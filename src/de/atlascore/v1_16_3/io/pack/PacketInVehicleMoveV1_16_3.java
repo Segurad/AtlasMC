@@ -1,0 +1,58 @@
+package de.atlascore.v1_16_3.io.pack;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+import de.atlascore.v1_16_3.io.V1_16_3;
+import de.atlasmc.io.AbstractPacket;
+import de.atlasmc.io.pack.PacketInVehicleMove;
+
+public class PacketInVehicleMoveV1_16_3 extends AbstractPacket implements PacketInVehicleMove {
+
+	public PacketInVehicleMoveV1_16_3() {
+		super(0x16, V1_16_3.version);
+		// TODO Auto-generated constructor stub
+	}
+	
+	private double x,y,z;
+	private float yaw,pitch;
+
+	@Override
+	public void read(int length, DataInputStream input) throws IOException {
+		x = input.readDouble();
+		y = input.readDouble();
+		z = input.readDouble();
+		yaw = input.readFloat();
+		pitch = input.readFloat();
+	}
+
+	@Override
+	public void write(DataOutputStream output) throws IOException {}
+
+	@Override
+	public double X() {	
+		return x;
+	}
+
+	@Override
+	public double Y() {
+		return y;
+	}
+
+	@Override
+	public double Z() {
+		return z;
+	}
+
+	@Override
+	public float Yaw() {
+		return yaw;
+	}
+
+	@Override
+	public float Pitch() {
+		return pitch;
+	}
+
+}
