@@ -1,5 +1,9 @@
 package de.atlasmc.io.pack;
 
-public interface PacketInHeldItemChange {
+import de.atlasmc.io.Packet;
+
+public interface PacketInHeldItemChange extends Packet {
+	
+	public short Slot();
 
 }

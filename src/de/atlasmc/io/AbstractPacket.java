@@ -4,23 +4,17 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import de.atlasmc.Material;
 import de.atlasmc.SimpleLocation;
+import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.meta.ItemMeta;
+import de.atlasmc.util.nbt.CompoundTag;
+import de.atlasmc.util.nbt.NBT;
 
 public class AbstractPacket {
 
 	private final int id, version;
 	private boolean cancelled;
-	public static int BOOLEAN = 1,
-			BYTE = 1,
-			SHORT = 2,
-			INT = 4,
-			LONG = 8,
-			FLOAT = 4,
-			DOUBLE = 8,
-			UUID = 16,
-			POSITION = 8,
-			ANGLE = 1,
-			ID = 1;
 	
 	public AbstractPacket(int id, int version) {
 		this.id = id;
@@ -130,6 +124,39 @@ public class AbstractPacket {
 		byte[] buffer = value.getBytes();
 		writeVarInt(buffer.length, output);
 		output.write(buffer);
+	}
+	
+	/**
+	 * 
+	 * @param input
+	 * @return a ItemStack or null if empty
+	 */
+	public ItemStack readSlot(DataInputStream input) throws IOException {
+		boolean present = input.readBoolean();
+		if (!present) return null;
+		int itemID = readVarInt(input);
+		byte amount = input.readByte();
+		Material mat = Material.getByItemID(itemID);
+		ItemStack item = new ItemStack(mat, amount);
+		byte comp = input.readByte();
+		if (comp == 0) return item;
+		NBT nbt = new CompoundTag();
+		nbt.read(input, false);
+		ItemMeta meta = mat.createItemMeta(nbt);
+		item.setItemMeta(meta);
+		return item;
+	}
+	
+	public void writeSlot(ItemStack item, DataOutputStream output) throws IOException {
+		if (item == null) {
+			output.writeBoolean(false);
+			return;
+		}
+		output.writeBoolean(true);
+		writeVarInt(item.getType().getItemID(), output);
+		output.writeByte(item.getAmount());
+		if (!item.hasItemMeta()) output.writeByte(0);
+		else item.getMetaAsNBT().write(output, false);
 	}
 
 }

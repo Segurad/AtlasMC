@@ -2,17 +2,26 @@ package de.atlascore.inventory.meta;
 
 import de.atlasmc.Material;
 import de.atlasmc.inventory.meta.ItemMeta;
+import de.atlasmc.util.nbt.NBT;
 
 public class CoreItemMeta implements ItemMeta {
-
-	private Material type;
 	
 	public CoreItemMeta(Material material) {
-		this.type = material;
+
+	}
+	
+	public CoreItemMeta clone() {
+		try {
+			return (CoreItemMeta) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
-	public Material getType() {
-		return type;
+	public NBT toNBT() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

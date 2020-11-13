@@ -6,14 +6,9 @@ import de.atlascore.inventory.meta.CoreItemMeta;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.inventory.meta.ItemMeta;
+import de.atlasmc.util.nbt.NBT;
 
-public class ClassMetaDataFactory implements MetaDataFactory {
-	
-	public static ClassMetaDataFactory DEFAULT;
-	
-	static {
-		DEFAULT = new ClassMetaDataFactory(ItemMeta.class, CoreItemMeta.class, BlockData.class, null);
-	}
+public class ClassMetaDataFactory extends MetaDataFactory {
 	
 	private Class<? extends ItemMeta> metaInterface, meta;
 	private Class<? extends BlockData> dataInterface, data;
@@ -42,12 +37,16 @@ public class ClassMetaDataFactory implements MetaDataFactory {
 		return data.getClass().isAssignableFrom(dataInterface); 
 	}
 	
-	public ItemMeta createMeta(Material material) {
+	public ItemMeta createMeta(Material material, boolean preConfig, NBT nbt) {
 		if (material == null) throw new IllegalArgumentException("Material can not be null!");
-		if (!material.isItem()) throw new Error("Material is not a Item!");
+		if (!material.isItem()) throw new IllegalArgumentException("Material is not a Item!");
+		if (preConfig) {
+			ItemMeta im = getMetaPreConfig(material);
+			if (im != null) return im.clone();
+		}
 		if (meta == null) return null;
 		try {
-			return meta.getConstructor(Material.class).newInstance(material);
+			return meta.getConstructor(Material.class, NBT.class).newInstance(material, nbt);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
@@ -55,9 +54,13 @@ public class ClassMetaDataFactory implements MetaDataFactory {
 		}
 	}
 	
-	public BlockData createData(Material material) {
+	public BlockData createData(Material material, boolean preConfig) {
 		if (material == null) throw new IllegalArgumentException("Material can not be null!");
-		if (!material.isBlock()) throw new Error("Material is not a Block!");
+		if (!material.isBlock()) throw new IllegalArgumentException("Material is not a Block!");
+		if (preConfig) {
+			BlockData bd = getDataPreConfig(material);
+			if (bd != null) return bd.clone();
+		}
 		if (data == null) return null;
 		try {
 			return data.getConstructor(Material.class).newInstance(material);

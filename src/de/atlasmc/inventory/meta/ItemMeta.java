@@ -1,8 +1,10 @@
 package de.atlasmc.inventory.meta;
 
-import de.atlasmc.Material;
+import de.atlasmc.util.nbt.NBT;
 
-public interface ItemMeta {
+public interface ItemMeta extends Cloneable {
 
-	public Material getType();
+	public ItemMeta clone();
+
+	public NBT toNBT();
 }

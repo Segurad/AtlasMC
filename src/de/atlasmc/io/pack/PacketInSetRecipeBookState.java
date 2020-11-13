@@ -1,5 +1,11 @@
 package de.atlasmc.io.pack;
 
-public interface PacketInSetRecipeBookState {
+import de.atlasmc.io.Packet;
+
+public interface PacketInSetRecipeBookState extends Packet {
+	
+	public int BookID();
+	public boolean BookOpen();
+	public boolean FilterActive();
 
 }

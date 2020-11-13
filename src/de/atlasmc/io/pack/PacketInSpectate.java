@@ -1,5 +1,9 @@
 package de.atlasmc.io.pack;
 
-public interface PacketInSpectate {
+import de.atlasmc.io.Packet;
+
+public interface PacketInSpectate extends Packet {
+	
+	public String UUID();
 
 }

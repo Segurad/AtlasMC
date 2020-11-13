@@ -1,5 +1,9 @@
 package de.atlasmc.io.pack;
 
-public interface PacketInResourcePackStatus {
+import de.atlasmc.io.Packet;
+
+public interface PacketInResourcePackStatus extends Packet {
+	
+	public int Result();
 
 }

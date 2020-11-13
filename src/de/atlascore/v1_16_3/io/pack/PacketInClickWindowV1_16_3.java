@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import de.atlascore.v1_16_3.io.V1_16_3;
+import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.pack.PacketInClickWindow;
 
@@ -17,6 +18,7 @@ public class PacketInClickWindowV1_16_3 extends AbstractPacket implements Packet
 	private byte windowID, button;
 	private short slot, action;
 	private int mode;
+	private ItemStack clickedItem;
 
 	@Override
 	public byte getWindowID() {
@@ -45,10 +47,20 @@ public class PacketInClickWindowV1_16_3 extends AbstractPacket implements Packet
 
 	@Override
 	public void read(int length, DataInputStream input) throws IOException {
-		
+		windowID = input.readByte();
+		slot = input.readShort();
+		button = input.readByte();
+		action = input.readShort();
+		mode = readVarInt(input);
+		clickedItem = readSlot(input);
 	}
 
 	@Override
 	public void write(DataOutputStream output) throws IOException {}
+
+	@Override
+	public ItemStack getClickedItem() {
+		return clickedItem;
+	}
 
 }

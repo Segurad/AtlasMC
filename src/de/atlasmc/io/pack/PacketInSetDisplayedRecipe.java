@@ -1,5 +1,9 @@
 package de.atlasmc.io.pack;
 
-public interface PacketInSetDisplayedRecipe {
+import de.atlasmc.io.Packet;
+
+public interface PacketInSetDisplayedRecipe extends Packet {
+	
+	public String RecipeID();
 
 }

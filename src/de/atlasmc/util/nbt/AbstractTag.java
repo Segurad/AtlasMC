@@ -26,7 +26,7 @@ abstract class AbstractTag implements NBT {
 
 	@Override
 	public void write(DataOutputStream output, boolean readName) throws IOException {
-		if (readName) {
+		if (readName && name != null) {
 			output.write(getType().getID());
 			byte[] buffer = name.getBytes();
 			output.writeShort(buffer.length);
