@@ -10,4 +10,8 @@ public class Validate {
 		if (value == false) throw new IllegalArgumentException(msg);
 	}
 
+	public static void isNumber(String num, String msg) {
+		if (!NumberConversion.isNumber(num)) throw new IllegalArgumentException(msg);
+	}
+
 }

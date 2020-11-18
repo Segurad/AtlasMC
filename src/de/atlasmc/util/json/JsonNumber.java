@@ -1,42 +1,64 @@
 package de.atlasmc.util.json;
 
-public class JsonNumber implements JsonContainer {
+import de.atlasmc.util.NumberConversion;
+import de.atlasmc.util.Validate;
+
+public class JsonNumber implements JsonElement {
 	
-	public Number num;
+	public String num;
 	
-	public JsonNumber(String num) {
-		if (num.contains(".") || num.contains("e"))
-			this.num = Double.parseDouble(num);
-		else
-			this.num = Long.parseLong(num);
+	public JsonNumber(String number) {
+		Validate.notNull(number, "Number can not be null!");
+		Validate.isNumber(number, "Number is not a Number!");
+		this.num = number;
 	}
 	
 	public JsonNumber(Number num) {
-		this.num = num;
+		this.num = num.toString();
 	}
 	
 	public int getInt() {
-		return (int) num;
+		return NumberConversion.toInt(num);
 	}
 	
 	public double getDouble() {
-		return (double) num;
+		return NumberConversion.toDouble(num);
 	}
 	
 	public long getLong() {
-		return (long) num;
+		return NumberConversion.toLong(num);
 	}
 	
 	public byte getByte() {
-		return (byte) num;
+		return NumberConversion.toByte(num);
 	}
 	
 	public float getFloat() {
-		return (float) num;
+		return NumberConversion.toFloat(num);
 	}
 	
 	@Override
-	public ContainerType getType() {
-		return ContainerType.JSON_NUMBER;
+	public ElementType getType() {
+		return ElementType.JSON_NUMBER;
+	}
+
+	@Override
+	public Object getValue() {
+		return num;
+	}
+	
+	@Override
+	public String toString() {
+		return num;
+	}
+
+	@Override
+	public StringBuilder toJsonString(StringBuilder builder) {
+		return builder.append(num);
+	}
+
+	@Override
+	public String toJsonString() {
+		return num;
 	}
 }
