@@ -1,6 +1,7 @@
 package de.atlasmc;
 
 import de.atlasmc.server.AtlasNode;
+import de.atlasmc.world.World;
 
 public class Atlas implements AtlasNode {
 
@@ -24,6 +25,11 @@ public class Atlas implements AtlasNode {
 	@Override
 	public boolean isMaster() {
 		return false;
+	}
+
+	public static World getWorld(String world) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -2479,7 +2479,7 @@ public class Material {
 	}
 	
 	public boolean isValidData(BlockData data) {
-		if (data.getType() != this) return false;
+		if (data.getMaterial() != this) return false;
 		MetaDataFactory mdf = getMetaDataFactory();
 		if (mdf == null) return MetaDataFactory.DEFAULT.isValidData(data);
 		return mdf.isValidData(data);

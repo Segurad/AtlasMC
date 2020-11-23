@@ -1,5 +1,5 @@
 package de.atlasmc.entity;
 
-public interface ThrownExpBottle {
+public interface ThrownExpBottle extends ThrowableProjectile {
 
 }

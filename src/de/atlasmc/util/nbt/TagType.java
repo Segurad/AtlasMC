@@ -2,6 +2,7 @@ package de.atlasmc.util.nbt;
 
 public enum TagType {
 
+	TAG_END(0),
 	BYTE(1),
 	SHORT(2),
 	INT(3),

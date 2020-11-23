@@ -4,6 +4,7 @@ import de.atlasmc.Material;
 
 public interface BlockData extends Cloneable {
 
-	public Material getType();
 	public BlockData clone();
+	public Material getMaterial();
+	public boolean matches(BlockData data);
 }

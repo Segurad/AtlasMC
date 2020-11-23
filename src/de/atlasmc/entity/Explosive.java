@@ -1,6 +1,6 @@
 package de.atlasmc.entity;
 
-public interface Exoplosive {
+public interface Explosive {
 
 	public float getYield();
 	public boolean isIncendiary();

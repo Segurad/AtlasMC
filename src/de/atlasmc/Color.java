@@ -140,4 +140,8 @@ public final class Color {
 	public static void unregisteColor(Color color) {
 		BY_NAME.remove(color.name);
 	}
+
+	public int asRGB() {
+		return (r << 8 + g) << 8 + b;
+	}
 }

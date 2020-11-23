@@ -1,5 +1,7 @@
 package de.atlasmc.entity;
 
+import de.atlasmc.Location;
+
 public interface Entity {
 
 	public boolean isOnFire();
@@ -13,9 +15,14 @@ public interface Entity {
 	public int getAirTicks();
 	public String getCustomName();
 	public boolean isSilent();
-	public boolean isCustomNameVisable();
+	public boolean isCustomNameVisible();
 	public boolean hasGravity();
 	public Pose getPose();
+	
+	public void remove();
+	public void setCustomNameVisible(boolean value);
+	public void setCustomName(String name);
+	public Location getLocation();
 	
 	public enum Pose {
 		DYING,
@@ -25,5 +32,7 @@ public interface Entity {
 		STANDING,
 		SWIMMING,
 	}
+
+	public EntityType getType();
 	
 }

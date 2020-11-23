@@ -45,10 +45,9 @@ public final class ListTag<T extends NBT> extends AbstractTag {
 		if (id <= 0) return;
 		datatype = TagType.getByID(id);
 		int length = input.readInt();
-		readName = !readName;
 		while(length > 0) {
 			NBT dat = datatype.createTag();
-			dat.read(input, readName);
+			dat.read(input, false);
 			data.add((T) dat);
 			length--;
 		}
@@ -58,7 +57,7 @@ public final class ListTag<T extends NBT> extends AbstractTag {
 	void writeD(DataOutputStream output, boolean readName) throws IOException {
 		output.writeByte(datatype.getID());
 		if (data.size() == 0) {
-			output.writeByte(0x00);
+			output.writeByte(0);
 			return;
 		}
 		output.writeInt(data.size());

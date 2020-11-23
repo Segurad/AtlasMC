@@ -1,5 +1,6 @@
 package de.atlasmc;
 
+import de.atlasmc.block.Block;
 import de.atlasmc.world.World;
 
 public class Location extends SimpleLocation {
@@ -11,8 +12,21 @@ public class Location extends SimpleLocation {
 		this.world = world;
 	}
 	
+	public Location(Location loc) {
+		super(loc);
+		this.world = loc.world;
+	}
+	
 	public World getWorld() {
 		return world;
+	}
+
+	public Block getBlock() {
+		return null;
+	}
+	
+	public Location clone() {
+		return new Location(this);
 	}
 
 }
