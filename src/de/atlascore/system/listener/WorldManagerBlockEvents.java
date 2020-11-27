@@ -1,19 +1,17 @@
-package de.atlasmc.world;
+package de.atlascore.system.listener;
 
 import de.atlasmc.event.EventHandler;
 import de.atlasmc.event.Listener;
+import de.atlasmc.event.block.BlockPhysicsEvent;
+import de.atlasmc.event.block.BlockPlaceEvent;
+import de.atlasmc.world.World;
+import de.atlasmc.world.WorldFlag;
 
 final class WorldManagerBlockEvents implements Listener {
 
-	private WorldManager wmanager;
-
-	public WorldManagerBlockEvents(WorldManager worldManager) {
-		wmanager = worldManager;
-	}
-
 	@EventHandler(ignoreCancelled = true)
 	public void onPhysic(BlockPhysicsEvent e) {
-		WorldData data = wmanager.getData(e.getBlock().getWorld());
+		World data = e.getBlock().getWorld();
 		if (data == null)
 			return;
 		if (data.hasFlag(WorldFlag.DISABLE_BLOCKPHYSICS))
@@ -61,10 +59,10 @@ final class WorldManagerBlockEvents implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onPlace(BlockPlaceEvent e) {
-		WorldData data = wmanager.getData(e.getBlock().getWorld());
-		if (data == null)
+		World world = e.getBlock().getWorld();
+		if (world == null)
 			return;
-		if (!data.hasFlag(WorldFlag.DISABLE_BLOCKPLACE))
+		if (!world.hasFlag(WorldFlag.DISABLE_BLOCKPLACE))
 			return;
 		if (!e.getPlayer().hasPermission("unioncore.world.blockplace.bypass"))
 			e.setCancelled(true);

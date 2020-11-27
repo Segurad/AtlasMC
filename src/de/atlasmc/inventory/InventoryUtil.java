@@ -1,4 +1,4 @@
-package de.atlasmc.util;
+package de.atlasmc.inventory;
 
 public class InventoryUtil {
 

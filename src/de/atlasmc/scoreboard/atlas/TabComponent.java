@@ -1,9 +1,9 @@
-package de.atlasmc.scoreboard;
+package de.atlasmc.scoreboard.atlas;
 
 import java.util.HashMap;
 
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
+import de.atlasmc.scoreboard.Scoreboard;
+import de.atlasmc.scoreboard.Team;
 
 public class TabComponent implements Component {
 

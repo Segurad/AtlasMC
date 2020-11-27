@@ -1,13 +1,10 @@
-package de.atlasmc.scoreboard;
+package de.atlasmc.scoreboard.atlas;
 
 import java.util.HashMap;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
-import org.bukkit.scoreboard.Team.Option;
-import org.bukkit.scoreboard.Team.OptionStatus;
+import de.atlasmc.chat.ChatColor;
+import de.atlasmc.scoreboard.Scoreboard;
+import de.atlasmc.scoreboard.Team;
 
 final class DefaultTabDisplayHandler implements TabDisplayHandler {
 

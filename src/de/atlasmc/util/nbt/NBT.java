@@ -1,7 +1,7 @@
 package de.atlasmc.util.nbt;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
 public interface NBT {
@@ -9,8 +9,8 @@ public interface NBT {
 	public String getName();
 	public Object getData();
 	public TagType getType();
-	public void read(DataInputStream input, boolean readName) throws IOException;
-	public void write(DataOutputStream output, boolean readName) throws IOException;
+	public void read(DataInput input, boolean readName) throws IOException;
+	public void write(DataOutput output, boolean readName) throws IOException;
 	
 	public static ByteTag createByteTag(String name, byte data) {
 		return new ByteTag(name, data);

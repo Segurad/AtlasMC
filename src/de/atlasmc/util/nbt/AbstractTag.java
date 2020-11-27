@@ -1,7 +1,7 @@
 package de.atlasmc.util.nbt;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
 abstract class AbstractTag implements NBT {
@@ -9,11 +9,11 @@ abstract class AbstractTag implements NBT {
 	protected String name;
 	
 	@Override
-	public void read(DataInputStream input, boolean readName) throws IOException {
+	public void read(DataInput input, boolean readName) throws IOException {
 		if (readName) {
 			short len = input.readShort();
 			byte[] buffer = new byte[len];
-			input.read(buffer);
+			input.readFully(buffer);
 			name = new String(buffer);
 		}
 		readD(input, readName);
@@ -25,7 +25,7 @@ abstract class AbstractTag implements NBT {
 	}
 
 	@Override
-	public void write(DataOutputStream output, boolean readName) throws IOException {
+	public void write(DataOutput output, boolean readName) throws IOException {
 		if (readName && name != null) {
 			output.write(getType().getID());
 			byte[] buffer = name.getBytes();
@@ -35,6 +35,6 @@ abstract class AbstractTag implements NBT {
 		writeD(output, readName);
 	}
 
-	abstract void readD(DataInputStream input, boolean readName) throws IOException;
-	abstract void writeD(DataOutputStream output, boolean readName) throws IOException;
+	abstract void readD(DataInput input, boolean readName) throws IOException;
+	abstract void writeD(DataOutput output, boolean readName) throws IOException;
 }

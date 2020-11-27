@@ -1,7 +1,7 @@
 package de.atlasmc.util.nbt;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public final class ListTag<T extends NBT> extends AbstractTag {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	void readD(DataInputStream input, boolean readName) throws IOException {
+	void readD(DataInput input, boolean readName) throws IOException {
 		data.clear();
 		byte id = input.readByte();
 		if (id <= 0) return;
@@ -54,7 +54,7 @@ public final class ListTag<T extends NBT> extends AbstractTag {
 	}
 
 	@Override
-	void writeD(DataOutputStream output, boolean readName) throws IOException {
+	void writeD(DataOutput output, boolean readName) throws IOException {
 		output.writeByte(datatype.getID());
 		if (data.size() == 0) {
 			output.writeByte(0);

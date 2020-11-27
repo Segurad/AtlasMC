@@ -30,5 +30,10 @@ public interface World {
 	public void playSound(Location loc, Sound sound, SoundCategory category, float volume, float pitch);
 
 	public void playSound(Location loc, String ssound, SoundCategory category, float volume, float pitch);
+	
+	public boolean hasFlag(WorldFlag flag);
+	public void addFlag(WorldFlag flag);
+	public void removeFlag(WorldFlag flag);
+	
 
 }

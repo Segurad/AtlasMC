@@ -1,59 +1,95 @@
 package de.atlasmc.event.inventory;
 
-import de.atlasmc.entity.Player;
+import de.atlasmc.event.HandlerList;
+import de.atlasmc.event.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.Inventory;
+import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
 
 public class InventoryClickEvent extends InventoryInteractEvent {
 
-	public InventoryClickEvent(Inventory inv) {
-		super(inv);
-		// TODO Auto-generated constructor stub
+	private static final HandlerList handlers = new HandlerList();
+	private final InventoryAction action;
+	private final ClickType click;
+	private final int rawSlot, key;
+	private final SlotType slotType;
+	
+	public InventoryClickEvent(InventoryView view, SlotType type, int slot, ClickType click, InventoryAction action) {
+		this(view, type, slot, click, action, -1);
+	}
+	
+	public InventoryClickEvent(InventoryView view, SlotType type, int slot, ClickType click, InventoryAction action, int key) {
+		super(view);
+		this.action = action;
+		this.click = click;
+		this.rawSlot = slot;
+		this.slotType = type;
+		this.key = key;
 	}
 
 	public ItemStack getCurrentItem() {
-		// TODO Auto-generated method stub
-		return null;
+		return view.getItem(rawSlot);
+	}
+	
+	public void setCurrentItem(ItemStack item) {
+		view.setItem(rawSlot, item);
 	}
 
 	public ItemStack getCursor() {
-		// TODO Auto-generated method stub
-		return null;
+		return view.getCursor();
+	}
+	
+	public void setCursor(ItemStack item) {
+		view.setCursor(item);
 	}
 
 	public Inventory getClickedInventory() {
-		// TODO Auto-generated method stub
 		return null;
-	}
-	
-	public static enum ClickType {
-		LEFT, RIGHT, SHIFT_RIGHT, SHIFT_LEFT, NUMBER_KEY, CONTROL_DROP, DROP, DOUBLE_CLICK
-		
 	}
 
 	public ClickType getClick() {
-		// TODO Auto-generated method stub
 		return null;
 	}
-
-	public boolean isCancelled() {
-		// TODO Auto-generated method stub
-		return false;
+	
+	public boolean isLeftClick() {
+		return click.isLeftClick();
+	}
+	
+	public boolean isRightClick() {
+		return click.isRightClick();
+	}
+	
+	public boolean isShiftClick() {
+		return click.isShiftClick();
+	}
+	
+	public InventoryAction getAction() {
+		return action;
 	}
 
 	public int getSlot() {
-		// TODO Auto-generated method stub
-		return 0;
+		return view.convertSlot(rawSlot);
+	}
+	
+	public int getRawSlot() {
+		return rawSlot;
 	}
 
 	public int getHotbarButton() {
-		// TODO Auto-generated method stub
-		return 0;
+		return key;
+	}
+	
+	public SlotType getSlotType() {
+		return slotType;
 	}
 
-	public Player getWhoClicked() {
-		// TODO Auto-generated method stub
-		return null;
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
+	
+	public static HandlerList getHandlerList() {
+		return handlers;
 	}
 
 }

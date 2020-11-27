@@ -3,14 +3,14 @@ package de.atlasmc.inventory.gui;
 import java.util.List;
 
 import de.atlasmc.Material;
+import de.atlasmc.event.inventory.ClickType;
 import de.atlasmc.event.inventory.InventoryClickEvent;
-import de.atlasmc.event.inventory.InventoryClickEvent.ClickType;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.ItemUtil;
 import de.atlasmc.inventory.gui.component.AbstractPageComponent;
 import de.atlasmc.inventory.gui.component.ComponentHandler;
 import de.atlasmc.inventory.gui.component.AbstractComponentHandler;
 import de.atlasmc.inventory.gui.component.PageComponent;
-import de.atlasmc.util.ItemUtil;
 
 /**
  * a 9x6 GUI with a 9x4 array of elements

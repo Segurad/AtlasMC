@@ -2,6 +2,7 @@ package de.atlasmc.world.particle;
 
 import de.atlasmc.Location;
 import de.atlasmc.entity.Player;
+import de.atlasmc.util.DummyTask;
 import de.atlasmc.util.EulerAngle;
 
 public class GrowigCircle extends Circle {

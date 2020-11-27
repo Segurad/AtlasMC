@@ -1,0 +1,40 @@
+package de.atlasmc.event.inventory;
+
+public enum InventoryType {
+
+	ANVIL,
+	BARREL,
+	BEACON,
+	BLAST_FURNACE,
+	BREWING,
+	CARTOGRAPHY,
+	CHEST,
+	CRAFTING,
+	CREATIVE,
+	DISPENSER,
+	DROPPER,
+	ENCHANTING,
+	ENDER_CHEST,
+	FURNACE,
+	GRINDSTONE,
+	HOPPER,
+	LECTERN,
+	LOOM,
+	MERCHANT,
+	PLAYER,
+	SHULKER_BOX,
+	SMITHING,
+	SMOKER,
+	STONECUTTER,
+	WORKBENCH;
+	
+	public static enum SlotType {
+		ARMOR,
+		CONTAINER,
+		CRAFTING,
+		FUEL,
+		OUTSIDE,
+		QUICKBAR,
+		RESULT;
+	}
+}

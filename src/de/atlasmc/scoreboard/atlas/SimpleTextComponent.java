@@ -1,4 +1,4 @@
-package de.atlasmc.scoreboard;
+package de.atlasmc.scoreboard.atlas;
 
 public class SimpleTextComponent implements TextComponent {
 

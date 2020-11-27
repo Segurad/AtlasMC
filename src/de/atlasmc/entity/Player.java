@@ -6,6 +6,9 @@ import de.atlasmc.Particle;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.inventory.Inventory;
+import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.io.ConnectionHandler;
+import de.atlasmc.scoreboard.Scoreboard;
 import de.atlasmc.server.AtlasServer;
 import de.atlasmc.server.ServerPlayer;
 
@@ -21,7 +24,7 @@ public interface Player extends ServerPlayer, HumanEntity {
 
 	public int getLevel();
 
-	public void setLevel(int i);
+	public void setLevel(int level);
 
 	public void playEffect(Location loc, Effect effect, Object data);
 
@@ -30,5 +33,24 @@ public interface Player extends ServerPlayer, HumanEntity {
 	public void playSound(Location loc, Sound sound, SoundCategory category, float volume, float pitch);
 
 	public void playSound(Location loc, String ssound, SoundCategory category, float volume, float pitch);
+
+	public void closeInventory();
+
+	public void setItemOnCursor(ItemStack item);
+
+	public ItemStack getItemOnCursor();
+
+	public ConnectionHandler getConnection();
+
+	/**
+	 * 
+	 * @param inventory
+	 * @return the current windowID or -1 if the Inventory does not belong to the Player
+	 */
+	public byte getWindowID(Inventory inventory);
+
+	public String getName();
+
+	public void setScoreboard(Scoreboard board);
 
 }

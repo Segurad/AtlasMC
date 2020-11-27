@@ -1,7 +1,7 @@
 package de.atlasmc.util.nbt;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
 public final class StringTag extends AbstractTag {
@@ -26,14 +26,14 @@ public final class StringTag extends AbstractTag {
 	}
 
 	@Override
-	void readD(DataInputStream input, boolean readName) throws IOException {
+	void readD(DataInput input, boolean readName) throws IOException {
 		int len = input.readShort();
 		byte[] buffer = new byte[len];
 		data = new String(buffer);
 	}
 
 	@Override
-	void writeD(DataOutputStream output, boolean readName) throws IOException {
+	void writeD(DataOutput output, boolean readName) throws IOException {
 		byte[] buffer = data.getBytes();
 		output.writeShort(buffer.length);
 		output.write(buffer);

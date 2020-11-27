@@ -1,11 +1,9 @@
-package de.atlasmc.scoreboard;
+package de.atlasmc.scoreboard.atlas;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
+import de.atlasmc.scoreboard.Scoreboard;
 
 public final class SideComponent implements Component {
 

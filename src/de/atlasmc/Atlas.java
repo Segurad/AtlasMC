@@ -1,12 +1,13 @@
 package de.atlasmc;
 
+import de.atlasmc.server.AtlasNetwork;
 import de.atlasmc.server.AtlasNode;
 import de.atlasmc.world.World;
 
 public class Atlas implements AtlasNode {
 
 	private static Atlas instance;
-	private AtlasNode master;
+	private AtlasNetwork network;
 	
 	public static AtlasNode getNode() {
 		return instance;

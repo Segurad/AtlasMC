@@ -2,7 +2,7 @@ package de.atlasmc.chat;
 
 public enum ChatColor {
 
-	GREEN;
+	GREEN, WHITE;
 	
 	public static String translateColor(String value) {
 		return translateAlternateColorCodes('&', value);

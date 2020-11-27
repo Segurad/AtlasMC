@@ -1,14 +1,16 @@
-package de.atlasmc.inventory.gui;
+package de.atlascore.system.listener;
 
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.EventHandler;
-import de.atlasmc.event.EventHandler.EventPriority;
+import de.atlasmc.event.EventPriority;
 import de.atlasmc.event.Listener;
 import de.atlasmc.event.inventory.InventoryClickEvent;
 import de.atlasmc.event.inventory.InventoryCloseEvent;
 import de.atlasmc.event.inventory.InventoryOpenEvent;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.gui.Button;
+import de.atlasmc.inventory.gui.GUI;
 
 final class GUIBListener implements Listener {
 	

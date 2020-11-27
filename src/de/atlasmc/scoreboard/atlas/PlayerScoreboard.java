@@ -1,9 +1,10 @@
-package de.atlasmc.scoreboard;
+package de.atlasmc.scoreboard.atlas;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.entity.Player;
+import de.atlasmc.scoreboard.Scoreboard;
 
 public final class PlayerScoreboard {
 

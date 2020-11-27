@@ -1,25 +1,30 @@
 package de.atlasmc.event.inventory;
 
+import de.atlasmc.entity.Player;
 import de.atlasmc.event.Cancellable;
-import de.atlasmc.inventory.Inventory;
+import de.atlasmc.inventory.InventoryView;
 
-public class InventoryInteractEvent extends InventoryEvent implements Cancellable {
+public abstract class InventoryInteractEvent extends InventoryEvent implements Cancellable {
 
-	public InventoryInteractEvent(Inventory inv) {
-		super(inv);
-		// TODO Auto-generated constructor stub
+	private boolean cancelled;
+	
+	public InventoryInteractEvent(InventoryView view) {
+		super(view);
+		cancelled = false;
+	}
+	
+	public Player getWhoClicked() {
+		return view.getPlayer();
 	}
 
 	@Override
 	public void setCancelled(boolean cancelled) {
-		// TODO Auto-generated method stub
-		
+		this.cancelled = cancelled;
 	}
 
 	@Override
 	public boolean isCancelled() {
-		// TODO Auto-generated method stub
-		return false;
+		return cancelled;
 	}
 
 }

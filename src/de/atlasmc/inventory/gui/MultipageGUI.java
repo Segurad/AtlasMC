@@ -1,5 +1,6 @@
 package de.atlasmc.inventory.gui;
 
+import de.atlascore.inventory.gui.CoreGUI;
 import de.atlasmc.Material;
 import de.atlasmc.event.inventory.InventoryClickEvent;
 import de.atlasmc.inventory.Inventory;
@@ -9,7 +10,7 @@ import de.atlasmc.inventory.gui.component.ItemComponentHandler;
 import de.atlasmc.inventory.gui.component.ItemPageComponent;
 import de.atlasmc.inventory.gui.component.PageComponent;
 
-public class MultipageGUI extends BaseGUI {
+public class MultipageGUI extends CoreGUI {
 
 	private final int next, back;
 	private int page = 0;
@@ -18,12 +19,12 @@ public class MultipageGUI extends BaseGUI {
 	private ItemStack inext = null, iback = null;
 	private final ItemStack air = new ItemStack(Material.AIR);
 	
-	public MultipageGUI(Inventory inv, int next, int back, int compLenght, int compDepth, int maxpages) {
-		this(inv, next, back, compLenght, compDepth, maxpages, 0, 0);
+	public MultipageGUI(int next, int back, int compLenght, int compDepth, int maxpages) {
+		this(next, back, compLenght, compDepth, maxpages, 0, 0);
 	}
 	
-	public MultipageGUI(Inventory inv, int next, int back, int compLenght, int compDepth, int maxpages, int compOffsetX, int compOffsetY) {
-		super(inv);
+	public MultipageGUI(int next, int back, int compLenght, int compDepth, int maxpages, int compOffsetX, int compOffsetY) {
+		super();
 		this.next = next;
 		this.back = back;
 		this.mltPageItems = new ItemPageComponent(compLenght, compDepth, maxpages);

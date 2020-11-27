@@ -2,9 +2,14 @@ package de.atlasmc.event.listener;
 
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.Player;
+import de.atlasmc.event.EventHandler;
+import de.atlasmc.event.EventPriority;
+import de.atlasmc.event.Listener;
+import de.atlasmc.event.entity.EntityDamageEvent;
+import de.atlasmc.event.entity.EntityDamageEvent.DamageCause;
 import de.atlasmc.util.Pair;
 
-public class InstantRespawn { /*implements  Listener {
+public class InstantRespawn implements  Listener {
 	
 	public boolean allowFallDamage = true;
 	public boolean allowFireDamage = true;
@@ -13,7 +18,7 @@ public class InstantRespawn { /*implements  Listener {
 	public boolean allowExplosionDamage = true;
 	public long millisLastDMG = 3000;
 	
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	/*@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onDamage(EntityDamageEvent e) {
 		if (!(e.getEntity() instanceof Player)) return;
 		final Player p = (Player) e.getEntity();

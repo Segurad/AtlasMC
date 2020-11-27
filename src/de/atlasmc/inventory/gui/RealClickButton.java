@@ -1,8 +1,8 @@
 package de.atlasmc.inventory.gui;
 
 import de.atlasmc.Material;
+import de.atlasmc.event.inventory.ClickType;
 import de.atlasmc.event.inventory.InventoryClickEvent;
-import de.atlasmc.event.inventory.InventoryClickEvent.ClickType;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.ItemStack;
 

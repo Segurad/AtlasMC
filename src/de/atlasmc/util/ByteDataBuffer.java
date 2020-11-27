@@ -2,7 +2,7 @@ package de.atlasmc.util;
 
 import java.io.DataInput;
 import java.io.DataOutput;
-import java.io.IOException;
+import java.util.Arrays;
 
 public class ByteDataBuffer implements DataOutput, DataInput {
 
@@ -18,6 +18,9 @@ public class ByteDataBuffer implements DataOutput, DataInput {
 		buffer = new byte[size];
 	}
 	
+	public ByteDataBuffer(byte[] data) {
+		this.buffer = data;
+	}
 	
 	@Override
 	public boolean readBoolean() {
@@ -40,159 +43,196 @@ public class ByteDataBuffer implements DataOutput, DataInput {
 	}
 
 	@Override
-	public double readDouble() throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+	public double readDouble() {
+		return Double.longBitsToDouble(readLong());
 	}
 
 	@Override
-	public float readFloat() throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+	public float readFloat() {
+		return Float.intBitsToFloat(readInt());
 	}
 
 	@Override
-	public void readFully(byte[] b) throws IOException {
-		// TODO Auto-generated method stub
-		
+	public void readFully(byte[] buffer) {
+		readFully(buffer, 0, buffer.length);
 	}
 
 	@Override
-	public void readFully(byte[] b, int off, int len) throws IOException {
-		// TODO Auto-generated method stub
-		
+	public void readFully(byte[] buffer, int off, int length) {
+		for (int i = off; i < length; i++) {
+			if (pos > count) throw new ArrayIndexOutOfBoundsException("Bufferend reached!");
+			buffer[i] = this.buffer[pos++];
+		}
 	}
 
 	@Override
-	public int readInt() throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+	public int readInt() {
+		if (pos + 3 > count) throw new ArrayIndexOutOfBoundsException("Bufferend reached!");
+		int value = buffer[pos++] << 8 +
+				buffer[pos++] << 8 +
+				buffer[pos++] << 8 + 
+				buffer[pos++];
+		return value;
 	}
 
 	@Override
-	public String readLine() throws IOException {
+	public String readLine() {
+		return null;
+	}
+
+	@Override
+	public long readLong() {
+		if (pos + 7 > count) throw new ArrayIndexOutOfBoundsException("Bufferend reached!");
+		long value = buffer[pos++] << 8 +
+				buffer[pos++] << 8 +
+				buffer[pos++] << 8 + 
+				buffer[pos++] << 8 +
+				buffer[pos++] << 8 +
+				buffer[pos++] << 8 +
+				buffer[pos++] << 8 +
+				buffer[pos++];
+		return value;
+	}
+
+	@Override
+	public short readShort() {
+		if (pos + 1 > count) throw new ArrayIndexOutOfBoundsException("Bufferend reached!");
+		int value = buffer[pos++] << 8 + buffer[pos++];
+		return (short) value;
+	}
+
+	@Override
+	public String readUTF() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public long readLong() throws IOException {
+	public int readUnsignedByte() {
+		return readByte() & 0xFF;
+	}
+
+	@Override
+	public int readUnsignedShort() {
+		return 0;
+	}
+
+	@Override
+	public int skipBytes(int n) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public short readShort() throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+	public void write(int value) {
+		writeByte(value);
 	}
 
 	@Override
-	public String readUTF() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+	public void write(byte[] buffer) {
+		write(buffer, 0, buffer.length);
 	}
 
 	@Override
-	public int readUnsignedByte() throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+	public void write(byte[] buffer, int off, int length) {
+		checkCapacity(count + length);
+		for (int i = off; i < length; i++) {
+			this.buffer[count++] = buffer[i];
+		}
 	}
 
 	@Override
-	public int readUnsignedShort() throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+	public void writeBoolean(boolean value) {
+		checkCapacity(count+1);
+		buffer[count++] = (byte) (value ? 1 : 0);
 	}
 
 	@Override
-	public int skipBytes(int n) throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+	public void writeByte(int value) {
+		checkCapacity(count+1);
+		buffer[count++] = (byte) (value);
 	}
 
 	@Override
-	public void write(int b) throws IOException {
+	public void writeBytes(String s) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void write(byte[] b) throws IOException {
+	public void writeChar(int v) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void write(byte[] b, int off, int len) throws IOException {
+	public void writeChars(String s) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void writeBoolean(boolean v) throws IOException {
-		// TODO Auto-generated method stub
-		
+	public void writeDouble(double value) {
+		writeLong(Double.doubleToLongBits(value));
 	}
 
 	@Override
-	public void writeByte(int v) throws IOException {
-		// TODO Auto-generated method stub
-		
+	public void writeFloat(float value) {
+		writeInt(Float.floatToIntBits(value));
 	}
 
 	@Override
-	public void writeBytes(String s) throws IOException {
-		// TODO Auto-generated method stub
-		
+	public void writeInt(int value) {
+		checkCapacity(count+4);
+		buffer[count++] = (byte) (value >> 24);
+		buffer[count++] = (byte) (value >> 16);
+		buffer[count++] = (byte) (value >> 8);
+		buffer[count++] = (byte) value;
 	}
 
 	@Override
-	public void writeChar(int v) throws IOException {
-		// TODO Auto-generated method stub
-		
+	public void writeLong(long value) {
+		checkCapacity(count+8);
+		buffer[count++] = (byte) (value >> 56);
+		buffer[count++] = (byte) (value >> 48);
+		buffer[count++] = (byte) (value >> 40);
+		buffer[count++] = (byte) (value >> 32);
+		buffer[count++] = (byte) (value >> 24);
+		buffer[count++] = (byte) (value >> 16);
+		buffer[count++] = (byte) (value >> 8);
+		buffer[count++] = (byte) value;
 	}
 
 	@Override
-	public void writeChars(String s) throws IOException {
-		// TODO Auto-generated method stub
-		
+	public void writeShort(int value) {
+		checkCapacity(count+2);
+		buffer[count++] = (byte) (value >> 8);
+		buffer[count++] = (byte) value;
 	}
 
 	@Override
-	public void writeDouble(double v) throws IOException {
+	public void writeUTF(String s) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
-	public void writeFloat(float v) throws IOException {
-		// TODO Auto-generated method stub
-		
+	public byte[] toByteArray() {
+		return Arrays.copyOf(buffer, count);
 	}
 
-	@Override
-	public void writeInt(int v) throws IOException {
-		// TODO Auto-generated method stub
-		
+	private void checkCapacity(int minCapacity) {
+		if (minCapacity - buffer.length > 0) grow(minCapacity);
 	}
 
-	@Override
-	public void writeLong(long v) throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
+	private void grow(int minCapacity) {
+		int oldCapacity = buffer.length;
+		int newCapacity = oldCapacity << 1;
+		if (newCapacity - minCapacity < 0) newCapacity = minCapacity;
+		if (newCapacity < 0) {
+			if (minCapacity < 0) throw new OutOfMemoryError();
+			newCapacity = Integer.MAX_VALUE;
+		}
 
-	@Override
-	public void writeShort(int v) throws IOException {
-		// TODO Auto-generated method stub
-		
+		buffer = Arrays.copyOf(buffer, newCapacity);
 	}
-
-	@Override
-	public void writeUTF(String s) throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

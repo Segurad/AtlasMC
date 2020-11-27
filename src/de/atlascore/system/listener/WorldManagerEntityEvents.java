@@ -1,9 +1,12 @@
-package de.atlasmc.world;
+package de.atlascore.system.listener;
 
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.EventHandler;
 import de.atlasmc.event.Listener;
 import de.atlasmc.event.entity.EntityDamageEvent.DamageCause;
+import de.atlasmc.world.WorldData;
+import de.atlasmc.world.WorldFlag;
+import de.atlasmc.world.WorldManager;
 
 final class WorldManagerEntityEvents implements Listener {
 

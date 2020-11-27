@@ -1,10 +1,21 @@
 package de.atlasmc.event;
 
-public class Event {
+public abstract class Event {
 
-	public HandlerList getHandlers() {
-		// TODO Auto-generated method stub
-		return null;
+	private final boolean async;
+	
+	public Event() {
+		this(false);
 	}
+	
+	public Event(boolean async) {
+		this.async = async;
+	}
+	
+	public abstract HandlerList getHandlers();
 
+	public final boolean isAsynchronous() {
+		return async;
+	}
+	
 }

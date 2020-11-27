@@ -1,10 +1,8 @@
-package de.atlasmc.util;
+package de.atlasmc.inventory;
 
 import java.util.List;
 import de.atlasmc.Material;
 import de.atlasmc.enchantments.Enchantment;
-import de.atlasmc.inventory.ItemFlag;
-import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.meta.ItemMeta;
 
 public class ItemUtil {
