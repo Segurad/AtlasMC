@@ -354,22 +354,21 @@ public final class MapColor {
 		return img;
 	}
 	
-	public static MapData regionToMap(Region region) {
+	public static MapData regionToMap(final Region region, final World world) {
 		if (region == null) return null;
-		final World w = region.getWorld();
 		final int width = (int) region.getWidhtX(), height = (int) region.getWidhtZ();
 		final byte[] map = new byte[width*height];
 		final int wx = (int) region.getMinX(),wz = (int) region.getMinZ();
 		for (int z = 0; z < height; z++) {
 			for (int x = 0; x < width; x++) {
-				final Block b = w.getHighestBlockAt(wx+x, wz+z);
+				final Block b = world.getHighestBlockAt(wx+x, wz+z);
 				MapColor c = fromMaterial(b.getType());
-				int y = w.getHighestBlockYAt(wx+x, wz+z-1);
+				int y = world.getHighestBlockYAt(wx+x, wz+z-1);
 				if (y > b.getY()) {
-					int ty = w.getHighestBlockYAt(wx+x, wz+z-2);
+					int ty = world.getHighestBlockYAt(wx+x, wz+z-2);
 					if (ty > y) {
 						y = ty;
-						ty = w.getHighestBlockYAt(wx+x, wz+z-3);
+						ty = world.getHighestBlockYAt(wx+x, wz+z-3);
 						if (ty > y) {
 							c = colors[c.baseID*4+LEVEL_LOWEST];
 						} else c = colors[c.baseID*4+LEVEL_LOWER];
@@ -378,7 +377,7 @@ public final class MapColor {
 				map[x+z*width] = c.ID;
 			}
 		}
-		return new MapData(map, width, height, MapData.SOURCE_WORLD, w.getName());
+		return new MapData(map, width, height, MapData.SOURCE_WORLD, world.getName());
 	}
 	
 	/**

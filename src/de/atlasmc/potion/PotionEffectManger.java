@@ -1,11 +1,5 @@
 package de.atlasmc.potion;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-
 public final class PotionEffectManger { /* implements Listener {
 	
 	private final HashMap<LivingEntity, HashMap<PotionEffectType, List<EffectConfig>>> map = new HashMap<LivingEntity, HashMap<PotionEffectType, List<EffectConfig>>>();

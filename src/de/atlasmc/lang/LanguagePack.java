@@ -22,6 +22,10 @@ public class LanguagePack {
 	public String get(String key) {
 		return msgs.get(key);
 	}
+	
+	public boolean hasKey(String key) {
+		return msgs.containsKey(key);
+	}
 
 	public void add(String key, String msg) {
 		msgs.put(key, msg);

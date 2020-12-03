@@ -7,7 +7,7 @@ import de.atlasmc.event.block.BlockPlaceEvent;
 import de.atlasmc.world.World;
 import de.atlasmc.world.WorldFlag;
 
-final class WorldManagerBlockEvents implements Listener {
+final class BlockEventHandler implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onPhysic(BlockPhysicsEvent e) {

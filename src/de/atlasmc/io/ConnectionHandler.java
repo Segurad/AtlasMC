@@ -23,5 +23,9 @@ public interface ConnectionHandler {
 	public void updateWindowSlots(Inventory abstractCoreInventory, int... slots);
 	
 	public Player getPlayer();
+	
+	public PlayerConnectionState getState();
+	
+	public void setState(PlayerConnectionState state);
 
 }

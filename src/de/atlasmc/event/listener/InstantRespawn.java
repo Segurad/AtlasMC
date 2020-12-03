@@ -2,11 +2,7 @@ package de.atlasmc.event.listener;
 
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.Player;
-import de.atlasmc.event.EventHandler;
-import de.atlasmc.event.EventPriority;
 import de.atlasmc.event.Listener;
-import de.atlasmc.event.entity.EntityDamageEvent;
-import de.atlasmc.event.entity.EntityDamageEvent.DamageCause;
 import de.atlasmc.util.Pair;
 
 public class InstantRespawn implements  Listener {

@@ -10,6 +10,7 @@ import de.atlasmc.inventory.Inventory;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
+import de.atlasmc.io.PlayerConnectionState;
 import de.atlasmc.io.ProtocolAdapter;
 import de.atlasmc.util.ByteDataBuffer;
 
@@ -91,6 +92,18 @@ public class ConnectionHandlerV1_16_3 implements ConnectionHandler {
 	public Player getPlayer() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public PlayerConnectionState getState() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setState(PlayerConnectionState state) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

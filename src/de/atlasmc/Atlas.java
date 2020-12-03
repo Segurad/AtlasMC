@@ -1,36 +1,34 @@
 package de.atlasmc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.atlasmc.server.AtlasNetwork;
 import de.atlasmc.server.AtlasNode;
-import de.atlasmc.world.World;
+import de.atlasmc.server.AtlasServer;
 
 public class Atlas implements AtlasNode {
 
 	private static Atlas instance;
 	private AtlasNetwork network;
+	private List<AtlasServer> localServers;
 	
-	public static AtlasNode getNode() {
+	public static Atlas getInstance() {
 		return instance;
 	}
 
 	@Override
-	public boolean isThis() {
-		return true;
-	}
-
-	@Override
 	public AtlasNode getMaster() {
-		return null;
+		return network.getMaster();
 	}
 
 	@Override
 	public boolean isMaster() {
-		return false;
+		return network.getMaster() == this;
 	}
-
-	public static World getWorld(String world) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public List<AtlasServer> getServers() {
+		return new ArrayList<AtlasServer>(localServers);
 	}
 
 }

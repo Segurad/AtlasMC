@@ -5,6 +5,15 @@ import java.util.HashMap;
 public class ProtocolHandler {
 
 	private final HashMap<Integer, ProtocolAdapter> wrapper;
+	private ProtocolAdapter defaultAdapter;
+	
+	public ProtocolAdapter getDefaultAdapter() {
+		return defaultAdapter;
+	}
+	
+	public void setDefaultAdapter(ProtocolAdapter defaultAdapter) {
+		this.defaultAdapter = defaultAdapter;
+	}
 	
 	public ProtocolHandler() {
 		wrapper = new HashMap<Integer, ProtocolAdapter>();

@@ -8,10 +8,13 @@ import de.atlasmc.SoundCategory;
 import de.atlasmc.block.Block;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
+import de.atlasmc.server.AtlasServer;
 
 public interface World {
 
 	public String getName();
+	
+	public AtlasServer getServer();
 
 	public Entity spawnEntity(Location loc, EntityType type);
 

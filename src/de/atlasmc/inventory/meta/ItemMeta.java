@@ -3,16 +3,46 @@ package de.atlasmc.inventory.meta;
 import java.io.DataOutput;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeModifier;
 import de.atlasmc.enchantments.Enchantment;
+import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.inventory.ItemFlag;
+import de.atlasmc.lang.LanguageHandler;
+import de.atlasmc.util.Multimap;
+import de.atlasmc.util.nbt.CompoundTag;
 import de.atlasmc.util.nbt.NBT;
 
 public interface ItemMeta extends Cloneable {
 
 	public ItemMeta clone();
+	
+	public boolean addAttributeModifier(Attribute attribute, AttributeModifier modifier);
+	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot);
+	public CompoundTag getCustomTagContainer();
+	public String getLocalizedName();
+	public String getLocalizedName(String local);
+	public LanguageHandler getLanguageHandler();
+	public void setLanguageHandler(LanguageHandler handler);
+	public boolean hasLanguageHandler();
+	public boolean hasLocalizedName();
+	public boolean hasLocalizedName(String local);
+	public boolean hasLocalizedNameKey();
+	public String getLocalizedNameKey();
+	public void setLocalizedNameKey(String key);
+	public boolean isUnbreakable();
+	public boolean hasEnchant(Enchantment ench);
+	public boolean hasConflictingEnchant(Enchantment enchantment);
+	public boolean removeAttributeModifier(Attribute attribute);
+	public boolean removeAttributeModifier(Attribute attribute, AttributeModifier modifier);
+	public boolean removeAttributeModifier(EquipmentSlot slot);
+	public boolean removeEnchant(Enchantment ench);
+	public void removeItemFlags(ItemFlag... itemflags);
+	public void setAttributeModifiers(Multimap<Attribute, AttributeModifier> attributeModifiers);
+	public void setCustomModelData(Integer data);
+	public void setUnbreakable(boolean unbreakable);
 
 	public NBT toNBT();
 	public DataOutput toNBT(DataOutput output);
@@ -43,13 +73,13 @@ public interface ItemMeta extends Cloneable {
 
 	public int getCustomModelData();
 
-	public List<ItemFlag> getItemFlags();
+	public Set<ItemFlag> getItemFlags();
 
 	public boolean hasItemFlag(ItemFlag flag);
 
 	public boolean hasAttributeModifiers();
 
-	public Map<Attribute, List<AttributeModifier>> getAttributeModifiers();
+	public Multimap<Attribute, AttributeModifier> getAttributeModifiers();
 
 	public List<AttributeModifier> getAttributeModifiers(Attribute attribute);
 }

@@ -30,6 +30,10 @@ public final class CompoundTag extends AbstractTag {
 	public void addTag(NBT tag) {
 		data.add(tag);
 	}
+	
+	public void removeTag(NBT tag) {
+		data.remove(tag);
+	}
 
 	@Override
 	void readD(DataInput input, boolean readName) throws IOException {

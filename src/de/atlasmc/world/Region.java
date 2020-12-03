@@ -1,6 +1,5 @@
 package de.atlasmc.world;
 
-import de.atlasmc.Atlas;
 import de.atlasmc.Location;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.schematic.Schematic;
@@ -10,7 +9,6 @@ import de.atlasmc.schematic.Schematic;
  */
 public class Region implements Cloneable {
 
-	protected String world;
 	protected SimpleLocation loc1, loc2;
 
 	protected double maxx, maxy, maxz, minx, miny, minz;
@@ -21,52 +19,21 @@ public class Region implements Cloneable {
 	 * @param loc1 The region's location 1
 	 * @param loc2 The region's location 2
 	 */
-	public Region(Location loc) {
-		this(loc, loc.getWorld().getName());
+	public Region(SimpleLocation loc1, SimpleLocation loc2) {
+		this.loc1 = loc1.clone();
+		this.loc2 = loc2.clone();
+		update();
 	}
 
-	public Region(Location loc1, Location loc2) {
-		this(loc1, loc2, loc1.getWorld().getName());
-	}
-
-	public Region(SimpleLocation loc, String world) {
+	public Region(SimpleLocation loc) {
 		loc1 = loc.clone();
 		loc2 = loc.clone();
-		this.world = world;
 		maxx = loc.getX();
 		minx = loc.getX();
 		maxy = loc.getY();
 		miny = loc.getY();
 		maxz = loc.getZ();
 		minz = loc.getZ();
-	}
-
-	public Region(SimpleLocation loc1, SimpleLocation loc2, String world) {
-		this.loc1 = loc1.clone();
-		this.loc2 = loc2.clone();
-		this.world = world;
-		update();
-	}
-
-	public void setWorld(World world) {
-		this.world = world.getName();
-	}
-
-	public void setWorld(String name) {
-		world = name;
-	}
-
-	/**
-	 * Gets the world of this region
-	 * 
-	 * @return world
-	 */
-	public World getWorld() {
-		return Atlas.getWorld(world);
-	}
-
-	public String getWorldName() {
-		return world;
 	}
 
 	/**
@@ -217,6 +184,6 @@ public class Region implements Cloneable {
 	}
 
 	public Region clone() {
-		return new Region(loc1.clone(), loc2.clone(), world);
+		return new Region(loc1.clone(), loc2.clone());
 	}
 }

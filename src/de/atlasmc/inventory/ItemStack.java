@@ -2,6 +2,8 @@ package de.atlasmc.inventory;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import de.atlasmc.Material;
 import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeModifier;
@@ -133,7 +135,7 @@ public class ItemStack {
 				}
 			}
 		}
-		List<ItemFlag> flags = metapart.getItemFlags();
+		Set<ItemFlag> flags = metapart.getItemFlags();
 		if (!flags.isEmpty()) {
 			for (ItemFlag flag : flags) {
 				if (!metaitem.hasItemFlag(flag)) return false;

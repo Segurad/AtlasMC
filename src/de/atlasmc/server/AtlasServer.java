@@ -28,7 +28,7 @@ public class AtlasServer implements Server {
 
 	@Override
 	public AtlasNode getNode() {
-		return Atlas.getNode();
+		return Atlas.getInstance();
 	}
 
 	@Override

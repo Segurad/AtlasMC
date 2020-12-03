@@ -2,57 +2,57 @@ package de.atlascore.v1_16_3.io;
 
 import java.net.Socket;
 
-import de.atlascore.v1_16_3.io.pack.PacketInAdvancementTabV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInAnimationV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInChatMessageV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInClickWindowButtonV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInClientSettingsV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInClientStatusV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInCloseWindowV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInCraftRecipeRequestV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInCreativeInventoryActionV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInEntityActionV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInGenerateStructureV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInHeldItemChangeV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInInteractEntityV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInKeepAliveV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInLockDifficultyV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInNameItemV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInPickItemV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInPlayerAbilitiesV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInPlayerBlockPlacementV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInPlayerDiggingV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInPlayerMovementV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInPlayerPositionAndRotationV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInPlayerPositionV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInPlayerRotationV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInPluginMessageV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInQueryBlockNBTV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInQueryEntityNBTV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInResourcePackStatusV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInSelectTradeV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInSetBeaconEffectV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInSetDifficultyV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInSetDisplayedRecipeV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInSetRecipeBookStateV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInSpectateV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInSteerBoatV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInSteerVehicleV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInTabCompleteV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInTeleportConfirmV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInUpdateCommandBlockMinecartV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInUpdateCommandBlockV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInUpdateJigsawBlockV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInUpdateSignV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInUpdateStructureBlockV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInUseItemV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInVehicleMoveV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketInWindowConfirmationV1_16_3;
-import de.atlascore.v1_16_3.io.pack.PacketOutSetSlotV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInAdvancementTabV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInAnimationV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInChatMessageV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInClickWindowButtonV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInClientSettingsV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInClientStatusV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInCloseWindowV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInCraftRecipeRequestV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInCreativeInventoryActionV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInEntityActionV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInGenerateStructureV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInHeldItemChangeV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInInteractEntityV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInKeepAliveV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInLockDifficultyV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInNameItemV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInPickItemV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInPlayerAbilitiesV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInPlayerBlockPlacementV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInPlayerDiggingV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInPlayerMovementV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInPlayerPositionAndRotationV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInPlayerPositionV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInPlayerRotationV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInPluginMessageV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInQueryBlockNBTV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInQueryEntityNBTV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInResourcePackStatusV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInSelectTradeV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInSetBeaconEffectV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInSetDifficultyV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInSetDisplayedRecipeV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInSetRecipeBookStateV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInSpectateV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInSteerBoatV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInSteerVehicleV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInTabCompleteV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInTeleportConfirmV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInUpdateCommandBlockMinecartV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInUpdateCommandBlockV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInUpdateJigsawBlockV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInUpdateSignV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInUpdateStructureBlockV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInUseItemV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInVehicleMoveV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketInWindowConfirmationV1_16_3;
+import de.atlascore.v1_16_3.io.protocol.play.PacketOutSetSlotV1_16_3;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.pack.PacketOutSetSlot;
+import de.atlasmc.io.protocol.play.PacketOutSetSlot;
 
 public class V1_16_3 implements de.atlasmc.io.ProtocolAdapter {
 
@@ -136,6 +136,18 @@ public class V1_16_3 implements de.atlasmc.io.ProtocolAdapter {
 	@Override
 	public PacketOutSetSlot createPacketOutSetSlot(byte windowID, int slot, ItemStack item) {
 		return new PacketOutSetSlotV1_16_3(windowID, (short) slot, item);
+	}
+
+	@Override
+	public int getConnectionCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setConnectionCount(int count) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

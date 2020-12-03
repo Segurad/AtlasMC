@@ -1,7 +1,9 @@
 package de.atlasmc.enchantments;
 
-public class Enchantment {
+public abstract class Enchantment {
 
 	public static Enchantment LUCK;
+
+	public abstract boolean conflictsWith(Enchantment echantment);
 
 }
