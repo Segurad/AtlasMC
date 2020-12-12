@@ -1,17 +1,16 @@
 package de.atlasmc.inventory.meta;
 
-import java.io.DataOutput;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeModifier;
+import de.atlasmc.chat.LanguageHandler;
 import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.inventory.ItemFlag;
-import de.atlasmc.lang.LanguageHandler;
-import de.atlasmc.util.Multimap;
+import de.atlasmc.util.map.Multimap;
 import de.atlasmc.util.nbt.CompoundTag;
 import de.atlasmc.util.nbt.NBT;
 
@@ -44,8 +43,10 @@ public interface ItemMeta extends Cloneable {
 	public void setCustomModelData(Integer data);
 	public void setUnbreakable(boolean unbreakable);
 
-	public NBT toNBT();
-	public DataOutput toNBT(DataOutput output);
+	public default NBT toNBT() {
+		return toNBT("default");
+	}
+	public NBT toNBT(String local);
 
 	public void setDisplayName(String name);
 

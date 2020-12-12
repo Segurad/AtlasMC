@@ -1,4 +1,4 @@
-package de.atlasmc.lang;
+package de.atlasmc.chat;
 
 import java.util.ArrayList;
 import java.util.Arrays;

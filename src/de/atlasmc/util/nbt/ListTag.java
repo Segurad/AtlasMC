@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.atlasmc.util.Validate;
+
 public final class ListTag<T extends NBT> extends AbstractTag {
 
 	private List<T> data;
@@ -25,7 +27,16 @@ public final class ListTag<T extends NBT> extends AbstractTag {
 	}
 	
 	public void addTag(T tag) {
+		Validate.notNull(tag, "NBT can not be null!");
+		Validate.isTrue(datatype == tag.getType(), "Illegal TagType:" + tag.getType().name() + " " + datatype.name() + " expected!");
 		data.add(tag);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public T createEntry(Object field) {
+		T tag = (T) datatype.createTag(field);
+		data.add(tag);
+		return tag;
 	}
 	
 	public TagType getDataType() {

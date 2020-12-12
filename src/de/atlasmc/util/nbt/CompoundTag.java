@@ -31,6 +31,52 @@ public final class CompoundTag extends AbstractTag {
 		data.add(tag);
 	}
 	
+	public void addByteArrayTag(String name, byte[] value) {
+		this.data.add(new ByteArrayTag(name, value));
+	}
+	
+	public void addByteTag(String name, byte value) {
+		this.data.add(new ByteTag(name, value));
+	}
+	
+	public void addDoubleTag(String name, double value) {
+		this.data.add(new DoubleTag(name, value));
+	}
+	
+	public void addFloatTag(String name, float value) {
+		this.data.add(new FloatTag(name, value));
+	}
+	
+	public void addIntArrayTag(String name, int[] value) {
+		this.data.add(new IntArrayTag(name, value));
+	}
+	
+	public void addIntTag(String name, int value) {
+		this.data.add(new IntTag(name, value));
+	}
+	
+	public ListTag<NBT> addListTag(String name, TagType type) {
+		ListTag<NBT> tag = new ListTag<NBT>(name, type);
+		this.data.add(tag);
+		return tag;
+	}
+	
+	public void addLongArrayTag(String name, long[] value) {
+		this.data.add(new LongArrayTag(name, value));
+	}
+	
+	public void addLongTag(String name, long value) {
+		this.data.add(new LongTag(name, value));
+	}
+	
+	public void addShortTag(String name, short value) {
+		this.data.add(new ShortTag(name, value));
+	}
+	
+	public void addStringTag(String name, String value) {
+		this.data.add(new StringTag(name, value));
+	}
+	
 	public void removeTag(NBT tag) {
 		data.remove(tag);
 	}
@@ -54,6 +100,12 @@ public final class CompoundTag extends AbstractTag {
 			dat.write(output, true);
 		}
 		output.writeByte(0x00);
+	}
+
+	public CompoundTag addCompoundTag(String string) {
+		CompoundTag tag = new CompoundTag(name);
+		this.data.add(tag);
+		return tag;
 	}
 
 }

@@ -8,6 +8,10 @@ public class JsonString implements JsonElement {
 		this.value = value;
 	}
 
+	public JsonString() {
+		this.value = null;
+	}
+
 	@Override
 	public ElementType getType() {
 		return ElementType.JSON_STRING;

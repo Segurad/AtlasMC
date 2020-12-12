@@ -22,7 +22,7 @@ public class Location extends SimpleLocation {
 	}
 
 	public Block getBlock() {
-		return null;
+		return world.getBlock(this);
 	}
 	
 	public Location clone() {

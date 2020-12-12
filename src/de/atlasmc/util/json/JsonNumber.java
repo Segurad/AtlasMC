@@ -17,6 +17,10 @@ public class JsonNumber implements JsonElement {
 		this.num = num.toString();
 	}
 	
+	public JsonNumber() {
+		this.num = "0";
+	}
+
 	public int getInt() {
 		return NumberConversion.toInt(num);
 	}

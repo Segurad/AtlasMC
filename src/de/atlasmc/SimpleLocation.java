@@ -1,5 +1,7 @@
 package de.atlasmc;
 
+import java.util.Objects;
+
 public class SimpleLocation implements Cloneable {
 
 	private double x;
@@ -77,11 +79,7 @@ public class SimpleLocation implements Cloneable {
 	}
 
 	public SimpleLocation clone() {
-		try {
-			return (SimpleLocation) super.clone();
-		} catch (CloneNotSupportedException e) {
-			throw new Error(e);
-		}
+		return new SimpleLocation(this);
 	}
 
 	/**
@@ -191,4 +189,26 @@ public class SimpleLocation implements Cloneable {
 		this.yaw = yaw;
 		return this;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(pitch, x, y, yaw, z);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SimpleLocation other = (SimpleLocation) obj;
+		return pitch == other.pitch
+				&& x == other.x
+				&& y == other.y
+				&& yaw == other.yaw
+				&& z == other.z;
+	}
+	
 }

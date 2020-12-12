@@ -1,4 +1,4 @@
-package de.atlasmc.lang;
+package de.atlasmc.chat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,6 +7,10 @@ import java.util.UUID;
 
 public class LanguageHandler {
 
+	public static final String 
+		de_DE = "de_DE",
+		en_US = "en_US";
+	
 	private final List<LanguagePack> packs = new ArrayList<LanguagePack>();
 	private final HashMap<UUID, LanguagePack> lang = new HashMap<UUID, LanguagePack>();
 	private LanguagePack defaultPack;
@@ -38,6 +42,7 @@ public class LanguageHandler {
 	}
 
 	public LanguagePack getPack(String lang) {
+		if (lang.equals("default")) return defaultPack;
 		for (LanguagePack pack : packs) {
 			if (pack.getLang().equalsIgnoreCase(lang))
 				return pack;
@@ -66,18 +71,5 @@ public class LanguageHandler {
 
 	public void setDefaultPack(LanguagePack pack) {
 		defaultPack = pack;
-	}
-
-	public enum LanguageKey {
-		DE("de_de"), EN("en_us");
-		
-		private String key;
-		private LanguageKey(String key) {
-			this.key = key;
-		}
-		
-		public String getKey() {
-			return key;
-		}
 	}
 }

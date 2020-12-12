@@ -1,6 +1,6 @@
 package de.atlascore.inventory.meta;
 
-import java.io.DataOutput;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -9,15 +9,20 @@ import java.util.Set;
 import de.atlasmc.Material;
 import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeModifier;
+import de.atlasmc.chat.LanguageHandler;
+import de.atlasmc.chat.MessageUtil;
 import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.inventory.ItemFlag;
 import de.atlasmc.inventory.meta.ItemMeta;
-import de.atlasmc.lang.LanguageHandler;
-import de.atlasmc.util.Multimap;
 import de.atlasmc.util.Validate;
+import de.atlasmc.util.map.ArrayListMultimap;
+import de.atlasmc.util.map.ListMultimap;
+import de.atlasmc.util.map.Multimap;
 import de.atlasmc.util.nbt.CompoundTag;
+import de.atlasmc.util.nbt.ListTag;
 import de.atlasmc.util.nbt.NBT;
+import de.atlasmc.util.nbt.TagType;
 
 public class CoreItemMeta implements ItemMeta {
 	
@@ -25,10 +30,10 @@ public class CoreItemMeta implements ItemMeta {
 	private String displayname, nameKey;
 	private LanguageHandler langHandler;
 	private List<String>lore;
-	private Set<ItemFlag>flags;
-	private Integer costommodeldata;
+	private int flags;
+	private Integer customModelData;
 	private Map<Enchantment, Integer> enchants;
-	private Multimap<Attribute, AttributeModifier> attributes;
+	private ListMultimap<Attribute, AttributeModifier> attributes;
 	private CompoundTag customTags;
 	
 	public CoreItemMeta(Material material) {
@@ -48,24 +53,24 @@ public class CoreItemMeta implements ItemMeta {
 	public boolean addAttributeModifier(Attribute attribute, AttributeModifier modifier) {
 		Validate.notNull(attribute, "Attribute can not be null!");
 		Validate.notNull(modifier, "AttributeModifier can not be null!");
-		return false;
+		if (attributes == null)
+			attributes = new ArrayListMultimap<>();
+		return this.attributes.put(attribute, modifier);
 	}
 
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
 		Validate.notNull(slot, "EquipmentSlot can not be null!");
-		// TODO
+		Multimap<Attribute, AttributeModifier> map = new ArrayListMultimap<>();
+		if (attributes == null) return map;
 		for (Attribute a : attributes.keySet()) {
-			List<AttributeModifier> mods = attributes.getValues(a);
-			Iterator<AttributeModifier> it = mods.iterator();
-			while(it.hasNext()) {
-				AttributeModifier mod = it.next();
-				if (mod.getSlot() == slot) {
-					mods.remove(mod);
-				}
+			List<AttributeModifier> mods = attributes.get(a);
+			for (AttributeModifier mod : mods) {
+				if (mod.getSlot() == slot)
+					map.put(a, mod);
 			}
 		}
-		return null;
+		return map;
 	}
 
 	@Override
@@ -97,7 +102,7 @@ public class CoreItemMeta implements ItemMeta {
 
 	@Override
 	public boolean hasLanguageHandler() {
-		return langHandler == null;
+		return langHandler != null;
 	}
 
 	@Override
@@ -133,12 +138,14 @@ public class CoreItemMeta implements ItemMeta {
 	@Override
 	public boolean hasEnchant(Enchantment ench) {
 		Validate.notNull(ench, "Enchant can not be null!");
+		if (enchants == null) return false;
 		return this.enchants.containsKey(ench);
 	}
 
 	@Override
 	public boolean hasConflictingEnchant(Enchantment ench) {
 		Validate.notNull(ench, "Enchant can not be null!");
+		if (enchants == null) return false;
 		for (Enchantment e : enchants.keySet()) {
 			if (ench.conflictsWith(e)) return true;
 		}
@@ -148,22 +155,27 @@ public class CoreItemMeta implements ItemMeta {
 	@Override
 	public boolean removeAttributeModifier(Attribute attribute) {
 		Validate.notNull(attribute, "Attribute can not be null!");
-		return attributes.remove(attribute);
+		if (attributes == null) return false;
+		return attributes.remove(attribute) != null;
 	}
 
 	@Override
 	public boolean removeAttributeModifier(Attribute attribute, AttributeModifier modifier) {
 		Validate.notNull(attribute, "Attribute can not be null!");
 		Validate.notNull(modifier, "AttributeModifier can not be null!");
-		return getAttributeModifiers(attribute).remove(modifier);
+		if (attributes == null) return false;
+		List<AttributeModifier> mods = getAttributeModifiers(attribute);
+		if (mods == null) return false;
+		return mods.remove(modifier);
 	}
 
 	@Override
 	public boolean removeAttributeModifier(EquipmentSlot slot) {
 		Validate.notNull(slot, "EquipmentSlot can not be null!");
+		if (attributes == null) return false;
 		boolean changes = false;
 		for (Attribute a : attributes.keySet()) {
-			List<AttributeModifier> mods = attributes.getValues(a);
+			List<AttributeModifier> mods = attributes.get(a);
 			Iterator<AttributeModifier> it = mods.iterator();
 			while(it.hasNext()) {
 				AttributeModifier mod = it.next();
@@ -179,26 +191,27 @@ public class CoreItemMeta implements ItemMeta {
 	@Override
 	public boolean removeEnchant(Enchantment ench) {
 		Validate.notNull(ench, "Enchant can not be null!");
+		if (enchants == null) return false;
 		return this.enchants.remove(ench) != null;
 	}
 
 	@Override
 	public void removeItemFlags(ItemFlag... itemflags) {
-		Validate.notNull(itemflags, "ItemFlag can not be null!");
 		for(ItemFlag flag : itemflags) {
-			this.flags.remove(flag);
+			this.flags &= (getBitModifier(flag) ^ 0xFFFFFFFF);
 		}
 	}
 
 	@Override
 	public void setAttributeModifiers(Multimap<Attribute, AttributeModifier> attributeModifiers) {
 		Validate.notNull(attributeModifiers, "AttributeModifier can not be null!");
-		this.attributes = attributeModifiers;
+		this.attributes.clear();
+		this.attributes.putAll(attributeModifiers);
 	}
 
 	@Override
 	public void setCustomModelData(Integer data) {
-		this.costommodeldata = data;
+		this.customModelData = data;
 	}
 
 	@Override
@@ -207,15 +220,25 @@ public class CoreItemMeta implements ItemMeta {
 	}
 
 	@Override
-	public NBT toNBT() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public DataOutput toNBT(DataOutput output) {
-		// TODO Auto-generated method stub
-		return null;
+	public NBT toNBT(String local) {
+		final CompoundTag container = new CompoundTag();
+		if (hasCustomModelData()) container.addIntTag("CustomModelData", customModelData);
+		if (hasDisplayName() || hasLore() || hasLocalizedName()) {
+			final CompoundTag display = container.addCompoundTag("display");
+			String name = getLocalizedName(local);
+			if (name == null) {
+				display.addStringTag("Name", MessageUtil.formatMessage(name));
+			} else if (hasDisplayName()) {
+				display.addStringTag("Name", MessageUtil.formatMessage(displayname));
+			}
+			if (hasLore()) {
+				ListTag<NBT> list = display.addListTag(name, TagType.STRING);
+				lore.forEach(s -> list.createEntry(MessageUtil.formatMessage(s)));
+			}
+		}
+		container.addIntTag("HideFlags", flags);
+		container.addByteTag("Unbreakable", (byte) (unbreakable ? 1 : 0));
+		return container;
 	}
 
 	@Override
@@ -236,7 +259,7 @@ public class CoreItemMeta implements ItemMeta {
 	@Override
 	public void addItemFlags(ItemFlag... flags) {
 		for (ItemFlag flag : flags) {
-			this.flags.add(flag);
+			this.flags |= getBitModifier(flag);
 		}
 	}
 
@@ -262,12 +285,13 @@ public class CoreItemMeta implements ItemMeta {
 
 	@Override
 	public int getEnchantLevel(Enchantment enchantment) {
+		if (enchants == null) return 0;
 		return this.enchants.get(enchantment);
 	}
 
 	@Override
 	public boolean hasLore() {
-		return lore != null;
+		return lore != null && !lore.isEmpty();
 	}
 
 	@Override
@@ -277,22 +301,31 @@ public class CoreItemMeta implements ItemMeta {
 
 	@Override
 	public boolean hasCustomModelData() {
-		return costommodeldata != null;
+		return customModelData != null;
 	}
 
 	@Override
 	public int getCustomModelData() {
-		return costommodeldata;
+		return customModelData;
 	}
 
 	@Override
 	public Set<ItemFlag> getItemFlags() {
+		Set<ItemFlag> flags = EnumSet.noneOf(ItemFlag.class);
+		for (ItemFlag flag : ItemFlag.values()) {
+			if (hasItemFlag(flag)) flags.add(flag);
+		}
 		return flags;
 	}
 
 	@Override
 	public boolean hasItemFlag(ItemFlag flag) {
-		return this.flags.contains(flag);
+		int value = getBitModifier(flag);
+		return (this.flags & value) == value;
+	}
+	
+	private byte getBitModifier(ItemFlag flag) { 
+		return (byte)(1 << flag.ordinal()); 
 	}
 
 	@Override
@@ -307,6 +340,6 @@ public class CoreItemMeta implements ItemMeta {
 
 	@Override
 	public List<AttributeModifier> getAttributeModifiers(Attribute attribute) {
-		return attributes.getValues(attribute);
+		return attributes.get(attribute);
 	}
 }

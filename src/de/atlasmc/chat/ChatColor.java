@@ -8,7 +8,7 @@ public enum ChatColor {
 		return translateAlternateColorCodes('&', value);
 	}
 
-	public static String translateAlternateColorCodes(char c, String value) {
+	public static String translateAlternateColorCodes(char prefix, String value) {
 		return null;
 	}
 	
