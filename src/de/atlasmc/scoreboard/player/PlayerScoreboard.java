@@ -1,4 +1,4 @@
-package de.atlasmc.scoreboard.atlas;
+package de.atlasmc.scoreboard.player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import de.atlasmc.entity.Player;
 import de.atlasmc.scoreboard.Scoreboard;
 
-public final class PlayerScoreboard {
+public class PlayerScoreboard {
 
 	private final Player player;
 	private final ScoreboardManager manager;

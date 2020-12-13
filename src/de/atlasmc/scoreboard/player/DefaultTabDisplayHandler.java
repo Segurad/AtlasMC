@@ -1,4 +1,4 @@
-package de.atlasmc.scoreboard.atlas;
+package de.atlasmc.scoreboard.player;
 
 import java.util.HashMap;
 
