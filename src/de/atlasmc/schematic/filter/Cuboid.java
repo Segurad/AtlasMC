@@ -1,9 +1,12 @@
 package de.atlasmc.schematic.filter;
 
+import java.util.List;
+
 import de.atlasmc.Material;
 import de.atlasmc.SimpleLocation;
-import de.atlasmc.schematic.SchematicBlock;
-import de.atlasmc.schematic.SchematicObject;
+import de.atlasmc.block.data.BlockData;
+import de.atlasmc.schematic.Schematic;
+import de.atlasmc.util.Pair;
 
 public class Cuboid implements Filter {
 
@@ -20,12 +23,12 @@ public class Cuboid implements Filter {
 	}
 
 	@Override
-	public SchematicObject[][][] apply(SchematicObject[][][] objects) {
-		return apply(objects, new SimpleLocation(0, 0, 0), new SimpleLocation(widhtx, height, widhtz), type);
+	public Pair<List<BlockData>, short[][][]> apply(Schematic schematic) {
+		return apply(schematic, new SimpleLocation(0, 0, 0), new SimpleLocation(widhtx, height, widhtz), type);
 	}
 
-	protected SchematicObject[][][] apply(SchematicObject[][][] blocks, SimpleLocation start,
-			SimpleLocation end, Material material) {
+	protected Pair<List<BlockData>, short[][][]> apply(Schematic schematic, SimpleLocation start, SimpleLocation end, Material material) {
+		final short[][][] data = schematic.getMapings();
 		for (int x = start.getBlockX(); x < end.getBlockX(); x++) {
 			for (int y = start.getBlockY(); x < end.getBlockY(); y++) {
 				for (int z = start.getBlockZ(); x < end.getBlockZ(); z++) {

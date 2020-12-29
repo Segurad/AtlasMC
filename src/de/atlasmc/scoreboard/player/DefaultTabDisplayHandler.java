@@ -66,7 +66,7 @@ final class DefaultTabDisplayHandler implements TabDisplayHandler {
 		final Team t = sb.getEntryTeam(board.getPlayer().getName());
 		final HashMap<Option, OptionStatus> map = new HashMap<>();
 		if (t == null) return map;
-		for (Option o : Option.values()) {
+		for (Option o : Option.getMaterials()) {
 			map.put(o, t.getOption(o));
 		}
 		return map;

@@ -9,6 +9,10 @@ public class Validate {
 	public static void isTrue(boolean value, String msg) {
 		if (value == false) throw new IllegalArgumentException(msg);
 	}
+	
+	public static void isFalse(boolean value, String msg) {
+		if (value == true) throw new IllegalArgumentException(msg);
+	}
 
 	public static void isNumber(String num, String msg) {
 		if (!NumberConversion.isNumber(num)) throw new IllegalArgumentException(msg);

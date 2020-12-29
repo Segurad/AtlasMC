@@ -3,6 +3,7 @@ package de.atlasmc;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import de.atlasmc.block.data.Ageable;
 import de.atlasmc.block.data.AnaloguePowerable;
@@ -92,11 +93,12 @@ import de.atlasmc.inventory.meta.MapMeta;
 import de.atlasmc.inventory.meta.PotionMeta;
 import de.atlasmc.inventory.meta.SuspiciousStewMeta;
 import de.atlasmc.inventory.meta.TropicalFishBucketMeta;
+import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.NBT;
 
 public class Material {
 	
-	private static final HashMap<String, Material> BY_NAME;
+	private static final List<Material> REGISTRI;
 	private static final HashMap<Material, MetaDataFactory> META_FACTORYS;
 	private static short iid;
 	
@@ -1175,9 +1177,9 @@ public class Material {
 	RESPAWN_ANCHOR;
 	
 	static {
-		BY_NAME = new HashMap<String, Material>();
+		REGISTRI = new ArrayList<Material>();
 		META_FACTORYS = new HashMap<Material, MetaDataFactory>();
-		MetaDataFactory AIR_MDF = new ClassMetaDataFactory(null, null, null, null),
+		MetaDataFactory AIR_MDF = new ClassMetaDataFactory(null, null, BlockData.class, null),
 		SNOWABLE_MDF = new ClassMetaDataFactory(Snowable.class, null),
 		SAPLING_MDF = new ClassMetaDataFactory(Sapling.class, null),
 		LEVELLED_MDF = new ClassMetaDataFactory(Levelled.class, null),
@@ -1266,9 +1268,9 @@ public class Material {
 		SUSPICIOUS_STEW_MDF = new ClassMetaDataFactory(SuspiciousStewMeta.class, null, null, null);
 		
 		AIR = c("AIR", 0, AIR_MDF);
-		VOID_AIR = new Material("VOID_AIR", false, (short) 9669, (byte) 1, AIR_MDF);
-		CAVE_AIR = new Material("CAVE_AIR", false, (short) 9670, (byte) 1, AIR_MDF);
-		BUBBLE_COLUMN = new Material("BUBBLE_COLUMN", false, (short) 9571, (byte) 1, BUBBLE_COLUMN_MDF);
+		VOID_AIR = new Material(0, "VOID_AIR", false, (short) 9669, (byte) 1, AIR_MDF);
+		CAVE_AIR = new Material(0, "CAVE_AIR", false, (short) 9670, (byte) 1, AIR_MDF);
+		BUBBLE_COLUMN = new Material(0, "BUBBLE_COLUMN", false, (short) 9571, (byte) 1, BUBBLE_COLUMN_MDF);
 		STONE = c("STONE", 1);
 		GRANITE = c("GRANITE", 2);
 		POLISHED_GRANITE = c("POLISHED_GRANITE", 3);
@@ -1298,8 +1300,8 @@ public class Material {
 		ACACIA_SAPLING = c("ACACIA_SAPLING", 29, SAPLING_MDF);
 		DARK_OAK_SAPLING = c("DARK_OAK_SAPLING", 31, SAPLING_MDF);
 		BEDROCK = c("BEDROCK", 33);
-		WATER = new Material("WATER", false, (short) 34, (byte) 1, LEVELLED_MDF);
-		LAVA = new Material("LAVA", false, (short) 50, (byte) 1, LEVELLED_MDF);
+		WATER = new Material(0, "WATER", false, (short) 34, (byte) 1, LEVELLED_MDF);
+		LAVA = new Material(0, "LAVA", false, (short) 50, (byte) 1, LEVELLED_MDF);
 		SAND = c("SAND", 66);
 		RED_SAND = c("RED_SAND", 67);
 		GRAVEL = c("GRAVEL", 68);
@@ -1363,11 +1365,11 @@ public class Material {
 		FERN = c("FERB", 1343);
 		DEAD_BUSH = c("DEAD_BUSH", 1344);
 		SEAGRASS = c("SEAGRASS", 1345);
-		TALL_SEAGRASS = new Material("TALL_SEAGRASS", false, (short) 1346, (byte) 1, BISECTED_MDF);
+		TALL_SEAGRASS = new Material(0, "TALL_SEAGRASS", false, (short) 1346, (byte) 1, BISECTED_MDF);
 		SEA_PICKLE = c("SEA_PICKLE", 9644, SEA_PICKLE_MDF);
 		PISTION = c("PISTION", 1348, PISTION_MDF);
-		PISTION_HEAD = new Material("PISTION_HEAD", false, (short) 1360, (byte) 1, PISTION_HEAD_MDF);
-		MOVING_PISTION = new Material("MOVING_PISTION", false, (short) 1400, (byte) 1, TECHNICAL_PISTION_MDF);
+		PISTION_HEAD = new Material(0, "PISTION_HEAD", false, (short) 1360, (byte) 1, PISTION_HEAD_MDF);
+		MOVING_PISTION = new Material(0, "MOVING_PISTION", false, (short) 1400, (byte) 1, TECHNICAL_PISTION_MDF);
 		WHITE_WOOL = c("WHITE_WOOL", 1384);
 		ORANGE_WOOL = c("ORANGE_WOOL", 1385);
 		MAGENTA_WOOL = c("MAGENTA_WOOL", 1386);
@@ -1405,14 +1407,14 @@ public class Material {
 		WARPED_ROOTS = c("WARPED_ROOTS", 14981);
 		NETHER_SPROUTS = c("NETHER_SPROUTS", 14982);
 		WEEPING_VINES = c("WEEPING_VINES", 14998, AGEABLE_MDF);
-		WEEPING_VINES_PLANT = new Material("WEEPING_VINES_PLANT", false, (short) 15024, (byte) 1);
+		WEEPING_VINES_PLANT = new Material(0, "WEEPING_VINES_PLANT", false, (short) 15024, (byte) 1);
 		TWISTING_VINES = c("TWISTING_VINES", 15025, AGEABLE_MDF);
-		TWISTING_VINES_PLANT = new Material("TWISTING_VINES_PLANT", false, (short) 15051, (byte) 1);
+		TWISTING_VINES_PLANT = new Material(0, "TWISTING_VINES_PLANT", false, (short) 15051, (byte) 1);
 		SUGAR_CANE = c("SUGAR_CANE", 3948, AGEABLE_MDF);
 		KELP = c("KELP", 9474, AGEABLE_MDF);
-		KELP_PLANT = new Material("KELP_PLANT", false, (short) 9500, (byte) 1);
+		KELP_PLANT = new Material(0, "KELP_PLANT", false, (short) 9500, (byte) 1);
 		BAMBOO = c("BAMBOO", 9656, BAMBOO_MDF);
-		BAMBOO_SAPLING = new Material("BAMBOO_SAPLING", false, (short) 9655, (byte) 1);
+		BAMBOO_SAPLING = new Material(0, "BAMBOO_SAPLING", false, (short) 9655, (byte) 1);
 		GOLD_BLOCK = c("GOLD_BLOCK", 1427);
 		IRON_BLOCK = c("IRON_BLOCK", 1428);
 		OAK_SLAB = c("OAK_SLAB", 8304, SLAB_MDF);
@@ -1449,9 +1451,9 @@ public class Material {
 		MOSSY_COBBLESTONE = c("MOSSY_COBBLESTONE", 1433);
 		OBSIDIAN = c("OBSIDIAN", 1433);
 		TORCH = c("TORCH", 1435);
-		WALL_TORCH = new Material("WALL_TORCH", false, (short) 1436, (byte) 1, DIRECTIONAL_MDF);
-		FIRE = new Material("FIRE", false, (short) 1440, (byte) 1, FIRE_MDF);
-		SOUL_FIRE = new Material("SOUL_FIRE", false, (short) 1952, (byte) 1, MetaDataFactory.DEFAULT);
+		WALL_TORCH = new Material(0, "WALL_TORCH", false, (short) 1436, (byte) 1, DIRECTIONAL_MDF);
+		FIRE = new Material(0, "FIRE", false, (short) 1440, (byte) 1, FIRE_MDF);
+		SOUL_FIRE = new Material(0, "SOUL_FIRE", false, (short) 1952, (byte) 1, MetaDataFactory.DEFAULT);
 		END_ROD = c("END_ROD", 9062, DIRECTIONAL_MDF);
 		CHORUS_PLANT = c("CHORUS_PLANT", 9068, MULTIPLE_FACING_MDF);
 		CHORUS_FLOWER = c("CHORUS_FLOWER", 9132, AGEABLE_MDF);
@@ -1486,7 +1488,7 @@ public class Material {
 		REDSTONE_WALL_TORCH = c("REDSTONE_WALL_TORCH", 3889, RED_WALL_TORCH_MDF);
 		SNOW = c("SNOW", 3921, SNOW_MDF);
 		ICE = c("ICE", 3929);
-		FROSTED_ICE = new Material("FROSTED_ICE", false, (short) 9253, (byte) 1, AGEABLE_MDF);
+		FROSTED_ICE = new Material(0, "FROSTED_ICE", false, (short) 9253, (byte) 1, AGEABLE_MDF);
 		SNOW_BLOCK = c("SNOW_BLOCK", 3930);
 		CACTUS = c("CACTUS", 3931, AGEABLE_MDF);
 		CLAY = c("CLAY", 3947);
@@ -1507,9 +1509,9 @@ public class Material {
 		BASALT = c("BASALT", 4002, ORIENTABLE_MDF);
 		POLISHED_BASALT = c("POLISHED_BASALT", 4005, ORIENTABLE_MDF);
 		SOUL_TORCH = c("SOUL_TORCH", 4008);
-		SOUL_WALL_TORCH = new Material("SOUL_WALL_TORCH", false, (short) 4009, (byte) 1, DIRECTIONAL_MDF);
+		SOUL_WALL_TORCH = new Material(0, "SOUL_WALL_TORCH", false, (short) 4009, (byte) 1, DIRECTIONAL_MDF);
 		GLOWSTONE = c("GLOWSTONE", 4013);
-		NETHER_PORTAL = new Material("NETHER_PORTAL", false, (short) 4014, (byte) 1, ORIENTABLE_MDF);
+		NETHER_PORTAL = new Material(0, "NETHER_PORTAL", false, (short) 4014, (byte) 1, ORIENTABLE_MDF);
 		JACK_O_LANTERN = c("JACK_O_LANTERN", 4020, DIRECTIONAL_MDF);
 		OAK_TRAPDOOR = c("OAK_TRAPDOOR", 4111, TRAP_DOOR_MDF);
 		SPRUCE_TRAPDOOR = c("SPRUCE_TRAPDOOR", 4175, TRAP_DOOR_MDF);
@@ -1536,10 +1538,10 @@ public class Material {
 		CHAIN = c("CHAIN", 4729, CHAIN_MDF);
 		GLASS_PANE = c("GLASS_PANE", 4735, FENCE_MDF);
 		MELON = c("MELON", 4767);
-		ATTACHED_MELON_STEM = new Material("ATTACHED_MELON_STEM", false, (short) 4768, (byte) 1, DIRECTIONAL_MDF);
-		ATTACHED_PUMPKIN_STEM = new Material("ATTACHED_PUMKIN_STEM", false, (short) 4772, (byte) 1, DIRECTIONAL_MDF);
-		MELON_STEM = new Material("MELON_STEM", false, (short) 4784, (byte) 1, AGEABLE_MDF);
-		PUMPKIN_STEM = new Material("PUMPKIN_STEM", false, (short) 4776, (byte) 1, AGEABLE_MDF);
+		ATTACHED_MELON_STEM = new Material(0, "ATTACHED_MELON_STEM", false, (short) 4768, (byte) 1, DIRECTIONAL_MDF);
+		ATTACHED_PUMPKIN_STEM = new Material(0, "ATTACHED_PUMKIN_STEM", false, (short) 4772, (byte) 1, DIRECTIONAL_MDF);
+		MELON_STEM = new Material(0, "MELON_STEM", false, (short) 4784, (byte) 1, AGEABLE_MDF);
+		PUMPKIN_STEM = new Material(0, "PUMPKIN_STEM", false, (short) 4776, (byte) 1, AGEABLE_MDF);
 		VINE = c("VINE", 4792, MULTIPLE_FACING_MDF);
 		OAK_FENCE_GATE = c("OAK_FENCE_GATE", 4825, GATE_MDF);
 		SPRUCE_FENCE_GATE = c("SPRUCE_FENCE_GATE", 8422, GATE_MDF);
@@ -1561,17 +1563,17 @@ public class Material {
 		ENCHANTING_TABLE = c("ENCHANTING_TABLE", 5136);
 		END_PORTAL_FRAME = c("END_PORTAL_FRAME", 5150, END_PORTAL_FRAME_MDF);
 		END_PORTAL = c("END_PORTAL", 5149);
-		END_GATEWAY = new Material("END_GATEWAY", false, (short) 9228, (byte) 1);
+		END_GATEWAY = new Material(0, "END_GATEWAY", false, (short) 9228, (byte) 1);
 		END_STONE = c("END_STONE", 5158);
 		END_STONE_BRICKS = c("END_STONE_BRICKS", 9222);
 		DRAGON_EGG = c("DRAGON_EGG", 5159);
 		REDSTONE_LAMP = c("REDSTONE_LAMP", 5160);
-		COCOA = new Material("COCOA", false, (short) 5162, (byte) 1, COCOA_MDF);
+		COCOA = new Material(0, "COCOA", false, (short) 5162, (byte) 1, COCOA_MDF);
 		SANDSTONE_STAIRS = c("SANDSTONE_STAIRS", 5174, STAIRS_MDF);
 		EMERALD_ORE = c("EMERALD_ORE", 5254);
 		ENDER_CHEST = c("ENDER_CHEST", 5255, ENDER_CHEST_MDF);
 		TRIPWIRE_HOOK = c("TRIPWIRE_HOOK", 5263, TRIPWIRE_HOOK_MDF);
-		TRIPWIRE = new Material("TRIPWIRE", false, (short) 5279, (byte) 1, TRIPWIRE_MDF);
+		TRIPWIRE = new Material(0, "TRIPWIRE", false, (short) 5279, (byte) 1, TRIPWIRE_MDF);
 		EMERALD_BLOCK = c("EMERALD_BLOCK", 5407);
 		SPRUCE_STAIRS = c("SPRUCE_STAIRS", 5408, STAIRS_MDF);
 		BIRCH_STAIRS = c("BIRCH_STAIRS", 5488, STAIRS_MDF);
@@ -1786,7 +1788,7 @@ public class Material {
 		PURPLE_CONCRETE_POWDER = c("PURPLE_CONCRETE_POWDER", 9468);
 		BLUE_CONCRETE_POWDER = c("BLUE_CONCRETE_POWDER", 9469);
 		BROWN_CONCRETE_POWDER = c("BROWN_CONCRETE_POWDER", 9470);
-		GREEN_CONCRETE_POWDER = c("CYAN_CONCRETE_POWDER", 9471);
+		GREEN_CONCRETE_POWDER = c("GREEN_CONCRETE_POWDER", 9471);
 		RED_CONCRETE_POWDER = c("RED_CONCRETE_POWDER", 9472);
 		BLACK_CONCRETE_POWDER = c("BLACK_CONCRETE_POWDER", 9473);
 		TURTLE_EGG = c("TURTLE_EGG", 9502, TURTLE_EGG_MDF);
@@ -1820,16 +1822,16 @@ public class Material {
 		DEAD_BUBBLE_CORAL_FAN = c("DEAD_BUBBLE_CORAL_FAN", 9548, WATERLOGGED_MDF);
 		DEAD_FIRE_CORAL_FAN = c("DEAD_FIRE_CORAL_FAN", 9550, WATERLOGGED_MDF);
 		DEAD_HORN_CORAL_FAN = c("DEAD_HORN_CORAL_FAN", 9552, WATERLOGGED_MDF);
-		TUBE_CORAL_WALL_FAN = new Material("TUBE_CORAL_WALL_FAN", false, (short) 9604, (byte) 1, CORAL_WALL_FAN_MDF);
-		BRAIN_CORAL_WALL_FAN = new Material("BRAIN_CORAL_WALL_FAN", false, (short) 9612, (byte) 1, CORAL_WALL_FAN_MDF);
-		BUBBLE_CORAL_WALL_FAN = new Material("BUBBLE_CORAL_WALL_FAN", false, (short) 9620, (byte) 1, CORAL_WALL_FAN_MDF);
-		FIRE_CORAL_WALL_FAN = new Material("FIRE_CORAL_WALL_FAN", false, (short) 9628, (byte) 1, CORAL_WALL_FAN_MDF);
-		HORN_CORAL_WALL_FAN = new Material("HORN_CORAL_WALL_FAN", false, (short) 9636, (byte) 1, CORAL_WALL_FAN_MDF);
-		DEAD_TUBE_CORAL_WALL_FAN = new Material("DEAD_TUBE_CORAL_WALL_FAN", false, (short) 9564, (byte) 1, CORAL_WALL_FAN_MDF);
-		DEAD_BRAIN_CORAL_WALL_FAN = new Material("DEAD_BRAIN_CORAL_WALL_FAN", false, (short) 9572, (byte) 1, CORAL_WALL_FAN_MDF);
-		DEAD_BUBBLE_CORAL_WALL_FAN = new Material("DEAD_BUBBLE_CORAL_WALL_FAN", false, (short) 9580, (byte) 1, CORAL_WALL_FAN_MDF);
-		DEAD_FIRE_CORAL_WALL_FAN = new Material("DEAD_FIRE_CORAL_WALL_FAN", false, (short) 9588, (byte) 1, CORAL_WALL_FAN_MDF);
-		DEAD_HORN_CORAL_WALL_FAN = new Material("DEAD_HORN_CORAL_WALL_FAN", false, (short) 9596, (byte) 1, CORAL_WALL_FAN_MDF);
+		TUBE_CORAL_WALL_FAN = new Material(0, "TUBE_CORAL_WALL_FAN", false, (short) 9604, (byte) 1, CORAL_WALL_FAN_MDF);
+		BRAIN_CORAL_WALL_FAN = new Material(0, "BRAIN_CORAL_WALL_FAN", false, (short) 9612, (byte) 1, CORAL_WALL_FAN_MDF);
+		BUBBLE_CORAL_WALL_FAN = new Material(0, "BUBBLE_CORAL_WALL_FAN", false, (short) 9620, (byte) 1, CORAL_WALL_FAN_MDF);
+		FIRE_CORAL_WALL_FAN = new Material(0, "FIRE_CORAL_WALL_FAN", false, (short) 9628, (byte) 1, CORAL_WALL_FAN_MDF);
+		HORN_CORAL_WALL_FAN = new Material(0, "HORN_CORAL_WALL_FAN", false, (short) 9636, (byte) 1, CORAL_WALL_FAN_MDF);
+		DEAD_TUBE_CORAL_WALL_FAN = new Material(0, "DEAD_TUBE_CORAL_WALL_FAN", false, (short) 9564, (byte) 1, CORAL_WALL_FAN_MDF);
+		DEAD_BRAIN_CORAL_WALL_FAN = new Material(0, "DEAD_BRAIN_CORAL_WALL_FAN", false, (short) 9572, (byte) 1, CORAL_WALL_FAN_MDF);
+		DEAD_BUBBLE_CORAL_WALL_FAN = new Material(0, "DEAD_BUBBLE_CORAL_WALL_FAN", false, (short) 9580, (byte) 1, CORAL_WALL_FAN_MDF);
+		DEAD_FIRE_CORAL_WALL_FAN = new Material(0, "DEAD_FIRE_CORAL_WALL_FAN", false, (short) 9588, (byte) 1, CORAL_WALL_FAN_MDF);
+		DEAD_HORN_CORAL_WALL_FAN = new Material(0, "DEAD_HORN_CORAL_WALL_FAN", false, (short) 9596, (byte) 1, CORAL_WALL_FAN_MDF);
 		BLUE_ICE = c("BLUE_ICE", 9652);
 		CONDUIT = c("CONDUIT", 9653, WATERLOGGED_MDF);
 		POLISHED_GRANITE_STAIRS = c("POLISHED_GRANITE_STAIRS", 9673, STAIRS_MDF);
@@ -1905,7 +1907,7 @@ public class Material {
 		IRON_PICKAXE = i("IRON_PICKAXE", 1, DAMAGEABLE_MDF);
 		IRON_AXE = i("IRON_AXE", 1, DAMAGEABLE_MDF);
 		IRON_HOE = i("IRON_HOE", 1, DAMAGEABLE_MDF);
-		DIAMOND_SWORD = i("DIAMOND_HOE", 1, DAMAGEABLE_MDF);
+		DIAMOND_SWORD = i("DIAMOND_SWORD", 1, DAMAGEABLE_MDF);
 		DIAMOND_SHOVEL = i("DIAMOND_SHOVEL", 1, DAMAGEABLE_MDF);
 		DIAMOND_PICKAXE = i("DIAMOND_PICKAXE", 1, DAMAGEABLE_MDF);
 		DIAMOND_AXE = i("DIAMOND_AXE", 1, DAMAGEABLE_MDF);
@@ -1962,14 +1964,14 @@ public class Material {
 		DARK_OAK_SIGN = c("DARK_OAK_SIGN", 3541, 16, SIGN_MDF);
 		CRIMSON_SIGN = c("CRIMSON_SIGN", 15663, 16, SIGN_MDF);
 		WARPED_SIGN = c("WARPED_SIGN", 15695, 16, SIGN_MDF);
-		OAK_WALL_SIGN = new Material("OAK_WALL_SIGN", false, (short) 3735, (byte) 1, WALL_SIGN_MDF);
-		SPRUCE_WALL_SIGN = new Material("SPRUCE_WALL_SIGN", false, (short) 3743, (byte) 1, WALL_SIGN_MDF);
-		BIRCH_WALL_SIGN = new Material("BIRCH_WALL_SIGN", false, (short) 3751, (byte) 1, WALL_SIGN_MDF);
-		JUNGLE_WALL_SIGN = new Material("JUNGLE_WALL_SIGN", false, (short) 3759, (byte) 1, WALL_SIGN_MDF);
-		ACACIA_WALL_SIGN = new Material("ACACIA_WALL_SIGN", false, (short) 3767, (byte) 1, WALL_SIGN_MDF);
-		DARK_OAK_WALL_SIGN = new Material("DARK_OAK_WALL_SIGN", false, (short) 3775, (byte) 1, WALL_SIGN_MDF);
-		CRIMSON_WALL_SIGN = new Material("CRIMSON_WALL_SIGN", false, (short) 15727, (byte) 1, WALL_SIGN_MDF);
-		WARPED_WALL_SIGN = new Material("WARPED_WALL_SIGN", false, (short) 15735, (byte) 1, WALL_SIGN_MDF);
+		OAK_WALL_SIGN = new Material(0, "OAK_WALL_SIGN", false, (short) 3735, (byte) 1, WALL_SIGN_MDF);
+		SPRUCE_WALL_SIGN = new Material(0, "SPRUCE_WALL_SIGN", false, (short) 3743, (byte) 1, WALL_SIGN_MDF);
+		BIRCH_WALL_SIGN = new Material(0, "BIRCH_WALL_SIGN", false, (short) 3751, (byte) 1, WALL_SIGN_MDF);
+		JUNGLE_WALL_SIGN = new Material(0, "JUNGLE_WALL_SIGN", false, (short) 3759, (byte) 1, WALL_SIGN_MDF);
+		ACACIA_WALL_SIGN = new Material(0, "ACACIA_WALL_SIGN", false, (short) 3767, (byte) 1, WALL_SIGN_MDF);
+		DARK_OAK_WALL_SIGN = new Material(0, "DARK_OAK_WALL_SIGN", false, (short) 3775, (byte) 1, WALL_SIGN_MDF);
+		CRIMSON_WALL_SIGN = new Material(0, "CRIMSON_WALL_SIGN", false, (short) 15727, (byte) 1, WALL_SIGN_MDF);
+		WARPED_WALL_SIGN = new Material(0, "WARPED_WALL_SIGN", false, (short) 15735, (byte) 1, WALL_SIGN_MDF);
 		BUCKET = i("BUCKET", 16);
 		WATER_BUCKET = i("WATER_BUCKET", 1);
 		LAVA_BUCKET = i("LAVA_BUCKET", 1);
@@ -2139,54 +2141,54 @@ public class Material {
 		EMERALD = i("EMERALD");
 		ITEM_FRAME = i("ITEM_FRAME");
 		FLOWER_POT = c("FLOWER_POT", 6309);
-		POTTED_OAK_SAPLING = new Material("POTTED_OAK_SAPLING", false, (short) 6310, (byte) 0);
-		POTTED_SPRUCE_SAPLING = new Material("POTTED_SPRUCE_SAPLING", false, (short) 6311, (byte) 0);
-		POTTED_BIRCH_SAPLING = new Material("POTTED_BIRCH_SAPLING", false, (short) 6312, (byte) 0);
-		POTTED_JUNGLE_SAPLING = new Material("POTTED_JUNGLE_SAPLING", false, (short) 6313, (byte) 0);
-		POTTED_ACACIA_SAPLING = new Material("POTTED_ACACIA_SAPLING", false, (short) 6314, (byte) 0);
-		POTTED_DARK_OAK_SAPLING = new Material("POTTED_DARK_OAK_SAPLING", false, (short) 6315, (byte) 0);
-		POTTED_FERN = new Material("POTTED_DARK_OAK_SAPLING", false, (short) 6316, (byte) 0);
-		POTTED_DANDELION = new Material("POTTED_DANDELION", false, (short) 6317, (byte) 0);
-		POTTED_POPPY = new Material("POTTED_POPPY", false, (short) 6318, (byte) 0);
-		POTTED_BLUE_ORCHID = new Material("POTTED_BLUE_ORCHID", false, (short) 6319, (byte) 0);
-		POTTED_ALLIUM = new Material("POTTED_ALLIUM", false, (short) 6320, (byte) 0);
-		POTTED_AZURE_BLUET = new Material("POTTED_AZURE_BLUET", false, (short) 6321, (byte) 0);
-		POTTED_RED_TULIP = new Material("POTTED_RED_TULIP", false, (short) 6322, (byte) 0);
-		POTTED_ORANGE_TULIP = new Material("POTTED_ORANGE_TULIP", false, (short) 6323, (byte) 0);
-		POTTED_WHITE_TULIP = new Material("POTTED_WHITE_TULIP", false, (short) 6324, (byte) 0);
-		POTTED_PINK_TULIP = new Material("POTTED_PINK_TULIP", false, (short) 6325, (byte) 0);
-		POTTED_OXEYE_DAISY = new Material("POTTED_OXEYE_DAISY", false, (short) 6326, (byte) 0);
-		POTTED_CORNFLOWER = new Material("POTTED_CORNFLOWER", false, (short) 6327, (byte) 0);
-		POTTED_LILY_OF_THE_VALLEY = new Material("POTTED_LILY_OF_THE_VALLEY", false, (short) 6328, (byte) 0);
-		POTTED_WITHER_ROSE = new Material("POTTED_WITHER_ROSE", false, (short) 6329, (byte) 0);
-		POTTED_RED_MUSHROOM = new Material("POTTED_RED_MUSHROOM", false, (short) 6330, (byte) 0);
-		POTTED_BROWN_MUSHROOM = new Material("POTTED_BROWN_MUSHROOM", false, (short) 6331, (byte) 0);
-		POTTED_DEAD_BUSH = new Material("POTTED_DEAD_BUSH", false, (short) 6332, (byte) 0);
-		POTTED_CACTUS = new Material("POTTED_CACTUS", false, (short) 6333, (byte) 0);
-		POTTED_CRIMSON_FUNGUS = new Material("POTTED_CRIMSON_FUNGUS", false, (short) 15842, (byte) 0);
-		POTTED_WARPED_FUNGUS = new Material("POTTED_WARPED_FUNGUS", false, (short) 15843, (byte) 0);
-		POTTED_CRIMSON_ROOTS = new Material("POTTED_CRIMSON_ROOTS", false, (short) 15844, (byte) 0);
-		POTTED_WARPED_ROOTS = new Material("POTTED_WARPED_ROOTS", false, (short) 15845, (byte) 0);
+		POTTED_OAK_SAPLING = new Material(0, "POTTED_OAK_SAPLING", false, (short) 6310, (byte) 0);
+		POTTED_SPRUCE_SAPLING = new Material(0, "POTTED_SPRUCE_SAPLING", false, (short) 6311, (byte) 0);
+		POTTED_BIRCH_SAPLING = new Material(0, "POTTED_BIRCH_SAPLING", false, (short) 6312, (byte) 0);
+		POTTED_JUNGLE_SAPLING = new Material(0, "POTTED_JUNGLE_SAPLING", false, (short) 6313, (byte) 0);
+		POTTED_ACACIA_SAPLING = new Material(0, "POTTED_ACACIA_SAPLING", false, (short) 6314, (byte) 0);
+		POTTED_DARK_OAK_SAPLING = new Material(0, "POTTED_DARK_OAK_SAPLING", false, (short) 6315, (byte) 0);
+		POTTED_FERN = new Material(0, "POTTED_FERN", false, (short) 6316, (byte) 0);
+		POTTED_DANDELION = new Material(0, "POTTED_DANDELION", false, (short) 6317, (byte) 0);
+		POTTED_POPPY = new Material(0, "POTTED_POPPY", false, (short) 6318, (byte) 0);
+		POTTED_BLUE_ORCHID = new Material(0, "POTTED_BLUE_ORCHID", false, (short) 6319, (byte) 0);
+		POTTED_ALLIUM = new Material(0, "POTTED_ALLIUM", false, (short) 6320, (byte) 0);
+		POTTED_AZURE_BLUET = new Material(0, "POTTED_AZURE_BLUET", false, (short) 6321, (byte) 0);
+		POTTED_RED_TULIP = new Material(0, "POTTED_RED_TULIP", false, (short) 6322, (byte) 0);
+		POTTED_ORANGE_TULIP = new Material(0, "POTTED_ORANGE_TULIP", false, (short) 6323, (byte) 0);
+		POTTED_WHITE_TULIP = new Material(0, "POTTED_WHITE_TULIP", false, (short) 6324, (byte) 0);
+		POTTED_PINK_TULIP = new Material(0, "POTTED_PINK_TULIP", false, (short) 6325, (byte) 0);
+		POTTED_OXEYE_DAISY = new Material(0, "POTTED_OXEYE_DAISY", false, (short) 6326, (byte) 0);
+		POTTED_CORNFLOWER = new Material(0, "POTTED_CORNFLOWER", false, (short) 6327, (byte) 0);
+		POTTED_LILY_OF_THE_VALLEY = new Material(0, "POTTED_LILY_OF_THE_VALLEY", false, (short) 6328, (byte) 0);
+		POTTED_WITHER_ROSE = new Material(0, "POTTED_WITHER_ROSE", false, (short) 6329, (byte) 0);
+		POTTED_RED_MUSHROOM = new Material(0, "POTTED_RED_MUSHROOM", false, (short) 6330, (byte) 0);
+		POTTED_BROWN_MUSHROOM = new Material(0, "POTTED_BROWN_MUSHROOM", false, (short) 6331, (byte) 0);
+		POTTED_DEAD_BUSH = new Material(0, "POTTED_DEAD_BUSH", false, (short) 6332, (byte) 0);
+		POTTED_CACTUS = new Material(0, "POTTED_CACTUS", false, (short) 6333, (byte) 0);
+		POTTED_CRIMSON_FUNGUS = new Material(0, "POTTED_CRIMSON_FUNGUS", false, (short) 15842, (byte) 0);
+		POTTED_WARPED_FUNGUS = new Material(0, "POTTED_WARPED_FUNGUS", false, (short) 15843, (byte) 0);
+		POTTED_CRIMSON_ROOTS = new Material(0, "POTTED_CRIMSON_ROOTS", false, (short) 15844, (byte) 0);
+		POTTED_WARPED_ROOTS = new Material(0, "POTTED_WARPED_ROOTS", false, (short) 15845, (byte) 0);
 		CARROT = i("CARROT");
-		CARROTS = new Material("CARROTS", false, (short) 6334, (byte) 0, AGEABLE_MDF);
+		CARROTS = new Material(0, "CARROTS", false, (short) 6334, (byte) 0, AGEABLE_MDF);
 		POTATO = i("POTATO");
-		POTATOES = new Material("POTATOES", false, (short) 6342, (byte) 0, AGEABLE_MDF);
+		POTATOES = new Material(0, "POTATOES", false, (short) 6342, (byte) 0, AGEABLE_MDF);
 		BAKED_POTATO = i("BAKED_POTATO");
 		POISONOUS_POTATO = i("POISONOUS_POTATO");
 		MAP = i("MAP");
 		GOLDEN_CARROT = i("GOLDEN_CARROT");
 		SKELETON_SKULL = c("SKELETON_SKULL", 6494, ROTATABLE_MDF);
-		SKELETON_WALL_SKULL = new Material("SKELETON_WALL_SKULL", false, (short) 6510, (byte) 0, DIRECTIONAL_MDF);
+		SKELETON_WALL_SKULL = new Material(0, "SKELETON_WALL_SKULL", false, (short) 6510, (byte) 0, DIRECTIONAL_MDF);
 		WITHER_SKELETON_SKULL = c("WITHER_SKELETON_SKULL", 6514, ROTATABLE_MDF);
-		WITHER_SKELETON_WALL_SKULL = new Material("WITHER_SKELETON_WALL_SKULL", false, (short) 6530, (byte) 0, DIRECTIONAL_MDF);
+		WITHER_SKELETON_WALL_SKULL = new Material(0, "WITHER_SKELETON_WALL_SKULL", false, (short) 6530, (byte) 0, DIRECTIONAL_MDF);
 		PLAYER_HEAD = c("PLAYER_HEAD", 6554, ROTATABLE_MDF);
-		PLAYER_WALL_HEAD = new Material("PLAYER_WALL_HEAD", false, (short) 6570, (byte) 0, DIRECTIONAL_MDF);
+		PLAYER_WALL_HEAD = new Material(0, "PLAYER_WALL_HEAD", false, (short) 6570, (byte) 0, DIRECTIONAL_MDF);
 		ZOMBIE_HEAD = c("ZOMBIE_HEAD", 6534, ROTATABLE_MDF);
-		ZOMBIE_WALL_HEAD = new Material("ZOMBIE_WALL_HEAD", false, (short) 6550, (byte) 0, DIRECTIONAL_MDF);
+		ZOMBIE_WALL_HEAD = new Material(0, "ZOMBIE_WALL_HEAD", false, (short) 6550, (byte) 0, DIRECTIONAL_MDF);
 		CREEPER_HEAD = c("CREEPER_HEAD", 6574, ROTATABLE_MDF);
-		CREEPER_WALL_HEAD = new Material("CREEPER_WALL_HEAD", false, (short) 6590, (byte) 0, DIRECTIONAL_MDF);
+		CREEPER_WALL_HEAD = new Material(0, "CREEPER_WALL_HEAD", false, (short) 6590, (byte) 0, DIRECTIONAL_MDF);
 		DRAGON_HEAD = c("DRAGON_HEAD", 6594, ROTATABLE_MDF);
-		DRAGON_WALL_HEAD = new Material("DRAGON_WALL_HEAD", false, (short) 6610, (byte) 0, DIRECTIONAL_MDF);
+		DRAGON_WALL_HEAD = new Material(0, "DRAGON_WALL_HEAD", false, (short) 6610, (byte) 0, DIRECTIONAL_MDF);
 		CARROT_ON_A_STICK = i("CARROT_ON_A_STICK", 1, DAMAGEABLE_MDF);
 		WARPED_FUNGUS_ON_A_STICK = i("WARPED_FUNGUS_ON_A_STICK", 1, DAMAGEABLE_MDF);
 		NETHER_STAR = i("NETHER_STAR");
@@ -2231,27 +2233,27 @@ public class Material {
 		GREEN_BANNER = c("GREEN_BANNER", 8109, ROTATABLE_MDF);
 		RED_BANNER = c("RED_BANNER", 8125, ROTATABLE_MDF);
 		BLACK_BANNER = c("BLACK_BANNER", 8141, ROTATABLE_MDF);
-		WHITE_WALL_BANNER = new Material("WHITE_WALL_BANNER", false, (short) 8157, (byte) 0, DIRECTIONAL_MDF);
-		ORANGE_WALL_BANNER = new Material("ORANGE_WALL_BANNER", false, (short) 8161, (byte) 0, DIRECTIONAL_MDF);
-		MAGENTA_WALL_BANNER = new Material("MAGENTA_WALL_BANNER", false, (short) 8165, (byte) 0, DIRECTIONAL_MDF);
-		LIGHT_BLUE_WALL_BANNER = new Material("LIGHT_BLUE_WALL_BANNER", false, (short) 8169, (byte) 0, DIRECTIONAL_MDF);
-		YELLOW_WALL_BANNER = new Material("YELLOW_WALL_BANNER", false, (short) 8173, (byte) 0, DIRECTIONAL_MDF);
-		LIME_WALL_BANNER = new Material("LIME_WALL_BANNER", false, (short) 8177, (byte) 0, DIRECTIONAL_MDF);
-		PINK_WALL_BANNER = new Material("PINK_WALL_BANNER", false, (short) 8181, (byte) 0, DIRECTIONAL_MDF);
-		GRAY_WALL_BANNER = new Material("GRAY_WALL_BANNER", false, (short) 8185, (byte) 0, DIRECTIONAL_MDF);
-		LIGHT_GRAY_WALL_BANNER = new Material("LIGHT_GRAY_WALL_BANNER", false, (short) 8189, (byte) 0, DIRECTIONAL_MDF);
-		CYAN_WALL_BANNER = new Material("CYAN_WALL_BANNER", false, (short) 8193, (byte) 0, DIRECTIONAL_MDF);
-		PURPLE_WALL_BANNER = new Material("PURPLE_WALL_BANNER", false, (short) 8197, (byte) 0, DIRECTIONAL_MDF);
-		BLUE_WALL_BANNER = new Material("BLUE_WALL_BANNER", false, (short) 8201, (byte) 0, DIRECTIONAL_MDF);
-		BROWN_WALL_BANNER = new Material("BROWN_WALL_BANNER", false, (short) 8205, (byte) 0, DIRECTIONAL_MDF);
-		GREEN_WALL_BANNER = new Material("GREEN_WALL_BANNER", false, (short) 8209, (byte) 0, DIRECTIONAL_MDF);
-		RED_WALL_BANNER = new Material("RED_WALL_BANNER", false, (short) 8213, (byte) 0, DIRECTIONAL_MDF);
-		BLACK_WALL_BANNER = new Material("BLACK_WALL_BANNER", false, (short) 8217, (byte) 0, DIRECTIONAL_MDF);
+		WHITE_WALL_BANNER = new Material(0, "WHITE_WALL_BANNER", false, (short) 8157, (byte) 0, DIRECTIONAL_MDF);
+		ORANGE_WALL_BANNER = new Material(0, "ORANGE_WALL_BANNER", false, (short) 8161, (byte) 0, DIRECTIONAL_MDF);
+		MAGENTA_WALL_BANNER = new Material(0, "MAGENTA_WALL_BANNER", false, (short) 8165, (byte) 0, DIRECTIONAL_MDF);
+		LIGHT_BLUE_WALL_BANNER = new Material(0, "LIGHT_BLUE_WALL_BANNER", false, (short) 8169, (byte) 0, DIRECTIONAL_MDF);
+		YELLOW_WALL_BANNER = new Material(0, "YELLOW_WALL_BANNER", false, (short) 8173, (byte) 0, DIRECTIONAL_MDF);
+		LIME_WALL_BANNER = new Material(0, "LIME_WALL_BANNER", false, (short) 8177, (byte) 0, DIRECTIONAL_MDF);
+		PINK_WALL_BANNER = new Material(0, "PINK_WALL_BANNER", false, (short) 8181, (byte) 0, DIRECTIONAL_MDF);
+		GRAY_WALL_BANNER = new Material(0, "GRAY_WALL_BANNER", false, (short) 8185, (byte) 0, DIRECTIONAL_MDF);
+		LIGHT_GRAY_WALL_BANNER = new Material(0, "LIGHT_GRAY_WALL_BANNER", false, (short) 8189, (byte) 0, DIRECTIONAL_MDF);
+		CYAN_WALL_BANNER = new Material(0, "CYAN_WALL_BANNER", false, (short) 8193, (byte) 0, DIRECTIONAL_MDF);
+		PURPLE_WALL_BANNER = new Material(0, "PURPLE_WALL_BANNER", false, (short) 8197, (byte) 0, DIRECTIONAL_MDF);
+		BLUE_WALL_BANNER = new Material(0, "BLUE_WALL_BANNER", false, (short) 8201, (byte) 0, DIRECTIONAL_MDF);
+		BROWN_WALL_BANNER = new Material(0, "BROWN_WALL_BANNER", false, (short) 8205, (byte) 0, DIRECTIONAL_MDF);
+		GREEN_WALL_BANNER = new Material(0, "GREEN_WALL_BANNER", false, (short) 8209, (byte) 0, DIRECTIONAL_MDF);
+		RED_WALL_BANNER = new Material(0, "RED_WALL_BANNER", false, (short) 8213, (byte) 0, DIRECTIONAL_MDF);
+		BLACK_WALL_BANNER = new Material(0, "BLACK_WALL_BANNER", false, (short) 8217, (byte) 0, DIRECTIONAL_MDF);
 		END_CRYSTAL = i("END_CRYSTAL");
 		CHORUS_FRUIT = i("CHORUS_FRUIT");
 		POPPED_CHORUS_FRUIT = i("POPPED_CHORUS_FRUIT");
 		BEETROOT = i("BEETROOT");
-		BEETROOTS = new Material("BEETROOTS", false, (short) 9223, (byte) 0, AGEABLE_MDF);
+		BEETROOTS = new Material(0, "BEETROOTS", false, (short) 9223, (byte) 0, AGEABLE_MDF);
 		BEETROOT_SOUP = i("BEETROOT_SOUP");
 		DRAGON_BREATH = i("DRAGON_BREATH");
 		SPLASH_POTION = i("SPLASH_POTION", 64, POTION_MDF);
@@ -2307,7 +2309,7 @@ public class Material {
 		STONECUTTER = c("STONECUTTER", 14854, DIRECTIONAL_MDF);
 		BELL = c("BELL", 14858, BELL_MDF);
 		LANTERN = c("LANTERN", 14890, LANTERN_MDF);
-		SOUL_LANTERN = c("LANTERN", 14894, LANTERN_MDF);
+		SOUL_LANTERN = c("SOUL_LANTERN", 14894, LANTERN_MDF);
 		SWEET_BERRIES = i("SWEET_BERRIES");
 		SWEET_BERRY_BUSH = c("SWEET_BERRY_BUSH", 14962, AGEABLE_MDF);
 		CAMPFIRE = c("CAMPFIRE", 14898, CAMPFIRE_MDF);
@@ -2334,37 +2336,37 @@ public class Material {
 		CHISELED_POLISHED_BLACKSTONE = c("CHISELED_BLACKSTONE", 16261);
 		POLISHED_BLACKSTONE_BRICKS = c("POLISHED_BLACKSTONE_BRICKS", 16259);
 		POLISHED_BLACKSTONE_BRICK_SLAB = c("POLISHED_BLACKSTONE_BRICK_SLAB", 16262, SLAB_MDF);
-		POLISHED_BLACKSTONE_BRICK_STAIRS = c("POLISHED_BLACKSTONE_STAIRS", 16268, STAIRS_MDF);
+		POLISHED_BLACKSTONE_BRICK_STAIRS = c("POLISHED_BLACKSTONE_BRICK_STAIRS", 16268, STAIRS_MDF);
 		CRACKED_POLISHED_BLACKSTONE_BRICKS = c("CRACKED_POLISHED_BLACKSTONE_BRICKS", 16260);
 		RESPAWN_ANCHOR = c("RESPAWN_ANCHOR", 15837, RESPAWN_ANCHOR_MDF);
 	}
 	
 	private static Material c(String name, int blockID) {
-		return new Material(name, (short) blockID, (byte) 64, null);
+		return new Material(0, name, (short) blockID, (byte) 64, null);
 	}
 	
 	private static Material c(String name, int blockID, MetaDataFactory mdf) {
-		return new Material(name, (short) blockID, (byte) 64, mdf);
+		return new Material(0, name, (short) blockID, (byte) 64, mdf);
 	}
 	
 	private static Material c(String name, int blockID, int amount, MetaDataFactory mdf) {
-		return new Material(name, (short) blockID, (byte) amount, mdf);
+		return new Material(0, name, (short) blockID, (byte) amount, mdf);
 	}
 	
 	private static Material i(String name) {
-		return new Material(name, (byte) 64, null);
+		return new Material(0, name, (byte) 64, null);
 	}
 	
 	private static Material i(String name, int amount) {
-		return new Material(name, (byte) amount, null);
+		return new Material(0, name, (byte) amount, null);
 	}
 	
 	private static Material i(String name, int amount, MetaDataFactory mdf) {
-		return new Material(name, (byte) amount, mdf);
+		return new Material(0, name, (byte) amount, mdf);
 	}
 	
 	private final String name;
-	private final short itemID, bid;
+	private final short itemID, bid, namespace;
 	private final byte max;
 	
 	/**
@@ -2374,39 +2376,43 @@ public class Material {
 	 * @param blockID the protocol BlockID or -1 if it has no Block
 	 * @param mdf null to use MetaDataFactory.DEFAULT
 	 */
-	public Material(String name, short itemID, short blockID, byte amount, MetaDataFactory mdf) {
+	public Material(int namespaceID, String name, short itemID, short blockID, byte amount, MetaDataFactory mdf) {
 		if (name == null) throw new IllegalArgumentException("Name can not be null!");
+		Validate.notNull(NamespacedKey.getNamespace(namespaceID), "Unknown namespace!");
 		this.name = name;
 		this.itemID = itemID;
 		this.bid = blockID;
 		this.max = amount;
+		this.namespace = (short) namespaceID;
 		registerMaterial();
 		setMetaDataFactory(this, mdf);
 	}
 	
-	public Material(String name, byte maxAmount, MetaDataFactory mdf) {
-		this(name, true, (short) -1, maxAmount, mdf);
+	public Material(int namespaceID, String name, byte maxAmount, MetaDataFactory mdf) {
+		this(namespaceID, name, true, (short) -1, maxAmount, mdf);
 	}
 	
-	public Material(String name, boolean hasItem, short blockID, byte maxAmount) {
-		this(name, hasItem, blockID, maxAmount, null);
+	public Material(int namespaceID, String name, boolean hasItem, short blockID, byte maxAmount) {
+		this(namespaceID, name, hasItem, blockID, maxAmount, null);
 	}
 	
-	public Material(String name, boolean hasItem, short blockID, byte maxAmount, MetaDataFactory mdf) {
+	public Material(int namespaceID, String name, boolean hasItem, short blockID, byte maxAmount, MetaDataFactory mdf) {
 		if (name == null) throw new IllegalArgumentException("Name can not be null!");
+		Validate.notNull(NamespacedKey.getNamespace(namespaceID), "Unknown namespace!");
 		this.name = name;
 		this.itemID = hasItem ? iid++ : -1;
 		this.bid = blockID;
 		this.max = maxAmount;
+		this.namespace = (short) namespaceID;
 		registerMaterial();
 		setMetaDataFactory(this, mdf);
 	}
 	
-	public Material(String name, short blockID, byte maxAmount, MetaDataFactory mdf) {
-		this(name, true, blockID, maxAmount, mdf);
+	public Material(int namespaceID, String name, short blockID, byte maxAmount, MetaDataFactory mdf) {
+		this(namespaceID, name, true, blockID, maxAmount, mdf);
 	}
 	
-	public String name() {
+	public String getName() {
 		return name.toUpperCase();
 	}
 	
@@ -2457,18 +2463,29 @@ public class Material {
 		return bid != -1;
 	}
 	
-	public static List<Material> values() {
-		return new ArrayList<Material>(BY_NAME.values());
+	public static List<Material> getMaterials() {
+		return new ArrayList<Material>(REGISTRI);
 	}
 	
-	protected final void registerMaterial() {
-		if (BY_NAME.containsValue(this)) throw new Error("Material already registered");
-		if (BY_NAME.containsKey(this.name())) throw new Error("Material with this name already registered");
-		BY_NAME.put(this.name(), this);
+	public short getNamespaceID() {
+		return namespace;
+	}
+	
+	public NamespacedKey getNamespacedKey() {
+		return new NamespacedKey(getNamespaceID(), getName());
+	}
+	
+	private final void registerMaterial() {
+		if (REGISTRI.contains(this)) throw new Error("Material already registered");
+		if (getMaterial(getNamespaceID(), getName()) != null) {
+			System.out.println(getName());
+			throw new Error("Material with this name already registered");
+		}
+		REGISTRI.add(this);
 	}
 	
 	public final void unregister() {
-		BY_NAME.remove(this.name());
+		REGISTRI.remove(this);
 		META_FACTORYS.remove(this);
 	}
 
@@ -2490,10 +2507,59 @@ public class Material {
 	}
 
 	public static Material getByItemID(int itemID) {
-		for (Material mat : BY_NAME.values()) {
+		for (Material mat : REGISTRI) {
 			if (mat.getItemID() == itemID) return mat;
 		}
 		return null;
+	}
+	
+	public static Material getMaterial(String name) {
+		Validate.notNull(name, "Name can not be null!");
+		if (name.contains(":")) {
+			String[] parts = name.split(":");
+			Validate.isTrue(parts.length == 2, "Illegal argument length!");
+			return getMaterial(parts[0], parts[1]);
+		}
+		for (Material mat : REGISTRI) {
+			if (mat.getName().equals(name)) return mat;
+		}
+		return null;
+	}
+	
+	public static Material getMaterial(String namespace, String name) {
+		int namespaceID = NamespacedKey.getNamespaceID(namespace);
+		Validate.isTrue(namespaceID != -1, "Unknown namespace!");
+		return getMaterial(namespaceID, name);
+	}
+	
+	public static Material getMaterial(NamespacedKey key) {
+		return getMaterial(key.getNamespaceID(), key.getKey());
+	}
+	
+	public static Material getMaterial(int namespaceID, String name) {
+		Validate.notNull(NamespacedKey.getNamespace(namespaceID), "Unknown namespace!");
+		for (Material mat : REGISTRI) {
+			if (mat.getNamespaceID() == namespaceID && mat.getName().equals(name)) return mat;
+		}
+		return null;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(bid, itemID, max, name, namespace);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Material other = (Material) obj;
+		return bid == other.bid && itemID == other.itemID && max == other.max && Objects.equals(name, other.name)
+				&& namespace == other.namespace;
 	}
 	
 }

@@ -56,7 +56,7 @@ public abstract class MetaDataFactory {
 		if (!material.isItem()) throw new IllegalArgumentException("Material is not a Item!");
 		if (meta == null) return metaPreConfig.remove(material);
 		if (!material.isValidMeta(meta))
-			throw new IllegalArgumentException("ItemMeta is not valid for Material: " + material.name());
+			throw new IllegalArgumentException("ItemMeta is not valid for Material: " + material.getName());
 		return metaPreConfig.put(material, meta);
 	}
 	
@@ -65,7 +65,7 @@ public abstract class MetaDataFactory {
 		if (!material.isBlock()) throw new IllegalArgumentException("Material is not a Block!");
 		if (data == null) return dataPreConfig.remove(material);
 		if (!material.isValidData(data))
-			throw new IllegalArgumentException("BlockData is not valid for Material: " + material.name());
+			throw new IllegalArgumentException("BlockData is not valid for Material: " + material.getName());
 		return dataPreConfig.put(material, data);
 	}
 }

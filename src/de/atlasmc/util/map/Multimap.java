@@ -24,4 +24,8 @@ public interface Multimap<K, V> {
 	
 	public void clear();
 
+	public boolean containsValue(Object value);
+	
+	public boolean containsKey(Object key);
+
 }

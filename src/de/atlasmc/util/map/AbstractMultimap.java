@@ -74,6 +74,19 @@ public abstract class AbstractMultimap<K, V> implements Multimap<K, V> {
 	public void clear() {
 		map.clear();
 	}
+	
+	@Override
+	public boolean containsValue(Object value) {
+		for (Collection<V> c : map.values()) {
+			if (c.contains(value)) return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean containsKey(Object key) {
+		return map.containsKey(key);
+	}
 
 	protected abstract Collection<V> createCollection();
 }

@@ -11,10 +11,10 @@ final class BlockEventHandler implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onPhysic(BlockPhysicsEvent e) {
-		World data = e.getBlock().getWorld();
-		if (data == null)
+		World world = e.getBlock().getWorld();
+		if (world == null)
 			return;
-		if (data.hasFlag(WorldFlag.DISABLE_BLOCKPHYSICS))
+		if (world.hasFlag(WorldFlag.DISABLE_BLOCKPHYSICS))
 			e.setCancelled(true);
 	}
 
