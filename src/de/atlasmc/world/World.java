@@ -11,12 +11,13 @@ import de.atlasmc.SoundCategory;
 import de.atlasmc.block.Block;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
-import de.atlasmc.server.AtlasServer;
+import de.atlasmc.io.atlasnetwork.server.AtlasServer;
 
 public interface World {
 
 	public List<Entity> getEntities();
 	public <T extends Entity> List<T> getEntitiesByClass(Class<T> clazz);
+
 	@SuppressWarnings("unchecked")
 	public List<Entity> getEntitesByClasses(Class<? extends Entity>... classes);
 

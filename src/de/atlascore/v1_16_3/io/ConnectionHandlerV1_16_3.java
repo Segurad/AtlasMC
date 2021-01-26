@@ -8,13 +8,15 @@ import java.net.Socket;
 import de.atlasmc.entity.Player;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.io.AbstractPacket;
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PlayerConnectionState;
-import de.atlasmc.io.ProtocolAdapter;
+import de.atlasmc.io.atlasnetwork.Proxy;
+import de.atlasmc.io.atlasnetwork.server.Server;
+import de.atlasmc.io.protocol.PlayerConnection;
+import de.atlasmc.io.protocol.PlayerConnectionState;
+import de.atlasmc.io.protocol.ProtocolAdapter;
 import de.atlasmc.util.ByteDataBuffer;
 
-public class ConnectionHandlerV1_16_3 implements ConnectionHandler {
+public class ConnectionHandlerV1_16_3 implements PlayerConnection {
 	
 	private final Socket socket;
 	private final ProtocolAdapter prot;
@@ -104,6 +106,24 @@ public class ConnectionHandlerV1_16_3 implements ConnectionHandler {
 	public void setState(PlayerConnectionState state) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Proxy getMainProxy() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Proxy getProxy() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Server getServer() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -50,11 +50,11 @@ import de.atlascore.v1_16_3.io.protocol.play.PacketInVehicleMoveV1_16_3;
 import de.atlascore.v1_16_3.io.protocol.play.PacketInWindowConfirmationV1_16_3;
 import de.atlascore.v1_16_3.io.protocol.play.PacketOutSetSlotV1_16_3;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
+import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutSetSlot;
 
-public class V1_16_3 implements de.atlasmc.io.ProtocolAdapter {
+public class V1_16_3 implements de.atlasmc.io.protocol.ProtocolAdapter {
 
 	public static final int version = 753;
 	
@@ -69,7 +69,7 @@ public class V1_16_3 implements de.atlasmc.io.ProtocolAdapter {
 	}
 
 	@Override
-	public ConnectionHandler createConnectionHandler(Socket socket) {
+	public PlayerConnection createConnectionHandler(Socket socket) {
 		return new ConnectionHandlerV1_16_3(socket, this);
 	}
 

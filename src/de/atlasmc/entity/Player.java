@@ -7,12 +7,12 @@ import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.io.ConnectionHandler;
+import de.atlasmc.io.atlasnetwork.server.AtlasPlayer;
+import de.atlasmc.io.atlasnetwork.server.AtlasServer;
+import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.scoreboard.Scoreboard;
-import de.atlasmc.server.AtlasServer;
-import de.atlasmc.server.ServerPlayer;
 
-public interface Player extends ServerPlayer, HumanEntity {
+public interface Player extends AtlasPlayer, HumanEntity {
 	
 	public AtlasServer getServer();
 
@@ -40,7 +40,7 @@ public interface Player extends ServerPlayer, HumanEntity {
 
 	public ItemStack getItemOnCursor();
 
-	public ConnectionHandler getConnection();
+	public PlayerConnection getConnection();
 
 	/**
 	 * 

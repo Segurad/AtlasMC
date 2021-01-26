@@ -3,9 +3,10 @@ package de.atlasmc;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.server.AtlasNetwork;
-import de.atlasmc.server.AtlasNode;
-import de.atlasmc.server.AtlasServer;
+import de.atlasmc.io.atlasnetwork.AtlasNetwork;
+import de.atlasmc.io.atlasnetwork.AtlasNode;
+import de.atlasmc.io.atlasnetwork.Proxy;
+import de.atlasmc.io.atlasnetwork.server.AtlasServer;
 
 public class Atlas implements AtlasNode {
 
@@ -29,6 +30,12 @@ public class Atlas implements AtlasNode {
 	
 	public List<AtlasServer> getServers() {
 		return new ArrayList<AtlasServer>(localServers);
+	}
+
+	@Override
+	public List<Proxy> getProxys() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

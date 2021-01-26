@@ -6,7 +6,6 @@ public interface Entity {
 
 	public boolean isOnFire();
 	public boolean isCrouching();
-	public boolean isUnused();
 	public boolean isSprinting();
 	public boolean isSwimming();
 	public boolean isInvisble();
