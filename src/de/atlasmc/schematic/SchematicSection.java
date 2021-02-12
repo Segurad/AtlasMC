@@ -1,5 +1,7 @@
 package de.atlasmc.schematic;
 
+import de.atlasmc.block.data.BlockData;
+
 /**
  * Represents a 16x16x16 storage-cube of a Schematic
  *
@@ -29,6 +31,9 @@ public interface SchematicSection {
 	 * @return the previous value
 	 */
 	public short setValue(short value, int x, int y, int z);
+	public void setBlock(BlockData data, int x, int y, int z);
+	public BlockData getBlock(int x, int y, int z);
+	public void set(BlockData data);
 	
 
 }

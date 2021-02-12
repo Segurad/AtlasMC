@@ -1,6 +1,7 @@
 package de.atlasmc;
 
 import de.atlasmc.block.Block;
+import de.atlasmc.block.data.BlockData;
 import de.atlasmc.world.World;
 
 public class Location extends SimpleLocation {
@@ -22,11 +23,15 @@ public class Location extends SimpleLocation {
 	}
 
 	public Block getBlock() {
-		return world.getBlock(this);
+		return world.getBlock(getBlockX(), getBlockY(), getBlockZ());
 	}
 	
 	public Location clone() {
 		return new Location(this);
+	}
+
+	public BlockData getBlockData() {
+		return world.getBlockData(getBlockX(), getBlockY(), getBlockZ());
 	}
 
 }

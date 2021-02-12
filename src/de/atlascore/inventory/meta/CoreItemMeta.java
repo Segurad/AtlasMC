@@ -37,7 +37,7 @@ public class CoreItemMeta implements ItemMeta {
 	private CompoundTag customTags;
 	
 	public CoreItemMeta(Material material) {
-
+		
 	}
 	
 	public CoreItemMeta clone() {

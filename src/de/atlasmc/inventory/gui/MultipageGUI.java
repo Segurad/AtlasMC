@@ -3,7 +3,6 @@ package de.atlasmc.inventory.gui;
 import de.atlascore.inventory.gui.CoreGUI;
 import de.atlasmc.Material;
 import de.atlasmc.event.inventory.InventoryClickEvent;
-import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.gui.component.ComponentHandler;
 import de.atlasmc.inventory.gui.component.ItemComponentHandler;
@@ -19,12 +18,12 @@ public class MultipageGUI extends CoreGUI {
 	private ItemStack inext = null, iback = null;
 	private final ItemStack air = new ItemStack(Material.AIR);
 	
-	public MultipageGUI(int next, int back, int compLenght, int compDepth, int maxpages) {
-		this(next, back, compLenght, compDepth, maxpages, 0, 0);
+	public MultipageGUI(String name, int back, int next, int compLenght, int compDepth, int maxpages) {
+		this(name, back, next, compLenght, compDepth, maxpages, 0, 0);
 	}
 	
-	public MultipageGUI(int next, int back, int compLenght, int compDepth, int maxpages, int compOffsetX, int compOffsetY) {
-		super();
+	public MultipageGUI(String name, int back, int next, int compLenght, int compDepth, int maxpages, int compOffsetX, int compOffsetY) {
+		super(9*6, name);
 		this.next = next;
 		this.back = back;
 		this.mltPageItems = new ItemPageComponent(compLenght, compDepth, maxpages);

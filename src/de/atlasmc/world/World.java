@@ -9,6 +9,7 @@ import de.atlasmc.SimpleLocation;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.block.Block;
+import de.atlasmc.block.data.BlockData;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.io.atlasnetwork.server.AtlasServer;
@@ -52,6 +53,7 @@ public interface World {
 	}
 	
 	public Block getBlock(int x, int y, int z);
+	public BlockData getBlockData(int x, int y, int z);
 	
 
 }

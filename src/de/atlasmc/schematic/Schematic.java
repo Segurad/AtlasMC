@@ -10,13 +10,13 @@ import de.atlasmc.Material;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.schematic.filter.Filter;
+import de.atlasmc.util.Array3DUtil;
 import de.atlasmc.util.Pair;
 import de.atlasmc.world.Region;
 
 public class Schematic {
 
 	private SchematicSection[][][] mappings;
-	private final List<BlockData> pallet;
 	private SimpleLocation sl;
 	private int rotation = 0;
 
@@ -25,28 +25,34 @@ public class Schematic {
 	}
 	
 	public Schematic(int widhtx, int height, int widhtz, BlockData defaultData) {
-		mappings = new short[widhtx][height][widhtz];
+		int x = widhtx/16 + widhtx%16 > 0 ? 1 : 0;
+		int y = height/16 + height%16 > 0 ? 1 : 0;
+		int z = widhtz/16 + widhtz%16 > 0 ? 1 : 0;
+		mappings = new SchematicSection[x][y][z];
 		sl = new SimpleLocation(0, 0, 0);
-		pallet = new ArrayList<>();
-		pallet.add(defaultData);
 	}
 	
 	public Schematic(Region region, Location center) {
-		this(region, center, Material.AIR.createBlockData());
-	}
-	
-	public Schematic(Region region, Location center, BlockData defaulBlockData) {
 		if (region == null) throw new IllegalArgumentException("Region can not be null");
 		if (center == null) throw new IllegalArgumentException("Location can not be null");
-		mappings = new short[(int) (region.getWidhtX() + 1)][(int) (region.getHeight() + 1)][(int) (region.getWidhtZ() + 1)];
-		pallet = new ArrayList<>();
-		pallet.add(defaulBlockData);
+		final int secX = region.getWidhtX()+1/16 + region.getWidhtX()+1%16 > 0 ? 1 : 0;
+		final int secY = region.getHeight()+1/16 + region.getHeight()+1%16 > 0 ? 1 : 0;
+		final int secZ = region.getWidhtZ()+1/16 + region.getWidhtZ()+1%16 > 0 ? 1 : 0;
+		mappings = new SchematicSection[secX][secY][secZ];
 		sl = new SimpleLocation(region.getMinX(), region.getMinY(), region.getMinZ()).sub(center);
-		int lx = 0;
-		int ly = 0;
-		int lz = 0;
 		final Location loc = new Location(center.getWorld(), 0, 0, 0);
-		for (int x = (int) region.getMinX(); x <= region.getMaxX(); x++) {
+		for (int i = 0; i < secX; i++) {
+			for (int j = 0; j < secY; j++) {
+				for (int k = 0; k < secZ; k++) {
+					SchematicSection section = new Section();
+					mappings[i][j][k] = section;
+					
+				}
+			}
+		}
+		
+		
+		/*for (int x = (int) region.getMinX(); x <= region.getMaxX(); x++) {
 			for (int y = (int) region.getMinY(); y <= region.getMaxY(); y++) {
 				for (int z = (int) region.getMinZ(); z <= region.getMaxZ(); z++) {
 					loc.setX(x);
@@ -60,91 +66,51 @@ public class Schematic {
 			}
 			ly = 0;
 			lx++;
-		}
+		}*/
 	}
 
-	public void setObject(SchematicBlock block, SimpleLocation loc) {
-		mappings[loc.getBlockX()][loc.getBlockY()][loc.getBlockZ()] = block;
-	}
-
-	public void setObject(SchematicBlock block, Location loc) {
-		mappings[loc.getBlockX()][loc.getBlockY()][loc.getBlockZ()] = block;
+	public void setBlock(BlockData data, SimpleLocation loc) {
+		setBlock(data, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 	}
 	
-	public void setObject(SchematicBlock block, int x, int y, int z) {
-		mappings[x][y][z] = block;
+	public void setBlock(BlockData data, int x, int y, int z) {
+		SchematicSection section = mappings[x/16][y/16][z/16];
+		section.setBlock(data, x%16, y%16, z%16);
 	}
 
-	public SchematicObject getObject(Location loc) {
-		return getObject(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+	public BlockData getBlock(SimpleLocation loc) {
+		return getBlock(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 	}
 
-	public SchematicObject getObject(SimpleLocation loc) {
-		return getObject(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-	}
-
-	public SchematicObject getObject(int x, int y, int z) {
-		return mappings[x][y][z];
+	public BlockData getBlock(int x, int y, int z) {
+		return mappings[x/16][y/16][z/16].getBlock(x%16,y%16,z%16);
 	}
 
 	public static Schematic getShematic(Region region, Location center) {
 		return new Schematic(region, center);
 	}
 
-	public void mirrorY() {
+	public void flipY() {
 		Thread t = new Thread(() -> {
 			final short[][][] new_blocks = new short[mappings.length][mappings[0].length][mappings[0][0].length];
 			sl.setY((sl.getY() == 0 ? mappings[0].length : 0));
-			final int lenX = Math.round(mappings.length/2);
-			final int lenY = Math.round(mappings[0].length/2);
-			final int lenZ = Math.round(mappings[0][0].length/2);
-			for (int x = 0; x < lenX; x++) {
-				for (int y = 0; y < lenY; y++) {
-					for (int z = 0; z < lenZ; z++) {
-						final short low = mappings[x][y][z];
-						final short high = mappings[x][mappings[0].length - y - 1][z];
-						mappings[x][y][z] = high;
-						mappings[x][mappings[0].length - y - 1][z] = low;
-					}
-				}
-			}
+			Array3DUtil.flipY(mappings, mappings.length, mappings[0].length, mappings[0][0].length, 0, 0, 0);
 		});
 		t.start();
 	}
 
-	public void mirrorX() {
+	public void flipX() {
 		Thread t = new Thread(() -> {
 			sl.setY((sl.getY() == 0 ? mappings[0].length : 0));
-			final int lenX = Math.round(mappings.length/2);
-			final int lenY = Math.round(mappings[0].length/2);
-			final int lenZ = Math.round(mappings[0][0].length/2);
-			for (int x = 0; x < lenX; x++) {
-				for (int y = 0; y < lenY; y++) {
-					for (int z = 0; z < lenZ; z++) {
-						final short low = mappings[x][y][z];
-						final short high = mappings[mappings.length - x - 1][y][z];
-						mappings[x][y][z] = high;
-						mappings[mappings.length - x - 1][y][z] = low;
-					}
-				}
-			}
+			Array3DUtil.flipX(mappings, mappings.length, mappings[0].length, mappings[0][0].length, 0, 0, 0);
 		});
 		t.start();
 	}
 
-	public void mirrorZ() {
+	public void flipZ() {
 		Thread t = new Thread(() -> {
 			sl.setY((sl.getY() == 0 ? mappings[0].length : 0));
-			final int lenX = Math.round(mappings.length/2);
-			final int lenY = Math.round(mappings[0].length/2);
-			final int lenZ = Math.round(mappings[0][0].length/2);
-			for (int x = 0; x < lenX; x++) {
-				for (int y = 0; y < lenY; y++) {
-					for (int z = 0; z < lenZ; z++) {
-						new_blocks[x][y][mappings[0][0].length - z - 1] = mappings[x][y][z];
-					}
-				}
-			}
+			Array3DUtil.flipZ(mappings, mappings.length, mappings[0].length, mappings[0][0].length, 0, 0, 0);
 		});
 		t.start();
 	}
@@ -187,8 +153,7 @@ public class Schematic {
 						exact.setY(y);
 						exact.setZ(z);
 						exact.add(lloc.getX(), lloc.getY(), lloc.getZ());
-						shem.setObject(new SchematicBlock(exact.getBlock()), x, y, z);
-						block.place(exact);
+						shem.setBlock(exact.getBlockData(), x, y, z);
 					}
 				}
 			}
@@ -299,35 +264,23 @@ public class Schematic {
 		return getWidhtX() * getHeight() * getWidhtZ();
 	}
 
-	public void filter(Filter filter) {
-		Pair<List<BlockData>, short[][][]> result = filter.apply(this);
-		this.pallet = result.getValue1();
-		this.mappings = result.getValue2();
-	}
-
 	public void set(final Material mat) {
 		set(mat.createBlockData());
 	}
 	
-	public void set(final BlockData mat) {
+	public void set(final BlockData data) {
 		final Thread t = new Thread(() -> {
-			pallet.clear();
-			pallet.add(mat);
 			final int lenX = mappings.length;
 			final int lenY = mappings[0].length;
 			final int lenZ = mappings[0][0].length;
 			for (int x = 0; x < lenX; x++) {
 				for (int y = 0; y < lenY; y++) {
 					for (int z = 0; z < lenZ; z++) {
-						mappings[x][y][z] = 0;
+						mappings[x][y][z].set(data);
 					}
 				}
 			}
 		});
 		t.start();
-	}
-
-	public short[][][] getMapings() {
-		return mappings;
 	}
 }

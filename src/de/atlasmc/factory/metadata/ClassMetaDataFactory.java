@@ -6,6 +6,7 @@ import de.atlascore.inventory.meta.CoreItemMeta;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.inventory.meta.ItemMeta;
+import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.NBT;
 
 public class ClassMetaDataFactory extends MetaDataFactory {
@@ -14,13 +15,12 @@ public class ClassMetaDataFactory extends MetaDataFactory {
 	private Class<? extends BlockData> dataInterface, data;
 	
 	public ClassMetaDataFactory(Class<? extends BlockData> dataInterface, Class<? extends BlockData> data) {
-		this.dataInterface = dataInterface;
-		this.metaInterface = ItemMeta.class;
-		this.data = data;
-		this.meta = CoreItemMeta.class;
+		this(ItemMeta.class, CoreItemMeta.class, dataInterface, data);
 	}
 	
 	public ClassMetaDataFactory(Class<? extends ItemMeta> metaInterface, Class<? extends ItemMeta> meta, Class<? extends BlockData> dataInterface, Class<? extends BlockData> data) {
+		if (metaInterface != null) Validate.isTrue(metaInterface.isAssignableFrom(meta), "MetaInterface is not assignable from Meta!");
+		if (dataInterface != null) Validate.isTrue(dataInterface.isAssignableFrom(meta), "DataInterface is not assignable from Data!");
 		this.dataInterface = dataInterface;
 		this.metaInterface = metaInterface;
 		this.data = data;

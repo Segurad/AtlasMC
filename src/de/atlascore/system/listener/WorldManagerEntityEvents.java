@@ -4,7 +4,9 @@ import de.atlasmc.entity.Player;
 import de.atlasmc.event.EventHandler;
 import de.atlasmc.event.EventPriority;
 import de.atlasmc.event.Listener;
+import de.atlasmc.event.entity.EntityDamageEvent;
 import de.atlasmc.event.entity.EntityDamageEvent.DamageCause;
+import de.atlasmc.world.World;
 import de.atlasmc.world.WorldFlag;
 
 final class WorldManagerEntityEvents implements Listener {
@@ -13,7 +15,7 @@ final class WorldManagerEntityEvents implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onDamge(EntityDamageEvent e) {
-		WorldData data = wmanager.getData(e.getEntity().getWorld());
+		World data = e.getEntity().getWorld();
 		if (data == null)
 			return;
 		if (e.getCause() == DamageCause.FALL) {
@@ -30,7 +32,7 @@ final class WorldManagerEntityEvents implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onDamage(EntityDamageByBlockEvent e) {
-		WorldData data = wmanager.getData(e.getDamager().getWorld());
+		World data = e.getDamager().getWorld();
 		if (data == null)
 			return;
 		if (data.hasFlag(WorldFlag.DISABLE_DAMAGE_BY_BLOCK))
@@ -39,7 +41,7 @@ final class WorldManagerEntityEvents implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onDamage(EntityDamageByEntityEvent e) {
-		WorldData data = wmanager.getData(e.getEntity().getWorld());
+		World data = e.getEntity().getWorld();
 		if (data == null)
 			return;
 		if (e.getDamager() instanceof Player) {
@@ -54,7 +56,7 @@ final class WorldManagerEntityEvents implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onFood(FoodLevelChangeEvent e) {
-		WorldData data = wmanager.getData(e.getEntity().getWorld());
+		World data = e.getEntity().getWorld();
 		if (data == null)
 			return;
 		if (data.hasFlag(WorldFlag.DISABLE_HUNGER))
@@ -63,7 +65,7 @@ final class WorldManagerEntityEvents implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onSpawn(EntitySpawnEvent e) {
-		WorldData data = wmanager.getData(e.getLocation().getWorld());
+		World data = e.getLocation().getWorld();
 		if (data == null)
 			return;
 		if (data.hasFlag(WorldFlag.DISABLE_MOBSPAWN))

@@ -2,6 +2,7 @@ package de.atlascore.system.listener;
 
 import de.atlasmc.event.EventHandler;
 import de.atlasmc.event.Listener;
+import de.atlasmc.event.block.BlockBreakEvent;
 import de.atlasmc.event.block.BlockPhysicsEvent;
 import de.atlasmc.event.block.BlockPlaceEvent;
 import de.atlasmc.world.World;
@@ -20,7 +21,7 @@ final class BlockEventHandler implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onFade(BlockFadeEvent e) {
-		WorldData data = wmanager.getData(e.getBlock().getWorld());
+		World data = e.getBlock().getWorld();
 		if (data == null)
 			return;
 		if (data.hasFlag(WorldFlag.DISABLE_BLOCKFADE))
@@ -29,7 +30,7 @@ final class BlockEventHandler implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onLeaveDecay(LeavesDecayEvent e) {
-		WorldData data = wmanager.getData(e.getBlock().getWorld());
+		World data = e.getBlock().getWorld();
 		if (data == null)
 			return;
 		if (data.hasFlag(WorldFlag.DISABLE_LEAVEDECAY))
@@ -38,7 +39,7 @@ final class BlockEventHandler implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onFluid(BlockFromToEvent e) {
-		WorldData data = wmanager.getData(e.getBlock().getWorld());
+		World data = e.getBlock().getWorld();
 		if (data == null)
 			return;
 		if (data.hasFlag(WorldFlag.DISABLE_LIQUIDFLOW))
@@ -47,7 +48,7 @@ final class BlockEventHandler implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onBreak(BlockBreakEvent e) {
-		WorldData data = wmanager.getData(e.getBlock().getWorld());
+		World data = e.getBlock().getWorld();
 		if (data == null)
 			return;
 		if (!data.hasFlag(WorldFlag.DISABLE_BLOCKBREAK))

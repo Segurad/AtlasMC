@@ -36,7 +36,7 @@ public abstract class ElementManagerGUI<E> extends MultipageGUI {
 	 */
 	@SuppressWarnings("unchecked")
 	public ElementManagerGUI(String name, Class<E> clazz, int add, ItemStack addicon, int maxpages) {
-		super(/*Bukkit.createInventory(null, 9*6, name)*/ null, 46, 45, 9, 4, maxpages);
+		super(name, 45, 46, 9, 4, maxpages);
 		if (add > 8 || add < 0) throw new IllegalArgumentException("Value must be between 0 and 8");
 		elements = new AbstractPageComponent<E>(clazz, 9, 4, maxpages) {
 			@Override

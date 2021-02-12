@@ -5,94 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import de.atlasmc.block.data.Ageable;
-import de.atlasmc.block.data.AnaloguePowerable;
-import de.atlasmc.block.data.Bamboo;
-import de.atlasmc.block.data.Barrel;
-import de.atlasmc.block.data.Bed;
-import de.atlasmc.block.data.Beehive;
-import de.atlasmc.block.data.Bell;
-import de.atlasmc.block.data.Bisected;
-import de.atlasmc.block.data.BlockData;
-import de.atlasmc.block.data.BrewingStand;
-import de.atlasmc.block.data.BubbleColumn;
-import de.atlasmc.block.data.Cake;
-import de.atlasmc.block.data.Campfire;
-import de.atlasmc.block.data.Chain;
-import de.atlasmc.block.data.Chest;
-import de.atlasmc.block.data.Cocoa;
-import de.atlasmc.block.data.CommandBlock;
-import de.atlasmc.block.data.Comparator;
-import de.atlasmc.block.data.CoralWallFan;
-import de.atlasmc.block.data.DaylightDetectore;
-import de.atlasmc.block.data.Directional;
-import de.atlasmc.block.data.Dispenser;
-import de.atlasmc.block.data.Door;
-import de.atlasmc.block.data.EndPortalFrame;
-import de.atlasmc.block.data.EnderChest;
-import de.atlasmc.block.data.Farmland;
-import de.atlasmc.block.data.Fence;
-import de.atlasmc.block.data.Fire;
-import de.atlasmc.block.data.Furnace;
-import de.atlasmc.block.data.Gate;
-import de.atlasmc.block.data.GlassPane;
-import de.atlasmc.block.data.Grindstone;
-import de.atlasmc.block.data.Hopper;
-import de.atlasmc.block.data.Jigsaw;
-import de.atlasmc.block.data.Jukebox;
-import de.atlasmc.block.data.Ladder;
-import de.atlasmc.block.data.Lantern;
-import de.atlasmc.block.data.Leaves;
-import de.atlasmc.block.data.Lectern;
-import de.atlasmc.block.data.Levelled;
-import de.atlasmc.block.data.Lightable;
-import de.atlasmc.block.data.MultipleFacing;
-import de.atlasmc.block.data.NoteBlock;
-import de.atlasmc.block.data.Observer;
-import de.atlasmc.block.data.Orientable;
-import de.atlasmc.block.data.Pistion;
-import de.atlasmc.block.data.PistionHead;
-import de.atlasmc.block.data.Powerable;
-import de.atlasmc.block.data.Rail;
-import de.atlasmc.block.data.RedstoneRail;
-import de.atlasmc.block.data.RedstoneWallTorch;
-import de.atlasmc.block.data.RedstoneWire;
-import de.atlasmc.block.data.Repeater;
-import de.atlasmc.block.data.RespawnAnchor;
-import de.atlasmc.block.data.Rotatable;
-import de.atlasmc.block.data.Sapling;
-import de.atlasmc.block.data.Scaffolding;
-import de.atlasmc.block.data.SeaPickle;
-import de.atlasmc.block.data.Sign;
-import de.atlasmc.block.data.Slab;
-import de.atlasmc.block.data.Snow;
-import de.atlasmc.block.data.Snowable;
-import de.atlasmc.block.data.Stairs;
-import de.atlasmc.block.data.StructureBlock;
-import de.atlasmc.block.data.Switch;
-import de.atlasmc.block.data.TechnicalPistion;
-import de.atlasmc.block.data.TrapDoor;
-import de.atlasmc.block.data.Tripwire;
-import de.atlasmc.block.data.TripwireHook;
-import de.atlasmc.block.data.TurtleEgg;
-import de.atlasmc.block.data.Wall;
-import de.atlasmc.block.data.WallSign;
-import de.atlasmc.block.data.Waterlogged;
+import de.atlascore.block.data.*;
+import de.atlasmc.block.data.*;
 import de.atlasmc.factory.metadata.ClassMetaDataFactory;
 import de.atlasmc.factory.metadata.MetaDataFactory;
-import de.atlasmc.inventory.meta.CompassMeta;
-import de.atlasmc.inventory.meta.CrossbowMeta;
-import de.atlasmc.inventory.meta.DamageableMeta;
-import de.atlasmc.inventory.meta.EnchantmentStorageMeta;
-import de.atlasmc.inventory.meta.FireworkEffectMeta;
-import de.atlasmc.inventory.meta.FireworkMeta;
-import de.atlasmc.inventory.meta.ItemMeta;
-import de.atlasmc.inventory.meta.KnowledgeBookMeta;
-import de.atlasmc.inventory.meta.LeatherArmorMeta;
-import de.atlasmc.inventory.meta.MapMeta;
-import de.atlasmc.inventory.meta.PotionMeta;
-import de.atlasmc.inventory.meta.SuspiciousStewMeta;
-import de.atlasmc.inventory.meta.TropicalFishBucketMeta;
+import de.atlasmc.inventory.meta.*;
 import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.NBT;
 
@@ -1179,22 +1096,22 @@ public class Material {
 	static {
 		REGISTRI = new ArrayList<Material>();
 		META_FACTORYS = new HashMap<Material, MetaDataFactory>();
-		MetaDataFactory AIR_MDF = new ClassMetaDataFactory(null, null, BlockData.class, null),
+		MetaDataFactory AIR_MDF = new ClassMetaDataFactory(null, null, BlockData.class, CoreBlockData.class),
 		SNOWABLE_MDF = new ClassMetaDataFactory(Snowable.class, null),
 		SAPLING_MDF = new ClassMetaDataFactory(Sapling.class, null),
 		LEVELLED_MDF = new ClassMetaDataFactory(Levelled.class, null),
-		ORIENTABLE_MDF = new ClassMetaDataFactory(Orientable.class, null),
-		LEAVES = new ClassMetaDataFactory(Leaves.class, null),
+		ORIENTABLE_MDF = new ClassMetaDataFactory(Orientable.class, CoreOrientable.class),
+		LEAVES = new ClassMetaDataFactory(Leaves.class, CoreLeaves.class),
 		DISPENSER_MDF = new ClassMetaDataFactory(Dispenser.class, null),
-		NOTE_BLOCK_MDF = new ClassMetaDataFactory(NoteBlock.class, null),
-		BED_MDF = new ClassMetaDataFactory(Bed.class, null),
+		NOTE_BLOCK_MDF = new ClassMetaDataFactory(NoteBlock.class, CoreNoteBlock.class),
+		BED_MDF = new ClassMetaDataFactory(Bed.class, CoreBed.class),
 		REDSTONE_RAIL_MDF = new ClassMetaDataFactory(RedstoneRail.class, null),
 		PISTION_MDF = new ClassMetaDataFactory(Pistion.class, null),
 		BISECTED_MDF = new ClassMetaDataFactory(Bisected.class, null),
 		PISTION_HEAD_MDF = new ClassMetaDataFactory(null, null, PistionHead.class, null),
 		TECHNICAL_PISTION_MDF = new ClassMetaDataFactory(null, null, TechnicalPistion.class, null),
 		TNT_MDF = new ClassMetaDataFactory(de.atlasmc.block.data.TNT.class, null),
-		DIRECTIONAL_MDF = new ClassMetaDataFactory(Directional.class, null),
+		DIRECTIONAL_MDF = new ClassMetaDataFactory(Directional.class, CoreDirectional.class),
 		FIRE_MDF = new ClassMetaDataFactory(null, null, Fire.class, null),
 		STAIRS_MDF = new ClassMetaDataFactory(Stairs.class, null),
 		CHEST_MDF = new ClassMetaDataFactory(Chest.class, null),
@@ -1208,7 +1125,7 @@ public class Material {
 		RAIL_MDF = new ClassMetaDataFactory(Rail.class, null),
 		WALL_SIGN_MDF = new ClassMetaDataFactory(WallSign.class, null),
 		SWITCH_MDF = new ClassMetaDataFactory(Switch.class, null),
-		POWERABLE_MDF = new ClassMetaDataFactory(Powerable.class, null),
+		POWERABLE_MDF = new ClassMetaDataFactory(Powerable.class, CorePowerable.class),
 		LIGHTABLE_MDF = new ClassMetaDataFactory(Lightable.class, null),
 		RED_WALL_TORCH_MDF = new ClassMetaDataFactory(RedstoneWallTorch.class, null),
 		SNOW_MDF = new ClassMetaDataFactory(Snow.class, null),

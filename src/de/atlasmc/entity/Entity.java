@@ -1,6 +1,7 @@
 package de.atlasmc.entity;
 
 import de.atlasmc.Location;
+import de.atlasmc.world.World;
 
 public interface Entity {
 
@@ -22,6 +23,8 @@ public interface Entity {
 	public void setCustomNameVisible(boolean value);
 	public void setCustomName(String name);
 	public Location getLocation();
+	
+	public World getWorld();
 	
 	public enum Pose {
 		DYING,
