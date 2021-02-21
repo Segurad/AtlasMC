@@ -1,6 +1,11 @@
 package de.atlasmc.block;
 
 public enum BlockFace {
-	NORTH, SOUTH, WEST, EAST, UP, DOWN
+	NORTH,
+	EAST,
+	SOUTH,
+	WEST,
+	UP,
+	DOWN
 
 }

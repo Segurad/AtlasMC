@@ -112,7 +112,7 @@ public class Material {
 	NOTE_BLOCK,
 	POWERED_RAIL,
 	DETECTOR_RAIL,
-	STICKY_PISTION,
+	STICKY_PISTON,
 	COBWEB,
 	GRASS,
 	FERN,
@@ -120,9 +120,9 @@ public class Material {
 	SEAGRASS,
 	TALL_SEAGRASS,
 	SEA_PICKLE,
-	PISTION,
-	PISTION_HEAD,
-	MOVING_PISTION,
+	PISTON,
+	PISTON_HEAD,
+	MOVING_PISTON,
 	WHITE_WOOL,
 	ORANGE_WOOL,
 	MAGENTA_WOOL,
@@ -1097,32 +1097,32 @@ public class Material {
 		REGISTRI = new ArrayList<Material>();
 		META_FACTORYS = new HashMap<Material, MetaDataFactory>();
 		MetaDataFactory AIR_MDF = new ClassMetaDataFactory(null, null, BlockData.class, CoreBlockData.class),
-		SNOWABLE_MDF = new ClassMetaDataFactory(Snowable.class, null),
-		SAPLING_MDF = new ClassMetaDataFactory(Sapling.class, null),
-		LEVELLED_MDF = new ClassMetaDataFactory(Levelled.class, null),
+		SNOWABLE_MDF = new ClassMetaDataFactory(Snowable.class, CoreSnowable.class),
+		SAPLING_MDF = new ClassMetaDataFactory(Sapling.class, CoreSapling.class),
+		LEVELLED_MDF = new ClassMetaDataFactory(Levelled.class, CoreLevelled.class),
 		ORIENTABLE_MDF = new ClassMetaDataFactory(Orientable.class, CoreOrientable.class),
 		LEAVES = new ClassMetaDataFactory(Leaves.class, CoreLeaves.class),
-		DISPENSER_MDF = new ClassMetaDataFactory(Dispenser.class, null),
+		DISPENSER_MDF = new ClassMetaDataFactory(Dispenser.class, CoreDispenser.class),
 		NOTE_BLOCK_MDF = new ClassMetaDataFactory(NoteBlock.class, CoreNoteBlock.class),
 		BED_MDF = new ClassMetaDataFactory(Bed.class, CoreBed.class),
-		REDSTONE_RAIL_MDF = new ClassMetaDataFactory(RedstoneRail.class, null),
-		PISTION_MDF = new ClassMetaDataFactory(Pistion.class, null),
+		REDSTONE_RAIL_MDF = new ClassMetaDataFactory(RedstoneRail.class, CoreRedstoneRail.class),
+		PISTON_MDF = new ClassMetaDataFactory(Piston.class, CorePiston.class),
 		BISECTED_MDF = new ClassMetaDataFactory(Bisected.class, null),
-		PISTION_HEAD_MDF = new ClassMetaDataFactory(null, null, PistionHead.class, null),
-		TECHNICAL_PISTION_MDF = new ClassMetaDataFactory(null, null, TechnicalPistion.class, null),
-		TNT_MDF = new ClassMetaDataFactory(de.atlasmc.block.data.TNT.class, null),
-		DIRECTIONAL_MDF = new ClassMetaDataFactory(Directional.class, CoreDirectional.class),
-		FIRE_MDF = new ClassMetaDataFactory(null, null, Fire.class, null),
-		STAIRS_MDF = new ClassMetaDataFactory(Stairs.class, null),
-		CHEST_MDF = new ClassMetaDataFactory(Chest.class, null),
-		REDSTONE_WIRE_MDF = new ClassMetaDataFactory(null, null, RedstoneWire.class, null),
+		PISTON_HEAD_MDF = new ClassMetaDataFactory(null, null, PistonHead.class, CorePistonHead.class),
+		TECHNICAL_PISTON_MDF = new ClassMetaDataFactory(null, null, TechnicalPiston.class, CoreTechnicalPiston.class),
+		TNT_MDF = new ClassMetaDataFactory(de.atlasmc.block.data.TNT.class, CoreTNT.class),
+		DIRECTIONAL_MDF = new ClassMetaDataFactory(Directional.class, null),
+		FIRE_MDF = new ClassMetaDataFactory(null, null, Fire.class, CoreFire.class),
+		STAIRS_MDF = new ClassMetaDataFactory(Stairs.class, CoreStairs.class),
+		CHEST_MDF = new ClassMetaDataFactory(Chest.class, CoreChest.class),
+		REDSTONE_WIRE_MDF = new ClassMetaDataFactory(null, null, RedstoneWire.class, CoreRedstoneWire.class),
 		AGEABLE_MDF = new ClassMetaDataFactory(Ageable.class, null),
 		FARMLAND_MDF = new ClassMetaDataFactory(Farmland.class, null),
 		FURNACE_MDF = new ClassMetaDataFactory(Furnace.class, null),
 		SIGN_MDF = new ClassMetaDataFactory(Sign.class, null),
 		DOOR_MDF = new ClassMetaDataFactory(Door.class, null),
-		LADDER_MDF = new ClassMetaDataFactory(Ladder.class, null),
-		RAIL_MDF = new ClassMetaDataFactory(Rail.class, null),
+		LADDER_MDF = new ClassMetaDataFactory(Ladder.class, CoreLadder.class),
+		RAIL_MDF = new ClassMetaDataFactory(Rail.class, CoreRail.class),
 		WALL_SIGN_MDF = new ClassMetaDataFactory(WallSign.class, null),
 		SWITCH_MDF = new ClassMetaDataFactory(Switch.class, null),
 		POWERABLE_MDF = new ClassMetaDataFactory(Powerable.class, CorePowerable.class),
@@ -1276,7 +1276,7 @@ public class Material {
 		NOTE_BLOCK = c("NOTE_BLOCK", 249, NOTE_BLOCK_MDF);
 		POWERED_RAIL = c("POWERED_RAIL", 1305, REDSTONE_RAIL_MDF);
 		DETECTOR_RAIL = c("DETECTOR_RAIL", 1317, REDSTONE_RAIL_MDF);
-		STICKY_PISTION = c("STICKY_PISTION", 1329, PISTION_MDF);
+		STICKY_PISTON = c("STICKY_PISTON", 1329, PISTON_MDF);
 		COBWEB = c("COBWEB", 1341);
 		GRASS = c("GRASS", 1342);
 		FERN = c("FERB", 1343);
@@ -1284,9 +1284,9 @@ public class Material {
 		SEAGRASS = c("SEAGRASS", 1345);
 		TALL_SEAGRASS = new Material(0, "TALL_SEAGRASS", false, (short) 1346, (byte) 1, BISECTED_MDF);
 		SEA_PICKLE = c("SEA_PICKLE", 9644, SEA_PICKLE_MDF);
-		PISTION = c("PISTION", 1348, PISTION_MDF);
-		PISTION_HEAD = new Material(0, "PISTION_HEAD", false, (short) 1360, (byte) 1, PISTION_HEAD_MDF);
-		MOVING_PISTION = new Material(0, "MOVING_PISTION", false, (short) 1400, (byte) 1, TECHNICAL_PISTION_MDF);
+		PISTON = c("PISTON", 1348, PISTON_MDF);
+		PISTON_HEAD = new Material(0, "PISTON_HEAD", false, (short) 1360, (byte) 1, PISTON_HEAD_MDF);
+		MOVING_PISTON = new Material(0, "MOVING_PISTON", false, (short) 1400, (byte) 1, TECHNICAL_PISTON_MDF);
 		WHITE_WOOL = c("WHITE_WOOL", 1384);
 		ORANGE_WOOL = c("ORANGE_WOOL", 1385);
 		MAGENTA_WOOL = c("MAGENTA_WOOL", 1386);

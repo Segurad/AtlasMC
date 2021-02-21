@@ -37,7 +37,7 @@ public class CoreLeaves extends CoreBlockData implements Leaves {
 	
 	@Override
 	public int getStateID() {
-		return super.getStateID() + (distance-1)<<1+(persistent?0:1);
+		return super.getStateID() + (distance-1)*2+(persistent?0:1);
 	}
 
 }

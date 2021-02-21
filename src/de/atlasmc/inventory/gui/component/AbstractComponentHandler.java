@@ -103,5 +103,15 @@ public abstract class AbstractComponentHandler implements ComponentHandler {
 	public Component<?> getComponent() {
 		return comp;
 	}
+	
+	@Override
+	public int getLength() {
+		return length;
+	}
+	
+	@Override
+	public int getDepth() {
+		return depth;
+	}
 
 }

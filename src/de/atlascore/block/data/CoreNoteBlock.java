@@ -38,7 +38,7 @@ public class CoreNoteBlock extends CorePowerable implements NoteBlock {
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockID()+instrument.ordinal()*48+note<<1+(isPowered()?0:1);
+		return getMaterial().getBlockID()+instrument.ordinal()*48+note*2+(isPowered()?0:1);
 	}
 
 }

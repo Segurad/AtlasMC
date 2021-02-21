@@ -47,6 +47,8 @@ public interface ComponentHandler {
 	public void setSlotEntry(int slot, Object entry, boolean update);
 	public void setButtons(Button button);
 	public void setClickable(boolean value);
+	public int getLength();
+	public int getDepth();
 
 
 }

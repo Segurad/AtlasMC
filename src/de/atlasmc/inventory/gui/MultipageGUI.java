@@ -36,14 +36,14 @@ public class MultipageGUI extends CoreGUI {
 				if (slot == back) {
 					if (page > 0) {
 						page--;
-						mhandler.updateDisplay(0, mltPageItems.getLengthY()*page);
+						mhandler.updateDisplay(0, mhandler.getDepth()*page);
 						if (page+2 == mltPageItems.getPages()) setItem(next, inext);
 						if (page == 0) return air;
 					}
 				} else if (slot == next) {
 					if (page+1 < mltPageItems.getPages()) {
 						page++;
-						mhandler.updateDisplay(0, mltPageItems.getLengthY()*page);
+						mhandler.updateDisplay(0, mhandler.getDepth()*page);
 						if (page-1 == 0) setItem(back, iback);
 						if (page+1 == mltPageItems.getPages()) return air;
 					}

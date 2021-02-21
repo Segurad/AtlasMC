@@ -1,4 +1,4 @@
-package de.atlasmc.io.atlas;
+package de.atlasmc.io.atlasprotocol;
 
 public interface PacketPlayerJoin {
 
