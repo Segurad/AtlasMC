@@ -47,6 +47,7 @@ public interface ItemMeta extends Cloneable {
 		return toNBT("default");
 	}
 	public NBT toNBT(String local);
+	public void fromNBT(NBT nbt);
 
 	public void setDisplayName(String name);
 

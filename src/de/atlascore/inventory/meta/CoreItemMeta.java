@@ -342,4 +342,10 @@ public class CoreItemMeta implements ItemMeta {
 	public List<AttributeModifier> getAttributeModifiers(Attribute attribute) {
 		return attributes.get(attribute);
 	}
+
+	@Override
+	public void fromNBT(NBT nbt) {
+		// TODO Auto-generated method stub
+		
+	}
 }

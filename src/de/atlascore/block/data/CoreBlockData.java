@@ -2,13 +2,16 @@ package de.atlascore.block.data;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
+import de.atlasmc.util.Validate;
 
 public class CoreBlockData implements BlockData {
 	
-	private final Material mat;
+	private final Material material;
 	
 	public CoreBlockData(Material material) {
-		this.mat = material;
+		Validate.notNull(material, "Material can not be null!");
+		Validate.isTrue(material.isBlock(), "Material is not a Block: " + material.getNamespacedName());
+		this.material = material;
 	}
 	
 	public BlockData clone() {
@@ -22,7 +25,7 @@ public class CoreBlockData implements BlockData {
 
 	@Override
 	public Material getMaterial() {
-		return mat;
+		return material;
 	}
 
 	@Override
@@ -33,7 +36,7 @@ public class CoreBlockData implements BlockData {
 
 	@Override
 	public int getStateID() {
-		return mat.getBlockID();
+		return material.getBlockID();
 	}
 
 }

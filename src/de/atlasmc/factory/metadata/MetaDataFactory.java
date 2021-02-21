@@ -2,16 +2,16 @@ package de.atlasmc.factory.metadata;
 
 import java.util.HashMap;
 
+import de.atlascore.block.data.CoreBlockData;
 import de.atlascore.inventory.meta.CoreItemMeta;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.util.Validate;
-import de.atlasmc.util.nbt.NBT;
 
 public abstract class MetaDataFactory {
 	
-	public static MetaDataFactory DEFAULT = new ClassMetaDataFactory(ItemMeta.class, CoreItemMeta.class, BlockData.class, null);
+	public static MetaDataFactory DEFAULT = new ClassMetaDataFactory(ItemMeta.class, CoreItemMeta.class, BlockData.class, CoreBlockData.class);
 	private static final HashMap<Material, ItemMeta> metaPreConfig = new HashMap<>();
 	private static final HashMap<Material, BlockData> dataPreConfig = new HashMap<>();
 	
@@ -19,8 +19,8 @@ public abstract class MetaDataFactory {
 	
 	public abstract boolean isValidData(BlockData data);
 	
-	public ItemMeta createMeta(Material material, NBT nbt) {
-		return createMeta(material, true, nbt);
+	public ItemMeta createMeta(Material material) {
+		return createMeta(material, true);
 	}
 	
 	public BlockData createData(Material material) {
@@ -33,7 +33,7 @@ public abstract class MetaDataFactory {
 	 * @param preConfig if true it will check for a MetaPreConfig
 	 * @return a new ItemMeta
 	 */
-	public abstract ItemMeta createMeta(Material material, boolean preConfig, NBT nbt);
+	public abstract ItemMeta createMeta(Material material, boolean preConfig);
 	
 	/**
 	 * 
@@ -43,15 +43,15 @@ public abstract class MetaDataFactory {
 	 */
 	public abstract BlockData createData(Material material, boolean preConfig);
 	
-	public ItemMeta getMetaPreConfig(Material material) {
+	public static ItemMeta getMetaPreConfig(Material material) {
 		return metaPreConfig.get(material);
 	}
 	
-	public BlockData getDataPreConfig(Material material) {
+	public static BlockData getDataPreConfig(Material material) {
 		return dataPreConfig.get(material);
 	}
 	
-	public ItemMeta setMetaPreConfig(Material material, ItemMeta meta) {
+	public static ItemMeta setMetaPreConfig(Material material, ItemMeta meta) {
 		Validate.notNull(material, "Material can not be null!");
 		if (!material.isItem()) throw new IllegalArgumentException("Material is not a Item!");
 		if (meta == null) return metaPreConfig.remove(material);
@@ -60,7 +60,7 @@ public abstract class MetaDataFactory {
 		return metaPreConfig.put(material, meta);
 	}
 	
-	public BlockData setDataPreConfig(Material material, BlockData data) {
+	public static BlockData setDataPreConfig(Material material, BlockData data) {
 		Validate.notNull(material, "Material can not be null!");
 		if (!material.isBlock()) throw new IllegalArgumentException("Material is not a Block!");
 		if (data == null) return dataPreConfig.remove(material);

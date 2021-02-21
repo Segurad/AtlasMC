@@ -142,7 +142,8 @@ public class AbstractPacket {
 		if (comp == 0) return item;
 		NBT nbt = new CompoundTag();
 		nbt.read(input, false);
-		ItemMeta meta = mat.createItemMeta(nbt);
+		ItemMeta meta = mat.createItemMeta();
+		meta.fromNBT(nbt);
 		item.setItemMeta(meta);
 		return item;
 	}

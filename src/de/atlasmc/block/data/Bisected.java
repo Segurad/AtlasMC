@@ -6,8 +6,8 @@ public interface Bisected extends BlockData {
 	public void setHalf(Half half);
 	
 	public static enum Half {
-		BOTTOM,
-		TOP
+		TOP,
+		BOTTOM
 	}
 
 }

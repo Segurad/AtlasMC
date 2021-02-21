@@ -33,5 +33,10 @@ public class CoreAgeable extends CoreBlockData implements Ageable {
 		Validate.isTrue(age <= maxage && age >= 0, "Age is not between 0 and " + maxage + ": " + age);
 		this.age = age;
 	}
+	
+	@Override
+	public int getStateID() {
+		return super.getStateID()+age;
+	}
 
 }

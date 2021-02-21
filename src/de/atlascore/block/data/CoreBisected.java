@@ -10,7 +10,7 @@ public class CoreBisected extends CoreBlockData implements Bisected {
 	
 	public CoreBisected(Material material) {
 		super(material);
-		this.half = Half.TOP;
+		this.half = Half.BOTTOM;
 	}
 
 	@Override
@@ -22,6 +22,11 @@ public class CoreBisected extends CoreBlockData implements Bisected {
 	public void setHalf(Half half) {
 		Validate.notNull(half, "Half can not be null!");
 		this.half = half;
+	}
+	
+	@Override
+	public int getStateID() {
+		return super.getStateID()+half.ordinal();
 	}
 
 }

@@ -7,17 +7,23 @@ import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.util.Validate;
-import de.atlasmc.util.nbt.NBT;
 
 public class ClassMetaDataFactory extends MetaDataFactory {
 	
-	private Class<? extends ItemMeta> metaInterface, meta;
-	private Class<? extends BlockData> dataInterface, data;
+	protected final Class<? extends ItemMeta> metaInterface, meta;
+	protected final Class<? extends BlockData> dataInterface, data;
 	
 	public ClassMetaDataFactory(Class<? extends BlockData> dataInterface, Class<? extends BlockData> data) {
 		this(ItemMeta.class, CoreItemMeta.class, dataInterface, data);
 	}
 	
+	/**
+	 * 
+	 * @param metaInterface
+	 * @param meta class must have a constructor with Material
+	 * @param dataInterface
+	 * @param data class must have a constructor with Material
+	 */
 	public ClassMetaDataFactory(Class<? extends ItemMeta> metaInterface, Class<? extends ItemMeta> meta, Class<? extends BlockData> dataInterface, Class<? extends BlockData> data) {
 		if (metaInterface != null) Validate.isTrue(metaInterface.isAssignableFrom(meta), "MetaInterface is not assignable from Meta!");
 		if (dataInterface != null) Validate.isTrue(dataInterface.isAssignableFrom(meta), "DataInterface is not assignable from Data!");
@@ -37,7 +43,7 @@ public class ClassMetaDataFactory extends MetaDataFactory {
 		return data.getClass().isAssignableFrom(dataInterface); 
 	}
 	
-	public ItemMeta createMeta(Material material, boolean preConfig, NBT nbt) {
+	public ItemMeta createMeta(Material material, boolean preConfig) {
 		if (material == null) throw new IllegalArgumentException("Material can not be null!");
 		if (!material.isItem()) throw new IllegalArgumentException("Material is not a Item!");
 		if (preConfig) {
@@ -46,7 +52,7 @@ public class ClassMetaDataFactory extends MetaDataFactory {
 		}
 		if (meta == null) return null;
 		try {
-			return meta.getConstructor(Material.class, NBT.class).newInstance(material, nbt);
+			return meta.getConstructor(Material.class).newInstance(material);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
