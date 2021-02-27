@@ -12,8 +12,12 @@ public abstract class CoreAbstractDirectional extends CoreBlockData implements D
 	private BlockFace face;
 	
 	public CoreAbstractDirectional(Material material) {
+		this(material, BlockFace.NORTH);
+	}
+	
+	public CoreAbstractDirectional(Material material, BlockFace face) {
 		super(material);
-		face = BlockFace.NORTH;
+		this.face = face;
 	}
 
 	@Override
@@ -27,7 +31,7 @@ public abstract class CoreAbstractDirectional extends CoreBlockData implements D
 	@Override
 	public void setFacing(BlockFace face) {
 		Validate.notNull(face, "BlockFace can not be null!");
-		Validate.isTrue(getFaceValue(face) != -1, "No valid BlockFace: " + face.name());
+		Validate.isTrue(getFaceValue(face) != -1, "BlockFace is not valid: " + face.name());
 		this.face = face;
 	}
 	
@@ -35,7 +39,7 @@ public abstract class CoreAbstractDirectional extends CoreBlockData implements D
 	public abstract int getStateID();
 	
 	protected abstract int getFaceValue(BlockFace face);
-	public int getFaceValue() {
+	protected int getFaceValue() {
 		return getFaceValue(face);
 	}
 

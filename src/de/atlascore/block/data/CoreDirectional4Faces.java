@@ -11,6 +11,10 @@ public class CoreDirectional4Faces extends CoreAbstractDirectional {
 	public CoreDirectional4Faces(Material material) {
 		super(material);
 	}
+	
+	public CoreDirectional4Faces(Material material, BlockFace face) {
+		super(material, face);
+	}
 
 	@Override
 	public Set<BlockFace> getFaces() {

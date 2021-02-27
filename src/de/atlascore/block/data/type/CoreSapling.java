@@ -11,9 +11,15 @@ public class CoreSapling extends CoreBlockData implements Sapling {
 	private int maxstage;
 	
 	public CoreSapling(Material material) {
-		super(material);
-		maxstage = 2;
+		this(material, 2);
 	}
+	
+	public CoreSapling(Material material, int maxstage) {
+		super(material);
+		this.maxstage = maxstage;
+	}
+	
+	
 
 	@Override
 	public int getMaxStage() {

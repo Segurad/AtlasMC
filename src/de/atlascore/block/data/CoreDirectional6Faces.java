@@ -12,6 +12,10 @@ public class CoreDirectional6Faces extends CoreAbstractDirectional {
 		super(material);
 	}
 
+	public CoreDirectional6Faces(Material material, BlockFace face) {
+		super(material, face);
+	}
+	
 	@Override
 	public Set<BlockFace> getFaces() {
 		return EnumSet.range(BlockFace.NORTH, BlockFace.DOWN);

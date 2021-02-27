@@ -8,15 +8,15 @@ import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.MultipleFacing;
 import de.atlasmc.util.Validate;
 
-public abstract class CoreMultipleFacing extends CoreBlockData implements MultipleFacing {
+public abstract class CoreAbstractMultipleFacing extends CoreBlockData implements MultipleFacing {
 
 	private Set<BlockFace> faces;
 	
-	public CoreMultipleFacing(Material material) {
+	public CoreAbstractMultipleFacing(Material material) {
 		this(material, 6);
 	}
 	
-	protected CoreMultipleFacing(Material material, int faces) {
+	protected CoreAbstractMultipleFacing(Material material, int faces) {
 		super(material);
 		this.faces = new HashSet<BlockFace>(faces);
 	}

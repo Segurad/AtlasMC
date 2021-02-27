@@ -3,13 +3,13 @@ package de.atlascore.block.data.type;
 import java.util.EnumSet;
 import java.util.Set;
 
-import de.atlascore.block.data.CoreMultipleFacing;
+import de.atlascore.block.data.CoreAbstractMultipleFacing;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.type.Fire;
 import de.atlasmc.util.Validate;
 
-public class CoreFire extends CoreMultipleFacing implements Fire {
+public class CoreFire extends CoreAbstractMultipleFacing implements Fire {
 
 	private int age;
 	private int maxage;

@@ -27,7 +27,7 @@ public class CoreLeaves extends CoreBlockData implements Leaves {
 
 	@Override
 	public void setDistance(int distance) {
-		Validate.isTrue(distance > 0 && distance < 8, "NamespaceID is not between 1 and 7: " + distance);
+		Validate.isTrue(distance > 0 && distance < 8, "Distance is not between 1 and 7: " + distance);
 		this.distance = distance;
 	}
 

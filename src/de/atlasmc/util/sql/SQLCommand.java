@@ -118,7 +118,7 @@ public class SQLCommand {
 		cmd.append(" VALUES (");
 		for (int i = 0; i < value.length; i++) {
 			cmd.append("'").append(value[i]).append("'");
-			if (i+1 < field.length) cmd.append(", ");
+			if (i+1 < value.length) cmd.append(", ");
 		}
 		cmd.append(");");
 		return new SQLCommand(cmd.toString());

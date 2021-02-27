@@ -6,16 +6,15 @@ import de.atlasmc.util.Validate;
 
 public class CoreAnaloguePowerable extends CoreBlockData implements AnaloguePowerable {
 
-	private int maxpower, power;
+	private int power;
 	
 	public CoreAnaloguePowerable(Material material) {
 		super(material);
-		maxpower = 15;
 	}
 
 	@Override
 	public int getMaxPower() {
-		return maxpower;
+		return 15;
 	}
 
 	@Override
@@ -25,7 +24,7 @@ public class CoreAnaloguePowerable extends CoreBlockData implements AnaloguePowe
 
 	@Override
 	public void setPower(int level) {
-		Validate.isTrue(level <= maxpower && level >= 0, "power is not between 0 and " + maxpower + ": " + level);
+		Validate.isTrue(level <= 15 && level >= 0, "power is not between 0 and " + 15 + ": " + level);
 		this.power = level;
 	}
 	

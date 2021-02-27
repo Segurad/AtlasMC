@@ -5,5 +5,8 @@ import de.atlasmc.block.data.Openable;
 import de.atlasmc.block.data.Powerable;
 
 public interface Gate extends Directional, Openable, Powerable {
+	
+	public boolean isInWall();
+	public void setInWall(boolean inWall);
 
 }

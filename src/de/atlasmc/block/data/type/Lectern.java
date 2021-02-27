@@ -5,4 +5,6 @@ import de.atlasmc.block.data.Powerable;
 
 public interface Lectern extends Directional, Powerable {
 
+	public boolean hasBook();
+	public void setBook(boolean book);
 }
