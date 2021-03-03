@@ -53,7 +53,7 @@ public abstract class MetaDataFactory {
 	
 	public static ItemMeta setMetaPreConfig(Material material, ItemMeta meta) {
 		Validate.notNull(material, "Material can not be null!");
-		if (!material.isItem()) throw new IllegalArgumentException("Material is not a Item!");
+		Validate.isTrue(material.isItem(), "Material is not a Item!");
 		if (meta == null) return metaPreConfig.remove(material);
 		if (!material.isValidMeta(meta))
 			throw new IllegalArgumentException("ItemMeta is not valid for Material: " + material.getName());
@@ -62,7 +62,7 @@ public abstract class MetaDataFactory {
 	
 	public static BlockData setDataPreConfig(Material material, BlockData data) {
 		Validate.notNull(material, "Material can not be null!");
-		if (!material.isBlock()) throw new IllegalArgumentException("Material is not a Block!");
+		Validate.isTrue(material.isBlock(), "Material is not a Block!");
 		if (data == null) return dataPreConfig.remove(material);
 		if (!material.isValidData(data))
 			throw new IllegalArgumentException("BlockData is not valid for Material: " + material.getName());

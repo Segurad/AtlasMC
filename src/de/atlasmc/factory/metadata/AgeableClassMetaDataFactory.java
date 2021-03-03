@@ -2,22 +2,16 @@ package de.atlasmc.factory.metadata;
 
 import java.lang.reflect.InvocationTargetException;
 
-import de.atlascore.inventory.meta.CoreItemMeta;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Ageable;
 import de.atlasmc.block.data.BlockData;
-import de.atlasmc.inventory.meta.ItemMeta;
 
 public class AgeableClassMetaDataFactory extends ClassMetaDataFactory {
 
 	private final int maxage;
 	
 	public AgeableClassMetaDataFactory(Class<? extends Ageable> dataInterface, Class<? extends Ageable> data, int maxage) {
-		this(ItemMeta.class, CoreItemMeta.class, dataInterface, data, maxage);
-	}
-	
-	public AgeableClassMetaDataFactory(Class<? extends ItemMeta> metaInterface, Class<? extends ItemMeta> meta, Class<? extends Ageable> dataInterface, Class<? extends Ageable> data, int maxage) {
-		super(metaInterface, meta, dataInterface, data);
+		super(dataInterface, data);
 		this.maxage = maxage;
 	}
 	
