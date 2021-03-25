@@ -6,8 +6,7 @@ import de.atlasmc.inventory.gui.GUI;
 public class ButtonComponent extends AbstractComponent<Button> {
 
 	public ButtonComponent(int x, int y) {
-		super(Button.class, x, y);
-		// TODO Auto-generated constructor stub
+		super(x, y);
 	}
 
 	@Override

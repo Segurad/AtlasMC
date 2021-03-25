@@ -10,6 +10,11 @@ public class MessageUtil {
 		return b.toString();
 	}
 	
+	/**
+	 * 
+	 * @param msg
+	 * @return the msg formated as json String
+	 */
 	public static String formatMessage(String msg) {
 		return msg;
 	}

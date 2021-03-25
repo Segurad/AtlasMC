@@ -6,7 +6,7 @@ import de.atlasmc.inventory.gui.GUI;
 public class ItemPageComponent extends AbstractPageComponent<ItemStack> {
 
 	public ItemPageComponent(int x, int y, int maxpages) {
-		super(ItemStack.class, x, y, maxpages);
+		super(x, y, maxpages);
 	}
 
 	@Override

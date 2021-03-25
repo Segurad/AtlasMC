@@ -10,11 +10,12 @@ import de.atlasmc.chat.LanguageHandler;
 import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.inventory.ItemFlag;
+import de.atlasmc.inventory.meta.lore.Lore;
 import de.atlasmc.util.map.Multimap;
 import de.atlasmc.util.nbt.CompoundTag;
-import de.atlasmc.util.nbt.NBT;
+import de.atlasmc.util.nbt.NBTHolder;
 
-public interface ItemMeta extends Cloneable {
+public interface ItemMeta extends Cloneable, NBTHolder {
 
 	public ItemMeta clone();
 	
@@ -43,15 +44,9 @@ public interface ItemMeta extends Cloneable {
 	public void setCustomModelData(Integer data);
 	public void setUnbreakable(boolean unbreakable);
 
-	public default NBT toNBT() {
-		return toNBT("default");
-	}
-	public NBT toNBT(String local);
-	public void fromNBT(NBT nbt);
-
 	public void setDisplayName(String name);
 
-	public void setLore(List<String> lore);
+	public void setLore(Lore lore);
 
 	public void addEnchant(Enchantment enchantment, int level);
 
@@ -69,7 +64,7 @@ public interface ItemMeta extends Cloneable {
 
 	public boolean hasLore();
 
-	public List<String> getLore();
+	public Lore getLore();
 
 	public boolean hasCustomModelData();
 
@@ -79,6 +74,8 @@ public interface ItemMeta extends Cloneable {
 
 	public boolean hasItemFlag(ItemFlag flag);
 
+	public boolean hasItemFlags();
+	
 	public boolean hasAttributeModifiers();
 
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers();

@@ -1,23 +1,19 @@
 package de.atlasmc.util.nbt;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-
 public interface NBT {
 	
 	public String getName();
+	public void setName(String name);
 	public Object getData();
+	public void setData(Object data);
 	public TagType getType();
-	public void read(DataInput input, boolean readName) throws IOException;
-	public void write(DataOutput output, boolean readName) throws IOException;
 	
-	public static ByteTag createByteTag(String name, byte data) {
-		return new ByteTag(name, data);
+	public static ByteTag createByteTag(String name, int data) {
+		return new ByteTag(name, (byte) data);
 	}
 	
-	public static ShortTag createShortTag(String name, short data) {
-		return new ShortTag(name, data);
+	public static ShortTag createShortTag(String name, int data) {
+		return new ShortTag(name, (short) data);
 	}
 	
 	public static IntTag createIntTag(String name, int data) {
@@ -56,7 +52,7 @@ public interface NBT {
 		return new IntArrayTag(name, data);
 	}
 	
-	public static LongArrayTag createIntArrayTag(String name, long[] data) {
+	public static LongArrayTag createLongArrayTag(String name, long[] data) {
 		return new LongArrayTag(name, data);
 	}
 }

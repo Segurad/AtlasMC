@@ -33,4 +33,9 @@ public final class ShortTag extends AbstractTag {
 		output.writeShort(data);
 	}
 
+	@Override
+	public void setData(Object data) {
+		this.data = (short) data;
+	}
+
 }

@@ -1,14 +1,12 @@
 package de.atlasmc.util.nbt;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import de.atlasmc.util.Validate;
 
-public final class ListTag<T extends NBT> extends AbstractTag {
+public final class ListTag<T extends NBT> extends AbstractTag implements Iterable<NBT> {
 
 	private List<T> data;
 	private TagType datatype;
@@ -50,31 +48,20 @@ public final class ListTag<T extends NBT> extends AbstractTag {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	void readD(DataInput input, boolean readName) throws IOException {
-		data.clear();
-		byte id = input.readByte();
-		if (id <= 0) return;
-		datatype = TagType.getByID(id);
-		int length = input.readInt();
-		while(length > 0) {
-			NBT dat = datatype.createTag();
-			dat.read(input, false);
-			data.add((T) dat);
-			length--;
-		}
+	public void setData(Object data) {
+		NBT tag = (NBT) data;
+		Validate.isTrue(datatype == tag.getType(), "Illegal TagType:" + tag.getType().name() + " " + datatype.name() + " expected!");
+		addTag((T) tag);
 	}
 
+	public int size() {
+		return data.size();
+	}
+
+	@SuppressWarnings("unchecked")
 	@Override
-	void writeD(DataOutput output, boolean readName) throws IOException {
-		output.writeByte(datatype.getID());
-		if (data.size() == 0) {
-			output.writeByte(0);
-			return;
-		}
-		output.writeInt(data.size());
-		for (NBT dat : data) {
-			dat.write(output, false);
-		}
+	public Iterator<NBT> iterator() {
+		return (Iterator<NBT>) data.iterator();
 	}
 
 }

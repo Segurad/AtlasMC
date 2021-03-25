@@ -1,6 +1,5 @@
 package de.atlasmc.inventory.gui.component;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,15 +10,14 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 
 	protected final List<ComponentHandler> handlers;
 	protected final List<E[][]> entries;
-	protected final Class<E> clazz;
 	protected final int x, y, max;
 	
-	protected AbstractPageComponent(Class<E> clazz, int x, int y) {
-		this(clazz, x, y, 0, 1);
+	protected AbstractPageComponent(int x, int y) {
+		this(x, y, 0, 1);
 	}
 	
-	protected AbstractPageComponent(Class<E> clazz, int x, int y, int maxpages) {
-		this(clazz, x, y, maxpages, 1);
+	protected AbstractPageComponent(int x, int y, int maxpages) {
+		this(x, y, maxpages, 1);
 	}
 	
 	/**
@@ -30,8 +28,8 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 	 * @param maxpages 0 for no limit
 	 * @param pages amount of pages to create
 	 */
-	protected AbstractPageComponent(Class<E> clazz, int x, int y, int maxpages, int pages) {
-		this.clazz = clazz;
+	@SuppressWarnings("unchecked")
+	protected AbstractPageComponent(int x, int y, int maxpages, int pages) {
 		this.x = x;
 		this.y = y;
 		this.max = maxpages;
@@ -40,9 +38,7 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 		if (pages > 0) {
 			for (int i = 0; i < pages; i++) {
 				if (entries.size() >= maxpages && maxpages > 0) break;
-				@SuppressWarnings("unchecked")
-				E[][] entries = (E[][]) Array.newInstance(clazz, y, x);
-				this.entries.add(entries);
+				this.entries.add((E[][]) new Object[y][x]);
 			}
 		}
 	}
@@ -92,7 +88,7 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 	public void set(int x, int y, E entry, ComponentHandler source) {
 		final int page = y/this.y;
 		final int ry = y%this.y;
-		E[][] entries = this.entries.get(page);
+		Object[][] entries = this.entries.get(page);
 		entries[ry][x] = entry;
 		handlers.forEach(h -> { if (h != source) h.internalUpdate(x, y); } );
 	}
@@ -101,20 +97,15 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 	public void set(int x, int y, E entry, boolean update) {
 		final int page = y/this.y;
 		final int ry = y%this.y;
-		E[][] entries = this.entries.get(page);
+		Object[][] entries = this.entries.get(page);
 		entries[ry][x] = entry;
 		if (update) handlers.forEach(h -> h.internalUpdate(x, y));
 	}
 
 	@Override
-	public boolean add(E entry) {
-		return add(entry, true);
-	}
-
-	@Override
 	public boolean add(E entry, boolean update) {
 		int page = 0;
-		for (E[][] entries : this.entries) {
+		for (Object[][] entries : this.entries) {
 			for (int y = 0; y < entries.length; y++) {
 				for (int x = 0; x < entries[y].length; x++) {
 					if (entries[y][x] != null) continue;
@@ -130,17 +121,12 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 		return false;
 	}
 	
-	@Override
-	public boolean remove(E entry) {
-		return remove(entry, true);
-	}
-	
 	@Override 
 	public boolean remove(E entry, boolean update) {
-		for (final E[][] entries : this.entries) {
+		for (final Object[][] entries : this.entries) {
 			for (int y = 0; y < entries.length; y++) {
 				for (int x = 0; x < entries[y].length; x++) {
-					final E etry = entries[y][x];
+					final Object etry = entries[y][x];
 					if (entries[y][x] == null) continue;
 					if (!etry.equals(entry)) continue;
 					entries[y][x] = null;
@@ -156,7 +142,7 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 
 	@Override
 	public boolean contains(E entry) {
-		for (E[][] entries : this.entries) {
+		for (Object[][] entries : this.entries) {
 			for (int y = 0; y < entries.length; y++) {
 				for (int x = 0; x < entries[y].length; x++) {
 					if (entries[y][x].equals(entry)) return true;
@@ -165,21 +151,11 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 		}
 		return false;
 	}
-
-	@Override
-	public Class<E> getType() {
-		return clazz;
-	}
-
-	@Override
-	public void clear() {
-		clear(true);
-	}
 	
 	@Override
 	public void clear(boolean update) {
-		for (final E[][] entries : this.entries) {
-			for (E[] e : entries) {
+		for (final Object[][] entries : this.entries) {
+			for (Object[] e : entries) {
 				Arrays.fill(e, null);
 			}
 		}
@@ -196,21 +172,19 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 		return max;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public int addPage() {
 		if (entries.size() >= max && max > 0) return -1;
-		@SuppressWarnings("unchecked")
-		E[][] entries = (E[][]) Array.newInstance(clazz, y, x);
-		this.entries.add(entries);
+		this.entries.add((E[][]) new Object[y][x]);
 		return this.entries.size()-1;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void addPage(int index) {
 		if (entries.size() >= max) return;
-		@SuppressWarnings("unchecked")
-		E[][] entries = (E[][]) Array.newInstance(clazz, y, x);
-		this.entries.add(index, entries);
+		this.entries.add(index, (E[][]) new Object[y][x]);
 	}
 	
 	@Override

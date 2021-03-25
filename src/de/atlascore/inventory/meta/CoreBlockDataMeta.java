@@ -6,26 +6,32 @@ import de.atlasmc.inventory.meta.BlockDataMeta;
 
 public class CoreBlockDataMeta extends CoreItemMeta implements BlockDataMeta {
 
+	private BlockData data;
+	private Material material;
 	public CoreBlockDataMeta(Material material) {
+		this(material, null);
+	}
+	
+	public CoreBlockDataMeta(Material material, BlockData data) {
 		super(material);
+		this.material = material;
+		this.data = data;
 	}
 
 	@Override
 	public BlockData getBlockData() {
-		// TODO Auto-generated method stub
-		return null;
+		if (data == null) data = material.createBlockData();
+		return data;
 	}
 
 	@Override
 	public boolean hasBlockData() {
-		// TODO Auto-generated method stub
-		return false;
+		return data != null;
 	}
 
 	@Override
 	public void setBlockData(BlockData data) {
-		// TODO Auto-generated method stub
-		
+		this.data = data;
 	}
 
 }

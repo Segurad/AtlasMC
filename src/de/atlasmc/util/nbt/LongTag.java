@@ -32,4 +32,9 @@ public final class LongTag extends AbstractTag {
 		output.writeLong(data);
 	}
 
+	@Override
+	public void setData(Object data) {
+		this.data = (long) data;
+	}
+
 }

@@ -9,24 +9,27 @@ import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeModifier;
 import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.inventory.meta.ItemMeta;
+import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.CompoundTag;
 import de.atlasmc.util.nbt.NBT;
+import de.atlasmc.util.nbt.NBTHolder;
 
-public class ItemStack {
+public class ItemStack implements NBTHolder {
 
-	private int amount;
+	private byte amount;
 	private Material type;
 	private ItemMeta meta;
-	
-	public ItemStack(Material mat, byte amount2) {
-		// TODO Auto-generated constructor stub
-	}
 
 	public ItemStack(Material material) {
-		// TODO Auto-generated constructor stub
+		this(material, 1);
 	}
 
 	public ItemStack(Material material, int amount) {
-		// TODO Auto-generated constructor stub
+		Validate.notNull(material, "Material can not be null!");
+		Validate.isFalse(amount > 127, "Amount can not be higher than 127");
+		Validate.isFalse(amount < -128, "Amount can not be lower than -128");
+		type = material;
+		this.amount = (byte) amount;
 	}
 
 	public Material getType() {
@@ -38,9 +41,9 @@ public class ItemStack {
 	}
 	
 	public void setAmount(int amount) {
-		if (amount > 127) throw new IllegalArgumentException("Amount can not be higher than 127");
-		if (amount < -128) throw new IllegalArgumentException("Amount can not be lower than -128");
-		this.amount = amount;
+		Validate.isFalse(amount > 127, "Amount can not be higher than 127");
+		Validate.isFalse(amount < -128, "Amount can not be lower than -128");
+		this.amount = (byte) amount;
 	}
 	
 	public ItemMeta getItemMeta() {
@@ -73,12 +76,12 @@ public class ItemStack {
 	}
 	
 	public ItemStack clone() {
+		// TODO
 		return null;
 	}
 
 	public int getMaxStackSize() {
-		// TODO Auto-generated method stub
-		return 0;
+		return type.getMaxAmount();
 	}
 	
 	public boolean isSimilarIgnoreDamage(ItemStack item) {
@@ -86,18 +89,19 @@ public class ItemStack {
 		if (item == this) return true;
 		if (type != item.getType()) return false; 
 		if (item.hasItemMeta() || hasItemMeta()) {
-			
+			if (!(item.hasItemMeta() && hasItemMeta())) return false;
+			// TODO
 		}
 		return true;
 	}
 	
-	public boolean isPartOf(ItemStack part, ItemStack item) {
-		if (part == null || item == null) return false;
-		if (part.getType() != item.getType()) return false;
-		if (!part.hasItemMeta() && !item.hasItemMeta()) return true;
-		if (part.isSimilar(item)) return true;
-		ItemMeta metapart = part.getItemMeta();
-		ItemMeta metaitem = part.getItemMeta();
+	public boolean isPartOf(ItemStack item) {
+		if (item == null) return false;
+		if (getType() != item.getType()) return false;
+		if (!hasItemMeta() && !item.hasItemMeta()) return true;
+		if (isSimilar(item)) return true;
+		ItemMeta metapart = getItemMeta();
+		ItemMeta metaitem = item.getItemMeta();
 		if (metapart.hasDisplayName()) {
 			if (!metaitem.hasDisplayName()) return false;
 			if (!metaitem.getDisplayName().contains(metapart.getDisplayName())) return false;
@@ -110,10 +114,7 @@ public class ItemStack {
 		}
 		if (metapart.hasLore()) {
 			if (!metaitem.hasLore()) return false;
-			List<String> lore = metaitem.getLore();
-			for (String s : metapart.getLore()) {
-				if (!lore.contains(s)) return false;
-			}
+			return metaitem.getLore().equals(metapart.getLore());
 		}
 		if (metapart.hasCustomModelData()) {
 			if (!metaitem.hasCustomModelData()) return false;
@@ -142,5 +143,23 @@ public class ItemStack {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public NBT toNBT(String local, boolean systemData) {
+		final CompoundTag container = new CompoundTag();
+		container.addByteTag("Count", (byte) getAmount());
+		container.addStringTag("id", getType().getNamespacedName());
+		if(hasItemMeta()) {
+			NBT meta = getItemMeta().toNBT();
+			meta.setName("tag");
+			container.addTag(meta);
+		}
+		return container;
+	}
+
+	@Override
+	public void fromNBT(NBT nbt) {
+		// TODO
 	}
 }

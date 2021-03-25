@@ -22,8 +22,8 @@ public abstract class ElementManagerGUI<E> extends MultipageGUI {
 	protected final PageComponent<E> elements;
 	protected final ComponentHandler ehandler;
 	
-	public ElementManagerGUI(String name, Class<E> clazz, int add, ItemStack addicon) {
-		this(name, clazz, add, addicon, 0);
+	public ElementManagerGUI(String name, int add, ItemStack addicon) {
+		this(name, add, addicon, 0);
 	}
 
 	/**
@@ -35,10 +35,10 @@ public abstract class ElementManagerGUI<E> extends MultipageGUI {
 	 * @param maxpages
 	 */
 	@SuppressWarnings("unchecked")
-	public ElementManagerGUI(String name, Class<E> clazz, int add, ItemStack addicon, int maxpages) {
+	public ElementManagerGUI(String name, int add, ItemStack addicon, int maxpages) {
 		super(name, 45, 46, 9, 4, maxpages);
 		if (add > 8 || add < 0) throw new IllegalArgumentException("Value must be between 0 and 8");
-		elements = new AbstractPageComponent<E>(clazz, 9, 4, maxpages) {
+		elements = new AbstractPageComponent<E>(9, 4, maxpages) {
 			@Override
 			public ComponentHandler createHandler(GUI gui, int slot, int length, int depth, int offsetX, int offsetY) {
 				return new AbstractComponentHandler(elements, gui, slot, length, depth) {

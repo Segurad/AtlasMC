@@ -10,6 +10,7 @@ import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.util.nbt.CompoundTag;
 import de.atlasmc.util.nbt.NBT;
+import de.atlasmc.util.nbt.NBTIOWriter;
 
 public class AbstractPacket {
 
@@ -74,6 +75,21 @@ public class AbstractPacket {
 	    return result;
 	}
 	
+	public static int getVarIntLength(int value) {
+		int length = 0;
+		do {
+	        @SuppressWarnings("unused")
+			int temp = value & 0b01111111;
+	        // Note: >>> means that the sign bit is shifted with the rest of the number rather than being left alone
+	        value >>>= 7;
+	        if (value != 0) {
+	            temp |= 0b10000000;
+	        }
+	        length++;
+	    } while (value != 0);
+		return length;
+	}
+	
 	public static void writeVarInt(int value, DataOutput output) throws IOException {
 	    do {
 	        int temp = value & 0b01111111;
@@ -84,6 +100,21 @@ public class AbstractPacket {
 	        }
 	        output.writeByte(temp);
 	    } while (value != 0);
+	}
+	
+	public static int getVarLongLength(long value) {
+		int length = 0;
+		do {
+	        @SuppressWarnings("unused")
+			int temp = (int) (value & 0b01111111);
+	        // Note: >>> means that the sign bit is shifted with the rest of the number rather than being left alone
+	        value >>>= 7;
+	        if (value != 0) {
+	            temp |= 0b10000000;
+	        }
+	        length++;
+	    } while (value != 0);
+		return length;
 	}
 	
 	public static void writeVarLong(long value, DataOutput output) throws IOException {
@@ -157,7 +188,7 @@ public class AbstractPacket {
 		writeVarInt(item.getType().getItemID(), output);
 		output.writeByte(item.getAmount());
 		if (!item.hasItemMeta()) output.writeByte(0);
-		else item.getMetaAsNBT().write(output, false);
+		else item.getItemMeta().toNBT(new NBTIOWriter(output), null, false);
 	}
 
 }

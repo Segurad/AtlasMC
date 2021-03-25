@@ -1,12 +1,10 @@
 package de.atlasmc.util.nbt;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public final class CompoundTag extends AbstractTag {
+public final class CompoundTag extends AbstractTag implements Iterable<NBT> {
 
 	private List<NBT> data;
 	
@@ -20,6 +18,13 @@ public final class CompoundTag extends AbstractTag {
 	@Override
 	public List<NBT> getData() {
 		return data;
+	}
+	
+	public NBT getTag(String name) {
+		for (NBT nbt : data) {
+			if (nbt.getName().equals(name)) return nbt;
+		}
+		return null;
 	}
 
 	@Override
@@ -55,7 +60,7 @@ public final class CompoundTag extends AbstractTag {
 		this.data.add(new IntTag(name, value));
 	}
 	
-	public ListTag<NBT> addListTag(String name, TagType type) {
+	public ListTag<? extends NBT> addListTag(String name, TagType type) {
 		ListTag<NBT> tag = new ListTag<NBT>(name, type);
 		this.data.add(tag);
 		return tag;
@@ -81,31 +86,20 @@ public final class CompoundTag extends AbstractTag {
 		data.remove(tag);
 	}
 
-	@Override
-	void readD(DataInput input, boolean readName) throws IOException {
-		data.clear();
-		while(true) {
-			byte id = input.readByte();
-			if (id <= 0) return;
-			TagType type = TagType.getByID(id);
-			NBT dat = type.createTag();
-			dat.read(input, true);
-			data.add(dat);
-		}
-	}
-
-	@Override
-	void writeD(DataOutput output, boolean readName) throws IOException {
-		for (NBT dat : data) {
-			dat.write(output, true);
-		}
-		output.writeByte(0x00);
-	}
-
 	public CompoundTag addCompoundTag(String string) {
 		CompoundTag tag = new CompoundTag(name);
 		this.data.add(tag);
 		return tag;
+	}
+
+	@Override
+	public void setData(Object data) {
+		addTag((NBT) data);
+	}
+
+	@Override
+	public Iterator<NBT> iterator() {
+		return data.iterator();
 	}
 
 }

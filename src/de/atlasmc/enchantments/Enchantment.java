@@ -6,4 +6,9 @@ public abstract class Enchantment {
 
 	public abstract boolean conflictsWith(Enchantment echantment);
 
+	public String getNamespacedName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

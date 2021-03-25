@@ -2,6 +2,8 @@ package de.atlasmc.util;
 
 import java.io.DataInput;
 import java.io.DataOutput;
+import java.io.EOFException;
+import java.io.IOException;
 import java.util.Arrays;
 
 public class ByteDataBuffer implements DataOutput, DataInput {
@@ -23,51 +25,51 @@ public class ByteDataBuffer implements DataOutput, DataInput {
 	}
 	
 	@Override
-	public boolean readBoolean() {
-		if (pos > count) throw new ArrayIndexOutOfBoundsException("Bufferend reached!");
+	public boolean readBoolean() throws IOException {
+		if (pos > count) throw new EOFException("Bufferend reached!");
 		byte value = buffer[pos++];
 		return value == 1;
 	}
 
 	@Override
-	public byte readByte()  {
-		if (pos > count) throw new ArrayIndexOutOfBoundsException("Bufferend reached!");
+	public byte readByte() throws IOException {
+		if (pos > count) throw new EOFException("Bufferend reached!");
 		return buffer[pos++];
 	}
 
 	@Override
-	public char readChar() {
-		if (pos + 1 > count) throw new ArrayIndexOutOfBoundsException("Bufferend reached!");
+	public char readChar() throws IOException {
+		if (pos + 1 > count) throw new EOFException("Bufferend reached!");
 		int value = buffer[pos++] << 8 + buffer[pos++];
 		return (char) value;
 	}
 
 	@Override
-	public double readDouble() {
+	public double readDouble() throws IOException {
 		return Double.longBitsToDouble(readLong());
 	}
 
 	@Override
-	public float readFloat() {
+	public float readFloat() throws IOException {
 		return Float.intBitsToFloat(readInt());
 	}
 
 	@Override
-	public void readFully(byte[] buffer) {
+	public void readFully(byte[] buffer) throws IOException {
 		readFully(buffer, 0, buffer.length);
 	}
 
 	@Override
-	public void readFully(byte[] buffer, int off, int length) {
+	public void readFully(byte[] buffer, int off, int length) throws IOException {
 		for (int i = off; i < length; i++) {
-			if (pos > count) throw new ArrayIndexOutOfBoundsException("Bufferend reached!");
+			if (pos > count) throw new EOFException("Bufferend reached!");
 			buffer[i] = this.buffer[pos++];
 		}
 	}
 
 	@Override
-	public int readInt() {
-		if (pos + 3 > count) throw new ArrayIndexOutOfBoundsException("Bufferend reached!");
+	public int readInt() throws IOException {
+		if (pos + 3 > count) throw new EOFException("Bufferend reached!");
 		int value = buffer[pos++] << 8 +
 				buffer[pos++] << 8 +
 				buffer[pos++] << 8 + 
@@ -81,8 +83,8 @@ public class ByteDataBuffer implements DataOutput, DataInput {
 	}
 
 	@Override
-	public long readLong() {
-		if (pos + 7 > count) throw new ArrayIndexOutOfBoundsException("Bufferend reached!");
+	public long readLong() throws IOException {
+		if (pos + 7 > count) throw new EOFException("Bufferend reached!");
 		long value = buffer[pos++] << 8 +
 				buffer[pos++] << 8 +
 				buffer[pos++] << 8 + 
@@ -95,8 +97,8 @@ public class ByteDataBuffer implements DataOutput, DataInput {
 	}
 
 	@Override
-	public short readShort() {
-		if (pos + 1 > count) throw new ArrayIndexOutOfBoundsException("Bufferend reached!");
+	public short readShort() throws IOException {
+		if (pos + 1 > count) throw new EOFException("Bufferend reached!");
 		int value = buffer[pos++] << 8 + buffer[pos++];
 		return (short) value;
 	}
@@ -108,7 +110,7 @@ public class ByteDataBuffer implements DataOutput, DataInput {
 	}
 
 	@Override
-	public int readUnsignedByte() {
+	public int readUnsignedByte() throws IOException {
 		return readByte() & 0xFF;
 	}
 

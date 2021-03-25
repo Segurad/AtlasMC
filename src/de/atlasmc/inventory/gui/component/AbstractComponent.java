@@ -1,6 +1,5 @@
 package de.atlasmc.inventory.gui.component;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,21 +9,18 @@ import de.atlasmc.inventory.gui.GUI;
 public abstract class AbstractComponent<E> implements Component<E> {
 
 	protected final List<ComponentHandler> handlers;
-	protected final E[][] entries;
-	protected final Class<E> clazz;
+	protected final Object[][] entries;
 	
-	protected AbstractComponent(Class<E> clazz, int x, int y) {
+	protected AbstractComponent(int x, int y) {
 		handlers = new ArrayList<ComponentHandler>();
-		this.clazz = clazz;
-		@SuppressWarnings("unchecked")
-		final E[][] ee = (E[][]) Array.newInstance(clazz, y, x);
-		entries = ee;
+		entries = new Object[y][x];
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public E get(int x, int y) {
 		if (y >= entries.length || x >= entries[y].length) return null;
-		return entries[y][x];
+		return (E) entries[y][x];
 	}
 	
 	@Override
@@ -45,10 +41,6 @@ public abstract class AbstractComponent<E> implements Component<E> {
 		handlers.forEach(h -> { if (h != source) h.internalUpdate(x, y); } );
 	}
 	
-	public boolean add(E entry) {
-		return add(entry, true);
-	}
-	
 	@Override
 	public boolean add(E entry, boolean update) {
 		for (int y = 0; y < entries.length; y++) {
@@ -64,16 +56,12 @@ public abstract class AbstractComponent<E> implements Component<E> {
 		return false;
 	}
 	
-	@Override
-	public boolean remove(E entry) {
-		return remove(entry, true);
-	}
-	
+	@SuppressWarnings("unchecked")
 	@Override 
 	public boolean remove(E entry, boolean update) {
 		for (int y = 0; y < entries.length; y++) {
 			for (int x = 0; x < entries[y].length; x++) {
-				final E etry = entries[y][x];
+				final E etry = (E) entries[y][x];
 				if (entries[y][x] == null) continue;
 				if (!etry.equals(entry)) continue;
 				entries[y][x] = null;
@@ -125,26 +113,17 @@ public abstract class AbstractComponent<E> implements Component<E> {
 	}
 	
 	@Override
-	public Class<E> getType() {
-		return clazz;
-	}
-	
-	@Override
-	public void clear() {
-		clear(true);
-	}
-	
-	@Override
 	public void clear(boolean update) {
-		for (E[] e : entries) {
+		for (Object[] e : entries) {
 			Arrays.fill(e, null);
 		}
 		if (update) handlers.forEach(h -> h.updateDisplay());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public E[][] getEntries() {
-		return entries;
+		return (E[][]) entries;
 	}
 	
 	@Override

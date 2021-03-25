@@ -1,9 +1,7 @@
 package de.atlasmc.chat;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 public class LanguageHandler {
 
@@ -12,33 +10,10 @@ public class LanguageHandler {
 		en_US = "en_US";
 	
 	private final List<LanguagePack> packs = new ArrayList<LanguagePack>();
-	private final HashMap<UUID, LanguagePack> lang = new HashMap<UUID, LanguagePack>();
 	private LanguagePack defaultPack;
 
 	public LanguageHandler(LanguagePack defaultPack) {
 		this.defaultPack = defaultPack;
-	}
-
-	public String getLang(UUID player) {
-		if (lang.containsKey(player)) {
-			return lang.get(player).getLang();
-		} else
-			return defaultPack.getLang();
-	}
-
-	public LanguagePack getLangPack(UUID player) {
-		if (lang.containsKey(player)) {
-			return lang.get(player);
-		} else
-			return defaultPack;
-	}
-
-	public void setLangPack(UUID player, LanguagePack pack) {
-		lang.put(player, pack);
-	}
-
-	public void removePlayer(UUID player) {
-		lang.remove(player);
 	}
 
 	public LanguagePack getPack(String lang) {

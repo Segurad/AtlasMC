@@ -1,10 +1,12 @@
 package de.atlascore.inventory.meta;
 
+import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import de.atlasmc.Material;
 import de.atlasmc.attribute.Attribute;
@@ -15,13 +17,14 @@ import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.inventory.ItemFlag;
 import de.atlasmc.inventory.meta.ItemMeta;
+import de.atlasmc.inventory.meta.lore.Lore;
 import de.atlasmc.util.Validate;
 import de.atlasmc.util.map.ArrayListMultimap;
 import de.atlasmc.util.map.ListMultimap;
 import de.atlasmc.util.map.Multimap;
 import de.atlasmc.util.nbt.CompoundTag;
-import de.atlasmc.util.nbt.ListTag;
-import de.atlasmc.util.nbt.NBT;
+import de.atlasmc.util.nbt.NBTReader;
+import de.atlasmc.util.nbt.NBTWriter;
 import de.atlasmc.util.nbt.TagType;
 
 public class CoreItemMeta implements ItemMeta {
@@ -29,7 +32,7 @@ public class CoreItemMeta implements ItemMeta {
 	private boolean unbreakable;
 	private String displayname, nameKey;
 	private LanguageHandler langHandler;
-	private List<String>lore;
+	private Lore lore;
 	private int flags;
 	private Integer customModelData;
 	private Map<Enchantment, Integer> enchants;
@@ -220,25 +223,67 @@ public class CoreItemMeta implements ItemMeta {
 	}
 
 	@Override
-	public NBT toNBT(String local) {
-		final CompoundTag container = new CompoundTag();
-		if (hasCustomModelData()) container.addIntTag("CustomModelData", customModelData);
+	public void toNBT(NBTWriter writer, String local, boolean systemData) throws IOException {
+		Validate.notNull(writer, "NBTWriter can not be null!");
+		writer.writeCompoundTag(null);
+		if (hasCustomModelData()) writer.writeIntTag("CustomModelData", customModelData);
 		if (hasDisplayName() || hasLore() || hasLocalizedName()) {
-			final CompoundTag display = container.addCompoundTag("display");
+			writer.writeCompoundTag("display");
 			String name = getLocalizedName(local);
 			if (name == null) {
-				display.addStringTag("Name", MessageUtil.formatMessage(name));
+				writer.writeStringTag("Name", MessageUtil.formatMessage(name));
 			} else if (hasDisplayName()) {
-				display.addStringTag("Name", MessageUtil.formatMessage(displayname));
+				writer.writeStringTag("Name", MessageUtil.formatMessage(displayname));
 			}
 			if (hasLore()) {
-				ListTag<NBT> list = display.addListTag(name, TagType.STRING);
-				lore.forEach(s -> list.createEntry(MessageUtil.formatMessage(s)));
+				writer.writeListTag("Lore", TagType.STRING, lore.countLines());
+				for (String s : lore) {
+					writer.writeStringTag(null, MessageUtil.formatMessage(s));
+				}
+			}
+			writer.writeEndTag();
+		}
+		if (hasEnchants()) {
+			writer.writeListTag("Enchantments", TagType.COMPOUND, getEnchants().size());
+			for (Enchantment ench : getEnchants().keySet()) {
+				writer.writeCompoundTag(null);
+				writer.writeStringTag("id", ench.getNamespacedName().toLowerCase());
+				writer.writeShortTag("lvl", (short) getEnchantLevel(ench));
+				writer.writeEndTag();
 			}
 		}
-		container.addIntTag("HideFlags", flags);
-		container.addByteTag("Unbreakable", (byte) (unbreakable ? 1 : 0));
-		return container;
+		if (hasAttributeModifiers()) {
+			writer.writeListTag("AttributeModifiers", TagType.COMPOUND, 0);
+			Multimap<Attribute, AttributeModifier> attributes = getAttributeModifiers();
+			for (Attribute attribute : attributes.keySet()) {
+				final String namespaced = attribute.getNamespacedName().toLowerCase();
+				final String name = attribute.name();
+				for (AttributeModifier mod : attributes.get(attribute)) {
+					writer.writeCompoundTag(null);
+					writer.writeDoubleTag("Amount", mod.getAmount());
+					writer.writeStringTag("AttributeName", namespaced);
+					writer.writeStringTag("Name", name);
+					writer.writeIntTag("Operation", mod.getOperation().ordinal());
+					writer.writeStringTag("Slot", mod.getSlot().name().toLowerCase());
+					final UUID uuid = mod.getUUID();
+					writer.writeIntArrayTag("UUID", new int[] {
+							(int) (uuid.getMostSignificantBits()>>32),
+							(int) uuid.getMostSignificantBits(),
+							(int) (uuid.getLeastSignificantBits()>>32),
+							(int) uuid.getLeastSignificantBits()
+					});
+				}
+			}
+		}
+		if (hasItemFlags()) writer.writeIntTag("HideFlags", flags);
+		if (isUnbreakable()) writer.writeByteTag("Unbreakable", 1);
+		writer.writeEndTag();
+	}
+	
+	@Override
+	public void fromNBT(NBTReader reader) {
+		Validate.notNull(reader, "NBTReader can not be null!");
+		// TODO:
 	}
 
 	@Override
@@ -247,7 +292,7 @@ public class CoreItemMeta implements ItemMeta {
 	}
 
 	@Override
-	public void setLore(List<String> lore) {
+	public void setLore(Lore lore) {
 		this.lore = lore;
 	}
 
@@ -295,7 +340,7 @@ public class CoreItemMeta implements ItemMeta {
 	}
 
 	@Override
-	public List<String> getLore() {
+	public Lore getLore() {
 		return lore;
 	}
 
@@ -330,22 +375,23 @@ public class CoreItemMeta implements ItemMeta {
 
 	@Override
 	public boolean hasAttributeModifiers() {
-		return !attributes.isEmpty();
+		return attributes != null && !attributes.isEmpty();
 	}
 
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers() {
+		if (attributes == null) attributes = new ArrayListMultimap<>();
 		return attributes;
 	}
 
 	@Override
 	public List<AttributeModifier> getAttributeModifiers(Attribute attribute) {
+		if (attributes == null) return null;
 		return attributes.get(attribute);
 	}
 
 	@Override
-	public void fromNBT(NBT nbt) {
-		// TODO Auto-generated method stub
-		
+	public boolean hasItemFlags() {
+		return flags != 0;
 	}
 }

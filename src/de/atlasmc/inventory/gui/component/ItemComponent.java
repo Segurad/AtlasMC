@@ -6,7 +6,7 @@ import de.atlasmc.inventory.gui.GUI;
 public class ItemComponent extends AbstractComponent<ItemStack> {
 
 	public ItemComponent(int x, int y) {
-		super(ItemStack.class, x, y);
+		super(x, y);
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public class ItemComponent extends AbstractComponent<ItemStack> {
 		for (int y = 0; y < entries.length; y++) {
 			for (int x = 0; x < entries[y].length; x++) {
 				if (entries[y][x] != null) {
-					ItemStack entry = entries[y][x];
+					ItemStack entry = (ItemStack) entries[y][x];
 					if (entry.isSimilar(item) && entry.getAmount() < entry.getMaxStackSize()) {
 						if (entry.getAmount() + item.getAmount() > entry.getMaxStackSize()) {
 							item.setAmount(item.getAmount() - (entry.getMaxStackSize()-entry.getAmount()));

@@ -59,7 +59,10 @@ public interface Component<E> extends Iterable<E> {
 	 */
 	public void set(int x, int y, E entry, boolean update);
 
-	public boolean add(E entry);
+	public default boolean add(E entry) {
+		return add(entry, true);
+	}
+	
 	/**
 	 * Appends an Entry to the Component
 	 * @param entry
@@ -68,7 +71,14 @@ public interface Component<E> extends Iterable<E> {
 	 */
 	public boolean add(E entry, boolean update);
 
-	public boolean remove(E entry);
+	/**
+	 * Removes the first Entry that is equal and updates
+	 * @param entry
+	 * @return true if an Entry could be removed
+	 */
+	public default boolean remove(E entry) {
+		return remove(entry, true);
+	}
 	
 	/**
 	 * Removes the first Entry that is equal
@@ -86,9 +96,10 @@ public interface Component<E> extends Iterable<E> {
 	 */
 	public E[][] getEntries();
 	
-	public Class<?> getType();
+	public default void clear() {
+		clear(true);
+	}
 	
-	public void clear();
 	public void clear(boolean update);
 	
 	public ComponentIterator<E> iterator();
