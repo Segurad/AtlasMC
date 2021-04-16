@@ -1,12 +1,11 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInSelectTrade;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInSelectTradeV1_16_3 extends AbstractPacket implements PacketInSelectTrade {
 
@@ -17,12 +16,14 @@ public class PacketInSelectTradeV1_16_3 extends AbstractPacket implements Packet
 	private int selectedslot;
 
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		selectedslot = readVarInt(input);
+	public void read(ByteBuf in) throws IOException {
+		selectedslot = readVarInt(in);
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		writeVarInt(selectedslot, out);
+	}
 
 	@Override
 	public int SelectedSlot() {

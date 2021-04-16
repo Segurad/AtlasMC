@@ -7,7 +7,6 @@ import de.atlasmc.FireworkEffect;
 public interface FireworkMeta extends ItemMeta {
 	
 	public void addEffect(FireworkEffect effect);
-	public void addEffects(Iterable<FireworkEffect> effects);
 	public void addEffects(FireworkEffect... effects);
 	public void clearEffects();
 	public FireworkMeta clone();

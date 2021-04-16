@@ -9,5 +9,6 @@ public interface Lore extends Iterable<String> {
 	public String getLine(int line);
 	public void setLine(int line, String text);
 	public int countLines();
+	public void addLine(String text);
 
 }

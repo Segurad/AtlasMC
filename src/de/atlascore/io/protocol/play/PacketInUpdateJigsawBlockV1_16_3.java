@@ -1,13 +1,12 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInUpdateJigsawBlock;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInUpdateJigsawBlockV1_16_3 extends AbstractPacket implements PacketInUpdateJigsawBlock {
 
@@ -19,17 +18,24 @@ public class PacketInUpdateJigsawBlockV1_16_3 extends AbstractPacket implements 
 	private String name,target,pool,finalstate,jointtype;
 
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		pos = readPosition(input);
-		name = readString(input);
-		target = readString(input);
-		pool = readString(input);
-		finalstate = readString(input);
-		jointtype = readString(input);
+	public void read(ByteBuf in) throws IOException {
+		pos = readPosition(in);
+		name = readString(in);
+		target = readString(in);
+		pool = readString(in);
+		finalstate = readString(in);
+		jointtype = readString(in);
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		writePosition(pos, out);
+		writeString(name, out);
+		writeString(target, out);
+		writeString(pool, out);
+		writeString(finalstate, out);
+		writeString(jointtype, out);
+	}
 
 	@Override
 	public SimpleLocation Position() {

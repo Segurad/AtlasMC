@@ -1,12 +1,11 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInSpectate;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInSpectateV1_16_3 extends AbstractPacket implements PacketInSpectate {
 
@@ -17,12 +16,14 @@ public class PacketInSpectateV1_16_3 extends AbstractPacket implements PacketInS
 	private String uuid;
 
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		uuid = readString(input);
+	public void read(ByteBuf in) throws IOException {
+		uuid = readString(in);
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		writeString(uuid, out);
+	}
 
 	@Override
 	public String UUID() {

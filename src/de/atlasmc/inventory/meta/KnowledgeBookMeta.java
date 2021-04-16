@@ -2,12 +2,14 @@ package de.atlasmc.inventory.meta;
 
 import java.util.List;
 
+import de.atlasmc.recipe.Recipe;
+
 public interface KnowledgeBookMeta extends ItemMeta {
 	
-	public void addRecipe(String... recipes);
+	public void addRecipe(Recipe... recipes);
 	public KnowledgeBookMeta clone();
-	public List<String> getRecipes();
+	public List<Recipe> getRecipes();
 	public boolean hasRecipes();
-	public void setRecipes(List<String> recipes);
+	public void setRecipes(List<Recipe> recipes);
 
 }

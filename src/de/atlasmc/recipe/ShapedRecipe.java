@@ -6,7 +6,7 @@ import java.util.List;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.recipe.condition.Condition;
 
-public class ShapedRecipe extends AbstractRecipe implements Recipe {
+public class ShapedRecipe extends Recipe {
 	
 	public ShapedRecipe(String key, ItemStack result) {
 		super(result);

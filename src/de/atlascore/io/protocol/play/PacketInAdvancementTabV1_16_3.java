@@ -1,12 +1,11 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInAdvancementTab;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInAdvancementTabV1_16_3 extends AbstractPacket implements PacketInAdvancementTab {
 
@@ -18,13 +17,16 @@ public class PacketInAdvancementTabV1_16_3 extends AbstractPacket implements Pac
 	private String tabID;
 
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		action = input.readInt();
-		tabID = readString(input);
+	public void read(ByteBuf in) throws IOException {
+		action = in.readInt();
+		tabID = readString(in);
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		out.writeInt(action);
+		writeString(tabID, out);
+	}
 
 	@Override
 	public int Action() {

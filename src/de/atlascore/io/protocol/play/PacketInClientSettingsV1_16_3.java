@@ -1,12 +1,11 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInClientSettings;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInClientSettingsV1_16_3 extends AbstractPacket implements PacketInClientSettings {
 
@@ -20,17 +19,24 @@ public class PacketInClientSettingsV1_16_3 extends AbstractPacket implements Pac
 	private byte skinParts;
 	
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		locale = readString(input);
-		viewDistance = input.readByte();
-		chatMode = readVarInt(input);
-		chatColor = input.readBoolean();
-		skinParts = input.readByte();
-		mainHand = readVarInt(input);
+	public void read(ByteBuf in) throws IOException {
+		locale = readString(in);
+		viewDistance = in.readByte();
+		chatMode = readVarInt(in);
+		chatColor = in.readBoolean();
+		skinParts = in.readByte();
+		mainHand = readVarInt(in);
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		writeString(locale, out);
+		out.writeByte(viewDistance);
+		writeVarInt(chatMode, out);
+		out.writeBoolean(chatColor);
+		out.writeByte(skinParts);
+		writeVarInt(mainHand, out);
+	}
 
 	@Override
 	public String getLocale() {

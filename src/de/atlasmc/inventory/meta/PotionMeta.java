@@ -9,7 +9,11 @@ import de.atlasmc.potion.PotionEffectType;
 
 public interface PotionMeta extends ItemMeta {
 	
-	public boolean addCustomEffect(PotionEffect effect, boolean overwrite);
+	public default void addCustomEffect(PotionEffect effect) {
+		addCustomEffect(effect, false);
+	}
+	
+	public void addCustomEffect(PotionEffect effect, boolean overwrite);
 	public boolean clearCustomEffects();
 	public PotionMeta clone();
 	public PotionData getBaseData();
@@ -19,8 +23,8 @@ public interface PotionMeta extends ItemMeta {
 	public boolean hasCustomEffect(PotionEffectType type);
 	public boolean hasCustomEffects();
 	public boolean removeCustomEffect(PotionEffectType type);
+	public boolean removeAllCustomEffects(PotionEffectType type);
 	public void setBasePotionData(PotionData data);
 	public void setColor(Color color);
-	public boolean setMainEffect(PotionEffectType type);
 	
 }

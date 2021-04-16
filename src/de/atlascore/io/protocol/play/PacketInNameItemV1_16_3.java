@@ -1,12 +1,11 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInNameItem;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInNameItemV1_16_3 extends AbstractPacket implements PacketInNameItem {
 
@@ -17,12 +16,14 @@ public class PacketInNameItemV1_16_3 extends AbstractPacket implements PacketInN
 	private String itemname;
 	
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		itemname = readString(input);
+	public void read(ByteBuf in) throws IOException {
+		itemname = readString(in);
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		writeString(itemname, out);
+	}
 
 	@Override
 	public String ItemName() {

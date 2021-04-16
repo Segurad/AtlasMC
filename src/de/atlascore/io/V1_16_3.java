@@ -1,7 +1,5 @@
 package de.atlascore.io;
 
-import java.net.Socket;
-
 import de.atlascore.io.protocol.play.PacketInAdvancementTabV1_16_3;
 import de.atlascore.io.protocol.play.PacketInAnimationV1_16_3;
 import de.atlascore.io.protocol.play.PacketInChatMessageV1_16_3;
@@ -52,9 +50,11 @@ import de.atlascore.io.protocol.play.PacketOutSetSlotV1_16_3;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.protocol.PlayerConnection;
+import de.atlasmc.io.protocol.ProtocolAdapter;
 import de.atlasmc.io.protocol.play.PacketOutSetSlot;
+import io.netty.channel.socket.SocketChannel;
 
-public class V1_16_3 implements de.atlasmc.io.protocol.ProtocolAdapter {
+public class V1_16_3 implements ProtocolAdapter {
 
 	public static final int version = 753;
 	
@@ -69,8 +69,8 @@ public class V1_16_3 implements de.atlasmc.io.protocol.ProtocolAdapter {
 	}
 
 	@Override
-	public PlayerConnection createConnectionHandler(Socket socket) {
-		return new ConnectionHandlerV1_16_3(socket, this);
+	public PlayerConnection createConnectionHandler(SocketChannel socket) {
+		return new CorePlayerConnection(socket);
 	}
 
 	@Override
@@ -136,18 +136,6 @@ public class V1_16_3 implements de.atlasmc.io.protocol.ProtocolAdapter {
 	@Override
 	public PacketOutSetSlot createPacketOutSetSlot(byte windowID, int slot, ItemStack item) {
 		return new PacketOutSetSlotV1_16_3(windowID, (short) slot, item);
-	}
-
-	@Override
-	public int getConnectionCount() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void setConnectionCount(int count) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

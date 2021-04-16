@@ -1,12 +1,11 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInQueryEntityNBT;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInQueryEntityNBTV1_16_3 extends AbstractPacket implements PacketInQueryEntityNBT {
 
@@ -17,13 +16,16 @@ public class PacketInQueryEntityNBTV1_16_3 extends AbstractPacket implements Pac
 	private int transactionID, entityID;
 
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		transactionID = readVarInt(input);
-		entityID = readVarInt(input);
+	public void read(ByteBuf in) throws IOException {
+		transactionID = readVarInt(in);
+		entityID = readVarInt(in);
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		writeVarInt(transactionID, out);
+		writeVarInt(entityID, out);
+	}
 
 	@Override
 	public int getTransactionID() {

@@ -1,13 +1,12 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInPlayerBlockPlacement;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInPlayerBlockPlacementV1_16_3 extends AbstractPacket implements PacketInPlayerBlockPlacement {
 
@@ -21,17 +20,24 @@ public class PacketInPlayerBlockPlacementV1_16_3 extends AbstractPacket implemen
 	private boolean insideblock;
 
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		hand = readVarInt(input);
-		face = readVarInt(input);
-		pos = readPosition(input);
-		curposx = input.readFloat();
-		curposy = input.readFloat();
-		curposz = input.readFloat();	
+	public void read(ByteBuf in) throws IOException {
+		hand = readVarInt(in);
+		face = readVarInt(in);
+		pos = readPosition(in);
+		curposx = in.readFloat();
+		curposy = in.readFloat();
+		curposz = in.readFloat();	
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		writeVarInt(hand, out);
+		writeVarInt(face, out);
+		writePosition(pos, out);
+		out.writeFloat(curposx);
+		out.writeFloat(curposy);
+		out.writeFloat(curposz);
+	}
 
 	@Override
 	public int Hand() {

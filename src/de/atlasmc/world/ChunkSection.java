@@ -17,5 +17,6 @@ public interface ChunkSection {
 	public short setValue(short value, int x, int y, int z);
 	public List<BlockData> getPallet();
 	public List<TileEntity> getTileEntities();
+	public Chunk getChunk();
 
 }

@@ -1,11 +1,11 @@
 package de.atlasmc.event.block;
 
 import de.atlasmc.block.Block;
-import de.atlasmc.event.HandlerList;
+import de.atlasmc.event.ServerHandlerList;
 
 public class BlockExpEvent extends BlockEvent {
 
-	private static final HandlerList handlers = new HandlerList();
+	private static final ServerHandlerList handlers = new ServerHandlerList();
 	private int exp;
 	
 	public BlockExpEvent(Block block, int exp) {
@@ -22,11 +22,11 @@ public class BlockExpEvent extends BlockEvent {
 	}
 
 	@Override
-	public HandlerList getHandlers() {
+	public ServerHandlerList getHandlers() {
 		return handlers;
 	}
 	
-	public static HandlerList getHandlerList() {
+	public static ServerHandlerList getHandlerList() {
 		return handlers;
 	}
 

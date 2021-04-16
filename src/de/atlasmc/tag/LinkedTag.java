@@ -2,7 +2,7 @@ package de.atlasmc.tag;
 
 import java.util.Set;
 
-public class LinkedTag<T> implements Tag<T> {
+public class LinkedTag<T> extends Tag<T> {
 	
 	private Set<Tag<T>> tagcontainer;
 

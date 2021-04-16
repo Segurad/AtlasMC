@@ -1,8 +1,12 @@
 package de.atlascore.block.data;
 
+import java.io.IOException;
+
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.io.NBTReader;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBlockData implements BlockData {
 	
@@ -37,6 +41,18 @@ public class CoreBlockData implements BlockData {
 	@Override
 	public int getStateID() {
 		return material.getBlockID();
+	}
+
+	@Override
+	public void toNBT(NBTWriter writer, String local, boolean systemData) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void fromNBT(NBTReader reader) throws IOException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

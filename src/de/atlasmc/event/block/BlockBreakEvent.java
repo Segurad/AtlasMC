@@ -2,11 +2,11 @@ package de.atlasmc.event.block;
 
 import de.atlasmc.block.Block;
 import de.atlasmc.event.Cancellable;
-import de.atlasmc.event.HandlerList;
+import de.atlasmc.event.ServerHandlerList;
 
 public class BlockBreakEvent extends BlockEvent implements Cancellable {
 
-	private static final HandlerList handlers = new HandlerList();
+	private static final ServerHandlerList handlers = new ServerHandlerList();
 	private boolean cancelled;
 	
 	public BlockBreakEvent(Block block) {
@@ -25,11 +25,11 @@ public class BlockBreakEvent extends BlockEvent implements Cancellable {
 	}
 
 	@Override
-	public HandlerList getHandlers() {
+	public ServerHandlerList getHandlers() {
 		return handlers;
 	}
 	
-	public static HandlerList getHandlerList() {
+	public static ServerHandlerList getHandlerList() {
 		return handlers;
 	}
 

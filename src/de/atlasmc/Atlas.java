@@ -3,37 +3,33 @@ package de.atlasmc;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.io.atlasnetwork.AtlasNetwork;
-import de.atlasmc.io.atlasnetwork.AtlasNode;
-import de.atlasmc.io.atlasnetwork.Proxy;
-import de.atlasmc.io.atlasnetwork.server.AtlasServer;
+import de.atlasmc.atlasnetwork.AtlasNetwork;
+import de.atlasmc.atlasnetwork.AtlasNode;
+import de.atlasmc.atlasnetwork.proxy.Proxy;
+import de.atlasmc.atlasnetwork.server.LocalServer;
+import de.atlasmc.atlasnetwork.server.ServerGroup;
 
 public class Atlas implements AtlasNode {
 
 	private static Atlas instance;
 	private AtlasNetwork network;
-	private List<AtlasServer> localServers;
+	private List<LocalServer> localServers;
 	
 	public static Atlas getInstance() {
 		return instance;
 	}
-
-	@Override
-	public AtlasNode getMaster() {
-		return network.getMaster();
-	}
-
-	@Override
-	public boolean isMaster() {
-		return network.getMaster() == this;
-	}
 	
-	public List<AtlasServer> getServers() {
-		return new ArrayList<AtlasServer>(localServers);
+	public List<LocalServer> getServers() {
+		return new ArrayList<LocalServer>(localServers);
 	}
 
 	@Override
 	public List<Proxy> getProxys() {
+		return null;
+	}
+
+	@Override
+	public List<ServerGroup> getAvailableGroups() {
 		// TODO Auto-generated method stub
 		return null;
 	}

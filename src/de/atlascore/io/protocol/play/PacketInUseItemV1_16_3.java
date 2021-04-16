@@ -1,12 +1,11 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInUseItem;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInUseItemV1_16_3 extends AbstractPacket implements PacketInUseItem {
 
@@ -17,12 +16,14 @@ public class PacketInUseItemV1_16_3 extends AbstractPacket implements PacketInUs
 	private int hand;
 
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		hand = readVarInt(input);
+	public void read(ByteBuf in) throws IOException {
+		hand = readVarInt(in);
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		writeVarInt(hand, out);
+	}
 
 	@Override
 	public int Hand() {

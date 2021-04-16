@@ -2,7 +2,7 @@ package de.atlasmc.tag;
 
 import java.util.Set;
 
-public class TagContainer<T> implements Tag<T> {
+public class TagContainer<T> extends Tag<T> {
 	
 	private Set<T> taged;
 	

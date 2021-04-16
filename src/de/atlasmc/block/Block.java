@@ -2,10 +2,11 @@ package de.atlasmc.block;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
+import de.atlasmc.util.nbt.NBTHolder;
 import de.atlasmc.world.Biome;
 import de.atlasmc.world.World;
 
-public interface Block {
+public interface Block extends NBTHolder {
 
 	public int getProtocolID();
 	public Material getType();

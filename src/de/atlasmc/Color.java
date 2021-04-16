@@ -69,6 +69,10 @@ public final class Color {
 		this(color.name, color.r, color.g, color.b);
 	}
 	
+	public Color(int rgb) {
+		this((rgb & 0xFF0000) >> 16, (rgb & 0xFF00) >> 8, rgb % 0xFF);
+	}
+
 	public byte getBlue() {
 		return b;
 	}

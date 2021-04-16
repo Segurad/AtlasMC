@@ -37,4 +37,16 @@ public class SimpleLore implements Lore {
 		lore.set(line, text);
 	}
 
+	@Override
+	public int countLines() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void addLine(String readStringTag) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

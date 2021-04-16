@@ -1,20 +1,22 @@
 package de.atlasmc.entity;
 
+import java.util.UUID;
+
 import de.atlasmc.Effect;
 import de.atlasmc.Location;
 import de.atlasmc.Particle;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
+import de.atlasmc.atlasnetwork.server.AtlasPlayer;
+import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.io.atlasnetwork.server.AtlasPlayer;
-import de.atlasmc.io.atlasnetwork.server.AtlasServer;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.scoreboard.Scoreboard;
 
 public interface Player extends AtlasPlayer, HumanEntity {
 	
-	public AtlasServer getServer();
+	public LocalServer getCurrentServer();
 
 	public void openInventory(Inventory inv);
 
@@ -52,5 +54,9 @@ public interface Player extends AtlasPlayer, HumanEntity {
 	public String getName();
 
 	public void setScoreboard(Scoreboard board);
+	
+	public UUID getInternalUUID();
+	public boolean hasInternalUUID();
+	public void setInternalUUID(UUID uuid);
 
 }

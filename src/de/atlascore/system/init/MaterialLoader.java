@@ -2,12 +2,30 @@ package de.atlascore.system.init;
 
 import de.atlascore.block.data.*;
 import de.atlascore.block.data.type.*;
+import de.atlascore.inventory.meta.CoreBannerMeta;
+import de.atlascore.inventory.meta.CoreCompassMeta;
+import de.atlascore.inventory.meta.CoreCrossbowMeta;
+import de.atlascore.inventory.meta.CoreDamageableMeta;
+import de.atlascore.inventory.meta.CoreEnchantmentStorageMeta;
+import de.atlascore.inventory.meta.CoreFireworkEffectMeta;
+import de.atlascore.inventory.meta.CoreFireworkMeta;
+import de.atlascore.inventory.meta.CoreKnowledgeBookMeta;
+import de.atlascore.inventory.meta.CoreLeatherArmorMeta;
+import de.atlascore.inventory.meta.CoreMapMeta;
+import de.atlascore.inventory.meta.CorePotionMeta;
+import de.atlascore.inventory.meta.CoreSkullMeta;
+import de.atlascore.inventory.meta.CoreSuspiciousStewMeta;
+import de.atlascore.inventory.meta.CoreTileEntityMeta;
+import de.atlascore.inventory.meta.CoreTropicalFishBucketMeta;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.*;
 import de.atlasmc.block.data.type.*;
+import de.atlasmc.block.tile.Banner;
 import de.atlasmc.factory.metadata.AgeableClassMetaDataFactory;
 import de.atlasmc.factory.metadata.ClassMetaDataFactory;
 import de.atlasmc.factory.metadata.MetaDataFactory;
+import de.atlasmc.factory.tileentity.ClassTileEntityFactory;
+import de.atlasmc.factory.tileentity.TileEntityFactory;
 import de.atlasmc.inventory.meta.*;
 import static de.atlasmc.Material.*;
 
@@ -33,7 +51,7 @@ public class MaterialLoader {
 				DIRECTIONAL6F_MDF = new ClassMetaDataFactory(Directional.class, CoreDirectional6Faces.class),
 				FIRE_MDF = new ClassMetaDataFactory(null, null, Fire.class, CoreFire.class),
 				STAIRS_MDF = new ClassMetaDataFactory(Stairs.class, CoreStairs.class),
-				CHEST_MDF = new ClassMetaDataFactory(Chest.class, CoreChest.class),
+				CHEST_MDF = new ClassMetaDataFactory(TileEntityMeta.class, CoreTileEntityMeta.class, Chest.class, CoreChest.class),
 				REDSTONE_WIRE_MDF = new ClassMetaDataFactory(null, null, RedstoneWire.class, CoreRedstoneWire.class),
 				AGEABLE15_MDF = new AgeableClassMetaDataFactory(Ageable.class, CoreAgeable.class, 15),
 				AGEABLE25_MDF = new AgeableClassMetaDataFactory(Ageable.class, CoreAgeable.class, 25),
@@ -41,7 +59,7 @@ public class MaterialLoader {
 				AGEABLE3_MDF = new AgeableClassMetaDataFactory(Ageable.class, CoreAgeable.class, 3),
 				AGEABLE7_MDF = new AgeableClassMetaDataFactory(Ageable.class, CoreAgeable.class, 7),
 				FARMLAND_MDF = new ClassMetaDataFactory(Farmland.class, CoreFarmland.class),
-				FURNACE_MDF = new ClassMetaDataFactory(Furnace.class, CoreFurnace.class),
+				FURNACE_MDF = new ClassMetaDataFactory(TileEntityMeta.class, CoreTileEntityMeta.class, Furnace.class, CoreFurnace.class),
 				SIGN_MDF = new ClassMetaDataFactory(Sign.class, CoreSign.class),
 				DOOR_MDF = new ClassMetaDataFactory(Door.class, CoreDoor.class),
 				LADDER_MDF = new ClassMetaDataFactory(Ladder.class, CoreLadder.class),
@@ -70,10 +88,12 @@ public class MaterialLoader {
 				COMMAND_BLOCK_MDF = new ClassMetaDataFactory(CommandBlock.class, CoreCommandBlock.class),
 				WALL_MDF = new ClassMetaDataFactory(Wall.class, CoreWall.class),
 				ROTATABLE_MDF = new ClassMetaDataFactory(Rotatable.class, CoreRotatable.class),
+				PLAYER_HEAD_MDF = new ClassMetaDataFactory(SkullMeta.class, CoreSkullMeta.class, Rotatable.class, CoreRotatable.class),
+				BANNER_MDF = new ClassMetaDataFactory(BannerMeta.class, CoreBannerMeta.class, Rotatable.class, CoreRotatable.class),
 				ANALOGUE_POWERABLE_MDF = new ClassMetaDataFactory(AnaloguePowerable.class, CoreAnaloguePowerable.class),
 				COMPARATOR_MDF = new ClassMetaDataFactory(Comparator.class, CoreComparator.class),
 				DAYLIGHT_DETECTORE_MDF = new ClassMetaDataFactory(DaylightDetectore.class, CoreDaylightDetector.class),
-				HOPPER_MDF = new ClassMetaDataFactory(Hopper.class, CoreHopper.class),
+				HOPPER_MDF = new ClassMetaDataFactory(TileEntityMeta.class, CoreTileEntityMeta.class, Hopper.class, CoreHopper.class),
 				GLASS_PANE_MDF = new ClassMetaDataFactory(GlassPane.class, CoreGlassPane.class),
 				SLAB_MDF = new ClassMetaDataFactory(Slab.class, CoreSlab.class),
 				OBSERVER_MDF = new ClassMetaDataFactory(Observer.class, CoreObserver.class),
@@ -84,7 +104,7 @@ public class MaterialLoader {
 				BAMBOO_MDF = new ClassMetaDataFactory(Bamboo.class, CoreBamboo.class),
 				BUBBLE_COLUMN_MDF = new ClassMetaDataFactory(BubbleColumn.class, CoreBubbleColumn.class),
 				SCAFFOLDING_MDF = new ClassMetaDataFactory(Scaffolding.class, CoreScaffolding.class),
-				BARREL_MDF = new ClassMetaDataFactory(Barrel.class, CoreBarrel.class),
+				BARREL_MDF = new ClassMetaDataFactory(TileEntityMeta.class, CoreTileEntityMeta.class, Barrel.class, CoreBarrel.class),
 				GRINDSTONE_MDF = new ClassMetaDataFactory(Grindstone.class, CoreGrindstone.class),
 				LECTERN_MDF = new ClassMetaDataFactory(Lectern.class, CoreLectern.class),
 				BELL_MDF = new ClassMetaDataFactory(Bell.class, CoreBell.class),
@@ -92,21 +112,21 @@ public class MaterialLoader {
 				CAMPFIRE_MDF = new ClassMetaDataFactory(Campfire.class, CoreCampfire.class),
 				STRUCTURE_BLOCK_MDF = new ClassMetaDataFactory(StructureBlock.class, CoreStructureBlock.class),
 				JIGSAW_MDF = new ClassMetaDataFactory(Jigsaw.class, CoreJigsaw.class),
-				BEEHIVE_MDF = new ClassMetaDataFactory(Beehive.class, CoreBeehive.class),
+				BEEHIVE_MDF = new ClassMetaDataFactory(TileEntityMeta.class, CoreTileEntityMeta.class, Beehive.class, CoreBeehive.class),
 				RESPAWN_ANCHOR_MDF = new ClassMetaDataFactory(RespawnAnchor.class, CoreRespawnAnchor.class),
 				// --- Items ---
-				DAMAGEABLE_MDF = new ClassMetaDataFactory(DamageableMeta.class, null, null, null),
-				LEATHER_ARMOR_MDF = new ClassMetaDataFactory(LeatherArmorMeta.class, null, null, null),
-				MAP_MDF = new ClassMetaDataFactory(MapMeta.class, null, null, null),
-				POTION_MDF = new ClassMetaDataFactory(PotionMeta.class, null, null, null),
-				FIREWORK_MDF = new ClassMetaDataFactory(FireworkMeta.class, null, null, null),
-				FIREWORK_EFFECT_MDF = new ClassMetaDataFactory(FireworkEffectMeta.class, null, null, null),
-				COMPASS_MDF = new ClassMetaDataFactory(CompassMeta.class, null, null, null),
-				ENCHANTMENT_STORAGE_MDF = new ClassMetaDataFactory(EnchantmentStorageMeta.class, null, null, null),
-				TROPICAL_BUCKET_MDF = new ClassMetaDataFactory(TropicalFishBucketMeta.class, null, null, null),
-				KNOWLEDGE_BOOK_MDF = new ClassMetaDataFactory(KnowledgeBookMeta.class, null, null, null),
-				CROSSBOW_MDF = new ClassMetaDataFactory(CrossbowMeta.class, null, null, null),
-				SUSPICIOUS_STEW_MDF = new ClassMetaDataFactory(SuspiciousStewMeta.class, null, null, null);
+				DAMAGEABLE_MDF = new ClassMetaDataFactory(DamageableMeta.class, CoreDamageableMeta.class, null, null),
+				LEATHER_ARMOR_MDF = new ClassMetaDataFactory(LeatherArmorMeta.class, CoreLeatherArmorMeta.class, null, null),
+				MAP_MDF = new ClassMetaDataFactory(MapMeta.class, CoreMapMeta.class, null, null),
+				POTION_MDF = new ClassMetaDataFactory(PotionMeta.class, CorePotionMeta.class, null, null),
+				FIREWORK_MDF = new ClassMetaDataFactory(FireworkMeta.class, CoreFireworkMeta.class, null, null),
+				FIREWORK_EFFECT_MDF = new ClassMetaDataFactory(FireworkEffectMeta.class, CoreFireworkEffectMeta.class, null, null),
+				COMPASS_MDF = new ClassMetaDataFactory(CompassMeta.class, CoreCompassMeta.class, null, null),
+				ENCHANTMENT_STORAGE_MDF = new ClassMetaDataFactory(EnchantmentStorageMeta.class, CoreEnchantmentStorageMeta.class, null, null),
+				TROPICAL_BUCKET_MDF = new ClassMetaDataFactory(TropicalFishBucketMeta.class, CoreTropicalFishBucketMeta.class, null, null),
+				KNOWLEDGE_BOOK_MDF = new ClassMetaDataFactory(KnowledgeBookMeta.class, CoreKnowledgeBookMeta.class, null, null),
+				CROSSBOW_MDF = new ClassMetaDataFactory(CrossbowMeta.class, CoreCrossbowMeta.class, null, null),
+				SUSPICIOUS_STEW_MDF = new ClassMetaDataFactory(SuspiciousStewMeta.class, CoreSuspiciousStewMeta.class, null, null);
 
 		AIR = c("AIR", 0, AIR_MDF);
 		VOID_AIR = new Material(0, "VOID_AIR", false, (short) 9669, (byte) 1, AIR_MDF);
@@ -1022,7 +1042,7 @@ public class MaterialLoader {
 		SKELETON_WALL_SKULL = new Material(0, "SKELETON_WALL_SKULL", false, (short) 6510, (byte) 0, DIRECTIONAL4F_MDF);
 		WITHER_SKELETON_SKULL = c("WITHER_SKELETON_SKULL", 6514, ROTATABLE_MDF);
 		WITHER_SKELETON_WALL_SKULL = new Material(0, "WITHER_SKELETON_WALL_SKULL", false, (short) 6530, (byte) 0, DIRECTIONAL4F_MDF);
-		PLAYER_HEAD = c("PLAYER_HEAD", 6554, ROTATABLE_MDF);
+		PLAYER_HEAD = c("PLAYER_HEAD", 6554, PLAYER_HEAD_MDF);
 		PLAYER_WALL_HEAD = new Material(0, "PLAYER_WALL_HEAD", false, (short) 6570, (byte) 0, DIRECTIONAL4F_MDF);
 		ZOMBIE_HEAD = c("ZOMBIE_HEAD", 6534, ROTATABLE_MDF);
 		ZOMBIE_WALL_HEAD = new Material(0, "ZOMBIE_WALL_HEAD", false, (short) 6550, (byte) 0, DIRECTIONAL4F_MDF);
@@ -1058,22 +1078,22 @@ public class MaterialLoader {
 		COMMAND_BLOCK_MINECART = i("COMMAND_BLOCK_MINECART", 1);
 		MUTTON = i("MUTTON");
 		COOKED_MUTTON = i("COOKED_MUTTON");
-		WHITE_BANNER = c("WHITE_BANNER", 7901, ROTATABLE_MDF);
-		ORANGE_BANNER = c("ORANGE_BANNER", 7917, ROTATABLE_MDF);
-		MAGENTA_BANNER = c("MAGENTA_BANNER", 7933, ROTATABLE_MDF);
-		LIGHT_BLUE_BANNER = c("LIGHT_BLUE_BANNER", 7949, ROTATABLE_MDF);
-		YELLOW_BANNER = c("YELLOW_BANNER", 7965, ROTATABLE_MDF);
-		LIME_BANNER = c("LIME_BANNER", 7981, ROTATABLE_MDF);
-		PINK_BANNER = c("PINK_BANNER", 7997, ROTATABLE_MDF);
-		GRAY_BANNER = c("GRAY_BANNER", 8013, ROTATABLE_MDF);
-		LIGHT_GRAY_BANNER = c("LIGHT_GRAY_BANNER", 8029, ROTATABLE_MDF);
-		CYAN_BANNER = c("CYAN_BANNER", 8045, ROTATABLE_MDF);
-		PURPLE_BANNER = c("PURPLE_BANNER", 8061, ROTATABLE_MDF);
-		BLUE_BANNER = c("BLUE_BANNER", 8077, ROTATABLE_MDF);
-		BROWN_BANNER = c("BROWN_BANNER", 8093, ROTATABLE_MDF);
-		GREEN_BANNER = c("GREEN_BANNER", 8109, ROTATABLE_MDF);
-		RED_BANNER = c("RED_BANNER", 8125, ROTATABLE_MDF);
-		BLACK_BANNER = c("BLACK_BANNER", 8141, ROTATABLE_MDF);
+		WHITE_BANNER = c("WHITE_BANNER", 7901, BANNER_MDF);
+		ORANGE_BANNER = c("ORANGE_BANNER", 7917, BANNER_MDF);
+		MAGENTA_BANNER = c("MAGENTA_BANNER", 7933, BANNER_MDF);
+		LIGHT_BLUE_BANNER = c("LIGHT_BLUE_BANNER", 7949, BANNER_MDF);
+		YELLOW_BANNER = c("YELLOW_BANNER", 7965, BANNER_MDF);
+		LIME_BANNER = c("LIME_BANNER", 7981, BANNER_MDF);
+		PINK_BANNER = c("PINK_BANNER", 7997, BANNER_MDF);
+		GRAY_BANNER = c("GRAY_BANNER", 8013, BANNER_MDF);
+		LIGHT_GRAY_BANNER = c("LIGHT_GRAY_BANNER", 8029, BANNER_MDF);
+		CYAN_BANNER = c("CYAN_BANNER", 8045, BANNER_MDF);
+		PURPLE_BANNER = c("PURPLE_BANNER", 8061, BANNER_MDF);
+		BLUE_BANNER = c("BLUE_BANNER", 8077, BANNER_MDF);
+		BROWN_BANNER = c("BROWN_BANNER", 8093, BANNER_MDF);
+		GREEN_BANNER = c("GREEN_BANNER", 8109, BANNER_MDF);
+		RED_BANNER = c("RED_BANNER", 8125, BANNER_MDF);
+		BLACK_BANNER = c("BLACK_BANNER", 8141, BANNER_MDF);
 		WHITE_WALL_BANNER = new Material(0, "WHITE_WALL_BANNER", false, (short) 8157, (byte) 0, DIRECTIONAL4F_MDF);
 		ORANGE_WALL_BANNER = new Material(0, "ORANGE_WALL_BANNER", false, (short) 8161, (byte) 0, DIRECTIONAL4F_MDF);
 		MAGENTA_WALL_BANNER = new Material(0, "MAGENTA_WALL_BANNER", false, (short) 8165, (byte) 0, DIRECTIONAL4F_MDF);
@@ -1180,6 +1200,45 @@ public class MaterialLoader {
 		POLISHED_BLACKSTONE_BRICK_STAIRS = c("POLISHED_BLACKSTONE_BRICK_STAIRS", 16268, STAIRS_MDF);
 		CRACKED_POLISHED_BLACKSTONE_BRICKS = c("CRACKED_POLISHED_BLACKSTONE_BRICKS", 16260);
 		RESPAWN_ANCHOR = c("RESPAWN_ANCHOR", 15837, RESPAWN_ANCHOR_MDF);
+		
+		//--- TileEntityFactory --------------------------------------------------------------------------------
+		
+		TileEntityFactory
+		BANNER_TEF = new ClassTileEntityFactory(Banner.class, null); // TODO
+		
+		WHITE_BANNER.setTileEntityFactory(BANNER_TEF);
+		ORANGE_BANNER.setTileEntityFactory(BANNER_TEF);
+		MAGENTA_BANNER.setTileEntityFactory(BANNER_TEF);
+		LIGHT_BLUE_BANNER.setTileEntityFactory(BANNER_TEF);
+		YELLOW_BANNER.setTileEntityFactory(BANNER_TEF);
+		LIME_BANNER.setTileEntityFactory(BANNER_TEF);
+		PINK_BANNER.setTileEntityFactory(BANNER_TEF);
+		GRAY_BANNER.setTileEntityFactory(BANNER_TEF);
+		LIGHT_GRAY_BANNER.setTileEntityFactory(BANNER_TEF);
+		CYAN_BANNER.setTileEntityFactory(BANNER_TEF);
+		PURPLE_BANNER.setTileEntityFactory(BANNER_TEF);
+		BLUE_BANNER.setTileEntityFactory(BANNER_TEF);
+		BROWN_BANNER.setTileEntityFactory(BANNER_TEF);
+		GREEN_BANNER.setTileEntityFactory(BANNER_TEF);
+		RED_BANNER.setTileEntityFactory(BANNER_TEF);
+		BLACK_BANNER.setTileEntityFactory(BANNER_TEF);
+		WHITE_WALL_BANNER.setTileEntityFactory(BANNER_TEF);
+		ORANGE_WALL_BANNER.setTileEntityFactory(BANNER_TEF);
+		MAGENTA_WALL_BANNER.setTileEntityFactory(BANNER_TEF);
+		LIGHT_BLUE_WALL_BANNER.setTileEntityFactory(BANNER_TEF);
+		YELLOW_WALL_BANNER.setTileEntityFactory(BANNER_TEF);
+		LIME_WALL_BANNER.setTileEntityFactory(BANNER_TEF);
+		PINK_WALL_BANNER.setTileEntityFactory(BANNER_TEF);
+		GRAY_WALL_BANNER.setTileEntityFactory(BANNER_TEF);
+		LIGHT_GRAY_WALL_BANNER.setTileEntityFactory(BANNER_TEF);
+		CYAN_WALL_BANNER.setTileEntityFactory(BANNER_TEF);
+		PURPLE_WALL_BANNER.setTileEntityFactory(BANNER_TEF);
+		BLUE_WALL_BANNER.setTileEntityFactory(BANNER_TEF);
+		BROWN_WALL_BANNER.setTileEntityFactory(BANNER_TEF);
+		GREEN_WALL_BANNER.setTileEntityFactory(BANNER_TEF);
+		RED_WALL_BANNER.setTileEntityFactory(BANNER_TEF);
+		BLACK_WALL_BANNER.setTileEntityFactory(BANNER_TEF);
+		
 	}
 
 	private static Material c(String name, int blockID) {

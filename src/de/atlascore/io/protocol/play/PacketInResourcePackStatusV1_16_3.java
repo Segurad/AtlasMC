@@ -1,12 +1,11 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInResourcePackStatus;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInResourcePackStatusV1_16_3 extends AbstractPacket implements PacketInResourcePackStatus {
 
@@ -17,12 +16,14 @@ public class PacketInResourcePackStatusV1_16_3 extends AbstractPacket implements
 	public int result;
 	
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		result = readVarInt(input);
+	public void read(ByteBuf in) throws IOException {
+		result = readVarInt(in);
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		writeVarInt(result, out);
+	}
 
 	@Override
 	public int Result() {

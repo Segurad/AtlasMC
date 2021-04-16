@@ -1,13 +1,12 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInGenerateStructure;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInGenerateStructureV1_16_3 extends AbstractPacket implements PacketInGenerateStructure {
 
@@ -20,14 +19,18 @@ public class PacketInGenerateStructureV1_16_3 extends AbstractPacket implements 
 	private boolean keepJigsaws;
 	
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		simploc = readPosition(input);
-		levels = readVarInt(input);
-		keepJigsaws = input.readBoolean();
+	public void read(ByteBuf in) throws IOException {
+		simploc = readPosition(in);
+		levels = readVarInt(in);
+		keepJigsaws = in.readBoolean();
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		writePosition(simploc, out);
+		writeVarInt(levels, out);
+		out.writeBoolean(keepJigsaws);
+	}
 
 	@Override
 	public SimpleLocation Position() {

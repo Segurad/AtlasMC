@@ -1,12 +1,11 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInInteractEntity;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInInteractEntityV1_16_3 extends AbstractPacket implements PacketInInteractEntity {
 
@@ -19,18 +18,26 @@ public class PacketInInteractEntityV1_16_3 extends AbstractPacket implements Pac
 	private boolean sneaking;
 
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		entityID = readVarInt(input);
-		type = readVarInt(input);
-		hand = readVarInt(input);
-		x = input.readFloat();
-		y = input.readFloat();
-		z = input.readFloat();
-		sneaking = input.readBoolean();
+	public void read(ByteBuf in) throws IOException {
+		entityID = readVarInt(in);
+		type = readVarInt(in);
+		hand = readVarInt(in);
+		x = in.readFloat();
+		y = in.readFloat();
+		z = in.readFloat();
+		sneaking = in.readBoolean();
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		writeVarInt(entityID, out);
+		writeVarInt(type, out);
+		writeVarInt(hand, out);
+		out.writeFloat(x);
+		out.writeFloat(y);
+		out.writeFloat(z);
+		out.writeBoolean(sneaking);
+	}
 
 	@Override
 	public int EntityID() {

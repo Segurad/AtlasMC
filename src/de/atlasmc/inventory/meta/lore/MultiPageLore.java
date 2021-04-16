@@ -40,6 +40,12 @@ public class MultiPageLore implements Lore {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public void addLine(String readStringTag) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 

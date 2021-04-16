@@ -1,5 +1,6 @@
 package de.atlasmc.inventory;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -10,9 +11,10 @@ import de.atlasmc.attribute.AttributeModifier;
 import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.util.Validate;
-import de.atlasmc.util.nbt.CompoundTag;
 import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.NBTHolder;
+import de.atlasmc.util.nbt.io.NBTReader;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class ItemStack implements NBTHolder {
 
@@ -71,12 +73,17 @@ public class ItemStack implements NBTHolder {
 	}
 
 	public boolean isSimilar(ItemStack item) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	
 	public ItemStack clone() {
-		// TODO
+		try {
+			ItemStack clone = (ItemStack) super.clone();
+			if (hasItemMeta()) clone.setItemMeta(getItemMeta().clone());
+			return clone;
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -146,20 +153,18 @@ public class ItemStack implements NBTHolder {
 	}
 
 	@Override
-	public NBT toNBT(String local, boolean systemData) {
-		final CompoundTag container = new CompoundTag();
-		container.addByteTag("Count", (byte) getAmount());
-		container.addStringTag("id", getType().getNamespacedName());
+	public void toNBT(NBTWriter writer, String local, boolean systemData) throws IOException {
+		writer.writeByteTag("Count", (byte) getAmount());
+		writer.writeStringTag("id", getType().getNamespacedName());
 		if(hasItemMeta()) {
-			NBT meta = getItemMeta().toNBT();
-			meta.setName("tag");
-			container.addTag(meta);
+			writer.writeCompoundTag("tag");
+			getItemMeta().toNBT(writer, local, systemData);
+			writer.writeEndTag();
 		}
-		return container;
 	}
 
 	@Override
-	public void fromNBT(NBT nbt) {
-		// TODO
+	public void fromNBT(NBTReader reader) {
+		
 	}
 }

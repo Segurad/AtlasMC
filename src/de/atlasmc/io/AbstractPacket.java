@@ -1,16 +1,14 @@
 package de.atlasmc.io;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.meta.ItemMeta;
-import de.atlasmc.util.nbt.CompoundTag;
-import de.atlasmc.util.nbt.NBT;
-import de.atlasmc.util.nbt.NBTIOWriter;
+import de.atlasmc.util.nbt.io.NBTNIOReader;
+import de.atlasmc.util.nbt.io.NBTNIOWriter;
+import io.netty.buffer.ByteBuf;
 
 public class AbstractPacket {
 
@@ -39,12 +37,12 @@ public class AbstractPacket {
 		return id;
 	}
 	
-	public static int readVarInt(DataInput input) throws IOException {
+	public static int readVarInt(ByteBuf in) {
 	    int numRead = 0;
 	    int result = 0;
 	    byte read;
 	    do {
-	        read = input.readByte();
+	        read = in.readByte();
 	        int value = (read & 0b01111111);
 	        result |= (value << (7 * numRead));
 
@@ -57,12 +55,12 @@ public class AbstractPacket {
 	    return result;
 	}
 	
-	public static long readVarLong(DataInput input) throws IOException {
+	public static long readVarLong(ByteBuf in) {
 	    int numRead = 0;
 	    long result = 0;
 	    byte read;
 	    do {
-	        read = input.readByte();
+	        read = in.readByte();
 	        int value = (read & 0b01111111);
 	        result |= (value << (7 * numRead));
 
@@ -75,22 +73,7 @@ public class AbstractPacket {
 	    return result;
 	}
 	
-	public static int getVarIntLength(int value) {
-		int length = 0;
-		do {
-	        @SuppressWarnings("unused")
-			int temp = value & 0b01111111;
-	        // Note: >>> means that the sign bit is shifted with the rest of the number rather than being left alone
-	        value >>>= 7;
-	        if (value != 0) {
-	            temp |= 0b10000000;
-	        }
-	        length++;
-	    } while (value != 0);
-		return length;
-	}
-	
-	public static void writeVarInt(int value, DataOutput output) throws IOException {
+	public static void writeVarInt(int value, ByteBuf out) {
 	    do {
 	        int temp = value & 0b01111111;
 	        // Note: >>> means that the sign bit is shifted with the rest of the number rather than being left alone
@@ -98,8 +81,23 @@ public class AbstractPacket {
 	        if (value != 0) {
 	            temp |= 0b10000000;
 	        }
-	        output.writeByte(temp);
+	        out.writeByte(temp);
 	    } while (value != 0);
+	}
+	
+	public static int getVarIntLength(int value) {
+		int i = 0;
+	    do {
+	        @SuppressWarnings("unused")
+			int temp = value & 0b01111111;
+	        // Note: >>> means that the sign bit is shifted with the rest of the number rather than being left alone
+	        value >>>= 7;
+	        if (value != 0) {
+	            temp |= 0b10000000;
+	        }
+	        i++;
+	    } while (value != 0);
+	    return i;
 	}
 	
 	public static int getVarLongLength(long value) {
@@ -117,7 +115,7 @@ public class AbstractPacket {
 		return length;
 	}
 	
-	public static void writeVarLong(long value, DataOutput output) throws IOException {
+	public static void writeVarLong(long value, ByteBuf out) throws IOException {
 	    do {
 	        int temp = (int) (value & 0b01111111);
 	        // Note: >>> means that the sign bit is shifted with the rest of the number rather than being left alone
@@ -125,70 +123,68 @@ public class AbstractPacket {
 	        if (value != 0) {
 	            temp |= 0b10000000;
 	        }
-	        output.writeByte(temp);
+	        out.writeByte(temp);
 	    } while (value != 0);
 	}
 	
-	public static SimpleLocation readPosition(DataInput input) throws IOException {
-		long in = input.readLong();
-		int x = (int) (in >> 38);
-		int y = (int) ((in >> 26) & 0xFFF);
-		int z = (int) (in << 38 >> 38);
+	public static SimpleLocation readPosition(ByteBuf in) throws IOException {
+		long raw = in.readLong();
+		int x = (int) (raw >> 38);
+		int y = (int) ((raw >> 26) & 0xFFF);
+		int z = (int) (raw << 38 >> 38);
 		return new SimpleLocation(x, y, z);
 	}
 	
-	public static void writePosition(SimpleLocation loc, DataOutput output) throws IOException {
-		long out = ((loc.getBlockX() & 0x3FFFFFF) << 38) |
+	public static void writePosition(SimpleLocation loc, ByteBuf out) throws IOException {
+		long raw = ((loc.getBlockX() & 0x3FFFFFF) << 38) |
 				((loc.getBlockZ() & 0x3FFFFFF) << 12) |
 				(loc.getBlockY() & 0xFFF);
-		output.writeLong(out);
+		out.writeLong(raw);
 	}
 	
-	public static String readString(DataInput input) throws IOException {
-		int len = readVarInt(input);
+	public static String readString(ByteBuf in) {
+		int len = readVarInt(in);
 		byte[] buffer = new byte[len];
-		input.readFully(buffer);
+		in.readBytes(buffer);
 		return new String(buffer);
 	}
 	
-	public static void writeString(String value, DataOutput output) throws IOException {
+	public static void writeString(String value, ByteBuf out) {
 		byte[] buffer = value.getBytes();
-		writeVarInt(buffer.length, output);
-		output.write(buffer);
+		writeVarInt(buffer.length, out);
+		out.writeBytes(buffer);
 	}
 	
 	/**
 	 * 
-	 * @param input
+	 * @param in
 	 * @return a ItemStack or null if empty
 	 */
-	public ItemStack readSlot(DataInput input) throws IOException {
-		boolean present = input.readBoolean();
+	public ItemStack readSlot(ByteBuf in) throws IOException {
+		boolean present = in.readBoolean();
 		if (!present) return null;
-		int itemID = readVarInt(input);
-		byte amount = input.readByte();
+		int itemID = readVarInt(in);
+		byte amount = in.readByte();
 		Material mat = Material.getByItemID(itemID);
 		ItemStack item = new ItemStack(mat, amount);
-		byte comp = input.readByte();
+		byte comp = in.readByte();
 		if (comp == 0) return item;
-		NBT nbt = new CompoundTag();
-		nbt.read(input, false);
 		ItemMeta meta = mat.createItemMeta();
-		meta.fromNBT(nbt);
+		meta.fromNBT(new NBTNIOReader(in));
 		item.setItemMeta(meta);
 		return item;
 	}
 	
-	public void writeSlot(ItemStack item, DataOutput output) throws IOException {
+	public void writeSlot(ItemStack item, ByteBuf out) throws IOException {
 		if (item == null) {
-			output.writeBoolean(false);
+			out.writeBoolean(false);
 			return;
 		}
-		output.writeBoolean(true);
-		writeVarInt(item.getType().getItemID(), output);
-		output.writeByte(item.getAmount());
-		if (!item.hasItemMeta()) output.writeByte(0);
-		else item.getItemMeta().toNBT(new NBTIOWriter(output), null, false);
+		out.writeBoolean(true);
+		writeVarInt(item.getType().getItemID(), out);
+		out.writeByte(item.getAmount());
+		if (!item.hasItemMeta()) out.writeByte(0);
+		else item.getItemMeta().toNBT(new NBTNIOWriter(out), null, false);
 	}
 
 }

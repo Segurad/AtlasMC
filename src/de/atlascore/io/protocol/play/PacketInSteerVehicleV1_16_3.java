@@ -1,12 +1,11 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInSteerVehicle;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInSteerVehicleV1_16_3 extends AbstractPacket implements PacketInSteerVehicle {
 
@@ -18,14 +17,18 @@ public class PacketInSteerVehicleV1_16_3 extends AbstractPacket implements Packe
 	private byte flags;
 
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		sideways = input.readFloat();
-		forward = input.readFloat();
-		flags = input.readByte();
+	public void read(ByteBuf in) throws IOException {
+		sideways = in.readFloat();
+		forward = in.readFloat();
+		flags = in.readByte();
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		out.writeFloat(sideways);
+		out.writeFloat(forward);
+		out.writeByte(flags);
+	}
 
 	@Override
 	public float Sideways() {

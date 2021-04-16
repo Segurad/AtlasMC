@@ -1,9 +1,11 @@
 package de.atlasmc.entity;
 
 import de.atlasmc.Location;
+import de.atlasmc.atlasnetwork.server.LocalServer;
+import de.atlasmc.util.nbt.NBTHolder;
 import de.atlasmc.world.World;
 
-public interface Entity {
+public interface Entity extends NBTHolder {
 
 	public boolean isOnFire();
 	public boolean isCrouching();
@@ -23,8 +25,8 @@ public interface Entity {
 	public void setCustomNameVisible(boolean value);
 	public void setCustomName(String name);
 	public Location getLocation();
-	
 	public World getWorld();
+	public LocalServer getServer();
 	
 	public enum Pose {
 		DYING,

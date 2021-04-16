@@ -1,13 +1,12 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInUpdateCommandBlock;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInUpdateCommandBlockV1_16_3 extends AbstractPacket implements PacketInUpdateCommandBlock {
 
@@ -21,15 +20,20 @@ public class PacketInUpdateCommandBlockV1_16_3 extends AbstractPacket implements
 	private byte flags;
 
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		pos = readPosition(input);
-		cmd = readString(input);
-		mode = readVarInt(input);
-		flags = input.readByte();
+	public void read(ByteBuf in) throws IOException {
+		pos = readPosition(in);
+		cmd = readString(in);
+		mode = readVarInt(in);
+		flags = in.readByte();
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		writePosition(pos, out);
+		writeString(cmd, out);
+		writeVarInt(mode, out);
+		out.writeByte(mode);
+	}
 
 	@Override
 	public SimpleLocation Position() {

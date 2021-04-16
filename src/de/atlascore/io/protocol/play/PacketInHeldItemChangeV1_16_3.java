@@ -1,12 +1,11 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInHeldItemChange;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInHeldItemChangeV1_16_3 extends AbstractPacket implements PacketInHeldItemChange {
 
@@ -17,12 +16,14 @@ public class PacketInHeldItemChangeV1_16_3 extends AbstractPacket implements Pac
 	private short slot;
 
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		slot = input.readShort();
+	public void read(ByteBuf in) throws IOException {
+		slot = in.readShort();
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		out.writeShort(slot);
+	}
 
 	@Override
 	public short Slot() {

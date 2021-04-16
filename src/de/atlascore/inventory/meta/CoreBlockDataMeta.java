@@ -1,13 +1,29 @@
 package de.atlascore.inventory.meta;
 
+import java.io.IOException;
+
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.inventory.meta.BlockDataMeta;
+import de.atlasmc.inventory.meta.ItemMeta;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBlockDataMeta extends CoreItemMeta implements BlockDataMeta {
 
 	private BlockData data;
 	private Material material;
+	
+	protected static final String
+			BLOCK_STATE_TAG = "BlockStateTag";
+	
+	static {
+		NBT_FIELDS.setField(BLOCK_STATE_TAG, (holder, reader) -> {
+			if (BlockDataMeta.class.isInstance(holder)) {
+				((BlockDataMeta) holder).getBlockData().fromNBT(reader);
+			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
+		});
+	}
+	
 	public CoreBlockDataMeta(Material material) {
 		this(material, null);
 	}
@@ -32,6 +48,21 @@ public class CoreBlockDataMeta extends CoreItemMeta implements BlockDataMeta {
 	@Override
 	public void setBlockData(BlockData data) {
 		this.data = data;
+	}
+	
+	@Override
+	public CoreBlockDataMeta clone() {
+		CoreBlockDataMeta clone = (CoreBlockDataMeta) super.clone();
+		clone.data = data.clone();
+		return clone;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, String local, boolean systemData) throws IOException {
+		super.toNBT(writer, local, systemData);
+		writer.writeCompoundTag(BLOCK_STATE_TAG);
+		data.toNBT(writer, local, systemData);
+		writer.writeEndTag();
 	}
 
 }

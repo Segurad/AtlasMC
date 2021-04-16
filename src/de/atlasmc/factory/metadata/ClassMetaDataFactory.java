@@ -36,12 +36,12 @@ public class ClassMetaDataFactory extends MetaDataFactory {
 	
 	public boolean isValidMeta(ItemMeta meta) {
 		if (meta == null) return false;
-		return meta.getClass().isAssignableFrom(metaInterface);
+		return metaInterface.isInstance(meta);
 	}
 	
 	public boolean isValidData(BlockData data) {
 		if (data == null) return false;
-		return data.getClass().isAssignableFrom(dataInterface); 
+		return dataInterface.isInstance(data); 
 	}
 	
 	public ItemMeta createMeta(Material material, boolean preConfig) {

@@ -1,12 +1,12 @@
 package de.atlasmc.event.inventory;
 
 import de.atlasmc.event.Cancellable;
-import de.atlasmc.event.HandlerList;
+import de.atlasmc.event.ServerHandlerList;
 import de.atlasmc.inventory.InventoryView;
 
 public class InventoryOpenEvent extends InventoryEvent implements Cancellable {
 
-	private static final HandlerList handlers = new HandlerList();
+	private static final ServerHandlerList handlers = new ServerHandlerList();
 	private boolean cancelled;
 	
 
@@ -26,11 +26,11 @@ public class InventoryOpenEvent extends InventoryEvent implements Cancellable {
 	}
 
 	@Override
-	public HandlerList getHandlers() {
+	public ServerHandlerList getHandlers() {
 		return handlers;
 	}
 	
-	public static HandlerList getHandlerList() {
+	public static ServerHandlerList getHandlerList() {
 		return handlers;
 	}
 

@@ -1,6 +1,6 @@
 package de.atlasmc.event.inventory;
 
-import de.atlasmc.event.HandlerList;
+import de.atlasmc.event.ServerHandlerList;
 import de.atlasmc.event.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryView;
@@ -8,7 +8,7 @@ import de.atlasmc.inventory.ItemStack;
 
 public class InventoryClickEvent extends InventoryInteractEvent {
 
-	private static final HandlerList handlers = new HandlerList();
+	private static final ServerHandlerList handlers = new ServerHandlerList();
 	private final InventoryAction action;
 	private final ClickType click;
 	private final int rawSlot, key;
@@ -84,11 +84,11 @@ public class InventoryClickEvent extends InventoryInteractEvent {
 	}
 
 	@Override
-	public HandlerList getHandlers() {
+	public ServerHandlerList getHandlers() {
 		return handlers;
 	}
 	
-	public static HandlerList getHandlerList() {
+	public static ServerHandlerList getHandlerList() {
 		return handlers;
 	}
 

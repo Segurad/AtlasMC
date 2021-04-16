@@ -1,12 +1,11 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInWindowConfirmation;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInWindowConfirmationV1_16_3 extends AbstractPacket implements PacketInWindowConfirmation {
 
@@ -19,14 +18,18 @@ public class PacketInWindowConfirmationV1_16_3 extends AbstractPacket implements
 	private boolean accepted;
 	
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		windowID = input.readByte();
-		actionNumber = input.readShort();
-		accepted = input.readBoolean();
+	public void read(ByteBuf in) throws IOException {
+		windowID = in.readByte();
+		actionNumber = in.readShort();
+		accepted = in.readBoolean();
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		out.writeByte(windowID);
+		out.writeShort(actionNumber);
+		out.writeBoolean(accepted);
+	}
 
 	@Override
 	public byte getWindowID() {

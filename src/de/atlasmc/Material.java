@@ -6,14 +6,16 @@ import java.util.List;
 import java.util.Objects;
 
 import de.atlasmc.block.data.BlockData;
+import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.factory.metadata.MetaDataFactory;
+import de.atlasmc.factory.tileentity.TileEntityFactory;
 import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.util.Validate;
 
 public class Material {
 	
 	private static final List<Material> REGISTRI;
-	private static final HashMap<Material, MetaDataFactory> META_FACTORYS;
+	private static final HashMap<Material, TileEntityFactory> TILE_FACTORYS;
 	private static short iid;
 	
 	public static Material
@@ -1092,12 +1094,13 @@ public class Material {
 	
 	static {
 		REGISTRI = new ArrayList<Material>();
-		META_FACTORYS = new HashMap<Material, MetaDataFactory>();
+		TILE_FACTORYS = new HashMap<Material, TileEntityFactory>();
 	}
 	
 	private final String name;
 	private final short itemID, bid, namespace;
 	private final byte max;
+	private MetaDataFactory mdf;
 	
 	/**
 	 * 
@@ -1115,7 +1118,7 @@ public class Material {
 		this.max = amount;
 		this.namespace = (short) namespaceID;
 		registerMaterial();
-		setMetaDataFactory(this, mdf);
+		setMetaDataFactory(mdf);
 	}
 	
 	public Material(int namespaceID, String name, byte maxAmount, MetaDataFactory mdf) {
@@ -1129,13 +1132,13 @@ public class Material {
 	public Material(int namespaceID, String name, boolean hasItem, short blockID, byte maxAmount, MetaDataFactory mdf) {
 		if (name == null) throw new IllegalArgumentException("Name can not be null!");
 		Validate.notNull(NamespacedKey.getNamespace(namespaceID), "Unknown namespace!");
-		this.name = name;
+		this.name = name.toLowerCase();
 		this.itemID = hasItem ? iid++ : -1;
 		this.bid = blockID;
 		this.max = maxAmount;
 		this.namespace = (short) namespaceID;
 		registerMaterial();
-		setMetaDataFactory(this, mdf);
+		setMetaDataFactory(mdf);
 	}
 	
 	public Material(int namespaceID, String name, short blockID, byte maxAmount, MetaDataFactory mdf) {
@@ -1143,7 +1146,7 @@ public class Material {
 	}
 	
 	public String getName() {
-		return name.toUpperCase();
+		return name;
 	}
 	
 	public short getItemID() {
@@ -1159,14 +1162,22 @@ public class Material {
 	 * @return the Material's MetaDataFactory or MetaDataFactory.DEFAULT
 	 */
 	public MetaDataFactory getMetaDataFactory() {
-		MetaDataFactory mdf = META_FACTORYS.get(this);
 		if (mdf == null) return MetaDataFactory.DEFAULT;
 		return mdf;
 	}
 	
-	public void setMetaDataFactory(Material material, MetaDataFactory factory) {
-		if (factory == null || factory == MetaDataFactory.DEFAULT) META_FACTORYS.remove(material);
-		else META_FACTORYS.put(material, factory);
+	public void setMetaDataFactory(MetaDataFactory factory) {
+		mdf = factory;
+	}
+	
+	public TileEntityFactory getTileEntityFactory() {
+		return isBlock() ? TILE_FACTORYS.get(this) : null;
+	}
+	
+	public void setTileEntityFactory(TileEntityFactory factory) {
+		Validate.isTrue(isBlock(), "Material must be a Block to have a TileEntityFactory");
+		if (factory == null) TILE_FACTORYS.remove(this);
+		else TILE_FACTORYS.put(this, factory);
 	}
 	
 	public ItemMeta createItemMeta() {
@@ -1179,6 +1190,31 @@ public class Material {
 		MetaDataFactory mdf = getMetaDataFactory();
 		if (mdf == null) return MetaDataFactory.DEFAULT.createData(this);
 		return mdf.createData(this);
+	}
+	
+	public TileEntity createTileEntity() {
+		TileEntityFactory tf = getTileEntityFactory();
+		if (tf != null) return tf.createTile(this);
+		return null;
+	}
+	
+	public boolean isValidMeta(ItemMeta meta) {
+		MetaDataFactory mdf = getMetaDataFactory();
+		if (mdf == null) return MetaDataFactory.DEFAULT.isValidMeta(meta);
+		return mdf.isValidMeta(meta);
+	}
+	
+	public boolean isValidData(BlockData data) {
+		if (data.getMaterial() != this) return false;
+		MetaDataFactory mdf = getMetaDataFactory();
+		if (mdf == null) return MetaDataFactory.DEFAULT.isValidData(data);
+		return mdf.isValidData(data);
+	}
+	
+	public boolean isValidTile(TileEntity tile) {
+		if (!isBlock()) return false;
+		TileEntityFactory tf = getTileEntityFactory();
+		return tf != null ? tf.isValidTile(tile) : false;
 	}
 	
 	public boolean isItem() {
@@ -1204,28 +1240,14 @@ public class Material {
 	private final void registerMaterial() {
 		if (REGISTRI.contains(this)) throw new Error("Material already registered");
 		if (getMaterial(getNamespaceID(), getName()) != null) {
-			System.out.println(getName());
-			throw new Error("Material with this name already registered");
+			throw new Error("Material: " + getNamespacedName() + " already registered!");
 		}
 		REGISTRI.add(this);
 	}
 	
 	public final void unregister() {
 		REGISTRI.remove(this);
-		META_FACTORYS.remove(this);
-	}
-
-	public boolean isValidMeta(ItemMeta meta) {
-		MetaDataFactory mdf = getMetaDataFactory();
-		if (mdf == null) return MetaDataFactory.DEFAULT.isValidMeta(meta);
-		return mdf.isValidMeta(meta);
-	}
-	
-	public boolean isValidData(BlockData data) {
-		if (data.getMaterial() != this) return false;
-		MetaDataFactory mdf = getMetaDataFactory();
-		if (mdf == null) return MetaDataFactory.DEFAULT.isValidData(data);
-		return mdf.isValidData(data);
+		TILE_FACTORYS.remove(this);
 	}
 	
 	public int getMaxAmount() {
@@ -1239,6 +1261,11 @@ public class Material {
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @param name the materials name with or without the namespace
+	 * @return first material with the name if no namespace if given
+	 */
 	public static Material getMaterial(String name) {
 		Validate.notNull(name, "Name can not be null!");
 		if (name.contains(":")) {
@@ -1289,7 +1316,7 @@ public class Material {
 	}
 
 	public String getNamespacedName() {
-		return NamespacedKey.getNamespace(getNamespaceID())+getName();
+		return NamespacedKey.getNamespace(getNamespaceID())+':'+getName();
 	}
 	
 }

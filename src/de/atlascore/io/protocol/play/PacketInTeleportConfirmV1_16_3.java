@@ -1,12 +1,11 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInTeleportConfirm;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInTeleportConfirmV1_16_3 extends AbstractPacket implements PacketInTeleportConfirm {
 
@@ -17,13 +16,13 @@ public class PacketInTeleportConfirmV1_16_3 extends AbstractPacket implements Pa
 	private int teleportID;
 
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		teleportID = readVarInt(input);
+	public void read(ByteBuf in) throws IOException {
+		teleportID = readVarInt(in);
 	}
 
 	@Override
-	public void write(DataOutput output) {
-		
+	public void write(ByteBuf out) {
+		writeVarInt(teleportID, out);
 	}
 
 	@Override

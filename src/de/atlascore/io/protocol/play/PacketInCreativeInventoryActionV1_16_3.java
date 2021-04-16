@@ -1,13 +1,12 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInCreativeInventoryAction;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInCreativeInventoryActionV1_16_3 extends AbstractPacket implements PacketInCreativeInventoryAction {
 
@@ -19,13 +18,16 @@ public class PacketInCreativeInventoryActionV1_16_3 extends AbstractPacket imple
 	private ItemStack clickedItem;
 	
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		slot = input.readShort();
-		clickedItem = readSlot(input);
+	public void read(ByteBuf in) throws IOException {
+		slot = in.readShort();
+		clickedItem = readSlot(in);
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		out.writeShort(slot);
+		writeSlot(clickedItem, out);
+	}
 
 	@Override
 	public short Slot() {

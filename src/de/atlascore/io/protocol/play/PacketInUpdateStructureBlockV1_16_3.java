@@ -1,13 +1,12 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInUpdateStructureBlock;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInUpdateStructureBlockV1_16_3 extends AbstractPacket implements PacketInUpdateStructureBlock {
 
@@ -23,28 +22,45 @@ public class PacketInUpdateStructureBlockV1_16_3 extends AbstractPacket implemen
 	private long seed;
 
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		pos = readPosition(input);
-		action = readVarInt(input);
-		mode = readVarInt(input);
-		mirror = readVarInt(input);
-		roation = readVarInt(input);
-		name = readString(input);
-		metadata = readString(input);
-		offx = input.readByte();
-		offy = input.readByte();
-		offz = input.readByte();
-		sizex = input.readByte();
-		sizey = input.readByte();
-		sizez = input.readByte();
-		flags = input.readByte();
-		integrity = input.readFloat();
-		seed = readVarLong(input);
+	public void read(ByteBuf in) throws IOException {
+		pos = readPosition(in);
+		action = readVarInt(in);
+		mode = readVarInt(in);
+		mirror = readVarInt(in);
+		roation = readVarInt(in);
+		name = readString(in);
+		metadata = readString(in);
+		offx = in.readByte();
+		offy = in.readByte();
+		offz = in.readByte();
+		sizex = in.readByte();
+		sizey = in.readByte();
+		sizez = in.readByte();
+		flags = in.readByte();
+		integrity = in.readFloat();
+		seed = readVarLong(in);
 		
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		writePosition(pos, out);
+		writeVarInt(action, out);
+		writeVarInt(mode, out);
+		writeVarInt(mirror, out);
+		writeVarInt(roation, out);
+		writeString(name, out);
+		writeString(metadata, out);
+		out.writeByte(offx);
+		out.writeByte(offy);
+		out.writeByte(offz);
+		out.writeByte(sizex);
+		out.writeByte(sizey);
+		out.writeByte(sizez);
+		out.writeByte(flags);
+		out.writeFloat(integrity);
+		writeVarLong(seed, out);
+	}
 
 	@Override
 	public SimpleLocation Position() {

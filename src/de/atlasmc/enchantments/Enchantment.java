@@ -11,4 +11,9 @@ public abstract class Enchantment {
 		return null;
 	}
 
+	public static Enchantment getEnchantment(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

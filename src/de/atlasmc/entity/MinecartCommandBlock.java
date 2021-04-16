@@ -1,6 +1,6 @@
 package de.atlasmc.entity;
 
-import de.atlasmc.chat.ChatComponent;
+import de.atlasmc.chat.component.ChatComponent;
 
 public interface MinecartCommandBlock {
 	

@@ -1,13 +1,12 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInUpdateSign;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInUpdateSignV1_16_3 extends AbstractPacket implements PacketInUpdateSign {
 
@@ -19,16 +18,22 @@ public class PacketInUpdateSignV1_16_3 extends AbstractPacket implements PacketI
 	private String l1,l2,l3,l4;
 
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		pos = readPosition(input);
-		l1 = readString(input);
-		l2 = readString(input);
-		l3 = readString(input);
-		l4 = readString(input);
+	public void read(ByteBuf in) throws IOException {
+		pos = readPosition(in);
+		l1 = readString(in);
+		l2 = readString(in);
+		l3 = readString(in);
+		l4 = readString(in);
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		writePosition(pos, out);
+		writeString(l1, out);
+		writeString(l2, out);
+		writeString(l3, out);
+		writeString(l4, out);
+	}
 
 	@Override
 	public SimpleLocation Position() {

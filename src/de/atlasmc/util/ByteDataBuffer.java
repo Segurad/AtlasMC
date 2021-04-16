@@ -4,6 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.EOFException;
 import java.io.IOException;
+import java.io.UTFDataFormatException;
 import java.util.Arrays;
 
 public class ByteDataBuffer implements DataOutput, DataInput {
@@ -104,9 +105,33 @@ public class ByteDataBuffer implements DataOutput, DataInput {
 	}
 
 	@Override
-	public String readUTF() {
-		// TODO Auto-generated method stub
-		return null;
+	public String readUTF() throws IOException {
+		final int length = readUnsignedShort();
+		char[] buf = new char[1024];
+		int index = 0;
+		String s = "";
+		for (int i = 0; i < length; i++) {
+			int first = readByte();
+			if (index >= 1024) {
+				s += buf;
+				index = 0;
+			}
+			if ((first & 0x40) == 0) {
+				buf[index++] = (char) (first & 0x7F);
+			} else if ((first & 0xE0) == 0xC0) {
+				int b = readByte();
+				if ((b & 0xC0) != 0x80) throw new UTFDataFormatException();
+				buf[index++] = (char) (((first & 0x1F) << 6) | (b & 0x3F));
+			} else if ((first & 0xF0) == 0xE0) {
+				int b = readByte();
+				if ((b & 0xC0) != 0x80) throw new UTFDataFormatException();
+				int c = readByte();
+				if ((c & 0xC0) != 0x80) throw new UTFDataFormatException();
+				buf[index++] = (char) (((first & 0x0F) << 12) | ((b & 0x3F) << 6) | (c & 0x3F));
+			}
+		}
+		if (index > 0) s += new String(buf, 0, index); 
+		return s;
 	}
 
 	@Override
@@ -115,8 +140,8 @@ public class ByteDataBuffer implements DataOutput, DataInput {
 	}
 
 	@Override
-	public int readUnsignedShort() {
-		return 0;
+	public int readUnsignedShort() throws IOException {
+		return readUnsignedByte() | readUnsignedByte();
 	}
 
 	@Override
@@ -157,20 +182,26 @@ public class ByteDataBuffer implements DataOutput, DataInput {
 
 	@Override
 	public void writeBytes(String s) {
-		// TODO Auto-generated method stub
-		
+		final int length = s.length();
+		if (length == 0) return;
+		for (int i = 0; i < length; i++) {
+			writeByte(s.charAt(i));
+		}
 	}
 
 	@Override
 	public void writeChar(int v) {
-		// TODO Auto-generated method stub
-		
+		writeByte(0xFF & (v >> 8));
+		writeByte(0xFF & v);
 	}
 
 	@Override
 	public void writeChars(String s) {
-		// TODO Auto-generated method stub
-		
+		final int length = s.length();
+		if (length == 0) return;
+		for (int i = 0; i < length; i++) {
+			writeChar(s.charAt(i));
+		}
 	}
 
 	@Override
@@ -213,9 +244,35 @@ public class ByteDataBuffer implements DataOutput, DataInput {
 	}
 
 	@Override
-	public void writeUTF(String s) {
-		// TODO Auto-generated method stub
-		
+	public void writeUTF(String s) throws UTFDataFormatException {
+		final int length = s.length();
+		if (length == 0) return;
+		int bytes = 0;
+		for (int i = 0; i < length; i++) {
+			char c = s.charAt(i);
+			if (c >= 1 && c <= 0x7F) {
+				bytes++;
+			} else if (c == 0 || (c >= 0x80 && c <= 0x7FF)) {
+				bytes+=2;
+			} else if (c >= 0x800 && c <= 0xFFFF) {
+				bytes+=3;
+			}
+		}
+		if (bytes > 65535) throw new UTFDataFormatException();
+		writeShort(bytes);
+		for (int i = 0; i < length; i++) {
+			char c = s.charAt(i);
+			if (c >= 1 && c <= 0x7F) {
+				write(c);
+			} else if (c == 0 || (c >= 0x80 && c <= 0x7FF)) {
+				write(0xc0 | (0x1f & (c >> 6)));
+				write(0x80 | (0x3f & c));
+			} else if (c >= 0x800 && c <= 0xFFFF) {
+				write(0xe0 | (0x0f & (c >> 12)));
+				write(0x80 | (0x3f & (c >>  6)));
+				write(0x80 | (0x3f & c));
+			}
+		}
 	}
 
 	public byte[] toByteArray() {

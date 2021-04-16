@@ -1,12 +1,11 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInPlayerPosition;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInPlayerPositionV1_16_3 extends AbstractPacket implements PacketInPlayerPosition {
 
@@ -14,19 +13,24 @@ public class PacketInPlayerPositionV1_16_3 extends AbstractPacket implements Pac
 		super(0x12, V1_16_3.version);
 	}
 	
-	private double x,feedy,z;
+	private double x,feety,z;
 	private boolean onGround;
 
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		x = input.readDouble();
-		feedy = input.readDouble();
-		z = input.readDouble();
-		onGround = input.readBoolean();
+	public void read(ByteBuf in) throws IOException {
+		x = in.readDouble();
+		feety = in.readDouble();
+		z = in.readDouble();
+		onGround = in.readBoolean();
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		out.writeDouble(x);
+		out.writeDouble(feety);
+		out.writeDouble(z);
+		out.writeBoolean(onGround);
+	}
 
 	@Override
 	public double X() {
@@ -35,7 +39,7 @@ public class PacketInPlayerPositionV1_16_3 extends AbstractPacket implements Pac
 
 	@Override
 	public double FeedY() {
-		return feedy;
+		return feety;
 	}
 
 	@Override

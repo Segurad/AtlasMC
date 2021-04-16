@@ -1,12 +1,11 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInPluginMessage;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInPluginMessageV1_16_3 extends AbstractPacket implements PacketInPluginMessage {
 
@@ -18,15 +17,19 @@ public class PacketInPluginMessageV1_16_3 extends AbstractPacket implements Pack
 	private byte[] data;
 	
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		channel = readString(input);
-		int len = readVarInt(input);
+	public void read(ByteBuf in) throws IOException {
+		channel = readString(in);
+		int len = readVarInt(in);
 		data = new byte[len];
-		input.readFully(data);
+		in.readBytes(data);
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		writeString(channel, out);
+		writeVarInt(data.length, out);
+		out.writeBytes(data);
+	}
 
 	@Override
 	public String getChannel() {

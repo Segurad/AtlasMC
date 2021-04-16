@@ -1,13 +1,12 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutSetSlot;
+import io.netty.buffer.ByteBuf;
 
 public class PacketOutSetSlotV1_16_3 extends AbstractPacket implements PacketOutSetSlot {
 
@@ -38,14 +37,17 @@ public class PacketOutSetSlotV1_16_3 extends AbstractPacket implements PacketOut
 	}
 
 	@Override
-	public void read(int length, DataInput input) throws IOException {}
+	public void read(ByteBuf in) throws IOException {
+		windowID = in.readByte();
+		slot = in.readShort();
+		item = readSlot(in);
+	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {
-		writeVarInt(getID(), output);
-		output.writeByte(windowID);
-		output.writeShort(slot);
-		writeSlot(item, output);
+	public void write(ByteBuf out) throws IOException {
+		out.writeByte(windowID);
+		out.writeShort(slot);
+		writeSlot(item, out);
 	}
 
 }

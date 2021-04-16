@@ -53,7 +53,7 @@ public class NamespacedKey {
 	public NamespacedKey(String namespace, String key) {
 		Validate.notNull(namespace, "Namespace can not be null!");
 		Validate.notNull(key, "Key can not be null!");
-		Validate.isTrue(namespace.equals("minecraft") || spaces.contains(namespace), "Unknown Namespace!");
+		Validate.isTrue(spaces.contains(namespace), "Unknown Namespace!");
 		this.key = key;
 		this.namespace = namespace;
 		this.namespaceID = (short) spaces.indexOf(key);

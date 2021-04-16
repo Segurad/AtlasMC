@@ -1,34 +1,38 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInVehicleMove;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInVehicleMoveV1_16_3 extends AbstractPacket implements PacketInVehicleMove {
 
 	public PacketInVehicleMoveV1_16_3() {
 		super(0x16, V1_16_3.version);
-		// TODO Auto-generated constructor stub
 	}
 	
 	private double x,y,z;
 	private float yaw,pitch;
 
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		x = input.readDouble();
-		y = input.readDouble();
-		z = input.readDouble();
-		yaw = input.readFloat();
-		pitch = input.readFloat();
+	public void read(ByteBuf in) throws IOException {
+		x = in.readDouble();
+		y = in.readDouble();
+		z = in.readDouble();
+		yaw = in.readFloat();
+		pitch = in.readFloat();
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		out.writeDouble(x);
+		out.writeDouble(y);
+		out.writeDouble(z);
+		out.writeFloat(yaw);
+		out.writeFloat(pitch);
+	}
 
 	@Override
 	public double X() {	

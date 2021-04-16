@@ -3,13 +3,13 @@ package de.atlasmc.event.block;
 import de.atlasmc.block.Block;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.Cancellable;
-import de.atlasmc.event.HandlerList;
+import de.atlasmc.event.ServerHandlerList;
 import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.inventory.ItemStack;
 
 public class BlockPlaceEvent extends BlockEvent implements Cancellable {
 
-	private final static HandlerList handlers = new HandlerList();
+	private final static ServerHandlerList handlers = new ServerHandlerList();
 	protected boolean cancelled, canBuild;
 	protected Player player;
 	protected Block placeAgainst;
@@ -59,11 +59,11 @@ public class BlockPlaceEvent extends BlockEvent implements Cancellable {
 	}
 
 	@Override
-	public HandlerList getHandlers() {
+	public ServerHandlerList getHandlers() {
 		return handlers;
 	}
 	
-	public static HandlerList getHandlerList() {
+	public static ServerHandlerList getHandlerList() {
 		return handlers;
 	}
 

@@ -7,7 +7,7 @@ import de.atlasmc.Material;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.recipe.condition.Condition;
 
-public class StonecuttingRecipe extends AbstractRecipe implements Recipe {
+public class StonecuttingRecipe extends Recipe {
 
 	public StonecuttingRecipe(String key, ItemStack result, Material source) {
 		super(result);

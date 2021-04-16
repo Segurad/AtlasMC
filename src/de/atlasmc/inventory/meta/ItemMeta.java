@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.atlasmc.Material;
 import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeModifier;
 import de.atlasmc.chat.LanguageHandler;
@@ -12,16 +13,16 @@ import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.inventory.ItemFlag;
 import de.atlasmc.inventory.meta.lore.Lore;
 import de.atlasmc.util.map.Multimap;
-import de.atlasmc.util.nbt.CompoundTag;
+import de.atlasmc.util.nbt.CustomTagContainer;
 import de.atlasmc.util.nbt.NBTHolder;
 
 public interface ItemMeta extends Cloneable, NBTHolder {
-
-	public ItemMeta clone();
 	
+	public ItemMeta clone();
 	public boolean addAttributeModifier(Attribute attribute, AttributeModifier modifier);
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot);
-	public CompoundTag getCustomTagContainer();
+	public boolean hasCustomTagContainer();
+	public CustomTagContainer getCustomTagContainer();
 	public String getLocalizedName();
 	public String getLocalizedName(String local);
 	public LanguageHandler getLanguageHandler();
@@ -81,4 +82,8 @@ public interface ItemMeta extends Cloneable, NBTHolder {
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers();
 
 	public List<AttributeModifier> getAttributeModifiers(Attribute attribute);
+	
+	public boolean hasCanDestroy();
+	public List<Material> getCanDestroy();
+	public void setCanDestroy(List<Material> material);
 }

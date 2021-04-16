@@ -3,15 +3,16 @@ package de.atlasmc.factory.metadata;
 import java.util.HashMap;
 
 import de.atlascore.block.data.CoreBlockData;
-import de.atlascore.inventory.meta.CoreItemMeta;
+import de.atlascore.inventory.meta.CoreBlockDataMeta;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.inventory.meta.ItemMeta;
+import de.atlasmc.inventory.meta.BlockDataMeta;
 import de.atlasmc.util.Validate;
 
 public abstract class MetaDataFactory {
 	
-	public static MetaDataFactory DEFAULT = new ClassMetaDataFactory(ItemMeta.class, CoreItemMeta.class, BlockData.class, CoreBlockData.class);
+	public static MetaDataFactory DEFAULT = new ClassMetaDataFactory(BlockDataMeta.class, CoreBlockDataMeta.class, BlockData.class, CoreBlockData.class);
 	private static final HashMap<Material, ItemMeta> metaPreConfig = new HashMap<>();
 	private static final HashMap<Material, BlockData> dataPreConfig = new HashMap<>();
 	
@@ -51,21 +52,21 @@ public abstract class MetaDataFactory {
 		return dataPreConfig.get(material);
 	}
 	
-	public static ItemMeta setMetaPreConfig(Material material, ItemMeta meta) {
+	public static void setMetaPreConfig(Material material, ItemMeta meta) {
 		Validate.notNull(material, "Material can not be null!");
 		Validate.isTrue(material.isItem(), "Material is not a Item!");
-		if (meta == null) return metaPreConfig.remove(material);
+		if (meta == null) metaPreConfig.remove(material);
 		if (!material.isValidMeta(meta))
 			throw new IllegalArgumentException("ItemMeta is not valid for Material: " + material.getName());
-		return metaPreConfig.put(material, meta);
+		metaPreConfig.put(material, meta);
 	}
 	
-	public static BlockData setDataPreConfig(Material material, BlockData data) {
+	public static void setDataPreConfig(Material material, BlockData data) {
 		Validate.notNull(material, "Material can not be null!");
 		Validate.isTrue(material.isBlock(), "Material is not a Block!");
-		if (data == null) return dataPreConfig.remove(material);
+		if (data == null) dataPreConfig.remove(material);
 		if (!material.isValidData(data))
 			throw new IllegalArgumentException("BlockData is not valid for Material: " + material.getName());
-		return dataPreConfig.put(material, data);
+		dataPreConfig.put(material, data);
 	}
 }

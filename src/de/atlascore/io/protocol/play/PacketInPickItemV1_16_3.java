@@ -1,12 +1,11 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 
 import de.atlascore.io.V1_16_3;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInPickItem;
+import io.netty.buffer.ByteBuf;
 
 public class PacketInPickItemV1_16_3 extends AbstractPacket implements PacketInPickItem {
 
@@ -18,12 +17,14 @@ public class PacketInPickItemV1_16_3 extends AbstractPacket implements PacketInP
 	private int slottouse;
 	
 	@Override
-	public void read(int length, DataInput input) throws IOException {
-		slottouse = readVarInt(input);
+	public void read(ByteBuf in) throws IOException {
+		slottouse = readVarInt(in);
 	}
 
 	@Override
-	public void write(DataOutput output) throws IOException {}
+	public void write(ByteBuf out) throws IOException {
+		writeVarInt(slottouse, out);
+	}
 
 	@Override
 	public int SlotToUse() {
