@@ -1,6 +1,8 @@
 package de.atlasmc.io.channel;
 
 import de.atlasmc.io.ConnectionHandler;
+import de.atlasmc.io.Packet;
+import de.atlasmc.io.PacketListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
@@ -22,7 +24,10 @@ public class PacketProcessor extends ChannelInboundHandlerAdapter {
 	
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		
+		Packet packet = (Packet) msg;
+		for (PacketListener listener : handler.getPacketListeners()) {
+			listener.handlePacket(packet);
+		}
 	}
 
 }

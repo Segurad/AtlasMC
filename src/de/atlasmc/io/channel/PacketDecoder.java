@@ -3,19 +3,30 @@ package de.atlasmc.io.channel;
 import java.util.List;
 
 import de.atlasmc.io.AbstractPacket;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.protocol.Protocol;
+import de.atlasmc.io.Protocol;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ReplayingDecoder;
 
 public class PacketDecoder extends ReplayingDecoder<Packet> {
+
+	private final ConnectionHandler handler;
 	
-	private Protocol protocol;
+	public PacketDecoder(ConnectionHandler handler) {
+		this.handler = handler;
+	}
+	
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 		int id = AbstractPacket.readVarInt(in);
-		Packet packet = protocol.createPacket(id);
+		Protocol prot = handler.getProtocol();
+		Packet packet = prot.createPacketIn(id);
+		if (packet == null) {
+			System.out.println("Invalid Packet: " + id);
+			return;
+		}
 		packet.read(in);
 		out.add(packet);
 	}

@@ -10,10 +10,11 @@ import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import io.netty.buffer.ByteBuf;
 
-public class AbstractPacket {
+public abstract class AbstractPacket implements Packet {
 
 	private final int id, version;
 	private boolean cancelled;
+	public static final int MAX_PACKET_LENGTH = 2097151;
 	
 	public AbstractPacket(int id, int version) {
 		this.id = id;
@@ -150,6 +151,7 @@ public class AbstractPacket {
 	}
 	
 	public static void writeString(String value, ByteBuf out) {
+		if (value == null) return;
 		byte[] buffer = value.getBytes();
 		writeVarInt(buffer.length, out);
 		out.writeBytes(buffer);

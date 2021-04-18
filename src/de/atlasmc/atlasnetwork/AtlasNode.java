@@ -14,7 +14,7 @@ import de.atlasmc.atlasnetwork.server.ServerGroup;
 public interface AtlasNode {
 
 	public List<? extends Server> getServers();
-	public List<Proxy> getProxys();
+	public List<? extends Proxy> getProxys();
 	public List<ServerGroup> getAvailableGroups();
 	
 }

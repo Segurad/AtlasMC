@@ -27,7 +27,7 @@ public class LocalProxy extends Proxy {
 	}
 	
 	public boolean isRunnning() {
-		return bossGroup != null && !bossGroup.isShutdown();
+		return channel != null && !channel.isOpen();
 	}
 	
 	public void run() {

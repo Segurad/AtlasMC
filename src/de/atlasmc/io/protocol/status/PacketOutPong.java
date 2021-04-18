@@ -1,5 +1,7 @@
 package de.atlasmc.io.protocol.status;
 
-public interface PacketOutPong {
+import de.atlasmc.io.Packet;
+
+public interface PacketOutPong extends Packet {
 
 }

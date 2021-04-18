@@ -1,6 +1,9 @@
 package de.atlasmc.entity;
 
+import java.util.UUID;
+
 import de.atlasmc.Location;
+import de.atlasmc.Vector;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.util.nbt.NBTHolder;
 import de.atlasmc.world.World;
@@ -38,5 +41,18 @@ public interface Entity extends NBTHolder {
 	}
 
 	public EntityType getType();
+	
+	/**
+	 * 
+	 * @return the internal entity id
+	 */
+	public int getID();
+	public UUID getUUID();
+	public int getObjectData();
+	public Vector getVelocity();
+	public boolean hasVelocity();
+	public double getX();
+	public double getY();
+	public double getZ();
 	
 }

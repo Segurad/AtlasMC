@@ -1,37 +1,35 @@
 package de.atlasmc;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.atlasnetwork.AtlasNetwork;
-import de.atlasmc.atlasnetwork.AtlasNode;
-import de.atlasmc.atlasnetwork.proxy.Proxy;
+import de.atlasmc.atlasnetwork.LocalAtlasNode;
 import de.atlasmc.atlasnetwork.server.LocalServer;
-import de.atlasmc.atlasnetwork.server.ServerGroup;
+import de.atlasmc.io.protocol.ProtocolAdapter;
+import de.atlasmc.io.protocol.ProtocolAdapterHandler;
 
-public class Atlas implements AtlasNode {
+public class Atlas {
 
-	private static Atlas instance;
-	private AtlasNetwork network;
-	private List<LocalServer> localServers;
+	private static LocalAtlasNode instance;
 	
-	public static Atlas getInstance() {
+	public Atlas(LocalAtlasNode node) {
+		if (instance != null) throw new RuntimeException("Atlas already started!");
+		instance = node;
+	}
+	
+	public static LocalAtlasNode getAtlas() {
 		return instance;
 	}
 	
 	public List<LocalServer> getServers() {
-		return new ArrayList<LocalServer>(localServers);
+		return instance.getServers();
 	}
 
-	@Override
-	public List<Proxy> getProxys() {
-		return null;
+	public static ProtocolAdapter getProtocolAdapter(int version) {
+		return instance.getProtocolAdapterHandler().getProtocol(version);
 	}
-
-	@Override
-	public List<ServerGroup> getAvailableGroups() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public static ProtocolAdapterHandler getProtocolAdapterHandler() {
+		return instance.getProtocolAdapterHandler();
 	}
 
 }

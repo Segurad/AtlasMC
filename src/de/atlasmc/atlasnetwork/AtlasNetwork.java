@@ -10,6 +10,7 @@ public class AtlasNetwork {
 	private List<AtlasNode> nodes;
  	private AtlasNode master;
 	private ServerGroup fallBack;
+	private int maxplayers, players;
 	
 	public AtlasNode getMaster() {
 		return master;

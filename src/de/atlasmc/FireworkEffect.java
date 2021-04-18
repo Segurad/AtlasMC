@@ -66,7 +66,7 @@ public class FireworkEffect implements NBTHolder {
 
 	@Override
 	public void fromNBT(NBTReader reader) throws IOException {
-		
+		// TODO
 	}
 
 }

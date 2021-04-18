@@ -1,5 +1,9 @@
 package de.atlasmc.io.protocol.status;
 
-public interface PacketInPing {
+import de.atlasmc.io.Packet;
+
+public interface PacketInPing extends Packet {
+	
+	public long getPing();
 
 }

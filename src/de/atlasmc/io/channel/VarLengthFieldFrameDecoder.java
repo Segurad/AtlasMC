@@ -1,45 +1,37 @@
 package de.atlasmc.io.channel;
 
-import java.nio.ByteOrder;
+import java.util.List;
 
 import de.atlasmc.io.AbstractPacket;
 import io.netty.buffer.ByteBuf;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.ByteToMessageDecoder;
 
-/**
- * A simple extension of {@link LengthFieldBasedFrameDecoder} that support varints
- * just use -1 as lengthFieldLength
- */
-public class VarLengthFieldFrameDecoder extends LengthFieldBasedFrameDecoder {
+public class VarLengthFieldFrameDecoder extends ByteToMessageDecoder {
 
-	private final int lengthFieldLength;
+	private int length = -1;
 	
-	public VarLengthFieldFrameDecoder(int maxFrameLength, int lengthFieldOffset, int lengthFieldLength, int lengthAdjustment, int initialBytesToStrip, boolean failFast) {
-		super(maxFrameLength, lengthFieldOffset, 1, lengthAdjustment, lengthFieldLength == -1 ? 0 : initialBytesToStrip, failFast);
-		this.lengthFieldLength = lengthFieldLength;
-	}
-	
-	public VarLengthFieldFrameDecoder(int maxFrameLength, int lengthFieldOffset, int lengthFieldLength, int lengthAdjustment, int initialBytesToStrip) {
-		super(maxFrameLength, lengthFieldOffset, 1, lengthAdjustment, lengthFieldLength == -1 ? 0 : initialBytesToStrip);
-		this.lengthFieldLength = lengthFieldLength;
-	}
-
-	public VarLengthFieldFrameDecoder(int maxFrameLength, int lengthFieldOffset, int lengthFieldLength) {
-		super(maxFrameLength, lengthFieldOffset, 1);
-		this.lengthFieldLength = lengthFieldLength;
-	}
-	
-	public VarLengthFieldFrameDecoder(ByteOrder byteOrder, int maxFrameLength, int lengthFieldOffset, int lengthFieldLength, int lengthAdjustment, int initialBytesToStrip, boolean failFast) {
-		super(byteOrder, maxFrameLength, lengthFieldOffset, 1, lengthAdjustment, lengthFieldLength == -1 ? 0 : initialBytesToStrip, failFast);
-		this.lengthFieldLength = lengthFieldLength;
-	}
-
 	@Override
-	protected long getUnadjustedFrameLength(ByteBuf buf, int offset, int length, ByteOrder order) {
-		length = lengthFieldLength;
-		if (length == -1) {
-			return AbstractPacket.readVarInt(buf);
-		} else
-		return super.getUnadjustedFrameLength(buf, offset, length, order);
+	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+		Object decode = decode(ctx, in);
+		if (decode != null)
+			out.add(decode);
 	}
+
+	protected Object decode(ChannelHandlerContext ctx, ByteBuf in) {
+		if (length == -1) {
+			length = AbstractPacket.readVarInt(in);
+		}
+		if (in.readableBytes() < length) return null;
+		if (length > AbstractPacket.MAX_PACKET_LENGTH) {
+			in.skipBytes(length);
+			length = -1;
+			return null;
+		}
+		int tlength = length;
+		length = -1;
+		System.out.println(tlength);
+		return in.readBytes(tlength);
+	}
+
 }

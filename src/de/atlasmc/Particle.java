@@ -79,7 +79,7 @@ public enum Particle {
 	
 	private Particle(int id) {
 		this.id = id;
-		this.data = Void.class;
+		this.data = void.class;
 	}
 	
 	public int getID() {

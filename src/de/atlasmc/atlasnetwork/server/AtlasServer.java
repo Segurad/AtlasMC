@@ -29,7 +29,7 @@ public class AtlasServer implements LocalServer {
 
 	@Override
 	public AtlasNode getNode() {
-		return Atlas.getInstance();
+		return Atlas.getAtlas();
 	}
 
 	@Override
