@@ -4,6 +4,6 @@ import de.atlasmc.io.Packet;
 
 public interface PacketInSetDisplayedRecipe extends Packet {
 	
-	public String RecipeID();
+	public String getRecipeID();
 
 }

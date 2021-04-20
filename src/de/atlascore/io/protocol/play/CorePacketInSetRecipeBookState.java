@@ -31,17 +31,17 @@ public class CorePacketInSetRecipeBookState extends AbstractPacket implements Pa
 	}
 
 	@Override
-	public int BookID() {
+	public int getBookID() {
 		return bookID;
 	}
 
 	@Override
-	public boolean BookOpen() {
+	public boolean getBookOpen() {
 		return bookopen;
 	}
 
 	@Override
-	public boolean FilterActive() {
+	public boolean getFilterActive() {
 		return filteractive;
 	}
 

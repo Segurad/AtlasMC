@@ -54,8 +54,8 @@ public class CorePacketOutSpawnEntity extends AbstractPacket implements PacketOu
 		x = in.readDouble();
 		y = in.readDouble();
 		z = in.readDouble();
-		yaw = in.readByte()*360/256;
-		pitch = in.readByte()*360/256;
+		yaw = MathUtil.fromAngle(in.readByte());
+		pitch = MathUtil.fromAngle(in.readByte());
 		objectdata = in.readInt();
 		vx = in.readShort();
 		vy = in.readShort();
@@ -71,8 +71,8 @@ public class CorePacketOutSpawnEntity extends AbstractPacket implements PacketOu
 		out.writeDouble(x);
 		out.writeDouble(y);
 		out.writeDouble(z);
-		out.writeByte(Math.round(yaw * 256 / 360));
-		out.writeByte(Math.round(pitch * 256 / 360));
+		out.writeByte(MathUtil.toAngle(yaw));
+		out.writeByte(MathUtil.toAngle(pitch));
 		out.writeInt(objectdata);
 		out.writeShort(vx);
 		out.writeShort(vy);

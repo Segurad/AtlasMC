@@ -95,8 +95,8 @@ public class CoreCompassMeta extends CoreItemMeta implements CompassMeta {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, String local, boolean systemData) throws IOException {
-		super.toNBT(writer, local, systemData);
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
 		if (isLodestoneTracked()) writer.writeByteTag(LODESTONE_TRACKED, isLodestoneTracked()?1:0);
 		if (hasLodestone()) {
 			writer.writeCompoundTag(LODESTONE_POS);

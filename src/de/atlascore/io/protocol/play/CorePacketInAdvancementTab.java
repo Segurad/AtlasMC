@@ -29,12 +29,12 @@ public class CorePacketInAdvancementTab extends AbstractPacket implements Packet
 	}
 
 	@Override
-	public int Action() {
+	public int getAction() {
 		return action;
 	}
 
 	@Override
-	public String TabID() {
+	public String getTabID() {
 		return tabID;
 	}
 	

@@ -26,7 +26,7 @@ public class CorePacketInSpectate extends AbstractPacket implements PacketInSpec
 	}
 
 	@Override
-	public String UUID() {
+	public String getUUID() {
 		return uuid;
 	}
 

@@ -76,8 +76,8 @@ public class CoreTropicalFishBucketMeta extends CoreItemMeta implements Tropical
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, String local, boolean systemData) throws IOException {
-		super.toNBT(writer, local, systemData);
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
 		writer.writeIntTag(BUCKET_VARIANT_TAG, pattern.getDataID() + bodyColor.ordinal() << 16 + patternColor.ordinal() << 24);
 	}
 

@@ -7,5 +7,8 @@ public interface TileEntity extends NBTHolder, Cloneable {
 
 	public TileEntity clone();
 	public Material getType();
+	public int getX();
+	public int getY();
+	public int getZ();
 
 }

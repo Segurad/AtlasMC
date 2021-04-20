@@ -26,7 +26,7 @@ public class CorePacketInPlayerAbilities extends AbstractPacket implements Packe
 	}	
 
 	@Override
-	public byte Flags() {
+	public byte getFlags() {
 		return flags;
 	}
 

@@ -32,17 +32,17 @@ public class CorePacketInUpdateCommandBlockMinecart extends AbstractPacket imple
 	}
 
 	@Override
-	public int EntityID() {
+	public int getEntityID() {
 		return entityID;
 	}
 
 	@Override
-	public String Command() {
+	public String getCommand() {
 		return cmd;
 	}
 
 	@Override
-	public boolean TrackOutput() {
+	public boolean getTrackOutput() {
 		return trackoutput;
 	}
 

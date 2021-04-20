@@ -4,8 +4,8 @@ import de.atlasmc.io.Packet;
 
 public interface PacketInEntityAction extends Packet {
 	
-	public int EntityID();
-	public int ActionID();
-	public int JumpBoost();
+	public int getEntityID();
+	public int getActionID();
+	public int getJumpBoost();
 
 }

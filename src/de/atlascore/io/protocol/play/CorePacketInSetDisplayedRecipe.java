@@ -26,7 +26,7 @@ public class CorePacketInSetDisplayedRecipe extends AbstractPacket implements Pa
 	}
 
 	@Override
-	public String RecipeID() {
+	public String getRecipeID() {
 		return recipeID;
 	}
 

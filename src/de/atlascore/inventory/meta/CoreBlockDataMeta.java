@@ -58,10 +58,10 @@ public class CoreBlockDataMeta extends CoreItemMeta implements BlockDataMeta {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, String local, boolean systemData) throws IOException {
-		super.toNBT(writer, local, systemData);
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
 		writer.writeCompoundTag(BLOCK_STATE_TAG);
-		data.toNBT(writer, local, systemData);
+		data.toNBT(writer, systemData);
 		writer.writeEndTag();
 	}
 

@@ -4,6 +4,6 @@ import de.atlasmc.io.Packet;
 
 public interface PacketInResourcePackStatus extends Packet {
 	
-	public int Result();
+	public int getResult();
 
 }

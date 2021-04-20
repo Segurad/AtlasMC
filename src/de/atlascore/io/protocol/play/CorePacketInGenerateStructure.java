@@ -3,7 +3,6 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.SimpleLocation;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInGenerateStructure;
 import io.netty.buffer.ByteBuf;
@@ -14,36 +13,36 @@ public class CorePacketInGenerateStructure extends AbstractPacket implements Pac
 		super(0x0F, CoreProtocolAdapter.VERSION);
 	}
 
-	private SimpleLocation simploc;
+	private long loc;
 	private int levels;
 	private boolean keepJigsaws;
 	
 	@Override
 	public void read(ByteBuf in) throws IOException {
-		simploc = readPosition(in);
+		loc = in.readLong();
 		levels = readVarInt(in);
 		keepJigsaws = in.readBoolean();
 	}
 
 	@Override
 	public void write(ByteBuf out) throws IOException {
-		writePosition(simploc, out);
+		out.writeLong(loc);
 		writeVarInt(levels, out);
 		out.writeBoolean(keepJigsaws);
 	}
 
 	@Override
-	public SimpleLocation Position() {
-		return simploc;
+	public long getPosition() {
+		return loc;
 	}
 
 	@Override
-	public int Levels() {
+	public int getLevels() {
 		return levels;
 	}
 
 	@Override
-	public boolean Keep_Jigsaws() {
+	public boolean getKeepJigsaws() {
 		return keepJigsaws;
 	}
 

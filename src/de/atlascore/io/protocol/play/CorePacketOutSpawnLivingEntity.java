@@ -54,9 +54,9 @@ public class CorePacketOutSpawnLivingEntity extends AbstractPacket implements Pa
 		x = in.readDouble();
 		y = in.readDouble();
 		z = in.readDouble();
-		yaw = in.readByte()*360/256;
-		pitch = in.readByte()*360/256;
-		headpitch = in.readByte()*360/256;
+		yaw = MathUtil.fromAngle(in.readByte());
+		pitch = MathUtil.fromAngle(in.readByte());
+		headpitch = MathUtil.fromAngle(in.readByte());
 		vx = in.readShort();
 		vy = in.readShort();
 		vz = in.readShort();
@@ -71,9 +71,9 @@ public class CorePacketOutSpawnLivingEntity extends AbstractPacket implements Pa
 		out.writeDouble(x);
 		out.writeDouble(y);
 		out.writeDouble(z);
-		out.writeByte((int) (yaw*256/360));
-		out.writeByte((int) (pitch*256/360));
-		out.writeByte((int) (headpitch*256/360));
+		out.writeByte(MathUtil.toAngle(yaw));
+		out.writeByte(MathUtil.toAngle(pitch));
+		out.writeByte(MathUtil.toAngle(headpitch));
 		out.writeShort(vx);
 		out.writeShort(vy);
 		out.writeShort(vz);

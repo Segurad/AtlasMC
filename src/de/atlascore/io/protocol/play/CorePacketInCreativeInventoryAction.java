@@ -30,7 +30,7 @@ public class CorePacketInCreativeInventoryAction extends AbstractPacket implemen
 	}
 
 	@Override
-	public short Slot() {
+	public short getSlot() {
 		return slot;
 	}
 

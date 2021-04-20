@@ -26,7 +26,7 @@ public class CorePacketInUseItem extends AbstractPacket implements PacketInUseIt
 	}
 
 	@Override
-	public int Hand() {
+	public int getHand() {
 		return hand;
 	}
 

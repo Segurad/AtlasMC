@@ -27,7 +27,7 @@ public class CorePacketInPickItem extends AbstractPacket implements PacketInPick
 	}
 
 	@Override
-	public int SlotToUse() {
+	public int getSlotToUse() {
 		return slottouse;
 	}
 

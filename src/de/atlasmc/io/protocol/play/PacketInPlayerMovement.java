@@ -4,6 +4,6 @@ import de.atlasmc.io.Packet;
 
 public interface PacketInPlayerMovement extends Packet {
 	
-	public boolean OnGround();
+	public boolean isOnGround();
 
 }

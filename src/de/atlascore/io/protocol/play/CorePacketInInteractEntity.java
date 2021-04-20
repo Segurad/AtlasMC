@@ -40,32 +40,32 @@ public class CorePacketInInteractEntity extends AbstractPacket implements Packet
 	}
 
 	@Override
-	public int EntityID() {
+	public int getEntityID() {
 		return entityID;
 	}
 
 	@Override
-	public int Type() {
+	public int getType() {
 		return type;
 	}
 
 	@Override
-	public float X() {
+	public float getX() {
 		return x;
 	}
 
 	@Override
-	public float Y() {
+	public float getY() {
 		return y;
 	}
 
 	@Override
-	public float Z() {
+	public float getZ() {
 		return z;
 	}
 
 	@Override
-	public int Hand() {
+	public int getHand() {
 		return hand;
 	}
 

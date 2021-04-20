@@ -32,17 +32,17 @@ public class CorePacketInCraftRecipeRequest extends AbstractPacket implements Pa
 	}
 
 	@Override
-	public byte WindowID() {
+	public byte getWindowID() {
 		return windowID;
 	}
 
 	@Override
-	public String Recipe() {
+	public String getRecipe() {
 		return recipe;
 	}
 
 	@Override
-	public boolean makeAll() {
+	public boolean getMakeAll() {
 		return makeall;
 	}
 	

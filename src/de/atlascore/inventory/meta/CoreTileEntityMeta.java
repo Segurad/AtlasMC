@@ -60,11 +60,11 @@ public class CoreTileEntityMeta extends CoreItemMeta implements TileEntityMeta {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, String local, boolean systemData) throws IOException {
-		super.toNBT(writer, local, systemData);
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
 		if (hasTileEntity()) {
 			writer.writeCompoundTag(BLOCK_ENTITY_TAG);
-			tile.toNBT(writer, local, systemData);
+			tile.toNBT(writer, systemData);
 			writer.writeEndTag();
 		}
 	}

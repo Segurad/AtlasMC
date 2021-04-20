@@ -13,5 +13,6 @@ public interface MapMeta extends ItemMeta {
 	public boolean hasMapView();
 	public void setColor(Color color);
 	public void setMapView(MapView view);
+	public void setMapID(int mapID);
 	
 }

@@ -1,15 +1,14 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.SimpleLocation;
 import de.atlasmc.io.Packet;
 
 public interface PacketInUpdateJigsawBlock extends Packet {
 	
-	public SimpleLocation Position();
-	public String Name();
-	public String Target();
-	public String Pool();
-	public String FinalState();
-	public String Jointtype();
+	public long getPosition();
+	public String getName();
+	public String getTarget();
+	public String getPool();
+	public String getFinalState();
+	public String getJointtype();
 
 }

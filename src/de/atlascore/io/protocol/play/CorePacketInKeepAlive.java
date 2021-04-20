@@ -26,7 +26,7 @@ public class CorePacketInKeepAlive extends AbstractPacket implements PacketInKee
 	}
 
 	@Override
-	public long KeepAliveID() {
+	public long getKeepAliveID() {
 		return keepAliveID;
 	}
 

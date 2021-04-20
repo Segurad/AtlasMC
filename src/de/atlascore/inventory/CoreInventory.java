@@ -8,7 +8,7 @@ import de.atlasmc.entity.Player;
 import de.atlasmc.event.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.io.protocol.PlayerConnection;
+import de.atlasmc.io.ConnectionHandler;
 
 public class CoreInventory implements Inventory {
 
@@ -54,7 +54,7 @@ public class CoreInventory implements Inventory {
 	@Override
 	public void updateSlot(int slot) {
 		for (Player player : viewers) {
-			PlayerConnection con = player.getConnection();
+			ConnectionHandler con = player.getConnection();
 			byte windowID = player.getWindowID(this);
 			if (windowID == -1) return;
 			con.getProtocol().createPacketOutSetSlot(windowID, slot, getItem(slot));

@@ -44,7 +44,7 @@ public class CoreBlockData implements BlockData {
 	}
 
 	@Override
-	public void toNBT(NBTWriter writer, String local, boolean systemData) throws IOException {
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}

@@ -27,7 +27,7 @@ public class CorePacketInAnimation extends AbstractPacket implements PacketInAni
 	}
 
 	@Override
-	public int Hand() {
+	public int getHand() {
 		return hand;
 	}
 	

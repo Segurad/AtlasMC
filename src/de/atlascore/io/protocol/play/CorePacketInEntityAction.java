@@ -33,17 +33,17 @@ public class CorePacketInEntityAction extends AbstractPacket implements PacketIn
 	}
 
 	@Override
-	public int EntityID() {
+	public int getEntityID() {
 		return entityID;
 	}
 
 	@Override
-	public int ActionID() {
+	public int getActionID() {
 		return actionID;
 	}
 
 	@Override
-	public int JumpBoost() {
+	public int getJumpBoost() {
 		return jumpboost;
 	}
 

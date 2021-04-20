@@ -4,7 +4,7 @@ import de.atlasmc.io.Packet;
 
 public interface PacketInAdvancementTab extends Packet {
 	
-	public int Action();
-	public String TabID();
+	public int getAction();
+	public String getTabID();
 
 }

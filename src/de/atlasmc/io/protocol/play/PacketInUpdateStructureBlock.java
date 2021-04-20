@@ -1,25 +1,24 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.SimpleLocation;
 import de.atlasmc.io.Packet;
 
 public interface PacketInUpdateStructureBlock extends Packet {
 	
-	public SimpleLocation Position();
-	public int Action();
-	public int Mode();
-	public String Name();
-	public byte OffsetX();
-	public byte OffsetY();
-	public byte OffsetZ();
-	public byte SizeX();
-	public byte SizeY();
-	public byte SizeZ();
-	public int Mirror();
-	public int Rotation();
-	public String Metadata();
-	public float Integrity();
-	public long Seed();
-	public byte Flags();
+	public long getPosition();
+	public int getAction();
+	public int getMode();
+	public String getName();
+	public byte getOffsetX();
+	public byte getOffsetY();
+	public byte getOffsetZ();
+	public byte getSizeX();
+	public byte getSizeY();
+	public byte getSizeZ();
+	public int getMirror();
+	public int getRotation();
+	public String getMetadata();
+	public float getIntegrity();
+	public long getSeed();
+	public byte getFlags();
 
 }

@@ -26,7 +26,7 @@ public class CorePacketInHeldItemChange extends AbstractPacket implements Packet
 	}
 
 	@Override
-	public short Slot() {
+	public short getSlot() {
 		return slot;
 	}
 

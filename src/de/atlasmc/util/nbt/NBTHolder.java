@@ -9,27 +9,15 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 
 /**
  * Represents a Object which can be converted to NBT or from NBT
- * @author Segurad
- *
  */
 public interface NBTHolder {
 	
 	/**
 	 * 
-	 * @return the NBT content with local = default and systemData = false
+	 * @return the NBT content with systemData = false
 	 */
 	public default NBT toNBT() {
-		return toNBT("default", false);
-	}
-	
-	public default NBT toNBT(String local, boolean systemData) {
-		NBTObjectWriter writer = new NBTObjectWriter();
-		try {
-			toNBT(writer, local, systemData);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return writer.toNBT();
+		return toNBT(false);
 	}
 	
 	/**
@@ -38,16 +26,13 @@ public interface NBTHolder {
 	 * @return the NBT content with local = default
 	 */
 	public default NBT toNBT(boolean systemData) {
-		return toNBT("default", systemData);
-	}
-	
-	/**
-	 * 
-	 * @param local
-	 * @return the NBT content with systemData = false
-	 */
-	public default NBT toNBT(String local) {
-		return toNBT(local, false);
+		NBTObjectWriter writer = new NBTObjectWriter();
+		try {
+			toNBT(writer, systemData);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return writer.toNBT();
 	}
 	
 	/**
@@ -58,7 +43,7 @@ public interface NBTHolder {
 	 * @throws IOException
 	 * Does not a new CompoundTag
 	 */
-	public void toNBT(NBTWriter writer, String local, boolean systemData) throws IOException;
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException;
 	
 	/**
 	 * 

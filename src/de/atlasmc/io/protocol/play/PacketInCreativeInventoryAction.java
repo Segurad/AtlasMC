@@ -5,7 +5,7 @@ import de.atlasmc.io.Packet;
 
 public interface PacketInCreativeInventoryAction extends Packet {
 	
-	public short Slot();
+	public short getSlot();
 	public ItemStack ClickedItem();
 
 }

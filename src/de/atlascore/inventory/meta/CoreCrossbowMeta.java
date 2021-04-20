@@ -89,11 +89,11 @@ public class CoreCrossbowMeta extends CoreDamageableMeta implements CrossbowMeta
 	}
 
 	@Override
-	public void toNBT(NBTWriter writer, String local, boolean systemData) throws IOException {
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		if (hasChargedProjectiles()) {
 			writer.writeListTag(CHARGED_PROJECTILES, TagType.COMPOUND, projectiles.size());
 			for (ItemStack i : projectiles) {
-				i.toNBT(writer, local, systemData);
+				i.toNBT(writer, systemData);
 				writer.writeEndTag();
 			}
 		}

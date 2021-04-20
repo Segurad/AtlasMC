@@ -38,27 +38,27 @@ public class CorePacketInPlayerPositionAndRotation extends AbstractPacket implem
 	}
 
 	@Override
-	public double X() {
+	public double getX() {
 		return x;
 	}
 
 	@Override
-	public double FeetY() {
+	public double getFeetY() {
 		return feety;
 	}
 
 	@Override
-	public double Z() {
+	public double getZ() {
 		return z;
 	}
 
 	@Override
-	public float Yaw() {
+	public float getYaw() {
 		return yaw;
 	}
 
 	@Override
-	public float Pitch() {
+	public float getPitch() {
 		return pitch;
 	}
 

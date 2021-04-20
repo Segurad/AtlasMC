@@ -59,4 +59,6 @@ public interface Player extends AtlasPlayer, HumanEntity {
 	public boolean hasInternalUUID();
 	public void setInternalUUID(UUID uuid);
 
+	public String getLocal();
+
 }

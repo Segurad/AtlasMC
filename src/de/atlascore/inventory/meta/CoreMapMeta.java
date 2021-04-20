@@ -25,8 +25,8 @@ public class CoreMapMeta extends CoreItemMeta implements MapMeta {
 	
 	static {
 		NBT_FIELDS.setField(MAP, (holder, reader) -> {
-			if (CoreMapMeta.class.isInstance(holder)) {
-				((CoreMapMeta) holder).mapID = reader.readIntTag();
+			if (MapMeta.class.isInstance(holder)) {
+				((MapMeta) holder).setMapID(reader.readIntTag());
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
 		NBT_FIELDS.setField(MAP_SCALE_DIRECTION, NBTField.TRASH);
@@ -86,8 +86,9 @@ public class CoreMapMeta extends CoreItemMeta implements MapMeta {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, String local, boolean systemData) throws IOException {
-		super.toNBT(writer, local, systemData);
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		writer.writeIntTag(MAP, mapID);
 	}
 	
 	@Override
@@ -96,9 +97,15 @@ public class CoreMapMeta extends CoreItemMeta implements MapMeta {
 	}
 	
 	@Override
-	public void writeDisplayCompound(NBTWriter writer, String local, boolean systemData) throws IOException {
-		super.writeDisplayCompound(writer, local, systemData);
+	public void writeDisplayCompound(NBTWriter writer, boolean systemData) throws IOException {
+		super.writeDisplayCompound(writer, systemData);
 		if (hasColor()) writer.writeIntTag(MAP_COLOR, getColor().asRGB());
+	}
+
+	@Override
+	public void setMapID(int mapID) {
+		this.mapID = mapID;
+		if (view != null && view.getMapID() != mapID) view = null;
 	}
 
 }

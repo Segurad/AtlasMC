@@ -35,27 +35,27 @@ public class CorePacketInVehicleMove extends AbstractPacket implements PacketInV
 	}
 
 	@Override
-	public double X() {	
+	public double getX() {	
 		return x;
 	}
 
 	@Override
-	public double Y() {
+	public double getY() {
 		return y;
 	}
 
 	@Override
-	public double Z() {
+	public double getZ() {
 		return z;
 	}
 
 	@Override
-	public float Yaw() {
+	public float getYaw() {
 		return yaw;
 	}
 
 	@Override
-	public float Pitch() {
+	public float getPitch() {
 		return pitch;
 	}
 

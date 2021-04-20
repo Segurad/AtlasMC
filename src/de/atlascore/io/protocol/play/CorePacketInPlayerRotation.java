@@ -31,17 +31,17 @@ public class CorePacketInPlayerRotation extends AbstractPacket implements Packet
 	}
 
 	@Override
-	public float Yaw() {
+	public float getYaw() {
 		return yaw;
 	}
 
 	@Override
-	public float Pitch() {
+	public float getPitch() {
 		return pitch;
 	}
 
 	@Override
-	public boolean OnGround() {
+	public boolean isOnGround() {
 		return onGround;
 	}
 	

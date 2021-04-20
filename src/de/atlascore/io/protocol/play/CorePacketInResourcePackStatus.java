@@ -26,7 +26,7 @@ public class CorePacketInResourcePackStatus extends AbstractPacket implements Pa
 	}
 
 	@Override
-	public int Result() {
+	public int getResult() {
 		return result;
 	}
 

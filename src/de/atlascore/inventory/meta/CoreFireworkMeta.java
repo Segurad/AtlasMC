@@ -108,12 +108,12 @@ public class CoreFireworkMeta extends CoreItemMeta implements FireworkMeta {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, String local, boolean systemData) throws IOException {
-		super.toNBT(writer, local, systemData);
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
 		if (hasEffects()) {
 			writer.writeListTag(EXPLOSIONS, TagType.COMPOUND, effects.size());
 			for (FireworkEffect effect : effects) {
-				effect.toNBT(writer, local, systemData);
+				effect.toNBT(writer, systemData);
 				writer.writeEndTag();
 			}
 		}

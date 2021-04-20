@@ -3,7 +3,6 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.SimpleLocation;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInUpdateJigsawBlock;
 import io.netty.buffer.ByteBuf;
@@ -14,12 +13,12 @@ public class CorePacketInUpdateJigsawBlock extends AbstractPacket implements Pac
 		super(0x28, CoreProtocolAdapter.VERSION);
 	}
 	
-	private SimpleLocation pos;
+	private long pos;
 	private String name,target,pool,finalstate,jointtype;
 
 	@Override
 	public void read(ByteBuf in) throws IOException {
-		pos = readPosition(in);
+		pos = in.readLong();
 		name = readString(in);
 		target = readString(in);
 		pool = readString(in);
@@ -29,7 +28,7 @@ public class CorePacketInUpdateJigsawBlock extends AbstractPacket implements Pac
 
 	@Override
 	public void write(ByteBuf out) throws IOException {
-		writePosition(pos, out);
+		out.writeLong(pos);
 		writeString(name, out);
 		writeString(target, out);
 		writeString(pool, out);
@@ -38,32 +37,32 @@ public class CorePacketInUpdateJigsawBlock extends AbstractPacket implements Pac
 	}
 
 	@Override
-	public SimpleLocation Position() {
+	public long getPosition() {
 		return pos;
 	}
 
 	@Override
-	public String Name() {
+	public String getName() {
 		return name;
 	}
 
 	@Override
-	public String Target() {
+	public String getTarget() {
 		return target;
 	}
 
 	@Override
-	public String Pool() {
+	public String getPool() {
 		return pool;
 	}
 
 	@Override
-	public String FinalState() {
+	public String getFinalState() {
 		return finalstate;
 	}
 
 	@Override
-	public String Jointtype() {
+	public String getJointtype() {
 		return jointtype;
 	}
 

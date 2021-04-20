@@ -153,12 +153,12 @@ public class ItemStack implements NBTHolder {
 	}
 
 	@Override
-	public void toNBT(NBTWriter writer, String local, boolean systemData) throws IOException {
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		writer.writeByteTag("Count", (byte) getAmount());
 		writer.writeStringTag("id", getType().getNamespacedName());
 		if(hasItemMeta()) {
 			writer.writeCompoundTag("tag");
-			getItemMeta().toNBT(writer, local, systemData);
+			getItemMeta().toNBT(writer, systemData);
 			writer.writeEndTag();
 		}
 	}

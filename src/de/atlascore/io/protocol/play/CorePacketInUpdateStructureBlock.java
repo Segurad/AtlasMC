@@ -3,7 +3,6 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.SimpleLocation;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInUpdateStructureBlock;
 import io.netty.buffer.ByteBuf;
@@ -14,16 +13,15 @@ public class CorePacketInUpdateStructureBlock extends AbstractPacket implements 
 		super(0x2A, CoreProtocolAdapter.VERSION);
 	}
 	
-	private SimpleLocation pos;
 	private int action,mode,mirror,roation;
 	private String name,metadata;
 	private byte offx,offy,offz,sizex,sizey,sizez,flags;
 	private float integrity;
-	private long seed;
+	private long seed, pos;
 
 	@Override
 	public void read(ByteBuf in) throws IOException {
-		pos = readPosition(in);
+		pos = in.readLong();
 		action = readVarInt(in);
 		mode = readVarInt(in);
 		mirror = readVarInt(in);
@@ -44,7 +42,7 @@ public class CorePacketInUpdateStructureBlock extends AbstractPacket implements 
 
 	@Override
 	public void write(ByteBuf out) throws IOException {
-		writePosition(pos, out);
+		out.writeLong(pos);
 		writeVarInt(action, out);
 		writeVarInt(mode, out);
 		writeVarInt(mirror, out);
@@ -63,82 +61,82 @@ public class CorePacketInUpdateStructureBlock extends AbstractPacket implements 
 	}
 
 	@Override
-	public SimpleLocation Position() {
+	public long getPosition() {
 		return pos;
 	}
 
 	@Override
-	public int Action() {
+	public int getAction() {
 		return action;
 	}
 
 	@Override
-	public int Mode() {
+	public int getMode() {
 		return mode;
 	}
 
 	@Override
-	public String Name() {
+	public String getName() {
 		return name;
 	}
 
 	@Override
-	public byte OffsetX() {
+	public byte getOffsetX() {
 		return offx;
 	}
 
 	@Override
-	public byte OffsetY() {
+	public byte getOffsetY() {
 		return offy;
 	}
 
 	@Override
-	public byte OffsetZ() {
+	public byte getOffsetZ() {
 		return offz;
 	}
 
 	@Override
-	public byte SizeX() {
+	public byte getSizeX() {
 		return sizex;
 	}
 
 	@Override
-	public byte SizeY() {
+	public byte getSizeY() {
 		return sizey;
 	}
 
 	@Override
-	public byte SizeZ() {
+	public byte getSizeZ() {
 		return sizez;
 	}
 
 	@Override
-	public int Mirror() {
+	public int getMirror() {
 		return mirror;
 	}
 
 	@Override
-	public int Rotation() {
+	public int getRotation() {
 		return roation;
 	}
 
 	@Override
-	public String Metadata() {
+	public String getMetadata() {
 		return metadata;
 	}
 
 	@Override
-	public float Integrity() {
+	public float getIntegrity() {
 		return integrity;
 	}
 
 	@Override
-	public long Seed() {
+	public long getSeed() {
 		return seed;
 	}
 
 	@Override
-	public byte Flags() {
+	public byte getFlags() {
 		return flags;
 	}
 

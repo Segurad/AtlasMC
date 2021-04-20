@@ -3,7 +3,6 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.SimpleLocation;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInPlayerDigging;
 import io.netty.buffer.ByteBuf;
@@ -15,35 +14,35 @@ public class CorePacketInPlayerDigging extends AbstractPacket implements PacketI
 	}
 
 	private int status;
-	private SimpleLocation pos;
+	private long pos;
 	private byte face;
 	
 	@Override
 	public void read(ByteBuf in) throws IOException {
 		status = readVarInt(in);
-		pos = readPosition(in);
+		pos = in.readLong();
 		face = in.readByte();
 	}
 
 	@Override
 	public void write(ByteBuf out) throws IOException {
 		writeVarInt(status, out);
-		writePosition(pos, out);
+		out.writeLong(pos);
 		out.writeByte(face);
 	}
 
 	@Override
-	public int Status() {
+	public int getStatus() {
 		return status;
 	}
 
 	@Override
-	public SimpleLocation Position() {
+	public long getPosition() {
 		return pos;
 	}
 
 	@Override
-	public byte Face() {
+	public byte getFace() {
 		return face;
 	}
 	

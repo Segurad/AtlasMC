@@ -156,13 +156,13 @@ public class CorePotionMeta extends CoreItemMeta implements PotionMeta {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, String local, boolean systemData) throws IOException {
-		super.toNBT(writer, local, systemData);
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
 		if (hasColor()) writer.writeIntTag(CUSTOM_POTION_COLOR, color.asRGB());
 		if (hasCustomEffects()) {
 			writer.writeListTag(CUSTOM_POTION_EFFECTS, TagType.COMPOUND, customEffects.size());
 			for (PotionEffect effect : customEffects) {
-				effect.toNBT(writer, local, systemData);
+				effect.toNBT(writer, systemData);
 				writer.writeEndTag();
 			}
 		}

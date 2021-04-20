@@ -28,12 +28,12 @@ public class CorePacketInSetBeaconEffect extends AbstractPacket implements Packe
 	}
 
 	@Override
-	public int PrimaryEffect() {
+	public int getPrimaryEffect() {
 		return primeffect;
 	}
 
 	@Override
-	public int SecondaryEffect() {
+	public int getSecondaryEffect() {
 		return secondeffect;
 	}
 

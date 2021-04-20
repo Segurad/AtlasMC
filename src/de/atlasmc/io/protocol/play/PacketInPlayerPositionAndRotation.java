@@ -4,11 +4,11 @@ import de.atlasmc.io.Packet;
 
 public interface PacketInPlayerPositionAndRotation extends Packet {
 	
-	public double X();
-	public double FeetY();
-	public double Z();
-	public float Yaw();
-	public float Pitch();
+	public double getX();
+	public double getFeetY();
+	public double getZ();
+	public float getYaw();
+	public float getPitch();
 	public boolean OnGround();
 
 }

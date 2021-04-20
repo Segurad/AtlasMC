@@ -31,17 +31,17 @@ public class CorePacketInSteerVehicle extends AbstractPacket implements PacketIn
 	}
 
 	@Override
-	public float Sideways() {
+	public float getSideways() {
 		return sideways;
 	}
 
 	@Override
-	public float Forward() {
+	public float getForward() {
 		return forward;
 	}
 
 	@Override
-	public byte Flags() {
+	public byte getFlags() {
 		return flags;
 	}
 

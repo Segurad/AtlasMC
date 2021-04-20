@@ -26,7 +26,7 @@ public class CorePacketInSelectTrade extends AbstractPacket implements PacketInS
 	}
 
 	@Override
-	public int SelectedSlot() {
+	public int getSelectedSlot() {
 		return selectedslot;
 	}
 

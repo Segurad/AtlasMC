@@ -47,8 +47,8 @@ public class CoreLeatherArmorMeta extends CoreDamageableMeta implements LeatherA
 	}
 	
 	@Override
-	protected void writeDisplayCompound(NBTWriter writer, String local, boolean systemData) throws IOException {
-		super.writeDisplayCompound(writer, local, systemData);
+	protected void writeDisplayCompound(NBTWriter writer, boolean systemData) throws IOException {
+		super.writeDisplayCompound(writer, systemData);
 		if (color != null) writer.writeIntTag(COLOR, color.asRGB());
 	}
 

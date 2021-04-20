@@ -14,7 +14,6 @@ import de.atlasmc.Material;
 import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeModifier;
 import de.atlasmc.attribute.AttributeModifier.Operation;
-import de.atlasmc.chat.LanguageHandler;
 import de.atlasmc.chat.MessageUtil;
 import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.inventory.EquipmentSlot;
@@ -37,8 +36,7 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 public class CoreItemMeta implements ItemMeta {
 	
 	private boolean unbreakable;
-	private String displayname, nameKey;
-	private LanguageHandler langHandler;
+	private String displayname;
 	private Lore lore;
 	private int flags;
 	private Integer customModelData;
@@ -214,56 +212,6 @@ public class CoreItemMeta implements ItemMeta {
 	public CustomTagContainer getCustomTagContainer() {
 		if (customTags == null)  customTags = new CustomTagContainer();
 		return customTags;
-	}
-	
-	@Override
-	public String getLocalizedName() {
-		return hasLanguageHandler() ? langHandler.getDefaultPack().get(nameKey) : null;
-	}
-
-	@Override
-	public String getLocalizedName(String local) {
-		return hasLanguageHandler() ? langHandler.getPack(local).get(nameKey) : null;
-	}
-
-	@Override
-	public LanguageHandler getLanguageHandler() {
-		return langHandler;
-	}
-
-	@Override
-	public void setLanguageHandler(LanguageHandler handler) {
-		this.langHandler = handler;	
-	}
-
-	@Override
-	public boolean hasLanguageHandler() {
-		return langHandler != null;
-	}
-
-	@Override
-	public boolean hasLocalizedName() {
-		return hasLanguageHandler() ? langHandler.getDefaultPack().hasKey(nameKey) : false;
-	}
-	
-	@Override
-	public boolean hasLocalizedName(String local) {
-		return hasLanguageHandler() ? langHandler.getPack(local).hasKey(nameKey) : false;
-	}
-	
-	@Override
-	public boolean hasLocalizedNameKey() {
-		return nameKey == null; 
-	}
-	
-	@Override
-	public String getLocalizedNameKey() {
-		return nameKey;
-	}
-	
-	@Override
-	public void setLocalizedNameKey(String key) {
-		this.nameKey = key;
 	}
 
 	@Override
@@ -482,7 +430,7 @@ public class CoreItemMeta implements ItemMeta {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, String local, boolean systemData) throws IOException {
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		Validate.notNull(writer, "NBTWriter can not be null!");
 		if (hasCanDestroy()) {
 			writer.writeListTag(CAN_DESTROY, TagType.STRING, canDestroy.size());
@@ -493,7 +441,7 @@ public class CoreItemMeta implements ItemMeta {
 		if (hasCustomModelData()) writer.writeIntTag(CUSTOM_MODEL_DATA, customModelData);
 		if (hasDisplayCompound()) {
 			writer.writeCompoundTag(DISPLAY);
-			writeDisplayCompound(writer, local, systemData);
+			writeDisplayCompound(writer, systemData);
 			writer.writeEndTag();
 		}
 		if (hasItemFlags()) writer.writeIntTag(HIDE_FLAGS, flags);
@@ -532,7 +480,7 @@ public class CoreItemMeta implements ItemMeta {
 		}
 		if (hasSystemDataCompound()) {
 			writer.writeCompoundTag(ATLASMC);
-			writeSystemDataCompound(writer, local);
+			writeSystemDataCompound(writer);
 			writer.writeEndTag();
 		}
 	}
@@ -568,14 +516,11 @@ public class CoreItemMeta implements ItemMeta {
 	}
 	
 	protected boolean hasDisplayCompound() {
-		return hasLocalizedName() || hasDisplayName() || hasLore();
+		return hasDisplayName() || hasLore();
 	}
 	
-	protected void writeDisplayCompound(NBTWriter writer, String local, boolean systemData) throws IOException {
-		String name = getLocalizedName(local);
-		if (name == null) {
-			writer.writeStringTag(NAME, MessageUtil.formatMessage(name));
-		} else if (hasDisplayName()) {
+	protected void writeDisplayCompound(NBTWriter writer, boolean systemData) throws IOException {
+		if (hasDisplayName()) {
 			writer.writeStringTag(NAME, MessageUtil.formatMessage(displayname));
 		}
 		if (hasLore()) {
@@ -590,7 +535,7 @@ public class CoreItemMeta implements ItemMeta {
 		return hasCustomTagContainer() && customTags.hasSystemTags();
 	}
 	
-	protected void writeSystemDataCompound(NBTWriter writer, String local) throws IOException {
+	protected void writeSystemDataCompound(NBTWriter writer) throws IOException {
 		if (customTags != null && customTags.hasSystemTags()) {
 			for (NBT nbt : customTags.getSystemTags()) {
 				writer.writeNBT(nbt);

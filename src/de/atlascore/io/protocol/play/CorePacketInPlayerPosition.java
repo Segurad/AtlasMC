@@ -33,22 +33,22 @@ public class CorePacketInPlayerPosition extends AbstractPacket implements Packet
 	}
 
 	@Override
-	public double X() {
+	public double getX() {
 		return x;
 	}
 
 	@Override
-	public double FeedY() {
+	public double getFeedY() {
 		return feety;
 	}
 
 	@Override
-	public double Z() {
+	public double getZ() {
 		return z;
 	}
 
 	@Override
-	public boolean OnGround() {
+	public boolean isOnGround() {
 		return onGround;
 	}
 	

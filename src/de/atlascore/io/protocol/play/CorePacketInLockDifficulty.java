@@ -26,7 +26,7 @@ public class CorePacketInLockDifficulty extends AbstractPacket implements Packet
 	}
 
 	@Override
-	public boolean Locked() {
+	public boolean isLocked() {
 		return locked;
 	}
 

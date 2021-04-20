@@ -8,9 +8,9 @@ import de.atlasmc.io.Packet;
 import de.atlasmc.io.Protocol;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.ReplayingDecoder;
+import io.netty.handler.codec.ByteToMessageDecoder;
 
-public class PacketDecoder extends ReplayingDecoder<Packet> {
+public class PacketDecoder extends ByteToMessageDecoder {
 
 	private final ConnectionHandler handler;
 	

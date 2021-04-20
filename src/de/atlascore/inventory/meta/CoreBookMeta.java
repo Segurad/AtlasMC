@@ -162,8 +162,8 @@ public class CoreBookMeta extends CoreItemMeta implements BookMeta {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, String local, boolean systemData) throws IOException {
-		super.toNBT(writer, local, systemData);
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
 		if (hasAuthor()) writer.writeStringTag(AUTHOR, author);
 		if (hasGeneration()) writer.writeIntTag(GENERATION, generation.ordinal());
 		if (hasPages()) {

@@ -8,12 +8,12 @@ public class CoreProtocolAdapter implements ProtocolAdapter {
 	public static final String VERSION_STRING = "[AtlasMC]";
 	private final CoreStatusProtocol status;
 	private final CoreLoginProtocol login;
-	private final CorePlayProtocol play;
+	private final CoreProtocolPlay play;
 		
 	public CoreProtocolAdapter() {
 		status = new CoreStatusProtocol();
 		login = new CoreLoginProtocol();
-		play = new CorePlayProtocol();
+		play = new CoreProtocolPlay();
 	}
 	
 	@Override
@@ -37,7 +37,7 @@ public class CoreProtocolAdapter implements ProtocolAdapter {
 	}
 
 	@Override
-	public CorePlayProtocol getPlayProtocol() {
+	public CoreProtocolPlay getPlayProtocol() {
 		return play;
 	}
 

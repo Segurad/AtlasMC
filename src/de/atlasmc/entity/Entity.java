@@ -3,6 +3,7 @@ package de.atlasmc.entity;
 import java.util.UUID;
 
 import de.atlasmc.Location;
+import de.atlasmc.SimpleLocation;
 import de.atlasmc.Vector;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.util.nbt.NBTHolder;
@@ -28,6 +29,8 @@ public interface Entity extends NBTHolder {
 	public void setCustomNameVisible(boolean value);
 	public void setCustomName(String name);
 	public Location getLocation();
+	public Location getLocation(Location loc);
+	public SimpleLocation getLocation(SimpleLocation loc);
 	public World getWorld();
 	public LocalServer getServer();
 	
@@ -37,7 +40,21 @@ public interface Entity extends NBTHolder {
 		SLEEPING,
 		SPIN_ATTACK,
 		STANDING,
-		SWIMMING,
+		SWIMMING
+	}
+	
+	public enum Animation {
+		SWING_MAIN_ARM,
+		TAKE_DAMAGE,
+		LEAVE_BED,
+		SWING_OFFHAND,
+		CRITICAL_EFFECT,
+		MAGIC_CRITICAL_EFFECT;
+		
+		public static Animation getByID(int id) {
+			Animation[] values = values();
+			return values[id];
+		}
 	}
 
 	public EntityType getType();
@@ -50,6 +67,7 @@ public interface Entity extends NBTHolder {
 	public UUID getUUID();
 	public int getObjectData();
 	public Vector getVelocity();
+	public Vector getVelocity(Vector vec);
 	public boolean hasVelocity();
 	public double getX();
 	public double getY();

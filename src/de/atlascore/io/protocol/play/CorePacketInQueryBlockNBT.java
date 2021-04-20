@@ -3,7 +3,6 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.SimpleLocation;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInQueryBlockNBT;
 import io.netty.buffer.ByteBuf;
@@ -15,18 +14,18 @@ public class CorePacketInQueryBlockNBT extends AbstractPacket implements PacketI
 	}
 
 	private int transactionID;
-	private SimpleLocation loc;
+	private long loc;
 	
 	@Override
 	public void read(ByteBuf in) throws IOException {
 		transactionID = readVarInt(in);
-		loc = readPosition(in);
+		loc = in.readLong();
 	}
 
 	@Override
 	public void write(ByteBuf out) throws IOException {
 		writeVarInt(transactionID, out);
-		writePosition(loc, out);
+		out.writeLong(loc);
 	}
 
 	@Override
@@ -35,7 +34,7 @@ public class CorePacketInQueryBlockNBT extends AbstractPacket implements PacketI
 	}
 
 	@Override
-	public SimpleLocation getLocation() {
+	public long getLocation() {
 		return loc;
 	}
 

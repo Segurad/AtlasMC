@@ -3,7 +3,6 @@ package de.atlasmc.io;
 import java.io.IOException;
 
 import de.atlasmc.Material;
-import de.atlasmc.SimpleLocation;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
@@ -128,21 +127,6 @@ public abstract class AbstractPacket implements Packet {
 	    } while (value != 0);
 	}
 	
-	public static SimpleLocation readPosition(ByteBuf in) throws IOException {
-		long raw = in.readLong();
-		int x = (int) (raw >> 38);
-		int y = (int) ((raw >> 26) & 0xFFF);
-		int z = (int) (raw << 38 >> 38);
-		return new SimpleLocation(x, y, z);
-	}
-	
-	public static void writePosition(SimpleLocation loc, ByteBuf out) throws IOException {
-		long raw = ((loc.getBlockX() & 0x3FFFFFF) << 38) |
-				((loc.getBlockZ() & 0x3FFFFFF) << 12) |
-				(loc.getBlockY() & 0xFFF);
-		out.writeLong(raw);
-	}
-	
 	public static String readString(ByteBuf in) {
 		int len = readVarInt(in);
 		byte[] buffer = new byte[len];
@@ -162,7 +146,7 @@ public abstract class AbstractPacket implements Packet {
 	 * @param in
 	 * @return a ItemStack or null if empty
 	 */
-	public ItemStack readSlot(ByteBuf in) throws IOException {
+	public static ItemStack readSlot(ByteBuf in) throws IOException {
 		boolean present = in.readBoolean();
 		if (!present) return null;
 		int itemID = readVarInt(in);
@@ -177,7 +161,7 @@ public abstract class AbstractPacket implements Packet {
 		return item;
 	}
 	
-	public void writeSlot(ItemStack item, ByteBuf out) throws IOException {
+	public static void writeSlot(ItemStack item, ByteBuf out) throws IOException {
 		if (item == null) {
 			out.writeBoolean(false);
 			return;
@@ -186,7 +170,7 @@ public abstract class AbstractPacket implements Packet {
 		writeVarInt(item.getType().getItemID(), out);
 		out.writeByte(item.getAmount());
 		if (!item.hasItemMeta()) out.writeByte(0);
-		else item.getItemMeta().toNBT(new NBTNIOWriter(out), null, false);
+		else item.getItemMeta().toNBT(new NBTNIOWriter(out), false);
 	}
 
 }

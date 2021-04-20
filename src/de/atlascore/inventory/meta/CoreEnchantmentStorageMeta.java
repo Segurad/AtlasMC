@@ -100,8 +100,8 @@ public class CoreEnchantmentStorageMeta extends CoreItemMeta implements Enchantm
 	}
 
 	@Override
-	public void toNBT(NBTWriter writer, String local, boolean systemData) throws IOException {
-		super.toNBT(writer, local, systemData);
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
 		writer.writeListTag(STORED_ENCHANTS, TagType.COMPOUND, enchantments.size());
 		for (Enchantment ench : getEnchants().keySet()) {
 			writer.writeStringTag(ID, ench.getNamespacedName());

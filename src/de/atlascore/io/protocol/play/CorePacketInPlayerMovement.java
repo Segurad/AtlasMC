@@ -26,7 +26,7 @@ public class CorePacketInPlayerMovement extends AbstractPacket implements Packet
 	}
 
 	@Override
-	public boolean OnGround() {
+	public boolean isOnGround() {
 		return onGround;
 	}
 	

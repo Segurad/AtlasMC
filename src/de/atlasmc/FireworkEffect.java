@@ -58,7 +58,7 @@ public class FireworkEffect implements NBTHolder {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, String local, boolean systemData) throws IOException {
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		if (hasFlicker()) writer.writeByteTag(FLICKER, 1);
 		if (hasTrail()) writer.writeByteTag(TRAIL, 1);
 		writer.writeByteTag(TYPE, type.ordinal());

@@ -28,12 +28,12 @@ public class CorePacketInSteerBoat extends AbstractPacket implements PacketInSte
 	}
 
 	@Override
-	public boolean LeftPaddleTurning() {
+	public boolean getLeftPaddleTurning() {
 		return leftPaddleturning;
 	}
 
 	@Override
-	public boolean RightPaddleTurning() {
+	public boolean getRightPaddleTurning() {
 		return rightPaddleturning;
 	}
 

@@ -46,8 +46,8 @@ public class CoreDamageableMeta extends CoreItemMeta implements DamageableMeta {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, String local, boolean systemData) throws IOException {
-		super.toNBT(writer, local, systemData);
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
 		writer.writeIntTag(DAMAGE, damage);
 	}
 

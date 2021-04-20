@@ -26,7 +26,7 @@ public class CorePacketInNameItem extends AbstractPacket implements PacketInName
 	}
 
 	@Override
-	public String ItemName() {
+	public String getItemName() {
 		return itemname;
 	}
 

@@ -4,6 +4,6 @@ import de.atlasmc.io.Packet;
 
 public interface PacketInKeepAlive extends Packet {
 	
-	public long KeepAliveID();
+	public long getKeepAliveID();
 
 }

@@ -50,11 +50,11 @@ public class CoreFireworkEffectMeta extends CoreItemMeta implements FireworkEffe
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, String local, boolean systemData) throws IOException {
-		super.toNBT(writer, local, systemData);
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
 		if (hasEffect()) {
 			writer.writeCompoundTag(EXPLOSION);
-			effect.toNBT(writer, local, systemData);
+			effect.toNBT(writer, systemData);
 			writer.writeEndTag();
 		}
 	}
