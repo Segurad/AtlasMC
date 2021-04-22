@@ -19,7 +19,7 @@ public class CorePacketOutSpawnPainting extends AbstractPacket implements Packet
 	private long loc;
 	
 	public CorePacketOutSpawnPainting() {
-		super(0x03, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutSpawnPainting(Painting painting) {

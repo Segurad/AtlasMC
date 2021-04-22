@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInSpectate extends AbstractPacket implements PacketInSpectate {
 
 	public CorePacketInSpectate() {
-		super(0x2D, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private String uuid;

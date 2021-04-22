@@ -5,5 +5,10 @@ import de.atlasmc.io.Packet;
 public interface PacketInCloseWindow extends Packet {
 	
 	public byte getWindowID();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x0A;
+	}
 
 }

@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInSetDifficulty extends AbstractPacket implements PacketInSetDifficulty {
 
 	public CorePacketInSetDifficulty() {
-		super(0x02, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	private int dif;

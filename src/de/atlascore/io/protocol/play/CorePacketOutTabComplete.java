@@ -16,7 +16,7 @@ public class CorePacketOutTabComplete extends AbstractPacket implements PacketOu
 	private List<Match> matches;
 	
 	public CorePacketOutTabComplete() {
-		super(0x0F, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutTabComplete(int transactionID, int start, int length, List<Match> matches) {

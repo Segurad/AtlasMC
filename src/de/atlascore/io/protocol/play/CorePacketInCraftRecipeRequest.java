@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInCraftRecipeRequest extends AbstractPacket implements PacketInCraftRecipeRequest {
 
 	public CorePacketInCraftRecipeRequest() {
-		super(0x19, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private byte windowID;

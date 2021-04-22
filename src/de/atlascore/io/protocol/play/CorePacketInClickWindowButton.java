@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInClickWindowButton extends AbstractPacket implements PacketInClickWindowButton {
 
 	public CorePacketInClickWindowButton() {
-		super(0x08, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	private byte windowID, buttonID;

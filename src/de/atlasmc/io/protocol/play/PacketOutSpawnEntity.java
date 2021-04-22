@@ -2,7 +2,9 @@ package de.atlasmc.io.protocol.play;
 
 import java.util.UUID;
 
-public interface PacketOutSpawnEntity {
+import de.atlasmc.io.Packet;
+
+public interface PacketOutSpawnEntity extends Packet {
 	
 	public int getEntityID();
 	public UUID getUUID();
@@ -16,5 +18,10 @@ public interface PacketOutSpawnEntity {
 	public double getVelocityZ();
 	public int getObjectData();
 	public int getType();
+	
+	@Override
+	public default int getDefaultID() {
+		return 0x00;
+	}
 	
 }

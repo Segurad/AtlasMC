@@ -10,8 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInEntityAction extends AbstractPacket implements PacketInEntityAction {
 
 	public CorePacketInEntityAction() {
-		super(0x1C, CoreProtocolAdapter.VERSION);
-		
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	private int entityID;

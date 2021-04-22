@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInTabComplete extends AbstractPacket implements PacketInTabComplete {
 
 	public CorePacketInTabComplete() {
-		super(0x06, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private int transactionID;

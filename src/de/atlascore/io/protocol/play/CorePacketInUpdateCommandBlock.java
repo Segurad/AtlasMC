@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInUpdateCommandBlock extends AbstractPacket implements PacketInUpdateCommandBlock {
 
 	public CorePacketInUpdateCommandBlock() {
-		super(0x26, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private long pos;

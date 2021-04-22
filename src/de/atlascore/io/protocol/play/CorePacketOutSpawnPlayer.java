@@ -13,13 +13,12 @@ import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutSpawnPlayer extends AbstractPacket implements PacketOutSpawnPlayer {
 
-	private int id;
+	private int id, pitch, yaw;
 	private double x, y, z;
 	private UUID uuid;
-	private float pitch, yaw;
 	
 	public CorePacketOutSpawnPlayer() {
-		super(0x04, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutSpawnPlayer(HumanEntity player) {
@@ -30,8 +29,8 @@ public class CorePacketOutSpawnPlayer extends AbstractPacket implements PacketOu
 		x = loc.getX();
 		y = loc.getY();
 		z = loc.getZ();
-		pitch = loc.getPitch();
-		yaw = loc.getYaw();
+		pitch = MathUtil.toAngle(loc.getPitch());
+		yaw = MathUtil.toAngle(loc.getYaw());
 	}
 
 	@Override
@@ -43,8 +42,8 @@ public class CorePacketOutSpawnPlayer extends AbstractPacket implements PacketOu
 		x = in.readDouble();
 		y = in.readDouble();
 		z = in.readDouble();
-		yaw = MathUtil.fromAngle(in.readByte());
-		pitch = MathUtil.fromAngle(in.readByte());
+		yaw = in.readUnsignedByte();
+		pitch = in.readUnsignedByte();
 	}
 
 	@Override
@@ -55,8 +54,8 @@ public class CorePacketOutSpawnPlayer extends AbstractPacket implements PacketOu
 		out.writeDouble(x);
 		out.writeDouble(y);
 		out.writeDouble(z);
-		out.writeByte(MathUtil.toAngle(yaw));
-		out.writeByte(MathUtil.toAngle(pitch));
+		out.writeByte(yaw);
+		out.writeByte(pitch);
 	}
 
 	@Override
@@ -86,12 +85,12 @@ public class CorePacketOutSpawnPlayer extends AbstractPacket implements PacketOu
 
 	@Override
 	public float getYaw() {
-		return yaw;
+		return MathUtil.fromAngle(yaw);
 	}
 
 	@Override
 	public float getPitch() {
-		return pitch;
+		return MathUtil.fromAngle(pitch);
 	}
 
 }

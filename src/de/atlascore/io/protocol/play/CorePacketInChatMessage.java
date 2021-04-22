@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInChatMessage extends AbstractPacket implements PacketInChatMessage {
 
 	public CorePacketInChatMessage() {
-		super(0x03, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	private String msg;

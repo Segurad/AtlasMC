@@ -13,7 +13,7 @@ public class CorePacketOutDisconnect extends AbstractPacket implements PacketOut
 	private String reason;
 	
 	public CorePacketOutDisconnect() {
-		super(0x19, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutDisconnect(ChatComponent reason) {

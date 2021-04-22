@@ -10,5 +10,10 @@ public interface PacketInUpdateJigsawBlock extends Packet {
 	public String getPool();
 	public String getFinalState();
 	public String getJointtype();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x28;
+	}
 
 }

@@ -15,7 +15,7 @@ public class CorePacketInEditBook extends AbstractPacket implements PacketInEdit
 	private int hand;
 	
 	public CorePacketInEditBook() {
-		super(0x0C, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	@Override

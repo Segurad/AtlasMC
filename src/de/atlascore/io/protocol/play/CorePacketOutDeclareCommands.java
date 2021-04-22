@@ -12,7 +12,7 @@ public class CorePacketOutDeclareCommands extends AbstractPacket implements Pack
 	// TODO wait for command implementation
 	
 	public CorePacketOutDeclareCommands() {
-		super(0x10, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	@Override

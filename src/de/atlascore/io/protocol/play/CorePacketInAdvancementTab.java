@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInAdvancementTab extends AbstractPacket implements PacketInAdvancementTab {
 
 	public CorePacketInAdvancementTab() {
-		super(0x22, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private int action;

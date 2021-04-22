@@ -12,7 +12,7 @@ public class CorePacketOutPong extends AbstractPacket implements PacketOutPong {
 	private long pong;
 	
 	public CorePacketOutPong() {
-		super(0x01, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutPong(long pong) {

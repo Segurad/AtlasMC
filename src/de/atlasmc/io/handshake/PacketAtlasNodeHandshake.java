@@ -24,4 +24,10 @@ public class PacketAtlasNodeHandshake extends AbstractPacket {
 		
 	}
 
+	@Override
+	public int getDefaultID() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

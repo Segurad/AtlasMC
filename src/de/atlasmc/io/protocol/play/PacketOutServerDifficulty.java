@@ -7,5 +7,10 @@ public interface PacketOutServerDifficulty extends Packet {
 	
 	public Difficulty getDifficulty();
 	public boolean isLocked();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x0D;
+	}
 
 }

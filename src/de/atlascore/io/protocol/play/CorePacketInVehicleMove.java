@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInVehicleMove extends AbstractPacket implements PacketInVehicleMove {
 
 	public CorePacketInVehicleMove() {
-		super(0x16, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private double x,y,z;

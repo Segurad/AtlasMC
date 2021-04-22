@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInUseItem extends AbstractPacket implements PacketInUseItem {
 
 	public CorePacketInUseItem() {
-		super(0x2F, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private int hand;

@@ -11,7 +11,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInCreativeInventoryAction extends AbstractPacket implements PacketInCreativeInventoryAction {
 
 	public CorePacketInCreativeInventoryAction() {
-		super(0x29, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	private short slot;

@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInSelectTrade extends AbstractPacket implements PacketInSelectTrade {
 
 	public CorePacketInSelectTrade() {
-		super(0x23, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private int selectedslot;

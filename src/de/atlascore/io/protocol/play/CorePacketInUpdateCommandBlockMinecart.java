@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInUpdateCommandBlockMinecart extends AbstractPacket implements PacketInUpdateCommandBlockMinecart {
 
 	public CorePacketInUpdateCommandBlockMinecart() {
-		super(0x27, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private int entityID;

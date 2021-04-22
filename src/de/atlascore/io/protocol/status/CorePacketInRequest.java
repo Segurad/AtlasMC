@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInRequest extends AbstractPacket implements PacketInRequest {
 
 	public CorePacketInRequest() {
-		super(0x00, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	@Override

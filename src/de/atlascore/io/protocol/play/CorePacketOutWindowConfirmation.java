@@ -14,7 +14,7 @@ public class CorePacketOutWindowConfirmation extends AbstractPacket implements P
 	private boolean accepted;
 	
 	public CorePacketOutWindowConfirmation() {
-		super(0x11, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutWindowConfirmation(byte windowID, short actionnumber, boolean accepted) {

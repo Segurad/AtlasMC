@@ -7,5 +7,10 @@ public interface PacketInPlayerRotation extends Packet {
 	public float getYaw();
 	public float getPitch();
 	public boolean isOnGround();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x14;
+	}
 
 }

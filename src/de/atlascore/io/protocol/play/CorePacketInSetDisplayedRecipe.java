@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInSetDisplayedRecipe extends AbstractPacket implements PacketInSetDisplayedRecipe {
 
 	public CorePacketInSetDisplayedRecipe() {
-		super(0x1F, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private String recipeID;

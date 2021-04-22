@@ -13,7 +13,7 @@ public class CorePacketOutBlockAction extends AbstractPacket implements PacketOu
 	private long pos;
 	
 	public CorePacketOutBlockAction() {
-		super(0x0A, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutBlockAction(long pos, int actionID, int actionParam, int blockType) {

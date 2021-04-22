@@ -13,4 +13,9 @@ public interface PacketOutExplosion extends Packet {
 	public float getMotionY();
 	public float getMotionZ();
 	
+	@Override
+	default int getDefaultID() {
+		return 0x1B;
+	}
+	
 }

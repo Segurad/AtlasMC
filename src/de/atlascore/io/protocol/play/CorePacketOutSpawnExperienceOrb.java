@@ -14,7 +14,7 @@ public class CorePacketOutSpawnExperienceOrb extends AbstractPacket implements P
 	private double x, y, z;
 	
 	public CorePacketOutSpawnExperienceOrb() {
-		super(0x01, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutSpawnExperienceOrb(ExperiemceOrb orb) {

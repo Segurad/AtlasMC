@@ -10,8 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInAnimation extends AbstractPacket implements PacketInAnimation {
 
 	public CorePacketInAnimation() {
-		super(0x2C, CoreProtocolAdapter.VERSION);
-		
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	private int hand;

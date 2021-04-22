@@ -56,4 +56,9 @@ public class PacketMinecraftHandshake extends AbstractPacket {
 		writeVarInt(nextState, out);
 	}
 
+	@Override
+	public int getDefaultID() {
+		return 0;
+	}
+
 }

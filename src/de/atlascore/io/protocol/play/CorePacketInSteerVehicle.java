@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInSteerVehicle extends AbstractPacket implements PacketInSteerVehicle {
 
 	public CorePacketInSteerVehicle() {
-		super(0x1D, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private float sideways,forward;

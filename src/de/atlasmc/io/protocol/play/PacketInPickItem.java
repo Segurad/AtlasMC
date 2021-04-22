@@ -6,4 +6,9 @@ public interface PacketInPickItem extends Packet {
 	
 	public int getSlotToUse();
 
+	@Override
+	default int getDefaultID() {
+		return 0x18;
+	}
+	
 }

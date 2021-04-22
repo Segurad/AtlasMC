@@ -7,5 +7,10 @@ public interface PacketOutAcknowledgePlayerDigging extends Packet {
 	public long getPosition();
 	public int getBlockState();
 	public boolean isSuccessful();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x07;
+	}
 
 }

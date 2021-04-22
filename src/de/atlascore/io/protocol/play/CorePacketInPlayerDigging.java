@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInPlayerDigging extends AbstractPacket implements PacketInPlayerDigging {
 
 	public CorePacketInPlayerDigging() {
-		super(0x1B, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	private int status;

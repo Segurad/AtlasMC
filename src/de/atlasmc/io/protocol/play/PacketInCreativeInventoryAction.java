@@ -7,5 +7,10 @@ public interface PacketInCreativeInventoryAction extends Packet {
 	
 	public short getSlot();
 	public ItemStack ClickedItem();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x29;
+	}
 
 }

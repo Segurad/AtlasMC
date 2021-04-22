@@ -14,7 +14,7 @@ public class CorePacketOutStatistics extends AbstractPacket implements PacketOut
 	private int elements;
 	
 	public CorePacketOutStatistics() {
-		super(0x06, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutStatistics(int[] statistics) {

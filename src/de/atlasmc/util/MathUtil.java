@@ -19,6 +19,10 @@ public class MathUtil {
 		}
 		return original;
 	}
+	
+	public static boolean isInRange(double original, double min, double max) {
+		return original >= min && original <= max;
+	}
 
 	public static int getPositionX(long position) {
 		return (int) (position >> 38);
@@ -48,5 +52,9 @@ public class MathUtil {
 	
 	public static float fromAngle(int value) {
 		return value * 360 / 256;
+	}
+
+	public static short delta(double var0, double var1) {
+		return (short) ((var0 * 32 - var1 * 32) * 128);
 	}
 }

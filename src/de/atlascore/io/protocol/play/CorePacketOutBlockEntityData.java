@@ -18,10 +18,10 @@ public class CorePacketOutBlockEntityData extends AbstractPacket implements Pack
 	private byte[] data;
 	
 	public CorePacketOutBlockEntityData() {
-		super(0x09, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
-	public CorePacketOutBlockEntityData(long position, Action action,  byte[] data) {
+	public CorePacketOutBlockEntityData(long position, TileUpdateAction action,  byte[] data) {
 		this();
 		pos = position;
 		this.action = action.getID();
@@ -47,8 +47,8 @@ public class CorePacketOutBlockEntityData extends AbstractPacket implements Pack
 	}
 
 	@Override
-	public Action getAction() {
-		return Action.getByID(action);
+	public TileUpdateAction getAction() {
+		return TileUpdateAction.getByID(action);
 	}
 
 	@Override

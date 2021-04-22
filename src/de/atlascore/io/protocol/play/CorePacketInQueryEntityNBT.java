@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInQueryEntityNBT extends AbstractPacket implements PacketInQueryEntityNBT {
 
 	public CorePacketInQueryEntityNBT() {
-		super(0x0D, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private int transactionID, entityID;

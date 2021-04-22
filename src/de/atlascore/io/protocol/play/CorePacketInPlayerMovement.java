@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInPlayerMovement extends AbstractPacket implements PacketInPlayerMovement {
 
 	public CorePacketInPlayerMovement() {
-		super(0x15, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private boolean onGround;

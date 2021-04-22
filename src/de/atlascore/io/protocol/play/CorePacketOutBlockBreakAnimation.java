@@ -13,7 +13,7 @@ public class CorePacketOutBlockBreakAnimation extends AbstractPacket implements 
 	private long pos;
 	
 	public CorePacketOutBlockBreakAnimation() {
-		super(0x08, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	/**

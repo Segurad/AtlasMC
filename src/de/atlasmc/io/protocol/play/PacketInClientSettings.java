@@ -10,5 +10,10 @@ public interface PacketInClientSettings extends Packet {
 	public boolean getChatColor();
 	public byte getDisplaySkinParts();
 	public int getMainHand();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x05;
+	}
 
 }

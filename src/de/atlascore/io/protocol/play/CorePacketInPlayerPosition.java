@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInPlayerPosition extends AbstractPacket implements PacketInPlayerPosition {
 
 	public CorePacketInPlayerPosition() {
-		super(0x12, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private double x,feety,z;

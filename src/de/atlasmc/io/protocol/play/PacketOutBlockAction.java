@@ -8,5 +8,10 @@ public interface PacketOutBlockAction extends Packet {
 	public int getActionID();
 	public int getActionParam();
 	public int getBlockType();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x0A;
+	}
 
 }

@@ -9,4 +9,9 @@ public interface PacketOutSetSlot extends Packet {
 	public int getSlot();
 	public ItemStack getItem();
 	
+	@Override
+	default int getDefaultID() {
+		return 0x15;
+	}
+	
 }

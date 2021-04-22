@@ -13,5 +13,10 @@ public interface PacketOutSpawnPlayer extends Packet {
 	public double getZ();
 	public float getYaw();
 	public float getPitch();
+	
+	@Override
+	public default int getDefaultID() {
+		return 0x04;
+	}
 
 }

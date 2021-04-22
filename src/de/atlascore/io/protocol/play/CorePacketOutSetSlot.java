@@ -14,8 +14,12 @@ public class CorePacketOutSetSlot extends AbstractPacket implements PacketOutSet
 	private short slot;
 	private ItemStack item;
 	
+	public CorePacketOutSetSlot() {
+		super(CoreProtocolAdapter.VERSION);
+	}
+	
 	public CorePacketOutSetSlot(byte windowID, short slot, ItemStack item) {
-		super(0x15, CoreProtocolAdapter.VERSION);
+		this();
 		this.windowID = windowID;
 		this.slot = slot;
 		this.item = item;

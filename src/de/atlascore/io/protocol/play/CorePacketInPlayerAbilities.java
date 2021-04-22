@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInPlayerAbilities extends AbstractPacket implements PacketInPlayerAbilities {
 
 	public CorePacketInPlayerAbilities() {
-		super(0x1A, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private byte flags;

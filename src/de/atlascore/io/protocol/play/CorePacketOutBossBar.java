@@ -9,10 +9,10 @@ import de.atlasmc.BossBar.BarColor;
 import de.atlasmc.BossBar.BarFlag;
 import de.atlasmc.BossBar.BarStyle;
 import de.atlasmc.io.AbstractPacket;
-import de.atlasmc.io.protocol.play.CoreBossBar;
+import de.atlasmc.io.protocol.play.PacketOutCoreBossBar;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutBossBar extends AbstractPacket implements CoreBossBar {
+public class CorePacketOutBossBar extends AbstractPacket implements PacketOutCoreBossBar {
 
 	private UUID uuid;
 	private int action, color, style, flags = 0;
@@ -20,10 +20,10 @@ public class CorePacketOutBossBar extends AbstractPacket implements CoreBossBar 
 	private float health;
 	
 	public CorePacketOutBossBar() {
-		super(0x0C, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
-	public CorePacketOutBossBar(UUID uuid, Action action, String title, float health, BarColor color, BarStyle style, Set<BarFlag> flags) {
+	public CorePacketOutBossBar(UUID uuid, BossBarAction action, String title, float health, BarColor color, BarStyle style, Set<BarFlag> flags) {
 		this();
 		this.action = action.ordinal();
 		this.color = color.ordinal();

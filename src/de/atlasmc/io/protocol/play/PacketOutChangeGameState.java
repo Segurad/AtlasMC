@@ -7,6 +7,11 @@ public interface PacketOutChangeGameState extends Packet {
 	public ChangeReason getReason();
 	public float getValue();
 	
+	@Override
+	default int getDefaultID() {
+		return 0x1D;
+	}
+	
 	public static enum ChangeReason {
 		NO_RESPAWN_REASON,
 		END_RAINING,

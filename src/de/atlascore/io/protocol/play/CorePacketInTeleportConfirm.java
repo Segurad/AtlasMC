@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInTeleportConfirm extends AbstractPacket implements PacketInTeleportConfirm {
 
 	public CorePacketInTeleportConfirm() {
-		super(0x00, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	private int teleportID;

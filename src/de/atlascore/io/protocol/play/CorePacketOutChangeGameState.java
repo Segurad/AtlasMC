@@ -13,7 +13,7 @@ public class CorePacketOutChangeGameState extends AbstractPacket implements Pack
 	private float value;
 	
 	public CorePacketOutChangeGameState() {
-		super(0x1D, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutChangeGameState(ChangeReason reason, float value) {

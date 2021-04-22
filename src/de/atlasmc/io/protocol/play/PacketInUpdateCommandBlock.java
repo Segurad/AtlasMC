@@ -8,5 +8,10 @@ public interface PacketInUpdateCommandBlock extends Packet {
 	public String getCommand();
 	public int getMode();
 	public byte Flags();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x26;
+	}
 
 }

@@ -13,7 +13,7 @@ public class CorePacketOutBlockChange extends AbstractPacket implements PacketOu
 	private int blockState;
 	
 	public CorePacketOutBlockChange() {
-		super(0x0B, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutBlockChange(long pos, int blockState) {

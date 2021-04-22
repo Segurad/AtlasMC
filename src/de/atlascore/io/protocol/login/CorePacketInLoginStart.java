@@ -12,7 +12,7 @@ public class CorePacketInLoginStart extends AbstractPacket implements PacketInLo
 	private String name;
 	
 	public CorePacketInLoginStart() {
-		super(0x00, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	@Override

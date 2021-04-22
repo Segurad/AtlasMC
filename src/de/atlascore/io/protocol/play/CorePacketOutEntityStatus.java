@@ -12,7 +12,7 @@ public class CorePacketOutEntityStatus extends AbstractPacket implements PacketO
 	private int entityID, status;
 	
 	public CorePacketOutEntityStatus() {
-		super(0x1A, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutEntityStatus(int entityID, int status) {

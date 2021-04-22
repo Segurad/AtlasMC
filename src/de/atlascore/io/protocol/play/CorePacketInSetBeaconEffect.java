@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInSetBeaconEffect extends AbstractPacket implements PacketInSetBeaconEffect {
 
 	public CorePacketInSetBeaconEffect() {
-		super(0x24, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	private int primeffect,secondeffect;

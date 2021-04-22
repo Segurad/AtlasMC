@@ -13,5 +13,10 @@ public interface PacketOutSpawnPainting extends Packet {
 	public Motive getMotiv();
 	public long getPosition();
 	public BlockFace getDirection();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x03;
+	}
 
 }

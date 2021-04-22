@@ -12,5 +12,10 @@ public interface PacketOutNamedSoundEffect extends Packet {
 	public double getZ();
 	public float getVolume();
 	public float getPitch();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x18;
+	}
 
 }

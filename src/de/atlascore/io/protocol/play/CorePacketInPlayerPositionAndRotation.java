@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInPlayerPositionAndRotation extends AbstractPacket implements PacketInPlayerPositionAndRotation {
 
 	public CorePacketInPlayerPositionAndRotation() {
-		super(0x13, CoreProtocolAdapter.VERSION);	
+		super(CoreProtocolAdapter.VERSION);	
 	}
 
 	private double x,feety,z;

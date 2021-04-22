@@ -9,5 +9,10 @@ public interface PacketInVehicleMove extends Packet {
 	public double getZ();
 	public float getYaw();
 	public float getPitch();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x16;
+	}
 
 }

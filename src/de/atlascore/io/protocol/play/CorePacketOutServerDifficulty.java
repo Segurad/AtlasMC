@@ -14,7 +14,7 @@ public class CorePacketOutServerDifficulty extends AbstractPacket implements Pac
 	private boolean locked;
 	
 	public CorePacketOutServerDifficulty() {
-		super(0x0D, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutServerDifficulty(Difficulty difficulty, boolean locked) {

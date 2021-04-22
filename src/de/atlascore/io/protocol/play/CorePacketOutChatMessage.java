@@ -16,7 +16,7 @@ public class CorePacketOutChatMessage extends AbstractPacket implements PacketOu
 	private int position;
 	
 	public CorePacketOutChatMessage() {
-		super(0x0E, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutChatMessage(ChatComponent chat, ChatMessage position, UUID sender) {

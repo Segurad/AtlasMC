@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInGenerateStructure extends AbstractPacket implements PacketInGenerateStructure {
 
 	public CorePacketInGenerateStructure() {
-		super(0x0F, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	private long loc;

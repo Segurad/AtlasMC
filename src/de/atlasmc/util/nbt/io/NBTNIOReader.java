@@ -26,6 +26,7 @@ public class NBTNIOReader implements NBTReader {
 		this.in = in;
 		highestList = -2;
 		index = 0;
+		getType();
 	}
 	
 	@Override

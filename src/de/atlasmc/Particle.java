@@ -110,4 +110,8 @@ public enum Particle {
 			return size;
 		}
 	}
+
+	public static Particle getByID(int id) {
+		return values()[id];
+	}
 }

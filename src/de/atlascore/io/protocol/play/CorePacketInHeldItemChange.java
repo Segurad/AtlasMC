@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInHeldItemChange extends AbstractPacket implements PacketInHeldItemChange {
 
 	public CorePacketInHeldItemChange() {
-		super(0x25, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private short slot;

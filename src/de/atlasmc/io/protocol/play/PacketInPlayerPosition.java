@@ -8,5 +8,10 @@ public interface PacketInPlayerPosition extends Packet {
 	public double getFeedY();
 	public double getZ();
 	public boolean isOnGround();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x12;
+	}
 
 }

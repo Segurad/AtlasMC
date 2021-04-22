@@ -13,7 +13,7 @@ public class CorePacketOutExplosion extends AbstractPacket implements PacketOutE
 	private byte[] records;
 	
 	public CorePacketOutExplosion() {
-		super(0x1B, CoreProtocolAdapter.VERSION);	
+		super(CoreProtocolAdapter.VERSION);	
 	}
 	
 	public CorePacketOutExplosion(float x, float y, float z, float strength, byte[] records, float motionX, float motionY, float motionZ) {

@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInUpdateStructureBlock extends AbstractPacket implements PacketInUpdateStructureBlock {
 
 	public CorePacketInUpdateStructureBlock() {
-		super(0x2A, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private int action,mode,mirror,roation;

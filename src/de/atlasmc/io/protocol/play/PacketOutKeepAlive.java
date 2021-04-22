@@ -6,4 +6,9 @@ public interface PacketOutKeepAlive extends Packet {
 
 	public long getKeepAlive();
 	
+	@Override
+	public default int getDefaultID() {
+		return 0x1F;
+	}
+	
 }

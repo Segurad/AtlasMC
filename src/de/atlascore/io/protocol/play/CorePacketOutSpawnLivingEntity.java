@@ -14,14 +14,13 @@ import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutSpawnLivingEntity extends AbstractPacket implements PacketOutSpawnLivingEntity {
 
-	private int id, type;
+	private int id, type, yaw, pitch, headpitch;
 	private UUID uuid;
 	private double x, y, z;
-	private float yaw, pitch, headpitch;
 	private short vx, vy, vz;
 	
 	public CorePacketOutSpawnLivingEntity() {
-		super(0x02, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutSpawnLivingEntity(LivingEntity entity) {
@@ -33,9 +32,9 @@ public class CorePacketOutSpawnLivingEntity extends AbstractPacket implements Pa
 		x = loc.getX();
 		y = loc.getY();
 		z = loc.getZ();
-		yaw = loc.getYaw();
-		pitch = loc.getPitch();
-		headpitch = entity.getHeadPitch();
+		yaw = MathUtil.toAngle(loc.getYaw());
+		pitch = MathUtil.toAngle(loc.getPitch());
+		headpitch = MathUtil.toAngle(entity.getHeadPitch());
 		if (entity.hasVelocity()) {
 			Vector v = entity.getVelocity();
 			vx = (short) (MathUtil.getInRange(v.getX(), -3.9, 3.9)*8000);
@@ -54,9 +53,9 @@ public class CorePacketOutSpawnLivingEntity extends AbstractPacket implements Pa
 		x = in.readDouble();
 		y = in.readDouble();
 		z = in.readDouble();
-		yaw = MathUtil.fromAngle(in.readByte());
-		pitch = MathUtil.fromAngle(in.readByte());
-		headpitch = MathUtil.fromAngle(in.readByte());
+		yaw = in.readUnsignedByte();
+		pitch = in.readUnsignedByte();
+		headpitch = in.readUnsignedByte();
 		vx = in.readShort();
 		vy = in.readShort();
 		vz = in.readShort();
@@ -71,9 +70,9 @@ public class CorePacketOutSpawnLivingEntity extends AbstractPacket implements Pa
 		out.writeDouble(x);
 		out.writeDouble(y);
 		out.writeDouble(z);
-		out.writeByte(MathUtil.toAngle(yaw));
-		out.writeByte(MathUtil.toAngle(pitch));
-		out.writeByte(MathUtil.toAngle(headpitch));
+		out.writeByte(yaw);
+		out.writeByte(pitch);
+		out.writeByte(headpitch);
 		out.writeShort(vx);
 		out.writeShort(vy);
 		out.writeShort(vz);
@@ -111,17 +110,17 @@ public class CorePacketOutSpawnLivingEntity extends AbstractPacket implements Pa
 
 	@Override
 	public float getYaw() {
-		return yaw;
+		return MathUtil.fromAngle(yaw);
 	}
 
 	@Override
 	public float getPitch() {
-		return pitch;
+		return MathUtil.fromAngle(pitch);
 	}
 
 	@Override
 	public float getHeadPitch() {
-		return headpitch;
+		return MathUtil.fromAngle(headpitch);
 	}
 
 	@Override

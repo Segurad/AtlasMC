@@ -12,7 +12,9 @@ public interface PacketInInteractEntity extends Packet {
 	public int getHand();
 	public boolean Sneaking();
 	
+	@Override
+	default int getDefaultID() {
+		return 0x0E;
+	}
 	
-	
-
 }

@@ -12,6 +12,10 @@ public interface NBTWriter {
 	
 	public void writeByteTag(String name, int value) throws IOException;
 	
+	public default void writeByteTag(String name, boolean value) throws IOException {
+		writeByteTag(name, value ? 1 : 0);
+	}
+	
 	public void writeShortTag(String name, int value) throws IOException;
 	
 	public void writeIntTag(String name, int value) throws IOException;

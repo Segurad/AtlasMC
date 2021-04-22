@@ -13,7 +13,7 @@ public class CorePacketOutOpenHorseWindow extends AbstractPacket implements Pack
 	private int slots, entityID;
 	
 	public CorePacketOutOpenHorseWindow() {
-		super(0x1E, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutOpenHorseWindow(byte windowID, int slots, int entityID) {

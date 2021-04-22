@@ -6,4 +6,10 @@ public interface PacketInTabComplete extends Packet {
 
 	public int getTransactionID();
 	public String getText();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x06;
+	}
+	
 }

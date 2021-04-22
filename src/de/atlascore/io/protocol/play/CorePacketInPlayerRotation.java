@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInPlayerRotation extends AbstractPacket implements PacketInPlayerRotation {
 
 	public CorePacketInPlayerRotation() {
-		super(0x14, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	private float yaw,pitch;

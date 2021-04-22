@@ -10,8 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInPickItem extends AbstractPacket implements PacketInPickItem {
 
 	public CorePacketInPickItem() {
-		super(0x18, CoreProtocolAdapter.VERSION);
-		
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	private int slottouse;

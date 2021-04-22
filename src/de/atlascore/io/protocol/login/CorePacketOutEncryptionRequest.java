@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketOutEncryptionRequest extends AbstractPacket implements PacketOutEncryptionRequest {
 
 	public CorePacketOutEncryptionRequest() {
-		super(0x01, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	@Override

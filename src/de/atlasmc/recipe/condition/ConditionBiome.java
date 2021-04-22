@@ -1,13 +1,13 @@
 package de.atlasmc.recipe.condition;
 
 import de.atlasmc.entity.Player;
-import de.atlasmc.world.Biome;
+import de.atlasmc.world.EnumBiome;
 
 public final class ConditionBiome implements Condition {
 
-	private final Biome bio;
+	private final EnumBiome bio;
 	
-	public ConditionBiome(Biome bio) {
+	public ConditionBiome(EnumBiome bio) {
 		this.bio = bio;
 	}
 	

@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInLockDifficulty extends AbstractPacket implements PacketInLockDifficulty {
 
 	public CorePacketInLockDifficulty() {
-		super(0x11, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	private boolean locked;

@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInPlayerBlockPlacement extends AbstractPacket implements PacketInPlayerBlockPlacement {
 
 	public CorePacketInPlayerBlockPlacement() {
-		super(0x2E, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private int hand,face;

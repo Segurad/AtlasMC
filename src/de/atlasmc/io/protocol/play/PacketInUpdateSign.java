@@ -9,5 +9,10 @@ public interface PacketInUpdateSign extends Packet {
 	public String getLine2();
 	public String getLine3();
 	public String getLine4();
+	
+	@Override
+	public default int getDefaultID() {
+		return 0x2B;
+	}
 
 }

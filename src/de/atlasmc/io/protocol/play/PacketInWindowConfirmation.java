@@ -8,4 +8,9 @@ public interface PacketInWindowConfirmation extends Packet {
 	public short getActionNumber();
 	public boolean getAccepted();
 	
+	@Override
+	default int getDefaultID() {
+		return 0x07;
+	}
+	
 }

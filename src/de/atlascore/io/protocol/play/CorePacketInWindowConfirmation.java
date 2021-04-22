@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInWindowConfirmation extends AbstractPacket implements PacketInWindowConfirmation {
 
 	public CorePacketInWindowConfirmation() {
-		super(0x07, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	private byte windowID;

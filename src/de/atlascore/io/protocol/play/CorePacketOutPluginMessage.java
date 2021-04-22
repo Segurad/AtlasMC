@@ -13,7 +13,7 @@ public class CorePacketOutPluginMessage extends AbstractPacket implements Packet
 	private byte[] data;
 	
 	public CorePacketOutPluginMessage() {
-		super(0x17, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutPluginMessage(String identifier, byte[] data) {

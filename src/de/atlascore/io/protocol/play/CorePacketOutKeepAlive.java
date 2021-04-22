@@ -12,7 +12,7 @@ public class CorePacketOutKeepAlive extends AbstractPacket implements PacketOutK
 	private long keepAlive;
 	
 	public CorePacketOutKeepAlive() {
-		super(0x1F, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutKeepAlive(long keepAlive) {

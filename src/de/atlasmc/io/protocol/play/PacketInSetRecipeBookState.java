@@ -7,5 +7,10 @@ public interface PacketInSetRecipeBookState extends Packet {
 	public int getBookID();
 	public boolean getBookOpen();
 	public boolean getFilterActive();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x1E;
+	}
 
 }

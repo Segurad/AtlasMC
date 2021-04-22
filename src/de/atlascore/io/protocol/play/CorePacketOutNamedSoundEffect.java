@@ -15,7 +15,7 @@ public class CorePacketOutNamedSoundEffect extends AbstractPacket implements Pac
 	private float volume, pitch;
 	
 	public CorePacketOutNamedSoundEffect() {
-		super(0x18, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutNamedSoundEffect(String identifier, SoundCategory category, double x, double y, double z, float volume, float pitch) {

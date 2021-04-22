@@ -8,4 +8,9 @@ public interface PacketOutWindowProperty extends Packet {
 	public int getProperty();
 	public int getValue();
 	
+	@Override
+	default int getDefaultID() {
+		return 0x14;
+	}
+	
 }

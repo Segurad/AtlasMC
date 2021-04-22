@@ -10,5 +10,10 @@ public interface PacketInPlayerPositionAndRotation extends Packet {
 	public float getYaw();
 	public float getPitch();
 	public boolean OnGround();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x13;
+	}
 
 }

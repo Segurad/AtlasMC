@@ -11,7 +11,7 @@ public class CorePacketOutResponse extends AbstractPacket implements PacketOutRe
 	private String response;
 	
 	public CorePacketOutResponse() {
-		super(0x00, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	public CorePacketOutResponse(String jString) {

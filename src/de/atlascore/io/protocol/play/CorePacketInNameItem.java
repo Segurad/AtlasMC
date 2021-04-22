@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInNameItem extends AbstractPacket implements PacketInNameItem {
 
 	public CorePacketInNameItem() {
-		super(0x20, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	private String itemname;

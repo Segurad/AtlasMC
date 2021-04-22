@@ -3,10 +3,13 @@ package de.atlasmc.world;
 import java.util.List;
 
 import de.atlasmc.block.data.BlockData;
-import de.atlasmc.block.tile.TileEntity;
 
 public interface ChunkSection {
 	
+	/**
+	 * 
+	 * @return a copy of the mappings
+	 */
 	public short[] getMappings();
 	public default short[] getMappings(short[] buffer) {
 		return getMappings(buffer, 0);
@@ -15,8 +18,21 @@ public interface ChunkSection {
 	public void setMappings(short[] mappings);
 	public short getValue(int x, int y, int z);
 	public short setValue(short value, int x, int y, int z);
-	public List<BlockData> getPallet();
-	public List<TileEntity> getTileEntities();
+	/**
+	 * 
+	 * @return a copy of the palette
+	 */
+	public List<BlockData> getPalette();
 	public Chunk getChunk();
+	public boolean isEmpty();
+	public int getBlockCount();
+	public int getPaletteSize();
+	public int getBitsPerBlock();
+	
+	/**
+	 * 
+	 * @return compacts the mappings
+	 */
+	public long[] getCompactMappings();
 
 }

@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInSetRecipeBookState extends AbstractPacket implements PacketInSetRecipeBookState {
 
 	public CorePacketInSetRecipeBookState() {
-		super(0x1E, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	private int bookID;

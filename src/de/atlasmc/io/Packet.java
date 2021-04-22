@@ -22,4 +22,10 @@ public interface Packet {
 	 * @return the packet id
 	 */
 	public int getID();
+	
+	/**
+	 * 
+	 * @return the packet id based on latest supported protocol (754 | v1.16.5)
+	 */
+	public int getDefaultID();
 }

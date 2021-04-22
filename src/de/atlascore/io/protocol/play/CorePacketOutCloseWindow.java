@@ -12,7 +12,7 @@ public class CorePacketOutCloseWindow extends AbstractPacket implements PacketOu
 	private byte windowID;
 	
 	public CorePacketOutCloseWindow() {
-		super(0x12, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutCloseWindow(byte windowID) {

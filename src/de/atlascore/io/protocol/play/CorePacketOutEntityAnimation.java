@@ -14,7 +14,7 @@ public class CorePacketOutEntityAnimation extends AbstractPacket implements Pack
 	private int id, animation;
 	
 	public CorePacketOutEntityAnimation() {
-		super(0x05, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutEntityAnimation(Entity entity, Animation animation) {

@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInSteerBoat extends AbstractPacket implements PacketInSteerBoat {
 
 	public CorePacketInSteerBoat() {
-		super(0x17, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private boolean rightPaddleturning,leftPaddleturning;

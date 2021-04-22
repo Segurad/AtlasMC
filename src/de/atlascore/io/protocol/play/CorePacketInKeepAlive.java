@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInKeepAlive extends AbstractPacket implements PacketInKeepAlive {
 
 	public CorePacketInKeepAlive() {
-		super(0x10, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private long keepAliveID;

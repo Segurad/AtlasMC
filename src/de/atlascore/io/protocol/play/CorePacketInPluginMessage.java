@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInPluginMessage extends AbstractPacket implements PacketInPluginMessage {
 
 	public CorePacketInPluginMessage() {
-		super(0x0B, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private String channel;

@@ -21,4 +21,9 @@ public interface PacketInUpdateStructureBlock extends Packet {
 	public long getSeed();
 	public byte getFlags();
 
+	@Override
+	public default int getDefaultID() {
+		return 0x2A;
+	}
+	
 }

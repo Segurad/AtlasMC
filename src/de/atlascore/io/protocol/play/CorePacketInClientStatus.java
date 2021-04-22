@@ -12,7 +12,7 @@ public class CorePacketInClientStatus extends AbstractPacket implements PacketIn
 	private int actionID;
 	
 	public CorePacketInClientStatus() {
-		super(0x04, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	@Override

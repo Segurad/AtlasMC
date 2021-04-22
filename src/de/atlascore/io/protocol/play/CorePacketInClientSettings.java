@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInClientSettings extends AbstractPacket implements PacketInClientSettings {
 
 	public CorePacketInClientSettings() {
-		super(0x05, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	private String locale;

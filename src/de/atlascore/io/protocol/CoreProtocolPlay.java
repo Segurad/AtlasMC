@@ -10,6 +10,7 @@ import de.atlasmc.entity.Player;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketListener;
 import de.atlasmc.io.Protocol;
+import de.atlasmc.io.protocol.play.CorePacketOutRespawn;
 
 public class CoreProtocolPlay implements Protocol {
 	
@@ -98,6 +99,33 @@ public class CoreProtocolPlay implements Protocol {
 		playOut.add(CorePacketOutChangeGameState.class); // 0x1D
 		playOut.add(CorePacketOutOpenHorseWindow.class); // 0x1E
 		playOut.add(CorePacketOutKeepAlive.class); // 0x1F
+		playOut.add(CorePacketOutChunkData.class); // 0x20
+		playOut.add(CorePacketOutEffect.class); // 0x21
+		playOut.add(CorePacketOutParticle.class); // 0x22
+		playOut.add(CorePacketOutUpdateLight.class); // 0x23
+		playOut.add(CorePacketOutJoinGame.class); // 0x24
+		playOut.add(CorePacketOutMapData.class); // 0x25
+		playOut.add(CorePacketOutTradeList.class); // 0x26
+		playOut.add(CorePacketOutEntityPosition.class); // 0x27
+		playOut.add(CorePacketOutEntityPositionAndRotation.class); // 0x28
+		playOut.add(CorePacketOutEntityRotation.class); // 0x29
+		playOut.add(CorePacketOutEntityMovement.class); // 0x2A
+		playOut.add(CorePacketOutVehicleMove.class); // 0x2B
+		playOut.add(CorePacketOutOpenBook.class); // 0x2C
+		playOut.add(CorePacketOutOpenWindow.class); // 0x2D
+		playOut.add(CorePacketOutOpenSignEditor.class); // 0x2E
+		playOut.add(CorePacketOutCraftRecipeResponse.class); // 0x2F
+		playOut.add(CorePacketOutPlayerAbilities.class); // 0x30
+		playOut.add(CorePacketOutCombatEvent.class); // 0x31
+		playOut.add(CorePacketOutPlayerInfo.class); // 0x32
+		playOut.add(CorePacketOutFacePlayer.class); // 0x33
+		playOut.add(CorePacketOutPlayerPositionAndLook.class); // 0x34
+		playOut.add(CorePacketOutUnlockRecipes.class); // 0x35
+		playOut.add(CorePacketOutDestroyEntities.class); // 0x36
+		playOut.add(CorePacketOutRemoveEntityEffect.class); // 0x37
+		playOut.add(CorePacketOutRessourcePackSend.class); // 0x38
+		playOut.add(CorePacketOutRespawn.class); // 0x39
+		playOut.add(CorePacketOutEntityHeadLook.class); // 0x3A
 		this.playIn = List.copyOf(playIn);
 		this.playOut = List.copyOf(playOut);
 	}

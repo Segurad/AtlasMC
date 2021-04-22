@@ -6,5 +6,10 @@ public interface PacketOutBlockChange extends Packet {
 	
 	public long getPosition();
 	public int getBlockStateID();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x0B;
+	}
 
 }

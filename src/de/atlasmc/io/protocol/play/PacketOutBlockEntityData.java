@@ -1,13 +1,14 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.Packet;
 import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.io.NBTReader;
 
-public interface PacketOutBlockEntityData {
+public interface PacketOutBlockEntityData extends Packet {
 	
 	public long getPosition();
 	
-	public Action getAction();
+	public TileUpdateAction getAction();
 	
 	public NBT getNBT();
 	
@@ -15,7 +16,12 @@ public interface PacketOutBlockEntityData {
 	
 	public byte[] getRawNBT();
 	
-	public enum Action {
+	@Override
+	default int getDefaultID() {
+		return 0x09;
+	}
+	
+	public enum TileUpdateAction {
 		MOB_SPAWNER_DATA(1),
 		COMMAND_BLOCK_TEXT(2),
 		BEACON_LEVEL_PRIMARY_SECONDARY(3),
@@ -32,7 +38,7 @@ public interface PacketOutBlockEntityData {
 		
 		private int id;
 		
-		private Action(int id) {
+		private TileUpdateAction(int id) {
 			this.id = id;
 		}
 		
@@ -40,7 +46,7 @@ public interface PacketOutBlockEntityData {
 			return id;
 		}
 		
-		public static Action getByID(int id) {
+		public static TileUpdateAction getByID(int id) {
 			switch (id) {
 			case 1: return MOB_SPAWNER_DATA;
 			case 2: return COMMAND_BLOCK_TEXT;

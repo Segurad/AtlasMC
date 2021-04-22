@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInUpdateSign extends AbstractPacket implements PacketInUpdateSign {
 
 	public CorePacketInUpdateSign() {
-		super(0x2B, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private long pos;

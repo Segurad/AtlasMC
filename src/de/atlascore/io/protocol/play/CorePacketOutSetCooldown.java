@@ -12,7 +12,7 @@ public class CorePacketOutSetCooldown extends AbstractPacket implements PacketOu
 	private int itemID, cooldown;
 	
 	public CorePacketOutSetCooldown() {
-		super(0x16, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutSetCooldown(int itemID, int cooldown) {

@@ -12,7 +12,7 @@ public class CorePacketInPing extends AbstractPacket implements PacketInPing {
 	private long ping;
 	
 	public CorePacketInPing() {
-		super(0x01, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketInPing(long ping) {

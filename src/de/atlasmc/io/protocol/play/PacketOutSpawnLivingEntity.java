@@ -18,5 +18,10 @@ public interface PacketOutSpawnLivingEntity extends Packet {
 	public double getVelocityX();
 	public double getVelocityY();
 	public double getVelocityZ();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x02;
+	}
 
 }

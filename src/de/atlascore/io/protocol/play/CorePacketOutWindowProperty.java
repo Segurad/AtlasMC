@@ -13,7 +13,7 @@ public class CorePacketOutWindowProperty extends AbstractPacket implements Packe
 	private int property, value;
 	
 	public CorePacketOutWindowProperty() {
-		super(0x14, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutWindowProperty(byte windowID, int property, int value) {

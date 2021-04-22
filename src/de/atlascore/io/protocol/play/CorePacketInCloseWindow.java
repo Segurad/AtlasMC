@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInCloseWindow extends AbstractPacket implements PacketInCloseWindow {
 
 	public CorePacketInCloseWindow() {
-		super(0x0A, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	private byte windowID;

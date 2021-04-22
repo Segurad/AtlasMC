@@ -7,5 +7,10 @@ public interface PacketInCraftRecipeRequest extends Packet {
 	public byte getWindowID();
 	public String getRecipe();
 	public boolean getMakeAll();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x19;
+	}
 
 }

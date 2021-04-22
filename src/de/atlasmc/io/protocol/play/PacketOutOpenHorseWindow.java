@@ -7,5 +7,10 @@ public interface PacketOutOpenHorseWindow extends Packet {
 	public byte getWindowID();
 	public int getSlots();
 	public int getEntityID();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x1E;
+	}
 
 }

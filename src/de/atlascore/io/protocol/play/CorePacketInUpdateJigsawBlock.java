@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInUpdateJigsawBlock extends AbstractPacket implements PacketInUpdateJigsawBlock {
 
 	public CorePacketInUpdateJigsawBlock() {
-		super(0x28, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	private long pos;

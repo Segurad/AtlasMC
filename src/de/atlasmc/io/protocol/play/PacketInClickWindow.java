@@ -11,4 +11,9 @@ public interface PacketInClickWindow extends Packet {
 	public short getActionNumber();
 	public int getMode();
 	public ItemStack getClickedItem();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x09;
+	}
 }

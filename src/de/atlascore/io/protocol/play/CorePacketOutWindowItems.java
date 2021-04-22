@@ -6,6 +6,8 @@ import de.atlascore.io.protocol.CoreProtocolAdapter;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutWindowItems;
+import de.atlasmc.util.nbt.io.NBTNIOReader;
+import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutWindowItems extends AbstractPacket implements PacketOutWindowItems {
@@ -14,7 +16,7 @@ public class CorePacketOutWindowItems extends AbstractPacket implements PacketOu
 	private ItemStack[] slots;
 	
 	public CorePacketOutWindowItems() {
-		super(0x13, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutWindowItems(byte windowID, ItemStack[] slots) {
@@ -31,8 +33,9 @@ public class CorePacketOutWindowItems extends AbstractPacket implements PacketOu
 		windowID = in.readByte();
 		final int count = in.readShort();
 		slots = new ItemStack[count];
+		NBTNIOReader reader = new NBTNIOReader(in);
 		for (int i = 0; i < count; i++) {
-			slots[i] = readSlot(in);
+			slots[i] = readSlot(in, reader);
 		}
 	}
 
@@ -40,8 +43,9 @@ public class CorePacketOutWindowItems extends AbstractPacket implements PacketOu
 	public void write(ByteBuf out) throws IOException {
 		out.writeByte(windowID);
 		out.writeShort(slots.length);
+		NBTNIOWriter writer = new NBTNIOWriter(out);
 		for (ItemStack i : slots) {
-			writeSlot(i, out);
+			writeSlot(i, out, writer);
 		}
 	}
 

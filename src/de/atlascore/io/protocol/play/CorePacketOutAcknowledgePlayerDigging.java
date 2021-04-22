@@ -14,7 +14,7 @@ public class CorePacketOutAcknowledgePlayerDigging extends AbstractPacket implem
 	private boolean successful;
 	
 	public CorePacketOutAcknowledgePlayerDigging() {
-		super(0x07, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutAcknowledgePlayerDigging(long pos, int blockstate, int status, boolean successful) {

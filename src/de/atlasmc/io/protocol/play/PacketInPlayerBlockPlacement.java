@@ -11,5 +11,10 @@ public interface PacketInPlayerBlockPlacement extends Packet {
 	public float getCursurPositionY();
 	public float getCursurPositionZ();
 	public boolean isInsideblock();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x2E;
+	}
 
 }

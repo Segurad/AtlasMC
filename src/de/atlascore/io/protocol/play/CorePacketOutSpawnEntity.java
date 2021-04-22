@@ -14,14 +14,13 @@ import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutSpawnEntity extends AbstractPacket implements PacketOutSpawnEntity {
 
-	private int id, type, objectdata;
+	private int id, type, objectdata, yaw, pitch;
 	private UUID uuid;
 	private double x, y, z;
-	private float yaw, pitch;
 	private short vx, vy, vz;
 	
 	public CorePacketOutSpawnEntity() {
-		super(0x00, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 	
 	public CorePacketOutSpawnEntity(Entity entity) {
@@ -33,8 +32,8 @@ public class CorePacketOutSpawnEntity extends AbstractPacket implements PacketOu
 		x = loc.getX();
 		y = loc.getY();
 		z = loc.getZ();
-		yaw = loc.getYaw();
-		pitch = loc.getPitch();
+		yaw = MathUtil.toAngle(loc.getYaw());
+		pitch = MathUtil.toAngle(loc.getPitch());
 		objectdata = entity.getObjectData();
 		if (entity.hasVelocity()) {
 			Vector v = entity.getVelocity();
@@ -54,8 +53,8 @@ public class CorePacketOutSpawnEntity extends AbstractPacket implements PacketOu
 		x = in.readDouble();
 		y = in.readDouble();
 		z = in.readDouble();
-		yaw = MathUtil.fromAngle(in.readByte());
-		pitch = MathUtil.fromAngle(in.readByte());
+		yaw = in.readUnsignedByte();
+		pitch = in.readUnsignedByte();
 		objectdata = in.readInt();
 		vx = in.readShort();
 		vy = in.readShort();
@@ -71,8 +70,8 @@ public class CorePacketOutSpawnEntity extends AbstractPacket implements PacketOu
 		out.writeDouble(x);
 		out.writeDouble(y);
 		out.writeDouble(z);
-		out.writeByte(MathUtil.toAngle(yaw));
-		out.writeByte(MathUtil.toAngle(pitch));
+		out.writeByte(yaw);
+		out.writeByte(pitch);
 		out.writeInt(objectdata);
 		out.writeShort(vx);
 		out.writeShort(vy);
@@ -106,12 +105,12 @@ public class CorePacketOutSpawnEntity extends AbstractPacket implements PacketOu
 
 	@Override
 	public float getYaw() {
-		return yaw;
+		return MathUtil.fromAngle(yaw);
 	}
 
 	@Override
 	public float getPitch() {
-		return pitch;
+		return MathUtil.fromAngle(pitch);
 	}
 
 	@Override

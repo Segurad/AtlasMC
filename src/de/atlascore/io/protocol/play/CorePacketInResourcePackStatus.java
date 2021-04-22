@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInResourcePackStatus extends AbstractPacket implements PacketInResourcePackStatus {
 
 	public CorePacketInResourcePackStatus() {
-		super(0x21, CoreProtocolAdapter.VERSION);
+		super(CoreProtocolAdapter.VERSION);
 	}
 
 	public int result;

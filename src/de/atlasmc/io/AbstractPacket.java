@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import io.netty.buffer.ByteBuf;
@@ -15,8 +14,23 @@ public abstract class AbstractPacket implements Packet {
 	private boolean cancelled;
 	public static final int MAX_PACKET_LENGTH = 2097151;
 	
+	/**
+	 * 
+	 * @param id the packets id
+	 * @param version the protocol version
+	 */
 	public AbstractPacket(int id, int version) {
 		this.id = id;
+		this.version = version;
+		this.cancelled = false;
+	}
+	
+	/**
+	 * Creates a new AbstractPacket with packet getDefaultID();
+	 * @param version the protocol version
+	 */
+	public AbstractPacket(int version) {
+		this.id = getDefaultID();
 		this.version = version;
 		this.cancelled = false;
 	}
@@ -129,13 +143,14 @@ public abstract class AbstractPacket implements Packet {
 	
 	public static String readString(ByteBuf in) {
 		int len = readVarInt(in);
+		if (len == 0) return null;
 		byte[] buffer = new byte[len];
 		in.readBytes(buffer);
 		return new String(buffer);
 	}
 	
 	public static void writeString(String value, ByteBuf out) {
-		if (value == null) return;
+		if (value == null) writeVarInt(0, out);
 		byte[] buffer = value.getBytes();
 		writeVarInt(buffer.length, out);
 		out.writeBytes(buffer);
@@ -155,9 +170,25 @@ public abstract class AbstractPacket implements Packet {
 		ItemStack item = new ItemStack(mat, amount);
 		byte comp = in.readByte();
 		if (comp == 0) return item;
-		ItemMeta meta = mat.createItemMeta();
-		meta.fromNBT(new NBTNIOReader(in));
-		item.setItemMeta(meta);
+		item.getItemMeta().fromNBT(new NBTNIOReader(in));
+		return item;
+	}
+	
+	/**
+	 * 
+	 * @param in
+	 * @return a ItemStack or null if empty
+	 */
+	public static ItemStack readSlot(ByteBuf in, NBTNIOReader reader) throws IOException {
+		boolean present = in.readBoolean();
+		if (!present) return null;
+		int itemID = readVarInt(in);
+		byte amount = in.readByte();
+		Material mat = Material.getByItemID(itemID);
+		ItemStack item = new ItemStack(mat, amount);
+		byte comp = in.readByte();
+		if (comp == 0) return item;
+		item.getItemMeta().fromNBT(reader);
 		return item;
 	}
 	
@@ -170,7 +201,28 @@ public abstract class AbstractPacket implements Packet {
 		writeVarInt(item.getType().getItemID(), out);
 		out.writeByte(item.getAmount());
 		if (!item.hasItemMeta()) out.writeByte(0);
-		else item.getItemMeta().toNBT(new NBTNIOWriter(out), false);
+		else {
+			NBTNIOWriter writer = new NBTNIOWriter(out);
+			writer.writeCompoundTag(null);
+			item.getItemMeta().toNBT(writer, false);
+			writer.writeEndTag();
+		}
+	}
+	
+	public static void writeSlot(ItemStack item, ByteBuf out, NBTNIOWriter writer) throws IOException {
+		if (item == null) {
+			out.writeBoolean(false);
+			return;
+		}
+		out.writeBoolean(true);
+		writeVarInt(item.getType().getItemID(), out);
+		out.writeByte(item.getAmount());
+		if (!item.hasItemMeta()) out.writeByte(0);
+		else {
+			writer.writeCompoundTag(null);
+			item.getItemMeta().toNBT(writer, false);
+			writer.writeEndTag();
+		}
 	}
 
 }

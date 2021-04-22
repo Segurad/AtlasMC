@@ -6,4 +6,9 @@ public interface PacketInClickWindowButton extends Packet {
 
 	public byte getWindowID();
 	public byte getButtonID();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x08;
+	}
 }

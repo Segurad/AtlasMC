@@ -513,6 +513,7 @@ public class CoreItemMeta implements ItemMeta {
 				highestContainer.getUnknownFieldHandler().setField(this, reader);
 			} else getCustomTagContainer().addCustomTag(reader.readNBT());
 		}
+		if (reader.getType() == TagType.TAG_END) reader.readNextEntry();
 	}
 	
 	protected boolean hasDisplayCompound() {

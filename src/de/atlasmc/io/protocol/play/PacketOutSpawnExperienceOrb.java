@@ -9,5 +9,10 @@ public interface PacketOutSpawnExperienceOrb extends Packet {
 	public double getY();
 	public double getZ();
 	public int getExperience();
+	
+	@Override
+	default int getDefaultID() {
+		return 0x01;
+	}
 
 }

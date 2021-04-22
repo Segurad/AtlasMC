@@ -8,4 +8,9 @@ public interface PacketInPlayerDigging extends Packet {
 	public long getPosition();
 	public byte getFace();
 	
+	@Override
+	default int getDefaultID() {
+		return 0x1B;
+	}
+	
 }
