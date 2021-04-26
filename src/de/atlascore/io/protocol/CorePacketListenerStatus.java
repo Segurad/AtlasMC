@@ -23,11 +23,13 @@ public class CorePacketListenerStatus implements PacketListener {
 	
 	@Override
 	public void handlePacket(Packet packet) {
+		System.out.println("PacketStatus: " + packet.getID()); // TODO delete
 		if (packet.getID() == 0) {
 			handler.sendPacket(new CorePacketOutResponse(jString));
 		} else if (packet.getID() == 1) {
 			PacketInPing ping = (PacketInPing) packet;
 			handler.sendPacket(new CorePacketOutPong(ping.getPing()));
+			handler.close();
 		}
 	}
 

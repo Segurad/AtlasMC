@@ -5,10 +5,13 @@ import java.io.IOException;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.AbstractNBTBuildable;
+import de.atlasmc.util.nbt.CustomTagContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
-public class CoreBlockData implements BlockData {
+public class CoreBlockData extends AbstractNBTBuildable implements BlockData {
 	
 	private final Material material;
 	
@@ -53,6 +56,18 @@ public class CoreBlockData implements BlockData {
 	public void fromNBT(NBTReader reader) throws IOException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	protected NBTFieldContainer getRootFieldContainer() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected CustomTagContainer getCustomTagContainer() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

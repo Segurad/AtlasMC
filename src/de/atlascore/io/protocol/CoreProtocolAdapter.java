@@ -6,13 +6,13 @@ public class CoreProtocolAdapter implements ProtocolAdapter {
 
 	public static final int VERSION = 754;
 	public static final String VERSION_STRING = "[AtlasMC]";
-	private final CoreStatusProtocol status;
-	private final CoreLoginProtocol login;
+	private final CoreProtocolStatus status;
+	private final CoreProtocolLogin login;
 	private final CoreProtocolPlay play;
 		
 	public CoreProtocolAdapter() {
-		status = new CoreStatusProtocol();
-		login = new CoreLoginProtocol();
+		status = new CoreProtocolStatus();
+		login = new CoreProtocolLogin();
 		play = new CoreProtocolPlay();
 	}
 	
@@ -27,12 +27,12 @@ public class CoreProtocolAdapter implements ProtocolAdapter {
 	}
 
 	@Override
-	public CoreStatusProtocol getStatusProtocol() {
+	public CoreProtocolStatus getStatusProtocol() {
 		return status;
 	}
 
 	@Override
-	public CoreLoginProtocol getLoginProtocol() {
+	public CoreProtocolLogin getLoginProtocol() {
 		return login;
 	}
 

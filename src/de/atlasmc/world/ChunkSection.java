@@ -17,13 +17,12 @@ public interface ChunkSection {
 	public short[] getMappings(short[] buffer, int offset);
 	public void setMappings(short[] mappings);
 	public short getValue(int x, int y, int z);
-	public short setValue(short value, int x, int y, int z);
+	public void setValue(short value, int x, int y, int z);
 	/**
 	 * 
 	 * @return a copy of the palette
 	 */
 	public List<BlockData> getPalette();
-	public Chunk getChunk();
 	public boolean isEmpty();
 	public int getBlockCount();
 	public int getPaletteSize();

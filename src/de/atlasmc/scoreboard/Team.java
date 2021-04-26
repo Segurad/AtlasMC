@@ -12,5 +12,16 @@ public interface Team {
 	public void setSuffix(String suffix);
 	public void setColor(ChatColor color);
 	public void unregister();
+	
+	public static enum OptionStatus {
+		ALWAYS,
+		FOR_OTHER_TEAMS,
+		FOR_OWN_TEAM,
+		NEVER;
+		
+		public static OptionStatus getByID(int id) {
+			return values()[id];
+		}
+	}
 
 }

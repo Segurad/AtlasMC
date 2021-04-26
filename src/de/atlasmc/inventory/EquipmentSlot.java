@@ -8,4 +8,13 @@ public enum EquipmentSlot {
 	LEGS,
 	CHEST,
 	HEAD;
+
+	public int getID() {
+		return ordinal();
+	}
+	
+	public static EquipmentSlot getByID(int id) {
+		return values()[id];
+	}
+	
 }

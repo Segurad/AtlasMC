@@ -37,9 +37,9 @@ public class CorePacketOutSpawnEntity extends AbstractPacket implements PacketOu
 		objectdata = entity.getObjectData();
 		if (entity.hasVelocity()) {
 			Vector v = entity.getVelocity();
-			vx = (short) (MathUtil.getInRange(v.getX(), -3.9, 3.9)*8000);
-			vy = (short) (MathUtil.getInRange(v.getY(), -3.9, 3.9)*8000);
-			vz = (short) (MathUtil.getInRange(v.getZ(), -3.9, 3.9)*8000);
+			vx = (short) (v.getX()*8000);
+			vy = (short) (v.getY()*8000);
+			vz = (short) (v.getZ()*8000);
 		}
 	}
 

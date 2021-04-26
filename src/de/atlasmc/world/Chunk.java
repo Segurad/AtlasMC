@@ -13,7 +13,12 @@ public interface Chunk {
 	 * @return a set of {@link ChunkSection}s ordered from the highest to the lowest
 	 */
 	public Set<ChunkSection> getSections();
-	public ChunkSection getSection(int hight);
+	/**
+	 * 
+	 * @param height between 0 and 256
+	 * @return the chunk section at this height
+	 */
+	public ChunkSection getSection(int height);
 	public Block getBlockAt(int x, int y, int z);
 	public World getWorld();
 	public boolean isLoaded();

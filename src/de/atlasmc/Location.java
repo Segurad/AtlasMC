@@ -6,7 +6,7 @@ import de.atlasmc.world.World;
 
 public class Location extends SimpleLocation {
 
-	private final World world;
+	private World world;
 	
 	public Location(World world, double x, double y, double z) {
 		super(x, y, z);
@@ -32,6 +32,12 @@ public class Location extends SimpleLocation {
 
 	public BlockData getBlockData() {
 		return world.getBlockData(getBlockX(), getBlockY(), getBlockZ());
+	}
+	
+	public Location copyTo(Location loc) {
+		super.copyTo(loc);
+		loc.world = world;
+		return loc;
 	}
 
 }

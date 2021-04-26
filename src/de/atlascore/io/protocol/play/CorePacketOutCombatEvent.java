@@ -5,10 +5,10 @@ import java.io.IOException;
 import de.atlascore.io.protocol.CoreProtocolAdapter;
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.io.AbstractPacket;
-import de.atlasmc.io.protocol.play.CombatEvent;
+import de.atlasmc.io.protocol.play.PacketOutCombatEvent;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutCombatEvent extends AbstractPacket implements CombatEvent {
+public class CorePacketOutCombatEvent extends AbstractPacket implements PacketOutCombatEvent {
 
 	private int event, duration, entityID, playerID;
 	private String deathMessage;

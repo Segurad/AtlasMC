@@ -1,7 +1,6 @@
 package de.atlasmc.io;
 
 import java.io.IOException;
-
 import de.atlasmc.Material;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
@@ -142,8 +141,13 @@ public abstract class AbstractPacket implements Packet {
 	}
 	
 	public static String readString(ByteBuf in) {
+		return readString(in, Short.MAX_VALUE);
+	}
+	
+	public static String readString(ByteBuf in, int maxLength) {
 		int len = readVarInt(in);
 		if (len == 0) return null;
+		if (len > maxLength) throw new IllegalArgumentException("Invalid String length:" + len + " expected: " + maxLength);
 		byte[] buffer = new byte[len];
 		in.readBytes(buffer);
 		return new String(buffer);

@@ -7,12 +7,12 @@ import java.util.List;
 
 import de.atlascore.io.protocol.play.*;
 import de.atlasmc.entity.Player;
+import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketListener;
-import de.atlasmc.io.Protocol;
-import de.atlasmc.io.protocol.play.CorePacketOutRespawn;
+import de.atlasmc.io.protocol.ProtocolPlay;
 
-public class CoreProtocolPlay implements Protocol {
+public class CoreProtocolPlay implements ProtocolPlay {
 	
 	private final List<Class<? extends Packet>> playIn, playOut;
 	
@@ -126,6 +126,39 @@ public class CoreProtocolPlay implements Protocol {
 		playOut.add(CorePacketOutRessourcePackSend.class); // 0x38
 		playOut.add(CorePacketOutRespawn.class); // 0x39
 		playOut.add(CorePacketOutEntityHeadLook.class); // 0x3A
+		playOut.add(CorePacketOutMultiBlockChange.class); // 0x3B
+		playOut.add(CorePacketOutSelectAdvancementTag.class); // 0x3C
+		playOut.add(CorePacketOutWorldBorder.class); // 0x3D
+		playOut.add(CorePacketOutCamera.class); // 0x3E
+		playOut.add(CorePacketOutHeldItemChange.class); // 0x3F
+		playOut.add(CorePacketOutUpdateViewPosition.class); // 0x40
+		playOut.add(CorePacketOutUpdateViewDistance.class); // 0x41
+		playOut.add(CorePacketOutSpawnPosition.class); // 0x42
+		playOut.add(CorePacketOutDisplayScoreboard.class); // 0x43
+		playOut.add(CorePacketOutEntityMetadata.class); // 0x44
+		playOut.add(CorePacketOutAttachEntity.class); // 0x45
+		playOut.add(CorePacketOutEntityVelocity.class); // 0x46
+		playOut.add(CorePacketOutEntityEquipment.class); // 0x47
+		playOut.add(CorePacketOutSetExperience.class); // 0x48
+		playOut.add(CorePacketOutUpdateHealth.class); // 0x49
+		playOut.add(CorePacketOutScoreboardObjective.class); // 0x4A
+		playOut.add(CorePacketOutSetPassengers.class); // 0x4B
+		playOut.add(CorePacketOutTeams.class); // 0x4C
+		playOut.add(CorePacketOutUpdateScore.class); // 0x4D
+		playOut.add(CorePacketOutTimeUpdate.class); // 0x4E
+		playOut.add(CorePacketOutTitle.class); // 0x4F
+		playOut.add(CorePacketOutEntitySoundEffect.class); // 0x50
+		playOut.add(CorePacketOutSoundEffect.class); // 0x51
+		playOut.add(CorePacketOutStopSound.class); // 0x52
+		playOut.add(CorePacketOutPlayerListHeaderAndFooter.class); // 0x53
+		playOut.add(CorePacketOutNBTQueryResponse.class); // 0x54
+		playOut.add(CorePacketOutCollectItem.class); // 0x55
+		playOut.add(CorePacketOutEntityTeleport.class); // 0x56
+		playOut.add(CorePacketOutAdvancements.class); // 0x57
+		playOut.add(CorePacketOutEntityProperties.class); // 0x58
+		playOut.add(CorePacketOutEntityEffect.class); // 0x59
+		playOut.add(CorePacketOutDeclareRecipes.class); // 0x5A
+		playOut.add(CorePacketOutTags.class); // 0x5B
 		this.playIn = List.copyOf(playIn);
 		this.playOut = List.copyOf(playOut);
 	}
@@ -170,6 +203,11 @@ public class CoreProtocolPlay implements Protocol {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	@Override
+	public CorePacketOutSetSlot createPacketOutSetSlot(byte windowID, int slot, ItemStack item) {
+		return new CorePacketOutSetSlot(windowID, slot, item);
 	}
 
 }

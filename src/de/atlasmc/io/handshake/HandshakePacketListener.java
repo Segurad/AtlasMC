@@ -24,14 +24,17 @@ public class HandshakePacketListener implements PacketListener {
 			PacketMinecraftHandshake pk = (PacketMinecraftHandshake) packet;
 			ProtocolAdapter adapter = Atlas.getProtocolAdapter(pk.getProtocolVersion());
 			if (adapter == null) {
+				System.out.println("not adapter found");
 				handler.close();
 			}
 			final int nextState = pk.getNextState();
+			System.out.println("NextState: " + nextState); // TODO delete
 			if (nextState == 1) {
 				final Protocol prot = adapter.getStatusProtocol();
 				handler.setProtocol(prot, prot.createPacketListener(handler));
 			} else if (nextState == 2) {
 				final Protocol prot = adapter.getLoginProtocol();
+				
 				handler.setProtocol(prot, prot.createPacketListener(handler));
 				HandlerList.callEvent(new PlayerLoginAtemptEvent(handler));
 			}

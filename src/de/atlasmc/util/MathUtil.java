@@ -57,4 +57,35 @@ public class MathUtil {
 	public static short delta(double var0, double var1) {
 		return (short) ((var0 * 32 - var1 * 32) * 128);
 	}
+	
+	public long sectionToPosition(int x, int y, int z) {
+		return ((x & 0x3FFFFF) << 42) | (y & 0xFFFFF) | ((z & 0x3FFFFF) << 20);
+	}
+	
+	public int sectionPositionX(long section) {
+		return (int) (section >> 42);
+	}
+	
+	public int sectionPositionY(long section) {
+		long y = section << 42 >> 44;
+		return (int) y;
+	}
+	
+	public int sectionPositionZ(long section) {
+		long z = section << 22 >> 42;
+		return (int) z;
+	}
+	
+	/**
+	 * 
+	 * @param blockstate
+	 * @param x relative to chunk
+	 * @param y relative to chunk
+	 * @param z relative to chunk
+	 * @return
+	 */
+	public long blockdataPosition(int blockstate, int x, int y, int z) {
+		return blockstate << 12 | (x << 8 | y << 4 | z);
+	}
+	
 }

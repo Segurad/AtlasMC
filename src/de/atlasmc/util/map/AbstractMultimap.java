@@ -87,6 +87,11 @@ public abstract class AbstractMultimap<K, V> implements Multimap<K, V> {
 	public boolean containsKey(Object key) {
 		return map.containsKey(key);
 	}
+	
+	@Override
+	public int size() {
+		return map.size();
+	}
 
 	protected abstract Collection<V> createCollection();
 }

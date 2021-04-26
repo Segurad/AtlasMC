@@ -9,10 +9,12 @@ public class ParticleObject implements Animation {
 
 	private final Particle particle;
 	private final int amount;
+	private final Object data;
 	
-	public ParticleObject(Particle particle, int amount) {
+	public ParticleObject(Particle particle, int amount, Object data) {
 		this.amount = amount;
 		this.particle = particle;
+		this.data = data;
 	}
 	
 	@Override
@@ -24,5 +26,14 @@ public class ParticleObject implements Animation {
 	public void playAll(Location loc, EulerAngle angle) {
 		loc.getWorld().spawnParticle(particle, loc, amount);
 	}
+
+	public Particle getParticle() {
+		return particle;
+	}
+	
+	public Object getData() {
+		return data;
+	}
+	
 
 }

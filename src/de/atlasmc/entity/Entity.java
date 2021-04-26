@@ -11,38 +11,6 @@ import de.atlasmc.world.World;
 
 public interface Entity extends NBTHolder {
 
-	public boolean isOnFire();
-	public boolean isCrouching();
-	public boolean isSprinting();
-	public boolean isSwimming();
-	public boolean isInvisble();
-	public boolean isGlowing();
-	public boolean isFlyingWithElytra();
-	public int getAirTicks();
-	public String getCustomName();
-	public boolean isSilent();
-	public boolean isCustomNameVisible();
-	public boolean hasGravity();
-	public Pose getPose();
-	
-	public void remove();
-	public void setCustomNameVisible(boolean value);
-	public void setCustomName(String name);
-	public Location getLocation();
-	public Location getLocation(Location loc);
-	public SimpleLocation getLocation(SimpleLocation loc);
-	public World getWorld();
-	public LocalServer getServer();
-	
-	public enum Pose {
-		DYING,
-		FALL_FLYING,
-		SLEEPING,
-		SPIN_ATTACK,
-		STANDING,
-		SWIMMING
-	}
-	
 	public enum Animation {
 		SWING_MAIN_ARM,
 		TAKE_DAMAGE,
@@ -52,25 +20,76 @@ public interface Entity extends NBTHolder {
 		MAGIC_CRITICAL_EFFECT;
 		
 		public static Animation getByID(int id) {
-			Animation[] values = values();
-			return values[id];
+			return values()[id];
 		}
 	}
-
-	public EntityType getType();
+	public enum Pose {
+		STANDING,
+		FALL_FLYING,
+		SLEEPING,
+		SWIMMING,
+		SPIN_ATTACK,
+		SNEAKING,
+		DYING;
+		
+		public static Pose getByID(int id) {
+			return values()[id];
+		}
+		
+		public int getID() {
+			return ordinal();
+		}
+	}
+	public int getAirTicks();
 	
+	public String getCustomName();
+	public float getFallDistance();
+	public short getFireTicks();
 	/**
 	 * 
 	 * @return the internal entity id
 	 */
 	public int getID();
-	public UUID getUUID();
+	
+	public Location getLocation();
+	public Location getLocation(Location loc);
+	
+	public SimpleLocation getLocation(SimpleLocation loc);
 	public int getObjectData();
+	public Pose getPose();
+	
+	public LocalServer getServer();
+	public EntityType getType();
+	public UUID getUUID();
 	public Vector getVelocity();
+	
 	public Vector getVelocity(Vector vec);
-	public boolean hasVelocity();
+	public World getWorld();
+	
 	public double getX();
 	public double getY();
 	public double getZ();
+	public boolean hasGravity();
+	public boolean hasVelocity();
+	public boolean isCrouching();
+
+	public boolean isCustomNameVisible();
+	
+	public boolean isFlyingWithElytra();
+	public boolean isGlowing();
+	public boolean isInvisble();
+	public boolean isOnFire();
+	public boolean isSilent();
+	public boolean isSprinting();
+	public boolean isSwimming();
+	public void remove();
+	public void setCustomName(String name);
+	
+	public void setCustomNameVisible(boolean value);
+	public void setFallDistance(float distance);
+
+	public void setFireTicks(int ticks);
+	
+	public void setGlowing(boolean glowing);
 	
 }

@@ -189,6 +189,15 @@ public class SimpleLocation implements Cloneable {
 		this.yaw = yaw;
 		return this;
 	}
+	
+	public SimpleLocation copyTo(SimpleLocation loc) {
+		loc.x = x;
+		loc.y = y;
+		loc.z = z;
+		loc.pitch = pitch;
+		loc.yaw = yaw;
+		return loc;	
+	}
 
 	@Override
 	public int hashCode() {

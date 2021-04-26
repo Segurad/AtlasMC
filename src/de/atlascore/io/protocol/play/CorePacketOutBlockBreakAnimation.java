@@ -4,10 +4,10 @@ import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
 import de.atlasmc.io.AbstractPacket;
-import de.atlasmc.io.protocol.play.CoreBlockBreakAnimation;
+import de.atlasmc.io.protocol.play.PacketOutBlockBreakAnimation;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutBlockBreakAnimation extends AbstractPacket implements CoreBlockBreakAnimation {
+public class CorePacketOutBlockBreakAnimation extends AbstractPacket implements PacketOutBlockBreakAnimation {
 
 	private int id, stage;
 	private long pos;

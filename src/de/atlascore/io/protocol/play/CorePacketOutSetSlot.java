@@ -11,14 +11,14 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketOutSetSlot extends AbstractPacket implements PacketOutSetSlot {
 
 	private byte windowID;
-	private short slot;
+	private int slot;
 	private ItemStack item;
 	
 	public CorePacketOutSetSlot() {
 		super(CoreProtocolAdapter.VERSION);
 	}
 	
-	public CorePacketOutSetSlot(byte windowID, short slot, ItemStack item) {
+	public CorePacketOutSetSlot(byte windowID, int slot, ItemStack item) {
 		this();
 		this.windowID = windowID;
 		this.slot = slot;

@@ -17,4 +17,8 @@ public final class Pair<A, B> {
 	public B getValue2() {
 		return value2;
 	}
+
+	public static <A, B> Pair<A, B> of(A value1, B value2) {
+		return new Pair<A, B>(value1, value2);
+	}
 }

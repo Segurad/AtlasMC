@@ -28,4 +28,6 @@ public interface Multimap<K, V> {
 	
 	public boolean containsKey(Object key);
 
+	public int size();
+
 }

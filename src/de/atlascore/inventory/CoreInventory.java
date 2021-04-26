@@ -9,6 +9,7 @@ import de.atlasmc.event.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.ConnectionHandler;
+import de.atlasmc.io.protocol.ProtocolPlay;
 
 public class CoreInventory implements Inventory {
 
@@ -57,7 +58,7 @@ public class CoreInventory implements Inventory {
 			ConnectionHandler con = player.getConnection();
 			byte windowID = player.getWindowID(this);
 			if (windowID == -1) return;
-			con.getProtocol().createPacketOutSetSlot(windowID, slot, getItem(slot));
+			((ProtocolPlay) con.getProtocol()).createPacketOutSetSlot(windowID, slot, getItem(slot));
 		}
 	}
 
