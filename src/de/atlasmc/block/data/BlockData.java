@@ -9,4 +9,5 @@ public interface BlockData extends Cloneable, NBTHolder {
 	public Material getMaterial();
 	public boolean matches(BlockData data);
 	public int getStateID();
+	
 }

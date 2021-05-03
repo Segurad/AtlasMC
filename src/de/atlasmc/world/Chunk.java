@@ -3,10 +3,13 @@ package de.atlasmc.world;
 import java.util.List;
 import java.util.Set;
 
-import de.atlasmc.block.Block;
+import de.atlasmc.Material;
+import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
+import de.atlasmc.entity.Entity;
+import de.atlasmc.tick.Tickable;
 
-public interface Chunk {
+public interface Chunk extends Tickable {
 
 	/**
 	 * 
@@ -19,8 +22,7 @@ public interface Chunk {
 	 * @return the chunk section at this height
 	 */
 	public ChunkSection getSection(int height);
-	public Block getBlockAt(int x, int y, int z);
-	public World getWorld();
+	public boolean hasSection(int height);
 	public boolean isLoaded();
 	public void load();
 	/**
@@ -38,5 +40,16 @@ public interface Chunk {
 	public EnumBiome getBiome(int x, int y, int z);
 	public void setBiome(EnumBiome biome, int x, int y, int z);
 	public List<TileEntity> getTileEntities();
+	public int getHighestBlockYAt(int x, int z);
+	public List<Entity> getEntites();
+	public List<Entity> getEntites(List<Entity> entities);
+	public <T extends Entity> List<T> getEntitesByClass(Class<T> clazz);
+	public <T extends Entity> List<T> getEntitesByClass(List<T> entities, Class<T> clazz);
+	public BlockData getBlockDataAt(int x, int y, int z);
+	public Material getBlockType(int x, int y, int z);
+	public void setBlockType(Material material, int x, int y, int z);
+	public void setBlockDataAt(BlockData data, int x, int y, int z);
+	public List<Entity> getEntitesByClasses(Class<? extends Entity>[] classes);
+	public List<Entity> getEntitesByClasses(List<Entity> entities, Class<? extends Entity>[] classes);
 	
 }

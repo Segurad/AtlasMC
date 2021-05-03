@@ -13,8 +13,9 @@ import de.atlasmc.block.Block;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
+import de.atlasmc.tick.Tickable;
 
-public interface World {
+public interface World extends Tickable {
 
 	public List<Entity> getEntities();
 	public <T extends Entity> List<T> getEntitiesByClass(Class<T> clazz);
@@ -31,6 +32,8 @@ public interface World {
 	public Block getHighestBlockAt(int x, int z);
 
 	public int getHighestBlockYAt(int x, int z);
+	
+	public long getAge();
 
 	public long getTime();
 
@@ -39,6 +42,8 @@ public interface World {
 	public void spawnParticle(Particle particle, SimpleLocation loc, int amount);
 
 	public Location getSpawnLocation();
+	
+	public Location getSpawnLocation(Location loc);
 
 	public void playSound(SimpleLocation loc, Sound sound, SoundCategory category, float volume, float pitch);
 

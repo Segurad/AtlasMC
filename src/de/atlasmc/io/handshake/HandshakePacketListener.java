@@ -24,7 +24,7 @@ public class HandshakePacketListener implements PacketListener {
 			PacketMinecraftHandshake pk = (PacketMinecraftHandshake) packet;
 			ProtocolAdapter adapter = Atlas.getProtocolAdapter(pk.getProtocolVersion());
 			if (adapter == null) {
-				System.out.println("not adapter found");
+				System.out.println("no adapter found");
 				handler.close();
 			}
 			final int nextState = pk.getNextState();

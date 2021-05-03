@@ -1,6 +1,7 @@
 package de.atlascore.entity;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,6 +10,7 @@ import de.atlasmc.SimpleLocation;
 import de.atlasmc.Vector;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.component.FinalComponent;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaData;
@@ -16,30 +18,30 @@ import de.atlasmc.entity.data.MetaDataContainer;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.nbt.AbstractNBTBuildable;
 import de.atlasmc.util.nbt.CustomTagContainer;
+import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreEntity extends AbstractNBTBuildable implements Entity {
 	
+	protected static final NBTFieldContainer NBT_FIELDS = new NBTFieldContainer();
+	private CustomTagContainer customTags;
 	private final MetaDataContainer metaContainer;
-	private final int id;
+	private int id;
 	private final EntityType type;
-	private final UUID uuid;
+	private UUID uuid;
 	private short air;
-	private String customName;
-	private boolean customNameVisible;
 	private float fallDistance;
 	private short fire;
 	private boolean glowing;
 	private boolean invulnerable;
 	private Vector motion;
-	private boolean noGravity;
 	private boolean onGround;
+	private boolean teleported;
 	private List<Entity> passengers;
 	private int portalCooldown;
-	private Location loc;
-	private boolean silent;
+	private final Location loc, oldLoc;
 	private List<String> scoreboardTags;
 	
 	protected static final int
@@ -51,12 +53,97 @@ public class CoreEntity extends AbstractNBTBuildable implements Entity {
 	META_HAS_NO_GRAVITY = 5,
 	META_POSE = 6;
 	
+	protected static final String
+	AIR = "Air",
+	CUSTOM_NAME = "CustomName",
+	CUSTOM_NAME_VISIBLE = "CustomNameVisible",
+	DIMENSION = "Dimension",
+	FALL_DISTANCE = "FallDistance",
+	FIRE = "Fire",
+	GLOWING = "Glowing",
+	ID = "id",
+	INVULNERABLE = "Invulnerable",
+	MOTION = "Motion", 
+	NO_GRAVITY = "NoGravity",
+	ON_GROUND = "OnGround",
+	PASSENGERS = "Passengers",
+	PORTAL_COOLDOWN = "PortalCooldown",
+	POS = "Pos",
+	ROTATION = "Rotation",
+	SILENT = "Silent",
+	TAGS = "Tags",
+	UUID = "UUID";
+	
+	static {
+		NBT_FIELDS.setField(AIR, (holder, reader) -> {
+			((Entity) holder).setAirTicks(reader.readShortTag());
+		});
+		NBT_FIELDS.setField(CUSTOM_NAME, (holder, reader) -> {
+			((Entity) holder).setCustomName(reader.readStringTag());
+		});
+		NBT_FIELDS.setField(CUSTOM_NAME_VISIBLE, (holder, reader) -> {
+			((Entity) holder).setCustomNameVisible(reader.readByteTag() == 1);
+		});
+		NBT_FIELDS.setField(DIMENSION, NBTField.TRASH);
+		NBT_FIELDS.setField(FALL_DISTANCE, (holder, reader) -> {
+			((Entity) holder).setFallDistance(reader.readFloatTag());
+		});
+		NBT_FIELDS.setField(FIRE, (holder, reader) -> {
+			((Entity) holder).setFireTicks(reader.readShortTag());
+		});
+		NBT_FIELDS.setField(GLOWING, (holder, reader) -> {
+			((Entity) holder).setGlowing(reader.readByteTag() == 1);
+		});
+		NBT_FIELDS.setField(ID, NBTField.TRASH); // TODO dilemma
+		NBT_FIELDS.setField(INVULNERABLE, (holder, reader) -> {
+			((Entity) holder).setInvulnerable(reader.readByteTag() == 1);
+		});
+		NBT_FIELDS.setField(MOTION, (holder, reader) -> {
+			double x = reader.readDoubleTag();
+			double y = reader.readDoubleTag();
+			double z = reader.readDoubleTag();
+			((Entity) holder).setVelocity(x, y, z);
+		});
+		NBT_FIELDS.setField(NO_GRAVITY, (holder, reader) -> {
+			((Entity) holder).setGravity(reader.readByteTag() == 0);
+		});
+		NBT_FIELDS.setField(ON_GROUND, (holder, reader) -> {
+			((Entity) holder).setOnGround(reader.readByteTag() == 1);
+		});
+		NBT_FIELDS.setField(PASSENGERS, NBTField.TRASH); // TODO
+		NBT_FIELDS.setField(PORTAL_COOLDOWN, (holder, reader) -> {
+			((Entity) holder).setPortalCooldown(reader.readIntTag());
+		});
+		NBT_FIELDS.setField(POS, (holder, reader) -> {
+			double x = reader.readDoubleTag();
+			double y = reader.readDoubleTag();
+			double z = reader.readDoubleTag();
+			((Entity) holder).teleport(x, y, z);
+		});
+		NBT_FIELDS.setField(ROTATION, (holder, reader) -> {
+			float yaw = reader.readFloatTag();
+			float pitch = reader.readFloatTag();
+			Entity ent = (Entity) holder;
+			ent.teleport(ent.getX(), ent.getY(), ent.getZ(), yaw, pitch);
+		});
+		NBT_FIELDS.setField(SILENT, (holder, reader) -> {
+			((Entity) holder).setSilent(reader.readByteTag() == 1);
+		});
+		NBT_FIELDS.setField(TAGS, (holder, reader) -> {
+			Entity ent = (Entity) holder;
+			while(reader.getRestPayload() > 0) {
+				ent.addScoreboardTag(reader.readStringTag());
+			}
+		});
+		NBT_FIELDS.setField(UUID, NBTField.TRASH);
+	}
 	
 	public CoreEntity(int id, EntityType type, Location loc, UUID uuid) {
 		this.id = id;
 		this.type = type;
 		this.uuid = uuid;
-		this.loc = loc.clone();
+		this.loc = new Location(loc);
+		this.oldLoc = new Location(loc);
 		this.motion = new Vector(0, 0, 0);
 		metaContainer = new MetaDataContainer(getMetaContainerSize());
 	}
@@ -108,17 +195,17 @@ public class CoreEntity extends AbstractNBTBuildable implements Entity {
 
 	@Override
 	public String getCustomName() {
-		return customName;
+		return ((ChatComponent) metaContainer.get(META_CUSTOM_NAME).getData()).getLegacyText();
 	}
 
 	@Override
 	public boolean isSilent() {
-		return silent;
+		return (boolean) metaContainer.get(META_IS_SILENT).getData();
 	}
 
 	@Override
 	public boolean isCustomNameVisible() {
-		return customNameVisible;
+		return (boolean) metaContainer.get(META_CUSTOM_NAME_VISIBLE).getData();
 	}
 
 	@Override
@@ -128,8 +215,7 @@ public class CoreEntity extends AbstractNBTBuildable implements Entity {
 
 	@Override
 	public Pose getPose() {
-		// TODO Auto-generated method stub
-		return null;
+		return metaContainer.get(META_POSE, MetaDataType.POSE).getData();
 	}
 
 	@Override
@@ -140,12 +226,12 @@ public class CoreEntity extends AbstractNBTBuildable implements Entity {
 
 	@Override
 	public void setCustomNameVisible(boolean value) {
-		this.customNameVisible = value;
+		metaContainer.get(META_CUSTOM_NAME_VISIBLE, MetaDataType.BOOLEAN).setData(value);
 	}
 
 	@Override
 	public void setCustomName(String name) {
-		this.customName = name;
+		metaContainer.get(META_CUSTOM_NAME, MetaDataType.OPT_CHAT).setData(new FinalComponent(name));
 	}
 
 	@Override
@@ -229,20 +315,20 @@ public class CoreEntity extends AbstractNBTBuildable implements Entity {
 
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		// TODO Auto-generated method stub
-		
+		writer.writeShortTag(AIR, air);
+		if (hasCustomName()) writer.writeStringTag(CUSTOM_NAME, getCustomName());
+		// TODO
 	}
 
 	@Override
 	protected NBTFieldContainer getRootFieldContainer() {
-		// TODO Auto-generated method stub
-		return null;
+		return NBT_FIELDS;
 	}
 
 	@Override
-	protected CustomTagContainer getCustomTagContainer() {
-		// TODO Auto-generated method stub
-		return null;
+	public CustomTagContainer getCustomTagContainer() {
+		if (customTags == null) customTags = new CustomTagContainer();
+		return customTags;
 	}
 
 	@Override
@@ -262,14 +348,12 @@ public class CoreEntity extends AbstractNBTBuildable implements Entity {
 
 	@Override
 	public float getFallDistance() {
-		// TODO Auto-generated method stub
-		return 0;
+		return fallDistance;
 	}
 
 	@Override
 	public void setFallDistance(float distance) {
-		// TODO Auto-generated method stub
-		
+		fallDistance = distance;
 	}
 
 	protected void initMetaContainer() {
@@ -284,5 +368,93 @@ public class CoreEntity extends AbstractNBTBuildable implements Entity {
 	
 	protected int getMetaContainerSize() {
 		return 6;
+	}
+
+	@Override
+	public void setPose(Pose pose) {
+		@SuppressWarnings("unchecked")
+		MetaData<Pose> data = (MetaData<Pose>) metaContainer.get(META_POSE);
+		data.setData(pose);
+	}
+
+	@Override
+	public void setAirTicks(int air) {
+		this.air = (short) air;
+	}
+
+	@Override
+	public void setInvulnerable(boolean invulnerable) {
+		this.invulnerable = invulnerable;
+	}
+
+	@Override
+	public void teleport(double x, double y, double z) {
+		teleported = true;
+		loc.copyTo(oldLoc);
+		loc.setLocation(x, y, z);
+	}
+
+	@Override
+	public void teleport(double x, double y, double z, float yaw, float pitch) {
+		teleported = true;
+		loc.copyTo(oldLoc);
+		loc.setLocation(x, y, z, yaw, pitch);
+	}
+
+	@Override
+	public void setVelocity(double x, double y, double z) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setGravity(boolean gravity) {
+		metaContainer.get(META_HAS_NO_GRAVITY, MetaDataType.BOOLEAN).setData(!gravity);
+	}
+
+	@Override
+	public void setOnGround(boolean onGorund) {
+		// TODO
+	}
+
+	@Override
+	public void setPortalCooldown(int cooldown) {
+		this.portalCooldown = cooldown;
+	}
+
+	@Override
+	public void setSilent(boolean silent) {
+		metaContainer.get(META_IS_SILENT, MetaDataType.BOOLEAN).setData(silent);
+	}
+
+	@Override
+	public void addScoreboardTag(String tag) {
+		getScoreboardTags().add(tag);
+	}
+
+	@Override
+	public void setID(int id) {
+		this.id = id;
+	}
+
+	@Override
+	public void setUUID(UUID uuid) {
+		this.uuid = uuid;
+	}
+
+	@Override
+	public List<String> getScoreboardTags() {
+		if (scoreboardTags == null) scoreboardTags = new ArrayList<String>();
+		return scoreboardTags;
+	}
+
+	@Override
+	public boolean hasScoreboardTags() {
+		return scoreboardTags != null && !scoreboardTags.isEmpty();
+	}
+
+	@Override
+	public boolean hasCustomName() {
+		return metaContainer.get(META_CUSTOM_NAME).hasData();
 	}
 }

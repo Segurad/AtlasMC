@@ -7,7 +7,16 @@ public interface Bisected extends BlockData {
 	
 	public static enum Half {
 		TOP,
-		BOTTOM
+		BOTTOM;
+
+		public static Half getByName(String name) {
+			if (TOP.name().equalsIgnoreCase(name)) {
+				return TOP;
+			} else if (BOTTOM.name().equalsIgnoreCase(name)) {
+				return BOTTOM;
+			}
+			return null;
+		}
 	}
 
 }

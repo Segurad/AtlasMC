@@ -2,15 +2,14 @@ package de.atlasmc.server;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import de.atlasmc.Atlas;
 import de.atlasmc.atlasnetwork.AtlasNode;
 import de.atlasmc.atlasnetwork.server.LocalServer;
+import de.atlasmc.atlasnetwork.server.ServerConfig;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.Event;
+import de.atlasmc.scheduler.Scheduler;
 import de.atlasmc.world.World;
 
 public class AtlasServer implements LocalServer {
@@ -19,12 +18,16 @@ public class AtlasServer implements LocalServer {
 	private final List<Player> players;
 	private final ServerThread thread;
 	private final List<World> worlds;
+	private final ServerConfig config;
+	private final int serverID;
 	
-	protected AtlasServer(ServerGroup group) {
+	protected AtlasServer(int serverID, ServerGroup group) {
+		this.config = group.getServerConfig().clone();
 		this.group = group;
 		this.players = new ArrayList<Player>();
 		thread = new ServerThread(this);
 		this.worlds = new ArrayList<World>();
+		this.serverID = serverID;
 	}
 
 	@Override
@@ -49,25 +52,42 @@ public class AtlasServer implements LocalServer {
 
 	@Override
 	public int getPlayerCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return players.size();
 	}
 
 	@Override
 	public int getMaxPlayers() {
-		// TODO Auto-generated method stub
-		return 0;
+		return config.getMaxPlayers();
 	}
 
 	@Override
 	public int getServerID() {
-		// TODO Auto-generated method stub
-		return 0;
+		return serverID;
 	}
 
 	@Override
 	public void queueEvent(Event event) {
 		thread.queueEvent(event);
+	}
+
+	public List<World> getWorlds() {
+		return worlds;
+	}
+
+	@Override
+	public boolean isServerThread() {
+		return Thread.currentThread() == thread;
+	}
+
+	@Override
+	public Scheduler getScheduler() {
+		return thread.getScheduler();
+	}
+
+	@Override
+	public long getAge() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

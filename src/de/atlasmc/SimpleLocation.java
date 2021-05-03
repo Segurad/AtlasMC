@@ -18,7 +18,7 @@ public class SimpleLocation implements Cloneable {
 		this(x, y, z, 0, 0);
 	}
 
-	public SimpleLocation(double x, double y, double z, float pitch, float yaw) {
+	public SimpleLocation(double x, double y, double z, float yaw, float pitch) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -181,7 +181,7 @@ public class SimpleLocation implements Cloneable {
 	 * @param yaw
 	 * @return this location
 	 */
-	public SimpleLocation setLocation(double x, double y, double z, float pitch, float yaw) {
+	public SimpleLocation setLocation(double x, double y, double z, float yaw, float pitch) {
 		this.x = x;
 		this.y = y;
 		this.z = z;

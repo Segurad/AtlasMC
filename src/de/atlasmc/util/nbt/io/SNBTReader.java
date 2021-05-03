@@ -116,4 +116,10 @@ public class SNBTReader implements NBTReader {
 		return null;
 	}
 
+	@Override
+	public void skipNBT() throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

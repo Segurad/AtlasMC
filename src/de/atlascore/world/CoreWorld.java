@@ -17,35 +17,44 @@ import de.atlasmc.world.World;
 import de.atlasmc.world.WorldFlag;
 
 public class CoreWorld implements World {
+	
+	private final CoreVanillaChunkProvider chunks;
+	private final String name;
+	private final LocalServer server;
+	private long time;
+	private long age;
+	private Location spawn;
+	
+	public CoreWorld(LocalServer server, String name) {
+		chunks = new CoreVanillaChunkProvider(this);
+		this.name = name;
+		this.server = server;
+	}
 
 	@Override
 	public List<Entity> getEntities() {
-		// TODO Auto-generated method stub
-		return null;
+		return chunks.getEntities();
 	}
 
 	@Override
 	public <T extends Entity> List<T> getEntitiesByClass(Class<T> clazz) {
-		// TODO Auto-generated method stub
-		return null;
+		return chunks.getEntitiesByClass(clazz);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Entity> getEntitesByClasses(Class<? extends Entity>... classes) {
-		// TODO Auto-generated method stub
-		return null;
+		return chunks.getEntitesByClasses(classes);
 	}
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return name;
 	}
 
 	@Override
 	public LocalServer getServer() {
-		// TODO Auto-generated method stub
-		return null;
+		return server;
 	}
 
 	@Override
@@ -56,20 +65,17 @@ public class CoreWorld implements World {
 
 	@Override
 	public Block getHighestBlockAt(int x, int z) {
-		// TODO Auto-generated method stub
-		return null;
+		return getBlock(x, getHighestBlockYAt(x, z), z);
 	}
 
 	@Override
 	public int getHighestBlockYAt(int x, int z) {
-		// TODO Auto-generated method stub
-		return 0;
+		return chunks.getHighestBlockYAt(x, z);
 	}
 
 	@Override
 	public long getTime() {
-		// TODO Auto-generated method stub
-		return 0;
+		return time;
 	}
 
 	@Override
@@ -86,8 +92,12 @@ public class CoreWorld implements World {
 
 	@Override
 	public Location getSpawnLocation() {
-		// TODO Auto-generated method stub
-		return null;
+		return spawn.clone();
+	}
+	
+	@Override
+	public Location getSpawnLocation(Location loc) {
+		return spawn.copyTo(loc);
 	}
 
 	@Override
@@ -122,14 +132,23 @@ public class CoreWorld implements World {
 
 	@Override
 	public Block getBlock(int x, int y, int z) {
-		// TODO Auto-generated method stub
-		return null;
+		return chunks.getBlock(x, y, z);
 	}
 
 	@Override
 	public BlockData getBlockData(int x, int y, int z) {
-		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void tick() {
+		age++;
+		chunks.tick();
+	}
+
+	@Override
+	public long getAge() {
+		return age;
 	}
 
 }

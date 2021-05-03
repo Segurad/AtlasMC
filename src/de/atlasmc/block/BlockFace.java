@@ -18,6 +18,16 @@ public enum BlockFace {
 	EAST_SOUTH_EAST,
 	SOUTH_SOUTH_EAST,
 	SOUTH_SOUTH_WEST,
-	WEST_SOUTH_WEST,
+	WEST_SOUTH_WEST,;
+
+	public static BlockFace getByName(String name) {
+		BlockFace[] faces = values();
+		for (BlockFace face : faces) {
+			if (face.name().equalsIgnoreCase(name)) {
+				return face;
+			};
+		}
+		return null;
+	}
 
 }

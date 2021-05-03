@@ -1,13 +1,26 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
+
 import de.atlascore.block.data.CoreDirectional4Faces;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Beehive;
 import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBeehive extends CoreDirectional4Faces implements Beehive {
 
 	private int honeyLevel;
+	
+	protected static final String HONEY_LEVEL = "honey_level";
+	
+	static {
+		NBT_FIELDS.setField(HONEY_LEVEL, (holder, reader) -> {
+			if (Beehive.class.isInstance(holder)) {
+				((Beehive) holder).setHoneyLevel(reader.readIntTag());
+			} else reader.skipNBT();
+		});
+	}
 	
 	public CoreBeehive(Material material) {
 		super(material);
@@ -34,6 +47,12 @@ public class CoreBeehive extends CoreDirectional4Faces implements Beehive {
 		return getMaterial().getBlockID()+
 				honeyLevel+
 				getFaceValue()*6;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		writer.writeIntTag(HONEY_LEVEL, honeyLevel);
 	}
 
 }

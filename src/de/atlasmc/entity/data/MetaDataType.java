@@ -156,7 +156,7 @@ public abstract class MetaDataType<T> {
 		
 	};
 	
-	public static final MetaDataType<Long> POS = new MetaDataType<Long>(9) {
+	public static final MetaDataType<Long> POSISTION = new MetaDataType<Long>(9) {
 
 		@Override
 		public Long read(ByteBuf in) {
@@ -170,7 +170,7 @@ public abstract class MetaDataType<T> {
 		
 	};
 	
-	public static final MetaDataType<Long> OPT_POS = new MetaDataType<Long>(10) {
+	public static final MetaDataType<Long> OPT_POSITION = new MetaDataType<Long>(10) {
 
 		@Override
 		public Long read(ByteBuf in) {

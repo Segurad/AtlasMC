@@ -17,5 +17,9 @@ public abstract class Event {
 	public final boolean isAsynchronous() {
 		return async;
 	}
+
+	public String getName() {
+		return getClass().getName();
+	}
 	
 }

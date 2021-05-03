@@ -1,13 +1,26 @@
 package de.atlascore.block.data;
 
+import java.io.IOException;
+
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.Rotatable;
 import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreRotatable extends CoreBlockData implements Rotatable {
 
 	private BlockFace rotation;
+	
+	protected static final String ROTATION = "rotation";
+	
+	static {
+		NBT_FIELDS.setField(ROTATION, (holder, reader) -> {
+			if (Rotatable.class.isInstance(holder)) {
+				((Rotatable) holder).setRotation(CoreRotatable.getBlockFace(Integer.parseInt(reader.readStringTag())));
+			} else reader.skipNBT();
+		});
+	}
 	
 	public CoreRotatable(Material material) {
 		super(material);
@@ -27,6 +40,10 @@ public class CoreRotatable extends CoreBlockData implements Rotatable {
 	}
 	
 	protected int getRotationValue() {
+		return getRotationValue(rotation);
+	}
+	
+	protected static int getRotationValue(BlockFace rotation) {
 		switch(rotation) {
 			case EAST: return 12;
 			case EAST_NORTH_EAST: return 11;
@@ -48,9 +65,37 @@ public class CoreRotatable extends CoreBlockData implements Rotatable {
 		}
 	}
 	
+	protected static BlockFace getBlockFace(int rotation) {
+		switch(rotation) {
+			case 12: return BlockFace.EAST;
+			case 11: return BlockFace.EAST_NORTH_EAST;
+			case 13: return BlockFace.EAST_SOUTH_EAST;
+			case 8: return BlockFace.NORTH;
+			case 10: return BlockFace.NORTH_EAST;
+			case 9: return BlockFace.NORTH_NORTH_EAST;
+			case 7: return BlockFace.NORTH_NORTH_WEST;
+			case 6: return BlockFace.NORTH_WEST;
+			case 0: return BlockFace.SOUTH;
+			case 14: return BlockFace.SOUTH_EAST;
+			case 15: return BlockFace.SOUTH_SOUTH_WEST;
+			case 1: return BlockFace.SOUTH_SOUTH_WEST;
+			case 2: return BlockFace.SOUTH_WEST;
+			case 4: return BlockFace.WEST;
+			case 5: return BlockFace.WEST_NORTH_WEST;
+			case 3: return BlockFace.WEST_SOUTH_WEST;
+			default: return BlockFace.SOUTH;
+		}
+	}
+	
 	@Override
 	public int getStateID() {
 		return super.getStateID()+getRotationValue();
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		writer.writeStringTag(ROTATION, "" + getRotationValue());
 	}
 
 }

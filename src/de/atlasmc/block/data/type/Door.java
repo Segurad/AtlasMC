@@ -12,7 +12,16 @@ public interface Door extends Bisected, Directional, Openable, Powerable {
 	
 	public static enum Hinge {
 		LEFT,
-		RIGHT
+		RIGHT;
+
+		public static Hinge getByName(String name) {
+			if (LEFT.name().equalsIgnoreCase(name)) {
+				return LEFT;
+			} else if (RIGHT.name().equalsIgnoreCase(name)) {
+				return RIGHT;
+			}
+			return null;
+		}
 	}
 
 }

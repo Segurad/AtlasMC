@@ -95,4 +95,11 @@ public enum EnumBiome {
 		return id;
 	}
 
+	public static EnumBiome getByID(int id) {
+		for (EnumBiome biome : values()) {
+			if (biome.getID() == id) return biome;
+		}
+		return null;
+	}
+
 }

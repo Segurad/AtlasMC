@@ -38,13 +38,17 @@ public abstract class AbstractNBTBuildable implements NBTHolder {
 				field.setField(this, reader);
 			} else if (highestContainer.hasUnknownFieldHandler()) {
 				highestContainer.getUnknownFieldHandler().setField(this, reader);
-			} else getCustomTagContainer().addCustomTag(reader.readNBT());
+			} else if (getCustomTagContainer() != null) {
+				getCustomTagContainer().addCustomTag(reader.readNBT());
+			} else reader.skipNBT();
 		}
 		if (reader.getType() == TagType.TAG_END) reader.readNextEntry();
 	}
 	
 	protected abstract NBTFieldContainer getRootFieldContainer();
 	
-	protected abstract CustomTagContainer getCustomTagContainer();
+	public CustomTagContainer getCustomTagContainer() {
+		return null;
+	}
 
 }

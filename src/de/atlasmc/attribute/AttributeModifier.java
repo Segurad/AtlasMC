@@ -9,13 +9,20 @@ public class AttributeModifier {
 
 	private double amount;
 	private Operation operation;
+	private final UUID uuid;
+	private final String name;
+	private EquipmentSlot slot;
 	
 	public AttributeModifier(UUID uuid, String name, double amount, Operation operation, EquipmentSlot slot) {
-		// TODO Auto-generated constructor stub
+		this.amount = amount;
+		this.uuid = uuid;
+		this.name = name;
+		this.operation = operation;
+		this.slot = slot;
 	}
 
 	public EquipmentSlot getSlot() {
-		return null;
+		return slot;
 	}
 	
 	public double getAmount() {
@@ -39,13 +46,23 @@ public class AttributeModifier {
 	}
 
 	public UUID getUUID() {
-		// TODO Auto-generated method stub
-		return null;
+		return uuid;
 	}
 
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return name;
+	}
+	
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+	
+	public void setOperation(Operation operation) {
+		this.operation = operation;
+	}
+	
+	public void setSlot(EquipmentSlot slot) {
+		this.slot = slot;
 	}
 
 }

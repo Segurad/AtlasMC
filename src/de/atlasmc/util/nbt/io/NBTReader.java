@@ -8,29 +8,37 @@ import de.atlasmc.util.nbt.TagType;
 
 public interface NBTReader {
 	
-	public TagType getType();
+	public int getDepth();
+	
+	public String getFieldName();
 	
 	public TagType getListType();
 	
 	public int getRestPayload();
 	
-	public String getFieldName();
-	
-	public byte readByteTag() throws IOException;
-	
-	public short readShortTag() throws IOException;
-	
-	public int readIntTag() throws IOException;
-	
-	public long readLongTag() throws IOException;
-	
-	public float readFloatTag() throws IOException;
-	
-	public double readDoubleTag() throws IOException;
+	public TagType getType();
 	
 	public byte[] readByteArrayTag() throws IOException;
 	
-	public String readStringTag() throws IOException;
+	public byte readByteTag() throws IOException;
+	
+	public double readDoubleTag() throws IOException;
+	
+	public float readFloatTag() throws IOException;
+	
+	public int[] readIntArrayTag() throws IOException;
+	
+	public int readIntTag() throws IOException;
+	
+	public long[] readLongArrayTag() throws IOException;
+	
+	public long readLongTag() throws IOException;
+	
+	/**
+	 * 
+	 * @return the next tag
+	 */
+	public NBT readNBT() throws IOException;
 	
 	/**
 	 * Used in case of CompoundTag or EndTag
@@ -38,8 +46,10 @@ public interface NBTReader {
 	 */
 	public void readNextEntry() throws IOException;
 	
-	public int[] readIntArrayTag() throws IOException;
+	public short readShortTag() throws IOException;
 	
+	public String readStringTag() throws IOException;
+
 	/**
 	 * Reads a IntArrayTag as UUID
 	 * @return
@@ -47,14 +57,6 @@ public interface NBTReader {
 	 */
 	public UUID readUUID() throws IOException;
 	
-	public long[] readLongArrayTag() throws IOException;
-	
-	/**
-	 * 
-	 * @return the next tag
-	 */
-	public NBT readNBT() throws IOException;
-
-	public int getDepth();
+	public void skipNBT() throws IOException;
 
 }

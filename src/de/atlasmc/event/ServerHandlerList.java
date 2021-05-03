@@ -21,6 +21,7 @@ public class ServerHandlerList extends HandlerList {
 	}
 	
 	public void registerExecutor(ServerGroup group, EventExecutor executor) {
+		if (group == null || executor == null) return;
 		synchronized (groupExecutors) {
 			if (groupExecutors.containsKey(group)) {
 				register(groupExecutors.get(group), executor);
@@ -29,6 +30,7 @@ public class ServerHandlerList extends HandlerList {
 	}
 	
 	public void registerExecutor(LocalServer server, EventExecutor executor) {
+		if (server == null || executor == null) return;
 		synchronized (serverExecutors) {
 			if (serverExecutors.containsKey(server)) {
 				register(serverExecutors.get(server), executor);
@@ -50,6 +52,7 @@ public class ServerHandlerList extends HandlerList {
 	}
 	
 	public List<EventExecutor> getExecutors(@NotNull ServerGroup group) {
+		if (group == null) return null;
 		synchronized (groupExecutors) {
 			if (!groupExecutors.containsKey(group)) return List.of();
 			return List.copyOf(groupExecutors.get(group));
@@ -57,6 +60,7 @@ public class ServerHandlerList extends HandlerList {
 	}
 	
 	public List<EventExecutor> getExecutors(@NotNull LocalServer server) {
+		if (server == null) return null;
 		synchronized (serverExecutors) {
 			if (!serverExecutors.containsKey(server)) return List.of();
 			return List.copyOf(serverExecutors.get(server));
@@ -67,6 +71,8 @@ public class ServerHandlerList extends HandlerList {
 	protected void callEvent(Event event, boolean cancelled) {
 		@SuppressWarnings("unchecked")
 		LocalServer server = ((GenericEvent<LocalServer, ?>) event).getEventSource();
+		if (!server.isServerThread() && !event.isAsynchronous()) 
+			throw new RuntimeException("Tryed to call ServerEvent async: " + event.getName());
 		final Iterator<EventExecutor> groupexes = getExecutors(server.getGroup()).iterator();
 		final Iterator<EventExecutor> serverexes = getExecutors(server).iterator();
 		final Iterator<EventExecutor> globalexes = getExecutors().iterator();
@@ -79,6 +85,7 @@ public class ServerHandlerList extends HandlerList {
 	
 	@Override
 	public void unregisterHandledListener(Listener listener) {
+		if (listener == null) return;
 		super.unregisterHandledListener(listener);
 		synchronized (groupExecutors) {
 			for (ServerGroup group : groupExecutors.keySet()) {
@@ -101,6 +108,7 @@ public class ServerHandlerList extends HandlerList {
 	}
 	
 	public static void unregisterServer(LocalServer server) {
+		if (server == null) return;
 		synchronized (HANDLERS) {
 			for (HandlerList h : HANDLERS) {
 				if (!ServerHandlerList.class.isInstance(h)) continue;

@@ -4,60 +4,72 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.world.ChunkSection;
 
 public class CoreChunkSection implements ChunkSection {
 	
-	private final List<BlockData> palette;
-	private final short[] mappings;
+	private final List<CorePaletteEntry> palette;
+	private final short[] indizes;
 
 	public CoreChunkSection() {
-		palette = new ArrayList<BlockData>();
-		mappings = new short[16*16*16];
+		palette = new ArrayList<CorePaletteEntry>();
+		CorePaletteEntry entry = new CorePaletteEntry(Material.AIR.createBlockData());
+		entry.setCount(4096);
+		palette.add(entry);
+		indizes = new short[4096];
 	}
 	
 	@Override
-	public short[] getMappings() {
-		return Arrays.copyOf(mappings, mappings.length);
+	public short[] getIndizes() {
+		return Arrays.copyOf(indizes, indizes.length);
 	}
 
 	@Override
-	public short[] getMappings(short[] buffer, int offset) {
-		for (short s : mappings) {
+	public short[] getIndizes(short[] buffer, int offset) {
+		for (short s : indizes) {
 			buffer[offset++] = s;
 		}
 		return buffer;
 	}
 
 	@Override
-	public void setMappings(short[] mappings) {
-		
+	public short getIndex(int x, int y, int z) {
+		return indizes[(z&0xF)<<4+(y & 0xF)<<8+x];
 	}
 
 	@Override
-	public short getValue(int x, int y, int z) {
-		return mappings[z*16*y*16+x];
-	}
-
-	@Override
-	public void setValue(short value, int x, int y, int z) {
-		mappings[z*16*y*16+x] = value;
+	public void setIndex(short value, int x, int y, int z) {
+		palette.get(value).incrementCount();
+		int index = (z&0xF)<<4+(y & 0xF)<<8+x;
+		palette.get(indizes[index]).decrementCount();
+		indizes[index] = value;
 	}
 
 	@Override
 	public List<BlockData> getPalette() {
-		return palette;
+		return getPalette(new ArrayList<BlockData>(palette.size()));
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return palette.isEmpty();
+		return getBlockCount() == 0;
 	}
 
 	@Override
 	public int getBlockCount() {
-		return 0;
+		int count = 0;
+		for (CorePaletteEntry entry : palette) {
+			int id = entry.getMaterial().getBlockID();
+			if (id == Material.AIR.getBlockID() 
+				|| id == Material.VOID_AIR.getBlockID() 
+				|| id == Material.CAVE_AIR.getBlockID()) {
+				continue;
+			}
+			count += entry.getCount();
+		}
+		return count;
 	}
 
 	@Override
@@ -79,11 +91,11 @@ public class CoreChunkSection implements ChunkSection {
 	@Override
 	public long[] getCompactMappings() {
 		final int bits = getBitsPerBlock();
-		long[] data = new long[(16*16*16*bits)/64];
+		long[] data = new long[(4096*bits)>>6];
 		int index = 0;
 		int restBits = 64;
 		long values = 0;
-		for (short s : mappings) {
+		for (short s : indizes) {
 			if (restBits < bits) {
 				data[index++] = values;
 				values = 0;
@@ -94,6 +106,60 @@ public class CoreChunkSection implements ChunkSection {
 		}
 		data[index] = values;
 		return data;
+	}
+
+	@Override
+	public BlockData getBlockData(int x, int y, int z) {
+		BlockData data = palette.get(getIndex(x, y, z)).getData();
+		return data.clone();
+	}
+
+	@Override
+	public int setBlockData(BlockData data, int x, int y, int z) {
+		int paletteValue = getPaletteIndex(data);
+		if (paletteValue == -1) {
+			final int size = palette.size();
+			for (int i = 0; i < size; i++) {
+				CorePaletteEntry entry = palette.get(i);
+				if (entry.getCount() > 0) continue;
+				paletteValue = i;
+				palette.set(i, new CorePaletteEntry(data));
+				break;
+			}
+			if (paletteValue == -1) {
+				palette.add(new CorePaletteEntry(data.clone()));
+				paletteValue = palette.size()-1;
+			}
+		}
+		setIndex((short) paletteValue, x, y, z);
+		return paletteValue;
+	}
+
+	@Override
+	public int getPaletteIndex(BlockData data) {
+		int index = -1;
+		for (CorePaletteEntry entry : palette) {
+			index++;
+			if (entry.getData().equals(data)) {
+				return index;
+			}
+		}
+		return -1;
+	}
+
+	@Override
+	public List<BlockData> getPalette(List<BlockData> palette) {
+		for (CorePaletteEntry entry : this.palette) {
+			palette.add(entry.getData().clone());
+		}
+		return palette;
+	}
+
+	@Override
+	public Material getBlockType(int x, int y, int z) {
+		BlockData data = palette.get(getIndex(x, y, z)).getData();
+		if (data == null) return null;
+		return data.getMaterial();
 	}
 
 }

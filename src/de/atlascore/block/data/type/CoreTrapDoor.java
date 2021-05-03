@@ -1,14 +1,23 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
+
 import de.atlascore.block.data.CoreDirectional4Faces;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.TrapDoor;
 import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTrapDoor extends CoreDirectional4Faces implements TrapDoor {
 	
 	private Half half;
 	private boolean open, powered, waterlogged;
+	
+	protected static final String
+	HALF = "half",
+	OPEN = "open",
+	POWERED = "powered",
+	WATERLOGGED = "waterlogged";
 	
 	public CoreTrapDoor(Material material) {
 		super(material);
@@ -63,6 +72,15 @@ public class CoreTrapDoor extends CoreDirectional4Faces implements TrapDoor {
 				(open?0:4)+
 				half.ordinal()*8+
 				getFaceValue()*16;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		writer.writeStringTag(HALF, half.name().toLowerCase());
+		writer.writeByteTag(OPEN, open);
+		writer.writeByteTag(POWERED, powered);
+		writer.writeByteTag(WATERLOGGED, waterlogged);
 	}
 
 }

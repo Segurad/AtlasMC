@@ -11,7 +11,15 @@ public interface Bed extends Directional {
 	
 	public static enum Part {
 		HEAD,
-		FOOT
+		FOOT;
+
+		public static Part getByName(String name) {
+			Part[] parts = values();
+			for (Part part : parts) {
+				if (part.name().equalsIgnoreCase(name)) return part;
+			}
+			return null;
+		}
 	}
 
 }

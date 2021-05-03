@@ -1,15 +1,28 @@
 package de.atlascore.block.data;
 
+import java.io.IOException;
 import java.util.Set;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.Directional;
 import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public abstract class CoreAbstractDirectional extends CoreBlockData implements Directional {
 
 	private BlockFace face;
+	
+	protected static final String FACING = "facing";
+	
+	static {
+		NBT_FIELDS.setField(FACING, (holder, reader) -> {
+			if (Directional.class.isInstance(holder)) {
+				BlockFace face = BlockFace.getByName(reader.readStringTag());
+				((Directional) holder).setFacing(face);
+			} else reader.skipNBT();
+		});
+	}
 	
 	public CoreAbstractDirectional(Material material) {
 		this(material, BlockFace.NORTH);
@@ -41,6 +54,12 @@ public abstract class CoreAbstractDirectional extends CoreBlockData implements D
 	protected abstract int getFaceValue(BlockFace face);
 	protected int getFaceValue() {
 		return getFaceValue(face);
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		writer.writeStringTag(FACING, face.name().toLowerCase());
 	}
 
 }

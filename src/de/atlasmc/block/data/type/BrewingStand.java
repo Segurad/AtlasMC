@@ -1,14 +1,14 @@
 package de.atlasmc.block.data.type;
 
-import java.util.Set;
-
 import de.atlasmc.block.data.BlockData;
 
 public interface BrewingStand extends BlockData {
 	
-	public Set<Integer> getBottles();
-	public int getMaxBottles();
-	public boolean hasBottle(int bottle);
-	public void setBottle(int bottle, boolean has);
+	public boolean hasBottle0();
+	public void setBottle0(boolean has);
+	public boolean hasBottle1();
+	public void setBottle1(boolean has);
+	public boolean hasBottle2();
+	public void setBottle2(boolean has);
 
 }

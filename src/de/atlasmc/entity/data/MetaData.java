@@ -17,16 +17,28 @@ public class MetaData<T> {
 		this.data = data;
 	}
 	
-	public MetaDataType<T> getType() {
-		return type;
+	public T getData() {
+		return data;
 	}
 	
 	public int getIndex() {
 		return index;
 	}
 	
-	public T getData() {
-		return data;
+	public MetaDataType<T> getType() {
+		return type;
+	}
+	
+	public boolean hasChanged() {
+		return changed;
+	}
+	
+	public boolean hasData() {
+		return data != null;
+	}
+	
+	public void setChanged(boolean changed) {
+		this.changed = changed;
 	}
 	
 	/**
@@ -36,14 +48,6 @@ public class MetaData<T> {
 	public void setData(T data) {
 		this.data = data;
 		changed = true;
-	}
-	
-	public boolean hasChanged() {
-		return changed;
-	}
-	
-	public void setChanged(boolean changed) {
-		this.changed = changed;
 	}
 
 }

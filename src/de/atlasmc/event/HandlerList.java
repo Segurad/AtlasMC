@@ -29,6 +29,7 @@ public class HandlerList {
 	}
 	
 	public void registerExecutor(@NotNull EventExecutor executor) {
+		if (executor == null) return;
 		synchronized (globalExecutors) {
 			register(globalExecutors, executor);
 		}
@@ -116,6 +117,7 @@ public class HandlerList {
 	 * If not present or does not contain a specific Object the EventHandler will be registered as Global.
 	 */
 	public static void registerListener(Listener listener, Object... handleroptions) {
+		if (listener == null) return;
 		List<EventExecutor> exes = getExecutors(listener);
 		for (EventExecutor exe : exes) {
 			try {
@@ -130,6 +132,7 @@ public class HandlerList {
 	}
 	
 	public static List<EventExecutor> getExecutors(Listener listener) {
+		if (listener == null) return null;
 		List<EventExecutor> executors = new ArrayList<>();
 		for (Method method : listener.getClass().getMethods()) {
 			EventHandler handler = method.getAnnotation(EventHandler.class);

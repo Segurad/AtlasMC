@@ -1,11 +1,13 @@
 package de.atlasmc.entity;
 
+import java.util.List;
 import java.util.UUID;
 
 import de.atlasmc.Location;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.Vector;
 import de.atlasmc.atlasnetwork.server.LocalServer;
+import de.atlasmc.util.nbt.CustomTagContainer;
 import de.atlasmc.util.nbt.NBTHolder;
 import de.atlasmc.world.World;
 
@@ -40,11 +42,13 @@ public interface Entity extends NBTHolder {
 			return ordinal();
 		}
 	}
-	public int getAirTicks();
+	public void addScoreboardTag(String tag);
 	
+	public int getAirTicks();
 	public String getCustomName();
 	public float getFallDistance();
 	public short getFireTicks();
+	
 	/**
 	 * 
 	 * @return the internal entity id
@@ -55,21 +59,23 @@ public interface Entity extends NBTHolder {
 	public Location getLocation(Location loc);
 	
 	public SimpleLocation getLocation(SimpleLocation loc);
+	public CustomTagContainer getCustomTagContainer();
 	public int getObjectData();
 	public Pose getPose();
+	public List<String> getScoreboardTags();
 	
 	public LocalServer getServer();
 	public EntityType getType();
 	public UUID getUUID();
 	public Vector getVelocity();
-	
 	public Vector getVelocity(Vector vec);
 	public World getWorld();
-	
 	public double getX();
+	
 	public double getY();
 	public double getZ();
 	public boolean hasGravity();
+	public boolean hasScoreboardTags();
 	public boolean hasVelocity();
 	public boolean isCrouching();
 
@@ -82,14 +88,43 @@ public interface Entity extends NBTHolder {
 	public boolean isSilent();
 	public boolean isSprinting();
 	public boolean isSwimming();
+	public boolean hasCustomName();
 	public void remove();
-	public void setCustomName(String name);
-	
-	public void setCustomNameVisible(boolean value);
-	public void setFallDistance(float distance);
+	public void setAirTicks(int air);
 
-	public void setFireTicks(int ticks);
 	
+	public void setCustomName(String name);
+	public void setCustomNameVisible(boolean value);
+
+	public void setFallDistance(float distance);
+	
+	public void setFireTicks(int ticks);
+
 	public void setGlowing(boolean glowing);
+
+	public void setGravity(boolean gravity);
+	
+	public void setID(int id);
+	public void setInvulnerable(boolean invulnerable);
+	public void setOnGround(boolean onGround);
+
+	public void setPortalCooldown(int cooldown);
+
+	public void setPose(Pose pose);
+
+	public void setSilent(boolean silent);
+
+	public void setUUID(UUID uuid);
+
+	public void setVelocity(double x, double y, double z);
+	
+	/**
+	 * Teleport to new coordinates and keeps yaw and pitch
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
+	public void teleport(double x, double y, double z);
+	public void teleport(double x, double y, double z, float yaw, float pitch);
 	
 }
