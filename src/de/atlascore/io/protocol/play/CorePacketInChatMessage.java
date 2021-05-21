@@ -17,7 +17,7 @@ public class CorePacketInChatMessage extends AbstractPacket implements PacketInC
 	
 	@Override
 	public void read(ByteBuf in) throws IOException {
-		msg = readString(in);
+		msg = readString(in, 256);
 	}
 
 	@Override

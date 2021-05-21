@@ -1,6 +1,5 @@
 package de.atlasmc.inventory.gui;
 
-import de.atlascore.inventory.gui.CoreGUI;
 import de.atlasmc.Material;
 import de.atlasmc.event.inventory.InventoryClickEvent;
 import de.atlasmc.inventory.ItemStack;
@@ -9,7 +8,7 @@ import de.atlasmc.inventory.gui.component.ItemComponentHandler;
 import de.atlasmc.inventory.gui.component.ItemPageComponent;
 import de.atlasmc.inventory.gui.component.PageComponent;
 
-public class MultipageGUI extends CoreGUI {
+public class MultipageGUI extends SimpleGUI {
 
 	private final int next, back;
 	private int page = 0;

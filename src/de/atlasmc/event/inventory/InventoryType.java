@@ -13,6 +13,9 @@ public enum InventoryType {
 	BEACON(8),
 	BLAST_FURNACE(9),
 	BREWING(10),
+	/**
+	 * A crafting table inventory, with 9 {@link SlotType#CRAFTING} slots and a {@link SlotType#RESULT} slot.
+	 */
 	CRAFTING(11),
 	ENCHANTING(12),
 	FURNACE(13),
@@ -27,13 +30,44 @@ public enum InventoryType {
 	CARTOGRAPHY(22),
 	STONECUTTER(23),
 	// non standard (types that are opened differently or only internal)
+	/**
+	 * A dispenser inventory, with 9 slots of {@link SlotType#CONTAINER}.<br>
+	 * Alternative to {@link InventoryType#GENERIC_3X3} for differentiation.
+	 */
 	DISPENSER(6),
+	/**
+	 * A dropper inventory, with 9 slots of {@link SlotType#CONTAINER}.<br>
+	 * Alternative to {@link InventoryType#GENERIC_3X3} for differentiation.
+	 */
 	DROPPER(6),
+	/**
+	 * A barrel inventory, with 27 slots of {@link SlotType#CONTAINER}.<br>
+	 * Alternative to {@link InventoryType#GENERIC_9X3} for differentiation.
+	 */
 	BARREL(2),
+	/**
+	 * A ender chest inventory, with 27 slots of {@link SlotType#CONTAINER}.<br>
+	 * Alternative to {@link InventoryType#GENERIC_9X3} for differentiation.<br>
+	 * <br>
+	 * If you would like to create a custom ender chest with different size do not use this.
+	 */
 	ENDER_CHEST(2),
+	/**
+	 * A chest inventory, with 27 slots of {@link SlotType#CONTAINER}.<br>
+	 * Alternative to {@link InventoryType#GENERIC_9X3} for differentiation.<br>
+	 * <br>
+	 * If you would like to create a custom inventory with different size do not use this.
+	 */
+	CHEST(2),
+	/**
+	 * A double chest inventory, with 54 slots of {@link SlotType#CONTAINER}.<br>
+	 * Alternative to {@link InventoryType#GENERIC_9X6} for differentiation.<br>
+	 * <br>
+	 * If you would like to create a custom inventory with different size do not use this.
+	 */
+	DOUBLE_CHEST(5),
 	CREATIVE(-1),
-	WORKBENCH(-1),
-	HORSE(-1),
+	HORSE(-1), // Opened via PacketOutOpenHorseWindow
 	LLAMA(-1),
 	PLAYER(3),
 	;

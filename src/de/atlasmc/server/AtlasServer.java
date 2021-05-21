@@ -86,8 +86,7 @@ public class AtlasServer implements LocalServer {
 
 	@Override
 	public long getAge() {
-		// TODO Auto-generated method stub
-		return 0;
+		return thread.getAge();
 	}
 
 }

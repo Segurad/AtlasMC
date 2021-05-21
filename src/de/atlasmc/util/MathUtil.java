@@ -1,5 +1,9 @@
 package de.atlasmc.util;
 
+import de.atlasmc.Location;
+import de.atlasmc.SimpleLocation;
+import de.atlasmc.world.World;
+
 public class MathUtil {
 	
 	private MathUtil() {}
@@ -86,6 +90,14 @@ public class MathUtil {
 	 */
 	public long blockdataPosition(int blockstate, int x, int y, int z) {
 		return blockstate << 12 | (x << 8 | y << 4 | z);
+	}
+
+	public static Location getLocation(World world, long position) {
+		return new Location(world, getPositionX(position), getPositionY(position), getPositionZ(position));
+	}
+	
+	public static SimpleLocation getLocation(long position) {
+		return new SimpleLocation(getPositionX(position), getPositionY(position), getPositionZ(position));
 	}
 	
 }

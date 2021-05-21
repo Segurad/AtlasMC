@@ -9,7 +9,7 @@ public interface Button {
 	/**
 	 * 
 	 * @param e
-	 * @return a ItemStack which will be set in the clicked slot or null for no changes
+	 * @return A ItemStack to update the slot or null for no changes
 	 */
 	public ItemStack press(InventoryClickEvent e);
 
@@ -21,6 +21,9 @@ public interface Button {
 
 	public void setPermission(String permission);
 
+	/**
+	 * @return true if a permission is present
+	 */
 	public boolean hasPermission();
 
 	/**

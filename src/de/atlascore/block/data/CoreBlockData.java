@@ -6,7 +6,6 @@ import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.AbstractNBTBuildable;
-import de.atlasmc.util.nbt.CustomTagContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -55,11 +54,6 @@ public class CoreBlockData extends AbstractNBTBuildable implements BlockData {
 	@Override
 	protected NBTFieldContainer getRootFieldContainer() {
 		return NBT_FIELDS;
-	}
-
-	@Override
-	protected CustomTagContainer getCustomTagContainer() {
-		return null;
 	}
 
 }

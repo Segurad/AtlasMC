@@ -3,6 +3,7 @@ package de.atlasmc.inventory;
 import java.util.List;
 
 import de.atlasmc.entity.Player;
+import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.event.inventory.InventoryType.SlotType;
 
 public interface Inventory extends Iterable<ItemStack> {
@@ -20,5 +21,7 @@ public interface Inventory extends Iterable<ItemStack> {
 	public String getTitle();
 
 	public SlotType getSlotType(int slot);
+
+	public InventoryType getType();
 
 }

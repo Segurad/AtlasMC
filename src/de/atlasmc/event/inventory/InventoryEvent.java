@@ -29,9 +29,5 @@ public abstract class InventoryEvent extends GenericEvent<LocalServer, ServerHan
 	public List<Player> getViewers() {
 		return view.getTopInventory().getViewers();
 	}
-	
-	public Player getPlayer() {
-		return view.getPlayer();
-	}
 
 }

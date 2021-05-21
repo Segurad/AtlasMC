@@ -19,15 +19,13 @@ public class CorePacketInPluginMessage extends AbstractPacket implements PacketI
 	@Override
 	public void read(ByteBuf in) throws IOException {
 		channel = readString(in);
-		int len = readVarInt(in);
-		data = new byte[len];
+		data = new byte[in.readableBytes()];
 		in.readBytes(data);
 	}
 
 	@Override
 	public void write(ByteBuf out) throws IOException {
 		writeString(channel, out);
-		writeVarInt(data.length, out);
 		out.writeBytes(data);
 	}
 

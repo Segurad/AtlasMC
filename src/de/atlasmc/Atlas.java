@@ -6,6 +6,7 @@ import de.atlasmc.atlasnetwork.LocalAtlasNode;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.io.protocol.ProtocolAdapter;
 import de.atlasmc.io.protocol.ProtocolAdapterHandler;
+import de.atlasmc.plugin.messenger.Messenger;
 
 public class Atlas {
 
@@ -30,6 +31,10 @@ public class Atlas {
 	
 	public static ProtocolAdapterHandler getProtocolAdapterHandler() {
 		return instance.getProtocolAdapterHandler();
+	}
+
+	public static Messenger getMessenger() {
+		return instance.getMessenger();
 	}
 
 }

@@ -8,5 +8,34 @@ public interface GUIListener {
 	public void openedBy(Player player);
 	public void closedBy(Player player);
 	public void click(InventoryClickEvent event);
+	
+	/**
+	 * Functional implementation of {@link GUIListener}
+	 */
+	public interface GUIOpenListener extends GUIListener {
+		
+		public void openedBy(Player player);
+		public default void closedBy(Player player) {}
+		public default void click(InventoryClickEvent event) {}
+	}
+	
+	/**
+	 * Functional implementation of {@link GUIListener}
+	 */
+	public interface GUICloseListener extends GUIListener {
+		
+		public default void openedBy(Player player) {}
+		public void closedBy(Player player);
+		public default void click(InventoryClickEvent event) {}
+	}
 
+	/**
+	 * Functional implementation of {@link GUIListener}
+	 */
+	public interface GUIClickListener extends GUIListener {
+		
+		public default void openedBy(Player player) {}
+		public default void closedBy(Player player) {}
+		public void click(InventoryClickEvent event);
+	}
 }

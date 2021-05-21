@@ -26,8 +26,8 @@ public class CorePacketInClientStatus extends AbstractPacket implements PacketIn
 	}
 
 	@Override
-	public int getActionID() {
-		return actionID;
+	public StatusAction getAction() {
+		return StatusAction.getByID(actionID);
 	}
 
 }

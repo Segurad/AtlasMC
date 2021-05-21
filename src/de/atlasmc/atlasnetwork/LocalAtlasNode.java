@@ -6,13 +6,16 @@ import de.atlasmc.atlasnetwork.proxy.Proxy;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.io.protocol.ProtocolAdapterHandler;
+import de.atlasmc.plugin.messenger.Messenger;
 
 public class LocalAtlasNode implements AtlasNode {
 	
 	private final ProtocolAdapterHandler adapterHandler;
+	private final Messenger messenger;
 	
 	public LocalAtlasNode() {
 		this.adapterHandler = new ProtocolAdapterHandler();
+		this.messenger = new Messenger();
 	}
 	
 	@Override
@@ -35,6 +38,10 @@ public class LocalAtlasNode implements AtlasNode {
 
 	public ProtocolAdapterHandler getProtocolAdapterHandler() {
 		return adapterHandler;
+	}
+
+	public Messenger getMessenger() {
+		return messenger;
 	}
 
 }

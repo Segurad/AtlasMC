@@ -124,6 +124,25 @@ public class InventoryView {
         return slot;
 	}
 	
+	/**
+	 * Converts from the normal slot to the raw slot
+	 * @param inv
+	 * @param slot
+	 * @return
+	 */
+	public int convertSlot(Inventory inv, int slot) {
+		if (inv == getBottomInventory()) {
+			
+		} if (inv == getTopInventory()) {
+			int numInTop = getTopInventory().getSize();
+			// Index from the top inventory as having slots from [0,size]
+        	if (slot < numInTop) {
+            	return slot;
+        	} else throw new ArrayIndexOutOfBoundsException("Slot out of Bounds!");
+		} else
+			throw new IllegalArgumentException("Inventory does not belong to this InventoryView!");
+	}
+	
 	public SlotType getSlotType(int rawSlot) {
 		Inventory inv = getInventory(rawSlot);
 		if (inv == null) return SlotType.OUTSIDE;

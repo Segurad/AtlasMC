@@ -5,11 +5,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import de.atlasmc.entity.Player;
+import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.event.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.Inventory;
+import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.io.ConnectionHandler;
-import de.atlasmc.io.protocol.ProtocolPlay;
+import de.atlasmc.io.protocol.PlayerConnection;
 
 public class CoreInventory implements Inventory {
 
@@ -55,10 +56,12 @@ public class CoreInventory implements Inventory {
 	@Override
 	public void updateSlot(int slot) {
 		for (Player player : viewers) {
-			ConnectionHandler con = player.getConnection();
-			byte windowID = player.getWindowID(this);
-			if (windowID == -1) return;
-			((ProtocolPlay) con.getProtocol()).createPacketOutSetSlot(windowID, slot, getItem(slot));
+			InventoryView view = player.getOpenInventory();
+			if (view.getBottomInventory() == this) {
+				
+			} else if (view.getTopInventory() == this) {
+				
+			} else viewers.remove(player);
 		}
 	}
 
@@ -70,6 +73,12 @@ public class CoreInventory implements Inventory {
 
 	@Override
 	public SlotType getSlotType(int slot) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public InventoryType getType() {
 		// TODO Auto-generated method stub
 		return null;
 	}

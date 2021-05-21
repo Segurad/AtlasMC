@@ -10,8 +10,9 @@ import de.atlasmc.SoundCategory;
 import de.atlasmc.atlasnetwork.server.AtlasPlayer;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.inventory.Inventory;
+import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.io.ConnectionHandler;
+import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.scoreboard.Scoreboard;
 
 public interface Player extends AtlasPlayer, HumanEntity {
@@ -42,14 +43,7 @@ public interface Player extends AtlasPlayer, HumanEntity {
 
 	public ItemStack getItemOnCursor();
 
-	public ConnectionHandler getConnection();
-
-	/**
-	 * 
-	 * @param inventory
-	 * @return the current windowID or -1 if the Inventory does not belong to the Player
-	 */
-	public byte getWindowID(Inventory inventory);
+	public PlayerConnection getConnection();
 
 	public String getName();
 
@@ -60,5 +54,7 @@ public interface Player extends AtlasPlayer, HumanEntity {
 	public void setInternalUUID(UUID uuid);
 
 	public String getLocal();
+
+	public InventoryView getOpenInventory();
 
 }

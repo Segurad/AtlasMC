@@ -47,7 +47,7 @@ public abstract class AbstractNBTBuildable implements NBTHolder {
 	
 	protected abstract NBTFieldContainer getRootFieldContainer();
 	
-	public CustomTagContainer getCustomTagContainer() {
+	protected CustomTagContainer getCustomTagContainer() {
 		return null;
 	}
 

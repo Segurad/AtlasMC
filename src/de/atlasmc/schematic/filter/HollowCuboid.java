@@ -2,7 +2,6 @@ package de.atlasmc.schematic.filter;
 
 import de.atlasmc.Material;
 import de.atlasmc.SimpleLocation;
-import de.atlasmc.schematic.SchematicObject;
 
 public class HollowCuboid extends Cuboid {
 

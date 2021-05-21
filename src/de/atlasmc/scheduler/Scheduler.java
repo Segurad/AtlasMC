@@ -8,6 +8,8 @@ public interface Scheduler {
 	 */
 	public void runSyncTask(AtlasTask task);
 	
+	public void runSyncTask(Runnable task);
+	
 	/**
 	 * Runs a Task after a delay
 	 * @param task
@@ -61,5 +63,10 @@ public interface Scheduler {
 	 * @param period
 	 */
 	public void runAsyncRepeatingTask(AtlasTask task, long delay, long period);
+
+	/**
+	 * Runs the queued tasks for the next tick
+	 */
+	public void runNextTasks();
 
 }

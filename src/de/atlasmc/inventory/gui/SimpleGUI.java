@@ -1,4 +1,4 @@
-package de.atlascore.inventory.gui;
+package de.atlasmc.inventory.gui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,13 +8,10 @@ import de.atlascore.inventory.CoreInventory;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.inventory.InventoryClickEvent;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.inventory.gui.Button;
-import de.atlasmc.inventory.gui.GUI;
-import de.atlasmc.inventory.gui.GUIListener;
 import de.atlasmc.inventory.gui.component.Component;
 import de.atlasmc.inventory.gui.component.ComponentHandler;
 
-public class CoreGUI extends CoreInventory implements GUI {
+public class SimpleGUI extends CoreInventory implements GUI {
 
 	protected Button[] buttons;
 	protected boolean[] clickable;
@@ -22,7 +19,7 @@ public class CoreGUI extends CoreInventory implements GUI {
 	protected List<ComponentHandler> components;
 	protected List<GUIListener> listeners;
 	
-	public CoreGUI(int size, String name) {
+	public SimpleGUI(int size, String name) {
 		super(size);
 		this.name = name;
 	}

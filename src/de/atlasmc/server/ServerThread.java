@@ -16,6 +16,7 @@ public class ServerThread extends Thread {
 	private final Queue<Event> eventQueue;
 	private final AtlasScheduler scheduler;
 	private int skipped;
+	private long age;
 	
 	public ServerThread(AtlasServer server) {
 		super("ServerThread: " + server.getServerID());
@@ -26,12 +27,12 @@ public class ServerThread extends Thread {
 
 	@Override
 	public void run() {
-		if (running) throw new RuntimeException("ServerThread already running!");
+		if (isRunning()) throw new RuntimeException("ServerThread already running!");
 		running = true;
 		long startTime;
 		long endTime;
 		long remaining;
-		while (running) {
+		while (isRunning()) {
 			startTime = System.currentTimeMillis();
 			// Start server process;
 			scheduler.runNextTasks();
@@ -42,6 +43,7 @@ public class ServerThread extends Thread {
 			for (World w : server.getWorlds()) {
 				w.tick();
 			}
+			age++;
 			// End server process
 			endTime = System.currentTimeMillis();
 			remaining = endTime - startTime;
@@ -58,6 +60,18 @@ public class ServerThread extends Thread {
 		// Stop process
 	}
 	
+	public boolean isRunning() {
+		synchronized (this) {
+			return running;
+		}
+	}
+	
+	public void stopServer() {
+		synchronized (this) {
+			running = false;
+		}
+	}
+	
 	public int getSkippedTicks() {
 		return skipped;
 	}
@@ -68,6 +82,10 @@ public class ServerThread extends Thread {
 
 	public Scheduler getScheduler() {
 		return scheduler;
+	}
+
+	public long getAge() {
+		return age;
 	}
 
 }

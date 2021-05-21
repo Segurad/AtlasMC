@@ -12,18 +12,16 @@ public class InventoryClickEvent extends InventoryInteractEvent {
 	private final InventoryAction action;
 	private final ClickType click;
 	private final int rawSlot, key;
-	private final SlotType slotType;
 	
-	public InventoryClickEvent(InventoryView view, SlotType type, int slot, ClickType click, InventoryAction action) {
-		this(view, type, slot, click, action, -1);
+	public InventoryClickEvent(InventoryView view, int rawSlot, ClickType click, InventoryAction action) {
+		this(view, rawSlot, click, action, -1);
 	}
 	
-	public InventoryClickEvent(InventoryView view, SlotType type, int slot, ClickType click, InventoryAction action, int key) {
+	public InventoryClickEvent(InventoryView view, int rawSlot, ClickType click, InventoryAction action, int key) {
 		super(view);
 		this.action = action;
 		this.click = click;
-		this.rawSlot = slot;
-		this.slotType = type;
+		this.rawSlot = rawSlot;
 		this.key = key;
 	}
 
@@ -44,11 +42,11 @@ public class InventoryClickEvent extends InventoryInteractEvent {
 	}
 
 	public Inventory getClickedInventory() {
-		return null;
+		return view.getInventory(rawSlot);
 	}
 
 	public ClickType getClick() {
-		return null;
+		return click;
 	}
 	
 	public boolean isLeftClick() {
@@ -80,7 +78,7 @@ public class InventoryClickEvent extends InventoryInteractEvent {
 	}
 	
 	public SlotType getSlotType() {
-		return slotType;
+		return view.getSlotType(rawSlot);
 	}
 
 	@Override

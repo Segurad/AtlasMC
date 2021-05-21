@@ -8,7 +8,7 @@ import de.atlasmc.atlasnetwork.server.LocalServer;
 public class AtlasScheduler implements Scheduler {
 
 	private final LocalServer server;
-	private final ConcurrentLinkedQueue<AtlasTask> nextTasks;
+	private final ConcurrentLinkedQueue<Runnable> nextTasks;
 	private final Vector<RegisteredTask> tasks;
 	private final Thread worker;
 	private final ConcurrentLinkedQueue<AsyncTaskWorker> workerQueue;
@@ -23,7 +23,7 @@ public class AtlasScheduler implements Scheduler {
 	
 	public AtlasScheduler(LocalServer server, int minWorkers, int workerMaxIdleTime) {
 		workerQueue = new ConcurrentLinkedQueue<AsyncTaskWorker>();
-		this.nextTasks = new ConcurrentLinkedQueue<AtlasTask>();
+		this.nextTasks = new ConcurrentLinkedQueue<>();
 		this.tasks = new Vector<RegisteredTask>();
 		this.fetchedWorkers = new Vector<AsyncTaskWorker>();
 		this.server = server;
@@ -56,7 +56,10 @@ public class AtlasScheduler implements Scheduler {
 			}
 			tasks.clear();
 			while (!nextTasks.isEmpty()) {
-				nextTasks.poll().notifiyShutdown();
+				Runnable r = nextTasks.poll();
+				if (r instanceof AtlasTask) {
+					((AtlasTask) r).notifiyShutdown();
+				}
 			}
 			for (AsyncTaskWorker worker : fetchedWorkers) {
 				worker.shutdown();
@@ -77,6 +80,11 @@ public class AtlasScheduler implements Scheduler {
 
 	@Override
 	public void runSyncTask(AtlasTask task) {
+		nextTasks.add(task);
+	}
+	
+	@Override
+	public void runSyncTask(Runnable task) {
 		nextTasks.add(task);
 	}
 
