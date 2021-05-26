@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.atlasmc.atlasnetwork.proxy.LocalProxy;
 import de.atlasmc.util.annotation.NotNull;
-import de.atlasmc.util.map.ArrayListMultimap;
+import de.atlasmc.util.map.ConcurrentVectorMultimap;
 import de.atlasmc.util.map.ListMultimap;
 
 public class ProxyHandlerList extends HandlerList {
@@ -14,15 +14,13 @@ public class ProxyHandlerList extends HandlerList {
 	
 	public ProxyHandlerList() {
 		super();
-		proxyExecutors = new ArrayListMultimap<LocalProxy, EventExecutor>();
+		proxyExecutors = new ConcurrentVectorMultimap<LocalProxy, EventExecutor>();
 	}
 	
-	public void registerExecutor(LocalProxy proxy, EventExecutor executor) {
-		synchronized (proxyExecutors) {
-			if (proxyExecutors.containsKey(proxy)) {
-				register(proxyExecutors.get(proxy), executor);
-			} else proxyExecutors.put(proxy, executor);
-		}
+	public synchronized void registerExecutor(LocalProxy proxy, EventExecutor executor) {
+		if (proxyExecutors.containsKey(proxy)) {
+			register(proxyExecutors.get(proxy), executor);
+		} else proxyExecutors.put(proxy, executor);
 	}
 	
 	@Override
@@ -37,34 +35,31 @@ public class ProxyHandlerList extends HandlerList {
 	}
 	
 	public List<EventExecutor> getExecutors(@NotNull LocalProxy proxy) {
-		synchronized (proxyExecutors) {
-			if (!proxyExecutors.containsKey(proxy)) return List.of();
-			return List.copyOf(proxyExecutors.get(proxy));
-		}
+		if (!proxyExecutors.containsKey(proxy)) return List.of();
+		return proxyExecutors.get(proxy);
 	}
 	
 	@Override
 	protected void callEvent(Event event, boolean cancelled) {
 		@SuppressWarnings("unchecked")
 		LocalProxy proxy = ((GenericEvent<LocalProxy, ?>) event).getEventSource();
-		final Iterator<EventExecutor> proxyexes = getExecutors(proxy).iterator();
-		final Iterator<EventExecutor> globalexes = getExecutors().iterator();
+		final List<EventExecutor> proxyexes = getExecutors(proxy);
+		final List<EventExecutor> globalexes = getExecutors();
+		int globalIndex = 0, proxyIndex = 0;
 		for (EventPriority prio : EventPriority.values()) {
-			fireEvents(proxyexes, prio, event, cancelled);
-			fireEvents(globalexes, prio, event, cancelled);
+			proxyIndex = fireEvents(proxyexes, prio, event, cancelled, proxyIndex);
+			globalIndex = fireEvents(globalexes, prio, event, cancelled, globalIndex);
 		}
 	}
 	
 	@Override
-	public void unregisterHandledListener(Listener listener) {
+	public synchronized void unregisterHandledListener(Listener listener) {
 		super.unregisterHandledListener(listener);
-		synchronized (proxyExecutors) {
-			for (LocalProxy proxy: proxyExecutors.keySet()) {
-				Iterator<EventExecutor> it = proxyExecutors.get(proxy).iterator();
-				while(it.hasNext()) {
-					EventExecutor exe = it.next();
-					if (exe.getListener() == listener) it.remove();
-				}
+		for (LocalProxy proxy : proxyExecutors.keySet()) {
+			Iterator<EventExecutor> it = proxyExecutors.get(proxy).iterator();
+			while(it.hasNext()) {
+				EventExecutor exe = it.next();
+				if (exe.getListener() == listener) it.remove();
 			}
 		}
 	}

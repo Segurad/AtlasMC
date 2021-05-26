@@ -6,7 +6,7 @@ import java.util.List;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.util.annotation.NotNull;
-import de.atlasmc.util.map.ArrayListMultimap;
+import de.atlasmc.util.map.ConcurrentVectorMultimap;
 import de.atlasmc.util.map.ListMultimap;
 
 public class ServerHandlerList extends HandlerList {
@@ -16,26 +16,22 @@ public class ServerHandlerList extends HandlerList {
 	
 	public ServerHandlerList() {
 		super();
-		this.groupExecutors = new ArrayListMultimap<ServerGroup, EventExecutor>();
-		this.serverExecutors = new ArrayListMultimap<LocalServer, EventExecutor>();
+		this.groupExecutors = new ConcurrentVectorMultimap<>();
+		this.serverExecutors = new ConcurrentVectorMultimap<>();
 	}
 	
-	public void registerExecutor(ServerGroup group, EventExecutor executor) {
+	public synchronized void registerExecutor(ServerGroup group, EventExecutor executor) {
 		if (group == null || executor == null) return;
-		synchronized (groupExecutors) {
-			if (groupExecutors.containsKey(group)) {
-				register(groupExecutors.get(group), executor);
-			} else groupExecutors.put(group, executor);
-		}
+		if (groupExecutors.containsKey(group)) {
+			register(groupExecutors.get(group), executor);
+		} else groupExecutors.put(group, executor);
 	}
 	
-	public void registerExecutor(LocalServer server, EventExecutor executor) {
+	public synchronized void registerExecutor(LocalServer server, EventExecutor executor) {
 		if (server == null || executor == null) return;
-		synchronized (serverExecutors) {
-			if (serverExecutors.containsKey(server)) {
-				register(serverExecutors.get(server), executor);
-			} else serverExecutors.put(server, executor);
-		}
+		if (serverExecutors.containsKey(server)) {
+			register(serverExecutors.get(server), executor);
+		} else serverExecutors.put(server, executor);
 	}
 	
 	@Override
@@ -53,18 +49,14 @@ public class ServerHandlerList extends HandlerList {
 	
 	public List<EventExecutor> getExecutors(@NotNull ServerGroup group) {
 		if (group == null) return null;
-		synchronized (groupExecutors) {
-			if (!groupExecutors.containsKey(group)) return List.of();
-			return List.copyOf(groupExecutors.get(group));
-		}
+		if (!groupExecutors.containsKey(group)) return List.of();
+		return groupExecutors.get(group);
 	}
 	
 	public List<EventExecutor> getExecutors(@NotNull LocalServer server) {
 		if (server == null) return null;
-		synchronized (serverExecutors) {
-			if (!serverExecutors.containsKey(server)) return List.of();
-			return List.copyOf(serverExecutors.get(server));
-		}
+		if (!serverExecutors.containsKey(server)) return List.of();
+		return serverExecutors.get(server);
 	}
 	
 	@Override
@@ -73,38 +65,36 @@ public class ServerHandlerList extends HandlerList {
 		LocalServer server = ((GenericEvent<LocalServer, ?>) event).getEventSource();
 		if (!server.isServerThread() && !event.isAsynchronous()) 
 			throw new RuntimeException("Tryed to call ServerEvent async: " + event.getName());
-		final Iterator<EventExecutor> groupexes = getExecutors(server.getGroup()).iterator();
-		final Iterator<EventExecutor> serverexes = getExecutors(server).iterator();
-		final Iterator<EventExecutor> globalexes = getExecutors().iterator();
+		final List<EventExecutor> groupexes = getExecutors(server.getGroup());
+		final List<EventExecutor> serverexes = getExecutors(server);
+		final List<EventExecutor> globalexes = getExecutors();
+		int groupIndex = 0, serverIndex = 0, globalIndex = 0;
 		for (EventPriority prio : EventPriority.values()) {
-			fireEvents(serverexes, prio, event, cancelled);
-			fireEvents(groupexes, prio, event, cancelled);
-			fireEvents(globalexes, prio, event, cancelled);
+			serverIndex = fireEvents(serverexes, prio, event, cancelled, serverIndex);
+			groupIndex = fireEvents(groupexes, prio, event, cancelled, groupIndex);
+			globalIndex = fireEvents(globalexes, prio, event, cancelled, globalIndex);
 		}
 	}
 	
 	@Override
-	public void unregisterHandledListener(Listener listener) {
+	public synchronized void unregisterHandledListener(Listener listener) {
 		if (listener == null) return;
 		super.unregisterHandledListener(listener);
-		synchronized (groupExecutors) {
-			for (ServerGroup group : groupExecutors.keySet()) {
-				Iterator<EventExecutor> it = groupExecutors.get(group).iterator();
-				while(it.hasNext()) {
-					EventExecutor exe = it.next();
-					if (exe.getListener() == listener) it.remove();
-				}
+		for (ServerGroup group : groupExecutors.keySet()) {
+			Iterator<EventExecutor> it = groupExecutors.get(group).iterator();
+			while(it.hasNext()) {
+				EventExecutor exe = it.next();
+				if (exe.getListener() == listener) it.remove();
 			}
 		}
-		synchronized (serverExecutors) {
-			for (LocalServer server : serverExecutors.keySet()) {
-				Iterator<EventExecutor> it = serverExecutors.get(server).iterator();
-				while(it.hasNext()) {
-					EventExecutor exe = it.next();
-					if (exe.getListener() == listener) it.remove();
-				}
+		for (LocalServer server : serverExecutors.keySet()) {
+			Iterator<EventExecutor> it = serverExecutors.get(server).iterator();
+			while(it.hasNext()) {
+				EventExecutor exe = it.next();
+				if (exe.getListener() == listener) it.remove();
 			}
 		}
+		
 	}
 	
 	public static void unregisterServer(LocalServer server) {

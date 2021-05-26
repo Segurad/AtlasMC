@@ -2,6 +2,7 @@ package de.atlasmc.util;
 
 import de.atlasmc.Location;
 import de.atlasmc.SimpleLocation;
+import de.atlasmc.Vector;
 import de.atlasmc.world.World;
 
 public class MathUtil {
@@ -99,5 +100,36 @@ public class MathUtil {
 	public static SimpleLocation getLocation(long position) {
 		return new SimpleLocation(getPositionX(position), getPositionY(position), getPositionZ(position));
 	}
+	
+	public float getYaw(double x, double z, double lockX, double lockZ) {
+		double dx = lockX-x;
+		double dz = lockZ-z;
+		float yaw = (float) (-Math.atan2(dx,dz)/Math.PI*180);
+		if (yaw < 0) 
+			yaw += 360;
+		return yaw;
+	}
+	
+	public float getPitch(double x, double y, double z, double lockX, double lockY, double lockZ) {
+		double dx = lockX-x;
+		double dy = lockY-y;
+		double dz = lockZ-z;
+		double r = Math.sqrt( dx*dx + dy*dy + dz*dz);
+		return (float) (-Math.asin(dy/r)/Math.PI*180);
+	}
+	
+	public Vector getVector(float yaw, float pitch) {
+		return getVector(yaw, pitch, new Vector());
+	}
+	
+	public Vector getVector(float yaw, float pitch, Vector vec) {
+		double cosPitch = Math.sin(pitch);
+		vec.setX(-cosPitch * Math.sin(yaw));
+		vec.setY(-Math.sin(pitch));
+		vec.setZ(cosPitch * Math.cos(yaw));
+		return vec;
+	}
+	
+	
 	
 }

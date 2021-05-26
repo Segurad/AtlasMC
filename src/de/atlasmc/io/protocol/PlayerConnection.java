@@ -8,6 +8,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import de.atlascore.io.protocol.CorePacketListenerPlay;
 import de.atlasmc.Atlas;
+import de.atlasmc.atlasnetwork.server.AtlasPlayer;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.Event;
@@ -76,7 +77,8 @@ import de.atlasmc.io.protocol.play.PacketInWindowConfirmation;
 
 public class PlayerConnection implements PacketListenerPlayIn {
 	
-	private final Player player;
+	private Player player;
+	private final AtlasPlayer aplayer;
 	private final ConnectionHandler connection;
 	private final ProtocolAdapter protocol;
 	private LocalServer server;
@@ -89,8 +91,8 @@ public class PlayerConnection implements PacketListenerPlayIn {
 	private short confirmNumber;
 	private byte invID;
 	
-	public PlayerConnection(Player player, ConnectionHandler connection, ProtocolAdapter protocol) {
-		this.player = player;
+	public PlayerConnection(AtlasPlayer player, ConnectionHandler connection, ProtocolAdapter protocol) {
+		this.aplayer = player;
 		this.connection = connection;
 		this.protocol = protocol;
 		this.inboundQueue = new ConcurrentLinkedQueue<>();
@@ -531,10 +533,8 @@ public class PlayerConnection implements PacketListenerPlayIn {
 	 * @return the current server or null if not at this note
 	 */
 	@ThreadSafe
-	public LocalServer getLocalSever() {
-		synchronized (this) {
-			return server;
-		}
+	public synchronized LocalServer getLocalSever() {
+		return server;
 	}
 	
 	public int getNextWindowActionID() {

@@ -10,6 +10,13 @@ public class Vector implements Cloneable {
 		this.z = z;
 	}
 	
+	/**
+	 * Creates a new Vector(0, 0, 0)
+	 */
+	public Vector() {
+		this(0, 0, 0);
+	}
+
 	public double getX() {
 		return x;
 	}

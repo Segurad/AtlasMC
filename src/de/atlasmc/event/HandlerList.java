@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Vector;
 
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
@@ -19,10 +20,10 @@ import de.atlasmc.util.annotation.ThreadSafe;
 public class HandlerList {
 	
 	protected static final List<HandlerList> HANDLERS = new ArrayList<>();
-	private final List<EventExecutor> globalExecutors;
+	private final Vector<EventExecutor> globalExecutors;
 	
 	public HandlerList() {
-		this.globalExecutors = new ArrayList<>();
+		this.globalExecutors = new Vector<>();
 		synchronized (HANDLERS) {
 			HANDLERS.add(this);
 		}
@@ -30,16 +31,14 @@ public class HandlerList {
 	
 	public void registerExecutor(@NotNull EventExecutor executor) {
 		if (executor == null) return;
-		synchronized (globalExecutors) {
-			register(globalExecutors, executor);
-		}
+		register(globalExecutors, executor);
 	}
 	
 	public void registerExecutor(EventExecutor executor, Object... handleroptions) {
 		registerExecutor(executor);
 	}
 	
-	protected void register(List<EventExecutor> exes, EventExecutor executor) {
+	protected synchronized void register(List<EventExecutor> exes, EventExecutor executor) {
 		ListIterator<EventExecutor> it = exes.listIterator();
 		final int ordinal = executor.getPriority().ordinal();
 		while(it.hasNext()) {
@@ -61,33 +60,42 @@ public class HandlerList {
 	 * @return a immutable copy of all registered GlobalExecutors
 	 */
 	public List<EventExecutor> getExecutors() {
-		synchronized (globalExecutors) {
-			return List.copyOf(globalExecutors);
-		}
+		return List.copyOf(globalExecutors);
 	}
 	
 	public static void callEvent(@NotNull final Event event) {
 		final HandlerList hl = event.getHandlers();
-		final boolean cancelled = Cancellable.class.isInstance(event) ? ((Cancellable) event).isCancelled() : false;
+		final boolean cancelled = Cancellable.class.isInstance(event);
 		hl.callEvent(event, cancelled);
 	}
 	
-	protected void callEvent(final Event event, boolean cancelled) {
-		final Iterator<EventExecutor> executors = getExecutors().iterator();
-		while(executors.hasNext()) {
-			EventExecutor exe = executors.next();
-			if (exe.getIgnoreCancelled() && cancelled) continue;
+	protected void callEvent(final Event event, boolean cancellable) {
+		for (EventExecutor exe : globalExecutors){
+			if (exe.getIgnoreCancelled() && cancellable) continue;
 			exe.fireEvent(event);
 		}
 	}
 	
-	protected static void fireEvents(final Iterator<EventExecutor> executors, final EventPriority priority, final Event event, final boolean cancelled) {
-		while (executors.hasNext()) {
-			EventExecutor exe = executors.next();
-			if (exe.getPriority() != priority) break;
-			if (exe.getIgnoreCancelled() && cancelled) continue;
+	/**
+	 * Fires the Event for all Executors with a lower or equal priority
+	 * @param executors
+	 * @param priority
+	 * @param event event
+	 * @param cancellable weather or not the event extends {@link Cancellable}
+	 * @param index the start index
+	 * @return
+	 */
+	protected static int fireEvents(final List<EventExecutor> executors, final EventPriority priority, final Event event, final boolean cancellable, final int index) {
+		if (index == -1) return -1;
+		final int length = executors.size();
+		final int prio = priority.ordinal();
+		for (int i = index; i < length; i++) {
+			EventExecutor exe = executors.get(i);
+			if (exe.getPriority().ordinal() > prio) return i;
+			if (exe.getIgnoreCancelled() && (cancellable ? false : ((Cancellable) event).isCancelled())) continue;
 			exe.fireEvent(event);
 		}
+		return -1;
 	}
 	
 	public static void unregisterListener(@NotNull Listener listener) {
@@ -98,13 +106,11 @@ public class HandlerList {
 		}
 	}
 
-	public void unregisterHandledListener(Listener listener) {
-		synchronized (globalExecutors) {
-			Iterator<EventExecutor> it = globalExecutors.iterator();
-			while(it.hasNext()) {
-				EventExecutor exe = it.next();
-				if (exe.getListener() == listener) it.remove();
-			}
+	public synchronized void unregisterHandledListener(Listener listener) {
+		Iterator<EventExecutor> it = globalExecutors.iterator();
+		while(it.hasNext()) {
+			EventExecutor exe = it.next();
+			if (exe.getListener() == listener) it.remove();
 		}
 	}
 	
