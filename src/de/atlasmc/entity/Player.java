@@ -7,7 +7,7 @@ import de.atlasmc.Location;
 import de.atlasmc.Particle;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
-import de.atlasmc.atlasnetwork.server.AtlasPlayer;
+import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryView;

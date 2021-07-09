@@ -41,15 +41,15 @@ public interface Chunk extends Tickable {
 	public void setBiome(EnumBiome biome, int x, int y, int z);
 	public List<TileEntity> getTileEntities();
 	public int getHighestBlockYAt(int x, int z);
-	public List<Entity> getEntites();
-	public List<Entity> getEntites(List<Entity> entities);
-	public <T extends Entity> List<T> getEntitesByClass(Class<T> clazz);
-	public <T extends Entity> List<T> getEntitesByClass(List<T> entities, Class<T> clazz);
+	public List<Entity> getEntities();
+	public List<Entity> getEntities(List<Entity> entities);
+	public <T extends Entity> List<T> getEntitiesByClass(Class<T> clazz);
+	public <T extends Entity> List<T> getEntitiesByClass(List<T> entities, Class<T> clazz);
 	public BlockData getBlockDataAt(int x, int y, int z);
 	public Material getBlockType(int x, int y, int z);
 	public void setBlockType(Material material, int x, int y, int z);
 	public void setBlockDataAt(BlockData data, int x, int y, int z);
-	public List<Entity> getEntitesByClasses(Class<? extends Entity>[] classes);
-	public List<Entity> getEntitesByClasses(List<Entity> entities, Class<? extends Entity>[] classes);
+	public List<Entity> getEntitiesByClasses(Class<? extends Entity>[] classes);
+	public List<Entity> getEntitiesByClasses(List<Entity> entities, Class<? extends Entity>[] classes);
 	
 }

@@ -2,11 +2,11 @@ package de.atlasmc.world;
 
 import java.io.IOException;
 
-import de.atlasmc.util.nbt.NBTHolder;
-import de.atlasmc.util.nbt.io.NBTReader;
+import de.atlasmc.util.nbt.AbstractNBTBase;
+import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
-public class Dimension implements NBTHolder {
+public class Dimension extends AbstractNBTBase {
 	
 	private final String name;
 	private final int id;
@@ -24,6 +24,8 @@ public class Dimension implements NBTHolder {
 	private float coordinateScale;
 	private long fixedTime;
 	private int logicalHeight;
+	
+	private final static NBTFieldContainer NBT_FIELDS;
 	
 	protected static final String
 	NAME = "name",
@@ -43,6 +45,11 @@ public class Dimension implements NBTHolder {
 	COORDINATE_SCALE = "coordinate_scale",
 	ULTRAWARM = "ultrawarm",
 	HAS_CEILING = "has_ceiling";
+	
+	static {
+		NBT_FIELDS = new NBTFieldContainer();
+		// TODO NBT Fields
+	}
 	
 	public Dimension(String name, int id) {
 		this.name = name;
@@ -192,10 +199,10 @@ public class Dimension implements NBTHolder {
 		}
 		writer.writeEndTag();
 	}
+
 	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		// TODO Auto-generated method stub
-		
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
 	}
 
 }

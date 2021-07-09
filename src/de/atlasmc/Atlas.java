@@ -13,7 +13,7 @@ public class Atlas {
 	private static LocalAtlasNode instance;
 	
 	public Atlas(LocalAtlasNode node) {
-		if (instance != null) throw new RuntimeException("Atlas already started!");
+		if (instance != null) throw new RuntimeException("Atlas already initiated!");
 		instance = node;
 	}
 	

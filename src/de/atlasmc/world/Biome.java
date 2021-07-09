@@ -3,11 +3,11 @@ package de.atlasmc.world;
 import java.io.IOException;
 
 import de.atlasmc.Color;
-import de.atlasmc.util.nbt.NBTHolder;
-import de.atlasmc.util.nbt.io.NBTReader;
+import de.atlasmc.util.nbt.AbstractNBTBase;
+import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
-public class Biome implements NBTHolder {
+public class Biome extends AbstractNBTBase {
 	
 	private final String name;
 	private final int id;
@@ -47,6 +47,8 @@ public class Biome implements NBTHolder {
 	private String particleType;
 	// }
 	
+	private static final NBTFieldContainer NBT_FIELDS;
+	
 	protected static final String
 	NAME = "name",
 	ID = "id",
@@ -82,6 +84,11 @@ public class Biome implements NBTHolder {
 	PROBABILITY = "probability",
 	OPTIONS = "options",
 	TYPE = "type";
+	
+	static {
+		NBT_FIELDS = new NBTFieldContainer();
+		// TODO
+	}
 	
 	public Biome(String name, int id) {
 		this.name = name;
@@ -352,9 +359,8 @@ public class Biome implements NBTHolder {
 	}
 
 	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		// TODO Auto-generated method stub
-		
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
 	}
 
 }

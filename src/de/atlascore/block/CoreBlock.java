@@ -20,23 +20,23 @@ public class CoreBlock implements Block {
 	
 	@Override
 	public Material getType() {
-		return chunk.getBlockType(loc.getBlockX() & 0xF, loc.getBlockY(), loc.getBlockZ() & 0xF);
+		return chunk.getBlockType(getX(), getY(), getZ());
 	}
 
 	@Override
 	public void setBlockData(BlockData data) {
-		this.chunk.setBlockDataAt(data, loc.getBlockX() & 0xF, loc.getBlockY(), loc.getBlockZ() & 0xF);
+		this.chunk.setBlockDataAt(data, getX(), getY(), getZ());
 	}
 
 	@Override
 	public void setType(Material material) {
 		if (!material.isBlock()) throw new IllegalArgumentException("Material is not a Block: " + material.getName());
-		chunk.setBlockType(material, loc.getBlockX() & 0xF, loc.getBlockY(), loc.getBlockZ() & 0xF);
+		chunk.setBlockType(material, getX(), getY(), getZ());
 	}
 
 	@Override
 	public BlockData getBlockData() {
-		return chunk.getBlockDataAt(loc.getBlockX() & 0xF, loc.getBlockY(), loc.getBlockZ() & 0xF);
+		return chunk.getBlockDataAt(getX(), getY(), getZ());
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class CoreBlock implements Block {
 
 	@Override
 	public EnumBiome getBiome() {
-		return chunk.getBiome(loc.getBlockX() & 0xF, loc.getBlockY(), loc.getBlockZ() & 0xF);
+		return chunk.getBiome(getX(), getY(), getZ());
 	}
 
 	@Override

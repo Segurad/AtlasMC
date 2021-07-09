@@ -7,5 +7,6 @@ public interface Protocol {
 	public int getVersion();
 	public PacketListener createPacketListener(Object o);
 	public Packet createCopy(Packet packet);
+	public <T extends Packet> T createPacket(Class<T> clazz);
 
 }

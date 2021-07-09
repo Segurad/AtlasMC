@@ -16,14 +16,14 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataContainer;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.util.nbt.AbstractNBTBuildable;
+import de.atlasmc.util.nbt.AbstractNBTBase;
 import de.atlasmc.util.nbt.CustomTagContainer;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
-public class CoreEntity extends AbstractNBTBuildable implements Entity {
+public class CoreEntity extends AbstractNBTBase implements Entity {
 	
 	protected static final NBTFieldContainer NBT_FIELDS = new NBTFieldContainer();
 	private CustomTagContainer customTags;
@@ -321,7 +321,7 @@ public class CoreEntity extends AbstractNBTBuildable implements Entity {
 	}
 
 	@Override
-	protected NBTFieldContainer getRootFieldContainer() {
+	protected NBTFieldContainer getFieldContainerRoot() {
 		return NBT_FIELDS;
 	}
 

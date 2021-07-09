@@ -7,7 +7,7 @@ import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
-public abstract class AbstractNBTBuildable implements NBTHolder {
+public abstract class AbstractNBTBase implements NBTHolder {
 
 	@Override
 	public abstract void toNBT(NBTWriter writer, boolean systemData) throws IOException;
@@ -17,7 +17,7 @@ public abstract class AbstractNBTBuildable implements NBTHolder {
 		Validate.notNull(reader, "NBTReader can not be null!");
 		final int depth = reader.getDepth();
 		final ArrayList<NBTFieldContainer> containers = new ArrayList<NBTFieldContainer>();
-		NBTFieldContainer highestContainer = getRootFieldContainer();
+		NBTFieldContainer highestContainer = getFieldContainerRoot();
 		while (depth <= reader.getDepth()) {
 			TagType type = reader.getType();
 			if (type == TagType.TAG_END) {
@@ -45,7 +45,7 @@ public abstract class AbstractNBTBuildable implements NBTHolder {
 		if (reader.getType() == TagType.TAG_END) reader.readNextEntry();
 	}
 	
-	protected abstract NBTFieldContainer getRootFieldContainer();
+	protected abstract NBTFieldContainer getFieldContainerRoot();
 	
 	protected CustomTagContainer getCustomTagContainer() {
 		return null;

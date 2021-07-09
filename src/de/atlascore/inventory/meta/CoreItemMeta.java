@@ -24,7 +24,7 @@ import de.atlasmc.util.Validate;
 import de.atlasmc.util.map.ArrayListMultimap;
 import de.atlasmc.util.map.ListMultimap;
 import de.atlasmc.util.map.Multimap;
-import de.atlasmc.util.nbt.AbstractNBTBuildable;
+import de.atlasmc.util.nbt.AbstractNBTBase;
 import de.atlasmc.util.nbt.CustomTagContainer;
 import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.NBTException;
@@ -32,7 +32,7 @@ import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
-public class CoreItemMeta extends AbstractNBTBuildable implements ItemMeta {
+public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	
 	private boolean unbreakable;
 	private String displayname;
@@ -513,7 +513,7 @@ public class CoreItemMeta extends AbstractNBTBuildable implements ItemMeta {
 	}
 	
 	@Override
-	protected NBTFieldContainer getRootFieldContainer() {
+	protected NBTFieldContainer getFieldContainerRoot() {
 		return NBT_FIELDS;
 	}
 }

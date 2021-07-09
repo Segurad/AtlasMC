@@ -9,15 +9,18 @@ import de.atlascore.io.protocol.play.*;
 import de.atlasmc.entity.Player;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.Packet;
+import de.atlasmc.io.PacketInbound;
+import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.PacketListener;
 import de.atlasmc.io.protocol.ProtocolPlay;
+import de.atlasmc.io.protocol.play.PacketPlay;
 
 public class CoreProtocolPlay implements ProtocolPlay {
 	
 	private final List<Class<? extends Packet>> playIn, playOut;
 	
 	public CoreProtocolPlay() {
-		List<Class<? extends Packet>> playIn = new ArrayList<>(48);
+		playIn = new ArrayList<>(48);
 		playIn.add(CorePacketInTeleportConfirm.class); // 0x00
 		playIn.add(CorePacketInQueryBlockNBT.class); // 0x01
 		playIn.add(CorePacketInSetDifficulty.class); // 0x02
@@ -66,7 +69,8 @@ public class CoreProtocolPlay implements ProtocolPlay {
 		playIn.add(CorePacketInSpectate.class); // 0x2D
 		playIn.add(CorePacketInPlayerBlockPlacement.class); // 0x2E
 		playIn.add(CorePacketInUseItem.class); // 0x2F
-		List<Class<? extends Packet>> playOut = new ArrayList<>(92);
+		// -----------------------------------------------------------------------------------
+		playOut = new ArrayList<>(92);
 		playOut.add(CorePacketOutSpawnEntity.class); // 0x00
 		playOut.add(CorePacketOutSpawnExperienceOrb.class); // 0x01
 		playOut.add(CorePacketOutSpawnLivingEntity.class); // 0x02
@@ -159,8 +163,6 @@ public class CoreProtocolPlay implements ProtocolPlay {
 		playOut.add(CorePacketOutEntityEffect.class); // 0x59
 		playOut.add(CorePacketOutDeclareRecipes.class); // 0x5A
 		playOut.add(CorePacketOutTags.class); // 0x5B
-		this.playIn = List.copyOf(playIn);
-		this.playOut = List.copyOf(playOut);
 	}
 
 	@Override
@@ -188,8 +190,13 @@ public class CoreProtocolPlay implements ProtocolPlay {
 
 	@Override
 	public Packet createCopy(Packet packet) {
-		// TODO Auto-generated method stub
-		return null;
+		if (!(packet instanceof PacketPlay)) throw new IllegalArgumentException("Class is not assignable from PacketPlay!");
+		// TODO
+		if (packet instanceof PacketInbound) {
+			return createPacketIn(packet.getDefaultID());
+		} else {
+			return createPacketOut(packet.getDefaultID());
+		}
 	}
 	
 	private Packet construct(Class<? extends Packet> clazz) {
@@ -203,6 +210,19 @@ public class CoreProtocolPlay implements ProtocolPlay {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends Packet> T createPacket(Class<T> clazz) {
+		if (!clazz.isAssignableFrom(PacketPlay.class)) throw new IllegalArgumentException("Class is not assignable from PacketPlay!");
+		DefaultPacketID id = clazz.getAnnotation(DefaultPacketID.class);
+		if (id == null) throw new IllegalArgumentException("Class does not contain DefaultPacketID annotation!");
+		if (!clazz.isAssignableFrom(PacketInbound.class)) {
+			return (T) createPacketIn(id.value());
+		} else {
+			return (T) createPacketOut(id.value());
+		}
 	}
 
 	@Override

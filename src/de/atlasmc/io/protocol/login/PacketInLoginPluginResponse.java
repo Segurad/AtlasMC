@@ -1,8 +1,8 @@
 package de.atlasmc.io.protocol.login;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInLoginPluginResponse extends Packet {
+public interface PacketInLoginPluginResponse extends PacketLogin, PacketInbound {
 	
 	public int getMessageID();
 	public boolean isSuccessful();

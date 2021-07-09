@@ -36,20 +36,34 @@ public class CoreChunkSection implements ChunkSection {
 
 	@Override
 	public short getIndex(int x, int y, int z) {
-		return indizes[(z&0xF)<<4+(y & 0xF)<<8+x];
+		return indizes[getIndizesIndex(x, y, z)];
 	}
 
 	@Override
 	public void setIndex(short value, int x, int y, int z) {
-		palette.get(value).incrementCount();
-		int index = (z&0xF)<<4+(y & 0xF)<<8+x;
-		palette.get(indizes[index]).decrementCount();
+		CorePaletteEntry entry = palette.get(value);
+		entry.incrementCount();
+		final int index = getIndizesIndex(x, y, z);
+		entry = palette.get(indizes[index]);
+		entry.decrementCount();
 		indizes[index] = value;
+	}
+	
+	protected int getIndizesIndex(int x, int y, int z) {
+		return (z&0xF)<<4+(y & 0xF)<<8+x;
 	}
 
 	@Override
 	public List<BlockData> getPalette() {
 		return getPalette(new ArrayList<BlockData>(palette.size()));
+	}
+	
+	@Override
+	public List<BlockData> getPalette(List<BlockData> palette) {
+		for (CorePaletteEntry entry : this.palette) {
+			palette.add(entry.getData().clone());
+		}
+		return palette;
 	}
 
 	@Override
@@ -116,23 +130,23 @@ public class CoreChunkSection implements ChunkSection {
 
 	@Override
 	public int setBlockData(BlockData data, int x, int y, int z) {
-		int paletteValue = getPaletteIndex(data);
-		if (paletteValue == -1) {
+		int paletteIndex = getPaletteIndex(data);
+		if (paletteIndex == -1) {
 			final int size = palette.size();
 			for (int i = 0; i < size; i++) {
 				CorePaletteEntry entry = palette.get(i);
 				if (entry.getCount() > 0) continue;
-				paletteValue = i;
+				paletteIndex = i;
 				palette.set(i, new CorePaletteEntry(data));
 				break;
 			}
-			if (paletteValue == -1) {
+			if (paletteIndex == -1) {
 				palette.add(new CorePaletteEntry(data.clone()));
-				paletteValue = palette.size()-1;
+				paletteIndex = palette.size()-1;
 			}
 		}
-		setIndex((short) paletteValue, x, y, z);
-		return paletteValue;
+		setIndex((short) paletteIndex, x, y, z);
+		return paletteIndex;
 	}
 
 	@Override
@@ -148,17 +162,9 @@ public class CoreChunkSection implements ChunkSection {
 	}
 
 	@Override
-	public List<BlockData> getPalette(List<BlockData> palette) {
-		for (CorePaletteEntry entry : this.palette) {
-			palette.add(entry.getData().clone());
-		}
-		return palette;
-	}
-
-	@Override
 	public Material getBlockType(int x, int y, int z) {
-		BlockData data = palette.get(getIndex(x, y, z)).getData();
-		if (data == null) return null;
+		CorePaletteEntry entry = palette.get(getIndex(x, y, z));
+		BlockData data = entry.getData();
 		return data.getMaterial();
 	}
 

@@ -2,9 +2,9 @@ package de.atlasmc.atlasnetwork.server;
 
 import java.util.List;
 
-import de.atlasmc.event.HandlerAccess;
+import de.atlasmc.atlasnetwork.AtlasPlayer;
 
-public interface ServerGroup extends HandlerAccess {
+public interface ServerGroup {
 	
 	public ServerConfig getServerConfig();
 	public List<Server> getServers();

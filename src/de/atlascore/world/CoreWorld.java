@@ -18,15 +18,16 @@ import de.atlasmc.world.WorldFlag;
 
 public class CoreWorld implements World {
 	
-	private final CoreVanillaChunkProvider chunks;
+	private final CoreChunkProvider chunks;
 	private final String name;
 	private final LocalServer server;
 	private long time;
+	private boolean timeCycle;
 	private long age;
 	private Location spawn;
 	
 	public CoreWorld(LocalServer server, String name) {
-		chunks = new CoreVanillaChunkProvider(this);
+		chunks = new CoreChunkProvider(this);
 		this.name = name;
 		this.server = server;
 	}
@@ -143,6 +144,12 @@ public class CoreWorld implements World {
 	@Override
 	public void tick() {
 		age++;
+		if (timeCycle) {
+			if (time >= 24000) {
+				time = 0;
+			} else
+			time++;
+		}
 		chunks.tick();
 	}
 

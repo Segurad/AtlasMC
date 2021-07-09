@@ -1,4 +1,4 @@
-package de.atlasmc.server;
+package de.atlascore.server;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -9,16 +9,16 @@ import de.atlasmc.scheduler.AtlasScheduler;
 import de.atlasmc.scheduler.Scheduler;
 import de.atlasmc.world.World;
 
-public class ServerThread extends Thread {
+public class CoreServerThread extends Thread {
 	
-	private final AtlasServer server;
+	private final CoreLocalServer server;
 	private boolean running;
 	private final Queue<Event> eventQueue;
 	private final AtlasScheduler scheduler;
 	private int skipped;
 	private long age;
 	
-	public ServerThread(AtlasServer server) {
+	public CoreServerThread(CoreLocalServer server) {
 		super("ServerThread: " + server.getServerID());
 		this.eventQueue = new ConcurrentLinkedQueue<Event>();
 		this.server = server;

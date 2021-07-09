@@ -1,4 +1,4 @@
-package de.atlasmc.server;
+package de.atlascore.server;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,20 +12,20 @@ import de.atlasmc.event.Event;
 import de.atlasmc.scheduler.Scheduler;
 import de.atlasmc.world.World;
 
-public class AtlasServer implements LocalServer {
+public class CoreLocalServer implements LocalServer {
 	
 	private final ServerGroup group;
 	private final List<Player> players;
-	private final ServerThread thread;
+	private final CoreServerThread thread;
 	private final List<World> worlds;
 	private final ServerConfig config;
 	private final int serverID;
 	
-	protected AtlasServer(int serverID, ServerGroup group) {
+	protected CoreLocalServer(int serverID, ServerGroup group) {
 		this.config = group.getServerConfig().clone();
 		this.group = group;
 		this.players = new ArrayList<Player>();
-		thread = new ServerThread(this);
+		thread = new CoreServerThread(this);
 		this.worlds = new ArrayList<World>();
 		this.serverID = serverID;
 	}

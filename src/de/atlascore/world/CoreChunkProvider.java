@@ -11,46 +11,50 @@ import de.atlasmc.tick.Tickable;
 import de.atlasmc.world.Chunk;
 import de.atlasmc.world.World;
 
-public class CoreVanillaChunkProvider implements Tickable {
+public class CoreChunkProvider implements Tickable {
 	
-	private final List<CoreChunkCluster> clusters;
+	private Chunk[] chunkBuffer;
+	private long[] chunkPosBuffer;
+	private int used, size;
 	private final World world;
 	
-	public CoreVanillaChunkProvider(World world) {
-		clusters = new ArrayList<CoreChunkCluster>();
+	public CoreChunkProvider(World world) {
 		this.world = world;
 	}
 	
 	public Chunk getChunk(int x, int z) {
-		int clusterX = x >> 9;
-		int clusterZ = z >> 9;
-		for (CoreChunkCluster cluster : clusters) {
-			if (cluster.getX() != clusterX || cluster.getZ() != clusterZ) continue;
-			return cluster.getChunk(x >> 4, z >> 4);
+		// X | Y
+		final long pos = (x >> 4) << 32 + z >> 4;
+		for (int i = 0; i < size; i++) {
+			if (chunkPosBuffer[i] != pos) continue;
+			return chunkBuffer[i];
 		}
 		return null;
 	}
 
 	public List<Entity> getEntities() {
-		List<Entity> entites = new ArrayList<Entity>();
-		for (CoreChunkCluster cluster : clusters) {
-			cluster.getEntities(entites);
+		List<Entity> entities = new ArrayList<Entity>();
+		for (Chunk chunk : chunkBuffer) {
+			if (chunk == null) continue;
+			chunk.getEntities(entities);
 		}
-		return entites;
+		return entities;
 	}
 
 	public <T extends Entity> List<T> getEntitiesByClass(Class<T> clazz) {
-		List<T> entites = new ArrayList<T>();
-		for (CoreChunkCluster cluster : clusters) {
-			cluster.getEntitiesByClass(entites, clazz);
+		List<T> entities = new ArrayList<T>();
+		for (Chunk chunk : chunkBuffer) {
+			if (chunk == null) continue;
+			chunk.getEntitiesByClass(entities, clazz);
 		}
 		return null;
 	}
 
 	public List<Entity> getEntitesByClasses(Class<? extends Entity>[] classes) {
 		List<Entity> entities = new ArrayList<Entity>();
-		for (CoreChunkCluster cluster : clusters) {
-			cluster.getEntitiesByClasses(entities, classes);
+		for (Chunk chunk : chunkBuffer) {
+			if (chunk == null) continue;
+			chunk.getEntitiesByClasses(entities, classes);
 		}
 		return entities;
 	}
@@ -62,9 +66,7 @@ public class CoreVanillaChunkProvider implements Tickable {
 	}
 
 	public void tick() {
-		for (CoreChunkCluster c : clusters) {
-			c.tick();
-		}
+		// TODO tick
 	}
 
 	public Block getBlock(int x, int y, int z) {

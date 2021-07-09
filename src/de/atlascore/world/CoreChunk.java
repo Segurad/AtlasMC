@@ -33,19 +33,24 @@ public class CoreChunk implements Chunk {
 	}
 
 	@Override
-	public ChunkSection getSection(int hight) {
-		ChunkSection section = sections[(hight & 0xFF) >>4];
+	public ChunkSection getSection(int height) {
+		final int sIndex = getSectionIndex(height);
+		ChunkSection section = sections[sIndex];
 		if (section == null) {
 			section = new CoreChunkSection();
-			sections[(hight & 0xFF) >>4] = section;
+			sections[sIndex] = section;
 		}
 		return section;
 	}
 	
 	@Override
-	public boolean hasSection(int hight) {
-		ChunkSection section = sections[(hight & 0xFF) >>4];
+	public boolean hasSection(int height) {
+		ChunkSection section = sections[getSectionIndex(height)];
 		return section != null;
+	}
+	
+	protected int getSectionIndex(int height) {
+		return (height & 0xFF) >>4;
 	}
 
 	@Override
@@ -73,13 +78,24 @@ public class CoreChunk implements Chunk {
 
 	@Override
 	public EnumBiome getBiome(int x, int y, int z) {
-		int id = biomes[(((y & 0xF) >> 2) & 63) << 4 | (((z & 0xFF) >> 2) & 3) << 2 | (((x & 0xF) >> 2) & 3)];
+		int id = biomes[getBiomeIndex(x, y, z)];
 		return EnumBiome.getByID(id);
 	}
 
 	@Override
 	public void setBiome(EnumBiome biome, int x, int y, int z) {
-		biomes[(((y & 0xF) >> 2) & 63) << 4 | (((z & 0xFF) >> 2) & 3) << 2 | (((x & 0xF) >> 2) & 3)] = biome.getID();
+		biomes[getBiomeIndex(x, y, z)] = biome.getID();
+	}
+	
+	/**
+	 * This Method return the index of a Biome at the given coordinates
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return 
+	 */
+	protected int getBiomeIndex(int x, int y, int z) {
+		return (((y & 0xF) >> 2) & 63) << 4 | (((z & 0xFF) >> 2) & 3) << 2 | (((x & 0xF) >> 2) & 3);
 	}
 
 	@Override
@@ -95,24 +111,24 @@ public class CoreChunk implements Chunk {
 	}
 
 	@Override
-	public List<Entity> getEntites() {
+	public List<Entity> getEntities() {
 		return entities;
 	}
 
 	@Override
-	public List<Entity> getEntites(List<Entity> entities) {
+	public List<Entity> getEntities(List<Entity> entities) {
 		entities.addAll(this.entities);
 		return entities;
 	}
 
 	@Override
-	public <T extends Entity> List<T> getEntitesByClass(Class<T> clazz) {
-		return getEntitesByClass(new ArrayList<T>(), clazz);
+	public <T extends Entity> List<T> getEntitiesByClass(Class<T> clazz) {
+		return getEntitiesByClass(new ArrayList<T>(), clazz);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends Entity> List<T> getEntitesByClass(List<T> entities, Class<T> clazz) {
+	public <T extends Entity> List<T> getEntitiesByClass(List<T> entities, Class<T> clazz) {
 		for (Entity ent : this.entities) {
 			if (clazz.isInstance(ent)) {
 				entities.add((T) ent);
@@ -149,19 +165,16 @@ public class CoreChunk implements Chunk {
 	@Override
 	public void setBlockDataAt(BlockData data, int x, int y, int z) {
 		ChunkSection section = getSection(y);
-		if (section == null) {
-			
-		};
-		
+		section.setBlockData(data, x, y, z);
 	}
 
 	@Override
-	public List<Entity> getEntitesByClasses(Class<? extends Entity>[] classes) {
-		return getEntitesByClasses(new ArrayList<Entity>(), classes);
+	public List<Entity> getEntitiesByClasses(Class<? extends Entity>[] classes) {
+		return getEntitiesByClasses(new ArrayList<Entity>(), classes);
 	}
 
 	@Override
-	public List<Entity> getEntitesByClasses(List<Entity> entities, Class<? extends Entity>[] classes) {
+	public List<Entity> getEntitiesByClasses(List<Entity> entities, Class<? extends Entity>[] classes) {
 		for (Entity ent : this.entities) {
 			for (Class<?> clazz : classes) {
 				if (clazz.isInstance(ent)) {
