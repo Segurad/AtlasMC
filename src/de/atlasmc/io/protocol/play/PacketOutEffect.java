@@ -1,9 +1,11 @@
 package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.Effect;
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutEffect extends Packet {
+@DefaultPacketID(PacketPlay.OUT_EFFECT)
+public interface PacketOutEffect extends PacketPlay, PacketOutbound {
 	
 	public Effect getEffect();
 	public long getPosition();
@@ -12,7 +14,7 @@ public interface PacketOutEffect extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x21;
+		return OUT_EFFECT;
 	}
 
 }

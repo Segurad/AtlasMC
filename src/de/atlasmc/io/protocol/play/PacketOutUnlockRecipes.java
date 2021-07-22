@@ -1,12 +1,14 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutUnlockRecipes extends Packet {
+@DefaultPacketID(PacketPlay.OUT_UNLOCK_RECIPES)
+public interface PacketOutUnlockRecipes extends PacketPlay, PacketOutbound {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x35;
+		return OUT_UNLOCK_RECIPES;
 	}
 	
 	public enum RecipesAction {

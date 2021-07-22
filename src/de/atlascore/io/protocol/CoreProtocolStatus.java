@@ -37,12 +37,18 @@ public class CoreProtocolStatus implements ProtocolStatus {
 	}
 
 	@Override
-	public PacketListener createPacketListener(Object o) {
+	public PacketListener createDefaultPacketListener(Object o) {
 		return new CorePacketListenerStatus((ConnectionHandler) o);
 	}
 
 	@Override
 	public Packet createCopy(Packet packet) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T extends Packet> T createPacket(Class<T> clazz) {
 		// TODO Auto-generated method stub
 		return null;
 	}

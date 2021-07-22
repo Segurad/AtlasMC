@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutUpdateScore extends Packet {
+@DefaultPacketID(PacketPlay.OUT_UPDATE_SCORE)
+public interface PacketOutUpdateScore extends PacketPlay, PacketOutbound {
 
 	public String getName();
 	public String getObjectiveName();
@@ -11,7 +13,7 @@ public interface PacketOutUpdateScore extends Packet {
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x4D;
+		return OUT_UPDATE_SCORE;
 	}
 	
 	public static enum ScoreAction {

@@ -1,14 +1,16 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutDisconnect extends Packet {
+@DefaultPacketID(PacketPlay.OUT_DISCONNECT)
+public interface PacketOutDisconnect extends PacketPlay, PacketOutbound {
 	
 	public String getReason();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x19;
+		return OUT_DISCONNECT;
 	}
 
 }

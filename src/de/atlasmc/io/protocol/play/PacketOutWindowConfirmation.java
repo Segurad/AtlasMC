@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutWindowConfirmation extends Packet {
+@DefaultPacketID(PacketPlay.OUT_WINDOW_CONFIRMATION)
+public interface PacketOutWindowConfirmation extends PacketPlay, PacketOutbound {
 	
 	public byte getWindowID();
 	public short getActionNumber();
@@ -10,7 +12,7 @@ public interface PacketOutWindowConfirmation extends Packet {
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x11;
+		return OUT_WINDOW_CONFIRMATION;
 	}
 
 }

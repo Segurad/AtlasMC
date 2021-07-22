@@ -1,14 +1,16 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInSpectate extends Packet {
+@DefaultPacketID(PacketPlay.IN_SPECTATE)
+public interface PacketInSpectate extends PacketPlay, PacketInbound {
 	
 	public String getUUID();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x2D;
+		return IN_SPECTATE;
 	}
 
 }

@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutEntityPositionAndRotation extends Packet {
+@DefaultPacketID(PacketPlay.OUT_ENTITY_POSITION_AND_ROTATION)
+public interface PacketOutEntityPositionAndRotation extends PacketPlay, PacketOutbound {
 	
 	public int getEntityID();
 	public short getDeltaX();
@@ -14,7 +16,7 @@ public interface PacketOutEntityPositionAndRotation extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x28;
+		return OUT_ENTITY_POSITION_AND_ROTATION;
 	}
 
 }

@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInCraftRecipeRequest extends Packet {
+@DefaultPacketID(PacketPlay.IN_CRAFT_RECIPE_REQUEST)
+public interface PacketInCraftRecipeRequest extends PacketPlay, PacketInbound {
 	
 	public byte getWindowID();
 	public String getRecipe();
@@ -10,7 +12,7 @@ public interface PacketInCraftRecipeRequest extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x19;
+		return IN_CRAFT_RECIPE_REQUEST;
 	}
 
 }

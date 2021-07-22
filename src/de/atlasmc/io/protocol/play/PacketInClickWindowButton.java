@@ -1,14 +1,16 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInClickWindowButton extends Packet {
+@DefaultPacketID(PacketPlay.IN_CLICK_WINDOW_BUTTON)
+public interface PacketInClickWindowButton extends PacketPlay, PacketInbound {
 
 	public byte getWindowID();
 	public byte getButtonID();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x08;
+		return IN_CLICK_WINDOW_BUTTON;
 	}
 }

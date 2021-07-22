@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.login;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutEncryptionRequest extends Packet {
+@DefaultPacketID(PacketLogin.OUT_ENCRYPTION_REQUEST)
+public interface PacketOutEncryptionRequest extends PacketLogin, PacketOutbound {
 	
 	public String getServerID();
 	public byte[] getPublicKey();
@@ -10,7 +12,7 @@ public interface PacketOutEncryptionRequest extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x01;
+		return OUT_ENCRYPTION_REQUEST;
 	}
 
 }

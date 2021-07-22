@@ -1,13 +1,15 @@
 package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.chat.component.ChatComponent;
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutTabComplete extends Packet {
+@DefaultPacketID(PacketPlay.OUT_TAB_COMPLETE)
+public interface PacketOutTabComplete extends PacketPlay, PacketOutbound {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x0F;
+		return OUT_TAB_COMPLETE;
 	}
 	
 	public static class Match {

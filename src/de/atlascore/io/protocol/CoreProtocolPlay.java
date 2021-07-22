@@ -20,7 +20,7 @@ public class CoreProtocolPlay implements ProtocolPlay {
 	private final List<Class<? extends Packet>> playIn, playOut;
 	
 	public CoreProtocolPlay() {
-		playIn = new ArrayList<>(48);
+		playIn = new ArrayList<>(PacketPlay.PACKET_COUNT_IN);
 		playIn.add(CorePacketInTeleportConfirm.class); // 0x00
 		playIn.add(CorePacketInQueryBlockNBT.class); // 0x01
 		playIn.add(CorePacketInSetDifficulty.class); // 0x02
@@ -70,9 +70,9 @@ public class CoreProtocolPlay implements ProtocolPlay {
 		playIn.add(CorePacketInPlayerBlockPlacement.class); // 0x2E
 		playIn.add(CorePacketInUseItem.class); // 0x2F
 		// -----------------------------------------------------------------------------------
-		playOut = new ArrayList<>(92);
-		playOut.add(CorePacketOutSpawnEntity.class); // 0x00
-		playOut.add(CorePacketOutSpawnExperienceOrb.class); // 0x01
+		playOut = new ArrayList<>(PacketPlay.PACKET_COUNT_OUT);
+		playOut.add(PacketPlay.OUT_SPAWN_ENTITY, CorePacketOutSpawnEntity.class); // 0x00
+		playOut.add(PacketPlay.OUT_SPAWN_EXPERIENCE_ORB, CorePacketOutSpawnExperienceOrb.class); // 0x01
 		playOut.add(CorePacketOutSpawnLivingEntity.class); // 0x02
 		playOut.add(CorePacketOutSpawnPainting.class); // 0x03
 		playOut.add(CorePacketOutSpawnPlayer.class); // 0x04
@@ -183,7 +183,7 @@ public class CoreProtocolPlay implements ProtocolPlay {
 	}
 
 	@Override
-	public PacketListener createPacketListener(Object o) {
+	public PacketListener createDefaultPacketListener(Object o) {
 		if (Player.class.isInstance(o)) return null;
 		return new CorePacketListenerPlay((Player) o);
 	}

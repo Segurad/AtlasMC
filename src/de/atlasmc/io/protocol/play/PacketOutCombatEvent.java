@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutCombatEvent extends Packet {
+@DefaultPacketID(PacketPlay.OUT_COMBAT_EVENT)
+public interface PacketOutCombatEvent extends PacketPlay, PacketOutbound {
 	
 	public int getEvent();
 	public int getDuration();
@@ -12,7 +14,7 @@ public interface PacketOutCombatEvent extends Packet {
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x31;
+		return OUT_COMBAT_EVENT;
 	}
 
 }

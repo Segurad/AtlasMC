@@ -1,15 +1,17 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutCraftRecipeResponse extends Packet {
+@DefaultPacketID(PacketPlay.OUT_CRAFT_RECIPE_RESPONSE)
+public interface PacketOutCraftRecipeResponse extends PacketPlay, PacketOutbound {
 	
 	public int getWindowID();
 	public String getRecipe();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x2F;
+		return OUT_CRAFT_RECIPE_RESPONSE;
 	}
 
 }

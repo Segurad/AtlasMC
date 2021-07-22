@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInPlayerDigging extends Packet {
+@DefaultPacketID(PacketPlay.IN_PLAYER_DIGGING)
+public interface PacketInPlayerDigging extends PacketPlay, PacketInbound {
 	
 	public int getStatus();
 	public long getPosition();
@@ -10,7 +12,7 @@ public interface PacketInPlayerDigging extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x1B;
+		return IN_PLAYER_DIGGING;
 	}
 	
 }

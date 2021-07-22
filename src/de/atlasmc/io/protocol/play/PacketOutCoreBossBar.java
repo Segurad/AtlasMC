@@ -1,12 +1,14 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutCoreBossBar extends Packet {
+@DefaultPacketID(PacketPlay.OUT_BOSS_BAR)
+public interface PacketOutCoreBossBar extends PacketPlay, PacketOutbound {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x0C;
+		return OUT_BOSS_BAR;
 	}
 	
 	public static enum BossBarAction {

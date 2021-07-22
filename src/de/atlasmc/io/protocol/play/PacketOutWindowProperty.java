@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutWindowProperty extends Packet {
+@DefaultPacketID(PacketPlay.OUT_WINDOW_PROPERTY)
+public interface PacketOutWindowProperty extends PacketPlay, PacketOutbound {
 
 	public byte getWindowID();
 	public int getProperty();
@@ -10,7 +12,7 @@ public interface PacketOutWindowProperty extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x14;
+		return OUT_WINDOW_PROPERTY;
 	}
 	
 }

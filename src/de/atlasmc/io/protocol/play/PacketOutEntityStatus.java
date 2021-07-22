@@ -1,15 +1,17 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutEntityStatus extends Packet {
+@DefaultPacketID(PacketPlay.OUT_ENTITY_STATUS)
+public interface PacketOutEntityStatus extends PacketPlay, PacketOutbound {
 	
 	public int getEntityID();
 	public int getStatus();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x1A;
+		return OUT_ENTITY_STATUS;
 	}
 
 }

@@ -1,9 +1,11 @@
 package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.Gamemode;
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutJoinGame extends Packet {
+@DefaultPacketID(PacketPlay.OUT_JOIN_GAME)
+public interface PacketOutJoinGame extends PacketPlay, PacketOutbound {
 	
 	public void setOldGamemode(Gamemode gamemode);
 	public void setReducedDebugInfo(boolean value);
@@ -13,7 +15,7 @@ public interface PacketOutJoinGame extends Packet {
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x24;
+		return OUT_JOIN_GAME;
 	}
 
 }

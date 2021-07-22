@@ -1,14 +1,16 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInSetDisplayedRecipe extends Packet {
+@DefaultPacketID(PacketPlay.IN_SET_DISPLAYED_RECIPE)
+public interface PacketInSetDisplayedRecipe extends PacketPlay, PacketInbound {
 	
 	public String getRecipeID();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x1F;
+		return IN_SET_DISPLAYED_RECIPE;
 	}
 
 }

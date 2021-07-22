@@ -2,10 +2,12 @@ package de.atlasmc.io.protocol.play;
 
 import java.util.List;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 import de.atlasmc.recipe.Recipe;
 
-public interface PacketOutDeclareRecipes extends Packet {
+@DefaultPacketID(PacketPlay.OUT_DECLARE_RECIPES)
+public interface PacketOutDeclareRecipes extends PacketPlay, PacketOutbound {
 	
 	public List<Recipe> getRecipes();
 	

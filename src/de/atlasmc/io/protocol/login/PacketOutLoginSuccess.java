@@ -2,16 +2,18 @@ package de.atlasmc.io.protocol.login;
 
 import java.util.UUID;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutLoginSuccess extends Packet {
+@DefaultPacketID(PacketLogin.OUT_LOGIN_SUCCESS)
+public interface PacketOutLoginSuccess extends PacketLogin, PacketOutbound {
 	
 	public UUID getUUID();
 	public String getUsername();
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x02;
+		return OUT_LOGIN_SUCCESS;
 	}
 
 }

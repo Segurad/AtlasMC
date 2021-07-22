@@ -1,14 +1,16 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInAnimation extends Packet {
+@DefaultPacketID(PacketPlay.IN_ANIMATION)
+public interface PacketInAnimation extends PacketPlay, PacketInbound {
 	
 	public int getHand();
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x2C;
+		return IN_ANIMATION;
 	}
 
 }

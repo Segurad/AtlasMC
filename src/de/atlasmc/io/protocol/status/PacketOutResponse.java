@@ -1,12 +1,14 @@
 package de.atlasmc.io.protocol.status;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutResponse extends Packet {
+@DefaultPacketID(PacketStatus.OUT_RESPONSE)
+public interface PacketOutResponse extends PacketStatus, PacketOutbound {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x00;
+		return OUT_RESPONSE;
 	}
 
 }

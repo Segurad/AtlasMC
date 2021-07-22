@@ -1,4 +1,4 @@
-package de.atlasmc.io.channel;
+package de.atlascore.io.netty.channel;
 
 import java.util.List;
 

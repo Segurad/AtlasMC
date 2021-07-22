@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutVehicleMove extends Packet {
+@DefaultPacketID(PacketPlay.OUT_VEHICLE_MOVE)
+public interface PacketOutVehicleMove extends PacketPlay, PacketOutbound {
 	
 	public double getX();
 	public double getY();
@@ -12,7 +14,7 @@ public interface PacketOutVehicleMove extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x2B;
+		return OUT_VEHICLE_MOVE;
 	}
 
 }

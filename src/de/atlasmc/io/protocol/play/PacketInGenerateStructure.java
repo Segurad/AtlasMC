@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInGenerateStructure extends Packet {
+@DefaultPacketID(PacketPlay.IN_GENERATE_STRUCTURE)
+public interface PacketInGenerateStructure extends PacketPlay, PacketInbound {
 	
 	public long getPosition();
 	public int getLevels();
@@ -10,7 +12,7 @@ public interface PacketInGenerateStructure extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x0F;
+		return IN_GENERATE_STRUCTURE;
 	}
 
 }

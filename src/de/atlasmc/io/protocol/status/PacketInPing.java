@@ -1,14 +1,16 @@
 package de.atlasmc.io.protocol.status;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInPing extends Packet {
+@DefaultPacketID(PacketStatus.IN_PING)
+public interface PacketInPing extends PacketStatus, PacketInbound {
 	
 	public long getPing();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x01;
+		return IN_PING;
 	}
 
 }

@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutExplosion extends Packet {
+@DefaultPacketID(PacketPlay.OUT_EXPLOSION)
+public interface PacketOutExplosion extends PacketPlay, PacketOutbound {
 
 	public float getX();
 	public float getY();
@@ -15,7 +17,7 @@ public interface PacketOutExplosion extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x1B;
+		return OUT_EXPLOSION;
 	}
 	
 }

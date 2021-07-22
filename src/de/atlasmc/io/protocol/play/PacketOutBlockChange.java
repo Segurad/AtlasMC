@@ -1,15 +1,17 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutBlockChange extends Packet {
+@DefaultPacketID(PacketPlay.OUT_BLOCK_CHANGE)
+public interface PacketOutBlockChange extends PacketPlay, PacketOutbound {
 	
 	public long getPosition();
 	public int getBlockStateID();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x0B;
+		return OUT_BLOCK_CHANGE;
 	}
 
 }

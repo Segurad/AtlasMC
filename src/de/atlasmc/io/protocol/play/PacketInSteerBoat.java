@@ -1,15 +1,17 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInSteerBoat extends Packet {
+@DefaultPacketID(PacketPlay.IN_STEER_BOAT)
+public interface PacketInSteerBoat extends PacketPlay, PacketInbound {
 	
 	public boolean getLeftPaddleTurning();
 	public boolean getRightPaddleTurning();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x17;
+		return IN_STEER_BOAT;
 	}
 
 }

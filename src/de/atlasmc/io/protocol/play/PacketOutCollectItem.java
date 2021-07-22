@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutCollectItem extends Packet {
+@DefaultPacketID(PacketPlay.OUT_COLLECT_ITEM)
+public interface PacketOutCollectItem extends PacketPlay, PacketOutbound {
 	
 	public int getCollectedID();
 	public int getCollectorID();
@@ -10,7 +12,7 @@ public interface PacketOutCollectItem extends Packet {
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x55;
+		return OUT_COLLECT_ITEM;
 	}
 
 }

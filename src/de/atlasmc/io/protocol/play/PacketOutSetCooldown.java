@@ -1,15 +1,17 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutSetCooldown extends Packet {
+@DefaultPacketID(PacketPlay.OUT_SET_COOLDOWN)
+public interface PacketOutSetCooldown extends PacketPlay, PacketOutbound {
 	
 	public int getItemID();
 	public int getCooldown();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x16;
+		return OUT_SET_COOLDOWN;
 	}
 
 }

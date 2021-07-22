@@ -1,15 +1,17 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutRemoveEntityEffect extends Packet {
+@DefaultPacketID(PacketPlay.OUT_REMOVE_ENTITY_EFFECT)
+public interface PacketOutRemoveEntityEffect extends PacketPlay, PacketOutbound {
 	
 	public int getEntityID();
 	public int getEffectID();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x37;
+		return OUT_REMOVE_ENTITY_EFFECT;
 	}
 
 }

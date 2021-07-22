@@ -5,16 +5,18 @@ import java.util.UUID;
 
 import de.atlasmc.Gamemode;
 import de.atlasmc.chat.component.ChatComponent;
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutPlayerInfo extends Packet {
+@DefaultPacketID(PacketPlay.OUT_PLAYER_INFO)
+public interface PacketOutPlayerInfo extends PacketPlay, PacketOutbound {
 	
 	public PlayerInfoAction getAction();
 	public List<PlayerInfo> getPlayers();
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x32;
+		return OUT_PLAYER_INFO;
 	}
 	
 	public static class PlayerInfo {

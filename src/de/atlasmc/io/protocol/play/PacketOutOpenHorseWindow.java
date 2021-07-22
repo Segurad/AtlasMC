@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutOpenHorseWindow extends Packet {
+@DefaultPacketID(PacketPlay.OUT_OPEN_HORSE_WINDOW)
+public interface PacketOutOpenHorseWindow extends PacketPlay, PacketOutbound {
 	
 	public byte getWindowID();
 	public int getSlots();
@@ -10,7 +12,7 @@ public interface PacketOutOpenHorseWindow extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x1E;
+		return OUT_OPEN_HORSE_WINDOW;
 	}
 
 }

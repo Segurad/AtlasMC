@@ -49,7 +49,7 @@ public class HandshakeProtocol implements Protocol {
 	}
 
 	@Override
-	public PacketListener createPacketListener(Object o) {
+	public PacketListener createDefaultPacketListener(Object o) {
 		if (ConnectionHandler.class.isInstance(o))
 		return new HandshakePacketListener((ConnectionHandler) o);
 		else return null;
@@ -62,6 +62,12 @@ public class HandshakeProtocol implements Protocol {
 	
 	public void setPacket(int id, Class<? extends Packet> clazz) {
 		packets.put(id, clazz);
+	}
+
+	@Override
+	public <T extends Packet> T createPacket(Class<T> clazz) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

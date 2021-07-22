@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutWorldBorder extends Packet {
+@DefaultPacketID(PacketPlay.OUT_WORLD_BORDER)
+public interface PacketOutWorldBorder extends PacketPlay, PacketOutbound {
 	
 	public BorderAction getAction();
 	public double getX();
@@ -16,7 +18,7 @@ public interface PacketOutWorldBorder extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x3D;
+		return OUT_WORLD_BORDER;
 	}
 
 	public static enum BorderAction {

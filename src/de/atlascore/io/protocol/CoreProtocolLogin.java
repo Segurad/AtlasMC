@@ -31,7 +31,7 @@ public class CoreProtocolLogin implements ProtocolLogin {
 	}
 
 	@Override
-	public PacketListener createPacketListener(Object o) {
+	public PacketListener createDefaultPacketListener(Object o) {
 		return new CorePacketListenerLogin((ConnectionHandler) o);
 	}
 

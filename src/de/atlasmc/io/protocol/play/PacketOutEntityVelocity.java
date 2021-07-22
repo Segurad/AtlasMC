@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutEntityVelocity extends Packet {
+@DefaultPacketID(PacketPlay.OUT_ENTITY_VELOCITY)
+public interface PacketOutEntityVelocity extends PacketPlay, PacketOutbound {
 	
 	public int getEntityID();
 	public short getVelocityX();
@@ -11,7 +13,7 @@ public interface PacketOutEntityVelocity extends Packet {
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x46;
+		return OUT_ENTITY_VELOCITY;
 	}
 
 }

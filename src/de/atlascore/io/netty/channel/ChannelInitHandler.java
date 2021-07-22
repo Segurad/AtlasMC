@@ -1,4 +1,4 @@
-package de.atlasmc.io.channel;
+package de.atlascore.io.netty.channel;
 
 import de.atlasmc.atlasnetwork.proxy.LocalProxy;
 import de.atlasmc.io.ConnectionHandler;

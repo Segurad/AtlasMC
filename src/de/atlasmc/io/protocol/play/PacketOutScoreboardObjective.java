@@ -1,10 +1,12 @@
 package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.chat.component.ChatComponent;
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 import de.atlasmc.scoreboard.RenderType;
 
-public interface PacketOutScoreboardObjective extends Packet {
+@DefaultPacketID(PacketPlay.OUT_SCOREBOARD_OBJECTIVE)
+public interface PacketOutScoreboardObjective extends PacketPlay, PacketOutbound {
 	
 	public String getName();
 	public Mode getMode();
@@ -13,7 +15,7 @@ public interface PacketOutScoreboardObjective extends Packet {
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x4A;
+		return OUT_SCOREBOARD_OBJECTIVE;
 	}
 	
 	public static enum Mode {

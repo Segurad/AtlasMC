@@ -1,14 +1,16 @@
 package de.atlasmc.io.protocol.login;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutSetCompression extends Packet {
+@DefaultPacketID(PacketLogin.OUT_SET_COMPRESSION)
+public interface PacketOutSetCompression extends PacketLogin, PacketOutbound {
 	
 	public int getThreshold();
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x03;
+		return OUT_SET_COMPRESSION;
 	}
 
 }

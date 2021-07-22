@@ -1,14 +1,16 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutOpenSignEditor extends Packet {
+@DefaultPacketID(PacketPlay.OUT_OPEN_SIGN_EDITOR)
+public interface PacketOutOpenSignEditor extends PacketPlay, PacketOutbound {
 	
 	public long getPosition();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x2E;
+		return OUT_OPEN_SIGN_EDITOR;
 	}
 
 }

@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutFacePlayer extends Packet {
+@DefaultPacketID(PacketPlay.OUT_FACE_PLAYER)
+public interface PacketOutFacePlayer extends PacketPlay, PacketOutbound {
 	
 	/**
 	 * 
@@ -26,7 +28,7 @@ public interface PacketOutFacePlayer extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x33;
+		return OUT_FACE_PLAYER;
 	}
 
 }

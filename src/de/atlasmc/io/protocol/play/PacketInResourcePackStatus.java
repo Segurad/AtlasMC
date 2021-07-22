@@ -1,14 +1,16 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInResourcePackStatus extends Packet {
+@DefaultPacketID(PacketPlay.IN_RESOURCE_PACKET_STATUS)
+public interface PacketInResourcePackStatus extends PacketPlay, PacketInbound {
 	
 	public int getResult();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x21;
+		return IN_RESOURCE_PACKET_STATUS;
 	}
 
 }

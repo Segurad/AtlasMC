@@ -1,12 +1,14 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutChatMessage extends Packet {
+@DefaultPacketID(PacketPlay.OUT_CHAT_MESSAGE)
+public interface PacketOutChatMessage extends PacketPlay, PacketOutbound {
 
 	@Override
 	default int getDefaultID() {
-		return 0x0E;
+		return OUT_CHAT_MESSAGE;
 	}
 	
 	public static enum ChatMessage {

@@ -1,9 +1,11 @@
 package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInClickWindow extends Packet {
+@DefaultPacketID(PacketPlay.IN_CLICK_WINDOW)
+public interface PacketInClickWindow extends PacketPlay, PacketInbound {
 
 	public byte getWindowID();
 	public short getSlot();
@@ -14,6 +16,6 @@ public interface PacketInClickWindow extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x09;
+		return IN_CLICK_WINDOW;
 	}
 }

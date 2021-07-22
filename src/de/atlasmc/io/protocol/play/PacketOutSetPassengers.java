@@ -1,15 +1,17 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutSetPassengers extends Packet {
+@DefaultPacketID(PacketPlay.OUT_SET_PASSENGER)
+public interface PacketOutSetPassengers extends PacketPlay, PacketOutbound {
 	
 	public int getVehicleID();
 	public int[] getPassengers();
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x4B;
+		return OUT_SET_PASSENGER;
 	}
 
 }

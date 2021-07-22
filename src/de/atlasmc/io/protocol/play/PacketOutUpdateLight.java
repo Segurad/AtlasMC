@@ -1,12 +1,14 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutUpdateLight extends Packet {
+@DefaultPacketID(PacketPlay.OUT_UPDATE_LIGHT)
+public interface PacketOutUpdateLight extends PacketPlay, PacketOutbound {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x23;
+		return OUT_UPDATE_LIGHT;
 	}
 
 }

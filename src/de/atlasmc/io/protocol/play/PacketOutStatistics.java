@@ -1,14 +1,16 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutStatistics extends Packet {
+@DefaultPacketID(PacketPlay.OUT_STATISTICS)
+public interface PacketOutStatistics extends PacketPlay, PacketOutbound {
 	
 	public int[] getStatistics();
 
 	@Override
 	default int getDefaultID() {
-		return 0x06;
+		return OUT_STATISTICS;
 	}
 	
 }

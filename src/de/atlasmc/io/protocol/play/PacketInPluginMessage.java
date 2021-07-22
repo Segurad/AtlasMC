@@ -1,15 +1,17 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInPluginMessage extends Packet {
+@DefaultPacketID(PacketPlay.IN_PLUGIN_MESSAGE)
+public interface PacketInPluginMessage extends PacketPlay, PacketInbound {
 	
 	public String getChannel();
 	public byte[] getData();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x0B;
+		return IN_PLUGIN_MESSAGE;
 	}
 
 }

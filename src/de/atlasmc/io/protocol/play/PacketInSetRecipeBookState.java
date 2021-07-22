@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInSetRecipeBookState extends Packet {
+@DefaultPacketID(PacketPlay.IN_SET_RECIPE_BOOK_STATE)
+public interface PacketInSetRecipeBookState extends PacketPlay, PacketInbound {
 	
 	public int getBookID();
 	public boolean getBookOpen();
@@ -10,7 +12,7 @@ public interface PacketInSetRecipeBookState extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x1E;
+		return IN_SET_RECIPE_BOOK_STATE;
 	}
 
 }

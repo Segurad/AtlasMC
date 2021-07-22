@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInInteractEntity extends Packet {
+@DefaultPacketID(PacketPlay.IN_INTERACT_ENTITY)
+public interface PacketInInteractEntity extends PacketPlay, PacketInbound {
 	
 	public int getEntityID();
 	public int getType();
@@ -14,7 +16,7 @@ public interface PacketInInteractEntity extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x0E;
+		return IN_INTERACT_ENTITY;
 	}
 	
 }

@@ -5,9 +5,11 @@ import java.util.Map;
 
 import de.atlasmc.advancement.Advancement;
 import de.atlasmc.advancement.AdvancementProgress;
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutAdvancements extends Packet {
+@DefaultPacketID(PacketPlay.OUT_ADVANCEMENTS)
+public interface PacketOutAdvancements extends PacketPlay, PacketOutbound {
 	
 	public boolean isReset();
 	public Map<String, Advancement> getAdvancements();
@@ -16,7 +18,7 @@ public interface PacketOutAdvancements extends Packet {
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x57;
+		return OUT_ADVANCEMENTS;
 	}
 
 }

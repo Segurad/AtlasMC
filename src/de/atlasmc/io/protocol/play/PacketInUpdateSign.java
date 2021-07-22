@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInUpdateSign extends Packet {
+@DefaultPacketID(PacketPlay.IN_UPDATE_SIGN)
+public interface PacketInUpdateSign extends PacketPlay, PacketInbound {
 	
 	public long getPosition();
 	public String getLine1();
@@ -12,7 +14,7 @@ public interface PacketInUpdateSign extends Packet {
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x2B;
+		return IN_UPDATE_SIGN;
 	}
 
 }

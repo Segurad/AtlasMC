@@ -1,15 +1,17 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutChangeGameState extends Packet {
+@DefaultPacketID(PacketPlay.OUT_CHANGE_GAME_STATE)
+public interface PacketOutChangeGameState extends PacketPlay, PacketOutbound {
 	
 	public ChangeReason getReason();
 	public float getValue();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x1D;
+		return OUT_CHANGE_GAME_STATE;
 	}
 	
 	public static enum ChangeReason {

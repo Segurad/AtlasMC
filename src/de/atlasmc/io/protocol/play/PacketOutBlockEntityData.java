@@ -1,10 +1,12 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.io.NBTReader;
 
-public interface PacketOutBlockEntityData extends Packet {
+@DefaultPacketID(PacketPlay.OUT_BLOCK_ENTITY_DATA)
+public interface PacketOutBlockEntityData extends PacketPlay, PacketOutbound {
 	
 	public long getPosition();
 	
@@ -18,7 +20,7 @@ public interface PacketOutBlockEntityData extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x09;
+		return OUT_BLOCK_ENTITY_DATA;
 	}
 	
 	public enum TileUpdateAction {

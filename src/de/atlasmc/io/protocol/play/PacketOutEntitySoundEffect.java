@@ -1,9 +1,11 @@
 package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.SoundCategory;
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutEntitySoundEffect extends Packet {
+@DefaultPacketID(PacketPlay.OUT_ENTITY_SOUND_EFFECT)
+public interface PacketOutEntitySoundEffect extends PacketPlay, PacketOutbound {
 	
 	public int getSoundID();
 	public SoundCategory getSoundCategory();
@@ -13,7 +15,7 @@ public interface PacketOutEntitySoundEffect extends Packet {
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x50;
+		return OUT_ENTITY_SOUND_EFFECT;
 	}
 
 }

@@ -4,10 +4,12 @@ import java.util.List;
 
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.chat.component.ChatComponent;
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 import de.atlasmc.scoreboard.Team.OptionStatus;
 
-public interface PacketOutTeams extends Packet {
+@DefaultPacketID(PacketPlay.OUT_TEAMS)
+public interface PacketOutTeams extends PacketPlay, PacketOutbound {
 	
 	public String getName();
 	public Mode getMode();
@@ -22,7 +24,7 @@ public interface PacketOutTeams extends Packet {
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x4C;
+		return OUT_TEAMS;
 	}
 	
 	public static enum Mode {

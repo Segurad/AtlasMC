@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInPlayerPositionAndRotation extends Packet {
+@DefaultPacketID(PacketPlay.IN_PLAYER_POSITION_AND_ROTATION)
+public interface PacketInPlayerPositionAndRotation extends PacketPlay, PacketInbound {
 	
 	public double getX();
 	public double getFeetY();
@@ -13,7 +15,7 @@ public interface PacketInPlayerPositionAndRotation extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x13;
+		return IN_PLAYER_POSITION_AND_ROTATION;
 	}
 
 }

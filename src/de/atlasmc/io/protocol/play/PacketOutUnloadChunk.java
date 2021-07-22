@@ -1,15 +1,17 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutUnloadChunk extends Packet {
+@DefaultPacketID(PacketPlay.OUT_UNLOAD_CHUNK)
+public interface PacketOutUnloadChunk extends PacketPlay, PacketOutbound {
 	
 	public int getChunkX();
 	public int getChunkZ();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x1C;
+		return OUT_UNLOAD_CHUNK;
 	}
 
 }

@@ -1,7 +1,9 @@
 package de.atlasmc.io.protocol.login;
 
+import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.PacketInbound;
 
+@DefaultPacketID(PacketLogin.IN_LOGIN_PLUGIN_RESPONSE)
 public interface PacketInLoginPluginResponse extends PacketLogin, PacketInbound {
 	
 	public int getMessageID();
@@ -10,7 +12,7 @@ public interface PacketInLoginPluginResponse extends PacketLogin, PacketInbound 
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x02;
+		return IN_LOGIN_PLUGIN_RESPONSE;
 	}
 
 }

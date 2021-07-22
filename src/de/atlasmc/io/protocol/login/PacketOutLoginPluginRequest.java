@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.login;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutLoginPluginRequest extends Packet {
+@DefaultPacketID(PacketLogin.OUT_LOGIN_PLUGIN_REQUEST)
+public interface PacketOutLoginPluginRequest extends PacketLogin, PacketOutbound {
 	
 	public int getMessageID();
 	public String getChannel();
@@ -10,7 +12,7 @@ public interface PacketOutLoginPluginRequest extends Packet {
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x04;
+		return OUT_LOGIN_PLUGIN_REQUEST;
 	}
 
 }

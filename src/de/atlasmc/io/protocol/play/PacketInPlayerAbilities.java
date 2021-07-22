@@ -1,14 +1,16 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInPlayerAbilities extends Packet {
+@DefaultPacketID(PacketPlay.IN_PLAYER_ABILITIES)
+public interface PacketInPlayerAbilities extends PacketPlay, PacketInbound {
 	
 	public byte getFlags();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x1A;
+		return IN_PLAYER_ABILITIES;
 	}
 
 }

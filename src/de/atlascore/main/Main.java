@@ -1,5 +1,6 @@
 package de.atlascore.main;
 
+import de.atlascore.io.netty.channel.ChannelInitHandler;
 import de.atlascore.io.protocol.CoreProtocolAdapter;
 import de.atlasmc.Atlas;
 import de.atlasmc.atlasnetwork.LocalAtlasNode;
@@ -8,7 +9,6 @@ import de.atlasmc.event.EventHandler;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.Listener;
 import de.atlasmc.event.proxy.PlayerLoginAtemptEvent;
-import de.atlasmc.io.channel.ChannelInitHandler;
 
 public class Main {
 	

@@ -18,6 +18,12 @@ public interface GUI extends Inventory {
 
 	public void setClickable(boolean value, int... slot);
 	public boolean isClickable(int slot);
+	
+	/**
+	 * Sets the clickable status for all slots
+	 * @param value
+	 */
+	public void setClickable(boolean value);
 
 	public void clearButtons();
 	

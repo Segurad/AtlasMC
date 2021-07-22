@@ -1,9 +1,11 @@
 package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.chat.component.ChatComponent;
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutTitle extends Packet {
+@DefaultPacketID(PacketPlay.OUT_TITLE)
+public interface PacketOutTitle extends PacketPlay, PacketOutbound {
 	
 	public TitleAction getAction();
 	public ChatComponent getText();
@@ -13,7 +15,7 @@ public interface PacketOutTitle extends Packet {
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x4F;
+		return OUT_TITLE;
 	}
 	
 	public static enum TitleAction {

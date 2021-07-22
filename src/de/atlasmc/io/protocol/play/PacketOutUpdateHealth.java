@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutUpdateHealth extends Packet {
+@DefaultPacketID(PacketPlay.OUT_UPDATE_HEALTH)
+public interface PacketOutUpdateHealth extends PacketPlay, PacketOutbound {
 	
 	public float getHealth();
 	public int getFood();
@@ -10,7 +12,7 @@ public interface PacketOutUpdateHealth extends Packet {
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x49;
+		return OUT_UPDATE_HEALTH;
 	}
 
 }

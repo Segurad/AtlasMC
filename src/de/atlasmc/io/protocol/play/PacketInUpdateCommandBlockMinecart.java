@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInUpdateCommandBlockMinecart extends Packet {
+@DefaultPacketID(PacketPlay.IN_UPDATE_COMMAND_BLOCK_MINECART)
+public interface PacketInUpdateCommandBlockMinecart extends PacketPlay, PacketInbound {
 	
 	public int getEntityID();
 	public String getCommand();
@@ -10,7 +12,7 @@ public interface PacketInUpdateCommandBlockMinecart extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x27;
+		return IN_UPDATE_COMMAND_BLOCK_MINECART;
 	}
 
 }

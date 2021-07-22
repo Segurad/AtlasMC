@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInUpdateJigsawBlock extends Packet {
+@DefaultPacketID(PacketPlay.IN_UPDATE_JIGSAW_BLOCK)
+public interface PacketInUpdateJigsawBlock extends PacketPlay, PacketInbound {
 	
 	public long getPosition();
 	public String getName();
@@ -13,7 +15,7 @@ public interface PacketInUpdateJigsawBlock extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x28;
+		return IN_UPDATE_JIGSAW_BLOCK;
 	}
 
 }

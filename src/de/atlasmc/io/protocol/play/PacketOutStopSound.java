@@ -1,16 +1,18 @@
 package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.SoundCategory;
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutStopSound extends Packet {
+@DefaultPacketID(PacketPlay.OUT_STOP_SOUND)
+public interface PacketOutStopSound extends PacketPlay, PacketOutbound {
 	
 	public SoundCategory getCategory();
 	public String getSound();
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x52;
+		return OUT_STOP_SOUND;
 	}
 
 }

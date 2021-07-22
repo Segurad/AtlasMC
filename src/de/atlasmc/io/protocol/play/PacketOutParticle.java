@@ -1,9 +1,11 @@
 package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.Particle;
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutParticle extends Packet {
+@DefaultPacketID(PacketPlay.OUT_PARTICLE)
+public interface PacketOutParticle extends PacketPlay, PacketOutbound {
 	
 	public Particle getParticle();
 	public boolean isLongDistance();
@@ -19,7 +21,7 @@ public interface PacketOutParticle extends Packet {
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x22;
+		return OUT_PARTICLE;
 	}
 
 }

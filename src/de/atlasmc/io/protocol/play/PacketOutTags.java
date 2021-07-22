@@ -2,9 +2,11 @@ package de.atlasmc.io.protocol.play;
 
 import java.util.Map;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutTags extends Packet {
+@DefaultPacketID(PacketPlay.OUT_TAGS)
+public interface PacketOutTags extends PacketPlay, PacketOutbound {
 	
 	public Map<String, int[]> getBlockTags();
 	public Map<String, int[]> getItemTags();
@@ -13,7 +15,7 @@ public interface PacketOutTags extends Packet {
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x5B;
+		return OUT_TAGS;
 	}
 
 }

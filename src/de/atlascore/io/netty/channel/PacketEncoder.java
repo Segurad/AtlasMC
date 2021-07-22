@@ -1,4 +1,4 @@
-package de.atlasmc.io.channel;
+package de.atlascore.io.netty.channel;
 
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.Packet;

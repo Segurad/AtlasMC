@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInUpdateStructureBlock extends Packet {
+@DefaultPacketID(PacketPlay.IN_UPDATE_STRUCTURE_BLOCK)
+public interface PacketInUpdateStructureBlock extends PacketPlay, PacketInbound {
 	
 	public long getPosition();
 	public int getAction();
@@ -23,7 +25,7 @@ public interface PacketInUpdateStructureBlock extends Packet {
 
 	@Override
 	public default int getDefaultID() {
-		return 0x2A;
+		return IN_UPDATE_STRUCTURE_BLOCK;
 	}
 	
 }

@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInSteerVehicle extends Packet {
+@DefaultPacketID(PacketPlay.IN_STEER_VEHICLE)
+public interface PacketInSteerVehicle extends PacketPlay, PacketInbound {
 	
 	public float getSideways();
 	public float getForward();
@@ -10,7 +12,7 @@ public interface PacketInSteerVehicle extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x1D;
+		return IN_STEER_VEHICLE;
 	}
 
 }

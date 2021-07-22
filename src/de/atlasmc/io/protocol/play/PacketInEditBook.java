@@ -1,9 +1,11 @@
 package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInEditBook extends Packet {
+@DefaultPacketID(PacketPlay.IN_EDIT_BOOK)
+public interface PacketInEditBook extends PacketPlay, PacketInbound {
 	
 	public ItemStack getBook();
 	public boolean isSigning();
@@ -11,7 +13,7 @@ public interface PacketInEditBook extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x0C;
+		return IN_EDIT_BOOK;
 	}
 
 }

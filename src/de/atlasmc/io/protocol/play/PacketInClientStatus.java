@@ -1,14 +1,16 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInClientStatus extends Packet {
+@DefaultPacketID(PacketPlay.IN_CLIENT_STATUS)
+public interface PacketInClientStatus extends PacketPlay, PacketInbound {
 	
 	public StatusAction getAction();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x04;
+		return IN_CLIENT_STATUS;
 	}
 	
 	public static enum StatusAction {

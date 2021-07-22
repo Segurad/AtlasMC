@@ -1,14 +1,16 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutSpawnPosition extends Packet {
+@DefaultPacketID(PacketPlay.OUT_SPAWN_POSITION)
+public interface PacketOutSpawnPosition extends PacketPlay, PacketOutbound {
 	
 	public long getPosition();
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x42;
+		return OUT_SPAWN_POSITION;
 	}
 
 }

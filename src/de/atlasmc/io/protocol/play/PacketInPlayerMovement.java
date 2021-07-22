@@ -1,14 +1,16 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInPlayerMovement extends Packet {
+@DefaultPacketID(PacketPlay.IN_PLAYER_MOVEMENT)
+public interface PacketInPlayerMovement extends PacketPlay, PacketInbound {
 	
 	public boolean isOnGround();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x15;
+		return IN_PLAYER_MOVEMENT;
 	}
 
 }

@@ -1,14 +1,16 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInSetDifficulty extends Packet {
+@DefaultPacketID(PacketPlay.IN_SET_DIFFICULTY)
+public interface PacketInSetDifficulty extends PacketPlay, PacketInbound {
 	
 	public int getDifficulty();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x02;
+		return IN_SET_DIFFICULTY;
 	}
 
 }

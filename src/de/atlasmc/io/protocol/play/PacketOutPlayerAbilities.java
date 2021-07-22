@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutPlayerAbilities extends Packet {
+@DefaultPacketID(PacketPlay.OUT_PLAYER_ABILITIES)
+public interface PacketOutPlayerAbilities extends PacketPlay, PacketOutbound {
 	
 	public boolean isInvulnerable();
 	public boolean isFlying();
@@ -13,7 +15,7 @@ public interface PacketOutPlayerAbilities extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x30;
+		return OUT_PLAYER_ABILITIES;
 	}
 
 }

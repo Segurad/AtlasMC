@@ -1,14 +1,16 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInUseItem extends Packet {
+@DefaultPacketID(PacketPlay.IN_USE_ITEM)
+public interface PacketInUseItem extends PacketPlay, PacketInbound {
 	
 	public int getHand();
 
 	@Override
 	default int getDefaultID() {
-		return 0x2F;
+		return IN_USE_ITEM;
 	}
 	
 }

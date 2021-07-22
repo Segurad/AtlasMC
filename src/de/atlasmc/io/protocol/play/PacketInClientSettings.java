@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInClientSettings extends Packet {
+@DefaultPacketID(PacketPlay.IN_CLIENT_SETTINGS)
+public interface PacketInClientSettings extends PacketPlay, PacketInbound {
 	
 	public String getLocale();
 	public int getViewDistance();
@@ -13,7 +15,7 @@ public interface PacketInClientSettings extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x05;
+		return IN_CLIENT_SETTINGS;
 	}
 
 }

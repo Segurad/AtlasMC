@@ -1,4 +1,4 @@
-package de.atlasmc.io.channel;
+package de.atlascore.io.netty.channel;
 import static io.netty.util.internal.ObjectUtil.checkPositiveOrZero;
 
 import io.netty.buffer.ByteBuf;

@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutBlockAction extends Packet {
+@DefaultPacketID(PacketPlay.OUT_BLOCK_ACTION)
+public interface PacketOutBlockAction extends PacketPlay, PacketOutbound {
 	
 	public long getPosition();
 	public int getActionID();
@@ -11,7 +13,7 @@ public interface PacketOutBlockAction extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x0A;
+		return OUT_BLOCK_ACTION;
 	}
 
 }

@@ -1,15 +1,17 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInTabComplete extends Packet {
+@DefaultPacketID(PacketPlay.IN_TAB_COMPLETE)
+public interface PacketInTabComplete extends PacketPlay, PacketInbound {
 
 	public int getTransactionID();
 	public String getText();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x06;
+		return IN_TAB_COMPLETE;
 	}
 	
 }

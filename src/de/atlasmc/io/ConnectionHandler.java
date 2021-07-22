@@ -19,7 +19,7 @@ public class ConnectionHandler {
 	
 	public ConnectionHandler(SocketChannel channel, LocalProxy proxy) {
 		this(channel, proxy, HandshakeProtocol.DEFAULT_PROTOCOL);
-		registerPacketListener(HandshakeProtocol.DEFAULT_PROTOCOL.createPacketListener(this));
+		registerPacketListener(HandshakeProtocol.DEFAULT_PROTOCOL.createDefaultPacketListener(this));
 	}
 	
 	public ConnectionHandler(SocketChannel channel, LocalProxy proxy, Protocol protocol) {

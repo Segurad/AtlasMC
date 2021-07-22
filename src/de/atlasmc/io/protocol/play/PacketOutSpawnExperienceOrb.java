@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutSpawnExperienceOrb extends Packet {
+@DefaultPacketID(PacketPlay.OUT_SPAWN_EXPERIENCE_ORB)
+public interface PacketOutSpawnExperienceOrb extends PacketPlay, PacketOutbound {
 	
 	public int getEntityID();
 	public double getX();
@@ -12,7 +14,7 @@ public interface PacketOutSpawnExperienceOrb extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x01;
+		return OUT_SPAWN_EXPERIENCE_ORB;
 	}
 
 }

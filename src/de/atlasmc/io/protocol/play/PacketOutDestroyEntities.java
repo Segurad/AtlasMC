@@ -1,14 +1,16 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutDestroyEntities extends Packet {
+@DefaultPacketID(PacketPlay.OUT_DESTROY_ENTITIES)
+public interface PacketOutDestroyEntities extends PacketPlay, PacketOutbound {
 	
 	public int[] getEntityIDs();
 
 	@Override
 	public default int getDefaultID() {
-		return 0x36;
+		return OUT_DESTROY_ENTITIES;
 	}
 	
 }

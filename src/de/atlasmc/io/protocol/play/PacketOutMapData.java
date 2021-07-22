@@ -2,10 +2,12 @@ package de.atlasmc.io.protocol.play;
 
 import java.util.List;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 import de.atlasmc.map.MapIcon;
 
-public interface PacketOutMapData extends Packet {
+@DefaultPacketID(PacketPlay.OUT_MAP_DATA)
+public interface PacketOutMapData extends PacketPlay, PacketOutbound {
 	
 	public int getMapID();
 	public int getScale();
@@ -20,7 +22,7 @@ public interface PacketOutMapData extends Packet {
 	
 	@Override
 	default int getDefaultID() {
-		return 0x25;
+		return OUT_MAP_DATA;
 	}
 
 }

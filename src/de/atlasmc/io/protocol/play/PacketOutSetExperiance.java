@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutSetExperiance extends Packet {
+@DefaultPacketID(PacketPlay.OUT_SET_EXPERIENCE)
+public interface PacketOutSetExperiance extends PacketPlay, PacketOutbound {
 	
 	public float getExperienceBar();
 	public int getLevel();
@@ -10,7 +12,7 @@ public interface PacketOutSetExperiance extends Packet {
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x48;
+		return OUT_SET_EXPERIENCE;
 	}
 
 }

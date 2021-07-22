@@ -1,15 +1,17 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInQueryBlockNBT extends Packet {
+@DefaultPacketID(PacketPlay.IN_QUERY_BLOCK_NBT)
+public interface PacketInQueryBlockNBT extends PacketPlay, PacketInbound {
 
 	public int getTransactionID();
 	public long getLocation();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x01;
+		return IN_QUERY_BLOCK_NBT;
 	}
 	
 }

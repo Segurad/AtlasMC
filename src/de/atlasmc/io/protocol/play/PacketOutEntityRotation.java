@@ -1,8 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketOutbound;
 
-public interface PacketOutEntityRotation extends Packet {
+@DefaultPacketID(PacketPlay.OUT_ENTITY_ROTATION)
+public interface PacketOutEntityRotation extends PacketPlay, PacketOutbound {
 	
 	public int getEntityID();
 	public float getYaw();
@@ -11,7 +13,7 @@ public interface PacketOutEntityRotation extends Packet {
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x29;
+		return OUT_ENTITY_ROTATION;
 	}
 
 }

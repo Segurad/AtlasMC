@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.login;
 import de.atlasmc.io.PacketInbound;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(0x01)
+@DefaultPacketID(PacketLogin.IN_ENCRYPTION_RESPONSE)
 public interface PacketInEncryptionResponse extends PacketLogin, PacketInbound {
 	
 	public byte[] getSecret();
@@ -11,7 +11,7 @@ public interface PacketInEncryptionResponse extends PacketLogin, PacketInbound {
 	
 	@Override
 	public default int getDefaultID() {
-		return 0x01;
+		return IN_ENCRYPTION_RESPONSE;
 	}
 
 }

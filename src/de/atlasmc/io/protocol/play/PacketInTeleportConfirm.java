@@ -1,14 +1,16 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketInbound;
 
-public interface PacketInTeleportConfirm extends Packet {
+@DefaultPacketID(PacketPlay.IN_TELEPORT_CONFIRM)
+public interface PacketInTeleportConfirm extends PacketPlay, PacketInbound {
 
 	public int getTeleportID();
 	
 	@Override
 	default int getDefaultID() {
-		return 0x00;
+		return IN_TELEPORT_CONFIRM;
 	}
 	
 }
