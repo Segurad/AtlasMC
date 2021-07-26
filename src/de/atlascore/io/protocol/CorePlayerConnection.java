@@ -10,6 +10,7 @@ import de.atlascore.io.protocol.CorePacketListenerPlay;
 import de.atlasmc.Atlas;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.atlasnetwork.server.LocalServer;
+import de.atlasmc.chat.ChatMode;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.Event;
 import de.atlasmc.event.HandlerList;
@@ -90,6 +91,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	private boolean chatColors = true;
 	private final ConcurrentLinkedQueue<Packet> inboundQueue;
 	private PlayerMoveEvent moveEvent;
+	private ChatMode chatmode;
 	
 	private boolean ignoreClick;
 	private short confirmNumber;
@@ -152,6 +154,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	@Override
 	public void handlePacket(PacketInClientSettings packet) {
 		chatColors = packet.getChatColor();
+		packet.getChatMode();
 		// TODO packet.getChatMode();
 		skinparts = packet.getDisplaySkinParts();
 		local = packet.getLocale();

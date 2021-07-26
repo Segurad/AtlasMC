@@ -19,14 +19,51 @@ import de.atlasmc.util.annotation.ThreadSafe;
 @ThreadSafe
 public class HandlerList {
 	
-	protected static final List<HandlerList> HANDLERS = new ArrayList<>();
+	private static final List<HandlerList> HANDLERS = new ArrayList<>();
+	private static int lowID;
 	private final Vector<EventExecutor> globalExecutors;
+	private final int handlerID;
 	
 	public HandlerList() {
 		this.globalExecutors = new Vector<>();
-		synchronized (HANDLERS) {
-			HANDLERS.add(this);
+		handlerID = registerHandlerList();
+	}
+	
+	/**
+	 * REgisters a HandlerList and returns the ID
+	 * @param handler
+	 * @return the handler's ID
+	 */
+	private final synchronized int registerHandlerList() {
+		final int size = HANDLERS.size();
+		int id = -1;
+		if (lowID == size) {
+			HANDLERS.add(lowID, this);
+			id = lowID;
+			lowID++;
+		} else {
+			HANDLERS.set(lowID, this);
+			id = lowID;
+			boolean result = false;
+			for (int i = lowID; i < size; i++) {
+				if (HANDLERS.get(i) != null) continue;
+				lowID = i;
+				result = true;
+				break;
+			}
+			if (!result) lowID = size;
 		}
+		return id;
+	}
+	
+	public synchronized void unregister() {
+		int id = this.getHandlerID();
+		HANDLERS.set(id, null);
+		if (id < lowID) lowID = id;
+	}
+	
+	public final int getHandlerID() {
+		return handlerID;
 	}
 	
 	public void registerExecutor(@NotNull EventExecutor executor) {
