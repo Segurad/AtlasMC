@@ -5,11 +5,10 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Vector;
-
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
+import de.atlasmc.util.ConcurrentLinkedCollection;
+import de.atlasmc.util.ConcurrentLinkedCollection.LinkedCollectionIterator;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.ThreadSafe;
 
@@ -19,13 +18,13 @@ import de.atlasmc.util.annotation.ThreadSafe;
 @ThreadSafe
 public class HandlerList {
 	
-	private static final List<HandlerList> HANDLERS = new ArrayList<>();
+	protected static final List<HandlerList> HANDLERS = new ArrayList<>();
 	private static int lowID;
-	private final Vector<EventExecutor> globalExecutors;
+	private final ConcurrentLinkedCollection<EventExecutor> globalExecutors;
 	private final int handlerID;
 	
 	public HandlerList() {
-		this.globalExecutors = new Vector<>();
+		this.globalExecutors = new ConcurrentLinkedCollection<>();
 		handlerID = registerHandlerList();
 	}
 	
@@ -34,32 +33,36 @@ public class HandlerList {
 	 * @param handler
 	 * @return the handler's ID
 	 */
-	private final synchronized int registerHandlerList() {
-		final int size = HANDLERS.size();
-		int id = -1;
-		if (lowID == size) {
-			HANDLERS.add(lowID, this);
-			id = lowID;
-			lowID++;
-		} else {
-			HANDLERS.set(lowID, this);
-			id = lowID;
-			boolean result = false;
-			for (int i = lowID; i < size; i++) {
-				if (HANDLERS.get(i) != null) continue;
-				lowID = i;
-				result = true;
-				break;
+	private final int registerHandlerList() {
+		synchronized (HANDLERS) {
+			final int size = HANDLERS.size();
+			int id = -1;
+			if (lowID == size) {
+				HANDLERS.add(lowID, this);
+				id = lowID;
+				lowID++;
+			} else {
+				HANDLERS.set(lowID, this);
+				id = lowID;
+				boolean result = false;
+				for (int i = lowID; i < size; i++) {
+					if (HANDLERS.get(i) != null) continue;
+					lowID = i;
+					result = true;
+					break;
+				}
+				if (!result) lowID = size;
 			}
-			if (!result) lowID = size;
+			return id;
 		}
-		return id;
 	}
 	
-	public synchronized void unregister() {
-		int id = this.getHandlerID();
-		HANDLERS.set(id, null);
-		if (id < lowID) lowID = id;
+	public void unregister() {
+		synchronized (HANDLERS) {
+			int id = this.getHandlerID();
+			HANDLERS.set(id, null);
+			if (id < lowID) lowID = id;
+		}
 	}
 	
 	public final int getHandlerID() {
@@ -75,8 +78,8 @@ public class HandlerList {
 		registerExecutor(executor);
 	}
 	
-	protected synchronized void register(List<EventExecutor> exes, EventExecutor executor) {
-		ListIterator<EventExecutor> it = exes.listIterator();
+	protected synchronized void register(ConcurrentLinkedCollection<EventExecutor> exes, EventExecutor executor) {
+		LinkedCollectionIterator<EventExecutor> it = exes.iterator();
 		final int ordinal = executor.getPriority().ordinal();
 		while(it.hasNext()) {
 			EventExecutor exe = it.next();
@@ -86,7 +89,7 @@ public class HandlerList {
 					it.add(executor);
 					return;
 				}
-				exes.add(0, executor);
+				exes.addFirst(executor);
 			}
 		}
 		exes.add(executor);
@@ -96,8 +99,8 @@ public class HandlerList {
 	 * 
 	 * @return a immutable copy of all registered GlobalExecutors
 	 */
-	public List<EventExecutor> getExecutors() {
-		return List.copyOf(globalExecutors);
+	public LinkedCollectionIterator<EventExecutor> getExecutors() {
+		return globalExecutors.iterator();
 	}
 	
 	public static void callEvent(@NotNull final Event event) {
@@ -106,6 +109,12 @@ public class HandlerList {
 		hl.callEvent(event, cancelled);
 	}
 	
+	/**
+	 * Calls all EventExecutors of this HandlerList <br>
+	 * This Method will be called by the static Method {@link #callEvent(Event)} and should be used for children to fire Events
+	 * @param event
+	 * @param cancellable
+	 */
 	protected void callEvent(final Event event, boolean cancellable) {
 		for (EventExecutor exe : globalExecutors){
 			if (exe.getIgnoreCancelled() && cancellable) continue;
@@ -119,31 +128,35 @@ public class HandlerList {
 	 * @param priority
 	 * @param event event
 	 * @param cancellable weather or not the event extends {@link Cancellable}
-	 * @param index the start index
-	 * @return
 	 */
-	protected static int fireEvents(final List<EventExecutor> executors, final EventPriority priority, final Event event, final boolean cancellable, final int index) {
-		if (index == -1) return -1;
-		final int length = executors.size();
+	protected static void fireEvents(final LinkedCollectionIterator<EventExecutor> executors, final EventPriority priority, final Event event, final boolean cancellable) {
+		if (executors == null || !executors.hasNext()) return;
 		final int prio = priority.ordinal();
-		for (int i = index; i < length; i++) {
-			EventExecutor exe = executors.get(i);
-			if (exe.getPriority().ordinal() > prio) return i;
+		while (executors.hasNext()) {
+			EventExecutor exe = executors.next();
+			if (exe.getPriority().ordinal() > prio) return;
 			if (exe.getIgnoreCancelled() && (cancellable ? false : ((Cancellable) event).isCancelled())) continue;
 			exe.fireEvent(event);
 		}
-		return -1;
 	}
 	
-	public static void unregisterListener(@NotNull Listener listener) {
+	/**
+	 * Unregisters the Listener from all HandlerLists
+	 * @param listener
+	 */
+	public static void unregisterListenerGlobal(@NotNull Listener listener) {
 		synchronized (HANDLERS) {
 			for (HandlerList h : HANDLERS) {
-				h.unregisterHandledListener(listener);
+				h.unregisterListener(listener);
 			}
 		}
 	}
 
-	public synchronized void unregisterHandledListener(Listener listener) {
+	/**
+	 * Unregisters the Listener from this HandlerList
+	 * @param listener
+	 */
+	public synchronized void unregisterListener(Listener listener) {
 		Iterator<EventExecutor> it = globalExecutors.iterator();
 		while(it.hasNext()) {
 			EventExecutor exe = it.next();

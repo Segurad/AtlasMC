@@ -43,7 +43,8 @@ public class CoreSuspiciousStewMeta extends CoreItemMeta implements SuspiciousSt
 			if (SuspiciousStewMeta.class.isInstance(holder)) {
 				SuspiciousStewMeta meta = ((SuspiciousStewMeta) holder);
 				while (reader.getRestPayload() > 0) {
-					PotionEffect effect = new PotionEffect(reader);
+					PotionEffect effect = new PotionEffect();
+					effect.fromNBT(reader);
 					meta.addCustomEffect(effect, false);
 				}
 			} else ((ItemMeta) holder).getCustomTagContainer().addSystemTag(reader.readNBT());

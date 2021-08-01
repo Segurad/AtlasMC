@@ -38,7 +38,9 @@ public class CorePotionMeta extends CoreItemMeta implements PotionMeta {
 				PotionMeta meta = ((PotionMeta) holder);
 				List<PotionEffect> effects = meta.getCustomEffects();
 				while (reader.getRestPayload() > 0) {
-					effects.add(new PotionEffect(reader));
+					PotionEffect effect = new PotionEffect();
+					effect.fromNBT(reader);
+					effects.add(effect);
 				}
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});

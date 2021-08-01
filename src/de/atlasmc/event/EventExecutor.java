@@ -3,6 +3,9 @@ package de.atlasmc.event;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * This class contains informations of a {@link EventHandler} Method and the Listener
+ */
 public class EventExecutor {
 	
 	private final boolean ignorecancelled;
@@ -35,6 +38,10 @@ public class EventExecutor {
 		return priority;
 	}
 	
+	/**
+	 * Invokes the EventHandler Method of this EventExecutor
+	 * @param event
+	 */
 	public void fireEvent(Event event) {
 		try {
 			method.invoke(eventClass, event);

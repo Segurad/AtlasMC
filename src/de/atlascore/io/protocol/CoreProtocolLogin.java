@@ -41,4 +41,10 @@ public class CoreProtocolLogin implements ProtocolLogin {
 		return null;
 	}
 
+	@Override
+	public <T extends Packet> T createPacket(Class<T> clazz) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

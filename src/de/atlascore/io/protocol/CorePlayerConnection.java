@@ -102,6 +102,7 @@ public class CorePlayerConnection implements PlayerConnection {
 		this.connection = connection;
 		this.protocol = protocol;
 		this.inboundQueue = new ConcurrentLinkedQueue<>();
+		this.chatmode = ChatMode.FULL;
 	}
 	
 	public void queueInboundPacket(Packet packet) {
@@ -154,8 +155,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	@Override
 	public void handlePacket(PacketInClientSettings packet) {
 		chatColors = packet.getChatColor();
-		packet.getChatMode();
-		// TODO packet.getChatMode();
+		chatmode = packet.getChatMode();
 		skinparts = packet.getDisplaySkinParts();
 		local = packet.getLocale();
 		mainHand = (byte) packet.getMainHand();
@@ -211,9 +211,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	
 	@Override
 	public void handlePacket(PacketInClickWindow packet) {
-		if (ignoreClick) {
-			return;
-		}
+		if (ignoreClick) return; // Block further clicks until PacketInWindowConfirmation after invalid click;
 		LocalServer s = getLocalSever();
 		if (s == null) return;
 		ClickType click = null;
@@ -279,7 +277,7 @@ public class CorePlayerConnection implements PlayerConnection {
 			case 2:
 				// ending left drag
 			case 6:
-				// ending right drag 
+				// ending right drag
 			case 10:
 				// ending middle drag
 				break;
@@ -567,6 +565,11 @@ public class CorePlayerConnection implements PlayerConnection {
 	@Override
 	public AtlasPlayer getAtlasPlayer() {
 		return aplayer;
+	}
+
+	@Override
+	public ChatMode getChatMode() {
+		return chatmode;
 	}
 
 }

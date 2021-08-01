@@ -8,14 +8,14 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class PotionEffect implements Cloneable, NBTHolder {
 	
-	private final PotionEffectType type;
+	private PotionEffectType type;
 	
 	public PotionEffect(PotionEffectType type) {
 		this.type = type;
 	}
-	
-	public PotionEffect(NBTReader reader) {
-		// TODO Auto-generated constructor stub
+
+	public PotionEffect() {
+		// TODO
 	}
 
 	public PotionEffect clone() {

@@ -3,6 +3,7 @@ package de.atlasmc.io.protocol;
 import de.atlasmc.atlasnetwork.AtlasNode;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.atlasnetwork.server.LocalServer;
+import de.atlasmc.chat.ChatMode;
 import de.atlasmc.entity.Player;
 import de.atlasmc.io.Packet;
 import de.atlasmc.util.annotation.ThreadSafe;
@@ -39,5 +40,7 @@ public interface PlayerConnection extends PacketListenerPlayIn {
 	public Player getPlayer();
 	
 	public AtlasPlayer getAtlasPlayer();
+	
+	public ChatMode getChatMode();
 
 }
