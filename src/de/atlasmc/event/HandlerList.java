@@ -22,14 +22,35 @@ public class HandlerList {
 	private static int lowID;
 	private final ConcurrentLinkedCollection<EventExecutor> globalExecutors;
 	private final int handlerID;
+	private EventExecutor defaultExecutor;
 	
 	public HandlerList() {
+		this.defaultExecutor = EventExecutor.NULL_EXECUTOR;
 		this.globalExecutors = new ConcurrentLinkedCollection<>();
 		handlerID = registerHandlerList();
 	}
 	
 	/**
-	 * REgisters a HandlerList and returns the ID
+	 * Sets the DefaultEventExecutor<br>
+	 * <br>
+	 * The DefaultEventExecutor is always the last EventExecutor called, ignoring the flags ({@link EventPriority} and ignoreCancelled)
+	 * @param defaultExecutor
+	 */
+	public void setDefaultExecutor(EventExecutor defaultExecutor) {
+		if (defaultExecutor == null) defaultExecutor = EventExecutor.NULL_EXECUTOR;
+		this.defaultExecutor = defaultExecutor;
+	}
+	
+	/**
+	 * Returns the DefaultEventExecutor of this HandlerList by Default it is the {@link EventExecutor#NULL_EXECUTOR}
+	 * @return a EventExecutor
+	 */
+	public EventExecutor getDefaultExecutor() {
+		return defaultExecutor;
+	}
+	
+	/**
+	 * Registers a HandlerList and returns the ID
 	 * @param handler
 	 * @return the handler's ID
 	 */
@@ -120,6 +141,7 @@ public class HandlerList {
 			if (exe.getIgnoreCancelled() && cancellable) continue;
 			exe.fireEvent(event);
 		}
+		getDefaultExecutor().fireEvent(event);
 	}
 	
 	/**
@@ -168,7 +190,7 @@ public class HandlerList {
 	 * 
 	 * @param listener
 	 * @param handleroptions extra arguments for EventExecutor registration <br>
-	 * If the Listener contains a e.g. a {@link ServerEvent}, you may add a {@link LocalServer} or {@link ServerGroup} for registration.
+	 * If the Listener contains a e.g. a {@link AbstractServerEvent}, you may add a {@link LocalServer} or {@link ServerGroup} for registration.
 	 * If there are multiple LocalServers or/and ServerGroups it will registered for all.
 	 * If not present or does not contain a specific Object the EventHandler will be registered as Global.
 	 */

@@ -47,6 +47,7 @@ public class ProxyHandlerList extends HandlerList {
 			fireEvents(proxyexes, prio, event, cancelled);
 			fireEvents(globalexes, prio, event, cancelled);
 		}
+		getDefaultExecutor().fireEvent(event);
 	}
 	
 	@Override

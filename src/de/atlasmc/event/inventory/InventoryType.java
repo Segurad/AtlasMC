@@ -29,7 +29,7 @@ public enum InventoryType {
 	SMOKER(21),
 	CARTOGRAPHY(22),
 	STONECUTTER(23),
-	// non standard (types that are opened differently or only internal)
+	// --- non standard (types that are opened differently or only internal)
 	/**
 	 * A dispenser inventory, with 9 slots of {@link SlotType#CONTAINER}.<br>
 	 * Alternative to {@link InventoryType#GENERIC_3X3} for differentiation.

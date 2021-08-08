@@ -23,8 +23,6 @@ public abstract class AtlasTask implements Runnable {
 	 * It does nothing by default if you need it, simply override it
 	 * May be called twice if it is a sync task which would be called on the next tick
 	 */
-	public void notifiyShutdown() {
-		
-	}
+	public void notifiyShutdown() {}
 	
 }

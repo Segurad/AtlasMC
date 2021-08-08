@@ -1,13 +1,13 @@
 package de.atlasmc.event.entity;
 
 import de.atlasmc.entity.Entity;
+import de.atlasmc.event.AbstractServerEvent;
 import de.atlasmc.event.Cancellable;
-import de.atlasmc.event.Event;
-import de.atlasmc.event.HandlerList;
+import de.atlasmc.event.ServerHandlerList;
 
-public class EntityDamageEvent extends Event implements Cancellable {
+public class EntityDamageEvent extends AbstractServerEvent implements Cancellable {
 	
-	private static final HandlerList handlers = new HandlerList();
+	private static final ServerHandlerList handlers = new ServerHandlerList();
 	private boolean cancelled;
 	private Entity entity;
 	private DamageCause cause;
@@ -19,6 +19,7 @@ public class EntityDamageEvent extends Event implements Cancellable {
 	}
 	
 	public EntityDamageEvent(Entity damagee, DamageCause cause, DamageModifier mod, double damage) {
+		super(damagee.getServer());
 		this.entity = damagee;
 		this.cause = cause;
 		this.mod = mod;
@@ -75,6 +76,10 @@ public class EntityDamageEvent extends Event implements Cancellable {
 		return entity;
 	}
 	
+	public double getDamage() {
+		return damage;
+	}
+	
 	public DamageCause getCause() {
 		return cause;
 	}
@@ -94,11 +99,11 @@ public class EntityDamageEvent extends Event implements Cancellable {
 	}
 
 	@Override
-	public HandlerList getHandlers() {
+	public ServerHandlerList getHandlers() {
 		return handlers;
 	}
 	
-	public static HandlerList getHandlerList() {
+	public static ServerHandlerList getHandlerList() {
 		return handlers;
 	}
 

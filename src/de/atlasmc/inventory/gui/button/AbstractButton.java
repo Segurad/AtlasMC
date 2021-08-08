@@ -1,18 +1,18 @@
-package de.atlasmc.inventory.gui;
+package de.atlasmc.inventory.gui.button;
 
 import de.atlasmc.entity.Player;
 import de.atlasmc.inventory.ItemStack;
 
-public abstract class ActionButton implements Button {
+public abstract class AbstractButton implements Button {
 
 	protected ItemStack icon;
 	protected String permission;
 
-	public ActionButton(ItemStack icon) {
+	public AbstractButton(ItemStack icon) {
 		this.icon = icon;
 	}
 
-	public ActionButton() {
+	public AbstractButton() {
 		icon = null;
 	}
 
@@ -50,9 +50,9 @@ public abstract class ActionButton implements Button {
 	public void unauthorizedClick(Player player) {}
 	
 	@Override
-	public ActionButton clone() {
+	public AbstractButton clone() {
 		try {
-			ActionButton btn = (ActionButton) super.clone();
+			AbstractButton btn = (AbstractButton) super.clone();
 			if (icon != null) btn.icon = icon.clone();
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();

@@ -3,6 +3,7 @@ package de.atlasmc.inventory.gui;
 import de.atlasmc.Material;
 import de.atlasmc.event.inventory.InventoryClickEvent;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.gui.button.AbstractButton;
 import de.atlasmc.inventory.gui.component.ComponentHandler;
 import de.atlasmc.inventory.gui.component.ItemComponentHandler;
 import de.atlasmc.inventory.gui.component.ItemPageComponent;
@@ -28,7 +29,7 @@ public class MultipageGUI extends SimpleGUI {
 		this.mltPageItems = new ItemPageComponent(compLenght, compDepth, maxpages);
 		this.mhandler = mltPageItems.createHandler(this, compOffsetY*9+compOffsetX, compLenght, compDepth, false);
 		addComponentHandler(mhandler);
-		ActionButton btnPage = new ActionButton() {
+		AbstractButton btnPage = new AbstractButton() {
 			@Override
 			public ItemStack press(InventoryClickEvent e) {
 				final int slot = e.getSlot();

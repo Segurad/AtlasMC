@@ -1,11 +1,10 @@
 package de.atlasmc.event.player;
 
-import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.entity.Player;
-import de.atlasmc.event.GenericEvent;
+import de.atlasmc.event.AbstractServerEvent;
 import de.atlasmc.event.ServerHandlerList;
 
-public class PlayerRespawnEvent extends GenericEvent<LocalServer, ServerHandlerList>{
+public class PlayerRespawnEvent extends AbstractServerEvent {
 
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	private final Player player;

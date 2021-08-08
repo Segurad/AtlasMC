@@ -1,7 +1,7 @@
 package de.atlasmc.inventory.gui.component;
 
-import de.atlasmc.inventory.gui.Button;
 import de.atlasmc.inventory.gui.GUI;
+import de.atlasmc.inventory.gui.button.Button;
 import de.atlasmc.util.Pair;
 
 public abstract class AbstractComponentHandler implements ComponentHandler {

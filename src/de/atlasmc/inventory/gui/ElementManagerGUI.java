@@ -9,6 +9,7 @@ import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.ItemUtil;
 import de.atlasmc.inventory.gui.component.AbstractPageComponent;
 import de.atlasmc.inventory.gui.component.ComponentHandler;
+import de.atlasmc.inventory.gui.button.AbstractButton;
 import de.atlasmc.inventory.gui.component.AbstractComponentHandler;
 import de.atlasmc.inventory.gui.component.PageComponent;
 
@@ -49,7 +50,7 @@ public abstract class ElementManagerGUI<E> extends MultipageGUI {
 			
 		};
 		ehandler = elements.createHandler(this, 0, 9, 4);
-		setButtons(0, 36, new ActionButton() {
+		setButtons(0, 36, new AbstractButton() {
 			@Override
 			public ItemStack press(InventoryClickEvent e) {
 				final int slot = e.getSlot();
@@ -65,7 +66,7 @@ public abstract class ElementManagerGUI<E> extends MultipageGUI {
 				return null;
 			}
 		}, false);
-		setButton(45+add, new ActionButton(addicon) {
+		setButton(45+add, new AbstractButton(addicon) {
 			@Override
 			public ItemStack press(InventoryClickEvent e) {
 				if (e.getClick() != ClickType.LEFT) return null;

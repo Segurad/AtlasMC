@@ -2,14 +2,12 @@ package de.atlasmc.event.inventory;
 
 import java.util.List;
 
-import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.entity.Player;
-import de.atlasmc.event.GenericEvent;
-import de.atlasmc.event.ServerHandlerList;
+import de.atlasmc.event.AbstractServerEvent;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryView;
 
-public abstract class InventoryEvent extends GenericEvent<LocalServer, ServerHandlerList> {
+public abstract class InventoryEvent extends AbstractServerEvent {
 	
 	protected InventoryView view;
 	

@@ -19,7 +19,7 @@ public class AgeableClassMetaDataFactory extends ClassMetaDataFactory {
 		if (material == null) throw new IllegalArgumentException("Material can not be null!");
 		if (!material.isBlock()) throw new IllegalArgumentException("Material is not a Block!");
 		if (preConfig) {
-			BlockData bd = getDataPreConfig(material);
+			BlockData bd = MetaDataFactory.getDataPreConfig(material);
 			if (bd != null) return bd.clone();
 		}
 		if (data == null) return null;

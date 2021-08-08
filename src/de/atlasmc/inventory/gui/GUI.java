@@ -5,6 +5,7 @@ import java.util.List;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.inventory.InventoryClickEvent;
 import de.atlasmc.inventory.Inventory;
+import de.atlasmc.inventory.gui.button.Button;
 import de.atlasmc.inventory.gui.component.Component;
 import de.atlasmc.inventory.gui.component.ComponentHandler;
 

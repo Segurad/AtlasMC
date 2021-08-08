@@ -71,6 +71,7 @@ public class ServerHandlerList extends HandlerList {
 			fireEvents(groupexes, prio, event, cancelled);
 			fireEvents(globalexes, prio, event, cancelled);
 		}
+		getDefaultExecutor().fireEvent(event);
 	}
 	
 	@Override

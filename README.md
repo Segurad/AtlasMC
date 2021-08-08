@@ -15,5 +15,6 @@ Things like Material and EntityType are no longer enums and will return a lowerc
 - MinecraftDevs (wiki.vg)
 - Bukkit
 - Oracle
+- Netty
 - Eclipse
 - CraftUnion

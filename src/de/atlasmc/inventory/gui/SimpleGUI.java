@@ -8,6 +8,7 @@ import de.atlascore.inventory.CoreInventory;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.inventory.InventoryClickEvent;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.gui.button.Button;
 import de.atlasmc.inventory.gui.component.Component;
 import de.atlasmc.inventory.gui.component.ComponentHandler;
 
@@ -127,6 +128,11 @@ public class SimpleGUI extends CoreInventory implements GUI {
 		for (int s : slot) {
 			clickable[s] = value;
 		}
+	}
+	
+	@Override
+	public void setClickable(boolean value) {
+		Arrays.fill(clickable, value);
 	}
 
 	@Override

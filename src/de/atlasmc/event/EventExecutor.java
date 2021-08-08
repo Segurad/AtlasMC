@@ -8,11 +8,23 @@ import java.lang.reflect.Method;
  */
 public class EventExecutor {
 	
+	/**
+	 * EventExecutor that does nothing
+	 */
+	public static final EventExecutor NULL_EXECUTOR = new EventExecutor() {
+		@Override
+		public void fireEvent(Event event) {}
+	};
+	
 	private final boolean ignorecancelled;
 	private final Class<?> eventClass;
 	private final Method method;
 	private final EventPriority priority;
 	private final Listener listener;
+	
+	private EventExecutor() {
+		this(null, null, EventPriority.MONITOR, true, null);
+	}
 	
 	public EventExecutor(Class<?> eventClass, Method method, EventPriority priority, boolean ignoreCancelled, Listener listener) {
 		this.eventClass = eventClass;

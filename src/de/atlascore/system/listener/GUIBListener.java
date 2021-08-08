@@ -9,8 +9,8 @@ import de.atlasmc.event.inventory.InventoryCloseEvent;
 import de.atlasmc.event.inventory.InventoryOpenEvent;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.inventory.gui.Button;
 import de.atlasmc.inventory.gui.GUI;
+import de.atlasmc.inventory.gui.button.Button;
 
 final class GUIBListener implements Listener {
 	

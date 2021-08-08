@@ -1,11 +1,9 @@
 package de.atlasmc.event.block;
 
-import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.block.Block;
-import de.atlasmc.event.GenericEvent;
-import de.atlasmc.event.ServerHandlerList;
+import de.atlasmc.event.AbstractServerEvent;
 
-public abstract class BlockEvent extends GenericEvent<LocalServer, ServerHandlerList> {
+public abstract class BlockEvent extends AbstractServerEvent {
 
 	protected Block block;
 	

@@ -132,7 +132,13 @@ public class InventoryView {
 	 */
 	public int convertSlot(Inventory inv, int slot) {
 		if (inv == getBottomInventory()) {
-			
+			if (slot <= 8) {
+				slot+=27;
+			} else {
+				slot-=9;
+			}
+			// TODO creative / crafting
+			return slot + getTopInventory().getSize();
 		} if (inv == getTopInventory()) {
 			int numInTop = getTopInventory().getSize();
 			// Index from the top inventory as having slots from [0,size]

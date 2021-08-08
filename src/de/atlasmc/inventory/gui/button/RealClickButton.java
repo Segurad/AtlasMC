@@ -1,4 +1,4 @@
-package de.atlasmc.inventory.gui;
+package de.atlasmc.inventory.gui.button;
 
 import de.atlasmc.Material;
 import de.atlasmc.event.inventory.ClickType;
@@ -12,7 +12,7 @@ import de.atlasmc.inventory.ItemStack;
  * @author Segurad
  *
  */
-public abstract class RealClickButton extends ActionButton {
+public abstract class RealClickButton extends AbstractButton {
 
 	public static final int NOTIFY_CURSOR = 0,
 			NOTIFY_SHIFT = 1,

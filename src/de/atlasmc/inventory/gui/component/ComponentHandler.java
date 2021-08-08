@@ -1,6 +1,6 @@
 package de.atlasmc.inventory.gui.component;
 
-import de.atlasmc.inventory.gui.Button;
+import de.atlasmc.inventory.gui.button.Button;
 import de.atlasmc.util.Pair;
 
 public interface ComponentHandler {

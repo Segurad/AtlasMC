@@ -1,4 +1,4 @@
-package de.atlasmc.inventory.gui;
+package de.atlasmc.inventory.gui.button;
 
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.inventory.InventoryClickEvent;
