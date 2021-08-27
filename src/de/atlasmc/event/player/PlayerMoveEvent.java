@@ -2,17 +2,16 @@ package de.atlasmc.event.player;
 
 import de.atlasmc.Location;
 import de.atlasmc.entity.Player;
-import de.atlasmc.event.AbstractServerEvent;
 import de.atlasmc.event.ServerHandlerList;
 
-public class PlayerMoveEvent extends AbstractServerEvent {
+public class PlayerMoveEvent extends PlayerEvent {
 
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
 	private final Location from, to;
 	
 	public PlayerMoveEvent(Player player, Location from, Location to) {
-		super(player.getServer());
+		super(player);
 		this.from = from;
 		this.to = to;
 	}

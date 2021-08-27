@@ -29,8 +29,8 @@ public class CorePacketInAdvancementTab extends AbstractPacket implements Packet
 	}
 
 	@Override
-	public int getAction() {
-		return action;
+	public Action getAction() {
+		return action == 0 ? Action.OPEN : Action.CLOSE;
 	}
 
 	@Override

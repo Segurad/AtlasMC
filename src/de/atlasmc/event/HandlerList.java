@@ -20,6 +20,7 @@ public class HandlerList {
 	
 	protected static final List<HandlerList> HANDLERS = new ArrayList<>();
 	private static int lowID;
+	
 	private final ConcurrentLinkedCollection<EventExecutor> globalExecutors;
 	private final int handlerID;
 	private EventExecutor defaultExecutor;

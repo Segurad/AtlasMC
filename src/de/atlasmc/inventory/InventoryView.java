@@ -26,6 +26,10 @@ public class InventoryView {
 		return type;
 	}
 	
+	/**
+	 * 
+	 * @return the owner of this view
+	 */
 	public Player getPlayer() {
 		return player;
 	}

@@ -3,12 +3,19 @@ package de.atlasmc.event.player;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.ServerHandlerList;
 
-public class PlayerRespawnEvent extends PlayerEvent {
+public class PlayerLocaleChangeEvent extends PlayerEvent {
 
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
-	public PlayerRespawnEvent(Player player) {
+	private final String locale;
+	
+	public PlayerLocaleChangeEvent(Player player, String locale) {
 		super(player);
+		this.locale = locale;
+	}
+	
+	public String getNewLocale() {
+		return locale;
 	}
 
 	@Override
@@ -19,5 +26,7 @@ public class PlayerRespawnEvent extends PlayerEvent {
 	public static ServerHandlerList getHandlerList() {
 		return handlers;
 	}
+	
+	
 
 }

@@ -56,7 +56,7 @@ public class EventExecutor {
 	 */
 	public void fireEvent(Event event) {
 		try {
-			method.invoke(eventClass, event);
+			method.invoke(this, event);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			e.printStackTrace();
 		}

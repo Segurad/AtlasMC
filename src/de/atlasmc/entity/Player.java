@@ -15,7 +15,7 @@ import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.scoreboard.Scoreboard;
 
-public interface Player extends AtlasPlayer, HumanEntity {
+public interface Player extends HumanEntity {
 	
 	public LocalServer getCurrentServer();
 
@@ -44,6 +44,8 @@ public interface Player extends AtlasPlayer, HumanEntity {
 	public ItemStack getItemOnCursor();
 
 	public PlayerConnection getConnection();
+	
+	public AtlasPlayer getAtlasPlayer();
 
 	public String getName();
 

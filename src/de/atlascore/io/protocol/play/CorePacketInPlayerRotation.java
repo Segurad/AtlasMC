@@ -3,6 +3,7 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlasmc.Location;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInPlayerRotation;
 import io.netty.buffer.ByteBuf;
@@ -43,6 +44,12 @@ public class CorePacketInPlayerRotation extends AbstractPacket implements Packet
 	@Override
 	public boolean isOnGround() {
 		return onGround;
+	}
+
+	@Override
+	public void getLocation(Location loc) {
+		loc.setPitch(pitch);
+		loc.setYaw(yaw);
 	}
 	
 	

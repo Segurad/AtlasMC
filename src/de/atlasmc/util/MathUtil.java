@@ -87,7 +87,7 @@ public class MathUtil {
 	 * @param x relative to chunk
 	 * @param y relative to chunk
 	 * @param z relative to chunk
-	 * @return
+	 * @return the parameters as single long
 	 */
 	public long blockdataPosition(int blockstate, int x, int y, int z) {
 		return blockstate << 12 | (x << 8 | y << 4 | z);

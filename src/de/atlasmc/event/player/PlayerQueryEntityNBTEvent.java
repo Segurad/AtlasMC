@@ -1,13 +1,12 @@
 package de.atlasmc.event.player;
 
 import de.atlasmc.entity.Player;
-import de.atlasmc.event.AbstractServerEvent;
 import de.atlasmc.event.ServerHandlerList;
 
-public class PlayerQueryEntityNBTEvent extends AbstractServerEvent {
+public class PlayerQueryEntityNBTEvent extends PlayerEvent {
 
 	public PlayerQueryEntityNBTEvent(Player player, int transactionID, int entityID) {
-		super(player.getServer());
+		super(player);
 	}
 
 	@Override

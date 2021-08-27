@@ -3,11 +3,11 @@ package de.atlasmc.event.player;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.ServerHandlerList;
 
-public class PlayerRespawnEvent extends PlayerEvent {
+public class AdvancementsCloseEvent extends PlayerEvent {
 
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
-	public PlayerRespawnEvent(Player player) {
+	public AdvancementsCloseEvent(Player player) {
 		super(player);
 	}
 

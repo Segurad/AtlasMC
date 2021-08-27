@@ -2,7 +2,7 @@ package de.atlasmc.io.protocol.play;
 
 import java.util.List;
 
-import de.atlasmc.entity.AbstractVillager.Trade;
+import de.atlasmc.entity.Merchant.MerchantRecipe;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.PacketOutbound;
 
@@ -10,7 +10,7 @@ import de.atlasmc.io.PacketOutbound;
 public interface PacketOutTradeList extends PacketPlay, PacketOutbound {
 	
 	public int getWindowID();
-	public List<Trade> getTrades();
+	public List<MerchantRecipe> getTrades();
 	public int getVillagerLevel();
 	public int getExperience();
 	public boolean isRegularVillager();
