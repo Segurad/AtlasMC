@@ -2,20 +2,16 @@ package de.atlasmc.scheduler;
 
 public abstract class AtlasTask implements Runnable {
 	
-	private boolean cancelled;
+	private volatile boolean cancelled;
 	
 	public abstract void run();
 	
 	public final boolean isCancelled() {
-		synchronized (this) {
-			return cancelled;
-		}
+		return cancelled;
 	}
 	
 	public final void cancel() {
-		synchronized (this) {
-			cancelled = true;
-		}
+		cancelled = true;
 	}
 	
 	/**

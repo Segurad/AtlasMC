@@ -8,99 +8,60 @@ import de.atlasmc.atlasnetwork.server.LocalServer;
 public class AtlasScheduler implements Scheduler {
 
 	private final LocalServer server;
-	private final ConcurrentLinkedQueue<Runnable> nextTasks;
-	private final Vector<RegisteredTask> tasks;
-	private final Thread worker;
+	private final SyncTaskWorker worker;
 	private final ConcurrentLinkedQueue<AsyncTaskWorker> workerQueue;
 	private final Vector<AsyncTaskWorker> fetchedWorkers;
 	private final int minWorkers;
 	private final long workerMaxIdleTime;
-	private boolean running;
 	
 	public AtlasScheduler(LocalServer server) {
-		this(server, 2, 5000);
+		this(server, 2, 6000, 12000);
 	}
 	
-	public AtlasScheduler(LocalServer server, int minWorkers, int workerMaxIdleTime) {
+	/**
+	 * 
+	 * @param server
+	 * @param minWorkers
+	 * @param workerMaxIdleTime in milliseconds
+	 * @param asyncWorkerGCTime in Ticks or -1 to disable
+	 */
+	public AtlasScheduler(LocalServer server, int minWorkers, int workerMaxIdleTime, int asyncWorkerGCTime) {
 		workerQueue = new ConcurrentLinkedQueue<AsyncTaskWorker>();
-		this.nextTasks = new ConcurrentLinkedQueue<>();
-		this.tasks = new Vector<RegisteredTask>();
 		this.fetchedWorkers = new Vector<AsyncTaskWorker>();
 		this.server = server;
 		this.minWorkers = minWorkers;
 		this.workerMaxIdleTime = workerMaxIdleTime;
-		worker = new Thread(() -> {
-			while (isRunning()) {
-				long time = System.currentTimeMillis();
-				if (!tasks.isEmpty()) {
-					for (RegisteredTask task : tasks) {
-						task.tick();
-						if (task.isRunnable()) {
-							nextTasks.add(task.getTask());
-						}
-						if (task.unregister()) tasks.remove(task);
-					}
-					time = System.currentTimeMillis() - time;
-					if (time > 50) {
-						time = 50 - (time % 50);
-					} else time = 50 - time;
-				} else time = 50;
-				try {
-					Thread.sleep(time);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			for (RegisteredTask task : tasks) {
-				task.getTask().notifiyShutdown();
-			}
-			tasks.clear();
-			while (!nextTasks.isEmpty()) {
-				Runnable r = nextTasks.poll();
-				if (r instanceof AtlasTask) {
-					((AtlasTask) r).notifiyShutdown();
-				}
-			}
-			for (AsyncTaskWorker worker : fetchedWorkers) {
-				worker.shutdown();
-			}
-			while (!workerQueue.isEmpty()) {
-				workerQueue.poll().shutdown();
-			}
-		}, "SchedulerThread: " + server.getServerID());
-		worker.start();
+		worker = new SyncTaskWorker(this, server.getIdentifier(), asyncWorkerGCTime);
 	}
 	
 	public void runNextTasks() {
 		if (!server.isServerThread()) throw new RuntimeException("Async SyncScheduler call!");
-		while(!nextTasks.isEmpty()) {
-			nextTasks.poll().run();
-		}
+		worker.runNextTasksSync();
 	}
 
 	@Override
 	public void runSyncTask(AtlasTask task) {
-		nextTasks.add(task);
+		worker.addTask(task);
 	}
 	
 	@Override
 	public void runSyncTask(Runnable task) {
-		nextTasks.add(task);
+		worker.addTask(task);
 	}
 
 	@Override
 	public void runSyncTaskLater(AtlasTask task, long delay) {
-		tasks.add(new DelayedTask(task, delay));
+		worker.addTask(new DelayedTask(task, delay));
 	}
 
 	@Override
 	public void runSyncTaskFor(AtlasTask task, long delay, long period, long repeats) {
-		tasks.add(new CountedRepeatingTask(task, delay, period, repeats));
+		worker.addTask(new CountedRepeatingTask(task, delay, period, repeats));
 	}
 
 	@Override
 	public void runSyncRepeatingTask(AtlasTask task, long delay, long period) {
-		tasks.add(new RepeatingTask(task, delay, period));
+		worker.addTask(new RepeatingTask(task, delay, period));
 	}
 
 	@Override
@@ -136,35 +97,42 @@ public class AtlasScheduler implements Scheduler {
 			}
 		}
 	}
+	
+	/**
+	 * This Method will be called by this Schedulers Worker to GC all AsyncWorkers that exceeded the workerMaxIdleTime
+	 */
+	final void runAsyncWorkerGC() {
+		int workers = workerQueue.size() + fetchedWorkers.size();
+		if (workers == minWorkers) return;
+		if (workers < minWorkers) {
+			for (int i = workers; i < minWorkers; i++) {
+				workerQueue.add(new AsyncTaskWorker(this));
+			}
+		} else {
+			long time = System.currentTimeMillis();
+			for (AsyncTaskWorker worker : workerQueue) {
+				if (time - worker.getLastActive() < workerMaxIdleTime) continue;
+				worker.shutdown();
+			}
+		}
+	}
 
 	final void restoreWorker(AsyncTaskWorker worker) {
 		fetchedWorkers.remove(worker);
 		workerQueue.add(worker);
 	}
 	
-	final long getWorkerMaxIdleTime() {
-		return workerMaxIdleTime;
-	}
-
-	final boolean canWorkerDie(AsyncTaskWorker worker) {
-		if (workerQueue.size() > minWorkers) {
-			workerQueue.remove(worker);
-			return true;
-		} else return false;
-	}
-	
 	public void shutdown() {
-		synchronized (this) {
-			running = false;
+		worker.shutdown();
+		for (AsyncTaskWorker worker : fetchedWorkers) {
+			worker.shutdown();
+		}
+		while (!workerQueue.isEmpty()) {
+			workerQueue.poll().shutdown();
 		}
 	}
 	
 	public boolean isRunning() {
-		synchronized (this) {
-			return running;
-		}
+		return worker.isRunning();
 	}
-	
-	
-
 }

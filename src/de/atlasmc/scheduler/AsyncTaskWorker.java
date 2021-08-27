@@ -2,10 +2,10 @@ package de.atlasmc.scheduler;
 
 final class AsyncTaskWorker extends Thread {
 	
-	private RegisteredTask task;
-	private long lastActiv, time;
+	private volatile RegisteredTask task;
+	private volatile long lastActiv;
 	private final AtlasScheduler scheduler;
-	private boolean running;
+	private volatile boolean running;
 	
 	/**
 	 * Creates a new TaskWorker which will automatically start
@@ -26,31 +26,38 @@ final class AsyncTaskWorker extends Thread {
 	
 	@Override
 	public void run() {
+		long time = 0;
 		while (isRunning()) {
-			if (getTask() != null) {
-				time = System.currentTimeMillis();
+			RegisteredTask task = getTask();
+			if (task != null) {
+				time = System.currentTimeMillis(); // To Track the Time the Task needed for execution
 				task.tick();
 				if (task.isRunnable()) {
 					task.getTask().run();
 				}
 				if (task.unregister()) { 
 					setTask(null);
-					setLastActive(System.currentTimeMillis());
+					lastActiv = System.currentTimeMillis();
 					scheduler.restoreWorker(this);
-					time = 50;
+					time = -1;
 				} else
 				time = System.currentTimeMillis() - time;
 				if (time > 50) {
 					time = 50 - (time % 50);
 				} else time = 50 - time;
+				try {
+					if (time >= 0)
+					Thread.sleep(time);
+					else wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			} else {
-				if (System.currentTimeMillis() - getLastActive() > scheduler.getWorkerMaxIdleTime() && scheduler.canWorkerDie(this)) break;
-				time = 50;
-			}
-			try {
-				Thread.sleep(time);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		RegisteredTask task = getTask();
@@ -58,40 +65,32 @@ final class AsyncTaskWorker extends Thread {
 	}
 	
 	public void setTask(RegisteredTask task) {
-		synchronized (this) {
-			setLastActive(0);
+			lastActiv = System.currentTimeMillis();
+			boolean notify = false;
+			if (task == null) notify = true;
 			this.task = task;
-		}
+			if (notify) notify();
 	}
 	
 	public RegisteredTask getTask() {
-		synchronized (this) {
-			return task;
-		}
+		return task;
 	}
 	
+	/**
+	 * 
+	 * @return the time this Worker was last Active in milliseconds
+	 */
 	public long getLastActive() {
-		synchronized (this) {
-			return lastActiv;
-		}
-	}
-	
-	private void setLastActive(long time) {
-		synchronized (this) {
-			lastActiv = time;
-		}
+		return lastActiv;
 	}
 	
 	public void shutdown() {
-		synchronized (this) {
-			running = false;
-		}
+		running = false;
+		if (task == null) notify();
 	}
 	
 	public boolean isRunning() {
-		synchronized (this) {
-			return running;
-		}
+		return running;
 	}
 	
 
