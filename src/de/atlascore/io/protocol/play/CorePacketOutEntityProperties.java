@@ -57,7 +57,7 @@ public class CorePacketOutEntityProperties extends AbstractPacket implements Pac
 
 	@Override
 	public List<AttributeInstance> getAttributes() {
-		// TODO
+		// TODO return attributes
 		return null;
 	}
 	

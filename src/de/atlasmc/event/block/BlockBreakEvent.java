@@ -1,6 +1,7 @@
 package de.atlasmc.event.block;
 
 import de.atlasmc.block.Block;
+import de.atlasmc.entity.Player;
 import de.atlasmc.event.Cancellable;
 import de.atlasmc.event.ServerHandlerList;
 
@@ -8,10 +9,11 @@ public class BlockBreakEvent extends BlockEvent implements Cancellable {
 
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	private boolean cancelled;
+	private final Player player;
 	
-	public BlockBreakEvent(Block block) {
+	public BlockBreakEvent(Block block, Player player) {
 		super(block);
-		// TODO Auto-generated constructor stub
+		this.player = player;
 	}
 
 	@Override
@@ -22,6 +24,10 @@ public class BlockBreakEvent extends BlockEvent implements Cancellable {
 	@Override
 	public boolean isCancelled() {
 		return cancelled;
+	}
+	
+	public Player getPlayer() {
+		return player;
 	}
 
 	@Override

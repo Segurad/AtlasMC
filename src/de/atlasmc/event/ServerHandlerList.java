@@ -66,6 +66,9 @@ public class ServerHandlerList extends HandlerList {
 		final LinkedCollectionIterator<EventExecutor> groupexes = getExecutors(server.getGroup());
 		final LinkedCollectionIterator<EventExecutor> serverexes = getExecutors(server);
 		final LinkedCollectionIterator<EventExecutor> globalexes = getExecutors();
+		if ((groupexes != null && groupexes.hasNext()) || 
+				(serverexes != null && serverexes.hasNext()) || 
+				globalexes.hasNext())
 		for (EventPriority prio : EventPriority.values()) {
 			fireEvents(serverexes, prio, event, cancelled);
 			fireEvents(groupexes, prio, event, cancelled);

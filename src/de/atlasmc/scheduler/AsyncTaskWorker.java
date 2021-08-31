@@ -45,26 +45,20 @@ final class AsyncTaskWorker extends Thread {
 				if (time > 50) {
 					time = 50 - (time % 50);
 				} else time = 50 - time;
-				try {
 					if (time >= 0)
-					Thread.sleep(time);
-					else wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			} else {
-				try {
-					wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
+					try {
+						Thread.sleep(time);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					else awaitTask();
+			} else awaitTask();
 		}
 		RegisteredTask task = getTask();
 		if (task != null) task.getTask().notifiyShutdown();
 	}
 	
-	public void setTask(RegisteredTask task) {
+	public synchronized void setTask(RegisteredTask task) {
 			lastActiv = System.currentTimeMillis();
 			boolean notify = false;
 			if (task == null) notify = true;
@@ -84,9 +78,17 @@ final class AsyncTaskWorker extends Thread {
 		return lastActiv;
 	}
 	
-	public void shutdown() {
+	public synchronized void shutdown() {
 		running = false;
 		if (task == null) notify();
+	}
+	
+	private synchronized void awaitTask() {
+		try {
+			wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public boolean isRunning() {

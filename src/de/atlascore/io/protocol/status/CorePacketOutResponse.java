@@ -1,6 +1,9 @@
 package de.atlascore.io.protocol.status;
 
 import java.io.IOException;
+
+import com.google.gson.JsonElement;
+
 import de.atlascore.io.protocol.CoreProtocolAdapter;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.status.PacketOutResponse;
@@ -14,9 +17,9 @@ public class CorePacketOutResponse extends AbstractPacket implements PacketOutRe
 		super(CoreProtocolAdapter.VERSION);
 	}
 
-	public CorePacketOutResponse(String jString) {
+	public CorePacketOutResponse(JsonElement json) {
 		this();
-		this.response = jString;
+		this.response = json.toString();
 	}
 
 	@Override

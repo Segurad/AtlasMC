@@ -34,9 +34,8 @@ public class HandshakePacketListener implements PacketListener {
 				handler.setProtocol(prot, prot.createDefaultPacketListener(handler));
 			} else if (nextState == 2) {
 				final Protocol prot = adapter.getLoginProtocol();
-				
 				handler.setProtocol(prot, prot.createDefaultPacketListener(handler));
-				HandlerList.callEvent(new PlayerLoginAtemptEvent(handler));
+				HandlerList.callEvent(new PlayerLoginAtemptEvent(handler)); // TODO delete
 			}
 		}
 	}

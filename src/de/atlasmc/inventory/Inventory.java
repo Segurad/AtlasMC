@@ -24,4 +24,6 @@ public interface Inventory extends Iterable<ItemStack> {
 
 	public InventoryType getType();
 
+	public InventoryHolder getHolder();
+
 }

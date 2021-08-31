@@ -17,6 +17,11 @@ public class MetaDataContainer {
 		return (MetaData<T>) data[index];
 	}
 	
+	@SuppressWarnings("unchecked")
+	public <T> T getData(int index, MetaDataType<T> type) {
+		return (T) data[index].getData();
+	}
+	
 	public MetaData<?> get(int index) {
 		return data[index];
 	}

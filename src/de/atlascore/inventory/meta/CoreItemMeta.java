@@ -172,7 +172,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 				attrs.putAll(attributes);
 			}
 			if (hasCustomTagContainer()) {
-				clone.customTags = null; // TODO
+				clone.customTags = null; // TODO clone CustomTags
 			}
 		}
 		return clone;

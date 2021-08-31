@@ -61,8 +61,10 @@ public class SyncTaskWorker extends Thread {
 	}
 
 	public void runNextTasksSync() {
-		while(!nextTasks.isEmpty()) {
+		int tasks = nextTasks.size();
+		while(!nextTasks.isEmpty() && tasks > 0) {
 			nextTasks.poll().run();
+			tasks--;
 		}
 	}
 

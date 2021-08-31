@@ -7,13 +7,13 @@ import java.util.List;
 
 import static de.atlasmc.io.protocol.play.PacketPlay.*;
 import de.atlascore.io.protocol.play.*;
-import de.atlasmc.entity.Player;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketInbound;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.PacketListener;
 import de.atlasmc.io.PacketOutbound;
+import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.ProtocolPlay;
 import de.atlasmc.io.protocol.play.PacketPlay;
 
@@ -187,8 +187,8 @@ public class CoreProtocolPlay implements ProtocolPlay {
 
 	@Override
 	public PacketListener createDefaultPacketListener(Object o) {
-		if (Player.class.isInstance(o)) return null;
-		return new CorePacketListenerPlay((Player) o);
+		if (o instanceof PlayerConnection) return null;
+		return new CorePacketListenerPlay((PlayerConnection) o);
 	}
 
 	@Override

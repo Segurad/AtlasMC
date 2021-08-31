@@ -43,6 +43,7 @@ public class ProxyHandlerList extends HandlerList {
 		LocalProxy proxy = ((GenericEvent<LocalProxy, ?>) event).getEventSource();
 		final LinkedCollectionIterator<EventExecutor> proxyexes = getExecutors(proxy);
 		final LinkedCollectionIterator<EventExecutor> globalexes = getExecutors();
+		if ((proxyexes != null && proxyexes.hasNext()) || globalexes.hasNext())
 		for (EventPriority prio : EventPriority.values()) {
 			fireEvents(proxyexes, prio, event, cancelled);
 			fireEvents(globalexes, prio, event, cancelled);

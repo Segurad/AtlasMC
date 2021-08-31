@@ -88,7 +88,7 @@ public class CoreBiome extends AbstractNBTBase implements Biome {
 	
 	static {
 		NBT_FIELDS = new NBTFieldContainer();
-		// TODO
+		// TODO create NBT reader
 	}
 	
 	public CoreBiome(String name, int id) {

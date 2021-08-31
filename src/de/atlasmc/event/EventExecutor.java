@@ -23,7 +23,11 @@ public class EventExecutor {
 	private final Listener listener;
 	
 	private EventExecutor() {
-		this(null, null, EventPriority.MONITOR, true, null);
+		this.eventClass = null;
+		this.ignorecancelled = false;
+		this.method = null;
+		this.priority = EventPriority.MONITOR;
+		this.listener = null;
 	}
 	
 	public EventExecutor(Class<?> eventClass, Method method, EventPriority priority, boolean ignoreCancelled, Listener listener) {
@@ -32,6 +36,7 @@ public class EventExecutor {
 		this.method = method;
 		this.priority = priority;
 		this.listener = listener;
+		method.setAccessible(true);
 	}
 	
 	public Listener getListener() {
@@ -56,7 +61,7 @@ public class EventExecutor {
 	 */
 	public void fireEvent(Event event) {
 		try {
-			method.invoke(this, event);
+			method.invoke(listener, event);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			e.printStackTrace();
 		}

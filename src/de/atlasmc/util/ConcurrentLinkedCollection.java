@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * This class is like a LinkedQueue without the poll feature and a special iterator which hops from node to node 
+ * This class is like a LinkedQueue without the poll feature and a special iterator which hops from node to node
  */
 public class ConcurrentLinkedCollection<E> implements Iterable<E>, Collection<E> {
 	
@@ -158,14 +158,19 @@ public class ConcurrentLinkedCollection<E> implements Iterable<E>, Collection<E>
 		return new LinkedCollectionIterator<E>(this);
 	}
 	
+	/**
+	 * A Iterator that navigates between valid nodes<br>
+	 * Repeatable behavior is not guaranteed due to changes made to the collection<br>
+	 * @param <E>
+	 */
 	public static final class LinkedCollectionIterator<E> implements Iterator<E> {
 		
-		private Node<E> node;
+		private Node<E> node, fetched;
 		private final ConcurrentLinkedCollection<E> list;
 		
 		LinkedCollectionIterator(ConcurrentLinkedCollection<E> list) {
 			this.list = list;
-			this.node = new Node<E>(null, null, list.head);
+			node = new Node<E>(null, null, list.head);
 		}
 		
 		@Override
@@ -178,11 +183,42 @@ public class ConcurrentLinkedCollection<E> implements Iterable<E>, Collection<E>
 			node = list.nextValid(node);
 			return node == null ? null : node.element;
 		}
+		
+		/**
+		 * Returns the next element but does not move the iterators position
+		 * @return the next element or null
+		 */
+		public E fetchNext() {
+			fetched = list.nextValid(node);
+			return fetched == null ? null : fetched.element;
+		}
+		
+		/**
+		 * Returns the previous element but does not move the iterators position
+		 * @return the previous element or null
+		 */
+		public E fetchPrevious() {
+			fetched = list.prevValid(node);
+			return fetched == null ? null : fetched.element;
+		}
+		
+		/**
+		 * Moves to the last fetched element if available
+		 */
+		public void moveToFetched() {
+			if (fetched == null) return;
+			node = fetched;
+		}
 
 		public boolean hasPrevious() {
 			return list.prevValid(node) != null;
 		}
 
+		/**
+		 * May or may not return the previous of the current element due to changes made to the collection<br>
+		 * e.g. does not return the element you had before if it is no longer in this collection or a new element had been inserted
+		 * @return the current previous or null
+		 */
 		public E previous() {
 			node = list.prevValid(node);
 			return node == null ? null : node.element;

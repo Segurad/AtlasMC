@@ -120,7 +120,7 @@ public class CorePlayerConnection implements PlayerConnection {
 		final int size = inboundQueue.size();
 		for (int i = 0; i < size; i++) {
 			Packet packet = inboundQueue.poll();
-			CorePacketListenerPlay.handlePacket(player, packet);
+			CorePacketListenerPlay.handlePacket(this, packet);
 		}
 	}
 

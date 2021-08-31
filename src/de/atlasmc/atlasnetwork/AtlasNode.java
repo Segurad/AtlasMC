@@ -16,5 +16,6 @@ public interface AtlasNode {
 	public List<? extends Server> getServers();
 	public List<? extends Proxy> getProxys();
 	public List<ServerGroup> getAvailableGroups();
+	public boolean isOnline();
 	
 }

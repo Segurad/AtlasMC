@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.util.ConcurrentLinkedCollection;
@@ -112,6 +113,7 @@ public class HandlerList {
 					return;
 				}
 				exes.addFirst(executor);
+				return;
 			}
 		}
 		exes.add(executor);
@@ -127,8 +129,7 @@ public class HandlerList {
 	
 	public static void callEvent(@NotNull final Event event) {
 		final HandlerList hl = event.getHandlers();
-		final boolean cancelled = Cancellable.class.isInstance(event);
-		hl.callEvent(event, cancelled);
+		hl.callEvent(event, event instanceof Cancellable);
 	}
 	
 	/**
@@ -139,7 +140,6 @@ public class HandlerList {
 	 */
 	protected void callEvent(final Event event, boolean cancellable) {
 		for (EventExecutor exe : globalExecutors){
-			if (exe.getIgnoreCancelled() && cancellable) continue;
 			exe.fireEvent(event);
 		}
 		getDefaultExecutor().fireEvent(event);
@@ -156,8 +156,9 @@ public class HandlerList {
 		if (executors == null || !executors.hasNext()) return;
 		final int prio = priority.ordinal();
 		while (executors.hasNext()) {
-			EventExecutor exe = executors.next();
+			EventExecutor exe = executors.fetchNext();
 			if (exe.getPriority().ordinal() > prio) return;
+			executors.moveToFetched();
 			if (exe.getIgnoreCancelled() && (cancellable ? false : ((Cancellable) event).isCancelled())) continue;
 			exe.fireEvent(event);
 		}
@@ -218,8 +219,7 @@ public class HandlerList {
 			if (handler == null) continue;
 			if (method.getParameterCount() != 1) continue;
 			Class<?>[] params = method.getParameterTypes();
-			if (!params[0].isAssignableFrom(Event.class)) continue;
-			method.setAccessible(true);
+			if (!Event.class.isAssignableFrom(params[0])) continue;
 			executors.add(new EventExecutor(params[0], method, handler.priority(), handler.ignoreCancelled(), listener));
 		}
 		return executors;

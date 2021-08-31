@@ -48,8 +48,7 @@ public class CorePacketOutServerDifficulty extends AbstractPacket implements Pac
 
 	@Override
 	public boolean isLocked() {
-		// TODO Auto-generated method stub
-		return false;
+		return locked;
 	}
 
 }

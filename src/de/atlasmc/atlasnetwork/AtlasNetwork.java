@@ -1,27 +1,15 @@
 package de.atlasmc.atlasnetwork;
 
-import java.util.List;
-
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 
-public class AtlasNetwork {
+public interface AtlasNetwork {
 	
-	private List<ServerGroup> groups;
-	private List<AtlasNode> nodes;
- 	private AtlasNode master;
-	private ServerGroup fallBack;
-	private int maxplayers, players;
+	public AtlasNode getMaster();
 	
-	public AtlasNode getMaster() {
-		return master;
-	}
+	public ServerGroup getFallBack();
 	
-	public ServerGroup getFallBack() {
-		return fallBack;
-	}
-	
-	public void setFallBack(ServerGroup group) {
-		this.fallBack = group;
-	}
+	public void setFallBack(ServerGroup group);
+
+	public int getOnlinePlayerCount();
 
 }

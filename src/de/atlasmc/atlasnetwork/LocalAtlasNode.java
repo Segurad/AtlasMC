@@ -44,4 +44,9 @@ public class LocalAtlasNode implements AtlasNode {
 		return messenger;
 	}
 
+	@Override
+	public boolean isOnline() {
+		return true;
+	}
+
 }

@@ -2,6 +2,7 @@ package de.atlasmc.event.inventory;
 
 import de.atlasmc.entity.Merchant;
 import de.atlasmc.event.ServerHandlerList;
+import de.atlasmc.inventory.InventoryHolder;
 import de.atlasmc.inventory.InventoryView;
 
 public class SelectTradeEvent extends InventoryInteractEvent {
@@ -19,9 +20,14 @@ public class SelectTradeEvent extends InventoryInteractEvent {
 		return tradeID;
 	}
 	
+	/**
+	 * 
+	 * @return a Merchant or null
+	 */
 	public Merchant getMerchant() {
-		// TODO
-		return null;
+		InventoryHolder h = view.getTopInventory().getHolder();
+		if (h == null || !(h instanceof Merchant)) return null;
+		return (Merchant) h;
 	}
 
 	@Override

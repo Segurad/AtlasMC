@@ -44,8 +44,21 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	private final Location loc, oldLoc;
 	private List<String> scoreboardTags;
 	
+	/**
+	 * Flags contains the following Data
+	 * Bit mask | Meaning
+	 * 0x01		| on fore
+	 * 0x02		| on ground
+	 * 0x04 	| unused
+	 * 0x08		| sprinting
+	 * 0x10		| swimming
+	 * 0x20		| invisible
+	 * 0x40		| glowing
+	 * 0x80		| flying elytra
+	 */
 	protected static final int
-	META_BASE_FLAGS = 0,
+	META_BASE_FLAGS = 0;
+	protected static final int
 	META_AIR_TICKS = 1,
 	META_CUSTOM_NAME = 2,
 	META_CUSTOM_NAME_VISIBLE = 3,
@@ -110,7 +123,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 		NBT_FIELDS.setField(ON_GROUND, (holder, reader) -> {
 			((Entity) holder).setOnGround(reader.readByteTag() == 1);
 		});
-		NBT_FIELDS.setField(PASSENGERS, NBTField.TRASH); // TODO
+		NBT_FIELDS.setField(PASSENGERS, NBTField.TRASH); // TODO nbt load passenger
 		NBT_FIELDS.setField(PORTAL_COOLDOWN, (holder, reader) -> {
 			((Entity) holder).setPortalCooldown(reader.readIntTag());
 		});
@@ -161,20 +174,17 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 
 	@Override
 	public boolean isSprinting() {
-		// TODO Auto-generated method stub
-		return false;
+		return (metaContainer.getData(META_BASE_FLAGS, MetaDataType.BYTE) & 0x08) == 0x08;
 	}
 
 	@Override
 	public boolean isSwimming() {
-		// TODO Auto-generated method stub
-		return false;
+		return (metaContainer.getData(META_BASE_FLAGS, MetaDataType.BYTE) & 0x10) == 0x10;
 	}
 
 	@Override
 	public boolean isInvisble() {
-		// TODO Auto-generated method stub
-		return false;
+		return (metaContainer.getData(META_BASE_FLAGS, MetaDataType.BYTE) & 0x20) == 0x20;
 	}
 
 	@Override
@@ -184,8 +194,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 
 	@Override
 	public boolean isFlyingWithElytra() {
-		// TODO Auto-generated method stub
-		return false;
+		return (metaContainer.getData(META_BASE_FLAGS, MetaDataType.BYTE) & 0x80) == 0x80;
 	}
 
 	@Override
@@ -317,7 +326,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		writer.writeShortTag(AIR, air);
 		if (hasCustomName()) writer.writeStringTag(CUSTOM_NAME, getCustomName());
-		// TODO
+		// TODO toNBT
 	}
 
 	@Override
@@ -356,6 +365,9 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 		fallDistance = distance;
 	}
 
+	/**
+	 * Init all MetaData fields of an Entity
+	 */
 	protected void initMetaContainer() {
 		metaContainer.set(new MetaData<Byte>(META_BASE_FLAGS, MetaDataType.BYTE, (byte) 0));
 		metaContainer.set(new MetaData<Integer>(META_AIR_TICKS, MetaDataType.INT, 300));
@@ -414,7 +426,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 
 	@Override
 	public void setOnGround(boolean onGorund) {
-		// TODO
+		// TODO set on ground
 	}
 
 	@Override
