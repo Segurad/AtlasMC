@@ -149,5 +149,12 @@ public interface PacketListenerPlayIn {
 	public void handlePacket(PacketInUseItem packet);
 
 	public void handleUnhandledPacket(Packet packet);
+	
+	public void handleBadPacket(Packet packet, BadPacketCause cause);
+	
+	public static enum BadPacketCause {
+		UNEXPECTED_PACKET,
+		UNKNOWN_PACKET
+	}
 
 }

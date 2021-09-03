@@ -10,11 +10,9 @@ public interface SQLConnection {
 
 	public void disconnect();
 	
-	public ResultSet perform(SQLCommand cmd);
+	public void update(String qry);
 	
-	public void performAsync(SQLCommand cmd);
-	
-	public void performAsync(SQLCommand cmd, AsyncSQLResultHandler handler);
+	public ResultSet getResult(String qry);
 	
 	public SQLConnection createNewInstance();
 }

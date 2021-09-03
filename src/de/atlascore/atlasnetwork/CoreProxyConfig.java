@@ -5,11 +5,13 @@ import com.google.gson.JsonObject;
 import de.atlasmc.atlasnetwork.ProxyConfig;
 
 public class CoreProxyConfig implements ProxyConfig {
+	
+	private String serverIconBase64 = "";
+	private boolean maintenance;
 
 	@Override
 	public boolean isMaintenance() {
-		// TODO Auto-generated method stub
-		return false;
+		return maintenance;
 	}
 
 	@Override
@@ -45,8 +47,17 @@ public class CoreProxyConfig implements ProxyConfig {
 
 	@Override
 	public String getServerIconBase64() {
-		// TODO Auto-generated method stub
-		return "";
+		return serverIconBase64;
+	}
+
+	@Override
+	public void setServerIconBase64(String serverIcon) {
+		serverIconBase64 = serverIcon;
+	}
+
+	@Override
+	public void setMaintenance(boolean value) {
+		this.maintenance = value;
 	}
 
 }

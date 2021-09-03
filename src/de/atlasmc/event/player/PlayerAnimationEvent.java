@@ -1,32 +1,29 @@
 package de.atlasmc.event.player;
 
-import de.atlasmc.Location;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.Cancellable;
 import de.atlasmc.event.ServerHandlerList;
 
-public class PlayerQueryBlockNBTEvent extends PlayerEvent implements Cancellable {
+public class PlayerAnimationEvent extends PlayerEvent implements Cancellable {
 
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
-	private final Location loc;
-	private final int transactionID;
+	private PlayerAnimationType animation;
 	private boolean cancelled;
 	
-	public PlayerQueryBlockNBTEvent(Player player, int transactionID, Location loc) {
+	public PlayerAnimationEvent(Player player, PlayerAnimationType anim) {
 		super(player);
-		this.transactionID = transactionID;
-		this.loc = loc;
+		this.animation = anim;
 	}
 	
-	public Location getLocation() {
-		return loc;
+	public PlayerAnimationType getAnimation() {
+		return animation;
 	}
 	
-	public int getTransactionID() {
-		return transactionID;
+	public void setAnimation(PlayerAnimationType animation) {
+		this.animation = animation;
 	}
-	
+
 	@Override
 	public void setCancelled(boolean cancelled) {
 		this.cancelled = cancelled;
@@ -36,7 +33,7 @@ public class PlayerQueryBlockNBTEvent extends PlayerEvent implements Cancellable
 	public boolean isCancelled() {
 		return cancelled;
 	}
-	
+
 	@Override
 	public ServerHandlerList getHandlers() {
 		return handlers;
@@ -44,6 +41,11 @@ public class PlayerQueryBlockNBTEvent extends PlayerEvent implements Cancellable
 	
 	public static ServerHandlerList getHandlerList() {
 		return handlers;
+	}
+	
+	public static enum PlayerAnimationType {
+		SWING_MAIN_HAND,
+		SWING_OFF_HAND
 	}
 
 }

@@ -28,7 +28,7 @@ public class LocalProxy extends Proxy {
 	private volatile ProxyConfig config;
 	
 	public LocalProxy(int port) {
-		this(port, ProxyConfig.DEFAULT_CONFIG);
+		this(port, ProxyConfig.DEFAULT_CONFIG.get());
 	}
 	
 	public LocalProxy(int port, ProxyConfig config) {
@@ -95,7 +95,7 @@ public class LocalProxy extends Proxy {
 		// MOTD
 		response.add("description", config.getJsonMOTD());
 		// Favicon
-		response.addProperty("favicon", "data:image/png;base64" + config.getServerIconBase64());
+		response.addProperty("favicon", "data:image/png;base64," + config.getServerIconBase64());
 		return response;
 	}
 

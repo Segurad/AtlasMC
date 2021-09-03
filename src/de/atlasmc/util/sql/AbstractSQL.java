@@ -38,7 +38,10 @@ abstract class AbstractSQL implements SQLConnection {
 		return false;
 	}
 
-	private void update(String qry) {
+	public void update(String qry) {
+		if (!isConnected()) {
+			throw new Error("[UnionCore] SQL<" + host + ">: Is not connected!");
+		}
 		try {
 			Statement st = connection.createStatement();
 			st.executeUpdate(qry);
@@ -48,41 +51,17 @@ abstract class AbstractSQL implements SQLConnection {
 		}
 	}
 
-	private ResultSet getResult(String qry) {
+	public ResultSet getResult(String qry) {
+		if (!isConnected()) {
+			throw new Error("[UnionCore] SQL<" + host + ">: Is not connected!");
+		}
 		try {
 			Statement st = connection.createStatement();
+			st.closeOnCompletion();
 			return st.executeQuery(qry);	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	@Override
-	public ResultSet perform(SQLCommand cmd) {
-		if (!isConnected()) {
-			throw new Error("[UnionCore] SQL<" + host + ">: Is not connected!");
-		}
-		if (cmd.hasResult()) {
-			return getResult(cmd.getCommand());
-		} else update(cmd.getCommand());
-		return null;
-	}
-	
-    public void performAsync(SQLCommand cmd) {
-    	performAsync(cmd, null);
-    }
-	
-	public void performAsync(SQLCommand cmd, final AsyncSQLResultHandler handler) {
-		Thread t = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				ResultSet r = perform(cmd);
-				if (r != null && handler != null) {
-					handler.result(r);
-				}
-			}
-		});
-		t.start();
 	}
 }

@@ -1,10 +1,20 @@
 package de.atlasmc.atlasnetwork;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 import com.google.gson.JsonElement;
 
 public interface ProxyConfig {
 
-	public static ProxyConfig DEFAULT_CONFIG = null;
+	AtomicReference<ProxyConfig> DEFAULT_CONFIG = new AtomicReference<ProxyConfig>();
+	
+	public static ProxyConfig getDefault() {
+		return DEFAULT_CONFIG.get();
+	}
+	
+	public static void setDefault(ProxyConfig newDefault) {
+		DEFAULT_CONFIG.set(newDefault);
+	}
 
 	public boolean isMaintenance();
 
@@ -36,4 +46,8 @@ public interface ProxyConfig {
 	public JsonElement getJsonMOTD();
 
 	public String getServerIconBase64();
+
+	public void setServerIconBase64(String serverIcon);
+
+	public void setMaintenance(boolean value);
 }

@@ -3,11 +3,15 @@ package de.atlascore.io.protocol;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import de.atlasmc.Atlas;
+import de.atlasmc.Location;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.atlasnetwork.server.LocalServer;
+import de.atlasmc.block.Block;
 import de.atlasmc.chat.ChatMode;
+import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.HandlerList;
+import de.atlasmc.event.block.SignChangeEvent;
 import de.atlasmc.event.inventory.ClickType;
 import de.atlasmc.event.inventory.InventoryAction;
 import de.atlasmc.event.inventory.InventoryButtonType;
@@ -20,9 +24,16 @@ import de.atlasmc.event.inventory.SelectTradeEvent;
 import de.atlasmc.event.player.AdvancementsCloseEvent;
 import de.atlasmc.event.player.AdvancementsOpenEvent;
 import de.atlasmc.event.player.AsyncPlayerChatEvent;
+import de.atlasmc.event.player.PlayerAnimationEvent;
+import de.atlasmc.event.player.PlayerAnimationEvent.PlayerAnimationType;
 import de.atlasmc.event.player.PlayerLocaleChangeEvent;
 import de.atlasmc.event.player.PlayerMoveEvent;
+import de.atlasmc.event.player.PlayerQueryBlockNBTEvent;
+import de.atlasmc.event.player.PlayerQueryEntityNBTEvent;
+import de.atlasmc.event.player.PlayerResourcePackStatusEvent;
+import de.atlasmc.event.player.PlayerResourcePackStatusEvent.ResourcePackStatus;
 import de.atlasmc.event.player.PlayerRespawnEvent;
+import de.atlasmc.event.player.PlayerSpectateEvent;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.ConnectionHandler;
@@ -37,7 +48,9 @@ import de.atlasmc.io.protocol.play.PacketInClickWindowButton;
 import de.atlasmc.io.protocol.play.PacketInClientSettings;
 import de.atlasmc.io.protocol.play.PacketInClientStatus;
 import de.atlasmc.io.protocol.play.PacketInClientStatus.StatusAction;
+import de.atlasmc.util.MathUtil;
 import de.atlasmc.util.annotation.ThreadSafe;
+import io.netty.buffer.ByteBuf;
 import de.atlasmc.io.protocol.play.PacketInCloseWindow;
 import de.atlasmc.io.protocol.play.PacketInCraftRecipeRequest;
 import de.atlasmc.io.protocol.play.PacketInCreativeInventoryAction;
@@ -88,21 +101,34 @@ public class CorePlayerConnection implements PlayerConnection {
 	private final ConnectionHandler connection;
 	private final ProtocolAdapter protocol;
 	private LocalServer server;
-	private String clientLocal;
-	private String advancementTabID;
-	private byte viewDistance, skinparts, mainHand;
-	private boolean chatColors = true;
 	private final ConcurrentLinkedQueue<Packet> inboundQueue;
-	private PlayerMoveEvent moveEvent;
-	private HashMap<Integer, ItemStack> dragItems;
-	private ChatMode chatmode;
 	
+	private byte invID;
+	private int teleportID;
+	private boolean teleportConfirmed = true;
+	private HashMap<Integer, ItemStack> dragItems;
+	private String advancementTabID;
+	
+	// Client Settings
+	private String clientLocal;
+	private ChatMode chatmode;
+	private boolean chatColors = true;
+	private byte viewDistance, skinparts, mainHand;
+	
+	// Client controlled values
+	private boolean clientOnGround;
+	
+	// Events
+	private PlayerMoveEvent eventMove;
+	private PlayerAnimationEvent eventAnimation;
+	
+	// Keep Alive
 	private long lastKeepAlive;
 	private boolean keepAliveResponse;
+	
+	// Click Control 
 	private boolean ignoreClick;
-	private boolean clientOnGround;
 	private short confirmNumber;
-	private byte invID;
 	
 	public CorePlayerConnection(AtlasPlayer player, ConnectionHandler connection, ProtocolAdapter protocol) {
 		this.aplayer = player;
@@ -126,25 +152,26 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInTeleportConfirm packet) {
-		// TODO
+		if (packet.getTeleportID() == teleportID) {
+			teleportConfirmed = true;
+		}
 	}
 
 	@Override
 	public void handlePacket(PacketInQueryBlockNBT packet) {
-		// TODO Auto-generated method stub
-		
+		Location loc = MathUtil.getLocation(player.getWorld(), packet.getLocation());
+		HandlerList.callEvent(new PlayerQueryBlockNBTEvent(player, packet.getTransactionID(), loc));
 	}
 
 	@Override
 	public void handlePacket(PacketInQueryEntityNBT packet) {
-		// TODO Auto-generated method stub
-		
+		HandlerList.callEvent(new PlayerQueryEntityNBTEvent(player, packet.getTransactionID(), packet.getEntityID()));
 	}
 
 	@Override
 	public void handlePacket(PacketInSetDifficulty packet) {
-		// TODO Auto-generated method stub
-		
+		// TODO Button not available in multiplayer clarification needed
+		handleBadPacket(packet, BadPacketCause.UNEXPECTED_PACKET);
 	}
 
 	@Override
@@ -185,7 +212,7 @@ public class CorePlayerConnection implements PlayerConnection {
 			if (confirmNumber == packet.getActionNumber()) {
 				ignoreClick = false;
 			}
-		} else handleBadPacket(packet);
+		} else handleBadPacket(packet, BadPacketCause.UNEXPECTED_PACKET);
 	}
 
 	@Override
@@ -337,32 +364,32 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInLockDifficulty packet) {
-		// TODO Auto-generated method stub
-	
+		// TODO Button not available in multiplayer clarification needed
+		handleBadPacket(packet, BadPacketCause.UNEXPECTED_PACKET);
 	}
 
 	@Override
 	public void handlePacket(PacketInPlayerPosition packet) {
-		packet.getLocation(moveEvent.getTo());
+		packet.getLocation(eventMove.getTo());
 		clientOnGround = packet.isOnGround();
-		player.getLocation(moveEvent.getFrom());
-		HandlerList.callEvent(moveEvent);
+		player.getLocation(eventMove.getFrom());
+		HandlerList.callEvent(eventMove);
 	}
 
 	@Override
 	public void handlePacket(PacketInPlayerPositionAndRotation packet) {
-		packet.getLocation(moveEvent.getTo());
+		packet.getLocation(eventMove.getTo());
 		clientOnGround = packet.isOnGround();
-		player.getLocation(moveEvent.getFrom());
-		HandlerList.callEvent(moveEvent);
+		player.getLocation(eventMove.getFrom());
+		HandlerList.callEvent(eventMove);
 	}
 
 	@Override
 	public void handlePacket(PacketInPlayerRotation packet) {
-		packet.getLocation(moveEvent.getTo());
+		packet.getLocation(eventMove.getTo());
 		clientOnGround = packet.isOnGround();
-		player.getLocation(moveEvent.getFrom());
-		HandlerList.callEvent(moveEvent);
+		player.getLocation(eventMove.getFrom());
+		HandlerList.callEvent(eventMove);
 	}
 
 	@Override
@@ -438,8 +465,7 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInResourcePackStatus packet) {
-		// TODO Auto-generated method stub
-		
+		HandlerList.callEvent(new PlayerResourcePackStatusEvent(player, ResourcePackStatus.getByID(packet.getResult())));
 	}
 
 	@Override
@@ -500,20 +526,28 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInUpdateSign packet) {
-		// TODO Auto-generated method stub
-		
+		long pos = packet.getPosition();
+		Block b = player.getWorld().getBlock(MathUtil.getPositionX(pos), MathUtil.getPositionY(pos), MathUtil.getPositionZ(pos));
+		String[] lines = new String[] {
+				packet.getLine1(),
+				packet.getLine2(),
+				packet.getLine3(),
+				packet.getLine4()
+		};
+		HandlerList.callEvent(new SignChangeEvent(b, player, lines));
 	}
 
 	@Override
 	public void handlePacket(PacketInAnimation packet) {
-		// TODO Auto-generated method stub
-		
+		eventAnimation.setAnimation(packet.getHand() == 0 ? 
+				PlayerAnimationType.SWING_MAIN_HAND : PlayerAnimationType.SWING_OFF_HAND);
+		eventAnimation.setCancelled(false);
+		HandlerList.callEvent(eventAnimation);
 	}
 
 	@Override
 	public void handlePacket(PacketInSpectate packet) {
-		// TODO Auto-generated method stub
-		
+		HandlerList.callEvent(new PlayerSpectateEvent(player, packet.getUUID()));
 	}
 
 	@Override
@@ -527,10 +561,9 @@ public class CorePlayerConnection implements PlayerConnection {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
 	@Override
 	public void handleUnhandledPacket(Packet packet) {
-		// TODO Auto-generated method stub
 		
 	}
 	
@@ -538,7 +571,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	 * Handling Packets that are not supposed to be received
 	 * @param packet
 	 */
-	protected void handleBadPacket(Packet packet) {
+	public void handleBadPacket(Packet packet, BadPacketCause cause) {
 		// TODO
 	}
 
@@ -580,15 +613,17 @@ public class CorePlayerConnection implements PlayerConnection {
 		ignoreClick = true;
 		return confirmNumber++;
 	}
-
-	@Override
-	public void setPlayer(Player player) {
-		this.player = player;
-	}
 	
 	@Override
 	public Player getPlayer() {
 		return player;
+	}
+	
+	@Override
+	public void setPlayer(Player player) {
+		this.player = player;
+		eventAnimation = new PlayerAnimationEvent(player, null);
+		eventMove = new PlayerMoveEvent(player, player.getLocation(), player.getLocation());
 	}
 
 	@Override

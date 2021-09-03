@@ -1,6 +1,7 @@
 package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
 import de.atlasmc.io.AbstractPacket;
@@ -9,24 +10,26 @@ import io.netty.buffer.ByteBuf;
 
 public class CorePacketInSpectate extends AbstractPacket implements PacketInSpectate {
 
+	private UUID uuid;
+	private String suuid;
+	
 	public CorePacketInSpectate() {
 		super(CoreProtocolAdapter.VERSION);
 	}
-	
-	private String uuid;
 
 	@Override
 	public void read(ByteBuf in) throws IOException {
-		uuid = readString(in);
+		suuid = readString(in);
+		uuid = UUID.fromString(suuid);
 	}
 
 	@Override
 	public void write(ByteBuf out) throws IOException {
-		writeString(uuid, out);
+		writeString(suuid, out);
 	}
 
 	@Override
-	public String getUUID() {
+	public UUID getUUID() {
 		return uuid;
 	}
 

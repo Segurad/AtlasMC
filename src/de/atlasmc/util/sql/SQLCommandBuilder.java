@@ -1,34 +1,12 @@
 package de.atlasmc.util.sql;
 
-/**
- * 
- * @author Segurad
- *
- */
-public class SQLCommand {
+public class SQLCommandBuilder {
 	// https://www.php-einfach.de/mysql-tutorial/uebersicht-sql-befehle/
 	// https://www.w3schools.com/sql/sql_update.asp
 	// https://www.w3schools.com/sql/sql_datatypes.asp data types
-	private final String cmd;
-	private final boolean result;
 	
-	public SQLCommand(String cmd, boolean result) {
-		this.cmd = cmd;
-		this.result = result;
-	}
+	private SQLCommandBuilder() {}
 	
-	public SQLCommand(String cmd) {
-		this.cmd = cmd;
-		this.result = false;
-	}
-	
-	public boolean hasResult() {
-		return result;
-	}
-	
-	public String getCommand() {
-		return cmd;
-	}
 	/**
 	 * 
 	 * @param table the table you update
@@ -38,7 +16,7 @@ public class SQLCommand {
 	 * @param is the value the condition attribute need to have
 	 * @return a new SQLCommand
 	 */
-	public static SQLCommand updateWhere(String table, String field, String value, String where, String is) {
+	public static String updateWhere(String table, String field, String value, String where, String is) {
 		StringBuilder cmd = new StringBuilder("UPDATE ");
 		cmd.append(table);
 		cmd.append(" SET ");
@@ -50,7 +28,7 @@ public class SQLCommand {
 		cmd.append("='");
 		cmd.append(is);
 		cmd.append("';");
-		return new SQLCommand(cmd.toString());
+		return cmd.toString();
 		//UPDATE <table> SET <field>= '<value>' WHERE <where>= '<whereis>';
 	}
 	/**
@@ -62,7 +40,7 @@ public class SQLCommand {
 	 * @param is the value the condition attribute need to have
 	 * @return a new SQLCommand
 	 */
-	public static SQLCommand updateWhere(String table, String[] field, String[] value, String where, String is) {
+	public static String updateWhere(String table, String[] field, String[] value, String where, String is) {
 		StringBuilder cmd = new StringBuilder("UPDATE ");
 		cmd.append(table);
 		cmd.append(" SET ");
@@ -75,7 +53,7 @@ public class SQLCommand {
 		cmd.append("='");
 		cmd.append(is);
 		cmd.append("';");
-		return new SQLCommand(cmd.toString());
+		return cmd.toString();
 	}
 	
 	/**
@@ -85,7 +63,7 @@ public class SQLCommand {
 	 * @param datatype the attribute data types
 	 * @return a new SQLCommand
 	 */
-	public static SQLCommand createTableIfNotExist(String table, String[] field, String[] datatype) {
+	public static String createTableIfNotExist(String table, String[] field, String[] datatype) {
 		StringBuilder cmd = new StringBuilder("CREATE TABLE IF NOT EXISTS ");
 		cmd.append(table);
 		cmd.append("(");
@@ -94,7 +72,7 @@ public class SQLCommand {
 			if (i+1 < field.length) cmd.append(", ");
 		}
 		cmd.append(");");
-		return new SQLCommand(cmd.toString());
+		return cmd.toString();
 	}
 	
 	/**
@@ -104,7 +82,7 @@ public class SQLCommand {
 	 * @param value the fields' values
 	 * @return a new SQLCommand
 	 */
-	public static SQLCommand insert(String table, String[] field, String[] value) {
+	public static String insert(String table, String[] field, String[] value) {
 		StringBuilder cmd = new StringBuilder("INSERT INTO ");
 		cmd.append(table);
 		if (field != null) {
@@ -121,7 +99,7 @@ public class SQLCommand {
 			if (i+1 < value.length) cmd.append(", ");
 		}
 		cmd.append(");");
-		return new SQLCommand(cmd.toString());
+		return cmd.toString();
 	}
 	
 	/**
@@ -130,15 +108,15 @@ public class SQLCommand {
 	 * @param value the fields' values
 	 * @return a new SQLCommand
 	 */
-	public static SQLCommand insert(String table, String[] value) {
+	public static String insert(String table, String[] value) {
 		return insert(table, null, value);
 	}
 	
-	public static SQLCommand selectWhere(String table, String where, String is) {
+	public static String selectWhere(String table, String where, String is) {
 		return selectWhere(table, "*", where, is);
 	}
 	
-	public static SQLCommand selectWhere(String table, String[] field, String where, String is) {
+	public static String selectWhere(String table, String[] field, String where, String is) {
 		StringBuilder cmd = new StringBuilder("SELECT ");
 		for (int i = 0; i < field.length; i++) {
 			cmd.append(field[i]);
@@ -151,10 +129,10 @@ public class SQLCommand {
 		cmd.append("='");
 		cmd.append(is);
 		cmd.append("';");
-		return new SQLCommand(cmd.toString(), true);
+		return cmd.toString();
 	}
 	
-	public static SQLCommand selectWhere(String table, String field, String where, String is) {
+	public static String selectWhere(String table, String field, String where, String is) {
 		StringBuilder cmd = new StringBuilder("SELECT ");
 		cmd.append(field);
 		cmd.append(" FROM ");
@@ -164,10 +142,10 @@ public class SQLCommand {
 		cmd.append("='");
 		cmd.append(is);
 		cmd.append("';");
-		return new SQLCommand(cmd.toString(), true);
+		return cmd.toString();
 	}
 	
-	public static SQLCommand deleteWhere(String table, String where, String is) {
+	public static String deleteWhere(String table, String where, String is) {
 		StringBuilder cmd = new StringBuilder("DELETE FROM ");
 		cmd.append(table);
 		cmd.append(" WHERE ");
@@ -175,10 +153,10 @@ public class SQLCommand {
 		cmd.append("='");
 		cmd.append(is);
 		cmd.append("';");
-		return new SQLCommand(cmd.toString());
+		return cmd.toString();
 	}
 	
-	public static SQLCommand selectWhere(String table, String field, String where, int is) {
+	public static String selectWhere(String table, String field, String where, int is) {
 		StringBuilder cmd = new StringBuilder("SELECT ");
 		cmd.append(field);
 		cmd.append(" FROM ");
@@ -188,10 +166,10 @@ public class SQLCommand {
 		cmd.append("=");
 		cmd.append(is);
 		cmd.append(";");
-		return new SQLCommand(cmd.toString(), true);
+		return cmd.toString();
 	}
 	
-	public static SQLCommand deleteWhere(String table, String where, int is) {
+	public static String deleteWhere(String table, String where, int is) {
 		StringBuilder cmd = new StringBuilder("DELETE FROM ");
 		cmd.append(table);
 		cmd.append(" WHERE ");
@@ -199,14 +177,11 @@ public class SQLCommand {
 		cmd.append("=");
 		cmd.append(is);
 		cmd.append(";");
-		return new SQLCommand(cmd.toString());
+		return cmd.toString();
 	}
 	
-	public static SQLCommand deleteContents(String table) {
-		StringBuilder cmd = new StringBuilder("DELETE FROM ");
-		cmd.append(table);
-		cmd.append(";");
-		return new SQLCommand(cmd.toString());
+	public static String deleteContents(String table) {
+		return "DELETE FROM " + table + ";";
 	}
 	
 }
