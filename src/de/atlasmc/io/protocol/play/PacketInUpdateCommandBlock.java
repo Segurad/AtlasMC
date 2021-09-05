@@ -1,5 +1,6 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.block.tile.CommandBlock.Mode;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.PacketInbound;
 
@@ -8,8 +9,8 @@ public interface PacketInUpdateCommandBlock extends PacketPlay, PacketInbound {
 	
 	public long getPosition();
 	public String getCommand();
-	public int getMode();
-	public byte Flags();
+	public Mode getMode();
+	public byte getFlags();
 	
 	@Override
 	default int getDefaultID() {

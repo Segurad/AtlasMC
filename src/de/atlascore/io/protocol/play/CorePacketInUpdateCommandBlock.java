@@ -3,6 +3,7 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlasmc.block.tile.CommandBlock.Mode;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInUpdateCommandBlock;
 import io.netty.buffer.ByteBuf;
@@ -45,12 +46,12 @@ public class CorePacketInUpdateCommandBlock extends AbstractPacket implements Pa
 	}
 
 	@Override
-	public int getMode() {
-		return mode;
+	public Mode getMode() {
+		return Mode.getByID(mode);
 	}
 
 	@Override
-	public byte Flags() {
+	public byte getFlags() {
 		return flags;
 	}
 

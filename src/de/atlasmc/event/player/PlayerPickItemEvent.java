@@ -4,31 +4,24 @@ import de.atlasmc.entity.Player;
 import de.atlasmc.event.Cancellable;
 import de.atlasmc.event.ServerHandlerList;
 
-/**
- * Called when a Player changes the selected Slot
- */
-public class PlayerHeldItemChangeEvent extends PlayerEvent implements Cancellable {
+public class PlayerPickItemEvent extends PlayerEvent implements Cancellable {
 
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
-	private int newSlot;
+	private int slot;
 	private boolean cancelled;
 	
-	public PlayerHeldItemChangeEvent(Player player, int newSlot) {
+	public PlayerPickItemEvent(Player player, int slot) {
 		super(player);
-		this.newSlot = newSlot;
+		this.slot = slot;
 	}
 	
-	public int getNewSlot() {
-		return newSlot;
+	public int getSlot() {
+		return slot;
 	}
 	
-	public void setNewSlot(int newSlot) {
-		this.newSlot = newSlot;
-	}
-	
-	public int getOldSlot() {
-		return getPlayer().getInventory().getHeldItemSlot();
+	public void setSlot(int slot) {
+		this.slot = slot;
 	}
 
 	@Override
@@ -40,7 +33,7 @@ public class PlayerHeldItemChangeEvent extends PlayerEvent implements Cancellabl
 	public boolean isCancelled() {
 		return cancelled;
 	}
-
+	
 	@Override
 	public ServerHandlerList getHandlers() {
 		return handlers;

@@ -27,6 +27,7 @@ public class PacketDecoder extends ByteToMessageDecoder {
 			System.out.println("Invalid Packet: " + id);
 			return;
 		}
+		packet.setTimestamp(System.currentTimeMillis());
 		packet.read(in);
 		out.add(packet);
 	}

@@ -1,11 +1,11 @@
 package de.atlasmc.io.protocol.login;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.protocol.PacketProtocol;
 
 /**
  * This interface marks Packets for the mc-login protocol
  */
-public interface PacketLogin extends Packet {
+public interface PacketLogin extends PacketProtocol {
 	
 	public static final int 
 	IN_LOGIN_START = 0x00,

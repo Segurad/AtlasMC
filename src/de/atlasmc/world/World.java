@@ -59,6 +59,7 @@ public interface World extends Tickable {
 	
 	public Block getBlock(int x, int y, int z);
 	public BlockData getBlockData(int x, int y, int z);
+	public Entity getEntity(int entityID);
 	
 
 }

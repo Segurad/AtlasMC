@@ -1,5 +1,6 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.block.BlockFace;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.PacketInbound;
 
@@ -8,7 +9,7 @@ public interface PacketInPlayerDigging extends PacketPlay, PacketInbound {
 	
 	public int getStatus();
 	public long getPosition();
-	public byte getFace();
+	public BlockFace getFace();
 	
 	@Override
 	default int getDefaultID() {

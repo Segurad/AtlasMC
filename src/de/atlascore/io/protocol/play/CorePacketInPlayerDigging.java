@@ -3,12 +3,22 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlasmc.block.BlockFace;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInPlayerDigging;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketInPlayerDigging extends AbstractPacket implements PacketInPlayerDigging {
 
+	private static final BlockFace[] faces = new BlockFace[] {
+		BlockFace.DOWN,
+		BlockFace.UP,
+		BlockFace.NORTH,
+		BlockFace.SOUTH,
+		BlockFace.WEST,
+		BlockFace.EAST
+	};
+	
 	public CorePacketInPlayerDigging() {
 		super(CoreProtocolAdapter.VERSION);
 	}
@@ -42,8 +52,10 @@ public class CorePacketInPlayerDigging extends AbstractPacket implements PacketI
 	}
 
 	@Override
-	public byte getFace() {
-		return face;
+	public BlockFace getFace() {
+		if (face < 0 || face > 5)
+			return BlockFace.UP;
+		return faces[face];
 	}
 	
 	

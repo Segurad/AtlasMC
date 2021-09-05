@@ -11,6 +11,7 @@ public abstract class AbstractPacket implements Packet {
 
 	private final int id, version;
 	private boolean cancelled;
+	private long timestamp;
 	public static final int MAX_PACKET_LENGTH = 2097151;
 	
 	/**
@@ -34,20 +35,34 @@ public abstract class AbstractPacket implements Packet {
 		this.cancelled = false;
 	}
 
+	@Override
 	public boolean isCancelled() {
 		return cancelled;
 	}
 
+	@Override
 	public void setCancelled(boolean cancelled) {
 		this.cancelled = cancelled;
 	}
 
+	@Override
 	public int getVersion() {
 		return version;
 	}
 
+	@Override
 	public int getID() {
 		return id;
+	}
+	
+	@Override
+	public long getTimestamp() {
+		return timestamp;
+	}
+	
+	@Override
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
 	}
 	
 	public static int readVarInt(ByteBuf in) {

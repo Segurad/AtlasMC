@@ -154,7 +154,9 @@ public interface PacketListenerPlayIn {
 	
 	public static enum BadPacketCause {
 		UNEXPECTED_PACKET,
-		UNKNOWN_PACKET
+		UNKNOWN_PACKET, 
+		BLOCKED_PACKET, 
+		UNEXPECTED_CONTENTS
 	}
 
 }

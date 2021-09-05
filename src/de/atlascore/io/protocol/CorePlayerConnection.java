@@ -2,11 +2,13 @@ package de.atlascore.io.protocol;
 
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
 import de.atlasmc.Atlas;
 import de.atlasmc.Location;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.block.Block;
+import de.atlasmc.block.BlockFace;
 import de.atlasmc.chat.ChatMode;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.Player;
@@ -18,28 +20,42 @@ import de.atlasmc.event.inventory.InventoryButtonType;
 import de.atlasmc.event.inventory.InventoryClickButtonEvent;
 import de.atlasmc.event.inventory.InventoryClickEvent;
 import de.atlasmc.event.inventory.InventoryCloseEvent;
+import de.atlasmc.event.inventory.InventoryCreativeClickEvent;
 import de.atlasmc.event.inventory.InventoryDragEvent;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.event.inventory.SelectTradeEvent;
+import de.atlasmc.event.inventory.SmithingNameInputEvent;
 import de.atlasmc.event.player.AdvancementsCloseEvent;
 import de.atlasmc.event.player.AdvancementsOpenEvent;
 import de.atlasmc.event.player.AsyncPlayerChatEvent;
 import de.atlasmc.event.player.PlayerAnimationEvent;
+import de.atlasmc.event.player.PlayerDiggingEvent;
+import de.atlasmc.event.player.PlayerDiggingEvent.DiggingStatus;
+import de.atlasmc.event.player.PlayerDropItemEvent;
+import de.atlasmc.event.player.PlayerHeldItemChangeEvent;
 import de.atlasmc.event.player.PlayerAnimationEvent.PlayerAnimationType;
 import de.atlasmc.event.player.PlayerLocaleChangeEvent;
 import de.atlasmc.event.player.PlayerMoveEvent;
+import de.atlasmc.event.player.PlayerPickItemEvent;
 import de.atlasmc.event.player.PlayerQueryBlockNBTEvent;
 import de.atlasmc.event.player.PlayerQueryEntityNBTEvent;
 import de.atlasmc.event.player.PlayerResourcePackStatusEvent;
 import de.atlasmc.event.player.PlayerResourcePackStatusEvent.ResourcePackStatus;
 import de.atlasmc.event.player.PlayerRespawnEvent;
 import de.atlasmc.event.player.PlayerSpectateEvent;
+import de.atlasmc.event.player.PlayerSwapHandItemsEvent;
+import de.atlasmc.event.player.PlayerToggleFlightEvent;
+import de.atlasmc.event.player.PlayerUpdateCommandBlockEvent;
+import de.atlasmc.event.player.PlayerUpdateCommandBlockMinecartEvent;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.PlayerInventory;
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
+import de.atlasmc.io.protocol.PacketProtocol;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.ProtocolAdapter;
+import de.atlasmc.io.protocol.ProtocolPlay;
 import de.atlasmc.io.protocol.play.PacketInAdvancementTab;
 import de.atlasmc.io.protocol.play.PacketInAnimation;
 import de.atlasmc.io.protocol.play.PacketInChatMessage;
@@ -92,6 +108,7 @@ import de.atlasmc.io.protocol.play.PacketInUpdateStructureBlock;
 import de.atlasmc.io.protocol.play.PacketInUseItem;
 import de.atlasmc.io.protocol.play.PacketInVehicleMove;
 import de.atlasmc.io.protocol.play.PacketInWindowConfirmation;
+import de.atlasmc.io.protocol.play.PacketOutKeepAlive;
 import de.atlasmc.io.protocol.play.PacketInAdvancementTab.Action;
 
 public class CorePlayerConnection implements PlayerConnection {
@@ -100,6 +117,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	private final AtlasPlayer aplayer;
 	private final ConnectionHandler connection;
 	private final ProtocolAdapter protocol;
+	private final ProtocolPlay protocolPlay;
 	private LocalServer server;
 	private final ConcurrentLinkedQueue<Packet> inboundQueue;
 	
@@ -121,27 +139,38 @@ public class CorePlayerConnection implements PlayerConnection {
 	// Events
 	private PlayerMoveEvent eventMove;
 	private PlayerAnimationEvent eventAnimation;
+	private PlayerDiggingEvent eventDigging;
+	private PlayerHeldItemChangeEvent eventHeldItemChange;
 	
 	// Keep Alive
-	private long lastKeepAlive;
+	private long lastKeepAlive; // the Time the last KeepAlive has been send or received
 	private boolean keepAliveResponse;
 	
 	// Click Control 
 	private boolean ignoreClick;
 	private short confirmNumber;
 	
+	// Digging related data
+	private long diggingStartTime;
+	private long diggingPosition;
+	private BlockFace diggingFace;
+	private boolean digging;
+	
 	public CorePlayerConnection(AtlasPlayer player, ConnectionHandler connection, ProtocolAdapter protocol) {
 		this.aplayer = player;
 		this.connection = connection;
 		this.protocol = protocol;
+		this.protocolPlay = protocol.getPlayProtocol();
 		this.inboundQueue = new ConcurrentLinkedQueue<>();
 		this.chatmode = ChatMode.FULL;
 	}
 	
+	@Override
 	public void queueInboundPacket(Packet packet) {
 		inboundQueue.add(packet);
 	}
 	
+	@Override
 	public void handleQueuedPackets() {
 		final int size = inboundQueue.size();
 		for (int i = 0; i < size; i++) {
@@ -249,7 +278,10 @@ public class CorePlayerConnection implements PlayerConnection {
 	
 	@Override
 	public void handlePacket(PacketInClickWindow packet) {
-		if (ignoreClick) return; // Block further clicks until PacketInWindowConfirmation after invalid click;
+		if (ignoreClick) {
+			handleBadPacket(packet, BadPacketCause.BLOCKED_PACKET);
+			return; // Block further clicks until PacketInWindowConfirmation after invalid click;
+		}
 		LocalServer s = getLocalSever();
 		if (s == null) return;
 		ClickType click = null;
@@ -300,7 +332,7 @@ public class CorePlayerConnection implements PlayerConnection {
 			HandlerList.callEvent(new InventoryClickEvent(player.getOpenInventory(), slot, click, action, key));
 		} else {
 			switch (button) {
-			// TODO
+			// TODO inventory paintmode
 			case 0:
 				// Start drag left
 			case 4:
@@ -322,7 +354,7 @@ public class CorePlayerConnection implements PlayerConnection {
 				break;
 			}
 			
-			HandlerList.callEvent(new InventoryDragEvent(player.getOpenInventory(), newCursor, oldCursor, dragItems));
+			//HandlerList.callEvent(new InventoryDragEvent(player.getOpenInventory(), newCursor, oldCursor, dragItems));
 		}
 	}
 
@@ -359,6 +391,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	@Override
 	public void handlePacket(PacketInKeepAlive packet) {
 		if (packet.getKeepAliveID() != lastKeepAlive) return;
+		lastKeepAlive = packet.getTimestamp();
 		keepAliveResponse = true;
 	}
 
@@ -370,6 +403,7 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInPlayerPosition packet) {
+		eventMove.setCancelled(false);
 		packet.getLocation(eventMove.getTo());
 		clientOnGround = packet.isOnGround();
 		player.getLocation(eventMove.getFrom());
@@ -378,6 +412,7 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInPlayerPositionAndRotation packet) {
+		eventMove.setCancelled(false);
 		packet.getLocation(eventMove.getTo());
 		clientOnGround = packet.isOnGround();
 		player.getLocation(eventMove.getFrom());
@@ -386,6 +421,7 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInPlayerRotation packet) {
+		eventMove.setCancelled(false);
 		packet.getLocation(eventMove.getTo());
 		clientOnGround = packet.isOnGround();
 		player.getLocation(eventMove.getFrom());
@@ -411,8 +447,7 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInPickItem packet) {
-		// TODO Auto-generated method stub
-		
+		HandlerList.callEvent(new PlayerPickItemEvent(player, packet.getSlotToUse()));
 	}
 
 	@Override
@@ -423,14 +458,57 @@ public class CorePlayerConnection implements PlayerConnection {
 	
 	@Override
 	public void handlePacket(PacketInPlayerAbilities packet) {
-		// TODO Auto-generated method stub
-		
+		HandlerList.callEvent(new PlayerToggleFlightEvent(player, packet.isFlying()));
 	}
 
 	@Override
 	public void handlePacket(PacketInPlayerDigging packet) {
-		// TODO Auto-generated method stub
-		
+		final int status = packet.getStatus();
+		switch (status) {
+		case 0: // Start Digging
+			eventDigging.setCancelled(false);
+			if (digging) {
+				handleBadPacket(packet, BadPacketCause.UNEXPECTED_CONTENTS);
+				eventDigging.setStatus(DiggingStatus.CANCELLED_DIGGING);
+				HandlerList.callEvent(eventDigging);
+			}
+			diggingStartTime = packet.getTimestamp();
+			diggingFace = packet.getFace();
+			diggingPosition = packet.getPosition();
+			MathUtil.getLocation(player.getWorld(), eventDigging.getLocation(), diggingPosition);
+			eventDigging.setFace(diggingFace);
+			eventDigging.setStatus(DiggingStatus.START_DIGGING);
+			eventDigging.setTime(0);
+			HandlerList.callEvent(eventDigging);
+			break;
+		case 1: // Cancelled Digging
+		case 2: // Finished Digging
+			eventDigging.setCancelled(false);
+			if (!digging || diggingPosition != packet.getPosition() || diggingFace != packet.getFace()) {
+				handleBadPacket(packet, BadPacketCause.UNEXPECTED_CONTENTS);
+			}
+			eventDigging.setStatus(status == 1 ? DiggingStatus.CANCELLED_DIGGING : DiggingStatus.FINISHED_DIGGING);
+			eventDigging.setTime((int) (packet.getTimestamp()-diggingStartTime));
+			HandlerList.callEvent(eventDigging);
+			break;
+		case 3: // Drop ItemStack all
+			ItemStack mainHand = player.getInventory().getItemInMainHand();
+			HandlerList.callEvent(new PlayerDropItemEvent(player, mainHand, mainHand.getAmount(), mainHand.getAmount(), true));
+			break;
+		case 4: // Drop ItemStack one
+			mainHand = player.getInventory().getItemInMainHand();
+			HandlerList.callEvent(new PlayerDropItemEvent(player, mainHand, 1, 1, false));
+			break;
+		case 5: // Shoot arrow / finish eating
+			// TODO eating shooting etc
+			break;
+		case 6: // Swap Item in Hand
+			PlayerInventory inv = player.getInventory();
+			mainHand = inv.getItemInMainHand();
+			ItemStack offHand = inv.getItemInOffHand();
+			HandlerList.callEvent(new PlayerSwapHandItemsEvent(player, mainHand, offHand));
+			break;
+		}
 	}
 
 	@Override
@@ -459,8 +537,7 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInNameItem packet) {
-		// TODO Auto-generated method stub
-		
+		HandlerList.callEvent(new SmithingNameInputEvent(player.getOpenInventory(), packet.getItemName()));
 	}
 
 	@Override
@@ -490,26 +567,28 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInHeldItemChange packet) {
-		// TODO Auto-generated method stub
-		
+		eventHeldItemChange.setCancelled(false);
+		eventHeldItemChange.setNewSlot(packet.getSlot());
+		HandlerList.callEvent(eventHeldItemChange);
 	}
 
 	@Override
 	public void handlePacket(PacketInUpdateCommandBlock packet) {
-		// TODO Auto-generated method stub
-		
+		Location loc = MathUtil.getLocation(player.getWorld(), packet.getPosition());
+		boolean trackoutput = (packet.getFlags() & 0x01) == 0x01;
+		boolean conditional = (packet.getFlags() & 0x02) == 0x02;
+		boolean alwaysactive = (packet.getFlags() & 0x04) == 0x04;
+		HandlerList.callEvent(new PlayerUpdateCommandBlockEvent(player, loc, packet.getCommand(), packet.getMode(), trackoutput, conditional, alwaysactive));
 	}
 
 	@Override
 	public void handlePacket(PacketInUpdateCommandBlockMinecart packet) {
-		// TODO Auto-generated method stub
-		
+		HandlerList.callEvent(new PlayerUpdateCommandBlockMinecartEvent(player, packet.getEntityID(), packet.getCommand(), packet.getTrackOutput()));
 	}
 
 	@Override
 	public void handlePacket(PacketInCreativeInventoryAction packet) {
-		// TODO Auto-generated method stub
-		
+		HandlerList.callEvent(new InventoryCreativeClickEvent(player.getOpenInventory(), packet.getSlot() < 0 ? -999 : packet.getSlot(), packet.getClickedItem()));
 	}
 
 	@Override
@@ -564,18 +643,20 @@ public class CorePlayerConnection implements PlayerConnection {
 	
 	@Override
 	public void handleUnhandledPacket(Packet packet) {
-		
+		// TODO unhandled Packet
 	}
 	
 	/**
 	 * Handling Packets that are not supposed to be received
 	 * @param packet
 	 */
+	@Override
 	public void handleBadPacket(Packet packet, BadPacketCause cause) {
-		// TODO
+		// TODO handle BadPacket
 	}
 
-	public ProtocolAdapter getProtocol() {
+	@Override
+	public ProtocolAdapter getProtocolAdapter() {
 		return protocol;
 	}
 	
@@ -605,10 +686,12 @@ public class CorePlayerConnection implements PlayerConnection {
 		return server;
 	}
 	
+	@Override
 	public int getNextWindowActionID() {
 		return confirmNumber;
 	}
 	
+	@Override
 	public int getNextWindowActionIDAndLock() {
 		ignoreClick = true;
 		return confirmNumber++;
@@ -622,8 +705,11 @@ public class CorePlayerConnection implements PlayerConnection {
 	@Override
 	public void setPlayer(Player player) {
 		this.player = player;
+		// Reinit all Events for the new PlayerEntity
 		eventAnimation = new PlayerAnimationEvent(player, null);
 		eventMove = new PlayerMoveEvent(player, player.getLocation(), player.getLocation());
+		eventDigging = new PlayerDiggingEvent(player, null, 0, player.getLocation(), diggingFace);
+		eventHeldItemChange = new PlayerHeldItemChangeEvent(player, 0);
 	}
 
 	@Override
@@ -642,6 +728,36 @@ public class CorePlayerConnection implements PlayerConnection {
 	
 	public byte getViewDistance() {
 		return viewDistance;
+	}
+
+	@Override
+	public boolean hasKeepAliveResponse() {
+		return keepAliveResponse;
+	}
+
+	@Override
+	public long getLastKeepAlive() {
+		return lastKeepAlive;
+	}
+
+	@Override
+	public void sendKeepAlive() {
+		if (!hasKeepAliveResponse()) return;
+		lastKeepAlive = System.currentTimeMillis();
+		keepAliveResponse = false;
+		PacketOutKeepAlive packet = getProtocol().createPacket(PacketOutKeepAlive.class);
+		packet.setKeepAlive(lastKeepAlive);
+		sendPacked(packet);
+	}
+
+	@Override
+	public void sendPacked(PacketProtocol packet) {
+		connection.sendPacket(packet);
+	}
+
+	@Override
+	public ProtocolPlay getProtocol() {
+		return protocolPlay;
 	}
 
 }

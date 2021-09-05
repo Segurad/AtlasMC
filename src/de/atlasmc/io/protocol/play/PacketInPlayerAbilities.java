@@ -13,4 +13,6 @@ public interface PacketInPlayerAbilities extends PacketPlay, PacketInbound {
 		return IN_PLAYER_ABILITIES;
 	}
 
+	public boolean isFlying();
+
 }

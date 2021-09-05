@@ -17,7 +17,7 @@ public class CorePacketInNameItem extends AbstractPacket implements PacketInName
 	
 	@Override
 	public void read(ByteBuf in) throws IOException {
-		itemname = readString(in);
+		itemname = readString(in, 32767);
 	}
 
 	@Override

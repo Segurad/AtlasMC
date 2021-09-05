@@ -3,32 +3,35 @@ package de.atlasmc.event.player;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.Cancellable;
 import de.atlasmc.event.ServerHandlerList;
+import de.atlasmc.inventory.ItemStack;
 
-/**
- * Called when a Player changes the selected Slot
- */
-public class PlayerHeldItemChangeEvent extends PlayerEvent implements Cancellable {
+public class PlayerSwapHandItemsEvent extends PlayerEvent implements Cancellable {
 
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
-	private int newSlot;
+	private ItemStack mainHand, offHand;
 	private boolean cancelled;
 	
-	public PlayerHeldItemChangeEvent(Player player, int newSlot) {
+	public PlayerSwapHandItemsEvent(Player player, ItemStack mainHand, ItemStack offHand) {
 		super(player);
-		this.newSlot = newSlot;
+		this.mainHand = mainHand;
+		this.offHand = offHand;
 	}
 	
-	public int getNewSlot() {
-		return newSlot;
+	public ItemStack getMainHand() {
+		return mainHand;
 	}
 	
-	public void setNewSlot(int newSlot) {
-		this.newSlot = newSlot;
+	public ItemStack getOffHand() {
+		return offHand;
 	}
 	
-	public int getOldSlot() {
-		return getPlayer().getInventory().getHeldItemSlot();
+	public void setMainHand(ItemStack mainHand) {
+		this.mainHand = mainHand;
+	}
+	
+	public void setOffHand(ItemStack offHand) {
+		this.offHand = offHand;
 	}
 
 	@Override

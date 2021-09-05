@@ -97,6 +97,14 @@ public class MathUtil {
 		return new Location(world, getPositionX(position), getPositionY(position), getPositionZ(position));
 	}
 	
+	public static Location getLocation(World world, Location loc, long position) {
+		return loc.setLocation(world, getPositionX(position), getPositionY(position), getPositionZ(position));
+	}
+	
+	public static SimpleLocation getLocation(SimpleLocation loc, long position) {
+		return loc.setLocation(getPositionX(position), getPositionY(position), getPositionZ(position));
+	}
+	
 	public static SimpleLocation getLocation(long position) {
 		return new SimpleLocation(getPositionX(position), getPositionY(position), getPositionZ(position));
 	}

@@ -30,4 +30,9 @@ public class CorePacketInPlayerAbilities extends AbstractPacket implements Packe
 		return flags;
 	}
 
+	@Override
+	public boolean isFlying() {
+		return (flags & 0x02) == 0x02;
+	}
+
 }

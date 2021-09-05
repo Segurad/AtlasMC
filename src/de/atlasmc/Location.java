@@ -34,6 +34,18 @@ public class Location extends SimpleLocation {
 		return world.getBlockData(getBlockX(), getBlockY(), getBlockZ());
 	}
 	
+	public Location setLocation(World world, double x, double y, double z) {
+		super.setLocation(x, y, z);
+		this.world = world;
+		return this;
+	}
+	
+	public Location setLocation(World world, double x, double y, double z, float yaw, float pitch) {
+		super.setLocation(x, y, z, yaw, pitch);
+		this.world = world;
+		return this;
+	}
+	
 	public Location copyTo(Location loc) {
 		super.copyTo(loc);
 		loc.world = world;

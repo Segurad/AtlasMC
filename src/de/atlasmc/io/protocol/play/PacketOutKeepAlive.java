@@ -7,6 +7,7 @@ import de.atlasmc.io.PacketOutbound;
 public interface PacketOutKeepAlive extends PacketPlay, PacketOutbound {
 
 	public long getKeepAlive();
+	public void setKeepAlive(long time);
 	
 	@Override
 	public default int getDefaultID() {

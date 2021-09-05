@@ -2,13 +2,15 @@ package de.atlasmc.event.player;
 
 import de.atlasmc.Location;
 import de.atlasmc.entity.Player;
+import de.atlasmc.event.Cancellable;
 import de.atlasmc.event.ServerHandlerList;
 
-public class PlayerMoveEvent extends PlayerEvent {
+public class PlayerMoveEvent extends PlayerEvent implements Cancellable {
 
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
 	private final Location from, to;
+	private boolean cancelled;
 	
 	public PlayerMoveEvent(Player player, Location from, Location to) {
 		super(player);
@@ -24,6 +26,16 @@ public class PlayerMoveEvent extends PlayerEvent {
 		return to;
 	}
 
+	@Override
+	public void setCancelled(boolean cancelled) {
+		this.cancelled = cancelled;
+	}
+
+	@Override
+	public boolean isCancelled() {
+		return cancelled;
+	}
+	
 	@Override
 	public ServerHandlerList getHandlers() {
 		return handlers;

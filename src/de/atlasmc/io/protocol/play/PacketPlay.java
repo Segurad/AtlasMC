@@ -1,11 +1,11 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.Packet;
+import de.atlasmc.io.protocol.PacketProtocol;
 
 /**
  * This interface marks Packets for the mc-play protocol
  */
-public interface PacketPlay extends Packet {
+public interface PacketPlay extends PacketProtocol {
 	
 	public static final int 
 	PACKET_COUNT_IN = 48, 

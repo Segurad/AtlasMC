@@ -14,7 +14,9 @@ public interface PlayerConnection extends PacketListenerPlayIn {
 	
 	public void handleQueuedPackets();
 
-	public ProtocolAdapter getProtocol();
+	public ProtocolAdapter getProtocolAdapter();
+	
+	public ProtocolPlay getProtocol();
 
 	/**
 	 * 
@@ -42,5 +44,13 @@ public interface PlayerConnection extends PacketListenerPlayIn {
 	public AtlasPlayer getAtlasPlayer();
 	
 	public ChatMode getChatMode();
+	
+	public boolean hasKeepAliveResponse();
+	
+	public long getLastKeepAlive();
+	
+	public void sendKeepAlive();
+	
+	public void sendPacked(PacketProtocol packet);
 
 }

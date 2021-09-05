@@ -8,7 +8,7 @@ import de.atlasmc.io.PacketInbound;
 public interface PacketInCreativeInventoryAction extends PacketPlay, PacketInbound {
 	
 	public short getSlot();
-	public ItemStack ClickedItem();
+	public ItemStack getClickedItem();
 	
 	@Override
 	default int getDefaultID() {

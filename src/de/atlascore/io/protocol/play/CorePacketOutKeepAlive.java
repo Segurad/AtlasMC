@@ -35,4 +35,9 @@ public class CorePacketOutKeepAlive extends AbstractPacket implements PacketOutK
 		return keepAlive;
 	}
 
+	@Override
+	public void setKeepAlive(long time) {
+		this.keepAlive = time;
+	}
+
 }

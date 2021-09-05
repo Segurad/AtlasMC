@@ -35,7 +35,7 @@ public class CorePacketInCreativeInventoryAction extends AbstractPacket implemen
 	}
 
 	@Override
-	public ItemStack ClickedItem() {
+	public ItemStack getClickedItem() {
 		return clickedItem;
 	}
 
