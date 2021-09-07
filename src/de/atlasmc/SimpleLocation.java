@@ -2,6 +2,8 @@ package de.atlasmc;
 
 import java.util.Objects;
 
+import de.atlasmc.util.MathUtil;
+
 public class SimpleLocation implements Cloneable {
 
 	private double x;
@@ -57,17 +59,29 @@ public class SimpleLocation implements Cloneable {
 	public double getZ() {
 		return z;
 	}
+	
+	public void addX(double x) {
+		this.x += x;
+	}
+	
+	public void addY(double y) {
+		this.y += y;
+	}
+	
+	public void addZ(double z) {
+		this.z += z;
+	}
 
 	public int getBlockX() {
-		return (int) x;
+		return MathUtil.floor(x);
 	}
 
 	public int getBlockY() {
-		return (int) y;
+		return MathUtil.floor(y);
 	}
 
 	public int getBlockZ() {
-		return (int) z;
+		return MathUtil.floor(z);
 	}
 
 	public float getPitch() {
@@ -198,6 +212,17 @@ public class SimpleLocation implements Cloneable {
 		loc.yaw = yaw;
 		return loc;	
 	}
+	
+	/**
+	 * Converts all values to integer values
+	 * @return this Location
+	 */
+	public SimpleLocation convertToBlock() {
+		this.x = getBlockX();
+		this.y = getBlockY();
+		this.z = getBlockZ();
+		return this;
+	}
 
 	@Override
 	public int hashCode() {
@@ -218,6 +243,14 @@ public class SimpleLocation implements Cloneable {
 				&& y == other.y
 				&& yaw == other.yaw
 				&& z == other.z;
+	}
+	
+	public Vector getDirection() {
+		return MathUtil.getVector(yaw, pitch);
+	}
+	
+	public Vector getDirection(Vector vec) {
+		return MathUtil.getVector(yaw, pitch, vec);
 	}
 	
 }

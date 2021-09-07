@@ -3,6 +3,7 @@ package de.atlasmc.entity;
 import java.util.UUID;
 
 import de.atlasmc.Effect;
+import de.atlasmc.Gamemode;
 import de.atlasmc.Location;
 import de.atlasmc.Particle;
 import de.atlasmc.Sound;
@@ -58,5 +59,7 @@ public interface Player extends HumanEntity {
 	public String getLocal();
 
 	public InventoryView getOpenInventory();
+
+	public Gamemode getGamemode();
 
 }

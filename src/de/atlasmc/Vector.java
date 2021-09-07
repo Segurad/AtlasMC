@@ -51,4 +51,9 @@ public class Vector implements Cloneable {
 		return null;
 	}
 
+	public void normalize() {
+		// norm vec
+		
+	}
+
 }

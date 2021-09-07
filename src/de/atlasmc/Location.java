@@ -26,8 +26,14 @@ public class Location extends SimpleLocation {
 		return world.getBlock(getBlockX(), getBlockY(), getBlockZ());
 	}
 	
+	@Override
 	public Location clone() {
 		return new Location(this);
+	}
+	
+	@Override
+	public Location convertToBlock() {
+		return (Location) super.convertToBlock();
 	}
 
 	public BlockData getBlockData() {

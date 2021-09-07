@@ -19,11 +19,13 @@ public class CoreChunk implements Chunk {
 	private final ChunkSection[] sections;
 	private final List<Entity> entities;
 	private final int[] biomes;
+	private final World world;
 	
 	public CoreChunk(World world) {
 		sections = new ChunkSection[16];
 		entities = new ArrayList<Entity>();
 		biomes = new int[1024];
+		this.world = world;
 	}
 
 	@Override
@@ -184,6 +186,16 @@ public class CoreChunk implements Chunk {
 			}
 		}
 		return entities;
+	}
+
+	@Override
+	public World getWorld() {
+		return world;
+	}
+
+	@Override
+	public void sendUpdate(int x, int y, int z) {
+		world.sendUpdate(this, x, y, z);
 	}
 
 }

@@ -11,7 +11,7 @@ import de.atlasmc.world.ChunkSection;
 public class CoreChunkSection implements ChunkSection {
 	
 	private final List<CorePaletteEntry> palette;
-	private final short[] indizes;
+	private final short[] indizes; // indexed by (y * 256 + z * 16 + x) (z << 4 + y << 8 + x)
 
 	public CoreChunkSection() {
 		palette = new ArrayList<CorePaletteEntry>();
@@ -48,9 +48,9 @@ public class CoreChunkSection implements ChunkSection {
 		entry.decrementCount();
 		indizes[index] = value;
 	}
-	
+
 	protected int getIndizesIndex(int x, int y, int z) {
-		return (z&0xF)<<4+(y & 0xF)<<8+x;
+		return (z & 0xF) << 4 + (y & 0xF) << 8 + (x & 0xF);
 	}
 
 	@Override

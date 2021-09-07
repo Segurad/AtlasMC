@@ -1318,5 +1318,9 @@ public class Material {
 	public String getNamespacedName() {
 		return NamespacedKey.getNamespace(getNamespaceID())+':'+getName();
 	}
+
+	public boolean isAir() {
+		return this == AIR || this == CAVE_AIR || this == VOID_AIR;
+	}
 	
 }

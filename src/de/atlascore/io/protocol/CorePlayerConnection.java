@@ -3,14 +3,15 @@ package de.atlascore.io.protocol;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import de.atlascore.block.CoreBlock;
 import de.atlasmc.Atlas;
+import de.atlasmc.Gamemode;
 import de.atlasmc.Location;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.block.Block;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.chat.ChatMode;
-import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.block.SignChangeEvent;
@@ -21,7 +22,6 @@ import de.atlasmc.event.inventory.InventoryClickButtonEvent;
 import de.atlasmc.event.inventory.InventoryClickEvent;
 import de.atlasmc.event.inventory.InventoryCloseEvent;
 import de.atlasmc.event.inventory.InventoryCreativeClickEvent;
-import de.atlasmc.event.inventory.InventoryDragEvent;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.event.inventory.SelectTradeEvent;
 import de.atlasmc.event.inventory.SmithingNameInputEvent;
@@ -33,6 +33,7 @@ import de.atlasmc.event.player.PlayerDiggingEvent;
 import de.atlasmc.event.player.PlayerDiggingEvent.DiggingStatus;
 import de.atlasmc.event.player.PlayerDropItemEvent;
 import de.atlasmc.event.player.PlayerHeldItemChangeEvent;
+import de.atlasmc.event.player.PlayerInteractEvent;
 import de.atlasmc.event.player.PlayerAnimationEvent.PlayerAnimationType;
 import de.atlasmc.event.player.PlayerLocaleChangeEvent;
 import de.atlasmc.event.player.PlayerMoveEvent;
@@ -47,6 +48,7 @@ import de.atlasmc.event.player.PlayerSwapHandItemsEvent;
 import de.atlasmc.event.player.PlayerToggleFlightEvent;
 import de.atlasmc.event.player.PlayerUpdateCommandBlockEvent;
 import de.atlasmc.event.player.PlayerUpdateCommandBlockMinecartEvent;
+import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.PlayerInventory;
@@ -66,7 +68,9 @@ import de.atlasmc.io.protocol.play.PacketInClientStatus;
 import de.atlasmc.io.protocol.play.PacketInClientStatus.StatusAction;
 import de.atlasmc.util.MathUtil;
 import de.atlasmc.util.annotation.ThreadSafe;
-import io.netty.buffer.ByteBuf;
+import de.atlasmc.util.raytracing.BlockRayCollisionRule;
+import de.atlasmc.util.raytracing.BlockRayTracer;
+import de.atlasmc.world.Chunk;
 import de.atlasmc.io.protocol.play.PacketInCloseWindow;
 import de.atlasmc.io.protocol.play.PacketInCraftRecipeRequest;
 import de.atlasmc.io.protocol.play.PacketInCreativeInventoryAction;
@@ -637,8 +641,23 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInUseItem packet) {
-		// TODO Auto-generated method stub
+		Location loc = player.getLocation();
+		BlockRayTracer ray = new BlockRayTracer(loc, loc.getDirection());
+		double length = player.getGamemode() == Gamemode.CREATIVE ? 5.0 : 4.5;
+		Chunk chunk = ray.getFirstBlockHit(BlockRayCollisionRule.IGNORE_FUID_AND_AIR, length);
+		Block block = new CoreBlock(loc, chunk);
 		
+		EquipmentSlot hand = packet.getHand();
+		PlayerInteractEvent.Action action;
+		if (block.getType().isAir()) {
+			if (hand == EquipmentSlot.HAND) {
+				action = PlayerInteractEvent.Action.LEFT_CLICK_AIR;
+			} else action = PlayerInteractEvent.Action.RIGHT_CLICK_AIR;
+		} else if (hand == EquipmentSlot.HAND) {
+			action = PlayerInteractEvent.Action.LEFT_CLICK_BLOCK;
+		} else action = PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK;
+		ItemStack item = player.getInventory().getItemInMainHand();
+		HandlerList.callEvent(new PlayerInteractEvent(player, action, item, block, ray.getLastHitFace(), hand));
 	}
 	
 	@Override

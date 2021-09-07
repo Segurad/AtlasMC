@@ -50,7 +50,9 @@ public interface World extends Tickable {
 	public void playSound(SimpleLocation loc, String sound, SoundCategory category, float volume, float pitch);
 	
 	public boolean hasFlag(WorldFlag flag);
+	
 	public void addFlag(WorldFlag flag);
+	
 	public void removeFlag(WorldFlag flag);
 
 	public default Block getBlock(SimpleLocation loc) {
@@ -58,8 +60,30 @@ public interface World extends Tickable {
 	}
 	
 	public Block getBlock(int x, int y, int z);
+	
 	public BlockData getBlockData(int x, int y, int z);
+	
 	public Entity getEntity(int entityID);
 	
+	public Chunk getChunk(int x, int z);
+	
+	public Chunk getChunk(SimpleLocation loc);
+	
+	/**
+	 * Updates the Block at this position for Players
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
+	public void sendUpdate(int x, int y, int z);
+	
+	/**
+	 * Updates the Block at this position for Players
+	 * @param chunk of Blocks
+	 * @param x 
+	 * @param y
+	 * @param z
+	 */
+	public void sendUpdate(Chunk chunk, int x, int y, int z);
 
 }

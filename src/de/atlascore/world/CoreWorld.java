@@ -13,6 +13,7 @@ import de.atlasmc.block.Block;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
+import de.atlasmc.world.Chunk;
 import de.atlasmc.world.World;
 import de.atlasmc.world.WorldFlag;
 
@@ -156,6 +157,31 @@ public class CoreWorld implements World {
 	@Override
 	public long getAge() {
 		return age;
+	}
+
+	@Override
+	public Entity getEntity(int entityID) {
+		return chunks.getEntity(entityID);
+	}
+
+	@Override
+	public Chunk getChunk(int x, int z) {
+		return chunks.getChunk(x, z);
+	}
+
+	@Override
+	public Chunk getChunk(SimpleLocation loc) {
+		return getChunk(loc.getBlockX() >> 4, loc.getBlockZ() >> 4);
+	}
+
+	@Override
+	public void sendUpdate(Chunk chunk, int x, int y, int z) {
+		// TODO send update to all players in this world
+	}
+
+	@Override
+	public void sendUpdate(int x, int y, int z) {
+		sendUpdate(getChunk(x, z), x, y, z);
 	}
 
 }

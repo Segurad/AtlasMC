@@ -22,13 +22,20 @@ public class CoreChunkProvider implements Tickable {
 		this.world = world;
 	}
 	
+	/**
+	 * 
+	 * @param x chunk coordinate
+	 * @param z chunk coordinate
+	 * @return
+	 */
 	public Chunk getChunk(int x, int z) {
 		// X | Y
-		final long pos = (x >> 4) << 32 + z >> 4;
+		final long pos = x << 32 + z;
 		for (int i = 0; i < size; i++) {
 			if (chunkPosBuffer[i] != pos) continue;
 			return chunkBuffer[i];
 		}
+		// TODO chunk not present
 		return null;
 	}
 
@@ -60,9 +67,9 @@ public class CoreChunkProvider implements Tickable {
 	}
 
 	public int getHighestBlockYAt(int x, int z) {
-		Chunk c = getChunk(x, z);
+		Chunk c = getChunk(x >> 4, z >> 4);
 		if (c == null) return 0;
-		return c.getHighestBlockYAt(x, z);
+		return c.getHighestBlockYAt(x & 0xF, z & 0xF);
 	}
 
 	public void tick() {
@@ -70,7 +77,12 @@ public class CoreChunkProvider implements Tickable {
 	}
 
 	public Block getBlock(int x, int y, int z) {
-		return new CoreBlock(new Location(world, x, y, z), getChunk(x, z));
+		return new CoreBlock(new Location(world, x, y, z), getChunk(x >> 4, z >> 4));
+	}
+
+	public Entity getEntity(int entityID) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -8,6 +8,11 @@ import de.atlasmc.world.World;
 public class MathUtil {
 	
 	private MathUtil() {}
+
+	public static int floor(double value) {
+		int i = (int) value;
+		return value > i ? i : i-1;
+	}
 	
 	/**
 	 * 
@@ -52,7 +57,7 @@ public class MathUtil {
 	}
 
 	public static int toAngle(float value) {
-		return Math.round(value * 256 / 360);
+		return floor(value * 256 / 360);
 	}
 	
 	public static float fromAngle(int value) {
@@ -63,20 +68,20 @@ public class MathUtil {
 		return (short) ((var0 * 32 - var1 * 32) * 128);
 	}
 	
-	public long sectionToPosition(int x, int y, int z) {
+	public static long sectionToPosition(int x, int y, int z) {
 		return ((x & 0x3FFFFF) << 42) | (y & 0xFFFFF) | ((z & 0x3FFFFF) << 20);
 	}
 	
-	public int sectionPositionX(long section) {
+	public static int sectionPositionX(long section) {
 		return (int) (section >> 42);
 	}
 	
-	public int sectionPositionY(long section) {
+	public static int sectionPositionY(long section) {
 		long y = section << 42 >> 44;
 		return (int) y;
 	}
 	
-	public int sectionPositionZ(long section) {
+	public static int sectionPositionZ(long section) {
 		long z = section << 22 >> 42;
 		return (int) z;
 	}
@@ -89,7 +94,7 @@ public class MathUtil {
 	 * @param z relative to chunk
 	 * @return the parameters as single long
 	 */
-	public long blockdataPosition(int blockstate, int x, int y, int z) {
+	public static long blockdataPosition(int blockstate, int x, int y, int z) {
 		return blockstate << 12 | (x << 8 | y << 4 | z);
 	}
 
@@ -109,7 +114,7 @@ public class MathUtil {
 		return new SimpleLocation(getPositionX(position), getPositionY(position), getPositionZ(position));
 	}
 	
-	public float getYaw(double x, double z, double lockX, double lockZ) {
+	public static float getYaw(double x, double z, double lockX, double lockZ) {
 		double dx = lockX-x;
 		double dz = lockZ-z;
 		float yaw = (float) (-Math.atan2(dx,dz)/Math.PI*180);
@@ -118,7 +123,7 @@ public class MathUtil {
 		return yaw;
 	}
 	
-	public float getPitch(double x, double y, double z, double lockX, double lockY, double lockZ) {
+	public static float getPitch(double x, double y, double z, double lockX, double lockY, double lockZ) {
 		double dx = lockX-x;
 		double dy = lockY-y;
 		double dz = lockZ-z;
@@ -126,15 +131,15 @@ public class MathUtil {
 		return (float) (-Math.asin(dy/r)/Math.PI*180);
 	}
 	
-	public Vector getVector(float yaw, float pitch) {
+	public static Vector getVector(float yaw, float pitch) {
 		return getVector(yaw, pitch, new Vector());
 	}
 	
-	public Vector getVector(float yaw, float pitch, Vector vec) {
-		double cosPitch = Math.sin(pitch);
-		vec.setX(-cosPitch * Math.sin(yaw));
-		vec.setY(-Math.sin(pitch));
-		vec.setZ(cosPitch * Math.cos(yaw));
+	public static Vector getVector(float yaw, float pitch, Vector vec) {
+		double cosPitch = Math.sin(Math.toRadians(pitch));
+		vec.setX(-cosPitch * Math.sin(Math.toRadians(yaw)));
+		vec.setY(-Math.sin(Math.toRadians(pitch)));
+		vec.setZ(cosPitch * Math.cos(Math.toRadians(yaw)));
 		return vec;
 	}
 	
