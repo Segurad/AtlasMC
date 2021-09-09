@@ -5,6 +5,7 @@ import java.io.IOException;
 import de.atlascore.io.protocol.CoreProtocolAdapter;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInSetRecipeBookState;
+import de.atlasmc.recipe.BookType;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketInSetRecipeBookState extends AbstractPacket implements PacketInSetRecipeBookState {
@@ -31,8 +32,8 @@ public class CorePacketInSetRecipeBookState extends AbstractPacket implements Pa
 	}
 
 	@Override
-	public int getBookID() {
-		return bookID;
+	public BookType getBookID() {
+		return BookType.getByID(bookID);
 	}
 
 	@Override

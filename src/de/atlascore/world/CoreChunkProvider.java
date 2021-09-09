@@ -3,7 +3,7 @@ package de.atlascore.world;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlascore.block.CoreBlock;
+import de.atlascore.block.CoreBlockAccess;
 import de.atlasmc.Location;
 import de.atlasmc.block.Block;
 import de.atlasmc.entity.Entity;
@@ -77,7 +77,7 @@ public class CoreChunkProvider implements Tickable {
 	}
 
 	public Block getBlock(int x, int y, int z) {
-		return new CoreBlock(new Location(world, x, y, z), getChunk(x >> 4, z >> 4));
+		return new CoreBlockAccess(new Location(world, x, y, z), getChunk(x >> 4, z >> 4));
 	}
 
 	public Entity getEntity(int entityID) {

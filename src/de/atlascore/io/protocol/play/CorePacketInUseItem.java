@@ -3,6 +3,7 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInUseItem;
 import io.netty.buffer.ByteBuf;
@@ -26,8 +27,8 @@ public class CorePacketInUseItem extends AbstractPacket implements PacketInUseIt
 	}
 
 	@Override
-	public int getHand() {
-		return hand;
+	public EquipmentSlot getHand() {
+		return hand == 0 ? EquipmentSlot.HAND : EquipmentSlot.OFF_HAND;
 	}
 
 }

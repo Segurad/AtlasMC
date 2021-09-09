@@ -3,6 +3,8 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlasmc.block.BlockFace;
+import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInPlayerBlockPlacement;
 import io.netty.buffer.ByteBuf;
@@ -39,8 +41,8 @@ public class CorePacketInPlayerBlockPlacement extends AbstractPacket implements 
 	}
 
 	@Override
-	public int getHand() {
-		return hand;
+	public EquipmentSlot getHand() {
+		return hand == 0 ? EquipmentSlot.HAND : EquipmentSlot.OFF_HAND;
 	}
 
 	@Override
@@ -49,8 +51,10 @@ public class CorePacketInPlayerBlockPlacement extends AbstractPacket implements 
 	}
 
 	@Override
-	public int getFace() {
-		return face;
+	public BlockFace getFace() {
+		if (face < 0 || face > 5)
+			return BlockFace.UP;
+		return CorePacketInPlayerDigging.faces[face];
 	}
 
 	@Override

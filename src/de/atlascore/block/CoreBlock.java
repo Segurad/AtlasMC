@@ -2,66 +2,45 @@ package de.atlascore.block;
 
 import de.atlasmc.Location;
 import de.atlasmc.Material;
-import de.atlasmc.block.Block;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.world.Chunk;
-import de.atlasmc.world.EnumBiome;
-import de.atlasmc.world.World;
 
-public class CoreBlock implements Block {
+public class CoreBlock extends CoreBlockAccess {
 	
-	private final Location loc;
-	private final Chunk chunk;
+	private BlockData data;
 	
-	public CoreBlock(Location loc, Chunk chunk) {
-		this.loc = loc;
-		this.chunk = chunk;
+	public CoreBlock(Location loc, BlockData data) {
+		this(loc, loc.getWorld().getChunk(loc), data);
 	}
 	
+	public CoreBlock(Location loc, Chunk chunk, BlockData data) {
+		super(loc, chunk);
+	}
+	
+	public CoreBlock(Location loc, Material type) {
+		this(loc, type.createBlockData());
+	}
+
 	@Override
 	public Material getType() {
-		return chunk.getBlockType(getX(), getY(), getZ());
+		return data.getMaterial();
 	}
-
-	@Override
-	public void setBlockData(BlockData data) {
-		this.chunk.setBlockDataAt(data, getX(), getY(), getZ());
-	}
-
-	@Override
-	public void setType(Material material) {
-		if (!material.isBlock()) throw new IllegalArgumentException("Material is not a Block: " + material.getName());
-		chunk.setBlockType(material, getX(), getY(), getZ());
-	}
-
+	
 	@Override
 	public BlockData getBlockData() {
-		return chunk.getBlockDataAt(getX(), getY(), getZ());
+		return data;
 	}
-
+	
 	@Override
-	public int getY() {
-		return loc.getBlockY();
+	public void setType(Material material) {
+		if (data.getMaterial() == material) return;
+		if (!material.isBlock()) throw new IllegalArgumentException("Material must be a Block: " + material.getName());
+		data = material.createBlockData();
 	}
-
+	
 	@Override
-	public EnumBiome getBiome() {
-		return chunk.getBiome(getX(), getY(), getZ());
-	}
-
-	@Override
-	public World getWorld() {
-		return loc.getWorld();
-	}
-
-	@Override
-	public int getX() {
-		return loc.getBlockX();
-	}
-
-	@Override
-	public int getZ() {
-		return loc.getBlockZ();
+	public void setBlockData(BlockData data) {
+		this.data = data;
 	}
 
 }

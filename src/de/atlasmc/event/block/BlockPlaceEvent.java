@@ -1,6 +1,7 @@
 package de.atlasmc.event.block;
 
 import de.atlasmc.block.Block;
+import de.atlasmc.block.BlockFace;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.Cancellable;
 import de.atlasmc.event.ServerHandlerList;
@@ -10,14 +11,24 @@ import de.atlasmc.inventory.ItemStack;
 public class BlockPlaceEvent extends BlockEvent implements Cancellable {
 
 	private final static ServerHandlerList handlers = new ServerHandlerList();
-	protected boolean cancelled, canBuild;
-	protected Player player;
-	protected Block placeAgainst;
-	protected ItemStack itemInMainHand;
-	protected EquipmentSlot hand;
 	
-	public BlockPlaceEvent(Block block) {
+	private boolean cancelled;
+	private final Player player;
+	private Block placeAgainst;
+	private final EquipmentSlot hand;
+	private final float cursorX, cursorY, cursorZ;
+	private BlockFace face;
+	
+	public BlockPlaceEvent(Block block, Block against, Player player, EquipmentSlot hand, BlockFace face, float cursorX, float cursorY, float cursorZ) {
 		super(block);
+		this.player = player;
+		this.hand = hand;
+		this.face = face;
+		this.cursorX = cursorX;
+		this.cursorY = cursorY;
+		this.cursorZ = cursorZ;
+		this.face = face;
+		this.placeAgainst = against;
 	}
 
 	@Override
@@ -28,6 +39,22 @@ public class BlockPlaceEvent extends BlockEvent implements Cancellable {
 	@Override
 	public boolean isCancelled() {
 		return this.cancelled;
+	}
+	
+	public float getCursorX() {
+		return cursorX;
+	}
+	
+	public float getCursorY() {
+		return cursorY;
+	}
+	
+	public float getCursorZ() {
+		return cursorZ;
+	}
+	
+	public BlockFace getFace() {
+		return face;
 	}
 
 	public Player getPlayer() {
@@ -43,7 +70,7 @@ public class BlockPlaceEvent extends BlockEvent implements Cancellable {
 	}
 	
 	public ItemStack getItemInHand() {
-		return this.itemInMainHand;
+		return player.getInventory().getItemInMainHand();
 	}
 	
 	public EquipmentSlot getHand() {
@@ -51,11 +78,11 @@ public class BlockPlaceEvent extends BlockEvent implements Cancellable {
 	}
 	
 	public boolean canBuild() {
-		return this.canBuild;
+		return player.getCanBuild();
 	}
 	
 	public void setBuild(boolean canBuild) {
-		this.canBuild = canBuild;
+		player.setCanBuild(canBuild);
 	}
 
 	@Override

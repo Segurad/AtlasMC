@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.atlascore.block.CoreBlock;
+import de.atlascore.block.CoreBlockAccess;
 import de.atlasmc.Atlas;
 import de.atlasmc.Gamemode;
 import de.atlasmc.Location;
@@ -14,7 +15,9 @@ import de.atlasmc.block.BlockFace;
 import de.atlasmc.chat.ChatMode;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.HandlerList;
+import de.atlasmc.event.block.BlockPlaceEvent;
 import de.atlasmc.event.block.SignChangeEvent;
+import de.atlasmc.event.inventory.BeaconEffectChangeEvent;
 import de.atlasmc.event.inventory.ClickType;
 import de.atlasmc.event.inventory.InventoryAction;
 import de.atlasmc.event.inventory.InventoryButtonType;
@@ -34,18 +37,24 @@ import de.atlasmc.event.player.PlayerDiggingEvent.DiggingStatus;
 import de.atlasmc.event.player.PlayerDropItemEvent;
 import de.atlasmc.event.player.PlayerHeldItemChangeEvent;
 import de.atlasmc.event.player.PlayerInteractEvent;
+import de.atlasmc.event.player.PlayerLeaveBedEvent;
 import de.atlasmc.event.player.PlayerAnimationEvent.PlayerAnimationType;
 import de.atlasmc.event.player.PlayerLocaleChangeEvent;
 import de.atlasmc.event.player.PlayerMoveEvent;
 import de.atlasmc.event.player.PlayerPickItemEvent;
 import de.atlasmc.event.player.PlayerQueryBlockNBTEvent;
 import de.atlasmc.event.player.PlayerQueryEntityNBTEvent;
+import de.atlasmc.event.player.PlayerQuickcraftRequestEvent;
 import de.atlasmc.event.player.PlayerResourcePackStatusEvent;
 import de.atlasmc.event.player.PlayerResourcePackStatusEvent.ResourcePackStatus;
 import de.atlasmc.event.player.PlayerRespawnEvent;
+import de.atlasmc.event.player.PlayerSetDisplayRecipeEvent;
+import de.atlasmc.event.player.PlayerSetRecipeBookStateEvent;
 import de.atlasmc.event.player.PlayerSpectateEvent;
 import de.atlasmc.event.player.PlayerSwapHandItemsEvent;
 import de.atlasmc.event.player.PlayerToggleFlightEvent;
+import de.atlasmc.event.player.PlayerToggleSneakEvent;
+import de.atlasmc.event.player.PlayerToggleSprintEvent;
 import de.atlasmc.event.player.PlayerUpdateCommandBlockEvent;
 import de.atlasmc.event.player.PlayerUpdateCommandBlockMinecartEvent;
 import de.atlasmc.inventory.EquipmentSlot;
@@ -113,6 +122,8 @@ import de.atlasmc.io.protocol.play.PacketInUseItem;
 import de.atlasmc.io.protocol.play.PacketInVehicleMove;
 import de.atlasmc.io.protocol.play.PacketInWindowConfirmation;
 import de.atlasmc.io.protocol.play.PacketOutKeepAlive;
+import de.atlasmc.potion.PotionEffect;
+import de.atlasmc.recipe.RecipeBook;
 import de.atlasmc.io.protocol.play.PacketInAdvancementTab.Action;
 
 public class CorePlayerConnection implements PlayerConnection {
@@ -145,6 +156,8 @@ public class CorePlayerConnection implements PlayerConnection {
 	private PlayerAnimationEvent eventAnimation;
 	private PlayerDiggingEvent eventDigging;
 	private PlayerHeldItemChangeEvent eventHeldItemChange;
+	private PlayerToggleSneakEvent eventSneak;
+	private PlayerToggleSprintEvent eventSprint;
 	
 	// Keep Alive
 	private long lastKeepAlive; // the Time the last KeepAlive has been send or received
@@ -159,6 +172,9 @@ public class CorePlayerConnection implements PlayerConnection {
 	private long diggingPosition;
 	private BlockFace diggingFace;
 	private boolean digging;
+	
+	// Recipe Book
+	private RecipeBook recipeBook;
 	
 	public CorePlayerConnection(AtlasPlayer player, ConnectionHandler connection, ProtocolAdapter protocol) {
 		this.aplayer = player;
@@ -235,8 +251,7 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInTabComplete packet) {
-		// TODO Auto-generated method stub
-		
+		// TODO command implementation needed
 	}
 
 	@Override
@@ -456,8 +471,11 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInCraftRecipeRequest packet) {
-		// TODO Auto-generated method stub
-		
+		int windowID = packet.getWindowID();
+		if (getInventoryID() != windowID) return;
+		String recipe = packet.getRecipe();
+		boolean craftAll = packet.getMakeAll();
+		HandlerList.callEvent(new PlayerQuickcraftRequestEvent(player, recipe, craftAll));
 	}
 	
 	@Override
@@ -517,8 +535,33 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInEntityAction packet) {
-		// TODO Auto-generated method stub
-		
+		// TODO
+		switch (packet.getActionID()) {
+		case 0: // Start sneaking
+			eventSneak.setSneaking(true);
+			HandlerList.callEvent(eventSneak);
+			break;
+		case 1: // Stop sneaking
+			eventSneak.setSneaking(false);
+			HandlerList.callEvent(eventSneak);
+			break;
+		case 2: // Leave Bed (GUI Button)
+			HandlerList.callEvent(new PlayerLeaveBedEvent(player));
+			break;
+		case 3: // Start sprinting
+			eventSprint.setSprinting(true);
+			HandlerList.callEvent(eventSprint);
+			break;
+		case 4: // Stop sprinting
+			eventSprint.setSprinting(false);
+			HandlerList.callEvent(eventSprint);
+			break;
+		case 5: // Start horse jump
+		case 6: // Stop horse jump
+		case 7: // Open horse inventory (mounted)
+		case 8: // start flying with elytra
+			break;
+		}
 	}
 
 	@Override
@@ -529,14 +572,12 @@ public class CorePlayerConnection implements PlayerConnection {
 	
 	@Override
 	public void handlePacket(PacketInSetRecipeBookState packet) {
-		// TODO Auto-generated method stub
-		
+		HandlerList.callEvent(new PlayerSetRecipeBookStateEvent(player, packet.getBookID(), packet.getBookOpen(), packet.getFilterActive()));
 	}
 
 	@Override
 	public void handlePacket(PacketInSetDisplayedRecipe packet) {
-		// TODO Auto-generated method stub
-		
+		HandlerList.callEvent(new PlayerSetDisplayRecipeEvent(player, packet.getRecipeID()));
 	}
 
 	@Override
@@ -566,7 +607,11 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInSetBeaconEffect packet) {
-		// TODO Auto-generated method stub
+		int primaryID = packet.getPrimaryEffect();
+		int secondaryID = packet.getSecondaryEffect();
+		PotionEffect primary = PotionEffect.createByPotionID(primaryID);
+		PotionEffect secondary = PotionEffect.createByPotionID(secondaryID);
+		HandlerList.callEvent(new BeaconEffectChangeEvent(player.getOpenInventory(), primary, secondary, primaryID, secondaryID));
 	}
 
 	@Override
@@ -635,8 +680,16 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInPlayerBlockPlacement packet) {
-		// TODO Auto-generated method stub
-		
+		float cX = packet.getCursurPositionX();
+		float cY = packet.getCursurPositionY();
+		float cZ = packet.getCursurPositionZ();
+		EquipmentSlot hand = packet.getHand();
+		BlockFace face = packet.getFace();
+		long pos = packet.getPosition();
+		Location loc = MathUtil.getLocation(player.getWorld(), pos);
+		Block block = new CoreBlockAccess(loc);
+		Block against = new CoreBlock(loc, player.getInventory().getItemInMainHand().getType());
+		HandlerList.callEvent(new BlockPlaceEvent(block, against, player, hand, face, cX, cY, cZ));
 	}
 
 	@Override
@@ -645,7 +698,7 @@ public class CorePlayerConnection implements PlayerConnection {
 		BlockRayTracer ray = new BlockRayTracer(loc, loc.getDirection());
 		double length = player.getGamemode() == Gamemode.CREATIVE ? 5.0 : 4.5;
 		Chunk chunk = ray.getFirstBlockHit(BlockRayCollisionRule.IGNORE_FUID_AND_AIR, length);
-		Block block = new CoreBlock(loc, chunk);
+		Block block = new CoreBlockAccess(loc, chunk);
 		
 		EquipmentSlot hand = packet.getHand();
 		PlayerInteractEvent.Action action;
@@ -729,6 +782,8 @@ public class CorePlayerConnection implements PlayerConnection {
 		eventMove = new PlayerMoveEvent(player, player.getLocation(), player.getLocation());
 		eventDigging = new PlayerDiggingEvent(player, null, 0, player.getLocation(), diggingFace);
 		eventHeldItemChange = new PlayerHeldItemChangeEvent(player, 0);
+		eventSneak = new PlayerToggleSneakEvent(player, false);
+		eventSprint = new PlayerToggleSprintEvent(player, false);
 	}
 
 	@Override

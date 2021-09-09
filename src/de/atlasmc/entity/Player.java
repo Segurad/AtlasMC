@@ -62,4 +62,10 @@ public interface Player extends HumanEntity {
 
 	public Gamemode getGamemode();
 
+	public boolean getCanBuild();
+
+	public void setCanBuild(boolean canBuild);
+
+	public void setGamemode(Gamemode gamemode);
+
 }

@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 
 public class CorePacketInPlayerDigging extends AbstractPacket implements PacketInPlayerDigging {
 
-	private static final BlockFace[] faces = new BlockFace[] {
+	public static final BlockFace[] faces = new BlockFace[] {
 		BlockFace.DOWN,
 		BlockFace.UP,
 		BlockFace.NORTH,

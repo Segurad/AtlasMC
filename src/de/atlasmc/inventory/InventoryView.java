@@ -9,21 +9,23 @@ public class InventoryView {
 	
 	protected Player player;
 	protected Inventory bottom, top;
-	protected InventoryType type;
 	
-	public InventoryView(Player player, Inventory bottom, Inventory top, InventoryType type) {
+	public InventoryView(Player player, Inventory bottom, Inventory top) {
 		this.player = player;
 		this.bottom = bottom;
 		this.top = top;
-		this.type = type;
 	}
 	
 	public void close() {
 		player.closeInventory();
 	}
 	
+	/**
+	 * Return the type of the top Inventory
+	 * @return
+	 */
 	public InventoryType getType() {
-		return type;
+		return top.getType();
 	}
 	
 	/**

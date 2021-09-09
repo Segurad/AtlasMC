@@ -43,4 +43,9 @@ public class PotionEffect implements Cloneable, NBTHolder {
 		
 	}
 
+	public static PotionEffect createByPotionID(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
