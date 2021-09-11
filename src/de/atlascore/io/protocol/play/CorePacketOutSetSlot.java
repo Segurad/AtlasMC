@@ -54,4 +54,19 @@ public class CorePacketOutSetSlot extends AbstractPacket implements PacketOutSet
 		writeSlot(item, out);
 	}
 
+	@Override
+	public void setWindowID(int windowID) {
+		this.windowID = (byte) windowID;
+	}
+
+	@Override
+	public void setSlot(int slot) {
+		this.slot = slot;
+	}
+
+	@Override
+	public void setItem(ItemStack item) {
+		this.item = item.clone();
+	}
+
 }

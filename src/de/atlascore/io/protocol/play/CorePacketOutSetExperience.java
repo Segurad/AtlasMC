@@ -52,4 +52,19 @@ public class CorePacketOutSetExperience extends AbstractPacket implements Packet
 		return experience;
 	}
 
+	@Override
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	@Override
+	public void setTotalExperience(int total) {
+		this.experience = total;
+	}
+
+	@Override
+	public void setExperienceBar(float bar) {
+		this.bar = bar;
+	}
+
 }

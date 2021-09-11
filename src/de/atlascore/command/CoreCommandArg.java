@@ -5,12 +5,22 @@ import java.util.List;
 
 import de.atlasmc.command.CommandArg;
 import de.atlasmc.command.CommandExecutor;
+import de.atlasmc.permission.Permission;
 
 public class CoreCommandArg implements CommandArg {
 
 	private final String name, help;
 	private CommandExecutor executor;
 	private List<CommandArg> args;
+	private Permission permission;
+	
+	public CoreCommandArg(String name) {
+		this(name, null);
+	}
+	
+	public CoreCommandArg(String name, String help) {
+		this(name, help, null);
+	}
 	
 	public CoreCommandArg(String name, String help, CommandExecutor executor) {
 		this.name = name;
@@ -73,6 +83,25 @@ public class CoreCommandArg implements CommandArg {
 	@Override
 	public boolean hasExecutor() {
 		return executor != null;
+	}
+	
+	public void createArg(String name, CommandExecutor executor) {
+		new CoreCommand(name, null, executor);
+	}
+
+	@Override
+	public Permission getPermission() {
+		return permission;
+	}
+
+	@Override
+	public void setPermission(Permission permission) {
+		this.permission = permission;
+	}
+
+	@Override
+	public boolean hasPermission() {
+		return permission != null;
 	}
 	
 }

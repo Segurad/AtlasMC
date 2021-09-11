@@ -14,12 +14,13 @@ import de.atlasmc.block.data.BlockData;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.world.Chunk;
+import de.atlasmc.world.ChunkProvider;
 import de.atlasmc.world.World;
 import de.atlasmc.world.WorldFlag;
 
 public class CoreWorld implements World {
 	
-	private final CoreChunkProvider chunks;
+	private final ChunkProvider chunks;
 	private final String name;
 	private final LocalServer server;
 	private long time;
@@ -28,7 +29,7 @@ public class CoreWorld implements World {
 	private Location spawn;
 	
 	public CoreWorld(LocalServer server, String name) {
-		chunks = new CoreChunkProvider(this);
+		chunks = new CoreBufferedChunkProvider(this);
 		this.name = name;
 		this.server = server;
 	}

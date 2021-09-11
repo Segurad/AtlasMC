@@ -732,18 +732,12 @@ public class CorePlayerConnection implements PlayerConnection {
 		return protocol;
 	}
 	
-	/**
-	 * 
-	 * @return the current inventory id
-	 */
+	@Override
 	public int getInventoryID() {
 		return invID;
 	}
 	
-	/**
-	 * increments and returns the inventory id
-	 * @return the new current inventory id
-	 */
+	@Override
 	public int getNextInventoryID() {
 		confirmNumber = 0;
 		return ++invID;
@@ -796,6 +790,7 @@ public class CorePlayerConnection implements PlayerConnection {
 		return chatmode;
 	}
 	
+	@Override
 	public String getClientLocal() {
 		return clientLocal;
 	}

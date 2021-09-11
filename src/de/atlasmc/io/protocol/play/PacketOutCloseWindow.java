@@ -13,4 +13,6 @@ public interface PacketOutCloseWindow extends PacketPlay, PacketOutbound {
 		return OUT_CLOSE_WINDOW;
 	}
 
+	public void setWindowID(int windowID);
+
 }

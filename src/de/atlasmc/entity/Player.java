@@ -9,7 +9,6 @@ import de.atlasmc.Particle;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
-import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
@@ -17,8 +16,6 @@ import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.scoreboard.Scoreboard;
 
 public interface Player extends HumanEntity {
-	
-	public LocalServer getCurrentServer();
 
 	public void openInventory(Inventory inv);
 
@@ -43,6 +40,8 @@ public interface Player extends HumanEntity {
 	public void setItemOnCursor(ItemStack item);
 
 	public ItemStack getItemOnCursor();
+	
+	public void updateItemOnCursor();
 
 	public PlayerConnection getConnection();
 	
@@ -53,7 +52,9 @@ public interface Player extends HumanEntity {
 	public void setScoreboard(Scoreboard board);
 	
 	public UUID getInternalUUID();
+	
 	public boolean hasInternalUUID();
+	
 	public void setInternalUUID(UUID uuid);
 
 	public String getLocal();

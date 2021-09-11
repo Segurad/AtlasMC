@@ -35,4 +35,9 @@ public class CorePacketOutCloseWindow extends AbstractPacket implements PacketOu
 		return windowID;
 	}
 
+	@Override
+	public void setWindowID(int windowID) {
+		this.windowID = (byte) windowID;
+	}
+
 }

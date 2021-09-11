@@ -11,6 +11,14 @@ public class CoreCommand extends CoreCommandArg implements Command {
 
 	private List<String> aliases;
 	
+	public CoreCommand(String name, String help) {
+		this(name, help, null);
+	}
+	
+	public CoreCommand(String name, String help, CommandExecutor executor) {
+		this(name, help, executor, null);
+	}
+	
 	public CoreCommand(String name, String help, CommandExecutor executor, String... aliases) {
 		super(name, help, executor);
 		if (aliases != null) {

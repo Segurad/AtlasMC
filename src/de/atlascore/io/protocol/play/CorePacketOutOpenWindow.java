@@ -55,4 +55,19 @@ public class CorePacketOutOpenWindow extends AbstractPacket implements PacketOut
 		return title;
 	}
 
+	@Override
+	public void setWindowID(int windowID) {
+		this.windowID = windowID;
+	}
+
+	@Override
+	public void setWindowType(InventoryType type) {
+		this.type = type.getID();
+	}
+
+	@Override
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
 }

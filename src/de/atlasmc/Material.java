@@ -7,8 +7,8 @@ import java.util.Objects;
 
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
-import de.atlasmc.factory.metadata.MetaDataFactory;
-import de.atlasmc.factory.tileentity.TileEntityFactory;
+import de.atlasmc.factory.MetaDataFactory;
+import de.atlasmc.factory.TileEntityFactory;
 import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.util.Validate;
 

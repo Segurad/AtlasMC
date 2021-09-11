@@ -2,6 +2,8 @@ package de.atlasmc.command;
 
 import java.util.List;
 
+import de.atlasmc.permission.Permission;
+
 public interface CommandArg {
 	
 	/**
@@ -27,5 +29,11 @@ public interface CommandArg {
 	public void setExecutor(CommandExecutor executor);
 	
 	public boolean hasExecutor();
+	
+	public Permission getPermission();
+	
+	public void setPermission(Permission permission);
+	
+	public boolean hasPermission();
 
 }

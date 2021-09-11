@@ -12,6 +12,9 @@ import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryHolder;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.io.protocol.PlayerConnection;
+import de.atlasmc.io.protocol.play.PacketOutSetSlot;
+import de.atlasmc.io.protocol.play.PacketOutWindowItems;
 
 public class CoreInventory implements Inventory {
 
@@ -45,7 +48,7 @@ public class CoreInventory implements Inventory {
 	public void setItem(int slot, ItemStack item) {
 		contents[slot] = item;
 		if (!viewers.isEmpty()) {
-			updateSlot(slot);
+			updateSlot(slot, true);
 		}
 	}
 
@@ -58,19 +61,7 @@ public class CoreInventory implements Inventory {
 	public List<Player> getViewers() {
 		return viewers;
 	}
-
-	@Override
-	public void updateSlot(int slot) {
-		for (Player player : viewers) {
-			InventoryView view = player.getOpenInventory();
-			if (view.getBottomInventory() == this) {
-				
-			} else if (view.getTopInventory() == this) {
-				
-			} else viewers.remove(player);
-		}
-	}
-
+	
 	@Override
 	public String getTitle() {
 		return title;
@@ -103,26 +94,75 @@ public class CoreInventory implements Inventory {
 
 	@Override
 	public void setContents(ItemStack[] contents) {
-		// TODO Auto-generated method stub
-		
+		final int newSize = contents.length;
+		final int oldSize = this.contents.length;
+		for (int i = 0; i < newSize && i < oldSize; i++) {
+			this.contents[i] = contents[i];
+		}
 	}
 
 	@Override
 	public boolean contains(Material material) {
-		// TODO Auto-generated method stub
+		for (ItemStack item : contents) {
+			if (item.getType() == material) return true;
+		}
 		return false;
 	}
 
 	@Override
 	public int count(Material material) {
-		// TODO Auto-generated method stub
-		return 0;
+		int c = 0;
+		for (ItemStack item : contents) {
+			if (item.getType() == material) c += item.getAmount();
+		}
+		return c;
 	}
+	
+	@Override
+	public void updateSlot(int slot, boolean animation) {
+		for (Player player : viewers) {
+			InventoryView view = player.getOpenInventory();
+			int raw = view.convertSlot(this, slot);
+			int id = view.getViewID();
+			if (getType() == InventoryType.PLAYER) {
+				if (slot > 35) {
+					id = 0; // update armor or offhand slot
+				} else if (slot < 9) {
+					if (animation) {
+						id = 0; // update hotbar with animation
+					} else id = -2; // update hotbar without animation
+				} else if (!animation) id = -2; // update slot without animation
+			} else if (!animation) id = -2;
+			PlayerConnection con = player.getConnection();
+			PacketOutSetSlot packet = con.getProtocol().createPacket(PacketOutSetSlot.class);
+			packet.setWindowID(id);
+			packet.setSlot(raw);
+			packet.setItem(getItem(slot));
+			con.sendPacked(packet);
+		}
+	}
+
 
 	@Override
 	public void updateSlots() {
-		// TODO Auto-generated method stub
-		
+		for (Player player : viewers) {
+			updateSlots(player);
+		}
+	}
+
+	@Override
+	public void updateSlots(Player player) {
+		InventoryView view = player.getOpenInventory();
+		int id = view.getViewID();
+		ItemStack[] items = null;
+		if (view.getTopInventory() == this) {
+			items = getContents();
+		}
+		PlayerConnection con = player.getConnection();
+		PacketOutWindowItems packet = con.getProtocol().createPacket(PacketOutWindowItems.class);
+		packet.setWindowID(id);
+		packet.setSlots(items);
+		con.sendPacked(packet);
 	}
 
 }

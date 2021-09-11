@@ -35,8 +35,10 @@ public interface Inventory extends Iterable<ItemStack> {
 	
 	public void setHolder(InventoryHolder holder);
 	
-	public void updateSlot(int slot);
+	public void updateSlot(int slot, boolean animation);
 	
 	public void updateSlots();
+
+	public void updateSlots(Player player);
 
 }

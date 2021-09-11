@@ -1,4 +1,4 @@
-package de.atlasmc.factory.metadata;
+package de.atlasmc.factory;
 
 import java.lang.reflect.InvocationTargetException;
 

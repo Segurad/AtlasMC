@@ -91,6 +91,10 @@ public enum InventoryType {
 		}
 	}
 	
+	/**
+	 * 
+	 * @return id for protocol
+	 */
 	public int getID() {
 		return id;
 	}
@@ -110,5 +114,9 @@ public enum InventoryType {
 		OUTSIDE,
 		QUICKBAR,
 		RESULT;
+	}
+
+	public int getSize() {
+		return 0;
 	}
 }

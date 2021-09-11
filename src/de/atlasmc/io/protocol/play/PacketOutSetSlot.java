@@ -15,5 +15,8 @@ public interface PacketOutSetSlot extends PacketPlay, PacketOutbound {
 	default int getDefaultID() {
 		return OUT_SET_SLOT;
 	}
+	public void setWindowID(int windowID);
+	public void setSlot(int slot);
+	public void setItem(ItemStack item);
 	
 }

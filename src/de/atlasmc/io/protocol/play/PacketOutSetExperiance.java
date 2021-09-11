@@ -7,12 +7,24 @@ import de.atlasmc.io.PacketOutbound;
 public interface PacketOutSetExperiance extends PacketPlay, PacketOutbound {
 	
 	public float getExperienceBar();
+	
 	public int getLevel();
+	
 	public int getTotalExperience();
 	
 	@Override
 	public default int getDefaultID() {
 		return OUT_SET_EXPERIENCE;
 	}
+	
+	public void setLevel(int level);
+	
+	public void setTotalExperience(int total);
+	
+	/**
+	 * 
+	 * @param bar value between 0 and 1
+	 */
+	public void setExperienceBar(float bar);
 
 }

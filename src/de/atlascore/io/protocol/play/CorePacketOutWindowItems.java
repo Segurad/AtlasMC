@@ -21,11 +21,7 @@ public class CorePacketOutWindowItems extends AbstractPacket implements PacketOu
 	
 	public CorePacketOutWindowItems(byte windowID, ItemStack[] slots) {
 		this();
-		this.slots = new ItemStack[slots.length];
-		int index = 0;
-		for (ItemStack i : slots) {
-			this.slots[index] = i.clone();
-		}
+		this.windowID = windowID;
 	}
 
 	@Override
@@ -62,6 +58,20 @@ public class CorePacketOutWindowItems extends AbstractPacket implements PacketOu
 	@Override
 	public ItemStack[] getSlots() {
 		return slots;
+	}
+
+	@Override
+	public void setSlots(ItemStack[] slots) {
+		this.slots = new ItemStack[slots.length];
+		int index = 0;
+		for (ItemStack i : slots) {
+			this.slots[index++] = i.clone();
+		}
+	}
+
+	@Override
+	public void setWindowID(int windowID) {
+		this.windowID = (byte) windowID;
 	}
 
 }

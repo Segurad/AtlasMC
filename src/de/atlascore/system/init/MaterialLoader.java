@@ -21,11 +21,11 @@ import de.atlasmc.Material;
 import de.atlasmc.block.data.*;
 import de.atlasmc.block.data.type.*;
 import de.atlasmc.block.tile.Banner;
-import de.atlasmc.factory.metadata.AgeableClassMetaDataFactory;
-import de.atlasmc.factory.metadata.ClassMetaDataFactory;
-import de.atlasmc.factory.metadata.MetaDataFactory;
-import de.atlasmc.factory.tileentity.ClassTileEntityFactory;
-import de.atlasmc.factory.tileentity.TileEntityFactory;
+import de.atlasmc.factory.AgeableClassMetaDataFactory;
+import de.atlasmc.factory.ClassMetaDataFactory;
+import de.atlasmc.factory.ClassTileEntityFactory;
+import de.atlasmc.factory.MetaDataFactory;
+import de.atlasmc.factory.TileEntityFactory;
 import de.atlasmc.inventory.meta.*;
 import static de.atlasmc.Material.*;
 

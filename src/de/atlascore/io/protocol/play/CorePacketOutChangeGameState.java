@@ -42,4 +42,14 @@ public class CorePacketOutChangeGameState extends AbstractPacket implements Pack
 	public float getValue() {
 		return value;
 	}
+
+	@Override
+	public void setValue(float value) {
+		this.value = value;
+	}
+
+	@Override
+	public void setReason(ChangeReason reason) {
+		this.reason = reason.ordinal();
+	}
 }

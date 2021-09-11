@@ -53,4 +53,18 @@ public interface PlayerConnection extends PacketListenerPlayIn {
 	
 	public void sendPacked(PacketProtocol packet);
 
+	/**
+	 * 
+	 * @return the current inventory id
+	 */
+	public int getInventoryID();
+
+	/**
+	 * increments and returns the inventory id
+	 * @return the new current inventory id
+	 */
+	public int getNextInventoryID();
+
+	public String getClientLocal();
+
 }

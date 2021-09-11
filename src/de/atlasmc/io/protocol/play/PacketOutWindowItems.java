@@ -8,8 +8,14 @@ import de.atlasmc.io.PacketOutbound;
 public interface PacketOutWindowItems extends PacketPlay, PacketOutbound {
 	
 	public byte getWindowID();
+	
 	public int getCount();
+	
 	public ItemStack[] getSlots();
+	
+	public void setSlots(ItemStack[] slots);
+	
+	public void setWindowID(int windowID);
 
 	@Override
 	default int getDefaultID() {

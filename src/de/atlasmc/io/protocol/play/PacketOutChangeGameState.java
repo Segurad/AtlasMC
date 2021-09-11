@@ -33,4 +33,7 @@ public interface PacketOutChangeGameState extends PacketPlay, PacketOutbound {
 		}
 	}
 
+	public void setValue(float value);
+	public void setReason(ChangeReason reason);
+
 }
