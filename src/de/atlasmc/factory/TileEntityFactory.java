@@ -6,6 +6,9 @@ import de.atlasmc.Material;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.util.Validate;
 
+/**
+ * Factory for creating {@link TileEntity}
+ */
 public abstract class TileEntityFactory {
 	
 	private static final HashMap<Material, TileEntity> tilePreConfig = new HashMap<>();

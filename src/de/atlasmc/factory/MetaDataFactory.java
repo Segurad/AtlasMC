@@ -10,6 +10,9 @@ import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.inventory.meta.BlockDataMeta;
 import de.atlasmc.util.Validate;
 
+/**
+ * Factory for creation of {@link ItemMeta} and {@link BlockData}
+ */
 public abstract class MetaDataFactory {
 	
 	public static MetaDataFactory DEFAULT = new ClassMetaDataFactory(BlockDataMeta.class, CoreBlockDataMeta.class, BlockData.class, CoreBlockData.class);

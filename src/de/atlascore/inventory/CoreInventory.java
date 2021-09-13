@@ -36,7 +36,25 @@ public class CoreInventory implements Inventory {
 	
 	@Override
 	public Iterator<ItemStack> iterator() {
-		return null; // TODO inventory iterator
+		return new Iterator<ItemStack>() {
+			int index = 0;
+			@Override
+			public ItemStack next() {
+				for (; index < size; index++) {
+					if (contents[index] == null) continue;
+					break;
+				}
+				return contents[index];
+			}
+			
+			@Override
+			public boolean hasNext() {
+				for (int i = index; i < size; i++) {
+					if (contents[i] != null) return true;
+				}
+				return false;
+			}
+		};
 	}
 
 	@Override
@@ -46,10 +64,13 @@ public class CoreInventory implements Inventory {
 
 	@Override
 	public void setItem(int slot, ItemStack item) {
+		setItem(slot, item, true);
+	}
+	
+	@Override
+	public void setItem(int slot, ItemStack item, boolean animation) {
 		contents[slot] = item;
-		if (!viewers.isEmpty()) {
-			updateSlot(slot, true);
-		}
+		updateSlot(slot, animation);
 	}
 
 	@Override
@@ -99,6 +120,7 @@ public class CoreInventory implements Inventory {
 		for (int i = 0; i < newSize && i < oldSize; i++) {
 			this.contents[i] = contents[i];
 		}
+		updateSlots();
 	}
 
 	@Override
@@ -113,6 +135,7 @@ public class CoreInventory implements Inventory {
 	public int count(Material material) {
 		int c = 0;
 		for (ItemStack item : contents) {
+			if (item == null) continue;
 			if (item.getType() == material) c += item.getAmount();
 		}
 		return c;
@@ -121,25 +144,30 @@ public class CoreInventory implements Inventory {
 	@Override
 	public void updateSlot(int slot, boolean animation) {
 		for (Player player : viewers) {
-			InventoryView view = player.getOpenInventory();
-			int raw = view.convertSlot(this, slot);
-			int id = view.getViewID();
-			if (getType() == InventoryType.PLAYER) {
-				if (slot > 35) {
-					id = 0; // update armor or offhand slot
-				} else if (slot < 9) {
-					if (animation) {
-						id = 0; // update hotbar with animation
-					} else id = -2; // update hotbar without animation
-				} else if (!animation) id = -2; // update slot without animation
-			} else if (!animation) id = -2;
-			PlayerConnection con = player.getConnection();
-			PacketOutSetSlot packet = con.getProtocol().createPacket(PacketOutSetSlot.class);
-			packet.setWindowID(id);
-			packet.setSlot(raw);
-			packet.setItem(getItem(slot));
-			con.sendPacked(packet);
+			updateSlot(player, slot, animation);
 		}
+	}
+	
+	@Override
+	public void updateSlot(Player player, int slot, boolean animation) {
+		InventoryView view = player.getOpenInventory();
+		int raw = view.convertSlot(this, slot);
+		int id = view.getViewID();
+		if (getType() == InventoryType.PLAYER) {
+			if (slot > 35) {
+				id = 0; // update armor or offhand slot
+			} else if (slot < 9) {
+				if (animation) {
+					id = 0; // update hotbar with animation
+				} else id = -2; // update hotbar without animation
+			} else if (!animation) id = -2; // update slot without animation
+		} else if (!animation) id = -2;
+		PlayerConnection con = player.getConnection();
+		PacketOutSetSlot packet = con.getProtocol().createPacket(PacketOutSetSlot.class);
+		packet.setWindowID(id);
+		packet.setSlot(raw);
+		packet.setItem(getItem(slot));
+		con.sendPacked(packet);
 	}
 
 
@@ -163,6 +191,23 @@ public class CoreInventory implements Inventory {
 		packet.setWindowID(id);
 		packet.setSlots(items);
 		con.sendPacked(packet);
+	}
+
+	@Override
+	public void removeItems(Material material, int count) {
+		for (int i = 0; i < size; i++) {
+			ItemStack item = contents[i];
+			if (item == null) continue;
+			if (item.getType() != material) return;
+			if (count >= item.getAmount()) {
+				count -= item.getAmount();
+				contents[i] = null;
+				continue;
+			}
+			item.setAmount(item.getAmount()-count);
+			updateSlot(i, true);
+			break;
+		}
 	}
 
 }

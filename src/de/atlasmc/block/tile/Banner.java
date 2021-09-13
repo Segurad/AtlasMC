@@ -8,13 +8,21 @@ import de.atlasmc.util.Validate;
 public interface Banner extends TileEntity {
 	
 	public void addPattern(Pattern pattern);
+	
 	public DyeColor getBaseColor();
+	
 	public void setBaseColor(DyeColor color);
+	
 	public Pattern getPattern(int index);
+	
 	public List<Pattern> getPatterns();
+	
 	public int numberOfPatterns();
+	
 	public Pattern removePattern(int index);
+	
 	public void setPattern(int index, Pattern pattern);
+	
 	public void setPatterns(List<Pattern> pattern);
 	
 	public static enum Pattern {

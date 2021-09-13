@@ -88,7 +88,7 @@ public class CoreInventoryView implements InventoryView {
 
         // Player crafting slots are indexed differently. The matrix is caught by the first return.
         // Creative mode is the same, except that you can't see the crafting slots (but the IDs are still used)
-        if (getType() == InventoryType.CRAFTING || getType() == InventoryType.CREATIVE) {
+        if (getType() == InventoryType.CRAFTING) {
             /*
              * Raw Slots:
              *

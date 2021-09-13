@@ -9,6 +9,9 @@ import de.atlasmc.inventory.meta.BlockDataMeta;
 import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.util.Validate;
 
+/**
+ * Class based {@link MetaDataFactory} for Materials
+ */
 public class ClassMetaDataFactory extends MetaDataFactory {
 	
 	protected final Class<? extends ItemMeta> metaInterface, meta;
@@ -21,9 +24,9 @@ public class ClassMetaDataFactory extends MetaDataFactory {
 	/**
 	 * 
 	 * @param metaInterface
-	 * @param meta class must have a constructor with Material
+	 * @param meta class must have a constructor ({@link Material})
 	 * @param dataInterface
-	 * @param data class must have a constructor with Material
+	 * @param data class must have a constructor ({@link Material})
 	 */
 	public ClassMetaDataFactory(Class<? extends ItemMeta> metaInterface, Class<? extends ItemMeta> meta, Class<? extends BlockData> dataInterface, Class<? extends BlockData> data) {
 		if (metaInterface != null) Validate.isTrue(metaInterface.isAssignableFrom(meta), "MetaInterface is not assignable from Meta!");

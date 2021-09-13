@@ -6,6 +6,9 @@ import de.atlasmc.Material;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.util.Validate;
 
+/**
+ * Class based {@link TileEntityFactory}
+ */
 public class ClassTileEntityFactory extends TileEntityFactory {
 	
 	private final Class<? extends TileEntity> tileInterface, tile;
@@ -13,7 +16,7 @@ public class ClassTileEntityFactory extends TileEntityFactory {
 	/**
 	 * 
 	 * @param tileInterface
-	 * @param tile class must have a constructor with Material
+	 * @param tile class must have a constructor ({@link Material})
 	 */
 	public ClassTileEntityFactory(Class<? extends TileEntity> tileInterface, Class<? extends TileEntity> tile) {
 		Validate.notNull(tileInterface, "TileInterface can not be null!");

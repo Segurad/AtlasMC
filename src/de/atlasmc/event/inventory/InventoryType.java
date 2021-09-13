@@ -16,7 +16,7 @@ public enum InventoryType {
 	/**
 	 * A crafting table inventory, with 9 {@link SlotType#CRAFTING} slots and a {@link SlotType#RESULT} slot.
 	 */
-	CRAFTING(11),
+	WORKBENCH(11),
 	ENCHANTING(12),
 	FURNACE(13),
 	GRINDSTONE(14),
@@ -66,10 +66,14 @@ public enum InventoryType {
 	 * If you would like to create a custom inventory with different size do not use this.
 	 */
 	DOUBLE_CHEST(5),
-	CREATIVE(-1),
 	HORSE(-1), // Opened via PacketOutOpenHorseWindow
 	LLAMA(-1),
 	PLAYER(3),
+	/**
+	 * The crafting section of the player's inventory<br>
+	 * Containing 4 {@link SlotType#CRAFTING} and 1 {@link SlotType#RESULT}
+	 */
+	CRAFTING(-1)
 	;
 	
 	private int id;

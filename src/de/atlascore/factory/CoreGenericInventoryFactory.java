@@ -9,7 +9,7 @@ import de.atlasmc.inventory.InventoryHolder;
 public class CoreGenericInventoryFactory extends ContainerFactory<Inventory> {
 
 	@Override
-	public Inventory createContainer(InventoryType type, InventoryHolder holder, String title) {
+	public Inventory createContainer(InventoryType type, String title, InventoryHolder holder) {
 		int size = 0;
 		switch (type) {
 		case GENERIC_9X3:

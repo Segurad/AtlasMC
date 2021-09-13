@@ -19,6 +19,11 @@ public class CorePlayerInventory extends CoreInventory implements PlayerInventor
 	}
 	
 	@Override
+	public void setHolder(InventoryHolder holder) {
+		throw new RuntimeException("Can not set holder for PlayerInventory!");
+	}
+	
+	@Override
 	public SlotType getSlotType(int slot) {
 		if (slot < 0) return SlotType.OUTSIDE;		
 		if (slot <= 8) return SlotType.QUICKBAR;

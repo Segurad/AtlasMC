@@ -6,6 +6,9 @@ import de.atlasmc.Material;
 import de.atlasmc.block.data.Ageable;
 import de.atlasmc.block.data.BlockData;
 
+/**
+ * Class based {@link MetaDataFactory} for {@link Ageable} BlockData
+ */
 public class AgeableClassMetaDataFactory extends ClassMetaDataFactory {
 
 	private final int maxage;
