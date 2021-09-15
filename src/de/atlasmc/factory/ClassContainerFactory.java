@@ -22,7 +22,7 @@ public class ClassContainerFactory<I extends Inventory> extends ContainerFactory
 	}
 	
 	@Override
-	public I createContainer(InventoryType type, String title, InventoryHolder holder) {
+	public I create(InventoryType type, String title, InventoryHolder holder) {
 		try {
 			return clazz.getConstructor(String.class, InventoryHolder.class).newInstance(title, holder);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException

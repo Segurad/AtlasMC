@@ -1,5 +1,6 @@
 package de.atlasmc.event.inventory;
 
+import de.atlasmc.entity.Player;
 import de.atlasmc.event.Cancellable;
 import de.atlasmc.event.ServerHandlerList;
 import de.atlasmc.inventory.InventoryView;
@@ -32,6 +33,10 @@ public class InventoryOpenEvent extends InventoryEvent implements Cancellable {
 	
 	public static ServerHandlerList getHandlerList() {
 		return handlers;
+	}
+
+	public Player getPlayer() {
+		return getView().getPlayer();
 	}
 
 }

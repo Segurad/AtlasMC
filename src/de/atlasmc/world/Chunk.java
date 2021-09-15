@@ -9,6 +9,9 @@ import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.tick.Tickable;
 
+/**
+ * A Chunk of a World
+ */
 public interface Chunk extends Tickable {
 
 	/**
@@ -28,9 +31,11 @@ public interface Chunk extends Tickable {
 	
 	public boolean isLoaded();
 	
+	/**
+	 * Returns the World of this Chunk
+	 * @return the World
+	 */
 	public World getWorld();
-	
-	public void load();
 	
 	/**
 	 * 
@@ -46,10 +51,10 @@ public interface Chunk extends Tickable {
 	
 	/**
 	 * Returns the Biome at
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @return
+	 * @param x world coordinate
+	 * @param y world coordinate
+	 * @param z world coordinate
+	 * @return the Biome
 	 */
 	public EnumBiome getBiome(int x, int y, int z);
 	
@@ -85,9 +90,9 @@ public interface Chunk extends Tickable {
 	 * Sets the BlockData at the position<br>
 	 * Does not update changes for clients if you want so use {@link #sendUpdate(Chunk, int, int, int)} or use the {@link Block} interface
 	 * @param data
-	 * @param x
-	 * @param y
-	 * @param z
+	 * @param x world coordinate
+	 * @param y world coordinate
+	 * @param z world coordinate
 	 */
 	public void setBlockDataAt(BlockData data, int x, int y, int z);
 	

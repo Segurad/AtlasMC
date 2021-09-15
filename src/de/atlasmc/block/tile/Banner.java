@@ -82,6 +82,11 @@ public interface Banner extends TileEntity {
 			}
 			return null;
 		}
+
+		public int getLoomID() {
+			// TODO pattern loom id research
+			return 0;
+		}
 	}
 
 }

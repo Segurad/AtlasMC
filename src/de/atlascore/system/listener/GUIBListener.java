@@ -19,7 +19,7 @@ final class GUIBListener implements Listener {
 		Inventory inv = e.getInventory();
 		GUI gui = (GUI) inv;
 		if (gui == null) return;
-		if (e.getPlayer() instanceof Player) gui.notifyOpenedBy((Player) e.getPlayer());
+		gui.notifyOpenedBy(e.getPlayer());
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)

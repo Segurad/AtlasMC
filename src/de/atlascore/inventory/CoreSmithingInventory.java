@@ -13,14 +13,12 @@ public class CoreSmithingInventory extends CoreInventory implements SmithingInve
 
 	@Override
 	public ItemStack getResult() {
-		// TODO Auto-generated method stub
-		return null;
+		return getItem(2);
 	}
 
 	@Override
 	public void setResult(ItemStack item) {
-		// TODO Auto-generated method stub
-		
+		setItem(2, item);
 	}
 
 }

@@ -21,6 +21,7 @@ public class ClassTileEntityFactory extends TileEntityFactory {
 	public ClassTileEntityFactory(Class<? extends TileEntity> tileInterface, Class<? extends TileEntity> tile) {
 		Validate.notNull(tileInterface, "TileInterface can not be null!");
 		Validate.notNull(tile, "Tile can not be null!");
+		if (!tileInterface.isAssignableFrom(tile)) throw new IllegalArgumentException("TileInterface is not assignable from Tile!");
 		this.tile = tile;
 		this.tileInterface = tileInterface;
 	}

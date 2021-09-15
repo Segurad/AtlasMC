@@ -30,7 +30,7 @@ public class ClassMetaDataFactory extends MetaDataFactory {
 	 */
 	public ClassMetaDataFactory(Class<? extends ItemMeta> metaInterface, Class<? extends ItemMeta> meta, Class<? extends BlockData> dataInterface, Class<? extends BlockData> data) {
 		if (metaInterface != null) Validate.isTrue(metaInterface.isAssignableFrom(meta), "MetaInterface is not assignable from Meta!");
-		if (dataInterface != null) Validate.isTrue(dataInterface.isAssignableFrom(meta), "DataInterface is not assignable from Data!");
+		if (dataInterface != null) Validate.isTrue(dataInterface.isAssignableFrom(data), "DataInterface is not assignable from Data!");
 		this.dataInterface = dataInterface;
 		this.metaInterface = metaInterface;
 		this.data = data;

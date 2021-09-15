@@ -52,4 +52,19 @@ public class CorePacketOutWindowProperty extends AbstractPacket implements Packe
 		return value;
 	}
 
+	@Override
+	public void setWindowID(int windowID) {
+		this.windowID = (byte) windowID;
+	}
+
+	@Override
+	public void setProperty(int property) {
+		this.property = property;
+	}
+
+	@Override
+	public void setValue(int value) {
+		this.value = value;
+	}
+
 }

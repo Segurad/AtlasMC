@@ -1,5 +1,5 @@
 package de.atlasmc.inventory;
 
-public interface FurnaceInventory extends Inventory {
+public interface FurnaceInventory extends AbstractFurnaceInventory {
 
 }

@@ -2,6 +2,7 @@ package de.atlascore.system.init;
 
 import de.atlascore.block.data.*;
 import de.atlascore.block.data.type.*;
+import de.atlascore.block.tile.CoreBanner;
 import de.atlascore.inventory.meta.CoreBannerMeta;
 import de.atlascore.inventory.meta.CoreCompassMeta;
 import de.atlascore.inventory.meta.CoreCrossbowMeta;
@@ -1204,7 +1205,7 @@ public class MaterialLoader {
 		//--- TileEntityFactory --------------------------------------------------------------------------------
 		
 		TileEntityFactory
-		BANNER_TEF = new ClassTileEntityFactory(Banner.class, null); // TODO
+		BANNER_TEF = new ClassTileEntityFactory(Banner.class, CoreBanner.class); // TODO
 		
 		WHITE_BANNER.setTileEntityFactory(BANNER_TEF);
 		ORANGE_BANNER.setTileEntityFactory(BANNER_TEF);

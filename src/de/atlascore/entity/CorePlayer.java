@@ -107,7 +107,10 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 
 	@Override
 	public void closeInventory() {
+		open.getViewers().remove(this);
 		open = null;
+		view.setTopInventory(getInventory().getCraftingInventory());
+		view.setViewID(0);
 		PacketOutCloseWindow packet = con.getProtocol().createPacket(PacketOutCloseWindow.class);
 		packet.setWindowID(con.getInventoryID());
 		con.sendPacked(packet);

@@ -1,62 +1,111 @@
 package de.atlascore.inventory;
 
+import de.atlasmc.entity.Player;
 import de.atlasmc.event.inventory.InventoryType;
+import de.atlasmc.event.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.BeaconInventory;
 import de.atlasmc.inventory.InventoryHolder;
+import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.potion.PotionEffect;
 
 public class CoreBeaconInventory extends CoreInventory implements BeaconInventory {
 
+	protected static final byte
+	PROPERTY_POWER_LEVEL = 0,
+	PROPERTY_FIRST_POTION_ID = 1,
+	PROPERTY_SECOND_POTION_ID = 2;
+	
+	private PotionEffect primary, secondary;
+	private int primaryid = -1, secondaryid = -1, power;
+	
 	public CoreBeaconInventory(String title, InventoryHolder holder) {
 		super(1, InventoryType.BEACON, title, holder);
 	}
 
 	@Override
+	public SlotType getSlotType(int slot) {
+		if (slot == 0) {
+			return SlotType.CRAFTING;
+		}
+		throw new IllegalArgumentException("Invalid slot index: " + slot);
+	}
+	
+	@Override
 	public PotionEffect getPrimaryEffect() {
-		// TODO Auto-generated method stub
-		return null;
+		return primary;
 	}
 
 	@Override
 	public PotionEffect getSecondaryEffect() {
-		// TODO Auto-generated method stub
-		return null;
+		return secondary;
 	}
 
 	@Override
 	public void setPrimaryEffect(PotionEffect effect) {
-		// TODO Auto-generated method stub
-		
+		this.primary = effect;
 	}
 
 	@Override
 	public void setSecondaryEffect(PotionEffect effect) {
-		// TODO Auto-generated method stub
-		
+		this.secondary = effect;
 	}
 
 	@Override
 	public int getPrimaryID() {
-		// TODO Auto-generated method stub
-		return 0;
+		return primaryid;
 	}
 
 	@Override
 	public int getSecondaryID() {
-		// TODO Auto-generated method stub
-		return 0;
+		return secondaryid;
 	}
 
 	@Override
 	public void setPrimaryID(int id) {
-		// TODO Auto-generated method stub
-		
+		this.primaryid = id;
+		updateProperty(PROPERTY_FIRST_POTION_ID, id);
 	}
 
 	@Override
 	public void setSecondaryID(int id) {
-		// TODO Auto-generated method stub
-		
+		this.secondaryid = id;
+		updateProperty(PROPERTY_SECOND_POTION_ID, id);
 	}
 
+	@Override
+	public int getPowerLevel() {
+		return power;
+	}
+
+	@Override
+	public void setPowerLevel(int power) {
+		if (power < 0 || power > 4) throw new IllegalArgumentException("Power must be between 0 and 4: " + power);
+		this.power = power;
+		updateProperty(PROPERTY_POWER_LEVEL, power);
+	}
+
+	@Override
+	public ItemStack getItem() {
+		return getItem(0);
+	}
+
+	@Override
+	public void setItem(ItemStack item) {
+		setItem(0, item);
+	}
+	
+	@Override
+	public void updateProperties() {
+		for (Player p : getViewers()) {
+			updateProperties(p);
+		}
+	}
+
+	@Override
+	public void updateProperties(Player player) {
+		updateProperty(PROPERTY_POWER_LEVEL, power, player);
+		updateProperty(PROPERTY_FIRST_POTION_ID, primaryid, player);
+		updateProperty(PROPERTY_SECOND_POTION_ID, secondaryid, player);
+	}
+	
 }

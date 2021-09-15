@@ -15,7 +15,7 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 	
 	public CoreHumanEntity(int id, EntityType type, Location loc, UUID uuid) {
 		super(id, type, loc, uuid);
-		inv = ContainerFactory.PLAYER_INV_FACTORY.createContainer(InventoryType.PLAYER, this);
+		inv = ContainerFactory.PLAYER_INV_FACTORY.create(InventoryType.PLAYER, this);
 	}
 
 	@Override

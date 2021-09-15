@@ -62,12 +62,6 @@ public class CoreChunk implements Chunk {
 	}
 
 	@Override
-	public void load() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public long[] getHightMap() {
 		// TODO Auto-generated method stub
 		return null;

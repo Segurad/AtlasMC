@@ -31,6 +31,8 @@ public interface Inventory extends Iterable<ItemStack> {
 	public void removeItems(Material material, int count);
 
 	public List<Player> getViewers();
+	
+	public boolean hasViewers();
 
 	public String getTitle();
 
@@ -66,5 +68,9 @@ public interface Inventory extends Iterable<ItemStack> {
 	 * Updates all slots of this inventory for a player<br>
 	 */
 	public void updateSlots(Player player);
+	
+	public void updateProperties();
+	
+	public void updateProperties(Player player);
 
 }

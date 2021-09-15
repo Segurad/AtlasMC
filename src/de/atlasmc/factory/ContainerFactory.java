@@ -1,14 +1,27 @@
 package de.atlasmc.factory;
 
 import de.atlasmc.event.inventory.InventoryType;
+import de.atlasmc.inventory.AnvilInventory;
 import de.atlasmc.inventory.BeaconInventory;
-import de.atlasmc.inventory.BrewingStandInventory;
+import de.atlasmc.inventory.BlastFurnaceInventory;
+import de.atlasmc.inventory.BrewingInventory;
+import de.atlasmc.inventory.CartographyInventory;
 import de.atlasmc.inventory.CraftingInventory;
+import de.atlasmc.inventory.EnchantingInventory;
 import de.atlasmc.inventory.FurnaceInventory;
+import de.atlasmc.inventory.GrindstoneInventory;
+import de.atlasmc.inventory.HorseInventory;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryHolder;
+import de.atlasmc.inventory.LecternInventory;
+import de.atlasmc.inventory.LlamaInventory;
+import de.atlasmc.inventory.LoomInventory;
+import de.atlasmc.inventory.MerchantInventory;
 import de.atlasmc.inventory.PlayerInventory;
 import de.atlasmc.inventory.SmithingInventory;
+import de.atlasmc.inventory.SmokerInventory;
+import de.atlasmc.inventory.StonecutterInventory;
+import de.atlasmc.inventory.WorkbenchInventory;
 
 /**
  * Factory for creating containers like Inventories or GUIs
@@ -32,7 +45,8 @@ public abstract class ContainerFactory<I extends Inventory> {
 	 * {@link InventoryType#DISPENSER},<br>
 	 * {@link InventoryType#DROPPER},<br>
 	 * {@link InventoryType#BARREL},<br>
-	 * {@link InventoryType#SHULKER_BOX}
+	 * {@link InventoryType#SHULKER_BOX},<br>
+	 * {@link InventoryType#HOPPER}
 	 */
 	public static ContainerFactory<Inventory> GENERIC_INV_FACTORY;
 	
@@ -54,7 +68,7 @@ public abstract class ContainerFactory<I extends Inventory> {
 	/**
 	 * Creates inventories of the type {@link InventoryType#BREWING}
 	 */
-	public static ContainerFactory<BrewingStandInventory> BREWING_STAND_INV_FACTORY;
+	public static ContainerFactory<BrewingInventory> BREWING_INV_FACTORY;
 	
 	/**
 	 * Creates inventories of the type {@link InventoryType#SMITHING}
@@ -66,10 +80,79 @@ public abstract class ContainerFactory<I extends Inventory> {
 	 */
 	public static ContainerFactory<CraftingInventory> CRAFTING_INV_FACTORY;
 	
-	public I createContainer(InventoryType type, InventoryHolder holder) {
-		return createContainer(type, null, holder);
+	/**
+	 * Creates inventories of the type {@link InventoryType#ANVIL}
+	 */
+	public static ContainerFactory<AnvilInventory> ANVIL_INV_FACTORY;
+	
+	/**
+	 * Creates inventories of the type {@link InventoryType#BLAST_FURNACE}
+	 */
+	public static ContainerFactory<BlastFurnaceInventory> BLAST_FURNACE_INV_FACTORY;
+	
+	/**
+	 * Creates inventories of the type {@link InventoryType#CARTOGRAPHY}
+	 */
+	public static ContainerFactory<CartographyInventory> CARTOGRAPHY_INV_FACTORY;
+	
+	/**
+	 * Creates inventories of the type {@link InventoryType#ENCHANTING}
+	 */
+	public static ContainerFactory<EnchantingInventory> ENCHANTING_INV_FACTORY;
+	
+	/**
+	 * Creates inventories of the type {@link InventoryType#GRINDSTONE}
+	 */
+	public static ContainerFactory<GrindstoneInventory> GRINDSTONE_INV_FACTORY;
+	
+	/**
+	 * Creates inventories of the type {@link InventoryType#HORSE}
+	 */
+	public static ContainerFactory<HorseInventory> HORSE_INV_FACTORY;
+	
+	/**
+	 * Creates inventories of the type {@link InventoryType#LECTERN}
+	 */
+	public static ContainerFactory<LecternInventory> LECTERN_INV_FACTORY;
+	
+	/**
+	 * Creates inventories of the type {@link InventoryType#LLAMA}
+	 */
+	public static ContainerFactory<LlamaInventory> LLAMA_INV_FACTORY;
+	
+	/**
+	 * Creates inventories of the type {@link InventoryType#MERCHANT}
+	 */
+	public static ContainerFactory<MerchantInventory> MERCHANT_INV_FACTORY;
+	
+	/**
+	 * Creates inventories of the type {@link InventoryType#SMOKER}
+	 */
+	public static ContainerFactory<SmokerInventory> SMOKER_INV_FACTORY;
+	
+	/**
+	 * Creates inventories of the type {@link InventoryType#STONECUTTER}
+	 */
+	public static ContainerFactory<StonecutterInventory> STONECUTTER_INV_FACTORY;
+	
+	/**
+	 * Creates inventories of the type {@link InventoryType#WORKBENCH}
+	 */
+	public static ContainerFactory<WorkbenchInventory> WORKBENCH_INV_FACTORY;
+	
+	/**
+	 * Creates inventories of the type {@link InventoryType#LOOM}
+	 */
+	public static ContainerFactory<LoomInventory> LOOM_INV_FACTORY;
+	
+	public I create(InventoryType type, InventoryHolder holder) {
+		return create(type, null, holder);
 	}
 	
-	public abstract I createContainer(InventoryType type, String title, InventoryHolder holder);
+	public I create(String title, InventoryHolder holder) {
+		return create(null, title, holder);
+	}
+	
+	public abstract I create(InventoryType type, String title, InventoryHolder holder);
 
 }

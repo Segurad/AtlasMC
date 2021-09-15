@@ -1,5 +1,9 @@
 package de.atlasmc.event.inventory;
 
+import de.atlasmc.factory.ContainerFactory;
+import de.atlasmc.inventory.Inventory;
+import de.atlasmc.inventory.InventoryHolder;
+
 public enum InventoryType {
 
 	GENERIC_9X1(0),
@@ -29,6 +33,9 @@ public enum InventoryType {
 	SMOKER(21),
 	CARTOGRAPHY(22),
 	STONECUTTER(23),
+	HORSE(-1), // Opened via PacketOutOpenHorseWindow
+	LLAMA(-1),
+	PLAYER(3),
 	// --- non standard (types that are opened differently or only internal)
 	/**
 	 * A dispenser inventory, with 9 slots of {@link SlotType#CONTAINER}.<br>
@@ -66,9 +73,6 @@ public enum InventoryType {
 	 * If you would like to create a custom inventory with different size do not use this.
 	 */
 	DOUBLE_CHEST(5),
-	HORSE(-1), // Opened via PacketOutOpenHorseWindow
-	LLAMA(-1),
-	PLAYER(3),
 	/**
 	 * The crafting section of the player's inventory<br>
 	 * Containing 4 {@link SlotType#CRAFTING} and 1 {@link SlotType#RESULT}
@@ -76,8 +80,8 @@ public enum InventoryType {
 	CRAFTING(-1)
 	;
 	
-	private int id;
-	
+	private final int id;
+
 	private InventoryType(int id) {
 		this.id = id;
 	}
@@ -103,6 +107,67 @@ public enum InventoryType {
 		return id;
 	}
 	
+	public Inventory create(String title, InventoryHolder holder) {
+		switch(this) {
+		case CHEST:
+		case BARREL:
+		case DOUBLE_CHEST:
+		case DISPENSER:
+		case DROPPER:
+		case ENDER_CHEST:
+		case GENERIC_3X3:
+		case GENERIC_9X1:
+		case GENERIC_9X2:
+		case GENERIC_9X3:
+		case GENERIC_9X4:
+		case GENERIC_9X5:
+		case GENERIC_9X6:
+		case SHULKER_BOX:
+		case HOPPER:
+			return ContainerFactory.GENERIC_INV_FACTORY.create(this, title, holder);
+		case ANVIL:
+			return ContainerFactory.ANVIL_INV_FACTORY.create(this, title, holder);
+		case BEACON:
+			return ContainerFactory.BEACON_INV_FACTORY.create(this, title, holder);
+		case BLAST_FURNACE:
+			return ContainerFactory.BLAST_FURNACE_INV_FACTORY.create(this, title, holder);
+		case BREWING:
+			return ContainerFactory.BREWING_INV_FACTORY.create(this, title, holder);
+		case CARTOGRAPHY:
+			return ContainerFactory.CARTOGRAPHY_INV_FACTORY.create(this, title, holder);
+		case CRAFTING:
+			return ContainerFactory.CRAFTING_INV_FACTORY.create(this, title, holder);
+		case ENCHANTING:
+			return ContainerFactory.ENCHANTING_INV_FACTORY.create(this, title, holder);
+		case FURNACE:
+			return ContainerFactory.FURNACE_INV_FACTPRY.create(this, title, holder);
+		case GRINDSTONE:
+			return ContainerFactory.GRINDSTONE_INV_FACTORY.create(this, title, holder);
+		case HORSE:
+			return ContainerFactory.HORSE_INV_FACTORY.create(this, title, holder);
+		case LECTERN:
+			return ContainerFactory.LECTERN_INV_FACTORY.create(this, title, holder);
+		case LLAMA:
+			return ContainerFactory.LLAMA_INV_FACTORY.create(this, title, holder);
+		case LOOM:
+			return ContainerFactory.LOOM_INV_FACTORY.create(this, title, holder);
+		case MERCHANT:
+			return ContainerFactory.MERCHANT_INV_FACTORY.create(this, title, holder);
+		case PLAYER:
+			return ContainerFactory.PLAYER_INV_FACTORY.create(this, title, holder);
+		case SMITHING:
+			return ContainerFactory.SMITHING_INV_FACTORY.create(this, title, holder);
+		case SMOKER:
+			return ContainerFactory.SMOKER_INV_FACTORY.create(this, title, holder);
+		case STONECUTTER:
+			return ContainerFactory.STONECUTTER_INV_FACTORY.create(this, title, holder);
+		case WORKBENCH:
+			return ContainerFactory.WORKBENCH_INV_FACTORY.create(this, title, holder);
+		default:
+			return null;
+		}
+	}
+	
 	public static InventoryType getByID(int id) {
 		for (InventoryType t : values()) {
 			if (t.getID() == id) return t;
@@ -118,9 +183,5 @@ public enum InventoryType {
 		OUTSIDE,
 		QUICKBAR,
 		RESULT;
-	}
-
-	public int getSize() {
-		return 0;
 	}
 }

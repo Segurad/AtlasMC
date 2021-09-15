@@ -15,6 +15,7 @@ import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutSetSlot;
 import de.atlasmc.io.protocol.play.PacketOutWindowItems;
+import de.atlasmc.io.protocol.play.PacketOutWindowProperty;
 
 public class CoreInventory implements Inventory {
 
@@ -209,5 +210,38 @@ public class CoreInventory implements Inventory {
 			break;
 		}
 	}
+
+	@Override
+	public boolean hasViewers() {
+		return !viewers.isEmpty();
+	}
+	
+	/**
+	 * Sends a {@link PacketOutWindowProperty} to all viewers
+	 * @param property
+	 * @param value
+	 */
+	protected void updateProperty(int property, int value) {
+		for (Player p : getViewers()) {
+			updateProperties(p);
+		}
+	}
+	
+	protected void updateProperty(int property, int value, Player player) {
+		int windowID = player.getOpenInventory().getViewID();
+		PlayerConnection con = player.getConnection();
+		PacketOutWindowProperty packet = con.getProtocol().createPacket(PacketOutWindowProperty.class);
+		packet.setWindowID(windowID);
+		packet.setProperty(property);
+		packet.setValue(value);
+		con.sendPacked(packet);
+	}
+
+
+	@Override
+	public void updateProperties() {}
+
+	@Override
+	public void updateProperties(Player player) {}
 
 }
