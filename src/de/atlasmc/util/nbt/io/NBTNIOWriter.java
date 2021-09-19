@@ -1,10 +1,8 @@
 package de.atlasmc.util.nbt.io;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.UUID;
 
-import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.CompoundTag;
 import de.atlasmc.util.nbt.ListTag;
 import de.atlasmc.util.nbt.NBT;
@@ -14,23 +12,19 @@ import io.netty.buffer.ByteBuf;
 public class NBTNIOWriter implements NBTWriter {
 	
 	private final ByteBuf out;
-	private int depth, highestList, restPayload, index;
-	private TagType listType;
-	private int[] lists; // structure: depth of list, remaining payload, depth of list..
-	private TagType[] listTypes;
+	private int depth;
+	private ListData list;
 	
 	public NBTNIOWriter(ByteBuf out) {
-		Validate.notNull(out, "DataOutput can not be null!");
+		if (out == null) throw new IllegalArgumentException("ByteBuff can not be null!");
 		this.out = out;
 		depth = -1;
-		highestList = -2;
-		index = 0;
 	}
 	
 	@Override
 	public void writeEndTag() throws IOException {
 		if (depth == -1) throw new IOException("No NBT to close available!");
-		if (highestList != depth || listType != TagType.COMPOUND) depth--;
+		if (list == null || list.depth != depth || list.type != TagType.COMPOUND) depth--;
 		prepareTag(0, null);
 	}
 	
@@ -79,7 +73,7 @@ public class NBTNIOWriter implements NBTWriter {
 	
 	@Override
 	public void writeStringTag(String name, String value) throws IOException {
-		Validate.notNull(value, "Value can not be null!");
+		if (value == null) throw new IllegalArgumentException("Value can not be null!");
 		prepareTag(8, name);
 		byte[] buffer = value.getBytes();
 		out.writeShort(buffer.length);
@@ -102,7 +96,7 @@ public class NBTNIOWriter implements NBTWriter {
 	
 	@Override
 	public void writeIntArrayTag(String name, int[] data) throws IOException {
-		Validate.notNull(data, "Data can not be null!");
+		if (data == null) throw new IllegalArgumentException("Data can not be null!");
 		prepareTag(11, name);
 		out.writeInt(data.length);
 		for (int i : data) {
@@ -112,7 +106,7 @@ public class NBTNIOWriter implements NBTWriter {
 	
 	@Override
 	public void writeUUID(String name, UUID uuid) throws IOException {
-		Validate.notNull(uuid, "UUID can not be null!");
+		if (uuid == null) throw new IllegalArgumentException("UUID can not be null!");
 		writeIntArrayTag(name, new int[] {
 				(int) (uuid.getMostSignificantBits()>>32),
 				(int) uuid.getMostSignificantBits(),
@@ -123,7 +117,7 @@ public class NBTNIOWriter implements NBTWriter {
 	
 	@Override
 	public void writeLongArrayTag(String name, long[] data) throws IOException {
-		Validate.notNull(data, "Data can not be null!");
+		if (data == null) throw new IllegalArgumentException("Data can not be null!");
 		prepareTag(12, name);
 		out.writeInt(data.length);
 		for (long i : data) {
@@ -133,7 +127,7 @@ public class NBTNIOWriter implements NBTWriter {
 	
 	@Override
 	public void writeNBT(NBT nbt) throws IOException {
-		Validate.notNull(nbt, "NBT can not be null!");
+		if (nbt == null) throw new IllegalArgumentException("NBT can not be null!");
 		TagType type = nbt.getType();
 		switch (type) {
 		case BYTE: 
@@ -187,13 +181,17 @@ public class NBTNIOWriter implements NBTWriter {
 	}
 	
 	private void prepareTag(int type, String name) throws IOException {
-		if (highestList == depth) {
-			if (restPayload > 0) {
-				if (listType == TagType.COMPOUND) {
-					if (type == 0 && --restPayload == 0) removeList();
-				} else if (type != listType.ordinal()) {
-					throw new IOException("TagType not campatiple with ListTag(" + listType.name() + "):" + TagType.getByID(type));
-				} else if (--restPayload == 0) removeList();
+		if (list != null && list.depth == depth) {
+			if (list.payload > 0) {
+				if (list.type == TagType.COMPOUND) {
+					list.payload--;
+					if (type == 0 && list.payload == 0) removeList();
+				} else if (type != list.type.ordinal()) {
+					throw new IOException("TagType not campatiple with ListTag(" + list.type.name() + "):" + TagType.getByID(type));
+				} else {
+					list.payload--;
+					if (list.payload == 0) removeList();
+				}
 			} else throw new IOException("Max Listpayload reached!");
 			return;
 		}
@@ -206,42 +204,12 @@ public class NBTNIOWriter implements NBTWriter {
 	
 	private void addList(int payload, TagType payloadType) {
 		if (payload <= 0) return;
-		if (lists == null) { // init array of lists if needed
-			lists = new int[8];
-			listTypes = new TagType[4];
-			Arrays.fill(lists, -1);
-		}
-		final int length = lists.length;
-		if (index == length) { // grow array of lists if needed
-			lists = Arrays.copyOf(lists, length*2);
-			Arrays.fill(lists, length, length*2-1, -1);
-			listTypes = Arrays.copyOf(listTypes, (length >> 1) * 2);
-		}
-		if (index > 0) { // Only needed if there is a currently active list
-			lists[index-1] = restPayload;
-		}
-		listTypes[index >> 1] = payloadType;
-		lists[index++] = ++depth;
-		lists[index++] = payload;
-		restPayload = payload;
-		highestList = depth;
-		listType = payloadType;
+		list = new ListData(payloadType, payload, ++depth, list);
 	}
 	
 	private void removeList() {
-		if (lists == null) return;
-		lists[--index] = -1;
-		lists[--index] = -1;
-		listTypes[index >> 1] = null;
-		if (index >= 2) { 
-			highestList = lists[index-2];
-			restPayload = lists[index-1];
-			listType = listTypes[(index >> 1) -1];
-		} else {
-			highestList = -2;
-			restPayload = 0;
-			listType = null;
-		}
+		if (list == null) return;
+		list = list.last;
 		depth--;
 	}
 

@@ -13,6 +13,10 @@ public interface NBTReader {
 	
 	public String getFieldName();
 	
+	/**
+	 * Returns the {@link TagType} of highest list contents or null
+	 * @return tag type or null
+	 */
 	public TagType getListType();
 	
 	/**
@@ -21,6 +25,10 @@ public interface NBTReader {
 	 */
 	public int getRestPayload();
 	
+	/**
+	 * Returns the type of the current Tag
+	 * @return tag type
+	 */
 	public TagType getType();
 	
 	public byte[] readByteArrayTag() throws IOException;
@@ -46,7 +54,8 @@ public interface NBTReader {
 	public NBT readNBT() throws IOException;
 	
 	/**
-	 * Used in case of CompoundTag or EndTag
+	 * Used in case of CompoundTag or EndTag for moving to the next element<br>
+	 * for ListTag(CompounTag) and ListTag(ListTag) it will move in the next list or compound
 	 * @throws IOException
 	 */
 	public void readNextEntry() throws IOException;
@@ -62,6 +71,10 @@ public interface NBTReader {
 	 */
 	public UUID readUUID() throws IOException;
 	
+	/**
+	 * Skips the current Tag (for compound the whole compound will be skipped same for lists) 
+	 * @throws IOException
+	 */
 	public void skipNBT() throws IOException;
 
 }

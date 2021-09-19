@@ -1,10 +1,8 @@
 package de.atlasmc.util.nbt.io;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.UUID;
 
-import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.CompoundTag;
 import de.atlasmc.util.nbt.ListTag;
 import de.atlasmc.util.nbt.NBT;
@@ -15,45 +13,15 @@ import io.netty.buffer.ByteBuf;
 public class NBTNIOReader implements NBTReader {
 	
 	private final ByteBuf in;
-	private TagType type, listType;
+	private TagType type;
 	private String name;
-	private int depth, highestList, restPayload, index;
-	private int[] lists;
-	private TagType[] listTypes;
+	private int depth;
+	private ListData list;
 	
 	public NBTNIOReader(ByteBuf in) {
-		Validate.notNull(in, "DataInput can not be null!");
+		if (in == null) throw new IllegalArgumentException("ByteBuf can not be null!");
 		this.in = in;
-		highestList = -2;
-		index = 0;
 		getType();
-	}
-	
-	private void addList() throws IOException {
-		TagType type = TagType.getByID(in.readByte());
-		int payload = in.readInt();
-		if (payload > 0) {
-			if (lists == null) {
-				lists = new int[8];
-				listTypes = new TagType[4];
-				Arrays.fill(lists, -1);
-			}
-			final int length = lists.length;
-			if (index == length) {
-				lists = Arrays.copyOf(lists, length*2);
-				Arrays.fill(lists, length, length*2-1, -1);
-				listTypes = Arrays.copyOf(listTypes, (length >> 1) * 2);
-			}
-			if (index > 0) {
-				lists[index-1] = restPayload;
-			}
-			lists[index++] = ++depth;
-			lists[index++] = payload;
-			listTypes[index/2] = type;
-			listType = type;
-			restPayload = payload;
-			highestList = depth;
-		} else prepareTag();
 	}
 	
 	@Override
@@ -69,12 +37,14 @@ public class NBTNIOReader implements NBTReader {
 	
 	@Override
 	public TagType getListType() {
-		return listType;
+		if (list == null) return null;
+		return list.type;
 	}
 	
 	@Override
 	public int getRestPayload() {
-		return restPayload;
+		if (list == null) return 0;
+		return list.payload;
 	}
 	
 	@Override
@@ -89,10 +59,11 @@ public class NBTNIOReader implements NBTReader {
 	}
 	
 	private void prepareTag() throws IOException {
-		if (depth == highestList) {
+		if (list != null && depth == list.depth) {
 			name = null;
-			if (restPayload > 0) {
-				if (--restPayload == 0) removeList();
+			if (list.payload > 0) {
+				list.payload--;
+				if (list.payload <= 0) removeList();
 			}
 			return;
 		}
@@ -100,6 +71,7 @@ public class NBTNIOReader implements NBTReader {
 		if (type == TagType.TAG_END) {
 			name = null;
 			depth--;
+			if (list != null && depth == list.depth) type = TagType.LIST;
 		} else {
 			byte[] buffer = new byte[in.readShort()];
 			in.readBytes(buffer);
@@ -173,46 +145,18 @@ public class NBTNIOReader implements NBTReader {
 	}
 	
 	@Override
-	public NBT readNBT() throws IOException {
-		switch (depth == highestList ? listType : type) {
-		case BYTE: return NBT.createByteTag(name, readByteTag());
-		case BYTE_ARRAY: return NBT.createByteArrayTag(name, readByteArrayTag());
-		case COMPOUND: {
-			CompoundTag compound = new CompoundTag(name);
-			final int depth = getDepth();
-			if (depth != highestList) readNextEntry();
-			while (depth >= getDepth()) {
-				if (type == TagType.TAG_END) {
-					readNextEntry();
-					break;
-				}
-				compound.addTag(readNBT());
-			}
-		};
-		case DOUBLE: return NBT.createDoubleTag(name, readDoubleTag());
-		case FLOAT: return NBT.createFloatTag(name, readFloatTag());
-		case INT: return NBT.createIntTag(name, readIntTag());
-		case INT_ARRAY: return NBT.createIntArrayTag(name, readIntArrayTag());
-		case LIST: 
-			ListTag<NBT> list = new ListTag<NBT>(name, listType);
-			name = null;
-			while (getRestPayload() > 0) {
-				list.addTag(readNBT());
-			}
-			return list;
-		case LONG: return NBT.createLongTag(name, readLongTag());
-		case LONG_ARRAY: return NBT.createLongArrayTag(name, readLongArrayTag());
-		case SHORT: return NBT.createShortTag(name, readShortTag());
-		case STRING: return NBT.createStringTag(name, readStringTag());
-		case TAG_END: readNextEntry(); return null;
-		default:
-			return null;
-		}
-	}
-	
-	@Override
 	public void readNextEntry() throws IOException {
-		prepareTag();
+		if (list == null || list.depth != depth)
+			if (type == TagType.COMPOUND || type == TagType.TAG_END)
+				prepareTag();
+			else 
+				throw new IOException("Next entry should only be called on COMPOUND or END: " + type.name());
+		else if (list.type == TagType.COMPOUND) {
+			depth++;
+			prepareTag();
+		} else if (list.type == TagType.LIST) {
+			addList();
+		}
 	}
 	
 	@Override
@@ -236,46 +180,138 @@ public class NBTNIOReader implements NBTReader {
 		if (data.length != 4) throw new NBTException("Invalid UUID data length: " + data.length);
 		return new UUID((data[0]<<32)+data[1], (data[2]<<32)+data[3]);
 	}
+	
+	private void addList() throws IOException {
+		TagType type = TagType.getByID(in.readByte());
+		int payload = in.readInt();
+		if (payload <= 0) {
+			prepareTag();
+			return;
+		}
+		list = new ListData(type, payload, ++depth, list);
+	}
 
 	private void removeList() {
-		if (lists == null) return;
-		lists[--index] = -1;
-		lists[--index] = -1;
-		listTypes[index/2] = null;
-		if (index >= 2) { 
-			highestList = lists[index-2];
-			restPayload = lists[index-1];
-			listType = listTypes[(index-2)/2];
-		} else {
-			highestList = -1;
-			restPayload = 0;
-			listType = null;
-		}
+		if (list == null) return;
+		list = list.last;
 		depth--;
+		if (list != null && depth == list.depth) type = TagType.LIST;
+	}
+	
+	@Override
+	public NBT readNBT() throws IOException {
+		final boolean isList = list != null && depth == list.depth;
+		switch (isList ? list.type : type) {
+		case BYTE: return NBT.createByteTag(name, readByteTag());
+		case BYTE_ARRAY: return NBT.createByteArrayTag(name, readByteArrayTag());
+		case COMPOUND: {
+			if (isList) {
+				final ListTag<CompoundTag> list = new ListTag<CompoundTag>(getFieldName(), this.list.type);
+				readNextEntry(); // move out of list header
+				while (this.list.payload > 0) {
+					CompoundTag compound = new CompoundTag(name);
+					final int depth = getDepth(); // root depth of compound
+					while (depth <= getDepth()) {
+						if (type == TagType.TAG_END) {
+							readNextEntry(); // move out of list or to next compound in list
+							break;
+						}
+						compound.addTag(readNBT());
+					}
+					list.addTag(compound);
+					this.list.payload--;
+				}
+				return list;
+			}
+			final CompoundTag compound = new CompoundTag(getFieldName());
+			readNextEntry(); // move to first compound entry
+			final int depth = getDepth(); // root depth of compound
+			while (depth <= getDepth()) {
+				if (type == TagType.TAG_END) {
+					readNextEntry(); // skip end
+					break;
+				}
+				compound.addTag(readNBT());
+			}
+			return compound;
+		}
+		case DOUBLE: return NBT.createDoubleTag(name, readDoubleTag());
+		case FLOAT: return NBT.createFloatTag(name, readFloatTag());
+		case INT: return NBT.createIntTag(name, readIntTag());
+		case INT_ARRAY: return NBT.createIntArrayTag(name, readIntArrayTag());
+		case LIST: 
+			if (isList) {
+				ListTag<NBT> list = new ListTag<>(getFieldName(), TagType.LIST);
+				while (this.list.payload > 0) {
+					readNextEntry();
+					list.addTag(readNBT());
+					this.list.payload--;
+				}
+				removeList();
+				return list;
+			}
+			final ListTag<NBT> list = new ListTag<NBT>(name, this.list.type);
+			name = null;
+			while (getRestPayload() > 0) {
+				list.addTag(readNBT());
+			}
+			return list;
+		case LONG: return NBT.createLongTag(name, readLongTag());
+		case LONG_ARRAY: return NBT.createLongArrayTag(name, readLongArrayTag());
+		case SHORT: return NBT.createShortTag(name, readShortTag());
+		case STRING: return NBT.createStringTag(name, readStringTag());
+		case TAG_END: readNextEntry(); return null;
+		default:
+			return null;
+		}
 	}
 	
 	@Override
 	public void skipNBT() throws IOException {
-		switch (depth == highestList ? listType : type) {
+		final boolean isList = list != null && depth == list.depth;
+		switch (isList ? list.type : type) {
 		case BYTE: readByteTag(); break;
 		case BYTE_ARRAY: readByteArrayTag(); break;
-		case COMPOUND: {
-			final int depth = getDepth();
-			if (depth != highestList) readNextEntry();
-			while (depth >= getDepth()) {
+		case COMPOUND: 
+			if (isList) {
+				readNextEntry(); // move out of list header
+				while (list.payload > 0) {
+					final int depth = getDepth(); // root depth of compound
+					while (depth <= getDepth()) {
+						if (type == TagType.TAG_END) {
+							readNextEntry(); // move out of list or to next compound in list
+							break;
+						}
+						skipNBT();
+					}
+					list.payload--;
+				}
+				removeList();
+				return;
+			}
+			readNextEntry(); // move to first compound entry
+			final int depth = getDepth(); // root depth of compound
+			while (depth <= getDepth()) {
 				if (type == TagType.TAG_END) {
-					readNextEntry();
+					readNextEntry(); // skip end
 					break;
 				}
 				skipNBT();
 			}
-		};
 		case DOUBLE: readDoubleTag(); break;
 		case FLOAT: readFloatTag(); break;
 		case INT: readIntTag(); break;
 		case INT_ARRAY: readIntArrayTag(); break;
 		case LIST: 
-			name = null;
+			if (isList) {
+				while (list.payload > 0) {
+					readNextEntry();
+					skipNBT();
+					list.payload--;
+				}
+				removeList();
+				return;
+			}
 			while (getRestPayload() > 0) {
 				skipNBT();
 			}
