@@ -1,5 +1,6 @@
 package de.atlascore.inventory;
 
+import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.event.inventory.InventoryType.SlotType;
@@ -14,7 +15,7 @@ public class CoreAnvilInventory extends CoreInventory implements AnvilInventory 
 	
 	private int repaircost;
 	
-	public CoreAnvilInventory(String title, InventoryHolder holder) {
+	public CoreAnvilInventory(ChatComponent title, InventoryHolder holder) {
 		super(3, InventoryType.ANVIL, title, holder);
 	}
 	

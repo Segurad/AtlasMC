@@ -3,12 +3,14 @@ package de.atlasmc.inventory.meta.lore;
 import java.util.Iterator;
 import java.util.List;
 
+import de.atlasmc.chat.component.ChatComponent;
+
 public class MultiPageLore implements Lore {
 	
-	private List<List<String>> pages;
+	private List<List<ChatComponent>> pages;
 
 	@Override
-	public Iterator<String> iterator() {
+	public Iterator<ChatComponent> iterator() {
 		return null;
 	}
 
@@ -18,19 +20,19 @@ public class MultiPageLore implements Lore {
 	}
 
 	@Override
-	public List<String> getLines() {
+	public List<ChatComponent> getLines() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getLine(int line) {
+	public ChatComponent getLine(int line) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void setLine(int line, String text) {
+	public void setLine(int line, ChatComponent text) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -42,7 +44,7 @@ public class MultiPageLore implements Lore {
 	}
 
 	@Override
-	public void addLine(String readStringTag) {
+	public void addLine(ChatComponent readStringTag) {
 		// TODO Auto-generated method stub
 		
 	}

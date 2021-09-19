@@ -4,16 +4,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import de.atlasmc.chat.component.ChatComponent;
+
 public class SimpleLore implements Lore {
 
-	private ArrayList<String> lore;
+	private ArrayList<ChatComponent> lore;
 	
-	public SimpleLore(List<String> lore) {
-		this.lore = new ArrayList<String>(lore);
+	public SimpleLore(List<ChatComponent> lore) {
+		this.lore = new ArrayList<ChatComponent>(lore);
 	}
 
 	@Override
-	public Iterator<String> iterator() {
+	public Iterator<ChatComponent> iterator() {
 		return lore.iterator();
 	}
 
@@ -23,17 +25,17 @@ public class SimpleLore implements Lore {
 	}
 
 	@Override
-	public List<String> getLines() {
+	public List<ChatComponent> getLines() {
 		return lore;
 	}
 
 	@Override
-	public String getLine(int line) {
+	public ChatComponent getLine(int line) {
 		return lore.get(line);
 	}
 
 	@Override
-	public void setLine(int line, String text) {
+	public void setLine(int line, ChatComponent text) {
 		lore.set(line, text);
 	}
 
@@ -44,7 +46,7 @@ public class SimpleLore implements Lore {
 	}
 
 	@Override
-	public void addLine(String readStringTag) {
+	public void addLine(ChatComponent readStringTag) {
 		// TODO Auto-generated method stub
 		
 	}

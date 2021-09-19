@@ -10,7 +10,7 @@ import de.atlasmc.block.tile.Banner.Pattern;
 import de.atlasmc.inventory.meta.BannerMeta;
 
 public class CoreBannerMeta extends CoreTileEntityMeta implements BannerMeta {
-
+	
 	public CoreBannerMeta(Material material) {
 		super(material);
 	}

@@ -1,7 +1,11 @@
 package de.atlasmc.chat;
 
-public class MessageUtil {
+import de.atlasmc.chat.component.ChatComponent;
+
+public class ChatUtil {
 	
+	public static ChatComponent ONE_SPACE = null; // TODO
+
 	public static String buildString(Object... values) {
 		final StringBuilder b = new StringBuilder();
 		for (final Object o : values) {
@@ -15,7 +19,7 @@ public class MessageUtil {
 	 * @param msg
 	 * @return the msg formated as json String
 	 */
-	public static String formatMessage(String msg) {
-		return msg;
+	public static ChatComponent toChat(String msg) {
+		return null; // TODO chat
 	}
 }

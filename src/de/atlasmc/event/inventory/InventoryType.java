@@ -1,5 +1,6 @@
 package de.atlasmc.event.inventory;
 
+import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryHolder;
@@ -107,7 +108,7 @@ public enum InventoryType {
 		return id;
 	}
 	
-	public Inventory create(String title, InventoryHolder holder) {
+	public Inventory create(ChatComponent title, InventoryHolder holder) {
 		switch(this) {
 		case CHEST:
 		case BARREL:

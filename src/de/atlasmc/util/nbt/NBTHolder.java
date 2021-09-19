@@ -39,7 +39,7 @@ public interface NBTHolder {
 	 * Write the NBT of the Holder
 	 * @param writer
 	 * @param local
-	 * @param systemData
+	 * @param systemData true if it is used system internal false while send to client
 	 * @throws IOException
 	 * Does not a new CompoundTag
 	 */

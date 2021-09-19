@@ -3,6 +3,7 @@ package de.atlasmc.inventory.gui;
 import java.util.List;
 
 import de.atlasmc.Material;
+import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.event.inventory.ClickType;
 import de.atlasmc.event.inventory.InventoryClickEvent;
 import de.atlasmc.inventory.ItemStack;
@@ -75,7 +76,7 @@ public abstract class ElementManagerGUI<E> extends MultipageGUI {
 				return null;
 			}
 		});
-		setPageSwitchIcons(ItemUtil.getItemStack(Material.ARROW, "§7-->"), ItemUtil.getItemStack(Material.ARROW, "§7<--"));
+		setPageSwitchIcons(ItemUtil.getItemStack(Material.ARROW, ChatUtil.toChat("§7-->")), ItemUtil.getItemStack(Material.ARROW, ChatUtil.toChat("§7<--")));
 	}
 	
 	private final void removeElement(int slot) {

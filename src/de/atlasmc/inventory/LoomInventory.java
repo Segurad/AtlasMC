@@ -1,6 +1,6 @@
 package de.atlasmc.inventory;
 
-import de.atlasmc.block.tile.Banner.Pattern;
+import de.atlasmc.block.tile.Banner.PatternType;
 
 public interface LoomInventory extends Inventory {
 	
@@ -20,8 +20,8 @@ public interface LoomInventory extends Inventory {
 	
 	public void setResult(ItemStack result);
 	
-	public Pattern getPattern();
+	public PatternType getPattern();
 	
-	public void setPattern(Pattern pattern);
+	public void setPattern(PatternType pattern);
 
 }

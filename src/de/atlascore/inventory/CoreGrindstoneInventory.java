@@ -1,5 +1,6 @@
 package de.atlascore.inventory;
 
+import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.event.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.GrindstoneInventory;
@@ -8,7 +9,7 @@ import de.atlasmc.inventory.ItemStack;
 
 public class CoreGrindstoneInventory extends CoreInventory implements GrindstoneInventory {
 
-	public CoreGrindstoneInventory(String title, InventoryHolder holder) {
+	public CoreGrindstoneInventory(ChatComponent title, InventoryHolder holder) {
 		super(3, InventoryType.GRINDSTONE, title, holder);
 	}
 	

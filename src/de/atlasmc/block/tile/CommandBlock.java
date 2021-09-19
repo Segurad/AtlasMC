@@ -1,5 +1,7 @@
 package de.atlasmc.block.tile;
 
+import de.atlasmc.chat.component.ChatComponent;
+
 public interface CommandBlock extends TileEntity {
 	
 	public Mode getMode();
@@ -8,15 +10,35 @@ public interface CommandBlock extends TileEntity {
 	
 	public boolean isConditional();
 	
-	public void setConditional(boolean value);
+	public void setConditional(boolean conditional);
 	
 	public boolean isAlwaysActive();
 	
-	public void setAlwaysActive(boolean value);
+	public void setAlwaysActive(boolean alwaysActive);
 	
 	public boolean getTrackOutput();
 	
-	public void setTrackOutput(boolean value);
+	public void setTrackOutput(boolean trackOutput);
+	
+	public void setCustomName(ChatComponent name);
+	
+	public ChatComponent getCustomName();
+	
+	public void setCommand(String command);
+	
+	public String getCommand();
+	
+	public void setLastOutput(ChatComponent lastoutput);
+	
+	public ChatComponent getLastOutput();
+	
+	public void setPowered(boolean powered);
+	
+	public boolean isPowered();
+	
+	public void setSuccessCount(int count);
+	
+	public int getSuccessCount();
 	
 	public static enum Mode {
 		SEQUENCE,

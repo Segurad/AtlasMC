@@ -29,14 +29,14 @@ public class CoreMapMeta extends CoreItemMeta implements MapMeta {
 				((MapMeta) holder).setMapID(reader.readIntTag());
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
-		NBT_FIELDS.setField(MAP_SCALE_DIRECTION, NBTField.TRASH);
-		NBT_FIELDS.setField(MAP_TRACING_POSITION, NBTField.TRASH);
+		NBT_FIELDS.setField(MAP_SCALE_DIRECTION, NBTField.SKIP);
+		NBT_FIELDS.setField(MAP_TRACING_POSITION, NBTField.SKIP);
 		NBT_FIELDS.getContainer(DISPLAY).setField(MAP_COLOR, (holder, reader) -> {
 			if (MapMeta.class.isInstance(holder)) {
 				((MapMeta) holder).setColor(new Color(reader.readIntTag()));
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
-		NBT_FIELDS.setField(DECORATION, NBTField.TRASH);
+		NBT_FIELDS.setField(DECORATION, NBTField.SKIP);
 	}
 	
 	public CoreMapMeta(Material material) {

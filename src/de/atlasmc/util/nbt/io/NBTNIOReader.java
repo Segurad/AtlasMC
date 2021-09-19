@@ -30,20 +30,23 @@ public class NBTNIOReader implements NBTReader {
 	}
 	
 	private void addList() throws IOException {
-		if (lists == null) {
-			lists = new int[8];
-			listTypes = new TagType[4];
-			Arrays.fill(lists, -1);
-		}
 		TagType type = TagType.getByID(in.readByte());
 		int payload = in.readInt();
 		if (payload > 0) {
+			if (lists == null) {
+				lists = new int[8];
+				listTypes = new TagType[4];
+				Arrays.fill(lists, -1);
+			}
 			final int length = lists.length;
 			if (index == length) {
 				lists = Arrays.copyOf(lists, length*2);
 				Arrays.fill(lists, length, length*2-1, -1);
+				listTypes = Arrays.copyOf(listTypes, (length >> 1) * 2);
 			}
-			lists[index-1] = restPayload;
+			if (index > 0) {
+				lists[index-1] = restPayload;
+			}
 			lists[index++] = ++depth;
 			lists[index++] = payload;
 			listTypes[index/2] = type;

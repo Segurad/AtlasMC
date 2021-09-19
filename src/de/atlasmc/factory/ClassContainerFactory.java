@@ -2,6 +2,7 @@ package de.atlasmc.factory;
 
 import java.lang.reflect.InvocationTargetException;
 
+import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryHolder;
@@ -22,7 +23,7 @@ public class ClassContainerFactory<I extends Inventory> extends ContainerFactory
 	}
 	
 	@Override
-	public I create(InventoryType type, String title, InventoryHolder holder) {
+	public I create(InventoryType type, ChatComponent title, InventoryHolder holder) {
 		try {
 			return clazz.getConstructor(String.class, InventoryHolder.class).newInstance(title, holder);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException

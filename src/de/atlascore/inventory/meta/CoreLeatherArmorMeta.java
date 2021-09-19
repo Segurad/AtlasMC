@@ -10,8 +10,6 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreLeatherArmorMeta extends CoreDamageableMeta implements LeatherArmorMeta {
 
-	private Color color;
-	
 	protected static final String COLOR = "color";
 	
 	static {
@@ -21,6 +19,8 @@ public class CoreLeatherArmorMeta extends CoreDamageableMeta implements LeatherA
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
 	}
+	
+	private Color color;
 	
 	public CoreLeatherArmorMeta(Material material) {
 		super(material);

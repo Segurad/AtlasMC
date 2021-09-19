@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import de.atlasmc.Material;
+import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.event.inventory.InventoryType.SlotType;
@@ -24,9 +25,9 @@ public class CoreInventory implements Inventory {
 	private final int size;
 	private InventoryHolder holder;
 	private final InventoryType type;
-	private final String title;
+	private ChatComponent title;
 	
-	public CoreInventory(int size, InventoryType type, String title, InventoryHolder holder) {
+	public CoreInventory(int size, InventoryType type, ChatComponent title, InventoryHolder holder) {
 		this.size = size;
 		this.contents = new ItemStack[size];
 		this.viewers = new ArrayList<Player>(1);
@@ -85,7 +86,7 @@ public class CoreInventory implements Inventory {
 	}
 	
 	@Override
-	public String getTitle() {
+	public ChatComponent getTitle() {
 		return title;
 	}
 
@@ -218,8 +219,8 @@ public class CoreInventory implements Inventory {
 	
 	/**
 	 * Sends a {@link PacketOutWindowProperty} to all viewers
-	 * @param property
-	 * @param value
+	 * @param property the property field
+	 * @param value the property value
 	 */
 	protected void updateProperty(int property, int value) {
 		for (Player p : getViewers()) {
@@ -243,5 +244,19 @@ public class CoreInventory implements Inventory {
 
 	@Override
 	public void updateProperties(Player player) {}
+
+	@Override
+	public void setTitle(ChatComponent title) {
+		this.title = title;
+	}
+
+	@Override
+	public int countItems() {
+		int count = 0;
+		for (ItemStack item : contents) {
+			if (item != null) count++;
+		}
+		return count;
+	}
 
 }

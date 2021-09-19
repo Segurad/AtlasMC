@@ -1,5 +1,6 @@
 package de.atlascore.inventory;
 
+import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.event.inventory.InventoryType.SlotType;
@@ -17,7 +18,7 @@ public class CoreAbstractFurnaceInventory extends CoreInventory implements Abstr
 	
 	private int progress, fuel, maxprogress, maxfuel;
 	
-	public CoreAbstractFurnaceInventory(InventoryType type, String title, InventoryHolder holder) {
+	public CoreAbstractFurnaceInventory(InventoryType type, ChatComponent title, InventoryHolder holder) {
 		super(3, type, title, holder);
 		this.maxprogress = 200;
 	}

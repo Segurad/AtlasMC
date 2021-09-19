@@ -3,6 +3,7 @@ package de.atlasmc.block.tile;
 import java.util.List;
 
 import de.atlasmc.DyeColor;
+import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.util.Validate;
 
 public interface Banner extends TileEntity {
@@ -11,7 +12,7 @@ public interface Banner extends TileEntity {
 	
 	public DyeColor getBaseColor();
 	
-	public void setBaseColor(DyeColor color);
+	public void setBaseColor(DyeColor color, boolean wall);
 	
 	public Pattern getPattern(int index);
 	
@@ -25,7 +26,31 @@ public interface Banner extends TileEntity {
 	
 	public void setPatterns(List<Pattern> pattern);
 	
-	public static enum Pattern {
+	public ChatComponent getCustomName();
+	
+	public void setCustomName(ChatComponent name);
+	
+	public static class Pattern {
+		
+		private final DyeColor color;
+		private final PatternType type;
+		
+		public Pattern(DyeColor color, PatternType type) {
+			this.color = color;
+			this.type = type;
+		}
+		
+		public DyeColor getColor() {
+			return color;
+		}
+		
+		public PatternType getType() {
+			return type;
+		}
+		
+	}
+	
+	public static enum PatternType {
 		BOTTOM_STRIPE("bs"),
 		TOP_STRIPE("ts"),
 		LEFT_STRIPE("ls"),
@@ -67,7 +92,7 @@ public interface Banner extends TileEntity {
 		
 		private final String identifier;
 		
-		private Pattern(String identifier) {
+		private PatternType(String identifier) {
 			this.identifier = identifier;
 		}
 		
@@ -75,9 +100,9 @@ public interface Banner extends TileEntity {
 			return identifier;
 		}
 		
-		public static Pattern getByIdentifier(String identifier) {
+		public static PatternType getByIdentifier(String identifier) {
 			Validate.notNull(identifier, "Identifier can not be null!");
-			for (Pattern pattern : values()) {
+			for (PatternType pattern : values()) {
 				if (pattern.getIdentifier().equals(identifier)) return pattern;
 			}
 			return null;

@@ -7,6 +7,7 @@ import java.util.Set;
 import de.atlasmc.Material;
 import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeModifier;
+import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.inventory.ItemFlag;
@@ -34,7 +35,7 @@ public interface ItemMeta extends Cloneable, NBTHolder {
 	public void setCustomModelData(Integer data);
 	public void setUnbreakable(boolean unbreakable);
 
-	public void setDisplayName(String name);
+	public void setDisplayName(ChatComponent name);
 
 	public void setLore(Lore lore);
 
@@ -44,7 +45,7 @@ public interface ItemMeta extends Cloneable, NBTHolder {
 
 	public boolean hasDisplayName();
 
-	public String getDisplayName();
+	public ChatComponent getDisplayName();
 
 	public boolean hasEnchants();
 

@@ -6,8 +6,8 @@ import de.atlasmc.util.nbt.io.NBTReader;
 
 public interface NBTField {
 	
-	public static final NBTField TRASH = (holder, reader) -> {
-		reader.readNBT();
+	public static final NBTField SKIP = (holder, reader) -> {
+		reader.skipNBT();
 	};
 	
 	public void setField(NBTHolder holder, NBTReader reader) throws IOException;

@@ -29,14 +29,14 @@ public class NBTIOReader implements NBTReader {
 	}
 	
 	private void addList() throws IOException {
-		if (lists == null) {
-			lists = new int[8];
-			listTypes = new TagType[4];
-			Arrays.fill(lists, -1);
-		}
 		TagType type = TagType.getByID(in.readByte());
 		int payload = in.readInt();
 		if (payload > 0) {
+			if (lists == null) {
+				lists = new int[8];
+				listTypes = new TagType[4];
+				Arrays.fill(lists, -1);
+			}
 			final int length = lists.length;
 			if (index == length) {
 				lists = Arrays.copyOf(lists, length*2);

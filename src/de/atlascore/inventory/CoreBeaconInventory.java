@@ -1,5 +1,6 @@
 package de.atlascore.inventory;
 
+import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.event.inventory.InventoryType.SlotType;
@@ -18,7 +19,7 @@ public class CoreBeaconInventory extends CoreInventory implements BeaconInventor
 	private PotionEffect primary, secondary;
 	private int primaryid = -1, secondaryid = -1, power;
 	
-	public CoreBeaconInventory(String title, InventoryHolder holder) {
+	public CoreBeaconInventory(ChatComponent title, InventoryHolder holder) {
 		super(1, InventoryType.BEACON, title, holder);
 	}
 

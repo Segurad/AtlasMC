@@ -51,7 +51,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 		PacketOutOpenWindow packet = con.getProtocol().createPacket(PacketOutOpenWindow.class);
 		packet.setWindowID(view.getViewID());
 		packet.setWindowType(inv.getType());
-		packet.setTitle(inv.getTitle());
+		packet.setTitle(inv.getTitle().getJsonText());
 		con.sendPacked(packet);
 		inv.updateSlots(this);
 	}

@@ -12,4 +12,10 @@ public class BaseComponent implements ChatComponent {
 		return null;
 	}
 
+	@Override
+	public boolean contains(ChatComponent displayName) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

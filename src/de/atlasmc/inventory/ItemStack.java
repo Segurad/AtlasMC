@@ -13,15 +13,30 @@ import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.NBTHolder;
+import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class ItemStack implements NBTHolder {
 
+	protected static final String
+	NBT_COUNT = "Count",
+	NBT_ID = "id",
+	NBT_TAG = "tag",
+	NBT_CUSTOM_CREATIVE_LOCK = "CustomCreativeLock",
+	NBT_SLOT = "Slot";
+	
 	private byte amount;
 	private Material type;
 	private ItemMeta meta;
 
+	/**
+	 * Creates a ItemStack of the Type {@link Material#AIR} with amount of 1
+	 */
+	public ItemStack() {
+		this(Material.AIR, 1);
+	}
+	
 	public ItemStack(Material material) {
 		this(material, 1);
 	}
@@ -151,11 +166,18 @@ public class ItemStack implements NBTHolder {
 		}
 		return true;
 	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+	
+	/**
+	 * Same as {@link #toNBT(NBTWriter, boolean)} but does write the slot number
+	 * @param writer
+	 * @param systemData
+	 * @param slot the slot number or -999 for none
+	 * @throws IOException 
+	 */
+	public void toSlot(NBTWriter writer, boolean systemData, int slot) throws IOException {
 		writer.writeByteTag("Count", (byte) getAmount());
 		writer.writeStringTag("id", getType().getNamespacedName());
+		if (slot != -999) writer.writeByteTag(NBT_SLOT, slot);
 		if(hasItemMeta()) {
 			writer.writeCompoundTag("tag");
 			getItemMeta().toNBT(writer, systemData);
@@ -164,7 +186,54 @@ public class ItemStack implements NBTHolder {
 	}
 
 	@Override
-	public void fromNBT(NBTReader reader) {
-		
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		toSlot(writer, systemData, -999);
+	}
+
+	@Override
+	public void fromNBT(NBTReader reader) throws IOException {
+		fromSlot(reader);
+	}
+	
+	/**
+	 * Same as {@link #fromSlot(NBTReader)} but does return the slot number while reading slot NBT
+	 * @param reader the NBTReader should be used
+	 * @return the slot number or -999 if not present
+	 * @throws IOException 
+	 */
+	public int fromSlot(NBTReader reader) throws IOException {
+		int slot = -999;
+		final int depth = reader.getDepth();
+		while (depth <= reader.getDepth()) {
+			String s = reader.getFieldName();
+			switch (s) {
+			case NBT_COUNT: 
+				amount = reader.readByteTag();
+				break;
+			case NBT_CUSTOM_CREATIVE_LOCK: 
+				reader.skipNBT(); // TODO skip creative lock because i don't know if it is used
+				break;
+			case NBT_ID: 
+				type = Material.getMaterial(reader.readStringTag());
+				break;
+			case NBT_SLOT: 
+				slot = reader.readByteTag();
+				break;
+			case NBT_TAG:
+				if (reader.getType() != TagType.COMPOUND) {
+					reader.skipNBT();
+				} else {
+					reader.readNextEntry();
+					getItemMeta().fromNBT(reader);
+				}
+				break;
+			default: 
+				reader.skipNBT();
+				break;
+			}
+		}
+		if (reader.getType() == TagType.TAG_END)
+			reader.skipNBT();
+		return slot;
 	}
 }

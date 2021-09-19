@@ -1,5 +1,6 @@
 package de.atlascore.inventory;
 
+import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.event.inventory.InventoryType.SlotType;
@@ -180,7 +181,7 @@ public class CoreInventoryView implements InventoryView {
 		return bottom;
 	}
 	
-	public String getTitle() {
+	public ChatComponent getTitle() {
 		return top.getTitle();
 	}
 	

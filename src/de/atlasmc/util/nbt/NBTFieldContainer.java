@@ -2,8 +2,9 @@ package de.atlasmc.util.nbt;
 
 import java.util.HashMap;
 
-import de.atlasmc.util.Validate;
-
+/**
+ * Stores {@link NBTField} and {@link NBTFieldContainer}
+ */
 public class NBTFieldContainer {
 	
 	private HashMap<String, NBTField> fields;
@@ -20,8 +21,8 @@ public class NBTFieldContainer {
 	}
 	
 	public void setField(String key, NBTField field) {
-		Validate.notNull(key, "Key can not be null!");
-		Validate.notNull(field, "Field can not be null!");
+		if (key == null) throw new IllegalArgumentException("Key can not be null!");
+		if (field == null) throw new IllegalArgumentException("Field can not be null!");
 		if (this.fields == null) this.fields= new HashMap<String, NBTField>();
 		this.fields.put(key, field);
 	}
@@ -36,8 +37,8 @@ public class NBTFieldContainer {
 	}
 	
 	public void setContainer(String key, NBTFieldContainer container) {
-		Validate.notNull(key, "Key can not be null!");
-		Validate.notNull(container, "Container can not be null!");
+		if (key == null) throw new IllegalArgumentException("Key can not be null!");
+		if (container == null) throw new IllegalArgumentException("Container can not be null!");
 		if (this.container == null) this.container = new HashMap<String, NBTFieldContainer>();
 		this.container.put(key, container);
 	}

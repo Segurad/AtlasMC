@@ -24,4 +24,10 @@ public class FinalComponent implements ChatComponent {
 		return json;
 	}
 
+	@Override
+	public boolean contains(ChatComponent displayName) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

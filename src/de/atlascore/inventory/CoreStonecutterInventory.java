@@ -1,5 +1,6 @@
 package de.atlascore.inventory;
 
+import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.inventory.InventoryHolder;
@@ -13,7 +14,7 @@ public class CoreStonecutterInventory extends CoreInventory implements Stonecutt
 	
 	private short selectedRecipe = -1;
 	
-	public CoreStonecutterInventory(String title, InventoryHolder holder) {
+	public CoreStonecutterInventory(ChatComponent title, InventoryHolder holder) {
 		super(2, InventoryType.STONECUTTER, title, holder);
 	}
 

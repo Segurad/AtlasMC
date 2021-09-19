@@ -1,5 +1,6 @@
 package de.atlascore.inventory;
 
+import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.event.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.CraftingInventory;
@@ -8,7 +9,7 @@ import de.atlasmc.inventory.ItemStack;
 
 public class CoreCraftingInventory extends CoreInventory implements CraftingInventory {
 
-	public CoreCraftingInventory(String title, InventoryHolder holder) {
+	public CoreCraftingInventory(ChatComponent title, InventoryHolder holder) {
 		super(5, InventoryType.CRAFTING, title, holder);
 	}
 	

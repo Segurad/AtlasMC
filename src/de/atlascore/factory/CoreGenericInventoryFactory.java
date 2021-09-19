@@ -1,6 +1,7 @@
 package de.atlascore.factory;
 
 import de.atlascore.inventory.CoreInventory;
+import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.Inventory;
@@ -9,7 +10,7 @@ import de.atlasmc.inventory.InventoryHolder;
 public class CoreGenericInventoryFactory extends ContainerFactory<Inventory> {
 
 	@Override
-	public Inventory create(InventoryType type, String title, InventoryHolder holder) {
+	public Inventory create(InventoryType type, ChatComponent title, InventoryHolder holder) {
 		int size = 0;
 		switch (type) {
 		case GENERIC_9X3:

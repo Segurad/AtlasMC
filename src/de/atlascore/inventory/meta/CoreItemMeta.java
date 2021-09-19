@@ -14,7 +14,8 @@ import de.atlasmc.Material;
 import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeModifier;
 import de.atlasmc.attribute.AttributeModifier.Operation;
-import de.atlasmc.chat.MessageUtil;
+import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.inventory.ItemFlag;
@@ -35,7 +36,7 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	
 	private boolean unbreakable;
-	private String displayname;
+	private ChatComponent displayname;
 	private Lore lore;
 	private int flags;
 	private Integer customModelData;
@@ -77,12 +78,12 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 		NBTFieldContainer display = new NBTFieldContainer();
 		NBT_FIELDS.setContainer(DISPLAY, display);
 		display.setField(NAME, (holder, reader) -> {
-			((ItemMeta) holder).setDisplayName(reader.readStringTag());
+			((ItemMeta) holder).setDisplayName(ChatUtil.toChat(reader.readStringTag()));
 		});
 		display.setField(LORE, (holder, reader) -> {
 			Lore lore = ((ItemMeta) holder).getLore();
 			while (reader.getRestPayload() > 0) {
-				lore.addLine(reader.readStringTag());
+				lore.addLine(ChatUtil.toChat(reader.readStringTag()));
 			}
 		});
 		NBT_FIELDS.setField(UNBREAKABLE, (holder, reader) -> {
@@ -303,7 +304,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	}
 
 	@Override
-	public void setDisplayName(String name) {
+	public void setDisplayName(ChatComponent name) {
 		this.displayname = name;
 	}
 
@@ -330,7 +331,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	}
 
 	@Override
-	public String getDisplayName() {
+	public ChatComponent getDisplayName() {
 		return displayname;
 	}
 
@@ -490,12 +491,12 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	
 	protected void writeDisplayCompound(NBTWriter writer, boolean systemData) throws IOException {
 		if (hasDisplayName()) {
-			writer.writeStringTag(NAME, MessageUtil.formatMessage(displayname));
+			writer.writeStringTag(NAME, getDisplayName().getJsonText());
 		}
 		if (hasLore()) {
 			writer.writeListTag(LORE, TagType.STRING, lore.countLines());
-			for (String s : lore) {
-				writer.writeStringTag(null, MessageUtil.formatMessage(s));
+			for (ChatComponent c : lore) {
+				writer.writeStringTag(null, c.getJsonText());
 			}
 		}
 	}
@@ -510,6 +511,11 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 				writer.writeNBT(nbt);
 			}
 		}
+	}
+	
+	@Override
+	protected boolean useCustomTagContainer() {
+		return true;
 	}
 	
 	@Override

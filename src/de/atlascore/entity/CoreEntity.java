@@ -97,7 +97,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 		NBT_FIELDS.setField(CUSTOM_NAME_VISIBLE, (holder, reader) -> {
 			((Entity) holder).setCustomNameVisible(reader.readByteTag() == 1);
 		});
-		NBT_FIELDS.setField(DIMENSION, NBTField.TRASH);
+		NBT_FIELDS.setField(DIMENSION, NBTField.SKIP);
 		NBT_FIELDS.setField(FALL_DISTANCE, (holder, reader) -> {
 			((Entity) holder).setFallDistance(reader.readFloatTag());
 		});
@@ -107,7 +107,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 		NBT_FIELDS.setField(GLOWING, (holder, reader) -> {
 			((Entity) holder).setGlowing(reader.readByteTag() == 1);
 		});
-		NBT_FIELDS.setField(ID, NBTField.TRASH); // TODO dilemma
+		NBT_FIELDS.setField(ID, NBTField.SKIP); // TODO dilemma
 		NBT_FIELDS.setField(INVULNERABLE, (holder, reader) -> {
 			((Entity) holder).setInvulnerable(reader.readByteTag() == 1);
 		});
@@ -123,7 +123,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 		NBT_FIELDS.setField(ON_GROUND, (holder, reader) -> {
 			((Entity) holder).setOnGround(reader.readByteTag() == 1);
 		});
-		NBT_FIELDS.setField(PASSENGERS, NBTField.TRASH); // TODO nbt load passenger
+		NBT_FIELDS.setField(PASSENGERS, NBTField.SKIP); // TODO nbt load passenger
 		NBT_FIELDS.setField(PORTAL_COOLDOWN, (holder, reader) -> {
 			((Entity) holder).setPortalCooldown(reader.readIntTag());
 		});
@@ -148,7 +148,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 				ent.addScoreboardTag(reader.readStringTag());
 			}
 		});
-		NBT_FIELDS.setField(UUID, NBTField.TRASH);
+		NBT_FIELDS.setField(UUID, NBTField.SKIP);
 	}
 	
 	public CoreEntity(int id, EntityType type, Location loc, UUID uuid) {
