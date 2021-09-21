@@ -24,17 +24,17 @@ public class CoreCompassMeta extends CoreItemMeta implements CompassMeta {
 	
 	static {
 		NBT_FIELDS.setField(LODESTONE_TRACKED, (holder, reader) -> {
-			if (CompassMeta.class.isInstance(holder)) {
+			if (holder instanceof CompassMeta) {
 				((CompassMeta) holder).setLodestoneTracked(reader.readByteTag() == 1);
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
 		NBT_FIELDS.setField(LODESTONE_DIMENSION, (holder, reader) -> {
-			if (CompassMeta.class.isInstance(holder)) {
+			if (holder instanceof CompassMeta) {
 				reader.readStringTag();
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
 		NBT_FIELDS.setField(LODESTONE_POS, (holder, reader) -> {
-			if (CompassMeta.class.isInstance(holder)) {
+			if (holder instanceof CompassMeta) {
 				if (reader.getType() == TagType.COMPOUND) {
 					reader.readNextEntry();
 					int x = 0, y = 0, z = 0;

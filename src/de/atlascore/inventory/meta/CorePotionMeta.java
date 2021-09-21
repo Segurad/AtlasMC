@@ -29,12 +29,12 @@ public class CorePotionMeta extends CoreItemMeta implements PotionMeta {
 	
 	static {
 		NBT_FIELDS.setField(CUSTOM_POTION_COLOR, (holder, reader) -> {
-			if (PotionMeta.class.isInstance(holder)) {
+			if (holder instanceof PotionMeta) {
 				((PotionMeta) holder).setColor(new Color(reader.readIntTag()));
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
 		NBT_FIELDS.setField(CUSTOM_POTION_EFFECTS, (holder, reader) -> {
-			if (PotionMeta.class.isInstance(holder)) {
+			if (holder instanceof PotionMeta) {
 				PotionMeta meta = ((PotionMeta) holder);
 				List<PotionEffect> effects = meta.getCustomEffects();
 				while (reader.getRestPayload() > 0) {
@@ -45,7 +45,7 @@ public class CorePotionMeta extends CoreItemMeta implements PotionMeta {
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
 		NBT_FIELDS.setField(POTION, (holder, reader) -> {
-			if (PotionMeta.class.isInstance(holder)) {
+			if (holder instanceof PotionMeta) {
 				((PotionMeta) holder).setBasePotionData(PotionData.getByName(reader.readStringTag()));
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});

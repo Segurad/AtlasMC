@@ -17,7 +17,7 @@ public class CoreAnaloguePowerable extends CoreBlockData implements AnaloguePowe
 		NBT_FIELDS.setField(POWER, (holder, reader) -> {
 			if (AnaloguePowerable.class.isInstance(holder)) {
 				((AnaloguePowerable) holder).setPower(reader.readIntTag());
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 	}
 	

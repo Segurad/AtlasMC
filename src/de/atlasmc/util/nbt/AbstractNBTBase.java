@@ -45,7 +45,7 @@ public abstract class AbstractNBTBase implements NBTHolder {
 				highestContainer.getUnknownFieldHandler().setField(this, reader);
 			} else if (useCustomTagContainer()) { // if not handler is present try to write in custom tags
 				getCustomTagContainer().addCustomTag(reader.readNBT());
-			} else reader.skipNBT(); // fallback just skip
+			} else reader.skipTag(); // fallback just skip
 		}
 		if (reader.getType() == TagType.TAG_END) reader.readNextEntry();
 	}

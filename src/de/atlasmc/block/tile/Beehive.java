@@ -25,5 +25,11 @@ public interface Beehive extends TileEntity {
 	public void addBee(Bee bee);
 	
 	public int getBeeCount();
+	
+	public void setFlowerPosX(int x);
+	
+	public void setFlowerPosY(int y);
+	
+	public void setFlowerPosZ(int z);
 
 }

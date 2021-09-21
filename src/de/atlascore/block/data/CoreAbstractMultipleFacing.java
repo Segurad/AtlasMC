@@ -26,32 +26,32 @@ public abstract class CoreAbstractMultipleFacing extends CoreBlockData implement
 		NBT_FIELDS.setField(NORTH, (holder, reader) -> {
 			if (MultipleFacing.class.isInstance(holder)) {
 				((MultipleFacing) holder).setFace(BlockFace.NORTH, reader.readByteTag() == 1);
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 		NBT_FIELDS.setField(SOUTH, (holder, reader) -> {
 			if (MultipleFacing.class.isInstance(holder)) {
 				((MultipleFacing) holder).setFace(BlockFace.SOUTH, reader.readByteTag() == 1);
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 		NBT_FIELDS.setField(EAST, (holder, reader) -> {
 			if (MultipleFacing.class.isInstance(holder)) {
 				((MultipleFacing) holder).setFace(BlockFace.EAST, reader.readByteTag() == 1);
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 		NBT_FIELDS.setField(WEST, (holder, reader) -> {
 			if (MultipleFacing.class.isInstance(holder)) {
 				((MultipleFacing) holder).setFace(BlockFace.WEST, reader.readByteTag() == 1);
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 		NBT_FIELDS.setField(UP, (holder, reader) -> {
 			if (MultipleFacing.class.isInstance(holder)) {
 				((MultipleFacing) holder).setFace(BlockFace.UP, reader.readByteTag() == 1);
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 		NBT_FIELDS.setField(DOWN, (holder, reader) -> {
 			if (MultipleFacing.class.isInstance(holder)) {
 				((MultipleFacing) holder).setFace(BlockFace.DOWN, reader.readByteTag() == 1);
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 	}
 	

@@ -9,11 +9,15 @@ import de.atlasmc.Material;
 import de.atlasmc.block.tile.Banner;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.Chunk;
 
 public class CoreBanner extends CoreTileEntity implements Banner {
+	
+	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
 	protected static final String
 	CUSTOM_NAME = "CustomName",
@@ -22,14 +26,16 @@ public class CoreBanner extends CoreTileEntity implements Banner {
 	PATTERN = "Pattern";
 	
 	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreTileEntity.NBT_FIELDS);
 		NBT_FIELDS.setField(CUSTOM_NAME, (holder, reader) -> {
 			if (holder instanceof Banner)
 			((Banner) holder).setCustomName(ChatUtil.toChat(reader.readStringTag()));
-			else reader.skipNBT();
+			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(PATTERNS, (holder, reader) -> {
 			if (holder instanceof Banner) {
 				Banner banner = (Banner) holder;
+				reader.readNextEntry();
 				while (reader.getRestPayload() > 0) {
 					final int depth = reader.getDepth();
 					int color = -999;
@@ -47,7 +53,7 @@ public class CoreBanner extends CoreTileEntity implements Banner {
 					if (color == -999 || pattern == null) continue;
 					banner.addPattern(new Pattern(DyeColor.getByID(color), PatternType.getByIdentifier(pattern)));
 				}
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 	}
 	
@@ -137,6 +143,11 @@ public class CoreBanner extends CoreTileEntity implements Banner {
 			}
 			writer.writeEndTag();
 		}
+	}
+	
+	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
 	}
 
 }

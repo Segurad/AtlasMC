@@ -1,7 +1,7 @@
 package de.atlasmc.block.tile;
 
-import de.atlasmc.inventory.InventoryHolder;
+import de.atlasmc.inventory.BrewingInventory;
 
-public interface BrewingStand extends TileEntity, InventoryHolder {
+public interface BrewingStand extends AbstractContainerTile<BrewingInventory> {
 
 }

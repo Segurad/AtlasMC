@@ -16,7 +16,7 @@ public class CoreOpenable extends CoreBlockData implements Openable {
 		NBT_FIELDS.setField(OPEN, (holder, reader) -> {
 			if (Openable.class.isInstance(holder)) {
 				((Openable) holder).setOpen(reader.readByteTag() == 1);
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 	}
 	

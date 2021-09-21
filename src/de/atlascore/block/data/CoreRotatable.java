@@ -18,7 +18,7 @@ public class CoreRotatable extends CoreBlockData implements Rotatable {
 		NBT_FIELDS.setField(ROTATION, (holder, reader) -> {
 			if (Rotatable.class.isInstance(holder)) {
 				((Rotatable) holder).setRotation(CoreRotatable.getBlockFace(Integer.parseInt(reader.readStringTag())));
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 	}
 	

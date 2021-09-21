@@ -16,7 +16,7 @@ public class CorePowerable extends CoreBlockData implements Powerable {
 		NBT_FIELDS.setField(POWERED, (holder, reader) -> {
 			if (Powerable.class.isInstance(holder)) {
 				((Powerable) holder).setPowered(reader.readByteTag() == 1);
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 	}
 	

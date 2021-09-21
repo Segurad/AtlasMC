@@ -151,6 +151,13 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 		NBT_FIELDS.setField(UUID, NBTField.SKIP);
 	}
 	
+	/**
+	 * Creates a new CoreEntity
+	 * @param id the unique entityID of this entity or -1 if not or later defined (entities with a id of -1 are not send to the player)
+	 * @param type the EntityType of this Entity
+	 * @param loc the Location of this Entity (the Location will be copied)
+	 * @param uuid the UUID of this entity
+	 */
 	public CoreEntity(int id, EntityType type, Location loc, UUID uuid) {
 		this.id = id;
 		this.type = type;

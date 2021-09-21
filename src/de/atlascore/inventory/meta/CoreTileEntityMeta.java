@@ -20,7 +20,7 @@ public class CoreTileEntityMeta extends CoreItemMeta implements TileEntityMeta {
 				TileEntityMeta meta = ((TileEntityMeta) holder);
 				TileEntity tile = meta.getType().createTileEntity();
 				if (tile == null) {
-					reader.skipNBT();
+					reader.skipTag();
 					return;
 				}
 				tile.fromNBT(reader);

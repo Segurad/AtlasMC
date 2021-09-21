@@ -20,7 +20,7 @@ public abstract class CoreAbstractDirectional extends CoreBlockData implements D
 			if (Directional.class.isInstance(holder)) {
 				BlockFace face = BlockFace.getByName(reader.readStringTag());
 				((Directional) holder).setFacing(face);
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 	}
 	

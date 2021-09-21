@@ -26,17 +26,17 @@ public class CoreBookMeta extends CoreItemMeta implements BookMeta {
 	
 	static {
 		NBT_FIELDS.setField(AUTHOR, (holder, reader) -> {
-			if (BookMeta.class.isInstance(holder)) {
+			if (holder instanceof BookMeta) {
 				((BookMeta) holder).setAuthor(reader.readStringTag());
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
 		NBT_FIELDS.setField(GENERATION, (holder, reader) -> {
-			if (BookMeta.class.isInstance(holder)) {
+			if (holder instanceof BookMeta) {
 				((BookMeta) holder).setGeneration(Generation.getByID(reader.readIntTag()));
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
 		NBT_FIELDS.setField(PAGES, (holder, reader) -> {
-			if (BookMeta.class.isInstance(holder)) {
+			if (holder instanceof BookMeta) {
 				BookMeta meta = ((BookMeta) holder);
 				while(reader.getRestPayload() > 0) {
 					meta.addPage(reader.readStringTag());
@@ -44,12 +44,12 @@ public class CoreBookMeta extends CoreItemMeta implements BookMeta {
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
 		NBT_FIELDS.setField(RESOLVED, (holder, reader) -> {
-			if (BookMeta.class.isInstance(holder)) {
+			if (holder instanceof BookMeta) {
 				((BookMeta) holder).setResolved(reader.readByteTag() == 1);
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
 		NBT_FIELDS.setField(TITLE, (holder, reader) -> {
-			if (BookMeta.class.isInstance(holder)) {
+			if (holder instanceof BookMeta) {
 				((BookMeta) holder).setTitle(reader.readStringTag());
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});

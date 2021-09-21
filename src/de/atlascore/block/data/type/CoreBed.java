@@ -21,12 +21,12 @@ public class CoreBed extends CoreDirectional4Faces implements Bed {
 		NBT_FIELDS.setField(OCCUPIED, (holder, reader) -> {
 			if (Bed.class.isInstance(holder)) {
 				((Bed) holder).setOccupied(reader.readByteTag() == 1);
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 		NBT_FIELDS.setField(PART, (holder, reader) -> {
 			if (Bed.class.isInstance(holder)) {
 				((Bed) holder).setPart(Part.getByName(reader.readStringTag()));
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 	}
 	

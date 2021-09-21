@@ -21,8 +21,9 @@ public class CoreEnchantmentStorageMeta extends CoreItemMeta implements Enchantm
 	
 	static {
 		NBT_FIELDS.setField(STORED_ENCHANTS, (holder, reader) -> {
-			if (EnchantmentStorageMeta.class.isInstance(holder)) {
+			if (holder instanceof EnchantmentStorageMeta) {
 				Map<Enchantment, Integer> enchants = ((EnchantmentStorageMeta) holder).getStoredEnchants();
+				reader.readNextEntry();
 				while (reader.getRestPayload() > 0) {
 					Enchantment ench = null;
 					int lvl = -1;

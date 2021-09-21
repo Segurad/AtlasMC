@@ -17,7 +17,7 @@ public class CoreBubbleColumn extends CoreBlockData implements BubbleColumn {
 		NBT_FIELDS.setField(DRAG, (holder, reader) -> {
 			if (BubbleColumn.class.isInstance(holder)) {
 				((BubbleColumn) holder).setDrag(reader.readByteTag() == 1);
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 	}
 	

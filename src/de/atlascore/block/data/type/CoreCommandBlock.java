@@ -18,7 +18,7 @@ public class CoreCommandBlock extends CoreDirectional6Faces implements CommandBl
 		NBT_FIELDS.setField(CONDITIONAL, (holder, reader) -> {
 			if (CommandBlock.class.isInstance(holder)) {
 				((CommandBlock) holder).setConditional(reader.readByteTag() == 1);
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 	}
 	

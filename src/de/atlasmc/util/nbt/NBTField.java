@@ -7,7 +7,7 @@ import de.atlasmc.util.nbt.io.NBTReader;
 public interface NBTField {
 	
 	public static final NBTField SKIP = (holder, reader) -> {
-		reader.skipNBT();
+		reader.skipTag();
 	};
 	
 	public void setField(NBTHolder holder, NBTReader reader) throws IOException;

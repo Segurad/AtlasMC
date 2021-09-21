@@ -24,7 +24,7 @@ public class CoreDoor extends CoreDirectional4Faces implements Door {
 		NBT_FIELDS.setField(HINGE, (holder, reader) -> {
 			if (Door.class.isInstance(holder)) {
 				((Door) holder).setHinge(Hinge.getByName(reader.readStringTag()));
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 	}
 	

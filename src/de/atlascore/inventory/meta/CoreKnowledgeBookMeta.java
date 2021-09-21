@@ -19,7 +19,7 @@ public class CoreKnowledgeBookMeta extends CoreItemMeta implements KnowledgeBook
 	
 	static {
 		NBT_FIELDS.setField(RECIPES, (holder, reader) -> {
-			if (KnowledgeBookMeta.class.isInstance(holder)) {
+			if (holder  instanceof KnowledgeBookMeta) {
 				List<Recipe> recipes = ((KnowledgeBookMeta) holder).getRecipes();
 				while(reader.getRestPayload() > 0) {
 					recipes.add(Recipe.getByName(reader.readStringTag()));

@@ -16,7 +16,7 @@ public class CoreFireworkEffectMeta extends CoreItemMeta implements FireworkEffe
 	
 	static {
 		NBT_FIELDS.setField(EXPLOSION, (holder, reader) -> {
-			if (FireworkEffectMeta.class.isInstance(holder)) {
+			if (holder instanceof FireworkEffectMeta) {
 				reader.readNextEntry();
 				FireworkEffect effect = new FireworkEffect();
 				effect.fromNBT(reader);

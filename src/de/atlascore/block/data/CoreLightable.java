@@ -16,7 +16,7 @@ public class CoreLightable extends CoreBlockData implements Lightable {
 		NBT_FIELDS.setField(LIT, (holder, reader) -> {
 			if (Lightable.class.isInstance(holder)) {
 				((Lightable) holder).setLit(reader.readByteTag() == 1);
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 	}
 	

@@ -19,7 +19,7 @@ public class CoreFarmland extends CoreBlockData implements Farmland {
 		NBT_FIELDS.setField(MOISTURE, (holder, reader) -> {
 			if (Farmland.class.isInstance(holder)) {
 				((Farmland) holder).setMoisture(reader.readIntTag());
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 	}
 	

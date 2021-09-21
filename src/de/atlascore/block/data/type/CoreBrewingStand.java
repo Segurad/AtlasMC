@@ -20,17 +20,17 @@ public class CoreBrewingStand extends CoreBlockData implements BrewingStand {
 		NBT_FIELDS.setField(HAS_BOTTLE_0, (holder, reader) -> {
 			if (BrewingStand.class.isInstance(holder)) {
 				((BrewingStand) holder).setBottle0(reader.readByteTag() == 1);
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 		NBT_FIELDS.setField(HAS_BOTTLE_1, (holder, reader) -> {
 			if (BrewingStand.class.isInstance(holder)) {
 				((BrewingStand) holder).setBottle1(reader.readByteTag() == 1);
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 		NBT_FIELDS.setField(HAS_BOTTLE_2, (holder, reader) -> {
 			if (BrewingStand.class.isInstance(holder)) {
 				((BrewingStand) holder).setBottle2(reader.readByteTag() == 1);
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 	}
 	

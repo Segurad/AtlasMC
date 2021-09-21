@@ -75,6 +75,42 @@ public interface NBTReader {
 	 * Skips the current Tag (for compound the whole compound will be skipped same for lists) 
 	 * @throws IOException
 	 */
-	public void skipNBT() throws IOException;
+	public void skipTag() throws IOException;
+	
+	/**
+	 * Sets a marker at the current position for returning by {@link #reset()}
+	 */
+	public void mark();
+	
+	/**
+	 * Returns to the marker set by {@link #mark()}
+	 */
+	public void reset();
+	
+	/**
+	 * @throws IOException 
+	 * @see #search(String, TagType, boolean)
+	 */
+	public default void search(String key) throws IOException {
+		search(key, null);
+	}
+	
+	/**
+	 * @throws IOException 
+	 * @see #search(String, TagType, boolean)
+	 */
+	public default void search(String key, TagType type) throws IOException {
+		search(key, type, false);
+	}
+	
+	/**
+	 * Reads until it reaches the key and/or type<br>
+	 * For using only one set the other one to null
+	 * @param key the searched key
+	 * @param type the searched {@link TagType}
+	 * @param list if the type should be used as list of type (ignored if type is null)
+	 * @throws IOException 
+	 */
+	public void search(String key, TagType type, boolean list) throws IOException;
 
 }

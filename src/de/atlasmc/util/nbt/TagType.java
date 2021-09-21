@@ -21,6 +21,15 @@ public enum TagType {
 		TagType[] types = values();
 		return types[id];
 	}
+	
+	/**
+	 * Returns weather or not this TagType is a number tag or not.<br>
+	 * Number tags: {@link #BYTE}, {@link #SHORT}, {@link #INT}, {@link #LONG}, {@link #FLOAT}, {@link #DOUBLE}
+	 * @return true if this TagType is a number tag
+	 */
+	public boolean isNumber() {
+		return this == BYTE || this == INT || this == DOUBLE || this == FLOAT || this == SHORT || this == LONG;
+	}
 
 	public NBT createTag() {
 		switch(this) {

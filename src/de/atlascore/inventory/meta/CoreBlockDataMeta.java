@@ -18,7 +18,7 @@ public class CoreBlockDataMeta extends CoreItemMeta implements BlockDataMeta {
 	
 	static {
 		NBT_FIELDS.setField(BLOCK_STATE_TAG, (holder, reader) -> {
-			if (BlockDataMeta.class.isInstance(holder)) {
+			if (holder instanceof BlockDataMeta) {
 				((BlockDataMeta) holder).getBlockData().fromNBT(reader);
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});

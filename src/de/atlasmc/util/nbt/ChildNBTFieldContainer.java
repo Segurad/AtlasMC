@@ -31,6 +31,18 @@ public class ChildNBTFieldContainer extends NBTFieldContainer {
 		return parent.getContainer(key);
 	}
 	
+	/**
+	 * Sets a {@link ChildNBTFieldContainer} if a container with this key is present in the parent container
+	 * otherwise it will set a {@link NBTFieldContainer} if the key is not present
+	 * @param key of the container
+	 * @return the new set container
+	 */
+	public NBTFieldContainer setChildContainer(String key) {
+		NBTFieldContainer container = getContainer(key);
+		if (container == null) return super.setContainer(key);
+		return super.setContainer(key, new ChildNBTFieldContainer(container));
+	}
+	
 	@Override
 	public NBTField getUnknownFieldHandler() {
 		NBTField field = super.getUnknownFieldHandler();

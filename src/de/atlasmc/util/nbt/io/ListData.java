@@ -2,7 +2,7 @@ package de.atlasmc.util.nbt.io;
 
 import de.atlasmc.util.nbt.TagType;
 
-public class ListData {
+final class ListData {
 	
 	public final ListData last;
 	public final int depth;

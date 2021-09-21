@@ -57,5 +57,11 @@ public class Location extends SimpleLocation {
 		loc.world = world;
 		return loc;
 	}
+	
+	public Location setLocation(Location loc) {
+		super.setLocation(loc);
+		world = loc.world;
+		return this;
+	}
 
 }

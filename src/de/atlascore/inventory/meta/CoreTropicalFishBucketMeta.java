@@ -19,7 +19,7 @@ public class CoreTropicalFishBucketMeta extends CoreItemMeta implements Tropical
 	
 	static {
 		NBT_FIELDS.setField(BUCKET_VARIANT_TAG, (holder, reader) -> {
-			if (TropicalFishBucketMeta.class.isInstance(holder)) {
+			if (holder instanceof TropicalFishBucketMeta) {
 				TropicalFishBucketMeta meta = ((TropicalFishBucketMeta) holder);
 				int variant = reader.readIntTag();
 				DyeColor[] colors = DyeColor.values();

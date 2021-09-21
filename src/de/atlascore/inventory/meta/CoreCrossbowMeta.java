@@ -22,16 +22,17 @@ public class CoreCrossbowMeta extends CoreDamageableMeta implements CrossbowMeta
 	
 	static {
 		NBT_FIELDS.setField(CHARGED, (holder, reader) -> {
-			if (CrossbowMeta.class.isInstance(holder)) {
+			if (holder instanceof CrossbowMeta) {
 				((CrossbowMeta) holder).setCharged(reader.readByteTag() == 1);
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
 		NBT_FIELDS.setField(CHARGED_PROJECTILES, (holder, reader) -> {
-			if (!CrossbowMeta.class.isInstance(holder)) {
+			if (!(holder instanceof CrossbowMeta)) {
 				((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 				return;
 			}
 			List<ItemStack> projectiles = ((CrossbowMeta) holder).getChargedProjectiles();
+			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {
 				ItemStack item = new ItemStack(Material.AIR);
 				item.fromNBT(reader);

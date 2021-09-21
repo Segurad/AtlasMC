@@ -2,6 +2,7 @@ package de.atlascore.block.tile;
 
 import java.io.IOException;
 
+import de.atlasmc.Location;
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.util.nbt.AbstractNBTBase;
@@ -25,22 +26,22 @@ public class CoreTileEntity extends AbstractNBTBase implements TileEntity {
 		NBT_FIELDS.setField(ID, (holder, reader) -> {
 			if (holder instanceof CoreTileEntity)
 			((TileEntity) holder).setType(Material.getMaterial(reader.readStringTag()));
-			else reader.skipNBT();
+			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(X, (holder, reader) -> {
 			if (holder instanceof TileEntity) 
 			((TileEntity) holder).setX(reader.readIntTag());
-			else reader.skipNBT();
+			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(Y, (holder, reader) -> {
 			if (holder instanceof TileEntity) 
 			((TileEntity) holder).setY(reader.readIntTag());
-			else reader.skipNBT();
+			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(Z, (holder, reader) -> {
 			if (holder instanceof TileEntity) 
 			((TileEntity) holder).setZ(reader.readIntTag());
-			else reader.skipNBT();
+			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(KEEP_PACKED, NBTField.SKIP); // TODO Field skipped due to unknown behavior
 	}
@@ -125,6 +126,11 @@ public class CoreTileEntity extends AbstractNBTBase implements TileEntity {
 	@Override
 	public Chunk getChunk() {
 		return chunk;
+	}
+
+	@Override
+	public Location getLocation() {
+		return new Location(chunk.getWorld(), x, y, z);
 	}
 
 }

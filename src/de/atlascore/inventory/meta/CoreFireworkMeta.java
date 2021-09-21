@@ -24,7 +24,7 @@ public class CoreFireworkMeta extends CoreItemMeta implements FireworkMeta {
 	
 	static {
 		NBT_FIELDS.setField(EXPLOSIONS, (holder, reader) -> {
-			if (FireworkMeta.class.isInstance(holder)) {
+			if (holder instanceof FireworkMeta) {
 				List<FireworkEffect> effects = ((FireworkMeta) holder).getEffects();
 				while (reader.getRestPayload() > 0) {
 					FireworkEffect effect = new FireworkEffect();
@@ -37,7 +37,7 @@ public class CoreFireworkMeta extends CoreItemMeta implements FireworkMeta {
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
 		NBT_FIELDS.setField(FLIGHT, (holder, reader) -> {
-			if (FireworkMeta.class.isInstance(holder)) {
+			if (holder instanceof FireworkMeta) {
 				((FireworkMeta) holder).setPower(reader.readByteTag());
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});

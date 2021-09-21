@@ -6,13 +6,17 @@ import de.atlasmc.Material;
 import de.atlasmc.block.tile.CommandBlock;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTField;
+import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.Chunk;
 
 public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 
-	protected static String
+	protected static final ChildNBTFieldContainer NBT_FIELDS;
+	
+	protected static final String
 	NBT_CUSTOM_NAME = "CustomName",
 	NBT_AUTO = "auto",
 	NBT_COMMAND = "conditionMet",
@@ -25,46 +29,47 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 	NBT_UPDATE_LAST_EXECUTION = "UpdateLastExecution";
 	
 	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreTileEntity.NBT_FIELDS);
 		NBT_FIELDS.setField(NBT_CUSTOM_NAME, (holder, reader) -> {
 			if (holder instanceof CommandBlock)
 			((CommandBlock) holder).setCustomName(ChatUtil.toChat(reader.readStringTag()));
-			else reader.skipNBT();
+			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(NBT_AUTO, (holder, reader) -> {
 			if (holder instanceof CommandBlock)
 			((CommandBlock) holder).setAlwaysActive(reader.readByteTag() == 1);
-			else reader.skipNBT();
+			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(NBT_COMMAND, (holder, reader) -> {
 			if (holder instanceof CommandBlock)
 			((CommandBlock) holder).setCommand(reader.readStringTag());
-			else reader.skipNBT();
+			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(NBT_CONDITION_MET, (holder, reader) -> {
 			if (holder instanceof CommandBlock)
 			((CommandBlock) holder).setConditional(reader.readByteTag() == 1);
-			else reader.skipNBT();
+			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(NBT_LAST_EXECUTION, NBTField.SKIP); // TODO Wait for CommandBlock logic
 		NBT_FIELDS.setField(NBT_LAST_OUTPUT, (holder, reader) -> {
 			if (holder instanceof CommandBlock)
 			((CommandBlock) holder).setLastOutput(ChatUtil.toChat(reader.readStringTag()));
-			else reader.skipNBT();
+			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(NBT_POWERED, (holder, reader) -> {
 			if (holder instanceof CommandBlock)
 			((CommandBlock) holder).setPowered(reader.readByteTag() == 1);
-			else reader.skipNBT();
+			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(NBT_SUCCESSCOUNT, (holder, reader) -> {
 			if (holder instanceof CommandBlock)
 			((CommandBlock) holder).setSuccessCount(reader.readIntTag());
-			else reader.skipNBT();
+			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(NBT_TRACKOUTPUT, (holder, reader) -> {
 			if (holder instanceof CommandBlock)
 			((CommandBlock) holder).setTrackOutput(reader.readByteTag() == 1);
-			else reader.skipNBT();
+			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(NBT_UPDATE_LAST_EXECUTION, NBTField.SKIP); // TODO see NBT_LAST_EXECUTION ^
 	}
@@ -188,5 +193,10 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 			writer.writeStringTag(NBT_COMMAND, getCommand());
 			writer.writeStringTag(NBT_LAST_OUTPUT, getLastOutput().getJsonText());
 		}
+	}
+	
+	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
 	}
 }

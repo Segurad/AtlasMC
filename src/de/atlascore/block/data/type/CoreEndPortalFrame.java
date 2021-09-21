@@ -17,7 +17,7 @@ public class CoreEndPortalFrame extends CoreDirectional4Faces implements EndPort
 		NBT_FIELDS.setField(EYE, (holder, reader) -> {
 			if (EndPortalFrame.class.isInstance(holder)) {
 				((EndPortalFrame) holder).setEye(reader.readByteTag() == 1);
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 	}
 	

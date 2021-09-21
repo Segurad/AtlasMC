@@ -5,6 +5,8 @@ import de.atlasmc.inventory.meta.SkullMeta;
 
 public class CoreSkullMeta extends CoreTileEntityMeta implements SkullMeta {
 
+	// TODO implement skullmeta
+	
 	public CoreSkullMeta(Material material) {
 		super(material);
 	}

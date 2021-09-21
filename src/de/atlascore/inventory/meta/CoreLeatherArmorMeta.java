@@ -14,7 +14,7 @@ public class CoreLeatherArmorMeta extends CoreDamageableMeta implements LeatherA
 	
 	static {
 		NBT_FIELDS.getContainer(DISPLAY).setField(COLOR, (holder, reader) -> {
-			if (LeatherArmorMeta.class.isInstance(holder)) {
+			if (holder instanceof LeatherArmorMeta) {
 				((LeatherArmorMeta) holder).setColor(new Color(reader.readIntTag()));
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});

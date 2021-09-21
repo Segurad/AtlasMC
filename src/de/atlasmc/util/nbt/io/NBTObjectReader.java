@@ -122,7 +122,25 @@ public class NBTObjectReader implements NBTReader {
 	}
 
 	@Override
-	public void skipNBT() throws IOException {
+	public void skipTag() throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mark() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void search(String key, TagType type, boolean list) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}

@@ -18,7 +18,7 @@ public class CoreBeehive extends CoreDirectional4Faces implements Beehive {
 		NBT_FIELDS.setField(HONEY_LEVEL, (holder, reader) -> {
 			if (Beehive.class.isInstance(holder)) {
 				((Beehive) holder).setHoneyLevel(reader.readIntTag());
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 	}
 	

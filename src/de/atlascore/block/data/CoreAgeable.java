@@ -18,7 +18,7 @@ public class CoreAgeable extends CoreBlockData implements Ageable {
 		NBT_FIELDS.setField(AGE, (holder, reader) -> {
 			if (Ageable.class.isInstance(holder)) {
 				((Ageable) holder).setAge(reader.readIntTag());
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 	}
 	

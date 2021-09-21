@@ -16,7 +16,7 @@ public class CoreWaterlogged extends CoreBlockData implements Waterlogged {
 		NBT_FIELDS.setField(WATERLOGGED, (holder, reader) -> {
 			if (Waterlogged.class.isInstance(holder)) {
 				((Waterlogged) holder).setWaterlogged(reader.readByteTag() == 1);
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 	}
 	

@@ -15,7 +15,7 @@ public class CoreDamageableMeta extends CoreItemMeta implements DamageableMeta {
 	
 	static {
 		NBT_FIELDS.setField(DAMAGE, (holder, reader) -> {
-			if (DamageableMeta.class.isInstance(holder)) {
+			if (holder instanceof DamageableMeta) {
 				((DamageableMeta) holder).setDamage(reader.readIntTag());
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});

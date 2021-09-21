@@ -40,7 +40,7 @@ public class CoreSuspiciousStewMeta extends CoreItemMeta implements SuspiciousSt
 	
 	static {
 		NBT_FIELDS.getContainer(ATLASMC).setField(SUSPICIOUS_STEW_EFFECTS, (holder, reader) -> {
-			if (SuspiciousStewMeta.class.isInstance(holder)) {
+			if (holder instanceof SuspiciousStewMeta) {
 				SuspiciousStewMeta meta = ((SuspiciousStewMeta) holder);
 				while (reader.getRestPayload() > 0) {
 					PotionEffect effect = new PotionEffect();

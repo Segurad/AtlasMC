@@ -294,4 +294,13 @@ public class ByteDataBuffer implements DataOutput, DataInput {
 
 		buffer = Arrays.copyOf(buffer, newCapacity);
 	}
+
+	public int readableBytes() {
+		return count-pos;
+	}
+
+	public void clear() {
+		count = 0;
+		pos = 0;
+	}
 }

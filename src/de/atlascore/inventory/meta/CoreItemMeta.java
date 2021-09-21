@@ -97,6 +97,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 		});
 		NBT_FIELDS.setField(ENCHANTS, (holder, reader) -> {
 			Map<Enchantment, Integer> enchants = ((ItemMeta) holder).getEnchants();
+			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {
 				Enchantment ench = null;
 				int lvl = -1;
@@ -116,6 +117,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 		});
 		NBT_FIELDS.setField(ATTRIBUTE_MODIFIERS, (holder, reader) -> {
 			Multimap<Attribute, AttributeModifier> attributes = ((ItemMeta) holder).getAttributeModifiers();
+			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {
 				Attribute attribute = null;
 				double amount = 0;

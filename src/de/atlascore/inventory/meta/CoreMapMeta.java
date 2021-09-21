@@ -25,18 +25,18 @@ public class CoreMapMeta extends CoreItemMeta implements MapMeta {
 	
 	static {
 		NBT_FIELDS.setField(MAP, (holder, reader) -> {
-			if (MapMeta.class.isInstance(holder)) {
+			if (holder instanceof MapMeta) {
 				((MapMeta) holder).setMapID(reader.readIntTag());
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
-		NBT_FIELDS.setField(MAP_SCALE_DIRECTION, NBTField.SKIP);
-		NBT_FIELDS.setField(MAP_TRACING_POSITION, NBTField.SKIP);
+		NBT_FIELDS.setField(MAP_SCALE_DIRECTION, NBTField.SKIP); // TODO skipped NBT
+		NBT_FIELDS.setField(MAP_TRACING_POSITION, NBTField.SKIP); // TODO skipped NBT
 		NBT_FIELDS.getContainer(DISPLAY).setField(MAP_COLOR, (holder, reader) -> {
-			if (MapMeta.class.isInstance(holder)) {
+			if (holder instanceof MapMeta) {
 				((MapMeta) holder).setColor(new Color(reader.readIntTag()));
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
-		NBT_FIELDS.setField(DECORATION, NBTField.SKIP);
+		NBT_FIELDS.setField(DECORATION, NBTField.SKIP); // TODO skipped NBT
 	}
 	
 	public CoreMapMeta(Material material) {

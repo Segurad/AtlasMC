@@ -211,7 +211,7 @@ public class ItemStack implements NBTHolder {
 				amount = reader.readByteTag();
 				break;
 			case NBT_CUSTOM_CREATIVE_LOCK: 
-				reader.skipNBT(); // TODO skip creative lock because i don't know if it is used
+				reader.skipTag(); // TODO skip creative lock because i don't know if it is used
 				break;
 			case NBT_ID: 
 				type = Material.getMaterial(reader.readStringTag());
@@ -221,19 +221,19 @@ public class ItemStack implements NBTHolder {
 				break;
 			case NBT_TAG:
 				if (reader.getType() != TagType.COMPOUND) {
-					reader.skipNBT();
+					reader.skipTag();
 				} else {
 					reader.readNextEntry();
 					getItemMeta().fromNBT(reader);
 				}
 				break;
 			default: 
-				reader.skipNBT();
+				reader.skipTag();
 				break;
 			}
 		}
 		if (reader.getType() == TagType.TAG_END)
-			reader.skipNBT();
+			reader.skipTag();
 		return slot;
 	}
 }

@@ -17,7 +17,7 @@ public class CoreBisected extends CoreBlockData implements Bisected {
 		NBT_FIELDS.setField(HALF, (holder, reader) -> {
 			if (Bisected.class.isInstance(holder)) {
 				((Bisected) holder).setHalf(Half.getByName(reader.readStringTag()));
-			} else reader.skipNBT();
+			} else reader.skipTag();
 		});
 	}
 	
