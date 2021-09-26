@@ -1,12 +1,11 @@
 package de.atlasmc.block.tile;
 
+import de.atlasmc.Nameable;
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryHolder;
 
-public interface AbstractContainerTile<I extends Inventory> extends TileEntity, InventoryHolder {
-
-	public void setCustomName(ChatComponent name);
+public interface AbstractContainerTile<I extends Inventory> extends TileEntity, InventoryHolder, Nameable {
 	
 	public boolean hasCustomName();
 	
@@ -21,8 +20,6 @@ public interface AbstractContainerTile<I extends Inventory> extends TileEntity, 
 	 * @return true if a inventory has been set
 	 */
 	public boolean hasInventory();
-	
-	public ChatComponent getCustomName();
 
 	public void setLock(ChatComponent lock);
 	

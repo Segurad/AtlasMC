@@ -12,7 +12,6 @@ import de.atlasmc.inventory.meta.PotionMeta;
 import de.atlasmc.potion.PotionData;
 import de.atlasmc.potion.PotionEffect;
 import de.atlasmc.potion.PotionEffectType;
-import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -132,7 +131,6 @@ public class CorePotionMeta extends CoreItemMeta implements PotionMeta {
 
 	@Override
 	public void setBasePotionData(PotionData data) {
-		Validate.notNull(data, "PotionData can not be null!");
 		this.data = data;
 	}
 
@@ -168,7 +166,7 @@ public class CorePotionMeta extends CoreItemMeta implements PotionMeta {
 				writer.writeEndTag();
 			}
 		}
-		writer.writeStringTag(POTION, data.getName());
+		if (data != null) writer.writeStringTag(POTION, data.getName());
 	}
 
 }

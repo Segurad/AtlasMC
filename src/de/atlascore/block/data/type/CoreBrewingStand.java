@@ -8,8 +8,6 @@ import de.atlasmc.block.data.type.BrewingStand;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBrewingStand extends CoreBlockData implements BrewingStand {
-
-	private boolean bottle0, bottle1, bottle2;
 	
 	protected static final String 
 	HAS_BOTTLE_0 = "has_bottle_0",
@@ -18,21 +16,23 @@ public class CoreBrewingStand extends CoreBlockData implements BrewingStand {
 	
 	static {
 		NBT_FIELDS.setField(HAS_BOTTLE_0, (holder, reader) -> {
-			if (BrewingStand.class.isInstance(holder)) {
+			if (holder instanceof BrewingStand) {
 				((BrewingStand) holder).setBottle0(reader.readByteTag() == 1);
 			} else reader.skipTag();
 		});
 		NBT_FIELDS.setField(HAS_BOTTLE_1, (holder, reader) -> {
-			if (BrewingStand.class.isInstance(holder)) {
+			if (holder instanceof BrewingStand) {
 				((BrewingStand) holder).setBottle1(reader.readByteTag() == 1);
 			} else reader.skipTag();
 		});
 		NBT_FIELDS.setField(HAS_BOTTLE_2, (holder, reader) -> {
-			if (BrewingStand.class.isInstance(holder)) {
+			if (holder instanceof BrewingStand) {
 				((BrewingStand) holder).setBottle2(reader.readByteTag() == 1);
 			} else reader.skipTag();
 		});
 	}
+	
+	private boolean bottle0, bottle1, bottle2;
 	
 	public CoreBrewingStand(Material material) {
 		super(material);
@@ -79,9 +79,9 @@ public class CoreBrewingStand extends CoreBlockData implements BrewingStand {
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		writer.writeByteTag(HAS_BOTTLE_0, bottle0);
-		writer.writeByteTag(HAS_BOTTLE_1, bottle1);
-		writer.writeByteTag(HAS_BOTTLE_2, bottle2);
+		if (hasBottle0()) writer.writeByteTag(HAS_BOTTLE_0, true);
+		if (hasBottle1()) writer.writeByteTag(HAS_BOTTLE_1, true);
+		if (hasBottle2()) writer.writeByteTag(HAS_BOTTLE_2, true);
 	}
 
 }

@@ -5,6 +5,9 @@ import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.world.Chunk;
 
+/**
+ * Block information storage but does not modify a chunk
+ */
 public class CoreBlock extends CoreBlockAccess {
 	
 	private BlockData data;

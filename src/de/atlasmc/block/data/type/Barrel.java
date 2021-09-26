@@ -1,10 +1,8 @@
 package de.atlasmc.block.data.type;
 
 import de.atlasmc.block.data.Directional;
+import de.atlasmc.block.data.Openable;
 
-public interface Barrel extends Directional {
-	
-	public boolean isOpen();
-	public void setOpen(boolean open);
+public interface Barrel extends Directional, Openable {
 
 }

@@ -1,12 +1,26 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
+
 import de.atlascore.block.data.CoreDirectional4Faces;
+import de.atlascore.block.data.CorePowerable;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Bell;
-import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBell extends CoreDirectional4Faces implements Bell {
 
+	protected static final String
+	ATTACHEMENT = "attachment";
+	
+	static {
+		NBT_FIELDS.setField(ATTACHEMENT, (holder, reader) -> {
+			if (holder instanceof Bell)
+			((Bell) holder).setAttachment(Attachment.getByName(reader.readStringTag()));
+			else reader.skipTag();
+		});
+	}
+	
 	private boolean powered;
 	private Attachment attachment;
 	
@@ -32,7 +46,7 @@ public class CoreBell extends CoreDirectional4Faces implements Bell {
 
 	@Override
 	public void setAttachment(Attachment attachment) {
-		Validate.notNull(attachment, "Attachment can not be null!");
+		if (attachment == null) throw new IllegalArgumentException("Attachment can not be null!");
 		this.attachment = attachment;
 	}
 	
@@ -44,4 +58,11 @@ public class CoreBell extends CoreDirectional4Faces implements Bell {
 				attachment.ordinal()*8;
 	}
 
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (isPowered()) writer.writeByteTag(CorePowerable.POWERED, true);
+		writer.writeStringTag(ATTACHEMENT, getAttachment().name().toLowerCase());
+	}
+	
 }

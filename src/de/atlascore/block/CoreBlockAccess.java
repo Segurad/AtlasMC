@@ -8,6 +8,9 @@ import de.atlasmc.world.Chunk;
 import de.atlasmc.world.EnumBiome;
 import de.atlasmc.world.World;
 
+/**
+ * Class for modifying and receiving information of a Block in a Chunk
+ */
 public class CoreBlockAccess implements Block {
 	
 	private final Location loc;

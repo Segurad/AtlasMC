@@ -1,12 +1,25 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
+
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Cake;
-import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreCake extends CoreBlockData implements Cake {
 
+	protected static final String
+	BITES = "bites";
+	
+	static {
+		NBT_FIELDS.setField(BITES, (holder, reader) -> {
+			if (holder instanceof Cake)
+			((Cake) holder).setBites(reader.readIntTag());
+			else reader.skipTag();
+		});
+	}
+	
 	private int bites;
 	
 	public CoreCake(Material material) {
@@ -25,13 +38,19 @@ public class CoreCake extends CoreBlockData implements Cake {
 
 	@Override
 	public void setBites(int bites) {
-		Validate.isTrue(bites >= 0 && bites < 7, "Bites is not between 0 and 6: " + bites);
+		if (bites < 0 || bites > 7) throw new IllegalArgumentException("Bites is not between 0 and 6: " + bites);
 		this.bites = bites;
 	}
 	
 	@Override
 	public int getStateID() {
 		return super.getStateID()+bites;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		writer.writeIntTag(BITES, getBites());
 	}
 
 }

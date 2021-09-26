@@ -1,12 +1,31 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
+
 import de.atlascore.block.data.CoreBlockData;
+import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Slab;
-import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreSlab extends CoreBlockData implements Slab {
 
+	protected static final ChildNBTFieldContainer NBT_FIELDS;
+	
+	protected static final String
+	TYPE = "type";
+	
+	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreBlockData.NBT_FIELDS);
+		NBT_FIELDS.setField(TYPE, (holder, reader) -> {
+			if (holder instanceof Slab)
+			((Slab) holder).setType(Type.getByName(reader.readStringTag()));
+			else reader.skipTag();
+		});
+	}
+	
 	private boolean waterlogged;
 	private Type type;
 	
@@ -32,7 +51,7 @@ public class CoreSlab extends CoreBlockData implements Slab {
 
 	@Override
 	public void setType(Type type) {
-		Validate.notNull(type, "Type can not be null!");
+		if (type == null) throw new IllegalArgumentException("Type can not be null!");
 		this.type = type;
 	}
 	
@@ -43,4 +62,16 @@ public class CoreSlab extends CoreBlockData implements Slab {
 				type.ordinal()*2;
 	}
 
+	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (getType() != Type.BOTTOM) writer.writeStringTag(TYPE, getType().name().toLowerCase());
+		if (isWaterlogged()) writer.writeByteTag(CoreWaterlogged.WATERLOGGED, true); 
+	}
+	
 }

@@ -9,8 +9,8 @@ import de.atlasmc.Location;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.Vector;
 import de.atlasmc.atlasnetwork.server.LocalServer;
+import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.ChatComponent;
-import de.atlasmc.chat.component.FinalComponent;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaData;
@@ -92,7 +92,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 			((Entity) holder).setAirTicks(reader.readShortTag());
 		});
 		NBT_FIELDS.setField(CUSTOM_NAME, (holder, reader) -> {
-			((Entity) holder).setCustomName(reader.readStringTag());
+			((Entity) holder).setCustomName(ChatUtil.toChat(reader.readStringTag()));
 		});
 		NBT_FIELDS.setField(CUSTOM_NAME_VISIBLE, (holder, reader) -> {
 			((Entity) holder).setCustomNameVisible(reader.readByteTag() == 1);
@@ -107,7 +107,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 		NBT_FIELDS.setField(GLOWING, (holder, reader) -> {
 			((Entity) holder).setGlowing(reader.readByteTag() == 1);
 		});
-		NBT_FIELDS.setField(ID, NBTField.SKIP); // TODO dilemma
+		NBT_FIELDS.setField(ID, NBTField.SKIP); // TODO skipped
 		NBT_FIELDS.setField(INVULNERABLE, (holder, reader) -> {
 			((Entity) holder).setInvulnerable(reader.readByteTag() == 1);
 		});
@@ -210,8 +210,8 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	}
 
 	@Override
-	public String getCustomName() {
-		return ((ChatComponent) metaContainer.get(META_CUSTOM_NAME).getData()).getLegacyText();
+	public ChatComponent getCustomName() {
+		return metaContainer.getData(META_CUSTOM_NAME, MetaDataType.OPT_CHAT);
 	}
 
 	@Override
@@ -246,8 +246,8 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	}
 
 	@Override
-	public void setCustomName(String name) {
-		metaContainer.get(META_CUSTOM_NAME, MetaDataType.OPT_CHAT).setData(new FinalComponent(name));
+	public void setCustomName(ChatComponent name) {
+		metaContainer.get(META_CUSTOM_NAME, MetaDataType.OPT_CHAT).setData(name);
 	}
 
 	@Override
@@ -332,7 +332,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		writer.writeShortTag(AIR, air);
-		if (hasCustomName()) writer.writeStringTag(CUSTOM_NAME, getCustomName());
+		if (hasCustomName()) writer.writeStringTag(CUSTOM_NAME, getCustomName().getJsonText());
 		// TODO toNBT
 	}
 

@@ -8,7 +8,6 @@ import de.atlasmc.Material;
 import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.inventory.meta.EnchantmentStorageMeta;
 import de.atlasmc.inventory.meta.ItemMeta;
-import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -50,7 +49,7 @@ public class CoreEnchantmentStorageMeta extends CoreItemMeta implements Enchantm
 
 	@Override
 	public void addStoredEnchant(Enchantment ench, int level) {
-		Validate.notNull(ench, "Enchantment can not be null!");
+		if (ench == null) throw new IllegalArgumentException("Enchantment can not be null!");
 		getEnchants().put(ench, level);
 	}
 
@@ -63,7 +62,7 @@ public class CoreEnchantmentStorageMeta extends CoreItemMeta implements Enchantm
 
 	@Override
 	public int getStoredEnchantLevel(Enchantment ench) {
-		Validate.notNull(ench, "Enchantment can not be null!");
+		if (ench == null) throw new IllegalArgumentException("Enchantment can not be null!");
 		return hasEnchant(ench) ? enchantments.get(ench) : 0;
 	}
 
@@ -75,7 +74,7 @@ public class CoreEnchantmentStorageMeta extends CoreItemMeta implements Enchantm
 
 	@Override
 	public boolean hasConflictingStoredEnchant(Enchantment ench) {
-		Validate.notNull(ench, "Enchantment can not be null!");
+		if (ench == null) throw new IllegalArgumentException("Enchantment can not be null!");
 		if (!hasEnchants()) return false;
 		for (Enchantment e : enchantments.keySet()) {
 			if (ench.conflictsWith(e)) return true;
@@ -95,7 +94,7 @@ public class CoreEnchantmentStorageMeta extends CoreItemMeta implements Enchantm
 
 	@Override
 	public boolean hasStoredEnchant(Enchantment ench) {
-		Validate.notNull(ench, "Enchantment can not be null!");
+		if (ench == null) throw new IllegalArgumentException("Enchantment can not be null!");
 		if (!hasEnchants()) return false;
 		return enchantments.containsKey(ench);
 	}

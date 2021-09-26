@@ -2,8 +2,6 @@ package de.atlasmc;
 
 import java.util.HashMap;
 
-import de.atlasmc.util.Validate;
-
 public final class Color {
 	
 	public static final Color 
@@ -56,9 +54,9 @@ public final class Color {
 	}
 	
 	public  Color(String name, int red, int green, int blue) {
-		Validate.isTrue(red >= 0 && red <= 255, "Red is not between 0 and 255: " + red);
-		Validate.isTrue(green >= 0 && green <= 255, "Green is not between 0 and 255: " + green);
-		Validate.isTrue(blue >= 0 && blue <= 255, "Red is not between 0 and 255: " + blue);
+		if (red < 0 || red > 255) throw new IllegalArgumentException("Red is not between 0 and 255: " + red);
+		if (green < 0 || green > 255) throw new IllegalArgumentException("Green is not between 0 and 255: " + green);
+		if (blue < 0 || blue > 255) throw new IllegalArgumentException("Red is not between 0 and 255: " + blue);
 		this.r = (byte) red;
 		this.b = (byte) blue;
 		this.g = (byte) green;

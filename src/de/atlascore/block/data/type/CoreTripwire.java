@@ -1,16 +1,30 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;
 
 import de.atlascore.block.data.CoreAbstractMultipleFacing;
+import de.atlascore.block.data.CoreAttachable;
+import de.atlascore.block.data.CorePowerable;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.type.Tripwire;
-import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTripwire extends CoreAbstractMultipleFacing implements Tripwire {
 
+	protected static final String
+	DISARMED = "disarmed";
+	
+	static {
+		NBT_FIELDS.setField(DISARMED, (holder, reader) -> {
+			if (holder instanceof Tripwire)
+			((Tripwire) holder).setDisarmed(reader.readByteTag() == 1);
+			else reader.skipTag();
+		});
+	}
+	
 	private boolean attached, powered, disarmed;
 	
 	public CoreTripwire(Material material) {
@@ -66,8 +80,16 @@ public class CoreTripwire extends CoreAbstractMultipleFacing implements Tripwire
 
 	@Override
 	public boolean isValid(BlockFace face) {
-		Validate.notNull(face, "BlockFace can not be null!");
+		if (face == null) throw new IllegalArgumentException("BlockFace can not be null!");
 		return face.ordinal() < 4;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (isAttached()) writer.writeByteTag(CoreAttachable.ATTACHED, true);
+		if (isDisarmed()) writer.writeByteTag(DISARMED, true);
+		if (isPowered()) writer.writeByteTag(CorePowerable.POWERED, true);
 	}
 
 }

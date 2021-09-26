@@ -1,5 +1,6 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -7,9 +8,21 @@ import de.atlascore.block.data.CoreAbstractDirectional;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.type.Hopper;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreHopper extends CoreAbstractDirectional implements Hopper {
 
+	protected static final String
+	ENABLED = "enabled";
+	
+	static {
+		NBT_FIELDS.setField(ENABLED, (holder, reader) -> {
+			if (holder instanceof Hopper)
+			((Hopper) holder).setEnabled(reader.readByteTag() == 1);
+			else reader.skipTag();
+		});
+	}
+	
 	private boolean enabled;
 	
 	public CoreHopper(Material material, BlockFace face) {
@@ -48,7 +61,12 @@ public class CoreHopper extends CoreAbstractDirectional implements Hopper {
 		case EAST: return 4;
 		default: return -1;
 		}
-
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (isEnabled()) writer.writeByteTag(ENABLED, true);
 	}
 
 }

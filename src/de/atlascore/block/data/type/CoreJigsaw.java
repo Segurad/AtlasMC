@@ -1,12 +1,25 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
+
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Jigsaw;
-import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreJigsaw extends CoreBlockData implements Jigsaw {
 
+	protected static final String
+	ORIENTATION = "orientation";
+	
+	static {
+		NBT_FIELDS.setField(ORIENTATION, (holder, reader) -> {
+			if (holder instanceof Jigsaw)
+			((Jigsaw) holder).setOrientation(Orientation.getByName(reader.readStringTag()));
+			else reader.skipTag();
+		});
+	}
+	
 	private Orientation orientation;
 	
 	public CoreJigsaw(Material material) {
@@ -21,8 +34,14 @@ public class CoreJigsaw extends CoreBlockData implements Jigsaw {
 
 	@Override
 	public void setOrientation(Orientation orientation) {
-		Validate.notNull(orientation, "Orientation can not be null!");
+		if (orientation == null) throw new IllegalArgumentException("Orientation can not be null!");
 		this.orientation = orientation;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (getOrientation() != Orientation.NORTH_UP) writer.writeStringTag(ORIENTATION, getOrientation().name().toLowerCase());
 	}
 
 }

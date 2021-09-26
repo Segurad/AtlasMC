@@ -4,22 +4,22 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.AnaloguePowerable;
-import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreAnaloguePowerable extends CoreBlockData implements AnaloguePowerable {
-
-	private int power;
 	
-	protected static final String POWER = "power";
+	protected static final String 
+	POWER = "power";
 	
 	static {
 		NBT_FIELDS.setField(POWER, (holder, reader) -> {
-			if (AnaloguePowerable.class.isInstance(holder)) {
+			if (holder instanceof AnaloguePowerable) {
 				((AnaloguePowerable) holder).setPower(reader.readIntTag());
 			} else reader.skipTag();
 		});
 	}
+	
+	private int power;
 	
 	public CoreAnaloguePowerable(Material material) {
 		super(material);
@@ -37,7 +37,7 @@ public class CoreAnaloguePowerable extends CoreBlockData implements AnaloguePowe
 
 	@Override
 	public void setPower(int level) {
-		Validate.isTrue(level <= 15 && level >= 0, "power is not between 0 and " + 15 + ": " + level);
+		if (level > 15 || level < 0) throw new IllegalArgumentException("Power is not between 0 and 15: " + level);
 		this.power = level;
 	}
 	

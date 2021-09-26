@@ -14,7 +14,15 @@ public interface Stairs extends Bisected, Directional, Waterlogged {
 		INNER_LEFT,
 		INNER_RIGHT,
 		OUTER_LEFT,
-		OUTER_RIGHT
+		OUTER_RIGHT;
+
+		public static Shape getByName(String name) {
+			name = name.toUpperCase();
+			for (Shape s : values()) {
+				s.name().equals(name);
+			}
+			return STRAIGHT;
+		}
 	}
 
 }

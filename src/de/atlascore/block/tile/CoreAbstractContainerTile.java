@@ -20,7 +20,6 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
 	protected static final String
-	NBT_CUSTOM_NAME = "CustomName",
 	NBT_LOCK = "Lock",
 	NBT_ITEMS = "Items",
 	NBT_LOOT_TABLE = "LootTable",
@@ -28,11 +27,6 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreTileEntity.NBT_FIELDS);
-		NBT_FIELDS.setField(NBT_CUSTOM_NAME, (holder, reader) -> {
-			if (holder instanceof AbstractContainerTile)
-			((AbstractContainerTile<?>) holder).setCustomName(ChatUtil.toChat(reader.readStringTag()));
-			else reader.skipTag();
-		});
 		NBT_FIELDS.setField(NBT_LOCK, (holder, reader) -> {
 			if (holder instanceof AbstractContainerTile)
 			((AbstractContainerTile<?>) holder).setLock(ChatUtil.toChat(reader.readStringTag()));
@@ -43,7 +37,11 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 				reader.readNextEntry();
 				while (reader.getRestPayload() > 0) {
 					Inventory inv = ((AbstractContainerTile<?>) holder).getInventory();
-					ItemStack item = new ItemStack();
+					reader.mark();
+					reader.search(ID);
+					Material mat = Material.getByName(reader.readStringTag());
+					reader.reset();
+					ItemStack item = new ItemStack(mat);
 					int slot = item.fromSlot(reader);
 					if (slot != -999) inv.setItem(slot, item);
 				}
@@ -63,7 +61,10 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 	@SuppressWarnings("unchecked")
 	@Override
 	public I getInventory() {
-		if (inv == null) inv = createInventory();
+		if (inv == null) {
+			inv = createInventory();
+			inv.setTitle(name);
+		}
 		return (I) inv;
 	}
 	

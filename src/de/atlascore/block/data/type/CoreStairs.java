@@ -1,19 +1,39 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
+
+import de.atlascore.block.data.CoreBisected;
 import de.atlascore.block.data.CoreDirectional4Faces;
+import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Stairs;
-import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreStairs extends CoreDirectional4Faces implements Stairs {
 
+	protected static final ChildNBTFieldContainer NBT_FIELDS;
+	
+	protected static final String
+	SHAPE = "shape";
+	
+	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreDirectional4Faces.NBT_FIELDS);
+		NBT_FIELDS.setField(SHAPE, (holder, reader) -> {
+			if (holder instanceof Stairs)
+			((Stairs) holder).setShape(Shape.getByName(reader.readStringTag()));
+			else reader.skipTag();
+		});
+	}
+	
 	private Half half;
 	private boolean waterlogged;
 	private Shape shape;
 	
 	public CoreStairs(Material material) {
 		super(material);
-		this.half = Half.TOP;
+		this.half = Half.BOTTOM;
 		this.shape = Shape.STRAIGHT;
 	}
 
@@ -24,7 +44,7 @@ public class CoreStairs extends CoreDirectional4Faces implements Stairs {
 
 	@Override
 	public void setHalf(Half half) {
-		Validate.notNull(half, "Half can not be null!");
+		if (half == null) throw new IllegalArgumentException("Half can not be null!");
 		this.half = half;
 	}
 
@@ -45,7 +65,7 @@ public class CoreStairs extends CoreDirectional4Faces implements Stairs {
 
 	@Override
 	public void setShape(Shape shape) {
-		Validate.notNull(shape, "Shape can not be null!");
+		if (shape == null) throw new IllegalArgumentException("Shape can not be null!");
 		this.shape = shape;
 	}
 
@@ -58,4 +78,17 @@ public class CoreStairs extends CoreDirectional4Faces implements Stairs {
 				getFaceValue()*20;
 	}
 
+	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (isWaterlogged()) writer.writeByteTag(CoreWaterlogged.WATERLOGGED, true);
+		if (getHalf() != Half.BOTTOM) writer.writeStringTag(CoreBisected.HALF, getHalf().name().toLowerCase());
+		if (getShape() != Shape.STRAIGHT) writer.writeStringTag(SHAPE, getShape().name().toLowerCase());
+	}
+	
 }

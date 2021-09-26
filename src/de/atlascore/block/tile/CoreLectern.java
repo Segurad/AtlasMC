@@ -27,8 +27,11 @@ public class CoreLectern extends CoreTileEntity implements Lectern {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreTileEntity.NBT_FIELDS);
 		NBT_FIELDS.setField(BOOK, (holder, reader) -> {
 			if (holder instanceof Lectern) {
-				reader.readNextEntry();
-				ItemStack item = new ItemStack();
+				reader.mark();
+				reader.search(ID);
+				Material type = Material.getByName(reader.readStringTag());
+				reader.reset();
+				ItemStack item = new ItemStack(type);
 				item.fromNBT(reader);
 				((Lectern) holder).setBook(item);
 			} else reader.skipTag();

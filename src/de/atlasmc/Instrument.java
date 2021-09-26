@@ -17,6 +17,14 @@ public enum Instrument {
 	DIDGERIDOO,
 	BIT,
 	BANJO,
-	PLING
+	PLING;
+
+	public static Instrument getByName(String name) {
+		name = name.toUpperCase();
+		for (Instrument i : values()) {
+			if (i.name().equals(name)) return i;
+		}
+		return HARP;
+	}
 
 }

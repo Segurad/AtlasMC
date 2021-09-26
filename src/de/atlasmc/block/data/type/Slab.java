@@ -10,6 +10,14 @@ public interface Slab extends Waterlogged {
 	public static enum Type {
 		TOP,
 		BOTTOM,
-		DOUBLE
+		DOUBLE;
+
+		public static Type getByName(String name) {
+			name = name.toLowerCase();
+			for (Type t : values()) {
+				if (t.name().equals(name)) return t;
+			}
+			return BOTTOM;
+		}
 	}
 }

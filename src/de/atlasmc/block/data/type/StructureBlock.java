@@ -11,7 +11,15 @@ public interface StructureBlock extends BlockData {
 		SAVE,
 		LOAD,
 		CORNER,
-		DATA
+		DATA;
+
+		public static Mode getByName(String name) {
+			name = name.toUpperCase();
+			for (Mode m : values()) {
+				if (m.name().equals(name)) return m;
+			}
+			return SAVE;
+		}
 	}
 
 }

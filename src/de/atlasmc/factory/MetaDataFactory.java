@@ -8,7 +8,6 @@ import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.inventory.meta.BlockDataMeta;
-import de.atlasmc.util.Validate;
 
 /**
  * Factory for creation of {@link ItemMeta} and {@link BlockData}
@@ -56,8 +55,8 @@ public abstract class MetaDataFactory {
 	}
 	
 	public static void setMetaPreConfig(Material material, ItemMeta meta) {
-		Validate.notNull(material, "Material can not be null!");
-		Validate.isTrue(material.isItem(), "Material is not a Item!");
+		if (material == null) throw new IllegalArgumentException("Material can not be null!");
+		if (!material.isItem()) throw new IllegalArgumentException("Material is not a Item!");
 		if (meta == null) metaPreConfig.remove(material);
 		if (!material.isValidMeta(meta))
 			throw new IllegalArgumentException("ItemMeta is not valid for Material: " + material.getName());
@@ -65,8 +64,8 @@ public abstract class MetaDataFactory {
 	}
 	
 	public static void setDataPreConfig(Material material, BlockData data) {
-		Validate.notNull(material, "Material can not be null!");
-		Validate.isTrue(material.isBlock(), "Material is not a Block!");
+		if (material == null) throw new IllegalArgumentException("Material can not be null!");
+		if (!material.isBlock()) throw new IllegalArgumentException("Material is not a Block!");
 		if (data == null) dataPreConfig.remove(material);
 		if (!material.isValidData(data))
 			throw new IllegalArgumentException("BlockData is not valid for Material: " + material.getName());

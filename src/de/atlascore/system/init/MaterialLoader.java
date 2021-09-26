@@ -79,6 +79,13 @@ import de.atlascore.block.data.type.CoreTurtleEgg;
 import de.atlascore.block.data.type.CoreWall;
 import de.atlascore.block.data.type.CoreWallSign;
 import de.atlascore.block.tile.CoreBanner;
+import de.atlascore.block.tile.CoreBeacon;
+import de.atlascore.block.tile.CoreDropper;
+import de.atlascore.block.tile.CoreEnchantingTable;
+import de.atlascore.block.tile.CoreEndGateway;
+import de.atlascore.block.tile.CoreMobSpawner;
+import de.atlascore.block.tile.CoreShulkerBox;
+import de.atlascore.block.tile.CoreSkull;
 import de.atlascore.inventory.meta.CoreBannerMeta;
 import de.atlascore.inventory.meta.CoreCompassMeta;
 import de.atlascore.inventory.meta.CoreCrossbowMeta;
@@ -169,6 +176,13 @@ import de.atlasmc.block.data.type.TurtleEgg;
 import de.atlasmc.block.data.type.Wall;
 import de.atlasmc.block.data.type.WallSign;
 import de.atlasmc.block.tile.Banner;
+import de.atlasmc.block.tile.Beacon;
+import de.atlasmc.block.tile.Dropper;
+import de.atlasmc.block.tile.EnchantingTable;
+import de.atlasmc.block.tile.EndGateway;
+import de.atlasmc.block.tile.MobSpawner;
+import de.atlasmc.block.tile.ShulkerBox;
+import de.atlasmc.block.tile.Skull;
 import de.atlasmc.factory.AgeableClassMetaDataFactory;
 import de.atlasmc.factory.ClassMetaDataFactory;
 import de.atlasmc.factory.ClassTileEntityFactory;
@@ -1365,7 +1379,27 @@ public class MaterialLoader {
 		//--- TileEntityFactory --------------------------------------------------------------------------------
 		
 		TileEntityFactory
-		BANNER_TEF = new ClassTileEntityFactory(Banner.class, CoreBanner.class); // TODO
+		BANNER_TEF = new ClassTileEntityFactory(Banner.class, CoreBanner.class),
+		BARREL_TEF = new ClassTileEntityFactory(de.atlasmc.block.tile.Barrel.class, de.atlascore.block.tile.CoreBarrel.class),
+		BEACON_TEF = new ClassTileEntityFactory(Beacon.class, CoreBeacon.class),
+		BEEHIVE_TEF = new ClassTileEntityFactory(de.atlasmc.block.tile.Beehive.class, de.atlascore.block.tile.CoreBeehive.class),
+		BREWING_STAND_TEF = new ClassTileEntityFactory(de.atlasmc.block.tile.BrewingStand.class, de.atlascore.block.tile.CoreBrewingStand.class),
+		CAMPFIRE_TEF = new ClassTileEntityFactory(de.atlasmc.block.tile.Campfire.class, de.atlascore.block.tile.CoreCampfire.class),
+		COMMAND_BLOCK_TEF = new ClassTileEntityFactory(de.atlasmc.block.tile.CommandBlock.class, de.atlascore.block.tile.CoreCommandBlock.class),
+		DISPENSER_TEF = new ClassTileEntityFactory(de.atlasmc.block.tile.Dispenser.class, de.atlascore.block.tile.CoreDispenser.class),
+		DROPPER_TEF = new ClassTileEntityFactory(Dropper.class, CoreDropper.class),
+		ENCHANTING_TABLE_TEF = new ClassTileEntityFactory(EnchantingTable.class, CoreEnchantingTable.class),
+		ENDER_CHEST_TEF = new ClassTileEntityFactory(de.atlasmc.block.tile.EnderChest.class, de.atlascore.block.tile.CoreEnderChest.class),
+		END_GATEWAY_TEF = new ClassTileEntityFactory(EndGateway.class, CoreEndGateway.class),
+		FURNACE_TEF = new ClassTileEntityFactory(de.atlasmc.block.tile.Furnace.class, de.atlascore.block.tile.CoreFurnace.class),
+		HOPPER_TEF = new ClassTileEntityFactory(de.atlasmc.block.tile.Hopper.class, de.atlascore.block.tile.CoreHopper.class),
+		JUKEBOX_TEF = new ClassTileEntityFactory(de.atlasmc.block.tile.Jukebox.class, de.atlascore.block.tile.CoreJukebox.class),
+		LECTERN_TEF = new ClassTileEntityFactory(de.atlasmc.block.tile.Lectern.class, de.atlascore.block.tile.CoreLectern.class),
+		MOB_SPAWNER_TEF = new ClassTileEntityFactory(MobSpawner.class, CoreMobSpawner.class),
+		SHULKER_BOX_TEF = new ClassTileEntityFactory(ShulkerBox.class, CoreShulkerBox.class),
+		SIGN_TEF = new ClassTileEntityFactory(de.atlasmc.block.tile.Sign.class, de.atlascore.block.tile.CoreSign.class),
+		SKULL_TEF = new ClassTileEntityFactory(Skull.class, CoreSkull.class),
+		STRUCTURE_BLOCK_TEF = new ClassTileEntityFactory(de.atlasmc.block.tile.StructureBlock.class, de.atlascore.block.tile.CoreStructureBlock.class);
 		
 		WHITE_BANNER.setTileEntityFactory(BANNER_TEF);
 		ORANGE_BANNER.setTileEntityFactory(BANNER_TEF);
@@ -1400,6 +1434,82 @@ public class MaterialLoader {
 		RED_WALL_BANNER.setTileEntityFactory(BANNER_TEF);
 		BLACK_WALL_BANNER.setTileEntityFactory(BANNER_TEF);
 		
+		BARREL.setTileEntityFactory(BARREL_TEF);
+		
+		BEACON.setTileEntityFactory(BEACON_TEF);
+		
+		BEEHIVE.setTileEntityFactory(BEEHIVE_TEF);
+		BEE_NEST.setTileEntityFactory(BEEHIVE_TEF);
+		
+		BREWING_STAND.setTileEntityFactory(BREWING_STAND_TEF);
+		
+		CAMPFIRE.setTileEntityFactory(CAMPFIRE_TEF);
+		
+		COMMAND_BLOCK.setTileEntityFactory(COMMAND_BLOCK_TEF);
+		CHAIN_COMMAND_BLOCK.setTileEntityFactory(COMMAND_BLOCK_TEF);
+		REPEATING_COMMAND_BLOCK.setTileEntityFactory(COMMAND_BLOCK_TEF);
+		
+		DISPENSER.setTileEntityFactory(DISPENSER_TEF);
+		
+		DROPPER.setTileEntityFactory(DROPPER_TEF);
+		
+		ENCHANTING_TABLE.setTileEntityFactory(ENCHANTING_TABLE_TEF);
+		
+		ENDER_CHEST.setTileEntityFactory(ENDER_CHEST_TEF);
+		
+		END_GATEWAY.setTileEntityFactory(END_GATEWAY_TEF);
+		
+		FURNACE.setTileEntityFactory(FURNACE_TEF);
+		SMOKER.setTileEntityFactory(FURNACE_TEF);
+		BLAST_FURNACE.setTileEntityFactory(FURNACE_TEF);
+		
+		HOPPER.setTileEntityFactory(HOPPER_TEF);
+		
+		JUKEBOX.setTileEntityFactory(JUKEBOX_TEF);
+		
+		LECTERN.setTileEntityFactory(LECTERN_TEF);
+		
+		SPAWNER.setTileEntityFactory(MOB_SPAWNER_TEF);
+		
+		SHULKER_BOX.setTileEntityFactory(SHULKER_BOX_TEF);
+		BLACK_SHULKER_BOX.setTileEntityFactory(SHULKER_BOX_TEF);
+		BLUE_SHULKER_BOX.setTileEntityFactory(SHULKER_BOX_TEF);
+		BROWN_SHULKER_BOX.setTileEntityFactory(SHULKER_BOX_TEF);
+		CYAN_SHULKER_BOX.setTileEntityFactory(SHULKER_BOX_TEF);
+		GRAY_SHULKER_BOX.setTileEntityFactory(SHULKER_BOX_TEF);
+		GREEN_SHULKER_BOX.setTileEntityFactory(SHULKER_BOX_TEF);
+		LIGHT_BLUE_SHULKER_BOX.setTileEntityFactory(SHULKER_BOX_TEF);
+		LIGHT_GRAY_SHULKER_BOX.setTileEntityFactory(SHULKER_BOX_TEF);
+		LIME_SHULKER_BOX.setTileEntityFactory(SHULKER_BOX_TEF);
+		MAGENTA_SHULKER_BOX.setTileEntityFactory(SHULKER_BOX_TEF);
+		ORANGE_SHULKER_BOX.setTileEntityFactory(SHULKER_BOX_TEF);
+		PINK_SHULKER_BOX.setTileEntityFactory(SHULKER_BOX_TEF);
+		PURPLE_SHULKER_BOX.setTileEntityFactory(SHULKER_BOX_TEF);
+		RED_SHULKER_BOX.setTileEntityFactory(SHULKER_BOX_TEF);
+		WHITE_SHULKER_BOX.setTileEntityFactory(SHULKER_BOX_TEF);
+		YELLOW_SHULKER_BOX.setTileEntityFactory(SHULKER_BOX_TEF);
+		
+		ACACIA_SIGN.setTileEntityFactory(SIGN_TEF);
+		ACACIA_WALL_SIGN.setTileEntityFactory(SIGN_TEF);
+		BIRCH_SIGN.setTileEntityFactory(SIGN_TEF);
+		BIRCH_WALL_SIGN.setTileEntityFactory(SIGN_TEF);
+		CRIMSON_SIGN.setTileEntityFactory(SIGN_TEF);
+		CRIMSON_WALL_SIGN.setTileEntityFactory(SIGN_TEF);
+		DARK_OAK_SIGN.setTileEntityFactory(SIGN_TEF);
+		DARK_OAK_WALL_SIGN.setTileEntityFactory(SIGN_TEF);
+		JUNGLE_SIGN.setTileEntityFactory(SIGN_TEF);
+		JUNGLE_WALL_SIGN.setTileEntityFactory(SIGN_TEF);
+		OAK_SIGN.setTileEntityFactory(SIGN_TEF);
+		OAK_WALL_SIGN.setTileEntityFactory(SIGN_TEF);
+		SPRUCE_SIGN.setTileEntityFactory(SIGN_TEF);
+		SPRUCE_WALL_SIGN.setTileEntityFactory(SIGN_TEF);
+		WARPED_SIGN.setTileEntityFactory(SIGN_TEF);
+		WARPED_WALL_SIGN.setTileEntityFactory(SIGN_TEF);
+		
+		PLAYER_HEAD.setTileEntityFactory(SKULL_TEF);
+		PLAYER_WALL_HEAD.setTileEntityFactory(SKULL_TEF);
+		
+		STRUCTURE_BLOCK.setTileEntityFactory(STRUCTURE_BLOCK_TEF);
 	}
 
 	private static Material c(String name, int blockID) {

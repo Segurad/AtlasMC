@@ -1,12 +1,30 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
+
 import de.atlascore.block.data.CoreDirectional4Faces;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Chest;
-import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreChest extends CoreDirectional4Faces implements Chest {
 
+	protected static final ChildNBTFieldContainer NBT_FIELDS;
+	
+	protected static final String
+	TYPE = "type";
+	
+	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreDirectional4Faces.NBT_FIELDS);
+		NBT_FIELDS.setField(TYPE, (holder, reader) -> {
+			if (holder instanceof Chest)
+			((Chest) holder).setType(Type.getByName(reader.readStringTag()));
+			else reader.skipTag();
+		});
+	}
+	
 	private boolean waterlogged;
 	private Type type;
 	
@@ -32,7 +50,7 @@ public class CoreChest extends CoreDirectional4Faces implements Chest {
 
 	@Override
 	public void setType(Type type) {
-		Validate.notNull(type, "Type can not be null!");
+		if (type == null) throw new IllegalArgumentException("Type can not be null!");
 		this.type = type;
 	}
 
@@ -44,6 +62,15 @@ public class CoreChest extends CoreDirectional4Faces implements Chest {
 				(waterlogged?0:1);
 	}
 	
+	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
 	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (getType() != Type.SINGLE) writer.writeStringTag(TYPE, getType().name().toLowerCase());
+	}
 
 }

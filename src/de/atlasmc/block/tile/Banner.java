@@ -3,10 +3,10 @@ package de.atlasmc.block.tile;
 import java.util.List;
 
 import de.atlasmc.DyeColor;
+import de.atlasmc.Nameable;
 import de.atlasmc.chat.component.ChatComponent;
-import de.atlasmc.util.Validate;
 
-public interface Banner extends TileEntity {
+public interface Banner extends TileEntity, Nameable {
 	
 	public void addPattern(Pattern pattern);
 	
@@ -101,7 +101,7 @@ public interface Banner extends TileEntity {
 		}
 		
 		public static PatternType getByIdentifier(String identifier) {
-			Validate.notNull(identifier, "Identifier can not be null!");
+			if (identifier == null) throw new IllegalArgumentException("Identifier can not be null!");
 			for (PatternType pattern : values()) {
 				if (pattern.getIdentifier().equals(identifier)) return pattern;
 			}

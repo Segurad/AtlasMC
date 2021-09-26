@@ -10,11 +10,12 @@ public class CoreOpenable extends CoreBlockData implements Openable {
 
 	private boolean open;
 	
-	protected static final String OPEN = "open";
+	public static final String 
+	OPEN = "open";
 	
 	static {
 		NBT_FIELDS.setField(OPEN, (holder, reader) -> {
-			if (Openable.class.isInstance(holder)) {
+			if (holder instanceof Openable) {
 				((Openable) holder).setOpen(reader.readByteTag() == 1);
 			} else reader.skipTag();
 		});

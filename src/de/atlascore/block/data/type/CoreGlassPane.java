@@ -1,13 +1,15 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;
 
 import de.atlascore.block.data.CoreAbstractMultipleFacing;
+import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.type.GlassPane;
-import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreGlassPane extends CoreAbstractMultipleFacing implements GlassPane {
 
@@ -44,8 +46,14 @@ public class CoreGlassPane extends CoreAbstractMultipleFacing implements GlassPa
 
 	@Override
 	public boolean isValid(BlockFace face) {
-		Validate.notNull(face, "BlockFace can not null!");
+		if (face == null) throw new IllegalArgumentException("BlockFace can not null!");
 		return face.ordinal() < 4;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (isWaterlogged()) writer.writeByteTag(CoreWaterlogged.WATERLOGGED, true);
 	}
 
 }

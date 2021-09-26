@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.TileEntity;
-import de.atlasmc.util.Validate;
 
 /**
  * Factory for creating {@link TileEntity}
@@ -26,8 +25,8 @@ public abstract class TileEntityFactory {
 	}
 	
 	public static void setPreConfig(Material material, TileEntity tile) {
-		Validate.notNull(material, "Material can not be null!");
-		Validate.isTrue(material.isBlock(), "Material is not a Block!");
+		if (material == null) throw new IllegalArgumentException("Material can not be null!");
+		if (!material.isBlock()) throw new IllegalArgumentException("Material is not a Block!");
 		if (tile == null) tilePreConfig.remove(material);
 		if (!material.isValidTile(tile))
 			throw new IllegalArgumentException("TileEntity is not valid for Material: " + material.getName());

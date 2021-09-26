@@ -1,5 +1,5 @@
 package de.atlasmc.block.tile;
 
-public interface StructureBlock {
+public interface StructureBlock extends TileEntity {
 
 }

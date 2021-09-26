@@ -10,11 +10,12 @@ public class CoreLightable extends CoreBlockData implements Lightable {
 
 	private boolean lit;
 	
-	protected static final String LIT = "lit";
+	public static final String 
+	LIT = "lit";
 	
 	static {
 		NBT_FIELDS.setField(LIT, (holder, reader) -> {
-			if (Lightable.class.isInstance(holder)) {
+			if (holder instanceof Lightable) {
 				((Lightable) holder).setLit(reader.readByteTag() == 1);
 			} else reader.skipTag();
 		});

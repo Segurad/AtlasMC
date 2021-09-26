@@ -1,7 +1,7 @@
 package de.atlasmc.block.tile;
 
-import de.atlasmc.inventory.InventoryHolder;
+import de.atlasmc.inventory.Inventory;
 
-public interface Dispenser extends TileEntity, InventoryHolder {
+public interface Dispenser extends AbstractContainerTile<Inventory> {
 
 }

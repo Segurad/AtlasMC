@@ -1,8 +1,9 @@
 package de.atlasmc.block.tile;
 
+import de.atlasmc.Nameable;
 import de.atlasmc.chat.component.ChatComponent;
 
-public interface CommandBlock extends TileEntity {
+public interface CommandBlock extends TileEntity, Nameable {
 	
 	public Mode getMode();
 	
@@ -19,10 +20,6 @@ public interface CommandBlock extends TileEntity {
 	public boolean getTrackOutput();
 	
 	public void setTrackOutput(boolean trackOutput);
-	
-	public void setCustomName(ChatComponent name);
-	
-	public ChatComponent getCustomName();
 	
 	public void setCommand(String command);
 	

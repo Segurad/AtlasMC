@@ -10,11 +10,12 @@ public class CorePowerable extends CoreBlockData implements Powerable {
 
 	private boolean powered;
 	
-	protected static final String POWERED = "powered";
+	public static final String 
+	POWERED = "powered";
 	
 	static {
 		NBT_FIELDS.setField(POWERED, (holder, reader) -> {
-			if (Powerable.class.isInstance(holder)) {
+			if (holder instanceof Powerable) {
 				((Powerable) holder).setPowered(reader.readByteTag() == 1);
 			} else reader.skipTag();
 		});

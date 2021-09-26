@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.CompoundTag;
 import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.TagType;
@@ -103,7 +102,7 @@ public class NBTObjectWriter implements NBTWriter {
 
 	@Override
 	public void writeUUID(String name, UUID uuid) throws IOException {
-		Validate.notNull(uuid, "UUID can not be null!");
+		if (uuid == null) throw new IllegalArgumentException("UUID can not be null!");
 		writeIntArrayTag(name, new int[] {
 				(int) (uuid.getMostSignificantBits()>>32),
 				(int) uuid.getMostSignificantBits(),

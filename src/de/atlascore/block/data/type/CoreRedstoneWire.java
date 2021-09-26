@@ -1,5 +1,6 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -7,10 +8,44 @@ import de.atlascore.block.data.CoreAnaloguePowerable;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.type.RedstoneWire;
-import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreRedstoneWire extends CoreAnaloguePowerable implements RedstoneWire {
 
+	protected static final ChildNBTFieldContainer NBT_FIELDS;
+	
+	protected static final String
+	NORTH = "north",
+	EAST = "east",
+	SOUTH = "south",
+	WEST = "west";
+	
+	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreAnaloguePowerable.NBT_FIELDS);
+		NBT_FIELDS.setField(NORTH, (holder, reader) -> {
+			if (holder instanceof RedstoneWire)
+			((RedstoneWire) holder).setFace(BlockFace.NORTH, Connection.getByName(reader.readStringTag()));
+			else reader.skipTag();
+		});
+		NBT_FIELDS.setField(EAST, (holder, reader) -> {
+			if (holder instanceof RedstoneWire)
+			((RedstoneWire) holder).setFace(BlockFace.EAST, Connection.getByName(reader.readStringTag()));
+			else reader.skipTag();
+		});
+		NBT_FIELDS.setField(SOUTH, (holder, reader) -> {
+			if (holder instanceof RedstoneWire)
+			((RedstoneWire) holder).setFace(BlockFace.SOUTH, Connection.getByName(reader.readStringTag()));
+			else reader.skipTag();
+		});
+		NBT_FIELDS.setField(WEST, (holder, reader) -> {
+			if (holder instanceof RedstoneWire)
+			((RedstoneWire) holder).setFace(BlockFace.WEST, Connection.getByName(reader.readStringTag()));
+			else reader.skipTag();
+		});
+	}
+	
 	private Connection[] connections;
 	
 	public CoreRedstoneWire(Material material) {
@@ -30,16 +65,16 @@ public class CoreRedstoneWire extends CoreAnaloguePowerable implements RedstoneW
 
 	@Override
 	public Connection getFace(BlockFace face) {
-		Validate.notNull(face, "BlockFace can not be null!");
-		Validate.isTrue(face.ordinal() < 4, "No valid BlockFace: " + face.name());
+		if (face == null) throw new IllegalArgumentException("BlockFace can not be null!");
+		if (face.ordinal() > 4) throw new IllegalArgumentException("No valid BlockFace: " + face.name());
 		return connections[face.ordinal()];
 	}
 
 	@Override
 	public void setFace(BlockFace face, Connection connection) {
-		Validate.notNull(connection, "Connection can not be null!");
-		Validate.notNull(face, "BlockFace can not be null!");
-		Validate.isTrue(face.ordinal() < 4, "No valid BlockFace: " + face.name());
+		if (connection == null) throw new IllegalArgumentException("Connection can not be null!");
+		if (face == null) throw new IllegalArgumentException("BlockFace can not be null!");
+		if (face.ordinal() > 4) throw new IllegalArgumentException("No valid BlockFace: " + face.name());
 		connections[face.ordinal()] = connection;
 	}
 	
@@ -51,6 +86,20 @@ public class CoreRedstoneWire extends CoreAnaloguePowerable implements RedstoneW
 				getPower()*9+
 				connections[0].ordinal()*144+ //NORTH
 				connections[1].ordinal()*432; //EAST
+	}
+	
+	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (getFace(BlockFace.NORTH) != Connection.NONE) writer.writeStringTag(NORTH, getFace(BlockFace.NORTH).name().toLowerCase());
+		if (getFace(BlockFace.EAST) != Connection.NONE) writer.writeStringTag(EAST, getFace(BlockFace.EAST).name().toLowerCase());
+		if (getFace(BlockFace.SOUTH) != Connection.NONE) writer.writeStringTag(SOUTH, getFace(BlockFace.SOUTH).name().toLowerCase());
+		if (getFace(BlockFace.WEST) != Connection.NONE) writer.writeStringTag(WEST, getFace(BlockFace.WEST).name().toLowerCase());
 	}
 
 }

@@ -2,10 +2,12 @@ package de.atlascore.block.data.type;
 
 import java.io.IOException;
 
+import de.atlascore.block.data.CoreBisected;
 import de.atlascore.block.data.CoreDirectional4Faces;
+import de.atlascore.block.data.CoreOpenable;
+import de.atlascore.block.data.CorePowerable;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Door;
-import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreDoor extends CoreDirectional4Faces implements Door {
@@ -15,9 +17,6 @@ public class CoreDoor extends CoreDirectional4Faces implements Door {
 	private boolean open, powered;
 	
 	protected static final String
-	HALF = "half",
-	OPEN = "open",
-	POWERED = "powered",
 	HINGE = "hinge";
 	
 	static {
@@ -41,7 +40,7 @@ public class CoreDoor extends CoreDirectional4Faces implements Door {
 
 	@Override
 	public void setHalf(Half half) {
-		Validate.notNull(half, "Half can not be null!");
+		if (half == null) throw new IllegalArgumentException("Half can not be null!");
 		this.half = half;
 	}
 
@@ -72,7 +71,7 @@ public class CoreDoor extends CoreDirectional4Faces implements Door {
 
 	@Override
 	public void setHinge(Hinge hinge) {
-		Validate.notNull(hinge, "Hinge can not be null!");
+		if (hinge == null) throw new IllegalArgumentException("Hinge can not be null!");
 		this.hinge = hinge;
 	}
 	
@@ -89,10 +88,10 @@ public class CoreDoor extends CoreDirectional4Faces implements Door {
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		writer.writeStringTag(HALF, half.name().toLowerCase());
-		writer.writeByteTag(OPEN, open);
-		writer.writeByteTag(POWERED, powered);
-		writer.writeStringTag(HINGE, hinge.name().toLowerCase());
+		if (getHalf() != Half.BOTTOM) writer.writeStringTag(CoreBisected.HALF, getHalf().name().toLowerCase());
+		if (isOpen()) writer.writeByteTag(CoreOpenable.OPEN, true);
+		if (isPowered()) writer.writeByteTag(CorePowerable.POWERED, true);
+		if (getHinge() != Hinge.LEFT) writer.writeStringTag(HINGE, getHinge().name().toLowerCase());
 	}
 
 }

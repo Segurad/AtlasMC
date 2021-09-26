@@ -26,7 +26,11 @@ public class CoreCampfire extends CoreTileEntity implements Campfire {
 			if (holder instanceof Campfire) {
 				reader.readNextEntry();
 				while (reader.getRestPayload() > 0) {
-					ItemStack item = new ItemStack();
+					reader.mark();
+					reader.search(ID);
+					Material type = Material.getByName(reader.readStringTag());
+					reader.reset();
+					ItemStack item = new ItemStack(type);
 					int slot = item.fromSlot(reader);
 					if (slot < 0 ||  slot > 4) continue;
 					((Campfire) holder).setItem(slot, item);

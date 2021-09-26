@@ -9,7 +9,11 @@ public interface TechnicalPiston extends Directional {
 	
 	public static enum Type {
 		NORMAL,
-		STICKY
+		STICKY;
+
+		public static Type getByName(String name) {
+			return STICKY.name().equalsIgnoreCase(name) ? STICKY : NORMAL;
+		}
 	}
 
 }

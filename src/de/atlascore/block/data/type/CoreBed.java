@@ -5,7 +5,6 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreDirectional4Faces;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Bed;
-import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBed extends CoreDirectional4Faces implements Bed {
@@ -19,12 +18,12 @@ public class CoreBed extends CoreDirectional4Faces implements Bed {
 	
 	static {
 		NBT_FIELDS.setField(OCCUPIED, (holder, reader) -> {
-			if (Bed.class.isInstance(holder)) {
+			if (holder instanceof Bed) {
 				((Bed) holder).setOccupied(reader.readByteTag() == 1);
 			} else reader.skipTag();
 		});
 		NBT_FIELDS.setField(PART, (holder, reader) -> {
-			if (Bed.class.isInstance(holder)) {
+			if (holder instanceof Bed) {
 				((Bed) holder).setPart(Part.getByName(reader.readStringTag()));
 			} else reader.skipTag();
 		});
@@ -52,7 +51,7 @@ public class CoreBed extends CoreDirectional4Faces implements Bed {
 
 	@Override
 	public void setPart(Part part) {
-		Validate.notNull(part, "Part can not be null!");
+		if (part == null) throw new IllegalArgumentException("Part can not be null!");
 		this.part = part;
 	}
 	

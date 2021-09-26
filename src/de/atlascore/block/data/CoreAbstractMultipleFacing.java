@@ -7,12 +7,13 @@ import java.util.Set;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.MultipleFacing;
-import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public abstract class CoreAbstractMultipleFacing extends CoreBlockData implements MultipleFacing {
-
-	private Set<BlockFace> faces;
+	
+	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
 	protected static final String
 	NORTH = "north",
@@ -23,6 +24,7 @@ public abstract class CoreAbstractMultipleFacing extends CoreBlockData implement
 	DOWN = "down";
 	
 	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreBlockData.NBT_FIELDS);
 		NBT_FIELDS.setField(NORTH, (holder, reader) -> {
 			if (MultipleFacing.class.isInstance(holder)) {
 				((MultipleFacing) holder).setFace(BlockFace.NORTH, reader.readByteTag() == 1);
@@ -55,6 +57,8 @@ public abstract class CoreAbstractMultipleFacing extends CoreBlockData implement
 		});
 	}
 	
+	private Set<BlockFace> faces;
+	
 	public CoreAbstractMultipleFacing(Material material) {
 		this(material, 6);
 	}
@@ -74,14 +78,14 @@ public abstract class CoreAbstractMultipleFacing extends CoreBlockData implement
 
 	@Override
 	public boolean hasFace(BlockFace face) {
-		Validate.notNull(face, "BlockFace can not be null!");
+		if (face == null) throw new IllegalArgumentException("BlockFace can not be null!");
 		return faces.contains(face);
 	}
 
 	@Override
 	public void setFace(BlockFace face, boolean has) {
-		Validate.notNull(face, "BlockFace can not be null!");
-		Validate.isTrue(isValid(face), "BlockFace is not valid: " + face.name());
+		if (face == null) throw new IllegalArgumentException("BlockFace can not be null!");
+		if (!isValid(face)) throw new IllegalArgumentException("BlockFace is not valid: " + face.name());
 		if (has) {
 			faces.add(face);
 		} else faces.remove(face);
@@ -92,6 +96,11 @@ public abstract class CoreAbstractMultipleFacing extends CoreBlockData implement
 	
 	@Override
 	public abstract boolean isValid(BlockFace face);
+	
+	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
 	
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {

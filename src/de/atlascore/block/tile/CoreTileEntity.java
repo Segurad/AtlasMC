@@ -4,7 +4,9 @@ import java.io.IOException;
 
 import de.atlasmc.Location;
 import de.atlasmc.Material;
+import de.atlasmc.Nameable;
 import de.atlasmc.block.tile.TileEntity;
+import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.util.nbt.AbstractNBTBase;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
@@ -19,13 +21,14 @@ public class CoreTileEntity extends AbstractNBTBase implements TileEntity {
 	KEEP_PACKED = "keepPacked",
 	X = "x",
 	Y = "y",
-	Z = "z";
+	Z = "z",
+	NBT_CUSTOM_NAME = "CustomName";
 	
 	static {
 		NBT_FIELDS = new NBTFieldContainer();
 		NBT_FIELDS.setField(ID, (holder, reader) -> {
 			if (holder instanceof CoreTileEntity)
-			((TileEntity) holder).setType(Material.getMaterial(reader.readStringTag()));
+			((TileEntity) holder).setType(Material.getByName(reader.readStringTag()));
 			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(X, (holder, reader) -> {
@@ -41,6 +44,11 @@ public class CoreTileEntity extends AbstractNBTBase implements TileEntity {
 		NBT_FIELDS.setField(Z, (holder, reader) -> {
 			if (holder instanceof TileEntity) 
 			((TileEntity) holder).setZ(reader.readIntTag());
+			else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_CUSTOM_NAME, (holder, reader) -> {
+			if (holder instanceof Nameable)
+			((Nameable) holder).setCustomName(ChatUtil.toChat(reader.readStringTag()));
 			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(KEEP_PACKED, NBTField.SKIP); // TODO Field skipped due to unknown behavior

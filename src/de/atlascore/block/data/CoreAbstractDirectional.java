@@ -6,7 +6,6 @@ import java.util.Set;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.Directional;
-import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public abstract class CoreAbstractDirectional extends CoreBlockData implements Directional {
@@ -17,7 +16,7 @@ public abstract class CoreAbstractDirectional extends CoreBlockData implements D
 	
 	static {
 		NBT_FIELDS.setField(FACING, (holder, reader) -> {
-			if (Directional.class.isInstance(holder)) {
+			if (holder instanceof Directional) {
 				BlockFace face = BlockFace.getByName(reader.readStringTag());
 				((Directional) holder).setFacing(face);
 			} else reader.skipTag();
@@ -43,15 +42,21 @@ public abstract class CoreAbstractDirectional extends CoreBlockData implements D
 
 	@Override
 	public void setFacing(BlockFace face) {
-		Validate.notNull(face, "BlockFace can not be null!");
-		Validate.isTrue(getFaceValue(face) != -1, "BlockFace is not valid: " + face.name());
+		if (face == null) throw new IllegalArgumentException("BlockFace can not be null!");
+		if (getFaceValue(face) == -1) throw new IllegalArgumentException("BlockFace is not valid: " + face.name());
 		this.face = face;
 	}
 	
 	@Override
 	public abstract int getStateID();
 	
+	/**
+	 * Returns the value of this BlockFace or -1 if invalid
+	 * @param face the BlockFace
+	 * @return a value or -1
+	 */
 	protected abstract int getFaceValue(BlockFace face);
+	
 	protected int getFaceValue() {
 		return getFaceValue(face);
 	}
@@ -59,7 +64,7 @@ public abstract class CoreAbstractDirectional extends CoreBlockData implements D
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		writer.writeStringTag(FACING, face.name().toLowerCase());
+		if (getFacing() != BlockFace.NORTH) writer.writeStringTag(FACING, face.name().toLowerCase());
 	}
 
 }

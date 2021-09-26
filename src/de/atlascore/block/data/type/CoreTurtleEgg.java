@@ -1,16 +1,36 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
+
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.TurtleEgg;
-import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTurtleEgg extends CoreBlockData implements TurtleEgg {
 
+	protected static final String
+	HATCH = "hatch",
+	EGGS = "eggs";
+	
+	static {
+		NBT_FIELDS.setField(EGGS, (holder, reader) -> {
+			if (holder instanceof TurtleEgg)
+			((TurtleEgg) holder).setEggs(reader.readIntTag());
+			else reader.skipTag();
+		});
+		NBT_FIELDS.setField(HATCH, (holder, reader) -> {
+			if (holder instanceof TurtleEgg)
+			((TurtleEgg) holder).setHatch(reader.readIntTag());
+			else reader.skipTag();
+		});
+	}
+	
 	private int eggs, hatch;
 	
 	public CoreTurtleEgg(Material material) {
 		super(material);
+		eggs = 1;
 	}
 
 	@Override
@@ -40,19 +60,27 @@ public class CoreTurtleEgg extends CoreBlockData implements TurtleEgg {
 
 	@Override
 	public void setHatch(int hatch) {
-		Validate.isTrue(hatch >= 0 && hatch <= 2, "Hatch is not between 0 and 2: " + hatch);
+		if (hatch < 0 || hatch > 2) throw new IllegalArgumentException("Hatch is not between 0 and 2: " + hatch);
 		this.hatch = hatch;
 	}
 
 	@Override
 	public void setEggs(int eggs) {
-		Validate.isTrue(eggs > 0 && eggs <= 4, "Eggs is not between 1 and 4: " + eggs);
+		if (eggs < 1 || eggs > 4) throw new IllegalArgumentException("Eggs is not between 1 and 4: " + eggs);
+		this.eggs = eggs;
 	}
 	
 	@Override
 	public int getStateID() {
 		return super.getStateID()+
 				hatch+(eggs-1)*3;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (getEggs() > 1) writer.writeIntTag(EGGS, getEggs());
+		if (getHatch() > 0) writer.writeIntTag(HATCH, getHatch());
 	}
 
 }

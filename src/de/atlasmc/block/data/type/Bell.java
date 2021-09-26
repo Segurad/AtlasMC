@@ -12,7 +12,15 @@ public interface Bell extends Directional, Powerable {
 		FLOOR,
 		CEILING,
 		SINGLE_WALL,
-		DOUBLE_WALL
+		DOUBLE_WALL;
+
+		public static Attachment getByName(String name) {
+			name = name.toUpperCase();
+			for (Attachment a : values()) {
+				if (a.name().equals(name)) return a;
+			}
+			return FLOOR;
+		}
 	}
 
 }

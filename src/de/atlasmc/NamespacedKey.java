@@ -3,8 +3,6 @@ package de.atlasmc;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.util.Validate;
-
 public class NamespacedKey {
 	
 	private static final List<String> spaces;
@@ -23,9 +21,9 @@ public class NamespacedKey {
 	 * @return the namespaceID
 	 */
 	public static short registerNamespace(String namespace) {
-		Validate.notNull(namespace, "Namespace can not be null!");
-		Validate.isFalse(spaces.contains(namespace), "Namespace already registered!");
-		if (nextID < 0) throw new Error("Can not register more Namespaces");
+		if (nextID < 0) throw new Error("Can not register more Namespaces!");
+		if (namespace == null) throw new IllegalArgumentException("Namespace can not be null!");
+		if (spaces.contains(namespace)) throw new IllegalArgumentException("Namespace already registered!");
 		spaces.add(nextID, namespace);
 		return nextID++;
 	}
@@ -36,7 +34,7 @@ public class NamespacedKey {
 	 * @return the namespaceID or -1
 	 */
 	public static short getNamespaceID(String namespace) {
-		Validate.notNull(namespace, "Namespace can not be null!");
+		if (namespace == null) throw new IllegalArgumentException("Namespace can not be null!");
 		return (short) spaces.indexOf(namespace);
 	}
 	
@@ -46,14 +44,14 @@ public class NamespacedKey {
 	 * @return the namespace or null
 	 */
 	public static String getNamespace(int namespaceID) {
-		Validate.isTrue(namespaceID >= 0 && namespaceID < nextID, "NamespaceID is not between 0 and " + (nextID-1) +": " + namespaceID);
+		if (namespaceID < 0 || namespaceID > nextID) throw new IllegalArgumentException("NamespaceID is not between 0 and " + (nextID-1) +": " + namespaceID);
 		return spaces.get(namespaceID);
 	}
 	
 	public NamespacedKey(String namespace, String key) {
-		Validate.notNull(namespace, "Namespace can not be null!");
-		Validate.notNull(key, "Key can not be null!");
-		Validate.isTrue(spaces.contains(namespace), "Unknown Namespace!");
+		if (namespace == null) throw new IllegalArgumentException("Namespace can not be null!");
+		if (key == null) throw new IllegalArgumentException("Key can not be null!");
+		if (spaces.contains(namespace)) throw new IllegalArgumentException("Unknown Namespace!");
 		this.key = key;
 		this.namespace = namespace;
 		this.namespaceID = (short) spaces.indexOf(key);
@@ -61,8 +59,8 @@ public class NamespacedKey {
 	
 	public NamespacedKey(int namespaceID, String key) {
 		this.namespace = getNamespace(namespaceID);
-		Validate.notNull(key, "Key can not be null!");
-		Validate.isTrue(namespace == null, "Unknown NamespaceID!");
+		if (key == null) throw new IllegalArgumentException("Key can not be null!");
+		if (namespace == null) throw new IllegalArgumentException("Unknown NamespaceID!");
 		this.namespaceID = (short) namespaceID;
 		this.key = key;
 	}

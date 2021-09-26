@@ -17,7 +17,6 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
 	protected static final String
-	NBT_CUSTOM_NAME = "CustomName",
 	NBT_AUTO = "auto",
 	NBT_COMMAND = "conditionMet",
 	NBT_CONDITION_MET = "LastExecution",
@@ -30,11 +29,6 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreTileEntity.NBT_FIELDS);
-		NBT_FIELDS.setField(NBT_CUSTOM_NAME, (holder, reader) -> {
-			if (holder instanceof CommandBlock)
-			((CommandBlock) holder).setCustomName(ChatUtil.toChat(reader.readStringTag()));
-			else reader.skipTag();
-		});
 		NBT_FIELDS.setField(NBT_AUTO, (holder, reader) -> {
 			if (holder instanceof CommandBlock)
 			((CommandBlock) holder).setAlwaysActive(reader.readByteTag() == 1);

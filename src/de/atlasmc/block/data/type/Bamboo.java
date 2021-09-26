@@ -10,6 +10,11 @@ public interface Bamboo extends Ageable, Sapling {
 	public static enum Leaves {
 		NONE,
 		SMALL,
-		LARGE
+		LARGE;
+
+		public static Leaves getByName(String name) {
+			name = name.toUpperCase();
+			return LARGE.name().equals(name) ? LARGE : SMALL.name().equals(name) ? SMALL : NONE;
+		}
 	}
 }

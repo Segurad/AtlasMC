@@ -3,7 +3,6 @@ package de.atlasmc.attribute;
 import java.util.UUID;
 
 import de.atlasmc.inventory.EquipmentSlot;
-import de.atlasmc.util.Validate;
 
 public class AttributeModifier {
 
@@ -39,7 +38,7 @@ public class AttributeModifier {
 		MULTIPLY_SCALAR_1;
 
 		public static Operation byID(int id) {
-			Validate.isTrue(id >= 0 && id < 3, "ID is not between 0 and 2: " + id);
+			if (id < 0 || id > 2) throw new IllegalArgumentException("ID is not between 0 and 2: " + id);
 			Operation[] ops = Operation.values();
 			return ops[id];
 		}

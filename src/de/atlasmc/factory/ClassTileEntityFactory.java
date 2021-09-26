@@ -4,7 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.TileEntity;
-import de.atlasmc.util.Validate;
 
 /**
  * Class based {@link TileEntityFactory}
@@ -19,8 +18,8 @@ public class ClassTileEntityFactory extends TileEntityFactory {
 	 * @param tile class must have a constructor ({@link Material})
 	 */
 	public ClassTileEntityFactory(Class<? extends TileEntity> tileInterface, Class<? extends TileEntity> tile) {
-		Validate.notNull(tileInterface, "TileInterface can not be null!");
-		Validate.notNull(tile, "Tile can not be null!");
+		if (tileInterface == null) throw new IllegalArgumentException("TileInterface can not be null!");
+		if (tile == null) throw new IllegalArgumentException("Tile can not be null!");
 		if (!tileInterface.isAssignableFrom(tile)) throw new IllegalArgumentException("TileInterface is not assignable from Tile!");
 		this.tile = tile;
 		this.tileInterface = tileInterface;
@@ -33,8 +32,8 @@ public class ClassTileEntityFactory extends TileEntityFactory {
 
 	@Override
 	public TileEntity createTile(Material material, boolean preConfig) {
-		Validate.notNull(material, "Material can not be null!");
-		Validate.isTrue(material.isBlock(), "Material is not a Block!");
+		if (material == null) throw new IllegalArgumentException("Material can not be null!");
+		if (!material.isBlock()) throw new IllegalArgumentException("Material is not a Block!");
 		if (preConfig) {
 			TileEntity te = getPreConfig(material);
 			if (te != null) return te.clone();

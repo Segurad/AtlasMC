@@ -1,11 +1,25 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
+
+import de.atlascore.block.data.CoreAgeable;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Bamboo;
-import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBamboo extends CoreSapling implements Bamboo {
 
+	protected static final String
+	LEAVES = "leaves";
+	
+	static {
+		NBT_FIELDS.setField(LEAVES, (holder, reader) -> {
+			if (holder instanceof Bamboo)
+			((Bamboo) holder).setLeaves(Leaves.getByName(reader.readStringTag()));
+			else reader.skipTag();
+		});
+	}
+	
 	private int age;
 	private Leaves leaves;
 	
@@ -26,7 +40,7 @@ public class CoreBamboo extends CoreSapling implements Bamboo {
 
 	@Override
 	public void setAge(int age) {
-		Validate.isTrue(age <= 1 && age >= 0, "Age is not between 0 and 1: " + age);
+		if (age > 1 || age < 0) throw new IllegalArgumentException("Age is not between 0 and 1: " + age);
 		this.age = age;
 	}
 
@@ -37,8 +51,15 @@ public class CoreBamboo extends CoreSapling implements Bamboo {
 
 	@Override
 	public void setLeaves(Leaves leaves) {
-		Validate.notNull(leaves, "Leaves can not be null!");
+		if (leaves == null) throw new IllegalArgumentException("Leaves can not be null!");
 		this.leaves = leaves;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		writer.writeIntTag(CoreAgeable.AGE, getAge());
+		writer.writeStringTag(LEAVES, getLeaves().name().toLowerCase());
 	}
 
 }

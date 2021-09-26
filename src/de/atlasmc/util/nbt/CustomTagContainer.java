@@ -3,8 +3,6 @@ package de.atlasmc.util.nbt;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.util.Validate;
-
 public class CustomTagContainer {
 	
 	private List<NBT> tags;
@@ -20,7 +18,7 @@ public class CustomTagContainer {
 	}
 	
 	public void addCustomTag(NBT nbt) {
-		Validate.notNull(nbt, "NBT can not be null!");
+		if (nbt == null) throw new IllegalArgumentException("NBT can not be null!");
 		getCustomTags().add(nbt);
 	}
 	
@@ -34,7 +32,7 @@ public class CustomTagContainer {
 	}
 	
 	public void addSystemTag(NBT nbt) {
-		Validate.notNull(nbt, "NBT can not be null!");
+		if (nbt == null) throw new IllegalArgumentException("NBT can not be null!");
 		getCustomTags().add(nbt);
 	}
 

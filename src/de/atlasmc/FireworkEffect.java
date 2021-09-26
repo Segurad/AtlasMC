@@ -3,7 +3,6 @@ package de.atlasmc;
 import java.io.IOException;
 import java.util.List;
 
-import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.NBTHolder;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -37,7 +36,7 @@ public class FireworkEffect implements NBTHolder {
 	}
 	
 	public void setType(Type type) {
-		Validate.notNull(type, "Type can not be null!");
+		if (type == null) throw new IllegalArgumentException("Type can not be null!");
 		this.type = type;
 	}
 	

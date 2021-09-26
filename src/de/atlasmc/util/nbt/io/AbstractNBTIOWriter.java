@@ -209,6 +209,10 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 		depth--;
 	}
 	
+	/*
+	 * Methods for writing data by subclass
+	 */
+	
 	protected abstract void ioWriteInt(int value) throws IOException;
 	
 	protected abstract void ioWriteByte(int value) throws IOException;

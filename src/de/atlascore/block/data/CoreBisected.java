@@ -4,22 +4,22 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Bisected;
-import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBisected extends CoreBlockData implements Bisected {
-
-	private Half half;
 	
-	protected static final String HALF = "half";
+	public static final String 
+	HALF = "half";
 	
 	static {
 		NBT_FIELDS.setField(HALF, (holder, reader) -> {
-			if (Bisected.class.isInstance(holder)) {
+			if (holder instanceof Bisected) {
 				((Bisected) holder).setHalf(Half.getByName(reader.readStringTag()));
 			} else reader.skipTag();
 		});
 	}
+	
+	private Half half;
 	
 	public CoreBisected(Material material) {
 		super(material);
@@ -33,7 +33,7 @@ public class CoreBisected extends CoreBlockData implements Bisected {
 
 	@Override
 	public void setHalf(Half half) {
-		Validate.notNull(half, "Half can not be null!");
+		if (half == null) throw new IllegalArgumentException("Half can not be null!");
 		this.half = half;
 	}
 	

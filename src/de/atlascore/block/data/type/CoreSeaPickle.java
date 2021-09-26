@@ -1,12 +1,25 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
+
 import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.SeaPickle;
-import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreSeaPickle extends CoreWaterlogged implements SeaPickle {
 
+	protected static final String
+	PICKLES = "pickles";
+	
+	static {
+		NBT_FIELDS.setField(PICKLES, (holder, reader) -> {
+			if (holder instanceof SeaPickle)
+			((SeaPickle) holder).setPickles(reader.readIntTag());
+			else reader.skipTag();
+		});
+	}
+	
 	private int pickles;
 	
 	public CoreSeaPickle(Material material) {
@@ -30,7 +43,7 @@ public class CoreSeaPickle extends CoreWaterlogged implements SeaPickle {
 
 	@Override
 	public void setPickles(int pickles) {
-		Validate.isTrue(pickles > 0 && pickles <= 4, "Pickles is not between 1 and 4: " + pickles);
+		if (pickles < 1 && pickles > 4) throw new IllegalArgumentException("Pickles is not between 1 and 4: " + pickles);
 		this.pickles = pickles;
 	}
 	
@@ -39,4 +52,10 @@ public class CoreSeaPickle extends CoreWaterlogged implements SeaPickle {
 		return super.getStateID()+(pickles-1)*2;
 	}
 
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (getPickles() > 1) writer.writeIntTag(PICKLES, getPickles());
+	}
+	
 }

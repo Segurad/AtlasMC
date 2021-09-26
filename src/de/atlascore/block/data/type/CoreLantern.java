@@ -1,11 +1,25 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
+
 import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Lantern;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreLantern extends CoreWaterlogged implements Lantern {
 
+	protected static final String
+	HANGING = "hanging";
+	
+	static {
+		NBT_FIELDS.setField(HANGING, (holder, reader) -> {
+			if (holder instanceof Lantern)
+			((Lantern) holder).setHanging(reader.readByteTag() == 1);
+			else reader.skipTag();
+		});
+	}
+	
 	private boolean hanging;
 	
 	public CoreLantern(Material material) {
@@ -18,7 +32,7 @@ public class CoreLantern extends CoreWaterlogged implements Lantern {
 	}
 
 	@Override
-	public void setHanding(boolean hanging) {
+	public void setHanging(boolean hanging) {
 		this.hanging = hanging;
 	}
 	
@@ -26,6 +40,12 @@ public class CoreLantern extends CoreWaterlogged implements Lantern {
 	public int getStateID() {
 		return super.getStateID()+
 				(hanging?0:2);
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (isHanging()) writer.writeByteTag(HANGING, true);
 	}
 
 }

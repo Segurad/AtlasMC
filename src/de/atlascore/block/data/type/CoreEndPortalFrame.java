@@ -8,10 +8,9 @@ import de.atlasmc.block.data.type.EndPortalFrame;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreEndPortalFrame extends CoreDirectional4Faces implements EndPortalFrame {
-
-	private boolean eye;
 	
-	protected static final String EYE = "eye";
+	protected static final String 
+	EYE = "eye";
 	
 	static {
 		NBT_FIELDS.setField(EYE, (holder, reader) -> {
@@ -20,6 +19,8 @@ public class CoreEndPortalFrame extends CoreDirectional4Faces implements EndPort
 			} else reader.skipTag();
 		});
 	}
+	
+	private boolean eye;
 	
 	public CoreEndPortalFrame(Material material) {
 		super(material);
@@ -45,7 +46,7 @@ public class CoreEndPortalFrame extends CoreDirectional4Faces implements EndPort
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		writer.writeByteTag(EYE, eye);
+		if (hasEye()) writer.writeByteTag(EYE, true);
 	}
 
 }

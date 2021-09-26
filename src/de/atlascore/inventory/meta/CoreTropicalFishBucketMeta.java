@@ -7,7 +7,6 @@ import de.atlasmc.Material;
 import de.atlasmc.entity.TropicalFish.Pattern;
 import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.inventory.meta.TropicalFishBucketMeta;
-import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTropicalFishBucketMeta extends CoreItemMeta implements TropicalFishBucketMeta {
@@ -59,19 +58,19 @@ public class CoreTropicalFishBucketMeta extends CoreItemMeta implements Tropical
 
 	@Override
 	public void setBodyColor(DyeColor color) {
-		Validate.notNull(color, "Color can not be null!");
+		if (color == null) throw new IllegalArgumentException("Color can not be null!");
 		this.bodyColor = color;
 	}
 
 	@Override
 	public void setPattern(Pattern pattern) {
-		Validate.notNull(pattern, "Pattern can not be null!");
+		if (pattern == null) throw new IllegalArgumentException("Pattern can not be null!");
 		this.pattern = pattern;
 	}
 
 	@Override
 	public void setPatternColor(DyeColor color) {
-		Validate.notNull(color, "Color can not be null!");
+		if (color == null) throw new IllegalArgumentException("Color can not be null!");
 		this.patternColor = color;
 	}
 	

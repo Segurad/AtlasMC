@@ -18,7 +18,20 @@ public interface Rail extends BlockData {
 		SOUT_EAST,
 		SOUTH_WEST,
 		NORTH_WEST,
-		NORTH_EAST
+		NORTH_EAST;
+
+		/**
+		 * Returns the Shape represented by the name or {@link #NORTH_SOUTH} if no matching Shape has been found
+		 * @param name the name of the Shape
+		 * @return the Shape or {@link #NORTH_SOUTH}
+		 */
+		public static Shape getByName(String name) {
+			name = name.toUpperCase();
+			for (Shape s : values()) {
+				if (s.name().equals(name)) return s;
+			}
+			return NORTH_SOUTH;
+		}
 	}
 
 }

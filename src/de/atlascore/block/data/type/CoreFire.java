@@ -1,13 +1,15 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;
 
 import de.atlascore.block.data.CoreAbstractMultipleFacing;
+import de.atlascore.block.data.CoreAgeable;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.type.Fire;
-import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreFire extends CoreAbstractMultipleFacing implements Fire {
 
@@ -32,7 +34,7 @@ public class CoreFire extends CoreAbstractMultipleFacing implements Fire {
 
 	@Override
 	public void setAge(int age) {
-		Validate.isTrue(age <= maxage && age >= 0, "Age is not between 0 and " + maxage + ": " + age);
+		if (age > maxage && age < 0) throw new IllegalArgumentException("Age is not between 0 and " + maxage + ": " + age);
 		this.age = age;
 	}
 
@@ -54,9 +56,14 @@ public class CoreFire extends CoreAbstractMultipleFacing implements Fire {
 
 	@Override
 	public boolean isValid(BlockFace face) {
-		Validate.notNull(face, "BlockFace can not be null!");
+		if (face == null) throw new IllegalArgumentException("BlockFace can not be null!");
 		return face != BlockFace.DOWN && face.ordinal() < 6;
 	}
 
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (getAge() > 0) writer.writeIntTag(CoreAgeable.AGE, getAge());
+	}
 
 }

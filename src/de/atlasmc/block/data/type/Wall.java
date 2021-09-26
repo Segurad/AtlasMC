@@ -13,7 +13,12 @@ public interface Wall extends Waterlogged {
 	public static enum Height {
 		NONE,
 		LOW,
-		TALL
+		TALL;
+
+		public static Height getByName(String name) {
+			name = name.toUpperCase();
+			return LOW.name().equals(name) ? LOW : TALL.name().equals(name) ? TALL : NONE;
+		}
 	}
 
 }

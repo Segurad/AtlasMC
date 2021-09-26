@@ -192,7 +192,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 		case BYTE_ARRAY: return NBT.createByteArrayTag(name, readByteArrayTag());
 		case COMPOUND: {
 			if (isList) {
-				final ListTag<CompoundTag> list = new ListTag<CompoundTag>(getFieldName(), this.list.type);
+				final ListTag<CompoundTag> list = new ListTag<>(getFieldName(), this.list.type);
 				readNextEntry(); // move out of list header
 				while (this.list.payload > 0) {
 					CompoundTag compound = new CompoundTag(name);
@@ -236,7 +236,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 				removeList();
 				return list;
 			}
-			final ListTag<NBT> list = new ListTag<NBT>(name, this.list.type);
+			final ListTag<NBT> list = new ListTag<>(name, this.list.type);
 			name = null;
 			while (getRestPayload() > 0) {
 				list.addTag(readNBT());
@@ -330,7 +330,8 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 
 	@Override
 	public void search(String key, TagType stype, boolean slist) throws IOException {
-		while (true) {
+		final int depth = getDepth();
+		while (depth <= getDepth()) {
 			// check if current tag is the result
 			if ((key == null || key.equals(name)) && 
 					(stype == null || !slist ? stype == type 
@@ -342,6 +343,10 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 			} else skipTag(); // progress to next
 		}
 	}
+	
+	/*
+	 * Methods for reading data by subclass
+	 */
 	
 	protected abstract void ioMark();
 	

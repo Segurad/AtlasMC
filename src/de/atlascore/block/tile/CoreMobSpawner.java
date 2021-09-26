@@ -1,9 +1,14 @@
 package de.atlascore.block.tile;
 
+import java.io.IOException;
+import java.util.UUID;
+
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.MobSpawner;
 import de.atlasmc.entity.Entity;
+import de.atlasmc.entity.EntityType;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.Chunk;
 
 public class CoreMobSpawner extends CoreTileEntity implements MobSpawner {
@@ -30,7 +35,14 @@ public class CoreMobSpawner extends CoreTileEntity implements MobSpawner {
 			}
 			reader.readNextEntry();
 			reader.mark();
+			reader.search(ID);
+			EntityType type = EntityType.getByName(reader.readStringTag());
+			reader.reset();
+			Entity ent = type.create(-1, null, UUID.randomUUID());
+			ent.fromNBT(reader);
+			((MobSpawner) holder).setDisplayedEntity(ent);
 		});
+		// TODO skipped fields of mob spawner
 	}
 	
 	private Entity display;
@@ -42,26 +54,36 @@ public class CoreMobSpawner extends CoreTileEntity implements MobSpawner {
 
 	@Override
 	public SpawnerConfiguration getConfiguration() {
-		// TODO Auto-generated method stub
-		return null;
+		return config;
 	}
 
 	@Override
 	public void setConfiguration(SpawnerConfiguration config) {
-		// TODO Auto-generated method stub
-		
+		this.config = config;
 	}
 
 	@Override
 	public Entity getDisplayedEntity() {
-		// TODO Auto-generated method stub
-		return null;
+		return display;
 	}
 
 	@Override
 	public void setDisplayedEntity(Entity entity) {
-		// TODO Auto-generated method stub
-		
+		this.display = entity;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (!systemData) {
+			Entity disp = display != null ? display : config != null ? config.getDisplayedEntity() : null;
+			if (disp != null) {
+				writer.writeCompoundTag(SPAWN_DATA);
+				disp.toNBT(writer, systemData);
+				writer.writeEndTag();
+			}
+			return;
+		}
 	}
 
 }

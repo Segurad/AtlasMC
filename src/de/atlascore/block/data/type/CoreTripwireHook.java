@@ -1,8 +1,13 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
+
+import de.atlascore.block.data.CoreAttachable;
 import de.atlascore.block.data.CoreDirectional4Faces;
+import de.atlascore.block.data.CorePowerable;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.TripwireHook;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTripwireHook extends CoreDirectional4Faces implements TripwireHook {
 
@@ -38,6 +43,13 @@ public class CoreTripwireHook extends CoreDirectional4Faces implements TripwireH
 				(powered?0:1)+
 				getFaceValue()*2+
 				(attached?0:8);
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (isPowered()) writer.writeByteTag(CorePowerable.POWERED, true);
+		if (isAttached()) writer.writeByteTag(CoreAttachable.ATTACHED, true);
 	}
 
 }

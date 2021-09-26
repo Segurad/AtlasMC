@@ -10,7 +10,6 @@ import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeModifier;
 import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.inventory.meta.ItemMeta;
-import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.NBTHolder;
 import de.atlasmc.util.nbt.TagType;
@@ -42,11 +41,9 @@ public class ItemStack implements NBTHolder {
 	}
 
 	public ItemStack(Material material, int amount) {
-		Validate.notNull(material, "Material can not be null!");
-		Validate.isFalse(amount > 127, "Amount can not be higher than 127");
-		Validate.isFalse(amount < -128, "Amount can not be lower than -128");
+		if (material == null) throw new IllegalArgumentException("Material can not be null!");
 		type = material;
-		this.amount = (byte) amount;
+		setAmount(amount);
 	}
 
 	public Material getType() {
@@ -58,8 +55,8 @@ public class ItemStack implements NBTHolder {
 	}
 	
 	public void setAmount(int amount) {
-		Validate.isFalse(amount > 127, "Amount can not be higher than 127");
-		Validate.isFalse(amount < -128, "Amount can not be lower than -128");
+		if (amount > 127) throw new IllegalArgumentException("Amount can not be higher than 127");
+		if (amount < -128) throw new IllegalArgumentException("Amount can not be lower than -128");
 		this.amount = (byte) amount;
 	}
 	
@@ -175,8 +172,8 @@ public class ItemStack implements NBTHolder {
 	 * @throws IOException 
 	 */
 	public void toSlot(NBTWriter writer, boolean systemData, int slot) throws IOException {
-		writer.writeByteTag("Count", (byte) getAmount());
 		writer.writeStringTag("id", getType().getNamespacedName());
+		writer.writeByteTag("Count", (byte) getAmount());
 		if (slot != -999) writer.writeByteTag(NBT_SLOT, slot);
 		if(hasItemMeta()) {
 			writer.writeCompoundTag("tag");
@@ -214,7 +211,7 @@ public class ItemStack implements NBTHolder {
 				reader.skipTag(); // TODO skip creative lock because i don't know if it is used
 				break;
 			case NBT_ID: 
-				type = Material.getMaterial(reader.readStringTag());
+				reader.readStringTag(); // TODO skipped material should be initiated by creating the stack
 				break;
 			case NBT_SLOT: 
 				slot = reader.readByteTag();

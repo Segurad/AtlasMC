@@ -1,12 +1,14 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;
 
+import de.atlascore.block.data.CorePowerable;
 import de.atlascore.block.data.CoreRail;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.RedstoneRail;
-import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreRedstoneRail extends CoreRail implements RedstoneRail {
 
@@ -28,7 +30,7 @@ public class CoreRedstoneRail extends CoreRail implements RedstoneRail {
 	
 	@Override
 	public void setShape(Shape shape) {
-		Validate.isTrue(shape.ordinal() < 6, "No valid Shape: " + shape.name());
+		if (shape.ordinal() > 6) throw new IllegalArgumentException("No valid Shape: " + shape.name());
 		super.setShape(shape);
 	}
 	
@@ -40,6 +42,12 @@ public class CoreRedstoneRail extends CoreRail implements RedstoneRail {
 	@Override
 	public int getStateID() {
 		return super.getStateID()+(powered?0:6);
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (isPowered()) writer.writeByteTag(CorePowerable.POWERED, true);
 	}
 
 }

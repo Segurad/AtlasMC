@@ -19,7 +19,15 @@ public interface Jigsaw extends BlockData {
 		WEST_UP,
 		EAST_UP,
 		NORTH_UP,
-		SOUTH_UP
+		SOUTH_UP;
+
+		public static Orientation getByName(String name) {
+			name = name.toUpperCase();
+			for (Orientation o : values()) {
+				o.name().equals(name);
+			}
+			return NORTH_UP;
+		}
 	}
 
 }

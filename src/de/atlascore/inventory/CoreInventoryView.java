@@ -7,7 +7,6 @@ import de.atlasmc.event.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.util.Validate;
 
 public class CoreInventoryView implements InventoryView {
 	
@@ -176,7 +175,7 @@ public class CoreInventoryView implements InventoryView {
 		if (rawSlot == -999 || rawSlot == -1) {
 			return null;
 		}
-		Validate.isTrue(rawSlot >= 0 && rawSlot < countSlots(), "Unknown Slot: " + rawSlot);
+		if (rawSlot < 0 || rawSlot > countSlots()) throw new IllegalArgumentException("Unknown Slot: " + rawSlot);
 		if (rawSlot < top.getSize()) return top;
 		return bottom;
 	}

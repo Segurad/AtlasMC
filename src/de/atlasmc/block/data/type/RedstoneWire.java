@@ -14,7 +14,12 @@ public interface RedstoneWire extends AnaloguePowerable {
 	public static enum Connection {
 		UP,
 		SIDE,
-		NONE
+		NONE;
+
+		public static Connection getByName(String name) {
+			name = name.toUpperCase();
+			return UP.name().equals(name) ? UP : SIDE.name().equals(name) ? SIDE : NONE;
+		}
 	}
 
 }

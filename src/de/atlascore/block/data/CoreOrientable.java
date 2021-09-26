@@ -1,14 +1,27 @@
 package de.atlascore.block.data;
 
+import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;
 
 import de.atlasmc.Axis;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Orientable;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreOrientable extends CoreBlockData implements Orientable {
 
+	protected static final String
+	AXIS = "axis";
+	
+	static {
+		NBT_FIELDS.setField(AXIS, (holder, reader) -> {
+			if (holder instanceof Orientable)
+			((Orientable) holder).setAxis(Axis.getByName(reader.readStringTag()));
+			else reader.skipTag();
+		});
+	}
+	
 	private Axis axis;
 	
 	public CoreOrientable(Material material) {
@@ -34,6 +47,12 @@ public class CoreOrientable extends CoreBlockData implements Orientable {
 	@Override
 	public int getStateID() {
 		return super.getStateID()+axis.ordinal();
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		writer.writeStringTag(AXIS, getAxis().name().toLowerCase());
 	}
 
 }

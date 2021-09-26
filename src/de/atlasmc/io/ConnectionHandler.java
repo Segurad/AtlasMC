@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.atlasmc.atlasnetwork.proxy.LocalProxy;
 import de.atlasmc.io.handshake.HandshakeProtocol;
-import de.atlasmc.util.Validate;
 import io.netty.channel.socket.SocketChannel;
 
 public class ConnectionHandler {
@@ -57,7 +56,7 @@ public class ConnectionHandler {
 	}
 	
 	public void setProtocol(Protocol protocol, PacketListener listener) {
-		Validate.notNull(protocol, "Protocol can not be null!");
+		if (protocol == null) throw new IllegalArgumentException("Protocol can not be null!");
 		synchronized (this) {
 			this.protocol = protocol;
 			packetListeners.removeAllElements();

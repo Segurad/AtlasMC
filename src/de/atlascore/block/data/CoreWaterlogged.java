@@ -10,11 +10,11 @@ public class CoreWaterlogged extends CoreBlockData implements Waterlogged {
 
 	private boolean waterlogged;
 	
-	protected static final String WATERLOGGED = "waterlogged";
+	public static final String WATERLOGGED = "waterlogged";
 	
 	static {
 		NBT_FIELDS.setField(WATERLOGGED, (holder, reader) -> {
-			if (Waterlogged.class.isInstance(holder)) {
+			if (holder instanceof Waterlogged) {
 				((Waterlogged) holder).setWaterlogged(reader.readByteTag() == 1);
 			} else reader.skipTag();
 		});
@@ -42,7 +42,7 @@ public class CoreWaterlogged extends CoreBlockData implements Waterlogged {
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		writer.writeByteTag(WATERLOGGED, waterlogged);
+		if (isWaterlogged()) writer.writeByteTag(WATERLOGGED, true);
 	}
 	
 }

@@ -8,18 +8,18 @@ import de.atlasmc.block.data.type.BubbleColumn;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBubbleColumn extends CoreBlockData implements BubbleColumn {
-
-	private boolean drag;
 	
 	protected static final String DRAG = "drag";
 	
 	static {
 		NBT_FIELDS.setField(DRAG, (holder, reader) -> {
-			if (BubbleColumn.class.isInstance(holder)) {
+			if (holder instanceof BubbleColumn) {
 				((BubbleColumn) holder).setDrag(reader.readByteTag() == 1);
 			} else reader.skipTag();
 		});
 	}
+	
+	private boolean drag;
 	
 	public CoreBubbleColumn(Material material) {
 		super(material);
@@ -44,6 +44,6 @@ public class CoreBubbleColumn extends CoreBlockData implements BubbleColumn {
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		writer.writeByteTag(DRAG, drag);
+		if (isDrag()) writer.writeByteTag(DRAG, true);
 	}
 }

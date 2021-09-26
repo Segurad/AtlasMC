@@ -1,12 +1,25 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
+
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Snow;
-import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreSnow extends CoreBlockData implements Snow {
 
+	protected static final String
+	LAYERS = "layers";
+	
+	static {
+		NBT_FIELDS.setField(LAYERS, (holder, reader) -> {
+			if (holder instanceof Snow)
+			((Snow) holder).setLayers(reader.readIntTag());
+			else reader.skipTag();
+		});
+	}
+	
 	private int layers;
 	
 	public CoreSnow(Material material) {
@@ -31,7 +44,7 @@ public class CoreSnow extends CoreBlockData implements Snow {
 
 	@Override
 	public void setLayers(int layers) {
-		Validate.isTrue(layers > 0 && layers < 9, "NamespaceID is not between 1 and 8: " + layers);
+		if (layers < 1 || layers > 8) throw new IllegalArgumentException("NamespaceID is not between 1 and 8: " + layers);
 		this.layers = layers;
 	}
 
@@ -39,4 +52,11 @@ public class CoreSnow extends CoreBlockData implements Snow {
 	public int getStateID() {
 		return super.getStateID()+layers;
 	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (getLayers() > 1) writer.writeIntTag(LAYERS, getLayers());
+	}
+	
 }

@@ -2,7 +2,7 @@ package de.atlasmc.block.tile;
 
 import de.atlasmc.Location;
 
-public interface EndGateway {
+public interface EndGateway extends TileEntity {
 
 	public long getAge();
 	

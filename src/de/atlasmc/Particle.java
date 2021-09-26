@@ -1,6 +1,6 @@
 package de.atlasmc;
+
 import de.atlasmc.block.data.BlockData;
-import de.atlasmc.util.Validate;
 import de.atlasmc.inventory.ItemStack;
 
 public enum Particle {
@@ -96,8 +96,8 @@ public enum Particle {
 		private final float size;
 		
 		public DustOptions(Color color, float size) {
-			Validate.notNull(color, "Color can not be null!");
-			Validate.isTrue(size >= 0.01 && size <= 4, "Size is not between 0.01 and 4: " + size);
+			if (color == null) throw new IllegalArgumentException("Color can not be null!");
+			if (size < 0.01 || size > 4) throw new IllegalArgumentException("Size is not between 0.01 and 4: " + size);
 			this.color = color;
 			this.size = size;
 		}

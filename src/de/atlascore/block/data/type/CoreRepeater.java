@@ -1,12 +1,31 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
+
 import de.atlascore.block.data.CoreDirectional4Faces;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Repeater;
-import de.atlasmc.util.Validate;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreRepeater extends CoreDirectional4Faces implements Repeater {
 
+	protected static final String
+	LOCKED = "locked",
+	DELAY = "delay";
+	
+	static {
+		NBT_FIELDS.setField(LOCKED, (holder, reader) -> {
+			if (holder instanceof Repeater)
+			((Repeater) holder).setLocked(reader.readByteTag() == 1);
+			else reader.skipTag();
+		});
+		NBT_FIELDS.setField(DELAY, (holder, reader) -> {
+			if (holder instanceof Repeater)
+			((Repeater) holder).setDelay(reader.readIntTag());
+			else reader.skipTag();
+		});
+	}
+	
 	private boolean powered, locked;
 	private int delay;
 	
@@ -47,7 +66,7 @@ public class CoreRepeater extends CoreDirectional4Faces implements Repeater {
 
 	@Override
 	public void setDelay(int delay) {
-		Validate.isTrue(delay > 0 && delay < 5, "Delay is not between 1 and 4: " + delay);
+		if (delay < 1 || delay > 4) throw new IllegalArgumentException("Delay is not between 1 and 4: " + delay);
 		this.delay = delay;
 	}
 
@@ -63,6 +82,13 @@ public class CoreRepeater extends CoreDirectional4Faces implements Repeater {
 				(locked?0:2)+
 				getFaceValue()*4+
 				delay*16;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (isLocked()) writer.writeByteTag(LOCKED, true);
+		if (getDelay() > 1) writer.writeByteTag(DELAY, getDelay());
 	}
 
 }

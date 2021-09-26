@@ -10,7 +10,6 @@ import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.factory.MetaDataFactory;
 import de.atlasmc.factory.TileEntityFactory;
 import de.atlasmc.inventory.meta.ItemMeta;
-import de.atlasmc.util.Validate;
 
 public class Material {
 	
@@ -1111,7 +1110,7 @@ public class Material {
 	 */
 	public Material(int namespaceID, String name, short itemID, short blockID, byte amount, MetaDataFactory mdf) {
 		if (name == null) throw new IllegalArgumentException("Name can not be null!");
-		Validate.notNull(NamespacedKey.getNamespace(namespaceID), "Unknown namespace!");
+		if (NamespacedKey.getNamespace(namespaceID) == null) throw new IllegalArgumentException("Unknown namespace!");
 		this.name = name;
 		this.itemID = itemID;
 		this.bid = blockID;
@@ -1131,7 +1130,7 @@ public class Material {
 	
 	public Material(int namespaceID, String name, boolean hasItem, short blockID, byte maxAmount, MetaDataFactory mdf) {
 		if (name == null) throw new IllegalArgumentException("Name can not be null!");
-		Validate.notNull(NamespacedKey.getNamespace(namespaceID), "Unknown namespace!");
+		if (NamespacedKey.getNamespace(namespaceID) == null) throw new IllegalArgumentException("Unknown namespace!");
 		this.name = name.toLowerCase();
 		this.itemID = hasItem ? iid++ : -1;
 		this.bid = blockID;
@@ -1175,7 +1174,7 @@ public class Material {
 	}
 	
 	public void setTileEntityFactory(TileEntityFactory factory) {
-		Validate.isTrue(isBlock(), "Material must be a Block to have a TileEntityFactory");
+		if (!isBlock()) throw new IllegalArgumentException("Material must be a Block to have a TileEntityFactory!");
 		if (factory == null) TILE_FACTORYS.remove(this);
 		else TILE_FACTORYS.put(this, factory);
 	}
@@ -1266,11 +1265,11 @@ public class Material {
 	 * @param name the materials name with or without the namespace
 	 * @return first material with the name if no namespace if given
 	 */
-	public static Material getMaterial(String name) {
-		Validate.notNull(name, "Name can not be null!");
+	public static Material getByName(String name) {
+		if (name == null) throw new IllegalArgumentException("Name can not be null!");
 		if (name.contains(":")) {
 			String[] parts = name.split(":");
-			Validate.isTrue(parts.length == 2, "Illegal argument length!");
+			if (parts.length > 2) throw new IllegalArgumentException("Illegal NamespacedKey format: " + name);
 			return getMaterial(parts[0], parts[1]);
 		}
 		for (Material mat : REGISTRI) {
@@ -1281,7 +1280,7 @@ public class Material {
 	
 	public static Material getMaterial(String namespace, String name) {
 		int namespaceID = NamespacedKey.getNamespaceID(namespace);
-		Validate.isTrue(namespaceID != -1, "Unknown namespace!");
+		if (namespaceID == -1) throw new IllegalArgumentException("Unknown namespace!");
 		return getMaterial(namespaceID, name);
 	}
 	
@@ -1290,7 +1289,7 @@ public class Material {
 	}
 	
 	public static Material getMaterial(int namespaceID, String name) {
-		Validate.notNull(NamespacedKey.getNamespace(namespaceID), "Unknown namespace!");
+		if (NamespacedKey.getNamespace(namespaceID) == null) throw new IllegalArgumentException("Unknown namespace!");
 		for (Material mat : REGISTRI) {
 			if (mat.getNamespaceID() == namespaceID && mat.getName().equals(name)) return mat;
 		}

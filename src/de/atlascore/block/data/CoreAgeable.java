@@ -4,23 +4,23 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Ageable;
-import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreAgeable extends CoreBlockData implements Ageable {
-
-	private int age;
-	private int maxage;
 	
-	protected static final String AGE = "age";
+	public static final String 
+	AGE = "age";
 	
 	static {
 		NBT_FIELDS.setField(AGE, (holder, reader) -> {
-			if (Ageable.class.isInstance(holder)) {
+			if (holder instanceof Ageable) {
 				((Ageable) holder).setAge(reader.readIntTag());
 			} else reader.skipTag();
 		});
 	}
+	
+	private int age;
+	private int maxage;
 	
 	public CoreAgeable(Material material) {
 		this(material, 15);
@@ -43,7 +43,7 @@ public class CoreAgeable extends CoreBlockData implements Ageable {
 
 	@Override
 	public void setAge(int age) {
-		Validate.isTrue(age <= maxage && age >= 0, "Age is not between 0 and " + maxage + ": " + age);
+		if (age > maxage || age < 0) throw new IllegalArgumentException("Age is not between 0 and " + maxage + ": " + age);
 		this.age = age;
 	}
 	

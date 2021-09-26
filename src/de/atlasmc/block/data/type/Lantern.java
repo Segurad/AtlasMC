@@ -5,6 +5,6 @@ import de.atlasmc.block.data.Waterlogged;
 public interface Lantern extends Waterlogged {
 	
 	public boolean isHanging();
-	public void setHanding(boolean hanging);
+	public void setHanging(boolean hanging);
 
 }

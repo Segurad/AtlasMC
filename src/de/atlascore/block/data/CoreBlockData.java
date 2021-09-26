@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
-import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.AbstractNBTBase;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -15,8 +14,8 @@ public class CoreBlockData extends AbstractNBTBase implements BlockData {
 	private final Material material;
 	
 	public CoreBlockData(Material material) {
-		Validate.notNull(material, "Material can not be null!");
-		Validate.isTrue(material.isBlock(), "Material is not a Block: " + material.getNamespacedName());
+		if (material == null) throw new IllegalArgumentException("Material can not be null!");
+		if (!material.isBlock()) throw new IllegalArgumentException("Material is not a Block: " + material.getNamespacedName());
 		this.material = material;
 	}
 	

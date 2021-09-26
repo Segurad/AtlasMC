@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import de.atlasmc.util.Validate;
-
 public final class ListTag<T extends NBT> extends AbstractTag implements Iterable<NBT> {
 
 	private List<T> data;
@@ -25,8 +23,8 @@ public final class ListTag<T extends NBT> extends AbstractTag implements Iterabl
 	}
 	
 	public void addTag(T tag) {
-		Validate.notNull(tag, "NBT can not be null!");
-		Validate.isTrue(datatype == tag.getType(), "Illegal TagType:" + tag.getType().name() + " " + datatype.name() + " expected!");
+		if (tag == null) throw new IllegalArgumentException("NBT can not be null!");
+		if (datatype != tag.getType()) throw new IllegalArgumentException("Illegal TagType:" + tag.getType().name() + " " + datatype.name() + " expected!");
 		data.add(tag);
 	}
 	
@@ -50,7 +48,7 @@ public final class ListTag<T extends NBT> extends AbstractTag implements Iterabl
 	@Override
 	public void setData(Object data) {
 		NBT tag = (NBT) data;
-		Validate.isTrue(datatype == tag.getType(), "Illegal TagType:" + tag.getType().name() + " " + datatype.name() + " expected!");
+		if (datatype != tag.getType()) throw new IllegalArgumentException("Illegal TagType:" + tag.getType().name() + " " + datatype.name() + " expected!");
 		addTag((T) tag);
 	}
 

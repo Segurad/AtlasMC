@@ -11,7 +11,15 @@ public interface Chest extends Directional, Waterlogged {
 	public static enum Type {
 		SINGLE,
 		LEFT,
-		RIGHT
+		RIGHT;
+
+		public static Type getByName(String name) {
+			name = name.toUpperCase();
+			for (Type t : values()) {
+				if (t.name().equals(name)) return t;
+			}
+			return SINGLE;
+		}
 	}
 
 }

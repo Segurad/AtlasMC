@@ -5,7 +5,6 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreDirectional4Faces;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Beehive;
-import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBeehive extends CoreDirectional4Faces implements Beehive {
@@ -16,7 +15,7 @@ public class CoreBeehive extends CoreDirectional4Faces implements Beehive {
 	
 	static {
 		NBT_FIELDS.setField(HONEY_LEVEL, (holder, reader) -> {
-			if (Beehive.class.isInstance(holder)) {
+			if (holder instanceof Beehive) {
 				((Beehive) holder).setHoneyLevel(reader.readIntTag());
 			} else reader.skipTag();
 		});
@@ -38,7 +37,7 @@ public class CoreBeehive extends CoreDirectional4Faces implements Beehive {
 
 	@Override
 	public void setHoneyLevel(int honeyLevel) {
-		Validate.isTrue(honeyLevel <=  5 && honeyLevel >= 0, "Level is not between 0 and 5: " + honeyLevel);
+		if (honeyLevel >  5 || honeyLevel < 0) throw new IllegalArgumentException("Level is not between 0 and 5: " + honeyLevel);
 		this.honeyLevel = honeyLevel;
 	}
 	

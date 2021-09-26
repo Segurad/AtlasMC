@@ -1,7 +1,5 @@
 package de.atlasmc.entity;
 
-import de.atlasmc.util.Validate;
-
 public interface TropicalFish extends Fish {
 	
 	public Pattern getPattern();
@@ -35,7 +33,7 @@ public interface TropicalFish extends Fish {
 		
 		public static Pattern getByDataID(int id) {
 			int index = (id & 0xFF) + (id & 0xFF00) >> 8;
-			Validate.isTrue(index >= 0 && index < 12, "Invalid DataID: " + id);
+			if (index < 0 && index > 12) throw new IllegalArgumentException("Invalid DataID: " + id);
 			Pattern[] values = values();
 			return values[index];
 		}

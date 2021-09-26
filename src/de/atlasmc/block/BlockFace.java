@@ -47,9 +47,9 @@ public enum BlockFace {
 	}
 
 	public static BlockFace getByName(String name) {
-		BlockFace[] faces = values();
-		for (BlockFace face : faces) {
-			if (face.name().equalsIgnoreCase(name)) {
+		name = name.toUpperCase();
+		for (BlockFace face : values()) {
+			if (face.name().equals(name)) {
 				return face;
 			};
 		}

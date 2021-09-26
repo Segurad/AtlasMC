@@ -7,7 +7,6 @@ import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.inventory.meta.BlockDataMeta;
 import de.atlasmc.inventory.meta.ItemMeta;
-import de.atlasmc.util.Validate;
 
 /**
  * Class based {@link MetaDataFactory} for Materials
@@ -29,8 +28,10 @@ public class ClassMetaDataFactory extends MetaDataFactory {
 	 * @param data class must have a constructor ({@link Material})
 	 */
 	public ClassMetaDataFactory(Class<? extends ItemMeta> metaInterface, Class<? extends ItemMeta> meta, Class<? extends BlockData> dataInterface, Class<? extends BlockData> data) {
-		if (metaInterface != null) Validate.isTrue(metaInterface.isAssignableFrom(meta), "MetaInterface is not assignable from Meta!");
-		if (dataInterface != null) Validate.isTrue(dataInterface.isAssignableFrom(data), "DataInterface is not assignable from Data!");
+		if (metaInterface != null && !metaInterface.isAssignableFrom(meta)) 
+			throw new IllegalArgumentException("MetaInterface is not assignable from Meta!");
+		if (dataInterface != null && !dataInterface.isAssignableFrom(data))
+				throw new IllegalArgumentException("DataInterface is not assignable from Data!");
 		this.dataInterface = dataInterface;
 		this.metaInterface = metaInterface;
 		this.data = data;
@@ -48,8 +49,8 @@ public class ClassMetaDataFactory extends MetaDataFactory {
 	}
 	
 	public ItemMeta createMeta(Material material, boolean preConfig) {
-		Validate.notNull(material, "Material can not be null!");
-		Validate.isTrue(material.isItem(), "Material is not a Item!");
+		if (material == null) throw new IllegalArgumentException("Material can not be null!");
+		if (!material.isItem()) throw new IllegalArgumentException("Material is not a Item!");
 		if (preConfig) {
 			ItemMeta im = getMetaPreConfig(material);
 			if (im != null) return im.clone();
@@ -65,8 +66,8 @@ public class ClassMetaDataFactory extends MetaDataFactory {
 	}
 	
 	public BlockData createData(Material material, boolean preConfig) {
-		Validate.notNull(material, "Material can not be null!");
-		Validate.isTrue(material.isBlock(), "Material is not a Block!");
+		if (material == null) throw new IllegalArgumentException("Material can not be null!");
+		if (!material.isBlock()) throw new IllegalArgumentException("Material is not a Block!");
 		if (preConfig) {
 			BlockData bd = getDataPreConfig(material);
 			if (bd != null) return bd.clone();

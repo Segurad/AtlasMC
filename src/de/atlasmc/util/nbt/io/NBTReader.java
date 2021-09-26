@@ -104,7 +104,7 @@ public interface NBTReader {
 	}
 	
 	/**
-	 * Reads until it reaches the key and/or type<br>
+	 * Reads until it reaches the key and/or type or the end of the current compound or list<br>
 	 * For using only one set the other one to null
 	 * @param key the searched key
 	 * @param type the searched {@link TagType}

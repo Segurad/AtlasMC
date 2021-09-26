@@ -5,7 +5,6 @@ import java.io.IOException;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.Rotatable;
-import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreRotatable extends CoreBlockData implements Rotatable {
@@ -34,8 +33,8 @@ public class CoreRotatable extends CoreBlockData implements Rotatable {
 
 	@Override
 	public void setRotation(BlockFace rotation) {
-		Validate.notNull(rotation, "BlockFace can not be null!");
-		Validate.isFalse(rotation == BlockFace.UP || rotation == BlockFace.DOWN, "BlockFace is not valid: " + rotation.name());
+		if (rotation == null) throw new IllegalArgumentException("BlockFace can not be null!");
+		if (rotation == BlockFace.UP || rotation == BlockFace.DOWN) throw new IllegalArgumentException("BlockFace is not valid: " + rotation.name());
 		this.rotation = rotation;
 	}
 	
@@ -95,7 +94,7 @@ public class CoreRotatable extends CoreBlockData implements Rotatable {
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		writer.writeStringTag(ROTATION, "" + getRotationValue());
+		writer.writeStringTag(ROTATION, String.valueOf(getRotationValue()));
 	}
 
 }

@@ -10,7 +10,11 @@ public interface Comparator extends Directional, Powerable {
 	
 	public static enum Mode {
 		COMPARE,
-		SUBTRACT
+		SUBTRACT;
+
+		public static Mode getByName(String name) {
+			return SUBTRACT.name().equalsIgnoreCase(name) ? SUBTRACT : COMPARE;
+		}
 	}
 
 }

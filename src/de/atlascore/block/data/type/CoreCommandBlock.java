@@ -44,7 +44,7 @@ public class CoreCommandBlock extends CoreDirectional6Faces implements CommandBl
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		writer.writeByteTag(CONDITIONAL, conditional);
+		if (isConditional()) writer.writeByteTag(CONDITIONAL, true);
 	}
 
 }

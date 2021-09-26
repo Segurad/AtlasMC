@@ -1,8 +1,12 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
+
 import de.atlascore.block.data.CoreOrientable;
+import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Chain;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreChain extends CoreOrientable implements Chain {
 
@@ -27,6 +31,12 @@ public class CoreChain extends CoreOrientable implements Chain {
 		return getMaterial().getBlockID()+
 				(waterlogged?0:1)+
 				getAxis().ordinal()*2;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (isWaterlogged()) writer.writeByteTag(CoreWaterlogged.WATERLOGGED, true);
 	}
 
 }

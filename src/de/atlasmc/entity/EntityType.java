@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 import de.atlasmc.Location;
-import de.atlasmc.util.Validate;
 
 public class EntityType {
 	
@@ -143,8 +142,8 @@ public class EntityType {
 	 * @param clazz the entity class needs to have a constructor({@link Integer}, {@link EntityType}, {@link Location}, {@link UUID})
 	 */
 	public EntityType(String name, int id, Class<? extends Entity> clazz) {
-		Validate.notNull(name, "Name can not be null!");
-		Validate.notNull(clazz, "Class can not be null!");
+		if (name == null) throw new IllegalArgumentException("Name can not be null!");
+		if (clazz == null) throw new IllegalArgumentException("Class can not be null!");
 		if (BY_NAME.containsKey(name)) throw new IllegalArgumentException("EntityType with the name (" + name + ") already exists!");
 		this.name = name;
 		this.id = id;

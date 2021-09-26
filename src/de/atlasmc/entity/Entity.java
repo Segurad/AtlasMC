@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import de.atlasmc.Location;
+import de.atlasmc.Nameable;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.Vector;
 import de.atlasmc.atlasnetwork.server.LocalServer;
@@ -11,7 +12,7 @@ import de.atlasmc.util.nbt.CustomTagContainer;
 import de.atlasmc.util.nbt.NBTHolder;
 import de.atlasmc.world.World;
 
-public interface Entity extends NBTHolder {
+public interface Entity extends NBTHolder, Nameable {
 
 	public enum Animation {
 		SWING_MAIN_ARM,
@@ -45,8 +46,9 @@ public interface Entity extends NBTHolder {
 	public void addScoreboardTag(String tag);
 	
 	public int getAirTicks();
-	public String getCustomName();
+	
 	public float getFallDistance();
+	
 	public short getFireTicks();
 	
 	/**
@@ -56,44 +58,67 @@ public interface Entity extends NBTHolder {
 	public int getID();
 	
 	public Location getLocation();
+	
 	public Location getLocation(Location loc);
 	
 	public SimpleLocation getLocation(SimpleLocation loc);
+	
 	public CustomTagContainer getCustomTagContainer();
+	
 	public int getObjectData();
+	
 	public Pose getPose();
+	
 	public List<String> getScoreboardTags();
 	
 	public LocalServer getServer();
+	
 	public EntityType getType();
+	
 	public UUID getUUID();
+	
 	public Vector getVelocity();
+	
 	public Vector getVelocity(Vector vec);
+	
 	public World getWorld();
+	
 	public double getX();
 	
 	public double getY();
+	
 	public double getZ();
+	
 	public boolean hasGravity();
+	
 	public boolean hasScoreboardTags();
+	
 	public boolean hasVelocity();
+	
 	public boolean isCrouching();
 
 	public boolean isCustomNameVisible();
 	
 	public boolean isFlyingWithElytra();
+	
 	public boolean isGlowing();
+	
 	public boolean isInvisble();
+	
 	public boolean isOnFire();
+	
 	public boolean isSilent();
+	
 	public boolean isSprinting();
+	
 	public boolean isSwimming();
+	
 	public boolean hasCustomName();
+	
 	public void remove();
+	
 	public void setAirTicks(int air);
 
-	
-	public void setCustomName(String name);
 	public void setCustomNameVisible(boolean value);
 
 	public void setFallDistance(float distance);
@@ -105,7 +130,9 @@ public interface Entity extends NBTHolder {
 	public void setGravity(boolean gravity);
 	
 	public void setID(int id);
+	
 	public void setInvulnerable(boolean invulnerable);
+	
 	public void setOnGround(boolean onGround);
 
 	public void setPortalCooldown(int cooldown);
@@ -125,6 +152,7 @@ public interface Entity extends NBTHolder {
 	 * @param z
 	 */
 	public void teleport(double x, double y, double z);
+	
 	public void teleport(double x, double y, double z, float yaw, float pitch);
 	
 }

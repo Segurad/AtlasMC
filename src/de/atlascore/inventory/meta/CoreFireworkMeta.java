@@ -8,7 +8,6 @@ import de.atlasmc.FireworkEffect;
 import de.atlasmc.Material;
 import de.atlasmc.inventory.meta.FireworkMeta;
 import de.atlasmc.inventory.meta.ItemMeta;
-import de.atlasmc.util.Validate;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -103,7 +102,7 @@ public class CoreFireworkMeta extends CoreItemMeta implements FireworkMeta {
 
 	@Override
 	public void setPower(int power) {
-		Validate.isTrue(power > 0 && power < 4, "Power is not between 1 and 3:" + power);
+		if (power < 0 || power > 4) throw new IllegalArgumentException("Power is not between 1 and 3:" + power);
 		this.power = power;
 	}
 	

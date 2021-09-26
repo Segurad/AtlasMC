@@ -24,7 +24,11 @@ public class CoreJukebox extends CoreTileEntity implements Jukebox {
 				reader.skipTag();
 				return;
 			}
-			ItemStack item = new ItemStack();
+			reader.mark();
+			reader.search(ID);
+			Material type = Material.getByName(reader.readStringTag());
+			reader.reset();
+			ItemStack item = new ItemStack(type);
 			item.fromNBT(reader);
 			((Jukebox) holder).setRecordItem(item);
 		});

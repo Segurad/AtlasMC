@@ -21,7 +21,6 @@ import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.inventory.ItemFlag;
 import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.inventory.meta.lore.Lore;
-import de.atlasmc.util.Validate;
 import de.atlasmc.util.map.ArrayListMultimap;
 import de.atlasmc.util.map.ListMultimap;
 import de.atlasmc.util.map.Multimap;
@@ -69,7 +68,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 		NBT_FIELDS.setField(CAN_DESTROY, (holder, reader) -> {
 			List<Material> canDestroy = ((ItemMeta) holder).getCanDestroy();
 			while (reader.getRestPayload() > 0) {
-				canDestroy.add(Material.getMaterial(reader.readStringTag()));
+				canDestroy.add(Material.getByName(reader.readStringTag()));
 			}
 		});
 		NBT_FIELDS.setField(CUSTOM_MODEL_DATA, (holder, reader) -> {
@@ -183,8 +182,8 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 
 	@Override
 	public boolean addAttributeModifier(Attribute attribute, AttributeModifier modifier) {
-		Validate.notNull(attribute, "Attribute can not be null!");
-		Validate.notNull(modifier, "AttributeModifier can not be null!");
+		if (attribute == null) throw new IllegalArgumentException("Attribute can not be null!");
+		if (modifier == null) throw new IllegalArgumentException("AttributeModifier can not be null!");
 		if (attributes == null)
 			attributes = new ArrayListMultimap<>();
 		return this.attributes.put(attribute, modifier);
@@ -192,7 +191,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
-		Validate.notNull(slot, "EquipmentSlot can not be null!");
+		if (slot == null) throw new IllegalArgumentException("EquipmentSlot can not be null!");
 		Multimap<Attribute, AttributeModifier> map = new ArrayListMultimap<>();
 		if (attributes == null) return map;
 		for (Attribute a : attributes.keySet()) {
@@ -223,14 +222,14 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 
 	@Override
 	public boolean hasEnchant(Enchantment ench) {
-		Validate.notNull(ench, "Enchantment can not be null!");
+		if (ench == null) throw new IllegalArgumentException("Enchantment can not be null!");
 		if (enchants == null) return false;
 		return this.enchants.containsKey(ench);
 	}
 
 	@Override
 	public boolean hasConflictingEnchant(Enchantment ench) {
-		Validate.notNull(ench, "Enchantment can not be null!");
+		if (ench == null) throw new IllegalArgumentException("Enchantment can not be null!");
 		if (!hasEnchants()) return false;
 		for (Enchantment e : enchants.keySet()) {
 			if (ench.conflictsWith(e)) return true;
@@ -240,15 +239,15 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 
 	@Override
 	public boolean removeAttributeModifier(Attribute attribute) {
-		Validate.notNull(attribute, "Attribute can not be null!");
+		if (attribute == null) throw new IllegalArgumentException("Attribute can not be null!");
 		if (attributes == null) return false;
 		return attributes.remove(attribute) != null;
 	}
 
 	@Override
 	public boolean removeAttributeModifier(Attribute attribute, AttributeModifier modifier) {
-		Validate.notNull(attribute, "Attribute can not be null!");
-		Validate.notNull(modifier, "AttributeModifier can not be null!");
+		if (attribute == null) throw new IllegalArgumentException("Attribute can not be null!");
+		if (modifier == null) throw new IllegalArgumentException("AttributeModifier can not be null!");
 		if (attributes == null) return false;
 		List<AttributeModifier> mods = getAttributeModifiers(attribute);
 		if (mods == null) return false;
@@ -257,7 +256,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 
 	@Override
 	public boolean removeAttributeModifier(EquipmentSlot slot) {
-		Validate.notNull(slot, "EquipmentSlot can not be null!");
+		if (slot == null) throw new IllegalArgumentException("EquipmentSlot can not be null!");
 		if (attributes == null) return false;
 		boolean changes = false;
 		for (Attribute a : attributes.keySet()) {
@@ -276,7 +275,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 
 	@Override
 	public boolean removeEnchant(Enchantment ench) {
-		Validate.notNull(ench, "Enchant can not be null!");
+		if (ench == null) throw new IllegalArgumentException("Enchant can not be null!");
 		if (enchants == null) return false;
 		return this.enchants.remove(ench) != null;
 	}
@@ -290,7 +289,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 
 	@Override
 	public void setAttributeModifiers(Multimap<Attribute, AttributeModifier> attributeModifiers) {
-		Validate.notNull(attributeModifiers, "AttributeModifier can not be null!");
+		if (attributeModifiers == null) throw new IllegalArgumentException("AttributeModifier can not be null!");
 		this.attributes.clear();
 		this.attributes.putAll(attributeModifiers);
 	}
@@ -433,7 +432,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		Validate.notNull(writer, "NBTWriter can not be null!");
+		if (writer == null) throw new IllegalArgumentException("NBTWriter can not be null!");
 		if (hasCanDestroy()) {
 			writer.writeListTag(CAN_DESTROY, TagType.STRING, canDestroy.size());
 			for (Material m : canDestroy) {

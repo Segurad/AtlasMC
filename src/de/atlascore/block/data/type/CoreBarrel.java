@@ -1,8 +1,12 @@
 package de.atlascore.block.data.type;
 
+import java.io.IOException;
+
 import de.atlascore.block.data.CoreDirectional6Faces;
+import de.atlascore.block.data.CoreOpenable;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Barrel;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBarrel extends CoreDirectional6Faces implements Barrel {
 
@@ -27,6 +31,12 @@ public class CoreBarrel extends CoreDirectional6Faces implements Barrel {
 		return getMaterial().getBlockID()+
 				(open?0:1)+
 				getFaceValue()*2;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (isOpen()) writer.writeByteTag(CoreOpenable.OPEN, true);
 	}
 
 }

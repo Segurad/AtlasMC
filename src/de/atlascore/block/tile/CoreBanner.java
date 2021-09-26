@@ -7,7 +7,6 @@ import java.util.List;
 import de.atlasmc.DyeColor;
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.Banner;
-import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
@@ -20,18 +19,12 @@ public class CoreBanner extends CoreTileEntity implements Banner {
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
 	protected static final String
-	CUSTOM_NAME = "CustomName",
 	PATTERNS = "Patterns",
 	COLOR = "Color",
 	PATTERN = "Pattern";
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreTileEntity.NBT_FIELDS);
-		NBT_FIELDS.setField(CUSTOM_NAME, (holder, reader) -> {
-			if (holder instanceof Banner)
-			((Banner) holder).setCustomName(ChatUtil.toChat(reader.readStringTag()));
-			else reader.skipTag();
-		});
 		NBT_FIELDS.setField(PATTERNS, (holder, reader) -> {
 			if (holder instanceof Banner) {
 				Banner banner = (Banner) holder;
@@ -133,7 +126,7 @@ public class CoreBanner extends CoreTileEntity implements Banner {
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
 		if (systemData) {
-			writer.writeStringTag(CUSTOM_NAME, name.getJsonText());
+			writer.writeStringTag(NBT_CUSTOM_NAME, name.getJsonText());
 		}
 		if (numberOfPatterns() > 0) {
 			writer.writeListTag(PATTERNS, TagType.COMPOUND, numberOfPatterns());
