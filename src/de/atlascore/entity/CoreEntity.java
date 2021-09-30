@@ -27,7 +27,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	
 	protected static final NBTFieldContainer NBT_FIELDS = new NBTFieldContainer();
 	private CustomTagContainer customTags;
-	private final MetaDataContainer metaContainer;
+	protected final MetaDataContainer metaContainer;
 	private int id;
 	private final EntityType type;
 	private UUID uuid;
@@ -57,8 +57,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	 * 0x80		| flying elytra
 	 */
 	protected static final int
-	META_BASE_FLAGS = 0;
-	protected static final int
+	META_BASE_FLAGS = 0,
 	META_AIR_TICKS = 1,
 	META_CUSTOM_NAME = 2,
 	META_CUSTOM_NAME_VISIBLE = 3,
@@ -166,6 +165,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 		this.oldLoc = new Location(loc);
 		this.motion = new Vector(0, 0, 0);
 		metaContainer = new MetaDataContainer(getMetaContainerSize());
+		initMetaContainer();
 	}
 
 	@Override
@@ -216,22 +216,22 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 
 	@Override
 	public boolean isSilent() {
-		return (boolean) metaContainer.get(META_IS_SILENT).getData();
+		return metaContainer.getData(META_IS_SILENT, MetaDataType.BOOLEAN);
 	}
 
 	@Override
 	public boolean isCustomNameVisible() {
-		return (boolean) metaContainer.get(META_CUSTOM_NAME_VISIBLE).getData();
+		return metaContainer.getData(META_CUSTOM_NAME_VISIBLE, MetaDataType.BOOLEAN);
 	}
 
 	@Override
 	public boolean hasGravity() {
-		return !(boolean) metaContainer.get(META_HAS_NO_GRAVITY).getData();
+		return !metaContainer.getData(META_HAS_NO_GRAVITY, MetaDataType.BOOLEAN);
 	}
 
 	@Override
 	public Pose getPose() {
-		return metaContainer.get(META_POSE, MetaDataType.POSE).getData();
+		return metaContainer.getData(META_POSE, MetaDataType.POSE);
 	}
 
 	@Override

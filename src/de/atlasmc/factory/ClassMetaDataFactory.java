@@ -16,6 +16,8 @@ public class ClassMetaDataFactory extends MetaDataFactory {
 	protected final Class<? extends ItemMeta> metaInterface, meta;
 	protected final Class<? extends BlockData> dataInterface, data;
 	
+	protected int hash;
+	
 	public ClassMetaDataFactory(Class<? extends BlockData> dataInterface, Class<? extends BlockData> data) {
 		this(BlockDataMeta.class, CoreBlockDataMeta.class, dataInterface, data);
 	}
@@ -80,6 +82,51 @@ public class ClassMetaDataFactory extends MetaDataFactory {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		if (hash != 0)
+			return hash;
+		final int prime = 31;
+		hash = 1;
+		hash = prime * hash + ((data == null) ? 0 : data.hashCode());
+		hash = prime * hash + ((dataInterface == null) ? 0 : dataInterface.hashCode());
+		hash = prime * hash + ((meta == null) ? 0 : meta.hashCode());
+		hash = prime * hash + ((metaInterface == null) ? 0 : metaInterface.hashCode());
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ClassMetaDataFactory other = (ClassMetaDataFactory) obj;
+		if (data == null) {
+			if (other.data != null)
+				return false;
+		} else if (!data.equals(other.data))
+			return false;
+		if (dataInterface == null) {
+			if (other.dataInterface != null)
+				return false;
+		} else if (!dataInterface.equals(other.dataInterface))
+			return false;
+		if (meta == null) {
+			if (other.meta != null)
+				return false;
+		} else if (!meta.equals(other.meta))
+			return false;
+		if (metaInterface == null) {
+			if (other.metaInterface != null)
+				return false;
+		} else if (!metaInterface.equals(other.metaInterface))
+			return false;
+		return true;
 	}
 	
 }

@@ -2,15 +2,15 @@ package de.atlasmc.entity;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 import de.atlasmc.Location;
+import de.atlasmc.NamespacedKey.Namespaced;
 
-public class EntityType {
+public class EntityType implements Namespaced {
 	
-	private static final HashMap<String, EntityType> BY_NAME;
+	private static final List<EntityType> REGISTRI;
 	private static int eid = 0;
 	
 	public static EntityType 
@@ -124,15 +124,16 @@ public class EntityType {
 	FISHING_BOBBER;
 	
 	static {
-		BY_NAME = new HashMap<String, EntityType>();
+		REGISTRI = new ArrayList<EntityType>();
 	}
 	
 	private final String name;
 	private final Class<? extends Entity> clazz;
 	private final int id;
+	private final short namespaceID;
 	
-	public EntityType(String name, Class<? extends Entity> clazz) {
-		this(name, eid++, clazz);
+	public EntityType(int namespaceID, String name, Class<? extends Entity> clazz) {
+		this(namespaceID, name, eid++, clazz);
 	}
 	
 	/**
@@ -141,18 +142,14 @@ public class EntityType {
 	 * @param id the entityTypeID of this type
 	 * @param clazz the entity class needs to have a constructor({@link Integer}, {@link EntityType}, {@link Location}, {@link UUID})
 	 */
-	public EntityType(String name, int id, Class<? extends Entity> clazz) {
+	public EntityType(int namespaceID, String name, int id, Class<? extends Entity> clazz) {
 		if (name == null) throw new IllegalArgumentException("Name can not be null!");
 		if (clazz == null) throw new IllegalArgumentException("Class can not be null!");
-		if (BY_NAME.containsKey(name)) throw new IllegalArgumentException("EntityType with the name (" + name + ") already exists!");
 		this.name = name;
 		this.id = id;
 		this.clazz = clazz;
-		BY_NAME.put(name, this);
-	}
-	
-	public String name() {
-		return name;
+		this.namespaceID = (short) namespaceID;
+		REGISTRI.add(this);
 	}
 	
 	public Class<? extends Entity> getEntityClass() {
@@ -182,18 +179,31 @@ public class EntityType {
 	}
 	
 	public static EntityType getByID(int id) {
-		for (EntityType type : BY_NAME.values()) {
+		for (EntityType type : REGISTRI) {
 			if (type.getTypeID() == id) return type;
 		}
 		return PIG;
 	}
 	
 	public static EntityType getByName(String name) {
-		return BY_NAME.get(name);
+		for (EntityType type : REGISTRI) {
+			type.getName().equals(name);
+		}
+		return null;
 	}
 	
 	public List<EntityType> values() {
-		return new ArrayList<EntityType>(BY_NAME.values());
+		return new ArrayList<EntityType>(REGISTRI);
+	}
+
+	@Override
+	public short getNamespaceID() {
+		return namespaceID;
+	}
+
+	@Override
+	public String getName() {
+		return name;
 	}
 	
 	

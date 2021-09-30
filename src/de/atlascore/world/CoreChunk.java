@@ -10,7 +10,9 @@ import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.world.Chunk;
+import de.atlasmc.world.ChunkListener;
 import de.atlasmc.world.ChunkSection;
+import de.atlasmc.world.ChunkStatus;
 import de.atlasmc.world.EnumBiome;
 import de.atlasmc.world.World;
 
@@ -18,13 +20,13 @@ public class CoreChunk implements Chunk {
 	
 	private final ChunkSection[] sections;
 	private final List<Entity> entities;
-	private final int[] biomes;
+	private final short[] biomes;
 	private final World world;
 	
 	public CoreChunk(World world) {
 		sections = new ChunkSection[16];
 		entities = new ArrayList<Entity>();
-		biomes = new int[1024];
+		biomes = new short[1024];
 		this.world = world;
 	}
 
@@ -68,7 +70,7 @@ public class CoreChunk implements Chunk {
 	}
 
 	@Override
-	public int[] getBiomes() {
+	public short[] getBiomes() {
 		return Arrays.copyOf(biomes, biomes.length);
 	}
 
@@ -80,7 +82,7 @@ public class CoreChunk implements Chunk {
 
 	@Override
 	public void setBiome(EnumBiome biome, int x, int y, int z) {
-		biomes[getBiomeIndex(x, y, z)] = biome.getID();
+		biomes[getBiomeIndex(x, y, z)] = (short) biome.getID();
 	}
 	
 	/**
@@ -190,6 +192,30 @@ public class CoreChunk implements Chunk {
 	@Override
 	public void sendUpdate(int x, int y, int z) {
 		world.sendUpdate(this, x, y, z);
+	}
+
+	@Override
+	public ChunkStatus getStatus() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getStatusInfo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void addListener(ChunkListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeListener(ChunkListener listener) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

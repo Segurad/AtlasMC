@@ -5,13 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.factory.MetaDataFactory;
 import de.atlasmc.factory.TileEntityFactory;
 import de.atlasmc.inventory.meta.ItemMeta;
 
-public class Material {
+public class Material implements Namespaced {
 	
 	private static final List<Material> REGISTRI;
 	private static final HashMap<Material, TileEntityFactory> TILE_FACTORYS;
@@ -1097,7 +1098,7 @@ public class Material {
 	}
 	
 	private final String name;
-	private final short itemID, bid, namespace;
+	private final short itemID, bid, namespaceID;
 	private final byte max;
 	private MetaDataFactory mdf;
 	
@@ -1115,7 +1116,7 @@ public class Material {
 		this.itemID = itemID;
 		this.bid = blockID;
 		this.max = amount;
-		this.namespace = (short) namespaceID;
+		this.namespaceID = (short) namespaceID;
 		registerMaterial();
 		setMetaDataFactory(mdf);
 	}
@@ -1135,7 +1136,7 @@ public class Material {
 		this.itemID = hasItem ? iid++ : -1;
 		this.bid = blockID;
 		this.max = maxAmount;
-		this.namespace = (short) namespaceID;
+		this.namespaceID = (short) namespaceID;
 		registerMaterial();
 		setMetaDataFactory(mdf);
 	}
@@ -1229,17 +1230,12 @@ public class Material {
 	}
 	
 	public short getNamespaceID() {
-		return namespace;
-	}
-	
-	public NamespacedKey getNamespacedKey() {
-		return new NamespacedKey(getNamespaceID(), getName());
+		return namespaceID;
 	}
 	
 	private final void registerMaterial() {
-		if (REGISTRI.contains(this)) throw new Error("Material already registered");
 		if (getMaterial(getNamespaceID(), getName()) != null) {
-			throw new Error("Material: " + getNamespacedName() + " already registered!");
+			throw new Error("Material already registered: " + getNamespacedName());
 		}
 		REGISTRI.add(this);
 	}
@@ -1296,9 +1292,22 @@ public class Material {
 		return null;
 	}
 
+	public boolean isAir() {
+		Objects.hash(null);
+		return this == AIR || this == CAVE_AIR || this == VOID_AIR;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(bid, itemID, max, name, namespace);
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + bid;
+		result = prime * result + itemID;
+		result = prime * result + max;
+		result = prime * result + ((mdf == null) ? 0 : mdf.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + namespaceID;
+		return result;
 	}
 
 	@Override
@@ -1310,16 +1319,25 @@ public class Material {
 		if (getClass() != obj.getClass())
 			return false;
 		Material other = (Material) obj;
-		return bid == other.bid && itemID == other.itemID && max == other.max && Objects.equals(name, other.name)
-				&& namespace == other.namespace;
-	}
-
-	public String getNamespacedName() {
-		return NamespacedKey.getNamespace(getNamespaceID())+':'+getName();
-	}
-
-	public boolean isAir() {
-		return this == AIR || this == CAVE_AIR || this == VOID_AIR;
+		if (bid != other.bid)
+			return false;
+		if (itemID != other.itemID)
+			return false;
+		if (max != other.max)
+			return false;
+		if (mdf == null) {
+			if (other.mdf != null)
+				return false;
+		} else if (!mdf.equals(other.mdf))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (namespaceID != other.namespaceID)
+			return false;
+		return true;
 	}
 	
 }

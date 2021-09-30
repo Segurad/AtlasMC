@@ -47,7 +47,7 @@ public interface Chunk extends Tickable {
 	 * 
 	 * @return a copy of the chunks biomes
 	 */
-	public int[] getBiomes();
+	public short[] getBiomes();
 	
 	/**
 	 * Returns the Biome at
@@ -107,5 +107,21 @@ public interface Chunk extends Tickable {
 	 * @see {@link World#sendUpdate(Chunk, int, int, int)}
 	 */
 	public void sendUpdate(int x, int y, int z);
+	
+	/**
+	 * Returns the current status of this Chunk
+	 * @return {@link ChunkStatus}
+	 */
+	public ChunkStatus getStatus();
+	
+	/**
+	 * Returns a status info text for the current status e.g. the current generator info
+	 * @return status text
+	 */
+	public String getStatusInfo();
+	
+	public void addListener(ChunkListener listener);
+	
+	public void removeListener(ChunkListener listener);
 	
 }

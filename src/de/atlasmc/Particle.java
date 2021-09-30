@@ -93,21 +93,21 @@ public enum Particle {
 	public static class DustOptions {
 		
 		private final Color color;
-		private final float size;
+		private final float scale;
 		
-		public DustOptions(Color color, float size) {
+		public DustOptions(Color color, float scale) {
 			if (color == null) throw new IllegalArgumentException("Color can not be null!");
-			if (size < 0.01 || size > 4) throw new IllegalArgumentException("Size is not between 0.01 and 4: " + size);
+			if (scale < 0.01 || scale > 4) throw new IllegalArgumentException("Size is not between 0.01 and 4: " + scale);
 			this.color = color;
-			this.size = size;
+			this.scale = scale;
 		}
 		
 		public Color getColor() {
 			return color;
 		}
 		
-		public float getSize() {
-			return size;
+		public float getScale() {
+			return scale;
 		}
 	}
 

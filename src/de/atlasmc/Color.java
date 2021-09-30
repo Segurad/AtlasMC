@@ -2,7 +2,11 @@ package de.atlasmc;
 
 import java.util.HashMap;
 
+import de.atlasmc.util.MathUtil;
+
 public final class Color {
+	
+	public static final String RGB = "RGB";
 	
 	public static final Color 
 	BLACK = new Color("BLACK", 0x00, 0x00, 0x00), 
@@ -60,7 +64,7 @@ public final class Color {
 		this.r = (byte) red;
 		this.b = (byte) blue;
 		this.g = (byte) green;
-		this.name = name != null ? name : "RGB";
+		this.name = name != null ? name : RGB;
 	}
 	
 	public Color(Color color) {
@@ -68,7 +72,17 @@ public final class Color {
 	}
 	
 	public Color(int rgb) {
-		this((rgb & 0xFF0000) >> 16, (rgb & 0xFF00) >> 8, rgb % 0xFF);
+		this((rgb & 0xFF0000) >> 16, (rgb & 0xFF00) >> 8, rgb & 0xFF);
+	}
+
+	public Color(float red, float green, float blue) {
+		red = MathUtil.getInRange(0, red, 1.0f);
+		green = MathUtil.getInRange(0, green, 1.0f);
+		blue = MathUtil.getInRange(0, blue, 1.0f);
+		r = (byte) (red == 1.0 ? 255 : red *256);
+		g = (byte) (green == 1.0 ? 255 : green *256);
+		b = (byte) (blue == 1.0 ? 255 : blue *256);
+		this.name = RGB;
 	}
 
 	public byte getBlue() {

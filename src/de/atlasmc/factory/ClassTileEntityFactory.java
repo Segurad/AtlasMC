@@ -12,6 +12,8 @@ public class ClassTileEntityFactory extends TileEntityFactory {
 	
 	private final Class<? extends TileEntity> tileInterface, tile;
 	
+	private int hash;
+	
 	/**
 	 * 
 	 * @param tileInterface
@@ -45,6 +47,39 @@ public class ClassTileEntityFactory extends TileEntityFactory {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		if (hash != 0)
+			return hash;
+		final int prime = 31;
+		hash = 1;
+		hash = prime * hash + ((tile == null) ? 0 : tile.hashCode());
+		hash = prime * hash + ((tileInterface == null) ? 0 : tileInterface.hashCode());
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ClassTileEntityFactory other = (ClassTileEntityFactory) obj;
+		if (tile == null) {
+			if (other.tile != null)
+				return false;
+		} else if (!tile.equals(other.tile))
+			return false;
+		if (tileInterface == null) {
+			if (other.tileInterface != null)
+				return false;
+		} else if (!tileInterface.equals(other.tileInterface))
+			return false;
+		return true;
 	} 
 
 }

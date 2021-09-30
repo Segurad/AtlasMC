@@ -80,5 +80,21 @@ public class NamespacedKey {
 	public static List<String> getNamespaces() {
 		return new ArrayList<>(); 
 	}
+	
+	public static interface Namespaced {
+		
+		public short getNamespaceID();
+		
+		public String getName();
+		
+		public default String getNamespacedName() {
+			return NamespacedKey.getNamespace(getNamespaceID())+':'+getName();
+		}
+		
+		public default NamespacedKey getNamespacedKey() {
+			return new NamespacedKey(getNamespaceID(), getName());
+		}
+		
+	}
 
 }

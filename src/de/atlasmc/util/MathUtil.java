@@ -30,6 +30,15 @@ public class MathUtil {
 		return original;
 	}
 	
+	public static float getInRange(float original, float min, float max) {
+		if (original > max)
+			return max;
+		if (original < min) {
+			return min;
+		}
+		return original;
+	}
+	
 	public static boolean isInRange(double original, double min, double max) {
 		return original >= min && original <= max;
 	}

@@ -3,7 +3,9 @@ package de.atlasmc.entity.data;
 import java.io.IOException;
 import java.util.UUID;
 
+import de.atlasmc.Color;
 import de.atlasmc.Particle;
+import de.atlasmc.Particle.DustOptions;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.chat.component.FinalComponent;
@@ -285,11 +287,11 @@ public abstract class MetaDataType<T> {
 				data = AbstractPacket.readVarInt(in);
 				break;
 			case DUST:
-				// TODO
-				in.readFloat();
-				in.readFloat();
-				in.readFloat();
-				in.readFloat();
+				float r = in.readFloat();
+				float g = in.readFloat();
+				float b = in.readFloat();
+				float scale = in.readFloat();
+				data = new DustOptions(new Color(r, g, b), scale);
 				break;
 			case ITEM:
 				data = AbstractPacket.readSlot(in);
@@ -310,7 +312,14 @@ public abstract class MetaDataType<T> {
 				AbstractPacket.writeVarInt(o.getData() != null ? (int) o.getData() : 0, out);
 				break;
 			case DUST:
-				// TODO
+				if (o.getData() != null && o.getData() instanceof DustOptions) {
+					DustOptions d = (DustOptions) o.getData();
+					Color c = d.getColor();
+					out.writeFloat(c.getRed() / 255.0f);
+					out.writeFloat(c.getGreen() / 255.0f);
+					out.writeFloat(c.getBlue() / 255.0f);
+					out.writeFloat(d.getScale());
+				}
 				out.writeFloat(0);
 				out.writeFloat(0);
 				out.writeFloat(0);
