@@ -4,7 +4,6 @@ import de.atlasmc.block.data.BlockData;
 
 /**
  * Represents a 16x16x16 storage-cube of a Schematic
- *
  */
 public interface SchematicSection {
 	

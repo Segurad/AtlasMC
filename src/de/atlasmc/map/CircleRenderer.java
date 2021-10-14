@@ -28,10 +28,10 @@ public final class CircleRenderer implements Renderer {
 	/**
 	 * 
 	 * @return the calculated array 
-	 * --- upper half left
-	 * array[0][-x+r] = y;
-	 * array[2][-y+r] = x;
-	 * --- upper half right
+	 * --- upper half left<br>
+	 * array[0][-x+r] = y;<br>
+	 * array[2][-y+r] = x;<br>
+	 * --- upper half right<br>
 	 * array[0][x+r] = y;
 	 * array[2][y+r] = x;
 	 * --- lower half left
@@ -83,9 +83,11 @@ public final class CircleRenderer implements Renderer {
 	}
 	/**
 	 * 
-	 * @return the calculated array 
+	 * @return the calculated array
+	 * @see #calc()
 	 */
 	public int[][] getPoints() {
+		if (points == null) return calc();
 		return points;
 	}
 	

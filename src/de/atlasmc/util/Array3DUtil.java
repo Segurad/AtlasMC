@@ -1,6 +1,12 @@
 package de.atlasmc.util;
 
+/**
+ * Utility for 3D Arrays with ordered by <b><u>Y > Z > X</u></b>
+ */
 public class Array3DUtil {
+	
+	private Array3DUtil() {};
+	
 	//--- Object -----------------------------------------------------
 	/**
 	 * 
