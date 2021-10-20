@@ -5,7 +5,7 @@ import de.atlasmc.SimpleLocation;
 public class CoreSchematicAccess implements SchematicAccess {
 
 	private boolean visible;
-	private final SimpleLocation off;
+	private final SimpleLocation off; // stores the offset and the rotation
 	private final Schematic schematic;
 	
 	public CoreSchematicAccess(Schematic schematic, int offX, int offY, int offZ) {

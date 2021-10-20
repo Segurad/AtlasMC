@@ -10,61 +10,71 @@ public class CoreSchematic implements Schematic {
 	private final SchematicSection[] sections; // ordered by y > z > x
 	private List<SchematicAccess> schematics;
 	private final SimpleLocation off;
-	private final int lengthX, lengthZ, hight;
+	private final int lengthX, lengthZ, height;
 	
+	/**
+	 * Creates a new CoreSchamtic instance with no contents
+	 * @param off the offset added when placed
+	 */
 	public CoreSchematic(SimpleLocation off) {
 		this(off, 0, 0, 0);
 	}
 	
-	public CoreSchematic(SimpleLocation off, int lengthX, int hight, int lengthZ) {
+	/**
+	 * Creates a new CoreSchematic instance<br>
+	 * if one of the size parameters is >= 0 the schematic does not have block contents
+	 * but still can act as a container for schematics
+	 * @param off the offset added when placed
+	 * @param lengthX
+	 * @param height
+	 * @param lengthZ 
+	 */
+	public CoreSchematic(SimpleLocation off, int lengthX, int height, int lengthZ) {
 		this.off = off.clone().convertToBlock();
 		this.lengthX = lengthX;
 		this.lengthZ = lengthZ;
-		this.hight = hight;
-		sections = lengthX == 0 || lengthZ == 0 || hight == 0 ? 
-				null : new SchematicSection[lengthX>>4*lengthZ>>4*hight>>4];
+		this.height = height;
+		sections = lengthX == 0 || lengthZ == 0 || height == 0 ? 
+				null : new SchematicSection[lengthX>>4*lengthZ>>4*height>>4];
 	}
 	
 	@Override
 	public SchematicSection getSection(int x, int y, int z) {
-		// TODO Auto-generated method stub
-		return null;
+		return sections[getIndex(x, y, z)];
+	}
+	
+	protected int getIndex(int x, int y, int z) {
+		return (y >> 4) * (z >> 4 * lengthX >> 4) + (x >> 4);
 	}
 
 	@Override
 	public int getHight() {
-		// TODO Auto-generated method stub
-		return 0;
+		return height;
 	}
 
 	@Override
 	public int getLengthX() {
-		// TODO Auto-generated method stub
-		return 0;
+		return lengthX;
 	}
 
 	@Override
 	public int getLengthZ() {
-		// TODO Auto-generated method stub
-		return 0;
+		return lengthZ;
 	}
 
 	@Override
 	public SimpleLocation getOffset() {
-		// TODO Auto-generated method stub
-		return null;
+		return off.clone();
 	}
 
 	@Override
 	public SimpleLocation getOffset(SimpleLocation loc) {
-		// TODO Auto-generated method stub
-		return null;
+		return off.copyTo(loc);
 	}
 
 	@Override
 	public void setOffset(SimpleLocation loc) {
-		// TODO Auto-generated method stub
-		
+		off.setLocation(loc);
 	}
 
 	@Override
