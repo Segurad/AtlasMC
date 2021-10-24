@@ -1,8 +1,6 @@
 package de.atlasmc.event;
 
 import de.atlasmc.atlasnetwork.server.LocalServer;
-import de.atlasmc.event.GenericEvent;
-import de.atlasmc.event.ServerHandlerList;
 
 /**
  * Abstract base for Events which are located on a certain server

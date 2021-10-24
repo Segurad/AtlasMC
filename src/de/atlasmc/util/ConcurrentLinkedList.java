@@ -3,32 +3,20 @@ package de.atlasmc.util;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import de.atlasmc.util.annotation.ThreadSafe;
 
 /**
- * This class is like a LinkedQueue without the poll feature and a special iterator which hops from node to node
+ * This class is a thread safe implementation of a LinkedList using volatile for the most reading operations and synchronized for manipulation
  */
-public class ConcurrentLinkedCollection<E> implements Iterable<E>, Collection<E> {
+@ThreadSafe
+public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 	
 	private volatile Node<E> head, tail;
-	private volatile int count = 0;
-	
-	static final class Node<T> {
-		
-		volatile boolean removed;
-		volatile Node<T> prev, next;
-		final T element;
-		
-		public Node(T element, Node<T> prev, Node<T> next) {
-			this.element = element;
-			this.prev = prev;
-			this.next = next;
-		}
-		
-	}
+	private volatile int count = 0; // Modify only by sync over this
 	
 	@Override
 	public boolean add(E entry) {
-		count++;
+		incrementCount();
 		if (head == null) {
 			head = new Node<E>(entry, null, null);
 			tail = head;
@@ -40,7 +28,7 @@ public class ConcurrentLinkedCollection<E> implements Iterable<E>, Collection<E>
 	}
 	
 	public void addFirst(E entry) {
-		count++;
+		incrementCount();
 		if (head == null) {
 			head = new Node<E>(entry, null, null);
 			tail = head;
@@ -63,7 +51,7 @@ public class ConcurrentLinkedCollection<E> implements Iterable<E>, Collection<E>
 			node.removed = true;
 			node = node.next;
 		}
-		count = 0;
+		count = 0; // no modify method needed is in sync method
 	}
 	
 	@Override
@@ -93,7 +81,7 @@ public class ConcurrentLinkedCollection<E> implements Iterable<E>, Collection<E>
 	private void removeNode(Node<E> node) {
 		if (node.removed) return;
 		node.removed = true;
-		count--;
+		decrementCount();
 		Node<E> prev = prevValid(node), next = nextValid(node);
 		if (prev != null) prev.next = next;
 		if (next != null) next.prev = prev;
@@ -137,7 +125,7 @@ public class ConcurrentLinkedCollection<E> implements Iterable<E>, Collection<E>
 		Node<E> newNode = new Node<E>(entry, node, next);
 		node.next = newNode;
 		next.prev = newNode;
-		count++;
+		incrementCount();
 	}
 	
 	private void insertBefor(Node<E> node, E entry) {
@@ -150,25 +138,118 @@ public class ConcurrentLinkedCollection<E> implements Iterable<E>, Collection<E>
 		Node<E> newNode = new Node<E>(entry, prev, node);
 		node.prev = newNode;
 		prev.next = newNode;
+		incrementCount();
+	}
+	
+	private synchronized void incrementCount() {
 		count++;
+	}
+	
+	private synchronized void decrementCount() {
+		count--;
 	}
 
 	@Override
-	public LinkedCollectionIterator<E> iterator() {
-		return new LinkedCollectionIterator<E>(this);
+	public LinkedListIterator<E> iterator() {
+		return new LinkedListIterator<E>(this);
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return count == 0;
+	}
+
+	@Override
+	public Object[] toArray() {
+		Object[] data = new Object[count];
+		if (data.length == 0) return data;
+		int index = 0;
+		for (E e : this) {
+			data[index] = e;
+			index++;
+			if (index >= data.length) break;
+		}
+		return data;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T[] toArray(T[] a) {
+		if (a.length < count) {
+			a = Arrays.copyOf(a, count);
+		}
+		int index = 0;
+		for (E e : this) {
+			a[index] = (T) e;
+			index++;
+			if (index >= a.length) break;
+		}
+		if (index < a.length) Arrays.fill(a, index, a.length, null);
+		return a;
+	}
+
+	@Override
+	public boolean containsAll(Collection<?> c) {
+		for (Object o : c) {
+			if (!contains(o)) return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean addAll(Collection<? extends E> c) {
+		for (E e : c) {
+			add(e);
+		}
+		return true;
+	}
+
+	@Override
+	public boolean removeAll(Collection<?> c) {
+		boolean changes = false;
+		for (Object o : c) {
+			if (remove(o)) changes = true;
+		}
+		return changes;
+	}
+
+	@Override
+	public boolean retainAll(Collection<?> c) {
+		boolean changes = false;
+		LinkedListIterator<E> it = iterator();
+		while (it.hasNext()) {
+			if (c.contains(it.next())) continue;
+			changes = true;
+			it.remove();
+		}
+		return changes;
+	}
+	
+	static final class Node<T> {
+		
+		volatile boolean removed;
+		volatile Node<T> prev, next;
+		final T element;
+		
+		public Node(T element, Node<T> prev, Node<T> next) {
+			this.element = element;
+			this.prev = prev;
+			this.next = next;
+		}
+		
 	}
 	
 	/**
 	 * A Iterator that navigates between valid nodes<br>
-	 * Repeatable behavior is not guaranteed due to changes made to the collection<br>
+	 * Repeatable behavior is not guaranteed due to asynchronous changes made to the list<br>
 	 * @param <E>
 	 */
-	public static final class LinkedCollectionIterator<E> implements Iterator<E> {
+	public static final class LinkedListIterator<E> implements Iterator<E> {
 		
 		private Node<E> node, fetched;
-		private final ConcurrentLinkedCollection<E> list;
+		private final ConcurrentLinkedList<E> list;
 		
-		LinkedCollectionIterator(ConcurrentLinkedCollection<E> list) {
+		LinkedListIterator(ConcurrentLinkedList<E> list) {
 			this.list = list;
 			node = new Node<E>(null, null, list.head);
 		}
@@ -237,77 +318,6 @@ public class ConcurrentLinkedCollection<E> implements Iterable<E>, Collection<E>
 			list.insertBefor(node, e);
 		}
 		
-	}
-
-	@Override
-	public boolean isEmpty() {
-		return count == 0;
-	}
-
-	@Override
-	public Object[] toArray() {
-		Object[] data = new Object[count];
-		if (data.length == 0) return data;
-		int index = 0;
-		for (E e : this) {
-			data[index] = e;
-			index++;
-			if (index >= data.length) break;
-		}
-		return data;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T[] toArray(T[] a) {
-		if (a.length < count) {
-			a = Arrays.copyOf(a, count);
-		}
-		int index = 0;
-		for (E e : this) {
-			a[index] = (T) e;
-			index++;
-			if (index >= a.length) break;
-		}
-		if (index < a.length) Arrays.fill(a, index, a.length, null);
-		return a;
-	}
-
-	@Override
-	public boolean containsAll(Collection<?> c) {
-		for (Object o : c) {
-			if (!contains(o)) return false;
-		}
-		return true;
-	}
-
-	@Override
-	public boolean addAll(Collection<? extends E> c) {
-		for (E e : c) {
-			add(e);
-		}
-		return true;
-	}
-
-	@Override
-	public boolean removeAll(Collection<?> c) {
-		boolean changes = false;
-		for (Object o : c) {
-			if (remove(o)) changes = true;
-		}
-		return changes;
-	}
-
-	@Override
-	public boolean retainAll(Collection<?> c) {
-		boolean changes = false;
-		LinkedCollectionIterator<E> it = iterator();
-		while (it.hasNext()) {
-			if (c.contains(it.next())) continue;
-			changes = true;
-			it.remove();
-		}
-		return changes;
 	}
 
 }

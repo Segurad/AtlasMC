@@ -2,7 +2,7 @@ package de.atlasmc.event;
 
 import java.util.Iterator;
 import de.atlasmc.atlasnetwork.proxy.LocalProxy;
-import de.atlasmc.util.ConcurrentLinkedCollection.LinkedCollectionIterator;
+import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.map.ConcurrentLinkedCollectionMultimap;
 
@@ -32,7 +32,7 @@ public class ProxyHandlerList extends HandlerList {
 		} else registerExecutor(executor);
 	}
 	
-	public LinkedCollectionIterator<EventExecutor> getExecutors(@NotNull LocalProxy proxy) {
+	public LinkedListIterator<EventExecutor> getExecutors(@NotNull LocalProxy proxy) {
 		if (!proxyExecutors.containsKey(proxy)) return null;
 		return proxyExecutors.get(proxy).iterator();
 	}
@@ -41,8 +41,8 @@ public class ProxyHandlerList extends HandlerList {
 	protected void callEvent(Event event, boolean cancelled) {
 		@SuppressWarnings("unchecked")
 		LocalProxy proxy = ((GenericEvent<LocalProxy, ?>) event).getEventSource();
-		final LinkedCollectionIterator<EventExecutor> proxyexes = getExecutors(proxy);
-		final LinkedCollectionIterator<EventExecutor> globalexes = getExecutors();
+		final LinkedListIterator<EventExecutor> proxyexes = getExecutors(proxy);
+		final LinkedListIterator<EventExecutor> globalexes = getExecutors();
 		if ((proxyexes != null && proxyexes.hasNext()) || globalexes.hasNext())
 		for (EventPriority prio : EventPriority.values()) {
 			fireEvents(proxyexes, prio, event, cancelled);

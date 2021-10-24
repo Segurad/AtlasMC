@@ -8,13 +8,13 @@ import java.util.List;
 
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
-import de.atlasmc.util.ConcurrentLinkedCollection;
-import de.atlasmc.util.ConcurrentLinkedCollection.LinkedCollectionIterator;
+import de.atlasmc.util.ConcurrentLinkedList;
+import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.ThreadSafe;
 
 /**
- * This class holds all {@link EventExecutor} for specific Events
+ * This class holds all {@link EventExecutor} for the Event it is used
  */
 @ThreadSafe
 public class HandlerList {
@@ -22,13 +22,13 @@ public class HandlerList {
 	protected static final List<HandlerList> HANDLERS = new ArrayList<>();
 	private static int lowID;
 	
-	private final ConcurrentLinkedCollection<EventExecutor> globalExecutors;
+	private final ConcurrentLinkedList<EventExecutor> globalExecutors;
 	private final int handlerID;
 	private EventExecutor defaultExecutor;
 	
 	public HandlerList() {
 		this.defaultExecutor = EventExecutor.NULL_EXECUTOR;
-		this.globalExecutors = new ConcurrentLinkedCollection<>();
+		this.globalExecutors = new ConcurrentLinkedList<>();
 		handlerID = registerHandlerList();
 	}
 	
@@ -80,6 +80,10 @@ public class HandlerList {
 		}
 	}
 	
+	/**
+	 * Unregisters this HandlerList<br>
+	 * Should only be called by System while unloading Events added by Plugins
+	 */
 	public void unregister() {
 		synchronized (HANDLERS) {
 			int id = this.getHandlerID();
@@ -101,8 +105,8 @@ public class HandlerList {
 		registerExecutor(executor);
 	}
 	
-	protected synchronized void register(ConcurrentLinkedCollection<EventExecutor> exes, EventExecutor executor) {
-		LinkedCollectionIterator<EventExecutor> it = exes.iterator();
+	protected synchronized void register(ConcurrentLinkedList<EventExecutor> exes, EventExecutor executor) {
+		LinkedListIterator<EventExecutor> it = exes.iterator();
 		final int ordinal = executor.getPriority().ordinal();
 		while(it.hasNext()) {
 			EventExecutor exe = it.next();
@@ -123,7 +127,7 @@ public class HandlerList {
 	 * 
 	 * @return a immutable copy of all registered GlobalExecutors
 	 */
-	public LinkedCollectionIterator<EventExecutor> getExecutors() {
+	public LinkedListIterator<EventExecutor> getExecutors() {
 		return globalExecutors.iterator();
 	}
 	
@@ -152,12 +156,11 @@ public class HandlerList {
 	 * @param event event
 	 * @param cancellable weather or not the event extends {@link Cancellable}
 	 */
-	protected static void fireEvents(final LinkedCollectionIterator<EventExecutor> executors, final EventPriority priority, final Event event, final boolean cancellable) {
+	protected static void fireEvents(final LinkedListIterator<EventExecutor> executors, final EventPriority priority, final Event event, final boolean cancellable) {
 		if (executors == null || !executors.hasNext()) return;
 		final int prio = priority.ordinal();
-		while (executors.hasNext()) {
-			EventExecutor exe = executors.fetchNext();
-			if (exe.getPriority().ordinal() > prio) return;
+		for (EventExecutor exe = executors.fetchNext(); exe != null; exe = executors.fetchNext()) {
+			if (exe.getPriority().ordinal() > prio) break;
 			executors.moveToFetched();
 			if (exe.getIgnoreCancelled() && (cancellable ? false : ((Cancellable) event).isCancelled())) continue;
 			exe.fireEvent(event);

@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.atlasmc.util.ConcurrentLinkedCollection;
+import de.atlasmc.util.ConcurrentLinkedList;
 
 public class ConcurrentLinkedCollectionMultimap<K, V> extends AbstractMultimap<K, V> {
 	
@@ -24,18 +24,18 @@ public class ConcurrentLinkedCollectionMultimap<K, V> extends AbstractMultimap<K
 	}
 
 	@Override
-	public ConcurrentLinkedCollection<V> get(K key) {
-		return (ConcurrentLinkedCollection<V>) super.get(key);
+	public ConcurrentLinkedList<V> get(K key) {
+		return (ConcurrentLinkedList<V>) super.get(key);
 	}
 
 	@Override
-	public ConcurrentLinkedCollection<V> remove(K key) {
-		return (ConcurrentLinkedCollection<V>) super.remove(key);
+	public ConcurrentLinkedList<V> remove(K key) {
+		return (ConcurrentLinkedList<V>) super.remove(key);
 	}
 
 	@Override
 	protected Collection<V> createCollection() {
-		return new ConcurrentLinkedCollection<V>();
+		return new ConcurrentLinkedList<V>();
 	}
 
 }

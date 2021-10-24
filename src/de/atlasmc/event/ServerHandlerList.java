@@ -3,7 +3,7 @@ package de.atlasmc.event;
 import java.util.Iterator;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
-import de.atlasmc.util.ConcurrentLinkedCollection.LinkedCollectionIterator;
+import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.map.ConcurrentLinkedCollectionMultimap;
 
@@ -45,13 +45,13 @@ public class ServerHandlerList extends HandlerList {
 		} else registerExecutor(executor);
 	}
 	
-	public LinkedCollectionIterator<EventExecutor> getExecutors(@NotNull ServerGroup group) {
+	public LinkedListIterator<EventExecutor> getExecutors(@NotNull ServerGroup group) {
 		if (group == null) return null;
 		if (!groupExecutors.containsKey(group)) return null;
 		return groupExecutors.get(group).iterator();
 	}
 	
-	public LinkedCollectionIterator<EventExecutor> getExecutors(@NotNull LocalServer server) {
+	public LinkedListIterator<EventExecutor> getExecutors(@NotNull LocalServer server) {
 		if (server == null) return null;
 		if (!serverExecutors.containsKey(server)) return null;
 		return serverExecutors.get(server).iterator();
@@ -63,9 +63,9 @@ public class ServerHandlerList extends HandlerList {
 		LocalServer server = ((GenericEvent<LocalServer, ?>) event).getEventSource();
 		if (!server.isServerThread() && !event.isAsynchronous()) 
 			throw new RuntimeException("Tryed to call ServerEvent async: " + event.getName());
-		final LinkedCollectionIterator<EventExecutor> groupexes = getExecutors(server.getGroup());
-		final LinkedCollectionIterator<EventExecutor> serverexes = getExecutors(server);
-		final LinkedCollectionIterator<EventExecutor> globalexes = getExecutors();
+		final LinkedListIterator<EventExecutor> groupexes = getExecutors(server.getGroup());
+		final LinkedListIterator<EventExecutor> serverexes = getExecutors(server);
+		final LinkedListIterator<EventExecutor> globalexes = getExecutors();
 		if ((groupexes != null && groupexes.hasNext()) || 
 				(serverexes != null && serverexes.hasNext()) || 
 				globalexes.hasNext())

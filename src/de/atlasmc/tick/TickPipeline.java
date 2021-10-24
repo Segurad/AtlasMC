@@ -4,17 +4,17 @@ import java.util.ArrayList;
 
 public class TickPipeline<T> {
 	
-	private final ArrayList<Ticker<T>> tickers;
+	private final ArrayList<Ticker<? extends T>> tickers;
 	
 	public TickPipeline() {
-		tickers = new ArrayList<Ticker<T>>();
+		tickers = new ArrayList<>();
 	}
 	
 	public TickPipeline(int capacity) {
-		tickers = new ArrayList<Ticker<T>>(capacity);
+		tickers = new ArrayList<>(capacity);
 	}
 	
-	public void addFirst(Ticker<T> ticker) {
+	public void addFirst(Ticker<? extends T> ticker) {
 		tickers.add(0, ticker);
 	}
 	
@@ -27,7 +27,7 @@ public class TickPipeline<T> {
 		tickers.add(ticker);
 	}
 	
-	public void addAfter(Class<? extends Ticker<T>> after, Ticker<T> ticker) {
+	public void addAfter(Class<? extends Ticker<?>> after, Ticker<T> ticker) {
 		for (int i = 0; i < tickers.size(); i++) {
 			if (!after.isInstance(tickers.get(i))) continue;
 			tickers.add(i+1, ticker);
