@@ -21,6 +21,10 @@ public class ByteDataBuffer implements DataOutput, DataInput {
 		buffer = new byte[size];
 	}
 	
+	/**
+	 * Creates a new ByteDataBuffer by wrapping the input byte array
+	 * @param data
+	 */
 	public ByteDataBuffer(byte[] data) {
 		this.buffer = data;
 	}
