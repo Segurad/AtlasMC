@@ -201,7 +201,7 @@ public class HandlerList {
 	 */
 	public static void registerListener(Listener listener, Object... handleroptions) {
 		if (listener == null) return;
-		List<EventExecutor> exes = getExecutors(listener);
+		List<EventExecutor> exes = MethodEventExecutor.getExecutors(listener);
 		for (EventExecutor exe : exes) {
 			try {
 				Method m = exe.getEventClass().getMethod("getHandlerList", null);
@@ -212,20 +212,6 @@ public class HandlerList {
 				e.printStackTrace();
 			}
 		}
-	}
-	
-	public static List<EventExecutor> getExecutors(Listener listener) {
-		if (listener == null) return null;
-		List<EventExecutor> executors = new ArrayList<>();
-		for (Method method : listener.getClass().getMethods()) {
-			EventHandler handler = method.getAnnotation(EventHandler.class);
-			if (handler == null) continue;
-			if (method.getParameterCount() != 1) continue;
-			Class<?>[] params = method.getParameterTypes();
-			if (!Event.class.isAssignableFrom(params[0])) continue;
-			executors.add(new EventExecutor(params[0], method, handler.priority(), handler.ignoreCancelled(), listener));
-		}
-		return executors;
 	}
 
 }
