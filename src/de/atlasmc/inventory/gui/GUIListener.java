@@ -12,6 +12,7 @@ public interface GUIListener {
 	/**
 	 * Functional implementation of {@link GUIListener}
 	 */
+	@FunctionalInterface
 	public interface GUIOpenListener extends GUIListener {
 		
 		public void openedBy(Player player);
@@ -22,6 +23,7 @@ public interface GUIListener {
 	/**
 	 * Functional implementation of {@link GUIListener}
 	 */
+	@FunctionalInterface
 	public interface GUICloseListener extends GUIListener {
 		
 		public default void openedBy(Player player) {}
@@ -32,6 +34,7 @@ public interface GUIListener {
 	/**
 	 * Functional implementation of {@link GUIListener}
 	 */
+	@FunctionalInterface
 	public interface GUIClickListener extends GUIListener {
 		
 		public default void openedBy(Player player) {}

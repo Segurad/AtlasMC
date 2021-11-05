@@ -5,24 +5,25 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.atlascore.inventory.CoreInventory;
+import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.inventory.InventoryClickEvent;
+import de.atlasmc.event.inventory.InventoryType;
+import de.atlasmc.inventory.InventoryHolder;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.gui.button.Button;
 import de.atlasmc.inventory.gui.component.Component;
 import de.atlasmc.inventory.gui.component.ComponentHandler;
 
-public class SimpleGUI extends CoreInventory implements GUI {
+public class CoreGUI extends CoreInventory implements GUI {
 
 	protected Button[] buttons;
 	protected boolean[] clickable;
-	protected final String name;
 	protected List<ComponentHandler> components;
 	protected List<GUIListener> listeners;
 	
-	public SimpleGUI(int size, String name) {
-		super(size);
-		this.name = name;
+	public CoreGUI(int size, InventoryType type, ChatComponent title, InventoryHolder holder) {
+		super(size, type, title, holder);
 	}
 
 	@Override

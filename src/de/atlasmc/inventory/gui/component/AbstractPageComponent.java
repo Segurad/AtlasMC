@@ -9,7 +9,7 @@ import de.atlasmc.inventory.gui.GUI;
 public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 
 	protected final List<ComponentHandler> handlers;
-	protected final List<E[][]> entries;
+	protected final List<E[]> entries;
 	protected final int x, y, max;
 	
 	protected AbstractPageComponent(int x, int y) {
@@ -38,7 +38,7 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 		if (pages > 0) {
 			for (int i = 0; i < pages; i++) {
 				if (entries.size() >= maxpages && maxpages > 0) break;
-				this.entries.add((E[][]) new Object[y][x]);
+				this.entries.add((E[]) new Object[y*x]);
 			}
 		}
 	}
@@ -75,8 +75,8 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 	public E get(int x, int y) {
 		final int page = y/this.y;
 		final int ry = y%this.y;
-		E[][] entries = this.entries.get(page);
-		return entries[ry][x];
+		E[] entries = this.entries.get(page);
+		return entries[ry*this.x+x];
 	}
 
 	@Override
@@ -88,8 +88,8 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 	public void set(int x, int y, E entry, ComponentHandler source) {
 		final int page = y/this.y;
 		final int ry = y%this.y;
-		Object[][] entries = this.entries.get(page);
-		entries[ry][x] = entry;
+		Object[] entries = this.entries.get(page);
+		entries[ry*this.x+x] = entry;
 		handlers.forEach(h -> { if (h != source) h.internalUpdate(x, y); } );
 	}
 
@@ -97,24 +97,22 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 	public void set(int x, int y, E entry, boolean update) {
 		final int page = y/this.y;
 		final int ry = y%this.y;
-		Object[][] entries = this.entries.get(page);
-		entries[ry][x] = entry;
+		Object[] entries = this.entries.get(page);
+		entries[ry*this.x+x] = entry;
 		if (update) handlers.forEach(h -> h.internalUpdate(x, y));
 	}
 
 	@Override
 	public boolean add(E entry, boolean update) {
 		int page = 0;
-		for (Object[][] entries : this.entries) {
-			for (int y = 0; y < entries.length; y++) {
-				for (int x = 0; x < entries[y].length; x++) {
-					if (entries[y][x] != null) continue;
-					entries[y][x] = entry;
-					if (!handlers.isEmpty() && update) for (ComponentHandler h : handlers) {
-						h.internalUpdate(x, page*this.y + y);
-					};
-					return true;
-				}
+		for (Object[] entries : this.entries) {
+			for (int i = 0; i < entries.length; i++) {
+				if (entries[i] != null) continue;
+				entries[i] = entry;
+				if (!handlers.isEmpty() && update) for (ComponentHandler h : handlers) {
+					h.internalUpdate(x, page*this.y + y);
+				};
+				return true;
 			}
 			page++;
 		}
@@ -123,18 +121,16 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 	
 	@Override 
 	public boolean remove(E entry, boolean update) {
-		for (final Object[][] entries : this.entries) {
-			for (int y = 0; y < entries.length; y++) {
-				for (int x = 0; x < entries[y].length; x++) {
-					final Object etry = entries[y][x];
-					if (entries[y][x] == null) continue;
-					if (!etry.equals(entry)) continue;
-					entries[y][x] = null;
-					if (!handlers.isEmpty() && update) for (ComponentHandler h : handlers) {
-						h.internalUpdate(x, y);
-					};
-					return true;
-				}
+		for (final Object[] entries : this.entries) {
+			for (int i = 0; i < entries.length; i++) {
+				final Object etry = entries[i];
+				if (entries[i] == null) continue;
+				if (!etry.equals(entry)) continue;
+				entries[i] = null;
+				if (!handlers.isEmpty() && update) for (ComponentHandler h : handlers) {
+					h.internalUpdate(x, y);
+				};
+				return true;
 			}
 		}
 		return false;
@@ -142,11 +138,9 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 
 	@Override
 	public boolean contains(E entry) {
-		for (Object[][] entries : this.entries) {
-			for (int y = 0; y < entries.length; y++) {
-				for (int x = 0; x < entries[y].length; x++) {
-					if (entries[y][x].equals(entry)) return true;
-				}
+		for (Object[] entries : this.entries) {
+			for (int i = 0; i < entries.length; i++) {
+				if (entries[i].equals(entry)) return true;
 			}
 		}
 		return false;
@@ -154,10 +148,8 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 	
 	@Override
 	public void clear(boolean update) {
-		for (final Object[][] entries : this.entries) {
-			for (Object[] e : entries) {
-				Arrays.fill(e, null);
-			}
+		for (final Object[] entries : this.entries) {
+			Arrays.fill(entries, null);
 		}
 		if (update) handlers.forEach(h -> h.updateDisplay());
 	}
@@ -176,7 +168,7 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 	@Override
 	public int addPage() {
 		if (entries.size() >= max && max > 0) return -1;
-		this.entries.add((E[][]) new Object[y][x]);
+		this.entries.add((E[]) new Object[y*x]);
 		return this.entries.size()-1;
 	}
 	
@@ -184,7 +176,7 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 	@Override
 	public void addPage(int index) {
 		if (entries.size() >= max) return;
-		this.entries.add(index, (E[][]) new Object[y][x]);
+		this.entries.add(index, (E[]) new Object[y*x]);
 	}
 	
 	@Override
@@ -193,17 +185,17 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 	}
 	
 	@Override
-	public E[][] getEntries() {
+	public E[] getEntries() {
 		return getEntries(0);
 	}
 	
 	@Override
-	public E[][] getEntries(int index) {
+	public E[] getEntries(int index) {
 		return entries.get(index);
 	}
 	
 	@Override
-	public List<E[][]> getEntrieList() {
+	public List<E[]> getEntrieList() {
 		return entries;
 	}
 	

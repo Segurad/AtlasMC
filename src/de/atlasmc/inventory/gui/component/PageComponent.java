@@ -14,6 +14,6 @@ public interface PageComponent<E> extends Component<E> {
 	public int addPage();
 	public void addPage(int index);
 	public void removePage(int index);
-	public E[][] getEntries(int index);
-	public List<E[][]> getEntrieList();
+	public E[] getEntries(int index);
+	public List<E[]> getEntrieList();
 }

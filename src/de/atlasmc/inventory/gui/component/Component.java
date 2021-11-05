@@ -92,9 +92,9 @@ public interface Component<E> extends Iterable<E> {
 	
 	/**
 	 * 
-	 * @return a the array of entries[y][x]
+	 * @return a the array of entries[y > x]
 	 */
-	public E[][] getEntries();
+	public E[] getEntries();
 	
 	public default void clear() {
 		clear(true);

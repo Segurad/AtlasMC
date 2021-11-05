@@ -4,8 +4,10 @@ import java.util.List;
 
 import de.atlasmc.Material;
 import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.event.inventory.ClickType;
 import de.atlasmc.event.inventory.InventoryClickEvent;
+import de.atlasmc.inventory.InventoryHolder;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.ItemUtil;
 import de.atlasmc.inventory.gui.component.AbstractPageComponent;
@@ -16,16 +18,14 @@ import de.atlasmc.inventory.gui.component.PageComponent;
 
 /**
  * a 9x6 GUI with a 9x4 array of elements
- * @author Segurad
- *
  */
 public abstract class ElementManagerGUI<E> extends MultipageGUI {
 
 	protected final PageComponent<E> elements;
 	protected final ComponentHandler ehandler;
 	
-	public ElementManagerGUI(String name, int add, ItemStack addicon) {
-		this(name, add, addicon, 0);
+	public ElementManagerGUI(ChatComponent title, InventoryHolder holder, int add, ItemStack addicon) {
+		this(title, holder, add, addicon, 0);
 	}
 
 	/**
@@ -37,8 +37,8 @@ public abstract class ElementManagerGUI<E> extends MultipageGUI {
 	 * @param maxpages
 	 */
 	@SuppressWarnings("unchecked")
-	public ElementManagerGUI(String name, int add, ItemStack addicon, int maxpages) {
-		super(name, 45, 46, 9, 4, maxpages);
+	public ElementManagerGUI(ChatComponent title, InventoryHolder holder, int add, ItemStack addicon, int maxpages) {
+		super(title, holder, 45, 46, 9, 4, maxpages);
 		if (add > 8 || add < 0) throw new IllegalArgumentException("Value must be between 0 and 8");
 		elements = new AbstractPageComponent<E>(9, 4, maxpages) {
 			@Override
@@ -114,17 +114,14 @@ public abstract class ElementManagerGUI<E> extends MultipageGUI {
 	protected abstract boolean removeElement(E element);
 	
 	public final void updateElementIcon(E element, ItemStack item) {
-		int page = -1, y = -1, x = -1;
-		final List<E[][]> valueList = getElements().getEntrieList();
-		for (final E[][] values : valueList) {
+		int page = -1, i = -1;
+		final List<E[]> valueList = getElements().getEntrieList();
+		for (final E[] values : valueList) {
 			page++;
-			for (final E[] values0 : values) {
-				y++;
-				for (final E value : values0) {
-					x++;
-					if (value != element) continue;
-					mhandler.setSlotEntry(page*9+y*9+x, item);
-				}
+			for (final E value : values) {
+				i++;
+				if (value != element) continue;
+				mhandler.setSlotEntry(page*9+i, item);
 			}
 		}
 	}

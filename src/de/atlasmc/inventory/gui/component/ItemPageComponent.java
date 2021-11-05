@@ -30,31 +30,29 @@ public class ItemPageComponent extends AbstractPageComponent<ItemStack> {
 	 * @return return the ItemStack with the remaining amount or null
 	 */
 	public ItemStack addSafe(ItemStack item) {
-		for (ItemStack[][] entries : this.entries) {
-			for (int y = 0; y < entries.length; y++) {
-				for (int x = 0; x < entries[y].length; x++) {
-					if (entries[y][x] != null) {
-						ItemStack entry = entries[y][x];
-						if (entry.isSimilar(item) && entry.getAmount() < entry.getMaxStackSize()) {
-							if (entry.getAmount() + item.getAmount() > entry.getMaxStackSize()) {
-								item.setAmount(item.getAmount() - (entry.getMaxStackSize()-entry.getAmount()));
-								entry.setAmount(entry.getMaxStackSize());
-							} else {
-								entry.setAmount(entry.getAmount()+item.getAmount());
-								return null;
-							}
-							if (!handlers.isEmpty()) for (ComponentHandler h : handlers) {
-								h.internalUpdate(x, y);
-							};
+		for (ItemStack[] entries : this.entries) {
+			for (int i = 0; i < entries.length; i++) {
+				if (entries[i] != null) {
+					ItemStack entry = entries[i];
+					if (entry.isSimilar(item) && entry.getAmount() < entry.getMaxStackSize()) {
+						if (entry.getAmount() + item.getAmount() > entry.getMaxStackSize()) {
+							item.setAmount(item.getAmount() - (entry.getMaxStackSize()-entry.getAmount()));
+							entry.setAmount(entry.getMaxStackSize());
+						} else {
+							entry.setAmount(entry.getAmount()+item.getAmount());
+							return null;
 						}
-						continue;
+						if (!handlers.isEmpty()) for (ComponentHandler h : handlers) {
+							h.internalUpdate(x, y);
+						};
 					}
-					entries[y][x] = item;
-					if (!handlers.isEmpty()) for (ComponentHandler h : handlers) {
-						h.internalUpdate(x, y);
-					};
-					return null;
+					continue;
 				}
+				entries[i] = item;
+				if (!handlers.isEmpty()) for (ComponentHandler h : handlers) {
+					h.internalUpdate(x, y);
+				};
+				return null;
 			}
 		}
 		return item;
