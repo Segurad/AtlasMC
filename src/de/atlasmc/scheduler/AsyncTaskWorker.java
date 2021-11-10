@@ -28,7 +28,7 @@ final class AsyncTaskWorker extends Thread {
 	public void run() {
 		long time = 0;
 		while (isRunning()) {
-			RegisteredTask task = getTask();
+			final RegisteredTask task = getTask();
 			if (task != null) {
 				time = System.currentTimeMillis(); // To Track the Time the Task needed for execution
 				task.tick();

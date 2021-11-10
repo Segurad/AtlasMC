@@ -4,9 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import de.atlascore.atlasnetwork.CoreProxyConfig;
 import de.atlascore.io.netty.channel.ChannelInitHandler;
+import de.atlascore.proxy.CoreLocalProxy;
 import de.atlasmc.atlasnetwork.LocalAtlasNode;
 import de.atlasmc.atlasnetwork.ProxyConfig;
-import de.atlasmc.atlasnetwork.proxy.LocalProxy;
 import de.atlasmc.event.EventHandler;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.Listener;
@@ -31,7 +31,7 @@ public class Main {
 		ProxyConfig cfg = new CoreProxyConfig();
 		cfg.setServerIconBase64(builder.getServerIcon());
 		cfg.setMaintenance(true);
-		LocalProxy proxy = new LocalProxy(25565, cfg);
+		CoreLocalProxy proxy = new CoreLocalProxy(node, builder.getPort(), cfg);
 		proxy.setChannelInitHandler(new ChannelInitHandler(proxy));
 		proxy.run();
 		
@@ -40,11 +40,8 @@ public class Main {
 			public void proxyAtempt(PlayerLoginAtemptEvent e) {
 				System.out.println("event success");
 			}
-		}, null);
+		});
 		System.out.println("Started");
-		while (true) {
-			
-		}
 	}
 
 }

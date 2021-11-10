@@ -6,4 +6,8 @@ public class SnippetTest {
 	static {
 		
 	}
+	
+	public static void test(String... args) {
+		
+	}
 }

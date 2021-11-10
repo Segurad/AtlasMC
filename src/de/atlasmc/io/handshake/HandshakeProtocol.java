@@ -30,7 +30,8 @@ public class HandshakeProtocol implements Protocol {
 		Class<? extends Packet> clazz = packets.get(id);
 		if (clazz == null) return null;
 		try {
-			return clazz.getConstructor(null).newInstance(null);
+			return clazz.getConstructor()
+					.newInstance();
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();

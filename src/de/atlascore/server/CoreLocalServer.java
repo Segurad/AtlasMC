@@ -86,7 +86,7 @@ public class CoreLocalServer implements LocalServer {
 
 	@Override
 	public long getAge() {
-		return thread.getAge();
+		return thread.getTicks();
 	}
 
 }

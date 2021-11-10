@@ -1,6 +1,5 @@
 package de.atlascore.io.protocol;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -205,8 +204,8 @@ public class CoreProtocolPlay implements ProtocolPlay {
 	private Packet construct(Class<? extends Packet> clazz) {
 		if (clazz == null) return null;
 		try {
-			Constructor<?> construct = clazz.getConstructor(null);
-			return (Packet) construct.newInstance(null);
+			return clazz.getConstructor()
+					.newInstance();
 		} catch (NoSuchMethodException | SecurityException | 
 				InstantiationException | IllegalAccessException | 
 				IllegalArgumentException | InvocationTargetException e) {

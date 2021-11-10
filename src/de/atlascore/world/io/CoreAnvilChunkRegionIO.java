@@ -5,12 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.zip.Deflater;
-import java.util.zip.Inflater;
-import java.util.zip.InflaterInputStream;
-import java.util.zip.ZipInputStream;
-
-import de.atlasmc.util.ByteDataBuffer;
 import de.atlasmc.world.Chunk;
 
 public class CoreAnvilChunkRegionIO {

@@ -204,8 +204,8 @@ public class HandlerList {
 		List<EventExecutor> exes = MethodEventExecutor.getExecutors(listener);
 		for (EventExecutor exe : exes) {
 			try {
-				Method m = exe.getEventClass().getMethod("getHandlerList", null);
-				HandlerList h = (HandlerList) m.invoke(null, null);
+				Method m = exe.getEventClass().getMethod("getHandlerList");
+				HandlerList h = (HandlerList) m.invoke(null);
 				h.registerExecutor(exe, handleroptions);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException 
 					| NoSuchMethodException | SecurityException e) {

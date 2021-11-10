@@ -3,11 +3,13 @@ package de.atlasmc.io.handshake;
 import java.io.IOException;
 
 import de.atlasmc.io.AbstractPacket;
+import de.atlasmc.io.DefaultPacketID;
 import io.netty.buffer.ByteBuf;
 
 /**
  * Default Minecraft handshake
  */
+@DefaultPacketID(0x00)
 public class PacketMinecraftHandshake extends AbstractPacket {
 
 	private int protocolVersion;

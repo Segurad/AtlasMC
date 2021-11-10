@@ -15,7 +15,7 @@ public class AtlasScheduler implements Scheduler {
 	private final long workerMaxIdleTime;
 	
 	public AtlasScheduler(LocalServer server) {
-		this(server, 2, 6000, 12000);
+		this(server, 0, 6000, 600);
 	}
 	
 	/**
@@ -34,6 +34,7 @@ public class AtlasScheduler implements Scheduler {
 		worker = new SyncTaskWorker(this, server.getIdentifier(), asyncWorkerGCTime);
 	}
 	
+	@Override
 	public void runNextTasks() {
 		if (!server.isServerThread()) throw new RuntimeException("Async SyncScheduler call!");
 		worker.runNextTasksSync();

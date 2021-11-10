@@ -16,14 +16,14 @@ public class CoreCommand extends CoreCommandArg implements Command {
 	}
 	
 	public CoreCommand(String name, String help, CommandExecutor executor) {
-		this(name, help, executor, null);
+		this(name, help, executor, (String[]) null);
 	}
 	
 	public CoreCommand(String name, String help, CommandExecutor executor, String... aliases) {
 		super(name, help, executor);
 		if (aliases != null) {
 			this.aliases = Arrays.asList(aliases);
-		}
+		} else List.of();
 	}
 
 	@Override

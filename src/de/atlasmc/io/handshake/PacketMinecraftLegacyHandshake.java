@@ -3,12 +3,14 @@ package de.atlasmc.io.handshake;
 import java.io.IOException;
 
 import de.atlasmc.io.AbstractPacket;
+import de.atlasmc.io.DefaultPacketID;
 import io.netty.buffer.ByteBuf;
 
+@DefaultPacketID(0xFE)
 public class PacketMinecraftLegacyHandshake extends AbstractPacket {
 
 	public PacketMinecraftLegacyHandshake(int id, int version) {
-		super(id, version);
+		super(0xFE, version);
 		// TODO Auto-generated constructor stub
 	}
 

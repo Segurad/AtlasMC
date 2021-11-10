@@ -18,6 +18,7 @@ public class LocalAtlasNodeBuilder {
 	private AtlasNetwork network;
 	private ProtocolAdapter defaultProtocol;
 	private String serverIcon;
+	private int port;
 	
 	/**
 	 * Inits this Builder with all Defaults
@@ -26,6 +27,7 @@ public class LocalAtlasNodeBuilder {
 		localNode = new LocalAtlasNode();
 		network = new CoreAtlasNetwork();
 		defaultProtocol = new CoreProtocolAdapter();
+		port = 25565;
 		
 		File f = new File(Main.class.getResource("/assets/server_icon.png").getFile());
 		byte[] data = new byte[(int) f.length()];
@@ -47,6 +49,10 @@ public class LocalAtlasNodeBuilder {
 
 	public String getServerIcon() {
 		return serverIcon;
+	}
+
+	public int getPort() {
+		return port;
 	}
 
 }

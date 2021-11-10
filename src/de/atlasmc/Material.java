@@ -3,8 +3,6 @@ package de.atlasmc;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
-
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
@@ -1293,7 +1291,6 @@ public class Material implements Namespaced {
 	}
 
 	public boolean isAir() {
-		Objects.hash(null);
 		return this == AIR || this == CAVE_AIR || this == VOID_AIR;
 	}
 

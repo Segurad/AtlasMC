@@ -50,7 +50,7 @@ class EventDefaultListenerPresentsTest {
 				if (!m.getName().equals("getHandlerList")) continue;
 				if (!Modifier.isStatic(m.getModifiers())) continue;
 				m.setAccessible(true);
-				HandlerList handlers = (HandlerList) m.invoke(clazz, null);
+				HandlerList handlers = (HandlerList) m.invoke(clazz);
 				if (handlers.getDefaultExecutor() == null || handlers.getDefaultExecutor() == EventExecutor.NULL_EXECUTOR) {
 					warnings++;
 					if (printMissingClasses)

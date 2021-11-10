@@ -2,26 +2,15 @@ package de.atlasmc.atlasnetwork.proxy;
 
 import de.atlasmc.atlasnetwork.AtlasNode;
 
-public class Proxy {
+/**
+ * A Proxy in this Network
+ */
+public interface Proxy {
 	
-	private final int port;
-	private final String host;
+	public AtlasNode getNode();
 	
-	public Proxy(String host, int port) {
-		this.host = host;
-		this.port = port;
-	}
+	public int getPort();
 	
-	public AtlasNode getNode() {
-		return null;
-	}
-	
-	public int getPort() {
-		return port;
-	}
-	
-	public String getHost() {
-		return host;
-	}
+	public String getHost();
 
 }
