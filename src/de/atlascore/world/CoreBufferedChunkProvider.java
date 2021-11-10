@@ -16,9 +16,10 @@ import de.atlasmc.world.World;
  */
 public class CoreBufferedChunkProvider implements ChunkProvider {
 	
-	private Chunk[] chunkBuffer;
-	private long[] chunkPosBuffer;
-	private int used, size;
+	private Chunk[] chunkBuffer; // stores all currently loaded chunks the index equals the index in the position buffer
+	private long[] chunkPosBuffer; // stores the position of a chunk as long 32 most significant bits X 32 least significant bits Z
+	private int used; // number of chunks currently buffered
+	private int size; // size of the chunk buffer
 	private final World world;
 	
 	public CoreBufferedChunkProvider(World world) {
@@ -27,8 +28,8 @@ public class CoreBufferedChunkProvider implements ChunkProvider {
 	
 	@Override
 	public Chunk getChunk(int x, int z) {
-		// X | Y
-		final long pos = x << 32 + z;
+		// X | Z
+		final long pos = x << 32 | z;
 		for (int i = 0; i < size; i++) {
 			if (chunkPosBuffer[i] != pos) continue;
 			return chunkBuffer[i];

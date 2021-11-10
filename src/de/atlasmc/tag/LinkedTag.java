@@ -2,6 +2,9 @@ package de.atlasmc.tag;
 
 import java.util.Set;
 
+/**
+ * Links {@link TagContainer} together
+ */
 public class LinkedTag<T> extends Tag<T> {
 	
 	private Set<Tag<T>> tagcontainer;

@@ -5,6 +5,9 @@ import java.io.IOException;
 import de.atlasmc.io.AbstractPacket;
 import io.netty.buffer.ByteBuf;
 
+/**
+ * Default Minecraft handshake
+ */
 public class PacketMinecraftHandshake extends AbstractPacket {
 
 	private int protocolVersion;

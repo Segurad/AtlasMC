@@ -2,6 +2,9 @@ package de.atlasmc.tag;
 
 import java.util.Set;
 
+/**
+ * Contains all elements for this tag
+ */
 public class TagContainer<T> extends Tag<T> {
 	
 	private Set<T> taged;

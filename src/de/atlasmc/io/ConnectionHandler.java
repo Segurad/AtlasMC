@@ -6,13 +6,15 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.atlasmc.atlasnetwork.proxy.LocalProxy;
 import de.atlasmc.io.handshake.HandshakeProtocol;
+import de.atlasmc.util.annotation.ThreadSafe;
 import io.netty.channel.socket.SocketChannel;
 
+@ThreadSafe
 public class ConnectionHandler {
 	
 	private final Queue<Packet> queue;
 	private final SocketChannel channel;
-	private Protocol protocol;
+	private volatile Protocol protocol;
 	private final Vector<PacketListener> packetListeners;
 	private final LocalProxy proxy;
 	
@@ -55,20 +57,16 @@ public class ConnectionHandler {
 		return !queue.isEmpty();
 	}
 	
-	public void setProtocol(Protocol protocol, PacketListener listener) {
+	public synchronized void setProtocol(Protocol protocol, PacketListener listener) {
 		if (protocol == null) throw new IllegalArgumentException("Protocol can not be null!");
-		synchronized (this) {
-			this.protocol = protocol;
-			packetListeners.removeAllElements();
-			if (listener != null)
-			packetListeners.add(listener);
-		}
+		this.protocol = protocol;
+		packetListeners.removeAllElements();
+		if (listener != null)
+		packetListeners.add(listener);
 	}
 	
 	public Protocol getProtocol() {
-		synchronized (this) {
-			return protocol;
-		}
+		return protocol;
 	}
 	
 	public void registerPacketListener(PacketListener listener) {

@@ -8,7 +8,8 @@ import de.atlasmc.world.Chunk;
 import de.atlasmc.world.ChunkProvider;
 
 /**
- * ChunkProvider for quicker chunk access but no dynamic world size
+ * ChunkProvider for quicker chunk access but no dynamic world size<br>
+ * Stores all chunks in a defined area with calculable access
  */
 public class CoreFixedChunkProvider implements ChunkProvider {
 

@@ -16,7 +16,9 @@ public class Atlas {
 	
 	public Atlas(LocalAtlasNode node, AtlasNetwork network) {
 		if (instance != null) throw new RuntimeException("Atlas already initiated!");
-		instance = node;
+		if (node == null) throw new IllegalArgumentException("Node can not be null!");
+		if (network == null) throw new IllegalArgumentException("Network can not be null!");
+		Atlas.instance = node;
 		Atlas.network = network;
 	}
 	

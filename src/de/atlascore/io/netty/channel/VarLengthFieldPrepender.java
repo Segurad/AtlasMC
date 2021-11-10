@@ -12,11 +12,16 @@ import java.util.List;
 
 import de.atlasmc.io.AbstractPacket;
 
+/**
+ * Adds the packets length to the data as varint
+ */
 @Sharable
 public class VarLengthFieldPrepender extends MessageToMessageEncoder<ByteBuf> {
 
     private final ByteOrder byteOrder;
     private final int lengthAdjustment;
+    
+    public static final VarLengthFieldPrepender INSTANCE = new VarLengthFieldPrepender();
 
     public VarLengthFieldPrepender() {
         this(ByteOrder.BIG_ENDIAN, 0);

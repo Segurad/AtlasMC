@@ -5,6 +5,9 @@ import java.io.IOException;
 import de.atlasmc.io.AbstractPacket;
 import io.netty.buffer.ByteBuf;
 
+/**
+ * Internal handshake to connect players from one node to another
+ */
 public class PacketAtlasPlayerHandshake extends AbstractPacket {
 
 	public PacketAtlasPlayerHandshake() {

@@ -5,6 +5,9 @@ import java.io.IOException;
 import de.atlasmc.io.AbstractPacket;
 import io.netty.buffer.ByteBuf;
 
+/**
+ * Handshake between nodes
+ */
 public class PacketAtlasNodeHandshake extends AbstractPacket {
 
 	public PacketAtlasNodeHandshake(int id, int version) {

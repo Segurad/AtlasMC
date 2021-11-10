@@ -1,16 +1,9 @@
 package de.atlascore.main;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Base64;
-
-import de.atlascore.atlasnetwork.CoreAtlasNetwork;
 import de.atlascore.atlasnetwork.CoreProxyConfig;
 import de.atlascore.io.netty.channel.ChannelInitHandler;
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.Atlas;
 import de.atlasmc.atlasnetwork.LocalAtlasNode;
 import de.atlasmc.atlasnetwork.ProxyConfig;
 import de.atlasmc.atlasnetwork.proxy.LocalProxy;
@@ -21,7 +14,6 @@ import de.atlasmc.event.proxy.PlayerLoginAtemptEvent;
 
 public class Main {
 	
-	@SuppressWarnings("resource")
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		System.out.print("       ____\n" + 
 				"      / /  \\     _________   __        ________    ______\n" + 
@@ -33,14 +25,11 @@ public class Main {
 				"/ / /_     __\\ \\_\\    \\__\\/     \\_____\\/  \\__\\/\\__\\/  \\_____\\/\n" + 
 				"\\_\\___\\   /____/_/\n");
 		System.out.println("Start...");
-		new Atlas(new LocalAtlasNode(), new CoreAtlasNetwork());
-		Atlas.getProtocolAdapterHandler().setProtocol(new CoreProtocolAdapter());
-		File f = new File(Main.class.getResource("/assets/server_icon.png").getFile());
-		byte[] data = new byte[(int) f.length()];
-		new FileInputStream(f).read(data);
-		String s = Base64.getEncoder().encodeToString(data);
+		LocalAtlasNodeBuilder builder = new LocalAtlasNodeBuilder();
+		builder.initDefaults();
+		LocalAtlasNode node = builder.build();
 		ProxyConfig cfg = new CoreProxyConfig();
-		cfg.setServerIconBase64(s);
+		cfg.setServerIconBase64(builder.getServerIcon());
 		cfg.setMaintenance(true);
 		LocalProxy proxy = new LocalProxy(25565, cfg);
 		proxy.setChannelInitHandler(new ChannelInitHandler(proxy));
