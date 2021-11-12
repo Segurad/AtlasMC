@@ -12,6 +12,8 @@ import de.atlasmc.SoundCategory;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Player;
+import de.atlasmc.event.HandlerList;
+import de.atlasmc.event.inventory.InventoryCloseEvent;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
@@ -19,6 +21,7 @@ import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutChangeGameState;
 import de.atlasmc.io.protocol.play.PacketOutCloseWindow;
 import de.atlasmc.io.protocol.play.PacketOutOpenWindow;
+import de.atlasmc.io.protocol.play.PacketOutParticle;
 import de.atlasmc.io.protocol.play.PacketOutChangeGameState.ChangeReason;
 import de.atlasmc.io.protocol.play.PacketOutSetExperiance;
 import de.atlasmc.io.protocol.play.PacketOutSetSlot;
@@ -88,25 +91,20 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	}
 
 	@Override
-	public void spawnParticle(Particle particle, Location loc, int amount, int i, int j, int k, int l) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void playSound(Location loc, Sound sound, SoundCategory category, float volume, float pitch) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void playSound(Location loc, String ssound, SoundCategory category, float volume, float pitch) {
+	public void playSound(Location loc, String sound, SoundCategory category, float volume, float pitch) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void closeInventory() {
+		HandlerList.callEvent(new InventoryCloseEvent(view));
 		open.getViewers().remove(this);
 		open = null;
 		view.setTopInventory(getInventory().getCraftingInventory());
@@ -203,6 +201,34 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 		packet.setWindowID(-1);
 		packet.setSlot(-1);
 		packet.setItem(cursorItem);
+	}
+
+	@Override
+	public void spawnParticle(Particle particle, double x, double y, double z, float offX, float offY, float offZ, float particledata, int count, Object data) {
+		PacketOutParticle packet = getConnection().getProtocol().createPacket(PacketOutParticle.class);
+		packet.setParticle(particle);
+		packet.setPoition(x, y, z);
+		packet.setOffset(offX, offY, offZ);
+		packet.setParticleData(particledata);
+		packet.setParticleCount(count);
+		if (!particle.isValid(data)) throw new IllegalArgumentException("Data is not valid!");
+		packet.setData(data);
+		con.sendPacked(packet);
+	}
+
+	@Override
+	public void spawnParticle(Particle particle, double x, double y, double z, float particledata) {
+		spawnParticle(particle, x, y, z, particledata, 1);
+	}
+
+	@Override
+	public void spawnParticle(Particle particle, double x, double y, double z, float particledata, int count) {
+		spawnParticle(particle, x, y, z, particledata, count, null);
+	}
+
+	@Override
+	public void spawnParticle(Particle particle, double x, double y, double z, float particledata, int count, Object data) {
+		spawnParticle(particle, x, y, z, 0, 0, 0, particledata, count, data);
 	}
 
 }

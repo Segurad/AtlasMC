@@ -29,7 +29,13 @@ public interface Player extends HumanEntity {
 
 	public void playEffect(Location loc, Effect effect, Object data);
 
-	public void spawnParticle(Particle particle, Location loc, int amount, int i, int j, int k, int l);
+	public void spawnParticle(Particle particle, double x, double y, double z, float particledata);
+	
+	public void spawnParticle(Particle particle, double x, double y, double z, float particledata, int count);
+	
+	public void spawnParticle(Particle particle, double x, double y, double z, float particledata, int count, Object data);
+	
+	public void spawnParticle(Particle particle, double x, double y, double z, float offX, float offY, float offZ, float particledata, int count, Object data);
 
 	public void playSound(Location loc, Sound sound, SoundCategory category, float volume, float pitch);
 

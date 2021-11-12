@@ -67,4 +67,9 @@ public interface PlayerConnection extends PacketListenerPlayIn {
 
 	public String getClientLocal();
 
+	/**
+	 * Cancel a click
+	 */
+	public void setWindowLock();
+
 }

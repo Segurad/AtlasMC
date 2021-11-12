@@ -34,7 +34,7 @@ public class ParticleObject implements Animation {
 
 	@Override
 	public void play(Player player, Location loc, EulerAngle angle) {
-		player.spawnParticle(particle, loc, amount,0,0,0,10);
+		player.spawnParticle(particle, loc.getX(), loc.getY(), loc.getZ(),0 ,0 ,0 ,0 ,amount, this);
 	}
 	
 	@Override

@@ -152,6 +152,7 @@ public class CoreInventory implements Inventory {
 	
 	@Override
 	public void updateSlot(Player player, int slot, boolean animation) {
+		if (slot == -999) return;
 		InventoryView view = player.getOpenInventory();
 		int raw = view.convertSlot(this, slot);
 		int id = view.getViewID();

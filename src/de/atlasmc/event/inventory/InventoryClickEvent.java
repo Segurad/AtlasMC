@@ -65,6 +65,10 @@ public class InventoryClickEvent extends InventoryInteractEvent {
 		return action;
 	}
 
+	/**
+	 * Returns the clicked slot in the clicked inventory or -999 if left or right out of the inventory
+	 * @return clicked slot or -999
+	 */
 	public int getSlot() {
 		return view.convertSlot(rawSlot);
 	}

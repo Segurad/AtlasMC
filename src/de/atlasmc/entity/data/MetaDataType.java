@@ -275,13 +275,23 @@ public abstract class MetaDataType<T> {
 	};
 
 	
-	public static final MetaDataType<ParticleObject> PARTICLE = new MetaDataType<ParticleObject>(15) {
+	public static final ParticleMetaDataType PARTICLE = new ParticleMetaDataType();
+			
+	public static final class ParticleMetaDataType extends MetaDataType<ParticleObject> {
+
+		public ParticleMetaDataType() {
+			super(15);
+		}
 
 		@Override
 		public ParticleObject read(ByteBuf in) throws IOException {
 			Particle p = Particle.getByID(AbstractPacket.readVarInt(in));
+			return new ParticleObject(p, read(p, in));
+		}
+		
+		public Object read(Particle particle, ByteBuf in) throws IOException {
 			Object data = null;
-			switch (p) {
+			switch (particle) {
 			case BLOCK:
 			case FALLING_DUST: 
 				data = AbstractPacket.readVarInt(in);
@@ -298,22 +308,25 @@ public abstract class MetaDataType<T> {
 				break;
 			default: break;
 			}
-			return new ParticleObject(p, 1, data);
+			return data;
 		}
 
 		@Override
 		public void write(Object data, ByteBuf out) throws IOException {
-			ParticleObject o = (ParticleObject) data;
-			Particle p = o.getParticle();
-			AbstractPacket.writeVarInt(p.getID(), out);
-			switch (p) {
+			ParticleObject obj = (ParticleObject) data;
+			write(obj.getParticle(), obj.getData(), false, out);
+		}
+		
+		public void write(Particle particle, Object data, boolean dataOnly, ByteBuf out) throws IOException {
+			if (!dataOnly) AbstractPacket.writeVarInt(particle.getID(), out);
+			switch (particle) {
 			case BLOCK:
 			case FALLING_DUST: 
-				AbstractPacket.writeVarInt(o.getData() != null ? (int) o.getData() : 0, out);
+				AbstractPacket.writeVarInt(data != null ? (int) data : 0, out);
 				break;
 			case DUST:
-				if (o.getData() != null && o.getData() instanceof DustOptions) {
-					DustOptions d = (DustOptions) o.getData();
+				if (data != null && data instanceof DustOptions) {
+					DustOptions d = (DustOptions) data;
 					Color c = d.getColor();
 					out.writeFloat(c.getRed() / 255.0f);
 					out.writeFloat(c.getGreen() / 255.0f);
@@ -326,7 +339,7 @@ public abstract class MetaDataType<T> {
 				out.writeFloat(0);
 				break;
 			case ITEM:
-				AbstractPacket.writeSlot((ItemStack) o.getData(), out);
+				AbstractPacket.writeSlot((ItemStack) data, out);
 				break;
 			default: break;
 			}

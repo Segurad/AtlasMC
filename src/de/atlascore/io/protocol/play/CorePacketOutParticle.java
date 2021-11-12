@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
 import de.atlasmc.Particle;
+import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutParticle;
 import io.netty.buffer.ByteBuf;
@@ -13,14 +14,14 @@ public class CorePacketOutParticle extends AbstractPacket implements PacketOutPa
 	private int id, count;
 	private double x, y, z;
 	private float offX, offY, offZ, particleData;
-	private byte[] data;
+	private Object data;
 	private boolean longDistance;
 	
 	public CorePacketOutParticle() {
 		super(CoreProtocolAdapter.VERSION);
 	}
 	
-	public CorePacketOutParticle(Particle particle, boolean longDistance, double x, double y, double z, float offX, float offY, float offZ, float particleData, int count, byte[] data) {
+	public CorePacketOutParticle(Particle particle, boolean longDistance, double x, double y, double z, float offX, float offY, float offZ, float particleData, int count, Object data) {
 		this();
 		this.id = particle.ordinal();
 		this.longDistance = longDistance;
@@ -47,8 +48,7 @@ public class CorePacketOutParticle extends AbstractPacket implements PacketOutPa
 		offZ = in.readFloat();
 		particleData = in.readFloat();
 		count = in.readInt();
-		data = new byte[in.readableBytes()];
-		in.readBytes(data);
+		data = MetaDataType.PARTICLE.read(Particle.getByID(id), in);
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class CorePacketOutParticle extends AbstractPacket implements PacketOutPa
 		out.writeFloat(offZ);
 		out.writeFloat(particleData);
 		out.writeInt(count);
-		out.writeBytes(data);
+		MetaDataType.PARTICLE.write(Particle.getByID(id), data, false, out);
 	}
 
 	@Override
@@ -117,8 +117,77 @@ public class CorePacketOutParticle extends AbstractPacket implements PacketOutPa
 	}
 
 	@Override
-	public byte[] getData() {
+	public Object getData() {
 		return data;
+	}
+
+	@Override
+	public void setLongDistance(boolean longdistance) {
+		this.longDistance = longdistance;
+	}
+
+	@Override
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	@Override
+	public void setY(double y) {
+		this.y = y;
+	}
+
+	@Override
+	public void setZ(double z) {
+		this.z = z;
+	}
+
+	@Override
+	public void setPoition(double x, double y, double z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+
+	@Override
+	public void setOffsetX(float x) {
+		this.offX = x;
+	}
+
+	@Override
+	public void setOffsetY(float y) {
+		this.offY = y;
+	}
+
+	@Override
+	public void setOffsetZ(float z) {
+		this.offZ = z;
+	}
+
+	@Override
+	public void setOffset(float x, float y, float z) {
+		this.offX = x;
+		this.offY = y;
+		this.offZ = z;
+	}
+
+	@Override
+	public void setParticleData(float data) {
+		this.particleData = data;
+	}
+
+	@Override
+	public void setParticleCount(int count) {
+		this.count = count;
+	}
+
+	@Override
+	public void setData(Object data) {
+		this.data = data;
+	}
+
+	@Override
+	public void setParticle(Particle particle) {
+		id = particle.getID();
 	}
 
 }

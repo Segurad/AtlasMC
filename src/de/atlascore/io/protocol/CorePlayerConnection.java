@@ -23,7 +23,6 @@ import de.atlasmc.event.inventory.InventoryAction;
 import de.atlasmc.event.inventory.InventoryButtonType;
 import de.atlasmc.event.inventory.InventoryClickButtonEvent;
 import de.atlasmc.event.inventory.InventoryClickEvent;
-import de.atlasmc.event.inventory.InventoryCloseEvent;
 import de.atlasmc.event.inventory.InventoryCreativeClickEvent;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.event.inventory.SelectTradeEvent;
@@ -122,6 +121,7 @@ import de.atlasmc.io.protocol.play.PacketInUseItem;
 import de.atlasmc.io.protocol.play.PacketInVehicleMove;
 import de.atlasmc.io.protocol.play.PacketInWindowConfirmation;
 import de.atlasmc.io.protocol.play.PacketOutKeepAlive;
+import de.atlasmc.io.protocol.play.PacketOutWindowConfirmation;
 import de.atlasmc.potion.PotionEffect;
 import de.atlasmc.recipe.RecipeBook;
 import de.atlasmc.io.protocol.play.PacketInAdvancementTab.Action;
@@ -381,7 +381,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	public void handlePacket(PacketInCloseWindow packet) {
 		LocalServer s = getLocalSever();
 		if (s == null) return;
-		HandlerList.callEvent(new InventoryCloseEvent(player.getOpenInventory()));
+		player.closeInventory();
 	}
 
 	@Override
@@ -827,6 +827,15 @@ public class CorePlayerConnection implements PlayerConnection {
 	@Override
 	public ProtocolPlay getProtocol() {
 		return protocolPlay;
+	}
+
+	@Override
+	public void setWindowLock() {
+		PacketOutWindowConfirmation packet = getProtocol().createPacket(PacketOutWindowConfirmation.class);
+		packet.setActionNumber(getNextWindowActionIDAndLock());
+		packet.setAccepted(false);
+		packet.setWindowID(invID);
+		sendPacked(packet);
 	}
 
 }

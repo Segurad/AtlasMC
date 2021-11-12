@@ -53,4 +53,19 @@ public class CorePacketOutWindowConfirmation extends AbstractPacket implements P
 		return accepted;
 	}
 
+	@Override
+	public void setActionNumber(int value) {
+		this.actionnumber = (short) value;
+	}
+
+	@Override
+	public void setAccepted(boolean accepted) {
+		this.accepted = accepted;
+	}
+
+	@Override
+	public void setWindowID(int id) {
+		this.windowID = (byte) id;		
+	}
+
 }

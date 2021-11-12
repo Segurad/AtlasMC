@@ -114,4 +114,9 @@ public enum Particle {
 	public static Particle getByID(int id) {
 		return values()[id];
 	}
+
+	public boolean isValid(Object data) {
+		if (this.data == null) return data == null;
+		return this.data.isInstance(data);
+	}
 }
