@@ -40,7 +40,7 @@ public class CorePacketOutStopSound extends AbstractPacket implements PacketOutS
 		if (category != null) {
 			if (sound != null) {
 				out.writeByte(3);
-				writeVarInt(category.ordinal(), out);
+				writeVarInt(category.getID(), out);
 				writeString(sound, out);
 			} else {
 				out.writeByte(1);
@@ -60,6 +60,16 @@ public class CorePacketOutStopSound extends AbstractPacket implements PacketOutS
 	@Override
 	public String getSound() {
 		return sound;
+	}
+
+	@Override
+	public void setCategory(SoundCategory category) {
+		this.category = category;
+	}
+
+	@Override
+	public void setSound(String sound) {
+		this.sound = sound;
 	}
 
 }

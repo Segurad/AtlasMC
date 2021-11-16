@@ -3,6 +3,7 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutSoundEffect;
@@ -21,9 +22,7 @@ public class CorePacketOutSoundEffect extends AbstractPacket implements PacketOu
 		this();
 		this.soundID = soundID;
 		this.category = category.ordinal();
-		this.x = (int) (x * 8);
-		this.y = (int) (y * 8);
-		this.z = (int) (z * 8);
+		setPosition(x, y, z);
 	}
 
 	@Override
@@ -49,11 +48,6 @@ public class CorePacketOutSoundEffect extends AbstractPacket implements PacketOu
 	}
 
 	@Override
-	public int getSoundID() {
-		return soundID;
-	}
-
-	@Override
 	public SoundCategory getCategory() {
 		return SoundCategory.getByID(category);
 	}
@@ -74,13 +68,45 @@ public class CorePacketOutSoundEffect extends AbstractPacket implements PacketOu
 	}
 
 	@Override
-	public float getValue() {
+	public float getPitch() {
+		return pitch;
+	}
+
+	@Override
+	public Sound getSound() {
+		return Sound.getByID(soundID);
+	}
+
+	@Override
+	public float getVolume() {
 		return volume;
 	}
 
 	@Override
-	public float getPitch() {
-		return pitch;
+	public void setPosition(double x, double y, double z) {
+		this.x = (int) (x * 8);
+		this.y = (int) (y * 8);
+		this.z = (int) (z * 8);
+	}
+
+	@Override
+	public void setCategory(SoundCategory category) {
+		this.category = category.getID();
+	}
+
+	@Override
+	public void setSound(Sound sound) {
+		this.soundID = sound.getID();
+	}
+
+	@Override
+	public void setVolume(float volume) {
+		this.volume = volume;
+	}
+
+	@Override
+	public void setPitch(float pitch) {
+		this.pitch = pitch;
 	}
 
 }

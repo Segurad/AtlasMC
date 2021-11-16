@@ -17,4 +17,8 @@ public enum SoundCategory {
 		SoundCategory[] values = values();
 		return values[id];
 	}
+
+	public int getID() {
+		return ordinal();
+	}
 }

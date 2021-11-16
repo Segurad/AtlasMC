@@ -38,8 +38,6 @@ public interface Player extends HumanEntity {
 	
 	public boolean hasPermission(String permission);
 
-	public void playSound(Location location, Sound sound, int i, int j);
-
 	public int getLevel();
 
 	public void setLevel(int level);
@@ -89,9 +87,15 @@ public interface Player extends HumanEntity {
 
 	// --- Sound ---
 	
-	public void playSound(Location loc, Sound sound, SoundCategory category, float volume, float pitch);
+	public void playSound(Entity entity, Sound sound, SoundCategory category, float volume, float pitch);
+	
+	public void playSound(double x, double y, double z, Sound sound, SoundCategory category, float volume, float pitch);
 
-	public void playSound(Location loc, String ssound, SoundCategory category, float volume, float pitch);
+	public void playSound(Entity entity, String sound, SoundCategory category, float volume, float pitch);
+	
+	public void playSound(double x, double y, double z, String sound, SoundCategory category, float volume, float pitch);
+	
+	public void stopSound(SoundCategory category, String sound);
 	
 	// --- Particle ---
 	
@@ -102,7 +106,7 @@ public interface Player extends HumanEntity {
 	public void spawnParticle(Particle particle, double x, double y, double z, float particledata, int count, Object data);
 	
 	public void spawnParticle(Particle particle, double x, double y, double z, float offX, float offY, float offZ, float particledata, int count, Object data);
-
+	
 	// --- Inventory Stuff ---
 	
 	public InventoryView getOpenInventory();

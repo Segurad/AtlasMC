@@ -3,6 +3,7 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutEntitySoundEffect;
@@ -45,11 +46,6 @@ public class CorePacketOutEntitySoundEffect extends AbstractPacket implements Pa
 	}
 
 	@Override
-	public int getSoundID() {
-		return soundID;
-	}
-
-	@Override
 	public SoundCategory getSoundCategory() {
 		return SoundCategory.getByID(category);
 	}
@@ -67,6 +63,36 @@ public class CorePacketOutEntitySoundEffect extends AbstractPacket implements Pa
 	@Override
 	public float getPitch() {
 		return pitch;
+	}
+
+	@Override
+	public Sound getSound() {
+		return Sound.getByID(soundID);
+	}
+
+	@Override
+	public void setEntityID(int entityID) {
+		this.entityID = entityID;
+	}
+
+	@Override
+	public void setCategory(SoundCategory category) {
+		this.category = category.getID();
+	}
+
+	@Override
+	public void setSound(Sound sound) {
+		this.soundID = sound.getID();
+	}
+
+	@Override
+	public void setVolume(float volume) {
+		this.volume = volume;
+	}
+
+	@Override
+	public void setPitch(float pitch) {
+		this.pitch = pitch;
 	}
 
 }

@@ -22,9 +22,7 @@ public class CorePacketOutNamedSoundEffect extends AbstractPacket implements Pac
 		this();
 		this.identifier = identifier;
 		this.category = category.ordinal();
-		this.x = (int) (x*8);
-		this.y = (int) (y*8);
-		this.z = (int) (z*8);
+		setPosition(x, y, z);
 		this.volume = volume;
 		this.pitch = pitch;
 	}
@@ -84,6 +82,33 @@ public class CorePacketOutNamedSoundEffect extends AbstractPacket implements Pac
 	@Override
 	public float getPitch() {
 		return pitch;
+	}
+
+	@Override
+	public void setPosition(double x, double y, double z) {
+		this.x = (int) (x*8);
+		this.y = (int) (y*8);
+		this.z = (int) (z*8);
+	}
+
+	@Override
+	public void setCategory(SoundCategory category) {
+		this.category = category.getID();
+	}
+
+	@Override
+	public void setIdentifier(String sound) {
+		this.identifier = sound;
+	}
+
+	@Override
+	public void setVolume(float volume) {
+		this.volume = volume;
+	}
+
+	@Override
+	public void setPitch(float pitch) {
+		this.pitch = pitch;
 	}
 	
 	

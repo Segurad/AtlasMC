@@ -4,6 +4,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.atlasmc.Sound;
+import de.atlasmc.SoundCategory;
 import de.atlasmc.entity.HumanEntity;
 import de.atlasmc.entity.Player;
 import de.atlasmc.inventory.Inventory;
@@ -35,7 +36,7 @@ public final class PlopIn extends AbstractAnimation {
 						if (!(e instanceof Player))
 							continue;
 						Player p = (Player) e;
-						p.playSound(p.getLocation(), sound, 1, 1);
+						p.playSound(sound, SoundCategory.MASTER, 1, 1);
 					}
 				}
 				index++;

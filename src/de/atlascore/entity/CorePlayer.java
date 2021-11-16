@@ -13,6 +13,7 @@ import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.chat.ChatAdapter;
 import de.atlasmc.chat.ChatChannel;
 import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.HandlerList;
@@ -24,11 +25,15 @@ import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutChangeGameState;
 import de.atlasmc.io.protocol.play.PacketOutCloseWindow;
+import de.atlasmc.io.protocol.play.PacketOutEntitySoundEffect;
+import de.atlasmc.io.protocol.play.PacketOutNamedSoundEffect;
 import de.atlasmc.io.protocol.play.PacketOutOpenWindow;
 import de.atlasmc.io.protocol.play.PacketOutParticle;
 import de.atlasmc.io.protocol.play.PacketOutChangeGameState.ChangeReason;
 import de.atlasmc.io.protocol.play.PacketOutSetExperiance;
 import de.atlasmc.io.protocol.play.PacketOutSetSlot;
+import de.atlasmc.io.protocol.play.PacketOutSoundEffect;
+import de.atlasmc.io.protocol.play.PacketOutStopSound;
 import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.scoreboard.Scoreboard;
 
@@ -44,7 +49,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	private boolean canBuild;
 	private Object pluginData;
 	private ChatAdapter chat;
-	private PermissionHandler permissionHandler;
+	private PermissionHandler permHandler;
 	
 	public CorePlayer(int id, EntityType type, Location loc, UUID uuid) {
 		super(id, type, loc, uuid);
@@ -73,14 +78,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 
 	@Override
 	public boolean hasPermission(String permission) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void playSound(Location location, Sound sound, int i, int j) {
-		// TODO Auto-generated method stub
-		
+		return permHandler.hasPermission(permission);
 	}
 
 	@Override
@@ -98,18 +96,6 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 
 	@Override
 	public void playEffect(Location loc, Effect effect, Object data) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void playSound(Location loc, Sound sound, SoundCategory category, float volume, float pitch) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void playSound(Location loc, String sound, SoundCategory category, float volume, float pitch) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -148,8 +134,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return getAtlasPlayer().getInternalName();
 	}
 
 	@Override
@@ -255,12 +240,12 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 
 	@Override
 	public PermissionHandler getPermissionHandler() {
-		return permissionHandler;
+		return permHandler;
 	}
 
 	@Override
 	public void setPermissionHandler(PermissionHandler handler) {
-		this.permissionHandler = handler;
+		this.permHandler = handler;
 	}
 
 	@Override
@@ -282,6 +267,52 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	@Override
 	public boolean hasPluginData() {
 		return pluginData != null;
+	}
+
+	@Override
+	public void playSound(double x, double y, double z, Sound sound, SoundCategory category, float volume, float pitch) {
+		PacketOutSoundEffect packet = con.getProtocol().createPacket(PacketOutSoundEffect.class);
+		packet.setPosition(x, y, z);
+		packet.setSound(sound);
+		packet.setCategory(category);
+		packet.setVolume(volume);
+		packet.setPitch(pitch);
+		con.sendPacked(packet);
+	}
+
+	@Override
+	public void playSound(Entity entity, Sound sound, SoundCategory category, float volume, float pitch) {
+		PacketOutEntitySoundEffect packet = con.getProtocol().createPacket(PacketOutEntitySoundEffect.class);
+		packet.setEntityID(entity.getID());
+		packet.setSound(sound);
+		packet.setCategory(category);
+		packet.setVolume(volume);
+		packet.setPitch(pitch);
+		con.sendPacked(packet);
+	}
+
+	@Override
+	public void playSound(Entity entity, String sound, SoundCategory category, float volume, float pitch) {
+		playSound(entity.getX(), entity.getY(), entity.getZ(), sound, category, volume, pitch);
+	}
+
+	@Override
+	public void playSound(double x, double y, double z, String sound, SoundCategory category, float volume, float pitch) {
+		PacketOutNamedSoundEffect packet = con.getProtocol().createPacket(PacketOutNamedSoundEffect.class);
+		packet.setPosition(x, y, z);
+		packet.setIdentifier(sound);
+		packet.setCategory(category);
+		packet.setVolume(volume);
+		packet.setPitch(pitch);
+		con.sendPacked(packet);
+	}
+
+	@Override
+	public void stopSound(SoundCategory category, String sound) {
+		PacketOutStopSound packet = con.getProtocol().createPacket(PacketOutStopSound.class);
+		packet.setCategory(category);
+		packet.setSound(sound);
+		con.sendPacked(packet);
 	}
 
 }

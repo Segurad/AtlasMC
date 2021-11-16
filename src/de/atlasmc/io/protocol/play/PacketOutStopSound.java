@@ -8,11 +8,15 @@ import de.atlasmc.io.PacketOutbound;
 public interface PacketOutStopSound extends PacketPlay, PacketOutbound {
 	
 	public SoundCategory getCategory();
+	
 	public String getSound();
+	
+	public void setCategory(SoundCategory category);
+
+	public void setSound(String sound);
 	
 	@Override
 	public default int getDefaultID() {
 		return OUT_STOP_SOUND;
 	}
-
 }
