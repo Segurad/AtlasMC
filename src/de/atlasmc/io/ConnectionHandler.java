@@ -15,6 +15,7 @@ public class ConnectionHandler {
 	private final Queue<Packet> queue;
 	private final SocketChannel channel;
 	private volatile Protocol protocol;
+	private volatile IOExceptionHandler errHandler;
 	private final Vector<PacketListener> packetListeners;
 	private final LocalProxy proxy;
 	
@@ -29,6 +30,7 @@ public class ConnectionHandler {
 		this.packetListeners = new Vector<PacketListener>();
 		this.proxy = proxy;
 		this.protocol = protocol;
+		this.errHandler = IOExceptionHandler.UNHANDLED;
 	}
 	
 	public LocalProxy getProxy() {
@@ -91,6 +93,18 @@ public class ConnectionHandler {
 	
 	public boolean isClosed() {
 		return !channel.isOpen();
+	}
+	
+	public IOExceptionHandler getExceptionHandler() {
+		return errHandler;
+	}
+	
+	public void setExceptionHandler(IOExceptionHandler handler) {
+		this.errHandler = handler != null ? handler : IOExceptionHandler.UNHANDLED;
+	}
+
+	public boolean handleException(Throwable cause) {
+		return errHandler.handle(this, cause);
 	}
 
 }

@@ -17,7 +17,7 @@ public class CorePacketInLoginStart extends AbstractPacket implements PacketInLo
 
 	@Override
 	public void read(ByteBuf in) throws IOException {
-		name = readString(in);
+		name = readString(in, 16);
 	}
 
 	@Override
