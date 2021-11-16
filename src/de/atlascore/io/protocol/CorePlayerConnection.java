@@ -12,7 +12,7 @@ import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.block.Block;
 import de.atlasmc.block.BlockFace;
-import de.atlasmc.chat.ChatMode;
+import de.atlasmc.chat.ChatChannel.ChannelType;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.block.BlockPlaceEvent;
@@ -144,7 +144,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	
 	// Client Settings
 	private String clientLocal;
-	private ChatMode chatmode;
+	private ChannelType chatmode;
 	private boolean chatColors = true;
 	private byte viewDistance, skinparts, mainHand;
 	
@@ -182,7 +182,7 @@ public class CorePlayerConnection implements PlayerConnection {
 		this.protocol = protocol;
 		this.protocolPlay = protocol.getPlayProtocol();
 		this.inboundQueue = new ConcurrentLinkedQueue<>();
-		this.chatmode = ChatMode.FULL;
+		this.chatmode = ChannelType.CHAT;
 	}
 	
 	@Override
@@ -786,7 +786,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	}
 
 	@Override
-	public ChatMode getChatMode() {
+	public ChannelType getChatMode() {
 		return chatmode;
 	}
 	

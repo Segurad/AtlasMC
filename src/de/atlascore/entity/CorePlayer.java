@@ -10,10 +10,14 @@ import de.atlasmc.Particle;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
+import de.atlasmc.chat.ChatAdapter;
+import de.atlasmc.chat.ChatChannel;
+import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.inventory.InventoryCloseEvent;
+import de.atlasmc.event.inventory.InventoryOpenEvent;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
@@ -25,17 +29,22 @@ import de.atlasmc.io.protocol.play.PacketOutParticle;
 import de.atlasmc.io.protocol.play.PacketOutChangeGameState.ChangeReason;
 import de.atlasmc.io.protocol.play.PacketOutSetExperiance;
 import de.atlasmc.io.protocol.play.PacketOutSetSlot;
+import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.scoreboard.Scoreboard;
 
 public class CorePlayer extends CoreHumanEntity implements Player {
 
 	private PlayerConnection con;
 	private Inventory open;
+	private CoreInventoryView view;
+	
 	private int level;
 	private Gamemode gamemode;
-	private CoreInventoryView view;
 	private ItemStack cursorItem;
 	private boolean canBuild;
+	private Object pluginData;
+	private ChatAdapter chat;
+	private PermissionHandler permissionHandler;
 	
 	public CorePlayer(int id, EntityType type, Location loc, UUID uuid) {
 		super(id, type, loc, uuid);
@@ -48,6 +57,9 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 		if (inv == getInventory()) throw new IllegalArgumentException("Can not open own Inventory!");
 		if (inv.getType().getID() == -1) throw new IllegalArgumentException("Can not open Inventory with this type (Please use the dedicated method!): " + inv.getType().name());
 		if (open != null) closeInventory();
+		InventoryOpenEvent event = new InventoryOpenEvent(view, inv);
+		HandlerList.callEvent(event);
+		if (event.isCancelled()) return;
 		this.open = inv;
 		view.setTopInventory(open);
 		view.setViewID(con.getNextInventoryID());
@@ -152,11 +164,6 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	}
 
 	@Override
-	public boolean hasInternalUUID() {
-		return con.getAtlasPlayer().hasInternalUUID();
-	}
-
-	@Override
 	public void setInternalUUID(UUID uuid) {
 		con.getAtlasPlayer().setInternalUUID(uuid);
 	}
@@ -205,13 +212,13 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 
 	@Override
 	public void spawnParticle(Particle particle, double x, double y, double z, float offX, float offY, float offZ, float particledata, int count, Object data) {
+		if (!particle.isValid(data)) throw new IllegalArgumentException("Data is not valid!");
 		PacketOutParticle packet = getConnection().getProtocol().createPacket(PacketOutParticle.class);
 		packet.setParticle(particle);
 		packet.setPoition(x, y, z);
 		packet.setOffset(offX, offY, offZ);
 		packet.setParticleData(particledata);
 		packet.setParticleCount(count);
-		if (!particle.isValid(data)) throw new IllegalArgumentException("Data is not valid!");
 		packet.setData(data);
 		con.sendPacked(packet);
 	}
@@ -229,6 +236,52 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	@Override
 	public void spawnParticle(Particle particle, double x, double y, double z, float particledata, int count, Object data) {
 		spawnParticle(particle, x, y, z, 0, 0, 0, particledata, count, data);
+	}
+
+	@Override
+	public ChatAdapter getChat() {
+		return chat;
+	}
+
+	@Override
+	public void sendMessage(ChatChannel channel, ChatComponent chat) {
+		this.chat.sendMessage(channel, chat);
+	}
+
+	@Override
+	public void sendMessage(ChatComponent chat) {
+		// TODO message in SystemChannel
+	}
+
+	@Override
+	public PermissionHandler getPermissionHandler() {
+		return permissionHandler;
+	}
+
+	@Override
+	public void setPermissionHandler(PermissionHandler handler) {
+		this.permissionHandler = handler;
+	}
+
+	@Override
+	public Object getPluginData() {
+		return pluginData;
+	}
+
+	@Override
+	public void setPluginData(Object data) {
+		this.pluginData = data;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getPluginData(Class<T> clazz) {
+		return clazz.isInstance(pluginData) ? (T) pluginData : null;
+	}
+
+	@Override
+	public boolean hasPluginData() {
+		return pluginData != null;
 	}
 
 }
