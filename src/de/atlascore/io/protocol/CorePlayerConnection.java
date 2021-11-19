@@ -695,9 +695,9 @@ public class CorePlayerConnection implements PlayerConnection {
 	@Override
 	public void handlePacket(PacketInUseItem packet) {
 		Location loc = player.getLocation();
-		BlockRayTracer ray = new BlockRayTracer(loc, loc.getDirection());
 		double length = player.getGamemode() == Gamemode.CREATIVE ? 5.0 : 4.5;
-		Chunk chunk = ray.getFirstBlockHit(BlockRayCollisionRule.IGNORE_FUID_AND_AIR, length);
+		BlockRayTracer ray = new BlockRayTracer(loc, loc.getDirection(), BlockRayCollisionRule.IGNORE_FUID_AND_AIR);
+		Chunk chunk = ray.getFirstBlockHit(length);
 		Block block = new CoreBlockAccess(loc, chunk);
 		
 		EquipmentSlot hand = packet.getHand();

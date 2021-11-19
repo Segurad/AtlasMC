@@ -150,8 +150,11 @@ public class ByteDataBuffer implements DataOutput, DataInput {
 
 	@Override
 	public int skipBytes(int n) {
-		// TODO Auto-generated method stub
-		return 0;
+		if (n+pos > count) {
+			n = count-pos;
+			pos = count;
+		} else pos += n;
+		return n;
 	}
 
 	@Override

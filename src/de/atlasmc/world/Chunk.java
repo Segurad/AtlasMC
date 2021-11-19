@@ -72,7 +72,24 @@ public interface Chunk extends Tickable {
 	
 	public <T extends Entity> List<T> getEntitiesByClass(List<T> entities, Class<T> clazz);
 	
+	/**
+	 * Returns a copy of the BlockData at the position
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return a copy of the BlockData 
+	 */
 	public BlockData getBlockDataAt(int x, int y, int z);
+	
+	/**
+	 * Returns the BlockData at the position <b>NOT</b> a copy<br>
+	 * If this BlockData is modified all Blocks with this data in the section will be modified!
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return BlockData
+	 */
+	public BlockData getBlockDataAtUnsafe(int x, int y, int z);
 	
 	public Material getBlockType(int x, int y, int z);
 	

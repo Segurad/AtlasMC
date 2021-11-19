@@ -91,6 +91,15 @@ public interface ChunkSection {
 	public BlockData getBlockData(int x, int y, int z);
 	
 	/**
+	 * Returns the BlockData at the position <b>NOT</b> a copy
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return BlockData
+	 */
+	public BlockData getBlockDataUnsafe(int x, int y, int z);
+	
+	/**
 	 * 
 	 * @param x
 	 * @param y

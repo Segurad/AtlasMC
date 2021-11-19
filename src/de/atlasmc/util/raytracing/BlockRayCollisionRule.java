@@ -1,16 +1,24 @@
 package de.atlasmc.util.raytracing;
 
 import de.atlasmc.Material;
-import de.atlasmc.util.raytracing.collisionrules.IgnoreFuidAndAir;
+import de.atlasmc.block.data.BlockData;
 
-public abstract class BlockRayCollisionRule {
+@FunctionalInterface
+public interface BlockRayCollisionRule {
 
 	public static BlockRayCollisionRule
-	ALWAYS,
-	IGNORE_AIR,
-	IGNORE_FUID_AND_AIR = new IgnoreFuidAndAir()
-	;
+	IGNORE_AIR = (data) -> {
+		Material material = data.getMaterial();
+		return !(material == Material.AIR
+				|| material == Material.CAVE_AIR || material == Material.VOID_AIR);
+	},
+	IGNORE_FUID_AND_AIR = (data) -> {
+		Material material = data.getMaterial();
+		return !(material == Material.AIR || material == Material.WATER 
+				|| material == Material.LAVA
+				|| material == Material.CAVE_AIR || material == Material.VOID_AIR);
+	};
 	
-	public abstract boolean isValidMaterial(Material material);
+	public boolean isValid(BlockData data);
 
 }

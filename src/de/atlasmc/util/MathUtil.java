@@ -152,6 +152,4 @@ public class MathUtil {
 		return vec;
 	}
 	
-	
-	
 }

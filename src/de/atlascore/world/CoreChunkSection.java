@@ -8,6 +8,9 @@ import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.world.ChunkSection;
 
+/**
+ * Default implementation of {@link ChunkSection}
+ */
 public class CoreChunkSection implements ChunkSection {
 	
 	private final List<CorePaletteEntry> palette;
@@ -126,6 +129,11 @@ public class CoreChunkSection implements ChunkSection {
 	public BlockData getBlockData(int x, int y, int z) {
 		BlockData data = palette.get(getIndex(x, y, z)).getData();
 		return data.clone();
+	}
+	
+	@Override
+	public BlockData getBlockDataUnsafe(int x, int y, int z) {
+		return palette.get(getIndex(x, y, z)).getData();
 	}
 
 	@Override

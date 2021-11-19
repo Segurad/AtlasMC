@@ -19,7 +19,7 @@ public class CoreBufferedChunkProvider implements ChunkProvider {
 	private Chunk[] chunkBuffer; // stores all currently loaded chunks the index equals the index in the position buffer
 	private long[] chunkPosBuffer; // stores the position of a chunk as long 32 most significant bits X 32 least significant bits Z
 	private int used; // number of chunks currently buffered
-	private int size; // size of the chunk buffer
+	private int last; // position of the last chunk in the buffer
 	private final World world;
 	
 	public CoreBufferedChunkProvider(World world) {
@@ -30,7 +30,7 @@ public class CoreBufferedChunkProvider implements ChunkProvider {
 	public Chunk getChunk(int x, int z) {
 		// X | Z
 		final long pos = x << 32 | z;
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < last; i++) {
 			if (chunkPosBuffer[i] != pos) continue;
 			return chunkBuffer[i];
 		}

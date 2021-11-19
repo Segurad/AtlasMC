@@ -2,7 +2,6 @@ package de.atlasmc.world;
 
 import de.atlasmc.Location;
 import de.atlasmc.SimpleLocation;
-import de.atlasmc.schematic.Schematic;
 
 /**
  * Represents a region between two locations
@@ -108,10 +107,6 @@ public class Region implements Cloneable {
 		// l == Location auf der Achse
 		// w == widthe der Strecke auf der Achse
 		return ((l1 <= l2 + w2) && (l2 <= l1 + w1));
-	}
-
-	public Schematic toShematic(Location center) {
-		return Schematic.getShematic(this, center);
 	}
 
 	public double getWidhtX() {

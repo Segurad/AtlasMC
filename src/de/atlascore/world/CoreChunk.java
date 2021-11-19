@@ -147,6 +147,13 @@ public class CoreChunk implements Chunk {
 		if (section == null) return null;
 		return section.getBlockData(x, y, z);
 	}
+	
+	@Override
+	public BlockData getBlockDataAtUnsafe(int x, int y, int z) {
+		ChunkSection section = getSection(y);
+		if (section == null) return null;
+		return section.getBlockDataUnsafe(x, y, z);
+	}
 
 	@Override
 	public Material getBlockType(int x, int y, int z) {

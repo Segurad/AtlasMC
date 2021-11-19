@@ -36,7 +36,7 @@ public final class PlopIn extends AbstractAnimation {
 						if (!(e instanceof Player))
 							continue;
 						Player p = (Player) e;
-						p.playSound(sound, SoundCategory.MASTER, 1, 1);
+						p.playSound(p, sound, SoundCategory.MASTER, 1, 1);
 					}
 				}
 				index++;
