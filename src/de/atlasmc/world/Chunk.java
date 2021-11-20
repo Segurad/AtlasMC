@@ -1,13 +1,12 @@
 package de.atlasmc.world;
 
 import java.util.List;
-import java.util.Set;
-
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.tick.Tickable;
+import de.atlasmc.util.annotation.NotNull;
 
 /**
  * A Chunk of a World
@@ -15,16 +14,19 @@ import de.atlasmc.tick.Tickable;
 public interface Chunk extends Tickable {
 
 	/**
-	 * 
-	 * @return a set of {@link ChunkSection}s ordered from the highest to the lowest
+	 * Returns a list of all section in this chunk.<br>
+	 * Sections that do not exist are null.
+	 * @return a list of sections 
 	 */
-	public Set<ChunkSection> getSections();
+	public List<ChunkSection> getSections();
 	
 	/**
-	 * 
+	 * Returns the ChunkSection at the given height<br>
+	 * If there is no section at this height a new one will be created
 	 * @param height between 0 and 256
 	 * @return the chunk section at this height
 	 */
+	@NotNull
 	public ChunkSection getSection(int height);
 	
 	public boolean hasSection(int height);

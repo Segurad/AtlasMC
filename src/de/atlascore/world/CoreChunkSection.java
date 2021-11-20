@@ -19,7 +19,7 @@ public class CoreChunkSection implements ChunkSection {
 	public CoreChunkSection() {
 		palette = new ArrayList<CorePaletteEntry>();
 		CorePaletteEntry entry = new CorePaletteEntry(Material.AIR.createBlockData());
-		entry.setCount(4096);
+		entry.count = 4096;
 		palette.add(entry);
 		indizes = new short[4096];
 	}
@@ -44,14 +44,20 @@ public class CoreChunkSection implements ChunkSection {
 
 	@Override
 	public void setIndex(short value, int x, int y, int z) {
-		CorePaletteEntry entry = palette.get(value);
-		entry.incrementCount();
+		palette.get(value).count++; // increment new values palette entry
 		final int index = getIndizesIndex(x, y, z);
-		entry = palette.get(indizes[index]);
-		entry.decrementCount();
-		indizes[index] = value;
+		palette.get(indizes[index]).count--; // decrement old values palette entry
+		indizes[index] = value; // replace old value
 	}
 
+	/**
+	 * This method compact the coordinates as a index<br>
+	 * @implNote does not check if the coordinates belong to this section
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return the index for the indizes
+	 */
 	protected int getIndizesIndex(int x, int y, int z) {
 		return (z & 0xF) << 4 | (y & 0xF) << 8 | (x & 0xF);
 	}
@@ -64,7 +70,7 @@ public class CoreChunkSection implements ChunkSection {
 	@Override
 	public List<BlockData> getPalette(List<BlockData> palette) {
 		for (CorePaletteEntry entry : this.palette) {
-			palette.add(entry.getData().clone());
+			palette.add(entry.data.clone());
 		}
 		return palette;
 	}
@@ -84,7 +90,7 @@ public class CoreChunkSection implements ChunkSection {
 				|| id == Material.CAVE_AIR.getBlockID()) {
 				continue;
 			}
-			count += entry.getCount();
+			count += entry.count;
 		}
 		return count;
 	}
@@ -127,42 +133,29 @@ public class CoreChunkSection implements ChunkSection {
 
 	@Override
 	public BlockData getBlockData(int x, int y, int z) {
-		BlockData data = palette.get(getIndex(x, y, z)).getData();
+		BlockData data = palette.get(getIndex(x, y, z)).data;
 		return data.clone();
 	}
 	
 	@Override
 	public BlockData getBlockDataUnsafe(int x, int y, int z) {
-		return palette.get(getIndex(x, y, z)).getData();
+		return palette.get(getIndex(x, y, z)).data;
 	}
 
 	@Override
-	public int setBlockData(BlockData data, int x, int y, int z) {
-		int paletteIndex = getPaletteIndex(data);
-		if (paletteIndex == -1) {
-			final int size = palette.size();
-			for (int i = 0; i < size; i++) {
-				CorePaletteEntry entry = palette.get(i);
-				if (entry.getCount() > 0) continue;
-				paletteIndex = i;
-				palette.set(i, new CorePaletteEntry(data));
-				break;
-			}
-			if (paletteIndex == -1) {
-				palette.add(new CorePaletteEntry(data.clone()));
-				paletteIndex = palette.size()-1;
-			}
-		}
-		setIndex((short) paletteIndex, x, y, z);
+	public short setBlockData(BlockData data, int x, int y, int z) {
+		short paletteIndex = addPaletteEntry(data);
+		setIndex(paletteIndex, x, y, z);
 		return paletteIndex;
 	}
 
 	@Override
-	public int getPaletteIndex(BlockData data) {
-		int index = -1;
+	public short getPaletteIndex(BlockData data) {
+		if (data == null) throw new IllegalArgumentException("Palette can not contain null!");
+		short index = -1;
 		for (CorePaletteEntry entry : palette) {
 			index++;
-			if (entry.getData().equals(data)) {
+			if (entry.data.equals(data)) {
 				return index;
 			}
 		}
@@ -172,8 +165,24 @@ public class CoreChunkSection implements ChunkSection {
 	@Override
 	public Material getBlockType(int x, int y, int z) {
 		CorePaletteEntry entry = palette.get(getIndex(x, y, z));
-		BlockData data = entry.getData();
+		BlockData data = entry.data;
 		return data.getMaterial();
+	}
+
+	@Override
+	public short addPaletteEntry(BlockData data) {
+		final short index = getPaletteIndex(data); // check if present
+		if (index != -1) return index; 
+		final int size = palette.size();
+		for (short i = 0; i < size; i++) { // check for unused entry for replacement
+			CorePaletteEntry entry = palette.get(i);
+			if (entry.count > 0) continue;
+			entry.data = data.clone();
+			return i;
+		}
+		// add new entry
+		palette.add(new CorePaletteEntry(data.clone()));
+		return (short) (palette.size()-1);
 	}
 
 }

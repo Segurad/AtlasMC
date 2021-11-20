@@ -116,13 +116,20 @@ public interface ChunkSection {
 	 * @param z
 	 * @return the palette index of this data
 	 */
-	public int setBlockData(BlockData data, int x, int y, int z);
+	public short setBlockData(BlockData data, int x, int y, int z);
 	
 	/**
 	 * 
 	 * @param data
 	 * @return the palette index of this data or -1 if not present
 	 */
-	public int getPaletteIndex(BlockData data);
+	public short getPaletteIndex(BlockData data);
+	
+	/**
+	 * Tries to add a copy BlockData to the palette
+	 * @param data to add
+	 * @return the index of this data is set or the index of present data
+	 */
+	public short addPaletteEntry(BlockData data);
 
 }

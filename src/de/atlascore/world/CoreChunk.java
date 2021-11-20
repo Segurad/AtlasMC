@@ -3,8 +3,6 @@ package de.atlascore.world;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
@@ -31,9 +29,8 @@ public class CoreChunk implements Chunk {
 	}
 
 	@Override
-	public Set<ChunkSection> getSections() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ChunkSection> getSections() {
+		return List.of(sections);
 	}
 
 	@Override
