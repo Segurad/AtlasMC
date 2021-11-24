@@ -14,6 +14,11 @@ public class MathUtil {
 		return value > i ? i : i-1;
 	}
 	
+	public static int upper(double value) {
+		int i = (int) value;
+		return value > i ? i+1 : i;
+	}
+	
 	/**
 	 * 
 	 * @param original

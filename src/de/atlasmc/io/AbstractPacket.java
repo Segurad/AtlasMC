@@ -26,7 +26,7 @@ public abstract class AbstractPacket implements Packet {
 	}
 	
 	/**
-	 * Creates a new AbstractPacket with packet getDefaultID();
+	 * Creates a new AbstractPacket with packet {@link #getDefaultID()}
 	 * @param version the protocol version
 	 */
 	public AbstractPacket(int version) {

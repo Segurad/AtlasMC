@@ -41,8 +41,11 @@ public class MapData {
 		setPixel(x, y, color.getID());
 	}
 	
-	public void setPixel(int x, int y, byte color) {
-		pixels[x+y*width] = color;
+	public boolean setPixel(int x, int y, byte color) {
+		final int index = x+y*width;
+		if (pixels[index] == color) return false;
+		pixels[index] = color;
+		return true;
 	}
 
 	public int getWidth() {

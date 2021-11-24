@@ -1,6 +1,6 @@
 package de.atlascore.main;
 
-// TODO remove this
+// FIXME remove this
 public class SnippetTest {
 
 	static {

@@ -100,7 +100,7 @@ public final class CircleRenderer implements Renderer {
 	 * @param data
 	 * @param offsetX
 	 * @param offsetY
-	 * @return
+	 * @return true if changes were made
 	 */
 	@Override
 	public boolean render(MapData data, int offsetX, int offsetY) {
@@ -112,8 +112,7 @@ public final class CircleRenderer implements Renderer {
 				int y = points[i][j]+offsetY;
 				if (x < 0 || x >= width) continue;
 				if (y < 0 || y >= height) continue;
-				data.setPixel(x, y, color);
-				changes = true;
+				if (data.setPixel(x, y, color)) changes = true;
 			}
 		}
 		return changes;

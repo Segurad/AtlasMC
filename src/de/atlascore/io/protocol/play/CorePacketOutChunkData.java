@@ -2,8 +2,6 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
-
 import de.atlascore.io.protocol.CoreProtocolAdapter;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
@@ -42,11 +40,11 @@ public class CorePacketOutChunkData extends AbstractPacket implements PacketOutC
 		this.x = x;
 		this.z = z;
 		this.fullChunk = fullChunk;
-		Set<ChunkSection> sections = chunk.getSections();
+		List<ChunkSection> sections = chunk.getSections();
 		if (fullChunk) {
 			for (ChunkSection s : sections) {
 				this.bitmask <<= 1;
-				if (!s.isEmpty()) this.bitmask += 0x01;
+				if (s != null && !s.isEmpty()) this.bitmask += 0x01;
 			}
 		} else this.bitmask = bitmask;
 		motionBlocking = chunk.getHightMap();
