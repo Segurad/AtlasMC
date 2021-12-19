@@ -105,6 +105,11 @@ public class HandlerList {
 		registerExecutor(executor);
 	}
 	
+	/**
+	 * Inserts a executor to the list and groups it with other executors of the same priority
+	 * @param exes
+	 * @param executor
+	 */
 	protected synchronized void register(ConcurrentLinkedList<EventExecutor> exes, EventExecutor executor) {
 		LinkedListIterator<EventExecutor> it = exes.iterator();
 		final int ordinal = executor.getPriority().ordinal();
@@ -143,10 +148,18 @@ public class HandlerList {
 	 * @param cancellable
 	 */
 	protected void callEvent(final Event event, boolean cancellable) {
+		if (globalExecutors.isEmpty()) {
+			getDefaultExecutor().fireEvent(event);
+			return;
+		}
+		boolean defaultHandler = false;
 		for (EventExecutor exe : globalExecutors){
+			if (exe.getPriority() == EventPriority.MONITOR && !defaultHandler) {
+				defaultHandler = true;
+				getDefaultExecutor().fireEvent(event);
+			}
 			exe.fireEvent(event);
 		}
-		getDefaultExecutor().fireEvent(event);
 	}
 	
 	/**
@@ -159,9 +172,9 @@ public class HandlerList {
 	protected static void fireEvents(final LinkedListIterator<EventExecutor> executors, final EventPriority priority, final Event event, final boolean cancellable) {
 		if (executors == null || !executors.hasNext()) return;
 		final int prio = priority.ordinal();
-		for (EventExecutor exe = executors.fetchNext(); exe != null; exe = executors.fetchNext()) {
+		for (EventExecutor exe = executors.peekNext(); exe != null; exe = executors.peekNext()) {
 			if (exe.getPriority().ordinal() > prio) break;
-			executors.moveToFetched();
+			executors.moveToPeeked();
 			if (exe.getIgnoreCancelled() && (cancellable ? false : ((Cancellable) event).isCancelled())) continue;
 			exe.fireEvent(event);
 		}

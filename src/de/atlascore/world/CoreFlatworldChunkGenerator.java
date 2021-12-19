@@ -40,29 +40,31 @@ public class CoreFlatworldChunkGenerator implements ChunkGenerator {
 	@Override
 	public Chunk generate(World world, int x, int z) {
 		CoreChunk chunk = new CoreChunk(world);
-		if (palette == null) return chunk;
-		int lastPaletteIndex = -1;
-		short lastSectionPaletteIndex = -1;
-		for (int y = startheight, i = 0; y < startheight+stack.length; y++, i++) {
-			if (stack[i] == -1) continue;
-			ChunkSection section = chunk.getSection(y);
+		if (palette != null) { // Fill chunk with Blocks
+			int lastPaletteIndex = -1;
+			short lastSectionPaletteIndex = -1;
 			
-			short sectionPaletteIndex = -1;
-			int paletteIndex = stack[i];
-			
-			// Reduce palette searching time
-			if (lastPaletteIndex == paletteIndex) 
-				sectionPaletteIndex = lastSectionPaletteIndex;
-			else {
-				sectionPaletteIndex = section.getPaletteIndex(palette[paletteIndex]);
-				lastPaletteIndex = paletteIndex;
-				lastSectionPaletteIndex = sectionPaletteIndex;
-			}
-			
-			// fill layer of section
-			for (int secZ = 0; secZ < 16; secZ++) {
-				for (int secX = 0; secX < 16; secX++) {
-					section.setIndex(sectionPaletteIndex, secX, y, secZ);
+			for (int y = startheight, i = 0; y < startheight+stack.length; y++, i++) {
+				if (stack[i] == -1) continue;
+				ChunkSection section = chunk.getSection(y);
+				
+				short sectionPaletteIndex = -1;
+				int paletteIndex = stack[i];
+				
+				// Reduce palette searching time
+				if (lastPaletteIndex == paletteIndex) 
+					sectionPaletteIndex = lastSectionPaletteIndex;
+				else {
+					sectionPaletteIndex = section.getPaletteIndex(palette[paletteIndex]);
+					lastPaletteIndex = paletteIndex;
+					lastSectionPaletteIndex = sectionPaletteIndex;
+				}
+				
+				// fill layer of section
+				for (int secZ = 0; secZ < 16; secZ++) {
+					for (int secX = 0; secX < 16; secX++) {
+						section.setIndex(sectionPaletteIndex, secX, y, secZ);
+					}
 				}
 			}
 		}

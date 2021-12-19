@@ -45,12 +45,22 @@ public class ServerHandlerList extends HandlerList {
 		} else registerExecutor(executor);
 	}
 	
+	/**
+	 * Returns the LinkedListIterator or null if ServerGroup not present
+	 * @param proxy
+	 * @return LinkedListIterator or null
+	 */
 	public LinkedListIterator<EventExecutor> getExecutors(@NotNull ServerGroup group) {
 		if (group == null) return null;
 		if (!groupExecutors.containsKey(group)) return null;
 		return groupExecutors.get(group).iterator();
 	}
 	
+	/**
+	 * Returns the LinkedListIterator or null if LocalServer not present
+	 * @param proxy
+	 * @return LinkedListIterator or null
+	 */
 	public LinkedListIterator<EventExecutor> getExecutors(@NotNull LocalServer server) {
 		if (server == null) return null;
 		if (!serverExecutors.containsKey(server)) return null;
@@ -68,13 +78,16 @@ public class ServerHandlerList extends HandlerList {
 		final LinkedListIterator<EventExecutor> globalexes = getExecutors();
 		if ((groupexes != null && groupexes.hasNext()) || 
 				(serverexes != null && serverexes.hasNext()) || 
-				globalexes.hasNext())
-		for (EventPriority prio : EventPriority.values()) {
-			fireEvents(serverexes, prio, event, cancelled);
-			fireEvents(groupexes, prio, event, cancelled);
-			fireEvents(globalexes, prio, event, cancelled);
+				globalexes.hasNext()) {
+			for (EventPriority prio : EventPriority.values()) {
+				if (prio == EventPriority.MONITOR) getDefaultExecutor().fireEvent(event);
+				fireEvents(serverexes, prio, event, cancelled);
+				fireEvents(groupexes, prio, event, cancelled);
+				fireEvents(globalexes, prio, event, cancelled);
+			}
+		} else {
+			getDefaultExecutor().fireEvent(event);
 		}
-		getDefaultExecutor().fireEvent(event);
 	}
 	
 	@Override

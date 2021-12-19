@@ -12,7 +12,7 @@ import de.atlasmc.util.annotation.ThreadSafe;
 public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 	
 	private volatile Node<E> head, tail;
-	private volatile int count = 0; // Modify only by sync over this
+	private volatile int count = 0; // Modify only by sync over ConcurrentLikedList.this
 	
 	@Override
 	public boolean add(E entry) {
@@ -246,7 +246,7 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 	 */
 	public static final class LinkedListIterator<E> implements Iterator<E> {
 		
-		private Node<E> node, fetched;
+		private Node<E> node, peeked;
 		private final ConcurrentLinkedList<E> list;
 		
 		LinkedListIterator(ConcurrentLinkedList<E> list) {
@@ -269,26 +269,26 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 		 * Returns the next element but does not move the iterators position
 		 * @return the next element or null
 		 */
-		public E fetchNext() {
-			fetched = list.nextValid(node);
-			return fetched == null ? null : fetched.element;
+		public E peekNext() {
+			peeked = list.nextValid(node);
+			return peeked == null ? null : peeked.element;
 		}
 		
 		/**
 		 * Returns the previous element but does not move the iterators position
 		 * @return the previous element or null
 		 */
-		public E fetchPrevious() {
-			fetched = list.prevValid(node);
-			return fetched == null ? null : fetched.element;
+		public E peekPrevious() {
+			peeked = list.prevValid(node);
+			return peeked == null ? null : peeked.element;
 		}
 		
 		/**
-		 * Moves to the last fetched element if available
+		 * Moves to the last peeked element if available
 		 */
-		public void moveToFetched() {
-			if (fetched == null) return;
-			node = fetched;
+		public void moveToPeeked() {
+			if (peeked == null) return;
+			node = peeked;
 		}
 
 		public boolean hasPrevious() {

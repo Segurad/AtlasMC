@@ -32,6 +32,11 @@ public class ProxyHandlerList extends HandlerList {
 		} else registerExecutor(executor);
 	}
 	
+	/**
+	 * Returns the LinkedListIterator or null if LocalProxy not present
+	 * @param proxy
+	 * @return LinkedListIterator or null
+	 */
 	public LinkedListIterator<EventExecutor> getExecutors(@NotNull LocalProxy proxy) {
 		if (!proxyExecutors.containsKey(proxy)) return null;
 		return proxyExecutors.get(proxy).iterator();
@@ -43,12 +48,15 @@ public class ProxyHandlerList extends HandlerList {
 		LocalProxy proxy = ((GenericEvent<LocalProxy, ?>) event).getEventSource();
 		final LinkedListIterator<EventExecutor> proxyexes = getExecutors(proxy);
 		final LinkedListIterator<EventExecutor> globalexes = getExecutors();
-		if ((proxyexes != null && proxyexes.hasNext()) || globalexes.hasNext())
-		for (EventPriority prio : EventPriority.values()) {
-			fireEvents(proxyexes, prio, event, cancelled);
-			fireEvents(globalexes, prio, event, cancelled);
+		if ((proxyexes != null && proxyexes.hasNext()) || globalexes.hasNext()) {
+			for (EventPriority prio : EventPriority.values()) {
+				if (prio == EventPriority.MONITOR) getDefaultExecutor().fireEvent(event);
+				fireEvents(proxyexes, prio, event, cancelled);
+				fireEvents(globalexes, prio, event, cancelled);
+			}
+		} else {
+			getDefaultExecutor().fireEvent(event);
 		}
-		getDefaultExecutor().fireEvent(event);
 	}
 	
 	@Override
