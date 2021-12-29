@@ -103,4 +103,11 @@ public class NBTIOReader extends AbstractNBTIOReader {
 		return false;
 	}
 
+	@Override
+	public void close() {
+		super.close();
+		in = null;
+		buf = null;
+	}
+
 }

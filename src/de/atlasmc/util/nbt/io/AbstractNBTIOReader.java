@@ -344,12 +344,29 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 		}
 	}
 	
+	public void close() {
+		type = null;
+		markType = null;
+		name = null;
+		markName = null;
+		depth = Integer.MIN_VALUE;
+		markDepth = depth;
+		list = null;
+		markList = null;
+	}
+	
 	/*
-	 * Methods for reading data by subclass
+	 * --- Methods for reading data by subclass ---
 	 */
 	
+	/**
+	 * @see #mark()
+	 */
 	protected abstract void ioMark();
 	
+	/**
+	 * @see #reset()
+	 */
 	protected abstract void ioReset();
 	
 	protected abstract int ioReadInt() throws IOException;

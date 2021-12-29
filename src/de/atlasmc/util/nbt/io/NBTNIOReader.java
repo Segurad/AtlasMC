@@ -5,7 +5,7 @@ import io.netty.buffer.ByteBuf;
 
 public class NBTNIOReader extends AbstractNBTIOReader implements NBTReader {
 	
-	private final ByteBuf in;
+	private ByteBuf in;
 	
 	public NBTNIOReader(ByteBuf in) {
 		if (in == null) throw new IllegalArgumentException("ByteBuf can not be null!");
@@ -61,6 +61,12 @@ public class NBTNIOReader extends AbstractNBTIOReader implements NBTReader {
 	@Override
 	protected double ioReadDouble() {
 		return in.readDouble();
+	}
+
+	@Override
+	public void close() {
+		super.close();
+		in = null;
 	}
 
 }

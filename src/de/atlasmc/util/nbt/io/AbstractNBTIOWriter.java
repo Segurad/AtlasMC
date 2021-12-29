@@ -209,8 +209,13 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 		depth--;
 	}
 	
+	public void close() {
+		depth = Integer.MIN_VALUE;
+		list = null;
+	}
+	
 	/*
-	 * Methods for writing data by subclass
+	 * --- Methods for writing data by subclass ---
 	 */
 	
 	protected abstract void ioWriteInt(int value) throws IOException;

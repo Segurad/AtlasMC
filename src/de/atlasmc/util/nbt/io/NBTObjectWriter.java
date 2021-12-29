@@ -10,7 +10,7 @@ import de.atlasmc.util.nbt.TagType;
 
 public class NBTObjectWriter implements NBTWriter {
 	
-	private final ArrayList<NBT> containers;
+	private ArrayList<NBT> containers;
 	private NBT highestContainer, masterContainer;
 	
 	public NBTObjectWriter() {
@@ -109,6 +109,13 @@ public class NBTObjectWriter implements NBTWriter {
 				(int) (uuid.getLeastSignificantBits()>>32),
 				(int) uuid.getLeastSignificantBits()
 		});
+	}
+
+	@Override
+	public void close() throws IOException {
+		containers = null;
+		highestContainer = null;
+		masterContainer = null;
 	}
 
 }

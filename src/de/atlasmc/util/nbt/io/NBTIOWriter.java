@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class NBTIOWriter extends AbstractNBTIOWriter {
 	
-	private final DataOutput out;
+	private DataOutput out;
 	
 	public NBTIOWriter(DataOutput out) {
 		if (out == null) throw new IllegalArgumentException("DataOutput can not be null!");
@@ -45,6 +45,12 @@ public class NBTIOWriter extends AbstractNBTIOWriter {
 	@Override
 	protected void ioWriteDouble(double value) throws IOException {
 		out.writeDouble(value);
+	}
+
+	@Override
+	public void close() {
+		super.close();
+		out = null;
 	}
 
 }

@@ -1,12 +1,22 @@
 package de.atlasmc.util.nbt.io;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.util.UUID;
+
+import com.google.gson.stream.JsonReader;
 
 import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.TagType;
 
-public class SNBTReader implements NBTReader {
+/**
+ * {@link NBTReader} implementation to read NBT Json
+ */
+public class SNBTReader extends JsonReader implements NBTReader {
+
+	public SNBTReader(Reader in) {
+		super(in);
+	}
 
 	@Override
 	public TagType getType() {

@@ -8,7 +8,7 @@ import de.atlasmc.util.nbt.TagType;
 
 public class NBTObjectReader implements NBTReader {
 
-	private final NBT nbt;
+	private NBT nbt;
 	
 	public NBTObjectReader(NBT nbt) {
 		this.nbt = nbt;
@@ -143,6 +143,11 @@ public class NBTObjectReader implements NBTReader {
 	public void search(String key, TagType type, boolean list) throws IOException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void close() {
+		nbt = null;
 	}
 
 }

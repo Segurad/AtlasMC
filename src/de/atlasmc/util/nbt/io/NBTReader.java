@@ -1,5 +1,6 @@
 package de.atlasmc.util.nbt.io;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -7,8 +8,12 @@ import de.atlasmc.util.nbt.ListTag;
 import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.TagType;
 
-public interface NBTReader {
+public interface NBTReader extends Closeable {
 	
+	/**
+	 * Returns the Depth in the current NBT Structure
+	 * @return
+	 */
 	public int getDepth();
 	
 	public String getFieldName();
@@ -20,7 +25,8 @@ public interface NBTReader {
 	public TagType getListType();
 	
 	/**
-	 * Returns the number of elements remaining in a {@link ListTag}
+	 * Returns the number of elements remaining in a {@link ListTag}.<br>
+	 * May be 1 for more than one element in some implementations.
 	 * @return number of elements
 	 */
 	public int getRestPayload();

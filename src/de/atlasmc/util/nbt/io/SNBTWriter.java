@@ -1,12 +1,22 @@
 package de.atlasmc.util.nbt.io;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.util.UUID;
+
+import com.google.gson.stream.JsonWriter;
 
 import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.TagType;
 
-public class SNBTWriter implements NBTWriter {
+/**
+ * {@link NBTWriter} implementation for NBT Json
+ */
+public class SNBTWriter extends JsonWriter implements NBTWriter {
+
+	public SNBTWriter(Writer out) {
+		super(out);
+	}
 
 	@Override
 	public void writeEndTag() throws IOException {

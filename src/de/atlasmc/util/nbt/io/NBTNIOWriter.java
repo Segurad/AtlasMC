@@ -6,7 +6,7 @@ import io.netty.buffer.ByteBuf;
 
 public class NBTNIOWriter extends AbstractNBTIOWriter {
 	
-	private final ByteBuf out;
+	private ByteBuf out;
 	
 	public NBTNIOWriter(ByteBuf out) {
 		if (out == null) throw new IllegalArgumentException("ByteBuff can not be null!");
@@ -46,6 +46,12 @@ public class NBTNIOWriter extends AbstractNBTIOWriter {
 	@Override
 	protected void ioWriteDouble(double value) throws IOException {
 		out.writeDouble(value);
+	}
+
+	@Override
+	public void close() {
+		super.close();
+		out = null;
 	}
 
 }

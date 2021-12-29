@@ -1,7 +1,11 @@
 package de.atlasmc.util.nbt.io;
 
+import de.atlasmc.util.nbt.ListTag;
 import de.atlasmc.util.nbt.TagType;
 
+/**
+ * Stores Data about a {@link ListTag} and its contents
+ */
 final class ListData {
 	
 	public final ListData last;

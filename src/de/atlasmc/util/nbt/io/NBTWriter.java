@@ -1,12 +1,13 @@
 package de.atlasmc.util.nbt.io;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.TagType;
 
-public interface NBTWriter {
+public interface NBTWriter extends Closeable {
 	
 	public void writeEndTag() throws IOException;
 	
