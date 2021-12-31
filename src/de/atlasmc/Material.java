@@ -1,8 +1,8 @@
 package de.atlasmc;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
@@ -13,7 +13,6 @@ import de.atlasmc.inventory.meta.ItemMeta;
 public class Material implements Namespaced {
 	
 	private static final List<Material> REGISTRI;
-	private static final HashMap<Material, TileEntityFactory> TILE_FACTORYS;
 	private static short iid;
 	
 	public static Material
@@ -1092,13 +1091,14 @@ public class Material implements Namespaced {
 	
 	static {
 		REGISTRI = new ArrayList<Material>();
-		TILE_FACTORYS = new HashMap<Material, TileEntityFactory>();
 	}
 	
 	private final String name;
 	private final short itemID, bid, namespaceID;
 	private final byte max;
+	private final float toughness, explosionResistance;
 	private MetaDataFactory mdf;
+	private TileEntityFactory tef;
 	
 	/**
 	 * 
@@ -1107,27 +1107,33 @@ public class Material implements Namespaced {
 	 * @param blockID the protocol BlockID or -1 if it has no Block
 	 * @param mdf null to use MetaDataFactory.DEFAULT
 	 */
-	public Material(int namespaceID, String name, short itemID, short blockID, byte amount, MetaDataFactory mdf) {
+	public Material(int namespaceID, String name, short itemID, short blockID, byte maxAmount, float toughness, float explosionResistance, MetaDataFactory mdf) {
 		if (name == null) throw new IllegalArgumentException("Name can not be null!");
 		if (NamespacedKey.getNamespace(namespaceID) == null) throw new IllegalArgumentException("Unknown namespace!");
 		this.name = name;
 		this.itemID = itemID;
 		this.bid = blockID;
-		this.max = amount;
+		this.max = maxAmount;
 		this.namespaceID = (short) namespaceID;
+		this.toughness = toughness;
+		this.explosionResistance = explosionResistance;
 		registerMaterial();
 		setMetaDataFactory(mdf);
 	}
 	
-	public Material(int namespaceID, String name, byte maxAmount, MetaDataFactory mdf) {
-		this(namespaceID, name, true, (short) -1, maxAmount, mdf);
+	public Material(int namespaceID, String name, byte maxAmount, float toughness, float explosionResistance, MetaDataFactory mdf) {
+		this(namespaceID, name, true, (short) -1, maxAmount, toughness, explosionResistance, mdf);
 	}
 	
-	public Material(int namespaceID, String name, boolean hasItem, short blockID, byte maxAmount) {
-		this(namespaceID, name, hasItem, blockID, maxAmount, null);
+	public Material(int namespaceID, String name, boolean hasItem, short blockID, byte maxAmount, float toughness, float explosionResistance) {
+		this(namespaceID, name, hasItem, blockID, maxAmount, toughness, explosionResistance, null);
 	}
 	
-	public Material(int namespaceID, String name, boolean hasItem, short blockID, byte maxAmount, MetaDataFactory mdf) {
+	public Material(int namespaceID, String name, short blockID, byte maxAmount, float toughness, float explosionResistance, MetaDataFactory mdf) {
+		this(namespaceID, name, true, blockID, maxAmount, toughness, explosionResistance, mdf);
+	}
+	
+	public Material(int namespaceID, String name, boolean hasItem, short blockID, byte maxAmount, float toughness, float explosionResistance, MetaDataFactory mdf) {
 		if (name == null) throw new IllegalArgumentException("Name can not be null!");
 		if (NamespacedKey.getNamespace(namespaceID) == null) throw new IllegalArgumentException("Unknown namespace!");
 		this.name = name.toLowerCase();
@@ -1135,12 +1141,10 @@ public class Material implements Namespaced {
 		this.bid = blockID;
 		this.max = maxAmount;
 		this.namespaceID = (short) namespaceID;
+		this.toughness = toughness;
+		this.explosionResistance = explosionResistance;
 		registerMaterial();
 		setMetaDataFactory(mdf);
-	}
-	
-	public Material(int namespaceID, String name, short blockID, byte maxAmount, MetaDataFactory mdf) {
-		this(namespaceID, name, true, blockID, maxAmount, mdf);
 	}
 	
 	public String getName() {
@@ -1155,9 +1159,17 @@ public class Material implements Namespaced {
 		return bid;
 	}
 	
+	public float getToughness() {
+		return toughness;
+	}
+	
+	public float getExplosionResistance() {
+		return explosionResistance;
+	}
+	
 	/**
-	 * 
-	 * @return the Material's MetaDataFactory or MetaDataFactory.DEFAULT
+	 * Returns the Material's MetaDataFactory or MetaDataFactory#DEFAULT
+	 * @return MetaDataFactory
 	 */
 	public MetaDataFactory getMetaDataFactory() {
 		if (mdf == null) return MetaDataFactory.DEFAULT;
@@ -1169,13 +1181,11 @@ public class Material implements Namespaced {
 	}
 	
 	public TileEntityFactory getTileEntityFactory() {
-		return isBlock() ? TILE_FACTORYS.get(this) : null;
+		return tef;
 	}
 	
 	public void setTileEntityFactory(TileEntityFactory factory) {
-		if (!isBlock()) throw new IllegalArgumentException("Material must be a Block to have a TileEntityFactory!");
-		if (factory == null) TILE_FACTORYS.remove(this);
-		else TILE_FACTORYS.put(this, factory);
+		this.tef = factory;
 	}
 	
 	public ItemMeta createItemMeta() {
@@ -1223,10 +1233,6 @@ public class Material implements Namespaced {
 		return bid != -1;
 	}
 	
-	public static List<Material> getMaterials() {
-		return new ArrayList<Material>(REGISTRI);
-	}
-	
 	public short getNamespaceID() {
 		return namespaceID;
 	}
@@ -1240,13 +1246,20 @@ public class Material implements Namespaced {
 	
 	public final void unregister() {
 		REGISTRI.remove(this);
-		TILE_FACTORYS.remove(this);
 	}
 	
 	public int getMaxAmount() {
 		return max;
 	}
+	
+	public boolean isAir() {
+		return this == AIR || this == CAVE_AIR || this == VOID_AIR;
+	}
 
+	public static List<Material> getMaterials() {
+		return new ArrayList<Material>(REGISTRI);
+	}
+	
 	public static Material getByItemID(int itemID) {
 		for (Material mat : REGISTRI) {
 			if (mat.getItemID() == itemID) return mat;
@@ -1288,53 +1301,6 @@ public class Material implements Namespaced {
 			if (mat.getNamespaceID() == namespaceID && mat.getName().equals(name)) return mat;
 		}
 		return null;
-	}
-
-	public boolean isAir() {
-		return this == AIR || this == CAVE_AIR || this == VOID_AIR;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + bid;
-		result = prime * result + itemID;
-		result = prime * result + max;
-		result = prime * result + ((mdf == null) ? 0 : mdf.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + namespaceID;
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Material other = (Material) obj;
-		if (bid != other.bid)
-			return false;
-		if (itemID != other.itemID)
-			return false;
-		if (max != other.max)
-			return false;
-		if (mdf == null) {
-			if (other.mdf != null)
-				return false;
-		} else if (!mdf.equals(other.mdf))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (namespaceID != other.namespaceID)
-			return false;
-		return true;
 	}
 	
 }
