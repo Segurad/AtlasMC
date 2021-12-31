@@ -4,6 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.EOFException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UTFDataFormatException;
 import java.util.Arrays;
 
@@ -304,6 +305,33 @@ public class ByteDataBuffer implements DataOutput, DataInput {
 
 	public int readableBytes() {
 		return count-pos;
+	}
+	
+	public int readFully(InputStream in, int length) throws IOException {
+		byte[] buf = new byte[1024];
+		int totalread = 0;
+		int read;
+		while (length > 0) {
+			read = in.read(buf, 0, length > 1024 ? 1024 : length);
+			if (read < 1) break;
+			write(buf, 0, read);
+			totalread += read;
+			length -= read;
+		}
+		return totalread;
+	}
+	
+	public long readFully(InputStream in) throws IOException {
+		byte[] buf = new byte[1024];
+		long totalread = 0;
+		int read;
+		while (true) {
+			read = in.read(buf);
+			if (read < 1) break;
+			write(buf, 0, read);
+			totalread += read;
+		}
+		return totalread;
 	}
 
 	public void clear() {
