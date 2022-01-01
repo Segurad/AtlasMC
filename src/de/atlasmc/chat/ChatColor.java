@@ -64,6 +64,13 @@ public enum ChatColor {
 
 	@Override
 	public String toString() {
-		return "ง" + formatID;
+		return "ยง" + formatID;
+	}
+
+	public static ChatColor getByFormatID(char id) {
+		for (ChatColor c : values()) {
+			if (c.getFormatID() == id) return c;
+		}
+		return null;
 	}
 }

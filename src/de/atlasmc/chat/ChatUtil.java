@@ -1,7 +1,7 @@
 package de.atlasmc.chat;
 
-import de.atlasmc.chat.component.BaseComponent;
 import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.component.TextComponent;
 
 public final class ChatUtil {
 	
@@ -39,7 +39,7 @@ public final class ChatUtil {
 	}
 
 	public static ChatComponent fromLegacy(String text) {
-		return fromLegacy(text, 'ง');
+		return fromLegacy(text, 'ยง');
 	}
 	
 	/**
@@ -77,15 +77,52 @@ public final class ChatUtil {
 	 */
 	public static ChatComponent fromLegacy(String text, char formatPrefix) {
 		final int textLength = text.length();
-		final BaseComponent base = new BaseComponent();
-		ChatComponent current = base;
-		for (int i = 0; i < textLength; ) {
+		final TextComponent base = new TextComponent();
+		TextComponent current = base;
+		boolean textReached = false;
+		String textPart = null;
+		int offSet = 0;
+		for (int i = 0; i < textLength; i++) {
 			char c = text.charAt(i);
 			if (c == formatPrefix) {
-				
+				c = text.charAt(i+1);
+				if (textReached && c == formatPrefix) {
+					if (textPart == null) textPart = text.substring(offSet, i);
+					else textPart += text.substring(offSet, i);
+					offSet = ++i+1;
+					continue;
+				}
+				if (textReached) {
+					current.setText(textPart);
+					current = new TextComponent();
+					textReached = false;
+					textPart = null;
+				}
+				switch (c) {
+				case 'k':
+					current.setObfuscated(true);
+				case 'l':
+					current.setBold(true);
+				case 'm':
+					current.setStrikethrough(true);
+				case 'n':
+					current.setUnderlined(true);
+				case 'o':
+					current.setItalic(true);
+				case 'x':
+					current.setColor(Integer.parseInt(text.substring(i+1, i+7), 16));
+					i+=6;
+				default:
+					current.setColor(ChatColor.getByFormatID(c));
+				}
+				offSet = ++i+1;
+				continue;
 			}
-			// TODO chat formation from legacy
+			textReached = true;
 		}
+		if (textPart == null) textPart = text.substring(offSet, text.length()-1);
+		else textPart += text.substring(offSet, text.length()-1);
+		current.setText(textPart);
 		return base;
 	}
 }

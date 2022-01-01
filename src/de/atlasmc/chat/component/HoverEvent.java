@@ -1,14 +1,6 @@
 package de.atlasmc.chat.component;
 
-public class HoverEvent {
-	
-	private final String value;
-	private final HoverAction action;
-	
-	public HoverEvent(String value, HoverAction action) {
-		this.value = value;
-		this.action = action;
-	}
+public interface HoverEvent {
 	
 	public static enum HoverAction {
 		SHOW_TEXT,
@@ -16,12 +8,8 @@ public class HoverEvent {
 		SHOW_ENTITY
 	}
 	
-	public String getValue() {
-		return value;
-	}
+	public String getValue();
 	
-	public HoverAction getAction() {
-		return action;
-	}
+	public HoverAction getAction();
 
 }
