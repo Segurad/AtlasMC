@@ -65,8 +65,6 @@ public interface Entity extends NBTHolder, Nameable {
 	
 	public CustomTagContainer getCustomTagContainer();
 	
-	public int getObjectData();
-	
 	public Pose getPose();
 	
 	public List<String> getScoreboardTags();
@@ -115,6 +113,8 @@ public interface Entity extends NBTHolder, Nameable {
 	
 	public boolean hasCustomName();
 	
+	public boolean isInvulnerable();
+	
 	public void remove();
 	
 	public void setAirTicks(int air);
@@ -132,8 +132,6 @@ public interface Entity extends NBTHolder, Nameable {
 	public void setID(int id);
 	
 	public void setInvulnerable(boolean invulnerable);
-	
-	public void setOnGround(boolean onGround);
 
 	public void setPortalCooldown(int cooldown);
 
@@ -154,5 +152,7 @@ public interface Entity extends NBTHolder, Nameable {
 	public void teleport(double x, double y, double z);
 	
 	public void teleport(double x, double y, double z, float yaw, float pitch);
+
+	public void setOnGround(boolean onGround);
 	
 }

@@ -2,19 +2,16 @@ package de.atlasmc.factory;
 
 import java.util.HashMap;
 
-import de.atlascore.block.data.CoreBlockData;
-import de.atlascore.inventory.meta.CoreBlockDataMeta;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.inventory.meta.ItemMeta;
-import de.atlasmc.inventory.meta.BlockDataMeta;
 
 /**
  * Factory for creation of {@link ItemMeta} and {@link BlockData}
  */
 public abstract class MetaDataFactory {
 	
-	public static MetaDataFactory DEFAULT = new ClassMetaDataFactory(BlockDataMeta.class, CoreBlockDataMeta.class, BlockData.class, CoreBlockData.class);
+	public static MetaDataFactory DEFAULT;
 	private static final HashMap<Material, ItemMeta> metaPreConfig = new HashMap<>();
 	private static final HashMap<Material, BlockData> dataPreConfig = new HashMap<>();
 	

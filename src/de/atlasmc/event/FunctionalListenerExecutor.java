@@ -49,9 +49,7 @@ public class FunctionalListenerExecutor implements EventExecutor {
 	@Override
 	public void fireEvent(Event event) {
 		if (!eventClass.isInstance(event)) return;
-		listener.fireEvent(event);
+		listener.accept(event);
 	}
 	
-	
-
 }

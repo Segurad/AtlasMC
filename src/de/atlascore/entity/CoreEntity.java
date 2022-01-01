@@ -37,7 +37,6 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	private boolean glowing;
 	private boolean invulnerable;
 	private Vector motion;
-	private boolean onGround;
 	private boolean teleported;
 	private List<Entity> passengers;
 	private int portalCooldown;
@@ -47,7 +46,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	/**
 	 * Flags contains the following Data
 	 * Bit mask | Meaning
-	 * 0x01		| on fore
+	 * 0x01		| on fire
 	 * 0x02		| on ground
 	 * 0x04 	| unused
 	 * 0x08		| sprinting
@@ -291,12 +290,6 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	}
 
 	@Override
-	public int getObjectData() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
 	public Vector getVelocity() {
 		return motion.clone();
 	}
@@ -433,7 +426,8 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 
 	@Override
 	public void setOnGround(boolean onGorund) {
-		// TODO set on ground
+		MetaData<Byte> meta = metaContainer.get(META_BASE_FLAGS, MetaDataType.BYTE);
+		meta.setData((byte) (meta.getData() & 0x02));
 	}
 
 	@Override
@@ -475,5 +469,10 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	@Override
 	public boolean hasCustomName() {
 		return metaContainer.get(META_CUSTOM_NAME).hasData();
+	}
+
+	@Override
+	public boolean isInvulnerable() {
+		return invulnerable;
 	}
 }

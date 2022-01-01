@@ -8,7 +8,6 @@ import de.atlasmc.Particle;
 import de.atlasmc.Particle.DustOptions;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.chat.component.ChatComponent;
-import de.atlasmc.chat.component.FinalComponent;
 import de.atlasmc.entity.Entity.Pose;
 import de.atlasmc.entity.Villager.VillagerData;
 import de.atlasmc.entity.Villager.VillagerProfession;
