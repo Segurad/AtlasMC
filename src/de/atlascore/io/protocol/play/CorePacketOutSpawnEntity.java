@@ -6,7 +6,10 @@ import java.util.UUID;
 import de.atlascore.io.protocol.CoreProtocolAdapter;
 import de.atlasmc.Location;
 import de.atlasmc.Vector;
+import de.atlasmc.block.BlockFace;
 import de.atlasmc.entity.Entity;
+import de.atlasmc.entity.FallingBlock;
+import de.atlasmc.entity.ItemFrame;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutSpawnEntity;
 import de.atlasmc.util.MathUtil;
@@ -34,7 +37,25 @@ public class CorePacketOutSpawnEntity extends AbstractPacket implements PacketOu
 		z = loc.getZ();
 		yaw = MathUtil.toAngle(loc.getYaw());
 		pitch = MathUtil.toAngle(loc.getPitch());
-		objectdata = entity.getObjectData();
+		objectdata = 0;
+		/*if (entity instanceof Projectile) {
+			Ignored
+		} else*/ if (entity instanceof ItemFrame) {
+			BlockFace ori = ((ItemFrame) entity).getOrientation();
+			switch (ori) {
+			case UP: objectdata = 1; break;
+			case NORTH: objectdata = 2; break;
+			case SOUTH: objectdata = 3; break;
+			case WEST: objectdata = 4; break;
+			case EAST: objectdata = 5; break;
+			default:
+				break;
+			}
+		} else if (entity instanceof FallingBlock) {
+			objectdata = ((FallingBlock) entity).getBlockData().getStateID();
+		} /*else if (entity instanceof FishingHook) {
+			Ignored
+		}*/
 		if (entity.hasVelocity()) {
 			Vector v = entity.getVelocity();
 			vx = (short) (v.getX()*8000);

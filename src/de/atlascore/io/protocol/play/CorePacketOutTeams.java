@@ -6,8 +6,8 @@ import java.util.List;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
 import de.atlasmc.chat.ChatColor;
+import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.ChatComponent;
-import de.atlasmc.chat.component.FinalComponent;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutTeams;
 import de.atlasmc.scoreboard.Team.OptionStatus;
@@ -152,7 +152,7 @@ public class CorePacketOutTeams extends AbstractPacket implements PacketOutTeams
 
 	@Override
 	public ChatComponent getDisplayName() {
-		return new FinalComponent(displayName);
+		return ChatUtil.toChat(displayName);
 	}
 
 	@Override
@@ -199,12 +199,12 @@ public class CorePacketOutTeams extends AbstractPacket implements PacketOutTeams
 
 	@Override
 	public ChatComponent getPrefix() {
-		return new FinalComponent(prefix);
+		return  ChatUtil.toChat(prefix);
 	}
 
 	@Override
 	public ChatComponent getSuffix() {
-		return new FinalComponent(suffix);
+		return ChatUtil.toChat(suffix);
 	}
 
 	@Override

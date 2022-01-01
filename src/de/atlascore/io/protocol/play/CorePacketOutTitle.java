@@ -3,8 +3,8 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.ChatComponent;
-import de.atlasmc.chat.component.FinalComponent;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutTitle;
 import io.netty.buffer.ByteBuf;
@@ -67,7 +67,7 @@ public class CorePacketOutTitle extends AbstractPacket implements PacketOutTitle
 
 	@Override
 	public ChatComponent getText() {
-		return new FinalComponent(title);
+		return ChatUtil.toChat(title);
 	}
 
 	@Override

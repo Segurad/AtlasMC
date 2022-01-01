@@ -3,8 +3,8 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.ChatComponent;
-import de.atlasmc.chat.component.FinalComponent;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutScoreboardObjective;
 import de.atlasmc.scoreboard.RenderType;
@@ -59,7 +59,7 @@ public class CorePacketOutScoreboardObjective extends AbstractPacket implements 
 
 	@Override
 	public ChatComponent getDisplayName() {
-		return new FinalComponent(displayName);
+		return ChatUtil.toChat(displayName);
 	}
 
 	@Override

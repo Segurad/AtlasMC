@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.chat.component.FinalComponent;
+import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutTabComplete;
 import io.netty.buffer.ByteBuf;
@@ -39,7 +39,7 @@ public class CorePacketOutTabComplete extends AbstractPacket implements PacketOu
 			boolean ht = in.readBoolean();
 			String tt = null;
 			if (ht) tt = readString(in);
-			matches.add(new Match(s, new FinalComponent(tt, null)));
+			matches.add(new Match(s, tt != null ? ChatUtil.toChat(tt) : null));
 		}
 	}
 

@@ -1,8 +1,6 @@
 package de.atlasmc.io.handshake;
 
 import de.atlasmc.Atlas;
-import de.atlasmc.event.HandlerList;
-import de.atlasmc.event.proxy.PlayerLoginAtemptEvent;
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketListener;

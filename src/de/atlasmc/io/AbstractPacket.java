@@ -1,6 +1,7 @@
 package de.atlasmc.io;
 
 import java.io.IOException;
+
 import de.atlasmc.Material;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.nbt.io.NBTNIOReader;

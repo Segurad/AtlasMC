@@ -3,8 +3,8 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.ChatComponent;
-import de.atlasmc.chat.component.FinalComponent;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutPlayerListHeaderAndFooter;
 import io.netty.buffer.ByteBuf;
@@ -40,12 +40,12 @@ public class CorePacketOutPlayerListHeaderAndFooter extends AbstractPacket imple
 
 	@Override
 	public ChatComponent getHeader() {
-		return new FinalComponent(header);
+		return ChatUtil.toChat(header);
 	}
 
 	@Override
 	public ChatComponent getFooter() {
-		return new FinalComponent(footer);
+		return ChatUtil.toChat(footer);
 	}
 
 }

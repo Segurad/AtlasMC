@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
 import de.atlasmc.Gamemode;
-import de.atlasmc.chat.component.FinalComponent;
+import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutPlayerInfo;
 import io.netty.buffer.ByteBuf;
@@ -53,7 +53,7 @@ public class CorePacketOutPlayerInfo extends AbstractPacket implements PacketOut
 				String displayName = null;
 				if (display) 
 					displayName = readString(in);
-				info.add(new PlayerInfo(new UUID(most, least), name, textures, ping, new FinalComponent(displayName), gm));
+				info.add(new PlayerInfo(new UUID(most, least), name, textures, ping, ChatUtil.toChat(displayName), gm));
 			}
 			break;
 		case 1:
@@ -80,7 +80,7 @@ public class CorePacketOutPlayerInfo extends AbstractPacket implements PacketOut
 				String displayName = null;
 				if (display) 
 					displayName = readString(in);
-				info.add(new PlayerInfo(new UUID(most, least), new FinalComponent(displayName)));
+				info.add(new PlayerInfo(new UUID(most, least), ChatUtil.toChat(displayName)));
 			}
 			break;
 		case 4:

@@ -3,8 +3,8 @@ package de.atlascore.io.protocol.login;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.ChatComponent;
-import de.atlasmc.chat.component.FinalComponent;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.login.PacketOutDisconnect;
 import io.netty.buffer.ByteBuf;
@@ -34,7 +34,7 @@ public class CorePacketOutDisconnect extends AbstractPacket implements PacketOut
 
 	@Override
 	public ChatComponent getReason() {
-		return new FinalComponent(reason);
+		return ChatUtil.toChat(reason);
 	}
 
 }
