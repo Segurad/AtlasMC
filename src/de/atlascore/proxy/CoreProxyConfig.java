@@ -1,4 +1,4 @@
-package de.atlascore.atlasnetwork;
+package de.atlascore.proxy;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

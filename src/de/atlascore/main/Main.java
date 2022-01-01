@@ -2,11 +2,16 @@ package de.atlascore.main;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import de.atlascore.atlasnetwork.CoreProxyConfig;
+
 import de.atlascore.io.netty.channel.ChannelInitHandler;
+import de.atlascore.plugin.CoreJavaPluginLoader;
+import de.atlascore.plugin.CorePluginManager;
 import de.atlascore.proxy.CoreLocalProxy;
+import de.atlascore.proxy.CoreProxyConfig;
+import de.atlasmc.Material;
 import de.atlasmc.atlasnetwork.LocalAtlasNode;
 import de.atlasmc.atlasnetwork.ProxyConfig;
+import de.atlasmc.entity.Entity;
 import de.atlasmc.event.EventHandler;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.Listener;
@@ -24,9 +29,11 @@ public class Main {
 				" / /_______/\\ \\ \\    \\::\\ \\    \\:\\/___/\\ \\:.\\ \\  \\ \\  /____\\:\\\n" + 
 				"/ / /_     __\\ \\_\\    \\__\\/     \\_____\\/  \\__\\/\\__\\/  \\_____\\/\n" + 
 				"\\_\\___\\   /____/_/\n");
-		System.out.println("Start...");
-		LocalAtlasNodeBuilder builder = new LocalAtlasNodeBuilder();
-		builder.initDefaults();
+		final CorePluginManager pmanager = new CorePluginManager();
+		pmanager.addLoader(new CoreJavaPluginLoader());
+		pmanager.loadCoreModuls();
+		
+		final CoreNodeBuilder builder = new CoreNodeBuilder();
 		LocalAtlasNode node = builder.build();
 		ProxyConfig cfg = new CoreProxyConfig();
 		cfg.setServerIconBase64(builder.getServerIcon());
