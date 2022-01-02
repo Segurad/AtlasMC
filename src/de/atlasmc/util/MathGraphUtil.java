@@ -11,14 +11,20 @@ public final class MathGraphUtil {
 	/**
 	 * Cast a Ray through cells and calls {@link VoxelRayConsumer#next(BlockFace, SimpleLocation, int)} each time a new cell is hit<br>
 	 * Using <a href="https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.42.3443&rep=rep1&type=pdf">Fast Voxel Traversal Algorithm</a> made by John Amanatides and Andrew Woo
-	 * @param start start location of the ray (location is not cloned and will be updated with new positions)
+	 * @param start start location of the ray 
 	 * @param direction direction of this ray 
 	 * @param length of this ray (if 0 or infinite the length is {@link Integer#MAX_VALUE})
 	 * @param consumer the consumer handling results
 	 */
 	public static void castVoxelRay3D(SimpleLocation start, Vector direction, double length, VoxelRayConsumer consumer) {
-		if (start == null) throw new IllegalArgumentException("Start location can not be null!");
-		if (direction == null) throw new IllegalArgumentException("direction can not be null!");
+		castVoxelRay3D(length, start.getX(), start.getY(), start.getZ(), direction.getX(), direction.getY(), direction.getZ(), consumer);
+	}
+	
+	/**
+	 * Cast a Ray through cells
+	 * @see #castVoxelRay3D(SimpleLocation, Vector, double, VoxelRayConsumer)
+	 */
+	public static void castVoxelRay3D(double x, double y, double z, double vX, double vY, double vZ, double length, VoxelRayConsumer consumer) {
 		if (consumer == null) throw new IllegalArgumentException("Consumer can not be null!");
 		
 		int stepX, stepY, stepZ; // coordinate change on Block boundary change
@@ -30,48 +36,48 @@ public final class MathGraphUtil {
 		
 		// v init v
 		
-		stepX = direction.getX() >= 0 ? direction.getX() != 0 ? 1 : 0 : -1;
-		stepY = direction.getY() >= 0 ? direction.getY() != 0 ? 1 : 0 : -1;
-		stepZ = direction.getZ() >= 0 ? direction.getZ() != 0 ? 1 : 0 : -1;
+		stepX = vX >= 0 ? vX != 0 ? 1 : 0 : -1;
+		stepY = vY >= 0 ? vY != 0 ? 1 : 0 : -1;
+		stepZ = vZ >= 0 ? vZ != 0 ? 1 : 0 : -1;
 		
-		tMaxX = start.getBlockX() + (stepX < 0 ? 0 : 1) - start.getX();
-		tMaxY = start.getBlockY() + (stepY < 0 ? 0 : 1) - start.getY();
-		tMaxZ = start.getBlockZ() + (stepZ < 0 ? 0 : 1) - start.getZ();
+		tMaxX = MathUtil.floor(x) + (stepX < 0 ? 0 : 1) - x;
+		tMaxY = MathUtil.floor(y) + (stepY < 0 ? 0 : 1) - y;
+		tMaxZ = MathUtil.floor(z) + (stepZ < 0 ? 0 : 1) - z;
 		
-		tMaxX = direction.getX() != 0 ? tMaxX / direction.getX() : Double.MAX_VALUE;
-		tMaxY = direction.getY() != 0 ? tMaxY / direction.getY() : Double.MAX_VALUE;
-		tMaxZ = direction.getZ() != 0 ? tMaxZ / direction.getZ() : Double.MAX_VALUE;
+		tMaxX = vX != 0 ? tMaxX / vX : Double.MAX_VALUE;
+		tMaxY = vY != 0 ? tMaxY / vY : Double.MAX_VALUE;
+		tMaxZ = vZ != 0 ? tMaxZ / vZ : Double.MAX_VALUE;
 		
-		tDeltaX = direction.getX() != 0 ? 1 / direction.getX() * stepX : Double.MAX_VALUE;
-		tDeltaY = direction.getY() != 0 ? 1 / direction.getY() * stepY : Double.MAX_VALUE;
-		tDeltaZ = direction.getZ() != 0 ? 1 / direction.getZ() * stepZ : Double.MAX_VALUE;
+		tDeltaX = vX != 0 ? 1 / vX * stepX : Double.MAX_VALUE;
+		tDeltaY = vY != 0 ? 1 / vY * stepY : Double.MAX_VALUE;
+		tDeltaZ = vZ != 0 ? 1 / vZ * stepZ : Double.MAX_VALUE;
 		
 		// calc the amount of traversals needed for the length input
 		if (Double.isFinite(length))
-		distance = 1+ (int) (Math.abs(direction.getX() * length) + Math.abs(direction.getY() * length) + Math.abs(direction.getZ() * length));
+		distance = 1+ (int) (Math.abs(vX * length) + Math.abs(vY * length) + Math.abs(vZ * length));
 		else distance = Integer.MAX_VALUE;
 		
 		while (traversed++ < distance) { // loop through blocks
 			if (tMaxX < tMaxY) {
 				if (tMaxX < tMaxZ) {
-					start.addX(stepX);
+					x += stepX;
 					tMaxX += tDeltaX;
 					lastHitFace = stepX > 0 ? BlockFace.EAST : BlockFace.WEST;
 				} else {
-					start.addZ(stepZ);
+					z += stepZ;
 					tMaxZ += tDeltaZ;
 					lastHitFace = stepZ > 0 ? BlockFace.SOUTH : BlockFace.NORTH;
 				}
 			} else if (tMaxY < tMaxZ) {
-				start.addY(stepY);
+				y += stepY;
 				tMaxY += tDeltaY;
 				lastHitFace = stepY > 0 ? BlockFace.DOWN : BlockFace.UP;
 			} else {
-				start.setZ(stepZ);
+				z += stepZ;
 				tMaxZ += tDeltaZ;
 				lastHitFace = stepZ > 0 ? BlockFace.SOUTH : BlockFace.NORTH;
 			}
-			if (consumer.next(lastHitFace, start, traversed)) // Notifies the consumer and breaks if it returns true
+			if (consumer.next(lastHitFace, x, y, z, traversed)) // Notifies the consumer and breaks if it returns true
 				break;
 		}
 	}
@@ -82,11 +88,13 @@ public final class MathGraphUtil {
 		/**
 		 * Consumer for castVoxelRay functions
 		 * @param passed the BlockFace passed while traversal to next Location
-		 * @param loc the current location
+		 * @param x current location X
+		 * @param y current location Y
+		 * @param z current location Z
 		 * @param traversed number of blocks traversed
 		 * @return true if the function should be cancelled
 		 */
-		public boolean next(BlockFace passed, SimpleLocation loc, int traversed);
+		public boolean next(BlockFace passed, double x, double y, double z, int traversed);
 	
 	}
 

@@ -1,11 +1,11 @@
 package de.atlasmc.util.raytracing;
 
 import de.atlasmc.Location;
-import de.atlasmc.SimpleLocation;
 import de.atlasmc.Vector;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.util.MathGraphUtil;
+import de.atlasmc.util.MathUtil;
 import de.atlasmc.util.MathGraphUtil.VoxelRayConsumer;
 import de.atlasmc.world.Chunk;
 import de.atlasmc.world.World;
@@ -43,7 +43,7 @@ public class BlockRayTracer implements VoxelRayConsumer {
 	}
 
 	@Override
-	public boolean next(BlockFace passed, SimpleLocation loc, int traversed) {
+	public boolean next(BlockFace passed, double x, double y, double z, int traversed) {
 		int newChunkX = ((int) loc.getX()) >> 4, newChunkZ = ((int) loc.getZ()) >> 4;
 		if (chunkZ != newChunkZ || chunkX != newChunkX) {
 			chunk = world.getChunk(newChunkX, newChunkZ);
@@ -51,7 +51,7 @@ public class BlockRayTracer implements VoxelRayConsumer {
 			chunkZ = newChunkZ;
 		}
 		lastHit = passed;
-		BlockData data = chunk.getBlockDataAt((int) loc.getX(), (int) loc.getY(), (int) loc.getZ());
+		BlockData data = chunk.getBlockDataAt(MathUtil.floor(x), MathUtil.floor(y), MathUtil.floor(z));
 		if (rule.isValid(data))
 			return true;
 		return false;

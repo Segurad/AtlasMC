@@ -72,14 +72,26 @@ public class SimpleLocation implements Cloneable {
 		this.z += z;
 	}
 
+	/**
+	 * Returns the floor of X
+	 * @return blockX
+	 */
 	public int getBlockX() {
 		return MathUtil.floor(x);
 	}
 
+	/**
+	 * Returns the floor of Y
+	 * @return blockY
+	 */
 	public int getBlockY() {
 		return MathUtil.floor(y);
 	}
 
+	/**
+	 * Returns the floor of Z
+	 * @return blockZ
+	 */
 	public int getBlockZ() {
 		return MathUtil.floor(z);
 	}
