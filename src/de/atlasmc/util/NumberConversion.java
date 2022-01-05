@@ -1,79 +1,168 @@
 package de.atlasmc.util;
 
-public class NumberConversion {
+/**
+ * Collection of some number related Methods useful or not
+ */
+public final class NumberConversion {
 
-	public static int square(int value) {
-		return value * value;
-	}
+	private NumberConversion() {}
 	
-	public static double square(double value) {
-		return value * value;
-	}
-	
-	public static long square(long value) {
-		return value * value;
-	}
-	
+	/**
+	 * 
+	 * @param value
+	 * @return value or 0
+	 */
 	public static int toInt(Object value) {
+		return toInt(value, 0);
+	}
+	
+	/**
+	 * 
+	 * @param value
+	 * @return value or 0
+	 */
+	public static double toDouble(Object value) {
+		return toDouble(value, 0);
+	}
+	
+	/**
+	 * 
+	 * @param value
+	 * @return value or 0
+	 */
+	public static byte toByte(Object value) {
+		return toByte(value, 0);
+	}
+	
+	/**
+	 * 
+	 * @param value
+	 * @return value or 0
+	 */
+	public static long toLong(Object value) {
+		return toLong(value, 0);
+	}
+	
+	/**
+	 * 
+	 * @param value
+	 * @return value or 0
+	 */
+	public static short toShort(Object value) {
+		return toShort(value, 0);
+	}
+	
+	/**
+	 * 
+	 * @param value
+	 * @return value or 0
+	 */
+	public static float toFloat(Object value) {
+		return toFloat(value, 0);
+	}
+	
+	/**
+	 * 
+	 * @param value
+	 * @param alt number returned when not a number
+	 * @return value or alt
+	 */
+	public static int toInt(Object value, int alt) {
 		if (value instanceof Number) {
 			return ((Number) value).intValue();
 		}
 		try {
 			return Integer.parseInt(value.toString());
 		} catch(NumberFormatException e) {} catch (NullPointerException e) {}
-		return 0;
+		return alt;
 	}
 	
-	public static double toDouble(Object value) {
+	/**
+	 * 
+	 * @param value
+	 * @param alt number returned when not a number
+	 * @return value or alt
+	 */
+	public static double toDouble(Object value, double alt) {
 		if (value instanceof Number) {
 			return ((Number) value).doubleValue();
 		}
 		try {
 			return Double.parseDouble(value.toString());
 		} catch(NumberFormatException e) {} catch (NullPointerException e) {}
-		return 0;
+		return alt;
 	}
 	
-	public static byte toByte(Object value) {
+	/**
+	 * 
+	 * @param value
+	 * @param alt number returned when not a number
+	 * @return value or alt
+	 */
+	public static byte toByte(Object value, int alt) {
 		if (value instanceof Number) {
 			return ((Number) value).byteValue();
 		}
 		try {
 			return Byte.parseByte(value.toString());
 		} catch (NumberFormatException e) {} catch (NullPointerException e) {}
-		return 0;
+		return (byte) alt;
 	}
 	
-	public static long toLong(Object value) {
+	/**
+	 * 
+	 * @param value
+	 * @param alt number returned when not a number
+	 * @return value or alt
+	 */
+	public static long toLong(Object value, long alt) {
 		if (value instanceof Number) {
 			return ((Number) value).longValue();
 		}
 		try {
 			return Byte.parseByte(value.toString());
 		} catch (NumberFormatException e) {} catch (NullPointerException e) {}
-		return 0;
+		return alt;
 	}
 	
-	public static short toShort(Object value) {
+	/**
+	 * 
+	 * @param value
+	 * @param alt number returned when not a number
+	 * @return value or alt
+	 */
+	public static short toShort(Object value, int alt) {
 		if (value instanceof Number) {
 			return ((Number) value).shortValue();
 		}
 		try {
 			Short.parseShort(value.toString());
 		} catch (NumberFormatException e) {} catch (NullPointerException e) {};
-		return 0;
+		return (short) alt;
 	}
 	
-	public static float toFloat(Object value) {
+	/**
+	 * 
+	 * @param value
+	 * @param alt number returned when not a number
+	 * @return value or alt
+	 */
+	public static float toFloat(Object value, float alt) {
 		if (value instanceof Number) {
 			return ((Number) value).floatValue();
 		}
 		try {
 			return Float.parseFloat(value.toString());
 		} catch (NumberFormatException e) {} catch (NullPointerException e) {}
-		return 0;
+		return alt;
 	}
 	
+	/**
+	 * 
+	 * @param value
+	 * @param alt number returned when not a number
+	 * @return value or alt
+	 */
 	public static boolean isNumber(Object value) {
 		if (value == null) return false;
 		if (value instanceof Number) return true;
