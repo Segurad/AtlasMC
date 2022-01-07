@@ -18,7 +18,8 @@ import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.plugin.Plugin;
-import de.atlasmc.scoreboard.Scoreboard;
+import de.atlasmc.scoreboard.ScoreboardView;
+import de.atlasmc.util.annotation.ThreadSafe;
 
 public interface Player extends HumanEntity {
 
@@ -49,8 +50,6 @@ public interface Player extends HumanEntity {
 	public AtlasPlayer getAtlasPlayer();
 
 	public String getName();
-
-	public void setScoreboard(Scoreboard board);
 	
 	public UUID getInternalUUID();
 	
@@ -84,6 +83,23 @@ public interface Player extends HumanEntity {
 	public <T> T getPluginData(Class<T> clazz); 
 	
 	public boolean hasPluginData();
+	
+	/**
+	 * Sets the {@link ScoreboardView} to this Player.<br>
+	 * Calls {@link ScoreboardView#add()} on the added view.<br>
+	 * Calls {@link ScoreboardView#remove()} on the old view.
+	 * @param view the new view or null
+	 * @throws IllegalArgumentException if the view does not belong to the player
+	 */
+	@ThreadSafe
+	public void setScoreboard(ScoreboardView view);
+	
+	/**
+	 * Returns the current active view or null
+	 * @return view or null
+	 */
+	@ThreadSafe
+	public ScoreboardView getScoreboard();
 
 	// --- Sound ---
 	

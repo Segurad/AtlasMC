@@ -35,13 +35,14 @@ import de.atlasmc.io.protocol.play.PacketOutSetSlot;
 import de.atlasmc.io.protocol.play.PacketOutSoundEffect;
 import de.atlasmc.io.protocol.play.PacketOutStopSound;
 import de.atlasmc.permission.PermissionHandler;
-import de.atlasmc.scoreboard.Scoreboard;
+import de.atlasmc.scoreboard.ScoreboardView;
 
 public class CorePlayer extends CoreHumanEntity implements Player {
 
 	private PlayerConnection con;
 	private Inventory open;
-	private CoreInventoryView view;
+	private final CoreInventoryView view;
+	private volatile ScoreboardView scoreView;
 	
 	private int level;
 	private Gamemode gamemode;
@@ -135,12 +136,6 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	@Override
 	public String getName() {
 		return getAtlasPlayer().getInternalName();
-	}
-
-	@Override
-	public void setScoreboard(Scoreboard board) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -313,6 +308,22 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 		packet.setCategory(category);
 		packet.setSound(sound);
 		con.sendPacked(packet);
+	}
+
+	@Override
+	public synchronized void setScoreboard(ScoreboardView view) {
+		if (view != null && view.getViewer() != this)
+			throw new IllegalArgumentException("ScoreboardView does not belong to this Player!");
+		if (this.scoreView != null)
+			this.scoreView.remove();
+		this.scoreView = view;
+		if (view != null)
+			view.add();
+	}
+
+	@Override
+	public ScoreboardView getScoreboard() {
+		return scoreView;
 	}
 
 }

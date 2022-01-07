@@ -9,9 +9,20 @@ import de.atlasmc.scoreboard.RenderType;
 public interface PacketOutScoreboardObjective extends PacketPlay, PacketOutbound {
 	
 	public String getName();
+	
 	public Mode getMode();
+	
 	public ChatComponent getDisplayName();
+	
 	public RenderType getRenderType();
+	
+	public void setName(String name);
+	
+	public void setMode(Mode mode);
+	
+	public void setDisplayName(ChatComponent display);
+	
+	public void setRenderType(RenderType type);
 	
 	@Override
 	public default int getDefaultID() {

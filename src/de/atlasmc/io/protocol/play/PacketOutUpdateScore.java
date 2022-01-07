@@ -6,10 +6,21 @@ import de.atlasmc.io.PacketOutbound;
 @DefaultPacketID(PacketPlay.OUT_UPDATE_SCORE)
 public interface PacketOutUpdateScore extends PacketPlay, PacketOutbound {
 
-	public String getName();
+	public String getEntry();
+	
 	public String getObjectiveName();
+	
 	public ScoreAction getAction();
+	
 	public int getValue();
+	
+	public void setEntry(String name);
+	
+	public void setObjective(String name);
+	
+	public void setAction(ScoreAction action);
+	
+	public void setValue(int value);
 	
 	@Override
 	public default int getDefaultID() {

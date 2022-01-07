@@ -67,4 +67,24 @@ public class CorePacketOutScoreboardObjective extends AbstractPacket implements 
 		return RenderType.getByID(renderType);
 	}
 
+	@Override
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public void setMode(Mode mode) {
+		this.mode = mode.ordinal();
+	}
+
+	@Override
+	public void setDisplayName(ChatComponent display) {
+		this.displayName = display.getJsonText();
+	}
+
+	@Override
+	public void setRenderType(RenderType type) {
+		this.renderType = type.ordinal();
+	}
+
 }

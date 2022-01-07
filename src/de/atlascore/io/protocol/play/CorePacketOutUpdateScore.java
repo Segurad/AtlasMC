@@ -43,7 +43,7 @@ public class CorePacketOutUpdateScore extends AbstractPacket implements PacketOu
 	}
 
 	@Override
-	public String getName() {
+	public String getEntry() {
 		return name;
 	}
 
@@ -60,6 +60,26 @@ public class CorePacketOutUpdateScore extends AbstractPacket implements PacketOu
 	@Override
 	public int getValue() {
 		return value;
+	}
+
+	@Override
+	public void setEntry(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public void setObjective(String name) {
+		this.objective = name;
+	}
+
+	@Override
+	public void setAction(ScoreAction action) {
+		this.action = action.ordinal();
+	}
+
+	@Override
+	public void setValue(int value) {
+		this.value = value;
 	}
 
 }

@@ -1,6 +1,6 @@
 package de.atlasmc.scoreboard;
 
-public enum Position {
+public enum DisplaySlot {
 	
 	LIST,
 	SIDEBAR,
@@ -10,7 +10,7 @@ public enum Position {
 		return ordinal();
 	}
 	
-	public static Position getByID(int id) {
+	public static DisplaySlot getByID(int id) {
 		return values()[id];
 	}
 

@@ -10,7 +10,7 @@ import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutTeams;
-import de.atlasmc.scoreboard.Team.OptionStatus;
+import de.atlasmc.scoreboard.TeamOptionType;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutTeams extends AbstractPacket implements PacketOutTeams {
@@ -27,7 +27,7 @@ public class CorePacketOutTeams extends AbstractPacket implements PacketOutTeams
 	}
 	
 	public CorePacketOutTeams(String name, Mode mode, ChatComponent displayName, int flags, 
-			OptionStatus nameTagVisibility, OptionStatus collisionRule, ChatColor color, 
+			TeamOptionType nameTagVisibility, TeamOptionType collisionRule, ChatColor color, 
 			ChatComponent prefix, ChatComponent suffix, List<String> entities) {
 		this();
 		this.flags = flags;
@@ -113,7 +113,7 @@ public class CorePacketOutTeams extends AbstractPacket implements PacketOutTeams
 		switch (mode) {
 		case 0:
 			writeString(displayName, out);
-			out.writeByte(flags);
+			out.writeByte(flags & 0x03);
 			writeString(nameTagVisibility, out);
 			writeString(collisionRule, out);
 			writeVarInt(color, out);
@@ -156,39 +156,34 @@ public class CorePacketOutTeams extends AbstractPacket implements PacketOutTeams
 	}
 
 	@Override
-	public int getFlags() {
-		return flags;
-	}
-
-	@Override
-	public OptionStatus getNameTagVisibility() {
+	public TeamOptionType getNameTagVisibility() {
 		switch (nameTagVisibility) {
 		case "always":
-			return OptionStatus.ALWAYS;
+			return TeamOptionType.ALWAYS;
 		case "hideForOtherTeams":
-			return OptionStatus.FOR_OTHER_TEAMS;
+			return TeamOptionType.FOR_OTHER_TEAMS;
 		case "hideForOwnTeam":
-			return OptionStatus.FOR_OWN_TEAM;
+			return TeamOptionType.FOR_OWN_TEAM;
 		case "never":
-			return OptionStatus.NEVER;
+			return TeamOptionType.NEVER;
 		default:
-			return OptionStatus.ALWAYS;
+			return TeamOptionType.ALWAYS;
 		}
 	}
 
 	@Override
-	public OptionStatus getCollisionRule() {
+	public TeamOptionType getCollisionRule() {
 		switch (collisionRule) {
 		case "always":
-			return OptionStatus.ALWAYS;
+			return TeamOptionType.ALWAYS;
 		case "pushOtherTeams":
-			return OptionStatus.FOR_OTHER_TEAMS;
+			return TeamOptionType.FOR_OTHER_TEAMS;
 		case "pushOwnTeam":
-			return OptionStatus.FOR_OWN_TEAM;
+			return TeamOptionType.FOR_OWN_TEAM;
 		case "never":
-			return OptionStatus.NEVER;
+			return TeamOptionType.NEVER;
 		default:
-			return OptionStatus.ALWAYS;
+			return TeamOptionType.ALWAYS;
 		}
 	}
 
@@ -210,6 +205,103 @@ public class CorePacketOutTeams extends AbstractPacket implements PacketOutTeams
 	@Override
 	public List<String> getEntities() {
 		return entities;
+	}
+
+	@Override
+	public boolean getAllowFriedlyFire() {
+		return (flags & 0x01) == 0x01;
+	}
+
+	@Override
+	public boolean canSeeInvisibleTeammeber() {
+		return (flags & 0x02) == 0x02;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public void setMode(Mode mode) {
+		this.mode = mode.ordinal();
+	}
+
+	@Override
+	public void setDisplayName(ChatComponent display) {
+		this.displayName = display.getJsonText();
+	}
+
+	@Override
+	public void setPrefix(ChatComponent prefix) {
+		this.prefix = prefix.getJsonText();
+	}
+
+	@Override
+	public void setSuffix(ChatComponent suffix) {
+		this.suffix = suffix.getJsonText();
+	}
+
+	@Override
+	public void setNameTagVisibility(TeamOptionType option) {
+		switch (option) {
+		case ALWAYS:
+			nameTagVisibility = "always";
+			break;
+		case FOR_OTHER_TEAMS:
+			nameTagVisibility = "hideForOwnTeam";
+			break;
+		case FOR_OWN_TEAM:
+			nameTagVisibility = "hideForOtherTeam";
+			break;
+		case NEVER:
+			nameTagVisibility = "never";
+			break;
+		}
+	}
+
+	@Override
+	public void setCollisionRule(TeamOptionType option) {
+		switch (option) {
+		case ALWAYS:
+			nameTagVisibility = "always";
+			break;
+		case FOR_OTHER_TEAMS:
+			nameTagVisibility = "pushOtherTeam";
+			break;
+		case FOR_OWN_TEAM:
+			nameTagVisibility = "pushOwnTeam";
+			break;
+		case NEVER:
+			nameTagVisibility = "never";
+			break;
+		}
+	}
+
+	@Override
+	public void setColor(ChatColor color) {
+		this.color = color.getID();
+	}
+
+	@Override
+	public void setEntries(List<String> entries) {
+		this.entities = entries;
+	}
+
+	@Override
+	public void setAllowFriedlyFire(boolean allow) {
+		if (allow)
+			flags |= 0x01;
+		else
+			flags &= 0xFE;
+	}
+
+	@Override
+	public void setSeeInvisibleTeammeber(boolean see) {
+		if (see)
+			flags |= 0x02;
+		else
+			flags &= 0xFD;
 	}
 
 }

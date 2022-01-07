@@ -5,44 +5,54 @@ import java.io.IOException;
 import de.atlascore.io.protocol.CoreProtocolAdapter;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutDisplayScoreboard;
-import de.atlasmc.scoreboard.Position;
+import de.atlasmc.scoreboard.DisplaySlot;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutDisplayScoreboard extends AbstractPacket implements PacketOutDisplayScoreboard {
 
 	private int pos;
-	private String name;
+	private String objective;
 	
 	public CorePacketOutDisplayScoreboard() {
 		super(CoreProtocolAdapter.VERSION);
 	}
 	
-	public CorePacketOutDisplayScoreboard(Position pos, String name) {
+	public CorePacketOutDisplayScoreboard(DisplaySlot pos, String name) {
 		this();
 		this.pos = pos.getID();
-		this.name = name;
+		this.objective = name;
 	}
 
 	@Override
 	public void read(ByteBuf in) throws IOException {
 		pos = in.readByte();
-		name = readString(in);
+		objective = readString(in);
 	}
 
 	@Override
 	public void write(ByteBuf out) throws IOException {
 		out.writeByte(pos);
-		writeString(name, out);
+		writeString(objective, out);
 	}
 
 	@Override
-	public Position getPosition() {
-		return Position.getByID(pos);
+	public DisplaySlot getPosition() {
+		return DisplaySlot.getByID(pos);
 	}
 
 	@Override
-	public String getName() {
-		return name;
+	public String getObjective() {
+		return objective;
+	}
+
+	@Override
+	public void setPosition(DisplaySlot slot) {
+		this.pos = slot.getID();
+	}
+
+	@Override
+	public void setObjective(String name) {
+		this.objective = name;
 	}
 
 }
