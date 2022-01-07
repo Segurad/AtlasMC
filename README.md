@@ -1,9 +1,9 @@
-(In Developement)
+![Lines of code](https://img.shields.io/tokei/lines/github/Segurad/AtlasMC)
+![Maintainability](https://img.shields.io/codeclimate/maintainability-percentage/Segurad/AtlasMC)
+<br>![Logo](https://craftunion.org/images/atlas/server_icon.png) 
+# AtlasMC 
 
-# AtlasMC
-
-AtlasMC is a new Minecraft Server Software<br>
-It is designed to run Multiple Serverinstances in one JVM using Multithreading<br>
+AtlasMC is a build from the Ground Minecraft Server Software. With the goal of this project is to give full access to all functional parts and run multiple "Server" instances in one aplication.
 !!! <u>AtlasMC is <b>NOT</b> designed to give a Vanilla experience</u> !!!
 
 # Thanks to
