@@ -1,5 +1,7 @@
 package de.atlasmc;
 
+import java.util.List;
+
 public enum Direction {
 
 	NORTH(337.5f, 22.5f, 0),
@@ -10,6 +12,8 @@ public enum Direction {
 	SOUTH_WEST(202.5f, 247.5f, 5),
 	WEST(247.5f, 292.5f, 6),
 	NORTH_WEST(292.5f, 337.5f, 7);
+	
+	private static List<Direction> VALUES;
 	
 	private final float min, max;
 	private final int id;
@@ -22,7 +26,7 @@ public enum Direction {
 	
 	public static Direction getDirectionYaw(float yaw) {
 		final float y = yaw + 180;
-		for (final Direction d : values()) {
+		for (final Direction d : getValues()) {
 			if (y > d.min && y <= d.max) return d;
 		}
 		return NORTH;
@@ -30,7 +34,7 @@ public enum Direction {
 	
 	public static Direction getDirectionDegree(float degree) {
 		final float y = degree;
-		for (final Direction d : values()) {
+		for (final Direction d : getValues()) {
 			if (y > d.min && y <= d.max) return d;
 		}
 		return NORTH;
@@ -47,4 +51,16 @@ public enum Direction {
 	public float getMin() {
 		return min;
 	}
+	
+	/**
+	 * Returns a immutable List of all Types.<br>
+	 * This method avoid allocation of a new array not like {@link #values()}.
+	 * @return list
+	 */
+	public static List<Direction> getValues() {
+		if (VALUES == null)
+			VALUES = List.of(values());
+		return VALUES;
+	}
+	
 }

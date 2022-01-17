@@ -1,6 +1,7 @@
 package de.atlasmc.inventory;
 
 public enum ItemFlag {
+	
 	HIDE_ENCHANTS,
 	HIDE_ATTRIBUTES,
 	HIDE_DESTROYS,

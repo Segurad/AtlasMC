@@ -1,5 +1,7 @@
 package de.atlasmc;
 
+import java.util.List;
+
 public enum Sound {
 
 	AMBIENT_CAVE,
@@ -995,12 +997,25 @@ public enum Sound {
 	ENTITY_ZOMBIE_VILLAGER_HURT,
 	ENTITY_ZOMBIE_VILLAGER_STEP;
 	
+	private static List<Sound> VALUES;
+	
 	public static Sound getByID(int soundID) {
-		return values()[soundID];
+		return getValues().get(soundID);
 	}
 
 	public int getID() {
 		return ordinal();
+	}
+	
+	/**
+	 * Returns a immutable List of all Types.<br>
+	 * This method avoid allocation of a new array not like {@link #values()}.
+	 * @return list
+	 */
+	public static List<Sound> getValues() {
+		if (VALUES == null)
+			VALUES = List.of(values());
+		return VALUES;
 	}
 
 }

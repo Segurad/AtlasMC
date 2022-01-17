@@ -1,5 +1,7 @@
 package de.atlasmc;
 
+import java.util.List;
+
 public enum DyeColor {
 	
 	WHITE,
@@ -19,8 +21,10 @@ public enum DyeColor {
 	RED,
 	BLACK;
 	
+	private static List<DyeColor> VALUES;
+	
 	public static DyeColor getByID(int id) {
-		return values()[id];
+		return getValues().get(id);
 	}
 	
 	public static DyeColor getByBanner(Material material) {
@@ -139,6 +143,17 @@ public enum DyeColor {
 
 	public int getID() {
 		return ordinal();
+	}
+	
+	/**
+	 * Returns a immutable List of all Types.<br>
+	 * This method avoid allocation of a new array not like {@link #values()}.
+	 * @return list
+	 */
+	public static List<DyeColor> getValues() {
+		if (VALUES == null)
+			VALUES = List.of(values());
+		return VALUES;
 	}
 
 }

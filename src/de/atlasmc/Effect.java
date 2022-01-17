@@ -1,5 +1,7 @@
 package de.atlasmc;
 
+import java.util.List;
+
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.BlockData;
 
@@ -67,6 +69,8 @@ public enum Effect {
 	END_GATEWAY_SPAWN(3000, Type.PARTICLE),
 	ENDER_DRAGON_GROWL(3001, Type.PARTICLE);
 	
+	private static List<Effect> VALUES;
+	
 	private int id;
 	private Class<?> clazz;
 	private Type type;
@@ -94,7 +98,7 @@ public enum Effect {
 	}
 
 	public static Effect getByID(int id) {
-		for (Effect e : values()) {
+		for (Effect e : getValues()) {
 			if (e.getID() == id) return e;
 		}
 		return null;
@@ -139,6 +143,17 @@ public enum Effect {
 		}
 		default: return 0;
 		}
+	}
+	
+	/**
+	 * Returns a immutable List of all Types.<br>
+	 * This method avoid allocation of a new array not like {@link #values()}.
+	 * @return list
+	 */
+	public static List<Effect> getValues() {
+		if (VALUES == null)
+			VALUES = List.of(values());
+		return VALUES;
 	}
 
 }

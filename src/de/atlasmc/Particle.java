@@ -1,5 +1,7 @@
 package de.atlasmc;
 
+import java.util.List;
+
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.inventory.ItemStack;
 
@@ -66,8 +68,7 @@ public enum Particle {
 	LANDING_HONEY(60),
 	FALLING_NECTAR(61);
 	
-	
-
+	private static List<Particle> VALUES;
 	
 	private final int id;
 	private final Class<?> data;
@@ -112,11 +113,23 @@ public enum Particle {
 	}
 
 	public static Particle getByID(int id) {
-		return values()[id];
+		return getValues().get(id);
 	}
 
 	public boolean isValid(Object data) {
 		if (this.data == null) return data == null;
 		return this.data.isInstance(data);
 	}
+	
+	/**
+	 * Returns a immutable List of all Types.<br>
+	 * This method avoid allocation of a new array not like {@link #values()}.
+	 * @return list
+	 */
+	public static List<Particle> getValues() {
+		if (VALUES == null)
+			VALUES = List.of(values());
+		return VALUES;
+	}
+	
 }
