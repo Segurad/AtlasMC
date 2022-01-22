@@ -63,4 +63,11 @@ public enum Direction {
 		return VALUES;
 	}
 	
+	/**
+	 * Releases the system resources used from the values cache
+	 */
+	public static void freeValues() {
+		VALUES = null;
+	}
+	
 }

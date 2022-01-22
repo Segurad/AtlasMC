@@ -12,7 +12,7 @@ public enum Gamemode {
 	private static List<Gamemode> VALUES;
 	
 	public static Gamemode getByID(int id) {
-		return VALUES.get(id);
+		return getValues().get(id);
 	}
 	
 	/**
@@ -24,6 +24,13 @@ public enum Gamemode {
 		if (VALUES == null)
 			VALUES = List.of(values());
 		return VALUES;
+	}
+	
+	/**
+	 * Releases the system resources used from the values cache
+	 */
+	public static void freeValues() {
+		VALUES = null;
 	}
 
 }

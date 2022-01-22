@@ -1,5 +1,7 @@
 package de.atlasmc.chat;
 
+import java.util.List;
+
 import de.atlasmc.Color;
 
 public enum ChatColor {
@@ -26,6 +28,8 @@ public enum ChatColor {
 	UNDERLINE('n'),
 	ITALIC('o'),
 	RESET('r');
+	
+	private static List<ChatColor> VALUES;
 
 	private final char formatID;
 	private final Color color;
@@ -57,10 +61,6 @@ public enum ChatColor {
 	public int getID() {
 		return ordinal();
 	}
-	
-	public static ChatColor getByID(int id) {
-		return values()[id];
-	}
 
 	@Override
 	public String toString() {
@@ -68,9 +68,32 @@ public enum ChatColor {
 	}
 
 	public static ChatColor getByFormatID(char id) {
-		for (ChatColor c : values()) {
+		for (ChatColor c : getValues()) {
 			if (c.getFormatID() == id) return c;
 		}
 		return null;
 	}
+	
+	public static ChatColor getByID(int id) {
+		return getValues().get(id);
+	}
+	
+	/**
+	 * Returns a immutable List of all Types.<br>
+	 * This method avoid allocation of a new array not like {@link #values()}.
+	 * @return list
+	 */
+	public static List<ChatColor> getValues() {
+		if (VALUES == null)
+			VALUES = List.of(values());
+		return VALUES;
+	}
+	
+	/**
+	 * Releases the system resources used from the values cache
+	 */
+	public static void freeValues() {
+		VALUES = null;
+	}
+	
 }
