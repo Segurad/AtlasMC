@@ -1,18 +1,19 @@
 package de.atlasmc.util.nbt.io;
 
-import java.io.DataInput;
 import java.io.IOException;
+import java.io.InputStream;
+
 import de.atlasmc.util.ByteDataBuffer;
 
 public class NBTIOReader extends AbstractNBTIOReader {
 	
 	private ByteDataBuffer buf;
 	private boolean readBuf, writeBuf;
-	private DataInput in;
+	private InputStream  in;
 	
-	public NBTIOReader(DataInput in) {
+	public NBTIOReader(InputStream in) {
 		if (in == null) throw new IllegalArgumentException("DataInput can not be null!");
-		this.in = new ByteDataBuffer();
+		this.in = in;
 		try {
 			readNextEntry();
 		} catch (IOException e) {
@@ -37,7 +38,9 @@ public class NBTIOReader extends AbstractNBTIOReader {
 	protected int ioReadInt() throws IOException {
 		if (readBuf())
 			return buf.readInt();
-		int val = in.readInt();
+		int val = in.read() << 8 | in.read();
+		val = val << 8 | in.read();
+		val = val << 8 | in.read();
 		if (writeBuf) buf.writeInt(val);
 		return val;
 	}
@@ -46,7 +49,7 @@ public class NBTIOReader extends AbstractNBTIOReader {
 	protected byte ioReadByte() throws IOException {
 		if (readBuf())
 			return buf.readByte();
-		byte val = in.readByte();
+		byte val = (byte) in.read();
 		if (writeBuf) buf.writeByte(val);
 		return val;
 	}
@@ -55,7 +58,7 @@ public class NBTIOReader extends AbstractNBTIOReader {
 	protected void ioReadBytes(byte[] buffer) throws IOException {
 		if (readBuf())
 			buf.readFully(buffer);
-		in.readFully(buffer);
+		in.read(buffer);
 		if (writeBuf) buf.write(buffer);
 	}
 
@@ -63,7 +66,7 @@ public class NBTIOReader extends AbstractNBTIOReader {
 	protected short ioReadShort() throws IOException {
 		if (readBuf())
 			return buf.readShort();
-		int val = in.readInt();
+		int val = in.read() << 8 | in.read();
 		if (writeBuf) buf.writeShort(val);
 		return (short) val;
 	}
@@ -72,27 +75,25 @@ public class NBTIOReader extends AbstractNBTIOReader {
 	protected long ioReadLong() throws IOException {
 		if (readBuf())
 			return buf.readLong();
-		long val = in.readLong();
+		long val = in.read() << 8 | in.read();
+		val = val << 8 | in.read();
+		val = val << 8 | in.read();
+		val = val << 8 | in.read();
+		val = val << 8 | in.read();
+		val = val << 8 | in.read();
+		val = val << 8 | in.read();
 		if (writeBuf) buf.writeLong(val);
 		return val;
 	}
 
 	@Override
 	protected float ioReadFloat() throws IOException {
-		if (readBuf())
-			return buf.readFloat();
-		float val = in.readFloat();
-		if (writeBuf) buf.writeFloat(val);
-		return val;
+		return Float.intBitsToFloat(ioReadInt());
 	}
 
 	@Override
 	protected double ioReadDouble() throws IOException {
-		if (readBuf())
-			return buf.readDouble();
-		double val = in.readDouble();
-		if (writeBuf) buf.writeDouble(val);
-		return val;
+		return Double.longBitsToDouble(ioReadLong());
 	}
 	
 	private boolean readBuf() {

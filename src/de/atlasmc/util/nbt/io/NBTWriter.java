@@ -35,6 +35,11 @@ public interface NBTWriter extends Closeable {
 	
 	public void writeCompoundTag(String name) throws IOException;
 	
+	public default void writeEmptyCompound(String name) throws IOException {
+		writeCompoundTag(name);
+		writeEndTag();
+	}
+	
 	public void writeIntArrayTag(String name, int[] data) throws IOException;
 	
 	/**

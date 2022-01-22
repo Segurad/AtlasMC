@@ -15,6 +15,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	private String name, markName;
 	private int depth, markDepth;
 	private ListData list, markList;
+	private boolean closed;
 	
 	@Override
 	public int getDepth() {
@@ -46,6 +47,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	
 	@Override
 	public byte[] readByteArrayTag() throws IOException {
+		ensureOpen();
 		byte[] data = new byte[ioReadInt()];
 		ioReadBytes(data);
 		prepareTag();
@@ -54,6 +56,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	
 	@Override
 	public byte readByteTag() throws IOException {
+		ensureOpen();
 		byte data = ioReadByte();
 		prepareTag();
 		return data;
@@ -61,6 +64,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	
 	@Override
 	public double readDoubleTag() throws IOException {
+		ensureOpen();
 		double data = ioReadDouble();
 		prepareTag();
 		return data;
@@ -68,6 +72,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	
 	@Override
 	public float readFloatTag() throws IOException {
+		ensureOpen();
 		float data = ioReadFloat();
 		prepareTag();
 		return data;
@@ -75,6 +80,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	
 	@Override
 	public int[] readIntArrayTag() throws IOException {
+		ensureOpen();
 		int[] data = new int[ioReadInt()];
 		for (int i = 0; i < data.length; i++) {
 			data[i] = ioReadInt();
@@ -85,6 +91,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	
 	@Override
 	public int readIntTag() throws IOException {
+		ensureOpen();
 		int data = ioReadInt();
 		prepareTag();
 		return data;
@@ -92,6 +99,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	
 	@Override
 	public long[] readLongArrayTag() throws IOException {
+		ensureOpen();
 		long[] data = new long[ioReadInt()];
 		for (int i = 0; i < data.length; i++) {
 			data[i] = ioReadLong();
@@ -102,6 +110,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	
 	@Override
 	public long readLongTag() throws IOException {
+		ensureOpen();
 		long data = ioReadLong();
 		prepareTag();
 		return data;
@@ -109,6 +118,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	
 	@Override
 	public short readShortTag() throws IOException {
+		ensureOpen();
 		short data = ioReadShort();
 		prepareTag();
 		return data;
@@ -116,6 +126,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	
 	@Override
 	public String readStringTag() throws IOException {
+		ensureOpen();
 		byte[] buffer = new byte[ioReadShort()];
 		ioReadBytes(buffer);
 		prepareTag();
@@ -123,6 +134,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	}
 	
 	protected void prepareTag() throws IOException {
+		ensureOpen();
 		if (list != null && depth == list.depth) {
 			name = null;
 			if (list.payload > 0) {
@@ -147,6 +159,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	
 	@Override
 	public void readNextEntry() throws IOException {
+		ensureOpen();
 		if (list == null || list.depth != depth)
 			if (type == TagType.COMPOUND || type == TagType.TAG_END)
 				prepareTag();
@@ -162,12 +175,14 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	
 	@Override
 	public UUID readUUID() throws IOException {
+		ensureOpen();
 		int[] data = readIntArrayTag();
 		if (data.length != 4) throw new NBTException("Invalid UUID data length: " + data.length);
 		return new UUID((data[0]<<32)+data[1], (data[2]<<32)+data[3]);
 	}
 	
 	private void addList() throws IOException {
+		ensureOpen();
 		TagType type = TagType.getByID(ioReadByte());
 		int payload = ioReadInt();
 		if (payload <= 0) {
@@ -186,6 +201,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	
 	@Override
 	public NBT readNBT() throws IOException {
+		ensureOpen();
 		final boolean isList = list != null && depth == list.depth;
 		switch (isList ? list.type : type) {
 		case BYTE: return NBT.createByteTag(name, readByteTag());
@@ -254,6 +270,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	
 	@Override
 	public void skipTag() throws IOException {
+		ensureOpen();
 		final boolean isList = list != null && depth == list.depth;
 		switch (isList ? list.type : type) {
 		case BYTE: readByteTag(); break;
@@ -330,6 +347,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 
 	@Override
 	public void search(String key, TagType stype, boolean slist) throws IOException {
+		ensureOpen();
 		final int depth = getDepth();
 		while (depth <= getDepth()) {
 			// check if current tag is the result
@@ -345,14 +363,18 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	}
 	
 	public void close() {
-		type = null;
-		markType = null;
+		closed = true;
 		name = null;
 		markName = null;
 		depth = Integer.MIN_VALUE;
 		markDepth = depth;
 		list = null;
 		markList = null;
+	}
+	
+	protected final void ensureOpen() throws IOException {
+		if (closed)
+			throw new IOException("Stream closed!");
 	}
 	
 	/*
