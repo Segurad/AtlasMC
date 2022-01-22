@@ -1,42 +1,44 @@
 package de.atlascore.entity;
 
-import de.atlasmc.Location;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.ThrowableProjectile;
-import de.atlasmc.entity.data.MetaData;
+import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.world.World;
 
 import java.util.UUID;
 
-public abstract class CoreThrowableProjectile extends CoreEntity implements ThrowableProjectile {
+public abstract class CoreThrowableProjectile extends CoreAbstractProjectile implements ThrowableProjectile {
 	
-	protected static final int
-	META_PROJECTILE_ITEM = 8;
+	protected static final MetaDataField<ItemStack> 
+	META_PROJECTILE_ITEM = new MetaDataField<ItemStack>(CoreEntity.LAST_META_INDEX+1, null, MetaDataType.SLOT);
 	
-	public CoreThrowableProjectile(int id, EntityType type, Location loc, UUID uuid) {
-		super(id, type, loc, uuid);
+	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+1;
+	
+	public CoreThrowableProjectile(EntityType type, UUID uuid, World world) {
+		super(type, uuid, world);
 	}
 	
 	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
-		metaContainer.set(new MetaData<ItemStack>(META_PROJECTILE_ITEM, MetaDataType.SLOT));
+		metaContainer.set(META_PROJECTILE_ITEM);
 	}
 	
 	@Override
 	protected int getMetaContainerSize() {
-		return super.getMetaContainerSize() + 1;
+		return LAST_META_INDEX + 1;
 	}
 
 	@Override
 	public ItemStack getItem() {
-		return metaContainer.getData(META_PROJECTILE_ITEM, MetaDataType.SLOT);
+		return metaContainer.getData(META_PROJECTILE_ITEM);
 	}
 
 	@Override
 	public void setItem(ItemStack item) {
-		metaContainer.get(META_PROJECTILE_ITEM, MetaDataType.SLOT).setData(item);
+		metaContainer.get(META_PROJECTILE_ITEM).setData(item);
 	}
 
 	@Override

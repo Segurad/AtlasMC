@@ -1,36 +1,39 @@
 package de.atlascore.entity;
 
-import de.atlasmc.Location;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.FishingHook;
-import de.atlasmc.entity.data.MetaData;
+import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.world.World;
 
 import java.util.UUID;
 
-public class CoreFishingHook extends CoreEntity implements FishingHook {
+public class CoreFishingHook extends CoreAbstractProjectile implements FishingHook {
 
-	protected static int
-	META_HOCKED_ENTITY = 8,
-	META_CATCHABLE = 9;
+	protected static final MetaDataField<Integer> 
+	META_HOCKED_ENTITY = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, 0, MetaDataType.INT);
+	protected static final MetaDataField<Boolean>
+	META_CATCHABLE = new MetaDataField<>(CoreEntity.LAST_META_INDEX+2, false, MetaDataType.BOOLEAN);
+	
+	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+2;
 	
 	private Entity hooked;
 	
-	public CoreFishingHook(int id, EntityType type, Location loc, UUID uuid) {
-		super(id, type, loc, uuid);
+	public CoreFishingHook(EntityType type, UUID uuid, World world) {
+		super(type, uuid, world);
 	}
 	
 	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
-		metaContainer.set(new MetaData<>(META_CATCHABLE, MetaDataType.INT, 0));
-		metaContainer.set(new MetaData<>(META_CATCHABLE, MetaDataType.BOOLEAN, false));
+		metaContainer.set(META_HOCKED_ENTITY);
+		metaContainer.set(META_CATCHABLE);
 	}
 	
 	@Override
 	protected int getMetaContainerSize() {
-		return super.getMetaContainerSize()+2;
+		return LAST_META_INDEX+1;
 	}
 
 	@Override
@@ -49,7 +52,7 @@ public class CoreFishingHook extends CoreEntity implements FishingHook {
 		int id = 0;
 		if (hooked != null)
 			id = hooked.getID()+1;
-		metaContainer.get(META_HOCKED_ENTITY, MetaDataType.INT).setData(id);
+		metaContainer.get(META_HOCKED_ENTITY).setData(id);
 	}
 
 }

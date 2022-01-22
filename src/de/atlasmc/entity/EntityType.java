@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import de.atlasmc.Location;
 import de.atlasmc.NamespacedKey.Namespaced;
+import de.atlasmc.world.World;
 
 public class EntityType implements Namespaced {
 	
@@ -140,7 +140,7 @@ public class EntityType implements Namespaced {
 	 * Creates a new EntityType
 	 * @param name of this type
 	 * @param id the entityTypeID of this type
-	 * @param clazz the entity class needs to have a constructor({@link Integer}, {@link EntityType}, {@link Location}, {@link UUID})
+	 * @param clazz the entity class needs to have a constructor({@link EntityType}, {@link UUID}, {@link World})
 	 */
 	public EntityType(int namespaceID, String name, int id, Class<? extends Entity> clazz) {
 		if (name == null) throw new IllegalArgumentException("Name can not be null!");
@@ -157,21 +157,24 @@ public class EntityType implements Namespaced {
 	}
 	
 	/**
-	 * Creates and returns a Entity based on the class by {@link #getEntityClass()}
-	 * @param id the entityID or -1 if not or later defined (entities with a id of -1 are not send to the player)
-	 * @param loc the Location of this Entity
+	 * Creates and returns a Entity based on the class by {@link #getEntityClass()}.<br>
+	 * The created Entity is marked as removed and need to be spawned. 
 	 * @param uuid the UUID of this Entity
 	 * @return the new Entity
 	 */
-	public Entity create(int id, Location loc, UUID uuid) {
+	public Entity create(World world, UUID uuid) {
 		try {
-			return clazz.getConstructor(int.class, EntityType.class, Location.class, UUID.class)
-			.newInstance(id, this, loc, uuid);
+			return clazz.getConstructor(EntityType.class, UUID.class, World.class)
+			.newInstance(this, uuid, world);
 		} catch (NoSuchMethodException | SecurityException | InstantiationException 
 				| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public Entity create(World world) {
+		return create(world, UUID.randomUUID());
 	}
 	
 	public int getTypeID() {
@@ -205,10 +208,5 @@ public class EntityType implements Namespaced {
 	public String getName() {
 		return name;
 	}
-	
-	
-	
-	
-	
 
 }

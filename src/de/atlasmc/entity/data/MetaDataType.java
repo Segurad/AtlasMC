@@ -7,6 +7,7 @@ import de.atlasmc.Color;
 import de.atlasmc.Particle;
 import de.atlasmc.Particle.DustOptions;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.entity.Entity.Pose;
 import de.atlasmc.entity.Villager.VillagerData;
@@ -24,7 +25,7 @@ import io.netty.buffer.ByteBuf;
 
 public abstract class MetaDataType<T> {
 	
-	public static final MetaDataType<Byte> BYTE = new MetaDataType<Byte>(0) {
+	public static final MetaDataType<Byte> BYTE = new MetaDataType<Byte>(0, Number.class) {
 		
 		@Override
 		public Byte read(ByteBuf in) {
@@ -37,7 +38,7 @@ public abstract class MetaDataType<T> {
 		}
 		
 	};
-	public static final MetaDataType<Integer> INT = new MetaDataType<Integer>(1) {
+	public static final MetaDataType<Integer> INT = new MetaDataType<Integer>(1, Number.class) {
 
 		@Override
 		public Integer read(ByteBuf in) {
@@ -51,7 +52,7 @@ public abstract class MetaDataType<T> {
 		
 	};
 	
-	public static final MetaDataType<Float> FLOAT = new MetaDataType<Float>(2) {
+	public static final MetaDataType<Float> FLOAT = new MetaDataType<Float>(2, Number.class) {
 
 		@Override
 		public Float read(ByteBuf in) {
@@ -65,7 +66,7 @@ public abstract class MetaDataType<T> {
 		
 	};
 	
-	public static final MetaDataType<String> STRING = new MetaDataType<String>(3) {
+	public static final MetaDataType<String> STRING = new MetaDataType<String>(3, String.class) {
 
 		@Override
 		public String read(ByteBuf in) {
@@ -79,11 +80,11 @@ public abstract class MetaDataType<T> {
 		
 	};
 	
-	public static final MetaDataType<ChatComponent> CHAT = new MetaDataType<ChatComponent>(4) {
+	public static final MetaDataType<ChatComponent> CHAT = new MetaDataType<ChatComponent>(4, ChatComponent.class) {
 
 		@Override
 		public ChatComponent read(ByteBuf in) {
-			return new FinalComponent(AbstractPacket.readString(in));
+			return ChatUtil.toChat(AbstractPacket.readString(in));
 		}
 
 		@Override
@@ -94,12 +95,12 @@ public abstract class MetaDataType<T> {
 		
 	};
 	
-	public static final MetaDataType<ChatComponent> OPT_CHAT = new MetaDataType<ChatComponent>(5) {
+	public static final MetaDataType<ChatComponent> OPT_CHAT = new MetaDataType<ChatComponent>(5, ChatComponent.class, true) {
 
 		@Override
 		public ChatComponent read(ByteBuf in) {
 			if (!in.readBoolean()) return null;
-			return new FinalComponent(AbstractPacket.readString(in));
+			return ChatUtil.toChat(AbstractPacket.readString(in));
 		}
 
 		@Override
@@ -112,7 +113,7 @@ public abstract class MetaDataType<T> {
 		
 	};
 	
-	public static final MetaDataType<ItemStack> SLOT = new MetaDataType<ItemStack>(6) {
+	public static final MetaDataType<ItemStack> SLOT = new MetaDataType<ItemStack>(6, ItemStack.class, true) {
 
 		@Override
 		public ItemStack read(ByteBuf in) throws IOException {
@@ -126,7 +127,7 @@ public abstract class MetaDataType<T> {
 		
 	};
 	
-	public static final MetaDataType<Boolean> BOOLEAN = new MetaDataType<Boolean>(7) {
+	public static final MetaDataType<Boolean> BOOLEAN = new MetaDataType<Boolean>(7, Boolean.class) {
 
 		@Override
 		public Boolean read(ByteBuf in) {
@@ -140,7 +141,7 @@ public abstract class MetaDataType<T> {
 		
 	};
 	
-	public static final MetaDataType<EulerAngle> ROTATION = new MetaDataType<EulerAngle>(8) {
+	public static final MetaDataType<EulerAngle> ROTATION = new MetaDataType<EulerAngle>(8, EulerAngle.class) {
 
 		@Override
 		public EulerAngle read(ByteBuf in) {
@@ -157,7 +158,7 @@ public abstract class MetaDataType<T> {
 		
 	};
 	
-	public static final MetaDataType<Long> POSISTION = new MetaDataType<Long>(9) {
+	public static final MetaDataType<Long> POSISTION = new MetaDataType<Long>(9, Number.class) {
 
 		@Override
 		public Long read(ByteBuf in) {
@@ -171,7 +172,7 @@ public abstract class MetaDataType<T> {
 		
 	};
 	
-	public static final MetaDataType<Long> OPT_POSITION = new MetaDataType<Long>(10) {
+	public static final MetaDataType<Long> OPT_POSITION = new MetaDataType<Long>(10, Number.class) {
 
 		@Override
 		public Long read(ByteBuf in) {
@@ -189,7 +190,7 @@ public abstract class MetaDataType<T> {
 		
 	};
 	
-	public static final MetaDataType<BlockFace> direction = new MetaDataType<BlockFace>(11) {
+	public static final MetaDataType<BlockFace> DIRECTION = new MetaDataType<BlockFace>(11, BlockFace.class) {
 
 		@Override
 		public BlockFace read(ByteBuf in) {
@@ -223,7 +224,7 @@ public abstract class MetaDataType<T> {
 		
 	};
 	
-	public static final MetaDataType<UUID> OPT_UUID = new MetaDataType<UUID>(12) {
+	public static final MetaDataType<UUID> OPT_UUID = new MetaDataType<UUID>(12, UUID.class, true) {
 
 		@Override
 		public UUID read(ByteBuf in) {
@@ -244,7 +245,7 @@ public abstract class MetaDataType<T> {
 		
 	};
 	
-	public static final MetaDataType<Integer> OPT_BLOCKSTATE = new MetaDataType<Integer>(13) {
+	public static final MetaDataType<Integer> OPT_BLOCKSTATE = new MetaDataType<Integer>(13, Number.class, true) {
 
 		@Override
 		public Integer read(ByteBuf in) {
@@ -259,27 +260,34 @@ public abstract class MetaDataType<T> {
 		
 	};
 	
-	public static final MetaDataType<CompoundTag> NBT_DATA = new MetaDataType<CompoundTag>(14) {
+	public static final MetaDataType<CompoundTag> NBT_DATA = new MetaDataType<CompoundTag>(14, CompoundTag.class, true) {
 
 		@Override
 		public CompoundTag read(ByteBuf in) throws IOException {
-			return (CompoundTag) new NBTNIOReader(in).readNBT();
+			NBTNIOReader reader = new NBTNIOReader(in);
+			CompoundTag tag = (CompoundTag) reader.readNBT();
+			reader.close();
+			return tag;
 		}
 
 		@Override
 		public void write(Object data, ByteBuf out) throws IOException {
-			new NBTNIOWriter(out).writeNBT((NBT) data);
+			NBTNIOWriter writer = new NBTNIOWriter(out);
+			if (data == null)
+				writer.writeEmptyCompound(null);
+			else
+				writer.writeNBT((NBT) data);
+			writer.close();
 		}
 		
 	};
-
 	
 	public static final ParticleMetaDataType PARTICLE = new ParticleMetaDataType();
 			
 	public static final class ParticleMetaDataType extends MetaDataType<ParticleObject> {
 
 		public ParticleMetaDataType() {
-			super(15);
+			super(15, ParticleObject.class);
 		}
 
 		@Override
@@ -346,7 +354,7 @@ public abstract class MetaDataType<T> {
 		
 	};
 	
-	public static final MetaDataType<VillagerData> VILLAGER_DATA = new MetaDataType<VillagerData>(16) {
+	public static final MetaDataType<VillagerData> VILLAGER_DATA = new MetaDataType<VillagerData>(16, VillagerData.class) {
 
 		@Override
 		public VillagerData read(ByteBuf in) {
@@ -366,7 +374,7 @@ public abstract class MetaDataType<T> {
 		
 	};
 	
-	public static final MetaDataType<Integer> OPT_INT = new MetaDataType<Integer>(17) {
+	public static final MetaDataType<Integer> OPT_INT = new MetaDataType<Integer>(17, Number.class, true) {
 
 		@Override
 		public Integer read(ByteBuf in) {
@@ -383,7 +391,7 @@ public abstract class MetaDataType<T> {
 		
 	};
 	
-	public static final MetaDataType<Pose> POSE = new MetaDataType<Pose>(18) {
+	public static final MetaDataType<Pose> POSE = new MetaDataType<Pose>(18, Pose.class) {
 
 		@Override
 		public Pose read(ByteBuf in) {
@@ -399,13 +407,29 @@ public abstract class MetaDataType<T> {
 	};
 	
 	private final int type;
+	private final boolean optional;
+	private final Class<?> clazz;
 	
-	public MetaDataType(int type) {
+	public MetaDataType(int type, Class<?> typeClass) {
+		this(type, typeClass, false);
+	}
+	
+	public MetaDataType(int type, Class<?> typeClass, boolean optional) {
 		this.type = type;
+		this.clazz = typeClass;
+		this.optional = optional;
 	}
 	
 	public int getType() {
 		return type;
+	}
+	
+	public Class<?> getTypeClass() {
+		return clazz;
+	}
+	
+	public boolean isOptional() {
+		return optional;
 	}
 	
 	public abstract T read(ByteBuf in) throws IOException;

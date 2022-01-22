@@ -1,12 +1,15 @@
 package de.atlasmc.entity;
 
+import de.atlasmc.DyeColor;
+
 public interface Sheep extends Animal {
 	
-	public Color getColor();
-	public boolean isSheared();
+	public DyeColor getColor();
 	
-	public static enum Color {
-		
-	}
+	public void setColor(DyeColor color);
+	
+	public boolean isSheared();
 
+	public void setSheared(boolean sheared);
+	
 }

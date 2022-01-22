@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import de.atlasmc.Location;
 import de.atlasmc.SimpleLocation;
+import de.atlasmc.Sound;
+import de.atlasmc.SoundCategory;
 import de.atlasmc.Vector;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.chat.ChatUtil;
@@ -15,12 +17,14 @@ import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataContainer;
+import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.nbt.AbstractNBTBase;
 import de.atlasmc.util.nbt.CustomTagContainer;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.world.Chunk;
 import de.atlasmc.world.World;
 
 public class CoreEntity extends AbstractNBTBase implements Entity {
@@ -36,33 +40,38 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	private short fire;
 	private boolean glowing;
 	private boolean invulnerable;
+	private boolean removed;
+	private volatile boolean aremoved;
 	private Vector motion;
 	private boolean teleported;
 	private List<Entity> passengers;
 	private int portalCooldown;
 	private final Location loc, oldLoc;
+	private Chunk chunk;
 	private List<String> scoreboardTags;
 	
 	/**
-	 * Flags contains the following Data
-	 * Bit mask | Meaning
-	 * 0x01		| on fire
-	 * 0x02		| on ground
-	 * 0x04 	| unused
-	 * 0x08		| sprinting
-	 * 0x10		| swimming
-	 * 0x20		| invisible
-	 * 0x40		| glowing
-	 * 0x80		| flying elytra
+	 * Flags contains the following Data<br>
+	 * <table>
+	 * <tr><th>Bit mask</th><th>Meaning</th></tr>
+	 * <tr><td>0x01		</td><td>on fire		</td></tr>
+	 * <tr><td>0x02		</td><td>on ground		</td></tr>
+	 * <tr><td>0x08		</td><td>sprinting		</th></tr>
+	 * <tr><td>0x10		</td><td>swimming		</td></tr>
+	 * <tr><td>0x20		</td><td>invisible		</td></tr>
+	 * <tr><td>0x40		</td><td>glowing		</td></tr>
+	 * <tr><td>0x80		</td><td>flying elytra	</td></tr>
+	 * </table>
 	 */
-	protected static final int
-	META_BASE_FLAGS = 0,
-	META_AIR_TICKS = 1,
-	META_CUSTOM_NAME = 2,
-	META_CUSTOM_NAME_VISIBLE = 3,
-	META_IS_SILENT = 4,
-	META_HAS_NO_GRAVITY = 5,
-	META_POSE = 6;
+	protected static final MetaDataField<Byte> META_ENTITY_FLAGS = new MetaDataField<>(0, (byte) 0, MetaDataType.BYTE);
+	protected static final MetaDataField<Integer> META_AIR_TICKS = new MetaDataField<>(1, 300, MetaDataType.INT);
+	protected static final MetaDataField<ChatComponent> META_CUSTOM_NAME = new MetaDataField<>(2, null, MetaDataType.OPT_CHAT); 
+	protected static final MetaDataField<Boolean> META_CUSTOM_NAME_VISIBLE = new MetaDataField<>(3, false, MetaDataType.BOOLEAN);
+	protected static final MetaDataField<Boolean> META_IS_SILENT = new MetaDataField<>(4, false, MetaDataType.BOOLEAN);
+	protected static final MetaDataField<Boolean> META_HAS_NO_GRAVITY = new MetaDataField<>(5, false, MetaDataType.BOOLEAN);
+	protected static final MetaDataField<Pose> META_POSE = new MetaDataField<>(6, Pose.STANDING, MetaDataType.POSE);
+	//protected static final MetaDataField<Integer> META_TICKS_FROZEN = new MetaDataField<>(7, 0, MetaDataType.INT); for 1.17
+	protected static final int LAST_META_INDEX = 6;
 	
 	protected static final String
 	AIR = "Air",
@@ -150,18 +159,19 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	}
 	
 	/**
-	 * Creates a new CoreEntity
-	 * @param id the unique entityID of this entity or -1 if not or later defined (entities with a id of -1 are not send to the player)
+	 * Creates a new CoreEntity with id 0 and removed status.<br>
+	 * Use {@link #spawn(int, World, double, double, double, float, float)} to spawn it in a {@link World}
 	 * @param type the EntityType of this Entity
 	 * @param loc the Location of this Entity (the Location will be copied)
 	 * @param uuid the UUID of this entity
 	 */
-	public CoreEntity(int id, EntityType type, Location loc, UUID uuid) {
-		this.id = id;
+	public CoreEntity(EntityType type, UUID uuid, World world) {
+		this.removed = true;
+		this.aremoved = true;
 		this.type = type;
 		this.uuid = uuid;
-		this.loc = new Location(loc);
-		this.oldLoc = new Location(loc);
+		this.loc = new Location(world, 0, 0, 0);
+		this.oldLoc = new Location(world, 0, 0, 0);
 		this.motion = new Vector(0, 0, 0);
 		metaContainer = new MetaDataContainer(getMetaContainerSize());
 		initMetaContainer();
@@ -173,24 +183,18 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	}
 
 	@Override
-	public boolean isCrouching() {
-		// TODO Auto-generated method 
-		return false;
-	}
-
-	@Override
 	public boolean isSprinting() {
-		return (metaContainer.getData(META_BASE_FLAGS, MetaDataType.BYTE) & 0x08) == 0x08;
+		return (metaContainer.getData(META_ENTITY_FLAGS) & 0x08) == 0x08;
 	}
 
 	@Override
 	public boolean isSwimming() {
-		return (metaContainer.getData(META_BASE_FLAGS, MetaDataType.BYTE) & 0x10) == 0x10;
+		return (metaContainer.getData(META_ENTITY_FLAGS) & 0x10) == 0x10;
 	}
 
 	@Override
 	public boolean isInvisble() {
-		return (metaContainer.getData(META_BASE_FLAGS, MetaDataType.BYTE) & 0x20) == 0x20;
+		return (metaContainer.getData(META_ENTITY_FLAGS) & 0x20) == 0x20;
 	}
 
 	@Override
@@ -200,7 +204,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 
 	@Override
 	public boolean isFlyingWithElytra() {
-		return (metaContainer.getData(META_BASE_FLAGS, MetaDataType.BYTE) & 0x80) == 0x80;
+		return (metaContainer.getData(META_ENTITY_FLAGS) & 0x80) == 0x80;
 	}
 
 	@Override
@@ -210,43 +214,52 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 
 	@Override
 	public ChatComponent getCustomName() {
-		return metaContainer.getData(META_CUSTOM_NAME, MetaDataType.OPT_CHAT);
+		return metaContainer.getData(META_CUSTOM_NAME);
 	}
 
 	@Override
 	public boolean isSilent() {
-		return metaContainer.getData(META_IS_SILENT, MetaDataType.BOOLEAN);
+		return metaContainer.getData(META_IS_SILENT);
 	}
 
 	@Override
 	public boolean isCustomNameVisible() {
-		return metaContainer.getData(META_CUSTOM_NAME_VISIBLE, MetaDataType.BOOLEAN);
+		return metaContainer.getData(META_CUSTOM_NAME_VISIBLE);
 	}
 
 	@Override
 	public boolean hasGravity() {
-		return !metaContainer.getData(META_HAS_NO_GRAVITY, MetaDataType.BOOLEAN);
+		return !metaContainer.getData(META_HAS_NO_GRAVITY);
 	}
 
 	@Override
 	public Pose getPose() {
-		return metaContainer.getData(META_POSE, MetaDataType.POSE);
+		return metaContainer.getData(META_POSE);
 	}
 
 	@Override
 	public void remove() {
-		// TODO Auto-generated method stub
+		if (removed)
+			return;
+		removed = true;
+		if (chunk != null)
+			chunk.removeEntity(this);
+		chunk = null;
+		if (passengers != null)
+			passengers.clear();
+		aremoved = true;
 		
+		// TODO implement remove
 	}
 
 	@Override
 	public void setCustomNameVisible(boolean value) {
-		metaContainer.get(META_CUSTOM_NAME_VISIBLE, MetaDataType.BOOLEAN).setData(value);
+		metaContainer.get(META_CUSTOM_NAME_VISIBLE).setData(value);
 	}
 
 	@Override
 	public void setCustomName(ChatComponent name) {
-		metaContainer.get(META_CUSTOM_NAME, MetaDataType.OPT_CHAT).setData(name);
+		metaContainer.get(META_CUSTOM_NAME).setData(name);
 	}
 
 	@Override
@@ -369,24 +382,22 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	 * Init all MetaData fields of an Entity
 	 */
 	protected void initMetaContainer() {
-		metaContainer.set(new MetaData<Byte>(META_BASE_FLAGS, MetaDataType.BYTE, (byte) 0));
-		metaContainer.set(new MetaData<Integer>(META_AIR_TICKS, MetaDataType.INT, 300));
-		metaContainer.set(new MetaData<ChatComponent>(META_CUSTOM_NAME, MetaDataType.OPT_CHAT));
-		metaContainer.set(new MetaData<Boolean>(META_CUSTOM_NAME_VISIBLE, MetaDataType.BOOLEAN, false));
-		metaContainer.set(new MetaData<Boolean>(META_IS_SILENT, MetaDataType.BOOLEAN, false));
-		metaContainer.set(new MetaData<Boolean>(META_HAS_NO_GRAVITY, MetaDataType.BOOLEAN, false));
-		metaContainer.set(new MetaData<Pose>(META_POSE, MetaDataType.POSE, Pose.STANDING));
+		metaContainer.set(META_ENTITY_FLAGS);
+		metaContainer.set(META_AIR_TICKS);
+		metaContainer.set(META_CUSTOM_NAME);
+		metaContainer.set(META_CUSTOM_NAME_VISIBLE);
+		metaContainer.set(META_IS_SILENT);
+		metaContainer.set(META_HAS_NO_GRAVITY);
+		metaContainer.set(META_POSE);
 	}
 	
 	protected int getMetaContainerSize() {
-		return 6;
+		return LAST_META_INDEX+1;
 	}
 
 	@Override
 	public void setPose(Pose pose) {
-		@SuppressWarnings("unchecked")
-		MetaData<Pose> data = (MetaData<Pose>) metaContainer.get(META_POSE);
-		data.setData(pose);
+		metaContainer.get(META_POSE).setData(pose);
 	}
 
 	@Override
@@ -421,12 +432,12 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 
 	@Override
 	public void setGravity(boolean gravity) {
-		metaContainer.get(META_HAS_NO_GRAVITY, MetaDataType.BOOLEAN).setData(!gravity);
+		metaContainer.get(META_HAS_NO_GRAVITY).setData(!gravity);
 	}
 
 	@Override
 	public void setOnGround(boolean onGorund) {
-		MetaData<Byte> meta = metaContainer.get(META_BASE_FLAGS, MetaDataType.BYTE);
+		MetaData<Byte> meta = metaContainer.get(META_ENTITY_FLAGS);
 		meta.setData((byte) (meta.getData() & 0x02));
 	}
 
@@ -437,17 +448,12 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 
 	@Override
 	public void setSilent(boolean silent) {
-		metaContainer.get(META_IS_SILENT, MetaDataType.BOOLEAN).setData(silent);
+		metaContainer.get(META_IS_SILENT).setData(silent);
 	}
 
 	@Override
 	public void addScoreboardTag(String tag) {
 		getScoreboardTags().add(tag);
-	}
-
-	@Override
-	public void setID(int id) {
-		this.id = id;
 	}
 
 	@Override
@@ -475,4 +481,83 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	public boolean isInvulnerable() {
 		return invulnerable;
 	}
+
+	@Override
+	public void spawn(int entityID, World world, double x, double y, double z, float pitch, float yaw) {
+		if (!asyncIsRemoved())
+			throw new IllegalStateException("Unable to spawn not removed Entity! call remove() first...");
+		removed = false;
+		aremoved = false;
+		if (passengers != null) 
+			passengers.clear();
+		this.id = entityID;
+		this.loc.setLocation(world, x, y, z, yaw, pitch);
+		this.oldLoc.setLocation(loc);
+		chunk = getWorld().getChunk(loc);
+		fallDistance = 0;
+		fire = 0;
+		metaContainer.setChanged(false); // reset changes made by EntitySpawnEvent to avoid duplications on first tick
+	}
+
+	@Override
+	public Chunk getChunk() {
+		return chunk;
+	}
+
+	@Override
+	public boolean asyncIsRemoved() {
+		return aremoved;
+	}
+
+	@Override
+	public boolean isRemoved() {
+		return removed;
+	}
+
+	@Override
+	public void tick() {
+		if (removed)
+			return;
+		prepUpdate();
+		if (isDead() || removed)
+			return;
+		update();
+		doTick();
+		// TODO implement entity tick
+	}
+	
+	/**
+	 * Called before {@link #update()} to make last changes before the entity is updated to the client
+	 */
+	protected void prepUpdate() {
+		
+	}
+	
+	/**
+	 * Updates changes made by the last tick to the client.<br>
+	 * {@link MetaDataContainer} will be updated by {@link CoreEntity}
+	 */
+	protected void update() {
+		
+	}
+	
+	/**
+	 * Processes the tick
+	 */
+	protected void doTick() {
+		
+	}
+	
+
+	@Override
+	public void causeSound(Sound sound, SoundCategory category, float volume, float pitch) {
+		// TODO cause sound
+		
+	}
+
+	@Override
+	public boolean isDead() {
+		return false;
+	}
+	
 }

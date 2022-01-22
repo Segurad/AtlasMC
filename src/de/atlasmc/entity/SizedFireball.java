@@ -5,6 +5,7 @@ import de.atlasmc.inventory.ItemStack;
 public interface SizedFireball extends Fireball {
 	
 	public ItemStack getDisplayItem();
-	public void setDisplayItem();
+	
+	public void setDisplayItem(ItemStack item);
 
 }

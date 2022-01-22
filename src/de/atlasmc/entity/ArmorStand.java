@@ -4,17 +4,41 @@ import de.atlasmc.util.EulerAngle;
 
 public interface ArmorStand extends LivingEntity {
 
-	public EulerAngle getBodyPose();
+	public default EulerAngle getBodyPose() {
+		return getBodyPose(new EulerAngle());
+	}
 
-	public EulerAngle getHeadPose();
+	public default EulerAngle getHeadPose() {
+		return getHeadPose(new EulerAngle());
+	}
 
-	public EulerAngle getLeftArmPose();
+	public default EulerAngle getLeftArmPose() {
+		return getLeftArmPose(new EulerAngle());
+	}
 
-	public EulerAngle getLeftLegPose();
+	public default EulerAngle getLeftLegPose() {
+		return getLeftLegPose(new EulerAngle());
+	}
 
-	public EulerAngle getRightArmPose();
+	public default EulerAngle getRightArmPose() {
+		return getRightArmPose(new EulerAngle());
+	}
 
-	public EulerAngle getRightLegPose();
+	public default EulerAngle getRightLegPose() {
+		return getRightLegPose(new EulerAngle());
+	}
+	
+	public EulerAngle getBodyPose(EulerAngle angle);
+
+	public EulerAngle getHeadPose(EulerAngle angle);
+
+	public EulerAngle getLeftArmPose(EulerAngle angle);
+
+	public EulerAngle getLeftLegPose(EulerAngle angle);
+
+	public EulerAngle getRightArmPose(EulerAngle angle);
+
+	public EulerAngle getRightLegPose(EulerAngle angle);
 
 	public void setBodyPose(EulerAngle angle);
 
@@ -28,26 +52,30 @@ public interface ArmorStand extends LivingEntity {
 
 	public void setRightLegPose(EulerAngle angle);
 	
-	public default EulerAngle getLimbPos(LimbType limb) {
+	public default EulerAngle getLimbPos(LimbType limb, EulerAngle angle) {
+		if (limb == null)
+			throw new IllegalArgumentException("Limb can not be null!");
 		switch (limb) {
 		case BODY:
-			return getBodyPose();
+			return getBodyPose(angle);
 		case HEAD:
-			return getHeadPose();
+			return getHeadPose(angle);
 		case LEFT_ARM:
-			return getLeftArmPose();
+			return getLeftArmPose(angle);
 		case LEFT_LEG:
-			return getLeftLegPose();
+			return getLeftLegPose(angle);
 		case RIGHT_ARM:
-			return getRightArmPose();
+			return getRightArmPose(angle);
 		case RIGHT_LEG:
-			return getRightLegPose();
+			return getRightLegPose(angle);
 		default:
-			return getHeadPose();
+			return getHeadPose(angle);
 		}
 	}
 	
 	public default void setLimbPos(LimbType limb, EulerAngle angle) {
+		if (limb == null)
+			throw new IllegalArgumentException("Limb can not be null!");
 		switch (limb) {
 		case BODY: {
 			setBodyPose(angle);
@@ -77,6 +105,22 @@ public interface ArmorStand extends LivingEntity {
 			break;
 		}
 	}
+	
+	public boolean isSmall();
+	
+	public void setSmall(boolean small);
+	
+	public boolean hasArms();
+	
+	public void setArms(boolean arms);
+	
+	public boolean hasBasePlate();
+	
+	public void setBasePlate(boolean baseplate);
+	
+	public boolean isMarker();
+	
+	public void setMarker(boolean marker);
 	
 	public static enum LimbType {
 		HEAD, BODY, RIGHT_LEG, LEFT_LEG, RIGHT_ARM, LEFT_ARM;

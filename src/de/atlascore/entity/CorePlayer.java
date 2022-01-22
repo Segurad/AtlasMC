@@ -10,8 +10,7 @@ import de.atlasmc.Particle;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
-import de.atlasmc.chat.ChatAdapter;
-import de.atlasmc.chat.ChatChannel;
+import de.atlasmc.chat.ChatType;
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
@@ -30,30 +29,32 @@ import de.atlasmc.io.protocol.play.PacketOutNamedSoundEffect;
 import de.atlasmc.io.protocol.play.PacketOutOpenWindow;
 import de.atlasmc.io.protocol.play.PacketOutParticle;
 import de.atlasmc.io.protocol.play.PacketOutChangeGameState.ChangeReason;
+import de.atlasmc.io.protocol.play.PacketOutChatMessage;
 import de.atlasmc.io.protocol.play.PacketOutSetExperiance;
 import de.atlasmc.io.protocol.play.PacketOutSetSlot;
 import de.atlasmc.io.protocol.play.PacketOutSoundEffect;
 import de.atlasmc.io.protocol.play.PacketOutStopSound;
 import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.scoreboard.ScoreboardView;
+import de.atlasmc.world.World;
 
 public class CorePlayer extends CoreHumanEntity implements Player {
-
+	
 	private PlayerConnection con;
 	private Inventory open;
 	private final CoreInventoryView view;
-	private volatile ScoreboardView scoreView;
+	private ScoreboardView scoreView;
+	//private final TablistView tabView;
 	
 	private int level;
 	private Gamemode gamemode;
 	private ItemStack cursorItem;
 	private boolean canBuild;
 	private Object pluginData;
-	private ChatAdapter chat;
 	private PermissionHandler permHandler;
 	
-	public CorePlayer(int id, EntityType type, Location loc, UUID uuid) {
-		super(id, type, loc, uuid);
+	public CorePlayer(EntityType type, UUID uuid, World world) {
+		super(type, uuid, world);
 		view = new CoreInventoryView(this, getInventory(), getInventory().getCraftingInventory(), 0);
 	}
 	
@@ -219,18 +220,20 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	}
 
 	@Override
-	public ChatAdapter getChat() {
-		return chat;
-	}
-
-	@Override
-	public void sendMessage(ChatChannel channel, ChatComponent chat) {
-		this.chat.sendMessage(channel, chat);
+	public void sendMessage(ChatComponent chat, ChatType type) {
+		if (type == null)
+			throw new IllegalArgumentException("Type can not be null!");
+		if (chat == null || type.ordinal() < con.getChatMode().ordinal())
+			return;
+		PacketOutChatMessage packet = con.getProtocol().createPacket(PacketOutChatMessage.class);
+		packet.setMessage(chat);
+		packet.setType(type);
+		con.sendPacked(packet);
 	}
 
 	@Override
 	public void sendMessage(ChatComponent chat) {
-		// TODO message in SystemChannel
+		sendMessage(chat, ChatType.SYSTEM);
 	}
 
 	@Override

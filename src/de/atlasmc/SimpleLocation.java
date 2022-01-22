@@ -3,7 +3,11 @@ package de.atlasmc;
 import java.util.Objects;
 
 import de.atlasmc.util.MathUtil;
+import de.atlasmc.world.World;
 
+/**
+ * Simplified version of {@link Location} that does not store a {@link World}
+ */
 public class SimpleLocation implements Cloneable {
 
 	private double x;
@@ -26,6 +30,10 @@ public class SimpleLocation implements Cloneable {
 		this.z = z;
 		this.pitch = pitch;
 		this.yaw = yaw;
+	}
+
+	public SimpleLocation() {
+		this(0, 0, 0);
 	}
 
 	public void setX(double x) {
@@ -143,7 +151,6 @@ public class SimpleLocation implements Cloneable {
 
 	/**
 	 * Rotates the Location around 0 0 0
-	 * 
 	 * @param rotation the rotation value
 	 * @return this Location
 	 */
@@ -155,19 +162,23 @@ public class SimpleLocation implements Cloneable {
 		return this;
 	}
 
+	/**
+	 * Returns the distance to the given location.<br>
+	 * Consider using {@link #getDistanceSquared(SimpleLocation)}!
+	 * @param loc
+	 * @return distance
+	 */
 	public double getDistance(SimpleLocation loc) {
 		return Math.sqrt(getDistanceSquared(loc));
 	}
 
+	/**
+	 * Returns the squared distance to the given location
+	 * @param loc
+	 * @return squared distance
+	 */
 	public double getDistanceSquared(SimpleLocation loc) {
 		return (Math.pow((getX() - loc.getX()), 2) + Math.pow((getY() - loc.getY()), 2) + Math.pow((getZ() - loc.getZ()), 2));
-	}
-
-	public SimpleLocation move(double x, double y, double z) {
-		this.x = this.x + x;
-		this.y = this.y + y;
-		this.z = this.z + z;
-		return this;
 	}
 
 	/**
@@ -257,10 +268,19 @@ public class SimpleLocation implements Cloneable {
 				&& z == other.z;
 	}
 	
+	/**
+	 * Converts pitch and yaw to a Vector
+	 * @return vector
+	 */
 	public Vector getDirection() {
 		return MathUtil.getVector(yaw, pitch);
 	}
 	
+	/**
+	 * Converts pitch and yaw to a Vector
+	 * @param vec Vector used to store the direction
+	 * @return the given Vector
+	 */
 	public Vector getDirection(Vector vec) {
 		return MathUtil.getVector(yaw, pitch, vec);
 	}

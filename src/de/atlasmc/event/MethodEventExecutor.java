@@ -47,6 +47,8 @@ public class MethodEventExecutor implements EventExecutor {
 	
 	@Override
 	public void fireEvent(Event event) {
+		if (!eventClass.isInstance(event))
+			return;
 		try {
 			method.invoke(listener, event);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
@@ -54,18 +56,28 @@ public class MethodEventExecutor implements EventExecutor {
 		}
 	}
 	
+	/**
+	 * Only checks if the obj is this
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		return obj == this;
+	}
+	
 	public static List<EventExecutor> getExecutors(Listener listener) {
 		if (listener == null) return null;
-		List<EventExecutor> executors = new ArrayList<>();
+		List<EventExecutor> executors = null;
 		for (Method method : listener.getClass().getMethods()) {
 			EventHandler handler = method.getAnnotation(EventHandler.class);
 			if (handler == null) continue;
 			if (method.getParameterCount() != 1) continue;
 			Class<?>[] params = method.getParameterTypes();
 			if (!Event.class.isAssignableFrom(params[0])) continue;
+			if (executors == null)
+				executors = new ArrayList<>();
 			executors.add(new MethodEventExecutor(params[0], method, handler.priority(), handler.ignoreCancelled(), listener));
 		}
-		return executors;
+		return executors == null ? List.of() : executors;
 	}
 	
 }

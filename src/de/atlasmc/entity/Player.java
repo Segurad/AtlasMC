@@ -9,8 +9,7 @@ import de.atlasmc.Particle;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
-import de.atlasmc.chat.ChatAdapter;
-import de.atlasmc.chat.ChatChannel;
+import de.atlasmc.chat.ChatType;
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryView;
@@ -19,19 +18,21 @@ import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.scoreboard.ScoreboardView;
-import de.atlasmc.util.annotation.ThreadSafe;
 
 public interface Player extends HumanEntity {
-
-	public ChatAdapter getChat();
-	
-	public void sendMessage(ChatChannel channel, ChatComponent chat);
 	
 	/**
-	 * Send a message in the SystemChannel
+	 * Send a message as {@link ChatType#SYSTEM}
 	 * @param chat
 	 */
 	public void sendMessage(ChatComponent chat);
+	
+	/**
+	 * Sends a message with the given type
+	 * @param chat
+	 * @param type
+	 */
+	public void sendMessage(ChatComponent chat, ChatType type);
 	
 	public PermissionHandler getPermissionHandler();
 	
@@ -67,7 +68,7 @@ public interface Player extends HumanEntity {
 	
 	/**
 	 * Returns a Object stored by a {@link Plugin}<br>
-	 * This method are used for storing data for e.g. a the current minigame
+	 * This method is used for storing data for e.g. a the current minigame
 	 * @return the stored Object
 	 */
 	public Object getPluginData();
@@ -91,14 +92,12 @@ public interface Player extends HumanEntity {
 	 * @param view the new view or null
 	 * @throws IllegalArgumentException if the view does not belong to the player
 	 */
-	@ThreadSafe
 	public void setScoreboard(ScoreboardView view);
 	
 	/**
 	 * Returns the current active view or null
 	 * @return view or null
 	 */
-	@ThreadSafe
 	public ScoreboardView getScoreboard();
 
 	// --- Sound ---

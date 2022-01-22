@@ -1,33 +1,35 @@
 package de.atlascore.entity;
 
-import de.atlasmc.Location;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.FallingBlock;
-import de.atlasmc.entity.data.MetaData;
+import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.world.World;
 
 import java.util.UUID;
 
 public class CoreFallingBlock extends CoreEntity implements FallingBlock {
 	
-	protected static final int
-	META_SPAWN_POS = 8;
+	protected static final MetaDataField<Long> 
+	META_SPAWN_POS = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, 0L, MetaDataType.POSISTION);
 	
-	public CoreFallingBlock(int id, EntityType type, Location loc, UUID uuid) {
-		super(id, type, loc, uuid);
+	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+1;
+	
+	public CoreFallingBlock(EntityType type, UUID uuid, World world) {
+		super(type, uuid, world);
 	}
 
 	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
-		metaContainer.set(new MetaData<Long>(META_SPAWN_POS, MetaDataType.POSISTION, 0L));
+		metaContainer.set(META_SPAWN_POS);
 	}
 	
 	@Override
 	protected int getMetaContainerSize() {
-		return super.getMetaContainerSize()+1;
+		return LAST_META_INDEX+1;
 	}
 	
 	@Override

@@ -1,5 +1,7 @@
 package de.atlasmc.entity;
 
-public interface AbstractMinecartContainer extends AbstractMinecart {
+import de.atlasmc.inventory.InventoryHolder;
+
+public interface AbstractMinecartContainer extends AbstractMinecart, InventoryHolder {
 
 }

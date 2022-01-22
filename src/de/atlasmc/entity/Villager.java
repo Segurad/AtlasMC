@@ -1,6 +1,20 @@
 package de.atlasmc.entity;
 
+import java.util.List;
+
 public interface Villager extends AbstractVillager {
+	
+	public VillagerType getVillagerType();
+	
+	public void setVillagerType(VillagerType type);
+	
+	public VillagerProfession getVillagerProfession();
+	
+	public void setVillagerProfession(VillagerProfession profession);
+	
+	public int getLevel();
+	
+	public void setLevel(int level);
 	
 	public static class VillagerData {
 		
@@ -54,7 +68,22 @@ public interface Villager extends AbstractVillager {
 		}
 		
 		public static VillagerType getByID(int id) {
-			return values()[id];
+			switch (id) {
+			case 0:
+				return DESERT;
+			case 1:
+				return JUNGLE;
+			case 2:
+				return PLAINS;
+			case 3:
+				return SAVANNA;
+			case 4:
+				return SWAMP;
+			case 5:
+				return TAIGA;
+			default:
+				return PLAINS;
+			}
 		}
 	}
 	
@@ -75,13 +104,34 @@ public interface Villager extends AbstractVillager {
 		TOOLSMITH,
 		WEAPONSMITH;
 		
+		private static List<VillagerProfession> VALUES;
+		
 		public int getID() {
 			return ordinal();
 		}
 		
 		public static VillagerProfession getByID(int id) {
-			return values()[id];
+			return getValues().get(id);
 		}
+		
+		/**
+		 * Returns a immutable List of all Types.<br>
+		 * This method avoid allocation of a new array not like {@link #values()}.
+		 * @return list
+		 */
+		public static List<VillagerProfession> getValues() {
+			if (VALUES == null)
+				VALUES = List.of(values());
+			return VALUES;
+		}
+		
+		/**
+		 * Releases the system resources used from the values cache
+		 */
+		public static void freeValues() {
+			VALUES = null;
+		}
+		
 	}
 
 }

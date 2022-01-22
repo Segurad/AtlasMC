@@ -1,19 +1,18 @@
 package de.atlasmc.entity.data;
 
 public class MetaData<T> {
-	
-	private final int index;
+
 	private T data;
 	private boolean changed;
-	private final MetaDataType<T> type;
+	private final MetaDataField<T> field;
 	
-	public MetaData(int index, MetaDataType<T> type) {
-		this.index = index;
-		this.type = type;
+	public MetaData(MetaDataField<T> field) {
+		this.field = field;
+		data = field.getDefaultData();
 	}
 	
-	public MetaData(int index, MetaDataType<T> type, T data) {
-		this(index, type);
+	public MetaData(MetaDataField<T> field, T data) {
+		this.field = field;
 		this.data = data;
 	}
 	
@@ -22,11 +21,11 @@ public class MetaData<T> {
 	}
 	
 	public int getIndex() {
-		return index;
+		return field.getIndex();
 	}
 	
 	public MetaDataType<T> getType() {
-		return type;
+		return field.getType();
 	}
 	
 	public boolean hasChanged() {
@@ -41,11 +40,21 @@ public class MetaData<T> {
 		this.changed = changed;
 	}
 	
+	public boolean isDefault() {
+		T defaultData = field.getDefaultData();
+		if (data == null)
+			return defaultData == null;
+		return data.equals(defaultData);
+	}
+	
 	/**
 	 * Sets the data and marks it as changed
 	 * @param data
 	 */
 	public void setData(T data) {
+		if (this.data == data)
+			return;
+		field.validateData(data);
 		this.data = data;
 		changed = true;
 	}

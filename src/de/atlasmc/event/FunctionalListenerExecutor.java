@@ -48,8 +48,17 @@ public class FunctionalListenerExecutor implements EventExecutor {
 
 	@Override
 	public void fireEvent(Event event) {
-		if (!eventClass.isInstance(event)) return;
+		if (!eventClass.isInstance(event)) 
+			return;
 		listener.accept(event);
+	}
+	
+	/**
+	 * Only checks if the obj is this
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		return obj == this;
 	}
 	
 }

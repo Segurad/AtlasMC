@@ -8,6 +8,11 @@ public class Location extends SimpleLocation {
 
 	private World world;
 	
+	public Location(World world, SimpleLocation loc) {
+		super(loc);
+		this.world = world;
+	}
+	
 	public Location(World world, double x, double y, double z) {
 		super(x, y, z);
 		this.world = world;
@@ -18,6 +23,10 @@ public class Location extends SimpleLocation {
 		this.world = loc.world;
 	}
 	
+	public Location(World world) {
+		this(world, 0, 0, 0);
+	}
+
 	public World getWorld() {
 		return world;
 	}

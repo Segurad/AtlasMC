@@ -1,6 +1,16 @@
 package de.atlasmc.entity;
 
+import de.atlasmc.ProjectileSource;
+
 public interface Projectile extends Entity {
+	
+	public ProjectileSource getShooter();
+	
+	public boolean doesBounce();
+	
+	public void setShooter(ProjectileSource source);
+	
+	public void setBounce(boolean bounce);
 	
 	public ProjectileType getProjectileType();
 	
@@ -8,19 +18,20 @@ public interface Projectile extends Entity {
 
 		ARROW(Arrow.class),
 		DRAGON_FIREBALL(DragonFireball.class),
-		EGG(ThrownEgg.class),
+		EGG(Egg.class),
+		FIREWORK_ROCKET(FireworkRocket.class),
+		EYE_OF_ENDER(EyeOfEnder.class),
 		ENDER_PEARL(EnderPearl.class),
-		FIREBALL(Fireball.class),
 		FISH_HOOK(FishingHook.class),
 		LARGE_FIREBALL(LargeFireball.class),
-		LAMA_SPIT(LlamaSpit.class),
+		LLAMA_SPIT(LlamaSpit.class),
 		SHULKER_BULLET(ShulkerBullet.class),
 		SMALL_FIREBALL(SmallFireball.class),
 		SNOWBALL(Snowball.class),
 		SPECTRAL_ARROW(SpectralArrow.class),
-		THROWN_EXP_BOTTLE(ThrownExpBottle.class),
-		THROWN_POTION(ThrownPotion.class),
-		TRIDENT(ThrownTrident.class),
+		EXP_BOTTLE(ExpBottle.class),
+		POTION(Potion.class),
+		TRIDENT(Trident.class),
 		WITHER_SKULL(WitherSkull.class);
 
 		private Class<? extends Projectile> pro;

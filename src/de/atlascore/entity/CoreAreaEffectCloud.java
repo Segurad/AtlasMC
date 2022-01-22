@@ -1,80 +1,83 @@
 package de.atlascore.entity;
 
-import de.atlasmc.Location;
 import de.atlasmc.Particle;
 import de.atlasmc.entity.AreaEffectCloud;
 import de.atlasmc.entity.EntityType;
-import de.atlasmc.entity.data.MetaData;
+import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.world.World;
 import de.atlasmc.world.particle.ParticleObject;
 import java.util.UUID;
 
 public class CoreAreaEffectCloud extends CoreEntity implements AreaEffectCloud {
-
-	protected static final int
-	META_RADIUS = 8,
-	META_COLOR = 9,
-	META_IGNORE_RADIUS = 10,
-	META_PARTICLE = 11;
 	
-	private static final ParticleObject DEFAULT_PARTICLE = new ParticleObject(Particle.EFFECT);
+	protected static final MetaDataField<Float> 
+	META_RADIUS = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, 0.5f, MetaDataType.FLOAT);
+	protected static final MetaDataField<Integer>
+	META_COLOR = new MetaDataField<>(CoreEntity.LAST_META_INDEX+2, 0, MetaDataType.INT);
+	protected static final MetaDataField<Boolean>
+	META_IGNORE_RADIUS = new MetaDataField<>(CoreEntity.LAST_META_INDEX+3, false, MetaDataType.BOOLEAN);
+	protected static final MetaDataField<ParticleObject>
+	META_PARTICLE = new MetaDataField<ParticleObject>(CoreEntity.LAST_META_INDEX+4, new ParticleObject(Particle.EFFECT), MetaDataType.PARTICLE);
 	
-	public CoreAreaEffectCloud(int id, EntityType type, Location loc, UUID uuid) {
-		super(id, type, loc, uuid);
+	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+4;
+	
+	public CoreAreaEffectCloud(EntityType type, UUID uuid, World world) {
+		super(type, uuid, world);
 	}
 	
 	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
-		metaContainer.set(new MetaData<>(META_RADIUS, MetaDataType.FLOAT, 0.5f));
-		metaContainer.set(new MetaData<>(META_COLOR, MetaDataType.INT, 0));
-		metaContainer.set(new MetaData<>(META_IGNORE_RADIUS, MetaDataType.BOOLEAN, false));
-		metaContainer.set(new MetaData<>(META_PARTICLE, MetaDataType.PARTICLE, DEFAULT_PARTICLE));
+		metaContainer.set(META_RADIUS);
+		metaContainer.set(META_COLOR);
+		metaContainer.set(META_IGNORE_RADIUS);
+		metaContainer.set(META_PARTICLE);
 	}
 	
 	@Override
 	protected int getMetaContainerSize() {
-		return super.getMetaContainerSize()+4;
+		return LAST_META_INDEX+1;
 	}
 
 	@Override
 	public float getRadius() {
-		return metaContainer.getData(META_RADIUS, MetaDataType.FLOAT);
+		return metaContainer.getData(META_RADIUS);
 	}
 
 	@Override
 	public int getColor() {
-		return metaContainer.getData(META_COLOR, MetaDataType.INT);
+		return metaContainer.getData(META_COLOR);
 	}
 
 	@Override
 	public boolean getIgnoreRadius() {
-		return metaContainer.getData(META_IGNORE_RADIUS, MetaDataType.BOOLEAN);
+		return metaContainer.getData(META_IGNORE_RADIUS);
 	}
 
 	@Override
 	public ParticleObject getParticle() {
-		return metaContainer.getData(META_PARTICLE, MetaDataType.PARTICLE);
+		return metaContainer.getData(META_PARTICLE);
 	}
 
 	@Override
 	public void setRadius(float radius) {
-		metaContainer.get(META_RADIUS, MetaDataType.FLOAT).setData(radius);
+		metaContainer.get(META_RADIUS).setData(radius);
 	}
 
 	@Override
 	public void setColor(int color) {
-		metaContainer.get(META_COLOR, MetaDataType.INT).setData(color);
+		metaContainer.get(META_COLOR).setData(color);
 	}
 
 	@Override
 	public void setIngnoreRadius(boolean ignore) {
-		metaContainer.get(META_IGNORE_RADIUS, MetaDataType.BOOLEAN).setData(ignore);
+		metaContainer.get(META_IGNORE_RADIUS).setData(ignore);
 	}
 
 	@Override
 	public void setParticle(ParticleObject particle) {
-		metaContainer.get(META_PARTICLE, MetaDataType.PARTICLE).setData(particle);
+		metaContainer.get(META_PARTICLE).setData(particle);
 	}
 
 }

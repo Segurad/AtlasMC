@@ -39,7 +39,8 @@ public class HandlerList {
 	 * @param defaultExecutor
 	 */
 	public void setDefaultExecutor(EventExecutor defaultExecutor) {
-		if (defaultExecutor == null) defaultExecutor = EventExecutor.NULL_EXECUTOR;
+		if (defaultExecutor == null) 
+			defaultExecutor = EventExecutor.NULL_EXECUTOR;
 		this.defaultExecutor = defaultExecutor;
 	}
 	
@@ -167,7 +168,7 @@ public class HandlerList {
 	 * @param executors
 	 * @param priority
 	 * @param event event
-	 * @param cancellable weather or not the event extends {@link Cancellable}
+	 * @param cancellable whether or not the event extends {@link Cancellable}
 	 */
 	protected static void fireEvents(final LinkedListIterator<EventExecutor> executors, final EventPriority priority, final Event event, final boolean cancellable) {
 		if (executors == null || !executors.hasNext()) return;
@@ -205,25 +206,32 @@ public class HandlerList {
 	}
 	
 	/**
-	 * 
-	 * @param listener
-	 * @param handleroptions extra arguments for EventExecutor registration <br>
 	 * If the Listener contains a e.g. a {@link AbstractServerEvent}, you may add a {@link LocalServer} or {@link ServerGroup} for registration.
 	 * If there are multiple LocalServers or/and ServerGroups it will registered for all.
 	 * If not present or does not contain a specific Object the EventHandler will be registered as Global.
+	 * @param listener
+	 * @param handleroptions extra arguments for EventExecutor registration <br>
 	 */
 	public static void registerListener(Listener listener, Object... handleroptions) {
 		if (listener == null) return;
 		List<EventExecutor> exes = MethodEventExecutor.getExecutors(listener);
 		for (EventExecutor exe : exes) {
+			Method m;
 			try {
-				Method m = exe.getEventClass().getMethod("getHandlerList");
-				HandlerList h = (HandlerList) m.invoke(null);
-				h.registerExecutor(exe, handleroptions);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException 
-					| NoSuchMethodException | SecurityException e) {
-				e.printStackTrace();
+				m = exe.getEventClass().getMethod("getHandlerList");
+			} catch (NoSuchMethodException e) {
+				throw new EventException("Unable to find static getHandlerList method in: " + exe.getEventClass().getName());
+			} catch (SecurityException e) {
+				throw new EventException("Unable to access static getHandlerList method in: " + exe.getEventClass().getName());
 			}
+			HandlerList h = null;
+			try {
+				m.setAccessible(true);
+				h = (HandlerList) m.invoke(null);
+			} catch (IllegalAccessException | InvocationTargetException e) {
+				throw new EventException("Unable to call static getHandlerList method!", e);
+			}
+			h.registerExecutor(exe, handleroptions);
 		}
 	}
 

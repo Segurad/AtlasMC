@@ -67,7 +67,11 @@ public class MathUtil {
 	}
 
 	public static long toPosition(double x, double y, double z) {
-		return toPosition((int) x, (int) y,  (int) z);
+		return toPosition(floor(x), floor(y),  floor(z));
+	}
+	
+	public static long toPosition(SimpleLocation loc) {
+		return toPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 	}
 
 	public static int toAngle(float value) {

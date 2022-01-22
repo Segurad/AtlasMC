@@ -6,13 +6,18 @@ import java.util.UUID;
 import de.atlasmc.Location;
 import de.atlasmc.Nameable;
 import de.atlasmc.SimpleLocation;
+import de.atlasmc.Sound;
+import de.atlasmc.SoundCategory;
 import de.atlasmc.Vector;
 import de.atlasmc.atlasnetwork.server.LocalServer;
+import de.atlasmc.tick.Tickable;
+import de.atlasmc.util.annotation.ThreadSafe;
 import de.atlasmc.util.nbt.CustomTagContainer;
 import de.atlasmc.util.nbt.NBTHolder;
+import de.atlasmc.world.Chunk;
 import de.atlasmc.world.World;
 
-public interface Entity extends NBTHolder, Nameable {
+public interface Entity extends NBTHolder, Nameable, Tickable {
 
 	public enum Animation {
 		SWING_MAIN_ARM,
@@ -81,6 +86,8 @@ public interface Entity extends NBTHolder, Nameable {
 	
 	public World getWorld();
 	
+	public Chunk getChunk();
+	
 	public double getX();
 	
 	public double getY();
@@ -92,8 +99,6 @@ public interface Entity extends NBTHolder, Nameable {
 	public boolean hasScoreboardTags();
 	
 	public boolean hasVelocity();
-	
-	public boolean isCrouching();
 
 	public boolean isCustomNameVisible();
 	
@@ -115,7 +120,26 @@ public interface Entity extends NBTHolder, Nameable {
 	
 	public boolean isInvulnerable();
 	
+	/**
+	 * Removes the entity the current world
+	 */
 	public void remove();
+	
+	/**
+	 * Thread safe alternative to {@link #isRemoved()}.<br>
+	 * Useage e.g. for other servers or worlds preparing the spawning of this entity.
+	 * @return true if the Entity is removed
+	 */
+	@ThreadSafe
+	public boolean asyncIsRemoved();
+	
+	/**
+	 * Check if the Entity is removed
+	 * @return true if the Entity is removed
+	 */
+	public boolean isRemoved();
+	
+	public boolean isDead();
 	
 	public void setAirTicks(int air);
 
@@ -128,8 +152,6 @@ public interface Entity extends NBTHolder, Nameable {
 	public void setGlowing(boolean glowing);
 
 	public void setGravity(boolean gravity);
-	
-	public void setID(int id);
 	
 	public void setInvulnerable(boolean invulnerable);
 
@@ -154,5 +176,20 @@ public interface Entity extends NBTHolder, Nameable {
 	public void teleport(double x, double y, double z, float yaw, float pitch);
 
 	public void setOnGround(boolean onGround);
+
+	/**
+	 * This method is called by the System when the entity is spawned at another world and/or server.<br>
+	 * It resets the removed status when used.
+	 * @param entityID the new entityID of this entity
+	 * @param world the new world of this entity
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param pitch
+	 * @param yaw
+	 */
+	public void spawn(int entityID, World world, double x, double y, double z, float pitch, float yaw);
+	
+	public void causeSound(Sound sound, SoundCategory category, float volume, float pitch);
 	
 }
