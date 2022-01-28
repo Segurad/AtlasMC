@@ -6,20 +6,20 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.util.ConcurrentLinkedList;
 
-public class ConcurrentLinkedCollectionMultimap<K, V> extends AbstractMultimap<K, V> {
+public class ConcurrentLinkedListMultimap<K, V> extends AbstractMultimap<K, V> {
 	
-	public ConcurrentLinkedCollectionMultimap() {
+	public ConcurrentLinkedListMultimap() {
 		super(new ConcurrentHashMap<>());
 	}
 	
-	public ConcurrentLinkedCollectionMultimap(Map<K, Collection<V>> map) {
+	public ConcurrentLinkedListMultimap(Map<K, Collection<V>> map) {
 		super(new ConcurrentHashMap<>(map.size()));
 		for (K key : map.keySet()) {
 			putAll(key, map.get(key));
 		}
 	}
 	
-	public ConcurrentLinkedCollectionMultimap(int mapCapacity) {
+	public ConcurrentLinkedListMultimap(int mapCapacity) {
 		super(new ConcurrentHashMap<K, Collection<V>>(mapCapacity));
 	}
 
