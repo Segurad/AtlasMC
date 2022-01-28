@@ -4,85 +4,103 @@ import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.util.nbt.NBT;
+import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
 
 public class NBTObjectReader implements NBTReader {
 
-	private NBT nbt;
+	private NBT nbt, current;
+	private ListData list;
+	private boolean closed;
+	private int depth;
 	
 	public NBTObjectReader(NBT nbt) {
 		this.nbt = nbt;
+		this.current = nbt;
 	}
 
 	@Override
 	public TagType getType() {
-		return null;
+		return current.getType();
 	}
 
 	@Override
 	public TagType getListType() {
-		// TODO Auto-generated method stub
-		return null;
+		return list != null ? list.type : null;
 	}
 
 	@Override
 	public int getRestPayload() {
-		// TODO Auto-generated method stub
-		return 0;
+		return list != null ? list.payload : 0;
 	}
 
 	@Override
 	public String getFieldName() {
-		// TODO Auto-generated method stub
-		return null;
+		return current != null ? current.getName() : null;
 	}
 
 	@Override
 	public byte readByteTag() throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+		ensureOpen();
+		if (current.getType() != TagType.BYTE)
+			throw new NBTException("Can not read as ByteTag: " + current.getType().name());
+		return (byte) current.getData();
 	}
 
 	@Override
 	public short readShortTag() throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+		ensureOpen();
+		if (current.getType() != TagType.SHORT)
+			throw new NBTException("Can not read as ShortTag: " + current.getType().name());
+		return (short) current.getData();
 	}
 
 	@Override
 	public int readIntTag() throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+		ensureOpen();
+		if (current.getType() != TagType.INT)
+			throw new NBTException("Can not read as IntTag: " + current.getType().name());
+		return (int) current.getData();
 	}
 
 	@Override
 	public long readLongTag() throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+		ensureOpen();
+		if (current.getType() != TagType.LONG)
+			throw new NBTException("Can not read as LongTag: " + current.getType().name());
+		return (long) current.getData();
 	}
 
 	@Override
 	public float readFloatTag() throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+		ensureOpen();
+		if (current.getType() != TagType.FLOAT)
+			throw new NBTException("Can not read as FloatTag: " + current.getType().name());
+		return (float) current.getData();
 	}
 
 	@Override
 	public double readDoubleTag() throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+		ensureOpen();
+		if (current.getType() != TagType.DOUBLE)
+			throw new NBTException("Can not read as DoubleTag: " + current.getType().name());
+		return (double) current.getData();
 	}
 
 	@Override
 	public byte[] readByteArrayTag() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		ensureOpen();
+		if (current.getType() != TagType.BYTE_ARRAY)
+			throw new NBTException("Can not read as ByteArrayTag: " + current.getType().name());
+		return (byte[]) current.getData();
 	}
 
 	@Override
 	public String readStringTag() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		ensureOpen();
+		if (current.getType() != TagType.STRING)
+			throw new NBTException("Can not read as StringTag: " + current.getType().name());
+		return (String) current.getData();
 	}
 
 	@Override
@@ -93,20 +111,23 @@ public class NBTObjectReader implements NBTReader {
 
 	@Override
 	public int[] readIntArrayTag() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		ensureOpen();
+		if (current.getType() != TagType.INT_ARRAY)
+			throw new NBTException("Can not read as IntArrayTag: " + current.getType().name());
+		return (int[]) current.getData();
 	}
 
 	@Override
 	public long[] readLongArrayTag() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		ensureOpen();
+		if (current.getType() != TagType.LONG_ARRAY)
+			throw new NBTException("Can not read as LongArrayTag: " + current.getType().name());
+		return (long[]) current.getData();
 	}
 
 	@Override
 	public int getDepth() {
-		// TODO Auto-generated method stub
-		return 0;
+		return depth;
 	}
 
 	@Override
@@ -148,6 +169,13 @@ public class NBTObjectReader implements NBTReader {
 	@Override
 	public void close() {
 		nbt = null;
+		current = null;
+		list = null;
+	}
+	
+	protected final void ensureOpen() throws IOException {
+		if (closed)
+			throw new IOException("Stream closed!");
 	}
 
 }

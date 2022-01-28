@@ -6,11 +6,13 @@ import java.util.UUID;
 
 import com.google.gson.stream.JsonReader;
 
+import de.atlasmc.util.ByteDataBuffer;
 import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.TagType;
 
 /**
- * {@link NBTReader} implementation to read NBT Json
+ * {@link NBTReader} implementation to read NBT Json<br>
+ * Only able to detect Compound, String, Number, List/Array
  */
 public class SNBTReader extends JsonReader implements NBTReader {
 
@@ -20,6 +22,7 @@ public class SNBTReader extends JsonReader implements NBTReader {
 
 	@Override
 	public TagType getType() {
+		
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -44,50 +47,48 @@ public class SNBTReader extends JsonReader implements NBTReader {
 
 	@Override
 	public byte readByteTag() throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+		return (byte) nextInt();
 	}
 
 	@Override
 	public short readShortTag() throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+		return (short) nextInt();
 	}
 
 	@Override
 	public int readIntTag() throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+		return nextInt();
 	}
 
 	@Override
 	public long readLongTag() throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+		return nextLong();
 	}
 
 	@Override
 	public float readFloatTag() throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+		return (float) nextDouble();
 	}
 
 	@Override
 	public double readDoubleTag() throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+		return nextDouble();
 	}
 
 	@Override
 	public byte[] readByteArrayTag() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		beginArray();
+		ByteDataBuffer buff = new ByteDataBuffer(32);
+		while (hasNext()) {
+			buff.writeByte(nextInt());
+		}
+		endArray();
+		return buff.toByteArray();
 	}
 
 	@Override
 	public String readStringTag() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		return nextString();
 	}
 
 	@Override
@@ -98,14 +99,36 @@ public class SNBTReader extends JsonReader implements NBTReader {
 
 	@Override
 	public int[] readIntArrayTag() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		beginArray();
+		ByteDataBuffer buff = new ByteDataBuffer(32);
+		int count = 0;
+		while (hasNext()) {
+			buff.writeInt(nextInt());
+			count++;
+		}
+		endArray();
+		int[] data = new int[count];
+		for (int i = 0; i < count; i++) {
+			data[i] = buff.readInt();
+		}
+		return data; 
 	}
 
 	@Override
 	public long[] readLongArrayTag() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		beginArray();
+		ByteDataBuffer buff = new ByteDataBuffer(32);
+		int count = 0;
+		while (hasNext()) {
+			buff.writeLong(nextLong());
+			count++;
+		}
+		endArray();
+		long[] data = new long[count];
+		for (int i = 0; i < count; i++) {
+			data[i] = buff.readLong();
+		}
+		return data; 
 	}
 
 	@Override
@@ -134,15 +157,11 @@ public class SNBTReader extends JsonReader implements NBTReader {
 
 	@Override
 	public void mark() {
-		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException("Mark is not implemented for this reader!");
 	}
 
 	@Override
-	public void reset() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void reset() {}
 
 	@Override
 	public void search(String key, TagType type, boolean list) throws IOException {

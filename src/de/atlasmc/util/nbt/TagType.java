@@ -1,5 +1,7 @@
 package de.atlasmc.util.nbt;
 
+import java.util.List;
+
 public enum TagType {
 
 	TAG_END,
@@ -16,10 +18,16 @@ public enum TagType {
 	INT_ARRAY,
 	LONG_ARRAY;
 	
+	private static List<TagType> VALUES;
+	
+	public int getID() {
+		return ordinal();
+	}
+	
 	public static TagType getByID(int id) {
-		if (id < 0 || id > 12) throw new IllegalArgumentException("ID (" + id + ") must be between 0 and 12");
-		TagType[] types = values();
-		return types[id];
+		if (id < 0 || id > 12) 
+			throw new IllegalArgumentException("ID (" + id + ") must be between 0 and 12");
+		return getValues().get(id);
 	}
 	
 	/**
@@ -96,4 +104,23 @@ public enum TagType {
 			return null;
 		}
 	}
+	
+	/**
+	 * Returns a immutable List of all Types.<br>
+	 * This method avoid allocation of a new array not like {@link #values()}.
+	 * @return list
+	 */
+	public static List<TagType> getValues() {
+		if (VALUES == null)
+			VALUES = List.of(values());
+		return VALUES;
+	}
+	
+	/**
+	 * Releases the system resources used from the values cache
+	 */
+	public static void freeValues() {
+		VALUES = null;
+	}
+	
 }
