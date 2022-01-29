@@ -1,26 +1,21 @@
 package de.atlascore.event;
 
-import static org.junit.Assert.fail;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Iterator;
-import java.util.stream.Stream;
-
 import org.junit.jupiter.api.Test;
 
 import de.atlasmc.event.Event;
 import de.atlasmc.event.EventExecutor;
 import de.atlasmc.event.HandlerList;
+import test.util.ReflectionUtil;
 
 class EventDefaultListenerPresentsTest {
 
 	int totalWarnings = 0, totalTested;
+	int tested = 0, warnings = 0;
 	
-	boolean printMissingClasses = false;
+	boolean printMissingClasses = true;
 	
 	@Test
 	void test() throws Exception {
@@ -34,32 +29,29 @@ class EventDefaultListenerPresentsTest {
 	}
 	
 	void testEventPacket(String packet) throws Exception {
-		String packetDir = packet.replace('.', '/');
-		InputStream in = ClassLoader.getSystemResourceAsStream(packetDir);
-		if (in == null) fail("InputStream is null! (maybe wrong packet name?)");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-		Stream<String> lins = reader.lines();
-		Iterator<String> it = lins.iterator();
-		int tested = 0, warnings = 0;
-		while (it.hasNext()) {
-			final String classname = it.next();
-			if (!classname.endsWith(".class")) continue;
-			Class<?> clazz = Class.forName(packet + "." + classname.substring(0, classname.lastIndexOf('.')));
-			if (!Event.class.isAssignableFrom(clazz)) continue;
+		tested = 0;
+		warnings = 0;
+		ReflectionUtil.getClassesInPacket(packet, (clazz) -> {
+			if (!Event.class.isAssignableFrom(clazz)) return;
 			for (Method m : clazz.getMethods()) {
 				if (!m.getName().equals("getHandlerList")) continue;
 				if (!Modifier.isStatic(m.getModifiers())) continue;
 				m.setAccessible(true);
-				HandlerList handlers = (HandlerList) m.invoke(clazz);
+				HandlerList handlers = null;
+				try {
+					handlers = (HandlerList) m.invoke(clazz);
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					e.printStackTrace();
+				}
 				if (handlers.getDefaultExecutor() == null || handlers.getDefaultExecutor() == EventExecutor.NULL_EXECUTOR) {
 					warnings++;
 					if (printMissingClasses)
-						System.out.println("[Warning] Event class does not have a DefaultExecutor: " + packet + "." + classname);
+						System.out.println("[Warning] Event class does not have a DefaultExecutor: " + packet + "." + clazz.getName());
 				}
 				tested++;
 				break;
 			}
-		}
+		});
 		System.out.println((tested-warnings) + "|" + tested + "\tDefaultEventExecutors set in " + packet);
 		totalTested += tested;
 		totalWarnings += warnings;
