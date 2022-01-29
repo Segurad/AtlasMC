@@ -5,6 +5,10 @@ import java.util.Map;
 import java.util.Set;
 
 public interface Multimap<K, V> {
+	
+	public static <K, V> Multimap<K, V> of() {
+		return ImmutableMultimap.getEmpty();
+	}
 
 	public Set<K> keySet();
 
