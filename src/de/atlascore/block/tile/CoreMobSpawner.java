@@ -1,8 +1,6 @@
 package de.atlascore.block.tile;
 
 import java.io.IOException;
-import java.util.UUID;
-
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.MobSpawner;
 import de.atlasmc.entity.Entity;
@@ -33,14 +31,15 @@ public class CoreMobSpawner extends CoreTileEntity implements MobSpawner {
 				reader.skipTag();
 				return;
 			}
+			MobSpawner spawner = (MobSpawner) holder;
 			reader.readNextEntry();
 			reader.mark();
 			reader.search(ID);
 			EntityType type = EntityType.getByName(reader.readStringTag());
 			reader.reset();
-			Entity ent = type.create(-1, null, UUID.randomUUID());
+			Entity ent = type.create(spawner.getWorld());
 			ent.fromNBT(reader);
-			((MobSpawner) holder).setDisplayedEntity(ent);
+			spawner.setDisplayedEntity(ent);
 		});
 		// TODO skipped fields of mob spawner
 	}

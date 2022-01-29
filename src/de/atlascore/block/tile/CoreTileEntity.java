@@ -12,6 +12,7 @@ import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.Chunk;
+import de.atlasmc.world.World;
 
 public class CoreTileEntity extends AbstractNBTBase implements TileEntity {
 	
@@ -139,6 +140,11 @@ public class CoreTileEntity extends AbstractNBTBase implements TileEntity {
 	@Override
 	public Location getLocation() {
 		return new Location(chunk.getWorld(), x, y, z);
+	}
+
+	@Override
+	public World getWorld() {
+		return chunk.getWorld();
 	}
 
 }

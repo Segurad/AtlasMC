@@ -4,6 +4,7 @@ import de.atlasmc.Location;
 import de.atlasmc.Material;
 import de.atlasmc.util.nbt.NBTHolder;
 import de.atlasmc.world.Chunk;
+import de.atlasmc.world.World;
 
 public interface TileEntity extends NBTHolder, Cloneable {
 
@@ -20,6 +21,8 @@ public interface TileEntity extends NBTHolder, Cloneable {
 	 * @return location
 	 */
 	public Location getLocation();
+	
+	public World getWorld();
 	
 	public int getX();
 	

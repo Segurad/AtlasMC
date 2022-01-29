@@ -69,7 +69,7 @@ public class CoreBeehive extends CoreTileEntity implements Beehive {
 					break;
 				case NBT_ENTITY_DATA:
 					reader.readNextEntry();
-					bee = (Bee) EntityType.BEE.create(-1, hive.getLocation(), null);
+					bee = (Bee) EntityType.BEE.create(hive.getWorld());
 					if (bee != null)
 						bee.fromNBT(reader);
 					break;
