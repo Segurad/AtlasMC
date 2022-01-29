@@ -9,7 +9,8 @@ public class ChildNBTFieldContainer extends NBTFieldContainer {
 	private final NBTFieldContainer parent;
 	
 	public ChildNBTFieldContainer(NBTFieldContainer parent) {
-		if (parent == null) throw new IllegalArgumentException("Parent NBTFieldContainer can not be null!");
+		if (parent == null) 
+			throw new IllegalArgumentException("Parent NBTFieldContainer can not be null!");
 		this.parent = parent;
 	}
 	
@@ -19,6 +20,8 @@ public class ChildNBTFieldContainer extends NBTFieldContainer {
 	
 	@Override
 	public NBTField getField(String key) {
+		if (key == null)
+			throw new IllegalArgumentException("Key can not be null!");
 		NBTField field = super.getField(key);
 		if (field != null) return field;
 		return parent.getField(key);
@@ -26,6 +29,8 @@ public class ChildNBTFieldContainer extends NBTFieldContainer {
 	
 	@Override
 	public NBTFieldContainer getContainer(String key) {
+		if (key == null)
+			throw new IllegalArgumentException("Key can not be null!");
 		NBTFieldContainer container = super.getContainer(key);
 		if (container != null) return container;
 		return parent.getContainer(key);
@@ -38,8 +43,11 @@ public class ChildNBTFieldContainer extends NBTFieldContainer {
 	 * @return the new set container
 	 */
 	public NBTFieldContainer setChildContainer(String key) {
+		if (key == null)
+			throw new IllegalArgumentException("Key can not be null!");
 		NBTFieldContainer container = getContainer(key);
-		if (container == null) return super.setContainer(key);
+		if (container == null) 
+			return super.setContainer(key);
 		return super.setContainer(key, new ChildNBTFieldContainer(container));
 	}
 	
