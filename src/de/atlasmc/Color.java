@@ -1,7 +1,6 @@
 package de.atlasmc;
 
-import java.util.HashMap;
-
+import java.util.List;
 import de.atlasmc.util.MathUtil;
 
 public final class Color {
@@ -27,27 +26,27 @@ public final class Color {
 	WHITE = new Color("WHITE", 0xFF, 0xFF, 0xFF),
 	YELLOW = new Color("YELLOW", 0xFF, 0xFF, 0x00);
 	
-	private static final HashMap<String, Color> BY_NAME;
+	private static final List<Color> VALUES;
 
 	static {
-		BY_NAME = new HashMap<String, Color>();
-		registerColor(AQUA);
-		registerColor(BLACK);
-		registerColor(BLUE);
-		registerColor(FUCHSIA);
-		registerColor(GRAY);
-		registerColor(GREEN);
-		registerColor(LIME);
-		registerColor(MAROON);
-		registerColor(NAVY);
-		registerColor(OLIVE);
-		registerColor(ORANGE);
-		registerColor(PURPLE);
-		registerColor(RED);
-		registerColor(SILVER);
-		registerColor(TEAL);
-		registerColor(WHITE);
-		registerColor(YELLOW);
+		VALUES = List.of(
+				AQUA,
+				BLACK,
+				BLUE,
+				FUCHSIA,
+				GRAY,
+				GREEN,
+				LIME,
+				MAROON,
+				NAVY,
+				OLIVE,
+				ORANGE,
+				PURPLE,
+				RED,
+				SILVER,
+				TEAL,
+				WHITE,
+				YELLOW);
 	}
 
 	private final byte r,g,b;
@@ -102,8 +101,10 @@ public final class Color {
 	}
 
 	public static Color getColor(String name) {
-		Color color = BY_NAME.get(name);
-		if (color != null) return color;
+		for (Color color : VALUES) {
+			if (color.getName().equals(name))
+				return color;
+		}
 		if (name.startsWith("RGB:")) {
 			String[] rgb = name.substring(4).split(",");
 			int r = Integer.parseInt(rgb[0]);
@@ -148,16 +149,16 @@ public final class Color {
 		}
 		return this.name;
 	}
-	
-	public static void registerColor(Color color) {
-		BY_NAME.putIfAbsent(color.name, color);
-	}
-	
-	public static void unregisteColor(Color color) {
-		BY_NAME.remove(color.name);
-	}
 
 	public int asRGB() {
 		return (r << 8 + g) << 8 + b;
+	}
+
+	public static Color fromRGB(int color) {
+		for (Color c : VALUES) {
+			if (c.asRGB() == color)
+				return c;
+		}
+		return new Color(color);
 	}
 }
