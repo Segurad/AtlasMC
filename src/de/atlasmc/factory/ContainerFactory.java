@@ -25,7 +25,7 @@ import de.atlasmc.inventory.StonecutterInventory;
 import de.atlasmc.inventory.WorkbenchInventory;
 
 /**
- * Factory for creating containers like Inventories or GUIs
+ * Factory for creating containers like {@link Inventory}
  */
 public abstract class ContainerFactory<I extends Inventory> {
 	

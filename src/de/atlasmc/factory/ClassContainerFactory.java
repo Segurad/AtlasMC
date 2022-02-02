@@ -25,7 +25,7 @@ public class ClassContainerFactory<I extends Inventory> extends ContainerFactory
 	@Override
 	public I create(InventoryType type, ChatComponent title, InventoryHolder holder) {
 		try {
-			return clazz.getConstructor(String.class, InventoryHolder.class).newInstance(title, holder);
+			return clazz.getConstructor(ChatComponent.class, InventoryHolder.class).newInstance(title, holder);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
