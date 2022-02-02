@@ -11,7 +11,7 @@ import de.atlasmc.inventory.meta.ItemMeta;
 /**
  * Class based {@link MetaDataFactory} for Materials
  */
-public class ClassMetaDataFactory extends MetaDataFactory {
+public class ClassMetaDataFactory implements MetaDataFactory {
 	
 	protected final Class<? extends ItemMeta> metaInterface, meta;
 	protected final Class<? extends BlockData> dataInterface, data;
@@ -33,31 +33,35 @@ public class ClassMetaDataFactory extends MetaDataFactory {
 		if (metaInterface != null && !metaInterface.isAssignableFrom(meta)) 
 			throw new IllegalArgumentException("MetaInterface is not assignable from Meta!");
 		if (dataInterface != null && !dataInterface.isAssignableFrom(data))
-				throw new IllegalArgumentException("DataInterface is not assignable from Data!");
+			throw new IllegalArgumentException("DataInterface is not assignable from Data!");
 		this.dataInterface = dataInterface;
 		this.metaInterface = metaInterface;
 		this.data = data;
 		this.meta = meta;
 	}
 	
+	@Override
 	public boolean isValidMeta(ItemMeta meta) {
-		if (meta == null) return false;
+		if (meta == null || metaInterface == null) 
+			return false;
 		return metaInterface.isInstance(meta);
 	}
 	
+	@Override
 	public boolean isValidData(BlockData data) {
-		if (data == null) return false;
+		if (data == null || dataInterface == null) 
+			return false;
 		return dataInterface.isInstance(data); 
 	}
 	
-	public ItemMeta createMeta(Material material, boolean preConfig) {
-		if (material == null) throw new IllegalArgumentException("Material can not be null!");
-		if (!material.isItem()) throw new IllegalArgumentException("Material is not a Item!");
-		if (preConfig) {
-			ItemMeta im = getMetaPreConfig(material);
-			if (im != null) return im.clone();
-		}
-		if (meta == null) return null;
+	@Override
+	public ItemMeta createMeta(Material material) {
+		if (material == null) 
+			throw new IllegalArgumentException("Material can not be null!");
+		if (!material.isItem()) 
+			throw new IllegalArgumentException("Material is not a Item!");
+		if (meta == null) 
+			return null;
 		try {
 			return meta.getConstructor(Material.class).newInstance(material);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
@@ -67,14 +71,14 @@ public class ClassMetaDataFactory extends MetaDataFactory {
 		}
 	}
 	
-	public BlockData createData(Material material, boolean preConfig) {
-		if (material == null) throw new IllegalArgumentException("Material can not be null!");
-		if (!material.isBlock()) throw new IllegalArgumentException("Material is not a Block!");
-		if (preConfig) {
-			BlockData bd = getDataPreConfig(material);
-			if (bd != null) return bd.clone();
-		}
-		if (data == null) return null;
+	@Override
+	public BlockData createData(Material material) {
+		if (material == null) 
+			throw new IllegalArgumentException("Material can not be null!");
+		if (!material.isBlock()) 
+			throw new IllegalArgumentException("Material is not a Block!");
+		if (data == null) 
+			return null;
 		try {
 			return data.getConstructor(Material.class).newInstance(material);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
@@ -106,25 +110,7 @@ public class ClassMetaDataFactory extends MetaDataFactory {
 		if (getClass() != obj.getClass())
 			return false;
 		ClassMetaDataFactory other = (ClassMetaDataFactory) obj;
-		if (data == null) {
-			if (other.data != null)
-				return false;
-		} else if (!data.equals(other.data))
-			return false;
-		if (dataInterface == null) {
-			if (other.dataInterface != null)
-				return false;
-		} else if (!dataInterface.equals(other.dataInterface))
-			return false;
-		if (meta == null) {
-			if (other.meta != null)
-				return false;
-		} else if (!meta.equals(other.meta))
-			return false;
-		if (metaInterface == null) {
-			if (other.metaInterface != null)
-				return false;
-		} else if (!metaInterface.equals(other.metaInterface))
+		if (data != other.data || meta != other.meta || dataInterface != other.dataInterface || metaInterface != other.metaInterface)
 			return false;
 		return true;
 	}

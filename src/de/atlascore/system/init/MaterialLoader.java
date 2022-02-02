@@ -93,6 +93,7 @@ import de.atlascore.inventory.meta.CoreDamageableMeta;
 import de.atlascore.inventory.meta.CoreEnchantmentStorageMeta;
 import de.atlascore.inventory.meta.CoreFireworkEffectMeta;
 import de.atlascore.inventory.meta.CoreFireworkMeta;
+import de.atlascore.inventory.meta.CoreItemMeta;
 import de.atlascore.inventory.meta.CoreKnowledgeBookMeta;
 import de.atlascore.inventory.meta.CoreLeatherArmorMeta;
 import de.atlascore.inventory.meta.CoreMapMeta;
@@ -195,6 +196,7 @@ import de.atlasmc.inventory.meta.DamageableMeta;
 import de.atlasmc.inventory.meta.EnchantmentStorageMeta;
 import de.atlasmc.inventory.meta.FireworkEffectMeta;
 import de.atlasmc.inventory.meta.FireworkMeta;
+import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.inventory.meta.KnowledgeBookMeta;
 import de.atlasmc.inventory.meta.LeatherArmorMeta;
 import de.atlasmc.inventory.meta.MapMeta;
@@ -207,6 +209,9 @@ import de.atlasmc.inventory.meta.TropicalFishBucketMeta;
 public class MaterialLoader {
 
 	public static void loadMaterial() {
+		
+		Material.DEFAULT_MDF = new ClassMetaDataFactory(ItemMeta.class, CoreItemMeta.class, BlockData.class, CoreBlockData.class);
+		
 		MetaDataFactory AIR_MDF = new ClassMetaDataFactory(null, null, BlockData.class, CoreBlockData.class),
 				SNOWABLE_MDF = new ClassMetaDataFactory(Snowable.class, CoreSnowable.class),
 				SAPLING_MDF = new ClassMetaDataFactory(Sapling.class, CoreSapling.class),
@@ -489,7 +494,7 @@ public class MaterialLoader {
 		TORCH = c("TORCH", 1435);
 		WALL_TORCH = new Material(0, "WALL_TORCH", false, (short) 1436, (byte) 1, 0, 0, DIRECTIONAL4F_MDF);
 		FIRE = new Material(0, "FIRE", false, (short) 1440, (byte) 1, 0, 0, FIRE_MDF);
-		SOUL_FIRE = new Material(0, "SOUL_FIRE", false, (short) 1952, (byte) 1, 0, 0, MetaDataFactory.DEFAULT);
+		SOUL_FIRE = new Material(0, "SOUL_FIRE", false, (short) 1952, (byte) 1, 0, 0);
 		END_ROD = c("END_ROD", 9062, DIRECTIONAL6F_MDF);
 		CHORUS_PLANT = c("CHORUS_PLANT", 9068, MULTIPLE_FACING6_MDF);
 		CHORUS_FLOWER = c("CHORUS_FLOWER", 9132, AGEABLE5_MDF);

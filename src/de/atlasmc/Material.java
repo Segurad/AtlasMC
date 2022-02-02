@@ -14,6 +14,7 @@ public class Material implements Namespaced {
 	
 	private static final List<Material> REGISTRI;
 	private static short iid;
+	public static MetaDataFactory DEFAULT_MDF = null;
 	
 	public static Material
 	AIR,
@@ -1172,7 +1173,7 @@ public class Material implements Namespaced {
 	 * @return MetaDataFactory
 	 */
 	public MetaDataFactory getMetaDataFactory() {
-		if (mdf == null) return MetaDataFactory.DEFAULT;
+		if (mdf == null) return DEFAULT_MDF;
 		return mdf;
 	}
 	
@@ -1190,13 +1191,13 @@ public class Material implements Namespaced {
 	
 	public ItemMeta createItemMeta() {
 		MetaDataFactory mdf = getMetaDataFactory();
-		if (mdf == null) return MetaDataFactory.DEFAULT.createMeta(this);
+		if (mdf == null) return DEFAULT_MDF.createMeta(this);
 		return mdf.createMeta(this);
 	}
 	
 	public BlockData createBlockData() {
 		MetaDataFactory mdf = getMetaDataFactory();
-		if (mdf == null) return MetaDataFactory.DEFAULT.createData(this);
+		if (mdf == null) return DEFAULT_MDF.createData(this);
 		return mdf.createData(this);
 	}
 	
@@ -1208,14 +1209,14 @@ public class Material implements Namespaced {
 	
 	public boolean isValidMeta(ItemMeta meta) {
 		MetaDataFactory mdf = getMetaDataFactory();
-		if (mdf == null) return MetaDataFactory.DEFAULT.isValidMeta(meta);
+		if (mdf == null) return DEFAULT_MDF.isValidMeta(meta);
 		return mdf.isValidMeta(meta);
 	}
 	
 	public boolean isValidData(BlockData data) {
 		if (data.getMaterial() != this) return false;
 		MetaDataFactory mdf = getMetaDataFactory();
-		if (mdf == null) return MetaDataFactory.DEFAULT.isValidData(data);
+		if (mdf == null) return DEFAULT_MDF.isValidData(data);
 		return mdf.isValidData(data);
 	}
 	

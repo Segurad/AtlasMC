@@ -18,14 +18,14 @@ public class AgeableClassMetaDataFactory extends ClassMetaDataFactory {
 		this.maxage = maxage;
 	}
 	
-	public BlockData createData(Material material, boolean preConfig) {
-		if (material == null) throw new IllegalArgumentException("Material can not be null!");
-		if (!material.isBlock()) throw new IllegalArgumentException("Material is not a Block!");
-		if (preConfig) {
-			BlockData bd = MetaDataFactory.getDataPreConfig(material);
-			if (bd != null) return bd.clone();
-		}
-		if (data == null) return null;
+	@Override
+	public BlockData createData(Material material) {
+		if (material == null) 
+			throw new IllegalArgumentException("Material can not be null!");
+		if (!material.isBlock()) 
+			throw new IllegalArgumentException("Material is not a Block!");
+		if (data == null) 
+			return null;
 		try {
 			return data.getConstructor(Material.class, int.class).newInstance(material, maxage);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
