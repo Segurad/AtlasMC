@@ -122,7 +122,7 @@ public class NBTIOReader extends AbstractNBTIOReader {
 			in.skip(bytes);
 			return;
 		}
-		buf.readFully(in, bytes);
+		buf.copyFromInput(in, bytes);
 	}
 
 }

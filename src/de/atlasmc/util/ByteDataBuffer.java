@@ -18,7 +18,8 @@ public class ByteDataBuffer implements DataOutput, DataInput {
 	}
 	
 	public ByteDataBuffer(int size) {
-		if (size < 0) throw new IllegalArgumentException("Negativ initial size: " + size);
+		if (size < 0) 
+			throw new IllegalArgumentException("Negativ initial size: " + size);
 		buffer = new byte[size];
 	}
 	
@@ -32,20 +33,23 @@ public class ByteDataBuffer implements DataOutput, DataInput {
 	
 	@Override
 	public boolean readBoolean() throws IOException {
-		if (pos > count) throw new EOFException("Bufferend reached!");
+		if (pos > count) 
+			throw new EOFException("Bufferend reached!");
 		byte value = buffer[pos++];
 		return value == 1;
 	}
 
 	@Override
 	public byte readByte() throws IOException {
-		if (pos > count) throw new EOFException("Bufferend reached!");
+		if (pos > count) 
+			throw new EOFException("Bufferend reached!");
 		return buffer[pos++];
 	}
 
 	@Override
 	public char readChar() throws IOException {
-		if (pos + 1 > count) throw new EOFException("Bufferend reached!");
+		if (pos + 1 > count) 
+			throw new EOFException("Bufferend reached!");
 		int value = buffer[pos++] << 8 + buffer[pos++];
 		return (char) value;
 	}
@@ -68,14 +72,16 @@ public class ByteDataBuffer implements DataOutput, DataInput {
 	@Override
 	public void readFully(byte[] buffer, int off, int length) throws IOException {
 		for (int i = off; i < length; i++) {
-			if (pos > count) throw new EOFException("Bufferend reached!");
+			if (pos > count) 
+				throw new EOFException("Bufferend reached!");
 			buffer[i] = this.buffer[pos++];
 		}
 	}
 
 	@Override
 	public int readInt() throws IOException {
-		if (pos + 3 > count) throw new EOFException("Bufferend reached!");
+		if (pos + 3 > count) 
+			throw new EOFException("Bufferend reached!");
 		int value = buffer[pos++] << 8 +
 				buffer[pos++] << 8 +
 				buffer[pos++] << 8 + 
@@ -90,7 +96,8 @@ public class ByteDataBuffer implements DataOutput, DataInput {
 
 	@Override
 	public long readLong() throws IOException {
-		if (pos + 7 > count) throw new EOFException("Bufferend reached!");
+		if (pos + 7 > count) 
+			throw new EOFException("Bufferend reached!");
 		long value = buffer[pos++] << 8 +
 				buffer[pos++] << 8 +
 				buffer[pos++] << 8 + 
@@ -104,7 +111,8 @@ public class ByteDataBuffer implements DataOutput, DataInput {
 
 	@Override
 	public short readShort() throws IOException {
-		if (pos + 1 > count) throw new EOFException("Bufferend reached!");
+		if (pos + 1 > count) 
+			throw new EOFException("Bufferend reached!");
 		int value = buffer[pos++] << 8 + buffer[pos++];
 		return (short) value;
 	}
@@ -307,21 +315,16 @@ public class ByteDataBuffer implements DataOutput, DataInput {
 		return count-pos;
 	}
 	
-	public int readFully(InputStream in, int length) throws IOException {
-		byte[] buf = new byte[1024];
-		int totalread = 0;
-		int read;
-		while (length > 0) {
-			read = in.read(buf, 0, length > 1024 ? 1024 : length);
-			if (read < 1) break;
-			write(buf, 0, read);
-			totalread += read;
-			length -= read;
-		}
-		return totalread;
+	public int copyFromInput(InputStream in, int length) throws IOException {
+		if (length <= 0)
+			return 0;
+		checkCapacity(count+length);
+		int read = in.read(buffer, count, count+length);
+		count += read;
+		return read;
 	}
 	
-	public long readFully(InputStream in) throws IOException {
+	public long copyAllFromInput(InputStream in) throws IOException {
 		byte[] buf = new byte[1024];
 		long totalread = 0;
 		int read;

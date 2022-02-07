@@ -39,7 +39,7 @@ public class CoreJavaClassLoader extends URLClassLoader {
 		try {
 			mainClass = Class.forName(info.main, true, this);
 		} catch (ClassNotFoundException e) {
-			throw new PluginException("Main lcass not found: " + info.main +"!");
+			throw new PluginException("Main class not found: " + info.main +"!");
 		}
 		if (!mainClass.isAssignableFrom(JavaPlugin.class))
 			throw new PluginException("Main class is not assignable from JavaPlugin!");
@@ -72,14 +72,14 @@ public class CoreJavaClassLoader extends URLClassLoader {
 			try {
 				InputStream in = jar.getInputStream(entry);
 				ByteDataBuffer buf = new ByteDataBuffer(in.available());
-				buf.readFully(in);
+				buf.copyAllFromInput(in);
 				classData = buf.toByteArray();
 				
 				int index = name.lastIndexOf('.');
 				if (index != -1) { // define packet
 					String packetName = name.substring(0, index);
 					if (getDefinedPackage(packetName) == null) {
-						if (this.manifest == null)
+						if (this.manifest != null)
 							definePackage(packetName, manifest, url);
 						else
 							definePackage(packetName, null, null, null, null, null, null, null);
