@@ -8,6 +8,47 @@ import de.atlasmc.util.nbt.ListTag;
 import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.TagType;
 
+/**
+ * Reader for NBT Data<br>
+ * <h1>Usage Examples</h1><br>
+ * Read {@link TagType#LIST}
+ * <pre>
+ * reader.readNextEntry(); // skip to first element of list
+ * while (reader.getRestPayload() > 0) {
+ * 	// read element
+ * }
+ * </pre>
+ * Read {@link TagType#COMPOUND}
+ * <pre>
+ * reader.readNextEntry(); // skip to first element of compound
+ * while (reader.getType() != TagType.TAG_END) {
+ * 	switch (reader.getFieldName()) {
+ * 	case MY_ELEMENT_1:
+ * 		// read element
+ * 	default:
+ * 		reader.skipTag(); // or throw exception if you want
+ * 	}
+ * }
+ * reader.readNextEntry(); // skip to next after compound over TAG_END
+ * </pre>
+ * Read {@link TagType#LIST} of {@link TagType#COMPOUND}
+ * <pre>
+ * reader.readNextEntry(); // skip to first element of list
+ * while (reader.getRestPayload() > 0) {
+ * 	int element_1 = 0;
+ * 	while (reader.getType() != TagType.TAG_END) {
+ * 		switch (reader.getFieldName()) {
+ * 		case ELEMENT_1:
+ * 			element_1 = reader.readIntTag(); // read element
+ * 		default:
+ * 			reader.skipTag(); // or throw exception
+ * 		}
+ * 	}
+ * 	// assemble your object
+ * 	reader.readNextEntry(); // skip to next compound over TAG_END
+ * }
+ * </pre>
+ */
 public interface NBTReader extends Closeable {
 	
 	/**
