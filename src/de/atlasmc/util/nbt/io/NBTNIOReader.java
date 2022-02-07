@@ -69,4 +69,9 @@ public class NBTNIOReader extends AbstractNBTIOReader implements NBTReader {
 		in = null;
 	}
 
+	@Override
+	protected void skipBytes(int bytes) throws IOException {
+		in.skipBytes(bytes);
+	}
+
 }

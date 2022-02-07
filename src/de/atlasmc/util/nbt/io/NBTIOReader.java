@@ -111,4 +111,18 @@ public class NBTIOReader extends AbstractNBTIOReader {
 		buf = null;
 	}
 
+	@Override
+	protected void skipBytes(int bytes) throws IOException {
+		if (readBuf()) {
+			bytes -= buf.skipBytes(bytes);
+		}
+		if (bytes < 1)
+			return;
+		if (!writeBuf) {
+			in.skip(bytes);
+			return;
+		}
+		buf.readFully(in, bytes);
+	}
+
 }

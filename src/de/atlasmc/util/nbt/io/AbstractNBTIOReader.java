@@ -134,6 +134,10 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	}
 	
 	protected void prepareTag() throws IOException {
+		prepareTag(false);
+	}
+	
+	protected void prepareTag(boolean skip) throws IOException {
 		ensureOpen();
 		if (list != null && depth == list.depth) {
 			name = null;
@@ -148,26 +152,33 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 			name = null;
 			depth--;
 			if (list != null && depth == list.depth) type = TagType.LIST;
-		} else {
+		} else if (skip) {
 			byte[] buffer = new byte[ioReadShort()];
 			ioReadBytes(buffer);
 			name = new String(buffer);
-			if (type == TagType.COMPOUND) depth++;
-			if (type == TagType.LIST) addList();
+		} else {
+			skipBytes(ioReadShort());
 		}
+		if (type == TagType.COMPOUND) 
+			depth++;
+		else if (type == TagType.LIST) 
+			addList();
 	}
 	
-	@Override
 	public void readNextEntry() throws IOException {
+		readNextEntry(false);
+	}
+	
+	public void readNextEntry(boolean skipPrepare) throws IOException {
 		ensureOpen();
 		if (list == null || list.depth != depth)
 			if (type == TagType.COMPOUND || type == TagType.TAG_END)
-				prepareTag();
+				prepareTag(skipPrepare);
 			else 
 				throw new IOException("Next entry should only be called on COMPOUND or END: " + type.name());
 		else if (list.type == TagType.COMPOUND) {
 			depth++;
-			prepareTag();
+			prepareTag(skipPrepare);
 		} else if (list.type == TagType.LIST) {
 			addList();
 		}
@@ -270,63 +281,72 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	
 	@Override
 	public void skipTag() throws IOException {
+		skipTag(false);
+	}
+	
+	public void skipTag(boolean skipPrepare) throws IOException {
 		ensureOpen();
 		final boolean isList = list != null && depth == list.depth;
 		switch (isList ? list.type : type) {
-		case BYTE: readByteTag(); break;
-		case BYTE_ARRAY: readByteArrayTag(); break;
+		case BYTE: skipTag(1, skipPrepare); break;
+		case BYTE_ARRAY: skipTag(ioReadInt(), skipPrepare); break;
 		case COMPOUND: 
 			if (isList) {
-				readNextEntry(); // move out of list header
+				readNextEntry(true); // move out of list header
 				while (list.payload > 0) {
 					final int depth = getDepth(); // root depth of compound
 					while (depth <= getDepth()) {
 						if (type == TagType.TAG_END) {
-							readNextEntry(); // move out of list or to next compound in list
+							readNextEntry(true); // move out of list or to next compound in list
 							break;
 						}
-						skipTag();
+						skipTag(true);
 					}
 					list.payload--;
 				}
 				removeList();
 				return;
 			}
-			readNextEntry(); // move to first compound entry
+			readNextEntry(true); // move to first compound entry
 			final int depth = getDepth(); // root depth of compound
 			while (depth <= getDepth()) {
 				if (type == TagType.TAG_END) {
-					readNextEntry(); // skip end
+					readNextEntry(true); // skip end
 					break;
 				}
-				skipTag();
+				skipTag(true);
 			}
-		case DOUBLE: readDoubleTag(); break;
-		case FLOAT: readFloatTag(); break;
-		case INT: readIntTag(); break;
-		case INT_ARRAY: readIntArrayTag(); break;
+		case DOUBLE: skipTag(8, skipPrepare); break;
+		case FLOAT: skipTag(4, skipPrepare); break;
+		case INT: skipTag(4, skipPrepare); break;
+		case INT_ARRAY: skipTag(ioReadInt(), skipPrepare); break;
 		case LIST: 
 			if (isList) {
+				readNextEntry(true);
 				while (list.payload > 0) {
-					readNextEntry();
-					skipTag();
+					skipTag(true);
 					list.payload--;
 				}
 				removeList();
 				return;
 			}
 			while (getRestPayload() > 0) {
-				skipTag();
+				skipTag(true);
 			}
 			break;
-		case LONG: readLongTag(); break;
-		case LONG_ARRAY: readLongArrayTag();
-		case SHORT: readShortTag(); break;
-		case STRING: readStringTag(); break;
-		case TAG_END: readNextEntry(); break;
+		case LONG: skipTag(8, skipPrepare); break;
+		case LONG_ARRAY: skipTag(ioReadInt(), skipPrepare);
+		case SHORT: skipTag(2, skipPrepare); break;
+		case STRING: skipTag(ioReadShort(), skipPrepare); break;
+		case TAG_END: readNextEntry(skipPrepare); break;
 		}
 	}
 	
+	private void skipTag(int bytes, boolean skipPrepare) throws IOException {
+		skipBytes(bytes);
+		prepareTag(skipPrepare);
+	}
+
 	@Override
 	public void mark() {
 		markDepth = depth;
@@ -404,5 +424,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	protected abstract float ioReadFloat() throws IOException;
 	
 	protected abstract double ioReadDouble() throws IOException;
+	
+	protected abstract void skipBytes(int bytes) throws IOException;
 
 }
