@@ -37,10 +37,13 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 				reader.readNextEntry();
 				while (reader.getRestPayload() > 0) {
 					Inventory inv = ((AbstractContainerTile<?>) holder).getInventory();
-					reader.mark();
-					reader.search(ID);
-					Material mat = Material.getByName(reader.readStringTag());
-					reader.reset();
+					Material mat = null;
+					if (!ID.equals(reader.getFieldName())) {
+						reader.mark();
+						reader.search(ID);
+						mat = Material.getByName(reader.readStringTag());
+						reader.reset();
+					} else mat = Material.getByName(reader.readStringTag());
 					ItemStack item = new ItemStack(mat);
 					int slot = item.fromSlot(reader);
 					if (slot != -999) inv.setItem(slot, item);
@@ -120,8 +123,9 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 				int slot = -1;
 				for (ItemStack item : contents) {
 					slot++;
-					if (item == null) continue;
-					writer.writeCompoundTag(null);
+					if (item == null) 
+						continue;
+					writer.writeCompoundTag();
 					item.toSlot(writer, systemData, slot);
 					writer.writeEndTag();
 				}

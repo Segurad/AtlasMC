@@ -26,11 +26,14 @@ public class CoreCampfire extends CoreTileEntity implements Campfire {
 			if (holder instanceof Campfire) {
 				reader.readNextEntry();
 				while (reader.getRestPayload() > 0) {
-					reader.mark();
-					reader.search(ID);
-					Material type = Material.getByName(reader.readStringTag());
-					reader.reset();
-					ItemStack item = new ItemStack(type);
+					Material mat = null;
+					if (!ID.equals(reader.getFieldName())) {
+						reader.mark();
+						reader.search(ID);
+						mat = Material.getByName(reader.readStringTag());
+						reader.reset();
+					} else mat = Material.getByName(reader.readStringTag());
+					ItemStack item = new ItemStack(mat);
 					int slot = item.fromSlot(reader);
 					if (slot < 0 ||  slot > 4) continue;
 					((Campfire) holder).setItem(slot, item);
@@ -137,7 +140,11 @@ public class CoreCampfire extends CoreTileEntity implements Campfire {
 		for (int i = 0; i < 4; i++) if (items[i] != null) count++;
 		writer.writeListTag(ITEMS, TagType.COMPOUND, count);
 		for (int i = 0; i < 4; i++) {
-			if (items[i] != null) items[i].toSlot(writer, systemData, i);
+			if (items[i] == null)
+				continue;
+			writer.writeCompoundTag();	
+			items[i].toSlot(writer, systemData, i);
+			writer.writeEndTag();
 		}
 		writer.writeIntArrayTag(COOKING_TIMES, getCookingTimes());
 		writer.writeIntArrayTag(COOKING_TOTAL_TIMES, getTotalCookingTimes());

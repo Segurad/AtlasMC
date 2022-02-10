@@ -33,10 +33,13 @@ public class CoreMobSpawner extends CoreTileEntity implements MobSpawner {
 			}
 			MobSpawner spawner = (MobSpawner) holder;
 			reader.readNextEntry();
-			reader.mark();
-			reader.search(ID);
-			EntityType type = EntityType.getByName(reader.readStringTag());
-			reader.reset();
+			EntityType type = null;
+			if (!ID.equals(reader.getFieldName())) {
+				reader.mark();
+				reader.search(ID);
+				type = EntityType.getByName(reader.readStringTag());
+				reader.reset();
+			} else type = EntityType.getByName(reader.readStringTag());
 			Entity ent = type.create(spawner.getWorld());
 			ent.fromNBT(reader);
 			spawner.setDisplayedEntity(ent);
