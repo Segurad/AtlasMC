@@ -12,10 +12,15 @@ public class EntitySpawnEvent extends EntityEvent implements Cancellable {
 
 	private static final ServerHandlerList HANDLERS = new ServerHandlerList();
 	
+	private final World world;
+	private double x, y, z;
+	private float pitch, yaw;
 	private boolean cancelled;
-	
-	public EntitySpawnEvent(Entity entity) {
+
+	public EntitySpawnEvent(Entity entity, World world, double x, double y, double z, float pitch, float yaw) {
 		super(entity);
+		this.world = world;
+		setLocation(x, y, z, pitch, yaw);
 	}
 
 	@Override
@@ -38,8 +43,39 @@ public class EntitySpawnEvent extends EntityEvent implements Cancellable {
 	}
 
 	public World getWorld() {
-		// TODO Auto-generated method stub
-		return null;
+		return world;
+	}
+	
+	public double getX() {
+		return x;
+	}
+	
+	public double getY() {
+		return y;
+	}
+	
+	public double getZ() {
+		return z;
+	}
+	
+	public float getPitch() {
+		return pitch;
+	}
+	
+	public float getYaw() {
+		return yaw;
+	}
+	
+	public void setLocation(double x, double y, double z) {
+		setLocation(x, y, z, pitch, yaw);
+	}
+	
+	public void setLocation(double x, double y, double z, float pitch, float yaw) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.pitch = pitch;
+		this.yaw = yaw;
 	}
 
 }
