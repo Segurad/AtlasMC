@@ -46,8 +46,7 @@ public class CoreBlockData extends AbstractNBTBase implements BlockData {
 
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		// TODO Auto-generated method stub
-		
+		writer.writeStringTag("id", material.getNamespacedName());
 	}
 
 	@Override
