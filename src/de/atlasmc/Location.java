@@ -37,7 +37,7 @@ public class Location extends SimpleLocation {
 	
 	@Override
 	public Location clone() {
-		return new Location(this);
+		return (Location) super.clone();
 	}
 	
 	@Override

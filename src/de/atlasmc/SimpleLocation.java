@@ -113,7 +113,13 @@ public class SimpleLocation implements Cloneable {
 	}
 
 	public SimpleLocation clone() {
-		return new SimpleLocation(this);
+		SimpleLocation clone = null;
+		try {
+			clone = (SimpleLocation) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return clone;
 	}
 
 	/**
