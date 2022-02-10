@@ -31,7 +31,7 @@ public class CoreMapMeta extends CoreItemMeta implements MapMeta {
 		});
 		NBT_FIELDS.setField(MAP_SCALE_DIRECTION, NBTField.SKIP); // TODO skipped NBT
 		NBT_FIELDS.setField(MAP_TRACING_POSITION, NBTField.SKIP); // TODO skipped NBT
-		NBT_FIELDS.getContainer(DISPLAY).setField(MAP_COLOR, (holder, reader) -> {
+		NBT_FIELDS.getContainer(NBT_DISPLAY).setField(MAP_COLOR, (holder, reader) -> {
 			if (holder instanceof MapMeta) {
 				((MapMeta) holder).setColor(new Color(reader.readIntTag()));
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());

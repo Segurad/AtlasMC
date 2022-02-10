@@ -12,10 +12,10 @@ public class CoreFireworkEffectMeta extends CoreItemMeta implements FireworkEffe
 
 	private FireworkEffect effect;
 	
-	protected static final String EXPLOSION = "Explosion";
+	protected static final String NBT_EXPLOSION = "Explosion";
 	
 	static {
-		NBT_FIELDS.setField(EXPLOSION, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_EXPLOSION, (holder, reader) -> {
 			if (holder instanceof FireworkEffectMeta) {
 				reader.readNextEntry();
 				FireworkEffect effect = new FireworkEffect();
@@ -31,7 +31,12 @@ public class CoreFireworkEffectMeta extends CoreItemMeta implements FireworkEffe
 	
 	@Override
 	public CoreFireworkEffectMeta clone() {
-		return (CoreFireworkEffectMeta) super.clone();
+		CoreFireworkEffectMeta clone = (CoreFireworkEffectMeta) super.clone();
+		if (clone == null)
+			return null;
+		if (hasEffect())
+			clone.setEffect(effect.clone());
+		return clone;
 	}
 
 	@Override
@@ -53,7 +58,7 @@ public class CoreFireworkEffectMeta extends CoreItemMeta implements FireworkEffe
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
 		if (hasEffect()) {
-			writer.writeCompoundTag(EXPLOSION);
+			writer.writeCompoundTag(NBT_EXPLOSION);
 			effect.toNBT(writer, systemData);
 			writer.writeEndTag();
 		}

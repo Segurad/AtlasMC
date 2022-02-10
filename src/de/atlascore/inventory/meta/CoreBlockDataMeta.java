@@ -9,20 +9,20 @@ import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBlockDataMeta extends CoreItemMeta implements BlockDataMeta {
-
-	private BlockData data;
-	private Material material;
 	
 	protected static final String
-			BLOCK_STATE_TAG = "BlockStateTag";
+	NBT_BLOCK_STATE_TAG = "BlockStateTag";
 	
 	static {
-		NBT_FIELDS.setField(BLOCK_STATE_TAG, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_BLOCK_STATE_TAG, (holder, reader) -> {
 			if (holder instanceof BlockDataMeta) {
 				((BlockDataMeta) holder).getBlockData().fromNBT(reader);
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
 	}
+	
+	private BlockData data;
+	private Material material;
 	
 	public CoreBlockDataMeta(Material material) {
 		this(material, null);
@@ -53,14 +53,17 @@ public class CoreBlockDataMeta extends CoreItemMeta implements BlockDataMeta {
 	@Override
 	public CoreBlockDataMeta clone() {
 		CoreBlockDataMeta clone = (CoreBlockDataMeta) super.clone();
-		clone.data = data.clone();
+		if (clone == null)
+			return null;
+		if (hasBlockData())
+			clone.data = data.clone();
 		return clone;
 	}
 	
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		writer.writeCompoundTag(BLOCK_STATE_TAG);
+		writer.writeCompoundTag(NBT_BLOCK_STATE_TAG);
 		data.toNBT(writer, systemData);
 		writer.writeEndTag();
 	}

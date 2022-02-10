@@ -14,10 +14,60 @@ import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreSuspiciousStewMeta extends CoreItemMeta implements SuspiciousStewMeta {
-
-	private List<PotionEffect> customEffects;
 	
-	protected static final String SUSPICIOUS_STEW_EFFECTS = "SuspiciousStewEffects";
+	protected static final String 
+	SUSPICIOUS_STEW_EFFECTS = "SuspiciousStewEffects",
+	NBT_AMBIENT = "Ambient",
+	NBT_AMPLIFIER = "Amplifier",
+	NBT_DURATION = "Duration",
+	NBT_SHOW_PARTICLES = "ShowParticles";
+	
+	static {
+		NBT_FIELDS.getContainer(NBT_ATLASMC).setField(SUSPICIOUS_STEW_EFFECTS, (holder, reader) -> {
+			if (holder instanceof SuspiciousStewMeta) {
+				SuspiciousStewMeta meta = ((SuspiciousStewMeta) holder);
+				reader.readNextEntry();
+				while (reader.getRestPayload() > 0) {
+					boolean reduceAmbient = false;
+					int amplifier = 0;
+					int duration = 0;
+					int id = -1;
+					boolean showParticles = true;
+					while (reader.getType() != TagType.TAG_END) {
+						switch (reader.getFieldName()) {
+						case NBT_AMBIENT:
+							reduceAmbient = reader.readByteTag() == 1;
+							break;
+						case NBT_AMPLIFIER:
+							amplifier = reader.readByteTag();
+							break;
+						case NBT_DURATION:
+							duration = reader.readIntTag();
+							break;
+						case NBT_ID:
+							id = reader.readByteTag();
+							break;
+						case NBT_SHOW_PARTICLES:
+							showParticles = reader.readByteTag() == 1;
+							break;
+						default:
+							reader.skipTag();
+							break;
+						}
+						PotionEffectType type = PotionEffectType.getByID(id);
+						if (duration <= 0 || type == null) {
+							reader.readNextEntry();
+							continue;
+						}
+						reader.readNextEntry();
+						meta.addCustomEffect(new PotionEffect(type, duration, amplifier, reduceAmbient, showParticles), false);
+					}
+				}
+			} else ((ItemMeta) holder).getCustomTagContainer().addSystemTag(reader.readNBT());
+		});
+	}
+	
+	private List<PotionEffect> customEffects;
 	
 	public CoreSuspiciousStewMeta(Material material) {
 		super(material);
@@ -25,7 +75,8 @@ public class CoreSuspiciousStewMeta extends CoreItemMeta implements SuspiciousSt
 
 	@Override
 	public void addCustomEffect(PotionEffect effect, boolean overwrite) {
-		if (overwrite) removeAllCustomEffects(effect.getType()); 
+		if (overwrite) 
+			removeAllCustomEffects(effect.getType()); 
 		getCustomEffects().add(effect);
 	}
 
@@ -37,26 +88,16 @@ public class CoreSuspiciousStewMeta extends CoreItemMeta implements SuspiciousSt
 		}
 		return false;
 	}
-	
-	static {
-		NBT_FIELDS.getContainer(ATLASMC).setField(SUSPICIOUS_STEW_EFFECTS, (holder, reader) -> {
-			if (holder instanceof SuspiciousStewMeta) {
-				SuspiciousStewMeta meta = ((SuspiciousStewMeta) holder);
-				while (reader.getRestPayload() > 0) {
-					PotionEffect effect = new PotionEffect();
-					effect.fromNBT(reader);
-					meta.addCustomEffect(effect, false);
-				}
-			} else ((ItemMeta) holder).getCustomTagContainer().addSystemTag(reader.readNBT());
-		});
-	}
 
 	@Override
 	public CoreSuspiciousStewMeta clone() {
 		CoreSuspiciousStewMeta clone = (CoreSuspiciousStewMeta) super.clone();
+		if (clone == null)
+			return null;
 		if (hasCustomEffects()) {
+			clone.customEffects = new ArrayList<>(getCustomEffectCount());
 			for (PotionEffect effect : getCustomEffects()) {
-				clone.getCustomEffects().add(effect.clone());
+				clone.customEffects.add(effect.clone());
 			}
 		}
 		return clone;
@@ -123,10 +164,19 @@ public class CoreSuspiciousStewMeta extends CoreItemMeta implements SuspiciousSt
 		if (hasCustomEffects()) {
 			writer.writeListTag(SUSPICIOUS_STEW_EFFECTS, TagType.COMPOUND, customEffects.size());
 			for (PotionEffect effect : customEffects) {
-				effect.toNBT(writer, systemData);
+				writer.writeByteTag(NBT_AMBIENT, effect.hasReducedAmbient());
+				writer.writeByteTag(NBT_AMPLIFIER, effect.getAmplifier());
+				writer.writeIntTag(NBT_DURATION, effect.getDuration());
+				writer.writeIntTag(NBT_ID, effect.getType().getID());
+				writer.writeByteTag(NBT_SHOW_PARTICLES, effect.hasParticels());
 				writer.writeEndTag();
 			}
 		}
 	}
 
+	@Override
+	public int getCustomEffectCount() {
+		return customEffects == null ? 0 : customEffects.size();
+	}
+	
 }

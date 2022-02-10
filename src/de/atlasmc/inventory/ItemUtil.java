@@ -6,7 +6,6 @@ import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.inventory.meta.ItemMeta;
-import de.atlasmc.inventory.meta.lore.SimpleLore;
 
 public class ItemUtil {
 
@@ -19,7 +18,7 @@ public class ItemUtil {
 		if (name != null || lore != null) {
 			ItemMeta meta = item.getItemMeta();
 			if (name != null) meta.setDisplayName(name);
-			if (lore != null) meta.setLore(new SimpleLore(lore));
+			if (lore != null) meta.setLore(lore);
 			item.setItemMeta(meta);
 		}
 		return item;

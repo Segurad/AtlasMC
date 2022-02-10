@@ -10,12 +10,10 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTileEntityMeta extends CoreItemMeta implements TileEntityMeta {
 
-	private TileEntity tile;
-	protected static final String BLOCK_ENTITY_TAG = "BlockEntityTag";
-	private Material type;
+	protected static final String NBT_BLOCK_ENTITY_TAG = "BlockEntityTag";
 	
 	static {
-		NBT_FIELDS.setField(BLOCK_ENTITY_TAG, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_BLOCK_ENTITY_TAG, (holder, reader) -> {
 			if (holder instanceof TileEntityMeta) {
 				TileEntityMeta meta = ((TileEntityMeta) holder);
 				TileEntity tile = meta.getType().createTileEntity();
@@ -28,6 +26,9 @@ public class CoreTileEntityMeta extends CoreItemMeta implements TileEntityMeta {
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
 	}
+	
+	private TileEntity tile;
+	private Material type;
 	
 	public CoreTileEntityMeta(Material material) {
 		super(material);
@@ -59,7 +60,10 @@ public class CoreTileEntityMeta extends CoreItemMeta implements TileEntityMeta {
 	@Override
 	public CoreTileEntityMeta clone() {
 		CoreTileEntityMeta clone = (CoreTileEntityMeta) super.clone();
-		if (hasTileEntity()) clone.setTileEntity(getTileEntity().clone());
+		if (clone == null)
+			return null;
+		if (hasTileEntity()) 
+			clone.setTileEntity(getTileEntity().clone());
 		return clone;
 	}
 	
@@ -67,7 +71,7 @@ public class CoreTileEntityMeta extends CoreItemMeta implements TileEntityMeta {
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
 		if (hasTileEntity()) {
-			writer.writeCompoundTag(BLOCK_ENTITY_TAG);
+			writer.writeCompoundTag(NBT_BLOCK_ENTITY_TAG);
 			tile.toNBT(writer, systemData);
 			writer.writeEndTag();
 		}

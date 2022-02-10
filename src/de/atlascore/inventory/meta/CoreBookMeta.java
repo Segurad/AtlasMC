@@ -11,31 +11,26 @@ import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBookMeta extends CoreItemMeta implements BookMeta {
-
-	private String author, title;
-	private Generation generation;
-	private List<String> pages;
-	private boolean resolved;
 	
 	protected static final String
-		AUTHOR = "author",
-		GENERATION = "generation",
-		PAGES = "pages",
-		RESOLVED = "resolved",
-		TITLE = "title";
+	NBT_AUTHOR = "author",
+	NBT_GENERATION = "generation",
+	NBT_PAGES = "pages",
+	NBT_RESOLVED = "resolved",
+	NBT_TITLE = "title";
 	
 	static {
-		NBT_FIELDS.setField(AUTHOR, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_AUTHOR, (holder, reader) -> {
 			if (holder instanceof BookMeta) {
 				((BookMeta) holder).setAuthor(reader.readStringTag());
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
-		NBT_FIELDS.setField(GENERATION, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_GENERATION, (holder, reader) -> {
 			if (holder instanceof BookMeta) {
 				((BookMeta) holder).setGeneration(Generation.getByID(reader.readIntTag()));
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
-		NBT_FIELDS.setField(PAGES, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_PAGES, (holder, reader) -> {
 			if (holder instanceof BookMeta) {
 				BookMeta meta = ((BookMeta) holder);
 				while(reader.getRestPayload() > 0) {
@@ -43,17 +38,22 @@ public class CoreBookMeta extends CoreItemMeta implements BookMeta {
 				}
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
-		NBT_FIELDS.setField(RESOLVED, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_RESOLVED, (holder, reader) -> {
 			if (holder instanceof BookMeta) {
 				((BookMeta) holder).setResolved(reader.readByteTag() == 1);
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
-		NBT_FIELDS.setField(TITLE, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_TITLE, (holder, reader) -> {
 			if (holder instanceof BookMeta) {
 				((BookMeta) holder).setTitle(reader.readStringTag());
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
 	}
+	
+	private String author, title;
+	private Generation generation;
+	private List<String> pages;
+	private boolean resolved;
 	
 	public CoreBookMeta(Material material) {
 		super(material);
@@ -164,16 +164,26 @@ public class CoreBookMeta extends CoreItemMeta implements BookMeta {
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		if (hasAuthor()) writer.writeStringTag(AUTHOR, author);
-		if (hasGeneration()) writer.writeIntTag(GENERATION, generation.ordinal());
+		if (hasAuthor()) writer.writeStringTag(NBT_AUTHOR, author);
+		if (hasGeneration()) writer.writeIntTag(NBT_GENERATION, generation.ordinal());
 		if (hasPages()) {
-			writer.writeListTag(PAGES, TagType.STRING, pages.size());
+			writer.writeListTag(NBT_PAGES, TagType.STRING, pages.size());
 			for (String s : pages) {
 				writer.writeStringTag(null, s);
 			}
 		}
-		if (isResolved()) writer.writeByteTag(RESOLVED, 1);
-		if (hasTitle()) writer.writeStringTag(TITLE, title);
+		if (isResolved()) writer.writeByteTag(NBT_RESOLVED, 1);
+		if (hasTitle()) writer.writeStringTag(NBT_TITLE, title);
+	}
+	
+	@Override
+	public CoreBookMeta clone() {
+		CoreBookMeta clone = (CoreBookMeta) super.clone();
+		if (clone == null)
+			return null;
+		if (hasPages())
+			clone.setPage(new ArrayList<>(pages));
+		return clone;
 	}
 
 }

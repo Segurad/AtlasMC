@@ -16,39 +16,74 @@ import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CorePotionMeta extends CoreItemMeta implements PotionMeta {
-
-	private Color color;
-	private List<PotionEffect> customEffects;
-	private PotionData data;
 	
 	protected static final String
-		CUSTOM_POTION_COLOR = "CustomPotionColor",
-		CUSTOM_POTION_EFFECTS = "CustomPotionEffects",
-		POTION = "Potion";
+	NBT_CUSTOM_POTION_COLOR = "CustomPotionColor",
+	NBT_CUSTOM_POTION_EFFECTS = "CustomPotionEffects",
+	NBT_POTION = "Potion",
+	NBT_AMBIENT = "Ambient",
+	NBT_AMPLIFIER = "Amplifier",
+	NBT_DURATION = "Duration",
+	NBT_SHOW_PARTICLES = "ShowParticles";
 	
 	static {
-		NBT_FIELDS.setField(CUSTOM_POTION_COLOR, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_CUSTOM_POTION_COLOR, (holder, reader) -> {
 			if (holder instanceof PotionMeta) {
 				((PotionMeta) holder).setColor(new Color(reader.readIntTag()));
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
-		NBT_FIELDS.setField(CUSTOM_POTION_EFFECTS, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_CUSTOM_POTION_EFFECTS, (holder, reader) -> {
 			if (holder instanceof PotionMeta) {
 				PotionMeta meta = ((PotionMeta) holder);
-				List<PotionEffect> effects = meta.getCustomEffects();
+				reader.readNextEntry();
 				while (reader.getRestPayload() > 0) {
-					PotionEffect effect = new PotionEffect();
-					effect.fromNBT(reader);
-					effects.add(effect);
+					boolean reduceAmbient = false;
+					int amplifier = 0;
+					int duration = 0;
+					int id = -1;
+					boolean showParticles = true;
+					while (reader.getType() != TagType.TAG_END) {
+						switch (reader.getFieldName()) {
+						case NBT_AMBIENT:
+							reduceAmbient = reader.readByteTag() == 1;
+							break;
+						case NBT_AMPLIFIER:
+							amplifier = reader.readByteTag();
+							break;
+						case NBT_DURATION:
+							duration = reader.readIntTag();
+							break;
+						case NBT_ID:
+							id = reader.readByteTag();
+							break;
+						case NBT_SHOW_PARTICLES:
+							showParticles = reader.readByteTag() == 1;
+							break;
+						default:
+							reader.skipTag();
+							break;
+						}
+						PotionEffectType type = PotionEffectType.getByID(id);
+						if (duration <= 0 || type == null) {
+							reader.readNextEntry();
+							continue;
+						}
+						reader.readNextEntry();
+						meta.addCustomEffect(new PotionEffect(type, duration, amplifier, reduceAmbient, showParticles));
+					}
 				}
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
-		NBT_FIELDS.setField(POTION, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_POTION, (holder, reader) -> {
 			if (holder instanceof PotionMeta) {
 				((PotionMeta) holder).setBasePotionData(PotionData.getByName(reader.readStringTag()));
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
 	}
+	
+	private Color color;
+	private List<PotionEffect> customEffects;
+	private PotionData data;
 	
 	public CorePotionMeta(Material material) {
 		super(material);
@@ -72,9 +107,12 @@ public class CorePotionMeta extends CoreItemMeta implements PotionMeta {
 	@Override
 	public CorePotionMeta clone() {
 		CorePotionMeta clone = (CorePotionMeta) super.clone();
+		if (clone == null)
+			return null;
 		if (hasCustomEffects()) {
+			clone.customEffects = new ArrayList<>(getCustomEffectCount());
 			for (PotionEffect effect : getCustomEffects()) {
-				clone.getCustomEffects().add(effect.clone());
+				clone.customEffects.add(effect.clone());
 			}
 		}
 		return clone;
@@ -158,15 +196,24 @@ public class CorePotionMeta extends CoreItemMeta implements PotionMeta {
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		if (hasColor()) writer.writeIntTag(CUSTOM_POTION_COLOR, color.asRGB());
+		if (hasColor()) writer.writeIntTag(NBT_CUSTOM_POTION_COLOR, color.asRGB());
 		if (hasCustomEffects()) {
-			writer.writeListTag(CUSTOM_POTION_EFFECTS, TagType.COMPOUND, customEffects.size());
+			writer.writeListTag(NBT_CUSTOM_POTION_EFFECTS, TagType.COMPOUND, customEffects.size());
 			for (PotionEffect effect : customEffects) {
-				effect.toNBT(writer, systemData);
+				writer.writeByteTag(NBT_AMBIENT, effect.hasReducedAmbient());
+				writer.writeByteTag(NBT_AMPLIFIER, effect.getAmplifier());
+				writer.writeIntTag(NBT_DURATION, effect.getDuration());
+				writer.writeIntTag(NBT_ID, effect.getType().getID());
+				writer.writeByteTag(NBT_SHOW_PARTICLES, effect.hasParticels());
 				writer.writeEndTag();
 			}
 		}
-		if (data != null) writer.writeStringTag(POTION, data.getName());
+		if (data != null) writer.writeStringTag(NBT_POTION, data.getName());
+	}
+
+	@Override
+	public int getCustomEffectCount() {
+		return customEffects == null ? 0 : customEffects.size();
 	}
 
 }

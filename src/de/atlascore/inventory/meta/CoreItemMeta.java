@@ -20,7 +20,6 @@ import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.inventory.ItemFlag;
 import de.atlasmc.inventory.meta.ItemMeta;
-import de.atlasmc.inventory.meta.lore.Lore;
 import de.atlasmc.util.map.ArrayListMultimap;
 import de.atlasmc.util.map.ListMultimap;
 import de.atlasmc.util.map.Multimap;
@@ -34,78 +33,76 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	
-	private boolean unbreakable;
-	private ChatComponent displayname;
-	private Lore lore;
-	private int flags;
-	private Integer customModelData;
-	private Map<Enchantment, Integer> enchants;
-	private ListMultimap<Attribute, AttributeModifier> attributes;
-	private List<Material> canDestroy;
-	private CustomTagContainer customTags;
 	protected static final NBTFieldContainer NBT_FIELDS;
 	protected static final String 
-			DISPLAY = "display",
-			NAME = "Name",
-			LORE = "Lore",
-			CAN_DESTROY = "CanDestroy",
-			CUSTOM_MODEL_DATA = "CustomModelData",
-			UNBREAKABLE = "Unbreakable",
-			HIDE_FLAGS = "HideFlags",
-			ATLASMC = "AtlasMC",
-			ENCHANTS = "Enchantments",
-			ID = "id",
-			LVL = "lvl",
-			ATTRIBUTE_MODIFIERS = "AttributeModifiers",
-			ATTRIBUTE_NAME = "AttibuteName",
-			AMOUNT = "Amount",
-			OPERATION = "Operation",
-			NBT_UUID = "UUID",
-			SLOT = "Slot";
+	NBT_DISPLAY = "display",
+	NBT_NAME = "Name",
+	NBT_LORE = "Lore",
+	NBT_CAN_DESTROY = "CanDestroy",
+	NBT_CUSTOM_MODEL_DATA = "CustomModelData",
+	NBT_UNBREAKABLE = "Unbreakable",
+	NBT_HIDE_FLAGS = "HideFlags",
+	NBT_ATLASMC = "AtlasMC",
+	NBT_ENCHANTS = "Enchantments",
+	NBT_ID = "id",
+	NBT_LVL = "lvl",
+	NBT_ATTRIBUTE_MODIFIERS = "AttributeModifiers",
+	NBT_ATTRIBUTE_NAME = "AttibuteName",
+	NBT_AMOUNT = "Amount",
+	NBT_OPERATION = "Operation",
+	NBT_UUID = "UUID",
+	NBT_SLOT = "Slot";
 			
 	static {
 		NBT_FIELDS = new NBTFieldContainer();
-		NBT_FIELDS.setField(CAN_DESTROY, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_CAN_DESTROY, (holder, reader) -> {
 			List<Material> canDestroy = ((ItemMeta) holder).getCanDestroy();
 			while (reader.getRestPayload() > 0) {
 				canDestroy.add(Material.getByName(reader.readStringTag()));
 			}
 		});
-		NBT_FIELDS.setField(CUSTOM_MODEL_DATA, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_CUSTOM_MODEL_DATA, (holder, reader) -> {
 			((ItemMeta) holder).setCustomModelData(reader.readIntTag());
 		});
 		NBTFieldContainer display = new NBTFieldContainer();
-		NBT_FIELDS.setContainer(DISPLAY, display);
-		display.setField(NAME, (holder, reader) -> {
+		NBT_FIELDS.setContainer(NBT_DISPLAY, display);
+		display.setField(NBT_NAME, (holder, reader) -> {
 			((ItemMeta) holder).setDisplayName(ChatUtil.toChat(reader.readStringTag()));
 		});
-		display.setField(LORE, (holder, reader) -> {
-			Lore lore = ((ItemMeta) holder).getLore();
+		display.setField(NBT_LORE, (holder, reader) -> {
+			List<ChatComponent> lore = new ArrayList<ChatComponent>(reader.getRestPayload());
 			while (reader.getRestPayload() > 0) {
-				lore.addLine(ChatUtil.toChat(reader.readStringTag()));
+				lore.add(ChatUtil.toChat(reader.readStringTag()));
 			}
+			((ItemMeta) holder).setLore(lore);
 		});
-		NBT_FIELDS.setField(UNBREAKABLE, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_UNBREAKABLE, (holder, reader) -> {
 			((ItemMeta) holder).setUnbreakable(reader.readByteTag() == 1);
 		});
-		NBT_FIELDS.setField(HIDE_FLAGS, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_HIDE_FLAGS, (holder, reader) -> {
 			((CoreItemMeta) holder).flags = reader.readIntTag();
 		});
-		NBT_FIELDS.setField(ATLASMC, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_ATLASMC, (holder, reader) -> {
 			((ItemMeta) holder).getCustomTagContainer().addSystemTag(reader.readNBT());
 		});
-		NBT_FIELDS.setField(ENCHANTS, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_ENCHANTS, (holder, reader) -> {
 			Map<Enchantment, Integer> enchants = ((ItemMeta) holder).getEnchants();
 			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {
 				Enchantment ench = null;
 				int lvl = -1;
-				for (int i = 0; i < 2; i++) {
-					if (reader.getFieldName().equals(ID)) {
+				while (reader.getType() != TagType.TAG_END) {
+					switch (reader.getFieldName()) {
+					case NBT_ID:
 						ench = Enchantment.getEnchantment(reader.readStringTag());
-					} else if (reader.getFieldName().equals(LVL)) {
+						break;
+					case NBT_LVL:
 						lvl = reader.readShortTag();
-					} else throw new NBTException("Unknown Enchantment Field: " + reader.getFieldName());
+						break;
+					default:
+						reader.skipTag();
+						break;
+					}
 				}
 				if (reader.getType() != TagType.TAG_END)
 					throw new NBTException("Error while reading Enchantment Field! Expected TAG_END but read: " + reader.getType().name());
@@ -114,7 +111,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 				enchants.put(ench, lvl);
 			}
 		});
-		NBT_FIELDS.setField(ATTRIBUTE_MODIFIERS, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_ATTRIBUTE_MODIFIERS, (holder, reader) -> {
 			Multimap<Attribute, AttributeModifier> attributes = ((ItemMeta) holder).getAttributeModifiers();
 			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {
@@ -124,38 +121,53 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 				UUID uuid = null;
 				EquipmentSlot slot = null;
 				Operation operation = null;
-				for (int i = 0; i < 5; i++) {
-					final String field = reader.getFieldName();
-					if (field.equals(AMOUNT)) {
+				while (reader.getType() != TagType.TAG_END) {
+					switch (reader.getFieldName()) {
+					case NBT_AMOUNT:
 						amount = reader.readDoubleTag();
-					} else if (field.equals(ATTRIBUTE_NAME)) {
+						break;
+					case NBT_ATTRIBUTE_NAME:
 						attribute = Attribute.getByName(reader.readStringTag());
-					} else if (field.equals(NAME)) {
+						break;
+					case NBT_NAME:
 						name = reader.readStringTag();
-					} else if (field.equals(OPERATION)) {
-						operation = Operation.byID(reader.readIntTag());
-					} else if (field.equals(NBT_UUID)) {
+						break;
+					case NBT_OPERATION:
+						operation = Operation.getByID(reader.readIntTag());
+						break;
+					case NBT_UUID:
 						uuid = reader.readUUID();
-					} else if (field.equals(SLOT)) {
-						slot = EquipmentSlot.valueOf(reader.readStringTag().toUpperCase().replace("_", ""));
-					} else throw new NBTException("Unknown Attribute Field: " + reader.getFieldName());
+						break;
+					case NBT_SLOT:
+						slot = EquipmentSlot.valueOf(reader.readStringTag().toUpperCase());
+						break;
+					default:
+						reader.skipTag();
+						break;
+					}
 				}
-				if (reader.getType() != TagType.TAG_END)
-					throw new NBTException("Error while reading Attriubte Field! Expected TAG_END but read: " + reader.getType().name());
 				reader.readNextEntry();
 				attributes.put(attribute, new AttributeModifier(uuid, name, amount, operation, slot));
 			}
 		});
 		NBTFieldContainer atlas = new NBTFieldContainer();
-		NBT_FIELDS.setContainer(ATLASMC, atlas);
+		NBT_FIELDS.setContainer(NBT_ATLASMC, atlas);
 		atlas.setUnknownFieldHandler((holder, reader) -> {
 			((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
 	}
 	
-	public CoreItemMeta(Material material) {
-		
-	}
+	private boolean unbreakable;
+	private ChatComponent displayname;
+	private List<ChatComponent> lore;
+	private int flags;
+	private Integer customModelData;
+	private Map<Enchantment, Integer> enchants;
+	private ListMultimap<Attribute, AttributeModifier> attributes;
+	private List<Material> canDestroy;
+	private CustomTagContainer customTags;
+	
+	public CoreItemMeta(Material material) {}
 	
 	@Override
 	public CoreItemMeta clone() {
@@ -165,25 +177,30 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
-		if (clone != null) {
-			if (hasCanDestroy()) {
-				clone.getCanDestroy().addAll(canDestroy);
-			}
-			if (hasAttributeModifiers()) {
-				Multimap<Attribute, AttributeModifier> attrs = clone.getAttributeModifiers();
-				attrs.putAll(attributes);
-			}
-			if (hasCustomTagContainer()) {
-				clone.customTags = null; // TODO clone CustomTags
-			}
+		if (clone == null)
+			return null;
+		if (hasCanDestroy())
+			clone.setCanDestroy(new ArrayList<>(canDestroy));
+		if (hasAttributeModifiers())
+			clone.setAttributeModifiers(new ArrayListMultimap<>(attributes.asMap()));
+		if (hasCustomTagContainer()) {
+			clone.customTags = null; // TODO clone CustomTags
 		}
+		if (hasCanDestroy())
+			clone.setCanDestroy(new ArrayList<>(canDestroy));
+		if (hasCustomTagContainer())
+			clone.customTags = customTags.clone();
+		if (hasLore())
+			clone.setLore(new ArrayList<>(lore));
 		return clone;
 	}
 
 	@Override
 	public boolean addAttributeModifier(Attribute attribute, AttributeModifier modifier) {
-		if (attribute == null) throw new IllegalArgumentException("Attribute can not be null!");
-		if (modifier == null) throw new IllegalArgumentException("AttributeModifier can not be null!");
+		if (attribute == null) 
+			throw new IllegalArgumentException("Attribute can not be null!");
+		if (modifier == null) 
+			throw new IllegalArgumentException("AttributeModifier can not be null!");
 		if (attributes == null)
 			attributes = new ArrayListMultimap<>();
 		return this.attributes.put(attribute, modifier);
@@ -191,17 +208,21 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
-		if (slot == null) throw new IllegalArgumentException("EquipmentSlot can not be null!");
-		Multimap<Attribute, AttributeModifier> map = new ArrayListMultimap<>();
-		if (attributes == null) return map;
+		if (slot == null) 
+			throw new IllegalArgumentException("EquipmentSlot can not be null!");
+		if (attributes == null || attributes.isEmpty()) 
+			return Multimap.of();
+		Multimap<Attribute, AttributeModifier> map = null;
 		for (Attribute a : attributes.keySet()) {
 			List<AttributeModifier> mods = attributes.get(a);
 			for (AttributeModifier mod : mods) {
 				if (mod.getSlot() == slot)
+					if (map == null)
+						map = new ArrayListMultimap<>();
 					map.put(a, mod);
 			}
 		}
-		return map;
+		return map != null ? map : Multimap.of(); 
 	}
 
 	@Override
@@ -310,7 +331,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	}
 
 	@Override
-	public void setLore(Lore lore) {
+	public void setLore(List<ChatComponent> lore) {
 		this.lore = lore;
 	}
 
@@ -359,7 +380,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	}
 
 	@Override
-	public Lore getLore() {
+	public List<ChatComponent> getLore() {
 		return lore;
 	}
 
@@ -399,14 +420,19 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers() {
-		if (attributes == null) attributes = new ArrayListMultimap<>();
+		if (attributes == null) 
+			attributes = new ArrayListMultimap<>();
 		return attributes;
 	}
 
 	@Override
 	public List<AttributeModifier> getAttributeModifiers(Attribute attribute) {
-		if (attributes == null) return null;
-		return attributes.get(attribute);
+		if (attribute == null)
+			throw new IllegalArgumentException("Attribute can not be null!");
+		if (attributes == null || attributes.isEmpty()) 
+			return List.of();
+		List<AttributeModifier> list = attributes.get(attribute);
+		return list == null ? List.of() : list;
 	}
 
 	@Override
@@ -421,7 +447,8 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 
 	@Override
 	public List<Material> getCanDestroy() {
-		if (canDestroy == null) canDestroy = new ArrayList<Material>();
+		if (canDestroy == null) 
+			canDestroy = new ArrayList<Material>();
 		return canDestroy;
 	}
 
@@ -434,38 +461,38 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		if (writer == null) throw new IllegalArgumentException("NBTWriter can not be null!");
 		if (hasCanDestroy()) {
-			writer.writeListTag(CAN_DESTROY, TagType.STRING, canDestroy.size());
+			writer.writeListTag(NBT_CAN_DESTROY, TagType.STRING, canDestroy.size());
 			for (Material m : canDestroy) {
 				writer.writeStringTag(null, m.getNamespacedName());
 			}
 		}
-		if (hasCustomModelData()) writer.writeIntTag(CUSTOM_MODEL_DATA, customModelData);
+		if (hasCustomModelData()) writer.writeIntTag(NBT_CUSTOM_MODEL_DATA, customModelData);
 		if (hasDisplayCompound()) {
-			writer.writeCompoundTag(DISPLAY);
+			writer.writeCompoundTag(NBT_DISPLAY);
 			writeDisplayCompound(writer, systemData);
 			writer.writeEndTag();
 		}
-		if (hasItemFlags()) writer.writeIntTag(HIDE_FLAGS, flags);
-		if (isUnbreakable()) writer.writeByteTag(UNBREAKABLE, 1);
+		if (hasItemFlags()) writer.writeIntTag(NBT_HIDE_FLAGS, flags);
+		if (isUnbreakable()) writer.writeByteTag(NBT_UNBREAKABLE, 1);
 		if (hasEnchants()) {
-			writer.writeListTag(ENCHANTS, TagType.COMPOUND, getEnchants().size());
+			writer.writeListTag(NBT_ENCHANTS, TagType.COMPOUND, getEnchants().size());
 			for (Enchantment ench : getEnchants().keySet()) {
-				writer.writeStringTag(ID, ench.getNamespacedName());
-				writer.writeShortTag(LVL, (short) getEnchantLevel(ench));
+				writer.writeStringTag(NBT_ID, ench.getNamespacedName());
+				writer.writeShortTag(NBT_LVL, (short) getEnchantLevel(ench));
 				writer.writeEndTag();
 			}
 		}
 		if (hasAttributeModifiers()) {
-			writer.writeListTag(ATTRIBUTE_MODIFIERS, TagType.COMPOUND, 0);
+			writer.writeListTag(NBT_ATTRIBUTE_MODIFIERS, TagType.COMPOUND, 0);
 			Multimap<Attribute, AttributeModifier> attributes = getAttributeModifiers();
 			for (Attribute attribute : attributes.keySet()) {
 				final String rawname = attribute.getRawName();
 				for (AttributeModifier mod : attributes.get(attribute)) {
-					writer.writeDoubleTag(AMOUNT, mod.getAmount());
-					writer.writeStringTag(ATTRIBUTE_NAME, rawname);
-					writer.writeStringTag(NAME, mod.getName());
-					writer.writeIntTag(OPERATION, mod.getOperation().ordinal());
-					writer.writeStringTag(SLOT, mod.getSlot().name().toLowerCase());
+					writer.writeDoubleTag(NBT_AMOUNT, mod.getAmount());
+					writer.writeStringTag(NBT_ATTRIBUTE_NAME, rawname);
+					writer.writeStringTag(NBT_NAME, mod.getName());
+					writer.writeIntTag(NBT_OPERATION, mod.getOperation().getID());
+					writer.writeStringTag(NBT_SLOT, mod.getSlot().name().toLowerCase());
 					writer.writeUUID(NBT_UUID, mod.getUUID());
 					writer.writeEndTag();
 				}
@@ -480,7 +507,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 			}
 		}
 		if (hasSystemDataCompound()) {
-			writer.writeCompoundTag(ATLASMC);
+			writer.writeCompoundTag(NBT_ATLASMC);
 			writeSystemDataCompound(writer);
 			writer.writeEndTag();
 		}
@@ -492,10 +519,10 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	
 	protected void writeDisplayCompound(NBTWriter writer, boolean systemData) throws IOException {
 		if (hasDisplayName()) {
-			writer.writeStringTag(NAME, getDisplayName().getJsonText());
+			writer.writeStringTag(NBT_NAME, getDisplayName().getJsonText());
 		}
 		if (hasLore()) {
-			writer.writeListTag(LORE, TagType.STRING, lore.countLines());
+			writer.writeListTag(NBT_LORE, TagType.STRING, lore.size());
 			for (ChatComponent c : lore) {
 				writer.writeStringTag(null, c.getJsonText());
 			}

@@ -10,14 +10,11 @@ import de.atlasmc.inventory.meta.TropicalFishBucketMeta;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTropicalFishBucketMeta extends CoreItemMeta implements TropicalFishBucketMeta {
-
-	private DyeColor patternColor, bodyColor;
-	private Pattern pattern;
 	
-	protected static final String BUCKET_VARIANT_TAG = "BucketVariantTag";
+	protected static final String NBT_BUCKET_VARIANT_TAG = "BucketVariantTag";
 	
 	static {
-		NBT_FIELDS.setField(BUCKET_VARIANT_TAG, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_BUCKET_VARIANT_TAG, (holder, reader) -> {
 			if (holder instanceof TropicalFishBucketMeta) {
 				TropicalFishBucketMeta meta = ((TropicalFishBucketMeta) holder);
 				int variant = reader.readIntTag();
@@ -28,6 +25,9 @@ public class CoreTropicalFishBucketMeta extends CoreItemMeta implements Tropical
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
 	}
+	
+	private DyeColor patternColor, bodyColor;
+	private Pattern pattern;
 	
 	public CoreTropicalFishBucketMeta(Material material) {
 		super(material);
@@ -77,7 +77,7 @@ public class CoreTropicalFishBucketMeta extends CoreItemMeta implements Tropical
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		writer.writeIntTag(BUCKET_VARIANT_TAG, pattern.getDataID() + bodyColor.ordinal() << 16 + patternColor.ordinal() << 24);
+		writer.writeIntTag(NBT_BUCKET_VARIANT_TAG, pattern.getDataID() + bodyColor.ordinal() << 16 + patternColor.ordinal() << 24);
 	}
 
 }

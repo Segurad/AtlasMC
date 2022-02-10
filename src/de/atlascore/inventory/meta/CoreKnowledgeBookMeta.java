@@ -12,13 +12,11 @@ import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreKnowledgeBookMeta extends CoreItemMeta implements KnowledgeBookMeta {
-
-	private List<Recipe> recipes;
 	
-	protected static final String RECIPES = "Recipes";
+	protected static final String NBT_RECIPES = "Recipes";
 	
 	static {
-		NBT_FIELDS.setField(RECIPES, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_RECIPES, (holder, reader) -> {
 			if (holder  instanceof KnowledgeBookMeta) {
 				List<Recipe> recipes = ((KnowledgeBookMeta) holder).getRecipes();
 				while(reader.getRestPayload() > 0) {
@@ -27,6 +25,8 @@ public class CoreKnowledgeBookMeta extends CoreItemMeta implements KnowledgeBook
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
 	}
+	
+	private List<Recipe> recipes;
 	
 	public CoreKnowledgeBookMeta(Material material) {
 		super(material);
@@ -43,7 +43,10 @@ public class CoreKnowledgeBookMeta extends CoreItemMeta implements KnowledgeBook
 	@Override
 	public CoreKnowledgeBookMeta clone() {
 		CoreKnowledgeBookMeta clone = (CoreKnowledgeBookMeta) super.clone();
-		if (hasRecipes()) clone.getRecipes().addAll(getRecipes());
+		if (clone == null)
+			return null;
+		if (hasRecipes()) 
+			clone.setRecipes(new ArrayList<Recipe>(recipes));
 		return clone;
 	}
 
@@ -67,7 +70,7 @@ public class CoreKnowledgeBookMeta extends CoreItemMeta implements KnowledgeBook
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
 		if (hasRecipes()) {
-			writer.writeListTag(RECIPES, TagType.STRING, recipes.size());
+			writer.writeListTag(NBT_RECIPES, TagType.STRING, recipes.size());
 			for (Recipe r : recipes) {
 				writer.writeStringTag(null, r.getNamespacedName());
 			}

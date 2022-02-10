@@ -8,13 +8,10 @@ import de.atlasmc.Material;
 import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.inventory.meta.EnchantmentStorageMeta;
 import de.atlasmc.inventory.meta.ItemMeta;
-import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreEnchantmentStorageMeta extends CoreItemMeta implements EnchantmentStorageMeta {
-
-	private Map<Enchantment, Integer> enchantments;
 	
 	protected static final String STORED_ENCHANTS = "StoredEnchantments";
 	
@@ -26,22 +23,29 @@ public class CoreEnchantmentStorageMeta extends CoreItemMeta implements Enchantm
 				while (reader.getRestPayload() > 0) {
 					Enchantment ench = null;
 					int lvl = -1;
-					for (int i = 0; i < 2; i++) {
-						if (reader.getFieldName().equals(ID)) {
+					while (reader.getType() != TagType.TAG_END) {
+						switch (reader.getFieldName()) {
+						case NBT_ID:
 							ench = Enchantment.getEnchantment(reader.readStringTag());
-						} else if (reader.getFieldName().equals(LVL)) {
+							break;
+						case NBT_LVL:
 							lvl = reader.readShortTag();
-						} else throw new NBTException("Unknown StoredEnchantment Field: " + reader.getFieldName());
+							break;
+						default:
+							reader.skipTag();
+							break;
+						}
 					}
-					if (reader.getType() != TagType.TAG_END)
-						throw new NBTException("Error while reading StoredEnchantment Field! Expected TAG_END but read: " + reader.getType().name());
 					reader.readNextEntry();
-					if (ench == null) continue;
+					if (ench == null) 
+						continue;
 					enchants.put(ench, lvl);
 				}
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
 	}
+	
+	private Map<Enchantment, Integer> enchantments;
 	
 	public CoreEnchantmentStorageMeta(Material material) {
 		super(material);
@@ -49,14 +53,18 @@ public class CoreEnchantmentStorageMeta extends CoreItemMeta implements Enchantm
 
 	@Override
 	public void addStoredEnchant(Enchantment ench, int level) {
-		if (ench == null) throw new IllegalArgumentException("Enchantment can not be null!");
+		if (ench == null) 
+			throw new IllegalArgumentException("Enchantment can not be null!");
 		getEnchants().put(ench, level);
 	}
 
 	@Override
 	public CoreEnchantmentStorageMeta clone() {
 		CoreEnchantmentStorageMeta clone = (CoreEnchantmentStorageMeta) super.clone();
-		clone.getEnchants().putAll(enchantments);
+		if (clone == null)
+			return null;
+		if (hasEnchants())
+			clone.enchantments = new HashMap<>(enchantments);
 		return clone;
 	}
 
@@ -104,8 +112,8 @@ public class CoreEnchantmentStorageMeta extends CoreItemMeta implements Enchantm
 		super.toNBT(writer, systemData);
 		writer.writeListTag(STORED_ENCHANTS, TagType.COMPOUND, enchantments.size());
 		for (Enchantment ench : getEnchants().keySet()) {
-			writer.writeStringTag(ID, ench.getNamespacedName());
-			writer.writeShortTag(LVL, (short) getEnchantLevel(ench));
+			writer.writeStringTag(NBT_ID, ench.getNamespacedName());
+			writer.writeShortTag(NBT_LVL, (short) getEnchantLevel(ench));
 			writer.writeEndTag();
 		}
 	}

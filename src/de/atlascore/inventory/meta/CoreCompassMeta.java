@@ -12,8 +12,6 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreCompassMeta extends CoreItemMeta implements CompassMeta {
 
-	private SimpleLocation loc;
-	private boolean tracked;
 	protected static final String 
 			LODESTONE_TRACKED = "LodestoneTracked",
 			LODESTONE_DIMENSION = "LodestoneDimension",
@@ -58,6 +56,9 @@ public class CoreCompassMeta extends CoreItemMeta implements CompassMeta {
 		});
 	}
 	
+	private SimpleLocation loc;
+	private boolean tracked;
+	
 	public CoreCompassMeta(Material material) {
 		super(material);
 	}
@@ -97,7 +98,7 @@ public class CoreCompassMeta extends CoreItemMeta implements CompassMeta {
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		if (isLodestoneTracked()) writer.writeByteTag(LODESTONE_TRACKED, isLodestoneTracked());
+		if (isLodestoneTracked()) writer.writeByteTag(LODESTONE_TRACKED, true);
 		if (hasLodestone()) {
 			writer.writeCompoundTag(LODESTONE_POS);
 			writer.writeIntTag(POS_X, loc.getBlockX());

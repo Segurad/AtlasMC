@@ -13,16 +13,13 @@ import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreFireworkMeta extends CoreItemMeta implements FireworkMeta {
-
-	private List<FireworkEffect> effects;
-	private int power;
 	
 	protected static final String
-			EXPLOSIONS = "Explosions",
-			FLIGHT = "Flight";
+	NBT_EXPLOSIONS = "Explosions",
+	NBT_FLIGHT = "Flight";
 	
 	static {
-		NBT_FIELDS.setField(EXPLOSIONS, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_EXPLOSIONS, (holder, reader) -> {
 			if (holder instanceof FireworkMeta) {
 				List<FireworkEffect> effects = ((FireworkMeta) holder).getEffects();
 				while (reader.getRestPayload() > 0) {
@@ -35,12 +32,15 @@ public class CoreFireworkMeta extends CoreItemMeta implements FireworkMeta {
 				}
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
-		NBT_FIELDS.setField(FLIGHT, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_FLIGHT, (holder, reader) -> {
 			if (holder instanceof FireworkMeta) {
 				((FireworkMeta) holder).setPower(reader.readByteTag());
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
 	}
+	
+	private List<FireworkEffect> effects;
+	private int power;
 	
 	public CoreFireworkMeta(Material material) {
 		super(material);
@@ -68,8 +68,13 @@ public class CoreFireworkMeta extends CoreItemMeta implements FireworkMeta {
 	@Override
 	public CoreFireworkMeta clone() {
 		CoreFireworkMeta clone = (CoreFireworkMeta) super.clone();
+		if (clone == null)
+			return null;
 		if (hasEffects()) {
-			clone.getEffects().addAll(effects);
+			clone.effects = new ArrayList<>(effects.size());
+			for (FireworkEffect effect : effects) {
+				clone.effects.add(effect.clone());
+			}
 		}
 		return clone;
 	}
@@ -110,13 +115,13 @@ public class CoreFireworkMeta extends CoreItemMeta implements FireworkMeta {
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
 		if (hasEffects()) {
-			writer.writeListTag(EXPLOSIONS, TagType.COMPOUND, effects.size());
+			writer.writeListTag(NBT_EXPLOSIONS, TagType.COMPOUND, effects.size());
 			for (FireworkEffect effect : effects) {
 				effect.toNBT(writer, systemData);
 				writer.writeEndTag();
 			}
 		}
-		writer.writeByteTag(FLIGHT, power);
+		writer.writeByteTag(NBT_FLIGHT, power);
 	}
 
 }

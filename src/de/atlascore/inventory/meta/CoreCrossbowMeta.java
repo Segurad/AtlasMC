@@ -12,21 +12,18 @@ import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreCrossbowMeta extends CoreDamageableMeta implements CrossbowMeta {
-
-	private List<ItemStack> projectiles;
-	private boolean charged;
 	
 	protected static final String 
-			CHARGED_PROJECTILES = "ChargedProjectiles", 
-			CHARGED = "Charged";
+	NBT_CHARGED_PROJECTILES = "ChargedProjectiles", 
+	NBT_CHARGED = "Charged";
 	
 	static {
-		NBT_FIELDS.setField(CHARGED, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_CHARGED, (holder, reader) -> {
 			if (holder instanceof CrossbowMeta) {
 				((CrossbowMeta) holder).setCharged(reader.readByteTag() == 1);
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});
-		NBT_FIELDS.setField(CHARGED_PROJECTILES, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_CHARGED_PROJECTILES, (holder, reader) -> {
 			if (!(holder instanceof CrossbowMeta)) {
 				((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 				return;
@@ -34,12 +31,22 @@ public class CoreCrossbowMeta extends CoreDamageableMeta implements CrossbowMeta
 			List<ItemStack> projectiles = ((CrossbowMeta) holder).getChargedProjectiles();
 			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {
-				ItemStack item = new ItemStack(Material.AIR);
+				Material mat = null;
+				if (!NBT_ID.equals(reader.getFieldName())) {
+					reader.mark();
+					reader.search(NBT_ID);
+					mat = Material.getByName(reader.readStringTag());
+					reader.reset();
+				} else mat = Material.getByName(reader.readStringTag());
+				ItemStack item = new ItemStack(mat);
 				item.fromNBT(reader);
 				projectiles.add(item);
 			}
 		});
 	}
+	
+	private List<ItemStack> projectiles;
+	private boolean charged;
 	
 	public CoreCrossbowMeta(Material material) {
 		super(material);
@@ -70,8 +77,10 @@ public class CoreCrossbowMeta extends CoreDamageableMeta implements CrossbowMeta
 	@Override
 	public CoreCrossbowMeta clone() {
 		CoreCrossbowMeta clone = (CoreCrossbowMeta) super.clone();
+		if (clone == null)
+			return null;
 		if (hasChargedProjectiles()) {
-			List<ItemStack> projectiles = clone.getChargedProjectiles();
+			List<ItemStack> projectiles = new ArrayList<ItemStack>(getProjectileCount());
 			for (ItemStack i : getChargedProjectiles()) {
 				projectiles.add(i.clone());
 			}
@@ -92,14 +101,20 @@ public class CoreCrossbowMeta extends CoreDamageableMeta implements CrossbowMeta
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		if (hasChargedProjectiles()) {
-			writer.writeListTag(CHARGED_PROJECTILES, TagType.COMPOUND, projectiles.size());
+			writer.writeListTag(NBT_CHARGED_PROJECTILES, TagType.COMPOUND, projectiles.size());
 			for (ItemStack i : projectiles) {
 				i.toNBT(writer, systemData);
 				writer.writeEndTag();
 			}
 		}
 		if (isCharged()) {
-			writer.writeByteTag(CHARGED, 1);
+			writer.writeByteTag(NBT_CHARGED, 1);
 		}
 	}
+
+	@Override
+	public int getProjectileCount() {
+		return projectiles == null ? 0 : projectiles.size();
+	}
+
 }

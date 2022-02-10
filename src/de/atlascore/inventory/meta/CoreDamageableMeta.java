@@ -11,10 +11,10 @@ public class CoreDamageableMeta extends CoreItemMeta implements DamageableMeta {
 
 	private int damage;
 	
-	protected static final String DAMAGE = "Damage";
+	protected static final String NBT_DAMAGE = "Damage";
 	
 	static {
-		NBT_FIELDS.setField(DAMAGE, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_DAMAGE, (holder, reader) -> {
 			if (holder instanceof DamageableMeta) {
 				((DamageableMeta) holder).setDamage(reader.readIntTag());
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
@@ -48,7 +48,7 @@ public class CoreDamageableMeta extends CoreItemMeta implements DamageableMeta {
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		writer.writeIntTag(DAMAGE, damage);
+		writer.writeIntTag(NBT_DAMAGE, damage);
 	}
 
 }
