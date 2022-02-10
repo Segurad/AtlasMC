@@ -45,4 +45,23 @@ public class AttributeInstance {
 		getModifiers().add(modifier);
 	}
 
+	public boolean removeModifiers() {
+		if (modifiers == null || modifiers.isEmpty())
+			return false;
+		modifiers.clear();
+		return true;
+	}
+
+	public boolean hasModifiers() {
+		return modifiers != null && !modifiers.isEmpty();
+	}
+
+	public void setModifiers(List<AttributeModifier> modifiers) {
+		if (modifiers == null)
+			return;
+		List<AttributeModifier> mods = getModifiers();
+		mods.clear();
+		mods.addAll(modifiers);
+	}
+
 }

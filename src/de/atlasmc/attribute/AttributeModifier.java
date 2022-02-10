@@ -1,5 +1,6 @@
 package de.atlasmc.attribute;
 
+import java.util.List;
 import java.util.UUID;
 
 import de.atlasmc.inventory.EquipmentSlot;
@@ -37,10 +38,32 @@ public class AttributeModifier {
 		ADD_SCALAR,
 		MULTIPLY_SCALAR_1;
 
-		public static Operation byID(int id) {
-			if (id < 0 || id > 2) throw new IllegalArgumentException("ID is not between 0 and 2: " + id);
-			Operation[] ops = Operation.values();
-			return ops[id];
+		private static List<Operation> VALUES;
+		
+		public int getID() {
+			return ordinal();
+		}
+		
+		public static Operation getByID(int id) {
+			return getValues().get(id);
+		}
+		
+		/**
+		 * Returns a immutable List of all Types.<br>
+		 * This method avoid allocation of a new array not like {@link #values()}.
+		 * @return list
+		 */
+		public static List<Operation> getValues() {
+			if (VALUES == null)
+				VALUES = List.of(values());
+			return VALUES;
+		}
+		
+		/**
+		 * Releases the system resources used from the values cache
+		 */
+		public static void freeValues() {
+			VALUES = null;
 		}
 	}
 
