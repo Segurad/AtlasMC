@@ -5,17 +5,17 @@ import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
 import de.atlasmc.util.annotation.NotNull;
-import de.atlasmc.util.map.ConcurrentLinkedCollectionMultimap;
+import de.atlasmc.util.map.ConcurrentLinkedListMultimap;
 
 public class ServerHandlerList extends HandlerList {
 	
-	private final ConcurrentLinkedCollectionMultimap<ServerGroup, EventExecutor> groupExecutors;
-	private final ConcurrentLinkedCollectionMultimap<LocalServer, EventExecutor> serverExecutors;
+	private final ConcurrentLinkedListMultimap<ServerGroup, EventExecutor> groupExecutors;
+	private final ConcurrentLinkedListMultimap<LocalServer, EventExecutor> serverExecutors;
 	
 	public ServerHandlerList() {
 		super();
-		this.groupExecutors = new ConcurrentLinkedCollectionMultimap<>();
-		this.serverExecutors = new ConcurrentLinkedCollectionMultimap<>();
+		this.groupExecutors = new ConcurrentLinkedListMultimap<>();
+		this.serverExecutors = new ConcurrentLinkedListMultimap<>();
 	}
 	
 	public void registerExecutor(ServerGroup group, EventExecutor executor) {

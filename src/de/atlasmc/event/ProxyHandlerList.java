@@ -4,15 +4,15 @@ import java.util.Iterator;
 import de.atlasmc.atlasnetwork.proxy.LocalProxy;
 import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
 import de.atlasmc.util.annotation.NotNull;
-import de.atlasmc.util.map.ConcurrentLinkedCollectionMultimap;
+import de.atlasmc.util.map.ConcurrentLinkedListMultimap;
 
 public class ProxyHandlerList extends HandlerList {
 	
-	private final ConcurrentLinkedCollectionMultimap<LocalProxy, EventExecutor> proxyExecutors;
+	private final ConcurrentLinkedListMultimap<LocalProxy, EventExecutor> proxyExecutors;
 	
 	public ProxyHandlerList() {
 		super();
-		proxyExecutors = new ConcurrentLinkedCollectionMultimap<LocalProxy, EventExecutor>();
+		proxyExecutors = new ConcurrentLinkedListMultimap<LocalProxy, EventExecutor>();
 	}
 	
 	public void registerExecutor(LocalProxy proxy, EventExecutor executor) {
