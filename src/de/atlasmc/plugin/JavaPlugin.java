@@ -76,7 +76,7 @@ public class JavaPlugin implements Plugin {
 		return loaded;
 	}
 
-	public final void init(File file ,PluginLoader loader, ClassLoader classloader, String name, String version, String author, String description) {
+	public final void init(File file, PluginLoader loader, ClassLoader classloader, String name, String version, String author, String description) {
 		if (classloader != null)
 			throw new PluginException("Plugin already initialized!");
 		this.file = file;
