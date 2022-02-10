@@ -41,7 +41,8 @@ public class ItemStack implements NBTHolder {
 	}
 
 	public ItemStack(Material material, int amount) {
-		if (material == null) throw new IllegalArgumentException("Material can not be null!");
+		if (material == null) 
+			throw new IllegalArgumentException("Material can not be null!");
 		type = material;
 		setAmount(amount);
 	}
@@ -55,8 +56,8 @@ public class ItemStack implements NBTHolder {
 	}
 	
 	public void setAmount(int amount) {
-		if (amount > 127) throw new IllegalArgumentException("Amount can not be higher than 127");
-		if (amount < -128) throw new IllegalArgumentException("Amount can not be lower than -128");
+		if (amount < -128 || amount > 127) 
+			throw new IllegalArgumentException("Amount must be between -128 and 127: " + amount);
 		this.amount = (byte) amount;
 	}
 	
