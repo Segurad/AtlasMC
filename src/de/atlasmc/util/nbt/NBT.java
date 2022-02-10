@@ -1,11 +1,15 @@
 package de.atlasmc.util.nbt;
 
-public interface NBT {
+public interface NBT extends Cloneable {
 	
 	public String getName();
+	
 	public void setName(String name);
+	
 	public Object getData();
+	
 	public void setData(Object data);
+	
 	public TagType getType();
 	
 	public static ByteTag createByteTag(String name, int data) {
@@ -55,4 +59,7 @@ public interface NBT {
 	public static LongArrayTag createLongArrayTag(String name, long[] data) {
 		return new LongArrayTag(name, data);
 	}
+	
+	public NBT clone();
+	
 }

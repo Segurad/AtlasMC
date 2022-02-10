@@ -25,5 +25,10 @@ public final class FloatTag extends AbstractTag {
 	public void setData(Object data) {
 		this.data = (float) data;
 	}
+	
+	@Override
+	public FloatTag clone() {
+		return (FloatTag) super.clone();
+	}
 
 }

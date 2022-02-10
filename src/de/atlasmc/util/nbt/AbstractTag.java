@@ -14,4 +14,14 @@ abstract class AbstractTag implements NBT {
 		this.name = name;
 	}
 	
+	public AbstractTag clone() {
+		AbstractTag clone = null;
+		try {
+			clone = (AbstractTag) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return clone;
+	}
+	
 }

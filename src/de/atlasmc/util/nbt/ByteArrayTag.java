@@ -25,5 +25,15 @@ public final class ByteArrayTag extends AbstractTag {
 	public void setData(Object data) {
 		this.data = (byte[]) data;
 	}
+	
+	@Override
+	public ByteArrayTag clone() {
+		ByteArrayTag clone = (ByteArrayTag) super.clone();
+		if (clone == null)
+			return null;
+		if (data != null)
+			clone.setData(data.clone());
+		return clone;
+	}
 
 }

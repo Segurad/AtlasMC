@@ -33,6 +33,10 @@ public interface NBTWriter extends Closeable {
 	
 	public void writeListTag(String name, TagType payloadType, int payloadsize) throws IOException;
 	
+	public default void writeCompoundTag() throws IOException {
+		writeCompoundTag(null);
+	}
+	
 	public void writeCompoundTag(String name) throws IOException;
 	
 	public default void writeEmptyCompound(String name) throws IOException {

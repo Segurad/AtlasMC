@@ -25,5 +25,15 @@ public final class LongArrayTag extends AbstractTag {
 	public void setData(Object data) {
 		this.data = (long[]) data;
 	}
+	
+	@Override
+	public LongArrayTag clone() {
+		LongArrayTag clone = (LongArrayTag) super.clone();
+		if (clone == null)
+			return null;
+		if (data != null)
+			clone.setData(data.clone());
+		return clone;
+	}
 
 }

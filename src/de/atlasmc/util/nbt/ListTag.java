@@ -61,5 +61,21 @@ public final class ListTag<T extends NBT> extends AbstractTag implements Iterabl
 	public Iterator<NBT> iterator() {
 		return (Iterator<NBT>) data.iterator();
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public ListTag<T> clone() {
+		ListTag<T> clone = (ListTag<T>) super.clone();
+		if (clone == null)
+			return null;
+		if (data != null) {
+			List<NBT> list = new ArrayList<NBT>(data.size());
+			for (NBT nbt : data) {
+				list.add(nbt.clone());
+			}
+			clone.setData(list);
+		}
+		return clone;
+	}
 
 }

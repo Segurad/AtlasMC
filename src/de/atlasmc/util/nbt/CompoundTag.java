@@ -101,5 +101,20 @@ public final class CompoundTag extends AbstractTag implements Iterable<NBT> {
 	public Iterator<NBT> iterator() {
 		return data.iterator();
 	}
+	
+	@Override
+	public CompoundTag clone() {
+		CompoundTag clone = (CompoundTag) super.clone();
+		if (clone == null)
+			return null;
+		if (data != null) {
+			List<NBT> list = new ArrayList<NBT>(data.size());
+			for (NBT nbt : data) {
+				list.add(nbt.clone());
+			}
+			clone.setData(list);
+		}
+		return clone;
+	}
 
 }

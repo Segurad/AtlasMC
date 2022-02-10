@@ -36,5 +36,10 @@ public final class LongTag extends AbstractTag {
 	public void setData(Object data) {
 		this.data = (long) data;
 	}
+	
+	@Override
+	public LongTag clone() {
+		return (LongTag) super.clone();
+	}
 
 }

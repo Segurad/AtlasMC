@@ -25,5 +25,10 @@ public final class DoubleTag extends AbstractTag {
 	public void setData(Object data) {
 		this.data = (double) data;
 	}
+	
+	@Override
+	public DoubleTag clone() {
+		return (DoubleTag) super.clone();
+	}
 
 }

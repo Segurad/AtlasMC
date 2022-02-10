@@ -37,19 +37,18 @@ public interface NBTHolder {
 	
 	/**
 	 * Write the NBT of the Holder
+	 * Does not create a new CompoundTag
 	 * @param writer
 	 * @param local
 	 * @param systemData true if it is used system internal false while send to client
 	 * @throws IOException
-	 * Does not a new CompoundTag
 	 */
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException;
 	
 	/**
-	 * 
+	 * Reads until a EndTag is reached and goes to the next entry by {@link NBTReader#readNextEntry()}
 	 * @param reader
 	 * @throws IOException
-	 * Reads until a EndTag is reached and reads to the next tag
 	 */
 	public void fromNBT(NBTReader reader) throws IOException;
 	

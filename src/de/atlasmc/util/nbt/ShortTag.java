@@ -37,5 +37,10 @@ public final class ShortTag extends AbstractTag {
 	public void setData(Object data) {
 		this.data = (short) data;
 	}
+	
+	@Override
+	public ShortTag clone() {
+		return (ShortTag) super.clone();
+	}
 
 }

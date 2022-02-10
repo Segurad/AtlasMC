@@ -25,5 +25,10 @@ public final class StringTag extends AbstractTag {
 	public void setData(Object data) {
 		this.data = (String) data;
 	}
+	
+	@Override
+	public StringTag clone() {
+		return (StringTag) super.clone();
+	}
 
 }

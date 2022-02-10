@@ -25,5 +25,10 @@ public final class IntTag extends AbstractTag {
 	public void setData(Object data) {
 		this.data = (int) data;
 	}
+	
+	@Override
+	public IntTag clone() {
+		return (IntTag) super.clone();
+	}
 
 }
