@@ -71,5 +71,24 @@ public class CoreBlockAccess implements Block {
 	public int getZ() {
 		return loc.getBlockZ();
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (obj == this)
+			return true;
+		if (!(obj instanceof Block))
+			return false;
+		Block block = (Block) obj;
+		if (block.getWorld() != getWorld() ||
+			block.getX() != getX() ||
+			block.getY() != getY() ||
+			block.getZ() != getZ())
+			return false;
+		if (getType() != block.getType())
+			return false;
+		return getBlockData().equals(block.getBlockData());
+	}
 
 }
