@@ -7,8 +7,8 @@ import java.util.UUID;
 import com.google.gson.stream.JsonReader;
 
 import de.atlasmc.util.ByteDataBuffer;
-import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.tag.NBT;
 
 /**
  * {@link NBTReader} implementation to read NBT Json<br>

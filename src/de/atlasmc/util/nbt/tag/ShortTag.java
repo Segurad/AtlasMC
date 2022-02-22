@@ -1,8 +1,10 @@
-package de.atlasmc.util.nbt;
+package de.atlasmc.util.nbt.tag;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+
+import de.atlasmc.util.nbt.TagType;
 
 public final class ShortTag extends AbstractTag {
 

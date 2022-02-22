@@ -3,6 +3,13 @@ package de.atlasmc.util.nbt;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.atlasmc.util.nbt.tag.NBT;
+
+/**
+ * Container that stores NBT in two categories.<br>
+ * <li><b>CustomTags</b> which are send to the user
+ * <li><b>SystemTags</b> which are only server side and will not be send to the user
+ */
 public class CustomTagContainer implements Cloneable {
 	
 	private List<NBT> tags;

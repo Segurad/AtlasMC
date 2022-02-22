@@ -3,10 +3,10 @@ package de.atlasmc.util.nbt.io;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlasmc.util.nbt.CompoundTag;
-import de.atlasmc.util.nbt.ListTag;
-import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.tag.CompoundTag;
+import de.atlasmc.util.nbt.tag.ListTag;
+import de.atlasmc.util.nbt.tag.NBT;
 
 public abstract class AbstractNBTIOWriter implements NBTWriter {
 	
@@ -219,7 +219,7 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 	
 	private void removeList() {
 		if (list == null) return;
-		list = list.last;
+		list = list.parent;
 		depth--;
 	}
 	

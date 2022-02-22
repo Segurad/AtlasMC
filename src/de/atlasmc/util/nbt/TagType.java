@@ -2,15 +2,29 @@ package de.atlasmc.util.nbt;
 
 import java.util.List;
 
+import de.atlasmc.util.nbt.tag.ByteArrayTag;
+import de.atlasmc.util.nbt.tag.ByteTag;
+import de.atlasmc.util.nbt.tag.CompoundTag;
+import de.atlasmc.util.nbt.tag.DoubleTag;
+import de.atlasmc.util.nbt.tag.FloatTag;
+import de.atlasmc.util.nbt.tag.IntArrayTag;
+import de.atlasmc.util.nbt.tag.IntTag;
+import de.atlasmc.util.nbt.tag.ListTag;
+import de.atlasmc.util.nbt.tag.LongArrayTag;
+import de.atlasmc.util.nbt.tag.LongTag;
+import de.atlasmc.util.nbt.tag.NBT;
+import de.atlasmc.util.nbt.tag.ShortTag;
+import de.atlasmc.util.nbt.tag.StringTag;
+
 public enum TagType {
 
 	TAG_END,
-	BYTE,
-	SHORT,
-	INT,
-	LONG,
-	FLOAT,
-	DOUBLE,
+	BYTE(true),
+	SHORT(true),
+	INT(true),
+	LONG(true),
+	FLOAT(true),
+	DOUBLE(true),
 	BYTE_ARRAY,
 	STRING,
 	LIST,
@@ -19,6 +33,16 @@ public enum TagType {
 	LONG_ARRAY;
 	
 	private static List<TagType> VALUES;
+	
+	private boolean isNum;
+	
+	private TagType() {
+		this(false);
+	}
+	
+	private TagType(boolean num) {
+		this.isNum = num;
+	}
 	
 	public int getID() {
 		return ordinal();
@@ -36,7 +60,7 @@ public enum TagType {
 	 * @return true if this TagType is a number tag
 	 */
 	public boolean isNumber() {
-		return this == BYTE || this == INT || this == DOUBLE || this == FLOAT || this == SHORT || this == LONG;
+		return isNum;
 	}
 
 	public NBT createTag() {

@@ -3,11 +3,11 @@ package de.atlasmc.util.nbt.io;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlasmc.util.nbt.CompoundTag;
-import de.atlasmc.util.nbt.ListTag;
-import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.tag.CompoundTag;
+import de.atlasmc.util.nbt.tag.ListTag;
+import de.atlasmc.util.nbt.tag.NBT;
 
 public abstract class AbstractNBTIOReader implements NBTReader {
 	
@@ -24,7 +24,6 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	
 	@Override
 	public String getFieldName() {
-		if (type == null) getType();
 		return name;
 	}
 	
@@ -205,7 +204,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 
 	private void removeList() {
 		if (list == null) return;
-		list = list.last;
+		list = list.parent;
 		depth--;
 		if (list != null && depth == list.depth) type = TagType.LIST;
 	}
@@ -350,7 +349,14 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	@Override
 	public void mark() {
 		markDepth = depth;
-		markList = list;
+		if (list != null) {
+			markList = list;
+			do {
+				list.markPayload = list.payload;
+				list = list.parent;
+			} while (list != null);
+			list = markList;
+		}
 		markName = name;
 		markType = type;
 		ioMark();

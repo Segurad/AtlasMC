@@ -1,4 +1,4 @@
-package de.atlasmc.util.nbt;
+package de.atlasmc.util.nbt.tag;
 
 abstract class AbstractTag implements NBT {
 	

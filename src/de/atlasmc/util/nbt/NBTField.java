@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import de.atlasmc.util.nbt.io.NBTReader;
 
+@FunctionalInterface
 public interface NBTField {
 	
 	public static final NBTField SKIP = (holder, reader) -> {

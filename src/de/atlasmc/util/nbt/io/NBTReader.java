@@ -4,9 +4,9 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlasmc.util.nbt.ListTag;
-import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.tag.ListTag;
+import de.atlasmc.util.nbt.tag.NBT;
 
 /**
  * Reader for NBT Data<br>

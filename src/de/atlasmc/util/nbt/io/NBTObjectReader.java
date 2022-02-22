@@ -3,9 +3,9 @@ package de.atlasmc.util.nbt.io;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.tag.NBT;
 
 public class NBTObjectReader implements NBTReader {
 

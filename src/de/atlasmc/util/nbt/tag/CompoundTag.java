@@ -1,8 +1,10 @@
-package de.atlasmc.util.nbt;
+package de.atlasmc.util.nbt.tag;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import de.atlasmc.util.nbt.TagType;
 
 public final class CompoundTag extends AbstractTag implements Iterable<NBT> {
 

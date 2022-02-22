@@ -4,8 +4,8 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.tag.NBT;
 
 public interface NBTWriter extends Closeable {
 	

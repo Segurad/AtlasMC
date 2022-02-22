@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import de.atlasmc.util.nbt.CompoundTag;
-import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.tag.CompoundTag;
+import de.atlasmc.util.nbt.tag.NBT;
 
 public class NBTObjectWriter implements NBTWriter {
 	

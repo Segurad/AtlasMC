@@ -6,6 +6,7 @@ import de.atlasmc.util.nbt.io.NBTObjectReader;
 import de.atlasmc.util.nbt.io.NBTObjectWriter;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.tag.NBT;
 
 /**
  * Represents a Object which can be converted to NBT or from NBT

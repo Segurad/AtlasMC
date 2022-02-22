@@ -1,4 +1,6 @@
-package de.atlasmc.util.nbt;
+package de.atlasmc.util.nbt.tag;
+
+import de.atlasmc.util.nbt.TagType;
 
 public final class FloatTag extends AbstractTag {
 

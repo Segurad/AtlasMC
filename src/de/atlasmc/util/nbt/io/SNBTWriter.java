@@ -6,10 +6,10 @@ import java.util.UUID;
 
 import com.google.gson.stream.JsonWriter;
 
-import de.atlasmc.util.nbt.CompoundTag;
-import de.atlasmc.util.nbt.ListTag;
-import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.tag.CompoundTag;
+import de.atlasmc.util.nbt.tag.ListTag;
+import de.atlasmc.util.nbt.tag.NBT;
 
 /**
  * {@link NBTWriter} implementation for NBT Json
@@ -223,7 +223,7 @@ public class SNBTWriter extends JsonWriter implements NBTWriter {
 	
 	private void removeList() throws IOException {
 		if (list == null) return;
-		list = list.last;
+		list = list.parent;
 		depth--;
 		endArray();
 	}
