@@ -1,11 +1,13 @@
-package de.atlasmc.scheduler;
+package de.atlascore.scheduler;
 
-class CountedRepeatingTask extends RegisteredTask {
+import de.atlasmc.scheduler.AtlasTask;
+
+class CoreCountedRepeatingTask extends CoreRegisteredTask {
 
 	private final long period;
 	private long delay, repeats;
 	
-	public CountedRepeatingTask(AtlasTask task, long delay, long period, long repeats) {
+	public CoreCountedRepeatingTask(AtlasTask task, long delay, long period, long repeats) {
 		super(task);
 		this.period = period-1;
 		this.delay = delay;
@@ -22,8 +24,8 @@ class CountedRepeatingTask extends RegisteredTask {
 	}
 
 	@Override
-	public boolean unregister() {
-		return super.unregister() || repeats <= 0;
+	public boolean isDead() {
+		return super.isDead() || repeats <= 0;
 	}
 	
 	@Override

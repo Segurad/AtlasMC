@@ -1,11 +1,13 @@
-package de.atlasmc.scheduler;
+package de.atlascore.scheduler;
 
-class RepeatingTask extends RegisteredTask {
+import de.atlasmc.scheduler.AtlasTask;
+
+class CoreRepeatingTask extends CoreRegisteredTask {
 
 	private final long period;
 	private long delay;
 	
-	public RepeatingTask(AtlasTask task, long delay, long period) {
+	public CoreRepeatingTask(AtlasTask task, long delay, long period) {
 		super(task);
 		this.period = period-1;
 		this.delay = delay;
