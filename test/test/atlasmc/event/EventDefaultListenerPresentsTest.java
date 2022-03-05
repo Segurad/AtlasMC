@@ -1,4 +1,4 @@
-package de.atlascore.event;
+package test.atlasmc.event;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

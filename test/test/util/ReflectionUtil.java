@@ -5,9 +5,13 @@ import static org.junit.Assert.fail;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Iterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
+
+import org.junit.jupiter.api.Assertions;
 
 public class ReflectionUtil {
 	
@@ -26,6 +30,27 @@ public class ReflectionUtil {
 			Class<?> clazz = Class.forName(packet + "." + classname.substring(0, classname.lastIndexOf('.')));
 			consumer.accept(clazz);
 		}
+	}
+	
+	public static Method isMethodPresent(Class<?> clazz, String method, Class<?>... parameterTypes) {
+		try {
+			return clazz.getDeclaredMethod(method, parameterTypes);
+		} catch (NoSuchMethodException e) {
+			Assertions.fail("Method " + method + " is not present in " + clazz.getName(), e);
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static void isMethodStatic(Method method) {
+		if (!Modifier.isStatic(method.getModifiers()))
+			fail("Method " + method.getName() + " is not static in " + method.getDeclaringClass().getName());
+	}
+	
+	public static void isMethodPresentAndStatic(Class<?> clazz, String method, Class<?>... parameterTypes) {
+		Method m = isMethodPresent(clazz, method, parameterTypes);
+		isMethodStatic(m);
 	}
 
 }

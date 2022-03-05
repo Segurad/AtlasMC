@@ -1,10 +1,13 @@
-package de.atlascore.system.init;
+package test.atlascore.system.init;
 
 import java.lang.reflect.Field;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import de.atlascore.system.init.ContainerFactoryLoader;
+import de.atlascore.system.init.EntityTypeLoader;
+import de.atlascore.system.init.MaterialLoader;
 import de.atlasmc.Material;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.factory.ContainerFactory;

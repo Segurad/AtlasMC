@@ -1,4 +1,4 @@
-package de.atlascore.entity;
+package test.atlascore.entity;
 
 import static org.junit.Assert.fail;
 
