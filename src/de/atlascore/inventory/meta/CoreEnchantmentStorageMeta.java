@@ -117,4 +117,16 @@ public class CoreEnchantmentStorageMeta extends CoreItemMeta implements Enchantm
 			writer.writeEndTag();
 		}
 	}
+	
+	@Override
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
+		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+			return false;
+		EnchantmentStorageMeta enchMeta = (EnchantmentStorageMeta) meta;
+		if (hasStoredEnchants() != enchMeta.hasStoredEnchants())
+			return false;
+		if (hasStoredEnchants() && !getStoredEnchants().equals(enchMeta.getStoredEnchants()))
+			return false;
+		return true;
+	}
 }

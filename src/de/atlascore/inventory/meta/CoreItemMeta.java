@@ -25,11 +25,11 @@ import de.atlasmc.util.map.ListMultimap;
 import de.atlasmc.util.map.Multimap;
 import de.atlasmc.util.nbt.AbstractNBTBase;
 import de.atlasmc.util.nbt.CustomTagContainer;
-import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.tag.NBT;
 
 public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	
@@ -549,5 +549,75 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	@Override
 	protected NBTFieldContainer getFieldContainerRoot() {
 		return NBT_FIELDS;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (obj == this)
+			return true;
+		if (!(obj instanceof ItemMeta))
+			return false;
+		return isSimilar((ItemMeta) obj, false, false);
+	}
+
+	@Override
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
+		if (meta == null)
+			return false;
+		if (meta == this)
+			return true;
+		if (checkClass) {
+			if (meta.getClass() != getClass())
+				return false;
+		} else {
+			Class<? extends ItemMeta> thisClass = getInterfaceClass();
+			Class<? extends ItemMeta> metaClass = meta.getInterfaceClass();
+			if (thisClass != metaClass && !metaClass.isAssignableFrom(thisClass)) {
+				if (thisClass.isAssignableFrom(metaClass)) // check if child
+					return meta.isSimilar(meta, ignoreDamage, checkClass); // execute isSimilar form child to improve accuracy
+				return false; // false because other branch
+			}
+		}
+		if (hasAttributeModifiers() != meta.hasAttributeModifiers())
+			return false;
+		if (hasAttributeModifiers()) {
+			Multimap<Attribute, AttributeModifier> metaAttributes = meta.getAttributeModifiers();
+			if (!attributes.equals(metaAttributes))
+				return false; 
+		}
+		if (hasCanDestroy() != meta.hasCanDestroy())
+			return false;
+		if (hasCanDestroy() && !getCanDestroy().equals(meta.getCanDestroy()))
+			return false;
+		if (getCustomModelData() != meta.getCustomModelData())
+			return false;
+		if (hasCustomTagContainer() != meta.hasCustomTagContainer())
+			return false;
+		if (hasCustomTagContainer() && !getCustomTagContainer().equals(meta.getCustomTagContainer()))
+			return false;
+		if (hasDisplayName() != meta.hasDisplayName())
+			return false;
+		if (hasDisplayName() && !getDisplayName().equals(meta.getDisplayName()))
+			return false;
+		if (hasEnchants() != meta.hasEnchants())
+			return false;
+		if (hasEnchants() && !getEnchants().equals(meta.getEnchants()))
+			return false;
+		if (getItemFlagsRaw() != meta.getItemFlagsRaw())
+			return false;
+		if (hasLore() != meta.hasLore())
+			return false;
+		if (hasLore() && !getLore().equals(meta.getLore()))
+			return false;
+		if (isUnbreakable() != meta.isUnbreakable())
+			return false;
+		return true;
+	}
+
+	@Override
+	public int getItemFlagsRaw() {
+		return flags;
 	}
 }

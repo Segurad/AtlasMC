@@ -9,14 +9,28 @@ import de.atlasmc.block.tile.Banner.Pattern;
 public interface BannerMeta extends TileEntityMeta {
 	
 	public BannerMeta clone();
+	
+	@Override
+	public default Class<? extends BannerMeta> getInterfaceClass() {
+		return BannerMeta.class;
+	}
+	
 	public Banner getTileEntity();
+	
 	public void addPattern(Pattern pattern);
+	
 	public DyeColor getBaseColor();
+	
 	public Pattern getPattern(int index);
+	
 	public List<Pattern> getPatterns();
+	
 	public int numberOfPatterns();
+	
 	public Pattern removePattern(int index);
+	
 	public void setPattern(int index, Pattern pattern);
+	
 	public void setPatterns(List<Pattern> pattern);
 
 }

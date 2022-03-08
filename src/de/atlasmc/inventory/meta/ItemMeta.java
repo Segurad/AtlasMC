@@ -20,6 +20,14 @@ public interface ItemMeta extends Cloneable, NBTHolder, Attributeable {
 	
 	public ItemMeta clone();
 	
+	/**
+	 * Returns the highest Interface class of this meta
+	 * @return class
+	 */
+	public default Class<? extends ItemMeta> getInterfaceClass() {
+		return ItemMeta.class;
+	}
+	
 	public boolean hasCustomTagContainer();
 	
 	public CustomTagContainer getCustomTagContainer();
@@ -65,6 +73,8 @@ public interface ItemMeta extends Cloneable, NBTHolder, Attributeable {
 	public int getCustomModelData();
 
 	public Set<ItemFlag> getItemFlags();
+	
+	public int getItemFlagsRaw();
 
 	public boolean hasItemFlag(ItemFlag flag);
 
@@ -81,5 +91,7 @@ public interface ItemMeta extends Cloneable, NBTHolder, Attributeable {
 	public boolean removeAttributeModifier(EquipmentSlot slot);
 	
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot);
+
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass);
 
 }

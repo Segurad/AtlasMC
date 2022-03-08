@@ -76,5 +76,19 @@ public class CoreTileEntityMeta extends CoreItemMeta implements TileEntityMeta {
 			writer.writeEndTag();
 		}
 	}
+	
+	@Override
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
+		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+			return false;
+		TileEntityMeta tileMeta = (TileEntityMeta) meta;
+		if (hasTileEntity() != tileMeta.hasTileEntity())
+			return false;
+		if (hasTileEntity() && !getTileEntity().equals(tileMeta.getTileEntity()))
+			return false;
+		if (!getType().equals(tileMeta.getType()))
+			return false;
+		return true;
+	}
 
 }

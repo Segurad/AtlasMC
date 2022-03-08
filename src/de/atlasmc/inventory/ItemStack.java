@@ -1,20 +1,13 @@
 package de.atlasmc.inventory;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import de.atlasmc.Material;
-import de.atlasmc.attribute.Attribute;
-import de.atlasmc.attribute.AttributeModifier;
-import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.inventory.meta.ItemMeta;
-import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.NBTHolder;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.tag.NBT;
 
 public class ItemStack implements NBTHolder {
 
@@ -104,65 +97,48 @@ public class ItemStack implements NBTHolder {
 		return type.getMaxAmount();
 	}
 	
-	public boolean isSimilarIgnoreDamage(ItemStack item) {
-		if (item == null) return false;
-		if (item == this) return true;
-		if (type != item.getType()) return false; 
-		if (item.hasItemMeta() || hasItemMeta()) {
-			if (!(item.hasItemMeta() && hasItemMeta())) return false;
-			// TODO
-		}
-		return true;
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (obj == this)
+			return true;
+		if (!(obj instanceof ItemStack))
+			return false;
+		ItemStack item = (ItemStack) obj;
+		return isSimilar(item, false, false, false);
+	}
+	
+	/**
+	 * Compares a ItemStack with this ItemStack a returns whether or not it is similar
+	 * @param item the ItemStack that should be compared
+	 * @param ignoreAmount whether or not the amount should be ignored in this comparison
+	 * @param ignoreDamage whether or not the damage values should be ignored in this comparison
+	 * @param checkClass whether or not the comparison should compare ItemStack and ItemMeta {@link Class}. If false may result in x.equals(y) is true and y.equals(x) is false
+	 * @return true if similar
+	 */
+	public boolean isSimilar(ItemStack item, boolean ignoreAmount, boolean ignoreDamage, boolean checkClass) {
+		if (item == null) 
+			return false;
+		if (item == this) 
+			return true;
+		if (item.getClass() != getClass())
+			return false;
+		if (type != item.getType()) 
+			return false; 
+		if (!ignoreAmount && amount != item.getAmount())
+			return false;
+		if (!hasItemMeta())
+			return !item.hasItemMeta();
+		if (!item.hasItemMeta())
+			return false;
+		ItemMeta meta = item.getItemMeta();
+		return meta.isSimilar(meta, ignoreDamage, checkClass);
 	}
 	
 	public boolean isPartOf(ItemStack item) {
-		if (item == null) return false;
-		if (getType() != item.getType()) return false;
-		if (!hasItemMeta() && !item.hasItemMeta()) return true;
-		if (isSimilar(item)) return true;
-		ItemMeta metapart = getItemMeta();
-		ItemMeta metaitem = item.getItemMeta();
-		if (metapart.hasDisplayName()) {
-			if (!metaitem.hasDisplayName()) return false;
-			if (!metaitem.getDisplayName().contains(metapart.getDisplayName())) return false;
-		}
-		if (metapart.hasEnchants()) {
-			Map<Enchantment, Integer> enchs = metapart.getEnchants();
-			for (Enchantment ench : enchs.keySet()) {
-				if (metaitem.getEnchantLevel(ench) < enchs.get(ench)) return false;
-			} return false;
-		}
-		if (metapart.hasLore()) {
-			if (!metaitem.hasLore()) return false;
-			return metaitem.getLore().equals(metapart.getLore());
-		}
-		if (metapart.hasCustomModelData()) {
-			if (!metaitem.hasCustomModelData()) return false;
-			if (metapart.getCustomModelData() != metaitem.getCustomModelData()) return false;
-		}
-		if (!metapart.getItemFlags().isEmpty()) {
-			for (ItemFlag f : metapart.getItemFlags()) {
-				if (!metaitem.hasItemFlag(f)) return false;
-			}
-		}
-		if (metapart.hasAttributeModifiers()) {
-			if (!metaitem.hasAttributeModifiers()) return false;
-			for (Attribute ab : metapart.getAttributeModifiers().keySet()) {
-				List<AttributeModifier> iteml = metaitem.getAttributeModifiers(ab);
-				if (iteml == null) return false;
-				List<AttributeModifier> partl = metapart.getAttributeModifiers(ab);
-				for (AttributeModifier am : partl) {
-					if (!iteml.contains(am)) return false;
-				}
-			}
-		}
-		Set<ItemFlag> flags = metapart.getItemFlags();
-		if (!flags.isEmpty()) {
-			for (ItemFlag flag : flags) {
-				if (!metaitem.hasItemFlag(flag)) return false;
-			}
-		}
-		return true;
+		// TODO implement
+		return false;
 	}
 	
 	/**

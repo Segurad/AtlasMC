@@ -7,12 +7,24 @@ import de.atlasmc.enchantments.Enchantment;
 public interface EnchantmentStorageMeta extends ItemMeta {
 	
 	public void addStoredEnchant(Enchantment ench, int level);
+	
 	public EnchantmentStorageMeta clone();
+	
+	@Override
+	public default Class<? extends EnchantmentStorageMeta> getInterfaceClass() {
+		return EnchantmentStorageMeta.class;
+	}
+	
 	public int getStoredEnchantLevel(Enchantment ench);
+	
 	public Map<Enchantment, Integer>getStoredEnchants();
+	
 	public boolean hasConflictingStoredEnchant(Enchantment ench);
+	
 	public boolean hasStoredEnchants();
+	
 	public boolean hasStoredEnchant(Enchantment ench);
+	
 	public void removeStoredEnchant(Enchantment ench);
 
 }

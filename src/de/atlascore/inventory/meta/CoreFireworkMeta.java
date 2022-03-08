@@ -123,5 +123,19 @@ public class CoreFireworkMeta extends CoreItemMeta implements FireworkMeta {
 		}
 		writer.writeByteTag(NBT_FLIGHT, power);
 	}
+	
+	@Override
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
+		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+			return false;
+		FireworkMeta fireMeta = (FireworkMeta) meta;
+		if (getPower() != fireMeta.getPower())
+			return false;
+		if (hasEffects() != fireMeta.hasEffects())
+			return false;
+		if (hasEffects() && !fireMeta.getEffects().equals(fireMeta.getEffects()))
+			return false;
+		return false;
+	}
 
 }

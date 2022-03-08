@@ -208,12 +208,37 @@ public class CorePotionMeta extends CoreItemMeta implements PotionMeta {
 				writer.writeEndTag();
 			}
 		}
-		if (data != null) writer.writeStringTag(NBT_POTION, data.getName());
+		if (hasBasePotionData()) writer.writeStringTag(NBT_POTION, data.getName());
 	}
 
 	@Override
 	public int getCustomEffectCount() {
 		return customEffects == null ? 0 : customEffects.size();
+	}
+
+	@Override
+	public boolean hasBasePotionData() {
+		return data != null;
+	}
+	
+	@Override
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
+		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+			return false;
+		PotionMeta potionMeta = (PotionMeta) meta;
+		if (hasColor() != potionMeta.hasColor())
+			return false;
+		if (hasColor() && !getColor().equals(potionMeta.getColor()))
+			return false;
+		if (hasBasePotionData() != potionMeta.hasBasePotionData())
+			return false;
+		if (hasBasePotionData() && !getBaseData().equals(potionMeta.getBaseData()))
+			return false;
+		if (hasCustomEffects() != potionMeta.hasCustomEffects())
+			return false;
+		if (hasCustomEffects() && !getCustomEffects().equals(potionMeta.getCustomEffects()))
+			return false;
+		return true;
 	}
 
 }

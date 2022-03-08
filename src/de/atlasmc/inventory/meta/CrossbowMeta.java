@@ -8,6 +8,11 @@ public interface CrossbowMeta extends DamageableMeta {
 	
 	public CrossbowMeta clone();
 	
+	@Override
+	public default Class<? extends CrossbowMeta> getInterfaceClass() {
+		return CrossbowMeta.class;
+	}
+	
 	public void addChargedProjectile(ItemStack item);
 	
 	public List<ItemStack> getChargedProjectiles();

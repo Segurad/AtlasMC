@@ -80,7 +80,9 @@ public class CoreCompassMeta extends CoreItemMeta implements CompassMeta {
 
 	@Override
 	public void setLodestone(SimpleLocation lodestone) {
-		this.loc = lodestone.clone();
+		if (loc == null)
+			loc = new SimpleLocation();
+		this.loc.setLocation(lodestone);
 	}
 
 	@Override
@@ -106,6 +108,20 @@ public class CoreCompassMeta extends CoreItemMeta implements CompassMeta {
 			writer.writeIntTag(POS_Z, loc.getBlockZ());
 			writer.writeEndTag();
 		}
+	}
+	
+	@Override
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
+		if (!isSimilar(meta, ignoreDamage, checkClass))
+			return false;
+		CompassMeta compassMeta = (CompassMeta) meta;
+		if (isLodestoneTracked() != compassMeta.isLodestoneTracked())
+			return false;
+		if (hasLodestone() != compassMeta.hasLodestone())
+			return false;
+		if (hasLodestone() && !getLodestone().equals(compassMeta.getLodestone()))
+			return false;
+		return true;
 	}
 
 }

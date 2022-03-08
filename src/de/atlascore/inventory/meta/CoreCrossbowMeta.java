@@ -116,5 +116,19 @@ public class CoreCrossbowMeta extends CoreDamageableMeta implements CrossbowMeta
 	public int getProjectileCount() {
 		return projectiles == null ? 0 : projectiles.size();
 	}
+	
+	@Override
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
+		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+			return false;
+		CrossbowMeta xbowMeta = (CrossbowMeta) meta;
+		if (isCharged() != xbowMeta.isCharged())
+			return false;
+		if (hasChargedProjectiles() != xbowMeta.hasChargedProjectiles())
+			return false;
+		if (hasChargedProjectiles() && !getChargedProjectiles().equals(xbowMeta.getChargedProjectiles()))
+			return false;
+		return true;
+	}
 
 }

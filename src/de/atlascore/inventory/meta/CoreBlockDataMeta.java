@@ -67,5 +67,17 @@ public class CoreBlockDataMeta extends CoreItemMeta implements BlockDataMeta {
 		data.toNBT(writer, systemData);
 		writer.writeEndTag();
 	}
+	
+	@Override
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
+		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+			return false;
+		BlockDataMeta blockMeta = (BlockDataMeta) meta;
+		if (hasBlockData() != blockMeta.hasBlockData())
+			return false;
+		if (hasBlockData() && !getBlockData().equals(blockMeta.getBlockData()))
+			return false;
+		return true;
+	}
 
 }

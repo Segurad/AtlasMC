@@ -179,4 +179,16 @@ public class CoreSuspiciousStewMeta extends CoreItemMeta implements SuspiciousSt
 		return customEffects == null ? 0 : customEffects.size();
 	}
 	
+	@Override
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
+		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+			return false;
+		SuspiciousStewMeta stewMeta = (SuspiciousStewMeta) meta;
+		if (hasCustomEffects() != stewMeta.hasCustomEffects())
+			return false;
+		if (hasCustomEffects() && !getCustomEffects().equals(stewMeta.getCustomEffects()))
+			return false;
+		return true;
+	}
+	
 }

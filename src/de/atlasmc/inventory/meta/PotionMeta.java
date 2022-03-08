@@ -19,6 +19,11 @@ public interface PotionMeta extends ItemMeta {
 	
 	public PotionMeta clone();
 	
+	@Override
+	public default Class<? extends PotionMeta> getInterfaceClass() {
+		return PotionMeta.class;
+	}
+	
 	public PotionData getBaseData();
 	
 	public Color getColor();
@@ -36,6 +41,8 @@ public interface PotionMeta extends ItemMeta {
 	public boolean removeAllCustomEffects(PotionEffectType type);
 	
 	public void setBasePotionData(PotionData data);
+	
+	public boolean hasBasePotionData();
 	
 	public void setColor(Color color);
 	

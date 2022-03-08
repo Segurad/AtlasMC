@@ -79,5 +79,19 @@ public class CoreTropicalFishBucketMeta extends CoreItemMeta implements Tropical
 		super.toNBT(writer, systemData);
 		writer.writeIntTag(NBT_BUCKET_VARIANT_TAG, pattern.getDataID() + bodyColor.ordinal() << 16 + patternColor.ordinal() << 24);
 	}
+	
+	@Override
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
+		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+			return false;
+		TropicalFishBucketMeta bucketMeta = (TropicalFishBucketMeta) meta;
+		if (getBodyColor() != bucketMeta.getBodyColor())
+			return false;
+		if (getPattern() != bucketMeta.getPattern())
+			return false;
+		if (getPatternColor() != bucketMeta.getPatternColor())
+			return false;
+		return true;
+	}
 
 }

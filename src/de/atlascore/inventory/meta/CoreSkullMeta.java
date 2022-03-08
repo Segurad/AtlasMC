@@ -10,5 +10,9 @@ public class CoreSkullMeta extends CoreTileEntityMeta implements SkullMeta {
 	public CoreSkullMeta(Material material) {
 		super(material);
 	}
+	
+	public CoreSkullMeta clone() {
+		return (CoreSkullMeta) super.clone();
+	}
 
 }

@@ -63,5 +63,17 @@ public class CoreFireworkEffectMeta extends CoreItemMeta implements FireworkEffe
 			writer.writeEndTag();
 		}
 	}
+	
+	@Override
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
+		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+			return false;
+		FireworkEffectMeta effectMeta = (FireworkEffectMeta) meta;
+		if (hasEffect() != effectMeta.hasEffect())
+			return false;
+		if (hasEffect() && !getEffect().equals(effectMeta.getEffect()))
+			return false;
+		return true;
+	}
 
 }

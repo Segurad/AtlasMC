@@ -15,4 +15,9 @@ public interface TileEntityMeta extends ItemMeta {
 	
 	public TileEntityMeta clone();
 
+	@Override
+	public default Class<? extends TileEntityMeta> getInterfaceClass() {
+		return TileEntityMeta.class;
+	}
+	
 }

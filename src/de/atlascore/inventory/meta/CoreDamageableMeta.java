@@ -50,5 +50,14 @@ public class CoreDamageableMeta extends CoreItemMeta implements DamageableMeta {
 		super.toNBT(writer, systemData);
 		writer.writeIntTag(NBT_DAMAGE, damage);
 	}
+	
+	@Override
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
+		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+			return false;
+		if (ignoreDamage)
+			return true;
+		return getDamage() == ((DamageableMeta) meta).getDamage();
+	}
 
 }

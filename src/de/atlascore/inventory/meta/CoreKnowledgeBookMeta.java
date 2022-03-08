@@ -76,5 +76,17 @@ public class CoreKnowledgeBookMeta extends CoreItemMeta implements KnowledgeBook
 			}
 		}
 	}
+	
+	@Override
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
+		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+			return false;
+		KnowledgeBookMeta bookMeta = (KnowledgeBookMeta) meta;
+		if (hasRecipes() != bookMeta.hasRecipes())
+			return false;
+		if (hasRecipes() && !getRecipes().equals(bookMeta.getRecipes()))
+			return true;
+		return true;
+	}
 
 }

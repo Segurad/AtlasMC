@@ -185,5 +185,29 @@ public class CoreBookMeta extends CoreItemMeta implements BookMeta {
 			clone.setPage(new ArrayList<>(pages));
 		return clone;
 	}
+	
+	@Override
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
+		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+			return false;
+		BookMeta bookMeta = (BookMeta) meta;
+		if (hasAuthor() != bookMeta.hasAuthor())
+			return false;
+		if (hasAuthor() && !getAuthor().equals(bookMeta.getAuthor()))
+			return false;
+		if (hasTitle() != bookMeta.hasTitle())
+			return false;
+		if (hasTitle() && !getTitle().equals(bookMeta.getTitle()))
+			return false;
+		if (getGeneration() != bookMeta.getGeneration())
+			return false;
+		if (isResolved() != bookMeta.isResolved())
+			return false;
+		if (hasPages() != hasPages())
+			return false;
+		if (hasPages() && !getPages().equals(bookMeta.getPages()))
+			return false;
+		return true;
+	}
 
 }

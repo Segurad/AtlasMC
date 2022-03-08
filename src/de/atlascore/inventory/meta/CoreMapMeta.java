@@ -92,12 +92,12 @@ public class CoreMapMeta extends CoreItemMeta implements MapMeta {
 	}
 	
 	@Override
-	public boolean hasDisplayCompound() {
+	protected boolean hasDisplayCompound() {
 		return hasColor() || super.hasDisplayCompound();
 	}
 	
 	@Override
-	public void writeDisplayCompound(NBTWriter writer, boolean systemData) throws IOException {
+	protected void writeDisplayCompound(NBTWriter writer, boolean systemData) throws IOException {
 		super.writeDisplayCompound(writer, systemData);
 		if (hasColor()) writer.writeIntTag(MAP_COLOR, getColor().asRGB());
 	}
@@ -106,6 +106,21 @@ public class CoreMapMeta extends CoreItemMeta implements MapMeta {
 	public void setMapID(int mapID) {
 		this.mapID = mapID;
 		if (view != null && view.getMapID() != mapID) view = null;
+	}
+	
+	@Override
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
+		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+			return false;
+		MapMeta mapMeta = (MapMeta) meta;
+		if (getColor() != null && !getColor().equals(mapMeta.getColor())) {
+			return false;
+		} else if (mapMeta.getColor() != null)
+			return false;
+		if (getMapId() != mapMeta.getMapId())
+			return false;
+		// TODO isSimilar
+		return true;
 	}
 
 }

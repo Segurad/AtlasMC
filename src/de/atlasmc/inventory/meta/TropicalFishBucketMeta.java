@@ -6,11 +6,22 @@ import de.atlasmc.entity.TropicalFish.Pattern;
 public interface TropicalFishBucketMeta extends ItemMeta {
 	
 	public TropicalFishBucketMeta clone();
+	
+	@Override
+	public default Class<? extends TropicalFishBucketMeta> getInterfaceClass() {
+		return TropicalFishBucketMeta.class;
+	}
+	
 	public DyeColor getBodyColor();
+	
 	public Pattern getPattern();
+	
 	public DyeColor getPatternColor();
+	
 	public void setBodyColor(DyeColor color);
+	
 	public void setPattern(Pattern pattern);
+	
 	public void setPatternColor(DyeColor color);
 
 }
