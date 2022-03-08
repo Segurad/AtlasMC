@@ -3,6 +3,9 @@ package de.atlasmc.util;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.annotation.ThreadSafe;
 
 /**
@@ -16,26 +19,34 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 	
 	@Override
 	public boolean add(E entry) {
-		incrementCount();
-		if (head == null) {
-			head = new Node<E>(entry, null, null);
-			tail = head;
-			return true;
-		}
-		tail.next = new Node<E>(entry, tail, null);
-		tail = tail.next;
+		internalAdd(entry);
 		return true;
 	}
 	
+	public EntryPointer<E> addWithPointer(E entry) {
+		return new EntryPointer<E>(this, internalAdd(entry));
+	}
+	
+	public EntryPointer<E> addFirstWithPointer(E entry) {
+		return new EntryPointer<E>(this, internalAddFirst(entry));
+	}
+	
 	public void addFirst(E entry) {
+		internalAddFirst(entry);
+	}
+	
+	private synchronized Node<E> internalAddFirst(E entry) {
+		if (entry == null)
+			throw new IllegalArgumentException("Entry can not be null!");
 		incrementCount();
 		if (head == null) {
 			head = new Node<E>(entry, null, null);
 			tail = head;
-			return;
+			return head;
 		}
 		head.prev = new Node<E>(entry, null, head);
 		head = head.prev;
+		return head;
 	}
 	
 	public int size() {
@@ -56,9 +67,11 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 	
 	@Override
 	public boolean contains(Object entry) {
+		if (entry == null)
+			return false;
 		Node<E> next = head;
 		while(next != null) {
-			if (entry.equals(next.element)) return true;
+			if (entry.equals(next.entry)) return true;
 			next = next.next;
 		}
 		return false;
@@ -66,9 +79,11 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 	
 	@Override
 	public boolean remove(Object entry) {
+		if (entry == null)
+			return false;
 		Node<E> next = head;
 		while(next != null) {
-			if (!entry.equals(next.element)) {
+			if (!entry.equals(next.entry)) {
 				next = nextValid(next);
 				continue;
 			}
@@ -78,7 +93,7 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 		return false;
 	}
 	
-	private void removeNode(Node<E> node) {
+	private synchronized void removeNode(Node<E> node) {
 		if (node.removed) return;
 		node.removed = true;
 		decrementCount();
@@ -115,8 +130,25 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 		tail = node;
 	}
 	
-	private void insertAfter(Node<E> node, E entry) {
-		if (node.removed) node = prevValid(node);
+	private synchronized Node<E> internalAdd(E entry) {
+		if (entry == null)
+			throw new IllegalArgumentException("Entry can not be null!");
+		if (head == null) {
+			head = new Node<E>(entry, null, null);
+			tail = head;
+			return tail;
+		}
+		tail.next = new Node<E>(entry, tail, null);
+		tail = tail.next;
+		incrementCount();
+		return tail;
+	}
+	
+	private synchronized void insertAfter(Node<E> node, E entry) {
+		if (entry == null)
+			throw new IllegalArgumentException("Entry can not be null!");
+		if (node.removed) 
+			node = prevValid(node);
 		if (node == null) {
 			addFirst(entry);
 			return;
@@ -128,7 +160,7 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 		incrementCount();
 	}
 	
-	private void insertBefor(Node<E> node, E entry) {
+	private synchronized void insertBefor(Node<E> node, E entry) {
 		if (node.removed) node = nextValid(node);
 		if (node == null) {
 			add(entry);
@@ -198,6 +230,8 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 
 	@Override
 	public boolean addAll(Collection<? extends E> c) {
+		if (c == null)
+			return false;
 		for (E e : c) {
 			add(e);
 		}
@@ -206,6 +240,8 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
+		if (c == null)
+			return false;
 		boolean changes = false;
 		for (Object o : c) {
 			if (remove(o)) changes = true;
@@ -215,6 +251,8 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 
 	@Override
 	public boolean retainAll(Collection<?> c) {
+		if (c == null)
+			return false;
 		boolean changes = false;
 		LinkedListIterator<E> it = iterator();
 		while (it.hasNext()) {
@@ -229,10 +267,10 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 		
 		volatile boolean removed;
 		volatile Node<T> prev, next;
-		final T element;
+		volatile T entry;
 		
-		public Node(T element, Node<T> prev, Node<T> next) {
-			this.element = element;
+		public Node(T entry, Node<T> prev, Node<T> next) {
+			this.entry = entry;
 			this.prev = prev;
 			this.next = next;
 		}
@@ -262,7 +300,28 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 		@Override
 		public E next() {
 			node = list.nextValid(node);
-			return node == null ? null : node.element;
+			return node == null ? null : node.entry;
+		}
+		
+		/**
+		 * Returns the element of the current node
+		 * @return element or null
+		 */
+		@Nullable
+		public E get() {
+			if (node == null)
+				return null;
+			return node.entry;
+		}
+		
+		/**
+		 * Returns a {@link EntryPointer} of the current node
+		 * @return pointer
+		 */
+		public EntryPointer<E> getPointer() {
+			if (node == null)
+				return null;
+			return new EntryPointer<>(list, node);
 		}
 		
 		/**
@@ -271,7 +330,7 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 		 */
 		public E peekNext() {
 			peeked = list.nextValid(node);
-			return peeked == null ? null : peeked.element;
+			return peeked == null ? null : peeked.entry;
 		}
 		
 		/**
@@ -280,15 +339,33 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 		 */
 		public E peekPrevious() {
 			peeked = list.prevValid(node);
-			return peeked == null ? null : peeked.element;
+			return peeked == null ? null : peeked.entry;
 		}
 		
 		/**
-		 * Moves to the last peeked element if available
+		 * Goto the last peeked element if available
 		 */
-		public void moveToPeeked() {
+		public void gotoPeeked() {
 			if (peeked == null) return;
 			node = peeked;
+		}
+		
+		/**
+		 * Goto the first element of this list and returns it
+		 * @return element
+		 */
+		public E gotoHead() {
+			node = list.head;
+			return node.entry;
+		}
+		
+		/**
+		 * Goto the last element of this list and returns it
+		 * @return element
+		 */
+		public E gotoTail() {
+			node = list.tail;
+			return node.entry;
 		}
 
 		public boolean hasPrevious() {
@@ -302,7 +379,7 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 		 */
 		public E previous() {
 			node = list.prevValid(node);
-			return node == null ? null : node.element;
+			return node == null ? null : node.entry;
 		}
 
 		@Override
@@ -310,12 +387,59 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 			list.removeNode(node);
 		}
 
-		public void add(E e) {
-			list.insertAfter(node, e);
+		public void add(E entry) {
+			if (entry == null)
+				throw new IllegalArgumentException("Entry can not be null!");
+			list.insertAfter(node, entry);
 		}
 		
-		public void addBefor(E e) {
-			list.insertBefor(node, e);
+		public void addBefor(E entry) {
+			if (entry == null)
+				throw new IllegalArgumentException("Entry can not be null!");
+			list.insertBefor(node, entry);
+		}
+		
+	}
+	
+	/**
+	 * Points to a Node and allows to remove or change it
+	 * @param <E>
+	 */
+	public static final class EntryPointer<E> {
+		
+		private final Node<E> node;
+		private final ConcurrentLinkedList<E> list;
+		
+		private EntryPointer(ConcurrentLinkedList<E> list, Node<E> node) {
+			this.list = list;
+			this.node = node;
+		}
+		
+		/**
+		 * Gets the entry of the node
+		 * @return entry
+		 */
+		@NotNull
+		public E get() {
+			return node.entry;
+		}
+		
+		/**
+		 * Sets the entry of the node
+		 * @param entry
+		 */
+		public void set(@NotNull E entry) {
+			if (entry == null)
+				throw new IllegalArgumentException("Entry can not be null!");
+			node.entry = entry;
+		}
+		
+		public void remove() {
+			list.removeNode(node);
+		}
+		
+		public boolean isRemoved() {
+			return node.removed;
 		}
 		
 	}
