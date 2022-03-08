@@ -16,9 +16,8 @@ public enum Axis {
 	 * @return the Axis or {@link #Y}
 	 */
 	public static Axis getByName(String name) {
-		name = name.toUpperCase();
-		for (Axis a : values()) {
-			if (a.name().equals(name)) return a;
+		for (Axis a : getValues()) {
+			if (a.name().equalsIgnoreCase(name)) return a;
 		}
 		return Y;
 	}

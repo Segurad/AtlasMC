@@ -4,24 +4,22 @@ import java.util.List;
 
 public enum Direction {
 
-	NORTH(337.5f, 22.5f, 0),
-	NORTH_EAST(22.5f, 67.5f, 1),
-	EAST(67.5f, 112.5f, 2),
-	SOUTH_EAST(112.5f, 157.5f, 3),
-	SOUTH(157.5f, 202.5f, 4),
-	SOUTH_WEST(202.5f, 247.5f, 5),
-	WEST(247.5f, 292.5f, 6),
-	NORTH_WEST(292.5f, 337.5f, 7);
+	NORTH(337.5f, 22.5f),
+	NORTH_EAST(22.5f, 67.5f),
+	EAST(67.5f, 112.5f),
+	SOUTH_EAST(112.5f, 157.5f),
+	SOUTH(157.5f, 202.5f),
+	SOUTH_WEST(202.5f, 247.5f),
+	WEST(247.5f, 292.5f),
+	NORTH_WEST(292.5f, 337.5f);
 	
 	private static List<Direction> VALUES;
 	
 	private final float min, max;
-	private final int id;
 	
-	private Direction(float min, float max, int id) {
+	private Direction(float min, float max) {
 		this.max = max;
 		this.min = min;
-		this.id = id;
 	}
 	
 	public static Direction getDirectionYaw(float yaw) {
@@ -40,8 +38,12 @@ public enum Direction {
 		return NORTH;
 	}
 	
-	public int getId() {
-		return id;
+	public int getID() {
+		return ordinal();
+	}
+	
+	public static Direction getByID(int id) {
+		return getValues().get(id);
 	}
 	
 	public float getMax() {

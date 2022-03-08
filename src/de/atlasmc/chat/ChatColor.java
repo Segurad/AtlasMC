@@ -33,6 +33,7 @@ public enum ChatColor {
 
 	private final char formatID;
 	private final Color color;
+	private final String name;
 	
 	private ChatColor(char formatID) {
 		this(formatID, Color.BLACK);
@@ -41,6 +42,7 @@ public enum ChatColor {
 	private ChatColor(char formatID, Color color) {
 		this.formatID = formatID;
 		this.color = color;
+		this.name = this.name().toLowerCase();
 	}
 	
 	/**
@@ -61,6 +63,10 @@ public enum ChatColor {
 	public int getID() {
 		return ordinal();
 	}
+	
+	public String getNameID() {
+		return name;
+	}
 
 	@Override
 	public String toString() {
@@ -69,7 +75,16 @@ public enum ChatColor {
 
 	public static ChatColor getByFormatID(char id) {
 		for (ChatColor c : getValues()) {
-			if (c.getFormatID() == id) return c;
+			if (c.getFormatID() == id) 
+				return c;
+		}
+		return null;
+	}
+	
+	public static ChatColor getByNameID(String name) {
+		for (ChatColor c : getValues()) {
+			if (c.getNameID().equals(name))
+				return c;
 		}
 		return null;
 	}

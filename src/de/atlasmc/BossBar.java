@@ -1,5 +1,7 @@
 package de.atlasmc;
 
+import java.util.List;
+
 public class BossBar {
 	
 	private String title;
@@ -65,10 +67,34 @@ public class BossBar {
 		PURPLE,
 		WHITE;
 		
-		public static BarColor getByID(int id) {
-			BarColor[] values = values();
-			return values[id];
+		private static List<BarColor> VALUES;
+		
+		public int getID() {
+			return ordinal();
 		}
+		
+		public static BarColor getByID(int id) {
+			return getValues().get(id);
+		}
+		
+		/**
+		 * Returns a immutable List of all Types.<br>
+		 * This method avoid allocation of a new array not like {@link #values()}.
+		 * @return list
+		 */
+		public static List<BarColor> getValues() {
+			if (VALUES == null)
+				VALUES = List.of(values());
+			return VALUES;
+		}
+		
+		/**
+		 * Releases the system resources used from the values cache
+		 */
+		public static void freeValues() {
+			VALUES = null;
+		}
+		
 	}
 	
 	public static enum BarStyle {
@@ -78,9 +104,32 @@ public class BossBar {
 		SEGMENTED_12,
 		SEGMENTED_20;
 		
+		private static List<BarStyle> VALUES;
+		
+		public int getID() {
+			return ordinal();
+		}
+		
 		public static BarStyle getByID(int id) {
-			BarStyle[] values = values();
-			return values[id];
+			return getValues().get(id);
+		}
+		
+		/**
+		 * Returns a immutable List of all Types.<br>
+		 * This method avoid allocation of a new array not like {@link #values()}.
+		 * @return list
+		 */
+		public static List<BarStyle> getValues() {
+			if (VALUES == null)
+				VALUES = List.of(values());
+			return VALUES;
+		}
+		
+		/**
+		 * Releases the system resources used from the values cache
+		 */
+		public static void freeValues() {
+			VALUES = null;
 		}
 	}
 	

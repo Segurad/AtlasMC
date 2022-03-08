@@ -11,6 +11,10 @@ public enum Gamemode {
 	
 	private static List<Gamemode> VALUES;
 	
+	public int getID() {
+		return ordinal();
+	}
+	
 	public static Gamemode getByID(int id) {
 		return getValues().get(id);
 	}

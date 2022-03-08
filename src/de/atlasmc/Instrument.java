@@ -24,9 +24,8 @@ public enum Instrument {
 	private static List<Instrument> VALUES;
 	
 	public static Instrument getByName(String name) {
-		name = name.toUpperCase();
-		for (Instrument i : VALUES) {
-			if (i.name().equals(name)) return i;
+		for (Instrument i : getValues()) {
+			if (i.name().equalsIgnoreCase(name)) return i;
 		}
 		return HARP;
 	}
