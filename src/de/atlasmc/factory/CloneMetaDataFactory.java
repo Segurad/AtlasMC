@@ -13,7 +13,7 @@ public class CloneMetaDataFactory implements MetaDataFactory {
 	private final ItemMeta meta;
 	private final BlockData data;
 	
-	public CloneMetaDataFactory(Class<? extends ItemMeta> metaInterface, ItemMeta meta, Class<BlockData> dataInterface, BlockData data) {
+	public <I extends ItemMeta, B extends BlockData> CloneMetaDataFactory(Class<I> metaInterface, I meta, Class<B> dataInterface, B data) {
 		if (metaInterface != null && !metaInterface.isInstance(meta)) 
 			throw new IllegalArgumentException("MetaInterface is not assignable from Meta!");
 		if (dataInterface != null && !dataInterface.isInstance(data))

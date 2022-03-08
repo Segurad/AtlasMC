@@ -11,6 +11,8 @@ public class CoreGenericInventoryFactory extends ContainerFactory<Inventory> {
 
 	@Override
 	public Inventory create(InventoryType type, ChatComponent title, InventoryHolder holder) {
+		if (type == null)
+			throw new IllegalArgumentException("Type can not be null!");
 		int size = 0;
 		switch (type) {
 		case GENERIC_9X3:

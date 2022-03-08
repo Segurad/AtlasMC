@@ -13,7 +13,7 @@ public class AgeableClassMetaDataFactory extends ClassMetaDataFactory {
 
 	private final int maxage;
 	
-	public AgeableClassMetaDataFactory(Class<? extends Ageable> dataInterface, Class<? extends Ageable> data, int maxage) {
+	public <A extends Ageable> AgeableClassMetaDataFactory(Class<A> dataInterface, Class<? extends A> data, int maxage) {
 		super(dataInterface, data);
 		this.maxage = maxage;
 	}
@@ -33,30 +33,6 @@ public class AgeableClassMetaDataFactory extends ClassMetaDataFactory {
 			e.printStackTrace();
 			return null;
 		}
-	}
-
-	@Override
-	public int hashCode() {
-		if (hash != 0) 
-			return hash;
-		final int prime = 31;
-		hash = super.hashCode();
-		hash = prime * hash + maxage;
-		return hash;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AgeableClassMetaDataFactory other = (AgeableClassMetaDataFactory) obj;
-		if (maxage != other.maxage)
-			return false;
-		return true;
 	}
 
 }
