@@ -6,11 +6,6 @@ public interface FireworkEffectMeta extends ItemMeta {
 	
 	public FireworkEffectMeta clone();
 	
-	@Override
-	public default Class<? extends FireworkEffectMeta> getInterfaceClass() {
-		return FireworkEffectMeta.class;
-	}
-	
 	public FireworkEffect getEffect();
 	
 	public boolean hasEffect();

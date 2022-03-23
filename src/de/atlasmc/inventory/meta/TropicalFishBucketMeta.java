@@ -7,11 +7,6 @@ public interface TropicalFishBucketMeta extends ItemMeta {
 	
 	public TropicalFishBucketMeta clone();
 	
-	@Override
-	public default Class<? extends TropicalFishBucketMeta> getInterfaceClass() {
-		return TropicalFishBucketMeta.class;
-	}
-	
 	public DyeColor getBodyColor();
 	
 	public Pattern getPattern();

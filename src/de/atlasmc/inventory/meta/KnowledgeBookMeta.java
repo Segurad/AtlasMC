@@ -10,11 +10,6 @@ public interface KnowledgeBookMeta extends ItemMeta {
 	
 	public KnowledgeBookMeta clone();
 	
-	@Override
-	public default Class<? extends KnowledgeBookMeta> getInterfaceClass() {
-		return KnowledgeBookMeta.class;
-	}
-	
 	public List<Recipe> getRecipes();
 	
 	public boolean hasRecipes();

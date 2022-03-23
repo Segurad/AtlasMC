@@ -78,8 +78,8 @@ public class CoreKnowledgeBookMeta extends CoreItemMeta implements KnowledgeBook
 	}
 	
 	@Override
-	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
-		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage) {
+		if (!super.isSimilar(meta, ignoreDamage))
 			return false;
 		KnowledgeBookMeta bookMeta = (KnowledgeBookMeta) meta;
 		if (hasRecipes() != bookMeta.hasRecipes())

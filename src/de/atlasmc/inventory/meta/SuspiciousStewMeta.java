@@ -13,11 +13,6 @@ public interface SuspiciousStewMeta extends ItemMeta {
 	
 	public SuspiciousStewMeta clone();
 	
-	@Override
-	public default Class<? extends SuspiciousStewMeta> getInterfaceClass() {
-		return SuspiciousStewMeta.class;
-	}
-	
 	public List<PotionEffect>getCustomEffects();
 	
 	public boolean hasCustomEffects();

@@ -222,8 +222,8 @@ public class CorePotionMeta extends CoreItemMeta implements PotionMeta {
 	}
 	
 	@Override
-	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
-		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage) {
+		if (!super.isSimilar(meta, ignoreDamage))
 			return false;
 		PotionMeta potionMeta = (PotionMeta) meta;
 		if (hasColor() != potionMeta.hasColor())

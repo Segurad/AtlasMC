@@ -118,8 +118,8 @@ public class CoreCrossbowMeta extends CoreDamageableMeta implements CrossbowMeta
 	}
 	
 	@Override
-	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
-		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage) {
+		if (!super.isSimilar(meta, ignoreDamage))
 			return false;
 		CrossbowMeta xbowMeta = (CrossbowMeta) meta;
 		if (isCharged() != xbowMeta.isCharged())

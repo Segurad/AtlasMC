@@ -119,8 +119,8 @@ public class CoreEnchantmentStorageMeta extends CoreItemMeta implements Enchantm
 	}
 	
 	@Override
-	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
-		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage) {
+		if (!super.isSimilar(meta, ignoreDamage))
 			return false;
 		EnchantmentStorageMeta enchMeta = (EnchantmentStorageMeta) meta;
 		if (hasStoredEnchants() != enchMeta.hasStoredEnchants())

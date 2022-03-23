@@ -187,8 +187,8 @@ public class CoreBookMeta extends CoreItemMeta implements BookMeta {
 	}
 	
 	@Override
-	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
-		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage) {
+		if (!super.isSimilar(meta, ignoreDamage))
 			return false;
 		BookMeta bookMeta = (BookMeta) meta;
 		if (hasAuthor() != bookMeta.hasAuthor())

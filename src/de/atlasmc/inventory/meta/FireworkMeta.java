@@ -14,11 +14,6 @@ public interface FireworkMeta extends ItemMeta {
 	
 	public FireworkMeta clone();
 	
-	@Override
-	public default Class<? extends FireworkMeta> getInterfaceClass() {
-		return FireworkMeta.class;
-	}
-	
 	public List<FireworkEffect> getEffects();
 	
 	public int getEffectSize();

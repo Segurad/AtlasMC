@@ -29,8 +29,8 @@ public class CoreSpawnEggMeta extends CoreItemMeta implements SpawnEggMeta {
 	}
 	
 	@Override
-	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
-		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage) {
+		if (!super.isSimilar(meta, ignoreDamage))
 			return false;
 		SpawnEggMeta eggMeta = (SpawnEggMeta) meta;
 		if (getSpawnedType() != null && !getSpawnedType().equals(eggMeta.getSpawnedType()))

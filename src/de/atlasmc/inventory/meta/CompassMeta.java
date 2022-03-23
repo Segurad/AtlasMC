@@ -6,11 +6,6 @@ public interface CompassMeta extends ItemMeta {
 	
 	public CompassMeta clone();
 	
-	@Override
-	public default Class<? extends CompassMeta> getInterfaceClass() {
-		return CompassMeta.class;
-	}
-	
 	public SimpleLocation getLodestone();
 	
 	public boolean hasLodestone();

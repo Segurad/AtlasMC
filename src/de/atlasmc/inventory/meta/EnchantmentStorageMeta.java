@@ -10,11 +10,6 @@ public interface EnchantmentStorageMeta extends ItemMeta {
 	
 	public EnchantmentStorageMeta clone();
 	
-	@Override
-	public default Class<? extends EnchantmentStorageMeta> getInterfaceClass() {
-		return EnchantmentStorageMeta.class;
-	}
-	
 	public int getStoredEnchantLevel(Enchantment ench);
 	
 	public Map<Enchantment, Integer>getStoredEnchants();

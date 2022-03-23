@@ -6,11 +6,6 @@ public interface BookMeta extends ItemMeta {
 	
 	public BookMeta clone();
 	
-	@Override
-	public default Class<? extends BookMeta> getInterfaceClass() {
-		return BookMeta.class;
-	}
-	
 	public Generation getGeneration();
 	
 	public boolean hasGeneration();

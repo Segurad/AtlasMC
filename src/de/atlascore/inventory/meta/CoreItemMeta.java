@@ -14,8 +14,8 @@ import de.atlasmc.Material;
 import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeModifier;
 import de.atlasmc.attribute.AttributeModifier.Operation;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
-import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.inventory.ItemFlag;
@@ -70,7 +70,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 			((ItemMeta) holder).setDisplayName(ChatUtil.toChat(reader.readStringTag()));
 		});
 		display.setField(NBT_LORE, (holder, reader) -> {
-			List<ChatComponent> lore = new ArrayList<ChatComponent>(reader.getRestPayload());
+			List<Chat> lore = new ArrayList<Chat>(reader.getRestPayload());
 			while (reader.getRestPayload() > 0) {
 				lore.add(ChatUtil.toChat(reader.readStringTag()));
 			}
@@ -158,8 +158,8 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	}
 	
 	private boolean unbreakable;
-	private ChatComponent displayname;
-	private List<ChatComponent> lore;
+	private Chat displayname;
+	private List<Chat> lore;
 	private int flags;
 	private Integer customModelData;
 	private Map<Enchantment, Integer> enchants;
@@ -326,12 +326,12 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	}
 
 	@Override
-	public void setDisplayName(ChatComponent name) {
+	public void setDisplayName(Chat name) {
 		this.displayname = name;
 	}
 
 	@Override
-	public void setLore(List<ChatComponent> lore) {
+	public void setLore(List<Chat> lore) {
 		this.lore = lore;
 	}
 
@@ -353,7 +353,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	}
 
 	@Override
-	public ChatComponent getDisplayName() {
+	public Chat getDisplayName() {
 		return displayname;
 	}
 
@@ -380,7 +380,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	}
 
 	@Override
-	public List<ChatComponent> getLore() {
+	public List<Chat> getLore() {
 		return lore;
 	}
 
@@ -523,7 +523,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 		}
 		if (hasLore()) {
 			writer.writeListTag(NBT_LORE, TagType.STRING, lore.size());
-			for (ChatComponent c : lore) {
+			for (Chat c : lore) {
 				writer.writeStringTag(null, c.getJsonText());
 			}
 		}
@@ -559,27 +559,17 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 			return true;
 		if (!(obj instanceof ItemMeta))
 			return false;
-		return isSimilar((ItemMeta) obj, false, false);
+		return isSimilar((ItemMeta) obj, false);
 	}
 
 	@Override
-	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage) {
 		if (meta == null)
 			return false;
 		if (meta == this)
 			return true;
-		if (checkClass) {
-			if (meta.getClass() != getClass())
-				return false;
-		} else {
-			Class<? extends ItemMeta> thisClass = getInterfaceClass();
-			Class<? extends ItemMeta> metaClass = meta.getInterfaceClass();
-			if (thisClass != metaClass && !metaClass.isAssignableFrom(thisClass)) {
-				if (thisClass.isAssignableFrom(metaClass)) // check if child
-					return meta.isSimilar(meta, ignoreDamage, checkClass); // execute isSimilar form child to improve accuracy
-				return false; // false because other branch
-			}
-		}
+		if (meta.getClass() != getClass())
+			return false;
 		if (hasAttributeModifiers() != meta.hasAttributeModifiers())
 			return false;
 		if (hasAttributeModifiers()) {

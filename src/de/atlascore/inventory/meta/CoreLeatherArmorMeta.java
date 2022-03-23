@@ -53,8 +53,8 @@ public class CoreLeatherArmorMeta extends CoreDamageableMeta implements LeatherA
 	}
 	
 	@Override
-	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
-		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage) {
+		if (!super.isSimilar(meta, ignoreDamage))
 			return false;
 		LeatherArmorMeta armorMeta = (LeatherArmorMeta) meta;
 		if (getColor() == armorMeta.getColor())

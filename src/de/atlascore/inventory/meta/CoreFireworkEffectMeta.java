@@ -65,8 +65,8 @@ public class CoreFireworkEffectMeta extends CoreItemMeta implements FireworkEffe
 	}
 	
 	@Override
-	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
-		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage) {
+		if (!super.isSimilar(meta, ignoreDamage))
 			return false;
 		FireworkEffectMeta effectMeta = (FireworkEffectMeta) meta;
 		if (hasEffect() != effectMeta.hasEffect())

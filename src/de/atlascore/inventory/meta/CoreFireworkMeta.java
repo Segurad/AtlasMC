@@ -125,8 +125,8 @@ public class CoreFireworkMeta extends CoreItemMeta implements FireworkMeta {
 	}
 	
 	@Override
-	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
-		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage) {
+		if (!super.isSimilar(meta, ignoreDamage))
 			return false;
 		FireworkMeta fireMeta = (FireworkMeta) meta;
 		if (getPower() != fireMeta.getPower())

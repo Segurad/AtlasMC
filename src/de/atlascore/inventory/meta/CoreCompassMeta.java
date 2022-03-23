@@ -111,8 +111,8 @@ public class CoreCompassMeta extends CoreItemMeta implements CompassMeta {
 	}
 	
 	@Override
-	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
-		if (!isSimilar(meta, ignoreDamage, checkClass))
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage) {
+		if (!isSimilar(meta, ignoreDamage))
 			return false;
 		CompassMeta compassMeta = (CompassMeta) meta;
 		if (isLodestoneTracked() != compassMeta.isLodestoneTracked())

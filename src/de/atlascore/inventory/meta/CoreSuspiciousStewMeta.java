@@ -180,8 +180,8 @@ public class CoreSuspiciousStewMeta extends CoreItemMeta implements SuspiciousSt
 	}
 	
 	@Override
-	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
-		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage) {
+		if (!super.isSimilar(meta, ignoreDamage))
 			return false;
 		SuspiciousStewMeta stewMeta = (SuspiciousStewMeta) meta;
 		if (hasCustomEffects() != stewMeta.hasCustomEffects())

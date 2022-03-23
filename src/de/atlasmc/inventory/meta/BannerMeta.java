@@ -10,11 +10,6 @@ public interface BannerMeta extends TileEntityMeta {
 	
 	public BannerMeta clone();
 	
-	@Override
-	public default Class<? extends BannerMeta> getInterfaceClass() {
-		return BannerMeta.class;
-	}
-	
 	public Banner getTileEntity();
 	
 	public void addPattern(Pattern pattern);

@@ -8,7 +8,7 @@ import de.atlasmc.Material;
 import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeModifier;
 import de.atlasmc.attribute.Attributeable;
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.inventory.ItemFlag;
@@ -19,14 +19,6 @@ import de.atlasmc.util.nbt.NBTHolder;
 public interface ItemMeta extends Cloneable, NBTHolder, Attributeable {
 	
 	public ItemMeta clone();
-	
-	/**
-	 * Returns the highest Interface class of this meta
-	 * @return class
-	 */
-	public default Class<? extends ItemMeta> getInterfaceClass() {
-		return ItemMeta.class;
-	}
 	
 	public boolean hasCustomTagContainer();
 	
@@ -46,9 +38,9 @@ public interface ItemMeta extends Cloneable, NBTHolder, Attributeable {
 	
 	public void setUnbreakable(boolean unbreakable);
 
-	public void setDisplayName(ChatComponent name);
+	public void setDisplayName(Chat name);
 
-	public void setLore(List<ChatComponent> lore);
+	public void setLore(List<Chat> lore);
 
 	public void addEnchant(Enchantment enchantment, int level);
 
@@ -56,7 +48,7 @@ public interface ItemMeta extends Cloneable, NBTHolder, Attributeable {
 
 	public boolean hasDisplayName();
 
-	public ChatComponent getDisplayName();
+	public Chat getDisplayName();
 
 	public boolean hasEnchants();
 
@@ -66,7 +58,7 @@ public interface ItemMeta extends Cloneable, NBTHolder, Attributeable {
 
 	public boolean hasLore();
 
-	public List<ChatComponent> getLore();
+	public List<Chat> getLore();
 
 	public boolean hasCustomModelData();
 
@@ -92,6 +84,6 @@ public interface ItemMeta extends Cloneable, NBTHolder, Attributeable {
 	
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot);
 
-	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass);
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage);
 
 }

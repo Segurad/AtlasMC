@@ -109,8 +109,8 @@ public class CoreMapMeta extends CoreItemMeta implements MapMeta {
 	}
 	
 	@Override
-	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
-		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage) {
+		if (!super.isSimilar(meta, ignoreDamage))
 			return false;
 		MapMeta mapMeta = (MapMeta) meta;
 		if (getColor() != null && !getColor().equals(mapMeta.getColor())) {

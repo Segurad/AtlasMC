@@ -69,8 +69,8 @@ public class CoreBlockDataMeta extends CoreItemMeta implements BlockDataMeta {
 	}
 	
 	@Override
-	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage, boolean checkClass) {
-		if (!super.isSimilar(meta, ignoreDamage, checkClass))
+	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage) {
+		if (!super.isSimilar(meta, ignoreDamage))
 			return false;
 		BlockDataMeta blockMeta = (BlockDataMeta) meta;
 		if (hasBlockData() != blockMeta.hasBlockData())
