@@ -32,6 +32,14 @@ public class SimpleLocation implements Cloneable {
 		this.yaw = yaw;
 	}
 
+	/**
+	 * Creates a new {@link SimpleLocation} 
+	 * <li>x - 0 
+	 * <li>y - 0 
+	 * <li>z - 0
+	 * <li>yaw - 0.0 
+	 * <li>pitch - 0.0
+	 */
 	public SimpleLocation() {
 		this(0, 0, 0);
 	}
