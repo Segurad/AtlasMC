@@ -1,18 +1,21 @@
 package de.atlasmc;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.factory.MetaDataFactory;
 import de.atlasmc.factory.TileEntityFactory;
+import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.meta.ItemMeta;
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 
 public class Material implements Namespaced {
 	
-	private static final List<Material> REGISTRI;
+	private static final Map<String, Map<String, Material>> REGISTRI_BY_NAME;
+	private static final Map<Integer, Material> REGISTRI_BY_IID;
 	private static short iid;
 	public static MetaDataFactory DEFAULT_MDF = null;
 	
@@ -1091,11 +1094,12 @@ public class Material implements Namespaced {
 	RESPAWN_ANCHOR;
 	
 	static {
-		REGISTRI = new ArrayList<Material>();
+		REGISTRI_BY_NAME = new ConcurrentHashMap<>();
+		REGISTRI_BY_IID = new ConcurrentHashMap<>();
 	}
 	
-	private final String name;
-	private final short itemID, bid, namespaceID;
+	private final NamespacedKey key;
+	private final short itemID, bid;
 	private final byte max;
 	private final float toughness, explosionResistance;
 	private MetaDataFactory mdf;
@@ -1108,48 +1112,38 @@ public class Material implements Namespaced {
 	 * @param blockID the protocol BlockID or -1 if it has no Block
 	 * @param mdf null to use MetaDataFactory.DEFAULT
 	 */
-	public Material(int namespaceID, String name, short itemID, short blockID, byte maxAmount, float toughness, float explosionResistance, MetaDataFactory mdf) {
-		if (name == null) throw new IllegalArgumentException("Name can not be null!");
-		if (NamespacedKey.getNamespace(namespaceID) == null) throw new IllegalArgumentException("Unknown namespace!");
-		this.name = name;
+	public Material(String namespace, String name, short itemID, short blockID, byte maxAmount, float toughness, float explosionResistance, MetaDataFactory mdf) {
+		this.key = new NamespacedKey(namespace, name);
 		this.itemID = itemID;
 		this.bid = blockID;
 		this.max = maxAmount;
-		this.namespaceID = (short) namespaceID;
 		this.toughness = toughness;
 		this.explosionResistance = explosionResistance;
 		registerMaterial();
 		setMetaDataFactory(mdf);
 	}
 	
-	public Material(int namespaceID, String name, byte maxAmount, float toughness, float explosionResistance, MetaDataFactory mdf) {
-		this(namespaceID, name, true, (short) -1, maxAmount, toughness, explosionResistance, mdf);
+	public Material(String namespace, String name, byte maxAmount, float toughness, float explosionResistance, MetaDataFactory mdf) {
+		this(namespace, name, true, (short) -1, maxAmount, toughness, explosionResistance, mdf);
 	}
 	
-	public Material(int namespaceID, String name, boolean hasItem, short blockID, byte maxAmount, float toughness, float explosionResistance) {
-		this(namespaceID, name, hasItem, blockID, maxAmount, toughness, explosionResistance, null);
+	public Material(String namespace, String name, boolean hasItem, short blockID, byte maxAmount, float toughness, float explosionResistance) {
+		this(namespace, name, hasItem, blockID, maxAmount, toughness, explosionResistance, null);
 	}
 	
-	public Material(int namespaceID, String name, short blockID, byte maxAmount, float toughness, float explosionResistance, MetaDataFactory mdf) {
-		this(namespaceID, name, true, blockID, maxAmount, toughness, explosionResistance, mdf);
+	public Material(String namespace, String name, short blockID, byte maxAmount, float toughness, float explosionResistance, MetaDataFactory mdf) {
+		this(namespace, name, true, blockID, maxAmount, toughness, explosionResistance, mdf);
 	}
 	
-	public Material(int namespaceID, String name, boolean hasItem, short blockID, byte maxAmount, float toughness, float explosionResistance, MetaDataFactory mdf) {
-		if (name == null) throw new IllegalArgumentException("Name can not be null!");
-		if (NamespacedKey.getNamespace(namespaceID) == null) throw new IllegalArgumentException("Unknown namespace!");
-		this.name = name.toLowerCase();
+	public Material(String namespace, String name, boolean hasItem, short blockID, byte maxAmount, float toughness, float explosionResistance, MetaDataFactory mdf) {
+		this.key = new NamespacedKey(namespace, name);
 		this.itemID = hasItem ? iid++ : -1;
 		this.bid = blockID;
 		this.max = maxAmount;
-		this.namespaceID = (short) namespaceID;
 		this.toughness = toughness;
 		this.explosionResistance = explosionResistance;
 		registerMaterial();
 		setMetaDataFactory(mdf);
-	}
-	
-	public String getName() {
-		return name;
 	}
 	
 	public short getItemID() {
@@ -1226,46 +1220,66 @@ public class Material implements Namespaced {
 		return tf != null ? tf.isValidTile(tile) : false;
 	}
 	
+	/**
+	 * Returns true if this Material can be represented as an {@link ItemStack}
+	 * @return true if item
+	 */
 	public boolean isItem() {
 		return itemID != -1;
 	}
 	
+	/**
+	 * Returns true if this Material cna be represented as a {@link BlockData}
+	 * @return true if block
+	 */
 	public boolean isBlock() {
 		return bid != -1;
 	}
 	
-	public short getNamespaceID() {
-		return namespaceID;
-	}
-	
+	/**
+	 * Internal registration method for a Material
+	 */
 	private final void registerMaterial() {
-		if (getMaterial(getNamespaceID(), getName()) != null) {
-			throw new Error("Material already registered: " + getNamespacedName());
+		final NamespacedKey key = getNamespacedKey();
+		if (getMaterial(key) != null) {
+			throw new IllegalStateException("Material already registered: " + getNamespacedName());
 		}
-		REGISTRI.add(this);
+		Map<String, Material> map = REGISTRI_BY_NAME.get(key.getNamespace());
+		if (map == null) {
+			map = new ConcurrentHashMap<>();
+			REGISTRI_BY_NAME.put(key.getNamespace(), map);
+		}
+		map.put(key.getName(), this);
+		if (isItem())
+			REGISTRI_BY_IID.put((int) getItemID(), this);
 	}
 	
+	/**
+	 * Method to remove a Material from registri
+	 */
 	public final void unregister() {
-		REGISTRI.remove(this);
+		final NamespacedKey key = getNamespacedKey();
+		Map<String, Material> map = REGISTRI_BY_NAME.get(key.getNamespace());
+		if (map == null)
+			return;
+		map.remove(key.getName());
 	}
 	
+	/**
+	 * Returns the max amount this Material stacks to by default.<br>
+	 * However amounts in range of -128 to 127 are possible.
+	 * @return max amount
+	 */
 	public int getMaxAmount() {
 		return max;
 	}
 	
+	/**
+	 * Returns whether or not this Material is some kind of air e.g. {@link Material#AIR}
+	 * @return true if air
+	 */
 	public boolean isAir() {
 		return this == AIR || this == CAVE_AIR || this == VOID_AIR;
-	}
-
-	public static List<Material> getMaterials() {
-		return new ArrayList<Material>(REGISTRI);
-	}
-	
-	public static Material getByItemID(int itemID) {
-		for (Material mat : REGISTRI) {
-			if (mat.getItemID() == itemID) return mat;
-		}
-		return null;
 	}
 	
 	/**
@@ -1274,34 +1288,60 @@ public class Material implements Namespaced {
 	 * @return first material with the name if no namespace if given
 	 */
 	public static Material getByName(String name) {
-		if (name == null) throw new IllegalArgumentException("Name can not be null!");
-		if (name.contains(":")) {
+		if (name == null) 
+			throw new IllegalArgumentException("Name can not be null!");
+		if (name.indexOf(':') != -1) {
 			String[] parts = name.split(":");
-			if (parts.length > 2) throw new IllegalArgumentException("Illegal NamespacedKey format: " + name);
+			if (parts.length > 2) 
+				throw new IllegalArgumentException("Illegal NamespacedKey format: " + name);
 			return getMaterial(parts[0], parts[1]);
 		}
-		for (Material mat : REGISTRI) {
-			if (mat.getName().equals(name)) return mat;
-		}
-		return null;
+		return getMaterial(NamespacedKey.MINECRAFT, name);
 	}
 	
-	public static Material getMaterial(String namespace, String name) {
-		int namespaceID = NamespacedKey.getNamespaceID(namespace);
-		if (namespaceID == -1) throw new IllegalArgumentException("Unknown namespace!");
-		return getMaterial(namespaceID, name);
+	/**
+	 * Returns a Material by its namespace and name
+	 * @param namespace
+	 * @param name
+	 * @return Material or null
+	 */
+	@Nullable
+	public static Material getMaterial(@NotNull String namespace,@NotNull String name) {
+		if (namespace == null) 
+			throw new IllegalArgumentException("Namespace can not be null!");
+		if (name == null)
+			throw new IllegalArgumentException("Name can not be null!");
+		Map<String, Material> map = REGISTRI_BY_NAME.get(namespace);
+		if (map == null)
+			return null;
+		return map.get(name);
 	}
 	
-	public static Material getMaterial(NamespacedKey key) {
-		return getMaterial(key.getNamespaceID(), key.getKey());
+	/**
+	 * Returns a Material by its {@link NamespacedKey}
+	 * @param key
+	 * @return Material or null
+	 */
+	@Nullable
+	public static Material getMaterial(@NotNull NamespacedKey key) {
+		if (key == null)
+			throw new IllegalArgumentException("Key can not be null!");
+		return getMaterial(key.getNamespace(), key.getName());
 	}
-	
-	public static Material getMaterial(int namespaceID, String name) {
-		if (NamespacedKey.getNamespace(namespaceID) == null) throw new IllegalArgumentException("Unknown namespace!");
-		for (Material mat : REGISTRI) {
-			if (mat.getNamespaceID() == namespaceID && mat.getName().equals(name)) return mat;
-		}
-		return null;
+
+	@Override
+	public NamespacedKey getNamespacedKey() {
+		return key;
+	}
+
+	/**
+	 * Returns a Material by its ItemID
+	 * @param itemID of a Material
+	 * @return Material or null
+	 */
+	@Nullable
+	public static Material getByItemID(int itemID) {
+		return REGISTRI_BY_IID.get(itemID);
 	}
 	
 }
