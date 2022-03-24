@@ -15,7 +15,7 @@ public interface NBTHolder {
 	
 	/**
 	 * 
-	 * @return the NBT content with systemData = false
+	 * @return the NBT without system data
 	 */
 	public default NBT toNBT() {
 		return toNBT(false);
@@ -23,24 +23,25 @@ public interface NBTHolder {
 	
 	/**
 	 * 
-	 * @param systemData
-	 * @return the NBT content with local = default
+	 * @param systemData whether or not the system data should
+	 * @return NBT 
 	 */
 	public default NBT toNBT(boolean systemData) {
 		NBTObjectWriter writer = new NBTObjectWriter();
+		NBT nbt = writer.toNBT();
 		try {
 			toNBT(writer, systemData);
+			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return writer.toNBT();
+		return nbt;
 	}
 	
 	/**
 	 * Write the NBT of the Holder
 	 * Does not create a new CompoundTag
 	 * @param writer
-	 * @param local
 	 * @param systemData true if it is used system internal false while send to client
 	 * @throws IOException
 	 */
@@ -54,8 +55,10 @@ public interface NBTHolder {
 	public void fromNBT(NBTReader reader) throws IOException;
 	
 	public default void fromNBT(NBT nbt) {
+		NBTObjectReader reader = new NBTObjectReader(nbt);
 		try {
-			fromNBT(new NBTObjectReader(nbt));
+			fromNBT(reader);
+			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
