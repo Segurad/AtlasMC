@@ -92,6 +92,18 @@ public abstract class AbstractMultimap<K, V> implements Multimap<K, V> {
 	public int size() {
 		return map.size();
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (obj == this)
+			return true;
+		if (!(obj instanceof Multimap))
+			return false;
+		Multimap<?, ?> otherMap = (Multimap<?, ?>) obj;
+		return map.equals(otherMap.asMap());
+	}
 
 	protected abstract Collection<V> createCollection();
 }
