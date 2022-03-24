@@ -161,4 +161,18 @@ public final class Color {
 		}
 		return new Color(color);
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (obj == this)
+			return true;
+		if (obj.getClass() != Color.class)
+			return false;
+		Color color = (Color) obj;
+		if (r != color.r || g != color.g || b != color.b)
+			return false;
+		return true;
+	}
 }
