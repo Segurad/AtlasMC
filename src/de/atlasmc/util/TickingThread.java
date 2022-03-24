@@ -2,17 +2,26 @@ package de.atlasmc.util;
 
 import de.atlasmc.util.annotation.ThreadSafe;
 
-public abstract class AbstractTickingThread extends Thread {
+/**
+ * Thread that ticks at a fixed rate
+ */
+public class TickingThread extends Thread {
 
 	private final short ticktime; // time interval of one tick
+	private final Runnable runner;
 	private volatile boolean running;
 	private int lastTickTime = -1, // time needed for the last tick
 				skipped = 0, // number of skipped ticks
 				ticks = 0; // number of ticks executed by this thread
 	
-	public AbstractTickingThread(String name, int ticktime) {
+	public TickingThread(String name, int ticktime) {
+		this(name, ticktime, null);
+	}
+	
+	public TickingThread(String name, int ticktime, Runnable runner) {
 		super(name);
 		this.ticktime = (short) ticktime;
+		this.runner = runner;
 	}
 	
 	@Override
@@ -44,7 +53,11 @@ public abstract class AbstractTickingThread extends Thread {
 		// Stop process
 	}
 	
-	protected abstract void tick();
+	protected void tick() {
+		if (runner == null)
+			return;
+		runner.run();
+	}
 	
 	@ThreadSafe
 	public boolean isRunning() {
