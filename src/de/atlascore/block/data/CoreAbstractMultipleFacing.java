@@ -78,14 +78,17 @@ public abstract class CoreAbstractMultipleFacing extends CoreBlockData implement
 
 	@Override
 	public boolean hasFace(BlockFace face) {
-		if (face == null) throw new IllegalArgumentException("BlockFace can not be null!");
+		if (face == null) 
+			throw new IllegalArgumentException("BlockFace can not be null!");
 		return faces.contains(face);
 	}
 
 	@Override
 	public void setFace(BlockFace face, boolean has) {
-		if (face == null) throw new IllegalArgumentException("BlockFace can not be null!");
-		if (!isValid(face)) throw new IllegalArgumentException("BlockFace is not valid: " + face.name());
+		if (face == null) 
+			throw new IllegalArgumentException("BlockFace can not be null!");
+		if (!isValid(face)) 
+			throw new IllegalArgumentException("BlockFace is not valid: " + face.name());
 		if (has) {
 			faces.add(face);
 		} else faces.remove(face);

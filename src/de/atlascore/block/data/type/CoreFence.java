@@ -1,7 +1,6 @@
 package de.atlascore.block.data.type;
 
 import java.io.IOException;
-import java.util.EnumSet;
 import java.util.Set;
 
 import de.atlascore.block.data.CoreAbstractMultipleFacing;
@@ -13,6 +12,12 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreFence extends CoreAbstractMultipleFacing implements Fence {
 
+	private static final Set<BlockFace> ALLOWED_FACES = 
+			Set.of(BlockFace.NORTH,
+					BlockFace.DOWN,
+					BlockFace.WEST,
+					BlockFace.EAST);
+	
 	private boolean waterlogged;
 	
 	public CoreFence(Material material) {
@@ -31,7 +36,7 @@ public class CoreFence extends CoreAbstractMultipleFacing implements Fence {
 
 	@Override
 	public Set<BlockFace> getAllowedFaces() {
-		return EnumSet.range(BlockFace.NORTH, BlockFace.WEST);
+		return ALLOWED_FACES;
 	}
 
 	@Override
@@ -52,7 +57,8 @@ public class CoreFence extends CoreAbstractMultipleFacing implements Fence {
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		if (isWaterlogged()) writer.writeByteTag(CoreWaterlogged.WATERLOGGED, true);
+		if (isWaterlogged()) 
+			writer.writeByteTag(CoreWaterlogged.WATERLOGGED, true);
 	}
 
 }

@@ -1,12 +1,19 @@
 package de.atlascore.block.data;
 
-import java.util.EnumSet;
 import java.util.Set;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 
 public class CoreDirectional6Faces extends CoreAbstractDirectional {
+	
+	private static final Set<BlockFace> ALLOWED_FACES =
+			Set.of(BlockFace.NORTH,
+					BlockFace.SOUTH,
+					BlockFace.EAST,
+					BlockFace.WEST,
+					BlockFace.UP,
+					BlockFace.DOWN);
 
 	public CoreDirectional6Faces(Material material) {
 		super(material);
@@ -18,7 +25,7 @@ public class CoreDirectional6Faces extends CoreAbstractDirectional {
 	
 	@Override
 	public Set<BlockFace> getFaces() {
-		return EnumSet.range(BlockFace.NORTH, BlockFace.DOWN);
+		return ALLOWED_FACES;
 	}
 
 	@Override

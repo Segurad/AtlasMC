@@ -1,7 +1,6 @@
 package de.atlascore.block.data;
 
 import java.io.IOException;
-import java.util.EnumSet;
 import java.util.Set;
 
 import de.atlasmc.Axis;
@@ -11,6 +10,11 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreOrientable extends CoreBlockData implements Orientable {
 
+	private static final Set<Axis> ALLOWED_AXIS =
+			Set.of(Axis.X,
+					Axis.Y,
+					Axis.Z);
+	
 	protected static final String
 	AXIS = "axis";
 	
@@ -31,7 +35,7 @@ public class CoreOrientable extends CoreBlockData implements Orientable {
 
 	@Override
 	public Set<Axis> getAxes() {
-		return EnumSet.allOf(Axis.class);
+		return ALLOWED_AXIS;
 	}
 
 	@Override

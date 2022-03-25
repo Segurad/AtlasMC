@@ -33,7 +33,8 @@ public class CoreBisected extends CoreBlockData implements Bisected {
 
 	@Override
 	public void setHalf(Half half) {
-		if (half == null) throw new IllegalArgumentException("Half can not be null!");
+		if (half == null) 
+			throw new IllegalArgumentException("Half can not be null!");
 		this.half = half;
 	}
 	
