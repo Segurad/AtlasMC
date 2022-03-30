@@ -111,20 +111,23 @@ public enum Effect {
 	
 	public int getDataByObject(Object data) {
 		if (data != null) {
-			if (!getData().isInstance(data)) throw new IllegalArgumentException("Wrong data for this effect!");
+			if (!getData().isInstance(data)) 
+				throw new IllegalArgumentException("Data not compatiple with this Effect!");
 		} else {
-			if (getData() != null) throw new IllegalArgumentException("Wrong data for this effect!");
+			if (getData() != null) 
+				throw new IllegalArgumentException("Data can not be null for this Effect!");
 		}
-		if (data == null) return 0;
+		if (data == null) 
+			return 0;
 		switch (this) {
-		case SPLASH_POTION_BREAK: return (int) data & 0xFFFFFF;
-		case INSTANT_SPASH_POTION_BREAK: return (int) data & 0xFFFFFF;
-		case BONEMEAL_PARTICLES: {
+		case SPLASH_POTION_BREAK:
+		case INSTANT_SPASH_POTION_BREAK: 
+			return (int) data & 0xFFFFFF;
+		case BONEMEAL_PARTICLES:
 			int count = (int) data;
-			if (count > 15 || count < 0) return 0;
-			return count;
-		}
-		case BLOCK_BREAK: return ((BlockData) data).getStateID();
+			return count > 15 || count < 0 ? 0 : count;
+		case BLOCK_BREAK: 
+			return ((BlockData) data).getStateID();
 		case SPAWNS_SMOKE: {
 			BlockFace face = (BlockFace) data;
 			switch (face) {
@@ -138,8 +141,8 @@ public enum Effect {
 			}
 		}
 		case PLAY_RECORD: {
-			// TODO match with records
-			return 0;
+			Material mat = (Material) data;
+			return mat.getItemID();
 		}
 		default: return 0;
 		}
