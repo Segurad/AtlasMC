@@ -1,99 +1,69 @@
 package de.atlasmc;
 
-import java.util.ArrayList;
-import java.util.List;
+import de.atlasmc.util.annotation.NotNull;
 
 public class NamespacedKey {
 	
-	private static final List<String> spaces;
-	private static short nextID = 0;
-	private final String key, namespace;
-	private final short namespaceID;
+	public static final String MINECRAFT = "minecraft";
 	
-	static {
-		spaces = new ArrayList<>();
-		spaces.add(nextID++, "minecraft");
-	}
+	private final String name, namespace;
 	
-	/**
-	 * 
-	 * @param namespace
-	 * @return the namespaceID
-	 */
-	public static short registerNamespace(String namespace) {
-		if (nextID < 0) throw new Error("Can not register more Namespaces!");
-		if (namespace == null) throw new IllegalArgumentException("Namespace can not be null!");
-		if (spaces.contains(namespace)) throw new IllegalArgumentException("Namespace already registered!");
-		spaces.add(nextID, namespace);
-		return nextID++;
-	}
-	
-	/**
-	 * 
-	 * @param namespace
-	 * @return the namespaceID or -1
-	 */
-	public static short getNamespaceID(String namespace) {
-		if (namespace == null) throw new IllegalArgumentException("Namespace can not be null!");
-		return (short) spaces.indexOf(namespace);
-	}
-	
-	/**
-	 * 
-	 * @param namespaceID
-	 * @return the namespace or null
-	 */
-	public static String getNamespace(int namespaceID) {
-		if (namespaceID < 0 || namespaceID > nextID) throw new IllegalArgumentException("NamespaceID is not between 0 and " + (nextID-1) +": " + namespaceID);
-		return spaces.get(namespaceID);
-	}
-	
-	public NamespacedKey(String namespace, String key) {
-		if (namespace == null) throw new IllegalArgumentException("Namespace can not be null!");
-		if (key == null) throw new IllegalArgumentException("Key can not be null!");
-		if (spaces.contains(namespace)) throw new IllegalArgumentException("Unknown Namespace!");
-		this.key = key;
+	public NamespacedKey(String namespace, String name) {
+		if (namespace == null) 
+			throw new IllegalArgumentException("Namespace can not be null!");
+		if (name == null) 
+			throw new IllegalArgumentException("Name can not be null!");
+		this.name = name;
 		this.namespace = namespace;
-		this.namespaceID = (short) spaces.indexOf(key);
 	}
 	
-	public NamespacedKey(int namespaceID, String key) {
-		this.namespace = getNamespace(namespaceID);
-		if (key == null) throw new IllegalArgumentException("Key can not be null!");
-		if (namespace == null) throw new IllegalArgumentException("Unknown NamespaceID!");
-		this.namespaceID = (short) namespaceID;
-		this.key = key;
-	}
-	
-	public String getKey() {
-		return key;
-	}
-	
-	public short getNamespaceID() {
-		return namespaceID;
+	public String getName() {
+		return name;
 	}
 	
 	public String getNamespace() {
 		return namespace;
 	}
 	
-	public static List<String> getNamespaces() {
-		return new ArrayList<>(); 
+	@Override
+	public String toString() {
+		return namespace + ":" + name;
 	}
 	
 	public static interface Namespaced {
 		
-		public short getNamespaceID();
+		/**
+		 * Returns the name
+		 * @return name
+		 */
+		@NotNull
+		public default String getName() {
+			return getNamespacedKey().getName();
+		}
 		
-		public String getName();
+		/**
+		 * Returns the namespace
+		 * @return namespace
+		 */
+		@NotNull
+		public default String getNamespace() {
+			return getNamespacedKey().getNamespace();
+		}
 		
+		/**
+		 * Returns the {@link NamespacedKey} as String
+		 * @return namespacedname
+		 */
+		@NotNull
 		public default String getNamespacedName() {
-			return NamespacedKey.getNamespace(getNamespaceID())+':'+getName();
+			return getNamespacedKey().toString();
 		}
 		
-		public default NamespacedKey getNamespacedKey() {
-			return new NamespacedKey(getNamespaceID(), getName());
-		}
+		/**
+		 * Returns the {@link NamespacedKey} of this Object
+		 */
+		@NotNull
+		public NamespacedKey getNamespacedKey();
 		
 	}
 
