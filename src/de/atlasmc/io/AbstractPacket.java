@@ -190,7 +190,9 @@ public abstract class AbstractPacket implements Packet {
 		ItemStack item = new ItemStack(mat, amount);
 		byte comp = in.readByte();
 		if (comp == 0) return item;
-		item.getItemMeta().fromNBT(new NBTNIOReader(in));
+		NBTNIOReader reader = new NBTNIOReader(in);
+		item.getItemMeta().fromNBT(reader);
+		reader.close();
 		return item;
 	}
 	
@@ -226,6 +228,7 @@ public abstract class AbstractPacket implements Packet {
 			writer.writeCompoundTag(null);
 			item.getItemMeta().toNBT(writer, false);
 			writer.writeEndTag();
+			writer.close();
 		}
 	}
 	
