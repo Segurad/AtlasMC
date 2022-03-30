@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.atlascore.inventory.CoreInventory;
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.inventory.InventoryClickEvent;
 import de.atlasmc.event.inventory.InventoryType;
@@ -22,7 +22,7 @@ public class CoreGUI extends CoreInventory implements GUI {
 	protected List<ComponentHandler> components;
 	protected List<GUIListener> listeners;
 	
-	public CoreGUI(int size, InventoryType type, ChatComponent title, InventoryHolder holder) {
+	public CoreGUI(int size, InventoryType type, Chat title, InventoryHolder holder) {
 		super(size, type, title, holder);
 	}
 

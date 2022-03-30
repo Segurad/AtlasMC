@@ -3,7 +3,7 @@ package de.atlasmc.inventory;
 import java.util.List;
 
 import de.atlasmc.Material;
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.event.inventory.InventoryType.SlotType;
@@ -35,7 +35,7 @@ public interface Inventory extends Iterable<ItemStack> {
 	
 	public boolean hasViewers();
 
-	public ChatComponent getTitle();
+	public Chat getTitle();
 
 	public SlotType getSlotType(int slot);
 
@@ -79,7 +79,7 @@ public interface Inventory extends Iterable<ItemStack> {
 	 * Players need to reopen it to receive the update
 	 * @param title for this Inventory
 	 */
-	public void setTitle(ChatComponent title);
+	public void setTitle(Chat title);
 
 	/**
 	 * Returns the number of Slots set in this Inventory

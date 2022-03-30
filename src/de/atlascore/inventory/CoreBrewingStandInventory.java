@@ -1,6 +1,6 @@
 package de.atlascore.inventory;
 
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.event.inventory.InventoryType.SlotType;
@@ -16,7 +16,7 @@ public class CoreBrewingStandInventory extends CoreInventory implements BrewingI
 	
 	private int fuel, maxfuel, brewingTime, dfuel, dbrewingTime = 400;
 	
-	public CoreBrewingStandInventory(ChatComponent title, InventoryHolder holder) {
+	public CoreBrewingStandInventory(Chat title, InventoryHolder holder) {
 		super(5, InventoryType.BREWING, title, holder);
 	}
 	

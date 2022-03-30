@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.Sign;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
-import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -45,34 +45,34 @@ public class CoreSign extends CoreTileEntity implements Sign {
 		});
 	}
 	
-	private ChatComponent[] lines;
+	private Chat[] lines;
 	
 	public CoreSign(Material type, Chunk chunk, int x, int y, int z) {
 		super(type, chunk, x, y, z);
 	}
 
 	@Override
-	public ChatComponent[] getLines() {
-		if (lines == null) lines = new ChatComponent[4];
+	public Chat[] getLines() {
+		if (lines == null) lines = new Chat[4];
 		return lines;
 	}
 
 	@Override
-	public void setLines(ChatComponent[] lines) {
+	public void setLines(Chat[] lines) {
 		if (lines == null) return;
-		if (this.lines == null) this.lines = new ChatComponent[4];
+		if (this.lines == null) this.lines = new Chat[4];
 		for (int i = 0; i < 4 && i < lines.length; i++) {
 			this.lines[i] = lines[i];
 		}
 	}
 
 	@Override
-	public void setLine(int index, ChatComponent line) {
+	public void setLine(int index, Chat line) {
 		getLines()[index] = line;
 	}
 
 	@Override
-	public ChatComponent getLine(int index) {
+	public Chat getLine(int index) {
 		if (lines == null) return null;
 		return lines[index];
 	}
@@ -87,12 +87,12 @@ public class CoreSign extends CoreTileEntity implements Sign {
 		super.toNBT(writer, systemData);
 		if (lines == null) return;
 		if (lines[0] != null)
-			writer.writeStringTag(TEXT_1, lines[0].getJsonText());
+			writer.writeStringTag(TEXT_1, lines[0].getText());
 		if (lines[1] != null)
-			writer.writeStringTag(TEXT_2, lines[1].getJsonText());
+			writer.writeStringTag(TEXT_2, lines[1].getText());
 		if (lines[2] != null)
-			writer.writeStringTag(TEXT_3, lines[2].getJsonText());
+			writer.writeStringTag(TEXT_3, lines[2].getText());
 		if (lines[3] != null)
-			writer.writeStringTag(TEXT_4, lines[3].getJsonText());
+			writer.writeStringTag(TEXT_4, lines[3].getText());
 	}
 }

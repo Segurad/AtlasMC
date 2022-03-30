@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
-import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.entity.Player;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.ProtocolPlay;
@@ -30,13 +30,13 @@ public class CoreScoreboard implements Scoreboard {
 	private final Collection<ScoreboardView> viewers;
 	private final Map<String, Objective> objectives;
 	private final Map<String, Team> teams;
-	private final Map<DisplaySlot, CoreObjective> slots;
+	private final CoreObjective[] slots;
 	
 	public CoreScoreboard() {
 		viewers = new ArrayList<>();
 		objectives = new HashMap<>();
 		teams = new HashMap<>();
-		slots = new HashMap<>(3);
+		slots = new CoreObjective[3];
 	}
 	
 	@Override
@@ -61,7 +61,7 @@ public class CoreScoreboard implements Scoreboard {
 
 	@Override
 	public Objective getObjective(DisplaySlot slot) {
-		return slots.get(slot);
+		return slots[slot.getID()];
 	}
 
 	@Override
@@ -75,12 +75,12 @@ public class CoreScoreboard implements Scoreboard {
 	}
 	
 	@Override
-	public Objective registerNewObjective(String name, ChatComponent displayName) {
+	public Objective registerNewObjective(String name, Chat displayName) {
 		return registerNewObjective(name, displayName, RenderType.INTEGER);
 	}
 
 	@Override
-	public Objective registerNewObjective(String name, ChatComponent displayName, RenderType renderType) {
+	public Objective registerNewObjective(String name, Chat displayName, RenderType renderType) {
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null!");
 		if (name.length() > 16)
@@ -143,7 +143,7 @@ public class CoreScoreboard implements Scoreboard {
 			PlayerConnection con = view.getViewer().getConnection();
 			PacketOutTeams packetTeams = con.getProtocol().createPacket(PacketOutTeams.class);
 			packetTeams.setName(team.getName());
-			packetTeams.setMode(de.atlasmc.io.protocol.play.PacketOutTeams.Mode.CREATE_TEAM);
+			packetTeams.setMode(PacketOutTeams.Mode.CREATE_TEAM);
 			packetTeams.setDisplayName(team.getDisplayName());
 			packetTeams.setAllowFriedlyFire(team.getAllowFriedlyFire());
 			packetTeams.setSeeInvisibleTeammeber(team.canSeeInvisibleTeammeber());
@@ -177,7 +177,7 @@ public class CoreScoreboard implements Scoreboard {
 			PlayerConnection con = view.getViewer().getConnection();
 			PacketOutTeams packetTeams = con.getProtocol().createPacket(PacketOutTeams.class);
 			packetTeams.setName(team.getName());
-			packetTeams.setMode(de.atlasmc.io.protocol.play.PacketOutTeams.Mode.REMOVE_TEAM);
+			packetTeams.setMode(PacketOutTeams.Mode.REMOVE_TEAM);
 			con.sendPacked(packetTeams);
 		}
 	}
@@ -211,7 +211,7 @@ public class CoreScoreboard implements Scoreboard {
 			for (Team team : teams.values()) {
 				PacketOutTeams packetTeams = play.createPacket(PacketOutTeams.class);
 				packetTeams.setName(team.getName());
-				packetTeams.setMode(de.atlasmc.io.protocol.play.PacketOutTeams.Mode.CREATE_TEAM);
+				packetTeams.setMode(PacketOutTeams.Mode.CREATE_TEAM);
 				packetTeams.setDisplayName(team.getDisplayName());
 				packetTeams.setAllowFriedlyFire(team.getAllowFriedlyFire());
 				packetTeams.setSeeInvisibleTeammeber(team.canSeeInvisibleTeammeber());
@@ -224,15 +224,14 @@ public class CoreScoreboard implements Scoreboard {
 				con.sendPacked(packetTeams);
 			}
 		}
-		if (!slots.isEmpty()) {
-			for (DisplaySlot key : slots.keySet()) {
-				Objective display = slots.get(key);
-				if (display == null) continue;
-				PacketOutDisplayScoreboard packetDisplay = play.createPacket(PacketOutDisplayScoreboard.class);
-				packetDisplay.setPosition(key);
-				packetDisplay.setObjective(display.getName());
-				con.sendPacked(packetDisplay);
-			}
+		for (int i = 0; i < 3; i++) {
+			Objective display = slots[i];
+			if (display == null) 
+				continue;
+			PacketOutDisplayScoreboard packetDisplay = play.createPacket(PacketOutDisplayScoreboard.class);
+			packetDisplay.setPosition(display.getDisplaySlot());
+			packetDisplay.setObjective(display.getName());
+			con.sendPacked(packetDisplay);
 		}
 	}
 	
@@ -253,7 +252,7 @@ public class CoreScoreboard implements Scoreboard {
 			for (Team team : teams.values()) {
 				PacketOutTeams packetTeams = play.createPacket(PacketOutTeams.class);
 				packetTeams.setName(team.getName());
-				packetTeams.setMode(de.atlasmc.io.protocol.play.PacketOutTeams.Mode.REMOVE_TEAM);
+				packetTeams.setMode(PacketOutTeams.Mode.REMOVE_TEAM);
 				con.sendPacked(packetTeams);
 			}
 		}
@@ -266,7 +265,7 @@ public class CoreScoreboard implements Scoreboard {
 	void unregisterObjective(CoreObjective obj) {
 		DisplaySlot slot = obj.getDisplaySlot();
 		if (slot != null)
-			slots.put(slot, null);
+			slots[slot.getID()] = null;
 		for (ScoreboardView view : viewers) {
 			PlayerConnection con = view.getViewer().getConnection();
 			PacketOutScoreboardObjective packetObj = con.getProtocol().createPacket(PacketOutScoreboardObjective.class);
@@ -278,7 +277,7 @@ public class CoreScoreboard implements Scoreboard {
 	}
 
 	void setDisplay(CoreObjective object, DisplaySlot slot) {
-		CoreObjective obj = slots.get(slot);
+		CoreObjective obj = slots[slot.getID()];
 		if (obj != null)
 			obj.resetDisplaySlot();
 		for (ScoreboardView view : viewers) {

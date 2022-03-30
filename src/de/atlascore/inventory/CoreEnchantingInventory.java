@@ -3,7 +3,7 @@ package de.atlascore.inventory;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.inventory.InventoryType;
@@ -31,7 +31,7 @@ public class CoreEnchantingInventory extends CoreInventory implements Enchanting
 	private	short dtopLvl = -1, dmidLvl = -1, dbotLvl = -1;
 	private Map<Enchantment, Integer> topEnch, midEnch, botEnch;
 	
-	public CoreEnchantingInventory(ChatComponent title, InventoryHolder holder) {
+	public CoreEnchantingInventory(Chat title, InventoryHolder holder) {
 		super(2, InventoryType.ENCHANTING, title, holder);
 	}
 

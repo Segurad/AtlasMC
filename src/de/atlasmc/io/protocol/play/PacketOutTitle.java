@@ -1,6 +1,6 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.PacketOutbound;
 
@@ -8,7 +8,7 @@ import de.atlasmc.io.PacketOutbound;
 public interface PacketOutTitle extends PacketPlay, PacketOutbound {
 	
 	public TitleAction getAction();
-	public ChatComponent getText();
+	public Chat getText();
 	public int getFadeIn();
 	public int getStay();
 	public int getFadeOut();

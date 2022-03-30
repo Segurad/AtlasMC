@@ -1,7 +1,7 @@
 package de.atlasmc.block.tile;
 
 import de.atlasmc.Nameable;
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryHolder;
 
@@ -21,10 +21,10 @@ public interface AbstractContainerTile<I extends Inventory> extends TileEntity, 
 	 */
 	public boolean hasInventory();
 
-	public void setLock(ChatComponent lock);
+	public void setLock(Chat lock);
 	
 	public boolean hasLock();
 	
-	public ChatComponent getLock();
+	public Chat getLock();
 	
 }

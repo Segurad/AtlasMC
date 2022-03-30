@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.play;
 import java.util.List;
 
 import de.atlasmc.chat.ChatColor;
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.PacketOutbound;
 import de.atlasmc.scoreboard.TeamOptionType;
@@ -15,7 +15,7 @@ public interface PacketOutTeams extends PacketPlay, PacketOutbound {
 	
 	public Mode getMode();
 	
-	public ChatComponent getDisplayName();
+	public Chat getDisplayName();
 	
 	public boolean getAllowFriedlyFire();
 	
@@ -27,9 +27,9 @@ public interface PacketOutTeams extends PacketPlay, PacketOutbound {
 	
 	public ChatColor getColor();
 	
-	public ChatComponent getPrefix();
+	public Chat getPrefix();
 	
-	public ChatComponent getSuffix();
+	public Chat getSuffix();
 	
 	public List<String> getEntities();
 	
@@ -37,11 +37,11 @@ public interface PacketOutTeams extends PacketPlay, PacketOutbound {
 	
 	public void setMode(Mode mode);
 	
-	public void setDisplayName(ChatComponent display);
+	public void setDisplayName(Chat display);
 	
-	public void setPrefix(ChatComponent prefix);
+	public void setPrefix(Chat prefix);
 	
-	public void setSuffix(ChatComponent suffix);
+	public void setSuffix(Chat suffix);
 	
 	public void setNameTagVisibility(TeamOptionType option);
 	

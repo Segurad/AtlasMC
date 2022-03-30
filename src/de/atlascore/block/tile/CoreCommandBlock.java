@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.CommandBlock;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
-import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
@@ -70,7 +70,7 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 	
 	private Mode mode;
 	private boolean conditional, alwaysActive, trackOutput, powered;
-	private ChatComponent name, lastoutput;
+	private Chat name, lastoutput;
 	private String command;
 	private int successCount;
 	
@@ -121,12 +121,12 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 	}
 
 	@Override
-	public void setCustomName(ChatComponent name) {
+	public void setCustomName(Chat name) {
 		this.name = name;
 	}
 
 	@Override
-	public ChatComponent getCustomName() {
+	public Chat getCustomName() {
 		return name;
 	}
 
@@ -141,12 +141,12 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 	}
 
 	@Override
-	public void setLastOutput(ChatComponent lastoutput) {
+	public void setLastOutput(Chat lastoutput) {
 		this.lastoutput = lastoutput;
 	}
 
 	@Override
-	public ChatComponent getLastOutput() {
+	public Chat getLastOutput() {
 		return lastoutput;
 	}
 

@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.AbstractContainerTile;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
-import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
@@ -55,7 +55,7 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 	}
 	
 	private Inventory inv;
-	private ChatComponent name, lock;
+	private Chat name, lock;
 	
 	public CoreAbstractContainerTile(Material type, Chunk chunk, int x, int y, int z) {
 		super(type, chunk, x, y, z);
@@ -77,18 +77,18 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 	}
 
 	@Override
-	public void setCustomName(ChatComponent name) {
+	public void setCustomName(Chat name) {
 		this.name = name; 
 		if (inv != null) inv.setTitle(name);
 	}
 
 	@Override
-	public ChatComponent getCustomName() {
+	public Chat getCustomName() {
 		return name;
 	}
 
 	@Override
-	public void setLock(ChatComponent lock) {
+	public void setLock(Chat lock) {
 		this.lock = lock;
 	}
 
@@ -103,7 +103,7 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 	}
 
 	@Override
-	public ChatComponent getLock() {
+	public Chat getLock() {
 		return lock;
 	}
 	

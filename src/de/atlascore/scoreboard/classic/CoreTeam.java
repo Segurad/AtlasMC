@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.chat.ChatColor;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
-import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutTeams;
 import de.atlasmc.io.protocol.play.PacketOutTeams.Mode;
@@ -19,7 +19,7 @@ class CoreTeam implements Team {
 	private final CoreScoreboard board;
 	private final String name;
 	private ChatColor color;
-	private ChatComponent prefix, suffix, display;
+	private Chat prefix, suffix, display;
 	private boolean friendlyFire, seeInvisible;
 	private TeamOptionType nameVisibility, collision;
 	private List<String> entries;
@@ -68,31 +68,31 @@ class CoreTeam implements Team {
 	}
 
 	@Override
-	public ChatComponent getPrefix() {
+	public Chat getPrefix() {
 		return prefix;
 	}
 
 	@Override
-	public ChatComponent getSuffix() {
+	public Chat getSuffix() {
 		return suffix;
 	}
 
 	@Override
-	public void setPrefix(ChatComponent prefix) {
+	public void setPrefix(Chat prefix) {
 		if (prefix == null)
 			prefix = ChatUtil.EMPTY;
 		this.prefix = prefix;
 	}
 
 	@Override
-	public void setSuffix(ChatComponent suffix) {
+	public void setSuffix(Chat suffix) {
 		if (suffix == null)
 			suffix = ChatUtil.EMPTY;
 		this.suffix = suffix;
 	}
 
 	@Override
-	public ChatComponent getDisplayName() {
+	public Chat getDisplayName() {
 		return display;
 	}
 
@@ -107,7 +107,7 @@ class CoreTeam implements Team {
 	}
 
 	@Override
-	public void setDisplayName(ChatComponent display) {
+	public void setDisplayName(Chat display) {
 		if (display == null)
 			display = ChatUtil.EMPTY;
 		this.display = display;
@@ -236,7 +236,7 @@ class CoreTeam implements Team {
 			PlayerConnection con = view.getViewer().getConnection();
 			PacketOutTeams packetTeams = con.getProtocol().createPacket(PacketOutTeams.class);
 			packetTeams.setName(team.getName());
-			packetTeams.setMode(de.atlasmc.io.protocol.play.PacketOutTeams.Mode.UPDATE_TEAM_INFO);
+			packetTeams.setMode(PacketOutTeams.Mode.UPDATE_TEAM_INFO);
 			packetTeams.setDisplayName(team.getDisplayName());
 			packetTeams.setAllowFriedlyFire(team.getAllowFriedlyFire());
 			packetTeams.setSeeInvisibleTeammeber(team.canSeeInvisibleTeammeber());
@@ -249,7 +249,7 @@ class CoreTeam implements Team {
 		}
 	}
 
-	private void editEntriesOfTeam(Team team, List<String> entries, de.atlasmc.io.protocol.play.PacketOutTeams.Mode mode) {
+	private void editEntriesOfTeam(Team team, List<String> entries, PacketOutTeams.Mode mode) {
 		for (ScoreboardView view : board.getViewersUnsafe()) {
 			PlayerConnection con = view.getViewer().getConnection();
 			PacketOutTeams packetTeams = con.getProtocol().createPacket(PacketOutTeams.class);

@@ -1,7 +1,7 @@
 package de.atlasmc.block.tile;
 
 import de.atlasmc.Nameable;
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 
 public interface CommandBlock extends TileEntity, Nameable {
 	
@@ -25,9 +25,9 @@ public interface CommandBlock extends TileEntity, Nameable {
 	
 	public String getCommand();
 	
-	public void setLastOutput(ChatComponent lastoutput);
+	public void setLastOutput(Chat lastoutput);
 	
-	public ChatComponent getLastOutput();
+	public Chat getLastOutput();
 	
 	public void setPowered(boolean powered);
 	

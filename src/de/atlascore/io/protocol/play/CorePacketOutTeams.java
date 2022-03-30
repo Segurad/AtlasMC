@@ -6,8 +6,8 @@ import java.util.List;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
 import de.atlasmc.chat.ChatColor;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
-import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutTeams;
 import de.atlasmc.scoreboard.TeamOptionType;
@@ -26,15 +26,15 @@ public class CorePacketOutTeams extends AbstractPacket implements PacketOutTeams
 		super(CoreProtocolAdapter.VERSION);
 	}
 	
-	public CorePacketOutTeams(String name, Mode mode, ChatComponent displayName, int flags, 
+	public CorePacketOutTeams(String name, Mode mode, Chat displayName, int flags, 
 			TeamOptionType nameTagVisibility, TeamOptionType collisionRule, ChatColor color, 
-			ChatComponent prefix, ChatComponent suffix, List<String> entities) {
+			Chat prefix, Chat suffix, List<String> entities) {
 		this();
 		this.flags = flags;
 		this.name = name;
-		this.displayName = displayName.getJsonText();
-		this.prefix = prefix.getJsonText();
-		this.suffix = suffix.getJsonText();
+		this.displayName = displayName.getText();
+		this.prefix = prefix.getText();
+		this.suffix = suffix.getText();
 		this.color = color.getID();
 		this.entities = entities;
 		this.mode = mode.ordinal();
@@ -151,7 +151,7 @@ public class CorePacketOutTeams extends AbstractPacket implements PacketOutTeams
 	}
 
 	@Override
-	public ChatComponent getDisplayName() {
+	public Chat getDisplayName() {
 		return ChatUtil.toChat(displayName);
 	}
 
@@ -193,12 +193,12 @@ public class CorePacketOutTeams extends AbstractPacket implements PacketOutTeams
 	}
 
 	@Override
-	public ChatComponent getPrefix() {
+	public Chat getPrefix() {
 		return  ChatUtil.toChat(prefix);
 	}
 
 	@Override
-	public ChatComponent getSuffix() {
+	public Chat getSuffix() {
 		return ChatUtil.toChat(suffix);
 	}
 
@@ -228,17 +228,17 @@ public class CorePacketOutTeams extends AbstractPacket implements PacketOutTeams
 	}
 
 	@Override
-	public void setDisplayName(ChatComponent display) {
+	public void setDisplayName(Chat display) {
 		this.displayName = display.getJsonText();
 	}
 
 	@Override
-	public void setPrefix(ChatComponent prefix) {
+	public void setPrefix(Chat prefix) {
 		this.prefix = prefix.getJsonText();
 	}
 
 	@Override
-	public void setSuffix(ChatComponent suffix) {
+	public void setSuffix(Chat suffix) {
 		this.suffix = suffix.getJsonText();
 	}
 

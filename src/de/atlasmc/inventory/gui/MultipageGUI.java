@@ -1,7 +1,7 @@
 package de.atlasmc.inventory.gui;
 
 import de.atlasmc.Material;
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.event.inventory.InventoryClickEvent;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.inventory.InventoryHolder;
@@ -21,11 +21,11 @@ public class MultipageGUI extends CoreGUI {
 	private ItemStack inext = null, iback = null;
 	private final ItemStack air = new ItemStack(Material.AIR);
 	
-	public MultipageGUI(ChatComponent title, InventoryHolder holder, int back, int next, int compLenght, int compDepth, int maxpages) {
+	public MultipageGUI(Chat title, InventoryHolder holder, int back, int next, int compLenght, int compDepth, int maxpages) {
 		this(title, holder, back, next, compLenght, compDepth, maxpages, 0, 0);
 	}
 	
-	public MultipageGUI(ChatComponent title, InventoryHolder holder, int back, int next, int compLenght, int compDepth, int maxpages, int compOffsetX, int compOffsetY) {
+	public MultipageGUI(Chat title, InventoryHolder holder, int back, int next, int compLenght, int compDepth, int maxpages, int compOffsetX, int compOffsetY) {
 		super(9*6, InventoryType.GENERIC_9X6, title, holder);
 		this.next = next;
 		this.back = back;

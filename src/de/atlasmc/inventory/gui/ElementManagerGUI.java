@@ -3,8 +3,8 @@ package de.atlasmc.inventory.gui;
 import java.util.List;
 
 import de.atlasmc.Material;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
-import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.event.inventory.ClickType;
 import de.atlasmc.event.inventory.InventoryClickEvent;
 import de.atlasmc.inventory.InventoryHolder;
@@ -24,7 +24,7 @@ public abstract class ElementManagerGUI<E> extends MultipageGUI {
 	protected final PageComponent<E> elements;
 	protected final ComponentHandler ehandler;
 	
-	public ElementManagerGUI(ChatComponent title, InventoryHolder holder, int add, ItemStack addicon) {
+	public ElementManagerGUI(Chat title, InventoryHolder holder, int add, ItemStack addicon) {
 		this(title, holder, add, addicon, 0);
 	}
 
@@ -37,7 +37,7 @@ public abstract class ElementManagerGUI<E> extends MultipageGUI {
 	 * @param maxpages
 	 */
 	@SuppressWarnings("unchecked")
-	public ElementManagerGUI(ChatComponent title, InventoryHolder holder, int add, ItemStack addicon, int maxpages) {
+	public ElementManagerGUI(Chat title, InventoryHolder holder, int add, ItemStack addicon, int maxpages) {
 		super(title, holder, 45, 46, 9, 4, maxpages);
 		if (add > 8 || add < 0) throw new IllegalArgumentException("Value must be between 0 and 8");
 		elements = new AbstractPageComponent<E>(9, 4, maxpages) {

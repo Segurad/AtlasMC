@@ -1,6 +1,6 @@
 package de.atlasmc.factory;
 
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.inventory.AnvilInventory;
 import de.atlasmc.inventory.BeaconInventory;
@@ -150,10 +150,10 @@ public abstract class ContainerFactory<I extends Inventory> {
 		return create(type, null, holder);
 	}
 	
-	public I create(ChatComponent title, InventoryHolder holder) {
+	public I create(Chat title, InventoryHolder holder) {
 		return create(null, title, holder);
 	}
 	
-	public abstract I create(InventoryType type, ChatComponent title, InventoryHolder holder);
+	public abstract I create(InventoryType type, Chat title, InventoryHolder holder);
 
 }

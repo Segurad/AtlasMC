@@ -7,7 +7,7 @@ import java.util.List;
 import de.atlasmc.DyeColor;
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.Banner;
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
@@ -51,7 +51,7 @@ public class CoreBanner extends CoreTileEntity implements Banner {
 	}
 	
 	private List<Pattern> patterns;
-	private ChatComponent name;
+	private Chat name;
 	
 	public CoreBanner(Material type, Chunk chunk, int x, int y, int z) {
 		super(type, chunk, x, y, z);
@@ -113,12 +113,12 @@ public class CoreBanner extends CoreTileEntity implements Banner {
 	}
 	
 	@Override
-	public ChatComponent getCustomName() {
+	public Chat getCustomName() {
 		return name;
 	}
 
 	@Override
-	public void setCustomName(ChatComponent chat) {
+	public void setCustomName(Chat chat) {
 		this.name = chat;
 	}
 	

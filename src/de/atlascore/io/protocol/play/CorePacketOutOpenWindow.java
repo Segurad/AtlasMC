@@ -3,7 +3,7 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutOpenWindow;
@@ -18,12 +18,12 @@ public class CorePacketOutOpenWindow extends AbstractPacket implements PacketOut
 		super(CoreProtocolAdapter.VERSION);
 	}
 	
-	public CorePacketOutOpenWindow(int windowID, InventoryType type, ChatComponent title) {
+	public CorePacketOutOpenWindow(int windowID, InventoryType type, Chat title) {
 		this();
 		this.windowID = windowID;
 		this.type = type.ordinal();
 		if (this.type == -1) throw new IllegalArgumentException("Invalid InventoryType:" + type.name());
-		this.title = title.getJsonText();
+		this.title = title.getText();
 	}
 
 	@Override

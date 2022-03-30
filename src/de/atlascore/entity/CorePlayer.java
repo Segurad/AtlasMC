@@ -10,8 +10,8 @@ import de.atlasmc.Particle;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatType;
-import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Player;
@@ -220,7 +220,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	}
 
 	@Override
-	public void sendMessage(ChatComponent chat, ChatType type) {
+	public void sendMessage(Chat chat, ChatType type) {
 		if (type == null)
 			throw new IllegalArgumentException("Type can not be null!");
 		if (chat == null || type.ordinal() < con.getChatMode().ordinal())
@@ -232,7 +232,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	}
 
 	@Override
-	public void sendMessage(ChatComponent chat) {
+	public void sendMessage(Chat chat) {
 		sendMessage(chat, ChatType.SYSTEM);
 	}
 

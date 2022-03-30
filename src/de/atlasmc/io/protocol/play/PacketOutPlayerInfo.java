@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import de.atlasmc.Gamemode;
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.PacketOutbound;
 
@@ -42,12 +42,12 @@ public interface PacketOutPlayerInfo extends PacketPlay, PacketOutbound {
 			this.ping = ping;
 		}
 		
-		public PlayerInfo(UUID uuid, ChatComponent displayName) {
+		public PlayerInfo(UUID uuid, Chat displayName) {
 			this.uuid = uuid;
 			this.displayName = displayName.getJsonText();
 		}
 		
-		public PlayerInfo(UUID uuid, String name, String textures, int ping, ChatComponent displayName, Gamemode gamemode) {
+		public PlayerInfo(UUID uuid, String name, String textures, int ping, Chat displayName, Gamemode gamemode) {
 			this.uuid = uuid;
 			this.name = name;
 			this.textures = textures;
@@ -88,7 +88,7 @@ public interface PacketOutPlayerInfo extends PacketPlay, PacketOutbound {
 			this.ping = ping;
 		}
 
-		public void setDisplayName(ChatComponent displayName) {
+		public void setDisplayName(Chat displayName) {
 			this.displayName = displayName != null ? displayName.getJsonText() : null;
 		}
 		

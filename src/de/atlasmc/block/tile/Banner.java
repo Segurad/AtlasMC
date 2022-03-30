@@ -4,7 +4,7 @@ import java.util.List;
 
 import de.atlasmc.DyeColor;
 import de.atlasmc.Nameable;
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 
 public interface Banner extends TileEntity, Nameable {
 	
@@ -26,9 +26,9 @@ public interface Banner extends TileEntity, Nameable {
 	
 	public void setPatterns(List<Pattern> pattern);
 	
-	public ChatComponent getCustomName();
+	public Chat getCustomName();
 	
-	public void setCustomName(ChatComponent name);
+	public void setCustomName(Chat name);
 	
 	public static class Pattern {
 		

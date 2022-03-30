@@ -12,7 +12,7 @@ import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.block.Block;
 import de.atlasmc.block.BlockFace;
-import de.atlasmc.chat.ChatChannel.ChannelType;
+import de.atlasmc.chat.ChatType;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.block.BlockPlaceEvent;
@@ -144,7 +144,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	
 	// Client Settings
 	private String clientLocal;
-	private ChannelType chatmode;
+	private ChatType chatmode;
 	private boolean chatColors = true;
 	private byte viewDistance, skinparts, mainHand;
 	
@@ -182,7 +182,7 @@ public class CorePlayerConnection implements PlayerConnection {
 		this.protocol = protocol;
 		this.protocolPlay = protocol.getPlayProtocol();
 		this.inboundQueue = new ConcurrentLinkedQueue<>();
-		this.chatmode = ChannelType.CHAT;
+		this.chatmode = ChatType.MESSAGE;
 	}
 	
 	@Override
@@ -422,6 +422,7 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInPlayerPosition packet) {
+		if (!teleportConfirmed) return;
 		eventMove.setCancelled(false);
 		packet.getLocation(eventMove.getTo());
 		clientOnGround = packet.isOnGround();
@@ -431,6 +432,7 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInPlayerPositionAndRotation packet) {
+		if (!teleportConfirmed) return;
 		eventMove.setCancelled(false);
 		packet.getLocation(eventMove.getTo());
 		clientOnGround = packet.isOnGround();
@@ -440,6 +442,7 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInPlayerRotation packet) {
+		if (!teleportConfirmed) return;
 		eventMove.setCancelled(false);
 		packet.getLocation(eventMove.getTo());
 		clientOnGround = packet.isOnGround();
@@ -786,7 +789,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	}
 
 	@Override
-	public ChannelType getChatMode() {
+	public ChatType getChatMode() {
 		return chatmode;
 	}
 	

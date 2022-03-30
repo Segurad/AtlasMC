@@ -1,15 +1,15 @@
 package de.atlasmc.block.tile;
 
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 
 public interface Sign extends TileEntity {
 	
-	public ChatComponent[] getLines();
+	public Chat[] getLines();
 	
-	public void setLines(ChatComponent[] lines);
+	public void setLines(Chat[] lines);
 	
-	public void setLine(int index, ChatComponent line);
+	public void setLine(int index, Chat line);
 	
-	public ChatComponent getLine(int index);
+	public Chat getLine(int index);
 
 }

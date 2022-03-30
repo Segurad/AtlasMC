@@ -1,6 +1,6 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.PacketOutbound;
 
@@ -15,9 +15,9 @@ public interface PacketOutTabComplete extends PacketPlay, PacketOutbound {
 	public static class Match {
 		
 		private final String match;
-		private final ChatComponent tooltip;
+		private final Chat tooltip;
 		
-		public Match(String match, ChatComponent tooltip) {
+		public Match(String match, Chat tooltip) {
 			this.match = match;
 			this.tooltip = tooltip;
 		}
@@ -26,7 +26,7 @@ public interface PacketOutTabComplete extends PacketPlay, PacketOutbound {
 			return match;
 		}
 		
-		public ChatComponent getToolTip() {
+		public Chat getToolTip() {
 			return tooltip;
 		}
 		

@@ -1,7 +1,7 @@
 package de.atlascore.factory;
 
 import de.atlascore.inventory.CoreInventory;
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.Inventory;
@@ -10,7 +10,7 @@ import de.atlasmc.inventory.InventoryHolder;
 public class CoreGenericInventoryFactory extends ContainerFactory<Inventory> {
 
 	@Override
-	public Inventory create(InventoryType type, ChatComponent title, InventoryHolder holder) {
+	public Inventory create(InventoryType type, Chat title, InventoryHolder holder) {
 		if (type == null)
 			throw new IllegalArgumentException("Type can not be null!");
 		int size = 0;

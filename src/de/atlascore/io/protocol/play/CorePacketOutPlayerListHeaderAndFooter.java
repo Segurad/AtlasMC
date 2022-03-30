@@ -3,8 +3,8 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
-import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutPlayerListHeaderAndFooter;
 import io.netty.buffer.ByteBuf;
@@ -12,18 +12,17 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketOutPlayerListHeaderAndFooter extends AbstractPacket implements PacketOutPlayerListHeaderAndFooter {
 
 	private String header, footer;
-	private static final String clear = "{\"text\":\"\"}";
 	
 	public CorePacketOutPlayerListHeaderAndFooter() {
 		super(CoreProtocolAdapter.VERSION);
 	}
 	
-	public CorePacketOutPlayerListHeaderAndFooter(ChatComponent header, ChatComponent footer) {
+	public CorePacketOutPlayerListHeaderAndFooter(Chat header, Chat footer) {
 		this();
-		if (header == null) this.header = clear;
-		else this.header = header.getJsonText();
-		if (footer == null) this.footer = clear;
-		else this.footer = footer.getJsonText();
+		if (header == null) this.header = ChatUtil.EMPTY.getText();
+		else this.header = header.getText();
+		if (footer == null) this.footer = ChatUtil.EMPTY.getText();
+		else this.footer = footer.getText();
 	}
 
 	@Override
@@ -39,12 +38,12 @@ public class CorePacketOutPlayerListHeaderAndFooter extends AbstractPacket imple
 	}
 
 	@Override
-	public ChatComponent getHeader() {
+	public Chat getHeader() {
 		return ChatUtil.toChat(header);
 	}
 
 	@Override
-	public ChatComponent getFooter() {
+	public Chat getFooter() {
 		return ChatUtil.toChat(footer);
 	}
 

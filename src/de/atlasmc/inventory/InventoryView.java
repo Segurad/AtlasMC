@@ -1,6 +1,6 @@
 package de.atlasmc.inventory;
 
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.event.inventory.InventoryType.SlotType;
@@ -49,7 +49,7 @@ public interface InventoryView {
 	
 	public Inventory getInventory(int rawSlot);
 	
-	public ChatComponent getTitle();
+	public Chat getTitle();
 	
 	public int getViewID();
 }

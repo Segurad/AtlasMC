@@ -1,11 +1,11 @@
 package de.atlasmc;
 
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 
 public interface Nameable {
 	
-	public ChatComponent getCustomName();
+	public Chat getCustomName();
 	
-	public void setCustomName(ChatComponent name);
+	public void setCustomName(Chat name);
 
 }

@@ -1,6 +1,6 @@
 package de.atlascore.inventory;
 
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.inventory.InventoryHolder;
@@ -13,7 +13,7 @@ public class CoreLecternInventory extends CoreInventory implements LecternInvent
 	
 	private int page;
 	
-	public CoreLecternInventory(ChatComponent title, InventoryHolder holder) {
+	public CoreLecternInventory(Chat title, InventoryHolder holder) {
 		super(1, InventoryType.LECTERN, title, holder);
 	}
 

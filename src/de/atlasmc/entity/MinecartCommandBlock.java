@@ -1,15 +1,15 @@
 package de.atlasmc.entity;
 
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 
 public interface MinecartCommandBlock {
 	
 	public String getCommand();
 	
-	public ChatComponent getLastOutput();
+	public Chat getLastOutput();
 
 	public void setCommand(String command);
 	
-	public void setLastOutput(ChatComponent out);
+	public void setLastOutput(Chat out);
 	
 }

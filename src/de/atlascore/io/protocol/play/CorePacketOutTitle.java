@@ -3,8 +3,8 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
-import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutTitle;
 import io.netty.buffer.ByteBuf;
@@ -18,10 +18,10 @@ public class CorePacketOutTitle extends AbstractPacket implements PacketOutTitle
 		super(CoreProtocolAdapter.VERSION);
 	}
 	
-	public CorePacketOutTitle(TitleAction action, ChatComponent title, int fadeIn, int stay, int fadeOut) {
+	public CorePacketOutTitle(TitleAction action, Chat title, int fadeIn, int stay, int fadeOut) {
 		this();
 		this.action = action.ordinal();
-		this.title = title.getJsonText();
+		this.title = title.getText();
 		this.fadeIn = fadeIn;
 		this.stay = stay;
 		this.fadeOut = fadeOut;
@@ -66,7 +66,7 @@ public class CorePacketOutTitle extends AbstractPacket implements PacketOutTitle
 	}
 
 	@Override
-	public ChatComponent getText() {
+	public Chat getText() {
 		return ChatUtil.toChat(title);
 	}
 

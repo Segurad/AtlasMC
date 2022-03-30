@@ -3,7 +3,7 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutDisconnect;
 import io.netty.buffer.ByteBuf;
@@ -16,9 +16,9 @@ public class CorePacketOutDisconnect extends AbstractPacket implements PacketOut
 		super(CoreProtocolAdapter.VERSION);
 	}
 	
-	public CorePacketOutDisconnect(ChatComponent reason) {
+	public CorePacketOutDisconnect(Chat reason) {
 		this();
-		this.reason = reason.getJsonText();
+		this.reason = reason.getText();
 	}
 
 	@Override

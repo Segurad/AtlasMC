@@ -1,7 +1,7 @@
 package de.atlascore.inventory;
 
 import de.atlasmc.block.tile.Banner.PatternType;
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.event.inventory.InventoryType.SlotType;
@@ -16,7 +16,7 @@ public class CoreLoomInventory extends CoreInventory implements LoomInventory {
 	
 	private PatternType pattern;
 	
-	public CoreLoomInventory(ChatComponent title, InventoryHolder holder) {
+	public CoreLoomInventory(Chat title, InventoryHolder holder) {
 		super(4, InventoryType.LOOM, title, holder);
 	}
 	

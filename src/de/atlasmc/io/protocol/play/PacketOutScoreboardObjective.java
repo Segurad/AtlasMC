@@ -1,6 +1,6 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.PacketOutbound;
 import de.atlasmc.scoreboard.RenderType;
@@ -12,7 +12,7 @@ public interface PacketOutScoreboardObjective extends PacketPlay, PacketOutbound
 	
 	public Mode getMode();
 	
-	public ChatComponent getDisplayName();
+	public Chat getDisplayName();
 	
 	public RenderType getRenderType();
 	
@@ -20,7 +20,7 @@ public interface PacketOutScoreboardObjective extends PacketPlay, PacketOutbound
 	
 	public void setMode(Mode mode);
 	
-	public void setDisplayName(ChatComponent display);
+	public void setDisplayName(Chat display);
 	
 	public void setRenderType(RenderType type);
 	

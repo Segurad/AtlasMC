@@ -2,7 +2,7 @@ package de.atlasmc.scoreboard.classic;
 
 import java.util.List;
 
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.scoreboard.DisplaySlot;
 import de.atlasmc.scoreboard.RenderType;
 
@@ -18,9 +18,9 @@ public interface Objective {
 
 	public void setRenderType(RenderType renderType);
 	
-	public ChatComponent getDisplayName();
+	public Chat getDisplayName();
 	
-	public void setDisplayName(ChatComponent chat);
+	public void setDisplayName(Chat chat);
 	
 	public void unregister();
 	

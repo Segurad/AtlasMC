@@ -1,6 +1,6 @@
 package de.atlascore.inventory;
 
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.event.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.CartographyInventory;
@@ -9,7 +9,7 @@ import de.atlasmc.inventory.ItemStack;
 
 public class CoreCartographyInventory extends CoreInventory implements CartographyInventory {
 
-	public CoreCartographyInventory(ChatComponent title, InventoryHolder holder) {
+	public CoreCartographyInventory(Chat title, InventoryHolder holder) {
 		super(3, InventoryType.CARTOGRAPHY, title, holder);
 	}
 	

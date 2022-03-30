@@ -9,8 +9,8 @@ import de.atlasmc.Particle;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatType;
-import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
@@ -25,14 +25,14 @@ public interface Player extends HumanEntity {
 	 * Send a message as {@link ChatType#SYSTEM}
 	 * @param chat
 	 */
-	public void sendMessage(ChatComponent chat);
+	public void sendMessage(Chat chat);
 	
 	/**
 	 * Sends a message with the given type
 	 * @param chat
 	 * @param type
 	 */
-	public void sendMessage(ChatComponent chat, ChatType type);
+	public void sendMessage(Chat chat, ChatType type);
 	
 	public PermissionHandler getPermissionHandler();
 	

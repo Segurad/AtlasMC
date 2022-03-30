@@ -1,6 +1,6 @@
 package de.atlascore.inventory;
 
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.entity.HumanEntity;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.event.inventory.InventoryType.SlotType;
@@ -13,10 +13,12 @@ public class CorePlayerInventory extends CoreInventory implements PlayerInventor
 
 	private int heldSlot;
 	
-	public CorePlayerInventory(ChatComponent title, InventoryHolder holder) {
+	public CorePlayerInventory(Chat title, InventoryHolder holder) {
 		super(40, InventoryType.PLAYER, title, holder);
-		if (holder == null) throw new IllegalArgumentException("InventoryHolder can not be null");
-		if (holder instanceof HumanEntity) throw new IllegalArgumentException("InventoryHolder must be at least a HumanEntity");
+		if (holder == null) 
+			throw new IllegalArgumentException("InventoryHolder can not be null");
+		if (!(holder instanceof HumanEntity)) 
+				throw new IllegalArgumentException("InventoryHolder must be at least a HumanEntity");
 	}
 	
 	@Override

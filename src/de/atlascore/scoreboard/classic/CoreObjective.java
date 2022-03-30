@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
-import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutScoreboardObjective;
 import de.atlasmc.io.protocol.play.PacketOutUpdateScore;
@@ -24,12 +24,12 @@ class CoreObjective implements Objective {
 	private final CoreScoreboard board;
 	private final String name;
 	private RenderType render;
-	private ChatComponent displayName;
+	private Chat displayName;
 	private Map<String, Integer> scores;
 	private DisplaySlot slot;
 	private boolean unregistered;
 	
-	CoreObjective(CoreScoreboard board, String name, ChatComponent displayName, RenderType render) {
+	CoreObjective(CoreScoreboard board, String name, Chat displayName, RenderType render) {
 		this.board = board;
 		this.name = name;
 		this.render = render;
@@ -66,12 +66,12 @@ class CoreObjective implements Objective {
 	}
 
 	@Override
-	public ChatComponent getDisplayName() {
+	public Chat getDisplayName() {
 		return displayName;
 	}
 
 	@Override
-	public void setDisplayName(ChatComponent chat) {
+	public void setDisplayName(Chat chat) {
 		if (chat == null)
 			chat = ChatUtil.EMPTY;
 		this.displayName = chat;
@@ -92,8 +92,6 @@ class CoreObjective implements Objective {
 
 	@Override
 	public void setDisplaySlot(DisplaySlot slot) {
-		if (this.slot != null)
-			board.setDisplay(null, slot);
 		this.slot = slot;
 		board.setDisplay(this, slot);
 	}

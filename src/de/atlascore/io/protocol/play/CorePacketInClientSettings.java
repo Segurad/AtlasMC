@@ -3,7 +3,7 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.chat.ChatChannel.ChannelType;
+import de.atlasmc.chat.ChatType;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInClientSettings;
 import io.netty.buffer.ByteBuf;
@@ -50,8 +50,8 @@ public class CorePacketInClientSettings extends AbstractPacket implements Packet
 	}
 
 	@Override
-	public ChannelType getChatMode() {
-		return ChannelType.values()[chatMode];
+	public ChatType getChatMode() {
+		return ChatType.getByID(chatMode);
 	}
 
 	@Override

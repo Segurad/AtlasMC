@@ -2,7 +2,7 @@ package de.atlasmc.scoreboard.classic;
 
 import java.util.List;
 
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.entity.Player;
 import de.atlasmc.scoreboard.DisplaySlot;
 import de.atlasmc.scoreboard.RenderType;
@@ -32,9 +32,9 @@ public interface Scoreboard {
 	
 	public Objective registerNewObjective(String name);
 	
-	public Objective registerNewObjective(String name, ChatComponent displayName);
+	public Objective registerNewObjective(String name, Chat displayName);
 	
-	public Objective registerNewObjective(String name, ChatComponent displayName, RenderType renderType);
+	public Objective registerNewObjective(String name, Chat displayName, RenderType renderType);
 	
 	/**
 	 * Registers a new Team for this Scoreboard.<br>
