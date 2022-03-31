@@ -2,6 +2,8 @@ package de.atlasmc.plugin;
 
 import java.io.File;
 
+import de.atlasmc.event.Listener;
+
 public class JavaPlugin implements Plugin {
 
 	private File file;
@@ -12,39 +14,66 @@ public class JavaPlugin implements Plugin {
 	private String author;
 	private String description;
 	private boolean loaded, enabled;
-
-	public JavaPlugin() {
-		if (classloader != null)
-			throw new PluginException("Plugin already initialized!");
-	}
 	
 	@Override
 	public final void load() {
+		if (isLoaded())
+			throw new IllegalStateException("Plugin already loaded!");
 		loaded = true;
+		onLoad();
 	}
 
 	@Override
 	public final void enable() {
+		if (isEnabled())
+			throw new IllegalStateException("Plugin already enabled!");
+		if (!isLoaded())
+			throw new IllegalStateException("Plugin has to be loaded first!");
 		enabled = true;
+		onEnable();
 	}
 
 	@Override
 	public final void disable() {
+		if (!isEnabled())
+			throw new IllegalStateException("Plugin already disabled!");
 		enabled = false;
+		onDisable();
 	}
 
 	@Override
 	public final void unload() {
+		if (!isLoaded())
+			throw new IllegalStateException("Plugin already unloaded!");
+		if (isEnabled())
+			disable();
 		loaded = false;
+		onUnload();
 	}
 	
-	public void onLoad() {}
+	/**
+	 * Override this to get notified when this Plugin should be loaded.<br>
+	 * During load all necessary systems should be created.
+	 */
+	protected void onLoad() {}
 
-	public void onEnable() {}
+	/**
+	 * Override this to get notified when this Plugin should be enabled.<br>
+	 * During enable all systems like {@link Listener}s should be registered and set enabled.
+	 */
+	protected void onEnable() {}
 
-	public void onDisable() {}
+	/**
+	 * Override this to get notified when this Plugin should be disabled.<br>
+	 * During disable all systems like {@link Listener}s should be unregistered and set disabled.
+	 */
+	protected void onDisable() {}
 
-	public void onUnload() {}
+	/**
+	 * Override this to get notified when this Plugin should be unloaded.<br>
+	 * During unload all systems and resources should be freed for GC.
+	 */
+	protected void onUnload() {}
 
 	@Override
 	public final String getVersion() {
