@@ -1,25 +1,15 @@
 package de.atlasmc.chat.component;
 
+import de.atlasmc.chat.Chat;
+
 public class TextComponent extends AbstractComponent {
 
 	private String text;
 	
-	@Override
-	public String getLegacyText() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getJsonText() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean contains(ChatComponent text) {
-		// TODO Auto-generated method stub
-		return false;
+	public TextComponent() {}
+	
+	public TextComponent(String text) {
+		this.text = text;
 	}
 
 	public void setText(String text) {
@@ -28,6 +18,12 @@ public class TextComponent extends AbstractComponent {
 
 	public String getText() {
 		return text;
+	}
+
+	@Override
+	public Chat toChat() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

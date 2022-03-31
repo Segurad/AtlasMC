@@ -7,8 +7,8 @@ import de.atlasmc.Color;
 import de.atlasmc.Particle;
 import de.atlasmc.Particle.DustOptions;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
-import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.entity.Entity.Pose;
 import de.atlasmc.entity.Villager.VillagerData;
 import de.atlasmc.entity.Villager.VillagerProfession;
@@ -16,10 +16,10 @@ import de.atlasmc.entity.Villager.VillagerType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.util.EulerAngle;
-import de.atlasmc.util.nbt.CompoundTag;
-import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
+import de.atlasmc.util.nbt.tag.CompoundTag;
+import de.atlasmc.util.nbt.tag.NBT;
 import de.atlasmc.world.particle.ParticleObject;
 import io.netty.buffer.ByteBuf;
 
@@ -80,25 +80,25 @@ public abstract class MetaDataType<T> {
 		
 	};
 	
-	public static final MetaDataType<ChatComponent> CHAT = new MetaDataType<ChatComponent>(4, ChatComponent.class) {
+	public static final MetaDataType<Chat> CHAT = new MetaDataType<Chat>(4, Chat.class) {
 
 		@Override
-		public ChatComponent read(ByteBuf in) {
+		public Chat read(ByteBuf in) {
 			return ChatUtil.toChat(AbstractPacket.readString(in));
 		}
 
 		@Override
 		public void write(Object data, ByteBuf out) {
-			ChatComponent chat = (ChatComponent) data;
+			Chat chat = (Chat) data;
 			AbstractPacket.writeString(chat.getJsonText(), out);
 		}
 		
 	};
 	
-	public static final MetaDataType<ChatComponent> OPT_CHAT = new MetaDataType<ChatComponent>(5, ChatComponent.class, true) {
+	public static final MetaDataType<Chat> OPT_CHAT = new MetaDataType<Chat>(5, Chat.class, true) {
 
 		@Override
-		public ChatComponent read(ByteBuf in) {
+		public Chat read(ByteBuf in) {
 			if (!in.readBoolean()) return null;
 			return ChatUtil.toChat(AbstractPacket.readString(in));
 		}
@@ -107,7 +107,7 @@ public abstract class MetaDataType<T> {
 		public void write(Object data, ByteBuf out) {
 			out.writeBoolean(data != null);
 			if (data == null) return;
-			ChatComponent chat = (ChatComponent) data;
+			Chat chat = (Chat) data;
 			AbstractPacket.writeString(chat.getJsonText(), out);
 		}
 		

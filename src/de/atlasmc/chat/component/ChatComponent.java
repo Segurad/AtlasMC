@@ -1,5 +1,6 @@
 package de.atlasmc.chat.component;
 
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatColor;
 
 public interface ChatComponent {
@@ -8,12 +9,6 @@ public interface ChatComponent {
 		FONT_DEFAULT = "minecraft:default",
 		FONT_ALT = "minecraft:alt",
 		FONT_UNIFORM = "minecraft:uniform";
-
-	public String getLegacyText();
-	
-	public String getJsonText();
-	
-	public boolean contains(ChatComponent text);
 	
 	public boolean isBold();
 	
@@ -53,7 +48,7 @@ public interface ChatComponent {
 	public ChatColor getColorChat();
 	
 	/**
-	 * Sets the color as RGB value or -1 to remove
+	 * Sets the color as RGB value or -1 to remove or -({@link ChatColor#getID()}+1) for chat color
 	 * @param rgb
 	 */
 	public void setColor(int rgb);
@@ -65,6 +60,18 @@ public interface ChatComponent {
 	 */
 	public void setColor(ChatColor color);
 	
+	/**
+	 * Returns whether or not this Component has a color
+	 * @return true if has color
+	 */
+	public boolean hasColor();
+	
+	/**
+	 * Returns whether or not this Component has a {@link ChatColor}
+	 * @return true if has {@link ChatColor}
+	 */
+	public boolean hasChatColor();
+	
 	public ClickEvent getClickEvent();
 	
 	public void setClickEvent(ClickEvent event);
@@ -72,5 +79,7 @@ public interface ChatComponent {
 	public HoverEvent getHoverEvent();
 	
 	public void setHoverEvent(HoverEvent event);
+	
+	public Chat toChat();
 	
 }

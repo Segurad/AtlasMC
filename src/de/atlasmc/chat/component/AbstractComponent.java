@@ -110,4 +110,14 @@ public abstract class AbstractComponent implements ChatComponent {
 		this.hoverEvent = event;
 	}
 	
+	@Override
+	public boolean hasChatColor() {
+		return color < -1;
+	}
+	
+	@Override
+	public boolean hasColor() {
+		return color != -1;
+	}
+	
 }

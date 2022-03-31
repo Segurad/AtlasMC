@@ -5,6 +5,8 @@ import java.io.StringReader;
 
 import com.google.gson.stream.JsonReader;
 
+import de.atlasmc.chat.Chat;
+
 public class ChatReader extends JsonReader {
 
 	public ChatReader(Reader in) {
@@ -15,7 +17,7 @@ public class ChatReader extends JsonReader {
 		super(new StringReader(text));
 	}
 	
-	public ChatComponent readChat() {
+	public Chat readChat() {
 		return null;
 	}
 

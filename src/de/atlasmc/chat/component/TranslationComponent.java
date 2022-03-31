@@ -1,26 +1,15 @@
 package de.atlasmc.chat.component;
 
+import de.atlasmc.chat.Chat;
+
 public class TranslationComponent extends AbstractComponent {
 	
 	private String translation;
-	
 
 	@Override
-	public String getLegacyText() {
+	public Chat toChat() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public String getJsonText() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean contains(ChatComponent text) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 }

@@ -1,5 +1,7 @@
 package de.atlasmc.chat.component;
 
+import de.atlasmc.chat.Chat;
+
 public class KeybindComponent extends AbstractComponent {
 	
 	public static final String
@@ -41,21 +43,9 @@ public class KeybindComponent extends AbstractComponent {
 	private String key;
 
 	@Override
-	public String getLegacyText() {
+	public Chat toChat() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public String getJsonText() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean contains(ChatComponent text) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 }

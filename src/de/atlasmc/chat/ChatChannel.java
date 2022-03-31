@@ -1,12 +1,20 @@
 package de.atlasmc.chat;
 
-import de.atlasmc.chat.component.ChatComponent;
+import java.util.List;
+
+import de.atlasmc.entity.Player;
 
 public interface ChatChannel {
 	
-	public ChannelType getType();
+	public void sendMessage(Chat message);
 	
-	public boolean isMuteable();
+	public void sendMessage(Chat message, ChatType type);
+	
+	public List<Player> getPlayers();
+	
+	public void addPlayer(Player player);
+	
+	public void removePlayer(Player player);
 	
 	public String getName();
 	
@@ -14,15 +22,6 @@ public interface ChatChannel {
 	 * 
 	 * @return the prefix or null
 	 */
-	public ChatComponent getPrefix();
-	
-	/**
-	 * Client chat settings
-	 */
-	public static enum ChannelType {
-		CHAT,
-		SYSTEM,
-		GAMEINFO
-	}
+	public Chat getPrefix();
 
 }
