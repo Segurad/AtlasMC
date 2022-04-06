@@ -10,7 +10,7 @@ public interface Objective {
 	
 	public Scoreboard getScoreboard();
 	
-	public Score getScore(String entry);
+	public Score getScore(String name);
 	
 	public String getName();
 	
@@ -36,8 +36,8 @@ public interface Objective {
 	
 	public void update();
 
-	public boolean resetScore(String entry);
+	public boolean resetScore(String name);
 	
-	public boolean hasScore(String entry);
+	public boolean hasScore(String name);
 	
 }

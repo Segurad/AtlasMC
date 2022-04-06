@@ -6,16 +6,16 @@ import de.atlasmc.scoreboard.classic.Score;
 class CoreScore implements Score {
 	
 	private final CoreObjective obj;
-	private final String entry;
+	private final String name;
 	
-	CoreScore(CoreObjective obj, String entry) {
+	CoreScore(CoreObjective obj, String name) {
 		this.obj = obj;
-		this.entry = entry;
+		this.name = name;
 	}
 
 	@Override
-	public String getEntry() {
-		return entry;
+	public String getName() {
+		return name;
 	}
 
 	@Override
@@ -25,7 +25,7 @@ class CoreScore implements Score {
 
 	@Override
 	public int getScore() {
-		Integer score = obj.getScoreValue(entry);
+		Integer score = obj.getScoreValue(name);
 		if (score == null)
 			throw new IllegalStateException("Score is not set!");
 		return score;
@@ -33,17 +33,17 @@ class CoreScore implements Score {
 
 	@Override
 	public void setScore(int score) {
-		obj.updateScore(entry, score);
+		obj.updateScore(name, score);
 	}
 
 	@Override
 	public void reset() {
-		obj.resetScore(entry);
+		obj.resetScore(name);
 	}
 
 	@Override
 	public boolean isSet() {
-		return obj.getScoreValue(entry) != null;
+		return obj.getScoreValue(name) != null;
 	}
 
 }

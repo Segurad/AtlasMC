@@ -199,7 +199,7 @@ public class CoreScoreboard implements Scoreboard {
 					continue;
 				for (Score score : obj.getScores()) {
 					PacketOutUpdateScore packetScore = play.createPacket(PacketOutUpdateScore.class);
-					packetScore.setEntry(score.getEntry());
+					packetScore.setEntry(score.getName());
 					packetScore.setAction(ScoreAction.UPDATE);
 					packetScore.setObjective(name);
 					packetScore.setValue(score.getScore());

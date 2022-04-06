@@ -2,7 +2,7 @@ package de.atlasmc.scoreboard.classic;
 
 public interface Score {
 	
-	public String getEntry();
+	public String getName();
 	
 	public Objective getObjective();
 	

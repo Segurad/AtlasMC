@@ -42,12 +42,12 @@ class CoreObjective implements Objective {
 	}
 
 	@Override
-	public Score getScore(String entry) {
-		if (entry == null)
+	public Score getScore(String name) {
+		if (name == null)
 			throw new IllegalArgumentException("Entry can not be null!");
-		if (entry.length() > 40)
+		if (name.length() > 40)
 			throw new IllegalArgumentException("Entry length > 40!");
-		return new CoreScore(this, entry);
+		return new CoreScore(this, name);
 	}
 
 	@Override
@@ -150,18 +150,18 @@ class CoreObjective implements Objective {
 	}
 
 	@Override
-	public boolean resetScore(String entry) {
+	public boolean resetScore(String name) {
 		if (unregistered)
 			throw new IllegalStateException("Objective not registered!");
-		if (scores == null || entry == null)
+		if (scores == null || name == null)
 			return false;
-		Integer val = scores.remove(entry);
+		Integer val = scores.remove(name);
 		if (val == null)
 			return false;
 		for (ScoreboardView view : board.getViewersUnsafe()) {
 			PlayerConnection con = view.getViewer().getConnection();
 			PacketOutUpdateScore packetScore = con.getProtocol().createPacket(PacketOutUpdateScore.class);
-			packetScore.setEntry(entry);
+			packetScore.setEntry(name);
 			packetScore.setAction(ScoreAction.REMOVE);
 			con.sendPacked(packetScore);
 		}
