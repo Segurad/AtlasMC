@@ -103,6 +103,7 @@ import de.atlascore.inventory.meta.CoreSuspiciousStewMeta;
 import de.atlascore.inventory.meta.CoreTileEntityMeta;
 import de.atlascore.inventory.meta.CoreTropicalFishBucketMeta;
 import de.atlasmc.Material;
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.block.data.Ageable;
 import de.atlasmc.block.data.AnaloguePowerable;
 import de.atlasmc.block.data.Bisected;
@@ -309,9 +310,9 @@ public class MaterialLoader {
 				SUSPICIOUS_STEW_MDF = new ClassMetaDataFactory(SuspiciousStewMeta.class, CoreSuspiciousStewMeta.class, null, null);
 
 		AIR = c("AIR", 0, AIR_MDF);
-		VOID_AIR = new Material(0, "VOID_AIR", false, (short) 9669, (byte) 1, 0, 0, AIR_MDF);
-		CAVE_AIR = new Material(0, "CAVE_AIR", false, (short) 9670, (byte) 1, 0, 0, AIR_MDF);
-		BUBBLE_COLUMN = new Material(0, "BUBBLE_COLUMN", false, (short) 9571, (byte) 1, 0, 0, BUBBLE_COLUMN_MDF);
+		VOID_AIR = new Material(NamespacedKey.MINECRAFT, "VOID_AIR", false, (short) 9669, (byte) 1, 0, 0, AIR_MDF);
+		CAVE_AIR = new Material(NamespacedKey.MINECRAFT, "CAVE_AIR", false, (short) 9670, (byte) 1, 0, 0, AIR_MDF);
+		BUBBLE_COLUMN = new Material(NamespacedKey.MINECRAFT, "BUBBLE_COLUMN", false, (short) 9571, (byte) 1, 0, 0, BUBBLE_COLUMN_MDF);
 		STONE = c("STONE", 1);
 		GRANITE = c("GRANITE", 2);
 		POLISHED_GRANITE = c("POLISHED_GRANITE", 3);
@@ -341,8 +342,8 @@ public class MaterialLoader {
 		ACACIA_SAPLING = c("ACACIA_SAPLING", 29, SAPLING_MDF);
 		DARK_OAK_SAPLING = c("DARK_OAK_SAPLING", 31, SAPLING_MDF);
 		BEDROCK = c("BEDROCK", 33);
-		WATER = new Material(0, "WATER", false, (short) 34, (byte) 1, 0, 0, LEVELLED_MDF);
-		LAVA = new Material(0, "LAVA", false, (short) 50, (byte) 1, 0, 0, LEVELLED_MDF);
+		WATER = new Material(NamespacedKey.MINECRAFT, "WATER", false, (short) 34, (byte) 1, 0, 0, LEVELLED_MDF);
+		LAVA = new Material(NamespacedKey.MINECRAFT, "LAVA", false, (short) 50, (byte) 1, 0, 0, LEVELLED_MDF);
 		SAND = c("SAND", 66);
 		RED_SAND = c("RED_SAND", 67);
 		GRAVEL = c("GRAVEL", 68);
@@ -406,11 +407,11 @@ public class MaterialLoader {
 		FERN = c("FERB", 1343);
 		DEAD_BUSH = c("DEAD_BUSH", 1344);
 		SEAGRASS = c("SEAGRASS", 1345);
-		TALL_SEAGRASS = new Material(0, "TALL_SEAGRASS", false, (short) 1346, (byte) 1, 0, 0, BISECTED_MDF);
+		TALL_SEAGRASS = new Material(NamespacedKey.MINECRAFT, "TALL_SEAGRASS", false, (short) 1346, (byte) 1, 0, 0, BISECTED_MDF);
 		SEA_PICKLE = c("SEA_PICKLE", 9644, SEA_PICKLE_MDF);
 		PISTON = c("PISTON", 1348, PISTON_MDF);
-		PISTON_HEAD = new Material(0, "PISTON_HEAD", false, (short) 1360, (byte) 1, 0, 0, PISTON_HEAD_MDF);
-		MOVING_PISTON = new Material(0, "MOVING_PISTON", false, (short) 1400, (byte) 1, 0, 0, TECHNICAL_PISTON_MDF);
+		PISTON_HEAD = new Material(NamespacedKey.MINECRAFT, "PISTON_HEAD", false, (short) 1360, (byte) 1, 0, 0, PISTON_HEAD_MDF);
+		MOVING_PISTON = new Material(NamespacedKey.MINECRAFT, "MOVING_PISTON", false, (short) 1400, (byte) 1, 0, 0, TECHNICAL_PISTON_MDF);
 		WHITE_WOOL = c("WHITE_WOOL", 1384);
 		ORANGE_WOOL = c("ORANGE_WOOL", 1385);
 		MAGENTA_WOOL = c("MAGENTA_WOOL", 1386);
@@ -448,14 +449,14 @@ public class MaterialLoader {
 		WARPED_ROOTS = c("WARPED_ROOTS", 14981);
 		NETHER_SPROUTS = c("NETHER_SPROUTS", 14982);
 		WEEPING_VINES = c("WEEPING_VINES", 14998, AGEABLE25_MDF);
-		WEEPING_VINES_PLANT = new Material(0, "WEEPING_VINES_PLANT", false, (short) 15024, (byte) 1, 0, 0);
+		WEEPING_VINES_PLANT = new Material(NamespacedKey.MINECRAFT, "WEEPING_VINES_PLANT", false, (short) 15024, (byte) 1, 0, 0);
 		TWISTING_VINES = c("TWISTING_VINES", 15025, AGEABLE25_MDF);
-		TWISTING_VINES_PLANT = new Material(0, "TWISTING_VINES_PLANT", false, (short) 15051, (byte) 1, 0, 0);
+		TWISTING_VINES_PLANT = new Material(NamespacedKey.MINECRAFT, "TWISTING_VINES_PLANT", false, (short) 15051, (byte) 1, 0, 0);
 		SUGAR_CANE = c("SUGAR_CANE", 3948, AGEABLE15_MDF);
 		KELP = c("KELP", 9474, AGEABLE25_MDF);
-		KELP_PLANT = new Material(0, "KELP_PLANT", false, (short) 9500, (byte) 1, 0, 0);
+		KELP_PLANT = new Material(NamespacedKey.MINECRAFT, "KELP_PLANT", false, (short) 9500, (byte) 1, 0, 0);
 		BAMBOO = c("BAMBOO", 9656, BAMBOO_MDF);
-		BAMBOO_SAPLING = new Material(0, "BAMBOO_SAPLING", false, (short) 9655, (byte) 1, 0, 0);
+		BAMBOO_SAPLING = new Material(NamespacedKey.MINECRAFT, "BAMBOO_SAPLING", false, (short) 9655, (byte) 1, 0, 0);
 		GOLD_BLOCK = c("GOLD_BLOCK", 1427);
 		IRON_BLOCK = c("IRON_BLOCK", 1428);
 		OAK_SLAB = c("OAK_SLAB", 8304, SLAB_MDF);
@@ -492,9 +493,9 @@ public class MaterialLoader {
 		MOSSY_COBBLESTONE = c("MOSSY_COBBLESTONE", 1433);
 		OBSIDIAN = c("OBSIDIAN", 1433);
 		TORCH = c("TORCH", 1435);
-		WALL_TORCH = new Material(0, "WALL_TORCH", false, (short) 1436, (byte) 1, 0, 0, DIRECTIONAL4F_MDF);
-		FIRE = new Material(0, "FIRE", false, (short) 1440, (byte) 1, 0, 0, FIRE_MDF);
-		SOUL_FIRE = new Material(0, "SOUL_FIRE", false, (short) 1952, (byte) 1, 0, 0);
+		WALL_TORCH = new Material(NamespacedKey.MINECRAFT, "WALL_TORCH", false, (short) 1436, (byte) 1, 0, 0, DIRECTIONAL4F_MDF);
+		FIRE = new Material(NamespacedKey.MINECRAFT, "FIRE", false, (short) 1440, (byte) 1, 0, 0, FIRE_MDF);
+		SOUL_FIRE = new Material(NamespacedKey.MINECRAFT, "SOUL_FIRE", false, (short) 1952, (byte) 1, 0, 0);
 		END_ROD = c("END_ROD", 9062, DIRECTIONAL6F_MDF);
 		CHORUS_PLANT = c("CHORUS_PLANT", 9068, MULTIPLE_FACING6_MDF);
 		CHORUS_FLOWER = c("CHORUS_FLOWER", 9132, AGEABLE5_MDF);
@@ -529,7 +530,7 @@ public class MaterialLoader {
 		REDSTONE_WALL_TORCH = c("REDSTONE_WALL_TORCH", 3889, RED_WALL_TORCH_MDF);
 		SNOW = c("SNOW", 3921, SNOW_MDF);
 		ICE = c("ICE", 3929);
-		FROSTED_ICE = new Material(0, "FROSTED_ICE", false, (short) 9253, (byte) 1, 0, 0, AGEABLE3_MDF);
+		FROSTED_ICE = new Material(NamespacedKey.MINECRAFT, "FROSTED_ICE", false, (short) 9253, (byte) 1, 0, 0, AGEABLE3_MDF);
 		SNOW_BLOCK = c("SNOW_BLOCK", 3930);
 		CACTUS = c("CACTUS", 3931, AGEABLE15_MDF);
 		CLAY = c("CLAY", 3947);
@@ -550,9 +551,9 @@ public class MaterialLoader {
 		BASALT = c("BASALT", 4002, ORIENTABLE_MDF);
 		POLISHED_BASALT = c("POLISHED_BASALT", 4005, ORIENTABLE_MDF);
 		SOUL_TORCH = c("SOUL_TORCH", 4008);
-		SOUL_WALL_TORCH = new Material(0, "SOUL_WALL_TORCH", false, (short) 4009, (byte) 1, 0, 0, DIRECTIONAL4F_MDF);
+		SOUL_WALL_TORCH = new Material(NamespacedKey.MINECRAFT, "SOUL_WALL_TORCH", false, (short) 4009, (byte) 1, 0, 0, DIRECTIONAL4F_MDF);
 		GLOWSTONE = c("GLOWSTONE", 4013);
-		NETHER_PORTAL = new Material(0, "NETHER_PORTAL", false, (short) 4014, (byte) 1, 0, 0, ORIENTABLE_MDF);
+		NETHER_PORTAL = new Material(NamespacedKey.MINECRAFT, "NETHER_PORTAL", false, (short) 4014, (byte) 1, 0, 0, ORIENTABLE_MDF);
 		JACK_O_LANTERN = c("JACK_O_LANTERN", 4020, DIRECTIONAL4F_MDF);
 		OAK_TRAPDOOR = c("OAK_TRAPDOOR", 4111, TRAP_DOOR_MDF);
 		SPRUCE_TRAPDOOR = c("SPRUCE_TRAPDOOR", 4175, TRAP_DOOR_MDF);
@@ -579,10 +580,10 @@ public class MaterialLoader {
 		CHAIN = c("CHAIN", 4729, CHAIN_MDF);
 		GLASS_PANE = c("GLASS_PANE", 4735, FENCE_MDF);
 		MELON = c("MELON", 4767);
-		ATTACHED_MELON_STEM = new Material(0, "ATTACHED_MELON_STEM", false, (short) 4768, (byte) 1, 0, 0, DIRECTIONAL4F_MDF);
-		ATTACHED_PUMPKIN_STEM = new Material(0, "ATTACHED_PUMKIN_STEM", false, (short) 4772, (byte) 1, 0, 0, DIRECTIONAL4F_MDF);
-		MELON_STEM = new Material(0, "MELON_STEM", false, (short) 4784, (byte) 1, 0, 0, AGEABLE7_MDF);
-		PUMPKIN_STEM = new Material(0, "PUMPKIN_STEM", false, (short) 4776, (byte) 1, 0, 0, AGEABLE7_MDF);
+		ATTACHED_MELON_STEM = new Material(NamespacedKey.MINECRAFT, "ATTACHED_MELON_STEM", false, (short) 4768, (byte) 1, 0, 0, DIRECTIONAL4F_MDF);
+		ATTACHED_PUMPKIN_STEM = new Material(NamespacedKey.MINECRAFT, "ATTACHED_PUMKIN_STEM", false, (short) 4772, (byte) 1, 0, 0, DIRECTIONAL4F_MDF);
+		MELON_STEM = new Material(NamespacedKey.MINECRAFT, "MELON_STEM", false, (short) 4784, (byte) 1, 0, 0, AGEABLE7_MDF);
+		PUMPKIN_STEM = new Material(NamespacedKey.MINECRAFT, "PUMPKIN_STEM", false, (short) 4776, (byte) 1, 0, 0, AGEABLE7_MDF);
 		VINE = c("VINE", 4792, MULTIPLE_FACING5_MDF);
 		OAK_FENCE_GATE = c("OAK_FENCE_GATE", 4825, GATE_MDF);
 		SPRUCE_FENCE_GATE = c("SPRUCE_FENCE_GATE", 8422, GATE_MDF);
@@ -604,17 +605,17 @@ public class MaterialLoader {
 		ENCHANTING_TABLE = c("ENCHANTING_TABLE", 5136);
 		END_PORTAL_FRAME = c("END_PORTAL_FRAME", 5150, END_PORTAL_FRAME_MDF);
 		END_PORTAL = c("END_PORTAL", 5149);
-		END_GATEWAY = new Material(0, "END_GATEWAY", false, (short) 9228, (byte) 1, 0, 0);
+		END_GATEWAY = new Material(NamespacedKey.MINECRAFT, "END_GATEWAY", false, (short) 9228, (byte) 1, 0, 0);
 		END_STONE = c("END_STONE", 5158);
 		END_STONE_BRICKS = c("END_STONE_BRICKS", 9222);
 		DRAGON_EGG = c("DRAGON_EGG", 5159);
 		REDSTONE_LAMP = c("REDSTONE_LAMP", 5160);
-		COCOA = new Material(0, "COCOA", false, (short) 5162, (byte) 1, 0, 0, COCOA_MDF);
+		COCOA = new Material(NamespacedKey.MINECRAFT, "COCOA", false, (short) 5162, (byte) 1, 0, 0, COCOA_MDF);
 		SANDSTONE_STAIRS = c("SANDSTONE_STAIRS", 5174, STAIRS_MDF);
 		EMERALD_ORE = c("EMERALD_ORE", 5254);
 		ENDER_CHEST = c("ENDER_CHEST", 5255, ENDER_CHEST_MDF);
 		TRIPWIRE_HOOK = c("TRIPWIRE_HOOK", 5263, TRIPWIRE_HOOK_MDF);
-		TRIPWIRE = new Material(0, "TRIPWIRE", false, (short) 5279, (byte) 1, 0, 0, TRIPWIRE_MDF);
+		TRIPWIRE = new Material(NamespacedKey.MINECRAFT, "TRIPWIRE", false, (short) 5279, (byte) 1, 0, 0, TRIPWIRE_MDF);
 		EMERALD_BLOCK = c("EMERALD_BLOCK", 5407);
 		SPRUCE_STAIRS = c("SPRUCE_STAIRS", 5408, STAIRS_MDF);
 		BIRCH_STAIRS = c("BIRCH_STAIRS", 5488, STAIRS_MDF);
@@ -863,16 +864,16 @@ public class MaterialLoader {
 		DEAD_BUBBLE_CORAL_FAN = c("DEAD_BUBBLE_CORAL_FAN", 9548, WATERLOGGED_MDF);
 		DEAD_FIRE_CORAL_FAN = c("DEAD_FIRE_CORAL_FAN", 9550, WATERLOGGED_MDF);
 		DEAD_HORN_CORAL_FAN = c("DEAD_HORN_CORAL_FAN", 9552, WATERLOGGED_MDF);
-		TUBE_CORAL_WALL_FAN = new Material(0, "TUBE_CORAL_WALL_FAN", false, (short) 9604, (byte) 1, 0, 0, CORAL_WALL_FAN_MDF);
-		BRAIN_CORAL_WALL_FAN = new Material(0, "BRAIN_CORAL_WALL_FAN", false, (short) 9612, (byte) 1, 0, 0, CORAL_WALL_FAN_MDF);
-		BUBBLE_CORAL_WALL_FAN = new Material(0, "BUBBLE_CORAL_WALL_FAN", false, (short) 9620, (byte) 1, 0, 0, CORAL_WALL_FAN_MDF);
-		FIRE_CORAL_WALL_FAN = new Material(0, "FIRE_CORAL_WALL_FAN", false, (short) 9628, (byte) 1, 0, 0, CORAL_WALL_FAN_MDF);
-		HORN_CORAL_WALL_FAN = new Material(0, "HORN_CORAL_WALL_FAN", false, (short) 9636, (byte) 1, 0, 0, CORAL_WALL_FAN_MDF);
-		DEAD_TUBE_CORAL_WALL_FAN = new Material(0, "DEAD_TUBE_CORAL_WALL_FAN", false, (short) 9564, (byte) 1, 0, 0, CORAL_WALL_FAN_MDF);
-		DEAD_BRAIN_CORAL_WALL_FAN = new Material(0, "DEAD_BRAIN_CORAL_WALL_FAN", false, (short) 9572, (byte) 1, 0, 0, CORAL_WALL_FAN_MDF);
-		DEAD_BUBBLE_CORAL_WALL_FAN = new Material(0, "DEAD_BUBBLE_CORAL_WALL_FAN", false, (short) 9580, (byte) 1, 0, 0, CORAL_WALL_FAN_MDF);
-		DEAD_FIRE_CORAL_WALL_FAN = new Material(0, "DEAD_FIRE_CORAL_WALL_FAN", false, (short) 9588, (byte) 1, 0, 0, CORAL_WALL_FAN_MDF);
-		DEAD_HORN_CORAL_WALL_FAN = new Material(0, "DEAD_HORN_CORAL_WALL_FAN", false, (short) 9596, (byte) 1, 0, 0, CORAL_WALL_FAN_MDF);
+		TUBE_CORAL_WALL_FAN = new Material(NamespacedKey.MINECRAFT, "TUBE_CORAL_WALL_FAN", false, (short) 9604, (byte) 1, 0, 0, CORAL_WALL_FAN_MDF);
+		BRAIN_CORAL_WALL_FAN = new Material(NamespacedKey.MINECRAFT, "BRAIN_CORAL_WALL_FAN", false, (short) 9612, (byte) 1, 0, 0, CORAL_WALL_FAN_MDF);
+		BUBBLE_CORAL_WALL_FAN = new Material(NamespacedKey.MINECRAFT, "BUBBLE_CORAL_WALL_FAN", false, (short) 9620, (byte) 1, 0, 0, CORAL_WALL_FAN_MDF);
+		FIRE_CORAL_WALL_FAN = new Material(NamespacedKey.MINECRAFT, "FIRE_CORAL_WALL_FAN", false, (short) 9628, (byte) 1, 0, 0, CORAL_WALL_FAN_MDF);
+		HORN_CORAL_WALL_FAN = new Material(NamespacedKey.MINECRAFT, "HORN_CORAL_WALL_FAN", false, (short) 9636, (byte) 1, 0, 0, CORAL_WALL_FAN_MDF);
+		DEAD_TUBE_CORAL_WALL_FAN = new Material(NamespacedKey.MINECRAFT, "DEAD_TUBE_CORAL_WALL_FAN", false, (short) 9564, (byte) 1, 0, 0, CORAL_WALL_FAN_MDF);
+		DEAD_BRAIN_CORAL_WALL_FAN = new Material(NamespacedKey.MINECRAFT, "DEAD_BRAIN_CORAL_WALL_FAN", false, (short) 9572, (byte) 1, 0, 0, CORAL_WALL_FAN_MDF);
+		DEAD_BUBBLE_CORAL_WALL_FAN = new Material(NamespacedKey.MINECRAFT, "DEAD_BUBBLE_CORAL_WALL_FAN", false, (short) 9580, (byte) 1, 0, 0, CORAL_WALL_FAN_MDF);
+		DEAD_FIRE_CORAL_WALL_FAN = new Material(NamespacedKey.MINECRAFT, "DEAD_FIRE_CORAL_WALL_FAN", false, (short) 9588, (byte) 1, 0, 0, CORAL_WALL_FAN_MDF);
+		DEAD_HORN_CORAL_WALL_FAN = new Material(NamespacedKey.MINECRAFT, "DEAD_HORN_CORAL_WALL_FAN", false, (short) 9596, (byte) 1, 0, 0, CORAL_WALL_FAN_MDF);
 		BLUE_ICE = c("BLUE_ICE", 9652);
 		CONDUIT = c("CONDUIT", 9653, WATERLOGGED_MDF);
 		POLISHED_GRANITE_STAIRS = c("POLISHED_GRANITE_STAIRS", 9673, STAIRS_MDF);
@@ -1005,14 +1006,14 @@ public class MaterialLoader {
 		DARK_OAK_SIGN = c("DARK_OAK_SIGN", 3541, 16, SIGN_MDF);
 		CRIMSON_SIGN = c("CRIMSON_SIGN", 15663, 16, SIGN_MDF);
 		WARPED_SIGN = c("WARPED_SIGN", 15695, 16, SIGN_MDF);
-		OAK_WALL_SIGN = new Material(0, "OAK_WALL_SIGN", false, (short) 3735, (byte) 1, 0, 0, WALL_SIGN_MDF);
-		SPRUCE_WALL_SIGN = new Material(0, "SPRUCE_WALL_SIGN", false, (short) 3743, (byte) 1, 0, 0, WALL_SIGN_MDF);
-		BIRCH_WALL_SIGN = new Material(0, "BIRCH_WALL_SIGN", false, (short) 3751, (byte) 1, 0, 0, WALL_SIGN_MDF);
-		JUNGLE_WALL_SIGN = new Material(0, "JUNGLE_WALL_SIGN", false, (short) 3759, (byte) 1, 0, 0, WALL_SIGN_MDF);
-		ACACIA_WALL_SIGN = new Material(0, "ACACIA_WALL_SIGN", false, (short) 3767, (byte) 1, 0, 0, WALL_SIGN_MDF);
-		DARK_OAK_WALL_SIGN = new Material(0, "DARK_OAK_WALL_SIGN", false, (short) 3775, (byte) 1, 0, 0, WALL_SIGN_MDF);
-		CRIMSON_WALL_SIGN = new Material(0, "CRIMSON_WALL_SIGN", false, (short) 15727, (byte) 1, 0, 0, WALL_SIGN_MDF);
-		WARPED_WALL_SIGN = new Material(0, "WARPED_WALL_SIGN", false, (short) 15735, (byte) 1, 0, 0, WALL_SIGN_MDF);
+		OAK_WALL_SIGN = new Material(NamespacedKey.MINECRAFT, "OAK_WALL_SIGN", false, (short) 3735, (byte) 1, 0, 0, WALL_SIGN_MDF);
+		SPRUCE_WALL_SIGN = new Material(NamespacedKey.MINECRAFT, "SPRUCE_WALL_SIGN", false, (short) 3743, (byte) 1, 0, 0, WALL_SIGN_MDF);
+		BIRCH_WALL_SIGN = new Material(NamespacedKey.MINECRAFT, "BIRCH_WALL_SIGN", false, (short) 3751, (byte) 1, 0, 0, WALL_SIGN_MDF);
+		JUNGLE_WALL_SIGN = new Material(NamespacedKey.MINECRAFT, "JUNGLE_WALL_SIGN", false, (short) 3759, (byte) 1, 0, 0, WALL_SIGN_MDF);
+		ACACIA_WALL_SIGN = new Material(NamespacedKey.MINECRAFT, "ACACIA_WALL_SIGN", false, (short) 3767, (byte) 1, 0, 0, WALL_SIGN_MDF);
+		DARK_OAK_WALL_SIGN = new Material(NamespacedKey.MINECRAFT, "DARK_OAK_WALL_SIGN", false, (short) 3775, (byte) 1, 0, 0, WALL_SIGN_MDF);
+		CRIMSON_WALL_SIGN = new Material(NamespacedKey.MINECRAFT, "CRIMSON_WALL_SIGN", false, (short) 15727, (byte) 1, 0, 0, WALL_SIGN_MDF);
+		WARPED_WALL_SIGN = new Material(NamespacedKey.MINECRAFT, "WARPED_WALL_SIGN", false, (short) 15735, (byte) 1, 0, 0, WALL_SIGN_MDF);
 		BUCKET = i("BUCKET", 16);
 		WATER_BUCKET = i("WATER_BUCKET", 1);
 		LAVA_BUCKET = i("LAVA_BUCKET", 1);
@@ -1182,54 +1183,54 @@ public class MaterialLoader {
 		EMERALD = i("EMERALD");
 		ITEM_FRAME = i("ITEM_FRAME");
 		FLOWER_POT = c("FLOWER_POT", 6309);
-		POTTED_OAK_SAPLING = new Material(0, "POTTED_OAK_SAPLING", false, (short) 6310, (byte) 0, 0, 0);
-		POTTED_SPRUCE_SAPLING = new Material(0, "POTTED_SPRUCE_SAPLING", false, (short) 6311, (byte) 0, 0, 0);
-		POTTED_BIRCH_SAPLING = new Material(0, "POTTED_BIRCH_SAPLING", false, (short) 6312, (byte) 0, 0, 0);
-		POTTED_JUNGLE_SAPLING = new Material(0, "POTTED_JUNGLE_SAPLING", false, (short) 6313, (byte) 0, 0, 0);
-		POTTED_ACACIA_SAPLING = new Material(0, "POTTED_ACACIA_SAPLING", false, (short) 6314, (byte) 0, 0, 0);
-		POTTED_DARK_OAK_SAPLING = new Material(0, "POTTED_DARK_OAK_SAPLING", false, (short) 6315, (byte) 0, 0, 0);
-		POTTED_FERN = new Material(0, "POTTED_FERN", false, (short) 6316, (byte) 0, 0, 0);
-		POTTED_DANDELION = new Material(0, "POTTED_DANDELION", false, (short) 6317, (byte) 0, 0, 0);
-		POTTED_POPPY = new Material(0, "POTTED_POPPY", false, (short) 6318, (byte) 0, 0, 0);
-		POTTED_BLUE_ORCHID = new Material(0, "POTTED_BLUE_ORCHID", false, (short) 6319, (byte) 0, 0, 0);
-		POTTED_ALLIUM = new Material(0, "POTTED_ALLIUM", false, (short) 6320, (byte) 0, 0, 0);
-		POTTED_AZURE_BLUET = new Material(0, "POTTED_AZURE_BLUET", false, (short) 6321, (byte) 0, 0, 0);
-		POTTED_RED_TULIP = new Material(0, "POTTED_RED_TULIP", false, (short) 6322, (byte) 0, 0, 0);
-		POTTED_ORANGE_TULIP = new Material(0, "POTTED_ORANGE_TULIP", false, (short) 6323, (byte) 0, 0, 0);
-		POTTED_WHITE_TULIP = new Material(0, "POTTED_WHITE_TULIP", false, (short) 6324, (byte) 0, 0, 0);
-		POTTED_PINK_TULIP = new Material(0, "POTTED_PINK_TULIP", false, (short) 6325, (byte) 0, 0, 0);
-		POTTED_OXEYE_DAISY = new Material(0, "POTTED_OXEYE_DAISY", false, (short) 6326, (byte) 0, 0, 0);
-		POTTED_CORNFLOWER = new Material(0, "POTTED_CORNFLOWER", false, (short) 6327, (byte) 0, 0, 0);
-		POTTED_LILY_OF_THE_VALLEY = new Material(0, "POTTED_LILY_OF_THE_VALLEY", false, (short) 6328, (byte) 0, 0, 0);
-		POTTED_WITHER_ROSE = new Material(0, "POTTED_WITHER_ROSE", false, (short) 6329, (byte) 0, 0, 0);
-		POTTED_RED_MUSHROOM = new Material(0, "POTTED_RED_MUSHROOM", false, (short) 6330, (byte) 0, 0, 0);
-		POTTED_BROWN_MUSHROOM = new Material(0, "POTTED_BROWN_MUSHROOM", false, (short) 6331, (byte) 0, 0, 0);
-		POTTED_DEAD_BUSH = new Material(0, "POTTED_DEAD_BUSH", false, (short) 6332, (byte) 0, 0, 0);
-		POTTED_CACTUS = new Material(0, "POTTED_CACTUS", false, (short) 6333, (byte) 0, 0, 0);
-		POTTED_CRIMSON_FUNGUS = new Material(0, "POTTED_CRIMSON_FUNGUS", false, (short) 15842, (byte) 0, 0, 0);
-		POTTED_WARPED_FUNGUS = new Material(0, "POTTED_WARPED_FUNGUS", false, (short) 15843, (byte) 0, 0, 0);
-		POTTED_CRIMSON_ROOTS = new Material(0, "POTTED_CRIMSON_ROOTS", false, (short) 15844, (byte) 0, 0, 0);
-		POTTED_WARPED_ROOTS = new Material(0, "POTTED_WARPED_ROOTS", false, (short) 15845, (byte) 0, 0, 0);
+		POTTED_OAK_SAPLING = new Material(NamespacedKey.MINECRAFT, "POTTED_OAK_SAPLING", false, (short) 6310, (byte) 0, 0, 0);
+		POTTED_SPRUCE_SAPLING = new Material(NamespacedKey.MINECRAFT, "POTTED_SPRUCE_SAPLING", false, (short) 6311, (byte) 0, 0, 0);
+		POTTED_BIRCH_SAPLING = new Material(NamespacedKey.MINECRAFT, "POTTED_BIRCH_SAPLING", false, (short) 6312, (byte) 0, 0, 0);
+		POTTED_JUNGLE_SAPLING = new Material(NamespacedKey.MINECRAFT, "POTTED_JUNGLE_SAPLING", false, (short) 6313, (byte) 0, 0, 0);
+		POTTED_ACACIA_SAPLING = new Material(NamespacedKey.MINECRAFT, "POTTED_ACACIA_SAPLING", false, (short) 6314, (byte) 0, 0, 0);
+		POTTED_DARK_OAK_SAPLING = new Material(NamespacedKey.MINECRAFT, "POTTED_DARK_OAK_SAPLING", false, (short) 6315, (byte) 0, 0, 0);
+		POTTED_FERN = new Material(NamespacedKey.MINECRAFT, "POTTED_FERN", false, (short) 6316, (byte) 0, 0, 0);
+		POTTED_DANDELION = new Material(NamespacedKey.MINECRAFT, "POTTED_DANDELION", false, (short) 6317, (byte) 0, 0, 0);
+		POTTED_POPPY = new Material(NamespacedKey.MINECRAFT, "POTTED_POPPY", false, (short) 6318, (byte) 0, 0, 0);
+		POTTED_BLUE_ORCHID = new Material(NamespacedKey.MINECRAFT, "POTTED_BLUE_ORCHID", false, (short) 6319, (byte) 0, 0, 0);
+		POTTED_ALLIUM = new Material(NamespacedKey.MINECRAFT, "POTTED_ALLIUM", false, (short) 6320, (byte) 0, 0, 0);
+		POTTED_AZURE_BLUET = new Material(NamespacedKey.MINECRAFT, "POTTED_AZURE_BLUET", false, (short) 6321, (byte) 0, 0, 0);
+		POTTED_RED_TULIP = new Material(NamespacedKey.MINECRAFT, "POTTED_RED_TULIP", false, (short) 6322, (byte) 0, 0, 0);
+		POTTED_ORANGE_TULIP = new Material(NamespacedKey.MINECRAFT, "POTTED_ORANGE_TULIP", false, (short) 6323, (byte) 0, 0, 0);
+		POTTED_WHITE_TULIP = new Material(NamespacedKey.MINECRAFT, "POTTED_WHITE_TULIP", false, (short) 6324, (byte) 0, 0, 0);
+		POTTED_PINK_TULIP = new Material(NamespacedKey.MINECRAFT, "POTTED_PINK_TULIP", false, (short) 6325, (byte) 0, 0, 0);
+		POTTED_OXEYE_DAISY = new Material(NamespacedKey.MINECRAFT, "POTTED_OXEYE_DAISY", false, (short) 6326, (byte) 0, 0, 0);
+		POTTED_CORNFLOWER = new Material(NamespacedKey.MINECRAFT, "POTTED_CORNFLOWER", false, (short) 6327, (byte) 0, 0, 0);
+		POTTED_LILY_OF_THE_VALLEY = new Material(NamespacedKey.MINECRAFT, "POTTED_LILY_OF_THE_VALLEY", false, (short) 6328, (byte) 0, 0, 0);
+		POTTED_WITHER_ROSE = new Material(NamespacedKey.MINECRAFT, "POTTED_WITHER_ROSE", false, (short) 6329, (byte) 0, 0, 0);
+		POTTED_RED_MUSHROOM = new Material(NamespacedKey.MINECRAFT, "POTTED_RED_MUSHROOM", false, (short) 6330, (byte) 0, 0, 0);
+		POTTED_BROWN_MUSHROOM = new Material(NamespacedKey.MINECRAFT, "POTTED_BROWN_MUSHROOM", false, (short) 6331, (byte) 0, 0, 0);
+		POTTED_DEAD_BUSH = new Material(NamespacedKey.MINECRAFT, "POTTED_DEAD_BUSH", false, (short) 6332, (byte) 0, 0, 0);
+		POTTED_CACTUS = new Material(NamespacedKey.MINECRAFT, "POTTED_CACTUS", false, (short) 6333, (byte) 0, 0, 0);
+		POTTED_CRIMSON_FUNGUS = new Material(NamespacedKey.MINECRAFT, "POTTED_CRIMSON_FUNGUS", false, (short) 15842, (byte) 0, 0, 0);
+		POTTED_WARPED_FUNGUS = new Material(NamespacedKey.MINECRAFT, "POTTED_WARPED_FUNGUS", false, (short) 15843, (byte) 0, 0, 0);
+		POTTED_CRIMSON_ROOTS = new Material(NamespacedKey.MINECRAFT, "POTTED_CRIMSON_ROOTS", false, (short) 15844, (byte) 0, 0, 0);
+		POTTED_WARPED_ROOTS = new Material(NamespacedKey.MINECRAFT, "POTTED_WARPED_ROOTS", false, (short) 15845, (byte) 0, 0, 0);
 		CARROT = i("CARROT");
-		CARROTS = new Material(0, "CARROTS", false, (short) 6334, (byte) 0, 0, 0, AGEABLE7_MDF);
+		CARROTS = new Material(NamespacedKey.MINECRAFT, "CARROTS", false, (short) 6334, (byte) 0, 0, 0, AGEABLE7_MDF);
 		POTATO = i("POTATO");
-		POTATOES = new Material(0, "POTATOES", false, (short) 6342, (byte) 0, 0, 0, AGEABLE7_MDF);
+		POTATOES = new Material(NamespacedKey.MINECRAFT, "POTATOES", false, (short) 6342, (byte) 0, 0, 0, AGEABLE7_MDF);
 		BAKED_POTATO = i("BAKED_POTATO");
 		POISONOUS_POTATO = i("POISONOUS_POTATO");
 		MAP = i("MAP");
 		GOLDEN_CARROT = i("GOLDEN_CARROT");
 		SKELETON_SKULL = c("SKELETON_SKULL", 6494, ROTATABLE_MDF);
-		SKELETON_WALL_SKULL = new Material(0, "SKELETON_WALL_SKULL", false, (short) 6510, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
+		SKELETON_WALL_SKULL = new Material(NamespacedKey.MINECRAFT, "SKELETON_WALL_SKULL", false, (short) 6510, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
 		WITHER_SKELETON_SKULL = c("WITHER_SKELETON_SKULL", 6514, ROTATABLE_MDF);
-		WITHER_SKELETON_WALL_SKULL = new Material(0, "WITHER_SKELETON_WALL_SKULL", false, (short) 6530, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
+		WITHER_SKELETON_WALL_SKULL = new Material(NamespacedKey.MINECRAFT, "WITHER_SKELETON_WALL_SKULL", false, (short) 6530, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
 		PLAYER_HEAD = c("PLAYER_HEAD", 6554, PLAYER_HEAD_MDF);
-		PLAYER_WALL_HEAD = new Material(0, "PLAYER_WALL_HEAD", false, (short) 6570, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
+		PLAYER_WALL_HEAD = new Material(NamespacedKey.MINECRAFT, "PLAYER_WALL_HEAD", false, (short) 6570, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
 		ZOMBIE_HEAD = c("ZOMBIE_HEAD", 6534, ROTATABLE_MDF);
-		ZOMBIE_WALL_HEAD = new Material(0, "ZOMBIE_WALL_HEAD", false, (short) 6550, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
+		ZOMBIE_WALL_HEAD = new Material(NamespacedKey.MINECRAFT, "ZOMBIE_WALL_HEAD", false, (short) 6550, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
 		CREEPER_HEAD = c("CREEPER_HEAD", 6574, ROTATABLE_MDF);
-		CREEPER_WALL_HEAD = new Material(0, "CREEPER_WALL_HEAD", false, (short) 6590, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
+		CREEPER_WALL_HEAD = new Material(NamespacedKey.MINECRAFT, "CREEPER_WALL_HEAD", false, (short) 6590, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
 		DRAGON_HEAD = c("DRAGON_HEAD", 6594, ROTATABLE_MDF);
-		DRAGON_WALL_HEAD = new Material(0, "DRAGON_WALL_HEAD", false, (short) 6610, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
+		DRAGON_WALL_HEAD = new Material(NamespacedKey.MINECRAFT, "DRAGON_WALL_HEAD", false, (short) 6610, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
 		CARROT_ON_A_STICK = i("CARROT_ON_A_STICK", 1, DAMAGEABLE_MDF);
 		WARPED_FUNGUS_ON_A_STICK = i("WARPED_FUNGUS_ON_A_STICK", 1, DAMAGEABLE_MDF);
 		NETHER_STAR = i("NETHER_STAR");
@@ -1274,27 +1275,27 @@ public class MaterialLoader {
 		GREEN_BANNER = c("GREEN_BANNER", 8109, BANNER_MDF);
 		RED_BANNER = c("RED_BANNER", 8125, BANNER_MDF);
 		BLACK_BANNER = c("BLACK_BANNER", 8141, BANNER_MDF);
-		WHITE_WALL_BANNER = new Material(0, "WHITE_WALL_BANNER", false, (short) 8157, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
-		ORANGE_WALL_BANNER = new Material(0, "ORANGE_WALL_BANNER", false, (short) 8161, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
-		MAGENTA_WALL_BANNER = new Material(0, "MAGENTA_WALL_BANNER", false, (short) 8165, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
-		LIGHT_BLUE_WALL_BANNER = new Material(0, "LIGHT_BLUE_WALL_BANNER", false, (short) 8169, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
-		YELLOW_WALL_BANNER = new Material(0, "YELLOW_WALL_BANNER", false, (short) 8173, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
-		LIME_WALL_BANNER = new Material(0, "LIME_WALL_BANNER", false, (short) 8177, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
-		PINK_WALL_BANNER = new Material(0, "PINK_WALL_BANNER", false, (short) 8181, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
-		GRAY_WALL_BANNER = new Material(0, "GRAY_WALL_BANNER", false, (short) 8185, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
-		LIGHT_GRAY_WALL_BANNER = new Material(0, "LIGHT_GRAY_WALL_BANNER", false, (short) 8189, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
-		CYAN_WALL_BANNER = new Material(0, "CYAN_WALL_BANNER", false, (short) 8193, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
-		PURPLE_WALL_BANNER = new Material(0, "PURPLE_WALL_BANNER", false, (short) 8197, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
-		BLUE_WALL_BANNER = new Material(0, "BLUE_WALL_BANNER", false, (short) 8201, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
-		BROWN_WALL_BANNER = new Material(0, "BROWN_WALL_BANNER", false, (short) 8205, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
-		GREEN_WALL_BANNER = new Material(0, "GREEN_WALL_BANNER", false, (short) 8209, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
-		RED_WALL_BANNER = new Material(0, "RED_WALL_BANNER", false, (short) 8213, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
-		BLACK_WALL_BANNER = new Material(0, "BLACK_WALL_BANNER", false, (short) 8217, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
+		WHITE_WALL_BANNER = new Material(NamespacedKey.MINECRAFT, "WHITE_WALL_BANNER", false, (short) 8157, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
+		ORANGE_WALL_BANNER = new Material(NamespacedKey.MINECRAFT, "ORANGE_WALL_BANNER", false, (short) 8161, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
+		MAGENTA_WALL_BANNER = new Material(NamespacedKey.MINECRAFT, "MAGENTA_WALL_BANNER", false, (short) 8165, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
+		LIGHT_BLUE_WALL_BANNER = new Material(NamespacedKey.MINECRAFT, "LIGHT_BLUE_WALL_BANNER", false, (short) 8169, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
+		YELLOW_WALL_BANNER = new Material(NamespacedKey.MINECRAFT, "YELLOW_WALL_BANNER", false, (short) 8173, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
+		LIME_WALL_BANNER = new Material(NamespacedKey.MINECRAFT, "LIME_WALL_BANNER", false, (short) 8177, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
+		PINK_WALL_BANNER = new Material(NamespacedKey.MINECRAFT, "PINK_WALL_BANNER", false, (short) 8181, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
+		GRAY_WALL_BANNER = new Material(NamespacedKey.MINECRAFT, "GRAY_WALL_BANNER", false, (short) 8185, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
+		LIGHT_GRAY_WALL_BANNER = new Material(NamespacedKey.MINECRAFT, "LIGHT_GRAY_WALL_BANNER", false, (short) 8189, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
+		CYAN_WALL_BANNER = new Material(NamespacedKey.MINECRAFT, "CYAN_WALL_BANNER", false, (short) 8193, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
+		PURPLE_WALL_BANNER = new Material(NamespacedKey.MINECRAFT, "PURPLE_WALL_BANNER", false, (short) 8197, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
+		BLUE_WALL_BANNER = new Material(NamespacedKey.MINECRAFT, "BLUE_WALL_BANNER", false, (short) 8201, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
+		BROWN_WALL_BANNER = new Material(NamespacedKey.MINECRAFT, "BROWN_WALL_BANNER", false, (short) 8205, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
+		GREEN_WALL_BANNER = new Material(NamespacedKey.MINECRAFT, "GREEN_WALL_BANNER", false, (short) 8209, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
+		RED_WALL_BANNER = new Material(NamespacedKey.MINECRAFT, "RED_WALL_BANNER", false, (short) 8213, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
+		BLACK_WALL_BANNER = new Material(NamespacedKey.MINECRAFT, "BLACK_WALL_BANNER", false, (short) 8217, (byte) 0, 0, 0, DIRECTIONAL4F_MDF);
 		END_CRYSTAL = i("END_CRYSTAL");
 		CHORUS_FRUIT = i("CHORUS_FRUIT");
 		POPPED_CHORUS_FRUIT = i("POPPED_CHORUS_FRUIT");
 		BEETROOT = i("BEETROOT");
-		BEETROOTS = new Material(0, "BEETROOTS", false, (short) 9223, (byte) 0, 0, 0, AGEABLE3_MDF);
+		BEETROOTS = new Material(NamespacedKey.MINECRAFT, "BEETROOTS", false, (short) 9223, (byte) 0, 0, 0, AGEABLE3_MDF);
 		BEETROOT_SOUP = i("BEETROOT_SOUP");
 		DRAGON_BREATH = i("DRAGON_BREATH");
 		SPLASH_POTION = i("SPLASH_POTION", 64, POTION_MDF);
@@ -1518,27 +1519,27 @@ public class MaterialLoader {
 	}
 
 	private static Material c(String name, int blockID) {
-		return new Material(0, name, (short) blockID, (byte) 64, 0, 0, null);
+		return new Material(NamespacedKey.MINECRAFT, name, (short) blockID, (byte) 64, 0, 0, null);
 	}
 
 	private static Material c(String name, int blockID, MetaDataFactory mdf) {
-		return new Material(0, name, (short) blockID, (byte) 64, 0, 0, mdf);
+		return new Material(NamespacedKey.MINECRAFT, name, (short) blockID, (byte) 64, 0, 0, mdf);
 	}
 
 	private static Material c(String name, int blockID, int amount, MetaDataFactory mdf) {
-		return new Material(0, name, (short) blockID, (byte) amount, 0, 0, mdf);
+		return new Material(NamespacedKey.MINECRAFT, name, (short) blockID, (byte) amount, 0, 0, mdf);
 	}
 
 	private static Material i(String name) {
-		return new Material(0, name, (byte) 64, 0, 0, null);
+		return new Material(NamespacedKey.MINECRAFT, name, (byte) 64, 0, 0, null);
 	}
 
 	private static Material i(String name, int amount) {
-		return new Material(0, name, (byte) amount, 0, 0, null);
+		return new Material(NamespacedKey.MINECRAFT, name, (byte) amount, 0, 0, null);
 	}
 
 	private static Material i(String name, int amount, MetaDataFactory mdf) {
-		return new Material(0, name, (byte) amount, 0, 0, mdf);
+		return new Material(NamespacedKey.MINECRAFT, name, (byte) amount, 0, 0, mdf);
 	}
 
 }
