@@ -17,14 +17,22 @@ public class CoreChat implements Chat {
 	
 	@Override
 	public String getLegacyText() {
-		if (legacy == null)
-			ChatUtil.legacyFromJson(json);
+		if (legacy == null) {
+			synchronized (this) {
+				if (legacy == null)
+					legacy = ChatUtil.legacyFromJson(json);
+			}
+		}
 		return legacy;
 	}
 	@Override
 	public String getJsonText() {
-		if (json == null)
-			json = ChatUtil.jsonFromLegacy(json);
+		if (json == null) {
+			synchronized (this) {
+				if (json == null)
+					json = ChatUtil.jsonFromLegacy(json);
+			}
+		}
 		return json;
 	}
 	@Override

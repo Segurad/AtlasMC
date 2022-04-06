@@ -1,18 +1,16 @@
 package de.atlasmc.chat.component;
 
-import de.atlasmc.chat.Chat;
-
 public class HoverTextEvent implements HoverEvent {
 
-	private Chat text;
+	private ChatComponent component;
 	
-	public HoverTextEvent(Chat text) {
-		this.text = text;
+	public HoverTextEvent(ChatComponent component) {
+		this.component = component;
 	}
 	
 	@Override
 	public String getValue() {
-		return text.getJsonText();
+		return component.toJson();
 	}
 
 	@Override

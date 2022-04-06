@@ -13,6 +13,7 @@ public class CoreChatFactory implements ChatFactory {
 
 	@Override
 	public String jsonFromLegacy(CharSequence text, char formatPrefix) {
+		// TODO implement to json
 		return null;
 	}
 
@@ -20,6 +21,7 @@ public class CoreChatFactory implements ChatFactory {
 	public String legacyFromJson(CharSequence json, char formatPrefix) {
 		if (json.charAt(0) != '{')
 			return json.toString();
+		// TODO implement to legacy
 		return null;
 	}
 

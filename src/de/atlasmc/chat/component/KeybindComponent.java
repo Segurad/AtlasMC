@@ -1,8 +1,11 @@
 package de.atlasmc.chat.component;
 
-import de.atlasmc.chat.Chat;
+import de.atlasmc.util.JsonBuffer;
 
-public class KeybindComponent extends AbstractComponent {
+public class KeybindComponent extends BaseComponent {
+
+	protected static final String
+	JSON_KEYBIND = "keybind";
 	
 	public static final String
 	KEY_ATTACK = "key.attack",
@@ -41,11 +44,20 @@ public class KeybindComponent extends AbstractComponent {
 	KEY_HOTBAR_9 = "key.hotbar.9";
 	
 	private String key;
-
+	
+	public KeybindComponent(String key) {
+		this.key = key;
+	}
+	
+	public String getKey() {
+		return key;
+	}
+	
 	@Override
-	public Chat toChat() {
-		// TODO Auto-generated method stub
-		return null;
+	public void addContents(JsonBuffer buff) {
+		if (key != null)
+			buff.appendText(JSON_KEYBIND, key);
+		super.addContents(buff);
 	}
 
 }

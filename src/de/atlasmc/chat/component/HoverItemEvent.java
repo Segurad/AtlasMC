@@ -1,6 +1,10 @@
 package de.atlasmc.chat.component;
 
+import java.io.IOException;
+import java.io.StringWriter;
+
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.nbt.io.SNBTWriter;
 
 public class HoverItemEvent implements HoverEvent {
 	
@@ -17,7 +21,17 @@ public class HoverItemEvent implements HoverEvent {
 
 	@Override
 	public String getValue() {
-		return null; // TODO item to nbt json
+		StringWriter swriter = new StringWriter();
+		SNBTWriter writer = new SNBTWriter(swriter);
+		String string = null;
+		try {
+			item.toNBT(writer, false);
+			string = swriter.toString();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return string;
 	}
 
 }

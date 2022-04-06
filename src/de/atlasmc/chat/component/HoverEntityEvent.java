@@ -1,6 +1,10 @@
 package de.atlasmc.chat.component;
 
+import java.io.IOException;
+import java.io.StringWriter;
+
 import de.atlasmc.entity.Entity;
+import de.atlasmc.util.nbt.io.SNBTWriter;
 
 public class HoverEntityEvent implements HoverEvent {
 
@@ -12,7 +16,17 @@ public class HoverEntityEvent implements HoverEvent {
 	
 	@Override
 	public String getValue() {
-		return null; // TODO to entity nbt json
+		StringWriter swriter = new StringWriter();
+		SNBTWriter writer = new SNBTWriter(swriter);
+		String string = null;
+		try {
+			entity.toNBT(writer, false);
+			string = swriter.toString();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return string;
 	}
 
 	@Override
