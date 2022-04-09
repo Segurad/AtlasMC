@@ -21,6 +21,7 @@ final class CoreAsyncTaskWorker extends Thread {
 	CoreAsyncTaskWorker(CoreSchedulerThread master, CoreRegisteredTask task) {
 		this.task = task;
 		this.master = master;
+		setDaemon(true);
 		start();
 	}
 	
