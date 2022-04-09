@@ -17,8 +17,6 @@ public final class MapColor {
 			LEVEL_LOW = 0,
 			LEVEL_LOWER = 1,
 			LEVEL_LOWEST = 3;
-	private final int level, R, G, B, baseID;
-	private final byte ID;
 	private static final MapColor[] colors;
 	public static final MapColor 
 	NONE,
@@ -228,13 +226,15 @@ public final class MapColor {
 		return new MapColor(r,g,b,l,id, bid);
 	}
 	
-	MapColor(int r, int g, int b, int level, int id, int bid) {
-		this.R = r;
-		this.B = b;
-		this.G = g;
-		this.level = level;
+	private final byte level, R, G, B, baseID, ID;
+	
+	private MapColor(int r, int g, int b, int level, int id, int bid) {
+		this.R = (byte) r;
+		this.B = (byte) b;
+		this.G = (byte) g;
+		this.level = (byte) level;
 		this.ID = (byte) id;
-		this.baseID = bid;
+		this.baseID = (byte) bid;
 	}
 	
 	/**
@@ -242,7 +242,7 @@ public final class MapColor {
 	 * @return the Red value
 	 */
 	public int getB() {
-		return B;
+		return B & 0xFF;
 	}
 	
 	/**
@@ -250,7 +250,7 @@ public final class MapColor {
 	 * @return the id of the color group
 	 */
 	public int getBaseID() {
-		return baseID;
+		return baseID & 0xFF;
 	}
 	
 	/**
@@ -258,7 +258,7 @@ public final class MapColor {
 	 * @return the Green value
 	 */
 	public int getG() {
-		return G;
+		return G & 0xFF;
 	}
 	
 	/**
@@ -274,7 +274,7 @@ public final class MapColor {
 	 * @return the red value
 	 */
 	public int getR() {
-		return R;
+		return R & 0xFF;
 	}
 	
 	/**
