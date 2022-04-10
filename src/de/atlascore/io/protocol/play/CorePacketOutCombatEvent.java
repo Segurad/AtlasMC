@@ -3,7 +3,7 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutCombatEvent;
 import io.netty.buffer.ByteBuf;
@@ -25,7 +25,7 @@ public class CorePacketOutCombatEvent extends AbstractPacket implements PacketOu
 	 * @param playerID only if event 2
 	 * @param deathMessage only if event 2
 	 */
-	public CorePacketOutCombatEvent(int event, int duration , int entityID, int playerID, ChatComponent deathMessage) {
+	public CorePacketOutCombatEvent(int event, int duration , int entityID, int playerID, Chat deathMessage) {
 		this();
 		this.event = event;
 		this.duration = duration;
