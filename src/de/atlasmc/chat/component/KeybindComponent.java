@@ -4,7 +4,7 @@ import de.atlasmc.util.JsonBuffer;
 
 public class KeybindComponent extends BaseComponent {
 
-	protected static final String
+	public static final String
 	JSON_KEYBIND = "keybind";
 	
 	public static final String

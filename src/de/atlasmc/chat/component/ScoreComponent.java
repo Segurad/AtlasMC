@@ -4,10 +4,10 @@ import de.atlasmc.util.JsonBuffer;
 
 public class ScoreComponent extends BaseComponent {
 
-	protected static final String
+	public static final String
+	JSON_SCORE = "score",
 	JSON_NAME = "name",
-	JSON_OBJECTIVE = "objective",
-	JSON_VALUE = "value";
+	JSON_OBJECTIVE = "objective";
 	
 	private String entry, objective, score;
 
@@ -25,9 +25,11 @@ public class ScoreComponent extends BaseComponent {
 	
 	@Override
 	public void addContents(JsonBuffer buff) {
-		buff.appendText(JSON_NAME, entry);
+		buff.beginObject(JSON_SCORE);
 		buff.appendText(JSON_OBJECTIVE, objective);
+		buff.appendText(JSON_NAME, entry);
 		buff.appendText(JSON_VALUE, score);
+		buff.endObject();
 		super.addContents(buff);
 	}
 	

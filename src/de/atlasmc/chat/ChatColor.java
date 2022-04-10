@@ -3,6 +3,7 @@ package de.atlasmc.chat;
 import java.util.List;
 
 import de.atlasmc.Color;
+import de.atlasmc.chat.component.ChatComponent;
 
 public enum ChatColor {
 
@@ -72,6 +73,33 @@ public enum ChatColor {
 	public String toString() {
 		return "§" + formatID;
 	}
+	
+	/**
+	 * Modifies the {@link ChatComponent} with this ChatColor
+	 * @param component
+	 */
+	public void modify(ChatComponent component) {
+		switch(this) {
+		case BOLD:
+			component.setBold(true);
+			break;
+		case ITALIC:
+			component.setItalic(true);
+			break;
+		case OBFUSCATED:
+			component.setObfuscated(true);
+			break;
+		case STRIKETHROUGH:
+			component.setStrikethrough(true);
+			break;
+		case UNDERLINE:
+			component.setUnderlined(true);
+			break;
+		default:
+			component.setColor(this);
+			break;
+		}
+	}
 
 	public static ChatColor getByFormatID(char id) {
 		for (ChatColor c : getValues()) {
@@ -99,8 +127,12 @@ public enum ChatColor {
 	 * @return list
 	 */
 	public static List<ChatColor> getValues() {
-		if (VALUES == null)
-			VALUES = List.of(values());
+		if (VALUES == null) {
+			synchronized (ChatColor.class) {
+				if (VALUES == null)
+					VALUES = List.of(values());
+			}
+		}
 		return VALUES;
 	}
 	

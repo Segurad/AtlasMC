@@ -1,5 +1,6 @@
 package de.atlasmc.chat;
 
+import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.factory.ChatFactory;
 import de.atlasmc.util.annotation.ThreadSafe;
 
@@ -48,7 +49,6 @@ public final class ChatUtil {
 	 * Converts from Legacy text<br><br>
 	 * <b>Supported format options</b> (§) used as format char:<br>
 	 * <ul>
-	 * <li>§§ = types the format char
 	 * <li>§0 = {@link ChatColor#BLACK}
 	 * <li>§1 = {@link ChatColor#DARK_BLUE}
 	 * <li>§2 = {@link ChatColor#DARK_GREEN}
@@ -67,11 +67,11 @@ public final class ChatUtil {
 	 * <li>§f = {@link ChatColor#WHITE}
 	 * <li>§k = obfuscated
 	 * <li>§l = <b>bold</b>
-	 * <li>§m = <strike>strikethrough</strike>
+	 * <li>§m = <strike>strike through</strike>
 	 * <li>§n = <u>underline</u>
 	 * <li>§o = <i>italic</i>
 	 * <li>§r = reset formating
-	 * <li>&x = rgb input (&x000000)
+	 * <li>§x = rgb input (&x000000)
 	 * </ul>
 	 * @param text
 	 * @param formatPrefix the char used to identify a format input
@@ -79,6 +79,37 @@ public final class ChatUtil {
 	 */
 	public static String jsonFromLegacy(CharSequence text, char formatPrefix) {
 		return FACTORY.jsonFromLegacy(text, formatPrefix);
+	}
+	
+	/**
+	 * Converts a json {@link CharSequence} to a {@link ChatComponent}
+	 * @param json
+	 * @return
+	 */
+	public static ChatComponent jsonToComponent(CharSequence json) {
+		return FACTORY.jsonToComponent(json);
+	}
+	
+	public static ChatComponent legacyToComponent(CharSequence legacy) {
+		return legacyToComponent(legacy, '§');
+	}
+	
+	public static ChatComponent legacyToComponent(CharSequence legacy, char formatPrefix) {
+		return FACTORY.legacyToComponent(legacy, formatPrefix);
+	}
+	
+	public static String legacyFromComponent(ChatComponent component) {
+		return legacyFromComponent(component, '§');
+	}
+	
+	/**
+	 * Converts a {@link ChatComponent} to legacy chat formated String
+	 * @param component
+	 * @param formatPrefix
+	 * @return
+	 */
+	public static String legacyFromComponent(ChatComponent component, char formatPrefix) {
+		return FACTORY.legacyFromComponent(component, formatPrefix);
 	}
 	
 	public static void init(ChatFactory factory) {

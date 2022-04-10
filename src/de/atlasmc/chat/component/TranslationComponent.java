@@ -1,5 +1,7 @@
 package de.atlasmc.chat.component;
 
+import java.util.List;
+
 import de.atlasmc.util.JsonBuffer;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
@@ -13,19 +15,19 @@ import de.atlasmc.util.annotation.Nullable;
  */
 public class TranslationComponent extends BaseComponent {
 	
-	protected static final String
+	public static final String
 	JSON_TRANSLATE = "translate",
 	JSON_WITH = "with";
 	
 	private String key;
-	private ChatComponent[] with;
+	private List<ChatComponent> with;
 	
 	/**
 	 * Creates a new TranslationComponent
 	 * @param key which is translated
 	 * @param with optional arguments that will be inserted at %s
 	 */
-	public TranslationComponent(@NotNull String key, @Nullable ChatComponent... with) {
+	public TranslationComponent(@NotNull String key, @Nullable List<ChatComponent> with) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
 		this.key = key;
@@ -36,8 +38,12 @@ public class TranslationComponent extends BaseComponent {
 		return key;
 	}
 	
-	public ChatComponent[] getWith() {
+	public List<ChatComponent> getWith() {
 		return with;
+	}
+	
+	public void setWith(List<ChatComponent> with) {
+		this.with = with;
 	}
 	
 	@Override

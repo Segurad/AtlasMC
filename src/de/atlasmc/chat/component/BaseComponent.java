@@ -1,14 +1,16 @@
 package de.atlasmc.chat.component;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import de.atlasmc.chat.ChatColor;
+import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.util.JsonBuffer;
 
 public class BaseComponent implements ChatComponent {
 	
-	protected static final String
+	public static final String
 	JSON_BOLD = "bold",
 	JSON_ITALIC = "italic",
 	JSON_UNDERLINED = "underlined",
@@ -16,9 +18,12 @@ public class BaseComponent implements ChatComponent {
 	JSON_STRIKETHROUGH = "strikethrough",
 	JSON_COLOR = "color",
 	JSON_FONT = "font",
-	JSON_CLICK_EVENT = "click_event",
-	JSON_HOVER_EVENT = "hover_event",
-	JSON_EXTRA = "extra";
+	JSON_CLICK_EVENT = "clickEvent",
+	JSON_HOVER_EVENT = "hoverEvent",
+	JSON_EXTRA = "extra",
+	JSON_ACTION = "action", // for hover and click event
+	JSON_CONTENTS = "contents", // hover event
+	JSON_VALUE = "value"; // click event
 	
 	private byte flags; // 0x01 = bold, 0x02 = italic, 0x04 = underlined, 0x08 = obfuscated, 0x10 = strikethrough
 	private String font = ChatComponent.FONT_DEFAULT;
@@ -150,7 +155,7 @@ public class BaseComponent implements ChatComponent {
 	
 	@Override
 	public String getLegacyText() {
-		return null;
+		return ChatUtil.legacyFromComponent(this);
 	}
 	
 	@Override
@@ -175,22 +180,24 @@ public class BaseComponent implements ChatComponent {
 			buff.appendBoolean(JSON_STRIKETHROUGH, true);
 		if (hasColor()) {
 			if (hasChatColor())
-				buff.appendText(JSON_COLOR, getColorChat().name().toLowerCase());
+				buff.appendText(JSON_COLOR, getColorChat().getNameID());
 			else
-				buff.appendText(JSON_COLOR, "#" + Integer.toString(color));
+				buff.appendText(JSON_COLOR, "#" + Integer.toHexString(color));
 		}
 		if (!getFont().equals(ChatComponent.FONT_DEFAULT))
 			buff.appendText(JSON_FONT, getFont());
 		if (getClickEvent() != null) {
 			buff.beginObject(JSON_CLICK_EVENT);
 			ClickEvent event = getClickEvent();
-			buff.append(event.getAction().getName(), event.getValue());
+			buff.append(JSON_ACTION, event.getAction().getName());
+			buff.append(JSON_VALUE, event.getValue());
 			buff.endObject();
 		}
 		if (getHoverEvent() != null) {
 			buff.beginObject(JSON_HOVER_EVENT);
 			HoverEvent event = getHoverEvent();
-			buff.append(event.getAction().getName(), event.getValue());
+			buff.append(JSON_ACTION, event.getAction().getName());
+			buff.append(JSON_CONTENTS, event.getValue());
 			buff.endObject();
 		}
 		if (hasExtra()) {
@@ -222,6 +229,13 @@ public class BaseComponent implements ChatComponent {
 	@Override
 	public String getText() {
 		return getJsonText();
+	}
+
+	@Override
+	public void setExtra(Collection<ChatComponent> extra) {
+		List<ChatComponent> list = getExtra();
+		list.clear();
+		list.addAll(extra);
 	}
 	
 }

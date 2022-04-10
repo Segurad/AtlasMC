@@ -1,5 +1,6 @@
 package de.atlasmc.chat.component;
 
+import java.util.Collection;
 import java.util.List;
 
 import de.atlasmc.chat.Chat;
@@ -94,5 +95,7 @@ public interface ChatComponent extends Chat {
 	public boolean hasExtra();
 	
 	public void addExtra(ChatComponent component);
+
+	public void setExtra(Collection<ChatComponent> extra);
 	
 }
