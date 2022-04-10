@@ -175,7 +175,7 @@ public class HandlerList {
 		final int prio = priority.ordinal();
 		for (EventExecutor exe = executors.peekNext(); exe != null; exe = executors.peekNext()) {
 			if (exe.getPriority().ordinal() > prio) break;
-			executors.moveToPeeked();
+			executors.gotoPeeked();
 			if (exe.getIgnoreCancelled() && (cancellable ? false : ((Cancellable) event).isCancelled())) continue;
 			exe.fireEvent(event);
 		}
