@@ -2,8 +2,8 @@ package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.PacketOutbound;
-import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.io.NBTReader;
+import de.atlasmc.util.nbt.tag.NBT;
 
 @DefaultPacketID(PacketPlay.OUT_BLOCK_ENTITY_DATA)
 public interface PacketOutBlockEntityData extends PacketPlay, PacketOutbound {

@@ -5,10 +5,10 @@ import java.io.IOException;
 import de.atlascore.io.protocol.CoreProtocolAdapter;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutNBTQueryResponse;
-import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import de.atlasmc.util.nbt.io.NBTReader;
+import de.atlasmc.util.nbt.tag.NBT;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
@@ -30,7 +30,9 @@ public class CorePacketOutNBTQueryResponse extends AbstractPacket implements Pac
 		} else {
 			buf = Unpooled.buffer();
 			try {
-				new NBTNIOWriter(buf).writeNBT(nbt);
+				NBTNIOWriter writer = new NBTNIOWriter(buf);
+				writer.writeNBT(nbt);
+				writer.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -57,7 +59,12 @@ public class CorePacketOutNBTQueryResponse extends AbstractPacket implements Pac
 	@Override
 	public NBT getNBT() {
 		try {
-			return new NBTNIOReader(buf).readNBT();
+			int pos = buf.readerIndex();
+			NBTNIOReader reader = new NBTNIOReader(buf);
+			NBT nbt = reader.readNBT();
+			reader.close();
+			buf.readerIndex(pos);
+			return nbt;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -33,6 +33,7 @@ public class CorePacketOutWindowItems extends AbstractPacket implements PacketOu
 		for (int i = 0; i < count; i++) {
 			slots[i] = readSlot(in, reader);
 		}
+		reader.close();
 	}
 
 	@Override
@@ -43,6 +44,7 @@ public class CorePacketOutWindowItems extends AbstractPacket implements PacketOu
 		for (ItemStack i : slots) {
 			writeSlot(i, out, writer);
 		}
+		writer.close();
 	}
 
 	@Override

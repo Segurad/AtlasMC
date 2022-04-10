@@ -1,14 +1,14 @@
 package de.atlascore.io.protocol.play;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutBlockEntityData;
-import de.atlasmc.util.ByteDataBuffer;
-import de.atlasmc.util.nbt.NBT;
 import de.atlasmc.util.nbt.io.NBTIOReader;
 import de.atlasmc.util.nbt.io.NBTReader;
+import de.atlasmc.util.nbt.tag.NBT;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutBlockEntityData extends AbstractPacket implements PacketOutBlockEntityData {
@@ -63,7 +63,7 @@ public class CorePacketOutBlockEntityData extends AbstractPacket implements Pack
 
 	@Override
 	public NBTReader getNBTReader() {
-		return new NBTIOReader(new ByteDataBuffer(data));
+		return new NBTIOReader(new ByteArrayInputStream(data));
 	}
 	
 	@Override

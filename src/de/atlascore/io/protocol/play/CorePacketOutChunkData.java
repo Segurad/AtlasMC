@@ -97,6 +97,7 @@ public class CorePacketOutChunkData extends AbstractPacket implements PacketOutC
 				motionBlocking = reader.readLongArrayTag();
 			} else reader.readLongArrayTag();
 		}
+		reader.close();
 		final int length = readVarInt(in);
 		biomes = new short[length];
 		for (int i = 0; i < length; i++) {
@@ -117,6 +118,7 @@ public class CorePacketOutChunkData extends AbstractPacket implements PacketOutC
 		writer.writeCompoundTag(null);
 		writer.writeLongArrayTag("MOTION_BLOCKING", motionBlocking);
 		writer.writeEndTag();
+		writer.close();
 		writeVarInt(biomes.length, out);
 		for (int i : biomes) {
 			writeVarInt(i, out);
