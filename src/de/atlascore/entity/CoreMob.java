@@ -21,6 +21,23 @@ public class CoreMob extends CoreLivingEntity implements Mob {
 	
 	protected static final int LAST_META_INDEX = CoreLivingEntity.LAST_META_INDEX+1;
 	
+	protected static final String
+	NBT_LEFT_HANDED = "LeftHanded",
+	NBT_NO_AI = "NoAI";
+	
+	static {
+		NBT_FIELDS.setField(NBT_LEFT_HANDED, (holder, reader) -> {
+			if (holder instanceof Mob) {
+				((Mob) holder).setLeftHanded(reader.readByteTag() == 1);
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_NO_AI, (holder, reader) -> {
+			if (holder instanceof Mob) {
+				((Mob) holder).setAware(reader.readByteTag() == 1);
+			} else reader.skipTag();
+		});
+	}
+	
 	public CoreMob(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
 	}

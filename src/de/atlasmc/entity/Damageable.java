@@ -2,8 +2,8 @@ package de.atlasmc.entity;
 
 public interface Damageable extends Entity {
 	
-	public double getHealth();
+	public float getHealth();
 	
-	public void setHealth(double health);
+	public void setHealth(float health);
 
 }

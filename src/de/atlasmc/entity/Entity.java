@@ -108,6 +108,8 @@ public interface Entity extends NBTHolder, Nameable, Tickable {
 	
 	public boolean isInvisble();
 	
+	public boolean isOnGround();
+	
 	public boolean isOnFire();
 	
 	public boolean isSilent();
@@ -140,6 +142,8 @@ public interface Entity extends NBTHolder, Nameable, Tickable {
 	public boolean isRemoved();
 	
 	public boolean isDead();
+	
+	public int getPortalCooldown();
 	
 	public void setAirTicks(int air);
 

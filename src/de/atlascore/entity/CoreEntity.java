@@ -11,8 +11,8 @@ import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.Vector;
 import de.atlasmc.atlasnetwork.server.LocalServer;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
-import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaData;
@@ -23,32 +23,12 @@ import de.atlasmc.util.nbt.AbstractNBTBase;
 import de.atlasmc.util.nbt.CustomTagContainer;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.Chunk;
 import de.atlasmc.world.World;
 
 public class CoreEntity extends AbstractNBTBase implements Entity {
-	
-	protected static final NBTFieldContainer NBT_FIELDS = new NBTFieldContainer();
-	private CustomTagContainer customTags;
-	protected final MetaDataContainer metaContainer;
-	private int id;
-	private final EntityType type;
-	private UUID uuid;
-	private short air;
-	private float fallDistance;
-	private short fire;
-	private boolean glowing;
-	private boolean invulnerable;
-	private boolean removed;
-	private volatile boolean aremoved;
-	private Vector motion;
-	private boolean teleported;
-	private List<Entity> passengers;
-	private int portalCooldown;
-	private final Location loc, oldLoc;
-	private Chunk chunk;
-	private List<String> scoreboardTags;
 	
 	/**
 	 * Flags contains the following Data<br>
@@ -65,7 +45,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	 */
 	protected static final MetaDataField<Byte> META_ENTITY_FLAGS = new MetaDataField<>(0, (byte) 0, MetaDataType.BYTE);
 	protected static final MetaDataField<Integer> META_AIR_TICKS = new MetaDataField<>(1, 300, MetaDataType.INT);
-	protected static final MetaDataField<ChatComponent> META_CUSTOM_NAME = new MetaDataField<>(2, null, MetaDataType.OPT_CHAT); 
+	protected static final MetaDataField<Chat> META_CUSTOM_NAME = new MetaDataField<>(2, null, MetaDataType.OPT_CHAT); 
 	protected static final MetaDataField<Boolean> META_CUSTOM_NAME_VISIBLE = new MetaDataField<>(3, false, MetaDataType.BOOLEAN);
 	protected static final MetaDataField<Boolean> META_IS_SILENT = new MetaDataField<>(4, false, MetaDataType.BOOLEAN);
 	protected static final MetaDataField<Boolean> META_HAS_NO_GRAVITY = new MetaDataField<>(5, false, MetaDataType.BOOLEAN);
@@ -73,90 +53,115 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	//protected static final MetaDataField<Integer> META_TICKS_FROZEN = new MetaDataField<>(7, 0, MetaDataType.INT); for 1.17
 	protected static final int LAST_META_INDEX = 6;
 	
+	protected static final NBTFieldContainer NBT_FIELDS = new NBTFieldContainer();
+	
 	protected static final String
-	AIR = "Air",
-	CUSTOM_NAME = "CustomName",
-	CUSTOM_NAME_VISIBLE = "CustomNameVisible",
-	DIMENSION = "Dimension",
-	FALL_DISTANCE = "FallDistance",
-	FIRE = "Fire",
-	GLOWING = "Glowing",
-	ID = "id",
-	INVULNERABLE = "Invulnerable",
-	MOTION = "Motion", 
-	NO_GRAVITY = "NoGravity",
-	ON_GROUND = "OnGround",
-	PASSENGERS = "Passengers",
-	PORTAL_COOLDOWN = "PortalCooldown",
-	POS = "Pos",
-	ROTATION = "Rotation",
-	SILENT = "Silent",
-	TAGS = "Tags",
-	UUID = "UUID";
+	NBT_AIR = "Air",
+	NBT_CUSTOM_NAME = "CustomName",
+	NBT_CUSTOM_NAME_VISIBLE = "CustomNameVisible",
+	NBT_DIMENSION = "Dimension",
+	NBT_FALL_DISTANCE = "FallDistance",
+	NBT_FIRE = "Fire",
+	NBT_GLOWING = "Glowing",
+	NBT_ID = "id",
+	NBT_INVULNERABLE = "Invulnerable",
+	NBT_MOTION = "Motion", 
+	NBT_NO_GRAVITY = "NoGravity",
+	NBT_ON_GROUND = "OnGround",
+	NBT_PASSENGERS = "Passengers",
+	NBT_PORTAL_COOLDOWN = "PortalCooldown",
+	NBT_POS = "Pos",
+	NBT_ROTATION = "Rotation",
+	NBT_SILENT = "Silent",
+	NBT_TAGS = "Tags",
+	NBT_UUID = "UUID";
 	
 	static {
-		NBT_FIELDS.setField(AIR, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_AIR, (holder, reader) -> {
 			((Entity) holder).setAirTicks(reader.readShortTag());
 		});
-		NBT_FIELDS.setField(CUSTOM_NAME, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_CUSTOM_NAME, (holder, reader) -> {
 			((Entity) holder).setCustomName(ChatUtil.toChat(reader.readStringTag()));
 		});
-		NBT_FIELDS.setField(CUSTOM_NAME_VISIBLE, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_CUSTOM_NAME_VISIBLE, (holder, reader) -> {
 			((Entity) holder).setCustomNameVisible(reader.readByteTag() == 1);
 		});
-		NBT_FIELDS.setField(DIMENSION, NBTField.SKIP);
-		NBT_FIELDS.setField(FALL_DISTANCE, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_DIMENSION, NBTField.SKIP);
+		NBT_FIELDS.setField(NBT_FALL_DISTANCE, (holder, reader) -> {
 			((Entity) holder).setFallDistance(reader.readFloatTag());
 		});
-		NBT_FIELDS.setField(FIRE, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_FIRE, (holder, reader) -> {
 			((Entity) holder).setFireTicks(reader.readShortTag());
 		});
-		NBT_FIELDS.setField(GLOWING, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_GLOWING, (holder, reader) -> {
 			((Entity) holder).setGlowing(reader.readByteTag() == 1);
 		});
-		NBT_FIELDS.setField(ID, NBTField.SKIP); // TODO skipped
-		NBT_FIELDS.setField(INVULNERABLE, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_ID, NBTField.SKIP); // TODO skipped
+		NBT_FIELDS.setField(NBT_INVULNERABLE, (holder, reader) -> {
 			((Entity) holder).setInvulnerable(reader.readByteTag() == 1);
 		});
-		NBT_FIELDS.setField(MOTION, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_MOTION, (holder, reader) -> {
 			double x = reader.readDoubleTag();
 			double y = reader.readDoubleTag();
 			double z = reader.readDoubleTag();
 			((Entity) holder).setVelocity(x, y, z);
 		});
-		NBT_FIELDS.setField(NO_GRAVITY, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_NO_GRAVITY, (holder, reader) -> {
 			((Entity) holder).setGravity(reader.readByteTag() == 0);
 		});
-		NBT_FIELDS.setField(ON_GROUND, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_ON_GROUND, (holder, reader) -> {
 			((Entity) holder).setOnGround(reader.readByteTag() == 1);
 		});
-		NBT_FIELDS.setField(PASSENGERS, NBTField.SKIP); // TODO nbt load passenger
-		NBT_FIELDS.setField(PORTAL_COOLDOWN, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_PASSENGERS, NBTField.SKIP); // TODO nbt load passenger
+		NBT_FIELDS.setField(NBT_PORTAL_COOLDOWN, (holder, reader) -> {
 			((Entity) holder).setPortalCooldown(reader.readIntTag());
 		});
-		NBT_FIELDS.setField(POS, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_POS, (holder, reader) -> {
 			double x = reader.readDoubleTag();
 			double y = reader.readDoubleTag();
 			double z = reader.readDoubleTag();
 			((Entity) holder).teleport(x, y, z);
 		});
-		NBT_FIELDS.setField(ROTATION, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_ROTATION, (holder, reader) -> {
 			float yaw = reader.readFloatTag();
 			float pitch = reader.readFloatTag();
 			Entity ent = (Entity) holder;
 			ent.teleport(ent.getX(), ent.getY(), ent.getZ(), yaw, pitch);
 		});
-		NBT_FIELDS.setField(SILENT, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_SILENT, (holder, reader) -> {
 			((Entity) holder).setSilent(reader.readByteTag() == 1);
 		});
-		NBT_FIELDS.setField(TAGS, (holder, reader) -> {
+		NBT_FIELDS.setField(NBT_TAGS, (holder, reader) -> {
 			Entity ent = (Entity) holder;
 			while(reader.getRestPayload() > 0) {
 				ent.addScoreboardTag(reader.readStringTag());
 			}
 		});
-		NBT_FIELDS.setField(UUID, NBTField.SKIP);
+		NBT_FIELDS.setField(NBT_UUID, NBTField.SKIP);
 	}
+	
+	private CustomTagContainer customTags;
+	protected final MetaDataContainer metaContainer;
+	private int id;
+	private final EntityType type;
+	private UUID uuid;
+	private short air;
+	private float fallDistance;
+	private short fire;
+	private boolean glowing;
+	private boolean invulnerable;
+	private boolean removed;
+	private volatile boolean aremoved;
+	private Vector motion;
+	private List<Entity> passengers;
+	private int portalCooldown;
+	private final Location loc, oldLoc;
+	private Chunk chunk;
+	private List<String> scoreboardTags;
+	
+	// Update flags
+	private boolean teleported;
+	private boolean passengersChanged;
 	
 	/**
 	 * Creates a new CoreEntity with id 0 and removed status.<br>
@@ -213,7 +218,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	}
 
 	@Override
-	public ChatComponent getCustomName() {
+	public Chat getCustomName() {
 		return metaContainer.getData(META_CUSTOM_NAME);
 	}
 
@@ -258,7 +263,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	}
 
 	@Override
-	public void setCustomName(ChatComponent name) {
+	public void setCustomName(Chat name) {
 		metaContainer.get(META_CUSTOM_NAME).setData(name);
 	}
 
@@ -337,9 +342,39 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeShortTag(AIR, air);
-		if (hasCustomName()) writer.writeStringTag(CUSTOM_NAME, getCustomName().getJsonText());
-		// TODO toNBT
+		writer.writeStringTag(NBT_ID, type.getNamespacedName());
+		writer.writeShortTag(NBT_AIR, air);
+		if (hasCustomName()) 
+			writer.writeStringTag(NBT_CUSTOM_NAME, getCustomName().getJsonText());
+		if (isCustomNameVisible())
+			writer.writeByteTag(NBT_CUSTOM_NAME_VISIBLE, true);
+		writer.writeFloatTag(NBT_FALL_DISTANCE, fallDistance);
+		writer.writeShortTag(NBT_FIRE, fire);
+		if (isGlowing())
+			writer.writeByteTag(NBT_GLOWING, true);
+		writer.writeByteTag(NBT_INVULNERABLE, isInvulnerable());
+		writer.writeListTag(NBT_MOTION, TagType.DOUBLE, 3);
+			writer.writeDoubleTag(null, motion.getX());
+			writer.writeDoubleTag(null, motion.getY());
+			writer.writeDoubleTag(null, motion.getZ());
+		if (!hasGravity())
+			writer.writeByteTag(NBT_NO_GRAVITY, true);
+		writer.writeByteTag(NBT_ON_GROUND, isOnGround());
+		writer.writeIntTag(NBT_PORTAL_COOLDOWN, portalCooldown);
+		writer.writeListTag(NBT_POS, TagType.DOUBLE, 3);
+			writer.writeDoubleTag(null, loc.getX());
+			writer.writeDoubleTag(null, loc.getY());
+			writer.writeDoubleTag(null, loc.getZ());
+		writer.writeListTag(NBT_ROTATION, TagType.FLOAT, 2);
+			writer.writeFloatTag(null, loc.getYaw());
+			writer.writeFloatTag(null, loc.getPitch());
+		if (isSilent())
+			writer.writeByteTag(NBT_SILENT, true);
+		if (hasScoreboardTags())
+			writer.writeListTag(NBT_TAGS, TagType.STRING, scoreboardTags.size());
+			for (String tag : scoreboardTags)
+				writer.writeStringTag(null, tag);
+		writer.writeUUID(NBT_CUSTOM_NAME, uuid);
 	}
 
 	@Override
@@ -436,9 +471,9 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	}
 
 	@Override
-	public void setOnGround(boolean onGorund) {
+	public void setOnGround(boolean onGround) {
 		MetaData<Byte> meta = metaContainer.get(META_ENTITY_FLAGS);
-		meta.setData((byte) (meta.getData() & 0x02));
+		meta.setData((byte) (onGround ? meta.getData() | 0x02 : meta.getData() & 0xFD));
 	}
 
 	@Override
@@ -458,6 +493,10 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 
 	@Override
 	public void setUUID(UUID uuid) {
+		if (uuid == null)
+			throw new IllegalArgumentException("UUID can not be null!");
+		if (!isRemoved())
+			throw new IllegalStateException("Can not change UUID while not removed!");
 		this.uuid = uuid;
 	}
 
@@ -486,6 +525,8 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	public void spawn(int entityID, World world, double x, double y, double z, float pitch, float yaw) {
 		if (!asyncIsRemoved())
 			throw new IllegalStateException("Unable to spawn not removed Entity! call remove() first...");
+		if (uuid == null)
+			uuid = java.util.UUID.randomUUID();
 		removed = false;
 		aremoved = false;
 		if (passengers != null) 
@@ -538,7 +579,18 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	 * {@link MetaDataContainer} will be updated by {@link CoreEntity}
 	 */
 	protected void update() {
-		
+		if (passengersChanged) {
+			int[] passengerIDs = new int[passengers.size()];
+			int index = 0;
+			for (Entity ent : passengers)
+				passengerIDs[index++] = ent.getID();
+			// TODO submit update to chunk viewers
+			passengersChanged = false;
+		}
+		if (teleported) {
+			// TODO submit teleport to viewers
+			teleported = false;
+		}
 	}
 	
 	/**
@@ -551,13 +603,23 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 
 	@Override
 	public void causeSound(Sound sound, SoundCategory category, float volume, float pitch) {
-		// TODO cause sound
-		
+		getWorld().playSound(this, sound, category, volume, pitch);
 	}
 
 	@Override
 	public boolean isDead() {
 		return false;
+	}
+
+	@Override
+	public boolean isOnGround() {
+		// TODO Auto-generated 
+		return false;
+	}
+
+	@Override
+	public int getPortalCooldown() {
+		return portalCooldown;
 	}
 	
 }

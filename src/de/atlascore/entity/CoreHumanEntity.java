@@ -12,7 +12,7 @@ import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.MainHand;
 import de.atlasmc.inventory.PlayerInventory;
-import de.atlasmc.util.nbt.CompoundTag;
+import de.atlasmc.util.nbt.tag.CompoundTag;
 import de.atlasmc.world.World;
 
 public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {

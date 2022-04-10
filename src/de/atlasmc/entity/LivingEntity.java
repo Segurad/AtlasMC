@@ -1,9 +1,13 @@
 package de.atlasmc.entity;
 
+import de.atlascore.inventory.EntityEquipment;
 import de.atlasmc.Color;
+import de.atlasmc.attribute.Attribute;
+import de.atlasmc.attribute.AttributeInstance;
+import de.atlasmc.attribute.Attributeable;
 import de.atlasmc.potion.PotionEffect;
 
-public interface LivingEntity extends Damageable {
+public interface LivingEntity extends Damageable, Attributeable {
 
 	public float getHeadPitch();
 	
@@ -53,5 +57,53 @@ public interface LivingEntity extends Damageable {
 	 * @param reduced
 	 */
 	public void setPotionAmbientReduced(boolean reduced);
+
+	public float getAbsorption();
+	
+	public void setAbsorption(float absorption);
+
+	public void addPotionEffect(PotionEffect effect);
+	
+	public AttributeInstance getAttribute(Attribute attribute);
+
+	/**
+	 * Time in ticks the death animation is played<br>
+	 * 0 if alive
+	 * @param time
+	 */
+	public void setDeathAnimationTime(int time);
+
+	public void setFallFlying(boolean fallFlying);
+
+	public void setHurtAnimationTime(int time);
+
+	public boolean hasActivePotionEffects();
+
+	public boolean hasAttributes();
+
+	public int getDeathAnimationTime();
+
+	public boolean isFallFlying();
+
+	public int getHurtAnimationTime();
+
+	public void setRemoveWhenFarAway(boolean remove);
+	
+	public boolean getRemoveWhenFarAway();
+
+	public EntityEquipment getEquipment();
+
+	/**
+	 * Sets the time in ticks this entity is invulnerable after it took damage
+	 * @param time
+	 */
+	public void setAttackTime(int time);
+	
+	/**
+	 * Returns the time in ticks this entity is invulnerable after it took damage<br>
+	 * 0 when no damage occurred in the last time
+	 * @return time
+	 */
+	public int getAttackTime();
 	
 }

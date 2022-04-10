@@ -22,6 +22,30 @@ public class CoreBee extends CoreAgeableMob implements Bee {
 	META_BEE_ANGER_TIME = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+2, 0, MetaDataType.INT);
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+2;
+	
+	protected static final String
+	NBT_HIVE_POS = "HivePos",
+	NBT_FLOWER_POS = "FlowerPos",
+	NBT_HAS_NECTAR = "HasNextar",
+	NBT_HAS_STUNG = "HasStung",
+	NBT_TICKS_SINCE_POLLINATION = "TicksSincePollination",
+	NBT_CANNOT_ENTER_HIVE_TICKS = "CannotEnterHiveTicks",
+	NBT_CROPS_GROWN_SINCE_POLLINATION = "CropsGrownSincePollination",
+	NBT_ANGER = "Anger",
+	NBT_HURT_BY = "HurtBy";
+
+	static {
+		NBT_FIELDS.setField(NBT_HAS_NECTAR, (holder, reader) -> {
+			if (holder instanceof Bee) {
+				((Bee) holder).setNectar(reader.readByteTag() == 1);
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_HAS_STUNG, (holder, reader) -> {
+			if (holder instanceof Bee) {
+				((Bee) holder).setStung(reader.readByteTag() == 1);
+			} else reader.skipTag();
+		});
+	}
 
 	private int tickInHive, minHiveOccupationTicks;
 	
