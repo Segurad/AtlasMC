@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.world.World;
 
@@ -127,13 +128,12 @@ public class EntityType implements Namespaced {
 		REGISTRI = new ArrayList<EntityType>();
 	}
 	
-	private final String name;
+	private final NamespacedKey key;
 	private final Class<? extends Entity> clazz;
 	private final int id;
-	private final short namespaceID;
 	
-	public EntityType(int namespaceID, String name, Class<? extends Entity> clazz) {
-		this(namespaceID, name, eid++, clazz);
+	public EntityType(String namespace, String name, Class<? extends Entity> clazz) {
+		this(namespace, name, eid++, clazz);
 	}
 	
 	/**
@@ -142,13 +142,11 @@ public class EntityType implements Namespaced {
 	 * @param id the entityTypeID of this type
 	 * @param clazz the entity class needs to have a constructor({@link EntityType}, {@link UUID}, {@link World})
 	 */
-	public EntityType(int namespaceID, String name, int id, Class<? extends Entity> clazz) {
-		if (name == null) throw new IllegalArgumentException("Name can not be null!");
+	public EntityType(String namespace, String name, int id, Class<? extends Entity> clazz) {
 		if (clazz == null) throw new IllegalArgumentException("Class can not be null!");
-		this.name = name;
+		this.key = new NamespacedKey(namespace, name);
 		this.id = id;
 		this.clazz = clazz;
-		this.namespaceID = (short) namespaceID;
 		REGISTRI.add(this);
 	}
 	
@@ -200,13 +198,8 @@ public class EntityType implements Namespaced {
 	}
 
 	@Override
-	public short getNamespaceID() {
-		return namespaceID;
-	}
-
-	@Override
-	public String getName() {
-		return name;
+	public NamespacedKey getNamespacedKey() {
+		return key;
 	}
 
 }
