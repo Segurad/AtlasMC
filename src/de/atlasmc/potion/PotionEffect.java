@@ -1,21 +1,24 @@
 package de.atlasmc.potion;
 
-import java.io.IOException;
-
-import de.atlasmc.util.nbt.NBTHolder;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
-
-public class PotionEffect implements Cloneable, NBTHolder {
+public class PotionEffect implements Cloneable {
 	
-	private PotionEffectType type;
-	
-	public PotionEffect(PotionEffectType type) {
-		this.type = type;
+	private final PotionEffectType type;
+	private int duration;
+	private final int amplifier;
+	private final boolean reduceAmbient, showParticels;
+
+	public PotionEffect(PotionEffectType type, int duration, int amplifier) {
+		this(type, duration, amplifier, false, true);
 	}
-
-	public PotionEffect() {
-		// TODO
+	
+	public PotionEffect(PotionEffectType type, int duration, int amplifier, boolean reduceAmbient, boolean showParticles) {
+		if (amplifier < 0 || amplifier > 127)
+			amplifier = 0;
+		this.amplifier = amplifier;
+		this.type = type;
+		this.reduceAmbient = reduceAmbient;
+		this.showParticels = showParticles;
+		this.duration = duration;
 	}
 
 	public PotionEffect clone() {
@@ -31,21 +34,47 @@ public class PotionEffect implements Cloneable, NBTHolder {
 		return type;
 	}
 
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
-
 	public static PotionEffect createByPotionID(int id) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public boolean hasReducedAmbient() {
+		return reduceAmbient;
+	}
+
+	public int getAmplifier() {
+		return amplifier;
+	}
+
+	public int getDuration() {
+		return duration;
+	}
+
+	public boolean hasParticels() {
+		return showParticels;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (obj == this)
+			return true;
+		if (getClass() != obj.getClass())
+			return false;
+		PotionEffect effect = (PotionEffect) obj;
+		if (getAmplifier() != effect.getAmplifier())
+			return false;
+		if (getDuration() != effect.getDuration())
+			return false;
+		if (hasReducedAmbient() != effect.hasReducedAmbient())
+			return false;
+		if (hasParticels() != effect.hasParticels())
+			return false;
+		if (!getType().equals(effect.getType()))
+			return false;
+		return true;
 	}
 
 }
