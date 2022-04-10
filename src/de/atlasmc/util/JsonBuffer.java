@@ -2,7 +2,7 @@ package de.atlasmc.util;
 
 import java.util.Arrays;
 
-public class JsonBuffer {
+public class JsonBuffer implements CharSequence {
 	
 	private char[] buff;
 	private String stringcache;
@@ -152,7 +152,7 @@ public class JsonBuffer {
 	@Override
 	public String toString() {
 		if (stringcache == null)
-			stringcache = String.copyValueOf(buff, 0, index);
+			stringcache = String.valueOf(buff, 0, index);
 		return stringcache;
 	}
 
@@ -167,6 +167,21 @@ public class JsonBuffer {
 			appendBoolean((boolean) value);
 		else
 			appendCharSequence(value.toString());
+	}
+
+	@Override
+	public int length() {
+		return index;
+	}
+
+	@Override
+	public char charAt(int index) {
+		return buff[index];
+	}
+
+	@Override
+	public CharSequence subSequence(int start, int end) {
+		return String.valueOf(buff, start, end);
 	}
 	
 }
