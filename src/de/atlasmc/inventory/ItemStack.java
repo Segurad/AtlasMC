@@ -106,7 +106,7 @@ public class ItemStack implements NBTHolder {
 		if (!(obj instanceof ItemStack))
 			return false;
 		ItemStack item = (ItemStack) obj;
-		return isSimilar(item, false, false, false);
+		return isSimilar(item, false, false);
 	}
 	
 	/**
@@ -114,10 +114,9 @@ public class ItemStack implements NBTHolder {
 	 * @param item the ItemStack that should be compared
 	 * @param ignoreAmount whether or not the amount should be ignored in this comparison
 	 * @param ignoreDamage whether or not the damage values should be ignored in this comparison
-	 * @param checkClass whether or not the comparison should compare ItemStack and ItemMeta {@link Class}. If false may result in x.equals(y) is true and y.equals(x) is false
 	 * @return true if similar
 	 */
-	public boolean isSimilar(ItemStack item, boolean ignoreAmount, boolean ignoreDamage, boolean checkClass) {
+	public boolean isSimilar(ItemStack item, boolean ignoreAmount, boolean ignoreDamage) {
 		if (item == null) 
 			return false;
 		if (item == this) 
@@ -133,12 +132,7 @@ public class ItemStack implements NBTHolder {
 		if (!item.hasItemMeta())
 			return false;
 		ItemMeta meta = item.getItemMeta();
-		return meta.isSimilar(meta, ignoreDamage, checkClass);
-	}
-	
-	public boolean isPartOf(ItemStack item) {
-		// TODO implement
-		return false;
+		return meta.isSimilar(meta, ignoreDamage);
 	}
 	
 	/**
