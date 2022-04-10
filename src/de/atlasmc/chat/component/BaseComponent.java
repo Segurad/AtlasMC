@@ -140,7 +140,7 @@ public class BaseComponent implements ChatComponent {
 	}
 	
 	@Override
-	public String toJson() {
+	public String getJsonText() {
 		JsonBuffer buff = new JsonBuffer();
 		buff.beginObject(null);
 		addContents(buff);
@@ -149,13 +149,13 @@ public class BaseComponent implements ChatComponent {
 	}
 	
 	@Override
-	public String toLegacy() {
+	public String getLegacyText() {
 		return null;
 	}
 	
 	@Override
 	public String toString() {
-		return toJson();
+		return getJsonText();
 	}
 	
 	/**
@@ -217,6 +217,11 @@ public class BaseComponent implements ChatComponent {
 	
 	public void addExtra(ChatComponent component) {
 		getExtra().add(component);
+	}
+
+	@Override
+	public String getText() {
+		return getJsonText();
 	}
 	
 }

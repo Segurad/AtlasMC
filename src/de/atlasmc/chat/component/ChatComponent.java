@@ -2,10 +2,11 @@ package de.atlasmc.chat.component;
 
 import java.util.List;
 
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.util.JsonBuffer;
 
-public interface ChatComponent {
+public interface ChatComponent extends Chat {
 	
 	public static final String 
 		FONT_DEFAULT = "minecraft:default",
@@ -82,15 +83,11 @@ public interface ChatComponent {
 	
 	public void setHoverEvent(HoverEvent event);
 	
-	public String toJson();
-	
 	/**
 	 * Adds the contents of this component to the buffer
 	 * @param buff
 	 */
 	public void addContents(JsonBuffer buff);
-	
-	public String toLegacy();
 	
 	public List<ChatComponent> getExtra();
 	

@@ -10,7 +10,7 @@ public class HoverTextEvent implements HoverEvent {
 	
 	@Override
 	public String getValue() {
-		return component.toJson();
+		return component.getJsonText();
 	}
 
 	@Override
