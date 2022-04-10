@@ -1,13 +1,17 @@
 package de.atlascore.world;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.atlascore.block.CoreBlockAccess;
 import de.atlasmc.Location;
 import de.atlasmc.block.Block;
+import de.atlasmc.block.data.BlockData;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.world.Chunk;
+import de.atlasmc.world.ChunkGenerator;
+import de.atlasmc.world.ChunkLoader;
 import de.atlasmc.world.ChunkProvider;
 import de.atlasmc.world.World;
 
@@ -19,23 +23,31 @@ public class CoreBufferedChunkProvider implements ChunkProvider {
 	private Chunk[] chunkBuffer; // stores all currently loaded chunks the index equals the index in the position buffer
 	private long[] chunkPosBuffer; // stores the position of a chunk as long 32 most significant bits X 32 least significant bits Z
 	private int used; // number of chunks currently buffered
-	private int last; // position of the last chunk in the buffer
 	private final World world;
+	private final ChunkGenerator generator;
+	private final ChunkLoader loader;
 	
-	public CoreBufferedChunkProvider(World world) {
+	public CoreBufferedChunkProvider(World world, ChunkGenerator generator, ChunkLoader loader) {
 		this.world = world;
+		this.generator = generator;
+		this.loader = loader;
 	}
 	
 	@Override
 	public Chunk getChunk(int x, int z) {
 		// X | Z
 		final long pos = x << 32 | z;
-		for (int i = 0; i < last; i++) {
+		for (int i = 0; i < used; i++) {
 			if (chunkPosBuffer[i] != pos) continue;
 			return chunkBuffer[i];
 		}
-		// TODO chunk not present
-		return null;
+		Chunk chunk = loader.loadChunk(world, x, z);
+		if (chunk == null)
+			chunk = generator.generate(world, x, z);
+		if (chunk == null)
+			return null;
+		addChunk(chunk, pos);
+		return chunk;
 	}
 
 	@Override
@@ -89,6 +101,44 @@ public class CoreBufferedChunkProvider implements ChunkProvider {
 	public Entity getEntity(int entityID) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public BlockData getBlockData(int x, int y, int z) {
+		return getChunk(x >> 4, z >> 4).getBlockDataAt(x, y, z);
+	}
+	
+	private void addChunk(Chunk chunk, long pos) {
+		ensureBufferSize();
+		chunkPosBuffer[used] = pos;
+		chunkBuffer[used] = chunk;
+		used++;
+	}
+	
+	private void removeChunk(Chunk chunk) {
+		for (int i = 0; i < used; i++) {
+			if (chunkBuffer[i] != chunk)
+				continue;
+			removeChunk(i);
+			break;
+		}
+	}
+	
+	private void removeChunk(int index) {
+		used--;
+		if (used > 0) {
+			chunkPosBuffer[index] = chunkPosBuffer[used];
+			chunkBuffer[index] = chunkBuffer[used];
+		} else chunkBuffer[0] = null;
+	}
+	
+	private void ensureBufferSize() {
+		int size = chunkPosBuffer.length;
+		if (used < size)
+			return;
+		size *= size >> 1;
+		chunkPosBuffer = Arrays.copyOf(chunkPosBuffer, size);
+		chunkBuffer = Arrays.copyOf(chunkBuffer, size);
 	}
 
 }

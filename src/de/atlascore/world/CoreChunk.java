@@ -3,7 +3,6 @@ package de.atlascore.world;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
@@ -19,12 +18,16 @@ public class CoreChunk implements Chunk {
 	
 	private final ChunkSection[] sections;
 	private final List<Entity> entities;
+	private final List<ChunkListener> listeners;
 	private final short[] biomes;
 	private final World world;
 	
+	private ChunkStatus status;
+	
 	public CoreChunk(World world) {
 		sections = new ChunkSection[16];
-		entities = new ArrayList<Entity>();
+		entities = new ArrayList<>();
+		listeners = new ArrayList<>();
 		biomes = new short[1024];
 		this.world = world;
 	}
@@ -57,7 +60,6 @@ public class CoreChunk implements Chunk {
 
 	@Override
 	public boolean isLoaded() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -195,14 +197,8 @@ public class CoreChunk implements Chunk {
 	}
 
 	@Override
-	public void sendUpdate(int x, int y, int z) {
-		world.sendUpdate(this, x, y, z);
-	}
-
-	@Override
 	public ChunkStatus getStatus() {
-		// TODO Auto-generated method stub
-		return null;
+		return status;
 	}
 
 	@Override
@@ -213,14 +209,35 @@ public class CoreChunk implements Chunk {
 
 	@Override
 	public void addListener(ChunkListener listener) {
-		// TODO Auto-generated method stub
-		
+		listeners.add(listener);
 	}
 
 	@Override
 	public void removeListener(ChunkListener listener) {
-		// TODO Auto-generated method stub
-		
+		listeners.remove(listener);
+	}
+
+	@Override
+	public void addEntity(Entity entity) {
+		entities.add(entity);
+	}
+
+	@Override
+	public void removeEntity(Entity entity) {
+		entities.remove(entity);
+	}
+
+	@Override
+	public void updateBlock(int x, int y, int z) {
+		int state = getBlockState(x, y, z);
+		for (ChunkListener listener : listeners) {
+			listener.updateBlock(state, x, y, z);
+		}
+	}
+
+	@Override
+	public int getBlockState(int x, int y, int z) {
+		return getBlockDataAtUnsafe(x, y, z).getStateID();
 	}
 
 }

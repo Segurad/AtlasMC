@@ -13,6 +13,9 @@ import de.atlasmc.block.Block;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
+import de.atlasmc.entity.LivingEntity;
+import de.atlasmc.event.HandlerList;
+import de.atlasmc.event.entity.EntitySpawnEvent;
 import de.atlasmc.world.Chunk;
 import de.atlasmc.world.ChunkProvider;
 import de.atlasmc.world.World;
@@ -26,6 +29,7 @@ public class CoreWorld implements World {
 	private long time;
 	private boolean timeCycle;
 	private long age;
+	private int nextEntityID;
 	private Location spawn;
 	
 	public CoreWorld(LocalServer server, String name) {
@@ -58,12 +62,6 @@ public class CoreWorld implements World {
 	@Override
 	public LocalServer getServer() {
 		return server;
-	}
-
-	@Override
-	public Entity spawnEntity(SimpleLocation loc, EntityType type) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -114,6 +112,11 @@ public class CoreWorld implements World {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void playSound(Entity entity, Sound sound, SoundCategory category, float volume, float pitch) {
+		// TODO Auto-generated 
+	}
 
 	@Override
 	public boolean hasFlag(WorldFlag flag) {
@@ -140,7 +143,7 @@ public class CoreWorld implements World {
 
 	@Override
 	public BlockData getBlockData(int x, int y, int z) {
-		return null;
+		return chunks.getBlockData(x, y ,z);
 	}
 
 	@Override
@@ -176,13 +179,21 @@ public class CoreWorld implements World {
 	}
 
 	@Override
-	public void sendUpdate(Chunk chunk, int x, int y, int z) {
-		// TODO send update to all players in this world
+	public boolean spawnEntity(Entity entity, double x, double y, double z, float pitch, float yaw) {
+		if (!entity.asyncIsRemoved())
+			return false;
+		EntitySpawnEvent event = new EntitySpawnEvent(entity, this, x, y, z, pitch, yaw);
+		HandlerList.callEvent(event);
+		if (event.isCancelled())
+			return false;
+		entity.spawn(nextEntityID++, this, event.getX(), event.getY(), event.getZ(), event.getPitch(), event.getYaw());
+		return true;
 	}
 
 	@Override
-	public void sendUpdate(int x, int y, int z) {
-		sendUpdate(getChunk(x, z), x, y, z);
+	public Entity spawnEntity(EntityType type, double x, double y, double z, float pitch, float yaw) {
+		Entity ent = type.create(this);
+		return spawnEntity(ent, x, y, z, pitch, yaw) ? ent : null;
 	}
 
 }

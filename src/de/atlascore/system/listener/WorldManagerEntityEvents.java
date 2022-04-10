@@ -6,6 +6,7 @@ import de.atlasmc.event.EventPriority;
 import de.atlasmc.event.Listener;
 import de.atlasmc.event.entity.EntityDamageEvent;
 import de.atlasmc.event.entity.EntityDamageEvent.DamageCause;
+import de.atlasmc.event.entity.EntitySpawnEvent;
 import de.atlasmc.world.World;
 import de.atlasmc.world.WorldFlag;
 
@@ -65,7 +66,7 @@ final class WorldManagerEntityEvents implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onSpawn(EntitySpawnEvent e) {
-		World data = e.getLocation().getWorld();
+		World data = e.getWorld();
 		if (data == null)
 			return;
 		if (data.hasFlag(WorldFlag.DISABLE_MOBSPAWN))

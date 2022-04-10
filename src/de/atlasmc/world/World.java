@@ -13,11 +13,13 @@ import de.atlasmc.block.Block;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
+import de.atlasmc.event.entity.EntitySpawnEvent;
 import de.atlasmc.tick.Tickable;
 
 public interface World extends Tickable {
 
 	public List<Entity> getEntities();
+	
 	public <T extends Entity> List<T> getEntitiesByClass(Class<T> clazz);
 
 	@SuppressWarnings("unchecked")
@@ -27,7 +29,47 @@ public interface World extends Tickable {
 	
 	public LocalServer getServer();
 
-	public Entity spawnEntity(SimpleLocation loc, EntityType type);
+	public default Entity spawnEntity(EntityType type, SimpleLocation loc) {
+		return spawnEntity(type, loc.getX(), loc.getY(), loc.getZ(), loc.getPitch(), loc.getYaw());
+	}
+	
+	public default Entity spawnEntity(EntityType type, double x, double y, double z) {
+		return spawnEntity(type, x, y, z, 0, 0);
+	}
+	
+	/**
+	 * Creates a Entity and calls {@link EntitySpawnEvent} 
+	 * if the event was successfully the entity will be spawned otherwise null will be returned
+	 * @param type
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param pitch
+	 * @param yaw
+	 * @return Entity or null
+	 */
+	public Entity spawnEntity(EntityType type, double x, double y, double z, float pitch, float yaw);
+	
+	public default boolean spawnEntity(Entity entity, SimpleLocation loc) {
+		return spawnEntity(entity, loc.getX(), loc.getY(), loc.getZ(), loc.getPitch(), loc.getYaw());
+	}
+	
+	public default boolean spawnEntity(Entity entity, double x, double y, double z) {
+		return spawnEntity(entity, x, y, z, 0, 0);
+	}
+	
+	/**
+	 * Spawns a {@link Entity} in this World.<br>
+	 * Will always return false if the Entity is not removed! 
+	 * @param entity
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param pitch
+	 * @param yaw
+	 * @return true if spawning was successfully
+	 */
+	public boolean spawnEntity(Entity entity, double x, double y, double z, float pitch, float yaw); 
 
 	public Block getHighestBlockAt(int x, int z);
 
@@ -66,6 +108,8 @@ public interface World extends Tickable {
 
 	public void playSound(SimpleLocation loc, String sound, SoundCategory category, float volume, float pitch);
 	
+	public void playSound(Entity entity, Sound sound, SoundCategory category, float volume, float pitch);
+	
 	public boolean hasFlag(WorldFlag flag);
 	
 	public void addFlag(WorldFlag flag);
@@ -96,22 +140,5 @@ public interface World extends Tickable {
 	 * @return the chunk
 	 */
 	public Chunk getChunk(SimpleLocation loc);
-	
-	/**
-	 * Updates the Block at this position for Players
-	 * @param x world coordinate
-	 * @param y world coordinate
-	 * @param z world coordinate
-	 */
-	public void sendUpdate(int x, int y, int z);
-	
-	/**
-	 * Updates the Block at this position for Players
-	 * @param chunk of Blocks
-	 * @param x chunk coordinate
-	 * @param y chunk coordinate
-	 * @param z chunk coordinate
-	 */
-	public void sendUpdate(Chunk chunk, int x, int y, int z);
 
 }

@@ -75,6 +75,10 @@ public interface Chunk extends Tickable {
 	
 	public <T extends Entity> List<T> getEntitiesByClass(List<T> entities, Class<T> clazz);
 	
+	public void addEntity(Entity entity);
+	
+	public void removeEntity(Entity entity);
+	
 	/**
 	 * Returns a copy of the BlockData at the position
 	 * @param x
@@ -93,6 +97,15 @@ public interface Chunk extends Tickable {
 	 * @return BlockData
 	 */
 	public BlockData getBlockDataAtUnsafe(int x, int y, int z);
+	
+	/**
+	 * Return the BlockState at the position
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return BlockState
+	 */
+	public int getBlockState(int x, int y, int z);
 	
 	public Material getBlockType(int x, int y, int z);
 	
@@ -121,14 +134,6 @@ public interface Chunk extends Tickable {
 	public List<Entity> getEntitiesByClasses(List<Entity> entities, Class<? extends Entity>[] classes);
 	
 	/**
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @see {@link World#sendUpdate(Chunk, int, int, int)}
-	 */
-	public void sendUpdate(int x, int y, int z);
-	
-	/**
 	 * Returns the current status of this Chunk
 	 * @return {@link ChunkStatus}
 	 */
@@ -143,5 +148,13 @@ public interface Chunk extends Tickable {
 	public void addListener(ChunkListener listener);
 	
 	public void removeListener(ChunkListener listener);
+	
+	/**
+	 * Sends a block update to all {@link ChunkListener}s 
+	 * @param x in this chunk
+	 * @param y in this chunk
+	 * @param z in this chunk
+	 */
+	public void updateBlock(int x, int y, int z);
 	
 }

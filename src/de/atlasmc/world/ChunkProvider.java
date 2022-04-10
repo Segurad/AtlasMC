@@ -3,6 +3,7 @@ package de.atlasmc.world;
 import java.util.List;
 
 import de.atlasmc.block.Block;
+import de.atlasmc.block.data.BlockData;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.tick.Tickable;
 
@@ -27,5 +28,7 @@ public interface ChunkProvider extends Tickable {
 	 * @return
 	 */
 	public Chunk getChunk(int x, int z);
+
+	public BlockData getBlockData(int x, int y, int z);
 
 }

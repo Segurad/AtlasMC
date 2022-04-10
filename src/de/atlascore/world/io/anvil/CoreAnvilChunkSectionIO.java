@@ -1,4 +1,4 @@
-package de.atlascore.world.io;
+package de.atlascore.world.io.anvil;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,7 +9,10 @@ import de.atlasmc.util.nbt.AbstractNBTBase;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
-public class CoreAnvilChunkSectionLoader extends AbstractNBTBase {
+/**
+ * Class for handling the IO operations for chunk sections
+ */
+public class CoreAnvilChunkSectionIO extends AbstractNBTBase {
 
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
@@ -23,15 +26,15 @@ public class CoreAnvilChunkSectionLoader extends AbstractNBTBase {
 	static {
 		NBT_FIELDS = new NBTFieldContainer();
 		NBT_FIELDS.setField(BLOCK_LIGHT, (holder, reader) -> {
-			CoreAnvilChunkSectionLoader loader = (CoreAnvilChunkSectionLoader) holder;
+			CoreAnvilChunkSectionIO loader = (CoreAnvilChunkSectionIO) holder;
 			loader.blocklight = reader.readByteArrayTag();
 		});
 		NBT_FIELDS.setField(BLOCK_STATES, (holder, reader) -> {
-			CoreAnvilChunkSectionLoader loader = (CoreAnvilChunkSectionLoader) holder;
+			CoreAnvilChunkSectionIO loader = (CoreAnvilChunkSectionIO) holder;
 			loader.blockstates = reader.readLongArrayTag();
 		});
 		NBT_FIELDS.setField(PALETTE, (holder, reader) -> {
-			CoreAnvilChunkSectionLoader loader = (CoreAnvilChunkSectionLoader) holder;
+			CoreAnvilChunkSectionIO loader = (CoreAnvilChunkSectionIO) holder;
 			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {
 				Material mat = Material.getByName(reader.readStringTag());
@@ -43,11 +46,11 @@ public class CoreAnvilChunkSectionLoader extends AbstractNBTBase {
 			}
 		});
 		NBT_FIELDS.setField(SKY_LIGHT, (holder, reader) -> {
-			CoreAnvilChunkSectionLoader loader = (CoreAnvilChunkSectionLoader) holder;
+			CoreAnvilChunkSectionIO loader = (CoreAnvilChunkSectionIO) holder;
 			loader.skylight = reader.readByteArrayTag();
 		});
 		NBT_FIELDS.setField(Y, (holder, reader) -> {
-			CoreAnvilChunkSectionLoader loader = (CoreAnvilChunkSectionLoader) holder;
+			CoreAnvilChunkSectionIO loader = (CoreAnvilChunkSectionIO) holder;
 			loader.hightIndex = reader.readByteTag();
 		});
 	}

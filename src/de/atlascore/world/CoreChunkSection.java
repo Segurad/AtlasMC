@@ -14,6 +14,12 @@ import de.atlasmc.world.ChunkSection;
 public class CoreChunkSection implements ChunkSection {
 	
 	private final List<CorePaletteEntry> palette;
+	
+	/**
+	 * 0x00F - X pos<br>
+	 * 0x0F0 - Z pos<br>
+	 * 0xF00 - Y pos<br>
+	 */
 	private final short[] indizes; // ordered by y > z > x (as hex 0xY00 + 0xZ0 + 0xX)
 
 	public CoreChunkSection() {
@@ -84,12 +90,8 @@ public class CoreChunkSection implements ChunkSection {
 	public int getBlockCount() {
 		int count = 0;
 		for (CorePaletteEntry entry : palette) {
-			int id = entry.getMaterial().getBlockID();
-			if (id == Material.AIR.getBlockID() 
-				|| id == Material.VOID_AIR.getBlockID() 
-				|| id == Material.CAVE_AIR.getBlockID()) {
+			if (entry.getMaterial().isAir())
 				continue;
-			}
 			count += entry.count;
 		}
 		return count;
@@ -124,7 +126,8 @@ public class CoreChunkSection implements ChunkSection {
 				values = 0;
 				restBits = 64;
 			}
-			values = (values << bits) | s;
+			values <<= bits; // shift to create space for next index 
+			values |= s; // add next index
 			restBits -= bits;
 		}
 		data[index] = values;
