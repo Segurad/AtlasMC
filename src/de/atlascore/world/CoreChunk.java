@@ -3,10 +3,13 @@ package de.atlascore.world;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiConsumer;
+
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.entity.Entity;
+import de.atlasmc.util.ViewerSet;
 import de.atlasmc.world.Chunk;
 import de.atlasmc.world.ChunkListener;
 import de.atlasmc.world.ChunkSection;
@@ -16,9 +19,17 @@ import de.atlasmc.world.World;
 
 public class CoreChunk implements Chunk {
 	
+	private static final BiConsumer<Chunk, ChunkListener>
+		VIEWER_ADD_FUNCTION = (holder, viewer) -> {
+			viewer.added(holder);
+		},
+		VIEWER_REMOVE_FUNCTION = (holder, viewer) -> {
+			viewer.removed(holder);
+		};
+	
 	private final ChunkSection[] sections;
 	private final List<Entity> entities;
-	private final List<ChunkListener> listeners;
+	private final ViewerSet<Chunk, ChunkListener> viewers;
 	private final short[] biomes;
 	private final World world;
 	
@@ -27,7 +38,7 @@ public class CoreChunk implements Chunk {
 	public CoreChunk(World world) {
 		sections = new ChunkSection[16];
 		entities = new ArrayList<>();
-		listeners = new ArrayList<>();
+		viewers = new ViewerSet<Chunk, ChunkListener>(this, VIEWER_ADD_FUNCTION, VIEWER_REMOVE_FUNCTION);
 		biomes = new short[1024];
 		this.world = world;
 	}
@@ -209,12 +220,12 @@ public class CoreChunk implements Chunk {
 
 	@Override
 	public void addListener(ChunkListener listener) {
-		listeners.add(listener);
+		viewers.add(listener);
 	}
 
 	@Override
 	public void removeListener(ChunkListener listener) {
-		listeners.remove(listener);
+		viewers.remove(listener);
 	}
 
 	@Override
@@ -230,14 +241,19 @@ public class CoreChunk implements Chunk {
 	@Override
 	public void updateBlock(int x, int y, int z) {
 		int state = getBlockState(x, y, z);
-		for (ChunkListener listener : listeners) {
-			listener.updateBlock(state, x, y, z);
+		for (ChunkListener listener : viewers) {
+			listener.updateBlock(this, state, x, y, z);
 		}
 	}
 
 	@Override
 	public int getBlockState(int x, int y, int z) {
 		return getBlockDataAtUnsafe(x, y, z).getStateID();
+	}
+
+	@Override
+	public ViewerSet<Chunk, ChunkListener> getViewers() {
+		return viewers;
 	}
 
 }

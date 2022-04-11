@@ -11,6 +11,7 @@ import de.atlasmc.SoundCategory;
 import de.atlasmc.Vector;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.tick.Tickable;
+import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.annotation.ThreadSafe;
 import de.atlasmc.util.nbt.CustomTagContainer;
 import de.atlasmc.util.nbt.NBTHolder;
@@ -195,5 +196,7 @@ public interface Entity extends NBTHolder, Nameable, Tickable {
 	public void spawn(int entityID, World world, double x, double y, double z, float pitch, float yaw);
 	
 	public void causeSound(Sound sound, SoundCategory category, float volume, float pitch);
+	
+	public ViewerSet<Entity, Player> getViewers();
 	
 }

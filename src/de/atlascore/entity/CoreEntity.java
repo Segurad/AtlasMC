@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.BiConsumer;
 
 import de.atlasmc.Location;
 import de.atlasmc.SimpleLocation;
@@ -15,10 +16,15 @@ import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
+import de.atlasmc.entity.Player;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataContainer;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.io.protocol.PlayerConnection;
+import de.atlasmc.io.protocol.play.PacketOutDestroyEntities;
+import de.atlasmc.io.protocol.play.PacketOutSpawnEntity;
+import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.nbt.AbstractNBTBase;
 import de.atlasmc.util.nbt.CustomTagContainer;
 import de.atlasmc.util.nbt.NBTField;
@@ -29,6 +35,20 @@ import de.atlasmc.world.Chunk;
 import de.atlasmc.world.World;
 
 public class CoreEntity extends AbstractNBTBase implements Entity {
+	
+	private static final BiConsumer<Entity, Player> 
+		VIEWER_ADD_FUNCTION = (holder, viewer) -> {
+			PlayerConnection con = viewer.getConnection();
+			PacketOutSpawnEntity packet = con.getProtocol().createPacket(PacketOutSpawnEntity.class);
+			// TODO packet out spawn entity
+			con.sendPacked(packet);
+		},
+		VIEWER_REMOVE_FUNCTION = (holder, viewer) -> {
+			PlayerConnection con = viewer.getConnection();
+			PacketOutDestroyEntities packet = con.getProtocol().createPacket(PacketOutDestroyEntities.class);
+			packet.setEntityID(holder.getID());
+			con.sendPacked(packet);
+		};
 	
 	/**
 	 * Flags contains the following Data<br>
@@ -144,6 +164,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	protected final MetaDataContainer metaContainer;
 	private int id;
 	private final EntityType type;
+	private final ViewerSet<Entity, Player> viewers;
 	private UUID uuid;
 	private short air;
 	private float fallDistance;
@@ -178,8 +199,13 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 		this.loc = new Location(world, 0, 0, 0);
 		this.oldLoc = new Location(world, 0, 0, 0);
 		this.motion = new Vector(0, 0, 0);
+		this.viewers = createViewerSet();
 		metaContainer = new MetaDataContainer(getMetaContainerSize());
 		initMetaContainer();
+	}
+	
+	protected ViewerSet<Entity, Player> createViewerSet() {
+		return new ViewerSet<Entity, Player>(this, VIEWER_ADD_FUNCTION, VIEWER_REMOVE_FUNCTION);
 	}
 
 	@Override
@@ -620,6 +646,11 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	@Override
 	public int getPortalCooldown() {
 		return portalCooldown;
+	}
+
+	@Override
+	public ViewerSet<Entity, Player> getViewers() {
+		return viewers;
 	}
 	
 }

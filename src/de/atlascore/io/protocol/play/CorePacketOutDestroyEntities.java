@@ -9,7 +9,8 @@ import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutDestroyEntities extends AbstractPacket implements PacketOutDestroyEntities {
 
-	private int[] entities;
+	private int[] entities; // for remove more than one
+	private int entity; // for single remove
 	
 	public CorePacketOutDestroyEntities() {
 		super(CoreProtocolAdapter.VERSION);
@@ -31,15 +32,32 @@ public class CorePacketOutDestroyEntities extends AbstractPacket implements Pack
 
 	@Override
 	public void write(ByteBuf out) throws IOException {
-		writeVarInt(entities.length, out);
-		for (int i : entities) {
-			writeVarInt(i, out);
+		if (entities != null) {
+			writeVarInt(entities.length, out);
+			for (int i : entities) {
+				writeVarInt(i, out);
+			}
+		} else {
+			writeVarInt(1, out);
+			writeVarInt(entity, out);
 		}
 	}
 
 	@Override
 	public int[] getEntityIDs() {
+		if (entities == null)
+			entities = new int[] { entity };
 		return entities;
+	}
+
+	@Override
+	public void setEntityIDs(int[] ids) {
+		entities = ids;
+	}
+
+	@Override
+	public void setEntityID(int id) {
+		entity = id;
 	}
 
 }

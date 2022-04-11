@@ -7,6 +7,7 @@ import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.tick.Tickable;
+import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.annotation.NotNull;
 
 /**
@@ -156,5 +157,7 @@ public interface Chunk extends Tickable {
 	 * @param z in this chunk
 	 */
 	public void updateBlock(int x, int y, int z);
+	
+	public ViewerSet<Chunk, ChunkListener> getViewers();
 	
 }
