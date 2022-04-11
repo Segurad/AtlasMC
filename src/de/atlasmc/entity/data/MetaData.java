@@ -48,15 +48,17 @@ public class MetaData<T> {
 	}
 	
 	/**
-	 * Sets the data and marks it as changed
+	 * Sets the data and marks it as changed if it has changed
 	 * @param data
+	 * @return true if changed
 	 */
-	public void setData(T data) {
+	public boolean setData(T data) {
 		if (this.data == data)
-			return;
+			return false;
 		field.validateData(data);
 		this.data = data;
 		changed = true;
+		return true;
 	}
 
 }
