@@ -146,6 +146,10 @@ public abstract class ContainerFactory<I extends Inventory> {
 	 */
 	public static ContainerFactory<LoomInventory> LOOM_INV_FACTORY;
 	
+	public I create(InventoryHolder holder) {
+		return create(null, null, holder);
+	}
+	
 	public I create(InventoryType type, InventoryHolder holder) {
 		return create(type, null, holder);
 	}

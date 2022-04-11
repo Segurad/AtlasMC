@@ -1,7 +1,9 @@
 package de.atlasmc.inventory;
 
-public interface HorseInventory extends Inventory {
+public interface HorseInventory extends AbstractHorseInventory {
 	
-	// TODO horse inv
+	public void setArmor(ItemStack armor);
+	
+	public ItemStack getArmor();
 
 }

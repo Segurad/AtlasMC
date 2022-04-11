@@ -7,6 +7,8 @@ import de.atlasmc.entity.Horse;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.factory.ContainerFactory;
+import de.atlasmc.inventory.HorseInventory;
 import de.atlasmc.world.World;
 
 public class CoreHorse extends CoreAbstractHorse implements Horse {
@@ -55,6 +57,16 @@ public class CoreHorse extends CoreAbstractHorse implements Horse {
 			throw new IllegalArgumentException("Style can not be null!");
 		MetaData<Integer> data = metaContainer.get(META_HORSE_VARIANT);
 		data.setData(data.getData() & 0xFF00 | (style.getID() << 8));
+	}
+	
+	@Override
+	public HorseInventory getInventory() {
+		return (HorseInventory) super.getInventory();
+	}
+
+	@Override
+	protected HorseInventory createInventory() {
+		return ContainerFactory.HORSE_INV_FACTORY.create(this);
 	}
 
 }

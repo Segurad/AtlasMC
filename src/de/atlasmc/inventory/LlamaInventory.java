@@ -1,7 +1,14 @@
 package de.atlasmc.inventory;
 
-public interface LlamaInventory extends Inventory {
+import de.atlasmc.entity.Llama;
+
+/**
+ * Inventory of a {@link Llama}
+ */
+public interface LlamaInventory extends AbstractHorseInventory {
 	
-	// TODO llama inv
+	public ItemStack getDecor();
+	
+	public void setDecor(ItemStack decor);
 
 }

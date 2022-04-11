@@ -7,6 +7,8 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Llama;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.factory.ContainerFactory;
+import de.atlasmc.inventory.AbstractHorseInventory;
 import de.atlasmc.world.World;
 
 public class CoreLlama extends CoreChestedHorse implements Llama {
@@ -54,7 +56,11 @@ public class CoreLlama extends CoreChestedHorse implements Llama {
 
 	@Override
 	public void setStrength(int strength) {
-		metaContainer.get(META_LLAMA_STRENGTH).setData(strength);		
+		if (!metaContainer.get(META_LLAMA_STRENGTH).setData(strength) || inv == null)
+			return;
+		AbstractHorseInventory old = inv;
+		inv = createInventory();
+		inv.setContents(old.getContents());
 	}
 
 	@Override
@@ -70,6 +76,16 @@ public class CoreLlama extends CoreChestedHorse implements Llama {
 		if (color == null)
 			throw new IllegalArgumentException("Color can not be null!");
 		metaContainer.get(META_LLAMA_CARPET).setData(color.getID());
+	}
+	
+	@Override
+	protected AbstractHorseInventory createInventory() {
+		return ContainerFactory.LLAMA_INV_FACTORY.create(this);
+	}
+	
+	@Override
+	public void setChest(boolean chest) {
+		metaContainer.get(META_HORSE_HAS_CHEST).setData(chest);
 	}
 
 }

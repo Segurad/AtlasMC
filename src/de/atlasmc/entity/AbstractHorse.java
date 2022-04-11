@@ -2,7 +2,10 @@ package de.atlasmc.entity;
 
 import java.util.UUID;
 
-public interface AbstractHorse extends Animal {
+import de.atlasmc.inventory.AbstractHorseInventory;
+import de.atlasmc.inventory.InventoryHolder;
+
+public interface AbstractHorse extends Animal, InventoryHolder {
 	
 	public boolean isTamed();
 	
@@ -31,5 +34,11 @@ public interface AbstractHorse extends Animal {
 	public UUID getOwner();
 
 	public void setOwner(UUID owner);
+	
+	/**
+	 * May not return the same Inventory every time e.g. {@link ChestedHorse} may return a new Inventory if the has chest value is changed
+	 * @return inventory
+	 */
+	public AbstractHorseInventory getInventory();
 	
 }

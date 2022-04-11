@@ -56,6 +56,12 @@ public class CoreInventory implements Inventory {
 				}
 				return false;
 			}
+			
+			@Override
+			public void remove() {
+				contents[index] = null;
+			}
+			
 		};
 	}
 

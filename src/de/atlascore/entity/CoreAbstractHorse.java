@@ -7,9 +7,10 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.inventory.AbstractHorseInventory;
 import de.atlasmc.world.World;
 
-public class CoreAbstractHorse extends CoreAgeableMob implements AbstractHorse {
+public abstract class CoreAbstractHorse extends CoreAgeableMob implements AbstractHorse {
 
 	/**
 	 * 0x02 - Is Tame<br>
@@ -25,6 +26,8 @@ public class CoreAbstractHorse extends CoreAgeableMob implements AbstractHorse {
 	META_HORSE_OWNER = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+2, null, MetaDataType.OPT_UUID);
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+2;
+	
+	protected AbstractHorseInventory inv;
 	
 	public CoreAbstractHorse(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
@@ -117,5 +120,14 @@ public class CoreAbstractHorse extends CoreAgeableMob implements AbstractHorse {
 	public void setOwner(UUID owner) {
 		metaContainer.get(META_HORSE_OWNER).setData(owner);
 	}
+
+	@Override
+	public AbstractHorseInventory getInventory() {
+		if (inv == null)
+			inv = createInventory();
+		return inv;
+	}
+	
+	protected abstract AbstractHorseInventory createInventory();
 
 }

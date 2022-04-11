@@ -16,7 +16,7 @@ public class ClassContainerFactory<I extends Inventory> extends ContainerFactory
 
 	/**
 	 * 
-	 * @param clazz must have a constructor ({@link String}, {@link InventoryHolder})
+	 * @param clazz must have a constructor ({@link Chat}, {@link InventoryHolder})
 	 */
 	public ClassContainerFactory(Class<? extends I> clazz) {
 		this.clazz = clazz;

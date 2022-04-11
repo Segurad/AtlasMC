@@ -6,6 +6,8 @@ import de.atlasmc.entity.ChestedHorse;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.factory.ContainerFactory;
+import de.atlasmc.inventory.AbstractHorseInventory;
 import de.atlasmc.world.World;
 
 public class CoreChestedHorse extends CoreAbstractHorse implements ChestedHorse {
@@ -37,7 +39,17 @@ public class CoreChestedHorse extends CoreAbstractHorse implements ChestedHorse 
 
 	@Override
 	public void setChest(boolean chest) {
-		metaContainer.get(META_HORSE_HAS_CHEST).setData(chest);		
+		if (!metaContainer.get(META_HORSE_HAS_CHEST).setData(chest) || inv == null)
+			return;
+		// create new inventory because of size change and copy contents
+		AbstractHorseInventory old = inv;
+		inv = createInventory();
+		inv.setContents(old.getContents());
+	}
+	
+	@Override
+	protected AbstractHorseInventory createInventory() {
+		return ContainerFactory.HORSE_INV_FACTORY.create(this);
 	}
 
 }

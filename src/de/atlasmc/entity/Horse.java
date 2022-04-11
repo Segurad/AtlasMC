@@ -2,6 +2,8 @@ package de.atlasmc.entity;
 
 import java.util.List;
 
+import de.atlasmc.inventory.HorseInventory;
+
 public interface Horse extends AbstractHorse {
 	
 	public Color getColor();
@@ -11,6 +13,8 @@ public interface Horse extends AbstractHorse {
 	public Style getStyle();
 	
 	public void setStyle(Style style);
+	
+	public HorseInventory getInventory();
 	
 	public static enum Color {
 		WHITE,
