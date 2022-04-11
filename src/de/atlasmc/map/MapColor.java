@@ -310,7 +310,7 @@ public final class MapColor {
 		final byte[] map = new byte[width*height];
 		for(int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				map[x+y*width] = matchColor(new java.awt.Color(pixels[x+y*width]));
+				map[x+y*width] = matchColor(pixels[x+y*width]);
 			}
 		};
 		return new MapData(map, width, height, MapData.SOURCE_IMAGE, name);
@@ -324,14 +324,23 @@ public final class MapColor {
 		return newimage;
 	}
 
-	public static byte matchColor(java.awt.Color color) {
-		if (color.getAlpha() < 128) return NONE.ID;
-		
+	/**
+	 * Returns the byte ID of the nearest MapColor to the RGBA input.<br>
+	 * If the alpha value is lower than 128 this method will always return the ID of {@link MapColor#NONE}
+	 * @param color
+	 * @return MapColor ID
+	 */
+	public static byte matchColor(int color) {
+		if ((color & 0xFF000000) < 0x10000000) 
+			return NONE.ID;
 		int index = 2;
 		double distance = -1.0;
 		final int length = colors.length;
+		final int r = color >> 16 & 0xFF;
+		final int g = color >> 8 & 0xFF;
+		final int b = color & 0xFF;
 		for (int i = 4; i < length; i++) {
-			final double d = getDistance(color, colors[i]);
+			final double d = getDistance(r, g, b, colors[i]);
 			if (d < distance || distance == -1.0) {
 				distance = d;
 				index = i;
@@ -398,11 +407,19 @@ public final class MapColor {
 		return colors[id*4+LEVEL_NORMAL];
 	}
 	
-	private static double getDistance(java.awt.Color color1, MapColor color2) {
-		final double dr = color2.R-color1.getRed();
-		final double dg = color2.G-color1.getGreen();
-		final double db = color2.B-color1.getBlue();
-		return (dr*dr)+(dg*dg)+(db*db);
+	/**
+	 * Returns the Distance between RGB and {@link MapColor}
+	 * @param r
+	 * @param g
+	 * @param b
+	 * @param color
+	 * @return distance
+	 */
+	private static double getDistance(int r, int g, int b, MapColor color) {
+		final double deltaR = color.R-r;
+		final double deltaG = color.G-g;
+		final double deltaB = color.B-b;
+		return (deltaR*deltaR)+(deltaG*deltaG)+(deltaB*deltaB);
 	}
 	
 	public static MapColor fromMaterial(Material material) {
