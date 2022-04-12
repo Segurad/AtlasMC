@@ -19,9 +19,7 @@ public class CorePacketOutEntityVelocity extends AbstractPacket implements Packe
 	public CorePacketOutEntityVelocity(int entityID, double x, double y, double z) {
 		this();
 		this.entityID = entityID;
-		this.x = (short) (x*8000);
-		this.y = (short) (y*8000);
-		this.z = (short) (z*8000);
+		setVelocity(x, y, z);
 	}
 
 	@Override
@@ -46,18 +44,25 @@ public class CorePacketOutEntityVelocity extends AbstractPacket implements Packe
 	}
 
 	@Override
-	public short getVelocityX() {
-		return x;
+	public double getVelocityX() {
+		return x/8000;
 	}
 
 	@Override
-	public short getVelocityY() {
-		return y;
+	public double getVelocityY() {
+		return y/8000;
 	}
 
 	@Override
-	public short getVelocityZ() {
-		return z;
+	public double getVelocityZ() {
+		return z/8000;
+	}
+
+	@Override
+	public void setVelocity(double x, double y, double z) {
+		this.x = (short) (x*8000);
+		this.y = (short) (y*8000);
+		this.z = (short) (z*8000);
 	}
 
 }

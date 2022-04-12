@@ -7,9 +7,14 @@ import de.atlasmc.io.PacketOutbound;
 public interface PacketOutEntityVelocity extends PacketPlay, PacketOutbound {
 	
 	public int getEntityID();
-	public short getVelocityX();
-	public short getVelocityY();
-	public short getVelocityZ();
+	
+	public double getVelocityX();
+	
+	public double getVelocityY();
+	
+	public double getVelocityZ();
+	
+	public void setVelocity(double x, double y, double z);
 	
 	@Override
 	public default int getDefaultID() {

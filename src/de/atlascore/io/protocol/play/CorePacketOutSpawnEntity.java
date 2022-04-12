@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.UUID;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.Location;
 import de.atlasmc.Vector;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.entity.Entity;
@@ -28,40 +27,7 @@ public class CorePacketOutSpawnEntity extends AbstractPacket implements PacketOu
 	
 	public CorePacketOutSpawnEntity(Entity entity) {
 		this();
-		id = entity.getID();
-		type = entity.getType().getTypeID();
-		uuid = entity.getUUID();
-		Location loc = entity.getLocation();
-		x = loc.getX();
-		y = loc.getY();
-		z = loc.getZ();
-		yaw = MathUtil.toAngle(loc.getYaw());
-		pitch = MathUtil.toAngle(loc.getPitch());
-		objectdata = 0;
-		/*if (entity instanceof Projectile) {
-			Ignored
-		} else*/ if (entity instanceof ItemFrame) {
-			BlockFace ori = ((ItemFrame) entity).getOrientation();
-			switch (ori) {
-			case UP: objectdata = 1; break;
-			case NORTH: objectdata = 2; break;
-			case SOUTH: objectdata = 3; break;
-			case WEST: objectdata = 4; break;
-			case EAST: objectdata = 5; break;
-			default:
-				break;
-			}
-		} else if (entity instanceof FallingBlock) {
-			objectdata = ((FallingBlock) entity).getBlockData().getStateID();
-		} /*else if (entity instanceof FishingHook) {
-			Ignored
-		}*/
-		if (entity.hasVelocity()) {
-			Vector v = entity.getVelocity();
-			vx = (short) (v.getX()*8000);
-			vy = (short) (v.getY()*8000);
-			vz = (short) (v.getZ()*8000);
-		}
+		setEntity(entity);
 	}
 
 	@Override
@@ -157,6 +123,57 @@ public class CorePacketOutSpawnEntity extends AbstractPacket implements PacketOu
 	@Override
 	public int getType() {
 		return type;
+	}
+
+	@Override
+	public void setLocation(double x, double y, double z, float pitch, float yaw) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.pitch = MathUtil.toAngle(pitch);
+		this.yaw = MathUtil.toAngle(yaw);
+	}
+
+	@Override
+	public void setVelocity(double x, double y, double z) {
+		this.x = (short) (x*8000);
+		this.y = (short) (y*8000);
+		this.z = (short) (z*8000);
+	}
+
+	@Override
+	public void setEntity(Entity entity) {
+		id = entity.getID();
+		type = entity.getType().getTypeID();
+		uuid = entity.getUUID();
+		x = entity.getX();
+		y = entity.getY();
+		z = entity.getZ();
+		yaw = MathUtil.toAngle(entity.getYaw());
+		pitch = MathUtil.toAngle(entity.getPitch());
+		objectdata = 0;
+		/*if (entity instanceof Projectile) {
+			Ignored
+		} else*/ if (entity instanceof ItemFrame) {
+			BlockFace ori = ((ItemFrame) entity).getOrientation();
+			switch (ori) {
+			case UP: objectdata = 1; break;
+			case NORTH: objectdata = 2; break;
+			case SOUTH: objectdata = 3; break;
+			case WEST: objectdata = 4; break;
+			case EAST: objectdata = 5; break;
+			default:
+				break;
+			}
+		} else if (entity instanceof FallingBlock) {
+			objectdata = ((FallingBlock) entity).getBlockData().getStateID();
+		} /*else if (entity instanceof FishingHook) {
+			Ignored
+		}*/
+		if (entity.hasVelocity()) {
+			Vector v = entity.getVelocity();
+			setVelocity(v.getX(), v.getY(), v.getZ());
+		}
 	}
 
 }

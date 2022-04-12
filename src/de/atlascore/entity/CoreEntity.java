@@ -24,6 +24,7 @@ import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutDestroyEntities;
 import de.atlasmc.io.protocol.play.PacketOutEntityMetadata;
+import de.atlasmc.io.protocol.play.PacketOutEntityTeleport;
 import de.atlasmc.io.protocol.play.PacketOutSpawnEntity;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.nbt.AbstractNBTBase;
@@ -37,17 +38,17 @@ import de.atlasmc.world.World;
 
 public class CoreEntity extends AbstractNBTBase implements Entity {
 	
-	private static final BiConsumer<Entity, Player> 
+	protected static final BiConsumer<Entity, Player> 
 		VIEWER_ADD_FUNCTION = (holder, viewer) -> {
 			PlayerConnection con = viewer.getConnection();
-			PacketOutSpawnEntity packet = con.getProtocol().createPacket(PacketOutSpawnEntity.class);
-			// TODO packet out spawn entity
+			PacketOutSpawnEntity packet = con.createPacket(PacketOutSpawnEntity.class);
+			packet.setEntity(holder);
 			con.sendPacked(packet);
 			holder.sendMetadata(viewer);
 		},
 		VIEWER_REMOVE_FUNCTION = (holder, viewer) -> {
 			PlayerConnection con = viewer.getConnection();
-			PacketOutDestroyEntities packet = con.getProtocol().createPacket(PacketOutDestroyEntities.class);
+			PacketOutDestroyEntities packet = con.createPacket(PacketOutDestroyEntities.class);
 			packet.setEntityID(holder.getID());
 			con.sendPacked(packet);
 		};
@@ -72,7 +73,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	protected static final MetaDataField<Boolean> META_IS_SILENT = new MetaDataField<>(4, false, MetaDataType.BOOLEAN);
 	protected static final MetaDataField<Boolean> META_HAS_NO_GRAVITY = new MetaDataField<>(5, false, MetaDataType.BOOLEAN);
 	protected static final MetaDataField<Pose> META_POSE = new MetaDataField<>(6, Pose.STANDING, MetaDataType.POSE);
-	//protected static final MetaDataField<Integer> META_TICKS_FROZEN = new MetaDataField<>(7, 0, MetaDataType.INT); for 1.17
+	//protected static final MetaDataField<Integer> META_TICKS_FROZEN = new MetaDataField<>(7, 0, MetaDataType.INT); TODO for 1.17
 	protected static final int LAST_META_INDEX = 6;
 	
 	protected static final NBTFieldContainer NBT_FIELDS = new NBTFieldContainer();
@@ -166,7 +167,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	protected final MetaDataContainer metaContainer;
 	private int id;
 	private final EntityType type;
-	private final ViewerSet<Entity, Player> viewers;
+	protected final ViewerSet<Entity, Player> viewers;
 	private UUID uuid;
 	private short air;
 	private float fallDistance;
@@ -207,7 +208,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	}
 	
 	protected ViewerSet<Entity, Player> createViewerSet() {
-		return new ViewerSet<Entity, Player>(this, VIEWER_ADD_FUNCTION, VIEWER_REMOVE_FUNCTION);
+		return new ViewerSet<>(this, VIEWER_ADD_FUNCTION, VIEWER_REMOVE_FUNCTION);
 	}
 
 	@Override
@@ -280,6 +281,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 		chunk = null;
 		if (passengers != null)
 			passengers.clear();
+		viewers.clear();
 		aremoved = true;
 		
 		// TODO implement remove
@@ -366,6 +368,16 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	@Override
 	public double getZ() {
 		return loc.getZ();
+	}
+	
+	@Override
+	public float getPitch() {
+		return loc.getPitch();
+	}
+
+	@Override
+	public float getYaw() {
+		return loc.getYaw();
 	}
 
 	@Override
@@ -554,7 +566,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 		if (!asyncIsRemoved())
 			throw new IllegalStateException("Unable to spawn not removed Entity! call remove() first...");
 		if (uuid == null)
-			uuid = java.util.UUID.randomUUID();
+			uuid = UUID.randomUUID();
 		removed = false;
 		aremoved = false;
 		if (passengers != null) 
@@ -616,8 +628,25 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 			passengersChanged = false;
 		}
 		if (teleported) {
-			// TODO submit teleport to viewers
+			for (Player viewer : viewers) {
+				PlayerConnection con = viewer.getConnection();
+				PacketOutEntityTeleport packet = con.createPacket(PacketOutEntityTeleport.class);
+				packet.setEntityID(getID());
+				packet.setLocation(getX(), getY(), getZ(), getPitch(), getYaw());
+				packet.setOnGround(isOnGround());
+				con.sendPacked(packet);
+			}
 			teleported = false;
+		}
+		if (metaContainer.hasChanges()) {
+			for (Player viewer : viewers) {
+				PlayerConnection con = viewer.getConnection();
+				PacketOutEntityMetadata packet = con.createPacket(PacketOutEntityMetadata.class);
+				packet.setEntityID(getID());
+				packet.setChangedData(metaContainer);
+				con.sendPacked(packet);
+			}
+			metaContainer.setChanged(false);
 		}
 	}
 	
@@ -642,7 +671,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	@Override
 	public boolean isOnGround() {
 		// TODO Auto-generated 
-		return false;
+		return true;
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package de.atlasmc.io.protocol.play;
 import java.util.UUID;
 
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.entity.Painting;
 import de.atlasmc.entity.Painting.Motive;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.PacketOutbound;
@@ -11,10 +12,16 @@ import de.atlasmc.io.PacketOutbound;
 public interface PacketOutSpawnPainting extends PacketPlay, PacketOutbound {
 	
 	public int getEntityID();
+	
 	public UUID getUUID();
+	
 	public Motive getMotiv();
+	
 	public long getPosition();
+	
 	public BlockFace getDirection();
+	
+	public void setEntity(Painting entity);
 	
 	@Override
 	default int getDefaultID() {

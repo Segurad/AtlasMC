@@ -13,7 +13,7 @@ public interface Protocol {
 	 * Further requirements are defined by the implementation.<br>
 	 * The default implementations are utilizing the {@link DefaultPacketID} annotation
 	 * @param clazz
-	 * @return
+	 * @return instance of Packet
 	 */
 	public <T extends Packet> T createPacket(Class<T> clazz);
 

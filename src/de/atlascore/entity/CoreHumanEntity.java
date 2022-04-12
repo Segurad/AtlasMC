@@ -1,6 +1,7 @@
 package de.atlascore.entity;
 
 import java.util.UUID;
+import java.util.function.BiConsumer;
 
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
@@ -12,11 +13,23 @@ import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.MainHand;
 import de.atlasmc.inventory.PlayerInventory;
+import de.atlasmc.io.protocol.PlayerConnection;
+import de.atlasmc.io.protocol.play.PacketOutSpawnPlayer;
+import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.nbt.tag.CompoundTag;
 import de.atlasmc.world.World;
 
 public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 
+	protected static final BiConsumer<Entity, Player>
+		VIEWER_ADD_FUNCTION = (holder, viewer) -> {
+			PlayerConnection con = viewer.getConnection();
+			PacketOutSpawnPlayer packet = con.createPacket(PacketOutSpawnPlayer.class);
+			packet.setEntity((HumanEntity) holder);
+			con.sendPacked(packet);
+			holder.sendMetadata(viewer);
+		};
+	
 	protected static final MetaDataField<Float>
 	META_ADDITIONAL_HEARTS = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+1, 0.0f, MetaDataType.FLOAT);
 	protected static final MetaDataField<Integer>
@@ -40,6 +53,11 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 	public CoreHumanEntity(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
 		inv = ContainerFactory.PLAYER_INV_FACTORY.create(InventoryType.PLAYER, this);
+	}
+	
+	@Override
+	protected ViewerSet<Entity, Player> createViewerSet() {
+		return new ViewerSet<Entity, Player>(this, VIEWER_ADD_FUNCTION, VIEWER_REMOVE_FUNCTION);
 	}
 	
 	@Override
@@ -134,16 +152,16 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 		super.prepUpdate();
 		if (shoulderChanged != 0) {
 			if ((shoulderChanged & 0x01) == 0x01) {
-				prepShoulder(META_SHOULDER_RIGHT, shoulderRight);
+				prepShoulderUpdate(META_SHOULDER_RIGHT, shoulderRight);
 			}
 			if ((shoulderChanged & 0x02) == 0x02) {
-				prepShoulder(META_SHOULDER_LEFT, shoulderLeft);
+				prepShoulderUpdate(META_SHOULDER_LEFT, shoulderLeft);
 			}
 			shoulderChanged = 0;
 		}
 	}
 	
-	private void prepShoulder(MetaDataField<CompoundTag> shoulder, Entity entity) {
+	private void prepShoulderUpdate(MetaDataField<CompoundTag> shoulder, Entity entity) {
 		if (entity == null)
 			metaContainer.get(shoulder).setData(null);
 		else

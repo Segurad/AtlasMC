@@ -72,4 +72,11 @@ public interface PlayerConnection extends PacketListenerPlayIn {
 	 */
 	public void setWindowLock();
 
+	/**
+	 * Creates a Packet of the Packet class with the current protocol.<br>
+	 * @param clazz
+	 * @return instance of Packet
+	 */
+	public <T extends Packet> T createPacket(Class<T> clazz);
+
 }

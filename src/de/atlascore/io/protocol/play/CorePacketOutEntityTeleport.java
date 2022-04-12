@@ -21,11 +21,7 @@ public class CorePacketOutEntityTeleport extends AbstractPacket implements Packe
 	public CorePacketOutEntityTeleport(int entityID, double x, double y, double z, float yaw, float pitch, boolean onGround) {
 		this();
 		this.entityID = entityID;
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.yaw = MathUtil.toAngle(yaw);
-		this.pitch = MathUtil.toAngle(pitch);
+		setLocation(x, y, z, pitch, yaw);
 		this.onGround = onGround;
 	}
 
@@ -73,17 +69,36 @@ public class CorePacketOutEntityTeleport extends AbstractPacket implements Packe
 
 	@Override
 	public float getYaw() {
-		return yaw;
+		return MathUtil.fromAngle(yaw);
 	}
 
 	@Override
 	public float getPitch() {
-		return pitch;
+		return MathUtil.fromAngle(pitch);
 	}
 
 	@Override
 	public boolean isOnGround() {
 		return onGround;
+	}
+
+	@Override
+	public void setEntityID(int id) {
+		this.entityID = id;
+	}
+
+	@Override
+	public void setLocation(double x, double y, double z, float pitch, float yaw) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.yaw = MathUtil.toAngle(yaw);
+		this.pitch = MathUtil.toAngle(pitch);
+	}
+
+	@Override
+	public void setOnGround(boolean onGround) {
+		this.onGround = onGround;
 	}
 
 }

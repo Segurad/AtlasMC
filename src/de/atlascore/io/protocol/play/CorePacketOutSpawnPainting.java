@@ -24,18 +24,7 @@ public class CorePacketOutSpawnPainting extends AbstractPacket implements Packet
 	
 	public CorePacketOutSpawnPainting(Painting painting) {
 		this();
-		id = painting.getID();
-		uuid = painting.getUUID();
-		loc = MathUtil.toPosition(painting.getX(), painting.getY(), painting.getZ());
-		motiv = painting.getMotive().ordinal();
-		BlockFace face = painting.getAttachedFace();
-		switch (face) {
-		case NORTH: direction = 2; break;
-		case SOUTH: direction = 0; break;
-		case WEST: direction = 1; break;
-		case EAST: direction = 3; break;
-		default: direction = 0; break;
-		}
+		setEntity(painting);
 	}
 
 	@Override
@@ -87,6 +76,22 @@ public class CorePacketOutSpawnPainting extends AbstractPacket implements Packet
 		case 2: return BlockFace.NORTH;
 		case 3: return BlockFace.EAST;
 		default: return BlockFace.SOUTH;
+		}
+	}
+
+	@Override
+	public void setEntity(Painting painting) {
+		id = painting.getID();
+		uuid = painting.getUUID();
+		loc = MathUtil.toPosition(painting.getX(), painting.getY(), painting.getZ());
+		motiv = painting.getMotive().ordinal();
+		BlockFace face = painting.getAttachedFace();
+		switch (face) {
+		case NORTH: direction = 2; break;
+		case SOUTH: direction = 0; break;
+		case WEST: direction = 1; break;
+		case EAST: direction = 3; break;
+		default: direction = 0; break;
 		}
 	}
 

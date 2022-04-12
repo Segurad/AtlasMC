@@ -32,7 +32,7 @@ public class CorePacketOutSpawnExperienceOrb extends AbstractPacket implements P
 		x = in.readDouble();
 		y = in.readDouble();
 		z = in.readDouble();
-		count = in.readShort();
+		count = in.readUnsignedShort();
 	}
 
 	@Override
@@ -67,6 +67,23 @@ public class CorePacketOutSpawnExperienceOrb extends AbstractPacket implements P
 	@Override
 	public int getExperience() {
 		return count;
+	}
+
+	@Override
+	public void setEntityID(int id) {
+		this.id = id;
+	}
+
+	@Override
+	public void setLocation(double x, double y, double z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+
+	@Override
+	public void setExperience(int xp) {
+		this.count = xp;
 	}
 
 }

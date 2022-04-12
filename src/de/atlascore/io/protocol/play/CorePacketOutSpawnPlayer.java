@@ -23,14 +23,7 @@ public class CorePacketOutSpawnPlayer extends AbstractPacket implements PacketOu
 	
 	public CorePacketOutSpawnPlayer(HumanEntity player) {
 		this();
-		uuid = player.getUUID();
-		id = player.getID();
-		Location loc = player.getLocation();
-		x = loc.getX();
-		y = loc.getY();
-		z = loc.getZ();
-		pitch = MathUtil.toAngle(loc.getPitch());
-		yaw = MathUtil.toAngle(loc.getYaw());
+		setEntity(player);
 	}
 
 	@Override
@@ -91,6 +84,18 @@ public class CorePacketOutSpawnPlayer extends AbstractPacket implements PacketOu
 	@Override
 	public float getPitch() {
 		return MathUtil.fromAngle(pitch);
+	}
+
+	@Override
+	public void setEntity(HumanEntity human) {
+		uuid = human.getUUID();
+		id = human.getID();
+		Location loc = human.getLocation();
+		x = loc.getX();
+		y = loc.getY();
+		z = loc.getZ();
+		pitch = MathUtil.toAngle(loc.getPitch());
+		yaw = MathUtil.toAngle(loc.getYaw());
 	}
 
 }

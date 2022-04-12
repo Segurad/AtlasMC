@@ -25,22 +25,7 @@ public class CorePacketOutSpawnLivingEntity extends AbstractPacket implements Pa
 	
 	public CorePacketOutSpawnLivingEntity(LivingEntity entity) {
 		this();
-		id = entity.getID();
-		uuid = entity.getUUID();
-		type = entity.getType().getTypeID();
-		Location loc = entity.getLocation();
-		x = loc.getX();
-		y = loc.getY();
-		z = loc.getZ();
-		yaw = MathUtil.toAngle(loc.getYaw());
-		pitch = MathUtil.toAngle(loc.getPitch());
-		headpitch = MathUtil.toAngle(entity.getHeadPitch());
-		if (entity.hasVelocity()) {
-			Vector v = entity.getVelocity();
-			vx = (short) (MathUtil.getInRange(v.getX(), -3.9, 3.9)*8000);
-			vy = (short) (MathUtil.getInRange(v.getY(), -3.9, 3.9)*8000);
-			vz = (short) (MathUtil.getInRange(v.getZ(), -3.9, 3.9)*8000);
-		}
+		setEntity(entity);
 	}
 
 	@Override
@@ -136,6 +121,26 @@ public class CorePacketOutSpawnLivingEntity extends AbstractPacket implements Pa
 	@Override
 	public double getVelocityZ() {
 		return vz/8000;
+	}
+
+	@Override
+	public void setEntity(LivingEntity entity) {
+		id = entity.getID();
+		uuid = entity.getUUID();
+		type = entity.getType().getTypeID();
+		Location loc = entity.getLocation();
+		x = loc.getX();
+		y = loc.getY();
+		z = loc.getZ();
+		yaw = MathUtil.toAngle(loc.getYaw());
+		pitch = MathUtil.toAngle(loc.getPitch());
+		headpitch = MathUtil.toAngle(entity.getHeadPitch());
+		if (entity.hasVelocity()) {
+			Vector v = entity.getVelocity();
+			vx = (short) (MathUtil.getInRange(v.getX(), -3.9, 3.9)*8000);
+			vy = (short) (MathUtil.getInRange(v.getY(), -3.9, 3.9)*8000);
+			vz = (short) (MathUtil.getInRange(v.getZ(), -3.9, 3.9)*8000);
+		}
 	}
 
 }

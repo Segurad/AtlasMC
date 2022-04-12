@@ -28,9 +28,37 @@ public interface Entity extends NBTHolder, Nameable, Tickable {
 		CRITICAL_EFFECT,
 		MAGIC_CRITICAL_EFFECT;
 		
+		private static List<Animation> VALUES;
+		
 		public static Animation getByID(int id) {
-			return values()[id];
+			return getValues().get(id);
 		}
+		
+		/**
+		 * Returns a immutable List of all Types.<br>
+		 * This method avoid allocation of a new array not like {@link #values()}.
+		 * @return list
+		 */
+		public static List<Animation> getValues() {
+			if (VALUES == null)
+				synchronized (Animation.class) {
+					if (VALUES == null)
+						VALUES = List.of(values());
+				}
+			return VALUES;
+		}
+		
+		public int getID() {
+			return ordinal();
+		}
+		
+		/**
+		 * Releases the system resources used from the values cache
+		 */
+		public static void freeValues() {
+			VALUES = null;
+		}
+		
 	}
 	public enum Pose {
 		STANDING,
@@ -41,13 +69,37 @@ public interface Entity extends NBTHolder, Nameable, Tickable {
 		SNEAKING,
 		DYING;
 		
+		private static List<Pose> VALUES;
+		
 		public static Pose getByID(int id) {
-			return values()[id];
+			return getValues().get(id);
+		}
+		
+		/**
+		 * Returns a immutable List of all Types.<br>
+		 * This method avoid allocation of a new array not like {@link #values()}.
+		 * @return list
+		 */
+		public static List<Pose> getValues() {
+			if (VALUES == null)
+				synchronized (Pose.class) {
+					if (VALUES == null)
+						VALUES = List.of(values());
+				}
+			return VALUES;
 		}
 		
 		public int getID() {
 			return ordinal();
 		}
+		
+		/**
+		 * Releases the system resources used from the values cache
+		 */
+		public static void freeValues() {
+			VALUES = null;
+		}
+		
 	}
 	public void addScoreboardTag(String tag);
 	
@@ -94,6 +146,10 @@ public interface Entity extends NBTHolder, Nameable, Tickable {
 	public double getY();
 	
 	public double getZ();
+	
+	public float getPitch();
+
+	public float getYaw();
 	
 	public boolean hasGravity();
 	

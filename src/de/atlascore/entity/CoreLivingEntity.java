@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.BiConsumer;
 
 import de.atlascore.inventory.EntityEquipment;
 import de.atlasmc.Color;
@@ -12,14 +13,19 @@ import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeInstance;
 import de.atlasmc.attribute.AttributeModifier;
 import de.atlasmc.attribute.AttributeModifier.Operation;
+import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.LivingEntity;
+import de.atlasmc.entity.Player;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.io.protocol.PlayerConnection;
+import de.atlasmc.io.protocol.play.PacketOutSpawnLivingEntity;
 import de.atlasmc.potion.PotionEffect;
 import de.atlasmc.potion.PotionEffectType;
+import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.map.ArrayListMultimap;
 import de.atlasmc.util.map.Multimap;
 import de.atlasmc.util.nbt.NBTField;
@@ -29,6 +35,15 @@ import de.atlasmc.world.World;
 
 public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 
+	protected static final BiConsumer<Entity, Player>
+		VIEWER_ADD_FUNCTION = (holder, viewer) -> {
+			PlayerConnection con = viewer.getConnection();
+			PacketOutSpawnLivingEntity packet = con.createPacket(PacketOutSpawnLivingEntity.class);
+			packet.setEntity((LivingEntity) holder);
+			con.sendPacked(packet);
+			holder.sendMetadata(viewer);
+		};
+	
 	/**
 	 * 0x01 Is hand active<br>
 	 * 0x02 active hand 0 = main hand, 1 = off hand<br>
@@ -366,6 +381,11 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	
 	public CoreLivingEntity(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
+	}
+	
+	@Override
+	protected ViewerSet<Entity, Player> createViewerSet() {
+		return new ViewerSet<Entity, Player>(this, VIEWER_ADD_FUNCTION, VIEWER_REMOVE_FUNCTION);
 	}
 	
 	@Override

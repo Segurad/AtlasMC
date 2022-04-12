@@ -33,7 +33,7 @@ public class EntityTypeLoader {
 		ENDERMITE = new EntityType(NamespacedKey.MINECRAFT, "ENDERMITE", CoreEndermite.class);
 		EVOKER = new EntityType(NamespacedKey.MINECRAFT, "EVOKER", null);
 		EVOKER_FANGS = new EntityType(NamespacedKey.MINECRAFT, "EVOKER_FANGS", null);
-		EXPERIENCE_ORB = new EntityType(NamespacedKey.MINECRAFT, "EXPERIENCE_ORB", null);
+		EXPERIENCE_ORB = new EntityType(NamespacedKey.MINECRAFT, "EXPERIENCE_ORB", CoreExperienceOrb.class);
 		EYE_OF_ENDER = new EntityType(NamespacedKey.MINECRAFT, "EYE_OF_ENDER", CoreEyeOfEnder.class);
 		FALLING_BLOCK = new EntityType(NamespacedKey.MINECRAFT, "FALLING_BLOCK", CoreFallingBlock.class);
 		FIREWORK_ROCKET = new EntityType(NamespacedKey.MINECRAFT, "FIREWORK_ROCKET", CoreFireworkRocket.class);
@@ -64,7 +64,7 @@ public class EntityTypeLoader {
 		MULE = new EntityType(NamespacedKey.MINECRAFT, "MULE", CoreMule.class);
 		MOOSHROOM = new EntityType(NamespacedKey.MINECRAFT, "MOOSHROOM", CoreMooshroom.class);
 		OCELOT = new EntityType(NamespacedKey.MINECRAFT, "OCELOT", CoreOcelot.class);
-		PAINTING = new EntityType(NamespacedKey.MINECRAFT, "PAINTING", null);
+		PAINTING = new EntityType(NamespacedKey.MINECRAFT, "PAINTING", CorePainting.class);
 		PANDA = new EntityType(NamespacedKey.MINECRAFT, "PANDA", CorePanda.class);
 		PARROT = new EntityType(NamespacedKey.MINECRAFT, "PARROT", CoreParrot.class);
 		PHANTOM = new EntityType(NamespacedKey.MINECRAFT, "PHANTOM", CorePhantom.class);

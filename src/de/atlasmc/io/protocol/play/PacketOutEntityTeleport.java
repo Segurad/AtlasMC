@@ -7,12 +7,24 @@ import de.atlasmc.io.PacketOutbound;
 public interface PacketOutEntityTeleport extends PacketPlay, PacketOutbound {
 	
 	public int getEntityID();
+	
+	public void setEntityID(int id);
+	
 	public double getX();
+	
 	public double getY();
+	
 	public double getZ();
+	
 	public float getYaw();
+	
 	public float getPitch();
+	
+	public void setLocation(double x, double y, double z, float pitch, float yaw);
+	
 	public boolean isOnGround();
+	
+	public void setOnGround(boolean onGround);
 	
 	@Override
 	default int getDefaultID() {

@@ -841,4 +841,9 @@ public class CorePlayerConnection implements PlayerConnection {
 		sendPacked(packet);
 	}
 
+	@Override
+	public <T extends Packet> T createPacket(Class<T> clazz) {
+		return protocolPlay.createPacket(clazz);
+	}
+
 }
