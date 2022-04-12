@@ -33,7 +33,10 @@ public enum ChatType {
 	 */
 	public static List<ChatType> getValues() {
 		if (VALUES == null)
-			VALUES = List.of(values());
+			synchronized (ChatType.class) {
+				if (VALUES == null)
+					VALUES = List.of(values());
+			}
 		return VALUES;
 	}
 	
