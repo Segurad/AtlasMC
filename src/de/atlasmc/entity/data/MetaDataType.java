@@ -33,8 +33,8 @@ public abstract class MetaDataType<T> {
 		}
 
 		@Override
-		public void write(Object data, ByteBuf out) {
-			out.writeByte((int) data);
+		public void write(Byte data, ByteBuf out) {
+			out.writeByte(data & 0xFF);
 		}
 		
 	};
@@ -46,8 +46,8 @@ public abstract class MetaDataType<T> {
 		}
 
 		@Override
-		public void write(Object data, ByteBuf out) {
-			AbstractPacket.writeVarInt((int) data, out);
+		public void write(Integer data, ByteBuf out) {
+			AbstractPacket.writeVarInt(data, out);
 		}
 		
 	};
@@ -60,8 +60,8 @@ public abstract class MetaDataType<T> {
 		}
 
 		@Override
-		public void write(Object data, ByteBuf out) {
-			out.writeFloat((float) data);
+		public void write(Float data, ByteBuf out) {
+			out.writeFloat(data);
 		}
 		
 	};
@@ -74,8 +74,8 @@ public abstract class MetaDataType<T> {
 		}
 
 		@Override
-		public void write(Object data, ByteBuf out) {
-			AbstractPacket.writeString((String) data, out);
+		public void write(String data, ByteBuf out) {
+			AbstractPacket.writeString(data, out);
 		}
 		
 	};
@@ -88,9 +88,8 @@ public abstract class MetaDataType<T> {
 		}
 
 		@Override
-		public void write(Object data, ByteBuf out) {
-			Chat chat = (Chat) data;
-			AbstractPacket.writeString(chat.getJsonText(), out);
+		public void write(Chat data, ByteBuf out) {
+			AbstractPacket.writeString(data.getText(), out);
 		}
 		
 	};
@@ -104,11 +103,10 @@ public abstract class MetaDataType<T> {
 		}
 
 		@Override
-		public void write(Object data, ByteBuf out) {
+		public void write(Chat data, ByteBuf out) {
 			out.writeBoolean(data != null);
 			if (data == null) return;
-			Chat chat = (Chat) data;
-			AbstractPacket.writeString(chat.getJsonText(), out);
+			AbstractPacket.writeString(data.getText(), out);
 		}
 		
 	};
@@ -116,13 +114,22 @@ public abstract class MetaDataType<T> {
 	public static final MetaDataType<ItemStack> SLOT = new MetaDataType<ItemStack>(6, ItemStack.class, true) {
 
 		@Override
-		public ItemStack read(ByteBuf in) throws IOException {
-			return AbstractPacket.readSlot(in);
+		public ItemStack read(ByteBuf in) {
+			try {
+				return AbstractPacket.readSlot(in);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return null;
 		}
 
 		@Override
-		public void write(Object data, ByteBuf out) throws IOException {
-			AbstractPacket.writeSlot((ItemStack) data, out);
+		public void write(ItemStack data, ByteBuf out) {
+			try {
+				AbstractPacket.writeSlot(data, out);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
 	};
@@ -135,8 +142,8 @@ public abstract class MetaDataType<T> {
 		}
 
 		@Override
-		public void write(Object data, ByteBuf out) {
-			out.writeBoolean((boolean) data);
+		public void write(Boolean data, ByteBuf out) {
+			out.writeBoolean(data);
 		}
 		
 	};
@@ -149,11 +156,10 @@ public abstract class MetaDataType<T> {
 		}
 
 		@Override
-		public void write(Object data, ByteBuf out) {
-			EulerAngle angle = (EulerAngle) data;
-			out.writeFloat((float) angle.getX());
-			out.writeFloat((float) angle.getY());
-			out.writeFloat((float) angle.getZ());
+		public void write(EulerAngle data, ByteBuf out) {
+			out.writeFloat(data.getX());
+			out.writeFloat(data.getY());
+			out.writeFloat(data.getZ());
 		}
 		
 	};
@@ -166,8 +172,8 @@ public abstract class MetaDataType<T> {
 		}
 
 		@Override
-		public void write(Object data, ByteBuf out) {
-			out.writeLong((long) data);
+		public void write(Long data, ByteBuf out) {
+			out.writeLong(data);
 		}
 		
 	};
@@ -181,7 +187,7 @@ public abstract class MetaDataType<T> {
 		}
 
 		@Override
-		public void write(Object data, ByteBuf out) {
+		public void write(Long data, ByteBuf out) {
 			out.writeBoolean(data != null);
 			if (data == null) return;
 			long l = (long) data;
@@ -207,10 +213,9 @@ public abstract class MetaDataType<T> {
 		}
 
 		@Override
-		public void write(Object data, ByteBuf out) {
-			BlockFace f = (BlockFace) data;
+		public void write(BlockFace data, ByteBuf out) {
 			int i = 0;
-			switch (f) {
+			switch (data) {
 			case DOWN: i = 0; break;
 			case UP: i = 1; break;
 			case NORTH: i = 2; break;
@@ -235,12 +240,11 @@ public abstract class MetaDataType<T> {
 		}
 
 		@Override
-		public void write(Object data, ByteBuf out) {
+		public void write(UUID data, ByteBuf out) {
 			out.writeBoolean(data != null);
 			if (data == null) return;
-			UUID uid = (UUID) data;
-			out.writeLong(uid.getMostSignificantBits());
-			out.writeLong(uid.getLeastSignificantBits());
+			out.writeLong(data.getMostSignificantBits());
+			out.writeLong(data.getLeastSignificantBits());
 		}
 		
 	};
@@ -253,9 +257,8 @@ public abstract class MetaDataType<T> {
 		}
 
 		@Override
-		public void write(Object data, ByteBuf out) {
-			int i = (int) data;
-			AbstractPacket.writeVarInt(data != null ? i : 0, out);
+		public void write(Integer data, ByteBuf out) {
+			AbstractPacket.writeVarInt(data != null ? data : 0, out);
 		}
 		
 	};
@@ -263,20 +266,29 @@ public abstract class MetaDataType<T> {
 	public static final MetaDataType<CompoundTag> NBT_DATA = new MetaDataType<CompoundTag>(14, CompoundTag.class, true) {
 
 		@Override
-		public CompoundTag read(ByteBuf in) throws IOException {
+		public CompoundTag read(ByteBuf in) {
 			NBTNIOReader reader = new NBTNIOReader(in);
-			CompoundTag tag = (CompoundTag) reader.readNBT();
+			CompoundTag tag = null;
+			try {
+				tag = (CompoundTag) reader.readNBT();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			reader.close();
 			return tag;
 		}
 
 		@Override
-		public void write(Object data, ByteBuf out) throws IOException {
+		public void write(CompoundTag data, ByteBuf out) {
 			NBTNIOWriter writer = new NBTNIOWriter(out);
+			try {
 			if (data == null)
 				writer.writeEmptyCompound(null);
 			else
 				writer.writeNBT((NBT) data);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			writer.close();
 		}
 		
@@ -291,12 +303,12 @@ public abstract class MetaDataType<T> {
 		}
 
 		@Override
-		public ParticleObject read(ByteBuf in) throws IOException {
+		public ParticleObject read(ByteBuf in) {
 			Particle p = Particle.getByID(AbstractPacket.readVarInt(in));
 			return new ParticleObject(p, read(p, in));
 		}
 		
-		public Object read(Particle particle, ByteBuf in) throws IOException {
+		public Object read(Particle particle, ByteBuf in) {
 			Object data = null;
 			switch (particle) {
 			case BLOCK:
@@ -311,7 +323,11 @@ public abstract class MetaDataType<T> {
 				data = new DustOptions(new Color(r, g, b), scale);
 				break;
 			case ITEM:
-				data = AbstractPacket.readSlot(in);
+				try {
+					data = AbstractPacket.readSlot(in);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				break;
 			default: break;
 			}
@@ -319,12 +335,11 @@ public abstract class MetaDataType<T> {
 		}
 
 		@Override
-		public void write(Object data, ByteBuf out) throws IOException {
-			ParticleObject obj = (ParticleObject) data;
-			write(obj.getParticle(), obj.getData(), false, out);
+		public void write(ParticleObject data, ByteBuf out) {
+			write(data.getParticle(), data.getData(), false, out);
 		}
 		
-		public void write(Particle particle, Object data, boolean dataOnly, ByteBuf out) throws IOException {
+		public void write(Particle particle, Object data, boolean dataOnly, ByteBuf out) {
 			if (!dataOnly) AbstractPacket.writeVarInt(particle.getID(), out);
 			switch (particle) {
 			case BLOCK:
@@ -346,7 +361,11 @@ public abstract class MetaDataType<T> {
 				out.writeFloat(0);
 				break;
 			case ITEM:
-				AbstractPacket.writeSlot((ItemStack) data, out);
+				try {
+					AbstractPacket.writeSlot((ItemStack) data, out);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				break;
 			default: break;
 			}
@@ -365,11 +384,10 @@ public abstract class MetaDataType<T> {
 		}
 
 		@Override
-		public void write(Object data, ByteBuf out) {
-			VillagerData v = (VillagerData) data;
-			AbstractPacket.writeVarInt(v.getType().getID(), out);
-			AbstractPacket.writeVarInt(v.getProfession().getID(), out);
-			AbstractPacket.writeVarInt(v.getLevel(), out);
+		public void write(VillagerData data, ByteBuf out) {
+			AbstractPacket.writeVarInt(data.getType().getID(), out);
+			AbstractPacket.writeVarInt(data.getProfession().getID(), out);
+			AbstractPacket.writeVarInt(data.getLevel(), out);
 		}
 		
 	};
@@ -383,10 +401,9 @@ public abstract class MetaDataType<T> {
 		}
 
 		@Override
-		public void write(Object data, ByteBuf out) {
+		public void write(Integer data, ByteBuf out) {
 			if (data == null) AbstractPacket.writeVarInt(0, out);
-			int i = (int) data;
-			AbstractPacket.writeVarInt(i+1, out);
+			AbstractPacket.writeVarInt(data+1, out);
 		}
 		
 	};
@@ -399,9 +416,8 @@ public abstract class MetaDataType<T> {
 		}
 
 		@Override
-		public void write(Object data, ByteBuf out) {
-			Pose p = (Pose) data;
-			AbstractPacket.writeVarInt(p.getID(), out);
+		public void write(Pose data, ByteBuf out) {
+			AbstractPacket.writeVarInt(data.getID(), out);
 		}
 		
 	};
@@ -420,7 +436,7 @@ public abstract class MetaDataType<T> {
 		this.optional = optional;
 	}
 	
-	public int getType() {
+	public int getTypeID() {
 		return type;
 	}
 	
@@ -432,8 +448,13 @@ public abstract class MetaDataType<T> {
 		return optional;
 	}
 	
-	public abstract T read(ByteBuf in) throws IOException;
+	public abstract T read(ByteBuf in);
 	
-	public abstract void write(Object data, ByteBuf out) throws IOException;
+	public abstract void write(T data, ByteBuf out);
+
+	@SuppressWarnings("unchecked")
+	public void writeRaw(Object data, ByteBuf buf) {
+		write((T) data, buf);
+	}
 
 }

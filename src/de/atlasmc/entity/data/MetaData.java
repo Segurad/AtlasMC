@@ -40,6 +40,10 @@ public class MetaData<T> {
 		this.changed = changed;
 	}
 	
+	/**
+	 * Returns whether or not the data is equals to the fields default data
+	 * @return true if default
+	 */
 	public boolean isDefault() {
 		T defaultData = field.getDefaultData();
 		if (data == null)

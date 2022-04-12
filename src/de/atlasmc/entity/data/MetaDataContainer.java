@@ -1,6 +1,10 @@
 package de.atlasmc.entity.data;
 
-public class MetaDataContainer {
+import java.util.Iterator;
+
+import de.atlasmc.util.ArrayIterator;
+
+public class MetaDataContainer implements Iterable<MetaData<?>> {
 	
 	private final MetaData<?>[] data;
 	
@@ -51,10 +55,6 @@ public class MetaDataContainer {
 	public MetaDataType<?> getType(int index) {
 		return data[index].getType();
 	}
-
-	public MetaData<?>[] getValues() {
-		return data;
-	}
 	
 	/**
 	 * 
@@ -98,6 +98,11 @@ public class MetaDataContainer {
 	 */
 	public <T> MetaData<T> set(MetaDataField<T> field, T data) {
 		return set(new MetaData<>(field, data));
+	}
+
+	@Override
+	public Iterator<MetaData<?>> iterator() {
+		return new ArrayIterator<>(data, false);
 	}
 
 }

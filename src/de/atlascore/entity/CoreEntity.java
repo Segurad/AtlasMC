@@ -23,6 +23,7 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutDestroyEntities;
+import de.atlasmc.io.protocol.play.PacketOutEntityMetadata;
 import de.atlasmc.io.protocol.play.PacketOutSpawnEntity;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.nbt.AbstractNBTBase;
@@ -42,6 +43,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 			PacketOutSpawnEntity packet = con.getProtocol().createPacket(PacketOutSpawnEntity.class);
 			// TODO packet out spawn entity
 			con.sendPacked(packet);
+			holder.sendMetadata(viewer);
 		},
 		VIEWER_REMOVE_FUNCTION = (holder, viewer) -> {
 			PlayerConnection con = viewer.getConnection();
@@ -651,6 +653,15 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	@Override
 	public ViewerSet<Entity, Player> getViewers() {
 		return viewers;
+	}
+
+	@Override
+	public void sendMetadata(Player player) {
+		PlayerConnection con = player.getConnection();
+		PacketOutEntityMetadata packet = con.getProtocol().createPacket(PacketOutEntityMetadata.class);
+		packet.setEntityID(getID());
+		packet.setNonDefaultData(metaContainer);
+		con.sendPacked(packet);
 	}
 	
 }

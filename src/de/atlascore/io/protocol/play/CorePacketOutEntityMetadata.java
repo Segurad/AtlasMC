@@ -23,21 +23,15 @@ public class CorePacketOutEntityMetadata extends AbstractPacket implements Packe
 	public CorePacketOutEntityMetadata(int entityID, MetaDataContainer container) {
 		this();
 		this.entityID = entityID;
-		if (container == null || !container.hasChanges()) {
-			buf = Unpooled.buffer(1);
-			buf.writeByte(0xFF);
-		}
+		if (container == null || !container.hasChanges())
+			return;
 		buf = Unpooled.buffer();
-		try {
-			for (MetaData<? extends Object> data : container.getValues()) {
-				if (!data.hasChanged()) continue;
-				buf.writeByte(data.getIndex());
-				MetaDataType<?> type = data.getType();
-				writeVarInt(type.getType(), buf);
-				type.write(data.getData(), buf);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		for (MetaData<? extends Object> data : container) {
+			if (!data.hasChanged()) continue;
+			buf.writeByte(data.getIndex());
+			MetaDataType<?> type = data.getType();
+			writeVarInt(type.getTypeID(), buf);
+			type.writeRaw(data.getData(), buf);
 		}
 		buf.writeByte(0xFF);
 	}
@@ -51,7 +45,10 @@ public class CorePacketOutEntityMetadata extends AbstractPacket implements Packe
 	@Override
 	public void write(ByteBuf out) throws IOException {
 		writeVarInt(entityID, out);
-		out.writeBytes(buf);
+		if (buf == null)
+			out.writeByte(0xFF);
+		else
+			out.writeBytes(buf);
 	}
 
 	@Override
@@ -62,6 +59,43 @@ public class CorePacketOutEntityMetadata extends AbstractPacket implements Packe
 	@Override
 	public ByteBuf getData() {
 		return buf;
+	}
+
+	@Override
+	public void setEntityID(int id) {
+		this.entityID = id;	
+	}
+
+	@Override
+	public void setNonDefaultData(MetaDataContainer container) {
+		for (MetaData<?> data : container) {
+			if (data.isDefault())
+				continue;
+			if (buf == null)
+				buf = Unpooled.buffer();
+			buf.writeByte(data.getIndex());
+			MetaDataType<?> type = data.getType();
+			writeVarInt(type.getTypeID(), buf);
+			type.writeRaw(data.getData(), buf);
+		}
+		buf.writeByte(0xFF);
+	}
+
+	@Override
+	public void setChangedData(MetaDataContainer container) {
+		if (!container.hasChanges())
+			return;
+		for (MetaData<?> data : container) {
+			if (!data.hasChanged())
+				continue;
+			if (buf == null)
+				buf = Unpooled.buffer();
+			buf.writeByte(data.getIndex());
+			MetaDataType<?> type = data.getType();
+			writeVarInt(type.getTypeID(), buf);
+			type.writeRaw(data.getData(), buf);
+		}
+		buf.writeByte(0xFF);
 	}
 
 }
