@@ -3,7 +3,10 @@
 <br>![Logo](https://craftunion.org/images/atlas/server_icon.png) 
 # AtlasMC 
 
-AtlasMC is a build from the Ground Minecraft Server Software. With the goal of this project is to give full access to all functional parts and run multiple "Server" instances in one aplication.
+<b>IN DEVELOPEMENT</b>
+
+AtlasMC is a build from the Ground Minecraft Server Software. The goal of this project is to give full access to all functional parts and run multiple "Server" instances in one application.
+
 !!! <u>AtlasMC is <b>NOT</b> designed to give a Vanilla experience</u> !!!
 
 # Thanks to
