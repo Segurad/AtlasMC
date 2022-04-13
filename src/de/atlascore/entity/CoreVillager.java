@@ -1,12 +1,20 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+import de.atlasmc.Material;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Villager;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.nbt.NBTField;
+import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreVillager extends CoreAbstractVillager implements Villager {
@@ -15,6 +23,83 @@ public class CoreVillager extends CoreAbstractVillager implements Villager {
 	META_VILLAGER_DATA = new MetaDataField<>(CoreAbstractVillager.LAST_META_INDEX+1, null, MetaDataType.VILLAGER_DATA);
 	
 	protected static final int LAST_META_INDEX = CoreAbstractVillager.LAST_META_INDEX+1;
+	
+	protected static final String
+		NBT_TYPE = "type",
+		NBT_PROFESSION = "profession",
+		NBT_LEVEL = "level",
+		NBT_INVENTORY = "Inventory",
+		NBT_GOSSIPS = "Gossips",
+		NBT_LAST_GOSSIP_DECAY = "LastGossipDecay",
+		NBT_WILLING = "Willing",
+		NBT_VILLAGER_DATA = "VillagerData",
+		NBT_XP = "Xp";
+	
+	static {
+		NBT_FIELDS.setField(NBT_INVENTORY, (holder, reader) -> {
+			if (!(holder instanceof Villager)) {
+				reader.skipTag();
+				return;
+			}
+			reader.readNextEntry();
+			while (reader.getRestPayload() > 0) {
+				Material mat = null;
+				if (!NBT_ID.equals(reader.getFieldName())) {
+					reader.mark();
+					reader.search(NBT_ID);
+					mat = Material.getByName(reader.readStringTag());
+					reader.reset();
+				} else mat = Material.getByName(reader.readStringTag());
+				ItemStack item = new ItemStack(mat);
+				item.fromNBT(reader);
+				((Villager) holder).addPocketItem(item);
+			}
+		});
+		NBT_FIELDS.setField(NBT_GOSSIPS, NBTField.SKIP); // TODO skipped because i found a use case
+		NBT_FIELDS.setField(NBT_LAST_GOSSIP_DECAY, NBTField.SKIP); // TODO see gossip
+		NBT_FIELDS.setField(NBT_XP, (holder, reader) -> {
+			if (holder instanceof Villager) {
+				((Villager) holder).setXp(reader.readIntTag());
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_VILLAGER_DATA, (holder, reader) -> {
+			if (!(holder instanceof Villager)) {
+				reader.skipTag();
+				return;
+			}
+			reader.readNextEntry();
+			while (reader.getType() != TagType.TAG_END) {
+				switch (reader.getFieldName()) {
+				case NBT_PROFESSION:
+					VillagerProfession prof = VillagerProfession.getByNameID(reader.readStringTag());
+					if (prof != null)
+						((Villager) holder).setVillagerProfession(prof);
+					break;
+				case NBT_TYPE:
+					VillagerType type = VillagerType.getByNameID(reader.readStringTag());
+					if (type != null)
+						((Villager) holder).setVillagerType(type);
+					break;
+				case NBT_LEVEL:
+					((Villager) holder).setLevel(reader.readIntTag());
+					break;
+				default:
+					reader.skipTag();
+					break;
+				}
+			}
+			reader.readNextEntry();
+		});
+		NBT_FIELDS.setField(NBT_WILLING, (holder, reader) -> {
+			if (holder instanceof Villager) {
+				((Villager) holder).setWilling(reader.readByteTag() == 1);
+			} else reader.skipTag();
+		});
+	}
+	
+	private List<ItemStack> pocket;
+	private int xp;
+	private boolean willing;
 	
 	public CoreVillager(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
@@ -73,4 +158,76 @@ public class CoreVillager extends CoreAbstractVillager implements Villager {
 		data.setChanged(true);
 	}
 
+	@Override
+	public List<ItemStack> getPocketContents() {
+		if (pocket == null)
+			pocket = new ArrayList<>();
+		return pocket;
+	}
+
+	@Override
+	public void addPocketItem(ItemStack item) {
+		if (item == null)
+			throw new IllegalArgumentException("Item can not be null!");
+		getPocketContents().add(item);
+	}
+
+	@Override
+	public void setPocketItems(List<ItemStack> pocket) {
+		List<ItemStack> p = getPocketContents();
+		p.clear();
+		p.addAll(pocket);
+	}
+
+	@Override
+	public boolean hasPocketItems() {
+		return pocket != null && !pocket.isEmpty();
+	}
+
+	@Override
+	public int getXp() {
+		return xp;
+	}
+
+	@Override
+	public void setXp(int xp) {
+		this.xp = xp;
+	}
+
+	@Override
+	public void addXp(int xp) {
+		this.xp += xp;
+	}
+
+	@Override
+	public boolean isWilling() {
+		return willing;
+	}
+
+	@Override
+	public void setWilling(boolean willing) {
+		this.willing = willing;
+	}
+
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (hasPocketItems()) {
+			List<ItemStack> items = getPocketContents();
+			writer.writeListTag(NBT_INVENTORY, TagType.COMPOUND, items.size());
+			int index = 0;
+			for (ItemStack item : items) {
+				item.toSlot(writer, systemData, index++);
+				writer.writeEndTag();
+			}
+		}
+		writer.writeCompoundTag(NBT_VILLAGER_DATA);
+		writer.writeStringTag(NBT_TYPE, getVillagerType().getNameID());
+		writer.writeStringTag(NBT_PROFESSION, getVillagerProfession().getNameID());
+		writer.writeIntTag(NBT_LEVEL, getLevel());
+		writer.writeEndTag();
+		writer.writeIntTag(NBT_XP, getXp());
+		writer.writeByteTag(NBT_WILLING, isWilling());
+	}
+	
 }

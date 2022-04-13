@@ -97,7 +97,7 @@ public class CoreAgeableMob extends CoreMob implements AgeableMob {
 	}
 
 	@Override
-	public int getInLove() {
+	public int isInLove() {
 		return inLove;
 	}
 
@@ -115,8 +115,8 @@ public class CoreAgeableMob extends CoreMob implements AgeableMob {
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
 		writer.writeIntTag(NBT_AGE, getAge());
-		if (getInLove() > 0) {
-			writer.writeIntTag(NBT_IN_LOVE, getInLove());
+		if (isInLove() > 0) {
+			writer.writeIntTag(NBT_IN_LOVE, isInLove());
 			writer.writeUUID(NBT_LOVE_CAUSE, loveCause);
 		}
 	}

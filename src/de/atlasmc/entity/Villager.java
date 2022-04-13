@@ -2,6 +2,8 @@ package de.atlasmc.entity;
 
 import java.util.List;
 
+import de.atlasmc.inventory.ItemStack;
+
 public interface Villager extends AbstractVillager {
 	
 	public VillagerType getVillagerType();
@@ -15,6 +17,45 @@ public interface Villager extends AbstractVillager {
 	public int getLevel();
 	
 	public void setLevel(int level);
+	
+	public List<ItemStack> getPocketContents();
+	
+	public void addPocketItem(ItemStack item);
+	
+	public void setPocketItems(List<ItemStack> pocket);
+	
+	public boolean hasPocketItems();
+	
+	/**
+	 * Returns the amount of xp this villager has gained through trading
+	 * @return
+	 */
+	public int getXp();
+	
+	/**
+	 * Sets the amount of xp this villager has gained through trading
+	 * @param xp
+	 */
+	public void setXp(int xp);
+	
+	/**
+	 * Adds a amount to xp this villager has gained through trading
+	 * @param xp
+	 */
+	public void addXp(int xp);
+	
+	/**
+	 * Returns whether or not this Villager is ready for breeding.<br>
+	 * @return true if ready
+	 */
+	public boolean isWilling();
+	
+	/**
+	 * Sets whether or not this Villager is ready for breeding.<br>
+	 * This value does not reset over time like {@link Breedable#isInLove()}
+	 * @param willing
+	 */
+	public void setWilling(boolean willing);
 	
 	public static class VillagerData {
 		
@@ -55,54 +96,88 @@ public interface Villager extends AbstractVillager {
 	}
 	
 	public static enum VillagerType {
-		DESERT,
-		JUNGLE,
-		PLAINS,
-		SAVANNA,
-		SNOW,
-		SWAMP,
-		TAIGA;
+		DESERT("minecraft:desert"),
+		JUNGLE("minecraft:jungle"),
+		PLAINS("minecraft:plains"),
+		SAVANNA("minecraft:savanna"),
+		SNOW("minecraft:snow"),
+		SWAMP("minecraft:swamp"),
+		TAIGA("minecraft:taiga");
+		
+		private final String nameID;
+		
+		private VillagerType(String nameID) {
+			this.nameID = nameID;
+		}
+		
+		public String getNameID() {
+			return nameID;
+		}
+		
+		private static List<VillagerType> VALUES;
 		
 		public int getID() {
 			return ordinal();
 		}
 		
 		public static VillagerType getByID(int id) {
-			switch (id) {
-			case 0:
-				return DESERT;
-			case 1:
-				return JUNGLE;
-			case 2:
-				return PLAINS;
-			case 3:
-				return SAVANNA;
-			case 4:
-				return SWAMP;
-			case 5:
-				return TAIGA;
-			default:
-				return PLAINS;
-			}
+			return getValues().get(id);
 		}
+		
+		/**
+		 * Returns a immutable List of all Types.<br>
+		 * This method avoid allocation of a new array not like {@link #values()}.
+		 * @return list
+		 */
+		public static List<VillagerType> getValues() {
+			if (VALUES == null)
+				VALUES = List.of(values());
+			return VALUES;
+		}
+		
+		/**
+		 * Releases the system resources used from the values cache
+		 */
+		public static void freeValues() {
+			VALUES = null;
+		}
+
+		public static VillagerType getByNameID(String nameID) {
+			for (VillagerType type : getValues()) {
+				if (type.getNameID().equals(nameID))
+					return type;
+			}
+			return null;
+		}
+		
 	}
 	
 	public static enum VillagerProfession {
-		NONE,
-		ARMORER,
-		BUTCHER,
-		CARTOGRAPHER,
-		CLERIC,
-		FARMER,
-		FISHERMAN,
-		FLETCHER,
-		LETHERWORKER,
-		LIBRARIAN,
-		MASON,
-		NITWIT,
-		SHEPHERD,
-		TOOLSMITH,
-		WEAPONSMITH;
+		NONE("minecraft:none"),
+		ARMORER("minecraft:armorer"),
+		BUTCHER("minecraft:butcher"),
+		CARTOGRAPHER("minecraft:cartographer"),
+		CLERIC("minecraft:cleric"),
+		FARMER("minecraft:farmer"),
+		FISHERMAN("minecraft:fisherman"),
+		FLETCHER("minecraft:fletcher"),
+		LETHERWORKER("minecraft:letherworker"),
+		LIBRARIAN("miencraft:librarian"),
+		MASON("minecraft:mason"),
+		NITWIT("minecraft:nitwit"),
+		SHEPHERD("minecraft:shepherd"),
+		TOOLSMITH("minecraft:toolsmith"),
+		WEAPONSMITH("minecraft:weaponsmith");
+		
+		private final String nameID;
+		
+		private VillagerProfession(String nameID) {
+			this.nameID = nameID;
+		}
+		
+		public String getNameID() {
+			return nameID;
+		}
 		
 		private static List<VillagerProfession> VALUES;
 		
@@ -131,7 +206,15 @@ public interface Villager extends AbstractVillager {
 		public static void freeValues() {
 			VALUES = null;
 		}
+
+		public static VillagerProfession getByNameID(String nameID) {
+			for (VillagerProfession prof : getValues()) {
+				if (prof.getNameID().equals(nameID))
+					return prof;
+			}
+			return null;
+		}
 		
 	}
-
+	
 }

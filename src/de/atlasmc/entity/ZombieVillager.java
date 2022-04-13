@@ -3,7 +3,7 @@ package de.atlasmc.entity;
 import de.atlasmc.entity.Villager.VillagerProfession;
 import de.atlasmc.entity.Villager.VillagerType;
 
-public interface ZombieVillager extends Zombie {
+public interface ZombieVillager extends Zombie, Merchant {
 	
 	public boolean isConverting();
 	

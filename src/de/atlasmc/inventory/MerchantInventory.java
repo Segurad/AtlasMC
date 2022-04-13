@@ -11,7 +11,7 @@ public interface MerchantInventory extends Inventory {
 	public int getRecipeCount();
 
 	public List<MerchantRecipe> getRecipes();
-	
-	// TODO implement
+
+	public void addRecipe(MerchantRecipe recipe);
 
 }

@@ -1,5 +1,6 @@
 package de.atlascore.entity;
 
+import java.util.List;
 import java.util.UUID;
 
 import de.atlasmc.entity.EntityType;
@@ -87,6 +88,36 @@ public class CoreZombieVillager extends CoreZombie implements ZombieVillager {
 	@Override
 	public void setConverting(boolean converting) {
 		metaContainer.get(META_IS_CONVERTING).setData(converting);
+	}
+
+	@Override
+	public MerchantRecipe getRecipe(int index) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getRecipeCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public List<MerchantRecipe> getRecipes() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void addRecipe(MerchantRecipe recipe) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean hasRecipes() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

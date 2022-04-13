@@ -11,4 +11,20 @@ public interface AbstractVillager extends Breedable, InventoryHolder, Merchant {
 	
 	public MerchantInventory getInventory();
 
+	/**
+	 * Sets the tick this Villager was last restocked
+	 * @param tick
+	 */
+	public void setLastRestock(long tick);
+
+	/**
+	 * Returns the tick this Villager was last restocked
+	 * @return
+	 */
+	public long getLastRestock();
+	
+	public int getRestocksToday();
+
+	public void setRestocksToday(int restocks);
+	
 }

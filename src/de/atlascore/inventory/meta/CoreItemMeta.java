@@ -25,7 +25,6 @@ import de.atlasmc.util.map.ListMultimap;
 import de.atlasmc.util.map.Multimap;
 import de.atlasmc.util.nbt.AbstractNBTBase;
 import de.atlasmc.util.nbt.CustomTagContainer;
-import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -104,8 +103,6 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 						break;
 					}
 				}
-				if (reader.getType() != TagType.TAG_END)
-					throw new NBTException("Error while reading Enchantment Field! Expected TAG_END but read: " + reader.getType().name());
 				reader.readNextEntry();
 				if (ench == null) continue;
 				enchants.put(ench, lvl);

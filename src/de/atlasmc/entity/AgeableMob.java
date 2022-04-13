@@ -33,7 +33,7 @@ public interface AgeableMob extends PathfinderMob {
 	 */
 	public void setInLove(int time);
 
-	public int getInLove();
+	public int isInLove();
 
 	/**
 	 * Sets the UUID of the Entity that causes the love state.
