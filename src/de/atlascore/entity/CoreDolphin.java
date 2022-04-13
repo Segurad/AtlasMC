@@ -1,5 +1,6 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.SimpleLocation;
@@ -8,6 +9,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.MathUtil;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreDolphin extends CoreMob implements Dolphin {
@@ -20,6 +22,35 @@ public class CoreDolphin extends CoreMob implements Dolphin {
 	META_MOISTURE_LEVEL = new MetaDataField<>(CoreMob.LAST_META_INDEX+3, 2400, MetaDataType.INT);
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+3;
+	
+	protected static final String
+	NBT_CAN_PICKUP_LOOT = "CanPickUpLoot",
+	NBT_GOT_FISH = "GotFish",
+	NBT_MOISTNESS = "Moistness",
+	// TODO currently skipped POS x y z
+	NBT_TREASURE_POS_X = "TreasurePosX",
+	NBT_TREASURE_POS_Y = "TreasurePosY",
+	NBT_TREASURE_POS_Z = "TreasurePosZ";
+
+	static {
+		NBT_FIELDS.setField(NBT_CAN_PICKUP_LOOT, (holder, reader) -> {
+			if (holder instanceof Dolphin) {
+				((Dolphin) holder).setCanPickupLoot(reader.readByteTag() == 1);
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_GOT_FISH, (holder, reader) -> {
+			if (holder instanceof Dolphin) {
+				((Dolphin) holder).setFish(reader.readByteTag() == 1);
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_MOISTNESS, (holder, reader) -> {
+			if (holder instanceof Dolphin) {
+				((Dolphin) holder).setMoistureLevel(reader.readIntTag());
+			} else reader.skipTag();
+		});
+	}
+	
+	private boolean canPickupLoot;
 	
 	public CoreDolphin(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
@@ -72,6 +103,26 @@ public class CoreDolphin extends CoreMob implements Dolphin {
 	@Override
 	public int getMaxMoistureLevel() {
 		return 2400;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (canPickupLoot())
+			writer.writeByteTag(NBT_CAN_PICKUP_LOOT, true);
+		if (hasFish())
+			writer.writeByteTag(NBT_GOT_FISH, true);
+		writer.writeIntTag(NBT_MOISTNESS, getMoistureLevel());
+	}
+
+	@Override
+	public boolean canPickupLoot() {
+		return canPickupLoot;
+	}
+
+	@Override
+	public void setCanPickupLoot(boolean canPickup) {
+		this.canPickupLoot = canPickup;
 	}
 
 }

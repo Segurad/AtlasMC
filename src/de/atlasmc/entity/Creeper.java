@@ -33,5 +33,13 @@ public interface Creeper extends Monster {
 	 * @param fuzing
 	 */
 	public void setFusing(boolean fuzing);
+
+	/**
+	 * Sets the radius of explosion. Values lower or equal to 0 will result in no destruction.
+	 * @param radius
+	 */
+	public void setExplosionRadius(int radius);
+	
+	public int getExplosionRadius();
 	
 }

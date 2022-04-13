@@ -26,4 +26,8 @@ public interface Dolphin extends WaterAnimal {
 	
 	public int getMaxMoistureLevel();
 
+	public boolean canPickupLoot();
+	
+	public void setCanPickupLoot(boolean canPickup);
+
 }

@@ -1,12 +1,16 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
 import java.util.UUID;
 
+import de.atlasmc.Location;
 import de.atlasmc.entity.Bee;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreBee extends CoreAgeableMob implements Bee {
@@ -32,9 +36,62 @@ public class CoreBee extends CoreAgeableMob implements Bee {
 	NBT_CANNOT_ENTER_HIVE_TICKS = "CannotEnterHiveTicks",
 	NBT_CROPS_GROWN_SINCE_POLLINATION = "CropsGrownSincePollination",
 	NBT_ANGER = "Anger",
-	NBT_HURT_BY = "HurtBy";
-
+	NBT_HURT_BY = "HurtBy",
+	NBT_X = "X",
+	NBT_Y = "Y",
+	NBT_Z = "Z";
+	
 	static {
+		NBT_FIELDS.setField(NBT_HIVE_POS, (holder, reader) -> {
+			if (holder instanceof Bee) {
+				reader.readNextEntry();
+				int x = 0, y = 0, z = 0;
+				while (reader.getType() != TagType.TAG_END) {
+					switch (reader.getFieldName()) {
+					case NBT_X:
+						x = reader.readIntTag();
+						break;
+					case NBT_Y:
+						y = reader.readIntTag();
+						break;
+					case NBT_Z:
+						z = reader.readIntTag();
+						break;
+					default:
+						reader.skipTag();
+						break;
+					}
+				}
+				reader.readNextEntry();
+				Bee bee = (Bee) holder;
+				bee.setHiveLocation(new Location(bee.getWorld(), x, y, z));
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_FLOWER_POS, (holder, reader) -> {
+			if (holder instanceof Bee) {
+				reader.readNextEntry();
+				int x = 0, y = 0, z = 0;
+				while (reader.getType() != TagType.TAG_END) {
+					switch (reader.getFieldName()) {
+					case NBT_X:
+						x = reader.readIntTag();
+						break;
+					case NBT_Y:
+						y = reader.readIntTag();
+						break;
+					case NBT_Z:
+						z = reader.readIntTag();
+						break;
+					default:
+						reader.skipTag();
+						break;
+					}
+				}
+				reader.readNextEntry();
+				Bee bee = (Bee) holder;
+				bee.setFlowerLocation(new Location(bee.getWorld(), x, y, z));
+			} else reader.skipTag();
+		});
 		NBT_FIELDS.setField(NBT_HAS_NECTAR, (holder, reader) -> {
 			if (holder instanceof Bee) {
 				((Bee) holder).setNectar(reader.readByteTag() == 1);
@@ -45,9 +102,40 @@ public class CoreBee extends CoreAgeableMob implements Bee {
 				((Bee) holder).setStung(reader.readByteTag() == 1);
 			} else reader.skipTag();
 		});
+		NBT_FIELDS.setField(NBT_TICKS_SINCE_POLLINATION, (holder, reader) -> {
+			if (holder instanceof Bee) {
+				((Bee) holder).setTicksSincePollination(reader.readIntTag());
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_CANNOT_ENTER_HIVE_TICKS, (holder, reader) -> {
+			if (holder instanceof Bee) {
+				((Bee) holder).setTicksCannotEnterHive(reader.readIntTag());
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_CROPS_GROWN_SINCE_POLLINATION, (holder, reader) -> {
+			if (holder instanceof Bee) {
+				((Bee) holder).setCropsGrownSincePollination(reader.readIntTag());
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_ANGER, (holder, reader) -> {
+			if (holder instanceof Bee) {
+				((Bee) holder).setAnger(reader.readIntTag());
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_HURT_BY, (holder, reader) -> {
+			if (holder instanceof Bee) {
+				((Bee) holder).setHurtBy(reader.readUUID());
+			} else reader.skipTag();
+		});
 	}
 
-	private int tickInHive, minHiveOccupationTicks;
+	private int tickInHive;
+	private int minHiveOccupationTicks;
+	private int ticksSincePollination;
+	private int ticksCannotEnterHive;
+	private int cropsGrownSincePollination;
+	private Location hive, flower;
+	private UUID hurtBy;
 	
 	public CoreBee(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
@@ -129,6 +217,95 @@ public class CoreBee extends CoreAgeableMob implements Bee {
 		if (ticks < 0)
 			throw new IllegalArgumentException("Ticks must be higher than 0: " + ticks);
 		metaContainer.get(META_BEE_ANGER_TIME).setData(ticks);
+	}
+
+	@Override
+	public void setHiveLocation(Location location) {
+		this.hive = location;
+	}
+
+	@Override
+	public Location getHiveLocation() {
+		return hive;
+	}
+
+	@Override
+	public void setFlowerLocation(Location location) {
+		this.flower = location;
+	}
+
+	@Override
+	public Location getFlowerLocation() {
+		return flower;
+	}
+
+	@Override
+	public void setTicksSincePollination(int ticks) {
+		this.ticksSincePollination = ticks;
+	}
+
+	@Override
+	public int getTicksSincePollination() {
+		return ticksSincePollination;
+	}
+
+	@Override
+	public void setTicksCannotEnterHive(int ticks) {
+		this.ticksCannotEnterHive = ticks;
+	}
+
+	@Override
+	public int getTicksCannotEnterHive() {
+		return ticksCannotEnterHive;
+	}
+
+	@Override
+	public void setCropsGrownSincePollination(int crops) {
+		this.cropsGrownSincePollination = crops;
+	}
+
+	@Override
+	public int getCropsGrownSincePollination() {
+		return cropsGrownSincePollination;
+	}
+
+	@Override
+	public void setHurtBy(UUID uuid) {
+		this.hurtBy = uuid;
+	}
+
+	@Override
+	public UUID getHurtBy() {
+		return hurtBy;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (hive != null) {
+			writer.writeCompoundTag(NBT_HIVE_POS);
+			writer.writeIntTag(NBT_X, hive.getBlockX());
+			writer.writeIntTag(NBT_Y, hive.getBlockY());
+			writer.writeIntTag(NBT_Z, hive.getBlockZ());
+			writer.writeEndTag();
+		}
+		if (flower != null) {
+			writer.writeCompoundTag(NBT_FLOWER_POS);
+			writer.writeIntTag(NBT_X, flower.getBlockX());
+			writer.writeIntTag(NBT_Y, flower.getBlockY());
+			writer.writeIntTag(NBT_Z, flower.getBlockZ());
+			writer.writeEndTag();
+		}
+		if (hasNectar())
+			writer.writeByteTag(NBT_HAS_NECTAR, true);
+		if (hasStung())
+			writer.writeByteTag(NBT_HAS_STUNG, true);
+		writer.writeIntTag(NBT_TICKS_SINCE_POLLINATION, getTicksSincePollination());
+		writer.writeIntTag(NBT_CANNOT_ENTER_HIVE_TICKS, getTicksCannotEnterHive());
+		writer.writeIntTag(NBT_CROPS_GROWN_SINCE_POLLINATION, getCropsGrownSincePollination());
+		writer.writeIntTag(NBT_ANGER, getAnger());
+		if (getHurtBy() != null) 	
+			writer.writeUUID(NBT_HURT_BY, getHurtBy());
 	}
 
 }
