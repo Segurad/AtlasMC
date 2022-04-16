@@ -272,7 +272,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	}
 
 	@Override
-	public void remove() {
+	public synchronized void remove() {
 		if (removed)
 			return;
 		removed = true;
@@ -562,8 +562,8 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	}
 
 	@Override
-	public void spawn(int entityID, World world, double x, double y, double z, float pitch, float yaw) {
-		if (!asyncIsRemoved())
+	public synchronized void spawn(int entityID, World world, double x, double y, double z, float pitch, float yaw) {
+		if (!asyncIsRemoved() || !isRemoved())
 			throw new IllegalStateException("Unable to spawn not removed Entity! call remove() first...");
 		if (uuid == null)
 			uuid = UUID.randomUUID();
