@@ -186,9 +186,10 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	@Override
 	public UUID readUUID() throws IOException {
 		ensureOpen();
-		int[] data = readIntArrayTag();
-		if (data.length != 4) throw new NBTException("Invalid UUID data length: " + data.length);
-		return new UUID((data[0]<<32)+data[1], (data[2]<<32)+data[3]);
+		int length = ioReadInt();
+		if (length != 4) 
+			throw new NBTException("Invalid UUID data length: " + length);
+		return new UUID(ioReadLong(), ioReadLong());
 	}
 	
 	private void addList() throws IOException {

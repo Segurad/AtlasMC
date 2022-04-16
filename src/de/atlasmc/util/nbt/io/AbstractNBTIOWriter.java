@@ -116,12 +116,10 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 		ensureOpen();
 		if (uuid == null) 
 			throw new IllegalArgumentException("UUID can not be null!");
-		writeIntArrayTag(name, new int[] {
-				(int) (uuid.getMostSignificantBits()>>32),
-				(int) uuid.getMostSignificantBits(),
-				(int) (uuid.getLeastSignificantBits()>>32),
-				(int) uuid.getLeastSignificantBits()
-		});
+		prepareTag(TagType.INT_ARRAY, name);
+		ioWriteInt(4);
+		ioWriteLong(uuid.getMostSignificantBits());
+		ioWriteLong(uuid.getLeastSignificantBits());
 	}
 	
 	@Override
