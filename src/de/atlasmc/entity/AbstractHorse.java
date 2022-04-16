@@ -15,9 +15,9 @@ public interface AbstractHorse extends Animal, InventoryHolder {
 	
 	public void setSaddled(boolean saddled);
 	
-	public boolean hasBred();
+	public boolean canBred();
 	
-	public void setBred(boolean bred);
+	public void setCanBred(boolean bred);
 	
 	public boolean isEating();
 	

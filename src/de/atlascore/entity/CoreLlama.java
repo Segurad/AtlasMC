@@ -1,14 +1,21 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.DyeColor;
+import de.atlasmc.Material;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Llama;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.AbstractHorseInventory;
+import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.LlamaInventory;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreLlama extends CoreChestedHorse implements Llama {
@@ -21,6 +28,44 @@ public class CoreLlama extends CoreChestedHorse implements Llama {
 	META_LLAMA_VARIANT = new MetaDataField<>(CoreChestedHorse.LAST_META_INDEX+3, 0, MetaDataType.INT);
 
 	protected static final int LAST_META_INDEX = CoreChestedHorse.LAST_META_INDEX+3;
+	
+	protected static final NBTFieldContainer NBT_FIELDS;
+	
+	protected static final String
+	NBT_DECOR_ITEM = "DecorItem",
+	NBT_STRENGTH = "Strength",
+	NBT_VARIANT = "Variant";
+	
+	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreChestedHorse.NBT_FIELDS);
+		NBT_FIELDS.setField(NBT_DECOR_ITEM, (holder, reader) -> {
+			if (!(holder instanceof Llama)) {
+				reader.skipTag();
+				return;
+			}
+			reader.readNextEntry();
+			Material mat = null;
+			if (!NBT_ID.equals(reader.getFieldName())) {
+				reader.mark();
+				reader.search(NBT_ID);
+				mat = Material.getByName(reader.readStringTag());
+				reader.reset();
+			} else mat = Material.getByName(reader.readStringTag());
+			ItemStack item = new ItemStack(mat);
+			item.fromNBT(reader);
+			((Llama) holder).getInventory().setDecor(item);
+		});
+		NBT_FIELDS.setField(NBT_STRENGTH, (holder, reader) -> {
+			if (holder instanceof Llama) {
+				((Llama) holder).setStrength(reader.readIntTag());
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_VARIANT, (holder, reader) -> {
+			if (holder instanceof Llama) {
+				((Llama) holder).setColor(LlamaColor.getByID(reader.readIntTag()));
+			} else reader.skipTag();
+		});
+	}
 	
 	public CoreLlama(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
@@ -50,8 +95,8 @@ public class CoreLlama extends CoreChestedHorse implements Llama {
 	}
 
 	@Override
-	public Color getColor() {
-		return Color.getByID(metaContainer.getData(META_LLAMA_VARIANT));
+	public LlamaColor getColor() {
+		return LlamaColor.getByID(metaContainer.getData(META_LLAMA_VARIANT));
 	}
 
 	@Override
@@ -72,10 +117,15 @@ public class CoreLlama extends CoreChestedHorse implements Llama {
 	}
 
 	@Override
-	public void setColor(Color color) {
+	public void setColor(LlamaColor color) {
 		if (color == null)
 			throw new IllegalArgumentException("Color can not be null!");
 		metaContainer.get(META_LLAMA_CARPET).setData(color.getID());
+	}
+	
+	@Override
+	public LlamaInventory getInventory() {
+		return (LlamaInventory) super.getInventory();
 	}
 	
 	@Override
@@ -88,4 +138,16 @@ public class CoreLlama extends CoreChestedHorse implements Llama {
 		metaContainer.get(META_HORSE_HAS_CHEST).setData(chest);
 	}
 
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (inv != null && getInventory().getDecor() != null) {
+			writer.writeCompoundTag(NBT_DECOR_ITEM);
+			getInventory().getDecor().toNBT(writer, systemData);
+			writer.writeEndTag();
+		}
+		writer.writeIntTag(NBT_STRENGTH, getStrength());
+		writer.writeIntTag(NBT_VARIANT, getColor().getID());
+	}
+	
 }

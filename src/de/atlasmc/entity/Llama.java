@@ -1,6 +1,7 @@
 package de.atlasmc.entity;
 
 import de.atlasmc.DyeColor;
+import de.atlasmc.inventory.LlamaInventory;
 
 public interface Llama extends ChestedHorse {
 	
@@ -12,11 +13,13 @@ public interface Llama extends ChestedHorse {
 	
 	public void setCarpedColor(DyeColor color);
 	
-	public Color getColor();
+	public LlamaColor getColor();
 	
-	public void setColor(Color color);
+	public void setColor(LlamaColor color);
 	
-	public static enum Color {
+	public LlamaInventory getInventory();
+	
+	public static enum LlamaColor {
 		CREAMY,
 		WHITE,
 		BROWN,
@@ -26,7 +29,7 @@ public interface Llama extends ChestedHorse {
 			return ordinal();
 		}
 		
-		public static Color getByID(int id) {
+		public static LlamaColor getByID(int id) {
 			switch (id) {
 			case 0:
 				return CREAMY;

@@ -1,13 +1,19 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
 import java.util.UUID;
 
+import de.atlasmc.Material;
 import de.atlasmc.entity.AbstractHorse;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.AbstractHorseInventory;
+import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public abstract class CoreAbstractHorse extends CoreAgeableMob implements AbstractHorse {
@@ -15,7 +21,7 @@ public abstract class CoreAbstractHorse extends CoreAgeableMob implements Abstra
 	/**
 	 * 0x02 - Is Tame<br>
 	 * 0x04 - Is saddled<br>
-	 * 0x08 - Has bred<br>
+	 * 0x08 - can bred<br>
 	 * 0x10 - Is eating<br>
 	 * 0x20 - Is rearing<br>
 	 * 0x40 - Is mouth open
@@ -26,6 +32,59 @@ public abstract class CoreAbstractHorse extends CoreAgeableMob implements Abstra
 	META_HORSE_OWNER = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+2, null, MetaDataType.OPT_UUID);
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+2;
+	
+	protected static final NBTFieldContainer NBT_FIELDS;
+	
+	protected static final String
+	NBT_BRED = "Bred",
+	NBT_EATING_HAYSTACK = "EatingHaystack",
+	NBT_OWNER = "Owner",
+	NBT_SADDLE_ITEM = "SaddleItem",
+	NBT_TAME = "Tame";
+	//NBT_TEMPER = "Temper"; TODO unnecessary (needed for taming)
+	
+	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreAgeableMob.NBT_FIELDS);
+		NBT_FIELDS.setField(NBT_BRED, (holder, reader) -> {
+			if (holder instanceof AbstractHorse) {
+				((AbstractHorse) holder).setCanBred(reader.readByteTag() == 1);
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_EATING_HAYSTACK, (holder, reader) -> {
+			if (holder instanceof AbstractHorse) {
+				((AbstractHorse) holder).setEating(reader.readByteTag() == 1);
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_OWNER, (holder, reader) -> {
+			if (holder instanceof AbstractHorse) {
+				((AbstractHorse) holder).setOwner(reader.readUUID());
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_SADDLE_ITEM, (holder, reader) -> {
+			if (holder instanceof AbstractHorse) {
+				if (!(holder instanceof AbstractHorse)) {
+					reader.skipTag();
+					return;
+				}
+				reader.readNextEntry();
+				Material mat = null;
+				if (!NBT_ID.equals(reader.getFieldName())) {
+					reader.mark();
+					reader.search(NBT_ID);
+					mat = Material.getByName(reader.readStringTag());
+					reader.reset();
+				} else mat = Material.getByName(reader.readStringTag());
+				ItemStack item = new ItemStack(mat);
+				item.fromNBT(reader);
+				((AbstractHorse) holder).getInventory().setSaddle(item);
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_TAME, (holder, reader) -> {
+			if (holder instanceof AbstractHorse) {
+				((AbstractHorse) holder).setTamed(reader.readByteTag() == 1);
+			} else reader.skipTag();
+		});
+	}
 	
 	protected AbstractHorseInventory inv;
 	
@@ -51,7 +110,7 @@ public abstract class CoreAbstractHorse extends CoreAgeableMob implements Abstra
 	}
 
 	@Override
-	public boolean hasBred() {
+	public boolean canBred() {
 		return (metaContainer.getData(META_HORSE_FLAGS) & 0x08) == 0x08;
 	}
 
@@ -93,7 +152,7 @@ public abstract class CoreAbstractHorse extends CoreAgeableMob implements Abstra
 	}
 
 	@Override
-	public void setBred(boolean bred) {
+	public void setCanBred(boolean bred) {
 		MetaData<Byte> data = metaContainer.get(META_HORSE_FLAGS);
 		data.setData((byte) (bred ? data.getData() | 0x08 : data.getData() & 0xF7));
 	}
@@ -129,5 +188,23 @@ public abstract class CoreAbstractHorse extends CoreAgeableMob implements Abstra
 	}
 	
 	protected abstract AbstractHorseInventory createInventory();
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (canBred())
+			writer.writeByteTag(NBT_BRED, true);
+		if (isEating())
+			writer.writeByteTag(NBT_EATING_HAYSTACK, true);
+		if (getOwner() != null)
+			writer.writeUUID(NBT_OWNER, getOwner());
+		if (inv != null && getInventory().getSaddle() != null) {
+			writer.writeCompoundTag(NBT_SADDLE_ITEM);
+			getInventory().getSaddle().toNBT(writer, systemData);
+			writer.writeEndTag();
+		}
+		if (isTamed())
+			writer.writeByteTag(NBT_TAME, true);
+	}
 
 }

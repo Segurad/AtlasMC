@@ -1,12 +1,17 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
 import java.util.UUID;
 
+import de.atlasmc.entity.Cat;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Tameable;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreTameable extends CoreAgeableMob implements Tameable {
@@ -21,6 +26,26 @@ public class CoreTameable extends CoreAgeableMob implements Tameable {
 	META_OWNER = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+2, null, MetaDataType.OPT_UUID);
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+2;
+	
+	protected static final NBTFieldContainer NBT_FIELDS;
+	
+	protected static final String
+	NBT_OWNER = "Owner",
+	NBT_SITTING = "Sitting";
+	
+	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreAgeableMob.NBT_FIELDS);
+		NBT_FIELDS.setField(NBT_OWNER, (holder, reader) -> {
+			if (holder instanceof Cat) {
+				((Cat) holder).setOwner(reader.readUUID());
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_SITTING, (holder, reader) -> {
+			if (holder instanceof Cat) {
+				((Cat) holder).setSitting(reader.readByteTag() == 1);
+			} else reader.skipTag();
+		});
+	}
 	
 	public CoreTameable(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
@@ -68,6 +93,15 @@ public class CoreTameable extends CoreAgeableMob implements Tameable {
 	@Override
 	public void setOwner(UUID owner) {
 		metaContainer.get(META_OWNER).setData(owner);
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (getOwner() != null)
+			writer.writeUUID(NBT_OWNER, getOwner());
+		if (isSitting())
+			writer.writeByteTag(NBT_SITTING, true);
 	}
 
 }

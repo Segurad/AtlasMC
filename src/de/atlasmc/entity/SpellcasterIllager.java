@@ -46,4 +46,12 @@ public interface SpellcasterIllager extends AbstractIllager {
 		
 	}
 
+	public void setSpellcastTime(int time);
+	
+	/**
+	 * Returns the time in ticks this {@link SpellcasterIllager} needs until the current spell is casted
+	 * @return ticks or 0 of none
+	 */
+	public int getSpellcastTime();
+
 }

@@ -10,6 +10,11 @@ import de.atlasmc.world.World;
 
 public class CoreSkeletonHorse extends CoreAbstractHorse implements SkeletonHorse {
 
+	
+	//protected static final String TODO unnecessary
+	//NBT_SKELETON_TRAP = "SkeletonTrap",
+	//NBT_SKELETON_TRAP_TIME = "SkeletonTrapTime";
+	
 	public CoreSkeletonHorse(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
 	}

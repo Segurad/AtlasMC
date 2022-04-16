@@ -51,10 +51,12 @@ public interface Panda extends Animal {
 		
 		private static List<Gene> VALUES;
 		
-		private boolean receccive;
+		private final boolean receccive;
+		private final String name;
 		
 		private Gene(boolean receccive) {
 			this.receccive = receccive;
+			this.name = name().toLowerCase();
 		}
 		
 		public boolean isRececcive() {
@@ -78,6 +80,18 @@ public interface Panda extends Animal {
 			if (VALUES == null)
 				VALUES = List.of(values());
 			return VALUES;
+		}
+
+		public static Gene getByNameID(String name) {
+			for (Gene gene : getValues()) {
+				if (gene.name.equals(name))
+					return gene;
+			}
+			return null;
+		}
+		
+		public String getNameID() {
+			return name;
 		}
 		
 	}

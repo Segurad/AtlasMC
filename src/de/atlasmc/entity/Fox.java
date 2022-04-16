@@ -1,5 +1,6 @@
 package de.atlasmc.entity;
 
+import java.util.Set;
 import java.util.UUID;
 
 public interface Fox extends Animal {
@@ -47,7 +48,17 @@ public interface Fox extends Animal {
 	public static enum Type {
 		RED,
 		SNOW;
-
+		
+		private final String name;
+		
+		private Type() {
+			name = name().toLowerCase();
+		}
+		
+		public String getNameID() {
+			return name;
+		}
+ 
 		public static Type getByID(int id) {
 			switch (id) {
 			case 0:
@@ -62,6 +73,32 @@ public interface Fox extends Animal {
 		public int getID() {
 			return ordinal();
 		}
+
+		public static Type getByNameID(String name) {
+			switch (name) {
+			case "red":
+				return RED;
+			case "snow":
+				return SNOW;
+			default:
+				return null;
+			}
+		}
 	}
+
+	public void addTrusted(UUID trusted);
+	
+	public boolean isTrusted(UUID trusted);
+	
+	public Set<UUID> getTrusted();
+	
+	public boolean hasTrusted();
+	
+	/**
+	 * Removes the UUID from the trusted set
+	 * @param trusted
+	 * @return true if UUID was present and removed
+	 */
+	public boolean removeTrusted(UUID trusted);
 
 }

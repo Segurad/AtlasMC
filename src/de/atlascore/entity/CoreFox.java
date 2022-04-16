@@ -1,5 +1,8 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import de.atlasmc.entity.EntityType;
@@ -7,6 +10,10 @@ import de.atlasmc.entity.Fox;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreFox extends CoreAgeableMob implements Fox {
@@ -31,6 +38,49 @@ public class CoreFox extends CoreAgeableMob implements Fox {
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+4;
 	
+	protected static final NBTFieldContainer NBT_FIELDS;
+	
+	protected static final String
+	NBT_TRUSTED = "Trusted",
+	NBT_TYPE = "Type",
+	NBT_SLEEPING = "Sleeping",
+	NBT_SITTING = "Sitting",
+	NBT_CROUCHING = "Crouching";
+	
+	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreAgeableMob.NBT_FIELDS);
+		NBT_FIELDS.setField(NBT_TRUSTED, (holder, reader) -> {
+			if (holder instanceof Fox) {
+				Fox fox = (Fox) holder;
+				while (reader.getRestPayload() > 0) {
+					fox.addTrusted(reader.readUUID());
+				}
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_TYPE, (holder, reader) -> {
+			if (holder instanceof Fox) {
+				((Fox) holder).setFoxType(Type.getByNameID(reader.readStringTag()));
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_SLEEPING, (holder, reader) -> {
+			if (holder instanceof Fox) {
+				((Fox) holder).setSleeping(reader.readByteTag() == 1);
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_SITTING, (holder, reader) -> {
+			if (holder instanceof Fox) {
+				((Fox) holder).setSitting(reader.readByteTag() == 1);
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_CROUCHING, (holder, reader) -> {
+			if (holder instanceof Fox) {
+				((Fox) holder).setCrouching(reader.readByteTag() == 1);
+			} else reader.skipTag();
+		});
+	}
+	
+	private Set<UUID> trusted;
+	
 	public CoreFox(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
 	}
@@ -47,6 +97,11 @@ public class CoreFox extends CoreAgeableMob implements Fox {
 	@Override
 	protected int getMetaContainerSize() {
 		return LAST_META_INDEX+1;
+	}
+	
+	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
 	}
 	
 	@Override
@@ -156,6 +211,57 @@ public class CoreFox extends CoreAgeableMob implements Fox {
 	@Override
 	public boolean isCrouching() {
 		return (metaContainer.getData(META_FOX_FLAGS) & 0x04) == 0x04;
+	}
+
+	@Override
+	public void addTrusted(UUID trusted) {
+		if (trusted == null)
+			throw new IllegalArgumentException("Trusted can not be null!");
+		getTrusted().add(trusted);
+	}
+
+	@Override
+	public boolean isTrusted(UUID trusted) {
+		if (trusted == null || !hasTrusted())
+			return false;
+		return this.trusted.contains(trusted);
+	}
+
+	@Override
+	public Set<UUID> getTrusted() {
+		if (trusted == null)
+			trusted = new HashSet<>();
+		return trusted;
+	}
+
+	@Override
+	public boolean removeTrusted(UUID trusted) {
+		if (trusted == null || !hasTrusted())
+			return false;
+		return this.trusted.remove(trusted);
+	}
+
+	@Override
+	public boolean hasTrusted() {
+		return trusted != null && !trusted.isEmpty();
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (hasTrusted()) {
+			Set<UUID> trusted = getTrusted();
+			writer.writeListTag(NBT_TRUSTED, TagType.INT_ARRAY, trusted.size());
+			for (UUID uuid : trusted)
+				writer.writeUUID(null, uuid);
+		}
+		writer.writeStringTag(NBT_TYPE, getFoxType().getNameID());
+		if (isSleeping())
+			writer.writeByteTag(NBT_SLEEPING, true);
+		if (isSitting())
+			writer.writeByteTag(NBT_SITTING, true);
+		if (isCrouching())
+			writer.writeByteTag(NBT_CROUCHING, true);
 	}
 
 }

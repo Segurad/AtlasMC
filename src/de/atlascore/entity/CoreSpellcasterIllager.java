@@ -1,11 +1,13 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.SpellcasterIllager;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreSpellcasterIllager extends CoreRaider implements SpellcasterIllager {
@@ -14,6 +16,19 @@ public class CoreSpellcasterIllager extends CoreRaider implements SpellcasterIll
 	META_SPELL = new MetaDataField<>(CoreRaider.LAST_META_INDEX+1, (byte) 0, MetaDataType.BYTE);
 	
 	protected static final int LAST_META_INDEX = CoreRaider.LAST_META_INDEX+1;
+	
+	protected static final String
+	NBT_SPELL_TICKS = "SpellTicks";
+	
+	static {
+		NBT_FIELDS.setField(NBT_SPELL_TICKS, (holder, reader) -> {
+			if (holder instanceof SpellcasterIllager) {
+				((SpellcasterIllager) holder).setSpellcastTime(reader.readIntTag());
+			} else reader.skipTag();
+		});
+	}
+
+	private int spellcastTime;
 	
 	public CoreSpellcasterIllager(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
@@ -40,6 +55,22 @@ public class CoreSpellcasterIllager extends CoreRaider implements SpellcasterIll
 		if (spell == null)
 			throw new IllegalArgumentException("Spell can not be null!");
 		metaContainer.get(META_SPELL).setData((byte) spell.getID());
+	}
+
+	@Override
+	public void setSpellcastTime(int time) {
+		this.spellcastTime = time;
+	}
+
+	@Override
+	public int getSpellcastTime() {
+		return spellcastTime;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		writer.writeIntTag(NBT_SPELL_TICKS, getSpellcastTime());
 	}
 
 }

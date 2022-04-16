@@ -1,5 +1,7 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,6 +13,8 @@ import de.atlasmc.entity.Villager.VillagerType;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreZombieVillager extends CoreZombie implements ZombieVillager {
@@ -21,6 +25,35 @@ public class CoreZombieVillager extends CoreZombie implements ZombieVillager {
 	META_VILLAGER_DATA = new MetaDataField<VillagerData>(CoreZombie.LAST_META_INDEX+2, null, MetaDataType.VILLAGER_DATA);
 	
 	protected static final int LAST_META_INDEX = CoreZombie.LAST_META_INDEX+2;
+	
+	protected static final String
+		NBT_OFFERS = "Offers",
+		NBT_RECIPES = "Recipes",
+		NBT_TYPE = "type",
+		NBT_PROFESSION = "profession",
+		NBT_LEVEL = "level",
+		NBT_VILLAGER_DATA = "VillagerData",
+		NBT_XP = "Xp",
+		NBT_CONVERSION_PLAYER = "ConversionPlayer",
+		NBT_CONVERSION_TIME = "ConversionTime";
+	
+	static {
+		NBT_FIELDS.setField(NBT_CONVERSION_PLAYER, (holder, reader) -> {
+			if (holder instanceof ZombieVillager) {
+				((ZombieVillager) holder).setConversionPlayer(reader.readUUID());
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_CONVERSION_TIME, (holder, reader) -> {
+			if (holder instanceof ZombieVillager) {
+				((ZombieVillager) holder).setConversionTime(reader.readIntTag());
+			} else reader.skipTag();
+		});
+	}
+	
+	private List<MerchantRecipe> recipes;
+	private int xp;
+	private UUID conversionPlayer;
+	private int conversionTime = -1;
 	
 	public CoreZombieVillager(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
@@ -92,32 +125,86 @@ public class CoreZombieVillager extends CoreZombie implements ZombieVillager {
 
 	@Override
 	public MerchantRecipe getRecipe(int index) {
-		// TODO Auto-generated method stub
-		return null;
+		if (index >= getRecipeCount() || index < 0)
+			return null;
+		return recipes.get(index);
 	}
 
 	@Override
 	public int getRecipeCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return recipes == null ? 0 : recipes.size();
 	}
 
 	@Override
 	public List<MerchantRecipe> getRecipes() {
-		// TODO Auto-generated method stub
-		return null;
+		if (recipes == null)
+			recipes = new ArrayList<>();
+		return recipes;
 	}
 
 	@Override
 	public void addRecipe(MerchantRecipe recipe) {
-		// TODO Auto-generated method stub
-		
+		getRecipes().add(recipe);
 	}
 
 	@Override
 	public boolean hasRecipes() {
-		// TODO Auto-generated method stub
-		return false;
+		return recipes != null && !recipes.isEmpty();
+	}
+
+	@Override
+	public void setXp(int xp) {
+		this.xp = xp;
+	}
+
+	@Override
+	public int getXp() {
+		return xp;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (getConversionTime() > -1)
+			writer.writeIntTag(NBT_CONVERSION_TIME, getConversionTime());
+		if (getConversionPlayer() != null)
+			writer.writeUUID(NBT_CONVERSION_PLAYER, getConversionPlayer());
+		writer.writeCompoundTag(NBT_VILLAGER_DATA);
+		writer.writeIntTag(NBT_LEVEL, getLevel());
+		writer.writeStringTag(NBT_PROFESSION, getVillagerProfession().getNameID());
+		writer.writeStringTag(NBT_TYPE, getVillagerType().getNameID());
+		writer.writeEndTag();
+		writer.writeIntTag(NBT_XP, getXp());
+		if (hasRecipes()) {
+			writer.writeCompoundTag(NBT_OFFERS);
+			List<MerchantRecipe> recipes = getRecipes();
+			writer.writeListTag(NBT_RECIPES, TagType.COMPOUND, recipes.size());
+			for (MerchantRecipe recipe : recipes) {
+				recipe.toNBT(writer, systemData);
+				writer.writeEndTag();
+			}
+			writer.writeEndTag();
+		}
+	}
+
+	@Override
+	public void setConversionPlayer(UUID uuid) {
+		this.conversionPlayer = uuid;
+	}
+
+	@Override
+	public UUID getConversionPlayer() {
+		return conversionPlayer;
+	}
+
+	@Override
+	public void setConversionTime(int ticks) {
+		this.conversionTime = ticks;
+	}
+
+	@Override
+	public int getConversionTime() {
+		return conversionTime;
 	}
 
 }

@@ -1,5 +1,6 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.entity.EntityType;
@@ -7,6 +8,7 @@ import de.atlasmc.entity.Panda;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CorePanda extends CoreAgeableMob implements Panda {
@@ -31,6 +33,23 @@ public class CorePanda extends CoreAgeableMob implements Panda {
 	META_PANDA_FLAGS = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+6, (byte) 0, MetaDataType.BYTE);
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+6;
+	
+	protected static final String
+	NBT_MAIN_GENE = "MainGene",
+	NBT_HIDDEN_GENE = "HiddenGene";
+	
+	static {
+		NBT_FIELDS.setField(NBT_MAIN_GENE, (holder, reader) -> {
+			if (holder instanceof Panda) {
+				((Panda) holder).setMainGene(Gene.getByNameID(reader.readStringTag()));
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_HIDDEN_GENE, (holder, reader) -> {
+			if (holder instanceof Panda) {
+				((Panda) holder).setHiddenGene(Gene.getByNameID(reader.readStringTag()));
+			} else reader.skipTag();
+		});
+	}
 	
 	public CorePanda(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
@@ -148,6 +167,13 @@ public class CorePanda extends CoreAgeableMob implements Panda {
 	public void setOnBack(boolean onback) {
 		MetaData<Byte> data = metaContainer.get(META_PANDA_FLAGS);
 		data.setData((byte) (onback ? data.getData() | 0x10 : data.getData() & 0xEF));
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		writer.writeStringTag(NBT_MAIN_GENE, getMainGene().getNameID());
+		writer.writeStringTag(NBT_HIDDEN_GENE, getHiddenGene().getNameID());
 	}
 
 }

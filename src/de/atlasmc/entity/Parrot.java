@@ -1,6 +1,6 @@
 package de.atlasmc.entity;
 
-public interface Parrot {
+public interface Parrot extends Tameable {
 	
 	public Type getParrotType();
 	

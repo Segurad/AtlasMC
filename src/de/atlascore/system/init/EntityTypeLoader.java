@@ -29,7 +29,7 @@ public class EntityTypeLoader {
 		ELDER_GUARDIAN = new EntityType(NamespacedKey.MINECRAFT, "ELDER_GUARDIAN", CoreElderGuardian.class);
 		END_CRYSTAL = new EntityType(NamespacedKey.MINECRAFT, "END_CRYSTAL", CoreEndCrystal.class);
 		ENDER_DRAGON = new EntityType(NamespacedKey.MINECRAFT, "ENDER_DRAGON", CoreEnderDragon.class);
-		ENDERMAN = new EntityType(NamespacedKey.MINECRAFT, "ENDERMAN", null);
+		ENDERMAN = new EntityType(NamespacedKey.MINECRAFT, "ENDERMAN", CoreEnderman.class);
 		ENDERMITE = new EntityType(NamespacedKey.MINECRAFT, "ENDERMITE", CoreEndermite.class);
 		EVOKER = new EntityType(NamespacedKey.MINECRAFT, "EVOKER", null);
 		EVOKER_FANGS = new EntityType(NamespacedKey.MINECRAFT, "EVOKER_FANGS", null);

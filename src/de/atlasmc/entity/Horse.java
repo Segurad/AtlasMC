@@ -6,9 +6,9 @@ import de.atlasmc.inventory.HorseInventory;
 
 public interface Horse extends AbstractHorse {
 	
-	public Color getColor();
+	public HorseColor getColor();
 	
-	public void setColor(Color color);
+	public void setColor(HorseColor color);
 	
 	public Style getStyle();
 	
@@ -16,7 +16,7 @@ public interface Horse extends AbstractHorse {
 	
 	public HorseInventory getInventory();
 	
-	public static enum Color {
+	public static enum HorseColor {
 		WHITE,
 		CREAMY,
 		CJESTMIT,
@@ -25,13 +25,13 @@ public interface Horse extends AbstractHorse {
 		GRAY,
 		DARK_BROWN;
 		
-		private static List<Color> VALUES;
+		private static List<HorseColor> VALUES;
 
 		public int getID() {
 			return ordinal();
 		}
 		
-		public static Color getByID(int id) {
+		public static HorseColor getByID(int id) {
 			return getValues().get(id);
 		}
 		
@@ -40,7 +40,7 @@ public interface Horse extends AbstractHorse {
 		 * This method avoid allocation of a new array not like {@link #values()}.
 		 * @return list
 		 */
-		public static List<Color> getValues() {
+		public static List<HorseColor> getValues() {
 			if (VALUES == null)
 				VALUES = List.of(values());
 			return VALUES;

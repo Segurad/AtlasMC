@@ -15,6 +15,19 @@ public class CoreGhast extends CoreMob implements Ghast {
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+1;
 	
+	protected static final String
+	NBT_EXPLOSION_POWER = "ExplosionPower";
+	
+	static {
+		NBT_FIELDS.setField(NBT_EXPLOSION_POWER, (holder, reader) -> {
+			if (holder instanceof Ghast) {
+				((Ghast) holder).setExplosionPower(reader.readIntTag());
+			} else reader.skipTag();
+		});
+	}
+	
+	private int explosionPower;
+	
 	public CoreGhast(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
 	}
@@ -38,6 +51,16 @@ public class CoreGhast extends CoreMob implements Ghast {
 	@Override
 	public void setAttacking(boolean attacking) {
 		metaContainer.get(META_IS_ATTACKING).setData(attacking);		
+	}
+
+	@Override
+	public void setExplosionPower(int power) {
+		this.explosionPower = power;
+	}
+
+	@Override
+	public int getExplosionPower() {
+		return explosionPower;
 	}
 
 }

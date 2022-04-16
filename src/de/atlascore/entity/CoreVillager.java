@@ -8,6 +8,7 @@ import java.util.UUID;
 import de.atlasmc.Material;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Villager;
+import de.atlasmc.entity.ZombieVillager;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
@@ -60,10 +61,17 @@ public class CoreVillager extends CoreAbstractVillager implements Villager {
 		NBT_FIELDS.setField(NBT_XP, (holder, reader) -> {
 			if (holder instanceof Villager) {
 				((Villager) holder).setXp(reader.readIntTag());
+			} else if (holder instanceof ZombieVillager) {
+				((ZombieVillager) holder).setXp(reader.readIntTag());
 			} else reader.skipTag();
 		});
 		NBT_FIELDS.setField(NBT_VILLAGER_DATA, (holder, reader) -> {
-			if (!(holder instanceof Villager)) {
+			int villager = 0;
+			if (holder instanceof Villager)
+				villager = 1;
+			else if (holder instanceof ZombieVillager)
+				villager = 2;
+			if (villager == 0) {
 				reader.skipTag();
 				return;
 			}
@@ -73,15 +81,26 @@ public class CoreVillager extends CoreAbstractVillager implements Villager {
 				case NBT_PROFESSION:
 					VillagerProfession prof = VillagerProfession.getByNameID(reader.readStringTag());
 					if (prof != null)
+						break;
+					if (villager == 1)
 						((Villager) holder).setVillagerProfession(prof);
+					else 
+						((ZombieVillager) holder).setVillagerProfession(prof);
 					break;
 				case NBT_TYPE:
 					VillagerType type = VillagerType.getByNameID(reader.readStringTag());
 					if (type != null)
+						break;
+					if (villager == 1)
 						((Villager) holder).setVillagerType(type);
+					else 
+						((ZombieVillager) holder).setVillagerType(type);
 					break;
 				case NBT_LEVEL:
-					((Villager) holder).setLevel(reader.readIntTag());
+					if (villager == 1)
+						((Villager) holder).setLevel(reader.readIntTag());
+					else
+						((ZombieVillager) holder).setLevel(reader.readIntTag());
 					break;
 				default:
 					reader.skipTag();

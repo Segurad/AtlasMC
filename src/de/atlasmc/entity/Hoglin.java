@@ -6,4 +6,8 @@ public interface Hoglin extends Animal {
 	
 	public void setImmune(boolean immune);
 
+	public void setHuntable(boolean huntable);
+	
+	public boolean isHuntable();
+
 }

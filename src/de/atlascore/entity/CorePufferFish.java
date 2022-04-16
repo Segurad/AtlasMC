@@ -1,11 +1,13 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.PufferFish;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CorePufferFish extends CoreFish implements PufferFish {
@@ -14,6 +16,17 @@ public class CorePufferFish extends CoreFish implements PufferFish {
 	META_PUFF_STATE = new MetaDataField<>(CoreFish.LAST_META_INDEX+1, 0, MetaDataType.INT);
 	
 	protected static final int LAST_META_INDEX = CoreFish.LAST_META_INDEX+1;
+	
+	protected static final String
+	NBT_PUFF_STATE = "PuffState";
+	
+	static {
+		NBT_FIELDS.setField(NBT_PUFF_STATE, (holder, reader) -> {
+			if (holder instanceof PufferFish) {
+				((PufferFish) holder).setPuffState(reader.readIntTag());
+			} else reader.skipTag();
+		});
+	}
 	
 	public CorePufferFish(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
@@ -41,4 +54,11 @@ public class CorePufferFish extends CoreFish implements PufferFish {
 		metaContainer.get(META_PUFF_STATE).setData(state);		
 	}
 
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (getPuffState() != 0)
+			writer.writeIntTag(NBT_PUFF_STATE, getPuffState());
+	}
+	
 }
