@@ -1,5 +1,6 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.DyeColor;
@@ -8,6 +9,9 @@ import de.atlasmc.entity.TropicalFish;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreTropicalFish extends CoreFish implements TropicalFish {
@@ -22,6 +26,24 @@ public class CoreTropicalFish extends CoreFish implements TropicalFish {
 	META_TROPICAL_VARIANT = new MetaDataField<>(CoreFish.LAST_META_INDEX+1, 0, MetaDataType.INT);
 	
 	protected static final int LAST_META_INDEX = CoreFish.LAST_META_INDEX+1;
+	
+	protected static final NBTFieldContainer NBT_FIELDS;
+	
+	protected static final String
+	NBT_VARIANT = "Variant";
+	
+	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreFish.NBT_FIELDS);
+		NBT_FIELDS.setField(NBT_VARIANT, (holder, reader) -> {
+			if (holder instanceof TropicalFish) {
+				int variant = reader.readIntTag();
+				TropicalFish fish = (TropicalFish) holder;
+				fish.setPattern(Pattern.getByDataID(variant));
+				fish.setBaseColor(DyeColor.getByID(variant >> 16 & 0xFF));
+				fish.setPatternColor(DyeColor.getByID(variant >> 24 & 0xFF));
+			} else reader.skipTag();
+		});
+	}
 	
 	public CoreTropicalFish(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
@@ -75,6 +97,12 @@ public class CoreTropicalFish extends CoreFish implements TropicalFish {
 			throw new IllegalArgumentException("Color can not be null");
 		MetaData<Integer> data = metaContainer.get(META_TROPICAL_VARIANT);
 		data.setData((data.getData() & 0xFF000000) | (color.getID() << 24));
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		writer.writeIntTag(NBT_VARIANT, metaContainer.getData(META_TROPICAL_VARIANT));
 	}
 
 }

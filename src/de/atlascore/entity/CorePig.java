@@ -1,11 +1,16 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Pig;
+import de.atlasmc.entity.Strider;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CorePig extends CoreAgeableMob implements Pig {
@@ -16,6 +21,20 @@ public class CorePig extends CoreAgeableMob implements Pig {
 	META_BOOST_TIME = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+2, 0, MetaDataType.INT);
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+2;
+	
+	protected static final NBTFieldContainer NBT_FIELDS;
+	
+	protected static final String
+	NBT_SADDLE = "Saddle";
+	
+	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreAgeableMob.NBT_FIELDS);
+		NBT_FIELDS.setField(NBT_SADDLE, (holder, reader) -> {
+			if (holder instanceof Strider) {
+				((Strider) holder).setSaddle(reader.readByteTag() == 1);
+			} else reader.skipTag();
+		});
+	}
 	
 	public CorePig(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
@@ -51,6 +70,13 @@ public class CorePig extends CoreAgeableMob implements Pig {
 	@Override
 	public void setBoostTime(int time) {
 		metaContainer.get(META_BOOST_TIME).setData(time);		
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (hasSaddle())
+			writer.writeByteTag(NBT_SADDLE, true);
 	}
 
 }

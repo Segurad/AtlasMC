@@ -1,7 +1,6 @@
 package de.atlascore.entity;
 
 import java.util.UUID;
-
 import de.atlasmc.Location;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Turtle;
@@ -26,6 +25,23 @@ public class CoreTurtle extends CoreAgeableMob implements Turtle {
 	META_IS_TRAVELING = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+6, false, MetaDataType.BOOLEAN);
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+6;
+	
+	protected static final String
+//	NBT_HOME_POS_X = "HomePosX", TODO unused 
+//	NBT_HOME_POS_Y = "HomePosY",
+//	NBT_HOME_POS_Z = "HomePosZ",
+//	NBT_TRAVEL_POS_X = "TravelPosX",
+//	NBT_TRAVEL_POS_Y = "TravelPosY",
+//	NBT_TRAVEL_POS_Z = "TravelPosZ",
+	NBT_HAS_EGG = "HasEgg";
+	
+	static {
+		NBT_FIELDS.setField(NBT_HAS_EGG, (holder, reader) -> {
+			if (holder instanceof Turtle) {
+				((Turtle) holder).setEgg(reader.readByteTag() == 1);
+			} else reader.skipTag();
+		});
+	}
 	
 	public CoreTurtle(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);

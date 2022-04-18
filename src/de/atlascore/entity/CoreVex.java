@@ -6,6 +6,8 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Vex;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.world.World;
 
 public class CoreVex extends CoreMob implements Vex {
@@ -14,6 +16,25 @@ public class CoreVex extends CoreMob implements Vex {
 	META_VEX_FLAGS = new MetaDataField<>(CoreMob.LAST_META_INDEX+1, (byte) 0, MetaDataType.BYTE);
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+1;
+	
+	protected static final NBTFieldContainer NBT_FIELDS;
+	
+	protected static final String
+	//NBT_BOUND_X = "BoundX", TODO unnecessary
+	//NBT_BOUND_Y = "BoundY",
+	//NBT_BOUND_Z = "BoundZ",
+	NBT_LIFE_TICKS = "LifeTicks";
+	
+	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreMob.NBT_FIELDS);
+		NBT_FIELDS.setField(NBT_LIFE_TICKS, (holder, reader) -> {
+			if (holder instanceof Vex) {
+				((Vex) holder).setLifeTime(reader.readIntTag());
+			} else reader.skipTag();
+		});
+	}
+	
+	private int lifetime = -1;
 	
 	public CoreVex(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
@@ -38,6 +59,16 @@ public class CoreVex extends CoreMob implements Vex {
 	@Override
 	public void setAttacking(boolean attacking) {
 		metaContainer.get(META_VEX_FLAGS).setData((byte) (attacking ? 0x01 : 0x00));	
+	}
+
+	@Override
+	public void setLifeTime(int ticks) {
+		this.lifetime = ticks;
+	}
+
+	@Override
+	public int getLifeTime() {
+		return lifetime;
 	}
 
 }

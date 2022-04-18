@@ -1,11 +1,15 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Strider;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreStrider extends CoreAgeableMob implements Strider {
@@ -18,6 +22,20 @@ public class CoreStrider extends CoreAgeableMob implements Strider {
 	META_HAS_SADDLE = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+3, false, MetaDataType.BOOLEAN);
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+3;
+	
+	protected static final NBTFieldContainer NBT_FIELDS;
+	
+	protected static final String
+	NBT_SADDLE = "Saddle";
+	
+	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreAgeableMob.NBT_FIELDS);
+		NBT_FIELDS.setField(NBT_SADDLE, (holder, reader) -> {
+			if (holder instanceof Strider) {
+				((Strider) holder).setSaddle(reader.readByteTag() == 1);
+			} else reader.skipTag();
+		});
+	}
 	
 	public CoreStrider(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
@@ -66,4 +84,11 @@ public class CoreStrider extends CoreAgeableMob implements Strider {
 		metaContainer.get(META_HAS_SADDLE).setData(saddle);		
 	}
 
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (hasSaddle())
+			writer.writeByteTag(NBT_SADDLE, true);
+	}
+	
 }

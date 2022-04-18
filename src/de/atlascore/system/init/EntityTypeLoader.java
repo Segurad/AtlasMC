@@ -53,7 +53,7 @@ public class EntityTypeLoader {
 		LIGHTNING_BOLT = new EntityType(NamespacedKey.MINECRAFT, "LIGHTNING_BOLT", null);
 		LLAMA = new EntityType(NamespacedKey.MINECRAFT, "LLAMA", CoreLlama.class);
 		LLAMA_SPIT = new EntityType(NamespacedKey.MINECRAFT, "LLAMA_SPIT", CoreLlamaSpit.class);
-		MAGMA_CUBE = new EntityType(NamespacedKey.MINECRAFT, "MAGMA_CUBE", null);
+		MAGMA_CUBE = new EntityType(NamespacedKey.MINECRAFT, "MAGMA_CUBE", CoreMagmaCube.class);
 		MINECART = new EntityType(NamespacedKey.MINECRAFT, "MINECART", CoreMinecart.class);
 		CHEST_MINECART = new EntityType(NamespacedKey.MINECRAFT, "CHEST_MINECART", CoreMinecartChest.class);
 		COMMAND_BLOCK_MINECART = new EntityType(NamespacedKey.MINECRAFT, "COMMAND_BLOCK_MINECART", CoreMinecartCommandBlock.class);

@@ -15,22 +15,36 @@ public interface Shulker extends AbstractGolem {
 	 * Returns the Blocks Location this Shulker is attached to or null if non
 	 * @return Location or null
 	 */
-	public Location getAttachmentPosition();
+	public Location getAttachedPosition();
 	
 	/**
 	 * Returns the Blocks Location this Shulker is attached to using the given Location or null if non
 	 * @param loc
 	 * @return Location or null
 	 */
-	public Location getAttachmentPosition(Location loc);
+	public Location getAttachedPosition(Location loc);
 	
 	/**
 	 * Sets the Blocks position this Shulker is attached to
 	 * @param loc or null to reset
 	 */
-	public void setAttachmentPosition(SimpleLocation loc);
+	public void setAttachedPosition(SimpleLocation loc);
 	
-	public void setAttachmentPosition(int x, int y, int z);
+	public void setAttachedPosition(int x, int y, int z);
+	
+	public int getAttachedX();
+	
+	public int getAttachedY();
+	
+	public int getAttachedZ();
+	
+	public void setAttachedX(int posX);
+	
+	public void setAttachedY(int posY);
+	
+	public void setAttachedZ(int posZ);
+	
+	public boolean hasAttachedPosition();
 	
 	public int getShieldHeight();
 	

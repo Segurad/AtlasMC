@@ -6,7 +6,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.WitherSkeleton;
 import de.atlasmc.world.World;
 
-public class CoreWitherSkeleton extends CoreMob implements WitherSkeleton {
+public class CoreWitherSkeleton extends CoreAbstractSkeleton implements WitherSkeleton {
 
 	public CoreWitherSkeleton(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
