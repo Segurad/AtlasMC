@@ -57,6 +57,10 @@ public class CoreEnderman extends CoreMob implements Enderman {
 				}
 			}
 			reader.skipTag();
+			if (data != null)
+				((Enderman) holder).setCarriedBlock(data);
+			else if (mat != null)
+				((Enderman) holder).setCarriedBlockType(mat);
 		});
 	}
 	

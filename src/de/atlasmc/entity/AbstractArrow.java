@@ -4,8 +4,6 @@ public interface AbstractArrow extends Projectile {
 	
 	public boolean isCritical();
 	
-	public boolean isInBlock();
-	
 	public void setCritical(boolean critical);
 
 	public int getPiercingLevel();
@@ -15,4 +13,25 @@ public interface AbstractArrow extends Projectile {
 	 * @param level of piercing
 	 */
 	public void setPiercingLevel(int level);
+
+	public void setDamage(double damage);
+	
+	public double getDamage();
+
+	public void setShakeOnImpact(boolean shake);
+	
+	public boolean isShakingOnImpact();
+
+	public void setLifeTime(int ticks);
+	
+	/**
+	 * Returns the time in ticks until this Arrow despawns or -1 if not counting
+	 * @return ticks or -1
+	 */
+	public int getLifeTime();
+
+	public void setPickupable(boolean pickupable);
+	
+	public boolean isPickupable();
+	
 }

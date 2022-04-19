@@ -27,6 +27,7 @@ public class CoreZombie extends CoreMob implements Zombie {
 	protected static final String
 		NBT_IS_BABY = "IsBaby",
 		NBT_CAN_BREAK_DOORS = "CanBreakDoors",
+		NBT_CAN_PICKUP_LOOT = "CanPickUpLoot",
 		NBT_DROWNED_CONVERSION_TIME = "DrownedConverionTime";
 	
 	static {
@@ -46,9 +47,15 @@ public class CoreZombie extends CoreMob implements Zombie {
 				((Zombie) holder).setDrownedConversionTime(reader.readIntTag());
 			} else reader.skipTag();
 		});
+		NBT_FIELDS.setField(NBT_CAN_PICKUP_LOOT, (holder, reader) -> {
+			if (holder instanceof Zombie) {
+				((Zombie) holder).setCanPickupLoot(reader.readByteTag() == 1);
+			} else reader.skipTag();
+		});
 	}
 	
 	private boolean canBreakDoor;
+	private boolean canPickupLoot;
 	private int drownedConverionTime = -1;
 	
 	public CoreZombie(EntityType type, UUID uuid, World world) {
@@ -116,7 +123,18 @@ public class CoreZombie extends CoreMob implements Zombie {
 			writer.writeByteTag(NBT_CAN_BREAK_DOORS, true);
 		if (getDrownedConverionTime() > -1)
 			writer.writeIntTag(NBT_DROWNED_CONVERSION_TIME, getDrownedConverionTime());
-			
+		if (canPickupLoot())
+			writer.writeByteTag(NBT_CAN_PICKUP_LOOT, true);
+	}
+
+	@Override
+	public void setCanPickupLoot(boolean canPickup) {
+		this.canPickupLoot = canPickup;
+	}
+
+	@Override
+	public boolean canPickupLoot() {
+		return canPickupLoot;
 	}
 
 }

@@ -22,5 +22,9 @@ public interface Zombie extends Monster {
 	 * @return ticks or -1
 	 */
 	public int getDrownedConverionTime();
+
+	public void setCanPickupLoot(boolean canPickup);
+	
+	public boolean canPickupLoot();
 	
 }

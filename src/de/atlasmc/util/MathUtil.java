@@ -1,11 +1,15 @@
 package de.atlasmc.util;
 
+import java.util.UUID;
+
 import de.atlasmc.Location;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.Vector;
 import de.atlasmc.world.World;
 
 public class MathUtil {
+	
+	public static final UUID ZERO_UUID = new UUID(0, 0);
 	
 	private MathUtil() {}
 
