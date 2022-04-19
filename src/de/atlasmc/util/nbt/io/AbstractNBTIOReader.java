@@ -151,7 +151,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 			name = null;
 			depth--;
 			if (list != null && depth == list.depth) type = TagType.LIST;
-		} else if (skip) {
+		} else if (!skip) {
 			byte[] buffer = new byte[ioReadShort()];
 			ioReadBytes(buffer);
 			name = new String(buffer);
