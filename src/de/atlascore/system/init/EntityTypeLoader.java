@@ -110,7 +110,7 @@ public class EntityTypeLoader {
 		WITHER_SKELETON = new EntityType(NamespacedKey.MINECRAFT, "WITHER_SKELETON", CoreWitherSkeleton.class);
 		WITHER_SKULL = new EntityType(NamespacedKey.MINECRAFT, "WITHER_SKULL", CoreWitherSkull.class);
 		WOLF = new EntityType(NamespacedKey.MINECRAFT, "WOLF", CoreWolf.class);
-		ZOGLIN = new EntityType(NamespacedKey.MINECRAFT, "ZOGLIN", null);
+		ZOGLIN = new EntityType(NamespacedKey.MINECRAFT, "ZOGLIN", CoreZoglin.class);
 		ZOMBIE = new EntityType(NamespacedKey.MINECRAFT, "ZOMBIE", CoreZombie.class);
 		ZOMBIE_HORSE = new EntityType(NamespacedKey.MINECRAFT, "ZOMBIE_HORSE", CoreZombieHorse.class);
 		ZOMBIE_VILLAGER = new EntityType(NamespacedKey.MINECRAFT, "ZOMBIFIED_VILLAGER", CoreZombieVillager.class);

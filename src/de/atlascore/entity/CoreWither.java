@@ -1,5 +1,6 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.entity.Entity;
@@ -7,6 +8,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Wither;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreWither extends CoreMob implements Wither {
@@ -22,7 +24,20 @@ public class CoreWither extends CoreMob implements Wither {
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+4;
 	
-	private Entity targetCenter, targetLeft, targetRight; 
+	protected static final String
+	NBT_INVUL = "Invul";
+	
+	static {
+		NBT_FIELDS.setField(NBT_INVUL, (holder, reader) -> {
+			if (holder instanceof Wither) {
+				((Wither) holder).setInvulnerable(reader.readIntTag());
+			} else reader.skipTag();
+		});
+	}
+	
+	private Entity targetCenter;
+	private Entity targetLeft;
+	private Entity targetRight; 
 	
 	public CoreWither(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
@@ -95,6 +110,12 @@ public class CoreWither extends CoreMob implements Wither {
 				throw new IllegalArgumentException("Target must be a removed Entity!");
 			metaContainer.get(head).setData(entity.getID());
 		}
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		writer.writeIntTag(NBT_INVUL, getInvulnerableTime());
 	}
 
 }

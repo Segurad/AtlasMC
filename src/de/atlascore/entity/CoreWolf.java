@@ -1,5 +1,6 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.DyeColor;
@@ -7,6 +8,9 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Wolf;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreWolf extends CoreTameable implements Wolf {
@@ -19,6 +23,28 @@ public class CoreWolf extends CoreTameable implements Wolf {
 	META_ANGER_TIME = new MetaDataField<>(CoreTameable.LAST_META_INDEX+3, 0, MetaDataType.INT);
 	
 	protected static final int LAST_META_INDEX = CoreTameable.LAST_META_INDEX+3;
+	
+	protected static final NBTFieldContainer NBT_FIELDS;
+	
+	protected static final String
+	NBT_ANGRY = "Angry",
+	NBT_COLLAR_COLOR = "CollarColor";
+	
+	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreTameable.NBT_FIELDS);
+		NBT_FIELDS.setField(NBT_COLLAR_COLOR, (holder, reader) -> {
+			if (holder instanceof Wolf) {
+				((Wolf) holder).setCollarColor(DyeColor.getByID(reader.readByteTag()));
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_ANGRY, (holder, reader) -> {
+			if (holder instanceof Wolf) {
+				((Wolf) holder).setAngry(reader.readByteTag() == 1);
+			} else reader.skipTag();
+		});
+	}
+	
+	private int angerTicks = -1;
 	
 	public CoreWolf(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
@@ -60,13 +86,31 @@ public class CoreWolf extends CoreTameable implements Wolf {
 	}
 
 	@Override
-	public int getAnger() {
-		return metaContainer.getData(META_ANGER_TIME);
+	public boolean isAngry() {
+		return metaContainer.getData(META_ANGER_TIME) == 1;
 	}
 
 	@Override
-	public void setAnger(int anger) {
-		metaContainer.get(META_ANGER_TIME).setData(anger);		
+	public void setAngry(boolean angry) {
+		metaContainer.get(META_ANGER_TIME).setData(angry ? 1 : 0);
+	}
+
+	@Override
+	public int getAngerTime() {
+		return angerTicks;
+	}
+
+	@Override
+	public void setAngerTime(int anger) {
+		this.angerTicks = anger;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (isAngry())
+			writer.writeByteTag(NBT_ANGRY, true);
+		writer.writeByteTag(NBT_COLLAR_COLOR, getCollarColor().getID());
 	}
 
 }

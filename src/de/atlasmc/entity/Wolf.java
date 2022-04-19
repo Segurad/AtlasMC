@@ -12,8 +12,16 @@ public interface Wolf extends Tameable {
 	
 	public void setCollarColor(DyeColor color);
 	
-	public int getAnger();
+	/**
+	 * Returns the time in ticks until the angry state of this Wolf will be reset or -1 if no time
+	 * @return ticks or -1
+	 */
+	public int getAngerTime();
 	
-	public void setAnger(int anger);
+	public void setAngerTime(int ticks);
+	
+	public void setAngry(boolean angry);
+	
+	public boolean isAngry();
 
 }
