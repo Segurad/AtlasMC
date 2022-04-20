@@ -165,4 +165,24 @@ public class MathUtil {
 		return vec;
 	}
 	
+	/**
+	 * Calculates the default Minecraft explosion radius by the explosion power.<br><br>
+	 * <code>radius = power / 0.225 * 1.3 * 0.3</code>
+	 * @param power
+	 * @return radius
+	 */
+	public float getDefaultExplosionRadius(int power) {
+		return power / 0.225f * 1.3f * 0.3f;
+	}
+	
+	/**
+	 * Calculates the default Minecraft explosion power by the explosion radius.<br><br>
+	 * <code>power = radius / 0.3 / 1.3 * 0.255
+	 * @param radius
+	 * @return power
+	 */
+	public int getDefaultExplosionPower(float radius) {
+		return (int) (radius / 0.3 / 1.3f * 0.225f);
+	}
+	
 }
