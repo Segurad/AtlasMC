@@ -28,7 +28,9 @@ import de.atlasmc.potion.PotionEffectType;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.map.ArrayListMultimap;
 import de.atlasmc.util.map.Multimap;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTField;
+import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
@@ -66,6 +68,8 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+7;
 	
+	protected static final NBTFieldContainer NBT_FIELDS;
+	
 	protected static final String
 	NBT_ABSORPTION_AMOUNT = "AbsorptionAmount",
 	NBT_ACTIVE_EFFECTS = "ActiveEffects",
@@ -97,6 +101,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	NBT_PERSISTENCE_REQUIRED = "PeristenceRequired";
 	
 	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreEntity.NBT_FIELDS);
 		NBT_FIELDS.setField(NBT_ABSORPTION_AMOUNT, (holder, reader) -> {
 			if (holder instanceof LivingEntity) {
 				((LivingEntity) holder).setAbsorption(reader.readFloatTag());

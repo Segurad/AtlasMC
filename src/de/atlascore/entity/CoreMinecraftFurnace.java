@@ -15,6 +15,21 @@ public class CoreMinecraftFurnace extends CoreAbstractMinecart implements Mineca
 	
 	protected static final int LAST_META_INDEX = CoreAbstractMinecart.LAST_META_INDEX+1;
 	
+	protected static final String
+	NBT_FUEL = "fuel";
+//	NBT_PUSH_X = "PushX", TODO ignored
+//	NBT_PUSH_Z = "PushZ";
+	
+	static {
+		NBT_FIELDS.setField(NBT_FUEL, (holder, reader) -> {
+			if (holder instanceof MinecartFurnace) {
+				((MinecartFurnace) holder).setFuelLevel(reader.readShortTag());
+			} else reader.skipTag();
+		});
+	}
+	
+	private int fuelLevel = -1;
+	
 	public CoreMinecraftFurnace(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
 	}
@@ -38,6 +53,16 @@ public class CoreMinecraftFurnace extends CoreAbstractMinecart implements Mineca
 	@Override
 	public void setFuel(boolean fuel) {
 		metaContainer.get(META_HAS_FUEL).setData(fuel);		
+	}
+
+	@Override
+	public void setFuelLevel(int ticks) {
+		this.fuelLevel = ticks;
+	}
+
+	@Override
+	public int getFuelLevel() {
+		return fuelLevel;
 	}
 
 }

@@ -37,6 +37,12 @@ public interface Boat extends Vehicle {
 	
 		private static List<BoatType> VALUES;
 		
+		private final String name;
+		
+		private BoatType() {
+			name = name().toLowerCase();
+		}
+		
 		public int getID() {
 			return ordinal();
 		}
@@ -52,8 +58,22 @@ public interface Boat extends Vehicle {
 		 */
 		public static List<BoatType> getValues() {
 			if (VALUES == null)
-				VALUES = List.of(values());
+				synchronized (BoatType.class) {
+					if (VALUES == null)
+						VALUES = List.of(values());
+				}
 			return VALUES;
+		}
+
+		public static BoatType getByNameID(String nameID) {
+			for (BoatType type : getValues()) {
+				if (type.getNameID().equals(nameID));
+			}
+			return null;
+		}
+
+		public String getNameID() {
+			return name;
 		}
 		
 	}

@@ -8,12 +8,12 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.world.World;
 
-public class CoreWitherSkull extends CoreFireball implements WitherSkull {
+public class CoreWitherSkull extends CoreAbstractFireball implements WitherSkull {
 
 	protected static final MetaDataField<Boolean>
-	META_SKULL_CHARGED = new MetaDataField<>(CoreFireball.LAST_META_INDEX+1, false, MetaDataType.BOOLEAN);
+	META_SKULL_CHARGED = new MetaDataField<>(CoreAbstractFireball.LAST_META_INDEX+1, false, MetaDataType.BOOLEAN);
 	
-	protected static final int LAST_META_INDEX = CoreFireball.LAST_META_INDEX+1;
+	protected static final int LAST_META_INDEX = CoreAbstractFireball.LAST_META_INDEX+1;
 	
 	public CoreWitherSkull(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);

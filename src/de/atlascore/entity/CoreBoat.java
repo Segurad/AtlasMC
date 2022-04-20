@@ -1,11 +1,15 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.entity.Boat;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreBoat extends CoreVehicle implements Boat {
@@ -26,6 +30,20 @@ public class CoreBoat extends CoreVehicle implements Boat {
 	META_SPLASH_TIMER = new MetaDataField<>(CoreVehicle.LAST_META_INDEX+7, 0, MetaDataType.INT);
 	
 	protected static final int LAST_META_INDEX = CoreVehicle.LAST_META_INDEX+7;
+	
+	protected static final NBTFieldContainer NBT_FIELDS;
+	
+	protected static final String
+	NBT_TYPE = "Type";
+	
+	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreVehicle.NBT_FIELDS);
+		NBT_FIELDS.setField(NBT_TYPE, (holder, reader) -> {
+			if (holder instanceof Boat) {
+				((Boat) holder).setBoatType(BoatType.getByNameID(reader.readStringTag()));
+			} else reader.skipTag();
+		});
+	}
 	
 	public CoreBoat(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
@@ -103,4 +121,10 @@ public class CoreBoat extends CoreVehicle implements Boat {
 		metaContainer.get(META_RIGHT_PADDLE_TURNING).setData(turning);
 	}
 
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		writer.writeStringTag(NBT_TYPE, getBoatType().getNameID());
+	}
+	
 }

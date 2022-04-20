@@ -11,5 +11,13 @@ public interface MinecartCommandBlock {
 	public void setCommand(String command);
 	
 	public void setLastOutput(Chat out);
+
+	public void setRedstoneSignal(int signal);
+	
+	public int getRedstoneSignal();
+
+	public void setTrackOutput(boolean track);
+	
+	public boolean isTrackingOutput();
 	
 }

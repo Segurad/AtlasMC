@@ -9,12 +9,12 @@ import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.world.World;
 
-public abstract class CoreSizedFireball extends CoreFireball implements SizedFireball {
+public abstract class CoreSizedFireball extends CoreAbstractFireball implements SizedFireball {
 
 	protected static final MetaDataField<ItemStack>
-	META_FIREBALL_ITEM = new MetaDataField<>(CoreFireball.LAST_META_INDEX+1, null, MetaDataType.SLOT);
+	META_FIREBALL_ITEM = new MetaDataField<>(CoreAbstractFireball.LAST_META_INDEX+1, null, MetaDataType.SLOT);
 	
-	protected static final int LAST_META_INDEX = CoreFireball.LAST_META_INDEX+1;
+	protected static final int LAST_META_INDEX = CoreAbstractFireball.LAST_META_INDEX+1;
 	
 	public CoreSizedFireball(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);

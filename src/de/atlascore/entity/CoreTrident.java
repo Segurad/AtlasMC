@@ -1,11 +1,15 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
 import java.util.UUID;
 
+import de.atlasmc.Material;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Trident;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreTrident extends CoreAbstractArrow implements Trident {
@@ -16,6 +20,33 @@ public class CoreTrident extends CoreAbstractArrow implements Trident {
 	META_ENCHANTMENT_GLINT = new MetaDataField<>(CoreAbstractArrow.LAST_META_INDEX+2, false, MetaDataType.BOOLEAN);
 	
 	protected static final int LAST_META_INDEX = CoreAbstractArrow.LAST_META_INDEX+2;
+	
+	protected static final String
+	NBT_TRIDENT = "Trident";
+	
+	static {
+		NBT_FIELDS.setField(NBT_TRIDENT, (holder, reader) -> {
+			if (holder instanceof Trident) {
+				if (!(holder instanceof Trident)) {
+					reader.skipTag();
+					return;
+				}
+				reader.readNextEntry();
+				Material mat = null;
+				if (!NBT_ID.equals(reader.getFieldName())) {
+					reader.mark();
+					reader.search(NBT_ID);
+					mat = Material.getByName(reader.readStringTag());
+					reader.reset();
+				} else mat = Material.getByName(reader.readStringTag());
+				ItemStack item = new ItemStack(mat);
+				item.fromNBT(reader);
+				((Trident) holder).setItem(item);
+			} else reader.skipTag();
+		});
+	}
+	
+	private ItemStack item;
 	
 	public CoreTrident(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
@@ -58,4 +89,29 @@ public class CoreTrident extends CoreAbstractArrow implements Trident {
 		metaContainer.get(META_ENCHANTMENT_GLINT).setData(glint);
 	}
 
+	@Override
+	public void setItem(ItemStack item) {
+		this.item = item;
+	}
+
+	@Override
+	public ItemStack getItem() {
+		return item;
+	}
+
+	@Override
+	public boolean hasItem() {
+		return item != null;
+	}
+
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		if (hasItem()) {
+			writer.writeCompoundTag(NBT_TRIDENT);
+			getItem().toNBT(writer, systemData);
+			writer.writeEndTag();
+		}
+	}
+	
 }
