@@ -17,6 +17,7 @@ import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutSetSlot;
 import de.atlasmc.io.protocol.play.PacketOutWindowItems;
 import de.atlasmc.io.protocol.play.PacketOutWindowProperty;
+import de.atlasmc.util.ArrayIterator;
 
 public class CoreInventory implements Inventory {
 
@@ -38,31 +39,7 @@ public class CoreInventory implements Inventory {
 	
 	@Override
 	public Iterator<ItemStack> iterator() {
-		return new Iterator<ItemStack>() {
-			int index = 0;
-			@Override
-			public ItemStack next() {
-				for (; index < size; index++) {
-					if (contents[index] == null) continue;
-					break;
-				}
-				return contents[index];
-			}
-			
-			@Override
-			public boolean hasNext() {
-				for (int i = index; i < size; i++) {
-					if (contents[i] != null) return true;
-				}
-				return false;
-			}
-			
-			@Override
-			public void remove() {
-				contents[index] = null;
-			}
-			
-		};
+		return new ArrayIterator<>(contents, true);
 	}
 
 	@Override
