@@ -41,6 +41,18 @@ public class Vector implements Cloneable {
 		this.z = z;
 	}
 	
+	public void set(Vector vec) {
+		this.x = vec.x;
+		this.y = vec.y;
+		this.z = vec.z;
+	}
+	
+	public void set(double x, double y, double z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+	
 	public Vector add(Vector vec) {
 		x += vec.x;
 		y += vec.y;
