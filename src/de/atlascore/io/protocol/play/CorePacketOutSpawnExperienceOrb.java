@@ -3,7 +3,7 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.entity.ExperiemceOrb;
+import de.atlasmc.entity.ExperienceOrb;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutSpawnExperienceOrb;
 import io.netty.buffer.ByteBuf;
@@ -17,7 +17,7 @@ public class CorePacketOutSpawnExperienceOrb extends AbstractPacket implements P
 		super(CoreProtocolAdapter.VERSION);
 	}
 	
-	public CorePacketOutSpawnExperienceOrb(ExperiemceOrb orb) {
+	public CorePacketOutSpawnExperienceOrb(ExperienceOrb orb) {
 		this();
 		id = orb.getID();
 		x = orb.getX();

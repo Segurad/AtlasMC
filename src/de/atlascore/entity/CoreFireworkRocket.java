@@ -1,5 +1,6 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.Material;
@@ -12,6 +13,9 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.meta.FireworkMeta;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreFireworkRocket extends CoreAbstractProjectile implements FireworkRocket {
@@ -24,6 +28,47 @@ public class CoreFireworkRocket extends CoreAbstractProjectile implements Firewo
 	META_SHOT_AT_ANGLE = new MetaDataField<>(CoreAbstractProjectile.LAST_META_INDEX+3, false, MetaDataType.BOOLEAN);
 	
 	protected static final int LAST_META_INDEX = CoreAbstractProjectile.LAST_META_INDEX+3;
+	
+	protected static final NBTFieldContainer NBT_FIELDS;
+	
+	protected static final String
+	NBT_LIFE = "Life",
+	NBT_LIFE_TIME = "LifeTime",
+	NBT_FIREWORK_ITEM = "FireworkItem";
+	
+	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreAbstractProjectile.NBT_FIELDS);
+		NBT_FIELDS.setField(NBT_LIFE, (holder, reader) -> {
+			if (holder instanceof FireworkRocket) {
+				((FireworkRocket) holder).setLifeTime(reader.readIntTag());
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_LIFE_TIME, (holder, reader) -> {
+			if (holder instanceof FireworkRocket) {
+				((FireworkRocket) holder).setMaxLifeTime(reader.readIntTag());
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_FIREWORK_ITEM, (holder, reader) -> {
+			if (!(holder instanceof FireworkRocket)) {
+				reader.skipTag();
+				return;
+			}
+			reader.readNextEntry();
+			Material mat = null;
+			if (!NBT_ID.equals(reader.getFieldName())) {
+				reader.mark();
+				reader.search(NBT_ID);
+				mat = Material.getByName(reader.readStringTag());
+				reader.reset();
+			} else mat = Material.getByName(reader.readStringTag());
+			ItemStack item = new ItemStack(mat);
+			item.fromNBT(reader);
+			((FireworkRocket) holder).setFirework(item);
+		});
+	}
+	
+	private int lifeTime;
+	private int maxLifeTime;
 	
 	public CoreFireworkRocket(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
@@ -107,6 +152,38 @@ public class CoreFireworkRocket extends CoreAbstractProjectile implements Firewo
 		}
 		Entity entity = (Entity) source;
 		metaContainer.get(META_SHOOTER_ID).setData(entity.getID());
+	}
+
+	@Override
+	public void setLifeTime(int ticks) {
+		this.lifeTime = ticks;
+	}
+
+	@Override
+	public int getLifeTime() {
+		return lifeTime;
+	}
+
+	@Override
+	public void setMaxLifeTime(int ticks) {
+		this.maxLifeTime = ticks;
+	}
+
+	@Override
+	public int getMaxLifeTime() {
+		return maxLifeTime;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		writer.writeIntTag(NBT_LIFE, getLifeTime());
+		writer.writeIntTag(NBT_LIFE_TIME, getMaxLifeTime());
+		if (getFirework() != null) {
+			writer.writeCompoundTag(NBT_FIREWORK_ITEM);
+			getFirework().toNBT(writer, systemData);
+			writer.writeEndTag();
+		}
 	}
 
 }

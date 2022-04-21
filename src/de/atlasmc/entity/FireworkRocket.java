@@ -19,4 +19,21 @@ public interface FireworkRocket extends Projectile {
 	
 	public void setShotAtAngle(boolean shotAtAngle);
 
+	public void setLifeTime(int ticks);
+	
+	/**
+	 * Returns the time in ticks this rocket is fling
+	 * @return ticks
+	 */
+	public int getLifeTime();
+	
+	public void setMaxLifeTime(int ticks);
+
+	/**
+	 * Returns the tick this rocket should explode.<br>
+	 * Counted by life time
+	 * @return max life time
+	 */
+	public int getMaxLifeTime();
+	
 }

@@ -38,6 +38,16 @@ public interface Painting extends Hanging {
 
 		private static List<Motive> VALUES;
 		
+		private final String name;
+		
+		private Motive() {
+			this.name = "minecraft:".concat(name().toLowerCase());
+		}
+		
+		public String getNameID() {
+			return name;
+		}
+		
 		public static Motive getByID(int id) {
 			return getValues().get(id);
 		}
@@ -65,6 +75,14 @@ public interface Painting extends Hanging {
 		 */
 		public static void freeValues() {
 			VALUES = null;
+		}
+
+		public static Motive getByNameID(String nameID) {
+			for (Motive motive : getValues()) {
+				if (motive.getNameID().equals(nameID))
+					return motive;
+			}
+			return null;
 		}
 		
 	}

@@ -1,5 +1,6 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 
@@ -12,6 +13,9 @@ import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutDestroyEntities;
 import de.atlasmc.io.protocol.play.PacketOutSpawnPainting;
 import de.atlasmc.util.ViewerSet;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CorePainting extends CoreEntity implements Painting {
@@ -24,7 +28,45 @@ public class CorePainting extends CoreEntity implements Painting {
 			con.sendPacked(spawn);
 			holder.sendMetadata(viewer);
 		};
+
+	protected static final NBTFieldContainer NBT_FIELDS;
 	
+	protected static final String
+	NBT_MOTIVE = "Motive",
+//	NBT_TILE_X = "TileX", TODO unnecessary
+//	NBT_TILE_Y = "TileY",
+//	NBT_TILE_Z = "TileZ",
+	NBT_FACE = "Facing";
+	
+	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreEntity.NBT_FIELDS);
+		NBT_FIELDS.setField(NBT_MOTIVE, (holder, reader) -> {
+			if (holder instanceof Painting) {
+				((Painting) holder).setMotive(Motive.getByNameID(reader.readStringTag()));
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_FACE, (holder, reader) -> {
+			if (holder instanceof Painting) {
+				switch (reader.readByteTag()) {
+				case 0:
+					((Painting) holder).setFacingDirection(BlockFace.SOUTH);
+					break;
+				case 1:
+					((Painting) holder).setFacingDirection(BlockFace.WEST);
+					break;
+				case 2:
+					((Painting) holder).setFacingDirection(BlockFace.NORTH);
+					break;
+				case 3:
+					((Painting) holder).setFacingDirection(BlockFace.EAST);
+					break;
+				default:
+					break;
+				}
+			} else reader.skipTag();
+		});
+	}
+		
 	private BlockFace attachedFace;
 	private Motive motive;
 	private boolean changedFaceOrMotive;
@@ -38,6 +80,11 @@ public class CorePainting extends CoreEntity implements Painting {
 	@Override
 	protected ViewerSet<Entity, Player> createViewerSet() {
 		return new ViewerSet<Entity, Player>(this, VIEWER_ADD_FUNCTION, VIEWER_REMOVE_FUNCTION);
+	}
+	
+	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
 	}
 	
 	@Override
@@ -91,6 +138,25 @@ public class CorePainting extends CoreEntity implements Painting {
 				sendMetadata(viewer);
 			}
 			changedFaceOrMotive = false;
+		}
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		writer.writeStringTag(NBT_MOTIVE, getMotive().getNameID());
+		switch(getAttachedFace()) {
+		case WEST:
+			writer.writeByteTag(NBT_FACE, 1);
+			break;
+		case NORTH:
+			writer.writeByteTag(NBT_FACE, 2);
+			break;
+		case EAST:
+			writer.writeByteTag(NBT_FACE, 3);
+			break;
+		default:
+			break;
 		}
 	}
 
