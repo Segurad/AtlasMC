@@ -9,6 +9,7 @@ import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.AbstractFurnaceInventory;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTField;
+import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.Chunk;
 
@@ -47,6 +48,11 @@ public class CoreFurnace extends CoreAbstractContainerTile<AbstractFurnaceInvent
 	
 	public CoreFurnace(Material type, Chunk chunk, int x, int y, int z) {
 		super(type, chunk, x, y, z);
+	}
+	
+	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
 	}
 
 	@Override

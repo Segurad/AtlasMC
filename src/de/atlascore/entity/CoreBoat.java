@@ -50,6 +50,11 @@ public class CoreBoat extends CoreVehicle implements Boat {
 	}
 	
 	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
 		metaContainer.set(META_TIME_SINCE_LAST_HIT);

@@ -6,6 +6,7 @@ import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Scaffolding;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreScaffolding extends CoreWaterlogged implements Scaffolding {
@@ -36,6 +37,11 @@ public class CoreScaffolding extends CoreWaterlogged implements Scaffolding {
 	public CoreScaffolding(Material material) {
 		super(material);
 		distance = 7;
+	}
+	
+	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
 	}
 
 	@Override

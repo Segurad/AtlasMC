@@ -47,6 +47,11 @@ public class CoreHoglin extends CoreAgeableMob implements Hoglin {
 	}
 	
 	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
 		metaContainer.set(META_IMMUNE);

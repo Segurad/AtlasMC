@@ -46,6 +46,11 @@ public class CoreSheep extends CoreAgeableMob implements Sheep {
 	}
 	
 	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
 		metaContainer.set(META_SHEEP_FLAGS);

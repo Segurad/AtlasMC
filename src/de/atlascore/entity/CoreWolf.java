@@ -51,6 +51,11 @@ public class CoreWolf extends CoreTameable implements Wolf {
 	}
 	
 	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
 		metaContainer.set(META_IS_BEGGING);

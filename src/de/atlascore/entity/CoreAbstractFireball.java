@@ -75,6 +75,11 @@ public abstract class CoreAbstractFireball extends CoreAbstractProjectile implem
 	}
 
 	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	@Override
 	public float getExplosionRadius() {
 		return explosionRadius;
 	}

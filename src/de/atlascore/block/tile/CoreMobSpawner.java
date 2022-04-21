@@ -6,6 +6,7 @@ import de.atlasmc.block.tile.MobSpawner;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.Chunk;
 
@@ -54,6 +55,12 @@ public class CoreMobSpawner extends CoreTileEntity implements MobSpawner {
 		super(type, chunk, x, y, z);
 	}
 
+	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	
 	@Override
 	public SpawnerConfiguration getConfiguration() {
 		return config;

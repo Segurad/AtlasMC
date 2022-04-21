@@ -6,6 +6,7 @@ import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.world.Chunk;
 
 public class CoreHopper extends CoreAbstractContainerTile<Inventory> implements Hopper {
@@ -33,6 +34,11 @@ public class CoreHopper extends CoreAbstractContainerTile<Inventory> implements 
 	
 	public CoreHopper(Material type, Chunk chunk, int x, int y, int z) {
 		super(type, chunk, x, y, z);
+	}
+	
+	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
 	}
 
 	@Override

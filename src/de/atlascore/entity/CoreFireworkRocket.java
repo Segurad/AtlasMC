@@ -75,6 +75,11 @@ public class CoreFireworkRocket extends CoreAbstractProjectile implements Firewo
 	}
 	
 	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
 		metaContainer.set(META_FIREWORK_INFO);

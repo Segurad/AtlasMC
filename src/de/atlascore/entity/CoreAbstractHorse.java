@@ -93,6 +93,11 @@ public abstract class CoreAbstractHorse extends CoreAgeableMob implements Abstra
 	}
 	
 	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
 		metaContainer.set(META_HORSE_FLAGS);

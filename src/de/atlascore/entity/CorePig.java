@@ -41,6 +41,11 @@ public class CorePig extends CoreAgeableMob implements Pig {
 	}
 	
 	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
 		metaContainer.set(META_HAS_SADDLE);

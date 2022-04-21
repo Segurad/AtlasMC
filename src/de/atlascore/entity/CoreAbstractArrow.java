@@ -75,6 +75,11 @@ public abstract class CoreAbstractArrow extends CoreAbstractProjectile implement
 	}
 	
 	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
 		metaContainer.set(META_ABSTRACT_ARROW_FLAGS);

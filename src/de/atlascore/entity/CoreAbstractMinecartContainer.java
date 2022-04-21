@@ -9,6 +9,7 @@ import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTField;
+import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.world.World;
 
 public abstract class CoreAbstractMinecartContainer extends CoreAbstractMinecart implements AbstractMinecartContainer {
@@ -48,6 +49,11 @@ public abstract class CoreAbstractMinecartContainer extends CoreAbstractMinecart
 	
 	public CoreAbstractMinecartContainer(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
+	}
+	
+	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
 	}
 
 	@Override

@@ -124,6 +124,11 @@ public class CoreFallingBlock extends CoreEntity implements FallingBlock {
 	public CoreFallingBlock(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
 	}
+	
+	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
 
 	@Override
 	protected void initMetaContainer() {

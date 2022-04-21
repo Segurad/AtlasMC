@@ -55,6 +55,11 @@ public class CoreExperienceOrb extends CoreEntity implements ExperienceOrb {
 	public CoreExperienceOrb(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
 	}
+	
+	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
 
 	@Override
 	protected ViewerSet<Entity, Player> createViewerSet() {

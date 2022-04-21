@@ -389,6 +389,11 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	}
 	
 	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	@Override
 	protected ViewerSet<Entity, Player> createViewerSet() {
 		return new ViewerSet<Entity, Player>(this, VIEWER_ADD_FUNCTION, VIEWER_REMOVE_FUNCTION);
 	}

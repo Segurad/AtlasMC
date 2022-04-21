@@ -41,6 +41,11 @@ public class CoreVex extends CoreMob implements Vex {
 	}
 	
 	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
 		metaContainer.set(META_VEX_FLAGS);

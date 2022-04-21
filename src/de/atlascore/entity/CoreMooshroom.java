@@ -40,6 +40,11 @@ public class CoreMooshroom extends CoreCow implements Mooshroom {
 	}
 	
 	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
 		metaContainer.set(META_SHROOM_TYPE);

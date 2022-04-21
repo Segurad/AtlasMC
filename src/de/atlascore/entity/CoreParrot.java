@@ -38,6 +38,11 @@ public class CoreParrot extends CoreTameable implements Parrot {
 	}
 	
 	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
 		metaContainer.set(META_PARROT_TYPE);

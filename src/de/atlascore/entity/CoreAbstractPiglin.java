@@ -39,6 +39,11 @@ public class CoreAbstractPiglin extends CoreMob implements AbstractPiglin {
 	}
 	
 	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
 		metaContainer.set(META_IMMUNE);

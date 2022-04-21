@@ -42,6 +42,11 @@ public class CoreStrider extends CoreAgeableMob implements Strider {
 	}
 	
 	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
 		metaContainer.set(META_BOOST_TIME);

@@ -64,6 +64,11 @@ public class CoreHorse extends CoreAbstractHorse implements Horse {
 	}
 	
 	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
 		metaContainer.set(META_HORSE_VARIANT);

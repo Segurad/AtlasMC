@@ -50,6 +50,11 @@ public class CoreTropicalFish extends CoreFish implements TropicalFish {
 	}
 	
 	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
 		metaContainer.set(META_TROPICAL_VARIANT);

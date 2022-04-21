@@ -74,6 +74,11 @@ public class CoreEndCrystal extends CoreEntity implements EndCrystal {
 	}
 	
 	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
 		metaContainer.set(META_BEAM_TARGET);
