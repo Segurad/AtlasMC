@@ -595,7 +595,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
 		writer.writeFloatTag(NBT_ABSORPTION_AMOUNT, getAbsorption());
-		if (hasActivePotionEffects()) {
+		if (hasPotionEffects()) {
 			writer.writeListTag(NBT_ACTIVE_EFFECTS, TagType.COMPOUND, activeEffects.size());
 			for (PotionEffect effect : activeEffects) {
 				writer.writeCompoundTag();
@@ -704,11 +704,6 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	public boolean hasAttributes() {
 		return attributes != null && !attributes.isEmpty();
 	}
-
-	@Override
-	public boolean hasActivePotionEffects() {
-		return activeEffects != null && !activeEffects.isEmpty();
-	}
 	
 	protected boolean hasBrain() {
 		return false;
@@ -739,6 +734,25 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	@Override
 	public int getAttackTime() {
 		return attackTime;
+	}
+
+	@Override
+	public List<PotionEffect> getPotionEffects() {
+		if (activeEffects == null)
+			activeEffects = new ArrayList<>();
+		return activeEffects;
+	}
+
+	@Override
+	public boolean hasPotionEffects() {
+		return activeEffects != null && !activeEffects.isEmpty();
+	}
+
+	@Override
+	public void removePotionEffect(PotionEffect effect) {
+		if (!hasPotionEffects())
+			return;
+		activeEffects.remove(effect);
 	}
 
 }

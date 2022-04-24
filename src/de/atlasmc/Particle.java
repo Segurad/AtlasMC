@@ -72,15 +72,18 @@ public enum Particle {
 	
 	private final int id;
 	private final Class<?> data;
+	private final String nameID;
 	
 	private Particle(int id, Class<?> data) {
 		this.id = id;
 		this.data = data;
+		this.nameID = name().toLowerCase();
 	}
 	
 	private Particle(int id) {
 		this.id = id;
 		this.data = void.class;
+		this.nameID = name().toLowerCase();
 	}
 	
 	public int getID() {
@@ -137,6 +140,17 @@ public enum Particle {
 	 */
 	public static void freeValues() {
 		VALUES = null;
+	}
+	
+	public String getNameID() {
+		return nameID;
+	}
+
+	public static Particle getByNameID(String nameID) {
+		for (Particle particle : getValues())
+			if (particle.getNameID().equals(nameID))
+				return particle;
+		return null;
 	}
 	
 }

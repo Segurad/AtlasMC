@@ -1,5 +1,7 @@
 package de.atlasmc.entity;
 
+import java.util.List;
+
 import de.atlascore.inventory.EntityEquipment;
 import de.atlasmc.Color;
 import de.atlasmc.attribute.Attribute;
@@ -64,6 +66,12 @@ public interface LivingEntity extends Damageable, Attributeable {
 
 	public void addPotionEffect(PotionEffect effect);
 	
+	public List<PotionEffect> getPotionEffects();
+	
+	public boolean hasPotionEffects();
+	
+	public void removePotionEffect(PotionEffect effect);
+	
 	public AttributeInstance getAttribute(Attribute attribute);
 
 	/**
@@ -76,8 +84,6 @@ public interface LivingEntity extends Damageable, Attributeable {
 	public void setFallFlying(boolean fallFlying);
 
 	public void setHurtAnimationTime(int time);
-
-	public boolean hasActivePotionEffects();
 
 	public boolean hasAttributes();
 
