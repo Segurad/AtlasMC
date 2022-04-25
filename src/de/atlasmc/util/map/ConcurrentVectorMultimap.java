@@ -33,6 +33,16 @@ public class ConcurrentVectorMultimap<K, V> extends AbstractMultimap<K, V> imple
 		super(new HashMap<K, Collection<V>>(mapCapacity));
 		this.DEFAULT_LIST_CAPACITY = valueInitCapacity;
 	}
+	
+	@Override
+	public synchronized boolean put(K key, V value) {
+		return super.put(key, value);
+	}
+	
+	@Override
+	public synchronized boolean putAll(K key, Iterable<V> values) {
+		return super.putAll(key, values);
+	}
 
 	@Override
 	public Vector<V> get(K key) {

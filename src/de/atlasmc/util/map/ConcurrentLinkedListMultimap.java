@@ -22,6 +22,16 @@ public class ConcurrentLinkedListMultimap<K, V> extends AbstractMultimap<K, V> {
 	public ConcurrentLinkedListMultimap(int mapCapacity) {
 		super(new ConcurrentHashMap<K, Collection<V>>(mapCapacity));
 	}
+	
+	@Override
+	public synchronized boolean put(K key, V value) {
+		return super.put(key, value);
+	}
+	
+	@Override
+	public synchronized boolean putAll(K key, Iterable<V> values) {
+		return super.putAll(key, values);
+	}
 
 	@Override
 	public ConcurrentLinkedList<V> get(K key) {

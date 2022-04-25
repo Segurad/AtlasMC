@@ -30,7 +30,7 @@ public abstract class AbstractMultimap<K, V> implements Multimap<K, V> {
 
 	@Override
 	public Collection<V> remove(K key) {
-		return map.remove(map);
+		return map.remove(key);
 	}
 
 	@Override
