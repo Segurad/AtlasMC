@@ -4,24 +4,25 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.UUID;
 
-import com.google.gson.stream.JsonWriter;
-
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.tag.CompoundTag;
 import de.atlasmc.util.nbt.tag.ListTag;
 import de.atlasmc.util.nbt.tag.NBT;
 
 /**
- * {@link NBTWriter} implementation for NBT Json
+ * {@link NBTWriter} implementation for SNBT
  */
-public class SNBTWriter extends JsonWriter implements NBTWriter {
+public class SNBTWriter implements NBTWriter {
 	
 	private int depth;
 	private ListData list;
 	private boolean closed;
+	private Writer out;
+	private boolean separator;
+	private boolean removeList;
 	
 	public SNBTWriter(Writer out) {
-		super(out);
+		this.out = out;
 	}
 
 	@Override
@@ -33,53 +34,73 @@ public class SNBTWriter extends JsonWriter implements NBTWriter {
 			throw new IOException("Can not write EndTag to List");
 		depth--;
 		prepareTag(TagType.TAG_END, null);
-		endObject();
+		out.write('}');
+		removeList();
 	}
 
 	@Override
 	public void writeByteTag(String name, int value) throws IOException {
 		prepareTag(TagType.BYTE, name);
-		value(value & 0xFF);
+		out.write(Byte.toString((byte) value));
+		out.write('B');
+		removeList();
 	}
 
 	@Override
 	public void writeShortTag(String name, int value) throws IOException {
 		prepareTag(TagType.SHORT, name);
-		value(value & 0xFFFF);
+		out.write(Short.toString((short) value));
+		out.write('S');
+		removeList();
 	}
 
 	@Override
 	public void writeIntTag(String name, int value) throws IOException {
 		prepareTag(TagType.INT, name);
-		value(value);
+		out.write(Integer.toString(value));
+		removeList();
 	}
 
 	@Override
 	public void writeLongTag(String name, long value) throws IOException {
 		prepareTag(TagType.LONG, name);
-		value(value);
+		out.write(Long.toString(value));
+		out.write('L');
+		removeList();
 	}
 
 	@Override
 	public void writeFloatTag(String name, float value) throws IOException {
 		prepareTag(TagType.FLOAT, name);
-		value(value);
+		out.write(Float.toString(value));
+		out.write('F');
+		removeList();
 	}
 
 	@Override
 	public void writeDoubleTag(String name, double value) throws IOException {
 		prepareTag(TagType.DOUBLE, name);
-		value(value);
+		out.write(Double.toString(value));
+		out.write('D');
+		removeList();
 	}
 
 	@Override
 	public void writeByteArrayTag(String name, byte[] data) throws IOException {
 		prepareTag(TagType.BYTE_ARRAY, name);
-		beginArray();
+		out.write('[');
+		out.write('B');
+		out.write(';');
+		boolean separator = false;
 		for (byte b : data) {
-			value(b);
+			if (separator)
+				out.write(',');
+			else
+				separator = true;
+			out.write(Byte.toString(b));
 		}
-		endArray();
+		out.write(']');
+		removeList();
 	}
 
 	@Override
@@ -87,7 +108,45 @@ public class SNBTWriter extends JsonWriter implements NBTWriter {
 		if (value == null)
 			throw new IllegalArgumentException("Value can not be null!");
 		prepareTag(TagType.STRING, name);
-		value(value);
+		out.write('"');
+		for (int i = 0; i < value.length(); i++) {
+			char c = value.charAt(i);
+			switch (c) {
+			case '"':
+				out.write('\\');
+				out.write('"');
+				break;
+			case '\\':
+				out.write('\\');
+				out.write('\\');
+				break;
+			case '\t':
+				out.write('\\');
+				out.write('t');
+				break;
+			case '\b':
+				out.write('\\');
+				out.write('b');
+				break;
+			case '\n':
+				out.write('\\');
+				out.write('n');
+				break;
+			case '\r':
+				out.write('\\');
+				out.write('r');
+				break;
+			case '\f':
+				out.write('\\');
+				out.write('f');
+				break;
+			default:
+				out.write(c);
+				break;
+			}
+		}
+		out.write('"');
+		removeList();
 	}
 
 	@Override
@@ -101,7 +160,8 @@ public class SNBTWriter extends JsonWriter implements NBTWriter {
 	@Override
 	public void writeCompoundTag(String name) throws IOException {
 		prepareTag(TagType.COMPOUND, name);
-		beginObject();
+		separator = false;
+		out.write('{');
 	}
 
 	@Override
@@ -109,11 +169,19 @@ public class SNBTWriter extends JsonWriter implements NBTWriter {
 		if (data == null)
 			throw new IllegalArgumentException("Data can not be null!");
 		prepareTag(TagType.INT_ARRAY, name);
-		beginArray();
+		out.write('[');
+		out.write('I');
+		out.write(';');
+		boolean separator = false;
 		for (int i : data) {
-			value(i);
+			if (separator)
+				out.write(',');
+			else
+				separator = true;
+			out.write(Integer.toString(i));
 		}
-		endArray();
+		out.write(']');
+		removeList();
 	}
 
 	@Override
@@ -121,11 +189,19 @@ public class SNBTWriter extends JsonWriter implements NBTWriter {
 		if (data == null)
 			throw new IllegalArgumentException("Data can not be null!");
 		prepareTag(TagType.LONG_ARRAY, name);
-		beginArray();
+		out.write('[');
+		out.write('L');
+		out.write(';');
+		boolean separator = false;
 		for (long l : data) {
-			value(l);
+			if (separator)
+				out.write(',');
+			else
+				separator = true;
+			out.write(Long.toString(l));
 		}
-		endArray();
+		out.write(']');
+		removeList();
 	}
 
 	@Override
@@ -206,26 +282,40 @@ public class SNBTWriter extends JsonWriter implements NBTWriter {
 					throw new IOException("TagType not campatiple with ListTag(" + list.type.name() + "):" + type.name());
 				list.payload--;
 				if (list.payload == 0) 
-					removeList();
+					removeList = true;
 			} else 
 				throw new IOException("Max Listpayload reached!");
 		}
+		if (separator)
+			out.write(',');
+		else
+			separator = true;
 		if (name == null) 
 			return;
-		name(name);
+		out.write('"');
+		out.write(name);
+		out.write('"');
+		out.write(':');
 	}
 	
 	private void addList(int payload, TagType payloadType) throws IOException {
 		if (payload <= 0) return;
 		list = new ListData(payloadType, payload, ++depth, list);
-		beginArray();
+		separator = false;
+		out.write('[');
 	}
 	
 	private void removeList() throws IOException {
-		if (list == null) return;
+		if (!removeList)
+			return;
+		removeList = false;
+		if (list == null) 
+			return;
+		if (list.depth != depth)
+			removeList = true;
 		list = list.parent;
 		depth--;
-		endArray();
+		out.write(']');
 	}
 
 	protected final void ensureOpen() throws IOException {
@@ -235,7 +325,8 @@ public class SNBTWriter extends JsonWriter implements NBTWriter {
 	
 	@Override
 	public void close() throws IOException {
-		super.close();
+		out.close();
+		out = null;
 		closed = true;
 		list = null;
 	}
