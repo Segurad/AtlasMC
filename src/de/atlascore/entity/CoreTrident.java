@@ -27,10 +27,6 @@ public class CoreTrident extends CoreAbstractArrow implements Trident {
 	static {
 		NBT_FIELDS.setField(NBT_TRIDENT, (holder, reader) -> {
 			if (holder instanceof Trident) {
-				if (!(holder instanceof Trident)) {
-					reader.skipTag();
-					return;
-				}
 				reader.readNextEntry();
 				Material mat = null;
 				if (!NBT_ID.equals(reader.getFieldName())) {

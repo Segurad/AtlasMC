@@ -117,6 +117,11 @@ public class CoreItemFrame extends CoreEntity implements ItemFrame {
 	}
 	
 	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
+	}
+	
+	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
 		metaContainer.set(new MetaData<>(META_FRAME_ITEM));

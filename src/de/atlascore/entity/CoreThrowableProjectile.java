@@ -43,5 +43,5 @@ public abstract class CoreThrowableProjectile extends CoreAbstractProjectile imp
 
 	@Override
 	public abstract ProjectileType getProjectileType();
-
+	
 }

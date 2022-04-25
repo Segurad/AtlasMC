@@ -27,7 +27,7 @@ public class CorePrimedTNT extends CoreEntity implements PrimedTNT {
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreEntity.NBT_FIELDS);
 		NBT_FIELDS.setField(NBT_FUSE, (holder, reader) -> {
-			((PrimedTNT) holder).setFuseTime(reader.readIntTag());
+			((PrimedTNT) holder).setFuseTime(reader.readShortTag());
 		});
 	}
 	
@@ -66,7 +66,7 @@ public class CorePrimedTNT extends CoreEntity implements PrimedTNT {
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		writer.writeIntTag(NBT_FUSE, getFuseTime());
+		writer.writeShortTag(NBT_FUSE, getFuseTime());
 	}
 
 }

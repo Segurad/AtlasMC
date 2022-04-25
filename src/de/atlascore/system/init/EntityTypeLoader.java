@@ -17,7 +17,7 @@ public class EntityTypeLoader {
 		BLAZE = new EntityType(NamespacedKey.MINECRAFT, "BLAZE", CoreBlaze.class);
 		BOAT = new EntityType(NamespacedKey.MINECRAFT, "BOAT", CoreBoat.class);
 		CAT = new EntityType(NamespacedKey.MINECRAFT, "CAT", CoreCow.class);
-		CAVE_SPIDER = new EntityType(NamespacedKey.MINECRAFT, "CAVE_SPIDER", null);
+		CAVE_SPIDER = new EntityType(NamespacedKey.MINECRAFT, "CAVE_SPIDER", CoreCaveSpider.class);
 		CHICKEN = new EntityType(NamespacedKey.MINECRAFT, "CHICKEN", CoreChicken.class);
 		COD = new EntityType(NamespacedKey.MINECRAFT, "COD", CoreCod.class);
 		COW = new EntityType(NamespacedKey.MINECRAFT, "COW", CoreCow.class);
@@ -25,14 +25,14 @@ public class EntityTypeLoader {
 		DOLPHIN = new EntityType(NamespacedKey.MINECRAFT, "DOLPHIN", CoreDolphin.class);
 		DONKEY = new EntityType(NamespacedKey.MINECRAFT, "DONKEY", CoreDonkey.class);
 		DRAGON_FIREBALL = new EntityType(NamespacedKey.MINECRAFT, "DRAGON_FIREBALL", CoreDragonFireball.class);
-		DROWNED = new EntityType(NamespacedKey.MINECRAFT, "DROWNED", null);
+		DROWNED = new EntityType(NamespacedKey.MINECRAFT, "DROWNED", CoreDrowned.class);
 		ELDER_GUARDIAN = new EntityType(NamespacedKey.MINECRAFT, "ELDER_GUARDIAN", CoreElderGuardian.class);
 		END_CRYSTAL = new EntityType(NamespacedKey.MINECRAFT, "END_CRYSTAL", CoreEndCrystal.class);
 		ENDER_DRAGON = new EntityType(NamespacedKey.MINECRAFT, "ENDER_DRAGON", CoreEnderDragon.class);
 		ENDERMAN = new EntityType(NamespacedKey.MINECRAFT, "ENDERMAN", CoreEnderman.class);
 		ENDERMITE = new EntityType(NamespacedKey.MINECRAFT, "ENDERMITE", CoreEndermite.class);
-		EVOKER = new EntityType(NamespacedKey.MINECRAFT, "EVOKER", null);
-		EVOKER_FANGS = new EntityType(NamespacedKey.MINECRAFT, "EVOKER_FANGS", null);
+		EVOKER = new EntityType(NamespacedKey.MINECRAFT, "EVOKER", CoreEvoker.class);
+		EVOKER_FANGS = new EntityType(NamespacedKey.MINECRAFT, "EVOKER_FANGS", CoreEvokerFangs.class);
 		EXPERIENCE_ORB = new EntityType(NamespacedKey.MINECRAFT, "EXPERIENCE_ORB", CoreExperienceOrb.class);
 		EYE_OF_ENDER = new EntityType(NamespacedKey.MINECRAFT, "EYE_OF_ENDER", CoreEyeOfEnder.class);
 		FALLING_BLOCK = new EntityType(NamespacedKey.MINECRAFT, "FALLING_BLOCK", CoreFallingBlock.class);
@@ -43,14 +43,14 @@ public class EntityTypeLoader {
 		GUARDIAN = new EntityType(NamespacedKey.MINECRAFT, "GUARDIAN", CoreGuardian.class);
 		HORSE = new EntityType(NamespacedKey.MINECRAFT, "HORSE", CoreHorse.class);
 		HOGLIN = new EntityType(NamespacedKey.MINECRAFT, "HOGLIN", CoreHoglin.class);
-		HUSK = new EntityType(NamespacedKey.MINECRAFT, "HUSK", null);
+		HUSK = new EntityType(NamespacedKey.MINECRAFT, "HUSK", CoreHusk.class);
 		ILLUSIONER = new EntityType(NamespacedKey.MINECRAFT, "ILLUSIONER", CoreIllusioner.class);
 		IRON_GOLEM = new EntityType(NamespacedKey.MINECRAFT, "IRON_GOLEM", CoreIronGolem.class);
 		ITEM = new EntityType(NamespacedKey.MINECRAFT, "ITEM", CoreItem.class);
 		ITEM_FRAME = new EntityType(NamespacedKey.MINECRAFT, "ITEM_FRAME", CoreItemFrame.class);
 		FIREBALL = new EntityType(NamespacedKey.MINECRAFT, "FIREBALL", CoreLargeFireball.class);
-		LEASH_KNOT = new EntityType(NamespacedKey.MINECRAFT, "LEASH_KNOT", null);
-		LIGHTNING_BOLT = new EntityType(NamespacedKey.MINECRAFT, "LIGHTNING_BOLT", null);
+		LEASH_KNOT = new EntityType(NamespacedKey.MINECRAFT, "LEASH_KNOT", CoreLeashKnot.class);
+		LIGHTNING_BOLT = new EntityType(NamespacedKey.MINECRAFT, "LIGHTNING_BOLT", CoreLightningBolt.class);
 		LLAMA = new EntityType(NamespacedKey.MINECRAFT, "LLAMA", CoreLlama.class);
 		LLAMA_SPIT = new EntityType(NamespacedKey.MINECRAFT, "LLAMA_SPIT", CoreLlamaSpit.class);
 		MAGMA_CUBE = new EntityType(NamespacedKey.MINECRAFT, "MAGMA_CUBE", CoreMagmaCube.class);
@@ -70,7 +70,7 @@ public class EntityTypeLoader {
 		PHANTOM = new EntityType(NamespacedKey.MINECRAFT, "PHANTOM", CorePhantom.class);
 		PIG = new EntityType(NamespacedKey.MINECRAFT, "PIG", CorePig.class);
 		PIGLIN = new EntityType(NamespacedKey.MINECRAFT, "PIGLIN", CorePiglin.class);
-		PIGLIN_BRUTE = new EntityType(NamespacedKey.MINECRAFT, "PIGLIN_BRUTE", null);
+		PIGLIN_BRUTE = new EntityType(NamespacedKey.MINECRAFT, "PIGLIN_BRUTE", CorePiglinBrute.class);
 		PILLAGER = new EntityType(NamespacedKey.MINECRAFT, "PILLAGER", CorePillager.class);
 		POLAR_BEAR = new EntityType(NamespacedKey.MINECRAFT, "POLAR_BEAR", CorePolarBear.class);
 		TNT = new EntityType(NamespacedKey.MINECRAFT, "TNT", CorePrimedTNT.class);
@@ -87,7 +87,7 @@ public class EntityTypeLoader {
 		SLIME = new EntityType(NamespacedKey.MINECRAFT, "SLIME", CoreSlime.class);
 		SMALL_FIREBALL = new EntityType(NamespacedKey.MINECRAFT, "SMALL_FIREBALL", CoreSmallFireball.class);
 		SNOW_GOLEM = new EntityType(NamespacedKey.MINECRAFT, "SNOW_GOLEM", CoreSnowGolem.class);
-		SNOWBALL = new EntityType(NamespacedKey.MINECRAFT, "SNOWBALL", null);
+		SNOWBALL = new EntityType(NamespacedKey.MINECRAFT, "SNOWBALL", CoreSnowball.class);
 		SPECTRAL_ARROW = new EntityType(NamespacedKey.MINECRAFT, "SPECTRAL_ARROW", CoreSpectralArrow.class);
 		SPIDER = new EntityType(NamespacedKey.MINECRAFT, "SPIDER", CoreSpider.class);
 		SQUID = new EntityType(NamespacedKey.MINECRAFT, "SQUID", CoreSquid.class);
@@ -114,7 +114,7 @@ public class EntityTypeLoader {
 		ZOMBIE = new EntityType(NamespacedKey.MINECRAFT, "ZOMBIE", CoreZombie.class);
 		ZOMBIE_HORSE = new EntityType(NamespacedKey.MINECRAFT, "ZOMBIE_HORSE", CoreZombieHorse.class);
 		ZOMBIE_VILLAGER = new EntityType(NamespacedKey.MINECRAFT, "ZOMBIFIED_VILLAGER", CoreZombieVillager.class);
-		ZOMBIFIED_PIGLIN = new EntityType(NamespacedKey.MINECRAFT, "ZOMBIEFIED_PIGLIN", null);
+		ZOMBIFIED_PIGLIN = new EntityType(NamespacedKey.MINECRAFT, "ZOMBIEFIED_PIGLIN", CoreZombifiedPiglin.class);
 		PLAYER = new EntityType(NamespacedKey.MINECRAFT, "PLAYER", CorePlayer.class);
 		FISHING_BOBBER = new EntityType(NamespacedKey.MINECRAFT, "FISHING_BOBBER", CoreFishingHook.class);
 	}
