@@ -1405,7 +1405,8 @@ public class MaterialLoader {
 		SHULKER_BOX_TEF = new ClassTileEntityFactory(ShulkerBox.class, CoreShulkerBox.class),
 		SIGN_TEF = new ClassTileEntityFactory(de.atlasmc.block.tile.Sign.class, de.atlascore.block.tile.CoreSign.class),
 		SKULL_TEF = new ClassTileEntityFactory(Skull.class, CoreSkull.class),
-		STRUCTURE_BLOCK_TEF = new ClassTileEntityFactory(de.atlasmc.block.tile.StructureBlock.class, de.atlascore.block.tile.CoreStructureBlock.class);
+		STRUCTURE_BLOCK_TEF = new ClassTileEntityFactory(de.atlasmc.block.tile.StructureBlock.class, de.atlascore.block.tile.CoreStructureBlock.class),
+		CHEST_TEF = new ClassTileEntityFactory(de.atlasmc.block.tile.Chest.class, de.atlascore.block.tile.CoreChest.class);
 		
 		WHITE_BANNER.setTileEntityFactory(BANNER_TEF);
 		ORANGE_BANNER.setTileEntityFactory(BANNER_TEF);
@@ -1516,6 +1517,9 @@ public class MaterialLoader {
 		PLAYER_WALL_HEAD.setTileEntityFactory(SKULL_TEF);
 		
 		STRUCTURE_BLOCK.setTileEntityFactory(STRUCTURE_BLOCK_TEF);
+		
+		CHEST.setTileEntityFactory(CHEST_TEF);
+		TRAPPED_CHEST.setTileEntityFactory(CHEST_TEF);
 	}
 
 	private static Material c(String name, int blockID) {
