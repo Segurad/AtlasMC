@@ -1,5 +1,6 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.entity.ArmorStand;
@@ -8,6 +9,10 @@ import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.EulerAngle;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreArmorStand extends CoreLivingEntity implements ArmorStand {
@@ -38,8 +43,92 @@ public class CoreArmorStand extends CoreLivingEntity implements ArmorStand {
 	
 	protected static final int LAST_META_INDEX = CoreLivingEntity.LAST_META_INDEX+7;
 	
+	protected static final NBTFieldContainer NBT_FIELDS;
+	
+	protected static final String
+	NBT_DISABLED_SLOTS = "DisabledSlots",
+	NBT_INVISIBLE = "Invisible",
+	NBT_MARKER = "Marker",
+	NBT_NO_BASE_PLATE = "NoBasePlate",
+	NBT_POSE = "Pose",
+	NBT_HEAD = "Head",
+	NBT_BODY = "Body",
+	NBT_LEFT_ARM = "LeftArm",
+	NBT_RIGHT_ARM = "RightArm",
+	NBT_LEFT_LEG = "LeftLeg",
+	NBT_RIGHT_LEG = "RightLeg",
+	NBT_SHOW_ARMS = "ShowArms",
+	NBT_SMALL = "Small";
+	
+	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreLivingEntity.NBT_FIELDS);
+		NBT_FIELDS.setField(NBT_DISABLED_SLOTS, (holder, reader) -> {
+			((ArmorStand) holder).setSlotInteractionFlags(reader.readIntTag());
+		});
+		NBT_FIELDS.setField(NBT_INVISIBLE, (holder, reader) -> {
+			((ArmorStand) holder).setInvisible(reader.readByteTag() == 1);
+		});
+		NBT_FIELDS.setField(NBT_MARKER, (holder, reader) -> {
+			((ArmorStand) holder).setMarker(reader.readByteTag() == 1);
+		});
+		NBT_FIELDS.setField(NBT_NO_BASE_PLATE, (holder, reader) -> {
+			((ArmorStand) holder).setBasePlate(reader.readByteTag() == 0);
+		});
+		NBT_FIELDS.setField(NBT_POSE, (holder, reader) -> {
+			reader.readNextEntry();
+			while (reader.getType() != TagType.TAG_END) {
+				if (reader.getType() != TagType.LIST)
+					reader.skipTag();
+				float x;
+				float y;
+				float z;
+				String fieldName = reader.getFieldName();
+				reader.readNextEntry();
+				x = reader.readFloatTag();
+				y = reader.readFloatTag();
+				z = reader.readFloatTag();
+				switch (fieldName) {
+				case NBT_HEAD:
+					((ArmorStand) holder).setHeadPose(x, y, z);
+					break;
+				case NBT_BODY:
+					((ArmorStand) holder).setBodyPose(x, y, z);
+					break;
+				case NBT_LEFT_ARM:
+					((ArmorStand) holder).setLeftArmPose(x, y, z);
+					break;
+				case NBT_RIGHT_ARM:
+					((ArmorStand) holder).setRightArmPose(x, y, z);
+					break;
+				case NBT_LEFT_LEG:
+					((ArmorStand) holder).setLeftLegPose(x, y, z);
+					break;
+				case NBT_RIGHT_LEG:
+					((ArmorStand) holder).setRightLegPose(x, y, z);
+					break;
+				default:
+					break;
+				}
+			}
+			reader.readNextEntry();
+		});
+		NBT_FIELDS.setField(NBT_SHOW_ARMS, (holder, reader) -> {
+			((ArmorStand) holder).setArms(reader.readByteTag() == 1);
+		});
+		NBT_FIELDS.setField(NBT_SMALL, (holder, reader) -> {
+			((ArmorStand) holder).setSmall(reader.readByteTag() == 1);
+		});
+	}
+	
+	private int slotFlags;
+	
 	public CoreArmorStand(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
+	}
+	
+	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
 	}
 	
 	@Override
@@ -132,6 +221,12 @@ public class CoreArmorStand extends CoreLivingEntity implements ArmorStand {
 		data.getData().set(angle);
 		data.setChanged(true);
 	}
+	
+	private void setRotation(MetaDataField<EulerAngle> field, float x, float y, float z) {
+		MetaData<EulerAngle> data = metaContainer.get(field);
+		data.getData().set(x, y, z);
+		data.setChanged(true);
+	}
 
 	@Override
 	public boolean isSmall() {
@@ -175,6 +270,106 @@ public class CoreArmorStand extends CoreLivingEntity implements ArmorStand {
 	public void setMarker(boolean marker) {
 		MetaData<Byte> data = metaContainer.get(META_ARMOR_STAND_FLAGS);
 		data.setData((byte) (marker ? data.getData() | 0x10 : data.getData() & 0xEF));
+	}
+
+	@Override
+	public void setSlotInteractionFlags(int flags) {
+		this.slotFlags = flags;
+	}
+
+	@Override
+	public int getSlotInteractionFlags() {
+		return slotFlags;
+	}
+
+	@Override
+	public void setBodyPose(float x, float y, float z) {
+		setRotation(META_ROTATION_BODY, x, y, z);
+	}
+
+	@Override
+	public void setHeadPose(float x, float y, float z) {
+		setRotation(META_ROTATION_HEAD, x, y, z);
+	}
+
+	@Override
+	public void setLeftArmPose(float x, float y, float z) {
+		setRotation(META_ROTATION_LEFT_ARM, x, y, z);
+	}
+
+	@Override
+	public void setLeftLegPose(float x, float y, float z) {
+		setRotation(META_ROTATION_LEFT_LEG, x, y, z);		
+	}
+
+	@Override
+	public void setRightArmPose(float x, float y, float z) {
+		setRotation(META_ROTATION_RIGHT_ARM, x, y, z);
+	}
+
+	@Override
+	public void setRightLegPose(float x, float y, float z) {
+		setRotation(META_ROTATION_RIGHT_LEG, x, y, z);
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		writer.writeIntTag(NBT_DISABLED_SLOTS, getSlotInteractionFlags());
+		if (isInvisible())
+			writer.writeByteTag(NBT_INVISIBLE, true);
+		if (isMarker())
+			writer.writeByteTag(NBT_MARKER, true);
+		if (!hasBasePlate())
+			writer.writeByteTag(NBT_NO_BASE_PLATE, true);
+		writer.writeCompoundTag(NBT_POSE);
+		EulerAngle pose = null;
+		if (!metaContainer.get(META_ROTATION_HEAD).isDefault()) {
+			pose = metaContainer.getData(META_ROTATION_HEAD);
+			writer.writeListTag(NBT_HEAD, TagType.FLOAT, 3);
+			writer.writeFloatTag(null, pose.getX());
+			writer.writeFloatTag(null, pose.getY());
+			writer.writeFloatTag(null, pose.getZ());
+		}
+		if (!metaContainer.get(META_ROTATION_BODY).isDefault()) {
+			pose = metaContainer.getData(META_ROTATION_BODY);
+			writer.writeListTag(NBT_BODY, TagType.FLOAT, 3);
+			writer.writeFloatTag(null, pose.getX());
+			writer.writeFloatTag(null, pose.getY());
+			writer.writeFloatTag(null, pose.getZ());
+		}
+		if (!metaContainer.get(META_ROTATION_LEFT_ARM).isDefault()) {
+			pose = metaContainer.getData(META_ROTATION_LEFT_ARM);
+			writer.writeListTag(NBT_LEFT_ARM, TagType.FLOAT, 3);
+			writer.writeFloatTag(null, pose.getX());
+			writer.writeFloatTag(null, pose.getY());
+			writer.writeFloatTag(null, pose.getZ());
+		}
+		if (!metaContainer.get(META_ROTATION_RIGHT_ARM).isDefault()) {
+			pose = metaContainer.getData(META_ROTATION_RIGHT_ARM);
+			writer.writeListTag(NBT_RIGHT_ARM, TagType.FLOAT, 3);
+			writer.writeFloatTag(null, pose.getX());
+			writer.writeFloatTag(null, pose.getY());
+			writer.writeFloatTag(null, pose.getZ());
+		}
+		if (!metaContainer.get(META_ROTATION_LEFT_LEG).isDefault()) {
+			pose = metaContainer.getData(META_ROTATION_LEFT_LEG);
+			writer.writeListTag(NBT_LEFT_LEG, TagType.FLOAT, 3);
+			writer.writeFloatTag(null, pose.getX());
+			writer.writeFloatTag(null, pose.getY());
+			writer.writeFloatTag(null, pose.getZ());
+		}
+		if (!metaContainer.get(META_ROTATION_RIGHT_LEG).isDefault()) {
+			pose = metaContainer.getData(META_ROTATION_RIGHT_LEG);
+			writer.writeListTag(NBT_RIGHT_LEG, TagType.FLOAT, 3);
+			writer.writeFloatTag(null, pose.getX());
+			writer.writeFloatTag(null, pose.getY());
+			writer.writeFloatTag(null, pose.getZ());
+		}
+		if (hasArms())
+			writer.writeByteTag(NBT_SHOW_ARMS, true);
+		if (isSmall())
+			writer.writeByteTag(NBT_SMALL, true);
 	}
 
 }

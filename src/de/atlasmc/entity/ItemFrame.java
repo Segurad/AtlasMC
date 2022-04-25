@@ -5,7 +5,7 @@ import java.util.List;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.inventory.ItemStack;
 
-public interface ItemFrame {
+public interface ItemFrame extends Entity {
 
 	public ItemStack getItem();
 	
@@ -19,12 +19,20 @@ public interface ItemFrame {
 	
 	public void setFixed(boolean fixed);
 	
+	/**
+	 * Returns whether or not this {@link ItemFrame} will stay at its position when the block it is on gets removed
+	 * @return fixed
+	 */
 	public boolean isFixed();
 	
 	public BlockFace getOrientation();
 	
 	public void setOrientation(BlockFace orientation);
 
+	public void setItemDropChance(float chance);
+	
+	public float getItemDropChance();
+	
 	public static enum Rotation {
 		NONE,
 		CLOCKWISE_45,

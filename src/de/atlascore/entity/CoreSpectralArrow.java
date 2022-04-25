@@ -1,20 +1,59 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.SpectralArrow;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreSpectralArrow extends CoreAbstractArrow implements SpectralArrow {
 
+	protected static final NBTFieldContainer NBT_FIELDS;
+	
+	protected static final String
+	NBT_DURATION = "Duration";
+	
+	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreAbstractProjectile.NBT_FIELDS);
+		NBT_FIELDS.setField(NBT_DURATION, (holder, reader) -> {
+			((SpectralArrow) holder).setDuration(reader.readIntTag());
+		});
+	}
+	
+	private int duration;
+	
 	public CoreSpectralArrow(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
+	}
+	
+	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
 	}
 
 	@Override
 	public ProjectileType getProjectileType() {
 		return ProjectileType.SPECTRAL_ARROW;
+	}
+
+	@Override
+	public void setDuration(int ticks) {
+		this.duration = ticks;
+	}
+
+	@Override
+	public int getDuration() {
+		return duration;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		super.toNBT(writer, systemData);
+		writer.writeIntTag(NBT_DURATION, getDuration());
 	}
 
 }

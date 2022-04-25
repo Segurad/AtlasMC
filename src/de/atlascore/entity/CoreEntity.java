@@ -227,10 +227,19 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	}
 
 	@Override
-	public boolean isInvisble() {
+	public boolean isInvisible() {
 		return (metaContainer.getData(META_ENTITY_FLAGS) & 0x20) == 0x20;
 	}
 
+	@Override
+	public void setInvisible(boolean invisible) {
+		MetaData<Byte> data = this.metaContainer.get(META_ENTITY_FLAGS);
+		if (invisible)
+			data.setData((byte) (data.getData() | 0x20));
+		else
+			data.setData((byte) (data.getData() & 0xDF));
+	}
+	
 	@Override
 	public boolean isGlowing() {
 		return glowing;

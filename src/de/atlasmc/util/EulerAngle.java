@@ -41,6 +41,12 @@ public class EulerAngle {
 	public void setZ(float z) {
 		this.z = z;
 	}
+	
+	public void set(float x, float y, float z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
 
 	public void set(EulerAngle angle) {
 		this.x = angle.x;

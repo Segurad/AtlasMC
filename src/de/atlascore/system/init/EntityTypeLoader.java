@@ -80,7 +80,7 @@ public class EntityTypeLoader {
 		SALMON = new EntityType(NamespacedKey.MINECRAFT, "SALMON", CoreSalmon.class);
 		SHEEP = new EntityType(NamespacedKey.MINECRAFT, "SHEEP", CoreSheep.class);
 		SHULKER = new EntityType(NamespacedKey.MINECRAFT, "SHULKER", CoreShulker.class);
-		SHULKER_BULLET = new EntityType(NamespacedKey.MINECRAFT, "SHULKER_BULLET", null);
+		SHULKER_BULLET = new EntityType(NamespacedKey.MINECRAFT, "SHULKER_BULLET", CoreShulkerBullet.class);
 		SILVERFISH = new EntityType(NamespacedKey.MINECRAFT, "SILVERFISH", CoreSilverfish.class);
 		SKELETON = new EntityType(NamespacedKey.MINECRAFT, "SKELETON", CoreSkeleton.class);
 		SKELETON_HORSE = new EntityType(NamespacedKey.MINECRAFT, "SKELETON_HORNE", CoreSkeletonHorse.class);

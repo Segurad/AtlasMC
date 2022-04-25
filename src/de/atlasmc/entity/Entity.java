@@ -163,7 +163,9 @@ public interface Entity extends NBTHolder, Nameable, Tickable {
 	
 	public boolean isGlowing();
 	
-	public boolean isInvisble();
+	public boolean isInvisible();
+	
+	public void setInvisible(boolean invisible);
 	
 	public boolean isOnGround();
 	
