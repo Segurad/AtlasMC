@@ -20,7 +20,8 @@ public class CoreSuspiciousStewMeta extends CoreItemMeta implements SuspiciousSt
 	NBT_AMBIENT = "Ambient",
 	NBT_AMPLIFIER = "Amplifier",
 	NBT_DURATION = "Duration",
-	NBT_SHOW_PARTICLES = "ShowParticles";
+	NBT_SHOW_PARTICLES = "ShowParticles",
+	NBT_SHOW_ICON = "ShowIcon";
 	
 	static {
 		NBT_FIELDS.getContainer(NBT_ATLASMC).setField(SUSPICIOUS_STEW_EFFECTS, (holder, reader) -> {
@@ -33,6 +34,7 @@ public class CoreSuspiciousStewMeta extends CoreItemMeta implements SuspiciousSt
 					int duration = 0;
 					int id = -1;
 					boolean showParticles = true;
+					boolean showIcon = true;
 					while (reader.getType() != TagType.TAG_END) {
 						switch (reader.getFieldName()) {
 						case NBT_AMBIENT:
@@ -50,18 +52,21 @@ public class CoreSuspiciousStewMeta extends CoreItemMeta implements SuspiciousSt
 						case NBT_SHOW_PARTICLES:
 							showParticles = reader.readByteTag() == 1;
 							break;
+						case NBT_SHOW_ICON:
+							showIcon = reader.readByteTag() == 1;
+							break;
 						default:
 							reader.skipTag();
 							break;
 						}
-						PotionEffectType type = PotionEffectType.getByID(id);
-						if (duration <= 0 || type == null) {
-							reader.readNextEntry();
-							continue;
-						}
-						reader.readNextEntry();
-						meta.addCustomEffect(new PotionEffect(type, duration, amplifier, reduceAmbient, showParticles), false);
 					}
+					PotionEffectType type = PotionEffectType.getByID(id);
+					if (duration <= 0 || type == null) {
+						reader.readNextEntry();
+						continue;
+					}
+					reader.readNextEntry();
+					meta.addCustomEffect(new PotionEffect(type, duration, amplifier, reduceAmbient, showParticles, showIcon), false);
 				}
 			} else ((ItemMeta) holder).getCustomTagContainer().addSystemTag(reader.readNBT());
 		});
@@ -169,6 +174,7 @@ public class CoreSuspiciousStewMeta extends CoreItemMeta implements SuspiciousSt
 				writer.writeIntTag(NBT_DURATION, effect.getDuration());
 				writer.writeIntTag(NBT_ID, effect.getType().getID());
 				writer.writeByteTag(NBT_SHOW_PARTICLES, effect.hasParticels());
+				writer.writeByteTag(NBT_SHOW_ICON, effect.isShowingIcon());
 				writer.writeEndTag();
 			}
 		}

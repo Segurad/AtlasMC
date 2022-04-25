@@ -43,6 +43,7 @@ public class CoreAreaEffectCloud extends CoreEntity implements AreaEffectCloud {
 	NBT_AMBIENT = "Ambient",
 	NBT_AMPLIFIER = "Amplifier",
 	NBT_SHOW_PARTICLES = "ShowParticles",
+	NBT_SHOW_ICON = "ShowIcon",
 	NBT_OWNER = "Owner",
 	NBT_PARTICLE = "Particle",
 	NBT_RADIUS = "Radius",
@@ -79,6 +80,7 @@ public class CoreAreaEffectCloud extends CoreEntity implements AreaEffectCloud {
 					int duration = 0;
 					int id = -1;
 					boolean showParticles = true;
+					boolean showIcon = true;
 					while (reader.getType() != TagType.TAG_END) {
 						switch (reader.getFieldName()) {
 						case NBT_AMBIENT:
@@ -96,18 +98,21 @@ public class CoreAreaEffectCloud extends CoreEntity implements AreaEffectCloud {
 						case NBT_SHOW_PARTICLES:
 							showParticles = reader.readByteTag() == 1;
 							break;
+						case NBT_SHOW_ICON:
+							showIcon = reader.readByteTag() == 1;
+							break;
 						default:
 							reader.skipTag();
 							break;
 						}
-						PotionEffectType type = PotionEffectType.getByID(id);
-						if (duration <= 0 || type == null) {
-							reader.readNextEntry();
-							continue;
-						}
-						reader.readNextEntry();
-						entity.addPotionEffect(new PotionEffect(type, duration, amplifier, reduceAmbient, showParticles));
 					}
+					PotionEffectType type = PotionEffectType.getByID(id);
+					if (duration <= 0 || type == null) {
+						reader.readNextEntry();
+						continue;
+					}
+					reader.readNextEntry();
+					entity.addPotionEffect(new PotionEffect(type, duration, amplifier, reduceAmbient, showParticles, showIcon));
 				}
 			} else reader.skipTag();
 		});
@@ -350,6 +355,7 @@ public class CoreAreaEffectCloud extends CoreEntity implements AreaEffectCloud {
 				writer.writeIntTag(NBT_DURATION, effect.getDuration());
 				writer.writeIntTag(NBT_ID, effect.getType().getID());
 				writer.writeByteTag(NBT_SHOW_PARTICLES, effect.hasParticels());
+				writer.writeByteTag(NBT_SHOW_ICON, effect.isShowingIcon());
 				writer.writeEndTag();
 			}
 		}

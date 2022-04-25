@@ -5,13 +5,15 @@ public class PotionEffect implements Cloneable {
 	private final PotionEffectType type;
 	private int duration;
 	private final int amplifier;
-	private final boolean reduceAmbient, showParticels;
+	private final boolean reduceAmbient;
+	private final boolean showParticels;
+	private final boolean showIcon;
 
 	public PotionEffect(PotionEffectType type, int duration, int amplifier) {
-		this(type, duration, amplifier, false, true);
+		this(type, duration, amplifier, false, true, true);
 	}
 	
-	public PotionEffect(PotionEffectType type, int duration, int amplifier, boolean reduceAmbient, boolean showParticles) {
+	public PotionEffect(PotionEffectType type, int duration, int amplifier, boolean reduceAmbient, boolean showParticles, boolean showIcon) {
 		if (amplifier < 0 || amplifier > 127)
 			amplifier = 0;
 		this.amplifier = amplifier;
@@ -19,6 +21,7 @@ public class PotionEffect implements Cloneable {
 		this.reduceAmbient = reduceAmbient;
 		this.showParticels = showParticles;
 		this.duration = duration;
+		this.showIcon = showIcon;
 	}
 
 	public PotionEffect clone() {
@@ -55,6 +58,10 @@ public class PotionEffect implements Cloneable {
 		return showParticels;
 	}
 	
+	public boolean isShowingIcon() {
+		return showIcon;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null)
@@ -73,6 +80,8 @@ public class PotionEffect implements Cloneable {
 		if (hasParticels() != effect.hasParticels())
 			return false;
 		if (!getType().equals(effect.getType()))
+			return false;
+		if (isShowingIcon() != effect.isShowingIcon())
 			return false;
 		return true;
 	}

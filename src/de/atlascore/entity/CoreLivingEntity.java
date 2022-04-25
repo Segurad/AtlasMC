@@ -77,6 +77,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	NBT_AMPLIFIER = "Amplifier",
 	NBT_DURATION = "Duration",
 	NBT_SHOW_PARTICLES = "ShowParticles",
+	NBT_SHOW_ICON = "ShowIcon",
 	NBT_ATTRIBUTES = "Attributes",
 	NBT_NAME = "Name",
 	NBT_BASE = "Base",
@@ -117,6 +118,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 					int duration = 0;
 					int id = -1;
 					boolean showParticles = true;
+					boolean showIcon = true;
 					while (reader.getType() != TagType.TAG_END) {
 						switch (reader.getFieldName()) {
 						case NBT_AMBIENT:
@@ -134,18 +136,21 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 						case NBT_SHOW_PARTICLES:
 							showParticles = reader.readByteTag() == 1;
 							break;
+						case NBT_SHOW_ICON:
+							showIcon = reader.readByteTag() == 1;
+							break;
 						default:
 							reader.skipTag();
 							break;
 						}
-						PotionEffectType type = PotionEffectType.getByID(id);
-						if (duration <= 0 || type == null) {
-							reader.readNextEntry();
-							continue;
-						}
-						reader.readNextEntry();
-						entity.addPotionEffect(new PotionEffect(type, duration, amplifier, reduceAmbient, showParticles));
 					}
+					PotionEffectType type = PotionEffectType.getByID(id);
+					if (duration <= 0 || type == null) {
+						reader.readNextEntry();
+						continue;
+					}
+					reader.readNextEntry();
+					entity.addPotionEffect(new PotionEffect(type, duration, amplifier, reduceAmbient, showParticles, showIcon));
 				}
 			} else reader.skipTag();
 		});
@@ -599,11 +604,12 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 			writer.writeListTag(NBT_ACTIVE_EFFECTS, TagType.COMPOUND, activeEffects.size());
 			for (PotionEffect effect : activeEffects) {
 				writer.writeCompoundTag();
-				if (effect.hasReducedAmbient()) writer.writeByteTag(NBT_AMBIENT, true);
+				writer.writeByteTag(NBT_AMBIENT, effect.hasReducedAmbient());
 				writer.writeByteTag(NBT_AMPLIFIER, effect.getAmplifier());
 				writer.writeIntTag(NBT_DURATION, effect.getDuration());
 				writer.writeByteTag(NBT_ID, effect.getType().getID());
-				if (!effect.hasParticels()) writer.writeByteTag(NBT_SHOW_PARTICLES, false);
+				writer.writeByteTag(NBT_SHOW_PARTICLES, effect.hasParticels());
+				writer.writeByteTag(NBT_SHOW_ICON, effect.isShowingIcon());
 				writer.writeEndTag();
 			}
 		}
