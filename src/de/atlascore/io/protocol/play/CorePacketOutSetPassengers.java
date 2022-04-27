@@ -51,4 +51,14 @@ public class CorePacketOutSetPassengers extends AbstractPacket implements Packet
 		return passengerIDs;
 	}
 
+	@Override
+	public void setVehicleID(int id) {
+		this.vehicleID = id;
+	}
+
+	@Override
+	public void setPassengers(int[] passengers) {
+		this.passengerIDs = passengers;
+	}
+
 }

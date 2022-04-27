@@ -257,6 +257,4 @@ public interface Entity extends NBTHolder, Nameable, Tickable {
 	
 	public ViewerSet<Entity, Player> getViewers();
 	
-	public void sendMetadata(Player player);
-	
 }

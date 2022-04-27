@@ -27,7 +27,8 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 			PacketOutSpawnPlayer packet = con.createPacket(PacketOutSpawnPlayer.class);
 			packet.setEntity((HumanEntity) holder);
 			con.sendPacked(packet);
-			holder.sendMetadata(viewer);
+			((CoreHumanEntity) holder).sendMetadata(viewer);
+			((CoreHumanEntity) holder).sendEntityEffects(viewer);
 		};
 	
 	protected static final MetaDataField<Float>

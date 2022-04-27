@@ -5,11 +5,21 @@ import java.io.IOException;
 import de.atlascore.io.protocol.CoreProtocolAdapter;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutEntityEffect;
+import de.atlasmc.potion.PotionEffect;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutEntityEffect extends AbstractPacket implements PacketOutEntityEffect {
 
-	private int flags, entityID, effectID, amplifier, duration;
+	protected static final int
+	FLAG_IS_AMBIENT = 0x01,
+	FLAG_SHOW_PARTICLES = 0x02,
+	FLAG_SHOW_ICON = 0x04;
+	
+	private int flags;
+	private int entityID;
+	private int effectID;
+	private int amplifier;
+	private int duration;
 	
 	public CorePacketOutEntityEffect() {
 		super(CoreProtocolAdapter.VERSION);
@@ -21,9 +31,12 @@ public class CorePacketOutEntityEffect extends AbstractPacket implements PacketO
 		this.entityID = entityID;
 		this.effectID = effectID;
 		this.duration = duration;
-		if (isAmbient) flags += 0x01;
-		if (showParticles) flags += 0x02;
-		if (showIcon) flags += 0x04;
+		if (isAmbient) 
+			flags |= FLAG_IS_AMBIENT;
+		if (showParticles) 
+			flags |= FLAG_SHOW_PARTICLES;
+		if (showIcon) 
+			flags |= FLAG_SHOW_ICON;
 	}
 
 	@Override
@@ -77,6 +90,25 @@ public class CorePacketOutEntityEffect extends AbstractPacket implements PacketO
 	@Override
 	public boolean getShowIcon() {
 		return (flags & 0x04) == 0x04;
+	}
+
+	@Override
+	public void setEntityID(int id) {
+		this.entityID = id;
+	}
+
+	@Override
+	public void setEffect(PotionEffect effect) {
+		effectID = effect.getType().getID();
+		amplifier = effect.getAmplifier();
+		duration = effect.getDuration();
+		flags = 0;
+		if (effect.hasReducedAmbient())
+			flags |= FLAG_IS_AMBIENT;
+		if (effect.hasParticels())
+			flags |= FLAG_SHOW_PARTICLES;
+		if (effect.isShowingIcon())
+			flags |= FLAG_SHOW_ICON;
 	}
 
 }

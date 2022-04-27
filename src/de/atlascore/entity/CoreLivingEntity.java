@@ -22,6 +22,8 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.protocol.PlayerConnection;
+import de.atlasmc.io.protocol.play.PacketOutEntityEffect;
+import de.atlasmc.io.protocol.play.PacketOutRemoveEntityEffect;
 import de.atlasmc.io.protocol.play.PacketOutSpawnLivingEntity;
 import de.atlasmc.potion.PotionEffect;
 import de.atlasmc.potion.PotionEffectType;
@@ -43,7 +45,8 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 			PacketOutSpawnLivingEntity packet = con.createPacket(PacketOutSpawnLivingEntity.class);
 			packet.setEntity((LivingEntity) holder);
 			con.sendPacked(packet);
-			holder.sendMetadata(viewer);
+			((CoreLivingEntity) holder).sendMetadata(viewer);
+			((CoreLivingEntity) holder).sendEntityEffects(viewer);
 		};
 	
 	/**
@@ -392,7 +395,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	public CoreLivingEntity(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
 	}
-	
+
 	@Override
 	protected NBTFieldContainer getFieldContainerRoot() {
 		return NBT_FIELDS;
@@ -759,6 +762,36 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		if (!hasPotionEffects())
 			return;
 		activeEffects.remove(effect);
+	}
+	
+	protected void sendAddEntityEffect(PotionEffect effect) {
+		for (Player viewer : viewers) {
+			PlayerConnection con = viewer.getConnection();
+			PacketOutEntityEffect packet = con.createPacket(PacketOutEntityEffect.class);
+			packet.setEntityID(getID());
+			packet.setEffect(effect);
+			con.sendPacked(packet);
+		}
+	}
+	
+	protected void sendRemoveEntityEffect(PotionEffectType type) {
+		for (Player viewer : viewers) {
+			PlayerConnection con = viewer.getConnection();
+			PacketOutRemoveEntityEffect packet = con.createPacket(PacketOutRemoveEntityEffect.class);
+			packet.setEntityID(getID());
+			packet.setEffectID(type.getID());
+			con.sendPacked(packet);
+		}
+	}
+	
+	protected void sendEntityEffects(Player viewer) {
+		PlayerConnection con = viewer.getConnection();
+		for (PotionEffect effect : getPotionEffects()) {
+			PacketOutEntityEffect packet = con.createPacket(PacketOutEntityEffect.class);
+			packet.setEntityID(getID());
+			packet.setEffect(effect);
+			con.sendPacked(packet);
+		}
 	}
 
 }

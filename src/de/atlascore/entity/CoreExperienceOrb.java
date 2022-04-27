@@ -26,7 +26,7 @@ public class CoreExperienceOrb extends CoreEntity implements ExperienceOrb {
 			packet.setLocation(holder.getX(), holder.getY(), holder.getZ());
 			packet.setExperience(((ExperienceOrb) holder).getExperience());
 			con.sendPacked(packet);
-			holder.sendMetadata(viewer);
+			((CoreExperienceOrb) holder).sendMetadata(viewer);
 		};
 	
 	protected static final NBTFieldContainer NBT_FIELDS;

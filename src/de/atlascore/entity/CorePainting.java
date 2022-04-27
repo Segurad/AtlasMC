@@ -26,7 +26,7 @@ public class CorePainting extends CoreEntity implements Painting {
 			PacketOutSpawnPainting spawn = con.createPacket(PacketOutSpawnPainting.class);
 			spawn.setEntity((Painting) holder);
 			con.sendPacked(spawn);
-			holder.sendMetadata(viewer);
+			((CorePainting) holder).sendMetadata(viewer);
 		};
 
 	protected static final NBTFieldContainer NBT_FIELDS;

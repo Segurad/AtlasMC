@@ -7,7 +7,12 @@ import de.atlasmc.io.PacketOutbound;
 public interface PacketOutSetPassengers extends PacketPlay, PacketOutbound {
 	
 	public int getVehicleID();
+	
 	public int[] getPassengers();
+	
+	public void setVehicleID(int id);
+	
+	public void setPassengers(int[] passengers);
 	
 	@Override
 	public default int getDefaultID() {

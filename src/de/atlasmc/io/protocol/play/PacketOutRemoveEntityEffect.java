@@ -7,7 +7,12 @@ import de.atlasmc.io.PacketOutbound;
 public interface PacketOutRemoveEntityEffect extends PacketPlay, PacketOutbound {
 	
 	public int getEntityID();
+	
 	public int getEffectID();
+	
+	public void setEntityID(int id);
+	
+	public void setEffectID(int id);
 	
 	@Override
 	default int getDefaultID() {

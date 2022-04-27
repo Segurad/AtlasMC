@@ -10,7 +10,8 @@ import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutRemoveEntityEffect extends AbstractPacket implements PacketOutRemoveEntityEffect {
 
-	private int entityID, effectID;
+	private int entityID;
+	private int effectID;
 	
 	public CorePacketOutRemoveEntityEffect() {
 		super(CoreProtocolAdapter.VERSION);
@@ -42,6 +43,16 @@ public class CorePacketOutRemoveEntityEffect extends AbstractPacket implements P
 	@Override
 	public int getEffectID() {
 		return effectID;
+	}
+
+	@Override
+	public void setEntityID(int id) {
+		this.entityID = id;
+	}
+
+	@Override
+	public void setEffectID(int id) {
+		this.effectID = id;
 	}
 
 }

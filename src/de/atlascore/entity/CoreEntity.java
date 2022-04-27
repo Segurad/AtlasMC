@@ -25,6 +25,7 @@ import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutDestroyEntities;
 import de.atlasmc.io.protocol.play.PacketOutEntityMetadata;
 import de.atlasmc.io.protocol.play.PacketOutEntityTeleport;
+import de.atlasmc.io.protocol.play.PacketOutSetPassengers;
 import de.atlasmc.io.protocol.play.PacketOutSpawnEntity;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.nbt.AbstractNBTBase;
@@ -44,7 +45,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 			PacketOutSpawnEntity packet = con.createPacket(PacketOutSpawnEntity.class);
 			packet.setEntity(holder);
 			con.sendPacked(packet);
-			holder.sendMetadata(viewer);
+			((CoreEntity) holder).sendMetadata(viewer);
 		},
 		VIEWER_REMOVE_FUNCTION = (holder, viewer) -> {
 			PlayerConnection con = viewer.getConnection();
@@ -629,14 +630,20 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	 */
 	protected void update() {
 		if (passengersChanged) {
+			passengersChanged = false;
 			int[] passengerIDs = new int[passengers.size()];
 			int index = 0;
 			for (Entity ent : passengers)
 				passengerIDs[index++] = ent.getID();
-			// TODO submit update to chunk viewers
-			passengersChanged = false;
+			for (Player viewer : viewers) {
+				PlayerConnection con = viewer.getConnection();
+				PacketOutSetPassengers packet = con.createPacket(PacketOutSetPassengers.class);
+				packet.setVehicleID(getID());
+				packet.setPassengers(passengerIDs);
+			}
 		}
 		if (teleported) {
+			teleported = false;
 			for (Player viewer : viewers) {
 				PlayerConnection con = viewer.getConnection();
 				PacketOutEntityTeleport packet = con.createPacket(PacketOutEntityTeleport.class);
@@ -645,7 +652,6 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 				packet.setOnGround(isOnGround());
 				con.sendPacked(packet);
 			}
-			teleported = false;
 		}
 		if (metaContainer.hasChanges()) {
 			for (Player viewer : viewers) {
@@ -693,8 +699,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 		return viewers;
 	}
 
-	@Override
-	public void sendMetadata(Player player) {
+	protected void sendMetadata(Player player) {
 		PlayerConnection con = player.getConnection();
 		PacketOutEntityMetadata packet = con.getProtocol().createPacket(PacketOutEntityMetadata.class);
 		packet.setEntityID(getID());
