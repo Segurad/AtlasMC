@@ -1,5 +1,7 @@
 package de.atlasmc.potion;
 
+import de.atlasmc.entity.Entity;
+
 public class PotionEffect implements Cloneable {
 	
 	private final PotionEffectType type;
@@ -35,6 +37,18 @@ public class PotionEffect implements Cloneable {
 
 	public PotionEffectType getType() {
 		return type;
+	}
+	
+	/**
+	 * Ticks this {@link PotionEffect}
+	 * @param entity
+	 * @param active if false only time will be reduced
+	 * @return the remaining duration
+	 */
+	public int tick(Entity entity, boolean active) {
+		if (active)
+			type.tick(entity, amplifier, duration);
+		return --duration;
 	}
 
 	public static PotionEffect createByPotionID(int id) {
