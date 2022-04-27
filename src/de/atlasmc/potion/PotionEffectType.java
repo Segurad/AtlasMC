@@ -3,8 +3,6 @@ package de.atlasmc.potion;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.atlasmc.entity.Entity;
-
 public abstract class PotionEffectType {
 
 	public static PotionEffectType
@@ -55,24 +53,11 @@ public abstract class PotionEffectType {
 		BY_ID.put(id, this);
 	}
 	
-	/**
-	 * This method is called when the effect is added to an {@link Entity}
-	 * @param entity
-	 * @param amplifier
-	 * @param duration
-	 * @return
-	 */
-	public abstract void addEffect(Entity entity, int amplifier, int duration);
+	public PotionEffect createEffect(int amplifier, int duration) {
+		return createEffect(amplifier, duration);
+	}
 	
-	public abstract void removeEffect(Entity entity, int amplifier, int duration);
-	
-	public abstract void tick(Entity entity, int amplifier, int duration);
-	
-	/**
-	 * Returns whether or not this effect will only do something when applied to a entity
-	 * @return false if it does tick or needs {@link #removeEffect(Entity, int, int)}
-	 */
-	public abstract boolean isOnlyOnApply();
+	public abstract PotionEffect createEffect(int amplifier, int duration, boolean reducedAmbient, boolean particles, boolean icon);
 	
 	public final int getID() {
 		return id;

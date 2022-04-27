@@ -2,102 +2,44 @@ package de.atlasmc.potion;
 
 import de.atlasmc.entity.Entity;
 
-public class PotionEffect implements Cloneable {
+public interface PotionEffect extends Cloneable {
 	
-	private final PotionEffectType type;
-	private int duration;
-	private final int amplifier;
-	private final boolean reduceAmbient;
-	private final boolean showParticels;
-	private final boolean showIcon;
-
-	public PotionEffect(PotionEffectType type, int duration, int amplifier) {
-		this(type, duration, amplifier, false, true, true);
-	}
+	public PotionEffect clone();
 	
-	public PotionEffect(PotionEffectType type, int duration, int amplifier, boolean reduceAmbient, boolean showParticles, boolean showIcon) {
-		if (amplifier < 0 || amplifier > 127)
-			amplifier = 0;
-		this.amplifier = amplifier;
-		this.type = type;
-		this.reduceAmbient = reduceAmbient;
-		this.showParticels = showParticles;
-		this.duration = duration;
-		this.showIcon = showIcon;
-	}
-
-	public PotionEffect clone() {
-		try {
-			return (PotionEffect) super.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public PotionEffectType getType() {
-		return type;
-	}
+	/**
+	 * Called when this PotionEffect is set active for its {@link Entity}
+	 */
+	public abstract void addEffect(Entity entity);
+	
+	/**
+	 * Called when this PotionEffect is set inactive for its {@link Entity}
+	 */
+	public abstract void removeEffect(Entity entity);
+	
+	/**
+	 * Returns whether or not this effect will only do something when applied to a entity
+	 * @return false if it does not tick or need {@link #removeEffect()}
+	 */
+	public boolean isOnlyOnApply();
+	
+	public PotionEffectType getType();
 	
 	/**
 	 * Ticks this {@link PotionEffect}
-	 * @param entity
 	 * @param active if false only time will be reduced
+	 * @param the entity it ticks for
 	 * @return the remaining duration
 	 */
-	public int tick(Entity entity, boolean active) {
-		if (active)
-			type.tick(entity, amplifier, duration);
-		return --duration;
-	}
+	public int tick(Entity entity, boolean active);
 
-	public static PotionEffect createByPotionID(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public boolean hasReducedAmbient();
 
-	public boolean hasReducedAmbient() {
-		return reduceAmbient;
-	}
+	public int getAmplifier();
 
-	public int getAmplifier() {
-		return amplifier;
-	}
+	public int getDuration();
 
-	public int getDuration() {
-		return duration;
-	}
-
-	public boolean hasParticels() {
-		return showParticels;
-	}
+	public boolean hasParticels();
 	
-	public boolean isShowingIcon() {
-		return showIcon;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null)
-			return false;
-		if (obj == this)
-			return true;
-		if (getClass() != obj.getClass())
-			return false;
-		PotionEffect effect = (PotionEffect) obj;
-		if (getAmplifier() != effect.getAmplifier())
-			return false;
-		if (getDuration() != effect.getDuration())
-			return false;
-		if (hasReducedAmbient() != effect.hasReducedAmbient())
-			return false;
-		if (hasParticels() != effect.hasParticels())
-			return false;
-		if (!getType().equals(effect.getType()))
-			return false;
-		if (isShowingIcon() != effect.isShowingIcon())
-			return false;
-		return true;
-	}
+	public boolean isShowingIcon();
 
 }

@@ -64,6 +64,14 @@ public interface LivingEntity extends Damageable, Attributeable {
 	
 	public void setAbsorption(float absorption);
 
+	public void addPotionEffect(PotionEffectType type, int amplifier, int duration);
+	
+	public void addPotionEffect(PotionEffectType type, int amplifier, int duration, boolean reducedAmbient, boolean particles, boolean icon);
+	
+	/**
+	 * Creates a copy of the effect and applies it to this Entity
+	 * @param effect
+	 */
 	public void addPotionEffect(PotionEffect effect);
 	
 	public Collection<PotionEffect> getActivePotionEffects();

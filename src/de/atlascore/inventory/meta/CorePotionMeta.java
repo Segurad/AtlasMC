@@ -75,7 +75,7 @@ public class CorePotionMeta extends CoreItemMeta implements PotionMeta {
 						continue;
 					}
 					reader.readNextEntry();
-					meta.addCustomEffect(new PotionEffect(type, duration, amplifier, reduceAmbient, showParticles, showIcon));
+					meta.addCustomEffect(type.createEffect(amplifier, duration, reduceAmbient, showParticles, showIcon));
 				}
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});

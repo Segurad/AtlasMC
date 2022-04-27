@@ -112,7 +112,7 @@ public class CoreAreaEffectCloud extends CoreEntity implements AreaEffectCloud {
 						continue;
 					}
 					reader.readNextEntry();
-					entity.addPotionEffect(new PotionEffect(type, duration, amplifier, reduceAmbient, showParticles, showIcon));
+					entity.addPotionEffect(type.createEffect(amplifier, duration, reduceAmbient, showParticles, showIcon));
 				}
 			} else reader.skipTag();
 		});

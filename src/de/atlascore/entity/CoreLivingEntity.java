@@ -157,7 +157,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 						continue;
 					}
 					reader.readNextEntry();
-					entity.addPotionEffect(new PotionEffect(type, duration, amplifier, reduceAmbient, showParticles, showIcon));
+					entity.addPotionEffect(type, amplifier, duration, reduceAmbient, showParticles, showIcon);
 				}
 			} else reader.skipTag();
 		});
@@ -574,14 +574,30 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	}
 
 	@Override
+	public void addPotionEffect(PotionEffectType type, int amplifier, int duration) {
+		internalAddPotionEffect(type.createEffect(amplifier, duration));
+	}
+	
+	@Override
+	public void addPotionEffect(PotionEffectType type, int amplifier, int duration, boolean reducedAmbient, boolean particles, boolean icon) {
+		internalAddPotionEffect(type.createEffect(amplifier, duration, reducedAmbient, particles, icon));
+	}
+	
+	@Override
 	public void addPotionEffect(PotionEffect effect) {
+		internalAddPotionEffect(effect.clone());	
+	}
+	
+	private void internalAddPotionEffect(PotionEffect effect) {
+		if (effect.isOnlyOnApply()) {
+			effect.addEffect(this);
+			return;
+		}
 		if (activeEffects == null)
 			activeEffects = new HashMap<>();
 		PotionEffectType type = effect.getType();
-		if (type.isOnlyOnApply()) {
-			type.addEffect(this, effect.getAmplifier(), effect.getDuration());
-		}
 		PotionEffect activeEffect = activeEffects.get(type);
+		effect = effect.clone();
 		if (activeEffect == null) {
 			activeEffects.put(type, effect);
 		} else if (activeEffect.getAmplifier() > effect.getAmplifier() 
@@ -598,6 +614,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 				effects = new ArrayList<>();
 			effects.add(activeEffect);
 		}
+		effect.addEffect(this);
 		sendAddEntityEffect(effect);
 	}
 
@@ -803,32 +820,13 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 			return;
 		if (!activeEffects.containsKey(type))
 			return;
-		if (effects != null) {
-			PotionEffect highestEffect = null;
-			int index = 0;
-			for (PotionEffect effect : effects) {
-				index++;
-				if (effect.getType() != type)
-					continue;
-				if (highestEffect == null) {
-					effect = highestEffect;
-					continue;
-				}
-				if (highestEffect.getAmplifier() > effect.getAmplifier())
-					continue;
-				if (highestEffect.getAmplifier() == effect.getAmplifier() && 
-						highestEffect.getDuration() >= effect.getDuration())
-					continue;
-				highestEffect = effect;
-			}
-			if (highestEffect != null) {
-				activeEffects.replace(type, highestEffect);
-				effects.remove(index);
-				sendAddEntityEffect(highestEffect);
-				return;
+		if (effects != null || !effects.isEmpty()) {
+			for (int i = 0; i < effects.size(); i++) {
+				if (effects.get(i).getType() == type)
+					effects.remove(i--);
 			}
 		}
-		activeEffects.remove(type);
+		activeEffects.remove(type).removeEffect(this);
 		sendRemoveEntityEffect(type);
 	}
 	
@@ -882,24 +880,31 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 					continue;
 				// remove expired active effect and try to replace
 				activeEffect = null;
+				int highest = 0;
 				int index = 0;
 				for (PotionEffect effect : effects) {
-					index++;
-					if (effect.getType() != type)
+					if (effect.getType() != type) {
+						index++;
 						continue;
+					}
 					if (activeEffect == null) {
 						activeEffect = effect;
+						highest = index++;
 						continue;
 					}
 					if (activeEffect.getAmplifier() > effect.getAmplifier() ||
 							activeEffect.getAmplifier() == effect.getAmplifier() && 
-							activeEffect.getDuration() >= effect.getDuration())
+							activeEffect.getDuration() >= effect.getDuration()) {
+						index++;
 						continue;
+					}
 					activeEffect = effect;
+					highest = index++;
 				}
 				if (activeEffect != null) {
-					activeEffects.replace(type, activeEffect);
-					effects.remove(index);
+					activeEffects.replace(type, activeEffect).removeEffect(this);
+					effects.remove(highest);
+					activeEffect.addEffect(this);
 					sendAddEntityEffect(activeEffect);
 				} else {
 					it.remove();

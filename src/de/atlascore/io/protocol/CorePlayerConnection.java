@@ -123,6 +123,7 @@ import de.atlasmc.io.protocol.play.PacketInWindowConfirmation;
 import de.atlasmc.io.protocol.play.PacketOutKeepAlive;
 import de.atlasmc.io.protocol.play.PacketOutWindowConfirmation;
 import de.atlasmc.potion.PotionEffect;
+import de.atlasmc.potion.PotionEffectType;
 import de.atlasmc.recipe.RecipeBook;
 import de.atlasmc.io.protocol.play.PacketInAdvancementTab.Action;
 
@@ -610,11 +611,11 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInSetBeaconEffect packet) {
-		int primaryID = packet.getPrimaryEffect();
-		int secondaryID = packet.getSecondaryEffect();
-		PotionEffect primary = PotionEffect.createByPotionID(primaryID);
-		PotionEffect secondary = PotionEffect.createByPotionID(secondaryID);
-		HandlerList.callEvent(new BeaconEffectChangeEvent(player.getOpenInventory(), primary, secondary, primaryID, secondaryID));
+		// int primaryID = packet.getPrimaryEffect();
+		// int secondaryID = packet.getSecondaryEffect();
+		// PotionEffect primary = PotionEffectType.createByPotionID(primaryID); TODO research for ids
+		// PotionEffect secondary = PotionEffectType.createByPotionID(secondaryID);
+		// HandlerList.callEvent(new BeaconEffectChangeEvent(player.getOpenInventory(), primary, secondary, primaryID, secondaryID));
 	}
 
 	@Override

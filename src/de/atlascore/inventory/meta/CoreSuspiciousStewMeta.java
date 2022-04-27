@@ -66,7 +66,7 @@ public class CoreSuspiciousStewMeta extends CoreItemMeta implements SuspiciousSt
 						continue;
 					}
 					reader.readNextEntry();
-					meta.addCustomEffect(new PotionEffect(type, duration, amplifier, reduceAmbient, showParticles, showIcon), false);
+					meta.addCustomEffect(type.createEffect(amplifier, duration, reduceAmbient, showParticles, showIcon), false);
 				}
 			} else ((ItemMeta) holder).getCustomTagContainer().addSystemTag(reader.readNBT());
 		});
