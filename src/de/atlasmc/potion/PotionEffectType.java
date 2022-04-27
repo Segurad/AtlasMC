@@ -56,19 +56,23 @@ public abstract class PotionEffectType {
 	}
 	
 	/**
-	 * This method is called when the effect is added to an {@link Entity} and it returns whether it will stay at this entity or not
+	 * This method is called when the effect is added to an {@link Entity}
 	 * @param entity
 	 * @param amplifier
 	 * @param duration
 	 * @return
 	 */
-	public abstract boolean addEffect(Entity entity, int amplifier, int duration);
+	public abstract void addEffect(Entity entity, int amplifier, int duration);
 	
 	public abstract void removeEffect(Entity entity, int amplifier, int duration);
 	
 	public abstract void tick(Entity entity, int amplifier, int duration);
 	
-	public abstract boolean isTicking();
+	/**
+	 * Returns whether or not this effect will only do something when applied to a entity
+	 * @return false if it does tick or needs {@link #removeEffect(Entity, int, int)}
+	 */
+	public abstract boolean isOnlyOnApply();
 	
 	public final int getID() {
 		return id;

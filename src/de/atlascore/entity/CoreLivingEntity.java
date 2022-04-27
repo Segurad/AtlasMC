@@ -2,7 +2,11 @@ package de.atlascore.entity;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 
@@ -386,11 +390,16 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		});
 	}
 	
-	private float health, absorption;
+	private float health;
+	private float absorption;
 	private List<AttributeInstance> attributes;
-	private List<PotionEffect> activeEffects;
-	private short deathAnimationTime, hurtTime, attackTime;
-	private boolean fallFlying, removeWhenFaraway;
+	private List<PotionEffect> effects;
+	private Map<PotionEffectType, PotionEffect> activeEffects;
+	private short deathAnimationTime;
+	private short hurtTime;
+	private short attackTime;
+	private boolean fallFlying;
+	private boolean removeWhenFaraway;
 	
 	public CoreLivingEntity(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
@@ -567,8 +576,29 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	@Override
 	public void addPotionEffect(PotionEffect effect) {
 		if (activeEffects == null)
-			activeEffects = new ArrayList<>();
-		activeEffects.add(effect);
+			activeEffects = new HashMap<>();
+		PotionEffectType type = effect.getType();
+		if (type.isOnlyOnApply()) {
+			type.addEffect(this, effect.getAmplifier(), effect.getDuration());
+		}
+		PotionEffect activeEffect = activeEffects.get(type);
+		if (activeEffect == null) {
+			activeEffects.put(type, effect);
+		} else if (activeEffect.getAmplifier() > effect.getAmplifier() 
+				|| (activeEffect.getAmplifier() == effect.getAmplifier() 
+				&& activeEffect.getDuration() >= effect.getDuration())) { 
+			// move new effect to effects when amplifier < or duration < when amplifier equals
+			if (effects != null)
+				effects = new ArrayList<>();
+			effects.add(effect);
+			return;
+		} else {
+			activeEffects.put(type, effect);
+			if (effects != null)
+				effects = new ArrayList<>();
+			effects.add(activeEffect);
+		}
+		sendAddEntityEffect(effect);
 	}
 
 	@Override
@@ -604,9 +634,9 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		super.toNBT(writer, systemData);
 		writer.writeFloatTag(NBT_ABSORPTION_AMOUNT, getAbsorption());
 		if (hasPotionEffects()) {
-			writer.writeListTag(NBT_ACTIVE_EFFECTS, TagType.COMPOUND, activeEffects.size());
-			for (PotionEffect effect : activeEffects) {
-				writer.writeCompoundTag();
+			int effectCount = activeEffects.size() + (effects != null ? effects.size() : 0);
+			writer.writeListTag(NBT_ACTIVE_EFFECTS, TagType.COMPOUND, effectCount);
+			for (PotionEffect effect : activeEffects.values()) {
 				writer.writeByteTag(NBT_AMBIENT, effect.hasReducedAmbient());
 				writer.writeByteTag(NBT_AMPLIFIER, effect.getAmplifier());
 				writer.writeIntTag(NBT_DURATION, effect.getDuration());
@@ -615,11 +645,20 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 				writer.writeByteTag(NBT_SHOW_ICON, effect.isShowingIcon());
 				writer.writeEndTag();
 			}
+			if (effects != null)
+				for (PotionEffect effect : effects) {
+					writer.writeByteTag(NBT_AMBIENT, effect.hasReducedAmbient());
+					writer.writeByteTag(NBT_AMPLIFIER, effect.getAmplifier());
+					writer.writeIntTag(NBT_DURATION, effect.getDuration());
+					writer.writeByteTag(NBT_ID, effect.getType().getID());
+					writer.writeByteTag(NBT_SHOW_PARTICLES, effect.hasParticels());
+					writer.writeByteTag(NBT_SHOW_ICON, effect.isShowingIcon());
+					writer.writeEndTag();
+				}
 		}
 		if (hasAttributes()) {
 			writer.writeListTag(NBT_ATTRIBUTES, TagType.COMPOUND, attributes.size());
 			for (AttributeInstance instance : attributes) {
-				writer.writeCompoundTag();
 				writer.writeStringTag(NBT_NAME, instance.getAttribute().getRawName());
 				writer.writeDoubleTag(NBT_BASE, instance.getBaseValue());
 				if (!instance.hasModifiers()) {
@@ -628,7 +667,6 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 				}
 				writer.writeListTag(NBT_MODIFIERS, TagType.COMPOUND, instance.getModifierCount());
 				for (AttributeModifier modifier : instance.getModifiers()) {
-					writer.writeCompoundTag();
 					writer.writeDoubleTag(NBT_AMOUNT, modifier.getAmount());
 					writer.writeStringTag(NBT_NAME, modifier.getName());
 					writer.writeIntTag(NBT_OPERATION, modifier.getOperation().getID());
@@ -660,16 +698,12 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 			}
 			if (equip.hasArmor()) {
 				writer.writeListTag(NBT_ARMOR_ITEMS, TagType.COMPOUND, 4);
-				writer.writeCompoundTag();
 				equip.getBoots().toNBT(writer, systemData);
 				writer.writeEndTag();
-				writer.writeCompoundTag();
 				equip.getLeggings().toNBT(writer, systemData);
 				writer.writeEndTag();
-				writer.writeCompoundTag();
 				equip.getChestplate().toNBT(writer, systemData);
 				writer.writeEndTag();
-				writer.writeCompoundTag();
 				equip.getHelmet().toNBT(writer, systemData);
 				writer.writeEndTag();
 			}
@@ -680,10 +714,8 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 			}
 			if (equip.hasHandItem()) {
 				writer.writeListTag(NBT_HAND_ITEMS, TagType.COMPOUND, 2);
-				writer.writeCompoundTag();
 				equip.getMainHand().toNBT(writer, systemData);
 				writer.writeEndTag();
-				writer.writeCompoundTag();
 				equip.getOffHand().toNBT(writer, systemData);
 				writer.writeEndTag();
 			}
@@ -746,22 +778,58 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	}
 
 	@Override
-	public List<PotionEffect> getPotionEffects() {
-		if (activeEffects == null)
-			activeEffects = new ArrayList<>();
-		return activeEffects;
+	public Collection<PotionEffect> getActivePotionEffects() {
+		return activeEffects == null ? List.of() : activeEffects.values();
 	}
 
 	@Override
 	public boolean hasPotionEffects() {
 		return activeEffects != null && !activeEffects.isEmpty();
 	}
+	
+	@Override
+	public boolean hasPotionEffect(PotionEffectType type) {
+		return activeEffects != null && activeEffects.containsKey(type);
+	}
+	
+	@Override
+	public PotionEffect getPotionEffect(PotionEffectType type) {
+		return activeEffects != null ? activeEffects.get(type) : null;
+	}
 
 	@Override
-	public void removePotionEffect(PotionEffect effect) {
+	public void removePotionEffect(PotionEffectType type) {
 		if (!hasPotionEffects())
 			return;
-		activeEffects.remove(effect);
+		if (!activeEffects.containsKey(type))
+			return;
+		if (effects != null) {
+			PotionEffect highestEffect = null;
+			int index = 0;
+			for (PotionEffect effect : effects) {
+				index++;
+				if (effect.getType() != type)
+					continue;
+				if (highestEffect == null) {
+					effect = highestEffect;
+					continue;
+				}
+				if (highestEffect.getAmplifier() > effect.getAmplifier())
+					continue;
+				if (highestEffect.getAmplifier() == effect.getAmplifier() && 
+						highestEffect.getDuration() >= effect.getDuration())
+					continue;
+				highestEffect = effect;
+			}
+			if (highestEffect != null) {
+				activeEffects.replace(type, highestEffect);
+				effects.remove(index);
+				sendAddEntityEffect(highestEffect);
+				return;
+			}
+		}
+		activeEffects.remove(type);
+		sendRemoveEntityEffect(type);
 	}
 	
 	protected void sendAddEntityEffect(PotionEffect effect) {
@@ -786,11 +854,58 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	
 	protected void sendEntityEffects(Player viewer) {
 		PlayerConnection con = viewer.getConnection();
-		for (PotionEffect effect : getPotionEffects()) {
+		for (PotionEffect effect : getActivePotionEffects()) {
 			PacketOutEntityEffect packet = con.createPacket(PacketOutEntityEffect.class);
 			packet.setEntityID(getID());
 			packet.setEffect(effect);
 			con.sendPacked(packet);
+		}
+	}
+	
+	@Override
+	protected void doTick() {
+		super.doTick();
+		if (hasPotionEffects()) {
+			if (effects != null && !effects.isEmpty()) {
+				for (int i = 0; i < effects.size(); i++) {
+					if (effects.get(i).tick(this, false) > -1)
+						continue;
+					effects.remove(i--);
+				}
+				
+			}
+			Iterator<PotionEffect> it = activeEffects.values().iterator();
+			while (it.hasNext()) {
+				PotionEffect activeEffect = it.next();
+				PotionEffectType type = activeEffect.getType();
+				if (activeEffect.tick(this, true) > -1)
+					continue;
+				// remove expired active effect and try to replace
+				activeEffect = null;
+				int index = 0;
+				for (PotionEffect effect : effects) {
+					index++;
+					if (effect.getType() != type)
+						continue;
+					if (activeEffect == null) {
+						activeEffect = effect;
+						continue;
+					}
+					if (activeEffect.getAmplifier() > effect.getAmplifier() ||
+							activeEffect.getAmplifier() == effect.getAmplifier() && 
+							activeEffect.getDuration() >= effect.getDuration())
+						continue;
+					activeEffect = effect;
+				}
+				if (activeEffect != null) {
+					activeEffects.replace(type, activeEffect);
+					effects.remove(index);
+					sendAddEntityEffect(activeEffect);
+				} else {
+					it.remove();
+					sendRemoveEntityEffect(type);
+				}
+			}
 		}
 	}
 
