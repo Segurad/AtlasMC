@@ -115,8 +115,8 @@ public class AttributeInstance {
 				break;
 			}
 		}
-		value *= scale_1;
 		value *= scale;
+		value *= scale_1;
 	}
 
 }
