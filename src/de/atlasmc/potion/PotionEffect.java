@@ -1,20 +1,20 @@
 package de.atlasmc.potion;
 
-import de.atlasmc.entity.Entity;
+import de.atlasmc.entity.LivingEntity;
 
 public interface PotionEffect extends Cloneable {
 	
 	public PotionEffect clone();
 	
 	/**
-	 * Called when this PotionEffect is set active for its {@link Entity}
+	 * Called when this PotionEffect is set active for its {@link LivingEntity}
 	 */
-	public abstract void addEffect(Entity entity);
+	public abstract void addEffect(LivingEntity entity);
 	
 	/**
-	 * Called when this PotionEffect is set inactive for its {@link Entity}
+	 * Called when this PotionEffect is set inactive for its {@link LivingEntity}
 	 */
-	public abstract void removeEffect(Entity entity);
+	public abstract void removeEffect(LivingEntity entity);
 	
 	/**
 	 * Returns whether or not this effect will only do something when applied to a entity
@@ -30,7 +30,7 @@ public interface PotionEffect extends Cloneable {
 	 * @param the entity it ticks for
 	 * @return the remaining duration
 	 */
-	public int tick(Entity entity, boolean active);
+	public int tick(LivingEntity entity, boolean active);
 
 	public boolean hasReducedAmbient();
 

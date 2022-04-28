@@ -47,10 +47,16 @@ public abstract class PotionEffectType {
 	}
 	
 	private final int id;
+	private final int color;
 	
-	public PotionEffectType(int id) {
+	public PotionEffectType(int id, int color) {
 		this.id = id;
+		this.color = color;
 		BY_ID.put(id, this);
+	}
+	
+	public int getColor() {
+		return color;
 	}
 	
 	public PotionEffect createEffect(int amplifier, int duration) {

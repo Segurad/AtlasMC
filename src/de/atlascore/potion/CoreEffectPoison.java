@@ -1,0 +1,43 @@
+package de.atlascore.potion;
+
+import de.atlasmc.entity.LivingEntity;
+import de.atlasmc.potion.PotionEffectType;
+
+public class CoreEffectPoison extends CoreAbstractPotionEffect {
+
+	private float damage;
+	
+	public CoreEffectPoison(PotionEffectType type, int amplifier, int duration, boolean reducedAmbient, boolean particles, boolean icon) {
+		super(type, amplifier, duration, reducedAmbient, particles, icon);
+		switch (amplifier) {
+		case 0:
+			damage = 0.4f / 20;
+			break;
+		case 1:
+			damage = 0.83f / 20;
+			break;
+		case 2:
+			damage = 0.166f / 20;
+			break;
+		case 3:
+			damage = 3.33f / 20;
+			break;
+		default:
+			damage = 10.0f / 20;
+			break;
+		}
+	}
+
+	@Override
+	public void addEffect(LivingEntity entity) {}
+
+	@Override
+	public void removeEffect(LivingEntity entity) {}
+
+	@Override
+	public int tick(LivingEntity entity, boolean active) {
+		entity.damage(damage);
+		return super.tick(entity, active);
+	}
+	
+}
