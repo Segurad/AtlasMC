@@ -26,7 +26,7 @@ public class CorePacketOutEntityProperties extends AbstractPacket implements Pac
 		buf = Unpooled.buffer();
 		writeVarInt(attributes.size(), buf);
 		for (AttributeInstance i : attributes) {
-			writeString(i.getAttribute().getRawName(), buf);
+			writeString(i.getAttribute().getName(), buf);
 			buf.writeDouble(i.getDefaultValue());
 			writeVarInt(i.getModifierCount(), buf);
 			for (AttributeModifier mod : i.getModifiers()) {

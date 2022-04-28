@@ -483,7 +483,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 			writer.writeListTag(NBT_ATTRIBUTE_MODIFIERS, TagType.COMPOUND, 0);
 			Multimap<Attribute, AttributeModifier> attributes = getAttributeModifiers();
 			for (Attribute attribute : attributes.keySet()) {
-				final String rawname = attribute.getRawName();
+				final String rawname = attribute.getName();
 				for (AttributeModifier mod : attributes.get(attribute)) {
 					writer.writeDoubleTag(NBT_AMOUNT, mod.getAmount());
 					writer.writeStringTag(NBT_ATTRIBUTE_NAME, rawname);

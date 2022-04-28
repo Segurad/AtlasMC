@@ -13,6 +13,14 @@ public class AttributeModifier {
 	private final String name;
 	private EquipmentSlot slot;
 	
+	public AttributeModifier(String name, double amount, Operation operation) {
+		this(UUID.randomUUID(), name, amount, operation, null);
+	}
+	
+	public AttributeModifier(UUID uuid, String name, double amount, Operation operation) {
+		this(uuid, name, amount, operation, null);
+	}
+	
 	public AttributeModifier(UUID uuid, String name, double amount, Operation operation, EquipmentSlot slot) {
 		this.amount = amount;
 		this.uuid = uuid;

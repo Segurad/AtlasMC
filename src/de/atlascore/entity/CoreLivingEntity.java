@@ -392,7 +392,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	
 	private float health;
 	private float absorption;
-	private List<AttributeInstance> attributes;
+	private Map<Attribute, AttributeInstance> attributes;
 	private List<PotionEffect> effects;
 	private Map<PotionEffectType, PotionEffect> activeEffects;
 	private short deathAnimationTime;
@@ -533,7 +533,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		if (attributes == null || attributes.isEmpty())
 			return Multimap.of();
 		Multimap<Attribute, AttributeModifier> map = null;
-		for (AttributeInstance instance : attributes) {
+		for (AttributeInstance instance : attributes.values()) {
 			if (!instance.hasModifiers())
 				continue;
 			if (map == null)
@@ -545,14 +545,14 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 
 	@Override
 	public boolean removeAttributeModifier(Attribute attribute) {
+		if (attribute == null)
+			throw new IllegalArgumentException("Attribute can not be null!");
 		if (attributes == null)
 			return false;
-		for (AttributeInstance instance : attributes) {
-			if (instance.getAttribute() != attribute)
-				continue;
-			return instance.removeModifiers();
-		}
-		return false;
+		AttributeInstance instance = getAttribute(attribute);
+		if (instance == null)
+			return false;
+		return instance.removeModifiers();
 	}
 
 	@Override
@@ -621,13 +621,12 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	@Override
 	public AttributeInstance getAttribute(Attribute attribute) {
 		if (attributes == null)
-			attributes = new ArrayList<>();
-		for (AttributeInstance instance : attributes) {
-			if (instance.getAttribute() == attribute)
-				return instance;
-		}
-		AttributeInstance instance = new AttributeInstance(attribute, 0.0); // TODO implement getDefaultAttributeValue somewhere
-		attributes.add(instance); 
+			attributes = new HashMap<>();
+		AttributeInstance instance = attributes.get(attribute);
+		if (instance != null)
+			return instance;
+		instance = new AttributeInstance(attribute, 0.0); // TODO implement getDefaultAttributeValue somewhere
+		attributes.put(attribute, instance); 
 		return instance;
 	}
 
@@ -675,8 +674,8 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		}
 		if (hasAttributes()) {
 			writer.writeListTag(NBT_ATTRIBUTES, TagType.COMPOUND, attributes.size());
-			for (AttributeInstance instance : attributes) {
-				writer.writeStringTag(NBT_NAME, instance.getAttribute().getRawName());
+			for (AttributeInstance instance : attributes.values()) {
+				writer.writeStringTag(NBT_NAME, instance.getAttribute().getName());
 				writer.writeDoubleTag(NBT_BASE, instance.getBaseValue());
 				if (!instance.hasModifiers()) {
 					writer.writeEndTag();
