@@ -7,6 +7,8 @@ import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutChunkData;
+import de.atlasmc.util.IndizeCompactor;
+import de.atlasmc.util.MathUtil;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
@@ -55,13 +57,16 @@ public class CorePacketOutChunkData extends AbstractPacket implements PacketOutC
 			if (((this.bitmask >> i--) & 0x01) != 0x01) continue;
 			data.writeShort(s.getBlockCount());
 			List<BlockData> palette = s.getPalette();
+			data.writeByte(MathUtil.getBitsPerBlock(palette.size()));
 			writeVarInt(palette.size(), data);
 			for (BlockData bd : palette) {
 				writeVarInt(bd.getStateID(), data);
 			}
-			long[] mapped = s.getCompactMappings();
-			for (long l : mapped) {
-				data.writeLong(l);
+			IndizeCompactor compactor = s.getIndizeCompactor();
+			final int count = compactor.numberOfLongs();
+			writeVarInt(count, data);
+			for (int j = 0; j < count; j++) {
+				data.writeLong(compactor.getAsLong());
 			}
 		}
 		List<TileEntity> tiles = chunk.getTileEntities();

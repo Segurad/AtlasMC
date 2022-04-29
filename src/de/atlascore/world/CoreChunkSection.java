@@ -6,6 +6,7 @@ import java.util.List;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
+import de.atlasmc.util.IndizeCompactor;
 import de.atlasmc.world.ChunkSection;
 
 /**
@@ -103,38 +104,6 @@ public class CoreChunkSection implements ChunkSection {
 	}
 
 	@Override
-	public int getBitsPerBlock() {
-		int size = getPaletteSize();
-		int bits = 4, mask = 0x0F;
-		while (mask < size) {
-			mask = (mask << 1) + 1;
-			bits++;
-		}
-		return bits;
-	}
-
-	@Override
-	public long[] getCompactMappings() {
-		final int bits = getBitsPerBlock();
-		long[] data = new long[(4096*bits)>>6];
-		int index = 0;
-		int restBits = 64;
-		long values = 0;
-		for (short s : indizes) {
-			if (restBits < bits) {
-				data[index++] = values;
-				values = 0;
-				restBits = 64;
-			}
-			values <<= bits; // shift to create space for next index 
-			values |= s; // add next index
-			restBits -= bits;
-		}
-		data[index] = values;
-		return data;
-	}
-
-	@Override
 	public BlockData getBlockData(int x, int y, int z) {
 		BlockData data = palette.get(getIndex(x, y, z)).data;
 		return data.clone();
@@ -186,6 +155,11 @@ public class CoreChunkSection implements ChunkSection {
 		// add new entry
 		palette.add(new CorePaletteEntry(data.clone()));
 		return (short) (palette.size()-1);
+	}
+
+	@Override
+	public IndizeCompactor getIndizeCompactor() {
+		return new IndizeCompactor(indizes, getPaletteSize());
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
+import de.atlasmc.util.IndizeCompactor;
 
 public interface ChunkSection {
 	
@@ -70,19 +71,6 @@ public interface ChunkSection {
 	
 	/**
 	 * 
-	 * @return number of bits needed to represent a index
-	 * minimum is 4 bit per index
-	 */
-	public int getBitsPerBlock();
-	
-	/**
-	 * 
-	 * @return compacts the mappings
-	 */
-	public long[] getCompactMappings();
-	
-	/**
-	 * 
 	 * @param x
 	 * @param y
 	 * @param z
@@ -131,5 +119,7 @@ public interface ChunkSection {
 	 * @return the index of this data is set or the index of present data
 	 */
 	public short addPaletteEntry(BlockData data);
+
+	public IndizeCompactor getIndizeCompactor();
 
 }
