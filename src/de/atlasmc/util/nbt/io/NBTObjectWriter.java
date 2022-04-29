@@ -2,7 +2,9 @@ package de.atlasmc.util.nbt.io;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.UUID;
+import java.util.function.LongSupplier;
 
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.tag.CompoundTag;
@@ -68,10 +70,12 @@ public class NBTObjectWriter implements NBTWriter {
 	}
 
 	@Override
-	public void writeByteArrayTag(String name, byte[] data) throws IOException {
+	public void writeByteArrayTag(String name, byte[] data, int offset, int length) throws IOException {
+		if (data == null)
+			throw new IllegalArgumentException("Data can not be null!");
 		if (highestContainer.getType() == TagType.LIST)
 			name = null;
-		highestContainer.setData(NBT.createByteArrayTag(name, data));
+		highestContainer.setData(NBT.createByteArrayTag(name, Arrays.copyOfRange(data, offset, offset + length)));
 	}
 
 	@Override
@@ -100,16 +104,32 @@ public class NBTObjectWriter implements NBTWriter {
 		highestContainer.setData(tag);
 		highestContainer = tag;
 	}
-
+	
 	@Override
-	public void writeIntArrayTag(String name, int[] data) throws IOException {
+	public void writeIntArrayTag(String name, int[] data, int offset, int length) throws IOException {
+		if (data == null)
+			throw new IllegalArgumentException("Data can not be null!");
 		if (highestContainer.getType() == TagType.LIST)
 			name = null;
-		highestContainer.setData(NBT.createIntArrayTag(name, data));
+		highestContainer.setData(NBT.createIntArrayTag(name, Arrays.copyOfRange(data, offset, offset + length)));
 	}
-
+	
 	@Override
-	public void writeLongArrayTag(String name, long[] data) throws IOException {
+	public void writeLongArrayTag(String name, long[] data, int offset, int length) throws IOException {
+		if (data == null)
+			throw new IllegalArgumentException("Data can not be null!");
+		if (highestContainer.getType() == TagType.LIST)
+			name = null;
+		highestContainer.setData(NBT.createLongArrayTag(name, Arrays.copyOfRange(data, offset, offset + length)));
+	}
+	
+	@Override
+	public void writeLongArrayTag(String name, int length, LongSupplier supplier) throws IOException {
+		if (supplier == null)
+			throw new IllegalArgumentException("Supplier can not be null!");
+		long[] data = new long[length];
+		for (int i = 0; i < length; i++)
+			data[i] = supplier.getAsLong();
 		if (highestContainer.getType() == TagType.LIST)
 			name = null;
 		highestContainer.setData(NBT.createLongArrayTag(name, data));

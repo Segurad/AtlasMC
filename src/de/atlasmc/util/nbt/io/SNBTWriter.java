@@ -3,6 +3,7 @@ package de.atlasmc.util.nbt.io;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.UUID;
+import java.util.function.LongSupplier;
 
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.tag.CompoundTag;
@@ -84,20 +85,22 @@ public class SNBTWriter implements NBTWriter {
 		out.write('D');
 		removeList();
 	}
-
+	
 	@Override
-	public void writeByteArrayTag(String name, byte[] data) throws IOException {
+	public void writeByteArrayTag(String name, byte[] data, int offset, int length) throws IOException {
+		if (data == null)
+			throw new IllegalArgumentException("Data can not be null!");
 		prepareTag(TagType.BYTE_ARRAY, name);
 		out.write('[');
 		out.write('B');
 		out.write(';');
 		boolean separator = false;
-		for (byte b : data) {
+		for (int i = 0, o = offset; i < length; i++, o++) {
 			if (separator)
 				out.write(',');
 			else
 				separator = true;
-			out.write(Byte.toString(b));
+			out.write(Byte.toString(data[o]));
 		}
 		out.write(']');
 		removeList();
@@ -165,7 +168,7 @@ public class SNBTWriter implements NBTWriter {
 	}
 
 	@Override
-	public void writeIntArrayTag(String name, int[] data) throws IOException {
+	public void writeIntArrayTag(String name, int[] data, int offset, int length) throws IOException {
 		if (data == null)
 			throw new IllegalArgumentException("Data can not be null!");
 		prepareTag(TagType.INT_ARRAY, name);
@@ -173,19 +176,19 @@ public class SNBTWriter implements NBTWriter {
 		out.write('I');
 		out.write(';');
 		boolean separator = false;
-		for (int i : data) {
+		for (int i = 0, o = offset; i < length; i++, o++) {
 			if (separator)
 				out.write(',');
 			else
 				separator = true;
-			out.write(Integer.toString(i));
+			out.write(Integer.toString(data[o]));
 		}
 		out.write(']');
 		removeList();
 	}
-
+	
 	@Override
-	public void writeLongArrayTag(String name, long[] data) throws IOException {
+	public void writeLongArrayTag(String name, long[] data, int offset, int length) throws IOException {
 		if (data == null)
 			throw new IllegalArgumentException("Data can not be null!");
 		prepareTag(TagType.LONG_ARRAY, name);
@@ -193,12 +196,32 @@ public class SNBTWriter implements NBTWriter {
 		out.write('L');
 		out.write(';');
 		boolean separator = false;
-		for (long l : data) {
+		for (int i = 0, o = offset; i < length; i++, o++) {
 			if (separator)
 				out.write(',');
 			else
 				separator = true;
-			out.write(Long.toString(l));
+			out.write(Long.toString(data[o]));
+		}
+		out.write(']');
+		removeList();
+	}
+	
+	@Override
+	public void writeLongArrayTag(String name, int length, LongSupplier supplier) throws IOException {
+		if (supplier == null)
+			throw new IllegalArgumentException("Supplier can not be null!");
+		prepareTag(TagType.LONG_ARRAY, name);
+		out.write('[');
+		out.write('L');
+		out.write(';');
+		boolean separator = false;
+		for (int i = 0; i < length; i++) {
+			if (separator)
+				out.write(',');
+			else
+				separator = true;
+			out.write(Long.toString(supplier.getAsLong()));
 		}
 		out.write(']');
 		removeList();

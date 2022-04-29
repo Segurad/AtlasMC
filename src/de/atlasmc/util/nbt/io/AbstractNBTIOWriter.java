@@ -2,6 +2,7 @@ package de.atlasmc.util.nbt.io;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.function.LongSupplier;
 
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.tag.CompoundTag;
@@ -66,14 +67,14 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 	}
 	
 	@Override
-	public void writeByteArrayTag(String name, byte[] data) throws IOException {
+	public void writeByteArrayTag(String name, byte[] data, int offset, int length) throws IOException {
 		if (data == null)
 			throw new IllegalArgumentException("Data can not be null!");
 		prepareTag(TagType.BYTE_ARRAY, name);
-		ioWriteInt(data.length);
-		ioWriteBytes(data);
+		ioWriteInt(length);
+		ioWriteBytes(data, offset, length);
 	}
-	
+
 	@Override
 	public void writeStringTag(String name, String value) throws IOException {
 		if (value == null) 
@@ -101,13 +102,13 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 	}
 	
 	@Override
-	public void writeIntArrayTag(String name, int[] data) throws IOException {
-		if (data == null) 
+	public void writeIntArrayTag(String name, int[] data, int offset, int length) throws IOException {
+		if (data == null)
 			throw new IllegalArgumentException("Data can not be null!");
 		prepareTag(TagType.INT_ARRAY, name);
-		ioWriteInt(data.length);
-		for (int i : data) {
-			ioWriteInt(i);
+		ioWriteInt(length);
+		for (int i = 0, o = offset; i < length; i++, o++) {
+			ioWriteInt(data[o]);
 		}
 	}
 	
@@ -123,13 +124,24 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 	}
 	
 	@Override
-	public void writeLongArrayTag(String name, long[] data) throws IOException {
-		if (data == null) 
+	public void writeLongArrayTag(String name, long[] data, int offset, int length) throws IOException {
+		if (data == null)
 			throw new IllegalArgumentException("Data can not be null!");
 		prepareTag(TagType.LONG_ARRAY, name);
-		ioWriteInt(data.length);
-		for (long i : data) {
-			ioWriteLong(i);
+		ioWriteInt(length);
+		for (int i = 0, o = offset; i < length; i++, o++) {
+			ioWriteLong(data[o]);
+		}
+	}
+	
+	@Override
+	public void writeLongArrayTag(String name, int length, LongSupplier supplier) throws IOException {
+		if (supplier == null)
+			throw new IllegalArgumentException("Supplier can not be null!");
+		prepareTag(TagType.LONG_ARRAY, name);
+		ioWriteInt(length);
+		for (int i = 0; i < length; i++) {
+			ioWriteLong(supplier.getAsLong());
 		}
 	}
 	
@@ -248,5 +260,7 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 	protected abstract void ioWriteFloat(float value) throws IOException;
 	
 	protected abstract void ioWriteDouble(double value) throws IOException;
+	
+	protected abstract void ioWriteBytes(byte[] buffer, int offset, int length) throws IOException;
 
 }

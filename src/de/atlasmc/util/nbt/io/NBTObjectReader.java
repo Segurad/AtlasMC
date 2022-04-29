@@ -2,6 +2,8 @@ package de.atlasmc.util.nbt.io;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
 
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
@@ -88,6 +90,16 @@ public class NBTObjectReader implements NBTReader {
 	}
 
 	@Override
+	public void readByteArrayTag(IntConsumer dataConsumer) throws IOException {
+		ensureOpen();
+		if (current.getType() != TagType.BYTE_ARRAY)
+			throw new NBTException("Can not read as ByteArrayTag: " + current.getType().name());
+		byte[] data = (byte[]) current.getData();
+		for (byte value : data)
+			dataConsumer.accept(value);
+	}
+	
+	@Override
 	public byte[] readByteArrayTag() throws IOException {
 		ensureOpen();
 		if (current.getType() != TagType.BYTE_ARRAY)
@@ -108,6 +120,16 @@ public class NBTObjectReader implements NBTReader {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void readIntArrayTag(IntConsumer dataConsumer) throws IOException {
+		ensureOpen();
+		if (current.getType() != TagType.INT_ARRAY)
+			throw new NBTException("Can not read as IntArrayTag: " + current.getType().name());
+		int[] data = (int[]) current.getData();
+		for (int value : data)
+			dataConsumer.accept(value);
+	}
 
 	@Override
 	public int[] readIntArrayTag() throws IOException {
@@ -115,6 +137,16 @@ public class NBTObjectReader implements NBTReader {
 		if (current.getType() != TagType.INT_ARRAY)
 			throw new NBTException("Can not read as IntArrayTag: " + current.getType().name());
 		return (int[]) current.getData();
+	}
+	
+	@Override
+	public void readLongArrayTag(LongConsumer dataConsumer) throws IOException {
+		ensureOpen();
+		if (current.getType() != TagType.LONG_ARRAY)
+			throw new NBTException("Can not read as LongArrayTag: " + current.getType().name());
+		long[] data = (long[]) current.getData();
+		for (long value : data)
+			dataConsumer.accept(value);
 	}
 
 	@Override

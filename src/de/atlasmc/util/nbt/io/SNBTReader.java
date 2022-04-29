@@ -3,6 +3,8 @@ package de.atlasmc.util.nbt.io;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.UUID;
+import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
 
 import com.google.gson.stream.JsonReader;
 
@@ -165,6 +167,24 @@ public class SNBTReader extends JsonReader implements NBTReader {
 
 	@Override
 	public void search(String key, TagType type, boolean list) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void readByteArrayTag(IntConsumer dataConsumer) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void readIntArrayTag(IntConsumer dataConsumer) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void readLongArrayTag(LongConsumer dataConsumer) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}

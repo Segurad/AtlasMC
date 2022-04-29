@@ -54,4 +54,9 @@ public class NBTNIOWriter extends AbstractNBTIOWriter {
 		out = null;
 	}
 
+	@Override
+	protected void ioWriteBytes(byte[] buffer, int offset, int length) throws IOException {
+		out.writeBytes(buffer, offset, length);
+	}
+
 }

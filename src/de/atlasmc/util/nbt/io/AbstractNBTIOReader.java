@@ -2,6 +2,8 @@ package de.atlasmc.util.nbt.io;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
 
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
@@ -45,6 +47,17 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	}
 	
 	@Override
+	public void readByteArrayTag(IntConsumer dataConsumer) throws IOException {
+		ensureOpen();
+		if (dataConsumer == null)
+			throw new IllegalArgumentException("DataConsumer can not be null!");
+		int payload = ioReadInt();
+		for (int i = 0; i < payload; i++)
+			dataConsumer.accept(ioReadByte());
+		prepareTag();
+	}
+	
+	@Override
 	public byte[] readByteArrayTag() throws IOException {
 		ensureOpen();
 		byte[] data = new byte[ioReadInt()];
@@ -78,6 +91,17 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	}
 	
 	@Override
+	public void readIntArrayTag(IntConsumer dataConsumer) throws IOException {
+		ensureOpen();
+		if (dataConsumer == null)
+			throw new IllegalArgumentException("DataConsumer can not be null!");
+		int paylaod = ioReadInt();
+		for (int i = 0; i < paylaod; i++)
+			dataConsumer.accept(ioReadInt());
+		prepareTag();
+	}
+	
+	@Override
 	public int[] readIntArrayTag() throws IOException {
 		ensureOpen();
 		int[] data = new int[ioReadInt()];
@@ -94,6 +118,17 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 		int data = ioReadInt();
 		prepareTag();
 		return data;
+	}
+	
+	@Override
+	public void readLongArrayTag(LongConsumer dataConsumer) throws IOException {
+		ensureOpen();
+		if (dataConsumer == null)
+			throw new IllegalArgumentException("DataConsumer can not be null!");
+		int payload = ioReadInt();
+		for (int i = 0; i < payload; i++)
+			dataConsumer.accept(ioReadLong());
+		prepareTag();
 	}
 	
 	@Override

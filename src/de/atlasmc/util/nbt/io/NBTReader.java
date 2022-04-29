@@ -3,6 +3,8 @@ package de.atlasmc.util.nbt.io;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.UUID;
+import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
 
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.tag.ListTag;
@@ -78,6 +80,8 @@ public interface NBTReader extends Closeable {
 	 */
 	public TagType getType();
 	
+	public void readByteArrayTag(IntConsumer dataConsumer) throws IOException;
+	
 	public byte[] readByteArrayTag() throws IOException;
 	
 	public byte readByteTag() throws IOException;
@@ -86,9 +90,13 @@ public interface NBTReader extends Closeable {
 	
 	public float readFloatTag() throws IOException;
 	
+	public void readIntArrayTag(IntConsumer dataConsumer) throws IOException;
+	
 	public int[] readIntArrayTag() throws IOException;
 	
 	public int readIntTag() throws IOException;
+	
+	public void readLongArrayTag(LongConsumer dataConsumer) throws IOException;
 	
 	public long[] readLongArrayTag() throws IOException;
 	
