@@ -5,6 +5,7 @@ import java.io.IOException;
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.Jukebox;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -14,8 +15,8 @@ public class CoreJukebox extends CoreTileEntity implements Jukebox {
 
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	RECORD_ITEM = "RecordItem";
+	protected static final CharKey
+	RECORD_ITEM = CharKey.of("RecordItem");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreTileEntity.NBT_FIELDS);

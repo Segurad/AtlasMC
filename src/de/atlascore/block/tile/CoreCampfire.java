@@ -5,6 +5,7 @@ import java.io.IOException;
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.Campfire;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
@@ -15,10 +16,10 @@ public class CoreCampfire extends CoreTileEntity implements Campfire {
 	
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	ITEMS = "Items",
-	COOKING_TIMES = "CookingTimes",
-	COOKING_TOTAL_TIMES = "CookingTotalTimes";
+	protected static final CharKey
+	ITEMS = CharKey.of("Items"),
+	COOKING_TIMES = CharKey.of("CookingTimes"),
+	COOKING_TOTAL_TIMES = CharKey.of("CookingTotalTimes");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreTileEntity.NBT_FIELDS);

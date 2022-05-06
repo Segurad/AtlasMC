@@ -5,6 +5,7 @@ import de.atlasmc.Material;
 import de.atlasmc.block.tile.MobSpawner;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -14,16 +15,16 @@ public class CoreMobSpawner extends CoreTileEntity implements MobSpawner {
 
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	DELAY = "Delay",
-	MAX_NEARY_ENTITIES = "MaxNearbyEntities",
-	MAX_DELAY = "MaxSpawnDelay",
-	MIN_DELAY = "MinSpawnDelay",
-	REQUIRED_PLAYER_RANGE = "RequiredPlayerRange",
-	SPAWN_COUNT = "SpawnCount",
-	SPAWN_DATA = "SpawnData",
-	SPAWN_POTENTIALS = "SpawnPotentials",
-	SPAWN_RANGE = "SpawnRange";
+	protected static final CharKey
+	DELAY = CharKey.of("Delay"),
+	MAX_NEARY_ENTITIES = CharKey.of("MaxNearbyEntities"),
+	MAX_DELAY = CharKey.of("MaxSpawnDelay"),
+	MIN_DELAY = CharKey.of("MinSpawnDelay"),
+	REQUIRED_PLAYER_RANGE = CharKey.of("RequiredPlayerRange"),
+	SPAWN_COUNT = CharKey.of("SpawnCount"),
+	SPAWN_DATA = CharKey.of("SpawnData"),
+	SPAWN_POTENTIALS = CharKey.of("SpawnPotentials"),
+	SPAWN_RANGE = CharKey.of("SpawnRange");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreTileEntity.NBT_FIELDS);

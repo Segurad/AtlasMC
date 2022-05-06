@@ -5,6 +5,7 @@ import java.io.IOException;
 import de.atlasmc.Location;
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.EndGateway;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -14,14 +15,14 @@ public class CoreEndGateway extends CoreTileEntity implements EndGateway {
 
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	AGE = "Age",
-	EXACT_TELEPORT = "ExactTeleport",
-	RELATIVE_COORDINATES = "RelativeCoordinates",
-	EXIT_PORTAL = "ExitPortal",
-	PORTAL_X = "X",
-	PORTAL_Y = "Y",
-	PORTAL_Z = "Z";
+	protected static final CharKey
+	AGE = CharKey.of("Age"),
+	EXACT_TELEPORT = CharKey.of("ExactTeleport"),
+	RELATIVE_COORDINATES = CharKey.of("RelativeCoordinates"),
+	EXIT_PORTAL = CharKey.of("ExitPortal"),
+	PORTAL_X = CharKey.of("X"),
+	PORTAL_Y = CharKey.of("Y"),
+	PORTAL_Z = CharKey.of("Z");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreTileEntity.NBT_FIELDS);

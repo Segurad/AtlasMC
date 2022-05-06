@@ -6,6 +6,7 @@ import de.atlasmc.Material;
 import de.atlasmc.block.tile.Sign;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -15,11 +16,11 @@ public class CoreSign extends CoreTileEntity implements Sign {
 
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	TEXT_1 = "Text1",
-	TEXT_2 = "Text2",
-	TEXT_3 = "Text3",
-	TEXT_4 = "Text4";
+	protected static final CharKey
+	TEXT_1 = CharKey.of("Text1"),
+	TEXT_2 = CharKey.of("Text2"),
+	TEXT_3 = CharKey.of("Text3"),
+	TEXT_4 = CharKey.of("Text4");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreTileEntity.NBT_FIELDS);

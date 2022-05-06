@@ -6,6 +6,7 @@ import de.atlasmc.Material;
 import de.atlasmc.block.tile.CommandBlock;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
@@ -16,16 +17,16 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_AUTO = "auto",
-	NBT_COMMAND = "conditionMet",
-	NBT_CONDITION_MET = "LastExecution",
-	NBT_LAST_EXECUTION = "LastExecution",
-	NBT_LAST_OUTPUT = "LastOutput",
-	NBT_POWERED = "powered",
-	NBT_SUCCESSCOUNT = "SuccessCount",
-	NBT_TRACKOUTPUT = "TrackOutput",
-	NBT_UPDATE_LAST_EXECUTION = "UpdateLastExecution";
+	protected static final CharKey
+	NBT_AUTO = CharKey.of("auto"),
+	NBT_COMMAND = CharKey.of("conditionMet"),
+	NBT_CONDITION_MET = CharKey.of("LastExecution"),
+	NBT_LAST_EXECUTION = CharKey.of("LastExecution"),
+	NBT_LAST_OUTPUT = CharKey.of("LastOutput"),
+	NBT_POWERED = CharKey.of("powered"),
+	NBT_SUCCESSCOUNT = CharKey.of("SuccessCount"),
+	NBT_TRACKOUTPUT = CharKey.of("TrackOutput"),
+	NBT_UPDATE_LAST_EXECUTION = CharKey.of("UpdateLastExecution");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreTileEntity.NBT_FIELDS);

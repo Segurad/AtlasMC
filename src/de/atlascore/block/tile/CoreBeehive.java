@@ -10,6 +10,7 @@ import de.atlasmc.SimpleLocation;
 import de.atlasmc.block.tile.Beehive;
 import de.atlasmc.entity.Bee;
 import de.atlasmc.entity.EntityType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.NBTFieldContainer;
@@ -21,15 +22,15 @@ public class CoreBeehive extends CoreTileEntity implements Beehive {
 
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_FLOWER_POS = "FlowerPos",
-	NBT_X = "X",
-	NBT_Y = "Y",
-	NBT_Z = "Z",
-	NBT_BEES = "Bees",
-	NBT_MIN_OCCUPATION_TICKS = "MinOccupationTicks",
-	NBT_TICKS_IN_HIVE = "TicksInHive",
-	NBT_ENTITY_DATA = "EntityData";
+	protected static final CharKey
+	NBT_FLOWER_POS = CharKey.of("FlowerPos"),
+	NBT_X = CharKey.of("X"),
+	NBT_Y = CharKey.of("Y"),
+	NBT_Z = CharKey.of("Z"),
+	NBT_BEES = CharKey.of("Bees"),
+	NBT_MIN_OCCUPATION_TICKS = CharKey.of("MinOccupationTicks"),
+	NBT_TICKS_IN_HIVE = CharKey.of("TicksInHive"),
+	NBT_ENTITY_DATA = CharKey.of("EntityData");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreTileEntity.NBT_FIELDS);
@@ -60,23 +61,21 @@ public class CoreBeehive extends CoreTileEntity implements Beehive {
 				int minoccupation = 0;
 				int ticksinhive = 0;
 				Bee bee = null;
-				switch (reader.getFieldName()) {
-				case NBT_MIN_OCCUPATION_TICKS:
-					minoccupation = reader.readIntTag();
-					break;
-				case NBT_TICKS_IN_HIVE:
-					ticksinhive = reader.readIntTag();
-					break;
-				case NBT_ENTITY_DATA:
-					reader.readNextEntry();
-					bee = (Bee) EntityType.BEE.create(hive.getWorld());
-					if (bee != null)
-						bee.fromNBT(reader);
-					break;
-				default:
-					reader.skipTag();
-					break;
+				while (reader.getType() != TagType.TAG_END) {
+					final CharSequence value = reader.getFieldName();
+					if (NBT_MIN_OCCUPATION_TICKS.equals(value))
+						minoccupation = reader.readIntTag();
+					else if (NBT_TICKS_IN_HIVE.equals(value))
+						ticksinhive = reader.readIntTag();
+					else if (NBT_ENTITY_DATA.equals(value)) {
+						reader.readNextEntry();
+						bee = (Bee) EntityType.BEE.create(hive.getWorld());
+						if (bee != null)
+							bee.fromNBT(reader);
+					} else
+						reader.skipTag();
 				}
+				reader.skipTag();
 				if (bee == null) continue;
 				bee.setTicksInHive(ticksinhive);
 				bee.setHiveMinOccupationTicks(minoccupation);

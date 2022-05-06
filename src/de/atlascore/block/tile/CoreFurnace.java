@@ -7,6 +7,7 @@ import de.atlasmc.block.tile.Furnace;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.AbstractFurnaceInventory;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
@@ -17,12 +18,12 @@ public class CoreFurnace extends CoreAbstractContainerTile<AbstractFurnaceInvent
 
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	BURN_TIME = "BurnTime",
-	COOK_TIME = "CookTime",
-	COOK_TIME_TOTAL = "CookTimeTotal",
+	protected static final CharKey
+	BURN_TIME = CharKey.of("BurnTime"),
+	COOK_TIME = CharKey.of("CookTime"),
+	COOK_TIME_TOTAL = CharKey.of("CookTimeTotal"),
 	// TODO handle furnace recipes nbt
-	RECIPE_USED_SIZE = "RecipesUsedSize"; // Number of recipes with the same result crafted last in this furnace
+	RECIPE_USED_SIZE = CharKey.of("RecipesUsedSize"); // Number of recipes with the same result crafted last in this furnace
 	// RECIPE_LOCATION_[INDEX] // Recipes which have the same result and were used last
 	// RECIPE_AMOUNT_[INDEX] // Number of end products created by a recipe
 	

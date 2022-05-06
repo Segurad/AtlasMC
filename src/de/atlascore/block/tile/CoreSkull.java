@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.Skull;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
@@ -16,57 +17,46 @@ public class CoreSkull extends CoreTileEntity implements Skull {
 
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	EXTRA_TYPE = "ExtraType",
-	OWNER = "Owner",
-	UUID = "Id",
-	NAME = "Name",
-	PROPERTIES = "Properties",
-	TEXTURES = "textures",
-	SIGNATURE = "Signature",
-	VALUE = "Value";
+	protected static final CharKey
+	EXTRA_TYPE = CharKey.of("ExtraType"),
+	OWNER = CharKey.of("Owner"),
+	UUID = CharKey.of("Id"),
+	NAME = CharKey.of("Name"),
+	PROPERTIES = CharKey.of("Properties"),
+	TEXTURES = CharKey.of("textures"),
+	SIGNATURE = CharKey.of("Signature"),
+	VALUE = CharKey.of("Value");
 
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreTileEntity.NBT_FIELDS);
 		NBTField name = (holder, reader) -> {
-			if (holder instanceof Skull)
 			((Skull) holder).setPlayerName(reader.readStringTag());
-			else reader.skipTag();
 		};
 		NBT_FIELDS.setField(EXTRA_TYPE, name);
 		NBT_FIELDS.setContainer(OWNER)
 		.setField(UUID, (holder, reader) -> {
-			if (holder instanceof Skull)
 			((Skull) holder).setPlayerUUID(reader.readUUID());
 		}).setField(NAME, name).setField(PROPERTIES, (holder, reader) -> {
-			if (!(holder instanceof Skull)) {
-				reader.skipTag();
-				return;
-			}
 			reader.readNextEntry();
 			while (reader.getType() != TagType.TAG_END) {
-				switch (reader.getFieldName()) {
-				case TEXTURES:
+				final CharSequence textureKey= reader.getFieldName();
+				if (TEXTURES.equals(textureKey)) {
 					Skull skull = (Skull) holder;
 					reader.readNextEntry();
 					while (reader.getRestPayload() > 0) {
-						switch (reader.getFieldName()) {
-						case SIGNATURE:
-							skull.setTextureSignature(reader.readStringTag());
-							break;
-						case VALUE:
-							skull.setTextureValue(reader.readStringTag());
-							break;
-						default:
-							reader.skipTag();
-							break;
+						while (reader.getType() != TagType.TAG_END) {
+							final CharSequence value = reader.getFieldName();
+							if (SIGNATURE.equals(value))
+								skull.setTextureSignature(reader.readStringTag());
+							else if (VALUE.equals(value))
+								skull.setTextureValue(reader.readStringTag());
+							else
+								reader.skipTag();
 						}
+						reader.skipTag();
 					}
-					break;
-				default:
+				} else
 					reader.skipTag();
-					break;
-				}
 			}
 			reader.readNextEntry();
 		});

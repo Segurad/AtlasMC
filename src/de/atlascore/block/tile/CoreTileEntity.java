@@ -7,6 +7,7 @@ import de.atlasmc.Material;
 import de.atlasmc.Nameable;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.AbstractNBTBase;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
@@ -17,35 +18,28 @@ import de.atlasmc.world.World;
 public class CoreTileEntity extends AbstractNBTBase implements TileEntity {
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
-	protected static final String
-	ID = "id",
-	KEEP_PACKED = "keepPacked",
-	X = "x",
-	Y = "y",
-	Z = "z",
-	NBT_CUSTOM_NAME = "CustomName";
+	
+	protected static final CharKey
+	ID = CharKey.of("id"),
+	KEEP_PACKED = CharKey.of("keepPacked"),
+	X = CharKey.of("x"),
+	Y = CharKey.of("y"),
+	Z = CharKey.of("z"),
+	NBT_CUSTOM_NAME = CharKey.of("CustomName");
 	
 	static {
 		NBT_FIELDS = new NBTFieldContainer();
 		NBT_FIELDS.setField(ID, (holder, reader) -> {
-			if (holder instanceof CoreTileEntity)
 			((TileEntity) holder).setType(Material.getByName(reader.readStringTag()));
-			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(X, (holder, reader) -> {
-			if (holder instanceof TileEntity) 
 			((TileEntity) holder).setX(reader.readIntTag());
-			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(Y, (holder, reader) -> {
-			if (holder instanceof TileEntity) 
 			((TileEntity) holder).setY(reader.readIntTag());
-			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(Z, (holder, reader) -> {
-			if (holder instanceof TileEntity) 
 			((TileEntity) holder).setZ(reader.readIntTag());
-			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(NBT_CUSTOM_NAME, (holder, reader) -> {
 			if (holder instanceof Nameable)

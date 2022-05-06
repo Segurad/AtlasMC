@@ -8,6 +8,7 @@ import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
@@ -19,11 +20,11 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_LOCK = "Lock",
-	NBT_ITEMS = "Items",
-	NBT_LOOT_TABLE = "LootTable",
-	NBT_LOOT_TABLE_SEED = "LootTableSeed";
+	protected static final CharKey
+	NBT_LOCK = CharKey.of("Lock"),
+	NBT_ITEMS = CharKey.of("Items"),
+	NBT_LOOT_TABLE = CharKey.of("LootTable"),
+	NBT_LOOT_TABLE_SEED = CharKey.of("LootTableSeed");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreTileEntity.NBT_FIELDS);

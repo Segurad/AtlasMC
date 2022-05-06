@@ -5,6 +5,7 @@ import de.atlasmc.block.tile.Hopper;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.Inventory;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.world.Chunk;
@@ -13,9 +14,9 @@ public class CoreHopper extends CoreAbstractContainerTile<Inventory> implements 
 
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	TRANSFER_COOLDOWN = "TransferCooldown",
-	TRANSFER_AMOUNT = "TransferAmount";
+	protected static final CharKey
+	TRANSFER_COOLDOWN = CharKey.of("TransferCooldown"),
+	TRANSFER_AMOUNT = CharKey.of("TransferAmount");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreAbstractContainerTile.NBT_FIELDS);

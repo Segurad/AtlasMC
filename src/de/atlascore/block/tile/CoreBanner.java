@@ -8,6 +8,7 @@ import de.atlasmc.DyeColor;
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.Banner;
 import de.atlasmc.chat.Chat;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
@@ -18,10 +19,10 @@ public class CoreBanner extends CoreTileEntity implements Banner {
 	
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	PATTERNS = "Patterns",
-	COLOR = "Color",
-	PATTERN = "Pattern";
+	protected static final CharKey
+	PATTERNS = CharKey.of("Patterns"),
+	COLOR = CharKey.of("Color"),
+	PATTERN = CharKey.of("Pattern");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreTileEntity.NBT_FIELDS);
@@ -30,19 +31,16 @@ public class CoreBanner extends CoreTileEntity implements Banner {
 				Banner banner = (Banner) holder;
 				reader.readNextEntry();
 				while (reader.getRestPayload() > 0) {
-					final int depth = reader.getDepth();
 					int color = -999;
 					String pattern = null;
-					while (depth <= reader.getDepth()) {
-						switch (reader.getFieldName()) {
-						case COLOR:
+					while (reader.getType() != TagType.TAG_END) {
+						final CharSequence value = reader.getFieldName();
+						if (COLOR.equals(value))
 							color = reader.readIntTag();
-							break;
-						case PATTERN:
+						else if (PATTERN.equals(value))
 							pattern = reader.readStringTag();
-							break;
-						}
 					}
+					reader.skipTag();
 					if (color == -999 || pattern == null) continue;
 					banner.addPattern(new Pattern(DyeColor.getByID(color), PatternType.getByIdentifier(pattern)));
 				}

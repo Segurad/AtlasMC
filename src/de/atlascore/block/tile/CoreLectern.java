@@ -8,6 +8,7 @@ import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.LecternInventory;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -17,9 +18,9 @@ public class CoreLectern extends CoreTileEntity implements Lectern {
 
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	BOOK = "Book",
-	PAGE = "Page";
+	protected static final CharKey
+	BOOK = CharKey.of("Book"),
+	PAGE = CharKey.of("Page");
 	
 	private LecternInventory inv;
 	
