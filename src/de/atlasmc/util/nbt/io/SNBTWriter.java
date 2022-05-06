@@ -40,7 +40,7 @@ public class SNBTWriter implements NBTWriter {
 	}
 
 	@Override
-	public void writeByteTag(String name, int value) throws IOException {
+	public void writeByteTag(CharSequence name, int value) throws IOException {
 		prepareTag(TagType.BYTE, name);
 		out.write(Byte.toString((byte) value));
 		out.write('B');
@@ -48,7 +48,7 @@ public class SNBTWriter implements NBTWriter {
 	}
 
 	@Override
-	public void writeShortTag(String name, int value) throws IOException {
+	public void writeShortTag(CharSequence name, int value) throws IOException {
 		prepareTag(TagType.SHORT, name);
 		out.write(Short.toString((short) value));
 		out.write('S');
@@ -56,14 +56,14 @@ public class SNBTWriter implements NBTWriter {
 	}
 
 	@Override
-	public void writeIntTag(String name, int value) throws IOException {
+	public void writeIntTag(CharSequence name, int value) throws IOException {
 		prepareTag(TagType.INT, name);
 		out.write(Integer.toString(value));
 		removeList();
 	}
 
 	@Override
-	public void writeLongTag(String name, long value) throws IOException {
+	public void writeLongTag(CharSequence name, long value) throws IOException {
 		prepareTag(TagType.LONG, name);
 		out.write(Long.toString(value));
 		out.write('L');
@@ -71,7 +71,7 @@ public class SNBTWriter implements NBTWriter {
 	}
 
 	@Override
-	public void writeFloatTag(String name, float value) throws IOException {
+	public void writeFloatTag(CharSequence name, float value) throws IOException {
 		prepareTag(TagType.FLOAT, name);
 		out.write(Float.toString(value));
 		out.write('F');
@@ -79,7 +79,7 @@ public class SNBTWriter implements NBTWriter {
 	}
 
 	@Override
-	public void writeDoubleTag(String name, double value) throws IOException {
+	public void writeDoubleTag(CharSequence name, double value) throws IOException {
 		prepareTag(TagType.DOUBLE, name);
 		out.write(Double.toString(value));
 		out.write('D');
@@ -87,7 +87,7 @@ public class SNBTWriter implements NBTWriter {
 	}
 	
 	@Override
-	public void writeByteArrayTag(String name, byte[] data, int offset, int length) throws IOException {
+	public void writeByteArrayTag(CharSequence name, byte[] data, int offset, int length) throws IOException {
 		if (data == null)
 			throw new IllegalArgumentException("Data can not be null!");
 		prepareTag(TagType.BYTE_ARRAY, name);
@@ -107,7 +107,7 @@ public class SNBTWriter implements NBTWriter {
 	}
 
 	@Override
-	public void writeStringTag(String name, String value) throws IOException {
+	public void writeStringTag(CharSequence name, String value) throws IOException {
 		if (value == null)
 			throw new IllegalArgumentException("Value can not be null!");
 		prepareTag(TagType.STRING, name);
@@ -153,7 +153,7 @@ public class SNBTWriter implements NBTWriter {
 	}
 
 	@Override
-	public void writeListTag(String name, TagType payloadType, int payloadsize) throws IOException {
+	public void writeListTag(CharSequence name, TagType payloadType, int payloadsize) throws IOException {
 		if (payloadType == null)
 			throw new IllegalArgumentException("PayloadType can not be null!");
 		prepareTag(TagType.LIST, name);
@@ -161,14 +161,14 @@ public class SNBTWriter implements NBTWriter {
 	}
 
 	@Override
-	public void writeCompoundTag(String name) throws IOException {
+	public void writeCompoundTag(CharSequence name) throws IOException {
 		prepareTag(TagType.COMPOUND, name);
 		separator = false;
 		out.write('{');
 	}
 
 	@Override
-	public void writeIntArrayTag(String name, int[] data, int offset, int length) throws IOException {
+	public void writeIntArrayTag(CharSequence name, int[] data, int offset, int length) throws IOException {
 		if (data == null)
 			throw new IllegalArgumentException("Data can not be null!");
 		prepareTag(TagType.INT_ARRAY, name);
@@ -188,7 +188,7 @@ public class SNBTWriter implements NBTWriter {
 	}
 	
 	@Override
-	public void writeLongArrayTag(String name, long[] data, int offset, int length) throws IOException {
+	public void writeLongArrayTag(CharSequence name, long[] data, int offset, int length) throws IOException {
 		if (data == null)
 			throw new IllegalArgumentException("Data can not be null!");
 		prepareTag(TagType.LONG_ARRAY, name);
@@ -208,7 +208,7 @@ public class SNBTWriter implements NBTWriter {
 	}
 	
 	@Override
-	public void writeLongArrayTag(String name, int length, LongSupplier supplier) throws IOException {
+	public void writeLongArrayTag(CharSequence name, int length, LongSupplier supplier) throws IOException {
 		if (supplier == null)
 			throw new IllegalArgumentException("Supplier can not be null!");
 		prepareTag(TagType.LONG_ARRAY, name);
@@ -285,7 +285,7 @@ public class SNBTWriter implements NBTWriter {
 	}
 
 	@Override
-	public void writeUUID(String name, UUID uuid) throws IOException {
+	public void writeUUID(CharSequence name, UUID uuid) throws IOException {
 		ensureOpen();
 		if (uuid == null) 
 			throw new IllegalArgumentException("UUID can not be null!");
@@ -297,7 +297,7 @@ public class SNBTWriter implements NBTWriter {
 		});
 	}
 	
-	private void prepareTag(TagType type, String name) throws IOException {
+	private void prepareTag(TagType type, CharSequence name) throws IOException {
 		ensureOpen();
 		if (list != null && list.depth == depth) {
 			if (list.payload > 0) {
@@ -316,7 +316,9 @@ public class SNBTWriter implements NBTWriter {
 		if (name == null) 
 			return;
 		out.write('"');
-		out.write(name);
+		final int length = name.length();
+		for (int i = 0; i < length; i++)
+			out.write(name.charAt(i));
 		out.write('"');
 		out.write(':');
 	}

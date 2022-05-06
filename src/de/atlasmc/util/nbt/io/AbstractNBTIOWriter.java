@@ -1,6 +1,7 @@
 package de.atlasmc.util.nbt.io;
 
 import java.io.IOException;
+import java.io.UTFDataFormatException;
 import java.util.UUID;
 import java.util.function.LongSupplier;
 
@@ -31,43 +32,43 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 	}
 	
 	@Override
-	public void writeByteTag(String name, int value) throws IOException {
+	public void writeByteTag(CharSequence name, int value) throws IOException {
 		prepareTag(TagType.BYTE, name);
 		ioWriteByte(value);
 	}
 	
 	@Override
-	public void writeShortTag(String name, int value) throws IOException {
+	public void writeShortTag(CharSequence name, int value) throws IOException {
 		prepareTag(TagType.SHORT, name);
 		ioWriteShort(value);
 	}
 	
 	@Override
-	public void writeIntTag(String name, int value) throws IOException {
+	public void writeIntTag(CharSequence name, int value) throws IOException {
 		prepareTag(TagType.INT, name);
 		ioWriteInt(value);
 	}
 	
 	@Override
-	public void writeLongTag(String name, long value) throws IOException {
+	public void writeLongTag(CharSequence name, long value) throws IOException {
 		prepareTag(TagType.LONG, name);
 		ioWriteLong(value);
 	}
 	
 	@Override
-	public void writeFloatTag(String name, float value) throws IOException {
+	public void writeFloatTag(CharSequence name, float value) throws IOException {
 		prepareTag(TagType.FLOAT, name);
 		ioWriteFloat(value);
 	}
 	
 	@Override
-	public void writeDoubleTag(String name, double value) throws IOException {
+	public void writeDoubleTag(CharSequence name, double value) throws IOException {
 		prepareTag(TagType.DOUBLE, name);
 		ioWriteDouble(value);
 	}
 	
 	@Override
-	public void writeByteArrayTag(String name, byte[] data, int offset, int length) throws IOException {
+	public void writeByteArrayTag(CharSequence name, byte[] data, int offset, int length) throws IOException {
 		if (data == null)
 			throw new IllegalArgumentException("Data can not be null!");
 		prepareTag(TagType.BYTE_ARRAY, name);
@@ -76,7 +77,7 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 	}
 
 	@Override
-	public void writeStringTag(String name, String value) throws IOException {
+	public void writeStringTag(CharSequence name, String value) throws IOException {
 		if (value == null) 
 			throw new IllegalArgumentException("Value can not be null!");
 		prepareTag(TagType.STRING, name);
@@ -86,7 +87,7 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 	}
 	
 	@Override
-	public void writeListTag(String name, TagType payload, int payloadsize) throws IOException {
+	public void writeListTag(CharSequence name, TagType payload, int payloadsize) throws IOException {
 		if (payload == null)
 			throw new IllegalArgumentException("PayloadType can not be null!");
 		prepareTag(TagType.LIST, name);
@@ -96,13 +97,13 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 	}
 	
 	@Override
-	public void writeCompoundTag(String name) throws IOException {
+	public void writeCompoundTag(CharSequence name) throws IOException {
 		prepareTag(TagType.COMPOUND, name);
 		depth++;		
 	}
 	
 	@Override
-	public void writeIntArrayTag(String name, int[] data, int offset, int length) throws IOException {
+	public void writeIntArrayTag(CharSequence name, int[] data, int offset, int length) throws IOException {
 		if (data == null)
 			throw new IllegalArgumentException("Data can not be null!");
 		prepareTag(TagType.INT_ARRAY, name);
@@ -113,7 +114,7 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 	}
 	
 	@Override
-	public void writeUUID(String name, UUID uuid) throws IOException {
+	public void writeUUID(CharSequence name, UUID uuid) throws IOException {
 		ensureOpen();
 		if (uuid == null) 
 			throw new IllegalArgumentException("UUID can not be null!");
@@ -124,7 +125,7 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 	}
 	
 	@Override
-	public void writeLongArrayTag(String name, long[] data, int offset, int length) throws IOException {
+	public void writeLongArrayTag(CharSequence name, long[] data, int offset, int length) throws IOException {
 		if (data == null)
 			throw new IllegalArgumentException("Data can not be null!");
 		prepareTag(TagType.LONG_ARRAY, name);
@@ -135,7 +136,7 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 	}
 	
 	@Override
-	public void writeLongArrayTag(String name, int length, LongSupplier supplier) throws IOException {
+	public void writeLongArrayTag(CharSequence name, int length, LongSupplier supplier) throws IOException {
 		if (supplier == null)
 			throw new IllegalArgumentException("Supplier can not be null!");
 		prepareTag(TagType.LONG_ARRAY, name);
@@ -202,7 +203,7 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 		}
 	}
 	
-	private void prepareTag(TagType type, String name) throws IOException {
+	private void prepareTag(TagType type, CharSequence name) throws IOException {
 		ensureOpen();
 		if (list != null && list.depth == depth) {
 			if (list.payload > 0) {
@@ -217,11 +218,9 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 		ioWriteByte(type.getID());
 		if (name == null) 
 			return;
-		byte[] buffer = name.getBytes();
-		ioWriteShort(buffer.length);
-		ioWriteBytes(buffer);
+		writeUTF(name);
 	}
-	
+
 	private void addList(int payload, TagType payloadType) {
 		if (payload <= 0) return;
 		list = new ListData(payloadType, payload, ++depth, list);
@@ -246,6 +245,37 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 	/*
 	 * --- Methods for writing data by subclass ---
 	 */
+	
+	protected void writeUTF(CharSequence sequence) throws IOException {
+		final int length = sequence.length();
+		if (length == 0) return;
+		int bytes = 0;
+		for (int i = 0; i < length; i++) {
+			char c = sequence.charAt(i);
+			if (c >= 1 && c <= 0x7F) {
+				bytes++;
+			} else if (c == 0 || (c >= 0x80 && c <= 0x7FF)) {
+				bytes+=2;
+			} else if (c >= 0x800 && c <= 0xFFFF) {
+				bytes+=3;
+			}
+		}
+		if (bytes > 65535) throw new UTFDataFormatException();
+		ioWriteShort(bytes);
+		for (int i = 0; i < length; i++) {
+			char c = sequence.charAt(i);
+			if (c >= 1 && c <= 0x7F) {
+				ioWriteByte(c);
+			} else if (c == 0 || (c >= 0x80 && c <= 0x7FF)) {
+				ioWriteByte(0xc0 | (0x1f & (c >> 6)));
+				ioWriteByte(0x80 | (0x3f & c));
+			} else if (c >= 0x800 && c <= 0xFFFF) {
+				ioWriteByte(0xe0 | (0x0f & (c >> 12)));
+				ioWriteByte(0x80 | (0x3f & (c >>  6)));
+				ioWriteByte(0x80 | (0x3f & c));
+			}
+		}
+	}
 	
 	protected abstract void ioWriteInt(int value) throws IOException;
 	

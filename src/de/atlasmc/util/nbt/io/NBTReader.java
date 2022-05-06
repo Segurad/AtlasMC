@@ -59,7 +59,11 @@ public interface NBTReader extends Closeable {
 	 */
 	public int getDepth();
 	
-	public String getFieldName();
+	/**
+	 * Returns the current fields name as {@link CharSequence} or null
+	 * @return sequence or null
+	 */
+	public CharSequence getFieldName();
 	
 	/**
 	 * Returns the {@link TagType} of highest list contents or null
@@ -146,7 +150,7 @@ public interface NBTReader extends Closeable {
 	 * @throws IOException 
 	 * @see #search(String, TagType, boolean)
 	 */
-	public default void search(String key) throws IOException {
+	public default void search(CharSequence key) throws IOException {
 		search(key, null);
 	}
 	
@@ -154,7 +158,7 @@ public interface NBTReader extends Closeable {
 	 * @throws IOException 
 	 * @see #search(String, TagType, boolean)
 	 */
-	public default void search(String key, TagType type) throws IOException {
+	public default void search(CharSequence key, TagType type) throws IOException {
 		search(key, type, false);
 	}
 	
@@ -166,6 +170,6 @@ public interface NBTReader extends Closeable {
 	 * @param list if the type should be used as list of type (ignored if type is null)
 	 * @throws IOException 
 	 */
-	public void search(String key, TagType type, boolean list) throws IOException;
+	public void search(CharSequence key, TagType type, boolean list) throws IOException;
 
 }

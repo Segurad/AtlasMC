@@ -1,10 +1,12 @@
 package de.atlasmc.util.nbt.io;
 
 import java.io.IOException;
+import java.io.UTFDataFormatException;
 import java.util.UUID;
 import java.util.function.IntConsumer;
 import java.util.function.LongConsumer;
 
+import de.atlasmc.util.map.key.CharKeyBuffer;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.tag.CompoundTag;
@@ -13,10 +15,15 @@ import de.atlasmc.util.nbt.tag.NBT;
 
 public abstract class AbstractNBTIOReader implements NBTReader {
 	
-	private TagType type, markType;
-	private String name, markName;
-	private int depth, markDepth;
-	private ListData list, markList;
+	private TagType type;
+	private TagType markType;
+	private CharKeyBuffer name;
+	private boolean hasName;
+	private String markName;
+	private int depth;
+	private int markDepth;
+	private ListData list;
+	private ListData markList;
 	private boolean closed;
 	
 	@Override
@@ -25,8 +32,12 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	}
 	
 	@Override
-	public String getFieldName() {
-		return name;
+	public CharSequence getFieldName() {
+		return hasName ? name.getView() : null;
+	}
+	
+	private String getFieldNameString() {
+		return hasName ? name.toString() : null;
 	}
 	
 	@Override
@@ -174,7 +185,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	protected void prepareTag(boolean skip) throws IOException {
 		ensureOpen();
 		if (list != null && depth == list.depth) {
-			name = null;
+			resetName();
 			if (list.payload > 0) {
 				list.payload--;
 				if (list.payload <= 0) removeList();
@@ -183,13 +194,12 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 		}
 		type = TagType.getByID(ioReadByte());
 		if (type == TagType.TAG_END) {
-			name = null;
+			resetName();
 			depth--;
 			if (list != null && depth == list.depth) type = TagType.LIST;
 		} else if (!skip) {
-			byte[] buffer = new byte[ioReadShort()];
-			ioReadBytes(buffer);
-			name = new String(buffer);
+			readName(name);
+			hasName = true;
 		} else {
 			skipBytes(ioReadShort());
 		}
@@ -199,6 +209,11 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 			addList();
 	}
 	
+	protected void resetName() {
+		name.clear();
+		hasName = false;
+	}
+
 	public void readNextEntry() throws IOException {
 		readNextEntry(false);
 	}
@@ -250,14 +265,14 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 		ensureOpen();
 		final boolean isList = list != null && depth == list.depth;
 		switch (isList ? list.type : type) {
-		case BYTE: return NBT.createByteTag(name, readByteTag());
-		case BYTE_ARRAY: return NBT.createByteArrayTag(name, readByteArrayTag());
+		case BYTE: return NBT.createByteTag(getFieldNameString(), readByteTag());
+		case BYTE_ARRAY: return NBT.createByteArrayTag(getFieldNameString(), readByteArrayTag());
 		case COMPOUND: {
 			if (isList) {
-				final ListTag<CompoundTag> list = new ListTag<>(getFieldName(), this.list.type);
+				final ListTag<CompoundTag> list = new ListTag<>(getFieldNameString(), this.list.type);
 				readNextEntry(); // move out of list header
 				while (this.list.payload > 0) {
-					CompoundTag compound = new CompoundTag(name);
+					CompoundTag compound = new CompoundTag(getFieldNameString());
 					final int depth = getDepth(); // root depth of compound
 					while (depth <= getDepth()) {
 						if (type == TagType.TAG_END) {
@@ -271,7 +286,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 				}
 				return list;
 			}
-			final CompoundTag compound = new CompoundTag(getFieldName());
+			final CompoundTag compound = new CompoundTag(getFieldNameString());
 			readNextEntry(); // move to first compound entry
 			final int depth = getDepth(); // root depth of compound
 			while (depth <= getDepth()) {
@@ -283,13 +298,13 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 			}
 			return compound;
 		}
-		case DOUBLE: return NBT.createDoubleTag(name, readDoubleTag());
-		case FLOAT: return NBT.createFloatTag(name, readFloatTag());
-		case INT: return NBT.createIntTag(name, readIntTag());
-		case INT_ARRAY: return NBT.createIntArrayTag(name, readIntArrayTag());
+		case DOUBLE: return NBT.createDoubleTag(getFieldNameString(), readDoubleTag());
+		case FLOAT: return NBT.createFloatTag(getFieldNameString(), readFloatTag());
+		case INT: return NBT.createIntTag(getFieldNameString(), readIntTag());
+		case INT_ARRAY: return NBT.createIntArrayTag(getFieldNameString(), readIntArrayTag());
 		case LIST: 
 			if (isList) {
-				ListTag<NBT> list = new ListTag<>(getFieldName(), TagType.LIST);
+				ListTag<NBT> list = new ListTag<>(getFieldNameString(), TagType.LIST);
 				while (this.list.payload > 0) {
 					readNextEntry();
 					list.addTag(readNBT());
@@ -298,16 +313,16 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 				removeList();
 				return list;
 			}
-			final ListTag<NBT> list = new ListTag<>(name, this.list.type);
-			name = null;
+			final ListTag<NBT> list = new ListTag<>(getFieldNameString(), this.list.type);
+			resetName();
 			while (getRestPayload() > 0) {
 				list.addTag(readNBT());
 			}
 			return list;
-		case LONG: return NBT.createLongTag(name, readLongTag());
-		case LONG_ARRAY: return NBT.createLongArrayTag(name, readLongArrayTag());
-		case SHORT: return NBT.createShortTag(name, readShortTag());
-		case STRING: return NBT.createStringTag(name, readStringTag());
+		case LONG: return NBT.createLongTag(getFieldNameString(), readLongTag());
+		case LONG_ARRAY: return NBT.createLongArrayTag(getFieldNameString(), readLongArrayTag());
+		case SHORT: return NBT.createShortTag(getFieldNameString(), readShortTag());
+		case STRING: return NBT.createStringTag(getFieldNameString(), readStringTag());
 		case TAG_END: readNextEntry(); return null;
 		default:
 			return null;
@@ -393,7 +408,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 			} while (list != null);
 			list = markList;
 		}
-		markName = name;
+		markName = name.toString();
 		markType = type;
 		ioMark();
 	}
@@ -402,18 +417,21 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	public void reset() {
 		depth = markDepth;
 		list = markList;
-		name = markName;
+		markList = null;
+		name.clear();
+		name.append(markName);
+		markName = null;
 		type = markType;
 		ioReset();
 	}
 
 	@Override
-	public void search(String key, TagType stype, boolean slist) throws IOException {
+	public void search(CharSequence key, TagType stype, boolean slist) throws IOException {
 		ensureOpen();
 		final int depth = getDepth();
 		while (depth <= getDepth()) {
 			// check if current tag is the result
-			if ((key == null || key.equals(name)) && 
+			if ((key == null || name.equals(key)) && 
 					(stype == null || !slist ? stype == type 
 					: type == TagType.LIST && stype == list.type)) break; // breaks if search result == true
 			// --- Skip to next ---
@@ -427,6 +445,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	public void close() {
 		closed = true;
 		name = null;
+		hasName = false;
 		markName = null;
 		depth = Integer.MIN_VALUE;
 		markDepth = depth;
@@ -442,6 +461,27 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	/*
 	 * --- Methods for reading data by subclass ---
 	 */
+	
+	protected void readName(CharKeyBuffer buf) throws IOException {
+		buf.clear();
+		final int length = ioReadShort() & 0xFFFF;
+		for (int i = 0; i < length; i++) {
+			int first = ioReadByte();
+			if ((first & 0x40) == 0) {
+				buf.append((char) (first & 0x7F));
+			} else if ((first & 0xE0) == 0xC0) {
+				int b = ioReadByte();
+				if ((b & 0xC0) != 0x80) throw new UTFDataFormatException();
+				buf.append((char) (((first & 0x1F) << 6) | (b & 0x3F)));
+			} else if ((first & 0xF0) == 0xE0) {
+				int b = ioReadByte();
+				if ((b & 0xC0) != 0x80) throw new UTFDataFormatException();
+				int c = ioReadByte();
+				if ((c & 0xC0) != 0x80) throw new UTFDataFormatException();
+				buf.append((char) (((first & 0x0F) << 12) | ((b & 0x3F) << 6) | (c & 0x3F)));
+			}
+		}
+	}
 	
 	/**
 	 * @see #mark()

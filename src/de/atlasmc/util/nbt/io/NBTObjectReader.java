@@ -193,7 +193,7 @@ public class NBTObjectReader implements NBTReader {
 	}
 
 	@Override
-	public void search(String key, TagType type, boolean list) throws IOException {
+	public void search(CharSequence key, TagType type, boolean list) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}

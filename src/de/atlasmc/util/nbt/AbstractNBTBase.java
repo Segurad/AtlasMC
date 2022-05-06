@@ -28,7 +28,7 @@ public abstract class AbstractNBTBase implements NBTHolder {
 				reader.readNextEntry(); // return in parent compound
 				continue; // go to next iteration for further reading or break if reached end
 			}
-			final String key = reader.getFieldName();
+			final CharSequence key = reader.getFieldName();
 			if (type == TagType.COMPOUND) {
 				NBTFieldContainer container = highestContainer.getContainer(key);
 				if (container != null) { // enter compound if not null

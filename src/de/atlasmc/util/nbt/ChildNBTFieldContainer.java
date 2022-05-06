@@ -1,5 +1,7 @@
 package de.atlasmc.util.nbt;
 
+import de.atlasmc.util.map.key.CharKey;
+
 /**
  * Stores {@link NBTField} and {@link NBTFieldContainer}
  * Overrides fields with the same key of the parent container
@@ -19,7 +21,7 @@ public class ChildNBTFieldContainer extends NBTFieldContainer {
 	}
 	
 	@Override
-	public NBTField getField(String key) {
+	public NBTField getField(CharSequence key) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
 		NBTField field = super.getField(key);
@@ -28,7 +30,7 @@ public class ChildNBTFieldContainer extends NBTFieldContainer {
 	}
 	
 	@Override
-	public NBTFieldContainer getContainer(String key) {
+	public NBTFieldContainer getContainer(CharSequence key) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
 		NBTFieldContainer container = super.getContainer(key);
@@ -42,7 +44,7 @@ public class ChildNBTFieldContainer extends NBTFieldContainer {
 	 * @param key of the container
 	 * @return the new set container
 	 */
-	public NBTFieldContainer setChildContainer(String key) {
+	public NBTFieldContainer setChildContainer(CharKey key) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
 		NBTFieldContainer container = getContainer(key);
