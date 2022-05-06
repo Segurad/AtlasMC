@@ -5,14 +5,15 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreDirectional6Faces;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.CommandBlock;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreCommandBlock extends CoreDirectional6Faces implements CommandBlock {
 
 	private boolean conditional;
 	
-	protected static final String
-	CONDITIONAL = "conditional";
+	protected static final CharKey
+	CONDITIONAL = CharKey.of("conditional");
 	
 	static {
 		NBT_FIELDS.setField(CONDITIONAL, (holder, reader) -> {

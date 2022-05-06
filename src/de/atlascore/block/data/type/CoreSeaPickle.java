@@ -5,12 +5,13 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.SeaPickle;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreSeaPickle extends CoreWaterlogged implements SeaPickle {
 
-	protected static final String
-	PICKLES = "pickles";
+	protected static final CharKey
+	PICKLES = CharKey.of("pickles");
 	
 	static {
 		NBT_FIELDS.setField(PICKLES, (holder, reader) -> {

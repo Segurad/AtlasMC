@@ -5,12 +5,13 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreAnaloguePowerable;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.DaylightDetectore;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreDaylightDetector extends CoreAnaloguePowerable implements DaylightDetectore {
 
-	protected static final String
-	INVERTED = "inverted";
+	protected static final CharKey
+	INVERTED = CharKey.of("inverted");
 	
 	static {
 		NBT_FIELDS.setField(INVERTED, (holder, reader) -> {

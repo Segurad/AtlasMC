@@ -4,12 +4,13 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Snowable;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreSnowable extends CoreBlockData implements Snowable {
 
-	protected static final String
-	SNWOY = "snowy";
+	protected static final CharKey
+	SNWOY = CharKey.of("snowy");
 	
 	static {
 		NBT_FIELDS.setField(SNWOY, (holder, reader) -> {

@@ -4,14 +4,15 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Openable;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreOpenable extends CoreBlockData implements Openable {
 
 	private boolean open;
 	
-	public static final String 
-	OPEN = "open";
+	public static final CharKey
+	OPEN = CharKey.of("open");
 	
 	static {
 		NBT_FIELDS.setField(OPEN, (holder, reader) -> {

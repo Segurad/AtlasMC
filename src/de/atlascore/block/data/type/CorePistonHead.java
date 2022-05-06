@@ -4,12 +4,13 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.PistonHead;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CorePistonHead extends CoreTechnicalPiston implements PistonHead {
 
-	protected static final String
-	SHORT = "short";
+	protected static final CharKey
+	SHORT = CharKey.of("short");
 	
 	static {
 		NBT_FIELDS.setField(SHORT, (holder, reader) -> {

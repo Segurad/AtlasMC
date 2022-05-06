@@ -8,6 +8,7 @@ import de.atlascore.block.data.CoreAnaloguePowerable;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.type.RedstoneWire;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -16,33 +17,25 @@ public class CoreRedstoneWire extends CoreAnaloguePowerable implements RedstoneW
 
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NORTH = "north",
-	EAST = "east",
-	SOUTH = "south",
-	WEST = "west";
+	protected static final CharKey
+	NORTH = CharKey.of("north"),
+	EAST = CharKey.of("east"),
+	SOUTH = CharKey.of("south"),
+	WEST = CharKey.of("west");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreAnaloguePowerable.NBT_FIELDS);
 		NBT_FIELDS.setField(NORTH, (holder, reader) -> {
-			if (holder instanceof RedstoneWire)
 			((RedstoneWire) holder).setFace(BlockFace.NORTH, Connection.getByName(reader.readStringTag()));
-			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(EAST, (holder, reader) -> {
-			if (holder instanceof RedstoneWire)
 			((RedstoneWire) holder).setFace(BlockFace.EAST, Connection.getByName(reader.readStringTag()));
-			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(SOUTH, (holder, reader) -> {
-			if (holder instanceof RedstoneWire)
 			((RedstoneWire) holder).setFace(BlockFace.SOUTH, Connection.getByName(reader.readStringTag()));
-			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(WEST, (holder, reader) -> {
-			if (holder instanceof RedstoneWire)
 			((RedstoneWire) holder).setFace(BlockFace.WEST, Connection.getByName(reader.readStringTag()));
-			else reader.skipTag();
 		});
 	}
 	

@@ -5,12 +5,13 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Jigsaw;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreJigsaw extends CoreBlockData implements Jigsaw {
 
-	protected static final String
-	ORIENTATION = "orientation";
+	protected static final CharKey
+	ORIENTATION = CharKey.of("orientation");
 	
 	static {
 		NBT_FIELDS.setField(ORIENTATION, (holder, reader) -> {

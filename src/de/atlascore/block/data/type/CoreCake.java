@@ -5,12 +5,13 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Cake;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreCake extends CoreBlockData implements Cake {
 
-	protected static final String
-	BITES = "bites";
+	protected static final CharKey
+	BITES = CharKey.of("bites");
 	
 	static {
 		NBT_FIELDS.setField(BITES, (holder, reader) -> {

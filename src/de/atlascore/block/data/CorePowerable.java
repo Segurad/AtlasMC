@@ -4,14 +4,15 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Powerable;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CorePowerable extends CoreBlockData implements Powerable {
 
 	private boolean powered;
 	
-	public static final String 
-	POWERED = "powered";
+	public static final CharKey
+	POWERED = CharKey.of("powered");
 	
 	static {
 		NBT_FIELDS.setField(POWERED, (holder, reader) -> {

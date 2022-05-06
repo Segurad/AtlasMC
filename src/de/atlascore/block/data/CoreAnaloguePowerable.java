@@ -4,12 +4,13 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.AnaloguePowerable;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreAnaloguePowerable extends CoreBlockData implements AnaloguePowerable {
 	
-	protected static final String 
-	POWER = "power";
+	protected static final CharKey 
+	POWER = CharKey.of("power");
 	
 	static {
 		NBT_FIELDS.setField(POWER, (holder, reader) -> {

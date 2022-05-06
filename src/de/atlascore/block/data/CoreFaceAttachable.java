@@ -4,12 +4,13 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.FaceAttachable;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreFaceAttachable extends CoreBlockData implements FaceAttachable {
 
-	public static final String
-	FACE = "face";
+	public static final CharKey
+	FACE = CharKey.of("face");
 	
 	static {
 		NBT_FIELDS.setField(FACE, (holder, reader) -> {

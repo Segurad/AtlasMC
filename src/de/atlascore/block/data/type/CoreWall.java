@@ -6,6 +6,7 @@ import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.type.Wall;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -14,39 +15,29 @@ public class CoreWall extends CoreWaterlogged implements Wall {
 
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NORTH = "north",
-	EAST = "east",
-	WEST = "west",
-	SOUTH = "south",
-	UP = "up";
+	protected static final CharKey
+	NORTH = CharKey.of("north"),
+	EAST = CharKey.of("east"),
+	WEST = CharKey.of("west"),
+	SOUTH = CharKey.of("south"),
+	UP = CharKey.of("up");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreWaterlogged.NBT_FIELDS);
 		NBT_FIELDS.setField(NORTH, (holder, reader) -> {
-			if (holder instanceof Wall)
 			((Wall) holder).setHeight(BlockFace.NORTH, Height.getByName(reader.readStringTag()));
-			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(EAST, (holder, reader) -> {
-			if (holder instanceof Wall)
 			((Wall) holder).setHeight(BlockFace.EAST, Height.getByName(reader.readStringTag()));
-			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(SOUTH, (holder, reader) -> {
-			if (holder instanceof Wall)
 			((Wall) holder).setHeight(BlockFace.SOUTH, Height.getByName(reader.readStringTag()));
-			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(WEST, (holder, reader) -> {
-			if (holder instanceof Wall)
 			((Wall) holder).setHeight(BlockFace.WEST, Height.getByName(reader.readStringTag()));
-			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(UP, (holder, reader) -> {
-			if (holder instanceof Wall)
 			((Wall) holder).setUp(reader.readByteTag() == 1);
-			else reader.skipTag();
 		});
 	}
 	

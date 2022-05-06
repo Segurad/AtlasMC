@@ -5,18 +5,17 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Snow;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreSnow extends CoreBlockData implements Snow {
 
-	protected static final String
-	LAYERS = "layers";
+	protected static final CharKey
+	LAYERS = CharKey.of("layers");
 	
 	static {
 		NBT_FIELDS.setField(LAYERS, (holder, reader) -> {
-			if (holder instanceof Snow)
 			((Snow) holder).setLayers(reader.readIntTag());
-			else reader.skipTag();
 		});
 	}
 	

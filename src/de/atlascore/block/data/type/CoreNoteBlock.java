@@ -6,13 +6,14 @@ import de.atlascore.block.data.CorePowerable;
 import de.atlasmc.Instrument;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.NoteBlock;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreNoteBlock extends CorePowerable implements NoteBlock {
 
-	protected static final String
-	INSTRUMENT = "instrument",
-	NOTE = "note";
+	protected static final CharKey
+	INSTRUMENT = CharKey.of("instrument"),
+	NOTE = CharKey.of("note");
 	
 	static {
 		NBT_FIELDS.setField(INSTRUMENT, (holder, reader) -> {

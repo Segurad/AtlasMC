@@ -6,6 +6,7 @@ import de.atlascore.block.data.CoreBlockData;
 import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Slab;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -14,15 +15,13 @@ public class CoreSlab extends CoreBlockData implements Slab {
 
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	TYPE = "type";
+	protected static final CharKey
+	TYPE = CharKey.of("type");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreBlockData.NBT_FIELDS);
 		NBT_FIELDS.setField(TYPE, (holder, reader) -> {
-			if (holder instanceof Slab)
 			((Slab) holder).setType(Type.getByName(reader.readStringTag()));
-			else reader.skipTag();
 		});
 	}
 	

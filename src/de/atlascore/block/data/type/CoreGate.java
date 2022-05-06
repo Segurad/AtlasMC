@@ -7,12 +7,13 @@ import de.atlascore.block.data.CoreOpenable;
 import de.atlascore.block.data.CorePowerable;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Gate;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreGate extends CoreDirectional4Faces implements Gate {
 
-	protected static final String
-	IN_WALL = "in_wall";
+	protected static final CharKey
+	IN_WALL = CharKey.of("in_wall");
 	
 	static {
 		NBT_FIELDS.setField(IN_WALL, (holder, reader) -> {

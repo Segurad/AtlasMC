@@ -5,13 +5,14 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreDirectional4Faces;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Beehive;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBeehive extends CoreDirectional4Faces implements Beehive {
 
 	private int honeyLevel;
 	
-	protected static final String HONEY_LEVEL = "honey_level";
+	protected static final CharKey HONEY_LEVEL = CharKey.of("honey_level");
 	
 	static {
 		NBT_FIELDS.setField(HONEY_LEVEL, (holder, reader) -> {

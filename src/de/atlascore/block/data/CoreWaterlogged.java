@@ -4,13 +4,14 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Waterlogged;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreWaterlogged extends CoreBlockData implements Waterlogged {
 
 	private boolean waterlogged;
 	
-	public static final String WATERLOGGED = "waterlogged";
+	public static final CharKey WATERLOGGED = CharKey.of("waterlogged");
 	
 	static {
 		NBT_FIELDS.setField(WATERLOGGED, (holder, reader) -> {

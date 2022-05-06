@@ -5,12 +5,13 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.RespawnAnchor;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreRespawnAnchor extends CoreBlockData implements RespawnAnchor {
 
-	protected static final String
-	CHARGES = "charges";
+	protected static final CharKey
+	CHARGES = CharKey.of("charges");
 	
 	static {
 		NBT_FIELDS.setField(CHARGES, (holder, reader) -> {

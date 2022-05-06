@@ -7,6 +7,7 @@ import java.util.Set;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.MultipleFacing;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -15,45 +16,33 @@ public abstract class CoreAbstractMultipleFacing extends CoreBlockData implement
 	
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NORTH = "north",
-	SOUTH = "south",
-	EAST = "east",
-	WEST = "west",
-	UP = "up",
-	DOWN = "down";
+	protected static final CharKey
+	NORTH = CharKey.of("north"),
+	SOUTH = CharKey.of("south"),
+	EAST = CharKey.of("east"),
+	WEST = CharKey.of("west"),
+	UP = CharKey.of("up"),
+	DOWN = CharKey.of("down");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreBlockData.NBT_FIELDS);
 		NBT_FIELDS.setField(NORTH, (holder, reader) -> {
-			if (MultipleFacing.class.isInstance(holder)) {
-				((MultipleFacing) holder).setFace(BlockFace.NORTH, reader.readByteTag() == 1);
-			} else reader.skipTag();
+			((MultipleFacing) holder).setFace(BlockFace.NORTH, reader.readByteTag() == 1);
 		});
 		NBT_FIELDS.setField(SOUTH, (holder, reader) -> {
-			if (MultipleFacing.class.isInstance(holder)) {
-				((MultipleFacing) holder).setFace(BlockFace.SOUTH, reader.readByteTag() == 1);
-			} else reader.skipTag();
+			((MultipleFacing) holder).setFace(BlockFace.SOUTH, reader.readByteTag() == 1);
 		});
 		NBT_FIELDS.setField(EAST, (holder, reader) -> {
-			if (MultipleFacing.class.isInstance(holder)) {
-				((MultipleFacing) holder).setFace(BlockFace.EAST, reader.readByteTag() == 1);
-			} else reader.skipTag();
+			((MultipleFacing) holder).setFace(BlockFace.EAST, reader.readByteTag() == 1);
 		});
 		NBT_FIELDS.setField(WEST, (holder, reader) -> {
-			if (MultipleFacing.class.isInstance(holder)) {
-				((MultipleFacing) holder).setFace(BlockFace.WEST, reader.readByteTag() == 1);
-			} else reader.skipTag();
+			((MultipleFacing) holder).setFace(BlockFace.WEST, reader.readByteTag() == 1);
 		});
 		NBT_FIELDS.setField(UP, (holder, reader) -> {
-			if (MultipleFacing.class.isInstance(holder)) {
-				((MultipleFacing) holder).setFace(BlockFace.UP, reader.readByteTag() == 1);
-			} else reader.skipTag();
+			((MultipleFacing) holder).setFace(BlockFace.UP, reader.readByteTag() == 1);
 		});
 		NBT_FIELDS.setField(DOWN, (holder, reader) -> {
-			if (MultipleFacing.class.isInstance(holder)) {
-				((MultipleFacing) holder).setFace(BlockFace.DOWN, reader.readByteTag() == 1);
-			} else reader.skipTag();
+			((MultipleFacing) holder).setFace(BlockFace.DOWN, reader.readByteTag() == 1);
 		});
 	}
 	

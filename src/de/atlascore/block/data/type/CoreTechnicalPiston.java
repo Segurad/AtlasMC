@@ -5,6 +5,7 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreDirectional6Faces;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.TechnicalPiston;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -13,8 +14,8 @@ public class CoreTechnicalPiston extends CoreDirectional6Faces implements Techni
 
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	TYPE = "type";
+	protected static final CharKey
+	TYPE = CharKey.of("type");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreDirectional6Faces.NBT_FIELDS);

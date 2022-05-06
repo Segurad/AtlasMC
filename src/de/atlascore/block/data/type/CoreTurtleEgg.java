@@ -5,13 +5,14 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.TurtleEgg;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTurtleEgg extends CoreBlockData implements TurtleEgg {
 
-	protected static final String
-	HATCH = "hatch",
-	EGGS = "eggs";
+	protected static final CharKey
+	HATCH = CharKey.of("hatch"),
+	EGGS = CharKey.of("eggs");
 	
 	static {
 		NBT_FIELDS.setField(EGGS, (holder, reader) -> {

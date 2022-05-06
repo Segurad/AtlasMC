@@ -5,12 +5,13 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Lantern;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreLantern extends CoreWaterlogged implements Lantern {
 
-	protected static final String
-	HANGING = "hanging";
+	protected static final CharKey
+	HANGING = CharKey.of("hanging");
 	
 	static {
 		NBT_FIELDS.setField(HANGING, (holder, reader) -> {

@@ -6,6 +6,7 @@ import de.atlascore.block.data.CoreDirectional4Faces;
 import de.atlascore.block.data.CorePowerable;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Comparator;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -14,8 +15,8 @@ public class CoreComparator extends CoreDirectional4Faces implements Comparator 
 
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	MODE = "mode";
+	protected static final CharKey
+	MODE = CharKey.of("mode");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreDirectional4Faces.NBT_FIELDS);

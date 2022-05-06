@@ -6,12 +6,13 @@ import de.atlascore.block.data.CoreDirectional4Faces;
 import de.atlascore.block.data.CorePowerable;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Bell;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBell extends CoreDirectional4Faces implements Bell {
 
-	protected static final String
-	ATTACHEMENT = "attachment";
+	protected static final CharKey
+	ATTACHEMENT = CharKey.of("attachment");
 	
 	static {
 		NBT_FIELDS.setField(ATTACHEMENT, (holder, reader) -> {

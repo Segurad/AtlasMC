@@ -5,12 +5,13 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreAgeable;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Bamboo;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBamboo extends CoreSapling implements Bamboo {
 
-	protected static final String
-	LEAVES = "leaves";
+	protected static final CharKey
+	LEAVES = CharKey.of("leaves");
 	
 	static {
 		NBT_FIELDS.setField(LEAVES, (holder, reader) -> {

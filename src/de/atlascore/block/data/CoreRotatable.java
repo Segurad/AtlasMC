@@ -5,13 +5,14 @@ import java.io.IOException;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.Rotatable;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreRotatable extends CoreBlockData implements Rotatable {
 
 	private BlockFace rotation;
 	
-	protected static final String ROTATION = "rotation";
+	protected static final CharKey ROTATION = CharKey.of("rotation");
 	
 	static {
 		NBT_FIELDS.setField(ROTATION, (holder, reader) -> {

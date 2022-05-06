@@ -2,6 +2,7 @@ package de.atlascore.block.data.type;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Lectern;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 import java.io.IOException;
@@ -11,8 +12,8 @@ import de.atlascore.block.data.CorePowerable;
 
 public class CoreLectern extends CoreDirectional4Faces implements Lectern {
 
-	protected static final String
-	BOOK = "book";
+	protected static final CharKey
+	BOOK = CharKey.of("book");
 	
 	static {
 		NBT_FIELDS.setField(BOOK, (holder, reader) -> {

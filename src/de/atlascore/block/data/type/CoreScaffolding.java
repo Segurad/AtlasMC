@@ -5,6 +5,7 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Scaffolding;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -13,9 +14,9 @@ public class CoreScaffolding extends CoreWaterlogged implements Scaffolding {
 
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	BOTTOM = "bottom",
-	DISTANCE = "distance";
+	protected static final CharKey
+	BOTTOM = CharKey.of("bottom"),
+	DISTANCE = CharKey.of("distance");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreWaterlogged.NBT_FIELDS);

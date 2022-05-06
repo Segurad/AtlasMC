@@ -5,11 +5,12 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.BubbleColumn;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBubbleColumn extends CoreBlockData implements BubbleColumn {
 	
-	protected static final String DRAG = "drag";
+	protected static final CharKey DRAG = CharKey.of("drag");
 	
 	static {
 		NBT_FIELDS.setField(DRAG, (holder, reader) -> {

@@ -4,14 +4,15 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Lightable;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreLightable extends CoreBlockData implements Lightable {
 
 	private boolean lit;
 	
-	public static final String 
-	LIT = "lit";
+	public static final CharKey
+	LIT = CharKey.of("lit");
 	
 	static {
 		NBT_FIELDS.setField(LIT, (holder, reader) -> {

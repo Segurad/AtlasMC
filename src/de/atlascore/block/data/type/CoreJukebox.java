@@ -5,12 +5,13 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Jukebox;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreJukebox extends CoreBlockData implements Jukebox {
 
-	protected static final String
-	HAS_RECORD = "has_record";
+	protected static final CharKey
+	HAS_RECORD = CharKey.of("has_record");
 	
 	static {
 		NBT_FIELDS.setField(HAS_RECORD, (holder, reader) -> {

@@ -4,12 +4,13 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Ageable;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreAgeable extends CoreBlockData implements Ageable {
 	
-	public static final String 
-	AGE = "age";
+	public static final CharKey
+	AGE = CharKey.of("age");
 	
 	static {
 		NBT_FIELDS.setField(AGE, (holder, reader) -> {

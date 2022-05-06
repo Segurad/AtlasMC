@@ -5,13 +5,14 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreDirectional4Faces;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Repeater;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreRepeater extends CoreDirectional4Faces implements Repeater {
 
-	protected static final String
-	LOCKED = "locked",
-	DELAY = "delay";
+	protected static final CharKey
+	LOCKED = CharKey.of("locked"),
+	DELAY = CharKey.of("delay");
 	
 	static {
 		NBT_FIELDS.setField(LOCKED, (holder, reader) -> {

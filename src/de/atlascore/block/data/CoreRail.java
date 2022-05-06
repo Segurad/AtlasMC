@@ -6,6 +6,7 @@ import java.util.Set;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Rail;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -14,15 +15,13 @@ public class CoreRail extends CoreBlockData implements Rail {
 
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	SHAPE = "shape";
+	protected static final CharKey
+	SHAPE = CharKey.of("shape");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreBlockData.NBT_FIELDS);
 		NBT_FIELDS.setField(SHAPE, (holder, reader) -> {
-			if (holder instanceof Rail)
 			((Rail) holder).setShape(Shape.getByName(reader.readStringTag()));
-			else reader.skipTag();
 		});
 	}
 	

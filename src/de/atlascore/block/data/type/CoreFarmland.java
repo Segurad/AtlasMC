@@ -5,6 +5,7 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Farmland;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreFarmland extends CoreBlockData implements Farmland {
@@ -12,7 +13,7 @@ public class CoreFarmland extends CoreBlockData implements Farmland {
 	private final int maxmoisture;
 	private int moisture;
 	
-	protected static final String MOISTURE = "moisture";
+	protected static final CharKey MOISTURE = CharKey.of("moisture");
 	
 	static {
 		NBT_FIELDS.setField(MOISTURE, (holder, reader) -> {

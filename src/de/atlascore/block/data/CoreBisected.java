@@ -4,12 +4,13 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Bisected;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBisected extends CoreBlockData implements Bisected {
 	
-	public static final String 
-	HALF = "half";
+	public static final CharKey
+	HALF = CharKey.of("half");
 	
 	static {
 		NBT_FIELDS.setField(HALF, (holder, reader) -> {

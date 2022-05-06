@@ -4,12 +4,13 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Levelled;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreLevelled extends CoreBlockData implements Levelled {
 
-	protected static final String
-	LEVEL = "level";
+	protected static final CharKey
+	LEVEL = CharKey.of("level");
 	
 	static {
 		NBT_FIELDS.setField(LEVEL, (holder, reader) -> {

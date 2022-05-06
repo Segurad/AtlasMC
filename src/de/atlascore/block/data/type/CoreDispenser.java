@@ -5,12 +5,13 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreDirectional6Faces;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Dispenser;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreDispenser extends CoreDirectional6Faces implements Dispenser {
 
-	protected static final String
-	TRIGGERED = "triggered";
+	protected static final CharKey
+	TRIGGERED = CharKey.of("triggered");
 	
 	static {
 		NBT_FIELDS.setField(TRIGGERED, (holder, reader) -> {

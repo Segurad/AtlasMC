@@ -5,6 +5,7 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Leaves;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -13,21 +14,17 @@ public class CoreLeaves extends CoreBlockData implements Leaves {
 
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	DISTANCE = "distance",
-	PERSISTENT = "persistent";
+	protected static final CharKey
+	DISTANCE = CharKey.of("distance"),
+	PERSISTENT = CharKey.of("persistent");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreBlockData.NBT_FIELDS);
 		NBT_FIELDS.setField(DISTANCE, (holder, reader) -> {
-			if (holder instanceof Leaves)
 			((Leaves) holder).setDistance(reader.readIntTag());
-			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(PERSISTENT, (holder, reader) -> {
-			if (holder instanceof Leaves)
 			((Leaves) holder).setPersistent(reader.readByteTag() == 1);
-			else reader.skipTag();
 		});
 	}
 	

@@ -6,6 +6,7 @@ import java.util.Set;
 import de.atlasmc.Axis;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Orientable;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreOrientable extends CoreBlockData implements Orientable {
@@ -15,8 +16,8 @@ public class CoreOrientable extends CoreBlockData implements Orientable {
 					Axis.Y,
 					Axis.Z);
 	
-	protected static final String
-	AXIS = "axis";
+	protected static final CharKey
+	AXIS = CharKey.of("axis");
 	
 	static {
 		NBT_FIELDS.setField(AXIS, (holder, reader) -> {

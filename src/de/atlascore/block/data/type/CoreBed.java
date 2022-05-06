@@ -5,6 +5,7 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreDirectional4Faces;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Bed;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBed extends CoreDirectional4Faces implements Bed {
@@ -12,9 +13,9 @@ public class CoreBed extends CoreDirectional4Faces implements Bed {
 	private boolean occupied;
 	private Part part;
 	
-	protected static final String 
-	OCCUPIED = "occupied",
-	PART = "part";
+	protected static final CharKey
+	OCCUPIED = CharKey.of("occupied"),
+	PART = CharKey.of("part");
 	
 	static {
 		NBT_FIELDS.setField(OCCUPIED, (holder, reader) -> {

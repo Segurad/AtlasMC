@@ -5,12 +5,13 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreDirectional6Faces;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Piston;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CorePiston extends CoreDirectional6Faces implements Piston {
 
-	protected static final String
-	EXTENDED = "extended";
+	protected static final CharKey
+	EXTENDED = CharKey.of("extended");
 	
 	static {
 		NBT_FIELDS.setField(EXTENDED, (holder, reader) -> {

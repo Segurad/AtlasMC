@@ -4,12 +4,13 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Attachable;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreAttachable extends CoreBlockData implements Attachable {
 	
-	public static final String
-	ATTACHED = "attached";
+	public static final CharKey
+	ATTACHED = CharKey.of("attached");
 	
 	static {
 		NBT_FIELDS.setField(ATTACHED, (holder, reader) -> {

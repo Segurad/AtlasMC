@@ -10,12 +10,13 @@ import de.atlascore.block.data.CorePowerable;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.type.Tripwire;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTripwire extends CoreAbstractMultipleFacing implements Tripwire {
 
-	protected static final String
-	DISARMED = "disarmed";
+	protected static final CharKey
+	DISARMED = CharKey.of("disarmed");
 	
 	static {
 		NBT_FIELDS.setField(DISARMED, (holder, reader) -> {

@@ -2,6 +2,7 @@ package de.atlascore.block.data.type;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Campfire;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 import java.io.IOException;
@@ -12,8 +13,8 @@ import de.atlascore.block.data.CoreWaterlogged;
 
 public class CoreCampfire extends CoreDirectional4Faces implements Campfire {
 
-	protected static final String
-	SIGNALE_FIRE = "signal_fire";
+	protected static final CharKey
+	SIGNALE_FIRE = CharKey.of("signal_fire");
 	
 	static {
 		NBT_FIELDS.setField(SIGNALE_FIRE, (holder, reader) -> {

@@ -7,6 +7,7 @@ import de.atlascore.block.data.CoreDirectional4Faces;
 import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Stairs;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -15,15 +16,13 @@ public class CoreStairs extends CoreDirectional4Faces implements Stairs {
 
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	SHAPE = "shape";
+	protected static final CharKey
+	SHAPE = CharKey.of("shape");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreDirectional4Faces.NBT_FIELDS);
 		NBT_FIELDS.setField(SHAPE, (holder, reader) -> {
-			if (holder instanceof Stairs)
 			((Stairs) holder).setShape(Shape.getByName(reader.readStringTag()));
-			else reader.skipTag();
 		});
 	}
 	

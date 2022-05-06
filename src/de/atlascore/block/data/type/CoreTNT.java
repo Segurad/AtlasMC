@@ -5,12 +5,13 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.TNT;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTNT extends CoreBlockData implements TNT {
 
-	protected static final String
-	UNSTABLE = "unstable";
+	protected static final CharKey
+	UNSTABLE = CharKey.of("unstable");
 	
 	static {
 		NBT_FIELDS.setField(UNSTABLE, (holder, reader) -> {

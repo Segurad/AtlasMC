@@ -6,13 +6,14 @@ import java.util.Set;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.Directional;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public abstract class CoreAbstractDirectional extends CoreBlockData implements Directional {
 
 	private BlockFace face;
 	
-	protected static final String FACING = "facing";
+	protected static final CharKey FACING = CharKey.of("facing");
 	
 	static {
 		NBT_FIELDS.setField(FACING, (holder, reader) -> {

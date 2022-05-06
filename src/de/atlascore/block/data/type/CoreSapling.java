@@ -5,12 +5,13 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Sapling;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreSapling extends CoreBlockData implements Sapling {
 
-	protected static final String
-	STAGE = "stage";
+	protected static final CharKey
+	STAGE = CharKey.of("stage");
 	
 	static {
 		NBT_FIELDS.setField(STAGE, (holder, reader) -> {

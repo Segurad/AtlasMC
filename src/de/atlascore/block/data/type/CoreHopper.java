@@ -8,12 +8,13 @@ import de.atlascore.block.data.CoreAbstractDirectional;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.type.Hopper;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreHopper extends CoreAbstractDirectional implements Hopper {
 
-	protected static final String
-	ENABLED = "enabled";
+	protected static final CharKey
+	ENABLED = CharKey.of("enabled");
 	
 	static {
 		NBT_FIELDS.setField(ENABLED, (holder, reader) -> {

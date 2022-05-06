@@ -5,14 +5,15 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.BrewingStand;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBrewingStand extends CoreBlockData implements BrewingStand {
 	
-	protected static final String 
-	HAS_BOTTLE_0 = "has_bottle_0",
-	HAS_BOTTLE_1 = "has_bottle_1",
-	HAS_BOTTLE_2 = "has_bottle_2";
+	protected static final CharKey
+	HAS_BOTTLE_0 = CharKey.of("has_bottle_0"),
+	HAS_BOTTLE_1 = CharKey.of("has_bottle_1"),
+	HAS_BOTTLE_2 = CharKey.of("has_bottle_2");
 	
 	static {
 		NBT_FIELDS.setField(HAS_BOTTLE_0, (holder, reader) -> {

@@ -8,6 +8,7 @@ import de.atlascore.block.data.CoreOpenable;
 import de.atlascore.block.data.CorePowerable;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Door;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreDoor extends CoreDirectional4Faces implements Door {
@@ -16,8 +17,8 @@ public class CoreDoor extends CoreDirectional4Faces implements Door {
 	private Hinge hinge;
 	private boolean open, powered;
 	
-	protected static final String
-	HINGE = "hinge";
+	protected static final CharKey
+	HINGE = CharKey.of("hinge");
 	
 	static {
 		NBT_FIELDS.setField(HINGE, (holder, reader) -> {
