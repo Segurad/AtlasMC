@@ -11,6 +11,7 @@ import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.AbstractHorseInventory;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
@@ -22,9 +23,9 @@ public class CoreChestedHorse extends CoreAbstractHorse implements ChestedHorse 
 	
 	protected static final int LAST_META_INDEX = CoreAbstractHorse.LAST_META_INDEX+1;
 
-	protected static final String
-	NBT_CHESTED_HORSE = "ChestedHorse",
-	NBT_ITEMS = "Items";
+	protected static final CharKey
+	NBT_CHESTED_HORSE = CharKey.of("ChestedHorse"),
+	NBT_ITEMS = CharKey.of("Items");
 	
 	static {
 		NBT_FIELDS.setField(NBT_CHESTED_HORSE, (holder, reader) -> {

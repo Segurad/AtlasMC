@@ -8,6 +8,7 @@ import de.atlasmc.entity.Cat;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -28,9 +29,9 @@ public class CoreCat extends CoreTameable implements Cat {
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_CAT_TYPE = "CatType", // TODO will change to "Type" in 1.19 and switches from byte to NamespacedKey as id
-	NBT_COLLAR_COLOR = "CollarColor";
+	protected static final CharKey
+	NBT_CAT_TYPE = CharKey.of("CatType"), // TODO will change to "Type" in 1.19 and switches from byte to NamespacedKey as id
+	NBT_COLLAR_COLOR = CharKey.of("CollarColor");
 	// NBT_Type = "Type", TODO 1.19
 	
 	static {

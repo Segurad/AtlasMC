@@ -7,6 +7,7 @@ import de.atlasmc.entity.Mob;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.world.World;
 
 public class CoreMob extends CoreLivingEntity implements Mob {
@@ -21,9 +22,9 @@ public class CoreMob extends CoreLivingEntity implements Mob {
 	
 	protected static final int LAST_META_INDEX = CoreLivingEntity.LAST_META_INDEX+1;
 	
-	protected static final String
-	NBT_LEFT_HANDED = "LeftHanded",
-	NBT_NO_AI = "NoAI";
+	protected static final CharKey
+	NBT_LEFT_HANDED = CharKey.of("LeftHanded"),
+	NBT_NO_AI = CharKey.of("NoAI");
 	
 	static {
 		NBT_FIELDS.setField(NBT_LEFT_HANDED, (holder, reader) -> {

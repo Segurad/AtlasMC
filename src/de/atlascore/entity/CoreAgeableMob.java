@@ -7,6 +7,7 @@ import de.atlasmc.entity.AgeableMob;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
@@ -18,12 +19,12 @@ public class CoreAgeableMob extends CoreMob implements AgeableMob {
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+1;
 	
-	protected static final String
-	NBT_AGE = "Age",
-	NBT_KEEP_BABY = "KeepBaby", // optional non standard nbt to set this entity as baby even if the age is 0 or greater
-	NBT_FORCE_AGE = "ForceAge",
-	NBT_IN_LOVE = "InLove",
-	NBT_LOVE_CAUSE = "LoveCauses";
+	protected static final CharKey
+	NBT_AGE = CharKey.of("Age"),
+	NBT_KEEP_BABY = CharKey.of("KeepBaby"), // optional non standard nbt to set this entity as baby even if the age is 0 or greater
+	NBT_FORCE_AGE = CharKey.of("ForceAge"),
+	NBT_IN_LOVE = CharKey.of("InLove"),
+	NBT_LOVE_CAUSE = CharKey.of("LoveCauses");
 	
 	static {
 		NBT_FIELDS.setField(NBT_AGE, (holder, reader) -> {

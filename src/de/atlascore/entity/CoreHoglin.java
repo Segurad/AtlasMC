@@ -7,6 +7,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Hoglin;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -21,10 +22,10 @@ public class CoreHoglin extends CoreAgeableMob implements Hoglin {
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_IS_IMMUNE_TO_ZOMBIFICATION = "IsImmuneToZombiefication",
+	protected static final CharKey
+	NBT_IS_IMMUNE_TO_ZOMBIFICATION = CharKey.of("IsImmuneToZombiefication"),
 	// NBT_TIME_IN_OVERWORLD = "TimeInOverworld", TODO skipped until usecase
-	NBT_CANNOT_BE_HUNTED = "CannotBeHunted";
+	NBT_CANNOT_BE_HUNTED = CharKey.of("CannotBeHunted");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreAgeableMob.NBT_FIELDS);

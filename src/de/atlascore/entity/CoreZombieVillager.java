@@ -13,6 +13,7 @@ import de.atlasmc.entity.Villager.VillagerType;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
@@ -26,16 +27,16 @@ public class CoreZombieVillager extends CoreZombie implements ZombieVillager {
 	
 	protected static final int LAST_META_INDEX = CoreZombie.LAST_META_INDEX+2;
 	
-	protected static final String
-		NBT_OFFERS = "Offers",
-		NBT_RECIPES = "Recipes",
-		NBT_TYPE = "type",
-		NBT_PROFESSION = "profession",
-		NBT_LEVEL = "level",
-		NBT_VILLAGER_DATA = "VillagerData",
-		NBT_XP = "Xp",
-		NBT_CONVERSION_PLAYER = "ConversionPlayer",
-		NBT_CONVERSION_TIME = "ConversionTime";
+	protected static final CharKey
+		NBT_OFFERS = CharKey.of("Offers"),
+		NBT_RECIPES = CharKey.of("Recipes"),
+		NBT_TYPE = CharKey.of("type"),
+		NBT_PROFESSION = CharKey.of("profession"),
+		NBT_LEVEL = CharKey.of("level"),
+		NBT_VILLAGER_DATA = CharKey.of("VillagerData"),
+		NBT_XP = CharKey.of("Xp"),
+		NBT_CONVERSION_PLAYER = CharKey.of("ConversionPlayer"),
+		NBT_CONVERSION_TIME = CharKey.of("ConversionTime");
 	
 	static {
 		NBT_FIELDS.setField(NBT_CONVERSION_PLAYER, (holder, reader) -> {
@@ -47,6 +48,33 @@ public class CoreZombieVillager extends CoreZombie implements ZombieVillager {
 			if (holder instanceof ZombieVillager) {
 				((ZombieVillager) holder).setConversionTime(reader.readIntTag());
 			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_XP, (holder, reader) -> {
+			if (holder instanceof ZombieVillager) {
+				((ZombieVillager) holder).setXp(reader.readIntTag());
+			} else reader.skipTag();
+		});
+		NBT_FIELDS.setField(NBT_VILLAGER_DATA, (holder, reader) -> {
+			reader.readNextEntry();
+			ZombieVillager villager = (ZombieVillager) holder;
+			while (reader.getType() != TagType.TAG_END) {
+				final CharSequence value = reader.getFieldName();
+				if (NBT_PROFESSION.equals(value)) {
+					VillagerProfession prof = VillagerProfession.getByNameID(reader.readStringTag());
+					if (prof != null)
+						break;
+					villager.setVillagerProfession(prof);
+				} else if (NBT_TYPE.equals(value)) {
+					VillagerType type = VillagerType.getByNameID(reader.readStringTag());
+					if (type != null)
+						break;
+					villager.setVillagerType(type);
+				} else if (NBT_LEVEL.equals(value))
+					villager.setLevel(reader.readIntTag());
+				else
+					reader.skipTag();
+			}
+			reader.readNextEntry();
 		});
 	}
 	

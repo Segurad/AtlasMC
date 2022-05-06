@@ -5,13 +5,14 @@ import java.util.UUID;
 
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.WanderingTrader;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreWanderingTrader extends CoreAbstractVillager implements WanderingTrader {
 
-	protected static final String
-	NBT_DESPAWN_DELAY = "DespawnDelay";
+	protected static final CharKey
+	NBT_DESPAWN_DELAY = CharKey.of("DespawnDelay");
 	//NBT_WANDER_TARGET = "WanderTarget";
 	
 	static {

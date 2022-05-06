@@ -7,6 +7,7 @@ import de.atlasmc.entity.Turtle;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.MathUtil;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.world.World;
 
 public class CoreTurtle extends CoreAgeableMob implements Turtle {
@@ -26,14 +27,14 @@ public class CoreTurtle extends CoreAgeableMob implements Turtle {
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+6;
 	
-	protected static final String
+	protected static final CharKey
 //	NBT_HOME_POS_X = "HomePosX", TODO unused 
 //	NBT_HOME_POS_Y = "HomePosY",
 //	NBT_HOME_POS_Z = "HomePosZ",
 //	NBT_TRAVEL_POS_X = "TravelPosX",
 //	NBT_TRAVEL_POS_Y = "TravelPosY",
 //	NBT_TRAVEL_POS_Z = "TravelPosZ",
-	NBT_HAS_EGG = "HasEgg";
+	NBT_HAS_EGG = CharKey.of("HasEgg");
 	
 	static {
 		NBT_FIELDS.setField(NBT_HAS_EGG, (holder, reader) -> {

@@ -10,6 +10,7 @@ import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -24,12 +25,12 @@ public class CoreItem extends CoreEntity implements Item {
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_AGE = "Age",
-	NBT_ITEM = "Item",
-	NBT_OWNER = "Owner",
-	NBT_PICKUP_DELAY = "PickupDelay",
-	NBT_THROWER = "Thrower";
+	protected static final CharKey
+	NBT_AGE = CharKey.of("Age"),
+	NBT_ITEM = CharKey.of("Item"),
+	NBT_OWNER = CharKey.of("Owner"),
+	NBT_PICKUP_DELAY = CharKey.of("PickupDelay"),
+	NBT_THROWER = CharKey.of("Thrower");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreEntity.NBT_FIELDS);

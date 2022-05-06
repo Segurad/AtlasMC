@@ -7,6 +7,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Parrot;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -21,8 +22,8 @@ public class CoreParrot extends CoreTameable implements Parrot {
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_VARIANT = "Variant";
+	protected static final CharKey
+	NBT_VARIANT = CharKey.of("Variant");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreTameable.NBT_FIELDS);

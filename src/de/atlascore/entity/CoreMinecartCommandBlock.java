@@ -9,6 +9,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.MinecartCommandBlock;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
@@ -21,11 +22,11 @@ public class CoreMinecartCommandBlock extends CoreAbstractMinecart implements Mi
 	
 	protected static final int LAST_META_INDEX = CoreAbstractMinecart.LAST_META_INDEX+2;
 	
-	protected static final String
-	NBT_COMMAND = "Command",
-	NBT_LAST_OUTPUT = "LastOutput",
-	NBT_SUCCESS_COUNT = "SuccessCount",
-	NBT_TRACK_OUTPUT = "TrackOutput";
+	protected static final CharKey
+	NBT_COMMAND = CharKey.of("Command"),
+	NBT_LAST_OUTPUT = CharKey.of("LastOutput"),
+	NBT_SUCCESS_COUNT = CharKey.of("SuccessCount"),
+	NBT_TRACK_OUTPUT = CharKey.of("TrackOutput");
 	
 	static {
 		NBT_FIELDS.setField(NBT_COMMAND, (holder, reader) -> {

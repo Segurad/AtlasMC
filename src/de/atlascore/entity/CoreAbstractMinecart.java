@@ -8,6 +8,7 @@ import de.atlasmc.entity.AbstractMinecart;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
@@ -32,12 +33,12 @@ public class CoreAbstractMinecart extends CoreEntity implements AbstractMinecart
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_CUSTOM_DISPLAY_TILE = "CustomDisplayTile",
-	NBT_DISPLAY_OFFSET = "DisplayOffset",
-	NBT_DISPLAY_STATE = "DisplayState",
-	NBT_NAME = "Name",
-	NBT_PROPERTIES = "Properties";
+	protected static final CharKey
+	NBT_CUSTOM_DISPLAY_TILE = CharKey.of("CustomDisplayTile"),
+	NBT_DISPLAY_OFFSET = CharKey.of("DisplayOffset"),
+	NBT_DISPLAY_STATE = CharKey.of("DisplayState"),
+	NBT_NAME = CharKey.of("Name"),
+	NBT_PROPERTIES = CharKey.of("Properties");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreEntity.NBT_FIELDS);
@@ -60,11 +61,10 @@ public class CoreAbstractMinecart extends CoreEntity implements AbstractMinecart
 			Material mat = null;
 			BlockData data = null;
 			while (reader.getType() != TagType.TAG_END) {
-				switch (reader.getFieldName()) {
-				case NBT_NAME:
+				final CharSequence value = reader.getFieldName();
+				if (NBT_NAME.equals(value))
 					mat = Material.getByName(reader.readStringTag());
-					break;
-				case NBT_PROPERTIES:
+				else if (NBT_PROPERTIES.equals(value))
 					if (mat == null)
 						reader.skipTag();
 					else {
@@ -72,11 +72,8 @@ public class CoreAbstractMinecart extends CoreEntity implements AbstractMinecart
 						reader.readNextEntry();
 						data.fromNBT(reader);
 					}
-					break;
-				default:
+				else
 					reader.skipTag();
-					break;
-				}
 			}
 			reader.skipTag();
 			if (data != null)

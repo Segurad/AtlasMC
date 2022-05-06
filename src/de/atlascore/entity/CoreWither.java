@@ -8,6 +8,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Wither;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
@@ -24,8 +25,8 @@ public class CoreWither extends CoreMob implements Wither {
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+4;
 	
-	protected static final String
-	NBT_INVUL = "Invul";
+	protected static final CharKey
+	NBT_INVUL = CharKey.of("Invul");
 	
 	static {
 		NBT_FIELDS.setField(NBT_INVUL, (holder, reader) -> {

@@ -6,6 +6,7 @@ import java.util.List;
 import de.atlasmc.Material;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTHolder;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
@@ -25,18 +26,18 @@ public interface Merchant {
 	
 	public static class MerchantRecipe implements Cloneable, NBTHolder {
 		
-		protected static final String
-		NBT_ID = "id", // required for get material
-		NBT_BUY = "buy",
-		NBT_BUY_B = "buyB",
-		NBT_DEMAND = "demand",
-		NBT_MAX_USES = "maxUses",
-		NBT_PRICE_MULTIPLIER = "priceMultiplier",
-		NBT_REWARD_EXP = "rewardExp",
-		NBT_SELL = "sell",
-		NBT_SPECIAL_PRICE = "specialPrice",
-		NBT_USES = "uses",
-		NBT_XP = "xp";
+		protected static final CharKey
+		NBT_ID = CharKey.of("id"), // required for get material
+		NBT_BUY = CharKey.of("buy"),
+		NBT_BUY_B = CharKey.of("buyB"),
+		NBT_DEMAND = CharKey.of("demand"),
+		NBT_MAX_USES = CharKey.of("maxUses"),
+		NBT_PRICE_MULTIPLIER = CharKey.of("priceMultiplier"),
+		NBT_REWARD_EXP = CharKey.of("rewardExp"),
+		NBT_SELL = CharKey.of("sell"),
+		NBT_SPECIAL_PRICE = CharKey.of("specialPrice"),
+		NBT_USES = CharKey.of("uses"),
+		NBT_XP = CharKey.of("xp");
 		
 		private ItemStack inputItem1, inputItem2, outputItem;
 		private boolean disabled;
@@ -180,12 +181,12 @@ public interface Merchant {
 		public void fromNBT(NBTReader reader) throws IOException {
 			while (reader.getType() != TagType.TAG_END) {
 				int itemID = 0;
-				switch (reader.getFieldName()) {
-				case NBT_BUY:
+				final CharSequence value = reader.getFieldName();
+				if (NBT_BUY.equals(value))
 					itemID++;
-				case NBT_BUY_B:
+				else if (NBT_BUY_B.equals(value))
 					itemID++;
-				case NBT_SELL:
+				else if (NBT_SELL.equals(value)) {
 					reader.readNextEntry();
 					Material mat = null;
 					if (!NBT_ID.equals(reader.getFieldName())) {
@@ -202,29 +203,20 @@ public interface Merchant {
 						setInputItem2(item);
 					else if (itemID == 0)
 						setOutputItem(item);
-					break;
-				case NBT_DEMAND:
+				} else if (NBT_DEMAND.equals(value))
 					setDemand(reader.readIntTag());
-					break;
-				case NBT_MAX_USES:
+				else if (NBT_MAX_USES.equals(value))
 					setMaxTrades(reader.readIntTag());
-					break;
-				case NBT_PRICE_MULTIPLIER:
+				else if (NBT_PRICE_MULTIPLIER.equals(value))
 					setPriceMultiplier(reader.readFloatTag());
-					break;
-				case NBT_REWARD_EXP:
+				else if (NBT_REWARD_EXP.equals(value))
 					reader.skipTag(); // TODO skipped reward xp flag
-					break;
-				case NBT_SPECIAL_PRICE:
+				else if (NBT_SPECIAL_PRICE.equals(value))
 					setSpecialPrice(reader.readIntTag());
-					break;
-				case NBT_USES:
+				else if (NBT_USES.equals(value))
 					setTrades(reader.readIntTag());
-					break;
-				case NBT_XP:
+				else if (NBT_XP.equals(value))
 					setXP(reader.readIntTag());
-					break;
-				}
 			}
 			reader.readNextEntry();
 		}

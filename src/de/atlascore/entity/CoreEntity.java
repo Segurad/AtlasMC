@@ -28,6 +28,7 @@ import de.atlasmc.io.protocol.play.PacketOutEntityTeleport;
 import de.atlasmc.io.protocol.play.PacketOutSetPassengers;
 import de.atlasmc.io.protocol.play.PacketOutSpawnEntity;
 import de.atlasmc.util.ViewerSet;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.AbstractNBTBase;
 import de.atlasmc.util.nbt.CustomTagContainer;
 import de.atlasmc.util.nbt.NBTField;
@@ -79,26 +80,26 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	
 	protected static final NBTFieldContainer NBT_FIELDS = new NBTFieldContainer();
 	
-	protected static final String
-	NBT_AIR = "Air",
-	NBT_CUSTOM_NAME = "CustomName",
-	NBT_CUSTOM_NAME_VISIBLE = "CustomNameVisible",
-	NBT_DIMENSION = "Dimension",
-	NBT_FALL_DISTANCE = "FallDistance",
-	NBT_FIRE = "Fire",
-	NBT_GLOWING = "Glowing",
-	NBT_ID = "id",
-	NBT_INVULNERABLE = "Invulnerable",
-	NBT_MOTION = "Motion", 
-	NBT_NO_GRAVITY = "NoGravity",
-	NBT_ON_GROUND = "OnGround",
-	NBT_PASSENGERS = "Passengers",
-	NBT_PORTAL_COOLDOWN = "PortalCooldown",
-	NBT_POS = "Pos",
-	NBT_ROTATION = "Rotation",
-	NBT_SILENT = "Silent",
-	NBT_TAGS = "Tags",
-	NBT_UUID = "UUID";
+	protected static final CharKey
+	NBT_AIR = CharKey.of("Air"),
+	NBT_CUSTOM_NAME = CharKey.of("CustomName"),
+	NBT_CUSTOM_NAME_VISIBLE = CharKey.of("CustomNameVisible"),
+	NBT_DIMENSION = CharKey.of("Dimension"),
+	NBT_FALL_DISTANCE = CharKey.of("FallDistance"),
+	NBT_FIRE = CharKey.of("Fire"),
+	NBT_GLOWING = CharKey.of("Glowing"),
+	NBT_ID = CharKey.of("id"),
+	NBT_INVULNERABLE = CharKey.of("Invulnerable"),
+	NBT_MOTION = CharKey.of("Motion"), 
+	NBT_NO_GRAVITY = CharKey.of("NoGravity"),
+	NBT_ON_GROUND = CharKey.of("OnGround"),
+	NBT_PASSENGERS = CharKey.of("Passengers"),
+	NBT_PORTAL_COOLDOWN = CharKey.of("PortalCooldown"),
+	NBT_POS = CharKey.of("Pos"),
+	NBT_ROTATION = CharKey.of("Rotation"),
+	NBT_SILENT = CharKey.of("Silent"),
+	NBT_TAGS = CharKey.of("Tags"),
+	NBT_UUID = CharKey.of("UUID");
 	
 	static {
 		NBT_FIELDS.setField(NBT_AIR, (holder, reader) -> {

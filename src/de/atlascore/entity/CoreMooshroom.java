@@ -7,6 +7,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Mooshroom;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -21,8 +22,8 @@ public class CoreMooshroom extends CoreCow implements Mooshroom {
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_TYPE = "Type";
+	protected static final CharKey
+	NBT_TYPE = CharKey.of("Type");
 	//NBT_EFFECT_ID = "EffectId", TODO unnecessary
 	//NBT_EFFECT_DURATION = "EffectDuration";
 	

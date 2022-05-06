@@ -13,6 +13,7 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.meta.FireworkMeta;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -31,10 +32,10 @@ public class CoreFireworkRocket extends CoreAbstractProjectile implements Firewo
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_LIFE = "Life",
-	NBT_LIFE_TIME = "LifeTime",
-	NBT_FIREWORK_ITEM = "FireworkItem";
+	protected static final CharKey
+	NBT_LIFE = CharKey.of("Life"),
+	NBT_LIFE_TIME = CharKey.of("LifeTime"),
+	NBT_FIREWORK_ITEM = CharKey.of("FireworkItem");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreAbstractProjectile.NBT_FIELDS);

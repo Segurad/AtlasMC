@@ -10,6 +10,7 @@ import de.atlasmc.entity.Fox;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
@@ -40,12 +41,12 @@ public class CoreFox extends CoreAgeableMob implements Fox {
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_TRUSTED = "Trusted",
-	NBT_TYPE = "Type",
-	NBT_SLEEPING = "Sleeping",
-	NBT_SITTING = "Sitting",
-	NBT_CROUCHING = "Crouching";
+	protected static final CharKey
+	NBT_TRUSTED = CharKey.of("Trusted"),
+	NBT_TYPE = CharKey.of("Type"),
+	NBT_SLEEPING = CharKey.of("Sleeping"),
+	NBT_SITTING = CharKey.of("Sitting"),
+	NBT_CROUCHING = CharKey.of("Crouching");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreAgeableMob.NBT_FIELDS);

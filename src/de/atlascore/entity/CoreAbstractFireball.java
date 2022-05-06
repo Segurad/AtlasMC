@@ -7,6 +7,7 @@ import de.atlasmc.Vector;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.AbstractArrow;
 import de.atlasmc.entity.AbstractFireball;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
@@ -17,11 +18,11 @@ public abstract class CoreAbstractFireball extends CoreAbstractProjectile implem
 
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_DIRECTION = "direction",
-	NBT_EXPLOSION_POWER = "ExplosionPower",
-	NBT_POWER = "power",
-	NBT_LIFE = "life";
+	protected static final CharKey
+	NBT_DIRECTION = CharKey.of("direction"),
+	NBT_EXPLOSION_POWER = CharKey.of("ExplosionPower"),
+	NBT_POWER = CharKey.of("power"),
+	NBT_LIFE = CharKey.of("life");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreAbstractProjectile.NBT_FIELDS);

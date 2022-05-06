@@ -12,6 +12,7 @@ import de.atlasmc.entity.Shulker;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.MathUtil;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -32,64 +33,52 @@ public class CoreShulker extends CoreMob implements Shulker {
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_ATTACHED_POS_X = "APX",
-	NBT_ATTACHED_POS_Y = "APY",
-	NBT_ATTACHED_POS_Z = "APZ",
-	NBT_ATTACHED_FACE = "AttachFace",
-	NBT_COLOR = "Color",
-	NBT_PEEK = "Peek";
+	protected static final CharKey
+	NBT_ATTACHED_POS_X = CharKey.of("APX"),
+	NBT_ATTACHED_POS_Y = CharKey.of("APY"),
+	NBT_ATTACHED_POS_Z = CharKey.of("APZ"),
+	NBT_ATTACHED_FACE = CharKey.of("AttachFace"),
+	NBT_COLOR = CharKey.of("Color"),
+	NBT_PEEK = CharKey.of("Peek");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreMob.NBT_FIELDS);
 		NBT_FIELDS.setField(NBT_ATTACHED_POS_X, (holder, reader) -> {
-			if (holder instanceof Shulker) {
-				((Shulker) holder).setAttachedX(reader.readIntTag());
-			} else reader.skipTag();
+			((Shulker) holder).setAttachedX(reader.readIntTag());
 		});
 		NBT_FIELDS.setField(NBT_ATTACHED_POS_Y, (holder, reader) -> {
-			if (holder instanceof Shulker) {
-				((Shulker) holder).setAttachedY(reader.readIntTag());
-			} else reader.skipTag();
+			((Shulker) holder).setAttachedY(reader.readIntTag());
 		});
 		NBT_FIELDS.setField(NBT_ATTACHED_POS_Z, (holder, reader) -> {
-			if (holder instanceof Shulker) {
-				((Shulker) holder).setAttachedZ(reader.readIntTag());
-			} else reader.skipTag();
+			((Shulker) holder).setAttachedZ(reader.readIntTag());
 		});
 		NBT_FIELDS.setField(NBT_ATTACHED_FACE, (holder, reader) -> {
-			if (holder instanceof Shulker) {
-				int faceID = reader.readByteTag();
-				BlockFace face = BlockFace.DOWN;
-				switch (faceID) {				
-				case 1:
-					face = BlockFace.UP;
-					break;
-				case 2:
-					face = BlockFace.NORTH;
-					break;
-				case 3:
-					face = BlockFace.SOUTH;
-					break;
-				case 4:
-					face = BlockFace.WEST;
-					break;
-				case 5:
-					face = BlockFace.EAST;
-					break;
-				}
-				((Shulker) holder).setAttachedFace(face);
-			} else reader.skipTag();
+			int faceID = reader.readByteTag();
+			BlockFace face = BlockFace.DOWN;
+			switch (faceID) {				
+			case 1:
+				face = BlockFace.UP;
+				break;
+			case 2:
+				face = BlockFace.NORTH;
+				break;
+			case 3:
+				face = BlockFace.SOUTH;
+				break;
+			case 4:
+				face = BlockFace.WEST;
+				break;
+			case 5:
+				face = BlockFace.EAST;
+				break;
+			}
+			((Shulker) holder).setAttachedFace(face);
 		});
 		NBT_FIELDS.setField(NBT_COLOR, (holder, reader) -> {
-			if (holder instanceof Shulker) {
-				((Shulker) holder).setColor(DyeColor.getByID(reader.readByteTag()));
-			} else reader.skipTag();
+			((Shulker) holder).setColor(DyeColor.getByID(reader.readByteTag()));
 		});
 		NBT_FIELDS.setField(NBT_PEEK, (holder, reader) -> {
-			if (holder instanceof Shulker) {
-				((Shulker) holder).setShieldHeight(reader.readByteTag());
-			} else reader.skipTag();
+			((Shulker) holder).setShieldHeight(reader.readByteTag());
 		});
 	}
 	

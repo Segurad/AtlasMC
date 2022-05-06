@@ -13,6 +13,7 @@ import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutDestroyEntities;
 import de.atlasmc.io.protocol.play.PacketOutSpawnPainting;
 import de.atlasmc.util.ViewerSet;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -31,12 +32,12 @@ public class CorePainting extends CoreEntity implements Painting {
 
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_MOTIVE = "Motive",
+	protected static final CharKey
+	NBT_MOTIVE = CharKey.of("Motive"),
 //	NBT_TILE_X = "TileX", TODO unnecessary
 //	NBT_TILE_Y = "TileY",
 //	NBT_TILE_Z = "TileZ",
-	NBT_FACE = "Facing";
+	NBT_FACE = CharKey.of("Facing");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreEntity.NBT_FIELDS);

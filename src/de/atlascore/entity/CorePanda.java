@@ -8,6 +8,7 @@ import de.atlasmc.entity.Panda;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
@@ -34,9 +35,9 @@ public class CorePanda extends CoreAgeableMob implements Panda {
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+6;
 	
-	protected static final String
-	NBT_MAIN_GENE = "MainGene",
-	NBT_HIDDEN_GENE = "HiddenGene";
+	protected static final CharKey
+	NBT_MAIN_GENE = CharKey.of("MainGene"),
+	NBT_HIDDEN_GENE = CharKey.of("HiddenGene");
 	
 	static {
 		NBT_FIELDS.setField(NBT_MAIN_GENE, (holder, reader) -> {

@@ -6,6 +6,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.MinecartFurnace;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.world.World;
 
 public class CoreMinecraftFurnace extends CoreAbstractMinecart implements MinecartFurnace {
@@ -15,8 +16,8 @@ public class CoreMinecraftFurnace extends CoreAbstractMinecart implements Mineca
 	
 	protected static final int LAST_META_INDEX = CoreAbstractMinecart.LAST_META_INDEX+1;
 	
-	protected static final String
-	NBT_FUEL = "fuel";
+	protected static final CharKey
+	NBT_FUEL = CharKey.of("fuel");
 //	NBT_PUSH_X = "PushX", TODO ignored
 //	NBT_PUSH_Z = "PushZ";
 	

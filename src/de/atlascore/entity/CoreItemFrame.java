@@ -13,6 +13,7 @@ import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -29,16 +30,16 @@ public class CoreItemFrame extends CoreEntity implements ItemFrame {
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_ITEM_DROP_CHANCE = "ItemDropChance",
-	NBT_ITEM_ROTATION = "ItemRotation",
-	NBT_ITEM = "Item",
+	protected static final CharKey
+	NBT_ITEM_DROP_CHANCE = CharKey.of("ItemDropChance"),
+	NBT_ITEM_ROTATION = CharKey.of("ItemRotation"),
+	NBT_ITEM = CharKey.of("Item"),
 //	NBT_TILE_X = "TileX", TODO unnecessary
 //	NBT_TILE_Y = "TileY",
 //	NBT_TILE_Z = "TileZ",
-	NBT_FACING = "Facing",
-	NBT_INVISIBLE = "Invisible",
-	NBT_FIXED = "Fixed";
+	NBT_FACING = CharKey.of("Facing"),
+	NBT_INVISIBLE = CharKey.of("Invisible"),
+	NBT_FIXED = CharKey.of("Fixed");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreEntity.NBT_FIELDS);

@@ -9,6 +9,7 @@ import de.atlasmc.entity.TropicalFish;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -29,19 +30,17 @@ public class CoreTropicalFish extends CoreFish implements TropicalFish {
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_VARIANT = "Variant";
+	protected static final CharKey
+	NBT_VARIANT = CharKey.of("Variant");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreFish.NBT_FIELDS);
 		NBT_FIELDS.setField(NBT_VARIANT, (holder, reader) -> {
-			if (holder instanceof TropicalFish) {
-				int variant = reader.readIntTag();
-				TropicalFish fish = (TropicalFish) holder;
-				fish.setPattern(Pattern.getByDataID(variant));
-				fish.setBaseColor(DyeColor.getByID(variant >> 16 & 0xFF));
-				fish.setPatternColor(DyeColor.getByID(variant >> 24 & 0xFF));
-			} else reader.skipTag();
+			int variant = reader.readIntTag();
+			TropicalFish fish = (TropicalFish) holder;
+			fish.setPattern(Pattern.getByDataID(variant));
+			fish.setBaseColor(DyeColor.getByID(variant >> 16 & 0xFF));
+			fish.setPatternColor(DyeColor.getByID(variant >> 24 & 0xFF));
 		});
 	}
 	

@@ -8,6 +8,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Wolf;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -26,9 +27,9 @@ public class CoreWolf extends CoreTameable implements Wolf {
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_ANGRY = "Angry",
-	NBT_COLLAR_COLOR = "CollarColor";
+	protected static final CharKey
+	NBT_ANGRY = CharKey.of("Angry"),
+	NBT_COLLAR_COLOR = CharKey.of("CollarColor");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreTameable.NBT_FIELDS);

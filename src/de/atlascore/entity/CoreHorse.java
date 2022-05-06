@@ -12,6 +12,7 @@ import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.HorseInventory;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -26,9 +27,9 @@ public class CoreHorse extends CoreAbstractHorse implements Horse {
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_ARMOR_ITEM = "ArmorItem",
-	NBT_VARIANT = "Variant";
+	protected static final CharKey
+	NBT_ARMOR_ITEM = CharKey.of("ArmorItem"),
+	NBT_VARIANT = CharKey.of("Variant");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreAbstractHorse.NBT_FIELDS);

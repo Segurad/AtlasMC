@@ -9,6 +9,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
@@ -27,19 +28,19 @@ public class CoreBee extends CoreAgeableMob implements Bee {
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+2;
 	
-	protected static final String
-	NBT_HIVE_POS = "HivePos",
-	NBT_FLOWER_POS = "FlowerPos",
-	NBT_HAS_NECTAR = "HasNextar",
-	NBT_HAS_STUNG = "HasStung",
-	NBT_TICKS_SINCE_POLLINATION = "TicksSincePollination",
-	NBT_CANNOT_ENTER_HIVE_TICKS = "CannotEnterHiveTicks",
-	NBT_CROPS_GROWN_SINCE_POLLINATION = "CropsGrownSincePollination",
-	NBT_ANGER = "Anger",
-	NBT_HURT_BY = "HurtBy",
-	NBT_X = "X",
-	NBT_Y = "Y",
-	NBT_Z = "Z";
+	protected static final CharKey
+	NBT_HIVE_POS = CharKey.of("HivePos"),
+	NBT_FLOWER_POS = CharKey.of("FlowerPos"),
+	NBT_HAS_NECTAR = CharKey.of("HasNextar"),
+	NBT_HAS_STUNG = CharKey.of("HasStung"),
+	NBT_TICKS_SINCE_POLLINATION = CharKey.of("TicksSincePollination"),
+	NBT_CANNOT_ENTER_HIVE_TICKS = CharKey.of("CannotEnterHiveTicks"),
+	NBT_CROPS_GROWN_SINCE_POLLINATION = CharKey.of("CropsGrownSincePollination"),
+	NBT_ANGER = CharKey.of("Anger"),
+	NBT_HURT_BY = CharKey.of("HurtBy"),
+	NBT_X = CharKey.of("X"),
+	NBT_Y = CharKey.of("Y"),
+	NBT_Z = CharKey.of("Z");
 	
 	static {
 		NBT_FIELDS.setField(NBT_HIVE_POS, (holder, reader) -> {
@@ -47,20 +48,15 @@ public class CoreBee extends CoreAgeableMob implements Bee {
 				reader.readNextEntry();
 				int x = 0, y = 0, z = 0;
 				while (reader.getType() != TagType.TAG_END) {
-					switch (reader.getFieldName()) {
-					case NBT_X:
+					final CharSequence value = reader.getFieldName();
+					if (NBT_X.equals(value))
 						x = reader.readIntTag();
-						break;
-					case NBT_Y:
+					else if (NBT_Y.equals(value))
 						y = reader.readIntTag();
-						break;
-					case NBT_Z:
+					else if (NBT_Z.equals(value))
 						z = reader.readIntTag();
-						break;
-					default:
+					else
 						reader.skipTag();
-						break;
-					}
 				}
 				reader.readNextEntry();
 				Bee bee = (Bee) holder;
@@ -72,20 +68,15 @@ public class CoreBee extends CoreAgeableMob implements Bee {
 				reader.readNextEntry();
 				int x = 0, y = 0, z = 0;
 				while (reader.getType() != TagType.TAG_END) {
-					switch (reader.getFieldName()) {
-					case NBT_X:
+					final CharSequence value = reader.getFieldName();
+					if (NBT_X.equals(value))
 						x = reader.readIntTag();
-						break;
-					case NBT_Y:
+					else if (NBT_Y.equals(value))
 						y = reader.readIntTag();
-						break;
-					case NBT_Z:
+					else if (NBT_Z.equals(value))
 						z = reader.readIntTag();
-						break;
-					default:
+					else
 						reader.skipTag();
-						break;
-					}
 				}
 				reader.readNextEntry();
 				Bee bee = (Bee) holder;

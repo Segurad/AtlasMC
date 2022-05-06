@@ -7,6 +7,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.SpellcasterIllager;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
@@ -17,8 +18,8 @@ public class CoreSpellcasterIllager extends CoreRaider implements SpellcasterIll
 	
 	protected static final int LAST_META_INDEX = CoreRaider.LAST_META_INDEX+1;
 	
-	protected static final String
-	NBT_SPELL_TICKS = "SpellTicks";
+	protected static final CharKey
+	NBT_SPELL_TICKS = CharKey.of("SpellTicks");
 	
 	static {
 		NBT_FIELDS.setField(NBT_SPELL_TICKS, (holder, reader) -> {

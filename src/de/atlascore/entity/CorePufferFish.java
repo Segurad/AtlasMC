@@ -7,6 +7,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.PufferFish;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
@@ -17,8 +18,8 @@ public class CorePufferFish extends CoreFish implements PufferFish {
 	
 	protected static final int LAST_META_INDEX = CoreFish.LAST_META_INDEX+1;
 	
-	protected static final String
-	NBT_PUFF_STATE = "PuffState";
+	protected static final CharKey
+	NBT_PUFF_STATE = CharKey.of("PuffState");
 	
 	static {
 		NBT_FIELDS.setField(NBT_PUFF_STATE, (holder, reader) -> {

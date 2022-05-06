@@ -9,6 +9,7 @@ import de.atlasmc.entity.Enderman;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
@@ -24,9 +25,9 @@ public class CoreEnderman extends CoreMob implements Enderman {
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+3;
 
-	protected static final String
-	NBT_CARRIED_BLOCK_STATE = "carriedBlockState",
-	NBT_PROPERTIES = "Properties";
+	protected static final CharKey
+	NBT_CARRIED_BLOCK_STATE = CharKey.of("carriedBlockState"),
+	NBT_PROPERTIES = CharKey.of("Properties");
 	
 	static {
 		NBT_FIELDS.setField(NBT_CARRIED_BLOCK_STATE, (holder, reader) -> {
@@ -38,11 +39,10 @@ public class CoreEnderman extends CoreMob implements Enderman {
 			Material mat = null;
 			BlockData data = null;
 			while (reader.getType() != TagType.TAG_END) {
-				switch (reader.getFieldName()) {
-				case NBT_NAME:
+				final CharSequence value = reader.getFieldName();
+				if (NBT_NAME.equals(value))
 					mat = Material.getByName(reader.readStringTag());
-					break;
-				case NBT_PROPERTIES:
+				else if (NBT_PROPERTIES.equals(value))
 					if (mat == null)
 						reader.skipTag();
 					else {
@@ -50,11 +50,8 @@ public class CoreEnderman extends CoreMob implements Enderman {
 						reader.readNextEntry();
 						data.fromNBT(reader);
 					}
-					break;
-				default:
+				else
 					reader.skipTag();
-					break;
-				}
 			}
 			reader.skipTag();
 			if (data != null)

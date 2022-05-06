@@ -7,6 +7,7 @@ import de.atlasmc.entity.AbstractSlime;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -21,8 +22,8 @@ public class CoreAbstractSlime extends CoreMob implements AbstractSlime {
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_SIZE = "Size";
+	protected static final CharKey
+	NBT_SIZE = CharKey.of("Size");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreMob.NBT_FIELDS);

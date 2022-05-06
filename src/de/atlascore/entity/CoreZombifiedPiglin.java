@@ -6,14 +6,15 @@ import java.util.UUID;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.ZombifiedPiglin;
 import de.atlasmc.util.MathUtil;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreZombifiedPiglin extends CoreZombie implements ZombifiedPiglin {
 
-	protected static final String
-	NBT_ANGER = "Anger",
-	NBT_HURT_BY = "HurtBy"; // used to set the flag angry 
+	protected static final CharKey
+	NBT_ANGER = CharKey.of("Anger"),
+	NBT_HURT_BY = CharKey.of("HurtBy"); // used to set the flag angry 
 	
 	static {
 		NBT_FIELDS.setField(NBT_ANGER, (holder, reader) -> {

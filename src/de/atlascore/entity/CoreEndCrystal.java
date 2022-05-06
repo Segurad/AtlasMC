@@ -9,6 +9,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.MathUtil;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
@@ -26,12 +27,12 @@ public class CoreEndCrystal extends CoreEntity implements EndCrystal {
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_BEAM_TARGET = "BeamTarget",
-	NBT_X = "X",
-	NBT_Y = "Y",
-	NBT_Z = "Z",
-	NBT_SHOW_BOTTOM = "ShowBottom";
+	protected static final CharKey
+	NBT_BEAM_TARGET = CharKey.of("BeamTarget"),
+	NBT_X = CharKey.of("X"),
+	NBT_Y = CharKey.of("Y"),
+	NBT_Z = CharKey.of("Z"),
+	NBT_SHOW_BOTTOM = CharKey.of("ShowBottom");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreEntity.NBT_FIELDS);
@@ -45,20 +46,15 @@ public class CoreEndCrystal extends CoreEntity implements EndCrystal {
 			int y = 0;
 			int z = 0;
 			while (reader.getType() != TagType.TAG_END) {
-				switch (reader.getFieldName()) {
-				case NBT_X:
+				final CharSequence value = reader.getFieldName();
+				if (NBT_X.equals(value))
 					x = reader.readIntTag();
-					break;
-				case NBT_Y:
+				else if (NBT_Y.equals(value))
 					y = reader.readIntTag();
-					break;
-				case NBT_Z:
+				else if (NBT_Z.equals(value))
 					z = reader.readIntTag();
-					break;
-				default:
+				else
 					reader.skipTag();
-					break;
-				}
 			}
 			((EndCrystal) holder).setBeamTarget(x, y, z);
 		});

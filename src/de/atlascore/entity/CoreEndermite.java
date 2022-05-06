@@ -5,14 +5,15 @@ import java.util.UUID;
 
 import de.atlasmc.entity.Endermite;
 import de.atlasmc.entity.EntityType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreEndermite extends CoreMob implements Endermite {
 
-	protected static final String
-	NBT_LIFETIME = "Lifetime",
-	NBT_PLAYER_SPAWNED = "PlayerSpawned";
+	protected static final CharKey
+	NBT_LIFETIME = CharKey.of("Lifetime"),
+	NBT_PLAYER_SPAWNED = CharKey.of("PlayerSpawned");
 	
 	static {
 		NBT_FIELDS.setField(NBT_LIFETIME, (holder, reader) -> {

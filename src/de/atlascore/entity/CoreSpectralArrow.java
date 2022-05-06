@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.SpectralArrow;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -14,8 +15,8 @@ public class CoreSpectralArrow extends CoreAbstractArrow implements SpectralArro
 
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_DURATION = "Duration";
+	protected static final CharKey
+	NBT_DURATION = CharKey.of("Duration");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreAbstractProjectile.NBT_FIELDS);

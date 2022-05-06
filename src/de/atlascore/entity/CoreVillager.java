@@ -8,12 +8,14 @@ import java.util.UUID;
 import de.atlasmc.Material;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Villager;
-import de.atlasmc.entity.ZombieVillager;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.map.key.CharKey;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTField;
+import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
@@ -25,23 +27,22 @@ public class CoreVillager extends CoreAbstractVillager implements Villager {
 	
 	protected static final int LAST_META_INDEX = CoreAbstractVillager.LAST_META_INDEX+1;
 	
-	protected static final String
-		NBT_TYPE = "type",
-		NBT_PROFESSION = "profession",
-		NBT_LEVEL = "level",
-		NBT_INVENTORY = "Inventory",
-		NBT_GOSSIPS = "Gossips",
-		NBT_LAST_GOSSIP_DECAY = "LastGossipDecay",
-		NBT_WILLING = "Willing",
-		NBT_VILLAGER_DATA = "VillagerData",
-		NBT_XP = "Xp";
+	protected static final NBTFieldContainer NBT_FIELDS;
+	
+	protected static final CharKey
+		NBT_TYPE = CharKey.of("type"),
+		NBT_PROFESSION = CharKey.of("profession"),
+		NBT_LEVEL = CharKey.of("level"),
+		NBT_INVENTORY = CharKey.of("Inventory"),
+		NBT_GOSSIPS = CharKey.of("Gossips"),
+		NBT_LAST_GOSSIP_DECAY = CharKey.of("LastGossipDecay"),
+		NBT_WILLING = CharKey.of("Willing"),
+		NBT_VILLAGER_DATA = CharKey.of("VillagerData"),
+		NBT_XP = CharKey.of("Xp");
 	
 	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreAbstractVillager.NBT_FIELDS);
 		NBT_FIELDS.setField(NBT_INVENTORY, (holder, reader) -> {
-			if (!(holder instanceof Villager)) {
-				reader.skipTag();
-				return;
-			}
 			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {
 				Material mat = null;
@@ -59,60 +60,32 @@ public class CoreVillager extends CoreAbstractVillager implements Villager {
 		NBT_FIELDS.setField(NBT_GOSSIPS, NBTField.SKIP); // TODO skipped because i found a use case
 		NBT_FIELDS.setField(NBT_LAST_GOSSIP_DECAY, NBTField.SKIP); // TODO see gossip
 		NBT_FIELDS.setField(NBT_XP, (holder, reader) -> {
-			if (holder instanceof Villager) {
-				((Villager) holder).setXp(reader.readIntTag());
-			} else if (holder instanceof ZombieVillager) {
-				((ZombieVillager) holder).setXp(reader.readIntTag());
-			} else reader.skipTag();
+			((Villager) holder).setXp(reader.readIntTag());
 		});
 		NBT_FIELDS.setField(NBT_VILLAGER_DATA, (holder, reader) -> {
-			int villager = 0;
-			if (holder instanceof Villager)
-				villager = 1;
-			else if (holder instanceof ZombieVillager)
-				villager = 2;
-			if (villager == 0) {
-				reader.skipTag();
-				return;
-			}
 			reader.readNextEntry();
+			Villager villager = (Villager) holder;
 			while (reader.getType() != TagType.TAG_END) {
-				switch (reader.getFieldName()) {
-				case NBT_PROFESSION:
+				final CharSequence value = reader.getFieldName();
+				if (NBT_PROFESSION.equals(value)) {
 					VillagerProfession prof = VillagerProfession.getByNameID(reader.readStringTag());
 					if (prof != null)
 						break;
-					if (villager == 1)
-						((Villager) holder).setVillagerProfession(prof);
-					else 
-						((ZombieVillager) holder).setVillagerProfession(prof);
-					break;
-				case NBT_TYPE:
+					villager.setVillagerProfession(prof);
+				} else if (NBT_TYPE.equals(value)) {
 					VillagerType type = VillagerType.getByNameID(reader.readStringTag());
 					if (type != null)
 						break;
-					if (villager == 1)
-						((Villager) holder).setVillagerType(type);
-					else 
-						((ZombieVillager) holder).setVillagerType(type);
-					break;
-				case NBT_LEVEL:
-					if (villager == 1)
-						((Villager) holder).setLevel(reader.readIntTag());
-					else
-						((ZombieVillager) holder).setLevel(reader.readIntTag());
-					break;
-				default:
+					villager.setVillagerType(type);
+				} else if (NBT_LEVEL.equals(value))
+					villager.setLevel(reader.readIntTag());
+				else
 					reader.skipTag();
-					break;
-				}
 			}
 			reader.readNextEntry();
 		});
 		NBT_FIELDS.setField(NBT_WILLING, (holder, reader) -> {
-			if (holder instanceof Villager) {
-				((Villager) holder).setWilling(reader.readByteTag() == 1);
-			} else reader.skipTag();
+			((Villager) holder).setWilling(reader.readByteTag() == 1);
 		});
 	}
 	
@@ -122,6 +95,11 @@ public class CoreVillager extends CoreAbstractVillager implements Villager {
 	
 	public CoreVillager(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
+	}
+	
+	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
 	}
 	
 	@Override

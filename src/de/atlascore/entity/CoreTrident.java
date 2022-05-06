@@ -9,6 +9,7 @@ import de.atlasmc.entity.Trident;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
@@ -21,8 +22,8 @@ public class CoreTrident extends CoreAbstractArrow implements Trident {
 	
 	protected static final int LAST_META_INDEX = CoreAbstractArrow.LAST_META_INDEX+2;
 	
-	protected static final String
-	NBT_TRIDENT = "Trident";
+	protected static final CharKey
+	NBT_TRIDENT = CharKey.of("Trident");
 	
 	static {
 		NBT_FIELDS.setField(NBT_TRIDENT, (holder, reader) -> {

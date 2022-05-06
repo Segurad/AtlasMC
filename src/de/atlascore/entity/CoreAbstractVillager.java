@@ -12,6 +12,9 @@ import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.MerchantInventory;
+import de.atlasmc.util.map.key.CharKey;
+import de.atlasmc.util.nbt.ChildNBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
@@ -23,13 +26,16 @@ public class CoreAbstractVillager extends CoreAgeableMob implements AbstractVill
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+1;
 	
-	protected static final String
-		NBT_OFFERS = "Offers",
-		NBT_RECIPES = "Recipes",
-		NBT_LAST_RESTOCK = "LastRestock",
-		NBT_RESTOCKS_TODAY = "RestocksToday";
+	protected static final NBTFieldContainer NBT_FIELDS;
+	
+	protected static final CharKey
+		NBT_OFFERS = CharKey.of("Offers"),
+		NBT_RECIPES = CharKey.of("Recipes"),
+		NBT_LAST_RESTOCK = CharKey.of("LastRestock"),
+		NBT_RESTOCKS_TODAY = CharKey.of("RestocksToday");
 	
 	static {
+		NBT_FIELDS = new ChildNBTFieldContainer(CoreAgeableMob.NBT_FIELDS);
 		NBT_FIELDS.setField(NBT_OFFERS, (holder, reader) -> {
 			if (!(holder instanceof Merchant)) {
 				reader.skipTag();
@@ -52,14 +58,10 @@ public class CoreAbstractVillager extends CoreAgeableMob implements AbstractVill
 			reader.readNextEntry();
 		});
 		NBT_FIELDS.setField(NBT_LAST_RESTOCK, (holder, reader) -> {
-			if (holder instanceof AbstractVillager) {
-				((AbstractVillager) holder).setLastRestock(reader.readLongTag());
-			} else reader.skipTag();
+			((AbstractVillager) holder).setLastRestock(reader.readLongTag());
 		});
 		NBT_FIELDS.setField(NBT_RESTOCKS_TODAY, (holder, reader) -> {
-			if (holder instanceof AbstractVillager) {
-				((AbstractVillager) holder).setRestocksToday(reader.readIntTag());
-			} else reader.skipTag();
+			((AbstractVillager) holder).setRestocksToday(reader.readIntTag());
 		});
 	}
 		
@@ -69,6 +71,11 @@ public class CoreAbstractVillager extends CoreAgeableMob implements AbstractVill
 	
 	public CoreAbstractVillager(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
+	}
+	
+	@Override
+	protected NBTFieldContainer getFieldContainerRoot() {
+		return NBT_FIELDS;
 	}
 	
 	@Override

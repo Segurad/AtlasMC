@@ -8,6 +8,7 @@ import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.potion.PotionData;
 import de.atlasmc.potion.PotionEffect;
 import de.atlasmc.potion.PotionEffectType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
@@ -35,23 +36,23 @@ public class CoreAreaEffectCloud extends CoreEntity implements AreaEffectCloud {
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_AGE = "age",
-	NBT_COLOR = "Color",
-	NBT_DURATION = "Duration",
-	NBT_EFFECTS = "Effects",
-	NBT_AMBIENT = "Ambient",
-	NBT_AMPLIFIER = "Amplifier",
-	NBT_SHOW_PARTICLES = "ShowParticles",
-	NBT_SHOW_ICON = "ShowIcon",
-	NBT_OWNER = "Owner",
-	NBT_PARTICLE = "Particle",
-	NBT_RADIUS = "Radius",
-	NBT_POTION = "Potion",
-	NBT_RADIUS_ON_USE = "RadiusOnUse",
-	NBT_RADIUS_PER_TICK = "RadiusPerTick",
-	NBT_REAPPLICATION_DELAY = "ReapplicationDelay",
-	NBT_WAIT_TIME = "WaitTime";
+	protected static final CharKey
+	NBT_AGE = CharKey.of("age"),
+	NBT_COLOR = CharKey.of("Color"),
+	NBT_DURATION = CharKey.of("Duration"),
+	NBT_EFFECTS = CharKey.of("Effects"),
+	NBT_AMBIENT = CharKey.of("Ambient"),
+	NBT_AMPLIFIER = CharKey.of("Amplifier"),
+	NBT_SHOW_PARTICLES = CharKey.of("ShowParticles"),
+	NBT_SHOW_ICON = CharKey.of("ShowIcon"),
+	NBT_OWNER = CharKey.of("Owner"),
+	NBT_PARTICLE = CharKey.of("Particle"),
+	NBT_RADIUS = CharKey.of("Radius"),
+	NBT_POTION = CharKey.of("Potion"),
+	NBT_RADIUS_ON_USE = CharKey.of("RadiusOnUse"),
+	NBT_RADIUS_PER_TICK = CharKey.of("RadiusPerTick"),
+	NBT_REAPPLICATION_DELAY = CharKey.of("ReapplicationDelay"),
+	NBT_WAIT_TIME = CharKey.of("WaitTime");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreEntity.NBT_FIELDS);
@@ -82,29 +83,21 @@ public class CoreAreaEffectCloud extends CoreEntity implements AreaEffectCloud {
 					boolean showParticles = true;
 					boolean showIcon = true;
 					while (reader.getType() != TagType.TAG_END) {
-						switch (reader.getFieldName()) {
-						case NBT_AMBIENT:
+						final CharSequence value = reader.getFieldName();
+						if (NBT_AMBIENT.equals(value))
 							reduceAmbient = reader.readByteTag() == 1;
-							break;
-						case NBT_AMPLIFIER:
+						else if (NBT_AMPLIFIER.equals(value))
 							amplifier = reader.readByteTag();
-							break;
-						case NBT_DURATION:
+						else if (NBT_DURATION.equals(value))
 							duration = reader.readIntTag();
-							break;
-						case NBT_ID:
+						else if (NBT_ID.equals(value))
 							id = reader.readByteTag();
-							break;
-						case NBT_SHOW_PARTICLES:
+						else if (NBT_SHOW_PARTICLES.equals(value))
 							showParticles = reader.readByteTag() == 1;
-							break;
-						case NBT_SHOW_ICON:
+						else if (NBT_SHOW_ICON.equals(value))
 							showIcon = reader.readByteTag() == 1;
-							break;
-						default:
+						else
 							reader.skipTag();
-							break;
-						}
 					}
 					PotionEffectType type = PotionEffectType.getByID(id);
 					if (duration <= 0 || type == null) {

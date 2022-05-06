@@ -7,6 +7,7 @@ import de.atlasmc.entity.Creeper;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
@@ -21,11 +22,11 @@ public class CoreCreeper extends CoreMob implements Creeper {
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+3;
 
-	protected static final String
-	NBT_EXPLOSION_RADIUS = "ExplosionRadius",
-	NBT_FUSE = "Fuse",
-	NBT_IGNITED = "Ignited",
-	NBT_POWERED = "Powered";
+	protected static final CharKey
+	NBT_EXPLOSION_RADIUS = CharKey.of("ExplosionRadius"),
+	NBT_FUSE = CharKey.of("Fuse"),
+	NBT_IGNITED = CharKey.of("Ignited"),
+	NBT_POWERED = CharKey.of("Powered");
 	
 	static {
 		NBT_FIELDS.setField(NBT_EXPLOSION_RADIUS, (holder, reader) -> {

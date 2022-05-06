@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.MinecartTNT;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -14,8 +15,8 @@ public class CoreMinecartTNT extends CoreAbstractMinecart implements MinecartTNT
 
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_FUSE = "Fuse";
+	protected static final CharKey
+	NBT_FUSE = CharKey.of("Fuse");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreAbstractMinecart.NBT_FIELDS);

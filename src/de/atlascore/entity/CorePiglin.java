@@ -11,6 +11,7 @@ import de.atlasmc.entity.Piglin;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
@@ -30,10 +31,10 @@ public class CorePiglin extends CoreAbstractPiglin implements Piglin {
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_IS_BABY = "IsBaby",
-	NBT_CANNOT_HUNT = "CannotHunt",
-	NBT_INVENTORY = "Inventory";
+	protected static final CharKey
+	NBT_IS_BABY = CharKey.of("IsBaby"),
+	NBT_CANNOT_HUNT = CharKey.of("CannotHunt"),
+	NBT_INVENTORY = CharKey.of("Inventory");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreAbstractPiglin.NBT_FIELDS);

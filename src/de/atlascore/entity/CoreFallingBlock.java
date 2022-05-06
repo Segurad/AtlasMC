@@ -7,6 +7,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.FallingBlock;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
@@ -25,15 +26,15 @@ public class CoreFallingBlock extends CoreEntity implements FallingBlock {
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_BLOCK_STATE = "BlockState",
-	NBT_NAME = "Name",
-	NBT_PROPERTIES = "Properties",
-	NBT_DROP_ITEM = "DropItem",
-	NBT_FALL_HURT_AMOUNT = "FallHurtAmount",
-	NBT_FALL_HURT_MAX = "FallHurtMax",
-	NBT_HURT_ENTITIES = "HurtEntities",
-	NBT_TILE_ENTITY_DATA = "TileEntityData";
+	protected static final CharKey
+	NBT_BLOCK_STATE = CharKey.of("BlockState"),
+	NBT_NAME = CharKey.of("Name"),
+	NBT_PROPERTIES = CharKey.of("Properties"),
+	NBT_DROP_ITEM = CharKey.of("DropItem"),
+	NBT_FALL_HURT_AMOUNT = CharKey.of("FallHurtAmount"),
+	NBT_FALL_HURT_MAX = CharKey.of("FallHurtMax"),
+	NBT_HURT_ENTITIES = CharKey.of("HurtEntities"),
+	NBT_TILE_ENTITY_DATA = CharKey.of("TileEntityData");
 	// TODO unused NBT_TIME = "Time";
 	
 	static {
@@ -47,11 +48,10 @@ public class CoreFallingBlock extends CoreEntity implements FallingBlock {
 			Material mat = null;
 			BlockData data = null;
 			while (reader.getType() != TagType.TAG_END) {
-				switch (reader.getFieldName()) {
-				case NBT_NAME:
+				final CharSequence value = reader.getFieldName();
+				if (NBT_NAME.equals(value))
 					mat = Material.getByName(reader.readStringTag());
-					break;
-				case NBT_PROPERTIES:
+				else if (NBT_PROPERTIES.equals(value))
 					if (mat == null)
 						reader.skipTag();
 					else {
@@ -59,11 +59,8 @@ public class CoreFallingBlock extends CoreEntity implements FallingBlock {
 						reader.readNextEntry();
 						data.fromNBT(reader);
 					}
-					break;
-				default:
+				else
 					reader.skipTag();
-					break;
-				}
 			}
 			reader.skipTag();
 			if (data != null)

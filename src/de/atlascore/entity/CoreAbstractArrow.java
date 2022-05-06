@@ -5,6 +5,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -24,17 +25,17 @@ public abstract class CoreAbstractArrow extends CoreAbstractProjectile implement
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_CRIT = "crit",
-	NBT_DAMAGE = "damage",
+	protected static final CharKey
+	NBT_CRIT = CharKey.of("crit"),
+	NBT_DAMAGE = CharKey.of("damage"),
 //	NBT_IN_BLOCK_STATE = "inBlockState", TODO unused in block state
 //	NBT_X_TILE = "xTile",
 //	NBT_Y_TILE = "yTile",
 //	NBT_Z_TILE = "zTile",
 //	NBT_IN_GROUND = "inGround",
-	NBT_LIFE = "life",
-	NBT_PICKUP = "pickup",
-	NBT_SHAKE = "shake";
+	NBT_LIFE = CharKey.of("life"),
+	NBT_PICKUP = CharKey.of("pickup"),
+	NBT_SHAKE = CharKey.of("shake");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreAbstractProjectile.NBT_FIELDS);

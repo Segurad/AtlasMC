@@ -5,13 +5,14 @@ import java.util.UUID;
 
 import de.atlasmc.entity.Chicken;
 import de.atlasmc.entity.EntityType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreChicken extends CoreAgeableMob implements Chicken {
 
-	protected static final String
-	NBT_EGG_LAY_TIME = "EggLayTime";
+	protected static final CharKey
+	NBT_EGG_LAY_TIME = CharKey.of("EggLayTime");
 	// NBT_IS_CHICKEN_JOCKEY = "IsChickenJockey"; TODO unnecessary value
 	
 	static {

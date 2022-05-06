@@ -11,6 +11,7 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.AbstractHorseInventory;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -35,12 +36,12 @@ public abstract class CoreAbstractHorse extends CoreAgeableMob implements Abstra
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_BRED = "Bred",
-	NBT_EATING_HAYSTACK = "EatingHaystack",
-	NBT_OWNER = "Owner",
-	NBT_SADDLE_ITEM = "SaddleItem",
-	NBT_TAME = "Tame";
+	protected static final CharKey
+	NBT_BRED = CharKey.of("Bred"),
+	NBT_EATING_HAYSTACK = CharKey.of("EatingHaystack"),
+	NBT_OWNER = CharKey.of("Owner"),
+	NBT_SADDLE_ITEM = CharKey.of("SaddleItem"),
+	NBT_TAME = CharKey.of("Tame");
 	//NBT_TEMPER = "Temper"; TODO unnecessary (needed for taming)
 	
 	static {

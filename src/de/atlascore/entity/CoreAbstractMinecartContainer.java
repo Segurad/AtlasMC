@@ -7,6 +7,7 @@ import de.atlasmc.entity.AbstractMinecartContainer;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
@@ -16,10 +17,10 @@ public abstract class CoreAbstractMinecartContainer extends CoreAbstractMinecart
 
 	protected static final ChildNBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_ITEMS = "Items",
-	NBT_LOOT_TABLE = "LootTable",
-	NBT_LOOT_TABLE_SEED = "LootTableSeed";
+	protected static final CharKey
+	NBT_ITEMS = CharKey.of("Items"),
+	NBT_LOOT_TABLE = CharKey.of("LootTable"),
+	NBT_LOOT_TABLE_SEED = CharKey.of("LootTableSeed");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreAbstractMinecart.NBT_FIELDS);

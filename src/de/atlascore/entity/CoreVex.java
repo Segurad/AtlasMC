@@ -6,6 +6,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Vex;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.world.World;
@@ -19,11 +20,11 @@ public class CoreVex extends CoreMob implements Vex {
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
+	protected static final CharKey
 	//NBT_BOUND_X = "BoundX", TODO unnecessary
 	//NBT_BOUND_Y = "BoundY",
 	//NBT_BOUND_Z = "BoundZ",
-	NBT_LIFE_TICKS = "LifeTicks";
+	NBT_LIFE_TICKS = CharKey.of("LifeTicks");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreMob.NBT_FIELDS);

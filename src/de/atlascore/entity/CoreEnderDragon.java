@@ -7,6 +7,7 @@ import de.atlasmc.entity.EnderDragon;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
@@ -17,8 +18,8 @@ public class CoreEnderDragon extends CoreMob implements EnderDragon {
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+1;
 	
-	protected static final String
-	NBT_DRAGON_PHASE = "DragonPhase";
+	protected static final CharKey
+	NBT_DRAGON_PHASE = CharKey.of("DragonPhase");
 	
 	static {
 		NBT_FIELDS.setField(NBT_DRAGON_PHASE, (holder, reader) -> {

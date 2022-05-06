@@ -9,6 +9,7 @@ import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.EulerAngle;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
@@ -45,20 +46,20 @@ public class CoreArmorStand extends CoreLivingEntity implements ArmorStand {
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_DISABLED_SLOTS = "DisabledSlots",
-	NBT_INVISIBLE = "Invisible",
-	NBT_MARKER = "Marker",
-	NBT_NO_BASE_PLATE = "NoBasePlate",
-	NBT_POSE = "Pose",
-	NBT_HEAD = "Head",
-	NBT_BODY = "Body",
-	NBT_LEFT_ARM = "LeftArm",
-	NBT_RIGHT_ARM = "RightArm",
-	NBT_LEFT_LEG = "LeftLeg",
-	NBT_RIGHT_LEG = "RightLeg",
-	NBT_SHOW_ARMS = "ShowArms",
-	NBT_SMALL = "Small";
+	protected static final CharKey
+	NBT_DISABLED_SLOTS = CharKey.of("DisabledSlots"),
+	NBT_INVISIBLE = CharKey.of("Invisible"),
+	NBT_MARKER = CharKey.of("Marker"),
+	NBT_NO_BASE_PLATE = CharKey.of("NoBasePlate"),
+	NBT_POSE = CharKey.of("Pose"),
+	NBT_HEAD = CharKey.of("Head"),
+	NBT_BODY = CharKey.of("Body"),
+	NBT_LEFT_ARM = CharKey.of("LeftArm"),
+	NBT_RIGHT_ARM = CharKey.of("RightArm"),
+	NBT_LEFT_LEG = CharKey.of("LeftLeg"),
+	NBT_RIGHT_LEG = CharKey.of("RightLeg"),
+	NBT_SHOW_ARMS = CharKey.of("ShowArms"),
+	NBT_SMALL = CharKey.of("Small");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreLivingEntity.NBT_FIELDS);
@@ -82,33 +83,23 @@ public class CoreArmorStand extends CoreLivingEntity implements ArmorStand {
 				float x;
 				float y;
 				float z;
-				String fieldName = reader.getFieldName();
+				final CharSequence fieldName = reader.getFieldName();
 				reader.readNextEntry();
 				x = reader.readFloatTag();
 				y = reader.readFloatTag();
 				z = reader.readFloatTag();
-				switch (fieldName) {
-				case NBT_HEAD:
+				if (NBT_HEAD.equals(fieldName))
 					((ArmorStand) holder).setHeadPose(x, y, z);
-					break;
-				case NBT_BODY:
+				else if (NBT_BODY.equals(fieldName))
 					((ArmorStand) holder).setBodyPose(x, y, z);
-					break;
-				case NBT_LEFT_ARM:
+				else if (NBT_LEFT_ARM.equals(fieldName))
 					((ArmorStand) holder).setLeftArmPose(x, y, z);
-					break;
-				case NBT_RIGHT_ARM:
+				else if (NBT_RIGHT_ARM.equals(fieldName))
 					((ArmorStand) holder).setRightArmPose(x, y, z);
-					break;
-				case NBT_LEFT_LEG:
+				else if (NBT_LEFT_LEG.equals(fieldName))
 					((ArmorStand) holder).setLeftLegPose(x, y, z);
-					break;
-				case NBT_RIGHT_LEG:
+				else if (NBT_RIGHT_LEG.equals(fieldName))
 					((ArmorStand) holder).setRightLegPose(x, y, z);
-					break;
-				default:
-					break;
-				}
 			}
 			reader.readNextEntry();
 		});

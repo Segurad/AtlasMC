@@ -5,13 +5,14 @@ import java.util.UUID;
 
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Vindicator;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
 public class CoreVindicator extends CoreRaider implements Vindicator {
 
-	protected static final String
-	NBT_JOHNNY = "Johnny";
+	protected static final CharKey
+	NBT_JOHNNY = CharKey.of("Johnny");
 	
 	static {
 		NBT_FIELDS.setField(NBT_JOHNNY, (holder, reader) -> {

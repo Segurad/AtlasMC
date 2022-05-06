@@ -9,6 +9,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.MathUtil;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
@@ -23,14 +24,14 @@ public class CoreDolphin extends CoreMob implements Dolphin {
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+3;
 	
-	protected static final String
-	NBT_CAN_PICKUP_LOOT = "CanPickUpLoot",
-	NBT_GOT_FISH = "GotFish",
-	NBT_MOISTNESS = "Moistness",
+	protected static final CharKey
+	NBT_CAN_PICKUP_LOOT = CharKey.of("CanPickUpLoot"),
+	NBT_GOT_FISH = CharKey.of("GotFish"),
+	NBT_MOISTNESS = CharKey.of("Moistness"),
 	// TODO currently skipped POS x y z
-	NBT_TREASURE_POS_X = "TreasurePosX",
-	NBT_TREASURE_POS_Y = "TreasurePosY",
-	NBT_TREASURE_POS_Z = "TreasurePosZ";
+	NBT_TREASURE_POS_X = CharKey.of("TreasurePosX"),
+	NBT_TREASURE_POS_Y = CharKey.of("TreasurePosY"),
+	NBT_TREASURE_POS_Z = CharKey.of("TreasurePosZ");
 
 	static {
 		NBT_FIELDS.setField(NBT_CAN_PICKUP_LOOT, (holder, reader) -> {

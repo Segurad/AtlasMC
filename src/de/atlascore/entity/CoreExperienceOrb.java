@@ -11,6 +11,7 @@ import de.atlasmc.entity.Player;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutSpawnExperienceOrb;
 import de.atlasmc.util.ViewerSet;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -31,9 +32,9 @@ public class CoreExperienceOrb extends CoreEntity implements ExperienceOrb {
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_AGE = "Age",
-	NBT_VALUE = "Value";
+	protected static final CharKey
+	NBT_AGE = CharKey.of("Age"),
+	NBT_VALUE = CharKey.of("Value");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreEntity.NBT_FIELDS);

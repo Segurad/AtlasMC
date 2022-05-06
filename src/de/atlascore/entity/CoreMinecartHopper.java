@@ -8,6 +8,7 @@ import de.atlasmc.entity.MinecartHopper;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.Inventory;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -17,8 +18,8 @@ public class CoreMinecartHopper extends CoreAbstractMinecartContainer implements
 
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_ENABLED = "Enabled";
+	protected static final CharKey
+	NBT_ENABLED = CharKey.of("Enabled");
 	// NBT_TRANSFER_COOLDOWN = "TransferCooldown"; TODO unnecessary
 	
 	static {

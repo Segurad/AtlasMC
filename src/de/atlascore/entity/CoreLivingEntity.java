@@ -34,6 +34,7 @@ import de.atlasmc.potion.PotionEffectType;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.map.ArrayListMultimap;
 import de.atlasmc.util.map.Multimap;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
@@ -77,36 +78,36 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
 	
-	protected static final String
-	NBT_ABSORPTION_AMOUNT = "AbsorptionAmount",
-	NBT_ACTIVE_EFFECTS = "ActiveEffects",
-	NBT_AMBIENT = "Ambient",
-	NBT_AMPLIFIER = "Amplifier",
-	NBT_DURATION = "Duration",
-	NBT_SHOW_PARTICLES = "ShowParticles",
-	NBT_SHOW_ICON = "ShowIcon",
-	NBT_ATTRIBUTES = "Attributes",
-	NBT_NAME = "Name",
-	NBT_BASE = "Base",
-	NBT_MODIFIERS = "Modifiers",
-	NBT_AMOUNT = "Amount",
-	NBT_OPERATION = "Operation",
-	NBT_BRAIN = "Brain",
-	NBT_DEATH_TIME = "DeathTime",
-	NBT_FALL_FLYING = "FallFlying",
-	NBT_HEALTH = "Health",
-	NBT_HURT_BY_TIMESTAMP = "HurtByTimeStamp",
-	NBT_HURT_TIME = "HurtTime",
-	NBT_ARMOR_DROP_CHANCE = "ArmorDropChance",
-	NBT_ARMOR_ITEMS = "ArmorItems",
-	NBT_ATTACK_TIME = "AttackTime",
-	NBT_DEATH_LOOT_TABLE = "DeathLootTable",
-	NBT_DEATH_LOOT_TABLE_SEED = "DeathLootTableSeed",
-	NBT_HAND_DROP_CHANCE = "HandDropChance",
-	NBT_HAND_ITEMS = "HandItems",
-	NBT_LEASH = "Leash",
-	NBT_LEASHED = "Leashed",
-	NBT_PERSISTENCE_REQUIRED = "PeristenceRequired";
+	protected static final CharKey
+	NBT_ABSORPTION_AMOUNT = CharKey.of("AbsorptionAmount"),
+	NBT_ACTIVE_EFFECTS = CharKey.of("ActiveEffects"),
+	NBT_AMBIENT = CharKey.of("Ambient"),
+	NBT_AMPLIFIER = CharKey.of("Amplifier"),
+	NBT_DURATION = CharKey.of("Duration"),
+	NBT_SHOW_PARTICLES = CharKey.of("ShowParticles"),
+	NBT_SHOW_ICON = CharKey.of("ShowIcon"),
+	NBT_ATTRIBUTES = CharKey.of("Attributes"),
+	NBT_NAME = CharKey.of("Name"),
+	NBT_BASE = CharKey.of("Base"),
+	NBT_MODIFIERS = CharKey.of("Modifiers"),
+	NBT_AMOUNT = CharKey.of("Amount"),
+	NBT_OPERATION = CharKey.of("Operation"),
+	NBT_BRAIN = CharKey.of("Brain"),
+	NBT_DEATH_TIME = CharKey.of("DeathTime"),
+	NBT_FALL_FLYING = CharKey.of("FallFlying"),
+	NBT_HEALTH = CharKey.of("Health"),
+	NBT_HURT_BY_TIMESTAMP = CharKey.of("HurtByTimeStamp"),
+	NBT_HURT_TIME = CharKey.of("HurtTime"),
+	NBT_ARMOR_DROP_CHANCE = CharKey.of("ArmorDropChance"),
+	NBT_ARMOR_ITEMS = CharKey.of("ArmorItems"),
+	NBT_ATTACK_TIME = CharKey.of("AttackTime"),
+	NBT_DEATH_LOOT_TABLE = CharKey.of("DeathLootTable"),
+	NBT_DEATH_LOOT_TABLE_SEED = CharKey.of("DeathLootTableSeed"),
+	NBT_HAND_DROP_CHANCE = CharKey.of("HandDropChance"),
+	NBT_HAND_ITEMS = CharKey.of("HandItems"),
+	NBT_LEASH = CharKey.of("Leash"),
+	NBT_LEASHED = CharKey.of("Leashed"),
+	NBT_PERSISTENCE_REQUIRED = CharKey.of("PeristenceRequired");
 	
 	static {
 		NBT_FIELDS = new ChildNBTFieldContainer(CoreEntity.NBT_FIELDS);
@@ -127,29 +128,21 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 					boolean showParticles = true;
 					boolean showIcon = true;
 					while (reader.getType() != TagType.TAG_END) {
-						switch (reader.getFieldName()) {
-						case NBT_AMBIENT:
+						final CharSequence value = reader.getFieldName();
+						if (NBT_AMBIENT.equals(value))
 							reduceAmbient = reader.readByteTag() == 1;
-							break;
-						case NBT_AMPLIFIER:
+						else if (NBT_AMPLIFIER.equals(value))
 							amplifier = reader.readByteTag();
-							break;
-						case NBT_DURATION:
+						else if (NBT_DURATION.equals(value))
 							duration = reader.readIntTag();
-							break;
-						case NBT_ID:
+						else if (NBT_ID.equals(value))
 							id = reader.readByteTag();
-							break;
-						case NBT_SHOW_PARTICLES:
+						else if (NBT_SHOW_PARTICLES.equals(value))
 							showParticles = reader.readByteTag() == 1;
-							break;
-						case NBT_SHOW_ICON:
+						else if (NBT_SHOW_ICON.equals(value))
 							showIcon = reader.readByteTag() == 1;
-							break;
-						default:
+						else
 							reader.skipTag();
-							break;
-						}
 					}
 					PotionEffectType type = PotionEffectType.getByID(id);
 					if (duration <= 0 || type == null) {
@@ -170,14 +163,12 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 					double base = 0;
 					List<AttributeModifier> modifiers = null;
 					while (reader.getType() != TagType.TAG_END) { // read Attribute compound
-						switch (reader.getFieldName()) {
-						case NBT_NAME:
+						final CharSequence attributeKey = reader.getFieldName();
+						if (NBT_NAME.equals(attributeKey))
 							attribute = Attribute.getByName(reader.readStringTag());
-							break;
-						case NBT_BASE:
+						else if (NBT_BASE.equals(attributeKey))
 							base = reader.readDoubleTag();
-							break;
-						case NBT_MODIFIERS:
+						else if (NBT_MODIFIERS.equals(attributeKey)) {
 							reader.readNextEntry();
 							while (reader.getRestPayload() > 0) { // read list of AttributeModifier
 								double amount = 0;
@@ -185,22 +176,17 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 								Operation operation = null;
 								UUID uuid = null;
 								while (reader.getType() != TagType.TAG_END) { // read AttributeModifier compound
-									switch (reader.getFieldName()) {
-									case NBT_AMOUNT:
+									final CharSequence modifierKey = reader.getFieldName();
+									if (NBT_AMOUNT.equals(modifierKey))
 										amount = reader.readDoubleTag();
-										break;
-									case NBT_NAME:
+									else if (NBT_NAME.equals(modifierKey))
 										name = reader.readStringTag();
-										break;
-									case NBT_OPERATION:
+									else if (NBT_OPERATION.equals(modifierKey))
 										operation = Operation.getByID(reader.readIntTag());
-										break;
-									case NBT_UUID:
+									else if (NBT_UUID.equals(modifierKey))
 										uuid = reader.readUUID();
-										break;
-									default:
+									else
 										reader.skipTag();
-									}
 								}
 								reader.readNextEntry(); // assemble Modifier
 								if (modifiers == null)
@@ -911,6 +897,12 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void damage(double damage) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
