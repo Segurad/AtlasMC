@@ -6,19 +6,20 @@ import de.atlasmc.Material;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.inventory.meta.CompassMeta;
 import de.atlasmc.inventory.meta.ItemMeta;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreCompassMeta extends CoreItemMeta implements CompassMeta {
 
-	protected static final String 
-			LODESTONE_TRACKED = "LodestoneTracked",
-			LODESTONE_DIMENSION = "LodestoneDimension",
-			LODESTONE_POS = "LodestonePos",
-			POS_X = "X",
-			POS_Y = "Y",
-			POS_Z = "Z";
+	protected static final CharKey 
+			LODESTONE_TRACKED = CharKey.of("LodestoneTracked"),
+			LODESTONE_DIMENSION = CharKey.of("LodestoneDimension"),
+			LODESTONE_POS = CharKey.of("LodestonePos"),
+			POS_X = CharKey.of("X"),
+			POS_Y = CharKey.of("Y"),
+			POS_Z = CharKey.of("Z");
 	
 	static {
 		NBT_FIELDS.setField(LODESTONE_TRACKED, (holder, reader) -> {
@@ -38,12 +39,12 @@ public class CoreCompassMeta extends CoreItemMeta implements CompassMeta {
 					int x = 0, y = 0, z = 0;
 					for (int i = 0; i < 3;) {
 						i++;
-						final String field = reader.getFieldName();
-						if (field.equals(POS_X)) {
+						final CharSequence field = reader.getFieldName();
+						if (POS_X.equals(field)) {
 							x = reader.readIntTag();
-						} else if (field.equals(POS_Y)) {
+						} else if (POS_Y.equals(field)) {
 							y = reader.readIntTag();
-						} else if (field.equals(POS_Z)) {
+						} else if (POS_Z.equals(field)) {
 							z = reader.readIntTag();
 						} throw new NBTException("Unknown LodestonePos Field: " + reader.getFieldName());
 					}

@@ -6,11 +6,12 @@ import de.atlasmc.Material;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.inventory.meta.TileEntityMeta;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTileEntityMeta extends CoreItemMeta implements TileEntityMeta {
 
-	protected static final String NBT_BLOCK_ENTITY_TAG = "BlockEntityTag";
+	protected static final CharKey NBT_BLOCK_ENTITY_TAG = CharKey.of("BlockEntityTag");
 	
 	static {
 		NBT_FIELDS.setField(NBT_BLOCK_ENTITY_TAG, (holder, reader) -> {

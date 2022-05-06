@@ -6,11 +6,12 @@ import de.atlasmc.Color;
 import de.atlasmc.Material;
 import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.inventory.meta.LeatherArmorMeta;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreLeatherArmorMeta extends CoreDamageableMeta implements LeatherArmorMeta {
 
-	protected static final String COLOR = "color";
+	protected static final CharKey COLOR = CharKey.of("color");
 	
 	static {
 		NBT_FIELDS.getContainer(NBT_DISPLAY).setField(COLOR, (holder, reader) -> {

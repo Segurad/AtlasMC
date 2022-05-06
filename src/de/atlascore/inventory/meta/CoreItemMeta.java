@@ -23,6 +23,7 @@ import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.util.map.ArrayListMultimap;
 import de.atlasmc.util.map.ListMultimap;
 import de.atlasmc.util.map.Multimap;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.AbstractNBTBase;
 import de.atlasmc.util.nbt.CustomTagContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
@@ -33,24 +34,24 @@ import de.atlasmc.util.nbt.tag.NBT;
 public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	
 	protected static final NBTFieldContainer NBT_FIELDS;
-	protected static final String 
-	NBT_DISPLAY = "display",
-	NBT_NAME = "Name",
-	NBT_LORE = "Lore",
-	NBT_CAN_DESTROY = "CanDestroy",
-	NBT_CUSTOM_MODEL_DATA = "CustomModelData",
-	NBT_UNBREAKABLE = "Unbreakable",
-	NBT_HIDE_FLAGS = "HideFlags",
-	NBT_ATLASMC = "AtlasMC",
-	NBT_ENCHANTS = "Enchantments",
-	NBT_ID = "id",
-	NBT_LVL = "lvl",
-	NBT_ATTRIBUTE_MODIFIERS = "AttributeModifiers",
-	NBT_ATTRIBUTE_NAME = "AttibuteName",
-	NBT_AMOUNT = "Amount",
-	NBT_OPERATION = "Operation",
-	NBT_UUID = "UUID",
-	NBT_SLOT = "Slot";
+	protected static final CharKey 
+	NBT_DISPLAY = CharKey.of("display"),
+	NBT_NAME = CharKey.of("Name"),
+	NBT_LORE = CharKey.of("Lore"),
+	NBT_CAN_DESTROY = CharKey.of("CanDestroy"),
+	NBT_CUSTOM_MODEL_DATA = CharKey.of("CustomModelData"),
+	NBT_UNBREAKABLE = CharKey.of("Unbreakable"),
+	NBT_HIDE_FLAGS = CharKey.of("HideFlags"),
+	NBT_ATLASMC = CharKey.of("AtlasMC"),
+	NBT_ENCHANTS = CharKey.of("Enchantments"),
+	NBT_ID = CharKey.of("id"),
+	NBT_LVL = CharKey.of("lvl"),
+	NBT_ATTRIBUTE_MODIFIERS = CharKey.of("AttributeModifiers"),
+	NBT_ATTRIBUTE_NAME = CharKey.of("AttibuteName"),
+	NBT_AMOUNT = CharKey.of("Amount"),
+	NBT_OPERATION = CharKey.of("Operation"),
+	NBT_UUID = CharKey.of("UUID"),
+	NBT_SLOT = CharKey.of("Slot");
 			
 	static {
 		NBT_FIELDS = new NBTFieldContainer();
@@ -91,17 +92,13 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 				Enchantment ench = null;
 				int lvl = -1;
 				while (reader.getType() != TagType.TAG_END) {
-					switch (reader.getFieldName()) {
-					case NBT_ID:
+					final CharSequence value = reader.getFieldName();
+					if (NBT_ID.equals(value))
 						ench = Enchantment.getEnchantment(reader.readStringTag());
-						break;
-					case NBT_LVL:
+					else if (NBT_LVL.equals(value))
 						lvl = reader.readShortTag();
-						break;
-					default:
+					else
 						reader.skipTag();
-						break;
-					}
 				}
 				reader.readNextEntry();
 				if (ench == null) continue;
@@ -119,29 +116,21 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 				EquipmentSlot slot = null;
 				Operation operation = null;
 				while (reader.getType() != TagType.TAG_END) {
-					switch (reader.getFieldName()) {
-					case NBT_AMOUNT:
+					final CharSequence value = reader.getFieldName();
+					if (NBT_AMOUNT.equals(value))
 						amount = reader.readDoubleTag();
-						break;
-					case NBT_ATTRIBUTE_NAME:
+					else if (NBT_ATTRIBUTE_NAME.equals(value))
 						attribute = Attribute.getByName(reader.readStringTag());
-						break;
-					case NBT_NAME:
+					else if (NBT_NAME.equals(value))
 						name = reader.readStringTag();
-						break;
-					case NBT_OPERATION:
+					else if (NBT_OPERATION.equals(value))
 						operation = Operation.getByID(reader.readIntTag());
-						break;
-					case NBT_UUID:
+					else if (NBT_UUID.equals(value))
 						uuid = reader.readUUID();
-						break;
-					case NBT_SLOT:
+					else if (NBT_SLOT.equals(value))
 						slot = EquipmentSlot.valueOf(reader.readStringTag().toUpperCase());
-						break;
-					default:
+					else
 						reader.skipTag();
-						break;
-					}
 				}
 				reader.readNextEntry();
 				attributes.put(attribute, new AttributeModifier(uuid, name, amount, operation, slot));

@@ -12,20 +12,21 @@ import de.atlasmc.inventory.meta.PotionMeta;
 import de.atlasmc.potion.PotionData;
 import de.atlasmc.potion.PotionEffect;
 import de.atlasmc.potion.PotionEffectType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CorePotionMeta extends CoreItemMeta implements PotionMeta {
 	
-	protected static final String
-	NBT_CUSTOM_POTION_COLOR = "CustomPotionColor",
-	NBT_CUSTOM_POTION_EFFECTS = "CustomPotionEffects",
-	NBT_POTION = "Potion",
-	NBT_AMBIENT = "Ambient",
-	NBT_AMPLIFIER = "Amplifier",
-	NBT_DURATION = "Duration",
-	NBT_SHOW_PARTICLES = "ShowParticles",
-	NBT_SHOW_ICON = "ShowIcon";
+	protected static final CharKey
+	NBT_CUSTOM_POTION_COLOR = CharKey.of("CustomPotionColor"),
+	NBT_CUSTOM_POTION_EFFECTS = CharKey.of("CustomPotionEffects"),
+	NBT_POTION = CharKey.of("Potion"),
+	NBT_AMBIENT = CharKey.of("Ambient"),
+	NBT_AMPLIFIER = CharKey.of("Amplifier"),
+	NBT_DURATION = CharKey.of("Duration"),
+	NBT_SHOW_PARTICLES = CharKey.of("ShowParticles"),
+	NBT_SHOW_ICON = CharKey.of("ShowIcon");
 	
 	static {
 		NBT_FIELDS.setField(NBT_CUSTOM_POTION_COLOR, (holder, reader) -> {
@@ -45,29 +46,21 @@ public class CorePotionMeta extends CoreItemMeta implements PotionMeta {
 					boolean showParticles = true;
 					boolean showIcon = true;
 					while (reader.getType() != TagType.TAG_END) {
-						switch (reader.getFieldName()) {
-						case NBT_AMBIENT:
+						final CharSequence value = reader.getFieldName();
+						if (NBT_AMBIENT.equals(value))
 							reduceAmbient = reader.readByteTag() == 1;
-							break;
-						case NBT_AMPLIFIER:
+						else if (NBT_AMPLIFIER.equals(value))
 							amplifier = reader.readByteTag();
-							break;
-						case NBT_DURATION:
+						else if (NBT_DURATION.equals(value))
 							duration = reader.readIntTag();
-							break;
-						case NBT_ID:
+						else if (NBT_ID.equals(value))
 							id = reader.readByteTag();
-							break;
-						case NBT_SHOW_PARTICLES:
+						else if (NBT_SHOW_PARTICLES.equals(value))
 							showParticles = reader.readByteTag() == 1;
-							break;
-						case NBT_SHOW_ICON:
+						else if (NBT_SHOW_ICON.equals(value))
 							showIcon = reader.readByteTag() == 1;
-							break;
-						default:
+						else
 							reader.skipTag();
-							break;
-						}
 					}
 					PotionEffectType type = PotionEffectType.getByID(id);
 					if (duration <= 0 || type == null) {

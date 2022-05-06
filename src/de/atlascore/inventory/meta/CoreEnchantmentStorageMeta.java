@@ -8,12 +8,13 @@ import de.atlasmc.Material;
 import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.inventory.meta.EnchantmentStorageMeta;
 import de.atlasmc.inventory.meta.ItemMeta;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreEnchantmentStorageMeta extends CoreItemMeta implements EnchantmentStorageMeta {
 	
-	protected static final String STORED_ENCHANTS = "StoredEnchantments";
+	protected static final CharKey STORED_ENCHANTS = CharKey.of("StoredEnchantments");
 	
 	static {
 		NBT_FIELDS.setField(STORED_ENCHANTS, (holder, reader) -> {
@@ -24,17 +25,13 @@ public class CoreEnchantmentStorageMeta extends CoreItemMeta implements Enchantm
 					Enchantment ench = null;
 					int lvl = -1;
 					while (reader.getType() != TagType.TAG_END) {
-						switch (reader.getFieldName()) {
-						case NBT_ID:
+						final CharSequence value = reader.getFieldName();
+						if (NBT_ID.equals(value))
 							ench = Enchantment.getEnchantment(reader.readStringTag());
-							break;
-						case NBT_LVL:
+						else if (NBT_LVL.equals(value))
 							lvl = reader.readShortTag();
-							break;
-						default:
+						else
 							reader.skipTag();
-							break;
-						}
 					}
 					reader.readNextEntry();
 					if (ench == null) 

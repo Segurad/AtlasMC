@@ -7,6 +7,7 @@ import de.atlasmc.Material;
 import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.inventory.meta.MapMeta;
 import de.atlasmc.map.MapView;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -16,12 +17,12 @@ public class CoreMapMeta extends CoreItemMeta implements MapMeta {
 	private MapView view;
 	private int mapID;
 	
-	protected static final String
-			MAP = "map",
-			MAP_SCALE_DIRECTION = "map_scale_direction",
-			MAP_COLOR = "MapColor",
-			MAP_TRACING_POSITION = "map_tracking_position",
-			DECORATION = "Decoration";
+	protected static final CharKey
+			MAP = CharKey.of("map"),
+			MAP_SCALE_DIRECTION = CharKey.of("map_scale_direction"),
+			MAP_COLOR = CharKey.of("MapColor"),
+			MAP_TRACING_POSITION = CharKey.of("map_tracking_position"),
+			DECORATION = CharKey.of("Decoration");
 	
 	static {
 		NBT_FIELDS.setField(MAP, (holder, reader) -> {

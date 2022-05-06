@@ -6,13 +6,14 @@ import de.atlasmc.FireworkEffect;
 import de.atlasmc.Material;
 import de.atlasmc.inventory.meta.FireworkEffectMeta;
 import de.atlasmc.inventory.meta.ItemMeta;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreFireworkEffectMeta extends CoreItemMeta implements FireworkEffectMeta {
 
 	private FireworkEffect effect;
 	
-	protected static final String NBT_EXPLOSION = "Explosion";
+	protected static final CharKey NBT_EXPLOSION = CharKey.of("Explosion");
 	
 	static {
 		NBT_FIELDS.setField(NBT_EXPLOSION, (holder, reader) -> {

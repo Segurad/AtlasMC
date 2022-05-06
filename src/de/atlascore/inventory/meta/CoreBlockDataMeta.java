@@ -6,12 +6,13 @@ import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.inventory.meta.BlockDataMeta;
 import de.atlasmc.inventory.meta.ItemMeta;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBlockDataMeta extends CoreItemMeta implements BlockDataMeta {
 	
-	protected static final String
-	NBT_BLOCK_STATE_TAG = "BlockStateTag";
+	protected static final CharKey
+	NBT_BLOCK_STATE_TAG = CharKey.of("BlockStateTag");
 	
 	static {
 		NBT_FIELDS.setField(NBT_BLOCK_STATE_TAG, (holder, reader) -> {

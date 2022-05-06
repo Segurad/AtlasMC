@@ -8,14 +8,15 @@ import de.atlasmc.Material;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.meta.CrossbowMeta;
 import de.atlasmc.inventory.meta.ItemMeta;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreCrossbowMeta extends CoreDamageableMeta implements CrossbowMeta {
 	
-	protected static final String 
-	NBT_CHARGED_PROJECTILES = "ChargedProjectiles", 
-	NBT_CHARGED = "Charged";
+	protected static final CharKey 
+	NBT_CHARGED_PROJECTILES = CharKey.of("ChargedProjectiles"), 
+	NBT_CHARGED = CharKey.of("Charged");
 	
 	static {
 		NBT_FIELDS.setField(NBT_CHARGED, (holder, reader) -> {

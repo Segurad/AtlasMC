@@ -7,17 +7,18 @@ import java.util.List;
 import de.atlasmc.Material;
 import de.atlasmc.inventory.meta.BookMeta;
 import de.atlasmc.inventory.meta.ItemMeta;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBookMeta extends CoreItemMeta implements BookMeta {
 	
-	protected static final String
-	NBT_AUTHOR = "author",
-	NBT_GENERATION = "generation",
-	NBT_PAGES = "pages",
-	NBT_RESOLVED = "resolved",
-	NBT_TITLE = "title";
+	protected static final CharKey
+	NBT_AUTHOR = CharKey.of("author"),
+	NBT_GENERATION = CharKey.of("generation"),
+	NBT_PAGES = CharKey.of("pages"),
+	NBT_RESOLVED = CharKey.of("resolved"),
+	NBT_TITLE = CharKey.of("title");
 	
 	static {
 		NBT_FIELDS.setField(NBT_AUTHOR, (holder, reader) -> {

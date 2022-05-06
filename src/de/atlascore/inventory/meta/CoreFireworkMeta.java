@@ -8,15 +8,16 @@ import de.atlasmc.FireworkEffect;
 import de.atlasmc.Material;
 import de.atlasmc.inventory.meta.FireworkMeta;
 import de.atlasmc.inventory.meta.ItemMeta;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreFireworkMeta extends CoreItemMeta implements FireworkMeta {
 	
-	protected static final String
-	NBT_EXPLOSIONS = "Explosions",
-	NBT_FLIGHT = "Flight";
+	protected static final CharKey
+	NBT_EXPLOSIONS = CharKey.of("Explosions"),
+	NBT_FLIGHT = CharKey.of("Flight");
 	
 	static {
 		NBT_FIELDS.setField(NBT_EXPLOSIONS, (holder, reader) -> {

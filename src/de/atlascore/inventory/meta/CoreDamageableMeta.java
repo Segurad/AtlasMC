@@ -5,13 +5,14 @@ import java.io.IOException;
 import de.atlasmc.Material;
 import de.atlasmc.inventory.meta.DamageableMeta;
 import de.atlasmc.inventory.meta.ItemMeta;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreDamageableMeta extends CoreItemMeta implements DamageableMeta {
 
 	private int damage;
 	
-	protected static final String NBT_DAMAGE = "Damage";
+	protected static final CharKey NBT_DAMAGE = CharKey.of("Damage");
 	
 	static {
 		NBT_FIELDS.setField(NBT_DAMAGE, (holder, reader) -> {

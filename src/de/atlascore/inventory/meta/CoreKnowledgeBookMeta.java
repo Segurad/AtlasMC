@@ -8,12 +8,13 @@ import de.atlasmc.Material;
 import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.inventory.meta.KnowledgeBookMeta;
 import de.atlasmc.recipe.Recipe;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreKnowledgeBookMeta extends CoreItemMeta implements KnowledgeBookMeta {
 	
-	protected static final String NBT_RECIPES = "Recipes";
+	protected static final CharKey NBT_RECIPES = CharKey.of("Recipes");
 	
 	static {
 		NBT_FIELDS.setField(NBT_RECIPES, (holder, reader) -> {

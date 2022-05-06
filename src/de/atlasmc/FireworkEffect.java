@@ -3,6 +3,7 @@ package de.atlasmc;
 import java.io.IOException;
 import java.util.List;
 
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTHolder;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
@@ -14,12 +15,12 @@ public class FireworkEffect implements NBTHolder {
 	private boolean flicker, trail;
 	private Type type;
 	
-	protected static final String
-	NBT_COLORS = "Color",
-	NBT_FADE_COLOR = "FadeColor",
-	NBT_FLICKER = "Flicker",
-	NBT_TRAIL = "Trail",
-	NBT_TYPE = "Type";
+	protected static final CharKey
+	NBT_COLORS = CharKey.of("Color"),
+	NBT_FADE_COLOR = CharKey.of("FadeColor"),
+	NBT_FLICKER = CharKey.of("Flicker"),
+	NBT_TRAIL = CharKey.of("Trail"),
+	NBT_TYPE = CharKey.of("Type");
 	
 	public static enum Type {
 		BALL,
@@ -102,24 +103,19 @@ public class FireworkEffect implements NBTHolder {
 	@Override
 	public void fromNBT(NBTReader reader) throws IOException {
 		while (reader.getType() != TagType.TAG_END) {
-			switch (reader.getFieldName()) {
-			case NBT_COLORS:
+			final CharSequence key = reader.getFieldName();
+			if (NBT_COLORS.equals(key))
 				colors = reader.readIntArrayTag();
-				break;
-			case NBT_FADE_COLOR:
+			else if (NBT_FADE_COLOR.equals(key))
 				fadeColors = reader.readIntArrayTag();
-				break;
-			case NBT_FLICKER:
+			else if (NBT_FLICKER.equals(key))
 				flicker = reader.readByteTag() == 1;
-				break;
-			case NBT_TRAIL:
+			else if (NBT_TRAIL.equals(key))
 				trail = reader.readByteTag() == 1;
-			case NBT_TYPE:
+			else if (NBT_TYPE.equals(key))
 				type = Type.getByID(reader.readByteTag());
-				break;
-			default:
+			else
 				reader.skipTag();
-			}
 		}
 		reader.readNextEntry();
 	}

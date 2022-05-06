@@ -10,18 +10,19 @@ import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.inventory.meta.SuspiciousStewMeta;
 import de.atlasmc.potion.PotionEffect;
 import de.atlasmc.potion.PotionEffectType;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreSuspiciousStewMeta extends CoreItemMeta implements SuspiciousStewMeta {
 	
-	protected static final String 
-	SUSPICIOUS_STEW_EFFECTS = "SuspiciousStewEffects",
-	NBT_AMBIENT = "Ambient",
-	NBT_AMPLIFIER = "Amplifier",
-	NBT_DURATION = "Duration",
-	NBT_SHOW_PARTICLES = "ShowParticles",
-	NBT_SHOW_ICON = "ShowIcon";
+	protected static final CharKey 
+	SUSPICIOUS_STEW_EFFECTS = CharKey.of("SuspiciousStewEffects"),
+	NBT_AMBIENT = CharKey.of("Ambient"),
+	NBT_AMPLIFIER = CharKey.of("Amplifier"),
+	NBT_DURATION = CharKey.of("Duration"),
+	NBT_SHOW_PARTICLES = CharKey.of("ShowParticles"),
+	NBT_SHOW_ICON = CharKey.of("ShowIcon");
 	
 	static {
 		NBT_FIELDS.getContainer(NBT_ATLASMC).setField(SUSPICIOUS_STEW_EFFECTS, (holder, reader) -> {
@@ -36,29 +37,21 @@ public class CoreSuspiciousStewMeta extends CoreItemMeta implements SuspiciousSt
 					boolean showParticles = true;
 					boolean showIcon = true;
 					while (reader.getType() != TagType.TAG_END) {
-						switch (reader.getFieldName()) {
-						case NBT_AMBIENT:
+						final CharSequence value = reader.getFieldName();
+						if (NBT_AMBIENT.equals(value))
 							reduceAmbient = reader.readByteTag() == 1;
-							break;
-						case NBT_AMPLIFIER:
+						else if (NBT_AMPLIFIER.equals(value))
 							amplifier = reader.readByteTag();
-							break;
-						case NBT_DURATION:
+						else if (NBT_DURATION.equals(value))
 							duration = reader.readIntTag();
-							break;
-						case NBT_ID:
+						else if (NBT_ID.equals(value))
 							id = reader.readByteTag();
-							break;
-						case NBT_SHOW_PARTICLES:
+						else if (NBT_SHOW_PARTICLES.equals(value))
 							showParticles = reader.readByteTag() == 1;
-							break;
-						case NBT_SHOW_ICON:
+						else if (NBT_SHOW_ICON.equals(value))
 							showIcon = reader.readByteTag() == 1;
-							break;
-						default:
+						else
 							reader.skipTag();
-							break;
-						}
 					}
 					PotionEffectType type = PotionEffectType.getByID(id);
 					if (duration <= 0 || type == null) {

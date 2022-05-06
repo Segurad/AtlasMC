@@ -7,11 +7,12 @@ import de.atlasmc.Material;
 import de.atlasmc.entity.TropicalFish.Pattern;
 import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.inventory.meta.TropicalFishBucketMeta;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTropicalFishBucketMeta extends CoreItemMeta implements TropicalFishBucketMeta {
 	
-	protected static final String NBT_BUCKET_VARIANT_TAG = "BucketVariantTag";
+	protected static final CharKey NBT_BUCKET_VARIANT_TAG = CharKey.of("BucketVariantTag");
 	
 	static {
 		NBT_FIELDS.setField(NBT_BUCKET_VARIANT_TAG, (holder, reader) -> {

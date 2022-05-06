@@ -3,6 +3,7 @@ package de.atlasmc.inventory;
 import java.io.IOException;
 import de.atlasmc.Material;
 import de.atlasmc.inventory.meta.ItemMeta;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTHolder;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
@@ -11,12 +12,12 @@ import de.atlasmc.util.nbt.tag.NBT;
 
 public class ItemStack implements NBTHolder {
 
-	protected static final String
-	NBT_COUNT = "Count",
-	NBT_ID = "id",
-	NBT_TAG = "tag",
-	NBT_CUSTOM_CREATIVE_LOCK = "CustomCreativeLock",
-	NBT_SLOT = "Slot";
+	protected static final CharKey
+	NBT_COUNT = CharKey.of("Count"),
+	NBT_ID = CharKey.of("id"),
+	NBT_TAG = CharKey.of("tag"),
+	NBT_CUSTOM_CREATIVE_LOCK = CharKey.of("CustomCreativeLock"),
+	NBT_SLOT = CharKey.of("Slot");
 	
 	private byte amount;
 	private Material type;
@@ -173,32 +174,24 @@ public class ItemStack implements NBTHolder {
 		int slot = -999;
 		final int depth = reader.getDepth();
 		while (depth <= reader.getDepth()) {
-			String s = reader.getFieldName();
-			switch (s) {
-			case NBT_COUNT: 
+			final CharSequence value = reader.getFieldName();
+			if (NBT_COUNT.equals(value)) 
 				amount = reader.readByteTag();
-				break;
-			case NBT_CUSTOM_CREATIVE_LOCK: 
+			else if (NBT_CUSTOM_CREATIVE_LOCK.equals(value)) 
 				reader.skipTag(); // TODO skip creative lock because i don't know if it is used
-				break;
-			case NBT_ID: 
+			else if (NBT_ID.equals(value))
 				reader.readStringTag(); // TODO skipped material should be initiated by creating the stack
-				break;
-			case NBT_SLOT: 
+			else if (NBT_SLOT.equals(value))
 				slot = reader.readByteTag();
-				break;
-			case NBT_TAG:
+			else if (NBT_TAG.equals(value))
 				if (reader.getType() != TagType.COMPOUND) {
 					reader.skipTag();
 				} else {
 					reader.readNextEntry();
 					getItemMeta().fromNBT(reader);
 				}
-				break;
-			default: 
+			else
 				reader.skipTag();
-				break;
-			}
 		}
 		if (reader.getType() == TagType.TAG_END)
 			reader.skipTag();
