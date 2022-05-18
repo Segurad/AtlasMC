@@ -11,14 +11,10 @@ public class NBTIOReader extends AbstractNBTIOReader {
 	private boolean readBuf, writeBuf;
 	private InputStream  in;
 	
-	public NBTIOReader(InputStream in) {
-		if (in == null) throw new IllegalArgumentException("DataInput can not be null!");
+	public NBTIOReader(InputStream in) throws IOException {
+		if (in == null) 
+			throw new IllegalArgumentException("DataInput can not be null!");
 		this.in = in;
-		try {
-			readNextEntry();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	@Override

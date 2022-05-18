@@ -9,6 +9,14 @@ public class CharKeyBuffer extends CharKey {
 	private String text;
 	private CharKeyBufferView view;
 	
+	public CharKeyBuffer() {
+		this(32);
+	}
+	
+	public CharKeyBuffer(int size) {
+		buf = new char[size];
+	}
+	
 	public CharKeyBuffer(CharKey key) {
 		buf = Arrays.copyOf(key.getBuf(), key.length());
 	}

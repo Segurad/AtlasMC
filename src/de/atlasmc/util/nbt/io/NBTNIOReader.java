@@ -3,19 +3,14 @@ package de.atlasmc.util.nbt.io;
 import java.io.IOException;
 import io.netty.buffer.ByteBuf;
 
-public class NBTNIOReader extends AbstractNBTIOReader implements NBTReader {
+public class NBTNIOReader extends AbstractNBTIOReader {
 	
 	private ByteBuf in;
 	
-	public NBTNIOReader(ByteBuf in) {
-		if (in == null) throw new IllegalArgumentException("ByteBuf can not be null!");
+	public NBTNIOReader(ByteBuf in) throws IOException {
+		if (in == null) 
+			throw new IllegalArgumentException("ByteBuf can not be null!");
 		this.in = in;
-		try {
-			readNextEntry();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		mark();
 	}
 
 	@Override
