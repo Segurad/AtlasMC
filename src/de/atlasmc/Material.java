@@ -1229,7 +1229,7 @@ public class Material implements Namespaced {
 	}
 	
 	/**
-	 * Returns true if this Material cna be represented as a {@link BlockData}
+	 * Returns true if this Material can be represented as a {@link BlockData}
 	 * @return true if block
 	 */
 	public boolean isBlock() {
@@ -1290,13 +1290,13 @@ public class Material implements Namespaced {
 	public static Material getByName(String name) {
 		if (name == null) 
 			throw new IllegalArgumentException("Name can not be null!");
-		if (name.indexOf(':') != -1) {
-			String[] parts = name.split(":");
-			if (parts.length > 2) 
-				throw new IllegalArgumentException("Illegal NamespacedKey format: " + name);
-			return getMaterial(parts[0], parts[1]);
-		}
-		return getMaterial(NamespacedKey.MINECRAFT, name);
+		final int index = name.indexOf(':');
+		if (index == -1 || (index == NamespacedKey.MINECRAFT.length() && name.startsWith(NamespacedKey.MINECRAFT)))
+			return getMaterial(NamespacedKey.MINECRAFT, name);
+		String[] parts = name.split(":");
+		if (parts.length > 2) 
+			throw new IllegalArgumentException("Illegal NamespacedKey format: " + name);
+		return getMaterial(parts[0], parts[1]);
 	}
 	
 	/**
