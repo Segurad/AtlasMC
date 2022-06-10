@@ -17,7 +17,7 @@ import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutSetSlot;
 import de.atlasmc.io.protocol.play.PacketOutWindowItems;
 import de.atlasmc.io.protocol.play.PacketOutWindowProperty;
-import de.atlasmc.util.ArrayIterator;
+import de.atlasmc.util.iterator.ArrayIterator;
 
 public class CoreInventory implements Inventory {
 

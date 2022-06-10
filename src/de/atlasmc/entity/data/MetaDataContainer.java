@@ -2,7 +2,7 @@ package de.atlasmc.entity.data;
 
 import java.util.Iterator;
 
-import de.atlasmc.util.ArrayIterator;
+import de.atlasmc.util.iterator.ArrayIterator;
 
 public class MetaDataContainer implements Iterable<MetaData<?>> {
 	
