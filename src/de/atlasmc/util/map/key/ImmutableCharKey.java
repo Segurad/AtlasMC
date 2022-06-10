@@ -20,10 +20,6 @@ public final class ImmutableCharKey extends CharKey {
 	public ImmutableCharKey(char[] chars, int offset, int length) {
 		buf = Arrays.copyOfRange(chars, offset, offset+length);
 	}
-	
-	private ImmutableCharKey(ImmutableCharKey key, int from, int to) {
-		buf = Arrays.copyOfRange(key.buf, from, to);
-	}
 
 	@Override
 	public int length() {
@@ -37,7 +33,11 @@ public final class ImmutableCharKey extends CharKey {
 
 	@Override
 	public CharKey subSequence(int start, int end) {
-		return new ImmutableCharKey(this, start, end);
+		if (start < 0)
+			throw new IndexOutOfBoundsException(start);
+		if (end < 0 || end >= length())
+			throw new IndexOutOfBoundsException(end);
+		return new SubCharKey(this, start, end);
 	}
 	
 	@Override
