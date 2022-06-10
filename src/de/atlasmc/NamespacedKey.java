@@ -6,7 +6,7 @@ public class NamespacedKey {
 	
 	public static final String MINECRAFT = "minecraft";
 	
-	private final String name, namespace;
+	private final String name, namespace, combination;
 	
 	public NamespacedKey(String namespace, String name) {
 		if (namespace == null) 
@@ -15,6 +15,7 @@ public class NamespacedKey {
 			throw new IllegalArgumentException("Name can not be null!");
 		this.name = name;
 		this.namespace = namespace;
+		this.combination = namespace + "+" + name;
 	}
 	
 	public String getName() {
@@ -27,7 +28,7 @@ public class NamespacedKey {
 	
 	@Override
 	public String toString() {
-		return namespace + ":" + name;
+		return combination;
 	}
 	
 	public static interface Namespaced {
