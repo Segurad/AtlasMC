@@ -140,16 +140,6 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	}
 
 	@Override
-	public UUID getInternalUUID() {
-		return con.getAtlasPlayer().getInteranlUUID();
-	}
-
-	@Override
-	public void setInternalUUID(UUID uuid) {
-		con.getAtlasPlayer().setInternalUUID(uuid);
-	}
-
-	@Override
 	public String getLocal() {
 		return con.getClientLocal();
 	}

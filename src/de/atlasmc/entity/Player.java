@@ -1,7 +1,5 @@
 package de.atlasmc.entity;
 
-import java.util.UUID;
-
 import de.atlasmc.Effect;
 import de.atlasmc.Gamemode;
 import de.atlasmc.Location;
@@ -51,10 +49,6 @@ public interface Player extends HumanEntity {
 	public AtlasPlayer getAtlasPlayer();
 
 	public String getName();
-	
-	public UUID getInternalUUID();
-	
-	public void setInternalUUID(UUID uuid);
 
 	public String getLocal();
 
