@@ -93,7 +93,7 @@ public class CorePacketOutChunkData extends AbstractPacket implements PacketOutC
 		bitmask = readVarInt(in);
 		NBTNIOReader reader = new NBTNIOReader(in);
 		reader.readNextEntry();
-		String name = reader.getFieldName();
+		final CharSequence name = reader.getFieldName();
 		if (name.equals("MOTION_BLOCKING")) {
 			motionBlocking = reader.readLongArrayTag();
 		} else reader.readLongArrayTag();

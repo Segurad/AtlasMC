@@ -72,7 +72,7 @@ public class CorePacketOutNBTQueryResponse extends AbstractPacket implements Pac
 	}
 
 	@Override
-	public NBTReader getNBTReader() {
+	public NBTReader getNBTReader() throws IOException {
 		return new NBTNIOReader(buf);
 	}
 

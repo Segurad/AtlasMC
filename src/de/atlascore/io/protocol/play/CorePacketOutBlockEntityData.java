@@ -62,7 +62,7 @@ public class CorePacketOutBlockEntityData extends AbstractPacket implements Pack
 	}
 
 	@Override
-	public NBTReader getNBTReader() {
+	public NBTReader getNBTReader() throws IOException {
 		return new NBTIOReader(new ByteArrayInputStream(data));
 	}
 	

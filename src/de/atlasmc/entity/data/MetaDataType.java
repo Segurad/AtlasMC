@@ -267,9 +267,10 @@ public abstract class MetaDataType<T> {
 
 		@Override
 		public CompoundTag read(ByteBuf in) {
-			NBTNIOReader reader = new NBTNIOReader(in);
+			NBTNIOReader reader = null;
 			CompoundTag tag = null;
 			try {
+				reader = new NBTNIOReader(in);
 				tag = (CompoundTag) reader.readNBT();
 			} catch (IOException e) {
 				e.printStackTrace();

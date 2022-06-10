@@ -1,5 +1,7 @@
 package de.atlasmc.io.protocol.play;
 
+import java.io.IOException;
+
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.PacketOutbound;
 import de.atlasmc.util.nbt.io.NBTReader;
@@ -14,7 +16,7 @@ public interface PacketOutBlockEntityData extends PacketPlay, PacketOutbound {
 	
 	public NBT getNBT();
 	
-	public NBTReader getNBTReader();
+	public NBTReader getNBTReader() throws IOException;
 	
 	public byte[] getRawNBT();
 	
