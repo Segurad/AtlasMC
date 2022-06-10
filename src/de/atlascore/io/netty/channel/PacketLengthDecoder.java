@@ -12,11 +12,11 @@ import io.netty.handler.codec.ByteToMessageDecoder;
  * Decodes the packet size and splits the input
  */
 @Sharable
-public class VarLengthFieldFrameDecoder extends ByteToMessageDecoder {
+public class PacketLengthDecoder extends ByteToMessageDecoder {
 
 	private int length = -1;
 	
-	public static final VarLengthFieldFrameDecoder INSTANCE = new VarLengthFieldFrameDecoder();
+	public static final PacketLengthDecoder INSTANCE = new PacketLengthDecoder();
 	
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
@@ -29,7 +29,8 @@ public class VarLengthFieldFrameDecoder extends ByteToMessageDecoder {
 		if (length == -1) {
 			length = AbstractPacket.readVarInt(in);
 		}
-		if (in.readableBytes() < length) return null;
+		if (in.readableBytes() < length) 
+			return null;
 		if (length > AbstractPacket.MAX_PACKET_LENGTH) {
 			in.skipBytes(length);
 			length = -1;

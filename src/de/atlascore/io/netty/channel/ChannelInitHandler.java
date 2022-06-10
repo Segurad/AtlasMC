@@ -15,12 +15,7 @@ public class ChannelInitHandler extends ChannelInitializer<SocketChannel> {
 	
 	@Override
 	protected void initChannel(SocketChannel ch) throws Exception {
-		ConnectionHandler handler = new ConnectionHandler(ch, proxy);
-		ch.pipeline().addLast("framer", VarLengthFieldFrameDecoder.INSTANCE)
-		.addLast("framer-prepender", VarLengthFieldPrepender.INSTANCE)
-		.addLast("protocol-decoder", new PacketDecoder(handler))
-		.addLast("protocol-encoder", new PacketEncoder())
-		.addLast("processor", new PacketProcessor(handler));
+		new ConnectionHandler(ch, proxy);
 	}
 
 }

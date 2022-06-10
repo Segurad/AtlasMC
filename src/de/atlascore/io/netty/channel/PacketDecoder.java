@@ -26,10 +26,8 @@ public class PacketDecoder extends ByteToMessageDecoder {
 		int id = AbstractPacket.readVarInt(in);
 		Protocol prot = handler.getProtocol();
 		Packet packet = prot.createPacketIn(id);
-		if (packet == null) {
-			System.out.println("Invalid Packet: " + id);
-			return;
-		}
+		if (packet == null)
+			throw new IllegalStateException("Invalid Packet ID: " + id);
 		packet.setTimestamp(System.currentTimeMillis());
 		packet.read(in);
 		out.add(packet);
@@ -37,7 +35,8 @@ public class PacketDecoder extends ByteToMessageDecoder {
 	
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		if (!handler.handleException(cause)) ctx.fireExceptionCaught(cause);
+		if (!handler.handleException(cause)) 
+			ctx.fireExceptionCaught(cause);
 	}
 
 }
