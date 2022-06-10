@@ -15,6 +15,7 @@ public class NBTIOReader extends AbstractNBTIOReader {
 		if (in == null) 
 			throw new IllegalArgumentException("DataInput can not be null!");
 		this.in = in;
+		prepareTag(false);
 	}
 	
 	@Override

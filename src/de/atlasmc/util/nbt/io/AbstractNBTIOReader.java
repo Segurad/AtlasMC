@@ -26,9 +26,8 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	private ListData markList;
 	private boolean closed;
 	
-	public AbstractNBTIOReader() throws IOException {
+	public AbstractNBTIOReader() {
 		name = new CharKeyBuffer();
-		prepareTag(false);
 	}
 	
 	@Override

@@ -11,6 +11,7 @@ public class NBTNIOReader extends AbstractNBTIOReader {
 		if (in == null) 
 			throw new IllegalArgumentException("ByteBuf can not be null!");
 		this.in = in;
+		prepareTag(false);
 	}
 
 	@Override
