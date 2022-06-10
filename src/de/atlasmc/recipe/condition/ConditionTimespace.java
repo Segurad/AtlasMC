@@ -13,12 +13,12 @@ public class ConditionTimespace implements Condition {
 	
 	@Override
 	public boolean isValid(Player player) {
-		long t = player.getLocation().getWorld().getTime();
+		long t = player.getWorld().getTime();
 		return t >= start && t <= end;
 	}
 
 	@Override
-	public void charge(Player player) {}
+	public void pay(Player player) {}
 
 	@Override
 	public boolean isPayCondition() {

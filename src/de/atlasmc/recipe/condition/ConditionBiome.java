@@ -17,7 +17,7 @@ public final class ConditionBiome implements Condition {
 	}
 
 	@Override
-	public void charge(Player player) {}
+	public void pay(Player player) {}
 
 	@Override
 	public boolean isPayCondition() {

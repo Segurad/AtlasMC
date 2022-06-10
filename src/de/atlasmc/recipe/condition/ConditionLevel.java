@@ -5,9 +5,11 @@ import de.atlasmc.entity.Player;
 public final class ConditionLevel implements Condition {
 
 	private final int lvl;
+	private final boolean pay;
 	
-	public ConditionLevel(int value) {
+	public ConditionLevel(int value, boolean pay) {
 		this.lvl = value;
+		this.pay = pay;
 	}
 	
 	@Override
@@ -16,13 +18,14 @@ public final class ConditionLevel implements Condition {
 	}
 
 	@Override
-	public void charge(Player player) {
-		player.setLevel(player.getLevel() - lvl);
+	public void pay(Player player) {
+		if (pay)
+			player.setLevel(player.getLevel() - lvl);
 	}
 
 	@Override
 	public boolean isPayCondition() {
-		return false;
+		return pay;
 	}
 
 }

@@ -13,11 +13,11 @@ public final class ConditionWorld implements Condition {
 	
 	@Override
 	public boolean isValid(Player player) {
-		return player.getLocation().getWorld().equals(world);
+		return player.getWorld().equals(world);
 	}
 
 	@Override
-	public void charge(Player player) {}
+	public void pay(Player player) {}
 
 	@Override
 	public boolean isPayCondition() {

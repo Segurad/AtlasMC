@@ -13,11 +13,11 @@ public final class ConditionRegion implements Condition {
 	
 	@Override
 	public boolean isValid(Player player) {
-		return region.contains(player.getLocation());
+		return region.contains(player.getX(), player.getY(), player.getZ());
 	}
 
 	@Override
-	public void charge(Player player) {}
+	public void pay(Player player) {}
 
 	@Override
 	public boolean isPayCondition() {
