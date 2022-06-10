@@ -11,13 +11,13 @@ public interface AtlasPlayer {
 	 * The original player name
 	 * @return player's name
 	 */
-	public String getName();
+	public String getMojangName();
 	
 	/**
 	 * The original player uuid
 	 * @return player's uuid
 	 */
-	public UUID getUUID();
+	public UUID getMojangUUID();
 	
 	/**
 	 * Returns the Proxy the player connected to the network
