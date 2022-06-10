@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import de.atlascore.inventory.EntityEquipment;
 import de.atlasmc.Color;
@@ -27,6 +28,7 @@ import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutEntityEffect;
+import de.atlasmc.io.protocol.play.PacketOutEntityProperties;
 import de.atlasmc.io.protocol.play.PacketOutRemoveEntityEffect;
 import de.atlasmc.io.protocol.play.PacketOutSpawnLivingEntity;
 import de.atlasmc.potion.PotionEffect;
@@ -379,6 +381,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	private float health;
 	private float absorption;
 	private Map<Attribute, AttributeInstance> attributes;
+	private Consumer<AttributeInstance> attributeUpdateListener;
 	private List<PotionEffect> effects;
 	private Map<PotionEffectType, PotionEffect> activeEffects;
 	private short deathAnimationTime;
@@ -386,6 +389,8 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	private short attackTime;
 	private boolean fallFlying;
 	private boolean removeWhenFaraway;
+	
+	private boolean updateAttributes;
 	
 	public CoreLivingEntity(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
@@ -499,18 +504,32 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 
 	@Override
 	public void setAttributeModifiers(Multimap<Attribute, AttributeModifier> attributeModifiers) {
-		// TODO Auto-generated method stub
-		
+		if (attributeModifiers == null)
+			throw new IllegalArgumentException("Modifiers can not be null!");
+		attributeModifiers.asMap().forEach((attribute, modifiers) -> {
+			AttributeInstance instance = getAttribute(attribute);
+			instance.setModifiers(modifiers);
+		});
 	}
 
 	@Override
 	public boolean addAttributeModifier(Attribute attribute, AttributeModifier modifier) {
-		return false;
+		if (attribute == null)
+			throw new IllegalArgumentException("Attribute can not be null!");
+		if (modifier == null)
+			throw new IllegalArgumentException("Modifier can not be null!");
+		AttributeInstance instance = getAttribute(attribute);
+		instance.addAttributeModififer(modifier);
+		return true;
 	}
 
 	@Override
 	public boolean hasAttributeModifiers() {
-		// TODO Auto-generated method stub
+		if (!hasAttributes())
+			return false;
+		for (AttributeInstance instance : attributes.values())
+			if (instance.hasModifiers())
+				return true;
 		return false;
 	}
 
@@ -543,8 +562,10 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 
 	@Override
 	public boolean removeAttributeModifier(Attribute attribute, AttributeModifier modifier) {
-		// TODO Auto-generated method stub
-		return false;
+		if (!hasAttribute(attribute))
+			return false;
+		AttributeInstance instance = getAttribute(attribute);
+		return instance.removeModifier(modifier.getUUID());
 	}
 
 	@Override
@@ -606,14 +627,23 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 
 	@Override
 	public AttributeInstance getAttribute(Attribute attribute) {
-		if (attributes == null)
+		if (attributes == null) {
 			attributes = new HashMap<>();
+			attributeUpdateListener = (instance) -> {
+				updateAttributes = true;
+			};
+		}
 		AttributeInstance instance = attributes.get(attribute);
 		if (instance != null)
 			return instance;
-		instance = new AttributeInstance(attribute, 0.0); // TODO implement getDefaultAttributeValue somewhere
+		instance = new AttributeInstance(attribute, 0.0, attributeUpdateListener); // TODO implement getDefaultAttributeValue somewhere
 		attributes.put(attribute, instance); 
 		return instance;
+	}
+	
+	@Override
+	public boolean hasAttribute(Attribute attribute) {
+		return attribute != null && attributes.containsKey(attribute);
 	}
 
 	@Override
@@ -895,6 +925,22 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 					it.remove();
 					sendRemoveEntityEffect(type);
 				}
+			}
+		}
+	}
+	
+	@Override
+	protected void update() {
+		super.update();
+		if (updateAttributes) {
+			updateAttributes = false;
+			if (!hasAttributes())
+			for (Player viewer : viewers) {
+				PlayerConnection con = viewer.getConnection();
+				PacketOutEntityProperties packet = con.createPacket(PacketOutEntityProperties.class);
+				packet.setEntity(getID());
+				packet.setAttributes(attributes.values());
+				con.sendPacked(packet);
 			}
 		}
 	}

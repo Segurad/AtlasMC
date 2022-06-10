@@ -85,6 +85,8 @@ public interface LivingEntity extends Damageable, Attributeable {
 	public void removePotionEffect(PotionEffectType type);
 	
 	public AttributeInstance getAttribute(Attribute attribute);
+	
+	public boolean hasAttribute(Attribute attribute);
 
 	/**
 	 * Time in ticks the death animation is played<br>

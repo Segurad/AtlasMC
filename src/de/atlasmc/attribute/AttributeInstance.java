@@ -1,11 +1,14 @@
 package de.atlasmc.attribute;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class AttributeInstance {
 
+	private final Consumer<AttributeInstance> updateListener;
 	private final Attribute attribute;
 	private final double defaultValue;
 	private double baseValue;
@@ -13,10 +16,13 @@ public class AttributeInstance {
 	private boolean changed;
 	private List<AttributeModifier> modifiers;
 	
-	public AttributeInstance(Attribute attribute, double defaultValue) {
+	public AttributeInstance(Attribute attribute, double defaultValue, Consumer<AttributeInstance> updateListener) {
+		if (attribute == null)
+			throw new IllegalArgumentException("Attribute can not be null!");
 		this.attribute = attribute;
 		this.defaultValue = defaultValue;
 		baseValue = defaultValue;
+		this.updateListener = updateListener;
 	}
 	
 	public Attribute getAttribute() {
@@ -32,7 +38,8 @@ public class AttributeInstance {
 	}
 
 	public List<AttributeModifier> getModifiers() {
-		if (modifiers == null) modifiers = new ArrayList<AttributeModifier>();
+		if (modifiers == null) 
+			modifiers = new ArrayList<AttributeModifier>();
 		return modifiers;
 	}
 	
@@ -43,11 +50,13 @@ public class AttributeInstance {
 	public void setBaseValue(double value) {
 		this.baseValue = value;
 		changed = true;
+		updateListener.accept(this);
 	}
 	
 	public void addAttributeModififer(AttributeModifier modifier) {
 		getModifiers().add(modifier);
 		changed = true;
+		updateListener.accept(this);
 	}
 
 	public boolean removeModifiers() {
@@ -55,6 +64,7 @@ public class AttributeInstance {
 			return false;
 		modifiers.clear();
 		changed = true;
+		updateListener.accept(this);
 		return true;
 	}
 
@@ -62,7 +72,7 @@ public class AttributeInstance {
 		return modifiers != null && !modifiers.isEmpty();
 	}
 
-	public void setModifiers(List<AttributeModifier> modifiers) {
+	public void setModifiers(Collection<AttributeModifier> modifiers) {
 		if (modifiers == null)
 			throw new IllegalArgumentException("Modifiers can not be null!");
 		if (!hasModifiers() && modifiers.isEmpty())
@@ -71,18 +81,24 @@ public class AttributeInstance {
 		mods.clear();
 		mods.addAll(modifiers);
 		changed = true;
+		updateListener.accept(this);
 	}
 
-	public void removeModifier(UUID uuid) {
+	public boolean removeModifier(UUID uuid) {
 		if (uuid == null)
 			throw new IllegalArgumentException("UUID can not be null!");
 		if (!hasModifiers())
-			return;
+			return false;
+		boolean removed = false;
 		for (int i = 0; i < modifiers.size(); i++)
 			if (modifiers.get(i).getUUID().equals(uuid)) {
 				modifiers.remove(i--);
 				changed = true;
+				removed = true;
 			}
+		if (removed)
+			updateListener.accept(this);
+		return removed;
 	}
 	
 	/**
@@ -117,6 +133,14 @@ public class AttributeInstance {
 		}
 		value *= scale;
 		value *= scale_1;
+	}
+	
+	/**
+	 * Force updates this instance
+	 */
+	public void update() {
+		recalcValue();
+		updateListener.accept(this);
 	}
 
 }

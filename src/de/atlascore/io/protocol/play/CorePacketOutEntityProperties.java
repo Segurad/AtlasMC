@@ -1,6 +1,7 @@
 package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
@@ -20,22 +21,10 @@ public class CorePacketOutEntityProperties extends AbstractPacket implements Pac
 		super(CoreProtocolAdapter.VERSION);
 	}
 	
-	public CorePacketOutEntityProperties(int entityID, List<AttributeInstance> attributes) {
+	public CorePacketOutEntityProperties(int entityID, Collection<AttributeInstance> attributes) {
 		this();
 		this.entityID = entityID;
-		buf = Unpooled.buffer();
-		writeVarInt(attributes.size(), buf);
-		for (AttributeInstance i : attributes) {
-			writeString(i.getAttribute().getName(), buf);
-			buf.writeDouble(i.getDefaultValue());
-			writeVarInt(i.getModifierCount(), buf);
-			for (AttributeModifier mod : i.getModifiers()) {
-				buf.writeLong(mod.getUUID().getMostSignificantBits());
-				buf.writeLong(mod.getUUID().getLeastSignificantBits());
-				buf.writeDouble(mod.getAmount());
-				buf.writeByte(mod.getOperation().ordinal());
-			}
-		}
+		setAttributes(attributes);
 	}
 
 	@Override
@@ -59,6 +48,31 @@ public class CorePacketOutEntityProperties extends AbstractPacket implements Pac
 	public List<AttributeInstance> getAttributes() {
 		// TODO return attributes
 		return null;
+	}
+
+	@Override
+	public void setEntity(int id) {
+		this.entityID = id;
+	}
+
+	@Override
+	public void setAttributes(Collection<AttributeInstance> attributes) {
+		if (buf == null)
+			buf = Unpooled.buffer();
+		else
+			buf.clear();
+		writeVarInt(attributes.size(), buf);
+		for (AttributeInstance i : attributes) {
+			writeString(i.getAttribute().getName(), buf);
+			buf.writeDouble(i.getDefaultValue());
+			writeVarInt(i.getModifierCount(), buf);
+			for (AttributeModifier mod : i.getModifiers()) {
+				buf.writeLong(mod.getUUID().getMostSignificantBits());
+				buf.writeLong(mod.getUUID().getLeastSignificantBits());
+				buf.writeDouble(mod.getAmount());
+				buf.writeByte(mod.getOperation().ordinal());
+			}
+		}
 	}
 	
 	
