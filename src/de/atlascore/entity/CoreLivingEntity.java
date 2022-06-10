@@ -54,6 +54,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 			con.sendPacked(packet);
 			((CoreLivingEntity) holder).sendMetadata(viewer);
 			((CoreLivingEntity) holder).sendEntityEffects(viewer);
+			((CoreLivingEntity) holder).sendAttributes(viewer);
 		};
 	
 	/**
@@ -845,6 +846,10 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		sendRemoveEntityEffect(type);
 	}
 	
+	/**
+	 * Sends a new PotionEffect to the current viewers
+	 * @param effect
+	 */
 	protected void sendAddEntityEffect(PotionEffect effect) {
 		for (Player viewer : viewers) {
 			PlayerConnection con = viewer.getConnection();
@@ -855,6 +860,10 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		}
 	}
 	
+	/**
+	 * Sends the removal of a PotionEffect to the current viewers
+	 * @param type
+	 */
 	protected void sendRemoveEntityEffect(PotionEffectType type) {
 		for (Player viewer : viewers) {
 			PlayerConnection con = viewer.getConnection();
@@ -865,6 +874,10 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		}
 	}
 	
+	/**
+	 * Should be called when a new viewer is added to send the current active effects
+	 * @param viewer
+	 */
 	protected void sendEntityEffects(Player viewer) {
 		PlayerConnection con = viewer.getConnection();
 		for (PotionEffect effect : getActivePotionEffects()) {
@@ -873,6 +886,20 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 			packet.setEffect(effect);
 			con.sendPacked(packet);
 		}
+	}
+	
+	/**
+	 * Should be called when a new viewer is added to send the current attributes
+	 * @param viewer
+	 */
+	protected void sendAttributes(Player viewer) {
+		if (updateAttributes) // escape because all attributes are send on he next tick
+			return;
+		PlayerConnection con = viewer.getConnection();
+		PacketOutEntityProperties packet = con.createPacket(PacketOutEntityProperties.class);
+		packet.setEntity(getID());
+		packet.setAttributes(attributes.values());
+		con.sendPacked(packet);
 	}
 	
 	@Override

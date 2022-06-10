@@ -29,6 +29,7 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 			con.sendPacked(packet);
 			((CoreHumanEntity) holder).sendMetadata(viewer);
 			((CoreHumanEntity) holder).sendEntityEffects(viewer);
+			((CoreHumanEntity) holder).sendAttributes(viewer);
 		};
 	
 	protected static final MetaDataField<Float>
