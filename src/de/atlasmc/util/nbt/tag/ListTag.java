@@ -10,23 +10,44 @@ public final class ListTag<T extends NBT> extends AbstractTag implements Iterabl
 
 	private List<T> data;
 	private TagType datatype;
+	private final int exspected;
 	
 	public ListTag(String name, TagType datatype) {
 		data = new ArrayList<>();
 		this.datatype = datatype;
 		this.name = name;
+		this.exspected = 0;
 	}
 	
-	public ListTag() {}
+	public ListTag(String name, TagType datatype, int payloadsize) {
+		data = new ArrayList<>(payloadsize);
+		this.datatype = datatype;
+		this.name = name;
+		this.exspected = payloadsize;
+	}
+
+	public ListTag() {
+		this.exspected = 0;
+	}
 
 	@Override
 	public List<T> getData() {
 		return data;
 	}
 	
+	public int getPayloadSize() {
+		return data != null ? data.size() : 0;
+	}
+	
+	public int getExspectedPayloadSize() {
+		return exspected;
+	}
+	
 	public void addTag(T tag) {
-		if (tag == null) throw new IllegalArgumentException("NBT can not be null!");
-		if (datatype != tag.getType()) throw new IllegalArgumentException("Illegal TagType:" + tag.getType().name() + " " + datatype.name() + " expected!");
+		if (tag == null) 
+			throw new IllegalArgumentException("NBT can not be null!");
+		if (datatype != tag.getType()) 
+			throw new IllegalArgumentException("Illegal TagType:" + tag.getType().name() + " " + datatype.name() + " expected!");
 		data.add(tag);
 	}
 	

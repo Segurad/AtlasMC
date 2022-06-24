@@ -63,5 +63,9 @@ public interface NBT extends Cloneable {
 	}
 	
 	public NBT clone();
+
+	public static ListTag<? extends NBT> createListTag(String string, TagType type, int payloadsize) {
+		return new ListTag<>(string, type, payloadsize);
+	}
 	
 }

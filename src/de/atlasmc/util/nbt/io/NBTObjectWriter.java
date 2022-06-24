@@ -1,30 +1,50 @@
 package de.atlasmc.util.nbt.io;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.UUID;
 import java.util.function.LongSupplier;
 
+import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.tag.CompoundTag;
+import de.atlasmc.util.nbt.tag.ListTag;
 import de.atlasmc.util.nbt.tag.NBT;
 
 public class NBTObjectWriter implements NBTWriter {
 	
-	private ArrayList<NBT> containers;
+	private LinkedList<NBT> containers;
 	private NBT highestContainer, masterContainer;
 	
+	/**
+	 * Creates a new NBTObjectWirter with a empty {@link CompoundTag} as root 
+	 */
 	public NBTObjectWriter() {
-		containers = new ArrayList<NBT>();
-		highestContainer = new CompoundTag();
+		this(new CompoundTag());
+	}
+	
+	/**
+	 * Creates a new NBTObjectWirter with the given NBT as root
+	 * @param root root of this writer
+	 */
+	public NBTObjectWriter(NBT root) {
+		highestContainer = root;
 		masterContainer = highestContainer;
 	}
 
 	@Override
 	public void writeEndTag() throws IOException {
-		if (highestContainer == masterContainer) throw new Error("No NBT to close available!");
-		highestContainer = containers.remove(containers.size()-1);
+		if (highestContainer == masterContainer) 
+			throw new NBTException("No NBT to close available!");
+		highestContainer = containers.poll();
+		if (highestContainer.getType() != TagType.LIST)
+			return;
+		ListTag<?> list = (ListTag<?>) highestContainer;
+		if (list.getExspectedPayloadSize() > list.getPayloadSize()) 
+			writeCompoundTag();
+		else
+			writeEndTag();
 	}
 
 	@Override
@@ -89,10 +109,14 @@ public class NBTObjectWriter implements NBTWriter {
 	public void writeListTag(CharSequence name, TagType payload, int payloadsize) throws IOException {
 		if (highestContainer.getType() == TagType.LIST)
 			name = null;
-		NBT tag = NBT.createListTag(name != null ? name.toString() : null, payload);
+		NBT tag = NBT.createListTag(name != null ? name.toString() : null, payload, payloadsize);
+		if (containers == null)
+			containers = new LinkedList<>();
 		containers.add(highestContainer);
 		highestContainer.setData(tag);
 		highestContainer = tag;
+		if (payload == TagType.COMPOUND)
+			writeCompoundTag();
 	}
 
 	@Override
@@ -100,6 +124,8 @@ public class NBTObjectWriter implements NBTWriter {
 		if (highestContainer.getType() == TagType.LIST)
 			name = null;
 		NBT tag = NBT.createCompoundTag(name != null ? name.toString() : null);
+		if (containers == null)
+			containers = new LinkedList<>();
 		containers.add(highestContainer);
 		highestContainer.setData(tag);
 		highestContainer = tag;
