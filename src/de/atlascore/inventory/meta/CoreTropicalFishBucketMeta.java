@@ -95,4 +95,14 @@ public class CoreTropicalFishBucketMeta extends CoreItemMeta implements Tropical
 		return true;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((bodyColor == null) ? 0 : bodyColor.hashCode());
+		result = prime * result + ((pattern == null) ? 0 : pattern.hashCode());
+		result = prime * result + ((patternColor == null) ? 0 : patternColor.hashCode());
+		return result;
+	}
+
 }

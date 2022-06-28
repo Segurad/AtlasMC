@@ -90,4 +90,12 @@ public class CoreKnowledgeBookMeta extends CoreItemMeta implements KnowledgeBook
 		return true;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((recipes == null) ? 0 : recipes.hashCode());
+		return result;
+	}
+	
 }

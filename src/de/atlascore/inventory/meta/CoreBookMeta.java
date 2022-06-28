@@ -211,4 +211,16 @@ public class CoreBookMeta extends CoreItemMeta implements BookMeta {
 		return true;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((author == null) ? 0 : author.hashCode());
+		result = prime * result + ((generation == null) ? 0 : generation.hashCode());
+		result = prime * result + ((pages == null) ? 0 : pages.hashCode());
+		result = prime * result + (resolved ? 1231 : 1237);
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		return result;
+	}
+
 }

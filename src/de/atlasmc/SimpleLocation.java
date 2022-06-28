@@ -1,7 +1,5 @@
 package de.atlasmc;
 
-import java.util.Objects;
-
 import de.atlasmc.util.MathUtil;
 import de.atlasmc.world.World;
 
@@ -260,27 +258,6 @@ public class SimpleLocation implements Cloneable {
 		this.z = getBlockZ();
 		return this;
 	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(pitch, x, y, yaw, z);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		SimpleLocation other = (SimpleLocation) obj;
-		return pitch == other.pitch
-				&& x == other.x
-				&& y == other.y
-				&& yaw == other.yaw
-				&& z == other.z;
-	}
 	
 	/**
 	 * Converts pitch and yaw to a Vector
@@ -297,6 +274,38 @@ public class SimpleLocation implements Cloneable {
 	 */
 	public Vector getDirection(Vector vec) {
 		return MathUtil.getVector(yaw, pitch, vec);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Float.floatToIntBits(pitch);
+		long temp;
+		temp = Double.doubleToLongBits(x);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(y);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + Float.floatToIntBits(yaw);
+		temp = Double.doubleToLongBits(z);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (obj instanceof SimpleLocation)
+			return false;
+		SimpleLocation other = (SimpleLocation) obj;
+		return pitch == other.pitch
+				&& x == other.x
+				&& y == other.y
+				&& yaw == other.yaw
+				&& z == other.z;
 	}
 	
 }

@@ -163,6 +163,16 @@ public final class Color {
 	}
 	
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + b;
+		result = prime * result + g;
+		result = prime * result + r;
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == null)
 			return false;
@@ -175,4 +185,5 @@ public final class Color {
 			return false;
 		return true;
 	}
+	
 }

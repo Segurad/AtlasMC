@@ -538,6 +538,22 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	}
 	
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((attributes == null) ? 0 : attributes.hashCode());
+		result = prime * result + ((canDestroy == null) ? 0 : canDestroy.hashCode());
+		result = prime * result + ((customModelData == null) ? 0 : customModelData.hashCode());
+		result = prime * result + ((customTags == null) ? 0 : customTags.hashCode());
+		result = prime * result + ((displayname == null) ? 0 : displayname.hashCode());
+		result = prime * result + ((enchants == null) ? 0 : enchants.hashCode());
+		result = prime * result + flags;
+		result = prime * result + ((lore == null) ? 0 : lore.hashCode());
+		result = prime * result + (unbreakable ? 1231 : 1237);
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == null)
 			return false;

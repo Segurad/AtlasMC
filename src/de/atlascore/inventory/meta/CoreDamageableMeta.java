@@ -61,4 +61,12 @@ public class CoreDamageableMeta extends CoreItemMeta implements DamageableMeta {
 		return getDamage() == ((DamageableMeta) meta).getDamage();
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + damage;
+		return result;
+	}
+
 }

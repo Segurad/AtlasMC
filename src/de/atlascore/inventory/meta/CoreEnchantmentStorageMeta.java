@@ -126,4 +126,13 @@ public class CoreEnchantmentStorageMeta extends CoreItemMeta implements Enchantm
 			return false;
 		return true;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((enchantments == null) ? 0 : enchantments.hashCode());
+		return result;
+	}
+
 }

@@ -1,6 +1,7 @@
 package de.atlasmc;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import de.atlasmc.util.map.key.CharKey;
@@ -136,6 +137,18 @@ public class FireworkEffect implements NBTHolder {
 		return clone;
 	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(colors);
+		result = prime * result + Arrays.hashCode(fadeColors);
+		result = prime * result + (flicker ? 1231 : 1237);
+		result = prime * result + (trail ? 1231 : 1237);
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null)

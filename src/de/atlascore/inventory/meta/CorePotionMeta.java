@@ -240,4 +240,14 @@ public class CorePotionMeta extends CoreItemMeta implements PotionMeta {
 		return true;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((color == null) ? 0 : color.hashCode());
+		result = prime * result + ((customEffects == null) ? 0 : customEffects.hashCode());
+		result = prime * result + ((data == null) ? 0 : data.hashCode());
+		return result;
+	}
+
 }

@@ -197,4 +197,15 @@ public class ItemStack implements NBTHolder {
 			reader.skipTag();
 		return slot;
 	}
+	
+	@Override
+	public int hashCode() {
+		int h = 1;
+		h = 31 * h + amount;
+		h = 31 * h + type.hashCode();
+		if (meta != null)
+			h = 31 * h + meta.hashCode();
+		return h;
+	}
+	
 }

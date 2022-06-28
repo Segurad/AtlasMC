@@ -125,4 +125,13 @@ public class CoreCompassMeta extends CoreItemMeta implements CompassMeta {
 		return true;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((loc == null) ? 0 : loc.hashCode());
+		result = prime * result + (tracked ? 1231 : 1237);
+		return result;
+	}
+
 }

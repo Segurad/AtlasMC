@@ -124,4 +124,13 @@ public class CoreMapMeta extends CoreItemMeta implements MapMeta {
 		return true;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((color == null) ? 0 : color.hashCode());
+		result = prime * result + mapID;
+		return result;
+	}
+
 }

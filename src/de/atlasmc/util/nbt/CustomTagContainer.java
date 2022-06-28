@@ -70,4 +70,35 @@ public class CustomTagContainer implements Cloneable {
 		return list;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((systemTags == null) ? 0 : systemTags.hashCode());
+		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CustomTagContainer other = (CustomTagContainer) obj;
+		if (systemTags == null) {
+			if (other.systemTags != null)
+				return false;
+		} else if (!systemTags.equals(other.systemTags))
+			return false;
+		if (tags == null) {
+			if (other.tags != null)
+				return false;
+		} else if (!tags.equals(other.tags))
+			return false;
+		return true;
+	}
+
 }

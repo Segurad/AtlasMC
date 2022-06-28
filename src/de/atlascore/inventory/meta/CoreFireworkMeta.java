@@ -139,4 +139,13 @@ public class CoreFireworkMeta extends CoreItemMeta implements FireworkMeta {
 		return false;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((effects == null) ? 0 : effects.hashCode());
+		result = prime * result + power;
+		return result;
+	}
+
 }

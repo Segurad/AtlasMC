@@ -132,4 +132,13 @@ public class CoreCrossbowMeta extends CoreDamageableMeta implements CrossbowMeta
 		return true;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + (charged ? 1231 : 1237);
+		result = prime * result + ((projectiles == null) ? 0 : projectiles.hashCode());
+		return result;
+	}
+
 }

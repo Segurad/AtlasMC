@@ -104,6 +104,11 @@ public abstract class AbstractMultimap<K, V> implements Multimap<K, V> {
 		Multimap<?, ?> otherMap = (Multimap<?, ?>) obj;
 		return map.equals(otherMap.asMap());
 	}
+	
+	@Override
+	public int hashCode() {
+		return map.hashCode();
+	}
 
 	protected abstract Collection<V> createCollection();
 }
