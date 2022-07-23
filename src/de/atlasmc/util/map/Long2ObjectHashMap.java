@@ -1,10 +1,15 @@
 package de.atlasmc.util.map;
 
+import java.util.AbstractCollection;
+import java.util.Collection;
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+
 /**
  * Maps primitive longs to Objects
  * @param <V>
  */
-public class Long2ObjectHashMap<V> {
+public class Long2ObjectHashMap<V> implements Iterable<V> {
 	
 	private static final int MIN_SIZE = 32;
 	private static final float DEFAULT_REHASH_DOWN = 0.25f;
@@ -12,8 +17,12 @@ public class Long2ObjectHashMap<V> {
 	
 	private Node<V>[] values;
 	private Node<V> head;
-	private int size, used;
-	private final float rehashUp, rehashDown;
+	private Values valueCollection;
+	private int size; // current values size
+	private int used; // current used values
+	private int modifikations;
+	private final float rehashUp;
+	private final float rehashDown;
 	
 	public Long2ObjectHashMap() {
 		this(MIN_SIZE);
@@ -48,6 +57,7 @@ public class Long2ObjectHashMap<V> {
 	public void put(long key, V value) {
 		getNode(hash(key), key, value, true, null);
 		ensureSize();
+		modifikations++;
 	}
 
 	/**
@@ -61,6 +71,7 @@ public class Long2ObjectHashMap<V> {
 			return null;
 		removeNode(node);
 		ensureSize();
+		modifikations++;
 		return node.value;
 	}
 
@@ -166,6 +177,10 @@ public class Long2ObjectHashMap<V> {
 		return used;
 	}
 	
+	public boolean isEmpty() {
+		return used != 0;
+	}
+	
 	/**
 	 * Returns the index by from this key
 	 * @param key
@@ -182,6 +197,7 @@ public class Long2ObjectHashMap<V> {
 	 */
 	@SuppressWarnings("unchecked")
 	private void rehash() {
+		modifikations++;
 		values = new Node[size];
 		Node<V> oldHead = head;
 		head = null;
@@ -210,7 +226,36 @@ public class Long2ObjectHashMap<V> {
 		}
 	}
 	
-	private class Node<E> {
+	@Override
+	public Iterator<V> iterator() {
+		return new ValueIterator();
+	}
+
+	public void clear() {
+		if (used == 0)
+			return;
+		head = null;
+		used = 0;
+		modifikations++;
+		for (int i = 0; i < size; i++)
+			values[i] = null;
+	}
+	
+	public boolean containsValue(Object o) {
+		Node<V> node = head;
+		while (node != null)
+			if (node.next.value.equals(o))
+				return true;
+		return false;
+	}
+	
+	public Collection<V> values() {
+		if (valueCollection == null)
+			valueCollection = new Values();
+		return valueCollection;
+	}
+	
+	final class Node<E> {
 		private int hash;
 		private final long key;
 		private E value;
@@ -222,4 +267,63 @@ public class Long2ObjectHashMap<V> {
 			this.value = value;
 		}	
 	}
+	
+	private class ValueIterator implements Iterator<V> {
+
+		private Node<V> current;
+		private Node<V> last; // safe for #remove()
+		private final int mods;
+		
+		public ValueIterator() {
+			this.current = head;
+			this.mods = Long2ObjectHashMap.this.modifikations;
+		}
+		
+		@Override
+		public boolean hasNext() {
+			return current != null && current.next != null;
+		}
+
+		@Override
+		public V next() {
+			if (this.mods != Long2ObjectHashMap.this.modifikations)
+				throw new ConcurrentModificationException();
+			V value = current.value;
+			last = current;
+			current = current.next;
+			return value;
+		}
+		
+		@Override
+		public void remove() {
+			Long2ObjectHashMap.this.removeNode(last);
+			last = null;
+		}
+		
+	}
+	
+	private class Values extends AbstractCollection<V> {
+
+		@Override
+		public Iterator<V> iterator() {
+			return new ValueIterator();
+		}
+
+		@Override
+		public int size() {
+			return Long2ObjectHashMap.this.size();
+		}
+		
+		@Override
+		public void clear() {
+			Long2ObjectHashMap.this.clear();
+		}
+		
+		@Override
+		public boolean contains(Object o) {
+			return Long2ObjectHashMap.this.containsValue(o);
+		}
+		
+	}
+	
 }
