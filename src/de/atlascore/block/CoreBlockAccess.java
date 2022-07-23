@@ -46,6 +46,11 @@ public class CoreBlockAccess implements Block {
 	public BlockData getBlockData() {
 		return chunk.getBlockDataAt(getX(), getY(), getZ());
 	}
+	
+	@Override
+	public BlockData getBlockDataUnsafe() {
+		return chunk.getBlockDataAtUnsafe(getX(), getY(), getZ());
+	}
 
 	@Override
 	public int getY() {

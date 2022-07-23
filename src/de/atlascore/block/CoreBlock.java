@@ -18,6 +18,9 @@ public class CoreBlock extends CoreBlockAccess {
 	
 	public CoreBlock(Location loc, Chunk chunk, BlockData data) {
 		super(loc, chunk);
+		if (data == null)
+			throw new IllegalArgumentException("BlockData can not be null!");
+		this.data = data;
 	}
 	
 	public CoreBlock(Location loc, Material type) {
@@ -35,9 +38,16 @@ public class CoreBlock extends CoreBlockAccess {
 	}
 	
 	@Override
+	public BlockData getBlockDataUnsafe() {
+		return data;
+	}
+	
+	@Override
 	public void setType(Material material) {
-		if (data.getMaterial() == material) return;
-		if (!material.isBlock()) throw new IllegalArgumentException("Material must be a Block: " + material.getName());
+		if (data.getMaterial() == material) 
+			return;
+		if (!material.isBlock()) 
+			throw new IllegalArgumentException("Material must be a Block: " + material.getName());
 		data = material.createBlockData();
 	}
 	
