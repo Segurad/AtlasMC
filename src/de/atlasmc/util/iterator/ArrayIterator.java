@@ -6,16 +6,23 @@ public class ArrayIterator<E> implements Iterator<E> {
 
 	private final E[] array;
 	private int index;
+	private int end;
 	private final boolean canRemove;
 	
 	public ArrayIterator(E[] array, boolean canRemove) {
+		this(array, canRemove, 0, array.length);
+	}
+	
+	public ArrayIterator(E[] array, boolean canRemove, int from, int to) {
 		this.array = array;
 		this.canRemove = canRemove;
+		this.index = from;
+		this.end = to;
 	}
 	
 	@Override
 	public boolean hasNext() {
-		for (int i = index+1; i < array.length; i++)
+		for (int i = index+1; i < end; i++)
 			if (array[i] != null)
 				return true;
 		return false;
