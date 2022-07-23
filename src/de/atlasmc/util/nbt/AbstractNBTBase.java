@@ -1,8 +1,7 @@
 package de.atlasmc.util.nbt;
 
 import java.io.IOException;
-import java.util.ArrayList;
-
+import java.util.LinkedList;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -16,15 +15,18 @@ public abstract class AbstractNBTBase implements NBTHolder {
 	 */
 	@Override
 	public void fromNBT(NBTReader reader) throws IOException {
-		if (reader == null) throw new IllegalArgumentException("NBTReader can not be null!");
+		if (reader == null) 
+			throw new IllegalArgumentException("NBTReader can not be null!");
 		final int depth = reader.getDepth(); // set the root depth
-		final ArrayList<NBTFieldContainer> containers = new ArrayList<NBTFieldContainer>(); // used for move into deeper compounds
+		LinkedList<NBTFieldContainer> containers = null; // used for move into deeper compounds
 		NBTFieldContainer highestContainer = getFieldContainerRoot();
+		final NBTHolder holder = getHolder();
 		while (depth <= reader.getDepth()) { // ensure to stay over or at root depth
 			TagType type = reader.getType();
 			if (type == TagType.TAG_END) {
-				if (containers.isEmpty()) break;
-				highestContainer = containers.remove(containers.size()-1); // fetch the highest container
+				if (containers == null || containers.isEmpty())
+					break;
+				highestContainer = containers.poll(); // fetch the highest container
 				reader.readNextEntry(); // return in parent compound
 				continue; // go to next iteration for further reading or break if reached end
 			}
@@ -32,7 +34,9 @@ public abstract class AbstractNBTBase implements NBTHolder {
 			if (type == TagType.COMPOUND) {
 				NBTFieldContainer container = highestContainer.getContainer(key);
 				if (container != null) { // enter compound if not null
-					containers.add(highestContainer);
+					if (containers == null)
+						containers = new LinkedList<>();
+					containers.addFirst(highestContainer);
 					highestContainer = container;
 					reader.readNextEntry(); // move pointer to first compound entry
 					continue;
@@ -42,12 +46,13 @@ public abstract class AbstractNBTBase implements NBTHolder {
 			if (field != null) { // if field exists set it
 				field.setField(this, reader);
 			} else if (highestContainer.hasUnknownFieldHandler()) { // if field does not exist try to use unknown field handler
-				highestContainer.getUnknownFieldHandler().setField(this, reader);
+				highestContainer.getUnknownFieldHandler().setField(holder, reader);
 			} else if (useCustomTagContainer()) { // if not handler is present try to write in custom tags
 				getCustomTagContainer().addCustomTag(reader.readNBT());
 			} else reader.skipTag(); // fallback just skip
 		}
-		if (reader.getType() == TagType.TAG_END) reader.readNextEntry();
+		if (reader.getType() == TagType.TAG_END) // escape from component
+			reader.readNextEntry();
 	}
 	
 	protected abstract NBTFieldContainer getFieldContainerRoot();
@@ -66,6 +71,15 @@ public abstract class AbstractNBTBase implements NBTHolder {
 	 */
 	protected CustomTagContainer getCustomTagContainer() {
 		return null;
+	}
+	
+	/**
+	 * Returns the holder for this NBT data
+	 * @implNote by default this method will return this instance of the holder
+	 * @return the NBTHolder
+	 */
+	protected NBTHolder getHolder() {
+		return this;
 	}
 
 }
