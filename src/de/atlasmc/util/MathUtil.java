@@ -200,56 +200,12 @@ public class MathUtil {
 		return bits;
 	}
 	
-	public static int getCompactMappings(short[] indizes, int paletteSize, long[] buf) {
-		return getCompactMappings(indizes, paletteSize, buf, 0);
-	}
-	
-	/**
-	 * Compacts the index array and stores them in the buffer
-	 * @param indizes
-	 * @param paletteSize
-	 * @param buf
-	 * @param offset
-	 * @return number of indizes compacted
-	 */
-	public static int getCompactMappings(short[] indizes, int paletteSize, long[] buf, int offset) {
-		if (buf == null)
-			throw new IllegalArgumentException("Buf can not be null!");
-		return createCompactMappings(indizes, getBitsPerBlock(paletteSize), buf, offset);
-	}
-
-	/**
-	 * Returns compacted mappings of an index array
-	 * @param indizes
-	 * @param paletteSize
-	 * @return a compacted array
-	 */
-	public static long[] getCompactMappings(short[] indizes, int paletteSize) {
-		int bits = getBitsPerBlock(paletteSize);
-		long[] buf = new long[(4096*bits)>>6];
-		createCompactMappings(indizes, bits, buf, 0);
-		return buf;
-	}
-	
-	private static int createCompactMappings(short[] indizes, int bits, long[] buf, int offset) {
-		int bufIndex = offset;
-		int indizesPerLong = 64 / bits;
-		long value = 0;
-		int compacted = 0;
-		for (int i = 0; i < indizes.length; i += indizesPerLong) {
-			for (int j = indizesPerLong-1; j >= 0; j--) {
-				if (i+j >= 4096)
-					continue;
-				value <<= bits; // shift to create space for next index 
-				value |= indizes[i+j]; // add next index
-				compacted++;
-			}
-			buf[bufIndex++] = value;
-			value = 0;
-			if (bufIndex >= buf.length)
-				return compacted;
-		}
-		return compacted;
+	public static int createPaletteBitMask(int numberOfBits) {
+		int mask = 0xF;
+		if (numberOfBits > 4)
+			for (int i = 4; i < numberOfBits; i++)
+				mask = (short) (mask << 1 | 0x1);
+		return mask;
 	}
 	
 }
