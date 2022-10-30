@@ -138,31 +138,35 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 		return children.addWithPointer(scheduler);
 	}
 	
-	protected void scheduleWorkers(CoreSchedulerThread master) {
+	/**
+	 * Ticks all tasks and execute them if they are executable
+	 * @param master
+	 */
+	protected void tickTasks(CoreSchedulerThread master) {
 		if (dead)
 			return;
 		for (CoreRegisteredTask task = syncIt.gotoHead(); task != null; syncIt.next()) {
-			if (dead)
-				return;
-			if (scheduleSyncTask(task))
+			if (tickSyncTask(task))
 				syncIt.remove();
 		}
 		for (CoreRegisteredTask task = asyncIt.gotoHead(); task != null; asyncIt.next()) {
-			if (dead)
-				return;
-			if (scheduleAsyncTask(master, task))
+			if (tickAsyncTask(master, task))
 				asyncIt.remove();
+		}
+		for (Scheduler scheduler : children) {
+			if (scheduler instanceof CoreAbstractScheduler)
+				((CoreAbstractScheduler) scheduler).tickTasks(master);
 		}
 	}
 	
-	protected boolean scheduleSyncTask(CoreRegisteredTask task) {
+	private boolean tickSyncTask(CoreRegisteredTask task) {
 		task.tick();
 		if (task.isRunnable())
 			nextSyncTask.add(task.getTask());
 		return task.isDead();
 	}
 	
-	protected boolean scheduleAsyncTask(CoreSchedulerThread master, CoreRegisteredTask task) {
+	private boolean tickAsyncTask(CoreSchedulerThread master, CoreRegisteredTask task) {
 		task.tick();
 		if (task.isRunnable())
 			master.fetchWorker(task);
