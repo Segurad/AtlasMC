@@ -46,7 +46,7 @@ class EventDefaultListenerPresentsTest {
 				if (handlers.getDefaultExecutor() == null || handlers.getDefaultExecutor() == EventExecutor.NULL_EXECUTOR) {
 					warnings++;
 					if (printMissingClasses)
-						System.out.println("[Warning] Event class does not have a DefaultExecutor: " + packet + "." + clazz.getName());
+						System.out.println("[Warning] Event class does not have a DefaultExecutor: " + clazz.getName());
 				}
 				tested++;
 				break;
