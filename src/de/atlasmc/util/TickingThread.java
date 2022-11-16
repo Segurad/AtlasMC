@@ -8,7 +8,7 @@ import de.atlasmc.util.annotation.ThreadSafe;
 public class TickingThread extends Thread {
 
 	private final short ticktime; // time interval of one tick
-	private final Runnable runner;
+	private Runnable runner;
 	private volatile boolean running;
 	private int lastTickTime = -1, // time needed for the last tick
 				skipped = 0, // number of skipped ticks
@@ -25,8 +25,9 @@ public class TickingThread extends Thread {
 	}
 	
 	@Override
-	public void run() {
-		if (isRunning()) throw new RuntimeException("Thread already running!");
+	public final void run() {
+		if (isRunning()) 
+			throw new RuntimeException("Thread already running!");
 		running = true;
 		long startTime;
 		long endTime;
@@ -51,8 +52,12 @@ public class TickingThread extends Thread {
 			}
 		}
 		// Stop process
+		runner = null;
 	}
 	
+	/**
+	 * Called each tick by this thread
+	 */
 	protected void tick() {
 		if (runner == null)
 			return;
