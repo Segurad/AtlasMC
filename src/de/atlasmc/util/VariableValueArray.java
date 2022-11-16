@@ -1,8 +1,10 @@
 package de.atlasmc.util;
 
-public class VariableValueArray {
+import java.util.Arrays;
+
+public class VariableValueArray implements Cloneable {
 	
-	private final int capacity;
+	private int capacity;
 	private long[] values;
 	private byte bitsPerValue;
 	private int mask;
@@ -124,11 +126,46 @@ public class VariableValueArray {
 	}
 	
 	/**
+	 * Sets the capacity of this array.<br>
+	 * If set lower than the current capacity values may be lost and new values will be set to 0.<br>
+	 * @param capacity
+	 */
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
+		values = Arrays.copyOf(values, (capacity + valuesPerLong - 1) / valuesPerLong);
+	}
+	
+	/**
 	 * Returns the backing long array
 	 * @return
 	 */
 	public long[] array() {
 		return values;
+	}
+
+	/**
+	 * Copies all values to this array
+	 * @param array the array copied from
+	 */
+	public void copy(VariableValueArray array) {
+		this.capacity = array.capacity;
+		this.values = array.values.clone();
+		this.bitsPerValue = array.bitsPerValue;
+		this.mask = array.mask;
+		this.valuesPerLong = array.valuesPerLong;
+	}
+	
+	public VariableValueArray clone() {
+		VariableValueArray clone = null;
+		try {
+			clone = (VariableValueArray) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		if (clone == null)
+			return null;
+		clone.values = values.clone();
+		return clone;	
 	}
 
 }
