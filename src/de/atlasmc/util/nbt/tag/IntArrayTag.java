@@ -38,4 +38,17 @@ public final class IntArrayTag extends AbstractTag {
 		return clone;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (!super.equals(obj))
+			return false;
+		IntArrayTag other = (IntArrayTag) obj;
+		if (data == null) {
+			if (other.data != null)
+				return false;
+		} else if (!data.equals(other.data))
+			return false;
+		return true;
+	}
+	
 }

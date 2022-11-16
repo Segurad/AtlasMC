@@ -33,4 +33,11 @@ public final class FloatTag extends AbstractTag {
 		return (FloatTag) super.clone();
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (!super.equals(obj))
+			return false;
+		return data == ((FloatTag) obj).data;
+	}
+	
 }

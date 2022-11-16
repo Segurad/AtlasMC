@@ -101,4 +101,19 @@ public final class ListTag<T extends NBT> extends AbstractTag implements Iterabl
 		return clone;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (!super.equals(obj))
+			return false;
+		ListTag<?> other = (ListTag<?>) obj;
+		if (data == null) {
+			if (other.data != null)
+				return false;
+		} else if (!data.equals(other.data))
+			return false;
+		if (datatype == other.datatype)
+			return false;
+		return true;
+	}
+	
 }

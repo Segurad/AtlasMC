@@ -32,5 +32,18 @@ public final class StringTag extends AbstractTag {
 	public StringTag clone() {
 		return (StringTag) super.clone();
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!super.equals(obj))
+			return false;
+		StringTag other = (StringTag) obj;
+		if (data == null) {
+			if (other.data != null)
+				return false;
+		} else if (!data.equals(other.data))
+			return false;
+		return true;
+	}
 
 }

@@ -118,5 +118,18 @@ public final class CompoundTag extends AbstractTag implements Iterable<NBT> {
 		}
 		return clone;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!super.equals(obj))
+			return false;
+		CompoundTag other = (CompoundTag) obj;
+		if (data == null) {
+			if (other.data != null)
+				return false;
+		} else if (!data.equals(other.data))
+			return false;
+		return true;
+	}
 
 }

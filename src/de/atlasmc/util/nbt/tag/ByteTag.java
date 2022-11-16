@@ -32,5 +32,12 @@ public final class ByteTag extends AbstractTag {
 	public ByteTag clone() {
 		return (ByteTag) super.clone();
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!super.equals(obj))
+			return false;
+		return data == ((ByteTag) obj).data;
+	}
 
 }

@@ -37,5 +37,18 @@ public final class LongArrayTag extends AbstractTag {
 			clone.setData(data.clone());
 		return clone;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!super.equals(obj))
+			return false;
+		LongArrayTag other = (LongArrayTag) obj;
+		if (data == null) {
+			if (other.data != null)
+				return false;
+		} else if (!data.equals(other.data))
+			return false;
+		return true;
+	}
 
 }

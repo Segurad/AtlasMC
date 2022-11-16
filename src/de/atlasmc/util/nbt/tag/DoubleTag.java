@@ -32,5 +32,12 @@ public final class DoubleTag extends AbstractTag {
 	public DoubleTag clone() {
 		return (DoubleTag) super.clone();
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!super.equals(obj))
+			return false;
+		return data == ((DoubleTag) obj).data;
+	}
 
 }

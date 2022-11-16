@@ -43,5 +43,12 @@ public final class LongTag extends AbstractTag {
 	public LongTag clone() {
 		return (LongTag) super.clone();
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!super.equals(obj))
+			return false;
+		return data == ((LongTag) obj).data;
+	}
 
 }

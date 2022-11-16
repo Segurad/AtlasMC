@@ -38,4 +38,17 @@ public final class ByteArrayTag extends AbstractTag {
 		return clone;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (!super.equals(obj))
+			return false;
+		ByteArrayTag other = (ByteArrayTag) obj;
+		if (data == null) {
+			if (other.data != null)
+				return false;
+		} else if (!data.equals(other.data))
+			return false;
+		return true;
+	}
+	
 }

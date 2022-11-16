@@ -44,5 +44,12 @@ public final class ShortTag extends AbstractTag {
 	public ShortTag clone() {
 		return (ShortTag) super.clone();
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!super.equals(obj))
+			return false;
+		return data == ((ShortTag) obj).data;
+	}
 
 }

@@ -338,7 +338,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 		skipTag(false);
 	}
 	
-	public void skipTag(boolean skipPrepare) throws IOException {
+	protected void skipTag(boolean skipPrepare) throws IOException {
 		ensureOpen();
 		final boolean isList = list != null && depth == list.depth;
 		switch (isList ? list.type : type) {

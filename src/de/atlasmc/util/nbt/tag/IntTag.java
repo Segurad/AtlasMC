@@ -32,5 +32,12 @@ public final class IntTag extends AbstractTag {
 	public IntTag clone() {
 		return (IntTag) super.clone();
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!super.equals(obj))
+			return false;
+		return data == ((IntTag) obj).data;
+	}
 
 }
