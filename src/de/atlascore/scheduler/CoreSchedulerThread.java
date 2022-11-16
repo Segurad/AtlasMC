@@ -7,7 +7,7 @@ import de.atlasmc.util.TickingThread;
 
 public class CoreSchedulerThread extends TickingThread {
 
-	private final CoreMasterScheduler scheduler;
+	private final CoreAtlasScheduler scheduler;
 	private final ConcurrentLinkedQueue<CoreAsyncTaskWorker> workerQueue;
 	private final ConcurrentLinkedList<CoreAsyncTaskWorker> fetchedWorkers;
 	private final int minWorkers;
@@ -15,7 +15,7 @@ public class CoreSchedulerThread extends TickingThread {
 	private final int asyncWorkerGCTime;
 	private int gcTime;
 	
-	public CoreSchedulerThread(CoreMasterScheduler scheduler, int minWorkers, int workerMaxIdleTime, int asyncWorkerGCTime) {
+	public CoreSchedulerThread(CoreAtlasScheduler scheduler, int minWorkers, int workerMaxIdleTime, int asyncWorkerGCTime) {
 		super("AtlasSchedulerWorker", 50);
 		this.scheduler = scheduler;
 		this.workerQueue = new ConcurrentLinkedQueue<CoreAsyncTaskWorker>();

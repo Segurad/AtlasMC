@@ -4,7 +4,7 @@ import de.atlasmc.scheduler.Scheduler;
 
 public class CoreAtlasScheduler extends CoreAbstractScheduler {
 	
-	private final CoreSchedulerThread thread;
+	private CoreSchedulerThread thread;
 	
 	public CoreAtlasScheduler() {
 		this(0, 6000, 600);
@@ -23,8 +23,11 @@ public class CoreAtlasScheduler extends CoreAbstractScheduler {
 	}
 	
 	@Override
-	public void shutdown() {
+	public synchronized void shutdown() {
+		if (thread == null)
+			return;
 		thread.stopThread();
+		thread = null;
 		super.shutdown();
 	}
 

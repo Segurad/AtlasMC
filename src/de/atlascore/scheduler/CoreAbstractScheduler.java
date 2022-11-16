@@ -101,7 +101,7 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 	}
 	
 	@Override
-	public void shutdown() {
+	public synchronized void shutdown() {
 		if (dead)
 			return;
 		dead = true;
@@ -123,6 +123,7 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 	@Override
 	public void runNextTasks() {
 		if (dead)
+			return;
 		for (Runnable task = nextSyncTask.poll(); task != null; task = nextSyncTask.poll()) {
 			task.run();
 		}
@@ -159,6 +160,11 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 		}
 	}
 	
+	/**
+	 * Ticks a sync tasks and adds it to {@link #nextSyncTask} when executed on the next tick
+	 * @param task
+	 * @return true if task is dead
+	 */
 	private boolean tickSyncTask(CoreRegisteredTask task) {
 		task.tick();
 		if (task.isRunnable())
@@ -166,6 +172,12 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 		return task.isDead();
 	}
 	
+	/**
+	 * Ticks a async task and executes it if possible
+	 * @param master
+	 * @param task
+	 * @return true if dead
+	 */
 	private boolean tickAsyncTask(CoreSchedulerThread master, CoreRegisteredTask task) {
 		task.tick();
 		if (task.isRunnable())
