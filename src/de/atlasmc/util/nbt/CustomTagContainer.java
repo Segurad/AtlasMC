@@ -20,7 +20,8 @@ public class CustomTagContainer implements Cloneable {
 	}
 	
 	public List<NBT> getCustomTags() {
-		if (tags == null) tags = new ArrayList<NBT>();
+		if (tags == null) 
+			tags = new ArrayList<NBT>();
 		return tags;
 	}
 	
@@ -35,7 +36,8 @@ public class CustomTagContainer implements Cloneable {
 	}
 	
 	public List<NBT> getSystemTags() {
-		if (systemTags == null) systemTags = new ArrayList<NBT>();
+		if (systemTags == null) 
+			systemTags = new ArrayList<NBT>();
 		return systemTags;
 	}
 	

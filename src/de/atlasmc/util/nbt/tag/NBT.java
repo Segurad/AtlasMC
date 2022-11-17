@@ -4,14 +4,26 @@ import de.atlasmc.util.nbt.TagType;
 
 public interface NBT extends Cloneable {
 	
+	/**
+	 * Returns the name key of this NBT
+	 * @return name key
+	 */
 	public String getName();
 	
+	/**
+	 * Sets the name key of this NBT
+	 * @param name key that should be set
+	 */
 	public void setName(String name);
 	
 	public Object getData();
 	
 	public void setData(Object data);
 	
+	/**
+	 * Returns the type of this NBT
+	 * @return type
+	 */
 	public TagType getType();
 	
 	public static ByteTag createByteTag(String name, int data) {
