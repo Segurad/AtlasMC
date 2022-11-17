@@ -8,6 +8,7 @@ import de.atlascore.block.CoreBlockAccess;
 import de.atlasmc.Atlas;
 import de.atlasmc.Gamemode;
 import de.atlasmc.Location;
+import de.atlasmc.SimpleLocation;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.block.Block;
@@ -17,7 +18,6 @@ import de.atlasmc.entity.Player;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.block.BlockPlaceEvent;
 import de.atlasmc.event.block.SignChangeEvent;
-import de.atlasmc.event.inventory.BeaconEffectChangeEvent;
 import de.atlasmc.event.inventory.ClickType;
 import de.atlasmc.event.inventory.InventoryAction;
 import de.atlasmc.event.inventory.InventoryButtonType;
@@ -121,9 +121,8 @@ import de.atlasmc.io.protocol.play.PacketInUseItem;
 import de.atlasmc.io.protocol.play.PacketInVehicleMove;
 import de.atlasmc.io.protocol.play.PacketInWindowConfirmation;
 import de.atlasmc.io.protocol.play.PacketOutKeepAlive;
+import de.atlasmc.io.protocol.play.PacketOutPlayerPositionAndLook;
 import de.atlasmc.io.protocol.play.PacketOutWindowConfirmation;
-import de.atlasmc.potion.PotionEffect;
-import de.atlasmc.potion.PotionEffectType;
 import de.atlasmc.recipe.RecipeBook;
 import de.atlasmc.io.protocol.play.PacketInAdvancementTab.Action;
 
@@ -151,6 +150,8 @@ public class CorePlayerConnection implements PlayerConnection {
 	
 	// Client controlled values
 	private boolean clientOnGround;
+	private SimpleLocation clientLocation;
+	private boolean locationChanged;
 	
 	// Events
 	private PlayerMoveEvent eventMove;
@@ -202,7 +203,7 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInTeleportConfirm packet) {
-		if (packet.getTeleportID() == teleportID) {
+		if (packet.getTeleportID() == teleportID - 1) {
 			teleportConfirmed = true;
 		}
 	}
@@ -253,6 +254,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	@Override
 	public void handlePacket(PacketInTabComplete packet) {
 		// TODO command implementation needed
+		throw new RuntimeException("Not implemented!");
 	}
 
 	@Override
@@ -392,25 +394,26 @@ public class CorePlayerConnection implements PlayerConnection {
 	
 	@Override
 	public void handlePacket(PacketInEditBook packet) {
-		// TODO Auto-generated method stub
-		
+		// TODO controlled dump while testing
+		throw new RuntimeException("Not implemented!");
 	}
 
 	@Override
 	public void handlePacket(PacketInInteractEntity packet) {
 		// TODO Auto-generated method stub
-		
+		throw new RuntimeException("Not implemented!");
 	}
 
 	@Override
 	public void handlePacket(PacketInGenerateStructure packet) {
 		// TODO Auto-generated method stub
-		
+		throw new RuntimeException("Not implemented!");
 	}
 
 	@Override
 	public void handlePacket(PacketInKeepAlive packet) {
-		if (packet.getKeepAliveID() != lastKeepAlive) return;
+		if (packet.getKeepAliveID() != lastKeepAlive) 
+			return;
 		lastKeepAlive = packet.getTimestamp();
 		keepAliveResponse = true;
 	}
@@ -425,30 +428,46 @@ public class CorePlayerConnection implements PlayerConnection {
 	public void handlePacket(PacketInPlayerPosition packet) {
 		if (!teleportConfirmed) return;
 		eventMove.setCancelled(false);
-		packet.getLocation(eventMove.getTo());
+		packet.getLocation(clientLocation);
+		clientLocation.copyTo(eventMove.getTo());
 		clientOnGround = packet.isOnGround();
 		player.getLocation(eventMove.getFrom());
 		HandlerList.callEvent(eventMove);
+		processMovement();
 	}
 
 	@Override
 	public void handlePacket(PacketInPlayerPositionAndRotation packet) {
 		if (!teleportConfirmed) return;
 		eventMove.setCancelled(false);
-		packet.getLocation(eventMove.getTo());
+		packet.getLocation(clientLocation);
+		clientLocation.copyTo(eventMove.getTo());
 		clientOnGround = packet.isOnGround();
 		player.getLocation(eventMove.getFrom());
 		HandlerList.callEvent(eventMove);
+		processMovement();
 	}
 
 	@Override
 	public void handlePacket(PacketInPlayerRotation packet) {
 		if (!teleportConfirmed) return;
 		eventMove.setCancelled(false);
-		packet.getLocation(eventMove.getTo());
+		packet.getLocation(clientLocation);
+		clientLocation.copyTo(eventMove.getTo());
 		clientOnGround = packet.isOnGround();
 		player.getLocation(eventMove.getFrom());
 		HandlerList.callEvent(eventMove);
+		processMovement();
+	}
+	
+	private void processMovement() {
+		if (eventMove.isCancelled() 
+				&& !clientLocation.matches(eventMove.getTo())) {
+			Location to = eventMove.getTo();
+			to.copyTo(clientLocation);
+			teleport(to.getX(), to.getY(), to.getZ(), to.getYaw(), to.getPitch());		
+		}
+		locationChanged = true;
 	}
 
 	@Override
@@ -539,7 +558,7 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInEntityAction packet) {
-		// TODO
+		// TODO missing implementations
 		switch (packet.getActionID()) {
 		case 0: // Start sneaking
 			eventSneak.setSneaking(true);
@@ -571,6 +590,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	@Override
 	public void handlePacket(PacketInSteerVehicle packet) {
 		// TODO Auto-generated method stub
+		throw new RuntimeException("Not implemented!");
 		
 	}
 	
@@ -720,6 +740,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	@Override
 	public void handleUnhandledPacket(Packet packet) {
 		// TODO unhandled Packet
+		throw new RuntimeException("Not implemented!");
 	}
 	
 	/**
@@ -729,6 +750,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	@Override
 	public void handleBadPacket(Packet packet, BadPacketCause cause) {
 		// TODO handle BadPacket
+		throw new RuntimeException("Not implemented!");
 	}
 
 	@Override
@@ -845,6 +867,35 @@ public class CorePlayerConnection implements PlayerConnection {
 	@Override
 	public <T extends Packet> T createPacket(Class<T> clazz) {
 		return protocolPlay.createPacket(clazz);
+	}
+
+	@Override
+	public SimpleLocation getClientLocation() {
+		return clientLocation;
+	}
+
+	@Override
+	public boolean hasClientLocationChanged() {
+		return locationChanged;
+	}
+
+	@Override
+	public SimpleLocation acceptClientLocation() {
+		locationChanged = false;
+		return clientLocation;
+	}
+	
+	@Override
+	public void teleport(double x, double y, double z, float yaw, float pitch) {
+		PacketOutPlayerPositionAndLook packet = createPacket(PacketOutPlayerPositionAndLook.class);
+		packet.setX(x);
+		packet.setY(y);
+		packet.setZ(z);
+		packet.setYaw(yaw);
+		packet.setPitch(pitch);
+		packet.setTeleportID(teleportID++);
+		teleportConfirmed = false;
+		sendPacked(packet);
 	}
 
 }

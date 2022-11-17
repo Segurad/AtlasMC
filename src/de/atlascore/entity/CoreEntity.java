@@ -24,9 +24,12 @@ import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutDestroyEntities;
 import de.atlasmc.io.protocol.play.PacketOutEntityMetadata;
+import de.atlasmc.io.protocol.play.PacketOutEntityPositionAndRotation;
+import de.atlasmc.io.protocol.play.PacketOutEntityRotation;
 import de.atlasmc.io.protocol.play.PacketOutEntityTeleport;
 import de.atlasmc.io.protocol.play.PacketOutSetPassengers;
 import de.atlasmc.io.protocol.play.PacketOutSpawnEntity;
+import de.atlasmc.util.MathUtil;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.AbstractNBTBase;
@@ -178,10 +181,11 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	private boolean invulnerable;
 	private boolean removed;
 	private volatile boolean aremoved;
-	private Vector motion;
+	protected Vector motion;
 	private List<Entity> passengers;
 	private int portalCooldown;
-	private final Location loc, oldLoc;
+	protected final Location loc;
+	protected final Location oldLoc;
 	private Chunk chunk;
 	private List<String> scoreboardTags;
 	
@@ -202,7 +206,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 		this.type = type;
 		this.uuid = uuid;
 		this.loc = new Location(world, 0, 0, 0);
-		this.oldLoc = new Location(world, 0, 0, 0);
+		this.oldLoc = new Location(loc);
 		this.motion = new Vector(0, 0, 0);
 		this.viewers = createViewerSet();
 		metaContainer = new MetaDataContainer(getMetaContainerSize());
@@ -435,7 +439,8 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 
 	@Override
 	public CustomTagContainer getCustomTagContainer() {
-		if (customTags == null) customTags = new CustomTagContainer();
+		if (customTags == null) 
+			customTags = new CustomTagContainer();
 		return customTags;
 	}
 
@@ -499,21 +504,20 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	@Override
 	public void teleport(double x, double y, double z) {
 		teleported = true;
-		loc.copyTo(oldLoc);
 		loc.setLocation(x, y, z);
+		loc.copyTo(oldLoc);
 	}
 
 	@Override
 	public void teleport(double x, double y, double z, float yaw, float pitch) {
 		teleported = true;
-		loc.copyTo(oldLoc);
 		loc.setLocation(x, y, z, yaw, pitch);
+		loc.copyTo(oldLoc);
 	}
 
 	@Override
 	public void setVelocity(double x, double y, double z) {
-		// TODO Auto-generated method stub
-		
+		// TODO velocity
 	}
 
 	@Override
@@ -584,7 +588,6 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 			passengers.clear();
 		this.id = entityID;
 		this.loc.setLocation(world, x, y, z, yaw, pitch);
-		this.oldLoc.setLocation(loc);
 		chunk = getWorld().getChunk(loc);
 		fallDistance = 0;
 		fire = 0;
@@ -610,11 +613,11 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	public void tick() {
 		if (removed)
 			return;
+		doTick();
 		prepUpdate();
 		if (isDead() || removed)
 			return;
 		update();
-		doTick();
 		// TODO implement entity tick
 	}
 	
@@ -643,6 +646,33 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 				packet.setPassengers(passengerIDs);
 			}
 		}
+		if (!oldLoc.matches(loc)) { // Entity has moved
+			if (oldLoc.getDistanceSquared(loc) > 64)
+				teleported = true; // teleport entity when moved more than 8 blocks
+			else {
+				for (Player viewer : viewers) {
+					PlayerConnection con = viewer.getConnection();
+					if (!loc.matchPosition(oldLoc)) {
+						PacketOutEntityPositionAndRotation packet = con.createPacket(PacketOutEntityPositionAndRotation.class);
+						short dx = MathUtil.delta(loc.getX(), oldLoc.getX());
+						short dy = MathUtil.delta(loc.getY(), oldLoc.getY());
+						short dz = MathUtil.delta(loc.getZ(), oldLoc.getZ());
+						packet.setEntityID(getID());
+						packet.setLocation(dx, dy, dz, loc.getYaw(), loc.getPitch());
+						packet.setOnGround(isOnGround());
+						con.sendPacked(packet);
+					} else {
+						PacketOutEntityRotation packet = con.createPacket(PacketOutEntityRotation.class);
+						packet.setEntityID(getID());
+						packet.setYaw(loc.getYaw());
+						packet.setPitch(loc.getPitch());
+						packet.setOnGround(isOnGround());
+						con.sendPacked(packet);
+					}
+				}
+			}
+			oldLoc.setLocation(loc);
+		}
 		if (teleported) {
 			teleported = false;
 			for (Player viewer : viewers) {
@@ -670,7 +700,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	 * Processes the tick
 	 */
 	protected void doTick() {
-		
+		loc.add(motion);
 	}
 	
 
@@ -681,13 +711,12 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 
 	@Override
 	public boolean isDead() {
-		return false;
+		return false; // TODO entity is dead
 	}
 
 	@Override
 	public boolean isOnGround() {
-		// TODO Auto-generated 
-		return true;
+		return (metaContainer.get(META_ENTITY_FLAGS).getData() & 0x2) == 0x2;
 	}
 
 	@Override

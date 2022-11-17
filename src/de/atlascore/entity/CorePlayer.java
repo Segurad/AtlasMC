@@ -5,8 +5,8 @@ import java.util.UUID;
 import de.atlascore.inventory.CoreInventoryView;
 import de.atlasmc.Effect;
 import de.atlasmc.Gamemode;
-import de.atlasmc.Location;
 import de.atlasmc.Particle;
+import de.atlasmc.SimpleLocation;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
@@ -24,6 +24,7 @@ import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutChangeGameState;
 import de.atlasmc.io.protocol.play.PacketOutCloseWindow;
+import de.atlasmc.io.protocol.play.PacketOutEffect;
 import de.atlasmc.io.protocol.play.PacketOutEntitySoundEffect;
 import de.atlasmc.io.protocol.play.PacketOutNamedSoundEffect;
 import de.atlasmc.io.protocol.play.PacketOutOpenWindow;
@@ -36,6 +37,7 @@ import de.atlasmc.io.protocol.play.PacketOutSoundEffect;
 import de.atlasmc.io.protocol.play.PacketOutStopSound;
 import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.scoreboard.ScoreboardView;
+import de.atlasmc.util.MathUtil;
 import de.atlasmc.world.World;
 
 public class CorePlayer extends CoreHumanEntity implements Player {
@@ -53,28 +55,36 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	private Object pluginData;
 	private PermissionHandler permHandler;
 	
-	public CorePlayer(EntityType type, UUID uuid, World world) {
+	public CorePlayer(EntityType type, UUID uuid, World world, PlayerConnection con) {
 		super(type, uuid, world);
 		view = new CoreInventoryView(this, getInventory(), getInventory().getCraftingInventory(), 0);
+		this.con = con;
 	}
 	
 	@Override
 	public void openInventory(Inventory inv) {
-		if (inv == null) throw new IllegalArgumentException("Inventory can not be null!");
-		if (inv == getInventory()) throw new IllegalArgumentException("Can not open own Inventory!");
-		if (inv.getType().getID() == -1) throw new IllegalArgumentException("Can not open Inventory with this type (Please use the dedicated method!): " + inv.getType().name());
-		if (open != null) closeInventory();
+		if (inv == null) 
+			throw new IllegalArgumentException("Inventory can not be null!");
+		if (inv == getInventory()) 
+			throw new IllegalArgumentException("Can not open own Inventory!");
+		if (inv.getType().getID() == -1) 
+			throw new IllegalArgumentException("Can not open Inventory with this type (Please use the dedicated method!): " + inv.getType().name());
+		if (open != null) 
+			closeInventory();
 		InventoryOpenEvent event = new InventoryOpenEvent(view, inv);
 		HandlerList.callEvent(event);
-		if (event.isCancelled()) return;
+		if (event.isCancelled()) 
+			return;
 		this.open = inv;
 		view.setTopInventory(open);
 		view.setViewID(con.getNextInventoryID());
+		
 		PacketOutOpenWindow packet = con.getProtocol().createPacket(PacketOutOpenWindow.class);
 		packet.setWindowID(view.getViewID());
 		packet.setWindowType(inv.getType());
 		packet.setTitle(inv.getTitle().getJsonText());
 		con.sendPacked(packet);
+		
 		inv.updateSlots(this);
 	}
 
@@ -97,9 +107,22 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	}
 
 	@Override
-	public void playEffect(Location loc, Effect effect, Object data) {
-		// TODO Auto-generated method stub
-		
+	public void playEffect(SimpleLocation loc, Effect effect, Object data, boolean relativeSound) {
+		if (loc == null)
+			throw new IllegalArgumentException("Location can not be null!");
+		playEffect(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), effect, data, relativeSound);
+	}
+	
+	@Override
+	public void playEffect(int x, int y, int z, Effect effect, Object data, boolean relativeSound) {
+		if (effect == null)
+			throw new IllegalArgumentException("Effect can not be null!");
+		PacketOutEffect packet = con.createPacket(PacketOutEffect.class);
+		packet.setEffect(effect);
+		packet.setPosition(MathUtil.toPosition(x, y, z));
+		packet.setData(effect.getDataValueByObject(data));
+		packet.setDisableRelativeVolume(!relativeSound);
+		con.sendPacked(packet);
 	}
 
 	@Override
@@ -317,6 +340,19 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	@Override
 	public ScoreboardView getScoreboard() {
 		return scoreView;
+	}
+	
+	@Override
+	protected void doTick() {
+		super.doTick();
+		if (con.hasClientLocationChanged())
+			con.acceptClientLocation().copyTo(loc);
+	}
+	
+	@Override
+	public void teleport(double x, double y, double z, float yaw, float pitch) {
+		super.teleport(x, y, z, yaw, pitch);
+		con.teleport(x, y, z, yaw, pitch);
 	}
 
 }

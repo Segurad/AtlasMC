@@ -86,4 +86,23 @@ public class CorePacketOutEntityPositionAndRotation extends AbstractPacket imple
 		return onGround;
 	}
 
+	@Override
+	public void setEntityID(int id) {
+		this.entityID = id;
+	}
+
+	@Override
+	public void setLocation(short deltaX, short deltaY, short deltaZ, float yaw, float pitch) {
+		this.x = deltaX;
+		this.y = deltaY;
+		this.z = deltaZ;
+		this.yaw = MathUtil.toAngle(yaw);
+		this.pitch = MathUtil.toAngle(pitch);
+	}
+
+	@Override
+	public void setOnGround(boolean onGround) {
+		this.onGround = onGround;
+	}
+
 }

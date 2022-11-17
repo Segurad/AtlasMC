@@ -7,9 +7,20 @@ import de.atlasmc.io.PacketOutbound;
 public interface PacketOutEntityRotation extends PacketPlay, PacketOutbound {
 	
 	public int getEntityID();
+	
 	public float getYaw();
+	
 	public float getPitch();
+	
 	public boolean isOnGround();
+	
+	public void setEntityID(int id);
+	
+	public void setYaw(float yaw);
+	
+	public void setPitch(float pitch);
+	
+	public void setOnGround(boolean onGround);
 	
 	@Override
 	public default int getDefaultID() {

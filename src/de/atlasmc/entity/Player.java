@@ -4,6 +4,7 @@ import de.atlasmc.Effect;
 import de.atlasmc.Gamemode;
 import de.atlasmc.Location;
 import de.atlasmc.Particle;
+import de.atlasmc.SimpleLocation;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
@@ -42,7 +43,31 @@ public interface Player extends HumanEntity {
 
 	public void setLevel(int level);
 
-	public void playEffect(Location loc, Effect effect, Object data);
+	public default void playEffect(SimpleLocation loc, Effect effect) {
+		playEffect(loc, effect, null, true);
+	}
+	
+	/**
+	 * 
+	 * @implNote #playEffect(loc, effect, data, true)
+	 * @param loc
+	 * @param effect
+	 * @param data
+	 */
+	public default void playEffect(SimpleLocation loc, Effect effect, Object data) {
+		playEffect(loc, effect, data, true);
+	}
+	
+	/**
+	 * Plays a sound or particle effect
+	 * @param loc
+	 * @param effect
+	 * @param data
+	 * @param relativeSound
+	 */
+	public void playEffect(SimpleLocation loc, Effect effect, Object data, boolean relativeSound);
+	
+	public void playEffect(int x, int y, int z, Effect effect, Object data, boolean relativeSound);
 
 	public PlayerConnection getConnection();
 	

@@ -1,5 +1,6 @@
 package de.atlasmc.io.protocol;
 
+import de.atlasmc.SimpleLocation;
 import de.atlasmc.atlasnetwork.AtlasNode;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.atlasnetwork.server.LocalServer;
@@ -10,8 +11,15 @@ import de.atlasmc.util.annotation.ThreadSafe;
 
 public interface PlayerConnection extends PacketListenerPlayIn {
 	
+	/**
+	 * Queues a packet for sync handling
+	 * @param packet
+	 */
 	public void queueInboundPacket(Packet packet);
 	
+	/**
+	 * Called by the server to handle all queued packets
+	 */
 	public void handleQueuedPackets();
 
 	public ProtocolAdapter getProtocolAdapter();
@@ -78,5 +86,17 @@ public interface PlayerConnection extends PacketListenerPlayIn {
 	 * @return instance of Packet
 	 */
 	public <T extends Packet> T createPacket(Class<T> clazz);
+	
+	public void teleport(double x, double y, double z, float yaw, float pitch);
+	
+	public SimpleLocation getClientLocation();
+	
+	public boolean hasClientLocationChanged();
+	
+	/**
+	 * Returns the new client location and mars it as unchanged
+	 * @return location
+	 */
+	public SimpleLocation acceptClientLocation();
 
 }

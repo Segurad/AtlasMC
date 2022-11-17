@@ -16,8 +16,6 @@ public class PacketLengthDecoder extends ByteToMessageDecoder {
 
 	private int length = -1;
 	
-	public static final PacketLengthDecoder INSTANCE = new PacketLengthDecoder();
-	
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 		Object decode = decode(ctx, in);

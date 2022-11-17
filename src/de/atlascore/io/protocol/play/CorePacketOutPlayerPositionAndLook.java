@@ -84,4 +84,41 @@ public class CorePacketOutPlayerPositionAndLook extends AbstractPacket implement
 		return teleportID;
 	}
 
+	@Override
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	@Override
+	public void setY(double y) {
+		this.y = y;
+	}
+
+	@Override
+	public void setZ(double z) {
+		this.z = z;
+	}
+
+	@Override
+	public void setYaw(float yaw) {
+		this.yaw = yaw;
+	}
+
+	@Override
+	public void setPitch(float pitch) {
+		this.pitch = pitch;
+	}
+
+	@Override
+	public void setFlags(int flags) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setTeleportID(int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

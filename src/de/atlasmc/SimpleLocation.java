@@ -275,6 +275,12 @@ public class SimpleLocation implements Cloneable {
 	public Vector getDirection(Vector vec) {
 		return MathUtil.getVector(yaw, pitch, vec);
 	}
+	
+	public void add(Vector vec) {
+		x += vec.getX();
+		y += vec.getY();
+		z += vec.getZ();
+	}
 
 	@Override
 	public int hashCode() {
@@ -306,6 +312,29 @@ public class SimpleLocation implements Cloneable {
 				&& y == other.y
 				&& yaw == other.yaw
 				&& z == other.z;
+	}
+
+	/**
+	 * Compares the position and rotation
+	 * @return true if is equal
+	 */
+	public boolean matches(SimpleLocation loc) {
+		return x == loc.x && 
+				z == loc.z &&
+				y == loc.y &&
+				yaw == loc.yaw &&
+				pitch == loc.pitch;
+	}
+	
+	/**
+	 * Compares the position
+	 * @param loc
+	 * @return true if equal
+	 */
+	public boolean matchPosition(SimpleLocation loc) {
+		return x == loc.x && 
+				z == loc.z &&
+				y == loc.y;
 	}
 	
 }

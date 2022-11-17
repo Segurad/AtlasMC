@@ -61,4 +61,24 @@ public class CorePacketOutEntityRotation extends AbstractPacket implements Packe
 		return onGround;
 	}
 
+	@Override
+	public void setEntityID(int id) {
+		this.entityID = id;
+	}
+
+	@Override
+	public void setYaw(float yaw) {
+		this.yaw = MathUtil.toAngle(yaw);
+	}
+
+	@Override
+	public void setPitch(float pitch) {
+		this.pitch = MathUtil.toAngle(pitch);
+	}
+
+	@Override
+	public void setOnGround(boolean onGround) {
+		this.onGround = onGround;
+	}
+
 }

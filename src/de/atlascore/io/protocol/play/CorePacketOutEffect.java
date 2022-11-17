@@ -62,4 +62,24 @@ public class CorePacketOutEffect extends AbstractPacket implements PacketOutEffe
 		return disableRelativVolume;
 	}
 
+	@Override
+	public void setEffect(Effect effect) {
+		this.id = effect.getID();
+	}
+
+	@Override
+	public void setPosition(long pos) {
+		this.pos = pos;
+	}
+
+	@Override
+	public void setData(int data) {
+		this.data = data;
+	}
+
+	@Override
+	public void setDisableRelativeVolume(boolean disable) {
+		this.disableRelativVolume = disable;
+	}
+
 }

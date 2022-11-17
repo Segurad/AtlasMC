@@ -78,7 +78,7 @@ public class ConnectionHandler {
 		this.errHandler = IOExceptionHandler.UNHANDLED;
 		
 		channel.pipeline()
-		.addLast(CHANNEL_PIPE_PACKET_LENGTH_DECODER, PacketLengthDecoder.INSTANCE)
+		.addLast(CHANNEL_PIPE_PACKET_LENGTH_DECODER, new PacketLengthDecoder())
 		.addLast(CHANNEL_PIPE_PACKET_LENGTH_ENCODER, PacketLengthEncoder.INSTANCE)
 		.addLast(CHANNEL_PIPE_PACKET_DECODER, new PacketDecoder(this))
 		.addLast(CHANNEL_PIPE_PACKET_ENCODER, new PacketEncoder())

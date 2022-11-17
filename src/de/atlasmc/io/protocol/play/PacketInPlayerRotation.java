@@ -1,6 +1,6 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.Location;
+import de.atlasmc.SimpleLocation;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.PacketInbound;
 
@@ -8,14 +8,16 @@ import de.atlasmc.io.PacketInbound;
 public interface PacketInPlayerRotation extends PacketPlay, PacketInbound {
 	
 	public float getYaw();
+	
 	public float getPitch();
+	
 	public boolean isOnGround();
 	
 	/**
 	 * Applies all Location changes to the Location
 	 * @param loc
 	 */
-	public void getLocation(Location loc);
+	public void getLocation(SimpleLocation loc);
 	
 	@Override
 	default int getDefaultID() {

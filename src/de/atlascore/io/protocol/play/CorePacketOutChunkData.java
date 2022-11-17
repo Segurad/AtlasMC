@@ -1,14 +1,15 @@
 package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import de.atlascore.io.protocol.CoreProtocolAdapter;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutChunkData;
-import de.atlasmc.util.IndizeCompactor;
 import de.atlasmc.util.MathUtil;
+import de.atlasmc.util.VariableValueArray;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
@@ -62,14 +63,14 @@ public class CorePacketOutChunkData extends AbstractPacket implements PacketOutC
 			for (BlockData bd : palette) {
 				writeVarInt(bd.getStateID(), data);
 			}
-			IndizeCompactor compactor = s.getIndizeCompactor();
-			final int count = compactor.numberOfLongs();
-			writeVarInt(count, data);
-			for (int j = 0; j < count; j++) {
-				data.writeLong(compactor.getAsLong());
+			VariableValueArray indizes = s.getIndizes();
+			final long[] values = indizes.array();
+			writeVarInt(values.length, data);
+			for (long l : values) {
+				data.writeLong(l);
 			}
 		}
-		List<TileEntity> tiles = chunk.getTileEntities();
+		Collection<TileEntity> tiles = chunk.getTileEntities();
 		tileCount = tiles.size();
 		if (tiles.isEmpty()) return;
 		this.tiles = Unpooled.buffer();

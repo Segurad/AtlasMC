@@ -8,9 +8,24 @@ import de.atlasmc.io.PacketOutbound;
 public interface PacketOutEffect extends PacketPlay, PacketOutbound {
 	
 	public Effect getEffect();
+	
 	public long getPosition();
+	
 	public int getData();
+	
 	public boolean getDisableRelativVolume();
+	
+	public void setEffect(Effect effect);
+	
+	public void setPosition(long pos);
+	
+	/**
+	 * @see {@link Effect#getDataValueByObject(Object)}
+	 * @param data
+	 */
+	public void setData(int data);
+	
+	public void setDisableRelativeVolume(boolean disable);
 	
 	@Override
 	default int getDefaultID() {

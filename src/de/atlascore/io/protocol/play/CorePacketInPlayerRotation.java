@@ -3,7 +3,7 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.Location;
+import de.atlasmc.SimpleLocation;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketInPlayerRotation;
 import io.netty.buffer.ByteBuf;
@@ -47,7 +47,7 @@ public class CorePacketInPlayerRotation extends AbstractPacket implements Packet
 	}
 
 	@Override
-	public void getLocation(Location loc) {
+	public void getLocation(SimpleLocation loc) {
 		loc.setPitch(pitch);
 		loc.setYaw(yaw);
 	}

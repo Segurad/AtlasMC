@@ -7,6 +7,7 @@ import de.atlasmc.block.data.BlockData;
 
 public enum Effect {
 	
+	// --- Sounds
 	DISPENSER_DISPENSES(1000, Type.SOUND),
 	DISPENSER_FAILS_TO_DISPENSE(1001, Type.SOUND),
 	DISPENSER_SHOOTS(1002, Type.SOUND),
@@ -51,7 +52,7 @@ public enum Effect {
 	HUSK_CONVERTS_TO_ZOMBIE_BY_DROWNING(1041, Type.SOUND),
 	GRINDSTONE_USED(1042, Type.SOUND),
 	BOOK_PAGE_TURNED(1043, Type.SOUND),
-	//-------------------------------------------------------------------
+	//--- Particle
 	COMPOSTER_COMPOSTS(1500, Type.PARTICLE),
 	LAVA_CONVERTS_BLOCK(1501, Type.PARTICLE),
 	REDSTONE_TORCH_BURNS_OUT(1502, Type.PARTICLE),
@@ -109,7 +110,7 @@ public enum Effect {
 		PARTICLE
 	}
 	
-	public int getDataByObject(Object data) {
+	public int getDataValueByObject(Object data) {
 		if (data != null) {
 			if (!getData().isInstance(data)) 
 				throw new IllegalArgumentException("Data not compatiple with this Effect!");
