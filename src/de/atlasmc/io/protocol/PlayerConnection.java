@@ -88,13 +88,18 @@ public interface PlayerConnection extends PacketListenerPlayIn {
 	public <T extends Packet> T createPacket(Class<T> clazz);
 	
 	public void teleport(double x, double y, double z, float yaw, float pitch);
-	
+
+	/**
+	 * Returns the last location the client send.<br>
+	 * Should not be changed.
+	 * @return location
+	 */
 	public SimpleLocation getClientLocation();
 	
 	public boolean hasClientLocationChanged();
 	
 	/**
-	 * Returns the new client location and mars it as unchanged
+	 * Returns the last location the client send and marks it as unchanged
 	 * @return location
 	 */
 	public SimpleLocation acceptClientLocation();

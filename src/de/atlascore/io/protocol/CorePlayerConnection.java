@@ -433,7 +433,7 @@ public class CorePlayerConnection implements PlayerConnection {
 		clientOnGround = packet.isOnGround();
 		player.getLocation(eventMove.getFrom());
 		HandlerList.callEvent(eventMove);
-		processMovement();
+		locationChanged = true;
 	}
 
 	@Override
@@ -445,7 +445,7 @@ public class CorePlayerConnection implements PlayerConnection {
 		clientOnGround = packet.isOnGround();
 		player.getLocation(eventMove.getFrom());
 		HandlerList.callEvent(eventMove);
-		processMovement();
+		locationChanged = true;
 	}
 
 	@Override
@@ -457,16 +457,6 @@ public class CorePlayerConnection implements PlayerConnection {
 		clientOnGround = packet.isOnGround();
 		player.getLocation(eventMove.getFrom());
 		HandlerList.callEvent(eventMove);
-		processMovement();
-	}
-	
-	private void processMovement() {
-		if (eventMove.isCancelled() 
-				&& !clientLocation.matches(eventMove.getTo())) {
-			Location to = eventMove.getTo();
-			to.copyTo(clientLocation);
-			teleport(to.getX(), to.getY(), to.getZ(), to.getYaw(), to.getPitch());		
-		}
 		locationChanged = true;
 	}
 
