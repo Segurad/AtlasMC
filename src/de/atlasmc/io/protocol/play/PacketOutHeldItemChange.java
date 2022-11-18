@@ -8,6 +8,8 @@ public interface PacketOutHeldItemChange extends PacketPlay, PacketOutbound {
 	
 	public int getSlot();
 	
+	public void setSlot(int slot);
+	
 	@Override
 	public default int getDefaultID() {
 		return OUT_HELD_ITEM_CHANGE;

@@ -35,4 +35,9 @@ public class CorePacketOutHeldItemChange extends AbstractPacket implements Packe
 		return slot;
 	}
 
+	@Override
+	public void setSlot(int slot) {
+		this.slot = slot;
+	}
+
 }

@@ -12,7 +12,12 @@ import de.atlasmc.util.Pair;
 public interface PacketOutEntityEquipment extends PacketPlay, PacketOutbound {
 	
 	public int getEntityID();
+	
 	public List<Pair<EquipmentSlot, ItemStack>> getSlots();
+	
+	public void setSlots(List<Pair<EquipmentSlot, ItemStack>> slots);
+	
+	public void setSlot(EquipmentSlot slot, ItemStack item);
 	
 	@Override
 	public default int getDefaultID() {

@@ -12,8 +12,16 @@ public abstract class Event {
 		this.async = async;
 	}
 	
+	/**
+	 * Returns the {@link HandlerList} of this Event
+	 * @return handler list
+	 */
 	public abstract HandlerList getHandlers();
 
+	/**
+	 * Returns whether or not this event is async
+	 * @return true if async
+	 */
 	public final boolean isAsynchronous() {
 		return async;
 	}

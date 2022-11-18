@@ -11,6 +11,7 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.factory.ContainerFactory;
+import de.atlasmc.inventory.CraftingInventory;
 import de.atlasmc.inventory.MainHand;
 import de.atlasmc.inventory.PlayerInventory;
 import de.atlasmc.io.protocol.PlayerConnection;
@@ -48,13 +49,13 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 	protected static final int LAST_META_INDEX = CoreLivingEntity.LAST_META_INDEX+6;
 	
 	private PlayerInventory inv;
+	private CraftingInventory craftingInv;
 	private double additionalHealth;
 	private Entity shoulderRight, shoulderLeft;
 	private byte shoulderChanged; // 0x01 Right 0x02 Left
 	
 	public CoreHumanEntity(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
-		inv = ContainerFactory.PLAYER_INV_FACTORY.create(InventoryType.PLAYER, this);
 	}
 	
 	@Override
@@ -80,6 +81,8 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 	
 	@Override
 	public PlayerInventory getInventory() {
+		if (inv == null)
+			inv = ContainerFactory.PLAYER_INV_FACTORY.create(InventoryType.PLAYER, this);
 		return inv;
 	}
 
@@ -168,6 +171,13 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 			metaContainer.get(shoulder).setData(null);
 		else
 			metaContainer.get(shoulder).setData((CompoundTag) entity.toNBT());
+	}
+
+	@Override
+	public CraftingInventory getCraftingInventory() {
+		if (craftingInv == null)
+			craftingInv = ContainerFactory.CRAFTING_INV_FACTORY.create(InventoryType.CRAFTING, this);
+		return craftingInv;
 	}
 
 }

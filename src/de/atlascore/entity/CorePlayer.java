@@ -57,7 +57,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	
 	public CorePlayer(EntityType type, UUID uuid, World world, PlayerConnection con) {
 		super(type, uuid, world);
-		view = new CoreInventoryView(this, getInventory(), getInventory().getCraftingInventory(), 0);
+		view = new CoreInventoryView(this, getInventory(), getCraftingInventory(), 0);
 		this.con = con;
 	}
 	

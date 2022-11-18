@@ -47,7 +47,7 @@ public class CorePacketOutEntityEquipment extends AbstractPacket implements Pack
 		for (int i = 0; i < size; i++) {
 			Pair<EquipmentSlot, ItemStack> pair = slots.get(i);
 			int slot = pair.getValue1().getID();
-			if (i+1 < size) slot += 0x80;
+			if (i+1 < size) slot |= 0x80;
 			out.writeInt(slot);
 			writeSlot(pair.getValue2(), out);
 		}
@@ -61,6 +61,17 @@ public class CorePacketOutEntityEquipment extends AbstractPacket implements Pack
 	@Override
 	public List<Pair<EquipmentSlot, ItemStack>> getSlots() {
 		return slots;
+	}
+
+	@Override
+	public void setSlots(List<Pair<EquipmentSlot, ItemStack>> slots) {
+		this.slots = slots;
+	}
+
+	@Override
+	public void setSlot(EquipmentSlot slot, ItemStack item) {
+		slots = new ArrayList<>(1);
+		slots.add(new Pair<>(slot, item));
 	}
 
 }
