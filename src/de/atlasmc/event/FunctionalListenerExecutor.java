@@ -5,10 +5,14 @@ package de.atlasmc.event;
  */
 public class FunctionalListenerExecutor implements EventExecutor {
 
-	private final Class<?> eventClass;
+	private final Class<? extends Event> eventClass;
 	private final FunctionalListener<Event> listener;
 	private final boolean ignoreCancelled;
 	private final EventPriority priority;
+	
+	public <E extends Event> FunctionalListenerExecutor(Class<E> eventClass, FunctionalListener<E> listener) {
+		this(eventClass, listener, EventPriority.NORMAL, false);
+	}
 	
 	public <E extends Event> FunctionalListenerExecutor(Class<E> eventClass, FunctionalListener<E> listener, boolean ignoreCancelled) {
 		this(eventClass, listener, EventPriority.NORMAL, ignoreCancelled);
@@ -37,7 +41,7 @@ public class FunctionalListenerExecutor implements EventExecutor {
 	}
 
 	@Override
-	public Class<?> getEventClass() {
+	public Class<? extends Event> getEventClass() {
 		return eventClass;
 	}
 
@@ -57,7 +61,7 @@ public class FunctionalListenerExecutor implements EventExecutor {
 	 * Only checks if the obj is this
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public final boolean equals(Object obj) {
 		return obj == this;
 	}
 	

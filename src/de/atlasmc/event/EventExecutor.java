@@ -21,7 +21,7 @@ public interface EventExecutor {
 		}
 
 		@Override
-		public Class<?> getEventClass() {
+		public Class<? extends Event> getEventClass() {
 			return Event.class;
 		}
 
@@ -38,7 +38,7 @@ public interface EventExecutor {
 
 	public boolean getIgnoreCancelled();
 	
-	public Class<?> getEventClass();
+	public Class<? extends Event> getEventClass();
 	
 	public EventPriority getPriority();
 	

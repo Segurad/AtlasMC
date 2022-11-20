@@ -11,12 +11,12 @@ import java.util.List;
 public class MethodEventExecutor implements EventExecutor {
 	
 	private final boolean ignorecancelled;
-	private final Class<?> eventClass;
+	private final Class<? extends Event> eventClass;
 	private final Method method;
 	private final EventPriority priority;
 	private final Listener listener;
 	
-	public MethodEventExecutor(Class<?> eventClass, Method method, EventPriority priority, boolean ignoreCancelled, Listener listener) {
+	public MethodEventExecutor(Class<? extends Event> eventClass, Method method, EventPriority priority, boolean ignoreCancelled, Listener listener) {
 		this.eventClass = eventClass;
 		this.ignorecancelled = ignoreCancelled;
 		this.method = method;
@@ -36,7 +36,7 @@ public class MethodEventExecutor implements EventExecutor {
 	}
 	
 	@Override
-	public Class<?> getEventClass() {
+	public Class<? extends Event> getEventClass() {
 		return eventClass;
 	}
 	
@@ -60,22 +60,32 @@ public class MethodEventExecutor implements EventExecutor {
 	 * Only checks if the obj is this
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public final boolean equals(Object obj) {
 		return obj == this;
 	}
 	
+	/**
+	 * Returns a list of {@link EventExecutor}s created by the methods marked with {@link EventHandler} of the Listener class
+	 * @param listener
+	 * @return list
+	 */
+	@SuppressWarnings("unchecked")
 	public static List<EventExecutor> getExecutors(Listener listener) {
-		if (listener == null) return null;
+		if (listener == null)
+			throw new IllegalArgumentException("Listener can not be null!");
 		List<EventExecutor> executors = null;
 		for (Method method : listener.getClass().getMethods()) {
 			EventHandler handler = method.getAnnotation(EventHandler.class);
-			if (handler == null) continue;
-			if (method.getParameterCount() != 1) continue;
+			if (handler == null) 
+				continue;
+			if (method.getParameterCount() != 1) 
+				continue;
 			Class<?>[] params = method.getParameterTypes();
-			if (!Event.class.isAssignableFrom(params[0])) continue;
+			if (!Event.class.isAssignableFrom(params[0])) 
+				continue;
 			if (executors == null)
 				executors = new ArrayList<>();
-			executors.add(new MethodEventExecutor(params[0], method, handler.priority(), handler.ignoreCancelled(), listener));
+			executors.add(new MethodEventExecutor((Class<? extends Event>) params[0], method, handler.priority(), handler.ignoreCancelled(), listener));
 		}
 		return executors == null ? List.of() : executors;
 	}
