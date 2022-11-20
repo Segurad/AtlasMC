@@ -27,7 +27,7 @@ public abstract class Event {
 	}
 
 	public String getName() {
-		return getClass().getName();
+		return getClass().getSimpleName();
 	}
 	
 }
