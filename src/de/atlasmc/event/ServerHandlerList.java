@@ -70,23 +70,31 @@ public class ServerHandlerList extends HandlerList {
 	@Override
 	protected void callEvent(Event event, boolean cancelled) {
 		@SuppressWarnings("unchecked")
-		LocalServer server = ((GenericEvent<LocalServer, ?>) event).getEventSource();
+		final LocalServer server = ((GenericEvent<LocalServer, ?>) event).getEventSource();
+		boolean defaultHandler = false;
 		if (!server.isServerThread() && !event.isAsynchronous()) 
-			throw new RuntimeException("Tryed to call ServerEvent async: " + event.getName());
-		final LinkedListIterator<EventExecutor> groupexes = getExecutors(server.getGroup());
-		final LinkedListIterator<EventExecutor> serverexes = getExecutors(server);
-		final LinkedListIterator<EventExecutor> globalexes = getExecutors();
-		if ((groupexes != null && groupexes.hasNext()) || 
-				(serverexes != null && serverexes.hasNext()) || 
-				globalexes.hasNext()) {
-			for (EventPriority prio : EventPriority.values()) {
-				if (prio == EventPriority.MONITOR) getDefaultExecutor().fireEvent(event);
-				fireEvents(serverexes, prio, event, cancelled);
-				fireEvents(groupexes, prio, event, cancelled);
-				fireEvents(globalexes, prio, event, cancelled);
+			throw new EventException("Tryed to call ServerEvent async: " + event.getName());
+		try {
+			final LinkedListIterator<EventExecutor> groupexes = getExecutors(server.getGroup());
+			final LinkedListIterator<EventExecutor> serverexes = getExecutors(server);
+			final LinkedListIterator<EventExecutor> globalexes = getExecutors();
+			if ((groupexes != null && groupexes.hasNext()) || 
+					(serverexes != null && serverexes.hasNext()) || 
+					globalexes.hasNext()) {
+				for (EventPriority prio : EventPriority.values()) {
+					if (prio == EventPriority.MONITOR) getDefaultExecutor().fireEvent(event);
+					fireEvents(serverexes, prio, event, cancelled);
+					fireEvents(groupexes, prio, event, cancelled);
+					fireEvents(globalexes, prio, event, cancelled);
+				}
+			} else {
+				getDefaultExecutor().fireEvent(event);
+				defaultHandler = true;
 			}
-		} else {
-			getDefaultExecutor().fireEvent(event);
+		} catch (Exception ex) {
+			server.getLogger().error(new EventException("Error while event handling for: " + event.getName(), ex));
+			if (!defaultHandler)
+				getDefaultExecutor().fireEvent(event);
 		}
 	}
 	
@@ -108,7 +116,6 @@ public class ServerHandlerList extends HandlerList {
 				if (exe.getListener() == listener) it.remove();
 			}
 		}
-		
 	}
 	
 	public static void unregisterServer(LocalServer server) {

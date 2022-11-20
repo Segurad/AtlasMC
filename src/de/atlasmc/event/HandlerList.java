@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import de.atlasmc.Atlas;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.util.ConcurrentLinkedList;
@@ -98,7 +99,8 @@ public class HandlerList {
 	}
 	
 	public void registerExecutor(@NotNull EventExecutor executor) {
-		if (executor == null) return;
+		if (executor == null) 
+			return;
 		register(globalExecutors, executor);
 	}
 	
@@ -154,12 +156,18 @@ public class HandlerList {
 			return;
 		}
 		boolean defaultHandler = false;
-		for (EventExecutor exe : globalExecutors){
-			if (exe.getPriority() == EventPriority.MONITOR && !defaultHandler) {
-				defaultHandler = true;
-				getDefaultExecutor().fireEvent(event);
+		try {
+			for (EventExecutor exe : globalExecutors){
+				if (exe.getPriority() == EventPriority.MONITOR && !defaultHandler) {
+					defaultHandler = true;
+					getDefaultExecutor().fireEvent(event);
+				}
+				exe.fireEvent(event);
 			}
-			exe.fireEvent(event);
+		} catch (Exception ex) {
+			Atlas.getLogger().error(new EventException("Error while event handling for: " + event.getName(), ex));
+			if (!defaultHandler)
+				getDefaultExecutor().fireEvent(event);
 		}
 	}
 	
@@ -216,23 +224,41 @@ public class HandlerList {
 		if (listener == null) return;
 		List<EventExecutor> exes = MethodEventExecutor.getExecutors(listener);
 		for (EventExecutor exe : exes) {
-			Method m;
-			try {
-				m = exe.getEventClass().getMethod("getHandlerList");
-			} catch (NoSuchMethodException e) {
-				throw new EventException("Unable to find static getHandlerList method in: " + exe.getEventClass().getName());
-			} catch (SecurityException e) {
-				throw new EventException("Unable to access static getHandlerList method in: " + exe.getEventClass().getName());
-			}
-			HandlerList h = null;
-			try {
-				m.setAccessible(true);
-				h = (HandlerList) m.invoke(null);
-			} catch (IllegalAccessException | InvocationTargetException e) {
-				throw new EventException("Unable to call static getHandlerList method!", e);
-			}
-			h.registerExecutor(exe, handleroptions);
+			HandlerList handlers = getHandlerListOf(exe.getEventClass());
+			handlers.registerExecutor(exe, handleroptions);
 		}
+	}
+	
+	public static <E extends Event> void registerFunctionalListener(Class<E> eventClass, FunctionalListener<E> listener, Object... handleroptions) {
+		HandlerList handlers = getHandlerListOf(eventClass);
+		FunctionalListenerExecutor exe = new FunctionalListenerExecutor(eventClass, listener);
+		handlers.registerExecutor(exe, handleroptions);
+	}
+	
+	/**
+	 * Returns the HandlerList of a event class
+	 * @param eventClass
+	 * @return handler list
+	 */
+	public static HandlerList getHandlerListOf(Class<? extends Event> eventClass) {
+		Method m;
+		try {
+			m = eventClass.getMethod("getHandlerList");
+		} catch (NoSuchMethodException e) {
+			throw new EventException("Unable to find static getHandlerList method in: " + eventClass.getName());
+		} catch (SecurityException e) {
+			throw new EventException("Unable to access static getHandlerList method in: " + eventClass.getName());
+		}
+		HandlerList h = null;
+		try {
+			m.setAccessible(true);
+			h = (HandlerList) m.invoke(null);
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			throw new EventException("Unable to call static getHandlerList method!", e);
+		}
+		if (h == null)
+			throw new EventException("Event class does not return a HandlerList: " + eventClass.getName());
+		return h;
 	}
 
 }

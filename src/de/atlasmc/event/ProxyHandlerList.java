@@ -45,17 +45,25 @@ public class ProxyHandlerList extends HandlerList {
 	@Override
 	protected void callEvent(Event event, boolean cancelled) {
 		@SuppressWarnings("unchecked")
-		LocalProxy proxy = ((GenericEvent<LocalProxy, ?>) event).getEventSource();
-		final LinkedListIterator<EventExecutor> proxyexes = getExecutors(proxy);
-		final LinkedListIterator<EventExecutor> globalexes = getExecutors();
-		if ((proxyexes != null && proxyexes.hasNext()) || globalexes.hasNext()) {
-			for (EventPriority prio : EventPriority.values()) {
-				if (prio == EventPriority.MONITOR) getDefaultExecutor().fireEvent(event);
-				fireEvents(proxyexes, prio, event, cancelled);
-				fireEvents(globalexes, prio, event, cancelled);
+		final LocalProxy proxy = ((GenericEvent<LocalProxy, ?>) event).getEventSource();
+		boolean defaultHandler = false;
+		try {
+			final LinkedListIterator<EventExecutor> proxyexes = getExecutors(proxy);
+			final LinkedListIterator<EventExecutor> globalexes = getExecutors();
+			if ((proxyexes != null && proxyexes.hasNext()) || globalexes.hasNext()) {
+				for (EventPriority prio : EventPriority.values()) {
+					if (prio == EventPriority.MONITOR) getDefaultExecutor().fireEvent(event);
+					fireEvents(proxyexes, prio, event, cancelled);
+					fireEvents(globalexes, prio, event, cancelled);
+				}
+			} else {
+				getDefaultExecutor().fireEvent(event);
+				defaultHandler = true;
 			}
-		} else {
-			getDefaultExecutor().fireEvent(event);
+		} catch (Exception ex) {
+			proxy.getLogger().error(new EventException("Error while event handling for: " + event.getName(), ex));
+			if (!defaultHandler)
+				getDefaultExecutor().fireEvent(event);
 		}
 	}
 	
