@@ -1,5 +1,7 @@
 package de.atlasmc.event;
 
+import java.util.List;
+
 public enum EventPriority {
 	/**
 	 * Priority for least important operations made before all other operations
@@ -22,5 +24,26 @@ public enum EventPriority {
 	/**
 	 * Priority to observe the outcome of the event after the default event handler made all operations
 	 */
-	MONITOR
+	MONITOR;
+	
+	private static List<EventPriority> VALUES;
+	
+	/**
+	 * Returns a immutable List of all Types.<br>
+	 * This method avoid allocation of a new array not like {@link #values()}.
+	 * @return list
+	 */
+	public static List<EventPriority> getValues() {
+		if (VALUES == null)
+			VALUES = List.of(values());
+		return VALUES;
+	}
+	
+	/**
+	 * Releases the system resources used from the values cache
+	 */
+	public static void freeValues() {
+		VALUES = null;
+	}
+	
 }
