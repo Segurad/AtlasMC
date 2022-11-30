@@ -169,9 +169,6 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 			clone.setCanDestroy(new ArrayList<>(canDestroy));
 		if (hasAttributeModifiers())
 			clone.setAttributeModifiers(new ArrayListMultimap<>(attributes.asMap()));
-		if (hasCustomTagContainer()) {
-			clone.customTags = null; // TODO clone CustomTags
-		}
 		if (hasCanDestroy())
 			clone.setCanDestroy(new ArrayList<>(canDestroy));
 		if (hasCustomTagContainer())
@@ -218,7 +215,8 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	
 	@Override
 	public CustomTagContainer getCustomTagContainer() {
-		if (customTags == null)  customTags = new CustomTagContainer();
+		if (customTags == null)  
+			customTags = new CustomTagContainer();
 		return customTags;
 	}
 
