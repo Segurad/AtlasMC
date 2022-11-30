@@ -1,35 +1,26 @@
 package de.atlasmc.recipe;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import de.atlasmc.Material;
-import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.recipe.condition.Condition;
+import de.atlasmc.NamespacedKey;
 
 public class StonecuttingRecipe extends Recipe {
 
-	public StonecuttingRecipe(String key, ItemStack result, Material source) {
-		super(result);
-		con = new ArrayList<Condition>(0);
+	private Ingredient ingredient;
+	
+	public StonecuttingRecipe(NamespacedKey key) {
+		super(key);
 	}
 	
-	private List<Condition> con;
-	private boolean enabled;
-
-	@Override
-	public List<Condition> getConditions() {
-		return con;
+	public Ingredient getIngredient() {
+		return ingredient;
 	}
-
-	@Override
-	public boolean isEnabled() {
-		return enabled;
+	
+	public void setIngredient(Ingredient ingredient) {
+		this.ingredient = ingredient;
 	}
-
+	
 	@Override
-	public void setEnabled(boolean value) {
-		enabled = value;
+	public RecipeType getType() {
+		return RecipeType.STONECUTTING;
 	}
 
 }

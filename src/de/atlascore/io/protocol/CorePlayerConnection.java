@@ -1,13 +1,18 @@
 package de.atlascore.io.protocol;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.atlascore.block.CoreBlock;
 import de.atlascore.block.CoreBlockAccess;
+import de.atlascore.recipe.CoreRecipeBook;
 import de.atlasmc.Atlas;
 import de.atlasmc.Gamemode;
 import de.atlasmc.Location;
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.atlasnetwork.server.LocalServer;
@@ -74,6 +79,7 @@ import de.atlasmc.io.protocol.play.PacketInClickWindowButton;
 import de.atlasmc.io.protocol.play.PacketInClientSettings;
 import de.atlasmc.io.protocol.play.PacketInClientStatus;
 import de.atlasmc.io.protocol.play.PacketInClientStatus.StatusAction;
+import de.atlasmc.io.protocol.play.PacketOutUnlockRecipes.RecipesAction;
 import de.atlasmc.util.MathUtil;
 import de.atlasmc.util.annotation.ThreadSafe;
 import de.atlasmc.util.raytracing.BlockRayCollisionRule;
@@ -120,9 +126,13 @@ import de.atlasmc.io.protocol.play.PacketInUpdateStructureBlock;
 import de.atlasmc.io.protocol.play.PacketInUseItem;
 import de.atlasmc.io.protocol.play.PacketInVehicleMove;
 import de.atlasmc.io.protocol.play.PacketInWindowConfirmation;
+import de.atlasmc.io.protocol.play.PacketOutDeclareRecipes;
 import de.atlasmc.io.protocol.play.PacketOutKeepAlive;
 import de.atlasmc.io.protocol.play.PacketOutPlayerPositionAndLook;
+import de.atlasmc.io.protocol.play.PacketOutUnlockRecipes;
 import de.atlasmc.io.protocol.play.PacketOutWindowConfirmation;
+import de.atlasmc.recipe.BookType;
+import de.atlasmc.recipe.Recipe;
 import de.atlasmc.recipe.RecipeBook;
 import de.atlasmc.io.protocol.play.PacketInAdvancementTab.Action;
 
@@ -175,8 +185,11 @@ public class CorePlayerConnection implements PlayerConnection {
 	private BlockFace diggingFace;
 	private boolean digging;
 	
-	// Recipe Book
-	private RecipeBook recipeBook;
+	// Recipes
+	private final List<RecipeBook> recipeBooks; // TODO update on changed (currently only when change in recipes)
+	private List<Recipe> recipesUnlocked;
+	private List<Recipe> recipesAvailable;
+	
 	
 	public CorePlayerConnection(AtlasPlayer player, ConnectionHandler connection, ProtocolAdapter protocol) {
 		this.aplayer = player;
@@ -185,6 +198,11 @@ public class CorePlayerConnection implements PlayerConnection {
 		this.protocolPlay = protocol.getPlayProtocol();
 		this.inboundQueue = new ConcurrentLinkedQueue<>();
 		this.chatmode = ChatType.MESSAGE;
+		CoreRecipeBook[] recipeBooks = new CoreRecipeBook[BookType.getValues().size()];
+		int index = 0;
+		for (BookType type : BookType.getValues())
+			recipeBooks[index++] = new CoreRecipeBook(type);
+		this.recipeBooks = List.of(recipeBooks);
 	}
 	
 	@Override
@@ -886,6 +904,127 @@ public class CorePlayerConnection implements PlayerConnection {
 		packet.setTeleportID(teleportID++);
 		teleportConfirmed = false;
 		sendPacked(packet);
+	}
+
+	@Override
+	public List<RecipeBook> getRecipeBooks() {
+		return recipeBooks;
+	}
+
+	@Override
+	public RecipeBook getRecipeBook(BookType type) {
+		return recipeBooks.get(type.getID());
+	}
+
+	@Override
+	public void unlockRecipes(boolean notify, Recipe... recipes) {
+		List<Recipe> toAdd = null;
+		List<NamespacedKey> toUnlock = null;
+		for (Recipe recipe : recipes) {
+			if (recipesUnlocked.contains(recipe))
+				continue; // assuming the recipe is already available
+			if (toUnlock == null)
+				toUnlock = new ArrayList<>();
+			toUnlock.add(recipe.getNamespacedKey());
+			if (!recipesAvailable.contains(recipe)) {
+				if (toAdd == null)
+					toAdd = new ArrayList<>();
+				toAdd.add(recipe);
+				recipesAvailable.add(recipe);
+			}
+		}
+		if (toAdd != null) {
+			PacketOutDeclareRecipes packet = createPacket(PacketOutDeclareRecipes.class);
+			packet.setRecipes(toAdd);
+			sendPacked(packet);
+		}
+		if (toUnlock == null)
+			return;
+		PacketOutUnlockRecipes packet = createPacket(PacketOutUnlockRecipes.class);
+		if (notify) {
+			packet.setAction(RecipesAction.ADD);
+			packet.setTagged(toUnlock);
+		} else {
+			packet.setAction(RecipesAction.INIT);
+			packet.setUntagged(toUnlock);
+		}
+		setRecipeBookState(packet);
+		sendPacked(packet);
+	}
+
+	@Override
+	public void lockRecipes(Recipe... recipes) {
+		List<NamespacedKey> toRemove = null;
+		for (Recipe recipe : recipes) {
+			if (!recipesUnlocked.remove(recipe))
+				continue;
+			if (toRemove == null)
+				toRemove = new ArrayList<>();
+			toRemove.add(recipe.getNamespacedKey());
+		}
+		if (toRemove == null)
+			return;
+		PacketOutUnlockRecipes packet = createPacket(PacketOutUnlockRecipes.class);
+		packet.setAction(RecipesAction.REMOVE);
+		packet.setTagged(toRemove);
+		setRecipeBookState(packet);
+		sendPacked(packet);
+	}
+	
+	private void setRecipeBookState(PacketOutUnlockRecipes packet) {
+		RecipeBook book = getRecipeBook(BookType.CRAFTING);
+		packet.setCraftingBookOpen(book.isOpen());
+		packet.setCraftingBookFiltered(book.hasFilter());
+		((CoreRecipeBook) book).setChanged(false);
+		book = getRecipeBook(BookType.FURNACE);
+		packet.setSmeltingBookOpen(book.isOpen());
+		packet.setSmeltingBookFiltered(book.hasFilter());
+		((CoreRecipeBook) book).setChanged(false);
+		book = getRecipeBook(BookType.BLAST_FURNACE);
+		packet.setBlastingBookOpen(book.isOpen());
+		packet.setBlastingBookFiltered(book.hasFilter());
+		((CoreRecipeBook) book).setChanged(false);
+		book = getRecipeBook(BookType.SMOKER);
+		packet.setSmokingBookOpen(book.isOpen());
+		packet.setSmokingBookFiltered(book.hasFilter());
+		((CoreRecipeBook) book).setChanged(false);
+	}
+
+	@Override
+	public void removeRecipes(Recipe... recipes) {
+		for (Recipe recipe : recipes) {
+			recipesAvailable.remove(recipe);
+		}
+		lockRecipes(recipes);
+	}
+
+	@Override
+	public void addRecipes(Recipe... recipes) {
+		List<Recipe> toAdd = null;
+		for (Recipe recipe : recipes)
+			if (!recipesAvailable.contains(recipe)) {
+				if (toAdd == null)
+					toAdd = new ArrayList<>();
+				toAdd.add(recipe);
+				recipesAvailable.add(recipe);
+			}
+		PacketOutDeclareRecipes packet = createPacket(PacketOutDeclareRecipes.class);
+		packet.setRecipes(toAdd);
+		sendPacked(packet);
+	}
+
+	@Override
+	public Collection<Recipe> getUnlockedRecipes() {
+		if (recipesUnlocked == null)
+			return List.of();
+		return recipesUnlocked;
+	}
+
+	@Override
+	public Collection<Recipe> getAvailableRecipes() {
+		if (recipesAvailable == null)
+			return List.of();
+		return recipesAvailable;
 	}
 
 }

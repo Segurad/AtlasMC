@@ -1,36 +1,41 @@
 package de.atlasmc.recipe;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import de.atlasmc.NamespacedKey;
+import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.recipe.condition.Condition;
 
-public class Recipe {
+public abstract class Recipe implements Namespaced {
 
 	protected List<Condition> con;
-	private boolean enabled;
-	protected final ItemStack result;
+	protected final NamespacedKey key;
+	protected ItemStack result;
+	protected ResultProcessor resultProcessor;
 
-	public Recipe(ItemStack result) {
-		this.result = result;
-		con = new ArrayList<Condition>(0);
+	public Recipe(NamespacedKey key) {
+		this.key = key;
 	}
 	
 	public List<Condition> getConditions() {
 		return con;
 	}
-
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(boolean value) {
-		enabled = value;
-	}
 	
 	public ItemStack getResult() {
-		return result.clone();
+		return result;
+	}
+	
+	public void setResult(ItemStack result) {
+		this.result = result;
+	}
+	
+	public ResultProcessor getResultProcessor() {
+		return resultProcessor;
+	}
+	
+	public void setResultProcessor(ResultProcessor resultProcessor) {
+		this.resultProcessor = resultProcessor;
 	}
 	
 	public static Recipe getByName(String readStringTag) {
@@ -38,8 +43,11 @@ public class Recipe {
 		return null;
 	}
 
-	public String getNamespacedName() {
-		// TODO Auto-generated method stub
-		return null;
+	@Override
+	public NamespacedKey getNamespacedKey() {
+		return key;
 	}
+	
+	public abstract RecipeType getType();
+	
 }

@@ -2,9 +2,7 @@ package de.atlasmc.recipe;
 
 public interface RecipeBook {
 	
-	public BookType getCurrentType();
-	
-	public void setCurrentType(BookType type);
+	public BookType getType();
 	
 	public boolean isOpen();
 	
@@ -13,9 +11,5 @@ public interface RecipeBook {
 	public boolean hasFilter();
 	
 	public void setFilter(boolean filter);
-	
-	public Recipe getDisplayedRecipe();
-	
-	public void setDisplayedRecipe(Recipe recipe);
 
 }

@@ -3,32 +3,33 @@ package de.atlasmc.recipe;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.recipe.condition.Condition;
+import de.atlasmc.NamespacedKey;
 
 public class ShapelessRecipe extends Recipe {
 
-	public ShapelessRecipe(String key, ItemStack result) {
-		super(result);
-		con = new ArrayList<Condition>(0);
+	private List<Ingredient> ingredients;
+	
+	public ShapelessRecipe(NamespacedKey key) {
+		super(key);
 	}
 	
-	private List<Condition> con;
-	private boolean enabled;
-
-	@Override
-	public List<Condition> getConditions() {
-		return con;
+	public List<Ingredient> getIngredients() {
+		if (ingredients == null)
+			ingredients = new ArrayList<Ingredient>(1);
+		return ingredients;
+	}
+	
+	public void addIngredient(Ingredient ingredient) {
+		this.ingredients.add(ingredient);
+	}
+	
+	public void setIngredients(List<Ingredient> ingredients) {
+		this.ingredients = ingredients;
 	}
 
 	@Override
-	public boolean isEnabled() {
-		return enabled;
+	public RecipeType getType() {
+		return RecipeType.CRAFTING_SHAPELESS;
 	}
-
-	@Override
-	public void setEnabled(boolean value) {
-		enabled = value;
-	}
-
+	
 }

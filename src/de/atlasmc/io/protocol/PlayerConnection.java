@@ -1,5 +1,8 @@
 package de.atlasmc.io.protocol;
 
+import java.util.Collection;
+import java.util.List;
+
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.atlasnetwork.AtlasNode;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
@@ -7,6 +10,9 @@ import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.chat.ChatType;
 import de.atlasmc.entity.Player;
 import de.atlasmc.io.Packet;
+import de.atlasmc.recipe.BookType;
+import de.atlasmc.recipe.Recipe;
+import de.atlasmc.recipe.RecipeBook;
 import de.atlasmc.util.annotation.ThreadSafe;
 
 public interface PlayerConnection extends PacketListenerPlayIn {
@@ -103,5 +109,47 @@ public interface PlayerConnection extends PacketListenerPlayIn {
 	 * @return location
 	 */
 	public SimpleLocation acceptClientLocation();
+	
+	/**
+	 * Returns all {@link RecipeBook}s of this player
+	 * @return list of recipe books
+	 */
+	public List<RecipeBook> getRecipeBooks();
+	
+	/**
+	 * Returns the {@link RecipeBook} represented by the type
+	 * @param type
+	 * @return book
+	 */
+	public RecipeBook getRecipeBook(BookType type);
+	
+	/**
+	 * Unlock the given recipes. If the recipe isn't present it will be added to the player
+	 * @param whether or not the player should receive a unlock notification
+	 * @param recipes
+	 */
+	public void unlockRecipes(boolean notify, Recipe... recipes);
+	
+	/**
+	 * Locks the given recipes in the player's {@link RecipeBook} but it is still can be used
+	 * @param recipes
+	 */
+	public void lockRecipes(Recipe... recipes);
+	
+	/**
+	 * Removes recipes from players access
+	 * @param recipes
+	 */
+	public void removeRecipes(Recipe... recipes);
+	
+	/**
+	 * Adds recipes to players access
+	 * @param recipes
+	 */
+	public void addRecipes(Recipe... recipes);
+	
+	public Collection<Recipe> getUnlockedRecipes();
+	
+	public Collection<Recipe> getAvailableRecipes();
 
 }

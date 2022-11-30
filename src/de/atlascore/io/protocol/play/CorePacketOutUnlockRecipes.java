@@ -1,8 +1,11 @@
 package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.play.PacketOutUnlockRecipes;
 import io.netty.buffer.ByteBuf;
@@ -12,41 +15,10 @@ public class CorePacketOutUnlockRecipes extends AbstractPacket implements Packet
 	private int action;
 	private boolean craftingOpen, craftingFilter, smeltingOpen, smeltingFilter, 
 					blastFurnaceOpen, blastFurnaceFilter, smokerOpen, smokerFilter;
-	private String[] recipes1, recipes2;
+	private List<NamespacedKey> tagged, untagged;
 	
 	public CorePacketOutUnlockRecipes() {
 		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	/**
-	 * 
-	 * @param action
-	 * @param craftingOpen
-	 * @param craftingFilter
-	 * @param smeltingOpen
-	 * @param smeltingFilter
-	 * @param blastFurnaceOpen
-	 * @param blastFurnaceFilter
-	 * @param smokerOpen
-	 * @param smokerFilter
-	 * @param recipes1
-	 * @param recipes2 will be ignored in case of {@link RecipesAction} ADD and REMOVE
-	 */
-	public CorePacketOutUnlockRecipes(RecipesAction action, boolean craftingOpen, boolean craftingFilter,
-			boolean smeltingOpen, boolean smeltingFilter, boolean blastFurnaceOpen, boolean blastFurnaceFilter,
-			boolean smokerOpen, boolean smokerFilter, String[] recipes1, String[] recipes2) {
-		this();
-		this.action = action.getID();
-		this.craftingOpen = craftingOpen;
-		this.craftingFilter = craftingFilter;
-		this.smeltingOpen = smeltingOpen;
-		this.smeltingFilter = smeltingFilter;
-		this.blastFurnaceOpen = blastFurnaceOpen;
-		this.blastFurnaceFilter = blastFurnaceFilter;
-		this.smokerOpen = smokerOpen;
-		this.smokerFilter = smokerFilter;
-		this.recipes1 = recipes1;
-		this.recipes2 = recipes2;
 	}
 
 	@Override
@@ -61,15 +33,15 @@ public class CorePacketOutUnlockRecipes extends AbstractPacket implements Packet
 		smokerOpen = in.readBoolean();
 		smokerFilter = in.readBoolean();
 		int size = readVarInt(in);
-		recipes1 = new String[size];
+		tagged = new ArrayList<>(size);
 		for (int i = 0; i < size; i++) {
-			recipes1[i] = readString(in);
+			tagged.add(i, new NamespacedKey(readString(in)));
 		}
 		if (action == 0) return;
 		size = readVarInt(in);
-		recipes2 = new String[size];
+		untagged = new ArrayList<>(size);
 		for (int i = 0; i < size; i++) {
-			recipes2[i] = readString(in);
+			untagged.add(i, new NamespacedKey(readString(in)));
 		}
 	}
 
@@ -84,15 +56,134 @@ public class CorePacketOutUnlockRecipes extends AbstractPacket implements Packet
 		out.writeBoolean(blastFurnaceFilter);
 		out.writeBoolean(smokerOpen);
 		out.writeBoolean(smokerFilter);
-		writeVarInt(recipes1.length, out);
-		for (String s : recipes1) {
-			writeString(s, out);
+		if (tagged == null) {
+			writeVarInt(0, out);
+		} else {
+			writeVarInt(tagged.size(), out);
+			for (NamespacedKey key : tagged) {
+				writeString(key.toString(), out);
+			}
 		}
-		if (action == 0) return;
-		writeVarInt(recipes2.length, out);
-		for (String s : recipes2) {
-			writeString(s, out);
+		if (action == 0) 
+			return;
+		if (untagged == null) {
+			writeVarInt(0, out);
+			return;
 		}
+		writeVarInt(untagged.size(), out);
+		for (NamespacedKey key : untagged) {
+			writeString(key.toString(), out);
+		}
+	}
+
+	@Override
+	public RecipesAction getAction() {
+		return RecipesAction.getByID(action);
+	}
+
+	@Override
+	public List<NamespacedKey> getTagged() {
+		return tagged;
+	}
+
+	@Override
+	public List<NamespacedKey> getUntagged() {
+		return untagged;
+	}
+
+	@Override
+	public void setTagged(List<NamespacedKey> tagged) {
+		this.tagged = tagged;
+	}
+
+	@Override
+	public void setUntagged(List<NamespacedKey> untagged) {
+		this.untagged = untagged;
+	}
+
+	@Override
+	public void setAction(RecipesAction action) {
+		this.action = action.getID();
+	}
+
+	@Override
+	public boolean isCraftingBookOpen() {
+		return craftingOpen;
+	}
+
+	@Override
+	public boolean isCraftingBookFiltered() {
+		return craftingFilter;
+	}
+
+	@Override
+	public boolean isSmeltingBookOpen() {
+		return smeltingOpen;
+	}
+
+	@Override
+	public boolean isSmeltingBookFiltered() {
+		return smeltingFilter;
+	}
+
+	@Override
+	public boolean isBlastingBookOpen() {
+		return blastFurnaceOpen;
+	}
+	
+	@Override
+	public boolean isBlastingBookFiltered() {
+		return blastFurnaceFilter;
+	}
+
+	@Override
+	public boolean isSmokingBookOpen() {
+		return smokerOpen;
+	}
+
+	@Override
+	public boolean isSmokingBookFilered() {
+		return smokerFilter;
+	}
+
+	@Override
+	public void setCraftingBookOpen(boolean open) {
+		this.craftingOpen = open;
+	}
+
+	@Override
+	public void setCraftingBookFiltered(boolean filtered) {
+		this.craftingFilter = filtered;
+	}
+
+	@Override
+	public void setSmeltingBookOpen(boolean open) {
+		this.smeltingOpen = open;
+	}
+
+	@Override
+	public void setSmeltingBookFiltered(boolean filtered) {
+		this.smeltingFilter = filtered;
+	}
+
+	@Override
+	public void setBlastingBookOpen(boolean open) {
+		this.blastFurnaceOpen = open;
+	}
+
+	@Override
+	public void setBlastingBookFiltered(boolean filtered) {
+		this.blastFurnaceFilter = filtered;
+	}
+
+	@Override
+	public void setSmokingBookOpen(boolean open) {
+		this.smokerOpen = open;
+	}
+
+	@Override
+	public void setSmokingBookFiltered(boolean filtered) {
+		this.smokerFilter = filtered;
 	}
 
 }

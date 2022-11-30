@@ -11,6 +11,8 @@ public interface PacketOutDeclareRecipes extends PacketPlay, PacketOutbound {
 	
 	public List<Recipe> getRecipes();
 	
+	public void setRecipes(List<Recipe> recipes);
+	
 	@Override
 	public default int getDefaultID() {
 		return 0x5A;

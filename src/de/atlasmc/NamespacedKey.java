@@ -8,6 +8,17 @@ public class NamespacedKey {
 	
 	private final String name, namespace, combination;
 	
+	public NamespacedKey(String namespacedKey) {
+		if (namespacedKey == null)
+			throw new IllegalArgumentException("NamespacedKey can not be null!");
+		int first = namespacedKey.indexOf(':');
+		if (first < 1)
+			throw new IllegalArgumentException("Illegal NamespacedKey: " + namespacedKey);
+		namespace = namespacedKey.substring(0, first);
+		name = namespacedKey.substring(first);
+		this.combination = namespacedKey;
+	}
+	
 	public NamespacedKey(String namespace, String name) {
 		if (namespace == null) 
 			throw new IllegalArgumentException("Namespace can not be null!");
@@ -15,7 +26,7 @@ public class NamespacedKey {
 			throw new IllegalArgumentException("Name can not be null!");
 		this.name = name;
 		this.namespace = namespace;
-		this.combination = namespace + "+" + name;
+		this.combination = namespace + ":" + name;
 	}
 	
 	public String getName() {
