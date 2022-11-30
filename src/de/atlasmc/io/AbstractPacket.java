@@ -13,7 +13,10 @@ public abstract class AbstractPacket implements Packet {
 	private final int id, version;
 	private boolean cancelled;
 	private long timestamp;
-	public static final int MAX_PACKET_LENGTH = 2097151;
+	
+	public static final int 
+		MAX_PACKET_LENGTH = 2097151,
+		CHAT_MAX_LENGTH = 262144;
 	
 	/**
 	 * 
@@ -162,15 +165,26 @@ public abstract class AbstractPacket implements Packet {
 	
 	public static String readString(ByteBuf in, int maxLength) {
 		int len = readVarInt(in);
-		if (len == 0) return null;
-		if (len > maxLength) throw new IllegalArgumentException("Invalid String length:" + len + " expected: " + maxLength);
+		if (len == 0) 
+			return null;
+		if (len > maxLength) 
+			throw new IllegalArgumentException("Invalid String length:" + len + " expected: " + maxLength);
 		byte[] buffer = new byte[len];
 		in.readBytes(buffer);
 		return new String(buffer);
 	}
 	
+	/**
+	 * Writes a String prefixed with a varint indicating the length of the following byte array.
+	 * @implNote if the String is null a string with length of 0 will be written
+	 * @param value the String to write
+	 * @param out the buffer the data should be written too
+	 */
 	public static void writeString(String value, ByteBuf out) {
-		if (value == null) writeVarInt(0, out);
+		if (value == null)  {
+			writeVarInt(0, out);
+			return;
+		}
 		byte[] buffer = value.getBytes();
 		writeVarInt(buffer.length, out);
 		out.writeBytes(buffer);
@@ -183,13 +197,15 @@ public abstract class AbstractPacket implements Packet {
 	 */
 	public static ItemStack readSlot(ByteBuf in) throws IOException {
 		boolean present = in.readBoolean();
-		if (!present) return null;
+		if (!present) 
+			return null;
 		int itemID = readVarInt(in);
 		byte amount = in.readByte();
 		Material mat = Material.getByItemID(itemID);
 		ItemStack item = new ItemStack(mat, amount);
 		byte comp = in.readByte();
-		if (comp == 0) return item;
+		if (comp == 0) 
+			return item;
 		NBTNIOReader reader = new NBTNIOReader(in);
 		item.getItemMeta().fromNBT(reader);
 		reader.close();
@@ -197,19 +213,21 @@ public abstract class AbstractPacket implements Packet {
 	}
 	
 	/**
-	 * 
+	 * Reads a Slot to ItemStack using a existing {@link NBTNIOReader}
 	 * @param in
 	 * @return a ItemStack or null if empty
 	 */
 	public static ItemStack readSlot(ByteBuf in, NBTNIOReader reader) throws IOException {
 		boolean present = in.readBoolean();
-		if (!present) return null;
+		if (!present) 
+			return null;
 		int itemID = readVarInt(in);
 		byte amount = in.readByte();
 		Material mat = Material.getByItemID(itemID);
 		ItemStack item = new ItemStack(mat, amount);
 		byte comp = in.readByte();
-		if (comp == 0) return item;
+		if (comp == 0) 
+			return item;
 		item.getItemMeta().fromNBT(reader);
 		return item;
 	}
@@ -222,7 +240,8 @@ public abstract class AbstractPacket implements Packet {
 		out.writeBoolean(true);
 		writeVarInt(item.getType().getItemID(), out);
 		out.writeByte(item.getAmount());
-		if (!item.hasItemMeta()) out.writeByte(0);
+		if (!item.hasItemMeta())
+			out.writeByte(0);
 		else {
 			NBTNIOWriter writer = new NBTNIOWriter(out);
 			writer.writeCompoundTag(null);
@@ -232,6 +251,13 @@ public abstract class AbstractPacket implements Packet {
 		}
 	}
 	
+	/**
+	 * Writes a ItemStack as Slot using a existing {@link NBTNIOWriter}
+	 * @param item
+	 * @param out
+	 * @param writer
+	 * @throws IOException
+	 */
 	public static void writeSlot(ItemStack item, ByteBuf out, NBTNIOWriter writer) throws IOException {
 		if (item == null) {
 			out.writeBoolean(false);
@@ -240,7 +266,8 @@ public abstract class AbstractPacket implements Packet {
 		out.writeBoolean(true);
 		writeVarInt(item.getType().getItemID(), out);
 		out.writeByte(item.getAmount());
-		if (!item.hasItemMeta()) out.writeByte(0);
+		if (!item.hasItemMeta()) 
+			out.writeByte(0);
 		else {
 			writer.writeCompoundTag(null);
 			item.getItemMeta().toNBT(writer, false);
