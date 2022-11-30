@@ -9,6 +9,7 @@ import java.util.List;
 import de.atlasmc.Atlas;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
+import de.atlasmc.log.Logger;
 import de.atlasmc.util.ConcurrentLinkedList;
 import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
 import de.atlasmc.util.annotation.NotNull;
@@ -51,6 +52,19 @@ public class HandlerList {
 	 */
 	public EventExecutor getDefaultExecutor() {
 		return defaultExecutor;
+	}
+	
+	/**
+	 * Fires the Event for the Default event executor
+	 * @param event
+	 * @param log the logger error should be send to
+	 */
+	protected void fireDefaultExecutor(Event event, Logger log) {
+		try {
+			defaultExecutor.fireEvent(event);
+		} catch (Exception ex) {
+			log.fatal(new EventException("Error while event handly with default handler for: " + event.getName(), ex));
+		}
 	}
 	
 	/**
@@ -156,18 +170,16 @@ public class HandlerList {
 			return;
 		}
 		boolean defaultHandler = false;
-		try {
-			for (EventExecutor exe : globalExecutors){
-				if (exe.getPriority() == EventPriority.MONITOR && !defaultHandler) {
-					defaultHandler = true;
-					getDefaultExecutor().fireEvent(event);
-				}
-				exe.fireEvent(event);
+		for (EventExecutor exe : globalExecutors){
+			if (exe.getPriority() == EventPriority.MONITOR && !defaultHandler) {
+				defaultHandler = true;
+				fireDefaultExecutor(event, Atlas.getLogger());
 			}
-		} catch (Exception ex) {
-			Atlas.getLogger().error(new EventException("Error while event handling for: " + event.getName(), ex));
-			if (!defaultHandler)
-				getDefaultExecutor().fireEvent(event);
+			try {
+				exe.fireEvent(event);
+			} catch (Exception ex) {
+				Atlas.getLogger().error(new EventException("Error while event handling for: " + event.getName(), ex));
+			}
 		}
 	}
 	
@@ -176,16 +188,24 @@ public class HandlerList {
 	 * @param executors
 	 * @param priority
 	 * @param event event
+	 * @param log the logger all error should be send to
 	 * @param cancellable whether or not the event extends {@link Cancellable}
 	 */
-	protected static void fireEvents(final LinkedListIterator<EventExecutor> executors, final EventPriority priority, final Event event, final boolean cancellable) {
-		if (executors == null || !executors.hasNext()) return;
+	protected static void fireEvents(final LinkedListIterator<EventExecutor> executors, final EventPriority priority, final Event event, final boolean cancellable, Logger log) {
+		if (executors == null || !executors.hasNext()) 
+			return;
 		final int prio = priority.ordinal();
 		for (EventExecutor exe = executors.peekNext(); exe != null; exe = executors.peekNext()) {
-			if (exe.getPriority().ordinal() > prio) break;
+			if (exe.getPriority().ordinal() > prio) 
+				break;
 			executors.gotoPeeked();
-			if (exe.getIgnoreCancelled() && (cancellable ? false : ((Cancellable) event).isCancelled())) continue;
-			exe.fireEvent(event);
+			if (exe.getIgnoreCancelled() && (cancellable ? false : ((Cancellable) event).isCancelled())) 
+				continue;
+			try {
+				exe.fireEvent(event);
+			} catch (Exception ex) {
+				log.error(new EventException("Error while event handling for: " + event.getName(), ex));
+			}
 		}
 	}
 	

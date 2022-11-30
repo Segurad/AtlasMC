@@ -2,6 +2,7 @@ package de.atlasmc.event;
 
 import java.util.Iterator;
 import de.atlasmc.atlasnetwork.proxy.LocalProxy;
+import de.atlasmc.log.Logger;
 import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.map.ConcurrentLinkedListMultimap;
@@ -46,24 +47,18 @@ public class ProxyHandlerList extends HandlerList {
 	protected void callEvent(Event event, boolean cancelled) {
 		@SuppressWarnings("unchecked")
 		final LocalProxy proxy = ((GenericEvent<LocalProxy, ?>) event).getEventSource();
-		boolean defaultHandler = false;
-		try {
-			final LinkedListIterator<EventExecutor> proxyexes = getExecutors(proxy);
-			final LinkedListIterator<EventExecutor> globalexes = getExecutors();
-			if ((proxyexes != null && proxyexes.hasNext()) || globalexes.hasNext()) {
-				for (EventPriority prio : EventPriority.values()) {
-					if (prio == EventPriority.MONITOR) getDefaultExecutor().fireEvent(event);
-					fireEvents(proxyexes, prio, event, cancelled);
-					fireEvents(globalexes, prio, event, cancelled);
-				}
-			} else {
-				getDefaultExecutor().fireEvent(event);
-				defaultHandler = true;
+		final Logger log = proxy.getLogger();
+		final LinkedListIterator<EventExecutor> proxyexes = getExecutors(proxy);
+		final LinkedListIterator<EventExecutor> globalexes = getExecutors();
+		if ((proxyexes != null && proxyexes.hasNext()) || globalexes.hasNext()) {
+			for (EventPriority prio : EventPriority.getValues()) {
+				if (prio == EventPriority.MONITOR) 
+					fireDefaultExecutor(event, log);
+				fireEvents(proxyexes, prio, event, cancelled, log);
+				fireEvents(globalexes, prio, event, cancelled, log);
 			}
-		} catch (Exception ex) {
-			proxy.getLogger().error(new EventException("Error while event handling for: " + event.getName(), ex));
-			if (!defaultHandler)
-				getDefaultExecutor().fireEvent(event);
+		} else {
+			fireDefaultExecutor(event, log);
 		}
 	}
 	

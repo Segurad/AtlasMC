@@ -3,6 +3,7 @@ package de.atlasmc.event;
 import java.util.Iterator;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
+import de.atlasmc.log.Logger;
 import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.map.ConcurrentLinkedListMultimap;
@@ -71,30 +72,24 @@ public class ServerHandlerList extends HandlerList {
 	protected void callEvent(Event event, boolean cancelled) {
 		@SuppressWarnings("unchecked")
 		final LocalServer server = ((GenericEvent<LocalServer, ?>) event).getEventSource();
-		boolean defaultHandler = false;
+		final Logger log = server.getLogger();
 		if (!server.isServerThread() && !event.isAsynchronous()) 
 			throw new EventException("Tryed to call ServerEvent async: " + event.getName());
-		try {
-			final LinkedListIterator<EventExecutor> groupexes = getExecutors(server.getGroup());
-			final LinkedListIterator<EventExecutor> serverexes = getExecutors(server);
-			final LinkedListIterator<EventExecutor> globalexes = getExecutors();
-			if ((groupexes != null && groupexes.hasNext()) || 
-					(serverexes != null && serverexes.hasNext()) || 
-					globalexes.hasNext()) {
-				for (EventPriority prio : EventPriority.values()) {
-					if (prio == EventPriority.MONITOR) getDefaultExecutor().fireEvent(event);
-					fireEvents(serverexes, prio, event, cancelled);
-					fireEvents(groupexes, prio, event, cancelled);
-					fireEvents(globalexes, prio, event, cancelled);
-				}
-			} else {
-				getDefaultExecutor().fireEvent(event);
-				defaultHandler = true;
+		final LinkedListIterator<EventExecutor> groupexes = getExecutors(server.getGroup());
+		final LinkedListIterator<EventExecutor> serverexes = getExecutors(server);
+		final LinkedListIterator<EventExecutor> globalexes = getExecutors();
+		if ((groupexes != null && groupexes.hasNext()) || 
+				(serverexes != null && serverexes.hasNext()) || 
+				globalexes.hasNext()) {
+			for (EventPriority prio : EventPriority.values()) {
+				if (prio == EventPriority.MONITOR)
+					fireDefaultExecutor(event, log);
+				fireEvents(serverexes, prio, event, cancelled, log);
+				fireEvents(groupexes, prio, event, cancelled, log);
+				fireEvents(globalexes, prio, event, cancelled, log);
 			}
-		} catch (Exception ex) {
-			server.getLogger().error(new EventException("Error while event handling for: " + event.getName(), ex));
-			if (!defaultHandler)
-				getDefaultExecutor().fireEvent(event);
+		} else {
+			fireDefaultExecutor(event, log);
 		}
 	}
 	
