@@ -5,24 +5,23 @@ final class CoreAsyncTaskWorker extends Thread {
 	private volatile CoreRegisteredTask task;
 	private volatile long lastActiv;
 	private final CoreSchedulerThread master;
-	private volatile boolean running;
+	private volatile boolean running = true;
 	
 	/**
-	 * Creates a new TaskWorker which will automatically start
+	 * Creates a new TaskWorker
 	 */
 	CoreAsyncTaskWorker(CoreSchedulerThread master) {
 		this(master, null);
 	}
 	
 	/**
-	 * Creates a new TaskWorker which will automatically start
+	 * Creates a new TaskWorker
 	 * @param task
 	 */
 	CoreAsyncTaskWorker(CoreSchedulerThread master, CoreRegisteredTask task) {
 		this.task = task;
 		this.master = master;
 		setDaemon(true);
-		start();
 	}
 	
 	@Override
@@ -61,12 +60,18 @@ final class CoreAsyncTaskWorker extends Thread {
 	
 	public synchronized void shutdown() {
 		running = false;
-		if (task == null) notify();
+		if (task == null) 
+			notify();
 	}
 	
 	private synchronized void awaitTask() {
+		CoreRegisteredTask task = master.fetchTask();
+		if (task != null) {
+			this.task = task;
+			return;
+		}
+		master.restoreWorker(this);
 		try {
-			master.restoreWorker(this);
 			wait();
 		} catch (InterruptedException e) {
 			e.printStackTrace();

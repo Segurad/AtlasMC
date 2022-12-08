@@ -1,7 +1,5 @@
 package de.atlascore.scheduler;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import de.atlasmc.scheduler.AtlasTask;
 import de.atlasmc.scheduler.Scheduler;
 import de.atlasmc.util.ConcurrentLinkedList;
@@ -12,7 +10,6 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 
 	protected final ConcurrentLinkedList<CoreRegisteredTask> asyncTasks;
 	protected final ConcurrentLinkedList<CoreRegisteredTask> syncTasks;
-	protected final ConcurrentLinkedQueue<Runnable> nextSyncTask;
 	private final ConcurrentLinkedList<Scheduler> children;
 	protected final LinkedListIterator<CoreRegisteredTask> asyncIt;
 	protected final LinkedListIterator<CoreRegisteredTask> syncIt;
@@ -23,7 +20,6 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 	private volatile boolean dead;
 	
 	public CoreAbstractScheduler() {
-		this.nextSyncTask = new ConcurrentLinkedQueue<>();
 		this.syncTasks = new ConcurrentLinkedList<>();
 		this.asyncTasks = new ConcurrentLinkedList<>();
 		this.children = new ConcurrentLinkedList<>();
@@ -33,12 +29,12 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 	
 	@Override
 	public void runSyncTask(AtlasTask task) {
-		addSyncTaskNext(task);
+		runSyncTaskLater(task, 0);
 	}
 	
 	@Override
 	public void runSyncTask(Runnable task) {
-		addSyncTaskNext(task);
+		runSyncTaskLater(new CoreAtlasTaskWrapper(task), 0);
 	}
 
 	@Override
@@ -91,14 +87,6 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 	protected void addAsyncTask(CoreRegisteredTask task) {
 		asyncTasks.add(task);
 	}
-
-	/**
-	 * Adds a task for the next sync execution to this Scheduler
-	 * @param task
-	 */
-	protected void addSyncTaskNext(Runnable task) {
-		nextSyncTask.add(task);
-	}
 	
 	@Override
 	public synchronized void shutdown() {
@@ -117,15 +105,15 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 			task.getTask().notifiyShutdown();
 		}
 		syncTasks.clear();
-		nextSyncTask.clear();
 	}
 	
 	@Override
 	public void runNextTasks() {
 		if (dead)
 			return;
-		for (Runnable task = nextSyncTask.poll(); task != null; task = nextSyncTask.poll()) {
-			task.run();
+		for (CoreRegisteredTask task = syncIt.gotoHead(); task != null; syncIt.next()) {
+			if (tickSyncTask(task))
+				syncIt.remove();
 		}
 	}
 	
@@ -140,16 +128,12 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 	}
 	
 	/**
-	 * Ticks all tasks and execute them if they are executable
+	 * Ticks all async tasks and execute them if they are executable
 	 * @param master
 	 */
 	protected void tickTasks(CoreSchedulerThread master) {
 		if (dead)
 			return;
-		for (CoreRegisteredTask task = syncIt.gotoHead(); task != null; syncIt.next()) {
-			if (tickSyncTask(task))
-				syncIt.remove();
-		}
 		for (CoreRegisteredTask task = asyncIt.gotoHead(); task != null; asyncIt.next()) {
 			if (tickAsyncTask(master, task))
 				asyncIt.remove();
@@ -168,7 +152,7 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 	private boolean tickSyncTask(CoreRegisteredTask task) {
 		task.tick();
 		if (task.isRunnable())
-			nextSyncTask.add(task.getTask());
+			task.getTask().run();
 		return task.isDead();
 	}
 	
