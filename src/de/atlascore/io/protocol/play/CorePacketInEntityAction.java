@@ -2,48 +2,32 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInEntityAction;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInEntityAction extends AbstractPacket implements PacketInEntityAction {
-
-	public CorePacketInEntityAction() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-
-	private int entityID;
-	private int actionID;
-	private int jumpboost;
+public class CorePacketInEntityAction extends CoreAbstractHandler<PacketInEntityAction> {
 	
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		entityID = readVarInt(in);
-		actionID = readVarInt(in);
-		jumpboost = readVarInt(in);
+	public void read(PacketInEntityAction packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		packet.setEntityID(readVarInt(in));
+		packet.setActionID(readVarInt(in));
+		packet.setJumpboost(readVarInt(in));
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(entityID, out);
-		writeVarInt(actionID, out);
-		writeVarInt(jumpboost, out);
+	public void write(PacketInEntityAction packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		writeVarInt(packet.getEntityID(), out);
+		writeVarInt(packet.getActionID(), out);
+		writeVarInt(packet.getJumpboost(), out);
 	}
 
 	@Override
-	public int getEntityID() {
-		return entityID;
+	public PacketInEntityAction createPacketData() {
+		return new PacketInEntityAction();
 	}
-
-	@Override
-	public int getActionID() {
-		return actionID;
-	}
-
-	@Override
-	public int getJumpBoost() {
-		return jumpboost;
-	}
-
+	
 }

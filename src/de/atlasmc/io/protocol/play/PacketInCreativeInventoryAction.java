@@ -1,17 +1,33 @@
 package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketPlay.IN_CREATIVE_INVENTORY_ACTION)
-public interface PacketInCreativeInventoryAction extends PacketPlay, PacketInbound {
+public class PacketInCreativeInventoryAction extends AbstractPacket implements PacketPlayIn {
 	
-	public short getSlot();
-	public ItemStack getClickedItem();
+	private int slot;
+	private ItemStack clickedItem;
+	
+	public int getSlot() {
+		return slot;
+	}
+	
+	public void setSlot(int slot) {
+		this.slot = slot;
+	}
+	
+	public ItemStack getClickedItem() {
+		return clickedItem;
+	}
+	
+	public void setClickedItem(ItemStack clickedItem) {
+		this.clickedItem = clickedItem;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_CREATIVE_INVENTORY_ACTION;
 	}
 

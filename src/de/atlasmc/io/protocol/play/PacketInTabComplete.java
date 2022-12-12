@@ -1,16 +1,32 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketPlay.IN_TAB_COMPLETE)
-public interface PacketInTabComplete extends PacketPlay, PacketInbound {
+public class PacketInTabComplete extends AbstractPacket implements PacketPlayIn {
 
-	public int getTransactionID();
-	public String getText();
+	private int transactionID;
+	private String text;
+	
+	public int getTransactionID() {
+		return transactionID;
+	}
+	
+	public void setTransactionID(int transactionID) {
+		this.transactionID = transactionID;
+	}
+	
+	public String getText() {
+		return text;
+	}
+	
+	public void setText(String text) {
+		this.text = text;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_TAB_COMPLETE;
 	}
 	

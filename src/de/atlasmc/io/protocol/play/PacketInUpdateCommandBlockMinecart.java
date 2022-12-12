@@ -1,17 +1,41 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketPlay.IN_UPDATE_COMMAND_BLOCK_MINECART)
-public interface PacketInUpdateCommandBlockMinecart extends PacketPlay, PacketInbound {
+public class PacketInUpdateCommandBlockMinecart extends AbstractPacket implements PacketPlayIn {
 	
-	public int getEntityID();
-	public String getCommand();
-	public boolean getTrackOutput();
+	private int entityID;
+	private String command;
+	private boolean trackOutput;
+	
+	public int getEntityID() {
+		return entityID;
+	}
+	
+	public void setEntityID(int entityID) {
+		this.entityID = entityID;
+	}
+	
+	public String getCommand() {
+		return command;
+	}
+	
+	public void setCommand(String command) {
+		this.command = command;
+	}
+	
+	public boolean getTrackOutput() {
+		return trackOutput;
+	}
+	
+	public void setTrackOutput(boolean trackOutput) {
+		this.trackOutput = trackOutput;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_UPDATE_COMMAND_BLOCK_MINECART;
 	}
 

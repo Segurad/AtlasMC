@@ -1,18 +1,28 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketPlay.IN_PLAYER_ABILITIES)
-public interface PacketInPlayerAbilities extends PacketPlay, PacketInbound {
+public class PacketInPlayerAbilities extends AbstractPacket implements PacketPlayIn {
 	
-	public byte getFlags();
+	private int flags;
+	
+	public int getFlags() {
+		return flags;
+	}
+	
+	public void setFlags(int flags) {
+		this.flags = flags;
+	}
+	
+	public boolean isFlying() {
+		return (flags & 0x02) == 0x02;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_PLAYER_ABILITIES;
 	}
-
-	public boolean isFlying();
 
 }

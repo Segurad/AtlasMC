@@ -1,17 +1,41 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketPlay.IN_CRAFT_RECIPE_REQUEST)
-public interface PacketInCraftRecipeRequest extends PacketPlay, PacketInbound {
+public class PacketInCraftRecipeRequest extends AbstractPacket implements PacketPlayIn {
 	
-	public byte getWindowID();
-	public String getRecipe();
-	public boolean getMakeAll();
+	private int windowID;
+	private String recipe;
+	private boolean makeAll;
+	
+	public int getWindowID() {
+		return windowID;
+	}
+	
+	public void setWindowID(int windowID) {
+		this.windowID = windowID;
+	}
+	
+	public String getRecipe() {
+		return recipe;
+	}
+	
+	public void setRecipe(String recipe) {
+		this.recipe = recipe;
+	}
+	
+	public boolean getMakeAll() {
+		return makeAll;
+	}
+	
+	public void setMakeAll(boolean makeAll) {
+		this.makeAll = makeAll;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_CRAFT_RECIPE_REQUEST;
 	}
 

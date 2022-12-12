@@ -2,32 +2,26 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInSetDifficulty;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInSetDifficulty extends AbstractPacket implements PacketInSetDifficulty {
-
-	public CorePacketInSetDifficulty() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-
-	private int dif;
+public class CorePacketInSetDifficulty extends CoreAbstractHandler<PacketInSetDifficulty> {
 	
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		dif = in.readByte();
+	public void read(PacketInSetDifficulty packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setDifficulty(in.readByte());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeByte(dif);
+	public void write(PacketInSetDifficulty packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		out.writeByte(packet.getDifficulty());
 	}
 
 	@Override
-	public int getDifficulty() {
-		return dif;
+	public PacketInSetDifficulty createPacketData() {
+		return new PacketInSetDifficulty();
 	}
 
 }

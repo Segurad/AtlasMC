@@ -2,32 +2,28 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInPickItem;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInPickItem extends AbstractPacket implements PacketInPickItem {
-
-	public CorePacketInPickItem() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-
-	private int slottouse;
+public class CorePacketInPickItem extends CoreAbstractHandler<PacketInPickItem> {
 	
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		slottouse = readVarInt(in);
+	public void read(PacketInPickItem packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		packet.setSlotToUse(readVarInt(in));
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(slottouse, out);
+	public void write(PacketInPickItem packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		writeVarInt(packet.getSlotToUse(), out);
 	}
 
 	@Override
-	public int getSlotToUse() {
-		return slottouse;
+	public PacketInPickItem createPacketData() {
+		return new PacketInPickItem();
 	}
-
+	
 }

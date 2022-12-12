@@ -1,15 +1,23 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketPlay.IN_CLOSE_WINDOW)
-public interface PacketInCloseWindow extends PacketPlay, PacketInbound {
+public class PacketInCloseWindow extends AbstractPacket implements PacketPlayIn {
 	
-	public byte getWindowID();
+	private int windowID;
+	
+	public int getWindowID() {
+		return windowID;
+	}
+	
+	public void setWindowID(int windowID) {
+		this.windowID = windowID;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_CLOSE_WINDOW;
 	}
 

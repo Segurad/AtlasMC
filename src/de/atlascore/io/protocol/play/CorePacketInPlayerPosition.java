@@ -2,62 +2,32 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.SimpleLocation;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInPlayerPosition;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInPlayerPosition extends AbstractPacket implements PacketInPlayerPosition {
+public class CorePacketInPlayerPosition extends CoreAbstractHandler<PacketInPlayerPosition> {
 
-	public CorePacketInPlayerPosition() {
-		super(CoreProtocolAdapter.VERSION);
+	@Override
+	public void read(PacketInPlayerPosition packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		packet.setX(in.readDouble());
+		packet.setFeetY(in.readDouble());
+		packet.setZ(in.readDouble());
+		packet.setOnGround(in.readBoolean());
+	}
+
+	@Override
+	public void write(PacketInPlayerPosition packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		out.writeDouble(packet.getX());
+		out.writeDouble(packet.getFeetY());
+		out.writeDouble(packet.getZ());
+		out.writeBoolean(packet.isOnGround());
 	}
 	
-	private double x,feety,z;
-	private boolean onGround;
-
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		x = in.readDouble();
-		feety = in.readDouble();
-		z = in.readDouble();
-		onGround = in.readBoolean();
+	public PacketInPlayerPosition createPacketData() {
+		return new PacketInPlayerPosition();
 	}
-
-	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeDouble(x);
-		out.writeDouble(feety);
-		out.writeDouble(z);
-		out.writeBoolean(onGround);
-	}
-
-	@Override
-	public double getX() {
-		return x;
-	}
-
-	@Override
-	public double getFeedY() {
-		return feety;
-	}
-
-	@Override
-	public double getZ() {
-		return z;
-	}
-
-	@Override
-	public boolean isOnGround() {
-		return onGround;
-	}
-
-	@Override
-	public void getLocation(SimpleLocation loc) {
-		loc.setLocation(x, feety, z);
-	}
-	
-	
 
 }

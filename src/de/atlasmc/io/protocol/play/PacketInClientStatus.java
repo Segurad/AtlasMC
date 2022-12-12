@@ -1,21 +1,33 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketPlay.IN_CLIENT_STATUS)
-public interface PacketInClientStatus extends PacketPlay, PacketInbound {
+public class PacketInClientStatus extends AbstractPacket implements PacketPlayIn {
 	
-	public StatusAction getAction();
+	private StatusAction action;
+	
+	public StatusAction getAction() {
+		return action;
+	}
+	
+	public void setAction(StatusAction action) {
+		this.action = action;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_CLIENT_STATUS;
 	}
 	
 	public static enum StatusAction {
 		RESPAWN,
 		STATS;
+		
+		public int getID() {
+			return ordinal();
+		}
 		
 		public static StatusAction getByID(int id) {
 			if (id == 0) {

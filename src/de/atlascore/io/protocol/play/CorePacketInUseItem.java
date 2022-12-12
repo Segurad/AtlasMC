@@ -2,33 +2,29 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlascore.io.CoreAbstractHandler;
 import de.atlasmc.inventory.EquipmentSlot;
-import de.atlasmc.io.AbstractPacket;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInUseItem;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInUseItem extends AbstractPacket implements PacketInUseItem {
+public class CorePacketInUseItem extends CoreAbstractHandler<PacketInUseItem> {
 
-	public CorePacketInUseItem() {
-		super(CoreProtocolAdapter.VERSION);
+	@Override
+	public void read(PacketInUseItem packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setHand(readVarInt(in) == 0 ? EquipmentSlot.HAND : EquipmentSlot.OFF_HAND);
+	}
+
+	@Override
+	public void write(PacketInUseItem packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.getHand() == EquipmentSlot.HAND ? 0 : 1, out);
 	}
 	
-	private int hand;
-
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		hand = readVarInt(in);
-	}
-
-	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(hand, out);
-	}
-
-	@Override
-	public EquipmentSlot getHand() {
-		return hand == 0 ? EquipmentSlot.HAND : EquipmentSlot.OFF_HAND;
+	public PacketInUseItem createPacketData() {
+		return new PacketInUseItem();
 	}
 
 }

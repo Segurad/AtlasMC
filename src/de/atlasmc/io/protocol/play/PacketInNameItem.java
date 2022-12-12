@@ -1,15 +1,24 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketPlay.IN_NAME_ITEM)
-public interface PacketInNameItem extends PacketPlay, PacketInbound {
+public class  PacketInNameItem extends AbstractPacket implements PacketPlayIn {
 	
-	public String getItemName();
+	private String itemName;
+	
+	public String getItemName() {
+		return itemName;
+	}
+	
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
 
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_NAME_ITEM;
 	}
 	

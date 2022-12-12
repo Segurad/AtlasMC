@@ -1,15 +1,24 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketPlay.IN_CHAT_MESSAGE)
-public interface PacketInChatMessage extends PacketPlay, PacketInbound {
+public class PacketInChatMessage extends AbstractPacket implements PacketPlayIn {
 
-	public String getMessage();
+	private String message;
+	
+	public String getMessage() {
+		return message;
+	}
+	
+	public void setMessage(String message) {
+		this.message = message;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_CHAT_MESSAGE;
 	}
+	
 }

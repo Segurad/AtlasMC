@@ -2,75 +2,36 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.SimpleLocation;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInPlayerPositionAndRotation;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInPlayerPositionAndRotation extends AbstractPacket implements PacketInPlayerPositionAndRotation {
+public class CorePacketInPlayerPositionAndRotation extends CoreAbstractHandler<PacketInPlayerPositionAndRotation> {
 
-	public CorePacketInPlayerPositionAndRotation() {
-		super(CoreProtocolAdapter.VERSION);	
-	}
-
-	private double x,feetY,z;
-	private float yaw,pitch;
-	private boolean onGround;
-	
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		x = in.readDouble();
-		feetY = in.readDouble();
-		z = in.readDouble();
-		yaw = in.readFloat();
-		pitch = in.readFloat();
-		onGround = in.readBoolean();
+	public void read(PacketInPlayerPositionAndRotation packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		packet.setX(in.readDouble());
+		packet.setFeetY(in.readDouble());
+		packet.setZ(in.readDouble());
+		packet.setYaw(in.readFloat());
+		packet.setPitch(in.readFloat());
+		packet.setOnGround(in.readBoolean());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeDouble(x);
-		out.writeDouble(feetY);
-		out.writeDouble(z);
-		out.writeFloat(yaw);
-		out.writeFloat(pitch);
-		out.writeBoolean(onGround);
+	public void write(PacketInPlayerPositionAndRotation packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		out.writeDouble(packet.getX());
+		out.writeDouble(packet.getFeetY());
+		out.writeDouble(packet.getZ());
+		out.writeFloat(packet.getYaw());
+		out.writeFloat(packet.getPitch());
+		out.writeBoolean(packet.isOnGround());
 	}
 
 	@Override
-	public double getX() {
-		return x;
-	}
-
-	@Override
-	public double getFeetY() {
-		return feetY;
-	}
-
-	@Override
-	public double getZ() {
-		return z;
-	}
-
-	@Override
-	public float getYaw() {
-		return yaw;
-	}
-
-	@Override
-	public float getPitch() {
-		return pitch;
-	}
-
-	@Override
-	public boolean isOnGround() {
-		return onGround;
-	}
-
-	@Override
-	public void getLocation(SimpleLocation loc) {
-		loc.setLocation(x, feetY, z, yaw, pitch);
+	public PacketInPlayerPositionAndRotation createPacketData() {
+		return new PacketInPlayerPositionAndRotation();
 	}
 	
 	

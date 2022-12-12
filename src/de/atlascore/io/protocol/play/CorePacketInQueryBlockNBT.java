@@ -2,40 +2,29 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInQueryBlockNBT;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInQueryBlockNBT extends AbstractPacket implements PacketInQueryBlockNBT {
-
-	public CorePacketInQueryBlockNBT() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-
-	private int transactionID;
-	private long loc;
+public class CorePacketInQueryBlockNBT extends CoreAbstractHandler<PacketInQueryBlockNBT> {
 	
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		transactionID = readVarInt(in);
-		loc = in.readLong();
+	public void read(PacketInQueryBlockNBT packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setTransactionID(readVarInt(in));
+		packet.setPosition(in.readLong());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(transactionID, out);
-		out.writeLong(loc);
+	public void write(PacketInQueryBlockNBT packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.getTransactionID(), out);
+		out.writeLong(packet.getPosition());
 	}
 
 	@Override
-	public int getTransactionID() {
-		return transactionID;
-	}
-
-	@Override
-	public long getLocation() {
-		return loc;
+	public PacketInQueryBlockNBT createPacketData() {
+		return new PacketInQueryBlockNBT();
 	}
 
 }

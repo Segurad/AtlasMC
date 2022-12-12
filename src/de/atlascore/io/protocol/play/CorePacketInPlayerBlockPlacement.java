@@ -2,79 +2,39 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.block.BlockFace;
+import de.atlascore.io.CoreAbstractHandler;
 import de.atlasmc.inventory.EquipmentSlot;
-import de.atlasmc.io.AbstractPacket;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInPlayerBlockPlacement;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInPlayerBlockPlacement extends AbstractPacket implements PacketInPlayerBlockPlacement {
-
-	public CorePacketInPlayerBlockPlacement() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	private int hand,face;
-	private long pos;
-	private float curposx,curposy,curposz;
-	private boolean insideblock;
+public class CorePacketInPlayerBlockPlacement extends CoreAbstractHandler<PacketInPlayerBlockPlacement> {
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		hand = readVarInt(in);
-		face = readVarInt(in);
-		pos = in.readLong();
-		curposx = in.readFloat();
-		curposy = in.readFloat();
-		curposz = in.readFloat();	
+	public void read(PacketInPlayerBlockPlacement packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		packet.setHand(readVarInt(in) == 0 ? EquipmentSlot.HAND : EquipmentSlot.OFF_HAND);
+		packet.setFace(CorePacketInPlayerDigging.FACES.get(readVarInt(in)));
+		packet.setPosition(in.readLong());
+		packet.setCursurPositionX(in.readFloat());
+		packet.setCursurPositionY(in.readFloat());
+		packet.setCursurPositionZ(in.readFloat());	
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(hand, out);
-		writeVarInt(face, out);
-		out.writeLong(pos);
-		out.writeFloat(curposx);
-		out.writeFloat(curposy);
-		out.writeFloat(curposz);
+	public void write(PacketInPlayerBlockPlacement packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		writeVarInt(packet.getHand() == EquipmentSlot.HAND ? 0 : 1, out);
+		writeVarInt(CorePacketInPlayerDigging.FACES.indexOf(packet.getFace()), out);
+		out.writeLong(packet.getPosition());
+		out.writeFloat(packet.getCursurPositionX());
+		out.writeFloat(packet.getCursurPositionY());
+		out.writeFloat(packet.getCursurPositionZ());
 	}
 
 	@Override
-	public EquipmentSlot getHand() {
-		return hand == 0 ? EquipmentSlot.HAND : EquipmentSlot.OFF_HAND;
-	}
-
-	@Override
-	public long getPosition() {
-		return pos;
-	}
-
-	@Override
-	public BlockFace getFace() {
-		if (face < 0 || face > 5)
-			return BlockFace.UP;
-		return CorePacketInPlayerDigging.faces[face];
-	}
-
-	@Override
-	public float getCursurPositionX() {
-		return curposx;
-	}
-
-	@Override
-	public float getCursurPositionY() {
-		return curposy;
-	}
-
-	@Override
-	public float getCursurPositionZ() {
-		return curposz;
-	}
-
-	@Override
-	public boolean isInsideblock() {
-		return insideblock;
+	public PacketInPlayerBlockPlacement createPacketData() {
+		return new PacketInPlayerBlockPlacement();
 	}
 
 }

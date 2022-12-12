@@ -2,32 +2,26 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInKeepAlive;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInKeepAlive extends AbstractPacket implements PacketInKeepAlive {
-
-	public CorePacketInKeepAlive() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	private long keepAliveID;
+public class CorePacketInKeepAlive extends CoreAbstractHandler<PacketInKeepAlive> {
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		keepAliveID = in.readLong();
+	public void read(PacketInKeepAlive packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		packet.setKeepAliveID(in.readLong());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeLong(keepAliveID);
+	public void write(PacketInKeepAlive packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		out.writeLong(packet.getKeepAliveID());
 	}
 
 	@Override
-	public long getKeepAliveID() {
-		return keepAliveID;
+	public PacketInKeepAlive createPacketData() {
+		return new PacketInKeepAlive();
 	}
 
 }

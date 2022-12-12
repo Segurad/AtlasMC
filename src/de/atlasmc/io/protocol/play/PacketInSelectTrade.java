@@ -1,15 +1,23 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketPlay.IN_SELECT_TRADE)
-public interface PacketInSelectTrade extends PacketPlay, PacketInbound {
+public class PacketInSelectTrade extends AbstractPacket implements PacketPlayIn {
 	
-	public int getSelectedSlot();
+	private int selectedSlot;
+	
+	public int getSelectedSlot() {
+		return selectedSlot;
+	}
+	
+	public void setSelectedSlot(int selectedSlot) {
+		this.selectedSlot = selectedSlot;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_SELECT_TRADE;
 	}
 

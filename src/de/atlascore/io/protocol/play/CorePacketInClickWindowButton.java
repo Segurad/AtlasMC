@@ -2,39 +2,28 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInClickWindowButton;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInClickWindowButton extends AbstractPacket implements PacketInClickWindowButton {
-
-	public CorePacketInClickWindowButton() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-
-	private byte windowID, buttonID;
+public class CorePacketInClickWindowButton extends CoreAbstractHandler<PacketInClickWindowButton> {
 	
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		windowID = in.readByte();
-		buttonID = in.readByte();
+	public void read(PacketInClickWindowButton packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		packet.setWindowID(in.readByte());
+		packet.setButtonID(in.readByte());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeByte(windowID);
-		out.writeByte(buttonID);
+	public void write(PacketInClickWindowButton packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		out.writeByte(packet.getWindowID());
+		out.writeByte(packet.getButtonID());
 	}
-
+	
 	@Override
-	public byte getWindowID() {
-		return windowID;
-	}
-
-	@Override
-	public byte getButtonID() {
-		return buttonID;
+	public PacketInClickWindowButton createPacketData() {
+		return new PacketInClickWindowButton();
 	}
 
 }

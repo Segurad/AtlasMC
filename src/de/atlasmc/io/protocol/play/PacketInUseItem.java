@@ -1,16 +1,24 @@
 package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.inventory.EquipmentSlot;
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketPlay.IN_USE_ITEM)
-public interface PacketInUseItem extends PacketPlay, PacketInbound {
+public class PacketInUseItem extends AbstractPacket implements PacketPlayIn {
 	
-	public EquipmentSlot getHand();
+	private EquipmentSlot hand;
+	
+	public EquipmentSlot getHand() {
+		return hand;
+	}
+	
+	public void setHand(EquipmentSlot hand) {
+		this.hand = hand;
+	}
 
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_USE_ITEM;
 	}
 	

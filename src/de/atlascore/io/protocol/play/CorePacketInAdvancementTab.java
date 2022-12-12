@@ -2,42 +2,31 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInAdvancementTab;
+import de.atlasmc.io.protocol.play.PacketInAdvancementTab.Action;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInAdvancementTab extends AbstractPacket implements PacketInAdvancementTab {
+public class CorePacketInAdvancementTab extends CoreAbstractHandler<PacketInAdvancementTab> {
 
-	public CorePacketInAdvancementTab() {
-		super(CoreProtocolAdapter.VERSION);
+	@Override
+	public void read(PacketInAdvancementTab packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		packet.setAction(Action.getByID(in.readInt()));
+		packet.setTabID(readString(in));
+	}
+
+	@Override
+	public void write(PacketInAdvancementTab packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		out.writeInt(packet.getAction().getID());
+		writeString(packet.getTabID(), out);
 	}
 	
-	private int action;
-	private String tabID;
-
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		action = in.readInt();
-		tabID = readString(in);
-	}
-
-	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeInt(action);
-		writeString(tabID, out);
-	}
-
-	@Override
-	public Action getAction() {
-		return action == 0 ? Action.OPEN : Action.CLOSE;
-	}
-
-	@Override
-	public String getTabID() {
-		return tabID;
+	public PacketInAdvancementTab createPacketData() {
+		return new PacketInAdvancementTab();
 	}
 	
-	
-
 }

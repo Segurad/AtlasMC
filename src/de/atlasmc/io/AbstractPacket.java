@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 
 public abstract class AbstractPacket implements Packet {
 
-	private final int id, version;
+	private final int id;
 	private boolean cancelled;
 	private long timestamp;
 	
@@ -23,9 +23,8 @@ public abstract class AbstractPacket implements Packet {
 	 * @param id the packets id
 	 * @param version the protocol version
 	 */
-	public AbstractPacket(int id, int version) {
+	public AbstractPacket(int id) {
 		this.id = id;
-		this.version = version;
 		this.cancelled = false;
 	}
 	
@@ -33,9 +32,8 @@ public abstract class AbstractPacket implements Packet {
 	 * Creates a new AbstractPacket with packet {@link #getDefaultID()}
 	 * @param version the protocol version
 	 */
-	public AbstractPacket(int version) {
+	public AbstractPacket() {
 		this.id = getDefaultID();
-		this.version = version;
 		this.cancelled = false;
 	}
 
@@ -47,11 +45,6 @@ public abstract class AbstractPacket implements Packet {
 	@Override
 	public void setCancelled(boolean cancelled) {
 		this.cancelled = cancelled;
-	}
-
-	@Override
-	public int getVersion() {
-		return version;
 	}
 
 	@Override

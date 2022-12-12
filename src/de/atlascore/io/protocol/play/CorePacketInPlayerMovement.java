@@ -2,34 +2,26 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInPlayerMovement;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInPlayerMovement extends AbstractPacket implements PacketInPlayerMovement {
-
-	public CorePacketInPlayerMovement() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	private boolean onGround;
+public class CorePacketInPlayerMovement extends CoreAbstractHandler<PacketInPlayerMovement> {
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		onGround = in.readBoolean();
+	public void read(PacketInPlayerMovement packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		packet.setOnGround(in.readBoolean());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeBoolean(onGround);
+	public void write(PacketInPlayerMovement packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		out.writeBoolean(packet.isOnGround());
 	}
-
+	
 	@Override
-	public boolean isOnGround() {
-		return onGround;
+	public PacketInPlayerMovement createPacketData() {
+		return new PacketInPlayerMovement();
 	}
-	
-	
 
 }

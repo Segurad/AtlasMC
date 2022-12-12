@@ -2,142 +2,59 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInUpdateStructureBlock;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInUpdateStructureBlock extends AbstractPacket implements PacketInUpdateStructureBlock {
-
-	public CorePacketInUpdateStructureBlock() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	private int action,mode,mirror,roation;
-	private String name,metadata;
-	private byte offx,offy,offz,sizex,sizey,sizez,flags;
-	private float integrity;
-	private long seed, pos;
+public class CorePacketInUpdateStructureBlock extends CoreAbstractHandler<PacketInUpdateStructureBlock> {
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		pos = in.readLong();
-		action = readVarInt(in);
-		mode = readVarInt(in);
-		mirror = readVarInt(in);
-		roation = readVarInt(in);
-		name = readString(in);
-		metadata = readString(in);
-		offx = in.readByte();
-		offy = in.readByte();
-		offz = in.readByte();
-		sizex = in.readByte();
-		sizey = in.readByte();
-		sizez = in.readByte();
-		flags = in.readByte();
-		integrity = in.readFloat();
-		seed = readVarLong(in);
+	public void read(PacketInUpdateStructureBlock packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setPosition(in.readLong());
+		packet.setAction(readVarInt(in));
+		packet.setMode(readVarInt(in));
+		packet.setMirror(readVarInt(in));
+		packet.setRotation(readVarInt(in));
+		packet.setName(readString(in));
+		packet.setMetadata(readString(in));
+		packet.setOffsetX(in.readByte());
+		packet.setOffsetY(in.readByte());
+		packet.setOffsetZ(in.readByte());
+		packet.setSizeX(in.readByte());
+		packet.setSizeY(in.readByte());
+		packet.setSizeZ(in.readByte());
+		packet.setFlags(in.readByte());
+		packet.setIntegrity(in.readFloat());
+		packet.setSeed(readVarLong(in));
 		
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeLong(pos);
-		writeVarInt(action, out);
-		writeVarInt(mode, out);
-		writeVarInt(mirror, out);
-		writeVarInt(roation, out);
-		writeString(name, out);
-		writeString(metadata, out);
-		out.writeByte(offx);
-		out.writeByte(offy);
-		out.writeByte(offz);
-		out.writeByte(sizex);
-		out.writeByte(sizey);
-		out.writeByte(sizez);
-		out.writeByte(flags);
-		out.writeFloat(integrity);
-		writeVarLong(seed, out);
+	public void write(PacketInUpdateStructureBlock packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		out.writeLong(packet.getPosition());
+		writeVarInt(packet.getAction(), out);
+		writeVarInt(packet.getMode(), out);
+		writeVarInt(packet.getMirror(), out);
+		writeVarInt(packet.getRotation(), out);
+		writeString(packet.getName(), out);
+		writeString(packet.getMetadata(), out);
+		out.writeByte(packet.getOffsetX());
+		out.writeByte(packet.getOffsetY());
+		out.writeByte(packet.getOffsetZ());
+		out.writeByte(packet.getSizeX());
+		out.writeByte(packet.getSizeY());
+		out.writeByte(packet.getSizeZ());
+		out.writeByte(packet.getFlags());
+		out.writeFloat(packet.getIntegrity());
+		writeVarLong(packet.getSeed(), out);
 	}
 
 	@Override
-	public long getPosition() {
-		return pos;
-	}
-
-	@Override
-	public int getAction() {
-		return action;
-	}
-
-	@Override
-	public int getMode() {
-		return mode;
-	}
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public byte getOffsetX() {
-		return offx;
-	}
-
-	@Override
-	public byte getOffsetY() {
-		return offy;
-	}
-
-	@Override
-	public byte getOffsetZ() {
-		return offz;
-	}
-
-	@Override
-	public byte getSizeX() {
-		return sizex;
-	}
-
-	@Override
-	public byte getSizeY() {
-		return sizey;
-	}
-
-	@Override
-	public byte getSizeZ() {
-		return sizez;
-	}
-
-	@Override
-	public int getMirror() {
-		return mirror;
-	}
-
-	@Override
-	public int getRotation() {
-		return roation;
-	}
-
-	@Override
-	public String getMetadata() {
-		return metadata;
-	}
-
-	@Override
-	public float getIntegrity() {
-		return integrity;
-	}
-
-	@Override
-	public long getSeed() {
-		return seed;
-	}
-
-	@Override
-	public byte getFlags() {
-		return flags;
+	public PacketInUpdateStructureBlock createPacketData() {
+		return new PacketInUpdateStructureBlock();
 	}
 
 }

@@ -2,71 +2,38 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInClickWindow;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInClickWindow extends AbstractPacket implements PacketInClickWindow {
-
-	public CorePacketInClickWindow() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	private byte windowID, button;
-	private short slot, action;
-	private int mode;
-	private ItemStack clickedItem;
+public class CorePacketInClickWindow extends CoreAbstractHandler<PacketInClickWindow> {
 
 	@Override
-	public byte getWindowID() {
-		return windowID;
+	public void read(PacketInClickWindow packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		packet.setWindowID(in.readByte());
+		packet.setSlot(in.readShort());
+		packet.setButton(in.readByte());
+		packet.setAction(in.readShort());
+		packet.setMode(readVarInt(in));
+		packet.setClickedItem(readSlot(in));
 	}
 
 	@Override
-	public short getSlot() {
-		return slot;
+	public void write(PacketInClickWindow packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		out.writeByte(packet.getWindowID());
+		out.writeShort(packet.getSlot());
+		out.writeByte(packet.getButton());
+		out.writeShort(packet.getAction());
+		writeVarInt(packet.getMode(), out);
+		writeSlot(packet.getClickedItem(), out);
 	}
 
 	@Override
-	public byte getButton() {
-		return button;
-	}
-
-	@Override
-	public short getActionNumber() {
-		return action;
-	}
-
-	@Override
-	public int getMode() {
-		return mode;
-	}
-
-	@Override
-	public void read(ByteBuf in) throws IOException {
-		windowID = in.readByte();
-		slot = in.readShort();
-		button = in.readByte();
-		action = in.readShort();
-		mode = readVarInt(in);
-		clickedItem = readSlot(in);
-	}
-
-	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeByte(windowID);
-		out.writeShort(slot);
-		out.writeByte(button);
-		out.writeShort(action);
-		writeVarInt(mode, out);
-		writeSlot(clickedItem, out);
-	}
-
-	@Override
-	public ItemStack getClickedItem() {
-		return clickedItem;
+	public PacketInClickWindow createPacketData() {
+		return new PacketInClickWindow();
 	}
 
 }

@@ -1,16 +1,31 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketPlay.IN_SET_BEACON_EFFECT)
-public interface PacketInSetBeaconEffect extends PacketPlay, PacketInbound {
+public class PacketInSetBeaconEffect extends AbstractPacket implements PacketPlayIn {
 	
-	public int getPrimaryEffect();
-	public int getSecondaryEffect();
+	private int primaryEffect, secondaryEffect;
+	
+	public int getPrimaryEffect() {
+		return primaryEffect;
+	}
+	
+	public int getSecondaryEffect() {
+		return secondaryEffect;
+	}
+	
+	public void setPrimaryEffect(int primaryEffect) {
+		this.primaryEffect = primaryEffect;
+	}
+	
+	public void setSecondaryEffect(int secondaryEffect) {
+		this.secondaryEffect = secondaryEffect;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_SET_BEACON_EFFECT;
 	}
 

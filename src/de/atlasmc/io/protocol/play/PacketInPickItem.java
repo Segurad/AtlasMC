@@ -1,15 +1,23 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketPlay.IN_PICK_ITEM)
-public interface PacketInPickItem extends PacketPlay, PacketInbound {
+public class PacketInPickItem extends AbstractPacket implements PacketPlayIn {
 	
-	public int getSlotToUse();
+	private int slotToUse;
+	
+	public int getSlotToUse() {
+		return slotToUse;
+	}
+	
+	public void setSlotToUse(int slotToUse) {
+		this.slotToUse = slotToUse;
+	}
 
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_PICK_ITEM;
 	}
 	

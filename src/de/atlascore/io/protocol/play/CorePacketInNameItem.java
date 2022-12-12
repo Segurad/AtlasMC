@@ -2,32 +2,28 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInNameItem;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInNameItem extends AbstractPacket implements PacketInNameItem {
-
-	public CorePacketInNameItem() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-
-	private String itemname;
+public class CorePacketInNameItem extends CoreAbstractHandler<PacketInNameItem> {
 	
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		itemname = readString(in, 32767);
+	public void read(PacketInNameItem packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		 packet.setItemName(readString(in));
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeString(itemname, out);
+	public void write(PacketInNameItem packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		writeString(packet.getItemName(), out);
 	}
-
+	
 	@Override
-	public String getItemName() {
-		return itemname;
+	public PacketInNameItem createPacketData() {
+		return new PacketInNameItem();
 	}
 
 }

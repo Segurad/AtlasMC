@@ -3,34 +3,30 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInSpectate;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInSpectate extends AbstractPacket implements PacketInSpectate {
-
-	private UUID uuid;
-	private String suuid;
+public class CorePacketInSpectate extends CoreAbstractHandler<PacketInSpectate> {
 	
-	public CorePacketInSpectate() {
-		super(CoreProtocolAdapter.VERSION);
+	@Override
+	public void read(PacketInSpectate packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		long most = in.readLong();
+		long least = in.readLong();
+		packet.setUUID(new UUID(most, least));
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		suuid = readString(in);
-		uuid = UUID.fromString(suuid);
+	public void write(PacketInSpectate packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		UUID uuid = packet.getUUID();
+		out.writeLong(uuid.getMostSignificantBits());
+		out.writeLong(uuid.getLeastSignificantBits());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeString(suuid, out);
-	}
-
-	@Override
-	public UUID getUUID() {
-		return uuid;
+	public PacketInSpectate createPacketData() {
+		return new PacketInSpectate();
 	}
 
 }

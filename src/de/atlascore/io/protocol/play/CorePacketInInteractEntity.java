@@ -2,76 +2,40 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInInteractEntity;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInInteractEntity extends AbstractPacket implements PacketInInteractEntity {
-
-	public CorePacketInInteractEntity() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	private int entityID,type,hand;
-	private float x,y,z;
-	private boolean sneaking;
+public class CorePacketInInteractEntity extends CoreAbstractHandler<PacketInInteractEntity> {
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		entityID = readVarInt(in);
-		type = readVarInt(in);
-		hand = readVarInt(in);
-		x = in.readFloat();
-		y = in.readFloat();
-		z = in.readFloat();
-		sneaking = in.readBoolean();
+	public void read(PacketInInteractEntity packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		packet.setEntityID(readVarInt(in));
+		packet.setType(readVarInt(in));
+		packet.setHand(readVarInt(in));
+		packet.setX(in.readFloat());
+		packet.setY(in.readFloat());
+		packet.setZ(in.readFloat());
+		packet.setSneaking(in.readBoolean());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(entityID, out);
-		writeVarInt(type, out);
-		writeVarInt(hand, out);
-		out.writeFloat(x);
-		out.writeFloat(y);
-		out.writeFloat(z);
-		out.writeBoolean(sneaking);
+	public void write(PacketInInteractEntity packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		writeVarInt(packet.getEntityID(), out);
+		writeVarInt(packet.getType(), out);
+		writeVarInt(packet.getHand(), out);
+		out.writeFloat(packet.getX());
+		out.writeFloat(packet.getY());
+		out.writeFloat(packet.getZ());
+		out.writeBoolean(packet.isSneaking());
 	}
 
 	@Override
-	public int getEntityID() {
-		return entityID;
-	}
-
-	@Override
-	public int getType() {
-		return type;
-	}
-
-	@Override
-	public float getX() {
-		return x;
-	}
-
-	@Override
-	public float getY() {
-		return y;
-	}
-
-	@Override
-	public float getZ() {
-		return z;
-	}
-
-	@Override
-	public int getHand() {
-		return hand;
-	}
-
-	@Override
-	public boolean Sneaking() {
-		return sneaking;
+	public PacketInInteractEntity createPacketData() {
+		return new PacketInInteractEntity();
 	}
 
 }

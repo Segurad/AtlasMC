@@ -2,68 +2,37 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInUpdateJigsawBlock;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInUpdateJigsawBlock extends AbstractPacket implements PacketInUpdateJigsawBlock {
-
-	public CorePacketInUpdateJigsawBlock() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	private long pos;
-	private String name,target,pool,finalstate,jointtype;
+public class CorePacketInUpdateJigsawBlock extends CoreAbstractHandler<PacketInUpdateJigsawBlock> {
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		pos = in.readLong();
-		name = readString(in);
-		target = readString(in);
-		pool = readString(in);
-		finalstate = readString(in);
-		jointtype = readString(in);
+	public void read(PacketInUpdateJigsawBlock packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setPosition(in.readLong());
+		packet.setName(readString(in));
+		packet.setTarget(readString(in));
+		packet.setPool(readString(in));
+		packet.setFinalState(readString(in));
+		packet.setJointtype(readString(in));
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeLong(pos);
-		writeString(name, out);
-		writeString(target, out);
-		writeString(pool, out);
-		writeString(finalstate, out);
-		writeString(jointtype, out);
+	public void write(PacketInUpdateJigsawBlock packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		out.writeLong(packet.getPosition());
+		writeString(packet.getName(), out);
+		writeString(packet.getTarget(), out);
+		writeString(packet.getPool(), out);
+		writeString(packet.getFinalState(), out);
+		writeString(packet.getJointtype(), out);
 	}
 
 	@Override
-	public long getPosition() {
-		return pos;
-	}
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public String getTarget() {
-		return target;
-	}
-
-	@Override
-	public String getPool() {
-		return pool;
-	}
-
-	@Override
-	public String getFinalState() {
-		return finalstate;
-	}
-
-	@Override
-	public String getJointtype() {
-		return jointtype;
+	public PacketInUpdateJigsawBlock createPacketData() {
+		return new PacketInUpdateJigsawBlock();
 	}
 
 }

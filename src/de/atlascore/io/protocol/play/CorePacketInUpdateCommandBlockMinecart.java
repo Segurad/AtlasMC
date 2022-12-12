@@ -2,48 +2,31 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInUpdateCommandBlockMinecart;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInUpdateCommandBlockMinecart extends AbstractPacket implements PacketInUpdateCommandBlockMinecart {
-
-	public CorePacketInUpdateCommandBlockMinecart() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	private int entityID;
-	private String cmd;
-	private boolean trackoutput;
+public class CorePacketInUpdateCommandBlockMinecart extends CoreAbstractHandler<PacketInUpdateCommandBlockMinecart> {
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		entityID = readVarInt(in);
-		cmd = readString(in);
-		trackoutput = in.readBoolean();
+	public void read(PacketInUpdateCommandBlockMinecart packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setEntityID(readVarInt(in));
+		packet.setCommand(readString(in));
+		packet.setTrackOutput(in.readBoolean());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(entityID, out);
-		writeString(cmd, out);
-		out.writeBoolean(trackoutput);
+	public void write(PacketInUpdateCommandBlockMinecart packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.getEntityID(), out);
+		writeString(packet.getCommand(), out);
+		out.writeBoolean(packet.getTrackOutput());
 	}
 
 	@Override
-	public int getEntityID() {
-		return entityID;
-	}
-
-	@Override
-	public String getCommand() {
-		return cmd;
-	}
-
-	@Override
-	public boolean getTrackOutput() {
-		return trackoutput;
+	public PacketInUpdateCommandBlockMinecart createPacketData() {
+		return new PacketInUpdateCommandBlockMinecart();
 	}
 
 }

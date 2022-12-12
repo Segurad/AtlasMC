@@ -1,15 +1,23 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketPlay.IN_KEEP_ALIVE)
-public interface PacketInKeepAlive extends PacketPlay, PacketInbound {
+public class PacketInKeepAlive extends AbstractPacket implements PacketPlayIn {
 	
-	public long getKeepAliveID();
+	private long keepAliveID;
+	
+	public long getKeepAliveID() {
+		return keepAliveID;
+	}
+	
+	public void setKeepAliveID(long keepAliveID) {
+		this.keepAliveID = keepAliveID;
+	}
 
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_KEEP_ALIVE;
 	}
 	

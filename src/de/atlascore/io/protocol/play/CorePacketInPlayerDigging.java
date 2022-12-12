@@ -1,63 +1,47 @@
 package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
+import java.util.List;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlascore.io.CoreAbstractHandler;
 import de.atlasmc.block.BlockFace;
-import de.atlasmc.io.AbstractPacket;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInPlayerDigging;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInPlayerDigging extends AbstractPacket implements PacketInPlayerDigging {
+public class CorePacketInPlayerDigging extends CoreAbstractHandler<PacketInPlayerDigging> {
 
-	public static final BlockFace[] faces = new BlockFace[] {
+	/**
+	 * List of all faces indexed by the id needed for the packet
+	 */
+	public static final List<BlockFace> FACES = List.of(
 		BlockFace.DOWN,
 		BlockFace.UP,
 		BlockFace.NORTH,
 		BlockFace.SOUTH,
 		BlockFace.WEST,
 		BlockFace.EAST
-	};
-	
-	public CorePacketInPlayerDigging() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-
-	private int status;
-	private long pos;
-	private byte face;
+	);
 	
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		status = readVarInt(in);
-		pos = in.readLong();
-		face = in.readByte();
+	public void read(PacketInPlayerDigging packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		packet.setStatus(readVarInt(in));
+		packet.setPosition(in.readLong());
+		packet.setFace(FACES.get(in.readByte()));
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(status, out);
-		out.writeLong(pos);
-		out.writeByte(face);
+	public void write(PacketInPlayerDigging packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		writeVarInt(packet.getStatus(), out);
+		out.writeLong(packet.getPosition());
+		out.writeByte(FACES.indexOf(packet.getFace()));
 	}
 
 	@Override
-	public int getStatus() {
-		return status;
+	public PacketInPlayerDigging createPacketData() {
+		return new PacketInPlayerDigging();
 	}
-
-	@Override
-	public long getPosition() {
-		return pos;
-	}
-
-	@Override
-	public BlockFace getFace() {
-		if (face < 0 || face > 5)
-			return BlockFace.UP;
-		return faces[face];
-	}
-	
-	
 
 }

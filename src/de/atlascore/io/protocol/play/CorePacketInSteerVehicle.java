@@ -2,47 +2,30 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInSteerVehicle;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInSteerVehicle extends AbstractPacket implements PacketInSteerVehicle {
+public class CorePacketInSteerVehicle extends CoreAbstractHandler<PacketInSteerVehicle> {
 
-	public CorePacketInSteerVehicle() {
-		super(CoreProtocolAdapter.VERSION);
+	@Override
+	public void read(PacketInSteerVehicle packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setSideways(in.readFloat());
+		packet.setForward(in.readFloat());
+		packet.setFlags(in.readByte());
+	}
+
+	@Override
+	public void write(PacketInSteerVehicle packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		out.writeFloat(packet.getSideways());
+		out.writeFloat(packet.getForward());
+		out.writeByte(packet.getFlags());
 	}
 	
-	private float sideways,forward;
-	private byte flags;
-
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		sideways = in.readFloat();
-		forward = in.readFloat();
-		flags = in.readByte();
-	}
-
-	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeFloat(sideways);
-		out.writeFloat(forward);
-		out.writeByte(flags);
-	}
-
-	@Override
-	public float getSideways() {
-		return sideways;
-	}
-
-	@Override
-	public float getForward() {
-		return forward;
-	}
-
-	@Override
-	public byte getFlags() {
-		return flags;
+	public PacketInSteerVehicle createPacketData() {
+		return new PacketInSteerVehicle();
 	}
 
 }

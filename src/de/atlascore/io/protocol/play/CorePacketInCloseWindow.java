@@ -2,33 +2,26 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInCloseWindow;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInCloseWindow extends AbstractPacket implements PacketInCloseWindow {
+public class CorePacketInCloseWindow extends CoreAbstractHandler<PacketInCloseWindow> {
 
-	public CorePacketInCloseWindow() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-
-	private byte windowID;
-	
 	@Override
-	public byte getWindowID() {
-		return windowID;
+	public void read(PacketInCloseWindow packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		packet.setWindowID(in.readByte());
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		windowID = in.readByte();
+	public void write(PacketInCloseWindow packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		out.writeByte(packet.getWindowID());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeByte(windowID);
+	public PacketInCloseWindow createPacketData() {
+		return new PacketInCloseWindow();
 	}
-
 
 }

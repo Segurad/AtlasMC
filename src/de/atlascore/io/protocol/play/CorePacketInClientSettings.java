@@ -2,71 +2,39 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlascore.io.CoreAbstractHandler;
 import de.atlasmc.chat.ChatType;
-import de.atlasmc.io.AbstractPacket;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInClientSettings;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInClientSettings extends AbstractPacket implements PacketInClientSettings {
+public class CorePacketInClientSettings extends CoreAbstractHandler<PacketInClientSettings> {
 
-	public CorePacketInClientSettings() {
-		super(CoreProtocolAdapter.VERSION);
+	@Override
+	public void read(PacketInClientSettings packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		packet.setLocale(readString(in));
+		packet.setViewDistance(in.readByte());
+		packet.setChatMode(ChatType.getByID(readVarInt(in)));
+		packet.setChatColor(in.readBoolean());
+		packet.setDisplaySkinParts(in.readByte());
+		packet.setMainHand(readVarInt(in));
 	}
 
-	private String locale;
-	private int viewDistance, chatMode, mainHand;
-	private boolean chatColor;
-	private byte skinParts;
+	@Override
+	public void write(PacketInClientSettings packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		writeString(packet.getLocale(), out);
+		out.writeByte(packet.getViewDistance());
+		writeVarInt(packet.getChatMode().getID(), out);
+		out.writeBoolean(packet.getChatColor());
+		out.writeByte(packet.getDisplaySkinParts());
+		writeVarInt(packet.getMainHand(), out);
+	}
 	
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		locale = readString(in);
-		viewDistance = in.readByte();
-		chatMode = readVarInt(in);
-		chatColor = in.readBoolean();
-		skinParts = in.readByte();
-		mainHand = readVarInt(in);
-	}
-
-	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeString(locale, out);
-		out.writeByte(viewDistance);
-		writeVarInt(chatMode, out);
-		out.writeBoolean(chatColor);
-		out.writeByte(skinParts);
-		writeVarInt(mainHand, out);
-	}
-
-	@Override
-	public String getLocale() {
-		return locale;
-	}
-
-	@Override
-	public int getViewDistance() {
-		return viewDistance;
-	}
-
-	@Override
-	public ChatType getChatMode() {
-		return ChatType.getByID(chatMode);
-	}
-
-	@Override
-	public boolean getChatColor() {
-		return chatColor;
-	}
-
-	@Override
-	public byte getDisplaySkinParts() {
-		return skinParts;
-	}
-
-	@Override
-	public int getMainHand() {
-		return mainHand;
+	public PacketInClientSettings createPacketData() {
+		return new PacketInClientSettings();
 	}
 
 }

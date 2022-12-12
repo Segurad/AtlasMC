@@ -2,32 +2,28 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInChatMessage;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInChatMessage extends AbstractPacket implements PacketInChatMessage {
+public class CorePacketInChatMessage extends CoreAbstractHandler<PacketInChatMessage> {
 
-	public CorePacketInChatMessage() {
-		super(CoreProtocolAdapter.VERSION);
+	@Override
+	public void read(PacketInChatMessage packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		packet.setMessage(readString(in, 256));
 	}
 
-	private String msg;
+	@Override
+	public void write(PacketInChatMessage packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		writeString(packet.getMessage(), out);
+	}
 	
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		msg = readString(in, 256);
-	}
-
-	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeString(msg, out);
-	}
-
-	@Override
-	public String getMessage() {
-		return msg;
+	public PacketInChatMessage createPacketData() {
+		return new PacketInChatMessage();
 	}
 
 }

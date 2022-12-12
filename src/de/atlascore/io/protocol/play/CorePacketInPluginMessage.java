@@ -2,43 +2,31 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInPluginMessage;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInPluginMessage extends AbstractPacket implements PacketInPluginMessage {
-
-	public CorePacketInPluginMessage() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	private String channel;
-	private byte[] data;
+public class CorePacketInPluginMessage extends CoreAbstractHandler<PacketInPluginMessage> {
 	
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		channel = readString(in);
-		data = new byte[in.readableBytes()];
+	public void read(PacketInPluginMessage packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setChannel(readString(in));
+		byte[] data = new byte[in.readableBytes()];
 		in.readBytes(data);
+		packet.setData(data);
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeString(channel, out);
-		out.writeBytes(data);
+	public void write(PacketInPluginMessage packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeString(packet.getChannel(), out);
+		out.writeBytes(packet.getData());
 	}
 
 	@Override
-	public String getChannel() {
-		return channel;
+	public PacketInPluginMessage createPacketData() {
+		return new PacketInPluginMessage();
 	}
-
-	@Override
-	public byte[] getData() {
-		return data;
-	}
-	
-	
 
 }

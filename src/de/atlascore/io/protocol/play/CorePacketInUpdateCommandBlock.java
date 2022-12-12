@@ -2,57 +2,35 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlascore.io.CoreAbstractHandler;
 import de.atlasmc.block.tile.CommandBlock.Mode;
-import de.atlasmc.io.AbstractPacket;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInUpdateCommandBlock;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInUpdateCommandBlock extends AbstractPacket implements PacketInUpdateCommandBlock {
-
-	public CorePacketInUpdateCommandBlock() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	private long pos;
-	private String cmd;
-	private int mode;
-	private byte flags;
+public class CorePacketInUpdateCommandBlock extends CoreAbstractHandler<PacketInUpdateCommandBlock> {
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		pos = in.readLong();
-		cmd = readString(in);
-		mode = readVarInt(in);
-		flags = in.readByte();
+	public void read(PacketInUpdateCommandBlock packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setPosition(in.readLong());
+		packet.setCommand(readString(in));
+		packet.setMode(Mode.getByID(readVarInt(in)));
+		packet.setFlags(in.readByte());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeLong(pos);
-		writeString(cmd, out);
-		writeVarInt(mode, out);
-		out.writeByte(mode);
+	public void write(PacketInUpdateCommandBlock packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		out.writeLong(packet.getPosition());
+		writeString(packet.getCommand(), out);
+		writeVarInt(packet.getMode().getID(), out);
+		out.writeByte(packet.getFlags());
 	}
 
 	@Override
-	public long getPosition() {
-		return pos;
-	}
-
-	@Override
-	public String getCommand() {
-		return cmd;
-	}
-
-	@Override
-	public Mode getMode() {
-		return Mode.getByID(mode);
-	}
-
-	@Override
-	public byte getFlags() {
-		return flags;
+	public PacketInUpdateCommandBlock createPacketData() {
+		return new PacketInUpdateCommandBlock();
 	}
 
 }

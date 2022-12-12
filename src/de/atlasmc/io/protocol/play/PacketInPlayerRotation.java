@@ -1,26 +1,50 @@
 package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.SimpleLocation;
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketPlay.IN_PLAYER_ROTATION)
-public interface PacketInPlayerRotation extends PacketPlay, PacketInbound {
+public class PacketInPlayerRotation extends AbstractPacket implements PacketPlayIn {
 	
-	public float getYaw();
+	private float yaw, pitch;
+	private boolean onGround;
 	
-	public float getPitch();
+	public float getPitch() {
+		return pitch;
+	}
 	
-	public boolean isOnGround();
+	public float getYaw() {
+		return yaw;
+	}
+	
+	public void setPitch(float pitch) {
+		this.pitch = pitch;
+	}
+	
+	public void setYaw(float yaw) {
+		this.yaw = yaw;
+	}
+	
+	public void setOnGround(boolean onGround) {
+		this.onGround = onGround;
+	}
+	
+	public boolean isOnGround() {
+		return onGround;
+	}
 	
 	/**
 	 * Applies all Location changes to the Location
 	 * @param loc
 	 */
-	public void getLocation(SimpleLocation loc);
+	public void getLocation(SimpleLocation loc) {
+		loc.setYaw(yaw);
+		loc.setPitch(pitch);
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_PLAYER_ROTATION;
 	}
 

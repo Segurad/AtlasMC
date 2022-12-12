@@ -1,32 +1,74 @@
 package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.SimpleLocation;
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketPlay.IN_PLAYER_POSITION_AND_ROTATION)
-public interface PacketInPlayerPositionAndRotation extends PacketPlay, PacketInbound {
+public class PacketInPlayerPositionAndRotation extends AbstractPacket implements PacketPlayIn {
 	
-	public double getX();
+	private double x,feetY,z;
+	private boolean onGround;
+	private float yaw, pitch;
 	
-	public double getFeetY();
+	public double getX() {
+		return x;
+	}
 	
-	public double getZ();
+	public void setX(double x) {
+		this.x = x;
+	}
 	
-	public float getYaw();
+	public double getFeetY() {
+		return feetY;
+	}
 	
-	public float getPitch();
+	public void setFeetY(double feetY) {
+		this.feetY = feetY;
+	}
 	
-	public boolean isOnGround();
+	public double getZ() {
+		return z;
+	}
+	
+	public void setZ(double z) {
+		this.z = z;
+	}
+	
+	public boolean isOnGround() {
+		return onGround;
+	}
+	
+	public void setOnGround(boolean onGround) {
+		this.onGround = onGround;
+	}
+	
+	public float getYaw() {
+		return yaw;
+	}
+	
+	public void setYaw(float yaw) {
+		this.yaw = yaw;
+	}
+	
+	public void setPitch(float pitch) {
+		this.pitch = pitch;
+	}
+	
+	public float getPitch() {
+		return pitch;
+	}
 	
 	/**
 	 * Applies all Location changes to the Location
 	 * @param loc
 	 */
-	public void getLocation(SimpleLocation loc);
+	public void getLocation(SimpleLocation loc) {
+		loc.setLocation(x, feetY, z, yaw, pitch);
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_PLAYER_POSITION_AND_ROTATION;
 	}
 

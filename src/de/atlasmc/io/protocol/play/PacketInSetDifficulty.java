@@ -1,15 +1,23 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketPlay.IN_SET_DIFFICULTY)
-public interface PacketInSetDifficulty extends PacketPlay, PacketInbound {
+public class PacketInSetDifficulty extends AbstractPacket implements PacketPlayIn {
 	
-	public int getDifficulty();
+	private int difficulty;
+	
+	public void setDifficulty(int difficulty) {
+		this.difficulty = difficulty;
+	}
+	
+	public int getDifficulty() {
+		return difficulty;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_SET_DIFFICULTY;
 	}
 

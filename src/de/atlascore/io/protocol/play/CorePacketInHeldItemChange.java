@@ -2,32 +2,26 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInHeldItemChange;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInHeldItemChange extends AbstractPacket implements PacketInHeldItemChange {
-
-	public CorePacketInHeldItemChange() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	private short slot;
+public class CorePacketInHeldItemChange extends CoreAbstractHandler<PacketInHeldItemChange> {
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		slot = in.readShort();
+	public void read(PacketInHeldItemChange packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		packet.setSlot(in.readShort());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeShort(slot);
+	public void write(PacketInHeldItemChange packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		out.writeShort(packet.getSlot());
 	}
 
 	@Override
-	public short getSlot() {
-		return slot;
+	public PacketInHeldItemChange createPacketData() {
+		return new PacketInHeldItemChange();
 	}
 
 }

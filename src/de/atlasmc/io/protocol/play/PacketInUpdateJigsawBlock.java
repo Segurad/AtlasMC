@@ -1,20 +1,64 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketPlay.IN_UPDATE_JIGSAW_BLOCK)
-public interface PacketInUpdateJigsawBlock extends PacketPlay, PacketInbound {
+public class PacketInUpdateJigsawBlock extends AbstractPacket implements PacketPlayIn {
 	
-	public long getPosition();
-	public String getName();
-	public String getTarget();
-	public String getPool();
-	public String getFinalState();
-	public String getJointtype();
+	private long position;
+	private String name, target, pool, finalState, jointtype;
+	
+	public long getPosition() {
+		return position;
+	}
+	
+	public void setPosition(long position) {
+		this.position = position;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String getTarget() {
+		return target;
+	}
+	
+	public void setTarget(String target) {
+		this.target = target;
+	}
+	
+	public String getPool() {
+		return pool;
+	}
+	
+	public void setPool(String pool) {
+		this.pool = pool;
+	}
+	
+	public String getFinalState() {
+		return finalState;
+	}
+	
+	public void setFinalState(String finalState) {
+		this.finalState = finalState;
+	}
+	
+	public String getJointtype() {
+		return jointtype;
+	}
+	
+	public void setJointtype(String jointtype) {
+		this.jointtype = jointtype;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_UPDATE_JIGSAW_BLOCK;
 	}
 

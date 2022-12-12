@@ -1,17 +1,40 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketPlay.IN_STEER_VEHICLE)
-public interface PacketInSteerVehicle extends PacketPlay, PacketInbound {
+public class PacketInSteerVehicle extends AbstractPacket implements PacketPlayIn {
 	
-	public float getSideways();
-	public float getForward();
-	public byte getFlags();
+	private float sideways,forward;
+	private int flags;
+	
+	public float getSideways() {
+		return sideways;
+	}
+	
+	public float getForward() {
+		return forward;
+	}
+	
+	public int getFlags() {
+		return flags;
+	}
+	
+	public void setSideways(float sideways) {
+		this.sideways = sideways;
+	}
+	
+	public void setForward(float forward) {
+		this.forward = forward;
+	}
+	
+	public void setFlags(int flags) {
+		this.flags = flags;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_STEER_VEHICLE;
 	}
 

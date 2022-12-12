@@ -2,37 +2,26 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInPlayerAbilities;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInPlayerAbilities extends AbstractPacket implements PacketInPlayerAbilities {
-
-	public CorePacketInPlayerAbilities() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	private byte flags;
+public class CorePacketInPlayerAbilities extends CoreAbstractHandler<PacketInPlayerAbilities> {
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		flags = in.readByte();
+	public void read(PacketInPlayerAbilities packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		packet.setFlags(in.readByte());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeByte(flags);
-	}	
-
-	@Override
-	public byte getFlags() {
-		return flags;
+	public void write(PacketInPlayerAbilities packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		out.writeByte(packet.getFlags());
 	}
 
 	@Override
-	public boolean isFlying() {
-		return (flags & 0x02) == 0x02;
+	public PacketInPlayerAbilities createPacketData() {
+		return new PacketInPlayerAbilities();
 	}
 
 }

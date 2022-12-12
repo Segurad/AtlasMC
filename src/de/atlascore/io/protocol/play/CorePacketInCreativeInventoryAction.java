@@ -2,41 +2,30 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInCreativeInventoryAction;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInCreativeInventoryAction extends AbstractPacket implements PacketInCreativeInventoryAction {
-
-	public CorePacketInCreativeInventoryAction() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-
-	private short slot;
-	private ItemStack clickedItem;
+public class CorePacketInCreativeInventoryAction extends CoreAbstractHandler<PacketInCreativeInventoryAction> {
 	
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		slot = in.readShort();
-		clickedItem = readSlot(in);
+	public void read(PacketInCreativeInventoryAction packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		packet.setSlot(in.readShort());
+		packet.setClickedItem(readSlot(in));
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeShort(slot);
-		writeSlot(clickedItem, out);
+	public void write(PacketInCreativeInventoryAction packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		out.writeShort(packet.getSlot());
+		writeSlot(packet.getClickedItem(), out);
 	}
-
+	
 	@Override
-	public short getSlot() {
-		return slot;
-	}
-
-	@Override
-	public ItemStack getClickedItem() {
-		return clickedItem;
+	public PacketInCreativeInventoryAction createPacketData() {
+		return new PacketInCreativeInventoryAction();
 	}
 
 }

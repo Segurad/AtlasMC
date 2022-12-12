@@ -2,61 +2,36 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInUpdateSign;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInUpdateSign extends AbstractPacket implements PacketInUpdateSign {
+public class CorePacketInUpdateSign extends CoreAbstractHandler<PacketInUpdateSign> {
 
-	public CorePacketInUpdateSign() {
-		super(CoreProtocolAdapter.VERSION);
+	@Override
+	public void read(PacketInUpdateSign packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setPosition(in.readLong());
+		packet.setLine1(readString(in));
+		packet.setLine2(readString(in));
+		packet.setLine3(readString(in));
+		packet.setLine4(readString(in));
+	}
+
+	@Override
+	public void write(PacketInUpdateSign packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		out.writeLong(packet.getPosition());
+		writeString(packet.getLine1(), out);
+		writeString(packet.getLine2(), out);
+		writeString(packet.getLine3(), out);
+		writeString(packet.getLine4(), out);
+	}
+
+	@Override
+	public PacketInUpdateSign createPacketData() {
+		return new PacketInUpdateSign();
 	}
 	
-	private long pos;
-	private String l1,l2,l3,l4;
-
-	@Override
-	public void read(ByteBuf in) throws IOException {
-		pos = in.readLong();
-		l1 = readString(in);
-		l2 = readString(in);
-		l3 = readString(in);
-		l4 = readString(in);
-	}
-
-	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeLong(pos);
-		writeString(l1, out);
-		writeString(l2, out);
-		writeString(l3, out);
-		writeString(l4, out);
-	}
-
-	@Override
-	public long getPosition() {
-		return pos;
-	}
-
-	@Override
-	public String getLine1() {
-		return l1;
-	}
-
-	@Override
-	public String getLine2() {
-		return l2;
-	}
-
-	@Override
-	public String getLine3() {
-		return l3;
-	}
-
-	@Override
-	public String getLine4() {
-		return l4;
-	}
-
 }

@@ -2,39 +2,30 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInSetBeaconEffect;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInSetBeaconEffect extends AbstractPacket implements PacketInSetBeaconEffect {
-
-	public CorePacketInSetBeaconEffect() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-
-	private int primeffect,secondeffect;
+public class CorePacketInSetBeaconEffect extends CoreAbstractHandler<PacketInSetBeaconEffect> {
 	
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		primeffect = readVarInt(in);
-		secondeffect = readVarInt(in);	
+	public void read(PacketInSetBeaconEffect packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setPrimaryEffect(readVarInt(in));
+		packet.setPrimaryEffect(readVarInt(in));	
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(primeffect, out);
-		writeVarInt(secondeffect, out);
+	public void write(PacketInSetBeaconEffect packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.getPrimaryEffect(), out);
+		writeVarInt(packet.getSecondaryEffect(), out);
 	}
 
 	@Override
-	public int getPrimaryEffect() {
-		return primeffect;
-	}
-
-	@Override
-	public int getSecondaryEffect() {
-		return secondeffect;
+	public PacketInSetBeaconEffect createPacketData() {
+		return new PacketInSetBeaconEffect();
 	}
 
 }

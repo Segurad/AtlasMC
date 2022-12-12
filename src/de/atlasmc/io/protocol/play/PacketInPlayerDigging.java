@@ -1,18 +1,42 @@
 package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketPlay.IN_PLAYER_DIGGING)
-public interface PacketInPlayerDigging extends PacketPlay, PacketInbound {
+public class PacketInPlayerDigging extends AbstractPacket implements PacketPlayIn {
 	
-	public int getStatus();
-	public long getPosition();
-	public BlockFace getFace();
+	private int status;
+	private long position;
+	private BlockFace face;
+	
+	public int getStatus() {
+		return status;
+	}
+	
+	public void setStatus(int status) {
+		this.status = status;
+	}
+	
+	public void setPosition(long position) {
+		this.position = position;
+	}
+	
+	public long getPosition() {
+		return position;
+	}
+	
+	public BlockFace getFace() {
+		return face;
+	}
+	
+	public void setFace(BlockFace face) {
+		this.face = face;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_PLAYER_DIGGING;
 	}
 	

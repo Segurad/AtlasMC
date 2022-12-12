@@ -1,21 +1,74 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketPlay.IN_INTERACT_ENTITY)
-public interface PacketInInteractEntity extends PacketPlay, PacketInbound {
+public class PacketInInteractEntity extends AbstractPacket implements PacketPlayIn {
 	
-	public int getEntityID();
-	public int getType();
-	public float getX();
-	public float getY();
-	public float getZ();
-	public int getHand();
-	public boolean Sneaking();
+	private int entityID,type,hand;
+	private float x,y,z;
+	private boolean sneaking;
+	
+	public int getEntityID() {
+		return entityID;
+	}
+	
+	public void setEntityID(int entityID) {
+		this.entityID = entityID;
+	}
+	
+	public int getType() {
+		return type;
+	}
+	
+	public void setType(int type) {
+		this.type = type;
+	}
+	
+	public int getHand() {
+		return hand;
+	}
+	
+	public void setHand(int hand) {
+		this.hand = hand;
+	}
+	
+	public float getX() {
+		return x;
+	}
+	
+	public float getY() {
+		return y;
+	}
+	
+	public float getZ() {
+		return z;
+	}
+	
+	public void setX(float x) {
+		this.x = x;
+	}
+	
+	public void setY(float y) {
+		this.y = y;
+	}
+	
+	
+	public void setZ(float z) {
+		this.z = z;
+	}
+	
+	public boolean isSneaking() {
+		return sneaking;
+	}
+	
+	public void setSneaking(boolean sneaking) {
+		this.sneaking = sneaking;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_INTERACT_ENTITY;
 	}
 	

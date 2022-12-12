@@ -2,50 +2,32 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketInCraftRecipeRequest;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInCraftRecipeRequest extends AbstractPacket implements PacketInCraftRecipeRequest {
+public class CorePacketInCraftRecipeRequest extends CoreAbstractHandler<PacketInCraftRecipeRequest> {
 
-	public CorePacketInCraftRecipeRequest() {
-		super(CoreProtocolAdapter.VERSION);
+	@Override
+	public void read(PacketInCraftRecipeRequest packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		packet.setWindowID(in.readByte());
+		packet.setRecipe(readString(in));
+		packet.setMakeAll(in.readBoolean());
+	}
+
+	@Override
+	public void write(PacketInCraftRecipeRequest packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		out.writeByte(packet.getWindowID());
+		writeString(packet.getRecipe(), out);
+		out.writeBoolean(packet.getMakeAll());
 	}
 	
-	private byte windowID;
-	private String recipe;
-	private boolean makeall;
-
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		windowID = in.readByte();
-		recipe = readString(in);
-		makeall = in.readBoolean();
-	}
-
-	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeByte(windowID);
-		writeString(recipe, out);
-		out.writeBoolean(makeall);
-	}
-
-	@Override
-	public byte getWindowID() {
-		return windowID;
-	}
-
-	@Override
-	public String getRecipe() {
-		return recipe;
-	}
-
-	@Override
-	public boolean getMakeAll() {
-		return makeall;
+	public PacketInCraftRecipeRequest createPacketData() {
+		return new PacketInCraftRecipeRequest();
 	}
 	
-	
-
 }

@@ -78,10 +78,11 @@ public class ConnectionHandler {
 		this.errHandler = IOExceptionHandler.UNHANDLED;
 		
 		channel.pipeline()
+		//.addLast(CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER, null) // TODO add outbound exception handler
 		.addLast(CHANNEL_PIPE_PACKET_LENGTH_DECODER, new PacketLengthDecoder())
 		.addLast(CHANNEL_PIPE_PACKET_LENGTH_ENCODER, PacketLengthEncoder.INSTANCE)
 		.addLast(CHANNEL_PIPE_PACKET_DECODER, new PacketDecoder(this))
-		.addLast(CHANNEL_PIPE_PACKET_ENCODER, new PacketEncoder())
+		.addLast(CHANNEL_PIPE_PACKET_ENCODER, new PacketEncoder(this))
 		.addLast(CHANNEL_PIPE_PACKET_PROCESSOR, new PacketProcessor(this));
 	}
 	
@@ -90,10 +91,6 @@ public class ConnectionHandler {
 	}
 	
 	public void sendPacket(Packet packet) {
-		Protocol prot = getProtocol();
-		if (packet.getVersion() != prot.getVersion()) {
-			packet = prot.createCopy(packet);
-		}
 		if (channel.isActive()) {
 			channel.writeAndFlush(packet);
 		} else {
@@ -166,8 +163,8 @@ public class ConnectionHandler {
 			if (isEncryotionEnabled())
 				throw new IllegalStateException("Encryption already enabled");
 			channel.pipeline()
-			.addFirst(CHANNEL_PIPE_PACKET_ENCRYPTOR, new PacketEncryptor(secret))
-			.addFirst(CHANNEL_PIPE_PACKET_DECRYPTOR, new PacketDecryptor(secret));
+			.addAfter(CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER, CHANNEL_PIPE_PACKET_ENCRYPTOR, new PacketEncryptor(secret))
+			.addAfter(CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER, CHANNEL_PIPE_PACKET_DECRYPTOR, new PacketDecryptor(secret));
 			encryption = true;
 		}
 	}
@@ -192,7 +189,7 @@ public class ConnectionHandler {
 			} else {
 				channel.pipeline()
 				.addAfter(CHANNEL_PIPE_PACKET_LENGTH_DECODER, CHANNEL_PIPE_PACKET_DECOMPRESSOR, new PacketDecompressor())
-				.addBefore(CHANNEL_PIPE_PACKET_LENGTH_ENCODER, CHANNEL_PIPE_PACKET_COMPRESSOR, new PacketCompressort(threshold));
+				.addAfter(CHANNEL_PIPE_PACKET_LENGTH_ENCODER, CHANNEL_PIPE_PACKET_COMPRESSOR, new PacketCompressort(threshold));
 			}
 		}
 	}
