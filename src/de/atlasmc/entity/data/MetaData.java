@@ -1,6 +1,10 @@
 package de.atlasmc.entity.data;
 
-public class MetaData<T> {
+/**
+ * Stores data of a {@link MetaData}, keeps track of changes and contains {@link MetaDataField} information
+ * @param <T>
+ */
+public class MetaData<T> implements Cloneable {
 
 	private T data;
 	private boolean changed;
@@ -63,6 +67,21 @@ public class MetaData<T> {
 		this.data = data;
 		changed = true;
 		return true;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public MetaData<T> clone() {
+		MetaData<T> clone = null;
+		try {
+			clone = (MetaData<T>) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		if (clone != null) {
+			if (data != null)
+				clone.data = field.getType().copyData(data);
+		}
+		return clone;
 	}
 
 }
