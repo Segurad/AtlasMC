@@ -87,13 +87,28 @@ public interface PlayerConnection extends PacketListenerPlayIn {
 	public void setWindowLock();
 
 	/**
-	 * Creates a Packet of the Packet class with the current protocol.<br>
-	 * @param clazz
-	 * @return instance of Packet
+	 * Teleports the player and returns the id of the teleport
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param yaw
+	 * @param pitch
+	 * @return teleport id
 	 */
-	public <T extends Packet> T createPacket(Class<T> clazz);
+	public int teleport(double x, double y, double z, float yaw, float pitch);
 	
-	public void teleport(double x, double y, double z, float yaw, float pitch);
+	/**
+	 * Returns the id of the last teleport
+	 * @return teleport id
+	 */
+	public int getTeleportID();
+	
+	/**
+	 * Sets the last teleport of the client as confirmed
+	 */
+	public void confirmTeleport();
+	
+	public boolean isTeleportConfirmed();
 
 	/**
 	 * Returns the last location the client send.<br>
