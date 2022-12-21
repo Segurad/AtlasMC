@@ -116,14 +116,14 @@ class CoreObjective implements Objective {
 	public void update() {
 		if (unregistered)
 			throw new IllegalStateException("Objective not registered!");
+		PacketOutScoreboardObjective packetObj = new PacketOutScoreboardObjective();
+		String name = getName();
+		packetObj.setName(name);
+		packetObj.setMode(Mode.UPDATE_DISPLAY);
+		packetObj.setDisplayName(getDisplayName().getText());
+		packetObj.setRenderType(getRenderType());
 		for (ScoreboardView view : board.getViewersUnsafe()) {
 			PlayerConnection con = view.getViewer().getConnection();
-			PacketOutScoreboardObjective packetObj = con.getProtocol().createPacket(PacketOutScoreboardObjective.class);
-			String name = getName();
-			packetObj.setName(name);
-			packetObj.setMode(Mode.UPDATE_DISPLAY);
-			packetObj.setDisplayName(getDisplayName());
-			packetObj.setRenderType(getRenderType());
 			con.sendPacked(packetObj);
 		}
 	}
@@ -134,13 +134,13 @@ class CoreObjective implements Objective {
 		if (scores == null)
 			scores = new HashMap<>();
 		scores.put(entry, value);
+		PacketOutUpdateScore packetScore = new PacketOutUpdateScore();
+		packetScore.setEntry(entry);
+		packetScore.setAction(ScoreAction.UPDATE);
+		packetScore.setObjective(getName());
+		packetScore.setValue(value);
 		for (ScoreboardView view : board.getViewersUnsafe()) {
 			PlayerConnection con = view.getViewer().getConnection();
-			PacketOutUpdateScore packetScore = con.getProtocol().createPacket(PacketOutUpdateScore.class);
-			packetScore.setEntry(entry);
-			packetScore.setAction(ScoreAction.UPDATE);
-			packetScore.setObjective(getName());
-			packetScore.setValue(value);
 			con.sendPacked(packetScore);
 		}
 	}
@@ -158,11 +158,11 @@ class CoreObjective implements Objective {
 		Integer val = scores.remove(name);
 		if (val == null)
 			return false;
+		PacketOutUpdateScore packetScore = new PacketOutUpdateScore();
+		packetScore.setEntry(name);
+		packetScore.setAction(ScoreAction.REMOVE);
 		for (ScoreboardView view : board.getViewersUnsafe()) {
 			PlayerConnection con = view.getViewer().getConnection();
-			PacketOutUpdateScore packetScore = con.getProtocol().createPacket(PacketOutUpdateScore.class);
-			packetScore.setEntry(name);
-			packetScore.setAction(ScoreAction.REMOVE);
 			con.sendPacked(packetScore);
 		}
 		return true;

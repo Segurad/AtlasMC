@@ -16,8 +16,17 @@ import java.util.List;
  */
 public enum ChatType {
 	
+	/**
+	 * Message send by user
+	 */
 	MESSAGE,
+	/**
+	 * Message send by system
+	 */
 	SYSTEM,
+	/**
+	 * Message above hotbar
+	 */
 	GAME;
 
 	private static List<ChatType> VALUES;

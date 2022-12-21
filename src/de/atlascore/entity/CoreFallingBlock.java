@@ -20,7 +20,7 @@ import java.util.UUID;
 public class CoreFallingBlock extends CoreEntity implements FallingBlock {
 	
 	protected static final MetaDataField<Long> 
-	META_SPAWN_POS = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, 0L, MetaDataType.POSISTION);
+	META_SPAWN_POS = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, 0L, MetaDataType.POSITION);
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+1;
 	

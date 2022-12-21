@@ -29,7 +29,7 @@ public class PacketDecoder extends ByteToMessageDecoder {
 		if (packet == null)
 			throw new IllegalStateException("Invalid Packet ID: " + id);
 		packet.setTimestamp(System.currentTimeMillis());
-		packet.read(in);
+		prot.readPacket(packet, in, handler);
 		out.add(packet);
 	}
 	

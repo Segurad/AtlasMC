@@ -5,13 +5,11 @@ import java.util.List;
 import de.atlasmc.io.AbstractPacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.handler.codec.ByteToMessageDecoder;
 
 /**
  * Decodes the packet size and splits the input
  */
-@Sharable
 public class PacketLengthDecoder extends ByteToMessageDecoder {
 
 	private int length = -1;

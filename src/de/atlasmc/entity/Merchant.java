@@ -149,7 +149,8 @@ public interface Merchant {
 			if (clone == null) return null;
 			clone.setInputItem1(inputItem1.clone());
 			clone.setOutputItem(outputItem.clone());
-			if (hasInputItem2()) clone.setInputItem2(inputItem2.clone());
+			if (hasInputItem2()) 
+				clone.setInputItem2(inputItem2.clone());
 			return clone;
 		}
 

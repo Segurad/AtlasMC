@@ -24,7 +24,7 @@ public class CorePainting extends CoreEntity implements Painting {
 	protected static final BiConsumer<Entity, Player>
 		VIEWER_ADD_FUNCTION = (holder, viewer) -> {
 			PlayerConnection con = viewer.getConnection();
-			PacketOutSpawnPainting spawn = con.createPacket(PacketOutSpawnPainting.class);
+			PacketOutSpawnPainting spawn = new PacketOutSpawnPainting();
 			spawn.setEntity((Painting) holder);
 			con.sendPacked(spawn);
 			((CorePainting) holder).sendMetadata(viewer);
@@ -128,13 +128,13 @@ public class CorePainting extends CoreEntity implements Painting {
 	protected void update() {
 		super.update();
 		if (changedFaceOrMotive) {
+			PacketOutDestroyEntities destroy = new PacketOutDestroyEntities();
+			PacketOutSpawnPainting spawn = new PacketOutSpawnPainting();
+			spawn.setEntity(this);
+			destroy.setEntityIDs(getID());
 			for (Player viewer : viewers) {
 				PlayerConnection con = viewer.getConnection();
-				PacketOutDestroyEntities destroy = con.createPacket(PacketOutDestroyEntities.class);
-				destroy.setEntityID(getID());
 				con.sendPacked(destroy);
-				PacketOutSpawnPainting spawn = con.createPacket(PacketOutSpawnPainting.class);
-				spawn.setEntity(this);
 				con.sendPacked(spawn);
 				sendMetadata(viewer);
 			}

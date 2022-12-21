@@ -232,30 +232,30 @@ class CoreTeam implements Team {
 	}
 	
 	private void updateTeamInfo(Team team) {
+		PacketOutTeams packetTeams = new PacketOutTeams();
+		packetTeams.setName(team.getName());
+		packetTeams.setMode(PacketOutTeams.Mode.UPDATE_TEAM_INFO);
+		packetTeams.setDisplayName(team.getDisplayName().getText());
+		packetTeams.setAllowFriedlyFire(team.getAllowFriedlyFire());
+		packetTeams.setSeeInvisibleTeammeber(team.canSeeInvisibleTeammeber());
+		packetTeams.setCollisionRule(team.getCollisionRule());
+		packetTeams.setNameTagVisibility(team.getNameTagVisibility());
+		packetTeams.setColor(team.getColor());
+		packetTeams.setPrefix(team.getPrefix().getText());
+		packetTeams.setSuffix(team.getSuffix().getText());
 		for (ScoreboardView view : board.getViewersUnsafe()) {
 			PlayerConnection con = view.getViewer().getConnection();
-			PacketOutTeams packetTeams = con.getProtocol().createPacket(PacketOutTeams.class);
-			packetTeams.setName(team.getName());
-			packetTeams.setMode(PacketOutTeams.Mode.UPDATE_TEAM_INFO);
-			packetTeams.setDisplayName(team.getDisplayName());
-			packetTeams.setAllowFriedlyFire(team.getAllowFriedlyFire());
-			packetTeams.setSeeInvisibleTeammeber(team.canSeeInvisibleTeammeber());
-			packetTeams.setCollisionRule(team.getCollisionRule());
-			packetTeams.setNameTagVisibility(team.getNameTagVisibility());
-			packetTeams.setColor(team.getColor());
-			packetTeams.setPrefix(team.getPrefix());
-			packetTeams.setSuffix(team.getSuffix());
 			con.sendPacked(packetTeams);
 		}
 	}
 
 	private void editEntriesOfTeam(Team team, List<String> entries, PacketOutTeams.Mode mode) {
+		PacketOutTeams packetTeams = new PacketOutTeams();
+		packetTeams.setName(team.getName());
+		packetTeams.setMode(mode);
+		packetTeams.setEntities(entries);
 		for (ScoreboardView view : board.getViewersUnsafe()) {
 			PlayerConnection con = view.getViewer().getConnection();
-			PacketOutTeams packetTeams = con.getProtocol().createPacket(PacketOutTeams.class);
-			packetTeams.setName(team.getName());
-			packetTeams.setMode(mode);
-			packetTeams.setEntries(entries);
 			con.sendPacked(packetTeams);
 		}
 	}

@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -49,7 +51,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	protected static final BiConsumer<Entity, Player>
 		VIEWER_ADD_FUNCTION = (holder, viewer) -> {
 			PlayerConnection con = viewer.getConnection();
-			PacketOutSpawnLivingEntity packet = con.createPacket(PacketOutSpawnLivingEntity.class);
+			PacketOutSpawnLivingEntity packet = new PacketOutSpawnLivingEntity();
 			packet.setEntity((LivingEntity) holder);
 			con.sendPacked(packet);
 			((CoreLivingEntity) holder).sendMetadata(viewer);
@@ -392,6 +394,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	private boolean removeWhenFaraway;
 	
 	private boolean updateAttributes;
+	private Set<AttributeInstance> changedAttributes;
 	
 	public CoreLivingEntity(EntityType type, UUID uuid, World world) {
 		super(type, uuid, world);
@@ -632,6 +635,9 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 			attributes = new HashMap<>();
 			attributeUpdateListener = (instance) -> {
 				updateAttributes = true;
+				if (changedAttributes == null)
+					changedAttributes = new HashSet<>();
+				changedAttributes.add(instance);
 			};
 		}
 		AttributeInstance instance = attributes.get(attribute);
@@ -851,11 +857,11 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	 * @param effect
 	 */
 	protected void sendAddEntityEffect(PotionEffect effect) {
+		PacketOutEntityEffect packet = new PacketOutEntityEffect();
+		packet.setEntityID(getID());
+		packet.setEffect(effect);
 		for (Player viewer : viewers) {
 			PlayerConnection con = viewer.getConnection();
-			PacketOutEntityEffect packet = con.createPacket(PacketOutEntityEffect.class);
-			packet.setEntityID(getID());
-			packet.setEffect(effect);
 			con.sendPacked(packet);
 		}
 	}
@@ -865,11 +871,11 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	 * @param type
 	 */
 	protected void sendRemoveEntityEffect(PotionEffectType type) {
+		PacketOutRemoveEntityEffect packet = new PacketOutRemoveEntityEffect();
+		packet.setEntityID(getID());
+		packet.setEffectID(type.getID());
 		for (Player viewer : viewers) {
 			PlayerConnection con = viewer.getConnection();
-			PacketOutRemoveEntityEffect packet = con.createPacket(PacketOutRemoveEntityEffect.class);
-			packet.setEntityID(getID());
-			packet.setEffectID(type.getID());
 			con.sendPacked(packet);
 		}
 	}
@@ -881,7 +887,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	protected void sendEntityEffects(Player viewer) {
 		PlayerConnection con = viewer.getConnection();
 		for (PotionEffect effect : getActivePotionEffects()) {
-			PacketOutEntityEffect packet = con.createPacket(PacketOutEntityEffect.class);
+			PacketOutEntityEffect packet = new PacketOutEntityEffect();
 			packet.setEntityID(getID());
 			packet.setEffect(effect);
 			con.sendPacked(packet);
@@ -896,9 +902,9 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		if (updateAttributes) // escape because all attributes are send on he next tick
 			return;
 		PlayerConnection con = viewer.getConnection();
-		PacketOutEntityProperties packet = con.createPacket(PacketOutEntityProperties.class);
+		PacketOutEntityProperties packet = new PacketOutEntityProperties();
 		packet.setEntity(getID());
-		packet.setAttributes(attributes.values());
+		packet.setCopyAttributes(attributes.values());
 		con.sendPacked(packet);
 	}
 	
@@ -961,12 +967,12 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		super.update();
 		if (updateAttributes) {
 			updateAttributes = false;
-			if (!hasAttributes())
+			PacketOutEntityProperties packet = new PacketOutEntityProperties();
+			packet.setEntity(getID());
+			packet.setCopyAttributes(changedAttributes);
+			changedAttributes.clear();
 			for (Player viewer : viewers) {
 				PlayerConnection con = viewer.getConnection();
-				PacketOutEntityProperties packet = con.createPacket(PacketOutEntityProperties.class);
-				packet.setEntity(getID());
-				packet.setAttributes(attributes.values());
 				con.sendPacked(packet);
 			}
 		}

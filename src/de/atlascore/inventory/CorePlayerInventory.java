@@ -165,7 +165,7 @@ public class CorePlayerInventory extends CoreInventory implements PlayerInventor
 		slots.add(new Pair<>(equipmentSlot, item));
 		for (Player viewer : getHolder().getViewers()) {
 			PlayerConnection con = viewer.getConnection();
-			PacketOutEntityEquipment packet = con.createPacket(PacketOutEntityEquipment.class);
+			PacketOutEntityEquipment packet = new PacketOutEntityEquipment();
 			packet.setSlots(slots);
 			con.sendPacked(packet);
 		}

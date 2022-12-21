@@ -16,7 +16,7 @@ import de.atlasmc.world.World;
 public class CoreDolphin extends CoreMob implements Dolphin {
 
 	protected static final MetaDataField<Long>
-	META_TREASURE_POSITION = new MetaDataField<>(CoreMob.LAST_META_INDEX+1, 0L, MetaDataType.POSISTION);
+	META_TREASURE_POSITION = new MetaDataField<>(CoreMob.LAST_META_INDEX+1, 0L, MetaDataType.POSITION);
 	protected static final MetaDataField<Boolean>
 	META_HAS_FISH = new MetaDataField<>(CoreMob.LAST_META_INDEX+2, false, MetaDataType.BOOLEAN);
 	protected static final MetaDataField<Integer>

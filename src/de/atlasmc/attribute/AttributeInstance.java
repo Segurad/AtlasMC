@@ -7,7 +7,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public class AttributeInstance {
-
+	
 	private final Consumer<AttributeInstance> updateListener;
 	private final Attribute attribute;
 	private final double defaultValue;
@@ -50,13 +50,15 @@ public class AttributeInstance {
 	public void setBaseValue(double value) {
 		this.baseValue = value;
 		changed = true;
-		updateListener.accept(this);
+		if (updateListener != null)
+			updateListener.accept(this);
 	}
 	
 	public void addAttributeModififer(AttributeModifier modifier) {
 		getModifiers().add(modifier);
 		changed = true;
-		updateListener.accept(this);
+		if (updateListener != null)
+			updateListener.accept(this);
 	}
 
 	public boolean removeModifiers() {
@@ -64,7 +66,8 @@ public class AttributeInstance {
 			return false;
 		modifiers.clear();
 		changed = true;
-		updateListener.accept(this);
+		if (updateListener != null)
+			updateListener.accept(this);
 		return true;
 	}
 
@@ -77,11 +80,18 @@ public class AttributeInstance {
 			throw new IllegalArgumentException("Modifiers can not be null!");
 		if (!hasModifiers() && modifiers.isEmpty())
 			return;
+		if (this.modifiers == null) {
+			this.modifiers = new ArrayList<>(modifiers);
+			if (updateListener != null)
+				updateListener.accept(this);
+			return;
+		}
 		List<AttributeModifier> mods = getModifiers();
 		mods.clear();
 		mods.addAll(modifiers);
 		changed = true;
-		updateListener.accept(this);
+		if (updateListener != null)
+			updateListener.accept(this);
 	}
 
 	public boolean removeModifier(UUID uuid) {
@@ -97,7 +107,8 @@ public class AttributeInstance {
 				removed = true;
 			}
 		if (removed)
-			updateListener.accept(this);
+			if (updateListener != null)
+				updateListener.accept(this);
 		return removed;
 	}
 	
@@ -140,7 +151,8 @@ public class AttributeInstance {
 	 */
 	public void update() {
 		recalcValue();
-		updateListener.accept(this);
+		if (updateListener != null)
+			updateListener.accept(this);
 	}
 
 }

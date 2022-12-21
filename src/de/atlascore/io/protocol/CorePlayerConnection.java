@@ -50,7 +50,6 @@ import de.atlasmc.event.player.PlayerQueryBlockNBTEvent;
 import de.atlasmc.event.player.PlayerQueryEntityNBTEvent;
 import de.atlasmc.event.player.PlayerQuickcraftRequestEvent;
 import de.atlasmc.event.player.PlayerResourcePackStatusEvent;
-import de.atlasmc.event.player.PlayerResourcePackStatusEvent.ResourcePackStatus;
 import de.atlasmc.event.player.PlayerRespawnEvent;
 import de.atlasmc.event.player.PlayerSetDisplayRecipeEvent;
 import de.atlasmc.event.player.PlayerSetRecipeBookStateEvent;
@@ -156,7 +155,8 @@ public class CorePlayerConnection implements PlayerConnection {
 	private String clientLocal;
 	private ChatType chatmode;
 	private boolean chatColors = true;
-	private byte viewDistance, skinparts, mainHand;
+	private byte viewDistance, mainHand;
+	private int skinparts;
 	
 	// Client controlled values
 	private boolean clientOnGround;
@@ -228,7 +228,7 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInQueryBlockNBT packet) {
-		Location loc = MathUtil.getLocation(player.getWorld(), packet.getLocation());
+		Location loc = MathUtil.getLocation(player.getWorld(), packet.getPosition());
 		HandlerList.callEvent(new PlayerQueryBlockNBTEvent(player, packet.getTransactionID(), loc));
 	}
 
@@ -604,7 +604,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	
 	@Override
 	public void handlePacket(PacketInSetRecipeBookState packet) {
-		HandlerList.callEvent(new PlayerSetRecipeBookStateEvent(player, packet.getBookID(), packet.getBookOpen(), packet.getFilterActive()));
+		HandlerList.callEvent(new PlayerSetRecipeBookStateEvent(player, packet.getBookType(), packet.isBookOpen(), packet.isFilterActive()));
 	}
 
 	@Override
@@ -619,7 +619,7 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void handlePacket(PacketInResourcePackStatus packet) {
-		HandlerList.callEvent(new PlayerResourcePackStatusEvent(player, ResourcePackStatus.getByID(packet.getResult())));
+		HandlerList.callEvent(new PlayerResourcePackStatusEvent(player, packet.getStatus()));
 	}
 
 	@Override
@@ -848,7 +848,7 @@ public class CorePlayerConnection implements PlayerConnection {
 		if (!hasKeepAliveResponse()) return;
 		lastKeepAlive = System.currentTimeMillis();
 		keepAliveResponse = false;
-		PacketOutKeepAlive packet = getProtocol().createPacket(PacketOutKeepAlive.class);
+		PacketOutKeepAlive packet = new PacketOutKeepAlive();
 		packet.setKeepAlive(lastKeepAlive);
 		sendPacked(packet);
 	}
@@ -865,16 +865,11 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void setWindowLock() {
-		PacketOutWindowConfirmation packet = getProtocol().createPacket(PacketOutWindowConfirmation.class);
+		PacketOutWindowConfirmation packet = new PacketOutWindowConfirmation();
 		packet.setActionNumber(getNextWindowActionIDAndLock());
 		packet.setAccepted(false);
 		packet.setWindowID(invID);
 		sendPacked(packet);
-	}
-
-	@Override
-	public <T extends Packet> T createPacket(Class<T> clazz) {
-		return protocolPlay.createPacket(clazz);
 	}
 
 	@Override
@@ -894,16 +889,17 @@ public class CorePlayerConnection implements PlayerConnection {
 	}
 	
 	@Override
-	public void teleport(double x, double y, double z, float yaw, float pitch) {
-		PacketOutPlayerPositionAndLook packet = createPacket(PacketOutPlayerPositionAndLook.class);
+	public int teleport(double x, double y, double z, float yaw, float pitch) {
+		PacketOutPlayerPositionAndLook packet = new PacketOutPlayerPositionAndLook();
 		packet.setX(x);
 		packet.setY(y);
 		packet.setZ(z);
 		packet.setYaw(yaw);
 		packet.setPitch(pitch);
-		packet.setTeleportID(teleportID++);
+		packet.setTeleportID(teleportID);
 		teleportConfirmed = false;
 		sendPacked(packet);
+		return teleportID++;
 	}
 
 	@Override
@@ -934,13 +930,13 @@ public class CorePlayerConnection implements PlayerConnection {
 			}
 		}
 		if (toAdd != null) {
-			PacketOutDeclareRecipes packet = createPacket(PacketOutDeclareRecipes.class);
+			PacketOutDeclareRecipes packet = new PacketOutDeclareRecipes();
 			packet.setRecipes(toAdd);
 			sendPacked(packet);
 		}
 		if (toUnlock == null)
 			return;
-		PacketOutUnlockRecipes packet = createPacket(PacketOutUnlockRecipes.class);
+		PacketOutUnlockRecipes packet = new PacketOutUnlockRecipes();
 		if (notify) {
 			packet.setAction(RecipesAction.ADD);
 			packet.setTagged(toUnlock);
@@ -964,7 +960,7 @@ public class CorePlayerConnection implements PlayerConnection {
 		}
 		if (toRemove == null)
 			return;
-		PacketOutUnlockRecipes packet = createPacket(PacketOutUnlockRecipes.class);
+		PacketOutUnlockRecipes packet = new PacketOutUnlockRecipes();
 		packet.setAction(RecipesAction.REMOVE);
 		packet.setTagged(toRemove);
 		setRecipeBookState(packet);
@@ -1008,7 +1004,7 @@ public class CorePlayerConnection implements PlayerConnection {
 				toAdd.add(recipe);
 				recipesAvailable.add(recipe);
 			}
-		PacketOutDeclareRecipes packet = createPacket(PacketOutDeclareRecipes.class);
+		PacketOutDeclareRecipes packet = new PacketOutDeclareRecipes();
 		packet.setRecipes(toAdd);
 		sendPacked(packet);
 	}
@@ -1025,6 +1021,21 @@ public class CorePlayerConnection implements PlayerConnection {
 		if (recipesAvailable == null)
 			return List.of();
 		return recipesAvailable;
+	}
+
+	@Override
+	public int getTeleportID() {
+		return teleportID - 1;
+	}
+
+	@Override
+	public void confirmTeleport() {
+		this.teleportConfirmed = true;	
+	}
+
+	@Override
+	public boolean isTeleportConfirmed() {
+		return teleportConfirmed;
 	}
 
 }

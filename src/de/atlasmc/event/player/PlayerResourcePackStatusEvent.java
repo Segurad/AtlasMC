@@ -1,5 +1,7 @@
 package de.atlasmc.event.player;
 
+import java.util.List;
+
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.ServerHandlerList;
 
@@ -33,9 +35,34 @@ public class PlayerResourcePackStatusEvent extends PlayerEvent {
 		FAILED_DOWNLOAD,
 		ACCEPTED;
 
-		public static ResourcePackStatus getByID(int id) {
-			return values()[id];
+		private static List<ResourcePackStatus> VALUES;
+		
+		public int getID() {
+			return ordinal();
 		}
+		
+		public static ResourcePackStatus getByID(int id) {
+			return getValues().get(id);
+		}
+		
+		/**
+		 * Returns a immutable List of all Types.<br>
+		 * This method avoid allocation of a new array not like {@link #values()}.
+		 * @return list
+		 */
+		public static List<ResourcePackStatus> getValues() {
+			if (VALUES == null)
+				VALUES = List.of(values());
+			return VALUES;
+		}
+		
+		/**
+		 * Releases the system resources used from the values cache
+		 */
+		public static void freeValues() {
+			VALUES = null;
+		}
+		
 	}
 	
 }

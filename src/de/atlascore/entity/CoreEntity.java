@@ -1,3 +1,4 @@
+
 package de.atlascore.entity;
 
 import java.io.IOException;
@@ -46,15 +47,15 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	protected static final BiConsumer<Entity, Player> 
 		VIEWER_ADD_FUNCTION = (holder, viewer) -> {
 			PlayerConnection con = viewer.getConnection();
-			PacketOutSpawnEntity packet = con.createPacket(PacketOutSpawnEntity.class);
+			PacketOutSpawnEntity packet = new PacketOutSpawnEntity();
 			packet.setEntity(holder);
 			con.sendPacked(packet);
 			((CoreEntity) holder).sendMetadata(viewer);
 		},
 		VIEWER_REMOVE_FUNCTION = (holder, viewer) -> {
 			PlayerConnection con = viewer.getConnection();
-			PacketOutDestroyEntities packet = con.createPacket(PacketOutDestroyEntities.class);
-			packet.setEntityID(holder.getID());
+			PacketOutDestroyEntities packet = new PacketOutDestroyEntities();
+			packet.setEntityIDs(holder.getID());
 			con.sendPacked(packet);
 		};
 	
@@ -639,34 +640,38 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 			int index = 0;
 			for (Entity ent : passengers)
 				passengerIDs[index++] = ent.getID();
+			PacketOutSetPassengers packet = new PacketOutSetPassengers();
+			packet.setVehicleID(getID());
+			packet.setPassengers(passengerIDs);
 			for (Player viewer : viewers) {
 				PlayerConnection con = viewer.getConnection();
-				PacketOutSetPassengers packet = con.createPacket(PacketOutSetPassengers.class);
-				packet.setVehicleID(getID());
-				packet.setPassengers(passengerIDs);
+				con.sendPacked(packet);
 			}
 		}
 		if (!oldLoc.matches(loc)) { // Entity has moved
 			if (oldLoc.getDistanceSquared(loc) > 64)
 				teleported = true; // teleport entity when moved more than 8 blocks
 			else {
-				for (Player viewer : viewers) {
-					PlayerConnection con = viewer.getConnection();
-					if (!loc.matchPosition(oldLoc)) {
-						PacketOutEntityPositionAndRotation packet = con.createPacket(PacketOutEntityPositionAndRotation.class);
-						short dx = MathUtil.delta(loc.getX(), oldLoc.getX());
-						short dy = MathUtil.delta(loc.getY(), oldLoc.getY());
-						short dz = MathUtil.delta(loc.getZ(), oldLoc.getZ());
-						packet.setEntityID(getID());
-						packet.setLocation(dx, dy, dz, loc.getYaw(), loc.getPitch());
-						packet.setOnGround(isOnGround());
+				if (!loc.matchPosition(oldLoc)) {
+					PacketOutEntityPositionAndRotation packet = new PacketOutEntityPositionAndRotation();
+					short dx = MathUtil.delta(loc.getX(), oldLoc.getX());
+					short dy = MathUtil.delta(loc.getY(), oldLoc.getY());
+					short dz = MathUtil.delta(loc.getZ(), oldLoc.getZ());
+					packet.setEntityID(getID());
+					packet.setLocation(dx, dy, dz, loc.getYaw(), loc.getPitch());
+					packet.setOnGround(isOnGround());
+					for (Player viewer : viewers) {
+						PlayerConnection con = viewer.getConnection();
 						con.sendPacked(packet);
-					} else {
-						PacketOutEntityRotation packet = con.createPacket(PacketOutEntityRotation.class);
-						packet.setEntityID(getID());
-						packet.setYaw(loc.getYaw());
-						packet.setPitch(loc.getPitch());
-						packet.setOnGround(isOnGround());
+					}
+				} else {
+					PacketOutEntityRotation packet = new PacketOutEntityRotation();
+					packet.setEntityID(getID());
+					packet.setYaw(loc.getYaw());
+					packet.setPitch(loc.getPitch());
+					packet.setOnGround(isOnGround());
+					for (Player viewer : viewers) {
+						PlayerConnection con = viewer.getConnection();
 						con.sendPacked(packet);
 					}
 				}
@@ -675,21 +680,21 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 		}
 		if (teleported) {
 			teleported = false;
+			PacketOutEntityTeleport packet = new PacketOutEntityTeleport();
+			packet.setEntityID(getID());
+			packet.setLocation(getX(), getY(), getZ(), getPitch(), getYaw());
+			packet.setOnGround(isOnGround());
 			for (Player viewer : viewers) {
 				PlayerConnection con = viewer.getConnection();
-				PacketOutEntityTeleport packet = con.createPacket(PacketOutEntityTeleport.class);
-				packet.setEntityID(getID());
-				packet.setLocation(getX(), getY(), getZ(), getPitch(), getYaw());
-				packet.setOnGround(isOnGround());
 				con.sendPacked(packet);
 			}
 		}
 		if (metaContainer.hasChanges()) {
+			PacketOutEntityMetadata packet = new PacketOutEntityMetadata();
+			packet.setEntityID(getID());
+			packet.setChangedData(metaContainer);
 			for (Player viewer : viewers) {
 				PlayerConnection con = viewer.getConnection();
-				PacketOutEntityMetadata packet = con.createPacket(PacketOutEntityMetadata.class);
-				packet.setEntityID(getID());
-				packet.setChangedData(metaContainer);
 				con.sendPacked(packet);
 			}
 			metaContainer.setChanged(false);
@@ -731,7 +736,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 
 	protected void sendMetadata(Player player) {
 		PlayerConnection con = player.getConnection();
-		PacketOutEntityMetadata packet = con.getProtocol().createPacket(PacketOutEntityMetadata.class);
+		PacketOutEntityMetadata packet = new PacketOutEntityMetadata();
 		packet.setEntityID(getID());
 		packet.setNonDefaultData(metaContainer);
 		con.sendPacked(packet);

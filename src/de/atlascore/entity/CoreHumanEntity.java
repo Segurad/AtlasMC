@@ -25,7 +25,7 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 	protected static final BiConsumer<Entity, Player>
 		VIEWER_ADD_FUNCTION = (holder, viewer) -> {
 			PlayerConnection con = viewer.getConnection();
-			PacketOutSpawnPlayer packet = con.createPacket(PacketOutSpawnPlayer.class);
+			PacketOutSpawnPlayer packet = new PacketOutSpawnPlayer();
 			packet.setEntity((HumanEntity) holder);
 			con.sendPacked(packet);
 			((CoreHumanEntity) holder).sendMetadata(viewer);

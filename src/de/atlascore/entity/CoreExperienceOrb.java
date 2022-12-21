@@ -22,7 +22,7 @@ public class CoreExperienceOrb extends CoreEntity implements ExperienceOrb {
 	protected static final BiConsumer<Entity, Player>
 		VIEWER_ADD_FUNCTION = (holder, viewer) -> {
 			PlayerConnection con = viewer.getConnection();
-			PacketOutSpawnExperienceOrb packet = con.createPacket(PacketOutSpawnExperienceOrb.class);
+			PacketOutSpawnExperienceOrb packet = new PacketOutSpawnExperienceOrb();
 			packet.setEntityID(holder.getID());
 			packet.setLocation(holder.getX(), holder.getY(), holder.getZ());
 			packet.setExperience(((ExperienceOrb) holder).getExperience());

@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import de.atlasmc.inventory.EquipmentSlot;
 
-public class AttributeModifier {
+public class AttributeModifier implements Cloneable {
 
 	private double amount;
 	private Operation operation;
@@ -93,6 +93,17 @@ public class AttributeModifier {
 	
 	public void setSlot(EquipmentSlot slot) {
 		this.slot = slot;
+	}
+	
+	@Override
+	public AttributeModifier clone() {
+		AttributeModifier clone = null;
+		try {
+			clone = (AttributeModifier) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return clone;
 	}
 
 }

@@ -2,7 +2,6 @@ package de.atlasmc.entity;
 
 import de.atlasmc.Effect;
 import de.atlasmc.Gamemode;
-import de.atlasmc.Location;
 import de.atlasmc.Particle;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.Sound;
@@ -13,6 +12,7 @@ import de.atlasmc.chat.ChatType;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.MerchantInventory;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.plugin.Plugin;

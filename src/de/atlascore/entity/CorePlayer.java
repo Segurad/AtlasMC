@@ -1,5 +1,7 @@
 package de.atlascore.entity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import de.atlascore.inventory.CoreInventoryView;
@@ -15,12 +17,14 @@ import de.atlasmc.chat.ChatType;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Player;
+import de.atlasmc.entity.Merchant.MerchantRecipe;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.inventory.InventoryCloseEvent;
 import de.atlasmc.event.inventory.InventoryOpenEvent;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.MerchantInventory;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutChangeGameState;
 import de.atlasmc.io.protocol.play.PacketOutCloseWindow;
@@ -35,6 +39,7 @@ import de.atlasmc.io.protocol.play.PacketOutSetExperiance;
 import de.atlasmc.io.protocol.play.PacketOutSetSlot;
 import de.atlasmc.io.protocol.play.PacketOutSoundEffect;
 import de.atlasmc.io.protocol.play.PacketOutStopSound;
+import de.atlasmc.io.protocol.play.PacketOutTradeList;
 import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.scoreboard.ScoreboardView;
 import de.atlasmc.util.MathUtil;
@@ -69,7 +74,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 			throw new IllegalArgumentException("Can not open own Inventory!");
 		if (inv.getType().getID() == -1) 
 			throw new IllegalArgumentException("Can not open Inventory with this type (Please use the dedicated method!): " + inv.getType().name());
-		if (open != null) 
+		if (open != null)
 			closeInventory();
 		InventoryOpenEvent event = new InventoryOpenEvent(view, inv);
 		HandlerList.callEvent(event);
@@ -79,13 +84,37 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 		view.setTopInventory(open);
 		view.setViewID(con.getNextInventoryID());
 		
-		PacketOutOpenWindow packet = con.getProtocol().createPacket(PacketOutOpenWindow.class);
+		PacketOutOpenWindow packet = new PacketOutOpenWindow();
 		packet.setWindowID(view.getViewID());
-		packet.setWindowType(inv.getType());
-		packet.setTitle(inv.getTitle().getJsonText());
+		packet.setType(inv.getType());
+		packet.setTitle(inv.getTitle().getText());
 		con.sendPacked(packet);
 		
 		inv.updateSlots(this);
+		
+		if (inv instanceof MerchantInventory) {
+			openMerchantInventory((MerchantInventory) inv);
+		}
+	}
+	
+	/**
+	 * Sends the {@link MerchantRecipe}s and some inventory information
+	 * @param inv
+	 */
+	protected void openMerchantInventory(MerchantInventory inv) {
+		List<MerchantRecipe> recipes = inv.getRecipes();
+		List<MerchantRecipe> copy = new ArrayList<>(recipes.size());
+		for (MerchantRecipe recipe : recipes)
+			copy.add(recipe.clone());
+		
+		PacketOutTradeList packet = new PacketOutTradeList();
+		packet.setTrades(copy);
+		packet.setLevel(inv.getLevel());
+		packet.setExperience(inv.getExperience());
+		packet.setRegular(!inv.getHideLevelProgress());
+		packet.setCanRestock(inv.canRestock());
+		
+		con.sendPacked(packet);
 	}
 
 	@Override
@@ -101,7 +130,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	@Override
 	public void setLevel(int level) {
 		this.level = level;
-		PacketOutSetExperiance setXP = con.getProtocol().createPacket(PacketOutSetExperiance.class);
+		PacketOutSetExperiance setXP = new PacketOutSetExperiance();
 		setXP.setLevel(level);
 		con.sendPacked(setXP);
 	}
@@ -117,7 +146,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	public void playEffect(int x, int y, int z, Effect effect, Object data, boolean relativeSound) {
 		if (effect == null)
 			throw new IllegalArgumentException("Effect can not be null!");
-		PacketOutEffect packet = con.createPacket(PacketOutEffect.class);
+		PacketOutEffect packet = new PacketOutEffect();
 		packet.setEffect(effect);
 		packet.setPosition(MathUtil.toPosition(x, y, z));
 		packet.setData(effect.getDataValueByObject(data));
@@ -132,7 +161,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 		open = null;
 		view.setTopInventory(getInventory().getCraftingInventory());
 		view.setViewID(0);
-		PacketOutCloseWindow packet = con.getProtocol().createPacket(PacketOutCloseWindow.class);
+		PacketOutCloseWindow packet = new PacketOutCloseWindow();
 		packet.setWindowID(con.getInventoryID());
 		con.sendPacked(packet);
 	}
@@ -190,7 +219,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	@Override
 	public void setGamemode(Gamemode gamemode) {
 		this.gamemode = gamemode;
-		PacketOutChangeGameState packet = con.getProtocol().createPacket(PacketOutChangeGameState.class);
+		PacketOutChangeGameState packet = new PacketOutChangeGameState();
 		packet.setReason(ChangeReason.CHANGE_GAMEMODE);
 		packet.setValue(gamemode.ordinal());
 		con.sendPacked(packet);
@@ -198,7 +227,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 
 	@Override
 	public void updateItemOnCursor() {
-		PacketOutSetSlot packet = con.getProtocol().createPacket(PacketOutSetSlot.class);
+		PacketOutSetSlot packet = new PacketOutSetSlot();
 		packet.setWindowID(-1);
 		packet.setSlot(-1);
 		packet.setItem(cursorItem);
@@ -207,12 +236,12 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	@Override
 	public void spawnParticle(Particle particle, double x, double y, double z, float offX, float offY, float offZ, float particledata, int count, Object data) {
 		if (!particle.isValid(data)) throw new IllegalArgumentException("Data is not valid!");
-		PacketOutParticle packet = getConnection().getProtocol().createPacket(PacketOutParticle.class);
+		PacketOutParticle packet = new PacketOutParticle();
 		packet.setParticle(particle);
-		packet.setPoition(x, y, z);
+		packet.setLocation(x, y, z);
 		packet.setOffset(offX, offY, offZ);
 		packet.setParticleData(particledata);
-		packet.setParticleCount(count);
+		packet.setCount(count);
 		packet.setData(data);
 		con.sendPacked(packet);
 	}
@@ -238,7 +267,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 			throw new IllegalArgumentException("Type can not be null!");
 		if (chat == null || type.ordinal() < con.getChatMode().ordinal())
 			return;
-		PacketOutChatMessage packet = con.getProtocol().createPacket(PacketOutChatMessage.class);
+		PacketOutChatMessage packet = new PacketOutChatMessage();
 		packet.setMessage(chat);
 		packet.setType(type);
 		con.sendPacked(packet);
@@ -282,7 +311,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 
 	@Override
 	public void playSound(double x, double y, double z, Sound sound, SoundCategory category, float volume, float pitch) {
-		PacketOutSoundEffect packet = con.getProtocol().createPacket(PacketOutSoundEffect.class);
+		PacketOutSoundEffect packet = new PacketOutSoundEffect();
 		packet.setPosition(x, y, z);
 		packet.setSound(sound);
 		packet.setCategory(category);
@@ -293,7 +322,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 
 	@Override
 	public void playSound(Entity entity, Sound sound, SoundCategory category, float volume, float pitch) {
-		PacketOutEntitySoundEffect packet = con.getProtocol().createPacket(PacketOutEntitySoundEffect.class);
+		PacketOutEntitySoundEffect packet = new PacketOutEntitySoundEffect();
 		packet.setEntityID(entity.getID());
 		packet.setSound(sound);
 		packet.setCategory(category);
@@ -309,8 +338,8 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 
 	@Override
 	public void playSound(double x, double y, double z, String sound, SoundCategory category, float volume, float pitch) {
-		PacketOutNamedSoundEffect packet = con.getProtocol().createPacket(PacketOutNamedSoundEffect.class);
-		packet.setPosition(x, y, z);
+		PacketOutNamedSoundEffect packet = new PacketOutNamedSoundEffect();
+		packet.setLocation(x, y, z);
 		packet.setIdentifier(sound);
 		packet.setCategory(category);
 		packet.setVolume(volume);
@@ -320,7 +349,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 
 	@Override
 	public void stopSound(SoundCategory category, String sound) {
-		PacketOutStopSound packet = con.getProtocol().createPacket(PacketOutStopSound.class);
+		PacketOutStopSound packet = new PacketOutStopSound();
 		packet.setCategory(category);
 		packet.setSound(sound);
 		con.sendPacked(packet);

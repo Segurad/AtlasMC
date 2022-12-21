@@ -14,4 +14,20 @@ public interface MerchantInventory extends Inventory {
 
 	public void addRecipe(MerchantRecipe recipe);
 
+	public int getLevel();
+	
+	public void setLevel(int level);
+
+	public int getExperience();
+	
+	public void setExperience(int xp);
+
+	public boolean getHideLevelProgress();
+	
+	public void setHideLevelProgress(boolean hide);
+
+	public boolean canRestock();
+	
+	public void setCanRestock(boolean restock);
+
 }
