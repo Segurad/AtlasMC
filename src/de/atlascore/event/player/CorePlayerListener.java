@@ -31,7 +31,7 @@ public class CorePlayerListener implements Listener {
 			return;
 		}
 		PlayerConnection con = player.getConnection();
-		PacketOutHeldItemChange packet = con.createPacket(PacketOutHeldItemChange.class);
+		PacketOutHeldItemChange packet = new PacketOutHeldItemChange();
 		packet.setSlot(event.getOldSlot());
 		con.sendPacked(packet);
 	}

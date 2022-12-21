@@ -128,6 +128,11 @@ public class CoreInventory implements Inventory {
 	
 	@Override
 	public void updateSlot(int slot, boolean animation) {
+		if (slot == -999) 
+			return;
+		ItemStack item = getItem(slot);
+		if (item != null)
+			item = item.clone();
 		for (Player player : viewers) {
 			updateSlot(player, slot, animation);
 		}
@@ -135,7 +140,22 @@ public class CoreInventory implements Inventory {
 	
 	@Override
 	public void updateSlot(Player player, int slot, boolean animation) {
-		if (slot == -999) return;
+		if (slot == -999) 
+			return;
+		ItemStack item = getItem(slot);
+		if (item != null)
+			item = item.clone();
+		internalUpdateSlot(player, item, slot, animation);
+	}
+	
+	/**
+	 * Sends a slot update to the given player with a the given item
+	 * @param player
+	 * @param item
+	 * @param slot
+	 * @param animation
+	 */
+	protected void internalUpdateSlot(Player player, ItemStack item, int slot, boolean animation) {
 		InventoryView view = player.getOpenInventory();
 		int raw = view.convertSlot(this, slot);
 		int id = view.getViewID();
@@ -145,37 +165,54 @@ public class CoreInventory implements Inventory {
 			} else if (slot < 9) {
 				if (animation) {
 					id = 0; // update hotbar with animation
-				} else id = -2; // update hotbar without animation
-			} else if (!animation) id = -2; // update slot without animation
-		} else if (!animation) id = -2;
+				} else 
+					id = -2; // update hotbar without animation
+			} else 
+				if (!animation) id = -2; // update slot without animation
+		} else 
+			if (!animation) id = -2;
 		PlayerConnection con = player.getConnection();
-		PacketOutSetSlot packet = con.getProtocol().createPacket(PacketOutSetSlot.class);
+		PacketOutSetSlot packet = new PacketOutSetSlot();
 		packet.setWindowID(id);
 		packet.setSlot(raw);
-		packet.setItem(getItem(slot));
+		packet.setItem(item);
 		con.sendPacked(packet);
 	}
 
-
 	@Override
 	public void updateSlots() {
+		ItemStack[] contents = getContents();
+		ItemStack[] items = new ItemStack[contents.length];
+		for (int i = 0; i < contents.length; i++)
+			if (contents[i] != null)
+				items[i] = contents[i].clone();
 		for (Player player : viewers) {
-			updateSlots(player);
+			internalUpdateSlots(player, items);
 		}
 	}
 
 	@Override
 	public void updateSlots(Player player) {
+		ItemStack[] contents = getContents();
+		ItemStack[] items = new ItemStack[contents.length];
+		for (int i = 0; i < contents.length; i++)
+			if (contents[i] != null)
+				items[i] = contents[i].clone();
+		internalUpdateSlots(player, items);
+	}
+	
+	/**
+	 * Sends a slot update to the given player with a the given items
+	 * @param player
+	 * @param items
+	 */
+	protected void internalUpdateSlots(Player player, ItemStack[] items) {
 		InventoryView view = player.getOpenInventory();
 		int id = view.getViewID();
-		ItemStack[] items = null;
-		if (view.getTopInventory() == this) {
-			items = getContents();
-		}
 		PlayerConnection con = player.getConnection();
-		PacketOutWindowItems packet = con.getProtocol().createPacket(PacketOutWindowItems.class);
+		PacketOutWindowItems packet = new PacketOutWindowItems();
 		packet.setWindowID(id);
-		packet.setSlots(items);
+		packet.setItems(items);
 		con.sendPacked(packet);
 	}
 
@@ -215,7 +252,7 @@ public class CoreInventory implements Inventory {
 	protected void updateProperty(int property, int value, Player player) {
 		int windowID = player.getOpenInventory().getViewID();
 		PlayerConnection con = player.getConnection();
-		PacketOutWindowProperty packet = con.getProtocol().createPacket(PacketOutWindowProperty.class);
+		PacketOutWindowProperty packet = new PacketOutWindowProperty();
 		packet.setWindowID(windowID);
 		packet.setProperty(property);
 		packet.setValue(value);
