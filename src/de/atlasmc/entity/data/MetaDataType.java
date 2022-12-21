@@ -23,6 +23,10 @@ import de.atlasmc.util.nbt.tag.NBT;
 import de.atlasmc.world.particle.ParticleObject;
 import io.netty.buffer.ByteBuf;
 
+/**
+ * Represents a {@link MetaData}s type
+ * @param <T>
+ */
 public abstract class MetaDataType<T> {
 	
 	public static final MetaDataType<Byte> BYTE = new MetaDataType<Byte>(0, Number.class) {
@@ -132,6 +136,10 @@ public abstract class MetaDataType<T> {
 			}
 		}
 		
+		public ItemStack copyData(ItemStack data) {
+			return data.clone();
+		};
+		
 	};
 	
 	public static final MetaDataType<Boolean> BOOLEAN = new MetaDataType<Boolean>(7, Boolean.class) {
@@ -162,9 +170,13 @@ public abstract class MetaDataType<T> {
 			out.writeFloat(data.getZ());
 		}
 		
+		public EulerAngle copyData(EulerAngle data) {
+			return data.clone();
+		};
+		
 	};
 	
-	public static final MetaDataType<Long> POSISTION = new MetaDataType<Long>(9, Number.class) {
+	public static final MetaDataType<Long> POSITION = new MetaDataType<Long>(9, Number.class) {
 
 		@Override
 		public Long read(ByteBuf in) {
@@ -293,6 +305,10 @@ public abstract class MetaDataType<T> {
 			writer.close();
 		}
 		
+		public CompoundTag copyData(CompoundTag data) {
+			return data.clone();
+		};
+		
 	};
 	
 	public static final ParticleMetaDataType PARTICLE = new ParticleMetaDataType();
@@ -372,6 +388,11 @@ public abstract class MetaDataType<T> {
 			}
 		}
 		
+		@Override
+		public ParticleObject copyData(ParticleObject data) {
+			return data.clone();
+		}
+		
 	};
 	
 	public static final MetaDataType<VillagerData> VILLAGER_DATA = new MetaDataType<VillagerData>(16, VillagerData.class) {
@@ -449,6 +470,15 @@ public abstract class MetaDataType<T> {
 		return optional;
 	}
 	
+	/**
+	 * Returns a copy of the data
+	 * @param data
+	 * @return copy
+	 */
+	public T copyData(T data) {
+		return data;
+	}
+	
 	public abstract T read(ByteBuf in);
 	
 	public abstract void write(T data, ByteBuf out);
@@ -456,6 +486,32 @@ public abstract class MetaDataType<T> {
 	@SuppressWarnings("unchecked")
 	public void writeRaw(Object data, ByteBuf buf) {
 		write((T) data, buf);
+	}
+	
+	public static MetaDataType<?> getByID(int id) {
+		switch (id) {
+		case 0: return BYTE;
+		case 1: return INT;
+		case 2: return FLOAT;
+		case 3: return STRING;
+		case 4: return CHAT;
+		case 5: return OPT_CHAT;
+		case 6: return SLOT;
+		case 7: return BOOLEAN;
+		case 8: return ROTATION;
+		case 9: return POSITION;
+		case 10: return OPT_POSITION;
+		case 11: return DIRECTION;
+		case 12: return OPT_UUID;
+		case 13: return OPT_BLOCKSTATE;
+		case 14: return NBT_DATA;
+		case 15: return PARTICLE;
+		case 16: return VILLAGER_DATA;
+		case 17: return OPT_INT;
+		case 18: return POSE;
+		default:
+			throw new IllegalArgumentException("Invalid Type ID: " + id);
+		}
 	}
 
 }
