@@ -1,16 +1,31 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_TIME_UPDATE)
-public interface PacketOutTimeUpdate extends PacketPlay, PacketOutbound {
+public class PacketOutTimeUpdate extends AbstractPacket implements PacketPlayOut {
 	
-	public long getWorldAge();
-	public long getTimeOfDay();
+	private long worldAge, timeOfDay;
+	
+	public long getWorldAge() {
+		return worldAge;
+	}
+	
+	public void setWorldAge(long worldAge) {
+		this.worldAge = worldAge;
+	}
+	
+	public long getTimeOfDay() {
+		return timeOfDay;
+	}
+	
+	public void setTimeOfDay(long timeOfDay) {
+		this.timeOfDay = timeOfDay;
+	}
 	
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_TIME_UPDATE;
 	}
 

@@ -1,56 +1,37 @@
 package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.advancement.Advancement;
-import de.atlasmc.advancement.AdvancementProgress;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutAdvancements;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutAdvancements extends AbstractPacket implements PacketOutAdvancements {
+public class CorePacketOutAdvancements extends CoreAbstractHandler<PacketOutAdvancements> {
 
-	public CorePacketOutAdvancements() {
-		super(CoreProtocolAdapter.VERSION);
+	@Override
+	public void read(PacketOutAdvancements packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		throw new UnsupportedOperationException("Not implemented yet!");
+//		packet.setReset(in.readBoolean());
+//		int size = readVarInt(in); // Size of advancements
+//		if (size > 0) {
+//			Map<String, Advancement> advancements = new HashMap<>(size);
+//			for (int i = 0; i < size; i++) {
+//				String key = readString(in);
+//				// TODO implement advancements
+//			}
+//		}
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		// TODO Auto-generated method stub
-		
+	public void write(PacketOutAdvancements packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		throw new UnsupportedOperationException("Not implemented yet");
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		// TODO Auto-generated method stub
-		
+	public PacketOutAdvancements createPacketData() {
+		return new PacketOutAdvancements();
 	}
 
-	@Override
-	public boolean isReset() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
-	@Override
-	public Map<String, Advancement> getAdvancements() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<String> getRemoved() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<String, AdvancementProgress> getProgress() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

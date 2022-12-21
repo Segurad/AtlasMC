@@ -1,16 +1,34 @@
 package de.atlasmc.io.protocol.play;
 
+import java.util.List;
+
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_CHANGE_GAME_STATE)
-public interface PacketOutChangeGameState extends PacketPlay, PacketOutbound {
+public class PacketOutChangeGameState extends AbstractPacket implements PacketPlayOut {
 	
-	public ChangeReason getReason();
-	public float getValue();
+	private ChangeReason reason;
+	private float value;
+	
+	public ChangeReason getReason() {
+		return reason;
+	}
+	
+	public void setReason(ChangeReason reason) {
+		this.reason = reason;
+	}
+	
+	public float getValue() {
+		return value;
+	}
+	
+	public void setValue(float value) {
+		this.value = value;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_CHANGE_GAME_STATE;
 	}
 	
@@ -28,12 +46,34 @@ public interface PacketOutChangeGameState extends PacketPlay, PacketOutbound {
 		PLAY_ELDER_GUARDIAN_MOB_APEAREANCE,
 		ENABLE_RESPAWN_SCREEN;
 		
-		public static ChangeReason getByID(int id) {
-			return values()[id];
+		private static List<ChangeReason> VALUES;
+		
+		public int getID() {
+			return ordinal();
 		}
+		
+		public static ChangeReason getByID(int id) {
+			return getValues().get(id);
+		}
+		
+		/**
+		 * Returns a immutable List of all Types.<br>
+		 * This method avoid allocation of a new array not like {@link #values()}.
+		 * @return list
+		 */
+		public static List<ChangeReason> getValues() {
+			if (VALUES == null)
+				VALUES = List.of(values());
+			return VALUES;
+		}
+		
+		/**
+		 * Releases the system resources used from the values cache
+		 */
+		public static void freeValues() {
+			VALUES = null;
+		}
+		
 	}
-
-	public void setValue(float value);
-	public void setReason(ChangeReason reason);
 
 }

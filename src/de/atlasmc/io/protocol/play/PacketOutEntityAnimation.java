@@ -1,17 +1,33 @@
 package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.entity.Entity.Animation;
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_ENTITY_ANIMATION)
-public interface PacketOutEntityAnimation extends PacketPlay, PacketOutbound {
+public class PacketOutEntityAnimation extends AbstractPacket implements PacketPlayOut {
 	
-	public int getEntityID();
-	public Animation getAnimation();
+	private Animation animation;
+	private int entityID;
+	
+	public Animation getAnimation() {
+		return animation;
+	}
+	
+	public void setAnimation(Animation animation) {
+		this.animation = animation;
+	}
+	
+	public int getEntityID() {
+		return entityID;
+	}
+	
+	public void setEntityID(int entityID) {
+		this.entityID = entityID;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_ENTITY_ANIMATION;
 	}
 

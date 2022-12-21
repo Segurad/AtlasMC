@@ -2,42 +2,26 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutHeldItemChange;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutHeldItemChange extends AbstractPacket implements PacketOutHeldItemChange {
+public class CorePacketOutHeldItemChange extends CoreAbstractHandler<PacketOutHeldItemChange> {
 
-	private int slot;
-	
-	public CorePacketOutHeldItemChange() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutHeldItemChange(int slot) {
-		this();
-		this.slot = slot;
+	@Override
+	public void read(PacketOutHeldItemChange packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setSlot(in.readByte());
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		in.readByte();
+	public void write(PacketOutHeldItemChange packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		out.writeByte(packet.getSlot());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeByte(slot);
-	}
-
-	@Override
-	public int getSlot() {
-		return slot;
-	}
-
-	@Override
-	public void setSlot(int slot) {
-		this.slot = slot;
+	public PacketOutHeldItemChange createPacketData() {
+		return new PacketOutHeldItemChange();
 	}
 
 }

@@ -5,19 +5,51 @@ import java.util.Map;
 
 import de.atlasmc.advancement.Advancement;
 import de.atlasmc.advancement.AdvancementProgress;
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_ADVANCEMENTS)
-public interface PacketOutAdvancements extends PacketPlay, PacketOutbound {
+public class PacketOutAdvancements extends AbstractPacket implements PacketPlayOut {
 	
-	public boolean isReset();
-	public Map<String, Advancement> getAdvancements();
-	public List<String> getRemoved();
-	public Map<String, AdvancementProgress> getProgress();
+	private boolean reset;
+	private List<String> remove;
+	private Map<String, Advancement> advancements;
+	private Map<String, AdvancementProgress> progress;
+	
+	public boolean isReset() {
+		return reset;
+	}
+	
+	public void setReset(boolean reset) {
+		this.reset = reset;
+	}
+	
+	public List<String> getRemove() {
+		return remove;
+	}
+	
+	public void setRemove(List<String> remove) {
+		this.remove = remove;
+	}
+	
+	public Map<String, Advancement> getAdvancements() {
+		return advancements;
+	}
+	
+	public void setAdvancements(Map<String, Advancement> advancements) {
+		this.advancements = advancements;
+	}
+	
+	public Map<String, AdvancementProgress> getProgress() {
+		return progress;
+	}
+	
+	public void setProgress(Map<String, AdvancementProgress> progress) {
+		this.progress = progress;
+	}
 	
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_ADVANCEMENTS;
 	}
 

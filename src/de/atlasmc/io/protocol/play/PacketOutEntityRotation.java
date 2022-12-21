@@ -1,29 +1,49 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_ENTITY_ROTATION)
-public interface PacketOutEntityRotation extends PacketPlay, PacketOutbound {
+public class PacketOutEntityRotation extends AbstractPacket implements PacketPlayOut {
 	
-	public int getEntityID();
+	private int entityID;
+	private float yaw, pitch;
+	private boolean onGround;
 	
-	public float getYaw();
+	public int getEntityID() {
+		return entityID;
+	}
 	
-	public float getPitch();
+	public void setEntityID(int entityID) {
+		this.entityID = entityID;
+	}
 	
-	public boolean isOnGround();
+	public boolean isOnGround() {
+		return onGround;
+	}
 	
-	public void setEntityID(int id);
+	public void setOnGround(boolean onGround) {
+		this.onGround = onGround;
+	}
 	
-	public void setYaw(float yaw);
+	public float getYaw() {
+		return yaw;
+	}
 	
-	public void setPitch(float pitch);
+	public void setYaw(float yaw) {
+		this.yaw = yaw;
+	}
 	
-	public void setOnGround(boolean onGround);
+	public float getPitch() {
+		return pitch;
+	}
+	
+	public void setPitch(float pitch) {
+		this.pitch = pitch;
+	}
 	
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_ENTITY_ROTATION;
 	}
 

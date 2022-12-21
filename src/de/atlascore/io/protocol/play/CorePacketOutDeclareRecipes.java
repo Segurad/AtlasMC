@@ -6,10 +6,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlascore.io.CoreAbstractHandler;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.io.AbstractPacket;
+import static de.atlasmc.io.AbstractPacket.*;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutDeclareRecipes;
 import de.atlasmc.recipe.AbstractCookingRecipe;
 import de.atlasmc.recipe.BlastFurnaceRecipe;
@@ -28,20 +29,14 @@ import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutDeclareRecipes extends AbstractPacket implements PacketOutDeclareRecipes {
-
-	private List<Recipe> recipes;
-	
-	public CorePacketOutDeclareRecipes() {
-		super(CoreProtocolAdapter.VERSION);
-	}
+public class CorePacketOutDeclareRecipes extends CoreAbstractHandler<PacketOutDeclareRecipes> {
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
+	public void read(PacketOutDeclareRecipes packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		final int recipeCount = readVarInt(in);
 		if (recipeCount == 0)
 			return;
-		recipes = new ArrayList<>(recipeCount);
+		List<Recipe> recipes = new ArrayList<>(recipeCount);
 		final NBTNIOReader reader = new NBTNIOReader(in);
 		for (int i = 0; i < recipeCount; i++) {
 			final RecipeType type = RecipeType.getByName(readString(in));
@@ -133,6 +128,7 @@ public class CorePacketOutDeclareRecipes extends AbstractPacket implements Packe
 			}
 		}
 		reader.close();
+		packet.setRecipes(recipes);
 	}
 	
 	protected AbstractCookingRecipe readCookingRecipe(AbstractCookingRecipe recipe, ByteBuf in, NBTNIOReader reader) throws IOException {
@@ -155,7 +151,8 @@ public class CorePacketOutDeclareRecipes extends AbstractPacket implements Packe
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
+	public void write(PacketOutDeclareRecipes packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		List<Recipe> recipes = packet.getRecipes();
 		if (recipes == null) {
 			writeVarInt(0, out);
 			return;
@@ -230,13 +227,8 @@ public class CorePacketOutDeclareRecipes extends AbstractPacket implements Packe
 	}
 
 	@Override
-	public List<Recipe> getRecipes() {
-		return recipes;
-	}
-
-	@Override
-	public void setRecipes(List<Recipe> recipes) {
-		this.recipes = recipes;
+	public PacketOutDeclareRecipes createPacketData() {
+		return new PacketOutDeclareRecipes();
 	}
 
 }

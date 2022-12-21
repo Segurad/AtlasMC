@@ -3,96 +3,79 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlascore.io.CoreAbstractHandler;
 import de.atlasmc.block.BlockFace;
-import de.atlasmc.entity.Painting;
 import de.atlasmc.entity.Painting.Motive;
-import de.atlasmc.io.AbstractPacket;
+import static de.atlasmc.io.AbstractPacket.*;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutSpawnPainting;
-import de.atlasmc.util.MathUtil;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutSpawnPainting extends AbstractPacket implements PacketOutSpawnPainting {
-
-	private int id, motiv, direction;
-	private UUID uuid;
-	private long loc;
-	
-	public CorePacketOutSpawnPainting() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutSpawnPainting(Painting painting) {
-		this();
-		setEntity(painting);
-	}
+public class CorePacketOutSpawnPainting extends CoreAbstractHandler<PacketOutSpawnPainting> {
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		id = readVarInt(in);
+	public void read(PacketOutSpawnPainting packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setEntityID(readVarInt(in));
 		long most = in.readLong();
 		long least = in.readLong();
-		uuid = new UUID(most, least);
-		motiv = readVarInt(in);
-		loc = in.readLong();
-		direction = in.readByte();
+		packet.setUUID(new UUID(most, least));
+		packet.setMotiv(Motive.getByID(readVarInt(in)));
+		packet.setPosition(in.readLong());
+		int directionID = in.readByte();
+		BlockFace face = null;
+		switch (directionID) {
+		case 0: 
+			face = BlockFace.SOUTH;
+			break;
+		case 1: 
+			face = BlockFace.WEST;
+			break;
+		case 2: 
+			face = BlockFace.NORTH;
+			break;
+		case 3: 
+			face = BlockFace.EAST;
+			break;
+		default: 
+			face = BlockFace.SOUTH;
+			break;
+		}
+		packet.setDirection(face);
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(id, out);
+	public void write(PacketOutSpawnPainting packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.getEntityID(), out);
+		UUID uuid = packet.getUUID();
 		out.writeLong(uuid.getMostSignificantBits());
 		out.writeLong(uuid.getLeastSignificantBits());
-		writeVarInt(motiv, out);
-		out.writeLong(loc);
-		out.writeByte(direction);
-	}
-
-	@Override
-	public int getEntityID() {
-		return id;
-	}
-
-	@Override
-	public UUID getUUID() {
-		return uuid;
-	}
-
-	@Override
-	public Motive getMotiv() {
-		return Motive.getByID(motiv);
-	}
-
-	@Override
-	public long getPosition() {
-		return loc;
-	}
-
-	@Override
-	public BlockFace getDirection() {
-		switch (direction) {
-		case 0: return BlockFace.SOUTH;
-		case 1: return BlockFace.WEST;
-		case 2: return BlockFace.NORTH;
-		case 3: return BlockFace.EAST;
-		default: return BlockFace.SOUTH;
-		}
-	}
-
-	@Override
-	public void setEntity(Painting painting) {
-		id = painting.getID();
-		uuid = painting.getUUID();
-		loc = MathUtil.toPosition(painting.getX(), painting.getY(), painting.getZ());
-		motiv = painting.getMotive().ordinal();
-		BlockFace face = painting.getAttachedFace();
+		writeVarInt(packet.getMotiv().getID(), out);
+		out.writeLong(packet.getPosition());
+		int directionID = 0;
+		BlockFace face = packet.getDirection();
 		switch (face) {
-		case NORTH: direction = 2; break;
-		case SOUTH: direction = 0; break;
-		case WEST: direction = 1; break;
-		case EAST: direction = 3; break;
-		default: direction = 0; break;
+		case NORTH: 
+			directionID = 2;
+			break;
+		case SOUTH: 
+			directionID = 0; 
+			break;
+		case WEST: 
+			directionID = 1; 
+			break;
+		case EAST: 
+			directionID = 3; 
+			break;
+		default: 
+			directionID = 0; 
+			break;
 		}
+		out.writeByte(directionID);
+	}
+
+	@Override
+	public PacketOutSpawnPainting createPacketData() {
+		return new PacketOutSpawnPainting();
 	}
 
 }

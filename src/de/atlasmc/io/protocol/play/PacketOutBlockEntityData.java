@@ -1,27 +1,41 @@
 package de.atlasmc.io.protocol.play;
 
-import java.io.IOException;
-
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.tag.NBT;
 
 @DefaultPacketID(PacketPlay.OUT_BLOCK_ENTITY_DATA)
-public interface PacketOutBlockEntityData extends PacketPlay, PacketOutbound {
+public class PacketOutBlockEntityData extends AbstractPacket implements PacketPlayOut {
 	
-	public long getPosition();
+	private long position;
+	private TileUpdateAction action;
+	private byte[] data;
 	
-	public TileUpdateAction getAction();
+	public long getPosition() {
+		return position;
+	}
 	
-	public NBT getNBT();
+	public void setPosition(long position) {
+		this.position = position;
+	}
 	
-	public NBTReader getNBTReader() throws IOException;
+	public TileUpdateAction getAction() {
+		return action;
+	}
 	
-	public byte[] getRawNBT();
+	public void setAction(TileUpdateAction action) {
+		this.action = action;
+	}
+	
+	public byte[] getData() {
+		return data;
+	}
+	
+	public void setData(byte[] data) {
+		this.data = data;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_BLOCK_ENTITY_DATA;
 	}
 	

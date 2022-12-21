@@ -1,34 +1,51 @@
 package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.Effect;
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_EFFECT)
-public interface PacketOutEffect extends PacketPlay, PacketOutbound {
+public class PacketOutEffect extends AbstractPacket implements PacketPlayOut {
 	
-	public Effect getEffect();
+	private Effect effect;
+	private int data;
+	private long position;
+	private boolean disableRelativeVolume;
 	
-	public long getPosition();
+	public Effect getEffect() {
+		return effect;
+	}
 	
-	public int getData();
+	public void setEffect(Effect effect) {
+		this.effect = effect;
+	}
 	
-	public boolean getDisableRelativVolume();
+	public int getData() {
+		return data;
+	}
 	
-	public void setEffect(Effect effect);
+	public void setData(int data) {
+		this.data = data;
+	}
 	
-	public void setPosition(long pos);
+	public boolean getDisableRelativeVolume() {
+		return disableRelativeVolume;
+	}
 	
-	/**
-	 * @see {@link Effect#getDataValueByObject(Object)}
-	 * @param data
-	 */
-	public void setData(int data);
+	public void setDisableRelativeVolume(boolean disableRelativVolume) {
+		this.disableRelativeVolume = disableRelativVolume;
+	}
 	
-	public void setDisableRelativeVolume(boolean disable);
+	public long getPosition() {
+		return position;
+	}
+	
+	public void setPosition(long position) {
+		this.position = position;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_EFFECT;
 	}
 

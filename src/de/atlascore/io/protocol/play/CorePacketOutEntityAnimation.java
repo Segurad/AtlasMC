@@ -2,47 +2,30 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.entity.Entity;
+import de.atlascore.io.CoreAbstractHandler;
 import de.atlasmc.entity.Entity.Animation;
-import de.atlasmc.io.AbstractPacket;
+import static de.atlasmc.io.AbstractPacket.*;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutEntityAnimation;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutEntityAnimation extends AbstractPacket implements PacketOutEntityAnimation {
+public class CorePacketOutEntityAnimation extends CoreAbstractHandler<PacketOutEntityAnimation> {
 
-	private int id, animation;
-	
-	public CorePacketOutEntityAnimation() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutEntityAnimation(Entity entity, Animation animation) {
-		this();
-		id = entity.getID();
-		this.animation = animation.ordinal();
+	@Override
+	public void read(PacketOutEntityAnimation packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setEntityID(readVarInt(in));
+		packet.setAnimation(Animation.getByID(in.readUnsignedByte()));
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		id = readVarInt(in);
-		animation = in.readUnsignedByte();
+	public void write(PacketOutEntityAnimation packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.getEntityID(), out);
+		out.writeByte(packet.getAnimation().getID());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(id, out);
-		out.writeByte(animation);
-	}
-
-	@Override
-	public int getEntityID() {
-		return id;
-	}
-
-	@Override
-	public Animation getAnimation() {
-		return Animation.getByID(animation);
+	public PacketOutEntityAnimation createPacketData() {
+		return new PacketOutEntityAnimation();
 	}
 
 }

@@ -1,22 +1,33 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 import de.atlasmc.scoreboard.DisplaySlot;
 
 @DefaultPacketID(PacketPlay.OUT_DISPLAY_SCOREBOARD)
-public interface PacketOutDisplayScoreboard extends PacketPlay, PacketOutbound {
+public class PacketOutDisplayScoreboard extends AbstractPacket implements PacketPlayOut {
 	
-	public DisplaySlot getPosition();
+	private DisplaySlot position;
+	private String objective;
 	
-	public String getObjective();
+	public DisplaySlot getPosition() {
+		return position;
+	}
 	
-	public void setPosition(DisplaySlot slot);
+	public void setPosition(DisplaySlot position) {
+		this.position = position;
+	}
 	
-	public void setObjective(String name);
+	public String getObjective() {
+		return objective;
+	}
+	
+	public void setObjective(String objective) {
+		this.objective = objective;
+	}
 	
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_DISPLAY_SCOREBOARD;
 	}
 

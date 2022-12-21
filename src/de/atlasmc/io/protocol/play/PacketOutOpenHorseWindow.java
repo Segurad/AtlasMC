@@ -1,17 +1,39 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_OPEN_HORSE_WINDOW)
-public interface PacketOutOpenHorseWindow extends PacketPlay, PacketOutbound {
+public class PacketOutOpenHorseWindow extends AbstractPacket implements PacketPlayOut {
 	
-	public byte getWindowID();
-	public int getSlots();
-	public int getEntityID();
+	private int windowID, slots, entityID;
+	
+	public int getWindowID() {
+		return windowID;
+	}
+	
+	public int getSlots() {
+		return slots;
+	}
+	
+	public int getEntityID() {
+		return entityID;
+	}
+	
+	public void setWindowID(int windowID) {
+		this.windowID = windowID;
+	}
+	
+	public void setSlots(int slots) {
+		this.slots = slots;
+	}
+	
+	public void setEntityID(int entityID) {
+		this.entityID = entityID;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_OPEN_HORSE_WINDOW;
 	}
 

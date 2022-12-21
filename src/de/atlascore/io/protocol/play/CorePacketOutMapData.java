@@ -4,54 +4,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutMapData;
 import de.atlasmc.map.MapIcon;
 import de.atlasmc.map.MapIcon.IconType;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutMapData extends AbstractPacket implements PacketOutMapData {
-
-	private int id, scale, colums, rows, offX, offZ;
-	private boolean trackingPosition, locked;
-	private List<MapIcon> icons;
-	private byte[] data;
-	
-	public CorePacketOutMapData() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutMapData(int id, int scale, boolean trackingPosition, boolean locked, List<MapIcon> icons) {
-		this(id, scale, trackingPosition, locked, icons, 0, 0, 0, 0, null);
-	}
-	
-	public CorePacketOutMapData(int id, int scale, boolean trackingPosition, boolean locked, List<MapIcon> icons, int colums, int rows, int offX, int offZ, byte[] data) {
-		this();
-		this.id = id;
-		this.scale = scale;
-		this.trackingPosition = trackingPosition;
-		this.locked = locked;
-		this.icons = new ArrayList<MapIcon>(icons.size());
-		for (MapIcon i : icons) {
-			this.icons.add(i.clone());
-		}
-		this.colums = colums;
-		this.rows = rows;
-		this.offX = offX;
-		this.offZ = offZ;
-		this.data = data;
-	}
+public class CorePacketOutMapData extends CoreAbstractHandler<PacketOutMapData> {
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		id = readVarInt(in);
-		scale = in.readByte();
-		trackingPosition = in.readBoolean();
-		locked = in.readBoolean();
+	public void read(PacketOutMapData packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setMapID(readVarInt(in));
+		packet.setScale(in.readByte());
+		packet.setTrackingPosition(in.readBoolean());
+		packet.setLocked(in.readBoolean());
 		final int count = readVarInt(in);
 		if (count > 0) {
-			icons = new ArrayList<MapIcon>(count);
+			List<MapIcon> icons = new ArrayList<MapIcon>(count);
 			for (int i = 0; i < count; i++) {
 				int type = readVarInt(in);
 				byte x = in.readByte();
@@ -64,26 +35,29 @@ public class CorePacketOutMapData extends AbstractPacket implements PacketOutMap
 				icon.setDisplayName(dname);
 				icons.add(icon);
 			}
+			packet.setIcons(icons);
 		}
-		colums = in.readUnsignedByte();
-		if (colums <= 0) return;
-		rows = in.readUnsignedByte();
-		offX = in.readByte();
-		offZ = in.readByte();
+		packet.setColums(in.readUnsignedByte());
+		if (packet.getColums() <= 0) 
+			return;
+		packet.setRows(in.readUnsignedByte());
+		packet.setOffX(in.readByte());
+		packet.setOffZ(in.readByte());
 		int length = readVarInt(in);
-		data = new byte[length];
+		byte[] data = new byte[length];
 		in.readBytes(data);
+		packet.setData(data);
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(id, out);
-		out.writeByte(scale);
-		out.writeBoolean(trackingPosition);
-		out.writeBoolean(locked);
-		if (icons != null) {
-			writeVarInt(icons.size(), out);
-			for (MapIcon i : icons) {
+	public void write(PacketOutMapData packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.getMapID(), out);
+		out.writeByte(packet.getScale());
+		out.writeBoolean(packet.isTrackingPosition());
+		out.writeBoolean(packet.isLocked());
+		if (packet.getIcons() != null) {
+			writeVarInt(packet.getIcons().size(), out);
+			for (MapIcon i : packet.getIcons()) {
 				writeVarInt(i.getType().ordinal(), out);
 				out.writeByte(i.getX());
 				out.writeByte(i.getZ());
@@ -93,53 +67,19 @@ public class CorePacketOutMapData extends AbstractPacket implements PacketOutMap
 					writeString(i.getDisplayName(), out);
 			}
 		} else writeVarInt(0, out);
-		out.writeByte(colums);
-		if (colums <= 0) return;
-		out.writeByte(rows);
-		out.writeByte(offX);
-		out.writeByte(offZ);
-		writeVarInt(data.length, out);
-		out.writeBytes(data);
+		out.writeByte(packet.getColums());
+		if (packet.getColums() <= 0) 
+			return;
+		out.writeByte(packet.getRows());
+		out.writeByte(packet.getOffX());
+		out.writeByte(packet.getOffZ());
+		writeVarInt(packet.getData().length, out);
+		out.writeBytes(packet.getData());
 	}
 
-	public int getMapID() {
-		return id;
-	}
-
-	public int getScale() {
-		return scale;
-	}
-
-	public int getColums() {
-		return colums;
-	}
-
-	public int getRows() {
-		return rows;
-	}
-
-	public int getOffX() {
-		return offX;
-	}
-
-	public int getOffZ() {
-		return offZ;
-	}
-
-	public boolean isTrackingPosition() {
-		return trackingPosition;
-	}
-
-	public boolean isLocked() {
-		return locked;
-	}
-
-	public List<MapIcon> getIcons() {
-		return icons;
-	}
-
-	public byte[] getData() {
-		return data;
+	@Override
+	public PacketOutMapData createPacketData() {
+		return new PacketOutMapData();
 	}
 
 }

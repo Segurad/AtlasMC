@@ -4,41 +4,28 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutTags;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutTags extends AbstractPacket implements PacketOutTags {
+public class CorePacketOutTags extends CoreAbstractHandler<PacketOutTags> {
 
-	private Map<String, int[]> blocks, items, entities, fluids;
-	
-	public CorePacketOutTags() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutTags(Map<String, int[]> blocks, Map<String, int[]> items, Map<String, int[]> entities, Map<String, int[]> fluids) {
-		this();
-		this.blocks = blocks;
-		this.items = items;
-		this.entities = entities;
-		this.fluids = fluids;
+	@Override
+	public void read(PacketOutTags packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setBlockTags(readMap(in));
+		packet.setItemTags(readMap(in));
+		packet.setFluidTags(readMap(in));
+		packet.setEntityTags(readMap(in));
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		blocks = readMap(in);
-		items = readMap(in);
-		fluids = readMap(in);
-		entities = readMap(in);
-	}
-
-	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeMap(blocks, out);
-		writeMap(items, out);
-		writeMap(fluids, out);
-		writeMap(entities, out);
+	public void write(PacketOutTags packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeMap(packet.getBlockTags(), out);
+		writeMap(packet.getItemTags(), out);
+		writeMap(packet.getFluidTags(), out);
+		writeMap(packet.getEntityTags(), out);
 	}
 	
 	private Map<String, int[]> readMap(ByteBuf in) {
@@ -66,25 +53,10 @@ public class CorePacketOutTags extends AbstractPacket implements PacketOutTags {
 			}
 		});
 	}
-
+	
 	@Override
-	public Map<String, int[]> getBlockTags() {
-		return blocks;
+	public PacketOutTags createPacketData() {
+		return new PacketOutTags();
 	}
-
-	@Override
-	public Map<String, int[]> getItemTags() {
-		return items;
-	}
-
-	@Override
-	public Map<String, int[]> getEntityTags() {
-		return entities;
-	}
-
-	@Override
-	public Map<String, int[]> getFluidTags() {
-		return fluids;
-	}
-
+	
 }

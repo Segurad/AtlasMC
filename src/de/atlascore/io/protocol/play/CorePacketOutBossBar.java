@@ -1,92 +1,75 @@
 package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
-import java.util.Set;
 import java.util.UUID;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+
 import de.atlasmc.BossBar.BarColor;
-import de.atlasmc.BossBar.BarFlag;
 import de.atlasmc.BossBar.BarStyle;
-import de.atlasmc.io.AbstractPacket;
-import de.atlasmc.io.protocol.play.PacketOutCoreBossBar;
+import de.atlasmc.io.ConnectionHandler;
+import de.atlasmc.io.protocol.play.PacketOutBossBar;
+import de.atlasmc.io.protocol.play.PacketOutBossBar.BossBarAction;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutBossBar extends AbstractPacket implements PacketOutCoreBossBar {
-
-	private UUID uuid;
-	private int action, color, style, flags = 0;
-	private String title;
-	private float health;
-	
-	public CorePacketOutBossBar() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutBossBar(UUID uuid, BossBarAction action, String title, float health, BarColor color, BarStyle style, Set<BarFlag> flags) {
-		this();
-		this.action = action.ordinal();
-		this.color = color.ordinal();
-		if (flags != null) {
-			if (flags.contains(BarFlag.DARKEN_SKY)) this.flags += 0x01;
-			if (flags.contains(BarFlag.PLAY_BOSS_MUSIC)) this.flags += 0x02;
-			if (flags.contains(BarFlag.CREATE_FOG)) this.flags += 0x04;
-		}
-		this.health = health;
-		this.style = style.ordinal();
-		this.title = title;
-		this.uuid = uuid;
-	}
+public class CorePacketOutBossBar extends CoreAbstractHandler<PacketOutBossBar> {
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
+	public void read(PacketOutBossBar packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		long most = in.readLong();
 		long least = in.readLong();
-		uuid = new UUID(most, least);
-		action = readVarInt(in);
+		packet.setUUID(new UUID(most, least));
+		BossBarAction action = BossBarAction.getByID(readVarInt(in));
 		switch (action) {
-		case 0: title = readString(in);
-				health = in.readFloat();
-				color = readVarInt(in);
-				style = readVarInt(in);
-				flags = in.readUnsignedByte();
+		case ADD: packet.setTitle(readString(in));
+				packet.setHealth(in.readFloat());
+				packet.setColor(BarColor.getByID(readVarInt(in)));
+				packet.setStyle(BarStyle.getByID(readVarInt(in)));
+				packet.setFlags(in.readUnsignedByte());
 				break;
-		case 1: break;
-		case 2: health = in.readFloat();
+		case REMOVE: break;
+		case UPDATE_HEALTH: packet.setHealth(in.readFloat());
 				break;
-		case 3: title = readString(in);
+		case UPDATE_TITLE: packet.setTitle(readString(in));
 				break;
-		case 4: color = readVarInt(in);
-				style = readVarInt(in);
+		case UPDATE_STYLE: packet.setColor(BarColor.getByID(readVarInt(in)));
+				packet.setStyle(BarStyle.getByID(readVarInt(in)));
 				break;
-		case 5: flags = in.readUnsignedByte();
+		case UPDATE_FLAGS: packet.setFlags(in.readUnsignedByte());
 				break;
 		}
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
+	public void write(PacketOutBossBar packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		UUID uuid = packet.getUUID();
 		out.writeLong(uuid.getMostSignificantBits());
 		out.writeLong(uuid.getLeastSignificantBits());
-		writeVarInt(action, out);
-		switch (action) {
-		case 0: writeString(title, out);
-				out.writeFloat(health);
-				writeVarInt(color, out);
-				writeVarInt(style, out);
-				out.writeByte(flags);
+		writeVarInt(packet.getAction().getID(), out);
+		switch (packet.getAction()) {
+		case ADD: writeString(packet.getTitle(), out);
+				out.writeFloat(packet.getHealth());
+				writeVarInt(packet.getColor().getID(), out);
+				writeVarInt(packet.getStyle().getID(), out);
+				out.writeByte(packet.getFlags());
 				break;
-		case 1: break;
-		case 2: out.writeFloat(health);
+		case REMOVE: break;
+		case UPDATE_HEALTH: out.writeFloat(packet.getHealth());
 				break;
-		case 3: writeString(title, out);
+		case UPDATE_TITLE: writeString(packet.getTitle(), out);
 				break;
-		case 4: writeVarInt(color, out);
-				writeVarInt(style, out);
+		case UPDATE_STYLE: writeVarInt(packet.getColor().getID(), out);
+				writeVarInt(packet.getStyle().getID(), out);
 				break;
-		case 5: out.writeByte(flags);
+		case UPDATE_FLAGS: out.writeByte(packet.getFlags());
 				break;
 		}
+	}
+	
+	@Override
+	public PacketOutBossBar createPacketData() {
+		return new PacketOutBossBar();
 	}
 
 }

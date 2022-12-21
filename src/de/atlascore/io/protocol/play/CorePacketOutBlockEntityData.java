@@ -1,74 +1,34 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutBlockEntityData;
-import de.atlasmc.util.nbt.io.NBTIOReader;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.tag.NBT;
+import de.atlasmc.io.protocol.play.PacketOutBlockEntityData.TileUpdateAction;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutBlockEntityData extends AbstractPacket implements PacketOutBlockEntityData {
-
-	private long pos;
-	private int action;
-	private byte[] data;
-	
-	public CorePacketOutBlockEntityData() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutBlockEntityData(long position, TileUpdateAction action,  byte[] data) {
-		this();
-		pos = position;
-		this.action = action.getID();
-		this.data = data;
-	}
+public class CorePacketOutBlockEntityData extends CoreAbstractHandler<PacketOutBlockEntityData> {
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		pos = in.readLong();
-		action = in.readUnsignedByte();
-		data = new byte[in.readableBytes()];
+	public void read(PacketOutBlockEntityData packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setPosition(in.readLong());
+		packet.setAction(TileUpdateAction.getByID(in.readUnsignedByte()));
+		byte[] data = new byte[in.readableBytes()];
 		in.readBytes(data);
+		packet.setData(data);
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		
+	public void write(PacketOutBlockEntityData packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		out.writeLong(packet.getPosition());
+		out.writeByte(packet.getAction().getID());
+		out.writeBytes(packet.getData());
 	}
 
 	@Override
-	public long getPosition() {
-		return pos;
-	}
-
-	@Override
-	public TileUpdateAction getAction() {
-		return TileUpdateAction.getByID(action);
-	}
-
-	@Override
-	public NBT getNBT() {
-		try {
-			return getNBTReader().readNBT();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	@Override
-	public NBTReader getNBTReader() throws IOException {
-		return new NBTIOReader(new ByteArrayInputStream(data));
-	}
-	
-	@Override
-	public byte[] getRawNBT() {
-		return data;
+	public PacketOutBlockEntityData createPacketData() {
+		return new PacketOutBlockEntityData();
 	}
 
 }

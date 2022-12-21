@@ -1,17 +1,23 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_HELD_ITEM_CHANGE)
-public interface PacketOutHeldItemChange extends PacketPlay, PacketOutbound {
+public class PacketOutHeldItemChange extends AbstractPacket implements PacketPlayOut {
 	
-	public int getSlot();
+	private int slot; 
 	
-	public void setSlot(int slot);
+	public int getSlot() {
+		return slot;
+	}
+	
+	public void setSlot(int slot) {
+		this.slot = slot;
+	}
 	
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_HELD_ITEM_CHANGE;
 	}
 

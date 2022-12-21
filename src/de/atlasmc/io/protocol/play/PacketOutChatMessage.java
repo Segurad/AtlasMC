@@ -4,33 +4,47 @@ import java.util.UUID;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatType;
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_CHAT_MESSAGE)
-public interface PacketOutChatMessage extends PacketPlay, PacketOutbound {
+public class PacketOutChatMessage extends AbstractPacket implements PacketPlayOut {
 
-	public Chat getMessage();
+	private UUID sender;
+	private String message;
+	private ChatType type;
 	
-	public UUID getSender();
-	
-	public ChatType getType();
-	
-	public void setMessage(Chat chat);
-	
-	public void setSender(UUID sender);
-	
-	public void setType(ChatType type);
-	
-	@Override
-	default int getDefaultID() {
-		return OUT_CHAT_MESSAGE;
+	public UUID getSender() {
+		return sender;
 	}
 	
-	public static enum ChatMessage {
-		CHAT,
-		SYSTEN,
-		GANE_INFO
+	public void setSender(UUID sender) {
+		this.sender = sender;
+	}
+	
+	public String getMessage() {
+		return message;
+	}
+	
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	
+	public void setMessage(Chat message) {
+		this.message = message.getText();
+	}
+	
+	public ChatType getType() {
+		return type;
+	}
+
+	public void setType(ChatType type) {
+		this.type = type;
+	}
+	
+	@Override
+	public int getDefaultID() {
+		return OUT_CHAT_MESSAGE;
 	}
 	
 }

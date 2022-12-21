@@ -2,7 +2,6 @@ package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketPlay.IN_UPDATE_SIGN)
 public class PacketInUpdateSign extends AbstractPacket implements PacketPlayIn {

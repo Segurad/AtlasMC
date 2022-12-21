@@ -2,74 +2,45 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlascore.io.CoreAbstractHandler;
 import de.atlasmc.SoundCategory;
-import de.atlasmc.io.AbstractPacket;
+import static de.atlasmc.io.AbstractPacket.*;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutStopSound;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutStopSound extends AbstractPacket implements PacketOutStopSound {
-
-	private SoundCategory category;
-	private String sound;
-	
-	public CorePacketOutStopSound() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutStopSound(SoundCategory category, String sound) {
-		this();
-		this.category = category;
-		this.sound = sound;
-	}
+public class CorePacketOutStopSound extends CoreAbstractHandler<PacketOutStopSound> {
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
+	public void read(PacketOutStopSound packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		int flags = in.readByte();
-		if (flags == 0) return;
-		if (flags == 1 || flags == 3) {
-			category = SoundCategory.getByID(readVarInt(in));
+		if (flags == 0) 
+			return;
+		if ((flags & 0x1) == 0x1) {
+			packet.setCategory(SoundCategory.getByID(readVarInt(in)));
 		}
-		if (flags == 2 || flags == 3) {
-			sound = readString(in);
+		if ((flags & 0x2) == 0x2) {
+			packet.setSound(readString(in));
 		}
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		if (category != null) {
-			if (sound != null) {
-				out.writeByte(3);
-				writeVarInt(category.getID(), out);
-				writeString(sound, out);
-			} else {
-				out.writeByte(1);
-				writeVarInt(category.ordinal(), out);
-			}
-		} else if (sound != null) {
-			out.writeByte(2);
-			writeString(sound, out);
-		} else out.writeByte(0);
+	public void write(PacketOutStopSound packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		int flags = 0;
+		if (packet.getCategory() != null)
+			flags |= 0x1;
+		if (packet.getSound() != null)
+			flags |= 0x2;
+		out.writeByte(flags);
+		if (packet.getCategory() != null)
+			writeVarInt(packet.getCategory().getID(), out);
+		if (packet.getSound() != null)
+			writeString(packet.getSound(), out);
 	}
-
+	
 	@Override
-	public SoundCategory getCategory() {
-		return category;
-	}
-
-	@Override
-	public String getSound() {
-		return sound;
-	}
-
-	@Override
-	public void setCategory(SoundCategory category) {
-		this.category = category;
-	}
-
-	@Override
-	public void setSound(String sound) {
-		this.sound = sound;
+	public PacketOutStopSound createPacketData() {
+		return new PacketOutStopSound();
 	}
 
 }

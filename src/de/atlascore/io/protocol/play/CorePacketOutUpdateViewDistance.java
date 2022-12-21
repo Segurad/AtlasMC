@@ -2,37 +2,28 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutUpdateViewDistance;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutUpdateViewDistance extends AbstractPacket implements PacketOutUpdateViewDistance {
+public class CorePacketOutUpdateViewDistance extends CoreAbstractHandler<PacketOutUpdateViewDistance> {
 
-	private int distance;
-	
-	public CorePacketOutUpdateViewDistance() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutUpdateViewDistance(int distance) {
-		this();
-		this.distance = distance;
+	@Override
+	public void read(PacketOutUpdateViewDistance packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setDistance(readVarInt(in));
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		distance = readVarInt(in);
+	public void write(PacketOutUpdateViewDistance packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.getDistance(), out);
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(distance, out);
-	}
-
-	@Override
-	public int getDistance() {
-		return distance;
+	public PacketOutUpdateViewDistance createPacketData() {
+		return new PacketOutUpdateViewDistance();
 	}
 
 }

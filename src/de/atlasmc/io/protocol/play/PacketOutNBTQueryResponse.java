@@ -1,21 +1,33 @@
 package de.atlasmc.io.protocol.play;
 
-import java.io.IOException;
-
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
-import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.tag.NBT;
 
 @DefaultPacketID(PacketPlay.OUT_NBT_QUERY_RESPONSE)
-public interface PacketOutNBTQueryResponse extends PacketPlay, PacketOutbound {
+public class PacketOutNBTQueryResponse extends AbstractPacket implements PacketPlayOut {
 	
-	public int getTransactionID();
-	public NBT getNBT();
-	public NBTReader getNBTReader() throws IOException;
+	private int transactionID;
+	private NBT nbt;
+	
+	public int getTransactionID() {
+		return transactionID;
+	}
+	
+	public void setTransactionID(int transactionID) {
+		this.transactionID = transactionID;
+	}
+	
+	public NBT getNBT() {
+		return nbt;
+	}
+	
+	public void setNBT(NBT nbt) {
+		this.nbt = nbt;
+	}
 	
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_NBT_QUERY_RESPONSE;
 	}
 

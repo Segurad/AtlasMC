@@ -2,55 +2,31 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutUpdateHealth;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutUpdateHealth extends AbstractPacket implements PacketOutUpdateHealth {
+public class CorePacketOutUpdateHealth extends CoreAbstractHandler<PacketOutUpdateHealth> {
 
-	private float health, saturation;
-	private int food;
-	
-	public CorePacketOutUpdateHealth() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutUpdateHealth(float health, int food, float saturation) {
-		this();
-		this.health = health;
-		this.food = food;
-		this.saturation = saturation;
+	@Override
+	public void read(PacketOutUpdateHealth packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setHealth(in.readFloat());
+		packet.setFood(readVarInt(in));
+		packet.setSaturation(in.readFloat());
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		health = in.readFloat();
-		food = readVarInt(in);
-		saturation = in.readFloat();
+	public void write(PacketOutUpdateHealth packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		out.writeFloat(packet.getHealth());
+		writeVarInt(packet.getFood(), out);
+		out.writeFloat(packet.getSaturation());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeFloat(health);
-		writeVarInt(food, out);
-		out.writeFloat(saturation);
-	}
-
-
-	@Override
-	public float getHealth() {
-		return health;
-	}
-
-	@Override
-	public int getFood() {
-		return food;
-	}
-
-	@Override
-	public float getSaturation() {
-		return saturation;
+	public PacketOutUpdateHealth createPacketData() {
+		return new PacketOutUpdateHealth();
 	}
 
 }

@@ -2,37 +2,28 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutEntityMovement;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutEntityMovement extends AbstractPacket implements PacketOutEntityMovement {
+public class CorePacketOutEntityMovement extends CoreAbstractHandler<PacketOutEntityMovement> {
 
-	private int entityID;
-	
-	public CorePacketOutEntityMovement() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutEntityMovement(int entityID) {
-		this();
-		this.entityID = entityID;
+	@Override
+	public void read(PacketOutEntityMovement packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setEntityID(readVarInt(in));
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		entityID = readVarInt(in);
+	public void write(PacketOutEntityMovement packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.getEntityID(), out);
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(entityID, out);
-	}
-
-	@Override
-	public int getEntityID() {
-		return entityID;
+	public PacketOutEntityMovement createPacketData() {
+		return new PacketOutEntityMovement();
 	}
 
 }

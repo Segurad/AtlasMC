@@ -2,45 +2,29 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutResourcePackSend;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutRessourcePackSend extends AbstractPacket implements PacketOutResourcePackSend {
+public class CorePacketOutRessourcePackSend extends CoreAbstractHandler<PacketOutResourcePackSend> {
 
-	private String url, hash;
-	
-	public CorePacketOutRessourcePackSend() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutRessourcePackSend(String url, String hash) {
-		this();
-		this.url = url;
-		this.hash = hash;
+	@Override
+	public void read(PacketOutResourcePackSend packet, ByteBuf in, ConnectionHandler hander) throws IOException {
+		packet.setURL(readString(in));
+		packet.setHash(readString(in));
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		url = readString(in);
-		hash = readString(in);
+	public void write(PacketOutResourcePackSend packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeString(packet.getURL(), out);
+		writeString(packet.getHash(), out);
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeString(url, out);
-		writeString(hash, out);
-	}
-
-	@Override
-	public String getURL() {
-		return url;
-	}
-
-	@Override
-	public String getHash() {
-		return hash;
+	public PacketOutResourcePackSend createPacketData() {
+		return new PacketOutResourcePackSend();
 	}
 
 }

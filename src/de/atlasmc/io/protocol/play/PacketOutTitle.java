@@ -1,20 +1,59 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.chat.Chat;
+import java.util.List;
+
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_TITLE)
-public interface PacketOutTitle extends PacketPlay, PacketOutbound {
+public class PacketOutTitle extends AbstractPacket implements PacketPlayOut {
 	
-	public TitleAction getAction();
-	public Chat getText();
-	public int getFadeIn();
-	public int getStay();
-	public int getFadeOut();
+	private TitleAction action;
+	private int fadeIn, stay, fadeOut;
+	private String title;
 	
+	public TitleAction getAction() {
+		return action;
+	}
+
+	public int getFadeIn() {
+		return fadeIn;
+	}
+
+	public int getStay() {
+		return stay;
+	}
+
+	public int getFadeOut() {
+		return fadeOut;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setAction(TitleAction action) {
+		this.action = action;
+	}
+
+	public void setFadeIn(int fadeIn) {
+		this.fadeIn = fadeIn;
+	}
+
+	public void setStay(int stay) {
+		this.stay = stay;
+	}
+
+	public void setFadeOut(int fadeOut) {
+		this.fadeOut = fadeOut;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_TITLE;
 	}
 	
@@ -26,9 +65,34 @@ public interface PacketOutTitle extends PacketPlay, PacketOutbound {
 		HIDE,
 		RESET;
 		
-		public static TitleAction getByID(int id) {
-			return values()[id];
+		private static List<TitleAction> VALUES;
+		
+		public int getID() {
+			return ordinal();
 		}
+		
+		public static TitleAction getByID(int id) {
+			return getValues().get(id);
+		}
+		
+		/**
+		 * Returns a immutable List of all Types.<br>
+		 * This method avoid allocation of a new array not like {@link #values()}.
+		 * @return list
+		 */
+		public static List<TitleAction> getValues() {
+			if (VALUES == null)
+				VALUES = List.of(values());
+			return VALUES;
+		}
+		
+		/**
+		 * Releases the system resources used from the values cache
+		 */
+		public static void freeValues() {
+			VALUES = null;
+		}
+		
 	}
 
 }

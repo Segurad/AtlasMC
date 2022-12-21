@@ -2,38 +2,28 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlascore.io.CoreAbstractHandler;
 import de.atlasmc.inventory.EquipmentSlot;
-import de.atlasmc.io.AbstractPacket;
+import static de.atlasmc.io.AbstractPacket.*;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutOpenBook;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutOpenBook extends AbstractPacket implements PacketOutOpenBook {
+public class CorePacketOutOpenBook extends CoreAbstractHandler<PacketOutOpenBook> {
 
-	private int hand;
-	
-	public CorePacketOutOpenBook() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutOpenBook(EquipmentSlot hand) {
-		this();
-		this.hand = hand == EquipmentSlot.HAND ? 0 : 1;
+	@Override
+	public void read(PacketOutOpenBook packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setHand(readVarInt(in) == 1 ? EquipmentSlot.OFF_HAND : EquipmentSlot.HAND);
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		hand = readVarInt(in);
+	public void write(PacketOutOpenBook packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.getHand() == EquipmentSlot.HAND ? 0 : 1, out);
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(hand, out);
-	}
-
-	@Override
-	public EquipmentSlot getHand() {
-		return hand == 0 ? EquipmentSlot.HAND : EquipmentSlot.OFF_HAND;
+	public PacketOutOpenBook createPacketData() {
+		return new PacketOutOpenBook();
 	}
 
 }

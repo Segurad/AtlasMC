@@ -2,100 +2,79 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+
 import de.atlasmc.Gamemode;
-import de.atlasmc.io.AbstractPacket;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutJoinGame;
+import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
-import de.atlasmc.world.Dimension;
 import de.atlasmc.world.DimensionCodec;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutJoinGame extends AbstractPacket implements PacketOutJoinGame {
+public class CorePacketOutJoinGame extends CoreAbstractHandler<PacketOutJoinGame> {
 
-	private int id;
-	private boolean hardcore;
-	private Gamemode gamemode, oldGamemode = null;
-	private String[] worlds;
-	private DimensionCodec codec;
-	private Dimension dimension;
-	private String world;
-	private long seed;
-	private int viewDistance;
-	private boolean reducedDebugInfo = true;
-	private boolean respawnScreen = true;
-	private boolean debug = false;
-	private boolean flat = false;
-	
-	public CorePacketOutJoinGame() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutJoinGame(int id, boolean hardcore, Gamemode gamemode, String[] worlds, DimensionCodec codec, Dimension dim, String world, long seed, int viewDistance) {
-		this();
-		this.id = id;
-		this.hardcore = hardcore;
-		this.gamemode = gamemode;
-		this.worlds = worlds;
-		this.codec = codec;
-		this.dimension = dim;
-		this.world = world;
-		this.seed = seed;
-		this.viewDistance = viewDistance;
+	@Override
+	public void read(PacketOutJoinGame packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setEntityID(in.readInt());
+		packet.setHardcore(in.readBoolean());
+		packet.setGamemode(Gamemode.getByID(in.readUnsignedByte()));
+		int oldGamemode = in.readByte();
+		if (oldGamemode != -1)
+			packet.setOldGamemode(Gamemode.getByID(oldGamemode));
+		int worldCount = readVarInt(in);
+		String[] worlds = new String[worldCount];
+		for (int i = 0; i < worldCount; i++)
+			worlds[i] = readString(in);
+		DimensionCodec codec = new DimensionCodec();
+		NBTNIOReader reader = new NBTNIOReader(in);
+		reader.readNextEntry();
+		codec.fromNBT(reader);
+		reader.readNextEntry();
+		reader.skipToEnd(); // TODO read Dimension
+		reader.close();
+		packet.setWorld(readString(in));
+		packet.setSeed(in.readLong());
+		readVarInt(in); // ignored value previous max players
+		packet.setViewDistance(readVarInt(in));
+		packet.setReducedDebugInfo(in.readBoolean());
+		packet.setRespawnScreen(in.readBoolean());
+		packet.setDebug(in.readBoolean());
+		packet.setFlat(in.readBoolean());
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeInt(id);
-		out.writeBoolean(hardcore);
-		out.writeByte(gamemode.ordinal());
-		out.writeByte(oldGamemode != null ? oldGamemode.ordinal() : -1);
-		writeVarInt(worlds.length, out);
-		for (String s : worlds) {
+	public void write(PacketOutJoinGame packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		out.writeInt(packet.getEntityID());
+		out.writeBoolean(packet.isHardcore());
+		out.writeByte(packet.getGamemode().getID());
+		out.writeByte(packet.getOldGamemode() != null ? packet.getOldGamemode().getID() : -1);
+		writeVarInt(packet.getWorlds().length, out);
+		for (String s : packet.getWorlds()) {
 			writeString(s, out);
 		}
 		NBTNIOWriter writer = new NBTNIOWriter(out);
-		codec.toNBT(writer, false);
-		dimension.toNBT(writer, false);
-		writeString(world, out);
-		out.writeLong(seed);
-		writeVarInt(0, out);
-		writeVarInt(viewDistance, out);
-		out.writeBoolean(reducedDebugInfo);
-		out.writeBoolean(respawnScreen);
-		out.writeBoolean(debug);
-		out.writeBoolean(flat);
+		writer.writeCompoundTag();
+		packet.getDimensionCodec().toNBT(writer, false);
+		writer.writeEndTag();
+		writer.writeCompoundTag();
+		packet.getDimension().toNBT(writer, false);
+		writer.writeEndTag();
+		writer.close();
+		writeString(packet.getWorld(), out);
+		out.writeLong(packet.getSeed());
+		writeVarInt(0, out); // ignored value was once max players (why mojang why is this value still in the packet)
+		writeVarInt(packet.getViewDistance(), out);
+		out.writeBoolean(packet.isReducedDebugInfo());
+		out.writeBoolean(packet.isRespawnScreen());
+		out.writeBoolean(packet.isDebug());
+		out.writeBoolean(packet.isFlat());
 	}
 
 	@Override
-	public void setOldGamemode(Gamemode gamemode) {
-		this.oldGamemode = gamemode;
+	public PacketOutJoinGame createPacketData() {
+		return new PacketOutJoinGame();
 	}
-
-	@Override
-	public void setReducedDebugInfo(boolean value) {
-		this.reducedDebugInfo = value;
-	}
-
-	@Override
-	public void setEnableRespawnScreen(boolean value) {
-		this.respawnScreen = value;
-	}
-
-	@Override
-	public void setDebug(boolean value) {
-		this.debug = value;
-	}
-
-	@Override
-	public void setFlat(boolean flat) {
-		this.flat = flat;
-	}
-
+	
 }

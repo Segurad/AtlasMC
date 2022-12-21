@@ -2,45 +2,28 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutUnloadChunk;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutUnloadChunk extends AbstractPacket implements PacketOutUnloadChunk {
+public class CorePacketOutUnloadChunk extends CoreAbstractHandler<PacketOutUnloadChunk> {
 
-	private int x, z;
-	
-	public CorePacketOutUnloadChunk() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutUnloadChunk(int x, int z) {
-		this();
-		this.x = x;
-		this.z = z;
+	@Override
+	public void read(PacketOutUnloadChunk packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setChunkX(in.readInt());
+		packet.setChunkZ(in.readInt());
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		x = in.readInt();
-		z = in.readInt();
+	public void write(PacketOutUnloadChunk packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		out.writeInt(packet.getChunkX());
+		out.writeInt(packet.getChunkZ());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeInt(x);
-		out.writeInt(z);
-	}
-
-	@Override
-	public int getChunkX() {
-		return x;
-	}
-
-	@Override
-	public int getChunkZ() {
-		return z;
+	public PacketOutUnloadChunk createPacketData() {
+		return new PacketOutUnloadChunk();
 	}
 
 }

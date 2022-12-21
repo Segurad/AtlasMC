@@ -1,17 +1,31 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.chat.Chat;
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_PLAYER_LIST_HEADER_AND_FOOTER)
-public interface PacketOutPlayerListHeaderAndFooter extends PacketPlay, PacketOutbound {
+public class PacketOutPlayerListHeaderAndFooter extends AbstractPacket implements PacketPlayOut {
 	
-	public Chat getHeader();
-	public Chat getFooter();
+	private String header, footer;
+	
+	public String getHeader() {
+		return header;
+	}
+	
+	public String getFooter() {
+		return footer;
+	}
+	
+	public void setHeader(String header) {
+		this.header = header;
+	}
+	
+	public void setFooter(String footer) {
+		this.footer = footer;
+	}
 	
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_PLAYER_LIST_HEADER_AND_FOOTER;
 	}
 

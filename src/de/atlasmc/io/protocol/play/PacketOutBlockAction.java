@@ -1,18 +1,48 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_BLOCK_ACTION)
-public interface PacketOutBlockAction extends PacketPlay, PacketOutbound {
+public class PacketOutBlockAction extends AbstractPacket implements PacketPlayOut {
 	
-	public long getPosition();
-	public int getActionID();
-	public int getActionParam();
-	public int getBlockType();
+	private int actionID, actionParam, blockType;
+	private long position;
+	
+	public int getActionID() {
+		return actionID;
+	}
+	
+	public void setActionID(int actionID) {
+		this.actionID = actionID;
+	}
+	
+	public int getActionParam() {
+		return actionParam;
+	}
+	
+	public void setActionParam(int actionParam) {
+		this.actionParam = actionParam;
+	}
+	
+	public int getBlockType() {
+		return blockType;
+	}
+	
+	public void setBlockType(int blockType) {
+		this.blockType = blockType;
+	}
+	
+	public long getPosition() {
+		return position;
+	}
+	
+	public void setPosition(long position) {
+		this.position = position;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_BLOCK_ACTION;
 	}
 

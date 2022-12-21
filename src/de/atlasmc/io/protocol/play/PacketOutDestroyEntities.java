@@ -1,19 +1,23 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_DESTROY_ENTITIES)
-public interface PacketOutDestroyEntities extends PacketPlay, PacketOutbound {
+public class PacketOutDestroyEntities extends AbstractPacket implements PacketPlayOut {
 	
-	public int[] getEntityIDs();
+	private int[] entityIDs;
 	
-	public void setEntityIDs(int[] ids);
+	public int[] getEntityIDs() {
+		return entityIDs;
+	}
 	
-	public void setEntityID(int id);
+	public void setEntityIDs(int... ids) {
+		this.entityIDs = ids;
+	}
 
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_DESTROY_ENTITIES;
 	}
 	

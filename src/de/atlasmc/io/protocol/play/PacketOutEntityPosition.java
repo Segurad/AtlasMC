@@ -1,19 +1,57 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_ENTITY_POSITION)
-public interface PacketOutEntityPosition extends PacketPlay, PacketOutbound {
+public class PacketOutEntityPosition extends AbstractPacket implements PacketPlayOut {
 
-	public int getEntityID();
-	public short getDeltaX();
-	public short getDeltaY();
-	public short getDeltaZ();
-	public boolean isOnGround();
+	private int entityID;
+	private int deltaX, deltaY, deltaZ;
+	private boolean onGround;
+	
+	public int getEntityID() {
+		return entityID;
+	}
+	
+	public void setEntityID(int entityID) {
+		this.entityID = entityID;
+	}
+	
+	public int getDeltaX() {
+		return deltaX;
+	}
+	
+	public void setDeltaX(int deltaX) {
+		this.deltaX = deltaX;
+	}
+	
+	public int getDeltaY() {
+		return deltaY;
+	}
+	
+	public void setDeltaY(int deltaY) {
+		this.deltaY = deltaY;
+	}
+	
+	public int getDeltaZ() {
+		return deltaZ;
+	}
+	
+	public void setDeltaZ(int deltaZ) {
+		this.deltaZ = deltaZ;
+	}
+	
+	public boolean isOnGround() {
+		return onGround;
+	}
+	
+	public void setOnGround(boolean onGround) {
+		this.onGround = onGround;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_ENTITY_POSITION;
 	}
 	

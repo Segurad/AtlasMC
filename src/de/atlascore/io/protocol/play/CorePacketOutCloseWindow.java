@@ -2,42 +2,26 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutCloseWindow;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutCloseWindow extends AbstractPacket implements PacketOutCloseWindow {
+public class CorePacketOutCloseWindow extends CoreAbstractHandler<PacketOutCloseWindow> {
 
-	private byte windowID;
-	
-	public CorePacketOutCloseWindow() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutCloseWindow(byte windowID) {
-		this();
-		this.windowID = windowID;
+	@Override
+	public void read(PacketOutCloseWindow packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setWindowID(in.readByte());
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		windowID = in.readByte();
-	}
-
-	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeByte(windowID);
+	public void write(PacketOutCloseWindow packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		out.writeByte(packet.getWindowID());
 	}
 	
 	@Override
-	public byte getWindowID() {
-		return windowID;
-	}
-
-	@Override
-	public void setWindowID(int windowID) {
-		this.windowID = (byte) windowID;
+	public PacketOutCloseWindow createPacketData() {
+		return new PacketOutCloseWindow();
 	}
 
 }

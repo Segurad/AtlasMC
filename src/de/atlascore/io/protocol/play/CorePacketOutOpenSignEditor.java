@@ -2,37 +2,26 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutOpenSignEditor;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutOpenSignEditor extends AbstractPacket implements PacketOutOpenSignEditor {
-
-	private long pos;
-	
-	public CorePacketOutOpenSignEditor() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-
-	public CorePacketOutOpenSignEditor(long position) {
-		this();
-		this.pos = position;
-	}
+public class CorePacketOutOpenSignEditor extends CoreAbstractHandler<PacketOutOpenSignEditor> {
 	
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		pos = in.readLong();
+	public void read(PacketOutOpenSignEditor packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setPosition(in.readLong());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeLong(pos);
+	public void write(PacketOutOpenSignEditor packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		out.writeLong(packet.getPosition());
 	}
 
 	@Override
-	public long getPosition() {
-		return pos;
+	public PacketOutOpenSignEditor createPacketData() {
+		return new PacketOutOpenSignEditor();
 	}
 
 }

@@ -2,54 +2,29 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutChangeGameState;
+import de.atlasmc.io.protocol.play.PacketOutChangeGameState.ChangeReason;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutChangeGameState extends AbstractPacket implements PacketOutChangeGameState {
+public class CorePacketOutChangeGameState extends CoreAbstractHandler<PacketOutChangeGameState> {
 
-	private int reason;
-	private float value;
+	@Override
+	public void read(PacketOutChangeGameState packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setReason(ChangeReason.getByID(in.readUnsignedByte()));
+		packet.setValue(in.readFloat());
+	}
+
+	@Override
+	public void write(PacketOutChangeGameState packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		out.writeByte(packet.getReason().getID());
+		out.writeFloat(packet.getValue());
+	}
 	
-	public CorePacketOutChangeGameState() {
-		super(CoreProtocolAdapter.VERSION);
+	@Override
+	public PacketOutChangeGameState createPacketData() {
+		return new PacketOutChangeGameState();
 	}
 	
-	public CorePacketOutChangeGameState(ChangeReason reason, float value) {
-		this();
-		this.reason = reason.ordinal();
-	}
-
-	@Override
-	public void read(ByteBuf in) throws IOException {
-		reason = in.readUnsignedByte();
-		value = in.readFloat();
-	}
-
-	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeByte(reason);
-		out.writeFloat(value);
-	}
-
-	@Override
-	public ChangeReason getReason() {
-		return ChangeReason.getByID(reason);
-	}
-
-	@Override
-	public float getValue() {
-		return value;
-	}
-
-	@Override
-	public void setValue(float value) {
-		this.value = value;
-	}
-
-	@Override
-	public void setReason(ChangeReason reason) {
-		this.reason = reason.ordinal();
-	}
 }

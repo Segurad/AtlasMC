@@ -2,87 +2,57 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.chat.Chat;
-import de.atlasmc.chat.ChatUtil;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutTitle;
+import de.atlasmc.io.protocol.play.PacketOutTitle.TitleAction;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutTitle extends AbstractPacket implements PacketOutTitle {
-
-	private int action, fadeIn, stay, fadeOut;
-	private String title;
-	
-	public CorePacketOutTitle() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutTitle(TitleAction action, Chat title, int fadeIn, int stay, int fadeOut) {
-		this();
-		this.action = action.ordinal();
-		this.title = title.getText();
-		this.fadeIn = fadeIn;
-		this.stay = stay;
-		this.fadeOut = fadeOut;
-	}
+public class CorePacketOutTitle extends CoreAbstractHandler<PacketOutTitle> {
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		action = readVarInt(in);
+	public void read(PacketOutTitle packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		TitleAction action = TitleAction.getByID(readVarInt(in));
+		packet.setAction(action);
 		switch (action) {
-		case 0:
-		case 1:
-		case 2:
-			title = readString(in);
+		case SET_TITLE:
+		case SET_SUBTITLE:
+		case SET_ACTION_BAR:
+			packet.setTitle(readString(in));
 			break;
-		case 3:
-			fadeIn = in.readInt();
-			stay = in.readInt();
-			fadeOut = in.readInt();
+		case SET_TIME_AND_DISPLAY:
+			packet.setFadeIn(in.readInt());
+			packet.setStay(in.readInt());
+			packet.setFadeOut(in.readInt());
+			break;
+		default:
 			break;
 		}
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(action, out);
-		switch (action) {
-		case 0:
-		case 1:
-		case 2:
-			writeString(title, out);
+	public void write(PacketOutTitle packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.getAction().getID(), out);
+		switch (packet.getAction()) {
+		case SET_TITLE:
+		case SET_SUBTITLE:
+		case SET_ACTION_BAR:
+			writeString(packet.getTitle(), out);
 			break;
-		case 3:
-			out.writeInt(fadeIn);
-			out.writeInt(stay);
-			out.writeInt(fadeOut);
+		case SET_TIME_AND_DISPLAY:
+			out.writeInt(packet.getFadeIn());
+			out.writeInt(packet.getStay());
+			out.writeInt(packet.getFadeOut());
+		default:
+			break;
 		}
 	}
 
 	@Override
-	public TitleAction getAction() {
-		return TitleAction.getByID(action);
-	}
-
-	@Override
-	public Chat getText() {
-		return ChatUtil.toChat(title);
-	}
-
-	@Override
-	public int getFadeIn() {
-		return fadeIn;
-	}
-
-	@Override
-	public int getStay() {
-		return stay;
-	}
-
-	@Override
-	public int getFadeOut() {
-		return fadeOut;
+	public PacketOutTitle createPacketData() {
+		return new PacketOutTitle();
 	}
 
 }

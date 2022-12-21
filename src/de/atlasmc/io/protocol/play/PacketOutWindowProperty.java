@@ -1,25 +1,39 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_WINDOW_PROPERTY)
-public interface PacketOutWindowProperty extends PacketPlay, PacketOutbound {
+public class PacketOutWindowProperty extends AbstractPacket implements PacketPlayOut {
 
-	public byte getWindowID();
+	private int windowID, property, value;
 	
-	public int getProperty();
+	public int getWindowID() {
+		return windowID;
+	}
 	
-	public int getValue();
+	public void setWindowID(int windowID) {
+		this.windowID = windowID;
+	}
 	
-	public void setWindowID(int windowID);
+	public int getProperty() {
+		return property;
+	}
 	
-	public void setProperty(int property);
+	public void setProperty(int property) {
+		this.property = property;
+	}
 	
-	public void setValue(int value);
+	public int getValue() {
+		return value;
+	}
+	
+	public void setValue(int value) {
+		this.value = value;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_WINDOW_PROPERTY;
 	}
 	

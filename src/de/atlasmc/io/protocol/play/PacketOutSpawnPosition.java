@@ -1,15 +1,23 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_SPAWN_POSITION)
-public interface PacketOutSpawnPosition extends PacketPlay, PacketOutbound {
+public class PacketOutSpawnPosition extends AbstractPacket implements PacketPlayOut {
 	
-	public long getPosition();
+	private long position;
+	
+	public long getPosition() {
+		return position;
+	}
+	
+	public void setPosition(long position) {
+		this.position = position;
+	}
 	
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_SPAWN_POSITION;
 	}
 

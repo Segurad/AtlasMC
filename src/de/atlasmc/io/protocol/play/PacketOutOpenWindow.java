@@ -1,26 +1,42 @@
 package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.event.inventory.InventoryType;
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_OPEN_WINDOW)
-public interface PacketOutOpenWindow extends PacketPlay, PacketOutbound {
+public class PacketOutOpenWindow extends AbstractPacket implements PacketPlayOut {
 	
-	public int getWindowID();
+	private int windowID;
+	private InventoryType type;
+	private String title;
 	
-	public InventoryType getWindowType();
-	
-	public String getTitle();
-	
-	public void setWindowID(int windowID);
-	
-	public void setWindowType(InventoryType type);
-	
-	public void setTitle(String title);
-	
+	public int getWindowID() {
+		return windowID;
+	}
+
+	public InventoryType getType() {
+		return type;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setWindowID(int windowID) {
+		this.windowID = windowID;
+	}
+
+	public void setType(InventoryType type) {
+		this.type = type;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_OPEN_WINDOW;
 	}
 	

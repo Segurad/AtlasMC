@@ -1,20 +1,14 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_PLAYER_POSITION_AND_LOOK)
-public interface PacketOutPlayerPositionAndLook extends PacketPlay, PacketOutbound {
+public class PacketOutPlayerPositionAndLook extends AbstractPacket implements PacketPlayOut {
 	
-	public double getX();
-	
-	public double getY();
-	
-	public double getZ();
-	
-	public float getYaw();
-	
-	public float getPitch();
+	private double x, y, z;
+	private float yaw, pitch;
+	private int flags, teleportID;
 	
 	/**
 	 * 
@@ -22,26 +16,64 @@ public interface PacketOutPlayerPositionAndLook extends PacketPlay, PacketOutbou
 	 * Flags: x | y | z | yaw | pitch
 	 * if a flag is set the corresponding value is treated as relative and not absolute
 	 */
-	public int getFlags();
+	public int getFlags() {
+		return flags;
+	}
 	
-	public int getTeleportID();
-	
-	public void setX(double x);
-	
-	public void setY(double y);
-	
-	public void setZ(double z);
-	
-	public void setYaw(float yaw);
-	
-	public void setPitch(float pitch);
-	
-	public void setFlags(int flags);
-	
-	public void setTeleportID(int id);
-	
+	public double getX() {
+		return x;
+	}
+
+	public double getY() {
+		return y;
+	}
+
+	public double getZ() {
+		return z;
+	}
+
+	public float getYaw() {
+		return yaw;
+	}
+
+	public float getPitch() {
+		return pitch;
+	}
+
+	public int getTeleportID() {
+		return teleportID;
+	}
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	public void setY(double y) {
+		this.y = y;
+	}
+
+	public void setZ(double z) {
+		this.z = z;
+	}
+
+	public void setYaw(float yaw) {
+		this.yaw = yaw;
+	}
+
+	public void setPitch(float pitch) {
+		this.pitch = pitch;
+	}
+
+	public void setFlags(int flags) {
+		this.flags = flags;
+	}
+
+	public void setTeleportID(int teleportID) {
+		this.teleportID = teleportID;
+	}
+
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_PLAYER_POSITION_AND_LOOK;
 	}
 

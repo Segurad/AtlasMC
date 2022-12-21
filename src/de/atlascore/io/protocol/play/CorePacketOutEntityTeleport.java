@@ -2,103 +2,40 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutEntityTeleport;
 import de.atlasmc.util.MathUtil;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutEntityTeleport extends AbstractPacket implements PacketOutEntityTeleport {
+public class CorePacketOutEntityTeleport extends CoreAbstractHandler<PacketOutEntityTeleport> {
 
-	private int entityID, yaw, pitch;
-	private double x, y, z;
-	private boolean onGround;
+	@Override
+	public void read(PacketOutEntityTeleport packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setEntityID(readVarInt(in));
+		packet.setX(in.readDouble());
+		packet.setY(in.readDouble());
+		packet.setZ(in.readDouble());
+		packet.setYaw(MathUtil.fromAngle(in.readUnsignedByte()));
+		packet.setPitch(MathUtil.fromAngle(in.readUnsignedByte()));
+		packet.setOnGround(in.readBoolean());
+	}
+
+	@Override
+	public void write(PacketOutEntityTeleport packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.getEntityID(), out);
+		out.writeDouble(packet.getX());
+		out.writeDouble(packet.getY());
+		out.writeDouble(packet.getZ());
+		out.writeByte(MathUtil.toAngle(packet.getYaw()));
+		out.writeByte(MathUtil.toAngle(packet.getPitch()));
+		out.writeBoolean(packet.isOnGround());
+	}
 	
-	public CorePacketOutEntityTeleport() { 
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutEntityTeleport(int entityID, double x, double y, double z, float yaw, float pitch, boolean onGround) {
-		this();
-		this.entityID = entityID;
-		setLocation(x, y, z, pitch, yaw);
-		this.onGround = onGround;
-	}
-
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		entityID = readVarInt(in);
-		x = in.readDouble();
-		y = in.readDouble();
-		z = in.readDouble();
-		yaw = in.readUnsignedByte();
-		pitch = in.readUnsignedByte();
-		onGround = in.readBoolean();
-	}
-
-	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(entityID, out);
-		out.writeDouble(x);
-		out.writeDouble(y);
-		out.writeDouble(z);
-		out.writeByte(yaw);
-		out.writeByte(pitch);
-		out.writeBoolean(onGround);
-	}
-
-	@Override
-	public int getEntityID() {
-		return entityID;
-	}
-
-	@Override
-	public double getX() {
-		return x;
-	}
-
-	@Override
-	public double getY() {
-		return y;
-	}
-
-	@Override
-	public double getZ() {
-		return z;
-	}
-
-	@Override
-	public float getYaw() {
-		return MathUtil.fromAngle(yaw);
-	}
-
-	@Override
-	public float getPitch() {
-		return MathUtil.fromAngle(pitch);
-	}
-
-	@Override
-	public boolean isOnGround() {
-		return onGround;
-	}
-
-	@Override
-	public void setEntityID(int id) {
-		this.entityID = id;
-	}
-
-	@Override
-	public void setLocation(double x, double y, double z, float pitch, float yaw) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.yaw = MathUtil.toAngle(yaw);
-		this.pitch = MathUtil.toAngle(pitch);
-	}
-
-	@Override
-	public void setOnGround(boolean onGround) {
-		this.onGround = onGround;
+	public PacketOutEntityTeleport createPacketData() {
+		return new PacketOutEntityTeleport();
 	}
 
 }

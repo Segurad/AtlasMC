@@ -5,17 +5,33 @@ import java.util.UUID;
 
 import de.atlasmc.Gamemode;
 import de.atlasmc.chat.Chat;
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_PLAYER_INFO)
-public interface PacketOutPlayerInfo extends PacketPlay, PacketOutbound {
+public class PacketOutPlayerInfo extends AbstractPacket implements PacketPlayOut {
 	
-	public PlayerInfoAction getAction();
-	public List<PlayerInfo> getPlayers();
+	private PlayerInfoAction action;
+	private List<PlayerInfo> info;
+	
+	public void setAction(PlayerInfoAction action) {
+		this.action = action;
+	}
+	
+	public PlayerInfoAction getAction() {
+		return action;
+	}
+	
+	public void setInfo(List<PlayerInfo> info) {
+		this.info = info;
+	}
+	
+	public List<PlayerInfo> getPlayers() {
+		return info;
+	}
 	
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_PLAYER_INFO;
 	}
 	
@@ -109,8 +125,32 @@ public interface PacketOutPlayerInfo extends PacketPlay, PacketOutbound {
 		UPDATE_DISPLAY_NAME,
 		REMOVE_PLAYER;
 		
+		private static List<PlayerInfoAction> VALUES;
+		
+		public int getID() {
+			return ordinal();
+		}
+		
 		public static PlayerInfoAction getByID(int id) {
-			return values()[id];
+			return getValues().get(id);
+		}
+		
+		/**
+		 * Returns a immutable List of all Types.<br>
+		 * This method avoid allocation of a new array not like {@link #values()}.
+		 * @return list
+		 */
+		public static List<PlayerInfoAction> getValues() {
+			if (VALUES == null)
+				VALUES = List.of(values());
+			return VALUES;
+		}
+		
+		/**
+		 * Releases the system resources used from the values cache
+		 */
+		public static void freeValues() {
+			VALUES = null;
 		}
 		
 	}

@@ -1,16 +1,32 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_ENTITY_HEAD_LOOK)
-public interface PacketOutEntityHeadLook extends PacketPlay, PacketOutbound {
+public class PacketOutEntityHeadLook extends AbstractPacket implements PacketPlayOut {
 	
-	public int getEntityID();
-	public float getYaw();
+	private int entityID;
+	private float yaw;
+	
+	public int getEntityID() {
+		return entityID;
+	}
+	
+	public void setEntityID(int entityID) {
+		this.entityID = entityID;
+	}
+	
+	public float getYaw() {
+		return yaw;
+	}
+	
+	public void setYaw(float yaw) {
+		this.yaw = yaw;
+	}	
 	
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_ENTITY_HEAD_LOOK;
 	}
 

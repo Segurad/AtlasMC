@@ -2,62 +2,34 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutBlockAction;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutBlockAction extends AbstractPacket implements PacketOutBlockAction {
+public class CorePacketOutBlockAction extends CoreAbstractHandler<PacketOutBlockAction> {
 
-	private int actionID, actionParam, type;
-	private long pos;
-	
-	public CorePacketOutBlockAction() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutBlockAction(long pos, int actionID, int actionParam, int blockType) {
-		this();
-		this.actionID = actionID;
-		this.pos = pos;
-		this.actionParam = actionParam;
-		this.type = blockType;
+	@Override
+	public void read(PacketOutBlockAction packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setPosition(in.readLong());
+		packet.setActionID(in.readUnsignedByte());
+		packet.setActionParam(in.readUnsignedByte());
+		packet.setBlockType(readVarInt(in));
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		pos = in.readLong();
-		actionID = in.readUnsignedByte();
-		actionParam = in.readUnsignedByte();
-		type = readVarInt(in);
+	public void write(PacketOutBlockAction packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		out.writeLong(packet.getPosition());
+		out.writeByte(packet.getActionID());
+		out.writeByte(packet.getActionParam());
+		writeVarInt(packet.getBlockType(), out);
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeLong(pos);
-		out.writeByte(actionID);
-		out.writeByte(actionParam);
-		writeVarInt(type, out);
-	}
-
-	@Override
-	public long getPosition() {
-		return pos;
-	}
-
-	@Override
-	public int getActionID() {
-		return actionID;
-	}
-
-	@Override
-	public int getActionParam() {
-		return actionParam;
-	}
-
-	@Override
-	public int getBlockType() {
-		return type;
+	public PacketOutBlockAction createPacketData() {
+		return new PacketOutBlockAction();
 	}
 
 }

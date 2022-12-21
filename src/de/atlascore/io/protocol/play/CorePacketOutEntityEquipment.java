@@ -4,32 +4,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlascore.io.CoreAbstractHandler;
 import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.io.AbstractPacket;
+import static de.atlasmc.io.AbstractPacket.*;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutEntityEquipment;
 import de.atlasmc.util.Pair;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutEntityEquipment extends AbstractPacket implements PacketOutEntityEquipment {
-	
-	private int entityID;
-	private List<Pair<EquipmentSlot, ItemStack>> slots;
-	
-	public CorePacketOutEntityEquipment() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutEntityEquipment(int entityID, List<Pair<EquipmentSlot, ItemStack>> slots) {
-		this();
-		this.slots = slots;
-	}
+public class CorePacketOutEntityEquipment extends CoreAbstractHandler<PacketOutEntityEquipment> {
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		entityID = readVarInt(in);
-		slots = new ArrayList<Pair<EquipmentSlot,ItemStack>>();
+	public void read(PacketOutEntityEquipment packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setEntityID(readVarInt(in));
+		List<Pair<EquipmentSlot, ItemStack>> slots = new ArrayList<>();
 		boolean next;
 		do {
 			int raw = in.readByte();
@@ -38,40 +27,27 @@ public class CorePacketOutEntityEquipment extends AbstractPacket implements Pack
 			ItemStack item = readSlot(in);
 			slots.add(Pair.of(slot, item));
 		} while (next);
+		packet.setSlots(slots);
 	}
 	
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(entityID, out);
+	public void write(PacketOutEntityEquipment packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.getEntityID(), out);
+		List<Pair<EquipmentSlot, ItemStack>> slots = packet.getSlots();
 		final int size = slots.size();
 		for (int i = 0; i < size; i++) {
 			Pair<EquipmentSlot, ItemStack> pair = slots.get(i);
 			int slot = pair.getValue1().getID();
-			if (i+1 < size) slot |= 0x80;
+			if (i+1 < size) 
+				slot |= 0x80;
 			out.writeInt(slot);
 			writeSlot(pair.getValue2(), out);
 		}
 	}
-	
-	@Override
-	public int getEntityID() {
-		return entityID;
-	}
 
 	@Override
-	public List<Pair<EquipmentSlot, ItemStack>> getSlots() {
-		return slots;
-	}
-
-	@Override
-	public void setSlots(List<Pair<EquipmentSlot, ItemStack>> slots) {
-		this.slots = slots;
-	}
-
-	@Override
-	public void setSlot(EquipmentSlot slot, ItemStack item) {
-		slots = new ArrayList<>(1);
-		slots.add(new Pair<>(slot, item));
+	public PacketOutEntityEquipment createPacketData() {
+		return new PacketOutEntityEquipment();
 	}
 
 }

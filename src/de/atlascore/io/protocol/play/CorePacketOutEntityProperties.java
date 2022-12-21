@@ -1,80 +1,71 @@
 package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlascore.io.CoreAbstractHandler;
+import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeInstance;
 import de.atlasmc.attribute.AttributeModifier;
-import de.atlasmc.io.AbstractPacket;
+import de.atlasmc.attribute.AttributeModifier.Operation;
+
+import static de.atlasmc.io.AbstractPacket.*;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutEntityProperties;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 
-public class CorePacketOutEntityProperties extends AbstractPacket implements PacketOutEntityProperties {
+public class CorePacketOutEntityProperties extends CoreAbstractHandler<PacketOutEntityProperties> {
 
-	private int entityID;
-	private ByteBuf buf;
-	
-	public CorePacketOutEntityProperties() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutEntityProperties(int entityID, Collection<AttributeInstance> attributes) {
-		this();
-		this.entityID = entityID;
-		setAttributes(attributes);
+	@Override
+	public void read(PacketOutEntityProperties packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setEntity(readVarInt(in));
+		int attributeCount = in.readInt();
+		List<AttributeInstance> attributes = new ArrayList<>(attributeCount);
+		for (int i = 0; i < attributeCount; i++) {
+			String typeID = readString(in);
+			Attribute type = Attribute.getByName(typeID);
+			double value = in.readDouble();
+			AttributeInstance instance = new AttributeInstance(type, 0.0, null);
+			instance.setBaseValue(value);
+			int modifierCount = readVarInt(in);
+			List<AttributeModifier> modifiers = new ArrayList<>(attributeCount);
+			for (int j = 0; j < modifierCount; j++) {
+				long most = in.readLong();
+				long least = in.readLong();
+				double amount = in.readDouble();
+				Operation op = Operation.getByID(i);
+				UUID uuid = new UUID(most, least);
+				AttributeModifier modifier = new AttributeModifier(uuid, null, amount, op);
+				modifiers.add(modifier);
+			}
+			instance.setModifiers(modifiers);
+			attributes.add(instance);
+		}
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		entityID = readVarInt(in);
-		buf = in.readBytes(in.readableBytes());
-	}
-
-	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(entityID, out);
-		out.writeBytes(buf);
-	}
-
-	@Override
-	public int getEntityID() {
-		return entityID;
-	}
-
-	@Override
-	public List<AttributeInstance> getAttributes() {
-		// TODO return attributes
-		return null;
-	}
-
-	@Override
-	public void setEntity(int id) {
-		this.entityID = id;
-	}
-
-	@Override
-	public void setAttributes(Collection<AttributeInstance> attributes) {
-		if (buf == null)
-			buf = Unpooled.buffer();
-		else
-			buf.clear();
-		writeVarInt(attributes.size(), buf);
+	public void write(PacketOutEntityProperties packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.getEntityID(), out);
+		List<AttributeInstance> attributes = packet.getAttributes();
+		writeVarInt(attributes.size(), out);
 		for (AttributeInstance i : attributes) {
-			writeString(i.getAttribute().getName(), buf);
-			buf.writeDouble(i.getDefaultValue());
-			writeVarInt(i.getModifierCount(), buf);
+			writeString(i.getAttribute().getName(), out);
+			out.writeDouble(i.getDefaultValue());
+			writeVarInt(i.getModifierCount(), out);
 			for (AttributeModifier mod : i.getModifiers()) {
-				buf.writeLong(mod.getUUID().getMostSignificantBits());
-				buf.writeLong(mod.getUUID().getLeastSignificantBits());
-				buf.writeDouble(mod.getAmount());
-				buf.writeByte(mod.getOperation().ordinal());
+				out.writeLong(mod.getUUID().getMostSignificantBits());
+				out.writeLong(mod.getUUID().getLeastSignificantBits());
+				out.writeDouble(mod.getAmount());
+				out.writeByte(mod.getOperation().getID());
 			}
 		}
 	}
-	
-	
+
+	@Override
+	public PacketOutEntityProperties createPacketData() {
+		return new PacketOutEntityProperties();
+	}
 
 }

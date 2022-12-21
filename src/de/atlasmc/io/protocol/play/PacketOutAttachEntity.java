@@ -1,16 +1,31 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_ATTACH_ENTITY)
-public interface PacketOutAttachEntity extends PacketPlay, PacketOutbound {
+public class PacketOutAttachEntity extends AbstractPacket implements PacketPlayOut {
 	
-	public int getAttachedEntityID();
-	public int getHoldingEntityID();
+	private int holderEntityID, attachedEntityID;
+	
+	public int getHolderEntityID() {
+		return holderEntityID;
+	}
+	
+	public void setHolderEntityID(int holderEntityID) {
+		this.holderEntityID = holderEntityID;
+	}
+	
+	public int getAttachedEntityID() {
+		return attachedEntityID;
+	}
+	
+	public void setAttachedEntityID(int attachedEntityID) {
+		this.attachedEntityID = attachedEntityID;
+	}
 	
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_ATTACH_ENTITY;
 	}
 

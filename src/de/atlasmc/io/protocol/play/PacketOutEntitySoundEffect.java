@@ -2,34 +2,60 @@ package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_ENTITY_SOUND_EFFECT)
-public interface PacketOutEntitySoundEffect extends PacketPlay, PacketOutbound {
+public class PacketOutEntitySoundEffect extends AbstractPacket implements PacketPlayOut {
 	
-	public Sound getSound();
+	private Sound sound;
+	private SoundCategory category;
+	private int entityID;
+	private float volume;
+	private float pitch;
 	
-	public SoundCategory getSoundCategory();
+	public Sound getSound() {
+		return sound;
+	}
 	
-	public int getEntityID();
+	public void setSound(Sound sound) {
+		this.sound = sound;
+	}
 	
-	public float getVolume();
+	public SoundCategory getCategory() {
+		return category;
+	}
 	
-	public float getPitch();
+	public void setCategory(SoundCategory category) {
+		this.category = category;
+	}
 	
-	public void setEntityID(int entityID);
+	public int getEntityID() {
+		return entityID;
+	}
 	
-	public void setCategory(SoundCategory category);
+	public void setEntityID(int entityID) {
+		this.entityID = entityID;
+	}
 	
-	public void setSound(Sound sound);
+	public float getVolume() {
+		return volume;
+	}
 	
-	public void setVolume(float volume);
+	public void setVolume(float volume) {
+		this.volume = volume;
+	}
 	
-	public void setPitch(float pitch);
+	public float getPitch() {
+		return pitch;
+	}
+	
+	public void setPitch(float pitch) {
+		this.pitch = pitch;
+	}
 	
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_ENTITY_SOUND_EFFECT;
 	}
 

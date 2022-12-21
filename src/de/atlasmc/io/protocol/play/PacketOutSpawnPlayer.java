@@ -3,30 +3,85 @@ package de.atlasmc.io.protocol.play;
 import java.util.UUID;
 
 import de.atlasmc.entity.HumanEntity;
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_SPAWN_PLAYER)
-public interface PacketOutSpawnPlayer extends PacketPlay, PacketOutbound {
+public class PacketOutSpawnPlayer extends AbstractPacket implements PacketPlayOut {
 	
-	public int getEntityID();
+	private int entityID;
+	private float pitch, yaw;
+	private double x, y, z;
+	private UUID uuid;
 	
-	public UUID getUUID();
-	
-	public double getX();
-	
-	public double getY();
-	
-	public double getZ();
-	
-	public float getYaw();
-	
-	public float getPitch();
-	
-	public void setEntity(HumanEntity entity);
+	public int getEntityID() {
+		return entityID;
+	}
+
+	public float getPitch() {
+		return pitch;
+	}
+
+	public float getYaw() {
+		return yaw;
+	}
+
+	public double getX() {
+		return x;
+	}
+
+	public double getY() {
+		return y;
+	}
+
+	public double getZ() {
+		return z;
+	}
+
+	public UUID getUUID() {
+		return uuid;
+	}
+
+	public void setEntityID(int entityID) {
+		this.entityID = entityID;
+	}
+
+	public void setPitch(float pitch) {
+		this.pitch = pitch;
+	}
+
+	public void setYaw(float yaw) {
+		this.yaw = yaw;
+	}
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	public void setY(double y) {
+		this.y = y;
+	}
+
+	public void setZ(double z) {
+		this.z = z;
+	}
+
+	public void setUUID(UUID uuid) {
+		this.uuid = uuid;
+	}
+
+	public void setEntity(HumanEntity entity) {
+		uuid = entity.getUUID();
+		entityID = entity.getID();
+		x = entity.getX();
+		y = entity.getY();
+		z = entity.getZ();
+		pitch = entity.getPitch();
+		yaw = entity.getYaw();
+	}
 	
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_SPAWN_PLAYER;
 	}
 

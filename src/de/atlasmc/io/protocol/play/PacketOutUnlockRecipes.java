@@ -3,58 +3,107 @@ package de.atlasmc.io.protocol.play;
 import java.util.List;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_UNLOCK_RECIPES)
-public interface PacketOutUnlockRecipes extends PacketPlay, PacketOutbound {
+public class PacketOutUnlockRecipes extends AbstractPacket implements PacketPlayOut {
 	
-	public RecipesAction getAction();
+	private RecipesAction action;
+	private boolean craftingOpen, craftingFilter, smeltingOpen, smeltingFilter, 
+					blastFurnaceOpen, blastFurnaceFilter, smokerOpen, smokerFilter;
+	private List<NamespacedKey> tagged, untagged;
 	
-	public List<NamespacedKey> getTagged();
+	public RecipesAction getAction() {
+		return action;
+	}
+
+	public List<NamespacedKey> getTagged() {
+		return tagged;
+	}
+
+	public List<NamespacedKey> getUntagged() {
+		return untagged;
+	}
+
+	public void setTagged(List<NamespacedKey> tagged) {
+		this.tagged = tagged;
+	}
+
+	public void setUntagged(List<NamespacedKey> untagged) {
+		this.untagged = untagged;
+	}
+
+	public void setAction(RecipesAction action) {
+		this.action = action;
+	}
+
+	public boolean isCraftingBookOpen() {
+		return craftingOpen;
+	}
+
+	public boolean isCraftingBookFiltered() {
+		return craftingFilter;
+	}
+
+	public boolean isSmeltingBookOpen() {
+		return smeltingOpen;
+	}
+
+	public boolean isSmeltingBookFiltered() {
+		return smeltingFilter;
+	}
+
+	public boolean isBlastingBookOpen() {
+		return blastFurnaceOpen;
+	}
 	
-	public List<NamespacedKey> getUntagged();
-	
-	public void setTagged(List<NamespacedKey> tagged);
-	
-	public void setUntagged(List<NamespacedKey> untagged);
-	
-	public void setAction(RecipesAction action);
-	
-	public boolean isCraftingBookOpen();
-	
-	public boolean isCraftingBookFiltered();
-	
-	public boolean isSmeltingBookOpen();
-	
-	public boolean isSmeltingBookFiltered();
-	
-	public boolean isBlastingBookOpen();
-	
-	public boolean isBlastingBookFiltered();
-	
-	public boolean isSmokingBookOpen();
-	
-	public boolean isSmokingBookFilered();
-	
-	public void setCraftingBookOpen(boolean open);
-	
-	public void setCraftingBookFiltered(boolean filtered);
-	
-	public void setSmeltingBookOpen(boolean open);
-	
-	public void setSmeltingBookFiltered(boolean filtered);
-	
-	public void setBlastingBookOpen(boolean open);
-	
-	public void setBlastingBookFiltered(boolean filtered);
-	
-	public void setSmokingBookOpen(boolean open);
-	
-	public void setSmokingBookFiltered(boolean filtered);
+	public boolean isBlastingBookFiltered() {
+		return blastFurnaceFilter;
+	}
+
+	public boolean isSmokingBookOpen() {
+		return smokerOpen;
+	}
+
+	public boolean isSmokingBookFilered() {
+		return smokerFilter;
+	}
+
+	public void setCraftingBookOpen(boolean open) {
+		this.craftingOpen = open;
+	}
+
+	public void setCraftingBookFiltered(boolean filtered) {
+		this.craftingFilter = filtered;
+	}
+
+	public void setSmeltingBookOpen(boolean open) {
+		this.smeltingOpen = open;
+	}
+
+	public void setSmeltingBookFiltered(boolean filtered) {
+		this.smeltingFilter = filtered;
+	}
+
+	public void setBlastingBookOpen(boolean open) {
+		this.blastFurnaceOpen = open;
+	}
+
+	public void setBlastingBookFiltered(boolean filtered) {
+		this.blastFurnaceFilter = filtered;
+	}
+
+	public void setSmokingBookOpen(boolean open) {
+		this.smokerOpen = open;
+	}
+
+	public void setSmokingBookFiltered(boolean filtered) {
+		this.smokerFilter = filtered;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_UNLOCK_RECIPES;
 	}
 	
@@ -76,6 +125,7 @@ public interface PacketOutUnlockRecipes extends PacketPlay, PacketOutbound {
 		public int getID() {
 			return ordinal();
 		}
+		
 	}
 
 }

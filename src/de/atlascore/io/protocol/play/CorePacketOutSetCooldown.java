@@ -2,45 +2,29 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutSetCooldown;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutSetCooldown extends AbstractPacket implements PacketOutSetCooldown {
+public class CorePacketOutSetCooldown extends CoreAbstractHandler<PacketOutSetCooldown> {
 
-	private int itemID, cooldown;
-	
-	public CorePacketOutSetCooldown() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutSetCooldown(int itemID, int cooldown) {
-		this();
-		this.itemID = itemID;
-		this.cooldown = cooldown;
+	@Override
+	public void read(PacketOutSetCooldown packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setItemID(readVarInt(in));
+		packet.setCooldown(readVarInt(in));
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		itemID = readVarInt(in);
-		cooldown = readVarInt(in);
+	public void write(PacketOutSetCooldown packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.getItemID(), out);
+		writeVarInt(packet.getCooldown(), out);
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(itemID, out);
-		writeVarInt(cooldown, out);
-	}
-
-	@Override
-	public int getItemID() {
-		return itemID;
-	}
-
-	@Override
-	public int getCooldown() {
-		return cooldown;
+	public PacketOutSetCooldown createPacketData() {
+		return new PacketOutSetCooldown();
 	}
 
 }

@@ -2,37 +2,27 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutCamera;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutCamera extends AbstractPacket implements PacketOutCamera {
+public class CorePacketOutCamera extends CoreAbstractHandler<PacketOutCamera> {
 
-	private int entityID;
-	
-	public CorePacketOutCamera() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutCamera(int entityID) {
-		this();
-		this.entityID = entityID;
+	@Override
+	public void read(PacketOutCamera packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setEntityID(readVarInt(in));
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		entityID = readVarInt(in);
+	public void write(PacketOutCamera packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.getEntityID(), out);
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(entityID, out);
-	}
-
-	@Override
-	public int getEntityID() {
-		return entityID;
+	public PacketOutCamera createPacketData() {
+		return new PacketOutCamera();
 	}
 
 }

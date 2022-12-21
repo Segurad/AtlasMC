@@ -1,16 +1,32 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_PLUGIN_MESSAGE)
-public interface PacketOutPluginMessage extends PacketPlay, PacketOutbound {
+public class PacketOutPluginMessage extends AbstractPacket implements PacketPlayOut {
 	
-	public String getIdentifier();
-	public byte[] getData();
+	private String identifier;
+	private byte[] data;
+	
+	public String getIdentifier() {
+		return identifier;
+	}
+	
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
+	
+	public byte[] getData() {
+		return data;
+	}
+	
+	public void setData(byte[] data) {
+		this.data = data;
+	}
 	
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_PLUGIN_MESSAGE;
 	}
 

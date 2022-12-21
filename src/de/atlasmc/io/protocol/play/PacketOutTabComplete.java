@@ -1,23 +1,59 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.chat.Chat;
+import java.util.List;
+
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_TAB_COMPLETE)
-public interface PacketOutTabComplete extends PacketPlay, PacketOutbound {
+public class PacketOutTabComplete extends AbstractPacket implements PacketPlayOut {
 	
+	private int transactionID, start, length;
+	private List<Match> matches;
+	
+	public int getTransactionID() {
+		return transactionID;
+	}
+
+	public int getStart() {
+		return start;
+	}
+
+	public int getLength() {
+		return length;
+	}
+
+	public List<Match> getMatches() {
+		return matches;
+	}
+
+	public void setTransactionID(int transactionID) {
+		this.transactionID = transactionID;
+	}
+
+	public void setStart(int start) {
+		this.start = start;
+	}
+
+	public void setLength(int length) {
+		this.length = length;
+	}
+
+	public void setMatches(List<Match> matches) {
+		this.matches = matches;
+	}
+
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_TAB_COMPLETE;
 	}
 	
 	public static class Match {
 		
 		private final String match;
-		private final Chat tooltip;
+		private final String tooltip;
 		
-		public Match(String match, Chat tooltip) {
+		public Match(String match, String tooltip) {
 			this.match = match;
 			this.tooltip = tooltip;
 		}
@@ -26,7 +62,7 @@ public interface PacketOutTabComplete extends PacketPlay, PacketOutbound {
 			return match;
 		}
 		
-		public Chat getToolTip() {
+		public String getToolTip() {
 			return tooltip;
 		}
 		

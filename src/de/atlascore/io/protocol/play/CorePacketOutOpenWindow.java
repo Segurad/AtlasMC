@@ -2,72 +2,32 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.chat.Chat;
+import de.atlascore.io.CoreAbstractHandler;
 import de.atlasmc.event.inventory.InventoryType;
-import de.atlasmc.io.AbstractPacket;
+import static de.atlasmc.io.AbstractPacket.*;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutOpenWindow;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutOpenWindow extends AbstractPacket implements PacketOutOpenWindow {
+public class CorePacketOutOpenWindow extends CoreAbstractHandler<PacketOutOpenWindow> {
 
-	private int windowID, type;
-	private String title;
+	@Override
+	public void read(PacketOutOpenWindow packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setWindowID(readVarInt(in));
+		packet.setType(InventoryType.getByID(readVarInt(in)));
+		packet.setTitle(readString(in));
+	}
+
+	@Override
+	public void write(PacketOutOpenWindow packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.getWindowID(), out);
+		writeVarInt(packet.getType().getID(), out);
+		writeString(packet.getTitle(), out);
+	}
 	
-	public CorePacketOutOpenWindow() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutOpenWindow(int windowID, InventoryType type, Chat title) {
-		this();
-		this.windowID = windowID;
-		this.type = type.ordinal();
-		if (this.type == -1) throw new IllegalArgumentException("Invalid InventoryType:" + type.name());
-		this.title = title.getText();
-	}
-
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		windowID = readVarInt(in);
-		type = readVarInt(in);
-		title = readString(in);
-	}
-
-	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(windowID, out);
-		writeVarInt(type, out);
-		writeString(title, out);
-	}
-
-	@Override
-	public int getWindowID() {
-		return windowID;
-	}
-
-	@Override
-	public InventoryType getWindowType() {
-		return InventoryType.getByID(type);
-	}
-
-	@Override
-	public String getTitle() {
-		return title;
-	}
-
-	@Override
-	public void setWindowID(int windowID) {
-		this.windowID = windowID;
-	}
-
-	@Override
-	public void setWindowType(InventoryType type) {
-		this.type = type.getID();
-	}
-
-	@Override
-	public void setTitle(String title) {
-		this.title = title;
+	public PacketOutOpenWindow createPacketData() {
+		return new PacketOutOpenWindow();
 	}
 
 }

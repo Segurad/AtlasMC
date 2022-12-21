@@ -1,25 +1,51 @@
 package de.atlasmc.io.protocol.play;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import de.atlasmc.attribute.AttributeInstance;
+import de.atlasmc.attribute.AttributeModifier;
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_ENTITY_PROPERTIES)
-public interface PacketOutEntityProperties extends PacketPlay, PacketOutbound {
+public class PacketOutEntityProperties extends AbstractPacket implements PacketPlayOut {
 	
-	public int getEntityID();
+	private int entityID;
+	private List<AttributeInstance> attributes;
 	
-	public List<AttributeInstance> getAttributes();
+	public int getEntityID() {
+		return entityID;
+	}
 	
-	public void setEntity(int id);
+	public List<AttributeInstance> getAttributes() {
+		return attributes;
+	}
 	
-	public void setAttributes(Collection<AttributeInstance> attributes);
+	public void setEntity(int entityID) {
+		this.entityID = entityID;
+	}
+	
+	public void setAttributes(List<AttributeInstance> attributes) {
+		this.attributes = attributes;
+	}
+	
+	public void setCopyAttributes(Collection<AttributeInstance> attributes) {
+		this.attributes = new ArrayList<>(attributes.size());
+		for (AttributeInstance i : attributes) {
+			AttributeInstance copyInstance = new AttributeInstance(i.getAttribute(), i.getDefaultValue(), null);
+			copyInstance.setBaseValue(i.getBaseValue());
+			List<AttributeModifier> modifiers = new ArrayList<>();
+			for (AttributeModifier mod : i.getModifiers()) {
+				modifiers.add(mod.clone());
+			}
+			copyInstance.setModifiers(modifiers);
+		}
+	}
 	
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_ENTITY_PROPERTIES;
 	}
 

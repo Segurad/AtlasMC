@@ -2,45 +2,28 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutTimeUpdate;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutTimeUpdate extends AbstractPacket implements PacketOutTimeUpdate {
+public class CorePacketOutTimeUpdate extends CoreAbstractHandler<PacketOutTimeUpdate> {
 
-	private long worldAge, timeOfDay;
+	@Override
+	public void read(PacketOutTimeUpdate packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setWorldAge(in.readLong());
+		packet.setTimeOfDay(in.readLong());
+	}
+
+	@Override
+	public void write(PacketOutTimeUpdate packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		out.writeLong(packet.getWorldAge());
+		out.writeLong(packet.getTimeOfDay());
+	}
 	
-	public CorePacketOutTimeUpdate() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutTimeUpdate(long worldAge, long timeOfDay) {
-		this();
-		this.worldAge = worldAge;
-		this.timeOfDay = timeOfDay;
-	}
-
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		worldAge = in.readLong();
-		timeOfDay = in.readLong();
-	}
-
-	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeLong(worldAge);
-		out.writeLong(timeOfDay);
-	}
-
-	@Override
-	public long getWorldAge() {
-		return worldAge;
-	}
-
-	@Override
-	public long getTimeOfDay() {
-		return timeOfDay;
+	public PacketOutTimeUpdate createPacketData() {
+		return new PacketOutTimeUpdate();
 	}
 
 }

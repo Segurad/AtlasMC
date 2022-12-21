@@ -2,60 +2,33 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutAcknowledgePlayerDigging;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutAcknowledgePlayerDigging extends AbstractPacket implements PacketOutAcknowledgePlayerDigging {
+public class CorePacketOutAcknowledgePlayerDigging extends CoreAbstractHandler<PacketOutAcknowledgePlayerDigging> {
 
-	private long pos;
-	private int blockstate, status;
-	private boolean successful;
-	
-	public CorePacketOutAcknowledgePlayerDigging() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutAcknowledgePlayerDigging(long pos, int blockstate, int status, boolean successful) {
-		this();
-		this.pos = pos;
-		this.blockstate = blockstate;
-		this.status = status;
-		this.successful = successful;
+	@Override
+	public void read(PacketOutAcknowledgePlayerDigging packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setPosition(in.readLong());
+		packet.setBlockState(readVarInt(in));
+		packet.setStatus(readVarInt(in));
+		packet.setSuccessful(in.readBoolean());
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		pos = in.readLong();
-		blockstate = readVarInt(in);
-		status = readVarInt(in);
-		successful = in.readBoolean();
+	public void write(PacketOutAcknowledgePlayerDigging packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		out.writeLong(packet.getPosition());
+		writeVarInt(packet.getBlockState(), out);
+		writeVarInt(packet.getStatus(), out);
+		out.writeBoolean(packet.isSuccessful());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeLong(pos);
-		writeVarInt(blockstate, out);
-		writeVarInt(status, out);
-		out.writeBoolean(successful);
+	public PacketOutAcknowledgePlayerDigging createPacketData() {
+		return new PacketOutAcknowledgePlayerDigging();
 	}
-
-	@Override
-	public long getPosition() {
-		return pos;
-	}
-
-	@Override
-	public int getBlockState() {
-		return blockstate;
-	}
-
-	@Override
-	public boolean isSuccessful() {
-		return successful;
-	}
-	
-	
 
 }

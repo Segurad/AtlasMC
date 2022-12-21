@@ -1,27 +1,44 @@
 package de.atlasmc.io.protocol.play;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 import de.atlasmc.util.Pair;
 
 @DefaultPacketID(PacketPlay.OUT_ENTITY_EQUIPMENT)
-public interface PacketOutEntityEquipment extends PacketPlay, PacketOutbound {
+public class PacketOutEntityEquipment extends AbstractPacket implements PacketPlayOut {
 	
-	public int getEntityID();
+	private int entityID;
+	private List<Pair<EquipmentSlot, ItemStack>> slots;
 	
-	public List<Pair<EquipmentSlot, ItemStack>> getSlots();
+	public int getEntityID() {
+		return entityID;
+	}
 	
-	public void setSlots(List<Pair<EquipmentSlot, ItemStack>> slots);
+	public void setEntityID(int entityID) {
+		this.entityID = entityID;
+	}
 	
-	public void setSlot(EquipmentSlot slot, ItemStack item);
+	public List<Pair<EquipmentSlot, ItemStack>> getSlots() {
+		return slots;
+	}
+	
+	public void setSlots(List<Pair<EquipmentSlot, ItemStack>> slots) {
+		this.slots = slots;
+	}
+	
+	public void setSlot(EquipmentSlot slot, ItemStack item) {
+		slots = new ArrayList<>(1);
+		slots.add(new Pair<>(slot, item));
+	}
 	
 	@Override
-	public default int getDefaultID() {
-		return 0x47;
+	public int getDefaultID() {
+		return OUT_ENTITY_EQUIPMENT;
 	}
 
 }

@@ -2,97 +2,38 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlascore.io.CoreAbstractHandler;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
-import de.atlasmc.io.AbstractPacket;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutEntitySoundEffect;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutEntitySoundEffect extends AbstractPacket implements PacketOutEntitySoundEffect {
-
-	private int soundID, category, entityID;
-	private float volume, pitch;
-	
-	public CorePacketOutEntitySoundEffect() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-
-	public CorePacketOutEntitySoundEffect(int soundID, SoundCategory category, int entityID, float volume, float pitch) {
-		this();
-		this.soundID = soundID;
-		this.category = category.ordinal();
-		this.entityID = entityID;
-		this.volume = volume;
-		this.pitch = pitch;
-	}
+public class CorePacketOutEntitySoundEffect extends CoreAbstractHandler<PacketOutEntitySoundEffect> {
 	
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		soundID = readVarInt(in);
-		category = readVarInt(in);
-		entityID = readVarInt(in);
-		volume = in.readFloat();
-		pitch = in.readFloat();
+	public void read(PacketOutEntitySoundEffect packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setSound(Sound.getByID(readVarInt(in)));
+		packet.setCategory(SoundCategory.getByID(readVarInt(in)));
+		packet.setEntityID(readVarInt(in));
+		packet.setVolume(in.readFloat());
+		packet.setPitch(in.readFloat());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(soundID, out);
-		writeVarInt(category, out);
-		writeVarInt(entityID, out);
-		out.writeFloat(volume);
-		out.writeFloat(pitch);
+	public void write(PacketOutEntitySoundEffect packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.getSound().getID(), out);
+		writeVarInt(packet.getCategory().getID(), out);
+		writeVarInt(packet.getEntityID(), out);
+		out.writeFloat(packet.getVolume());
+		out.writeFloat(packet.getPitch());
 	}
-
+	
 	@Override
-	public SoundCategory getSoundCategory() {
-		return SoundCategory.getByID(category);
-	}
-
-	@Override
-	public int getEntityID() {
-		return entityID;
-	}
-
-	@Override
-	public float getVolume() {
-		return volume;
-	}
-
-	@Override
-	public float getPitch() {
-		return pitch;
-	}
-
-	@Override
-	public Sound getSound() {
-		return Sound.getByID(soundID);
-	}
-
-	@Override
-	public void setEntityID(int entityID) {
-		this.entityID = entityID;
-	}
-
-	@Override
-	public void setCategory(SoundCategory category) {
-		this.category = category.getID();
-	}
-
-	@Override
-	public void setSound(Sound sound) {
-		this.soundID = sound.getID();
-	}
-
-	@Override
-	public void setVolume(float volume) {
-		this.volume = volume;
-	}
-
-	@Override
-	public void setPitch(float pitch) {
-		this.pitch = pitch;
+	public PacketOutEntitySoundEffect createPacketData() {
+		return new PacketOutEntitySoundEffect();
 	}
 
 }

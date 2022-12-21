@@ -2,57 +2,30 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutRemoveEntityEffect;
-import de.atlasmc.potion.PotionEffectType;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutRemoveEntityEffect extends AbstractPacket implements PacketOutRemoveEntityEffect {
+public class CorePacketOutRemoveEntityEffect extends CoreAbstractHandler<PacketOutRemoveEntityEffect> {
 
-	private int entityID;
-	private int effectID;
-	
-	public CorePacketOutRemoveEntityEffect() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutRemoveEntityEffect(int entityID, PotionEffectType effect) {
-		this();
-		this.entityID = entityID;
-		this.effectID = effect.getID();
+	@Override
+	public void read(PacketOutRemoveEntityEffect packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setEntityID(readVarInt(in));
+		packet.setEffectID(in.readByte());
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		entityID = readVarInt(in);
-		effectID = in.readByte();
+	public void write(PacketOutRemoveEntityEffect packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.getEntityID(), out);
+		out.writeByte(packet.getEffectID());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(entityID, out);
-		out.writeByte(effectID);
-	}
-
-	@Override
-	public int getEntityID() {
-		return entityID;
-	}
-
-	@Override
-	public int getEffectID() {
-		return effectID;
-	}
-
-	@Override
-	public void setEntityID(int id) {
-		this.entityID = id;
-	}
-
-	@Override
-	public void setEffectID(int id) {
-		this.effectID = id;
+	public PacketOutRemoveEntityEffect createPacketData() {
+		return new PacketOutRemoveEntityEffect();
 	}
 
 }

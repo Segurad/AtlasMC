@@ -1,16 +1,24 @@
 package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.inventory.EquipmentSlot;
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_OPEN_BOOK)
-public interface PacketOutOpenBook extends PacketPlay, PacketOutbound {
+public class PacketOutOpenBook extends AbstractPacket implements PacketPlayOut {
 	
-	public EquipmentSlot getHand();
+	private EquipmentSlot hand;
+	
+	public EquipmentSlot getHand() {
+		return hand;
+	}
+	
+	public void setHand(EquipmentSlot hand) {
+		this.hand = hand;
+	}
 	
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_OPEN_BOOK;
 	}
 

@@ -1,17 +1,40 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_BLOCK_BREAK_ANIMATION)
-public interface PacketOutBlockBreakAnimation extends PacketPlay, PacketOutbound {
+public class PacketOutBlockBreakAnimation extends AbstractPacket implements PacketPlayOut {
 	
-	public int getEntityID();
-	public long getPosition();
-	public int getStage();
+	private int entityID, stage;
+	private long position;
+	
+	public int getEntityID() {
+		return entityID;
+	}
+	
+	public void setEntityID(int entityID) {
+		this.entityID = entityID;
+	}
+	
+	public int getStage() {
+		return stage;
+	}
+	
+	public void setStage(int stage) {
+		this.stage = stage;
+	}
+	
+	public long getPosition() {
+		return position;
+	}
+	
+	public void setPosition(long position) {
+		this.position = position;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_BLOCK_BREAK_ANIMATION;
 	}
 

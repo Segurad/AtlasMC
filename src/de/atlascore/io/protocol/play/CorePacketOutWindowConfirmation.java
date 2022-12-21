@@ -2,70 +2,30 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutWindowConfirmation;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutWindowConfirmation extends AbstractPacket implements PacketOutWindowConfirmation {
+public class CorePacketOutWindowConfirmation extends CoreAbstractHandler<PacketOutWindowConfirmation> {
 
-	private byte windowID;
-	private short actionnumber;
-	private boolean accepted;
-	
-	public CorePacketOutWindowConfirmation() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutWindowConfirmation(byte windowID, short actionnumber, boolean accepted) {
-		this();
-		this.windowID = windowID;
-		this.accepted = accepted;
-		this.actionnumber = actionnumber;
+	@Override
+	public void read(PacketOutWindowConfirmation packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setWindowID(in.readByte());
+		packet.setActionNumber(in.readShort());
+		packet.setAccepted(in.readBoolean());
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		windowID = in.readByte();
-		actionnumber = in.readShort();
-		accepted = in.readBoolean();
+	public void write(PacketOutWindowConfirmation packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		out.writeByte(packet.getWindowID());
+		out.writeShort(packet.getActionNumber());
+		out.writeBoolean(packet.isAccepted());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeByte(windowID);
-		out.writeShort(actionnumber);
-		out.writeBoolean(accepted);
-	}
-
-	@Override
-	public byte getWindowID() {
-		return windowID;
-	}
-
-	@Override
-	public short getActionNumber() {
-		return actionnumber;
-	}
-
-	@Override
-	public boolean isAccepted() {
-		return accepted;
-	}
-
-	@Override
-	public void setActionNumber(int value) {
-		this.actionnumber = (short) value;
-	}
-
-	@Override
-	public void setAccepted(boolean accepted) {
-		this.accepted = accepted;
-	}
-
-	@Override
-	public void setWindowID(int id) {
-		this.windowID = (byte) id;		
+	public PacketOutWindowConfirmation createPacketData() {
+		return new PacketOutWindowConfirmation();
 	}
 
 }

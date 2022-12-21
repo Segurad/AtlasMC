@@ -1,19 +1,56 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_VEHICLE_MOVE)
-public interface PacketOutVehicleMove extends PacketPlay, PacketOutbound {
+public class PacketOutVehicleMove extends AbstractPacket implements PacketPlayOut {
 	
-	public double getX();
-	public double getY();
-	public double getZ();
-	public float getPitch();
-	public float getYaw();
+	private double x, y, z;
+	private float yaw, pitch;
 	
+	public double getX() {
+		return x;
+	}
+
+	public double getY() {
+		return y;
+	}
+
+	public double getZ() {
+		return z;
+	}
+
+	public float getYaw() {
+		return yaw;
+	}
+
+	public float getPitch() {
+		return pitch;
+	}
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	public void setY(double y) {
+		this.y = y;
+	}
+
+	public void setZ(double z) {
+		this.z = z;
+	}
+
+	public void setYaw(float yaw) {
+		this.yaw = yaw;
+	}
+
+	public void setPitch(float pitch) {
+		this.pitch = pitch;
+	}
+
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_VEHICLE_MOVE;
 	}
 

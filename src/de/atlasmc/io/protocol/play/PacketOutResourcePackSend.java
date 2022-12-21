@@ -1,16 +1,31 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_RESOURCE_PACK_SEND)
-public interface PacketOutResourcePackSend extends PacketPlay, PacketOutbound {
+public class PacketOutResourcePackSend extends AbstractPacket implements PacketPlayOut {
 	
-	public String getURL();
-	public String getHash();
+	private String url, hash;
+	
+	public String getURL() {
+		return url;
+	}
+	
+	public void setURL(String url) {
+		this.url = url;
+	}
+	
+	public String getHash() {
+		return hash;
+	}
+	
+	public void setHash(String hash) {
+		this.hash = hash;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_RESOURCE_PACK_SEND;
 	}
 

@@ -4,43 +4,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlascore.io.CoreAbstractHandler;
 import de.atlasmc.entity.Merchant.MerchantRecipe;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.io.AbstractPacket;
+import static de.atlasmc.io.AbstractPacket.*;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutTradeList;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutTradeList extends AbstractPacket implements PacketOutTradeList {
-
-	private int windowID, level, experience;
-	private boolean regular, canRestock;
-	private List<MerchantRecipe> trades;
-	
-	public CorePacketOutTradeList() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutTradeList(int windowID, List<MerchantRecipe> trades, int level, int experience, boolean regular, boolean canRestock) {
-		this();
-		this.windowID = windowID;
-		this.trades = new ArrayList<MerchantRecipe>(trades.size());
-		for (MerchantRecipe t : trades) {
-			this.trades.add(t.clone());
-		}
-		this.level = level;
-		this.experience = experience;
-		this.regular = regular;
-		this.canRestock = canRestock;
-	}
+public class CorePacketOutTradeList extends CoreAbstractHandler<PacketOutTradeList> {
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		windowID = readVarInt(in);
+	public void read(PacketOutTradeList packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setWindowID(readVarInt(in));
 		final int size = in.readByte();
-		trades = new ArrayList<MerchantRecipe>(size);
+		List<MerchantRecipe> recipes = new ArrayList<MerchantRecipe>(size);
 		NBTNIOReader reader = new NBTNIOReader(in);
 		for (int i = 0; i < size; i++) {
 			ItemStack in1 = readSlot(in, reader);
@@ -64,20 +44,22 @@ public class CorePacketOutTradeList extends AbstractPacket implements PacketOutT
 			t.setPriceMultiplier(priceMulti);
 			t.setDemand(demand);
 			
-			this.trades.add(t);
+			recipes.add(t);
 		}
-		level = readVarInt(in);
-		experience = readVarInt(in);
-		regular = in.readBoolean();
-		canRestock = in.readBoolean();
+		reader.close();
+		packet.setTrades(recipes);
+		packet.setLevel(readVarInt(in));
+		packet.setExperience(readVarInt(in));
+		packet.setRegular(in.readBoolean());
+		packet.setCanRestock(in.readBoolean());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(windowID, out);
-		out.writeByte(trades.size());
+	public void write(PacketOutTradeList packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.getWindowID(), out);
+		out.writeByte(packet.getTrades().size());
 		NBTNIOWriter writer = new NBTNIOWriter(out);
-		for (MerchantRecipe t : trades) {
+		for (MerchantRecipe t : packet.getTrades()) {
 			writeSlot(t.getInputItem1(), out, writer);
 			writeSlot(t.getOutputItem(), out, writer);
 			out.writeBoolean(t.hasInputItem2());
@@ -91,40 +73,16 @@ public class CorePacketOutTradeList extends AbstractPacket implements PacketOutT
 			out.writeFloat(t.getPriceMultiplier());
 			out.writeInt(t.getDemand());
 		}
-		writeVarInt(level, out);
-		writeVarInt(experience, out);
-		out.writeBoolean(regular);
-		out.writeBoolean(canRestock);
+		writer.close();
+		writeVarInt(packet.getLevel(), out);
+		writeVarInt(packet.getExperience(), out);
+		out.writeBoolean(packet.isRegular());
+		out.writeBoolean(packet.canRestock());
 	}
-
+	
 	@Override
-	public int getWindowID() {
-		return windowID;
-	}
-
-	@Override
-	public List<MerchantRecipe> getTrades() {
-		return trades;
-	}
-
-	@Override
-	public int getVillagerLevel() {
-		return level;
-	}
-
-	@Override
-	public int getExperience() {
-		return experience;
-	}
-
-	@Override
-	public boolean isRegularVillager() {
-		return regular;
-	}
-
-	@Override
-	public boolean getCanRestock() {
-		return canRestock;
+	public PacketOutTradeList createPacketData() {
+		return new PacketOutTradeList();
 	}
 
 }

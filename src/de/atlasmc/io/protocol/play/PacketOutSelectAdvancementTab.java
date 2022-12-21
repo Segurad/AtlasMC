@@ -1,16 +1,23 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_SELECT_ADVANCEMENT_TAB)
-public interface PacketOutSelectAdvancementTab extends PacketPlay, PacketOutbound {
+public class PacketOutSelectAdvancementTab extends AbstractPacket implements PacketPlayOut {
 	
-	public boolean hasTabID();
-	public String getTabID();
+	private String tabID;
+	
+	public String getTabID() {
+		return tabID;
+	}
+	
+	public void setTabID(String tabID) {
+		this.tabID = tabID;
+	}
 
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_SELECT_ADVANCEMENT_TAB;
 	}
 

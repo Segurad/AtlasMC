@@ -1,16 +1,23 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_KEEP_ALIVE)
-public interface PacketOutKeepAlive extends PacketPlay, PacketOutbound {
+public class PacketOutKeepAlive extends AbstractPacket implements PacketPlayOut {
 
-	public long getKeepAlive();
-	public void setKeepAlive(long time);
+	private long keepAlive;
+	
+	public long getKeepAlive() {
+		return keepAlive;
+	}
+	
+	public void setKeepAlive(long keepAlive) {
+		this.keepAlive = keepAlive;
+	}
 	
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_KEEP_ALIVE;
 	}
 	

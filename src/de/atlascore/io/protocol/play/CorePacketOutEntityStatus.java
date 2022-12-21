@@ -2,45 +2,28 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutEntityStatus;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutEntityStatus extends AbstractPacket implements PacketOutEntityStatus {
+public class CorePacketOutEntityStatus extends CoreAbstractHandler<PacketOutEntityStatus> {
 
-	private int entityID, status;
-	
-	public CorePacketOutEntityStatus() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutEntityStatus(int entityID, int status) {
-		this();
-		this.entityID = entityID;
-		this.status = status;
+	@Override
+	public void read(PacketOutEntityStatus packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setEntityID(in.readInt());
+		packet.setStatus(in.readByte());
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		entityID = in.readInt();
-		status = in.readByte();
+	public void write(PacketOutEntityStatus packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		out.writeInt(packet.getEntityID());
+		out.writeByte(packet.getStatus());
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeInt(entityID);
-		out.writeByte(status);
-	}
-
-	@Override
-	public int getEntityID() {
-		return entityID;
-	}
-
-	@Override
-	public int getStatus() {
-		return status;
+	public PacketOutEntityStatus createPacketData() {
+		return new PacketOutEntityStatus();
 	}
 
 }

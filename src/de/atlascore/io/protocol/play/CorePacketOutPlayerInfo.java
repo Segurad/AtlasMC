@@ -5,35 +5,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
+import de.atlascore.io.CoreAbstractHandler;
 import de.atlasmc.Gamemode;
 import de.atlasmc.chat.ChatUtil;
-import de.atlasmc.io.AbstractPacket;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutPlayerInfo;
+import de.atlasmc.io.protocol.play.PacketOutPlayerInfo.PlayerInfo;
+import de.atlasmc.io.protocol.play.PacketOutPlayerInfo.PlayerInfoAction;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutPlayerInfo extends AbstractPacket implements PacketOutPlayerInfo {
-
-	private int action;
-	private List<PlayerInfo> info;
-	
-	public CorePacketOutPlayerInfo() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutPlayerInfo(PlayerInfoAction action, List<PlayerInfo> info) {
-		this();
-		this.action = action.ordinal();
-		this.info = info;
-	}
+public class CorePacketOutPlayerInfo extends CoreAbstractHandler<PacketOutPlayerInfo> {
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		action = readVarInt(in);
+	public void read(PacketOutPlayerInfo packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setAction(PlayerInfoAction.getByID(readVarInt(in)));
 		final int count = readVarInt(in);
-		info = new ArrayList<PlayerInfo>(count);
-		switch (action) {
-		case 0:
+		List<PlayerInfo> infos = new ArrayList<>(count);
+		switch (packet.getAction()) {
+		case ADD_PLAYER:
 			for (int i = 0; i < count; i++) {
 				long most = in.readLong();
 				long least = in.readLong();
@@ -53,26 +44,26 @@ public class CorePacketOutPlayerInfo extends AbstractPacket implements PacketOut
 				String displayName = null;
 				if (display) 
 					displayName = readString(in);
-				info.add(new PlayerInfo(new UUID(most, least), name, textures, ping, ChatUtil.toChat(displayName), gm));
+				infos.add(new PlayerInfo(new UUID(most, least), name, textures, ping, ChatUtil.toChat(displayName), gm));
 			}
 			break;
-		case 1:
+		case UPDATE_GAMEMODE:
 			for (int i = 0; i < count; i++) {
 				long most = in.readLong();
 				long least = in.readLong();
 				Gamemode gm = Gamemode.getByID(readVarInt(in));
-				info.add(new PlayerInfo(new UUID(most, least), gm));
+				infos.add(new PlayerInfo(new UUID(most, least), gm));
 			}
 			break;
-		case 2:
+		case UPDATE_LATENCY:
 			for (int i = 0; i < count; i++) {
 				long most = in.readLong();
 				long least = in.readLong();
 				int ping = readVarInt(in);
-				info.add(new PlayerInfo(new UUID(most, least), ping));
+				infos.add(new PlayerInfo(new UUID(most, least), ping));
 			}
 			break;
-		case 3:
+		case UPDATE_DISPLAY_NAME:
 			for (int i = 0; i < count; i++) {
 				long most = in.readLong();
 				long least = in.readLong();
@@ -80,14 +71,14 @@ public class CorePacketOutPlayerInfo extends AbstractPacket implements PacketOut
 				String displayName = null;
 				if (display) 
 					displayName = readString(in);
-				info.add(new PlayerInfo(new UUID(most, least), ChatUtil.toChat(displayName)));
+				infos.add(new PlayerInfo(new UUID(most, least), ChatUtil.toChat(displayName)));
 			}
 			break;
-		case 4:
+		case REMOVE_PLAYER:
 			for (int i = 0; i < count; i++) {
 				long most = in.readLong();
 				long least = in.readLong();
-				info.add(new PlayerInfo(new UUID(most, least)));
+				infos.add(new PlayerInfo(new UUID(most, least)));
 			}
 			break;
 		default: break;
@@ -95,12 +86,13 @@ public class CorePacketOutPlayerInfo extends AbstractPacket implements PacketOut
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(action, out);
-		writeVarInt(info.size(), out);
-		switch (action) {
-		case 0:
-			for (PlayerInfo i : info) {
+	public void write(PacketOutPlayerInfo packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.getAction().getID(), out);
+		List<PlayerInfo> infos = packet.getPlayers();
+		writeVarInt(infos.size(), out);
+		switch (packet.getAction()) {
+		case ADD_PLAYER:
+			for (PlayerInfo i : infos) {
 				out.writeLong(i.getUUID().getMostSignificantBits());
 				out.writeLong(i.getUUID().getLeastSignificantBits());
 				writeString(i.getName(), out);
@@ -117,23 +109,23 @@ public class CorePacketOutPlayerInfo extends AbstractPacket implements PacketOut
 					writeString(i.getDisplayName(), out);
 			}
 			break;
-		case 1:
-			for (PlayerInfo i : info) {
+		case UPDATE_GAMEMODE:
+			for (PlayerInfo i : infos) {
 				out.writeLong(i.getUUID().getMostSignificantBits());
 				out.writeLong(i.getUUID().getLeastSignificantBits());
 				writeVarInt(i.getGamemode().ordinal(), out);
 			}
 			break;
-		case 2:
-			for (PlayerInfo i : info) {
+		case UPDATE_LATENCY:
+			for (PlayerInfo i : infos) {
 				out.writeLong(i.getUUID().getMostSignificantBits());
 				out.writeLong(i.getUUID().getLeastSignificantBits());
 				writeVarInt(i.getPing(), out);
 				out.writeBoolean(i.hasDisplayName());
 			}
 			break;
-		case 3:
-			for (PlayerInfo i : info) {
+		case UPDATE_DISPLAY_NAME:
+			for (PlayerInfo i : infos) {
 				out.writeLong(i.getUUID().getMostSignificantBits());
 				out.writeLong(i.getUUID().getLeastSignificantBits());
 				out.writeBoolean(i.hasDisplayName());
@@ -141,8 +133,8 @@ public class CorePacketOutPlayerInfo extends AbstractPacket implements PacketOut
 					writeString(i.getDisplayName(), out);
 			}
 			break;
-		case 4:
-			for (PlayerInfo i : info) {
+		case REMOVE_PLAYER:
+			for (PlayerInfo i : infos) {
 				out.writeLong(i.getUUID().getMostSignificantBits());
 				out.writeLong(i.getUUID().getLeastSignificantBits());
 			}
@@ -152,13 +144,8 @@ public class CorePacketOutPlayerInfo extends AbstractPacket implements PacketOut
 	}
 
 	@Override
-	public PlayerInfoAction getAction() {
-		return PlayerInfoAction.getByID(action);
-	}
-
-	@Override
-	public List<PlayerInfo> getPlayers() {
-		return info;
+	public PacketOutPlayerInfo createPacketData() {
+		return new PacketOutPlayerInfo();
 	}
 
 }

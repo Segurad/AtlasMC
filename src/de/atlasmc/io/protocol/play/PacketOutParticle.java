@@ -1,62 +1,121 @@
 package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.Particle;
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_PARTICLE)
-public interface PacketOutParticle extends PacketPlay, PacketOutbound {
+public class PacketOutParticle extends AbstractPacket implements PacketPlayOut {
 	
-	public Particle getParticle();
+	private Particle particle;
+	private int count;
+	private double x, y, z;
+	private float offX, offY, offZ, particleData;
+	private Object data;
+	private boolean longDistance;
 	
-	public boolean isLongDistance();
+	public Particle getParticle() {
+		return particle;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public double getX() {
+		return x;
+	}
+
+	public double getY() {
+		return y;
+	}
+
+	public double getZ() {
+		return z;
+	}
+
+	public float getOffX() {
+		return offX;
+	}
+
+	public float getOffY() {
+		return offY;
+	}
+
+	public float getOffZ() {
+		return offZ;
+	}
+
+	public float getParticleData() {
+		return particleData;
+	}
+
+	public Object getData() {
+		return data;
+	}
+
+	public boolean isLongDistance() {
+		return longDistance;
+	}
+
+	public void setParticle(Particle particle) {
+		this.particle = particle;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	public void setY(double y) {
+		this.y = y;
+	}
 	
-	public double getX();
+	public void setLocation(double x, double y, double z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+
+	public void setZ(double z) {
+		this.z = z;
+	}
+
+	public void setOffX(float offX) {
+		this.offX = offX;
+	}
+
+	public void setOffY(float offY) {
+		this.offY = offY;
+	}
+
+	public void setOffZ(float offZ) {
+		this.offZ = offZ;
+	}
 	
-	public double getY();
-	
-	public double getZ();
-	
-	public float getOffsetX();
-	
-	public float getOffsetY();
-	
-	public float getOffsetZ();
-	
-	public float getParticleData();
-	
-	public int getParticleCount();
-	
-	public Object getData();
-	
-	public void setParticle(Particle particle);
-	
-	public void setLongDistance(boolean longdistance);
-	
-	public void setX(double x);
-	
-	public void setY(double y);
-	
-	public void setZ(double z);
-	
-	public void setPoition(double x, double y, double z);
-	
-	public void setOffsetX(float x);
-	
-	public void setOffsetY(float y);
-	
-	public void setOffsetZ(float z);
-	
-	public void setOffset(float x, float y, float z);
-	
-	public void setParticleData(float data);
-	
-	public void setParticleCount(int count);
-	
-	public void setData(Object data);
-	
+	public void setOffset(float offX, float offY, float offZ) {
+		this.offX = offX;
+		this.offY = offY;
+		this.offZ = offZ;
+	}
+
+	public void setParticleData(float particleData) {
+		this.particleData = particleData;
+	}
+
+	public void setData(Object data) {
+		this.data = data;
+	}
+
+	public void setLongDistance(boolean longDistance) {
+		this.longDistance = longDistance;
+	}
+
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_PARTICLE;
 	}
 

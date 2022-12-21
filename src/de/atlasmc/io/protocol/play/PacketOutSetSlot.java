@@ -1,22 +1,42 @@
 package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_SET_SLOT)
-public interface PacketOutSetSlot extends PacketPlay, PacketOutbound {
+public class PacketOutSetSlot extends AbstractPacket implements PacketPlayOut {
 
-	public byte getWindowID();
-	public int getSlot();
-	public ItemStack getItem();
+	private int windowID, slot;
+	private ItemStack item;
+	
+	public int getWindowID() {
+		return windowID;
+	}
+	
+	public void setWindowID(int windowID) {
+		this.windowID = windowID;
+	}
+	
+	public int getSlot() {
+		return slot;
+	}
+	
+	public void setSlot(int slot) {
+		this.slot = slot;
+	}
+	
+	public ItemStack getItem() {
+		return item;
+	}
+	
+	public void setItem(ItemStack item) {
+		this.item = item;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_SET_SLOT;
 	}
-	public void setWindowID(int windowID);
-	public void setSlot(int slot);
-	public void setItem(ItemStack item);
 	
 }

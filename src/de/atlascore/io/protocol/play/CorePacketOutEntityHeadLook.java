@@ -2,46 +2,30 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.CoreAbstractHandler;
+import static de.atlasmc.io.AbstractPacket.*;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.protocol.play.PacketOutEntityHeadLook;
 import de.atlasmc.util.MathUtil;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutEntityHeadLook extends AbstractPacket implements PacketOutEntityHeadLook {
+public class CorePacketOutEntityHeadLook extends CoreAbstractHandler<PacketOutEntityHeadLook> {
 
-	private int entityID, yaw;
+	@Override
+	public void read(PacketOutEntityHeadLook packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setEntityID(readVarInt(in));
+		packet.setYaw(MathUtil.fromAngle(in.readByte()));
+	}
+
+	@Override
+	public void write(PacketOutEntityHeadLook packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.getEntityID(), out);
+		out.writeByte(MathUtil.toAngle(packet.getYaw()));
+	}
 	
-	public CorePacketOutEntityHeadLook() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutEntityHeadLook(int entityID, float yaw) {
-		this();
-		this.entityID = entityID;
-		this.yaw = MathUtil.toAngle(yaw);
-	}
-
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		entityID = readVarInt(in);
-		yaw = in.readByte();
-	}
-
-	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(entityID, out);
-		out.writeByte(yaw);
-	}
-
-	@Override
-	public int getEntityID() {
-		return entityID;
-	}
-
-	@Override
-	public float getYaw() {
-		return MathUtil.fromAngle(yaw);
+	public PacketOutEntityHeadLook createPacketData() {
+		return new PacketOutEntityHeadLook();
 	}
 
 }

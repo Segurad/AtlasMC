@@ -2,45 +2,172 @@ package de.atlasmc.io.protocol.play;
 
 import java.util.UUID;
 
+import de.atlasmc.Vector;
+import de.atlasmc.block.BlockFace;
 import de.atlasmc.entity.Entity;
+import de.atlasmc.entity.EntityType;
+import de.atlasmc.entity.FallingBlock;
+import de.atlasmc.entity.ItemFrame;
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketPlay.OUT_SPAWN_ENTITY)
-public interface PacketOutSpawnEntity extends PacketPlay, PacketOutbound {
+public class PacketOutSpawnEntity extends AbstractPacket implements PacketPlayOut {
 	
-	public int getEntityID();
+	private int entityID;
+	private EntityType type;
+	private int objectdata;
+	private UUID uuid;
+	private double x, y, z;
+	private float yaw, pitch;
+	private double velocityX, velocityY, velocityZ;
 	
-	public UUID getUUID();
+	public int getEntityID() {
+		return entityID;
+	}
+
+	public EntityType getType() {
+		return type;
+	}
+
+	public int getObjectdata() {
+		return objectdata;
+	}
+
+	public UUID getUUID() {
+		return uuid;
+	}
+
+	public double getX() {
+		return x;
+	}
+
+	public double getY() {
+		return y;
+	}
+
+	public double getZ() {
+		return z;
+	}
+
+	public float getYaw() {
+		return yaw;
+	}
+
+	public float getPitch() {
+		return pitch;
+	}
+
+	public double getVelocityX() {
+		return velocityX;
+	}
+
+	public double getVelocityY() {
+		return velocityY;
+	}
+
+	public double getVelocityZ() {
+		return velocityZ;
+	}
+
+	public void setEntityID(int entityID) {
+		this.entityID = entityID;
+	}
+
+	public void setType(EntityType type) {
+		this.type = type;
+	}
+
+	public void setObjectdata(int objectdata) {
+		this.objectdata = objectdata;
+	}
+
+	public void setUUID(UUID uuid) {
+		this.uuid = uuid;
+	}
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	public void setY(double y) {
+		this.y = y;
+	}
+
+	public void setZ(double z) {
+		this.z = z;
+	}
+
+	public void setYaw(float yaw) {
+		this.yaw = yaw;
+	}
+
+	public void setPitch(float pitch) {
+		this.pitch = pitch;
+	}
+
+	public void setVelocityX(double velocityX) {
+		this.velocityX = velocityX;
+	}
+
+	public void setVelocityY(double velocityY) {
+		this.velocityY = velocityY;
+	}
+
+	public void setVelocityZ(double velocityZ) {
+		this.velocityZ = velocityZ;
+	}
+
+	public void setLocation(double x, double y, double z, float pitch, float yaw) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.yaw = yaw;
+		this.pitch = pitch;
+	}
 	
-	public double getX();
+	public void setVelocity(double x, double y, double z) {
+		this.velocityX = x;
+		this.velocityY = y;
+		this.velocityZ = z;
+	}
 	
-	public double getY();
-	
-	public double getZ();
-	
-	public float getYaw();
-	
-	public float getPitch();
-	
-	public void setLocation(double x, double y, double z, float pitch, float yaw);
-	
-	public double getVelocityX();
-	
-	public double getVelocityY();
-	
-	public double getVelocityZ();
-	
-	public void setVelocity(double x, double y, double z);
-	
-	public void setEntity(Entity holder);
-	
-	public int getObjectData();
-	
-	public int getType();
+	public void setEntity(Entity entity) {
+		entityID = entity.getID();
+		type = entity.getType();
+		uuid = entity.getUUID();
+		x = entity.getX();
+		y = entity.getY();
+		z = entity.getZ();
+		yaw = entity.getYaw();
+		pitch = entity.getPitch();
+		objectdata = 0;
+		/*if (entity instanceof Projectile) {
+			Ignored
+		} else*/ if (entity instanceof ItemFrame) {
+			BlockFace ori = ((ItemFrame) entity).getOrientation();
+			switch (ori) {
+			case UP: objectdata = 1; break;
+			case NORTH: objectdata = 2; break;
+			case SOUTH: objectdata = 3; break;
+			case WEST: objectdata = 4; break;
+			case EAST: objectdata = 5; break;
+			default:
+				break;
+			}
+		} else if (entity instanceof FallingBlock) {
+			objectdata = ((FallingBlock) entity).getBlockData().getStateID();
+		} /*else if (entity instanceof FishingHook) {
+			Ignored
+		}*/
+		if (entity.hasVelocity()) {
+			Vector v = entity.getVelocity();
+			setVelocity(v.getX(), v.getY(), v.getZ());
+		}
+	}
 	
 	@Override
-	public default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_SPAWN_ENTITY;
 	}
 	
