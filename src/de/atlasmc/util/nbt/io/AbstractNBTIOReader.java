@@ -396,6 +396,17 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 		}
 	}
 	
+	@Override
+	public void skipToEnd() throws IOException {
+		int depth = getDepth();
+		while (depth <= getDepth()) {
+			if (getType() == TagType.TAG_END && depth == getDepth())
+				readNextEntry();
+			else
+				skipTag(true);
+		}
+	}
+	
 	private void skipTag(int bytes, boolean skipPrepare) throws IOException {
 		skipBytes(bytes);
 		prepareTag(skipPrepare);

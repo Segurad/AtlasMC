@@ -210,4 +210,10 @@ public class NBTObjectReader implements NBTReader {
 			throw new IOException("Stream closed!");
 	}
 
+	@Override
+	public void skipToEnd() throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

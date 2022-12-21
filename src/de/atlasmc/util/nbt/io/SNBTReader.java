@@ -189,4 +189,10 @@ public class SNBTReader extends JsonReader implements NBTReader {
 		
 	}
 
+	@Override
+	public void skipToEnd() throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

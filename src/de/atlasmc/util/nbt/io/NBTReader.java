@@ -137,6 +137,12 @@ public interface NBTReader extends Closeable {
 	public void skipTag() throws IOException;
 	
 	/**
+	 * Reads until the end of the current component or list and skips over {@link TagType#TAG_END}
+	 * @throws IOException
+	 */
+	public void skipToEnd() throws IOException;
+	
+	/**
 	 * Sets a marker at the current position for returning by {@link #reset()}
 	 */
 	public void mark();
