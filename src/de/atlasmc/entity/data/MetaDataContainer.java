@@ -4,6 +4,9 @@ import java.util.Iterator;
 
 import de.atlasmc.util.iterator.ArrayIterator;
 
+/**
+ * Stores {@link MetaData} and provides easy access 
+ */
 public class MetaDataContainer implements Iterable<MetaData<?>> {
 	
 	private final MetaData<?>[] data;

@@ -1,5 +1,9 @@
 package de.atlasmc.entity.data;
 
+/**
+ * Field of {@link MetaData} defines the index, default data and {@link MetaDataType}
+ * @param <T>
+ */
 public class MetaDataField<T> {
 	
 	private final byte index;

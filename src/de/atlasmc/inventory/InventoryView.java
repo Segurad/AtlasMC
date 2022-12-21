@@ -51,5 +51,11 @@ public interface InventoryView {
 	
 	public Chat getTitle();
 	
+	/**
+	 * Returns the view id of the current view. 
+	 * Will be incremented each time a new inventory is opened. 
+	 * Is always 0 for the default inventory.
+	 * @return view id
+	 */
 	public int getViewID();
 }
