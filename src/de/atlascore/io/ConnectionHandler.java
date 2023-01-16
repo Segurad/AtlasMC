@@ -1,4 +1,4 @@
-package de.atlasmc.io;
+package de.atlascore.io;
 
 import java.util.Queue;
 import java.util.Vector;
@@ -13,11 +13,17 @@ import de.atlascore.io.netty.channel.PacketEncryptor;
 import de.atlascore.io.netty.channel.PacketProcessor;
 import de.atlascore.io.netty.channel.PacketLengthDecoder;
 import de.atlascore.io.netty.channel.PacketLengthEncoder;
-import de.atlasmc.atlasnetwork.proxy.LocalProxy;
+import de.atlasmc.io.IOExceptionHandler;
+import de.atlasmc.io.Packet;
+import de.atlasmc.io.PacketListener;
+import de.atlasmc.io.Protocol;
 import de.atlasmc.io.handshake.HandshakeProtocol;
 import de.atlasmc.util.annotation.ThreadSafe;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 
 @ThreadSafe
 public class ConnectionHandler {
@@ -34,8 +40,6 @@ public class ConnectionHandler {
 	CHANNEL_PIPE_PACKET_ENCODER = "packet_encoder",
 	CHANNEL_PIPE_PACKET_PROCESSOR = "packet_processor",
 	CHANNEL_PIPE_INBOUND_EXCEPTION_HANDLER = "inbound_exception_handler";
-	
-	private final Queue<Packet> queue;
 	
 	/** 
 	 * Channel default pipeline
@@ -62,18 +66,17 @@ public class ConnectionHandler {
 	private volatile Protocol protocol;
 	private volatile IOExceptionHandler errHandler;
 	private final Vector<PacketListener> packetListeners;
-	private final LocalProxy proxy;
+	private final Queue<Object> queue; // contains Packet and FuturePacket
 	
-	public ConnectionHandler(SocketChannel channel, LocalProxy proxy) {
-		this(channel, proxy, HandshakeProtocol.DEFAULT_PROTOCOL);
+	public ConnectionHandler(SocketChannel channel) {
+		this(channel, HandshakeProtocol.DEFAULT_PROTOCOL);
 		registerPacketListener(HandshakeProtocol.DEFAULT_PROTOCOL.createDefaultPacketListener(this));
 	}
 	
-	public ConnectionHandler(SocketChannel channel, LocalProxy proxy, Protocol protocol) {
-		queue = new ConcurrentLinkedQueue<Packet>();
+	public ConnectionHandler(SocketChannel channel, Protocol protocol) {
+		queue = new ConcurrentLinkedQueue<>();
 		this.channel = channel;
 		this.packetListeners = new Vector<PacketListener>();
-		this.proxy = proxy;
 		this.protocol = protocol;
 		this.errHandler = IOExceptionHandler.UNHANDLED;
 		
@@ -86,21 +89,58 @@ public class ConnectionHandler {
 		.addLast(CHANNEL_PIPE_PACKET_PROCESSOR, new PacketProcessor(this));
 	}
 	
-	public LocalProxy getProxy() {
-		return proxy;
+	public void sendPacket(Packet packet) {
+		sendPacket(packet, null);
 	}
 	
-	public void sendPacket(Packet packet) {
+	public void sendPacket(Packet packet, GenericFutureListener<? extends Future<? super Void>> listener) {
+		if (isClosed())
+			return;
 		if (channel.isActive()) {
-			channel.writeAndFlush(packet);
-		} else {
-			queue.add(packet);
+			writeQueuedPackets();
+			writePacket(packet, listener);
+		} else queuePacket(packet, listener);
+	}
+	
+	public void sendChunkedPacket(PacketChunker<? extends Packet> chunker) {
+		Packet next = chunker.nextChunk();
+		if (next == null)
+			return;
+		sendPacket(next, (future) -> {
+			sendChunkedPacket(chunker);
+		});
+	}
+	
+	private void writePacket(Packet packet, GenericFutureListener<? extends Future<? super Void>> listener) {
+		if (!channel.isActive()) {
+			queuePacket(packet, listener);
+			return;
 		}
+		ChannelFuture future = channel.writeAndFlush(packet);
+		if (listener != null)
+			future.addListener(listener);
+	}
+	
+	private void queuePacket(Packet packet, GenericFutureListener<? extends Future<? super Void>> listener) {
+		if (listener == null) {
+			queue.add(packet);
+		} else
+			queue.add(new FuturePacket(packet, listener));
 	}
 
-	public void writeQueued() {
-		while (!queue.isEmpty()) {
-			channel.writeAndFlush(queue.poll());
+	public void writeQueuedPackets() {
+		if (!channel.isActive() || queue.isEmpty())
+			return;
+		synchronized (queue) {
+			Object element = null;
+			while ((element = queue.poll()) != null) {
+				if (element instanceof Packet)
+					writePacket((Packet) element, null);
+				else {
+					FuturePacket future = (FuturePacket) element;
+					writePacket(future.packet, future.listener);
+				}
+			}
 		}
 	}
 
@@ -137,7 +177,11 @@ public class ConnectionHandler {
 	}
 
 	public void close() {
+		if (isClosed())
+			return;
+		channel.config().setAutoRead(false);
 		channel.close();
+		queue.clear();
 	}
 	
 	public boolean isClosed() {
@@ -196,6 +240,18 @@ public class ConnectionHandler {
 	
 	public int getCompressionThreshold() {
 		return compressionThreshold;
+	}
+	
+	static class FuturePacket {
+		
+		private final Packet packet;
+		private final GenericFutureListener<? extends Future<? super Void>> listener;
+		
+		public FuturePacket(Packet packet, GenericFutureListener<? extends Future<? super Void>> listener) {
+			this.packet = packet;
+			this.listener = listener;
+		}
+		
 	}
 
 }
