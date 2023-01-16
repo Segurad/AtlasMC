@@ -84,7 +84,28 @@ public interface NBTReader extends Closeable {
 	 */
 	public TagType getType();
 	
+	public boolean isArrayTag();
+	
+	/**
+	 * Returns the number of remaining elements of the current array tag.
+	 * or -1 if no array tag
+	 * <h2> Array Tag Types may be
+	 * <li> {@link TagType#BYTE_ARRAY}
+	 * <li> {@link TagType#INT_ARRAY}
+	 * <li> {@link TagType#LONG_ARRAY}
+	 * @return number of elements
+	 */
+	public int getArrayTagPayload();
+	
 	public void readByteArrayTag(IntConsumer dataConsumer) throws IOException;
+	
+	/**
+	 * Reads a byte array tag to the given buffer.
+	 * @param buf
+	 * @return number of read bytes
+	 * @throws IOException
+	 */
+	public int readByteArrayTag(byte[] buf) throws IOException;
 	
 	public byte[] readByteArrayTag() throws IOException;
 	
@@ -96,11 +117,27 @@ public interface NBTReader extends Closeable {
 	
 	public void readIntArrayTag(IntConsumer dataConsumer) throws IOException;
 	
+	/**
+	 * Reads a int array tag to the given buffer.
+	 * @param buf
+	 * @return number of read integer
+	 * @throws IOException
+	 */
+	public int readIntArrayTag(int[] buf) throws IOException;
+	
 	public int[] readIntArrayTag() throws IOException;
 	
 	public int readIntTag() throws IOException;
 	
 	public void readLongArrayTag(LongConsumer dataConsumer) throws IOException;
+	
+	/**
+	 * Reads a long array tag to the given buffer.
+	 * @param buf
+	 * @return number of read long
+	 * @throws IOException
+	 */
+	public int readLongArrayTag(long[] buf) throws IOException;
 	
 	public long[] readLongArrayTag() throws IOException;
 	

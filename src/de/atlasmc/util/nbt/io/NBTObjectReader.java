@@ -216,4 +216,34 @@ public class NBTObjectReader implements NBTReader {
 		
 	}
 
+	@Override
+	public boolean isArrayTag() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int getArrayTagPayload() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int readByteArrayTag(byte[] buf) throws IOException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int readIntArrayTag(int[] buf) throws IOException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int readLongArrayTag(long[] buf) throws IOException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

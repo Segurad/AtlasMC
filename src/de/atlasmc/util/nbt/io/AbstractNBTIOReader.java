@@ -25,6 +25,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	private ListData list;
 	private ListData markList;
 	private boolean closed;
+	private int arrayTagPayload = -1;
 	
 	public AbstractNBTIOReader() {
 		name = new CharKeyBuffer();
@@ -66,16 +67,32 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 		ensureOpen();
 		if (dataConsumer == null)
 			throw new IllegalArgumentException("DataConsumer can not be null!");
-		int payload = ioReadInt();
+		final int payload = arrayTagPayload;
 		for (int i = 0; i < payload; i++)
 			dataConsumer.accept(ioReadByte());
 		prepareTag();
 	}
 	
 	@Override
+	public int readByteArrayTag(byte[] buf) throws IOException {
+		ensureOpen();
+		int bytesRead = 0;
+		for (int i = 0; i < buf.length; i++) {
+			if (arrayTagPayload <= 0)
+				break;
+			bytesRead++;
+			arrayTagPayload--;
+			buf[i] = ioReadByte();
+		}
+		if (arrayTagPayload <= 0)
+			prepareTag();
+		return bytesRead;
+	}
+	
+	@Override
 	public byte[] readByteArrayTag() throws IOException {
 		ensureOpen();
-		byte[] data = new byte[ioReadInt()];
+		byte[] data = new byte[arrayTagPayload];
 		ioReadBytes(data);
 		prepareTag();
 		return data;
@@ -110,16 +127,32 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 		ensureOpen();
 		if (dataConsumer == null)
 			throw new IllegalArgumentException("DataConsumer can not be null!");
-		int paylaod = ioReadInt();
-		for (int i = 0; i < paylaod; i++)
+		final int payload = arrayTagPayload; 
+		for (int i = 0; i < payload; i++)
 			dataConsumer.accept(ioReadInt());
 		prepareTag();
 	}
 	
 	@Override
+	public int readIntArrayTag(int[] buf) throws IOException {
+		ensureOpen();
+		int intsRead = 0;
+		for (int i = 0; i < buf.length; i++) {
+			if (arrayTagPayload <= 0)
+				break;
+			intsRead++;
+			arrayTagPayload--;
+			buf[i] = ioReadInt();
+		}
+		if (arrayTagPayload <= 0)
+			prepareTag();
+		return intsRead;
+	}
+	
+	@Override
 	public int[] readIntArrayTag() throws IOException {
 		ensureOpen();
-		int[] data = new int[ioReadInt()];
+		int[] data = new int[arrayTagPayload];
 		for (int i = 0; i < data.length; i++) {
 			data[i] = ioReadInt();
 		}
@@ -140,16 +173,32 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 		ensureOpen();
 		if (dataConsumer == null)
 			throw new IllegalArgumentException("DataConsumer can not be null!");
-		int payload = ioReadInt();
+		final int payload = arrayTagPayload;
 		for (int i = 0; i < payload; i++)
 			dataConsumer.accept(ioReadLong());
 		prepareTag();
 	}
 	
 	@Override
+	public int readLongArrayTag(long[] buf) throws IOException {
+		ensureOpen();
+		int longsRead = 0;
+		for (int i = 0; i < buf.length; i++) {
+			if (arrayTagPayload <= 0)
+				break;
+			longsRead++;
+			arrayTagPayload--;
+			buf[i] = ioReadLong();
+		}
+		if (arrayTagPayload <= 0)
+			prepareTag();
+		return longsRead;
+	}
+	
+	@Override
 	public long[] readLongArrayTag() throws IOException {
 		ensureOpen();
-		long[] data = new long[ioReadInt()];
+		long[] data = new long[arrayTagPayload];
 		for (int i = 0; i < data.length; i++) {
 			data[i] = ioReadLong();
 		}
@@ -188,6 +237,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 	
 	protected void prepareTag(boolean skip) throws IOException {
 		ensureOpen();
+		arrayTagPayload = -1;
 		if (list != null && depth == list.depth) {
 			resetName();
 			if (list.payload > 0) {
@@ -205,12 +255,15 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 			readName(name);
 			hasName = true;
 		} else {
+			// skip name of tag
 			skipBytes(ioReadShort());
 		}
 		if (type == TagType.COMPOUND) 
 			depth++;
 		else if (type == TagType.LIST) 
 			addList();
+		else if (isArrayTag())
+			arrayTagPayload = ioReadInt();
 	}
 	
 	protected void resetName() {
@@ -343,7 +396,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 		final boolean isList = list != null && depth == list.depth;
 		switch (isList ? list.type : type) {
 		case BYTE: skipTag(1, skipPrepare); break;
-		case BYTE_ARRAY: skipTag(ioReadInt(), skipPrepare); break;
+		case BYTE_ARRAY: skipTag(arrayTagPayload, skipPrepare); break;
 		case COMPOUND: 
 			if (isList) {
 				readNextEntry(true); // move out of list header
@@ -373,7 +426,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 		case DOUBLE: skipTag(8, skipPrepare); break;
 		case FLOAT: skipTag(4, skipPrepare); break;
 		case INT: skipTag(4, skipPrepare); break;
-		case INT_ARRAY: skipTag(ioReadInt(), skipPrepare); break;
+		case INT_ARRAY: skipTag(arrayTagPayload*4, skipPrepare); break;
 		case LIST: 
 			if (isList) {
 				readNextEntry(true);
@@ -389,7 +442,7 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 			}
 			break;
 		case LONG: skipTag(8, skipPrepare); break;
-		case LONG_ARRAY: skipTag(ioReadInt(), skipPrepare);
+		case LONG_ARRAY: skipTag(arrayTagPayload*8, skipPrepare);
 		case SHORT: skipTag(2, skipPrepare); break;
 		case STRING: skipTag(ioReadShort(), skipPrepare); break;
 		case TAG_END: readNextEntry(skipPrepare); break;
@@ -455,6 +508,18 @@ public abstract class AbstractNBTIOReader implements NBTReader {
 				readNextEntry(); // progress to first element of list or compound
 			} else skipTag(); // progress to next
 		}
+	}
+	
+	@Override
+	public boolean isArrayTag() {
+		return type == TagType.BYTE_ARRAY ||
+				type == TagType.INT_ARRAY ||
+				type == TagType.LONG_ARRAY;
+	}
+	
+	@Override
+	public int getArrayTagPayload() {
+		return arrayTagPayload;
 	}
 	
 	public void close() {
