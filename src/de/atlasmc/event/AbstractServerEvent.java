@@ -14,5 +14,10 @@ public abstract class AbstractServerEvent extends GenericEvent<LocalServer, Serv
 	public AbstractServerEvent(LocalServer eventSource) {
 		super(eventSource);
 	}
+	
+	@Override
+	public SyncThreadHolder getSyncThreadHolder() {
+		return getEventSource();
+	}
 
 }

@@ -13,6 +13,8 @@ public abstract class GenericEvent<E, H extends HandlerList> extends Event {
 	
 	public GenericEvent(boolean async, E eventSource) {
 		super(async);
+		if (eventSource == null)
+			throw new IllegalArgumentException("Event source can not be null!");
 		this.eventSource = eventSource;
 	}
 	
@@ -22,4 +24,11 @@ public abstract class GenericEvent<E, H extends HandlerList> extends Event {
 	
 	@Override
 	public abstract H getHandlers();
+	
+	/**
+	 * Returns the thread holder for synchronous events. May be the same as {@link #getEventSource()}
+	 * @return holder
+	 */
+	public abstract SyncThreadHolder getSyncThreadHolder();
+	
 }
