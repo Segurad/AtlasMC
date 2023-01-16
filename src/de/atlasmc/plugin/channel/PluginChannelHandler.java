@@ -1,8 +1,8 @@
-package de.atlasmc.plugin.messenger;
+package de.atlasmc.plugin.channel;
 
 import java.util.Collection;
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.plugin.messenger.PluginChannel.ChannelDirection;
+import de.atlasmc.plugin.channel.PluginChannel.ChannelDirection;
 
 public interface PluginChannelHandler {
 	

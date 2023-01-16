@@ -1,4 +1,4 @@
-package de.atlasmc.plugin.messenger;
+package de.atlasmc.plugin.channel;
 
 import de.atlasmc.NamespacedKey.Namespaced;
 
