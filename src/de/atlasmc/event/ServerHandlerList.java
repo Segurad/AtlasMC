@@ -20,17 +20,21 @@ public class ServerHandlerList extends HandlerList {
 	}
 	
 	public void registerExecutor(ServerGroup group, EventExecutor executor) {
-		if (group == null || executor == null) return;
+		if (group == null || executor == null) 
+			return;
 		if (groupExecutors.containsKey(group)) {
 			register(groupExecutors.get(group), executor);
-		} else groupExecutors.put(group, executor);
+		} else 
+			groupExecutors.put(group, executor);
 	}
 	
 	public void registerExecutor(LocalServer server, EventExecutor executor) {
-		if (server == null || executor == null) return;
+		if (server == null || executor == null) 
+			return;
 		if (serverExecutors.containsKey(server)) {
 			register(serverExecutors.get(server), executor);
-		} else serverExecutors.put(server, executor);
+		} else 
+			serverExecutors.put(server, executor);
 	}
 	
 	@Override
@@ -52,8 +56,10 @@ public class ServerHandlerList extends HandlerList {
 	 * @return LinkedListIterator or null
 	 */
 	public LinkedListIterator<EventExecutor> getExecutors(@NotNull ServerGroup group) {
-		if (group == null) return null;
-		if (!groupExecutors.containsKey(group)) return null;
+		if (group == null) 
+			return null;
+		if (!groupExecutors.containsKey(group)) 
+			return null;
 		return groupExecutors.get(group).iterator();
 	}
 	
@@ -63,8 +69,10 @@ public class ServerHandlerList extends HandlerList {
 	 * @return LinkedListIterator or null
 	 */
 	public LinkedListIterator<EventExecutor> getExecutors(@NotNull LocalServer server) {
-		if (server == null) return null;
-		if (!serverExecutors.containsKey(server)) return null;
+		if (server == null) 
+			return null;
+		if (!serverExecutors.containsKey(server)) 
+			return null;
 		return serverExecutors.get(server).iterator();
 	}
 	
@@ -73,8 +81,6 @@ public class ServerHandlerList extends HandlerList {
 		@SuppressWarnings("unchecked")
 		final LocalServer server = ((GenericEvent<LocalServer, ?>) event).getEventSource();
 		final Logger log = server.getLogger();
-		if (!server.isServerThread() && !event.isAsynchronous()) 
-			throw new EventException("Tryed to call ServerEvent async: " + event.getName());
 		final LinkedListIterator<EventExecutor> groupexes = getExecutors(server.getGroup());
 		final LinkedListIterator<EventExecutor> serverexes = getExecutors(server);
 		final LinkedListIterator<EventExecutor> globalexes = getExecutors();
@@ -95,29 +101,34 @@ public class ServerHandlerList extends HandlerList {
 	
 	@Override
 	public synchronized void unregisterListener(Listener listener) {
-		if (listener == null) return;
+		if (listener == null) 
+			return;
 		super.unregisterListener(listener);
 		for (ServerGroup group : groupExecutors.keySet()) {
 			Iterator<EventExecutor> it = groupExecutors.get(group).iterator();
 			while(it.hasNext()) {
 				EventExecutor exe = it.next();
-				if (exe.getListener() == listener) it.remove();
+				if (exe.getListener() == listener) 
+					it.remove();
 			}
 		}
 		for (LocalServer server : serverExecutors.keySet()) {
 			Iterator<EventExecutor> it = serverExecutors.get(server).iterator();
 			while(it.hasNext()) {
 				EventExecutor exe = it.next();
-				if (exe.getListener() == listener) it.remove();
+				if (exe.getListener() == listener) 
+					it.remove();
 			}
 		}
 	}
 	
 	public static void unregisterServer(LocalServer server) {
-		if (server == null) return;
+		if (server == null) 
+			return;
 		synchronized (HANDLERS) {
 			for (HandlerList h : HANDLERS) {
-				if (!(h instanceof ServerHandlerList)) continue;
+				if (!(h instanceof ServerHandlerList)) 
+					continue;
 				ServerHandlerList sh = (ServerHandlerList) h;
 				sh.serverExecutors.remove(server);
 			}
