@@ -3,7 +3,6 @@ package de.atlasmc.util;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.annotation.ThreadSafe;
@@ -94,7 +93,8 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 	}
 	
 	private synchronized void removeNode(Node<E> node) {
-		if (node.removed) return;
+		if (node.removed) 
+			return;
 		node.removed = true;
 		decrementCount();
 		Node<E> prev = prevValid(node), next = nextValid(node);
@@ -161,7 +161,8 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 	}
 	
 	private synchronized void insertBefor(Node<E> node, E entry) {
-		if (node.removed) node = nextValid(node);
+		if (node.removed) 
+			node = nextValid(node);
 		if (node == null) {
 			add(entry);
 			return;
@@ -194,12 +195,14 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 	@Override
 	public Object[] toArray() {
 		Object[] data = new Object[count];
-		if (data.length == 0) return data;
+		if (data.length == 0) 
+			return data;
 		int index = 0;
 		for (E e : this) {
 			data[index] = e;
 			index++;
-			if (index >= data.length) break;
+			if (index >= data.length) 
+				break;
 		}
 		return data;
 	}
@@ -214,16 +217,19 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 		for (E e : this) {
 			a[index] = (T) e;
 			index++;
-			if (index >= a.length) break;
+			if (index >= a.length) 
+				break;
 		}
-		if (index < a.length) Arrays.fill(a, index, a.length, null);
+		if (index < a.length) 
+			Arrays.fill(a, index, a.length, null);
 		return a;
 	}
 
 	@Override
 	public boolean containsAll(Collection<?> c) {
 		for (Object o : c) {
-			if (!contains(o)) return false;
+			if (!contains(o)) 
+				return false;
 		}
 		return true;
 	}
@@ -232,19 +238,24 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 	public boolean addAll(Collection<? extends E> c) {
 		if (c == null)
 			return false;
+		boolean changes = false;
 		for (E e : c) {
-			add(e);
+			if (add(e))
+				changes = true;
 		}
-		return true;
+		return changes;
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
 		if (c == null)
 			return false;
+		if (c.isEmpty())
+			return false;
 		boolean changes = false;
 		for (Object o : c) {
-			if (remove(o)) changes = true;
+			if (remove(o)) 
+				changes = true;
 		}
 		return changes;
 	}
@@ -256,7 +267,8 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 		boolean changes = false;
 		LinkedListIterator<E> it = iterator();
 		while (it.hasNext()) {
-			if (c.contains(it.next())) continue;
+			if (c.contains(it.next())) 
+				continue;
 			changes = true;
 			it.remove();
 		}
