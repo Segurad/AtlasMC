@@ -1,6 +1,11 @@
 package de.atlasmc.util.nbt.tag;
 
+import java.io.IOException;
+
+import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.io.NBTReader;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public final class ByteArrayTag extends AbstractTag {
 
@@ -49,6 +54,21 @@ public final class ByteArrayTag extends AbstractTag {
 		} else if (!data.equals(other.data))
 			return false;
 		return true;
+	}
+
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		writer.writeByteArrayTag(name, data);
+	}
+
+	@Override
+	public void fromNBT(NBTReader reader) throws IOException {
+		if (reader.getType() != TagType.BYTE_ARRAY)
+			throw new NBTException("Can not read " + reader.getType().name() + " as BYTE_ARRAY");
+		CharSequence name = reader.getFieldName();
+		if (name != null)
+			this.name = name.toString();
+		data = reader.readByteArrayTag();
 	}
 	
 }

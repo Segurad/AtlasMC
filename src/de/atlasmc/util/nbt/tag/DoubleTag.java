@@ -1,6 +1,11 @@
 package de.atlasmc.util.nbt.tag;
 
+import java.io.IOException;
+
+import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.io.NBTReader;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public final class DoubleTag extends AbstractTag {
 
@@ -38,6 +43,21 @@ public final class DoubleTag extends AbstractTag {
 		if (!super.equals(obj))
 			return false;
 		return data == ((DoubleTag) obj).data;
+	}
+
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		writer.writeDoubleTag(name, data);
+	}
+
+	@Override
+	public void fromNBT(NBTReader reader) throws IOException {
+		if (reader.getType() != TagType.DOUBLE)
+			throw new NBTException("Can not read " + reader.getType().name() + " as DOUBLE");
+		CharSequence name = reader.getFieldName();
+		if (name != null)
+			this.name = name.toString();
+		data = reader.readDoubleTag();	
 	}
 
 }

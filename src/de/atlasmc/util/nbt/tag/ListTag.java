@@ -1,16 +1,20 @@
 package de.atlasmc.util.nbt.tag;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.io.NBTReader;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public final class ListTag<T extends NBT> extends AbstractTag implements Iterable<NBT> {
 
 	private List<T> data;
 	private TagType datatype;
-	private final int exspected;
+	private int exspected;
 	
 	public ListTag(String name, TagType datatype) {
 		data = new ArrayList<>();
@@ -114,6 +118,29 @@ public final class ListTag<T extends NBT> extends AbstractTag implements Iterabl
 		if (datatype == other.datatype)
 			return false;
 		return true;
+	}
+
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		writer.writeListTag(name, datatype, data != null ? data.size() : 0);
+		if (data != null)
+			for (T element : data)
+				writer.writeNBT(element);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void fromNBT(NBTReader reader) throws IOException {
+		if (reader.getType() != TagType.LIST)
+			throw new NBTException("Can not read " + reader.getType().name() + " as LIST");
+		CharSequence name = reader.getFieldName();
+		if (name != null)
+			this.name = name.toString();
+		datatype = reader.getListType();
+		exspected = reader.getRestPayload();
+		reader.readNextEntry();
+		while (reader.getRestPayload() > 0)
+			addTag((T) reader.readNBT());
 	}
 	
 }

@@ -4,7 +4,10 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.io.NBTReader;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public final class LongTag extends AbstractTag {
 
@@ -49,6 +52,21 @@ public final class LongTag extends AbstractTag {
 		if (!super.equals(obj))
 			return false;
 		return data == ((LongTag) obj).data;
+	}
+
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		writer.writeLongTag(name, data);
+	}
+
+	@Override
+	public void fromNBT(NBTReader reader) throws IOException {
+		if (reader.getType() != TagType.LONG)
+			throw new NBTException("Can not read " + reader.getType().name() + " as LONG");
+		CharSequence name = reader.getFieldName();
+		if (name != null)
+			this.name = name.toString();
+		data = reader.readLongTag();
 	}
 
 }

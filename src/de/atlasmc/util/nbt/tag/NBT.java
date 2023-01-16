@@ -1,8 +1,9 @@
 package de.atlasmc.util.nbt.tag;
 
+import de.atlasmc.util.nbt.NBTHolder;
 import de.atlasmc.util.nbt.TagType;
 
-public interface NBT extends Cloneable {
+public interface NBT extends Cloneable, NBTHolder {
 	
 	/**
 	 * Returns the name key of this NBT

@@ -1,10 +1,14 @@
 package de.atlasmc.util.nbt.tag;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.io.NBTReader;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public final class CompoundTag extends AbstractTag implements Iterable<NBT> {
 
@@ -130,6 +134,30 @@ public final class CompoundTag extends AbstractTag implements Iterable<NBT> {
 		} else if (!data.equals(other.data))
 			return false;
 		return true;
+	}
+
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		writer.writeCompoundTag(name);
+		if (data != null)
+			for (NBT entry : data) {
+				writer.writeNBT(entry);
+			}
+		writer.writeEndTag();
+	}
+
+	@Override
+	public void fromNBT(NBTReader reader) throws IOException {
+		if (reader.getType() != TagType.COMPOUND)
+			throw new NBTException("Can not read " + reader.getType().name() + " as COMPOUND");
+		CharSequence name = reader.getFieldName();
+		if (name != null)
+			this.name = name.toString();
+		while (reader.getType() != TagType.TAG_END) {
+			reader.readNextEntry();
+			addTag(reader.readNBT());
+		}
+		reader.readNextEntry();
 	}
 
 }

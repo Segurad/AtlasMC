@@ -28,7 +28,7 @@ public interface NBTWriter extends Closeable {
 	
 	public void writeDoubleTag(CharSequence name, double value) throws IOException;
 	
-	public default void writeByteArrayTag(String name, byte[] data) throws IOException {
+	public default void writeByteArrayTag(CharSequence name, byte[] data) throws IOException {
 		if (data == null)
 			throw new IllegalArgumentException("Data can not be null!");
 		writeByteArrayTag(name, data, 0, data.length);
