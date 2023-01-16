@@ -12,7 +12,6 @@ import de.atlasmc.chat.ChatType;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.inventory.MerchantInventory;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.plugin.Plugin;
@@ -154,5 +153,7 @@ public interface Player extends HumanEntity {
 	public ItemStack getItemOnCursor();
 	
 	public void updateItemOnCursor();
+
+	public void disconnect(String message);
 	
 }
