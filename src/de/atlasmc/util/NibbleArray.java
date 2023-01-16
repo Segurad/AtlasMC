@@ -47,10 +47,18 @@ public class NibbleArray {
 		values[index >> 1] = bytee;
 	}
 	
+	/**
+	 * Returns the number of elements that can be stored in this array
+	 * @return number of elements
+	 */
 	public int getCapacity() {
 		return capacity;
 	}
 	
+	/**
+	 * Returns the backing byte array
+	 * @return byte array
+	 */
 	public byte[] array() {
 		return values;
 	}
