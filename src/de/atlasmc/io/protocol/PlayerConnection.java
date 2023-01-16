@@ -6,27 +6,25 @@ import java.util.List;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.atlasnetwork.AtlasNode;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
+import de.atlasmc.atlasnetwork.proxy.LocalProxy;
 import de.atlasmc.atlasnetwork.server.LocalServer;
-import de.atlasmc.chat.ChatType;
 import de.atlasmc.entity.Player;
-import de.atlasmc.io.Packet;
+import de.atlasmc.event.player.PlayerAnimationEvent;
+import de.atlasmc.event.player.PlayerDiggingEvent;
+import de.atlasmc.event.player.PlayerHeldItemChangeEvent;
+import de.atlasmc.event.player.PlayerMoveEvent;
+import de.atlasmc.event.player.PlayerToggleSneakEvent;
+import de.atlasmc.event.player.PlayerToggleSprintEvent;
+import de.atlasmc.plugin.channel.PluginChannelHandler;
 import de.atlasmc.recipe.BookType;
 import de.atlasmc.recipe.Recipe;
 import de.atlasmc.recipe.RecipeBook;
+import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.annotation.ThreadSafe;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 
-public interface PlayerConnection extends PacketListenerPlayIn {
-	
-	/**
-	 * Queues a packet for sync handling
-	 * @param packet
-	 */
-	public void queueInboundPacket(Packet packet);
-	
-	/**
-	 * Called by the server to handle all queued packets
-	 */
-	public void handleQueuedPackets();
+public interface PlayerConnection {
 
 	public ProtocolAdapter getProtocolAdapter();
 	
@@ -39,9 +37,18 @@ public interface PlayerConnection extends PacketListenerPlayIn {
 	@ThreadSafe
 	public LocalServer getLocalSever();
 	
+	public int getWindowActionID();
+	
 	public int getNextWindowActionID();
 	
-	public int getNextWindowActionIDAndLock();
+	/**
+	 * Cancel a click
+	 */
+	public void lockWindowActions();
+
+	public void unlockWindowActions();
+	
+	public boolean isWindowActionLocked();
 	
 	/**
 	 * Used to bind a {@link Player} Entity to this connection if the player is currently on this {@link AtlasNode}
@@ -57,15 +64,25 @@ public interface PlayerConnection extends PacketListenerPlayIn {
 	
 	public AtlasPlayer getAtlasPlayer();
 	
-	public ChatType getChatMode();
-	
 	public boolean hasKeepAliveResponse();
 	
 	public long getLastKeepAlive();
 	
 	public void sendKeepAlive();
 	
+	/**
+	 * Sends a packet to the client.
+	 * @param packet
+	 */
 	public void sendPacked(PacketProtocol packet);
+	
+	/**
+	 * Sends a packet to the client.
+	 * The future will inform when the packet is send or failed.
+	 * @param packet
+	 * @param listener
+	 */
+	public void sendPacket(PacketProtocol packet, GenericFutureListener<? extends Future<? super Void>> listener);
 
 	/**
 	 * 
@@ -78,13 +95,6 @@ public interface PlayerConnection extends PacketListenerPlayIn {
 	 * @return the new current inventory id
 	 */
 	public int getNextInventoryID();
-
-	public String getClientLocal();
-
-	/**
-	 * Cancel a click
-	 */
-	public void setWindowLock();
 
 	/**
 	 * Teleports the player and returns the id of the teleport
@@ -109,21 +119,23 @@ public interface PlayerConnection extends PacketListenerPlayIn {
 	public void confirmTeleport();
 	
 	public boolean isTeleportConfirmed();
-
-	/**
-	 * Returns the last location the client send.<br>
-	 * Should not be changed.
-	 * @return location
-	 */
-	public SimpleLocation getClientLocation();
 	
 	public boolean hasClientLocationChanged();
+	
+	public void setClientLocationChanged(boolean changed);
 	
 	/**
 	 * Returns the last location the client send and marks it as unchanged
 	 * @return location
 	 */
 	public SimpleLocation acceptClientLocation();
+	
+	/**
+	 * Returns the last location the client send.
+	 * Can be used for changes.
+	 * @return
+	 */
+	public SimpleLocation getClientLocation();
 	
 	/**
 	 * Returns all {@link RecipeBook}s of this player
@@ -166,5 +178,61 @@ public interface PlayerConnection extends PacketListenerPlayIn {
 	public Collection<Recipe> getUnlockedRecipes();
 	
 	public Collection<Recipe> getAvailableRecipes();
+	
+	public PluginChannelHandler getPluginChannelHandler();
 
+	/**
+	 * Will disconnect the player form the network
+	 * @param message
+	 */
+	public void disconnect(String message);
+	
+	public LocalProxy getProxy();
+	
+	/**
+	 * Returns the currently open advancement tab of the player or null if none.
+	 * @return tab or null
+	 */
+	@Nullable
+	public String getOpenAdvancementTab();
+	
+	/**
+	 * Returns whether or not the player has a open advancement tab.
+	 * @return true if open
+	 */
+	public boolean hasOpenAdvancementTab();
+	
+	/**
+	 * Sets the currently open advancement tab of this player or null to close.
+	 * @param tab
+	 * @param update true if should update to the client
+	 */
+	public void setOpenAdvancementTab(@Nullable String tab, boolean update);
+
+	public PlayerAnimationEvent getEventAnimation();
+
+	public PlayerHeldItemChangeEvent getEventHeldItemChange();
+
+	public PlayerToggleSneakEvent getEventSneak();
+
+	public PlayerToggleSprintEvent getEventSprint();
+
+	public PlayerDiggingEvent getEventDigging();
+
+	public PlayerMoveEvent getEventMove();
+	
+	public boolean isDigging();
+
+	public void confirmKeepAlive(long lastResponseTime);
+	
+	public boolean isClientOnGround();
+	
+	/**
+	 * Only for updating value send by client
+	 * @param onGround
+	 */
+	public void setClientOnGround(boolean onGround);
+
+	public PlayerSettings getSettings();
+	
 }
