@@ -2,13 +2,13 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.CoreAbstractHandler;
-import de.atlasmc.io.ConnectionHandler;
+import de.atlascore.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutChangeGameState;
 import de.atlasmc.io.protocol.play.PacketOutChangeGameState.ChangeReason;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutChangeGameState extends CoreAbstractHandler<PacketOutChangeGameState> {
+public class CorePacketOutChangeGameState extends PacketIO<PacketOutChangeGameState> {
 
 	@Override
 	public void read(PacketOutChangeGameState packet, ByteBuf in, ConnectionHandler handler) throws IOException {

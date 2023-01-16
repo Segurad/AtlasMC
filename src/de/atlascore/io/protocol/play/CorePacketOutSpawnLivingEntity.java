@@ -3,16 +3,16 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlascore.io.CoreAbstractHandler;
+import de.atlascore.io.ConnectionHandler;
 import de.atlasmc.entity.EntityType;
 import static de.atlasmc.io.AbstractPacket.*;
 
-import de.atlasmc.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutSpawnLivingEntity;
 import de.atlasmc.util.MathUtil;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutSpawnLivingEntity extends CoreAbstractHandler<PacketOutSpawnLivingEntity> {
+public class CorePacketOutSpawnLivingEntity extends PacketIO<PacketOutSpawnLivingEntity> {
 
 	@Override
 	public void read(PacketOutSpawnLivingEntity packet, ByteBuf in, ConnectionHandler handler) throws IOException {

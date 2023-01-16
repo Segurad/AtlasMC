@@ -2,14 +2,15 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.CoreAbstractHandler;
 import static de.atlasmc.io.AbstractPacket.*;
-import de.atlasmc.io.ConnectionHandler;
+
+import de.atlascore.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketInSetRecipeBookState;
 import de.atlasmc.recipe.BookType;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInSetRecipeBookState extends CoreAbstractHandler<PacketInSetRecipeBookState> {
+public class CorePacketInSetRecipeBookState extends PacketIO<PacketInSetRecipeBookState> {
 	
 	@Override
 	public void read(PacketInSetRecipeBookState packet, ByteBuf in, ConnectionHandler handler) throws IOException {

@@ -1,16 +1,18 @@
 package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
-import de.atlascore.io.CoreAbstractHandler;
+
 import static de.atlasmc.io.AbstractPacket.*;
-import de.atlasmc.io.ConnectionHandler;
+
+import de.atlascore.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutChunkData;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutChunkData extends CoreAbstractHandler<PacketOutChunkData> {
+public class CorePacketOutChunkData extends PacketIO<PacketOutChunkData> {
 
 	@Override
 	public void read(PacketOutChunkData packet, ByteBuf in, ConnectionHandler handler) throws IOException {

@@ -3,12 +3,12 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlascore.io.CoreAbstractHandler;
-import de.atlasmc.io.ConnectionHandler;
+import de.atlascore.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketInSpectate;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInSpectate extends CoreAbstractHandler<PacketInSpectate> {
+public class CorePacketInSpectate extends PacketIO<PacketInSpectate> {
 	
 	@Override
 	public void read(PacketInSpectate packet, ByteBuf in, ConnectionHandler handler) throws IOException {

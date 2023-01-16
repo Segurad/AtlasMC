@@ -2,12 +2,12 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.CoreAbstractHandler;
-import de.atlasmc.io.ConnectionHandler;
+import de.atlascore.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutWindowConfirmation;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutWindowConfirmation extends CoreAbstractHandler<PacketOutWindowConfirmation> {
+public class CorePacketOutWindowConfirmation extends PacketIO<PacketOutWindowConfirmation> {
 
 	@Override
 	public void read(PacketOutWindowConfirmation packet, ByteBuf in, ConnectionHandler handler) throws IOException {

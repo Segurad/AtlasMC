@@ -2,14 +2,15 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.CoreAbstractHandler;
+import de.atlascore.io.ConnectionHandler;
 import de.atlasmc.SoundCategory;
 import static de.atlasmc.io.AbstractPacket.*;
-import de.atlasmc.io.ConnectionHandler;
+
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutStopSound;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutStopSound extends CoreAbstractHandler<PacketOutStopSound> {
+public class CorePacketOutStopSound extends PacketIO<PacketOutStopSound> {
 
 	@Override
 	public void read(PacketOutStopSound packet, ByteBuf in, ConnectionHandler handler) throws IOException {

@@ -2,39 +2,28 @@ package de.atlascore.io.protocol.login;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.chat.Chat;
-import de.atlasmc.chat.ChatUtil;
-import de.atlasmc.io.AbstractPacket;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlascore.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.login.PacketOutDisconnect;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutDisconnect extends AbstractPacket implements PacketOutDisconnect {
+public class CorePacketOutDisconnect extends PacketIO<PacketOutDisconnect> {
 
-	private String reason;
-	
-	public CorePacketOutDisconnect() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutDisconnect(Chat reason) {
-		this();
-		this.reason = reason.getJsonText();
+	@Override
+	public void read(PacketOutDisconnect packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setReason(readString(in));
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		reason = readString(in);
+	public void write(PacketOutDisconnect packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeString(packet.getReason(), out);
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeString(reason, out);
-	}
-
-	@Override
-	public Chat getReason() {
-		return ChatUtil.toChat(reason);
+	public PacketOutDisconnect createPacketData() {
+		return new PacketOutDisconnect();
 	}
 
 }

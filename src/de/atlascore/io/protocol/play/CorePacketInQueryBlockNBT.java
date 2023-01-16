@@ -2,13 +2,14 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.CoreAbstractHandler;
 import static de.atlasmc.io.AbstractPacket.*;
-import de.atlasmc.io.ConnectionHandler;
+
+import de.atlascore.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketInQueryBlockNBT;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInQueryBlockNBT extends CoreAbstractHandler<PacketInQueryBlockNBT> {
+public class CorePacketInQueryBlockNBT extends PacketIO<PacketInQueryBlockNBT> {
 	
 	@Override
 	public void read(PacketInQueryBlockNBT packet, ByteBuf in, ConnectionHandler handler) throws IOException {

@@ -1,47 +1,26 @@
 package de.atlasmc.io.handshake;
 
-import java.lang.reflect.InvocationTargetException;
+import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.atlasmc.io.ConnectionHandler;
+import de.atlascore.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketListener;
 import de.atlasmc.io.Protocol;
+import io.netty.buffer.ByteBuf;
 
 public class HandshakeProtocol implements Protocol {
 
-	private final ConcurrentHashMap<Integer, Class<? extends Packet>> packets;
 	public static final HandshakeProtocol DEFAULT_PROTOCOL;
+
+	private final ConcurrentHashMap<Integer, HandshakePaketIO<?>> packets;
 	
 	static {
 		DEFAULT_PROTOCOL = new HandshakeProtocol();
-		DEFAULT_PROTOCOL.setPacket(0x00, PacketMinecraftHandshake.class);
-		DEFAULT_PROTOCOL.setPacket(0x01, PacketAtlasPlayerHandshake.class);
-		DEFAULT_PROTOCOL.setPacket(0x02, PacketAtlasNodeHandshake.class);
-		DEFAULT_PROTOCOL.setPacket(0xFE, PacketMinecraftLegacyHandshake.class);
 	}
 	
 	public HandshakeProtocol() {
 		packets = new ConcurrentHashMap<>(4);
-	}
-	
-	@Override
-	public Packet createPacketIn(int id) {
-		Class<? extends Packet> clazz = packets.get(id);
-		if (clazz == null) return null;
-		try {
-			return clazz.getConstructor()
-					.newInstance();
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	@Override
-	public Packet createPacketOut(int id) {
-		return null;
 	}
 
 	@Override
@@ -52,23 +31,50 @@ public class HandshakeProtocol implements Protocol {
 	@Override
 	public PacketListener createDefaultPacketListener(Object o) {
 		if (ConnectionHandler.class.isInstance(o))
-		return new HandshakePacketListener((ConnectionHandler) o);
-		else return null;
-	}
-
-	@Override
-	public Packet createCopy(Packet packet) {
-		return null;
+			return new HandshakePacketListener((ConnectionHandler) o, this);
+		else 
+			return null;
 	}
 	
-	public void setPacket(int id, Class<? extends Packet> clazz) {
-		packets.put(id, clazz);
+	public void setPacketIO(int id, HandshakePaketIO<? extends PacketHandshake> io) {
+		packets.put(id, io);
+	}
+	
+	public HandshakePaketIO<?> getPacketIO(int id) {
+		return packets.get(id);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <P extends Packet> P readPacket(P packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		HandshakePaketIO<P> io = (HandshakePaketIO<P>) packets.get(packet.getID());
+		if (io == null)
+			return null;
+		io.read(packet, in, con);
+		return packet;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <P extends Packet> P writePacket(P packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		HandshakePaketIO<P> io = (HandshakePaketIO<P>) packets.get(packet.getID());
+		if (io == null)
+			return null;
+		io.write(packet, out, con);
+		return packet;
 	}
 
 	@Override
-	public <T extends Packet> T createPacket(Class<T> clazz) {
-		// TODO Auto-generated method stub
-		return null;
+	public Packet createPacketIn(int id) {
+		HandshakePaketIO<?> io = packets.get(id);
+		if (io == null)
+			return null;
+		return io.createPacketData();
+	}
+
+	@Override
+	public Packet createPacketOut(int id) {
+		return createPacketIn(id);
 	}
 
 }

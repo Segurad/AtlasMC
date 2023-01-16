@@ -5,13 +5,13 @@ import static de.atlasmc.io.AbstractPacket.writeVarInt;
 
 import java.io.IOException;
 
-import de.atlascore.io.CoreAbstractHandler;
-import de.atlasmc.io.ConnectionHandler;
+import de.atlascore.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutEntityPositionAndRotation;
 import de.atlasmc.util.MathUtil;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutEntityPositionAndRotation extends CoreAbstractHandler<PacketOutEntityPositionAndRotation> {
+public class CorePacketOutEntityPositionAndRotation extends PacketIO<PacketOutEntityPositionAndRotation> {
 	
 	@Override
 	public void read(PacketOutEntityPositionAndRotation packet, ByteBuf in, ConnectionHandler handler) throws IOException {

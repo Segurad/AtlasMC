@@ -4,17 +4,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlascore.io.CoreAbstractHandler;
+import de.atlascore.io.ConnectionHandler;
 import de.atlasmc.entity.Merchant.MerchantRecipe;
 import de.atlasmc.inventory.ItemStack;
 import static de.atlasmc.io.AbstractPacket.*;
-import de.atlasmc.io.ConnectionHandler;
+
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutTradeList;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutTradeList extends CoreAbstractHandler<PacketOutTradeList> {
+public class CorePacketOutTradeList extends PacketIO<PacketOutTradeList> {
 
 	@Override
 	public void read(PacketOutTradeList packet, ByteBuf in, ConnectionHandler handler) throws IOException {

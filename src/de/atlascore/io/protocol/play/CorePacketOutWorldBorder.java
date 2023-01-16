@@ -2,14 +2,14 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.CoreAbstractHandler;
-import de.atlasmc.io.ConnectionHandler;
+import de.atlascore.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutWorldBorder;
 import de.atlasmc.io.protocol.play.PacketOutWorldBorder.BorderAction;
 import io.netty.buffer.ByteBuf;
 import static de.atlasmc.io.AbstractPacket.*;
 
-public class CorePacketOutWorldBorder extends CoreAbstractHandler<PacketOutWorldBorder> {
+public class CorePacketOutWorldBorder extends PacketIO<PacketOutWorldBorder> {
 
 	@Override
 	public void read(PacketOutWorldBorder packet, ByteBuf in, ConnectionHandler handler) throws IOException {

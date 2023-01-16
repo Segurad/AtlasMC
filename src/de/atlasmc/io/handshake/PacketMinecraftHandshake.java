@@ -1,33 +1,13 @@
 package de.atlasmc.io.handshake;
 
-import java.io.IOException;
-
 import de.atlasmc.io.AbstractPacket;
-import de.atlasmc.io.DefaultPacketID;
-import io.netty.buffer.ByteBuf;
 
-/**
- * Default Minecraft handshake
- */
-@DefaultPacketID(0x00)
-public class PacketMinecraftHandshake extends AbstractPacket {
+public class PacketMinecraftHandshake extends AbstractPacket implements PacketHandshake {
 
 	private int protocolVersion;
 	private String address;
 	private int port;
 	private int nextState;
-	
-	public PacketMinecraftHandshake() {
-		super(0x00, 0);
-	}
-	
-	public PacketMinecraftHandshake(int protocolVersion, String address, int port, int nextState) {
-		super(0x00, 0);
-		this.protocolVersion = protocolVersion;
-		this.address = address;
-		this.port = port;
-		this.nextState = nextState;
-	}
 	
 	public int getProtocolVersion() {
 		return protocolVersion;
@@ -37,33 +17,33 @@ public class PacketMinecraftHandshake extends AbstractPacket {
 		return port;
 	}
 	
+	public String getAddress() {
+		return address;
+	}
+	
 	public int getNextState() {
 		return nextState;
 	}
 	
-	public String getAddress() {
-		return address;
+	public void setProtocolVersion(int protocolVersion) {
+		this.protocolVersion = protocolVersion;
 	}
-
-	@Override
-	public void read(ByteBuf in) throws IOException {
-		protocolVersion = readVarInt(in);
-		address = readString(in);
-		port = in.readShort();
-		nextState = readVarInt(in);
+	
+	public void setPort(int port) {
+		this.port = port;
 	}
-
-	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeVarInt(protocolVersion, out);
-		writeString(address, out);
-		out.writeShort(port);
-		writeVarInt(nextState, out);
+	
+	public void setAddress(String address) {
+		this.address = address;
 	}
-
+	
+	public void setNextState(int nextState) {
+		this.nextState = nextState;
+	}
+	
 	@Override
 	public int getDefaultID() {
-		return 0;
+		return 0x00;
 	}
 
 }

@@ -3,15 +3,15 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 import java.util.List;
 
-import de.atlascore.io.CoreAbstractHandler;
+import de.atlascore.io.ConnectionHandler;
 import de.atlasmc.block.BlockFace;
 import static de.atlasmc.io.AbstractPacket.*;
 
-import de.atlasmc.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketInPlayerDigging;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInPlayerDigging extends CoreAbstractHandler<PacketInPlayerDigging> {
+public class CorePacketInPlayerDigging extends PacketIO<PacketInPlayerDigging> {
 
 	/**
 	 * List of all faces indexed by the id needed for the packet

@@ -2,14 +2,14 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.CoreAbstractHandler;
 import static de.atlasmc.io.AbstractPacket.*;
 
-import de.atlasmc.io.ConnectionHandler;
+import de.atlascore.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketInEntityAction;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInEntityAction extends CoreAbstractHandler<PacketInEntityAction> {
+public class CorePacketInEntityAction extends PacketIO<PacketInEntityAction> {
 	
 	@Override
 	public void read(PacketInEntityAction packet, ByteBuf in, ConnectionHandler con) throws IOException {

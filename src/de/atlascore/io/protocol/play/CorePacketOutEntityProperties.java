@@ -5,18 +5,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import de.atlascore.io.CoreAbstractHandler;
+import de.atlascore.io.ConnectionHandler;
 import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeInstance;
 import de.atlasmc.attribute.AttributeModifier;
 import de.atlasmc.attribute.AttributeModifier.Operation;
 
 import static de.atlasmc.io.AbstractPacket.*;
-import de.atlasmc.io.ConnectionHandler;
+
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutEntityProperties;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutEntityProperties extends CoreAbstractHandler<PacketOutEntityProperties> {
+public class CorePacketOutEntityProperties extends PacketIO<PacketOutEntityProperties> {
 
 	@Override
 	public void read(PacketOutEntityProperties packet, ByteBuf in, ConnectionHandler handler) throws IOException {

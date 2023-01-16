@@ -1,9 +1,5 @@
 package de.atlasmc.io;
 
-import java.io.IOException;
-
-import io.netty.buffer.ByteBuf;
-
 public interface Packet {
 	
 	public boolean isCancelled();

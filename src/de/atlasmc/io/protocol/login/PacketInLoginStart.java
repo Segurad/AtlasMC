@@ -1,15 +1,24 @@
 package de.atlasmc.io.protocol.login;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketLogin.IN_LOGIN_START)
-public interface PacketInLoginStart extends PacketLogin, PacketInbound {
+public class PacketInLoginStart extends AbstractPacket implements PacketLogin, PacketInbound {
 	
-	public String getName();
+	private String name;
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_LOGIN_START;
 	}
 

@@ -1,15 +1,24 @@
 package de.atlasmc.io.protocol.status;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.PacketInbound;
 
 @DefaultPacketID(PacketStatus.IN_PING)
-public interface PacketInPing extends PacketStatus, PacketInbound {
+public class PacketInPing extends AbstractPacket implements PacketStatus, PacketInbound {
 	
-	public long getPing();
+	private long ping;
+	
+	public long getPing() {
+		return ping;
+	}
+	
+	public void setPing(long ping) {
+		this.ping = ping;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return IN_PING;
 	}
 

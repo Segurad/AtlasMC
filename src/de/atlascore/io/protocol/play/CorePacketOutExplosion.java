@@ -2,12 +2,12 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.CoreAbstractHandler;
-import de.atlasmc.io.ConnectionHandler;
+import de.atlascore.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutExplosion;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutExplosion extends CoreAbstractHandler<PacketOutExplosion> {
+public class CorePacketOutExplosion extends PacketIO<PacketOutExplosion> {
 
 	@Override
 	public void read(PacketOutExplosion packet, ByteBuf in, ConnectionHandler handler) throws IOException {

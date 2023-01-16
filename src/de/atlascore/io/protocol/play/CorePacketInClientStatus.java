@@ -2,16 +2,16 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.CoreAbstractHandler;
 import static de.atlasmc.io.AbstractPacket.readVarInt;
 import static de.atlasmc.io.AbstractPacket.writeVarInt;
 
-import de.atlasmc.io.ConnectionHandler;
+import de.atlascore.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketInClientStatus;
 import de.atlasmc.io.protocol.play.PacketInClientStatus.StatusAction;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInClientStatus extends CoreAbstractHandler<PacketInClientStatus> {
+public class CorePacketInClientStatus extends PacketIO<PacketInClientStatus> {
 	
 	@Override
 	public void read(PacketInClientStatus packet, ByteBuf in, ConnectionHandler con) throws IOException {

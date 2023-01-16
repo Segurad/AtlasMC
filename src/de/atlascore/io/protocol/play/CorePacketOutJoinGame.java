@@ -2,18 +2,18 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.CoreAbstractHandler;
 import static de.atlasmc.io.AbstractPacket.*;
 
+import de.atlascore.io.ConnectionHandler;
 import de.atlasmc.Gamemode;
-import de.atlasmc.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutJoinGame;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import de.atlasmc.world.DimensionCodec;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutJoinGame extends CoreAbstractHandler<PacketOutJoinGame> {
+public class CorePacketOutJoinGame extends PacketIO<PacketOutJoinGame> {
 
 	@Override
 	public void read(PacketOutJoinGame packet, ByteBuf in, ConnectionHandler handler) throws IOException {

@@ -4,16 +4,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlascore.io.CoreAbstractHandler;
+import de.atlascore.io.ConnectionHandler;
 import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.inventory.ItemStack;
 import static de.atlasmc.io.AbstractPacket.*;
-import de.atlasmc.io.ConnectionHandler;
+
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutEntityEquipment;
 import de.atlasmc.util.Pair;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutEntityEquipment extends CoreAbstractHandler<PacketOutEntityEquipment> {
+public class CorePacketOutEntityEquipment extends PacketIO<PacketOutEntityEquipment> {
 
 	@Override
 	public void read(PacketOutEntityEquipment packet, ByteBuf in, ConnectionHandler handler) throws IOException {

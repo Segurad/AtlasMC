@@ -3,14 +3,15 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlascore.io.CoreAbstractHandler;
+import de.atlascore.io.ConnectionHandler;
 import de.atlasmc.chat.ChatType;
 import static de.atlasmc.io.AbstractPacket.*;
-import de.atlasmc.io.ConnectionHandler;
+
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutChatMessage;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutChatMessage extends CoreAbstractHandler<PacketOutChatMessage> {
+public class CorePacketOutChatMessage extends PacketIO<PacketOutChatMessage> {
 
 	@Override
 	public void read(PacketOutChatMessage packet, ByteBuf in, ConnectionHandler handler) throws IOException {

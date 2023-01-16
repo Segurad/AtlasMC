@@ -1,17 +1,16 @@
 package de.atlasmc.event.proxy;
 
-import de.atlasmc.atlasnetwork.proxy.LocalProxy;
-import de.atlasmc.event.GenericEvent;
+import de.atlascore.io.ConnectionHandler;
+import de.atlascore.io.ProxyConnectionHandler;
 import de.atlasmc.event.ProxyHandlerList;
-import de.atlasmc.io.ConnectionHandler;
 
-public class PlayerLoginAtemptEvent extends GenericEvent<LocalProxy, ProxyHandlerList> {
+public class PlayerLoginAtemptEvent extends ProxyEvent {
 
 	private static final ProxyHandlerList handlers = new ProxyHandlerList();
 	
 	private final ConnectionHandler handler;
 	
-	public PlayerLoginAtemptEvent(ConnectionHandler handler) {
+	public PlayerLoginAtemptEvent(ProxyConnectionHandler handler) {
 		super(handler.getProxy());
 		this.handler = handler;
 	}

@@ -1,6 +1,6 @@
 package de.atlascore.io.netty.channel;
 
-import de.atlasmc.io.ConnectionHandler;
+import de.atlascore.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -19,9 +19,7 @@ public class PacketProcessor extends ChannelInboundHandlerAdapter {
 	
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-		if (handler.hasQueued()) {
-			handler.writeQueued();
-		}
+		handler.writeQueuedPackets();
 		ctx.fireChannelActive();
 	}
 	

@@ -2,32 +2,26 @@ package de.atlascore.io.protocol.status;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import de.atlascore.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.status.PacketOutPong;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutPong extends AbstractPacket implements PacketOutPong {
+public class CorePacketOutPong extends PacketIO<PacketOutPong> {
 
-	private long pong;
-	
-	public CorePacketOutPong() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutPong(long pong) {
-		this();
-		this.pong = pong;
+	@Override
+	public void read(PacketOutPong packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setPong(in.readLong());
 	}
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		pong = in.readLong();
+	public void write(PacketOutPong packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		out.writeLong(packet.getPong());
 	}
-
+	
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		out.writeLong(pong);
+	public PacketOutPong createPacketData() {
+		return new PacketOutPong();
 	}
 
 }

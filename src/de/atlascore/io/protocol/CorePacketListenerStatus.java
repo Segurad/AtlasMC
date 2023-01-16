@@ -1,17 +1,19 @@
 package de.atlascore.io.protocol;
 
-import de.atlascore.io.protocol.status.CorePacketOutPong;
-import de.atlascore.io.protocol.status.CorePacketOutResponse;
-import de.atlasmc.io.ConnectionHandler;
+import java.io.IOException;
+
+import de.atlascore.io.ProxyConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketListener;
 import de.atlasmc.io.protocol.status.PacketInPing;
+import de.atlasmc.io.protocol.status.PacketOutPong;
+import de.atlasmc.io.protocol.status.PacketOutResponse;
 
 public class CorePacketListenerStatus implements PacketListener {
 
-	private final ConnectionHandler handler;
+	private final ProxyConnectionHandler handler;
 	
-	public CorePacketListenerStatus(ConnectionHandler handler) {
+	public CorePacketListenerStatus(ProxyConnectionHandler handler) {
 		this.handler = handler;
 	}
 	
@@ -19,15 +21,25 @@ public class CorePacketListenerStatus implements PacketListener {
 	public void handlePacket(Packet packet) {
 		System.out.println("PacketStatus: " + packet.getID()); // TODO  delete
 		if (packet.getID() == 0) {
-			handler.sendPacket(new CorePacketOutResponse(handler.getProxy().createServerListResponse(CoreProtocolAdapter.VERSION)));
+			PacketOutResponse response = new PacketOutResponse();
+			response.setResponse(handler.getProxy().createServerListResponse(CoreProtocolAdapter.VERSION).toString());
+			handler.sendPacket(response);
 		} else if (packet.getID() == 1) {
 			PacketInPing ping = (PacketInPing) packet;
-			handler.sendPacket(new CorePacketOutPong(ping.getPing()));
+			PacketOutPong pong = new PacketOutPong();
+			pong.setPong(ping.getPing());
+			handler.sendPacket(pong);
 			handler.close();
 		}
 	}
 
 	@Override
 	public void handleUnregister() {}
+
+	@Override
+	public void handleSyncPackets() throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

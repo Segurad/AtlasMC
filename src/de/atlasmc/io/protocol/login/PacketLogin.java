@@ -7,6 +7,10 @@ import de.atlasmc.io.protocol.PacketProtocol;
  */
 public interface PacketLogin extends PacketProtocol {
 	
+	public static final int
+	PACKET_COUNT_IN = 3,
+	PACKET_COUNT_OUT = 5;
+	
 	public static final int 
 	IN_LOGIN_START = 0x00,
 	IN_ENCRYPTION_RESPONSE = 0x01,

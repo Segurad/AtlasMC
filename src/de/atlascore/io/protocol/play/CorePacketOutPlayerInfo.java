@@ -5,18 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import de.atlascore.io.CoreAbstractHandler;
+import de.atlascore.io.ConnectionHandler;
 import de.atlasmc.Gamemode;
 import de.atlasmc.chat.ChatUtil;
 import static de.atlasmc.io.AbstractPacket.*;
 
-import de.atlasmc.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutPlayerInfo;
 import de.atlasmc.io.protocol.play.PacketOutPlayerInfo.PlayerInfo;
 import de.atlasmc.io.protocol.play.PacketOutPlayerInfo.PlayerInfoAction;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutPlayerInfo extends CoreAbstractHandler<PacketOutPlayerInfo> {
+public class CorePacketOutPlayerInfo extends PacketIO<PacketOutPlayerInfo> {
 
 	@Override
 	public void read(PacketOutPlayerInfo packet, ByteBuf in, ConnectionHandler handler) throws IOException {

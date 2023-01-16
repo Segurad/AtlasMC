@@ -2,15 +2,15 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.CoreAbstractHandler;
+import de.atlascore.io.ConnectionHandler;
 import de.atlasmc.block.tile.CommandBlock.Mode;
 import static de.atlasmc.io.AbstractPacket.*;
 
-import de.atlasmc.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketInUpdateCommandBlock;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInUpdateCommandBlock extends CoreAbstractHandler<PacketInUpdateCommandBlock> {
+public class CorePacketInUpdateCommandBlock extends PacketIO<PacketInUpdateCommandBlock> {
 
 	@Override
 	public void read(PacketInUpdateCommandBlock packet, ByteBuf in, ConnectionHandler handler) throws IOException {

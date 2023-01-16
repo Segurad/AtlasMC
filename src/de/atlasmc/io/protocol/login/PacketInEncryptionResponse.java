@@ -7,7 +7,12 @@ import de.atlasmc.io.DefaultPacketID;
 public interface PacketInEncryptionResponse extends PacketLogin, PacketInbound {
 	
 	public byte[] getSecret();
+	
 	public byte[] getVerifyToken();
+	
+	public void setSecret(byte[] secret);
+	
+	public void setVerifyToken(byte[] secret);
 	
 	@Override
 	public default int getDefaultID() {

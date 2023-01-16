@@ -2,16 +2,16 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.CoreAbstractHandler;
 import static de.atlasmc.io.AbstractPacket.*;
 
-import de.atlasmc.io.ConnectionHandler;
+import de.atlascore.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutScoreboardObjective;
 import de.atlasmc.io.protocol.play.PacketOutScoreboardObjective.Mode;
 import de.atlasmc.scoreboard.RenderType;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutScoreboardObjective extends CoreAbstractHandler<PacketOutScoreboardObjective> {
+public class CorePacketOutScoreboardObjective extends PacketIO<PacketOutScoreboardObjective> {
 
 	@Override
 	public void read(PacketOutScoreboardObjective packet, ByteBuf in, ConnectionHandler handler) throws IOException {

@@ -2,12 +2,12 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.CoreAbstractHandler;
-import de.atlasmc.io.ConnectionHandler;
+import de.atlascore.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketInPlayerPositionAndRotation;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInPlayerPositionAndRotation extends CoreAbstractHandler<PacketInPlayerPositionAndRotation> {
+public class CorePacketInPlayerPositionAndRotation extends PacketIO<PacketInPlayerPositionAndRotation> {
 
 	@Override
 	public void read(PacketInPlayerPositionAndRotation packet, ByteBuf in, ConnectionHandler con) throws IOException {

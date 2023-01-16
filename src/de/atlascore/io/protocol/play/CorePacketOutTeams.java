@@ -4,17 +4,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlascore.io.CoreAbstractHandler;
+import de.atlascore.io.ConnectionHandler;
 import de.atlasmc.chat.ChatColor;
 import static de.atlasmc.io.AbstractPacket.*;
 
-import de.atlasmc.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutTeams;
 import de.atlasmc.io.protocol.play.PacketOutTeams.Mode;
 import de.atlasmc.scoreboard.TeamOptionType;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutTeams extends CoreAbstractHandler<PacketOutTeams> {
+public class CorePacketOutTeams extends PacketIO<PacketOutTeams> {
 
 	@Override
 	public void read(PacketOutTeams packet, ByteBuf in, ConnectionHandler handler) throws IOException {

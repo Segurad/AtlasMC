@@ -2,13 +2,14 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.CoreAbstractHandler;
 import static de.atlasmc.io.AbstractPacket.*;
-import de.atlasmc.io.ConnectionHandler;
+
+import de.atlascore.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutSetCooldown;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutSetCooldown extends CoreAbstractHandler<PacketOutSetCooldown> {
+public class CorePacketOutSetCooldown extends PacketIO<PacketOutSetCooldown> {
 
 	@Override
 	public void read(PacketOutSetCooldown packet, ByteBuf in, ConnectionHandler handler) throws IOException {

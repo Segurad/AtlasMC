@@ -4,14 +4,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlascore.io.CoreAbstractHandler;
 import static de.atlasmc.io.AbstractPacket.*;
-import de.atlasmc.io.ConnectionHandler;
+
+import de.atlascore.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutTabComplete;
 import de.atlasmc.io.protocol.play.PacketOutTabComplete.Match;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutTabComplete extends CoreAbstractHandler<PacketOutTabComplete> {
+public class CorePacketOutTabComplete extends PacketIO<PacketOutTabComplete> {
 
 	@Override
 	public void read(PacketOutTabComplete packet, ByteBuf in, ConnectionHandler handler) throws IOException {

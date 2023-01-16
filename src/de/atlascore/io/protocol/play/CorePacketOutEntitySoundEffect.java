@@ -2,16 +2,16 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.CoreAbstractHandler;
+import de.atlascore.io.ConnectionHandler;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import static de.atlasmc.io.AbstractPacket.*;
 
-import de.atlasmc.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutEntitySoundEffect;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutEntitySoundEffect extends CoreAbstractHandler<PacketOutEntitySoundEffect> {
+public class CorePacketOutEntitySoundEffect extends PacketIO<PacketOutEntitySoundEffect> {
 	
 	@Override
 	public void read(PacketOutEntitySoundEffect packet, ByteBuf in, ConnectionHandler handler) throws IOException {

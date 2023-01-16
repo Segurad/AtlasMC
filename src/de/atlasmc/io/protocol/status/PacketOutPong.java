@@ -1,13 +1,24 @@
 package de.atlasmc.io.protocol.status;
 
+import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.PacketOutbound;
 
 @DefaultPacketID(PacketStatus.OUT_PONG)
-public interface PacketOutPong extends PacketStatus, PacketOutbound {
+public class PacketOutPong extends AbstractPacket implements PacketStatus, PacketOutbound {
+	
+	private long pong;
+	
+	public long getPong() {
+		return pong;
+	}
+	
+	public void setPong(long pong) {
+		this.pong = pong;
+	}
 	
 	@Override
-	default int getDefaultID() {
+	public int getDefaultID() {
 		return OUT_PONG;
 	}
 

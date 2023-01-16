@@ -2,15 +2,15 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.CoreAbstractHandler;
+import de.atlascore.io.ConnectionHandler;
 import de.atlasmc.inventory.EquipmentSlot;
 import static de.atlasmc.io.AbstractPacket.*;
 
-import de.atlasmc.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketInUseItem;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInUseItem extends CoreAbstractHandler<PacketInUseItem> {
+public class CorePacketInUseItem extends PacketIO<PacketInUseItem> {
 
 	@Override
 	public void read(PacketInUseItem packet, ByteBuf in, ConnectionHandler handler) throws IOException {

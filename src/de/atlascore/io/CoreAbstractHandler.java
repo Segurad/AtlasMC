@@ -2,7 +2,6 @@ package de.atlascore.io;
 
 import java.io.IOException;
 
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import io.netty.buffer.ByteBuf;
 

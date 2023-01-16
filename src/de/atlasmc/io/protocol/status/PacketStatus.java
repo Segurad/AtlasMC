@@ -8,6 +8,10 @@ import de.atlasmc.io.protocol.PacketProtocol;
 public interface PacketStatus extends PacketProtocol {
 	
 	public static final int
+	PACKET_COUNT_IN = 2,
+	PACKET_COUNT_OUT = 2;
+	
+	public static final int
 	IN_REQUEST = 0x00,
 	IN_PING = 0x01;
 	

@@ -6,11 +6,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import de.atlascore.io.CoreAbstractHandler;
+import de.atlascore.io.ConnectionHandler;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.ItemStack;
 import static de.atlasmc.io.AbstractPacket.*;
-import de.atlasmc.io.ConnectionHandler;
+
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutDeclareRecipes;
 import de.atlasmc.recipe.AbstractCookingRecipe;
 import de.atlasmc.recipe.BlastFurnaceRecipe;
@@ -29,7 +30,7 @@ import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutDeclareRecipes extends CoreAbstractHandler<PacketOutDeclareRecipes> {
+public class CorePacketOutDeclareRecipes extends PacketIO<PacketOutDeclareRecipes> {
 
 	@Override
 	public void read(PacketOutDeclareRecipes packet, ByteBuf in, ConnectionHandler handler) throws IOException {

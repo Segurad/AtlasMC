@@ -3,15 +3,16 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlascore.io.CoreAbstractHandler;
+import de.atlascore.io.ConnectionHandler;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.entity.Painting.Motive;
 import static de.atlasmc.io.AbstractPacket.*;
-import de.atlasmc.io.ConnectionHandler;
+
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutSpawnPainting;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutSpawnPainting extends CoreAbstractHandler<PacketOutSpawnPainting> {
+public class CorePacketOutSpawnPainting extends PacketIO<PacketOutSpawnPainting> {
 
 	@Override
 	public void read(PacketOutSpawnPainting packet, ByteBuf in, ConnectionHandler handler) throws IOException {

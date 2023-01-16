@@ -2,13 +2,13 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.CoreAbstractHandler;
+import de.atlascore.io.ConnectionHandler;
 import de.atlasmc.Difficulty;
-import de.atlasmc.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutServerDifficulty;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutServerDifficulty extends CoreAbstractHandler<PacketOutServerDifficulty> {
+public class CorePacketOutServerDifficulty extends PacketIO<PacketOutServerDifficulty> {
 
 	@Override
 	public void read(PacketOutServerDifficulty packet, ByteBuf in, ConnectionHandler handler) throws IOException {

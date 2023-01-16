@@ -3,17 +3,17 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlascore.io.CoreAbstractHandler;
 import static de.atlasmc.io.AbstractPacket.*;
 
+import de.atlascore.io.ConnectionHandler;
 import de.atlasmc.BossBar.BarColor;
 import de.atlasmc.BossBar.BarStyle;
-import de.atlasmc.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutBossBar;
 import de.atlasmc.io.protocol.play.PacketOutBossBar.BossBarAction;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutBossBar extends CoreAbstractHandler<PacketOutBossBar> {
+public class CorePacketOutBossBar extends PacketIO<PacketOutBossBar> {
 
 	@Override
 	public void read(PacketOutBossBar packet, ByteBuf in, ConnectionHandler handler) throws IOException {

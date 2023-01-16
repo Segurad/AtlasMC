@@ -1,5 +1,7 @@
 package de.atlasmc.io;
 
+import de.atlascore.io.ConnectionHandler;
+
 /**
  * Interface for handling exception in protocols e.g. exception while packet read
  */

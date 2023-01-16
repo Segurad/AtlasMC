@@ -1,35 +1,25 @@
 package de.atlascore.io.protocol;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static de.atlasmc.io.protocol.play.PacketPlay.*;
 
-import de.atlascore.io.CoreAbstractHandler;
 import de.atlascore.io.protocol.play.*;
-import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketInbound;
-import de.atlasmc.io.ConnectionHandler;
-import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.PacketListener;
-import de.atlasmc.io.PacketOutbound;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.ProtocolPlay;
-import de.atlasmc.io.protocol.play.PacketPlay;
 import de.atlasmc.io.protocol.play.PacketPlayIn;
 import de.atlasmc.io.protocol.play.PacketPlayOut;
-import io.netty.buffer.ByteBuf;
 
-public class CoreProtocolPlay implements ProtocolPlay {
+public class CoreProtocolPlay extends CoreAbstractProtocol implements ProtocolPlay {
 	
-	private final List<CoreAbstractHandler<? extends PacketPlayIn>> playIn;
-	private final List<CoreAbstractHandler<? extends PacketPlayOut>> playOut;
+	private final List<PacketIO<? extends PacketPlayIn>> playIn;
+	private final List<PacketIO<? extends PacketPlayOut>> playOut;
 	
 	public CoreProtocolPlay() {
-		playIn = new ArrayList<>(PacketPlay.PACKET_COUNT_IN);
+		playIn = new ArrayList<>(PACKET_COUNT_IN);
 		playIn.add(IN_TELEPORT_CONFIRM, new CorePacketInTeleportConfirm()); // 0x00
 		playIn.add(IN_QUERY_BLOCK_NBT, new CorePacketInQueryBlockNBT()); // 0x01
 		playIn.add(IN_SET_DIFFICULTY, new CorePacketInSetDifficulty()); // 0x02
@@ -79,7 +69,7 @@ public class CoreProtocolPlay implements ProtocolPlay {
 		playIn.add(IN_PLAYER_BLOCK_PLACEMENT, new CorePacketInPlayerBlockPlacement()); // 0x2E
 		playIn.add(IN_USE_ITEM, new CorePacketInUseItem()); // 0x2F
 		// -----------------------------------------------------------------------------------
-		playOut = new ArrayList<>(PacketPlay.PACKET_COUNT_OUT);
+		playOut = new ArrayList<>(PACKET_COUNT_OUT);
 		playOut.add(OUT_SPAWN_ENTITY, new CorePacketOutSpawnEntity()); // 0x00
 		playOut.add(OUT_SPAWN_EXPERIENCE_ORB, new CorePacketOutSpawnExperienceOrb()); // 0x01
 		playOut.add(OUT_SPAWN_LIVING_ENTITY, new CorePacketOutSpawnLivingEntity()); // 0x02
@@ -175,61 +165,24 @@ public class CoreProtocolPlay implements ProtocolPlay {
 	}
 
 	@Override
-	public Packet createPacketIn(int id) {
-		if (id > 47 || id < 0) 
-			return null;
-		return playIn.get(id).createPacketData();
-	}
-
-	@Override
-	public Packet createPacketOut(int id) {
-		if (id > 91 || id < 0) 
-			return null;
-		return playOut.get(id).createPacketData();
-	}
-
-	@Override
-	public int getVersion() {
-		return CoreProtocolAdapter.VERSION;
-	}
-
-	@Override
 	public PacketListener createDefaultPacketListener(Object o) {
 		if (o instanceof PlayerConnection) 
 			return null;
 		return new CorePacketListenerPlay((PlayerConnection) o);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <P extends Packet> P readPacket(P packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		CoreAbstractHandler<P> handler = null;
-		if (packet instanceof PacketPlayIn)
-			handler = (CoreAbstractHandler<P>) playIn.get(packet.getID());
-		else if (packet instanceof PacketPlayOut)
-			handler = (CoreAbstractHandler<P>) playOut.get(packet.getID());
-		else
-			throw new IOException("Unable to read this packet! (Packet is not instance of PacketPlayIn or PacketPlayOut)");
-		if (handler == null)
-			throw new IOException("Unable to find handler for packet: " + packet.getClass());
-		handler.read(packet, in, con);
-		return packet;
+	public PacketIO<?> getHandlerIn(int id) {
+		if (id >= PACKET_COUNT_IN || id < 0)
+			throw new IllegalArgumentException("Invalid packet id: " + id);
+		return playIn.get(id);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <P extends Packet> P writePacket(P packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		CoreAbstractHandler<P> handler = null;
-		if (packet instanceof PacketPlayIn)
-			handler = (CoreAbstractHandler<P>) playIn.get(packet.getID());
-		else if (packet instanceof PacketPlayOut)
-			handler = (CoreAbstractHandler<P>) playOut.get(packet.getID());
-		else
-			throw new IOException("Unable to write this packet! (Packet is not instance of PacketPlayIn or PacketPlayOut)");
-		if (handler == null)
-			throw new IOException("Unable to find handler for packet: " + packet.getClass());
-		handler.write(packet, out, con);
-		return packet;
+	public PacketIO<?> getHandlerOut(int id) {
+		if (id >= PACKET_COUNT_OUT || id < 0)
+			throw new IllegalArgumentException("Invalid packet id: " + id);
+		return playOut.get(id);
 	}
 
 }

@@ -1,7 +1,7 @@
 package de.atlascore.io.netty.channel;
 
+import de.atlascore.io.ConnectionHandler;
 import de.atlasmc.io.AbstractPacket;
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

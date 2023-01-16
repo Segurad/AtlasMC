@@ -2,8 +2,8 @@ package de.atlascore.io.netty.channel;
 
 import java.util.List;
 
+import de.atlascore.io.ConnectionHandler;
 import de.atlasmc.io.AbstractPacket;
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.Protocol;
 import io.netty.buffer.ByteBuf;

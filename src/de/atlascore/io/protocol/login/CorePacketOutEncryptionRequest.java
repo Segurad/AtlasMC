@@ -2,60 +2,40 @@ package de.atlascore.io.protocol.login;
 
 import java.io.IOException;
 
-import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlasmc.io.AbstractPacket;
+import static de.atlasmc.io.AbstractPacket.*;
+
+import de.atlascore.io.ConnectionHandler;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.login.PacketOutEncryptionRequest;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutEncryptionRequest extends AbstractPacket implements PacketOutEncryptionRequest {
-
-	private String serverID;
-	private byte[] publicKey, verifyToken;
-	
-	public CorePacketOutEncryptionRequest() {
-		super(CoreProtocolAdapter.VERSION);
-	}
-	
-	public CorePacketOutEncryptionRequest(String serverID, byte[] publicKey, byte[] verifyToken) {
-		this();
-		this.serverID = serverID;
-		this.publicKey = publicKey;
-		this.verifyToken = verifyToken;
-	}
+public class CorePacketOutEncryptionRequest extends PacketIO<PacketOutEncryptionRequest> {
 
 	@Override
-	public void read(ByteBuf in) throws IOException {
-		serverID = readString(in);
+	public void read(PacketOutEncryptionRequest packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.setServerID(readString(in));
 		int length = readVarInt(in);
-		publicKey = new byte[length];
+		byte[] publicKey = new byte[length];
 		in.readBytes(publicKey);
+		packet.setPublicKey(publicKey);
 		length = readVarInt(in);
-		verifyToken = new byte[length];
+		byte[] verifyToken = new byte[length];
 		in.readBytes(verifyToken);
+		packet.setVerifyToken(verifyToken);
 	}
 
 	@Override
-	public void write(ByteBuf out) throws IOException {
-		writeString(serverID, out);
-		writeVarInt(publicKey.length, out);
-		out.writeBytes(publicKey);
-		writeVarInt(verifyToken.length, out);
-		out.writeBytes(verifyToken);
+	public void write(PacketOutEncryptionRequest packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeString(packet.getServerID(), out);
+		writeVarInt(packet.getPublicKey().length, out);
+		out.writeBytes(packet.getPublicKey());
+		writeVarInt(packet.getVerifyToken().length, out);
+		out.writeBytes(packet.getVerifyToken());
 	}
 
 	@Override
-	public String getServerID() {
-		return serverID;
-	}
-
-	@Override
-	public byte[] getPublicKey() {
-		return publicKey;
-	}
-
-	@Override
-	public byte[] getVerifyToken() {
-		return verifyToken;
+	public PacketOutEncryptionRequest createPacketData() {
+		return new PacketOutEncryptionRequest();
 	}
 
 }

@@ -2,16 +2,17 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlascore.io.CoreAbstractHandler;
+import de.atlascore.io.ConnectionHandler;
 import de.atlasmc.Gamemode;
 import static de.atlasmc.io.AbstractPacket.*;
-import de.atlasmc.io.ConnectionHandler;
+
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutRespawn;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutRespawn extends CoreAbstractHandler<PacketOutRespawn> {
+public class CorePacketOutRespawn extends PacketIO<PacketOutRespawn> {
 
 	@Override
 	public void read(PacketOutRespawn packet, ByteBuf in, ConnectionHandler handler) throws IOException {
