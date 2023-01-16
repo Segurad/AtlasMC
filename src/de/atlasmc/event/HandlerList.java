@@ -155,11 +155,16 @@ public class HandlerList {
 	
 	public static void callEvent(@NotNull final Event event) {
 		final HandlerList hl = event.getHandlers();
+		if (!event.isAsynchronous() && event instanceof GenericEvent) {
+			GenericEvent<?, ?> gEvent = (GenericEvent<?, ?>) event;
+			if (!gEvent.getSyncThreadHolder().isSync())
+				throw new EventException("Tried to call sync event asynchronous!");
+		}
 		hl.callEvent(event, event instanceof Cancellable);
 	}
 	
 	/**
-	 * Calls all EventExecutors of this HandlerList <br>
+	 * Calls all EventExecutors of this HandlerList.
 	 * This Method will be called by the static Method {@link #callEvent(Event)} and should be used for children to fire Events
 	 * @param event
 	 * @param cancellable
