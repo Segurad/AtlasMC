@@ -4,11 +4,11 @@ import java.util.Arrays;
 
 public class VariableValueArray implements Cloneable {
 	
-	private int capacity;
-	private long[] values;
-	private byte bitsPerValue;
-	private int mask;
-	private byte valuesPerLong;
+	private int capacity; // Number of values that can be stored
+	private long[] values; // backing array
+	private byte bitsPerValue; // bits required per value
+	private int mask; // mask containing as many 1 bits as bits per value defines
+	private byte valuesPerLong; // number of values stored per long
 	
 	public VariableValueArray(int capacity, int bitsPerValue) {
 		this(capacity, bitsPerValue, null);
@@ -137,7 +137,7 @@ public class VariableValueArray implements Cloneable {
 	
 	/**
 	 * Returns the backing long array
-	 * @return
+	 * @return long array
 	 */
 	public long[] array() {
 		return values;
@@ -153,6 +153,21 @@ public class VariableValueArray implements Cloneable {
 		this.bitsPerValue = array.bitsPerValue;
 		this.mask = array.mask;
 		this.valuesPerLong = array.valuesPerLong;
+	}
+	
+	/**
+	 * Fill the array with the given value
+	 * @param value
+	 */
+	public void fill(int value) {
+		value &= mask; // trim value
+		long storedLong = 0; // create long that contains the max number of values
+		for (int i = 0; i < valuesPerLong; i++) {
+			storedLong <<= bitsPerValue;
+			storedLong |= value;
+		}
+		// store long to backing array
+		Arrays.fill(values, storedLong);
 	}
 	
 	public VariableValueArray clone() {
