@@ -1,11 +1,12 @@
 package de.atlasmc.entity;
 
 import java.util.Collection;
-import de.atlascore.inventory.EntityEquipment;
+
 import de.atlasmc.Color;
 import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeInstance;
 import de.atlasmc.attribute.Attributeable;
+import de.atlasmc.inventory.EntityEquipment;
 import de.atlasmc.potion.PotionEffect;
 import de.atlasmc.potion.PotionEffectType;
 

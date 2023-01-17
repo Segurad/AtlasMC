@@ -13,7 +13,6 @@ import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import de.atlascore.inventory.EntityEquipment;
 import de.atlasmc.Color;
 import de.atlasmc.Material;
 import de.atlasmc.attribute.Attribute;
@@ -27,6 +26,7 @@ import de.atlasmc.entity.Player;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.inventory.EntityEquipment;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutEntityEffect;
