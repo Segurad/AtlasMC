@@ -1,6 +1,4 @@
-package de.atlascore.inventory;
-
-import de.atlasmc.inventory.ItemStack;
+package de.atlasmc.inventory;
 
 public interface EntityEquipment {
 
