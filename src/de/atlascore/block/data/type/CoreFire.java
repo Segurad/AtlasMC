@@ -47,11 +47,11 @@ public class CoreFire extends CoreAbstractMultipleFacing implements Fire {
 	public int getStateID() {
 		return getMaterial().getBlockID()+
 				(hasFace(BlockFace.WEST)?0:1)+
-				(hasFace(BlockFace.UP)?0:4)+
-				(hasFace(BlockFace.SOUTH)?0:8)+
-				(hasFace(BlockFace.NORTH)?0:16)+
-				(hasFace(BlockFace.EAST)?0:32)+
-				age*64;
+				(hasFace(BlockFace.UP)?0:2)+
+				(hasFace(BlockFace.SOUTH)?0:4)+
+				(hasFace(BlockFace.NORTH)?0:8)+
+				(hasFace(BlockFace.EAST)?0:16)+
+				age*32;
 	}
 
 	@Override

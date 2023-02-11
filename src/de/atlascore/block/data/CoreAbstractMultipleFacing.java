@@ -54,7 +54,7 @@ public abstract class CoreAbstractMultipleFacing extends CoreBlockData implement
 	
 	protected CoreAbstractMultipleFacing(Material material, int faces) {
 		super(material);
-		this.faces = new HashSet<BlockFace>(faces);
+		this.faces = new HashSet<>(faces);
 	}
 
 	@Override

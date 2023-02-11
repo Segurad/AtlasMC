@@ -82,7 +82,7 @@ public class CoreRepeater extends CoreDirectional4Faces implements Repeater {
 				(powered?0:1)+
 				(locked?0:2)+
 				getFaceValue()*4+
-				delay*16;
+				(delay-1)*16;
 	}
 	
 	@Override

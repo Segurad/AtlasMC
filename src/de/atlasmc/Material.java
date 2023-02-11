@@ -467,7 +467,7 @@ public class Material implements Namespaced {
 	DARK_PRISMARINE_STAIRS,
 	SEA_LANTERN,
 	RED_SANDSTONE,
-	CHISELLED_RED_SANDSTONE,
+	CHISELED_RED_SANDSTONE,
 	CUT_RED_SANDSTONE,
 	RED_SANDSTONE_STAIRS,
 	REPEATING_COMMAND_BLOCK,
@@ -918,6 +918,7 @@ public class Material implements Namespaced {
 	POTTED_BROWN_MUSHROOM,
 	POTTED_DEAD_BUSH,
 	POTTED_CACTUS,
+	POTTED_BAMBOO,
 	POTTED_CRIMSON_FUNGUS,
 	POTTED_WARPED_FUNGUS,
 	POTTED_CRIMSON_ROOTS,
@@ -1113,7 +1114,7 @@ public class Material implements Namespaced {
 	 * @param mdf null to use MetaDataFactory.DEFAULT
 	 */
 	public Material(String namespace, String name, short itemID, short blockID, byte maxAmount, float toughness, float explosionResistance, MetaDataFactory mdf) {
-		this.key = new NamespacedKey(namespace, name);
+		this.key = new NamespacedKey(namespace, name.toLowerCase());
 		this.itemID = itemID;
 		this.bid = blockID;
 		this.max = maxAmount;
@@ -1136,7 +1137,7 @@ public class Material implements Namespaced {
 	}
 	
 	public Material(String namespace, String name, boolean hasItem, short blockID, byte maxAmount, float toughness, float explosionResistance, MetaDataFactory mdf) {
-		this.key = new NamespacedKey(namespace, name);
+		this.key = new NamespacedKey(namespace, name.toLowerCase());
 		this.itemID = hasItem ? iid++ : -1;
 		this.bid = blockID;
 		this.max = maxAmount;
@@ -1217,7 +1218,7 @@ public class Material implements Namespaced {
 	public boolean isValidTile(TileEntity tile) {
 		if (!isBlock()) return false;
 		TileEntityFactory tf = getTileEntityFactory();
-		return tf != null ? tf.isValidTile(tile) : false;
+		return tf != null && tf.isValidTile(tile);
 	}
 	
 	/**
@@ -1312,8 +1313,9 @@ public class Material implements Namespaced {
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null!");
 		Map<String, Material> map = REGISTRI_BY_NAME.get(namespace);
-		if (map == null)
+		if (map == null) {
 			return null;
+		}
 		return map.get(name);
 	}
 	

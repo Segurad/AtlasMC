@@ -35,14 +35,21 @@ public class CoreJigsaw extends CoreBlockData implements Jigsaw {
 
 	@Override
 	public void setOrientation(Orientation orientation) {
-		if (orientation == null) throw new IllegalArgumentException("Orientation can not be null!");
+		if (orientation == null) 
+			throw new IllegalArgumentException("Orientation can not be null!");
 		this.orientation = orientation;
+	}
+	
+	@Override
+	public int getStateID() {
+		return getMaterial().getBlockID()+orientation.ordinal();
 	}
 	
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		if (getOrientation() != Orientation.NORTH_UP) writer.writeStringTag(ORIENTATION, getOrientation().name().toLowerCase());
+		if (getOrientation() != Orientation.NORTH_UP) 
+			writer.writeStringTag(ORIENTATION, getOrientation().getNameID());
 	}
 
 }

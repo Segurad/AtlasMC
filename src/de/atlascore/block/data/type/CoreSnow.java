@@ -49,7 +49,7 @@ public class CoreSnow extends CoreBlockData implements Snow {
 
 	@Override
 	public int getStateID() {
-		return super.getStateID()+layers;
+		return super.getStateID()+(layers-1);
 	}
 	
 	@Override

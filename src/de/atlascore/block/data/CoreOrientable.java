@@ -30,8 +30,12 @@ public class CoreOrientable extends CoreBlockData implements Orientable {
 	private Axis axis;
 	
 	public CoreOrientable(Material material) {
+		this(material, Axis.Y);
+	}
+	
+	public CoreOrientable(Material material, Axis axis) {
 		super(material);
-		axis = Axis.Y;
+		setAxis(axis);
 	}
 
 	@Override
@@ -46,6 +50,10 @@ public class CoreOrientable extends CoreBlockData implements Orientable {
 
 	@Override
 	public void setAxis(Axis axis) {
+		if (axis == null)
+			throw new IllegalArgumentException("Axis can not be null!");
+		if (!getAxes().contains(axis))
+			throw new IllegalArgumentException("Axis is not valid: " + axis.name());
 		this.axis = axis;
 	}
 	

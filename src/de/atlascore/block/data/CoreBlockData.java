@@ -14,8 +14,10 @@ public class CoreBlockData extends AbstractNBTBase implements BlockData {
 	private final Material material;
 	
 	public CoreBlockData(Material material) {
-		if (material == null) throw new IllegalArgumentException("Material can not be null!");
-		if (!material.isBlock()) throw new IllegalArgumentException("Material is not a Block: " + material.getNamespacedName());
+		if (material == null) 
+			throw new IllegalArgumentException("Material can not be null!");
+		if (!material.isBlock()) 
+			throw new IllegalArgumentException("Material is not a Block: " + material.getNamespacedName());
 		this.material = material;
 	}
 	
@@ -31,12 +33,6 @@ public class CoreBlockData extends AbstractNBTBase implements BlockData {
 	@Override
 	public Material getMaterial() {
 		return material;
-	}
-
-	@Override
-	public boolean matches(BlockData data) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override

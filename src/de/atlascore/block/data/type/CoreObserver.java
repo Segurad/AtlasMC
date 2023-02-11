@@ -5,6 +5,7 @@ import java.io.IOException;
 import de.atlascore.block.data.CoreDirectional6Faces;
 import de.atlascore.block.data.CorePowerable;
 import de.atlasmc.Material;
+import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.type.Observer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -13,7 +14,7 @@ public class CoreObserver extends CoreDirectional6Faces implements Observer {
 	private boolean powered;
 	
 	public CoreObserver(Material material) {
-		super(material);
+		super(material, BlockFace.SOUTH);
 	}
 
 	@Override

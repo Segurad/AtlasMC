@@ -40,8 +40,8 @@ public class CoreEndPortalFrame extends CoreDirectional4Faces implements EndPort
 	@Override
 	public int getStateID() {
 		return getMaterial().getBlockID()+
-				(eye?0:1)+
-				getFaceValue()*2;
+				getFaceValue()+
+				(eye?0:4);
 	}
 	
 	@Override

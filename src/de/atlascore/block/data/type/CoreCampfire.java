@@ -28,6 +28,7 @@ public class CoreCampfire extends CoreDirectional4Faces implements Campfire {
 	
 	public CoreCampfire(Material material) {
 		super(material);
+		lit = true;
 	}
 
 	@Override
@@ -72,9 +73,12 @@ public class CoreCampfire extends CoreDirectional4Faces implements Campfire {
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		if (isLit()) writer.writeByteTag(CoreLightable.LIT, true);
-		if (isWaterlogged()) writer.writeByteTag(CoreWaterlogged.WATERLOGGED, true);
-		if (isSignalFire()) writer.writeByteTag(SIGNALE_FIRE, true);
+		if (isLit()) 
+			writer.writeByteTag(CoreLightable.LIT, true);
+		if (isWaterlogged()) 
+			writer.writeByteTag(CoreWaterlogged.WATERLOGGED, true);
+		if (isSignalFire()) 
+			writer.writeByteTag(SIGNALE_FIRE, true);
 	}
 
 }

@@ -15,7 +15,7 @@ public class CoreGlassPane extends CoreAbstractMultipleFacing implements GlassPa
 
 	private boolean waterlogged;
 	
-	protected CoreGlassPane(Material material) {
+	public CoreGlassPane(Material material) {
 		super(material, 4);
 	}
 

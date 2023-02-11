@@ -1,5 +1,6 @@
 package de.atlasmc.block;
 
+import de.atlasmc.Location;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.world.ChunkSection;
@@ -36,5 +37,13 @@ public interface Block {
 	public EnumBiome getBiome();
 	
 	public World getWorld();
+
+	/**
+	 * Returns a copy of the Blocks location
+	 * @return location
+	 */
+	public Location getLocation();
+	
+	public Location getLocation(Location loc);
 	
 }

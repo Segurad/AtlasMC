@@ -24,8 +24,12 @@ public class CoreLevelled extends CoreBlockData implements Levelled {
 	private final int maxlevel;
 	
 	public CoreLevelled(Material material) {
+		this(material, 15);
+	}
+	
+	public CoreLevelled(Material material, int maxlevel) {
 		super(material);
-		maxlevel = 15;
+		this.maxlevel = maxlevel;
 	}
 
 	@Override

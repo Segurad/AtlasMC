@@ -96,4 +96,14 @@ public class CoreBlockAccess implements Block {
 		return getBlockData().equals(block.getBlockData());
 	}
 
+	@Override
+	public Location getLocation() {
+		return loc.clone();
+	}
+
+	@Override
+	public Location getLocation(Location loc) {
+		return this.loc.copyTo(loc);
+	}
+
 }

@@ -1,7 +1,6 @@
 package de.atlascore.block.data.type;
 
 import java.io.IOException;
-import java.util.EnumSet;
 import java.util.Set;
 
 import de.atlascore.block.data.CoreAbstractDirectional;
@@ -13,6 +12,13 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreHopper extends CoreAbstractDirectional implements Hopper {
 
+	private static final Set<BlockFace> ALLOWED_FACES =
+			Set.of(BlockFace.NORTH,
+					BlockFace.EAST,
+					BlockFace.SOUTH,
+					BlockFace.WEST,
+					BlockFace.DOWN);
+	
 	protected static final CharKey
 	ENABLED = CharKey.of("enabled");
 	
@@ -26,8 +32,9 @@ public class CoreHopper extends CoreAbstractDirectional implements Hopper {
 	
 	private boolean enabled;
 	
-	public CoreHopper(Material material, BlockFace face) {
+	public CoreHopper(Material material) {
 		super(material, BlockFace.DOWN);
+		this.enabled = true;
 	}
 
 	@Override
@@ -42,7 +49,7 @@ public class CoreHopper extends CoreAbstractDirectional implements Hopper {
 
 	@Override
 	public Set<BlockFace> getFaces() {
-		return EnumSet.of(BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.DOWN);
+		return ALLOWED_FACES;
 	}
 
 	@Override

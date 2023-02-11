@@ -15,7 +15,7 @@ public class NamespacedKey {
 		if (first < 1)
 			throw new IllegalArgumentException("Illegal NamespacedKey: " + namespacedKey);
 		namespace = namespacedKey.substring(0, first);
-		name = namespacedKey.substring(first);
+		name = namespacedKey.substring(first+1);
 		this.combination = namespacedKey;
 	}
 	

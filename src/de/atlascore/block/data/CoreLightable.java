@@ -35,6 +35,12 @@ public class CoreLightable extends CoreBlockData implements Lightable {
 	public void setLit(boolean lit) {
 		this.lit = lit;
 	}
+	
+	@Override
+	public int getStateID() {
+		return getMaterial().getBlockID()+
+				(lit?0:1);
+	}
 
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {

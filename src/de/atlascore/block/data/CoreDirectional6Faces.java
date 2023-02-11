@@ -31,7 +31,7 @@ public class CoreDirectional6Faces extends CoreAbstractDirectional {
 	@Override
 	protected int getFaceValue(BlockFace face) {
 		int val = face.ordinal();
-		return val < 6 ? val : -1;
+		return val <= 6 ? val : -1;
 	}
 
 	@Override

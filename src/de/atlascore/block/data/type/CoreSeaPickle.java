@@ -25,6 +25,8 @@ public class CoreSeaPickle extends CoreWaterlogged implements SeaPickle {
 	
 	public CoreSeaPickle(Material material) {
 		super(material);
+		pickles = 1;
+		setWaterlogged(true);
 	}
 
 	@Override

@@ -109,7 +109,7 @@ public class CoreBeehive extends CoreTileEntity implements Beehive {
 	
 	@Override
 	public List<Bee> getBees() {
-		if (bees == null) bees = new ArrayList<Bee>();
+		if (bees == null) bees = new ArrayList<>();
 		return bees;
 	}
 
@@ -120,7 +120,7 @@ public class CoreBeehive extends CoreTileEntity implements Beehive {
 
 	@Override
 	public void addBee(Bee bee) {
-		if (bees == null) bees = new ArrayList<Bee>();
+		if (bees == null) bees = new ArrayList<>();
 		bees.add(bee);
 	}
 	

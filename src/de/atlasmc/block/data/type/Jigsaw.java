@@ -1,5 +1,7 @@
 package de.atlasmc.block.data.type;
 
+import java.util.List;
+
 import de.atlasmc.block.data.BlockData;
 
 public interface Jigsaw extends BlockData {
@@ -20,6 +22,36 @@ public interface Jigsaw extends BlockData {
 		EAST_UP,
 		NORTH_UP,
 		SOUTH_UP;
+		
+		private final String name;
+		
+		private Orientation() {
+			this.name = name().toLowerCase();
+		}
+		
+		private static List<Orientation> VALUES;
+		
+		public String getNameID() {
+			return name;
+		}
+		
+		/**
+		 * Returns a immutable List of all Types.<br>
+		 * This method avoid allocation of a new array not like {@link #values()}.
+		 * @return list
+		 */
+		public static List<Orientation> getValues() {
+			if (VALUES == null)
+				VALUES = List.of(values());
+			return VALUES;
+		}
+		
+		/**
+		 * Releases the system resources used from the values cache
+		 */
+		public static void freeValues() {
+			VALUES = null;
+		}
 
 		public static Orientation getByName(String name) {
 			name = name.toUpperCase();
