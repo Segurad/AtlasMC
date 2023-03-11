@@ -28,7 +28,7 @@ public abstract class AbstractButton implements Button {
 	
 	@Override
 	public boolean hasIcon() {
-		return icon == null ? false : true;
+		return icon != null;
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public abstract class AbstractButton implements Button {
 
 	@Override
 	public boolean hasPermission() {
-		return permission == null ? false : !permission.equals("");
+		return permission != null && !permission.equals("");
 	}
 
 	@Override

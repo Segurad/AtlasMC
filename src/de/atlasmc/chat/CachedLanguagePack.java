@@ -10,7 +10,7 @@ public class CachedLanguagePack implements LanguagePack {
 
 	public CachedLanguagePack(String langkey) {
 		this.langkey = langkey;
-		this.msgs = new HashMap<String, String>();
+		this.msgs = new HashMap<>();
 	}
 
 	public String getLang() {

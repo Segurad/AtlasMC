@@ -15,7 +15,7 @@ public class ShapelessRecipe extends Recipe {
 	
 	public List<Ingredient> getIngredients() {
 		if (ingredients == null)
-			ingredients = new ArrayList<Ingredient>(1);
+			ingredients = new ArrayList<>(1);
 		return ingredients;
 	}
 	

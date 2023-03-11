@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -70,7 +69,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 			((ItemMeta) holder).setDisplayName(ChatUtil.toChat(reader.readStringTag()));
 		});
 		display.setField(NBT_LORE, (holder, reader) -> {
-			List<Chat> lore = new ArrayList<Chat>(reader.getRestPayload());
+			List<Chat> lore = new ArrayList<>(reader.getRestPayload());
 			while (reader.getRestPayload() > 0) {
 				lore.add(ChatUtil.toChat(reader.readStringTag()));
 			}
@@ -266,9 +265,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 		boolean changes = false;
 		for (Attribute a : attributes.keySet()) {
 			List<AttributeModifier> mods = attributes.get(a);
-			Iterator<AttributeModifier> it = mods.iterator();
-			while(it.hasNext()) {
-				AttributeModifier mod = it.next();
+			for (AttributeModifier mod : mods) {
 				if (mod.getSlot() == slot) {
 					mods.remove(mod);
 					changes = true;
@@ -432,7 +429,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	@Override
 	public List<Material> getCanDestroy() {
 		if (canDestroy == null) 
-			canDestroy = new ArrayList<Material>();
+			canDestroy = new ArrayList<>();
 		return canDestroy;
 	}
 

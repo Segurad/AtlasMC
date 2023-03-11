@@ -19,7 +19,7 @@ public final class Pair<A, B> {
 	}
 
 	public static <A, B> Pair<A, B> of(A value1, B value2) {
-		return new Pair<A, B>(value1, value2);
+		return new Pair<>(value1, value2);
 	}
 
 	@Override

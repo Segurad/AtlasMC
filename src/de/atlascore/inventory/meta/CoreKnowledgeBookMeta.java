@@ -35,7 +35,7 @@ public class CoreKnowledgeBookMeta extends CoreItemMeta implements KnowledgeBook
 
 	@Override
 	public void addRecipe(Recipe... recipes) {
-		if (this.recipes == null) this.recipes = new ArrayList<Recipe>();
+		if (this.recipes == null) this.recipes = new ArrayList<>();
 		for (Recipe r : recipes) {
 			this.recipes.add(r);
 		}
@@ -47,13 +47,13 @@ public class CoreKnowledgeBookMeta extends CoreItemMeta implements KnowledgeBook
 		if (clone == null)
 			return null;
 		if (hasRecipes()) 
-			clone.setRecipes(new ArrayList<Recipe>(recipes));
+			clone.setRecipes(new ArrayList<>(recipes));
 		return clone;
 	}
 
 	@Override
 	public List<Recipe> getRecipes() {
-		if (recipes == null) this.recipes = new ArrayList<Recipe>();
+		if (recipes == null) this.recipes = new ArrayList<>();
 		return recipes;
 	}
 
@@ -86,7 +86,7 @@ public class CoreKnowledgeBookMeta extends CoreItemMeta implements KnowledgeBook
 		if (hasRecipes() != bookMeta.hasRecipes())
 			return false;
 		if (hasRecipes() && !getRecipes().equals(bookMeta.getRecipes()))
-			return true;
+			return false;
 		return true;
 	}
 

@@ -44,7 +44,7 @@ public class MultiToggleButton implements Button {
 	}
 
 	public boolean hasPermission() {
-		return permission == null ? false : !permission.equals("");
+		return permission != null && !permission.equals("");
 	}
 
 	public int getState() {

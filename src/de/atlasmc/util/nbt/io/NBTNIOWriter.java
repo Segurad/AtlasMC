@@ -9,7 +9,8 @@ public class NBTNIOWriter extends AbstractNBTIOWriter {
 	private ByteBuf out;
 	
 	public NBTNIOWriter(ByteBuf out) {
-		if (out == null) throw new IllegalArgumentException("ByteBuff can not be null!");
+		if (out == null) 
+			throw new IllegalArgumentException("ByteBuf can not be null!");
 		this.out = out;
 	}
 

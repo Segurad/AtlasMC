@@ -31,7 +31,7 @@ public class CoreInventory implements Inventory {
 	public CoreInventory(int size, InventoryType type, Chat title, InventoryHolder holder) {
 		this.size = size;
 		this.contents = new ItemStack[size];
-		this.viewers = new ArrayList<Player>(1);
+		this.viewers = new ArrayList<>(1);
 		this.holder = holder;
 		this.title = title;
 		this.type = type;

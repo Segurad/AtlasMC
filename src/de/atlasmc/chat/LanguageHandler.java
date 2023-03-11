@@ -9,7 +9,7 @@ public class LanguageHandler {
 		de_DE = "de_DE",
 		en_US = "en_US";
 	
-	private final List<LanguagePack> packs = new ArrayList<LanguagePack>();
+	private final List<LanguagePack> packs = new ArrayList<>();
 	private LanguagePack defaultPack;
 
 	public LanguageHandler(LanguagePack defaultPack) {
@@ -35,7 +35,7 @@ public class LanguageHandler {
 	}
 
 	public List<LanguagePack> getPacks() {
-		List<LanguagePack> packs = new ArrayList<LanguagePack>();
+		List<LanguagePack> packs = new ArrayList<>();
 		packs.addAll(this.packs);
 		return packs;
 	}

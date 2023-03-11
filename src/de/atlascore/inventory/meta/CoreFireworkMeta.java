@@ -82,7 +82,7 @@ public class CoreFireworkMeta extends CoreItemMeta implements FireworkMeta {
 
 	@Override
 	public List<FireworkEffect> getEffects() {
-		if (effects == null) effects = new ArrayList<FireworkEffect>();
+		if (effects == null) effects = new ArrayList<>();
 		return effects;
 	}
 
@@ -136,7 +136,7 @@ public class CoreFireworkMeta extends CoreItemMeta implements FireworkMeta {
 			return false;
 		if (hasEffects() && !fireMeta.getEffects().equals(fireMeta.getEffects()))
 			return false;
-		return false;
+		return true;
 	}
 
 	@Override

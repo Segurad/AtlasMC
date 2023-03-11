@@ -55,13 +55,13 @@ public class CoreCrossbowMeta extends CoreDamageableMeta implements CrossbowMeta
 
 	@Override
 	public void addChargedProjectile(ItemStack item) {
-		if (projectiles == null) projectiles = new ArrayList<ItemStack>();
+		if (projectiles == null) projectiles = new ArrayList<>();
 		projectiles.add(item);
 	}
 
 	@Override
 	public List<ItemStack> getChargedProjectiles() {
-		if (projectiles == null) projectiles = new ArrayList<ItemStack>();
+		if (projectiles == null) projectiles = new ArrayList<>();
 		return projectiles;
 	}
 
@@ -81,7 +81,7 @@ public class CoreCrossbowMeta extends CoreDamageableMeta implements CrossbowMeta
 		if (clone == null)
 			return null;
 		if (hasChargedProjectiles()) {
-			List<ItemStack> projectiles = new ArrayList<ItemStack>(getProjectileCount());
+			List<ItemStack> projectiles = new ArrayList<>(getProjectileCount());
 			for (ItemStack i : getChargedProjectiles()) {
 				projectiles.add(i.clone());
 			}

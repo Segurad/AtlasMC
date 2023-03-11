@@ -45,7 +45,7 @@ public class CoreCommandArg implements CommandArg {
 
 	@Override
 	public void addArgument(CommandArg arg) {
-		if (args == null) args = new ArrayList<CommandArg>(1);
+		if (args == null) args = new ArrayList<>(1);
 		args.add(arg);
 	}
 
@@ -86,7 +86,7 @@ public class CoreCommandArg implements CommandArg {
 	}
 	
 	public void createArg(String name, CommandExecutor executor) {
-		new CoreCommand(name, null, executor);
+		new CoreCommandArg(name, null, executor);
 	}
 
 	@Override

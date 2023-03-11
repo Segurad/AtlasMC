@@ -125,7 +125,7 @@ public class EntityType implements Namespaced {
 	FISHING_BOBBER;
 	
 	static {
-		REGISTRI = new ArrayList<EntityType>();
+		REGISTRI = new ArrayList<>();
 	}
 	
 	private final NamespacedKey key;
@@ -194,7 +194,7 @@ public class EntityType implements Namespaced {
 	}
 	
 	public List<EntityType> values() {
-		return new ArrayList<EntityType>(REGISTRI);
+		return new ArrayList<>(REGISTRI);
 	}
 
 	@Override

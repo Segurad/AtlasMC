@@ -41,7 +41,7 @@ public final class LootGroup implements Loot {
 
 	@Override
 	public List<ItemStack> getItems(Random random) {
-		List<ItemStack> ritems = new ArrayList<ItemStack>();
+		List<ItemStack> ritems = new ArrayList<>();
 		final int length = chances.length;
 		for (int i = 0; i < length; i++) {
 			final int r = random.nextInt(1000+1);

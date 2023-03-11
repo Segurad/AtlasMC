@@ -31,7 +31,7 @@ public class CorePacketOutTags extends PacketIO<PacketOutTags> {
 	
 	private Map<String, int[]> readMap(ByteBuf in) {
 		final int length = readVarInt(in);
-		HashMap<String, int[]> map = new HashMap<String, int[]>(length);
+		HashMap<String, int[]> map = new HashMap<>(length);
 		for (int i = 0; i < length; i++) {
 			String name = readString(in);
 			final int count = readVarInt(in);

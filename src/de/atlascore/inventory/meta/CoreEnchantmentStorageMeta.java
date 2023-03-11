@@ -73,7 +73,7 @@ public class CoreEnchantmentStorageMeta extends CoreItemMeta implements Enchantm
 
 	@Override
 	public Map<Enchantment, Integer> getStoredEnchants() {
-		if (enchantments == null) enchantments = new HashMap<Enchantment, Integer>();
+		if (enchantments == null) enchantments = new HashMap<>();
 		return enchantments;
 	}
 

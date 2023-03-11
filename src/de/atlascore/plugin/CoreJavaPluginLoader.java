@@ -29,14 +29,17 @@ public class CoreJavaPluginLoader implements PluginLoader {
 
 	@Override
 	public boolean canLoad(File file) {
-		if (!file.getPath().endsWith(".jar")) return false;
-		if (!file.exists() || file.isDirectory()) return false;
+		if (!file.getPath().endsWith(".jar")) 
+			return false;
+		if (!file.exists() || file.isDirectory()) 
+			return false;
 		return true;
 	}
 
 	@Override
 	public Plugin load(File file) throws IOException {
-		if (!canLoad(file)) return null;
+		if (!canLoad(file)) 
+			return null;
 		CorePluginInfo info = getInfo(file);
 		CoreJavaClassLoader loader = new CoreJavaClassLoader(this, file, getClass().getClassLoader(), info);
 		loaders.add(loader);
@@ -49,7 +52,8 @@ public class CoreJavaPluginLoader implements PluginLoader {
 		try {
 			jar = new JarFile(file);
 			JarEntry entry = jar.getJarEntry("plugin.json");
-			if (entry == null) throw new FileNotFoundException("Jar does not contain plugin.json");
+			if (entry == null) 
+				throw new FileNotFoundException("Jar does not contain plugin.json");
 			InputStream in = jar.getInputStream(entry);
 			Gson gson = new Gson();
 			JsonReader reader = new JsonReader(new InputStreamReader(in));

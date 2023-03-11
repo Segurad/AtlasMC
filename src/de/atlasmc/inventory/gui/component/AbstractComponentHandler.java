@@ -71,7 +71,7 @@ public abstract class AbstractComponentHandler implements ComponentHandler {
 	@Override
 	public Pair<Integer, Integer> getCoordsBySlot(int slot) {
 		final int rslot = this.slot;
-		return new Pair<Integer, Integer>(x+((slot-rslot)%9), y+((slot-rslot)/9));
+		return new Pair<>(x + ((slot - rslot) % 9), y + ((slot - rslot) / 9));
 	}
 	
 	@Override

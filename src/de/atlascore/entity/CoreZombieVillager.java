@@ -23,7 +23,7 @@ public class CoreZombieVillager extends CoreZombie implements ZombieVillager {
 	protected static final MetaDataField<Boolean>
 	META_IS_CONVERTING = new MetaDataField<>(CoreZombie.LAST_META_INDEX+1, false, MetaDataType.BOOLEAN);
 	protected static final MetaDataField<VillagerData>
-	META_VILLAGER_DATA = new MetaDataField<VillagerData>(CoreZombie.LAST_META_INDEX+2, null, MetaDataType.VILLAGER_DATA);
+	META_VILLAGER_DATA = new MetaDataField<>(CoreZombie.LAST_META_INDEX + 2, null, MetaDataType.VILLAGER_DATA);
 	
 	protected static final int LAST_META_INDEX = CoreZombie.LAST_META_INDEX+2;
 	

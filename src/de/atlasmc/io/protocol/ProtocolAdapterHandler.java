@@ -7,7 +7,7 @@ public class ProtocolAdapterHandler {
 	private final ConcurrentHashMap<Integer, ProtocolAdapter> wrapper;
 	
 	public ProtocolAdapterHandler() {
-		wrapper = new ConcurrentHashMap<Integer, ProtocolAdapter>();
+		wrapper = new ConcurrentHashMap<>();
 	}
 	
 	public ProtocolAdapter getProtocol(int id) {

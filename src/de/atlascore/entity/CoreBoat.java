@@ -18,7 +18,7 @@ public class CoreBoat extends CoreVehicle implements Boat {
 	protected static final MetaDataField<Integer>
 	META_TIME_SINCE_LAST_HIT = new MetaDataField<>(CoreVehicle.LAST_META_INDEX+1, 0, MetaDataType.INT);
 	protected static final MetaDataField<Integer>
-	META_FORWARD_DIRECTION = new MetaDataField<Integer>(CoreVehicle.LAST_META_INDEX+2, 1, MetaDataType.INT);
+	META_FORWARD_DIRECTION = new MetaDataField<>(CoreVehicle.LAST_META_INDEX + 2, 1, MetaDataType.INT);
 	protected static final MetaDataField<Float>
 	META_DAMAGE_TAKEN = new MetaDataField<>(CoreVehicle.LAST_META_INDEX+3, 0.0f, MetaDataType.FLOAT);
 	protected static final MetaDataField<Integer>
@@ -26,7 +26,7 @@ public class CoreBoat extends CoreVehicle implements Boat {
 	protected static final MetaDataField<Boolean>
 	META_LEFT_PADDLE_TURNING = new MetaDataField<>(CoreVehicle.LAST_META_INDEX+5, false, MetaDataType.BOOLEAN);
 	protected static final MetaDataField<Boolean>
-	META_RIGHT_PADDLE_TURNING = new MetaDataField<Boolean>(CoreVehicle.LAST_META_INDEX+6, false, MetaDataType.BOOLEAN);
+	META_RIGHT_PADDLE_TURNING = new MetaDataField<>(CoreVehicle.LAST_META_INDEX + 6, false, MetaDataType.BOOLEAN);
 	protected static final MetaDataField<Integer>
 	META_SPLASH_TIMER = new MetaDataField<>(CoreVehicle.LAST_META_INDEX+7, 0, MetaDataType.INT);
 	

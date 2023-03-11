@@ -7,7 +7,7 @@ import de.atlasmc.SimpleLocation;
 import de.atlasmc.Vector;
 import de.atlasmc.world.World;
 
-public class MathUtil {
+public final class MathUtil {
 	
 	public static final UUID ZERO_UUID = new UUID(0, 0);
 	
@@ -191,9 +191,8 @@ public class MathUtil {
 	 * @return bits needed
 	 */
 	public static int getBitsPerBlock(int paletteSize) {
-		int size = paletteSize;
 		int bits = 4, mask = 0x0F;
-		while (mask < size) {
+		while (mask < paletteSize) {
 			mask = (mask << 1) + 1;
 			bits++;
 		}

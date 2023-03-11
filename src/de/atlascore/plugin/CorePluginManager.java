@@ -17,8 +17,8 @@ public class CorePluginManager implements PluginManager {
 	private final CopyOnWriteArrayList<PluginLoader> loaders;
 	
 	public CorePluginManager() {
-		this.plugins = new CopyOnWriteArrayList<Plugin>();
-		this.loaders = new CopyOnWriteArrayList<PluginLoader>();
+		this.plugins = new CopyOnWriteArrayList<>();
+		this.loaders = new CopyOnWriteArrayList<>();
 	}
 	
 	@Override
@@ -56,7 +56,7 @@ public class CorePluginManager implements PluginManager {
 					if (plugin == null) continue;
 					plugins.add(plugin);
 					if (list == null)
-						list = new ArrayList<Plugin>();
+						list = new ArrayList<>();
 					list.add(plugin);
 					break;
 				} catch (IOException | PluginException e) {}

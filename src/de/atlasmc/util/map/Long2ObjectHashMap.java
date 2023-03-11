@@ -99,7 +99,7 @@ public class Long2ObjectHashMap<V> implements Iterable<V> {
 		if (used == 0) { // if used == 0 do direct insert
 			if (!create) // escape if not create
 				return null;
-			head = new Node<V>(hash, key, value);
+			head = new Node<>(hash, key, value);
 			values[hash] = head;
 			return head;
 		}
@@ -243,9 +243,11 @@ public class Long2ObjectHashMap<V> implements Iterable<V> {
 	
 	public boolean containsValue(Object o) {
 		Node<V> node = head;
-		while (node != null)
-			if (node.next.value.equals(o))
+		while (node != null) {
+			if (node.value.equals(o))
 				return true;
+			node = node.next;
+		}
 		return false;
 	}
 	
@@ -255,7 +257,7 @@ public class Long2ObjectHashMap<V> implements Iterable<V> {
 		return valueCollection;
 	}
 	
-	final class Node<E> {
+	static final class Node<E> {
 		private int hash;
 		private final long key;
 		private E value;

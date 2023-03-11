@@ -30,7 +30,7 @@ public class CoreAreaEffectCloud extends CoreEntity implements AreaEffectCloud {
 	protected static final MetaDataField<Boolean>
 	META_IGNORE_RADIUS = new MetaDataField<>(CoreEntity.LAST_META_INDEX+3, false, MetaDataType.BOOLEAN);
 	protected static final MetaDataField<ParticleObject>
-	META_PARTICLE = new MetaDataField<ParticleObject>(CoreEntity.LAST_META_INDEX+4, new ParticleObject(Particle.EFFECT), MetaDataType.PARTICLE);
+	META_PARTICLE = new MetaDataField<>(CoreEntity.LAST_META_INDEX + 4, new ParticleObject(Particle.EFFECT), MetaDataType.PARTICLE);
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+4;
 	

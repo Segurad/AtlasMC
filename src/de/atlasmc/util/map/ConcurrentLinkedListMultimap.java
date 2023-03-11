@@ -20,7 +20,7 @@ public class ConcurrentLinkedListMultimap<K, V> extends AbstractMultimap<K, V> {
 	}
 	
 	public ConcurrentLinkedListMultimap(int mapCapacity) {
-		super(new ConcurrentHashMap<K, Collection<V>>(mapCapacity));
+		super(new ConcurrentHashMap<>(mapCapacity));
 	}
 	
 	@Override
@@ -45,7 +45,7 @@ public class ConcurrentLinkedListMultimap<K, V> extends AbstractMultimap<K, V> {
 
 	@Override
 	protected Collection<V> createCollection() {
-		return new ConcurrentLinkedList<V>();
+		return new ConcurrentLinkedList<>();
 	}
 
 }

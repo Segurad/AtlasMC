@@ -61,6 +61,11 @@ public class Location extends SimpleLocation {
 		return this;
 	}
 	
+	/**
+	 * Copies all values from this location to the given one and returns it
+	 * @param loc
+	 * @return location
+	 */
 	public Location copyTo(Location loc) {
 		super.copyTo(loc);
 		loc.world = world;

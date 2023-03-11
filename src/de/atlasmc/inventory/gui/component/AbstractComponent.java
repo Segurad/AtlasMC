@@ -13,7 +13,7 @@ public abstract class AbstractComponent<E> implements Component<E> {
 	protected final int x, y;
 	
 	protected AbstractComponent(int x, int y) {
-		handlers = new ArrayList<ComponentHandler>();
+		handlers = new ArrayList<>();
 		this.x = x;
 		this.y = y;
 		entries = new Object[y*x];
@@ -103,8 +103,8 @@ public abstract class AbstractComponent<E> implements Component<E> {
 
 	@Override
 	public boolean contains(E entry) {
-		for (int i = 0; i < entries.length; i++) {
-			if (entries[i].equals(entry)) return true;
+		for (Object o : entries) {
+			if (o.equals(entry)) return true;
 		}
 		return false;
 	}
@@ -112,7 +112,9 @@ public abstract class AbstractComponent<E> implements Component<E> {
 	@Override
 	public void clear(boolean update) {
 		Arrays.fill(entries, null);
-		if (update) handlers.forEach(h -> h.updateDisplay());
+		if (update)
+			for (ComponentHandler handler : handlers)
+				handler.updateDisplay();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -123,7 +125,7 @@ public abstract class AbstractComponent<E> implements Component<E> {
 	
 	@Override
 	public ComponentIterator<E> iterator() {
-		return new ComponentIterator<E>(this);
+		return new ComponentIterator<>(this);
 	}
 	
 	@Override

@@ -21,7 +21,7 @@ public class CorePacketOutTradeList extends PacketIO<PacketOutTradeList> {
 	public void read(PacketOutTradeList packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.setWindowID(readVarInt(in));
 		final int size = in.readByte();
-		List<MerchantRecipe> recipes = new ArrayList<MerchantRecipe>(size);
+		List<MerchantRecipe> recipes = new ArrayList<>(size);
 		NBTNIOReader reader = new NBTNIOReader(in);
 		for (int i = 0; i < size; i++) {
 			ItemStack in1 = readSlot(in, reader);

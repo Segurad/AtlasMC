@@ -8,7 +8,8 @@ public class NBTIOWriter extends AbstractNBTIOWriter {
 	private OutputStream out;
 	
 	public NBTIOWriter(OutputStream out) {
-		if (out == null) throw new IllegalArgumentException("DataOutput can not be null!");
+		if (out == null) 
+			throw new IllegalArgumentException("DataOutput can not be null!");
 		this.out = out;
 	}
 	

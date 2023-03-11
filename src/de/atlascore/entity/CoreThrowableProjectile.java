@@ -12,7 +12,7 @@ import java.util.UUID;
 public abstract class CoreThrowableProjectile extends CoreAbstractProjectile implements ThrowableProjectile {
 	
 	protected static final MetaDataField<ItemStack> 
-	META_PROJECTILE_ITEM = new MetaDataField<ItemStack>(CoreEntity.LAST_META_INDEX+1, null, MetaDataType.SLOT);
+	META_PROJECTILE_ITEM = new MetaDataField<>(CoreEntity.LAST_META_INDEX + 1, null, MetaDataType.SLOT);
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+1;
 	

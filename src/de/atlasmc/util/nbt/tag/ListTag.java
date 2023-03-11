@@ -96,7 +96,7 @@ public final class ListTag<T extends NBT> extends AbstractTag implements Iterabl
 		if (clone == null)
 			return null;
 		if (data != null) {
-			List<NBT> list = new ArrayList<NBT>(data.size());
+			List<NBT> list = new ArrayList<>(data.size());
 			for (NBT nbt : data) {
 				list.add(nbt.clone());
 			}

@@ -105,7 +105,7 @@ class CoreObjective implements Objective {
 	public List<Score> getScores() {
 		if (scores == null || scores.isEmpty())
 			return List.of();
-		List<Score> scores = new ArrayList<Score>(this.scores.size());
+		List<Score> scores = new ArrayList<>(this.scores.size());
 		for (String s : this.scores.keySet()) {
 			scores.add(new CoreScore(this, s));
 		}

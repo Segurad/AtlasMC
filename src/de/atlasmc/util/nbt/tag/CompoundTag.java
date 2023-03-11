@@ -67,7 +67,7 @@ public final class CompoundTag extends AbstractTag implements Iterable<NBT> {
 	}
 	
 	public ListTag<? extends NBT> addListTag(String name, TagType type) {
-		ListTag<NBT> tag = new ListTag<NBT>(name, type);
+		ListTag<NBT> tag = new ListTag<>(name, type);
 		this.data.add(tag);
 		return tag;
 	}
@@ -114,7 +114,7 @@ public final class CompoundTag extends AbstractTag implements Iterable<NBT> {
 		if (clone == null)
 			return null;
 		if (data != null) {
-			List<NBT> list = new ArrayList<NBT>(data.size());
+			List<NBT> list = new ArrayList<>(data.size());
 			for (NBT nbt : data) {
 				list.add(nbt.clone());
 			}

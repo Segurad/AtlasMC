@@ -204,7 +204,7 @@ public class HandlerList {
 			if (exe.getPriority().ordinal() > prio) 
 				break;
 			executors.gotoPeeked();
-			if (exe.getIgnoreCancelled() && (cancellable ? false : ((Cancellable) event).isCancelled())) 
+			if (exe.getIgnoreCancelled() && (!cancellable && ((Cancellable) event).isCancelled()))
 				continue;
 			try {
 				exe.fireEvent(event);

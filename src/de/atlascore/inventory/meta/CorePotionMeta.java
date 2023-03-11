@@ -128,7 +128,7 @@ public class CorePotionMeta extends CoreItemMeta implements PotionMeta {
 
 	@Override
 	public List<PotionEffect> getCustomEffects() {
-		if (customEffects == null) customEffects = new ArrayList<PotionEffect>();
+		if (customEffects == null) customEffects = new ArrayList<>();
 		return customEffects;
 	}
 

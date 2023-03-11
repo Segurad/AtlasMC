@@ -35,7 +35,7 @@ public class CoreFox extends CoreAgeableMob implements Fox {
 	protected static final MetaDataField<UUID>
 	META_FOX_FIRST_TRUSTED = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+3, null, MetaDataType.OPT_UUID);
 	protected static final MetaDataField<UUID>
-	META_FOX_LAST_TRUSTED = new MetaDataField<UUID>(CoreAgeableMob.LAST_META_INDEX+4, null, MetaDataType.OPT_UUID);
+	META_FOX_LAST_TRUSTED = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX + 4, null, MetaDataType.OPT_UUID);
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+4;
 	

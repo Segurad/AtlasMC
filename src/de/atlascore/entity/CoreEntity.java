@@ -65,7 +65,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	 * <tr><th>Bit mask</th><th>Meaning</th></tr>
 	 * <tr><td>0x01		</td><td>on fire		</td></tr>
 	 * <tr><td>0x02		</td><td>on ground		</td></tr>
-	 * <tr><td>0x08		</td><td>sprinting		</th></tr>
+	 * <tr><td>0x08		</td><td>sprinting		</td></tr>
 	 * <tr><td>0x10		</td><td>swimming		</td></tr>
 	 * <tr><td>0x20		</td><td>invisible		</td></tr>
 	 * <tr><td>0x40		</td><td>glowing		</td></tr>
@@ -558,7 +558,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 
 	@Override
 	public List<String> getScoreboardTags() {
-		if (scoreboardTags == null) scoreboardTags = new ArrayList<String>();
+		if (scoreboardTags == null) scoreboardTags = new ArrayList<>();
 		return scoreboardTags;
 	}
 

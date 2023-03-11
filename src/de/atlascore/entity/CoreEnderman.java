@@ -17,11 +17,11 @@ import de.atlasmc.world.World;
 public class CoreEnderman extends CoreMob implements Enderman {
 	
 	protected static final MetaDataField<Integer> 
-	META_CARRIED_BLOCK = new MetaDataField<Integer>(CoreMob.LAST_META_INDEX+1, null, MetaDataType.OPT_BLOCKSTATE);
+	META_CARRIED_BLOCK = new MetaDataField<>(CoreMob.LAST_META_INDEX + 1, null, MetaDataType.OPT_BLOCKSTATE);
 	protected static final MetaDataField<Boolean>
-	META_IS_SCREAMING = new MetaDataField<Boolean>(CoreMob.LAST_META_INDEX+2, false, MetaDataType.BOOLEAN);
+	META_IS_SCREAMING = new MetaDataField<>(CoreMob.LAST_META_INDEX + 2, false, MetaDataType.BOOLEAN);
 	protected static final MetaDataField<Boolean>
-	META_IS_STARING = new MetaDataField<Boolean>(CoreMob.LAST_META_INDEX+3, false, MetaDataType.BOOLEAN);
+	META_IS_STARING = new MetaDataField<>(CoreMob.LAST_META_INDEX + 3, false, MetaDataType.BOOLEAN);
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+3;
 

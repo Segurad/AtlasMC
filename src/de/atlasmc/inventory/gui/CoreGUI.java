@@ -33,7 +33,7 @@ public class CoreGUI extends CoreInventory implements GUI {
 
 	@Override
 	public boolean isButtonAt(int slot) {
-		return buttons == null ? false : (buttons[slot] == null ? false : true);
+		return buttons != null && (buttons[slot] != null);
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class CoreGUI extends CoreInventory implements GUI {
 
 	@Override
 	public boolean isClickable(int slot) {
-		return clickable == null ? false : clickable[slot];
+		return clickable != null && clickable[slot];
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class CoreGUI extends CoreInventory implements GUI {
 	@Override
 	public void addComponentHandler(ComponentHandler handler) {
 		if (handler == null) return;
-		if (components == null) components = new ArrayList<ComponentHandler>();
+		if (components == null) components = new ArrayList<>();
 		components.add(handler);
 		handler.updateDisplay();
 	}
@@ -101,7 +101,7 @@ public class CoreGUI extends CoreInventory implements GUI {
 
 	@Override
 	public void addGUIListener(GUIListener listener) {
-		if (listeners == null) listeners = new ArrayList<GUIListener>();
+		if (listeners == null) listeners = new ArrayList<>();
 		listeners.add(0, listener);
 	}
 

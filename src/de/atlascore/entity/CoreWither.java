@@ -21,7 +21,7 @@ public class CoreWither extends CoreMob implements Wither {
 	protected static final MetaDataField<Integer>
 	META_TARGET_RIGHT_HEAD = new MetaDataField<>(CoreMob.LAST_META_INDEX+3, 0, MetaDataType.INT);
 	protected static final MetaDataField<Integer>
-	META_INVULNERABLE_TIME = new MetaDataField<Integer>(CoreMob.LAST_META_INDEX+4, 0, MetaDataType.INT);
+	META_INVULNERABLE_TIME = new MetaDataField<>(CoreMob.LAST_META_INDEX + 4, 0, MetaDataType.INT);
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+4;
 	

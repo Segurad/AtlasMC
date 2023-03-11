@@ -80,7 +80,7 @@ public class CorePainting extends CoreEntity implements Painting {
 
 	@Override
 	protected ViewerSet<Entity, Player> createViewerSet() {
-		return new ViewerSet<Entity, Player>(this, VIEWER_ADD_FUNCTION, VIEWER_REMOVE_FUNCTION);
+		return new ViewerSet<>(this, VIEWER_ADD_FUNCTION, VIEWER_REMOVE_FUNCTION);
 	}
 	
 	@Override

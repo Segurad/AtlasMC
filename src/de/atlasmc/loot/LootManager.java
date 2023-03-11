@@ -12,7 +12,7 @@ public class LootManager<T> {
 	
 	public LootManager() {
 		random = new Random();
-		defaulttables = new HashMap<T, LootTable>();
+		defaulttables = new HashMap<>();
 	}
 	
 	public LootTable getTable(T key) {

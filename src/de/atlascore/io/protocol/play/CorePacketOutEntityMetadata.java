@@ -20,8 +20,8 @@ public class CorePacketOutEntityMetadata extends PacketIO<PacketOutEntityMetadat
 	public void read(PacketOutEntityMetadata packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.setEntityID(readVarInt(in));
 		List<MetaData<?>> data = null;
-		int index = in.readUnsignedByte();
-		while (index != 0xFF) {
+		int index = 0;
+		while ((index = in.readUnsignedByte()) != 0xFF) {
 			if (data == null)
 				data = new ArrayList<>();
 			int typeID = readVarInt(in);

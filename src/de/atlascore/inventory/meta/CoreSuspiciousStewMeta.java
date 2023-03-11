@@ -103,7 +103,7 @@ public class CoreSuspiciousStewMeta extends CoreItemMeta implements SuspiciousSt
 
 	@Override
 	public List<PotionEffect> getCustomEffects() {
-		if (customEffects == null) customEffects = new ArrayList<PotionEffect>();
+		if (customEffects == null) customEffects = new ArrayList<>();
 		return customEffects;
 	}
 

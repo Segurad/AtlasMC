@@ -13,7 +13,7 @@ public class ProxyHandlerList extends HandlerList {
 	
 	public ProxyHandlerList() {
 		super();
-		proxyExecutors = new ConcurrentLinkedListMultimap<LocalProxy, EventExecutor>();
+		proxyExecutors = new ConcurrentLinkedListMultimap<>();
 	}
 	
 	public void registerExecutor(LocalProxy proxy, EventExecutor executor) {

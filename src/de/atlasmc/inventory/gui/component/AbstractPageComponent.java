@@ -33,7 +33,7 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 		this.x = x;
 		this.y = y;
 		this.max = maxpages;
-		handlers = new ArrayList<ComponentHandler>();
+		handlers = new ArrayList<>();
 		entries = new ArrayList<>();
 		if (pages > 0) {
 			for (int i = 0; i < pages; i++) {
@@ -139,8 +139,8 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 	@Override
 	public boolean contains(E entry) {
 		for (Object[] entries : this.entries) {
-			for (int i = 0; i < entries.length; i++) {
-				if (entries[i].equals(entry)) return true;
+			for (Object o : entries) {
+				if (o.equals(entry)) return true;
 			}
 		}
 		return false;
@@ -151,7 +151,9 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 		for (final Object[] entries : this.entries) {
 			Arrays.fill(entries, null);
 		}
-		if (update) handlers.forEach(h -> h.updateDisplay());
+		if (update)
+			for (ComponentHandler handler : handlers)
+				handler.updateDisplay();
 	}
 	
 	@Override

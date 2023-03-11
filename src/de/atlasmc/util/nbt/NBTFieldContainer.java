@@ -36,7 +36,8 @@ public class NBTFieldContainer {
 			throw new IllegalArgumentException("Key can not be null!");
 		if (field == null) 
 			throw new IllegalArgumentException("Field can not be null!");
-		if (this.fields == null) this.fields= new HashMap<CharSequence, NBTField>();
+		if (this.fields == null) 
+			this.fields= new HashMap<>();
 		this.fields.put(key, field);
 		return this;
 	}
@@ -75,7 +76,8 @@ public class NBTFieldContainer {
 			throw new IllegalArgumentException("Key can not be null!");
 		if (container == null) 
 			throw new IllegalArgumentException("Container can not be null!");
-		if (this.container == null) this.container = new HashMap<CharSequence, NBTFieldContainer>();
+		if (this.container == null) 
+			this.container = new HashMap<>();
 		this.container.put(key, container);
 		return container;
 	}

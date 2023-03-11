@@ -12,7 +12,7 @@ public class LootTable {
 	private int tickets;
 	
 	public LootTable() {
-		this.loot = new ArrayList<Loot>();
+		this.loot = new ArrayList<>();
 		this.tickets = 1;
 	}
 
@@ -30,7 +30,7 @@ public class LootTable {
 			if (value < r) continue;
 			return l.getItems(random);
 		}
-		return new ArrayList<ItemStack>();
+		return new ArrayList<>();
 	}
 
 }

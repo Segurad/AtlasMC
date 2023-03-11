@@ -23,7 +23,7 @@ public class CorePacketOutMapData extends PacketIO<PacketOutMapData> {
 		packet.setLocked(in.readBoolean());
 		final int count = readVarInt(in);
 		if (count > 0) {
-			List<MapIcon> icons = new ArrayList<MapIcon>(count);
+			List<MapIcon> icons = new ArrayList<>(count);
 			for (int i = 0; i < count; i++) {
 				int type = readVarInt(in);
 				byte x = in.readByte();

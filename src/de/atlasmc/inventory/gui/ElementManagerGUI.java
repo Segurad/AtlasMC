@@ -40,16 +40,17 @@ public abstract class ElementManagerGUI<E> extends MultipageGUI {
 	public ElementManagerGUI(Chat title, InventoryHolder holder, int add, ItemStack addicon, int maxpages) {
 		super(title, holder, 45, 46, 9, 4, maxpages);
 		if (add > 8 || add < 0) throw new IllegalArgumentException("Value must be between 0 and 8");
-		elements = new AbstractPageComponent<E>(9, 4, maxpages) {
-			@Override
-			public ComponentHandler createHandler(GUI gui, int slot, int length, int depth, int offsetX, int offsetY) {
-				return new AbstractComponentHandler(elements, gui, slot, length, depth) {
-					@Override
-					public void internalUpdate(int x, int y) {}		
-				};
-			}
-			
-		};
+		elements = new AbstractPageComponent<>(9, 4, maxpages) {
+            @Override
+            public ComponentHandler createHandler(GUI gui, int slot, int length, int depth, int offsetX, int offsetY) {
+                return new AbstractComponentHandler(elements, gui, slot, length, depth) {
+                    @Override
+                    public void internalUpdate(int x, int y) {
+                    }
+                };
+            }
+
+        };
 		ehandler = elements.createHandler(this, 0, 9, 4);
 		setButtons(0, 36, new AbstractButton() {
 			@Override

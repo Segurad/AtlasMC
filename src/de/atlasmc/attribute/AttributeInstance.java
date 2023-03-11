@@ -39,7 +39,7 @@ public class AttributeInstance {
 
 	public List<AttributeModifier> getModifiers() {
 		if (modifiers == null) 
-			modifiers = new ArrayList<AttributeModifier>();
+			modifiers = new ArrayList<>();
 		return modifiers;
 	}
 	

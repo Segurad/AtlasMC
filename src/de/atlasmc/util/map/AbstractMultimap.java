@@ -1,7 +1,6 @@
 package de.atlasmc.util.map;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -49,9 +48,9 @@ public abstract class AbstractMultimap<K, V> implements Multimap<K, V> {
 			c = map.put(key, createCollection());
 		} else c = map.get(key);
 		boolean b = false;
-		Iterator<V> iterator = values.iterator();
-		while (iterator.hasNext()) {
-			if (c.add(iterator.next())) b = true;
+		for (V value : values) {
+			if (c.add(value))
+				b = true;
 		}
 		return b;
 	}

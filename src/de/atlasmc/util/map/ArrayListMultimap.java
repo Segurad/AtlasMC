@@ -27,7 +27,7 @@ public class ArrayListMultimap<K, V> extends AbstractMultimap<K, V> implements L
 	}
 	
 	public ArrayListMultimap(int mapCapacity, int valueInitCapacity) {
-		super(new HashMap<K, Collection<V>>(mapCapacity));
+		super(new HashMap<>(mapCapacity));
 		this.DEFAULT_LIST_CAPACITY = valueInitCapacity;
 	}
 
@@ -43,7 +43,7 @@ public class ArrayListMultimap<K, V> extends AbstractMultimap<K, V> implements L
 
 	@Override
 	protected Collection<V> createCollection() {
-		return new ArrayList<V>(DEFAULT_LIST_CAPACITY);
+		return new ArrayList<>(DEFAULT_LIST_CAPACITY);
 	}
 
 }

@@ -23,11 +23,11 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 	}
 	
 	public EntryPointer<E> addWithPointer(E entry) {
-		return new EntryPointer<E>(this, internalAdd(entry));
+		return new EntryPointer<>(this, internalAdd(entry));
 	}
 	
 	public EntryPointer<E> addFirstWithPointer(E entry) {
-		return new EntryPointer<E>(this, internalAddFirst(entry));
+		return new EntryPointer<>(this, internalAddFirst(entry));
 	}
 	
 	public void addFirst(E entry) {
@@ -39,11 +39,11 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 			throw new IllegalArgumentException("Entry can not be null!");
 		incrementCount();
 		if (head == null) {
-			head = new Node<E>(entry, null, null);
+			head = new Node<>(entry, null, null);
 			tail = head;
 			return head;
 		}
-		head.prev = new Node<E>(entry, null, head);
+		head.prev = new Node<>(entry, null, head);
 		head = head.prev;
 		return head;
 	}
@@ -134,11 +134,11 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 		if (entry == null)
 			throw new IllegalArgumentException("Entry can not be null!");
 		if (head == null) {
-			head = new Node<E>(entry, null, null);
+			head = new Node<>(entry, null, null);
 			tail = head;
 			return tail;
 		}
-		tail.next = new Node<E>(entry, tail, null);
+		tail.next = new Node<>(entry, tail, null);
 		tail = tail.next;
 		incrementCount();
 		return tail;
@@ -154,7 +154,7 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 			return;
 		}
 		Node<E> next = nextValid(node);
-		Node<E> newNode = new Node<E>(entry, node, next);
+		Node<E> newNode = new Node<>(entry, node, next);
 		node.next = newNode;
 		next.prev = newNode;
 		incrementCount();
@@ -168,7 +168,7 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 			return;
 		}
 		Node<E> prev = prevValid(node);
-		Node<E> newNode = new Node<E>(entry, prev, node);
+		Node<E> newNode = new Node<>(entry, prev, node);
 		node.prev = newNode;
 		prev.next = newNode;
 		incrementCount();
@@ -184,7 +184,7 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 
 	@Override
 	public LinkedListIterator<E> iterator() {
-		return new LinkedListIterator<E>(this);
+		return new LinkedListIterator<>(this);
 	}
 
 	@Override
@@ -301,7 +301,7 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 		
 		LinkedListIterator(ConcurrentLinkedList<E> list) {
 			this.list = list;
-			node = new Node<E>(null, null, list.head);
+			node = new Node<>(null, null, list.head);
 		}
 		
 		@Override

@@ -30,7 +30,7 @@ public class ConcurrentVectorMultimap<K, V> extends AbstractMultimap<K, V> imple
 	}
 	
 	public ConcurrentVectorMultimap(int mapCapacity, int valueInitCapacity) {
-		super(new HashMap<K, Collection<V>>(mapCapacity));
+		super(new HashMap<>(mapCapacity));
 		this.DEFAULT_LIST_CAPACITY = valueInitCapacity;
 	}
 	
@@ -56,7 +56,7 @@ public class ConcurrentVectorMultimap<K, V> extends AbstractMultimap<K, V> imple
 
 	@Override
 	protected Collection<V> createCollection() {
-		return new Vector<V>(DEFAULT_LIST_CAPACITY);
+		return new Vector<>(DEFAULT_LIST_CAPACITY);
 	}
 
 }

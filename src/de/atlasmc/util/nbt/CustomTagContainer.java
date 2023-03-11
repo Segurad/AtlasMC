@@ -21,7 +21,7 @@ public class CustomTagContainer implements Cloneable {
 	
 	public List<NBT> getCustomTags() {
 		if (tags == null) 
-			tags = new ArrayList<NBT>();
+			tags = new ArrayList<>();
 		return tags;
 	}
 	
@@ -37,7 +37,7 @@ public class CustomTagContainer implements Cloneable {
 	
 	public List<NBT> getSystemTags() {
 		if (systemTags == null) 
-			systemTags = new ArrayList<NBT>();
+			systemTags = new ArrayList<>();
 		return systemTags;
 	}
 	
@@ -65,7 +65,7 @@ public class CustomTagContainer implements Cloneable {
 	}
 
 	private List<NBT> cloneList(List<NBT> tags) {
-		List<NBT> list = new ArrayList<NBT>(tags.size());
+		List<NBT> list = new ArrayList<>(tags.size());
 		for (NBT nbt : tags) {
 			list.add(nbt.clone());
 		}
