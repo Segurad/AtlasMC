@@ -4,8 +4,8 @@ import de.atlasmc.NamespacedKey;
 
 public class SmokerRecipe extends AbstractCookingRecipe {
 
-	public SmokerRecipe(NamespacedKey key) {
-		super(key);
+	public SmokerRecipe(NamespacedKey key, NamespacedKey group) {
+		super(key, group);
 	}
 	
 	@Override

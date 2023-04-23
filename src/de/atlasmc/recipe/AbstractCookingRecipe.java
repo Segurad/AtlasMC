@@ -2,14 +2,14 @@ package de.atlasmc.recipe;
 
 import de.atlasmc.NamespacedKey;
 
-public abstract class AbstractCookingRecipe extends Recipe {
+public abstract class AbstractCookingRecipe extends GroupedRecipe {
 
 	private Ingredient ingredient;
 	private int time;
 	private	float xp;
 	
-	public AbstractCookingRecipe(NamespacedKey key) {
-		super(key);
+	public AbstractCookingRecipe(NamespacedKey key, NamespacedKey group) {
+		super(key, group);
 	}
 	
 	public Ingredient getIngredient() {

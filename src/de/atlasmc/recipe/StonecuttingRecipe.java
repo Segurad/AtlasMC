@@ -2,12 +2,12 @@ package de.atlasmc.recipe;
 
 import de.atlasmc.NamespacedKey;
 
-public class StonecuttingRecipe extends Recipe {
+public class StonecuttingRecipe extends GroupedRecipe {
 
 	private Ingredient ingredient;
 	
-	public StonecuttingRecipe(NamespacedKey key) {
-		super(key);
+	public StonecuttingRecipe(NamespacedKey key, NamespacedKey group) {
+		super(key, group);
 	}
 	
 	public Ingredient getIngredient() {

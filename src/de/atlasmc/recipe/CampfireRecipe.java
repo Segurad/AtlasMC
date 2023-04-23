@@ -4,8 +4,8 @@ import de.atlasmc.NamespacedKey;
 
 public class CampfireRecipe extends AbstractCookingRecipe {
 
-	public CampfireRecipe(NamespacedKey key) {
-		super(key);
+	public CampfireRecipe(NamespacedKey key, NamespacedKey group) {
+		super(key, group);
 	}
 	
 	@Override

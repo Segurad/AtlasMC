@@ -4,8 +4,8 @@ import de.atlasmc.NamespacedKey;
 
 public class FurnaceRecipe extends AbstractCookingRecipe {
 
-	public FurnaceRecipe(NamespacedKey key) {
-		super(key);
+	public FurnaceRecipe(NamespacedKey key, NamespacedKey group) {
+		super(key, group);
 	}
 	
 	@Override

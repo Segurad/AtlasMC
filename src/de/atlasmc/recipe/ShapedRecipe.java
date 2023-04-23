@@ -5,13 +5,13 @@ import java.util.Map;
 
 import de.atlasmc.NamespacedKey;
 
-public class ShapedRecipe extends Recipe {
+public class ShapedRecipe extends GroupedRecipe {
 	
 	private Map<Character, Ingredient> ingredients;
 	private String[] shape;
 	
-	public ShapedRecipe(NamespacedKey key) {
-		super(key);
+	public ShapedRecipe(NamespacedKey key, NamespacedKey group) {
+		super(key, group);
 		ingredients = new HashMap<>(1);
 	}
 	

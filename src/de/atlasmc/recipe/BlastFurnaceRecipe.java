@@ -4,8 +4,8 @@ import de.atlasmc.NamespacedKey;
 
 public class BlastFurnaceRecipe extends AbstractCookingRecipe {
 
-	public BlastFurnaceRecipe(NamespacedKey key) {
-		super(key);
+	public BlastFurnaceRecipe(NamespacedKey key, NamespacedKey group) {
+		super(key, group);
 	}
 
 	@Override

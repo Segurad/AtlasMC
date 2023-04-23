@@ -5,12 +5,12 @@ import java.util.List;
 
 import de.atlasmc.NamespacedKey;
 
-public class ShapelessRecipe extends Recipe {
+public class ShapelessRecipe extends GroupedRecipe {
 
 	private List<Ingredient> ingredients;
 	
-	public ShapelessRecipe(NamespacedKey key) {
-		super(key);
+	public ShapelessRecipe(NamespacedKey key, NamespacedKey group) {
+		super(key, group);
 	}
 	
 	public List<Ingredient> getIngredients() {
