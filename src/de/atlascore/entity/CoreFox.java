@@ -15,7 +15,6 @@ import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreFox extends CoreAgeableMob implements Fox {
 
@@ -82,8 +81,8 @@ public class CoreFox extends CoreAgeableMob implements Fox {
 	
 	private Set<UUID> trusted;
 	
-	public CoreFox(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreFox(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 
 	@Override

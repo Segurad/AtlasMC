@@ -17,7 +17,6 @@ import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreItemFrame extends CoreEntity implements ItemFrame {
 
@@ -112,8 +111,8 @@ public class CoreItemFrame extends CoreEntity implements ItemFrame {
 	private BlockFace orientation;
 	private float dropChance = 1.0f;
 	
-	public CoreItemFrame(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreItemFrame(EntityType type, UUID uuid) {
+		super(type, uuid);
 		orientation = BlockFace.NORTH;
 	}
 	

@@ -7,7 +7,6 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Guardian;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.world.World;
 
 public class CoreGuardian extends CoreMob implements Guardian {
 
@@ -20,8 +19,8 @@ public class CoreGuardian extends CoreMob implements Guardian {
 	
 	private Entity target;
 	
-	public CoreGuardian(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreGuardian(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

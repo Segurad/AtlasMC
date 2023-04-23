@@ -5,7 +5,6 @@ import java.util.UUID;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.EvokerFangs;
-import de.atlasmc.world.World;
 
 public class CoreEvokerFangs extends CoreEntity implements EvokerFangs {
 
@@ -17,8 +16,8 @@ public class CoreEvokerFangs extends CoreEntity implements EvokerFangs {
 	
 	private Entity caster;
 	
-	public CoreEvokerFangs(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreEvokerFangs(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 
 	@Override

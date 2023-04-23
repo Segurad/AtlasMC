@@ -14,7 +14,6 @@ import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreEndCrystal extends CoreEntity implements EndCrystal {
 	
@@ -65,8 +64,8 @@ public class CoreEndCrystal extends CoreEntity implements EndCrystal {
 		});
 	}
 	
-	public CoreEndCrystal(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreEndCrystal(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

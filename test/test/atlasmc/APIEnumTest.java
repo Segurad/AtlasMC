@@ -7,6 +7,7 @@ import de.atlasmc.BossBar.BarColor;
 import de.atlasmc.BossBar.BarStyle;
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.chat.ChatType;
+import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.Difficulty;
 import de.atlasmc.Direction;
 import de.atlasmc.DyeColor;
@@ -39,6 +40,7 @@ public class APIEnumTest {
 		testCacheAndID(BarStyle.class);
 		testCacheAndID(ChatType.class);
 		testCacheAndID(ChatColor.class);
+		testCacheAndID(InventoryType.class);
 	}
 	
 	private void testCacheAndID(Class<? extends Enum<?>> clazz) {

@@ -9,7 +9,6 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreCreeper extends CoreMob implements Creeper {
 	
@@ -54,8 +53,8 @@ public class CoreCreeper extends CoreMob implements Creeper {
 	private int fuzeTime = -1;
 	private int radius = 3;
 	
-	public CoreCreeper(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreCreeper(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 
 	@Override

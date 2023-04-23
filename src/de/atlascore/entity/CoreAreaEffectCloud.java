@@ -1,5 +1,10 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import de.atlasmc.Particle;
 import de.atlasmc.entity.AreaEffectCloud;
 import de.atlasmc.entity.EntityType;
@@ -13,13 +18,7 @@ import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 import de.atlasmc.world.particle.ParticleObject;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 public class CoreAreaEffectCloud extends CoreEntity implements AreaEffectCloud {
 	
@@ -166,8 +165,8 @@ public class CoreAreaEffectCloud extends CoreEntity implements AreaEffectCloud {
 	private List<PotionEffect> potionEffects;
 	private PotionData data;
 	
-	public CoreAreaEffectCloud(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreAreaEffectCloud(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

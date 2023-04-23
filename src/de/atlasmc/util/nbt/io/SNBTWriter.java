@@ -310,16 +310,15 @@ public class SNBTWriter implements NBTWriter {
 				throw new IOException("Max Listpayload reached!");
 		}
 		if (separator)
-			out.write(',');
+			if (type != TagType.TAG_END)
+				out.write(',');
 		else
 			separator = true;
 		if (name == null) 
 			return;
-		out.write('"');
 		final int length = name.length();
 		for (int i = 0; i < length; i++)
 			out.write(name.charAt(i));
-		out.write('"');
 		out.write(':');
 	}
 	

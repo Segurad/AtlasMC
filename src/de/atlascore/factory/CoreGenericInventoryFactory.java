@@ -2,10 +2,10 @@ package de.atlascore.factory;
 
 import de.atlascore.inventory.CoreInventory;
 import de.atlasmc.chat.Chat;
-import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryHolder;
+import de.atlasmc.inventory.InventoryType;
 
 public class CoreGenericInventoryFactory extends ContainerFactory<Inventory> {
 

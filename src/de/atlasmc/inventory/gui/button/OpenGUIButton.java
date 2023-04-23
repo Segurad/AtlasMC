@@ -19,7 +19,7 @@ public class OpenGUIButton extends AbstractButton {
 	
 	@Override
 	public ItemStack press(InventoryClickEvent e) {
-		e.getWhoClicked().openInventory(gui);
+		e.getWhoClicked().openInventory(gui.getInventory());
 		return null;
 	}
 

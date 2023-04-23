@@ -7,7 +7,6 @@ import de.atlasmc.entity.Chicken;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreChicken extends CoreAgeableMob implements Chicken {
 
@@ -25,8 +24,8 @@ public class CoreChicken extends CoreAgeableMob implements Chicken {
 	
 	private int eggLayTime = -1;
 	
-	public CoreChicken(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreChicken(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 
 	@Override

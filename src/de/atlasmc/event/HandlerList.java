@@ -6,10 +6,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.slf4j.Logger;
+
 import de.atlasmc.Atlas;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
-import de.atlasmc.log.Logger;
 import de.atlasmc.util.ConcurrentLinkedList;
 import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
 import de.atlasmc.util.annotation.NotNull;
@@ -63,7 +64,7 @@ public class HandlerList {
 		try {
 			defaultExecutor.fireEvent(event);
 		} catch (Exception ex) {
-			log.fatal(new EventException("Error while event handly with default handler for: " + event.getName(), ex));
+			log.error("Error while event handly with default handler for: " + event.getName(), ex);
 		}
 	}
 	
@@ -183,7 +184,7 @@ public class HandlerList {
 			try {
 				exe.fireEvent(event);
 			} catch (Exception ex) {
-				Atlas.getLogger().error(new EventException("Error while event handling for: " + event.getName(), ex));
+				Atlas.getLogger().error("Error while event handling for: " + event.getName(), ex);
 			}
 		}
 	}
@@ -209,7 +210,7 @@ public class HandlerList {
 			try {
 				exe.fireEvent(event);
 			} catch (Exception ex) {
-				log.error(new EventException("Error while event handling for: " + event.getName(), ex));
+				log.error("Error while event handling for: " + event.getName(), ex);
 			}
 		}
 	}

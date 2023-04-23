@@ -131,11 +131,19 @@ public interface Entity extends NBTHolder, Nameable, Tickable {
 	
 	public EntityType getType();
 	
+	/**
+	 * Returns the UUID of this Entity
+	 * @return UUID
+	 */
 	public UUID getUUID();
 	
 	public Vector getVelocity();
 	
 	public Vector getVelocity(Vector vec);
+	
+	public void setVelocity(Vector vec);
+	
+	public void setVelocity(double x, double y, double z);
 	
 	public World getWorld();
 	
@@ -225,8 +233,12 @@ public interface Entity extends NBTHolder, Nameable, Tickable {
 	public void setSilent(boolean silent);
 
 	public void setUUID(UUID uuid);
-
-	public void setVelocity(double x, double y, double z);
+	
+	public default void teleport(SimpleLocation loc) {
+		if (loc == null)
+			throw new IllegalArgumentException("Location can not be null!");
+		teleport(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
+	}
 	
 	/**
 	 * Teleport to new coordinates and keeps yaw and pitch
@@ -237,8 +249,6 @@ public interface Entity extends NBTHolder, Nameable, Tickable {
 	public void teleport(double x, double y, double z);
 	
 	public void teleport(double x, double y, double z, float yaw, float pitch);
-
-	public void setOnGround(boolean onGround);
 
 	/**
 	 * This method is called by the System when the entity is spawned at another world and/or server.<br>

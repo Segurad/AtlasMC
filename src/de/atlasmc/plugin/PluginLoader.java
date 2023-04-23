@@ -16,9 +16,19 @@ public interface PluginLoader {
 	 * Loads a Plugin and returns a representative instance e.g. the Main class.<br>
 	 * If the loader was not able to load it because of a not supported format or an error it should return null. 
 	 * @param file
-	 * @return Plugin or null
+	 * @return Plugin or null if unable to load
 	 * @throws IOException 
 	 */
 	public Plugin load(File file) throws IOException;
+	
+	/**
+	 * Prepares a Plugin to be loaded later with this loader
+	 * @param file
+	 * @return PreparedPlugin or null if unable to load
+	 * @throws IOException
+	 */
+	public PreparedPlugin preparePlugin(File file) throws IOException;
+
+	public void remove(ClassLoader loader);
 
 }

@@ -5,9 +5,13 @@ import de.atlasmc.event.inventory.InventoryClickEvent;
 
 public interface GUIListener {
 
-	public void openedBy(Player player);
-	public void closedBy(Player player);
-	public void click(InventoryClickEvent event);
+	void openedBy(Player player);
+	
+	void closedBy(Player player);
+	
+	void click(InventoryClickEvent event);
+	
+	void removed();
 	
 	/**
 	 * Functional implementation of {@link GUIListener}
@@ -15,9 +19,17 @@ public interface GUIListener {
 	@FunctionalInterface
 	public interface GUIOpenListener extends GUIListener {
 		
-		public void openedBy(Player player);
-		public default void closedBy(Player player) {}
-		public default void click(InventoryClickEvent event) {}
+		void openedBy(Player player);
+		
+		@Override
+		default void closedBy(Player player) {}
+		
+		@Override
+		default void click(InventoryClickEvent event) {}
+	
+		@Override
+		default void removed() {}
+		
 	}
 	
 	/**
@@ -26,9 +38,17 @@ public interface GUIListener {
 	@FunctionalInterface
 	public interface GUICloseListener extends GUIListener {
 		
-		public default void openedBy(Player player) {}
-		public void closedBy(Player player);
-		public default void click(InventoryClickEvent event) {}
+		@Override
+		default void openedBy(Player player) {}
+		
+		void closedBy(Player player);
+		
+		@Override
+		default void click(InventoryClickEvent event) {}
+		
+		@Override
+		default void removed() {}
+		
 	}
 
 	/**
@@ -37,8 +57,18 @@ public interface GUIListener {
 	@FunctionalInterface
 	public interface GUIClickListener extends GUIListener {
 		
-		public default void openedBy(Player player) {}
-		public default void closedBy(Player player) {}
-		public void click(InventoryClickEvent event);
+		@Override
+		default void openedBy(Player player) {}
+		
+		@Override
+		default void closedBy(Player player) {}
+		
+		@Override
+		void click(InventoryClickEvent event);
+	
+		@Override
+		default void removed() {}
+		
 	}
+
 }

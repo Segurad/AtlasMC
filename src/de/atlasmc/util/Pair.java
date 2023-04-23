@@ -18,10 +18,6 @@ public final class Pair<A, B> {
 		return value2;
 	}
 
-	public static <A, B> Pair<A, B> of(A value1, B value2) {
-		return new Pair<>(value1, value2);
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -1,24 +1,28 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 
+import de.atlasmc.Material;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.HumanEntity;
 import de.atlasmc.entity.Player;
+import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.CraftingInventory;
+import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.MainHand;
 import de.atlasmc.inventory.PlayerInventory;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutSpawnPlayer;
+import de.atlasmc.util.CooldownHandler;
 import de.atlasmc.util.ViewerSet;
+import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.tag.CompoundTag;
-import de.atlasmc.world.World;
 
 public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 
@@ -53,9 +57,15 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 	private double additionalHealth;
 	private Entity shoulderRight, shoulderLeft;
 	private byte shoulderChanged; // 0x01 Right 0x02 Left
+	private final CooldownHandler<Material> cooldowns;
 	
-	public CoreHumanEntity(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreHumanEntity(EntityType type, UUID uuid) {
+		super(type, uuid);
+		this.cooldowns = createItemCooldownHander();
+	}
+	
+	protected CooldownHandler<Material> createItemCooldownHander() { 
+		return new CooldownHandler<>();
 	}
 	
 	@Override
@@ -166,11 +176,22 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 		}
 	}
 	
+	@Override
+	protected void doTick() {
+		super.doTick();
+		cooldowns.tick();
+	}
+	
 	private void prepShoulderUpdate(MetaDataField<CompoundTag> shoulder, Entity entity) {
 		if (entity == null)
 			metaContainer.get(shoulder).setData(null);
-		else
-			metaContainer.get(shoulder).setData((CompoundTag) entity.toNBT());
+		else {
+			try {
+				metaContainer.get(shoulder).setData((CompoundTag) entity.toNBT());
+			} catch (IOException e) {
+				throw new NBTException("Error while createing entity nbt!", e);
+			}
+		}
 	}
 
 	@Override
@@ -178,6 +199,42 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 		if (craftingInv == null)
 			craftingInv = ContainerFactory.CRAFTING_INV_FACTORY.create(InventoryType.CRAFTING, this);
 		return craftingInv;
+	}
+
+	@Override
+	public boolean isSneaking() {
+		return (metaContainer.get(META_ENTITY_FLAGS).getData() & 0x2) == 0x2;
+	}
+
+	@Override
+	public void setSneaking(boolean sneaking) {
+		MetaData<Byte> meta = metaContainer.get(META_ENTITY_FLAGS);
+		meta.setData((byte) (sneaking ? meta.getData() | 0x02 : meta.getData() & 0xFD));
+	}
+
+	@Override
+	public void setCooldown(Material material, int ticks) {
+		cooldowns.setCooldown(material, ticks);
+	}
+
+	@Override
+	public int getCooldown(Material material) {
+		return cooldowns.getCooldown(material);
+	}
+
+	@Override
+	public int getCooldownPast(Material material) {
+		return cooldowns.getCooldownPast(material);
+	}
+
+	@Override
+	public boolean hasCooldown(Material material) {
+		return cooldowns.hasCooldown(material);
+	}
+
+	@Override
+	public int removeCooldown(Material material) {
+		return cooldowns.removeCooldown(material);
 	}
 
 }

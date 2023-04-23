@@ -10,7 +10,6 @@ import de.atlasmc.atlasnetwork.proxy.LocalProxy;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.player.PlayerAnimationEvent;
-import de.atlasmc.event.player.PlayerDiggingEvent;
 import de.atlasmc.event.player.PlayerHeldItemChangeEvent;
 import de.atlasmc.event.player.PlayerMoveEvent;
 import de.atlasmc.event.player.PlayerToggleSneakEvent;
@@ -217,11 +216,7 @@ public interface PlayerConnection {
 
 	public PlayerToggleSprintEvent getEventSprint();
 
-	public PlayerDiggingEvent getEventDigging();
-
 	public PlayerMoveEvent getEventMove();
-	
-	public boolean isDigging();
 
 	public void confirmKeepAlive(long lastResponseTime);
 	

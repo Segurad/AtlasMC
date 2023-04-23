@@ -4,9 +4,12 @@ import de.atlasmc.entity.Player;
 import de.atlasmc.event.EventHandler;
 import de.atlasmc.event.EventPriority;
 import de.atlasmc.event.Listener;
+import de.atlasmc.event.entity.EntityDamageByBlockEvent;
+import de.atlasmc.event.entity.EntityDamageByEntityEvent;
 import de.atlasmc.event.entity.EntityDamageEvent;
 import de.atlasmc.event.entity.EntityDamageEvent.DamageCause;
 import de.atlasmc.event.entity.EntitySpawnEvent;
+import de.atlasmc.event.entity.FoodLevelChangeEvent;
 import de.atlasmc.world.World;
 import de.atlasmc.world.WorldFlag;
 

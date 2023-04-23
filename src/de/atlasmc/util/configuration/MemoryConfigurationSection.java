@@ -22,6 +22,7 @@ public class MemoryConfigurationSection implements ConfigurationSection {
 	
 	public MemoryConfigurationSection(ConfigurationSection parent) {
 		this.root = parent.getRoot();
+		this.values = new LinkedHashMap<>();
 	}
 	
 	@Override
@@ -70,6 +71,17 @@ public class MemoryConfigurationSection implements ConfigurationSection {
 	}
 
 	@Override
+	public String getString(String path) {
+		return getString(path, null);
+	}
+	
+	@Override
+	public String getString(String path, String def) {
+		Object val = get(path, def);
+		return val == null ? def : val.toString();
+	}
+	
+	@Override
 	public int getInt(String path) {
 		return getInt(path, 0);
 	}
@@ -98,8 +110,8 @@ public class MemoryConfigurationSection implements ConfigurationSection {
 
 	@Override
 	public boolean getBoolean(String path, boolean def) {
-		Object val = get(path, Boolean.valueOf(def));
-		return val instanceof Boolean ? ((Boolean) val).booleanValue() : def;
+		Object val = get(path, def);
+		return val instanceof Boolean ? (Boolean) val : def;
 	}
 
 	@Override
@@ -143,6 +155,8 @@ public class MemoryConfigurationSection implements ConfigurationSection {
 	@Override
 	public <T> List<T> getListOfType(String path, Class<T> clazz, List<T> def) {
 		List<?> list = getList(path, def);
+		if (list == null)
+			return def;
 		for (Object o : list)
 			if (!clazz.isInstance(o))
 				return def;
@@ -200,8 +214,9 @@ public class MemoryConfigurationSection implements ConfigurationSection {
 		String key = path.substring(searchIndex);
 		if (section == this) {
 			values.put(key, value);
+		} else {
+			section.set(key, value);
 		}
-		section.set(key, value);
 	}
 	
 	protected ConfigurationSection createSection() {
@@ -221,6 +236,11 @@ public class MemoryConfigurationSection implements ConfigurationSection {
 	@Override
 	public Set<String> getKeys() {
 		return values.keySet();
+	}
+
+	@Override
+	public int getSize() {
+		return values.size();
 	}
 
 }

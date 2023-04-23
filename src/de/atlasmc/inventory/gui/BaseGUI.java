@@ -4,26 +4,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import de.atlascore.inventory.CoreInventory;
-import de.atlasmc.chat.Chat;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.inventory.InventoryClickEvent;
-import de.atlasmc.event.inventory.InventoryType;
-import de.atlasmc.inventory.InventoryHolder;
+import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.gui.button.Button;
 import de.atlasmc.inventory.gui.component.Component;
 import de.atlasmc.inventory.gui.component.ComponentHandler;
 
-public class CoreGUI extends CoreInventory implements GUI {
+public class BaseGUI implements GUI {
 
 	protected Button[] buttons;
 	protected boolean[] clickable;
 	protected List<ComponentHandler> components;
 	protected List<GUIListener> listeners;
+	protected Inventory inv;
 	
-	public CoreGUI(int size, InventoryType type, Chat title, InventoryHolder holder) {
-		super(size, type, title, holder);
+	public BaseGUI(Inventory inv) {
+		if (inv == null)
+			throw new IllegalAccessError("Inventory can not be null!");
+		this.inv = inv;
 	}
 
 	@Override
@@ -38,11 +38,14 @@ public class CoreGUI extends CoreInventory implements GUI {
 
 	@Override
 	public void setButton(int slot, Button button) {
-		if (buttons == null) buttons = new Button[getSize()]; 
+		if (buttons == null) 
+			buttons = new Button[inv.getSize()]; 
 		buttons[slot] = button;
-		if (button == null) return;
+		if (button == null) 
+			return;
 		final ItemStack icon = button.getIcon(slot);
-		if (icon != null) setItem(slot, icon);
+		if (icon != null) 
+			inv.setItem(slot, icon);
 	}
 
 	public void update() {
@@ -50,7 +53,7 @@ public class CoreGUI extends CoreInventory implements GUI {
 			Button b = buttons[i];
 			if (b == null)
 				continue;
-			setItem(i, b.getIcon());
+			inv.setItem(i, b.getIcon());
 		}
 	}
 
@@ -96,36 +99,45 @@ public class CoreGUI extends CoreInventory implements GUI {
 	@Override
 	public void notifyOpenedBy(Player player) {
 		if (listeners != null)
-		listeners.forEach(l -> l.openedBy(player));
+			listeners.forEach(l -> l.openedBy(player));
 	}
 
 	@Override
 	public void addGUIListener(GUIListener listener) {
-		if (listeners == null) listeners = new ArrayList<>();
+		if (listeners == null) 
+			listeners = new ArrayList<>();
 		listeners.add(0, listener);
 	}
 
 	@Override
 	public void removeGUIListener(GUIListener listener) {
-		if (listeners != null)
+		if (listeners == null)
+			return;
 		listeners.remove(listener);
 	}
 
 	@Override
 	public void notifyClosedBy(Player player) {
-		if (listeners != null)
-		listeners.forEach(l -> l.closedBy(player));
+		if (listeners == null && listeners.isEmpty())
+			return;
+		for (GUIListener l : listeners)
+			l.closedBy(player);
 	}
 
 	@Override
 	public void notifyClick(InventoryClickEvent event) {
-		if (listeners != null)
-		listeners.forEach(l -> l.click(event));
+		if (listeners == null || listeners.isEmpty())
+			return;
+		for (GUIListener l : listeners)
+			l.click(event);
 	}
 
 	@Override
 	public void setClickable(boolean value, int... slot) {
-		if (clickable == null) clickable = new boolean[getSize()];
+		if (slot == null)
+			throw new IllegalArgumentException("Slot can not be null!");
+		if (clickable == null) 
+			clickable = new boolean[inv.getSize()];
 		for (int s : slot) {
 			clickable[s] = value;
 		}
@@ -152,4 +164,18 @@ public class CoreGUI extends CoreInventory implements GUI {
 			setButton(i, button, icon);
 		}
 	}
+
+	@Override
+	public Inventory getInventory() {
+		return inv;
+	}
+
+	@Override
+	public void notifyRemoved() {
+		if (listeners == null || listeners.isEmpty())
+			return;
+		for (GUIListener l : listeners)
+			l.removed();
+	}
+	
 }

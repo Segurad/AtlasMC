@@ -1,11 +1,14 @@
 package de.atlascore.scheduler;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import org.slf4j.LoggerFactory;
+
 import de.atlasmc.util.ConcurrentLinkedList;
 import de.atlasmc.util.TickingThread;
 
 public class CoreSchedulerThread extends TickingThread {
-
+	
 	private final CoreAtlasScheduler scheduler;
 	private final ConcurrentLinkedQueue<CoreAsyncTaskWorker> workerQueue;
 	private final ConcurrentLinkedList<CoreAsyncTaskWorker> fetchedWorkers;
@@ -17,7 +20,7 @@ public class CoreSchedulerThread extends TickingThread {
 	private volatile int workerCount;
 	
 	public CoreSchedulerThread(CoreAtlasScheduler scheduler, int minWorkers, int workerMaxIdleTime, int asyncWorkerGCTime) {
-		super("AtlasSchedulerWorker", 50);
+		super("Atlas-Scheduler", 50, LoggerFactory.getLogger("Scheduler"), false);
 		this.scheduler = scheduler;
 		this.workerQueue = new ConcurrentLinkedQueue<>();
 		this.fetchedWorkers = new ConcurrentLinkedList<>();
@@ -66,7 +69,7 @@ public class CoreSchedulerThread extends TickingThread {
 	}
 	
 	@Override
-	protected void tick() {
+	protected void tick(int tick) {
 		gcTime++;
 		scheduler.tickTasks(this);
 		if (tasks.size() > 10) { // try to reduce queue load

@@ -1,7 +1,8 @@
 package de.atlasmc.command;
 
-public interface CommandSender {
-	
-	public void sendMessage(String message);
+import de.atlasmc.chat.Messageable;
+import de.atlasmc.permission.Permissible;
+
+public interface CommandSender extends Permissible, Messageable {
 
 }

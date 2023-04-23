@@ -45,24 +45,23 @@ public class CorePacketOutDeclareRecipes extends PacketIO<PacketOutDeclareRecipe
 			switch (type) {
 			case CRAFTING_SHAPELESS: 
 			{
-				readString(in); // read group
+				String group = readString(in);
 				final int ingredientCount = readVarInt(in);
 				List<Ingredient> ingredients = new ArrayList<>(ingredientCount);
 				for (int j = 0; j < ingredientCount; j++)
 					ingredients.add(readIngredient(in, reader));
 				ItemStack result = readSlot(in, reader);
-				ShapelessRecipe recipe = new ShapelessRecipe(key);
+				ShapelessRecipe recipe = new ShapelessRecipe(key, new NamespacedKey(group));
 				recipe.setIngredients(ingredients);
 				recipe.setResult(result);
 				recipes.add(recipe);
-			}
 				break;
-			case CRAFTING_SHAPED:
-			{
+			}
+			case CRAFTING_SHAPED: {
 				final int width = readVarInt(in);
 				final int height = readVarInt(in);
 				final char[] shapeBuf = new char[width * height];
-				readString(in); // read group
+				String group = readString(in);
 				// --- read shape and ingredients ---
 				// in protocol the ingredients are set in each shape slot
 				// the atlas implementation maps the ingredients that are the same to chars
@@ -82,7 +81,7 @@ public class CorePacketOutDeclareRecipes extends PacketIO<PacketOutDeclareRecipe
 					}
 				}
 				// --- build recipe ---
-				final ShapedRecipe recipe = new ShapedRecipe(key);
+				final ShapedRecipe recipe = new ShapedRecipe(key, new NamespacedKey(group));
 				final String[] shape = new String[height];
 				for (int j = 0, k = 0; j < height; j++, k += width)
 					shape[j] = new String(shapeBuf, k, width);
@@ -92,20 +91,28 @@ public class CorePacketOutDeclareRecipes extends PacketIO<PacketOutDeclareRecipe
 				});
 				recipe.setResult(readSlot(in, reader));
 				recipes.add(recipe);
+				break;
 			}
+			case SMELTING: {
+				String group = readString(in);
+				recipes.add(readCookingRecipe(new FurnaceRecipe(key, new NamespacedKey(group)), in, reader));
 				break;
-			case SMELTING:
-				recipes.add(readCookingRecipe(new FurnaceRecipe(key), in, reader));
+			}
+			case BLASTING: {
+				String group = readString(in);
+				recipes.add(readCookingRecipe(new BlastFurnaceRecipe(key, new NamespacedKey(group)), in, reader));
 				break;
-			case BLASTING:
-				recipes.add(readCookingRecipe(new BlastFurnaceRecipe(key), in, reader));
+			}
+			case SMOKING: {
+				String group = readString(in);
+				recipes.add(readCookingRecipe(new SmokerRecipe(key, new NamespacedKey(group)), in, reader));
 				break;
-			case SMOKING:
-				recipes.add(readCookingRecipe(new SmokerRecipe(key), in, reader));
+			}
+			case CAMPFIRE_COOKING: {
+				String group = readString(in);
+				recipes.add(readCookingRecipe(new CampfireRecipe(key, new NamespacedKey(group)), in, reader));
 				break;
-			case CAMPFIRE_COOKING:
-				recipes.add(readCookingRecipe(new CampfireRecipe(key), in, reader));
-				break;
+			}
 			case SMITHING:
 			{
 				SmithingRecipe recipe = new SmithingRecipe(key);
@@ -117,8 +124,8 @@ public class CorePacketOutDeclareRecipes extends PacketIO<PacketOutDeclareRecipe
 				break;
 			case STONECUTTING:
 			{
-				readString(in); // read group
-				StonecuttingRecipe recipe = new StonecuttingRecipe(key);
+				String group = readString(in);
+				StonecuttingRecipe recipe = new StonecuttingRecipe(key, new NamespacedKey(group));
 				recipe.setIngredient(readIngredient(in, reader));
 				recipe.setResult(readSlot(in, reader));
 				recipes.add(recipe);
@@ -133,7 +140,6 @@ public class CorePacketOutDeclareRecipes extends PacketIO<PacketOutDeclareRecipe
 	}
 	
 	protected AbstractCookingRecipe readCookingRecipe(AbstractCookingRecipe recipe, ByteBuf in, NBTNIOReader reader) throws IOException {
-		readString(in); // read group
 		recipe.setIngredient(readIngredient(in, reader));
 		recipe.setResult(readSlot(in, reader));
 		recipe.setXp(in.readFloat());
@@ -164,20 +170,23 @@ public class CorePacketOutDeclareRecipes extends PacketIO<PacketOutDeclareRecipe
 			writeString(recipe.getType().getNameID(), out);
 			writeString(recipe.getNamespacedName(), out);
 			switch (recipe.getType()) {
-			case CRAFTING_SHAPELESS:
+			case CRAFTING_SHAPELESS: {
 				ShapelessRecipe shapeless = (ShapelessRecipe) recipe;
-				writeString(null, out); // TODO write group
+				NamespacedKey group = shapeless.getGroup();
+				writeString(group != null ? group.toString() : null, out);
 				writeVarInt(shapeless.getIngredients().size(), out);
 				for (Ingredient ingredient : shapeless.getIngredients()) {
 					writeIngredient(ingredient, out, writer);
 				}
 				writeSlot(shapeless.getResult(), out, writer);
 				break;
-			case CRAFTING_SHAPED:
+			}
+			case CRAFTING_SHAPED: {
 				ShapedRecipe shaped = (ShapedRecipe) recipe;
 				writeVarInt(shaped.getShapeWidth(), out);
 				writeVarInt(shaped.getShapeHeight(), out);
-				writeString(null, out); // TODO write group
+				NamespacedKey group = shaped.getGroup();
+				writeString(group != null ? group.toString() : null, out);
 				// --- write ingredients in shape ---
 				String[] shape = shaped.getShape();
 				for (String line : shape)
@@ -186,29 +195,35 @@ public class CorePacketOutDeclareRecipes extends PacketIO<PacketOutDeclareRecipe
 				// --- write result
 				writeSlot(shaped.getResult(), out, writer);
 				break;
+			}
 			case SMELTING:
 			case SMOKING:
 			case BLASTING:
-			case CAMPFIRE_COOKING:
+			case CAMPFIRE_COOKING: {
 				AbstractCookingRecipe cooking = (AbstractCookingRecipe) recipe;
-				writeString(null, out); // TODO write group
+				NamespacedKey group = cooking.getGroup();
+				writeString(group != null ? group.toString() : null, out);
 				writeIngredient(cooking.getIngredient(), out, writer);
 				writeSlot(cooking.getResult(), out, writer);
 				out.writeFloat(cooking.getXp());
 				writeVarInt(cooking.getTime(), out);
 				break;
-			case SMITHING:
+			}
+			case SMITHING: {
 				SmithingRecipe smithing = (SmithingRecipe) recipe;
 				writeIngredient(smithing.getBaseIngredient(), out, writer);
 				writeIngredient(smithing.getAdditionalIngredient(), out, writer);
 				writeSlot(smithing.getResult(), out);
 				break;
-			case STONECUTTING:
+			}
+			case STONECUTTING: {
 				StonecuttingRecipe cutting = (StonecuttingRecipe) recipe;
-				writeString(null, out); // TODO write group
+				NamespacedKey group = cutting.getGroup();
+				writeString(group != null ? group.toString() : null, out);
 				writeIngredient(cutting.getIngredient(), out, writer);
 				writeSlot(cutting.getResult(), out, writer);
 				break;
+			}
 			default:
 				break;
 			}

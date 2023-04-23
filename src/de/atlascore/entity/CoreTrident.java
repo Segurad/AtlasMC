@@ -11,7 +11,6 @@ import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreTrident extends CoreAbstractArrow implements Trident {
 
@@ -45,8 +44,8 @@ public class CoreTrident extends CoreAbstractArrow implements Trident {
 	
 	private ItemStack item;
 	
-	public CoreTrident(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreTrident(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

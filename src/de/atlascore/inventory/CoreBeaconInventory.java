@@ -2,11 +2,11 @@ package de.atlascore.inventory;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.entity.Player;
-import de.atlasmc.event.inventory.InventoryType;
-import de.atlasmc.event.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.BeaconInventory;
 import de.atlasmc.inventory.InventoryHolder;
+import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.InventoryType.SlotType;
 import de.atlasmc.potion.PotionEffect;
 
 public class CoreBeaconInventory extends CoreInventory implements BeaconInventory {
@@ -20,7 +20,7 @@ public class CoreBeaconInventory extends CoreInventory implements BeaconInventor
 	private int primaryid = -1, secondaryid = -1, power;
 	
 	public CoreBeaconInventory(Chat title, InventoryHolder holder) {
-		super(1, InventoryType.BEACON, title, holder);
+		super(1, 0, InventoryType.BEACON, title, holder);
 	}
 
 	@Override

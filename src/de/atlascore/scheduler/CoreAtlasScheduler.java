@@ -20,6 +20,7 @@ public class CoreAtlasScheduler extends CoreAbstractScheduler {
 	public CoreAtlasScheduler(int minWorkers, int workerMaxIdleTime, int asyncWorkerGCTime) {
 		super();
 		thread = new CoreSchedulerThread(this, minWorkers, workerMaxIdleTime, asyncWorkerGCTime);
+		thread.start();
 	}
 	
 	@Override

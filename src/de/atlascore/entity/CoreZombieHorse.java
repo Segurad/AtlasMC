@@ -6,12 +6,11 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.ZombieHorse;
 import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.AbstractHorseInventory;
-import de.atlasmc.world.World;
 
 public class CoreZombieHorse extends CoreAbstractHorse implements ZombieHorse {
 
-	public CoreZombieHorse(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreZombieHorse(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 
 	@Override

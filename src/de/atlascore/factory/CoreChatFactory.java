@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.JsonParseException;
 import com.google.gson.stream.JsonReader;
 
 import de.atlascore.CoreChat;
@@ -52,7 +53,7 @@ public class CoreChatFactory implements ChatFactory {
 			comp = readComponent(reader);
 			reader.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new JsonParseException("Error while parsing json chat!", e);
 		}
 		return comp;
 	}

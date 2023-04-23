@@ -8,15 +8,20 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.CodeSigner;
 import java.security.CodeSource;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.atlasmc.plugin.JavaPlugin;
 import de.atlasmc.plugin.PluginException;
 import de.atlasmc.util.ByteDataBuffer;
+import de.atlasmc.util.configuration.Configuration;
 
 public class CoreJavaClassLoader extends URLClassLoader {
 	
@@ -27,7 +32,7 @@ public class CoreJavaClassLoader extends URLClassLoader {
 	private final Map<String, Class<?>> classCache;
 	private final CoreJavaPluginLoader loader;
 	
-	public CoreJavaClassLoader(CoreJavaPluginLoader loader, File file, ClassLoader parent, CorePluginInfo info) throws IOException {
+	public CoreJavaClassLoader(CoreJavaPluginLoader loader, File file, ClassLoader parent, Configuration info) throws IOException {
 		super(new URL[] { file.toURI().toURL() }, parent);
 		this.url = file.toURI().toURL();
 		this.jar = new JarFile(file);
@@ -37,9 +42,9 @@ public class CoreJavaClassLoader extends URLClassLoader {
 		
 		Class<?> mainClass = null;
 		try {
-			mainClass = Class.forName(info.main, true, this);
+			mainClass = Class.forName(info.getString("main"), true, this);
 		} catch (ClassNotFoundException e) {
-			throw new PluginException("Main class not found: " + info.main +"!");
+			throw new PluginException("Main class not found: " + info.getString("main") +"!");
 		}
 		if (!mainClass.isAssignableFrom(JavaPlugin.class))
 			throw new PluginException("Main class is not assignable from JavaPlugin!");
@@ -49,7 +54,12 @@ public class CoreJavaClassLoader extends URLClassLoader {
 				| NoSuchMethodException | SecurityException e) {
 			throw new PluginException("Unable to instanciate Plugin!", e);
 		}
-		plugin.init(file, loader, this, info.name, info.version, info.author, info.description);
+		String name = info.getString("name");
+		String version = info.getString("version");
+		List<String> author = List.copyOf(info.getStringList("author", List.of()));
+		String description = info.getString("description");
+		Logger logger = LoggerFactory.getLogger(name);
+		plugin.init(file, loader, logger, name, version, author, description);
 	}
 
 	@Override

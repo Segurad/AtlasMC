@@ -5,14 +5,13 @@ import java.util.UUID;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.ShulkerBullet;
-import de.atlasmc.world.World;
 
 public class CoreShulkerBullet extends CoreAbstractProjectile implements ShulkerBullet {
 
 	private Entity target;
 	
-	public CoreShulkerBullet(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreShulkerBullet(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 
 	@Override

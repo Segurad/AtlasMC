@@ -11,13 +11,13 @@ import de.atlasmc.util.nbt.tag.NBT;
 
 public class NBTObjectReader implements NBTReader {
 
-	private NBT nbt, current;
+	private NBT source, current;
 	private ListData list;
 	private boolean closed;
 	private int depth;
 	
 	public NBTObjectReader(NBT nbt) {
-		this.nbt = nbt;
+		this.source = nbt;
 		this.current = nbt;
 	}
 
@@ -170,8 +170,13 @@ public class NBTObjectReader implements NBTReader {
 
 	@Override
 	public UUID readUUID() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		ensureOpen();
+		if (getType() != TagType.INT_ARRAY)
+			throw new NBTException("Can not read as IntArrayTag: " + getType().name());
+		int[] values = (int[]) current.getData();
+		long most = (values[0] << 32) | values[1];
+		long least = (values[2] << 32) | values[3];
+		return new UUID(most, least);
 	}
 
 	@Override
@@ -200,7 +205,7 @@ public class NBTObjectReader implements NBTReader {
 
 	@Override
 	public void close() {
-		nbt = null;
+		source = null;
 		current = null;
 		list = null;
 	}
@@ -218,8 +223,10 @@ public class NBTObjectReader implements NBTReader {
 
 	@Override
 	public boolean isArrayTag() {
-		// TODO Auto-generated method stub
-		return false;
+		final TagType type = getType();
+		return type == TagType.BYTE_ARRAY ||
+				type == TagType.INT_ARRAY ||
+				type == TagType.LONG_ARRAY;
 	}
 
 	@Override

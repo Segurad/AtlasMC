@@ -14,7 +14,10 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import de.atlasmc.Color;
+import de.atlasmc.Location;
 import de.atlasmc.Material;
+import de.atlasmc.SimpleLocation;
+import de.atlasmc.Vector;
 import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeInstance;
 import de.atlasmc.attribute.AttributeModifier;
@@ -23,9 +26,13 @@ import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.LivingEntity;
 import de.atlasmc.entity.Player;
+import de.atlasmc.entity.Projectile;
+import de.atlasmc.entity.Projectile.ProjectileType;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.event.HandlerList;
+import de.atlasmc.event.entity.ProjectileLounchEvent;
 import de.atlasmc.inventory.EntityEquipment;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.protocol.PlayerConnection;
@@ -381,7 +388,8 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		});
 	}
 	
-	private float health;
+	private boolean healthChanged;
+	private double health;
 	private float absorption;
 	private Map<Attribute, AttributeInstance> attributes;
 	private Consumer<AttributeInstance> attributeUpdateListener;
@@ -396,8 +404,8 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	private boolean updateAttributes;
 	private Set<AttributeInstance> changedAttributes;
 	
-	public CoreLivingEntity(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreLivingEntity(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 
 	@Override
@@ -436,17 +444,21 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	@Override
 	protected void prepUpdate() {
 		super.prepUpdate();
-		metaContainer.get(META_HEALTH).setData(health);
+		if (healthChanged) {
+			healthChanged = false;
+			metaContainer.get(META_HEALTH).setData((float) health);
+		}
 	}
 
 	@Override
-	public float getHealth() {
+	public double getHealth() {
 		return health;
 	}
 
 	@Override
-	public void setHealth(float health) {
+	public void setHealth(double health) {
 		this.health = health;
+		this.healthChanged = true;
 	}
 	
 	@Override
@@ -586,17 +598,31 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 
 	@Override
 	public void addPotionEffect(PotionEffectType type, int amplifier, int duration) {
+		if (type == null)
+			throw new IllegalArgumentException("Type can not be null!");
 		internalAddPotionEffect(type.createEffect(amplifier, duration));
 	}
 	
 	@Override
 	public void addPotionEffect(PotionEffectType type, int amplifier, int duration, boolean reducedAmbient, boolean particles, boolean icon) {
+		if (type == null)
+			throw new IllegalArgumentException("Type can not be null!");
 		internalAddPotionEffect(type.createEffect(amplifier, duration, reducedAmbient, particles, icon));
 	}
 	
 	@Override
 	public void addPotionEffect(PotionEffect effect) {
+		if (effect == null)
+			throw new IllegalArgumentException("Effect can not be null!");
 		internalAddPotionEffect(effect.clone());	
+	}
+	
+	@Override
+	public void addPotionEffects(List<PotionEffect> effects) {
+		if (effects == null)
+			throw new IllegalArgumentException("Effects can not be null!");
+		for (PotionEffect effect : effects)
+			internalAddPotionEffect(effect.clone());
 	}
 	
 	private void internalAddPotionEffect(PotionEffect effect) {
@@ -723,7 +749,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		writer.writeShortTag(NBT_DEATH_TIME, getDeathAnimationTime());
 		if (isFallFlying())
 			writer.writeByteTag(NBT_FALL_FLYING, true);
-		writer.writeFloatTag(NBT_HEALTH, getHealth());
+		writer.writeFloatTag(NBT_HEALTH, (float) getHealth());
 		// TODO useless writer.writeIntTag(NBT_HURT_BY_TIMESTAMP, 0);
 		writer.writeShortTag(NBT_HURT_TIME, getHurtAnimationTime());
 		if (getEquipment() != null) {
@@ -982,6 +1008,54 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	public void damage(double damage) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Projectile lounchProjectile(Projectile projectile, Vector velocity) {
+		if (projectile == null)
+			throw new IllegalArgumentException("Projectile can not be null!");
+		World world = getWorld();
+		ProjectileLounchEvent event = new ProjectileLounchEvent(projectile, world, loc.getX(), loc.getY() + getEyeHeight(), loc.getZ(), loc.getPitch(), loc.getYaw());
+		HandlerList.callEvent(event);
+		if (event.isCancelled())
+			return null;
+		int id = world.getEntityID();
+		projectile.spawn(id, world, event.getX(), event.getY(), event.getZ(), event.getPitch(), event.getYaw());
+		if (velocity != null)
+			projectile.setVelocity(velocity);
+		return projectile;
+	}
+
+	@Override
+	public Projectile lounchProjectile(ProjectileType type, Vector velocity) {
+		if (type == null)
+			throw new IllegalArgumentException("Type can not be null!");
+		Projectile pro = type.create(getWorld());
+		return lounchProjectile(pro, velocity);
+	}
+	
+	@Override
+	public double getEyeHeight() {
+		return 0;
+	}
+
+	@Override
+	public Location getEyeLocation() {
+		return getEyeLocation(new Location(loc));
+	}
+
+	@Override
+	public Location getEyeLocation(Location location) {
+		loc.copyTo(location);
+		location.addY(getEyeHeight());
+		return location;
+	}
+
+	@Override
+	public SimpleLocation getEyeLocation(SimpleLocation location) {
+		loc.copyTo(location);
+		location.addY(getEyeHeight());
+		return location;
 	}
 
 }

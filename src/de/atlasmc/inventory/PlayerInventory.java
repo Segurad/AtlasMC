@@ -4,36 +4,44 @@ import de.atlasmc.entity.HumanEntity;
 
 public interface PlayerInventory extends Inventory {
 	
-	public ItemStack getHelmet();
+	ItemStack getHelmet();
 	
-	public ItemStack getChestplate();
+	ItemStack getChestplate();
 	
-	public ItemStack getLeggings();
+	ItemStack getLeggings();
 	
-	public ItemStack getBoots();
+	ItemStack getBoots();
 	
-	public void setHelmet(ItemStack item);
+	void setHelmet(ItemStack item);
 	
-	public void setChestplate(ItemStack item);
+	void setChestplate(ItemStack item);
 	
-	public void setLeggings(ItemStack item);
+	void setLeggings(ItemStack item);
 	
-	public void setBoots(ItemStack item);
+	void setBoots(ItemStack item);
 	
-	public HumanEntity getHolder();
+	ItemStack[] getArmorContents();
+	
+	ItemStack[] getArmorContentsUnsafe();
+	
+	void setArmorContents(ItemStack[] items);
+	
+	void setArmorContentsUnsafe(ItemStack[] items);
+	
+	HumanEntity getHolder();
 
-	public ItemStack getItemInMainHand();
+	ItemStack getItemInMainHand();
 	
-	public void setItemInMainHand(ItemStack item);
+	void setItemInMainHand(ItemStack item);
 
-	public ItemStack getItemInOffHand();
+	ItemStack getItemInOffHand();
 	
-	public void setItemInOffHand(ItemStack item);
+	void setItemInOffHand(ItemStack item);
 
-	public int getHeldItemSlot();
+	int getHeldItemSlot();
 	
-	public void setHeldItemSlot(int slot);
+	void setHeldItemSlot(int slot);
 	
-	public CraftingInventory getCraftingInventory();
+	CraftingInventory getCraftingInventory();
 
 }

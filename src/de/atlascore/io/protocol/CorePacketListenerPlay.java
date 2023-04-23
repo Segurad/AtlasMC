@@ -11,6 +11,7 @@ import de.atlasmc.SimpleLocation;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.block.Block;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.block.DiggingHandler;
 import de.atlasmc.chat.ChatType;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.HandlerList;
@@ -22,7 +23,6 @@ import de.atlasmc.event.inventory.InventoryButtonType;
 import de.atlasmc.event.inventory.InventoryClickButtonEvent;
 import de.atlasmc.event.inventory.InventoryClickEvent;
 import de.atlasmc.event.inventory.InventoryCreativeClickEvent;
-import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.event.inventory.SelectTradeEvent;
 import de.atlasmc.event.inventory.SmithingNameInputEvent;
 import de.atlasmc.event.player.AdvancementsCloseEvent;
@@ -56,9 +56,9 @@ import de.atlasmc.event.player.PlayerViewDistanceChangeEvent;
 import de.atlasmc.event.player.PlayerAnimationEvent.PlayerAnimationType;
 import de.atlasmc.event.player.PlayerChangeDisplayedSkinPartsEvent;
 import de.atlasmc.event.player.PlayerChatSettingsEvent;
-import de.atlasmc.event.player.PlayerDiggingEvent;
-import de.atlasmc.event.player.PlayerDiggingEvent.DiggingStatus;
 import de.atlasmc.inventory.EquipmentSlot;
+import de.atlasmc.inventory.InventoryType;
+import de.atlasmc.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.PlayerInventory;
@@ -157,17 +157,31 @@ public class CorePacketListenerPlay implements PacketListener {
 			int id = packet.getButtonID();
 			if (view.getType() == InventoryType.ENCHANTING) {
 				switch (id) {
-				case 0: type = InventoryButtonType.ENCHANTING_TOP_ENCHANTMENT; break;
-				case 1: type = InventoryButtonType.ENCHANTING_MIDDLE_ENCHANTMENT; break;
-				case 2: type = InventoryButtonType.ENCHANTING_BOTTOM_EMCHANTMENT; break;
+				case 0: 
+					type = InventoryButtonType.ENCHANTING_TOP_ENCHANTMENT; 
+					break;
+				case 1: 
+					type = InventoryButtonType.ENCHANTING_MIDDLE_ENCHANTMENT; 
+					break;
+				case 2: 
+					type = InventoryButtonType.ENCHANTING_BOTTOM_EMCHANTMENT; 
+					break;
 				}
 				id = -1;
 			} else if (view.getType() == InventoryType.LECTERN) {
 				switch (id) {
-				case 1: type = InventoryButtonType.LECTERN_PREVIOUS_PAGE; break;
-				case 2: type = InventoryButtonType.LECTERN_NEXT_PAGE; break;
-				case 3: type = InventoryButtonType.LECTERN_TAKE_BOOK; break;
-				default: type = InventoryButtonType.LECTERN_OPEN_PAGE_NUMBER; break;
+				case 1: 
+					type = InventoryButtonType.LECTERN_PREVIOUS_PAGE; 
+					break;
+				case 2: 
+					type = InventoryButtonType.LECTERN_NEXT_PAGE; 
+					break;
+				case 3: 
+					type = InventoryButtonType.LECTERN_TAKE_BOOK; 
+					break;
+				default: 
+					type = InventoryButtonType.LECTERN_OPEN_PAGE_NUMBER; 
+					break;
 				}
 				if (id < 100) {
 					id = -1;
@@ -186,19 +200,54 @@ public class CorePacketListenerPlay implements PacketListener {
 			LocalServer s = con.getLocalSever();
 			if (s == null) 
 				return;
-			ClickType click = null;
 			int key = -1;
-			int slot = packet.getSlot();
-			int button = packet.getButton();
+			final int slot = packet.getSlot();
+			final int button = packet.getButton();
 			con.getNextWindowActionID();
-			InventoryView view = con.getPlayer().getOpenInventory();
+			final InventoryView view = con.getPlayer().getOpenInventory();
 			if (packet.getMode() != 5) {
+				InventoryAction action = InventoryAction.UNKNOWN;
+				ClickType click = ClickType.UNKNOWN;
+				final ItemStack slotItem = slot != -999 ? view.getItemUnsafe(slot) : null;
+				final ItemStack cursorItem = con.getPlayer().getItemOnCursorUnsafe();
+				if (slotItem == null && cursorItem == null)
+					action = InventoryAction.NOTHING;
 				switch (packet.getMode()) {
 				case 0: 
 					if (button == 0) {
 						click = ClickType.LEFT;
+						if (slotItem != null) {
+							if (cursorItem == null) {
+								action = InventoryAction.PICKUP_ALL;
+							} else if (slotItem.isSimilar(cursorItem)) {
+								if (slotItem.getAmount() < slotItem.getMaxStackSize()) {
+									action = InventoryAction.PLACE_SOME;
+								} else {
+									action = InventoryAction.NOTHING;
+								}
+							} else {
+								action = InventoryAction.SWAP_WITH_CURSOR;
+							}
+						} else if (cursorItem != null) {
+							action = InventoryAction.PLACE_ALL;
+						}
 					} else {
 						click = ClickType.RIGHT;
+						if (slotItem != null) {
+							if (cursorItem == null) {
+								action = InventoryAction.PICKUP_HALF;
+							} else if (slotItem.isSimilar(cursorItem)) {
+								if (slotItem.getAmount() < slotItem.getMaxStackSize()) {
+									action = InventoryAction.PLACE_ONE;
+								} else {
+									action = InventoryAction.NOTHING;
+								}
+							} else {
+								action = InventoryAction.SWAP_WITH_CURSOR;
+							}
+						} else if (cursorItem != null) {
+							action = InventoryAction.PLACE_ONE;
+						}
 					}
 					break;
 				case 1:
@@ -207,32 +256,67 @@ public class CorePacketListenerPlay implements PacketListener {
 					} else {
 						click = ClickType.SHIFT_RIGHT;
 					}
+					if (slotItem != null) {
+						action = InventoryAction.MOVE_TO_OTHER_INVENTORY; // TODO check for available space else NOTHING
+					}
 					break;
 				case 2:
 					key = packet.getButton();
 					click = ClickType.NUMBER_KEY;
+					if (cursorItem != null) {
+						action = InventoryAction.NOTHING;
+					} else if (view.getSlotType(slot) == SlotType.QUICKBAR) {
+						action = InventoryAction.HOTBAR_SWAP;
+					} else if (view.getSlotType(slot) != SlotType.OUTSIDE) {
+						action = InventoryAction.HOTBAR_MOVE_AND_READD;
+					}
 					break;
 				case 3:
 					click = ClickType.MIDDLE;
+					if (con.getPlayer().getGamemode() == Gamemode.CREATIVE) {
+						action = InventoryAction.CLONE_STACK;
+					}
 					break;
 				case 4:
 					if (slot != -999) {
 						if (button == 0) {
 							click = ClickType.DROP;
+							if (cursorItem == null && slotItem != null) {
+								action = InventoryAction.DROP_ONE_SLOT;
+							} else {
+								action = InventoryAction.NOTHING;
+							}
 						} else {
 							click = ClickType.CONTROL_DROP;
+							if (cursorItem == null && slotItem != null) {
+								action = InventoryAction.DROP_ALL_SLOT;
+							} else {
+								action = InventoryAction.NOTHING;
+							}
 						}
 					} else if (button == 0) {
 						click = ClickType.WINDOW_BORDER_LEFT;
+						if (cursorItem != null) {
+							action = InventoryAction.DROP_ALL_CURSOR;
+						} else {
+							action = InventoryAction.NOTHING;
+						}
 					} else {
 						click = ClickType.WINDOW_BORDER_RIGHT;
+						if (cursorItem != null) {
+							action = InventoryAction.DROP_ONE_CURSOR;
+						} else {
+							action = InventoryAction.NOTHING;
+						}
 					}
 					break;
 				case 6:
 					click = ClickType.DOUBLE_CLICK;
+					if (slotItem != null) {
+						action = InventoryAction.COLLECT_TO_CURSOR; // TODO check if any items of type are present else NOTHING
+					}
 					break;
 				}
-				InventoryAction action = null; // TODO make not null lol -> approach GUI API RealclickButton
 				HandlerList.callEvent(new InventoryClickEvent(view, slot, click, action, key));
 			} else {
 				switch (button) {
@@ -368,30 +452,22 @@ public class CorePacketListenerPlay implements PacketListener {
 			Player player = con.getPlayer();
 			switch (status) {
 			case 0: { // Start Digging
-				PlayerDiggingEvent eventDigging = con.getEventDigging();
-				eventDigging.setCancelled(false);
-				if (con.isDigging()) {
-					eventDigging.setStatus(DiggingStatus.CANCELLED_DIGGING);
-					eventDigging.setFace(con.getDiggingFace());
-					HandlerList.callEvent(eventDigging);
-				}
-				diggingStartTime = packet.getTimestamp();
-				diggingFace = packet.getFace();
-				diggingPosition = packet.getPosition();
-				MathUtil.getLocation(player.getWorld(), eventDigging.getLocation(), diggingPosition);
-				eventDigging.setFace(diggingFace);
-				eventDigging.setStatus(DiggingStatus.START_DIGGING);
-				eventDigging.setTime(0);
-				HandlerList.callEvent(eventDigging);
+				DiggingHandler handler = player.getDigging();
+				long pos = packet.getPosition();
+				int x = MathUtil.getPositionX(pos);
+				int y = MathUtil.getPositionY(pos);
+				int z = MathUtil.getPositionZ(pos);
+				handler.startDigging(packet.getFace(), player.getWorld(), x, y, z);
 				break;
 			}
-			case 1: // Cancelled Digging
+			case 1: { // Cancelled Digging
+				DiggingHandler handler = player.getDigging();
+				handler.cancelDigging();
+				break;
+			}
 			case 2: { // Finished Digging
-				PlayerDiggingEvent eventDigging = con.getEventDigging();
-				eventDigging.setCancelled(false);
-				eventDigging.setStatus(status == 1 ? DiggingStatus.CANCELLED_DIGGING : DiggingStatus.FINISHED_DIGGING);
-				eventDigging.setTime((int) (packet.getTimestamp()-diggingStartTime));
-				HandlerList.callEvent(eventDigging);
+				DiggingHandler handler = player.getDigging();
+				handler.finishDigging();
 				break;
 			}
 			case 3: // Drop ItemStack all
@@ -484,7 +560,7 @@ public class CorePacketListenerPlay implements PacketListener {
 			Player player = con.getPlayer();
 			HandlerList.callEvent(new SelectTradeEvent(player.getOpenInventory(), packet.getSelectedSlot()));
 		});
-		initHandler(PacketInUseItem.class, (listener, packet) -> { // 0x24
+		initHandler(PacketInSetBeaconEffect.class, (listener, packet) -> { // 0x24
 			// int primaryID = packet.getPrimaryEffect();
 			// int secondaryID = packet.getSecondaryEffect();
 			// PotionEffect primary = PotionEffectType.createByPotionID(primaryID); TODO research for ids
@@ -586,11 +662,11 @@ public class CorePacketListenerPlay implements PacketListener {
 		});
 	}
 
-	private static <T extends PacketPlayIn> PacketHandler<T> initHandler(Class<T> clazz, PacketHandler<T> handler) {
+	private static <T extends PacketPlayIn> void initHandler(Class<T> clazz, PacketHandler<T> handler) {
 		initHandler(clazz, handler, false);
 	}
 		
-	private static <T extends PacketPlayIn> PacketHandler<T> initHandler(Class<T> clazz, PacketHandler<T> handler, boolean async) {
+	private static <T extends PacketPlayIn> void initHandler(Class<T> clazz, PacketHandler<T> handler, boolean async) {
 		DefaultPacketID annotation = clazz.getAnnotation(DefaultPacketID.class);
 	    if (annotation == null) 
 	    	throw new IllegalArgumentException("Class does not contain DefaultPacketID annotation!");
@@ -610,7 +686,7 @@ public class CorePacketListenerPlay implements PacketListener {
 	public void handlePacket(Packet packet) {
 		int id = packet.getID();
 		if (id < 0 && id >= PacketPlayIn.PACKET_COUNT_IN) {
-			unhandledPacket(con, packet);
+			unhandledPacket(packet);
 			return;
 		}
 		if (handleAsync[id]) {
@@ -622,12 +698,12 @@ public class CorePacketListenerPlay implements PacketListener {
 	@Override
 	public void handleUnregister() {}
 	
-	protected static void unhandledPacket(PlayerConnection player, Packet packet) {
+	protected void unhandledPacket(Packet packet) {
 		throw new IllegalStateException("Not implemented unhandledPacket"); // TODO
 	}
 	
 	@FunctionalInterface
-	public interface PacketHandler<T extends Packet> {
+	public static interface PacketHandler<T extends Packet> {
 		public void handle(PlayerConnection con, T packet);
 	}
 

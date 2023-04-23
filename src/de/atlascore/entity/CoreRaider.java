@@ -6,7 +6,6 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Raider;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.world.World;
 
 public class CoreRaider extends CoreMob implements Raider {
 
@@ -15,8 +14,8 @@ public class CoreRaider extends CoreMob implements Raider {
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+1;
 	
-	public CoreRaider(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreRaider(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 
 	@Override

@@ -1,9 +1,9 @@
 package de.atlascore.inventory;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.inventory.BlastFurnaceInventory;
 import de.atlasmc.inventory.InventoryHolder;
+import de.atlasmc.inventory.InventoryType;
 
 public class CoreBlastFurnaceInventory extends CoreAbstractFurnaceInventory implements BlastFurnaceInventory {
 

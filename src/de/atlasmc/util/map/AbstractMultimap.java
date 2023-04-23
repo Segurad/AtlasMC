@@ -34,19 +34,19 @@ public abstract class AbstractMultimap<K, V> implements Multimap<K, V> {
 
 	@Override
 	public boolean put(K key, V value) {
-		Collection<V> c;
-		if (!map.containsKey(key)) {
+		Collection<V> c = map.get(key);
+		if (c == null)
 			c = map.put(key, createCollection());
-		} else c = map.get(key);
+		if (value == null)
+			return true;
 		return c.add(value);
 	}
 
 	@Override
 	public boolean putAll(K key, Iterable<V> values) {
-		Collection<V> c;
-		if (!map.containsKey(key)) {
+		Collection<V> c = map.get(key);
+		if (c == null)
 			c = map.put(key, createCollection());
-		} else c = map.get(key);
 		boolean b = false;
 		for (V value : values) {
 			if (c.add(value))

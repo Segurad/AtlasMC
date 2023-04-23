@@ -3,9 +3,10 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlascore.io.ConnectionHandler;
-import de.atlasmc.event.inventory.InventoryType;
+
 import static de.atlasmc.io.AbstractPacket.*;
 
+import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutOpenWindow;
 import io.netty.buffer.ByteBuf;

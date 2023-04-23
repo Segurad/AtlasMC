@@ -12,7 +12,6 @@ import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreBee extends CoreAgeableMob implements Bee {
 
@@ -128,8 +127,8 @@ public class CoreBee extends CoreAgeableMob implements Bee {
 	private Location hive, flower;
 	private UUID hurtBy;
 	
-	public CoreBee(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreBee(EntityType type, UUID uuid) {
+		super(type, uuid);
 		minHiveOccupationTicks = 600;
 	}
 

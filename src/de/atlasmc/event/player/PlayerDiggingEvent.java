@@ -11,38 +11,28 @@ public class PlayerDiggingEvent extends PlayerEvent implements Cancellable {
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
 	private DiggingStatus status;
-	private int time;
 	private final Location loc;
 	private BlockFace face;
 	private boolean cancelled;
+	private float progressPerTick;
 	
-	public PlayerDiggingEvent(Player player, DiggingStatus status, int time, Location loc, BlockFace face) {
+	public PlayerDiggingEvent(Player player, DiggingStatus status, Location loc, BlockFace face) {
 		super(player);
 		this.status = status;
-		this.time = time;
 		this.face = face;
 		this.loc = loc;
 	}
 
+	public float getProgressPerTick() {
+		return progressPerTick;
+	}
+	
+	public void setProgressPerTick(float progressPerTick) {
+		this.progressPerTick = progressPerTick;
+	}
+	
 	public DiggingStatus getStatus() {
 		return status;
-	}
-	
-	/**
-	 * Return the time in milliseconds the player had dug<br>
-	 * Always 0 if status is {@link DiggingStatus#START_DIGGING}
-	 * @return dig time
-	 */
-	public int getTime() {
-		return time;
-	}
-	
-	public void setStatus(DiggingStatus status) {
-		this.status = status;
-	}
-	
-	public void setTime(int time) {
-		this.time = time;
 	}
 	
 	public Location getLocation() {
@@ -51,10 +41,6 @@ public class PlayerDiggingEvent extends PlayerEvent implements Cancellable {
 	
 	public BlockFace getFace() {
 		return face;
-	}
-	
-	public void setFace(BlockFace face) {
-		this.face = face;
 	}
 
 	@Override

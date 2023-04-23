@@ -2,11 +2,11 @@ package de.atlascore.inventory;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.entity.Player;
-import de.atlasmc.event.inventory.InventoryType;
-import de.atlasmc.event.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.AnvilInventory;
 import de.atlasmc.inventory.InventoryHolder;
+import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.InventoryType.SlotType;
 
 public class CoreAnvilInventory extends CoreInventory implements AnvilInventory {
 	
@@ -16,7 +16,7 @@ public class CoreAnvilInventory extends CoreInventory implements AnvilInventory 
 	private int repaircost;
 	
 	public CoreAnvilInventory(Chat title, InventoryHolder holder) {
-		super(3, InventoryType.ANVIL, title, holder);
+		super(3, 2, InventoryType.ANVIL, title, holder);
 	}
 	
 	@Override

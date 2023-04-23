@@ -16,7 +16,6 @@ import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreHorse extends CoreAbstractHorse implements Horse {
 
@@ -60,8 +59,8 @@ public class CoreHorse extends CoreAbstractHorse implements Horse {
 		});
 	}
 	
-	public CoreHorse(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreHorse(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

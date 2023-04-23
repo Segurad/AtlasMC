@@ -2,9 +2,9 @@ package de.atlascore.block.tile;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.Chest;
-import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.Inventory;
+import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.world.Chunk;
 
 public class CoreChest extends CoreAbstractContainerTile<Inventory> implements Chest {

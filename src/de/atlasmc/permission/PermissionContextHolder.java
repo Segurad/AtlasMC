@@ -7,16 +7,16 @@ import java.util.Collection;
  */
 public interface PermissionContextHolder {
 	
-	public Collection<PermissionContext> getContexts();
+	Collection<PermissionContext> getContexts();
 	
-	public Collection<PermissionContext> getContexts(String key);
+	Collection<PermissionContext> getContexts(String key);
 	
-	public PermissionContext getContext(String key, String context);
+	PermissionContext getContext(String key, String context);
 	
-	public void addPermissionContext(PermissionContext context);
+	boolean addPermissionContext(PermissionContext context);
 	
-	public void removePermissionContext(PermissionContext context);
+	boolean removePermissionContext(PermissionContext context);
 	
-	public void removePermissionContext(String key, String context);
+	boolean removePermissionContext(String key, String context);
 
 }

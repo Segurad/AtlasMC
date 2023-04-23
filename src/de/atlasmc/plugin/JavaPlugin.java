@@ -1,76 +1,86 @@
 package de.atlasmc.plugin;
 
 import java.io.File;
+import java.util.List;
 
+import org.slf4j.Logger;
+
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.event.Listener;
 
 public class JavaPlugin implements Plugin {
 
+	private Logger logger;
 	private File file;
 	private PluginLoader loader;
-	private ClassLoader classloader;
 	private String name;
 	private String version;
-	private String author;
+	private List<String> author;
 	private String description;
 	private boolean loaded, enabled;
 	
 	@Override
 	public final void load() {
 		if (isLoaded())
-			throw new IllegalStateException("Plugin already loaded!");
-		loaded = true;
+			return;
 		onLoad();
+		loaded = true;
 	}
 
 	@Override
 	public final void enable() {
 		if (isEnabled())
-			throw new IllegalStateException("Plugin already enabled!");
-		if (!isLoaded())
+			return;
+		if (!isEnabled())
 			throw new IllegalStateException("Plugin has to be loaded first!");
-		enabled = true;
 		onEnable();
+		enabled = true;
 	}
 
 	@Override
 	public final void disable() {
 		if (!isEnabled())
-			throw new IllegalStateException("Plugin already disabled!");
-		enabled = false;
+			return;
 		onDisable();
+		enabled = false;
 	}
 
 	@Override
 	public final void unload() {
 		if (!isLoaded())
-			throw new IllegalStateException("Plugin already unloaded!");
+			return;
 		if (isEnabled())
-			disable();
-		loaded = false;
+			throw new IllegalStateException("Plugin has the be disabled first!");
 		onUnload();
+		loaded = false;
 	}
 	
 	/**
-	 * Override this to get notified when this Plugin should be loaded.<br>
+	 * Override to get notified when this Plugin should perform a internal reload.
+	 */
+	@Override
+	public void reload() {}
+	
+	/**
+	 * Override this to get notified when this Plugin should be loaded.
 	 * During load all necessary systems should be created.
 	 */
 	protected void onLoad() {}
 
 	/**
-	 * Override this to get notified when this Plugin should be enabled.<br>
+	 * Override this to get notified when this Plugin should be enabled.
 	 * During enable all systems like {@link Listener}s should be registered and set enabled.
 	 */
 	protected void onEnable() {}
 
 	/**
-	 * Override this to get notified when this Plugin should be disabled.<br>
+	 * Override this to get notified when this Plugin should be disabled.
 	 * During disable all systems like {@link Listener}s should be unregistered and set disabled.
 	 */
 	protected void onDisable() {}
 
 	/**
-	 * Override this to get notified when this Plugin should be unloaded.<br>
+	 * Override this to get notified when this Plugin should be unloaded.
 	 * During unload all systems and resources should be freed for GC.
 	 */
 	protected void onUnload() {}
@@ -81,7 +91,7 @@ public class JavaPlugin implements Plugin {
 	}
 
 	@Override
-	public final String getAuthor() {
+	public final List<String> getAuthor() {
 		return author;
 	}
 
@@ -105,16 +115,16 @@ public class JavaPlugin implements Plugin {
 		return loaded;
 	}
 
-	public final void init(File file, PluginLoader loader, ClassLoader classloader, String name, String version, String author, String description) {
-		if (classloader != null)
-			throw new PluginException("Plugin already initialized!");
+	public final void init(File file, PluginLoader loader, Logger logger, String name, String version, List<String> author, String description) {
+		if (loader == null)
+			throw new IllegalArgumentException("Loader can not be null!");
 		this.file = file;
 		this.loader = loader;
-		this.classloader = classloader;
 		this.name = name;
 		this.version = version;
 		this.author = author;
 		this.description = description;
+		this.logger = logger;
 	}
 
 	@Override
@@ -123,13 +133,25 @@ public class JavaPlugin implements Plugin {
 	}
 
 	@Override
-	public final ClassLoader getClassLoader() {
-		return classloader;
+	public final File getFile() {
+		return file;
+	}
+	
+	@Override
+	public final Logger getLogger() {
+		return logger;
 	}
 
 	@Override
-	public File getFile() {
-		return file;
-	}
+	public void loadConfiguration(PluginConfiguration config) {}
+
+	@Override
+	public void unloadConfiguration(NamespacedKey config) {}
+
+	@Override
+	public void reloadConfiguration(NamespacedKey config) {}
+
+	@Override
+	public void reloadConfigurations() {}
 
 }

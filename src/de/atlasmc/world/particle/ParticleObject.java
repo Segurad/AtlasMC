@@ -1,5 +1,7 @@
 package de.atlasmc.world.particle;
 
+import java.lang.reflect.InvocationTargetException;
+
 import de.atlasmc.Location;
 import de.atlasmc.Particle;
 import de.atlasmc.entity.Player;
@@ -9,10 +11,11 @@ public class ParticleObject implements Animation {
 
 	private final Particle particle;
 	private final int amount;
-	private final Object data;
+	private Object data;
 	
 	public ParticleObject(Particle particle, int amount, Object data) {
-		if (particle == null) throw new IllegalArgumentException("Particle can not be null!");
+		if (particle == null) 
+			throw new IllegalArgumentException("Particle can not be null!");
 		this.amount = amount;
 		this.particle = particle;
 		if (data != null && !particle.getData().isAssignableFrom(data.getClass())) 
@@ -48,6 +51,23 @@ public class ParticleObject implements Animation {
 	
 	public Object getData() {
 		return data;
+	}
+	
+	public ParticleObject clone() {
+		ParticleObject clone = null;
+		try {
+			clone = (ParticleObject) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		if (data != null && data instanceof Cloneable)
+			try {
+				clone.data = data.getClass().getMethod("clone").invoke(data);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+					| NoSuchMethodException | SecurityException e) {
+				e.printStackTrace();
+			}
+		return clone;
 	}
 	
 

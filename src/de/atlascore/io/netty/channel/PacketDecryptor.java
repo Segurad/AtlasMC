@@ -3,14 +3,13 @@ package de.atlascore.io.netty.channel;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.List;
 
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-
+import de.atlasmc.io.ProtocolException;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
@@ -19,16 +18,14 @@ public class PacketDecryptor extends MessageToMessageDecoder<ByteBuf> {
 
 	private final Cipher cip;
 	
-	public PacketDecryptor(byte[] secret) {
+	public PacketDecryptor(SecretKey secret) throws InvalidKeyException, InvalidAlgorithmParameterException {
 		Cipher cip = null;
 		try {
 			cip = Cipher.getInstance("AES/CFB8/NoPadding");
-			byte[] iv = new byte[16];
-			new SecureRandom().nextBytes(iv);
-			cip.init(Cipher.DECRYPT_MODE, new SecretKeySpec(secret, "AES"), new IvParameterSpec(iv));
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException e) {
-			e.printStackTrace();
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+			throw new ProtocolException("Unable to find AES cipher!");
 		}
+		cip.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(secret.getEncoded()));
 		this.cip = cip;
 	}
 	

@@ -10,7 +10,6 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CorePanda extends CoreAgeableMob implements Panda {
 
@@ -52,8 +51,8 @@ public class CorePanda extends CoreAgeableMob implements Panda {
 		});
 	}
 	
-	public CorePanda(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CorePanda(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 
 	@Override

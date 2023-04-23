@@ -9,7 +9,6 @@ import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreRavager extends CoreRaider implements Ravager {
 
@@ -43,8 +42,8 @@ public class CoreRavager extends CoreRaider implements Ravager {
 	private int timeRoar;
 	private int timeStunned;
 
-	public CoreRavager(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreRavager(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

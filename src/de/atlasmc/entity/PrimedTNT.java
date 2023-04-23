@@ -2,8 +2,12 @@ package de.atlasmc.entity;
 
 public interface PrimedTNT extends Entity {
 	
-	public int getFuseTime();
+	int getFuseTime();
 	
-	public void setFuseTime(int time);
+	void setFuseTime(int time);
+	
+	Entity getSource();
+	
+	void setSource(Entity source);
 
 }

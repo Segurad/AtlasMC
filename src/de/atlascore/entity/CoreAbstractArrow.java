@@ -9,8 +9,6 @@ import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
-
 import java.io.IOException;
 import java.util.UUID;
 
@@ -71,8 +69,8 @@ public abstract class CoreAbstractArrow extends CoreAbstractProjectile implement
 	private boolean shakeOnImpact;
 	private int lifetime = -1;
 	
-	public CoreAbstractArrow(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreAbstractArrow(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

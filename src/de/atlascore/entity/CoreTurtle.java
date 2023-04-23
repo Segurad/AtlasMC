@@ -1,6 +1,7 @@
 package de.atlascore.entity;
 
 import java.util.UUID;
+
 import de.atlasmc.Location;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Turtle;
@@ -8,7 +9,6 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.MathUtil;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.world.World;
 
 public class CoreTurtle extends CoreAgeableMob implements Turtle {
 
@@ -44,8 +44,8 @@ public class CoreTurtle extends CoreAgeableMob implements Turtle {
 		});
 	}
 	
-	public CoreTurtle(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreTurtle(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

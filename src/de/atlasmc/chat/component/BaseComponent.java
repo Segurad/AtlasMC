@@ -237,5 +237,15 @@ public class BaseComponent implements ChatComponent {
 		list.clear();
 		list.addAll(extra);
 	}
+
+	@Override
+	public boolean hasLegacy() {
+		return false;
+	}
+
+	@Override
+	public boolean hasJson() {
+		return true;
+	}
 	
 }

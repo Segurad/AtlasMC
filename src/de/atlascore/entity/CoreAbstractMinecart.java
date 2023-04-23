@@ -12,7 +12,6 @@ import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.world.World;
 
 public class CoreAbstractMinecart extends CoreEntity implements AbstractMinecart {
 
@@ -85,8 +84,8 @@ public class CoreAbstractMinecart extends CoreEntity implements AbstractMinecart
 	
 	private BlockData customBlockData; 
 	
-	public CoreAbstractMinecart(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreAbstractMinecart(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

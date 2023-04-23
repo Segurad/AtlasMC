@@ -1,9 +1,8 @@
-package de.atlascore.main;
+package de.atlasmc.plugin;
 
 import de.atlasmc.entity.EntityType;
-import de.atlasmc.plugin.Plugin;
 
-public interface CoreModulPlugin extends Plugin {
+public interface CoremodulPlugin extends Plugin {
 
 	/**
 	 * Init <u>ALL</u> static fields of this class e.g. {@link Material}
@@ -17,6 +16,6 @@ public interface CoreModulPlugin extends Plugin {
 	 */
 	public void addTypes();
 
-	public void initNode(CoreNodeBuilder nodebuilder);
+	public void initNode(NodeBuilder nodebuilder);
 
 }

@@ -1,5 +1,7 @@
 package de.atlasmc.inventory;
 
+import java.util.Arrays;
+
 import de.atlasmc.Material;
 
 public class InventoryUtil {
@@ -13,9 +15,13 @@ public class InventoryUtil {
 	}
 
 	public static void setPlaceholder(Inventory inv, ItemStack item) {
-		for (int i = 0; i < inv.getSize(); i++) {
-			inv.setItem(i, item);
-		}
+		if (inv == null)
+			throw new IllegalArgumentException("Inventory can not be null!");
+		if (item == null)
+			throw new IllegalArgumentException("Item can not be null!");
+		ItemStack[] contents = new ItemStack[inv.getSize()];
+		Arrays.fill(contents, item);
+		inv.setContentsUnsafe(contents);
 	}
 
 	public static void setPlaceholder(Inventory inv, Material material, boolean glow, int line) {

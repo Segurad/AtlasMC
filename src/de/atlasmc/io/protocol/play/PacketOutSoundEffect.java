@@ -69,7 +69,7 @@ public class PacketOutSoundEffect extends AbstractPacket implements PacketPlayOu
 		this.pitch = pitch;
 	}
 
-	public void setPosition(double x, double y, double z) {
+	public void setLocation(double x, double y, double z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;

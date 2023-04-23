@@ -12,7 +12,9 @@ import de.atlasmc.atlasnetwork.server.Server;
 public interface AtlasNode {
 
 	public List<? extends Server> getServers();
-	public List<? extends Proxy> getProxys();
+	
+	public List<? extends Proxy> getProxies();
+	
 	public boolean isOnline();
 	
 }

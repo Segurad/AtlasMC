@@ -4,8 +4,9 @@ import java.util.List;
 
 import de.atlasmc.Nameable;
 import de.atlasmc.chat.Chat;
+import de.atlasmc.command.CommandSender;
 
-public interface CommandBlock extends TileEntity, Nameable {
+public interface CommandBlock extends TileEntity, Nameable, CommandSender {
 	
 	public Mode getMode();
 	
@@ -27,9 +28,14 @@ public interface CommandBlock extends TileEntity, Nameable {
 	
 	public String getCommand();
 	
-	public void setLastOutput(Chat lastoutput);
+	public Chat getLastMessage();
 	
-	public Chat getLastOutput();
+	/**
+	 * While {@link #sendMessage(Chat)} does only set the last message if {@link #getTrackOutput()} is true,
+	 * this method will always set the last output
+	 * @param message
+	 */
+	public void setLastMessage(Chat message);
 	
 	public void setPowered(boolean powered);
 	

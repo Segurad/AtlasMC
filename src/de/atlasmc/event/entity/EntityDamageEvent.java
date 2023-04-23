@@ -24,11 +24,11 @@ public class EntityDamageEvent extends EntityEvent implements Cancellable {
 		this.damage = damage;
 	}
 	
-	public static abstract class DamageModifier {
-		public static DamageModifier PHYSICAL, TRUE, MAGIC;
+	@FunctionalInterface
+	public static interface DamageModifier {
 		
-		public abstract double calcDamage(Entity damager, Entity damagee, double damage);
-		public abstract double calcFinalDamage(Entity damager, Entity damagee, double damage);
+		double calcFinalDamage(Entity damager, Entity damagee, double damage);
+	
 	}
 	
 	public static class DamageCause {
@@ -74,12 +74,20 @@ public class EntityDamageEvent extends EntityEvent implements Cancellable {
 		return damage;
 	}
 	
+	public void setDamage(double damage) {
+		this.damage = damage;
+	}
+	
 	public DamageCause getCause() {
 		return cause;
 	}
 	
 	public DamageModifier getDamageModifier() {
 		return mod;
+	}
+	
+	public double getFinalDamage() {
+		return mod != null ? mod.calcFinalDamage(null, getEntity(), damage) : damage;
 	}
 
 	@Override

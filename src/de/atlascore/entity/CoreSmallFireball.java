@@ -4,12 +4,11 @@ import java.util.UUID;
 
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.SmallFireball;
-import de.atlasmc.world.World;
 
 public class CoreSmallFireball extends CoreSizedFireball implements SmallFireball {
 
-	public CoreSmallFireball(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreSmallFireball(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 
 	@Override

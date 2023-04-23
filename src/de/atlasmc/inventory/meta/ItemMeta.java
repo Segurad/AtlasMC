@@ -18,72 +18,72 @@ import de.atlasmc.util.nbt.NBTHolder;
 
 public interface ItemMeta extends Cloneable, NBTHolder, Attributeable {
 	
-	public ItemMeta clone();
+	ItemMeta clone();
 	
-	public boolean hasCustomTagContainer();
+	boolean hasCustomTagContainer();
 	
-	public CustomTagContainer getCustomTagContainer();
+	CustomTagContainer getCustomTagContainer();
 	
-	public boolean isUnbreakable();
+	boolean isUnbreakable();
 	
-	public boolean hasEnchant(Enchantment ench);
+	boolean hasEnchant(Enchantment ench);
 	
-	public boolean hasConflictingEnchant(Enchantment enchantment);
+	boolean hasConflictingEnchant(Enchantment enchantment);
 	
-	public boolean removeEnchant(Enchantment ench);
+	boolean removeEnchant(Enchantment ench);
 	
-	public void removeItemFlags(ItemFlag... itemflags);
+	void removeItemFlags(ItemFlag... itemflags);
 	
-	public void setCustomModelData(Integer data);
+	void setCustomModelData(Integer data);
 	
-	public void setUnbreakable(boolean unbreakable);
+	void setUnbreakable(boolean unbreakable);
 
-	public void setDisplayName(Chat name);
+	void setDisplayName(Chat name);
 
-	public void setLore(List<Chat> lore);
+	void setLore(List<Chat> lore);
 
-	public void addEnchant(Enchantment enchantment, int level);
+	void addEnchant(Enchantment enchantment, int level);
 
-	public void addItemFlags(ItemFlag... flags);
+	void addItemFlags(ItemFlag... flags);
 
-	public boolean hasDisplayName();
+	boolean hasDisplayName();
 
-	public Chat getDisplayName();
+	Chat getDisplayName();
 
-	public boolean hasEnchants();
+	boolean hasEnchants();
 
-	public Map<Enchantment, Integer> getEnchants();
+	Map<Enchantment, Integer> getEnchants();
 
-	public int getEnchantLevel(Enchantment enchantment);
+	int getEnchantLevel(Enchantment enchantment);
 
-	public boolean hasLore();
+	boolean hasLore();
 
-	public List<Chat> getLore();
+	List<Chat> getLore();
 
-	public boolean hasCustomModelData();
+	boolean hasCustomModelData();
 
-	public int getCustomModelData();
+	int getCustomModelData();
 
-	public Set<ItemFlag> getItemFlags();
+	Set<ItemFlag> getItemFlags();
 	
-	public int getItemFlagsRaw();
+	int getItemFlagsRaw();
 
-	public boolean hasItemFlag(ItemFlag flag);
+	boolean hasItemFlag(ItemFlag flag);
 
-	public boolean hasItemFlags();
+	boolean hasItemFlags();
 
-	public List<AttributeModifier> getAttributeModifiers(Attribute attribute);
+	List<AttributeModifier> getAttributeModifiers(Attribute attribute);
 	
-	public boolean hasCanDestroy();
+	boolean hasCanDestroy();
 	
-	public List<Material> getCanDestroy();
+	List<Material> getCanDestroy();
 	
-	public void setCanDestroy(List<Material> material);
+	void setCanDestroy(List<Material> material);
 	
-	public boolean removeAttributeModifier(EquipmentSlot slot);
+	boolean removeAttributeModifier(EquipmentSlot slot);
 	
-	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot);
+	Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot);
 
-	public boolean isSimilar(ItemMeta meta, boolean ignoreDamage);
+	boolean isSimilar(ItemMeta meta, boolean ignoreDamage);
 
 }

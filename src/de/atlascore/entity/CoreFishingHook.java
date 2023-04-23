@@ -1,13 +1,12 @@
 package de.atlascore.entity;
 
+import java.util.UUID;
+
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.FishingHook;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.world.World;
-
-import java.util.UUID;
 
 public class CoreFishingHook extends CoreAbstractProjectile implements FishingHook {
 
@@ -20,8 +19,8 @@ public class CoreFishingHook extends CoreAbstractProjectile implements FishingHo
 	
 	private Entity hooked;
 	
-	public CoreFishingHook(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreFishingHook(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

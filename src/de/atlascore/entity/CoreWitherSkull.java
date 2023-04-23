@@ -6,7 +6,6 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.WitherSkull;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.world.World;
 
 public class CoreWitherSkull extends CoreAbstractFireball implements WitherSkull {
 
@@ -15,8 +14,8 @@ public class CoreWitherSkull extends CoreAbstractFireball implements WitherSkull
 	
 	protected static final int LAST_META_INDEX = CoreAbstractFireball.LAST_META_INDEX+1;
 	
-	public CoreWitherSkull(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreWitherSkull(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

@@ -72,8 +72,8 @@ public class CorePainting extends CoreEntity implements Painting {
 	private Motive motive;
 	private boolean changedFaceOrMotive;
 	
-	public CorePainting(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CorePainting(EntityType type, UUID uuid) {
+		super(type, uuid);
 		attachedFace = BlockFace.SOUTH;
 		motive = Motive.KEBAB;
 	}

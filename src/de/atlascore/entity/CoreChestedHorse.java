@@ -14,7 +14,6 @@ import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreChestedHorse extends CoreAbstractHorse implements ChestedHorse {
 	
@@ -56,8 +55,8 @@ public class CoreChestedHorse extends CoreAbstractHorse implements ChestedHorse 
 		});
 	}
 	
-	public CoreChestedHorse(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreChestedHorse(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

@@ -53,10 +53,9 @@ public abstract class AbstractButton implements Button {
 	public AbstractButton clone() {
 		try {
 			AbstractButton btn = (AbstractButton) super.clone();
-			if (icon != null) btn.icon = icon.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
+			if (icon != null) 
+				btn.icon = icon.clone();
+		} catch (CloneNotSupportedException e) {}
 		return null;
 	}
 }

@@ -4,14 +4,15 @@ import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.chat.Chat;
+import de.atlasmc.chat.ChatType;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.MinecartCommandBlock;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.permission.Permission;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreMinecartCommandBlock extends CoreAbstractMinecart implements MinecartCommandBlock {
 
@@ -36,7 +37,7 @@ public class CoreMinecartCommandBlock extends CoreAbstractMinecart implements Mi
 		});
 		NBT_FIELDS.setField(NBT_LAST_OUTPUT, (holder, reader) -> {
 			if (holder instanceof MinecartCommandBlock) {
-				((MinecartCommandBlock) holder).setLastOutput(ChatUtil.toChat(reader.readStringTag()));
+				((MinecartCommandBlock) holder).setLastMessage(ChatUtil.toChat(reader.readStringTag()));
 			} else reader.skipTag();
 		});
 		NBT_FIELDS.setField(NBT_SUCCESS_COUNT, (holder, reader) -> {
@@ -54,8 +55,8 @@ public class CoreMinecartCommandBlock extends CoreAbstractMinecart implements Mi
 	protected byte redstoneSignal;
 	protected boolean trackOutput;
 	
-	public CoreMinecartCommandBlock(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreMinecartCommandBlock(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override
@@ -75,7 +76,7 @@ public class CoreMinecartCommandBlock extends CoreAbstractMinecart implements Mi
 	}
 
 	@Override
-	public Chat getLastOutput() {
+	public Chat getLastMessage() {
 		return metaContainer.getData(META_LAST_OUTPUT);
 	}
 
@@ -85,10 +86,10 @@ public class CoreMinecartCommandBlock extends CoreAbstractMinecart implements Mi
 	}
 
 	@Override
-	public void setLastOutput(Chat out) {
-		if (out == null)
-			out = ChatUtil.EMPTY;
-		metaContainer.get(META_LAST_OUTPUT).setData(out);
+	public void setLastMessage(Chat message) {
+		if (message == null)
+			message = ChatUtil.EMPTY;
+		metaContainer.get(META_LAST_OUTPUT).setData(message);
 	}
 
 	@Override
@@ -115,9 +116,28 @@ public class CoreMinecartCommandBlock extends CoreAbstractMinecart implements Mi
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
 		writer.writeStringTag(NBT_COMMAND, getCommand());
-		writer.writeStringTag(NBT_LAST_OUTPUT, getLastOutput().getText());
+		writer.writeStringTag(NBT_LAST_OUTPUT, getLastMessage().getText());
 		writer.writeIntTag(NBT_SUCCESS_COUNT, getRedstoneSignal());
 		writer.writeByteTag(NBT_TRACK_OUTPUT, isTrackingOutput());
+	}
+
+	@Override
+	public Permission getPermission(String permission, boolean allowWildcards) {
+		// TODO command block minecart Permission
+		return null;
+	}
+
+	@Override
+	public void sendMessage(String message) {
+		sendMessage(ChatUtil.toChat(message), ChatType.SYSTEM);
+	}
+
+	@Override
+	public void sendMessage(Chat chat, ChatType type) {
+		if (chat == null)
+			chat = ChatUtil.EMPTY;
+		if (isTrackingOutput())
+			metaContainer.set(META_LAST_OUTPUT, chat);
 	}
 
 }

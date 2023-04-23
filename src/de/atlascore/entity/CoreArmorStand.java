@@ -14,7 +14,6 @@ import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreArmorStand extends CoreLivingEntity implements ArmorStand {
 
@@ -113,8 +112,8 @@ public class CoreArmorStand extends CoreLivingEntity implements ArmorStand {
 	
 	private int slotFlags;
 	
-	public CoreArmorStand(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreArmorStand(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

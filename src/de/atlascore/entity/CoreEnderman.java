@@ -12,7 +12,6 @@ import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreEnderman extends CoreMob implements Enderman {
 	
@@ -64,8 +63,8 @@ public class CoreEnderman extends CoreMob implements Enderman {
 	private BlockData block;
 	private boolean blockChanged;
 	
-	public CoreEnderman(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreEnderman(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
+import de.atlasmc.util.NibbleArray;
 import de.atlasmc.util.VariableValueArray;
 
 public interface ChunkSection {
@@ -169,6 +170,13 @@ public interface ChunkSection {
 	public int getPaletteEntryBlockCount(BlockData data);
 	
 	/**
+	 * Returns the palette entry at the given index
+	 * @param index
+	 * @return entry
+	 */
+	public BlockData getPaletteEntry(int index);
+	
+	/**
 	 * Sets the number of blocks associated with a palette entry.
 	 * May cause issues if used inappropriate. Should only be used for deep editing of indizes and palette.
 	 * The sum of all counts should always be 4096.
@@ -189,5 +197,13 @@ public interface ChunkSection {
 	 * @return true if the data is present and has changed
 	 */
 	public boolean setPaletteEntryBlockCount(BlockData data, int count);
+	
+	public NibbleArray getBlockLight();
+	
+	public boolean hasBlockLight();
+	
+	public NibbleArray getSkyLight();
+	
+	public boolean hasSkyLight();
 	
 }

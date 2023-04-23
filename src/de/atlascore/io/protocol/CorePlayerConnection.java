@@ -12,7 +12,6 @@ import de.atlasmc.SimpleLocation;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.atlasnetwork.proxy.LocalProxy;
 import de.atlasmc.atlasnetwork.server.LocalServer;
-import de.atlasmc.block.BlockFace;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.player.PlayerAnimationEvent;
 import de.atlasmc.event.player.PlayerDiggingEvent;
@@ -81,12 +80,6 @@ public class CorePlayerConnection implements PlayerConnection {
 	// Click Control 
 	private boolean windowActionLocked;
 	private short windowActionID;
-	
-	// Digging related data
-	private long diggingStartTime;
-	private long diggingPosition;
-	private BlockFace diggingFace;
-	private boolean digging;
 	
 	// Recipes
 	private final List<RecipeBook> recipeBooks; // TODO update on changed (currently only when change in recipes)
@@ -175,7 +168,6 @@ public class CorePlayerConnection implements PlayerConnection {
 		// Reinit all Events for the new PlayerEntity
 		eventAnimation = new PlayerAnimationEvent(player, null);
 		eventMove = new PlayerMoveEvent(player, player.getLocation(), player.getLocation());
-		eventDigging = new PlayerDiggingEvent(player, null, 0, player.getLocation(), diggingFace);
 		eventHeldItemChange = new PlayerHeldItemChangeEvent(player, 0);
 		eventSneak = new PlayerToggleSneakEvent(player, false);
 		eventSprint = new PlayerToggleSprintEvent(player, false);
@@ -461,18 +453,8 @@ public class CorePlayerConnection implements PlayerConnection {
 	}
 
 	@Override
-	public PlayerDiggingEvent getEventDigging() {
-		return eventDigging;
-	}
-
-	@Override
 	public PlayerMoveEvent getEventMove() {
 		return eventMove;
-	}
-
-	@Override
-	public boolean isDigging() {
-		return digging;
 	}
 
 	@Override

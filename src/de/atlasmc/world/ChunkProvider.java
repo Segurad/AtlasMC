@@ -21,14 +21,8 @@ public interface ChunkProvider extends Tickable {
 
 	public Entity getEntity(int entityID);
 
-	/**
-	 * 
-	 * @param x chunk coordinate
-	 * @param z chunk coordinate
-	 * @return
-	 */
-	public Chunk getChunk(int x, int z);
-
+	public Chunk getChunk(int x, int z, boolean load);
+	
 	public BlockData getBlockData(int x, int y, int z);
 
 }

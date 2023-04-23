@@ -11,7 +11,6 @@ import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
-import de.atlasmc.world.World;
 
 public abstract class CoreAbstractMinecartContainer extends CoreAbstractMinecart implements AbstractMinecartContainer {
 
@@ -48,8 +47,8 @@ public abstract class CoreAbstractMinecartContainer extends CoreAbstractMinecart
 	
 	private Inventory inv;
 	
-	public CoreAbstractMinecartContainer(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreAbstractMinecartContainer(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

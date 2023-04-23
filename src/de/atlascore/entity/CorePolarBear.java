@@ -6,7 +6,6 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.PolarBear;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.world.World;
 
 public class CorePolarBear extends CoreAgeableMob implements PolarBear {
 
@@ -15,8 +14,8 @@ public class CorePolarBear extends CoreAgeableMob implements PolarBear {
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+1;
 	
-	public CorePolarBear(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CorePolarBear(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

@@ -3,7 +3,7 @@ package de.atlascore.io.protocol;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlascore.io.ConnectionHandler;
+import de.atlascore.io.ProxyConnectionHandler;
 import de.atlascore.io.protocol.login.CorePacketInLoginStart;
 import de.atlascore.io.protocol.login.CorePacketOutDisconnect;
 import de.atlascore.io.protocol.login.CorePacketOutEncryptionRequest;
@@ -34,7 +34,7 @@ public class CoreProtocolLogin extends CoreAbstractProtocol implements ProtocolL
 
 	@Override
 	public PacketListener createDefaultPacketListener(Object o) {
-		return new CorePacketListenerLogin((ConnectionHandler) o);
+		return new CorePacketListenerLogin((ProxyConnectionHandler) o);
 	}
 
 	@Override

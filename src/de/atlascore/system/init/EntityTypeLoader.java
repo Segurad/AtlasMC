@@ -73,7 +73,7 @@ public class EntityTypeLoader {
 		PIGLIN_BRUTE = new EntityType(NamespacedKey.MINECRAFT, "piglin_brute", CorePiglinBrute.class);
 		PILLAGER = new EntityType(NamespacedKey.MINECRAFT, "pillager", CorePillager.class);
 		POLAR_BEAR = new EntityType(NamespacedKey.MINECRAFT, "polar_bear", CorePolarBear.class);
-		TNT = new EntityType(NamespacedKey.MINECRAFT, "tnt", CorePrimedTNT.class);
+		PRIMED_TNT = new EntityType(NamespacedKey.MINECRAFT, "tnt", CorePrimedTNT.class);
 		PUFFERFISH = new EntityType(NamespacedKey.MINECRAFT, "pufferfish", CorePufferFish.class);
 		RABBIT = new EntityType(NamespacedKey.MINECRAFT, "rabbit", CoreRabbit.class);
 		RAVAGER = new EntityType(NamespacedKey.MINECRAFT, "ravager", CoreRavager.class);

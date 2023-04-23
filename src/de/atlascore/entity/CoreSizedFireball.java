@@ -7,7 +7,6 @@ import de.atlasmc.entity.SizedFireball;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.world.World;
 
 public abstract class CoreSizedFireball extends CoreAbstractFireball implements SizedFireball {
 
@@ -16,8 +15,8 @@ public abstract class CoreSizedFireball extends CoreAbstractFireball implements 
 	
 	protected static final int LAST_META_INDEX = CoreAbstractFireball.LAST_META_INDEX+1;
 	
-	public CoreSizedFireball(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreSizedFireball(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

@@ -39,16 +39,16 @@ public class CoreFlatworldChunkGenerator implements ChunkGenerator {
 	
 	@Override
 	public Chunk generate(World world, int x, int z) {
-		CoreChunk chunk = new CoreChunk(world);
+		CoreChunk chunk = new CoreChunk(world, x, z);
 		if (palette != null) { // Fill chunk with Blocks
 			int lastPaletteIndex = -1;
-			short lastSectionPaletteIndex = -1;
+			int lastSectionPaletteIndex = -1;
 			
 			for (int y = startheight, i = 0; y < startheight+stack.length; y++, i++) {
 				if (stack[i] == -1) continue;
 				ChunkSection section = chunk.getSection(y);
 				
-				short sectionPaletteIndex = -1;
+				int sectionPaletteIndex = -1;
 				int paletteIndex = stack[i];
 				
 				// Reduce palette searching time

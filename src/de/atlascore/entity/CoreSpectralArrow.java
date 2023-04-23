@@ -9,7 +9,6 @@ import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreSpectralArrow extends CoreAbstractArrow implements SpectralArrow {
 
@@ -27,8 +26,8 @@ public class CoreSpectralArrow extends CoreAbstractArrow implements SpectralArro
 	
 	private int duration;
 	
-	public CoreSpectralArrow(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreSpectralArrow(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

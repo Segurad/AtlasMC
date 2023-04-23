@@ -3,9 +3,9 @@ package de.atlasmc.factory;
 import java.lang.reflect.InvocationTargetException;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryHolder;
+import de.atlasmc.inventory.InventoryType;
 
 /**
  * Class based {@link ContainerFactory} for Inventories or GUI by only using the Title and Holder

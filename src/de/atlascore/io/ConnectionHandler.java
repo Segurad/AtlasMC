@@ -1,8 +1,12 @@
 package de.atlascore.io;
 
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.util.Queue;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import javax.crypto.SecretKey;
 
 import de.atlascore.io.netty.channel.PacketCompressort;
 import de.atlascore.io.netty.channel.PacketDecoder;
@@ -76,7 +80,7 @@ public class ConnectionHandler {
 	public ConnectionHandler(SocketChannel channel, Protocol protocol) {
 		queue = new ConcurrentLinkedQueue<>();
 		this.channel = channel;
-		this.packetListeners = new Vector<PacketListener>();
+		this.packetListeners = new Vector<>();
 		this.protocol = protocol;
 		this.errHandler = IOExceptionHandler.UNHANDLED;
 		
@@ -200,7 +204,7 @@ public class ConnectionHandler {
 		return errHandler.handle(this, cause);
 	}
 	
-	public void enableEncryption(byte[] secret) {
+	public void enableEncryption(SecretKey secret) throws InvalidKeyException, InvalidAlgorithmParameterException {
 		if (isEncryotionEnabled())
 			throw new IllegalStateException("Encryption already enabled");
 		synchronized (this) {

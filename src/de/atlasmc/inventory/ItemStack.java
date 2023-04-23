@@ -73,14 +73,22 @@ public class ItemStack implements NBTHolder {
 	/**
 	 * 
 	 * @return the NBT or null if the ItemStack has no ItemMeta
+	 * @throws IOException 
 	 */
-	public NBT getMetaAsNBT() {
-		if (meta == null) return null;
+	public NBT getMetaAsNBT() throws IOException {
+		if (meta == null) 
+			return null;
 		return meta.toNBT();
 	}
 
+	/**
+	 * Compares a ItemStack with this ItemStack a returns whether or not it is similar.
+	 * Ignoring stack size and damage
+	 * @param item
+	 * @return true if similar
+	 */
 	public boolean isSimilar(ItemStack item) {
-		return false;
+		return isSimilar(item, true, true);
 	}
 	
 	public ItemStack clone() {

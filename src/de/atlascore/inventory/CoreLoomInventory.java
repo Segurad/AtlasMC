@@ -3,11 +3,11 @@ package de.atlascore.inventory;
 import de.atlasmc.block.tile.Banner.PatternType;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.entity.Player;
-import de.atlasmc.event.inventory.InventoryType;
-import de.atlasmc.event.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.InventoryHolder;
+import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.LoomInventory;
+import de.atlasmc.inventory.InventoryType.SlotType;
 
 public class CoreLoomInventory extends CoreInventory implements LoomInventory {
 
@@ -17,7 +17,7 @@ public class CoreLoomInventory extends CoreInventory implements LoomInventory {
 	private PatternType pattern;
 	
 	public CoreLoomInventory(Chat title, InventoryHolder holder) {
-		super(4, InventoryType.LOOM, title, holder);
+		super(4, 3, InventoryType.LOOM, title, holder);
 	}
 	
 	@Override

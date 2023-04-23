@@ -6,7 +6,6 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Spider;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.world.World;
 
 public class CoreSpider extends CoreMob implements Spider {
 
@@ -15,8 +14,8 @@ public class CoreSpider extends CoreMob implements Spider {
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+1;
 	
-	public CoreSpider(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreSpider(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

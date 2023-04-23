@@ -1,10 +1,10 @@
 package de.atlasmc.event.inventory;
 
 import de.atlasmc.event.ServerHandlerList;
-import de.atlasmc.event.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.InventoryType.SlotType;
 
 public class InventoryClickEvent extends InventoryInteractEvent {
 

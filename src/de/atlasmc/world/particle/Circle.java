@@ -48,7 +48,7 @@ public class Circle implements Animation {
 	}
 	
 	protected List<Location> getLocations(Location center, double radius) {
-		List<Location> locs = new ArrayList<Location>();
+		List<Location> locs = new ArrayList<>();
 		double degree = 360 / points;
 		for (int d = 0; d <= points; d++) {
 			//loc(x|z) = [ loc.x + radius * cos(d) | loc.z + radius * sin(d)]

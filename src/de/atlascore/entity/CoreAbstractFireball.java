@@ -4,15 +4,14 @@ import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.Vector;
-import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.AbstractArrow;
 import de.atlasmc.entity.AbstractFireball;
+import de.atlasmc.entity.EntityType;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public abstract class CoreAbstractFireball extends CoreAbstractProjectile implements AbstractFireball {
 
@@ -69,8 +68,8 @@ public abstract class CoreAbstractFireball extends CoreAbstractProjectile implem
 	private Vector direction;
 	private Vector speed;
 	
-	public CoreAbstractFireball(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreAbstractFireball(EntityType type, UUID uuid) {
+		super(type, uuid);
 		this.direction = new Vector();
 		this.speed = new Vector();
 	}

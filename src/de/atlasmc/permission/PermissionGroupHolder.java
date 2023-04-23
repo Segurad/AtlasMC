@@ -8,24 +8,24 @@ public interface PermissionGroupHolder {
 	 * Returns all {@link PermissionGroup}s of this holder
 	 * @return groups
 	 */
-	public Collection<PermissionGroup> getGroups();
+	Collection<PermissionGroup> getGroups();
 	
 	/**
 	 * Returns the PermissionGroup of this holder with the highest {@link PermissionGroup#getPower()}
 	 * @return group
 	 */
-	public PermissionGroup getHighestGroup();
+	PermissionGroup getHighestGroup();
 	
 	/**
 	 * Adds a {@link PermissionGroup} to this holder
 	 * @param group to add
 	 */
-	public void addPermissionGroup(PermissionGroup group);
+	void addPermissionGroup(PermissionGroup group);
 	
 	/**
 	 * Removes a {@link PermissionGroup} from this holder
 	 * @param group
 	 */
-	public void removePermissionGrou(PermissionGroup group);
+	void removePermissionGroup(PermissionGroup group);
 
 }

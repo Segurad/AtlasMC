@@ -5,15 +5,20 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * Class that stores the header information of a .mcr file
+ * Class that stores the header information of a .mcr file<br>
+ * Header structure: <br>
+ * 4096 bytes of 3 byte sector offset and 1 byte sector count in this file<br>
+ * if sector offset and count is 0 the chunk is not present<br>
+ * 4096 bytes of 4 byte timestamps when the chunk was last ticked<br>
+ * index calculation ()
  */
-public class CoreAnvilRegionHeader {
+public class CoreAnvilRegionFileHeader {
 	
-	private final byte[] sectorCounts;
-	private final int[] offsets;
-	private final int[] timestamps;
+	private byte[] sectorCounts;
+	private int[] offsets;
+	private int[] timestamps;
 	
-	public CoreAnvilRegionHeader() {
+	public CoreAnvilRegionFileHeader() {
 		sectorCounts = new byte[1024];
 		offsets = new int[1024];
 		timestamps = new int[1024];
@@ -90,13 +95,14 @@ public class CoreAnvilRegionHeader {
 	}
 	
 	/**
-	 * Returns the header entry index by the chunk coordinates
+	 * Returns the header entry index by the chunk coordinates<br>
+	 * if used to navigate the header data directly the returned value needs to be multiplied by 4
 	 * @param x the chunk x
 	 * @param z the chunk z
 	 * @return the header index
 	 */
-	protected int getIndex(int x, int z) {
-		return (z & 0xFF) << 4 | (x & 0xFF); 
+	public static int getIndex(int x, int z) {
+		return (z & 0x1F) << 5 | (x & 0x1F); 
 	}
 
 }

@@ -1,7 +1,10 @@
 package de.atlascore.scheduler;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 final class CoreAsyncTaskWorker extends Thread {
 	
+	private static final AtomicInteger COUNT = new AtomicInteger(1);
 	private volatile CoreRegisteredTask task;
 	private volatile long lastActiv;
 	private final CoreSchedulerThread master;
@@ -19,6 +22,7 @@ final class CoreAsyncTaskWorker extends Thread {
 	 * @param task
 	 */
 	CoreAsyncTaskWorker(CoreSchedulerThread master, CoreRegisteredTask task) {
+		super("Scheduler-Worker-" + COUNT.getAndIncrement());
 		this.task = task;
 		this.master = master;
 		setDaemon(true);

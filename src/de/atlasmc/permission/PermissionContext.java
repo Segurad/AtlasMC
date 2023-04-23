@@ -17,12 +17,12 @@ public interface PermissionContext extends Permissible {
 	 * Returns the key of this context
 	 * @return key
 	 */
-	public String getContextKey();
+	String getContextKey();
 	
 	/**
 	 * Context is a grouping of permission
 	 * @return context
 	 */
-	public String getContext();
+	String getContext();
 
 }

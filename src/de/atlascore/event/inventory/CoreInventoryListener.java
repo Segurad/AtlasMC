@@ -1,4 +1,4 @@
-package de.atlascore.system.listener;
+package de.atlascore.event.inventory;
 
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.EventHandler;
@@ -11,13 +11,16 @@ import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.gui.GUI;
 import de.atlasmc.inventory.gui.button.Button;
 
-final class InventoryListener implements Listener {
+public final class CoreInventoryListener implements Listener {
 	
 	@EventHandler
 	public void onOpen(InventoryOpenEvent e) {
+		if (e.isCancelled())
+			return;
 		Inventory inv = e.getInventory();
-		GUI gui = (GUI) inv;
-		if (gui == null) return;
+		GUI gui = inv.getGUI();
+		if (gui == null) 
+			return;
 		gui.notifyOpenedBy(e.getPlayer());
 	}
 
@@ -26,8 +29,8 @@ final class InventoryListener implements Listener {
 		final int slot = e.getSlot();
 		final Inventory inv = e.getClickedInventory();
 		final Player player = e.getWhoClicked();
-		if (inv instanceof GUI) {
-			GUI gui = (GUI) inv;
+		final GUI gui = inv.getGUI();
+		if (gui != null) {
 			if (!gui.isClickable(slot)) {
 				e.setCancelled(true);
 			}
@@ -47,22 +50,24 @@ final class InventoryListener implements Listener {
 		}
 		// Processing event results
 		if (e.isCancelled()) { // cancelled event
-			player.getConnection().setWindowLock();
+			player.getConnection().lockWindowActions();
 			inv.updateSlot(player, slot, false);
 			return;
 		}
 		// Default event handling
-		if (slot == -999) return;
+		if (slot == -999) 
+			return;
 	}
 
 	@EventHandler
 	public void onClose(InventoryCloseEvent e) {
 		final Inventory inv = e.getInventory();
 		final Player player = e.getPlayer();
-		if (inv instanceof GUI) {
-			GUI gui = (GUI) inv;
+		final GUI gui = inv.getGUI();
+		if (gui != null) {
 			gui.notifyClosedBy(player);
 		}
 		// nothing to process cause inventory will be closed no matter what
 	}
+	
 }

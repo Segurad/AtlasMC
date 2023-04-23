@@ -79,7 +79,7 @@ public class EntityType implements Namespaced {
 	PIGLIN_BRUTE,
 	PILLAGER,
 	POLAR_BEAR,
-	TNT,
+	PRIMED_TNT,
 	PUFFERFISH,
 	RABBIT,
 	RAVAGER,
@@ -162,13 +162,12 @@ public class EntityType implements Namespaced {
 	 */
 	public Entity create(World world, UUID uuid) {
 		try {
-			return clazz.getConstructor(EntityType.class, UUID.class, World.class)
-			.newInstance(this, uuid, world);
+			return clazz.getConstructor(EntityType.class, UUID.class)
+			.newInstance(this, uuid);
 		} catch (NoSuchMethodException | SecurityException | InstantiationException 
 				| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			e.printStackTrace();
+			throw new IllegalStateException("Error while creating Entity", e);
 		}
-		return null;
 	}
 	
 	public Entity create(World world) {

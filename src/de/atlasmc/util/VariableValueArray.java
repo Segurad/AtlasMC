@@ -58,6 +58,7 @@ public class VariableValueArray implements Cloneable {
 			while (restBits > oldBitPerValue) {
 				set(index++, (int) (l & oldMask));
 				l >>= oldBitPerValue;
+				restBits -= oldBitPerValue;
 			}
 			restBits = 64;
 		}

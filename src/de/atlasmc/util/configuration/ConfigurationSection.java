@@ -9,50 +9,60 @@ import java.util.Set;
  */
 public interface ConfigurationSection {
 
-	public boolean contains(String path);
+	boolean contains(String path);
 
-	public ConfigurationSection getConfigurationSection(String path);
+	ConfigurationSection getConfigurationSection(String path);
+	
+	Object get(String path);
+	
+	Object get(String path, Object def);
+	
+	String getString(String path);
+	
+	String getString(String path, String def);
 
-	public Object get(String path);
+	int getInt(String path);
 	
-	public Object get(String path, Object def);
-
-	public int getInt(String path);
+	int getInt(String path, int def);
 	
-	public int getInt(String path, int def);
+	double getDouble(String path);
 	
-	public double getDouble(String path);
+	double getDouble(String path, double def);
 	
-	public double getDouble(String path, double def);
+	boolean getBoolean(String path);
 	
-	public boolean getBoolean(String path);
+	boolean getBoolean(String path, boolean def);
 	
-	public boolean getBoolean(String path, boolean def);
+	float getFloat(String path);
 	
-	public float getFloat(String path);
+	float getFloat(String path, float def);
 	
-	public float getFloat(String path, float def);
+	List<String> getStringList(String path);
 	
-	public List<String> getStringList(String path);
+	List<String> getStringList(String path, List<String> def);
 	
-	public List<String> getStringList(String path, List<String> def);
+	<T> List<T> getListOfType(String path, Class<T> clazz);
 	
-	public <T> List<T> getListOfType(String path, Class<T> clazz);
+	<T> List<T> getListOfType(String path, Class<T> clazz, List<T> def);
 	
-	public <T> List<T> getListOfType(String path, Class<T> clazz, List<T> def);
+	List<?> getList(String path);
 	
-	public List<?> getList(String path);
+	List<?> getList(String path, List<?> def);
 	
-	public List<?> getList(String path, List<?> def);
+	ConfigurationSection createSection(String path);
 	
-	public ConfigurationSection createSection(String path);
+	Configuration getRoot();
 	
-	public Configuration getRoot();
+	void set(String path, Object value);
 	
-	public void set(String path, Object value);
+	Map<String, Object> getValues();
 	
-	public Map<String, Object> getValues();
+	Set<String> getKeys();
 	
-	public Set<String> getKeys();
+	/**
+	 * Returns the number of elements in this section
+	 * @return size
+	 */
+	int getSize();
 
 }

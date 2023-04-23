@@ -3,6 +3,7 @@ package de.atlasmc.event.inventory;
 import de.atlasmc.event.Cancellable;
 import de.atlasmc.event.ServerHandlerList;
 import de.atlasmc.inventory.BeaconInventory;
+import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.potion.PotionEffect;
 

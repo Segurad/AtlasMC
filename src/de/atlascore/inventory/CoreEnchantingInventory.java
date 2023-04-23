@@ -6,9 +6,9 @@ import java.util.Map;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.entity.Player;
-import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.inventory.EnchantingInventory;
 import de.atlasmc.inventory.InventoryHolder;
+import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.ItemStack;
 
 public class CoreEnchantingInventory extends CoreInventory implements EnchantingInventory {
@@ -32,7 +32,7 @@ public class CoreEnchantingInventory extends CoreInventory implements Enchanting
 	private Map<Enchantment, Integer> topEnch, midEnch, botEnch;
 	
 	public CoreEnchantingInventory(Chat title, InventoryHolder holder) {
-		super(2, InventoryType.ENCHANTING, title, holder);
+		super(2, 1, InventoryType.ENCHANTING, title, holder);
 	}
 
 	@Override

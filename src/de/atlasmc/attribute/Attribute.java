@@ -1,5 +1,6 @@
 package de.atlasmc.attribute;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -31,6 +32,10 @@ public class Attribute {
 	public Attribute(String rawName) {
 		this.rawName = rawName;
 		BY_NAME.put(rawName, this);
+	}
+	
+	public static Collection<Attribute> getValues() {
+		return BY_NAME.values();
 	}
 
 	public String getName() {

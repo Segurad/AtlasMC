@@ -1,0 +1,41 @@
+group_1:
+  min-server: 1
+  max-server: -1
+  new-server-delay: 60
+  new-server-on-user-load: 1
+  maintenance: false
+  server-config:
+    server-factory: "atlasmc:internal"
+    config:
+      memory-utilisation: 0.5 # internal only
+      memory-threshold: 4G # internal only
+      server-implementation: "class:de.atlascore.server.CoreLocalServer"
+      max-memory: 4G # deploied only
+      min-memory: 2G # deploied only
+      jvm-args: "" # deploied only
+      # class:path -> to server class implementation (only internal) e.g. "class:de.atlascore.server.CoreLocalServer"
+      # server_factory:name -> server factory implementation (only internal (may deploy server through factory implementation but idc)) e.g. "server_factory:atlas_core_factory"
+      # repo:repopath to server resource -> (deploied only) e.g. repo:repo/server:paper-1.16.5 (planned implementations paper, forge, fabric, sponge, MCHPRS, minestom (more or less useless))
+    static: false
+    auto-stop-delay: 180
+    auto-stop-users: 0
+    dynamic-slots: false
+    slots: 30
+    modt:
+      sign:
+      - Line1
+      - Line2
+      - Line3
+      - Line4
+      holo:
+      - Line1
+      - Line2
+      - LineN
+    data:
+    - "repo/world:my_world"
+    plugins:
+    - "repo/plugin:my_plugin_1"
+    - "repo/plugin:my_plugin_2"
+    plugin-configs:
+    - "repo/plugin-config:my_config_1"
+    - "repo/plugin-config:my_config_2"

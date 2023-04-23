@@ -7,7 +7,6 @@ import de.atlasmc.entity.MinecartFurnace;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.world.World;
 
 public class CoreMinecraftFurnace extends CoreAbstractMinecart implements MinecartFurnace {
 
@@ -31,8 +30,8 @@ public class CoreMinecraftFurnace extends CoreAbstractMinecart implements Mineca
 	
 	private int fuelLevel = -1;
 	
-	public CoreMinecraftFurnace(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreMinecraftFurnace(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

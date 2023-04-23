@@ -1,0 +1,26 @@
+network-info:
+  slots: 0
+  slot-distance: 1
+  slot-mode: normal # dynamic, fixed (displays slots/distance), base (displays max slots dynamic in base of distance increments)
+  motd-first-line: '§4-§8§m===§4- §7Powered by §4Atlas§8MC §4-§8§m===§4-'
+  motd-second-line: ''
+  protocol-text: '§7Online §8【§a§l✓§8】'
+  player-info:
+  - ''
+  - ''
+  - ''
+  - ''
+network-info-maintenance:
+  slots: 0
+  slot-distance: 1
+  slot-mode: normal
+  motd-first-line: ''
+  motd-second-line: ''
+  protocol-text: '§cMaintenance §8【§4✘§8】'
+  player-info:
+  - ''
+  - ''
+  - ''
+  - ''
+max-slots: 256
+maintenance: false

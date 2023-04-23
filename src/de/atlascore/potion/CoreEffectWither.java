@@ -9,26 +9,10 @@ public class CoreEffectWither extends CoreAbstractPotionEffect {
 	
 	public CoreEffectWither(PotionEffectType type, int amplifier, int duration, boolean reducedAmbient, boolean particles, boolean icon) {
 		super(type, amplifier, duration, reducedAmbient, particles, icon);
-		switch (amplifier) {
-		case 0:
-			damage = 0.25f / 20;
-			break;
-		case 1:
-			damage = 0.5f / 20;
-			break;
-		case 2:
-			damage = 1.0f / 20;
-			break;
-		case 3:
-			damage = 2.0f / 20;
-			break;
-		case 4:
-			damage = 5.0f / 20;
-			break;
-		default:
-			damage = 10.0f / 20;
-			break;
-		}
+		damage = 0.25f;
+		for (int i = 1; i < amplifier; i++)
+			damage *= 2;	
+		damage /= 20;
 	}
 
 	@Override

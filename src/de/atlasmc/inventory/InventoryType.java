@@ -1,9 +1,9 @@
-package de.atlasmc.event.inventory;
+package de.atlasmc.inventory;
+
+import java.util.List;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.factory.ContainerFactory;
-import de.atlasmc.inventory.Inventory;
-import de.atlasmc.inventory.InventoryHolder;
 
 public enum InventoryType {
 
@@ -81,6 +81,8 @@ public enum InventoryType {
 	CRAFTING(-1)
 	;
 	
+	private static List<InventoryType> VALUES;
+	
 	private final int id;
 
 	private InventoryType(int id) {
@@ -106,6 +108,32 @@ public enum InventoryType {
 	 */
 	public int getID() {
 		return id;
+	}
+	
+	/**
+	 * Returns a immutable List of all Types.<br>
+	 * This method avoid allocation of a new array not like {@link #values()}.
+	 * @return list
+	 */
+	public static List<InventoryType> getValues() {
+		if (VALUES == null)
+			VALUES = List.of(values());
+		return VALUES;
+	}
+	
+	/**
+	 * Releases the system resources used from the values cache
+	 */
+	public static void freeValues() {
+		VALUES = null;
+	}
+	
+	public Inventory create(Chat title) {
+		return create(title, null);
+	}
+	
+	public Inventory create(InventoryHolder holder) {
+		return create(null, holder);
 	}
 	
 	public Inventory create(Chat title, InventoryHolder holder) {
@@ -165,12 +193,12 @@ public enum InventoryType {
 		case WORKBENCH:
 			return ContainerFactory.WORKBENCH_INV_FACTORY.create(this, title, holder);
 		default:
-			return null;
+			throw new IllegalStateException("Unimplemented create for type: " + this.name());
 		}
 	}
 	
 	public static InventoryType getByID(int id) {
-		for (InventoryType t : values()) {
+		for (InventoryType t : getValues()) {
 			if (t.getID() == id) return t;
 		}
 		return null;
@@ -185,4 +213,5 @@ public enum InventoryType {
 		QUICKBAR,
 		RESULT;
 	}
+	
 }

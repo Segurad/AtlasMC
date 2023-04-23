@@ -8,7 +8,6 @@ import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.world.World;
 
 public class CoreMob extends CoreLivingEntity implements Mob {
 
@@ -39,8 +38,8 @@ public class CoreMob extends CoreLivingEntity implements Mob {
 		});
 	}
 	
-	public CoreMob(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreMob(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

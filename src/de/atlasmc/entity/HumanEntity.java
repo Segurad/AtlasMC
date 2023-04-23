@@ -1,5 +1,6 @@
 package de.atlasmc.entity;
 
+import de.atlasmc.Material;
 import de.atlasmc.inventory.CraftingInventory;
 import de.atlasmc.inventory.InventoryHolder;
 import de.atlasmc.inventory.MainHand;
@@ -30,5 +31,19 @@ public interface HumanEntity extends LivingEntity, InventoryHolder {
 	public void setLeftShoulder(Entity entity);
 
 	public CraftingInventory getCraftingInventory();
+	
+	boolean isSneaking();
+	
+	void setSneaking(boolean sneaking);
+	
+	void setCooldown(Material material, int ticks);
+	
+	int getCooldown(Material material);
+	
+	int getCooldownPast(Material material);
+	
+	boolean hasCooldown(Material material);
+	
+	int removeCooldown(Material material);
 
 }

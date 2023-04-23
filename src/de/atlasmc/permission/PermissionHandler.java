@@ -1,7 +1,8 @@
 package de.atlasmc.permission;
 
-public interface PermissionHandler {
-	
-	public boolean hasPermission(String permission);
+/**
+ * Handles all stuff regarding permissions
+ */
+public interface PermissionHandler extends PermissionGroupHolder, PermissionHolder, PermissionContextHolder, PermissionContextHandler {
 
 }

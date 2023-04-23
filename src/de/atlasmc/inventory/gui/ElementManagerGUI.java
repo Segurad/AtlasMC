@@ -3,11 +3,10 @@ package de.atlasmc.inventory.gui;
 import java.util.List;
 
 import de.atlasmc.Material;
-import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.event.inventory.ClickType;
 import de.atlasmc.event.inventory.InventoryClickEvent;
-import de.atlasmc.inventory.InventoryHolder;
+import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.ItemUtil;
 import de.atlasmc.inventory.gui.component.AbstractPageComponent;
@@ -24,8 +23,8 @@ public abstract class ElementManagerGUI<E> extends MultipageGUI {
 	protected final PageComponent<E> elements;
 	protected final ComponentHandler ehandler;
 	
-	public ElementManagerGUI(Chat title, InventoryHolder holder, int add, ItemStack addicon) {
-		this(title, holder, add, addicon, 0);
+	public ElementManagerGUI(Inventory inv, int add, ItemStack addicon) {
+		this(inv, add, addicon, 0);
 	}
 
 	/**
@@ -37,9 +36,10 @@ public abstract class ElementManagerGUI<E> extends MultipageGUI {
 	 * @param maxpages
 	 */
 	@SuppressWarnings("unchecked")
-	public ElementManagerGUI(Chat title, InventoryHolder holder, int add, ItemStack addicon, int maxpages) {
-		super(title, holder, 45, 46, 9, 4, maxpages);
-		if (add > 8 || add < 0) throw new IllegalArgumentException("Value must be between 0 and 8");
+	public ElementManagerGUI(Inventory inv, int add, ItemStack addicon, int maxpages) {
+		super(inv, 45, 46, 9, 4, maxpages);
+		if (add > 8 || add < 0) 
+			throw new IllegalArgumentException("Value must be between 0 and 8");
 		elements = new AbstractPageComponent<>(9, 4, maxpages) {
             @Override
             public ComponentHandler createHandler(GUI gui, int slot, int length, int depth, int offsetX, int offsetY) {
@@ -57,12 +57,14 @@ public abstract class ElementManagerGUI<E> extends MultipageGUI {
 			public ItemStack press(InventoryClickEvent e) {
 				final int slot = e.getSlot();
 				final E el = (E) ehandler.getSlotEntry(getCurrentPage()*9*4+slot);
-				if (el == null) return null;
+				if (el == null) 
+					return null;
 				final ClickType click = e.getClick();
 				if (click == ClickType.LEFT) {
 					editElement(el);
 				} else if (click == ClickType.RIGHT) {
-					if (!removeElement(el)) return null;
+					if (!removeElement(el)) 
+						return null;
 					removeElement(slot);
 				}
 				return null;
@@ -71,7 +73,8 @@ public abstract class ElementManagerGUI<E> extends MultipageGUI {
 		setButton(45+add, new AbstractButton(addicon) {
 			@Override
 			public ItemStack press(InventoryClickEvent e) {
-				if (e.getClick() != ClickType.LEFT) return null;
+				if (e.getClick() != ClickType.LEFT) 
+					return null;
 				final E el = createElement();
 				addElement(el);
 				return null;
@@ -121,7 +124,8 @@ public abstract class ElementManagerGUI<E> extends MultipageGUI {
 			page++;
 			for (final E value : values) {
 				i++;
-				if (value != element) continue;
+				if (value != element) 
+					continue;
 				mhandler.setSlotEntry(page*9+i, item);
 			}
 		}
@@ -130,11 +134,13 @@ public abstract class ElementManagerGUI<E> extends MultipageGUI {
 	public final boolean addElement(E element) {
 		if (!elements.add(element, false)) {
 			int  index  = elements.addPage();
-			if (index == -1) return false;
+			if (index == -1) 
+				return false;
 			elements.set(0, index * 4, element, false);
 			addPage();
 			mltPageItems.set(0, index * 4, createIcon(element));
-		} else mltPageItems.add(createIcon(element));
+		} else 
+			mltPageItems.add(createIcon(element));
 		return true;
 	}
 	

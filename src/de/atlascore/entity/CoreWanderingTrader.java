@@ -7,7 +7,6 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.WanderingTrader;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreWanderingTrader extends CoreAbstractVillager implements WanderingTrader {
 
@@ -26,8 +25,8 @@ public class CoreWanderingTrader extends CoreAbstractVillager implements Wanderi
 	
 	private int despawnDelay;
 	
-	public CoreWanderingTrader(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreWanderingTrader(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 
 	@Override

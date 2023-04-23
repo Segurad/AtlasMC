@@ -6,7 +6,6 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Witch;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.world.World;
 
 public class CoreWitch extends CoreRaider implements Witch {
 
@@ -15,8 +14,8 @@ public class CoreWitch extends CoreRaider implements Witch {
 	
 	protected static final int LAST_META_INDEX = CoreRaider.LAST_META_INDEX+1;
 	
-	public CoreWitch(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreWitch(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

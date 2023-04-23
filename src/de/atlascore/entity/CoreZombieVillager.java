@@ -6,17 +6,16 @@ import java.util.List;
 import java.util.UUID;
 
 import de.atlasmc.entity.EntityType;
-import de.atlasmc.entity.ZombieVillager;
 import de.atlasmc.entity.Villager.VillagerData;
 import de.atlasmc.entity.Villager.VillagerProfession;
 import de.atlasmc.entity.Villager.VillagerType;
+import de.atlasmc.entity.ZombieVillager;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreZombieVillager extends CoreZombie implements ZombieVillager {
 
@@ -83,8 +82,8 @@ public class CoreZombieVillager extends CoreZombie implements ZombieVillager {
 	private UUID conversionPlayer;
 	private int conversionTime = -1;
 	
-	public CoreZombieVillager(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreZombieVillager(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 
 	@Override

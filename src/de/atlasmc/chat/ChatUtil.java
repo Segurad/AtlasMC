@@ -1,5 +1,8 @@
 package de.atlasmc.chat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.factory.ChatFactory;
 import de.atlasmc.util.annotation.ThreadSafe;
@@ -8,6 +11,8 @@ import de.atlasmc.util.annotation.ThreadSafe;
 public final class ChatUtil {
 	
 	private static ChatFactory FACTORY;
+	
+	public static final char DEFAULT_CHAT_FORMAT_PREFIX = '§'; 
 	
 	private ChatUtil() {}
 	
@@ -33,12 +38,21 @@ public final class ChatUtil {
 		return FACTORY.asChat(json, legacy);
 	}
 	
+	public static List<Chat> toChat(List<String> text) {
+		if (text == null)
+			throw new IllegalArgumentException("Text can not be null!");
+		List<Chat> chat = new ArrayList<>(text.size());
+		for (CharSequence s : text)
+			chat.add(toChat(s));
+		return chat;
+	}
+	
 	public static String jsonFromLegacy(CharSequence msg) {
-		return jsonFromLegacy(msg, '§');
+		return jsonFromLegacy(msg, DEFAULT_CHAT_FORMAT_PREFIX);
 	}
 
 	public static String legacyFromJson(CharSequence text) {
-		return legacyFromJson(text, '§');
+		return legacyFromJson(text, DEFAULT_CHAT_FORMAT_PREFIX);
 	}
 	
 	public static String legacyFromJson(CharSequence json, char formatPrefix) {

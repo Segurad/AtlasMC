@@ -12,8 +12,6 @@ import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
-
 import java.io.IOException;
 import java.util.UUID;
 
@@ -118,8 +116,8 @@ public class CoreFallingBlock extends CoreEntity implements FallingBlock {
 	private BlockData data;
 	private TileEntity tile;
 	
-	public CoreFallingBlock(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreFallingBlock(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

@@ -1,90 +1,197 @@
 package de.atlasmc.inventory;
 
+import java.util.Iterator;
 import java.util.List;
 
 import de.atlasmc.Material;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.entity.Player;
-import de.atlasmc.event.inventory.InventoryType;
-import de.atlasmc.event.inventory.InventoryType.SlotType;
+import de.atlasmc.inventory.InventoryType.SlotType;
+import de.atlasmc.inventory.gui.GUI;
 
 /**
  * Represents a Inventory
  */
 public interface Inventory extends Iterable<ItemStack> {
-
-	public int getSize();
-
-	public void setItem(int slot, ItemStack item, boolean animation);
 	
-	public void setItem(int slot, ItemStack item);
+	/**
+	 * Clears the contents of this Inventory.<br>
+	 * {@link #updateSlots()} is required to persist changes to the player
+	 */
+	void clear();
 
-	public ItemStack getItem(int slot);
-	
-	public ItemStack[] getContents();
-	
-	public void setContents(ItemStack[] contents);
-	
-	public boolean contains(Material material);
-	
-	public int count(Material material);
-	
-	public void removeItems(Material material, int count);
+	int getSize();
 
-	public List<Player> getViewers();
+	/**
+	 * Sets a copy of the given item in the given slot
+	 * @param slot the slot to set the item in
+	 * @param item the item set in the given slot
+	 * @param whether or not the item add animation should be played
+	 */
+	void setItem(int slot, ItemStack item, boolean animation);
 	
-	public boolean hasViewers();
-
-	public Chat getTitle();
-
-	public SlotType getSlotType(int slot);
-
-	public InventoryType getType();
-
-	public InventoryHolder getHolder();
+	/**
+	 * Sets a copy of the given item in the given slot
+	 * @param slot the slot to set the item in
+	 * @param item the item set in the given slot
+	 */
+	void setItem(int slot, ItemStack item);
 	
-	public void setHolder(InventoryHolder holder);
+	/**
+	 * Sets the given item in the given slot <b>NOT A COPY</b>
+	 * @param slot the slot to set the item in
+	 * @param item the item set in the given slot
+	 * @param whether or not the item add animation should be played
+	 */
+	void setItemUnsafe(int slot, ItemStack item, boolean animation);
+	
+	/**
+	 * Sets the given item in the given slot <b>NOT A COPY</b>
+	 * @param slot the slot to set the item in
+	 * @param item the item set in the given slot
+	 */
+	void setItemUnsafe(int slot, ItemStack item);
+	
+	/**
+	 * Adds the given item to this inventory and returns the amount remaining of the stack.
+	 * <li> fills stacks of the same type
+	 * <li> fills empty slots
+	 * @param item
+	 * @return remaining
+	 */
+	int addItem(ItemStack item);
+	
+	/**
+	 * Removes all stacks in the inventory that match the given stack
+	 * @param item
+	 */
+	default void remove(ItemStack item) {
+		removeSimilar(item, false, false);
+	}
+	
+	/**
+	 * Removes all stacks in the inventory that are similar to the given stack
+	 * @param item
+	 * @param ignoreAmount
+	 * @param ignoreDamage
+	 */
+	void removeSimilar(ItemStack item, boolean ignoreAmount, boolean ignoreDamage);
+	
+	/**
+	 * Removes all stacks in the inventory that match the given material
+	 * @param material
+	 */
+	void remove(Material material);
+	
+	/**
+	 * Adds the given items to this inventory and returns a list with items that could not be added.
+	 * <li> fills stacks of the same type
+	 * <li> fills empty slots
+	 * @param items
+	 * @return list
+	 */
+	List<ItemStack> addItem(ItemStack... items);
+
+	/**
+	 * Returns a copy of the item in the given slot or null
+	 * @param slot
+	 * @return item or null
+	 */
+	ItemStack getItem(int slot);
+	
+	/**
+	 * Returns the item in the given slot or null <b>NOT A COPY</b>
+	 * @param slot
+	 * @return item or null
+	 */
+	ItemStack getItemUnsafe(int slot);
+	
+	/**
+	 * Returns a copy of the contents of this Inventory
+	 * @return contents
+	 */
+	ItemStack[] getContents();
+	
+	/**
+	 * Returns a new Array with the items in this Inventory <b>NO ITEM COPIES</b>
+	 * @return contents
+	 */
+	ItemStack[] getContentsUnsafe();
+	
+	void setContents(ItemStack[] contents);
+	
+	void setContentsUnsafe(ItemStack[] contents);
+	
+	boolean contains(Material material);
+	
+	int count(Material material);
+	
+	void removeItems(Material material, int count);
+
+	List<Player> getViewers();
+	
+	boolean hasViewers();
+
+	Chat getTitle();
+
+	SlotType getSlotType(int slot);
+
+	InventoryType getType();
+
+	InventoryHolder getHolder();
+	
+	void setHolder(InventoryHolder holder);
 	
 	/**
 	 * Updates a certain slot of this inventory for all viewers<br>
 	 * @param slot
 	 * @param animation
 	 */
-	public void updateSlot(int slot, boolean animation);
+	void updateSlot(int slot, boolean animation);
 	
 	/**
-	 * Updates a certain slot of this inventory for a player<br>
+	 * Updates a certain slot of this inventory for a player
 	 * @param player
 	 * @param slot
 	 * @param animation
 	 */
-	public void updateSlot(Player player, int slot, boolean animation);
+	void updateSlot(Player player, int slot, boolean animation);
 	
 	/**
-	 * Updates all slots of this inventory for all viewers<br>
+	 * Updates all slots of this inventory for all viewers
 	 */
-	public void updateSlots();
+	void updateSlots();
 
 	/**
-	 * Updates all slots of this inventory for a player<br>
+	 * Updates all slots of this inventory for a player
+	 * @param player
 	 */
-	public void updateSlots(Player player);
+	void updateSlots(Player player);
 	
-	public void updateProperties();
+	void updateProperties();
 	
-	public void updateProperties(Player player);
+	void updateProperties(Player player);
 
 	/**
-	 * Sets the Title of this Inventory<br>
-	 * Players need to reopen it to receive the update
+	 * Sets the Title of this Inventory. Players need to reopen it to receive the update.
 	 * @param title for this Inventory
 	 */
-	public void setTitle(Chat title);
+	void setTitle(Chat title);
 
 	/**
 	 * Returns the number of Slots set in this Inventory
 	 * @return slots set
 	 */
-	public int countItems();
-
+	int countItems();
+	
+	/**
+	 * Returns an iterator over the items in this inventory <b>NO ITEM COPIES</b> 
+	 * @return iterator
+	 */
+	Iterator<ItemStack> iteratorUnsafe();
+	
+	GUI getGUI();
+	
+	void setGUI(GUI gui);
+	
 }

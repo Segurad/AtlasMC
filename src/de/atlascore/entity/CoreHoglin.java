@@ -11,7 +11,6 @@ import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreHoglin extends CoreAgeableMob implements Hoglin {
 
@@ -43,8 +42,8 @@ public class CoreHoglin extends CoreAgeableMob implements Hoglin {
 	
 	private boolean huntable = true;
 	
-	public CoreHoglin(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreHoglin(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

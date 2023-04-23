@@ -7,7 +7,6 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.world.World;
 
 public class CoreBlaze extends CoreMob implements Blaze {
 	
@@ -16,8 +15,8 @@ public class CoreBlaze extends CoreMob implements Blaze {
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+1;
 	
-	public CoreBlaze(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreBlaze(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

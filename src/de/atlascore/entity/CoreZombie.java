@@ -11,7 +11,6 @@ import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreZombie extends CoreMob implements Zombie {
 
@@ -59,8 +58,8 @@ public class CoreZombie extends CoreMob implements Zombie {
 	private boolean canPickupLoot;
 	private int drownedConverionTime = -1;
 	
-	public CoreZombie(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreZombie(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

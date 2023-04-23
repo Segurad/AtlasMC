@@ -4,12 +4,11 @@ import java.util.UUID;
 
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Silverfish;
-import de.atlasmc.world.World;
 
 public class CoreSilverfish extends CoreMob implements Silverfish {
 
-	public CoreSilverfish(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreSilverfish(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 
 }

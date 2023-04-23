@@ -9,15 +9,14 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Merchant;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.factory.ContainerFactory;
+import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.MerchantInventory;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreAbstractVillager extends CoreAgeableMob implements AbstractVillager {
 
@@ -69,8 +68,8 @@ public class CoreAbstractVillager extends CoreAgeableMob implements AbstractVill
 	private long lastRestock;
 	private int restocksToday;
 	
-	public CoreAbstractVillager(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreAbstractVillager(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

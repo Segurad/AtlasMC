@@ -4,9 +4,9 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.Furnace;
-import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.AbstractFurnaceInventory;
+import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTField;

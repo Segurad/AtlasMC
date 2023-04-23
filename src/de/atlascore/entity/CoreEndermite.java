@@ -7,7 +7,6 @@ import de.atlasmc.entity.Endermite;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreEndermite extends CoreMob implements Endermite {
 
@@ -31,8 +30,8 @@ public class CoreEndermite extends CoreMob implements Endermite {
 	private int lifetime;
 	private boolean playerSpawned;
 	
-	public CoreEndermite(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreEndermite(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 
 	@Override

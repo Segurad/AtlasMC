@@ -5,7 +5,9 @@ import java.io.IOException;
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.CommandBlock;
 import de.atlasmc.chat.Chat;
+import de.atlasmc.chat.ChatType;
 import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.permission.Permission;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTField;
@@ -48,7 +50,7 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 		NBT_FIELDS.setField(NBT_LAST_EXECUTION, NBTField.SKIP); // TODO Wait for CommandBlock logic
 		NBT_FIELDS.setField(NBT_LAST_OUTPUT, (holder, reader) -> {
 			if (holder instanceof CommandBlock)
-			((CommandBlock) holder).setLastOutput(ChatUtil.toChat(reader.readStringTag()));
+			((CommandBlock) holder).setLastMessage(ChatUtil.toChat(reader.readStringTag()));
 			else reader.skipTag();
 		});
 		NBT_FIELDS.setField(NBT_POWERED, (holder, reader) -> {
@@ -142,12 +144,7 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 	}
 
 	@Override
-	public void setLastOutput(Chat lastoutput) {
-		this.lastoutput = lastoutput;
-	}
-
-	@Override
-	public Chat getLastOutput() {
+	public Chat getLastMessage() {
 		return lastoutput;
 	}
 
@@ -179,19 +176,41 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 			writer.writeByteTag(NBT_AUTO, isAlwaysActive());
 			writer.writeStringTag(NBT_COMMAND, getCommand());
 			writer.writeLongTag(NBT_LAST_EXECUTION, 0);
-			writer.writeStringTag(NBT_LAST_OUTPUT, getLastOutput().getJsonText());
+			writer.writeStringTag(NBT_LAST_OUTPUT, getLastMessage().getJsonText());
 			writer.writeByteTag(NBT_POWERED, isPowered());
 			writer.writeIntTag(NBT_SUCCESSCOUNT, getSuccessCount());
 			writer.writeByteTag(NBT_TRACKOUTPUT, getTrackOutput());
 			writer.writeByteTag(NBT_UPDATE_LAST_EXECUTION, true);
 		} else {
 			writer.writeStringTag(NBT_COMMAND, getCommand());
-			writer.writeStringTag(NBT_LAST_OUTPUT, getLastOutput().getJsonText());
+			writer.writeStringTag(NBT_LAST_OUTPUT, getLastMessage().getJsonText());
 		}
 	}
 	
 	@Override
 	protected NBTFieldContainer getFieldContainerRoot() {
 		return NBT_FIELDS;
+	}
+
+	@Override
+	public Permission getPermission(String permission, boolean allowWildcards) {
+		// TODO has Permission command block
+		return null;
+	}
+
+	@Override
+	public void sendMessage(String message) {
+		sendMessage(ChatUtil.toChat(message), ChatType.SYSTEM);
+	}
+
+	@Override
+	public void sendMessage(Chat chat, ChatType type) {
+		if (trackOutput)
+			lastoutput = chat;
+	}
+
+	@Override
+	public void setLastMessage(Chat message) {
+		lastoutput = message;
 	}
 }

@@ -368,7 +368,7 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 		 */
 		public E gotoHead() {
 			node = list.head;
-			return node.entry;
+			return node != null ? node.entry : null;
 		}
 		
 		/**
@@ -377,7 +377,7 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 		 */
 		public E gotoTail() {
 			node = list.tail;
-			return node.entry;
+			return node != null ? node.entry : null;
 		}
 
 		public boolean hasPrevious() {

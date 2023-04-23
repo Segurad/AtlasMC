@@ -76,7 +76,7 @@ public class CoreChunkSection implements ChunkSection {
 
 	@Override
 	public List<BlockData> getPalette() {
-		return getPalette(new ArrayList<BlockData>(lastPaletteEntry));
+		return getPalette(new ArrayList<>(lastPaletteEntry));
 	}
 	
 	@Override
@@ -170,7 +170,7 @@ public class CoreChunkSection implements ChunkSection {
 			return index; 
 		if (checkCoordinates) {
 			int paletteIndex = getIndex(x, y, z);
-			if (palette[paletteIndex].count >= 1) { // if the entry at the index has a count of 1 to replace it a
+			if (palette[paletteIndex].count == 1) { // if the entry at the index has a count of 1 to replace it a
 				palette[paletteIndex].data = data.clone();
 				palette[paletteIndex].count = 1;
 				return paletteIndex;
@@ -240,9 +240,37 @@ public class CoreChunkSection implements ChunkSection {
 	@Override
 	public int setPaletteEntry(int index, BlockData data, boolean addIfOutOfBounds) {
 		if (index < 0 || index >= palette.length)
-			return addPaletteEntry(data);
+			if (addIfOutOfBounds)
+				return addPaletteEntry(data);
+			else
+				return -1;
 		palette[index].data = data.clone();
 		return index;
+	}
+
+	@Override
+	public BlockData getPaletteEntry(int index) {
+		return palette[index].data;
+	}
+
+	@Override
+	public NibbleArray getBlockLight() {
+		return blocklight;
+	}
+
+	@Override
+	public NibbleArray getSkyLight() {
+		return skylight;
+	}
+
+	@Override
+	public boolean hasBlockLight() {
+		return blocklight != null;
+	}
+
+	@Override
+	public boolean hasSkyLight() {
+		return skylight != null;
 	}
 
 }

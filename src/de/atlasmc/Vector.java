@@ -1,5 +1,7 @@
 package de.atlasmc;
 
+import de.atlasmc.util.MathUtil;
+
 public class Vector implements Cloneable {
 	
 	private double x,y,z;
@@ -152,6 +154,11 @@ public class Vector implements Cloneable {
 	
 	public double lengthSquared() {
 		return x*x + y*y + z*z;
+	}
+	
+	public float angle(Vector vec) {
+		double dot = MathUtil.getInRange(dot(vec) / length() * vec.length(), -1.0, 1.0);
+		return (float) Math.acos(dot);
 	}
 
 }

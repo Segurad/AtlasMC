@@ -1,5 +1,6 @@
 package de.atlasmc.world;
 
+import java.util.Collection;
 import java.util.List;
 
 import de.atlasmc.Material;
@@ -7,6 +8,7 @@ import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.tick.Tickable;
+import de.atlasmc.util.VariableValueArray;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.annotation.NotNull;
 
@@ -16,15 +18,15 @@ import de.atlasmc.util.annotation.NotNull;
 public interface Chunk extends Tickable {
 
 	/**
-	 * Returns a list of all section in this chunk.<br>
+	 * Returns a list of all section in this chunk.
 	 * Sections that do not exist are null.
 	 * @return a list of sections 
 	 */
 	public List<ChunkSection> getSections();
 	
 	/**
-	 * Returns the ChunkSection at the given height<br>
-	 * If there is no section at this height a new one will be created
+	 * Returns the ChunkSection at the given height.
+	 * If there is no section at this height a new one will be created.
 	 * @param height between 0 and 256
 	 * @return the chunk section at this height
 	 */
@@ -33,7 +35,18 @@ public interface Chunk extends Tickable {
 	
 	public boolean hasSection(int height);
 	
+	/**
+	 * Returns if this Chunk is fully loaded or generated
+	 * @return loaded
+	 */
 	public boolean isLoaded();
+	
+	/**
+	 * Sets this chunk as loaded. 
+	 * Should only be used by the {@link ChunkGenerator} or {@link ChunkLoader} that handles the Chunk
+	 * @param loaded
+	 */
+	public void setLoaded(boolean loaded);
 	
 	/**
 	 * Returns the World of this Chunk
@@ -43,13 +56,14 @@ public interface Chunk extends Tickable {
 	
 	/**
 	 * 
-	 * @return a copy of the chunks hightmap
+	 * @return hightmap
 	 */
-	public long[] getHightMap();
+	public VariableValueArray getHightMap();
 	
 	/**
-	 * 
-	 * @return a copy of the chunks biomes
+	 * Returns the Biomes of this chunk. Organized in 4x4x4 Block per Biome ordered x < z < y.
+	 * The returned array contains the IDs of the Biomes hand has a length of 1024
+	 * @return biomes array
 	 */
 	public short[] getBiomes();
 	
@@ -64,7 +78,7 @@ public interface Chunk extends Tickable {
 	
 	public void setBiome(EnumBiome biome, int x, int y, int z);
 	
-	public List<TileEntity> getTileEntities();
+	public Collection<TileEntity> getTileEntities();
 	
 	public int getHighestBlockYAt(int x, int z);
 	
@@ -159,5 +173,9 @@ public interface Chunk extends Tickable {
 	public void updateBlock(int x, int y, int z);
 	
 	public ViewerSet<Chunk, ChunkListener> getViewers();
+	
+	public int getX();
+	
+	public int getZ();
 	
 }

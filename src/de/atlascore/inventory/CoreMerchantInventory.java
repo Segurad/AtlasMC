@@ -5,8 +5,8 @@ import java.util.List;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.entity.Merchant.MerchantRecipe;
-import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.inventory.InventoryHolder;
+import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.MerchantInventory;
 
 public class CoreMerchantInventory extends CoreInventory implements MerchantInventory {

@@ -145,7 +145,7 @@ public interface ArmorStand extends LivingEntity {
 	/**
 	 * Sets the slot interaction flags
 	 * @see #getSlotInteractionFlags()
-	 * @param flags
+	 * @param flags the interaction flags
 	 */
 	public void setSlotInteractionFlags(int flags);
 	

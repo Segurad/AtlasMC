@@ -26,7 +26,7 @@ public class CorePacketOutEntityEquipment extends PacketIO<PacketOutEntityEquipm
 			next = (raw & 0x80) == 0x80;
 			EquipmentSlot slot = EquipmentSlot.getByID(raw & 0x7F);
 			ItemStack item = readSlot(in);
-			slots.add(Pair.of(slot, item));
+			slots.add(new Pair<>(slot, item));
 		} while (next);
 		packet.setSlots(slots);
 	}

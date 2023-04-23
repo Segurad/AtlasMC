@@ -18,7 +18,6 @@ import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreArrow extends CoreAbstractArrow implements Arrow {
 
@@ -94,8 +93,8 @@ public class CoreArrow extends CoreAbstractArrow implements Arrow {
 	private List<PotionEffect> effects;
 	private PotionData data;
 	
-	public CoreArrow(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreArrow(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

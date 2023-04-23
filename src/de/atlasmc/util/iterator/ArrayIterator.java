@@ -31,7 +31,7 @@ public class ArrayIterator<E> implements Iterator<E> {
 	@Override
 	public E next() {
 		index++;
-		for (; index < array.length; index++)
+		for (; index < end; index++)
 			if (array[index] != null)
 				return array[index];
 		return null;

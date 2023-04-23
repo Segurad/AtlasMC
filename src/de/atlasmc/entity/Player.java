@@ -1,5 +1,7 @@
 package de.atlasmc.entity;
 
+import java.util.UUID;
+
 import de.atlasmc.Effect;
 import de.atlasmc.Gamemode;
 import de.atlasmc.Particle;
@@ -7,36 +9,22 @@ import de.atlasmc.SimpleLocation;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
-import de.atlasmc.chat.Chat;
-import de.atlasmc.chat.ChatType;
+import de.atlasmc.block.DiggingHandler;
+import de.atlasmc.chat.Messageable;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.protocol.PlayerConnection;
+import de.atlasmc.permission.Permissible;
 import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.scoreboard.ScoreboardView;
 
-public interface Player extends HumanEntity {
-	
-	/**
-	 * Send a message as {@link ChatType#SYSTEM}
-	 * @param chat
-	 */
-	public void sendMessage(Chat chat);
-	
-	/**
-	 * Sends a message with the given type
-	 * @param chat
-	 * @param type
-	 */
-	public void sendMessage(Chat chat, ChatType type);
+public interface Player extends HumanEntity, Permissible, Messageable {
 	
 	public PermissionHandler getPermissionHandler();
 	
 	public void setPermissionHandler(PermissionHandler handler);
-	
-	public boolean hasPermission(String permission);
 
 	public int getLevel();
 
@@ -120,40 +108,92 @@ public interface Player extends HumanEntity {
 
 	// --- Sound ---
 	
-	public void playSound(Entity entity, Sound sound, SoundCategory category, float volume, float pitch);
+	void stopSound(SoundCategory category, String sound);
 	
-	public void playSound(double x, double y, double z, Sound sound, SoundCategory category, float volume, float pitch);
+	// Entity sound
+	
+	void playSound(Entity entity, Sound sound, SoundCategory category, float volume, float pitch);
+	
+	void playSound(Entity entity, String sound, SoundCategory category, float volume, float pitch);
+	
+	// Located sound
+	
+	default void playSound(SimpleLocation loc, Sound sound, float volume, float pitch) {
+		if (loc == null)
+			throw new IllegalArgumentException("Location can not be null!");
+		playSound(loc.getX(), loc.getY(), loc.getZ(), sound, volume, pitch);
+	}
+	
+	default void playSound(SimpleLocation loc, Sound sound, SoundCategory category, float volume, float pitch) {
+		if (loc == null)
+			throw new IllegalArgumentException("Location can not be null!");
+		playSound(loc.getX(), loc.getY(), loc.getZ(), sound, category, volume, pitch);
+	}
+	
+	default void playSound(double x, double y, double z, Sound sound, float volume, float pitch) {
+		playSound(x, y, z, sound, SoundCategory.MASTER, volume, pitch);
+	}
+	
+	void playSound(double x, double y, double z, Sound sound, SoundCategory category, float volume, float pitch);
 
-	public void playSound(Entity entity, String sound, SoundCategory category, float volume, float pitch);
+	// Located named sound
 	
-	public void playSound(double x, double y, double z, String sound, SoundCategory category, float volume, float pitch);
+	default void playSound(SimpleLocation loc, String sound, float volume, float pitch) {
+		if (loc == null)
+			throw new IllegalArgumentException("Location can not be null!");
+		playSound(loc.getX(), loc.getY(), loc.getZ(), sound, volume, pitch);
+	}
 	
-	public void stopSound(SoundCategory category, String sound);
+	default void playSound(SimpleLocation loc, String sound, SoundCategory category, float volume, float pitch) {
+		if (loc == null)
+			throw new IllegalArgumentException("Location can not be null!");
+		playSound(loc.getX(), loc.getY(), loc.getZ(), sound, category, volume, pitch);
+	}
+	
+	default void playSound(double x, double y, double z, String sound, float volume, float pitch) {
+		playSound(x, y, z, sound, SoundCategory.MASTER, volume, pitch);
+	}
+	
+	void playSound(double x, double y, double z, String sound, SoundCategory category, float volume, float pitch);
 	
 	// --- Particle ---
 	
-	public void spawnParticle(Particle particle, double x, double y, double z, float particledata);
+	void spawnParticle(Particle particle, double x, double y, double z, float particledata);
 	
-	public void spawnParticle(Particle particle, double x, double y, double z, float particledata, int count);
+	void spawnParticle(Particle particle, double x, double y, double z, float particledata, int count);
 	
-	public void spawnParticle(Particle particle, double x, double y, double z, float particledata, int count, Object data);
+	void spawnParticle(Particle particle, double x, double y, double z, float particledata, int count, Object data);
 	
-	public void spawnParticle(Particle particle, double x, double y, double z, float offX, float offY, float offZ, float particledata, int count, Object data);
+	void spawnParticle(Particle particle, double x, double y, double z, float offX, float offY, float offZ, float particledata, int count, Object data);
 	
 	// --- Inventory Stuff ---
 	
-	public InventoryView getOpenInventory();
+	InventoryView getOpenInventory();
 	
-	public void openInventory(Inventory inv);
+	void openInventory(Inventory inv);
 	
-	public void closeInventory();
+	void closeInventory();
 
-	public void setItemOnCursor(ItemStack item);
+	void setItemOnCursor(ItemStack item);
 
-	public ItemStack getItemOnCursor();
+	ItemStack getItemOnCursor();
 	
-	public void updateItemOnCursor();
+	void setItemOnCursorUnsafe(ItemStack item);
+	
+	ItemStack getItemOnCursorUnsafe();
+	
+	void updateItemOnCursor();
 
-	public void disconnect(String message);
+	void disconnect(String message);
+	
+	DiggingHandler getDigging();
+	
+	void setDiggingHandller(DiggingHandler handler);
+	
+	/**
+	 * Returns the UUID of this Player equivalent to {@link AtlasPlayer#getInternalUUID()}
+	 * @return UUID
+	 */
+	UUID getUUID();
 	
 }

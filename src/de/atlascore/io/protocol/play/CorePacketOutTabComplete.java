@@ -27,6 +27,7 @@ public class CorePacketOutTabComplete extends PacketIO<PacketOutTabComplete> {
 			String toolTip = null;
 			if (hasToolTip) toolTip = readString(in);
 			matches.add(new Match(match, toolTip));
+			count--;
 		}
 		packet.setMatches(matches);
 	}

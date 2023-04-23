@@ -7,7 +7,6 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Vindicator;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreVindicator extends CoreRaider implements Vindicator {
 
@@ -24,8 +23,8 @@ public class CoreVindicator extends CoreRaider implements Vindicator {
 	
 	private boolean johnny;
 	
-	public CoreVindicator(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreVindicator(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 
 	@Override

@@ -13,11 +13,18 @@ import de.atlasmc.block.Block;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
-import de.atlasmc.entity.LivingEntity;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.entity.EntitySpawnEvent;
+import de.atlasmc.io.protocol.play.PacketOutEffect;
+import de.atlasmc.io.protocol.play.PacketOutEntitySoundEffect;
+import de.atlasmc.io.protocol.play.PacketOutNamedSoundEffect;
+import de.atlasmc.io.protocol.play.PacketOutParticle;
+import de.atlasmc.io.protocol.play.PacketOutSoundEffect;
+import de.atlasmc.util.MathUtil;
 import de.atlasmc.world.Chunk;
+import de.atlasmc.world.ChunkListener;
 import de.atlasmc.world.ChunkProvider;
+import de.atlasmc.world.PlayerChunkListener;
 import de.atlasmc.world.World;
 import de.atlasmc.world.WorldFlag;
 
@@ -33,7 +40,7 @@ public class CoreWorld implements World {
 	private Location spawn;
 	
 	public CoreWorld(LocalServer server, String name) {
-		chunks = new CoreBufferedChunkProvider(this);
+		chunks = new CoreBufferedChunkProvider(this, null, null); // TODO use worldcreator
 		this.name = name;
 		this.server = server;
 	}
@@ -81,14 +88,50 @@ public class CoreWorld implements World {
 
 	@Override
 	public void playEffect(SimpleLocation loc, Effect effect, Object data, int radius) {
-		// TODO Auto-generated method stub
-		
+		if (loc == null)
+			throw new IllegalArgumentException("Location can not be null!");
+		if (effect == null)
+			throw new IllegalArgumentException("Effect can not be null!");
+		Chunk chunk = getChunk(loc, false);
+		if (chunk == null)
+			return;
+		PacketOutEffect packet = null;
+		for (ChunkListener listener : chunk.getViewers()) {
+			if (!(listener instanceof PlayerChunkListener))
+				continue;
+			PlayerChunkListener player = (PlayerChunkListener) listener;
+			if (packet == null) {
+				packet = new PacketOutEffect();
+				packet.setEffect(effect);
+				packet.setPosition(MathUtil.toPosition(loc));
+				packet.setData(effect.getDataValueByObject(data));
+			}
+			player.getConnection().sendPacked(packet);
+		}
 	}
 
 	@Override
 	public void spawnParticle(Particle particle, SimpleLocation loc, int amount) {
-		// TODO Auto-generated method stub
-		
+		if (loc == null)
+			throw new IllegalArgumentException("Location can not be null!");
+		if (particle == null)
+			throw new IllegalArgumentException("Particle can not be null!");
+		PacketOutParticle packet = null;
+		Chunk chunk = getChunk(loc, false);
+		if (chunk == null)
+			return;
+		for (ChunkListener listener : chunk.getViewers()) {
+			if (!(listener instanceof PlayerChunkListener))
+				continue;
+			PlayerChunkListener player = (PlayerChunkListener) listener;
+			if (packet == null) {
+				packet = new PacketOutParticle();
+				packet.setParticle(particle);
+				packet.setLocation(loc.getX(), loc.getY(), loc.getZ());
+				packet.setCount(amount);
+			}
+			player.getConnection().sendPacked(packet);
+		}
 	}
 
 	@Override
@@ -103,19 +146,86 @@ public class CoreWorld implements World {
 
 	@Override
 	public void playSound(SimpleLocation loc, Sound sound, SoundCategory category, float volume, float pitch) {
-		// TODO Auto-generated method stub
-		
+		if (loc == null)
+			throw new IllegalArgumentException("Location can not be null!");
+		if (sound == null)
+			throw new IllegalArgumentException("Sound can not be null!");
+		if (category == null)
+			throw new IllegalAccessError("Category can not be null!");
+		PacketOutSoundEffect packet = null;
+		Chunk chunk = getChunk(loc, false);
+		if (chunk == null)
+			return;
+		for (ChunkListener listener : chunk.getViewers()) {
+			if (!(listener instanceof PlayerChunkListener))
+				continue;
+			PlayerChunkListener player = (PlayerChunkListener) listener;
+			if (packet == null) {
+				packet = new PacketOutSoundEffect();
+				packet.setSound(sound);
+				packet.setCategory(category);
+				packet.setPitch(pitch);
+				packet.setVolume(volume);
+				packet.setLocation(loc.getX(), loc.getY(), loc.getZ());
+			}
+			player.getConnection().sendPacked(packet);
+		}
 	}
 
 	@Override
 	public void playSound(SimpleLocation loc, String sound, SoundCategory category, float volume, float pitch) {
-		// TODO Auto-generated method stub
-		
+		if (loc == null)
+			throw new IllegalArgumentException("Location can not be null!");
+		if (sound == null)
+			throw new IllegalArgumentException("Sound can not be null!");
+		if (category == null)
+			throw new IllegalAccessError("Category can not be null!");
+		PacketOutNamedSoundEffect packet = null;
+		Chunk chunk = getChunk(loc, false);
+		if (chunk == null)
+			return;
+		for (ChunkListener listener : chunk.getViewers()) {
+			if (!(listener instanceof PlayerChunkListener))
+				continue;
+			PlayerChunkListener player = (PlayerChunkListener) listener;
+			if (packet == null) {
+				packet = new PacketOutNamedSoundEffect();
+				packet.setIdentifier(sound);
+				packet.setCategory(category);
+				packet.setPitch(pitch);
+				packet.setVolume(volume);
+				packet.setLocation(loc.getX(), loc.getY(), loc.getZ());
+			}
+			player.getConnection().sendPacked(packet);
+		}
 	}
 	
 	@Override
 	public void playSound(Entity entity, Sound sound, SoundCategory category, float volume, float pitch) {
-		// TODO Auto-generated 
+		if (entity == null)
+			throw new IllegalArgumentException("Entity can not be null!");
+		if (sound == null)
+			throw new IllegalArgumentException("Sound can not be null!");
+		if (category == null)
+			throw new IllegalAccessError("Category can not be null!");
+		PacketOutEntitySoundEffect packet = null;
+		Chunk chunk = entity.getChunk();
+		if (chunk == null)
+			return;
+		for (ChunkListener listener : chunk.getViewers()) {
+			if (!(listener instanceof PlayerChunkListener))
+				continue;
+			PlayerChunkListener player = (PlayerChunkListener) listener;
+			if (packet == null) {
+				packet = new PacketOutEntitySoundEffect();
+				packet.setSound(sound);
+				packet.setCategory(category);
+				packet.setPitch(pitch);
+				packet.setVolume(volume);
+				packet.setEntityID(entity.getID());
+			}
+			player.getConnection().sendPacked(packet);
+		}
 	}
 
 	@Override
@@ -170,12 +280,22 @@ public class CoreWorld implements World {
 
 	@Override
 	public Chunk getChunk(int x, int z) {
-		return chunks.getChunk(x, z);
+		return getChunk(x, z, true);
+	}
+	
+	@Override
+	public Chunk getChunk(int x, int z, boolean load) {
+		return chunks.getChunk(x, z, load);
 	}
 
 	@Override
 	public Chunk getChunk(SimpleLocation loc) {
-		return getChunk(loc.getBlockX() >> 4, loc.getBlockZ() >> 4);
+		return getChunk(loc, true);
+	}
+	
+	@Override
+	public Chunk getChunk(SimpleLocation loc, boolean load) {
+		return getChunk(loc.getBlockX() >> 4, loc.getBlockZ() >> 4, load);
 	}
 
 	@Override
@@ -194,6 +314,11 @@ public class CoreWorld implements World {
 	public Entity spawnEntity(EntityType type, double x, double y, double z, float pitch, float yaw) {
 		Entity ent = type.create(this);
 		return spawnEntity(ent, x, y, z, pitch, yaw) ? ent : null;
+	}
+
+	@Override
+	public int getEntityID() {
+		return nextEntityID++;
 	}
 
 }

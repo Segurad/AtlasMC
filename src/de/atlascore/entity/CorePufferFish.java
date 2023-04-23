@@ -9,7 +9,6 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CorePufferFish extends CoreFish implements PufferFish {
 
@@ -29,8 +28,8 @@ public class CorePufferFish extends CoreFish implements PufferFish {
 		});
 	}
 	
-	public CorePufferFish(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CorePufferFish(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

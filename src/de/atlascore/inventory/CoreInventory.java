@@ -1,18 +1,20 @@
 package de.atlascore.inventory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 import de.atlasmc.Material;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.entity.Player;
-import de.atlasmc.event.inventory.InventoryType;
-import de.atlasmc.event.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryHolder;
+import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.gui.GUI;
+import de.atlasmc.inventory.InventoryType.SlotType;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutSetSlot;
 import de.atlasmc.io.protocol.play.PacketOutWindowItems;
@@ -22,14 +24,21 @@ import de.atlasmc.util.iterator.ArrayIterator;
 public class CoreInventory implements Inventory {
 
 	protected final ItemStack[] contents;
+	protected final int storageSize;
 	protected final List<Player> viewers;
 	private final int size;
 	private InventoryHolder holder;
 	private final InventoryType type;
 	private Chat title;
+	private GUI gui;
 	
 	public CoreInventory(int size, InventoryType type, Chat title, InventoryHolder holder) {
+		this(size, size, type, title, holder);
+	}
+	
+	public CoreInventory(int size, int storageSize, InventoryType type, Chat title, InventoryHolder holder) {
 		this.size = size;
+		this.storageSize = storageSize;
 		this.contents = new ItemStack[size];
 		this.viewers = new ArrayList<>(1);
 		this.holder = holder;
@@ -39,7 +48,12 @@ public class CoreInventory implements Inventory {
 	
 	@Override
 	public Iterator<ItemStack> iterator() {
-		return new ArrayIterator<>(contents, true);
+		return new ArrayIterator<>(getContents(), true);
+	}
+	
+	@Override
+	public Iterator<ItemStack> iteratorUnsafe() {
+		return new ArrayIterator<>(getContents(), false);
 	}
 
 	@Override
@@ -54,12 +68,123 @@ public class CoreInventory implements Inventory {
 	
 	@Override
 	public void setItem(int slot, ItemStack item, boolean animation) {
+		if (contents[slot] == item)
+			return;
+		if (item != null)
+			item = item.clone();
+		contents[slot] = item;
+		updateSlot(slot, animation);
+	}
+	
+	@Override
+	public void remove(Material material) {
+		if (material == null)
+			throw new IllegalArgumentException("Material can not be null!");
+		for (int i = 0; i < size; i++) {
+			ItemStack item = contents[i];
+			if (item != null && item.getType() == material) {
+				contents[i] = null;
+				updateSlot(i, false);
+			}
+		}
+	}
+	
+	@Override
+	public void removeSimilar(ItemStack item, boolean ignoreAmount, boolean ignoreDamage) {
+		if (item == null)
+			throw new IllegalArgumentException("Item can not be null!");
+		for (int i = 0; i < size; i++) {
+			ItemStack slotitem = contents[i];
+			if (item.isSimilar(slotitem, ignoreAmount, ignoreDamage)) {
+				contents[i] = null;
+				updateSlot(i, false);
+			}
+		}
+	}
+	
+	@Override
+	public void setItemUnsafe(int slot, ItemStack item, boolean animation) {
+		if (contents[slot] == item)
+			return;
 		contents[slot] = item;
 		updateSlot(slot, animation);
 	}
 
 	@Override
+	public void setItemUnsafe(int slot, ItemStack item) {
+		setItemUnsafe(slot, item, true);
+	}
+	
+	@Override
+	public int addItem(ItemStack item) {
+		if (item == null)
+			throw new IllegalArgumentException("Item can not be null!");
+		int restAmount = item.getAmount();
+		if (restAmount <= 0)
+			return 0;
+		for (int i = 0; i < storageSize; i++) {
+			ItemStack slotItem = contents[i];
+			if (slotItem == null)
+				continue;
+			int missing = slotItem.getType().getMaxAmount()-slotItem.getAmount();
+			if (missing <= 0)
+				continue;
+			if (!slotItem.isSimilar(slotItem, true, false))
+				continue;
+			if (restAmount <= missing) {
+				ItemStack clone = slotItem.clone();
+				clone.setAmount(clone.getAmount()+restAmount);
+				setItem(i, clone, false);
+				return 0;
+			}
+			restAmount-=missing;
+			ItemStack clone = slotItem.clone();
+			clone.setAmount(clone.getAmount()+missing);
+			setItem(i, clone, false);
+		}
+		for (int i = 0; i < storageSize; i++) {
+			if (contents[i] == null) {
+				if (restAmount > item.getType().getMaxAmount()) {
+					restAmount -= item.getType().getMaxAmount();
+					setItem(i, item, false);
+				} else {
+					ItemStack clone = item.clone();
+					clone.setAmount(restAmount);
+					setItemUnsafe(i, clone, false);
+					return 0;
+				}
+			}
+		}
+		return restAmount;
+	}
+	
+	@Override
+	public List<ItemStack> addItem(ItemStack... items) {
+		List<ItemStack> left = null;
+		for (int i = 0; i < items.length; i++) {
+			ItemStack item = items[i];
+			if (item == null)
+				continue;
+			int remain = addItem(item);
+			if (remain == 0)
+				continue;
+			if (left == null)
+				left = new ArrayList<>(items.length-i);
+			ItemStack clone = item.clone();
+			clone.setAmount(remain);
+			left.add(clone);
+		}
+		return left != null ? left : List.of();
+	}
+
+	@Override
 	public ItemStack getItem(int slot) {
+		ItemStack item = contents[slot];
+		return item != null ? item.clone() : null;
+	}
+	
+	@Override
+	public ItemStack getItemUnsafe(int slot) {
 		return contents[slot];
 	}
 
@@ -95,15 +220,38 @@ public class CoreInventory implements Inventory {
 
 	@Override
 	public ItemStack[] getContents() {
+		ItemStack[] contents = new ItemStack[size];
+		for (int i = 0; i < size; i++) {
+			ItemStack item = this.contents[i];
+			if (item != null)
+				item = item.clone();
+			contents[i] = item;
+		}
 		return contents;
+	}
+	
+	@Override
+	public ItemStack[] getContentsUnsafe() {
+		return Arrays.copyOf(contents, size);
+	}
+
+	@Override
+	public void setContentsUnsafe(ItemStack[] contents) {
+		System.arraycopy(contents, 0, this.contents, 0, size);
+		updateSlots();
 	}
 
 	@Override
 	public void setContents(ItemStack[] contents) {
-		final int newSize = contents.length;
-		final int oldSize = this.contents.length;
-		for (int i = 0; i < newSize && i < oldSize; i++) {
-			this.contents[i] = contents[i];
+		if (contents == null)
+			throw new IllegalArgumentException("Contents can not be null!");
+		if (contents.length != size)
+			throw new IllegalAccessError("Contents length must be the same as the size of this Inventory!");
+		for (int i = 0; i < size; i++) {
+			ItemStack item = contents[i];
+			if (item != null)
+				item = item.clone();
+			this.contents[i] = item;
 		}
 		updateSlots();
 	}
@@ -120,8 +268,10 @@ public class CoreInventory implements Inventory {
 	public int count(Material material) {
 		int c = 0;
 		for (ItemStack item : contents) {
-			if (item == null) continue;
-			if (item.getType() == material) c += item.getAmount();
+			if (item == null) 
+				continue;
+			if (item.getType() == material) 
+				c += item.getAmount();
 		}
 		return c;
 	}
@@ -130,9 +280,6 @@ public class CoreInventory implements Inventory {
 	public void updateSlot(int slot, boolean animation) {
 		if (slot == -999) 
 			return;
-		ItemStack item = getItem(slot);
-		if (item != null)
-			item = item.clone();
 		for (Player player : viewers) {
 			updateSlot(player, slot, animation);
 		}
@@ -142,9 +289,7 @@ public class CoreInventory implements Inventory {
 	public void updateSlot(Player player, int slot, boolean animation) {
 		if (slot == -999) 
 			return;
-		ItemStack item = getItem(slot);
-		if (item != null)
-			item = item.clone();
+		ItemStack item = getItemUnsafe(slot);
 		internalUpdateSlot(player, item, slot, animation);
 	}
 	
@@ -181,24 +326,15 @@ public class CoreInventory implements Inventory {
 
 	@Override
 	public void updateSlots() {
-		ItemStack[] contents = getContents();
-		ItemStack[] items = new ItemStack[contents.length];
-		for (int i = 0; i < contents.length; i++)
-			if (contents[i] != null)
-				items[i] = contents[i].clone();
+		ItemStack[] contents = getContentsUnsafe();
 		for (Player player : viewers) {
-			internalUpdateSlots(player, items);
+			internalUpdateSlots(player, contents);
 		}
 	}
 
 	@Override
 	public void updateSlots(Player player) {
-		ItemStack[] contents = getContents();
-		ItemStack[] items = new ItemStack[contents.length];
-		for (int i = 0; i < contents.length; i++)
-			if (contents[i] != null)
-				items[i] = contents[i].clone();
-		internalUpdateSlots(player, items);
+		internalUpdateSlots(player, getContentsUnsafe());
 	}
 	
 	/**
@@ -278,6 +414,27 @@ public class CoreInventory implements Inventory {
 			if (item != null) count++;
 		}
 		return count;
+	}
+	
+	@Override
+	public void clear() {
+		Arrays.fill(contents, null);	
+		updateSlots();
+	}
+
+	@Override
+	public GUI getGUI() {
+		return gui;
+	}
+
+	@Override
+	public void setGUI(GUI gui) {
+		if (gui != null && gui.getInventory() != this)
+			throw new IllegalArgumentException("Can only asigne gui with this inventory!");
+		GUI oldGUI = this.gui;
+		this.gui = gui;
+		if (oldGUI != null)
+			oldGUI.notifyRemoved();
 	}
 
 }

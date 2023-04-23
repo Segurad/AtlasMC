@@ -16,8 +16,9 @@ public interface NBTHolder {
 	/**
 	 * 
 	 * @return the NBT without system data
+	 * @throws IOException 
 	 */
-	public default NBT toNBT() {
+	public default NBT toNBT() throws IOException {
 		return toNBT(false);
 	}
 	
@@ -25,16 +26,13 @@ public interface NBTHolder {
 	 * 
 	 * @param systemData whether or not the system data should
 	 * @return NBT 
+	 * @throws IOException 
 	 */
-	public default NBT toNBT(boolean systemData) {
+	public default NBT toNBT(boolean systemData) throws IOException {
 		NBTObjectWriter writer = new NBTObjectWriter();
 		NBT nbt = writer.toNBT();
-		try {
-			toNBT(writer, systemData);
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		toNBT(writer, systemData);
+		writer.close();
 		return nbt;
 	}
 	
@@ -54,13 +52,9 @@ public interface NBTHolder {
 	 */
 	public void fromNBT(NBTReader reader) throws IOException;
 	
-	public default void fromNBT(NBT nbt) {
+	public default void fromNBT(NBT nbt) throws IOException {
 		NBTObjectReader reader = new NBTObjectReader(nbt);
-		try {
-			fromNBT(reader);
-			reader.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		fromNBT(reader);
+		reader.close();
 	}
 }

@@ -3,6 +3,9 @@ package de.atlascore.io.protocol;
 import java.io.IOException;
 
 import de.atlascore.io.ProxyConnectionHandler;
+import de.atlasmc.Atlas;
+import de.atlasmc.atlasnetwork.AtlasNetwork;
+import de.atlasmc.atlasnetwork.NetworkInfo;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketListener;
 import de.atlasmc.io.protocol.status.PacketInPing;
@@ -22,7 +25,15 @@ public class CorePacketListenerStatus implements PacketListener {
 		System.out.println("PacketStatus: " + packet.getID()); // TODO  delete
 		if (packet.getID() == 0) {
 			PacketOutResponse response = new PacketOutResponse();
-			response.setResponse(handler.getProxy().createServerListResponse(CoreProtocolAdapter.VERSION).toString());
+			AtlasNetwork network = Atlas.getNetwork();
+			NetworkInfo info = null;
+			if (network.isMainenance()) {
+				info = network.getNetworkInfoMaintenance();
+			} else {
+				info = network.getNetworkInfo();
+			}
+			int version = handler.getProtocol().getVersion();
+			response.setResponse(info.getStatusInfo(version));
 			handler.sendPacket(response);
 		} else if (packet.getID() == 1) {
 			PacketInPing ping = (PacketInPing) packet;

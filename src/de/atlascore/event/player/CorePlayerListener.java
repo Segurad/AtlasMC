@@ -7,11 +7,12 @@ import de.atlasmc.event.EventHandler;
 import de.atlasmc.event.Listener;
 import de.atlasmc.event.player.PlayerHeldItemChangeEvent;
 import de.atlasmc.event.player.PlayerMoveEvent;
+import de.atlasmc.event.player.PlayerPluginChannelUnknownEvent;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutHeldItemChange;
 
 public class CorePlayerListener implements Listener {
-	
+
 	@EventHandler
 	public void onMove(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
@@ -34,6 +35,13 @@ public class CorePlayerListener implements Listener {
 		PacketOutHeldItemChange packet = new PacketOutHeldItemChange();
 		packet.setSlot(event.getOldSlot());
 		con.sendPacked(packet);
+	}
+	
+	@EventHandler
+	public void onPluginChannelUnknonw(PlayerPluginChannelUnknownEvent event) {
+		if (event.isIgnore())
+			return;
+		event.getPlayer().disconnect("Message on not registered plugin channel: " + event.getChannel());
 	}
 
 }

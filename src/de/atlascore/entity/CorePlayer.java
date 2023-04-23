@@ -3,15 +3,20 @@ package de.atlascore.entity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.BiConsumer;
 
+import de.atlascore.block.CorePlayerDiggingHandler;
 import de.atlascore.inventory.CoreInventoryView;
+import de.atlascore.inventory.CorePlayerItemCooldownHandler;
 import de.atlasmc.Effect;
 import de.atlasmc.Gamemode;
+import de.atlasmc.Material;
 import de.atlasmc.Particle;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
+import de.atlasmc.block.DiggingHandler;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatType;
 import de.atlasmc.entity.Entity;
@@ -34,18 +39,33 @@ import de.atlasmc.io.protocol.play.PacketOutNamedSoundEffect;
 import de.atlasmc.io.protocol.play.PacketOutOpenWindow;
 import de.atlasmc.io.protocol.play.PacketOutParticle;
 import de.atlasmc.io.protocol.play.PacketOutChangeGameState.ChangeReason;
-import de.atlasmc.io.protocol.play.PacketOutChatMessage;
 import de.atlasmc.io.protocol.play.PacketOutSetExperiance;
 import de.atlasmc.io.protocol.play.PacketOutSetSlot;
 import de.atlasmc.io.protocol.play.PacketOutSoundEffect;
+import de.atlasmc.io.protocol.play.PacketOutSpawnPlayer;
 import de.atlasmc.io.protocol.play.PacketOutStopSound;
 import de.atlasmc.io.protocol.play.PacketOutTradeList;
+import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.scoreboard.ScoreboardView;
+import de.atlasmc.util.CooldownHandler;
 import de.atlasmc.util.MathUtil;
-import de.atlasmc.world.World;
 
 public class CorePlayer extends CoreHumanEntity implements Player {
+	
+	protected static final BiConsumer<Entity, Player>
+	VIEWER_ADD_FUNCTION = (holder, viewer) -> {
+		CorePlayer player = (CorePlayer) holder;
+		PlayerConnection con = viewer.getConnection();
+		PacketOutSpawnPlayer packet = new PacketOutSpawnPlayer();
+		packet.setEntity(player);
+		con.sendPacked(packet);
+		player.sendMetadata(viewer);
+		player.sendEntityEffects(viewer);
+		player.sendAttributes(viewer);
+		DiggingHandler digging = player.getDigging();
+		digging.sendAnimation(viewer);
+	};
 	
 	private PlayerConnection con;
 	private Inventory open;
@@ -58,12 +78,18 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	private ItemStack cursorItem;
 	private boolean canBuild;
 	private Object pluginData;
-	private PermissionHandler permHandler;
+	private DiggingHandler digging;
 	
-	public CorePlayer(EntityType type, UUID uuid, World world, PlayerConnection con) {
-		super(type, uuid, world);
+	public CorePlayer(EntityType type, UUID uuid, PlayerConnection con) {
+		super(type, uuid);
 		view = new CoreInventoryView(this, getInventory(), getCraftingInventory(), 0);
 		this.con = con;
+		this.digging = new CorePlayerDiggingHandler(this);
+	}
+	
+	@Override
+	protected CooldownHandler<Material> createItemCooldownHander() {
+		return new CorePlayerItemCooldownHandler(this);
 	}
 	
 	@Override
@@ -116,10 +142,10 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 		
 		con.sendPacked(packet);
 	}
-
+	
 	@Override
-	public boolean hasPermission(String permission) {
-		return permHandler.hasPermission(permission);
+	public Permission getPermission(String permission, boolean allowWildcards) {
+		return getPermissionHandler().getPermission(permission);
 	}
 
 	@Override
@@ -168,12 +194,30 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 
 	@Override
 	public void setItemOnCursor(ItemStack item) {
+		if (this.cursorItem == item)
+			return;
+		if (item != null)
+			item = item.clone();
 		this.cursorItem = item;
+		updateItemOnCursor();
 	}
 
 	@Override
 	public ItemStack getItemOnCursor() {
-		return cursorItem;
+		return cursorItem != null ? cursorItem.clone() : null;
+	}
+	
+	@Override
+	public void setItemOnCursorUnsafe(ItemStack item) {
+		if (cursorItem == item)
+			return;
+		this.cursorItem = item;
+		updateItemOnCursor();
+	}
+	
+	@Override
+	public ItemStack getItemOnCursorUnsafe() {
+		return this.cursorItem;
 	}
 
 	@Override
@@ -193,7 +237,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 
 	@Override
 	public String getLocal() {
-		return con.getClientLocal();
+		return con.getSettings().getLocal();
 	}
 
 	@Override
@@ -263,29 +307,22 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 
 	@Override
 	public void sendMessage(Chat chat, ChatType type) {
-		if (type == null)
-			throw new IllegalArgumentException("Type can not be null!");
-		if (chat == null || type.ordinal() < con.getChatMode().ordinal())
-			return;
-		PacketOutChatMessage packet = new PacketOutChatMessage();
-		packet.setMessage(chat);
-		packet.setType(type);
-		con.sendPacked(packet);
+		con.getAtlasPlayer().sendMessage(chat, type);
 	}
-
+	
 	@Override
-	public void sendMessage(Chat chat) {
-		sendMessage(chat, ChatType.SYSTEM);
+	public void sendMessage(String message) {
+		con.getAtlasPlayer().sendMessage(message);
 	}
 
 	@Override
 	public PermissionHandler getPermissionHandler() {
-		return permHandler;
+		return getAtlasPlayer().getPermissionHandler();
 	}
 
 	@Override
 	public void setPermissionHandler(PermissionHandler handler) {
-		this.permHandler = handler;
+		getAtlasPlayer().setPermissionHandler(handler);
 	}
 
 	@Override
@@ -312,7 +349,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	@Override
 	public void playSound(double x, double y, double z, Sound sound, SoundCategory category, float volume, float pitch) {
 		PacketOutSoundEffect packet = new PacketOutSoundEffect();
-		packet.setPosition(x, y, z);
+		packet.setLocation(x, y, z);
 		packet.setSound(sound);
 		packet.setCategory(category);
 		packet.setVolume(volume);
@@ -382,6 +419,21 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	public void teleport(double x, double y, double z, float yaw, float pitch) {
 		super.teleport(x, y, z, yaw, pitch);
 		con.teleport(x, y, z, yaw, pitch);
+	}
+
+	@Override
+	public void disconnect(String message) {
+		con.disconnect(message);
+	}
+
+	@Override
+	public DiggingHandler getDigging() {
+		return digging;
+	}
+
+	@Override
+	public void setDiggingHandller(DiggingHandler handler) {
+		this.digging = handler;
 	}
 
 }

@@ -1,6 +1,11 @@
 package de.atlasmc.plugin;
 
 import java.io.File;
+import java.util.List;
+
+import org.slf4j.Logger;
+
+import de.atlasmc.NamespacedKey;
 
 public interface Plugin {
 	
@@ -24,9 +29,22 @@ public interface Plugin {
 	 */
 	public void unload();
 	
+	/**
+	 * Called when the Plugin should reload all internal configurations
+	 */
+	public void reload();
+	
+	public void loadConfiguration(PluginConfiguration config);
+	
+	public void unloadConfiguration(NamespacedKey config);
+	
+	public void reloadConfiguration(NamespacedKey config);
+	
+	public void reloadConfigurations();
+	
 	public String getVersion();
 	
-	public String getAuthor();
+	public List<String> getAuthor();
 	
 	public String getName();
 	
@@ -38,8 +56,8 @@ public interface Plugin {
 	
 	public PluginLoader getPluginLoader();
 	
-	public ClassLoader getClassLoader();
-	
 	public File getFile();
+	
+	public Logger getLogger();
 
 }

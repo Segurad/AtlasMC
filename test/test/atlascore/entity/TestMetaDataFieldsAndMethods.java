@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import de.atlascore.system.init.ContainerFactoryLoader;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
-import de.atlasmc.world.World;
 import test.util.ReflectionUtil;
 
 public class TestMetaDataFieldsAndMethods implements Consumer<Class<?>> {
@@ -52,12 +51,12 @@ public class TestMetaDataFieldsAndMethods implements Consumer<Class<?>> {
 		if (LAST_META_INDEX == null && !META_FIELDS.isEmpty())
 			fail("LAST_META_INDEX missing but MetaDataFields present: " + clazz.getName());
 		try {
-			clazz.getDeclaredMethod("initMetaContainer", null);
+			clazz.getDeclaredMethod("initMetaContainer");
 		} catch (NoSuchMethodException | SecurityException e) {
 			fail("Missing \"initMetaContainer()\" method for entity class: " + clazz.getName());
 		}
 		try {
-			clazz.getDeclaredMethod("getMetaContainerSize", null);
+			clazz.getDeclaredMethod("getMetaContainerSize");
 		} catch (NoSuchMethodException | SecurityException e) {
 			fail("Missing \"getMetaContainerSize()\" method for entity class: " + clazz.getName());
 		}
@@ -65,12 +64,12 @@ public class TestMetaDataFieldsAndMethods implements Consumer<Class<?>> {
 			return;
 		Constructor<?> construct = null;
 		try {
-			construct = clazz.getConstructor(EntityType.class, UUID.class, World.class);
+			construct = clazz.getConstructor(EntityType.class, UUID.class);
 		} catch (NoSuchMethodException | SecurityException e) {
-			Assertions.fail("Entity constructor(EntityType, UUID, World) missing: " + clazz.getName(), e);
+			Assertions.fail("Entity constructor(EntityType, UUID) missing: " + clazz.getName(), e);
 		}
 		try {
-			construct.newInstance(null, null, null);
+			construct.newInstance(null, null);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
 			Assertions.fail("Fail to create Entity instance: " + clazz.getName(), e);

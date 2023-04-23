@@ -1,10 +1,9 @@
 package de.atlasmc.inventory.gui;
 
 import de.atlasmc.Material;
-import de.atlasmc.chat.Chat;
 import de.atlasmc.event.inventory.InventoryClickEvent;
-import de.atlasmc.event.inventory.InventoryType;
-import de.atlasmc.inventory.InventoryHolder;
+import de.atlasmc.inventory.Inventory;
+import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.gui.button.AbstractButton;
 import de.atlasmc.inventory.gui.component.ComponentHandler;
@@ -12,7 +11,7 @@ import de.atlasmc.inventory.gui.component.ItemComponentHandler;
 import de.atlasmc.inventory.gui.component.ItemPageComponent;
 import de.atlasmc.inventory.gui.component.PageComponent;
 
-public class MultipageGUI extends CoreGUI {
+public class MultipageGUI extends BaseGUI {
 
 	private final int next, back;
 	private int page = 0;
@@ -21,12 +20,26 @@ public class MultipageGUI extends CoreGUI {
 	private ItemStack inext = null, iback = null;
 	private final ItemStack air = new ItemStack(Material.AIR);
 	
-	public MultipageGUI(Chat title, InventoryHolder holder, int back, int next, int compLenght, int compDepth, int maxpages) {
-		this(title, holder, back, next, compLenght, compDepth, maxpages, 0, 0);
+	public MultipageGUI(Inventory inv, int back, int next, int compLenght, int compDepth, int maxpages) {
+		this(inv, back, next, compLenght, compDepth, maxpages, 0, 0);
 	}
 	
-	public MultipageGUI(Chat title, InventoryHolder holder, int back, int next, int compLenght, int compDepth, int maxpages, int compOffsetX, int compOffsetY) {
-		super(9*6, InventoryType.GENERIC_9X6, title, holder);
+	/**
+	 * Creates a new MultipageGUI. The given Inventory must be of {@link InventoryType#GENERIC_9X6} or {@link InventoryType#DOUBLE_CHEST}
+	 * @param inv
+	 * @param back
+	 * @param next
+	 * @param compLenght
+	 * @param compDepth
+	 * @param maxpages
+	 * @param compOffsetX
+	 * @param compOffsetY
+	 */
+	public MultipageGUI(Inventory inv, int back, int next, int compLenght, int compDepth, int maxpages, int compOffsetX, int compOffsetY) {
+		super(inv);
+		if (inv.getType() != InventoryType.GENERIC_9X6 || inv.getType() != InventoryType.DOUBLE_CHEST) {
+			throw new IllegalArgumentException("Invalid inventory type: " + inv.getType().name());
+		}
 		this.next = next;
 		this.back = back;
 		this.mltPageItems = new ItemPageComponent(compLenght, compDepth, maxpages);
@@ -40,15 +53,19 @@ public class MultipageGUI extends CoreGUI {
 					if (page > 0) {
 						page--;
 						mhandler.updateDisplay(0, mhandler.getDepth()*page);
-						if (page+2 == mltPageItems.getPages()) setItem(next, inext);
-						if (page == 0) return air;
+						if (page+2 == mltPageItems.getPages()) 
+							inv.setItem(next, inext);
+						if (page == 0) 
+							return air;
 					}
 				} else if (slot == next) {
 					if (page+1 < mltPageItems.getPages()) {
 						page++;
 						mhandler.updateDisplay(0, mhandler.getDepth()*page);
-						if (page-1 == 0) setItem(back, iback);
-						if (page+1 == mltPageItems.getPages()) return air;
+						if (page-1 == 0) 
+							inv.setItem(back, iback);
+						if (page+1 == mltPageItems.getPages()) 
+							return air;
 					}
 				}
 				return null;
@@ -72,8 +89,14 @@ public class MultipageGUI extends CoreGUI {
 	public void setPageSwitchIcons(ItemStack next, ItemStack back) {
 		this.iback = back;
 		this.inext = next;
-		if (page+1 == mltPageItems.getPages()) setItem(this.next, null); else setItem(this.next, inext);
-		if (page-1 == 0) setItem(this.back, iback); else setItem(this.back, null);
+		if (page+1 == mltPageItems.getPages()) 
+			inv.setItem(this.next, null); 
+		else 
+			inv.setItem(this.next, inext);
+		if (page-1 == 0) 
+			inv.setItem(this.back, iback); 
+		else 
+			inv.setItem(this.back, null);
 	}
 	
 	public int getCurrentPage() {
@@ -91,7 +114,7 @@ public class MultipageGUI extends CoreGUI {
 	public int addPage() {
 		int index = mltPageItems.addPage();
 		if (index != -1) {
-			setItem(next, inext);
+			inv.setItem(next, inext);
 		}
 		return index;
 	}

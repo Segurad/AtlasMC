@@ -36,9 +36,14 @@ public class CharKeyBuffer extends CharKey {
 	}
 	
 	public void append(CharSequence sequence) {
-		final int length = sequence.length();
+		append(sequence, 0, sequence.length());
+	}
+	
+	public void append(CharSequence sequence, final int offset, final int length) {
+		if (length <= 0)
+			return;
 		ensureSize(length);
-		for (int i = 0; i < length ; i++)
+		for (int i = offset; i < length; i++)
 			buf[this.length++] = sequence.charAt(i);
 	}
 	
@@ -47,6 +52,8 @@ public class CharKeyBuffer extends CharKey {
 	}
 	
 	public void append(char[] buf, int offset, int length) {
+		if (length <= 0)
+			return;
 		ensureSize(length);
 		final int end = offset+length;
 		for (int i = offset; i < end; i++)

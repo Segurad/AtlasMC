@@ -17,9 +17,10 @@ public class ItemUtil {
 		ItemStack item = new ItemStack(material, amount);
 		if (name != null || lore != null) {
 			ItemMeta meta = item.getItemMeta();
-			if (name != null) meta.setDisplayName(name);
-			if (lore != null) meta.setLore(lore);
-			item.setItemMeta(meta);
+			if (name != null) 
+				meta.setDisplayName(name);
+			if (lore != null)
+				meta.setLore(lore);
 		}
 		return item;
 	}
@@ -32,7 +33,6 @@ public class ItemUtil {
 			meta.addEnchant(Enchantment.LUCK, 1);
 			meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		}
-		item.setItemMeta(meta);
 		return item;
 	}
 }

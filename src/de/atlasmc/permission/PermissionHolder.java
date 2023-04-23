@@ -5,22 +5,20 @@ import java.util.Collection;
 /**
  * Stores {@link Permission}s
  */
-public interface PermissionHolder {
+public interface PermissionHolder extends Permissible {
 	
-	public Collection<Permission> getPermissions();
+	Collection<Permission> getPermissions();
 	
-	public Permission getPermission(String permission);
+	void setPermission(String permission, int value);
 	
-	public void addPermission(String permission, int value, boolean negate);
+	default void setPermission(String permission) {
+		setPermission(permission, 1);
+	}
 	
-	public void addPermission(String permission, int value);
+	void setPermission(Permission permission);
 	
-	public void addPermission(String permission);
+	void removePermission(String permission);
 	
-	public void addPermission(Permission permission);
-	
-	public void removePermission(String permission);
-	
-	public void removePermission(Permission permission);
+	void removePermission(Permission permission);
  
 }

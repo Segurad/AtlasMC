@@ -4,8 +4,8 @@ public interface Damageable extends Entity {
 	
 	public void damage(double damage);
 	
-	public float getHealth();
+	public double getHealth();
 	
-	public void setHealth(float health);
+	public void setHealth(double health);
 
 }

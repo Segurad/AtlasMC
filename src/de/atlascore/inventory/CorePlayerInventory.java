@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.entity.HumanEntity;
 import de.atlasmc.entity.Player;
-import de.atlasmc.event.inventory.InventoryType;
-import de.atlasmc.event.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.CraftingInventory;
 import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.inventory.InventoryHolder;
+import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.PlayerInventory;
+import de.atlasmc.inventory.InventoryType.SlotType;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutEntityEquipment;
 import de.atlasmc.util.Pair;
@@ -28,7 +28,7 @@ public class CorePlayerInventory extends CoreInventory implements PlayerInventor
 	private int heldSlot;
 	
 	public CorePlayerInventory(Chat title, InventoryHolder holder) {
-		super(40, InventoryType.PLAYER, title, holder);
+		super(41, 36, InventoryType.PLAYER, title, holder);
 		if (holder == null) 
 			throw new IllegalArgumentException("InventoryHolder can not be null");
 		if (!(holder instanceof HumanEntity)) 
@@ -85,7 +85,7 @@ public class CorePlayerInventory extends CoreInventory implements PlayerInventor
 		if (slot > 8 || slot < 0) 
 			throw new IllegalArgumentException("Slot must be between 0 and 8");
 		this.heldSlot = slot;
-		updateEquipmentSlot(EquipmentSlot.HAND, slot);
+		updateEquipmentSlot(slot);
 	}
 
 	@Override
@@ -130,28 +130,18 @@ public class CorePlayerInventory extends CoreInventory implements PlayerInventor
 	
 	@Override
 	public void setItem(int slot, ItemStack item, boolean animation) {
-		super.setItem(slot, item, animation);
-		if (slot == heldSlot) {
-			updateEquipmentSlot(EquipmentSlot.HAND, slot);
+		if (contents[slot] == item)
 			return;
-		}
-		switch (slot) {
-		case SLOT_HEAD:
-			updateEquipmentSlot(EquipmentSlot.HEAD, slot);
-			break;
-		case SLOT_CHEST:
-			updateEquipmentSlot(EquipmentSlot.CHEST, slot);
-			break;
-		case SLOT_LEGS:
-			updateEquipmentSlot(EquipmentSlot.LEGS, slot);
-			break;
-		case SLOT_FEET:
-			updateEquipmentSlot(EquipmentSlot.FEET, slot);
-			break;
-		case SLOT_OFF_HAND:
-			updateEquipmentSlot(EquipmentSlot.OFF_HAND, slot);
-			break;
-		}
+		super.setItem(slot, item, animation);
+		updateEquipmentSlot(slot);
+	}
+	
+	@Override
+	public void setItemUnsafe(int slot, ItemStack item, boolean animation) {
+		if (contents[slot] == item)
+			return;
+		super.setItemUnsafe(slot, item, animation);
+		updateEquipmentSlot(slot);
 	}
 
 	@Override
@@ -159,14 +149,109 @@ public class CorePlayerInventory extends CoreInventory implements PlayerInventor
 		return getHolder().getCraftingInventory();
 	}
 	
-	private void updateEquipmentSlot(EquipmentSlot equipmentSlot, int slot) {
-		ItemStack item = getItem(slot).clone();
+	private void updateEquipmentSlot(int slot) {
+		EquipmentSlot equipmentSlot = null;
+		if (slot == heldSlot) {
+			equipmentSlot = EquipmentSlot.HAND;
+		} else {
+			switch (slot) {
+			case SLOT_HEAD:
+				equipmentSlot = EquipmentSlot.HEAD;
+				break;
+			case SLOT_CHEST:
+				equipmentSlot = EquipmentSlot.CHEST;
+				break;
+			case SLOT_LEGS:
+				equipmentSlot = EquipmentSlot.LEGS;
+				break;
+			case SLOT_FEET:
+				equipmentSlot = EquipmentSlot.FEET;
+				break;
+			case SLOT_OFF_HAND:
+				equipmentSlot = EquipmentSlot.OFF_HAND;
+				break;
+			}
+		}
+		ItemStack item = getItemUnsafe(slot);
 		ArrayList<Pair<EquipmentSlot, ItemStack>> slots = new ArrayList<>(1);
 		slots.add(new Pair<>(equipmentSlot, item));
+		PacketOutEntityEquipment packet = new PacketOutEntityEquipment();
+		packet.setSlots(slots);
+		packet.setEntityID(getHolder().getID());
 		for (Player viewer : getHolder().getViewers()) {
 			PlayerConnection con = viewer.getConnection();
-			PacketOutEntityEquipment packet = new PacketOutEntityEquipment();
-			packet.setSlots(slots);
+			con.sendPacked(packet);
+		}
+	}
+
+	@Override
+	public ItemStack[] getArmorContents() {
+		ItemStack[] contents = new ItemStack[4];
+		contents[0] = getItem(SLOT_FEET);
+		contents[1] = getItem(SLOT_LEGS);
+		contents[2] = getItem(SLOT_CHEST);
+		contents[3] = getItem(SLOT_HEAD);
+		return contents;
+	}
+	
+	@Override
+	public ItemStack[] getArmorContentsUnsafe() {
+		ItemStack[] contents = new ItemStack[4];
+		contents[0] = this.contents[SLOT_FEET];
+		contents[1] = this.contents[SLOT_LEGS];
+		contents[2] = this.contents[SLOT_CHEST];
+		contents[3] = this.contents[SLOT_HEAD];
+		return contents;
+	}
+
+	@Override
+	public void setArmorContents(ItemStack[] items) {
+		internalSetArmorContents(items, false);
+	}
+	
+	@Override
+	public void setArmorContentsUnsafe(ItemStack[] items) {
+		internalSetArmorContents(items, true);
+	}
+	
+	private void internalSetArmorContents(ItemStack[] items, boolean unsafe) {
+		if (items == null)
+			throw new IllegalArgumentException("Contents can not be null!");
+		if (items.length != 4)
+			throw new IllegalArgumentException("Contents must have a length of 4: " + items.length);
+		if (!unsafe) {
+			for (int i = 0; i < items.length; i++) {
+				ItemStack item = items[i];
+				if (item != null)
+					items[i] = item.clone();
+			}
+		}
+		ArrayList<Pair<EquipmentSlot, ItemStack>> slots = new ArrayList<>(4);
+		if (items[0] != null) {
+			contents[SLOT_FEET] = items[0];
+			updateSlot(SLOT_FEET, false);
+			slots.add(new Pair<>(EquipmentSlot.FEET, items[0]));
+		}
+		if (items[1] != null) {
+			contents[SLOT_LEGS] = items[1];
+			updateSlot(SLOT_LEGS, false);
+			slots.add(new Pair<>(EquipmentSlot.LEGS, items[1]));
+		}
+		if (items[2] != null) {
+			contents[SLOT_CHEST] = items[2];
+			updateSlot(SLOT_CHEST, false);
+			slots.add(new Pair<>(EquipmentSlot.CHEST, items[2]));
+		}
+		if (items[3] != null) {
+			contents[SLOT_HEAD] = items[3];
+			updateSlot(SLOT_HEAD, false);
+			slots.add(new Pair<>(EquipmentSlot.HEAD, items[3]));
+		}
+		PacketOutEntityEquipment packet = new PacketOutEntityEquipment();
+		packet.setSlots(slots);
+		packet.setEntityID(getHolder().getID());
+		for (Player viewer : getHolder().getViewers()) {
+			PlayerConnection con = viewer.getConnection();
 			con.sendPacked(packet);
 		}
 	}

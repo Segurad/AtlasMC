@@ -17,7 +17,7 @@ public class CoreServerThread extends TickingThread {
 	private final Scheduler scheduler;
 	
 	public CoreServerThread(CoreLocalServer server) {
-		super("ServerThread: " + server.getServerID(), 50);
+		super("ServerThread: " + server.getServerID(), 50, server.getLogger(), false);
 		this.eventQueue = new ConcurrentLinkedQueue<>();
 		this.server = server;
 		this.scheduler = Atlas.getScheduler().createScheduler();

@@ -18,7 +18,7 @@ final class BlockEventHandler implements Listener {
 		if (world.hasFlag(WorldFlag.DISABLE_BLOCKPHYSICS))
 			e.setCancelled(true);
 	}
-
+	/*
 	@EventHandler(ignoreCancelled = true)
 	public void onFade(BlockFadeEvent e) {
 		World data = e.getBlock().getWorld();
@@ -44,7 +44,7 @@ final class BlockEventHandler implements Listener {
 			return;
 		if (data.hasFlag(WorldFlag.DISABLE_LIQUIDFLOW))
 			e.setCancelled(true);
-	}
+	}*/
 
 	@EventHandler(ignoreCancelled = true)
 	public void onBreak(BlockBreakEvent e) {

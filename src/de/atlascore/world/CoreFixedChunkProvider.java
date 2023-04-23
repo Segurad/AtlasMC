@@ -57,7 +57,7 @@ public class CoreFixedChunkProvider implements ChunkProvider {
 	}
 
 	@Override
-	public Chunk getChunk(int x, int z) {
+	public Chunk getChunk(int x, int z, boolean load) {
 		// TODO Auto-generated method stub
 		return null;
 	}

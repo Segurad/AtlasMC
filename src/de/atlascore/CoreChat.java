@@ -25,6 +25,7 @@ public class CoreChat implements Chat {
 		}
 		return legacy;
 	}
+	
 	@Override
 	public String getJsonText() {
 		if (json == null) {
@@ -35,6 +36,7 @@ public class CoreChat implements Chat {
 		}
 		return json;
 	}
+	
 	@Override
 	public String getText() {
 		return json != null ? json : legacy;
@@ -74,6 +76,16 @@ public class CoreChat implements Chat {
 		} else if (!legacy.equals(other.legacy))
 			return false;
 		return true;
+	}
+
+	@Override
+	public boolean hasLegacy() {
+		return legacy != null;
+	}
+
+	@Override
+	public boolean hasJson() {
+		return json != null;
 	}
 
 }

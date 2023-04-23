@@ -6,7 +6,6 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.SkeletonHorse;
 import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.AbstractHorseInventory;
-import de.atlasmc.world.World;
 
 public class CoreSkeletonHorse extends CoreAbstractHorse implements SkeletonHorse {
 
@@ -15,8 +14,8 @@ public class CoreSkeletonHorse extends CoreAbstractHorse implements SkeletonHors
 	//NBT_SKELETON_TRAP = "SkeletonTrap",
 	//NBT_SKELETON_TRAP_TIME = "SkeletonTrapTime";
 	
-	public CoreSkeletonHorse(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreSkeletonHorse(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

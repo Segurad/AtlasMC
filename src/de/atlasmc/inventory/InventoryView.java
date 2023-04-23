@@ -2,8 +2,7 @@ package de.atlasmc.inventory;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.entity.Player;
-import de.atlasmc.event.inventory.InventoryType;
-import de.atlasmc.event.inventory.InventoryType.SlotType;
+import de.atlasmc.inventory.InventoryType.SlotType;
 
 public interface InventoryView {
 	
@@ -27,11 +26,19 @@ public interface InventoryView {
 	
 	public void setCursor(ItemStack item);
 	
+	public void setCursorUnsafe(ItemStack item);
+	
 	public ItemStack getCursor();
+	
+	public ItemStack getCursorUnsafe();
 
 	public ItemStack getItem(int rawSlot);
 	
+	public ItemStack getItemUnsafe(int rawSlot);
+	
 	public void setItem(int rawSlot, ItemStack item);
+	
+	public void setItemUnsafe(int rawSlot, ItemStack item);
 	
 	public int countSlots();
 	

@@ -12,7 +12,6 @@ import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreCat extends CoreTameable implements Cat {
 	
@@ -48,8 +47,8 @@ public class CoreCat extends CoreTameable implements Cat {
 		});
 	}
 	
-	public CoreCat(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreCat(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

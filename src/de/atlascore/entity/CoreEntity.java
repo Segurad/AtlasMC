@@ -64,7 +64,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	 * <table>
 	 * <tr><th>Bit mask</th><th>Meaning</th></tr>
 	 * <tr><td>0x01		</td><td>on fire		</td></tr>
-	 * <tr><td>0x02		</td><td>on ground		</td></tr>
+	 * <tr><td>0x02		</td><td>on crouching	</td></tr>
 	 * <tr><td>0x08		</td><td>sprinting		</td></tr>
 	 * <tr><td>0x10		</td><td>swimming		</td></tr>
 	 * <tr><td>0x20		</td><td>invisible		</td></tr>
@@ -139,7 +139,8 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 			((Entity) holder).setGravity(reader.readByteTag() == 0);
 		});
 		NBT_FIELDS.setField(NBT_ON_GROUND, (holder, reader) -> {
-			((Entity) holder).setOnGround(reader.readByteTag() == 1);
+			// TODO skipped on ground
+			//((Entity) holder).setOnGround(reader.readByteTag() == 1);
 		});
 		NBT_FIELDS.setField(NBT_PASSENGERS, NBTField.SKIP); // TODO nbt load passenger
 		NBT_FIELDS.setField(NBT_PORTAL_COOLDOWN, (holder, reader) -> {
@@ -182,6 +183,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	private boolean invulnerable;
 	private boolean removed;
 	private volatile boolean aremoved;
+	private volatile LocalServer server;
 	protected Vector motion;
 	private List<Entity> passengers;
 	private int portalCooldown;
@@ -198,15 +200,14 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	 * Creates a new CoreEntity with id 0 and removed status.<br>
 	 * Use {@link #spawn(int, World, double, double, double, float, float)} to spawn it in a {@link World}
 	 * @param type the EntityType of this Entity
-	 * @param loc the Location of this Entity (the Location will be copied)
 	 * @param uuid the UUID of this entity
 	 */
-	public CoreEntity(EntityType type, UUID uuid, World world) {
+	public CoreEntity(EntityType type, UUID uuid) {
 		this.removed = true;
 		this.aremoved = true;
 		this.type = type;
 		this.uuid = uuid;
-		this.loc = new Location(world, 0, 0, 0);
+		this.loc = new Location(null, 0, 0, 0);
 		this.oldLoc = new Location(loc);
 		this.motion = new Vector(0, 0, 0);
 		this.viewers = createViewerSet();
@@ -335,7 +336,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 
 	@Override
 	public LocalServer getServer() {
-		return loc.getWorld().getServer();
+		return server;
 	}
 
 	@Override
@@ -520,16 +521,15 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	public void setVelocity(double x, double y, double z) {
 		// TODO velocity
 	}
+	
+	@Override
+	public void setVelocity(Vector vec) {
+		// TODO velocity
+	}
 
 	@Override
 	public void setGravity(boolean gravity) {
 		metaContainer.get(META_HAS_NO_GRAVITY).setData(!gravity);
-	}
-
-	@Override
-	public void setOnGround(boolean onGround) {
-		MetaData<Byte> meta = metaContainer.get(META_ENTITY_FLAGS);
-		meta.setData((byte) (onGround ? meta.getData() | 0x02 : meta.getData() & 0xFD));
 	}
 
 	@Override
@@ -579,12 +579,15 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 
 	@Override
 	public synchronized void spawn(int entityID, World world, double x, double y, double z, float pitch, float yaw) {
+		if (world == null)
+			throw new IllegalArgumentException("World can not be null!");
 		if (!asyncIsRemoved() || !isRemoved())
 			throw new IllegalStateException("Unable to spawn not removed Entity! call remove() first...");
 		if (uuid == null)
 			uuid = UUID.randomUUID();
 		removed = false;
 		aremoved = false;
+		server = world.getServer();
 		if (passengers != null) 
 			passengers.clear();
 		this.id = entityID;
@@ -720,11 +723,6 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	}
 
 	@Override
-	public boolean isOnGround() {
-		return (metaContainer.get(META_ENTITY_FLAGS).getData() & 0x2) == 0x2;
-	}
-
-	@Override
 	public int getPortalCooldown() {
 		return portalCooldown;
 	}
@@ -740,6 +738,12 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 		packet.setEntityID(getID());
 		packet.setNonDefaultData(metaContainer);
 		con.sendPacked(packet);
+	}
+
+	@Override
+	public boolean isOnGround() {
+		// TODO on ground
+		return true;
 	}
 	
 }

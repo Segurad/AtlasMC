@@ -2,7 +2,6 @@ package de.atlasmc.world.particle;
 
 import de.atlasmc.Location;
 import de.atlasmc.entity.Player;
-import de.atlasmc.util.DummyTask;
 import de.atlasmc.util.EulerAngle;
 
 public class GrowigCircle extends Circle {
@@ -31,7 +30,6 @@ public class GrowigCircle extends Circle {
 	@Override
 	public void play(Player player, Location loc, EulerAngle angle) {
 		if (delay > 0) {
-			Plugin pl = Bukkit.getPluginManager().getPlugin("UnionCore");
 			Runnable rable = new Runnable() {
 				int repeats = GrowigCircle.this.repeats;
 				double rad = radius;
@@ -43,7 +41,7 @@ public class GrowigCircle extends Circle {
 						}
 						repeats--;
 						rad += growth;
-						Bukkit.getScheduler().runTaskLater(pl, new DummyTask(this), delay);
+						// TODO schedule Atlas.getScheduler().runSyncTaskLater(rable, delay);
 					} else if (next != null) next.play(player, loc, angle);
 				}
 			};
@@ -71,7 +69,6 @@ public class GrowigCircle extends Circle {
 	@Override
 	public void playAll(Location loc, EulerAngle angle) {
 		if (delay > 0) {
-			Plugin pl = Bukkit.getPluginManager().getPlugin("UnionCore");
 			Runnable rable = new Runnable() {
 				int repeats = GrowigCircle.this.repeats;
 				double rad = radius;
@@ -83,7 +80,7 @@ public class GrowigCircle extends Circle {
 						}
 						repeats--;
 						rad += growth;
-						Bukkit.getScheduler().runTaskLater(pl, new DummyTask(this), delay);
+						// TODO schedule Bukkit.getScheduler().runTaskLater(pl, new DummyTask(this), delay);
 					} else if (next != null) next.playAll(loc, angle);
 				}
 			};

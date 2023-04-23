@@ -70,6 +70,12 @@ public interface World extends Tickable {
 	 * @return true if spawning was successfully
 	 */
 	public boolean spawnEntity(Entity entity, double x, double y, double z, float pitch, float yaw); 
+	
+	/**
+	 * Returns the next free entityID
+	 * @return entityID
+	 */
+	int getEntityID();
 
 	public Block getHighestBlockAt(int x, int z);
 
@@ -135,10 +141,27 @@ public interface World extends Tickable {
 	public Chunk getChunk(int x, int z);
 	
 	/**
-	 * Returns the Chunk at this Location
+	 * Returns the chunk at the given x and z coordinates or null if not loaded
+	 * @param x
+	 * @param z
+	 * @param load if the chunk should be loaded
+	 * @return chunk or null
+	 */
+	public Chunk getChunk(int x, int z, boolean load);
+	
+	/**
+	 * Returns the Chunk at this location
 	 * @param loc the chunk location
-	 * @return the chunk
+	 * @return chunk
 	 */
 	public Chunk getChunk(SimpleLocation loc);
+	
+	/**
+	 * Returns the Chunk at this location or null if not loaded
+	 * @param loc
+	 * @param load if the chunk should be loaded
+	 * @return chunk or null
+	 */
+	public Chunk getChunk(SimpleLocation loc, boolean load);
 
 }

@@ -5,14 +5,13 @@ import java.util.UUID;
 
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.MinecartHopper;
-import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.Inventory;
+import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreMinecartHopper extends CoreAbstractMinecartContainer implements MinecartHopper {
 
@@ -31,8 +30,8 @@ public class CoreMinecartHopper extends CoreAbstractMinecartContainer implements
 	
 	private boolean enabled;
 	
-	public CoreMinecartHopper(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreMinecartHopper(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

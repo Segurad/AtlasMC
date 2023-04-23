@@ -1,7 +1,6 @@
 package de.atlasmc.factory;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.inventory.AnvilInventory;
 import de.atlasmc.inventory.BeaconInventory;
 import de.atlasmc.inventory.BlastFurnaceInventory;
@@ -14,6 +13,7 @@ import de.atlasmc.inventory.GrindstoneInventory;
 import de.atlasmc.inventory.HorseInventory;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryHolder;
+import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.LecternInventory;
 import de.atlasmc.inventory.LlamaInventory;
 import de.atlasmc.inventory.LoomInventory;

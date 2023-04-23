@@ -1,8 +1,10 @@
 package de.atlasmc.event;
 
 import java.util.Iterator;
+
+import org.slf4j.Logger;
+
 import de.atlasmc.atlasnetwork.proxy.LocalProxy;
-import de.atlasmc.log.Logger;
 import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.map.ConcurrentLinkedListMultimap;

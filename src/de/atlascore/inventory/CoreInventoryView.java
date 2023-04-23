@@ -2,11 +2,11 @@ package de.atlascore.inventory;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.entity.Player;
-import de.atlasmc.event.inventory.InventoryType;
-import de.atlasmc.event.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.Inventory;
+import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.InventoryType.SlotType;
 
 public class CoreInventoryView implements InventoryView {
 	
@@ -60,6 +60,16 @@ public class CoreInventoryView implements InventoryView {
 	public ItemStack getCursor() {
 		return player.getItemOnCursor();
 	}
+	
+	@Override
+	public void setCursorUnsafe(ItemStack item) {
+		player.setItemOnCursorUnsafe(item);
+	}
+
+	@Override
+	public ItemStack getCursorUnsafe() {
+		return player.getItemOnCursorUnsafe();
+	}
 
 	public ItemStack getItem(int rawSlot) {
 		Inventory inv = getInventory(rawSlot);
@@ -68,7 +78,21 @@ public class CoreInventoryView implements InventoryView {
 	
 	public void setItem(int rawSlot, ItemStack item) {
 		Inventory inv = getInventory(rawSlot);
-		if (inv != null) inv.setItem(convertSlot(rawSlot), item);
+		if (inv != null) 
+			inv.setItem(convertSlot(rawSlot), item);
+	}
+	
+	@Override
+	public ItemStack getItemUnsafe(int rawSlot) {
+		Inventory inv = getInventory(rawSlot);
+		return inv == null ? null : inv.getItemUnsafe(convertSlot(rawSlot));
+	}
+
+	@Override
+	public void setItemUnsafe(int rawSlot, ItemStack item) {
+		Inventory inv = getInventory(rawSlot);
+		if (inv != null)
+			inv.setItemUnsafe(convertSlot(rawSlot), item);
 	}
 	
 	public int countSlots() {
@@ -76,7 +100,6 @@ public class CoreInventoryView implements InventoryView {
 	}
 	
 	public int convertSlot(int rawSlot) {
-		// Thanks for copy past to CraftBukkit
 		int numInTop = getTopInventory().getSize();
         // Index from the top inventory as having slots from [0,size]
         if (rawSlot < numInTop) {
@@ -167,7 +190,8 @@ public class CoreInventoryView implements InventoryView {
 	
 	public SlotType getSlotType(int rawSlot) {
 		Inventory inv = getInventory(rawSlot);
-		if (inv == null) return SlotType.OUTSIDE;
+		if (inv == null) 
+			return SlotType.OUTSIDE;
 		return inv.getSlotType(convertSlot(rawSlot));
 	}
 	
@@ -175,8 +199,10 @@ public class CoreInventoryView implements InventoryView {
 		if (rawSlot == -999 || rawSlot == -1) {
 			return null;
 		}
-		if (rawSlot < 0 || rawSlot > countSlots()) throw new IllegalArgumentException("Unknown Slot: " + rawSlot);
-		if (rawSlot < top.getSize()) return top;
+		if (rawSlot < 0 || rawSlot > countSlots()) 
+			throw new IllegalArgumentException("Unknown Slot: " + rawSlot);
+		if (rawSlot < top.getSize()) 
+			return top;
 		return bottom;
 	}
 	

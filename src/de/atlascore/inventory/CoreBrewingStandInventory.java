@@ -2,11 +2,11 @@ package de.atlascore.inventory;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.entity.Player;
-import de.atlasmc.event.inventory.InventoryType;
-import de.atlasmc.event.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.BrewingInventory;
 import de.atlasmc.inventory.InventoryHolder;
+import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.InventoryType.SlotType;
 
 public class CoreBrewingStandInventory extends CoreInventory implements BrewingInventory {
 
@@ -17,7 +17,7 @@ public class CoreBrewingStandInventory extends CoreInventory implements BrewingI
 	private int fuel, maxfuel, brewingTime, dfuel, dbrewingTime = 400;
 	
 	public CoreBrewingStandInventory(Chat title, InventoryHolder holder) {
-		super(5, InventoryType.BREWING, title, holder);
+		super(5, 3, InventoryType.BREWING, title, holder);
 	}
 	
 	@Override

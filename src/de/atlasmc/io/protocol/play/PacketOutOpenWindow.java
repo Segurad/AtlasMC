@@ -1,6 +1,6 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.event.inventory.InventoryType;
+import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 

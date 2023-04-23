@@ -3,6 +3,7 @@ package de.atlascore.entity;
 import java.io.IOException;
 import java.util.UUID;
 
+import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.PrimedTNT;
 import de.atlasmc.entity.data.MetaDataField;
@@ -11,7 +12,6 @@ import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CorePrimedTNT extends CoreEntity implements PrimedTNT {
 
@@ -32,8 +32,10 @@ public class CorePrimedTNT extends CoreEntity implements PrimedTNT {
 		});
 	}
 	
-	public CorePrimedTNT(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	private Entity source;
+	
+	public CorePrimedTNT(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override
@@ -68,6 +70,16 @@ public class CorePrimedTNT extends CoreEntity implements PrimedTNT {
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
 		writer.writeShortTag(NBT_FUSE, getFuseTime());
+	}
+
+	@Override
+	public Entity getSource() {
+		return source;
+	}
+
+	@Override
+	public void setSource(Entity source) {
+		this.source = source;
 	}
 
 }

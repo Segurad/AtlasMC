@@ -18,7 +18,6 @@ import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.world.World;
 
 public class CoreVillager extends CoreAbstractVillager implements Villager {
 	
@@ -93,8 +92,8 @@ public class CoreVillager extends CoreAbstractVillager implements Villager {
 	private int xp;
 	private boolean willing;
 	
-	public CoreVillager(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreVillager(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

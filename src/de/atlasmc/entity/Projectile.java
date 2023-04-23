@@ -1,6 +1,7 @@
 package de.atlasmc.entity;
 
 import de.atlasmc.ProjectileSource;
+import de.atlasmc.world.World;
 
 public interface Projectile extends Entity {
 	
@@ -40,10 +41,47 @@ public interface Projectile extends Entity {
 			this.pro = pro;
 		}
 
+		/**
+		 * Returns the class representing the {@link Projectile} entity of this type
+		 * @return class
+		 */
 		public Class<? extends Projectile> getProjectileClass() {
 			return pro;
 		}
 
+		/**
+		 * Returns a unspawned {@link Projectile} represented by the {@link ProjectileType}
+		 * @param world
+		 * @see EntityType#create(World, java.util.UUID)
+		 * @return projectile
+		 */
+		public Projectile create(World world) {
+			switch(this) {
+			case ARROW:
+				return (Projectile) EntityType.ARROW.create(world);
+			case DRAGON_FIREBALL:
+				return (Projectile) EntityType.DRAGON_FIREBALL.create(world);
+			case EGG:
+				return (Projectile) EntityType.EGG.create(world);
+			case ENDER_PEARL:
+				return (Projectile) EntityType.ENDER_PEARL.create(world);
+			case SHULKER_BULLET:
+				return (Projectile) EntityType.SHULKER_BULLET.create(world);
+			case SMALL_FIREBALL:
+				return (Projectile) EntityType.SMALL_FIREBALL.create(world);
+			case SNOWBALL:
+				return (Projectile) EntityType.SNOWBALL.create(world);
+			case SPECTRAL_ARROW:
+				return (Projectile) EntityType.SPECTRAL_ARROW.create(world);
+			case TRIDENT:
+				return (Projectile) EntityType.TRIDENT.create(world);
+			case WITHER_SKULL:
+				return (Projectile) EntityType.WITHER_SKULL.create(world);
+			default:
+				throw new IllegalStateException("Missing create implementation for type: " + this.name());
+			}
+		}
+		
 		public static ProjectileType get(String arg0) {
 			for (ProjectileType type : ProjectileType.values()) {
 				if (type.toString().equals(arg0)) {
@@ -52,6 +90,7 @@ public interface Projectile extends Entity {
 			}
 			return ARROW;
 		}
+		
 	}
 	
 }

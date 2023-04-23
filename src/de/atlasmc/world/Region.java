@@ -88,7 +88,18 @@ public class Region implements Cloneable {
 	 * @return true if the location is in this region
 	 */
 	public boolean contains(Location loc) {
-		return isIntersecting(new Region(loc));
+		return contains(loc.getX(), loc.getY(), loc.getZ());
+	}
+	
+	public boolean contains(double x, double y, double z) {
+		if (isIntersecting(getMinX(), getWidhtX(), x, 0)) {
+			if (isIntersecting(getMinY(), getHeight(), y, 0)) {
+				if (isIntersecting(getMinZ(), getWidhtZ(), z, 0)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public boolean isIntersecting(Region region) {

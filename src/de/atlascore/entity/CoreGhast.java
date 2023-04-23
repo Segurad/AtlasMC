@@ -7,7 +7,6 @@ import de.atlasmc.entity.Ghast;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.world.World;
 
 public class CoreGhast extends CoreMob implements Ghast {
 
@@ -29,8 +28,8 @@ public class CoreGhast extends CoreMob implements Ghast {
 	
 	private int explosionPower;
 	
-	public CoreGhast(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreGhast(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

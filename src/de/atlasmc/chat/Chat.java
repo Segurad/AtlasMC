@@ -20,4 +20,18 @@ public interface Chat {
 	 */
 	public String getText();
 	
+	/**
+	 * Indicates whether or not legacy text is stored.
+	 * However calling {@link #getLegacyText()} will always return legacy text
+	 * @return true if legacy is stored
+	 */
+	public boolean hasLegacy();
+	
+	/**
+	 * Indicates whether or not legacy text is stored.
+	 * However calling {@link #getJsonText()} will always return json text
+	 * @return true if json is stored
+	 */
+	public boolean hasJson();
+	
 }

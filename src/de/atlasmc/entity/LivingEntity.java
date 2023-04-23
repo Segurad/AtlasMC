@@ -1,8 +1,12 @@
 package de.atlasmc.entity;
 
 import java.util.Collection;
+import java.util.List;
 
 import de.atlasmc.Color;
+import de.atlasmc.Location;
+import de.atlasmc.ProjectileSource;
+import de.atlasmc.SimpleLocation;
 import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeInstance;
 import de.atlasmc.attribute.Attributeable;
@@ -10,7 +14,7 @@ import de.atlasmc.inventory.EntityEquipment;
 import de.atlasmc.potion.PotionEffect;
 import de.atlasmc.potion.PotionEffectType;
 
-public interface LivingEntity extends Damageable, Attributeable {
+public interface LivingEntity extends Damageable, Attributeable, ProjectileSource {
 
 	public float getHeadPitch();
 	
@@ -75,6 +79,8 @@ public interface LivingEntity extends Damageable, Attributeable {
 	 */
 	public void addPotionEffect(PotionEffect effect);
 	
+	public void addPotionEffects(List<PotionEffect> effects);
+	
 	public Collection<PotionEffect> getActivePotionEffects();
 	
 	public boolean hasPotionEffects();
@@ -126,5 +132,13 @@ public interface LivingEntity extends Damageable, Attributeable {
 	 * @return time
 	 */
 	public int getAttackTime();
+	
+	double getEyeHeight();
+	
+	Location getEyeLocation();
+	
+	Location getEyeLocation(Location location);
+	
+	SimpleLocation getEyeLocation(SimpleLocation location);
 	
 }

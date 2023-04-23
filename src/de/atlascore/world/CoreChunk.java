@@ -1,7 +1,7 @@
 package de.atlascore.world;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -9,7 +9,9 @@ import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.entity.Entity;
+import de.atlasmc.util.VariableValueArray;
 import de.atlasmc.util.ViewerSet;
+import de.atlasmc.util.map.Int2ObjectHashMap;
 import de.atlasmc.world.Chunk;
 import de.atlasmc.world.ChunkListener;
 import de.atlasmc.world.ChunkSection;
@@ -28,18 +30,26 @@ public class CoreChunk implements Chunk {
 		};
 	
 	private final ChunkSection[] sections;
-	private final List<Entity> entities;
+	private List<Entity> entities;
+	private Int2ObjectHashMap<TileEntity> tiles;
 	private final ViewerSet<Chunk, ChunkListener> viewers;
 	private final short[] biomes;
 	private final World world;
+	private final int x;
+	private final int z;
+	private final VariableValueArray hightmap;
+	private boolean loaded;
 	
 	private ChunkStatus status;
 	
-	public CoreChunk(World world) {
+	public CoreChunk(World world, int x, int z) {
+		this.x = x;
+		this.z = z;
 		sections = new ChunkSection[16];
 		entities = new ArrayList<>();
-		viewers = new ViewerSet<Chunk, ChunkListener>(this, VIEWER_ADD_FUNCTION, VIEWER_REMOVE_FUNCTION);
+		viewers = new ViewerSet<>(this, VIEWER_ADD_FUNCTION, VIEWER_REMOVE_FUNCTION);
 		biomes = new short[1024];
+		hightmap = new VariableValueArray(256, 9);
 		this.world = world;
 	}
 
@@ -71,18 +81,22 @@ public class CoreChunk implements Chunk {
 
 	@Override
 	public boolean isLoaded() {
-		return false;
+		return loaded;
+	}
+	
+	@Override
+	public void setLoaded(boolean loaded) {
+		this.loaded = loaded;
 	}
 
 	@Override
-	public long[] getHightMap() {
-		// TODO Auto-generated method stub
-		return null;
+	public VariableValueArray getHightMap() {
+		return hightmap;
 	}
 
 	@Override
 	public short[] getBiomes() {
-		return Arrays.copyOf(biomes, biomes.length);
+		return biomes;
 	}
 
 	@Override
@@ -108,9 +122,10 @@ public class CoreChunk implements Chunk {
 	}
 
 	@Override
-	public List<TileEntity> getTileEntities() {
-		// TODO Auto-generated method stub
-		return null;
+	public Collection<TileEntity> getTileEntities() {
+		if (tiles == null)
+			return List.of();
+		return tiles.values();
 	}
 
 	@Override
@@ -132,7 +147,7 @@ public class CoreChunk implements Chunk {
 
 	@Override
 	public <T extends Entity> List<T> getEntitiesByClass(Class<T> clazz) {
-		return getEntitiesByClass(new ArrayList<T>(), clazz);
+		return getEntitiesByClass(new ArrayList<>(), clazz);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -186,7 +201,7 @@ public class CoreChunk implements Chunk {
 
 	@Override
 	public List<Entity> getEntitiesByClasses(Class<? extends Entity>[] classes) {
-		return getEntitiesByClasses(new ArrayList<Entity>(), classes);
+		return getEntitiesByClasses(new ArrayList<>(), classes);
 	}
 
 	@Override
@@ -254,6 +269,16 @@ public class CoreChunk implements Chunk {
 	@Override
 	public ViewerSet<Chunk, ChunkListener> getViewers() {
 		return viewers;
+	}
+
+	@Override
+	public int getX() {
+		return x;
+	}
+
+	@Override
+	public int getZ() {
+		return z;
 	}
 
 }

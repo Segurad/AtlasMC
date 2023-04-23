@@ -9,7 +9,6 @@ import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
-import de.atlasmc.world.World;
 
 public class CoreVex extends CoreMob implements Vex {
 
@@ -37,8 +36,8 @@ public class CoreVex extends CoreMob implements Vex {
 	
 	private int lifetime = -1;
 	
-	public CoreVex(EntityType type, UUID uuid, World world) {
-		super(type, uuid, world);
+	public CoreVex(EntityType type, UUID uuid) {
+		super(type, uuid);
 	}
 	
 	@Override

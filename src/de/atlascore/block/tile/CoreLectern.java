@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.Lectern;
-import de.atlasmc.event.inventory.InventoryType;
 import de.atlasmc.factory.ContainerFactory;
+import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.LecternInventory;
 import de.atlasmc.util.map.key.CharKey;
