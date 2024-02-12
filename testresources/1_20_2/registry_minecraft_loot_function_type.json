@@ -1,0 +1,83 @@
+{
+    "minecraft:apply_bonus": {
+        "protocol_id": 15
+    },
+    "minecraft:copy_name": {
+        "protocol_id": 12
+    },
+    "minecraft:copy_nbt": {
+        "protocol_id": 20
+    },
+    "minecraft:copy_state": {
+        "protocol_id": 21
+    },
+    "minecraft:enchant_randomly": {
+        "protocol_id": 2
+    },
+    "minecraft:enchant_with_levels": {
+        "protocol_id": 1
+    },
+    "minecraft:exploration_map": {
+        "protocol_id": 10
+    },
+    "minecraft:explosion_decay": {
+        "protocol_id": 17
+    },
+    "minecraft:fill_player_head": {
+        "protocol_id": 19
+    },
+    "minecraft:furnace_smelt": {
+        "protocol_id": 5
+    },
+    "minecraft:limit_count": {
+        "protocol_id": 14
+    },
+    "minecraft:looting_enchant": {
+        "protocol_id": 6
+    },
+    "minecraft:reference": {
+        "protocol_id": 25
+    },
+    "minecraft:sequence": {
+        "protocol_id": 26
+    },
+    "minecraft:set_attributes": {
+        "protocol_id": 8
+    },
+    "minecraft:set_banner_pattern": {
+        "protocol_id": 22
+    },
+    "minecraft:set_contents": {
+        "protocol_id": 13
+    },
+    "minecraft:set_count": {
+        "protocol_id": 0
+    },
+    "minecraft:set_damage": {
+        "protocol_id": 7
+    },
+    "minecraft:set_enchantments": {
+        "protocol_id": 3
+    },
+    "minecraft:set_instrument": {
+        "protocol_id": 24
+    },
+    "minecraft:set_loot_table": {
+        "protocol_id": 16
+    },
+    "minecraft:set_lore": {
+        "protocol_id": 18
+    },
+    "minecraft:set_name": {
+        "protocol_id": 9
+    },
+    "minecraft:set_nbt": {
+        "protocol_id": 4
+    },
+    "minecraft:set_potion": {
+        "protocol_id": 23
+    },
+    "minecraft:set_stew_effect": {
+        "protocol_id": 11
+    }
+}

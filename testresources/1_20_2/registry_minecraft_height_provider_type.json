@@ -1,0 +1,20 @@
+{
+    "minecraft:biased_to_bottom": {
+        "protocol_id": 2
+    },
+    "minecraft:constant": {
+        "protocol_id": 0
+    },
+    "minecraft:trapezoid": {
+        "protocol_id": 4
+    },
+    "minecraft:uniform": {
+        "protocol_id": 1
+    },
+    "minecraft:very_biased_to_bottom": {
+        "protocol_id": 3
+    },
+    "minecraft:weighted_list": {
+        "protocol_id": 5
+    }
+}

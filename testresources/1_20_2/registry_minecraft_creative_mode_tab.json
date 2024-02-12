@@ -1,0 +1,44 @@
+{
+    "minecraft:building_blocks": {
+        "protocol_id": 0
+    },
+    "minecraft:colored_blocks": {
+        "protocol_id": 1
+    },
+    "minecraft:combat": {
+        "protocol_id": 8
+    },
+    "minecraft:food_and_drinks": {
+        "protocol_id": 9
+    },
+    "minecraft:functional_blocks": {
+        "protocol_id": 3
+    },
+    "minecraft:hotbar": {
+        "protocol_id": 5
+    },
+    "minecraft:ingredients": {
+        "protocol_id": 10
+    },
+    "minecraft:inventory": {
+        "protocol_id": 13
+    },
+    "minecraft:natural_blocks": {
+        "protocol_id": 2
+    },
+    "minecraft:op_blocks": {
+        "protocol_id": 12
+    },
+    "minecraft:redstone_blocks": {
+        "protocol_id": 4
+    },
+    "minecraft:search": {
+        "protocol_id": 6
+    },
+    "minecraft:spawn_eggs": {
+        "protocol_id": 11
+    },
+    "minecraft:tools_and_utilities": {
+        "protocol_id": 7
+    }
+}

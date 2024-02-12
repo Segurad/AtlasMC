@@ -1,0 +1,14 @@
+{
+    "minecraft:append_loot": {
+        "protocol_id": 3
+    },
+    "minecraft:append_static": {
+        "protocol_id": 2
+    },
+    "minecraft:clear": {
+        "protocol_id": 0
+    },
+    "minecraft:passthrough": {
+        "protocol_id": 1
+    }
+}

@@ -1,0 +1,92 @@
+{
+    "minecraft:alban": {
+        "protocol_id": 2
+    },
+    "minecraft:aztec": {
+        "protocol_id": 1
+    },
+    "minecraft:aztec2": {
+        "protocol_id": 3
+    },
+    "minecraft:bomb": {
+        "protocol_id": 4
+    },
+    "minecraft:burning_skull": {
+        "protocol_id": 23
+    },
+    "minecraft:bust": {
+        "protocol_id": 15
+    },
+    "minecraft:courbet": {
+        "protocol_id": 8
+    },
+    "minecraft:creebet": {
+        "protocol_id": 11
+    },
+    "minecraft:donkey_kong": {
+        "protocol_id": 29
+    },
+    "minecraft:earth": {
+        "protocol_id": 25
+    },
+    "minecraft:fighters": {
+        "protocol_id": 20
+    },
+    "minecraft:fire": {
+        "protocol_id": 28
+    },
+    "minecraft:graham": {
+        "protocol_id": 13
+    },
+    "minecraft:kebab": {
+        "protocol_id": 0
+    },
+    "minecraft:match": {
+        "protocol_id": 14
+    },
+    "minecraft:pigscene": {
+        "protocol_id": 22
+    },
+    "minecraft:plant": {
+        "protocol_id": 5
+    },
+    "minecraft:pointer": {
+        "protocol_id": 21
+    },
+    "minecraft:pool": {
+        "protocol_id": 7
+    },
+    "minecraft:sea": {
+        "protocol_id": 9
+    },
+    "minecraft:skeleton": {
+        "protocol_id": 24
+    },
+    "minecraft:skull_and_roses": {
+        "protocol_id": 18
+    },
+    "minecraft:stage": {
+        "protocol_id": 16
+    },
+    "minecraft:sunset": {
+        "protocol_id": 10
+    },
+    "minecraft:void": {
+        "protocol_id": 17
+    },
+    "minecraft:wanderer": {
+        "protocol_id": 12
+    },
+    "minecraft:wasteland": {
+        "protocol_id": 6
+    },
+    "minecraft:water": {
+        "protocol_id": 27
+    },
+    "minecraft:wind": {
+        "protocol_id": 26
+    },
+    "minecraft:wither": {
+        "protocol_id": 19
+    }
+}

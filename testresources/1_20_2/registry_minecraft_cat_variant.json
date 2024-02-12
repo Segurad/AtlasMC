@@ -1,0 +1,35 @@
+{
+    "minecraft:all_black": {
+        "protocol_id": 10
+    },
+    "minecraft:black": {
+        "protocol_id": 1
+    },
+    "minecraft:british_shorthair": {
+        "protocol_id": 4
+    },
+    "minecraft:calico": {
+        "protocol_id": 5
+    },
+    "minecraft:jellie": {
+        "protocol_id": 9
+    },
+    "minecraft:persian": {
+        "protocol_id": 6
+    },
+    "minecraft:ragdoll": {
+        "protocol_id": 7
+    },
+    "minecraft:red": {
+        "protocol_id": 2
+    },
+    "minecraft:siamese": {
+        "protocol_id": 3
+    },
+    "minecraft:tabby": {
+        "protocol_id": 0
+    },
+    "minecraft:white": {
+        "protocol_id": 8
+    }
+}

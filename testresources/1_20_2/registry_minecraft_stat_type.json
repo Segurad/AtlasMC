@@ -1,0 +1,29 @@
+{
+    "minecraft:broken": {
+        "protocol_id": 3
+    },
+    "minecraft:crafted": {
+        "protocol_id": 1
+    },
+    "minecraft:custom": {
+        "protocol_id": 8
+    },
+    "minecraft:dropped": {
+        "protocol_id": 5
+    },
+    "minecraft:killed": {
+        "protocol_id": 6
+    },
+    "minecraft:killed_by": {
+        "protocol_id": 7
+    },
+    "minecraft:mined": {
+        "protocol_id": 0
+    },
+    "minecraft:picked_up": {
+        "protocol_id": 4
+    },
+    "minecraft:used": {
+        "protocol_id": 2
+    }
+}

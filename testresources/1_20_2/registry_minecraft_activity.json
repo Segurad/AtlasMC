@@ -1,0 +1,80 @@
+{
+    "minecraft:admire_item": {
+        "protocol_id": 12
+    },
+    "minecraft:avoid": {
+        "protocol_id": 13
+    },
+    "minecraft:celebrate": {
+        "protocol_id": 11
+    },
+    "minecraft:core": {
+        "protocol_id": 0
+    },
+    "minecraft:dig": {
+        "protocol_id": 25
+    },
+    "minecraft:emerge": {
+        "protocol_id": 24
+    },
+    "minecraft:fight": {
+        "protocol_id": 10
+    },
+    "minecraft:hide": {
+        "protocol_id": 9
+    },
+    "minecraft:idle": {
+        "protocol_id": 1
+    },
+    "minecraft:investigate": {
+        "protocol_id": 22
+    },
+    "minecraft:lay_spawn": {
+        "protocol_id": 20
+    },
+    "minecraft:long_jump": {
+        "protocol_id": 16
+    },
+    "minecraft:meet": {
+        "protocol_id": 5
+    },
+    "minecraft:panic": {
+        "protocol_id": 6
+    },
+    "minecraft:play": {
+        "protocol_id": 3
+    },
+    "minecraft:play_dead": {
+        "protocol_id": 15
+    },
+    "minecraft:pre_raid": {
+        "protocol_id": 8
+    },
+    "minecraft:raid": {
+        "protocol_id": 7
+    },
+    "minecraft:ram": {
+        "protocol_id": 17
+    },
+    "minecraft:rest": {
+        "protocol_id": 4
+    },
+    "minecraft:ride": {
+        "protocol_id": 14
+    },
+    "minecraft:roar": {
+        "protocol_id": 23
+    },
+    "minecraft:sniff": {
+        "protocol_id": 21
+    },
+    "minecraft:swim": {
+        "protocol_id": 19
+    },
+    "minecraft:tongue": {
+        "protocol_id": 18
+    },
+    "minecraft:work": {
+        "protocol_id": 2
+    }
+}

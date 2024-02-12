@@ -1,0 +1,20 @@
+{
+    "minecraft:always_true": {
+        "protocol_id": 0
+    },
+    "minecraft:block_match": {
+        "protocol_id": 1
+    },
+    "minecraft:blockstate_match": {
+        "protocol_id": 2
+    },
+    "minecraft:random_block_match": {
+        "protocol_id": 4
+    },
+    "minecraft:random_blockstate_match": {
+        "protocol_id": 5
+    },
+    "minecraft:tag_match": {
+        "protocol_id": 3
+    }
+}

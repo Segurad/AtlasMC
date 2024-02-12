@@ -1,0 +1,14 @@
+{
+    "minecraft:checkerboard": {
+        "protocol_id": 2
+    },
+    "minecraft:fixed": {
+        "protocol_id": 0
+    },
+    "minecraft:multi_noise": {
+        "protocol_id": 1
+    },
+    "minecraft:the_end": {
+        "protocol_id": 3
+    }
+}

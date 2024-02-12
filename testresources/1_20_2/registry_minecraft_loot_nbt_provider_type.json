@@ -1,0 +1,8 @@
+{
+    "minecraft:context": {
+        "protocol_id": 1
+    },
+    "minecraft:storage": {
+        "protocol_id": 0
+    }
+}

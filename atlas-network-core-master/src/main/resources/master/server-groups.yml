@@ -1,0 +1,46 @@
+TestGroup:
+  min-server: 1 # minimum amount of servers in this group 
+  max-server: -1 # max amount of servers in this group -1 for no limit
+  min-non-full-server: 0 # number of servers without state full
+  max-non-full-server: 0 # number of server with state not full 0 for unlimited
+  new-server-delay: 1200 # time in ticks this group must not be satisfied until a ne server is started
+  new-server-on-user-load: 1.0
+  maintenance: false
+  node-selector:
+    method: "atlas-master:server/default_deployment"
+    memory-threshold: 4000 # memory in mb
+    memory-utilisation: 0.5
+    internal: true # whether or not this group internal server or deploied
+  server-config:
+    server-factory: "atlas-core:factory/localserver"
+    config:
+      server-implementation: "class:de.atlascore.server.CoreLocalServer"
+      max-memory: 4G # deploied only
+      min-memory: 2G # deploied only
+      jvm-args: "" # deploied only
+      # class:path -> to server class implementation (only internal) e.g. "class:de.atlascore.server.CoreLocalServer"
+      # server_factory:name -> server factory implementation (only internal (may deploy server through factory implementation but idc)) e.g. "server_factory:atlas_core_factory"
+      # repo:repopath to server resource -> (deploied only) e.g. repo:repo/server:paper-1.16.5 (planned implementations paper, forge, fabric, sponge, MCHPRS, minestom (more or less useless))
+    static: false
+    auto-stop-delay: 180
+    auto-stop-users: 0
+    dynamic-slots: false
+    slots: 30
+    modt:
+      sign:
+      - Line1
+      - Line2
+      - Line3
+      - Line4
+      holo:
+      - Line1
+      - Line2
+      - LineN
+    template: "server-templates:test"
+    worlds:
+    - "repo/world:myworld"
+    data:
+    - "repo/world:my_world"
+    plugins:
+    - plugin: "repo/plugin:my_plugin_1"
+      config: "repo/plugin-config:my_config_1"

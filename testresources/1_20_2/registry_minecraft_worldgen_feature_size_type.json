@@ -1,0 +1,8 @@
+{
+    "minecraft:three_layers_feature_size": {
+        "protocol_id": 1
+    },
+    "minecraft:two_layers_feature_size": {
+        "protocol_id": 0
+    }
+}

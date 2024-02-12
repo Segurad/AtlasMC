@@ -1,0 +1,8 @@
+{
+    "minecraft:block": {
+        "protocol_id": 0
+    },
+    "minecraft:entity": {
+        "protocol_id": 1
+    }
+}

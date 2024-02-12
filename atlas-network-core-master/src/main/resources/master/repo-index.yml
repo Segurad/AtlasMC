@@ -1,0 +1,21 @@
+master/plugin:
+- type: plugin
+  key: "myplugin1"
+  name: "MyPlugin1"
+  description: "Plugin developed by someone"
+  files:
+  - "plugins/MyPlugin.jar"
+master/config:
+- type: plugin-config
+  key: "myconfig1"
+  description: "some configuration description"
+  plugin-name: "MyPlugin"
+  files:
+  - "configurations/myconfig1/"
+- key: "configs:master/config"
+master/world:
+- type: world
+  format: anvil
+  name: MyWorld
+master/schematic:
+- type: schematic

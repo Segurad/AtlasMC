@@ -1,0 +1,14 @@
+{
+    "minecraft:bandlands": {
+        "protocol_id": 0
+    },
+    "minecraft:block": {
+        "protocol_id": 1
+    },
+    "minecraft:condition": {
+        "protocol_id": 3
+    },
+    "minecraft:sequence": {
+        "protocol_id": 2
+    }
+}

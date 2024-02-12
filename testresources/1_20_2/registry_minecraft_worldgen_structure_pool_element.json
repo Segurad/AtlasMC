@@ -1,0 +1,17 @@
+{
+    "minecraft:empty_pool_element": {
+        "protocol_id": 3
+    },
+    "minecraft:feature_pool_element": {
+        "protocol_id": 2
+    },
+    "minecraft:legacy_single_pool_element": {
+        "protocol_id": 4
+    },
+    "minecraft:list_pool_element": {
+        "protocol_id": 1
+    },
+    "minecraft:single_pool_element": {
+        "protocol_id": 0
+    }
+}

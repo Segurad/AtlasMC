@@ -1,0 +1,26 @@
+{
+    "minecraft:alternatives": {
+        "protocol_id": 5
+    },
+    "minecraft:dynamic": {
+        "protocol_id": 3
+    },
+    "minecraft:empty": {
+        "protocol_id": 0
+    },
+    "minecraft:group": {
+        "protocol_id": 7
+    },
+    "minecraft:item": {
+        "protocol_id": 1
+    },
+    "minecraft:loot_table": {
+        "protocol_id": 2
+    },
+    "minecraft:sequence": {
+        "protocol_id": 6
+    },
+    "minecraft:tag": {
+        "protocol_id": 4
+    }
+}

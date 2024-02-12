@@ -1,0 +1,11 @@
+{
+    "minecraft:cold": {
+        "protocol_id": 2
+    },
+    "minecraft:temperate": {
+        "protocol_id": 0
+    },
+    "minecraft:warm": {
+        "protocol_id": 1
+    }
+}

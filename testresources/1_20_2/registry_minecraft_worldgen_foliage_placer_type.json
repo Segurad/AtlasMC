@@ -1,0 +1,35 @@
+{
+    "minecraft:acacia_foliage_placer": {
+        "protocol_id": 3
+    },
+    "minecraft:blob_foliage_placer": {
+        "protocol_id": 0
+    },
+    "minecraft:bush_foliage_placer": {
+        "protocol_id": 4
+    },
+    "minecraft:cherry_foliage_placer": {
+        "protocol_id": 10
+    },
+    "minecraft:dark_oak_foliage_placer": {
+        "protocol_id": 8
+    },
+    "minecraft:fancy_foliage_placer": {
+        "protocol_id": 5
+    },
+    "minecraft:jungle_foliage_placer": {
+        "protocol_id": 6
+    },
+    "minecraft:mega_pine_foliage_placer": {
+        "protocol_id": 7
+    },
+    "minecraft:pine_foliage_placer": {
+        "protocol_id": 2
+    },
+    "minecraft:random_spread_foliage_placer": {
+        "protocol_id": 9
+    },
+    "minecraft:spruce_foliage_placer": {
+        "protocol_id": 1
+    }
+}

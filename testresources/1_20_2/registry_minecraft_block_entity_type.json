@@ -1,0 +1,125 @@
+{
+    "minecraft:banner": {
+        "protocol_id": 19
+    },
+    "minecraft:barrel": {
+        "protocol_id": 26
+    },
+    "minecraft:beacon": {
+        "protocol_id": 14
+    },
+    "minecraft:bed": {
+        "protocol_id": 24
+    },
+    "minecraft:beehive": {
+        "protocol_id": 33
+    },
+    "minecraft:bell": {
+        "protocol_id": 30
+    },
+    "minecraft:blast_furnace": {
+        "protocol_id": 28
+    },
+    "minecraft:brewing_stand": {
+        "protocol_id": 11
+    },
+    "minecraft:brushable_block": {
+        "protocol_id": 39
+    },
+    "minecraft:calibrated_sculk_sensor": {
+        "protocol_id": 35
+    },
+    "minecraft:campfire": {
+        "protocol_id": 32
+    },
+    "minecraft:chest": {
+        "protocol_id": 1
+    },
+    "minecraft:chiseled_bookshelf": {
+        "protocol_id": 38
+    },
+    "minecraft:command_block": {
+        "protocol_id": 22
+    },
+    "minecraft:comparator": {
+        "protocol_id": 18
+    },
+    "minecraft:conduit": {
+        "protocol_id": 25
+    },
+    "minecraft:daylight_detector": {
+        "protocol_id": 16
+    },
+    "minecraft:decorated_pot": {
+        "protocol_id": 40
+    },
+    "minecraft:dispenser": {
+        "protocol_id": 5
+    },
+    "minecraft:dropper": {
+        "protocol_id": 6
+    },
+    "minecraft:enchanting_table": {
+        "protocol_id": 12
+    },
+    "minecraft:end_gateway": {
+        "protocol_id": 21
+    },
+    "minecraft:end_portal": {
+        "protocol_id": 13
+    },
+    "minecraft:ender_chest": {
+        "protocol_id": 3
+    },
+    "minecraft:furnace": {
+        "protocol_id": 0
+    },
+    "minecraft:hanging_sign": {
+        "protocol_id": 8
+    },
+    "minecraft:hopper": {
+        "protocol_id": 17
+    },
+    "minecraft:jigsaw": {
+        "protocol_id": 31
+    },
+    "minecraft:jukebox": {
+        "protocol_id": 4
+    },
+    "minecraft:lectern": {
+        "protocol_id": 29
+    },
+    "minecraft:mob_spawner": {
+        "protocol_id": 9
+    },
+    "minecraft:piston": {
+        "protocol_id": 10
+    },
+    "minecraft:sculk_catalyst": {
+        "protocol_id": 36
+    },
+    "minecraft:sculk_sensor": {
+        "protocol_id": 34
+    },
+    "minecraft:sculk_shrieker": {
+        "protocol_id": 37
+    },
+    "minecraft:shulker_box": {
+        "protocol_id": 23
+    },
+    "minecraft:sign": {
+        "protocol_id": 7
+    },
+    "minecraft:skull": {
+        "protocol_id": 15
+    },
+    "minecraft:smoker": {
+        "protocol_id": 27
+    },
+    "minecraft:structure_block": {
+        "protocol_id": 20
+    },
+    "minecraft:trapped_chest": {
+        "protocol_id": 2
+    }
+}

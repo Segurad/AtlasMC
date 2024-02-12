@@ -1,0 +1,68 @@
+{
+    "minecraft:angler_pottery_pattern": {
+        "protocol_id": 1
+    },
+    "minecraft:archer_pottery_pattern": {
+        "protocol_id": 2
+    },
+    "minecraft:arms_up_pottery_pattern": {
+        "protocol_id": 3
+    },
+    "minecraft:blade_pottery_pattern": {
+        "protocol_id": 4
+    },
+    "minecraft:brewer_pottery_pattern": {
+        "protocol_id": 5
+    },
+    "minecraft:burn_pottery_pattern": {
+        "protocol_id": 6
+    },
+    "minecraft:danger_pottery_pattern": {
+        "protocol_id": 7
+    },
+    "minecraft:decorated_pot_base": {
+        "protocol_id": 21
+    },
+    "minecraft:decorated_pot_side": {
+        "protocol_id": 0
+    },
+    "minecraft:explorer_pottery_pattern": {
+        "protocol_id": 8
+    },
+    "minecraft:friend_pottery_pattern": {
+        "protocol_id": 9
+    },
+    "minecraft:heart_pottery_pattern": {
+        "protocol_id": 10
+    },
+    "minecraft:heartbreak_pottery_pattern": {
+        "protocol_id": 11
+    },
+    "minecraft:howl_pottery_pattern": {
+        "protocol_id": 12
+    },
+    "minecraft:miner_pottery_pattern": {
+        "protocol_id": 13
+    },
+    "minecraft:mourner_pottery_pattern": {
+        "protocol_id": 14
+    },
+    "minecraft:plenty_pottery_pattern": {
+        "protocol_id": 15
+    },
+    "minecraft:prize_pottery_pattern": {
+        "protocol_id": 16
+    },
+    "minecraft:sheaf_pottery_pattern": {
+        "protocol_id": 17
+    },
+    "minecraft:shelter_pottery_pattern": {
+        "protocol_id": 18
+    },
+    "minecraft:skull_pottery_pattern": {
+        "protocol_id": 19
+    },
+    "minecraft:snort_pottery_pattern": {
+        "protocol_id": 20
+    }
+}

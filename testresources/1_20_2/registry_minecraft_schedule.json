@@ -1,0 +1,14 @@
+{
+    "minecraft:empty": {
+        "protocol_id": 0
+    },
+    "minecraft:simple": {
+        "protocol_id": 1
+    },
+    "minecraft:villager_baby": {
+        "protocol_id": 2
+    },
+    "minecraft:villager_default": {
+        "protocol_id": 3
+    }
+}

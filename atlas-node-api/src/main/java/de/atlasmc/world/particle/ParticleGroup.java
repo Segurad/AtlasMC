@@ -1,0 +1,49 @@
+package de.atlasmc.world.particle;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import de.atlasmc.Location;
+import de.atlasmc.entity.Player;
+import de.atlasmc.util.EulerAngle;
+
+public class ParticleGroup implements Animation {
+
+	private final List<Animation> animations;
+	private Animation next;
+	
+	public ParticleGroup() {
+		animations = new ArrayList<>();
+		next = null;
+	}
+	
+	public ParticleGroup(List<Animation> animations, Animation next) {
+		this.animations = animations;
+		this.next = next;
+	}
+	
+	public void addAnimation(Animation animation) {
+		if (animation == null) return;
+		animations.add(animation);
+	}
+	
+	public void removeAnimation(Animation animation) {
+		animations.remove(animation);
+	}
+	
+	public List<Animation> getAnimations() {
+		return animations;
+	}
+
+	@Override
+	public void play(Player player, Location loc, EulerAngle angle) {
+		animations.forEach(a -> a.play(player, loc, angle));
+		if (next != null) next.play(player, loc, angle);
+	}
+
+	@Override
+	public void playAll(Location loc, EulerAngle angle) {
+		animations.forEach(a -> a.playAll(loc, angle));
+		if (next != null) next.playAll(loc, angle);
+	}
+}

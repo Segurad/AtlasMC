@@ -1,0 +1,170 @@
+{
+    "minecraft:btp": {
+        "protocol_id": 52
+    },
+    "minecraft:ecp": {
+        "protocol_id": 50
+    },
+    "minecraft:iglu": {
+        "protocol_id": 34
+    },
+    "minecraft:jigsaw": {
+        "protocol_id": 55
+    },
+    "minecraft:mscorridor": {
+        "protocol_id": 0
+    },
+    "minecraft:mscrossing": {
+        "protocol_id": 1
+    },
+    "minecraft:msroom": {
+        "protocol_id": 2
+    },
+    "minecraft:msstairs": {
+        "protocol_id": 3
+    },
+    "minecraft:nebcr": {
+        "protocol_id": 4
+    },
+    "minecraft:nebef": {
+        "protocol_id": 5
+    },
+    "minecraft:nebs": {
+        "protocol_id": 6
+    },
+    "minecraft:neccs": {
+        "protocol_id": 7
+    },
+    "minecraft:nece": {
+        "protocol_id": 9
+    },
+    "minecraft:necsr": {
+        "protocol_id": 14
+    },
+    "minecraft:nectb": {
+        "protocol_id": 8
+    },
+    "minecraft:nefos": {
+        "protocol_id": 54
+    },
+    "minecraft:nemt": {
+        "protocol_id": 15
+    },
+    "minecraft:nerc": {
+        "protocol_id": 16
+    },
+    "minecraft:nesc": {
+        "protocol_id": 12
+    },
+    "minecraft:nesclt": {
+        "protocol_id": 11
+    },
+    "minecraft:nescrt": {
+        "protocol_id": 13
+    },
+    "minecraft:nescsc": {
+        "protocol_id": 10
+    },
+    "minecraft:nesr": {
+        "protocol_id": 17
+    },
+    "minecraft:nestart": {
+        "protocol_id": 18
+    },
+    "minecraft:omb": {
+        "protocol_id": 38
+    },
+    "minecraft:omcr": {
+        "protocol_id": 39
+    },
+    "minecraft:omdxr": {
+        "protocol_id": 40
+    },
+    "minecraft:omdxyr": {
+        "protocol_id": 41
+    },
+    "minecraft:omdyr": {
+        "protocol_id": 42
+    },
+    "minecraft:omdyzr": {
+        "protocol_id": 43
+    },
+    "minecraft:omdzr": {
+        "protocol_id": 44
+    },
+    "minecraft:omentry": {
+        "protocol_id": 45
+    },
+    "minecraft:ompenthouse": {
+        "protocol_id": 46
+    },
+    "minecraft:omsimple": {
+        "protocol_id": 47
+    },
+    "minecraft:omsimplet": {
+        "protocol_id": 48
+    },
+    "minecraft:omwr": {
+        "protocol_id": 49
+    },
+    "minecraft:orp": {
+        "protocol_id": 33
+    },
+    "minecraft:rupo": {
+        "protocol_id": 35
+    },
+    "minecraft:sh5c": {
+        "protocol_id": 21
+    },
+    "minecraft:shcc": {
+        "protocol_id": 19
+    },
+    "minecraft:shfc": {
+        "protocol_id": 20
+    },
+    "minecraft:shipwreck": {
+        "protocol_id": 53
+    },
+    "minecraft:shli": {
+        "protocol_id": 23
+    },
+    "minecraft:shlt": {
+        "protocol_id": 22
+    },
+    "minecraft:shph": {
+        "protocol_id": 25
+    },
+    "minecraft:shpr": {
+        "protocol_id": 24
+    },
+    "minecraft:shrc": {
+        "protocol_id": 27
+    },
+    "minecraft:shrt": {
+        "protocol_id": 26
+    },
+    "minecraft:shs": {
+        "protocol_id": 30
+    },
+    "minecraft:shsd": {
+        "protocol_id": 28
+    },
+    "minecraft:shssd": {
+        "protocol_id": 31
+    },
+    "minecraft:shstart": {
+        "protocol_id": 29
+    },
+    "minecraft:tedp": {
+        "protocol_id": 37
+    },
+    "minecraft:tejp": {
+        "protocol_id": 32
+    },
+    "minecraft:tesh": {
+        "protocol_id": 36
+    },
+    "minecraft:wmp": {
+        "protocol_id": 51
+    }
+}

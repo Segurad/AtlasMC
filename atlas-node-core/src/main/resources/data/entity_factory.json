@@ -1,0 +1,622 @@
+{
+    "minecraft:area_effect_cloud": {
+        "id": 1,
+        "entityClass": "de.atlascore.entity.CoreAreaEffectCloud",
+        "const": "AREA_EFFECT_CLOUD"
+    },
+    "minecraft:armor_stand": {
+        "id": 2,
+        "entityClass": "de.atlascore.entity.CoreArmorStand",
+        "const": "ARMOR_STAND"
+    },
+    "minecraft:arrow": {
+        "id": 3,
+        "entityClass": "de.atlascore.entity.CoreArrow",
+        "const": "ARROW"
+    },
+    "minecraft:bat": {
+        "id": 5,
+        "entityClass": "de.atlascore.entity.CoreBat",
+        "const": "BAT"
+    },
+    "minecraft:bee": {
+        "id": 6,
+        "entityClass": "de.atlascore.entity.CoreBee",
+        "const": "BEE"
+    },
+    "minecraft:blaze": {
+        "id": 7,
+        "entityClass": "de.atlascore.entity.CoreBlaze",
+        "const": "BLAZE"
+    },
+    "minecraft:boat": {
+        "id": 9,
+        "entityClass": "de.atlascore.entity.CoreBoat",
+        "const": "BOAT"
+    },
+    "minecraft:cat": {
+        "id": 11,
+        "entityClass": "de.atlascore.entity.CoreCow",
+        "const": "CAT"
+    },
+    "minecraft:cave_spider": {
+        "id": 12,
+        "entityClass": "de.atlascore.entity.CoreCaveSpider",
+        "const": "CAVE_SPIDER"
+    },
+    "minecraft:chicken": {
+        "id": 15,
+        "entityClass": "de.atlascore.entity.CoreChicken",
+        "const": "CHICKEN"
+    },
+    "minecraft:cod": {
+        "id": 16,
+        "entityClass": "de.atlascore.entity.CoreCod",
+        "const": "COD"
+    },
+    "minecraft:cow": {
+        "id": 18,
+        "entityClass": "de.atlascore.entity.CoreCow",
+        "const": "COW"
+    },
+    "minecraft:creeper": {
+        "id": 19,
+        "entityClass": "de.atlascore.entity.CoreCreeper",
+        "const": "CREEPER"
+    },
+    "minecraft:dolphin": {
+        "id": 20,
+        "entityClass": "de.atlascore.entity.CoreDolphin",
+        "const": "DOLPHIN"
+    },
+    "minecraft:donkey": {
+        "id": 21,
+        "entityClass": "de.atlascore.entity.CoreDonkey",
+        "const": "DONKEY"
+    },
+    "minecraft:dragon_fireball": {
+        "id": 22,
+        "entityClass": "de.atlascore.entity.CoreDragonFireball",
+        "const": "DRAGON_FIREBALL"
+    },
+    "minecraft:drowned": {
+        "id": 23,
+        "entityClass": "de.atlascore.entity.CoreDrowned",
+        "const": "DROWNED"
+    },
+    "minecraft:elder_guardian": {
+        "id": 25,
+        "entityClass": "de.atlascore.entity.CoreElderGuardian",
+        "const": "ELDER_GUARDIAN"
+    },
+    "minecraft:end_crystal": {
+        "id": 26,
+        "entityClass": "de.atlascore.entity.CoreEndCrystal",
+        "const": "END_CRYSTAL"
+    },
+    "minecraft:ender_dragon": {
+        "id": 27,
+        "entityClass": "de.atlascore.entity.CoreEnderDragon",
+        "const": "ENDER_DRAGON"
+    },
+    "minecraft:enderman": {
+        "id": 29,
+        "entityClass": "de.atlascore.entity.CoreEnderman",
+        "const": "ENDERMAN"
+    },
+    "minecraft:endermite": {
+        "id": 30,
+        "entityClass": "de.atlascore.entity.CoreEndermite",
+        "const": "ENDERMITE"
+    },
+    "minecraft:evoker": {
+        "id": 31,
+        "entityClass": "de.atlascore.entity.CoreEvoker",
+        "const": "EVOKER"
+    },
+    "minecraft:evoker_fangs": {
+        "id": 32,
+        "entityClass": "de.atlascore.entity.CoreEvokerFangs",
+        "const": "EVOKER_FANGS"
+    },
+    "minecraft:experience_orb": {
+        "id": 34,
+        "entityClass": "de.atlascore.entity.CoreExperienceOrb",
+        "const": "EXPERIENCE_ORB"
+    },
+    "minecraft:eye_of_ender": {
+        "id": 35,
+        "entityClass": "de.atlascore.entity.CoreEyeOfEnder",
+        "const": "EYE_OF_ENDER"
+    },
+    "minecraft:falling_block": {
+        "id": 36,
+        "entityClass": "de.atlascore.entity.CoreFallingBlock",
+        "const": "FALLING_BLOCK"
+    },
+    "minecraft:firework_rocket": {
+        "id": 37,
+        "entityClass": "de.atlascore.entity.CoreFireworkRocket",
+        "const": "FIREWORK_ROCKET"
+    },
+    "minecraft:fox": {
+        "id": 38,
+        "entityClass": "de.atlascore.entity.CoreFox",
+        "const": "FOX"
+    },
+    "minecraft:ghast": {
+        "id": 41,
+        "entityClass": "de.atlascore.entity.CoreGhast",
+        "const": "GHAST"
+    },
+    "minecraft:giant": {
+        "id": 42,
+        "entityClass": "de.atlascore.entity.CoreGiant",
+        "const": "GIANT"
+    },
+    "minecraft:guardian": {
+        "id": 46,
+        "entityClass": "de.atlascore.entity.CoreGuardian",
+        "const": "GUARDIAN"
+    },
+    "minecraft:horse": {
+        "id": 49,
+        "entityClass": "de.atlascore.entity.CoreHorse",
+        "const": "HORSE"
+    },
+    "minecraft:hoglin": {
+        "id": 47,
+        "entityClass": "de.atlascore.entity.CoreHoglin",
+        "const": "HOGLIN"
+    },
+    "minecraft:husk": {
+        "id": 50,
+        "entityClass": "de.atlascore.entity.CoreHusk",
+        "const": "HUSK"
+    },
+    "minecraft:illusioner": {
+        "id": 51,
+        "entityClass": "de.atlascore.entity.CoreIllusioner",
+        "const": "ILLUSIONER"
+    },
+    "minecraft:iron_golem": {
+        "id": 53,
+        "entityClass": "de.atlascore.entity.CoreIronGolem",
+        "const": "IRON_GOLEM"
+    },
+    "minecraft:item": {
+        "id": 54,
+        "entityClass": "de.atlascore.entity.CoreItem",
+        "const": "ITEM"
+    },
+    "minecraft:item_frame": {
+        "id": 56,
+        "entityClass": "de.atlascore.entity.CoreItemFrame",
+        "const": "ITEM_FRAME"
+    },
+    "minecraft:fireball": {
+        "id": 57,
+        "entityClass": "de.atlascore.entity.CoreLargeFireball",
+        "const": "FIREBALL"
+    },
+    "minecraft:leash_knot": {
+        "id": 58,
+        "entityClass": "de.atlascore.entity.CoreLeashKnot",
+        "const": "LEASH_KNOT"
+    },
+    "minecraft:lightning_bolt": {
+        "id": 59,
+        "entityClass": "de.atlascore.entity.CoreLightningBolt",
+        "const": "LIGHTNING_BOLT"
+    },
+    "minecraft:llama": {
+        "id": 60,
+        "entityClass": "de.atlascore.entity.CoreLlama",
+        "const": "LLAMA"
+    },
+    "minecraft:llama_spit": {
+        "id": 61,
+        "entityClass": "de.atlascore.entity.CoreLlamaSpit",
+        "const": "LLAMA_SPIT"
+    },
+    "minecraft:magma_cube": {
+        "id": 62,
+        "entityClass": "de.atlascore.entity.CoreMagmaCube",
+        "const": "MAGMA_CUBE"
+    },
+    "minecraft:minecart": {
+        "id": 64,
+        "entityClass": "de.atlascore.entity.CoreMinecart",
+        "const": "MINECART"
+    },
+    "minecraft:chest_minecart": {
+        "id": 14,
+        "entityClass": "de.atlascore.entity.CoreMinecartChest",
+        "const": "CHEST_MINECART"
+    },
+    "minecraft:command_block_minecart": {
+        "id": 17,
+        "entityClass": "de.atlascore.entity.CoreMinecartCommandBlock",
+        "const": "COMMAND_BLOCK_MINECART"
+    },
+    "minecraft:furnace_minecart": {
+        "id": 40,
+        "entityClass": "de.atlascore.entity.CoreMinecraftFurnace",
+        "const": "FURNACE_MINECART"
+    },
+    "minecraft:hopper_minecart": {
+        "id": 48,
+        "entityClass": "de.atlascore.entity.CoreMinecartHopper",
+        "const": "HOPPER_MINECART"
+    },
+    "minecraft:spawner_minecart": {
+        "id": 93,
+        "entityClass": "de.atlascore.entity.CoreMinecartSpawner",
+        "const": "SPAWNER_MINECART"
+    },
+    "minecraft:tnt_minecart": {
+        "id": 102,
+        "entityClass": "de.atlascore.entity.CoreMinecartTNT",
+        "const": "TNT_MINECART"
+    },
+    "minecraft:mule": {
+        "id": 66,
+        "entityClass": "de.atlascore.entity.CoreMule",
+        "const": "MULE"
+    },
+    "minecraft:mooshroom": {
+        "id": 65,
+        "entityClass": "de.atlascore.entity.CoreMooshroom",
+        "const": "MOOSHROOM"
+    },
+    "minecraft:ocelot": {
+        "id": 67,
+        "entityClass": "de.atlascore.entity.CoreOcelot",
+        "const": "OCELOT"
+    },
+    "minecraft:painting": {
+        "id": 68,
+        "entityClass": "de.atlascore.entity.CorePainting",
+        "const": "PAINTING"
+    },
+    "minecraft:panda": {
+        "id": 69,
+        "entityClass": "de.atlascore.entity.CorePanda",
+        "const": "PANDA"
+    },
+    "minecraft:parrot": {
+        "id": 70,
+        "entityClass": "de.atlascore.entity.CoreParrot",
+        "const": "PARROT"
+    },
+    "minecraft:phantom": {
+        "id": 71,
+        "entityClass": "de.atlascore.entity.CorePhantom",
+        "const": "PHANTOM"
+    },
+    "minecraft:pig": {
+        "id": 72,
+        "entityClass": "de.atlascore.entity.CorePig",
+        "const": "PIG"
+    },
+    "minecraft:piglin": {
+        "id": 73,
+        "entityClass": "de.atlascore.entity.CorePiglin",
+        "const": "PIGLIN"
+    },
+    "minecraft:piglin_brute": {
+        "id": 74,
+        "entityClass": "de.atlascore.entity.CorePiglinBrute",
+        "const": "PIGLIN_BRUTE"
+    },
+    "minecraft:pillager": {
+        "id": 75,
+        "entityClass": "de.atlascore.entity.CorePillager",
+        "const": "PILLAGER"
+    },
+    "minecraft:polar_bear": {
+        "id": 76,
+        "entityClass": "de.atlascore.entity.CorePolarBear",
+        "const": "POLAR_BEAR"
+    },
+    "minecraft:tnt": {
+        "id": 101,
+        "entityClass": "de.atlascore.entity.CorePrimedTNT",
+        "const": "TNT"
+    },
+    "minecraft:pufferfish": {
+        "id": 78,
+        "entityClass": "de.atlascore.entity.CorePufferFish",
+        "const": "PUFFERFISH"
+    },
+    "minecraft:rabbit": {
+        "id": 79,
+        "entityClass": "de.atlascore.entity.CoreRabbit",
+        "const": "RABBIT"
+    },
+    "minecraft:ravager": {
+        "id": 80,
+        "entityClass": "de.atlascore.entity.CoreRavager",
+        "const": "RAVAGER"
+    },
+    "minecraft:salmon": {
+        "id": 81,
+        "entityClass": "de.atlascore.entity.CoreSalmon",
+        "const": "SALMON"
+    },
+    "minecraft:sheep": {
+        "id": 82,
+        "entityClass": "de.atlascore.entity.CoreSheep",
+        "const": "SHEEP"
+    },
+    "minecraft:shulker": {
+        "id": 83,
+        "entityClass": "de.atlascore.entity.CoreShulker",
+        "const": "SHULKER"
+    },
+    "minecraft:shulker_bullet": {
+        "id": 84,
+        "entityClass": "de.atlascore.entity.CoreShulkerBullet",
+        "const": "SHULKER_BULLET"
+    },
+    "minecraft:silverfish": {
+        "id": 85,
+        "entityClass": "de.atlascore.entity.CoreSilverfish",
+        "const": "SILVERFISH"
+    },
+    "minecraft:skeleton": {
+        "id": 86,
+        "entityClass": "de.atlascore.entity.CoreSkeleton",
+        "const": "SKELETON"
+    },
+    "minecraft:skeleton_horse": {
+        "id": 87,
+        "entityClass": "de.atlascore.entity.CoreSkeletonHorse",
+        "const": "SKELETON_HORSE"
+    },
+    "minecraft:slime": {
+        "id": 88,
+        "entityClass": "de.atlascore.entity.CoreSlime",
+        "const": "SLIME"
+    },
+    "minecraft:small_fireball": {
+        "id": 89,
+        "entityClass": "de.atlascore.entity.CoreSmallFireball",
+        "const": "SMALL_FIREBALL"
+    },
+    "minecraft:snow_golem": {
+        "id": 91,
+        "entityClass": "de.atlascore.entity.CoreSnowGolem",
+        "const": "SNOW_GOLEM"
+    },
+    "minecraft:snowball": {
+        "id": 92,
+        "entityClass": "de.atlascore.entity.CoreSnowball",
+        "const": "SNOWBALL"
+    },
+    "minecraft:spectral_arrow": {
+        "id": 94,
+        "entityClass": "de.atlascore.entity.CoreSpectralArrow",
+        "const": "SPECTRAL_ARROW"
+    },
+    "minecraft:spider": {
+        "id": 95,
+        "entityClass": "de.atlascore.entity.CoreSpider",
+        "const": "SPIDER"
+    },
+    "minecraft:squid": {
+        "id": 96,
+        "entityClass": "de.atlascore.entity.CoreSquid",
+        "const": "SQUID"
+    },
+    "minecraft:stray": {
+        "id": 97,
+        "entityClass": "de.atlascore.entity.CoreStray",
+        "const": "STRAY"
+    },
+    "minecraft:strider": {
+        "id": 98,
+        "entityClass": "de.atlascore.entity.CoreStrider",
+        "const": "STRIDER"
+    },
+    "minecraft:egg": {
+        "id": 24,
+        "entityClass": "de.atlascore.entity.CoreEgg",
+        "const": "EGG"
+    },
+    "minecraft:ender_pearl": {
+        "id": 28,
+        "entityClass": "de.atlascore.entity.CoreEnderPearl",
+        "const": "ENDER_PEARL"
+    },
+    "minecraft:experience_bottle": {
+        "id": 33,
+        "entityClass": "de.atlascore.entity.CoreExpBottle",
+        "const": "EXPERIENCE_BOTTLE"
+    },
+    "minecraft:potion": {
+        "id": 77,
+        "entityClass": "de.atlascore.entity.CorePotion",
+        "const": "POTION"
+    },
+    "minecraft:trident": {
+        "id": 104,
+        "entityClass": "de.atlascore.entity.CoreTrident",
+        "const": "TRIDENT"
+    },
+    "minecraft:trader_llama": {
+        "id": 103,
+        "entityClass": "de.atlascore.entity.CoreTraderLlama",
+        "const": "TRADER_LLAMA"
+    },
+    "minecraft:tropical_fish": {
+        "id": 105,
+        "entityClass": "de.atlascore.entity.CoreTropicalFish",
+        "const": "TROPICAL_FISH"
+    },
+    "minecraft:turtle": {
+        "id": 106,
+        "entityClass": "de.atlascore.entity.CoreTurtle",
+        "const": "TURTLE"
+    },
+    "minecraft:vex": {
+        "id": 107,
+        "entityClass": "de.atlascore.entity.CoreVex",
+        "const": "VEX"
+    },
+    "minecraft:villager": {
+        "id": 108,
+        "entityClass": "de.atlascore.entity.CoreVillager",
+        "const": "VILLAGER"
+    },
+    "minecraft:vindicator": {
+        "id": 109,
+        "entityClass": "de.atlascore.entity.CoreVindicator",
+        "const": "VINDICATOR"
+    },
+    "minecraft:wandering_trader": {
+        "id": 110,
+        "entityClass": "de.atlascore.entity.CoreWanderingTrader",
+        "const": "WANDERING_TRADER"
+    },
+    "minecraft:witch": {
+        "id": 112,
+        "entityClass": "de.atlascore.entity.CoreWitch",
+        "const": "WITCH"
+    },
+    "minecraft:wither": {
+        "id": 113,
+        "entityClass": "de.atlascore.entity.CoreWither",
+        "const": "WITHER"
+    },
+    "minecraft:wither_skeleton": {
+        "id": 114,
+        "entityClass": "de.atlascore.entity.CoreWitherSkeleton",
+        "const": "WITHER_SKELETON"
+    },
+    "minecraft:wither_skull": {
+        "id": 115,
+        "entityClass": "de.atlascore.entity.CoreWitherSkull",
+        "const": "WITHER_SKULL"
+    },
+    "minecraft:wolf": {
+        "id": 116,
+        "entityClass": "de.atlascore.entity.CoreWolf",
+        "const": "WOLF"
+    },
+    "minecraft:zoglin": {
+        "id": 117,
+        "entityClass": "de.atlascore.entity.CoreZoglin",
+        "const": "ZOGLIN"
+    },
+    "minecraft:zombie": {
+        "id": 118,
+        "entityClass": "de.atlascore.entity.CoreZombie",
+        "const": "ZOMBIE"
+    },
+    "minecraft:zombie_horse": {
+        "id": 119,
+        "entityClass": "de.atlascore.entity.CoreZombieHorse",
+        "const": "ZOMBIE_HORSE"
+    },
+    "minecraft:zombified_piglin": {
+        "id": 121,
+        "entityClass": "de.atlascore.entity.CoreZombifiedPiglin",
+        "const": "ZOMBIFIED_PIGLIN"
+    },
+    "minecraft:player": {
+        "id": 122,
+        "entityClass": "de.atlascore.entity.CorePlayer",
+        "const": "PLAYER"
+    },
+    "minecraft:fishing_bobber": {
+        "id": 123,
+        "entityClass": "de.atlascore.entity.CoreFishingHook",
+        "const": "FISHING_BOBBER"
+    },
+    "minecraft:allay": {
+        "const": "ALLAY",
+        "id": 0,
+        "entityClass": "de.atlascore.entity.CoreAllay"
+    },
+    "minecraft:axolotl": {
+        "const": "AXOLOTL",
+        "id": 4,
+        "entityClass": "de.atlascore.entity.CoreAxolotl"
+    },
+    "minecraft:block_display": {
+        "const": "BLOCK_DISPLAY",
+        "id": 8,
+        "entityClass": "de.atlascore.entity.CoreBlockDisplay"
+    },
+    "minecraft:camel": {
+        "const": "CAMEL",
+        "id": 10,
+        "entityClass": "de.atlascore.entity.CoreCamel"
+    },
+    "minecraft:chest_boat": {
+        "const": "CHEST_BOAT",
+        "id": 13,
+        "entityClass": "de.atlascore.entity.CoreChestBoat"
+    },
+    "minecraft:frog": {
+        "const": "FROG",
+        "id": 39,
+        "entityClass": "de.atlascore.entity.CoreFrog"
+    },
+    "minecraft:glow_item_frame": {
+        "const": "GLOW_ITEM_FRAME",
+        "id": 43,
+        "entityClass": "de.atlascore.entity.CoreGlowItemFrame"
+    },
+    "minecraft:glow_squid": {
+        "const": "GLOW_SQUID",
+        "id": 44,
+        "entityClass": "de.atlascore.entity.CoreGlowSquid"
+    },
+    "minecraft:goat": {
+        "const": "GOAT",
+        "id": 45,
+        "entityClass": "de.atlascore.entity.CoreGoat"
+    },
+    "minecraft:interaction": {
+        "const": "INTERACTION",
+        "id": 52,
+        "entityClass": "de.atlascore.entity.CoreInteraction"
+    },
+    "minecraft:item_display": {
+        "const": "ITEM_DISPLAY",
+        "id": 55,
+        "entityClass": "de.atlascore.entity.CoreItemDisplay"
+    },
+    "minecraft:marker": {
+        "const": "MARKER",
+        "id": 63,
+        "entityClass": "de.atlascore.entity.CoreMarker"
+    },
+    "minecraft:sniffer": {
+        "const": "SNIFFER",
+        "id": 90,
+        "entityClass": "de.atlascore.entity.CoreSniffer"
+    },
+    "minecraft:tadpole": {
+        "const": "TADPOLE",
+        "id": 99,
+        "entityClass": "de.atlascore.entity.CoreTadpole"
+    },
+    "minecraft:text_display": {
+        "const": "TEXT_DISPLAY",
+        "id": 100,
+        "entityClass": "de.atlascore.entity.CoreTextDisplay"
+    },
+    "minecraft:zombie_villager": {
+        "const": "ZOMBIE_VILLAGER",
+        "id": 120,
+        "entityClass": "de.atlascore.entity.CoreZombieVillager"
+    },
+    "minecraft:warden": {
+        "const": "WARDEN",
+        "id": 111,
+        "entityClass": "de.atlascore.entity.CoreWarden"
+    }
+}

@@ -1,0 +1,34 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>de.atlas-project</groupId>
+	<artifactId>atlas-mc</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>AtlasMC</name>
+	<description>A Minecraft server software</description>
+	<modules>
+		<module>atlas-node-api</module>
+		<module>atlas-node-core</module>
+		<module>atlas-network-core-common</module>
+		<module>atlas-network-core-master</module>
+		<module>atlas-network-core-minion</module>
+		<module>atlas-node-bootstrap</module>
+		<module>atlas-packaging</module>
+		<module>atlas-test</module>
+	</modules>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.9.2</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>

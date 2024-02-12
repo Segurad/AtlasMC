@@ -1,0 +1,182 @@
+{
+    "minecraft:block_activate": {
+        "protocol_id": 0
+    },
+    "minecraft:block_attach": {
+        "protocol_id": 1
+    },
+    "minecraft:block_change": {
+        "protocol_id": 2
+    },
+    "minecraft:block_close": {
+        "protocol_id": 3
+    },
+    "minecraft:block_deactivate": {
+        "protocol_id": 4
+    },
+    "minecraft:block_destroy": {
+        "protocol_id": 5
+    },
+    "minecraft:block_detach": {
+        "protocol_id": 6
+    },
+    "minecraft:block_open": {
+        "protocol_id": 7
+    },
+    "minecraft:block_place": {
+        "protocol_id": 8
+    },
+    "minecraft:container_close": {
+        "protocol_id": 9
+    },
+    "minecraft:container_open": {
+        "protocol_id": 10
+    },
+    "minecraft:drink": {
+        "protocol_id": 11
+    },
+    "minecraft:eat": {
+        "protocol_id": 12
+    },
+    "minecraft:elytra_glide": {
+        "protocol_id": 13
+    },
+    "minecraft:entity_action": {
+        "protocol_id": 20
+    },
+    "minecraft:entity_damage": {
+        "protocol_id": 14
+    },
+    "minecraft:entity_die": {
+        "protocol_id": 15
+    },
+    "minecraft:entity_dismount": {
+        "protocol_id": 16
+    },
+    "minecraft:entity_interact": {
+        "protocol_id": 17
+    },
+    "minecraft:entity_mount": {
+        "protocol_id": 18
+    },
+    "minecraft:entity_place": {
+        "protocol_id": 19
+    },
+    "minecraft:equip": {
+        "protocol_id": 21
+    },
+    "minecraft:explode": {
+        "protocol_id": 22
+    },
+    "minecraft:flap": {
+        "protocol_id": 23
+    },
+    "minecraft:fluid_pickup": {
+        "protocol_id": 24
+    },
+    "minecraft:fluid_place": {
+        "protocol_id": 25
+    },
+    "minecraft:hit_ground": {
+        "protocol_id": 26
+    },
+    "minecraft:instrument_play": {
+        "protocol_id": 27
+    },
+    "minecraft:item_interact_finish": {
+        "protocol_id": 28
+    },
+    "minecraft:item_interact_start": {
+        "protocol_id": 29
+    },
+    "minecraft:jukebox_play": {
+        "protocol_id": 30
+    },
+    "minecraft:jukebox_stop_play": {
+        "protocol_id": 31
+    },
+    "minecraft:lightning_strike": {
+        "protocol_id": 32
+    },
+    "minecraft:note_block_play": {
+        "protocol_id": 33
+    },
+    "minecraft:prime_fuse": {
+        "protocol_id": 34
+    },
+    "minecraft:projectile_land": {
+        "protocol_id": 35
+    },
+    "minecraft:projectile_shoot": {
+        "protocol_id": 36
+    },
+    "minecraft:resonate_1": {
+        "protocol_id": 45
+    },
+    "minecraft:resonate_10": {
+        "protocol_id": 54
+    },
+    "minecraft:resonate_11": {
+        "protocol_id": 55
+    },
+    "minecraft:resonate_12": {
+        "protocol_id": 56
+    },
+    "minecraft:resonate_13": {
+        "protocol_id": 57
+    },
+    "minecraft:resonate_14": {
+        "protocol_id": 58
+    },
+    "minecraft:resonate_15": {
+        "protocol_id": 59
+    },
+    "minecraft:resonate_2": {
+        "protocol_id": 46
+    },
+    "minecraft:resonate_3": {
+        "protocol_id": 47
+    },
+    "minecraft:resonate_4": {
+        "protocol_id": 48
+    },
+    "minecraft:resonate_5": {
+        "protocol_id": 49
+    },
+    "minecraft:resonate_6": {
+        "protocol_id": 50
+    },
+    "minecraft:resonate_7": {
+        "protocol_id": 51
+    },
+    "minecraft:resonate_8": {
+        "protocol_id": 52
+    },
+    "minecraft:resonate_9": {
+        "protocol_id": 53
+    },
+    "minecraft:sculk_sensor_tendrils_clicking": {
+        "protocol_id": 37
+    },
+    "minecraft:shear": {
+        "protocol_id": 38
+    },
+    "minecraft:shriek": {
+        "protocol_id": 39
+    },
+    "minecraft:splash": {
+        "protocol_id": 40
+    },
+    "minecraft:step": {
+        "protocol_id": 41
+    },
+    "minecraft:swim": {
+        "protocol_id": 42
+    },
+    "minecraft:teleport": {
+        "protocol_id": 43
+    },
+    "minecraft:unequip": {
+        "protocol_id": 44
+    }
+}

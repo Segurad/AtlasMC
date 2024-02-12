@@ -1,0 +1,11 @@
+{
+    "minecraft:canyon": {
+        "protocol_id": 2
+    },
+    "minecraft:cave": {
+        "protocol_id": 0
+    },
+    "minecraft:nether_cave": {
+        "protocol_id": 1
+    }
+}

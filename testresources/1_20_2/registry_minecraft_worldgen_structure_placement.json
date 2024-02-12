@@ -1,0 +1,8 @@
+{
+    "minecraft:concentric_rings": {
+        "protocol_id": 1
+    },
+    "minecraft:random_spread": {
+        "protocol_id": 0
+    }
+}

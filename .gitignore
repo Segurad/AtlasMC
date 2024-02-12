@@ -1,0 +1,7 @@
+bin/
+target/
+.settings/
+.classpath
+.project
+Atlas.txt
+dependency-reduced-pom.xml

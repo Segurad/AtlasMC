@@ -1,0 +1,29 @@
+{
+    "minecraft:bending_trunk_placer": {
+        "protocol_id": 6
+    },
+    "minecraft:cherry_trunk_placer": {
+        "protocol_id": 8
+    },
+    "minecraft:dark_oak_trunk_placer": {
+        "protocol_id": 4
+    },
+    "minecraft:fancy_trunk_placer": {
+        "protocol_id": 5
+    },
+    "minecraft:forking_trunk_placer": {
+        "protocol_id": 1
+    },
+    "minecraft:giant_trunk_placer": {
+        "protocol_id": 2
+    },
+    "minecraft:mega_jungle_trunk_placer": {
+        "protocol_id": 3
+    },
+    "minecraft:straight_trunk_placer": {
+        "protocol_id": 0
+    },
+    "minecraft:upwards_branching_trunk_placer": {
+        "protocol_id": 7
+    }
+}

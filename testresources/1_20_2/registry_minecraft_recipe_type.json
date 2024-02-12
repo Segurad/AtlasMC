@@ -1,0 +1,23 @@
+{
+    "minecraft:blasting": {
+        "protocol_id": 2
+    },
+    "minecraft:campfire_cooking": {
+        "protocol_id": 4
+    },
+    "minecraft:crafting": {
+        "protocol_id": 0
+    },
+    "minecraft:smelting": {
+        "protocol_id": 1
+    },
+    "minecraft:smithing": {
+        "protocol_id": 6
+    },
+    "minecraft:smoking": {
+        "protocol_id": 3
+    },
+    "minecraft:stonecutting": {
+        "protocol_id": 5
+    }
+}

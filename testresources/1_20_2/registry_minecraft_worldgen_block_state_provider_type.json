@@ -1,0 +1,23 @@
+{
+    "minecraft:dual_noise_provider": {
+        "protocol_id": 4
+    },
+    "minecraft:noise_provider": {
+        "protocol_id": 3
+    },
+    "minecraft:noise_threshold_provider": {
+        "protocol_id": 2
+    },
+    "minecraft:randomized_int_state_provider": {
+        "protocol_id": 6
+    },
+    "minecraft:rotated_block_provider": {
+        "protocol_id": 5
+    },
+    "minecraft:simple_state_provider": {
+        "protocol_id": 0
+    },
+    "minecraft:weighted_state_provider": {
+        "protocol_id": 1
+    }
+}

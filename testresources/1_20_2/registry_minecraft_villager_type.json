@@ -1,0 +1,23 @@
+{
+    "minecraft:desert": {
+        "protocol_id": 0
+    },
+    "minecraft:jungle": {
+        "protocol_id": 1
+    },
+    "minecraft:plains": {
+        "protocol_id": 2
+    },
+    "minecraft:savanna": {
+        "protocol_id": 3
+    },
+    "minecraft:snow": {
+        "protocol_id": 4
+    },
+    "minecraft:swamp": {
+        "protocol_id": 5
+    },
+    "minecraft:taiga": {
+        "protocol_id": 6
+    }
+}

@@ -1,0 +1,30 @@
+my_group:
+  name: MyGroupName
+  sort-weight: 1
+  prefix: "&4My&5Group"
+  suffix: "&eSomeSuffix"
+  chat-color: "&3"
+  name-color: "&4"
+  power: 666  
+  default: true
+  permissions:
+  - "my.permission:true"
+  - "my.permission:8"
+  - "bann.needed.bann.power:400"
+  - "bann.power:400"
+  - "can.join:true"
+  - "skyblock.ender.pages:5"
+  context-permissions:
+    server: # context key
+      my_server: # context value
+      - "my.server.permission"
+    server-group:
+      my_group:
+      - "my.server.group.permission"
+    node-group:
+      my_group:
+      - "my.node.group.permission"
+  context: # key value based settings e.g prefix: "my displayed prefix"
+    prefix: "Hello World"
+  inherited-groups:
+  - some_other_group

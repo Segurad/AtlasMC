@@ -1,0 +1,38 @@
+network-info:
+  slots: 256
+  slot-distance: 1
+  slot-mode: normal # dynamic, fixed (displays slots/distance), base (displays max slots dynamic in base of distance increments)
+  motd-first-line: '         §4§m  §8§m===§4§m  §r §7powered by §4§lAtlas§8§lMC §4§m  §8§m===§4§m  '
+  motd-second-line: ''
+  use-protocol-text: true
+  protocol-text: '§7Online §8【§a§l✓§8】'
+  player-info:
+  - '§4§m                                                    '
+  - '    §4§lAtlas§8§lMC'
+  - '§4§m                                                    '
+  - ''
+  - ' §4§l» §7by Segurad'
+  - ''
+  - ' §4§l» §7https§4://§7github§4.§7com§4/§7Segurad§4/§8Atlas§4MC '
+  - ''
+  - '§4§m                                                    '
+network-info-maintenance:
+  slots: 256
+  slot-distance: 1
+  slot-mode: normal
+  motd-first-line: '         §4§m  §8§m===§4§m  §r §7powered by §4§lAtlas§8§lMC §4§m  §8§m===§4§m  '
+  motd-second-line: ''
+  use-protocol-text: true
+  protocol-text: '§cMaintenance §8【§4✘§8】'
+  player-info:
+  - '§4§m                                                    '
+  - '    §4§lAtlas§8§lMC'
+  - '§4§m                                                    '
+  - ''
+  - ' §4§l» §7by Segurad'
+  - ''
+  - ' §4§l» §7https§4://§7github§4.§7com§4/§7Segurad§4/§8Atlas§4MC '
+  - ''
+  - '§4§m                                                    '
+max-slots: 256
+maintenance: false

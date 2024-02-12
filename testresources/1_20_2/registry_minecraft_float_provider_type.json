@@ -1,0 +1,14 @@
+{
+    "minecraft:clamped_normal": {
+        "protocol_id": 2
+    },
+    "minecraft:constant": {
+        "protocol_id": 0
+    },
+    "minecraft:trapezoid": {
+        "protocol_id": 3
+    },
+    "minecraft:uniform": {
+        "protocol_id": 1
+    }
+}

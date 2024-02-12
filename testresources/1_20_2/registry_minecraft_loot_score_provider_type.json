@@ -1,0 +1,8 @@
+{
+    "minecraft:context": {
+        "protocol_id": 1
+    },
+    "minecraft:fixed": {
+        "protocol_id": 0
+    }
+}

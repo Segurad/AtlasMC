@@ -1,0 +1,47 @@
+{
+    "minecraft:biome": {
+        "protocol_id": 4
+    },
+    "minecraft:block_predicate_filter": {
+        "protocol_id": 0
+    },
+    "minecraft:carving_mask": {
+        "protocol_id": 14
+    },
+    "minecraft:count": {
+        "protocol_id": 5
+    },
+    "minecraft:count_on_every_layer": {
+        "protocol_id": 8
+    },
+    "minecraft:environment_scan": {
+        "protocol_id": 9
+    },
+    "minecraft:height_range": {
+        "protocol_id": 11
+    },
+    "minecraft:heightmap": {
+        "protocol_id": 10
+    },
+    "minecraft:in_square": {
+        "protocol_id": 12
+    },
+    "minecraft:noise_based_count": {
+        "protocol_id": 6
+    },
+    "minecraft:noise_threshold_count": {
+        "protocol_id": 7
+    },
+    "minecraft:random_offset": {
+        "protocol_id": 13
+    },
+    "minecraft:rarity_filter": {
+        "protocol_id": 1
+    },
+    "minecraft:surface_relative_threshold_filter": {
+        "protocol_id": 2
+    },
+    "minecraft:surface_water_depth_filter": {
+        "protocol_id": 3
+    }
+}

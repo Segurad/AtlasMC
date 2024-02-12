@@ -1,0 +1,11 @@
+{
+    "minecraft:debug": {
+        "protocol_id": 2
+    },
+    "minecraft:flat": {
+        "protocol_id": 1
+    },
+    "minecraft:noise": {
+        "protocol_id": 0
+    }
+}

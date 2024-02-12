@@ -1,0 +1,50 @@
+{
+    "minecraft:buried_treasure": {
+        "protocol_id": 0
+    },
+    "minecraft:desert_pyramid": {
+        "protocol_id": 1
+    },
+    "minecraft:end_city": {
+        "protocol_id": 2
+    },
+    "minecraft:fortress": {
+        "protocol_id": 3
+    },
+    "minecraft:igloo": {
+        "protocol_id": 4
+    },
+    "minecraft:jigsaw": {
+        "protocol_id": 5
+    },
+    "minecraft:jungle_temple": {
+        "protocol_id": 6
+    },
+    "minecraft:mineshaft": {
+        "protocol_id": 7
+    },
+    "minecraft:nether_fossil": {
+        "protocol_id": 8
+    },
+    "minecraft:ocean_monument": {
+        "protocol_id": 9
+    },
+    "minecraft:ocean_ruin": {
+        "protocol_id": 10
+    },
+    "minecraft:ruined_portal": {
+        "protocol_id": 11
+    },
+    "minecraft:shipwreck": {
+        "protocol_id": 12
+    },
+    "minecraft:stronghold": {
+        "protocol_id": 13
+    },
+    "minecraft:swamp_hut": {
+        "protocol_id": 14
+    },
+    "minecraft:woodland_mansion": {
+        "protocol_id": 15
+    }
+}
