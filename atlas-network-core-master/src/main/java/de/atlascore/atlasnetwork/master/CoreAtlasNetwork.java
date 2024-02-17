@@ -12,12 +12,8 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.atlasnetwork.AtlasNetwork;
 import de.atlasmc.atlasnetwork.NetworkInfo;
 import de.atlasmc.atlasnetwork.NodeConfig;
-import de.atlasmc.atlasnetwork.NodeManager;
-import de.atlasmc.atlasnetwork.PermissionProvider;
-import de.atlasmc.atlasnetwork.ProfileHandler;
 import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
-import de.atlasmc.atlasnetwork.server.ServerManager;
 import de.atlasmc.datarepository.Repository;
 
 public class CoreAtlasNetwork implements AtlasNetwork {
@@ -96,9 +92,6 @@ public class CoreAtlasNetwork implements AtlasNetwork {
 
 	@Override
 	public void tick() {
-		profileHandler.expungeStaleEntries();
-		permProvider.expungeStaleEntries();
-		smanager.tick();
 	}
 
 	@Override
@@ -107,22 +100,22 @@ public class CoreAtlasNetwork implements AtlasNetwork {
 	}
 
 	@Override
-	public ServerManager getServerManager() {
+	public CoreServerManager getServerManager() {
 		return smanager;
 	}
 
 	@Override
-	public ProfileHandler getProfileHandler() {
+	public CorePlayerProfileHandler getProfileHandler() {
 		return profileHandler;
 	}
 
 	@Override
-	public PermissionProvider getPermissionProvider() {
+	public CorePermissionProvider getPermissionProvider() {
 		return permProvider;
 	}
 
 	@Override
-	public NodeManager getNodeManager() {
+	public CoreNodeManager getNodeManager() {
 		return nodeManager;
 	}
 

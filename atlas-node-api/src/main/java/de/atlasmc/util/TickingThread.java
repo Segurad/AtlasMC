@@ -24,6 +24,10 @@ public class TickingThread extends Thread implements WatchableThread {
 	private volatile long lastActive;
 	private final Queue<Runnable> queue;
 	
+	public TickingThread(String name, int ticktime, Log logger) {
+		this(name, ticktime, logger, false);
+	}
+	
 	public TickingThread(String name, int ticktime, Log logger, boolean exitOnError) {
 		this(name, ticktime, logger, exitOnError, null);
 	}

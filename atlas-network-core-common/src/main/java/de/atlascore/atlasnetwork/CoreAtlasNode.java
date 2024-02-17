@@ -9,7 +9,7 @@ public abstract class CoreAtlasNode implements AtlasNode {
 	
 	private final UUID uuid;
 	private final PublicKey key;
-	private boolean online;
+	private NodeStatus status;
 	
 	public CoreAtlasNode(UUID uuid, PublicKey key) {
 		if (uuid == null)
@@ -18,15 +18,18 @@ public abstract class CoreAtlasNode implements AtlasNode {
 			throw new IllegalArgumentException("Key can not be null!");
 		this.uuid = uuid;
 		this.key = key;
+		this.status = NodeStatus.OFFLINE;
 	}
 
 	@Override
-	public boolean isOnline() {
-		return online;
+	public NodeStatus getStatus() {
+		return status;
 	}
 	
-	public void setOnline(boolean online) {
-		this.online = online;
+	public void setStatus(NodeStatus status) {
+		if (status == null)
+			throw new IllegalArgumentException("Status can not be null!");
+		this.status = status;
 	}
 
 	@Override

@@ -78,8 +78,8 @@ public class LocalAtlasNode implements AtlasNode, SyncThreadHolder {
 	}
 
 	@Override
-	public boolean isOnline() {
-		return true;
+	public NodeStatus getStatus() {
+		return NodeStatus.ONLINE;
 	}
 
 	public Scheduler getScheduler() {

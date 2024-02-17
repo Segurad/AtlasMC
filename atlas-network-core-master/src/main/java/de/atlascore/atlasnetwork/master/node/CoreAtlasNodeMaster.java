@@ -5,8 +5,9 @@ import java.util.UUID;
 import de.atlascore.atlasnetwork.CoreAtlasNode;
 import de.atlasmc.atlasnetwork.AtlasNode;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
+import de.atlasmc.tick.Tickable;
 
-public abstract class CoreAtlasNodeMaster extends CoreAtlasNode implements AtlasNode {
+public abstract class CoreAtlasNodeMaster extends CoreAtlasNode implements AtlasNode, Tickable {
 	
 	protected long maxHeap;
 	protected long usedHeap;
@@ -24,5 +25,5 @@ public abstract class CoreAtlasNodeMaster extends CoreAtlasNode implements Atlas
 	}
 
 	public abstract void deployServer(UUID uuid, ServerGroup group);
-
+	
 }

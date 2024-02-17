@@ -21,10 +21,16 @@ public interface AtlasNode {
 	
 	Future<Collection<? extends ServerGroup>> getServerGroups(); 
 	
-	boolean isOnline();
+	NodeStatus getStatus();
 	
 	PublicKey getPublicKey();
 
 	UUID getUUID();
+	
+	public static enum NodeStatus {
+		OFFLINE,
+		STARTING,
+		ONLINE
+	}
 	
 }

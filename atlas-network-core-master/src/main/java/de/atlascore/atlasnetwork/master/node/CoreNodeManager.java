@@ -7,8 +7,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlascore.atlasnetwork.CoreAtlasNode;
 import de.atlasmc.atlasnetwork.NodeManager;
+import de.atlasmc.tick.Tickable;
 
-public class CoreNodeManager implements NodeManager {
+public class CoreNodeManager implements NodeManager, Tickable {
 	
 	private final Map<UUID, CoreAtlasNodeMaster> nodes;
 	
@@ -24,6 +25,11 @@ public class CoreNodeManager implements NodeManager {
 	@Override
 	public CoreAtlasNode getNode(UUID uuid) {
 		return nodes.get(uuid);
+	}
+
+	public void tick() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
