@@ -34,6 +34,7 @@ public class LocalAtlasNode implements AtlasNode, SyncThreadHolder {
 	private final TickingThread mainThread;
 	private final DataRepositoryHandler dataHandler;
 	private final UUID uuid;
+	private NodeStatus status;
 	
 	public LocalAtlasNode(UUID uuid, Log logger, Scheduler scheduler, File workdir, PluginManager pluginManager, TickingThread mainThread, KeyPair keyPair, DataRepositoryHandler dataHandler) {
 		if (uuid == null)
@@ -79,7 +80,7 @@ public class LocalAtlasNode implements AtlasNode, SyncThreadHolder {
 
 	@Override
 	public NodeStatus getStatus() {
-		return NodeStatus.ONLINE;
+		return status;
 	}
 
 	public Scheduler getScheduler() {

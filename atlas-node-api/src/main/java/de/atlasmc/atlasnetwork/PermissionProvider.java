@@ -10,6 +10,8 @@ public interface PermissionProvider {
 
 	Future<List<PermissionGroup>> getGroups(String... names);
 
+	Future<PermissionGroup> getGroup(String name);
+	
 	Future<PermissionGroup> getGroup(String name, boolean load);
 
 	Future<PermissionHandler> getHandler(AtlasPlayer player);

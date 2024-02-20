@@ -117,6 +117,11 @@ public abstract class CorePermissionProvider implements PermissionProvider {
 	}
 	
 	@Override
+	public Future<PermissionGroup> getGroup(String name) {
+		return getGroup(name, true);
+	}
+	
+	@Override
 	public Future<PermissionGroup> getGroup(String name, boolean load) {
 		PermissionGroup handler = internalGetGroup(name);
 		if (handler != null)

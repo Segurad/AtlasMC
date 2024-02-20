@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.security.KeyPair;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -20,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
 
@@ -71,12 +73,14 @@ public class CoreMasterBuilder {
 	private Map<String, NodeConfig> nodeConfigs;
 	private Map<String, ProxyConfig> proxyConfigs;
 	boolean override = false;
+	private final KeyPair keyPair;
 	
-	public CoreMasterBuilder(Log log, File workDir, ConfigurationSection masterConfig, Map<String, String> arguments) {
+	public CoreMasterBuilder(Log log, File workDir, ConfigurationSection masterConfig, Map<String, String> arguments, KeyPair keyPair) {
 		this.log = log;
 		this.workDir = workDir;
 		this.arguments = arguments;
 		this.masterConfig = masterConfig;
+		this.keyPair = keyPair;
 		this.serverGroups = new HashMap<>();
 		this.nodeConfigs = new HashMap<>();
 		this.proxyConfigs = new HashMap<>();
@@ -121,11 +125,37 @@ public class CoreMasterBuilder {
 		loadProxyConfig(proxyCfgFile);
 		loadPermissions(permissionCfgFile);
 		
+		File nodeIDFile = new File(workDir, "node-id.yml");
+		UUID nodeID = null;
+		if (nodeIDFile.exists()) {
+			YamlConfiguration nodeIDCfg = null;
+			try {
+				nodeIDCfg = YamlConfiguration.loadConfiguration(nodeIDFile);
+			} catch (IOException e) {
+				log.error("Error while loading node id file!", e);
+				System.exit(1);
+			}
+			String rawID = nodeIDCfg.getString("node-id");
+			if (rawID != null)
+				nodeID = UUID.fromString(rawID);
+		}
+		if (nodeID == null) {
+			nodeID = UUID.randomUUID();
+			YamlConfiguration nodeIDCfg = new YamlConfiguration();
+			nodeIDCfg.set("node-id", nodeID.toString());
+			try {
+				nodeIDCfg.save(nodeIDFile);
+			} catch (IOException e) {
+				log.error("Error while writing node id file!", e);
+				System.exit(1);
+			}
+		}
+		
 		CoreServerManager smanager = new CoreServerManager(fallBack, serverGroups);
 		CoreSQLPlayerProfileHandler profileHandler = new CoreSQLPlayerProfileHandler(con);
 		CorePermissionProvider permProvider = new CoreSQLPermissionProvider(con);
 		CoreLocalRepository repo = new CoreLocalRepository(new File(workDir, "data/"), "master");
-		return new CoreAtlasNetwork(profileHandler, permProvider, info, infoMaintenance, slots, maintenance, smanager, nodeConfigs, proxyConfigs, repo);
+		return new CoreAtlasNetwork(profileHandler, permProvider, info, infoMaintenance, slots, maintenance, smanager, nodeConfigs, proxyConfigs, repo, keyPair, nodeID);
 	}
 	
 	private void loadServerGroups(File file) {

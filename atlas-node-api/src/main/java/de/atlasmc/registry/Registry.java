@@ -2,9 +2,8 @@ package de.atlasmc.registry;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
-import de.atlasmc.util.nbt.NBTHolder;
 
-public interface Registry<T> extends Namespaced, NBTHolder {
+public interface Registry<T> extends Namespaced {
 	
 	T getDefault();
 	

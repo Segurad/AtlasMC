@@ -120,7 +120,7 @@ public class Main {
 		AtlasNetwork master = null;
 		if (isMaster) {
 			ConfigurationSection masterConfig = config.getConfigurationSection("master");
-			master = createMaster(log, workDir, masterConfig, arguments);
+			master = createMaster(log, workDir, masterConfig, arguments, keyPair);
 		} else {
 			String masterHost = config.getString("host");
 			int masterPort = config.getInt("port"); 
@@ -215,13 +215,13 @@ public class Main {
 		return null;
 	}
 
-	private static AtlasNetwork createMaster(Log log, File workDir, ConfigurationSection masterConfig, Map<String, String> arguments) {
+	private static AtlasNetwork createMaster(Log log, File workDir, ConfigurationSection masterConfig, Map<String, String> arguments, KeyPair keyPair) {
 		log.info("Initialize Atlas Master Node...");
 		if (masterConfig == null) {
 			log.error("Master configuration not found");
 			return null;
 		}
-		CoreMasterBuilder builder = new CoreMasterBuilder(log, workDir, masterConfig, arguments);
+		CoreMasterBuilder builder = new CoreMasterBuilder(log, workDir, masterConfig, arguments, keyPair);
 		return builder.build();
 	}
 
