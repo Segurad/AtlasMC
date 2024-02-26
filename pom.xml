@@ -17,6 +17,7 @@
 		<module>atlas-node-bootstrap</module>
 		<module>atlas-packaging</module>
 		<module>atlas-test</module>
+		<module>atlas-shade-yaml-transformer</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
