@@ -1,6 +1,7 @@
 package de.atlasmc.registry;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.util.annotation.InternalAPI;
 
 public class Registries {
@@ -10,8 +11,12 @@ public class Registries {
 	
 	private Registries() {}
 	
-	public static <T> T getDefault(Class<T> clazz) {
-		return HANDLER.getDefault(clazz);
+	public static <T> T getInstanceDefault(Class<T> clazz) {
+		return HANDLER.getInstanceDefault(clazz);
+	}
+	
+	public static <T> Class<? extends T> getClassDefault(Class<T> clazz) {
+		return HANDLER.getClassDefault(clazz);
 	}
 	
 	public static <T> T getDefault(NamespacedKey key) {
@@ -26,12 +31,24 @@ public class Registries {
 		return HANDLER.getRegistry(key);
 	}
 
-	public static <T> Registry<T> getRegistry(Class<T> clazz) {
-		return HANDLER.getRegistry(clazz);
+	public static <T> InstanceRegistry<T> getInstanceRegistry(Class<T> clazz) {
+		return HANDLER.getInstanceRegistry(clazz);
 	}
 	
-	public static <T> Registry<T> createRegistry(NamespacedKey key, Class<T> clazz) {
-		return HANDLER.createRegistry(key, clazz);
+	public static <T> ClassRegistry<T> getClassRegistry(Class<T> clazz) {
+		return HANDLER.getClassRegistry(clazz);
+	}
+	
+	public static <T> InstanceRegistry<T> createInstanceRegistry(NamespacedKey key, Class<T> clazz) {
+		return HANDLER.createInstanceRegistry(key, clazz);
+	}
+	
+	public static <T> ClassRegistry<T> createClassRegistry(NamespacedKey key, Class<T> clazz) {
+		return HANDLER.createClassRegistry(key, clazz);
+	}
+	
+	public static <T> Registry<T> createRegitry(NamespacedKey key, Class<?> clazz, Target target) {
+		return HANDLER.createRegistry(key, clazz, target);
 	}
 	
 	public static RegistryHandler getHandler() {

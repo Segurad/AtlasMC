@@ -40,6 +40,9 @@
 				<version>3.11.0</version>
 				<configuration>
 					<proc>only</proc>
+					<annotationProcessors>
+                    	<annotationProcessor>de.atlasmc.registry.RegistryAnnotationProcessor</annotationProcessor>
+                	</annotationProcessors>
 				</configuration>
 			</plugin>
 		</plugins>

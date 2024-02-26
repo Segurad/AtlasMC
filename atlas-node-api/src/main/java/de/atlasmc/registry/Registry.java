@@ -2,12 +2,19 @@ package de.atlasmc.registry;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
+import de.atlasmc.registry.RegistryHolder.Target;
 
 public interface Registry<T> extends Namespaced {
 	
 	T getDefault();
 	
+	T setDefault(T defaultEntry);
+	
 	T get(NamespacedKey key);
+	
+	T getOrDefault(NamespacedKey key);
+	
+	T getOrDefault(NamespacedKey key, T defaultValue);
 	
 	boolean register(NamespacedKey key, T value);
 	
@@ -15,6 +22,14 @@ public interface Registry<T> extends Namespaced {
 
 	T get(String key);
 	
-	Class<T> getType();
+	T getOrDefault(String key);
+	
+	T getOrDefault(String key, T defaultValue);
+
+	int size();
+	
+	Target getTarget();
+	
+	Class<?> getType();
 
 }

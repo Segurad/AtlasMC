@@ -1,6 +1,7 @@
 package de.atlasmc.registry;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.registry.RegistryHolder.Target;
 
 public interface RegistryHandler {
 
@@ -8,10 +9,16 @@ public interface RegistryHandler {
 
 	<T> T getDefault(NamespacedKey key);
 	
-	<T> T getDefault(Class<T> clazz);
+	<T> T getInstanceDefault(Class<T> clazz);
 	
-	<T> Registry<T> createRegistry(NamespacedKey key, Class<T> clazz);
+	<T> Class<? extends T> getClassDefault(Class<T> clazz);
+	
+	<T> InstanceRegistry<T> createInstanceRegistry(NamespacedKey key, Class<T> clazz);
+	
+	<T> ClassRegistry<T> createClassRegistry(NamespacedKey key, Class<T> clazz);
 
+	<T> Registry<T> createRegistry(NamespacedKey key, Class<?> clazz, Target target);
+	
 	<T> Registry<T> getRegistry(String key);
 	
 	/**
@@ -20,6 +27,10 @@ public interface RegistryHandler {
 	 * @param clazz
 	 * @return registry or null
 	 */
-	<T> Registry<T> getRegistry(Class<T> clazz);
+	<T> InstanceRegistry<T> getInstanceRegistry(Class<T> clazz);
+	
+	<T> ClassRegistry<T> getClassRegistry(Class<T> clazz);
+	
+	Registry<?> getRegistry(Class<?> clazz);
 
 }

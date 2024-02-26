@@ -13,5 +13,12 @@ import java.lang.annotation.Target;
 public @interface RegistryHolder {
 	
 	String key();
+	
+	Target target() default Target.INSTANCE;
+	
+	public static enum Target {
+		INSTANCE,
+		CLASS
+	}
 
 }

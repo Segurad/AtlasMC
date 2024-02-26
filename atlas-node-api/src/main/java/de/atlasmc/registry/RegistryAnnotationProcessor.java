@@ -20,6 +20,7 @@ import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.Elements;
 import javax.tools.StandardLocation;
 
 import de.atlasmc.util.configuration.file.YamlConfiguration;
@@ -52,6 +53,7 @@ public class RegistryAnnotationProcessor extends AbstractProcessor {
 						Map<String, Object> values = getAnnotationValues(mirror);
 						String key = (String) values.get("key");
 						String type = ele.toString();
+						String target = values.get("target").toString();
 						if (registries == null) {
 							registries = new HashMap<>();
 						}
@@ -59,8 +61,8 @@ public class RegistryAnnotationProcessor extends AbstractProcessor {
 							String message = "Another type (" + registries.get(key) + ") with the given registry key is already present: " + key;
 							processingEnv.getMessager().printMessage(Kind.ERROR, message, ele, mirror);
 						}
-						registries.put(key, type);
-						processingEnv.getMessager().printMessage(Kind.NOTE, "Found registry: " + key + " type: " + type);
+						registries.put(key, type + ":" + target);
+						processingEnv.getMessager().printMessage(Kind.NOTE, "Found registry: " + key + " type: " + type + " target: " + target);
 					}
 				}
 			} else if (annotation.toString().equals("de.atlasmc.registry.RegistryValue")) {
@@ -186,7 +188,8 @@ public class RegistryAnnotationProcessor extends AbstractProcessor {
 	
 	private Map<String, Object> getAnnotationValues(AnnotationMirror mirror) {
 		Map<String, Object> values = new HashMap<>();
-		Map<? extends ExecutableElement, ? extends AnnotationValue> rawValues = mirror.getElementValues();
+		Elements elements = processingEnv.getElementUtils();
+		Map<? extends ExecutableElement, ? extends AnnotationValue> rawValues = elements.getElementValuesWithDefaults(mirror);
 		rawValues.forEach((k,v) -> {
 			values.put(k.getSimpleName().toString(), v.getValue());
 		});

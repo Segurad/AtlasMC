@@ -55,8 +55,10 @@ import de.atlasmc.log.Log;
 import de.atlasmc.log.Logging;
 import de.atlasmc.plugin.CoremodulPlugin;
 import de.atlasmc.plugin.Plugin;
+import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.registry.RegistryHandler;
+import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.util.EncryptionUtil;
 import de.atlasmc.util.FileUtils;
 import de.atlasmc.util.ThreadWatchdog;
@@ -351,12 +353,15 @@ public class Main {
 		}
 		for (String key : registryConfig.getKeys()) {
 			String value = registryConfig.getString(key);
+			String[] parts = value.split(":");
+			String rawClass = parts[0];
+			Target target = Target.valueOf(parts[1]);
 			try {
-				Class<?> registryType = Class.forName(value);
-				handler.createRegistry(NamespacedKey.of(key), registryType);
-				logger.debug("Created registry ({}) of type: {}", key, value);
+				Class<?> registryType = Class.forName(rawClass);
+				handler.createRegistry(NamespacedKey.of(key), registryType, target);
+				logger.debug("Created registry ({}) of type: {}", key, rawClass);
 			} catch (ClassNotFoundException e) {
-				logger.error("Registry ({}) class not found: {}", key, value);
+				logger.error("Registry ({}) class not found: {}", key, rawClass);
 				continue;
 			}
 		}
@@ -376,23 +381,32 @@ public class Main {
 			List<String> rawEntries = registryEntryConfig.getStringList(key);
 			for (String rawEntry : rawEntries) {
 				String[] parts = rawEntry.split(":", 2);
+				String rawClass = parts[0];
+				String entryKey = parts[1];
 				Class<?> entryClass = null;
 				try {
-					entryClass = Class.forName(parts[0]);
+					entryClass = Class.forName(rawClass);
 				} catch (ClassNotFoundException e) {
-					logger.error("Registry ({}) entry class not found: {}", key, parts[0]);
+					logger.error("Registry ({}) entry class not found: {}", key, rawClass);
 					logger.error(e);
 					continue;
 				}
 				Object entryValue = null;
-				try {
-					entryValue = entryClass.getConstructor().newInstance();
-				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-						| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-					logger.error("Unable to create instance of registry entry: " + entryClass.getName(), e);
+				if (registry.getTarget() == Target.CLASS) {
+					entryValue = entryClass;
+				} else {
+					try {
+						entryValue = entryClass.getConstructor().newInstance();
+					} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+							| InvocationTargetException | NoSuchMethodException | SecurityException e) {
+						logger.error("Unable to create instance of registry entry: " + entryClass.getName(), e);
+					}
 				}
-				if (registry.register(parts[1], entryValue)) {
-					logger.debug("Registry ({}) registered: {}={}", key, parts[1], entryClass.getName());
+				if (Registries.DEFAULT_REGISTRY_KEY.equals(entryKey)) {
+					registry.setDefault(entryValue);
+					logger.debug("Registry ({}) set default: {}", key, entryClass.getName());
+				} else if (registry.register(parts[1], entryValue)) {
+					logger.debug("Registry ({}) registered: {}={}", key, entryKey, entryClass.getName());
 				}
 			}
 		}

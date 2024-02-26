@@ -1,9 +1,12 @@
 package de.atlascore.registry;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.registry.ClassRegistry;
+import de.atlasmc.registry.InstanceRegistry;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.registry.RegistryHandler;
 import de.atlasmc.registry.RegistryHolder;
+import de.atlasmc.registry.RegistryHolder.Target;
 
 public class CoreRegistryHandler implements RegistryHandler {
 	
@@ -11,7 +14,7 @@ public class CoreRegistryHandler implements RegistryHandler {
 	private final Registry<Registry> registries;
 	
 	public CoreRegistryHandler() {
-		registries = new CoreRegistry<>(NamespacedKey.of(NamespacedKey.ATLAS, "registry_root"), Registry.class);
+		registries = new CoreInstanceRegistry<>(NamespacedKey.of(NamespacedKey.ATLAS, "registry_root"), Registry.class);
 	}
 
 	@Override
@@ -29,12 +32,34 @@ public class CoreRegistryHandler implements RegistryHandler {
 			return null;
 		return registry.getDefault();
 	}
-
+	
 	@Override
-	public <T> Registry<T> createRegistry(NamespacedKey key, Class<T> type) {
-		CoreRegistry<T> registry = new CoreRegistry<>(key, type);
+	public <T> InstanceRegistry<T> createInstanceRegistry(NamespacedKey key, Class<T> clazz) {
+		return new CoreInstanceRegistry<>(key, clazz);
+	}
+	
+	@Override
+	public <T> ClassRegistry<T> createClassRegistry(NamespacedKey key, Class<T> clazz) {
+		return new CoreClassRegistry<>(key, clazz);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> Registry<T> createRegistry(NamespacedKey key, Class<?> clazz, Target target) {
+		Registry<?> registry = null;
+		switch (target) {
+		case INSTANCE: {
+			registry = createInstanceRegistry(key, clazz);
+			break;
+		}
+		case CLASS:
+			registry = new CoreClassRegistry<>(key, clazz);
+			break;
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + target);
+		}
 		registries.register(key, registry);
-		return registry;
+		return (Registry<T>) registry;
 	}
 
 	@Override
@@ -44,20 +69,42 @@ public class CoreRegistryHandler implements RegistryHandler {
 		return registry;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getDefault(Class<T> clazz) {
-		Registry<T> registry = getRegistry(clazz);
-		if (registry == null)
-			return null;
-		return registry.getDefault();
+	public <T> InstanceRegistry<T> getInstanceRegistry(Class<T> clazz) {
+		Registry<?> registry = getRegistry(clazz);
+		if (registry instanceof InstanceRegistry reg)
+			return reg;
+		return null;
 	}
-
+	
 	@Override
-	public <T> Registry<T> getRegistry(Class<T> clazz) {
+	public Registry<?> getRegistry(Class<?> clazz) {
 		RegistryHolder holder = clazz.getAnnotation(RegistryHolder.class);
 		if (holder == null)
 			throw new IllegalArgumentException("Class does not contain  RegistryHolder annotation: " + clazz.getName());
 		return getRegistry(holder.key());
+	}
+
+	@Override
+	public <T> T getInstanceDefault(Class<T> clazz) {
+		InstanceRegistry<T> registry = getInstanceRegistry(clazz);
+		return registry != null ? registry.getDefault() : null;
+	}
+
+	@Override
+	public <T> Class<? extends T> getClassDefault(Class<T> clazz) {
+		ClassRegistry<T> registry = getClassRegistry(clazz);
+		return registry != null ? registry.getDefault() : null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> ClassRegistry<T> getClassRegistry(Class<T> clazz) {
+		Registry<?> registry = getRegistry(clazz);
+		if (registry instanceof ClassRegistry reg)
+			return reg;
+		return null;
 	}
 
 }
