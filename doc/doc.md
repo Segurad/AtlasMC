@@ -12,3 +12,5 @@
 - [Events](events.md)
 - [Internal API](internal_api.md)
 - [Unsafe API](unsafe_api.md)
+- [Registries](registries.md)
+- [Commands](commands.md)
