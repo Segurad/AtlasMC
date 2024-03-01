@@ -18,8 +18,7 @@ import de.atlasmc.util.configuration.file.YamlConfiguration;
 
 public class YamlTransformer implements ReproducibleResourceTransformer {
 	
-	private Map<String, YamlConfiguration> resources = new HashMap<>();
-	private Map<String, Long> resourceTime = new HashMap<>();
+	private Map<String, ResourceFile> resources = new HashMap<>();
 	
 	private String target;
 
@@ -36,23 +35,23 @@ public class YamlTransformer implements ReproducibleResourceTransformer {
 	@Override
 	public void processResource(String resource, InputStream is, List<Relocator> relocators, long time) throws IOException {
 		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(is);
-		YamlConfiguration presentCfg = resources.get(resource);
+		ResourceFile presentCfg = resources.get(resource);
 		if (presentCfg == null) {			
-			resources.put(resource, cfg);
-			resourceTime.put(resource, time);
+			resources.put(resource, new ResourceFile(cfg, time));
 			return;
 		}
-		merge(cfg, presentCfg);
-		if (time > resourceTime.get(resource))
-			resourceTime.put(resource, time);
+		merge(cfg, presentCfg.config);
+		presentCfg.changed = true;
+		if (time > presentCfg.time)
+			presentCfg.time = time;
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void merge(ConfigurationSection src, ConfigurationSection dest) {
-		final Set<String> destKeys = dest.getKeys();
+	private void merge(ConfigurationSection src, ConfigurationSection cfg) {
+		final Set<String> destKeys = cfg.getKeys();
 		for (String key : src.getKeys()) {
 			if (destKeys.contains(key)) {
-				Object destvalue = dest.get(key);
+				Object destvalue = cfg.get(key);
 				if (destvalue instanceof ConfigurationSection section) {
 					Object srcValue = src.get(key);
 					if (srcValue instanceof ConfigurationSection srcSection) {
@@ -69,7 +68,7 @@ public class YamlTransformer implements ReproducibleResourceTransformer {
 					}
 				}
 			} else {
-				dest.set(key, src.get(key));
+				cfg.set(key, src.get(key));
 			}
 		}
 	}
@@ -81,22 +80,39 @@ public class YamlTransformer implements ReproducibleResourceTransformer {
 
 	@Override
 	public void modifyOutputStream(JarOutputStream os) throws IOException {
-        for (Map.Entry<String, YamlConfiguration> e : resources.entrySet()) {
+        for (Map.Entry<String, ResourceFile> e : resources.entrySet()) {
+        	ResourceFile resource = e.getValue();
+        	if (!e.getValue().changed)
+        		continue;
             JarEntry jarEntry = new JarEntry(e.getKey());
-            jarEntry.setTime(resourceTime.get(e.getKey()));
+            jarEntry.setTime(resource.time);
             os.putNextEntry(jarEntry);
-            e.getValue().save(os);
+            resource.config.save(os);
             os.closeEntry();
             File targetFile = new File(target, e.getKey());
             if (!targetFile.exists()) {
             	targetFile.getParentFile().mkdirs();
             }
-            e.getValue().save(targetFile);
+            resource.config.save(targetFile);
+            System.out.println("Merged Yaml: " + e.getKey());
         }
 	}
 	
 	public void setTarget(String target) {
 		this.target = target;
+	}
+	
+	private static final class ResourceFile {
+		
+		public final YamlConfiguration config;
+		public long time;
+		public boolean changed;
+		
+		public ResourceFile(YamlConfiguration config, long time) {
+			this.config = config;
+			this.time = time;
+		}
+		
 	}
 
 }
