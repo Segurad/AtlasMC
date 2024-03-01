@@ -14,7 +14,7 @@ import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutRegistryData implements PacketIO<PacketOutRegistryData> {
-
+	
 	@Override
 	public void read(PacketOutRegistryData packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		NBTNIOReader reader = new NBTNIOReader(in, true);
@@ -32,7 +32,9 @@ public class CorePacketOutRegistryData implements PacketIO<PacketOutRegistryData
 			writer.writeCompoundTag();
 			for (Registry<?> registry : data) {
 				writer.writeCompoundTag(registry.getNamespacedKeyRaw());
-				registry.toNBT(writer, false);
+				writer.writeStringTag("type", registry.getNamespacedKeyRaw());
+				writer.writeListTag("value", TagType.COMPOUND, registry.size());
+				
 				writer.writeEndTag();
 			}
 			writer.writeEndTag();

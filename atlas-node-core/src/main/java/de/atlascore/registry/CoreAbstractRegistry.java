@@ -1,6 +1,9 @@
 package de.atlascore.registry;
 
+import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.NamespacedKey;
@@ -110,6 +113,21 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	@Override
 	public Class<?> getType() {
 		return type;
+	}
+	
+	@Override
+	public Set<Entry<String, T>> entrySet() {
+		return entries.entrySet();
+	}
+	
+	@Override
+	public Set<String> keySet() {
+		return entries.keySet();
+	}
+	
+	@Override
+	public Collection<T> values() {
+		return entries.values();
 	}
 
 }

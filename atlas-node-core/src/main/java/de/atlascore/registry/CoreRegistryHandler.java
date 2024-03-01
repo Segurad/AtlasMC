@@ -1,5 +1,7 @@
 package de.atlascore.registry;
 
+import java.util.Collection;
+
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.registry.ClassRegistry;
 import de.atlasmc.registry.InstanceRegistry;
@@ -105,6 +107,13 @@ public class CoreRegistryHandler implements RegistryHandler {
 		if (registry instanceof ClassRegistry reg)
 			return reg;
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Collection<Registry<?>> getRegistries() {
+		Collection<?> registries = this.registries.values();
+		return (Collection<Registry<?>>) registries;
 	}
 
 }

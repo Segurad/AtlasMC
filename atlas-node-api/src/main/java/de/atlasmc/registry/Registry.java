@@ -1,5 +1,9 @@
 package de.atlasmc.registry;
 
+import java.util.Collection;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.registry.RegistryHolder.Target;
@@ -32,4 +36,10 @@ public interface Registry<T> extends Namespaced {
 	
 	Class<?> getType();
 
+	Collection<T> values();
+	
+	Set<Entry<String, T>> entrySet();
+	
+	Set<String> keySet();
+	
 }

@@ -1,8 +1,11 @@
 package de.atlasmc.registry;
 
+import java.util.Collection;
+
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.util.annotation.InternalAPI;
+import de.atlasmc.util.annotation.NotNull;
 
 public class Registries {
 	
@@ -35,7 +38,7 @@ public class Registries {
 		return HANDLER.getInstanceRegistry(clazz);
 	}
 	
-	public static <T> ClassRegistry<T> getClassRegistry(Class<T> clazz) {
+	public static <T> ClassRegistry<? extends T> getClassRegistry(Class<T> clazz) {
 		return HANDLER.getClassRegistry(clazz);
 	}
 	
@@ -51,8 +54,14 @@ public class Registries {
 		return HANDLER.createRegistry(key, clazz, target);
 	}
 	
+	@NotNull
 	public static RegistryHandler getHandler() {
 		return HANDLER;
+	}
+	
+	@NotNull
+	public static Collection<Registry<?>> getRegistries() {
+		return HANDLER.getRegistries();
 	}
 	
 	@InternalAPI

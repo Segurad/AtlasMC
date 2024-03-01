@@ -54,7 +54,7 @@ public class WorldBuilder {
 			String optinalFactoryKey = optionalCfg.getString("factory");
 			if (optinalFactoryKey == null)
 				return Pair.of();
-			T factory = Registries.getRegistry(clazz).get(optinalFactoryKey);
+			T factory = Registries.getInstanceRegistry(clazz).get(optinalFactoryKey);
 			if (factory == null)
 				throw new InvalidConfigurationException("Unable to find the defined \"" + key + ".factory\": " + optinalFactoryKey);
 			ConfigurationSection factoryCfg = optionalCfg.getConfigurationSection("config");
@@ -64,7 +64,7 @@ public class WorldBuilder {
 	}
 	
 	private <T> T getRequiredOptional(Class<T> clazz, String key, ConfigurationSection config) {
-		Registry<T> registry = Registries.getRegistry(clazz);
+		Registry<T> registry = Registries.getInstanceRegistry(clazz);
 		String raw = config.getString(key);
 		T value = null;
 		if (raw == null) {
@@ -78,8 +78,8 @@ public class WorldBuilder {
 	}
 	
 	public WorldBuilder defaults() {
-		worldFactory = Registries.getDefault(WorldFactory.class);
-		chunkFactory = Registries.getDefault(ChunkFactory.class);
+		worldFactory = Registries.getInstanceDefault(WorldFactory.class);
+		chunkFactory = Registries.getInstanceDefault(ChunkFactory.class);
 		return this;
 	}
 	

@@ -21,12 +21,11 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
+import javax.tools.Diagnostic.Kind;
+import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 
 import de.atlasmc.util.configuration.file.YamlConfiguration;
-
-import javax.tools.Diagnostic.Kind;
-import javax.tools.FileObject;
 
 @SupportedAnnotationTypes({ 
 		"de.atlasmc.registry.RegistryHolder",
@@ -53,7 +52,7 @@ public class RegistryAnnotationProcessor extends AbstractProcessor {
 						Map<String, Object> values = getAnnotationValues(mirror);
 						String key = (String) values.get("key");
 						String type = ele.toString();
-						String target = values.get("target").toString();
+						Object target = values.get("target");
 						if (registries == null) {
 							registries = new HashMap<>();
 						}

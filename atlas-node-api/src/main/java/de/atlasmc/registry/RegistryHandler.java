@@ -1,5 +1,7 @@
 package de.atlasmc.registry;
 
+import java.util.Collection;
+
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.registry.RegistryHolder.Target;
 
@@ -29,8 +31,10 @@ public interface RegistryHandler {
 	 */
 	<T> InstanceRegistry<T> getInstanceRegistry(Class<T> clazz);
 	
-	<T> ClassRegistry<T> getClassRegistry(Class<T> clazz);
+	<T> ClassRegistry<? extends T> getClassRegistry(Class<T> clazz);
 	
 	Registry<?> getRegistry(Class<?> clazz);
+
+	Collection<Registry<?>> getRegistries();
 
 }
