@@ -26,6 +26,11 @@ public class InvalidConfigurationException extends RuntimeException {
 		this.config = config;
 	}
 	
+	public InvalidConfigurationException(String msg, Throwable cause, ConfigurationSection config) {
+		super(msg, cause);
+		this.config = config;
+	}
+	
 	public ConfigurationSection getConfiguration() {
 		return config;
 	}

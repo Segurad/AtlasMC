@@ -26,7 +26,7 @@ public abstract class FileConfiguration extends MemoryConfiguration {
 	public void save(File file) throws IOException {
 		if (file == null)
 			throw new IllegalArgumentException("File can not be null!");
-		file.mkdirs();
+		file.getParentFile().mkdirs();
 		FileWriter writer = new FileWriter(file, Charset.forName("UTF-8"));
 		save(writer);
 		writer.close();
@@ -34,12 +34,10 @@ public abstract class FileConfiguration extends MemoryConfiguration {
 	
 	public void save(OutputStream out) throws IOException {
 		save(new OutputStreamWriter(out));
-		out.close();
 	}
 	
 	public void save(Writer writer) throws IOException {
 		writer.write(saveToString());
-		writer.close();
 	}
 
 	public void load(File file) throws IOException, FileNotFoundException {
@@ -69,9 +67,11 @@ public abstract class FileConfiguration extends MemoryConfiguration {
 	public abstract void loadFromString(String data);
 
 	protected void mapToSection(Map<?, ?> map, ConfigurationSection section) {
+		if (map == null)
+			return;
 		map.forEach((key, value) -> {
-			if (value instanceof Map) {
-				mapToSection((Map<?, ?>) value, section.createSection((String) key));
+			if (value instanceof Map mapValue) {
+				mapToSection(mapValue, section.createSection((String) key));
 			} else {
 				if (value instanceof List) {
 					@SuppressWarnings("unchecked")
@@ -81,11 +81,11 @@ public abstract class FileConfiguration extends MemoryConfiguration {
 						Object listValue = list.get(i);
 						if (listValue == null)
 							continue;
-						if (!(listValue instanceof LinkedHashMap))
+						if (!(listValue instanceof LinkedHashMap mapListValue))
 							continue;
 						ConfigurationSection listSection = new MemoryConfigurationSection(section);
 						list.set(i, listSection);
-						mapToSection(map, listSection);
+						mapToSection(mapListValue, listSection);
 					}
 				}
 				section.set((String) key, value);

@@ -68,5 +68,7 @@ public interface ConfigurationSection {
 	 * @return size
 	 */
 	int getSize();
+	
+	void clear();
 
 }

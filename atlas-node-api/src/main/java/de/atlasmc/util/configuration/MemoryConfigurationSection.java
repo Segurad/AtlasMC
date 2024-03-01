@@ -253,5 +253,10 @@ public class MemoryConfigurationSection implements ConfigurationSection {
 	public int getSize() {
 		return values.size();
 	}
+	
+	@Override
+	public void clear() {
+		values.clear();		
+	}
 
 }

@@ -36,7 +36,7 @@ public abstract class AbstractMultimap<K, V> implements Multimap<K, V> {
 	public boolean put(K key, V value) {
 		Collection<V> c = map.get(key);
 		if (c == null)
-			c = map.put(key, createCollection());
+			map.put(key, c = createCollection());
 		if (value == null)
 			return true;
 		return c.add(value);
