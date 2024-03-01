@@ -1,0 +1,34 @@
+commands:
+- name: debug
+  aliases:
+  - dd
+  - d
+  allowed-sources: CONSOLE
+  permission: atlas.debug
+  literal-args:
+  - name: dump
+    literal-args:
+    - name: registries
+      executor: atlas-core:debug_dump_registries
+      var-args:
+      - name: target
+        parser: brigadier:string
+        executor: atlas-core:debug_dump_registries
+- name: help
+  executor: atlas-core:help
+  literal-args:
+  - name: command
+    executor: atlas-core:help
+    parser: brigadier:string
+    var-args:
+    - name: page
+      executor: atlas-core:help
+      parser: brigadier:integer
+  var-args:
+  - name: page
+    executor: atlas-core:help
+    parser: brigadier:integer
+- name: info
+  allowed-sources: CONSOLE
+  executor: atlas-core:info
+  permission: atlas.info

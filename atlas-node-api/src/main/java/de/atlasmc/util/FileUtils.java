@@ -1,6 +1,7 @@
 package de.atlasmc.util;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -16,6 +17,8 @@ public class FileUtils {
 				return file;
 		}
 		InputStream resourceStream = caller.getResourceAsStream(resource);
+		if (resourceStream == null)
+			throw new FileNotFoundException("Resource not found: " + resource);
 		Files.copy(resourceStream, file.toPath());
 		return file;
 	}

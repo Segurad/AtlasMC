@@ -150,4 +150,14 @@ public class LocalAtlasNode implements AtlasNode, SyncThreadHolder {
 		return uuid;
 	}
 
+	public AtlasPlayer getLocalPlayer(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public AtlasPlayer getLocalPlayer(UUID name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

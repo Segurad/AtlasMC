@@ -3,8 +3,10 @@ package de.atlasmc;
 import java.io.File;
 import java.security.KeyPair;
 import java.util.Collection;
+import java.util.UUID;
 
 import de.atlasmc.atlasnetwork.AtlasNetwork;
+import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.atlasnetwork.LocalAtlasNode;
 import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.datarepository.DataRepositoryHandler;
@@ -79,6 +81,14 @@ public class Atlas {
 	
 	public static PluginManager getPluginManager() {
 		return INSTANCE.getPluginManager();
+	}
+
+	public static AtlasPlayer getLocalPlayer(UUID uuid) {
+		return INSTANCE.getLocalPlayer(uuid);
+	}
+	
+	public static AtlasPlayer getLocalPlayer(String name) {
+		return INSTANCE.getLocalPlayer(name);
 	}
 	
 }

@@ -42,6 +42,8 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.atlasnetwork.AtlasNetwork;
 import de.atlasmc.atlasnetwork.LocalAtlasNode;
 import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
+import de.atlasmc.command.Command;
+import de.atlasmc.command.Commands;
 import de.atlasmc.datarepository.LocalRepository;
 import de.atlasmc.datarepository.RepositoryEntry;
 import de.atlasmc.event.Event;
@@ -79,7 +81,7 @@ public class Main {
 				"\t    / / /\\ \\ \\  \\__.::.__\\/ \\:\\ \\     \\::: _  \\ \\ \\::::_\\/_\n" + 
 				"\t   / / /_/ /  \\    \\::\\ \\    \\:\\ \\     \\::(_)  \\ \\ \\:\\/___/\\\n" + 
 				"\t  / / /___/ /\\ \\    \\::\\ \\    \\:\\ \\____ \\:: __  \\ \\ \\_::._\\:\\\n" + 
-				"\t / /_______/\\ \\ \\    \\::\\ \\    \\:\\/___/\\ \\:.\\ \\  \\ \\  /____\\:\\\n" + 
+				"\t / / ______/\\ \\ \\    \\::\\ \\    \\:\\/___/\\ \\:.\\ \\  \\ \\  /____\\:\\\n" + 
 				"\t/ / /_     __\\ \\_\\    \\__\\/     \\_____\\/  \\__\\/\\__\\/  \\_____\\/\n" + 
 				"\t\\_\\___\\   /____/_/ by Segurad\n");
 		File workDir = null;
@@ -134,7 +136,8 @@ public class Main {
 		}
 		log.info("Atlas Master initialized");
 		log.info("Initizalizing Node...");
-		loadRegistry(log);
+		RegistryHandler regHandler = loadRegistry(log);
+		Registries.init(regHandler);
 		try {
 			initDefaults(log);
 		} catch (Exception e) {
@@ -166,6 +169,7 @@ public class Main {
 				}
 			}
 		}
+		loadCommands(log, workDir);
 		final CorePluginManager pmanager = new CorePluginManager(log);
 		builder.setChatFactory(new CoreChatFactory());
 		builder.setPluginManager(pmanager);
@@ -210,6 +214,32 @@ public class Main {
 		});
 		builder.getMainThread().start();
 		ThreadWatchdog.watch(builder.getMainThread());
+	}
+
+	private static void loadCommands(Log log, File workDir) {
+		log.info("Loading commands...");
+		File commandFile = null;
+		try {
+			commandFile = FileUtils.extractConfiguration(new File(workDir, "data"), "commands.yml", "/data/commands.yml", OVERRIDE_CONFIG, Main.class);
+		} catch (IOException e) {
+			log.error("Error while extracting commands.yml", e);
+			return;
+		}
+		Collection<Command> commands = null;
+		try {
+			commands = Commands.loadCommands(commandFile);
+		} catch (Exception e) {
+			log.error("Error while loading commands.yml", e);
+			return;
+		}
+		Commands.register(commands, CorePluginManager.SYSTEM);
+		for (Command cmd : commands) {
+			if (cmd.hasAliases()) {
+				log.debug("Registered command: {} {}", cmd.getName(), cmd.getAliases());
+			} else {
+				log.debug("Registered command: {}", cmd.getName());
+			}
+		}
 	}
 
 	private static AtlasNetwork connectRemoteMaster(Log log, String masterHost, int masterPort, KeyPair keyPair) {
