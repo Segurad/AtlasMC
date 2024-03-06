@@ -54,6 +54,10 @@ public class Registries {
 		return HANDLER.createRegistry(key, clazz, target);
 	}
 	
+	public static void registerRegistry(Registry<?> registry) {
+		HANDLER.registerRegistry(registry);
+	}
+	
 	@NotNull
 	public static RegistryHandler getHandler() {
 		return HANDLER;

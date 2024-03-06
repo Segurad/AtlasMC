@@ -116,4 +116,9 @@ public class CoreRegistryHandler implements RegistryHandler {
 		return (Collection<Registry<?>>) registries;
 	}
 
+	@Override
+	public void registerRegistry(Registry<?> registry) {
+		this.registries.register(registry.getKey(), registry);
+	}
+
 }

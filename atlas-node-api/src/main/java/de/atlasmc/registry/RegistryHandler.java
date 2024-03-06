@@ -37,4 +37,6 @@ public interface RegistryHandler {
 
 	Collection<Registry<?>> getRegistries();
 
+	void registerRegistry(Registry<?> registry);
+
 }
