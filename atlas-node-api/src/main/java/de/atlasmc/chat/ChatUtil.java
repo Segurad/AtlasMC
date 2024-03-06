@@ -133,5 +133,25 @@ public final class ChatUtil {
 		ONE_SPACE = factory.asChat("{\"text\":\" \"}", " ");
 		EMPTY = factory.asChat("{\"text\":\"\"}", "");
 	}
+
+	public static String jsonToRawText(String json) {
+		return FACTORY.jsonToRawText(json);
+	}
+
+	public static String legacyToRawText(String legacy) {
+		return FACTORY.legacyToRawText(legacy, DEFAULT_CHAT_FORMAT_PREFIX);
+	}
+	
+	public static String legacyToRawText(String legacy, char fomatPrefix) {
+		return FACTORY.legacyToRawText(legacy, fomatPrefix);
+	}
+	
+	public static String rawTextFromComponent(ChatComponent component) {
+		return FACTORY.rawTextFromComponent(component, DEFAULT_CHAT_FORMAT_PREFIX);
+	}
+	
+	public static String rawTextFromComponent(ChatComponent component, char formatPrefix) {
+		return FACTORY.rawTextFromComponent(component, formatPrefix);
+	}
 	
 }

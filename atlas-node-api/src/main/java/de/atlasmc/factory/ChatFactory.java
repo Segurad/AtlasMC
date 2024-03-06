@@ -5,19 +5,25 @@ import de.atlasmc.chat.component.ChatComponent;
 
 public interface ChatFactory {
 	
-	public Chat asChat(CharSequence json, CharSequence legacy);
+	Chat asChat(CharSequence json, CharSequence legacy);
 	
 	/**
 	 * {@inheritDoc ChatUtil#jsonFromLegacy(CharSequence, char)}
 	 */
-	public String jsonFromLegacy(CharSequence text, char formatPrefix);
+	String jsonFromLegacy(CharSequence text, char formatPrefix);
 	
-	public String legacyFromJson(CharSequence text, char formatPrefix);
+	String legacyFromJson(CharSequence text, char formatPrefix);
 	
-	public ChatComponent legacyToComponent(CharSequence legacy, char formatPrefix);
+	ChatComponent legacyToComponent(CharSequence legacy, char formatPrefix);
 	
-	public ChatComponent jsonToComponent(CharSequence json);
+	ChatComponent jsonToComponent(CharSequence json);
 	
-	public String legacyFromComponent(ChatComponent component, char formatPrefix);
+	String rawTextFromComponent(ChatComponent component, char formatPrefix);
+	
+	String legacyFromComponent(ChatComponent component, char formatPrefix);
+
+	String jsonToRawText(String json);
+
+	String legacyToRawText(String legacy, char formatPrefix);
 
 }

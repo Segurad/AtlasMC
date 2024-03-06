@@ -21,6 +21,12 @@ public interface Chat {
 	public String getText();
 	
 	/**
+	 * Returns the raw text without any format codes
+	 * @return raw text
+	 */
+	public String getRawText();
+	
+	/**
 	 * Indicates whether or not legacy text is stored.
 	 * However calling {@link #getLegacyText()} will always return legacy text
 	 * @return true if legacy is stored

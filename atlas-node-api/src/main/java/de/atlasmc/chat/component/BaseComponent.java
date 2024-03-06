@@ -247,5 +247,10 @@ public class BaseComponent implements ChatComponent {
 	public boolean hasJson() {
 		return true;
 	}
+
+	@Override
+	public String getRawText() {
+		return ChatUtil.rawTextFromComponent(this);
+	}
 	
 }
