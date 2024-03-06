@@ -14,6 +14,12 @@ commands:
 - name: Foo # <required> Name of the command
   aliases: # <optional> defines aliaes used within you command this is only applicable on the root element
   - Bar
+  # A general description of the purpose of this command
+  # Used ti generate help command list
+  cmd-description: "Some description"
+  # A more detailed description of the usage if executed at this point
+  # Used to generate help this command
+  description: "Some description"
   literal-args: # <optional> defines literal arguments for your command. literals have the same definition as the root element
   - name: FooArg
     permission: some.arg.permission
