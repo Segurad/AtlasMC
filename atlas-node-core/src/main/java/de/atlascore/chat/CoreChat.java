@@ -87,5 +87,14 @@ public class CoreChat implements Chat {
 	public boolean hasJson() {
 		return json != null;
 	}
+	
+	@Override
+	public String getRawText() {
+		if (json != null)
+			return ChatUtil.jsonToRawText(json);
+		if (legacy != null)
+			return ChatUtil.legacyToRawText(legacy);
+		return "";
+	}
 
 }

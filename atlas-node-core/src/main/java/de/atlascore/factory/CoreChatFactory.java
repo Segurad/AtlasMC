@@ -273,8 +273,7 @@ public class CoreChatFactory implements ChatFactory {
 					builder.append(ChatColor.UNDERLINE.getFormatID());
 				}
 			}
-			if (component instanceof TextComponent) {
-				TextComponent text = (TextComponent) component;
+			if (component instanceof TextComponent text) {
 				builder.append(text.getValue());
 			}
 		}
@@ -320,6 +319,55 @@ public class CoreChatFactory implements ChatFactory {
 			}
 		}
 		return base;
+	}
+
+	@Override
+	public String jsonToRawText(String json) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String legacyToRawText(String legacy, char formatPrefix) {
+		if (legacy.length() == 0)
+			return legacy;
+		StringBuilder builder = new StringBuilder(legacy.length());
+		for (int i = 0; i < legacy.length(); i++) {
+			char c = legacy.charAt(i);
+			if (c == formatPrefix) {
+				if (i+1 >= legacy.length()) // Return because end is reached
+					continue;
+				c = legacy.charAt(++i);
+				if (c == 'x') {
+					i+=6;
+				}
+				continue;
+			}
+			builder.append(c);
+		}
+		return builder.toString();
+	}
+
+	@Override
+	public String rawTextFromComponent(ChatComponent component, char formatPrefix) {
+		if (component == null)
+			throw new IllegalArgumentException("Component can not be null!");
+		StringBuilder builder = new StringBuilder();
+		buildRawText(builder, component, formatPrefix);
+		return builder.toString();
+	}
+	
+	private void buildRawText(StringBuilder builder, ChatComponent component, char formatPrefix) {
+		if (!(component instanceof TextComponent) || component.getClass() != BaseComponent.class) {	
+			if (component instanceof TextComponent text) {
+				builder.append(text.getValue());
+			}
+		}
+		if (component.hasExtra()) {
+			for (ChatComponent child : component.getExtra()) {
+				buildRawText(builder, child, formatPrefix);;
+			}
+		}
 	}
 
 }
