@@ -7,12 +7,21 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Command extends CommandArg {
 	
 	private List<String> aliases;
+	private String commandDescription;
 	
 	public Command(String name, String... aliases) {
 		super(name);
 		if (aliases != null) {
 			this.aliases = new CopyOnWriteArrayList<>(aliases);
 		}
+	}
+	
+	public String getCommandDescription() {
+		return commandDescription;
+	}
+	
+	public void setCommandDescription(String commandDescription) {
+		this.commandDescription = commandDescription;
 	}
 
 	public Collection<String> getAliases() {

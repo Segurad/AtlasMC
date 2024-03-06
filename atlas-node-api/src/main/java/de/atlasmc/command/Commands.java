@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -69,6 +68,8 @@ public class Commands {
 		if (cmdName == null)
 			throw new InvalidConfigurationException("\"name\" is not defined!", config);
 		Command command = new Command(cmdName);
+		String cmdDescription = config.getString("cmd-description");
+		command.setCommandDescription(cmdDescription);
 		List<String> aliaes = config.getStringList("aliases");
 		if (aliaes != null)
 			command.getAliases().addAll(aliaes);
@@ -124,6 +125,8 @@ public class Commands {
 				}
 			}
 		}
+		String description = config.getString("description");
+		arg.setDescription(description);
 		String allowedSource = config.getString("allowed-source");
 		if (allowedSource != null) {
 			switch (allowedSource) {
@@ -267,8 +270,10 @@ public class Commands {
 			cmd = commandByAlias.get(rawCommand);
 		if (cmd == null)
 			throw new CommandNotFoundException(rawCommand);
-		List<CommandArg> parsedNodes = null;
-		Map<String, Object> arguments = null;
+		CommandContextBuilder builder = new CommandContextBuilder();
+		builder.setSender(sender);
+		builder.setCommand(cmd);
+		builder.setRawCommand(rawCommand);
 		CommandArg currentArg = cmd;
 		while (currentArg != null) {
 			reader.skipWhitespaces();
@@ -278,9 +283,7 @@ public class Commands {
 				String rawArg = reader.readUnquotedString();
 				CommandArg next = currentArg.getLiteralArg(rawArg);
 				if (next != null) {
-					if (parsedNodes == null)
-						parsedNodes = new ArrayList<>();
-					parsedNodes.add(next);
+					builder.addParsedArg(next);
 					currentArg = next;
 					continue;
 				}
@@ -299,12 +302,9 @@ public class Commands {
 						Object arg = parser.parse(reader);
 						if (arg == null)
 							continue;
-						if (arguments == null)
-							arguments = new HashMap<>();
-						arguments.put(varArg.getName(), arg);
-						if (parsedNodes == null)
-							parsedNodes = new ArrayList<>();
-						parsedNodes.add(varArg);
+						builder
+						.addArgument(varArg.getName(), arg)
+						.addParsedArg(varArg);
 						currentArg = varArg;
 						break;
 					} catch (CommandSyntaxException e) {
@@ -317,7 +317,8 @@ public class Commands {
 			// TODO implement redirects
 			break; // break no node found
 		}
-		return new CommandContext(sender, command, cmd, parsedNodes, arguments, currentArg);
+		builder.setLastArg(currentArg);
+		return builder.build();
 	}
 
 }

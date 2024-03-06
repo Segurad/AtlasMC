@@ -22,6 +22,7 @@ public class CommandArg {
 	};
 	
 	private final String name;
+	private String description;
 	private CommandExecutor executor;
 	private String permission;
 	private Predicate<CommandSender> senderValidator; 
@@ -47,6 +48,14 @@ public class CommandArg {
 	@Nullable
 	public CommandExecutor getExecutor() {
 		return executor;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public void setExecutor(@Nullable CommandExecutor executor) {
@@ -110,7 +119,7 @@ public class CommandArg {
 	}
 	
 	public boolean hasLiteralArgs() {
-		return literalArgs != null && !varArgs.isEmpty();
+		return literalArgs != null && !literalArgs.isEmpty();
 	}
 	
 	@Nullable

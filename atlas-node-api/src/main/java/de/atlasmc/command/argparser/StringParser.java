@@ -50,15 +50,18 @@ public class StringParser implements VarArgParser<String> {
 
 	@Override
 	public String parse(CommandStringReader reader) {
+		String result = null;
 		if (type == StringType.GREEDY_PHRASE) {
-			String result = reader.getRemaining();
+			result = reader.getRemaining();
 			reader.setCursor(reader.getTotalLength());
-			return result;
 		} else if (type == StringType.SINGLE_WORD) {
-			return reader.readUnquotedString();
+			result = reader.readUnquotedString();
 		} else {
-			return reader.readString();
+			result = reader.readString();
 		}
+		if (result.length() == 0)
+			return null;
+		return result;
 	}
 
 	@Override

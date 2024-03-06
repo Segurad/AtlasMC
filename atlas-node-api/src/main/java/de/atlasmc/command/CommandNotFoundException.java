@@ -8,7 +8,7 @@ public class CommandNotFoundException extends CommandException {
 	private static final long serialVersionUID = 1L;
 
 	public CommandNotFoundException(String rawCommand) {
-		super(rawCommand, "Command not found!");
+		super(rawCommand, "Command not found: " + rawCommand);
 	}
 
 }

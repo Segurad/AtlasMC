@@ -36,7 +36,7 @@ public class CommandStringReader {
 	}
 	
 	public boolean canRead(int length) {
-		return cursor + length < command.length();
+		return cursor + length <= command.length();
 	}
 	
 	public boolean isAllowedNumber(char c) {
