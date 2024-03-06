@@ -64,6 +64,7 @@ public class LocalAtlasNode implements AtlasNode, SyncThreadHolder {
 		this.pluginManager = pluginManager;
 		this.mainThread = mainThread;
 		this.keyPair = keyPair;
+		this.status = NodeStatus.ONLINE;
 	}
 	
 	public Collection<LocalServer> getServers() {

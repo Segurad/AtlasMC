@@ -19,6 +19,7 @@ import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.atlasnetwork.server.ServerManager;
 import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.command.ConsoleCommandSender;
 import de.atlasmc.datarepository.DataRepositoryHandler;
 import de.atlasmc.factory.ChatFactory;
 import de.atlasmc.io.protocol.ProtocolAdapter;
@@ -46,6 +47,7 @@ public class CoreNodeBuilder implements NodeBuilder {
 	private Set<NamespacedKey> modules;
 	private PluginManager pluginManager;
 	private TickingThread mainThread;
+	private ConsoleCommandSender console;
 	private final UUID uuid;
 	
 	public CoreNodeBuilder(UUID uuid, AtlasNetwork network, Log logger, File workdir, Configuration config, KeyPair keyPair) {
@@ -163,13 +165,13 @@ public class CoreNodeBuilder implements NodeBuilder {
 		return keyPair;
 	}
 	
-	public LocalAtlasNode build(boolean initAtlas) {
+	@Override
+	public LocalAtlasNode build() {
 		if (network == null)
 			throw new IllegalStateException("Can not build Atlas without defined AtlasNetwork");
 		LocalAtlasNode node = new LocalAtlasNode(uuid, log, scheduler, workdir, pluginManager, mainThread, keyPair, dataHandler);
 		node.getProtocolAdapterHandler().setProtocol(defaultProtocol);
-		if (initAtlas)
-			Atlas.init(node, network);
+		Atlas.init(node, network);
 		ChatUtil.init(chatFactory);
 		return node;
 	}
@@ -196,6 +198,19 @@ public class CoreNodeBuilder implements NodeBuilder {
 	@Override
 	public UUID getUUID() {
 		return uuid;
+	}
+
+	public void setConsoleSender(ConsoleCommandSender console) {
+		this.console = console;
+	}
+	
+	public ConsoleCommandSender getConsoleSender() {
+		return console;
+	}
+
+	@Override
+	public void clear() {
+		// TODO clear
 	}
 
 }

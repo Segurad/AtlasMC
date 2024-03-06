@@ -17,9 +17,11 @@ import java.util.UUID;
 
 import de.atlascore.CoreAtlasThread;
 import de.atlascore.atlasnetwork.master.CoreMasterBuilder;
+import de.atlascore.command.CoreConsoleCommandSender;
 import de.atlascore.datarepository.CoreCacheRepository;
 import de.atlascore.datarepository.CoreDataRepositoryHandler;
 import de.atlascore.datarepository.CoreLocalRepository;
+import de.atlascore.event.command.CoreCommandListener;
 import de.atlascore.event.inventory.CoreInventoryListener;
 import de.atlascore.event.player.CorePlayerListener;
 import de.atlascore.factory.CoreChatFactory;
@@ -40,6 +42,7 @@ import de.atlascore.system.init.PotionEffectTypeLoader;
 import de.atlascore.world.ChunkWorker;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.atlasnetwork.AtlasNetwork;
+import de.atlasmc.atlasnetwork.AtlasNode.NodeStatus;
 import de.atlasmc.atlasnetwork.LocalAtlasNode;
 import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.command.Command;
@@ -51,6 +54,7 @@ import de.atlasmc.event.EventExecutor;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.Listener;
 import de.atlasmc.event.MethodEventExecutor;
+import de.atlasmc.event.command.CommandEvent;
 import de.atlasmc.event.node.NodeInitializedEvent;
 import de.atlasmc.io.handshake.HandshakeProtocol;
 import de.atlasmc.log.Log;
@@ -188,8 +192,7 @@ public class Main {
 				((CoremodulPlugin) plugin).initNode(builder);
 			}
 		}
-		LocalAtlasNode node = builder.build(true);
-		
+		LocalAtlasNode node = builder.build();
 		HandshakeProtocol.DEFAULT_PROTOCOL.setPacketIO(0x00, new CorePacketMinecraftHandshake());
 		Random rand = null;
 		log.info("Initializing Proxy...");
@@ -206,14 +209,29 @@ public class Main {
 			proxy.run();
 			node.registerProxy(proxy);
 		}
-		long endTime = System.currentTimeMillis();
-		double timeTotal = (endTime-startTime) / 1000.0;
-		log.info("{}-Node up and running after {} seconds", isMaster ? "Master" : "Minion", String.format("%,.3f", timeTotal));
+		CoreConsoleCommandSender console = null;
+		try {
+			console = new CoreConsoleCommandSender();
+		} catch (IOException e) {
+			log.error("Error while initializing console sender!", e);
+			System.exit(1);
+		}
+		builder.setConsoleSender(console);
 		builder.getMainThread().runTask(() -> {
 			HandlerList.callEvent(new NodeInitializedEvent());
 		});
 		builder.getMainThread().start();
 		ThreadWatchdog.watch(builder.getMainThread());
+		long endTime = System.currentTimeMillis();
+		double timeTotal = (endTime-startTime) / 1000.0;
+		log.info("{}-Node up and running after {} seconds", isMaster ? "Master" : "Minion", String.format("%,.3f", timeTotal));
+		while (node.getStatus() == NodeStatus.ONLINE) {
+			String command = console.readLine();
+			HandlerList.callEvent(new CommandEvent(console, command, true));
+		}
+		try {
+			builder.getMainThread().join();
+		} catch (InterruptedException e) {}
 	}
 
 	private static void loadCommands(Log log, File workDir) {
@@ -277,6 +295,8 @@ public class Main {
 		initDefaultExecutor(log, new CorePlayerListener());
 		log.debug("Loading inventory event default executors...");
 		initDefaultExecutor(log, new CoreInventoryListener());
+		log.debug("Loading command event default executors...");
+		initDefaultExecutor(log, new CoreCommandListener());
 	}
 	
 	private static void initDefaultExecutor(Log log, Listener listener) {

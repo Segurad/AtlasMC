@@ -67,6 +67,8 @@ public class HandlerList {
 	protected void fireDefaultExecutor(Event event, Log log) {
 		try {
 			defaultExecutor.fireEvent(event);
+		} catch (InvocationTargetException ex) {
+			log.error("Error while event handling with default handler for: " + event.getName(), ex.getCause());
 		} catch (Exception ex) {
 			log.error("Error while event handling with default handler for: " + event.getName(), ex);
 		}
