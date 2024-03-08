@@ -26,7 +26,8 @@ public class CoreSwitch extends CoreDirectional4Faces implements Switch {
 
 	@Override
 	public void setAttachedFace(AttachedFace face) {
-		if (face == null) throw new IllegalArgumentException("AttachedFace can not be null!");
+		if (face == null) 
+			throw new IllegalArgumentException("AttachedFace can not be null!");
 		this.face = face;
 	}
 

@@ -37,12 +37,16 @@ public class CoreRegistryHandler implements RegistryHandler {
 	
 	@Override
 	public <T> InstanceRegistry<T> createInstanceRegistry(NamespacedKey key, Class<T> clazz) {
-		return new CoreInstanceRegistry<>(key, clazz);
+		InstanceRegistry<T> registry = new CoreInstanceRegistry<>(key, clazz);
+		registries.register(key, registry);
+		return registry;
 	}
 	
 	@Override
 	public <T> ClassRegistry<T> createClassRegistry(NamespacedKey key, Class<T> clazz) {
-		return new CoreClassRegistry<>(key, clazz);
+		ClassRegistry<T> registry = new CoreClassRegistry<>(key, clazz);
+		registries.register(key, registry);
+		return registry;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -82,10 +86,14 @@ public class CoreRegistryHandler implements RegistryHandler {
 	
 	@Override
 	public Registry<?> getRegistry(Class<?> clazz) {
+		return getRegistry(getRegistryKey(clazz));
+	}
+	
+	private String getRegistryKey(Class<?> clazz) {
 		RegistryHolder holder = clazz.getAnnotation(RegistryHolder.class);
 		if (holder == null)
 			throw new IllegalArgumentException("Class does not contain  RegistryHolder annotation: " + clazz.getName());
-		return getRegistry(holder.key());
+		return holder.key();
 	}
 
 	@Override
@@ -119,6 +127,24 @@ public class CoreRegistryHandler implements RegistryHandler {
 	@Override
 	public void registerRegistry(Registry<?> registry) {
 		this.registries.register(registry.getKey(), registry);
+	}
+
+	@Override
+	public <T> InstanceRegistry<T> createInstanceRegistry(Class<T> clazz) {
+		NamespacedKey key = NamespacedKey.of(getRegistryKey(clazz));
+		return createInstanceRegistry(key, clazz);
+	}
+
+	@Override
+	public <T> ClassRegistry<T> createClassRegistry(Class<T> clazz) {
+		NamespacedKey key = NamespacedKey.of(getRegistryKey(clazz));
+		return createClassRegistry(key, clazz);
+	}
+
+	@Override
+	public <T> Registry<T> createRegistry(Class<?> clazz, Target target) {
+		NamespacedKey key = NamespacedKey.of(getRegistryKey(clazz));
+		return createRegistry(key, clazz, target);
 	}
 
 }

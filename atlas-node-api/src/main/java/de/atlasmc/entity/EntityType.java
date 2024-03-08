@@ -1,17 +1,20 @@
 package de.atlasmc.entity;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.UUID;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
+import de.atlasmc.registry.Registries;
+import de.atlasmc.registry.Registry;
+import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.world.World;
 
+@RegistryHolder(key="atlas:entity_type")
 public class EntityType implements Namespaced {
 	
-	private static final List<EntityType> REGISTRI;
+	private static Registry<EntityType> registry;
 	
 	public static EntityType 
 	AREA_EFFECT_CLOUD,
@@ -139,10 +142,6 @@ public class EntityType implements Namespaced {
 	PLAYER,
 	FISHING_BOBBER;
 	
-	static {
-		REGISTRI = new ArrayList<>();
-	}
-	
 	private final NamespacedKey key;
 	private final Class<? extends Entity> clazz;
 	private final int id;
@@ -161,7 +160,7 @@ public class EntityType implements Namespaced {
 		this.key = key;
 		this.id = id;
 		this.clazz = clazz;
-		REGISTRI.add(this);
+		getRegistry().register(key, this);
 	}
 	
 	public Class<? extends Entity> getEntityClass() {
@@ -193,27 +192,39 @@ public class EntityType implements Namespaced {
 	}
 	
 	public static EntityType getByID(int id) {
-		for (EntityType type : REGISTRI) {
+		for (EntityType type : getRegistry().values()) {
 			if (type.getTypeID() == id) return type;
 		}
 		return PIG;
 	}
 	
 	public static EntityType getByName(String name) {
-		for (EntityType type : REGISTRI) {
-			if (type.getNamespacedKeyRaw().equals(name))
-				return type;
-		}
-		throw new IllegalArgumentException("No value found with name: " + name);
+		Registry<EntityType> registry = getRegistry();
+		EntityType ent = registry.get(name);
+		if (ent == null)
+			throw new IllegalArgumentException("No value found with name: " + name);
+		return ent;
 	}
 	
-	public static List<EntityType> values() {
-		return new ArrayList<>(REGISTRI);
+	public static Collection<EntityType> values() {
+		return getRegistry().values();
 	}
 
 	@Override
 	public NamespacedKey getNamespacedKey() {
 		return key;
+	}
+	
+	public static Registry<EntityType> getRegistry() {
+		Registry<EntityType> r = registry;
+		if (r == null) {
+			synchronized (EntityType.class) {
+				r = registry;
+				if (r == null)
+					r = registry = Registries.getInstanceRegistry(EntityType.class);
+			}
+		}
+		return r;
 	}
 
 }

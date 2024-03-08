@@ -2,21 +2,26 @@ package de.atlasmc;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
+import de.atlasmc.entity.EntityType;
 import de.atlasmc.factory.MetaDataFactory;
 import de.atlasmc.factory.TileEntityFactory;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.meta.ItemMeta;
+import de.atlasmc.registry.Registries;
+import de.atlasmc.registry.Registry;
+import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 
+@RegistryHolder(key="atlas:material")
 public class Material implements Namespaced {
 	
-	public static final Map<String, Map<String, Material>> REGISTRI_BY_NAME;
+	private static Registry<Material> registry;
 	private static final Map<Integer, Material> REGISTRI_BY_IID;
-	public static MetaDataFactory DEFAULT_MDF = null;
 	
 	public static Material
 	ACACIA_BOAT,
@@ -1423,7 +1428,6 @@ public class Material implements Namespaced {
 	ZOMBIFIED_PIGLIN_SPAWN_EGG;
 	
 	static {
-		REGISTRI_BY_NAME = new ConcurrentHashMap<>();
 		REGISTRI_BY_IID = new ConcurrentHashMap<>();
 	}
 	
@@ -1488,11 +1492,12 @@ public class Material implements Namespaced {
 	 * @return MetaDataFactory
 	 */
 	public MetaDataFactory getMetaDataFactory() {
-		if (mdf == null) return DEFAULT_MDF;
 		return mdf;
 	}
 	
 	public void setMetaDataFactory(MetaDataFactory factory) {
+		if (factory == null)
+			factory = Registries.getInstanceDefault(MetaDataFactory.class);
 		mdf = factory;
 	}
 	
@@ -1505,16 +1510,10 @@ public class Material implements Namespaced {
 	}
 	
 	public ItemMeta createItemMeta() {
-		MetaDataFactory mdf = getMetaDataFactory();
-		if (mdf == null) 
-			return DEFAULT_MDF.createMeta(this);
 		return mdf.createMeta(this);
 	}
 	
 	public BlockData createBlockData() {
-		MetaDataFactory mdf = getMetaDataFactory();
-		if (mdf == null) 
-			return DEFAULT_MDF.createData(this);
 		return mdf.createData(this);
 	}
 	
@@ -1530,17 +1529,12 @@ public class Material implements Namespaced {
 	}
 	
 	public boolean isValidMeta(ItemMeta meta) {
-		MetaDataFactory mdf = getMetaDataFactory();
-		if (mdf == null) 
-			return DEFAULT_MDF.isValidMeta(meta);
 		return mdf.isValidMeta(meta);
 	}
 	
 	public boolean isValidData(BlockData data) {
-		if (data.getMaterial() != this) return false;
-		MetaDataFactory mdf = getMetaDataFactory();
-		if (mdf == null) 
-			return DEFAULT_MDF.isValidData(data);
+		if (data.getMaterial() != this) 
+			return false;
 		return mdf.isValidData(data);
 	}
 	
@@ -1572,15 +1566,7 @@ public class Material implements Namespaced {
 	 */
 	private final void registerMaterial() {
 		final NamespacedKey key = getNamespacedKey();
-		if (getMaterial(key) != null) {
-			throw new IllegalStateException("Material already registered: " + getNamespacedKeyRaw());
-		}
-		Map<String, Material> map = REGISTRI_BY_NAME.get(key.getNamespace());
-		if (map == null) {
-			map = new ConcurrentHashMap<>();
-			REGISTRI_BY_NAME.put(key.getNamespace(), map);
-		}
-		map.put(key.getKey(), this);
+		getRegistry().register(key, this);
 		if (isItem())
 			REGISTRI_BY_IID.put((int) getItemID(), this);
 	}
@@ -1590,10 +1576,19 @@ public class Material implements Namespaced {
 	 */
 	public final void unregister() {
 		final NamespacedKey key = getNamespacedKey();
-		Map<String, Material> map = REGISTRI_BY_NAME.get(key.getNamespace());
-		if (map == null)
-			return;
-		map.remove(key.getKey());
+		getRegistry().remove(key);
+	}
+	
+	public static Registry<Material> getRegistry() {
+		Registry<Material> r = registry;
+		if (r == null) {
+			synchronized (EntityType.class) {
+				r = registry;
+				if (r == null)
+					r = registry = Registries.getInstanceRegistry(Material.class);
+			}
+		}
+		return r;
 	}
 	
 	/**
@@ -1624,10 +1619,7 @@ public class Material implements Namespaced {
 		final int index = name.indexOf(':');
 		if (index == -1 || (index == NamespacedKey.MINECRAFT.length() && name.startsWith(NamespacedKey.MINECRAFT)))
 			return getMaterial(NamespacedKey.MINECRAFT, name);
-		String[] parts = name.split(":");
-		if (parts.length > 2) 
-			throw new IllegalArgumentException("Illegal NamespacedKey format: " + name);
-		return getMaterial(parts[0], parts[1]);
+		return getRegistry().get(name);
 	}
 	
 	/**
@@ -1642,11 +1634,7 @@ public class Material implements Namespaced {
 			throw new IllegalArgumentException("Namespace can not be null!");
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null!");
-		Map<String, Material> map = REGISTRI_BY_NAME.get(namespace);
-		if (map == null) {
-			return null;
-		}
-		return map.get(name);
+		return getRegistry().get(NamespacedKey.of(namespace, name));
 	}
 	
 	/**
@@ -1658,7 +1646,7 @@ public class Material implements Namespaced {
 	public static Material getMaterial(@NotNull NamespacedKey key) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
-		return getMaterial(key.getNamespace(), key.getKey());
+		return getRegistry().get(key);
 	}
 
 	@Override

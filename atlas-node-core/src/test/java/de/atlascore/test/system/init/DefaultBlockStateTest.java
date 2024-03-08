@@ -9,16 +9,24 @@ import org.opentest4j.MultipleFailuresError;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 
+import de.atlascore.registry.CoreRegistryHandler;
 import de.atlascore.system.init.MaterialLoader;
 import de.atlasmc.Material;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.block.data.BlockData;
+import de.atlasmc.factory.MetaDataFactory;
+import de.atlasmc.factory.TileEntityFactory;
+import de.atlasmc.registry.Registries;
 import de.atlastest.AtlasTest;
 
 public class DefaultBlockStateTest { 
 	
 	@Test
 	void testDefaultBlockStateIDs() throws Exception {
+		Registries.init(new CoreRegistryHandler());
+		Registries.createInstanceRegistry(Material.class);
+		Registries.createInstanceRegistry(MetaDataFactory.class);
+		Registries.createInstanceRegistry(TileEntityFactory.class);
 		MaterialLoader.loadMaterial();
 		JsonReader reader = AtlasTest.getJsonResourceReader("blocks.json");
 		reader.beginObject();
@@ -32,6 +40,7 @@ public class DefaultBlockStateTest {
 			if (mat == null) {
 				reader.skipValue();
 				checks.add(new AssertionFailedError("Cannot find Material with name: " + rawMat));
+				continue;
 			}
 			reader.beginObject();
 			// find states

@@ -61,8 +61,7 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 		if (value == null)
 			throw new IllegalArgumentException("Value can not be null!");
 		validateEntry(value);
-		entries.put(key.toString(), value);
-		return true;
+		return entries.putIfAbsent(key.toString(), value) == null;
 	}
 
 	@Override
@@ -74,8 +73,7 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 		if (value == null)
 			throw new IllegalArgumentException("Value can not be null!");
 		validateEntry(value);
-		entries.put(key, value);
-		return true;
+		return entries.putIfAbsent(key, value) == null;
 	}
 	
 	protected abstract void validateEntry(T value);
@@ -128,6 +126,16 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	@Override
 	public Collection<T> values() {
 		return entries.values();
+	}
+	
+	@Override
+	public T remove(NamespacedKey key) {
+		return entries.remove(key.toString());
+	}
+	
+	@Override
+	public T remove(String key) {
+		return entries.remove(key);
 	}
 
 }

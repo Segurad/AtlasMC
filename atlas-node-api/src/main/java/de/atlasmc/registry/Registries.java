@@ -50,8 +50,20 @@ public class Registries {
 		return HANDLER.createClassRegistry(key, clazz);
 	}
 	
-	public static <T> Registry<T> createRegitry(NamespacedKey key, Class<?> clazz, Target target) {
+	public static <T> Registry<T> createRegistry(NamespacedKey key, Class<?> clazz, Target target) {
 		return HANDLER.createRegistry(key, clazz, target);
+	}
+	
+	public static <T> InstanceRegistry<T> createInstanceRegistry(Class<T> clazz) {
+		return HANDLER.createInstanceRegistry(clazz);
+	}
+	
+	public static <T> ClassRegistry<T> createClassRegistry(Class<T> clazz) {
+		return HANDLER.createClassRegistry(clazz);
+	}
+	
+	public static <T> Registry<T> createRegistry(Class<?> clazz, Target target) {
+		return HANDLER.createRegistry(clazz, target);
 	}
 	
 	public static void registerRegistry(Registry<?> registry) {

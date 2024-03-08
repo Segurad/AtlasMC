@@ -10,14 +10,20 @@ import org.junit.jupiter.api.function.Executable;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 
+import de.atlascore.registry.CoreRegistryHandler;
 import de.atlascore.system.init.EntityTypeLoader;
 import de.atlasmc.entity.EntityType;
+import de.atlasmc.registry.Registries;
 import de.atlastest.AtlasTest;
 
 public class EntityTypeTest {
 	
 	@Test
 	void testEntityTypes() throws IOException, ClassNotFoundException {
+		try {
+			Registries.init(new CoreRegistryHandler());
+		} catch (IllegalStateException e) {}
+		Registries.createInstanceRegistry(EntityType.class);
 		EntityTypeLoader.loadEntityTypes();
 		JsonReader reader = AtlasTest.getJsonResourceReader("registry_minecraft_entity_type.json");
 		LinkedList<Executable> checks = new LinkedList<>();

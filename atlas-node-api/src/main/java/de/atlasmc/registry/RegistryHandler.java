@@ -39,4 +39,10 @@ public interface RegistryHandler {
 
 	void registerRegistry(Registry<?> registry);
 
+	<T> InstanceRegistry<T> createInstanceRegistry(Class<T> clazz);
+
+	<T> ClassRegistry<T> createClassRegistry(Class<T> clazz);
+
+	<T> Registry<T> createRegistry(Class<?> clazz, Target target);
+
 }

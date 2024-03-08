@@ -30,6 +30,10 @@ public interface Registry<T> extends Namespaced {
 	
 	T getOrDefault(String key, T defaultValue);
 
+	T remove(String key);
+	
+	T remove(NamespacedKey key);
+	
 	int size();
 	
 	Target getTarget();

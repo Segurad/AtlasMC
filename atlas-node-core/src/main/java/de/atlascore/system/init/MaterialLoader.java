@@ -6,8 +6,6 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.google.gson.stream.JsonReader;
 
@@ -16,6 +14,8 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.factory.FactoryException;
 import de.atlasmc.factory.MetaDataFactory;
 import de.atlasmc.factory.TileEntityFactory;
+import de.atlasmc.registry.Registries;
+import de.atlasmc.registry.Registry;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.file.JsonConfiguration;
 
@@ -36,11 +36,9 @@ public class MaterialLoader {
 		JsonReader reader = new JsonReader(new InputStreamReader(in));
 		reader.beginObject();
 		// load mdf
-		Map<String, MetaDataFactory> MDFs = new HashMap<>();
-		loadFactories(reader, MDFs);
+		Registry<MetaDataFactory> MDFs = loadFactories(reader, MetaDataFactory.class);
 		// load tef
-		Map<String, TileEntityFactory> TEFs = new HashMap<>();
-		loadFactories(reader, TEFs);
+		Registry<TileEntityFactory> TEFs = loadFactories(reader, TileEntityFactory.class);
 		// load mats
 		reader.nextName();
 		reader.beginObject();
@@ -61,10 +59,12 @@ public class MaterialLoader {
 				String key = reader.nextName();
 				switch(key) {
 				case "MDF":
-					MDF = MDFs.get(reader.nextString());
+					String mdfKey = reader.nextString();
+					MDF = MDFs.get(mdfKey);
 					break;
 				case "TEF":
-					TEF = TEFs.get(reader.nextString());
+					String tefKey = reader.nextString();
+					TEF = TEFs.get(tefKey);
 					break;
 				case "const":
 					var = reader.nextString();
@@ -110,12 +110,12 @@ public class MaterialLoader {
 		}
 		reader.endObject();
 		reader.close();
-		Material.DEFAULT_MDF = MDFs.get("default");
 		loaded = true;
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static <V> void loadFactories(JsonReader reader, Map<String, V> map) throws IOException, ClassNotFoundException {
+	private static <V> Registry<V> loadFactories(JsonReader reader, Class<V> clazz) throws IOException, ClassNotFoundException {
+		Registry<V> registry = Registries.getInstanceRegistry(clazz);
 		reader.nextName();
 		reader.beginArray();
 		while (reader.hasNext()) {
@@ -148,15 +148,16 @@ public class MaterialLoader {
 						| InvocationTargetException e) {
 					throw new FactoryException("Error while instaciating factory!", e);
 				}
-				map.put(name, factory);
+				registry.register(name, factory);
 				if (isDefault)
-					map.put("default", factory);
+					registry.setDefault(factory);
 				reader.endObject();
 			}
 			reader.endArray();
 			reader.endObject();
 		}
 		reader.endArray();
+		return registry;
 	}
 
 }

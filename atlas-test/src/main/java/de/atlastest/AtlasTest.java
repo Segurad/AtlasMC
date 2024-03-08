@@ -30,7 +30,6 @@ public class AtlasTest {
 		Thread thread = Thread.currentThread();
 		StackTraceElement[] stack = thread.getStackTrace();
 		String rawcaller = stack[3].getClassName();
-		System.out.println(rawcaller);
 		Class<?> caller;
 		try {
 			caller = Class.forName(rawcaller);
