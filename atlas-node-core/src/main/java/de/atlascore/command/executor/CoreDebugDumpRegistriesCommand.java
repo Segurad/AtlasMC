@@ -20,7 +20,7 @@ import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.MemoryConfigurationSection;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
 
-@RegistryValue(registry="atlas:command_executor", key="atlas-core:debug_dump_registries")
+@RegistryValue(registry="atlas:command/executor", key="atlas-core:debug_dump_registries")
 public class CoreDebugDumpRegistriesCommand implements CommandExecutor {
 
 	private static final Collection<String> KEYS = List.of("target");

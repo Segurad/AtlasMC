@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.atlasmc.registry.RegistryHolder;
 
-@RegistryHolder(key="atlas:command_executor")
+@RegistryHolder(key="atlas:command/executor")
 public interface CommandExecutor {
 	
 	/**

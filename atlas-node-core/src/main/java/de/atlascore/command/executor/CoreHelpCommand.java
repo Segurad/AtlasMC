@@ -10,7 +10,7 @@ import de.atlasmc.command.Commands;
 import de.atlasmc.registry.RegistryValue;
 import de.atlasmc.util.MathUtil;
 
-@RegistryValue(registry="atlas:command_executor", key="atlas-core:help")
+@RegistryValue(registry="atlas:command/executor", key="atlas-core:help")
 public class CoreHelpCommand implements CommandExecutor {
 
 	private static final int ITEMS_PER_PAGE = 10;

@@ -12,7 +12,7 @@ import de.atlasmc.command.CommandExecutor;
 import de.atlasmc.entity.Player;
 import de.atlasmc.registry.RegistryValue;
 
-@RegistryValue(registry = "atlas:command_executor", key="atlas-core:gamemode")
+@RegistryValue(registry = "atlas:command/executor", key="atlas-core:gamemode")
 public class CoreGamemodeCommand implements CommandExecutor {
 
 	private static final Collection<String> KEYS = List.of("gamemode", "gamemodeID", "target");
