@@ -6,14 +6,17 @@ commands:
   cmd-description: "Utility for developers and administrators working with atlas"
   allowed-sources: CONSOLE
   permission: atlas.debug
-  literal-args:
-  - name: dump
-    literal-args:
-    - name: registries
+  args:
+  - type: literal
+    name: dump
+    args:
+    - type: literal
+      name: registries
       executor: atlas-core:debug_dump_registries
       description: "Dumps all registries to file"
-      var-args:
-      - name: target
+      args:
+      - type: var
+        name: target
         parser: brigadier:string
         executor: atlas-core:debug_dump_registries
         description: "Dumps the given registry to file"
@@ -22,22 +25,22 @@ commands:
   - "?"
   cmd-description: "Shows help about commands."
   executor: atlas-core:help
-  literal-args:
-  - name: command
-    executor: atlas-core:help
-    parser: brigadier:string
-    var-args:
-    - name: page
-      executor: atlas-core:help
-      parser:
-        type: brigadier:integer
-        min: 1
-  var-args:
-  - name: page
+  templates:
+    template-name: page
+    type: var
+    name: page
     executor: atlas-core:help
     parser:
       type: brigadier:integer
       min: 1
+  args:
+  - type: var
+    name: command
+    executor: atlas-core:help
+    parser: brigadier:string
+    args:
+    - template: page    
+  - template: page
 - name: info
   cmd-description: "Shows some general system information"
   allowed-sources: CONSOLE

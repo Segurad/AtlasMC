@@ -1,10 +1,10 @@
 package de.atlasmc.command;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
 
 import de.atlasmc.atlasnetwork.AtlasPlayer;
@@ -28,6 +28,7 @@ public class CommandArg {
 	private Predicate<CommandSender> senderValidator; 
 	private List<CommandArg> args;
 	private Map<String, LiteralCommandArg> literalArgs;
+	private Map<String, LiteralCommandArg> literalArgAliases;
 	private Map<String, VarCommandArg> varArgs;
  	
 	public CommandArg(@NotNull String name) {
@@ -96,17 +97,24 @@ public class CommandArg {
 			throw new IllegalArgumentException("Argument can not be null!");
 		if (arg instanceof LiteralCommandArg literal) {
 			if (literalArgs == null)
-				literalArgs = new HashMap<>();
+				literalArgs = new HashMap<>(1);
 			literalArgs.put(literal.getName(), literal);
+			if (literal.hasAliases()) {
+				if (literalArgAliases == null)
+					literalArgAliases = new HashMap<>(1);
+				for (String alias : literal.getAliases()) {
+					literalArgAliases.putIfAbsent(alias, literal);
+				}
+			}
 		} else if (arg instanceof VarCommandArg varArg) {
 			if (varArgs == null)
-				varArgs = new HashMap<>();
+				varArgs = new HashMap<>(1);
 			varArgs.put(varArg.getName(), varArg);
 		} else {
 			throw new IllegalArgumentException("Argument must be a instance of VarCommandArg or LiteralCommandArg: " + arg.getClass().getName());
 		}
 		if (args == null) 
-			args = new ArrayList<>();
+			args = new CopyOnWriteArrayList<>();
 		args.add(arg);
 		return this;
 	}
@@ -126,7 +134,10 @@ public class CommandArg {
 	public LiteralCommandArg getLiteralArg(@NotNull String name) {
 		if (args == null)
 			return null;
-		return literalArgs.get(name);
+		LiteralCommandArg arg = literalArgs.get(name);
+		if (arg == null)
+			arg = literalArgAliases.get(name);
+		return arg;
 	}
 	
 	@NotNull

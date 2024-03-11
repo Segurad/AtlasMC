@@ -12,7 +12,7 @@ Example Command configuraon:
 ```yaml  
 commands:
 - name: Foo # <required> Name of the command
-  aliases: # <optional> defines aliaes used within you command this is only applicable on the root element
+  aliases: # <optional> defines aliaes used within you command this is only applicable on the root element and literals
   - Bar
   # A general description of the purpose of this command
   # Used ti generate help command list
@@ -20,13 +20,22 @@ commands:
   # A more detailed description of the usage if executed at this point
   # Used to generate help this command
   description: "Some description"
-  literal-args: # <optional> defines literal arguments for your command. literals have the same definition as the root element
-  - name: FooArg
+  tempaltes:
+  - template-name: MyTemplate
+    # same definitions as argument
+    # if a templates uses tempalte: <name> within its arguments the theplate must be defined before this template
+  args:
+  - template: MyTemplate # using a template as deined in the root as argument
+  - type: literal # <required> defines literal arguments for your command. literals have the same definition as the root element
+    name: FooArg
     permission: some.arg.permission
     executor: myplugin:executor
+    arg-key: someKey # <optional> string. defines a key that will be mapped with the name of this literal and supplied as argument to the executor
+    aliases:
+    - FA
     #...
-  var-args: # <optional> defines variable arguments that parse user input used for your executor. var args have the same definiton as the root plus some extras
-  - name: FooVarArg # <required> this name is provided for the executor as key to access the parsed value
+  - type: var # <optional> defines variable arguments that parse user input used for your executor. var args have the same definiton as the root plus some extras
+    name: FooVarArg # <required> this name is provided for the executor as key to access the parsed value
     # <required> String | Object 
     # Defines how this argument is parsed
     # Object form is used when the parser needs some configurations otherwise a string is all you need

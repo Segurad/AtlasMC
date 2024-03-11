@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -71,9 +72,23 @@ public class Commands {
 		String cmdDescription = config.getString("cmd-description");
 		command.setCommandDescription(cmdDescription);
 		List<String> aliaes = config.getStringList("aliases");
+		Map<String, CommandArg> templates = Map.of();
+		List<ConfigurationSection> templateCfgs = config.getListOfType("templates", ConfigurationSection.class);
+		if (templateCfgs != null) {
+			templates = new HashMap<>();
+			for (ConfigurationSection argCfg : templateCfgs) {
+				String key = argCfg.getString("template-name");
+				if (key == null)
+					continue;
+				CommandArg template = loadArg(argCfg, templates);
+				if (template == null)
+					continue;
+				templates.put(key, template);
+			}
+		}
 		if (aliaes != null)
 			command.getAliases().addAll(aliaes);
-		loadArg(config, command);
+		loadArg(config, command, templates);
 		return command;
 	}
 	
@@ -99,7 +114,26 @@ public class Commands {
 		return commands;
 	}
 	
-	private static void loadArg(ConfigurationSection config, CommandArg arg) {
+	private static CommandArg loadArg(ConfigurationSection config, Map<String, CommandArg> templates) {
+		String tempKey = config.getString("template");
+		if (tempKey != null)
+			return templates.get(tempKey);
+		String type = config.getString("type");
+		if (type == null)
+			return null;
+		CommandArg arg = null;
+		switch (type) {
+		case "literal":
+			arg = loadLiteralArg(config, templates);
+			break;
+		case "var":
+			arg = loadVarArg(config, templates);
+			break;
+		}
+		return arg;
+	}
+	
+	private static void loadArg(ConfigurationSection config, CommandArg arg, Map<String, CommandArg> templates) {
 		arg.setPermission(config.getString("permission"));
 		String executorKey = config.getString("executor");
 		if (executorKey != null) {
@@ -107,21 +141,12 @@ public class Commands {
 			CommandExecutor executor = registry.get(executorKey);
 			arg.setExecutor(executor);
 		}
-		List<ConfigurationSection> literalArgs = config.getListOfType("literal-args", ConfigurationSection.class);
+		List<ConfigurationSection> literalArgs = config.getListOfType("args", ConfigurationSection.class);
 		if (literalArgs != null) {
 			for (ConfigurationSection argCfg : literalArgs) {
-				LiteralCommandArg literalArg = loadLiteralArg(argCfg);
-				if (literalArg != null) {
-					arg.setArg(literalArg);
-				}
-			}
-		}
-		List<ConfigurationSection> varArgs = config.getListOfType("var-args", ConfigurationSection.class);
-		if (varArgs != null) {
-			for (ConfigurationSection argCfg : varArgs) {
-				VarCommandArg varArg = loadVarArg(argCfg);
-				if (varArg != null) {
-					arg.setArg(varArg);
+				CommandArg childArg = loadArg(argCfg, templates);
+				if (childArg != null) {
+					arg.setArg(childArg);
 				}
 			}
 		}
@@ -142,22 +167,26 @@ public class Commands {
 		}
 	}
 	
-	private static LiteralCommandArg loadLiteralArg(ConfigurationSection config) {
+	private static LiteralCommandArg loadLiteralArg(ConfigurationSection config, Map<String, CommandArg> templates) {
 		String argName = config.getString("name");
 		if (argName == null)
 			throw new InvalidConfigurationException("\"name\" is not defined!", config);
 		LiteralCommandArg arg = new LiteralCommandArg(argName);
-		loadArg(config, arg);
+		List<String> aliaes = config.getStringList("aliases");
+		if (aliaes != null)
+			arg.getAliases().addAll(aliaes);
+		arg.setArgKey(config.getString("arg-key"));
+		loadArg(config, arg, templates);
 		return arg;
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private static VarCommandArg loadVarArg(ConfigurationSection config) {
+	private static VarCommandArg loadVarArg(ConfigurationSection config, Map<String, CommandArg> templates) {
 		String argName = config.getString("name");
 		if (argName == null)
 			throw new InvalidConfigurationException("\"name\" is not defined!", config);
 		VarCommandArg arg = new VarCommandArg(argName);
-		loadArg(config, arg);
+		loadArg(config, arg, templates);
 		// load parser
 		Object rawParser = config.get("parser");
 		if (rawParser == null)
@@ -281,14 +310,18 @@ public class Commands {
 			if (currentArg.hasLiteralArgs()) {
 				final int cursor = reader.getCursor();
 				String rawArg = reader.readUnquotedString();
-				CommandArg next = currentArg.getLiteralArg(rawArg);
+				LiteralCommandArg next = currentArg.getLiteralArg(rawArg);
 				if (next != null) {
+					String key = next.getArgKey();
+					if (key != null)
+						builder.addArgument(key, next.getName());
 					builder.addParsedArg(next);
 					currentArg = next;
 					continue;
 				}
 				reader.setCursor(cursor);
-			} // lookup var args
+			}
+			// lookup var args
 			if (currentArg.hasVarArgs()) {
 				Collection<VarCommandArg> varArgs = currentArg.getVarArgs();
 				for (VarCommandArg varArg : varArgs) {
