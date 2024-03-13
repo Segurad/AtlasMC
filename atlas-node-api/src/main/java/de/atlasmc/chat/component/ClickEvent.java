@@ -4,10 +4,14 @@ import java.util.List;
 
 public class ClickEvent {
 	
-	private final Object value;
+	private final String value;
 	private final ClickAction action;
 	
-	public ClickEvent(Object value, ClickAction action) {
+	public ClickEvent(ClickAction action, String value) {
+		if (action == null)
+			throw new IllegalArgumentException("Action can not be null!");
+		if (value == null)
+			throw new IllegalArgumentException("Value can not be null!");
 		this.value = value;
 		this.action = action;
 	}
@@ -21,7 +25,7 @@ public class ClickEvent {
 		
 		private static List<ClickAction> VALUES;
 		
-		private String name;
+		private final String name;
 		
 		private ClickAction(String name) {
 			this.name = name;

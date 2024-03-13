@@ -4,68 +4,83 @@ import java.util.Arrays;
 
 public class JsonBuffer implements CharSequence {
 	
+	private static final char 
+	BEGIN_OBJECT = '{',
+	END_OBJECT = '}',
+	BEGIN_ARRAY = '[',
+	END_ARRAY = ']';
+	
 	private char[] buff;
 	private String stringcache;
 	
 	private int index;
 	private boolean separator;
 	
-	public void beginObject(CharSequence key) {
+	public JsonBuffer beginObject(CharSequence key) {
 		clearStringCache();
 		appendKey(key);
 		ensureSize(1);
-		buff[index++] = '{';
+		buff[index++] = BEGIN_OBJECT;
 		separator = false;
+		return this;
 	}
 	
-	public void endObject() {
+	public JsonBuffer endObject() {
 		clearStringCache();
 		ensureSize(1);
-		buff[index++] = '}';
+		buff[index++] = END_OBJECT;
+		return this;
 	}
 	
-	public void beginArray(CharSequence key) {
+	public JsonBuffer beginArray(CharSequence key) {
 		clearStringCache();
 		appendKey(key);
 		ensureSize(1);
-		buff[index++] = '[';
+		buff[index++] = BEGIN_ARRAY;
 		separator = false;
+		return this;
 	}
 	
-	public void endArray() {
+	public JsonBuffer endArray() {
 		clearStringCache();
 		ensureSize(1);
-		buff[index++] = ']';
+		buff[index++] = END_ARRAY;
+		return this;
 	}
 	
-	public void appendText(CharSequence key, CharSequence text) {
+	public JsonBuffer appendText(CharSequence key, CharSequence text) {
 		clearStringCache();
 		appendKey(key);
 		appendCharSequence(text);
+		return this;
 	}
 	
-	public void appendBoolean(CharSequence key, boolean value) {
+	public JsonBuffer appendBoolean(CharSequence key, boolean value) {
 		clearStringCache();
 		appendKey(key);
 		appendBoolean(value);
+		return this;
 	}
 	
-	public void appendDouble(CharSequence key, double value) {
+	public JsonBuffer appendDouble(CharSequence key, double value) {
 		clearStringCache();
 		appendKey(key);
 		appendCharSequenceRaw(Double.toString(value));
+		return this;
 	}
 	
-	public void appendNull(CharSequence key) {
+	public JsonBuffer appendNull(CharSequence key) {
 		clearStringCache();
 		appendKey(key);
 		appendNull();
+		return this;
 	}
 	
-	public void appendLong(CharSequence key, long value) {
+	public JsonBuffer appendLong(CharSequence key, long value) {
 		clearStringCache();
 		appendKey(key);
 		appendCharSequenceRaw(Long.toString(value));
+		return this;
 	}
 
 	protected void appendKey(CharSequence key) {
@@ -114,12 +129,43 @@ public class JsonBuffer implements CharSequence {
 			appendNull();
 			return;
 		}
-		ensureSize(2+sequence.length());
+		int toEscape = countToEscape(sequence);
+		ensureSize(2+sequence.length() + toEscape);
 		buff[index++] = '"';
-		for (int i = 0; i < sequence.length(); i++) {
-			buff[index++] = sequence.charAt(i);
+		final int length = sequence.length();
+		for (int i = 0; i < length; i++) {
+			char c = sequence.charAt(i);
+			if (needsEscape(c))
+				buff[index++] = '\\';
+			buff[index++] = c;
 		}
 		buff[index++] = '"';
+	}
+	
+	protected int countToEscape(CharSequence sequence) {
+		final int length = sequence.length();
+		int toEscape = 0;
+		for (int i = 0; i < length; i++) {
+			char c = sequence.charAt(i);
+			if (needsEscape(c))
+				toEscape++;
+		}
+		return toEscape;
+	}
+	
+	protected boolean needsEscape(char c) {
+		switch (c) {
+		case '\\':
+		case '"':
+		case '\t':
+		case '\n':
+		case '\b':
+		case '\r':
+		case '\f':
+			return true;
+		default:
+			return false;
+		}
 	}
 	
 	/**
@@ -156,7 +202,7 @@ public class JsonBuffer implements CharSequence {
 		return stringcache;
 	}
 
-	public void append(CharSequence key, Object value) {
+	public JsonBuffer append(CharSequence key, Object value) {
 		clearStringCache();
 		appendKey(key);
 		if (value == null)
@@ -167,6 +213,14 @@ public class JsonBuffer implements CharSequence {
 			appendBoolean((boolean) value);
 		else
 			appendCharSequence(value.toString());
+		return this;
+	}
+	
+	public JsonBuffer appendRaw(CharSequence key, CharSequence value) {
+		clearStringCache();
+		appendKey(key);
+		appendCharSequenceRaw(value);
+		return this;
 	}
 
 	@Override

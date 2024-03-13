@@ -5,97 +5,164 @@ import java.util.List;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatColor;
+import de.atlasmc.chat.component.ClickEvent.ClickAction;
+import de.atlasmc.entity.Entity;
+import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.JsonBuffer;
 
-public interface ChatComponent extends Chat {
+public interface ChatComponent extends Chat, Cloneable {
 	
 	public static final String 
 		FONT_DEFAULT = "minecraft:default",
 		FONT_ALT = "minecraft:alt",
 		FONT_UNIFORM = "minecraft:uniform";
 	
-	public boolean isBold();
+	boolean isBold();
 	
-	public void setBold(boolean bold);
+	ChatComponent setBold(boolean bold);
 	
-	public boolean isItalic();
+	boolean isItalic();
 	
-	public void setItalic(boolean italic);
+	ChatComponent setItalic(boolean italic);
 	
-	public boolean isUnderlined();
+	boolean isUnderlined();
 	
-	public void setUnderlined(boolean underlined);
+	ChatComponent setUnderlined(boolean underlined);
 	
-	public boolean isObfuscated();
+	boolean isObfuscated();
 	
-	public void setObfuscated(boolean obfuscated);
+	ChatComponent setObfuscated(boolean obfuscated);
 	
-	public boolean isStrikethrough();
+	boolean isStrikethrough();
 	
-	public void setStrikethrough(boolean strikethrough);
+	ChatComponent setStrikethrough(boolean strikethrough);
 	
-	public String getFont();
+	String getFont();
 	
-	public void setFont(String font);
+	ChatComponent setFont(String font);
 	
 	/**
 	 * Returns the RGB value of the color used or -1.
 	 * If set by {@link #setColor(ChatColor)} it will return the index+1 as negative
 	 * @return rgb or enum -(index+1) or -1
 	 */
-	public int getColor();
+	int getColor();
 	
 	/**
 	 * Returns the ChatColor represented by the color or null
 	 * @return ChatColor or null
 	 */
-	public ChatColor getColorChat();
+	ChatColor getColorChat();
 	
 	/**
 	 * Sets the color as RGB value or -1 to remove or -({@link ChatColor#getID()}+1) for chat color
 	 * @param rgb
 	 */
-	public void setColor(int rgb);
+	ChatComponent setColor(int rgb);
 	
 	/**
 	 * Sets the color by {@link ChatColor} or null to remove.
 	 * Format is allowed but the dedicated methods should be used instead
 	 * @param color
 	 */
-	public void setColor(ChatColor color);
+	ChatComponent setColor(ChatColor color);
 	
 	/**
 	 * Returns whether or not this Component has a color
 	 * @return true if has color
 	 */
-	public boolean hasColor();
+	boolean hasColor();
 	
 	/**
 	 * Returns whether or not this Component has a {@link ChatColor}
 	 * @return true if has {@link ChatColor}
 	 */
-	public boolean hasChatColor();
+	boolean hasChatColor();
 	
-	public ClickEvent getClickEvent();
+	ClickEvent getClickEvent();
 	
-	public void setClickEvent(ClickEvent event);
+	ChatComponent setClickEvent(ClickEvent event);
 	
-	public HoverEvent getHoverEvent();
+	HoverEvent getHoverEvent();
 	
-	public void setHoverEvent(HoverEvent event);
+	ChatComponent setHoverEvent(HoverEvent event);
 	
 	/**
 	 * Adds the contents of this component to the buffer
 	 * @param buff
 	 */
-	public void addContents(JsonBuffer buff);
+	void addContents(JsonBuffer buff);
 	
-	public List<ChatComponent> getExtra();
+	List<ChatComponent> getExtra();
 	
-	public boolean hasExtra();
+	boolean hasExtra();
 	
-	public void addExtra(ChatComponent component);
+	ChatComponent addExtra(ChatComponent component);
+	
+	ChatComponent addExtra(ChatComponent... components);
 
-	public void setExtra(Collection<ChatComponent> extra);
+	ChatComponent setExtra(Collection<ChatComponent> extra);
+	
+	ChatComponent clone();
+	
+	static BaseComponent base() {
+		return new BaseComponent();
+	}
+	
+	static TextComponent text() {
+		return new TextComponent();
+	}
+	
+	static TextComponent text(String text) {
+		return new TextComponent(text);
+	}
+	
+	static TextComponent empty() {
+		return new TextComponent("");
+	}
+	
+	static TextComponent space() {
+		return new TextComponent(" ");
+	}
+	
+	static KeybindComponent key(String key) {
+		return new KeybindComponent(key);
+	}
+	
+	static ScoreComponent score(String entry, String objective, String score) {
+		return new ScoreComponent(entry, objective, score);
+	}
+	
+	static TranslationComponent translate() {
+		return new TranslationComponent();
+	}
+	
+	static TranslationComponent translate(String key) {
+		return new TranslationComponent(key);
+	}
+	
+	static ClickEvent click(ClickAction action, String value) {
+		return new ClickEvent(action, value);
+	}
+	
+	static HoverTextEvent hoverText(ChatComponent component) {
+		return new HoverTextEvent(component);
+	}
+	
+	static HoverEntityEvent hoverEntity(Entity entity) {
+		return new HoverEntityEvent(entity);
+	}
+	
+	static HoverEntityEvent hoverEntity(String type, String uuid, ChatComponent name) {
+		return new HoverEntityEvent(type, uuid, name);
+	}
+	
+	static HoverItemEvent hoverItem(ItemStack item) {
+		return new HoverItemEvent(item);
+	}
+	
+	static HoverItemEvent hoverItem(String type, int count, String tag) {
+		return new HoverItemEvent(type, count, tag);
+	}
 	
 }

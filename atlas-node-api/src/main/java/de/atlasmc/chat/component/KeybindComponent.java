@@ -2,7 +2,7 @@ package de.atlasmc.chat.component;
 
 import de.atlasmc.util.JsonBuffer;
 
-public class KeybindComponent extends BaseComponent {
+public class KeybindComponent extends AbstractBaseComponent<KeybindComponent> {
 
 	public static final String
 	JSON_KEYBIND = "keybind";
@@ -58,6 +58,11 @@ public class KeybindComponent extends BaseComponent {
 		if (key != null)
 			buff.appendText(JSON_KEYBIND, key);
 		super.addContents(buff);
+	}
+
+	@Override
+	protected KeybindComponent getThis() {
+		return this;
 	}
 
 }

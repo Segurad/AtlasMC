@@ -2,7 +2,7 @@ package de.atlasmc.chat.component;
 
 import de.atlasmc.util.JsonBuffer;
 
-public class ScoreComponent extends BaseComponent {
+public class ScoreComponent extends AbstractBaseComponent<ScoreComponent> {
 
 	public static final String
 	JSON_SCORE = "score",
@@ -31,6 +31,11 @@ public class ScoreComponent extends BaseComponent {
 		buff.appendText(JSON_VALUE, score);
 		buff.endObject();
 		super.addContents(buff);
+	}
+
+	@Override
+	protected ScoreComponent getThis() {
+		return this;
 	}
 	
 }

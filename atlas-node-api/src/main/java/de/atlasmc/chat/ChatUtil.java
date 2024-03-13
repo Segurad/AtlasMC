@@ -147,11 +147,11 @@ public final class ChatUtil {
 	}
 	
 	public static String rawTextFromComponent(ChatComponent component) {
-		return FACTORY.rawTextFromComponent(component, DEFAULT_CHAT_FORMAT_PREFIX);
+		return FACTORY.rawTextFromComponent(component);
 	}
-	
-	public static String rawTextFromComponent(ChatComponent component, char formatPrefix) {
-		return FACTORY.rawTextFromComponent(component, formatPrefix);
+
+	public static ChatComponent toComponent(Chat chat) {
+		return FACTORY.toComponent(chat);
 	}
 	
 }

@@ -2,6 +2,8 @@ package de.atlasmc.chat.component;
 
 import java.util.List;
 
+import de.atlasmc.util.JsonBuffer;
+
 public interface HoverEvent {
 	
 	public static enum HoverAction {
@@ -65,8 +67,8 @@ public interface HoverEvent {
 		
 	}
 	
-	public String getValue();
-	
-	public HoverAction getAction();
+	HoverAction getAction();
+
+	void addContents(JsonBuffer buff);
 
 }

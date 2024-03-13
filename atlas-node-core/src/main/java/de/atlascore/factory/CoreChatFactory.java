@@ -6,21 +6,26 @@ import java.util.List;
 
 import com.google.gson.JsonParseException;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 
 import de.atlascore.chat.CoreChat;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatColor;
+import de.atlasmc.chat.ChatFormatException;
+import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.BaseComponent;
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.chat.component.ClickEvent;
 import de.atlasmc.chat.component.ClickEvent.ClickAction;
+import de.atlasmc.chat.component.HoverEntityEvent;
 import de.atlasmc.chat.component.HoverEvent;
+import de.atlasmc.chat.component.HoverEvent.HoverAction;
+import de.atlasmc.chat.component.HoverItemEvent;
+import de.atlasmc.chat.component.HoverTextEvent;
 import de.atlasmc.chat.component.KeybindComponent;
-import de.atlasmc.chat.component.RawHoverEvent;
 import de.atlasmc.chat.component.ScoreComponent;
 import de.atlasmc.chat.component.TextComponent;
 import de.atlasmc.chat.component.TranslationComponent;
-import de.atlasmc.chat.component.HoverEvent.HoverAction;
 import de.atlasmc.factory.ChatFactory;
 import de.atlasmc.util.CharSequenceReader;
 
@@ -190,26 +195,71 @@ public class CoreChatFactory implements ChatFactory {
 	}
 	
 	private HoverEvent readHoverEvent(JsonReader reader) throws IOException {
-		HoverAction hoverAction = null;
-		String contents = null;
 		reader.beginObject();
-		while (reader.hasNext()) {
-			switch (reader.nextName()) {
-			case BaseComponent.JSON_ACTION:
-				hoverAction = HoverAction.getByNameID(reader.nextString());
-				break;
-			case BaseComponent.JSON_CONTENTS:
-				contents = reader.nextString();
-				break;
-			default:
-				reader.skipValue();
-				break;
+		String next = reader.nextName();
+		if (!BaseComponent.JSON_ACTION.equals(next))
+			throw new ChatFormatException("Expected " + BaseComponent.JSON_ACTION + " but was: " + next);
+		HoverAction hoverAction = HoverAction.getByNameID(reader.nextString());
+		next = reader.nextName();
+		if (!BaseComponent.JSON_CONTENTS.equals(next))
+			throw new ChatFormatException("Expected " + BaseComponent.JSON_ACTION + " but was: " + next);
+		reader.beginObject();
+		HoverEvent event = null;
+		switch (hoverAction) {
+		case SHOW_ENTITY:
+			String type = null;
+			String uuid = null;
+			ChatComponent name = null;
+			while (reader.peek() != JsonToken.END_OBJECT) {
+				String key = reader.nextName();
+				switch (key) {
+				case HoverEntityEvent.JSON_ID:
+					uuid = reader.nextString();
+					break;
+				case HoverEntityEvent.JSON_NAME:
+					reader.beginObject();
+					name = readComponent(reader);
+					reader.endObject();
+					break;
+				case HoverEntityEvent.JSON_TYPE:
+					type = reader.nextString();
+					break;
+				default:
+					reader.skipValue();
+				}
 			}
+			event = new HoverEntityEvent(type, uuid, name);
+			break;
+		case SHOW_ITEM:
+			String id = null;
+			int count = 0;
+			String tag = null;
+			while (reader.peek() != JsonToken.END_OBJECT) {
+				String key = reader.nextName();
+				switch (key) {
+				case HoverItemEvent.JSON_ID:
+					id = reader.nextString();
+					break;
+				case HoverItemEvent.JSON_COUNT:
+					count = reader.nextInt();
+					break;
+				case HoverItemEvent.JSON_TAG:
+					tag = reader.nextString();
+					break;
+				default:
+					reader.skipValue();
+				}
+			}
+			event = new HoverItemEvent(id, count, tag);
+			break;
+		case SHOW_TEXT:
+			ChatComponent chat = readComponent(reader);
+			event = new HoverTextEvent(chat);
+			break;
 		}
 		reader.endObject();
-		if (hoverAction != null)
-			return new RawHoverEvent(hoverAction, contents);
-		return null;
+		reader.endObject();
+		return event;
 	}
 	
 	private ClickEvent readClickEvent(JsonReader reader) throws IOException {
@@ -231,7 +281,7 @@ public class CoreChatFactory implements ChatFactory {
 		}
 		reader.endObject();
 		if (clickAction != null)
-			return new ClickEvent(value, clickAction);
+			return new ClickEvent(clickAction, value);
 		return null;
 	}
 
@@ -323,8 +373,8 @@ public class CoreChatFactory implements ChatFactory {
 
 	@Override
 	public String jsonToRawText(String json) {
-		// TODO Auto-generated method stub
-		return null;
+		ChatComponent comp = jsonToComponent(json);
+		return rawTextFromComponent(comp);
 	}
 
 	@Override
@@ -349,15 +399,15 @@ public class CoreChatFactory implements ChatFactory {
 	}
 
 	@Override
-	public String rawTextFromComponent(ChatComponent component, char formatPrefix) {
+	public String rawTextFromComponent(ChatComponent component) {
 		if (component == null)
 			throw new IllegalArgumentException("Component can not be null!");
 		StringBuilder builder = new StringBuilder();
-		buildRawText(builder, component, formatPrefix);
+		buildRawText(builder, component);
 		return builder.toString();
 	}
 	
-	private void buildRawText(StringBuilder builder, ChatComponent component, char formatPrefix) {
+	private void buildRawText(StringBuilder builder, ChatComponent component) {
 		if (!(component instanceof TextComponent) || component.getClass() != BaseComponent.class) {	
 			if (component instanceof TextComponent text) {
 				builder.append(text.getValue());
@@ -365,9 +415,22 @@ public class CoreChatFactory implements ChatFactory {
 		}
 		if (component.hasExtra()) {
 			for (ChatComponent child : component.getExtra()) {
-				buildRawText(builder, child, formatPrefix);;
+				buildRawText(builder, child);
 			}
 		}
+	}
+
+	@Override
+	public ChatComponent toComponent(Chat chat) {
+		if (chat == null)
+			return ChatComponent.empty();
+		if (chat instanceof ChatComponent comp)
+			return comp;
+		if (chat.hasJson())
+			return jsonToComponent(chat.getJsonText());
+		if (chat.hasLegacy())
+			return legacyToComponent(chat.getLegacyText(), ChatUtil.DEFAULT_CHAT_FORMAT_PREFIX);
+		return ChatComponent.empty();
 	}
 
 }

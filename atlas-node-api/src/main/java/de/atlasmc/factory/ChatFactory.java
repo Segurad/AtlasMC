@@ -18,12 +18,14 @@ public interface ChatFactory {
 	
 	ChatComponent jsonToComponent(CharSequence json);
 	
-	String rawTextFromComponent(ChatComponent component, char formatPrefix);
+	String rawTextFromComponent(ChatComponent component);
 	
 	String legacyFromComponent(ChatComponent component, char formatPrefix);
 
 	String jsonToRawText(String json);
 
 	String legacyToRawText(String legacy, char formatPrefix);
+
+	ChatComponent toComponent(Chat chat);
 
 }

@@ -2,7 +2,7 @@ package de.atlasmc.chat.component;
 
 import de.atlasmc.util.JsonBuffer;
 
-public class TextComponent extends BaseComponent {
+public class TextComponent extends AbstractBaseComponent<TextComponent> {
 
 	public static final String
 	JSON_TEXT = "text";
@@ -10,31 +10,29 @@ public class TextComponent extends BaseComponent {
 	private String text;
 	
 	public TextComponent(String text) {
-		if (text == null)
-			throw new IllegalArgumentException("Text can not be null!");
 		this.text = text;
 	}
 
 	public TextComponent() {}
 
-	public void setText(String text) {
-		if (text == null)
-			throw new IllegalAccessError("Text can not be null!");
+	public TextComponent setValue(String text) {
 		this.text = text;
-	}
-
-	public String getValue() {
-		return text;
+		return this;
 	}
 	
-	public void setValue(String value) {
-		this.text = value;
+	public String getValue() {
+		return text;
 	}
 	
 	@Override
 	public void addContents(JsonBuffer buff) {
 		buff.appendText(JSON_TEXT, text);
 		super.addContents(buff);
+	}
+
+	@Override
+	protected TextComponent getThis() {
+		return this;
 	}
 
 }

@@ -1,37 +1,68 @@
 package de.atlasmc.chat.component;
 
-import java.io.IOException;
-import java.io.StringWriter;
-
+import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.entity.Entity;
-import de.atlasmc.util.nbt.io.SNBTWriter;
+import de.atlasmc.util.JsonBuffer;
 
 public class HoverEntityEvent implements HoverEvent {
 
-	private final Entity entity;
+	public static final String
+	JSON_NAME = "name",
+	JSON_TYPE = "type",
+	JSON_ID = "id";
+	
+	private final ChatComponent name;
+	private final String type;
+	private final String uuid;
 	
 	public HoverEntityEvent(Entity entity) {
-		this.entity = entity;
+		if (entity == null)
+			throw new IllegalArgumentException("Entity can not be null!");
+		if (entity.hasCustomName()) {
+			this.name = ChatUtil.toComponent(entity.getCustomName());
+		} else {
+			this.name = null;
+		}
+		this.type = entity.getType().getNamespacedKeyRaw();
+		this.uuid = entity.getUUID().toString();
 	}
 	
-	@Override
-	public String getValue() {
-		StringWriter swriter = new StringWriter();
-		SNBTWriter writer = new SNBTWriter(swriter);
-		String string = null;
-		try {
-			entity.toNBT(writer, false);
-			string = swriter.toString();
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return string;
+	public HoverEntityEvent(String type, String uuid, ChatComponent name) {
+		if (type == null)
+			throw new IllegalArgumentException("Type can not be null!");
+		if (uuid == null)
+			throw new IllegalArgumentException("UUID can not be null!");
+		this.type = type;
+		this.uuid = uuid;
+		this.name = name;
 	}
 
 	@Override
 	public HoverAction getAction() {
 		return HoverAction.SHOW_ENTITY;
+	}
+
+	@Override
+	public void addContents(JsonBuffer buff) {
+		if (this.name != null) {
+			buff.beginObject(JSON_NAME);
+			this.name.addContents(buff);
+			buff.endObject();
+		}
+		buff.append(JSON_TYPE, this.type);
+		buff.append(JSON_ID, this.uuid);
+	}
+	
+	public ChatComponent getName() {
+		return name;
+	}
+	
+	public String getType() {
+		return type;
+	}
+	
+	public String getUUID() {
+		return uuid;
 	}
 
 }
