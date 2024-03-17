@@ -21,6 +21,7 @@ abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> impleme
 	JSON_CLICK_EVENT = "clickEvent",
 	JSON_HOVER_EVENT = "hoverEvent",
 	JSON_EXTRA = "extra",
+	JSON_INSERTION = "insertion",
 	JSON_ACTION = "action", // for hover and click event
 	JSON_CONTENTS = "contents", // hover event
 	JSON_VALUE = "value"; // click event
@@ -31,6 +32,18 @@ abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> impleme
 	private ClickEvent clickEvent;
 	private HoverEvent hoverEvent;
 	private List<ChatComponent> extra;
+	private String insertion;
+	
+	@Override
+	public String getInsertion() {
+		return insertion;
+	}
+	
+	@Override
+	public T setInsertion(String insertion) {
+		this.insertion = insertion;
+		return getThis();
+	}
 	
 	@Override
 	public boolean isBold() {
@@ -195,6 +208,8 @@ abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> impleme
 			else
 				buff.appendText(JSON_COLOR, "#" + Integer.toHexString(color));
 		}
+		if (insertion != null)
+			buff.append(JSON_INSERTION, insertion);
 		if (!getFont().equals(ChatComponent.FONT_DEFAULT))
 			buff.appendText(JSON_FONT, getFont());
 		final ClickEvent clickEvent = getClickEvent();

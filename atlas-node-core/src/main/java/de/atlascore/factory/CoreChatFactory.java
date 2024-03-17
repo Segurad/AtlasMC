@@ -76,7 +76,7 @@ public class CoreChatFactory implements ChatFactory {
 		ClickEvent clickEvent = null;
 		List<ChatComponent> extra = null;
 		List<ChatComponent> with = null;
-		
+		String insertion = null;
 		ChatComponent comp = null;
 		
 		reader.beginObject();
@@ -87,6 +87,9 @@ public class CoreChatFactory implements ChatFactory {
 				break;
 			case BaseComponent.JSON_ITALIC:
 				italic = reader.nextBoolean();
+				break;
+			case BaseComponent.JSON_INSERTION:
+				insertion = reader.nextString();
 				break;
 			case BaseComponent.JSON_UNDERLINED:
 				underlined = reader.nextBoolean();
@@ -155,27 +158,25 @@ public class CoreChatFactory implements ChatFactory {
 			}
 		}
 		reader.endObject();
-		
-		if (comp != null) {
-			comp.setBold(bold);
-			comp.setItalic(italic);
-			comp.setUnderlined(underlined);
-			comp.setObfuscated(obfuscated);
-			comp.setStrikethrough(strikethrough);
-			if (color != null)
-				comp.setColor(color);
-			else if (rgb != -1)
-				comp.setColor(rgb);
-			comp.setFont(font);
-			comp.setHoverEvent(hoverEvent);
-			comp.setClickEvent(clickEvent);
-			comp.setExtra(extra);
-			if (comp instanceof TranslationComponent) {
-				TranslationComponent trsl = (TranslationComponent) comp;
-				trsl.setWith(with);
-			}
+		if (comp == null)
+			comp = new BaseComponent();
+		comp.setBold(bold)
+			.setItalic(italic)
+			.setUnderlined(underlined)
+			.setObfuscated(obfuscated)
+			.setStrikethrough(strikethrough)
+			.setFont(font)
+			.setHoverEvent(hoverEvent)
+			.setClickEvent(clickEvent)
+			.setExtra(extra)
+			.setInsertion(insertion);
+		if (color != null)
+			comp.setColor(color);
+		else if (rgb != -1)
+			comp.setColor(rgb);
+		if (comp instanceof TranslationComponent trcomp) {
+			trcomp.setWith(with);
 		}
-		
 		return comp;
 	}
 	

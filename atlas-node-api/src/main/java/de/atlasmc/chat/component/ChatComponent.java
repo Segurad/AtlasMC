@@ -17,6 +17,16 @@ public interface ChatComponent extends Chat, Cloneable {
 		FONT_ALT = "minecraft:alt",
 		FONT_UNIFORM = "minecraft:uniform";
 	
+	
+	String getInsertion();
+	
+	/**
+	 * Sets a insertion text. If player shift-clicks the insertion text will be inserted into the chat input of the player.
+	 * @param insertion
+	 * @return this component
+	 */
+	ChatComponent setInsertion(String insertion);
+	
 	boolean isBold();
 	
 	ChatComponent setBold(boolean bold);
