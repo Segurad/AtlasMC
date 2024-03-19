@@ -7,6 +7,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
+
 public class CompleteFuture<V> implements Future<V> {
 	
 	private static final Future<?> NULL_RESULT_FUTURE = new CompleteFuture<>(null);
@@ -100,6 +103,7 @@ public class CompleteFuture<V> implements Future<V> {
 	 * @return future
 	 */
 	@SuppressWarnings("unchecked")
+	@NotNull
 	public static <V>  Future<V> getNullFuture() {
 		return (Future<V>) NULL_RESULT_FUTURE;
 	}
@@ -110,11 +114,18 @@ public class CompleteFuture<V> implements Future<V> {
 	 * @return future
 	 */
 	@SuppressWarnings("unchecked")
+	@NotNull
 	public static <V> Future<V> getEmptyListFuture() {
 		return (Future<V>) EMPTY_LIST_FUTURE;
 	}
 	
+	/**
+	 * Returns a successful Future with a empty immutable Map
+	 * @param <V>
+	 * @return future
+	 */
 	@SuppressWarnings("unchecked")
+	@NotNull
 	public static <V> Future<V> getEmptyMapFuture() {
 		return (Future<V>) EMPTY_MAP_FUTURE;
 	}
@@ -124,7 +135,18 @@ public class CompleteFuture<V> implements Future<V> {
 		return;
 	}
 
-	public static <V> Future<V> of(V value) {
+	/**
+	 * Returns a Complete future of the given value.
+	 * If the value is null {@link #getNullFuture()}.
+	 * If the value is empty map {@link #getEmptyMapFuture()}.
+	 * If the value is empty collection {@link #getEmptyListFuture()}.
+	 * Otherwise a new CompleteFuture will be constructed.
+	 * @param <V>
+	 * @param value
+	 * @return future
+	 */
+	@NotNull
+	public static <V> Future<V> of(@Nullable V value) {
 		if (value == null)
 			return getNullFuture();
 		if (value instanceof Collection<?> col && col.isEmpty()) {
