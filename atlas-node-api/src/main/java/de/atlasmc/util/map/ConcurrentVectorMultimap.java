@@ -6,32 +6,28 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * 
- */
-public class ConcurrentVectorMultimap<K, V> extends AbstractMultimap<K, V> implements ListMultimap<K, V> {
+import de.atlasmc.util.annotation.ThreadSafe;
 
-	private int DEFAULT_LIST_CAPACITY;
+@ThreadSafe
+public class ConcurrentVectorMultimap<K, V> extends AbstractMultimap<K, V> implements ListMultimap<K, V> {
 	
 	public ConcurrentVectorMultimap() {
 		this(new ConcurrentHashMap<>());
 	}
 	
 	public ConcurrentVectorMultimap(Map<K, Collection<V>> map) {
-		this(map, 3);
+		this(map, DEFAULT_COLLECTION_CAPACITY);
 	}
 	
-	public ConcurrentVectorMultimap(Map<K, Collection<V>> map, int valueInitCapacity) {
-		super(new HashMap<>());
-		this.DEFAULT_LIST_CAPACITY = valueInitCapacity;
+	public ConcurrentVectorMultimap(Map<K, Collection<V>> map, int defaultCollctionCapacity) {
+		super(new HashMap<>(), defaultCollctionCapacity);
 		for (K key : map.keySet()) {
 			putAll(key, map.get(key));
 		}
 	}
 	
-	public ConcurrentVectorMultimap(int mapCapacity, int valueInitCapacity) {
-		super(new HashMap<>(mapCapacity));
-		this.DEFAULT_LIST_CAPACITY = valueInitCapacity;
+	public ConcurrentVectorMultimap(int mapCapacity, int defaultCollectionCapacity) {
+		super(new HashMap<>(mapCapacity), defaultCollectionCapacity);
 	}
 	
 	@Override
@@ -55,8 +51,8 @@ public class ConcurrentVectorMultimap<K, V> extends AbstractMultimap<K, V> imple
 	}
 
 	@Override
-	protected Collection<V> createCollection() {
-		return new Vector<>(DEFAULT_LIST_CAPACITY);
+	protected Collection<V> createCollection(int capacity) {
+		return new Vector<>(capacity);
 	}
 
 }

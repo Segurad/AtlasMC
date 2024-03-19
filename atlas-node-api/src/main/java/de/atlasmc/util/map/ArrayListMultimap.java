@@ -7,34 +7,28 @@ import java.util.List;
 import java.util.Map;
 
 public class ArrayListMultimap<K, V> extends AbstractMultimap<K, V> implements ListMultimap<K, V> {
-
-	private static final int DEFAULT_LIST_CAPACITY = 3;
-	
-	private int defaultListCapacity = DEFAULT_LIST_CAPACITY;
 	
 	public ArrayListMultimap() {
-		super(new HashMap<>());
+		super(new HashMap<>(), DEFAULT_COLLECTION_CAPACITY);
 	}
 	
 	public ArrayListMultimap(Map<K, Collection<V>> map) {
-		this(map, DEFAULT_LIST_CAPACITY);
+		this(map, DEFAULT_COLLECTION_CAPACITY);
 	}
 	
-	public ArrayListMultimap(Map<K, Collection<V>> map, int valueInitCapacity) {
-		super(new HashMap<>());
-		this.defaultListCapacity = valueInitCapacity;
+	public ArrayListMultimap(Map<K, Collection<V>> map, int defaultCollectionCapacity) {
+		super(new HashMap<>(), defaultCollectionCapacity);
 		for (K key : map.keySet()) {
 			putAll(key, map.get(key));
 		}
 	}
 	
 	public ArrayListMultimap(int mapCapacity) {
-		this(mapCapacity, DEFAULT_LIST_CAPACITY);
+		this(mapCapacity, DEFAULT_COLLECTION_CAPACITY);
 	}
 	
-	public ArrayListMultimap(int mapCapacity, int valueInitCapacity) {
-		super(new HashMap<>(mapCapacity));
-		this.defaultListCapacity = valueInitCapacity;
+	public ArrayListMultimap(int mapCapacity, int defaultCollectionCapacity) {
+		super(new HashMap<>(mapCapacity), defaultCollectionCapacity);
 	}
 
 	@Override
@@ -48,8 +42,8 @@ public class ArrayListMultimap<K, V> extends AbstractMultimap<K, V> implements L
 	}
 
 	@Override
-	protected Collection<V> createCollection() {
-		return new ArrayList<>(defaultListCapacity);
+	protected Collection<V> createCollection(int capacity) {
+		return new ArrayList<>(capacity);
 	}
 
 }

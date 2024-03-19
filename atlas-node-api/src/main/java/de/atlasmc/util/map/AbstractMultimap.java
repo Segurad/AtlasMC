@@ -1,15 +1,20 @@
 package de.atlasmc.util.map;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 public abstract class AbstractMultimap<K, V> implements Multimap<K, V> {
 	
-	private final Map<K, Collection<V>> map;
+	protected static final int DEFAULT_COLLECTION_CAPACITY = 3;
 	
-	protected AbstractMultimap(Map<K, Collection<V>> map) {
+	private final Map<K, Collection<V>> map;
+	private final int defaultCollectionCapacity;
+	
+	protected AbstractMultimap(Map<K, Collection<V>> map, int defaultCollectionCapacity) {
 		this.map = map;
+		this.defaultCollectionCapacity = defaultCollectionCapacity;
 	}
 
 	@Override
@@ -36,17 +41,30 @@ public abstract class AbstractMultimap<K, V> implements Multimap<K, V> {
 	public boolean put(K key, V value) {
 		Collection<V> c = map.get(key);
 		if (c == null)
-			map.put(key, c = createCollection());
+			map.put(key, c = createCollection(defaultCollectionCapacity));
 		if (value == null)
 			return true;
 		return c.add(value);
 	}
+	
+	@Override
+	public boolean putAll(K key, Collection<V> values) {
+		if (values.isEmpty())
+			return false;
+		Collection<V> c = map.get(key);
+		if (c == null)
+			c = map.put(key, createCollection(Math.max(values.size(), defaultCollectionCapacity)));
+		return c.addAll(values);
+	}
 
 	@Override
 	public boolean putAll(K key, Iterable<V> values) {
+		Iterator<V> it = values.iterator();
+		if (!it.hasNext())
+			return false;
 		Collection<V> c = map.get(key);
 		if (c == null)
-			c = map.put(key, createCollection());
+			c = map.put(key, createCollection(defaultCollectionCapacity));
 		boolean b = false;
 		for (V value : values) {
 			if (c.add(value))
@@ -57,6 +75,8 @@ public abstract class AbstractMultimap<K, V> implements Multimap<K, V> {
 	
 	@Override
 	public boolean putAll(Multimap<K, V> map) {
+		if(map.isEmpty())
+			return false;
 		boolean b = false;
 		for (K key : map.keySet()) {
 			if (putAll(key, map.get(key))) b = true;
@@ -108,6 +128,7 @@ public abstract class AbstractMultimap<K, V> implements Multimap<K, V> {
 	public int hashCode() {
 		return map.hashCode();
 	}
-
-	protected abstract Collection<V> createCollection();
+	
+	protected abstract Collection<V> createCollection(int capacity);
+	
 }

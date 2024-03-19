@@ -16,7 +16,7 @@ public class ImmutableMultimap<K, V> extends AbstractMultimap<K, V> implements M
 	
 	@SuppressWarnings("unchecked")
 	public ImmutableMultimap(Map<K, Collection<V>> map) {
-		super((Map<K, Collection<V>>) buildImmutable(map));
+		super((Map<K, Collection<V>>) buildImmutable(map), DEFAULT_COLLECTION_CAPACITY);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -62,7 +62,7 @@ public class ImmutableMultimap<K, V> extends AbstractMultimap<K, V> implements M
 	}
 
 	@Override
-	protected Collection<V> createCollection() {
+	protected Collection<V> createCollection(int capacity) {
 		return List.of();
 	}
 

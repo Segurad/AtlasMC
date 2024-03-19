@@ -10,33 +10,35 @@ public interface Multimap<K, V> {
 		return ImmutableMultimap.getEmpty();
 	}
 
-	public Set<K> keySet();
+	Set<K> keySet();
 
 	/**
 	 * Returns the collection for this key or null if not present
 	 * @param key
 	 * @return collection or null
 	 */
-	public Collection<V> get(K key);
+	Collection<V> get(K key);
 
-	public boolean isEmpty();
+	boolean isEmpty();
 
-	public Collection<V> remove(K key);
+	Collection<V> remove(K key);
 
-	public boolean put(K key, V value);
+	boolean put(K key, V value);
 	
-	public boolean putAll(K key, Iterable<V> values);
+	boolean putAll(K key, Collection<V> values);
 	
-	public boolean putAll(Multimap<K, V> map);
+	boolean putAll(K key, Iterable<V> values);
 	
-	public Map<K, Collection<V>> asMap();
+	boolean putAll(Multimap<K, V> map);
 	
-	public void clear();
+	Map<K, Collection<V>> asMap();
+	
+	void clear();
 
-	public boolean containsValue(Object value);
+	boolean containsValue(Object value);
 	
-	public boolean containsKey(Object key);
+	boolean containsKey(Object key);
 
-	public int size();
+	int size();
 
 }

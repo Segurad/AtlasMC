@@ -2,35 +2,23 @@ package de.atlasmc.util.map;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.util.ConcurrentLinkedList;
+import de.atlasmc.util.annotation.ThreadSafe;
 
-public class ConcurrentLinkedListMultimap<K, V> extends AbstractMultimap<K, V> {
+@ThreadSafe
+public class ConcurrentLinkedListMultimap<K, V> extends AbstractConcurrentMultimap<K, V> {
 	
 	public ConcurrentLinkedListMultimap() {
-		super(new ConcurrentHashMap<>());
+		super();
 	}
 	
 	public ConcurrentLinkedListMultimap(Map<K, Collection<V>> map) {
-		super(new ConcurrentHashMap<>(map.size()));
-		for (K key : map.keySet()) {
-			putAll(key, map.get(key));
-		}
+		super(map, DEFAULT_COLLECTION_CAPACITY);
 	}
 	
 	public ConcurrentLinkedListMultimap(int mapCapacity) {
-		super(new ConcurrentHashMap<>(mapCapacity));
-	}
-	
-	@Override
-	public synchronized boolean put(K key, V value) {
-		return super.put(key, value);
-	}
-	
-	@Override
-	public synchronized boolean putAll(K key, Iterable<V> values) {
-		return super.putAll(key, values);
+		super(mapCapacity);
 	}
 
 	@Override
@@ -44,7 +32,7 @@ public class ConcurrentLinkedListMultimap<K, V> extends AbstractMultimap<K, V> {
 	}
 
 	@Override
-	protected Collection<V> createCollection() {
+	protected Collection<V> createCollection(int capacity) {
 		return new ConcurrentLinkedList<>();
 	}
 
