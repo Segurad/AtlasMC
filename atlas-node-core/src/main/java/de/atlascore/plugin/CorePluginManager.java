@@ -11,7 +11,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.atlasmc.Atlas;
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.event.Event;
 import de.atlasmc.event.EventPriority;
@@ -25,6 +24,7 @@ import de.atlasmc.plugin.PluginConfiguration;
 import de.atlasmc.plugin.PluginLoader;
 import de.atlasmc.plugin.PluginManager;
 import de.atlasmc.plugin.PreparedPlugin;
+import de.atlasmc.server.LocalServer;
 
 public class CorePluginManager implements PluginManager {
 	

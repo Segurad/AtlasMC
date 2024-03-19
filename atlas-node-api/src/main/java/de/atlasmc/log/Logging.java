@@ -1,8 +1,8 @@
 package de.atlasmc.log;
 
-import de.atlasmc.atlasnetwork.proxy.LocalProxy;
-import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.plugin.Plugin;
+import de.atlasmc.proxy.LocalProxy;
+import de.atlasmc.server.LocalServer;
 
 public class Logging {
 	

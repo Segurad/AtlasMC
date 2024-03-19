@@ -2,8 +2,8 @@ package de.atlascore.log;
 
 import org.apache.logging.log4j.core.Logger;
 
-import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.log.ServerLog;
+import de.atlasmc.server.LocalServer;
 
 public class CoreServerLog extends CoreLog implements ServerLog {
 

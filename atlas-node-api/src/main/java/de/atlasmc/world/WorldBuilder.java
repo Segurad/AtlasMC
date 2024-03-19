@@ -2,7 +2,6 @@ package de.atlasmc.world;
 
 import java.io.File;
 
-import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.factory.ChunkFactory;
 import de.atlasmc.factory.ChunkGeneratorFactory;
 import de.atlasmc.factory.ChunkLoaderFactory;
@@ -10,13 +9,15 @@ import de.atlasmc.factory.ChunkProviderFactory;
 import de.atlasmc.factory.WorldFactory;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
+import de.atlasmc.server.LocalServer;
+import de.atlasmc.util.Builder;
 import de.atlasmc.util.Pair;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.InvalidConfigurationException;
 import de.atlasmc.world.WorldBuilder;
 
-public class WorldBuilder {
+public class WorldBuilder implements Builder<World> {
 
 	private LocalServer server;
 	private String name;
@@ -185,6 +186,7 @@ public class WorldBuilder {
 		return this;
 	}
 	
+	@Override
 	public World build() {
 		validate();
 		World world = worldFactory.createWorld(this);
@@ -234,6 +236,22 @@ public class WorldBuilder {
 	public WorldBuilder setChunkLoaderConfig(ConfigurationSection chunkLoaderConfig) {
 		this.chunkLoaderConfig = chunkLoaderConfig;
 		return this;
+	}
+
+	@Override
+	public void clear() {
+		server = null;
+		name = null;
+		worldDir = null;
+		chunkGenConfig = null;
+		chunkGenerator = null;
+		chunkLoaderConfig = null;
+		chunkLoader = null;
+		chunkProviderConfig = null;
+		chunkProviderFactory = null;
+		dimension = null;
+		worldFactory = null;
+		chunkFactory = null;
 	}
 
 }

@@ -1,6 +1,6 @@
 package de.atlasmc.io;
 
-import de.atlasmc.atlasnetwork.proxy.LocalProxy;
+import de.atlasmc.proxy.LocalProxy;
 
 public interface ProxyConnectionHandler extends ConnectionHandler {
 	

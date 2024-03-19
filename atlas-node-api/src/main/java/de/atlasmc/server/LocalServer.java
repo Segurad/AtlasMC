@@ -1,22 +1,19 @@
-package de.atlasmc.atlasnetwork.server;
+package de.atlasmc.server;
 
-import java.io.File;
 import java.util.Collection;
 
-import de.atlasmc.entity.Player;
 import de.atlasmc.event.Event;
 import de.atlasmc.event.SyncThreadHolder;
 import de.atlasmc.log.Log;
 import de.atlasmc.scheduler.Scheduler;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.ThreadSafe;
-import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.world.World;
 
-public interface LocalServer extends Server, SyncThreadHolder {
-	
-	@NotNull
-	Collection<Player> getPlayers();
+/**
+ * A server running as a thread in this node
+ */
+public interface LocalServer extends NodeServer, SyncThreadHolder {
 	
 	@NotNull
 	Collection<World> getWorlds();
@@ -28,8 +25,6 @@ public interface LocalServer extends Server, SyncThreadHolder {
 	@NotNull
 	Scheduler getScheduler();
 	
-	long getAge();
-	
 	@ThreadSafe
 	@NotNull
 	Log getLogger();
@@ -40,20 +35,5 @@ public interface LocalServer extends Server, SyncThreadHolder {
 	 */
 	@ThreadSafe
 	void runTask(Runnable task);
-	
-	@ThreadSafe
-	@NotNull
-	File getWorkdir();
-	
-	@ThreadSafe
-	@NotNull
-	Future<Void> start();
-	
-	@ThreadSafe
-	@NotNull
-	Future<Void> stop();
-	
-	@ThreadSafe
-	boolean isRunning();
 	
 }

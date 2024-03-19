@@ -1,5 +1,6 @@
-package de.atlasmc.atlasnetwork.proxy;
+package de.atlasmc.proxy;
 
+import de.atlasmc.atlasnetwork.proxy.Proxy;
 import de.atlasmc.event.SyncThreadHolder;
 import de.atlasmc.io.ProxyConnectionHandler;
 import de.atlasmc.log.Log;

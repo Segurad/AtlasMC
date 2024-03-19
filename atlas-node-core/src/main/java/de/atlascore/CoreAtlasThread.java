@@ -1,7 +1,7 @@
 package de.atlascore;
 
 import de.atlasmc.Atlas;
-import de.atlasmc.atlasnetwork.LocalAtlasNode;
+import de.atlasmc.LocalAtlasNode;
 import de.atlasmc.log.Log;
 import de.atlasmc.util.TickingThread;
 

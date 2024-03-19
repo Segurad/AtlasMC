@@ -3,12 +3,12 @@ package de.atlasmc.plugin;
 import java.io.File;
 import java.util.List;
 
-import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.event.Event;
 import de.atlasmc.event.EventPriority;
 import de.atlasmc.event.FunctionalListener;
 import de.atlasmc.event.Listener;
+import de.atlasmc.server.LocalServer;
 
 public interface PluginManager {
 	

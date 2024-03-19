@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.atlasnetwork.server.ServerConfig;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
+import de.atlasmc.server.LocalServer;
 import de.atlasmc.util.configuration.ConfigurationSection;
 
 public abstract class CoreAbstractServerGroup implements ServerGroup {

@@ -1,13 +1,18 @@
-package de.atlasmc.atlasnetwork.proxy;
+package de.atlasmc.proxy;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import de.atlasmc.NamespacedKey;
+import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.configuration.ConfigurationSection;
+import de.atlasmc.util.configuration.MemoryConfiguration;
 
 public class ProxyConfig implements Cloneable {
 	
+	private final String name;
+	private final NamespacedKey factory;
 	private int port;
 	private boolean auth;
 	private boolean internal;
@@ -19,10 +24,15 @@ public class ProxyConfig implements Cloneable {
 	private int keepAliveTimeout;
 	private int rateLimit;
 	private int chunksPerTick;
-	
-	public ProxyConfig() {}
+	private ConfigurationSection config;
 	
 	public ProxyConfig(String name, ConfigurationSection config) {
+		this.name = name;
+		String rawFactory = config.getString("factory");
+		if (rawFactory != null)
+			this.factory = NamespacedKey.of(rawFactory);
+		else
+			this.factory = null;
 		this.port = config.getInt("port", -1);
 		this.internal = config.getString("mode").equals("internal");
 		ConfigurationSection playerCfg = config.getConfigurationSection("player-connections");
@@ -39,6 +49,15 @@ public class ProxyConfig implements Cloneable {
 		keepAliveTimeout = playerCfg.getInt("keep-alive-timeout", 30);
 		rateLimit = playerCfg.getInt("rate-limit");
 		chunksPerTick = playerCfg.getInt("chunks-per-tick");
+		this.config = new MemoryConfiguration(config);
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public ConfigurationSection getConfig() {
+		return config;
 	}
 	
 	public int getPort() {
@@ -83,6 +102,11 @@ public class ProxyConfig implements Cloneable {
 	
 	public int getKeepAliveTimeout() {
 		return keepAliveTimeout;
+	}
+	
+	@Nullable
+	public NamespacedKey getFactory() {
+		return factory;
 	}
 	
 	@Override

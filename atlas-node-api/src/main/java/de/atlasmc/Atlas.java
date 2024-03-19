@@ -7,14 +7,14 @@ import java.util.UUID;
 
 import de.atlasmc.atlasnetwork.AtlasNetwork;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
-import de.atlasmc.atlasnetwork.LocalAtlasNode;
-import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.datarepository.DataRepositoryHandler;
 import de.atlasmc.io.protocol.ProtocolAdapter;
 import de.atlasmc.io.protocol.ProtocolAdapterHandler;
 import de.atlasmc.log.Log;
 import de.atlasmc.plugin.PluginManager;
 import de.atlasmc.scheduler.Scheduler;
+import de.atlasmc.server.NodeServer;
+import de.atlasmc.server.NodeServerManager;
 
 public class Atlas {
 
@@ -43,7 +43,7 @@ public class Atlas {
 		return INSTANCE;
 	}
 	
-	public Collection<LocalServer> getServers() {
+	public Collection<NodeServer> getServers() {
 		return INSTANCE.getServers();
 	}
 
@@ -73,6 +73,10 @@ public class Atlas {
 	
 	public static KeyPair getKeyPair() {
 		return INSTANCE.getKeyPair();
+	}
+	
+	public static NodeServerManager getServerManager() {
+		return INSTANCE.getServerManager();
 	}
 	
 	public static DataRepositoryHandler getDataHandler() {

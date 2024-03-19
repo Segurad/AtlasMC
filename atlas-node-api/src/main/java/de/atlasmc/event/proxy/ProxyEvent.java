@@ -1,9 +1,9 @@
 package de.atlasmc.event.proxy;
 
-import de.atlasmc.atlasnetwork.proxy.LocalProxy;
 import de.atlasmc.event.GenericEvent;
 import de.atlasmc.event.ProxyHandlerList;
 import de.atlasmc.event.SyncThreadHolder;
+import de.atlasmc.proxy.LocalProxy;
 
 public abstract class ProxyEvent extends GenericEvent<LocalProxy, ProxyHandlerList> {
 

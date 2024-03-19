@@ -1,6 +1,6 @@
 package de.atlasmc.log;
 
-import de.atlasmc.atlasnetwork.proxy.LocalProxy;
+import de.atlasmc.proxy.LocalProxy;
 
 public interface ProxyLog extends Log {
 	

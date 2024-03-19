@@ -8,21 +8,21 @@ import java.util.UUID;
 
 import de.atlasmc.Atlas;
 import de.atlasmc.atlasnetwork.AtlasNode;
-import de.atlasmc.atlasnetwork.server.LocalServer;
+import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.atlasnetwork.server.ServerConfig;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
-import de.atlasmc.entity.Player;
 import de.atlasmc.event.Event;
 import de.atlasmc.log.Log;
 import de.atlasmc.log.Logging;
 import de.atlasmc.scheduler.Scheduler;
+import de.atlasmc.server.LocalServer;
 import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.world.World;
 
 public class CoreLocalServer implements LocalServer {
 	
 	private final ServerGroup group;
-	private final Set<Player> players;
+	private final Set<AtlasPlayer> players;
 	private final Set<World> worlds;
 	private final CoreServerThread thread;
 	private final ServerConfig config;
@@ -68,7 +68,7 @@ public class CoreLocalServer implements LocalServer {
 	}
 
 	@Override
-	public Collection<Player> getPlayers() {
+	public Collection<AtlasPlayer> getPlayers() {
 		return players;
 	}
 
@@ -115,11 +115,6 @@ public class CoreLocalServer implements LocalServer {
 	@Override
 	public Scheduler getScheduler() {
 		return thread.getScheduler();
-	}
-
-	@Override
-	public long getAge() {
-		return thread.getTick();
 	}
 
 	@Override

@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.atlasmc.Atlas;
-import de.atlasmc.atlasnetwork.LocalAtlasNode;
-import de.atlasmc.atlasnetwork.server.LocalServer;
+import de.atlasmc.LocalAtlasNode;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.log.Log;
 import de.atlasmc.plugin.Plugin;
+import de.atlasmc.server.LocalServer;
 import de.atlasmc.util.ConcurrentLinkedList;
 import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
 import de.atlasmc.util.annotation.NotNull;

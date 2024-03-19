@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 import de.atlasmc.log.Log;
 import de.atlasmc.plugin.Plugin;
-import de.atlasmc.atlasnetwork.server.LocalServer;
+import de.atlasmc.server.LocalServer;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.util.ConcurrentLinkedList;
 import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;

@@ -15,14 +15,14 @@ import org.apache.logging.log4j.core.appender.rolling.OnStartupTriggeringPolicy;
 import org.apache.logging.log4j.core.appender.rolling.TimeBasedTriggeringPolicy;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 
-import de.atlasmc.atlasnetwork.proxy.LocalProxy;
-import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.log.LogHandler;
 import de.atlasmc.log.Log;
 import de.atlasmc.log.PluginLog;
 import de.atlasmc.log.ProxyLog;
 import de.atlasmc.log.ServerLog;
 import de.atlasmc.plugin.Plugin;
+import de.atlasmc.proxy.LocalProxy;
+import de.atlasmc.server.LocalServer;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.MemoryConfiguration;

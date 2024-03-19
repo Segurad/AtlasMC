@@ -5,7 +5,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.atlasmc.Atlas;
-import de.atlasmc.entity.Player;
+import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.event.Event;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.scheduler.Scheduler;
@@ -39,9 +39,9 @@ public class CoreServerThread extends TickingThread {
 			Event event = eventQueue.poll();
 			HandlerList.callEvent(event);
 		}
-		final Collection<Player> players = server.getPlayers();
+		final Collection<AtlasPlayer> players = server.getPlayers();
 		if (!players.isEmpty()) {
-			for (Player player : players) {
+			for (AtlasPlayer player : players) {
 				player.getConnection().handleSyncPackets(logger);
 			}
 		}

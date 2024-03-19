@@ -3,6 +3,7 @@ package de.atlasmc.atlasnetwork.server;
 import java.util.Collection;
 import java.util.UUID;
 
+import de.atlasmc.server.LocalServer;
 import de.atlasmc.util.annotation.ThreadSafe;
 import de.atlasmc.util.concurrent.future.Future;
 

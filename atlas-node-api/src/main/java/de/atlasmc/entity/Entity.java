@@ -11,7 +11,7 @@ import de.atlasmc.Nameable;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
-import de.atlasmc.atlasnetwork.server.LocalServer;
+import de.atlasmc.server.LocalServer;
 import de.atlasmc.tick.Tickable;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.annotation.ThreadSafe;

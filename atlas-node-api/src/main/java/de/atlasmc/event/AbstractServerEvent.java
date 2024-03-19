@@ -1,6 +1,6 @@
 package de.atlasmc.event;
 
-import de.atlasmc.atlasnetwork.server.LocalServer;
+import de.atlasmc.server.LocalServer;
 
 /**
  * Abstract base for Events which are located on a certain server

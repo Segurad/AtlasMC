@@ -7,12 +7,12 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.Atlas;
-import de.atlasmc.atlasnetwork.LocalAtlasNode;
-import de.atlasmc.atlasnetwork.proxy.LocalProxy;
-import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
+import de.atlasmc.LocalAtlasNode;
 import de.atlasmc.io.ProxyConnectionHandler;
 import de.atlasmc.log.Log;
 import de.atlasmc.log.Logging;
+import de.atlasmc.proxy.LocalProxy;
+import de.atlasmc.proxy.ProxyConfig;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;

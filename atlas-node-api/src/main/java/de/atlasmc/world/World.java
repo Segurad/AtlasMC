@@ -8,12 +8,12 @@ import de.atlasmc.SimpleLocation;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.WorldEvent;
-import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.block.Block;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.event.entity.EntitySpawnEvent;
+import de.atlasmc.server.LocalServer;
 import de.atlasmc.tick.Tickable;
 import de.atlasmc.util.annotation.NotNull;
 

@@ -2,7 +2,7 @@ package de.atlasmc.event;
 
 import de.atlasmc.log.Log;
 import de.atlasmc.plugin.Plugin;
-import de.atlasmc.atlasnetwork.proxy.LocalProxy;
+import de.atlasmc.proxy.LocalProxy;
 import de.atlasmc.util.ConcurrentLinkedList;
 import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
 import de.atlasmc.util.annotation.NotNull;

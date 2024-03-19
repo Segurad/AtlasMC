@@ -1,9 +1,9 @@
 package de.atlascore.io;
 
-import de.atlasmc.atlasnetwork.proxy.LocalProxy;
 import de.atlasmc.io.Protocol;
 import de.atlasmc.io.ProxyConnectionHandler;
 import de.atlasmc.log.Log;
+import de.atlasmc.proxy.LocalProxy;
 import io.netty.channel.socket.SocketChannel;
 
 public class CoreProxyConnectionHandler extends CoreConnectionHandler implements ProxyConnectionHandler {

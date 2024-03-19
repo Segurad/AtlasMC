@@ -2,8 +2,8 @@ package de.atlascore.log;
 
 import org.apache.logging.log4j.core.Logger;
 
-import de.atlasmc.atlasnetwork.proxy.LocalProxy;
 import de.atlasmc.log.ProxyLog;
+import de.atlasmc.proxy.LocalProxy;
 
 public class CoreProxyLog extends CoreLog implements ProxyLog {
 

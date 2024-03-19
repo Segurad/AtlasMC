@@ -3,10 +3,10 @@ package de.atlasmc.factory;
 import java.io.File;
 import java.util.UUID;
 
-import de.atlasmc.atlasnetwork.server.LocalServer;
 import de.atlasmc.atlasnetwork.server.ServerConfig;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.registry.RegistryHolder;
+import de.atlasmc.server.LocalServer;
 
 @RegistryHolder(key="atlas:factory/server")
 public interface ServerFactory {
