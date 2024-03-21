@@ -1,0 +1,851 @@
+[
+    {
+        "type": "de.atlasmc.block.data.ClassBlockDataFactory",
+        "configurations": [
+            {
+                "name": "atlas:blockdata",
+                "default": true,
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.BlockData",
+                    "data": "de.atlascore.block.data.CoreBlockData"
+                }
+            },
+            {
+                "name": "atlas:snowable",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.Snowable",
+                    "data": "de.atlascore.block.data.CoreSnowable"
+                }
+            },
+            {
+                "name": "atlas:sapling",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Sapling",
+                    "data": "de.atlascore.block.data.type.CoreSapling"
+                }
+            },
+            {
+                "name": "atlas:levelled",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.Levelled",
+                    "data": "de.atlascore.block.data.CoreLevelled"
+                }
+            },
+            {
+                "name": "atlas:orientable",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.Orientable",
+                    "data": "de.atlascore.block.data.CoreOrientable"
+                }
+            },
+            {
+                "name": "atlas:orientable_xz",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.Orientable",
+                    "data": "de.atlascore.block.data.CoreOrientableXZ"
+                }
+            },
+            {
+                "name": "atlas:leaves",
+                "parameters": {
+                    "metaInterface": "de.atlasmc.inventory.meta.BlockDataMeta",
+                    "meta": "de.atlascore.inventory.meta.CoreBlockDataMeta",
+                    "dataInterface": "de.atlasmc.block.data.type.Leaves",
+                    "data": "de.atlascore.block.data.type.CoreLeaves"
+                }
+            },
+            {
+                "name": "atlas:dispenser",
+                "parameters": {
+                    "metaInterface": "de.atlasmc.inventory.meta.BlockDataMeta",
+                    "meta": "de.atlascore.inventory.meta.CoreBlockDataMeta",
+                    "dataInterface": "de.atlasmc.block.data.type.Dispenser",
+                    "data": "de.atlascore.block.data.type.CoreDispenser"
+                }
+            },
+            {
+                "name": "atlas:note_block",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.NoteBlock",
+                    "data": "de.atlascore.block.data.type.CoreNoteBlock"
+                }
+            },
+            {
+                "name": "atlas:bed",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Bed",
+                    "data": "de.atlascore.block.data.type.CoreBed"
+                }
+            },
+            {
+                "name": "atlas:redstone_rail",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.RedstoneRail",
+                    "data": "de.atlascore.block.data.type.CoreRedstoneRail"
+                }
+            },
+            {
+                "name": "atlas:piston",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Piston",
+                    "data": "de.atlascore.block.data.type.CorePiston"
+                }
+            },
+            {
+                "name": "atlas:bisected",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.Bisected",
+                    "data": "de.atlascore.block.data.CoreBisected"
+                }
+            },
+            {
+                "name": "atlas:piston_head",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.PistonHead",
+                    "data": "de.atlascore.block.data.type.CorePistonHead"
+                }
+            },
+            {
+                "name": "atlas:technical_piston",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.TechnicalPiston",
+                    "data": "de.atlascore.block.data.type.CoreTechnicalPiston"
+                }
+            },
+            {
+                "name": "atlas:tnt",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.TNT",
+                    "data": "de.atlascore.block.data.type.CoreTNT"
+                }
+            },
+            {
+                "name": "atlas:directional4f",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.Directional",
+                    "data": "de.atlascore.block.data.CoreDirectional4Faces"
+                }
+            },
+            {
+                "name": "atlas:fire",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Fire",
+                    "data": "de.atlascore.block.data.type.CoreFire"
+                }
+            },
+            {
+                "name": "atlas:stairs",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Stairs",
+                    "data": "de.atlascore.block.data.type.CoreStairs"
+                }
+            },
+            {
+                "name": "atlas:chest",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Chest",
+                    "data": "de.atlascore.block.data.type.CoreChest"
+                }
+            },
+            {
+                "name": "atlas:redstone_wire",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.RedstoneWire",
+                    "data": "de.atlascore.block.data.type.CoreRedstoneWire"
+                }
+            },
+            {
+                "name": "atlas:farmland",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Farmland",
+                    "data": "de.atlascore.block.data.type.CoreFarmland"
+                }
+            },
+            {
+                "name": "atlas:furnace",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Furnace",
+                    "data": "de.atlascore.block.data.type.CoreFurnace"
+                }
+            },
+            {
+                "name": "atlas:sign",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Sign",
+                    "data": "de.atlascore.block.data.type.CoreSign"
+                }
+            },
+            {
+                "name": "atlas:door",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Door",
+                    "data": "de.atlascore.block.data.type.CoreDoor"
+                }
+            },
+            {
+                "name": "atlas:ladder",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Ladder",
+                    "data": "de.atlascore.block.data.type.CoreLadder"
+                }
+            },
+            {
+                "name": "atlas:rail",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.Rail",
+                    "data": "de.atlascore.block.data.CoreRail"
+                }
+            },
+            {
+                "name": "atlas:wall_sign",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.WallSign",
+                    "data": "de.atlascore.block.data.type.CoreWallSign"
+                }
+            },
+            {
+                "name": "atlas:switch",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Switch",
+                    "data": "de.atlascore.block.data.type.CoreSwitch"
+                }
+            },
+            {
+                "name": "atlas:powerable",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.Powerable",
+                    "data": "de.atlascore.block.data.CorePowerable"
+                }
+            },
+            {
+                "name": "atlas:lightable",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.Lightable",
+                    "data": "de.atlascore.block.data.CoreLightable"
+                }
+            },
+            {
+                "name": "atlas:redstone_wall_torch",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.RedstoneWallTorch",
+                    "data": "de.atlascore.block.data.type.CoreRedstoneWallTorch"
+                }
+            },
+            {
+                "name": "atlas:snow",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Snow",
+                    "data": "de.atlascore.block.data.type.CoreSnow"
+                }
+            },
+            {
+                "name": "atlas:jukebox",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Jukebox",
+                    "data": "de.atlascore.block.data.type.CoreJukebox"
+                }
+            },
+            {
+                "name": "atlas:fence",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Fence",
+                    "data": "de.atlascore.block.data.type.CoreFence"
+                }
+            },
+            {
+                "name": "atlas:cake",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Cake",
+                    "data": "de.atlascore.block.data.type.CoreCake"
+                }
+            },
+            {
+                "name": "atlas:repeater",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Repeater",
+                    "data": "de.atlascore.block.data.type.CoreRepeater"
+                }
+            },
+            {
+                "name": "atlas:trap_door",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.TrapDoor",
+                    "data": "de.atlascore.block.data.type.CoreTrapDoor"
+                }
+            },
+            {
+                "name": "atlas:multiple_facing_6",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.MultipleFacing",
+                    "data": "de.atlascore.block.data.CoreMultipleFacing6"
+                }
+            },
+            {
+                "name": "atlas:multiple_facing_5",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.MultipleFacing",
+                    "data": "de.atlascore.block.data.CoreMultipleFacing5"
+                }
+            },
+            {
+                "name": "atlas:chain",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Chain",
+                    "data": "de.atlascore.block.data.type.CoreChain"
+                }
+            },
+            {
+                "name": "atlas:gate",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Gate",
+                    "data": "de.atlascore.block.data.type.CoreGate"
+                }
+            },
+            {
+                "name": "atlas:brewing_stand",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.BrewingStand",
+                    "data": "de.atlascore.block.data.type.CoreBrewingStand"
+                }
+            },
+            {
+                "name": "atlas:end_portal_frame",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.EndPortalFrame",
+                    "data": "de.atlascore.block.data.type.CoreEndPortalFrame"
+                }
+            },
+            {
+                "name": "atlas:cocoa",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Cocoa",
+                    "data": "de.atlascore.block.data.type.CoreCocoa"
+                }
+            },
+            {
+                "name": "atlas:ender_chest",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.EnderChest",
+                    "data": "de.atlascore.block.data.type.CoreEnderChest"
+                }
+            },
+            {
+                "name": "atlas:tripwire_hook",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.TripwireHook",
+                    "data": "de.atlascore.block.data.type.CoreTripwireHook"
+                }
+            },
+            {
+                "name": "atlas:tripwire",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Tripwire",
+                    "data": "de.atlascore.block.data.type.CoreTripwire"
+                }
+            },
+            {
+                "name": "atlas:command_block",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.CommandBlock",
+                    "data": "de.atlascore.block.data.type.CoreCommandBlock"
+                }
+            },
+            {
+                "name": "atlas:wall",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Wall",
+                    "data": "de.atlascore.block.data.type.CoreWall"
+                }
+            },
+            {
+                "name": "atlas:rotatable",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.Rotatable",
+                    "data": "de.atlascore.block.data.CoreRotatable"
+                }
+            },
+            {
+                "name": "atlas:banner",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.Rotatable",
+                    "data": "de.atlascore.block.data.CoreRotatable"
+                }
+            },
+            {
+                "name": "atlas:analogue_powerable",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.AnaloguePowerable",
+                    "data": "de.atlascore.block.data.CoreAnaloguePowerable"
+                }
+            },
+            {
+                "name": "atlas:comparator",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Comparator",
+                    "data": "de.atlascore.block.data.type.CoreComparator"
+                }
+            },
+            {
+                "name": "atlas:daylight_detector",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.DaylightDetectore",
+                    "data": "de.atlascore.block.data.type.CoreDaylightDetector"
+                }
+            },
+            {
+                "name": "atlas:hopper",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Hopper",
+                    "data": "de.atlascore.block.data.type.CoreHopper"
+                }
+            },
+            {
+                "name": "atlas:glass_pane",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.GlassPane",
+                    "data": "de.atlascore.block.data.type.CoreGlassPane"
+                }
+            },
+            {
+                "name": "atlas:slab",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Slab",
+                    "data": "de.atlascore.block.data.type.CoreSlab"
+                }
+            },
+            {
+                "name": "atlas:observer",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Observer",
+                    "data": "de.atlascore.block.data.type.CoreObserver"
+                }
+            },
+            {
+                "name": "atlas:turtle_egg",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.TurtleEgg",
+                    "data": "de.atlascore.block.data.type.CoreTurtleEgg"
+                }
+            },
+            {
+                "name": "atlas:coral_wall_fan",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.CoralWallFan",
+                    "data": "de.atlascore.block.data.type.CoreCoralWallFan"
+                }
+            },
+            {
+                "name": "atlas:sea_pickle",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.SeaPickle",
+                    "data": "de.atlascore.block.data.type.CoreSeaPickle"
+                }
+            },
+            {
+                "name": "atlas:bamboo",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Bamboo",
+                    "data": "de.atlascore.block.data.type.CoreBamboo"
+                }
+            },
+            {
+                "name": "atlas:bubble_column",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.BubbleColumn",
+                    "data": "de.atlascore.block.data.type.CoreBubbleColumn"
+                }
+            },
+            {
+                "name": "atlas:scaffolding",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Scaffolding",
+                    "data": "de.atlascore.block.data.type.CoreScaffolding"
+                }
+            },
+            {
+                "name": "atlas:barrel",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Barrel",
+                    "data": "de.atlascore.block.data.type.CoreBarrel"
+                }
+            },
+            {
+                "name": "atlas:grindstone",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Grindstone",
+                    "data": "de.atlascore.block.data.type.CoreGrindstone"
+                }
+            },
+            {
+                "name": "atlas:lectern",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Lectern",
+                    "data": "de.atlascore.block.data.type.CoreLectern"
+                }
+            },
+            {
+                "name": "atlas:bell",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Bell",
+                    "data": "de.atlascore.block.data.type.CoreBell"
+                }
+            },
+            {
+                "name": "atlas:lantern",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Lantern",
+                    "data": "de.atlascore.block.data.type.CoreLantern"
+                }
+            },
+            {
+                "name": "atlas:campfire",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Campfire",
+                    "data": "de.atlascore.block.data.type.CoreCampfire"
+                }
+            },
+            {
+                "name": "atlas:structure_block",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.StructureBlock",
+                    "data": "de.atlascore.block.data.type.CoreStructureBlock"
+                }
+            },
+            {
+                "name": "atlas:jigsaw",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Jigsaw",
+                    "data": "de.atlascore.block.data.type.CoreJigsaw"
+                }
+            },
+            {
+                "name": "atlas:beehive",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Beehive",
+                    "data": "de.atlascore.block.data.type.CoreBeehive"
+                }
+            },
+            {
+                "name": "atlas:respawn_anchor",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.RespawnAnchor",
+                    "data": "de.atlascore.block.data.type.CoreRespawnAnchor"
+                }
+            },
+            {
+                "name": "atlas:candle",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Candle",
+                    "data": "de.atlascore.block.data.type.CoreCandle"
+                }
+            },
+            {
+                "name": "atlas:hanging_sign",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.HangingSign",
+                    "data": "de.atlascore.block.data.type.CoreHangingSign"
+                }
+            },
+            {
+                "name": "atlas:light",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Light",
+                    "data": "de.atlascore.block.data.type.CoreLight"
+                }
+            },
+            {
+                "name": "atlas:amethyst_cluster",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.AmethystCluster",
+                    "data": "de.atlascore.block.data.type.CoreAmethystCluster"
+                }
+            },
+            {
+                "name": "atlas:lightning_rod",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.LightningRod",
+                    "data": "de.atlascore.block.data.type.CoreLightningRod"
+                }
+            },
+            {
+                "name": "atlas:sculk_shrieker",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.SculkShrieker",
+                    "data": "de.atlascore.block.data.type.CoreSculkShrieker"
+                }
+            },
+            {
+                "name": "atlas:big_dripleaf",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.BigDripleaf",
+                    "data": "de.atlascore.block.data.type.CoreBigDripleaf"
+                }
+            },
+            {
+                "name": "atlas:waterlogged",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.Waterlogged",
+                    "data": "de.atlascore.block.data.CoreWaterlogged"
+                }
+            },
+            {
+                "name": "atlas:mangrove_propagule",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.MangrovePropagule",
+                    "data": "de.atlascore.block.data.type.CoreMangrovePropagule"
+                }
+            },
+            {
+                "name": "atlas:sculk_sensor",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.SculkSensor",
+                    "data": "de.atlascore.block.data.type.CoreSculkSensor"
+                }
+            },
+            {
+                "name": "atlas:calibrated_sculk_sensor",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.CalibratedSculkSensor",
+                    "data": "de.atlascore.block.data.type.CoreCalibratedSculkSensor"
+                }
+            },
+            {
+                "name": "atlas:chiseled_bookshelf",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.ChiseledBookshelf",
+                    "data": "de.atlascore.block.data.type.CoreChiseledBookshelf"
+                }
+            },
+            {
+                "name": "atlas:decorated_pot",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.DecoratedPot",
+                    "data": "de.atlascore.block.data.type.CoreDecoratedPot"
+                }
+            },
+            {
+                "name": "atlas:pink_petals",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.PinkPetals",
+                    "data": "de.atlascore.block.data.type.CorePinkPetals"
+                }
+            },
+            {
+                "name": "atlas:pointed_dripstone",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.PointedDripstone",
+                    "data": "de.atlascore.block.data.type.CorePointedDripstone"
+                }
+            },
+            {
+                "name": "atlas:sculk_catalyst",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.SculkCatalyst",
+                    "data": "de.atlascore.block.data.type.CoreSculkCatalyst"
+                }
+            },
+            {
+                "name": "atlas:sculk_vein",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.SculkVein",
+                    "data": "de.atlascore.block.data.type.CoreSculkVein"
+                }
+            },
+            {
+                "name": "atlas:small_dripleaf",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.SmallDripleaf",
+                    "data": "de.atlascore.block.data.type.CoreSmallDripleaf"
+                }
+            },
+            {
+                "name": "atlas:hatchable",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.Hatchable",
+                    "data": "de.atlascore.block.data.CoreHatchable"
+                }
+            },
+            {
+                "name": "atlas:brushable",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.Brushable",
+                    "data": "de.atlascore.block.data.CoreBrushable"
+                }
+            },
+            {
+                "name": "atlas:dripleaf",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Dripleaf",
+                    "data": "de.atlascore.block.data.type.CoreDripleaf"
+                }
+            },
+            {
+                "name": "atlas:cave_vines",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.CaveVines",
+                    "data": "de.atlascore.block.data.type.CoreCaveVines"
+                }
+            },
+            {
+                "name": "atlas:cave_vines_plant",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.CaveVinesPlant",
+                    "data": "de.atlascore.block.data.type.CoreCaveVinesPlant"
+                }
+            },
+            {
+                "name": "atlas:pitcher_crop",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.PitcherCrop",
+                    "data": "de.atlascore.block.data.type.CorePitcherCrop"
+                }
+            },
+            {
+                "name": "atlas:glow_lichen",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.GlowLichen",
+                    "data": "de.atlascore.block.data.type.CoreGlowLichen"
+                }
+            },
+            {
+                "name": "atlas:skull",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Skull",
+                    "data": "de.atlascore.block.data.type.CoreSkull"
+                }
+            },
+            {
+                "name": "atlas:wall_skull",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.WallSkull",
+                    "data": "de.atlascore.block.data.type.CoreWallSkull"
+                }
+            }
+        ]
+    },
+    {
+        "type": "de.atlasmc.block.data.LevelledClassBlockDataFactory",
+        "configurations": [
+            {
+                "name": "atlas:levelled_3",
+                "parameters": {
+                    "maxlevel": 3,
+                    "dataInterface": "de.atlasmc.block.data.Levelled",
+                    "data": "de.atlascore.block.data.CoreLevelled"
+                }
+            }
+        ]
+    },
+    {
+        "type": "de.atlasmc.block.data.DirectionalBlockDataFactory",
+        "configurations": [
+            {
+                "name": "atlas:directional6f_up",
+                "parameters": {
+                    "direction": "UP",
+                    "dataInterface": "de.atlasmc.block.data.Directional",
+                    "data": "de.atlascore.block.data.CoreDirectional6Faces"
+                }
+            }
+        ]
+    },
+    {
+        "type": "de.atlasmc.block.data.AgeableClassBlockDataFactory",
+        "configurations": [
+            {
+                "name": "atlas:ageable_15",
+                "parameters": {
+                    "maxage": 15,
+                    "dataInterface": "de.atlasmc.block.data.Ageable",
+                    "data": "de.atlascore.block.data.CoreAgeable"
+                }
+            },
+            {
+                "name": "atlas:ageable_25",
+                "parameters": {
+                    "maxage": 25,
+                    "dataInterface": "de.atlasmc.block.data.Ageable",
+                    "data": "de.atlascore.block.data.CoreAgeable"
+                }
+            },
+            {
+                "name": "atlas:ageable_5",
+                "parameters": {
+                    "maxage": 5,
+                    "dataInterface": "de.atlasmc.block.data.Ageable",
+                    "data": "de.atlascore.block.data.CoreAgeable"
+                }
+            },
+            {
+                "name": "atlas:ageable_3",
+                "parameters": {
+                    "maxage": 3,
+                    "dataInterface": "de.atlasmc.block.data.Ageable",
+                    "data": "de.atlascore.block.data.CoreAgeable"
+                }
+            },
+            {
+                "name": "atlas:ageable_1",
+                "parameters": {
+                    "maxage": 1,
+                    "dataInterface": "de.atlasmc.block.data.Ageable",
+                    "data": "de.atlascore.block.data.CoreAgeable"
+                }
+            },
+            {
+                "name": "atlas:ageable_7",
+                "parameters": {
+                    "maxage": 7,
+                    "dataInterface": "de.atlasmc.block.data.Ageable",
+                    "data": "de.atlascore.block.data.CoreAgeable"
+                }
+            }
+        ]
+    },
+    {
+        "type": "de.atlasmc.block.data.LightableBlockDataFactory",
+        "configurations": [
+            {
+                "name": "atlas:lightable_lit",
+                "parameters": {
+                    "lit": true,
+                    "dataInterface": "de.atlasmc.block.data.Lightable",
+                    "data": "de.atlascore.block.data.CoreLightable"
+                }
+            }
+        ]
+    },
+    {
+        "type": "de.atlasmc.block.data.MultipleFacingBlockDataFactory",
+        "configurations": [
+            {
+                "name": "atlas:multiple_facing_6_all",
+                "parameters": {
+                    "faces": [
+                        "NORTH",
+                        "SOUTH",
+                        "EAST",
+                        "WEST",
+                        "UP",
+                        "DOWN"
+                    ],
+                    "dataInterface": "de.atlasmc.block.data.MultipleFacing",
+                    "data": "de.atlascore.block.data.CoreMultipleFacing6"
+                }
+            }
+        ]
+    },
+    {
+        "type": "de.atlasmc.block.data.WaterloggedBlockDataFactory",
+        "configurations": [
+            {
+                "name": "atlas:waterlogged_true",
+                "parameters": {
+                    "waterlogged": true,
+                    "dataInterface": "de.atlasmc.block.data.Waterlogged",
+                    "data": "de.atlascore.block.data.CoreWaterlogged"
+                }
+            }
+        ]
+    }
+]

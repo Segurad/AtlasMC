@@ -1,27 +1,23 @@
-package de.atlasmc.factory;
+package de.atlasmc.block.data;
 
 import java.lang.reflect.InvocationTargetException;
 
 import de.atlasmc.Material;
-import de.atlasmc.block.data.Ageable;
-import de.atlasmc.block.data.BlockData;
-import de.atlasmc.block.data.Levelled;
-import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.util.configuration.Configuration;
 
 /**
- * Class based {@link MetaDataFactory} for {@link Ageable} BlockData
+ * Class based {@link ItemMetaFactory} for {@link Ageable} BlockData
  */
-public class LevelledClassMetaDataFactory extends ClassMetaDataFactory {
+public class LevelledClassBlockDataFactory extends ClassBlockDataFactory {
 
 	private final int maxlevel;
 	
-	public <I extends ItemMeta, L extends Levelled> LevelledClassMetaDataFactory(Class<I> metaInterface, Class<? extends I> meta, Class<L> dataInterface, Class<? extends L> data, int maxlevel) {
-		super(metaInterface, meta, dataInterface, data);
+	public <L extends Levelled> LevelledClassBlockDataFactory(Class<L> dataInterface, Class<? extends L> data, int maxlevel) {
+		super(dataInterface, data);
 		this.maxlevel = maxlevel;
 	}
 	
-	public LevelledClassMetaDataFactory(Configuration cfg) throws ClassNotFoundException {
+	public LevelledClassBlockDataFactory(Configuration cfg) throws ClassNotFoundException {
 		super(cfg);
 		maxlevel = cfg.getInt("maxlevel");
 	}

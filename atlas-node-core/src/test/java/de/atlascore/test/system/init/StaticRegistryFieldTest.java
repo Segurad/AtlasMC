@@ -10,10 +10,11 @@ import de.atlascore.system.init.ContainerFactoryLoader;
 import de.atlascore.system.init.EntityTypeLoader;
 import de.atlascore.system.init.MaterialLoader;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.BlockDataFactory;
+import de.atlasmc.block.tile.TileEntityFactory;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.factory.ContainerFactory;
-import de.atlasmc.factory.MetaDataFactory;
-import de.atlasmc.factory.TileEntityFactory;
+import de.atlasmc.inventory.meta.ItemMetaFactory;
 import de.atlasmc.registry.Registries;
 
 public class StaticRegistryFieldTest {
@@ -30,7 +31,8 @@ public class StaticRegistryFieldTest {
 			Registries.init(new CoreRegistryHandler());
 		} catch (IllegalStateException e) {}
 		Registries.createInstanceRegistry(Material.class);
-		Registries.createInstanceRegistry(MetaDataFactory.class);
+		Registries.createInstanceRegistry(ItemMetaFactory.class);
+		Registries.createInstanceRegistry(BlockDataFactory.class);
 		Registries.createInstanceRegistry(TileEntityFactory.class);
 		MaterialLoader.loadMaterial();
 		StaticRegistryFieldTest.testNotNull(Material.class, Material.class);

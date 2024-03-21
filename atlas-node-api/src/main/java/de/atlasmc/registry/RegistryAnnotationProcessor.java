@@ -60,6 +60,7 @@ public class RegistryAnnotationProcessor extends AbstractProcessor {
 							String message = "Another type (" + registries.get(key) + ") with the given registry key is already present: " + key;
 							processingEnv.getMessager().printMessage(Kind.ERROR, message, ele, mirror);
 						}
+						//System.out.println("holder: " + key + " : " + type + " : " + target);
 						registries.put(key, type + ":" + target);
 						processingEnv.getMessager().printMessage(Kind.NOTE, "Found registry: " + key + " type: " + type + " target: " + target);
 					}
@@ -81,6 +82,7 @@ public class RegistryAnnotationProcessor extends AbstractProcessor {
 						} else {
 							registryEntries.put(registry, entries = new HashMap<>());
 						}
+						//System.out.println("value: " + key + " : " + type);
 						entries.put(key, type);
 						boolean isDefault = (boolean) values.get("isDefault");
 						processingEnv.getMessager().printMessage(Kind.NOTE, "Found value: " + key + " type: " + type + " registry: " + registry + " default: " + isDefault);
@@ -118,6 +120,7 @@ public class RegistryAnnotationProcessor extends AbstractProcessor {
 		boolean changes = false;
 		for (String k : registries.keySet()) {
 			String v = registries.get(k);
+			//System.out.println(k + " : " + v);
 			if (!v.equals(registryConfig.set(k, v)))
 				changes = true;
 		}
@@ -190,6 +193,7 @@ public class RegistryAnnotationProcessor extends AbstractProcessor {
 		Elements elements = processingEnv.getElementUtils();
 		Map<? extends ExecutableElement, ? extends AnnotationValue> rawValues = elements.getElementValuesWithDefaults(mirror);
 		rawValues.forEach((k,v) -> {
+			//System.out.print(k.getSimpleName().toString() + " : " + v.getValue());
 			values.put(k.getSimpleName().toString(), v.getValue());
 		});
 		return values;

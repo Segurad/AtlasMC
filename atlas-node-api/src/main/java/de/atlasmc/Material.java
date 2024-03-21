@@ -5,12 +5,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.block.data.BlockData;
+import de.atlasmc.block.data.BlockDataFactory;
 import de.atlasmc.block.tile.TileEntity;
+import de.atlasmc.block.tile.TileEntityFactory;
 import de.atlasmc.entity.EntityType;
-import de.atlasmc.factory.MetaDataFactory;
-import de.atlasmc.factory.TileEntityFactory;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.meta.ItemMeta;
+import de.atlasmc.inventory.meta.ItemMetaFactory;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.registry.RegistryHolder;
@@ -1436,8 +1437,9 @@ public class Material implements Namespaced {
 	private final short itemID, blockStateID, blockID;
 	private final byte max;
 	private final float toughness, explosionResistance;
-	private MetaDataFactory mdf;
-	private TileEntityFactory tef;
+	private ItemMetaFactory itemMetaFactory;
+	private BlockDataFactory blockDataFactory;
+	private TileEntityFactory tileEntityFactory;
 	
 	/**
 	 * @param key the Material's name
@@ -1450,7 +1452,7 @@ public class Material implements Namespaced {
 	 * @param explosionResistance
 	 * @param mdf null to use MetaDataFactory.DEFAULT
 	 */
-	public Material(NamespacedKey key, NamespacedKey clientKey, short itemID, short blockStateID, short blockID, byte maxAmount, float toughness, float explosionResistance, MetaDataFactory mdf) {
+	public Material(NamespacedKey key, NamespacedKey clientKey, short itemID, short blockStateID, short blockID, byte maxAmount, float toughness, float explosionResistance, ItemMetaFactory itemMetaFactory, BlockDataFactory blockDataFactory) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
 		if (clientKey == null)
@@ -1464,7 +1466,8 @@ public class Material implements Namespaced {
 		this.toughness = toughness;
 		this.explosionResistance = explosionResistance;
 		registerMaterial();
-		setMetaDataFactory(mdf);
+		setMetaDataFactory(itemMetaFactory);
+		setBlockDataFactory(blockDataFactory);
 	}
 	
 	public short getItemID() {
@@ -1491,30 +1494,40 @@ public class Material implements Namespaced {
 	 * Returns the Material's MetaDataFactory or MetaDataFactory#DEFAULT
 	 * @return MetaDataFactory
 	 */
-	public MetaDataFactory getMetaDataFactory() {
-		return mdf;
+	public ItemMetaFactory getMetaDataFactory() {
+		return itemMetaFactory;
 	}
 	
-	public void setMetaDataFactory(MetaDataFactory factory) {
+	public void setMetaDataFactory(ItemMetaFactory factory) {
 		if (factory == null)
-			factory = Registries.getInstanceDefault(MetaDataFactory.class);
-		mdf = factory;
+			factory = Registries.getInstanceDefault(ItemMetaFactory.class);
+		itemMetaFactory = factory;
+	}
+	
+	public BlockDataFactory getBlockDataFactory() {
+		return blockDataFactory;
+	}
+	
+	public void setBlockDataFactory(BlockDataFactory factory) {
+		if (factory == null)
+			factory = Registries.getInstanceDefault(BlockDataFactory.class);
+		this.blockDataFactory = factory;
 	}
 	
 	public TileEntityFactory getTileEntityFactory() {
-		return tef;
+		return tileEntityFactory;
 	}
 	
 	public void setTileEntityFactory(TileEntityFactory factory) {
-		this.tef = factory;
+		this.tileEntityFactory = factory;
 	}
 	
 	public ItemMeta createItemMeta() {
-		return mdf.createMeta(this);
+		return itemMetaFactory.createMeta(this);
 	}
 	
 	public BlockData createBlockData() {
-		return mdf.createData(this);
+		return blockDataFactory.createData(this);
 	}
 	
 	public TileEntity createTileEntity() {
@@ -1525,17 +1538,17 @@ public class Material implements Namespaced {
 	}
 	
 	public int getTileID() {
-		return tef != null ? tef.getTileID() : -1;
+		return tileEntityFactory != null ? tileEntityFactory.getTileID() : -1;
 	}
 	
 	public boolean isValidMeta(ItemMeta meta) {
-		return mdf.isValidMeta(meta);
+		return itemMetaFactory.isValidMeta(meta);
 	}
 	
 	public boolean isValidData(BlockData data) {
 		if (data.getMaterial() != this) 
 			return false;
-		return mdf.isValidData(data);
+		return blockDataFactory.isValidData(data);
 	}
 	
 	public boolean isValidTile(TileEntity tile) {

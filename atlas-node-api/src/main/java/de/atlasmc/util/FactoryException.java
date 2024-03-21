@@ -1,4 +1,4 @@
-package de.atlasmc.factory;
+package de.atlasmc.util;
 
 public class FactoryException extends RuntimeException {
 

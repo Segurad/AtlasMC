@@ -1,26 +1,25 @@
-package de.atlasmc.factory;
+package de.atlasmc.block.data;
 
 import java.lang.reflect.InvocationTargetException;
 
 import de.atlasmc.Material;
-import de.atlasmc.block.data.Ageable;
-import de.atlasmc.block.data.BlockData;
 import de.atlasmc.inventory.meta.ItemMeta;
+import de.atlasmc.util.FactoryException;
 import de.atlasmc.util.configuration.Configuration;
 
 /**
- * Class based {@link MetaDataFactory} for {@link Ageable} BlockData
+ * Class based {@link ItemMetaFactory} for {@link Ageable} BlockData
  */
-public class AgeableClassMetaDataFactory extends ClassMetaDataFactory {
+public class AgeableClassBlockDataFactory extends ClassBlockDataFactory {
 
 	private final int maxage;
 	
-	public <I extends ItemMeta, A extends Ageable> AgeableClassMetaDataFactory(Class<I> metaInterface, Class<? extends I> meta, Class<A> dataInterface, Class<? extends A> data, int maxage) {
-		super(metaInterface, meta, dataInterface, data);
+	public <I extends ItemMeta, A extends Ageable> AgeableClassBlockDataFactory(Class<A> dataInterface, Class<? extends A> data, int maxage) {
+		super(dataInterface, data);
 		this.maxage = maxage;
 	}
 	
-	public AgeableClassMetaDataFactory(Configuration cfg) throws ClassNotFoundException {
+	public AgeableClassBlockDataFactory(Configuration cfg) throws ClassNotFoundException {
 		super(cfg);
 		maxage = cfg.getInt("maxage");
 	}

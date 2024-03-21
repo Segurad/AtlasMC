@@ -1,0 +1,127 @@
+[
+    {
+        "type": "de.atlasmc.inventory.meta.ClassItemMetaFactory",
+        "configurations": [
+            {
+                "name": "atlas:itemmeta",
+                "default": true,
+                "parameters": {
+                    "metaInterface": "de.atlasmc.inventory.meta.ItemMeta",
+                    "meta": "de.atlascore.inventory.meta.CoreItemMeta"
+                }
+            },
+            {
+                "name": "atlas:blockdata",
+                "parameters": {
+                    "metaInterface": "de.atlasmc.inventory.meta.BlockDataMeta",
+                    "meta": "de.atlascore.inventory.meta.CoreBlockDataMeta"
+                }
+            },
+            {
+                "name": "atlas:tileentity",
+                "parameters": {
+                    "metaInterface": "de.atlasmc.inventory.meta.TileEntityMeta",
+                    "meta": "de.atlascore.inventory.meta.CoreTileEntityMeta"
+                }
+            },
+            {
+                "name": "atlas:damageable",
+                "parameters": {
+                    "metaInterface": "de.atlasmc.inventory.meta.DamageableMeta",
+                    "meta": "de.atlascore.inventory.meta.CoreDamageableMeta"
+                }
+            },
+            {
+                "name": "atlas:leather_armor",
+                "parameters": {
+                    "metaInterface": "de.atlasmc.inventory.meta.LeatherArmorMeta",
+                    "meta": "de.atlascore.inventory.meta.CoreLeatherArmorMeta"
+                }
+            },
+            {
+                "name": "atlas:map",
+                "parameters": {
+                    "metaInterface": "de.atlasmc.inventory.meta.MapMeta",
+                    "meta": "de.atlascore.inventory.meta.CoreMapMeta"
+                }
+            },
+            {
+                "name": "atlas:potion",
+                "parameters": {
+                    "metaInterface": "de.atlasmc.inventory.meta.PotionMeta",
+                    "meta": "de.atlascore.inventory.meta.CorePotionMeta"
+                }
+            },
+            {
+                "name": "atlas:firework",
+                "parameters": {
+                    "metaInterface": "de.atlasmc.inventory.meta.FireworkMeta",
+                    "meta": "de.atlascore.inventory.meta.CoreFireworkMeta"
+                }
+            },
+            {
+                "name": "atlas:firework_effect",
+                "parameters": {
+                    "metaInterface": "de.atlasmc.inventory.meta.FireworkEffectMeta",
+                    "meta": "de.atlascore.inventory.meta.CoreFireworkEffectMeta"
+                }
+            },
+            {
+                "name": "atlas:compass",
+                "parameters": {
+                    "metaInterface": "de.atlasmc.inventory.meta.CompassMeta",
+                    "meta": "de.atlascore.inventory.meta.CoreCompassMeta"
+                }
+            },
+            {
+                "name": "atlas:enchantment_storage",
+                "parameters": {
+                    "metaInterface": "de.atlasmc.inventory.meta.EnchantmentStorageMeta",
+                    "meta": "de.atlascore.inventory.meta.CoreEnchantmentStorageMeta"
+                }
+            },
+            {
+                "name": "atlas:tropical_bucket",
+                "parameters": {
+                    "metaInterface": "de.atlasmc.inventory.meta.TropicalFishBucketMeta",
+                    "meta": "de.atlascore.inventory.meta.CoreTropicalFishBucketMeta"
+                }
+            },
+            {
+                "name": "atlas:knowledge_book",
+                "parameters": {
+                    "metaInterface": "de.atlasmc.inventory.meta.KnowledgeBookMeta",
+                    "meta": "de.atlascore.inventory.meta.CoreKnowledgeBookMeta"
+                }
+            },
+            {
+                "name": "atlas:crossbow",
+                "parameters": {
+                    "metaInterface": "de.atlasmc.inventory.meta.CrossbowMeta",
+                    "meta": "de.atlascore.inventory.meta.CoreCrossbowMeta"
+                }
+            },
+            {
+                "name": "atlas:suspicious_stew",
+                "parameters": {
+                    "metaInterface": "de.atlasmc.inventory.meta.SuspiciousStewMeta",
+                    "meta": "de.atlascore.inventory.meta.CoreSuspiciousStewMeta"
+                }
+            },
+            {
+                "name": "atlas:bundle",
+                "parameters": {
+                    "metaInterface": "de.atlasmc.inventory.meta.BundleMeta",
+                    "meta": "de.atlascore.inventory.meta.CoreBundleMeta"
+                }
+            },
+            {
+                "name": "atlas:goat_horn",
+                "parameters": {
+                    "metaInterface": "de.atlasmc.inventory.meta.GoatHornMeta",
+                    "meta": "de.atlascore.inventory.meta.CoreGoatHornMeta"
+                }
+            }
+        ]
+    }
+]

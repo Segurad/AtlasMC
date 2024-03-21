@@ -1,15 +1,15 @@
-package de.atlasmc.factory;
+package de.atlasmc.block.tile;
 
 import java.lang.reflect.InvocationTargetException;
 
 import de.atlasmc.Material;
-import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.util.configuration.Configuration;
+import de.atlasmc.util.configuration.ConfigurationSerializeable;
 
 /**
  * Class based {@link TileEntityFactory}
  */
-public class ClassTileEntityFactory implements TileEntityFactory {
+public class ClassTileEntityFactory implements TileEntityFactory, ConfigurationSerializeable {
 	
 	private final Class<? extends TileEntity> tileInterface, tile;
 	private final int tileID;

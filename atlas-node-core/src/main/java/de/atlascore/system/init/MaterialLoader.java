@@ -11,11 +11,12 @@ import com.google.gson.stream.JsonReader;
 
 import de.atlasmc.Material;
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.factory.FactoryException;
-import de.atlasmc.factory.MetaDataFactory;
-import de.atlasmc.factory.TileEntityFactory;
+import de.atlasmc.block.data.BlockDataFactory;
+import de.atlasmc.block.tile.TileEntityFactory;
+import de.atlasmc.inventory.meta.ItemMetaFactory;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
+import de.atlasmc.util.FactoryException;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.file.JsonConfiguration;
 
@@ -32,20 +33,21 @@ public class MaterialLoader {
 	private static synchronized void load() throws IOException, ClassNotFoundException {
 		if (loaded)
 			return;
-		InputStream in = MaterialLoader.class.getResourceAsStream("/data/material_factory.json");
-		JsonReader reader = new JsonReader(new InputStreamReader(in));
-		reader.beginObject();
 		// load mdf
-		Registry<MetaDataFactory> MDFs = loadFactories(reader, MetaDataFactory.class);
+		Registry<ItemMetaFactory> IMFs = loadFactories(ItemMetaFactory.class, "/data/item_meta_factories.json");
+		// load bdf
+		Registry<BlockDataFactory> BDFs = loadFactories(BlockDataFactory.class, "/data/block_data_factories.json");
 		// load tef
-		Registry<TileEntityFactory> TEFs = loadFactories(reader, TileEntityFactory.class);
+		Registry<TileEntityFactory> TEFs = loadFactories(TileEntityFactory.class, "/data/tile_entity_factories.json");
 		// load mats
-		reader.nextName();
+		InputStream in = MaterialLoader.class.getResourceAsStream("/data/materials.json");
+		JsonReader reader = new JsonReader(new InputStreamReader(in));
 		reader.beginObject();
 		while (reader.hasNext()) {
 			String name = reader.nextName();
 			reader.beginObject();
-			MetaDataFactory MDF = null;
+			ItemMetaFactory IMF = null;
+			BlockDataFactory BDF = null;
 			TileEntityFactory TEF = null;
 			String var = null;
 			short itemID = -1;
@@ -58,9 +60,13 @@ public class MaterialLoader {
 			while (reader.hasNext()) {
 				String key = reader.nextName();
 				switch(key) {
-				case "MDF":
+				case "IMF":
 					String mdfKey = reader.nextString();
-					MDF = MDFs.get(mdfKey);
+					IMF = IMFs.get(mdfKey);
+					break;
+				case "BDF":
+					String bdfKey = reader.nextString();
+					BDF = BDFs.get(bdfKey);
 					break;
 				case "TEF":
 					String tefKey = reader.nextString();
@@ -92,10 +98,18 @@ public class MaterialLoader {
 					reader.skipValue();
 				}
 			}
+			// set default ItemMetaFactory for Blocks
+			if (IMF == null && blockID != -1) {
+				if (TEF != null) {
+					IMF = IMFs.get("atlas:tileentity");
+				} else {
+					IMF = IMFs.get("atlas:blockdata");
+				}
+			}
 			reader.endObject();
 			NamespacedKey nameKey = NamespacedKey.of(name);
 			NamespacedKey clientKey = clientName == null ? nameKey : NamespacedKey.of(clientName);
-			Material mat = new Material(nameKey, clientKey, itemID, blockStateID, blockID, amount, toughness, explosionResistance, MDF);
+			Material mat = new Material(nameKey, clientKey, itemID, blockStateID, blockID, amount, toughness, explosionResistance, IMF, BDF);
 			if (TEF != null)
 				mat.setTileEntityFactory(TEF);
 			if (var != null) {
@@ -104,6 +118,7 @@ public class MaterialLoader {
 					field.setAccessible(true);
 				    field.set(null, mat);
 				} catch (Exception e) {
+					reader.close();
 					throw new IllegalStateException("Error while initializing field: " + var, e);
 				}
 			}
@@ -114,9 +129,10 @@ public class MaterialLoader {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static <V> Registry<V> loadFactories(JsonReader reader, Class<V> clazz) throws IOException, ClassNotFoundException {
+	private static <V> Registry<V> loadFactories(Class<V> clazz, String path) throws IOException, ClassNotFoundException {
+		InputStream in = MaterialLoader.class.getResourceAsStream(path);
+		JsonReader reader = new JsonReader(new InputStreamReader(in));
 		Registry<V> registry = Registries.getInstanceRegistry(clazz);
-		reader.nextName();
 		reader.beginArray();
 		while (reader.hasNext()) {
 			reader.beginObject();
