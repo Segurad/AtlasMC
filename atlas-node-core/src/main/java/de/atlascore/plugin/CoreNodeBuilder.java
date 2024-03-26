@@ -9,13 +9,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
+import de.atlascore.CoreLocalAtlasNode;
 import de.atlasmc.Atlas;
+import de.atlasmc.LocalAtlasNode;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.atlasnetwork.AtlasNetwork;
-import de.atlasmc.atlasnetwork.LocalAtlasNode;
 import de.atlasmc.atlasnetwork.NodeConfig;
-import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.atlasnetwork.server.ServerManager;
 import de.atlasmc.chat.ChatUtil;
@@ -26,15 +27,17 @@ import de.atlasmc.io.protocol.ProtocolAdapter;
 import de.atlasmc.log.Log;
 import de.atlasmc.plugin.NodeBuilder;
 import de.atlasmc.plugin.PluginManager;
+import de.atlasmc.proxy.ProxyConfig;
 import de.atlasmc.scheduler.Scheduler;
+import de.atlasmc.server.NodeServerManager;
 import de.atlasmc.util.TickingThread;
 import de.atlasmc.util.configuration.Configuration;
 
 public class CoreNodeBuilder implements NodeBuilder {
 	
-	private final KeyPair keyPair;
-	private final Log log;
-	private final AtlasNetwork network;
+	private KeyPair keyPair;
+	private Log log;
+	private AtlasNetwork network;
 	private Scheduler scheduler;
 	private final File workdir;
 	private DataRepositoryHandler dataHandler;
@@ -48,6 +51,7 @@ public class CoreNodeBuilder implements NodeBuilder {
 	private PluginManager pluginManager;
 	private TickingThread mainThread;
 	private ConsoleCommandSender console;
+	private NodeServerManager serverManager;
 	private final UUID uuid;
 	
 	public CoreNodeBuilder(UUID uuid, AtlasNetwork network, Log logger, File workdir, Configuration config, KeyPair keyPair) {
@@ -83,12 +87,29 @@ public class CoreNodeBuilder implements NodeBuilder {
 		}
 	}
 	
+	public NodeServerManager getServerManager() {
+		return serverManager;
+	}
+	
+	public CoreNodeBuilder setServerManager(NodeServerManager serverManager) {
+		this.serverManager = serverManager;
+		return this;
+	}
+	
 	private void resolveServerGroups(Collection<String> serverGroups) {
 		ServerManager smanager = network.getServerManager();
+		if (serverGroups.isEmpty())
+			return;
 		for (String groupKey : serverGroups) {
 			if (this.serverGroups.containsKey(groupKey))
 				continue;
-			ServerGroup group = smanager.getServerGroup(groupKey);
+			ServerGroup group = null;
+			try {
+				group = smanager.getServerGroup(groupKey).get();
+			} catch (InterruptedException | ExecutionException e) {
+				log.error("Error while loading server group!", e);
+				continue;
+			}
 			if (group == null) {
 				log.warn("Unable to load server group: {}", groupKey);
 				continue;
@@ -116,8 +137,9 @@ public class CoreNodeBuilder implements NodeBuilder {
 	}
 	
 	@Override
-	public void setMainThread(TickingThread mainThread) {
+	public CoreNodeBuilder setMainThread(TickingThread mainThread) {
 		this.mainThread = mainThread;
+		return this;
 	}
 	
 	@Override
@@ -126,13 +148,15 @@ public class CoreNodeBuilder implements NodeBuilder {
 	}
 	
 	@Override
-	public void setPluginManager(PluginManager pluginManager) {
+	public CoreNodeBuilder setPluginManager(PluginManager pluginManager) {
 		this.pluginManager = pluginManager;
+		return this;
 	}
 	
 	@Override
-	public void setDataHandler(DataRepositoryHandler dataHandler) {
+	public CoreNodeBuilder setDataHandler(DataRepositoryHandler dataHandler) {
 		this.dataHandler = dataHandler;
+		return this;
 	}
 	
 	@Override
@@ -146,8 +170,9 @@ public class CoreNodeBuilder implements NodeBuilder {
 	}
 	
 	@Override
-	public void setScheduler(Scheduler scheduler) {
+	public CoreNodeBuilder setScheduler(Scheduler scheduler) {
 		this.scheduler = scheduler;
+		return this;
 	}
 	
 	@Override
@@ -156,8 +181,9 @@ public class CoreNodeBuilder implements NodeBuilder {
 	}
 	
 	@Override
-	public void setDefaultProtocol(ProtocolAdapter defaultProtocol) {
+	public CoreNodeBuilder setDefaultProtocol(ProtocolAdapter defaultProtocol) {
 		this.defaultProtocol = defaultProtocol;
+		return this;
 	}
 	
 	@Override
@@ -169,7 +195,7 @@ public class CoreNodeBuilder implements NodeBuilder {
 	public LocalAtlasNode build() {
 		if (network == null)
 			throw new IllegalStateException("Can not build Atlas without defined AtlasNetwork");
-		LocalAtlasNode node = new LocalAtlasNode(uuid, log, scheduler, workdir, pluginManager, mainThread, keyPair, dataHandler);
+		LocalAtlasNode node = new CoreLocalAtlasNode(uuid, log, scheduler, workdir, pluginManager, mainThread, keyPair, dataHandler, serverManager);
 		node.getProtocolAdapterHandler().setProtocol(defaultProtocol);
 		Atlas.init(node, network);
 		ChatUtil.init(chatFactory);
@@ -182,8 +208,9 @@ public class CoreNodeBuilder implements NodeBuilder {
 	}
 
 	@Override
-	public void setChatFactory(ChatFactory chatFactory) {
+	public CoreNodeBuilder setChatFactory(ChatFactory chatFactory) {
 		this.chatFactory = chatFactory;
+		return this;
 	}
 	
 	@Override

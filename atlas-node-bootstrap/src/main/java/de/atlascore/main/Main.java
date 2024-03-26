@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
+import java.net.Socket;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -32,19 +33,18 @@ import de.atlascore.log.CoreLogHandler;
 import de.atlascore.plugin.CoreJavaPluginLoader;
 import de.atlascore.plugin.CoreNodeBuilder;
 import de.atlascore.plugin.CorePluginManager;
-import de.atlascore.proxy.CoreLocalProxy;
 import de.atlascore.registry.CoreRegistryHandler;
 import de.atlascore.scheduler.CoreAtlasScheduler;
+import de.atlascore.server.CoreNodeServerManager;
 import de.atlascore.system.init.ContainerFactoryLoader;
 import de.atlascore.system.init.EntityTypeLoader;
 import de.atlascore.system.init.MaterialLoader;
 import de.atlascore.system.init.PotionEffectTypeLoader;
 import de.atlascore.world.ChunkWorker;
+import de.atlasmc.LocalAtlasNode;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.atlasnetwork.AtlasNetwork;
 import de.atlasmc.atlasnetwork.AtlasNode.NodeStatus;
-import de.atlasmc.atlasnetwork.LocalAtlasNode;
-import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.command.Command;
 import de.atlasmc.command.Commands;
 import de.atlasmc.datarepository.LocalRepository;
@@ -61,6 +61,9 @@ import de.atlasmc.log.Log;
 import de.atlasmc.log.Logging;
 import de.atlasmc.plugin.CoremodulPlugin;
 import de.atlasmc.plugin.Plugin;
+import de.atlasmc.proxy.LocalProxy;
+import de.atlasmc.proxy.LocalProxyFactory;
+import de.atlasmc.proxy.ProxyConfig;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.registry.RegistryHandler;
@@ -75,6 +78,9 @@ import de.atlasmc.util.configuration.file.YamlConfiguration;
 public class Main {
 	
 	private static boolean OVERRIDE_CONFIG;
+	private static final int MAX_RANDOM_PORT_TRIES = 10;
+	private static final int RANDOM_PORT_RANGE_START = 25000;
+	private static final int RANDOM_PORT_RANGE_END = 35000;
 	
 	public static void main(String[] args) {
 		OVERRIDE_CONFIG = false;
@@ -126,7 +132,10 @@ public class Main {
 		}
 		boolean isMaster = config.getBoolean("is-master");
 		AtlasNetwork master = null;
+		RegistryHandler registries = null;
 		if (isMaster) {
+			registries = loadRegistry(log);
+			Registries.init(registries);
 			ConfigurationSection masterConfig = config.getConfigurationSection("master");
 			master = createMaster(log, workDir, masterConfig, arguments, keyPair);
 		} else {
@@ -140,14 +149,16 @@ public class Main {
 		}
 		log.info("Atlas Master initialized");
 		log.info("Initizalizing Node...");
-		RegistryHandler regHandler = loadRegistry(log);
-		Registries.init(regHandler);
+		if (registries == null) {
+			registries = loadRegistry(log);
+			Registries.init(registries);
+		}
 		try {
 			initDefaults(log);
 		} catch (Exception e) {
 			log.error("Error while initializing defaults!", e);
 		}
-		UUID nodeUUID = UUID.randomUUID(); // TODO request node uuid from master
+		UUID nodeUUID = master.getNodeUUID();
 		final CoreNodeBuilder builder = new CoreNodeBuilder(nodeUUID, master, log, workDir, config, keyPair);
 		CoreCacheRepository cache = new CoreCacheRepository(new File(workDir, "cache/data/"));
 		LocalRepository repo = isMaster ? (LocalRepository) master.getRepository() : new CoreLocalRepository(new File(workDir, "data/"), "local");
@@ -178,6 +189,7 @@ public class Main {
 		builder.setChatFactory(new CoreChatFactory());
 		builder.setPluginManager(pmanager);
 		builder.setScheduler(new CoreAtlasScheduler());
+		builder.setServerManager(new CoreNodeServerManager());
 		builder.setMainThread(new CoreAtlasThread(log));
 		builder.setDefaultProtocol(new CoreProtocolAdapter());
 		pmanager.addLoader(new CoreJavaPluginLoader());
@@ -196,15 +208,42 @@ public class Main {
 		HandshakeProtocol.DEFAULT_PROTOCOL.setPacketIO(0x00, new CorePacketMinecraftHandshake());
 		Random rand = null;
 		log.info("Initializing Proxy...");
+		Registry<LocalProxyFactory> proxyFactories = registries.getInstanceRegistry(LocalProxyFactory.class);
+		final int portRange = RANDOM_PORT_RANGE_END - RANDOM_PORT_RANGE_START;
 		for (ProxyConfig cfg : builder.getProxyConfigs()) {
+			NamespacedKey proxyKey = cfg.getFactory();
+			LocalProxyFactory factory = null;
+			if (proxyKey != null) {
+				factory = proxyFactories.get(proxyKey);
+				if (factory == null)
+					log.warn("No proxy factory found with key: {}", proxyKey);
+			}
+			if (factory == null) {
+				factory = proxyFactories.getDefault();
+				if (factory == null)
+					log.warn("No default proxy factory found!");
+				continue;
+			}
 			int port = cfg.getPort();
 			if (port == -1) {
-				if (rand == null)
-					rand = new Random();
-				port = 25000 + rand.nextInt(10000);
+				int maxTries = MAX_RANDOM_PORT_TRIES;
+				while (maxTries > 0) {
+					maxTries--;
+					if (rand == null)
+						rand = new Random();
+					port = RANDOM_PORT_RANGE_START + rand.nextInt(portRange);
+					if (isPortAvailable(port)) {
+						break;
+					}
+					port = -1;
+				}
+				if (port == -1) {
+					log.warn("Unable to fetch random open port! ({} tries)", MAX_RANDOM_PORT_TRIES);
+					continue;
+				}
 			}
-			UUID proxyUUID = UUID.randomUUID(); // TODO request uuid form master
-			CoreLocalProxy proxy = new CoreLocalProxy(proxyUUID, node, port, cfg.clone());
+			UUID proxyUUID = UUID.randomUUID();
+			LocalProxy proxy = factory.createProxy(proxyUUID, node, port, cfg);
 			proxy.setChannelInitHandler(new ChannelInitHandler(proxy));
 			proxy.run();
 			node.registerProxy(proxy);
@@ -232,6 +271,22 @@ public class Main {
 		try {
 			builder.getMainThread().join();
 		} catch (InterruptedException e) {}
+	}
+	
+	private static boolean isPortAvailable(int port) {
+		Socket s = null;
+	    try {
+	        s = new Socket("localhost", port);
+	        return false;
+	    } catch (IOException e) {
+	        return true;
+	    } finally {
+	        if( s != null){
+	            try {
+	                s.close();
+	            } catch (IOException e) {}
+	        }
+	    }
 	}
 
 	private static void loadCommands(Log log, File workDir) {

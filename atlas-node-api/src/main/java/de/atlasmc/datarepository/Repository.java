@@ -10,6 +10,6 @@ public interface Repository {
 	
 	boolean isReadOnly();
 	
-	Future<? extends RepositoryEntry> getRepoEntry(NamespacedKey key);
+	Future<? extends RepositoryEntry> getEntry(NamespacedKey key);
 
 }

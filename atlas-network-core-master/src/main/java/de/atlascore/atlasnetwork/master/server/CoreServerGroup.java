@@ -76,6 +76,10 @@ public class CoreServerGroup extends CoreAbstractServerGroup implements Tickable
 		return internal;
 	}
 	
+	/**
+	 * Returns whether or not this group is unsatisfied.
+	 * @return true if unsatisfied
+	 */
 	public boolean isUnsatisfied() {
 		if (timeout > 0)
 			return false;
@@ -126,6 +130,11 @@ public class CoreServerGroup extends CoreAbstractServerGroup implements Tickable
 		return servers.size();
 	}
 	
+	/**
+	 * Sets a timeout in ticks until this group becomes active again
+	 * If timeouted this group will not return true on {@link #isUnsatisfied()}
+	 * @param timeout
+	 */
 	public void setTimeout(int timeout) {
 		if (timeout < 0)
 			throw new IllegalArgumentException("Timeout may not be lower than 0: " + timeout);

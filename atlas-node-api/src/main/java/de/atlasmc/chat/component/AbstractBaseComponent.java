@@ -119,7 +119,7 @@ abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> impleme
 	}
 
 	@Override
-	public T setColor(ChatColor color) {
+	public T color(ChatColor color) {
 		this.color = color == null ? -1 : -(color.getID()+1);
 		return getThis();
 	}
@@ -259,7 +259,7 @@ abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> impleme
 	}
 	
 	@Override
-	public ChatComponent addExtra(ChatComponent... components) {
+	public ChatComponent extra(ChatComponent... components) {
 		List<ChatComponent> extra = getExtra();
 		for (ChatComponent comp : components) {
 			extra.add(comp);

@@ -1,14 +1,21 @@
 package de.atlascore.atlasnetwork.master.server;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import de.atlascore.atlasnetwork.master.CoreAtlasMaster;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.atlasnetwork.server.Server;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.atlasnetwork.server.ServerManager;
+import de.atlasmc.log.Log;
 import de.atlasmc.tick.Tickable;
+import de.atlasmc.util.concurrent.future.CompletableFuture;
+import de.atlasmc.util.concurrent.future.CompleteFuture;
+import de.atlasmc.util.concurrent.future.Future;
 
 public class CoreServerManager implements ServerManager, Tickable {
 
@@ -25,8 +32,11 @@ public class CoreServerManager implements ServerManager, Tickable {
 	}
 
 	@Override
-	public ServerGroup getServerGroup(String name) {
-		return serverGroups.get(name);
+	public Future<ServerGroup> getServerGroup(String name) {
+		ServerGroup group = serverGroups.get(name);
+		if (group == null)
+			return CompleteFuture.getNullFuture();
+		return new CompleteFuture<>(group);
 	}
 	
 	public Server getServer(UUID uuid) {
@@ -40,9 +50,11 @@ public class CoreServerManager implements ServerManager, Tickable {
 
 	@Override
 	public void tick() {
+		Log logger = CoreAtlasMaster.getLogger();
 		for (CoreServerGroup serverGroup : serverGroups.values()) {
 			serverGroup.tick();
 			if (serverGroup.isUnsatisfied()) {
+				logger.debug("Server group unsatisfied: {}", serverGroup.getName());
 				deployServers(serverGroup);
 				serverGroup.setTimeout(60);
 			}
@@ -61,6 +73,17 @@ public class CoreServerManager implements ServerManager, Tickable {
 		missingServers = Math.max(missingServers, group.getMinNonFullServers()-serversNonFull); // provide min non full
 		// TODO calc missing server to satisfy slot requirement
 		deployment.deploy(group, missingServers);
+	}
+
+	@Override
+	public Future<Collection<ServerGroup>> getServerGroups(String... names) {
+		ArrayList<ServerGroup> groups = new ArrayList<>();
+		for (String name : names) {
+			ServerGroup group = this.serverGroups.get(name);
+			if (group != null)
+				groups.add(group);
+		}
+		return new CompletableFuture<>();
 	}
 
 }

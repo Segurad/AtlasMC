@@ -17,14 +17,6 @@ public interface DataRepositoryHandler {
 	
 	void removeRepo(Repository repo);
 	
-	Future<PluginEntry> getPlugin(NamespacedKey key, boolean load);
-	
-	Future<WorldEntry> getWorld(NamespacedKey key, boolean load);
-	
-	Future<SchematicEntry> getSchematic(NamespacedKey key, boolean load); 
-	
-	Future<PluginConfigEntry> getPluginConfiguration(NamespacedKey key, boolean load);
-	
 	Future<RepositoryEntry> getEntry(NamespacedKey key, boolean load);
 
 	Future<Collection<RepositoryEntry>> getEntries(Collection<NamespacedKey> keys);

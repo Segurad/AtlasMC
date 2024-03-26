@@ -22,12 +22,6 @@ public class CoreCacheRepository extends CoreAbstractLocalRepository implements 
 	}
 
 	@Override
-	public Future<? extends RepositoryEntry> getRepoEntry(NamespacedKey key) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public boolean remove(RepositoryEntry entry) throws IOException {
 		// TODO Auto-generated method stub
 		return false;
@@ -55,6 +49,12 @@ public class CoreCacheRepository extends CoreAbstractLocalRepository implements 
 	public void clearExpired() throws IOException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Future<? extends RepositoryEntry> getEntry(NamespacedKey key) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

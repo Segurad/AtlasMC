@@ -1,5 +1,6 @@
 package de.atlascore.event.command;
 
+import de.atlasmc.Atlas;
 import de.atlasmc.command.CommandContext;
 import de.atlasmc.command.Commands;
 import de.atlasmc.event.EventHandler;
@@ -16,7 +17,9 @@ public class CoreCommandListener implements Listener {
 		if (command == null || command.length() == 0)
 			return;
 		CommandContext context = Commands.parseCommand(event.getSender(), command);
-		context.execute();
+		if (!context.execute()) {
+			Atlas.getLogger().debug("Failed to execute command: {}", command);
+		}
 	}
 
 }

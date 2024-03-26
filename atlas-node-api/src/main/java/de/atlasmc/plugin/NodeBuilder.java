@@ -4,44 +4,47 @@ import java.security.KeyPair;
 import java.util.Collection;
 import java.util.UUID;
 
-import de.atlasmc.atlasnetwork.LocalAtlasNode;
-import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
+import de.atlasmc.LocalAtlasNode;
 import de.atlasmc.datarepository.DataRepositoryHandler;
 import de.atlasmc.factory.ChatFactory;
 import de.atlasmc.io.protocol.ProtocolAdapter;
+import de.atlasmc.proxy.ProxyConfig;
 import de.atlasmc.scheduler.Scheduler;
+import de.atlasmc.server.NodeServerManager;
 import de.atlasmc.util.Builder;
 import de.atlasmc.util.TickingThread;
 
 public interface NodeBuilder extends Builder<LocalAtlasNode> {
 
-	void setMainThread(TickingThread mainThread);
+	NodeBuilder setMainThread(TickingThread mainThread);
 
 	PluginManager getPluginManager();
 
-	void setPluginManager(PluginManager pluginManager);
+	NodeBuilder setPluginManager(PluginManager pluginManager);
 
 	Scheduler getScheduler();
 
-	void setScheduler(Scheduler scheduler);
+	NodeBuilder setScheduler(Scheduler scheduler);
 
 	ProtocolAdapter getDefaultProtocol();
 
-	void setDefaultProtocol(ProtocolAdapter defaultProtocol);
+	NodeBuilder setDefaultProtocol(ProtocolAdapter defaultProtocol);
 
 	KeyPair getKeyPair();
 
 	Collection<ProxyConfig> getProxyConfigs();
 
-	void setChatFactory(ChatFactory chatFactory);
+	NodeBuilder setChatFactory(ChatFactory chatFactory);
 
 	ChatFactory getChatFactory();
 
 	TickingThread getMainThread();
 
-	void setDataHandler(DataRepositoryHandler dataHandler);
+	NodeBuilder setDataHandler(DataRepositoryHandler dataHandler);
 
 	DataRepositoryHandler getDataHandler();
+	
+	NodeBuilder setServerManager(NodeServerManager serverManager);
 	
 	UUID getUUID();
 

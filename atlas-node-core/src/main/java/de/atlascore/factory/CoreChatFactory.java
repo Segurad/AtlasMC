@@ -171,7 +171,7 @@ public class CoreChatFactory implements ChatFactory {
 			.setExtra(extra)
 			.setInsertion(insertion);
 		if (color != null)
-			comp.setColor(color);
+			comp.color(color);
 		else if (rgb != -1)
 			comp.setColor(rgb);
 		if (comp instanceof TranslationComponent trcomp) {

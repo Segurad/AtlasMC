@@ -36,16 +36,16 @@ import de.atlascore.permission.CorePermissionContext;
 import de.atlascore.permission.CorePermissionGroup;
 import de.atlascore.plugin.CoreNodeBuilder;
 import de.atlasmc.Atlas;
-import de.atlasmc.atlasnetwork.AtlasNetwork;
 import de.atlasmc.atlasnetwork.NetworkInfo;
 import de.atlasmc.atlasnetwork.NetworkInfo.SlotMode;
 import de.atlasmc.atlasnetwork.NodeConfig;
-import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.log.Log;
 import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionContext;
 import de.atlasmc.permission.PermissionGroup;
+import de.atlasmc.proxy.ProxyConfig;
+import de.atlasmc.util.Builder;
 import de.atlasmc.util.FileUtils;
 import de.atlasmc.util.NumberConversion;
 import de.atlasmc.util.configuration.Configuration;
@@ -53,7 +53,7 @@ import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
 import de.atlasmc.util.sql.SQLConnectionPool;
 
-public class CoreMasterBuilder {
+public class CoreMasterBuilder implements Builder<CoreAtlasNetwork> {
 	
 	private static final int MIN_SCHEMA_VERSION = 1;
 	private static final int CURRENT_SCHEMA_VERSION = 1;
@@ -86,7 +86,7 @@ public class CoreMasterBuilder {
 		this.proxyConfigs = new HashMap<>();
 	}
 
-	public AtlasNetwork build() {
+	public CoreAtlasNetwork build() {
 		ConfigurationSection dbConfig = masterConfig.getConfigurationSection("database");
 		con = getDBConnection(dbConfig);
 		if (con == null) {
@@ -636,6 +636,12 @@ public class CoreMasterBuilder {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

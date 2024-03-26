@@ -53,7 +53,7 @@ public interface ChatComponent extends Chat, Cloneable {
 	
 	/**
 	 * Returns the RGB value of the color used or -1.
-	 * If set by {@link #setColor(ChatColor)} it will return the index+1 as negative
+	 * If set by {@link #color(ChatColor)} it will return the index+1 as negative
 	 * @return rgb or enum -(index+1) or -1
 	 */
 	int getColor();
@@ -75,7 +75,7 @@ public interface ChatComponent extends Chat, Cloneable {
 	 * Format is allowed but the dedicated methods should be used instead
 	 * @param color
 	 */
-	ChatComponent setColor(ChatColor color);
+	ChatComponent color(ChatColor color);
 	
 	/**
 	 * Returns whether or not this Component has a color
@@ -109,7 +109,7 @@ public interface ChatComponent extends Chat, Cloneable {
 	
 	ChatComponent addExtra(ChatComponent component);
 	
-	ChatComponent addExtra(ChatComponent... components);
+	ChatComponent extra(ChatComponent... components);
 
 	ChatComponent setExtra(Collection<ChatComponent> extra);
 	

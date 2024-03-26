@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import de.atlasmc.chat.Chat;
+import de.atlasmc.chat.ChatColor;
+import de.atlasmc.chat.component.ChatComponent;
+import static de.atlasmc.chat.component.ChatComponent.*;
 import de.atlasmc.command.argparser.VarArgParser;
 import de.atlasmc.command.suggestion.SuggestionType;
 import de.atlasmc.plugin.Plugin;
@@ -140,6 +144,8 @@ public class Commands {
 			Registry<CommandExecutor> registry = Registries.getInstanceRegistry(CommandExecutor.class);
 			CommandExecutor executor = registry.get(executorKey);
 			arg.setExecutor(executor);
+			if (executor == null)
+				throw new InvalidConfigurationException("No executor with name: " + executorKey);
 		}
 		List<ConfigurationSection> literalArgs = config.getListOfType("args", ConfigurationSection.class);
 		if (literalArgs != null) {
@@ -352,6 +358,33 @@ public class Commands {
 		}
 		builder.setLastArg(currentArg);
 		return builder.build();
+	}
+	
+	public static List<Chat> buildHelp(Command command) {
+		if (command == null)
+			throw new IllegalArgumentException("Command can not be null!");
+		List<Chat> help = new ArrayList<>();
+		buildHelp(help, text("/").color(ChatColor.RED), command);
+		return help;
+	}
+	
+	private static void buildHelp(List<Chat> help, ChatComponent parent, CommandArg arg) {
+		parent = parent.clone();
+		if (arg instanceof VarCommandArg) {
+			parent.extra(
+					text("<").color(ChatColor.RED),
+					text(arg.getName()).color(ChatColor.DARK_GRAY),
+					text(">").color(ChatColor.RED));
+		} else {
+			parent.extra(text(arg.getName()).color(ChatColor.DARK_GRAY));
+		}
+		if (arg.hasExecutor())
+			help.add(parent);
+		if (!arg.hasArguments())
+			return;
+		for (CommandArg child : arg.getArguments()) {
+			buildHelp(help, parent, child);
+		}
 	}
 
 }

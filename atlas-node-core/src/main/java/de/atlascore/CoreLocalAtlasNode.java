@@ -1,4 +1,4 @@
-package de.atlasmc.atlasnetwork;
+package de.atlascore;
 
 import java.io.File;
 import java.security.KeyPair;
@@ -8,35 +8,37 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.atlasmc.atlasnetwork.proxy.LocalProxy;
-import de.atlasmc.atlasnetwork.server.LocalServer;
+import de.atlasmc.LocalAtlasNode;
+import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.datarepository.DataRepositoryHandler;
-import de.atlasmc.event.SyncThreadHolder;
 import de.atlasmc.io.protocol.ProtocolAdapterHandler;
 import de.atlasmc.log.Log;
 import de.atlasmc.plugin.PluginManager;
+import de.atlasmc.proxy.LocalProxy;
 import de.atlasmc.scheduler.Scheduler;
+import de.atlasmc.server.NodeServer;
+import de.atlasmc.server.NodeServerManager;
 import de.atlasmc.util.TickingThread;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
 
-public class LocalAtlasNode implements AtlasNode, SyncThreadHolder {
+public class CoreLocalAtlasNode implements LocalAtlasNode {
 	
 	private final ProtocolAdapterHandler adapterHandler;
 	private final Scheduler scheduler;
 	private final Log logger;
 	private final File workdir;
 	private final KeyPair keyPair;
-	private final Map<UUID, LocalServer> servers;
 	private final Map<UUID, LocalProxy> proxies;
 	private final PluginManager pluginManager;
 	private final TickingThread mainThread;
 	private final DataRepositoryHandler dataHandler;
+	private final NodeServerManager smanager;
 	private final UUID uuid;
 	private NodeStatus status;
 	
-	public LocalAtlasNode(UUID uuid, Log logger, Scheduler scheduler, File workdir, PluginManager pluginManager, TickingThread mainThread, KeyPair keyPair, DataRepositoryHandler dataHandler) {
+	public CoreLocalAtlasNode(UUID uuid, Log logger, Scheduler scheduler, File workdir, PluginManager pluginManager, TickingThread mainThread, KeyPair keyPair, DataRepositoryHandler dataHandler, NodeServerManager serverManager) {
 		if (uuid == null)
 			throw new IllegalArgumentException("UUID can not be null!");
 		if (logger == null)
@@ -53,6 +55,8 @@ public class LocalAtlasNode implements AtlasNode, SyncThreadHolder {
 			throw new IllegalArgumentException("Key pair can not be null!");
 		if (dataHandler == null)
 			throw new IllegalArgumentException("Data handler can not be null!");
+		if (serverManager == null)
+			throw new IllegalArgumentException("ServerManager can not be null!");
 		this.uuid = uuid;
 		this.dataHandler = dataHandler;
 		this.adapterHandler = new ProtocolAdapterHandler();
@@ -60,21 +64,24 @@ public class LocalAtlasNode implements AtlasNode, SyncThreadHolder {
 		this.logger = logger;
 		this.workdir = workdir;
 		this.proxies = new ConcurrentHashMap<>();
-		this.servers = new ConcurrentHashMap<>(5);
 		this.pluginManager = pluginManager;
 		this.mainThread = mainThread;
 		this.keyPair = keyPair;
-		this.status = NodeStatus.ONLINE;
+		this.smanager = serverManager;
+		this.status = NodeStatus.STARTING;
 	}
 	
-	public Collection<LocalServer> getServers() {
-		return servers.values();
+	@Override
+	public NodeServerManager getServerManager() {
+		return smanager;
 	}
-
+	
+	@Override
 	public Collection<LocalProxy> getProxies() {
 		return proxies.values();
 	}
 
+	@Override
 	public ProtocolAdapterHandler getProtocolAdapterHandler() {
 		return adapterHandler;
 	}
@@ -84,10 +91,12 @@ public class LocalAtlasNode implements AtlasNode, SyncThreadHolder {
 		return status;
 	}
 
+	@Override
 	public Scheduler getScheduler() {
 		return scheduler;
 	}
-
+	
+	@Override
 	public Log getLogger() {
 		return logger;
 	}
@@ -97,33 +106,39 @@ public class LocalAtlasNode implements AtlasNode, SyncThreadHolder {
 		return Thread.currentThread() == mainThread;
 	}
 
+	@Override
 	public File getWorkdir() {
 		return workdir;
 	}
 	
+	@Override
 	public PluginManager getPluginManager() {
 		return pluginManager;
 	}
 	
+	@Override
 	public KeyPair getKeyPair() {
 		return keyPair;
 	}
 	
+	@Override
 	public DataRepositoryHandler getDataHandler() {
 		return dataHandler;
 	}
 
+	@Override
 	public void registerProxy(LocalProxy proxy) {
 		proxies.put(proxy.getUUID(), proxy);
 	}
 
 	@Override
-	public Future<? extends LocalServer> getServer(UUID uuid) {
-		return CompleteFuture.of(servers.get(uuid));
+	public Future<? extends NodeServer> getServer(UUID uuid) {
+		return CompleteFuture.of(smanager.getServer(uuid));
 	}
 	
-	public LocalServer getLocalServer(UUID uuid) {
-		return servers.get(uuid);
+	@Override
+	public NodeServer getLocalServer(UUID uuid) {
+		return smanager.getServer(uuid);
 	}
 
 	@Override
@@ -131,6 +146,7 @@ public class LocalAtlasNode implements AtlasNode, SyncThreadHolder {
 		return CompleteFuture.of(proxies.get(uuid));
 	}
 	
+	@Override
 	public LocalProxy getLocalProxy(UUID uuid) {
 		return proxies.get(uuid);
 	}
@@ -151,14 +167,26 @@ public class LocalAtlasNode implements AtlasNode, SyncThreadHolder {
 		return uuid;
 	}
 
+	@Override
 	public AtlasPlayer getLocalPlayer(String name) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
+	@Override
 	public AtlasPlayer getLocalPlayer(UUID name) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Collection<NodeServer> getServers() {
+		return smanager.getServers();
+	}
+
+	@Override
+	public void setStatus(NodeStatus status) {
+		this.status = status;
 	}
 
 }

@@ -3,10 +3,9 @@ package de.atlasmc.atlasnetwork;
 import java.security.PublicKey;
 import java.util.UUID;
 
-import de.atlasmc.atlasnetwork.AtlasNode.NodeStatus;
-import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.atlasnetwork.server.ServerManager;
 import de.atlasmc.datarepository.Repository;
+import de.atlasmc.proxy.ProxyConfig;
 import de.atlasmc.tick.Tickable;
 
 public interface AtlasNetwork extends Tickable {
@@ -34,12 +33,6 @@ public interface AtlasNetwork extends Tickable {
 	Repository getRepository();
 	
 	/**
-	 * Updates the status of this node to the master
-	 * @param status to set
-	 */
-	void updateNodeStatus(NodeStatus status);
-	
-	/**
 	 * Returns this nodes UUID
 	 * @return uuid
 	 */
@@ -50,5 +43,7 @@ public interface AtlasNetwork extends Tickable {
 	 * @return public key
 	 */
 	PublicKey getPublicKey();
+	
+	AtlasMasterConnection getMasterConnection();
 	
 }

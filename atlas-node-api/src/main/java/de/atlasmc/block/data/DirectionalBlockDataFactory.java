@@ -4,18 +4,18 @@ import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.util.configuration.Configuration;
 
-public class DirectionalMetaDataFactory extends ClassBlockDataFactory {
+public class DirectionalBlockDataFactory extends ClassBlockDataFactory {
 
 	private final BlockFace direction;
 	
-	public <D extends Directional> DirectionalMetaDataFactory(Class<D> dataInterface, Class<? extends D> data, BlockFace direction) {
+	public <D extends Directional> DirectionalBlockDataFactory(Class<D> dataInterface, Class<? extends D> data, BlockFace direction) {
 		super(dataInterface, data);
 		if (direction == null)
 			throw new IllegalArgumentException("Direction can not be null!");
 		this.direction = direction;
 	}
 	
-	public DirectionalMetaDataFactory(Configuration cfg) throws ClassNotFoundException {
+	public DirectionalBlockDataFactory(Configuration cfg) throws ClassNotFoundException {
 		super(cfg);
 		direction = BlockFace.valueOf(cfg.getString("direction"));
 	}

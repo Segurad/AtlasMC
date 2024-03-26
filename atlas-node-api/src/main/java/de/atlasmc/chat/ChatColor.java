@@ -96,7 +96,7 @@ public enum ChatColor {
 			component.setUnderlined(true);
 			break;
 		default:
-			component.setColor(this);
+			component.color(this);
 			break;
 		}
 	}

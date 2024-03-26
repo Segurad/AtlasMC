@@ -3,9 +3,11 @@ package de.atlascore.command.executor;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.atlasmc.chat.Chat;
 import de.atlasmc.command.Command;
 import de.atlasmc.command.CommandContext;
 import de.atlasmc.command.CommandExecutor;
+import de.atlasmc.command.CommandSender;
 import de.atlasmc.command.Commands;
 import de.atlasmc.registry.RegistryValue;
 import de.atlasmc.util.MathUtil;
@@ -44,7 +46,11 @@ public class CoreHelpCommand implements CommandExecutor {
 			if (cmd == null) {
 				context.getSender().sendMessage("No command found with name: " + keyCommand);
 			} else {
-				context.getSender().sendMessage("Currently not implemented!");
+				List<Chat> help = Commands.buildHelp(cmd);
+				CommandSender sender = context.getSender();
+				for (Chat msg : help) {
+					sender.sendMessage(msg);
+				}
 			}
 		}
 		return true;
