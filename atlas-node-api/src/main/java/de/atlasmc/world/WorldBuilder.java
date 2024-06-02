@@ -2,11 +2,6 @@ package de.atlasmc.world;
 
 import java.io.File;
 
-import de.atlasmc.factory.ChunkFactory;
-import de.atlasmc.factory.ChunkGeneratorFactory;
-import de.atlasmc.factory.ChunkLoaderFactory;
-import de.atlasmc.factory.ChunkProviderFactory;
-import de.atlasmc.factory.WorldFactory;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.server.LocalServer;

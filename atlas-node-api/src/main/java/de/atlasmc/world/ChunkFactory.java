@@ -1,10 +1,6 @@
-package de.atlasmc.factory;
+package de.atlasmc.world;
 
 import de.atlasmc.registry.RegistryHolder;
-import de.atlasmc.world.Chunk;
-import de.atlasmc.world.ChunkGenerator;
-import de.atlasmc.world.ChunkLoader;
-import de.atlasmc.world.World;
 
 /**
  * Factory for creating {@link Chunk}s

@@ -5,7 +5,6 @@ import java.util.List;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
-import de.atlasmc.factory.ChunkFactory;
 import de.atlasmc.util.NumberConversion;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
 import de.atlasmc.util.concurrent.future.Future;
@@ -13,6 +12,7 @@ import de.atlasmc.util.configuration.InvalidConfigurationException;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.palette.Palette;
 import de.atlasmc.world.Chunk;
+import de.atlasmc.world.ChunkFactory;
 import de.atlasmc.world.ChunkGenerator;
 import de.atlasmc.world.ChunkSection;
 import de.atlasmc.world.World;

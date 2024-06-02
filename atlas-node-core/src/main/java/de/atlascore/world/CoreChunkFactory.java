@@ -1,8 +1,8 @@
 package de.atlascore.world;
 
-import de.atlasmc.factory.ChunkFactory;
 import de.atlasmc.registry.RegistryValue;
 import de.atlasmc.world.Chunk;
+import de.atlasmc.world.ChunkFactory;
 import de.atlasmc.world.World;
 
 /**

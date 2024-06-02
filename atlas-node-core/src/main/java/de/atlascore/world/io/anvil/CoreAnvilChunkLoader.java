@@ -1,4 +1,4 @@
-package de.atlascore.world.anvil.io;
+package de.atlascore.world.io.anvil;
 
 import java.io.File;
 import java.lang.ref.ReferenceQueue;
@@ -7,10 +7,10 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.atlasmc.factory.ChunkFactory;
 import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.world.Chunk;
+import de.atlasmc.world.ChunkFactory;
 import de.atlasmc.world.ChunkLoader;
 import de.atlasmc.world.World;
 
