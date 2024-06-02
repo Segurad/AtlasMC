@@ -243,6 +243,34 @@ public abstract class AbstractPacket implements Packet {
 		writeString(key.toString(), out);
 	}
 	
+	/**
+	 * Reads a byte array of {@link #readVarInt(ByteBuf)} length
+	 * @param in
+	 * @param maxLength
+	 * @return array
+	 * @throws IllegalArgumentException if length > maxLength
+	 */
+	public static byte[] readByteArray(ByteBuf in, int maxLength) {
+		int len = readVarInt(in);
+		if (len == 0) 
+			return null;
+		if (len > maxLength) 
+			throw new IllegalArgumentException("Invalid byte array length:" + len + " expected: " + maxLength);
+		byte[] buff = new byte[len];
+		in.readBytes(buff);
+		return buff;
+	}
+	
+	/**
+	 * Writes the a varint indicating the length of the given array followed byte the array
+	 * @param out
+	 * @param data to write
+	 */
+	public static void writeByteArray(ByteBuf out, byte[] data) {
+		writeVarInt(data.length, out);
+		out.writeBytes(data);
+	}
+	
 	public static String readString(ByteBuf in, int maxLength) {
 		int len = readVarInt(in);
 		if (len == 0) 

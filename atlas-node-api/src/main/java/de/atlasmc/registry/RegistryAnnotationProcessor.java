@@ -193,7 +193,7 @@ public class RegistryAnnotationProcessor extends AbstractProcessor {
 		Elements elements = processingEnv.getElementUtils();
 		Map<? extends ExecutableElement, ? extends AnnotationValue> rawValues = elements.getElementValuesWithDefaults(mirror);
 		rawValues.forEach((k,v) -> {
-			//System.out.print(k.getSimpleName().toString() + " : " + v.getValue());
+			//System.out.println(k.getSimpleName().toString() + " : " + v.getValue());
 			values.put(k.getSimpleName().toString(), v.getValue());
 		});
 		return values;

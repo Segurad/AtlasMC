@@ -7,6 +7,7 @@ import de.atlasmc.atlasnetwork.server.ServerManager;
 import de.atlasmc.datarepository.Repository;
 import de.atlasmc.proxy.ProxyConfig;
 import de.atlasmc.tick.Tickable;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface AtlasNetwork extends Tickable {
 	
@@ -36,6 +37,7 @@ public interface AtlasNetwork extends Tickable {
 	 * Returns this nodes UUID
 	 * @return uuid
 	 */
+	@NotNull
 	UUID getNodeUUID();
 	
 	/**

@@ -47,7 +47,7 @@ import de.atlasmc.atlasnetwork.AtlasNetwork;
 import de.atlasmc.atlasnetwork.AtlasNode.NodeStatus;
 import de.atlasmc.command.Command;
 import de.atlasmc.command.Commands;
-import de.atlasmc.datarepository.LocalRepository;
+import de.atlasmc.datarepository.DataRepositoryHandler;
 import de.atlasmc.datarepository.RepositoryEntry;
 import de.atlasmc.event.Event;
 import de.atlasmc.event.EventExecutor;
@@ -133,11 +133,12 @@ public class Main {
 		boolean isMaster = config.getBoolean("is-master");
 		AtlasNetwork master = null;
 		RegistryHandler registries = null;
+		DataRepositoryHandler repoHandler = loadRepositories(log, workDir);
 		if (isMaster) {
 			registries = loadRegistry(log);
 			Registries.init(registries);
 			ConfigurationSection masterConfig = config.getConfigurationSection("master");
-			master = createMaster(log, workDir, masterConfig, arguments, keyPair);
+			master = createMaster(log, workDir, masterConfig, arguments, keyPair, repoHandler);
 		} else {
 			String masterHost = config.getString("host");
 			int masterPort = config.getInt("port"); 
@@ -160,9 +161,6 @@ public class Main {
 		}
 		UUID nodeUUID = master.getNodeUUID();
 		final CoreNodeBuilder builder = new CoreNodeBuilder(nodeUUID, master, log, workDir, config, keyPair);
-		CoreCacheRepository cache = new CoreCacheRepository(new File(workDir, "cache/data/"));
-		LocalRepository repo = isMaster ? (LocalRepository) master.getRepository() : new CoreLocalRepository(new File(workDir, "data/"), "local");
-		CoreDataRepositoryHandler repoHandler = new CoreDataRepositoryHandler(cache, repo);
 		builder.setDataHandler(repoHandler);
 		if (!isMaster)
 			builder.getDataHandler().addRepo(master.getRepository());
@@ -256,6 +254,7 @@ public class Main {
 			System.exit(1);
 		}
 		builder.setConsoleSender(console);
+		node.setStatus(NodeStatus.ONLINE);
 		builder.getMainThread().runTask(() -> {
 			HandlerList.callEvent(new NodeInitializedEvent());
 		});
@@ -320,13 +319,14 @@ public class Main {
 		return null;
 	}
 
-	private static AtlasNetwork createMaster(Log log, File workDir, ConfigurationSection masterConfig, Map<String, String> arguments, KeyPair keyPair) {
+	private static AtlasNetwork createMaster(Log log, File workDir, ConfigurationSection masterConfig, Map<String, String> arguments, KeyPair keyPair, DataRepositoryHandler repoHandler) {
 		log.info("Initialize Atlas Master Node...");
 		if (masterConfig == null) {
 			log.error("Master configuration not found");
 			return null;
 		}
 		CoreMasterBuilder builder = new CoreMasterBuilder(log, workDir, masterConfig, arguments, keyPair);
+		builder.setRepoHandler(repoHandler);
 		return builder.build();
 	}
 
@@ -444,6 +444,18 @@ public class Main {
 			log.info("\n\n{}", publicKey);
 			return pair;
 		}
+	}
+	
+	private static DataRepositoryHandler loadRepositories(Log logger, File workDir) {
+		CoreCacheRepository cache = new CoreCacheRepository(new File(workDir, "cache/data/"));
+		CoreDataRepositoryHandler repoHandler = new CoreDataRepositoryHandler(cache);
+		CoreLocalRepository repo = new CoreLocalRepository("localdata", new File(workDir, "data/"));
+		repo.registerNamespace("plugins", "plugins");
+		repo.registerNamespace("configurations", "configurations");
+		repo.registerNamespace("worlds", "worlds");
+		repo.registerNamespace("server-templates", "templates/server");
+		repo.registerNamespace("schematics", "schematics");
+		return repoHandler;
 	}
 	
 	private static RegistryHandler loadRegistry(Log logger) {

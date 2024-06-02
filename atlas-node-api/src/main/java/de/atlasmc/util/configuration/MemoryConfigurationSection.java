@@ -15,7 +15,7 @@ public class MemoryConfigurationSection implements ConfigurationSection {
 	
 	protected MemoryConfigurationSection() {
 		if (!(this instanceof Configuration))
-			throw new IllegalStateException("Cannot create ConfigurationSection as root when not Configuration!");
+			throw new IllegalStateException("Cannot create ConfigurationSection as root when not a instance of Configuration!");
 		this.root = (Configuration) this;
 		this.values = new LinkedHashMap<>();
 	}
