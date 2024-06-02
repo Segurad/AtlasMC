@@ -5,4 +5,4 @@
  * <li><a href="https://minecraft.fandom.com/wiki/Chunk_format">Chunk format</a></ul>
  * </ul>
  */
-package de.atlascore.world.anvil.io;
+package de.atlascore.world.io.anvil;

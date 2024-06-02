@@ -1,4 +1,4 @@
-package de.atlascore.world.anvil.io;
+package de.atlascore.world.io.anvil;
 
 import java.io.IOException;
 import java.io.InputStream;
