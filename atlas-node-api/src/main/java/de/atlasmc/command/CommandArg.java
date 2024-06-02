@@ -132,10 +132,10 @@ public class CommandArg {
 	
 	@Nullable
 	public LiteralCommandArg getLiteralArg(@NotNull String name) {
-		if (args == null)
+		if (literalArgs == null)
 			return null;
 		LiteralCommandArg arg = literalArgs.get(name);
-		if (arg == null)
+		if (arg == null && literalArgAliases != null)
 			arg = literalArgAliases.get(name);
 		return arg;
 	}

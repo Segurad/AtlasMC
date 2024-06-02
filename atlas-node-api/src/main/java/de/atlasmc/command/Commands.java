@@ -1,5 +1,10 @@
 package de.atlasmc.command;
 
+import static de.atlasmc.chat.component.ChatComponent.base;
+import static de.atlasmc.chat.component.ChatComponent.space;
+import static de.atlasmc.chat.component.ChatComponent.text;
+import static de.atlasmc.chat.component.ChatComponent.chat;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -14,13 +19,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.chat.component.ChatComponent;
-import static de.atlasmc.chat.component.ChatComponent.*;
 import de.atlasmc.command.argparser.VarArgParser;
 import de.atlasmc.command.suggestion.SuggestionType;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.registry.ClassRegistry;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
+import de.atlasmc.util.MathUtil;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.InvalidConfigurationException;
@@ -360,31 +365,121 @@ public class Commands {
 		return builder.build();
 	}
 	
-	public static List<Chat> buildHelp(Command command) {
+	public static List<Chat> buildHelp(int page, int linesPerPage) {
+		if (page < 1)
+			throw new IllegalArgumentException("Page can not be lower than 1: " + page);
+		List<Command> commands = new ArrayList<>(Commands.getCommands());
+		commands.sort((a, b) -> {
+			return a.getName().compareTo(b.getName());
+		});
+		int first = (page - 1) * linesPerPage;
+		int maxPages = MathUtil.upper(((double) commands.size()) / linesPerPage);
+		first = MathUtil.getInRange(first, 0, commands.size()-1);
+		final int size = ((commands.size()-first) % linesPerPage) + 1;
+		List<Chat> lines = new ArrayList<>(size);
+		lines.add(chat(
+				text("--- ").color(ChatColor.DARK_GRAY), 
+				text("Help").color(ChatColor.RED), 
+				text(" - ").color(ChatColor.DARK_GRAY), 
+				text("Commands").color(ChatColor.RED), 
+				text(" - ").color(ChatColor.DARK_GRAY), 
+				text("Page").color(ChatColor.RED),
+				text(" [").color(ChatColor.DARK_GRAY),
+				text(Integer.toString(page)).color(ChatColor.RED),
+				text("/").color(ChatColor.DARK_GRAY),
+				text(Integer.toString(maxPages)).color(ChatColor.RED),
+				text("] ---").color(ChatColor.DARK_GRAY)));
+		for (int i = 1; i < size; i++) {
+			Command cmd = commands.get(first++);
+			String description = cmd.getCommandDescription();
+			if (description == null)
+				description = "-";
+			lines.add(chat(
+					text("- ").color(ChatColor.DARK_GRAY),
+					text("/").color(ChatColor.RED),
+					text(cmd.getName()).color(ChatColor.DARK_GRAY),
+					text(" : ").color(ChatColor.RED),
+					text(description).color(ChatColor.GRAY)));
+		}
+		return lines;
+	}
+	
+	public static List<Chat> buildHelp(int page, int linesPerPage, Command command) {
+		if (page < 1)
+			throw new IllegalArgumentException("Page can not be lower than 1: " + page);
 		if (command == null)
 			throw new IllegalArgumentException("Command can not be null!");
+		int first = (page - 1) * linesPerPage;
+		int last = Math.max(first + linesPerPage, Integer.MAX_VALUE);
 		List<Chat> help = new ArrayList<>();
-		buildHelp(help, text("/").color(ChatColor.RED), command);
+		ChatComponent base = base();
+		help.add(base);
+		int size = buildHelp(first, last, -1, help, text("- ").color(ChatColor.DARK_GRAY).extra(text("/").color(ChatColor.RED)), command);
+		int maxPages = MathUtil.upper(((double) size) / linesPerPage);
+		base.extra(
+				text("--- ").color(ChatColor.DARK_GRAY), 
+				text("Help").color(ChatColor.RED), 
+				text(" - ").color(ChatColor.DARK_GRAY), 
+				text(command.getName()).color(ChatColor.RED), 
+				text(" - ").color(ChatColor.DARK_GRAY), 
+				text("Page").color(ChatColor.RED),
+				text(" [").color(ChatColor.DARK_GRAY),
+				text(Integer.toString(page)).color(ChatColor.RED),
+				text("/").color(ChatColor.DARK_GRAY),
+				text(Integer.toString(maxPages)).color(ChatColor.RED),
+				text("] ---").color(ChatColor.DARK_GRAY));
 		return help;
 	}
 	
-	private static void buildHelp(List<Chat> help, ChatComponent parent, CommandArg arg) {
+	private static int buildHelp(int first, int last, int size, List<Chat> help, ChatComponent parent, CommandArg arg) {
+		if (size >= last) {
+			return size + getArgSize(arg);
+		}
+		size++;
 		parent = parent.clone();
+		if (!(arg instanceof Command)) {
+			parent.extra(space());
+		}
 		if (arg instanceof VarCommandArg) {
 			parent.extra(
 					text("<").color(ChatColor.RED),
 					text(arg.getName()).color(ChatColor.DARK_GRAY),
 					text(">").color(ChatColor.RED));
 		} else {
-			parent.extra(text(arg.getName()).color(ChatColor.DARK_GRAY));
+			parent.extra(
+					text(arg.getName()).color(ChatColor.DARK_GRAY));
 		}
-		if (arg.hasExecutor())
-			help.add(parent);
+		if (arg.hasExecutor() && size >= first) {
+			String description = arg.getDescription();
+			if (description == null) {
+				help.add(parent);
+			} else {
+				help.add(chat(
+						parent, 
+						text(" : ").color(ChatColor.RED), 
+						text(arg.getDescription()).color(ChatColor.GRAY)));
+			}
+		}
 		if (!arg.hasArguments())
-			return;
+			return size;
 		for (CommandArg child : arg.getArguments()) {
-			buildHelp(help, parent, child);
+			if (size >= last) {
+				size += getArgSize(child);
+			} else {
+				size = buildHelp(first, last, size, help, parent, child);
+			}
 		}
+		return size;
+	}
+	
+	private static int getArgSize(CommandArg arg) {
+		int size = 1;
+		if (arg.hasArguments()) {
+			for (CommandArg child : arg.getArguments()) {
+				size += getArgSize(child);
+			}
+		}
+		return size;
 	}
 
 }

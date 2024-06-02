@@ -115,6 +115,12 @@ public interface ChatComponent extends Chat, Cloneable {
 	
 	ChatComponent clone();
 	
+	static BaseComponent chat(ChatComponent... components) {
+		BaseComponent comp = new BaseComponent();
+		comp.extra(components);
+		return comp;
+	}
+	
 	static BaseComponent base() {
 		return new BaseComponent();
 	}

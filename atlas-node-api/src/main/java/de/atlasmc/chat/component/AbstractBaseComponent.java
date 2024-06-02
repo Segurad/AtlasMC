@@ -304,9 +304,11 @@ abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> impleme
 		} catch (CloneNotSupportedException e) {
 			return null;
 		}
-		copy.extra = new ArrayList<>(this.extra.size());
-		for (ChatComponent extra : this.extra)
-			copy.extra.add(extra.clone());
+		if (this.extra != null) {
+			copy.extra = new ArrayList<>(this.extra.size());
+			for (ChatComponent extra : this.extra)
+				copy.extra.add(extra.clone());
+		}
 		return copy.getThis();
 	}
 	
