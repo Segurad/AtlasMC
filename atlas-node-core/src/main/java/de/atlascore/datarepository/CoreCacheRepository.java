@@ -12,7 +12,7 @@ import de.atlasmc.util.concurrent.future.Future;
 public class CoreCacheRepository extends CoreAbstractLocalRepository implements CacheRepository {
 	
 	public CoreCacheRepository(File dir) {
-		// TODO Auto-generated constructor stub
+		super("cache", dir, false);
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class CoreCacheRepository extends CoreAbstractLocalRepository implements 
 	}
 
 	@Override
-	public Future<? extends RepositoryEntry> getEntry(NamespacedKey key) {
+	public Future<RepositoryEntry> getEntry(NamespacedKey key) {
 		// TODO Auto-generated method stub
 		return null;
 	}

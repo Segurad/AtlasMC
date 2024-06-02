@@ -6,10 +6,12 @@ import de.atlasmc.util.concurrent.future.Future;
 
 public interface Repository {
 	
+	String getName();
+	
 	Collection<String> getNamespaces();
 	
 	boolean isReadOnly();
 	
-	Future<? extends RepositoryEntry> getEntry(NamespacedKey key);
+	Future<RepositoryEntry> getEntry(NamespacedKey key);
 
 }

@@ -40,6 +40,7 @@ import de.atlasmc.atlasnetwork.NetworkInfo;
 import de.atlasmc.atlasnetwork.NetworkInfo.SlotMode;
 import de.atlasmc.atlasnetwork.NodeConfig;
 import de.atlasmc.chat.ChatColor;
+import de.atlasmc.datarepository.DataRepositoryHandler;
 import de.atlasmc.log.Log;
 import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionContext;
@@ -74,6 +75,7 @@ public class CoreMasterBuilder implements Builder<CoreAtlasNetwork> {
 	private Map<String, ProxyConfig> proxyConfigs;
 	boolean override = false;
 	private final KeyPair keyPair;
+	private DataRepositoryHandler repoHandler;
 	
 	public CoreMasterBuilder(Log log, File workDir, ConfigurationSection masterConfig, Map<String, String> arguments, KeyPair keyPair) {
 		this.log = log;
@@ -84,6 +86,11 @@ public class CoreMasterBuilder implements Builder<CoreAtlasNetwork> {
 		this.serverGroups = new HashMap<>();
 		this.nodeConfigs = new HashMap<>();
 		this.proxyConfigs = new HashMap<>();
+	}
+	
+	public CoreMasterBuilder setRepoHandler(DataRepositoryHandler repoHandler) {
+		this.repoHandler = repoHandler;
+		return this;
 	}
 
 	public CoreAtlasNetwork build() {
@@ -154,7 +161,7 @@ public class CoreMasterBuilder implements Builder<CoreAtlasNetwork> {
 		CoreServerManager smanager = new CoreServerManager(fallBack, serverGroups);
 		CoreSQLPlayerProfileHandler profileHandler = new CoreSQLPlayerProfileHandler(con);
 		CorePermissionProvider permProvider = new CoreSQLPermissionProvider(con);
-		CoreLocalRepository repo = new CoreLocalRepository(new File(workDir, "data/"), "master");
+		CoreLocalRepository repo = new CoreLocalRepository("localdata", new File(workDir, "data/"));
 		return new CoreAtlasNetwork(profileHandler, permProvider, info, infoMaintenance, slots, maintenance, smanager, nodeConfigs, proxyConfigs, repo, keyPair, nodeID);
 	}
 	
