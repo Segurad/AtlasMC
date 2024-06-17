@@ -106,24 +106,25 @@ public class JsonConfiguration extends FileConfiguration {
 			switch(token) {
 			case BEGIN_ARRAY:
 				ArrayList<Object> list = new ArrayList<>();
-				set(key, list);
+				section.set(key, list);
 				reader.beginArray();
 				loadList(section, reader, list);
 				break;
 			case BEGIN_OBJECT:
-				ConfigurationSection child = createSection(key);
+				ConfigurationSection child = section.createSection(key);
 				reader.beginObject();
 				loadSection(child, reader);
 				break;
 			case BOOLEAN:
-				set(key, reader.nextBoolean());
+				section.set(key, reader.nextBoolean());
 				break;
 			case NULL:
-				set(key, null);
+				section.set(key, null);
+				reader.nextNull();
 				break;
 			case NUMBER:
 			case STRING:
-				set(key, reader.nextString());
+				section.set(key, reader.nextString());
 				break;
 			case END_DOCUMENT:
 				throw new JsonIOException("Unexpected end of document!");
