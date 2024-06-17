@@ -27,6 +27,9 @@ public class CoreHelpCommand implements CommandExecutor {
 		} else {
 			Command cmd = Commands.getCommand(keyCommand);
 			if (cmd == null) {
+				cmd = Commands.getByAlias(keyCommand);
+			}
+			if (cmd == null) {
 				context.getSender().sendMessage("No command found with name: " + keyCommand);
 			} else {
 				help = Commands.buildHelp(page, ITEMS_PER_PAGE, cmd);
