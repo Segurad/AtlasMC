@@ -59,3 +59,9 @@ commands:
   permission: some.permission.to.execute # <optinal> defines a permission that is required to execute this node
 #...
 ```
+
+### Dummy Executor
+
+Atlas provides a non functional executor called ```atlas:dummy_executor``` as placeholder.
+This executor does echo the command sender his used command.
+It can be used for defining command and implementing the required executors later.

@@ -18,7 +18,10 @@ public class CoreCommandListener implements Listener {
 			return;
 		CommandContext context = Commands.parseCommand(event.getSender(), command);
 		if (!context.execute()) {
-			Atlas.getLogger().debug("Failed to execute command: {}", command);
+			if (context.getLastArg().hasExecutor())
+				Atlas.getLogger().debug("Failed to execute command (executor returned false): {}", command);
+			else
+				Atlas.getLogger().debug("Failed to execute command (no executor): {}", command);
 		}
 	}
 
