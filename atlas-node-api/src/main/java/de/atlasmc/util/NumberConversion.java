@@ -120,7 +120,7 @@ public final class NumberConversion {
 			return ((Number) value).longValue();
 		}
 		try {
-			return Byte.parseByte(value.toString());
+			return Long.parseLong(value.toString());
 		} catch (Exception e) {}
 		return alt;
 	}
