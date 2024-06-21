@@ -58,7 +58,7 @@ public class YamlConfiguration extends FileConfiguration {
 		return cfg;
 	}
 	
-	public static YamlConfiguration loadConfiguration(InputStream file) throws FileNotFoundException, IOException {
+	public static YamlConfiguration loadConfiguration(InputStream file) throws IOException {
 		YamlConfiguration cfg = new YamlConfiguration();
 		cfg.load(file);
 		return cfg;

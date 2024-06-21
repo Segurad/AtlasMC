@@ -3,6 +3,7 @@ package de.atlasmc.util.configuration.file;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -19,7 +20,7 @@ import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.MemoryConfiguration;
 
 public class JsonConfiguration extends FileConfiguration {
-
+	
 	@Override
 	public String saveToString() {
 		StringWriter string = new StringWriter();
@@ -182,6 +183,12 @@ public class JsonConfiguration extends FileConfiguration {
 	public static JsonConfiguration loadConfiguration(JsonReader reader) {
 		JsonConfiguration cfg = new JsonConfiguration();
 		cfg.load(reader);
+		return cfg;
+	}
+
+	public static FileConfiguration loadConfiguration(InputStream input) throws IOException {
+		JsonConfiguration cfg = new JsonConfiguration();
+		cfg.load(input);
 		return cfg;
 	}
 
