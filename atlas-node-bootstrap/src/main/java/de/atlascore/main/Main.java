@@ -18,6 +18,7 @@ import java.util.UUID;
 
 import de.atlascore.CoreAtlasThread;
 import de.atlascore.atlasnetwork.master.CoreMasterBuilder;
+import de.atlascore.cache.CoreCacheHandler;
 import de.atlascore.command.CoreConsoleCommandSender;
 import de.atlascore.datarepository.CoreCacheRepository;
 import de.atlascore.datarepository.CoreDataRepositoryHandler;
@@ -45,6 +46,7 @@ import de.atlasmc.LocalAtlasNode;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.atlasnetwork.AtlasNetwork;
 import de.atlasmc.atlasnetwork.AtlasNode.NodeStatus;
+import de.atlasmc.cache.Cache;
 import de.atlasmc.command.Command;
 import de.atlasmc.command.Commands;
 import de.atlasmc.datarepository.DataRepositoryHandler;
@@ -113,6 +115,7 @@ public class Main {
 		log.info("VM-Name: {}", System.getProperty("java.vm.name"));
 		log.info("VM-Verions: {}", System.getProperty("java.vm.version"));
 		log.info("OS-Name: {}", System.getProperty("os.name"));
+		Cache.init(new CoreCacheHandler());
 		if (altWorkDir)
 			log.info("Using alternativ work dir: {}", workDirPath);
 		if (arguments.containsKey("atlas.config.override")) {

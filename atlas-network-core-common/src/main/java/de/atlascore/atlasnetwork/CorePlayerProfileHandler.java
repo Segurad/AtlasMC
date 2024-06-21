@@ -10,8 +10,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.atlasnetwork.ProfileHandler;
+import de.atlasmc.cache.Cache;
+import de.atlasmc.cache.CacheHolder;
 
-public abstract class CorePlayerProfileHandler implements ProfileHandler {
+public abstract class CorePlayerProfileHandler implements ProfileHandler, CacheHolder {
 	
 	private final Map<Integer, RefListener> by_id;
 	private final Map<String, RefListener> by_name;
@@ -27,6 +29,7 @@ public abstract class CorePlayerProfileHandler implements ProfileHandler {
 		by_mojang_uuid = new ConcurrentHashMap<>();
 		by_uuid = new ConcurrentHashMap<>();
 		queue = new ReferenceQueue<>();
+		Cache.register(this);
 	}
 	
 	private <T> AtlasPlayer internalGet(Map<T, RefListener> map, T key) {
@@ -152,7 +155,8 @@ public abstract class CorePlayerProfileHandler implements ProfileHandler {
 		by_mojang_uuid.put(profile.getMojangUUID(), ref);
 	}
 
-	public synchronized void expungeStaleEntries() {
+	@Override
+	public synchronized void cleanUp() {
 		RefListener ref = null;
 		while ((ref = (RefListener) queue.poll()) != null) {
 			by_id.remove(ref.id, ref);

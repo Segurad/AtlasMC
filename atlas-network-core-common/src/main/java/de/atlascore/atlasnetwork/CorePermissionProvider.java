@@ -11,6 +11,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.atlasnetwork.PermissionProvider;
+import de.atlasmc.cache.Cache;
+import de.atlasmc.cache.CacheHolder;
 import de.atlasmc.permission.PermissionGroup;
 import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
@@ -18,7 +20,7 @@ import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.util.concurrent.future.FutureListener;
 
-public abstract class CorePermissionProvider implements PermissionProvider {
+public abstract class CorePermissionProvider implements PermissionProvider, CacheHolder {
 	
 	private final Map<String, RefListener<PermissionGroup>> groups;
 	private final Map<UUID, RefListener<PermissionHandler>> handlers;
@@ -33,6 +35,7 @@ public abstract class CorePermissionProvider implements PermissionProvider {
 		this.groups = new ConcurrentHashMap<>();
 		this.futureGroups = new ConcurrentHashMap<>();
 		this.futureHandlers = new ConcurrentHashMap<>();
+		Cache.register(this);
 	}
 	
 	@Override
@@ -200,7 +203,8 @@ public abstract class CorePermissionProvider implements PermissionProvider {
 		
 	}
 
-	public void expungeStaleEntries() {
+	@Override
+	public void cleanUp() {
 		RefListener<?> ref = null;
 		while ((ref = (RefListener<?>) queue.poll()) != null) {
 			ref.removeRef(this);
