@@ -3,6 +3,7 @@ package de.atlasmc.block.data;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.util.configuration.Configuration;
+import de.atlasmc.util.configuration.ConfigurationSection;
 
 public class DirectionalBlockDataFactory extends ClassBlockDataFactory {
 
@@ -25,6 +26,12 @@ public class DirectionalBlockDataFactory extends ClassBlockDataFactory {
 		Directional data = (Directional) super.createData(material);
 		data.setFacing(direction);
 		return data;
+	}
+	
+	@Override
+	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
+		configuration.set("direction", direction.name());
+		return super.toConfiguration(configuration);
 	}
 
 }

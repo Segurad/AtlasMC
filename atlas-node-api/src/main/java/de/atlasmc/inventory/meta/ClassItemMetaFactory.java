@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import de.atlasmc.Material;
 import de.atlasmc.util.FactoryException;
 import de.atlasmc.util.configuration.Configuration;
+import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.ConfigurationSerializeable;
 
 /**
@@ -59,6 +60,15 @@ public class ClassItemMetaFactory implements ItemMetaFactory, ConfigurationSeria
 				| NoSuchMethodException | SecurityException e) {
 			throw new FactoryException("Error while creating meta", e);
 		}
+	}
+
+	@Override
+	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
+		if (metaInterface != null)
+			configuration.set("metaInterface", metaInterface.getName());
+		if (meta != null)
+			configuration.set("meta", meta.getName());
+		return configuration;
 	}
 	
 }

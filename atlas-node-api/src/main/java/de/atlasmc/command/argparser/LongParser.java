@@ -75,4 +75,13 @@ public class LongParser implements VarArgParser<Long> {
 		return ID;
 	}
 
+	@Override
+	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
+		if (min != Long.MIN_VALUE)
+			configuration.set("min", min);
+		if (max != Long.MAX_VALUE)
+			configuration.set("max", max);
+		return configuration;
+	}
+
 }

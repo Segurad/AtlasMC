@@ -2,6 +2,7 @@ package de.atlasmc.block.data;
 
 import de.atlasmc.Material;
 import de.atlasmc.util.configuration.Configuration;
+import de.atlasmc.util.configuration.ConfigurationSection;
 
 public class LightableBlockDataFactory extends ClassBlockDataFactory {
 
@@ -22,6 +23,12 @@ public class LightableBlockDataFactory extends ClassBlockDataFactory {
 		Lightable data = (Lightable) super.createData(material);
 		data.setLit(lit);
 		return data;
+	}
+	
+	@Override
+	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
+		configuration.set("lit", lit);
+		return super.toConfiguration(configuration);
 	}
 
 }

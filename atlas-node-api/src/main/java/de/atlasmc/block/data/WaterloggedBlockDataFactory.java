@@ -2,6 +2,7 @@ package de.atlasmc.block.data;
 
 import de.atlasmc.Material;
 import de.atlasmc.util.configuration.Configuration;
+import de.atlasmc.util.configuration.ConfigurationSection;
 
 public class WaterloggedBlockDataFactory extends ClassBlockDataFactory {
 
@@ -22,6 +23,12 @@ public class WaterloggedBlockDataFactory extends ClassBlockDataFactory {
 		Waterlogged data = (Waterlogged) super.createData(material);
 		data.setWaterlogged(waterlogged);
 		return data;
+	}
+	
+	@Override
+	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
+		configuration.set("waterlogged", waterlogged);
+		return super.toConfiguration(configuration);
 	}
 
 }

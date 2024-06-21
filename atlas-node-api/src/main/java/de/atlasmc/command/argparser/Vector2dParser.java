@@ -7,6 +7,7 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.command.CommandStringReader;
 import de.atlasmc.command.CommandSyntaxException;
 import de.atlasmc.registry.RegistryValue;
+import de.atlasmc.util.configuration.ConfigurationSection;
 import io.netty.buffer.ByteBuf;
 import static de.atlasmc.command.argparser.Vector3dParser.parseRelative;
 
@@ -55,6 +56,11 @@ public class Vector2dParser implements VarArgParser<ArgumentVector2d> {
 	@Override
 	public Collection<String> getExamples() {
 		return List.of(); // TODO parser examples
+	}
+
+	@Override
+	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
+		return configuration;
 	}
 
 }

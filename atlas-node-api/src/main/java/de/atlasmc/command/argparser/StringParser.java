@@ -75,4 +75,11 @@ public class StringParser implements VarArgParser<String> {
 		GREEDY_PHRASE
 	}
 
+	@Override
+	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
+		if (type != StringType.SINGLE_WORD)
+			configuration.set("string-type", type.name());
+		return configuration;
+	}
+
 }

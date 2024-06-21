@@ -73,6 +73,15 @@ public class IntParser implements VarArgParser<Integer> {
 	@Override
 	public int getID() {
 		return ID;
+	}
+	
+	@Override
+	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
+		if (min != Double.MIN_VALUE)
+			configuration.set("min", min);
+		if (max != Double.MAX_VALUE)
+			configuration.set("max", max);
+		return configuration;
 	} 
 
 }

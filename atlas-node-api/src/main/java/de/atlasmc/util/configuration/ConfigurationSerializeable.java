@@ -7,5 +7,11 @@ package de.atlasmc.util.configuration;
  * a {@link ConfigurationSection} as only parameter
  */
 public interface ConfigurationSerializeable {
-
+	
+	default ConfigurationSection toConfiguration() {
+		return toConfiguration(new MemoryConfiguration());
+	}
+	
+	<T extends ConfigurationSection> T toConfiguration(T configuration);
+	
 }

@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import de.atlasmc.Material;
 import de.atlasmc.util.configuration.Configuration;
+import de.atlasmc.util.configuration.ConfigurationSection;
 
 /**
  * Class based {@link ItemMetaFactory} for {@link Ageable} BlockData
@@ -37,6 +38,12 @@ public class LevelledClassBlockDataFactory extends ClassBlockDataFactory {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	@Override
+	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
+		configuration.set("maxlevel", maxlevel);
+		return super.toConfiguration(configuration);
 	}
 
 }

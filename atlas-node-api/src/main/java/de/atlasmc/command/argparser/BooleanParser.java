@@ -6,6 +6,7 @@ import java.util.List;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.command.CommandStringReader;
 import de.atlasmc.registry.RegistryValue;
+import de.atlasmc.util.configuration.ConfigurationSection;
 import io.netty.buffer.ByteBuf;
 
 @RegistryValue(registry="atlas:command/var_arg_parser", key="brigadier:bool")
@@ -36,6 +37,11 @@ public class BooleanParser implements VarArgParser<Boolean> {
 	@Override
 	public Collection<String> getExamples() {
 		return EXAMPLES;
+	}
+
+	@Override
+	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
+		return configuration;
 	}
 
 }

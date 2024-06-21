@@ -8,6 +8,7 @@ import java.util.Set;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.util.configuration.Configuration;
+import de.atlasmc.util.configuration.ConfigurationSection;
 
 /**
  * ClassMetaDataFactory implementation for {@link MultipleFacing} Blocks that applies default faces.
@@ -40,6 +41,15 @@ public class MultipleFacingBlockDataFactory extends ClassBlockDataFactory {
 		for (BlockFace face : faces)
 			data.setFace(face, true);
 		return data;
+	}
+	
+	@Override
+	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
+		ArrayList<String> faces = new ArrayList<>(this.faces.size());
+		for (BlockFace face : this.faces)
+			faces.add(face.name());
+		configuration.set("faces", faces);
+		return super.toConfiguration(configuration);
 	}
 
 }

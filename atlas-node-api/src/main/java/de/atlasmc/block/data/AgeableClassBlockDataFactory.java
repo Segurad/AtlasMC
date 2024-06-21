@@ -6,6 +6,7 @@ import de.atlasmc.Material;
 import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.util.FactoryException;
 import de.atlasmc.util.configuration.Configuration;
+import de.atlasmc.util.configuration.ConfigurationSection;
 
 /**
  * Class based {@link ItemMetaFactory} for {@link Ageable} BlockData
@@ -38,6 +39,12 @@ public class AgeableClassBlockDataFactory extends ClassBlockDataFactory {
 				| NoSuchMethodException | SecurityException e) {
 			throw new FactoryException("Error while creating data", e);
 		}
+	}
+	
+	@Override
+	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
+		configuration.set("maxage", maxage);
+		return super.toConfiguration(configuration);
 	}
 
 }

@@ -7,6 +7,7 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.command.CommandStringReader;
 import de.atlasmc.command.CommandSyntaxException;
 import de.atlasmc.registry.RegistryValue;
+import de.atlasmc.util.configuration.ConfigurationSection;
 import io.netty.buffer.ByteBuf;
 import static de.atlasmc.command.argparser.Vector3dParser.parseRelative;
 
@@ -61,6 +62,11 @@ public class BlockPositionParser implements VarArgParser<ArgumentVector3i> {
 	@Override
 	public Collection<String> getExamples() {
 		return List.of(); // TODO parser example
+	}
+
+	@Override
+	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
+		return configuration;
 	}
 
 }

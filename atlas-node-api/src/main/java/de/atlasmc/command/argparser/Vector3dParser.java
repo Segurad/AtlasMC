@@ -7,6 +7,7 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.command.CommandStringReader;
 import de.atlasmc.command.CommandSyntaxException;
 import de.atlasmc.registry.RegistryValue;
+import de.atlasmc.util.configuration.ConfigurationSection;
 import io.netty.buffer.ByteBuf;
 
 @RegistryValue(registry="atlas:command/var_arg_parser", key="minecraft:vec3")
@@ -70,6 +71,11 @@ public class Vector3dParser implements VarArgParser<ArgumentVector3d> {
 	@Override
 	public Collection<String> getExamples() {
 		return List.of(); // TODO parser examples
+	}
+
+	@Override
+	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
+		return configuration;
 	}
 
 }

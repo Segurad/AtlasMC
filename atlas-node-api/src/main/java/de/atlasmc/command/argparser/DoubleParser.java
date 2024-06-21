@@ -73,6 +73,15 @@ public class DoubleParser implements VarArgParser<Double> {
 		buf.writerIndex(index);
 		buf.writeByte(flags);
 		buf.writerIndex(next);
+	}
+
+	@Override
+	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
+		if (min != Double.MIN_VALUE)
+			configuration.set("min", min);
+		if (max != Double.MAX_VALUE)
+			configuration.set("max", max);
+		return configuration;
 	} 
 
 }

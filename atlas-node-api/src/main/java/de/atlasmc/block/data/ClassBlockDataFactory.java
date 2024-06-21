@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import de.atlasmc.Material;
 import de.atlasmc.util.FactoryException;
 import de.atlasmc.util.configuration.Configuration;
+import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.ConfigurationSerializeable;
 
 /**
@@ -59,6 +60,15 @@ public class ClassBlockDataFactory implements BlockDataFactory, ConfigurationSer
 				| NoSuchMethodException | SecurityException e) {
 			throw new FactoryException("Error while creating data", e);
 		}
+	}
+
+	@Override
+	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
+		if (dataInterface != null)
+			configuration.set("dataInterface", dataInterface.getName());
+		if (data != null)
+			configuration.set("data", data.getName());
+		return configuration;
 	}
 	
 }
