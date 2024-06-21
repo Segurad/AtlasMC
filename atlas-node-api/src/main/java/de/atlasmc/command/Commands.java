@@ -1,9 +1,9 @@
 package de.atlasmc.command;
 
 import static de.atlasmc.chat.component.ChatComponent.base;
+import static de.atlasmc.chat.component.ChatComponent.chat;
 import static de.atlasmc.chat.component.ChatComponent.space;
 import static de.atlasmc.chat.component.ChatComponent.text;
-import static de.atlasmc.chat.component.ChatComponent.chat;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -335,6 +335,7 @@ public class Commands {
 			// lookup var args
 			if (currentArg.hasVarArgs()) {
 				Collection<VarCommandArg> varArgs = currentArg.getVarArgs();
+				VarCommandArg next = null;
 				for (VarCommandArg varArg : varArgs) {
 					if (!varArg.canUse(sender))
 						continue;
@@ -349,13 +350,18 @@ public class Commands {
 						builder
 						.addArgument(varArg.getName(), arg)
 						.addParsedArg(varArg);
-						currentArg = varArg;
+						next = varArg;
 						break;
 					} catch (CommandSyntaxException e) {
 						// TODO handle exception
 						reader.setCursor(cursor);
 						continue;
 					}
+				}
+				if (next != null) {
+					builder.addParsedArg(next);
+					currentArg = next;
+					continue;
 				}
 			}
 			// TODO implement redirects

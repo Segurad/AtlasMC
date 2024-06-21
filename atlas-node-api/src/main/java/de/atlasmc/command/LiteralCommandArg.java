@@ -40,6 +40,11 @@ public class LiteralCommandArg extends CommandArg {
 		this.argKey = key;
 	}
 	
+	/**
+	 * Returns the argument key of this literal.
+	 * If a argument key is present {@link #getName()} will be set as argument with the given key in the {@link CommandContext}
+	 * @return key or null
+	 */
 	public String getArgKey() {
 		return argKey;
 	}
