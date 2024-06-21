@@ -4,8 +4,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Stream;
 
 public class FileUtils {
 	
@@ -36,6 +40,54 @@ public class FileUtils {
 		if (parent.equals(path))
 			return null;
 		return path.startsWith(parent) ? path : null;
+	}
+
+	/**
+	 * Checks if the given file exists and if it is a directory.
+	 * If the file does not exist this will create the directory with {@link File#mkdirs()}
+	 * @param file
+	 * @thows {@link IllegalArgumentException} if the given file is present and is not a directory
+	 */
+	public static void ensureDir(File file) {
+		if (file.exists()) {
+			if (!file.isDirectory())
+				throw new IllegalArgumentException("The given file does not represent a directory: " + file);
+		} else {
+			file.mkdirs();
+		}
+	}
+	
+	/**
+	 * Checks if the given path exists and if it is a directory.
+	 * If the path does not exist this will create the directory with {@link Files#createDirectories(Path, java.nio.file.attribute.FileAttribute...)}
+	 * @param path
+	 * @thows {@link IllegalArgumentException} if the given path is present and is not a directory
+	 */
+	public static void ensureDir(Path path) {
+		if (Files.exists(path)) {
+			if (!Files.isDirectory(path))
+				throw new IllegalArgumentException("The given file does not represent a directory: " + path);
+		} else {
+			try {
+				Files.createDirectories(path);
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			}
+		}
+	}
+	
+	public static Set<Path> getFiles(Path path) throws IOException {
+		Set<Path> result = new HashSet<>();
+		try (Stream<Path> files = Files.list(path)) {
+			files.forEach((file) -> {
+				if (!Files.isRegularFile(file))
+					return;
+				result.add(file);
+			});
+		}
+		if (result.isEmpty())
+			return Set.of();
+		return result;
 	}
 
 }
