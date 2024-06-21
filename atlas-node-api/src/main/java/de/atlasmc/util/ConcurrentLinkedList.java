@@ -3,6 +3,7 @@ package de.atlasmc.util;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.annotation.ThreadSafe;
 
@@ -410,9 +411,29 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 				throw new IllegalArgumentException("Entry can not be null!");
 			list.insertBefor(node, entry);
 		}
+
+		/**
+		 * Tries to find the given element. Returns null if not found.
+		 * If the entry is found this iterator will point to the entry.
+		 * If no matching entry is found the iterator will point to no entry.
+		 * @param entry
+		 * @return the entry matching the given entry or null of not found
+		 */
+		public E find(E entry) {
+			E next = get();
+			if (entry == next)
+				return next;
+			if (entry.equals(next))
+				return next;
+			while ((next = next()) != null) {
+				if (entry == next)
+					return next;
+				if (entry.equals(next))
+					return next;
+			}
+			return null;
+		}
 		
 	}
 	
-
-
 }
