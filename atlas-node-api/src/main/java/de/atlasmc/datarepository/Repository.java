@@ -8,7 +8,7 @@ public interface Repository {
 	
 	String getName();
 	
-	Collection<String> getNamespaces();
+	Collection<? extends RepositoryNamespace> getNamespaces();
 	
 	boolean isReadOnly();
 	

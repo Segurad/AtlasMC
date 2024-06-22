@@ -1,13 +1,5 @@
 package de.atlascore.datarepository;
 
-import de.atlasmc.datarepository.LocalRepository;
-import de.atlasmc.datarepository.Repository;
-import de.atlasmc.datarepository.RepositoryEntry;
-import de.atlasmc.util.concurrent.future.CompleteFuture;
-import de.atlasmc.util.concurrent.future.CompletableFuture;
-import de.atlasmc.util.concurrent.future.Future;
-import de.atlasmc.util.concurrent.future.FutureListener;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -19,6 +11,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.datarepository.CacheRepository;
 import de.atlasmc.datarepository.DataRepositoryHandler;
+import de.atlasmc.datarepository.LocalRepository;
+import de.atlasmc.datarepository.Repository;
+import de.atlasmc.datarepository.RepositoryEntry;
+import de.atlasmc.datarepository.RepositoryNamespace;
+import de.atlasmc.util.concurrent.future.CompletableFuture;
+import de.atlasmc.util.concurrent.future.CompleteFuture;
+import de.atlasmc.util.concurrent.future.Future;
+import de.atlasmc.util.concurrent.future.FutureListener;
 
 public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 	
@@ -71,7 +71,7 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 	private RepositoryEntry getLocal(NamespacedKey key) {
 		RepositoryEntry entry = null;
 		for (LocalRepository local : localRepos.values()) {
-			if (!local.getNamespaces().contains(key.getNamespace()))
+			if (local.getNamespace(key.getKey()) == null)
 				continue;
 			entry = local.getEntry(key).getNow();
 			if (entry != null)
@@ -86,19 +86,33 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 	public void addRepo(Repository repo) {
 		if (repo == null)
 			throw new IllegalArgumentException("Repo can not be null!");
-		if (remotes.add(repo)) {
-			Collection<String> namespaces = repo.getNamespaces();
-			for (String namespace : namespaces)
-				repoByNamespace.putIfAbsent(namespace, repo);
+		if (repo instanceof LocalRepository local) {
+			if (localRepos.putIfAbsent(repo.getName(), local) != null)
+				return;
+			Collection<? extends RepositoryNamespace> namespaces = repo.getNamespaces();
+			for (RepositoryNamespace namespace : namespaces)
+				repoByNamespace.putIfAbsent(namespace.getNamespace(), repo);
+		} else if (remotes.add(repo)) {
+			Collection<? extends RepositoryNamespace> namespaces = repo.getNamespaces();
+			for (RepositoryNamespace namespace : namespaces)
+				repoByNamespace.putIfAbsent(namespace.getNamespace(), repo);
 		}	
 	}
 
 	@Override
 	public void removeRepo(Repository repo) {
-		if (remotes.remove(repo)) {
-			Collection<String> namespaces = repo.getNamespaces();
-			for (String namespace : namespaces)
-				repoByNamespace.remove(namespace, repo);
+		if (repo == null)
+			throw new IllegalArgumentException("Repo can not be null!");
+		if (repo instanceof LocalRepository local) {
+			if (!localRepos.remove(repo.getName(), local))
+				return;
+			Collection<? extends RepositoryNamespace> namespaces = repo.getNamespaces();
+			for (RepositoryNamespace namespace : namespaces)
+				repoByNamespace.putIfAbsent(namespace.getNamespace(), repo);
+		} else if (remotes.remove(repo)) {
+			Collection<? extends RepositoryNamespace> namespaces = repo.getNamespaces();
+			for (RepositoryNamespace namespace : namespaces)
+				repoByNamespace.putIfAbsent(namespace.getNamespace(), repo);
 		}
 	}
 	
@@ -144,6 +158,11 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 	@Override
 	public Future<RepositoryEntry> getEntry(NamespacedKey key) {
 		return getEntry(key, true);
+	}
+
+	@Override
+	public LocalRepository getLocalRepo(String name) {
+		return localRepos.get(name);
 	}
 
 }

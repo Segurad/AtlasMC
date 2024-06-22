@@ -1,4 +1,5 @@
 commands:
+# === Debug ===================================================================
 - name: debug
   aliases:
   - dd
@@ -20,13 +21,14 @@ commands:
         parser: brigadier:string
         executor: atlas-core:debug_dump_registries
         description: "Dumps the given registry to file"
+# === Help ====================================================================
 - name: help
   aliases:
   - "?"
   cmd-description: "Shows help about commands."
   executor: atlas-core:help
   templates:
-    template-name: page
+  - template-name: page
     type: var
     name: page
     executor: atlas-core:help
@@ -41,8 +43,130 @@ commands:
     args:
     - template: page    
   - template: page
+# === Aliases ================================================================
+- name: aliases
+  aliases:
+  - a
+  cmd-description: "Provides information about command aliases"
+  args:
+  - type: var
+    name: command
+    parser: brigadier:string
+    description: "Provides a list of all aliases of the given command"
+    executor: atlas-core:aliases
+# === Info ===================================================================
 - name: info
   cmd-description: "Shows some general system information"
   allowed-sources: CONSOLE
   executor: atlas-core:info
   permission: atlas.info
+# === confirm ================================================================
+- name: confirm
+  aliases:
+  - "yes"
+  cmd-description: "Used to confirm something"
+  description: "Used to confirm someting"
+  executor: atlas:dummy_executor
+  args:
+  - type: var
+    name: confirmation
+    parser: brigadier:string
+    description: "Used to confirm something with parameter"
+    executor: atlas:dummy_executor
+# === Repositories ===========================================================
+- name: repository
+  aliases:
+  - repo
+  cmd-description: "Command to interact with atlas data repository"
+  args:
+  - type: literal
+    name: list
+    description: "Lists all local repositories"
+    executor: atlas-core:datarepo/list
+  - type: var
+    name: repo
+    parser: brigadier:string
+    args:
+    - type: literal
+      name: status
+      description: "Provides information about entries and untracked files within the given repository"
+      executor: atlas-core:datarepo/status
+      args:
+      - type: var
+        name: namespace
+        parser: brigadier:string
+        description: "Provides information about entries and untracked files within the given namespace"
+        executor: atlas-core:datarepo/status
+    - type: literal
+      name: list
+      executor: atlas-core:datarepo/list
+      description: "Lists all namespaces of the local repository"
+    - type: literal
+      name: create
+      args:
+      - type: literal
+        name: namespace
+        arg-key: toCreate
+        aliases:
+        - ns
+        args:
+        - type: var
+          name: namespace
+          parser: brigadier:string
+          args:
+          - type: var
+            name: path
+            parser: brigadier:string
+            description: "Creates a new namespace with the given name and path"
+            executor: atlas:dummy_executor
+      - type: literal
+        name: entry
+        arg-key: toCreate
+        aliases:
+        - e
+        args:
+        - type: var
+          name: namespace
+          parser: brigadier:string
+          args:
+          - type: var
+            name: entryname
+            parser: brigadier:string
+            args:
+            - type: var
+              name: path
+              parser: brigadier:string
+              description: "Creates a new entry with the given name and path"
+              executor: atlas-core:datarepo/create
+    - type: literal
+      name: update
+      description: "Updates all entries in all namespaces of the given repository"
+      executor: atlas-core:datarepo/update
+      args:
+      - type: var
+        name: namespace
+        parser: brigadier:string
+        description: "Updates all entries in the given namespace"
+        executor: atlas-core:datarepo/update
+        args:
+        - type: var
+          name: entry
+          parser: brigadier:string
+          description: "Upates the given entry"
+          executor: atlas-core:datarepo/update
+    - type: literal
+      name: delete
+      args:
+      - type: var
+        name: namespace
+        parser: brigadier:string
+        description: "Deletes the given namespace of this repository"
+        executor: atlas:dummy_executor
+        args:
+        - type: var
+          name: entry
+          parser: brigadier:string
+          description: "Deletes the given entry of this Repositories"
+          executor: atlas:dummy_executor
+        
+        

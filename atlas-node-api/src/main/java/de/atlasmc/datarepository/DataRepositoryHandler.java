@@ -30,4 +30,6 @@ public interface DataRepositoryHandler {
 
 	Future<Collection<RepositoryEntry>> getEntries(Collection<NamespacedKey> keys);
 
+	LocalRepository getLocalRepo(String name);
+
 }

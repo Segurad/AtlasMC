@@ -16,6 +16,18 @@ public class CoreLocalEntryFile implements EntryFile {
 		this.size = size;
 	}
 	
+	public void setChecksum(byte[] checksum) {
+		this.checksum = checksum;
+	}
+	
+	public void setLastTouch(long lastTouch) {
+		this.lastTouch = lastTouch;
+	}
+	
+	public void setSize(long size) {
+		this.size = size;
+	}
+	
 	@Override
 	public byte[] checksum() {
 		return checksum;
@@ -34,6 +46,11 @@ public class CoreLocalEntryFile implements EntryFile {
 	@Override
 	public long size() {
 		return size;
+	}
+
+	@Override
+	public boolean matchChecksum(byte[] checksum) {
+		return this.checksum.equals(checksum);
 	}
 
 }

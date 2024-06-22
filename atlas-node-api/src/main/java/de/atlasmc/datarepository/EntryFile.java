@@ -29,4 +29,6 @@ public interface EntryFile {
 	 */
 	long size();
 
+	boolean matchChecksum(byte[] checksum);
+
 }

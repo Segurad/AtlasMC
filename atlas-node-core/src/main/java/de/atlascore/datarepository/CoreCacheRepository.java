@@ -7,18 +7,13 @@ import java.util.Collection;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.datarepository.CacheRepository;
 import de.atlasmc.datarepository.RepositoryEntry;
+import de.atlasmc.datarepository.RepositoryEntryUpdate;
 import de.atlasmc.util.concurrent.future.Future;
 
 public class CoreCacheRepository extends CoreAbstractLocalRepository implements CacheRepository {
 	
 	public CoreCacheRepository(File dir) {
 		super("cache", dir, false);
-	}
-
-	@Override
-	public Collection<String> getNamespaces() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -53,6 +48,12 @@ public class CoreCacheRepository extends CoreAbstractLocalRepository implements 
 
 	@Override
 	public Future<RepositoryEntry> getEntry(NamespacedKey key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Future<Collection<RepositoryEntryUpdate>> update() {
 		// TODO Auto-generated method stub
 		return null;
 	}

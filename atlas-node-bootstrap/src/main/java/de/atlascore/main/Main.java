@@ -458,6 +458,7 @@ public class Main {
 		repo.registerNamespace("worlds", "worlds");
 		repo.registerNamespace("server-templates", "templates/server");
 		repo.registerNamespace("schematics", "schematics");
+		repoHandler.addRepo(repo);
 		return repoHandler;
 	}
 	
@@ -507,8 +508,7 @@ public class Main {
 				try {
 					entryClass = Class.forName(rawClass);
 				} catch (ClassNotFoundException e) {
-					logger.error("Registry ({}) entry class not found: {}", key, rawClass);
-					logger.error(e);
+					logger.error("Registry (" + key + ") entry class not found: " + rawClass, e);
 					continue;
 				}
 				Object entryValue = null;
