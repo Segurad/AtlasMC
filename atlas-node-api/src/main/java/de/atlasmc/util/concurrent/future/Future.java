@@ -10,8 +10,8 @@ public interface Future<V> extends java.util.concurrent.Future<V> {
 	
 	boolean isSuccess();
 	
-	void setListener(GenericFutureListener<? extends Future<? super V>> listener);
+	void setListener(FutureListener<V> listener);
 	
-	void removeListener(GenericFutureListener<? extends Future<? super V>> listener);
+	void removeListener(FutureListener<V> listener);
 
 }

@@ -86,10 +86,9 @@ public class CompleteFuture<V> implements Future<V> {
 		return result != null && cause == null && !cancelled;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void setListener(GenericFutureListener<? extends Future<? super V>> listener) {
-		((GenericFutureListener<Future<V>>) listener).complete(this);
+	public void setListener(FutureListener<V> listener) {
+		listener.complete(this);
 	}
 
 	@Override
@@ -131,7 +130,7 @@ public class CompleteFuture<V> implements Future<V> {
 	}
 
 	@Override
-	public void removeListener(GenericFutureListener<? extends Future<? super V>> listener) {
+	public void removeListener(FutureListener<V> listener) {
 		return;
 	}
 

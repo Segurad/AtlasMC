@@ -85,34 +85,33 @@ public class CompletableFuture<V> implements Future<V> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void setListener(GenericFutureListener<? extends Future<? super V>> listener) {
-		GenericFutureListener<Future<V>> newListener = (GenericFutureListener<Future<V>>) listener;
+	public void setListener(FutureListener<V> listener) {
 		if (isDone()) {
-			newListener.complete(this);
+			listener.complete(this);
 			return;
 		}
 		synchronized (this) {
 			if (isDone()) {
-				newListener.complete(this);
+				listener.complete(this);
 				return;
 			}
 			Object currentListener = this.listener;
 			if (currentListener == null) {
-				this.listener = newListener;
+				this.listener = listener;
 			} else if (currentListener instanceof Array) {
 				CopyOnWriteArraySet<Object> ary =  (CopyOnWriteArraySet<Object>) currentListener;
-				ary.add(newListener);
+				ary.add(listener);
 			} else {
-				CopyOnWriteArraySet<GenericFutureListener<Future<V>>> ary = new CopyOnWriteArraySet<>();
-				ary.add((GenericFutureListener<Future<V>>) currentListener);
-				ary.add(newListener);
+				CopyOnWriteArraySet<FutureListener<V>> ary = new CopyOnWriteArraySet<>();
+				ary.add((FutureListener<V>) currentListener);
+				ary.add(listener);
 				this.listener = ary;
 			}
 		}
 	}
 	
 	@Override
-	public void removeListener(GenericFutureListener<? extends Future<? super V>> listener) {
+	public void removeListener(FutureListener<V> listener) {
 		if (listener == null)
 			return;
 		if (isDone())
@@ -149,11 +148,11 @@ public class CompletableFuture<V> implements Future<V> {
 			Object listener = this.listener;
 			if (listener != null) {
 				if (listener instanceof CopyOnWriteArraySet) {
-					for (GenericFutureListener<Future<V>> l : (Iterable<GenericFutureListener<Future<V>>>)listener) {
+					for (FutureListener<V> l : (Iterable<FutureListener<V>>)listener) {
 						l.complete(this);
 					}
 				} else {
-					((GenericFutureListener<Future<V>>) listener).complete(this);
+					((FutureListener<V>) listener).complete(this);
 				}
 				this.listener = null;
 			}
