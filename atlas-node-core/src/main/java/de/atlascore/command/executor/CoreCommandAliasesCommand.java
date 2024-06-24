@@ -8,7 +8,7 @@ import de.atlasmc.command.Commands;
 import de.atlasmc.registry.RegistryValue;
 
 @RegistryValue(registry="atlas:command/executor", key="atlas-core:aliases")
-public class CoreCommandAliases implements CommandExecutor {
+public class CoreCommandAliasesCommand implements CommandExecutor {
 
 	@Override
 	public boolean execute(CommandContext context) {

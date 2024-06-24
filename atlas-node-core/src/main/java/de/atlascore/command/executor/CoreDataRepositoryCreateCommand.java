@@ -9,7 +9,7 @@ import de.atlasmc.datarepository.RepositoryNamespace;
 import de.atlasmc.registry.RegistryValue;
 
 @RegistryValue(registry="atlas:command/executor", key="atlas-core:datarepo/create")
-public class CoreDataRepositoryCreate implements CommandExecutor {
+public class CoreDataRepositoryCreateCommand implements CommandExecutor {
 
 	@Override
 	public boolean execute(CommandContext context) {
