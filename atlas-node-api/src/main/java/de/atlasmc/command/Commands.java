@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import de.atlasmc.cache.Caching;
+import de.atlasmc.cache.MapCache;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.chat.component.ChatComponent;
@@ -26,6 +28,8 @@ import de.atlasmc.registry.ClassRegistry;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.util.MathUtil;
+import de.atlasmc.util.concurrent.future.CompletableFuture;
+import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.InvalidConfigurationException;
@@ -35,9 +39,18 @@ import de.atlasmc.util.map.Multimap;
 
 public class Commands {
 	
-	private static final Map<String, Command> commands = new ConcurrentHashMap<>();
-	private static final Map<String, Command> commandByAlias = new ConcurrentHashMap<>();
-	private static final Multimap<Plugin, Command> pluginCommands = new ConcurrentLinkedListMultimap<>();
+	private static final Map<String, Command> commands;
+	private static final Map<String, Command> commandByAlias;
+	private static final Multimap<Plugin, Command> pluginCommands;
+	private static final MapCache<CommandSender, CompletableFuture<CommandContext>> confirmations;
+	
+	static {
+		commands = new ConcurrentHashMap<>();
+		commandByAlias = new ConcurrentHashMap<>();
+		pluginCommands = new ConcurrentLinkedListMultimap<>();
+		confirmations = new MapCache<>();
+		Caching.register(confirmations);
+	}
 	
 	public static void register(Command cmd, Plugin plugin) {
 		if (cmd == null)
@@ -271,6 +284,29 @@ public class Commands {
 			}
 		}
 		return arg;
+	}
+	
+	public static Future<CommandContext> awaitConfirm(CommandSender sender) {
+		CompletableFuture<CommandContext> future = new CompletableFuture<>();
+		confirmations.put(sender, future);
+		return future;
+	}
+	
+	public static Future<CommandContext> awaitConfirm(CommandSender sender, int ttl) {
+		CompletableFuture<CommandContext> future = new CompletableFuture<>();
+		confirmations.put(sender, future, ttl);
+		return future;
+	}
+	
+	static void finishConfirm(CommandContext context) {
+		CommandSender sender = context.getSender();
+		CompletableFuture<CommandContext> future = confirmations.get(sender);
+		if (future == null) {
+			sender.sendMessage("Nothing to confirm...");
+			return;
+		}
+		confirmations.remove(sender, future);
+		future.finish(context);
 	}
 	
 	public static Command getCommand(String name) {

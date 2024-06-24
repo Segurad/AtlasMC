@@ -66,13 +66,13 @@ commands:
   - "yes"
   cmd-description: "Used to confirm something"
   description: "Used to confirm someting"
-  executor: atlas:dummy_executor
+  executor: atlas:confirm
   args:
   - type: var
     name: confirmation
     parser: brigadier:string
     description: "Used to confirm something with parameter"
-    executor: atlas:dummy_executor
+    executor: atlas:confirm
 # === Repositories ===========================================================
 - name: repository
   aliases:
