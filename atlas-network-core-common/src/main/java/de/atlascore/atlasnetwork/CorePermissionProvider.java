@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.atlasnetwork.PermissionProvider;
-import de.atlasmc.cache.Cache;
+import de.atlasmc.cache.Caching;
 import de.atlasmc.cache.CacheHolder;
 import de.atlasmc.permission.PermissionGroup;
 import de.atlasmc.permission.PermissionHandler;
@@ -35,7 +35,7 @@ public abstract class CorePermissionProvider implements PermissionProvider, Cach
 		this.groups = new ConcurrentHashMap<>();
 		this.futureGroups = new ConcurrentHashMap<>();
 		this.futureHandlers = new ConcurrentHashMap<>();
-		Cache.register(this);
+		Caching.register(this);
 	}
 	
 	@Override

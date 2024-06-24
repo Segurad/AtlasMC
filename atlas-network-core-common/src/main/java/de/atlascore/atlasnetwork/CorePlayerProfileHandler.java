@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.atlasnetwork.ProfileHandler;
-import de.atlasmc.cache.Cache;
+import de.atlasmc.cache.Caching;
 import de.atlasmc.cache.CacheHolder;
 
 public abstract class CorePlayerProfileHandler implements ProfileHandler, CacheHolder {
@@ -29,7 +29,7 @@ public abstract class CorePlayerProfileHandler implements ProfileHandler, CacheH
 		by_mojang_uuid = new ConcurrentHashMap<>();
 		by_uuid = new ConcurrentHashMap<>();
 		queue = new ReferenceQueue<>();
-		Cache.register(this);
+		Caching.register(this);
 	}
 	
 	private <T> AtlasPlayer internalGet(Map<T, RefListener> map, T key) {

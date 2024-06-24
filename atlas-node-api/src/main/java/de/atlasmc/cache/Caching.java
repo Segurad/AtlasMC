@@ -4,11 +4,11 @@ import de.atlasmc.util.annotation.InternalAPI;
 import de.atlasmc.util.annotation.ThreadSafe;
 
 @ThreadSafe
-public final class Cache {
+public final class Caching {
 	
 	private static CacheHandler handler;
 	
-	private Cache() {}
+	private Caching() {}
 	
 	public static boolean register(CacheHolder holder) {
 		return handler.register(holder);
@@ -44,12 +44,12 @@ public final class Cache {
 	public static void init(CacheHandler handler) {
 		if (handler == null)
 			throw new IllegalArgumentException("Handler can not be null!");
-		if (Cache.handler != null)
+		if (Caching.handler != null)
 			throw new IllegalStateException("Cache already initialized!");
-		synchronized (Cache.class) {
-			if (Cache.handler != null)
+		synchronized (Caching.class) {
+			if (Caching.handler != null)
 				throw new IllegalStateException("Cache already initialized!");
-			Cache.handler = handler;
+			Caching.handler = handler;
 		}
 	}
 	
