@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.atlasmc.util.annotation.Nullable;
+
 /**
  * Section of a {@link Configuration} e.g. sub map or list
  */
@@ -57,7 +59,23 @@ public interface ConfigurationSection {
 	
 	Configuration getRoot();
 	
+	/**
+	 * Sets the value at the given path and returns the previous value.
+	 * If the value is null and no {@link ConfigurationSection} is present at the paths end these sections will not be created and so the value will not be set.
+	 * @param path
+	 * @param value
+	 * @return old value or null
+	 */
+	@Nullable
 	Object set(String path, Object value);
+	
+	/**
+	 * Removes the last path element and returns the values currently set
+	 * @param path
+	 * @return value or null
+	 */
+	@Nullable
+	Object remove(String path);
 	
 	Map<String, Object> getValues();
 	
@@ -69,6 +87,9 @@ public interface ConfigurationSection {
 	 */
 	int getSize();
 	
+	/**
+	 * Removes all elements from this section
+	 */
 	void clear();
 
 }

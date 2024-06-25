@@ -259,4 +259,30 @@ public class MemoryConfigurationSection implements ConfigurationSection {
 		values.clear();		
 	}
 
+	@Override
+	public Object remove(String path) {
+		if (path == null)
+			throw new IllegalArgumentException("Path can not be null!");
+		if (path.length() == 0)
+			return this;
+
+		ConfigurationSection section = this;
+		int lastIndex = -1;
+		int searchIndex = -1;
+		// find section of key
+		while ((lastIndex = path.indexOf('.', searchIndex = lastIndex+1)) != -1) {
+			String nextPathKey = path.substring(searchIndex, lastIndex);
+			if (!section.contains(nextPathKey))
+				return null; // path not present
+			section = section.getConfigurationSection(nextPathKey);
+			if (section == null)
+				return null;
+		}
+		String key = path.substring(searchIndex);
+		if (section == this) {
+			return values.remove(key);
+		}
+		return section.remove(key);
+	}
+
 }

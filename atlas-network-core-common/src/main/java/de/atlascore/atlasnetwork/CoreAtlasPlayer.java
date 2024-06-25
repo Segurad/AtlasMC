@@ -122,6 +122,12 @@ public class CoreAtlasPlayer implements AtlasPlayer {
 		// TODO handle chat
 	}
 	
+	@Override
+	public void sendTranslation(String key, Object... values) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	private void sendInternalMessage(String message) {
 		if (con != null) {
 			PacketOutSystemChatMessage packet = new PacketOutSystemChatMessage();

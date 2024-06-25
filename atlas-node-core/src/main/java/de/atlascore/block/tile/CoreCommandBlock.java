@@ -187,6 +187,12 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 	public void sendMessage(String message) {
 		sendMessage(ChatUtil.toChat(message));
 	}
+	
+	@Override
+	public void sendTranslation(String key, Object... values) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
 	public void sendMessage(Chat chat) {

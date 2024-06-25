@@ -13,5 +13,7 @@ public interface Repository {
 	boolean isReadOnly();
 	
 	Future<RepositoryEntry> getEntry(NamespacedKey key);
+	
+	Future<Boolean> delete();
 
 }

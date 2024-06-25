@@ -13,11 +13,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.cache.CacheHolder;
+import de.atlasmc.cache.Caching;
 import de.atlasmc.datarepository.EntryFile;
 import de.atlasmc.datarepository.LocalRepository;
 import de.atlasmc.datarepository.RepositoryEntry;
 import de.atlasmc.datarepository.RepositoryEntryUpdate;
 import de.atlasmc.datarepository.RepositoryNamespace;
+import de.atlasmc.util.DeleteFileVisitor;
 import de.atlasmc.util.FileUtils;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
@@ -52,6 +54,7 @@ public abstract class CoreAbstractLocalRepository implements LocalRepository, Ca
 		// init meta dir
 		this.metaDir = new File(dir, ".datarepo");
 		this.namespaceFile = new  File(metaDir, "namespaces.yml");
+		Caching.register(this);
 		init();
 	}
 	
@@ -243,6 +246,24 @@ public abstract class CoreAbstractLocalRepository implements LocalRepository, Ca
 			}
 		}
 		return CompleteFuture.of(changes);
+	}
+	
+	@Override
+	public Future<Boolean> delete() {
+		try {
+			Files.walkFileTree(metaDir.toPath(), DeleteFileVisitor.INSTANCE);
+			for (CoreLocalNamespace namespace : namespaces.values())
+				namespace.internalDelete();
+		} catch(IOException e) {
+			return new CompleteFuture<>(e);
+		}
+		return CompleteFuture.of(true);
+	}
+
+	protected void removeNamespace(CoreLocalNamespace namespace) throws IOException {
+		namespaces.remove(namespace.getNamespace());
+		namespacesConfig.remove(namespace.getNamespace());
+		namespacesConfig.save(namespaceFile);
 	}
 	
 }

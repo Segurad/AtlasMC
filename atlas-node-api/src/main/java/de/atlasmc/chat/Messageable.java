@@ -8,6 +8,8 @@ public interface Messageable {
 		}
 	}
 	
+	void sendTranslation(String key, Object... values);
+	
 	void sendMessage(Chat chat);
 	
 	void sendMessage(String message);

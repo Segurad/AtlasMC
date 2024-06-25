@@ -529,4 +529,9 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 		con.getAtlasPlayer().sendMessage(message, type, source, target);
 	}
 
+	@Override
+	public void sendTranslation(String key, Object... values) {
+		con.getAtlasPlayer().sendTranslation(key, values);
+	}
+
 }

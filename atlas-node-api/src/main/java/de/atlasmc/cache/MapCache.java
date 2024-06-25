@@ -3,7 +3,6 @@ package de.atlasmc.cache;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;

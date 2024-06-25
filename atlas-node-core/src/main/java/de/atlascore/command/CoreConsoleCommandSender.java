@@ -85,4 +85,10 @@ public class CoreConsoleCommandSender implements ConsoleCommandSender {
 		System.out.println(message);
 	}
 
+	@Override
+	public void sendTranslation(String key, Object... values) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

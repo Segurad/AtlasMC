@@ -2,7 +2,6 @@ package de.atlasmc.datarepository;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Map;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.util.concurrent.future.Future;
@@ -20,5 +19,7 @@ public interface RepositoryNamespace {
 	NamespaceStatus getStatus() throws IOException;
 
 	Future<Collection<RepositoryEntryUpdate>> update();
+
+	Future<Boolean> delete();
 
 }

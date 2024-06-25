@@ -341,4 +341,20 @@ class CoreLocalNamespace implements RepositoryNamespace {
 		return changes;
 	}
 
+	@Override
+	public Future<Boolean> delete() {
+		try {
+			repo.removeNamespace(this);
+			internalDelete();
+		} catch(IOException e) {
+			return new CompleteFuture<>(e);
+		}
+		return CompleteFuture.of(true);
+	}
+	
+	protected void internalDelete() throws IOException {
+		Files.walkFileTree(metaDir.toPath(), DeleteFileVisitor.INSTANCE);
+		Files.walkFileTree(path, DeleteFileVisitor.INSTANCE);
+	}
+
 }

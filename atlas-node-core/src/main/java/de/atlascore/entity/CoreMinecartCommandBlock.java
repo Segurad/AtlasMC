@@ -145,4 +145,10 @@ public class CoreMinecartCommandBlock extends CoreAbstractMinecart implements Mi
 		sendMessage(message);
 	}
 
+	@Override
+	public void sendTranslation(String key, Object... values) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

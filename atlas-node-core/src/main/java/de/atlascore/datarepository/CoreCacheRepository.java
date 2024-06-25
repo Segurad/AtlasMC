@@ -58,4 +58,10 @@ public class CoreCacheRepository extends CoreAbstractLocalRepository implements 
 		return null;
 	}
 
+	@Override
+	public Future<Boolean> delete() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

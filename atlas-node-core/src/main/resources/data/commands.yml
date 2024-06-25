@@ -61,8 +61,9 @@ commands:
   executor: atlas-core:info
   permission: atlas.info
 # === confirm ================================================================
-- name: confirm
+- name: confirmation
   aliases:
+  - confirm
   - "yes"
   cmd-description: "Used to confirm something"
   description: "Used to confirm someting"
@@ -156,17 +157,31 @@ commands:
           executor: atlas-core:datarepo/update
     - type: literal
       name: delete
+      description: "Deletes the given repository"
+      executor: atlas-core:datarepo/delete
       args:
+      - type: literal
+        name: confirm
+        description: "Deletes the given repository without any other confirmation"
+        executor: atlas-core:datarepo/delete
       - type: var
         name: namespace
         parser: brigadier:string
         description: "Deletes the given namespace of this repository"
-        executor: atlas:dummy_executor
+        executor: atlas-core:datarepo/delete
         args:
+        - type: literal
+          name: confirm
+          description: "Deletes the given namespace of this repository without any other confirmation"
+          executor: atlas-core:datarepo/delete
         - type: var
           name: entry
           parser: brigadier:string
-          description: "Deletes the given entry of this Repositories"
-          executor: atlas:dummy_executor
-        
+          description: "Deletes the given entry of this repositories"
+          executor: atlas-core:datarepo/delete
+          args:
+          - type: literal
+            name: confirm
+            description: "Deletes the given entry of this repository without any other confirmation"
+            executor: atlas-core:datarepo/delete
         

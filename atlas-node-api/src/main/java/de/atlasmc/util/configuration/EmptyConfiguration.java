@@ -153,4 +153,9 @@ final class EmptyConfiguration implements Configuration {
 	@Override
 	public void clear() {}
 
+	@Override
+	public Object remove(String path) {
+		return null;
+	}
+
 }

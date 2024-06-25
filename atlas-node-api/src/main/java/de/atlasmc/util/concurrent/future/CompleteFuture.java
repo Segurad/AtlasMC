@@ -15,6 +15,8 @@ public class CompleteFuture<V> implements Future<V> {
 	private static final Future<?> NULL_RESULT_FUTURE = new CompleteFuture<>(null);
 	private static final Future<?> EMPTY_LIST_FUTURE = new CompleteFuture<>(List.of());
 	private static final Future<?> EMPTY_MAP_FUTURE = new CompleteFuture<>(Map.of());
+	private static final Future<Boolean> TRUE_FUTURE = new CompleteFuture<>(Boolean.TRUE);
+	private static final Future<Boolean> FALSE_FUTURE = new CompleteFuture<>(Boolean.FALSE);
 	
 	private final V result;
 	private final boolean cancelled;
@@ -128,6 +130,14 @@ public class CompleteFuture<V> implements Future<V> {
 	public static <V> Future<V> getEmptyMapFuture() {
 		return (Future<V>) EMPTY_MAP_FUTURE;
 	}
+	
+	public static Future<Boolean> getTrueFuture() {
+		return TRUE_FUTURE;
+	}
+	
+	public static Future<Boolean> getFalseFuture() {
+		return FALSE_FUTURE;
+	}
 
 	@Override
 	public void removeListener(FutureListener<V> listener) {
@@ -152,6 +162,10 @@ public class CompleteFuture<V> implements Future<V> {
 			if (col instanceof Map)
 				return getEmptyMapFuture();
 			return getEmptyListFuture();
+		} else if (value instanceof Boolean) {
+			@SuppressWarnings("unchecked")
+			Future<V> future = (boolean) value ? (Future<V>) TRUE_FUTURE : (Future<V>) FALSE_FUTURE;
+			return future;
 		}
 		return new CompleteFuture<>(value);
 	}
