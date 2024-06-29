@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -74,6 +75,7 @@ import de.atlasmc.util.EncryptionUtil;
 import de.atlasmc.util.FileUtils;
 import de.atlasmc.util.ThreadWatchdog;
 import de.atlasmc.util.configuration.ConfigurationSection;
+import de.atlasmc.util.configuration.MemoryConfigurationSection;
 import de.atlasmc.util.configuration.file.FileConfiguration;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
 
@@ -166,7 +168,7 @@ public class Main {
 		final CoreNodeBuilder builder = new CoreNodeBuilder(nodeUUID, master, log, workDir, config, keyPair);
 		builder.setDataHandler(repoHandler);
 		if (!isMaster)
-			builder.getDataHandler().addRepo(master.getRepository());
+			builder.getDataHandler().addRepos(master.getRepositories());
 		log.info("Loading core modules...");
 		Collection<RepositoryEntry> entries = null;
 		try {
@@ -190,7 +192,7 @@ public class Main {
 		builder.setChatFactory(new CoreChatFactory());
 		builder.setPluginManager(pmanager);
 		builder.setScheduler(new CoreAtlasScheduler());
-		builder.setServerManager(new CoreNodeServerManager());
+		builder.setServerManager(new CoreNodeServerManager(workDir));
 		builder.setMainThread(new CoreAtlasThread(log));
 		builder.setDefaultProtocol(new CoreProtocolAdapter());
 		pmanager.addLoader(new CoreJavaPluginLoader());
@@ -452,12 +454,45 @@ public class Main {
 	private static DataRepositoryHandler loadRepositories(Log logger, File workDir) {
 		CoreCacheRepository cache = new CoreCacheRepository(new File(workDir, "cache/data/"));
 		CoreDataRepositoryHandler repoHandler = new CoreDataRepositoryHandler(cache);
-		CoreLocalRepository repo = new CoreLocalRepository("localdata", new File(workDir, "data/"));
+		File repoMeta = new File(workDir, "data/repositories.yml");
+		if (repoMeta.exists()) {
+			try {
+				YamlConfiguration cfg = YamlConfiguration.loadConfiguration(repoMeta);
+				List<ConfigurationSection> repos = cfg.getConfigurationList("repositories");
+				for (ConfigurationSection repoCfg : repos) {
+					String name = repoCfg.getString("name");
+					UUID uuid = UUID.fromString(repoCfg.getString("uuid"));
+					String path = repoCfg.getString("path");
+					File repoPath = new File(workDir, path);
+					CoreLocalRepository repo = new CoreLocalRepository(name, uuid, repoPath);
+					repoHandler.addRepo(repo);
+					logger.debug("Loaded repository {}-{}: ", name, uuid, repoPath);
+				}
+			} catch (IOException e) {
+				logger.error("Error while loading repositories! (using defaults)", e);
+			}
+			return repoHandler;
+		}
+		String repoPath = "data/";
+		CoreLocalRepository repo = new CoreLocalRepository("localdata", UUID.randomUUID(), new File(workDir, repoPath));
 		repo.registerNamespace("plugins", "plugins");
 		repo.registerNamespace("configurations", "configurations");
 		repo.registerNamespace("worlds", "worlds");
 		repo.registerNamespace("server-templates", "templates/server");
 		repo.registerNamespace("schematics", "schematics");
+		YamlConfiguration cfg = new YamlConfiguration();
+		ArrayList<ConfigurationSection> repos = new ArrayList<>();
+		cfg.set("repositories", repos);
+		MemoryConfigurationSection repoCfg = new MemoryConfigurationSection(cfg);
+		repoCfg.set("name", repo.getName());
+		repoCfg.set("uuid", repo.getUUID());
+		repoCfg.set("path", repoPath);
+		repos.add(repoCfg);
+		try {
+			cfg.save(repoMeta);
+		} catch (IOException e) {
+			logger.error("Error whil writing repository meta file!", e);
+		}
 		repoHandler.addRepo(repo);
 		return repoHandler;
 	}

@@ -9,6 +9,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.NamespacedKey;
@@ -30,6 +31,7 @@ import de.atlasmc.util.reference.WeakReference1;
 public abstract class CoreAbstractLocalRepository implements LocalRepository, CacheHolder {
 	
 	private final String name;
+	private final UUID uuid;
 	protected final File metaDir;
 	private final File namespaceFile;
 	protected final Path dirPath; 
@@ -40,13 +42,16 @@ public abstract class CoreAbstractLocalRepository implements LocalRepository, Ca
 	
 	private YamlConfiguration namespacesConfig;
 	
-	public CoreAbstractLocalRepository(String name, File dir, boolean readonly) {
+	public CoreAbstractLocalRepository(String name, UUID uuid, File dir, boolean readonly) {
 		if (dir == null)
 			throw new IllegalArgumentException("Dir can not be null!");
 		FileUtils.ensureDir(dir);
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null!");
+		if (uuid == null)
+			throw new IllegalArgumentException("UUID can not be null!");
 		this.name = name;
+		this.uuid = uuid;
 		this.dirPath = dir.toPath();
 		this.readonly = readonly;
 		this.namespaces = new ConcurrentHashMap<>();
@@ -56,6 +61,11 @@ public abstract class CoreAbstractLocalRepository implements LocalRepository, Ca
 		this.namespaceFile = new  File(metaDir, "namespaces.yml");
 		Caching.register(this);
 		init();
+	}
+	
+	@Override
+	public UUID getUUID() {
+		return uuid;
 	}
 	
 	@Override

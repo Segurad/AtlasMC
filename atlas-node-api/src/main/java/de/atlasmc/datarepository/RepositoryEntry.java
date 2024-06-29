@@ -14,6 +14,8 @@ import de.atlasmc.util.concurrent.future.Future;
  */
 public interface RepositoryEntry extends Namespaced {
 	
+	Repository getRepository();
+	
 	/**
 	 * Returns all files of this entry
 	 * @return files
@@ -26,6 +28,12 @@ public interface RepositoryEntry extends Namespaced {
 	 * @return true if present
 	 */
 	boolean isLocalAvailable();
+
+	/**
+	 * Returns whether or not this entry is a directory
+	 * @return
+	 */
+	boolean isDirectory();
 	
 	/**
 	 * 
@@ -85,5 +93,12 @@ public interface RepositoryEntry extends Namespaced {
 	 * @return future with this entry
 	 */
 	Future<RepositoryEntryUpdate> update();
+
+	/**
+	 * Tries to make this entry available to this node. Returns a future containing a entry.
+	 * The entry provided by the future should be used for further usage.
+	 * @return future entry
+	 */
+	Future<RepositoryEntry> makeAvailable();
 
 }

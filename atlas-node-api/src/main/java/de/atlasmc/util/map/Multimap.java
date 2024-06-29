@@ -2,15 +2,20 @@ package de.atlasmc.util.map;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
-public interface Multimap<K, V> {
+public interface Multimap<K, V> extends Iterable<Entry<K, Collection<V>>> {
 	
 	public static <K, V> Multimap<K, V> of() {
 		return ImmutableMultimap.getEmpty();
 	}
 
 	Set<K> keySet();
+	
+	Collection<Collection<V>> values();
+	
+	Set<Entry<K, Collection<V>>> entrySet();
 
 	/**
 	 * Returns the collection for this key or null if not present

@@ -2,6 +2,7 @@ package de.atlascore.atlasnetwork.master;
 
 import java.security.KeyPair;
 import java.security.PublicKey;
+import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,6 +20,7 @@ import de.atlasmc.atlasnetwork.AtlasNetwork;
 import de.atlasmc.atlasnetwork.NetworkInfo;
 import de.atlasmc.atlasnetwork.NodeConfig;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
+import de.atlasmc.datarepository.DataRepositoryHandler;
 import de.atlasmc.datarepository.Repository;
 import de.atlasmc.proxy.ProxyConfig;
 
@@ -34,19 +36,19 @@ public class CoreAtlasNetwork implements AtlasNetwork {
 	private final CoreServerManager smanager;
 	private final Map<String, ProxyConfig> proxyConfigs;
 	private final Map<String, NodeConfig> nodeConfigs;
-	private final Repository repo;
+	private final DataRepositoryHandler repoHandler;
 	private CoreLocalAtlasNodeMaster localNode;
 	private CoreLocalAtlasMasterConnection masterCon;
 	private final KeyPair keyPair;
 	private final UUID uuid;
 	
-	public CoreAtlasNetwork(CorePlayerProfileHandler profileHandler, CorePermissionProvider permProvider, NetworkInfo info, NetworkInfo infoMaintenance, int slots, boolean maintenance, CoreServerManager smanager, Map<String, NodeConfig> nodeConfigs, Map<String, ProxyConfig> proxyConfigs, Repository repo, KeyPair keyPair, UUID uuid) {
+	public CoreAtlasNetwork(CorePlayerProfileHandler profileHandler, CorePermissionProvider permProvider, NetworkInfo info, NetworkInfo infoMaintenance, int slots, boolean maintenance, CoreServerManager smanager, Map<String, NodeConfig> nodeConfigs, Map<String, ProxyConfig> proxyConfigs, DataRepositoryHandler repoHandler, KeyPair keyPair, UUID uuid) {
 		if (profileHandler == null)
 			throw new IllegalArgumentException("Profile handler can not be null!");
 		if (permProvider == null)
 			throw new IllegalArgumentException("Permission porvider can not be null!");
-		if (repo == null)
-			throw new IllegalArgumentException("Repository can not be null!");
+		if (repoHandler == null)
+			throw new IllegalArgumentException("RepositoryHandler can not be null!");
 		this.profileHandler = profileHandler;
 		this.permProvider = permProvider;
 		this.info = info;
@@ -57,7 +59,7 @@ public class CoreAtlasNetwork implements AtlasNetwork {
 		this.smanager = smanager;
 		CoreSimpleServerDeploymentMethod simpleDeployer = new CoreSimpleServerDeploymentMethod(this.nodeManager);
 		this.smanager.addDeploymentMethod(NamespacedKey.of("atlas-master:server/simple_deployment"), simpleDeployer);
-		this.repo = repo;
+		this.repoHandler = repoHandler;
 		this.proxyConfigs = new ConcurrentHashMap<>(proxyConfigs);
 		this.nodeConfigs = new ConcurrentHashMap<>(nodeConfigs);
 		this.keyPair = keyPair;
@@ -108,9 +110,11 @@ public class CoreAtlasNetwork implements AtlasNetwork {
 	public void tick() {
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Repository getRepository() {
-		return repo;
+	public Collection<Repository> getRepositories() {
+		Collection<? extends Repository> repos = repoHandler.getLocalRepos();
+		return (Collection<Repository>) repos;
 	}
 
 	@Override

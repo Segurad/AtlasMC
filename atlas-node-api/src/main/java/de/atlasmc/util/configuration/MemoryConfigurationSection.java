@@ -145,6 +145,16 @@ public class MemoryConfigurationSection implements ConfigurationSection {
 	public List<String> getStringList(String path, List<String> def) {
 		return getListOfType(path, String.class, def);
 	}
+	
+	@Override
+	public List<ConfigurationSection> getConfigurationList(String path) {
+		return getConfigurationList(path, null);
+	}
+	
+	@Override
+	public List<ConfigurationSection> getConfigurationList(String path, List<ConfigurationSection> def) {
+		return getListOfType(path, ConfigurationSection.class, def);
+	}
 
 	@Override
 	public List<?> getList(String path) {

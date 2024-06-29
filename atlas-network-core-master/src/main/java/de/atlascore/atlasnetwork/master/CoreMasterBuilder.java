@@ -30,7 +30,6 @@ import de.atlascore.atlasnetwork.CorePermissionProvider;
 import de.atlascore.atlasnetwork.master.server.CoreServerGroup;
 import de.atlascore.atlasnetwork.master.server.CoreServerManager;
 import de.atlascore.chat.CoreChat;
-import de.atlascore.datarepository.CoreLocalRepository;
 import de.atlascore.permission.CorePermission;
 import de.atlascore.permission.CorePermissionContext;
 import de.atlascore.permission.CorePermissionGroup;
@@ -161,8 +160,7 @@ public class CoreMasterBuilder implements Builder<CoreAtlasNetwork> {
 		CoreServerManager smanager = new CoreServerManager(fallBack, serverGroups);
 		CoreSQLPlayerProfileHandler profileHandler = new CoreSQLPlayerProfileHandler(con);
 		CorePermissionProvider permProvider = new CoreSQLPermissionProvider(con);
-		CoreLocalRepository repo = new CoreLocalRepository("localdata", new File(workDir, "data/"));
-		return new CoreAtlasNetwork(profileHandler, permProvider, info, infoMaintenance, slots, maintenance, smanager, nodeConfigs, proxyConfigs, repo, keyPair, nodeID);
+		return new CoreAtlasNetwork(profileHandler, permProvider, info, infoMaintenance, slots, maintenance, smanager, nodeConfigs, proxyConfigs, repoHandler, keyPair, nodeID);
 	}
 	
 	private void loadServerGroups(File file) {

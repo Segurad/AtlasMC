@@ -10,8 +10,10 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.datarepository.Repository;
 import de.atlasmc.datarepository.RepositoryEntry;
 import de.atlasmc.datarepository.RepositoryEntryUpdate;
+import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.ConfigurationSerializeable;
@@ -23,7 +25,7 @@ public class CoreLocalRepositoryEntry implements RepositoryEntry, ConfigurationS
 	private final NamespacedKey key;
 	private String description;
 	private String root;
-	private final Collection<CoreLocalEntryFile> files;
+	private final List<CoreLocalEntryFile> files;
 	private byte[] checksum;
 	
 	public CoreLocalRepositoryEntry(CoreAbstractLocalRepository repo, NamespacedKey key, ConfigurationSection config) {
@@ -129,6 +131,11 @@ public class CoreLocalRepositoryEntry implements RepositoryEntry, ConfigurationS
 		this.checksum = checksum;
 	}
 	
+	@Override
+	public boolean isDirectory() {
+		return files.size() > 1 || !files.get(0).file().equals(root);
+	}
+	
 	public <T extends ConfigurationSection> T toConfiguration(T config) {
 		config.set("root", root);
 		config.set("description", description);
@@ -143,6 +150,16 @@ public class CoreLocalRepositoryEntry implements RepositoryEntry, ConfigurationS
 			fileCfg.set("lastTouch", file.lastTouch());
 		}
 		return config;
+	}
+
+	@Override
+	public Repository getRepository() {
+		return repo;
+	}
+
+	@Override
+	public Future<RepositoryEntry> makeAvailable() {
+		return CompleteFuture.of(this);
 	}
 	
 }

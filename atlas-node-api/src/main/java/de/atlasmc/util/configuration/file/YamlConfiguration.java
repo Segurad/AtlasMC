@@ -10,6 +10,9 @@ import java.util.Map;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
+
+import de.atlasmc.util.configuration.ConfigurationSection;
+
 import org.yaml.snakeyaml.Yaml;
 
 public class YamlConfiguration extends FileConfiguration {
@@ -17,11 +20,20 @@ public class YamlConfiguration extends FileConfiguration {
 	private final Yaml yaml;
 	
 	public YamlConfiguration() {
+		this.yaml = createYaml();
+	}
+	
+	public YamlConfiguration(ConfigurationSection configuration) {
+		super(configuration);
+		this.yaml = createYaml();
+	}
+	
+	private Yaml createYaml() {
 		DumperOptions dumpOptions = new DumperOptions();
 		dumpOptions.setDefaultFlowStyle(FlowStyle.BLOCK);
 		YamlRepresenter representer = new YamlRepresenter(dumpOptions);
 		representer.setDefaultFlowStyle(FlowStyle.BLOCK);
-		this.yaml = new Yaml(representer);
+		return new Yaml(representer);
 	}
 
 	@Override

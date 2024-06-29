@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -24,16 +24,18 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 	
 	private final CacheRepository cache;
 	private final Map<String, LocalRepository> localRepos;
-	private final Set<Repository> remotes;
+	private final Map<String, Repository> remotes;
 	private final Map<String, Repository> repoByNamespace;
+	private final Map<UUID, Repository> uuidToRepo;
 	
 	public CoreDataRepositoryHandler(CacheRepository cache) {
 		if (cache == null)
 			throw new IllegalArgumentException("Cache repository can not be null!");
 		this.cache = cache;
 		localRepos = new ConcurrentHashMap<>();
-		remotes = ConcurrentHashMap.newKeySet();
+		remotes = new ConcurrentHashMap<>();
 		repoByNamespace = new ConcurrentHashMap<>();
+		uuidToRepo = new ConcurrentHashMap<>();
 	}
 
 	@Override
@@ -48,7 +50,7 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 
 	@Override
 	public Collection<Repository> getRemoteRepos() {
-		return remotes;
+		return remotes.values();
 	}
 	
 	@Override
@@ -89,14 +91,13 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 		if (repo instanceof LocalRepository local) {
 			if (localRepos.putIfAbsent(repo.getName(), local) != null)
 				return;
-			Collection<? extends RepositoryNamespace> namespaces = repo.getNamespaces();
-			for (RepositoryNamespace namespace : namespaces)
-				repoByNamespace.putIfAbsent(namespace.getNamespace(), repo);
-		} else if (remotes.add(repo)) {
-			Collection<? extends RepositoryNamespace> namespaces = repo.getNamespaces();
-			for (RepositoryNamespace namespace : namespaces)
-				repoByNamespace.putIfAbsent(namespace.getNamespace(), repo);
+		} else if (remotes.putIfAbsent(repo.getName(), repo) != null) {
+			return;
 		}	
+		Collection<? extends RepositoryNamespace> namespaces = repo.getNamespaces();
+		for (RepositoryNamespace namespace : namespaces)
+			repoByNamespace.putIfAbsent(namespace.getNamespace(), repo);
+		uuidToRepo.put(repo.getUUID(), repo);
 	}
 
 	@Override
@@ -106,14 +107,13 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 		if (repo instanceof LocalRepository local) {
 			if (!localRepos.remove(repo.getName(), local))
 				return;
-			Collection<? extends RepositoryNamespace> namespaces = repo.getNamespaces();
-			for (RepositoryNamespace namespace : namespaces)
-				repoByNamespace.putIfAbsent(namespace.getNamespace(), repo);
-		} else if (remotes.remove(repo)) {
-			Collection<? extends RepositoryNamespace> namespaces = repo.getNamespaces();
-			for (RepositoryNamespace namespace : namespaces)
-				repoByNamespace.putIfAbsent(namespace.getNamespace(), repo);
+		} else if (!remotes.remove(repo.getName(), repo)) {
+			return;
 		}
+		Collection<? extends RepositoryNamespace> namespaces = repo.getNamespaces();
+		for (RepositoryNamespace namespace : namespaces)
+			repoByNamespace.putIfAbsent(namespace.getNamespace(), repo);
+		uuidToRepo.remove(repo.getUUID(), repo);
 	}
 	
 	@Override
@@ -163,6 +163,25 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 	@Override
 	public LocalRepository getLocalRepo(String name) {
 		return localRepos.get(name);
+	}
+
+	@Override
+	public Repository getRepo(String name) {
+		Repository repo = localRepos.get(name);
+		if (repo != null)
+			return repo;
+		return remotes.get(name);
+	}
+	
+	@Override
+	public Repository getRepo(UUID uuid) {
+		return uuidToRepo.get(uuid);
+	}
+
+	@Override
+	public void addRepos(Collection<Repository> repositories) {
+		for (Repository repo : repositories)
+			addRepo(repo);
 	}
 
 }

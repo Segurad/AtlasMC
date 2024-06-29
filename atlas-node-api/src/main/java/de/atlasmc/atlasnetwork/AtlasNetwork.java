@@ -1,6 +1,7 @@
 package de.atlasmc.atlasnetwork;
 
 import java.security.PublicKey;
+import java.util.Collection;
 import java.util.UUID;
 
 import de.atlasmc.atlasnetwork.server.ServerManager;
@@ -31,7 +32,7 @@ public interface AtlasNetwork extends Tickable {
 
 	boolean isMaintenance();
 	
-	Repository getRepository();
+	Collection<Repository> getRepositories();
 	
 	/**
 	 * Returns this nodes UUID

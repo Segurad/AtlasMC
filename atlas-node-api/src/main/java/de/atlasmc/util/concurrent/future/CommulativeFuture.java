@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class CommulativeFuture<V> extends AbstractFuture<Collection<Future<V>>> {
 	
-	public CommulativeFuture(Collection<? extends Future<V>> futures) {
+	public CommulativeFuture(Collection<Future<V>> futures) {
 		this.result = List.copyOf(futures);
 		final AtomicInteger awaiting = new AtomicInteger(result.size());
 		FutureListener<V> listener = (future) -> {

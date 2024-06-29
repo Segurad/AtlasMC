@@ -3,6 +3,7 @@ package de.atlascore.datarepository;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.UUID;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.datarepository.CacheRepository;
@@ -13,7 +14,7 @@ import de.atlasmc.util.concurrent.future.Future;
 public class CoreCacheRepository extends CoreAbstractLocalRepository implements CacheRepository {
 	
 	public CoreCacheRepository(File dir) {
-		super("cache", dir, false);
+		super("cache", UUID.randomUUID(), dir, false);
 	}
 
 	@Override

@@ -47,6 +47,10 @@ public interface ConfigurationSection {
 	
 	List<String> getStringList(String path, List<String> def);
 	
+	List<ConfigurationSection> getConfigurationList(String path);
+	
+	List<ConfigurationSection> getConfigurationList(String path, List<ConfigurationSection> def);
+	
 	<T> List<T> getListOfType(String path, Class<T> clazz);
 	
 	<T> List<T> getListOfType(String path, Class<T> clazz, List<T> def);

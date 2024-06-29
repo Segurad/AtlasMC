@@ -21,6 +21,12 @@ import de.atlasmc.util.configuration.MemoryConfiguration;
 
 public class JsonConfiguration extends FileConfiguration {
 	
+	public JsonConfiguration() {}
+	
+	public JsonConfiguration(ConfigurationSection configuration) {
+		super(configuration);
+	}
+	
 	@Override
 	public String saveToString() {
 		StringWriter string = new StringWriter();

@@ -158,4 +158,14 @@ final class EmptyConfiguration implements Configuration {
 		return null;
 	}
 
+	@Override
+	public List<ConfigurationSection> getConfigurationList(String path) {
+		return null;
+	}
+
+	@Override
+	public List<ConfigurationSection> getConfigurationList(String path, List<ConfigurationSection> def) {
+		return null;
+	}
+
 }

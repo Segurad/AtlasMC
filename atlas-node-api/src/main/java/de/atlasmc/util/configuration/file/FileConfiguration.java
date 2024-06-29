@@ -23,6 +23,12 @@ import de.atlasmc.util.configuration.MemoryConfigurationSection;
 
 public abstract class FileConfiguration extends MemoryConfiguration {
 	
+	public FileConfiguration() {}
+	
+	public FileConfiguration(ConfigurationSection configuration) {
+		super(configuration);
+	}
+	
 	public void save(File file) throws IOException {
 		if (file == null)
 			throw new IllegalArgumentException("File can not be null!");
