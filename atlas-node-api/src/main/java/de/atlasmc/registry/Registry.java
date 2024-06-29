@@ -7,6 +7,7 @@ import java.util.Set;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.registry.RegistryHolder.Target;
+import de.atlasmc.util.annotation.Nullable;
 
 public interface Registry<T> extends Namespaced {
 	
@@ -24,10 +25,13 @@ public interface Registry<T> extends Namespaced {
 	
 	boolean register(String key, T value);
 
+	@Nullable
 	T get(String key);
 	
+	@Nullable
 	T getOrDefault(String key);
 	
+	@Nullable
 	T getOrDefault(String key, T defaultValue);
 
 	T remove(String key);

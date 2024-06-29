@@ -1,10 +1,9 @@
 package de.atlascore.atlasnetwork.master.server;
 
 import java.util.Collection;
-import java.util.UUID;
 
-import de.atlascore.atlasnetwork.master.node.CoreNodeManager;
 import de.atlascore.atlasnetwork.master.node.CoreAtlasNodeMaster;
+import de.atlascore.atlasnetwork.master.node.CoreNodeManager;
 
 public class CoreSimpleServerDeploymentMethod implements CoreServerDeploymentMethod {
 	
@@ -32,7 +31,7 @@ public class CoreSimpleServerDeploymentMethod implements CoreServerDeploymentMet
 				if (maxMemory-memory < requiredMemory)
 					continue;
 			}
-			node.deployServer(UUID.randomUUID(), group);
+			node.deployServer(group);
 		}
 	}
 

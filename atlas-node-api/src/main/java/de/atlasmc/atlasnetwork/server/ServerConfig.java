@@ -1,15 +1,15 @@
 package de.atlasmc.atlasnetwork.server;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginConfiguration;
-import de.atlasmc.util.Pair;
 import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.MemoryConfiguration;
@@ -26,9 +26,10 @@ public class ServerConfig implements Cloneable {
 	private boolean maintenance;
 	private int stopUserCount;
 	private int stopTime;
+	private NamespacedKey template;
+	private Map<NamespacedKey, String> data;
+	private Map<NamespacedKey, NamespacedKey> plugins;
 	private Map<String, List<String>> motd;
-	private Collection<String> requiredData;
-	private Collection<Pair<String, String>> requiredPlugins;
 	
 	public ServerConfig() {}
 	
@@ -56,20 +57,28 @@ public class ServerConfig implements Cloneable {
 				motd.put(key, textList);
 			}
 		}
-		List<String> data = config.getStringList("data", List.of());
-		this.requiredData = List.copyOf(data);
-		@SuppressWarnings("unchecked")
-		List<ConfigurationSection> plugins = (List<ConfigurationSection>) config.getList("plugins");
-		if (plugins != null && !plugins.isEmpty()) {
-			List<Pair<String, String>> requiredPlugins = new ArrayList<>(plugins.size());
-			for (ConfigurationSection pluginCfg : plugins) {
-				String plugin = pluginCfg.getString("plugin");
-				String cfg = pluginCfg.getString("config");
-				requiredPlugins.add(Pair.of(plugin, cfg));
+		String rawTemplate = config.getString("template");
+		if (rawTemplate != null)
+			template = NamespacedKey.of(rawTemplate);
+		ConfigurationSection dataCfg = config.getConfigurationSection("data");
+		if (dataCfg != null) {
+			this.data = new HashMap<>();
+			for (String key : dataCfg.getKeys()) {
+				String path = dataCfg.getString(key);
+				if (path == null)
+					continue;
+				this.data.put(NamespacedKey.of(key), path);
 			}
-			this.requiredPlugins = List.copyOf(requiredPlugins);
-		} else {
-			this.requiredPlugins = List.of();
+		}
+		ConfigurationSection pluginsCfg = config.getConfigurationSection("plugins");
+		if (pluginsCfg != null) {
+			this.plugins = new HashMap<>();
+			for (String key : pluginsCfg.getKeys()) {
+				String cfg = pluginsCfg.getString(key);
+				if (cfg == null)
+					continue;
+				this.plugins.put(NamespacedKey.of(key), NamespacedKey.of(cfg));
+			}
 		}
 	}
 	
@@ -96,8 +105,36 @@ public class ServerConfig implements Cloneable {
 		return slots;
 	}
 	
-	public Collection<String> getRequiredData() {
-		return requiredData;
+	public boolean hasTemplate() {
+		return template != null;
+	}
+	
+	/**
+	 * Returns the repository key for a template used by this server or null
+	 * @return key or null
+	 */
+	@Nullable
+	public NamespacedKey getTemplate() {
+		return template;
+	}
+	
+	public boolean hasData() {
+		return data != null && !data.isEmpty();
+	}
+	
+	/**
+	 * Returns repository keys of required data and the paths where the data should be located
+	 * @return data
+	 */
+	@NotNull
+	public Map<NamespacedKey, String> getData() {
+		if (data == null)
+			data = new HashMap<>();
+		return data;
+	}
+	
+	public boolean hasPlugins() {
+		return plugins != null && !plugins.isEmpty();
 	}
 	
 	/**
@@ -105,8 +142,10 @@ public class ServerConfig implements Cloneable {
 	 * @return plugins
 	 */
 	@NotNull
-	public Collection<Pair<String, String>> getRequiredPlugins() {
-		return requiredPlugins;
+	public Map<NamespacedKey, NamespacedKey> getPlugins() {
+		if (plugins == null)
+			plugins = new HashMap<>();
+		return plugins;
 	}
 	
 	public boolean isStatic() {
@@ -129,10 +168,18 @@ public class ServerConfig implements Cloneable {
 		return stopTime;
 	}
 	
+	/**
+	 * Whether or not this server should stop if empty
+	 * @return true if stop when empty
+	 */
 	public boolean isStopWhenEmpty() {
 		return stopWhenEmpty;
 	}
 	
+	/**
+	 * Whether or not this server will safe chunk data
+	 * @return true if safe chunk data
+	 */
 	public boolean getSafeChunks() {
 		return safeChunks;
 	}
@@ -149,6 +196,10 @@ public class ServerConfig implements Cloneable {
 		return motd.get(key);
 	}
 	
+	/**
+	 * Returns a map of available motd configurations for this server
+	 * @return
+	 */
 	public Map<String, List<String>> getMotd() {
 		return motd;
 	}

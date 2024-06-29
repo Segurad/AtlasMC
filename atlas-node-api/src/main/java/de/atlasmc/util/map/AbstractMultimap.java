@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 public abstract class AbstractMultimap<K, V> implements Multimap<K, V> {
 	
@@ -20,6 +21,16 @@ public abstract class AbstractMultimap<K, V> implements Multimap<K, V> {
 	@Override
 	public Set<K> keySet() {
 		return map.keySet();
+	}
+	
+	@Override
+	public Collection<Collection<V>> values() {
+		return map.values();
+	}
+	
+	@Override
+	public Set<Entry<K, Collection<V>>> entrySet() {
+		return map.entrySet();
 	}
 
 	@Override
@@ -127,6 +138,11 @@ public abstract class AbstractMultimap<K, V> implements Multimap<K, V> {
 	@Override
 	public int hashCode() {
 		return map.hashCode();
+	}
+	
+	@Override
+	public Iterator<Entry<K, Collection<V>>> iterator() {
+		return map.entrySet().iterator();
 	}
 	
 	protected abstract Collection<V> createCollection(int capacity);

@@ -24,6 +24,6 @@ public abstract class CoreAtlasNodeMaster extends CoreAtlasNode implements Atlas
 		return usedHeap;
 	}
 
-	public abstract void deployServer(UUID uuid, ServerGroup group);
+	public abstract void deployServer(ServerGroup group);
 	
 }

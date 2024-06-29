@@ -466,7 +466,7 @@ public class Main {
 					File repoPath = new File(workDir, path);
 					CoreLocalRepository repo = new CoreLocalRepository(name, uuid, repoPath);
 					repoHandler.addRepo(repo);
-					logger.debug("Loaded repository {}-{}: ", name, uuid, repoPath);
+					logger.debug("Loaded repository {}-{}: {}", name, uuid, repoPath);
 				}
 			} catch (IOException e) {
 				logger.error("Error while loading repositories! (using defaults)", e);
@@ -485,7 +485,7 @@ public class Main {
 		cfg.set("repositories", repos);
 		MemoryConfigurationSection repoCfg = new MemoryConfigurationSection(cfg);
 		repoCfg.set("name", repo.getName());
-		repoCfg.set("uuid", repo.getUUID());
+		repoCfg.set("uuid", repo.getUUID().toString());
 		repoCfg.set("path", repoPath);
 		repos.add(repoCfg);
 		try {

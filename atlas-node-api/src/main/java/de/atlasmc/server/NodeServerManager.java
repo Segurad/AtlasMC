@@ -15,6 +15,6 @@ public interface NodeServerManager {
 	
 	Collection<NodeServer> getServers(ServerGroup group);
 
-	NodeServer deployServer(UUID uuid, ServerGroup group);
+	NodeServer deployServer(ServerGroup group);
 
 }

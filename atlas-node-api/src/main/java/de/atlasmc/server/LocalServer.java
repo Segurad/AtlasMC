@@ -1,5 +1,6 @@
 package de.atlasmc.server;
 
+import java.io.File;
 import java.util.Collection;
 
 import de.atlasmc.event.Event;

@@ -17,19 +17,28 @@ public interface NodeServer extends Server {
 	@NotNull
 	Collection<AtlasPlayer> getPlayers();
 	
+
+	@ThreadSafe
+	@NotNull
+	File getWorlddir();
+	
 	@ThreadSafe
 	@NotNull
 	File getWorkdir();
 	
 	@ThreadSafe
 	@NotNull
-	Future<Void> start();
+	Future<Boolean> start();
 	
 	@ThreadSafe
 	@NotNull
-	Future<Void> stop();
+	Future<Boolean> stop();
 	
 	@ThreadSafe
 	boolean isRunning();
+
+	@ThreadSafe
+	@NotNull
+	Future<Boolean> prepare();
 	
 }

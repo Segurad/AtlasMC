@@ -37,8 +37,8 @@ public class CoreLocalAtlasNodeMaster extends CoreAtlasNodeMaster {
 	public void tick() {}
 
 	@Override
-	public void deployServer(UUID uuid, ServerGroup group) {
-		Atlas.getServerManager().deployServer(uuid, group);
+	public void deployServer(ServerGroup group) {
+		Atlas.getServerManager().deployServer(group);
 	}
 
 }

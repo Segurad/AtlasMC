@@ -67,4 +67,10 @@ public class CoreServer implements Server {
 		this.maxPlayer = maxPlayer;
 	}
 
+	@Override
+	public Status getStatus() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

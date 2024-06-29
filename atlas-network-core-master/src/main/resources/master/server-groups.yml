@@ -36,11 +36,10 @@ TestGroup:
       - Line1
       - Line2
       - LineN
-    template: "server-templates:test"
+    template: server-templates:someserver
     worlds:
-    - "repo/world:myworld"
+    - testworld
     data:
-    - "repo/world:my_world"
+      words:testworld: worlds/testworld
     plugins:
-    - plugin: "repo/plugin:my_plugin_1"
-      config: "repo/plugin-config:my_config_1"
+      plugin:my_plugin_1: plugin-config:my_config_1
