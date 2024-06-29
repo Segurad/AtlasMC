@@ -32,48 +32,57 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 	}
 	
 	@Override
-	public void runSyncTask(Plugin plugin, AtlasTask task) {
-		runSyncTaskLater(plugin, task, 0);
-	}
-	
-	@Override
-	public void runSyncTask(Plugin plugin, Runnable task) {
-		runSyncTaskLater(plugin, new CoreAtlasTaskWrapper(task), 0);
+	public AtlasTask runSyncTask(Plugin plugin, Runnable task) {
+		return runSyncTaskLater(plugin, task, 0);
 	}
 
 	@Override
-	public void runSyncTaskLater(Plugin plugin, AtlasTask task, long delay) {
-		addSyncTask(new CoreDelayedTask(plugin, task, delay));
+	public AtlasTask runSyncTaskLater(Plugin plugin, Runnable task, long delay) {
+		AtlasTask atask = asTask(task);
+		addSyncTask(new CoreDelayedTask(plugin, atask, delay));
+		return atask;
 	}
 
 	@Override
-	public void runSyncTaskFor(Plugin plugin, AtlasTask task, long delay, long period, long repeats) {
-		addSyncTask(new CoreCountedRepeatingTask(plugin, task, delay, period, repeats));
+	public AtlasTask runSyncTaskFor(Plugin plugin, Runnable task, long delay, long period, long repeats) {
+		AtlasTask atask = asTask(task);
+		addSyncTask(new CoreCountedRepeatingTask(plugin, atask, delay, period, repeats));
+		return atask;
 	}
 
 	@Override
-	public void runSyncRepeatingTask(Plugin plugin, AtlasTask task, long delay, long period) {
-		addSyncTask(new CoreRepeatingTask(plugin, task, delay, period));
+	public AtlasTask runSyncRepeatingTask(Plugin plugin, Runnable task, long delay, long period) {
+		AtlasTask atask = asTask(task);
+		addSyncTask(new CoreRepeatingTask(plugin, atask, delay, period));
+		return atask;
 	}
 
 	@Override
-	public void runAsyncTask(Plugin plugin, AtlasTask task) {
-		addAsyncTask(new CoreDelayedTask(plugin, task, 0));
+	public AtlasTask runAsyncTask(Plugin plugin, Runnable task) {
+		AtlasTask atask = asTask(task);
+		addAsyncTask(new CoreDelayedTask(plugin, atask, 0));
+		return atask;
 	}
 
 	@Override
-	public void runAsyncTaskLater(Plugin plugin, AtlasTask task, long delay) {
-		addAsyncTask(new CoreDelayedTask(plugin, task, delay));
+	public AtlasTask runAsyncTaskLater(Plugin plugin, Runnable task, long delay) {
+		AtlasTask atask = asTask(task);
+		addAsyncTask(new CoreDelayedTask(plugin, atask, delay));
+		return atask;
 	}
 
 	@Override
-	public void runAsyncTaskFor(Plugin plugin, AtlasTask task, long delay, long period, long repeats) {
-		addAsyncTask(new CoreRepeatingTask(plugin, task, delay, period));
+	public AtlasTask runAsyncTaskFor(Plugin plugin, Runnable task, long delay, long period, long repeats) {
+		AtlasTask atask = asTask(task);
+		addAsyncTask(new CoreRepeatingTask(plugin, atask, delay, period));
+		return atask;
 	}
 
 	@Override
-	public void runAsyncRepeatingTask(Plugin plugin, AtlasTask task, long delay, long period) {
-		addAsyncTask(new CoreRepeatingTask(plugin, task, delay, period));
+	public AtlasTask runAsyncRepeatingTask(Plugin plugin, Runnable task, long delay, long period) {
+		AtlasTask atask = asTask(task);
+		addAsyncTask(new CoreRepeatingTask(plugin, atask, delay, period));
+		return atask;
 	}
 	
 	/**
@@ -178,6 +187,14 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 		if (task.isRunnable())
 			master.fetchWorker(task);
 		return task.isDead();
+	}
+	
+	private AtlasTask asTask(Runnable task) {
+		if (task instanceof AtlasTask atlasTask) {
+			return atlasTask;
+		} else {
+			return new CoreAtlasTaskWrapper(task);
+		}
 	}
 	
 	@Override
