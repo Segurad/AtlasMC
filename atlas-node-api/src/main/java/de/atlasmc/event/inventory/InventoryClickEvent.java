@@ -11,7 +11,8 @@ public class InventoryClickEvent extends InventoryInteractEvent {
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	private final InventoryAction action;
 	private final ClickType click;
-	private final int rawSlot, key;
+	private final int rawSlot;
+	private final int key;
 	
 	public InventoryClickEvent(InventoryView view, int rawSlot, ClickType click, InventoryAction action) {
 		this(view, rawSlot, click, action, -1);

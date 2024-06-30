@@ -15,7 +15,8 @@ public enum Direction {
 	
 	private static List<Direction> VALUES;
 	
-	private final float min, max;
+	private final float min;
+	private final float max;
 	
 	private Direction(float min, float max) {
 		this.max = max;

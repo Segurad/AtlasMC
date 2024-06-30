@@ -6,7 +6,8 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.OUT_UNLOAD_CHUNK)
 public class PacketOutUnloadChunk extends AbstractPacket implements PacketPlayOut {
 	
-	private int chunkX, chunkZ;
+	private int chunkX;
+	private int chunkZ;
 	
 	public int getChunkX() {
 		return chunkX;

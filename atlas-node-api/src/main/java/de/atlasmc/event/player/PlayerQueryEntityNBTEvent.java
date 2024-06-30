@@ -8,7 +8,8 @@ public class PlayerQueryEntityNBTEvent extends PlayerEvent implements Cancellabl
 
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
-	private final int transactionID, entityID;
+	private final int transactionID;
+	private final int entityID;
 	private boolean cancelled;
 	
 	public PlayerQueryEntityNBTEvent(Player player, int transactionID, int entityID) {

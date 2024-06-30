@@ -118,7 +118,7 @@ public class CoreAtlasPlayer implements AtlasPlayer {
 	public void sendMessage(Chat chat) {
 		if (chat == null)
 			throw new IllegalArgumentException("Chat can not be null!");
-		sendInternalMessage(chat.getText());
+		sendInternalMessage(chat.toText());
 		// TODO handle chat
 	}
 	

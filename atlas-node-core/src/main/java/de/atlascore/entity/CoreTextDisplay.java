@@ -241,7 +241,7 @@ public class CoreTextDisplay extends CoreDisplay implements TextDisplay {
 		int opacity = getTextOpacity();
 		if (opacity != 0xFF)
 			writer.writeByteTag(NBT_TEXT_OPACITY, opacity);
-		writer.writeStringTag(NBT_TEXT, getText().getText());
+		writer.writeStringTag(NBT_TEXT, getText().toText());
 	}
 
 }

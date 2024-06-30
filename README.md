@@ -1,5 +1,7 @@
 ![Maintainability](https://img.shields.io/codeclimate/maintainability-percentage/Segurad/AtlasMC)
-<br>![Logo](atlas-network-core-master/src/main/resources/assets/server_icon.png) 
+
+![Logo](atlas-network-core-master/src/main/resources/assets/server_icon.png) 
+
 # AtlasMC 
 
 <b>IN DEVELOPEMENT</b>

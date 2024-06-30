@@ -406,7 +406,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 		writer.writeStringTag(NBT_ID, type.getNamespacedKeyRaw());
 		writer.writeShortTag(NBT_AIR, air);
 		if (hasCustomName()) 
-			writer.writeStringTag(NBT_CUSTOM_NAME, getCustomName().getJsonText());
+			writer.writeStringTag(NBT_CUSTOM_NAME, getCustomName().toJsonText());
 		if (isCustomNameVisible())
 			writer.writeByteTag(NBT_CUSTOM_NAME_VISIBLE, true);
 		writer.writeFloatTag(NBT_FALL_DISTANCE, fallDistance);

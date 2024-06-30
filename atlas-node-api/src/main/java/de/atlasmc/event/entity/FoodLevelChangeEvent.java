@@ -16,6 +16,7 @@ public class FoodLevelChangeEvent extends EntityEvent implements Cancellable {
 	public FoodLevelChangeEvent(Entity entity, int newLevel, ItemStack item) {
 		super(entity);
 		this.newLevel = newLevel;
+		this.item = item;
 	}
 
 	@Override

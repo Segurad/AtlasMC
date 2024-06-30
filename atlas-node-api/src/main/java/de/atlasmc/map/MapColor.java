@@ -163,7 +163,12 @@ public final class MapColor {
 		}
 	}
 	
-	private final byte level, R, G, B, baseID, ID;
+	private final byte level;
+	private final byte R;
+	private final byte G;
+	private final byte B;
+	private final byte baseID;
+	private final byte ID;
 	
 	private MapColor(int r, int g, int b, int level, int id, int bid) {
 		this.R = (byte) r;
@@ -305,9 +310,11 @@ public final class MapColor {
 	
 	public static MapData regionToMap(final Region region, final World world) {
 		if (region == null) return null;
-		final int width = (int) region.getWidhtX(), height = (int) region.getWidhtZ();
+		final int width = (int) region.getWidhtX();
+		final int height = (int) region.getWidhtZ();
 		final byte[] map = new byte[width*height];
-		final int wx = (int) region.getMinX(),wz = (int) region.getMinZ();
+		final int wx = (int) region.getMinX();
+		final int wz = (int) region.getMinZ();
 		for (int z = 0; z < height; z++) {
 			for (int x = 0; x < width; x++) {
 				final Block b = world.getHighestBlockAt(wx+x, wz+z);

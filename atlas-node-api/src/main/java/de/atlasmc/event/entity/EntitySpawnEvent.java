@@ -13,8 +13,11 @@ public class EntitySpawnEvent extends EntityEvent implements Cancellable {
 	protected static final ServerHandlerList HANDLERS = new ServerHandlerList();
 	
 	private final World world;
-	private double x, y, z;
-	private float pitch, yaw;
+	private double x;
+	private double y;
+	private double z;
+	private float pitch;
+	private float yaw;
 	private boolean cancelled;
 
 	public EntitySpawnEvent(Entity entity, World world, double x, double y, double z, float pitch, float yaw) {

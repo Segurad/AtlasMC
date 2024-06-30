@@ -13,7 +13,8 @@ import de.atlasmc.util.configuration.ConfigurationSerializeable;
  */
 public class ClassBlockDataFactory implements BlockDataFactory, ConfigurationSerializeable {
 	
-	protected final Class<? extends BlockData> dataInterface, data;
+	protected final Class<? extends BlockData> dataInterface;
+	protected final Class<? extends BlockData> data;
 	
 	/**
 	 * 

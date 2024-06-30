@@ -14,7 +14,11 @@ public class CoreBrewingStandInventory extends CoreInventory implements BrewingI
 	PROPERTY_BREW_TIME = 0,
 	PROPERTY_FUEL_TIME = 1;
 	
-	private int fuel, maxfuel, brewingTime, dfuel, dbrewingTime = 400;
+	private int fuel;
+	private int maxfuel;
+	private int brewingTime;
+	private int dfuel;
+	private int dbrewingTime = 400;
 	
 	public CoreBrewingStandInventory(Chat title, InventoryHolder holder) {
 		super(5, 3, InventoryType.BREWING, title, holder);

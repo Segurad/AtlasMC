@@ -33,7 +33,9 @@ public class CoreBrewingStand extends CoreBlockData implements BrewingStand {
 		});
 	}
 	
-	private boolean bottle0, bottle1, bottle2;
+	private boolean bottle0;
+	private boolean bottle1;
+	private boolean bottle2;
 	
 	public CoreBrewingStand(Material material) {
 		super(material);

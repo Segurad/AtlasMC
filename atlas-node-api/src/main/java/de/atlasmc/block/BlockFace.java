@@ -26,8 +26,11 @@ public enum BlockFace {
 	
 	private static List<BlockFace> VALUES;
 	
-	final int modX, modY, modZ; // Modifier in direction*
-	final float pitch, yaw;
+	private final int modX;
+	private final int modY;
+	private final int modZ;
+	private final float pitch;
+	private final float yaw;
 	
 	private BlockFace(int modX, int modY, int modZ) {
 		this(modX, modY, modZ, 0, 0);

@@ -39,9 +39,15 @@ public interface Merchant {
 		NBT_USES = CharKey.literal("uses"),
 		NBT_XP = CharKey.literal("xp");
 		
-		private ItemStack inputItem1, inputItem2, outputItem;
+		private ItemStack inputItem1;
+		private ItemStack inputItem2;
+		private ItemStack outputItem;
 		private boolean disabled;
-		private int trades, maxTrades, xp, specialPrice, demand;
+		private int trades;
+		private int maxTrades;
+		private int xp;
+		private int specialPrice;
+		private int demand;
 		private float priceMultiplier;
 		
 		public MerchantRecipe() {}

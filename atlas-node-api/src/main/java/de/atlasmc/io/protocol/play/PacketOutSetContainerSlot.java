@@ -7,7 +7,9 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.OUT_SET_CONTAINER_SLOT)
 public class PacketOutSetContainerSlot extends AbstractPacket implements PacketPlayOut {
 
-	private int windowID, slot, stateID;
+	private int windowID;
+	private int slot;
+	private int stateID;
 	private ItemStack item;
 	
 	public int getWindowID() {

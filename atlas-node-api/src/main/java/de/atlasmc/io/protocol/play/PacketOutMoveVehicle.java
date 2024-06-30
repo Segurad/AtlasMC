@@ -6,8 +6,11 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.OUT_MOVE_VEHICLE)
 public class PacketOutMoveVehicle extends AbstractPacket implements PacketPlayOut {
 	
-	private double x, y, z;
-	private float yaw, pitch;
+	private double x;
+	private double y;
+	private double z;
+	private float yaw;
+	private float pitch;
 	
 	public double getX() {
 		return x;

@@ -11,11 +11,11 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreMultipleFacing6Waterlogged extends CoreMultipleFacing6 implements Waterlogged {
 	
+	private boolean waterlogged;
+	
 	public CoreMultipleFacing6Waterlogged(Material material) {
 		super(material);
 	}
-
-	private boolean waterlogged;
 
 	@Override
 	public boolean isWaterlogged() {

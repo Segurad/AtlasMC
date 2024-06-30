@@ -9,7 +9,8 @@ import de.atlasmc.scoreboard.RenderType;
 @DefaultPacketID(PacketPlay.OUT_UPDATE_OBJECTIVES)
 public class PacketOutUpdateObjectives extends AbstractPacket implements PacketPlayOut {
 	
-	private String name, displayName;
+	private String name;
+	private String displayName;
 	private Mode mode;
 	private RenderType renderType;
 	

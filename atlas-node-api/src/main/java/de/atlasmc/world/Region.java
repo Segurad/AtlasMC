@@ -10,9 +10,15 @@ import de.atlasmc.SimpleLocation;
  */
 public class Region implements Cloneable {
 
-	protected SimpleLocation loc1, loc2;
+	protected SimpleLocation loc1;
+	protected SimpleLocation loc2;
 
-	protected double maxx, maxy, maxz, minx, miny, minz;
+	protected double maxx;
+	protected double maxy;
+	protected double maxz;
+	protected double minx;
+	protected double miny;
+	protected double minz;
 
 	/**
 	 * Constructs a region between two locations

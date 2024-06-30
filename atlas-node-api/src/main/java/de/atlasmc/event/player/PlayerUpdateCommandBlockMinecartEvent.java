@@ -13,7 +13,8 @@ public class PlayerUpdateCommandBlockMinecartEvent extends PlayerEvent implement
 	private int entityID;
 	private MinecartCommandBlock entity;
 	private final String command;
-	private boolean trackoutput, cancelled;
+	private boolean trackoutput;
+	private boolean cancelled;
 	
 	public PlayerUpdateCommandBlockMinecartEvent(Player player, int entityID, String command, boolean trackoutput) {
 		super(player);

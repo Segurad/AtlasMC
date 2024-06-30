@@ -8,7 +8,8 @@ import de.atlasmc.recipe.BookType;
 public class PacketInChangeRecipeBookSettings extends AbstractPacket implements PacketPlayIn {
 	
 	private BookType bookType;
-	private boolean bookOpen, filterActive;
+	private boolean bookOpen;
+	private boolean filterActive;
 	
 	public BookType getBookType() {
 		return bookType;

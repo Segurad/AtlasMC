@@ -251,7 +251,7 @@ public class CoreWorld implements World {
 				packet.setPitch(pitch);
 				packet.setVolume(volume);
 				packet.setEntityID(entity.getID());
-				packet.getSeed();
+				packet.setSeed(seed);
 			}
 			player.getConnection().sendPacked(packet);
 		}

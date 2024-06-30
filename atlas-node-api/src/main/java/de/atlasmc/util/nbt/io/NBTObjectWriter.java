@@ -15,7 +15,8 @@ import de.atlasmc.util.nbt.tag.NBT;
 public class NBTObjectWriter implements NBTWriter {
 	
 	private LinkedList<NBT> containers;
-	private NBT highestContainer, masterContainer;
+	private NBT highestContainer;
+	private NBT masterContainer;
 	
 	/**
 	 * Creates a new NBTObjectWirter with a empty {@link CompoundTag} as root 

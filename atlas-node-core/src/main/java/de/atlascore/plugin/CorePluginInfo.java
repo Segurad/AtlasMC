@@ -4,7 +4,11 @@ import java.util.List;
 
 final class CorePluginInfo {
 	
-	public final String name, version, author, description, main;
+	public final String name;
+	public final String version;
+	public final String author;
+	public final String description;
+	public final String main;
 	public final boolean coreModule;
 	public final List<String> dependencies;
 	

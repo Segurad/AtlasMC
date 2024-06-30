@@ -61,7 +61,9 @@ public class CoreSkull extends CoreTileEntity implements Skull {
 		
 	}
 	
-	private String name, signature, texture;
+	private String name;
+	private String signature;
+	private String texture;
 	private UUID uuid;
 	
 	public CoreSkull(Material type) {

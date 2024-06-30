@@ -9,8 +9,13 @@ public class PacketOutParticle extends AbstractPacket implements PacketPlayOut {
 	
 	private Particle particle;
 	private int count;
-	private double x, y, z;
-	private float offX, offY, offZ, maxSpeed;
+	private double x;
+	private double y; 
+	private double z;
+	private float offX;
+	private float offY;
+	private float offZ;
+	private float maxSpeed;
 	private Object data;
 	private boolean longDistance;
 	

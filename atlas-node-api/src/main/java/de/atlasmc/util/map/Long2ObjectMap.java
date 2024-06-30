@@ -269,7 +269,8 @@ public class Long2ObjectMap<V> implements Iterable<V> {
 		private int hash;
 		private final long key;
 		private E value;
-		private Node<E> prev, next;
+		private Node<E> prev;
+		private Node<E> next;
 		
 		public Node(int hash, long key) {
 			this.hash = hash;

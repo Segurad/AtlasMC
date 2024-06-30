@@ -11,7 +11,9 @@ public class PacketInUseItemOn extends AbstractPacket implements PacketPlayIn {
 	private EquipmentSlot hand;
 	private BlockFace face;
 	private long pos;
-	private float curposx,curposy,curposz;
+	private float curposx;
+	private float curposy;
+	private float curposz;
 	private boolean insideblock;
 	private int sequence;
 	

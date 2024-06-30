@@ -10,7 +10,8 @@ public abstract class AbstractComponent<E> implements Component<E> {
 
 	protected final List<ComponentHandler> handlers;
 	protected final Object[] entries; // ordered y > x
-	protected final int x, y;
+	protected final int x;
+	protected final int y;
 	
 	protected AbstractComponent(int x, int y) {
 		handlers = new ArrayList<>();

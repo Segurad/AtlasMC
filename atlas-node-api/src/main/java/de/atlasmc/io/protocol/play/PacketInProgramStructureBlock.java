@@ -6,11 +6,22 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.IN_PROGRAM_STRUCTURE_BLOCK)
 public class PacketInProgramStructureBlock extends AbstractPacket implements PacketPlayIn {
 	
-	private int action, mode, mirror, rotation;
-	private String name, metadata;
-	private int offsetX, offsetY, offsetZ, sizeX, sizeY, sizeZ, flags;
+	private int action;
+	private int mode;
+	private int mirror;
+	private int rotation;
+	private String name;
+	private String metadata;
+	private int offsetX;
+	private int offsetY;
+	private int offsetZ;
+	private int sizeX;
+	private int sizeY;
+	private int sizeZ;
+	private int flags;
 	private float integrity;
-	private long seed, position;
+	private long seed;
+	private long position;
 
 	public int getAction() {
 		return action;

@@ -10,7 +10,9 @@ public abstract class AbstractPageComponent<E> implements PageComponent<E> {
 
 	protected final List<ComponentHandler> handlers;
 	protected final List<E[]> entries;
-	protected final int x, y, max;
+	protected final int x;
+	protected final int y;
+	protected final int max;
 	
 	protected AbstractPageComponent(int x, int y) {
 		this(x, y, 0, 1);

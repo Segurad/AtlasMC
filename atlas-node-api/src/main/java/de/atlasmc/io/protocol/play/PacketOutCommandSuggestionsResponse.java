@@ -8,7 +8,9 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.OUT_COMMAND_SUGGESTIONS_RESPONSE)
 public class PacketOutCommandSuggestionsResponse extends AbstractPacket implements PacketPlayOut {
 	
-	private int transactionID, start, length;
+	private int transactionID;
+	private int start;
+	private int length;
 	private List<Match> matches;
 	
 	public int getTransactionID() {

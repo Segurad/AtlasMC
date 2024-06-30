@@ -6,7 +6,8 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.IN_PADDLE_BOAT)
 public class PacketInPaddleBoat extends AbstractPacket implements PacketPlayIn {
 	
-	private boolean leftPaddle, rightPaddle;
+	private boolean leftPaddle;
+	private boolean rightPaddle;
 	
 	public boolean getLeftPaddleTurning() {
 		return leftPaddle;

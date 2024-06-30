@@ -2,6 +2,7 @@ package de.atlascore.chat;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.chat.component.ChatComponent;
 
 public class CoreChat implements Chat {
 	
@@ -16,35 +17,35 @@ public class CoreChat implements Chat {
 	}
 	
 	@Override
-	public String getLegacyText() {
+	public String toLegacyText() {
 		if (legacy == null) {
 			synchronized (this) {
 				if (legacy == null)
-					legacy = ChatUtil.legacyFromJson(json);
+					legacy = ChatUtil.jsonToLegacy(json);
 			}
 		}
 		return legacy;
 	}
 	
 	@Override
-	public String getJsonText() {
+	public String toJsonText() {
 		if (json == null) {
 			synchronized (this) {
 				if (json == null)
-					json = ChatUtil.jsonFromLegacy(json);
+					json = ChatUtil.legacyToJson(json);
 			}
 		}
 		return json;
 	}
 	
 	@Override
-	public String getText() {
+	public String toText() {
 		return json != null ? json : legacy;
 	}
 	
 	@Override
 	public String toString() {
-		return getText();
+		return toText();
 	}
 
 	@Override
@@ -89,12 +90,17 @@ public class CoreChat implements Chat {
 	}
 	
 	@Override
-	public String getRawText() {
+	public String toRawText() {
 		if (json != null)
 			return ChatUtil.jsonToRawText(json);
 		if (legacy != null)
 			return ChatUtil.legacyToRawText(legacy);
 		return "";
+	}
+
+	@Override
+	public ChatComponent toComponent() {
+		return ChatUtil.toComponent(this);
 	}
 
 }

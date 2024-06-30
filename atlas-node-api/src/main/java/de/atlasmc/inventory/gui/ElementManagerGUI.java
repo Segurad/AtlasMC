@@ -117,7 +117,8 @@ public abstract class ElementManagerGUI<E> extends MultipageGUI {
 	protected abstract boolean removeElement(E element);
 	
 	public final void updateElementIcon(E element, ItemStack item) {
-		int page = -1, i = -1;
+		int page = -1;
+		int i = -1;
 		final List<E[]> valueList = getElements().getEntrieList();
 		for (final E[] values : valueList) {
 			page++;

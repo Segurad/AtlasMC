@@ -47,7 +47,10 @@ public final class Color {
 				YELLOW);
 	}
 
-	public final byte r, g, b, a;
+	public final byte r; 
+	public final byte g; 
+	public final byte b; 
+	public final byte a;
 	
 	private final String name;
 	
@@ -193,6 +196,24 @@ public final class Color {
 		result = prime * result + b;
 		result = prime * result + a;
 		return result;
+	}
+	
+	
+	public String asConsoleColor() {
+		return asConsoleColor(r & 0xFF, g & 0xFF, b & 0xFF);
+	}
+	
+	public static String asConsoleColor(int rgb) {
+		return asConsoleColor((rgb & 0xFF0000) >> 16, (rgb & 0xFF00) >> 8, rgb & 0xFF);
+	}
+	
+	public static String asConsoleColor(int r, int g, int b) {
+		return new StringBuilder(22)
+				.append("\033[38;2;")
+				.append(r).append(';')
+				.append(g).append(';')
+				.append(b).append('m')
+				.toString();
 	}
 
 	@Override

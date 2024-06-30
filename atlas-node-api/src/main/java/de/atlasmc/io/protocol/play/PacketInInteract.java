@@ -6,8 +6,12 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.IN_INTERACT)
 public class PacketInInteract extends AbstractPacket implements PacketPlayIn {
 	
-	private int entityID,type,hand;
-	private float x,y,z;
+	private int entityID;
+	private int type;
+	private int hand;
+	private float x;
+	private float y;
+	private float z;
 	private boolean sneaking;
 	
 	public int getEntityID() {

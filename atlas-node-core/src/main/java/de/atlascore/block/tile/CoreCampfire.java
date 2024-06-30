@@ -47,7 +47,8 @@ public class CoreCampfire extends CoreTileEntity implements Campfire {
 	}
 	
 	private ItemStack[] items;
-	private int[] cookingTimes, cookingTotalTimes;
+	private int[] cookingTimes;
+	private int[] cookingTotalTimes;
 
 	public CoreCampfire(Material type) {
 		super(type);

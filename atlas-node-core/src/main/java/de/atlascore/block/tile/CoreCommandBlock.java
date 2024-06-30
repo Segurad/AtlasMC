@@ -57,8 +57,12 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 	}
 	
 	private Mode mode;
-	private boolean conditional, alwaysActive, trackOutput, powered;
-	private Chat name, lastoutput;
+	private boolean conditional;
+	private boolean alwaysActive;
+	private boolean trackOutput;
+	private boolean powered;
+	private Chat name;
+	private Chat lastoutput;
 	private String command;
 	private int successCount;
 	
@@ -157,18 +161,18 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
 		if (systemData) {
-			writer.writeStringTag(NBT_CUSTOM_NAME, getCustomName().getJsonText());
+			writer.writeStringTag(NBT_CUSTOM_NAME, getCustomName().toJsonText());
 			writer.writeByteTag(NBT_AUTO, isAlwaysActive());
 			writer.writeStringTag(NBT_COMMAND, getCommand());
 			writer.writeLongTag(NBT_LAST_EXECUTION, 0);
-			writer.writeStringTag(NBT_LAST_OUTPUT, getLastMessage().getJsonText());
+			writer.writeStringTag(NBT_LAST_OUTPUT, getLastMessage().toJsonText());
 			writer.writeByteTag(NBT_POWERED, isPowered());
 			writer.writeIntTag(NBT_SUCCESSCOUNT, getSuccessCount());
 			writer.writeByteTag(NBT_TRACKOUTPUT, getTrackOutput());
 			writer.writeByteTag(NBT_UPDATE_LAST_EXECUTION, true);
 		} else {
 			writer.writeStringTag(NBT_COMMAND, getCommand());
-			writer.writeStringTag(NBT_LAST_OUTPUT, getLastMessage().getJsonText());
+			writer.writeStringTag(NBT_LAST_OUTPUT, getLastMessage().toJsonText());
 		}
 	}
 	

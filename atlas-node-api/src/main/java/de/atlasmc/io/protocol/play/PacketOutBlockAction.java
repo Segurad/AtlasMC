@@ -6,7 +6,9 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.OUT_BLOCK_ACTION)
 public class PacketOutBlockAction extends AbstractPacket implements PacketPlayOut {
 	
-	private int actionID, actionParam, blockType;
+	private int actionID;
+	private int actionParam;
+	private int blockType;
 	private long position;
 	
 	public int getActionID() {

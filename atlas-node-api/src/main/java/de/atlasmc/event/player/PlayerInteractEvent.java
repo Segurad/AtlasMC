@@ -25,6 +25,7 @@ public class PlayerInteractEvent extends PlayerEvent implements Cancellable {
 		this.clicked = clicked;
 		this.hand = hand;
 		this.action = action;
+		this.item = item;
 	}
 	
 	public Action getAction() {

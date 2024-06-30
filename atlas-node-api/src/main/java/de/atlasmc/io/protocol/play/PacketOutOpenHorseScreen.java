@@ -6,7 +6,9 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.OUT_OPEN_HORSE_SCREEN)
 public class PacketOutOpenHorseScreen extends AbstractPacket implements PacketPlayOut {
 	
-	private int windowID, slots, entityID;
+	private int windowID;
+	private int slots;
+	private int entityID;
 	
 	public int getWindowID() {
 		return windowID;

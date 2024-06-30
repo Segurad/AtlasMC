@@ -11,9 +11,11 @@ public class BeaconEffectChangeEvent extends InventoryEvent implements Cancellab
 
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
-	private PotionEffect newPrimary, newSecondary;
+	private PotionEffect newPrimary;
+	private PotionEffect newSecondary;
 	private boolean cancelled;
-	private int newPrimaryID, newSecondaryID;
+	private int newPrimaryID;
+	private int newSecondaryID;
 	
 	public BeaconEffectChangeEvent(InventoryView view, PotionEffect newPrimary, PotionEffect newSecondary, int primaryID, int secondaryID) {
 		super(view);

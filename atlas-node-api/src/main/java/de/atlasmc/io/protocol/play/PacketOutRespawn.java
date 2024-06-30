@@ -11,8 +11,11 @@ public class PacketOutRespawn extends AbstractPacket implements PacketPlayOut {
 	private Dimension dimension;
 	private String world;
 	private long seed;
-	private Gamemode gamemode, previous;
-	private boolean debug, flat, copymeta;
+	private Gamemode gamemode;
+	private Gamemode previous;
+	private boolean debug;
+	private boolean flat;
+	private boolean copymeta;
 	
 	public Dimension getDimension() {
 		return dimension;

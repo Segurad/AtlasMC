@@ -452,11 +452,11 @@ public class Commands {
 		if (command == null)
 			throw new IllegalArgumentException("Command can not be null!");
 		int first = (page - 1) * linesPerPage;
-		int last = Math.max(first + linesPerPage, Integer.MAX_VALUE);
+		int last = first + linesPerPage;
 		List<Chat> help = new ArrayList<>();
 		ChatComponent base = base();
 		help.add(base);
-		int size = buildHelp(first, last, -1, help, text("- ").color(ChatColor.DARK_GRAY).extra(text("/").color(ChatColor.RED)), command);
+		int size = buildHelp(first, last, 0, help, text("- ").color(ChatColor.DARK_GRAY).extra(text("/").color(ChatColor.RED)), command);
 		int maxPages = MathUtil.upper(((double) size) / linesPerPage);
 		base.extra(
 				text("--- ").color(ChatColor.DARK_GRAY), 
@@ -477,7 +477,6 @@ public class Commands {
 		if (size >= last) {
 			return size + getArgSize(arg);
 		}
-		size++;
 		parent = parent.clone();
 		if (!(arg instanceof Command)) {
 			parent.extra(space());
@@ -491,16 +490,19 @@ public class Commands {
 			parent.extra(
 					text(arg.getName()).color(ChatColor.DARK_GRAY));
 		}
-		if (arg.hasExecutor() && size >= first) {
-			String description = arg.getDescription();
-			if (description == null) {
-				help.add(parent);
-			} else {
-				help.add(chat(
-						parent, 
-						text(" : ").color(ChatColor.RED), 
-						text(arg.getDescription()).color(ChatColor.GRAY)));
+		if (arg.hasExecutor()) {
+			if (size >= first) {
+				String description = arg.getDescription();
+				if (description == null) {
+					help.add(parent);
+				} else {
+					help.add(chat(
+							parent, 
+							text(" : ").color(ChatColor.RED), 
+							text(arg.getDescription()).color(ChatColor.GRAY)));
+				}
 			}
+			size++;
 		}
 		if (!arg.hasArguments())
 			return size;
@@ -515,11 +517,14 @@ public class Commands {
 	}
 	
 	private static int getArgSize(CommandArg arg) {
-		int size = 1;
+		int size = 0;
 		if (arg.hasArguments()) {
 			for (CommandArg child : arg.getArguments()) {
 				size += getArgSize(child);
 			}
+		}
+		if (arg.hasExecutor()) {
+			size++;
 		}
 		return size;
 	}

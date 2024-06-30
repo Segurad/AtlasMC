@@ -10,9 +10,16 @@ import de.atlasmc.io.DefaultPacketID;
 public class PacketOutUpdateRecipeBook extends AbstractPacket implements PacketPlayOut {
 	
 	private RecipesAction action;
-	private boolean craftingOpen, craftingFilter, smeltingOpen, smeltingFilter, 
-					blastFurnaceOpen, blastFurnaceFilter, smokerOpen, smokerFilter;
-	private List<NamespacedKey> tagged, untagged;
+	private boolean craftingOpen;
+	private boolean craftingFilter;
+	private boolean smeltingOpen;
+	private boolean smeltingFilter; 
+	private boolean blastFurnaceOpen; 
+	private boolean blastFurnaceFilter;
+	private boolean smokerOpen;
+	private boolean smokerFilter;
+	private List<NamespacedKey> tagged;
+	private List<NamespacedKey> untagged;
 	
 	public RecipesAction getAction() {
 		return action;

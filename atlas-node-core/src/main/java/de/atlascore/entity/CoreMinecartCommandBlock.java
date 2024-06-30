@@ -116,7 +116,7 @@ public class CoreMinecartCommandBlock extends CoreAbstractMinecart implements Mi
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
 		writer.writeStringTag(NBT_COMMAND, getCommand());
-		writer.writeStringTag(NBT_LAST_OUTPUT, getLastMessage().getText());
+		writer.writeStringTag(NBT_LAST_OUTPUT, getLastMessage().toText());
 		writer.writeIntTag(NBT_SUCCESS_COUNT, getRedstoneSignal());
 		writer.writeByteTag(NBT_TRACK_OUTPUT, isTrackingOutput());
 	}

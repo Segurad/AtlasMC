@@ -9,7 +9,8 @@ public class PlayerSetRecipeBookStateEvent extends PlayerEvent {
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
 	private final BookType type;
-	private final boolean open, filter;
+	private final boolean open;
+	private final boolean filter;
 	
 	public PlayerSetRecipeBookStateEvent(Player player, BookType type, boolean open, boolean filter) {
 		super(player);

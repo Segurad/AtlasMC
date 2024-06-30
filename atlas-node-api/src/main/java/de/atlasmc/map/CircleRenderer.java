@@ -104,15 +104,19 @@ public final class CircleRenderer implements Renderer {
 	 */
 	@Override
 	public boolean render(MapData data, int offsetX, int offsetY) {
-		final int width = data.getWidth(), height = data.getHeight();
+		final int width = data.getWidth();
+		final int height = data.getHeight();
 		boolean changes = false;
 		for (int i = 0; i < count; i++) {
 			for (int j = 0; j < 16; j++) {
 				int x = points[i][j++]+offsetX;
 				int y = points[i][j]+offsetY;
-				if (x < 0 || x >= width) continue;
-				if (y < 0 || y >= height) continue;
-				if (data.setPixel(x, y, color)) changes = true;
+				if (x < 0 || x >= width) 
+					continue;
+				if (y < 0 || y >= height) 
+					continue;
+				if (data.setPixel(x, y, color)) 
+					changes = true;
 			}
 		}
 		return changes;

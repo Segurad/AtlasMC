@@ -11,7 +11,8 @@ import de.atlasmc.inventory.InventoryType.SlotType;
 public class CoreInventoryView implements InventoryView {
 	
 	private final Player player;
-	private Inventory bottom, top;
+	private Inventory bottom;
+	private Inventory top;
 	private int viewID;
 	
 	public CoreInventoryView(Player player, Inventory bottom, Inventory top, int viewID) {

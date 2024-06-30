@@ -46,7 +46,8 @@ public class CoreEndGateway extends CoreTileEntity implements EndGateway {
 	}
 	
 	private long age;
-	private boolean exactTeleport, relativeCoordinates;
+	private boolean exactTeleport;
+	private boolean relativeCoordinates;
 	private final Location exit;
 	
 	public CoreEndGateway(Material type) {

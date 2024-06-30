@@ -6,7 +6,8 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.OUT_SET_COOLDOWN)
 public class PacketOutSetCooldown extends AbstractPacket implements PacketPlayOut {
 	
-	private int itemID, cooldown;
+	private int itemID;
+	private int cooldown;
 	
 	public int getItemID() {
 		return itemID;

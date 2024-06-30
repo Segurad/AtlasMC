@@ -37,7 +37,7 @@ public class CoreEnchantingTable extends CoreTileEntity implements EnchantingTab
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
 		if (!systemData) return;
-		writer.writeStringTag(NBT_CUSTOM_NAME, name.getJsonText());
+		writer.writeStringTag(NBT_CUSTOM_NAME, name.toJsonText());
 	}
 
 }

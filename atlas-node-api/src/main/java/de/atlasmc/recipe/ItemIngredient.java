@@ -7,7 +7,8 @@ import de.atlasmc.inventory.ItemStack;
 public class ItemIngredient implements Ingredient {
 
 	private final List<ItemStack> items;
-	private final boolean ignoreAmount, ignoreDamage;
+	private final boolean ignoreAmount;
+	private final boolean ignoreDamage;
 	
 	public ItemIngredient(List<ItemStack> items) {
 		this(items, true, false);

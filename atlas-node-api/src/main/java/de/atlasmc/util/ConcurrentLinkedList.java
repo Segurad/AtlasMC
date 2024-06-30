@@ -13,7 +13,8 @@ import de.atlasmc.util.annotation.ThreadSafe;
 @ThreadSafe
 public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 	
-	private volatile Node<E> head, tail;
+	private volatile Node<E> head;
+	private volatile Node<E> tail;
 	private volatile int count = 0; // Modify only by sync over ConcurrentLikedList.this
 	
 	@Override
@@ -280,7 +281,8 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 	static final class Node<T> {
 		
 		volatile boolean removed;
-		volatile Node<T> prev, next;
+		volatile Node<T> prev;
+		volatile Node<T> next;
 		volatile T entry;
 		
 		public Node(T entry, Node<T> prev, Node<T> next) {
@@ -298,7 +300,8 @@ public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
 	 */
 	public static final class LinkedListIterator<E> implements Iterator<E> {
 		
-		private Node<E> node, peeked;
+		private Node<E> node;
+		private Node<E> peeked;
 		private final ConcurrentLinkedList<E> list;
 		
 		LinkedListIterator(ConcurrentLinkedList<E> list) {

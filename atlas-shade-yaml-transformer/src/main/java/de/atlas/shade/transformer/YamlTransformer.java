@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
@@ -80,10 +81,8 @@ public class YamlTransformer implements ReproducibleResourceTransformer {
 
 	@Override
 	public void modifyOutputStream(JarOutputStream os) throws IOException {
-        for (Map.Entry<String, ResourceFile> e : resources.entrySet()) {
+        for (Entry<String, ResourceFile> e : resources.entrySet()) {
         	ResourceFile resource = e.getValue();
-        	if (!e.getValue().changed)
-        		continue;
             JarEntry jarEntry = new JarEntry(e.getKey());
             jarEntry.setTime(resource.time);
             os.putNextEntry(jarEntry);
@@ -94,7 +93,8 @@ public class YamlTransformer implements ReproducibleResourceTransformer {
             	targetFile.getParentFile().mkdirs();
             }
             resource.config.save(targetFile);
-            System.out.println("Merged Yaml: " + e.getKey());
+            if (resource.changed)
+            	System.out.println("Merged Yaml: " + e.getKey());
         }
 	}
 	

@@ -7,7 +7,11 @@ import de.atlasmc.io.DefaultPacketID;
 public class PacketInProgramJigsawBlock extends AbstractPacket implements PacketPlayIn {
 	
 	private long position;
-	private String name, target, pool, finalState, jointtype;
+	private String name;
+	private String target;
+	private String pool;
+	private String finalState;
+	private String jointtype;
 	
 	public long getPosition() {
 		return position;

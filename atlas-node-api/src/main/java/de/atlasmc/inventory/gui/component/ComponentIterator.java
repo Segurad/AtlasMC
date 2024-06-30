@@ -5,7 +5,8 @@ import java.util.ListIterator;
 public class ComponentIterator<E> implements ListIterator<E> {
 
 	private final Component<E> comp;
-	private int x,y;
+	private int x;
+	private int y;
 	private boolean direction;
 	
 	public ComponentIterator(Component<E> comp) {

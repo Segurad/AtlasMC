@@ -120,7 +120,7 @@ public class CoreBanner extends CoreTileEntity implements Banner {
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
 		if (systemData) {
-			writer.writeStringTag(NBT_CUSTOM_NAME, name.getJsonText());
+			writer.writeStringTag(NBT_CUSTOM_NAME, name.toJsonText());
 		}
 		if (numberOfPatterns() > 0) {
 			writer.writeListTag(PATTERNS, TagType.COMPOUND, numberOfPatterns());

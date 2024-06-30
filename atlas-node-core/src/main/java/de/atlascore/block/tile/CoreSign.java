@@ -84,12 +84,12 @@ public class CoreSign extends CoreTileEntity implements Sign {
 		if (lines == null) 
 			return;
 		if (lines[0] != null)
-			writer.writeStringTag(NBT_TEXT_1, lines[0].getText());
+			writer.writeStringTag(NBT_TEXT_1, lines[0].toText());
 		if (lines[1] != null)
-			writer.writeStringTag(NBT_TEXT_2, lines[1].getText());
+			writer.writeStringTag(NBT_TEXT_2, lines[1].toText());
 		if (lines[2] != null)
-			writer.writeStringTag(NBT_TEXT_3, lines[2].getText());
+			writer.writeStringTag(NBT_TEXT_3, lines[2].toText());
 		if (lines[3] != null)
-			writer.writeStringTag(NBT_TEXT_4, lines[3].getText());
+			writer.writeStringTag(NBT_TEXT_4, lines[3].toText());
 	}
 }

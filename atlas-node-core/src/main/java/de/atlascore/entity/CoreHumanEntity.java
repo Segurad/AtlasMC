@@ -39,7 +39,8 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 	private PlayerInventory inv;
 	private CraftingInventory craftingInv;
 	private double additionalHealth;
-	private Entity shoulderRight, shoulderLeft;
+	private Entity shoulderRight;
+	private Entity shoulderLeft;
 	private byte shoulderChanged; // 0x01 Right 0x02 Left
 	private final CooldownHandler<Material> cooldowns;
 	private int foodLevel = 20;

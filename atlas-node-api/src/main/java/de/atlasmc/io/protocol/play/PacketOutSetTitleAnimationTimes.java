@@ -6,7 +6,9 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.OUT_SET_TITLE_ANIMATION_TIMES)
 public class PacketOutSetTitleAnimationTimes extends AbstractPacket implements PacketPlayOut {
 	
-	private int fadeIn, stay, fadeOut;
+	private int fadeIn;
+	private int stay;
+	private int fadeOut;
 
 	public int getFadeIn() {
 		return fadeIn;

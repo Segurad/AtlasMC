@@ -9,7 +9,12 @@ import de.atlasmc.map.MapIcon;
 @DefaultPacketID(PacketPlay.OUT_MAP_DATA)
 public class PacketOutMapData extends AbstractPacket implements PacketPlayOut {
 	
-	private int mapID, scale, colums, rows, offX, offZ;
+	private int mapID;
+	private int scale;
+	private int colums;
+	private int rows;
+	private int offX;
+	private int offZ;
 	private boolean locked;
 	private List<MapIcon> icons;
 	private byte[] data;

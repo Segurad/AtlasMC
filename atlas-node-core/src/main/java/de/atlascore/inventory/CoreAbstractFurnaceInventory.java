@@ -16,7 +16,10 @@ public class CoreAbstractFurnaceInventory extends CoreInventory implements Abstr
 	PROPERTY_PROGRESS = 2,
 	PROPERTY_MAX_PROGRESS = 3;
 	
-	private int progress, fuel, maxprogress, maxfuel;
+	private int progress;
+	private int fuel;
+	private int maxprogress;
+	private int maxfuel;
 	
 	public CoreAbstractFurnaceInventory(InventoryType type, Chat title, InventoryHolder holder) {
 		super(3, 2, type, title, holder);

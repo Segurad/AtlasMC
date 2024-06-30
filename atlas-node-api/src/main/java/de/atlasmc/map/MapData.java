@@ -8,7 +8,9 @@ public class MapData {
 			SOURCE_CUSTOM = 3;
 	
 	private final byte[] pixels;
-	private final int width, height, source;
+	private final int width;
+	private final int height;
+	private final int source;
 	private final String sourcename;
 	
 	public MapData(byte[] pixels, int width, int height, int source, String sourcename) {

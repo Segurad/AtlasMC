@@ -3,7 +3,9 @@ package de.atlasmc.map;
 public class MapIcon implements Cloneable {
 	
 	private IconType type;
-	private int x, z, direction;
+	private int x;
+	private int z;
+	private int direction;
 	private String name;
 	
 	public MapIcon(IconType type) {

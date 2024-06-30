@@ -6,9 +6,13 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.OUT_SYNCHRONIZE_PLAYER_POSITION)
 public class PacketOutSynchronizePlayerPosition extends AbstractPacket implements PacketPlayOut {
 	
-	private double x, y, z;
-	private float yaw, pitch;
-	private int flags, teleportID;
+	private double x;
+	private double y;
+	private double z;
+	private float yaw;
+	private float pitch;
+	private int flags;
+	private int teleportID;
 	
 	/**
 	 * 

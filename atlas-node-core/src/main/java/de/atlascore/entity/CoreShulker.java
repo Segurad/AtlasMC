@@ -81,7 +81,9 @@ public class CoreShulker extends CoreMob implements Shulker {
 		});
 	}
 	
-	private int apX, apY, apZ;
+	private int apX;
+	private int apY;
+	private int apZ;
 	private boolean changedAttachedPosition;
 	
 	public CoreShulker(EntityType type, UUID uuid) {

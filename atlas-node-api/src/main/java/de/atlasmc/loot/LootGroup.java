@@ -10,7 +10,8 @@ public final class LootGroup implements Loot {
 
 	private final LootItem[] items;
 	private final int[] chances;
-	private final int tickets, maxamount;
+	private final int tickets;
+	private final int maxamount;
 	
 	public LootGroup(LootItem[] items, int[] chances, int maxamount) {
 		this(items, chances, 0, maxamount);

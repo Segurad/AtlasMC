@@ -17,7 +17,7 @@ public class AdaptivePalette<E> implements Palette<E> {
 	public AdaptivePalette(int minBitsPerEntry, int capacity, GlobalValueProvider<E> globalPalette, int globalBitThreshold, E entry) {
 		this.minBitsPerEntry = minBitsPerEntry;
 		this.globalBitThreshold = globalBitThreshold;
-		this.palette = new SingleValuePalette<>(capacity, globalPalette);
+		this.palette = new SingleValuePalette<>(capacity, globalPalette, entry);
 	}
 	
 	@Override

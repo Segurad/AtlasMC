@@ -8,7 +8,8 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.OUT_UPDATE_SCORE)
 public class PacketOutUpdateScore extends AbstractPacket implements PacketPlayOut {
 
-	private String entry, objective;
+	private String entry;
+	private String objective;
 	private ScoreAction action;
 	private int value;
 	

@@ -122,15 +122,15 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 		}, true);
 	}
 	
+	private ProxyConnectionHandler con;
+	private AtlasPlayer player;
+	private volatile byte[] verifyToken;
+	
 	private static <T extends PacketLogin> void initHandler(Class<T> clazz, PacketHandler<CorePacketListenerLoginIn, T> handler, boolean async) {
 	    int id = Packet.getDefaultPacketID(clazz);
 	    HANDLERS[id] = handler;
 	    HANDLE_ASYNC[id] = async;
 	}
-
-	private ProxyConnectionHandler con;
-	private AtlasPlayer player;
-	private volatile byte[] verifyToken;
 
 	public CorePacketListenerLoginIn(ProxyConnectionHandler handler) {
 		super(null, PacketLogin.PACKET_COUNT_IN);

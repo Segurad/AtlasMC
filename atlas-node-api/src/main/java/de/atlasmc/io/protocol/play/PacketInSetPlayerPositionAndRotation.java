@@ -7,9 +7,12 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.IN_SET_PLAYER_POSITION_AND_ROTATION)
 public class PacketInSetPlayerPositionAndRotation extends AbstractPacket implements PacketPlayIn {
 	
-	private double x,feetY,z;
+	private double x; 
+	private double feetY; 
+	private double z;
 	private boolean onGround;
-	private float yaw, pitch;
+	private float yaw;
+	private float pitch;
 	
 	public double getX() {
 		return x;

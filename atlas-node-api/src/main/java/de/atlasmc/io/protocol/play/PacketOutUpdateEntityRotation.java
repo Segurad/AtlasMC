@@ -7,7 +7,8 @@ import de.atlasmc.io.DefaultPacketID;
 public class PacketOutUpdateEntityRotation extends AbstractPacket implements PacketPlayOut {
 	
 	private int entityID;
-	private float yaw, pitch;
+	private float yaw;
+	private float pitch;
 	private boolean onGround;
 	
 	public int getEntityID() {

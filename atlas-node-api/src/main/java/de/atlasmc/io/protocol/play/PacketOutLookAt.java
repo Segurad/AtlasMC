@@ -6,8 +6,12 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.OUT_LOOK_AT)
 public class PacketOutLookAt extends AbstractPacket implements PacketPlayOut {
 	
-	private boolean aimWithEyes, aimAtEyes, hasEntity;
-	private double x, y, z;
+	private boolean aimWithEyes;
+	private boolean aimAtEyes;
+	private boolean hasEntity;
+	private double x;
+	private double y;
+	private double z;
 	private int entityID;
 	
 	/**

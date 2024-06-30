@@ -7,7 +7,9 @@ import de.atlasmc.io.DefaultPacketID;
 public class PacketOutUpdateEntityPosition extends AbstractPacket implements PacketPlayOut {
 
 	private int entityID;
-	private int deltaX, deltaY, deltaZ;
+	private int deltaX;
+	private int deltaY;
+	private int deltaZ;
 	private boolean onGround;
 	
 	public int getEntityID() {

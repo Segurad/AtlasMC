@@ -10,11 +10,11 @@ import io.netty.buffer.ByteBuf;
  */
 public class LinkedTag<T> extends Tag<T> {
 	
+	private Set<Tag<T>> tagcontainer;
+	
 	public LinkedTag(NamespacedKey type, NamespacedKey identifier) {
 		super(type, identifier);
 	}
-
-	private Set<Tag<T>> tagcontainer;
 
 	public void addTag(Tag<T> tag) {
 		tagcontainer.add(tag);

@@ -27,7 +27,8 @@ public class CoreRepeater extends CoreDirectional4Faces implements Repeater {
 		});
 	}
 	
-	private boolean powered, locked;
+	private boolean powered;
+	private boolean locked;
 	private int delay;
 	
 	public CoreRepeater(Material material) {

@@ -36,7 +36,9 @@ public class CoreCompassMeta extends CoreItemMeta implements CompassMeta {
 			if (holder instanceof CompassMeta) {
 				if (reader.getType() == TagType.COMPOUND) {
 					reader.readNextEntry();
-					int x = 0, y = 0, z = 0;
+					int x = 0;
+					int y = 0;
+					int z = 0;
 					for (int i = 0; i < 3;) {
 						i++;
 						final CharSequence field = reader.getFieldName();
@@ -94,14 +96,16 @@ public class CoreCompassMeta extends CoreItemMeta implements CompassMeta {
 	@Override
 	public CoreCompassMeta clone() {
 		CoreCompassMeta clone = (CoreCompassMeta) super.clone();
-		if (hasLodestone()) clone.setLodestone(getLodestone().clone());
+		if (hasLodestone()) 
+			clone.setLodestone(getLodestone().clone());
 		return clone;
 	}
 	
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		if (isLodestoneTracked()) writer.writeByteTag(LODESTONE_TRACKED, true);
+		if (isLodestoneTracked()) 
+			writer.writeByteTag(LODESTONE_TRACKED, true);
 		if (hasLodestone()) {
 			writer.writeCompoundTag(LODESTONE_POS);
 			writer.writeIntTag(POS_X, loc.getBlockX());

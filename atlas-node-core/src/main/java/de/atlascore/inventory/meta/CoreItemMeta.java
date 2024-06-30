@@ -567,12 +567,12 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	
 	protected void writeDisplayCompound(NBTWriter writer, boolean systemData) throws IOException {
 		if (hasDisplayName()) {
-			writer.writeStringTag(NBT_NAME, getDisplayName().getJsonText());
+			writer.writeStringTag(NBT_NAME, getDisplayName().toJsonText());
 		}
 		if (hasLore()) {
 			writer.writeListTag(NBT_LORE, TagType.STRING, lore.size());
 			for (Chat c : lore) {
-				writer.writeStringTag(null, c.getJsonText());
+				writer.writeStringTag(null, c.toJsonText());
 			}
 		}
 	}

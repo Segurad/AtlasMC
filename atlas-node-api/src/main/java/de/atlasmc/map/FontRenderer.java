@@ -6,7 +6,9 @@ public class FontRenderer implements Renderer {
 	
 	private Font font;
 	private byte color;
-	private int pixLine, pixChar, scale;
+	private int pixLine;
+	private int pixChar;
+	private int scale;
 	private String text = "";
 	
 	public FontRenderer(Font font) {
@@ -26,9 +28,12 @@ public class FontRenderer implements Renderer {
 	}
 	
 	public FontRenderer(Font font, MapColor color, int lineSpacing, int charSpacing, int scale) {
-		if (font == null) throw new IllegalArgumentException("Font can not be null!");
-		if (color == null) throw new IllegalArgumentException("MapColor can not be null!");
-		if (scale < 1) throw new IllegalArgumentException("Scale can not be < 1!");
+		if (font == null) 
+			throw new IllegalArgumentException("Font can not be null!");
+		if (color == null) 
+			throw new IllegalArgumentException("MapColor can not be null!");
+		if (scale < 1) 
+			throw new IllegalArgumentException("Scale can not be < 1!");
 		this.font = font;
 		this.color = color.getID();
 		this.pixChar = charSpacing;
@@ -37,7 +42,8 @@ public class FontRenderer implements Renderer {
 	}
 	
 	public void setColor(MapColor color) {
-		if (color == null) throw new IllegalArgumentException("MapColor can not be null!");
+		if (color == null) 
+			throw new IllegalArgumentException("MapColor can not be null!");
 		this.color = color.getID();
 	}
 	
@@ -46,7 +52,8 @@ public class FontRenderer implements Renderer {
 	}
 	
 	public void setFont(Font font) {
-		if (font == null) throw new IllegalArgumentException("Font can not be null!");
+		if (font == null) 
+			throw new IllegalArgumentException("Font can not be null!");
 		this.font = font;
 	}
 	
@@ -83,14 +90,16 @@ public class FontRenderer implements Renderer {
 	}
 	
 	public void setScale(int value) {
-		if (value < 1) throw new IllegalArgumentException("Scale can not be < 1!");
+		if (value < 1) 
+			throw new IllegalArgumentException("Scale can not be < 1!");
 		this.scale = value;
 	}
 	
 	@Override
 	public boolean render(MapData data, int offsetX, int offsetY) {
 		final int height = font.getHeight();
-		int x = offsetX, y = offsetY + height;
+		int x = offsetX;
+		int y = offsetY + height;
 		if (scale == 1) {
 			for (char charr : text.toCharArray()) {
 				if (charr == '\n') {
@@ -126,10 +135,11 @@ public class FontRenderer implements Renderer {
 				if (render.length > 1)
 				for (int i = 1; i < render.length; i++) {
 					int tx = render[i++]*scale;
-					int ty = render[i]*scale;
+					int ty = y - render[i]*scale;
 					for (int j = 0; j < scale; j++) {
+						int px = x + tx + j;
 						for (int k = 0; k < scale; k++) {
-							data.setPixel(x + tx + j, y-ty-k, color);
+							data.setPixel(px, ty-k, color);
 						}
 					}
 					x += length*scale + pixChar*scale;

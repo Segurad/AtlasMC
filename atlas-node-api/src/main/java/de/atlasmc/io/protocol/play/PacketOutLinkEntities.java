@@ -6,7 +6,8 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.OUT_LINK_ENTITIES)
 public class PacketOutLinkEntities extends AbstractPacket implements PacketPlayOut {
 	
-	private int holderEntityID, attachedEntityID;
+	private int holderEntityID;
+	private int attachedEntityID;
 	
 	public int getHolderEntityID() {
 		return holderEntityID;

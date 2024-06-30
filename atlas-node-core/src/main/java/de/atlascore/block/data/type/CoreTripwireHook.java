@@ -11,7 +11,8 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTripwireHook extends CoreDirectional4Faces implements TripwireHook {
 
-	private boolean powered, attached;
+	private boolean powered;
+	private boolean attached;
 	
 	public CoreTripwireHook(Material material) {
 		super(material);

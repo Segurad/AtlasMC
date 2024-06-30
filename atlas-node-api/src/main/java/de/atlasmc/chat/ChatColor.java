@@ -23,26 +23,32 @@ public enum ChatColor {
 	LIGHT_PURPLE('d', Color.fromRGB(0xFF55FF)),
 	YELLOW('e', Color.fromRGB(0xFFFF55)),
 	WHITE('f', Color.fromRGB(0xFFFFFF)),
-	OBFUSCATED('k'),
-	BOLD('l'),
-	STRIKETHROUGH('m'),
-	UNDERLINE('n'),
-	ITALIC('o'),
-	RESET('r');
+	OBFUSCATED('k', ""), // TODO research obfuscated console format
+	BOLD('l', "\033[1m"),
+	STRIKETHROUGH('m', ""), // TODO research strike through console format
+	UNDERLINE('n', "\033[4m"),
+	ITALIC('o', ""), // TODO research italic console format
+	RESET('r', "\033[0m");
 	
 	private static List<ChatColor> VALUES;
 
 	private final char formatID;
 	private final Color color;
+	private final String consoleFormat;
 	private final String name;
 	
-	private ChatColor(char formatID) {
-		this(formatID, Color.BLACK);
+	private ChatColor(char formatID, String console) {
+		this(formatID, Color.BLACK, console);
 	}
 	
 	private ChatColor(char formatID, Color color) {
+		this(formatID, color, color.asConsoleColor());
+	}
+	
+	private ChatColor(char formatID, Color color, String console) {
 		this.formatID = formatID;
 		this.color = color;
+		this.consoleFormat = console;
 		this.name = this.name().toLowerCase();
 	}
 	
@@ -59,6 +65,10 @@ public enum ChatColor {
 	
 	public char getFormatID() {
 		return formatID;
+	}
+	
+	public String getConsoleFormat() {
+		return consoleFormat;
 	}
 	
 	public int getID() {

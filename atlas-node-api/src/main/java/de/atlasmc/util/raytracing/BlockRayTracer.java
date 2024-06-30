@@ -17,7 +17,8 @@ public class BlockRayTracer implements VoxelRayConsumer {
 	private final Vector3d direction;
 	private final World world;
 	private Chunk chunk;
-	private int chunkX, chunkZ;
+	private int chunkX;
+	private int chunkZ;
 	private BlockRayCollisionRule rule;
 	private BlockFace lastHit;
 	
@@ -48,7 +49,8 @@ public class BlockRayTracer implements VoxelRayConsumer {
 
 	@Override
 	public boolean next(BlockFace passed, double x, double y, double z, int traversed) {
-		int newChunkX = ((int) loc.x) >> 4, newChunkZ = ((int) loc.z) >> 4;
+		final int newChunkX = ((int) loc.x) >> 4;
+		final int newChunkZ = ((int) loc.z) >> 4;
 		if (chunkZ != newChunkZ || chunkX != newChunkX) {
 			chunk = world.getChunk(newChunkX, newChunkZ);
 			chunkX = newChunkX;

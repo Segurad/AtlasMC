@@ -3,7 +3,8 @@ package de.atlasmc.util.map.key;
 public class SubCharKey extends CharKey {
 
 	private final CharKey parent;
-	private final int start, end;
+	private final int start;
+	private final int end;
 	
 	public SubCharKey(CharKey parent, int start, int end) {
 		this.parent = parent;

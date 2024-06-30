@@ -11,7 +11,8 @@ import java.util.Arrays;
 public class ByteDataBuffer implements DataOutput, DataInput {
 
 	protected byte[] buffer;
-	protected int count, pos;
+	protected int count;
+	protected int pos;
 	
 	public ByteDataBuffer() {
 		buffer = new byte[32];

@@ -64,8 +64,10 @@ public interface Display extends Entity {
 	
 	public static final class Transformation {
 		
-		private final Vector3f scale, translation;
-		private final Quaternionf rotationRight, rotationLeft;
+		private final Vector3f scale;
+		private final Vector3f translation;
+		private final Quaternionf rotationRight;
+		private final Quaternionf rotationLeft;
 		
 		public Transformation(Vector3f scale, Vector3f translation, Quaternionf rotationRight, Quaternionf rotationLeft)  {
 			this.scale = scale;

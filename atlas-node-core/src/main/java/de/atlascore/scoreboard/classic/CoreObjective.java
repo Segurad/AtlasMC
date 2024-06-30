@@ -120,7 +120,7 @@ class CoreObjective implements Objective {
 		String name = getName();
 		packetObj.setName(name);
 		packetObj.setMode(Mode.UPDATE_DISPLAY);
-		packetObj.setDisplayName(getDisplayName().getText());
+		packetObj.setDisplayName(getDisplayName().toText());
 		packetObj.setRenderType(getRenderType());
 		for (ScoreboardView view : board.getViewersUnsafe()) {
 			PlayerConnection con = view.getViewer().getConnection();

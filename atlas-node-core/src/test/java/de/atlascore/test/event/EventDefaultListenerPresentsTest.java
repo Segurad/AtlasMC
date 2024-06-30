@@ -22,8 +22,10 @@ import de.atlastest.util.ReflectionUtil;
 
 class EventDefaultListenerPresentsTest {
 
-	int totalWarnings = 0, totalTested;
-	int tested = 0, warnings = 0;
+	int totalWarnings = 0;
+	int totalTested;
+	int tested = 0;
+	int warnings = 0;
 	
 	boolean printMissingClasses = true;
 	

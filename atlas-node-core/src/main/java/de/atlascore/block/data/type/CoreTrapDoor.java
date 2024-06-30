@@ -14,7 +14,9 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 public class CoreTrapDoor extends CoreDirectional4Faces implements TrapDoor {
 	
 	private Half half;
-	private boolean open, powered, waterlogged;
+	private boolean open;
+	private boolean powered;
+	private boolean waterlogged;
 	
 	public CoreTrapDoor(Material material) {
 		super(material);

@@ -16,7 +16,9 @@ public class BlockPlaceEvent extends BlockEvent implements Cancellable {
 	private final Player player;
 	private Block placeAgainst;
 	private final EquipmentSlot hand;
-	private final float cursorX, cursorY, cursorZ;
+	private final float cursorX;
+	private final float cursorY;
+	private final float cursorZ;
 	private BlockFace face;
 	
 	public BlockPlaceEvent(Block block, Block against, Player player, EquipmentSlot hand, BlockFace face, float cursorX, float cursorY, float cursorZ) {

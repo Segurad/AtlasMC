@@ -202,7 +202,8 @@ public final class MathUtil {
 	 * @return bits needed
 	 */
 	public static int getRequiredBitCount(int value) {
-		int bits = 1, mask = 0x01;
+		int bits = 1;
+		int mask = 0x01;
 		while (mask < value) {
 			mask = (mask << 1) + 1;
 			bits++;

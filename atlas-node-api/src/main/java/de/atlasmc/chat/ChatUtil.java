@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.chat.component.ChatComponent;
-import de.atlasmc.factory.ChatFactory;
 import de.atlasmc.util.annotation.ThreadSafe;
 
 @ThreadSafe
@@ -12,7 +11,11 @@ public final class ChatUtil {
 	
 	private static ChatFactory FACTORY;
 	
-	public static final char DEFAULT_CHAT_FORMAT_PREFIX = '§'; 
+	public static final char DEFAULT_CHAT_FORMAT_PREFIX;
+	
+	static {
+		DEFAULT_CHAT_FORMAT_PREFIX = System.getProperty("de.atlasmc.chat.defaultLegacyPrefix", "§").charAt(0);
+	}
 	
 	private ChatUtil() {}
 	
@@ -47,16 +50,16 @@ public final class ChatUtil {
 		return chat;
 	}
 	
-	public static String jsonFromLegacy(CharSequence msg) {
-		return jsonFromLegacy(msg, DEFAULT_CHAT_FORMAT_PREFIX);
-	}
-
-	public static String legacyFromJson(CharSequence text) {
-		return legacyFromJson(text, DEFAULT_CHAT_FORMAT_PREFIX);
+	public static String legacyToJson(CharSequence msg) {
+		return legacyToJson(msg, DEFAULT_CHAT_FORMAT_PREFIX);
 	}
 	
-	public static String legacyFromJson(CharSequence json, char formatPrefix) {
-		return null;
+	public static String jsonToLegacy(CharSequence json) {
+		return jsonToLegacy(json, DEFAULT_CHAT_FORMAT_PREFIX);
+	}
+	
+	public static String jsonToLegacy(CharSequence json, char formatPrefix) {
+		return FACTORY.jsonToLegacy(json, formatPrefix);
 	}
 	
 	/**
@@ -91,8 +94,8 @@ public final class ChatUtil {
 	 * @param formatPrefix the char used to identify a format input
 	 * @return the text as json
 	 */
-	public static String jsonFromLegacy(CharSequence text, char formatPrefix) {
-		return FACTORY.jsonFromLegacy(text, formatPrefix);
+	public static String legacyToJson(CharSequence text, char formatPrefix) {
+		return FACTORY.legacyToJson(text, formatPrefix);
 	}
 	
 	/**
@@ -112,8 +115,8 @@ public final class ChatUtil {
 		return FACTORY.legacyToComponent(legacy, formatPrefix);
 	}
 	
-	public static String legacyFromComponent(ChatComponent component) {
-		return legacyFromComponent(component, '§');
+	public static String componentToLegacy(ChatComponent component) {
+		return componentToLegacy(component, '§');
 	}
 	
 	/**
@@ -122,8 +125,12 @@ public final class ChatUtil {
 	 * @param formatPrefix
 	 * @return
 	 */
-	public static String legacyFromComponent(ChatComponent component, char formatPrefix) {
-		return FACTORY.legacyFromComponent(component, formatPrefix);
+	public static String componentToLegacy(ChatComponent component, char formatPrefix) {
+		return FACTORY.componentToLegacy(component, formatPrefix);
+	}
+	
+	public static String componentToConsole(ChatComponent component) {
+		return FACTORY.componentToConsole(component);
 	}
 	
 	public static void init(ChatFactory factory) {
@@ -146,8 +153,8 @@ public final class ChatUtil {
 		return FACTORY.legacyToRawText(legacy, fomatPrefix);
 	}
 	
-	public static String rawTextFromComponent(ChatComponent component) {
-		return FACTORY.rawTextFromComponent(component);
+	public static String componentToRawText(ChatComponent component) {
+		return FACTORY.componentToRawText(component);
 	}
 
 	public static ChatComponent toComponent(Chat chat) {

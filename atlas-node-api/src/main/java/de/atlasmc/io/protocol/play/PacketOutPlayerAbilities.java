@@ -7,7 +7,8 @@ import de.atlasmc.io.DefaultPacketID;
 public class PacketOutPlayerAbilities extends AbstractPacket implements PacketPlayOut {
 	
 	private int flags = 0;
-	private float flySpeed, fovModifier;
+	private float flySpeed;
+	private float fovModifier;
 	
 	/**
 	 * <ul>

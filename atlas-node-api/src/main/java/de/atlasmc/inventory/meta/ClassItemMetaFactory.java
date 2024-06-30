@@ -13,7 +13,8 @@ import de.atlasmc.util.configuration.ConfigurationSerializeable;
  */
 public class ClassItemMetaFactory implements ItemMetaFactory, ConfigurationSerializeable {
 	
-	protected final Class<? extends ItemMeta> metaInterface, meta;
+	protected final Class<? extends ItemMeta> metaInterface;
+	protected final Class<? extends ItemMeta> meta;
 	
 	/**
 	 * 

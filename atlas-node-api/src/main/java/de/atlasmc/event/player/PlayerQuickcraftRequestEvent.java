@@ -13,7 +13,8 @@ public class PlayerQuickcraftRequestEvent extends PlayerEvent implements Cancell
 	
 	private final String recipeID;
 	
-	private boolean craftAll, cancelled;
+	private boolean craftAll;
+	private boolean cancelled;
 	
 	public PlayerQuickcraftRequestEvent(Player player, String recipe, boolean craftAll) {
 		super(player);

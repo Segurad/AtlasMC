@@ -8,8 +8,12 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.OUT_UPDATE_LIGHT)
 public class PacketOutUpdateLight extends AbstractPacket implements PacketPlayOut {
 	
-	private int chunkX, chunkZ;
-	private BitSet skyMask, blockMask, emptySkyMask, emptyBlockMask;
+	private int chunkX;
+	private int chunkZ;
+	private BitSet skyMask;
+	private BitSet blockMask;
+	private BitSet emptySkyMask;
+	private BitSet emptyBlockMask;
 	private boolean trustEdges;
 	private byte[][] blockLight;
 	private byte[][] skyLight;

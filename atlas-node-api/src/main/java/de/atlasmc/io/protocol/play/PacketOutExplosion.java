@@ -6,7 +6,13 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.OUT_EXPLOSION)
 public class PacketOutExplosion extends AbstractPacket implements PacketPlayOut {
 
-	private float x, y, z, strength, motionX, motionY, motionZ;
+	private float x;
+	private float y;
+	private float z;
+	private float strength;
+	private float motionX;
+	private float motionY;
+	private float motionZ;
 	private byte[] records;
 
 	public float getX() {

@@ -19,9 +19,13 @@ class CoreTeam implements Team {
 	private final CoreScoreboard board;
 	private final String name;
 	private ChatColor color;
-	private Chat prefix, suffix, display;
-	private boolean friendlyFire, seeInvisible;
-	private TeamOptionType nameVisibility, collision;
+	private Chat prefix;
+	private Chat suffix;
+	private Chat display;
+	private boolean friendlyFire;
+	private boolean seeInvisible;
+	private TeamOptionType nameVisibility;
+	private TeamOptionType collision;
 	private List<String> entries;
 	private boolean unregistered;
 
@@ -235,14 +239,14 @@ class CoreTeam implements Team {
 		PacketOutUpdateTeams packetTeams = new PacketOutUpdateTeams();
 		packetTeams.setName(team.getName());
 		packetTeams.setMode(PacketOutUpdateTeams.Mode.UPDATE_TEAM_INFO);
-		packetTeams.setDisplayName(team.getDisplayName().getText());
+		packetTeams.setDisplayName(team.getDisplayName().toText());
 		packetTeams.setAllowFriedlyFire(team.getAllowFriedlyFire());
 		packetTeams.setSeeInvisibleTeammeber(team.canSeeInvisibleTeammeber());
 		packetTeams.setCollisionRule(team.getCollisionRule());
 		packetTeams.setNameTagVisibility(team.getNameTagVisibility());
 		packetTeams.setColor(team.getColor());
-		packetTeams.setPrefix(team.getPrefix().getText());
-		packetTeams.setSuffix(team.getSuffix().getText());
+		packetTeams.setPrefix(team.getPrefix().toText());
+		packetTeams.setSuffix(team.getSuffix().toText());
 		for (ScoreboardView view : board.getViewersUnsafe()) {
 			PlayerConnection con = view.getViewer().getConnection();
 			con.sendPacked(packetTeams);

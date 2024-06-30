@@ -27,7 +27,8 @@ public class CoreHopper extends CoreAbstractContainerTile<Inventory> implements 
 		});
 	}
 	
-	private int cooldown, transferAmount;
+	private int cooldown;
+	private int transferAmount;
 	
 	public CoreHopper(Material type) {
 		super(type);

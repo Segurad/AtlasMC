@@ -7,7 +7,9 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.IN_SET_PLAYER_POSITION)
 public class PacketInSetPlayerPosition extends AbstractPacket implements PacketPlayIn {
 
-	private double x,feetY,z;
+	private double x;
+	private double feetY;
+	private double z;
 	private boolean onGround;
 	
 	public double getX() {

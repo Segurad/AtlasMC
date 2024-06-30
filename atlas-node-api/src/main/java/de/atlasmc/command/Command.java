@@ -5,7 +5,7 @@ public class Command extends LiteralCommandArg {
 	private String commandDescription;
 	
 	public Command(String name, String... aliases) {
-		super(name);
+		super(name, aliases);
 	}
 	
 	public String getCommandDescription() {

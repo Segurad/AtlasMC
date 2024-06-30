@@ -8,7 +8,10 @@ public class PacketInUpdateSign extends AbstractPacket implements PacketPlayIn {
 	
 	private long position;
 	boolean isFront;
-	private String line1,line2,line3,line4;
+	private String line1;
+	private String line2;
+	private String line3;
+	private String line4;
 	
 	public long getPosition() {
 		return position;

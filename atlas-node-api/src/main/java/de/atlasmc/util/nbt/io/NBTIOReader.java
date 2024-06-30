@@ -8,7 +8,8 @@ import de.atlasmc.util.ByteDataBuffer;
 public class NBTIOReader extends AbstractNBTIOReader {
 	
 	private ByteDataBuffer buf;
-	private boolean readBuf, writeBuf;
+	private boolean readBuf;
+	private boolean writeBuf;
 	private InputStream  in;
 	
 	public NBTIOReader(InputStream in) {

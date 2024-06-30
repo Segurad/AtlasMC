@@ -6,7 +6,8 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.OUT_SET_BLOCK_DESTROY_STAGE)
 public class PacketOutSetBlockDestroyStage extends AbstractPacket implements PacketPlayOut {
 	
-	private int entityID, stage;
+	private int entityID;
+	private int stage;
 	private long position;
 	
 	public int getEntityID() {

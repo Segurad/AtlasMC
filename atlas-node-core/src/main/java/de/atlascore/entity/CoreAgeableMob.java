@@ -55,7 +55,8 @@ public class CoreAgeableMob extends CoreMob implements AgeableMob {
 		});
 	}
 	
-	private int age, inLove;
+	private int age;
+	private int inLove;
 	private UUID loveCause;
 	
 	public CoreAgeableMob(EntityType type, UUID uuid) {

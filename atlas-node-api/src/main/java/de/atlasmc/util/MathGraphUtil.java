@@ -29,9 +29,17 @@ public final class MathGraphUtil {
 		if (consumer == null) 
 			throw new IllegalArgumentException("Consumer can not be null!");
 		
-		int stepX, stepY, stepZ; // coordinate change on Block boundary change
-		double tMaxX, tMaxY, tMaxZ; // t in which the next boundary is crossed
-		double tDeltaX, tDeltaY, tDeltaZ; 
+		// coordinate change on Block boundary change
+		int stepX;
+		int stepY;
+		int stepZ; 
+		// t in which the next boundary is crossed
+		double tMaxX;
+		double tMaxY;
+		double tMaxZ; 
+		double tDeltaX; 
+		double tDeltaY;
+		double tDeltaZ; 
 		int traversed = 0; // number of blocks traversed
 		int distance; // number of blocks needed until the end
 		BlockFace lastHitFace;

@@ -6,7 +6,9 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.OUT_PICKUP_ITEM)
 public class PacketOutPickupItem extends AbstractPacket implements PacketPlayOut {
 	
-	private int collectedID, collectorID, pickupCount;
+	private int collectedID;
+	private int collectorID;
+	private int pickupCount;
 	
 	public int getCollectedID() {
 		return collectedID;

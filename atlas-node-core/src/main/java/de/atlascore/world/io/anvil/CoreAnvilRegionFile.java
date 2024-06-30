@@ -24,7 +24,9 @@ import de.atlasmc.world.World;
  */
 public class CoreAnvilRegionFile {
 	
-	private final int x, z; // the regions x and z value equals (coordinate >> 9)
+	// the regions x and z value equals (coordinate >> 9)
+	private final int x;
+	private final int z; 
 	private final File mcrFile;
 	
 	/**

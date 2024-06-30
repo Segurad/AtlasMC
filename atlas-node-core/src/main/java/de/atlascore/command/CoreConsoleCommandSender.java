@@ -7,6 +7,7 @@ import java.util.Scanner;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatType;
 import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.command.ConsoleCommandSender;
 import de.atlasmc.permission.Permission;
 
@@ -68,21 +69,21 @@ public class CoreConsoleCommandSender implements ConsoleCommandSender {
 
 	@Override
 	public void sendMessage(Chat chat) {
-		sendRawMessage(chat.getRawText());
+		sendMessage(chat.toComponent());
 	}
 
 	@Override
 	public void sendMessage(String message) {
-		sendRawMessage(ChatUtil.legacyToRawText(message));
+		sendMessage(ChatUtil.legacyToComponent(message));
 	}
 
 	@Override
 	public void sendMessage(String message, ChatType type, String source, String target) {
-		sendRawMessage(ChatUtil.legacyToRawText(message));
+		sendMessage(ChatUtil.legacyToComponent(message));
 	}
 	
-	private void sendRawMessage(String message) {
-		System.out.println(message);
+	private void sendMessage(ChatComponent chat) {
+		System.out.println(ChatUtil.componentToConsole(chat));
 	}
 
 	@Override

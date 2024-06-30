@@ -9,7 +9,8 @@ public class PlayerSwapHandItemsEvent extends PlayerEvent implements Cancellable
 
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
-	private ItemStack mainHand, offHand;
+	private ItemStack mainHand;
+	private ItemStack offHand;
 	private boolean cancelled;
 	
 	public PlayerSwapHandItemsEvent(Player player, ItemStack mainHand, ItemStack offHand) {

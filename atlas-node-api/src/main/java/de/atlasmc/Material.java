@@ -1434,9 +1434,12 @@ public class Material implements Namespaced {
 	
 	private final NamespacedKey key;
 	private final NamespacedKey clientKey;
-	private final short itemID, blockStateID, blockID;
+	private final short itemID;
+	private final short blockStateID;
+	private final short blockID;
 	private final byte max;
-	private final float toughness, explosionResistance;
+	private final float toughness;
+	private final float explosionResistance;
 	private ItemMetaFactory itemMetaFactory;
 	private BlockDataFactory blockDataFactory;
 	private TileEntityFactory tileEntityFactory;
@@ -1499,9 +1502,11 @@ public class Material implements Namespaced {
 	}
 	
 	public void setMetaDataFactory(ItemMetaFactory factory) {
-		if (factory == null)
-			factory = Registries.getInstanceDefault(ItemMetaFactory.class);
-		itemMetaFactory = factory;
+		if (factory == null) {
+			itemMetaFactory = Registries.getInstanceDefault(ItemMetaFactory.class);
+		} else {
+			itemMetaFactory = factory;
+		}
 	}
 	
 	public BlockDataFactory getBlockDataFactory() {
@@ -1509,9 +1514,11 @@ public class Material implements Namespaced {
 	}
 	
 	public void setBlockDataFactory(BlockDataFactory factory) {
-		if (factory == null)
-			factory = Registries.getInstanceDefault(BlockDataFactory.class);
-		this.blockDataFactory = factory;
+		if (factory == null) {
+			blockDataFactory = Registries.getInstanceDefault(BlockDataFactory.class);
+		} else {
+			blockDataFactory = factory;
+		}
 	}
 	
 	public TileEntityFactory getTileEntityFactory() {

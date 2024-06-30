@@ -26,10 +26,18 @@ public class CoreEnchantingInventory extends CoreInventory implements Enchanting
 	PROPERTY_ENCH_LVL_BOT = 9;
 	
 	private short dseed = (short) 0xFFAA0123;
-	private short lvlTop = 10, lvlMid = 20, lvlBot = 30;
-	private short dtopID = -1, dmidID = -1, dbotID = -1;
-	private	short dtopLvl = -1, dmidLvl = -1, dbotLvl = -1;
-	private Map<Enchantment, Integer> topEnch, midEnch, botEnch;
+	private short lvlTop = 10;
+	private short lvlMid = 20;
+	private short lvlBot = 30;
+	private short dtopID = -1;
+	private short dmidID = -1;
+	private short dbotID = -1;
+	private	short dtopLvl = -1;
+	private short dmidLvl = -1;
+	private short dbotLvl = -1;
+	private Map<Enchantment, Integer> topEnch;
+	private Map<Enchantment, Integer> midEnch;
+	private Map<Enchantment, Integer> botEnch;
 	
 	public CoreEnchantingInventory(Chat title, InventoryHolder holder) {
 		super(2, 1, InventoryType.ENCHANTING, title, holder);

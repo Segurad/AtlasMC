@@ -2,7 +2,9 @@ package de.atlasmc.util;
 
 public class EulerAngle implements Cloneable {
 
-	private float x, y, z;
+	private float x;
+	private float y;
+	private float z;
 	
 	public EulerAngle(float x, float y, float z) {
 		this.x = x;

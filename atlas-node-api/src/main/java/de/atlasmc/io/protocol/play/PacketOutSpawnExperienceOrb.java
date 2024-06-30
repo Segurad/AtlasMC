@@ -7,8 +7,11 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.OUT_SPAWN_EXPERIENCE_ORB)
 public class PacketOutSpawnExperienceOrb extends AbstractPacket implements PacketPlayOut {
 	
-	private int entityID, xp;
-	private double x, y, z;
+	private int entityID;
+	private int xp;
+	private double x;
+	private double y;
+	private double z;
 	
 	public int getEntityID() {
 		return entityID;

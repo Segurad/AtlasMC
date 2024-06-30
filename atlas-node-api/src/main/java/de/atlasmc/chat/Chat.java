@@ -1,43 +1,51 @@
 package de.atlasmc.chat;
 
+import de.atlasmc.chat.component.ChatComponent;
+
 public interface Chat {
 
 	/**
 	 * Always returns the text in legacy format.
 	 * @return text in legacy
 	 */
-	public String getLegacyText();
+	String toLegacyText();
 	
 	/**
 	 * Always returns the text in json format.
 	 * @return text in json
 	 */
-	public String getJsonText();
+	String toJsonText();
 	
 	/**
 	 * Returns the text in json format if present otherwise it will return in legacy format
 	 * @return text in json or legacy
 	 */
-	public String getText();
+	String toText();
 	
 	/**
 	 * Returns the raw text without any format codes
 	 * @return raw text
 	 */
-	public String getRawText();
+	String toRawText();
+	
+	/**
+	 * Returns the text as {@link ChatComponent}
+	 * @return component
+	 */
+	ChatComponent toComponent();
 	
 	/**
 	 * Indicates whether or not legacy text is stored.
-	 * However calling {@link #getLegacyText()} will always return legacy text
+	 * However calling {@link #toLegacyText()} will always return legacy text
 	 * @return true if legacy is stored
 	 */
-	public boolean hasLegacy();
+	boolean hasLegacy();
 	
 	/**
 	 * Indicates whether or not legacy text is stored.
-	 * However calling {@link #getJsonText()} will always return json text
+	 * However calling {@link #toJsonText()} will always return json text
 	 * @return true if json is stored
 	 */
-	public boolean hasJson();
+	boolean hasJson();
 	
 }

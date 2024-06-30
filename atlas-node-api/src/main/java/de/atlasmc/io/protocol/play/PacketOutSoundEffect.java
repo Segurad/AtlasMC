@@ -10,8 +10,11 @@ public class PacketOutSoundEffect extends AbstractPacket implements PacketPlayOu
 	
 	private Sound sound;
 	private SoundCategory category;
-	private double x, y, z;
-	private float volume, pitch;
+	private double x;
+	private double y;
+	private double z;
+	private float volume;
+	private float pitch;
 	private float range;
 	private boolean fixedRange;
 	private String identifier;

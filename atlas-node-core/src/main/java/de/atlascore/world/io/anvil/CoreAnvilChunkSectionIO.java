@@ -67,7 +67,8 @@ public class CoreAnvilChunkSectionIO extends AbstractNBTBase {
 	}
 	
 	private byte[] blocklight, skylight;
-	private boolean hasBlocklight, hasSkylight;
+	private boolean hasBlocklight;
+	private boolean hasSkylight;
 	private long[] indizes;
 	private byte hightIndex;
 	private List<BlockData> palette;

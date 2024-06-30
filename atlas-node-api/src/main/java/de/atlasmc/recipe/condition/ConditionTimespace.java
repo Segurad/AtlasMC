@@ -4,7 +4,8 @@ import de.atlasmc.entity.Player;
 
 public class ConditionTimespace implements Condition {
 	
-	private final long start, end;
+	private final long start;
+	private final long end;
 	
 	public ConditionTimespace(long start, long end) {
 		this.start = start;

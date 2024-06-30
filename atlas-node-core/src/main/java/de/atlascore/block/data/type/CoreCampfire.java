@@ -24,7 +24,9 @@ public class CoreCampfire extends CoreDirectional4Faces implements Campfire {
 		});
 	}
 	
-	private boolean lit, waterlogged, signalFire;
+	private boolean lit;
+	private boolean waterlogged;
+	private boolean signalFire;
 	
 	public CoreCampfire(Material material) {
 		super(material);

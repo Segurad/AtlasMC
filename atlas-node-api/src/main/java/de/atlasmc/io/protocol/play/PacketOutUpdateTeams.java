@@ -14,8 +14,11 @@ public class PacketOutUpdateTeams extends AbstractPacket implements PacketPlayOu
 	private ChatColor color;
 	private String name;
 	private Mode mode;
-	private String prefix, suffix, displayName;
-	private TeamOptionType nameTagVisibility, collisionRule;
+	private String prefix;
+	private String suffix; 
+	private String displayName;
+	private TeamOptionType nameTagVisibility;
+	private TeamOptionType collisionRule;
 	private List<String> entities;
 	
 	public boolean getAllowFriedlyFire() {

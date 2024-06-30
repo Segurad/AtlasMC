@@ -460,8 +460,8 @@ public class CoreMasterBuilder implements Builder<CoreAtlasNetwork> {
 		PreparedStatement stmt = con.prepareStatement("INSERT INTO perm_groups (name, sort_weight, prefix, suffix, chat_color, name_color, power, is_default) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 		stmt.setString(1, group.getName());
 		stmt.setInt(2, group.getSortWeight());
-		stmt.setString(3, group.getPrefix().getText());
-		stmt.setString(4, group.getPrefix().getText());
+		stmt.setString(3, group.getPrefix().toText());
+		stmt.setString(4, group.getPrefix().toText());
 		stmt.setInt(5, group.getChatColor().getColor().asRGB());
 		stmt.setInt(6, group.getNameColor().getID());
 		stmt.setInt(7, group.getPower());

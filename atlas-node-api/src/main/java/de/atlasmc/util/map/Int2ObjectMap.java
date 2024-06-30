@@ -269,7 +269,8 @@ public class Int2ObjectMap<V> implements Iterable<V> {
 		private int hash;
 		private final int key;
 		private E value;
-		private Node<E> prev, next;
+		private Node<E> prev;
+		private Node<E> next;
 		
 		public Node(int hash, int key) {
 			this.hash = hash;

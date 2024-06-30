@@ -13,7 +13,10 @@ public class PlayerUpdateCommandBlockEvent extends PlayerEvent implements Cancel
 	private final Location loc;
 	private String command;
 	private Mode mode;
-	private boolean trackoutput, conditional, alwaysactive, cancelled;
+	private boolean trackoutput;
+	private boolean conditional;
+	private boolean alwaysactive;
+	private boolean cancelled;
 	
 	public PlayerUpdateCommandBlockEvent(Player player, Location loc, String command, Mode mode, boolean trackoutput, boolean conditional, boolean alwaysactive) {
 		super(player);

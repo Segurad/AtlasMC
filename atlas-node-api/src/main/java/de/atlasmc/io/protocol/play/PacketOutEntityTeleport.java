@@ -7,8 +7,11 @@ import de.atlasmc.io.DefaultPacketID;
 public class PacketOutEntityTeleport extends AbstractPacket implements PacketPlayOut {
 	
 	private int entityID;
-	private double x, y, z;
-	private float yaw, pitch;
+	private double x;
+	private double y;
+	private double z;
+	private float yaw;
+	private float pitch;
 	private boolean onGround;
 	
 	public int getEntityID() {

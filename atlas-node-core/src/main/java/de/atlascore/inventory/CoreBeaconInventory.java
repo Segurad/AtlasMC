@@ -16,8 +16,11 @@ public class CoreBeaconInventory extends CoreInventory implements BeaconInventor
 	PROPERTY_FIRST_POTION_ID = 1,
 	PROPERTY_SECOND_POTION_ID = 2;
 	
-	private PotionEffect primary, secondary;
-	private int primaryid = -1, secondaryid = -1, power;
+	private PotionEffect primary;
+	private PotionEffect secondary;
+	private int primaryid = -1;
+	private int secondaryid = -1;
+	private int power;
 	
 	public CoreBeaconInventory(Chat title, InventoryHolder holder) {
 		super(1, 0, InventoryType.BEACON, title, holder);

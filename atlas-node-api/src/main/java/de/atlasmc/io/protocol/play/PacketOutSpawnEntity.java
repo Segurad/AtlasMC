@@ -19,10 +19,15 @@ public class PacketOutSpawnEntity extends AbstractPacket implements PacketPlayOu
 	private EntityType type;
 	private int objectdata;
 	private UUID uuid;
-	private double x, y, z;
-	private float yaw, pitch;
+	private double x; 
+	private double y;
+	private double z;
+	private float yaw;
+	private float pitch;
 	private float headYaw;
-	private double velocityX, velocityY, velocityZ;
+	private double velocityX;
+	private double velocityY;
+	private double velocityZ;
 	
 	public int getEntityID() {
 		return entityID;

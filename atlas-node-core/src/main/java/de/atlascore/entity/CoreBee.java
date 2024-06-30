@@ -45,7 +45,9 @@ public class CoreBee extends CoreAgeableMob implements Bee {
 		NBT_FIELDS.setField(NBT_HIVE_POS, (holder, reader) -> {
 			if (holder instanceof Bee) {
 				reader.readNextEntry();
-				int x = 0, y = 0, z = 0;
+				int x = 0;
+				int y = 0;
+				int z = 0;
 				while (reader.getType() != TagType.TAG_END) {
 					final CharSequence value = reader.getFieldName();
 					if (NBT_X.equals(value))
@@ -124,7 +126,8 @@ public class CoreBee extends CoreAgeableMob implements Bee {
 	private int ticksSincePollination;
 	private int ticksCannotEnterHive;
 	private int cropsGrownSincePollination;
-	private Location hive, flower;
+	private Location hive;
+	private Location flower;
 	private UUID hurtBy;
 	
 	public CoreBee(EntityType type, UUID uuid) {

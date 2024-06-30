@@ -6,7 +6,8 @@ import de.atlasmc.inventory.ItemStack;
 
 public final class LootItem {
 
-	private final int max, min;
+	private final int max;
+	private final int min;
 	private final ItemStack item;
 	
 	public LootItem(ItemStack item, int max, int min) {

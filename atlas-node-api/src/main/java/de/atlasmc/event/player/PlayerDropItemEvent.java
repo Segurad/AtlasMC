@@ -10,7 +10,8 @@ public class PlayerDropItemEvent extends PlayerEvent implements Cancellable {
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
 	private ItemStack drop;
-	private int dropAmount, removeAmount;
+	private int dropAmount;
+	private int removeAmount;
 	private final boolean all;
 	private boolean cancelled;
 	

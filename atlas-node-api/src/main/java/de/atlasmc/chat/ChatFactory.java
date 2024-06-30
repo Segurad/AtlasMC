@@ -1,6 +1,5 @@
-package de.atlasmc.factory;
+package de.atlasmc.chat;
 
-import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.component.ChatComponent;
 
 public interface ChatFactory {
@@ -10,17 +9,19 @@ public interface ChatFactory {
 	/**
 	 * {@inheritDoc ChatUtil#jsonFromLegacy(CharSequence, char)}
 	 */
-	String jsonFromLegacy(CharSequence text, char formatPrefix);
+	String legacyToJson(CharSequence text, char formatPrefix);
 	
-	String legacyFromJson(CharSequence text, char formatPrefix);
+	String jsonToLegacy(CharSequence text, char formatPrefix);
 	
 	ChatComponent legacyToComponent(CharSequence legacy, char formatPrefix);
 	
 	ChatComponent jsonToComponent(CharSequence json);
 	
-	String rawTextFromComponent(ChatComponent component);
+	String componentToRawText(ChatComponent component);
 	
-	String legacyFromComponent(ChatComponent component, char formatPrefix);
+	String componentToLegacy(ChatComponent component, char formatPrefix);
+	
+	String componentToConsole(ChatComponent component);
 
 	String jsonToRawText(String json);
 

@@ -15,7 +15,8 @@ public class CoreDoor extends CoreDirectional4Faces implements Door {
 	
 	private Half half;
 	private Hinge hinge;
-	private boolean open, powered;
+	private boolean open;
+	private boolean powered;
 	
 	protected static final CharKey
 	HINGE = CharKey.literal("hinge");

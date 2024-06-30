@@ -6,7 +6,8 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.OUT_SET_HEALTH)
 public class PacketOutUpdateHealth extends AbstractPacket implements PacketPlayOut {
 	
-	private float health, saturation;
+	private float health;
+	private float saturation;
 	private int food;
 	
 	public float getHealth() {

@@ -12,8 +12,10 @@ import de.atlasmc.inventory.MerchantInventory;
 public class CoreMerchantInventory extends CoreInventory implements MerchantInventory {
 
 	private List<MerchantRecipe> recipes;
-	private boolean canRestock, hideLevelProgress;
-	private int level, xp;
+	private boolean canRestock;
+	private boolean hideLevelProgress;
+	private int level;
+	private int xp;
 	
 	public CoreMerchantInventory(Chat title, InventoryHolder holder) {
 		super(3, InventoryType.MERCHANT, title, holder);

@@ -46,7 +46,8 @@ public class CoreTropicalFishBucketMeta extends CoreItemMeta implements Tropical
 		});
 	}
 	
-	private DyeColor patternColor, bodyColor;
+	private DyeColor patternColor;
+	private DyeColor bodyColor;
 	private Pattern pattern;
 	private Entity entity;
 	

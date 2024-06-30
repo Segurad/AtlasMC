@@ -17,7 +17,8 @@ public abstract class RealClickButton extends AbstractButton {
 			NOTIFY_DROP = 2;
 	@Override
 	public ItemStack press(InventoryClickEvent e) {
-		ItemStack sitem = e.getCurrentItem(), citem = e.getCursor();
+		ItemStack sitem = e.getCurrentItem();
+		ItemStack citem = e.getCursor();
 		if (sitem != null && sitem.getType() == Material.AIR) 
 			sitem = null;
 		if (citem != null && citem.getType() == Material.AIR) 

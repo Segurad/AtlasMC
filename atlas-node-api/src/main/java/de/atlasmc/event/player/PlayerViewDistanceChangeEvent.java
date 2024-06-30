@@ -10,7 +10,8 @@ public class PlayerViewDistanceChangeEvent extends PlayerEvent {
 
 	private static final ServerHandlerList HANDLERS = new ServerHandlerList();
 	
-	private final int newDistance, oldDistance;
+	private final int newDistance;
+	private final int oldDistance;
 	
 	public PlayerViewDistanceChangeEvent(Player player, int newDistance, int oldDistance) {
 		super(false, player);

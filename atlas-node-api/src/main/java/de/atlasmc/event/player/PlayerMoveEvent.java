@@ -9,7 +9,8 @@ public class PlayerMoveEvent extends PlayerEvent implements Cancellable {
 
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
-	private final Location from, to;
+	private final Location from;
+	private final Location to;
 	private boolean cancelled;
 	
 	public PlayerMoveEvent(Player player, Location from, Location to) {
@@ -63,7 +64,8 @@ public class PlayerMoveEvent extends PlayerEvent implements Cancellable {
 		FORWARD(0, 1.85),
 		BACKWARD(4, 1.85);
 		
-		private double val, toleranz;
+		private double val;
+		private double toleranz;
 		
 		private MoveDirection(double val, double toleranz) {
 			this.toleranz = toleranz;

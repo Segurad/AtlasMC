@@ -19,7 +19,7 @@ public class PacketOutSystemChatMessage extends AbstractPacket implements Packet
 	}
 	
 	public void setMessage(Chat message) {
-		this.message = message.getText();
+		this.message = message.toText();
 	}
 	
 	public boolean isActionbar() {

@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.UUID;
 
 import de.atlasmc.LocalAtlasNode;
+import de.atlasmc.chat.ChatFactory;
 import de.atlasmc.datarepository.DataRepositoryHandler;
-import de.atlasmc.factory.ChatFactory;
 import de.atlasmc.io.protocol.ProtocolAdapter;
 import de.atlasmc.proxy.ProxyConfig;
 import de.atlasmc.scheduler.Scheduler;

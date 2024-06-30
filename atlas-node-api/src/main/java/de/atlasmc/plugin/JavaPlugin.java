@@ -16,7 +16,8 @@ public class JavaPlugin implements Plugin {
 	private String version;
 	private List<String> author;
 	private String description;
-	private boolean loaded, enabled;
+	private boolean loaded;
+	private boolean enabled;
 	
 	@Override
 	public final void load() {

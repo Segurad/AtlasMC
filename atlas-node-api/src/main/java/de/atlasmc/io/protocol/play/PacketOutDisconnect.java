@@ -18,7 +18,7 @@ public class PacketOutDisconnect extends AbstractPacket implements PacketPlayOut
 	}
 	
 	public void setReason(Chat chat) {
-		this.reason = chat.getText();
+		this.reason = chat.toText();
 	}
 	
 	@Override

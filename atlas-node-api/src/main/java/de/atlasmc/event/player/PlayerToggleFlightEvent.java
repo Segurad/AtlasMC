@@ -8,7 +8,8 @@ public class PlayerToggleFlightEvent extends PlayerEvent implements Cancellable 
 
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
-	private boolean flying, cancelled;
+	private boolean flying;
+	private boolean cancelled;
 	
 	public PlayerToggleFlightEvent(Player player, boolean flying) {
 		super(player);

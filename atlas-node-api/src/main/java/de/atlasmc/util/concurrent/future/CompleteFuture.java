@@ -141,7 +141,7 @@ public class CompleteFuture<V> implements Future<V> {
 
 	@Override
 	public void removeListener(FutureListener<V> listener) {
-		return;
+		// no listeners present so no listener need to be removed
 	}
 
 	/**

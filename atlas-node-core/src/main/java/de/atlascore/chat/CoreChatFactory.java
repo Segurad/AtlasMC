@@ -1,4 +1,4 @@
-package de.atlascore.factory;
+package de.atlascore.chat;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,9 +8,10 @@ import com.google.gson.JsonParseException;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 
-import de.atlascore.chat.CoreChat;
+import de.atlasmc.Color;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatColor;
+import de.atlasmc.chat.ChatFactory;
 import de.atlasmc.chat.ChatFormatException;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.BaseComponent;
@@ -26,7 +27,6 @@ import de.atlasmc.chat.component.KeybindComponent;
 import de.atlasmc.chat.component.ScoreComponent;
 import de.atlasmc.chat.component.TextComponent;
 import de.atlasmc.chat.component.TranslationComponent;
-import de.atlasmc.factory.ChatFactory;
 import de.atlasmc.util.CharSequenceReader;
 
 public class CoreChatFactory implements ChatFactory {
@@ -37,15 +37,15 @@ public class CoreChatFactory implements ChatFactory {
 	}
 
 	@Override
-	public String jsonFromLegacy(CharSequence text, char formatPrefix) {
-		return legacyToComponent(text, formatPrefix).getJsonText();
+	public String legacyToJson(CharSequence text, char formatPrefix) {
+		return legacyToComponent(text, formatPrefix).toJsonText();
 	}
 
 	@Override
-	public String legacyFromJson(CharSequence json, char formatPrefix) {
+	public String jsonToLegacy(CharSequence json, char formatPrefix) {
 		if (json.charAt(0) != '{')
 			return json.toString();
-		return legacyFromComponent(jsonToComponent(json), formatPrefix);
+		return componentToLegacy(jsonToComponent(json), formatPrefix);
 	}
 
 	@Override
@@ -287,7 +287,7 @@ public class CoreChatFactory implements ChatFactory {
 	}
 
 	@Override
-	public String legacyFromComponent(ChatComponent component, char formatPrefix) {
+	public String componentToLegacy(ChatComponent component, char formatPrefix) {
 		if (component == null)
 			throw new IllegalArgumentException("Component can not be null!");
 		StringBuilder builder = new StringBuilder();
@@ -375,7 +375,7 @@ public class CoreChatFactory implements ChatFactory {
 	@Override
 	public String jsonToRawText(String json) {
 		ChatComponent comp = jsonToComponent(json);
-		return rawTextFromComponent(comp);
+		return componentToRawText(comp);
 	}
 
 	@Override
@@ -400,7 +400,7 @@ public class CoreChatFactory implements ChatFactory {
 	}
 
 	@Override
-	public String rawTextFromComponent(ChatComponent component) {
+	public String componentToRawText(ChatComponent component) {
 		if (component == null)
 			throw new IllegalArgumentException("Component can not be null!");
 		StringBuilder builder = new StringBuilder();
@@ -428,10 +428,56 @@ public class CoreChatFactory implements ChatFactory {
 		if (chat instanceof ChatComponent comp)
 			return comp;
 		if (chat.hasJson())
-			return jsonToComponent(chat.getJsonText());
+			return jsonToComponent(chat.toJsonText());
 		if (chat.hasLegacy())
-			return legacyToComponent(chat.getLegacyText(), ChatUtil.DEFAULT_CHAT_FORMAT_PREFIX);
+			return legacyToComponent(chat.toLegacyText(), ChatUtil.DEFAULT_CHAT_FORMAT_PREFIX);
 		return ChatComponent.empty();
+	}
+
+	@Override
+	public String componentToConsole(ChatComponent component) {
+		if (component == null)
+			throw new IllegalArgumentException("Component can not be null!");
+		StringBuilder builder = new StringBuilder();
+		buildConsole(builder, component);
+		return builder.toString();
+	}
+	
+	private void buildConsole(StringBuilder builder, ChatComponent component) {
+		if (!(component instanceof TextComponent) || component.getClass() != BaseComponent.class) {	
+			ChatColor color = component.getColorChat();
+			if (color != null) {
+				builder.append(color.getConsoleFormat());
+			}
+			if (color != ChatColor.RESET) {
+				if (component.isBold()) {
+					builder.append(ChatColor.BOLD.getConsoleFormat());
+				}
+				if (component.isItalic()) {
+					builder.append(ChatColor.ITALIC.getConsoleFormat());
+				}
+				if (component.isObfuscated()) {
+					builder.append(ChatColor.OBFUSCATED.getConsoleFormat());
+				}
+				if (component.isStrikethrough()) {
+					builder.append(ChatColor.STRIKETHROUGH.getConsoleFormat());
+				}
+				if (component.isUnderlined()) {
+					builder.append(ChatColor.UNDERLINE.getConsoleFormat());
+				}
+			}
+			if (component.hasColor()) {
+				builder.append(Color.asConsoleColor(component.getColor()));
+			}
+			if (component instanceof TextComponent text) {
+				builder.append(text.getValue());
+			}
+		}
+		if (component.hasExtra()) {
+			for (ChatComponent child : component.getExtra()) {
+				buildConsole(builder, child);
+			}
+		}
 	}
 
 }

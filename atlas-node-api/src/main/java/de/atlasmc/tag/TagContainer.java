@@ -11,12 +11,12 @@ import io.netty.buffer.ByteBuf;
  */
 public class TagContainer<T> extends Tag<T> {
 	
+	private Set<T> taged;
+	
 	public TagContainer(NamespacedKey type, NamespacedKey identifier) {
 		super(type, identifier);
 		taged = new HashSet<>();
 	}
-
-	private Set<T> taged;
 	
 	public boolean isTaged(T element) {
 		return taged.contains(element);

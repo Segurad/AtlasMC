@@ -51,7 +51,8 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 	}
 	
 	private Inventory inv;
-	private Chat name, lock;
+	private Chat name;
+	private Chat lock;
 	
 	public CoreAbstractContainerTile(Material type) {
 		super(type);
@@ -108,9 +109,9 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 		super.toNBT(writer, systemData);
 		if (!systemData) return;
 		if (hasCustomName())
-		writer.writeStringTag(NBT_CUSTOM_NAME, getCustomName().getJsonText());
+		writer.writeStringTag(NBT_CUSTOM_NAME, getCustomName().toJsonText());
 		if (hasLock())
-		writer.writeStringTag(NBT_LOCK, getLock().getJsonText());
+		writer.writeStringTag(NBT_LOCK, getLock().toJsonText());
 		if (inv != null) {
 			int count = inv.countItems();
 			if (count > 0) {

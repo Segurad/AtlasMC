@@ -7,7 +7,9 @@ import de.atlasmc.io.DefaultPacketID;
 public class PacketOutSetEntityVelocity extends AbstractPacket implements PacketPlayOut {
 	
 	private int entityID;
-	private double x, y, z;
+	private double x;
+	private double y;
+	private double z;
 	
 	public int getEntityID() {
 		return entityID;

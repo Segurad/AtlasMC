@@ -10,7 +10,9 @@ public class CoreSchematic implements Schematic {
 	private final SchematicSection[] sections; // ordered by y > z > x
 	private List<SchematicAccess> schematics;
 	private final SimpleLocation off;
-	private final int lengthX, lengthZ, height;
+	private final int lengthX;
+	private final int lengthZ;
+	private final int height;
 	
 	/**
 	 * Creates a new CoreSchamtic instance with no contents

@@ -9,7 +9,9 @@ public class ScoreComponent extends AbstractBaseComponent<ScoreComponent> {
 	JSON_NAME = "name",
 	JSON_OBJECTIVE = "objective";
 	
-	private String entry, objective, score;
+	private String entry;
+	private String objective;
+	private String score;
 
 	public ScoreComponent(String entry, String objective, String score) {
 		if (entry == null)

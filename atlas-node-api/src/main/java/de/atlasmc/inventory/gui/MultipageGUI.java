@@ -13,11 +13,13 @@ import de.atlasmc.inventory.gui.component.PageComponent;
 
 public class MultipageGUI extends BaseGUI {
 
-	private final int next, back;
+	private final int next;
+	private final int back;
 	private int page = 0;
 	protected final ItemPageComponent mltPageItems;
 	protected final ItemComponentHandler mhandler;
-	private ItemStack inext = null, iback = null;
+	private ItemStack inext = null;
+	private ItemStack iback = null;
 	private final ItemStack air = new ItemStack(Material.AIR);
 	
 	public MultipageGUI(Inventory inv, int back, int next, int compLenght, int compDepth, int maxpages) {

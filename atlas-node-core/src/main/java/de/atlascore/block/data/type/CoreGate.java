@@ -23,7 +23,9 @@ public class CoreGate extends CoreDirectional4Faces implements Gate {
 		});
 	}
 	
-	private boolean open, powered, inWall;
+	private boolean open;
+	private boolean powered;
+	private boolean inWall;
 	
 	public CoreGate(Material material) {
 		super(material);

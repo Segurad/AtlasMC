@@ -6,7 +6,9 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.OUT_RESOURCE_PACK)
 public class PacketOutResourcePack extends AbstractPacket implements PacketPlayOut {
 	
-	private String url, hash, promt;
+	private String url;
+	private String hash;
+	private String promt;
 	private boolean forced;
 	
 	public String getURL() {

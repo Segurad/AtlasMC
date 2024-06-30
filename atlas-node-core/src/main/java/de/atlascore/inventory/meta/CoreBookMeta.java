@@ -51,7 +51,8 @@ public class CoreBookMeta extends CoreItemMeta implements BookMeta {
 		});
 	}
 	
-	private String author, title;
+	private String author;
+	private String title;
 	private Generation generation;
 	private List<String> pages;
 	private boolean resolved;

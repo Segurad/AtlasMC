@@ -12,8 +12,10 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class FireworkEffect implements NBTHolder {
 	
-	private int[] colors, fadeColors;
-	private boolean flicker, trail;
+	private int[] colors;
+	private int[] fadeColors;
+	private boolean flicker;
+	private boolean trail;
 	private Type type;
 	
 	protected static final CharKey

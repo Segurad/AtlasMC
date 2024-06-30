@@ -6,7 +6,8 @@ import de.atlasmc.io.DefaultPacketID;
 @DefaultPacketID(PacketPlay.IN_QUERY_ENTITY_TAG)
 public class PacketInQueryEntityTag extends AbstractPacket implements PacketPlayIn {
 
-	private int transactionID, entityID;
+	private int transactionID;
+	private int entityID;
 	
 	public int getTransactionID() {
 		return transactionID;

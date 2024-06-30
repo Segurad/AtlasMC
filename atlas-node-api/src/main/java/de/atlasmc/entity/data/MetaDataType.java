@@ -127,7 +127,7 @@ public abstract class MetaDataType<T> {
 
         @Override
         public void write(Chat data, ByteBuf out) {
-            AbstractPacket.writeString(data.getText(), out);
+            AbstractPacket.writeString(data.toText(), out);
         }
 
     };
@@ -146,7 +146,7 @@ public abstract class MetaDataType<T> {
             out.writeBoolean(data != null);
             if (data == null) 
             	return;
-            AbstractPacket.writeString(data.getText(), out);
+            AbstractPacket.writeString(data.toText(), out);
         }
 
     };

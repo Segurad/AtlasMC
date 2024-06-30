@@ -168,7 +168,7 @@ abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> impleme
 	}
 	
 	@Override
-	public String getJsonText() {
+	public String toJsonText() {
 		JsonBuffer buff = new JsonBuffer();
 		buff.beginObject(null);
 		addContents(buff);
@@ -177,13 +177,13 @@ abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> impleme
 	}
 	
 	@Override
-	public String getLegacyText() {
-		return ChatUtil.legacyFromComponent(this);
+	public String toLegacyText() {
+		return ChatUtil.componentToLegacy(this);
 	}
 	
 	@Override
 	public String toString() {
-		return getJsonText();
+		return toJsonText();
 	}
 	
 	/**
@@ -268,8 +268,8 @@ abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> impleme
 	}
 
 	@Override
-	public String getText() {
-		return getJsonText();
+	public String toText() {
+		return toJsonText();
 	}
 
 	@Override
@@ -291,8 +291,8 @@ abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> impleme
 	}
 
 	@Override
-	public String getRawText() {
-		return ChatUtil.rawTextFromComponent(this);
+	public String toRawText() {
+		return ChatUtil.componentToRawText(this);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -310,6 +310,11 @@ abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> impleme
 				copy.extra.add(extra.clone());
 		}
 		return copy.getThis();
+	}
+	
+	@Override
+	public ChatComponent toComponent() {
+		return this;
 	}
 	
 	protected abstract T getThis();
