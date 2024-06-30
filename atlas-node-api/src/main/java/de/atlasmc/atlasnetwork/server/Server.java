@@ -3,6 +3,7 @@ package de.atlasmc.atlasnetwork.server;
 import java.util.UUID;
 
 import de.atlasmc.atlasnetwork.AtlasNode;
+import de.atlasmc.server.NodeServer;
 
 public interface Server {
 	
@@ -32,7 +33,7 @@ public interface Server {
 		 */
 		PREPARATION,
 		/**
-		 * Server is prepared and awaits start
+		 * Server is prepared and awaits start ({@link NodeServer#start()})
 		 */
 		AWAIT_START,
 		/**

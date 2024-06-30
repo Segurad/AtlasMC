@@ -10,6 +10,8 @@ import de.atlasmc.event.Event;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.scheduler.Scheduler;
 import de.atlasmc.util.TickingThread;
+import de.atlasmc.util.concurrent.future.CompletableFuture;
+import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.world.World;
 
 public class CoreServerThread extends TickingThread {
@@ -17,6 +19,7 @@ public class CoreServerThread extends TickingThread {
 	private final CoreLocalServer server;
 	private final Queue<Event> eventQueue;
 	private final Scheduler scheduler;
+	private volatile CompletableFuture<Boolean> future;
 	
 	public CoreServerThread(CoreLocalServer server) {
 		super(server.getServerName(), 50, server.getLogger(), false);
@@ -52,6 +55,22 @@ public class CoreServerThread extends TickingThread {
 			}
 		}
 		scheduler.runNextTasks();
+	}
+	
+	@Override
+	public void run() {
+		// startup sequence
+		// TODO startup
+		// start ticking
+		super.run();
+		// shutdown sequence
+		// TODO shutdown
+	}
+
+	public Future<Boolean> startServer() {
+		Future<Boolean> future = this.future = new CompletableFuture<>();
+		start();
+		return future;
 	}
 
 }

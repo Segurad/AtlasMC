@@ -19,7 +19,6 @@ import de.atlasmc.log.Logging;
 import de.atlasmc.scheduler.Scheduler;
 import de.atlasmc.server.LocalServer;
 import de.atlasmc.server.ServerException;
-import de.atlasmc.util.concurrent.future.CompletableFuture;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.world.World;
@@ -30,7 +29,8 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 	private final Set<World> worlds;
 	private CoreServerThread thread;
 	private final Log logger;
-	private volatile CompletableFuture<Boolean> future;
+	private volatile Status targetStatus;
+ 	private volatile Future<Boolean> future;
 	protected final Lock lock = new ReentrantLock();
 	
 	public CoreLocalServer(UUID serverID, File workdir, ServerGroup group) {
@@ -106,8 +106,36 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 
 	@Override
 	public Future<Boolean> start() {
-		// TODO Auto-generated method stub
-		return null;
+		Future<Boolean> future = tryTarget(Status.ONLINE, Status.AWAIT_START);
+		if (future != null)
+			return future;
+		lock.lock();
+		future = tryTarget(Status.ONLINE, Status.AWAIT_START);
+		if (future != null) {
+			lock.unlock();
+			return future;
+		}
+		status = Status.STARTUP;
+		logger.info("Starting...");
+		CoreServerThread thread = this.thread = new CoreServerThread(this);
+		this.future = future = thread.startServer();
+		lock.unlock();
+		return future;
+	}
+	
+	private Future<Boolean> tryTarget(Status target, Status required) {
+		Status status = this.status;
+		if (status == target)
+			return CompleteFuture.getTrueFuture();
+		if (status.ordinal() < required.ordinal())
+			return new CompleteFuture<>(false, new ServerException("Server is not in required status ("+ required +") was: " + status));
+		Status currentTarget = this.targetStatus;
+		if (currentTarget == target) {
+			return this.future;
+		} else if (currentTarget == null) {
+			return null;
+		}
+		return new CompleteFuture<>(false, new ServerException("Server currently targets another status: " + currentTarget));
 	}
 
 	@Override
@@ -118,11 +146,11 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 
 	@Override
 	public Future<Boolean> prepare() {
-		Future<Boolean> future = tryPreparation();
+		Future<Boolean> future = tryTarget(Status.AWAIT_START, Status.OFFLINE);
 		if (future != null)
 			return future;
 		lock.lock();
-		future = tryPreparation();
+		future = tryTarget(Status.AWAIT_START, Status.OFFLINE);
 		if (future != null) {
 			lock.unlock();
 			return future;
@@ -130,7 +158,8 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 		status = Status.PREPARATION;
 		logger.info("Preparing...");
 		CoreLocalServerPreparingTask task = new CoreLocalServerPreparingTask(this);
-		future = task.getFuture();
+		this.future = future = task.getFuture();
+		targetStatus = Status.AWAIT_START;
 		future.setListener((f) -> {
 			lock.lock();
 			if (f.getNow()) {
@@ -141,23 +170,13 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 				logger.info("Failed preparation!", f.cause());
 				this.status = Status.OFFLINE;
 			}
+			this.targetStatus = null;
 			this.future = null;
 			lock.unlock();
 		});
 		Atlas.getScheduler().runAsyncTask(CorePluginManager.SYSTEM, task);
 		lock.unlock();
 		return future;
-	}
-	
-	private Future<Boolean> tryPreparation() {
-		Status status = this.status;
-		if (status.ordinal() > Status.AWAIT_START.ordinal())
-			throw new ServerException("Server is prepared");
-		if (status == Status.AWAIT_START)
-			return CompleteFuture.getTrueFuture();
-		if (status == Status.PREPARATION)
-			return future;
-		return null;
 	}
 
 }

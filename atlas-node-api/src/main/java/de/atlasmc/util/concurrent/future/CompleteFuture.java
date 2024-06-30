@@ -42,6 +42,10 @@ public class CompleteFuture<V> implements Future<V> {
 		this(null, null, cancelled);
 	}
 	
+	public CompleteFuture(V result, Throwable cause) {
+		this(result, cause, false);
+	}
+	
 	public CompleteFuture(V result, Throwable cause, boolean cancelled) {
 		this.result = result;
 		this.cause = cause;
