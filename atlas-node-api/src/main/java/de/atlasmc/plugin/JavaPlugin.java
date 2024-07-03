@@ -6,6 +6,7 @@ import java.util.List;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.event.Listener;
 import de.atlasmc.log.Log;
+import de.atlasmc.util.annotation.InternalAPI;
 
 public class JavaPlugin implements Plugin {
 
@@ -115,7 +116,10 @@ public class JavaPlugin implements Plugin {
 		return loaded;
 	}
 
-	public final void init(File file, PluginLoader loader, Log logger, String name, String version, List<String> author, String description) {
+	@InternalAPI
+	public final synchronized void init(File file, PluginLoader loader, Log logger, String name, String version, List<String> author, String description) {
+		if (this.loader != null)
+			throw new IllegalStateException("Plugin already initialized!");
 		if (loader == null)
 			throw new IllegalArgumentException("Loader can not be null!");
 		this.file = file;

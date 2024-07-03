@@ -1,6 +1,7 @@
 package de.atlasmc.plugin;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 
 import de.atlasmc.atlasnetwork.server.ServerGroup;
@@ -9,8 +10,20 @@ import de.atlasmc.event.EventPriority;
 import de.atlasmc.event.FunctionalListener;
 import de.atlasmc.event.Listener;
 import de.atlasmc.server.LocalServer;
+import de.atlasmc.util.concurrent.future.Future;
 
 public interface PluginManager {
+
+	Future<Plugin> loadPluginAsync(File file, boolean enable, boolean checkDependencies);
+	
+	default List<Future<Plugin>> loadPluginsAsync(File directory) {
+		return loadPlugins(directory, true, true);
+	}
+	
+	List<Future<Plugin>> loadPluginsAsync(File directory, boolean enable, boolean checkDependencies);
+	
+	List<Future<Plugin>> loadPluginsAsync(Collection<File> files, boolean enable, boolean checkDependencies);
+
 	
 	/**
 	 * Loads and returns the Plugin represented by the file or null if unable to load.<br>
@@ -20,7 +33,7 @@ public interface PluginManager {
 	 * @param checkDependencies if dependencies should be checked before loading
 	 * @return Plugin or null if not successful
 	 */
-	Plugin loadPlugin(File file, boolean enable, boolean checkDependencies);
+	Future<Plugin> loadPlugin(File file, boolean enable, boolean checkDependencies);
 	
 	/**
 	 * Unloads the given Plugin and removes it from this PluginManager
@@ -29,7 +42,7 @@ public interface PluginManager {
 	 */
 	boolean unloadPlugin(Plugin plugin);
 	
-	default List<Plugin> loadPlugins(File directory) {
+	default List<Future<Plugin>> loadPlugins(File directory) {
 		return loadPlugins(directory, true, true);
 	}
 	
@@ -41,7 +54,9 @@ public interface PluginManager {
 	 * @return List of Plugins that are successfully loaded
 	 * @see #loadPlugins(File)
 	 */
-	List<Plugin> loadPlugins(File directory, boolean enable, boolean checkDependencies);
+	List<Future<Plugin>> loadPlugins(File directory, boolean enable, boolean checkDependencies);
+	
+	List<Future<Plugin>> loadPlugins(Collection<File> files, boolean enable, boolean checkDependencies);
 	
 	/**
 	 * Unloads all Plugins and removes them from this PluginManager

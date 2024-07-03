@@ -1,22 +1,24 @@
 package de.atlascore.plugin;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PreparedPlugin;
 import de.atlasmc.plugin.channel.PluginChannelException;
+import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.util.configuration.Configuration;
 
 public abstract class CoreAbstractPreparedPlugin implements PreparedPlugin {
 	
 	private final Configuration pluginInfo;
-	protected Plugin plugin;
-	protected boolean tryedToLoad;
+	protected volatile Plugin plugin;
+	protected volatile boolean tryedToLoad;
 	private final String name;
-	protected Set<PreparedPlugin> dependencies;
-	protected Set<PreparedPlugin> softDependencies;
-	private boolean invalid;
+	protected Set<Future<Plugin>> dependencies;
+	protected Set<Future<Plugin>> softDependencies;
+	private volatile boolean invalid;
 	
 	public CoreAbstractPreparedPlugin(Configuration pluginInfo) {
 		if (pluginInfo == null)
@@ -43,10 +45,10 @@ public abstract class CoreAbstractPreparedPlugin implements PreparedPlugin {
 	}
 	
 	@Override
-	public Set<PreparedPlugin> getDependencies() {
+	public void addDependency(Future<Plugin> future) {
 		if (dependencies == null)
 			dependencies = new HashSet<>();
-		return dependencies;
+		dependencies.add(future);
 	}
 	
 	@Override
@@ -55,10 +57,10 @@ public abstract class CoreAbstractPreparedPlugin implements PreparedPlugin {
 	}
 	
 	@Override
-	public Set<PreparedPlugin> getSoftDependencies() {
+	public void addSoftDependency(Future<Plugin> future) {
 		if (softDependencies == null)
 			softDependencies = new HashSet<>();
-		return softDependencies;
+		softDependencies.add(future);
 	}
 	
 	@Override
@@ -79,6 +81,16 @@ public abstract class CoreAbstractPreparedPlugin implements PreparedPlugin {
 	@Override
 	public Plugin getPlugin() {
 		return plugin;
+	}
+	
+	@Override
+	public Collection<Future<Plugin>> getDependencies() {
+		return dependencies;
+	}
+	
+	@Override
+	public Collection<Future<Plugin>> getSoftDependencies() {
+		return softDependencies;
 	}
 
 }

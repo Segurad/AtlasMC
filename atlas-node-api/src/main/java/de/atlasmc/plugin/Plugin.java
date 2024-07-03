@@ -11,52 +11,52 @@ public interface Plugin {
 	/**
 	 * Called directly after the Plugin is loaded.
 	 */
-	public void load();
+	void load();
 	
 	/**
 	 * Called when the Plugin should be enabled.
 	 */
-	public void enable();
+	void enable();
 	
 	/**
 	 * Called when the Plugin should be disabled.
 	 */
-	public void disable();
+	void disable();
 	
 	/**
 	 * Called when the Plugin gets unloaded.
 	 */
-	public void unload();
+	void unload();
 	
 	/**
 	 * Called when the Plugin should reload all internal configurations
 	 */
-	public void reload();
+	void reload();
 	
-	public void loadConfiguration(PluginConfiguration config);
+	void loadConfiguration(PluginConfiguration config);
 	
-	public void unloadConfiguration(NamespacedKey config);
+	void unloadConfiguration(NamespacedKey config);
 	
-	public void reloadConfiguration(NamespacedKey config);
+	void reloadConfiguration(NamespacedKey config);
 	
-	public void reloadConfigurations();
+	void reloadConfigurations();
 	
-	public String getVersion();
+	String getVersion();
 	
-	public List<String> getAuthor();
+	List<String> getAuthor();
 	
-	public String getName();
+	String getName();
 	
-	public String getDescription();
+	String getDescription();
 	
-	public boolean isLoaded();
+	boolean isLoaded();
 	
-	public boolean isEnabled();
+	boolean isEnabled();
 	
-	public PluginLoader getPluginLoader();
+	PluginLoader getPluginLoader();
 	
-	public File getFile();
+	File getFile();
 	
-	public Log getLogger();
+	Log getLogger();
 
 }

@@ -2,12 +2,14 @@ package de.atlascore.plugin;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import de.atlasmc.Atlas;
 import de.atlasmc.NamespacedKey;
@@ -21,10 +23,13 @@ import de.atlasmc.event.Listener;
 import de.atlasmc.log.Log;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginConfiguration;
+import de.atlasmc.plugin.PluginException;
 import de.atlasmc.plugin.PluginLoader;
 import de.atlasmc.plugin.PluginManager;
 import de.atlasmc.plugin.PreparedPlugin;
 import de.atlasmc.server.LocalServer;
+import de.atlasmc.util.concurrent.future.CompleteFuture;
+import de.atlasmc.util.concurrent.future.Future;
 
 public class CorePluginManager implements PluginManager {
 	
@@ -33,35 +38,15 @@ public class CorePluginManager implements PluginManager {
 	private final Log logger;
 	private final Map<String, Plugin> plugins;
 	private final List<PluginLoader> loaders;
+	private final Map<String, Future<Plugin>> loading;
+	private final Lock lock;
 	
 	public CorePluginManager(Log logger) {
 		this.logger = logger;
+		this.lock = new ReentrantLock();
 		this.plugins = new ConcurrentHashMap<>();
+		this.loading = new ConcurrentHashMap<>();
 		this.loaders = new CopyOnWriteArrayList<>();
-	}
-	
-	@Override
-	public Plugin loadPlugin(File file, boolean enable, boolean checkDependencies) {
-		if (file.exists())
-			throw new IllegalArgumentException("File does not exist: ".concat(file.getPath()));
-		PreparedPlugin prepared = preparePlugin(file);
-		boolean missingDependencies = false;
-		if (checkDependencies) {
-			List<String> dependencies = prepared.getPluginInfo().getStringList("depends-on");
-			if (dependencies != null) {
-				for (String dependency : dependencies) {
-					if (getPlugin(dependency) == null) {
-						logger.error("Missing dependency \"{}\" for plugin: {}", dependency, prepared.getName());
-						missingDependencies = true;
-					}
-				}
-			}
-		}
-		if (missingDependencies) {
-			logger.error("Unable to load plugin: {} (Missing dependencies)!", prepared.getName());
-			return null;
-		}
-		return loadPreparedPlugin(prepared, enable);
 	}
 
 	@Override
@@ -96,69 +81,141 @@ public class CorePluginManager implements PluginManager {
 		} catch(Exception e) {
 			logger.error("Error while removing tasks of plugin: " + plugin.getName() + " v" + plugin.getVersion(), e);
 		}
+		lock.lock();
 		plugins.remove(plugin.getName(), plugin);
+		lock.unlock();
 		return true;
 	}
 	
 	@Override
-	public List<Plugin> loadPlugins(File directory, boolean enable, boolean checkDependencies) {
+	public Future<Plugin> loadPlugin(File file, boolean enable, boolean checkDependencies) {
+		return internalLoadPlugin(file, enable, checkDependencies, false);
+	}
+	
+	@Override
+	public List<Future<Plugin>> loadPlugins(Collection<File> files, boolean enable, boolean checkDependencies) {
+		return internalLoadPlugins(files, enable, checkDependencies, false);
+	}
+	
+	private Future<Plugin> internalLoadPlugin(File file, boolean enable, boolean checkDependencies, boolean async) {
+		if (file.exists())
+			throw new IllegalArgumentException("File does not exist: " + file.getPath());
+		List<Future<Plugin>> futures = internalLoadPlugins(List.of(file), enable, checkDependencies, async);
+		return futures.get(0);
+	}
+	
+	private List<Future<Plugin>> internalLoadPlugins(File directory, boolean enable, boolean checkDependencies, boolean async) {
 		if (directory == null)
 			throw new IllegalArgumentException("Directory can not be null!");
 		if (!directory.isDirectory())
 			throw new IllegalArgumentException("Directory does not exist: ".concat(directory.getPath()));
 		logger.debug("Loading plugins from directory: {}", directory.getPath());
-		Map<String, PreparedPlugin> prepared = null;
-		for (File file : directory.listFiles()) {
-			if (!file.isFile())
-				continue;
-			PreparedPlugin plugin = preparePlugin(file);
-			if (plugin == null)
-				continue;
-			logger.debug("Prepared plugin: {}", plugin.getName());
-			if (prepared == null)
-				prepared = new HashMap<>();
-			prepared.put(plugin.getName(), plugin);
-		}
-		if (prepared == null)
-			return List.of();
-		if (checkDependencies) {
-			logger.debug("Resolving dependencies...");
-			for (PreparedPlugin preped : prepared.values()) {
-				// check load before
-				List<String> loadbefore = preped.getPluginInfo().getStringList("load-before");
-				if (loadbefore == null)
-					continue;
-				for (String name : loadbefore) {
-					PreparedPlugin after = prepared.get(name);
-					if (after == null)
-						continue;
-					Set<PreparedPlugin> dependencies = after.getDependencies();
-					dependencies.add(preped);
-				}
-				// resolve soft depends and depends on
-				resolveDependencies(preped, prepared);
-			}
-		}
-		List<Plugin> list = null;
-		logger.debug("Loading plugins...");
-		for (PreparedPlugin preped : prepared.values()) {
-			Plugin plugin = loadPreparedPlugin(preped, enable);
-			if (plugin == null)
-				continue;
-			if (list == null)
-				list = new ArrayList<>(prepared.size());
-			list.add(plugin);
-		}
-		return list == null ? List.of() : list;
+		return internalLoadPlugins(List.of(directory.listFiles()), enable, checkDependencies, async);
 	}
 	
-	private void resolveDependencies(PreparedPlugin plugin, Map<String, PreparedPlugin> plugins) {
+	private List<Future<Plugin>> internalLoadPlugins(Collection<File> files, boolean enable, boolean checkDependencies, boolean async) {
+		lock.lock();
+		List<Future<Plugin>> futures = new ArrayList<>(files.size());
+		Map<String, CorePluginLoaderTask> prepared = null;
+		Map<String, Future<Plugin>> loadingFuture = new HashMap<>(files.size());
+		for (File file : files) {
+			// prepare plugin
+			PreparedPlugin plugin = preparePlugin(file);
+			if (plugin == null) {
+				futures.add(new CompleteFuture<>(new PluginException("Unable to load plugin (no loader?): " + file)));
+				continue;
+			}
+			final String pluginName = plugin.getName();
+			// check if loading
+			Future<Plugin> future = loading.get(pluginName);
+			if (future != null) {
+				loadingFuture.put(pluginName, future);
+				futures.add(future);
+				continue;	
+			}
+			// check if loaded
+			Plugin p = plugins.get(pluginName);
+			if (p != null) {
+				Future<Plugin> f = CompleteFuture.of(p);
+				loadingFuture.put(pluginName, f);
+				futures.add(f);
+				continue;
+			}
+			// add for loading
+			logger.debug("Prepared plugin: {}", pluginName);
+			if (prepared == null)
+				prepared = new HashMap<>();
+			CorePluginLoaderTask task = new CorePluginLoaderTask(this, plugin, enable, async);
+			this.loading.put(pluginName, task.getFuture());
+			prepared.put(pluginName, task);
+			loadingFuture.put(pluginName, task.getFuture());
+		}
+		lock.unlock();
+		if (prepared == null) {
+			// all plugins loaded or not able to load
+			return futures.isEmpty() ? List.of() : futures;
+		}
+		// try check dependencies for plugins to load
+		if (checkDependencies) {
+			logger.debug("Resolving dependencies...");
+			for (CorePluginLoaderTask task : prepared.values()) {
+				// check load before
+				PreparedPlugin preped = task.getPlugin();
+				List<String> loadbefore = preped.getPluginInfo().getStringList("load-before");
+				if (loadbefore == null || loadbefore.isEmpty())
+					continue;
+				for (String name : loadbefore) {
+					CorePluginLoaderTask after = prepared.get(name);
+					if (after == null)
+						continue;
+					after.getPlugin().addSoftDependency(task.getFuture());
+				}
+				// resolve soft depends and depends on
+				resolveDependencies(preped, loadingFuture);
+			}
+		}
+		for (CorePluginLoaderTask preped : prepared.values()) {
+			preped.prepare();
+		}
+		logger.debug("Loading plugins...");
+		if (async) {
+			for (CorePluginLoaderTask preped : prepared.values()) {
+				if (preped.isReady() && !preped.isFinished()) {
+					preped.schedule();
+				}
+			}
+		} else {
+			int loaded = 0;
+			do {
+				loaded = 0;
+				for (CorePluginLoaderTask preped : prepared.values()) {
+					if (preped.isReady() && !preped.isFinished()) {
+						preped.run();
+						loaded++;
+					}
+				}
+			} while (loaded > 0);
+		}
+		return futures;
+	}
+	
+	@Override
+	public List<Future<Plugin>> loadPlugins(File directory, boolean enable, boolean checkDependencies) {
+		if (directory == null)
+			throw new IllegalArgumentException("Directory can not be null!");
+		if (!directory.isDirectory())
+			throw new IllegalArgumentException("Directory does not exist: ".concat(directory.getPath()));
+		logger.debug("Loading plugins from directory: {}", directory.getPath());
+		return loadPlugins(List.of(directory.listFiles()), enable, checkDependencies);
+	}
+	
+	private void resolveDependencies(PreparedPlugin plugin, Map<String, Future<Plugin>> plugins) {
 		List<String> dependencies = plugin.getPluginInfo().getStringList("depends-on");
 		boolean missingDependencies = false;
 		for (String dependency : dependencies) {
-			PreparedPlugin prepared = plugins.get(dependency);
-			if (prepared != null) {
-				plugin.getDependencies().add(prepared);
+			Future<Plugin> future = plugins.get(dependency);
+			if (future != null) {
+				plugin.addDependency(future);
 				continue;
 			}
 			if (getPlugin(dependency) != null)
@@ -173,9 +230,9 @@ public class CorePluginManager implements PluginManager {
 		}
 		dependencies = plugin.getPluginInfo().getStringList("soft-depends-on");
 		for (String dependency : dependencies) {
-			PreparedPlugin prepared = plugins.get(dependency);
-			if (prepared != null) {
-				plugin.getDependencies().add(prepared);
+			Future<Plugin> future = plugins.get(dependency);
+			if (future != null) {
+				plugin.addSoftDependency(future);
 				continue;
 			}
 			if (getPlugin(dependency) != null)
@@ -189,60 +246,60 @@ public class CorePluginManager implements PluginManager {
 	 * Returns null if failed to load the PreparedPlugin
 	 * @param prepared
 	 * @param enable
-	 * @return Plugin or null
+	 * @return plugin
+	 * @throws PluginException
 	 */
-	private Plugin loadPreparedPlugin(PreparedPlugin prepared, boolean enable) {
+	Plugin loadPreparedPlugin(CorePluginLoaderTask task, boolean enable) {
+		PreparedPlugin prepared = task.getPlugin();
 		if (prepared.isInvalid())
 			return null;
 		if (prepared.isLoaded())
 			return prepared.getPlugin();
 		if (prepared.hasDependencies()) {
 			boolean missingDependencies = false;
-			for (PreparedPlugin dependency : prepared.getDependencies()) {
-				loadPreparedPlugin(dependency, enable);
-				if (dependency.isInvalid()) {
-					logger.warn("Missing dependency \"{}\" for plugin: {}", dependency.getName(), prepared.getName());
+			for (Future<Plugin> dependency : prepared.getDependencies()) {
+				if (!dependency.isSuccess()) {
 					missingDependencies = true;
+					break;
 				}
 			}
 			if (missingDependencies) {
-				logger.error("Unable to load plugin: {} (Missing dependencies)!", prepared.getName());
-				return null;
-			}
-		}
-		if (prepared.hasSoftDependencies()) {
-			for (PreparedPlugin dependency : prepared.getSoftDependencies()) {
-				loadPreparedPlugin(dependency, enable);
-				if (dependency.isInvalid()) {
-					logger.debug("Missing soft dependency \"{}\" for plugin: {}", dependency.getName(), prepared.getName());
-				}
+				throw new PluginException("Unable to load plugin: " + prepared.getName() + " (Missing dependencies)!");
 			}
 		}
 		Plugin plugin = null;
 		try {
 			plugin = prepared.load();
 		} catch (Exception e) {
-			logger.error("Error while loading plugin source: " + prepared.getName(), e);
 			prepared.setInvalid();
-			return null;
+			throw new PluginException("Error while loading plugin source: " + prepared.getName(), e);
 		}
 		if (plugin.isEnabled())
+			// plugin already loaded
 			return plugin;
 		try {
 			plugin.load();
 		} catch(Exception e) {
-			logger.error("Error while loading plugin: " + plugin.getName() + " v" + plugin.getVersion(), e);
+			throw new PluginException("Error while loading plugin: " + plugin.getName() + " v" + plugin.getVersion(), e);
+		}
+		if (!enable) {
+			registerPlugin(plugin);
 			return plugin;
 		}
-		if (!enable)
-			return plugin;
 		try {
 			plugin.enable();
 		} catch(Exception e) {
-			logger.error("Error while enabling plugin: " + plugin.getName() + " v" + plugin.getVersion(), e);
-			return plugin;
+			throw new PluginException("Error while enabling plugin: " + plugin.getName() + " v" + plugin.getVersion(), e);
 		}
+		registerPlugin(plugin);
 		return plugin;
+	}
+	
+	private void registerPlugin(Plugin plugin) {
+		lock.lock();
+		plugins.put(plugin.getName(), plugin);
+		loading.remove(plugin.getName());
+		lock.unlock();
 	}
 	
 	/**
@@ -256,10 +313,6 @@ public class CorePluginManager implements PluginManager {
 				PreparedPlugin plugin = loader.preparePlugin(file);
 				if (plugin == null) 
 					continue;
-				if (plugins.containsKey(plugin.getName())) {
-					logger.error("Plugin with name {} already loaded.", plugin.getName());
-					return null;
-				}
 				return plugin;
 			}
 		} catch (Exception e) {
@@ -426,7 +479,7 @@ public class CorePluginManager implements PluginManager {
 
 		@Override
 		public String getName() {
-			return "Atlas System";
+			return "Atlas-System";
 		}
 
 		@Override
@@ -459,6 +512,21 @@ public class CorePluginManager implements PluginManager {
 			return Atlas.getLogger();
 		}
 		
+	}
+
+	@Override
+	public Future<Plugin> loadPluginAsync(File file, boolean enable, boolean checkDependencies) {
+		return internalLoadPlugin(file, enable, checkDependencies, true);
+	}
+
+	@Override
+	public List<Future<Plugin>> loadPluginsAsync(File directory, boolean enable, boolean checkDependencies) {
+		return internalLoadPlugins(directory, enable, checkDependencies, true);
+	}
+
+	@Override
+	public List<Future<Plugin>> loadPluginsAsync(Collection<File> files, boolean enable, boolean checkDependencies) {
+		return internalLoadPlugins(files, enable, checkDependencies, true);
 	}
 	
 }

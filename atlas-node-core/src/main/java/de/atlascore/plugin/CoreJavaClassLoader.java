@@ -68,7 +68,8 @@ public class CoreJavaClassLoader extends URLClassLoader {
 	
 	protected Class<?> findClass(String name, boolean checkGlobal) throws ClassNotFoundException {
 		Class<?> clazz = classCache.get(name);
-		if (clazz != null) return clazz; // this cache contained the class
+		if (clazz != null) 
+			return clazz; // this cache contained the class
 		if (checkGlobal)
 			clazz = loader.getClassByName(name, this); // try find in global cache 
 		if (clazz != null) 

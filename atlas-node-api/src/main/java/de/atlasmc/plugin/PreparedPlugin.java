@@ -1,8 +1,9 @@
 package de.atlasmc.plugin;
 
 import java.io.IOException;
-import java.util.Set;
+import java.util.Collection;
 
+import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.util.configuration.Configuration;
 
 public interface PreparedPlugin {
@@ -28,11 +29,15 @@ public interface PreparedPlugin {
 	
 	Configuration getPluginInfo();
 	
-	Set<PreparedPlugin> getDependencies();
+	void addDependency(Future<Plugin> dependency);
 	
 	boolean hasDependencies();
 	
-	Set<PreparedPlugin> getSoftDependencies();
+	void addSoftDependency(Future<Plugin> dependency);
+	
+	Collection<Future<Plugin>> getSoftDependencies();
+	
+	Collection<Future<Plugin>> getDependencies();
 	
 	boolean hasSoftDependencies();
 	

@@ -1,11 +1,9 @@
 package de.atlascore.plugin;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -31,9 +29,9 @@ public class CoreJavaPluginLoader implements PluginLoader {
 
 	@Override
 	public boolean canLoad(File file) {
-		if (!file.getPath().endsWith(".jar")) 
-			return false;
 		if (!file.exists() || file.isDirectory()) 
+			return false;
+		if (!file.getPath().endsWith(".jar")) 
 			return false;
 		Configuration info = null;
 		try {
@@ -90,8 +88,6 @@ public class CoreJavaPluginLoader implements PluginLoader {
 	 */
 	@NotNull
 	private Configuration getInfo(File file) throws IOException {
-		if (file == null)
-			throw new IllegalAccessError("File can not be null!");
 		JarFile jar = new JarFile(file);
 		JarEntry entry = jar.getJarEntry("atlas-plugin.yml");
 		if (entry == null) { 
@@ -99,9 +95,8 @@ public class CoreJavaPluginLoader implements PluginLoader {
 			return null;
 		}
 		InputStream in = jar.getInputStream(entry);
-		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-		YamlConfiguration pluginyml = YamlConfiguration.loadConfiguration(reader);
-		reader.close();
+		YamlConfiguration pluginyml = YamlConfiguration.loadConfiguration(in);
+		in.close();
 		jar.close();
 		return pluginyml;
 	}
