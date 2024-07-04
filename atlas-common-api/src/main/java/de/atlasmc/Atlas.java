@@ -6,6 +6,7 @@ import java.security.KeyPair;
 import de.atlasmc.datarepository.DataRepositoryHandler;
 import de.atlasmc.event.SyncThreadHolder;
 import de.atlasmc.log.Log;
+import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginManager;
 import de.atlasmc.scheduler.Scheduler;
 
@@ -21,6 +22,7 @@ public class Atlas implements SyncThreadHolder {
 	private static DataRepositoryHandler dataHandler;
 	private static Atlas threadHolder;
 	private static Thread mainThread;
+	private static Plugin system;
 	
 	private Atlas() {}
 	
@@ -35,6 +37,7 @@ public class Atlas implements SyncThreadHolder {
 			keyPair = builder.getKeyPair();
 			dataHandler = builder.getDataHandler();
 			mainThread = builder.getMainThread();
+			system = builder.getSystem();
 			threadHolder = new Atlas();
 		}
 	}
@@ -78,6 +81,10 @@ public class Atlas implements SyncThreadHolder {
 	@Override
 	public boolean isSync() {
 		return Thread.currentThread() == mainThread;
+	}
+	
+	public static Plugin getSystem() {
+		return system;
 	}
 	
 }

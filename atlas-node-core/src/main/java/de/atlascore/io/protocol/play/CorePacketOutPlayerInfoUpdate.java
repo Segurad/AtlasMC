@@ -1,5 +1,17 @@
 package de.atlascore.io.protocol.play;
 
+import static de.atlasmc.io.AbstractPacket.readString;
+import static de.atlasmc.io.AbstractPacket.readUUID;
+import static de.atlasmc.io.AbstractPacket.readVarInt;
+import static de.atlasmc.io.AbstractPacket.writeString;
+import static de.atlasmc.io.AbstractPacket.writeVarInt;
+import static de.atlasmc.io.protocol.play.PacketOutPlayerInfoUpdate.ACTION_ADD_PLAYER;
+import static de.atlasmc.io.protocol.play.PacketOutPlayerInfoUpdate.ACTION_INIT_CHAT;
+import static de.atlasmc.io.protocol.play.PacketOutPlayerInfoUpdate.ACTION_UPDATE_DISPLAY_NAME;
+import static de.atlasmc.io.protocol.play.PacketOutPlayerInfoUpdate.ACTION_UPDATE_GAMEMODE;
+import static de.atlasmc.io.protocol.play.PacketOutPlayerInfoUpdate.ACTION_UPDATE_LATENCY;
+import static de.atlasmc.io.protocol.play.PacketOutPlayerInfoUpdate.ACTION_UPDATE_LISTED;
+
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
@@ -8,13 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import de.atlascore.chat.CorePlayerChatSignatureData;
 import de.atlasmc.Gamemode;
 import de.atlasmc.atlasnetwork.ProfileProperty;
 import de.atlasmc.chat.PlayerChatSignatureData;
-import static de.atlasmc.io.AbstractPacket.*;
-import static de.atlasmc.io.protocol.play.PacketOutPlayerInfoUpdate.*;
-
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
@@ -63,7 +71,7 @@ public class CorePacketOutPlayerInfoUpdate implements PacketIO<PacketOutPlayerIn
 					}
 					int sigSize = readVarInt(in);
 					byte[] signature = new byte[sigSize];
-					PlayerChatSignatureData sigData = new CorePlayerChatSignatureData(sid, expiration, key, signature);
+					PlayerChatSignatureData sigData = new PlayerChatSignatureData(sid, expiration, key, signature);
 					info.chatSignature = sigData;
 				}
 			}

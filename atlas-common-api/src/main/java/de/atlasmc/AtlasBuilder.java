@@ -5,6 +5,7 @@ import java.security.KeyPair;
 
 import de.atlasmc.datarepository.DataRepositoryHandler;
 import de.atlasmc.log.Log;
+import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginManager;
 import de.atlasmc.scheduler.Scheduler;
 import de.atlasmc.util.Builder;
@@ -18,6 +19,7 @@ public final class AtlasBuilder implements Builder<Boolean> {
 	private KeyPair keyPair;
 	private DataRepositoryHandler dataHandler;
 	private Thread mainThread;
+	private Plugin system;
 	
 	@Override
 	public Boolean build() {
@@ -95,6 +97,15 @@ public final class AtlasBuilder implements Builder<Boolean> {
 	
 	public AtlasBuilder setMainThread(Thread mainThread) {
 		this.mainThread = mainThread;
+		return this;
+	}
+	
+	public Plugin getSystem() {
+		return system;
+	}
+	
+	public AtlasBuilder setSystem(Plugin system) {
+		this.system = system;
 		return this;
 	}
 

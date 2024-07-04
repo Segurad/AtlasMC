@@ -12,7 +12,7 @@ import de.atlasmc.event.Event;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.scheduler.Scheduler;
 import de.atlasmc.server.NodeServer;
-import de.atlasmc.util.TickingThread;
+import de.atlasmc.tick.TickingThread;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
 import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.world.World;

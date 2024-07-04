@@ -11,8 +11,8 @@ import de.atlasmc.datarepository.DataRepositoryHandler;
 import de.atlasmc.io.protocol.ProtocolAdapter;
 import de.atlasmc.scheduler.Scheduler;
 import de.atlasmc.server.NodeServerManager;
+import de.atlasmc.tick.TickingThread;
 import de.atlasmc.util.Builder;
-import de.atlasmc.util.TickingThread;
 
 public interface NodeBuilder extends Builder<LocalAtlasNode> {
 

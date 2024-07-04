@@ -2,7 +2,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>de.atlas-project</groupId>
+	<groupId>org.atlas-project</groupId>
 	<artifactId>atlas-mc</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
@@ -17,9 +17,10 @@
 		<module>atlas-node-bootstrap</module>
 		<module>atlas-packaging</module>
 		<module>atlas-test</module>
-		<module>atlas-shade-yaml-transformer</module>
+		<module>atlas-shade-plugin</module>
 		<module>atlas-common-api</module>
 		<module>atlas-network-api</module>
+		<module>atlas-common-core</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

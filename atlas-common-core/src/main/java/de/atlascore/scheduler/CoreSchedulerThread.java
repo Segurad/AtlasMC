@@ -3,8 +3,8 @@ package de.atlascore.scheduler;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.atlasmc.log.Logging;
+import de.atlasmc.tick.TickingThread;
 import de.atlasmc.util.ConcurrentLinkedList;
-import de.atlasmc.util.TickingThread;
 
 public class CoreSchedulerThread extends TickingThread {
 	

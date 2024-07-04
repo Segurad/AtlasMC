@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.atlascore.plugin.CorePluginManager;
 import de.atlasmc.Atlas;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.atlasnetwork.server.ServerConfig;
@@ -28,7 +27,7 @@ import de.atlasmc.util.configuration.file.YamlConfiguration;
  * Task that ensures all required templates, data, plugins are available.
  * Copies templates and data to server workdir.
  */
-public class CoreLocalServerPreparingTask extends AtlasTask implements CoreLocalServerTask {
+public class CoreLocalServerPreparingTask extends AtlasTask {
 
 	private final CoreLocalServer server;
 	private final CompletableFuture<Boolean> future;
@@ -44,11 +43,6 @@ public class CoreLocalServerPreparingTask extends AtlasTask implements CoreLocal
 	
 	public Future<Boolean> getFuture() {
 		return future;
-	}
-	
-	@Override
-	public void run() {
-		execute(-1);
 	}
 	
 	private void copyEntries() {
@@ -112,7 +106,7 @@ public class CoreLocalServerPreparingTask extends AtlasTask implements CoreLocal
 						log.error("Failed to pull entry data!", entryFuture.cause());
 				}
 			}
-			Atlas.getScheduler().runAsyncTaskLater(CorePluginManager.SYSTEM, this, 1L);
+			Atlas.getScheduler().runAsyncTaskLater(Atlas.getSystem(), this, 1L);
 		});
 	}
 	
@@ -146,7 +140,7 @@ public class CoreLocalServerPreparingTask extends AtlasTask implements CoreLocal
 			}
 		}
 		this.failed = failed;
-		Atlas.getScheduler().runAsyncTaskLater(CorePluginManager.SYSTEM, this, 1L);
+		Atlas.getScheduler().runAsyncTaskLater(Atlas.getSystem(), this, 1L);
 	}
 
 	private void fetchRepoEntries() {
@@ -217,18 +211,12 @@ public class CoreLocalServerPreparingTask extends AtlasTask implements CoreLocal
 		}
 		CommulativeFuture<Collection<RepositoryEntry>> cumFuture = new CommulativeFuture<>(futures);
 		cumFuture.setListener((future) -> {
-			Atlas.getScheduler().runAsyncTaskLater(CorePluginManager.SYSTEM, this, 1L);
+			Atlas.getScheduler().runAsyncTaskLater(Atlas.getSystem(), this, 1L);
 		});
 	}
 
 	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void execute(int tick) {
+	public void run() {
 		if (failed) {
 			future.finish(false);
 			return;

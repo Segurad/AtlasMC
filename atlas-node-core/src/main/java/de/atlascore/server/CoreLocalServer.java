@@ -12,7 +12,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
-import de.atlascore.plugin.CorePluginManager;
 import de.atlasmc.Atlas;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.atlasnetwork.NodePlayer;
@@ -196,7 +195,7 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 			this.future = null;
 			lock.unlock();
 		});
-		Atlas.getScheduler().runAsyncTask(CorePluginManager.SYSTEM, task);
+		Atlas.getScheduler().runAsyncTask(Atlas.getSystem(), task);
 		lock.unlock();
 		return future;
 	}

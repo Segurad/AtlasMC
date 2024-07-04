@@ -30,7 +30,7 @@ import de.atlasmc.plugin.NodeBuilder;
 import de.atlasmc.plugin.PluginManager;
 import de.atlasmc.scheduler.Scheduler;
 import de.atlasmc.server.NodeServerManager;
-import de.atlasmc.util.TickingThread;
+import de.atlasmc.tick.TickingThread;
 import de.atlasmc.util.configuration.Configuration;
 
 public class CoreNodeBuilder implements NodeBuilder {

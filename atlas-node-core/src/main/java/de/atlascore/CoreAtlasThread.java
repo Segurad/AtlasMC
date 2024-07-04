@@ -1,9 +1,7 @@
 package de.atlascore;
 
-import de.atlasmc.AtlasNode;
-import de.atlasmc.LocalAtlasNode;
 import de.atlasmc.log.Log;
-import de.atlasmc.util.TickingThread;
+import de.atlasmc.tick.TickingThread;
 
 public class CoreAtlasThread extends TickingThread {
 	
@@ -18,10 +16,7 @@ public class CoreAtlasThread extends TickingThread {
 	
 	@Override
 	protected void tick(int tick) {
-		LocalAtlasNode node = AtlasNode.getAtlas();
-		node.getProxies().forEach((proxy) -> {
-			proxy.tick();
-		});
+		
 	}
 
 }

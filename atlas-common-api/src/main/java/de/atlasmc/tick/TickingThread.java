@@ -1,10 +1,11 @@
-package de.atlasmc.util;
+package de.atlasmc.tick;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.LockSupport;
 
 import de.atlasmc.log.Log;
+import de.atlasmc.util.WatchableThread;
 import de.atlasmc.util.annotation.ThreadSafe;
 
 /**

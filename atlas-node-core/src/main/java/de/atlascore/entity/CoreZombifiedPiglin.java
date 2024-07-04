@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.ZombifiedPiglin;
-import de.atlasmc.util.MathUtil;
+import de.atlasmc.util.AtlasUtil;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -59,7 +59,7 @@ public class CoreZombifiedPiglin extends CoreZombie implements ZombifiedPiglin {
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
 		if (isAngry())
-			writer.writeUUID(NBT_HURT_BY, MathUtil.ZERO_UUID);
+			writer.writeUUID(NBT_HURT_BY, AtlasUtil.ZERO_UUID);
 		writer.writeShortTag(NBT_ANGER, getAngerTime());
 	}
 

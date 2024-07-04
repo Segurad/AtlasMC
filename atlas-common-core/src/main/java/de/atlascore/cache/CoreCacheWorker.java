@@ -1,7 +1,7 @@
 package de.atlascore.cache;
 
 import de.atlasmc.log.Logging;
-import de.atlasmc.util.TickingThread;
+import de.atlasmc.tick.TickingThread;
 
 class CoreCacheWorker extends TickingThread {
 	

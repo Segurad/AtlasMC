@@ -20,7 +20,7 @@ import de.atlasmc.proxy.LocalProxy;
 import de.atlasmc.scheduler.Scheduler;
 import de.atlasmc.server.NodeServer;
 import de.atlasmc.server.NodeServerManager;
-import de.atlasmc.util.TickingThread;
+import de.atlasmc.tick.TickingThread;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
 

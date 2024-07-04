@@ -3,7 +3,7 @@ package de.atlascore.atlasnetwork.master;
 import de.atlascore.atlasnetwork.master.node.CoreNodeManager;
 import de.atlascore.atlasnetwork.master.server.CoreServerManager;
 import de.atlasmc.log.Log;
-import de.atlasmc.util.TickingThread;
+import de.atlasmc.tick.TickingThread;
 
 public class CoreAtlasMasterThread extends TickingThread {
 

@@ -33,12 +33,11 @@ import de.atlascore.chat.CoreChat;
 import de.atlascore.permission.CorePermission;
 import de.atlascore.permission.CorePermissionContext;
 import de.atlascore.permission.CorePermissionGroup;
-import de.atlascore.plugin.CoreNodeBuilder;
 import de.atlasmc.Atlas;
 import de.atlasmc.atlasnetwork.NetworkInfo;
 import de.atlasmc.atlasnetwork.NetworkInfo.SlotMode;
-import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.atlasnetwork.NodeConfig;
+import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.datarepository.DataRepositoryHandler;
 import de.atlasmc.log.Log;
@@ -263,7 +262,7 @@ public class CoreMasterBuilder implements Builder<CoreAtlasNetwork> {
 			}
 		}
 		if (in == null) {
-			in = CoreNodeBuilder.class.getResourceAsStream("/assets/server_icon.png");
+			in = CoreMasterBuilder.class.getResourceAsStream("/assets/server_icon.png");
 			try {
 				size = in.available();
 			} catch (IOException e) {

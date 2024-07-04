@@ -11,7 +11,7 @@ import de.atlascore.atlasnetwork.CoreAtlasPlayer;
 import de.atlascore.atlasnetwork.CorePlayerProfileHandler;
 import de.atlasmc.atlasnetwork.AtlasNetworkException;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
-import de.atlasmc.util.MathUtil;
+import de.atlasmc.util.AtlasUtil;
 import de.atlasmc.util.sql.SQLConnectionPool;
 
 public class CoreSQLPlayerProfileHandler extends CorePlayerProfileHandler  {
@@ -32,8 +32,8 @@ public class CoreSQLPlayerProfileHandler extends CorePlayerProfileHandler  {
 			CoreAtlasPlayer profile = null;
 			if (result.next()) {
 				int id = result.getInt(1);
-				UUID mUUID = MathUtil.uuidFromBytes(result.getBytes(2), 0);
-				UUID iUUID = MathUtil.uuidFromBytes(result.getBytes(3), 0);
+				UUID mUUID = AtlasUtil.uuidFromBytes(result.getBytes(2), 0);
+				UUID iUUID = AtlasUtil.uuidFromBytes(result.getBytes(3), 0);
 				String mName = result.getString(4);
 				String iName = result.getString(5);
 				Date firstJoin = result.getDate(6);
@@ -64,7 +64,7 @@ public class CoreSQLPlayerProfileHandler extends CorePlayerProfileHandler  {
 
 	@Override
 	protected AtlasPlayer loadPlayer(UUID uuid) {
-		return queryProfile("internal_uuid", MathUtil.uuidToBytes(uuid));
+		return queryProfile("internal_uuid", AtlasUtil.uuidToBytes(uuid));
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public class CoreSQLPlayerProfileHandler extends CorePlayerProfileHandler  {
 
 	@Override
 	protected AtlasPlayer loadPlayerByMojang(UUID uuid) {
-		return queryProfile("mojang_uuid", MathUtil.uuidToBytes(uuid));
+		return queryProfile("mojang_uuid", AtlasUtil.uuidToBytes(uuid));
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public class CoreSQLPlayerProfileHandler extends CorePlayerProfileHandler  {
 		try {
 			con = conPool.getConnection();
 			PreparedStatement stmt = con.prepareStatement("UPDATE profiles SET internal_uuid=? WHERE profile_id=?");
-			stmt.setBytes(1, MathUtil.uuidToBytes(uuid));
+			stmt.setBytes(1, AtlasUtil.uuidToBytes(uuid));
 			stmt.setInt(2, player.getID());
 			stmt.execute();
 			stmt.close();
@@ -164,8 +164,8 @@ public class CoreSQLPlayerProfileHandler extends CorePlayerProfileHandler  {
 		try {
 			con = conPool.getConnection();
 			PreparedStatement stmt = con.prepareStatement("INSERT INTO profiles (mojang_uuid, internal_uuid, mojang_name, internal_name, join_first, join_last) VALUES (?, ?, ?, ?, ?, ?)");
-			stmt.setBytes(1, MathUtil.uuidToBytes(mojangUUID));
-			stmt.setBytes(2, MathUtil.uuidToBytes(internalUUID));
+			stmt.setBytes(1, AtlasUtil.uuidToBytes(mojangUUID));
+			stmt.setBytes(2, AtlasUtil.uuidToBytes(internalUUID));
 			stmt.setString(3, mojangName);
 			stmt.setString(4, internalName);
 			stmt.setDate(5, firstJoin);

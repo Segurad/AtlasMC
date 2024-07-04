@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import de.atlasmc.log.Logging;
+import de.atlasmc.tick.TickingThread;
 
 public class ThreadWatchdog extends TickingThread {
 
