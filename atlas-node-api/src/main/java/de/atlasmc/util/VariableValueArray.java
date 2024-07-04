@@ -38,7 +38,7 @@ public class VariableValueArray implements Cloneable {
 		this.capacity = capacity;
 		this.bitsPerValue = (byte) bitsPerValue;
 		this.valuesPerLong = valuesPerLong(bitsPerValue);
-		int valuesSize = MathUtil.upper(capacity / (double) valuesPerLong);
+		int valuesSize = Math.ceilDiv(capacity, valuesPerLong);
 		if (values != null) {
 			if (values.length != valuesSize)
 				throw new IllegalArgumentException("Invalid values length, expected: " + valuesSize + " but got: " + values.length);

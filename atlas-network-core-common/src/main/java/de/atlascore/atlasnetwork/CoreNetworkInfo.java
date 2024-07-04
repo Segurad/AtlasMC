@@ -7,7 +7,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import de.atlasmc.Atlas;
 import de.atlasmc.atlasnetwork.NetworkInfo;
 import de.atlasmc.chat.placeholder.PlaceholderHandler;
 
@@ -15,6 +14,7 @@ public class CoreNetworkInfo implements NetworkInfo {
 	
 	private final int slots;
 	private final int slotDistance;
+	private volatile int onlinePlayerCount;
 	private final SlotMode mode;
 	private final String motd;
 	private final String protocolText;
@@ -87,15 +87,15 @@ public class CoreNetworkInfo implements NetworkInfo {
 		int maxPlayers = 0, onlinePlayers = 0;
 		switch (mode) {
 		case NORMAL: 
-			onlinePlayers = Atlas.getNetwork().getOnlinePlayerCount();
+			onlinePlayers = onlinePlayerCount;
 			maxPlayers = slots;
 			break;
 		case DYNAMIC: 
-			onlinePlayers = Atlas.getNetwork().getOnlinePlayerCount();
+			onlinePlayers = onlinePlayerCount;
 			maxPlayers = onlinePlayers + slotDistance;
 			break;
 		case BASE:
-			onlinePlayers = Atlas.getNetwork().getOnlinePlayerCount();
+			onlinePlayers = onlinePlayerCount;
 			maxPlayers = onlinePlayers + slotDistance;
 			// TODO implement slotmode base
 			break;
@@ -114,6 +114,10 @@ public class CoreNetworkInfo implements NetworkInfo {
 		// Favicon
 		statusInfo.addProperty("favicon", serverIcon);
 		return statusInfo.toString();
+	}
+	
+	public void setOnlinePlayerCount(int onlinePlayerCount) {
+		this.onlinePlayerCount = onlinePlayerCount;
 	}
 	
 	private JsonElement createSample() {

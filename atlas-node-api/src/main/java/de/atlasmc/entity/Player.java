@@ -11,6 +11,7 @@ import de.atlasmc.SimpleLocation;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
+import de.atlasmc.atlasnetwork.NodePlayer;
 import de.atlasmc.block.DiggingHandler;
 import de.atlasmc.chat.Messageable;
 import de.atlasmc.inventory.Inventory;
@@ -24,13 +25,13 @@ import de.atlasmc.scoreboard.ScoreboardView;
 
 public interface Player extends HumanEntity, Permissible, Messageable {
 	
-	public PermissionHandler getPermissionHandler();
+	PermissionHandler getPermissionHandler();
 	
-	public void setPermissionHandler(PermissionHandler handler);
+	void setPermissionHandler(PermissionHandler handler);
+	
+	int getLevel();
 
-	public int getLevel();
-
-	public void setLevel(int level);
+	void setLevel(int level);
 	
 	int getExp();
 	
@@ -66,34 +67,36 @@ public interface Player extends HumanEntity, Permissible, Messageable {
 	 * @param data
 	 * @param relativeSound
 	 */
-	public void playEffect(SimpleLocation loc, WorldEvent effect, Object data, boolean relativeSound);
+	void playEffect(SimpleLocation loc, WorldEvent effect, Object data, boolean relativeSound);
 	
-	public void playEffect(int x, int y, int z, WorldEvent effect, Object data, boolean relativeSound);
+	void playEffect(int x, int y, int z, WorldEvent effect, Object data, boolean relativeSound);
 
-	public PlayerConnection getConnection();
+	PlayerConnection getConnection();
 	
-	public AtlasPlayer getAtlasPlayer();
-
-	public String getName();
-
-	public String getLocal();
-
-	public boolean getCanBuild();
-
-	public void setCanBuild(boolean canBuild);
-
-	public Gamemode getGamemode();
+	AtlasPlayer getAtlasPlayer();
 	
-	public void setGamemode(Gamemode gamemode);
+	NodePlayer getNodePlayer();
+
+	String getName();
+
+	String getLocal();
+
+	boolean getCanBuild();
+
+	void setCanBuild(boolean canBuild);
+
+	Gamemode getGamemode();
+	
+	void setGamemode(Gamemode gamemode);
 	
 	/**
 	 * Returns a Object stored by a {@link Plugin}<br>
 	 * This method is used for storing data for e.g. a the current minigame
 	 * @return the stored Object
 	 */
-	public Object getPluginData();
+	Object getPluginData();
 	
-	public void setPluginData(Object data);
+	void setPluginData(Object data);
 	
 	/**
 	 * Does the same thing as {@link #getPluginData()} but does cast it and returns null if not matching the class
@@ -101,9 +104,9 @@ public interface Player extends HumanEntity, Permissible, Messageable {
 	 * @param clazz
 	 * @return the plugindata or null if not assignable from class
 	 */
-	public <T> T getPluginData(Class<T> clazz); 
+	<T> T getPluginData(Class<T> clazz); 
 	
-	public boolean hasPluginData();
+	boolean hasPluginData();
 	
 	/**
 	 * Sets the {@link ScoreboardView} to this Player.<br>
@@ -112,13 +115,13 @@ public interface Player extends HumanEntity, Permissible, Messageable {
 	 * @param view the new view or null
 	 * @throws IllegalArgumentException if the view does not belong to the player
 	 */
-	public void setScoreboard(ScoreboardView view);
+	void setScoreboard(ScoreboardView view);
 	
 	/**
 	 * Returns the current active view or null
 	 * @return view or null
 	 */
-	public ScoreboardView getScoreboard();
+	ScoreboardView getScoreboard();
 
 	// --- Sound ---
 	

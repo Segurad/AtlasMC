@@ -9,7 +9,7 @@
   <dependencies>
 	  <dependency>
 		  <groupId>de.atlas-project</groupId>
-		  <artifactId>atlas-node-api</artifactId>
+		  <artifactId>atlas-network-api</artifactId>
 		  <version>0.0.1-SNAPSHOT</version>
 	  </dependency>
   </dependencies>

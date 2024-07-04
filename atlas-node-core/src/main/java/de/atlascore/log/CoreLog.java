@@ -1,7 +1,7 @@
 package de.atlascore.log;
 
 import org.apache.logging.log4j.Marker;
-import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.Logger;
 import de.atlasmc.log.Log;
 
 public class CoreLog implements Log {

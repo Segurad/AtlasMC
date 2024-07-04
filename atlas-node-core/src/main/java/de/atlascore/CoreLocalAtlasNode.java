@@ -8,8 +8,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import de.atlascore.plugin.CoreNodeBuilder;
 import de.atlasmc.LocalAtlasNode;
-import de.atlasmc.atlasnetwork.AtlasPlayer;
+import de.atlasmc.atlasnetwork.NodePlayer;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.datarepository.DataRepositoryHandler;
 import de.atlasmc.io.protocol.ProtocolAdapterHandler;
@@ -38,7 +39,19 @@ public class CoreLocalAtlasNode implements LocalAtlasNode {
 	private final UUID uuid;
 	private NodeStatus status;
 	
-	public CoreLocalAtlasNode(UUID uuid, Log logger, Scheduler scheduler, File workdir, PluginManager pluginManager, TickingThread mainThread, KeyPair keyPair, DataRepositoryHandler dataHandler, NodeServerManager serverManager) {
+	public CoreLocalAtlasNode(CoreNodeBuilder builder) {
+		this.uuid = builder.getUUID();
+		this.dataHandler = builder.getDataHandler();
+		this.adapterHandler = new ProtocolAdapterHandler();
+		this.scheduler = builder.getScheduler();
+		this.logger = builder.getLogger();
+		this.workdir = builder.getWorkdir();
+		this.proxies = new ConcurrentHashMap<>();
+		this.pluginManager = builder.getPluginManager();
+		this.mainThread = builder.getMainThread();
+		this.keyPair = builder.getKeyPair();
+		this.smanager = builder.getServerManager();
+		this.status = NodeStatus.STARTING;
 		if (uuid == null)
 			throw new IllegalArgumentException("UUID can not be null!");
 		if (logger == null)
@@ -55,20 +68,8 @@ public class CoreLocalAtlasNode implements LocalAtlasNode {
 			throw new IllegalArgumentException("Key pair can not be null!");
 		if (dataHandler == null)
 			throw new IllegalArgumentException("Data handler can not be null!");
-		if (serverManager == null)
+		if (smanager == null)
 			throw new IllegalArgumentException("ServerManager can not be null!");
-		this.uuid = uuid;
-		this.dataHandler = dataHandler;
-		this.adapterHandler = new ProtocolAdapterHandler();
-		this.scheduler = scheduler;
-		this.logger = logger;
-		this.workdir = workdir;
-		this.proxies = new ConcurrentHashMap<>();
-		this.pluginManager = pluginManager;
-		this.mainThread = mainThread;
-		this.keyPair = keyPair;
-		this.smanager = serverManager;
-		this.status = NodeStatus.STARTING;
 	}
 	
 	@Override
@@ -153,7 +154,6 @@ public class CoreLocalAtlasNode implements LocalAtlasNode {
 
 	@Override
 	public Future<Collection<? extends ServerGroup>> getServerGroups() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -168,13 +168,13 @@ public class CoreLocalAtlasNode implements LocalAtlasNode {
 	}
 
 	@Override
-	public AtlasPlayer getLocalPlayer(String name) {
+	public NodePlayer getLocalPlayer(String name) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	@Override
-	public AtlasPlayer getLocalPlayer(UUID name) {
+	public NodePlayer getLocalPlayer(UUID name) {
 		// TODO Auto-generated method stub
 		return null;
 	}

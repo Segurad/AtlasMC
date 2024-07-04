@@ -28,7 +28,7 @@ import de.atlasmc.util.configuration.file.YamlConfiguration;
  * Task that ensures all required templates, data, plugins are available.
  * Copies templates and data to server workdir.
  */
-public class CoreLocalServerPreparingTask extends AtlasTask {
+public class CoreLocalServerPreparingTask extends AtlasTask implements CoreLocalServerTask {
 
 	private final CoreLocalServer server;
 	private final CompletableFuture<Boolean> future;
@@ -48,35 +48,7 @@ public class CoreLocalServerPreparingTask extends AtlasTask {
 	
 	@Override
 	public void run() {
-		if (failed) {
-			future.finish(false);
-			return;
-		}
-		switch(stage) {
-		case 0: // fetching required entries
-			stage++;
-			fetchRepoEntries();
-			break;
-		case 1:
-			stage++;
-			checkData("Failed to fetch entry: {}");
-			break;
-		case 2:
-			stage++;
-			makeEntriesAvailble();
-			break;
-		case 3:
-			stage++;
-			checkData("Failed to pull entry data: {}");
-			break;
-		case 4:
-			stage++;
-			copyEntries();
-			future.finish(true);
-			break;
-		default:
-			future.finish(false, new ServerDeploymentException("Invalid stage: " + stage));
-		}
+		execute(-1);
 	}
 	
 	private void copyEntries() {
@@ -247,6 +219,45 @@ public class CoreLocalServerPreparingTask extends AtlasTask {
 		cumFuture.setListener((future) -> {
 			Atlas.getScheduler().runAsyncTaskLater(CorePluginManager.SYSTEM, this, 1L);
 		});
+	}
+
+	@Override
+	public String name() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void execute(int tick) {
+		if (failed) {
+			future.finish(false);
+			return;
+		}
+		switch(stage) {
+		case 0: // fetching required entries
+			stage++;
+			fetchRepoEntries();
+			break;
+		case 1:
+			stage++;
+			checkData("Failed to fetch entry: {}");
+			break;
+		case 2:
+			stage++;
+			makeEntriesAvailble();
+			break;
+		case 3:
+			stage++;
+			checkData("Failed to pull entry data: {}");
+			break;
+		case 4:
+			stage++;
+			copyEntries();
+			future.finish(true);
+			break;
+		default:
+			future.finish(false, new ServerDeploymentException("Invalid stage: " + stage));
+		}
 	}
 
 }

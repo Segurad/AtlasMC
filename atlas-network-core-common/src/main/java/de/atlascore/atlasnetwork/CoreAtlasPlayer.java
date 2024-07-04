@@ -8,9 +8,6 @@ import de.atlasmc.atlasnetwork.proxy.Proxy;
 import de.atlasmc.atlasnetwork.server.Server;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatType;
-import de.atlasmc.entity.Player;
-import de.atlasmc.io.protocol.PlayerConnection;
-import de.atlasmc.io.protocol.play.PacketOutSystemChatMessage;
 import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionHandler;
 
@@ -31,7 +28,6 @@ public class CoreAtlasPlayer implements AtlasPlayer {
 	private volatile Proxy proxy;
 	private volatile Server currentServer;
 	private volatile PermissionHandler permhandler;
-	private volatile PlayerConnection con;
 	
 	public CoreAtlasPlayer(CorePlayerProfileHandler handler, int id, String mojangName, UUID mojangUUID, String name, UUID uuid, Date firstJoin, Date lastJoin) {
 		this.handler = handler;
@@ -129,23 +125,7 @@ public class CoreAtlasPlayer implements AtlasPlayer {
 	}
 	
 	private void sendInternalMessage(String message) {
-		if (con != null) {
-			PacketOutSystemChatMessage packet = new PacketOutSystemChatMessage();
-			packet.setMessage(message);
-			con.sendPacked(packet);
-		} else {
-			// TODO send message to player within network
-		}
-	}
-
-	@Override
-	public PlayerConnection getConnection() {
-		return con;
-	}
-
-	@Override
-	public Player getPlayer() {
-		return con != null ? con.getPlayer() : null;
+		
 	}
 
 	@Override

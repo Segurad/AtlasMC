@@ -1,14 +1,17 @@
 package de.atlascore.server;
 
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
 
 import de.atlasmc.Atlas;
-import de.atlasmc.atlasnetwork.AtlasPlayer;
+import de.atlasmc.atlasnetwork.NodePlayer;
 import de.atlasmc.event.Event;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.scheduler.Scheduler;
+import de.atlasmc.server.NodeServer;
 import de.atlasmc.util.TickingThread;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
 import de.atlasmc.util.concurrent.future.Future;
@@ -20,15 +23,18 @@ public class CoreServerThread extends TickingThread {
 	private final Queue<Event> eventQueue;
 	private final Scheduler scheduler;
 	private volatile CompletableFuture<Boolean> future;
+	private final LinkedHashSet<Consumer<NodeServer>> shutdownHooks;
 	
-	public CoreServerThread(CoreLocalServer server) {
+	public CoreServerThread(CoreLocalServer server, LinkedHashSet<Consumer<NodeServer>> shutdownHooks) {
 		super(server.getServerName(), 50, server.getLogger(), false);
 		this.eventQueue = new ConcurrentLinkedQueue<>();
 		this.server = server;
+		this.shutdownHooks = shutdownHooks;
 		this.scheduler = Atlas.getScheduler().createScheduler();
 	}
 
 	public void queueEvent(Event event) {
+		if (isRunning())
 		eventQueue.add(event);
 	}
 
@@ -42,9 +48,9 @@ public class CoreServerThread extends TickingThread {
 			Event event = eventQueue.poll();
 			HandlerList.callEvent(event);
 		}
-		final Collection<AtlasPlayer> players = server.getPlayers();
+		final Collection<NodePlayer> players = server.getPlayers();
 		if (!players.isEmpty()) {
-			for (AtlasPlayer player : players) {
+			for (NodePlayer player : players) {
 				player.getConnection().handleSyncPackets(logger);
 			}
 		}
@@ -60,11 +66,13 @@ public class CoreServerThread extends TickingThread {
 	@Override
 	public void run() {
 		// startup sequence
-		// TODO startup
+		server.onStartup();
 		// start ticking
 		super.run();
 		// shutdown sequence
-		// TODO shutdown
+		server.onShutdown();
+		scheduler.shutdown();
+		eventQueue.clear();
 	}
 
 	public Future<Boolean> startServer() {

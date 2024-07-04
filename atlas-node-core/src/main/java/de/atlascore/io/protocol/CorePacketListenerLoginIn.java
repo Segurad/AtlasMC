@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Random;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -15,15 +16,8 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import de.atlasmc.io.protocol.login.PacketInEncryptionResponse;
-import de.atlasmc.io.protocol.login.PacketInLoginAcknowledged;
-import de.atlasmc.io.protocol.login.PacketInLoginPluginResponse;
-import de.atlasmc.io.protocol.login.PacketInLoginStart;
-import de.atlasmc.io.protocol.login.PacketLogin;
-import de.atlasmc.io.protocol.login.PacketOutEncryptionRequest;
-import de.atlasmc.io.protocol.login.PacketOutLoginSuccess;
-import de.atlasmc.proxy.LocalProxy;
 import de.atlasmc.Atlas;
+import de.atlasmc.AtlasNode;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.atlasnetwork.ProfileHandler;
 import de.atlasmc.io.Packet;
@@ -32,6 +26,14 @@ import de.atlasmc.io.ProtocolException;
 import de.atlasmc.io.ProxyConnectionHandler;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.ProtocolAdapter;
+import de.atlasmc.io.protocol.login.PacketInEncryptionResponse;
+import de.atlasmc.io.protocol.login.PacketInLoginAcknowledged;
+import de.atlasmc.io.protocol.login.PacketInLoginPluginResponse;
+import de.atlasmc.io.protocol.login.PacketInLoginStart;
+import de.atlasmc.io.protocol.login.PacketLogin;
+import de.atlasmc.io.protocol.login.PacketOutEncryptionRequest;
+import de.atlasmc.io.protocol.login.PacketOutLoginSuccess;
+import de.atlasmc.proxy.LocalProxy;
 
 public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePacketListenerLoginIn, Packet> {
 
@@ -55,7 +57,7 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 				packetOut.setVerifyToken(token);
 				handler.con.sendPacket(packet);
 			} else if (proxy.isSync()) {
-				ProfileHandler profiles = Atlas.getNetwork().getProfileHandler();
+				ProfileHandler profiles = AtlasNode.getNetwork().getProfileHandler();
 				AtlasPlayer player = profiles.getPlayer(packet.uuid);
 				if (player == null) {
 					// TODO request profile implementation
@@ -112,7 +114,7 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 		}, true);
 		initHandler(PacketInLoginAcknowledged.class, (handler, packet) -> {
 			int version = handler.con.getProtocol().getVersion();
-			ProtocolAdapter adapter = Atlas.getProtocolAdapter(version);
+			ProtocolAdapter adapter = AtlasNode.getProtocolAdapter(version);
 			Protocol configuration = adapter.getConfigurationProtocol();
 			PlayerConnection con = new CorePlayerConnection(handler.player, handler.con, adapter);
 			handler.con.setProtocol(configuration, configuration.createDefaultPacketListener(con));

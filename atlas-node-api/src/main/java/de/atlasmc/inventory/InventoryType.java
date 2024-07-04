@@ -3,7 +3,6 @@ package de.atlasmc.inventory;
 import java.util.List;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.factory.ContainerFactory;
 
 public enum InventoryType {
 

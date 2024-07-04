@@ -13,7 +13,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import de.atlasmc.Atlas;
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.event.Event;
 import de.atlasmc.event.EventPriority;
 import de.atlasmc.event.FunctionalListener;
@@ -27,7 +26,6 @@ import de.atlasmc.plugin.PluginException;
 import de.atlasmc.plugin.PluginLoader;
 import de.atlasmc.plugin.PluginManager;
 import de.atlasmc.plugin.PreparedPlugin;
-import de.atlasmc.server.LocalServer;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
 
@@ -372,17 +370,8 @@ public class CorePluginManager implements PluginManager {
 	}
 
 	@Override
-	public void registerEvents(Plugin plugin, Listener listener, ServerGroup group) {
-		if (group == null)
-			throw new IllegalArgumentException("Group can not be null!");
-		HandlerList.registerListener(plugin, listener, group);
-	}
-
-	@Override
-	public void registerEvents(Plugin plugin, Listener listener, LocalServer server) {
-		if (server == null)
-			throw new IllegalArgumentException("Server can not be null!");
-		HandlerList.registerListener(plugin, listener, server);
+	public void registerEvents(Plugin plugin, Listener listener, Object... context) {
+		HandlerList.registerListener(plugin, listener, context);
 	}
 	
 	@Override
@@ -391,17 +380,8 @@ public class CorePluginManager implements PluginManager {
 	}
 
 	@Override
-	public <E extends Event> void registerFunctionalListener(Plugin plugin, Class<E> eventClass, FunctionalListener<E> listener, ServerGroup group) {
-		if (group == null)
-			throw new IllegalArgumentException("Group can not be null!");
-		HandlerList.registerFunctionalListener(plugin, eventClass, listener, group);
-	}
-
-	@Override
-	public <E extends Event> void registerFunctionalListener(Plugin plugin, Class<E> eventClass, FunctionalListener<E> listener, LocalServer server) {
-		if (server == null)
-			throw new IllegalArgumentException("Server can not be null!");
-		HandlerList.registerFunctionalListener(plugin, eventClass, listener, server);
+	public <E extends Event> void registerFunctionalListener(Plugin plugin, Class<E> eventClass, FunctionalListener<E> listener, Object... context) {
+		HandlerList.registerFunctionalListener(plugin, eventClass, listener, context);
 	}
 	
 	@Override
@@ -414,23 +394,10 @@ public class CorePluginManager implements PluginManager {
 
 	@Override
 	public <E extends Event> void registerFunctionalListener(Plugin plugin, Class<E> eventClass,
-			FunctionalListener<E> listener, ServerGroup group, boolean ignoreCancelled, EventPriority priority) {
-		if (group == null)
-			throw new IllegalArgumentException("Group can not be null!");
+			FunctionalListener<E> listener, boolean ignoreCancelled, EventPriority priority, Object... context) {
 		HandlerList handlers = HandlerList.getHandlerListOf(eventClass);
 		FunctionalListenerExecutor exe = new FunctionalListenerExecutor(plugin, eventClass, listener, priority, ignoreCancelled);
-		handlers.registerExecutor(exe, group);
-	}
-
-	@Override
-	public <E extends Event> void registerFunctionalListener(Plugin plugin, Class<E> eventClass,
-			FunctionalListener<E> listener, LocalServer server, boolean ignoreCancelled, EventPriority priority) {
-		if (server == null)
-			throw new IllegalArgumentException("Server can not be null!");
-		HandlerList.registerListener(plugin, listener, server);
-		HandlerList handlers = HandlerList.getHandlerListOf(eventClass);
-		FunctionalListenerExecutor exe = new FunctionalListenerExecutor(plugin, eventClass, listener, priority, ignoreCancelled);
-		handlers.registerExecutor(exe, server);
+		handlers.registerExecutor(exe, context);
 	}
 
 	@Override

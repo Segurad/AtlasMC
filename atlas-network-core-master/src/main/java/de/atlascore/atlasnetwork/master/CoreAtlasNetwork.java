@@ -9,20 +9,17 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlascore.atlasnetwork.CorePermissionProvider;
 import de.atlascore.atlasnetwork.CorePlayerProfileHandler;
-import de.atlascore.atlasnetwork.master.node.CoreLocalAtlasMasterConnection;
-import de.atlascore.atlasnetwork.master.node.CoreLocalAtlasNodeMaster;
 import de.atlascore.atlasnetwork.master.node.CoreNodeManager;
 import de.atlascore.atlasnetwork.master.server.CoreServerManager;
 import de.atlascore.atlasnetwork.master.server.CoreSimpleServerDeploymentMethod;
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.atlasnetwork.AtlasMasterConnection;
 import de.atlasmc.atlasnetwork.AtlasNetwork;
 import de.atlasmc.atlasnetwork.NetworkInfo;
 import de.atlasmc.atlasnetwork.NodeConfig;
+import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.datarepository.DataRepositoryHandler;
 import de.atlasmc.datarepository.Repository;
-import de.atlasmc.proxy.ProxyConfig;
 
 public class CoreAtlasNetwork implements AtlasNetwork {
 	
@@ -37,8 +34,6 @@ public class CoreAtlasNetwork implements AtlasNetwork {
 	private final Map<String, ProxyConfig> proxyConfigs;
 	private final Map<String, NodeConfig> nodeConfigs;
 	private final DataRepositoryHandler repoHandler;
-	private CoreLocalAtlasNodeMaster localNode;
-	private CoreLocalAtlasMasterConnection masterCon;
 	private final KeyPair keyPair;
 	private final UUID uuid;
 	
@@ -64,8 +59,6 @@ public class CoreAtlasNetwork implements AtlasNetwork {
 		this.nodeConfigs = new ConcurrentHashMap<>(nodeConfigs);
 		this.keyPair = keyPair;
 		this.uuid = uuid;
-		this.localNode = new CoreLocalAtlasNodeMaster(uuid, keyPair.getPublic());
-		this.masterCon = new CoreLocalAtlasMasterConnection(localNode);
 	}
 	
 	public ServerGroup getFallBack() {
@@ -145,11 +138,6 @@ public class CoreAtlasNetwork implements AtlasNetwork {
 	@Override
 	public PublicKey getPublicKey() {
 		return keyPair.getPublic();
-	}
-
-	@Override
-	public AtlasMasterConnection getMasterConnection() {
-		return masterCon;
 	}
 
 }

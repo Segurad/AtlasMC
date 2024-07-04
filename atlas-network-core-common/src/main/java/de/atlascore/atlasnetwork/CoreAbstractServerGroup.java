@@ -1,13 +1,7 @@
 package de.atlascore.atlasnetwork;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
 import de.atlasmc.atlasnetwork.server.ServerConfig;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
-import de.atlasmc.server.LocalServer;
 import de.atlasmc.util.configuration.ConfigurationSection;
 
 public abstract class CoreAbstractServerGroup implements ServerGroup {
@@ -21,7 +15,6 @@ public abstract class CoreAbstractServerGroup implements ServerGroup {
 	protected final int newServerDelay;
 	protected final float newServerOnUserLoad;
 	protected volatile boolean maintenance;
-	protected final Map<UUID, LocalServer> localServers;
 	
 	public CoreAbstractServerGroup(String name, ConfigurationSection config) {
 		if (name == null)
@@ -38,7 +31,6 @@ public abstract class CoreAbstractServerGroup implements ServerGroup {
 		maintenance = config.getBoolean("maintenance");
 		ConfigurationSection serverCfg = config.getConfigurationSection("server-config");
 		this.config = new ServerConfig(serverCfg);
-		this.localServers = new ConcurrentHashMap<>();
 	}
 	
 	// config
@@ -85,18 +77,6 @@ public abstract class CoreAbstractServerGroup implements ServerGroup {
 	@Override
 	public boolean isMaintenance() {
 		return maintenance;
-	}
-	
-	@Override
-	public LocalServer getLocalServer(UUID uuid) {
-		if (uuid == null)
-			throw new IllegalArgumentException("UUID can not be null!");
-		return localServers.get(uuid);
-	}
-	
-	@Override
-	public Collection<LocalServer> getLocalServers() {
-		return localServers.values();
 	}
 
 }

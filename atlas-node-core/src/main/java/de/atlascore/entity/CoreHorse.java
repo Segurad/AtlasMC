@@ -9,7 +9,7 @@ import de.atlasmc.entity.Horse;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.factory.ContainerFactory;
+import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.HorseInventory;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;

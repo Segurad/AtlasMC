@@ -8,7 +8,7 @@ import de.atlasmc.entity.AbstractVillager;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.factory.ContainerFactory;
+import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.MerchantInventory;
 import de.atlasmc.util.map.key.CharKey;

@@ -3,8 +3,8 @@ package de.atlascore.server;
 import java.io.File;
 import java.util.UUID;
 
-import de.atlasmc.Atlas;
-import de.atlasmc.atlasnetwork.AtlasNode;
+import de.atlasmc.LocalAtlasNode;
+import de.atlasmc.AtlasNode;
 import de.atlasmc.atlasnetwork.server.ServerConfig;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.server.NodeServer;
@@ -65,8 +65,8 @@ public abstract class CoreAbstractNodeServer implements NodeServer {
 	}
 
 	@Override
-	public AtlasNode getNode() {
-		return Atlas.getAtlas();
+	public LocalAtlasNode getNode() {
+		return AtlasNode.getAtlas();
 	}
 
 	@Override

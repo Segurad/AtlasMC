@@ -3,8 +3,8 @@ package de.atlascore.proxy;
 import java.util.UUID;
 
 import de.atlasmc.LocalAtlasNode;
+import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.proxy.LocalProxy;
-import de.atlasmc.proxy.ProxyConfig;
 import de.atlasmc.proxy.LocalProxyFactory;
 import de.atlasmc.registry.RegistryValue;
 

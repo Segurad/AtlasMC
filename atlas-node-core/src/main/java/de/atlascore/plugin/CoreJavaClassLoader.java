@@ -57,7 +57,7 @@ public class CoreJavaClassLoader extends URLClassLoader {
 		String version = info.getString("version");
 		List<String> author = List.copyOf(info.getStringList("author", List.of()));
 		String description = info.getString("description");
-		Log logger = Logging.getLogger(plugin);
+		Log logger = Logging.getLogger(plugin.getName(), "Plugin");
 		plugin.init(file, loader, logger, name, version, author, description);
 	}
 

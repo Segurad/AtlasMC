@@ -8,11 +8,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.Atlas;
 import de.atlasmc.LocalAtlasNode;
+import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.io.ProxyConnectionHandler;
 import de.atlasmc.log.Log;
 import de.atlasmc.log.Logging;
 import de.atlasmc.proxy.LocalProxy;
-import de.atlasmc.proxy.ProxyConfig;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -37,7 +37,7 @@ public class CoreLocalProxy extends CoreProxy implements LocalProxy {
 	public CoreLocalProxy(UUID uuid, LocalAtlasNode node, int port, ProxyConfig config) {
 		super(uuid, node, getLocalHostName(), port);
 		this.config = config;
-		this.logger = Logging.getLogger(this);
+		this.logger = Logging.getLogger("Proxy-" + uuid, "Proxy");
 		this.logger.sendToConsole(true);
 		this.connectionProcesses = ConcurrentHashMap.newKeySet();
 	}
@@ -92,7 +92,7 @@ public class CoreLocalProxy extends CoreProxy implements LocalProxy {
 
 	@Override
 	public boolean isSync() {
-		return Atlas.getAtlas().isSync();
+		return Atlas.isMainThread();
 	}
 	
 	private static String getLocalHostName() {

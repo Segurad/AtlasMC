@@ -27,7 +27,6 @@ import de.atlasmc.plugin.Plugin;
 import de.atlasmc.registry.ClassRegistry;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
-import de.atlasmc.util.MathUtil;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
 import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.util.configuration.Configuration;
@@ -97,20 +96,28 @@ public class Commands {
 		Map<String, CommandArg> templates = Map.of();
 		List<ConfigurationSection> templateCfgs = config.getListOfType("templates", ConfigurationSection.class);
 		if (templateCfgs != null) {
-			templates = new HashMap<>();
-			for (ConfigurationSection argCfg : templateCfgs) {
-				String key = argCfg.getString("template-name");
-				if (key == null)
-					continue;
-				CommandArg template = loadArg(argCfg, templates);
-				if (template == null)
-					continue;
-				templates.put(key, template);
+			try {
+				templates = new HashMap<>();
+				for (ConfigurationSection argCfg : templateCfgs) {
+					String key = argCfg.getString("template-name");
+					if (key == null)
+						continue;
+					CommandArg template = loadArg(argCfg, templates);
+					if (template == null)
+						continue;
+					templates.put(key, template);
+				}
+			} catch(Exception e) {
+				throw new InvalidConfigurationException("Error while loading templates for command: " + cmdName, e);
 			}
 		}
 		if (aliaes != null)
 			command.getAliases().addAll(aliaes);
-		loadArg(config, command, templates);
+		try {
+			loadArg(config, command, templates);
+		} catch(Exception e) {
+			throw new InvalidConfigurationException("Error while loading command: " + cmdName, e);
+		}
 		return command;
 	}
 	
@@ -177,18 +184,8 @@ public class Commands {
 		String description = config.getString("description");
 		arg.setDescription(description);
 		String allowedSource = config.getString("allowed-source");
-		if (allowedSource != null) {
-			switch (allowedSource) {
-			case "ANY":
-				break;
-			case "PLAYER":
-				arg.setSenderValidator(CommandArg.PLAYERS_ONLY);
-				break;
-			case "CONSOLE":
-				arg.setSenderValidator(CommandArg.CONSOLE_ONLY);
-				break;
-			}
-		}
+		CommandSourceValidator validator = Registries.getInstanceRegistry(CommandSourceValidator.class).get(allowedSource);
+		arg.setSenderValidator(validator);
 	}
 	
 	private static LiteralCommandArg loadLiteralArg(ConfigurationSection config, Map<String, CommandArg> templates) {
@@ -415,8 +412,8 @@ public class Commands {
 			return a.getName().compareTo(b.getName());
 		});
 		int first = (page - 1) * linesPerPage;
-		int maxPages = MathUtil.upper(((double) commands.size()) / linesPerPage);
-		first = MathUtil.getInRange(first, 0, commands.size()-1);
+		int maxPages = Math.ceilDiv(commands.size(), linesPerPage);
+		first = Math.clamp(first, 0, commands.size()-1);
 		final int size = ((commands.size()-first) % linesPerPage) + 1;
 		List<Chat> lines = new ArrayList<>(size);
 		lines.add(chat(
@@ -457,7 +454,7 @@ public class Commands {
 		ChatComponent base = base();
 		help.add(base);
 		int size = buildHelp(first, last, 0, help, text("- ").color(ChatColor.DARK_GRAY).extra(text("/").color(ChatColor.RED)), command);
-		int maxPages = MathUtil.upper(((double) size) / linesPerPage);
+		int maxPages = Math.ceilDiv(size, linesPerPage);
 		base.extra(
 				text("--- ").color(ChatColor.DARK_GRAY), 
 				text("Help").color(ChatColor.RED), 

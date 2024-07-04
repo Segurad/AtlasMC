@@ -3,6 +3,7 @@ package de.atlasmc.proxy;
 import java.util.UUID;
 
 import de.atlasmc.LocalAtlasNode;
+import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.registry.RegistryHolder;
 
 @RegistryHolder(key="atlas:factory/proxy")

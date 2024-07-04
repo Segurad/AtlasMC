@@ -2,7 +2,6 @@ package de.atlascore.log;
 
 import java.io.File;
 
-import org.apache.logging.log4j.core.layout.PatternLayout.Builder;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Appender;
@@ -14,15 +13,10 @@ import org.apache.logging.log4j.core.appender.rolling.DefaultRolloverStrategy;
 import org.apache.logging.log4j.core.appender.rolling.OnStartupTriggeringPolicy;
 import org.apache.logging.log4j.core.appender.rolling.TimeBasedTriggeringPolicy;
 import org.apache.logging.log4j.core.layout.PatternLayout;
+import org.apache.logging.log4j.core.layout.PatternLayout.Builder;
 
-import de.atlasmc.log.LogHandler;
 import de.atlasmc.log.Log;
-import de.atlasmc.log.PluginLog;
-import de.atlasmc.log.ProxyLog;
-import de.atlasmc.log.ServerLog;
-import de.atlasmc.plugin.Plugin;
-import de.atlasmc.proxy.LocalProxy;
-import de.atlasmc.server.LocalServer;
+import de.atlasmc.log.LogHandler;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.MemoryConfiguration;
@@ -79,21 +73,6 @@ public class CoreLogHandler implements LogHandler {
 	@Override
 	public Log getLogger(String name, String group) {
 		return new CoreLog(name, getLog4jLogger(group));
-	}
-
-	@Override
-	public ServerLog getLogger(LocalServer server) {
-		return new CoreServerLog(server, getLog4jLogger("Server"));
-	}
-
-	@Override
-	public PluginLog getLogger(Plugin plugin) {
-		return new CorePluginLog(plugin, getLog4jLogger("Plugin"));
-	}
-
-	@Override
-	public ProxyLog getLogger(LocalProxy proxy) {
-		return new CoreProxyLog(proxy, getLog4jLogger("Proxy"));
 	}
 	
 	private synchronized Logger getLog4jLogger(String name) {

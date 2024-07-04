@@ -21,6 +21,7 @@ import de.atlasmc.entity.Villager.VillagerProfession;
 import de.atlasmc.entity.Villager.VillagerType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.AbstractPacket;
+import de.atlasmc.io.protocol.ProtocolUtil;
 import de.atlasmc.util.EulerAngle;
 import de.atlasmc.util.MathUtil;
 import de.atlasmc.util.nbt.tag.CompoundTag;
@@ -156,7 +157,7 @@ public abstract class MetaDataType<T> {
         @Override
         public ItemStack read(ByteBuf in) {
             try {
-                return AbstractPacket.readSlot(in);
+                return ProtocolUtil.readSlot(in);
             } catch (IOException e) {
                 throw new IllegalStateException("Error while reading slot meta data!", e);
             }
@@ -165,7 +166,7 @@ public abstract class MetaDataType<T> {
         @Override
         public void write(ItemStack data, ByteBuf out) {
             try {
-                AbstractPacket.writeSlot(data, out);
+                ProtocolUtil.writeSlot(data, out);
             } catch (IOException e) {
             	throw new IllegalStateException("Error while writing slot meta data!", e);
             }

@@ -8,21 +8,22 @@ import java.util.function.BiConsumer;
 import de.atlascore.block.CorePlayerDiggingHandler;
 import de.atlascore.inventory.CoreInventoryView;
 import de.atlascore.inventory.CorePlayerItemCooldownHandler;
-import de.atlasmc.WorldEvent;
 import de.atlasmc.Gamemode;
 import de.atlasmc.Material;
 import de.atlasmc.Particle;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
+import de.atlasmc.WorldEvent;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
+import de.atlasmc.atlasnetwork.NodePlayer;
 import de.atlasmc.block.DiggingHandler;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatType;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
-import de.atlasmc.entity.Player;
 import de.atlasmc.entity.Merchant.MerchantRecipe;
+import de.atlasmc.entity.Player;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.inventory.InventoryCloseEvent;
 import de.atlasmc.event.inventory.InventoryOpenEvent;
@@ -31,20 +32,20 @@ import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.MerchantInventory;
 import de.atlasmc.io.protocol.PlayerConnection;
-import de.atlasmc.io.protocol.play.PacketOutGameEvent;
 import de.atlasmc.io.protocol.play.PacketOutCloseContainer;
-import de.atlasmc.io.protocol.play.PacketOutWorldEvent;
 import de.atlasmc.io.protocol.play.PacketOutEntitySoundEffect;
+import de.atlasmc.io.protocol.play.PacketOutGameEvent;
+import de.atlasmc.io.protocol.play.PacketOutGameEvent.ChangeReason;
+import de.atlasmc.io.protocol.play.PacketOutMerchantOffers;
 import de.atlasmc.io.protocol.play.PacketOutOpenScreen;
 import de.atlasmc.io.protocol.play.PacketOutParticle;
-import de.atlasmc.io.protocol.play.PacketOutGameEvent.ChangeReason;
 import de.atlasmc.io.protocol.play.PacketOutSetContainerSlot;
 import de.atlasmc.io.protocol.play.PacketOutSetExperiance;
 import de.atlasmc.io.protocol.play.PacketOutSoundEffect;
 import de.atlasmc.io.protocol.play.PacketOutSpawnEntity;
 import de.atlasmc.io.protocol.play.PacketOutStopSound;
-import de.atlasmc.io.protocol.play.PacketOutMerchantOffers;
 import de.atlasmc.io.protocol.play.PacketOutUpdateHealth;
+import de.atlasmc.io.protocol.play.PacketOutWorldEvent;
 import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.scoreboard.ScoreboardView;
@@ -68,6 +69,8 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	};
 	
 	private PlayerConnection con;
+	private AtlasPlayer atlasPlayer;
+	private NodePlayer nodePlayer;
 	private Inventory open;
 	private final CoreInventoryView view;
 	private ScoreboardView scoreView;
@@ -87,6 +90,8 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 		super(type, uuid);
 		view = new CoreInventoryView(this, getInventory(), getCraftingInventory(), 0);
 		this.con = con;
+		this.nodePlayer = con.getNodePlayer();
+		this.atlasPlayer = con.getNodePlayer().getAtlasPlayer();
 		this.digging = new CorePlayerDiggingHandler(this);
 	}
 	
@@ -264,12 +269,17 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 
 	@Override
 	public AtlasPlayer getAtlasPlayer() {
-		return con.getAtlasPlayer();
+		return atlasPlayer;
+	}
+	
+	@Override
+	public NodePlayer getNodePlayer() {
+		return nodePlayer;
 	}
 
 	@Override
 	public String getName() {
-		return getAtlasPlayer().getInternalName();
+		return atlasPlayer.getInternalName();
 	}
 
 	@Override
@@ -344,22 +354,22 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 
 	@Override
 	public void sendMessage(Chat chat) {
-		con.getAtlasPlayer().sendMessage(chat);
+		con.sendMessage(chat);
 	}
 	
 	@Override
 	public void sendMessage(String message) {
-		con.getAtlasPlayer().sendMessage(message);
+		con.sendMessage(message);
 	}
 
 	@Override
 	public PermissionHandler getPermissionHandler() {
-		return getAtlasPlayer().getPermissionHandler();
+		return atlasPlayer.getPermissionHandler();
 	}
 
 	@Override
 	public void setPermissionHandler(PermissionHandler handler) {
-		getAtlasPlayer().setPermissionHandler(handler);
+		atlasPlayer.setPermissionHandler(handler);
 	}
 
 	@Override
@@ -526,12 +536,12 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 
 	@Override
 	public void sendMessage(String message, ChatType type, String source, String target) {
-		con.getAtlasPlayer().sendMessage(message, type, source, target);
+		con.sendMessage(message, type, source, target);
 	}
 
 	@Override
 	public void sendTranslation(String key, Object... values) {
-		con.getAtlasPlayer().sendTranslation(key, values);
+		con.sendTranslation(key, values);
 	}
 
 }

@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.Beacon;
-import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.BeaconInventory;
+import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.ChildNBTFieldContainer;

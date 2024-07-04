@@ -3,21 +3,29 @@ package de.atlascore.server;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Consumer;
 
 import de.atlascore.plugin.CorePluginManager;
 import de.atlasmc.Atlas;
-import de.atlasmc.atlasnetwork.AtlasPlayer;
+import de.atlasmc.NamespacedKey;
+import de.atlasmc.atlasnetwork.NodePlayer;
 import de.atlasmc.atlasnetwork.server.ServerConfig;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
+import de.atlasmc.datarepository.DataRepositoryHandler;
+import de.atlasmc.datarepository.RepositoryEntry;
 import de.atlasmc.event.Event;
 import de.atlasmc.log.Log;
 import de.atlasmc.log.Logging;
 import de.atlasmc.scheduler.Scheduler;
 import de.atlasmc.server.LocalServer;
+import de.atlasmc.server.NodeServer;
 import de.atlasmc.server.ServerException;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
@@ -25,12 +33,25 @@ import de.atlasmc.world.World;
 
 public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServer {
 	
-	private final Set<AtlasPlayer> players;
+	private static final List<NamespacedKey> TASKS_ON_STARTUP;
+	private static final List<NamespacedKey> TASKS_ON_PREPARATION;
+	private static final List<NamespacedKey> TASKS_ON_SHUTDOWN;
+	private static final List<NamespacedKey> TASKS_ON_TICK;
+	
+	static {
+		TASKS_ON_STARTUP = List.of();
+		TASKS_ON_PREPARATION = List.of();
+		TASKS_ON_SHUTDOWN = List.of();
+		TASKS_ON_TICK = List.of();
+	}
+	
+	private final Set<NodePlayer> players;
 	private final Set<World> worlds;
 	private CoreServerThread thread;
 	private final Log logger;
 	private volatile Status targetStatus;
  	private volatile Future<Boolean> future;
+ 	private final LinkedHashSet<Consumer<NodeServer>> shutdownHooks;
 	protected final Lock lock = new ReentrantLock();
 	
 	public CoreLocalServer(UUID serverID, File workdir, ServerGroup group) {
@@ -45,7 +66,8 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 		super(serverID, workdir, new File(workdir, "worlds/"), group, config);
 		this.players = new HashSet<>();
 		this.worlds = new HashSet<>();
-		this.logger = Logging.getLogger(this);
+		this.shutdownHooks = new LinkedHashSet<>();
+		this.logger = Logging.getLogger(getServerName(), "Server");
 	}
 
 	@Override
@@ -54,7 +76,7 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 	}
 
 	@Override
-	public Collection<AtlasPlayer> getPlayers() {
+	public Collection<NodePlayer> getPlayers() {
 		return players;
 	}
 
@@ -117,7 +139,7 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 		}
 		status = Status.STARTUP;
 		logger.info("Starting...");
-		CoreServerThread thread = this.thread = new CoreServerThread(this);
+		CoreServerThread thread = this.thread = new CoreServerThread(this, shutdownHooks);
 		this.future = future = thread.startServer();
 		lock.unlock();
 		return future;
@@ -177,6 +199,46 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 		Atlas.getScheduler().runAsyncTask(CorePluginManager.SYSTEM, task);
 		lock.unlock();
 		return future;
+	}
+	
+	protected void onShutdown() {
+		synchronized (shutdownHooks) {
+			for (Consumer<NodeServer> c : shutdownHooks.reversed()) {
+				try {
+					c.accept(this);
+				} catch(Exception e) {
+					logger.error("Error in shutdown hook!", e);
+				}
+			}
+		}
+	}
+	
+	protected void onStartup() {
+		if (config.hasPlugins()) {
+			Map<NamespacedKey, NamespacedKey> plugins = config.getPlugins();
+			DataRepositoryHandler handler = Atlas.getDataHandler();
+			Future<Collection<RepositoryEntry>> pluginEntries = handler.getEntries(plugins.keySet());
+			Future<Collection<RepositoryEntry>> cfgEntries = handler.getEntries(plugins.values());
+			try {
+				
+			} catch (Exception e) {
+				logger.error("Error while fetching plugins!", e);
+			}
+		}
+	}
+
+	@Override
+	public boolean addShutdownHook(Consumer<NodeServer> hook) {
+		synchronized (shutdownHooks) {
+			return shutdownHooks.add(hook);
+		}
+	}
+
+	@Override
+	public boolean removeShutdownHook(Consumer<NodeServer> hook) {
+		synchronized (shutdownHooks) {
+			return shutdownHooks.remove(hook);
+		}
 	}
 
 }

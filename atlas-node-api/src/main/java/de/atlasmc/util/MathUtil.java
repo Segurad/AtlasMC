@@ -24,40 +24,6 @@ public final class MathUtil {
 		return value > i ? i+1 : i;
 	}
 	
-	/**
-	 * 
-	 * @param original
-	 * @param min
-	 * @param max
-	 * @return the original if it is in range otherwise it will return the min or max
-	 */
-	public static double getInRange(double original, double min, double max) {
-		if (original > max)
-			return max;
-		if (original < min) {
-			return min;
-		}
-		return original;
-	}
-	
-	public static float getInRange(float original, float min, float max) {
-		if (original > max)
-			return max;
-		if (original < min) {
-			return min;
-		}
-		return original;
-	}
-	
-	public static int getInRange(int original, int min, int max) {
-		if (original > max)
-			return max;
-		if (original < min) {
-			return min;
-		}
-		return original;
-	}
-	
 	public static boolean isInRange(double original, double min, double max) {
 		return original >= min && original <= max;
 	}

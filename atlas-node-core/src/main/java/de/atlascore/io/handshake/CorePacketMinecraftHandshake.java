@@ -1,10 +1,13 @@
 package de.atlascore.io.handshake;
 
+import static de.atlasmc.io.AbstractPacket.readString;
+import static de.atlasmc.io.AbstractPacket.readVarInt;
+import static de.atlasmc.io.AbstractPacket.writeString;
+import static de.atlasmc.io.AbstractPacket.writeVarInt;
+
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
-
-import de.atlasmc.Atlas;
+import de.atlasmc.AtlasNode;
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.Packet;
@@ -23,7 +26,7 @@ public class CorePacketMinecraftHandshake extends HandshakePaketIO<PacketMinecra
 
 	@Override
 	public void handle(ConnectionHandler handler, PacketMinecraftHandshake packet) {
-		ProtocolAdapter adapter = Atlas.getProtocolAdapter(packet.getProtocolVersion());
+		ProtocolAdapter adapter = AtlasNode.getProtocolAdapter(packet.getProtocolVersion());
 		if (adapter == null) {
 			handler.close();
 			return;

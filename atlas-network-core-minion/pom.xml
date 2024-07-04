@@ -7,6 +7,11 @@
   </parent>
   <artifactId>atlas-network-core-minion</artifactId>
   <dependencies>
+  	  <dependency>
+  	  	<groupId>de.atlas-project</groupId>
+  	  	<artifactId>atlas-network-core-common</artifactId>
+  	  	<version>0.0.1-SNAPSHOT</version>
+  	  </dependency>
 	  <dependency>
 		  <groupId>de.atlas-project</groupId>
 		  <artifactId>atlas-node-core</artifactId>

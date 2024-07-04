@@ -5,27 +5,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.Predicate;
 
-import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 
 public class CommandArg {
 	
-	public static final Predicate<CommandSender> 
-	PLAYERS_ONLY = (sender) -> {
-		return sender instanceof AtlasPlayer;
-	},
-	CONSOLE_ONLY = (sender) -> {
-		return sender instanceof ConsoleCommandSender;
-	};
-	
 	private final String name;
 	private String description;
 	private CommandExecutor executor;
 	private String permission;
-	private Predicate<CommandSender> senderValidator; 
+	private CommandSourceValidator senderValidator; 
 	private List<CommandArg> args;
 	private Map<String, LiteralCommandArg> literalArgs;
 	private Map<String, LiteralCommandArg> literalArgAliases;
@@ -159,16 +149,16 @@ public class CommandArg {
 	}
 	
 	@Nullable
-	public Predicate<CommandSender> getSenderValidator() {
+	public CommandSourceValidator getSenderValidator() {
 		return senderValidator;
 	}
 
-	public void setSenderValidator(@Nullable Predicate<CommandSender> senderValidator) {
+	public void setSenderValidator(@Nullable CommandSourceValidator senderValidator) {
 		this.senderValidator = senderValidator;
 	}
 	
 	public boolean canUse(@NotNull CommandSender sender) {
-		if (senderValidator != null && !senderValidator.test(sender))
+		if (senderValidator != null && !senderValidator.isValid(sender))
 			return false;
 		if (permission != null && !sender.hasPermission(permission))
 			return false;

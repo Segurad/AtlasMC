@@ -6,7 +6,7 @@ import java.util.List;
 
 import de.atlasmc.entity.Merchant.MerchantRecipe;
 import de.atlasmc.inventory.ItemStack;
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;

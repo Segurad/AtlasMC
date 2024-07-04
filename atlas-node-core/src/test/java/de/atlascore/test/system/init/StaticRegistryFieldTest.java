@@ -13,7 +13,7 @@ import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockDataFactory;
 import de.atlasmc.block.tile.TileEntityFactory;
 import de.atlasmc.entity.EntityType;
-import de.atlasmc.factory.ContainerFactory;
+import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.meta.ItemMetaFactory;
 import de.atlasmc.registry.Registries;
 

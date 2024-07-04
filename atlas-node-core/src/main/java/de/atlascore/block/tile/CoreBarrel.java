@@ -2,7 +2,7 @@ package de.atlascore.block.tile;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.Barrel;
-import de.atlasmc.factory.ContainerFactory;
+import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryType;
 

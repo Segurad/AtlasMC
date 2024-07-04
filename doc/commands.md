@@ -55,7 +55,7 @@ commands:
       # additional configuration goes here
       # suggestion: some_suggestion:key
   executor: some_executor:key # <optional> defines the executor used when command ends at this node
-  allowed-source: ANY # <optional> ANY|PLAYER|CONSOLE defines who can invoke this node defaults to ANY
+  allowed-source: atlas:console # <optional> defines who can invoke this node see registry: atlas:command/source_validator
   permission: some.permission.to.execute # <optinal> defines a permission that is required to execute this node
 #...
 ```

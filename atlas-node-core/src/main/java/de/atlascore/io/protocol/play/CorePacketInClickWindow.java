@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.ConnectionHandler;

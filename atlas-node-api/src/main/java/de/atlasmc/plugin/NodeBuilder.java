@@ -5,10 +5,10 @@ import java.util.Collection;
 import java.util.UUID;
 
 import de.atlasmc.LocalAtlasNode;
+import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.chat.ChatFactory;
 import de.atlasmc.datarepository.DataRepositoryHandler;
 import de.atlasmc.io.protocol.ProtocolAdapter;
-import de.atlasmc.proxy.ProxyConfig;
 import de.atlasmc.scheduler.Scheduler;
 import de.atlasmc.server.NodeServerManager;
 import de.atlasmc.util.Builder;

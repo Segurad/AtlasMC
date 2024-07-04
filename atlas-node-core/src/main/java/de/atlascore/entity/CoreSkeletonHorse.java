@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.SkeletonHorse;
-import de.atlasmc.factory.ContainerFactory;
 import de.atlasmc.inventory.AbstractHorseInventory;
+import de.atlasmc.inventory.ContainerFactory;
 
 public class CoreSkeletonHorse extends CoreAbstractHorse implements SkeletonHorse {
 

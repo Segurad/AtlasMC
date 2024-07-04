@@ -10,6 +10,9 @@ import de.atlascore.recipe.CoreRecipeBook;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
+import de.atlasmc.atlasnetwork.NodePlayer;
+import de.atlasmc.chat.Chat;
+import de.atlasmc.chat.ChatType;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.player.PlayerAnimationEvent;
 import de.atlasmc.event.player.PlayerDiggingEvent;
@@ -47,7 +50,7 @@ import io.netty.util.concurrent.GenericFutureListener;
 public class CorePlayerConnection implements PlayerConnection {
 	
 	private Player player;
-	private final AtlasPlayer aplayer;
+	private final NodePlayer aplayer;
 	private final ProxyConnectionHandler connection;
 	private final ProtocolAdapter protocol;
 	private final ProtocolPlay protocolPlay;
@@ -90,7 +93,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	
 	
 	public CorePlayerConnection(AtlasPlayer player, ProxyConnectionHandler connection, ProtocolAdapter protocol) {
-		this.aplayer = player;
+		this.aplayer = new CoreNodePlayer(this, player);
 		this.connection = connection;
 		this.protocol = protocol;
 		this.inConfiguration = true;
@@ -145,7 +148,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	}
 
 	@Override
-	public AtlasPlayer getAtlasPlayer() {
+	public NodePlayer getNodePlayer() {
 		return aplayer;
 	}
 
@@ -504,6 +507,30 @@ public class CorePlayerConnection implements PlayerConnection {
 	@Override
 	public void handleSyncPackets(Log logger) {
 		connection.handleSyncPackets(logger);
+	}
+
+	@Override
+	public void sendTranslation(String key, Object... values) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void sendMessage(Chat chat) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void sendMessage(String message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void sendMessage(String message, ChatType type, String source, String target) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

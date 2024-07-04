@@ -22,7 +22,7 @@ public abstract class NodeEvent extends GenericEvent<AtlasNode, HandlerList> {
 	
 	@Override
 	public SyncThreadHolder getSyncThreadHolder() {
-		return Atlas.getAtlas();
+		return Atlas.getThreadHolder();
 	}
 
 }

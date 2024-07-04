@@ -43,10 +43,12 @@ import de.atlascore.system.init.EntityTypeLoader;
 import de.atlascore.system.init.MaterialLoader;
 import de.atlascore.system.init.PotionEffectTypeLoader;
 import de.atlascore.world.ChunkWorker;
+import de.atlasmc.AtlasBuilder;
 import de.atlasmc.LocalAtlasNode;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.atlasnetwork.AtlasNetwork;
 import de.atlasmc.atlasnetwork.AtlasNode.NodeStatus;
+import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.cache.Caching;
 import de.atlasmc.command.Command;
 import de.atlasmc.command.Commands;
@@ -62,11 +64,8 @@ import de.atlasmc.event.node.NodeInitializedEvent;
 import de.atlasmc.io.handshake.HandshakeProtocol;
 import de.atlasmc.log.Log;
 import de.atlasmc.log.Logging;
-import de.atlasmc.plugin.CoremodulPlugin;
-import de.atlasmc.plugin.Plugin;
 import de.atlasmc.proxy.LocalProxy;
 import de.atlasmc.proxy.LocalProxyFactory;
-import de.atlasmc.proxy.ProxyConfig;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.registry.RegistryHandler;
@@ -135,6 +134,15 @@ public class Main {
 		if (config == null) {
 			System.exit(1);
 		}
+		new AtlasBuilder()
+		.setDataHandler(loadRepositories(log, workDir))
+		.setKeyPair(keyPair)
+		.setLogger(log)
+		.setMainThread(new CoreAtlasThread(log))
+		.setPluginManager(new CorePluginManager(log))
+		.setScheduler(new CoreAtlasScheduler())
+		.setWorkDir(workDir)
+		.build();
 		boolean isMaster = config.getBoolean("is-master");
 		AtlasNetwork master = null;
 		RegistryHandler registries = null;
@@ -200,13 +208,6 @@ public class Main {
 		coremodulDir.mkdirs();
 		pmanager.loadPlugins(coremodulDir);
 		pmanager.loadPlugins(tmpCoremodulDir);
-		if (pmanager.getPluginCount() > 0) { 
-			for (Plugin plugin : pmanager.getPlugins()) {
-				if (!(plugin instanceof CoremodulPlugin))
-					continue;
-				((CoremodulPlugin) plugin).initNode(builder);
-			}
-		}
 		LocalAtlasNode node = builder.build();
 		HandshakeProtocol.DEFAULT_PROTOCOL.setPacketIO(0x00, new CorePacketMinecraftHandshake());
 		Random rand = null;

@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.MinecartHopper;
-import de.atlasmc.factory.ContainerFactory;
+import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.util.map.key.CharKey;

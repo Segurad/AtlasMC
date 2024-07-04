@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 import de.atlasmc.atlasnetwork.AtlasNode;
-import de.atlasmc.atlasnetwork.AtlasPlayer;
+import de.atlasmc.atlasnetwork.NodePlayer;
 import de.atlasmc.datarepository.DataRepositoryHandler;
 import de.atlasmc.event.SyncThreadHolder;
 import de.atlasmc.io.protocol.ProtocolAdapterHandler;
@@ -45,9 +45,9 @@ public interface LocalAtlasNode extends AtlasNode, SyncThreadHolder {
 	
 	LocalProxy getLocalProxy(UUID uuid);
 
-	AtlasPlayer getLocalPlayer(String name);
+	NodePlayer getLocalPlayer(String name);
 	
-	AtlasPlayer getLocalPlayer(UUID name);
+	NodePlayer getLocalPlayer(UUID name);
 	
 	void setStatus(NodeStatus status);
 

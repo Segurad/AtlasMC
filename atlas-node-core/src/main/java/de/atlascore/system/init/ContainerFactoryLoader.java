@@ -1,6 +1,5 @@
 package de.atlascore.system.init;
 
-import de.atlascore.factory.CoreGenericInventoryFactory;
 import de.atlascore.inventory.CoreAnvilInventory;
 import de.atlascore.inventory.CoreBeaconInventory;
 import de.atlascore.inventory.CoreBlastFurnaceInventory;
@@ -9,6 +8,7 @@ import de.atlascore.inventory.CoreCartographyInventory;
 import de.atlascore.inventory.CoreCraftingInventory;
 import de.atlascore.inventory.CoreEnchantingInventory;
 import de.atlascore.inventory.CoreFurnaceInventory;
+import de.atlascore.inventory.CoreGenericInventoryFactory;
 import de.atlascore.inventory.CoreGrindstoneInventory;
 import de.atlascore.inventory.CoreHorseInventory;
 import de.atlascore.inventory.CoreLecternInventory;
@@ -20,8 +20,8 @@ import de.atlascore.inventory.CoreSmithingInventory;
 import de.atlascore.inventory.CoreSmokerInventory;
 import de.atlascore.inventory.CoreStonecutterInventory;
 import de.atlascore.inventory.CoreWorkbenchInventory;
-import de.atlasmc.factory.ClassContainerFactory;
-import de.atlasmc.factory.ContainerFactory;
+import de.atlasmc.inventory.ClassContainerFactory;
+import de.atlasmc.inventory.ContainerFactory;
 
 public class ContainerFactoryLoader {
 	

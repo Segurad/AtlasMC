@@ -12,11 +12,12 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import de.atlascore.CoreLocalAtlasNode;
-import de.atlasmc.Atlas;
+import de.atlasmc.AtlasNode;
 import de.atlasmc.LocalAtlasNode;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.atlasnetwork.AtlasNetwork;
 import de.atlasmc.atlasnetwork.NodeConfig;
+import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.atlasnetwork.server.ServerManager;
 import de.atlasmc.chat.ChatFactory;
@@ -27,7 +28,6 @@ import de.atlasmc.io.protocol.ProtocolAdapter;
 import de.atlasmc.log.Log;
 import de.atlasmc.plugin.NodeBuilder;
 import de.atlasmc.plugin.PluginManager;
-import de.atlasmc.proxy.ProxyConfig;
 import de.atlasmc.scheduler.Scheduler;
 import de.atlasmc.server.NodeServerManager;
 import de.atlasmc.util.TickingThread;
@@ -39,7 +39,7 @@ public class CoreNodeBuilder implements NodeBuilder {
 	private Log log;
 	private AtlasNetwork network;
 	private Scheduler scheduler;
-	private final File workdir;
+	private File workdir;
 	private DataRepositoryHandler dataHandler;
 	private ChatFactory chatFactory;
 	private ProtocolAdapter defaultProtocol;
@@ -195,9 +195,9 @@ public class CoreNodeBuilder implements NodeBuilder {
 	public LocalAtlasNode build() {
 		if (network == null)
 			throw new IllegalStateException("Can not build Atlas without defined AtlasNetwork");
-		LocalAtlasNode node = new CoreLocalAtlasNode(uuid, log, scheduler, workdir, pluginManager, mainThread, keyPair, dataHandler, serverManager);
+		LocalAtlasNode node = new CoreLocalAtlasNode(this);
 		node.getProtocolAdapterHandler().setProtocol(defaultProtocol);
-		Atlas.init(node, network);
+		AtlasNode.init(node, network);
 		ChatUtil.init(chatFactory);
 		return node;
 	}
@@ -233,6 +233,14 @@ public class CoreNodeBuilder implements NodeBuilder {
 	
 	public ConsoleCommandSender getConsoleSender() {
 		return console;
+	}
+	
+	public Log getLogger() {
+		return log;
+	}
+	
+	public File getWorkdir() {
+		return workdir;
 	}
 
 	@Override
