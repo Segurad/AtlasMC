@@ -503,7 +503,7 @@ public class Main {
 		RegistryHandler handler = new CoreRegistryHandler();
 		YamlConfiguration registryConfig = null;
 		try {
-			registryConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(Main.class.getResourceAsStream("/META-INF/atlas/registries.yml")));
+			registryConfig = YamlConfiguration.loadConfiguration(Main.class.getResourceAsStream("/META-INF/atlas/registries.yml"));
 		} catch(IOException e) {
 			logger.error("Error while loading registries", e);
 			return handler;
@@ -524,7 +524,7 @@ public class Main {
 		}
 		YamlConfiguration registryEntryConfig = null;
 		try {
-			registryEntryConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(Main.class.getResourceAsStream("/META-INF/atlas/registry-entries.yml")));
+			registryEntryConfig = YamlConfiguration.loadConfiguration(Main.class.getResourceAsStream("/META-INF/atlas/registry-entries.yml"));
 		} catch(IOException e) {
 			logger.error("Error while loading registry entries", e);
 			return handler;
