@@ -9,14 +9,18 @@ import org.apache.logging.log4j.core.pattern.PatternConverter;
 
 import de.atlascore.log.CoreAtlasMarker;
 
-@Plugin(name = "CoreAtlasLoggerNameConverter", category = PatternConverter.CATEGORY)
+@Plugin(name = "AtlasLoggerNamePattern", category = PatternConverter.CATEGORY)
 @ConverterKeys({"al", "atlasLogger"})
-public class CoreAtlasLoggerNameConverter extends LogEventPatternConverter {
+public class CoreAtlasLoggerNamePattern extends LogEventPatternConverter {
 
-	private static final CoreAtlasLoggerNameConverter INSTANCE = new CoreAtlasLoggerNameConverter();
+	private static final CoreAtlasLoggerNamePattern INSTANCE = new CoreAtlasLoggerNamePattern();
 	
-	private CoreAtlasLoggerNameConverter() {
-		super("CoreAtlasLoggerName", "atlasLoggerName");
+	public static CoreAtlasLoggerNamePattern newInstance(final String[] options) {
+		return INSTANCE;
+	}
+	
+	private CoreAtlasLoggerNamePattern() {
+		super("CoreAtlasLoggerName", null);
 	}
 
 	@Override
@@ -25,10 +29,6 @@ public class CoreAtlasLoggerNameConverter extends LogEventPatternConverter {
 		if (marker instanceof CoreAtlasMarker) {
 			toAppendTo.append(marker.getName());
 		}
-	}
-	
-	public static CoreAtlasLoggerNameConverter newInstance(final String[] options) {
-		return INSTANCE;
 	}
 
 }

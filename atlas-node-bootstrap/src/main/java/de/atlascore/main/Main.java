@@ -3,7 +3,6 @@ package de.atlascore.main;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 import java.security.KeyPair;
@@ -18,7 +17,6 @@ import java.util.Random;
 import java.util.UUID;
 
 import de.atlascore.CoreAtlasThread;
-import de.atlascore.atlasnetwork.master.CoreMasterBuilder;
 import de.atlascore.cache.CoreCacheHandler;
 import de.atlascore.chat.CoreChatFactory;
 import de.atlascore.command.CoreConsoleCommandSender;
@@ -43,6 +41,7 @@ import de.atlascore.system.init.EntityTypeLoader;
 import de.atlascore.system.init.MaterialLoader;
 import de.atlascore.system.init.PotionEffectTypeLoader;
 import de.atlascore.world.ChunkWorker;
+import de.atlasmc.Atlas;
 import de.atlasmc.AtlasBuilder;
 import de.atlasmc.LocalAtlasNode;
 import de.atlasmc.NamespacedKey;
@@ -50,6 +49,7 @@ import de.atlasmc.atlasnetwork.AtlasNetwork;
 import de.atlasmc.atlasnetwork.AtlasNode.NodeStatus;
 import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.cache.Caching;
+import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.command.Command;
 import de.atlasmc.command.Commands;
 import de.atlasmc.datarepository.DataRepositoryHandler;
@@ -64,12 +64,15 @@ import de.atlasmc.event.node.NodeInitializedEvent;
 import de.atlasmc.io.handshake.HandshakeProtocol;
 import de.atlasmc.log.Log;
 import de.atlasmc.log.Logging;
+import de.atlasmc.plugin.PluginManager;
 import de.atlasmc.proxy.LocalProxy;
 import de.atlasmc.proxy.LocalProxyFactory;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.registry.RegistryHandler;
 import de.atlasmc.registry.RegistryHolder.Target;
+import de.atlasmc.util.Builder;
+import de.atlasmc.util.BuilderFactory;
 import de.atlasmc.util.EncryptionUtil;
 import de.atlasmc.util.FileUtils;
 import de.atlasmc.util.ThreadWatchdog;
@@ -106,10 +109,12 @@ public class Main {
 		} else {
 			workDirPath = System.getProperty("user.dir");
 		}
-		workDir = new File(workDirPath);
+		workDir = new File(workDirPath).getAbsoluteFile();
 		if (!workDir.exists())
 			workDir.mkdirs();
-		initLogging(workDir);
+		System.setProperty("atlas.workDir", workDir.getAbsolutePath());
+		AtlasBuilder.initWorkDir(workDir);
+		Logging.init(new CoreLogHandler());
 		ThreadWatchdog.init();
 		Log log  = Logging.getLogger("Atlas", "Atlas");
 		log.sendToConsole(true);
@@ -134,39 +139,48 @@ public class Main {
 		if (config == null) {
 			System.exit(1);
 		}
+		
+		ChatUtil.init(new CoreChatFactory());
+		Registries.init(loadRegistry(log));
+		
+		PluginManager pluginManager = new CorePluginManager(log);
+		pluginManager.addLoader(new CoreJavaPluginLoader());
+		
 		new AtlasBuilder()
 		.setDataHandler(loadRepositories(log, workDir))
 		.setKeyPair(keyPair)
 		.setLogger(log)
 		.setMainThread(new CoreAtlasThread(log))
-		.setPluginManager(new CorePluginManager(log))
+		.setPluginManager(pluginManager)
 		.setScheduler(new CoreAtlasScheduler())
 		.setWorkDir(workDir)
 		.build();
 		boolean isMaster = config.getBoolean("is-master");
 		AtlasNetwork master = null;
-		RegistryHandler registries = null;
-		DataRepositoryHandler repoHandler = loadRepositories(log, workDir);
+
+		//#####################################################################		
+		//#	Initializing master												  #
+		//#####################################################################
+		
 		if (isMaster) {
-			registries = loadRegistry(log);
-			Registries.init(registries);
 			ConfigurationSection masterConfig = config.getConfigurationSection("master");
-			master = createMaster(log, workDir, masterConfig, arguments, keyPair, repoHandler);
+			master = createMaster(masterConfig, arguments);
 		} else {
 			String masterHost = config.getString("host");
 			int masterPort = config.getInt("port"); 
-			master = connectRemoteMaster(log, masterHost, masterPort, keyPair);
+			master = connectRemoteMaster(masterHost, masterPort);
 		}
 		if (master == null) {
 			log.error("Unable to initialize master!");
 			System.exit(1);
 		}
 		log.info("Atlas Master initialized");
+		
+		//#####################################################################		
+		//#	Initializing node												  #
+		//#####################################################################
+		
 		log.info("Initizalizing Node...");
-		if (registries == null) {
-			registries = loadRegistry(log);
-			Registries.init(registries);
-		}
 		try {
 			initDefaults(log);
 		} catch (Exception e) {
@@ -174,17 +188,15 @@ public class Main {
 		}
 		UUID nodeUUID = master.getNodeUUID();
 		final CoreNodeBuilder builder = new CoreNodeBuilder(nodeUUID, master, log, workDir, config, keyPair);
-		builder.setDataHandler(repoHandler);
-		if (!isMaster)
-			builder.getDataHandler().addRepos(master.getRepositories());
-		log.info("Loading core modules...");
+		
+		// load remote plugins
 		Collection<RepositoryEntry> entries = null;
 		try {
-			entries = repoHandler.getEntries(builder.getModules()).get();
+			entries = Atlas.getDataHandler().getEntries(builder.getModules()).get();
 		} catch (Exception e) {
 			log.error("Error while fetching data for modules!", e);
 		}
-		File tmpCoremodulDir = new File(workDir, "tmp/modules/");
+		File tmpCoremodulDir = new File(Atlas.getWorkdir(), "tmp/modules/");
 		tmpCoremodulDir.mkdirs();
 		if (entries != null) {
 			for (RepositoryEntry entry : entries) {
@@ -195,24 +207,17 @@ public class Main {
 				}
 			}
 		}
+		
 		loadCommands(log, workDir);
-		final CorePluginManager pmanager = new CorePluginManager(log);
-		builder.setChatFactory(new CoreChatFactory());
-		builder.setPluginManager(pmanager);
-		builder.setScheduler(new CoreAtlasScheduler());
 		builder.setServerManager(new CoreNodeServerManager(workDir));
-		builder.setMainThread(new CoreAtlasThread(log));
 		builder.setDefaultProtocol(new CoreProtocolAdapter());
-		pmanager.addLoader(new CoreJavaPluginLoader());
 		File coremodulDir = new File(workDir, "modules/");
 		coremodulDir.mkdirs();
-		pmanager.loadPlugins(coremodulDir);
-		pmanager.loadPlugins(tmpCoremodulDir);
 		LocalAtlasNode node = builder.build();
 		HandshakeProtocol.DEFAULT_PROTOCOL.setPacketIO(0x00, new CorePacketMinecraftHandshake());
 		Random rand = null;
 		log.info("Initializing Proxy...");
-		Registry<LocalProxyFactory> proxyFactories = registries.getInstanceRegistry(LocalProxyFactory.class);
+		Registry<LocalProxyFactory> proxyFactories = Registries.getInstanceRegistry(LocalProxyFactory.class);
 		final int portRange = RANDOM_PORT_RANGE_END - RANDOM_PORT_RANGE_START;
 		for (ProxyConfig cfg : builder.getProxyConfigs()) {
 			NamespacedKey proxyKey = cfg.getFactory();
@@ -261,11 +266,11 @@ public class Main {
 		}
 		builder.setConsoleSender(console);
 		node.setStatus(NodeStatus.ONLINE);
-		builder.getMainThread().runTask(() -> {
+		Atlas.getMainThread().runTask(() -> {
 			HandlerList.callEvent(new NodeInitializedEvent());
 		});
-		builder.getMainThread().start();
-		ThreadWatchdog.watch(builder.getMainThread());
+		Atlas.getMainThread().startThread();
+		ThreadWatchdog.watch(Atlas.getMainThread());
 		long endTime = System.currentTimeMillis();
 		double timeTotal = (endTime-startTime) / 1000.0;
 		log.info("{}-Node up and running after {} seconds", isMaster ? "Master" : "Minion", String.format("%,.3f", timeTotal));
@@ -274,7 +279,7 @@ public class Main {
 			HandlerList.callEvent(new CommandEvent(console, command, true));
 		}
 		try {
-			builder.getMainThread().join();
+			Atlas.getMainThread().getThread().join();
 		} catch (InterruptedException e) {}
 	}
 	
@@ -320,20 +325,22 @@ public class Main {
 		}
 	}
 
-	private static AtlasNetwork connectRemoteMaster(Log log, String masterHost, int masterPort, KeyPair keyPair) {
-		log.error("Remote master is currently not implemented in AtlasMC...");
+	private static AtlasNetwork connectRemoteMaster(String masterHost, int masterPort) {
+		Atlas.getLogger().error("Remote master is currently not implemented in AtlasMC...");
 		return null;
 	}
 
-	private static AtlasNetwork createMaster(Log log, File workDir, ConfigurationSection masterConfig, Map<String, String> arguments, KeyPair keyPair, DataRepositoryHandler repoHandler) {
-		log.info("Initialize Atlas Master Node...");
+	private static AtlasNetwork createMaster(ConfigurationSection masterConfig, Map<String, String> arguments) {
+		Atlas.getLogger().info("Initialize Atlas Master Node...");
 		if (masterConfig == null) {
-			log.error("Master configuration not found");
+			Atlas.getLogger().error("Master configuration not found");
 			return null;
 		}
-		CoreMasterBuilder builder = new CoreMasterBuilder(log, workDir, masterConfig, arguments, keyPair);
-		builder.setRepoHandler(repoHandler);
-		return builder.build();
+		Registry<BuilderFactory> builderRegistry = Registries.getInstanceRegistry(BuilderFactory.class);
+		BuilderFactory builderFactory = builderRegistry.get("atlas-core:master");
+		@SuppressWarnings("unchecked")
+		Builder<AtlasNetwork> networkBuilder = (Builder<AtlasNetwork>) builderFactory.createBuilder(masterConfig, arguments);
+		return networkBuilder.build();
 	}
 
 	private static FileConfiguration loadConfig(File workDir) throws IOException {
@@ -388,18 +395,6 @@ public class Main {
 			arguments = Map.copyOf(arguments);
 		}
 		return arguments;
-	}
-	
-	private static void initLogging(File workDir) {
-		YamlConfiguration logConfig = null;
-		try {
-			logConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(Main.class.getResourceAsStream("/log-config.yml")));
-		} catch (IOException e) {
-			System.out.println("Error while loading log-config.yml!");
-			e.printStackTrace();
-			System.exit(1);
-		}
-		Logging.init(new CoreLogHandler(workDir, logConfig));
 	}
 	
 	private static KeyPair getKeyPair(File workDir, Log log) {

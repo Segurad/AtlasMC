@@ -12,6 +12,6 @@ public interface AtlasThreadTaskFactory {
 	 * @param context
 	 * @return
 	 */
-	AtlasThreadTaskFactory createTask(String name, Object... context);
+	AtlasThreadTask createTask(String name, Object... context);
 
 }

@@ -1,6 +1,8 @@
 package de.atlasmc.tick;
 
-public interface AtlasThread {
+import de.atlasmc.util.WatchableThread;
+
+public interface AtlasThread extends WatchableThread {
 	
 	boolean addStartupHook(AtlasThreadTask task);
 	
@@ -27,5 +29,11 @@ public interface AtlasThread {
 	boolean removeShutdownHook(AtlasThreadTask task);
 	
 	boolean isRunning();
+	
+	void startThread();
+	
+	void stopThread();
+
+	void runTask(Runnable task);
 
 }

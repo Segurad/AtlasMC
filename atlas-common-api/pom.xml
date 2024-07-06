@@ -8,6 +8,44 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>atlas-common-api</artifactId>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.11.0</version>
+				<executions>
+					<!-- First execution: Compile all sources -->
+					<execution>
+						<id>default-compile</id>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+						<configuration>
+							<proc>none</proc>
+							<!-- Configuration for the first compilation (if
+							any) -->
+						</configuration>
+					</execution>
+					<!-- Second execution: Run annotation processing -->
+					<execution>
+						<id>annotation-processing</id>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<proc>only</proc>
+							<annotationProcessors>
+								<annotationProcessor>
+									de.atlasmc.registry.RegistryAnnotationProcessor</annotationProcessor>
+							</annotationProcessors>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 	<dependencies>
 		<!-- Apache-2.0 License -->
 		<dependency>
@@ -21,7 +59,7 @@
 			<artifactId>joml</artifactId>
 			<version>1.10.5</version>
 		</dependency>
-				<!-- Apache-2.0 License -->
+		<!-- Apache-2.0 License -->
 		<!-- https://github.com/google/gson -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>

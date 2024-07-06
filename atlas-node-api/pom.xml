@@ -33,17 +33,6 @@
                     </execution>
                 </executions>
             </plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.11.0</version>
-				<configuration>
-					<proc>only</proc>
-					<annotationProcessors>
-                    	<annotationProcessor>de.atlasmc.registry.RegistryAnnotationProcessor</annotationProcessor>
-                	</annotationProcessors>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 	<dependencies>

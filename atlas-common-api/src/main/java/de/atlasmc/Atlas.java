@@ -9,6 +9,7 @@ import de.atlasmc.log.Log;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginManager;
 import de.atlasmc.scheduler.Scheduler;
+import de.atlasmc.tick.AtlasThread;
 
 public class Atlas implements SyncThreadHolder {
 
@@ -21,10 +22,19 @@ public class Atlas implements SyncThreadHolder {
 	private static KeyPair keyPair;
 	private static DataRepositoryHandler dataHandler;
 	private static Atlas threadHolder;
-	private static Thread mainThread;
+	private static AtlasThread mainThread;
 	private static Plugin system;
 	
 	private Atlas() {}
+	
+	
+	static void initWorkDir(File workDir) {
+		synchronized (Atlas.class) {
+			if (Atlas.workDir != null)
+				throw new IllegalStateException("Atlas already initialized!");
+			Atlas.workDir = workDir;
+		}
+	}
 	
 	static void init(AtlasBuilder builder) {
 		synchronized (Atlas.class) {
@@ -32,7 +42,6 @@ public class Atlas implements SyncThreadHolder {
 				throw new IllegalStateException("Atlas already initialized!");
 			scheduler = builder.getScheduler();
 			logger = builder.getLogger();
-			workDir = builder.getWorkDir();
 			pluginManager = builder.getPluginManager();
 			keyPair = builder.getKeyPair();
 			dataHandler = builder.getDataHandler();
@@ -74,7 +83,7 @@ public class Atlas implements SyncThreadHolder {
 		return threadHolder;
 	}
 	
-	public static Thread getMainThread() {
+	public static AtlasThread getMainThread() {
 		return mainThread;
 	}
 

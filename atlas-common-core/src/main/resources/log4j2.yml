@@ -1,0 +1,108 @@
+Configuration:
+  status: info
+  name: AtlasMainConfig
+  properties:
+    property:
+    - name: defaultFilePattern
+      value: "%d{yyyy-MM-dd HH:mm:ss} %p\t| %al - %m%n"
+    - name: workDir
+      value: ${sys:atlas.workDir:-.}/log
+  thresholdFilter:
+    level: debug
+  appenders:
+    Console:
+    - name: defaultConsoleLog
+      target: SYSTEM_OUT
+      Filters:
+        AtlasConsoleFilter: {}
+      PatternLayout:
+        Pattern: "%d{MM-dd HH:mm:ss} %p\t| %al - %m%n"
+    - name: pluginConsoleLog
+      target: SYSTEM_OUT
+      Filters:
+        AtlasConsoleFilter: {}
+      PatternLayout:
+        Pattern: "%d{MM-dd HH:mm:ss} %p\t| [Plugin] %al - %m%n"
+    RollingRandomAccessFile:
+    - name: defaultLogFile
+      fileName: "${workDir}/latest.log"
+      filePattern: "${workDir}/log_%d{yyyy-MM-dd}.log"
+      PatternLayout:
+        Pattern: ${defaultFilePattern}
+      Policies:
+        TimeBasedTriggeringPolicy: {}
+        OnStartupTriggeringPolicy:
+          minSize: 1
+    - name: masterLogFile
+      fileName: "${workDir}/master/latest.log"
+      filePattern: "${workDir}/master/log_%d{yyyy-MM-dd}.log"
+      PatternLayout:
+        Pattern: ${defaultFilePattern}
+      Policies:
+        TimeBasedTriggeringPolicy: {}
+        OnStartupTriggeringPolicy:
+            minSize: 1
+    - name: proxyLogFile
+      fileName: "${workDir}/proxy/latest.log"
+      filePattern: "${workDir}/proxy/log_%d{yyyy-MM-dd}.log"
+      PatternLayout:
+        Pattern: ${defaultFilePattern}
+      Policies:
+        TimeBasedTriggeringPolicy: {}
+        OnStartupTriggeringPolicy:
+          minSize: 1
+    - name: serverLogFile
+      fileName: "${workDir}/server/latest.log"
+      filePattern: "${workDir}/server/log_%d{yyyy-MM-dd}.log"
+      PatternLayout:
+        Pattern: ${defaultFilePattern}
+      Policies:
+        TimeBasedTriggeringPolicy: {}
+        OnStartupTriggeringPolicy:
+          minSize: 1
+    - name: pluginLogFile
+      fileName: "${workDir}/plugin/latest.log"
+      filePattern: "${workDir}/plugin/log_%d{yyyy-MM-dd}.log"
+      PatternLayout:
+        Pattern: "%d{yyyy-MM-dd HH:mm:ss} %p\t| [Plugin] %al - %m%n"
+      Policies:
+        TimeBasedTriggeringPolicy: {}
+        OnStartupTriggeringPolicy:
+          minSize: 1
+ 
+  Loggers:
+    logger:
+    - name: Atlas-Master
+      level: debug
+      additivity: false
+      AppenderRef:
+      - ref: masterLogFile
+      - ref: defaultConsoleLog
+    - name: Atlas
+      level: debug
+      additivity: false
+      AppenderRef:
+      - ref: defaultLogFile
+      - ref: defaultConsoleLog
+    - name: Proxy
+      level: debug
+      additivity: false
+      AppenderRef:
+      - ref: proxyLogFile
+      - ref: defaultConsoleLog
+    - name: Server
+      level: debug
+      additivity: false
+      AppenderRef:
+      - ref: serverLogFile
+      - ref: defaultConsoleLog
+    - name: Plugin
+      level: debug
+      additivity: false
+      AppenderRef:
+      - ref: pluginLogFile
+      - ref: pluginConsoleLog
+    Root:
+      level: info
+      AppenderRef:
+        ref: defaultConsoleLog

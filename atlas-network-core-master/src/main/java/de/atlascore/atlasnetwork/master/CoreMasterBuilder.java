@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.security.KeyPair;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -27,6 +26,7 @@ import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
 
 import de.atlascore.atlasnetwork.CoreNetworkInfo;
 import de.atlascore.atlasnetwork.CorePermissionProvider;
+import de.atlascore.atlasnetwork.CorePlayerProfileHandler;
 import de.atlascore.atlasnetwork.master.server.CoreServerGroup;
 import de.atlascore.atlasnetwork.master.server.CoreServerManager;
 import de.atlascore.chat.CoreChat;
@@ -34,12 +34,10 @@ import de.atlascore.permission.CorePermission;
 import de.atlascore.permission.CorePermissionContext;
 import de.atlascore.permission.CorePermissionGroup;
 import de.atlasmc.Atlas;
-import de.atlasmc.atlasnetwork.NetworkInfo;
 import de.atlasmc.atlasnetwork.NetworkInfo.SlotMode;
 import de.atlasmc.atlasnetwork.NodeConfig;
 import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.chat.ChatColor;
-import de.atlasmc.datarepository.DataRepositoryHandler;
 import de.atlasmc.log.Log;
 import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionContext;
@@ -64,7 +62,8 @@ public class CoreMasterBuilder implements Builder<CoreAtlasNetwork> {
 	private SQLConnectionPool con;
 	private String schema;
 	private final ConfigurationSection masterConfig;
-	private NetworkInfo info, infoMaintenance;
+	private CoreNetworkInfo info;
+	private CoreNetworkInfo infoMaintenance;
 	private int slots;
 	private boolean maintenance;
 	private CoreServerGroup fallBack;
@@ -72,23 +71,19 @@ public class CoreMasterBuilder implements Builder<CoreAtlasNetwork> {
 	private Map<String, NodeConfig> nodeConfigs;
 	private Map<String, ProxyConfig> proxyConfigs;
 	boolean override = false;
-	private final KeyPair keyPair;
-	private DataRepositoryHandler repoHandler;
+	private CoreServerManager serverManager;
+	private CorePlayerProfileHandler profileHandler;
+	private CorePermissionProvider permissionProvider;
+	private UUID nodeID;
 	
-	public CoreMasterBuilder(Log log, File workDir, ConfigurationSection masterConfig, Map<String, String> arguments, KeyPair keyPair) {
-		this.log = log;
-		this.workDir = workDir;
+	public CoreMasterBuilder(ConfigurationSection masterConfig, Map<String, String> arguments) {
+		this.log = Atlas.getLogger();
+		this.workDir = Atlas.getWorkdir();
 		this.arguments = arguments;
 		this.masterConfig = masterConfig;
-		this.keyPair = keyPair;
 		this.serverGroups = new HashMap<>();
 		this.nodeConfigs = new HashMap<>();
 		this.proxyConfigs = new HashMap<>();
-	}
-	
-	public CoreMasterBuilder setRepoHandler(DataRepositoryHandler repoHandler) {
-		this.repoHandler = repoHandler;
-		return this;
 	}
 
 	public CoreAtlasNetwork build() {
@@ -131,7 +126,7 @@ public class CoreMasterBuilder implements Builder<CoreAtlasNetwork> {
 		loadPermissions(permissionCfgFile);
 		
 		File nodeIDFile = new File(workDir, "node-id.yml");
-		UUID nodeID = null;
+		nodeID = null;
 		if (nodeIDFile.exists()) {
 			YamlConfiguration nodeIDCfg = null;
 			try {
@@ -156,10 +151,10 @@ public class CoreMasterBuilder implements Builder<CoreAtlasNetwork> {
 			}
 		}
 		
-		CoreServerManager smanager = new CoreServerManager(fallBack, serverGroups);
-		CoreSQLPlayerProfileHandler profileHandler = new CoreSQLPlayerProfileHandler(con);
-		CorePermissionProvider permProvider = new CoreSQLPermissionProvider(con);
-		return new CoreAtlasNetwork(profileHandler, permProvider, info, infoMaintenance, slots, maintenance, smanager, nodeConfigs, proxyConfigs, repoHandler, keyPair, nodeID);
+		serverManager = new CoreServerManager(fallBack, serverGroups);
+		profileHandler = new CoreSQLPlayerProfileHandler(con);
+		permissionProvider = new CoreSQLPermissionProvider(con);
+		return new CoreAtlasNetwork(this);
 	}
 	
 	private void loadServerGroups(File file) {
@@ -235,7 +230,7 @@ public class CoreMasterBuilder implements Builder<CoreAtlasNetwork> {
 		maintenance = cfg.getBoolean("maintenance");
 	}
 	
-	private NetworkInfo loadNetworkInfo(ConfigurationSection config, String serverIcon) {
+	private CoreNetworkInfo loadNetworkInfo(ConfigurationSection config, String serverIcon) {
 		int slots = config.getInt("slots");
 		int slotDistance = config.getInt("slot-distance");
 		String rawSlotMode = config.getString("slot-mode");
@@ -646,6 +641,46 @@ public class CoreMasterBuilder implements Builder<CoreAtlasNetwork> {
 	public void clear() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public CorePlayerProfileHandler getProfileHandler() {
+		return profileHandler;
+	}
+
+	public CorePermissionProvider getPermissionProvider() {
+		return permissionProvider;
+	}
+
+	public CoreNetworkInfo getNetworkInfo() {
+		return info;
+	}
+
+	public CoreNetworkInfo getNetworkInfoMaintenance() {
+		return infoMaintenance;
+	}
+
+	public int getSlots() {
+		return slots;
+	}
+
+	public boolean isMaintenance() {
+		return maintenance;
+	}
+
+	public CoreServerManager getServerManager() {
+		return serverManager;
+	}
+
+	public Map<String, ProxyConfig> getProxyConfigs() {
+		return proxyConfigs;
+	}
+
+	public Map<String, NodeConfig> getNodeConfigs() {
+		return nodeConfigs;
+	}
+
+	public UUID getNodeID() {
+		return nodeID;
 	}
 
 }

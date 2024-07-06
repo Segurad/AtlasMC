@@ -5,7 +5,7 @@ commands:
   - dd
   - d
   cmd-description: "Utility for developers and administrators working with atlas"
-  allowed-sources: CONSOLE
+  allowed-source: atlas:console
   permission: atlas.debug
   args:
   - type: literal

@@ -12,6 +12,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import de.atlascore.CoreLocalAtlasNode;
+import de.atlasmc.Atlas;
 import de.atlasmc.AtlasNode;
 import de.atlasmc.LocalAtlasNode;
 import de.atlasmc.NamespacedKey;
@@ -20,36 +21,24 @@ import de.atlasmc.atlasnetwork.NodeConfig;
 import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.atlasnetwork.server.ServerManager;
-import de.atlasmc.chat.ChatFactory;
-import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.command.ConsoleCommandSender;
-import de.atlasmc.datarepository.DataRepositoryHandler;
 import de.atlasmc.io.protocol.ProtocolAdapter;
 import de.atlasmc.log.Log;
 import de.atlasmc.plugin.NodeBuilder;
-import de.atlasmc.plugin.PluginManager;
-import de.atlasmc.scheduler.Scheduler;
 import de.atlasmc.server.NodeServerManager;
-import de.atlasmc.tick.TickingThread;
 import de.atlasmc.util.configuration.Configuration;
 
 public class CoreNodeBuilder implements NodeBuilder {
 	
-	private KeyPair keyPair;
 	private Log log;
 	private AtlasNetwork network;
-	private Scheduler scheduler;
 	private File workdir;
-	private DataRepositoryHandler dataHandler;
-	private ChatFactory chatFactory;
 	private ProtocolAdapter defaultProtocol;
 	private List<ProtocolAdapter> protAdapter;
 	private Map<String, NodeConfig> nodeConfigs;
 	private Map<String, ProxyConfig> proxyConfigs;
 	private Map<String, ServerGroup> serverGroups;
 	private Set<NamespacedKey> modules;
-	private PluginManager pluginManager;
-	private TickingThread mainThread;
 	private ConsoleCommandSender console;
 	private NodeServerManager serverManager;
 	private final UUID uuid;
@@ -57,8 +46,7 @@ public class CoreNodeBuilder implements NodeBuilder {
 	public CoreNodeBuilder(UUID uuid, AtlasNetwork network, Log logger, File workdir, Configuration config, KeyPair keyPair) {
 		this.uuid = uuid;
 		this.network = network;
-		this.log = logger;
-		this.keyPair = keyPair;
+		this.log = Atlas.getLogger();
 		this.workdir = workdir;
 		this.nodeConfigs = new HashMap<>();
 		this.proxyConfigs = new HashMap<>();
@@ -132,50 +120,6 @@ public class CoreNodeBuilder implements NodeBuilder {
 	}
 	
 	@Override
-	public TickingThread getMainThread() {
-		return mainThread;
-	}
-	
-	@Override
-	public CoreNodeBuilder setMainThread(TickingThread mainThread) {
-		this.mainThread = mainThread;
-		return this;
-	}
-	
-	@Override
-	public PluginManager getPluginManager() {
-		return pluginManager;
-	}
-	
-	@Override
-	public CoreNodeBuilder setPluginManager(PluginManager pluginManager) {
-		this.pluginManager = pluginManager;
-		return this;
-	}
-	
-	@Override
-	public CoreNodeBuilder setDataHandler(DataRepositoryHandler dataHandler) {
-		this.dataHandler = dataHandler;
-		return this;
-	}
-	
-	@Override
-	public DataRepositoryHandler getDataHandler() {
-		return dataHandler;
-	}
-	
-	@Override
-	public Scheduler getScheduler() {
-		return scheduler;
-	}
-	
-	@Override
-	public CoreNodeBuilder setScheduler(Scheduler scheduler) {
-		this.scheduler = scheduler;
-		return this;
-	}
-	
-	@Override
 	public ProtocolAdapter getDefaultProtocol() {
 		return defaultProtocol;
 	}
@@ -187,35 +131,18 @@ public class CoreNodeBuilder implements NodeBuilder {
 	}
 	
 	@Override
-	public KeyPair getKeyPair() {
-		return keyPair;
-	}
-	
-	@Override
 	public LocalAtlasNode build() {
 		if (network == null)
 			throw new IllegalStateException("Can not build Atlas without defined AtlasNetwork");
 		LocalAtlasNode node = new CoreLocalAtlasNode(this);
 		node.getProtocolAdapterHandler().setProtocol(defaultProtocol);
 		AtlasNode.init(node, network);
-		ChatUtil.init(chatFactory);
 		return node;
 	}
 
 	@Override
 	public Collection<ProxyConfig> getProxyConfigs() {
 		return proxyConfigs.values();
-	}
-
-	@Override
-	public CoreNodeBuilder setChatFactory(ChatFactory chatFactory) {
-		this.chatFactory = chatFactory;
-		return this;
-	}
-	
-	@Override
-	public ChatFactory getChatFactory() {
-		return chatFactory;
 	}
 	
 	public Set<NamespacedKey> getModules() {

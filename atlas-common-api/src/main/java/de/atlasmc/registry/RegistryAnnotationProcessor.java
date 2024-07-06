@@ -30,7 +30,7 @@ import de.atlasmc.util.configuration.file.YamlConfiguration;
 @SupportedAnnotationTypes({ 
 		"de.atlasmc.registry.RegistryHolder",
 		"de.atlasmc.registry.RegistryValue"})
-@SupportedSourceVersion(SourceVersion.RELEASE_17)
+@SupportedSourceVersion(SourceVersion.RELEASE_21)
 public class RegistryAnnotationProcessor extends AbstractProcessor {
 
 	private Map<String, String> registries;

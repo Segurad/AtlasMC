@@ -184,8 +184,10 @@ public class Commands {
 		String description = config.getString("description");
 		arg.setDescription(description);
 		String allowedSource = config.getString("allowed-source");
-		CommandSourceValidator validator = Registries.getInstanceRegistry(CommandSourceValidator.class).get(allowedSource);
-		arg.setSenderValidator(validator);
+		if (allowedSource != null) {
+			CommandSourceValidator validator = Registries.getInstanceRegistry(CommandSourceValidator.class).get(allowedSource);
+			arg.setSenderValidator(validator);
+		}
 	}
 	
 	private static LiteralCommandArg loadLiteralArg(ConfigurationSection config, Map<String, CommandArg> templates) {

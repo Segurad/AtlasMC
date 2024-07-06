@@ -8,6 +8,7 @@ import de.atlasmc.log.Log;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginManager;
 import de.atlasmc.scheduler.Scheduler;
+import de.atlasmc.tick.AtlasThread;
 import de.atlasmc.util.Builder;
 
 public final class AtlasBuilder implements Builder<Boolean> {
@@ -18,7 +19,7 @@ public final class AtlasBuilder implements Builder<Boolean> {
 	private PluginManager pluginManager;
 	private KeyPair keyPair;
 	private DataRepositoryHandler dataHandler;
-	private Thread mainThread;
+	private AtlasThread mainThread;
 	private Plugin system;
 	
 	@Override
@@ -91,11 +92,11 @@ public final class AtlasBuilder implements Builder<Boolean> {
 		return this;
 	}
 	
-	public Thread getMainThread() {
+	public AtlasThread getMainThread() {
 		return mainThread;
 	}
 	
-	public AtlasBuilder setMainThread(Thread mainThread) {
+	public AtlasBuilder setMainThread(AtlasThread mainThread) {
 		this.mainThread = mainThread;
 		return this;
 	}
@@ -107,6 +108,10 @@ public final class AtlasBuilder implements Builder<Boolean> {
 	public AtlasBuilder setSystem(Plugin system) {
 		this.system = system;
 		return this;
+	}
+
+	public static void initWorkDir(File workDir) {
+		Atlas.initWorkDir(workDir);
 	}
 
 }

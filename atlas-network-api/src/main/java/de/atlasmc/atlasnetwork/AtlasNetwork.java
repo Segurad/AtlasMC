@@ -26,6 +26,8 @@ public interface AtlasNetwork extends Tickable {
 
 	int getOnlinePlayerCount();
 
+	int getMaxPlayers();
+	
 	NetworkInfo getNetworkInfo();
 
 	NetworkInfo getNetworkInfoMaintenance();

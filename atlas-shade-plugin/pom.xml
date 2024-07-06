@@ -11,7 +11,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.atlas-project</groupId>
-			<artifactId>atlas-node-api</artifactId>
+			<artifactId>atlas-common-api</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
