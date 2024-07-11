@@ -16,6 +16,13 @@ public class NBTIOReader extends AbstractNBTIOReader {
 		this(in, false);
 	}
 	
+	/**
+	 * Creates a new NBTIOReader
+	 * Unnamed root components are root compound tags without name and name length.
+	 * Unnamed roots are only used in java protocol since version 764.
+	 * @param in
+	 * @param unnamedRoot
+	 */
 	public NBTIOReader(InputStream in, boolean unnamedRoot) {
 		super(unnamedRoot);
 		if (in == null) 
@@ -25,8 +32,10 @@ public class NBTIOReader extends AbstractNBTIOReader {
 	
 	@Override
 	protected void ioMark() {
-		if (buf == null) buf = new ByteDataBuffer();
-		else buf.clear();
+		if (buf == null) 
+			buf = new ByteDataBuffer();
+		else 
+			buf.clear();
 		writeBuf = true;
 	}
 
@@ -43,7 +52,8 @@ public class NBTIOReader extends AbstractNBTIOReader {
 		int val = in.read() << 8 | in.read();
 		val = val << 8 | in.read();
 		val = val << 8 | in.read();
-		if (writeBuf) buf.writeInt(val);
+		if (writeBuf) 
+			buf.writeInt(val);
 		return val;
 	}
 
@@ -52,16 +62,18 @@ public class NBTIOReader extends AbstractNBTIOReader {
 		if (readBuf())
 			return buf.readByte();
 		byte val = (byte) in.read();
-		if (writeBuf) buf.writeByte(val);
+		if (writeBuf) 
+			buf.writeByte(val);
 		return val;
 	}
 
 	@Override
-	protected void ioReadBytes(byte[] buffer) throws IOException {
+	protected void ioReadBytes(byte[] buffer, int off, int length) throws IOException {
 		if (readBuf())
-			buf.readFully(buffer);
-		in.read(buffer);
-		if (writeBuf) buf.write(buffer);
+			buf.readFully(buffer, off, length);
+		in.read(buffer, off, length);
+		if (writeBuf) 
+			buf.write(buffer, off, length);
 	}
 
 	@Override
@@ -69,7 +81,8 @@ public class NBTIOReader extends AbstractNBTIOReader {
 		if (readBuf())
 			return buf.readShort();
 		int val = in.read() << 8 | in.read();
-		if (writeBuf) buf.writeShort(val);
+		if (writeBuf) 
+			buf.writeShort(val);
 		return (short) val;
 	}
 
@@ -84,7 +97,8 @@ public class NBTIOReader extends AbstractNBTIOReader {
 		val = val << 8 | in.read();
 		val = val << 8 | in.read();
 		val = val << 8 | in.read();
-		if (writeBuf) buf.writeLong(val);
+		if (writeBuf) 
+			buf.writeLong(val);
 		return val;
 	}
 
@@ -100,7 +114,8 @@ public class NBTIOReader extends AbstractNBTIOReader {
 	
 	private boolean readBuf() {
 		if (readBuf) {
-			if (buf.readableBytes() > 0) return true;
+			if (buf.readableBytes() > 0) 
+				return true;
 			readBuf = false;
 		}
 		return false;

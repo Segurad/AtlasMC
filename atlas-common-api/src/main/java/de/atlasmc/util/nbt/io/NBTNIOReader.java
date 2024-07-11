@@ -1,6 +1,7 @@
 package de.atlasmc.util.nbt.io;
 
 import java.io.IOException;
+
 import io.netty.buffer.ByteBuf;
 
 public class NBTNIOReader extends AbstractNBTIOReader {
@@ -11,6 +12,13 @@ public class NBTNIOReader extends AbstractNBTIOReader {
 		this(in, false);
 	}
 	
+	/**
+	 * Creates a new NBTNIOReader
+	 * Unnamed root components are root compound tags without name and name length.
+	 * Unnamed roots are only used in java protocol since version 764.
+	 * @param in
+	 * @param unnamedRoot
+	 */
 	public NBTNIOReader(ByteBuf in, boolean unnamedRoot) {
 		super(unnamedRoot);
 		if (in == null) 
@@ -39,8 +47,8 @@ public class NBTNIOReader extends AbstractNBTIOReader {
 	}
 
 	@Override
-	protected void ioReadBytes(byte[] buffer) {
-		in.readBytes(buffer);
+	protected void ioReadBytes(byte[] buffer, int off, int length) {
+		in.readBytes(buffer, off, length);
 	}
 
 	@Override

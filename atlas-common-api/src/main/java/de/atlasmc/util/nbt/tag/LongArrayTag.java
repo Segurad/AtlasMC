@@ -1,6 +1,7 @@
 package de.atlasmc.util.nbt.tag;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
@@ -51,7 +52,7 @@ public final class LongArrayTag extends AbstractTag {
 		if (data == null) {
 			if (other.data != null)
 				return false;
-		} else if (!data.equals(other.data))
+		} else if (!Arrays.equals(data, other.data))
 			return false;
 		return true;
 	}

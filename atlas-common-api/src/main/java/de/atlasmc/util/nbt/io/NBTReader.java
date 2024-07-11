@@ -99,7 +99,17 @@ public interface NBTReader extends Closeable {
 	 */
 	TagType getType() throws IOException;
 	
+	/**
+	 * Returns whether or not the current tag is a array tag
+	 * @return true if array tag
+	 */
 	boolean isArrayTag();
+	
+	/**
+	 * Returns whether or not the next element is a entry of a list tag
+	 * @return true if list
+	 */
+	boolean isList();
 	
 	/**
 	 * Returns the number of remaining elements of the current array tag.
@@ -235,5 +245,12 @@ public interface NBTReader extends Closeable {
 	 * @throws IOException 
 	 */
 	void search(CharSequence key, TagType type, boolean list) throws IOException;
+	
+	/**
+	 * Reads the current tag as number
+	 * @return number
+	 * @throws IOException
+	 */
+	Number readNumber() throws IOException;
 
 }

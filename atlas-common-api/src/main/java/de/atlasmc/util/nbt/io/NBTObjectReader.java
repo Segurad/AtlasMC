@@ -3,7 +3,6 @@ package de.atlasmc.util.nbt.io;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 import java.util.function.IntConsumer;
 import java.util.function.LongConsumer;
 
@@ -14,7 +13,7 @@ import de.atlasmc.util.nbt.tag.EndTag;
 import de.atlasmc.util.nbt.tag.ListTag;
 import de.atlasmc.util.nbt.tag.NBT;
 
-public class NBTObjectReader implements NBTReader {
+public class NBTObjectReader extends AbstractNBTReader {
 
 	private NBT current;
 	private StackElement stack;
@@ -209,17 +208,6 @@ public class NBTObjectReader implements NBTReader {
 	}
 
 	@Override
-	public UUID readUUID() throws IOException {
-		ensureOpen();
-		if (getType() != TagType.INT_ARRAY)
-			throw new NBTException("Can not read as IntArrayTag: " + getType().name());
-		int[] values = (int[]) current.getData();
-		long most = (values[0] << 32) | values[1];
-		long least = (values[2] << 32) | values[3];
-		return new UUID(most, least);
-	}
-
-	@Override
 	public void skipTag() throws IOException {
 		ensureOpen();
 		prepareTag();
@@ -255,24 +243,6 @@ public class NBTObjectReader implements NBTReader {
 		marked = false;
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public void search(CharSequence key, TagType stype, boolean slist) throws IOException {
-		ensureOpen();
-		final int depth = getDepth();
-		while (depth <= getDepth()) {
-			// check if current tag is the result
-			if ((key == null || current.getName().equals(key)) && 
-					(stype == null || !slist ? stype == getType() 
-					: getType() == TagType.LIST && stype == ((ListTag<NBT>) current).getDataType())) break; // breaks if search result == true
-			// --- Skip to next ---
-			// Handle Compound, List(Compound) and List(List)
-			if (getType() == TagType.COMPOUND || (getType() == TagType.LIST && (((ListTag<NBT>) current).getDataType() == TagType.COMPOUND || ((ListTag<NBT>) current).getDataType() == TagType.LIST))) {
-				readNextEntry(); // progress to first element of list or compound
-			} else skipTag(); // progress to next
-		}
-	}
-
 	@Override
 	public void close() {
 		if (closed)
@@ -287,25 +257,6 @@ public class NBTObjectReader implements NBTReader {
 	protected final void ensureOpen() throws IOException {
 		if (closed)
 			throw new IOException("Stream closed!");
-	}
-
-	@Override
-	public void skipToEnd() throws IOException {
-		final int depth = getDepth();
-		while (depth <= getDepth()) {
-			if (getType() == TagType.TAG_END && depth == getDepth())
-				readNextEntry();
-			else
-				skipTag();
-		}
-	}
-
-	@Override
-	public boolean isArrayTag() {
-		final TagType type = getType();
-		return type == TagType.BYTE_ARRAY ||
-				type == TagType.INT_ARRAY ||
-				type == TagType.LONG_ARRAY;
 	}
 
 	@Override
@@ -458,6 +409,11 @@ public class NBTObjectReader implements NBTReader {
 			mark = -1;
 		}
 		
+	}
+
+	@Override
+	public boolean isList() {
+		return current.getType() == TagType.LIST;
 	}
 
 }

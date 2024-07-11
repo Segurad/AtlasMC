@@ -70,6 +70,8 @@ public class CharKeyBuffer extends CharKey {
 	
 	public void clear() {
 		length = 0;
+		hash = 0;
+		text = null;
 	}
 	
 	@Override
@@ -86,7 +88,7 @@ public class CharKeyBuffer extends CharKey {
 
 	@Override
 	public CharSequence subSequence(int start, int end) {
-		return new ImmutableCharKey(buf, 0, length);
+		return new ImmutableCharKey(buf, start, end);
 	}
 
 	@Override
@@ -99,9 +101,8 @@ public class CharKeyBuffer extends CharKey {
 	 * @param length
 	 */
 	protected void ensureSize(int length) {
-		if (length > 0)
-			hash = 0;
 		text = null;
+		hash = 0;
 		if (buf.length >= this.length + length)
 			return;
 		buf = Arrays.copyOf(buf, (int) ((buf.length + length) * 1.75));

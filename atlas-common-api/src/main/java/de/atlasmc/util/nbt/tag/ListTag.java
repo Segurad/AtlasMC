@@ -113,10 +113,12 @@ public final class ListTag<T extends NBT> extends AbstractTag implements Iterabl
 		if (data == null) {
 			if (other.data != null)
 				return false;
-		} else if (!data.equals(other.data))
+		} else if (!data.equals(other.data)) {
 			return false;
-		if (datatype == other.datatype)
+		}
+		if (datatype != other.datatype) {
 			return false;
+		}
 		return true;
 	}
 

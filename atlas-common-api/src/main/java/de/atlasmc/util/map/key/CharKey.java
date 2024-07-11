@@ -103,4 +103,9 @@ public abstract class CharKey implements CharSequence {
 		CACHE.clear();
 	}
 
+	@Override
+	public String toString() {
+		return new String(getBuf(), 0, length());
+	}
+	
 }

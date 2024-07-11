@@ -28,5 +28,10 @@ public class CharKeyBufferView extends CharKey {
 	protected final char[] getBuf() {
 		return buf.getBuf();
 	}
+	
+	@Override
+	public String toString() {
+		return buf.toString();
+	}
 
 }

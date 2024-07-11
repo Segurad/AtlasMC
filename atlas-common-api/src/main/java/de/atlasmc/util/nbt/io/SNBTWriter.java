@@ -6,8 +6,6 @@ import java.util.UUID;
 import java.util.function.LongSupplier;
 
 import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.tag.CompoundTag;
-import de.atlasmc.util.nbt.tag.ListTag;
 import de.atlasmc.util.nbt.tag.NBT;
 
 /**
@@ -23,6 +21,7 @@ public class SNBTWriter implements NBTWriter {
 	private boolean removeList;
 	
 	public SNBTWriter(Writer out) {
+		depth = -1;
 		this.out = out;
 	}
 
@@ -43,7 +42,7 @@ public class SNBTWriter implements NBTWriter {
 	public void writeByteTag(CharSequence name, int value) throws IOException {
 		prepareTag(TagType.BYTE, name);
 		out.write(Byte.toString((byte) value));
-		out.write('B');
+		out.write('b');
 		removeList();
 	}
 
@@ -51,7 +50,7 @@ public class SNBTWriter implements NBTWriter {
 	public void writeShortTag(CharSequence name, int value) throws IOException {
 		prepareTag(TagType.SHORT, name);
 		out.write(Short.toString((short) value));
-		out.write('S');
+		out.write('s');
 		removeList();
 	}
 
@@ -74,7 +73,7 @@ public class SNBTWriter implements NBTWriter {
 	public void writeFloatTag(CharSequence name, float value) throws IOException {
 		prepareTag(TagType.FLOAT, name);
 		out.write(Float.toString(value));
-		out.write('F');
+		out.write('f');
 		removeList();
 	}
 
@@ -82,7 +81,7 @@ public class SNBTWriter implements NBTWriter {
 	public void writeDoubleTag(CharSequence name, double value) throws IOException {
 		prepareTag(TagType.DOUBLE, name);
 		out.write(Double.toString(value));
-		out.write('D');
+		out.write('d');
 		removeList();
 	}
 	
@@ -101,6 +100,7 @@ public class SNBTWriter implements NBTWriter {
 			else
 				separator = true;
 			out.write(Byte.toString(data[o]));
+			out.write('b');
 		}
 		out.write(']');
 		removeList();
@@ -164,6 +164,7 @@ public class SNBTWriter implements NBTWriter {
 	public void writeCompoundTag(CharSequence name) throws IOException {
 		prepareTag(TagType.COMPOUND, name);
 		separator = false;
+		depth++;
 		out.write('{');
 	}
 
@@ -234,56 +235,7 @@ public class SNBTWriter implements NBTWriter {
 		ensureOpen();
 		if (nbt == null) 
 			throw new IllegalArgumentException("NBT can not be null!");
-		TagType type = nbt.getType();
-		switch (type) {
-		case BYTE: 
-			writeByteTag(nbt.getName(), (int) nbt.getData());
-			break;
-		case BYTE_ARRAY:
-			writeByteArrayTag(nbt.getName(), (byte[]) nbt.getData());
-			break;
-		case COMPOUND:
-			CompoundTag tag = (CompoundTag) nbt;
-			writeCompoundTag(tag.getName());
-			for (NBT entry : tag) {
-				writeNBT(entry);
-			}
-			writeEndTag();
-			break;
-		case DOUBLE:
-			writeDoubleTag(nbt.getName(), (double) nbt.getData());
-			break;
-		case FLOAT:
-			writeFloatTag(nbt.getName(), (float) nbt.getData());
-			break;
-		case INT:
-			writeFloatTag(nbt.getName(), (float) nbt.getData());
-			break;
-		case INT_ARRAY:
-			writeIntArrayTag(nbt.getName(), (int[]) nbt.getData());
-			break;
-		case LIST:
-			@SuppressWarnings("unchecked") ListTag<NBT> listTag = (ListTag<NBT>) nbt;
-			writeListTag(listTag.getName(), listTag.getDataType(), listTag.size());
-			for (NBT entry : listTag) {
-				writeNBT(entry);
-			}
-			break;
-		case LONG:
-			writeLongTag(nbt.getName(), (long) nbt.getData());
-			break;
-		case LONG_ARRAY:
-			writeLongArrayTag(nbt.getName(), (long[]) nbt.getData());
-			break;
-		case SHORT:
-			writeShortTag(nbt.getName(), (int) nbt.getData());
-			break;
-		case STRING:
-			writeStringTag(nbt.getName(), (String) nbt.getData());
-			break;
-		default:
-			break;
-		}
+		nbt.toNBT(this, true);
 	}
 
 	@Override
@@ -311,16 +263,25 @@ public class SNBTWriter implements NBTWriter {
 			} else 
 				throw new IOException("Max Listpayload reached!");
 		}
-		if (separator)
-			if (type != TagType.TAG_END)
+		if (separator) {
+			if (type != TagType.TAG_END) {
 				out.write(',');
-		else
+			}
+		} else {
 			separator = true;
+		}
 		if (name == null) 
 			return;
 		final int length = name.length();
-		for (int i = 0; i < length; i++)
-			out.write(name.charAt(i));
+		if (length > 0) {
+			for (int i = 0; i < length; i++)
+				out.write(name.charAt(i));
+		} else {
+			if (type == TagType.COMPOUND && depth == -1)
+				return;
+			out.write('"');
+			out.write('"');
+		}
 		out.write(':');
 	}
 	

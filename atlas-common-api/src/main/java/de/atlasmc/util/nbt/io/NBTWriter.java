@@ -10,54 +10,54 @@ import de.atlasmc.util.nbt.tag.NBT;
 
 public interface NBTWriter extends Closeable {
 	
-	public void writeEndTag() throws IOException;
+	void writeEndTag() throws IOException;
 	
-	public void writeByteTag(CharSequence name, int value) throws IOException;
+	void writeByteTag(CharSequence name, int value) throws IOException;
 	
-	public default void writeByteTag(CharSequence name, boolean value) throws IOException {
+	default void writeByteTag(CharSequence name, boolean value) throws IOException {
 		writeByteTag(name, value ? 1 : 0);
 	}
 	
-	public void writeShortTag(CharSequence name, int value) throws IOException;
+	void writeShortTag(CharSequence name, int value) throws IOException;
 	
-	public void writeIntTag(CharSequence name, int value) throws IOException;
+	void writeIntTag(CharSequence name, int value) throws IOException;
 	
-	public void writeLongTag(CharSequence name, long value) throws IOException;
+	void writeLongTag(CharSequence name, long value) throws IOException;
 	
-	public void writeFloatTag(CharSequence name, float value) throws IOException;
+	void writeFloatTag(CharSequence name, float value) throws IOException;
 	
-	public void writeDoubleTag(CharSequence name, double value) throws IOException;
+	void writeDoubleTag(CharSequence name, double value) throws IOException;
 	
-	public default void writeByteArrayTag(CharSequence name, byte[] data) throws IOException {
+	default void writeByteArrayTag(CharSequence name, byte[] data) throws IOException {
 		if (data == null)
 			throw new IllegalArgumentException("Data can not be null!");
 		writeByteArrayTag(name, data, 0, data.length);
 	}
 	
-	public void writeByteArrayTag(CharSequence name, byte[] data, int offset, int length) throws IOException;
+	void writeByteArrayTag(CharSequence name, byte[] data, int offset, int length) throws IOException;
 	
-	public void writeStringTag(CharSequence name, String value) throws IOException;
+	void writeStringTag(CharSequence name, String value) throws IOException;
 	
-	public void writeListTag(CharSequence name, TagType payloadType, int payloadsize) throws IOException;
+	void writeListTag(CharSequence name, TagType payloadType, int payloadsize) throws IOException;
 	
-	public default void writeCompoundTag() throws IOException {
+	default void writeCompoundTag() throws IOException {
 		writeCompoundTag(null);
 	}
 	
-	public void writeCompoundTag(CharSequence name) throws IOException;
+	void writeCompoundTag(CharSequence name) throws IOException;
 	
-	public default void writeEmptyCompound(CharSequence name) throws IOException {
+	default void writeEmptyCompound(CharSequence name) throws IOException {
 		writeCompoundTag(name);
 		writeEndTag();
 	}
 	
-	public default void writeIntArrayTag(CharSequence name, int[] data) throws IOException {
+	default void writeIntArrayTag(CharSequence name, int[] data) throws IOException {
 		if (data == null)
 			throw new IllegalArgumentException("Data can not be null!");
 		writeIntArrayTag(name, data, 0, data.length);
 	}
 	
-	public void writeIntArrayTag(CharSequence name, int[] data, int offset, int length) throws IOException;
+	void writeIntArrayTag(CharSequence name, int[] data, int offset, int length) throws IOException;
 	
 	/**
 	 * Writes a UUID as IntArrayTag
@@ -65,18 +65,18 @@ public interface NBTWriter extends Closeable {
 	 * @param uuid
 	 * @throws IOException
 	 */
-	public void writeUUID(CharSequence name, UUID uuid) throws IOException;
+	void writeUUID(CharSequence name, UUID uuid) throws IOException;
 	
-	public default void writeLongArrayTag(CharSequence name, long[] data) throws IOException {
+	default void writeLongArrayTag(CharSequence name, long[] data) throws IOException {
 		if (data == null)
 			throw new IllegalArgumentException("Data can not be null!");
 		writeLongArrayTag(name, data, 0, data.length);
 	}
 	
-	public void writeLongArrayTag(CharSequence name, long[] data, int offset, int length) throws IOException;
+	void writeLongArrayTag(CharSequence name, long[] data, int offset, int length) throws IOException;
 	
-	public void writeLongArrayTag(CharSequence name, int length, LongSupplier supplier) throws IOException;
+	void writeLongArrayTag(CharSequence name, int length, LongSupplier supplier) throws IOException;
 	
-	public void writeNBT(NBT nbt) throws IOException;
+	void writeNBT(NBT nbt) throws IOException;
 	
 }

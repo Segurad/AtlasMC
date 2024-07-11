@@ -17,8 +17,8 @@ public final class ImmutableCharKey extends CharKey {
 		this(chars, 0, chars.length);
 	}
 	
-	public ImmutableCharKey(char[] chars, int offset, int length) {
-		buf = Arrays.copyOfRange(chars, offset, offset+length);
+	public ImmutableCharKey(char[] chars, int offset, int end) {
+		buf = Arrays.copyOfRange(chars, offset, end);
 	}
 
 	@Override

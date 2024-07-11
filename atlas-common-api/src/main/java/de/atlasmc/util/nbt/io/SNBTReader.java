@@ -2,23 +2,18 @@ package de.atlasmc.util.nbt.io;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.UUID;
 import java.util.function.IntConsumer;
 import java.util.function.LongConsumer;
 import java.util.regex.Pattern;
 
 import de.atlasmc.util.map.key.CharKeyBuffer;
-import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.tag.CompoundTag;
-import de.atlasmc.util.nbt.tag.ListTag;
-import de.atlasmc.util.nbt.tag.NBT;
 
 /**
  * {@link NBTReader} implementation to read NBT Json<br>
  * Only able to detect Compound, String, Number, List/Array
  */
-public class SNBTReader implements NBTReader {
+public class SNBTReader extends AbstractNBTReader {
 	
 	/**
 	 * Pattern for {@link TagType#DOUBLE} without suffix
@@ -114,10 +109,6 @@ public class SNBTReader implements NBTReader {
 	public CharSequence getFieldName() {
 		return name.getView();
 	}
-	
-	private String getFieldNameString() {
-		return hasName ? name.toString() : null;
-	}
 
 	@Override
 	public TagType getListType() {
@@ -141,13 +132,6 @@ public class SNBTReader implements NBTReader {
 	@Override
 	public TagType getType() {
 		return type;
-	}
-
-	@Override
-	public boolean isArrayTag() {
-		return type == TagType.BYTE_ARRAY ||
-				type == TagType.INT_ARRAY ||
-				type == TagType.LONG_ARRAY;
 	}
 
 	@Override
@@ -247,72 +231,6 @@ public class SNBTReader implements NBTReader {
 	}
 
 	@Override
-	public NBT readNBT() throws IOException {
-		ensureOpen();
-		final boolean isList = list != null && depth == list.depth;
-		switch (isList ? list.type : type) {
-		case BYTE: return NBT.createByteTag(getFieldNameString(), readByteTag());
-		case BYTE_ARRAY: return NBT.createByteArrayTag(getFieldNameString(), readByteArrayTag());
-		case COMPOUND: {
-			if (isList) {
-				final ListTag<CompoundTag> list = new ListTag<>(getFieldNameString(), this.list.type);
-				readNextEntry(); // move out of list header
-				while (this.list.payload > 0) {
-					CompoundTag compound = new CompoundTag(getFieldNameString());
-					final int depth = getDepth(); // root depth of compound
-					while (depth <= getDepth()) {
-						if (type == TagType.TAG_END) {
-							readNextEntry(); // move out of list or to next compound in list
-							break;
-						}
-						compound.addTag(readNBT());
-					}
-					list.addTag(compound);
-				}
-				return list;
-			}
-			final CompoundTag compound = new CompoundTag(getFieldNameString());
-			readNextEntry(); // move to first compound entry
-			final int depth = getDepth(); // root depth of compound
-			while (depth <= getDepth()) {
-				if (type == TagType.TAG_END) {
-					readNextEntry(); // skip end
-					break;
-				}
-				compound.addTag(readNBT());
-			}
-			return compound;
-		}
-		case DOUBLE: return NBT.createDoubleTag(getFieldNameString(), readDoubleTag());
-		case FLOAT: return NBT.createFloatTag(getFieldNameString(), readFloatTag());
-		case INT: return NBT.createIntTag(getFieldNameString(), readIntTag());
-		case INT_ARRAY: return NBT.createIntArrayTag(getFieldNameString(), readIntArrayTag());
-		case LIST: 
-			if (isList) {
-				ListTag<NBT> list = new ListTag<>(getFieldNameString(), TagType.LIST);
-				readNextEntry();
-				while (this.list.payload > 0) {
-					list.addTag(readNBT());
-				}
-				return list;
-			}
-			final ListTag<NBT> list = new ListTag<>(getFieldNameString(), this.list.type);
-			resetName();
-			while (getRestPayload() > 0) {
-				list.addTag(readNBT());
-			}
-			return list;
-		case LONG: return NBT.createLongTag(getFieldNameString(), readLongTag());
-		case LONG_ARRAY: return NBT.createLongArrayTag(getFieldNameString(), readLongArrayTag());
-		case SHORT: return NBT.createShortTag(getFieldNameString(), readShortTag());
-		case STRING: return NBT.createStringTag(getFieldNameString(), readStringTag());
-		case TAG_END: readNextEntry(); return null;
-		default:
-			throw new NBTException("Error while reading NBT: isList=" + isList + " Type=" + type.name() + " ListType=" + (isList ? this.list.type.name() : "null"));
-		}
-	}
-
-	@Override
 	public void readNextEntry() throws IOException {
 		ensureOpen();
 		if (type == TagType.LIST) {
@@ -351,24 +269,7 @@ public class SNBTReader implements NBTReader {
 	}
 
 	@Override
-	public UUID readUUID() throws IOException {
-		ensureOpen();
-		int[] values = readIntArrayTag();
-		if (values.length != 4) 
-			throw new NBTException("Invalid UUID data length: " + values.length);
-		long most = (values[0] << 32) | values[1];
-		long least = (values[2] << 32) | values[3];
-		return new UUID(most, least);
-	}
-
-	@Override
 	public void skipTag() throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void skipToEnd() throws IOException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -381,12 +282,6 @@ public class SNBTReader implements NBTReader {
 
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void search(CharSequence key, TagType type, boolean list) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -471,6 +366,11 @@ public class SNBTReader implements NBTReader {
 	protected final void ensureOpen() throws IOException {
 		if (closed)
 			throw new IOException("Stream closed!");
+	}
+
+	@Override
+	public boolean isList() {
+		return list != null && depth == list.depth;
 	}
 
 }

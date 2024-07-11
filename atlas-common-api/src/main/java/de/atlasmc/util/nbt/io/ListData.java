@@ -28,12 +28,33 @@ final class ListData {
 	 * {@link TagType} of this list
 	 */
 	public final TagType type;
+	
+	/**
+	 * Whether or not this list was entered with {@link NBTReader#readNextEntry()}
+	 */
+	public boolean entered = false;
+	
+	public boolean markEntered;
 
 	public ListData(TagType type, int payload, int depth, ListData parent) {
 		this.type = type;
 		this.depth = depth;
 		this.payload = payload;
 		this.parent = parent;
+	}
+	
+	public void mark() {
+		markEntered = entered;
+		markPayload = payload;
+		if (parent != null)
+			parent.mark();
+	}
+	
+	public void reset() {
+		entered = markEntered;
+		payload = markPayload;
+		if (parent != null)
+			parent.reset();
 	}
 	
 }

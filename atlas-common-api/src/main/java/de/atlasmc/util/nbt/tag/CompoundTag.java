@@ -66,7 +66,7 @@ public final class CompoundTag extends AbstractTag implements Iterable<NBT> {
 		this.data.add(new IntTag(name, value));
 	}
 	
-	public ListTag<? extends NBT> addListTag(String name, TagType type) {
+	public ListTag<NBT> addListTag(String name, TagType type) {
 		ListTag<NBT> tag = new ListTag<>(name, type);
 		this.data.add(tag);
 		return tag;
@@ -92,7 +92,7 @@ public final class CompoundTag extends AbstractTag implements Iterable<NBT> {
 		data.remove(tag);
 	}
 
-	public CompoundTag addCompoundTag(String string) {
+	public CompoundTag addCompoundTag(String name) {
 		CompoundTag tag = new CompoundTag(name);
 		this.data.add(tag);
 		return tag;
@@ -129,10 +129,12 @@ public final class CompoundTag extends AbstractTag implements Iterable<NBT> {
 			return false;
 		CompoundTag other = (CompoundTag) obj;
 		if (data == null) {
-			if (other.data != null)
+			if (other.data != null) {
 				return false;
-		} else if (!data.equals(other.data))
+			}
+		} else if (!data.equals(other.data)) {
 			return false;
+		}
 		return true;
 	}
 

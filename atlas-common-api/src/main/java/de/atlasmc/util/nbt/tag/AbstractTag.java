@@ -1,5 +1,11 @@
 package de.atlasmc.util.nbt.tag;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.UncheckedIOException;
+
+import de.atlasmc.util.nbt.io.SNBTWriter;
+
 abstract class AbstractTag implements NBT {
 	
 	protected String name;
@@ -41,6 +47,19 @@ abstract class AbstractTag implements NBT {
 		if (getType() != other.getType())
 			return false;
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+		StringWriter writer = new StringWriter();
+		SNBTWriter nbtWriter = new SNBTWriter(writer);
+		try {
+			nbtWriter.writeNBT(this);
+			nbtWriter.close();
+		} catch (IOException e) {
+			throw new UncheckedIOException("Error while writing NBT to string!", e);
+		}
+		return writer.toString();
 	}
 	
 }

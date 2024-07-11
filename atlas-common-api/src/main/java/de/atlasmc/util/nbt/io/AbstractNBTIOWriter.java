@@ -14,6 +14,7 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 	private ListData list;
 	private boolean closed;
 	private final boolean unnamedRoot;
+	private byte[] nameBuf;
 	
 	public AbstractNBTIOWriter() {
 		this(false);
@@ -172,24 +173,30 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 				throw new IOException("Max Listpayload reached!");
 		}
 		ioWriteByte(type.getID());
+		if (type == TagType.TAG_END)
+			return;
 		if (!unnamedRoot || depth != -1)
 			writeUTF(name);
 	}
 
 	private void addList(int payload, TagType payloadType) {
-		if (payload <= 0) return;
+		if (payload <= 0) 
+			return;
 		list = new ListData(payloadType, payload, ++depth, list);
 	}
 	
 	private void removeList() {
-		if (list == null) return;
+		if (list == null) 
+			return;
 		list = list.parent;
 		depth--;
 	}
 	
 	public void close() {
+		closed = true;
 		depth = Integer.MIN_VALUE;
 		list = null;
+		nameBuf = null;
 	}
 	
 	protected final void ensureOpen() throws IOException {
@@ -201,40 +208,62 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 	 * --- Methods for writing data by subclass ---
 	 */
 	
-	protected void writeUTF(CharSequence sequence) throws IOException {
-		if (sequence == null || sequence.length() == 0) {
+	protected void writeUTF(CharSequence str) throws IOException {
+		if (str == null) {
 			ioWriteShort(0);
 			return;
 		}
-		final int length = sequence.length();
-		int bytes = 0;
-		for (int i = 0; i < length; i++) {
-			char c = sequence.charAt(i);
-			if (c >= 1 && c <= 0x7F) {
-				bytes++;
-			} else if (c == 0 || (c >= 0x80 && c <= 0x7FF)) {
-				bytes+=2;
-			} else if (c >= 0x800 && c <= 0xFFFF) {
-				bytes+=3;
-			}
-		}
-		if (bytes > 65535) 
-			throw new UTFDataFormatException();
-		ioWriteShort(bytes);
-		for (int i = 0; i < length; i++) {
-			char c = sequence.charAt(i);
-			if (c >= 1 && c <= 0x7F) {
-				ioWriteByte(c);
-			} else if (c == 0 || (c >= 0x80 && c <= 0x7FF)) {
-				ioWriteByte(0xc0 | (0x1f & (c >> 6)));
-				ioWriteByte(0x80 | (0x3f & c));
-			} else if (c >= 0x800 && c <= 0xFFFF) {
-				ioWriteByte(0xe0 | (0x0f & (c >> 12)));
-				ioWriteByte(0x80 | (0x3f & (c >>  6)));
-				ioWriteByte(0x80 | (0x3f & c));
-			}
-		}
+		final int strlen = str.length();
+        int utflen = strlen; // optimized for ASCII
+
+        for (int i = 0; i < strlen; i++) {
+            int c = str.charAt(i);
+            if (c >= 0x80 || c == 0)
+                utflen += (c >= 0x800) ? 2 : 1;
+        }
+
+        if (utflen > 65535 || /* overflow */ utflen < strlen)
+            throw new UTFDataFormatException(tooLongMsg(str.toString(), utflen));
+        final byte[] bytearr;
+        if (nameBuf == null || nameBuf.length < utflen) {
+        	bytearr = nameBuf = new byte[utflen];
+        } else {
+        	bytearr = nameBuf;
+        }
+        int count = 0;
+        ioWriteShort(utflen);
+        int i = 0;
+        for (i = 0; i < strlen; i++) { // optimized for initial run of ASCII
+            int c = str.charAt(i);
+            if (c >= 0x80 || c == 0) break;
+            bytearr[count++] = (byte) c;
+        }
+
+        for (; i < strlen; i++) {
+            int c = str.charAt(i);
+            if (c < 0x80 && c != 0) {
+                bytearr[count++] = (byte) c;
+            } else if (c >= 0x800) {
+                bytearr[count++] = (byte) (0xE0 | ((c >> 12) & 0x0F));
+                bytearr[count++] = (byte) (0x80 | ((c >>  6) & 0x3F));
+                bytearr[count++] = (byte) (0x80 | ((c >>  0) & 0x3F));
+            } else {
+                bytearr[count++] = (byte) (0xC0 | ((c >>  6) & 0x1F));
+                bytearr[count++] = (byte) (0x80 | ((c >>  0) & 0x3F));
+            }
+        }
+        ioWriteBytes(bytearr, 0, utflen);
 	}
+	
+    private static String tooLongMsg(String s, int bits32) {
+        int slen = s.length();
+        String head = s.substring(0, 8);
+        String tail = s.substring(slen - 8, slen);
+        // handle int overflow with max 3x expansion
+        long actualLength = (long)slen + Integer.toUnsignedLong(bits32 - slen);
+        return "encoded string (" + head + "..." + tail + ") too long: "
+            + actualLength + " bytes";
+    }
 
 	protected abstract void ioWriteInt(int value) throws IOException;
 	

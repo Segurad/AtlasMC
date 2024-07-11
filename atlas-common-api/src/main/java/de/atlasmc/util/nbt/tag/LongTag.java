@@ -14,6 +14,7 @@ public final class LongTag extends AbstractTag {
 	private long data;
 	
 	public LongTag(String name, long data) {
+		this.name = name;
 		this.data = data;
 	}
 
