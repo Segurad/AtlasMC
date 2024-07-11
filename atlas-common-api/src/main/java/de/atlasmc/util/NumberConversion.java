@@ -3,7 +3,7 @@ package de.atlasmc.util;
 /**
  * Collection of some number related Methods useful or not
  */
-public final class NumberConversion {
+public class NumberConversion {
 
 	private NumberConversion() {}
 	
@@ -68,8 +68,8 @@ public final class NumberConversion {
 	 * @return value or alt
 	 */
 	public static int toInt(Object value, int alt) {
-		if (value instanceof Number) {
-			return ((Number) value).intValue();
+		if (value instanceof Number num) {
+			return num.intValue();
 		}
 		try {
 			return Integer.parseInt(value.toString());
@@ -84,8 +84,8 @@ public final class NumberConversion {
 	 * @return value or alt
 	 */
 	public static double toDouble(Object value, double alt) {
-		if (value instanceof Number) {
-			return ((Number) value).doubleValue();
+		if (value instanceof Number num) {
+			return num.doubleValue();
 		}
 		try {
 			return Double.parseDouble(value.toString());
@@ -100,8 +100,8 @@ public final class NumberConversion {
 	 * @return value or alt
 	 */
 	public static byte toByte(Object value, int alt) {
-		if (value instanceof Number) {
-			return ((Number) value).byteValue();
+		if (value instanceof Number num) {
+			return num.byteValue();
 		}
 		try {
 			return Byte.parseByte(value.toString());
@@ -116,8 +116,8 @@ public final class NumberConversion {
 	 * @return value or alt
 	 */
 	public static long toLong(Object value, long alt) {
-		if (value instanceof Number) {
-			return ((Number) value).longValue();
+		if (value instanceof Number num) {
+			return num.longValue();
 		}
 		try {
 			return Long.parseLong(value.toString());
@@ -132,8 +132,8 @@ public final class NumberConversion {
 	 * @return value or alt
 	 */
 	public static short toShort(Object value, int alt) {
-		if (value instanceof Number) {
-			return ((Number) value).shortValue();
+		if (value instanceof Number num) {
+			return num.shortValue();
 		}
 		try {
 			return Short.parseShort(value.toString());
@@ -148,8 +148,8 @@ public final class NumberConversion {
 	 * @return value or alt
 	 */
 	public static float toFloat(Object value, float alt) {
-		if (value instanceof Number) {
-			return ((Number) value).floatValue();
+		if (value instanceof Number num) {
+			return num.floatValue();
 		}
 		try {
 			return Float.parseFloat(value.toString());
