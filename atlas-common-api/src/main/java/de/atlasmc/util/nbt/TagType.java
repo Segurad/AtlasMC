@@ -80,7 +80,7 @@ public enum TagType {
 		case INT_ARRAY:
 			return new IntArrayTag();
 		case LIST:
-			return new ListTag<>();
+			return new ListTag();
 		case LONG:
 			return new LongTag();
 		case LONG_ARRAY:
@@ -115,7 +115,7 @@ public enum TagType {
 		case INT_ARRAY:
 			return new IntArrayTag(name, (int[]) field);
 		case LIST:
-			return new ListTag<>(name, (TagType) field);
+			return new ListTag(name, (TagType) field);
 		case LONG:
 			return new LongTag(name, (long) field);
 		case LONG_ARRAY:

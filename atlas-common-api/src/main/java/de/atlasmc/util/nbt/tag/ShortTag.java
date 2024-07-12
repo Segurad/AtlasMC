@@ -9,12 +9,12 @@ import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
-public final class ShortTag extends AbstractTag {
+public final class ShortTag extends NumberTag {
 
 	private short data;
 	
 	public ShortTag(String name, short data) {
-		this.name = name;
+		super(name);
 		this.data = data;
 	}
 
@@ -68,6 +68,36 @@ public final class ShortTag extends AbstractTag {
 		if (name != null)
 			this.name = name.toString();
 		data = reader.readShortTag();
+	}
+	
+	@Override
+	public int asInteger() {
+		return data;
+	}
+
+	@Override
+	public byte asByte() {
+		return (byte) data;
+	}
+
+	@Override
+	public short asShort() {
+		return data;
+	}
+
+	@Override
+	public long asLong() {
+		return data;
+	}
+
+	@Override
+	public float asFloat() {
+		return data;
+	}
+
+	@Override
+	public double asDouble() {
+		return data;
 	}
 
 }

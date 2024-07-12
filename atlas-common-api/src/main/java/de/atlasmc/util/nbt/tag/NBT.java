@@ -9,23 +9,25 @@ public interface NBT extends Cloneable, NBTHolder {
 	 * Returns the name key of this NBT
 	 * @return name key
 	 */
-	public String getName();
+	String getName();
 	
 	/**
 	 * Sets the name key of this NBT
 	 * @param name key that should be set
 	 */
-	public void setName(String name);
+	void setName(String name);
 	
-	public Object getData();
+	Object getData();
 	
-	public void setData(Object data);
+	void setData(Object data);
 	
 	/**
 	 * Returns the type of this NBT
 	 * @return type
 	 */
-	public TagType getType();
+	TagType getType();
+	
+	NBT clone();
 	
 	public static ByteTag createByteTag(String name, int data) {
 		return new ByteTag(name, (byte) data);
@@ -59,12 +61,16 @@ public interface NBT extends Cloneable, NBTHolder {
 		return new StringTag(name, data);
 	}
 	
-	public static ListTag<? extends NBT> createListTag(String name, TagType type) {
-		return new ListTag<>(name, type);
+	public static ListTag createListTag(String name, TagType type) {
+		return new ListTag(name, type);
 	}
 	
 	public static CompoundTag createCompoundTag(String name) {
 		return new CompoundTag(name);
+	}
+	
+	public static HoldingCompoundTag createCompoundTag(String name, NBTHolder holder) {
+		return new HoldingCompoundTag(name, holder);
 	}
 	
 	public static IntArrayTag createIntArrayTag(String name, int[] data) {
@@ -74,11 +80,9 @@ public interface NBT extends Cloneable, NBTHolder {
 	public static LongArrayTag createLongArrayTag(String name, long[] data) {
 		return new LongArrayTag(name, data);
 	}
-	
-	public NBT clone();
 
-	public static ListTag<? extends NBT> createListTag(String string, TagType type, int payloadsize) {
-		return new ListTag<>(string, type, payloadsize);
+	public static ListTag createListTag(String string, TagType type, int payloadsize) {
+		return new ListTag(string, type, payloadsize);
 	}
 	
 }

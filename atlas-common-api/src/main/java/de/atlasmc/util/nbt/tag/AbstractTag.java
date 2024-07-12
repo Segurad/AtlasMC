@@ -10,6 +10,12 @@ abstract class AbstractTag implements NBT {
 	
 	protected String name;
 	
+	public AbstractTag(String name) {
+		this.name = name;
+	}
+	
+	public AbstractTag() {}
+	
 	@Override
 	public String getName() {
 		return name;

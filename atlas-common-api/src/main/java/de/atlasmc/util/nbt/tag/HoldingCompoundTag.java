@@ -14,6 +14,13 @@ public class HoldingCompoundTag extends AbstractTag {
 
 	private NBTHolder value;
 	
+	public HoldingCompoundTag(String name, NBTHolder holder) {
+		super(name);
+		this.value = holder;
+	}
+	
+	public HoldingCompoundTag() {}
+	
 	@Override
 	public NBTHolder getData() {
 		return value;
@@ -21,9 +28,9 @@ public class HoldingCompoundTag extends AbstractTag {
 
 	@Override
 	public void setData(Object data) {
-		if (!(data instanceof NBTHolder))
+		if (!(data instanceof NBTHolder holder))
 			throw new IllegalArgumentException("Data must be a instance of NBTHolder: " + data.getClass().getName());
-		this.value = (NBTHolder) data;
+		this.value = holder;
 	}
 
 	@Override

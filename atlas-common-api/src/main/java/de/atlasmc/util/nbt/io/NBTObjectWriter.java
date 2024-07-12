@@ -41,7 +41,7 @@ public class NBTObjectWriter implements NBTWriter {
 		highestContainer = containers.poll();
 		if (highestContainer.getType() != TagType.LIST)
 			return;
-		ListTag<?> list = (ListTag<?>) highestContainer;
+		ListTag list = (ListTag) highestContainer;
 		if (list.getExspectedPayloadSize() > list.getPayloadSize()) 
 			writeCompoundTag();
 		else

@@ -9,12 +9,12 @@ import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
-public final class LongTag extends AbstractTag {
+public final class LongTag extends NumberTag {
 
 	private long data;
 	
 	public LongTag(String name, long data) {
-		this.name = name;
+		super(name);
 		this.data = data;
 	}
 
@@ -68,6 +68,36 @@ public final class LongTag extends AbstractTag {
 		if (name != null)
 			this.name = name.toString();
 		data = reader.readLongTag();
+	}
+	
+	@Override
+	public int asInteger() {
+		return (int) data;
+	}
+
+	@Override
+	public byte asByte() {
+		return (byte) data;
+	}
+
+	@Override
+	public short asShort() {
+		return (short) data;
+	}
+
+	@Override
+	public long asLong() {
+		return data;
+	}
+
+	@Override
+	public float asFloat() {
+		return data;
+	}
+
+	@Override
+	public double asDouble() {
+		return data;
 	}
 
 }

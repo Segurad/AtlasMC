@@ -62,7 +62,7 @@ public abstract class AbstractNBTReader implements NBTReader {
 			return NBT.createByteArrayTag(name, readByteArrayTag());
 		case COMPOUND: {
 			if (isList) {
-				final ListTag<CompoundTag> list = new ListTag<>(name, getListType());
+				final ListTag list = new ListTag(name, getListType());
 				readNextEntry(); // move out of list header
 				while (getRestPayload() > 0) {
 					CompoundTag compound = new CompoundTag(name);
@@ -100,14 +100,14 @@ public abstract class AbstractNBTReader implements NBTReader {
 			return NBT.createIntArrayTag(name, readIntArrayTag());
 		case LIST: 
 			if (isList) {
-				ListTag<NBT> list = new ListTag<>(name, TagType.LIST);
+				ListTag list = new ListTag(name, TagType.LIST);
 				readNextEntry();
 				while (getRestPayload() > 0) {
 					list.addTag(readNBT());
 				}
 				return list;
 			}
-			final ListTag<NBT> list = new ListTag<>(name, getListType());
+			final ListTag list = new ListTag(name, getListType());
 			readNextEntry();
 			while (getRestPayload() > 0) {
 				list.addTag(readNBT());

@@ -150,7 +150,7 @@ public class NBTObjectReader extends AbstractNBTReader {
 		ensureOpen();
 			if (current.getType() == TagType.COMPOUND || 
 					current.getType() == TagType.TAG_END ||
-					current.getType() == TagType.LIST && ((ListTag<?>) current).getDataType() == TagType.COMPOUND)
+					current.getType() == TagType.LIST && ((ListTag) current).getDataType() == TagType.COMPOUND)
 				prepareTag();
 			else
 				throw new IOException("Next entry should only be called on COMPOUND or END: " + current.getType().name());
@@ -312,8 +312,7 @@ public class NBTObjectReader extends AbstractNBTReader {
 		} else if (current.getType() == TagType.COMPOUND) {
 			stack = new StackElement(stack, (CompoundTag) current);
 		} else if (current.getType() == TagType.LIST) {
-			@SuppressWarnings("unchecked")
-			ListTag<NBT> list = (ListTag<NBT>) current;
+			ListTag list = (ListTag) current;
 			stack = new StackElement(stack, list);
 			if (list.getDataType() == TagType.COMPOUND && list.size() > 0) {
 				CompoundTag nbt = (CompoundTag) stack.next();
@@ -362,7 +361,7 @@ public class NBTObjectReader extends AbstractNBTReader {
 			this(parent, tag.getData(), null);
 		}
 
-		public StackElement(StackElement parent, ListTag<NBT> tag) {
+		public StackElement(StackElement parent, ListTag tag) {
 			this(parent, tag.getData(), tag.getDataType());
 		}
 		

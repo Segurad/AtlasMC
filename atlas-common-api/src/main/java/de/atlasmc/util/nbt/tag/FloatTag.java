@@ -7,12 +7,12 @@ import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
-public final class FloatTag extends AbstractTag {
+public final class FloatTag extends NumberTag {
 
 	private float data;
 	
 	public FloatTag(String name, float data) {
-		this.name = name;
+		super(name);
 		this.data = data;
 	}
 
@@ -58,6 +58,36 @@ public final class FloatTag extends AbstractTag {
 		if (name != null)
 			this.name = name.toString();
 		data = reader.readFloatTag();
+	}
+	
+	@Override
+	public int asInteger() {
+		return (int) data;
+	}
+
+	@Override
+	public byte asByte() {
+		return (byte) data;
+	}
+
+	@Override
+	public short asShort() {
+		return (short) data;
+	}
+
+	@Override
+	public long asLong() {
+		return (long) data;
+	}
+
+	@Override
+	public float asFloat() {
+		return data;
+	}
+
+	@Override
+	public double asDouble() {
+		return data;
 	}
 	
 }

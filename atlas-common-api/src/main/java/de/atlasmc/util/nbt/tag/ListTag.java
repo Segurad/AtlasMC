@@ -2,7 +2,6 @@ package de.atlasmc.util.nbt.tag;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import de.atlasmc.util.nbt.NBTException;
@@ -10,33 +9,23 @@ import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
-public final class ListTag<T extends NBT> extends AbstractTag implements Iterable<NBT> {
+public final class ListTag extends AbstractCollectionTag<ListTag, List<NBT>> implements Iterable<NBT> {
 
-	private List<T> data;
 	private TagType datatype;
 	private int exspected;
 	
 	public ListTag(String name, TagType datatype) {
-		data = new ArrayList<>();
-		this.datatype = datatype;
-		this.name = name;
-		this.exspected = 0;
+		this(name, datatype, 0);
 	}
 	
 	public ListTag(String name, TagType datatype, int payloadsize) {
-		data = new ArrayList<>(payloadsize);
+		super(name);
 		this.datatype = datatype;
-		this.name = name;
 		this.exspected = payloadsize;
 	}
 
 	public ListTag() {
 		this.exspected = 0;
-	}
-
-	@Override
-	public List<T> getData() {
-		return data;
 	}
 	
 	public int getPayloadSize() {
@@ -47,19 +36,15 @@ public final class ListTag<T extends NBT> extends AbstractTag implements Iterabl
 		return exspected;
 	}
 	
-	public void addTag(T tag) {
-		if (tag == null) 
-			throw new IllegalArgumentException("NBT can not be null!");
-		if (datatype != tag.getType()) 
-			throw new IllegalArgumentException("Illegal TagType:" + tag.getType().name() + " " + datatype.name() + " expected!");
-		data.add(tag);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public T createEntry(Object field) {
-		T tag = (T) datatype.createTag(field);
-		data.add(tag);
-		return tag;
+	/**
+	 * 
+	 * @param field
+	 * @return this
+	 */
+	public ListTag createEntry(Object field) {
+		NBT tag = datatype.createTag(field);
+		add(tag);
+		return this;
 	}
 	
 	public TagType getDataType() {
@@ -71,66 +56,27 @@ public final class ListTag<T extends NBT> extends AbstractTag implements Iterabl
 		return TagType.LIST;
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public void setData(Object data) {
-		NBT tag = (NBT) data;
-		if (datatype != tag.getType()) throw new IllegalArgumentException("Illegal TagType:" + tag.getType().name() + " " + datatype.name() + " expected!");
-		addTag((T) tag);
-	}
-
 	public int size() {
 		return data.size();
 	}
-
-	@SuppressWarnings("unchecked")
+	
 	@Override
-	public Iterator<NBT> iterator() {
-		return (Iterator<NBT>) data.iterator();
+	protected void add(NBT data) {
+		if (data == null) 
+			throw new IllegalArgumentException("NBT can not be null!");
+		if (datatype != data.getType()) 
+			throw new IllegalArgumentException("Illegal TagType:" + data.getType().name() + " " + datatype.name() + " expected!");
+		super.add(data);
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Override
-	public ListTag<T> clone() {
-		ListTag<T> clone = (ListTag<T>) super.clone();
-		if (clone == null)
-			return null;
-		if (data != null) {
-			List<NBT> list = new ArrayList<>(data.size());
-			for (NBT nbt : data) {
-				list.add(nbt.clone());
-			}
-			clone.setData(list);
-		}
-		return clone;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (!super.equals(obj))
-			return false;
-		ListTag<?> other = (ListTag<?>) obj;
-		if (data == null) {
-			if (other.data != null)
-				return false;
-		} else if (!data.equals(other.data)) {
-			return false;
-		}
-		if (datatype != other.datatype) {
-			return false;
-		}
-		return true;
-	}
-
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		writer.writeListTag(name, datatype, data != null ? data.size() : 0);
-		if (data != null)
-			for (T element : data)
+		if (data != null && !data.isEmpty())
+			for (NBT element : data)
 				writer.writeNBT(element);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void fromNBT(NBTReader reader) throws IOException {
 		if (reader.getType() != TagType.LIST)
@@ -142,7 +88,17 @@ public final class ListTag<T extends NBT> extends AbstractTag implements Iterabl
 		exspected = reader.getRestPayload();
 		reader.readNextEntry();
 		while (reader.getRestPayload() > 0)
-			addTag((T) reader.readNBT());
+			addTag(reader.readNBT());
+	}
+
+	@Override
+	protected List<NBT> createCollection() {
+		return new ArrayList<>();
+	}
+
+	@Override
+	protected ListTag getThis() {
+		return this;
 	}
 	
 }

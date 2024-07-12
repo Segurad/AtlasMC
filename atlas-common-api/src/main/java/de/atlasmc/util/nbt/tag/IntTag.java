@@ -7,7 +7,7 @@ import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
-public final class IntTag extends AbstractTag {
+public final class IntTag extends NumberTag {
 
 	private int data;
 	
@@ -19,7 +19,7 @@ public final class IntTag extends AbstractTag {
 	public IntTag() {}
 
 	@Override
-	public Object getData() {
+	public Integer getData() {
 		return data;
 	}
 
@@ -58,6 +58,36 @@ public final class IntTag extends AbstractTag {
 		if (name != null)
 			this.name = name.toString();
 		data = reader.readIntTag();
+	}
+	
+	@Override
+	public int asInteger() {
+		return data;
+	}
+
+	@Override
+	public byte asByte() {
+		return (byte) data;
+	}
+
+	@Override
+	public short asShort() {
+		return (short) data;
+	}
+
+	@Override
+	public long asLong() {
+		return data;
+	}
+
+	@Override
+	public float asFloat() {
+		return data;
+	}
+
+	@Override
+	public double asDouble() {
+		return data;
 	}
 
 }

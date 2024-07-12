@@ -1,6 +1,5 @@
 package de.atlasmc.test.util.nbt;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,7 +16,6 @@ import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.SNBTWriter;
 import de.atlasmc.util.nbt.tag.CompoundTag;
-import de.atlasmc.util.nbt.tag.ListTag;
 import de.atlasmc.util.nbt.tag.NBT;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
@@ -28,22 +26,24 @@ public class NBTIOSimpleTest {
 	private static final NBT SIMPLE_TYPES_STRUCTURE;
 	
 	static {
-		CompoundTag root = NBT.createCompoundTag("");
-		root.addCompoundTag("test_compound");
-		root.addByteTag("test_byte", (byte) 85);
-		root.addShortTag("test_short", (short) 21845);
-		root.addIntTag("test_int", 1431655765);
-		root.addLongTag("test_long", 6148914691236517205L);
-		root.addStringTag("test_string", "some_test_string 0x42");
-		root.addFloatTag("test_float", 0.4242f);
-		root.addDoubleTag("test_double", 0.4242d);
-		root.addByteArrayTag("test_byte_array", new byte[] { (byte) 0xCA, (byte) 0xFF, (byte) 0xEE });
-		root.addIntArrayTag("test_int_array", new int[] { 0xCAFFEE42, 0xCAFFEE42, 0xCAFFEE42 });
-		root.addLongArrayTag("test_long_array", new long[] { 0xCAFFEE42CAFFEE42L, 0xCAFFEE42CAFFEE42L, 0xCAFFEE42CAFFEE42L });
-		ListTag<NBT> testList = root.addListTag("test_list", TagType.BYTE);
-		testList.addTag(NBT.createByteTag(null, 85));
-		testList.addTag(NBT.createByteTag(null, 85));
-		testList.addTag(NBT.createByteTag(null, 85));
+		CompoundTag root = NBT.createCompoundTag("")
+			.addTag(NBT.createCompoundTag("test_compound"))
+			.addByteTag("test_byte", (byte) 85)
+			.addShortTag("test_short", (short) 21845)
+			.addIntTag("test_int", 1431655765)
+			.addLongTag("test_long", 6148914691236517205L)
+			.addStringTag("test_string", "some_test_string 0x42")
+			.addFloatTag("test_float", 0.4242f)
+			.addDoubleTag("test_double", 0.4242d)
+			.addByteArrayTag("test_byte_array", new byte[] { (byte) 0xCA, (byte) 0xFF, (byte) 0xEE })
+			.addIntArrayTag("test_int_array", new int[] { 0xCAFFEE42, 0xCAFFEE42, 0xCAFFEE42 })
+			.addLongArrayTag("test_long_array", new long[] { 0xCAFFEE42CAFFEE42L, 0xCAFFEE42CAFFEE42L, 0xCAFFEE42CAFFEE42L })
+			.addTag(
+				NBT.createListTag("test_list", TagType.BYTE)
+				.addByteTag(null, (byte) 85)
+				.addByteTag(null, (byte) 85)
+				.addByteTag(null, (byte) 85)
+			);
 		SIMPLE_TYPES_STRUCTURE = root;
 	}
 	
