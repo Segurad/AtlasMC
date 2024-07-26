@@ -1,14 +1,14 @@
 package de.atlascore.atlasnetwork;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
 import de.atlasmc.atlasnetwork.NetworkInfo;
 import de.atlasmc.chat.placeholder.PlaceholderHandler;
+import de.atlasmc.util.configuration.ConfigurationSection;
+import de.atlasmc.util.configuration.MemoryConfigurationSection;
+import de.atlasmc.util.configuration.file.JsonConfiguration;
 
 public class CoreNetworkInfo implements NetworkInfo {
 	
@@ -74,16 +74,14 @@ public class CoreNetworkInfo implements NetworkInfo {
 	}
 
 	@Override
-	public String getStatusInfo(int protocol) {
-		JsonObject statusInfo = new JsonObject();
+	public JsonConfiguration getStatusInfo(int protocol) {
+		JsonConfiguration statusInfo = new JsonConfiguration();
 		// Version
-		JsonObject version = new JsonObject();
-		statusInfo.add("version", version);
-		version.addProperty("name", protocolText);
-		version.addProperty("protocol", maintenance ? -1 : protocol);
+		ConfigurationSection version = statusInfo.createSection("version");
+		version.set("name", protocolText);
+		version.set("protocol", maintenance ? -1 : protocol);
 		// Player
-		JsonObject players = new JsonObject();
-		statusInfo.add("players", players);
+		ConfigurationSection players = statusInfo.createSection("players");
 		int maxPlayers = 0, onlinePlayers = 0;
 		switch (mode) {
 		case NORMAL: 
@@ -104,32 +102,31 @@ public class CoreNetworkInfo implements NetworkInfo {
 			maxPlayers = slots + slotDistance;
 			break;
 		}
-		players.addProperty("max", maxPlayers);
-		players.addProperty("online", onlinePlayers);
-		players.add("sample", createSample());
+		players.set("max", maxPlayers);
+		players.set("online", onlinePlayers);
+		buildSample(statusInfo);
 		// MOTD
-		JsonObject motd = new JsonObject();
-		motd.addProperty("text", PlaceholderHandler.setPlaceholders(this.motd, null));
-		statusInfo.add("description", motd);
+		ConfigurationSection motd = statusInfo.createSection("description");
+		motd.set("text", PlaceholderHandler.setPlaceholders(this.motd, null));
 		// Favicon
-		statusInfo.addProperty("favicon", serverIcon);
-		return statusInfo.toString();
+		statusInfo.set("favicon", serverIcon);
+		return statusInfo;
 	}
 	
-	public void setOnlinePlayerCount(int onlinePlayerCount) {
-		this.onlinePlayerCount = onlinePlayerCount;
-	}
-	
-	private JsonElement createSample() {
-		JsonArray playerInfo = new JsonArray();
+	private void buildSample(ConfigurationSection parent) {
+		ArrayList<ConfigurationSection> sample = new ArrayList<>();
+		parent.set("sample", sample);
 		int i = 0;
 		for (String s : this.playerInfo) {
-			JsonObject player = new JsonObject();
-			playerInfo.add(player);
-			player.addProperty("name", PlaceholderHandler.setPlaceholders(s, null));
-			player.addProperty("id", playerInfoUUIDs[i]);
+			ConfigurationSection section = new MemoryConfigurationSection(parent);
+			sample.add(section);
+			section.set("name", PlaceholderHandler.setPlaceholders(s, null));
+			section.set("id", playerInfoUUIDs[i++]);
 		}
-		return playerInfo;
+	}
+
+	public void setOnlinePlayerCount(int onlinePlayerCount) {
+		this.onlinePlayerCount = onlinePlayerCount;
 	}
 
 }

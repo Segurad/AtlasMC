@@ -3,6 +3,7 @@ package de.atlasmc.registry;
 import java.util.Collection;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.plugin.Plugin;
 import de.atlasmc.registry.RegistryHolder.Target;
 
 public interface RegistryHandler {
@@ -44,5 +45,7 @@ public interface RegistryHandler {
 	<T> ClassRegistry<T> createClassRegistry(Class<T> clazz);
 
 	<T> Registry<T> createRegistry(Class<?> clazz, Target target);
+	
+	boolean removePluginEntries(Plugin plugin);
 
 }

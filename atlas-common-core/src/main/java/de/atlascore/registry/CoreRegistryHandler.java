@@ -3,6 +3,7 @@ package de.atlascore.registry;
 import java.util.Collection;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.plugin.Plugin;
 import de.atlasmc.registry.ClassRegistry;
 import de.atlasmc.registry.InstanceRegistry;
 import de.atlasmc.registry.Registry;
@@ -17,6 +18,7 @@ public class CoreRegistryHandler implements RegistryHandler {
 	
 	public CoreRegistryHandler() {
 		registries = new CoreInstanceRegistry<>(NamespacedKey.of(NamespacedKey.ATLAS, "registry_root"), Registry.class);
+		registries.register(null, registries.getKey(), registries);
 	}
 
 	@Override
@@ -38,14 +40,14 @@ public class CoreRegistryHandler implements RegistryHandler {
 	@Override
 	public <T> InstanceRegistry<T> createInstanceRegistry(NamespacedKey key, Class<T> clazz) {
 		InstanceRegistry<T> registry = new CoreInstanceRegistry<>(key, clazz);
-		registries.register(key, registry);
+		registries.register(null, key, registry);
 		return registry;
 	}
 	
 	@Override
 	public <T> ClassRegistry<T> createClassRegistry(NamespacedKey key, Class<T> clazz) {
 		ClassRegistry<T> registry = new CoreClassRegistry<>(key, clazz);
-		registries.register(key, registry);
+		registries.register(null, key, registry);
 		return registry;
 	}
 	
@@ -64,7 +66,7 @@ public class CoreRegistryHandler implements RegistryHandler {
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + target);
 		}
-		registries.register(key, registry);
+		registries.register(null, key, registry);
 		return (Registry<T>) registry;
 	}
 
@@ -126,7 +128,7 @@ public class CoreRegistryHandler implements RegistryHandler {
 
 	@Override
 	public void registerRegistry(Registry<?> registry) {
-		this.registries.register(registry.getKey(), registry);
+		this.registries.register(null, registry.getKey(), registry);
 	}
 
 	@Override
@@ -145,6 +147,18 @@ public class CoreRegistryHandler implements RegistryHandler {
 	public <T> Registry<T> createRegistry(Class<?> clazz, Target target) {
 		NamespacedKey key = NamespacedKey.of(getRegistryKey(clazz));
 		return createRegistry(key, clazz, target);
+	}
+
+	@Override
+	public boolean removePluginEntries(Plugin plugin) {
+		if (plugin == null)
+			throw new IllegalArgumentException("Plugin can not be null!");
+		boolean changes = false;
+		for (@SuppressWarnings("rawtypes") Registry reg : registries.values()) {
+			if (reg.removePluginEntries(plugin))
+				changes = true;
+		}
+		return changes;
 	}
 
 }

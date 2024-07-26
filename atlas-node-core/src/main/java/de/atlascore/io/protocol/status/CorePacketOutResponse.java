@@ -1,6 +1,7 @@
 package de.atlascore.io.protocol.status;
 
 import java.io.IOException;
+import java.io.StringReader;
 
 import static de.atlasmc.io.AbstractPacket.*;
 
@@ -8,18 +9,21 @@ import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.status.PacketOutResponse;
+import de.atlasmc.util.configuration.file.JsonConfiguration;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutResponse implements PacketIO<PacketOutResponse> {
 
 	@Override
 	public void read(PacketOutResponse packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setResponse(readString(in));
+		String rawResponse = readString(in);
+		packet.response = JsonConfiguration.loadConfiguration(new StringReader(rawResponse));
 	}
 
 	@Override
 	public void write(PacketOutResponse packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeString(packet.getResponse(), out);
+		String rawResponse = packet.response.saveToString();
+		writeString(rawResponse, out);
 	}
 	
 	@Override

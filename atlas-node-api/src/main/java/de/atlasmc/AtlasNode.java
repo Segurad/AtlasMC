@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.UUID;
 
 import de.atlasmc.atlasnetwork.AtlasNetwork;
-import de.atlasmc.atlasnetwork.NodePlayer;
 import de.atlasmc.io.protocol.ProtocolAdapter;
 import de.atlasmc.io.protocol.ProtocolAdapterHandler;
 import de.atlasmc.server.NodeServer;
@@ -30,12 +29,12 @@ public class AtlasNode {
 		}
 	}
 	
-	public static NodePlayer getLocalPlayer(UUID uuid) {
-		return INSTANCE.getLocalPlayer(uuid);
+	public static NodePlayer getPlayer(UUID uuid) {
+		return INSTANCE.getPlayer(uuid);
 	}
 	
 	public static NodePlayer getLocalPlayer(String name) {
-		return INSTANCE.getLocalPlayer(name);
+		return INSTANCE.getPlayer(name);
 	}
 	
 	public static NodeServerManager getServerManager() {

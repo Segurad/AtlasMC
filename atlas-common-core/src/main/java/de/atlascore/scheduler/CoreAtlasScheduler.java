@@ -30,7 +30,7 @@ public class CoreAtlasScheduler extends CoreAbstractScheduler {
 	public synchronized void shutdown() {
 		if (thread == null)
 			return;
-		thread.stopThread();
+		thread.shutdown();
 		thread = null;
 		super.shutdown();
 	}

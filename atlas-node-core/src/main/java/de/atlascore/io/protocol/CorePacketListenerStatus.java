@@ -32,7 +32,7 @@ public class CorePacketListenerStatus implements PacketListener {
 				info = network.getNetworkInfo();
 			}
 			int version = handler.getProtocol().getVersion();
-			response.setResponse(info.getStatusInfo(version));
+			response.response = info.getStatusInfo(version);
 			handler.sendPacket(response);
 		} else if (packet.getID() == 1) {
 			PacketInPing ping = (PacketInPing) packet;

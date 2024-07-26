@@ -2,6 +2,8 @@ package de.atlasmc.atlasnetwork;
 
 import java.util.List;
 
+import de.atlasmc.util.configuration.file.JsonConfiguration;
+
 public interface NetworkInfo {
 	
 	int getSlots();
@@ -18,7 +20,7 @@ public interface NetworkInfo {
 	
 	List<String> getPlayerInfo();
 	
-	String getStatusInfo(int protocol);
+	JsonConfiguration getStatusInfo(int protocol);
 	
 	public static enum SlotMode {
 		/**

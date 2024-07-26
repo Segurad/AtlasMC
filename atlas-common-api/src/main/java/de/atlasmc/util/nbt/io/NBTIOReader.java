@@ -121,6 +121,9 @@ public class NBTIOReader extends AbstractNBTIOReader {
 		return false;
 	}
 
+	/**
+	 * @implNote does not close the stream
+	 */
 	@Override
 	public void close() {
 		super.close();

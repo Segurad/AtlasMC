@@ -2,11 +2,12 @@ package de.atlascore.world.chunkprovider;
 
 import java.util.Collection;
 
-import de.atlasmc.util.map.Long2ObjectMap;
 import de.atlasmc.world.Chunk;
 import de.atlasmc.world.ChunkGenerator;
 import de.atlasmc.world.ChunkLoader;
 import de.atlasmc.world.World;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 
 /**
  * ChunkProvider implementation that stores Chunks in a Buffer for dynamic world size
@@ -17,7 +18,7 @@ public class CoreBufferedChunkProvider extends CoreAbstractChunkProvider {
 	
 	public CoreBufferedChunkProvider(World world, ChunkGenerator generator, ChunkLoader loader) {
 		super(world, generator, loader);
-		this.chunks = new Long2ObjectMap<>();
+		this.chunks = new Long2ObjectOpenHashMap<>();
 	}
 
 	@Override

@@ -21,6 +21,8 @@
 		<module>atlas-common-api</module>
 		<module>atlas-network-api</module>
 		<module>atlas-common-core</module>
+		<module>atlas-master-api</module>
+		<module>atlas-master-core</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -2,9 +2,8 @@ package de.atlasmc.server;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.function.Consumer;
 
-import de.atlasmc.atlasnetwork.NodePlayer;
+import de.atlasmc.NodePlayer;
 import de.atlasmc.atlasnetwork.server.Server;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.ThreadSafe;
@@ -41,9 +40,5 @@ public interface NodeServer extends Server {
 	@ThreadSafe
 	@NotNull
 	Future<Boolean> prepare();
-	
-	boolean addShutdownHook(Consumer<NodeServer> hook);
-	
-	boolean removeShutdownHook(Consumer<NodeServer> hook);
 	
 }

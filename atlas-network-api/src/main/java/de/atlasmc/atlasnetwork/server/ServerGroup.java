@@ -1,14 +1,9 @@
 package de.atlasmc.atlasnetwork.server;
 
-import java.util.UUID;
-
 import de.atlasmc.util.annotation.ThreadSafe;
-import de.atlasmc.util.concurrent.future.Future;
 
 @ThreadSafe
 public interface ServerGroup {
-	
-	// config
 	
 	ServerConfig getServerConfig();
 	
@@ -27,29 +22,5 @@ public interface ServerGroup {
 	boolean isMaintenance();
 	
 	String getName();
-	
-	// runtime
-	
-	Future<Server> getServer(UUID uuid);
-	
-	/**
-	 * Returns the number of server marked as full
-	 * @return full server count
-	 */
-	int getFullServerCount();
-	
-	int getServerCount();
-	
-	/**
-	 * Returns the maximum number of supported slots of all servers
-	 * @return slots
-	 */
-	int getCurrentPlayerCapacity();
-	
-	/**
-	 * Returns the number of player in this group
-	 * @return player count
-	 */
-	int getPlayerCount();
 
 }

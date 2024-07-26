@@ -17,23 +17,25 @@ import de.atlasmc.util.annotation.NotNull;
 public interface Chunk extends Tickable {
 
 	/**
-	 * Returns a array of section in this chunk.
-	 * Sections that do not exist are null.
-	 * Ordered bottom to top
+	 * Returns a array of ordered sections bottom to top.
 	 * @return sections
 	 */
-	ChunkSection[] getSections();
+	 ChunkSection[] getSections();
 	
 	/**
 	 * Returns the ChunkSection at the given height.
 	 * If there is no section at this height a new one will be created.
-	 * @param height between 0 and 256
+	 * @param height
 	 * @return the chunk section at this height
 	 */
 	@NotNull
 	ChunkSection getSection(int height);
 	
+	ChunkSection getSectionByIndex(int index);
+	
 	boolean hasSection(int height);
+	
+	boolean hasSectionIndex(int index);
 	
 	/**
 	 * Returns if this Chunk is fully loaded or generated
@@ -123,11 +125,7 @@ public interface Chunk extends Tickable {
 	 * @param clazz the class a entity must be a instance of
 	 * @return the given list
 	 */
-	<T extends Entity, C extends Collection<T>> C getEntitiesByClass(C entities, Class<T> clazz);
-	
-	void addEntity(Entity entity);
-	
-	void removeEntity(Entity entity);
+	<T extends Entity, C extends Collection<T>> C getEntitiesByClass(Class<T> clazz, C entities);
 	
 	/**
 	 * Returns a copy of the BlockData at the position or null if {@link #hasSection(int)} is false
@@ -179,11 +177,9 @@ public interface Chunk extends Tickable {
 	 */
 	void setBlockDataAt(BlockData data, int x, int y, int z);
 	
-	@SuppressWarnings("unchecked")
-	Collection<Entity> getEntitiesByClasses(Class<? extends Entity>... classes);
+	Collection<Entity> getEntitiesByClasses(@SuppressWarnings("unchecked") Class<? extends Entity>... classes);
 	
-	@SuppressWarnings("unchecked")
-	<C extends Collection<Entity>> C getEntitiesByClasses(C entities, Class<? extends Entity>... classes);
+	<C extends Collection<Entity>> C getEntitiesByClasses(C entities, @SuppressWarnings("unchecked") Class<? extends Entity>... classes);
 	
 	/**
 	 * Returns the current status of this Chunk
@@ -191,19 +187,19 @@ public interface Chunk extends Tickable {
 	 */
 	ChunkStatus getStatus();
 	
-	void addListener(ChunkListener listener);
+	void addListener(ChunkViewer listener);
 	
-	void removeListener(ChunkListener listener);
+	void removeListener(ChunkViewer listener);
 	
 	/**
-	 * Sends a block update to all {@link ChunkListener}s 
+	 * Sends a block update to all {@link ChunkViewer}s 
 	 * @param x in this chunk
 	 * @param y in this chunk
 	 * @param z in this chunk
 	 */
 	void updateBlock(int x, int y, int z);
 	
-	ViewerSet<Chunk, ChunkListener> getViewers();
+	ViewerSet<Chunk, ChunkViewer> getViewers();
 	
 	int getX();
 	

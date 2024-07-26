@@ -3,19 +3,12 @@ package de.atlasmc.io.protocol.status;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.PacketOutbound;
+import de.atlasmc.util.configuration.file.JsonConfiguration;
 
 @DefaultPacketID(PacketStatus.OUT_RESPONSE)
 public class PacketOutResponse extends AbstractPacket implements PacketStatus, PacketOutbound {
 	
-	private String response;
-	
-	public String getResponse() {
-		return response;
-	}
-	
-	public void setResponse(String response) {
-		this.response = response;
-	}
+	public JsonConfiguration response;
 	
 	@Override
 	public int getDefaultID() {

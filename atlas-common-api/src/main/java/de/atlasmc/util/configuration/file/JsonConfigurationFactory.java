@@ -8,7 +8,7 @@ import java.io.Reader;
 
 import de.atlasmc.registry.RegistryValue;
 
-@RegistryValue(registry="atlas:factory/file_configuration", key="atlas:factory/json_configuration")
+@RegistryValue(registry="atlas:factory/file_configuration", key="atlas:json_configuration")
 public class JsonConfigurationFactory implements FileConfigurationFactory {
 
 	public static final JsonConfigurationFactory INSTANCE = new JsonConfigurationFactory();

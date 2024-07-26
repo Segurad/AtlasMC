@@ -23,7 +23,6 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 	private int markDepth;
 	private ListData list;
 	private ListData markList;
-	private boolean closed;
 	private int arrayTagPayload = -1;
 	private int markArrayTagPayload = -1;
 	private final boolean unnamedRoot;
@@ -664,8 +663,9 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 		return arrayTagPayload;
 	}
 
+	@Override
 	public void close() {
-		closed = true;
+		super.close();
 		name = null;
 		hasName = false;
 		markName = null;
@@ -673,11 +673,6 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 		markDepth = depth;
 		list = null;
 		markList = null;
-	}
-
-	protected final void ensureOpen() throws IOException {
-		if (closed)
-			throw new IOException("Stream closed!");
 	}
 
 	/*

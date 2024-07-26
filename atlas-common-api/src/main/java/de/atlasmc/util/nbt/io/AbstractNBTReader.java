@@ -10,6 +10,18 @@ import de.atlasmc.util.nbt.tag.ListTag;
 import de.atlasmc.util.nbt.tag.NBT;
 
 public abstract class AbstractNBTReader implements NBTReader {
+	
+	protected boolean closed;
+	
+	@Override
+	public void close() {
+		this.closed = true;
+	}
+	
+	protected void ensureOpen() throws IOException {
+		if (closed)
+			throw new IOException("Stream closed!");
+	}
 
 	@Override
 	public Number readNumber() throws IOException {

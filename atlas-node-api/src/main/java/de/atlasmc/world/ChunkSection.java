@@ -12,13 +12,13 @@ public interface ChunkSection {
 	 * Returns weather or not this section is empty
 	 * @return true if only air is present
 	 */
-	public boolean isEmpty();
+	boolean isEmpty();
 	
 	/**
 	 * 
 	 * @return the number of non air blocks
 	 */
-	public int getBlockCount();
+	int getBlockCount();
 	
 	/**
 	 * 
@@ -27,7 +27,7 @@ public interface ChunkSection {
 	 * @param z
 	 * @return a copy of the BlockData 
 	 */
-	public BlockData getBlockData(int x, int y, int z);
+	BlockData getBlockData(int x, int y, int z);
 	
 	/**
 	 * Returns the BlockData at the position <b>NOT</b> a copy
@@ -37,7 +37,7 @@ public interface ChunkSection {
 	 * @return BlockData
 	 */
 	@UnsafeAPI
-	public BlockData getBlockDataUnsafe(int x, int y, int z);
+	BlockData getBlockDataUnsafe(int x, int y, int z);
 	
 	/**
 	 * 
@@ -46,7 +46,7 @@ public interface ChunkSection {
 	 * @param z
 	 * @return
 	 */
-	public Material getBlockType(int x, int y, int z);
+	Material getBlockType(int x, int y, int z);
 	
 	/**
 	 * 
@@ -55,7 +55,7 @@ public interface ChunkSection {
 	 * @param y
 	 * @param z
 	 */
-	public void setBlockData(BlockData data, int x, int y, int z);
+	void setBlockData(BlockData data, int x, int y, int z);
 	
 	Biome getBiome(int x, int y, int z);
 	

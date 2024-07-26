@@ -253,11 +253,6 @@ public class NBTObjectReader extends AbstractNBTReader {
 		markCurrent = null;
 		closed = true;
 	}
-	
-	protected final void ensureOpen() throws IOException {
-		if (closed)
-			throw new IOException("Stream closed!");
-	}
 
 	@Override
 	public int getArrayTagPayload() {

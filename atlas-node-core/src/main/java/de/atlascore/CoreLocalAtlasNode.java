@@ -9,14 +9,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import de.atlascore.plugin.CoreNodeBuilder;
 import de.atlasmc.Atlas;
 import de.atlasmc.LocalAtlasNode;
-import de.atlasmc.atlasnetwork.NodePlayer;
-import de.atlasmc.atlasnetwork.server.ServerGroup;
+import de.atlasmc.NodePlayer;
 import de.atlasmc.io.protocol.ProtocolAdapterHandler;
 import de.atlasmc.proxy.LocalProxy;
 import de.atlasmc.server.NodeServer;
 import de.atlasmc.server.NodeServerManager;
-import de.atlasmc.util.concurrent.future.CompleteFuture;
-import de.atlasmc.util.concurrent.future.Future;
 
 public class CoreLocalAtlasNode implements LocalAtlasNode {
 	
@@ -62,30 +59,15 @@ public class CoreLocalAtlasNode implements LocalAtlasNode {
 	public void registerProxy(LocalProxy proxy) {
 		proxies.put(proxy.getUUID(), proxy);
 	}
-
-	@Override
-	public Future<? extends NodeServer> getServer(UUID uuid) {
-		return CompleteFuture.of(smanager.getServer(uuid));
-	}
 	
 	@Override
-	public NodeServer getLocalServer(UUID uuid) {
+	public NodeServer getServer(UUID uuid) {
 		return smanager.getServer(uuid);
 	}
 
 	@Override
-	public Future<? extends LocalProxy> getProxy(UUID uuid) {
-		return CompleteFuture.of(proxies.get(uuid));
-	}
-	
-	@Override
-	public LocalProxy getLocalProxy(UUID uuid) {
+	public LocalProxy getProxy(UUID uuid) {
 		return proxies.get(uuid);
-	}
-
-	@Override
-	public Future<Collection<? extends ServerGroup>> getServerGroups() {
-		return null;
 	}
 	
 	@Override
@@ -94,13 +76,13 @@ public class CoreLocalAtlasNode implements LocalAtlasNode {
 	}
 
 	@Override
-	public NodePlayer getLocalPlayer(String name) {
+	public NodePlayer getPlayer(String name) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	@Override
-	public NodePlayer getLocalPlayer(UUID name) {
+	public NodePlayer getPlayer(UUID name) {
 		// TODO Auto-generated method stub
 		return null;
 	}

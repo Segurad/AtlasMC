@@ -10,7 +10,6 @@ import de.atlascore.atlasnetwork.CorePermissionProvider;
 import de.atlascore.atlasnetwork.CorePlayerProfileHandler;
 import de.atlascore.atlasnetwork.master.node.CoreNodeManager;
 import de.atlascore.atlasnetwork.master.server.CoreServerManager;
-import de.atlascore.atlasnetwork.master.server.CoreSimpleServerDeploymentMethod;
 import de.atlasmc.Atlas;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.atlasnetwork.AtlasNetwork;

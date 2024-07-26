@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
-import de.atlascore.CoreAtlasThread;
+import de.atlascore.atlasnetwork.master.CoreMasterBuilder;
 import de.atlascore.cache.CoreCacheHandler;
 import de.atlascore.chat.CoreChatFactory;
 import de.atlascore.command.CoreConsoleCommandSender;
@@ -71,8 +71,7 @@ import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.registry.RegistryHandler;
 import de.atlasmc.registry.RegistryHolder.Target;
-import de.atlasmc.util.Builder;
-import de.atlasmc.util.BuilderFactory;
+import de.atlasmc.tick.AtlasThread;
 import de.atlasmc.util.EncryptionUtil;
 import de.atlasmc.util.FileUtils;
 import de.atlasmc.util.ThreadWatchdog;
@@ -150,7 +149,7 @@ public class Main {
 		.setDataHandler(loadRepositories(log, workDir))
 		.setKeyPair(keyPair)
 		.setLogger(log)
-		.setMainThread(new CoreAtlasThread(log))
+		.setMainThread(new AtlasThread("Atlas-Main", 50, log, false))
 		.setPluginManager(pluginManager)
 		.setScheduler(new CoreAtlasScheduler())
 		.setWorkDir(workDir)
@@ -336,11 +335,8 @@ public class Main {
 			Atlas.getLogger().error("Master configuration not found");
 			return null;
 		}
-		Registry<BuilderFactory> builderRegistry = Registries.getInstanceRegistry(BuilderFactory.class);
-		BuilderFactory builderFactory = builderRegistry.get("atlas-core:master");
-		@SuppressWarnings("unchecked")
-		Builder<AtlasNetwork> networkBuilder = (Builder<AtlasNetwork>) builderFactory.createBuilder(masterConfig, arguments);
-		return networkBuilder.build();
+		CoreMasterBuilder builder = new CoreMasterBuilder(masterConfig, arguments);
+		return builder.build();
 	}
 
 	private static FileConfiguration loadConfig(File workDir) throws IOException {

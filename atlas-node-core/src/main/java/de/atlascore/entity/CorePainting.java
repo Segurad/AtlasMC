@@ -61,8 +61,8 @@ public class CorePainting extends CoreHanging implements Painting {
 	}
 	
 	@Override
-	public void spawn(int entityID, World world, double x, double y, double z, float pitch, float yaw) {
-		super.spawn(entityID, world, x, y, z, pitch, yaw);
+	public void spawn(World world, double x, double y, double z, float pitch, float yaw) {
+		super.spawn(world, x, y, z, pitch, yaw);
 	}
 	
 	@Override

@@ -135,12 +135,8 @@ public class CompleteFuture<V> implements Future<V> {
 		return (Future<V>) EMPTY_MAP_FUTURE;
 	}
 	
-	public static Future<Boolean> getTrueFuture() {
-		return TRUE_FUTURE;
-	}
-	
-	public static Future<Boolean> getFalseFuture() {
-		return FALSE_FUTURE;
+	public static Future<Boolean> getBooleanFuture(boolean value) {
+		return value ? TRUE_FUTURE : FALSE_FUTURE;
 	}
 
 	@Override
@@ -151,8 +147,9 @@ public class CompleteFuture<V> implements Future<V> {
 	/**
 	 * Returns a Complete future of the given value.
 	 * If the value is null {@link #getNullFuture()}.
-	 * If the value is empty map {@link #getEmptyMapFuture()}.
-	 * If the value is empty collection {@link #getEmptyListFuture()}.
+	 * If the value is a empty map {@link #getEmptyMapFuture()}.
+	 * If the value is a empty collection {@link #getEmptyListFuture()}.
+	 * If the value is a boolean {@link #getBooleanFuture(boolean)}
 	 * Otherwise a new CompleteFuture will be constructed.
 	 * @param <V>
 	 * @param value
@@ -168,7 +165,7 @@ public class CompleteFuture<V> implements Future<V> {
 			return getEmptyListFuture();
 		} else if (value instanceof Boolean) {
 			@SuppressWarnings("unchecked")
-			Future<V> future = (boolean) value ? (Future<V>) TRUE_FUTURE : (Future<V>) FALSE_FUTURE;
+			Future<V> future = (Future<V>) getBooleanFuture((boolean) value);
 			return future;
 		}
 		return new CompleteFuture<>(value);

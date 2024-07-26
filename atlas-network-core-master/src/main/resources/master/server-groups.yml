@@ -14,21 +14,20 @@ TestGroup:
   server-config:
     server-factory: "atlas-core:localserver"
     config:
-      #load-default-tasks: true # whether or not all default tasks should be loaded
-      # the following lists are optional and provide a deep configuration of all tasks
-      # a element may represent a string or a object
-      # a string is directly interpreted as key for the task
-      # a object must contain the key "task-type" with a string as value that represents the key of the task
-      # if a string elemnt is named "default" all default tasks of the category will be loaded at this position
-      # if default is not in this list and "load-default-tasks" is true the default tasks will be inserted first
-      #startup-tasks: # tasks that will be executed in defined order on startup
-      #- default
-      #shutdown-tasks: # tasks that will be executed in reverse order on shutdown
-      #- default
-      #preparaton-tasks: # tasks that will be executed in defined order on preparation
-      #- default
-      #tick-tasks: # tasks that will be executed each tick in defined order
-      #- default
+      # the following objects are optional and provide a deep configuration of all tasks
+      # a key may have a string or a object
+      # a string is directly interpreted as registry key for the task
+      # a object must contain the key "task-type" with a string as value that represents the registry key of the task
+      # if a key is named "default" all default tasks of the category will be loaded at this position if the value is true
+      # if one of the task configurations is not present the default tasks will be loaded for this tasks
+      startup-hooks: # tasks that will be executed in defined order on startup
+        default: true
+      shutdown-hooks: # tasks that will be executed in reverse order on shutdown
+        default: true
+      preparaton-tasks: # tasks that will be executed in defined order on preparation
+        default: true
+      tick-tasks: # tasks that will be executed each tick in defined order
+        default: true
     static: false
     auto-stop-delay: 180
     auto-stop-users: 0

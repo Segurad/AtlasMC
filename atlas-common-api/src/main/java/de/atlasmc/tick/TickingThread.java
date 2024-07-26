@@ -65,7 +65,7 @@ public class TickingThread extends Thread implements WatchableThread {
 			} catch (Exception e) {
 				logger.error("Error in tick process!", e);
 				if (exitOnError)
-					stopThread();
+					shutdown();
 			}
 			// End process
 			tickEnd = System.nanoTime();
@@ -108,7 +108,7 @@ public class TickingThread extends Thread implements WatchableThread {
 	 */
 	protected void tick(int tick) {
 		if (runner == null) {
-			stopThread();
+			shutdown();
 			throw new IllegalStateException("Tick invokation without runner!");
 		}
 		runner.run();
@@ -120,7 +120,7 @@ public class TickingThread extends Thread implements WatchableThread {
 	}
 	
 	@ThreadSafe
-	public void stopThread() {
+	public void shutdown() {
 		running = false;
 	}
 	

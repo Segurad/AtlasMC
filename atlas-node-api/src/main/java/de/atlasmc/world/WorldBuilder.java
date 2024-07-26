@@ -10,7 +10,6 @@ import de.atlasmc.util.Pair;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.InvalidConfigurationException;
-import de.atlasmc.world.WorldBuilder;
 
 public class WorldBuilder implements Builder<World> {
 
@@ -26,6 +25,7 @@ public class WorldBuilder implements Builder<World> {
 	private Dimension dimension;
 	private WorldFactory worldFactory;
 	private ChunkFactory chunkFactory;
+	private EntityTrackerFactory entityTracker;
 	
 	public WorldBuilder() {}
 	
@@ -71,12 +71,6 @@ public class WorldBuilder implements Builder<World> {
 				throw new InvalidConfigurationException("Unable to find the defined \"" + key + "\": " + raw);
 		}
 		return value;
-	}
-	
-	public WorldBuilder defaults() {
-		worldFactory = Registries.getInstanceDefault(WorldFactory.class);
-		chunkFactory = Registries.getInstanceDefault(ChunkFactory.class);
-		return this;
 	}
 	
 	public void setConfiguration(ConfigurationSection config) {
@@ -132,6 +126,10 @@ public class WorldBuilder implements Builder<World> {
 		return chunkProviderConfig;
 	}
 	
+	/**
+	 * Returns the file or directory of the world
+	 * @return
+	 */
 	public File getWorldDir() {
 		return worldDir;
 	}
@@ -232,6 +230,15 @@ public class WorldBuilder implements Builder<World> {
 		this.chunkLoaderConfig = chunkLoaderConfig;
 		return this;
 	}
+	
+	public EntityTrackerFactory getEntityTracker() {
+		return entityTracker;
+	}
+	
+	public WorldBuilder setEntityTracker(EntityTrackerFactory entityTracker) {
+		this.entityTracker = entityTracker;
+		return this;
+	}
 
 	@Override
 	public void clear() {
@@ -247,6 +254,7 @@ public class WorldBuilder implements Builder<World> {
 		dimension = null;
 		worldFactory = null;
 		chunkFactory = null;
+		entityTracker = null;
 	}
 
 }

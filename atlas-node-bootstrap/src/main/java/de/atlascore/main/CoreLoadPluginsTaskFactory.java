@@ -16,7 +16,7 @@ public class CoreLoadPluginsTaskFactory implements AtlasThreadTaskFactory {
 	public AtlasThreadTask createTask(String name, Object... context) {
 		return new AtlasThreadTask() {	
 			@Override
-			public boolean tick(int tick) throws Exception {
+			public void tick(int tick) throws Exception {
 				Log log = Atlas.getLogger();
 				log.info("Loading core modules...");
 				File tmpCoremodulDir = new File(Atlas.getWorkdir(), "tmp/modules/");
@@ -26,7 +26,6 @@ public class CoreLoadPluginsTaskFactory implements AtlasThreadTaskFactory {
 				PluginManager pm = Atlas.getPluginManager();
 				pm.loadPlugins(coremodulDir);
 				pm.loadPlugins(tmpCoremodulDir);
-				return true;
 			}
 			
 			@Override

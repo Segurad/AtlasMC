@@ -10,13 +10,12 @@ import de.atlascore.inventory.CoreInventoryView;
 import de.atlascore.inventory.CorePlayerItemCooldownHandler;
 import de.atlasmc.Gamemode;
 import de.atlasmc.Material;
+import de.atlasmc.NodePlayer;
 import de.atlasmc.Particle;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
-import de.atlasmc.WorldEvent;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
-import de.atlasmc.atlasnetwork.NodePlayer;
 import de.atlasmc.block.DiggingHandler;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatType;
@@ -51,6 +50,7 @@ import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.scoreboard.ScoreboardView;
 import de.atlasmc.util.CooldownHandler;
 import de.atlasmc.util.MathUtil;
+import de.atlasmc.world.WorldEvent;
 
 public class CorePlayer extends CoreHumanEntity implements Player {
 	
@@ -365,11 +365,6 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	@Override
 	public PermissionHandler getPermissionHandler() {
 		return atlasPlayer.getPermissionHandler();
-	}
-
-	@Override
-	public void setPermissionHandler(PermissionHandler handler) {
-		atlasPlayer.setPermissionHandler(handler);
 	}
 
 	@Override

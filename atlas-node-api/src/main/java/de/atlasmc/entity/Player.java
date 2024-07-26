@@ -4,14 +4,13 @@ import java.util.UUID;
 
 import org.joml.Vector3d;
 
-import de.atlasmc.WorldEvent;
 import de.atlasmc.Gamemode;
+import de.atlasmc.NodePlayer;
 import de.atlasmc.Particle;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
-import de.atlasmc.atlasnetwork.NodePlayer;
 import de.atlasmc.block.DiggingHandler;
 import de.atlasmc.chat.Messageable;
 import de.atlasmc.inventory.Inventory;
@@ -22,12 +21,11 @@ import de.atlasmc.permission.Permissible;
 import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.scoreboard.ScoreboardView;
+import de.atlasmc.world.WorldEvent;
 
 public interface Player extends HumanEntity, Permissible, Messageable {
 	
 	PermissionHandler getPermissionHandler();
-	
-	void setPermissionHandler(PermissionHandler handler);
 	
 	int getLevel();
 

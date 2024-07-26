@@ -23,14 +23,14 @@ import de.atlasmc.entity.data.MetaDataContainer;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.io.protocol.PlayerConnection;
+import de.atlasmc.io.protocol.play.PacketOutEntityTeleport;
 import de.atlasmc.io.protocol.play.PacketOutRemoveEntities;
 import de.atlasmc.io.protocol.play.PacketOutSetEntityMetadata;
+import de.atlasmc.io.protocol.play.PacketOutSetPassengers;
+import de.atlasmc.io.protocol.play.PacketOutSpawnEntity;
 import de.atlasmc.io.protocol.play.PacketOutUpdateEntityPositionAndRotation;
 import de.atlasmc.io.protocol.play.PacketOutUpdateEntityRotation;
 import de.atlasmc.server.LocalServer;
-import de.atlasmc.io.protocol.play.PacketOutEntityTeleport;
-import de.atlasmc.io.protocol.play.PacketOutSetPassengers;
-import de.atlasmc.io.protocol.play.PacketOutSpawnEntity;
 import de.atlasmc.util.MathUtil;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.map.key.CharKey;
@@ -42,6 +42,8 @@ import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.tag.NBT;
 import de.atlasmc.world.Chunk;
+import de.atlasmc.world.EntityTracker.Perception;
+import de.atlasmc.world.EntityTracker.TrackerBinding;
 import de.atlasmc.world.World;
 
 public class CoreEntity extends AbstractNBTBase implements Entity {
@@ -60,7 +62,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 			packet.setEntityIDs(holder.getID());
 			con.sendPacked(packet);
 		};
-	
+		
 	/**
 	 * Flags contains the following Data<br>
 	 * <table>
@@ -178,9 +180,9 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	
 	private CustomTagContainer customTags;
 	protected final MetaDataContainer metaContainer;
-	private int id;
 	private final EntityType type;
 	protected final ViewerSet<Entity, Player> viewers;
+	protected TrackerBinding tracker;
 	private UUID uuid;
 	private short air;
 	private float fallDistance;
@@ -197,6 +199,8 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	protected final Location oldLoc;
 	private Chunk chunk;
 	private List<String> scoreboardTags;
+	private Perception<?> perception;
+	private double perceptionDistance;
 	
 	// Update flags
 	private boolean teleported;
@@ -300,13 +304,14 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 			return;
 		removed = true;
 		if (chunk != null)
-			chunk.removeEntity(this);
+			;
 		chunk = null;
 		if (passengers != null)
 			passengers.clear();
 		viewers.clear();
 		aremoved = true;
-		
+		tracker.unregister();
+		tracker = null;
 		// TODO implement remove
 	}
 
@@ -352,7 +357,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 
 	@Override
 	public int getID() {
-		return id;
+		return tracker.getID();
 	}
 
 	@Override
@@ -640,7 +645,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	}
 
 	@Override
-	public synchronized void spawn(int entityID, World world, double x, double y, double z, float pitch, float yaw) {
+	public synchronized void spawn(World world, double x, double y, double z, float pitch, float yaw) {
 		if (world == null)
 			throw new IllegalArgumentException("World can not be null!");
 		if (!asyncIsRemoved() || !isRemoved())
@@ -652,8 +657,8 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 		server = world.getServer();
 		if (passengers != null) 
 			passengers.clear();
-		this.id = entityID;
 		this.loc.set(world, x, y, z, yaw, pitch);
+		tracker = world.getEntityTracker().register(this, x, y ,z, perception);
 		chunk = getWorld().getChunk(loc);
 		fallDistance = 0;
 		fire = 0;
@@ -714,9 +719,10 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 			}
 		}
 		if (!oldLoc.matches(loc)) { // Entity has moved
-			if (oldLoc.getDistanceSquared(loc) > 64)
+			tracker.updatePosition(loc.x, loc.y, loc.z);
+			if (oldLoc.getDistanceSquared(loc) > 64) {
 				teleported = true; // teleport entity when moved more than 8 blocks
-			else {
+			} else {
 				if (!loc.matchPosition(oldLoc)) {
 					PacketOutUpdateEntityPositionAndRotation packet = new PacketOutUpdateEntityPositionAndRotation();
 					short dx = MathUtil.delta(loc.x, oldLoc.x);
@@ -822,6 +828,30 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	@Override
 	public void setFreezeTicks(int ticks) {
 		metaContainer.get(META_TICKS_FROZEN).setData(ticks);
+	}
+
+	@Override
+	public Perception<?> getPerception() {
+		return perception;
+	}
+
+	@Override
+	public void setPerception(Perception<?> perception) {
+		this.perception = perception;
+		if (tracker != null)
+			tracker.updatePerception(perception);
+	}
+
+	@Override
+	public double getPerceptionDistance() {
+		return perceptionDistance;
+	}
+
+	@Override
+	public void setPerceptionDistance(double distance) {
+		this.perceptionDistance = distance;
+		if (tracker != null)
+			tracker.updatePerceptionDistance(distance);
 	}
 	
 }

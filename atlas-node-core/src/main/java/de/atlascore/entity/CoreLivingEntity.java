@@ -992,8 +992,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		HandlerList.callEvent(event);
 		if (event.isCancelled())
 			return null;
-		int id = world.getEntityID();
-		projectile.spawn(id, world, event.getX(), event.getY(), event.getZ(), event.getPitch(), event.getYaw());
+		projectile.spawn(world, event.getX(), event.getY(), event.getZ(), event.getPitch(), event.getYaw());
 		if (velocity != null)
 			projectile.setVelocity(velocity);
 		return projectile;

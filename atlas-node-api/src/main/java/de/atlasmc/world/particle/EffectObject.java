@@ -1,9 +1,9 @@
 package de.atlasmc.world.particle;
 
-import de.atlasmc.WorldEvent;
 import de.atlasmc.Location;
 import de.atlasmc.entity.Player;
 import de.atlasmc.util.EulerAngle;
+import de.atlasmc.world.WorldEvent;
 
 public class EffectObject implements Animation {
 

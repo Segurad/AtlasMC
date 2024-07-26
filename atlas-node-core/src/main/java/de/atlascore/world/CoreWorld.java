@@ -2,7 +2,7 @@ package de.atlascore.world;
 
 import java.io.File;
 import java.util.Collection;
-import de.atlasmc.WorldEvent;
+
 import de.atlasmc.Location;
 import de.atlasmc.Particle;
 import de.atlasmc.SimpleLocation;
@@ -15,26 +15,29 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.entity.EntitySpawnEvent;
-import de.atlasmc.io.protocol.play.PacketOutWorldEvent;
-import de.atlasmc.server.LocalServer;
 import de.atlasmc.io.protocol.play.PacketOutEntitySoundEffect;
 import de.atlasmc.io.protocol.play.PacketOutParticle;
 import de.atlasmc.io.protocol.play.PacketOutSoundEffect;
+import de.atlasmc.io.protocol.play.PacketOutWorldEvent;
+import de.atlasmc.server.LocalServer;
 import de.atlasmc.util.MathUtil;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.world.Chunk;
 import de.atlasmc.world.ChunkFactory;
 import de.atlasmc.world.ChunkGenerator;
 import de.atlasmc.world.ChunkGeneratorFactory;
-import de.atlasmc.world.ChunkListener;
+import de.atlasmc.world.ChunkViewer;
 import de.atlasmc.world.ChunkLoader;
 import de.atlasmc.world.ChunkLoaderFactory;
 import de.atlasmc.world.ChunkProvider;
 import de.atlasmc.world.ChunkProviderFactory;
 import de.atlasmc.world.Dimension;
+import de.atlasmc.world.EntityTracker;
+import de.atlasmc.world.EntityTrackerFactory;
 import de.atlasmc.world.PlayerChunkListener;
 import de.atlasmc.world.World;
 import de.atlasmc.world.WorldBuilder;
+import de.atlasmc.world.WorldEvent;
 import de.atlasmc.world.WorldFlag;
 
 public class CoreWorld implements World {
@@ -43,10 +46,10 @@ public class CoreWorld implements World {
 	private final String name;
 	private final LocalServer server;
 	private final Dimension dimension;
+	private final EntityTracker entityTracker;
 	private long time;
 	private boolean timeCycle;
 	private long age;
-	private int nextEntityID;
 	private Location spawn;
 	
 	public CoreWorld(WorldBuilder builder) {
@@ -80,22 +83,26 @@ public class CoreWorld implements World {
 		this.chunks = chunkProviderFactory.createProvider(this, chunkGen, chunkLoader, providerCfg);
 		if (chunks == null)
 			throw new IllegalStateException("No chunk provider initialized!");
+		EntityTrackerFactory entityTrackerFactory = builder.getEntityTracker();
+		if (entityTrackerFactory == null)
+			throw new IllegalArgumentException("EntityTrackerFactory can not be null!");
+		this.entityTracker = entityTrackerFactory.createEntityTracker(this);
 	}
 
 	@Override
 	public Collection<Entity> getEntities() {
-		return chunks.getEntities();
+		return entityTracker.getEntities();
 	}
 
 	@Override
 	public <T extends Entity> Collection<T> getEntitiesByClass(Class<T> clazz) {
-		return chunks.getEntitiesByClass(clazz);
+		return entityTracker.getEntitiesByClass(clazz);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<Entity> getEntitesByClasses(Class<? extends Entity>... classes) {
-		return chunks.getEntitesByClasses(classes);
+		return entityTracker.getEntitesByClasses(classes);
 	}
 
 	@Override
@@ -133,7 +140,7 @@ public class CoreWorld implements World {
 		if (chunk == null)
 			return;
 		PacketOutWorldEvent packet = null;
-		for (ChunkListener listener : chunk.getViewers()) {
+		for (ChunkViewer listener : chunk.getViewers()) {
 			if (!(listener instanceof PlayerChunkListener))
 				continue;
 			PlayerChunkListener player = (PlayerChunkListener) listener;
@@ -157,7 +164,7 @@ public class CoreWorld implements World {
 		Chunk chunk = getChunk(loc, false);
 		if (chunk == null)
 			return;
-		for (ChunkListener listener : chunk.getViewers()) {
+		for (ChunkViewer listener : chunk.getViewers()) {
 			if (!(listener instanceof PlayerChunkListener))
 				continue;
 			PlayerChunkListener player = (PlayerChunkListener) listener;
@@ -202,7 +209,7 @@ public class CoreWorld implements World {
 		Chunk chunk = getChunk(loc, false);
 		if (chunk == null)
 			return;
-		for (ChunkListener listener : chunk.getViewers()) {
+		for (ChunkViewer listener : chunk.getViewers()) {
 			if (!(listener instanceof PlayerChunkListener))
 				continue;
 			PlayerChunkListener player = (PlayerChunkListener) listener;
@@ -304,7 +311,7 @@ public class CoreWorld implements World {
 
 	@Override
 	public Entity getEntity(int entityID) {
-		return chunks.getEntity(entityID);
+		return entityTracker.getEntity(entityID);
 	}
 
 	@Override
@@ -335,7 +342,7 @@ public class CoreWorld implements World {
 		HandlerList.callEvent(event);
 		if (event.isCancelled())
 			return false;
-		entity.spawn(nextEntityID++, this, event.getX(), event.getY(), event.getZ(), event.getPitch(), event.getYaw());
+		entity.spawn(this, event.getX(), event.getY(), event.getZ(), event.getPitch(), event.getYaw());
 		return true;
 	}
 
@@ -346,20 +353,13 @@ public class CoreWorld implements World {
 	}
 
 	@Override
-	public int getEntityID() {
-		return nextEntityID++;
-	}
-	
-	@Override
-	public int getEntityIDs(int count) {
-		int next = nextEntityID+1;
-		nextEntityID+= count;
-		return next;
+	public Dimension getDimension() {
+		return dimension;
 	}
 
 	@Override
-	public Dimension getDimension() {
-		return dimension;
+	public EntityTracker getEntityTracker() {
+		return entityTracker;
 	}
 
 }

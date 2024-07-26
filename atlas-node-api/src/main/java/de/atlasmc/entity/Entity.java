@@ -18,6 +18,7 @@ import de.atlasmc.util.annotation.ThreadSafe;
 import de.atlasmc.util.nbt.CustomTagContainer;
 import de.atlasmc.util.nbt.NBTHolder;
 import de.atlasmc.world.Chunk;
+import de.atlasmc.world.EntityTracker.Perception;
 import de.atlasmc.world.World;
 
 public interface Entity extends NBTHolder, Nameable, Tickable {
@@ -103,98 +104,98 @@ public interface Entity extends NBTHolder, Nameable, Tickable {
 		}
 		
 	}
-	public void addScoreboardTag(String tag);
+	void addScoreboardTag(String tag);
 	
-	public int getAirTicks();
+	int getAirTicks();
 	
-	public float getFallDistance();
+	float getFallDistance();
 	
-	public short getFireTicks();
+	short getFireTicks();
 	
 	/**
 	 * 
 	 * @return the internal entity id
 	 */
-	public int getID();
+	int getID();
 	
-	public Location getLocation();
+	Location getLocation();
 	
-	public Location getLocation(Location loc);
+	Location getLocation(Location loc);
 	
-	public SimpleLocation getLocation(SimpleLocation loc);
+	SimpleLocation getLocation(SimpleLocation loc);
 	
-	public CustomTagContainer getCustomTagContainer();
+	CustomTagContainer getCustomTagContainer();
 	
-	public Pose getPose();
+	Pose getPose();
 	
-	public Collection<String> getScoreboardTags();
+	Collection<String> getScoreboardTags();
 	
-	public LocalServer getServer();
+	LocalServer getServer();
 	
-	public EntityType getType();
+	EntityType getType();
 	
 	/**
 	 * Returns the UUID of this Entity
 	 * @return UUID
 	 */
-	public UUID getUUID();
+	UUID getUUID();
 	
-	public Vector3d getVelocity();
+	Vector3d getVelocity();
 	
-	public Vector3d getVelocity(Vector3d vec);
+	Vector3d getVelocity(Vector3d vec);
 	
-	public void setVelocity(Vector3d vec);
+	void setVelocity(Vector3d vec);
 	
-	public void setVelocity(double x, double y, double z);
+	void setVelocity(double x, double y, double z);
 	
-	public World getWorld();
+	World getWorld();
 	
-	public Chunk getChunk();
+	Chunk getChunk();
 	
-	public double getX();
+	double getX();
 	
-	public double getY();
+	double getY();
 	
-	public double getZ();
+	double getZ();
 	
-	public float getPitch();
+	float getPitch();
 
-	public float getYaw();
+	float getYaw();
 	
-	public boolean hasGravity();
+	boolean hasGravity();
 	
-	public boolean hasScoreboardTags();
+	boolean hasScoreboardTags();
 	
-	public boolean hasVelocity();
+	boolean hasVelocity();
 
-	public boolean isCustomNameVisible();
+	boolean isCustomNameVisible();
 	
-	public boolean isFlyingWithElytra();
+	boolean isFlyingWithElytra();
 	
-	public boolean isGlowing();
+	boolean isGlowing();
 	
-	public boolean isInvisible();
+	boolean isInvisible();
 	
-	public void setInvisible(boolean invisible);
+	void setInvisible(boolean invisible);
 	
-	public boolean isOnGround();
+	boolean isOnGround();
 	
-	public boolean isOnFire();
+	boolean isOnFire();
 	
-	public boolean isSilent();
+	boolean isSilent();
 	
-	public boolean isSprinting();
+	boolean isSprinting();
 	
-	public boolean isSwimming();
+	boolean isSwimming();
 	
-	public boolean hasCustomName();
+	boolean hasCustomName();
 	
-	public boolean isInvulnerable();
+	boolean isInvulnerable();
 	
 	/**
 	 * Removes the entity the current world
 	 */
-	public void remove();
+	void remove();
 	
 	/**
 	 * Thread safe alternative to {@link #isRemoved()}.<br>
@@ -202,39 +203,39 @@ public interface Entity extends NBTHolder, Nameable, Tickable {
 	 * @return true if the Entity is removed
 	 */
 	@ThreadSafe
-	public boolean asyncIsRemoved();
+	boolean asyncIsRemoved();
 	
 	/**
 	 * Check if the Entity is removed
 	 * @return true if the Entity is removed
 	 */
-	public boolean isRemoved();
+	boolean isRemoved();
 	
-	public boolean isDead();
+	boolean isDead();
 	
-	public int getPortalCooldown();
+	int getPortalCooldown();
 	
-	public void setAirTicks(int air);
+	void setAirTicks(int air);
 
-	public void setCustomNameVisible(boolean value);
+	void setCustomNameVisible(boolean value);
 
-	public void setFallDistance(float distance);
+	void setFallDistance(float distance);
 	
-	public void setFireTicks(int ticks);
+	void setFireTicks(int ticks);
 
-	public void setGlowing(boolean glowing);
+	void setGlowing(boolean glowing);
 
-	public void setGravity(boolean gravity);
+	void setGravity(boolean gravity);
 	
-	public void setInvulnerable(boolean invulnerable);
+	void setInvulnerable(boolean invulnerable);
 
-	public void setPortalCooldown(int cooldown);
+	void setPortalCooldown(int cooldown);
 
-	public void setPose(Pose pose);
+	void setPose(Pose pose);
 
-	public void setSilent(boolean silent);
+	void setSilent(boolean silent);
 
-	public void setUUID(UUID uuid);
+	void setUUID(UUID uuid);
 	
 	int getFreezeTicks();
 	
@@ -252,14 +253,13 @@ public interface Entity extends NBTHolder, Nameable, Tickable {
 	 * @param y
 	 * @param z
 	 */
-	public void teleport(double x, double y, double z);
+	void teleport(double x, double y, double z);
 	
-	public void teleport(double x, double y, double z, float yaw, float pitch);
+	void teleport(double x, double y, double z, float yaw, float pitch);
 
 	/**
 	 * This method is called by the System when the entity is spawned at another world and/or server.<br>
 	 * It resets the removed status when used.
-	 * @param entityID the new entityID of this entity
 	 * @param world the new world of this entity
 	 * @param x
 	 * @param y
@@ -267,12 +267,20 @@ public interface Entity extends NBTHolder, Nameable, Tickable {
 	 * @param pitch
 	 * @param yaw
 	 */
-	public void spawn(int entityID, World world, double x, double y, double z, float pitch, float yaw);
+	void spawn(World world, double x, double y, double z, float pitch, float yaw);
 	
-	public void causeSound(Sound sound, SoundCategory category, float volume, float pitch, long seed);
+	void causeSound(Sound sound, SoundCategory category, float volume, float pitch, long seed);
 	
-	public void causeSound(String sound, SoundCategory category, float volume, float pitch, long seed, boolean fixedRange, float range);
+	void causeSound(String sound, SoundCategory category, float volume, float pitch, long seed, boolean fixedRange, float range);
 	
-	public ViewerSet<Entity, Player> getViewers();
+	ViewerSet<Entity, Player> getViewers();
+	
+	Perception<?> getPerception();
+	
+	void setPerception(Perception<?> perception);
+	
+	double getPerceptionDistance();
+	
+	void setPerceptionDistance(double distance);
 	
 }

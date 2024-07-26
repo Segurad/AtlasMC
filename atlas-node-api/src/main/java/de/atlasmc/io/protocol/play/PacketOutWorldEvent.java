@@ -1,8 +1,8 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.WorldEvent;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.world.WorldEvent;
 
 @DefaultPacketID(PacketPlay.OUT_WORLD_EVENT)
 public class PacketOutWorldEvent extends AbstractPacket implements PacketPlayOut {

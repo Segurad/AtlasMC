@@ -95,7 +95,6 @@ public class CoreAtlasPlayer implements AtlasPlayer {
 		return permhandler;
 	}
 
-	@Override
 	public void setPermissionHandler(PermissionHandler handler) {
 		this.permhandler = handler;
 	}
@@ -138,7 +137,6 @@ public class CoreAtlasPlayer implements AtlasPlayer {
 		return lastJoin;
 	}
 	
-	@Override
 	public void setLastJoin(Date date) {
 		if (date == null)
 			throw new IllegalArgumentException("Date can not be null!");

@@ -40,9 +40,9 @@ public class AdaptivePalette<E> implements Palette<E> {
 		int id = palette.setEntry(entry, index);
 		if (id != -1)
 			return id;
-		if (palette instanceof SingleValuePalette<E> p) {
+		if (palette instanceof SingleValuePalette<E>) {
 			palette = new IndirectPalette<>(minBitsPerEntry, globalBitThreshold, palette);
-		} else if (palette instanceof IndirectPalette<E> p) {
+		} else if (palette instanceof IndirectPalette<E>) {
 			palette = new IndirectGlobalPalette<>(minBitsPerEntry, 0, palette);
 		} else {
 			throw new IllegalStateException("Unable to switch palette: " + palette.getClass().getName());

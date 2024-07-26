@@ -5,8 +5,7 @@ import java.io.IOException;
 import io.netty.buffer.ByteBuf;
 
 /**
- * Abstract base for packet handling
- * @param <P> the packet type
+ * Used for reading writing and creating of packets
  */
 public interface PacketIO<P extends Packet> {
 	

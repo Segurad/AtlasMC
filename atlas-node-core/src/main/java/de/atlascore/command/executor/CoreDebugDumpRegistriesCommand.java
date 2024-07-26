@@ -8,13 +8,13 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Map.Entry;
 
 import de.atlasmc.Atlas;
 import de.atlasmc.command.CommandContext;
 import de.atlasmc.command.CommandExecutor;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
+import de.atlasmc.registry.RegistryEntry;
 import de.atlasmc.registry.RegistryValue;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.MemoryConfigurationSection;
@@ -80,19 +80,19 @@ public class CoreDebugDumpRegistriesCommand implements CommandExecutor {
 			}
 			cfg.set("default", defaultClass.getName());
 		}
-		Collection<Entry<String, Object>> entries = registry.entrySet();
+		Collection<RegistryEntry<Object>> entries = registry.entries();
 		if (entries.isEmpty())
 			return;
 		ConfigurationSection values = cfg.createSection("entries");
-		for (Entry<String, ?> entry : entries) {
+		for (RegistryEntry<Object> entry : entries) {
 			Class<?> entryClass = null;
-			Object entryValue = entry.getValue();
+			Object entryValue = entry.value();
 			if (entryValue instanceof Class clazz) {
 				entryClass = clazz;
 			} else {
 				entryClass = entryValue.getClass();
 			}
-			values.set(entry.getKey(), entryClass.getName());
+			values.set(entry.key(), entryClass.getName());
 		}
 	}
 	

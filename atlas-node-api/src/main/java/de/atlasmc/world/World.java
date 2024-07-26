@@ -7,7 +7,6 @@ import de.atlasmc.Particle;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
-import de.atlasmc.WorldEvent;
 import de.atlasmc.block.Block;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.entity.Entity;
@@ -16,6 +15,7 @@ import de.atlasmc.event.entity.EntitySpawnEvent;
 import de.atlasmc.server.LocalServer;
 import de.atlasmc.tick.Tickable;
 import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 
 public interface World extends Tickable {
 
@@ -76,20 +76,6 @@ public interface World extends Tickable {
 	 * @return true if spawning was successfully
 	 */
 	boolean spawnEntity(Entity entity, double x, double y, double z, float pitch, float yaw); 
-	
-	/**
-	 * Returns the next entityID
-	 * @return entityID
-	 */
-	int getEntityID();
-	
-	/**
-	 * Returns the next entityID.
-	 * If you use this method you are able to use the number of entity ids given by count starting by the returned id.
-	 * @param count the number of entityIDs that should be used
-	 * @return entityID
-	 */
-	int getEntityIDs(int count);
 
 	Block getHighestBlockAt(int x, int z);
 
@@ -154,6 +140,7 @@ public interface World extends Tickable {
 	 * @param z of the chunk
 	 * @return the chunk
 	 */
+	@Nullable
 	Chunk getChunk(int x, int z);
 	
 	/**
@@ -163,6 +150,7 @@ public interface World extends Tickable {
 	 * @param load if the chunk should be loaded
 	 * @return chunk or null
 	 */
+	@Nullable
 	Chunk getChunk(int x, int z, boolean load);
 	
 	/**
@@ -170,6 +158,7 @@ public interface World extends Tickable {
 	 * @param loc the chunk location
 	 * @return chunk
 	 */
+	@Nullable
 	Chunk getChunk(SimpleLocation loc);
 	
 	/**
@@ -178,9 +167,13 @@ public interface World extends Tickable {
 	 * @param load if the chunk should be loaded
 	 * @return chunk or null
 	 */
+	@Nullable
 	Chunk getChunk(SimpleLocation loc, boolean load);
 
 	@NotNull
 	Dimension getDimension();
+	
+	@NotNull
+	EntityTracker getEntityTracker();
 
 }

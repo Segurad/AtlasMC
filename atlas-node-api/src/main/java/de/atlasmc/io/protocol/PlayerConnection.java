@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.List;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.NodePlayer;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.atlasnetwork.AtlasNode;
-import de.atlasmc.atlasnetwork.NodePlayer;
 import de.atlasmc.chat.Messageable;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.player.PlayerAnimationEvent;

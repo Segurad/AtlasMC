@@ -47,7 +47,6 @@ public class YamlTransformer implements ReproducibleResourceTransformer {
 			presentCfg.time = time;
 	}
 	
-	@SuppressWarnings("unchecked")
 	private void merge(ConfigurationSection src, ConfigurationSection cfg) {
 		final Set<String> destKeys = cfg.getKeys();
 		for (String key : src.getKeys()) {
@@ -58,7 +57,9 @@ public class YamlTransformer implements ReproducibleResourceTransformer {
 					if (srcValue instanceof ConfigurationSection srcSection) {
 						merge(srcSection, section);
 					}
-				} else if (destvalue instanceof List list) {
+				} else if (destvalue instanceof List) {
+					@SuppressWarnings("unchecked")
+					List<Object> list = (List<Object>) destvalue;
 					Object srcValue = src.get(key);
 					if (srcValue instanceof List srcList) {
 						for (Object srcEntry : srcList) {

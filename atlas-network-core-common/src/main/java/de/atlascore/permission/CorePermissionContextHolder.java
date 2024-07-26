@@ -15,7 +15,7 @@ import de.atlasmc.permission.PermissionContextHolder;
 
 public class CorePermissionContextHolder implements PermissionContextHolder, Iterable<PermissionContext> {
 	
-	private volatile Map<String, Map<String, PermissionContext>> permContext;
+	private Map<String, Map<String, PermissionContext>> permContext;
 	private Collection<PermissionContext> values;
 
 	@Override

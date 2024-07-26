@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.atlasmc.util.VariableValueArray;
-import de.atlasmc.util.map.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 public abstract class AbstractPalette<E> implements Palette<E> {
 	
@@ -25,7 +26,7 @@ public abstract class AbstractPalette<E> implements Palette<E> {
 	protected AbstractPalette(int minBitsPerEntry, int maxBitsPerEntry, Palette<E> palette) {
 		if (palette == null)
 			throw new IllegalArgumentException("Palette can not be null!");
-		this.valueToEntry = new Int2ObjectMap<>();
+		this.valueToEntry = new Int2ObjectOpenHashMap<>();
 		this.entryMap = new HashMap<>();
 		this.minBitsPerEntry = minBitsPerEntry;
 		this.maxBitsPerEntry = maxBitsPerEntry;
@@ -48,7 +49,7 @@ public abstract class AbstractPalette<E> implements Palette<E> {
 	protected AbstractPalette(int minBitsPerEntry, int capacity, int maxBitsPerEntry, GlobalValueProvider<E> provider) {
 		if (provider == null)
 			throw new IllegalArgumentException("Provider can not be null!");
-		this.valueToEntry = new Int2ObjectMap<>();
+		this.valueToEntry = new Int2ObjectOpenHashMap<>();
 		this.entryMap = new HashMap<>();
 		this.minBitsPerEntry = minBitsPerEntry;
 		this.globalProvider = provider;

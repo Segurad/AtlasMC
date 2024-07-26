@@ -1,6 +1,7 @@
 package de.atlasmc.server;
 
 import java.util.Collection;
+import java.util.Queue;
 
 import de.atlasmc.event.Event;
 import de.atlasmc.event.SyncThreadHolder;
@@ -22,6 +23,9 @@ public interface LocalServer extends NodeServer, SyncThreadHolder {
 	void queueEvent(Event event);
 	
 	@ThreadSafe
+	Queue<Event> getEventQueue();
+	
+	@ThreadSafe
 	@NotNull
 	Scheduler getScheduler();
 	
@@ -35,5 +39,5 @@ public interface LocalServer extends NodeServer, SyncThreadHolder {
 	 */
 	@ThreadSafe
 	void runTask(Runnable task);
-	
+
 }

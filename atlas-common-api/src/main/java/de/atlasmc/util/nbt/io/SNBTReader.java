@@ -2,6 +2,7 @@ package de.atlasmc.util.nbt.io;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.util.function.IntConsumer;
 import java.util.function.LongConsumer;
 import java.util.regex.Pattern;
@@ -90,11 +91,15 @@ public class SNBTReader extends AbstractNBTReader {
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void close() {
 		if (closed)
 			return;
 		closed = true;
-		reader.close();
+		try {
+			reader.close();
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
 		reader = null;
 		name = null;
 		buffer = null;
@@ -361,11 +366,6 @@ public class SNBTReader extends AbstractNBTReader {
 	protected void resetName() {
 		name.clear();
 		hasName = false;
-	}
-	
-	protected final void ensureOpen() throws IOException {
-		if (closed)
-			throw new IOException("Stream closed!");
 	}
 
 	@Override

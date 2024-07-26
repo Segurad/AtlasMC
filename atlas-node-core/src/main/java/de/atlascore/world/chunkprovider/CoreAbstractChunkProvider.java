@@ -1,14 +1,9 @@
 package de.atlascore.world.chunkprovider;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import de.atlascore.block.CoreBlockAccess;
 import de.atlasmc.Location;
 import de.atlasmc.block.Block;
 import de.atlasmc.block.data.BlockData;
-import de.atlasmc.entity.Entity;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
@@ -119,39 +114,6 @@ public abstract class CoreAbstractChunkProvider implements ChunkProvider {
 	protected abstract void addCachedChunk(long pos, Chunk chunk);
 
 	@Override
-	public Collection<Entity> getEntities() {
-		List<Entity> entities = new ArrayList<>();
-		for (Chunk chunk : getChunks()) {
-			if (chunk == null) 
-				continue;
-			chunk.getEntities(entities);
-		}
-		return entities;
-	}
-
-	@Override
-	public <T extends Entity> Collection<T> getEntitiesByClass(Class<T> clazz) {
-		List<T> entities = new ArrayList<>();
-		for (Chunk chunk : getChunks()) {
-			if (chunk == null) 
-				continue;
-			chunk.getEntitiesByClass(entities, clazz);
-		}
-		return null;
-	}
-
-	@Override
-	public Collection<Entity> getEntitesByClasses(Class<? extends Entity>[] classes) {
-		List<Entity> entities = new ArrayList<>();
-		for (Chunk chunk : getChunks()) {
-			if (chunk == null) 
-				continue;
-			chunk.getEntitiesByClasses(entities, classes);
-		}
-		return entities;
-	}
-
-	@Override
 	public int getHighestBlockYAt(int x, int z) {
 		Chunk c = getChunk(x >> 4, z >> 4, false);
 		if (c == null) 
@@ -167,16 +129,7 @@ public abstract class CoreAbstractChunkProvider implements ChunkProvider {
 		return new CoreBlockAccess(new Location(world, x, y, z), chunk);
 	}
 
-	@Override
-	public Entity getEntity(int entityID) {
-		for (Chunk chunk : getChunks()) {
-			Entity entity = chunk.getEntity(entityID);
-			if (entity != null)
-				return entity;
-		}
-		return null;
-	}
-	
+
 	@Override
 	public void tick() {
 		for (Chunk chunk : getChunks()) {

@@ -1,6 +1,5 @@
 package de.atlascore.world;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -9,20 +8,23 @@ import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.entity.Entity;
+import de.atlasmc.util.MathUtil;
 import de.atlasmc.util.VariableValueArray;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.annotation.NotNull;
-import de.atlasmc.util.map.Int2ObjectMap;
 import de.atlasmc.world.Biome;
 import de.atlasmc.world.Chunk;
-import de.atlasmc.world.ChunkListener;
+import de.atlasmc.world.ChunkViewer;
 import de.atlasmc.world.ChunkSection;
 import de.atlasmc.world.ChunkStatus;
+import de.atlasmc.world.Dimension;
 import de.atlasmc.world.World;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 public class CoreChunk implements Chunk {
 	
-	private static final BiConsumer<Chunk, ChunkListener>
+	private static final BiConsumer<Chunk, ChunkViewer>
 		VIEWER_ADD_FUNCTION = (holder, viewer) -> {
 			viewer.added(holder);
 		},
@@ -31,13 +33,13 @@ public class CoreChunk implements Chunk {
 		};
 	
 	private final ChunkSection[] sections;
-	private List<Entity> entities;
 	private Int2ObjectMap<TileEntity> tiles;
-	private final ViewerSet<Chunk, ChunkListener> viewers;
+	private final ViewerSet<Chunk, ChunkViewer> viewers;
 	private final World world;
 	private final int x;
 	private final int z;
-	private final VariableValueArray hightmap;
+	private byte offsetY;
+	private final VariableValueArray heightmap;
 	private boolean loaded;
 	
 	private ChunkStatus status;
@@ -45,10 +47,12 @@ public class CoreChunk implements Chunk {
 	public CoreChunk(World world, int x, int z) {
 		this.x = x;
 		this.z = z;
-		sections = new ChunkSection[16];
-		entities = new ArrayList<>();
 		viewers = new ViewerSet<>(this, VIEWER_ADD_FUNCTION, VIEWER_REMOVE_FUNCTION);
-		hightmap = new VariableValueArray(256, 9);
+		Dimension dim = world.getDimension();
+		int effectiveHeight = dim.getHeight() - dim.getMinY();
+		this.offsetY = (byte) ((0 - dim.getMinY()) / 16);
+		sections = new ChunkSection[effectiveHeight / 16];
+		heightmap = new VariableValueArray(256, MathUtil.getRequiredBitCount(effectiveHeight));
 		this.world = world;
 	}
 
@@ -70,12 +74,11 @@ public class CoreChunk implements Chunk {
 	
 	@Override
 	public boolean hasSection(int height) {
-		ChunkSection section = sections[getSectionIndex(height)];
-		return section != null;
+		return sections[getSectionIndex(height)] != null;
 	}
 	
 	protected int getSectionIndex(int height) {
-		return (height & 0xFF) >>4;
+		return MathUtil.floor(height / 16 + offsetY);
 	}
 
 	@Override
@@ -90,7 +93,7 @@ public class CoreChunk implements Chunk {
 
 	@Override
 	public VariableValueArray getHightMap() {
-		return hightmap;
+		return heightmap;
 	}
 
 	@Override
@@ -117,12 +120,16 @@ public class CoreChunk implements Chunk {
 	
 	@Override
 	public TileEntity getTileEntity(int x, int y, int z) {
+		if (tiles == null)
+			return null;
 		TileEntity tile = tiles.get(getTileIndex(x, y, z));
 		return tile != null ? tile.clone() : tile;
 	}
 	
 	@Override
 	public TileEntity getTileEntityUnsafe(int x, int y, int z) {
+		if (tiles == null)
+			return null;
 		return tiles.get(getTileIndex(x, y, z));
 	}
 	
@@ -132,7 +139,7 @@ public class CoreChunk implements Chunk {
 			tile = tile.clone();
 			tile.setLocation(this, x, y, z);
 		}
-		return tiles.put(getTileIndex(x, y, z), tile);
+		return internalSetTileUnsafe(tile, x, y, z);
 	}
 	
 	@Override
@@ -142,7 +149,19 @@ public class CoreChunk implements Chunk {
 			tile = material.createTileEntity();
 			tile.setLocation(this, x, y, z);
 		}
-		return tiles.put(getTileIndex(x, y, z), tile);
+		return internalSetTileUnsafe(tile, x, y, z);
+	}
+	
+	private TileEntity internalSetTileUnsafe(TileEntity tile, int x, int y, int z) {
+		Int2ObjectMap<TileEntity> map = this.tiles;
+		if (map == null) {
+			if (tile == null)
+				return null;
+			map = tiles = new Int2ObjectOpenHashMap<>();
+		}
+		if (tile == null)
+			return map.remove(getTileIndex(x, y, z));
+		return map.put(getTileIndex(x, y, z), tile);
 	}
 	
 	protected int getTileIndex(int x, int y, int z) {
@@ -151,38 +170,34 @@ public class CoreChunk implements Chunk {
 		pos = pos << 8 | (z & 0xF);
 		return pos;
 	}
+	
+	protected int getHeigtMapIndex(int x, int z) {
+		return (z << 4) + x;
+	}
 
 	@Override
 	public int getHighestBlockYAt(int x, int z) {
-		// TODO Auto-generated method stub
-		return 0;
+		return heightmap.get(getHeigtMapIndex(x, z)) + offsetY * 16;
 	}
 
 	@Override
 	public Collection<Entity> getEntities() {
-		return entities;
+		return world.getEntityTracker().getEntities(x, z);
 	}
 
 	@Override
 	public <C extends Collection<Entity>> C getEntities(C entities) {
-		entities.addAll(this.entities);
-		return entities;
+		return world.getEntityTracker().getEntities(x, z, entities);
 	}
 
 	@Override
 	public <T extends Entity> Collection<T> getEntitiesByClass(Class<T> clazz) {
-		return getEntitiesByClass(new ArrayList<>(), clazz);
+		return world.getEntityTracker().getEntitesByClasses(x, z, clazz);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends Entity, C extends Collection<T>> C getEntitiesByClass(C entities, Class<T> clazz) {
-		for (Entity ent : this.entities) {
-			if (clazz.isInstance(ent)) {
-				entities.add((T) ent);
-			}
-		}
-		return entities;
+	public <T extends Entity, C extends Collection<T>> C getEntitiesByClass(Class<T> clazz, C entities) {
+		return world.getEntityTracker().getEntitesByClasses(x, z, clazz, entities);
 	}
 
 	@Override
@@ -226,24 +241,14 @@ public class CoreChunk implements Chunk {
 		section.setBlockData(data, x, y, z);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<Entity> getEntitiesByClasses(Class<? extends Entity>... classes) {
-		return getEntitiesByClasses(new ArrayList<>(), classes);
+	public Collection<Entity> getEntitiesByClasses(@SuppressWarnings("unchecked") Class<? extends Entity>... classes) {
+		return world.getEntityTracker().getEntitesByClasses(x, z, classes);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <C extends Collection<Entity>> C getEntitiesByClasses(C entities, Class<? extends Entity>... classes) {
-		for (Entity ent : this.entities) {
-			for (Class<?> clazz : classes) {
-				if (clazz.isInstance(ent)) {
-					entities.add(ent);
-					break;
-				}
-			}
-		}
-		return entities;
+	public <C extends Collection<Entity>> C getEntitiesByClasses(C entities, @SuppressWarnings("unchecked") Class<? extends Entity>... classes) {
+		return world.getEntityTracker().getEntitiesByClasses(x, z, entities, classes);
 	}
 
 	@Override
@@ -257,29 +262,19 @@ public class CoreChunk implements Chunk {
 	}
 
 	@Override
-	public void addListener(ChunkListener listener) {
+	public void addListener(ChunkViewer listener) {
 		viewers.add(listener);
 	}
 
 	@Override
-	public void removeListener(ChunkListener listener) {
+	public void removeListener(ChunkViewer listener) {
 		viewers.remove(listener);
-	}
-
-	@Override
-	public void addEntity(Entity entity) {
-		entities.add(entity);
-	}
-
-	@Override
-	public void removeEntity(Entity entity) {
-		entities.remove(entity);
 	}
 
 	@Override
 	public void updateBlock(int x, int y, int z) {
 		int state = getBlockState(x, y, z);
-		for (ChunkListener listener : viewers) {
+		for (ChunkViewer listener : viewers) {
 			listener.updateBlock(this, state, x, y, z);
 		}
 	}
@@ -290,7 +285,7 @@ public class CoreChunk implements Chunk {
 	}
 
 	@Override
-	public ViewerSet<Chunk, ChunkListener> getViewers() {
+	public ViewerSet<Chunk, ChunkViewer> getViewers() {
 		return viewers;
 	}
 
@@ -306,8 +301,24 @@ public class CoreChunk implements Chunk {
 
 	@Override
 	public Entity getEntity(int entityID) {
-		// TODO Auto-generated method stub
-		return null;
+		return world.getEntityTracker().getEntity(x, z, entityID);
+	}
+
+	@Override
+	public ChunkSection getSectionByIndex(int index) {
+		int sIndex = index + offsetY;
+		ChunkSection section = sections[sIndex];
+		if (section == null) {
+			section = new CoreChunkSection();
+			sections[sIndex] = section;
+		}
+		return section;
+	}
+
+	@Override
+	public boolean hasSectionIndex(int index) {
+		int sIndex = index + offsetY;
+		return sections[sIndex] != null;
 	}
 
 }

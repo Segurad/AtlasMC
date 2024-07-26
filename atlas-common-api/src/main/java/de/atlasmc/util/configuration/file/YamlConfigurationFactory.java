@@ -8,7 +8,7 @@ import java.io.Reader;
 
 import de.atlasmc.registry.RegistryValue;
 
-@RegistryValue(registry="atlas:factory/file_configuration", key="atlas:factory/yaml_configuration")
+@RegistryValue(registry="atlas:factory/file_configuration", key="atlas:yaml_configuration")
 public class YamlConfigurationFactory implements FileConfigurationFactory {
 
 	public static final YamlConfigurationFactory INSTANCE = new YamlConfigurationFactory();

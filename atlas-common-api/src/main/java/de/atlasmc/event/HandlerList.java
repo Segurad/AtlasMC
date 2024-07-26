@@ -167,10 +167,8 @@ public class HandlerList {
 	 * @param event the event to call
 	 */
 	public static void callEvent(@NotNull final Event event) {
-		final HandlerList handlers = event.getHandlers();
 		if (!event.isAsynchronous()) {
-			if (event instanceof GenericEvent<?, ?>) {
-				GenericEvent<?, ?> gEvent = (GenericEvent<?, ?>) event;
+			if (event instanceof GenericEvent<?, ?> gEvent) {
 				if (!gEvent.getSyncThreadHolder().isSync())
 					throw new EventException("Tried to call sync event asynchronous!");
 			} else {
@@ -178,6 +176,7 @@ public class HandlerList {
 					throw new EventException("Tried to call sync event asynchronous!");
 			}
 		}
+		final HandlerList handlers = event.getHandlers();
 		handlers.callEvent(event, event instanceof Cancellable);
 	}
 	

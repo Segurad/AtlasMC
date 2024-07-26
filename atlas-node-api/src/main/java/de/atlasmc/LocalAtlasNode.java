@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.UUID;
 
 import de.atlasmc.atlasnetwork.AtlasNode;
-import de.atlasmc.atlasnetwork.NodePlayer;
 import de.atlasmc.io.protocol.ProtocolAdapterHandler;
 import de.atlasmc.proxy.LocalProxy;
 import de.atlasmc.server.NodeServer;
@@ -22,13 +21,13 @@ public interface LocalAtlasNode extends AtlasNode {
 
 	void registerProxy(LocalProxy proxy);
 	
-	NodeServer getLocalServer(UUID uuid);
+	NodeServer getServer(UUID uuid);
 	
-	LocalProxy getLocalProxy(UUID uuid);
+	LocalProxy getProxy(UUID uuid);
 
-	NodePlayer getLocalPlayer(String name);
+	NodePlayer getPlayer(String name);
 	
-	NodePlayer getLocalPlayer(UUID name);
+	NodePlayer getPlayer(UUID name);
 	
 	void setStatus(NodeStatus status);
 

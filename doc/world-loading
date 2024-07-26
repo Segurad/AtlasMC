@@ -1,0 +1,10 @@
+name: SomeWorld
+world-factory: somefactory
+chunk-factory: somefactory
+dimension: somedimension
+chunk-generator:
+  factory: somefactory
+chunk-loader:
+  factory: somefactory
+chunk-provider:
+  factory: somefactory

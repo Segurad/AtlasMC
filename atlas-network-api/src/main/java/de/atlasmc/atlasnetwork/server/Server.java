@@ -47,6 +47,7 @@ public interface Server {
 		 * Server is shutting down
 		 */
 		SHUTDOWN
+		
 	}
 	
 }

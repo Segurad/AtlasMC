@@ -76,13 +76,17 @@ public interface AtlasPlayer extends Messageable, Permissible {
 	 */
 	int getID();
 	
+	/**
+	 * Returns the date time this player first joined the network
+	 * @return date
+	 */
 	Date getFirstJoin();
 	
+	/**
+	 * Returns the date time this player last joined the network
+	 * @return
+	 */
 	Date getLastJoin();
-	
-	void setLastJoin(Date date);
-
-	void setPermissionHandler(PermissionHandler handler);
 
 	PermissionHandler getPermissionHandler();
 

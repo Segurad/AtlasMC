@@ -8,7 +8,7 @@ import de.atlasmc.world.ChunkProvider;
 import de.atlasmc.world.ChunkProviderFactory;
 import de.atlasmc.world.World;
 
-@RegistryValue(registry="atlas:factory/chunk_provider_factory", key="atlas-core:factory/buffered_chunk_provider", isDefault = true)
+@RegistryValue(registry="atlas:factory/chunk_provider_factory", key="atlas-core:buffered_chunk_provider", isDefault = true)
 public class CoreBufferedChunkProviderFactory implements ChunkProviderFactory {
 
 	@Override

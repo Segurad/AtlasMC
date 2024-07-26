@@ -5,7 +5,7 @@ import de.atlasmc.world.World;
 import de.atlasmc.world.WorldBuilder;
 import de.atlasmc.world.WorldFactory;
 
-@RegistryValue(registry="atlas:factory/world_factory", key="atlas-core:factory/world_factory", isDefault = true)
+@RegistryValue(registry="atlas:factory/world_factory", key="atlas-core:world", isDefault = true)
 public class CoreWorldFactory implements WorldFactory {
 
 	@Override

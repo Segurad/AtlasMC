@@ -8,7 +8,7 @@ import de.atlasmc.world.World;
 /**
  * Core implementation of {@link ChunkFactory} for construction of {@link CoreChunk}
  */
-@RegistryValue(registry="atlas:factory/chunk_factory", key="atlas-core:factory/chunk_factory", isDefault = true)
+@RegistryValue(registry="atlas:factory/chunk_factory", key="atlas-core:chunk", isDefault = true)
 public class CoreChunkFactory implements ChunkFactory {
 
 	@Override

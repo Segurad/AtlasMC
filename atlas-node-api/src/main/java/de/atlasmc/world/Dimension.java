@@ -6,28 +6,38 @@ import de.atlasmc.util.nbt.NBTHolder;
 
 public interface Dimension extends NBTHolder, Namespaced {
 	
-	public int getID();
+	int getID();
 	
-	public int getMinY();
+	/**
+	 * Returns the minimum height of this dimension.
+	 * Always a multiple of 16
+	 * @return y
+	 */
+	int getMinY();
 	
-	public int getHeight();
+	/**
+	 * Returns the maximum height of this dimension.
+	 * Always a multiple of 16
+	 * @return
+	 */
+	int getHeight();
 	
-	public float getAmbientLight();
+	float getAmbientLight();
 	
 	/**
 	 * Returns the fixed time value of this dimension or -1 if no fixed time is set
 	 * @return time or -1
 	 */
-	public long getFixedTime();
+	long getFixedTime();
 	
-	public boolean hasFixedTime();
+	boolean hasFixedTime();
 	
-	public boolean hasSkyLight();
+	boolean hasSkyLight();
 	
-	public boolean hasCeiling();
+	boolean hasCeiling();
 	
-	public int getLogicalHeight();
+	int getLogicalHeight();
 	
-	public NamespacedKey getEffects();
+	NamespacedKey getEffects();
 
 }

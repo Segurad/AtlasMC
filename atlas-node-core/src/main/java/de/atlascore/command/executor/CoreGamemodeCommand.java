@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import de.atlasmc.AtlasNode;
 import de.atlasmc.Gamemode;
-import de.atlasmc.atlasnetwork.NodePlayer;
+import de.atlasmc.NodePlayer;
 import de.atlasmc.command.CommandContext;
 import de.atlasmc.command.CommandExecutor;
 import de.atlasmc.entity.Player;
@@ -43,7 +43,7 @@ public class CoreGamemodeCommand implements CommandExecutor {
 				if (target instanceof String targetName) {
 					aplayer = AtlasNode.getLocalPlayer(targetName);
 				} else if (target instanceof UUID targetUUID) {
-					aplayer = AtlasNode.getLocalPlayer(targetUUID);
+					aplayer = AtlasNode.getPlayer(targetUUID);
 				}
 				if (aplayer == null)
 					continue;
