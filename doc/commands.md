@@ -1,5 +1,9 @@
 # Commands
 
+Plugin Resourcepaths: 
+- `/commands.yml`
+
+
 Atlas has a command API verry similar to mojangs bridadier.
 As Developer you have the powerfull option define your commands with simple YAML. There is no need to pares and verify commands yourself. You just need to implement the CommandExecutor that will handle your Command
 

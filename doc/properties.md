@@ -1,3 +1,7 @@
+# Properties
+
+To configure some behavior of Atlas you can use the following properties.
+
 | Property Name                            | Value   | Desciption                                                                | Default |
 |------------------------------------------|---------|---------------------------------------------------------------------------|---------|
 | de.atlasmc.map.useIntToMapColorCache     | boolean | Whether or not a full cache of rgb int values to color ids should be used | true    |

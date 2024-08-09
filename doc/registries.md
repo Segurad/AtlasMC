@@ -1,5 +1,27 @@
 # Registries
 
-Registries are the main way of providing funktionality for Atlas it self and Plugins. You can simply use Registries by using the `Registries` class or using the registry annotations to automatically create registries or provide values for existing registries
+Plugin Resourcepaths: 
+- `/META-INF/atlas/registies.yml`
+- `/META-INF/atlas/registry-entries.yml`
 
-List of atlas registries:
+Registries are the main way of providing funktionality for Atlas itself and Plugins. You can simply use Registries by using the `Registries` class or using the registry annotations to automatically create registries or provide values for existing registries
+
+## registries.yml
+
+```yaml
+<registrykey>:
+  targert: INSTANE # INSTANCE, CLASS
+  type: my.required.registry.type
+```
+
+## registry-entries.yml
+
+```yaml
+<registrykey>:
+- type: my.registry.entry
+  key: my:configurationserializablekey
+  configuration: # <optional> uses configuration for construction on ConfigurationSerializable
+    param1: value1
+```
+
+## List of atlas registries:
