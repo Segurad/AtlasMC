@@ -1,3 +1,5 @@
+[Doc](doc.md) > [Administration](doc.md#administration) > [Properties]()
+
 # Properties
 
 To configure some behavior of Atlas you can use the following properties.

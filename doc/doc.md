@@ -8,6 +8,7 @@
 
 ## Development
 - [Plugin Development](plugins.md)
+- [Node Startup](node-startup.md)
 - [Thread structure](threads.md)
 - [Events](events.md)
 - [Internal API](internal_api.md)

@@ -1,8 +1,12 @@
+[Doc](doc.md) > [Development](doc.md#development) > [Registries]()
+
 # Registries
 
 Plugin Resourcepaths: 
-- `/META-INF/atlas/registies.yml`
-- `/META-INF/atlas/registry-entries.yml`
+- [`/META-INF/atlas/registies.yml`](#registriesyml)
+- [`/META-INF/atlas/registry-entries.yml`](#registry-entriesyml)
+
+---
 
 Registries are the main way of providing funktionality for Atlas itself and Plugins. You can simply use Registries by using the `Registries` class or using the registry annotations to automatically create registries or provide values for existing registries
 

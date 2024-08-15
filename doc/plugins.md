@@ -1,6 +1,15 @@
+[Doc](doc.md) > [Development](doc.md#development) > [Plugins]()
+
 # Plugins
 
+Plugin Resourcepaths: 
+- [`/atlas-plugin.yml`](#atlas-pluginyml)
+
+---
+
 Introduction goes here
+
+---
 
 Because the APIs are loaded dynamically in Atlas a Plugin should depend on its required API Plugins.
 
