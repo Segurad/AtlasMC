@@ -1,7 +1,6 @@
 package de.atlasmc.plugin;
 
 import java.util.Collection;
-import java.util.UUID;
 
 import de.atlasmc.LocalAtlasNode;
 import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
@@ -18,7 +17,5 @@ public interface NodeBuilder extends Builder<LocalAtlasNode> {
 	Collection<ProxyConfig> getProxyConfigs();
 	
 	NodeBuilder setServerManager(NodeServerManager serverManager);
-	
-	UUID getUUID();
 
 }

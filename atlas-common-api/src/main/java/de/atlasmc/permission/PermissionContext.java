@@ -10,6 +10,8 @@ package de.atlasmc.permission;
  */
 public interface PermissionContext extends PermissionHolder {
 	
+	String getName();
+	
 	/**
 	 * Returns the key of this context
 	 * @return key

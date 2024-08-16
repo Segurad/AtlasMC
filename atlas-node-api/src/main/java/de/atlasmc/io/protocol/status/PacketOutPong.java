@@ -7,15 +7,7 @@ import de.atlasmc.io.PacketOutbound;
 @DefaultPacketID(PacketStatus.OUT_PONG)
 public class PacketOutPong extends AbstractPacket implements PacketStatus, PacketOutbound {
 	
-	private long pong;
-	
-	public long getPong() {
-		return pong;
-	}
-	
-	public void setPong(long pong) {
-		this.pong = pong;
-	}
+	public long pong;
 	
 	@Override
 	public int getDefaultID() {

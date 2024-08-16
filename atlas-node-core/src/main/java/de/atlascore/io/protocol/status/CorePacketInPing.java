@@ -12,12 +12,12 @@ public class CorePacketInPing implements PacketIO<PacketInPing> {
 
 	@Override
 	public void read(PacketInPing packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setPing(in.readLong());
+		packet.ping = in.readLong();
 	}
 
 	@Override
 	public void write(PacketInPing packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeLong(packet.getPing());
+		out.writeLong(packet.ping);
 	}
 
 	@Override

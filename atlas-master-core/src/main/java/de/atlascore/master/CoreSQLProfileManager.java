@@ -1,4 +1,4 @@
-package de.atlascore.atlasnetwork.master;
+package de.atlascore.master;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -7,25 +7,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import de.atlascore.atlasnetwork.CoreAtlasPlayer;
-import de.atlascore.atlasnetwork.CorePlayerProfileHandler;
 import de.atlasmc.atlasnetwork.AtlasNetworkException;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
+import de.atlasmc.master.AtlasMaster;
 import de.atlasmc.util.AtlasUtil;
-import de.atlasmc.util.sql.SQLConnectionPool;
 
-public class CoreSQLPlayerProfileHandler extends CorePlayerProfileHandler  {
-
-	private SQLConnectionPool conPool;
-	
-	public CoreSQLPlayerProfileHandler(SQLConnectionPool con) {
-		this.conPool = con;
-	}
+public class CoreSQLProfileManager extends CoreProfileManager  {
 	
 	private AtlasPlayer queryProfile(String key, Object value) {
 		Connection con = null;
 		try {
-			con = conPool.getConnection();
+			con = AtlasMaster.getDatabase().getConnection();
 			PreparedStatement stmt = con.prepareStatement("SELECT profile_id, mojang_uuid, internal_uuid, mojang_name, internal_name, join_first, join_last FROM profiles WHERE " + key + "=?");
 			stmt.setObject(1, value);
 			ResultSet result = stmt.executeQuery();
@@ -86,7 +78,7 @@ public class CoreSQLPlayerProfileHandler extends CorePlayerProfileHandler  {
 	protected void updateLastJoind(AtlasPlayer player, Date date) {
 		Connection con = null;
 		try {
-			con = conPool.getConnection();
+			con = AtlasMaster.getDatabase().getConnection();
 			PreparedStatement stmt = con.prepareStatement("UPDATE profiles SET join_last=? WHERE profile_id=?");
 			stmt.setObject(1, date);
 			stmt.setInt(2, player.getID());
@@ -111,7 +103,7 @@ public class CoreSQLPlayerProfileHandler extends CorePlayerProfileHandler  {
 	protected void updateInternalUUID(AtlasPlayer player, UUID uuid) {
 		Connection con = null;
 		try {
-			con = conPool.getConnection();
+			con = AtlasMaster.getDatabase().getConnection();
 			PreparedStatement stmt = con.prepareStatement("UPDATE profiles SET internal_uuid=? WHERE profile_id=?");
 			stmt.setBytes(1, AtlasUtil.uuidToBytes(uuid));
 			stmt.setInt(2, player.getID());
@@ -136,7 +128,7 @@ public class CoreSQLPlayerProfileHandler extends CorePlayerProfileHandler  {
 	protected void updateInternalName(AtlasPlayer player, String name) {
 		Connection con = null;
 		try {
-			con = conPool.getConnection();
+			con = AtlasMaster.getDatabase().getConnection();
 			PreparedStatement stmt = con.prepareStatement("UPDATE profiles SET internal_name=? WHERE profile_id=?");
 			stmt.setString(1, name);
 			stmt.setInt(2, player.getID());
@@ -162,7 +154,7 @@ public class CoreSQLPlayerProfileHandler extends CorePlayerProfileHandler  {
 		Connection con = null;
 		int id = -1;
 		try {
-			con = conPool.getConnection();
+			con = AtlasMaster.getDatabase().getConnection();
 			PreparedStatement stmt = con.prepareStatement("INSERT INTO profiles (mojang_uuid, internal_uuid, mojang_name, internal_name, join_first, join_last) VALUES (?, ?, ?, ?, ?, ?)");
 			stmt.setBytes(1, AtlasUtil.uuidToBytes(mojangUUID));
 			stmt.setBytes(2, AtlasUtil.uuidToBytes(internalUUID));

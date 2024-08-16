@@ -87,6 +87,11 @@ public class CoreSchedulerThread extends TickingThread {
 		runAsyncWorkerGC();
 		gcTime = 0;
 	}
+	
+	@Override
+	public void shutdown() {
+		super.shutdown();
+	}
 
 	/**
 	 * Returns a Queued async task

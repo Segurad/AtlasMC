@@ -1,52 +1,84 @@
 package de.atlasmc.atlasnetwork;
 
 import java.security.PublicKey;
-import java.util.Collection;
 import java.util.UUID;
 
 import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.atlasnetwork.server.ServerManager;
-import de.atlasmc.datarepository.Repository;
-import de.atlasmc.tick.Tickable;
+import de.atlasmc.util.annotation.InternalAPI;
 import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.concurrent.future.Future;
 
-public interface AtlasNetwork extends Tickable {
+public class AtlasNetwork  {
 	
-	NodeManager getNodeManager();
+	private static AtlasNetworkHandler HANDLER;
 	
-	ServerManager getServerManager();
+	private AtlasNetwork() {}
 	
-	ProfileHandler getProfileHandler();
+	@InternalAPI
+	public static void init(AtlasNetworkHandler handler) {
+		synchronized (AtlasNetwork.class) {
+			if (HANDLER != null)
+				throw new IllegalStateException("AtlasNetwork already initialized!");
+			HANDLER = handler;
+		}
+	}
 	
-	PermissionProvider getPermissionProvider();
+	public static NodeManager getNodeManager() {
+		return HANDLER.getNodeManager();
+	}
 	
-	NodeConfig getNodeConfig(String name);
+	public static ServerManager getServerManager() {
+		return HANDLER.getServerManager();
+	}
 	
-	ProxyConfig getProxyConfig(String name);
+	public static ProfileHandler getProfileHandler() {
+		return HANDLER.getProfileHandler();
+	}
+	
+	public static PermissionManager getPermissionProvider() {
+		return HANDLER.getPermissionProvider();
+	}
+	
+	public static Future<NodeConfig> getNodeConfig(String name) {
+		return HANDLER.getNodeConfig(name);
+	}
+	
+	public static Future<ProxyConfig> getProxyConfig(String name) {
+		return HANDLER.getProxyConfig(name);
+	}
 
-	int getOnlinePlayerCount();
+	public static int getOnlinePlayerCount() {
+		return HANDLER.getOnlinePlayerCount();
+	}
 
-	int getMaxPlayers();
+	public static int getMaxPlayers() {
+		return HANDLER.getMaxPlayers();
+	}
 	
-	NetworkInfo getNetworkInfo();
+	public static NetworkInfo getNetworkInfo() {
+		return HANDLER.getNetworkInfo();
+	}
 
-	NetworkInfo getNetworkInfoMaintenance();
-
-	boolean isMaintenance();
-	
-	Collection<Repository> getRepositories();
+	public static boolean isMaintenance() {
+		return HANDLER.isMaintenance();
+	}
 	
 	/**
 	 * Returns this nodes UUID
 	 * @return uuid
 	 */
 	@NotNull
-	UUID getNodeUUID();
+	public static UUID getNodeUUID() {
+		return HANDLER.getNodeUUID();
+	}
 	
 	/**
 	 * Returns the masters public key
 	 * @return public key
 	 */
-	PublicKey getPublicKey();
+	public static PublicKey getPublicKey() {
+		return HANDLER.getPublicKey();
+	}
 	
 }

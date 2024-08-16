@@ -11,21 +11,33 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import de.atlasmc.util.annotation.NotNull;
+
 public class FileUtils {
 	
-	public static File extractConfiguration(File destDir, String filename, String resource, boolean override, Class<?> caller) throws IOException {
-		File file = new File(destDir, filename);
-		if (file.exists()) {
+	public static File extractResource(File dest, String resource, boolean override) throws IOException {
+		String callerName = Thread.currentThread().getStackTrace()[2].getClassName();
+		Class<?> caller;
+		try {
+			caller = Class.forName(callerName);
+		} catch (ClassNotFoundException e) {
+			throw new IllegalStateException(e);
+		}
+		return extractResource(dest, resource, override, caller);
+	}
+	
+	public static File extractResource(File dest, String resource, boolean override, Class<?> caller) throws IOException {
+		if (dest.exists()) {
 			if (override)
-				file.delete();
+				dest.delete();
 			else
-				return file;
+				return dest;
 		}
 		InputStream resourceStream = caller.getResourceAsStream(resource);
 		if (resourceStream == null)
 			throw new FileNotFoundException("Resource not found: " + resource);
-		Files.copy(resourceStream, file.toPath());
-		return file;
+		Files.copy(resourceStream, dest.toPath());
+		return dest;
 	}
 	
 	/**
@@ -76,7 +88,16 @@ public class FileUtils {
 		}
 	}
 	
+	/**
+	 * Returns all regular files in the given directory. 
+	 * @param path
+	 * @return
+	 * @throws IOException
+	 */
+	@NotNull
 	public static Set<Path> getFiles(Path path) throws IOException {
+		if (!Files.isDirectory(path))
+			return Set.of();
 		Set<Path> result = new HashSet<>();
 		try (Stream<Path> files = Files.list(path)) {
 			files.forEach((file) -> {

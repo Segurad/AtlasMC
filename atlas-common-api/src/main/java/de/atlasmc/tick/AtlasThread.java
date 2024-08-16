@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import de.atlasmc.log.Log;
 import de.atlasmc.util.ConcurrentLinkedList;
+import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
@@ -25,12 +26,16 @@ public class AtlasThread extends TickingThread {
 	
 	@Override
 	public void run() {
+		running = true;
 		runTasks(startupHooks, "Error in startup hook: ", -1);
-		synchronized (this) {
-			((CompletableFuture<Boolean>) startupFuture).finish(true);
-			startupFuture = CompleteFuture.getBooleanFuture(true);
+		startupHooks.clear();
+		if (running) {
+			synchronized (this) {
+				((CompletableFuture<Boolean>) startupFuture).finish(true);
+				startupFuture = CompleteFuture.getBooleanFuture(true);
+			}
+			super.run();
 		}
-		super.run();
 		tickTasks.clear();
 		runTasks(shutdownHooks, "Error in shutdown hook: ", -1);
 		synchronized (this) {
@@ -49,7 +54,6 @@ public class AtlasThread extends TickingThread {
 				logger.error(error + task.name(), e);
 			}
 		}
-		tasks.clear();
 	}
 	
 	protected void tick(int tick) {
@@ -106,14 +110,32 @@ public class AtlasThread extends TickingThread {
 	}
 	
 	private boolean addBefore(ConcurrentLinkedList<AtlasThreadTask> tasks, String taskName, AtlasThreadTask task) {
+		LinkedListIterator<AtlasThreadTask> it = tasks.iterator();
+		AtlasThreadTask next = null;
+		while ((next = it.next()) != null) {
+			if (!next.name().equals(taskName))
+				continue;
+			it.addBefor(task);
+			return true;
+		}
 		return false;
 	}
 	
 	private boolean addAfter(ConcurrentLinkedList<AtlasThreadTask> tasks, String taskName, AtlasThreadTask task) {
-		return true;
+		LinkedListIterator<AtlasThreadTask> it = tasks.iterator();
+		AtlasThreadTask next = null;
+		while ((next = it.next()) != null) {
+			if (!next.name().equals(taskName))
+				continue;
+			it.add(task);
+			return true;
+		}
+		return false;
 	}
 
 	public Future<Boolean> startThread() {
+		if (getState() == State.TERMINATED)
+			return CompleteFuture.getBooleanFuture(false);
 		Future<Boolean> future = this.startupFuture;
 		if (future != null)
 			return future;
@@ -129,6 +151,8 @@ public class AtlasThread extends TickingThread {
 	}
 
 	public Future<Boolean> stopThread() {
+		if (getState() == State.NEW)
+			return CompleteFuture.getBooleanFuture(false);
 		Future<Boolean> future = this.shutdownFuture;
 		if (future != null)
 			return future;
@@ -138,7 +162,7 @@ public class AtlasThread extends TickingThread {
 				return future;
 			future = new CompletableFuture<>();
 			this.shutdownFuture = future;
-			start();
+			shutdown();
 			return future;
 		}
 	}

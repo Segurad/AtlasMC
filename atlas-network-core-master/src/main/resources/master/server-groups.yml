@@ -1,4 +1,5 @@
-TestGroup:
+server-groups:
+- name: TestGroup
   min-server: 1 # minimum amount of servers in this group 
   max-server: -1 # max amount of servers in this group -1 for no limit
   min-non-full-server: 0 # number of servers without state full

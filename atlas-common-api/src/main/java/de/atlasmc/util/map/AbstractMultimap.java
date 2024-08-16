@@ -47,6 +47,16 @@ public abstract class AbstractMultimap<K, V> implements Multimap<K, V> {
 	public Collection<V> remove(K key) {
 		return map.remove(key);
 	}
+	
+	@Override
+	public V remove(K key, V value) {
+		Collection<V> c = map.get(key);
+		if (c == null)
+			return null;
+		if (c.remove(value))
+			return value;
+		return null;
+	}
 
 	@Override
 	public boolean put(K key, V value) {
@@ -138,11 +148,6 @@ public abstract class AbstractMultimap<K, V> implements Multimap<K, V> {
 	@Override
 	public int hashCode() {
 		return map.hashCode();
-	}
-	
-	@Override
-	public Iterator<Entry<K, Collection<V>>> iterator() {
-		return map.entrySet().iterator();
 	}
 	
 	protected abstract Collection<V> createCollection(int capacity);

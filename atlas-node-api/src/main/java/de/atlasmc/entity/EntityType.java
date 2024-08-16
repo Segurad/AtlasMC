@@ -160,7 +160,7 @@ public class EntityType implements Namespaced {
 		this.key = key;
 		this.id = id;
 		this.clazz = clazz;
-		getRegistry().register(key, this);
+		getRegistry().register(null, key, this);
 	}
 	
 	public Class<? extends Entity> getEntityClass() {

@@ -21,7 +21,7 @@ public class CoreSimpleServerDeploymentMethod implements ServerDeploymentMethod 
 		Collection<AtlasNode> nodes = nodeManager.getNodes();
 		if (nodes.isEmpty())
 			return;
-		int threshold = group.getMemoryThreshold();
+		long threshold = group.getMemoryThreshold();
 		// TODO float utilisation = group.getMemoryUtilisation();
 		long requiredMemory = threshold * 1000L * 1000L;
 		for (AtlasNode node : nodes) {

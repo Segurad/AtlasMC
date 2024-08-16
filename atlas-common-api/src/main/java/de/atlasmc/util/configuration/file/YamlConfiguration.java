@@ -28,7 +28,7 @@ public class YamlConfiguration extends FileConfiguration {
 		this.yaml = createYaml();
 	}
 	
-	private Yaml createYaml() {
+	protected Yaml createYaml() {
 		DumperOptions dumpOptions = new DumperOptions();
 		dumpOptions.setDefaultFlowStyle(FlowStyle.BLOCK);
 		YamlRepresenter representer = new YamlRepresenter(dumpOptions);

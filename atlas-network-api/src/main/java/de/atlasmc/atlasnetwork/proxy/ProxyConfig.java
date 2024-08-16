@@ -7,9 +7,10 @@ import java.util.regex.Pattern;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.configuration.ConfigurationSection;
+import de.atlasmc.util.configuration.ConfigurationSerializeable;
 import de.atlasmc.util.configuration.MemoryConfiguration;
 
-public class ProxyConfig implements Cloneable {
+public class ProxyConfig implements Cloneable, ConfigurationSerializeable {
 	
 	private final String name;
 	private final NamespacedKey factory;
@@ -26,8 +27,8 @@ public class ProxyConfig implements Cloneable {
 	private int chunksPerTick;
 	private ConfigurationSection config;
 	
-	public ProxyConfig(String name, ConfigurationSection config) {
-		this.name = name;
+	public ProxyConfig(ConfigurationSection config) {
+		this.name = config.getString("name");
 		String rawFactory = config.getString("factory");
 		if (rawFactory != null)
 			this.factory = NamespacedKey.of(rawFactory);
@@ -114,6 +115,12 @@ public class ProxyConfig implements Cloneable {
 		try {
 			return (ProxyConfig) super.clone();
 		} catch (CloneNotSupportedException e) {}
+		return null;
+	}
+
+	@Override
+	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

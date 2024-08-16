@@ -1,11 +1,11 @@
-package de.atlascore.atlasnetwork.master;
+package de.atlascore.master.permission;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import de.atlascore.atlasnetwork.CorePermissionProvider;
+import de.atlascore.permission.CorePermission;
 import de.atlascore.permission.CorePermissionContext;
 import de.atlascore.permission.CorePermissionGroup;
 import de.atlascore.permission.CorePlayerPermissionHandler;
@@ -14,41 +14,33 @@ import de.atlasmc.Color;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.master.AtlasMaster;
+import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionContext;
 import de.atlasmc.permission.PermissionGroup;
 import de.atlasmc.permission.PermissionHandler;
-import de.atlasmc.util.concurrent.future.CompletableFuture;
-import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
-import de.atlasmc.util.sql.SQLConnectionPool;
 
-public class CoreSQLPermissionProvider extends CorePermissionProvider {
-
-	private final SQLConnectionPool conPool;
-
-	public CoreSQLPermissionProvider(SQLConnectionPool con) {
-		this.conPool = con;
-	}
+public class CoreSQLPermissionManager extends CorePermissionManager {
 
 	@Override
-	protected Future<PermissionHandler> loadHandler(AtlasPlayer player) {
+	protected PermissionHandler loadHandler(AtlasPlayer player) {
 		Connection con = null;
-		Future<PermissionHandler> future = null;
 		try {
-			con = conPool.getConnection();
-			future = internalLoadHandler(con, player);
+			con = AtlasMaster.getDatabase().getConnection();
+			return internalLoadHandler(con, player);
 		} catch (SQLException e) {
-			Atlas.getLogger().info("Error while loading permission handler!", e);
+			Atlas.getLogger().error("Error while loading permission handler!", e);
 		} finally {
 			if (con != null)
 				try {
 					con.close();
 				} catch (SQLException e) {}
 		}
-		return future == null ? CompleteFuture.getNullFuture() : future;
+		return null;
 	}
 
-	private Future<PermissionHandler> internalLoadHandler(Connection con, AtlasPlayer player) throws SQLException {
+	private PermissionHandler internalLoadHandler(Connection con, AtlasPlayer player) throws SQLException {
 		final int userID = player.getID();
 		final CorePlayerPermissionHandler handler = new CorePlayerPermissionHandler();
 		// load permissions
@@ -93,46 +85,40 @@ public class CoreSQLPermissionProvider extends CorePermissionProvider {
 		con = null;
 		while (result.next()) {
 			String parentName = result.getString(1);
-			PermissionGroup parentGroup = null;
-			try {
-				parentGroup = getGroup(parentName, true).get();
-			} catch (Exception e) {
-				result.close();
-				return new CompleteFuture<>(e);
-			}
+			PermissionGroup parentGroup = getGroup(parentName, true);
 			if (parentGroup != null)
 				handler.addPermissionGroup(parentGroup);
 		}
 		result.close();
-		return new CompletableFuture<>();
+		return handler;
 	}
 
 	@Override
-	protected Future<PermissionGroup> loadGroup(String name) {
+	protected PermissionGroup loadGroup(String name) {
 		Connection con = null;
 		Future<PermissionGroup> future = null;
 		try {
-			con = conPool.getConnection();
-			future = internalLoadGroup(con, name);
+			con = AtlasMaster.getDatabase().getConnection();
+			return internalLoadGroup(con, name);
 		} catch (SQLException e) {
-			Atlas.getLogger().info("Error while loading permission group!", e);
+			Atlas.getLogger().error("Error while loading permission group!", e);
 		} finally {
 			if (con != null)
 				try {
 					con.close();
 				} catch (SQLException e) {}
 		}
-		return future == null ? CompleteFuture.getNullFuture() : future;
+		return null;
 	}
 
-	private Future<PermissionGroup> internalLoadGroup(Connection con, String name) throws SQLException {
+	private PermissionGroup internalLoadGroup(Connection con, String name) throws SQLException {
 		PreparedStatement stmt = con.prepareStatement("SELECT group_id, name, sort_weight, prefix, suffix, chat_color, name_color, power, is_default FROM perm_groups WHERE name=?");
 		stmt.setString(1, name);
 		ResultSet result = stmt.executeQuery();
 		stmt.close();
 		if (result.next()) {
 			result.close();
-			return CompleteFuture.getNullFuture();
+			return null;
 		}
 		// load group
 		int groupID = result.getInt(1);
@@ -192,18 +178,12 @@ public class CoreSQLPermissionProvider extends CorePermissionProvider {
 		con = null;
 		while (result.next()) {
 			String parentName = result.getString(1);
-			PermissionGroup parentGroup = null;
-			try {
-				parentGroup = getGroup(parentName, true).get();
-			} catch (Exception e) {
-				result.close();
-				return new CompleteFuture<>(e);
-			}
+			PermissionGroup parentGroup = getGroup(parentName, true);
 			if (parentGroup != null)
 				group.addParent(parentGroup);
 		}
 		result.close();
-		return new CompletableFuture<>();
+		return group;
 	}
 
 	private CorePermissionContext getContext(Connection con, int id, String key, String value) throws SQLException {
@@ -217,6 +197,32 @@ public class CoreSQLPermissionProvider extends CorePermissionProvider {
 		}
 		ctxPermResult.close();
 		return context;
+	}
+
+	@Override
+	public Permission createPermission(String permission) {
+		return createPermission(permission, 1);
+	}
+
+	@Override
+	public Permission createPermission(String permission, int value) {
+		return new CorePermission(permission, value);
+	}
+
+	@Override
+	public PermissionContext createContext(String key, String value) {
+		return new CorePermissionContext(key, value);
+	}
+
+	@Override
+	public PermissionGroup createGroup(String name) {
+		return new CorePermissionGroup(name);
+	}
+
+	@Override
+	public boolean removeGroup(String name) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

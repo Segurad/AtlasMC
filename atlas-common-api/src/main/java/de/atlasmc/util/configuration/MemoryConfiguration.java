@@ -12,9 +12,9 @@ public class MemoryConfiguration extends MemoryConfigurationSection implements C
 		if (section == null)
 			return;
 		section.getValues().forEach((key, value) -> {
-			if (value instanceof ConfigurationSection) {
+			if (value instanceof ConfigurationSection child) {
 				ConfigurationSection newSection = parent.createSection(key);
-				copySection(newSection, (ConfigurationSection) value);
+				copySection(newSection, child);
 			} else {
 				parent.set(key, value);
 			}

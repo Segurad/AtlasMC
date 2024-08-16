@@ -1,6 +1,5 @@
 package de.atlascore.io.protocol;
 
-import de.atlasmc.AtlasNode;
 import de.atlasmc.atlasnetwork.AtlasNetwork;
 import de.atlasmc.atlasnetwork.NetworkInfo;
 import de.atlasmc.io.Packet;
@@ -21,23 +20,16 @@ public class CorePacketListenerStatus implements PacketListener {
 	
 	@Override
 	public void handlePacket(Packet packet) {
-		System.out.println("PacketStatus: " + packet.getID()); // TODO  delete
 		if (packet.getID() == 0) {
 			PacketOutResponse response = new PacketOutResponse();
-			AtlasNetwork network = AtlasNode.getNetwork();
-			NetworkInfo info = null;
-			if (network.isMaintenance()) {
-				info = network.getNetworkInfoMaintenance();
-			} else {
-				info = network.getNetworkInfo();
-			}
+			NetworkInfo info = AtlasNetwork.getNetworkInfo();
 			int version = handler.getProtocol().getVersion();
 			response.response = info.getStatusInfo(version);
 			handler.sendPacket(response);
 		} else if (packet.getID() == 1) {
 			PacketInPing ping = (PacketInPing) packet;
 			PacketOutPong pong = new PacketOutPong();
-			pong.setPong(ping.getPing());
+			pong.pong = ping.ping;
 			handler.sendPacket(pong);
 			handler.close();
 		}

@@ -17,7 +17,7 @@ public class TickingThread extends Thread implements WatchableThread {
 	private Runnable runner;
 	protected final Log logger;
 	private final boolean exitOnError;
-	private volatile boolean running;
+	protected volatile boolean running;
 	private int tick = 0; // number of ticks executed by this thread
 	private long nextTick = 0;
 	private long tickStart = 0;
@@ -51,8 +51,6 @@ public class TickingThread extends Thread implements WatchableThread {
 	
 	@Override
 	public void run() {
-		if (isRunning()) 
-			throw new RuntimeException("Thread already running!");
 		running = true;
 		nextTick = System.nanoTime();
 		lastActive = nextTick;
@@ -120,7 +118,7 @@ public class TickingThread extends Thread implements WatchableThread {
 	}
 	
 	@ThreadSafe
-	public void shutdown() {
+	protected void shutdown() {
 		running = false;
 	}
 	

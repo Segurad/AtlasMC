@@ -7,15 +7,7 @@ import de.atlasmc.io.PacketInbound;
 @DefaultPacketID(PacketStatus.IN_PING)
 public class PacketInPing extends AbstractPacket implements PacketStatus, PacketInbound {
 	
-	private long ping;
-	
-	public long getPing() {
-		return ping;
-	}
-	
-	public void setPing(long ping) {
-		this.ping = ping;
-	}
+	public long ping;
 	
 	@Override
 	public int getDefaultID() {

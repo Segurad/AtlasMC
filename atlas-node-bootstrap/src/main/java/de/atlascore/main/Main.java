@@ -15,39 +15,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.function.Consumer;
 
-import de.atlascore.atlasnetwork.master.CoreMasterBuilder;
 import de.atlascore.cache.CoreCacheHandler;
 import de.atlascore.chat.CoreChatFactory;
-import de.atlascore.command.CoreConsoleCommandSender;
 import de.atlascore.datarepository.CoreCacheRepository;
 import de.atlascore.datarepository.CoreDataRepositoryHandler;
 import de.atlascore.datarepository.CoreLocalRepository;
-import de.atlascore.event.command.CoreCommandListener;
-import de.atlascore.event.inventory.CoreInventoryListener;
-import de.atlascore.event.player.CorePlayerListener;
-import de.atlascore.io.handshake.CorePacketMinecraftHandshake;
-import de.atlascore.io.netty.channel.ChannelInitHandler;
-import de.atlascore.io.protocol.CoreProtocolAdapter;
 import de.atlascore.log.CoreLogHandler;
 import de.atlascore.plugin.CoreJavaPluginLoader;
-import de.atlascore.plugin.CoreNodeBuilder;
 import de.atlascore.plugin.CorePluginManager;
 import de.atlascore.registry.CoreRegistryHandler;
 import de.atlascore.scheduler.CoreAtlasScheduler;
-import de.atlascore.server.CoreNodeServerManager;
-import de.atlascore.system.init.ContainerFactoryLoader;
-import de.atlascore.system.init.EntityTypeLoader;
-import de.atlascore.system.init.MaterialLoader;
-import de.atlascore.system.init.PotionEffectTypeLoader;
-import de.atlascore.world.ChunkWorker;
 import de.atlasmc.Atlas;
 import de.atlasmc.AtlasBuilder;
-import de.atlasmc.LocalAtlasNode;
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.atlasnetwork.AtlasNetwork;
-import de.atlasmc.atlasnetwork.AtlasNode.NodeStatus;
-import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.cache.Caching;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.command.Command;
@@ -60,13 +42,14 @@ import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.Listener;
 import de.atlasmc.event.MethodEventExecutor;
 import de.atlasmc.event.command.CommandEvent;
-import de.atlasmc.event.node.NodeInitializedEvent;
-import de.atlasmc.io.handshake.HandshakeProtocol;
 import de.atlasmc.log.Log;
 import de.atlasmc.log.Logging;
+import de.atlasmc.plugin.AtlasModul;
+import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginManager;
-import de.atlasmc.proxy.LocalProxy;
-import de.atlasmc.proxy.LocalProxyFactory;
+import de.atlasmc.plugin.StartupContext;
+import de.atlasmc.plugin.StartupException;
+import de.atlasmc.plugin.StartupStageHandler;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.registry.RegistryHandler;
@@ -155,39 +138,51 @@ public class Main {
 		.setWorkDir(workDir)
 		.build();
 		boolean isMaster = config.getBoolean("is-master");
-		AtlasNetwork master = null;
 
-		//#####################################################################		
-		//#	Initializing master												  #
-		//#####################################################################
-		
+		StartupContext context = new StartupContext();
+		context.addStage(
+				StartupContext.LOAD_EXTRA_PLUGINS,
+				StartupContext.INIT_STAGES,
+				StartupContext.CONNECT_MASTER, 
+				StartupContext.INIT_NODE,
+				StartupContext.LOAD_NODE_DATA,
+				StartupContext.FINALIZE_STARTUP);
 		if (isMaster) {
-			ConfigurationSection masterConfig = config.getConfigurationSection("master");
-			master = createMaster(masterConfig, arguments);
-		} else {
-			String masterHost = config.getString("host");
-			int masterPort = config.getInt("port"); 
-			master = connectRemoteMaster(masterHost, masterPort);
+			context.addStageAfter(
+					StartupContext.LOAD_EXTRA_PLUGINS,
+					StartupContext.INIT_MASTER,
+					StartupContext.LOAD_MASTER_DATA);
 		}
-		if (master == null) {
-			log.error("Unable to initialize master!");
+		
+		for (Plugin plugin : pluginManager.getPlugins()) {
+			if (!(plugin instanceof AtlasModul modul))
+				continue;
+			if (!plugin.isEnabled())
+				continue;
+			modul.initStartupHandler(context);
+		}
+		
+		try {
+		do {
+			log.debug("Running startup stage: {}", context.getStage());
+			prepareStage(context);
+			runStage(context);
+			finalizeStage(context);
+		} while (context.hasNextStage() && !context.hasFailed());
+		} catch (StartupException e) {}
+		if (context.hasFailed()) {
+			Throwable cause = context.getCause();
+			log.error("Error while running startup!", cause);
+			for (Consumer<Throwable> handler : context.getFailHandlers()) {
+				try {
+					handler.accept(cause);
+				} catch(Exception e) {
+					log.error("Error while running startup fail handler!", e);
+				}
+			}
 			System.exit(1);
 		}
-		log.info("Atlas Master initialized");
-		
-		//#####################################################################		
-		//#	Initializing node												  #
-		//#####################################################################
-		
-		log.info("Initizalizing Node...");
-		try {
-			initDefaults(log);
-		} catch (Exception e) {
-			log.error("Error while initializing defaults!", e);
-		}
-		UUID nodeUUID = master.getNodeUUID();
-		final CoreNodeBuilder builder = new CoreNodeBuilder(nodeUUID, master, log, workDir, config, keyPair);
-		
+		loadCommands(log, workDir);
 		// load remote plugins
 		Collection<RepositoryEntry> entries = null;
 		try {
@@ -206,8 +201,6 @@ public class Main {
 				}
 			}
 		}
-		
-		loadCommands(log, workDir);
 		builder.setServerManager(new CoreNodeServerManager(workDir));
 		builder.setDefaultProtocol(new CoreProtocolAdapter());
 		File coremodulDir = new File(workDir, "modules/");
@@ -282,11 +275,56 @@ public class Main {
 		} catch (InterruptedException e) {}
 	}
 	
+	private static void prepareStage(StartupContext context) {
+		if (context.hasFailed())
+			return;
+		Collection<StartupStageHandler> handlers = context.getStageHandlers();
+		try {
+			for (StartupStageHandler handler : handlers) {
+				if (context.hasFailed())
+					return;
+				handler.prepareStage(context);
+			}
+		} catch (Exception e) {
+			context.fail(e);
+		}
+	}
+	
+	private static void runStage(StartupContext context) {
+		if (context.hasFailed())
+			return;
+		Collection<StartupStageHandler> handlers = context.getStageHandlers();
+		try {
+			for (StartupStageHandler handler : handlers) {
+				if (context.hasFailed())
+					return;
+				handler.handleStage(context);
+			}
+		} catch (Exception e) {
+			context.fail(e);
+		}
+	}
+	
+	private static void finalizeStage(StartupContext context) {
+		if (context.hasFailed())
+			return;
+		Collection<StartupStageHandler> handlers = context.getStageHandlers();
+		try {
+			for (StartupStageHandler handler : handlers) {
+				if (context.hasFailed())
+					break;
+				handler.finalizeStage(context);
+			}
+		} catch (Exception e) {
+			context.fail(e);
+		}
+	}
+	
 	private static boolean isPortAvailable(int port) {
 		Socket s = null;
 	    try {
 	        s = new Socket("localhost", port);
-	        return false;
+	        return false; 
 	    } catch (IOException e) {
 	        return true;
 	    } finally {
@@ -302,7 +340,7 @@ public class Main {
 		log.info("Loading commands...");
 		File commandFile = null;
 		try {
-			commandFile = FileUtils.extractConfiguration(new File(workDir, "data"), "commands.yml", "/data/commands.yml", OVERRIDE_CONFIG, Main.class);
+			commandFile = FileUtils.extractResource(new File(workDir, "data/commands.yml"), "/data/commands.yml", OVERRIDE_CONFIG, Main.class);
 		} catch (IOException e) {
 			log.error("Error while extracting commands.yml", e);
 			return;
@@ -324,43 +362,9 @@ public class Main {
 		}
 	}
 
-	private static AtlasNetwork connectRemoteMaster(String masterHost, int masterPort) {
-		Atlas.getLogger().error("Remote master is currently not implemented in AtlasMC...");
-		return null;
-	}
-
-	private static AtlasNetwork createMaster(ConfigurationSection masterConfig, Map<String, String> arguments) {
-		Atlas.getLogger().info("Initialize Atlas Master Node...");
-		if (masterConfig == null) {
-			Atlas.getLogger().error("Master configuration not found");
-			return null;
-		}
-		CoreMasterBuilder builder = new CoreMasterBuilder(masterConfig, arguments);
-		return builder.build();
-	}
-
 	private static FileConfiguration loadConfig(File workDir) throws IOException {
-		File nodeConfigFile = FileUtils.extractConfiguration(workDir, "node.yml", "/node.yml", OVERRIDE_CONFIG, Main.class);
+		File nodeConfigFile = FileUtils.extractResource(new File(workDir, "node.yml"), "/node.yml", OVERRIDE_CONFIG, Main.class);
 		return YamlConfiguration.loadConfiguration(nodeConfigFile);
-	}
-	
-	private static void initDefaults(Log log) throws Exception {
-		log.info("Loading defaults...");
-		ChunkWorker.init(ChunkWorker.DEFAULT_THREADS);
-		MaterialLoader.loadMaterial();
-		ContainerFactoryLoader.loadContainerFactories();
-		PotionEffectTypeLoader.loadPotionEffects();
-		EntityTypeLoader.loadEntityTypes();
-		initDefaultExecutors(log);
-	}
-
-	private static void initDefaultExecutors(Log log) {
-		log.debug("Loading player event default executors...");
-		initDefaultExecutor(log, new CorePlayerListener());
-		log.debug("Loading inventory event default executors...");
-		initDefaultExecutor(log, new CoreInventoryListener());
-		log.debug("Loading command event default executors...");
-		initDefaultExecutor(log, new CoreCommandListener());
 	}
 	
 	private static void initDefaultExecutor(Log log, Listener listener) {
@@ -552,7 +556,7 @@ public class Main {
 				if (Registries.DEFAULT_REGISTRY_KEY.equals(entryKey)) {
 					registry.setDefault(entryValue);
 					logger.debug("Registry ({}) set default: {}", key, entryClass.getName());
-				} else if (registry.register(parts[1], entryValue)) {
+				} else if (registry.register(null, parts[1], entryValue)) {
 					logger.debug("Registry ({}) registered: {}={}", key, entryKey, entryClass.getName());
 				}
 			}

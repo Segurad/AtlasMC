@@ -74,26 +74,28 @@ public class ThreadWatchdog extends TickingThread {
 				info.isSuspended(), 
 				info.isInNative(), 
 				info.getThreadState());
-		if (info.getLockedMonitors().length > 0) {
+		final MonitorInfo[] monitorInfo = info.getLockedMonitors();
+		if (monitorInfo.length > 0) {
 			logger.error("");
 			logger.error("--- Lock Monitors -------------------------------------------------------------");
-			logger.error("Waiting with Monitors: {}", info.getLockedMonitors().length);
-			for (MonitorInfo lock : info.getLockedMonitors()) {
+			logger.error("Waiting with Monitors: {}", monitorInfo.length);
+			for (MonitorInfo lock : monitorInfo) {
 				logger.error("Lock on: {}", lock.getLockedStackFrame());
 			}
 			
 		}
-		if (info.getLockedSynchronizers().length > 0) {
+		final LockInfo[] lockInfo = info.getLockedSynchronizers();
+		if (lockInfo.length > 0) {
 			logger.error("");
 			logger.error("--- Lock Synchronizer -------------------------------------------------------------");
-			logger.error("Waiting with Synchronizer: {}", info.getLockedSynchronizers().length);
-			for (LockInfo lock : info.getLockedSynchronizers()) {
+			logger.error("Waiting with Synchronizer: {}", lockInfo.length);
+			for (LockInfo lock : lockInfo) {
 				logger.error("Lock on: {}#{}", lock.getClassName(), lock.getIdentityHashCode());
 			}
 		}
 		logger.error("");
 		logger.error("--- StackTrace ----------------------------------------------------------------");
-		StackTraceElement[] stack = info.getStackTrace();
+		final StackTraceElement[] stack = info.getStackTrace();
 		for (StackTraceElement element : stack)
 			logger.error("Stack: {}", element);
 	}

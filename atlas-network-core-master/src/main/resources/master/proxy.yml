@@ -1,4 +1,5 @@
-default-proxy:
+proxies:
+- name: default-proxy
   port: 666 # Port value or -1/random for random port
   mode: open # internal accepts only connection wihting the atlas network
   player-connections:

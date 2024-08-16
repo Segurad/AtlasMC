@@ -1,4 +1,4 @@
-package de.atlascore.atlasnetwork;
+package de.atlascore.master;
 
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
@@ -9,20 +9,20 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.atlasnetwork.AtlasPlayer;
-import de.atlasmc.atlasnetwork.ProfileHandler;
-import de.atlasmc.cache.Caching;
 import de.atlasmc.cache.CacheHolder;
+import de.atlasmc.cache.Caching;
+import de.atlasmc.master.ProfileManager;
 
-public abstract class CorePlayerProfileHandler implements ProfileHandler, CacheHolder {
+public abstract class CoreProfileManager implements ProfileManager, CacheHolder {
 	
-	private final Map<Integer, RefListener> by_id;
-	private final Map<String, RefListener> by_name;
-	private final Map<String, RefListener> by_mojang_name;
-	private final Map<UUID, RefListener> by_mojang_uuid;
-	private final Map<UUID, RefListener> by_uuid;
+	private final Map<Integer, Ref> by_id;
+	private final Map<String, Ref> by_name;
+	private final Map<String, Ref> by_mojang_name;
+	private final Map<UUID, Ref> by_mojang_uuid;
+	private final Map<UUID, Ref> by_uuid;
 	private final ReferenceQueue<AtlasPlayer> queue;
 	
-	public CorePlayerProfileHandler() {
+	public CoreProfileManager() {
 		by_id = new ConcurrentHashMap<>();
 		by_name = new ConcurrentHashMap<>();
 		by_mojang_name = new ConcurrentHashMap<>();
@@ -32,7 +32,7 @@ public abstract class CorePlayerProfileHandler implements ProfileHandler, CacheH
 		Caching.register(this);
 	}
 	
-	private <T> AtlasPlayer internalGet(Map<T, RefListener> map, T key) {
+	private <T> AtlasPlayer internalGet(Map<T, Ref> map, T key) {
 		Reference<AtlasPlayer> ref = map.get(key);
 		if (ref != null && !ref.refersTo(null)) {
 			return ref.get();
@@ -147,7 +147,7 @@ public abstract class CorePlayerProfileHandler implements ProfileHandler, CacheH
 	protected abstract AtlasPlayer loadPlayerByMojang(UUID uuid);
 	
 	private synchronized void cache(AtlasPlayer profile) {
-		RefListener ref = new RefListener(profile, queue);
+		Ref ref = new Ref(profile, queue);
 		by_id.put(profile.getID(), ref);
 		by_name.put(profile.getInternalName(), ref);
 		by_uuid.put(profile.getInternalUUID(), ref);
@@ -157,8 +157,8 @@ public abstract class CorePlayerProfileHandler implements ProfileHandler, CacheH
 
 	@Override
 	public synchronized void cleanUp() {
-		RefListener ref = null;
-		while ((ref = (RefListener) queue.poll()) != null) {
+		Ref ref = null;
+		while ((ref = (Ref) queue.poll()) != null) {
 			by_id.remove(ref.id, ref);
 			by_name.remove(ref.name, ref);
 			by_mojang_name.remove(ref.mojangName, ref);
@@ -167,7 +167,7 @@ public abstract class CorePlayerProfileHandler implements ProfileHandler, CacheH
 		}	
 	}
 	
-	private static class RefListener extends WeakReference<AtlasPlayer> {
+	private static class Ref extends WeakReference<AtlasPlayer> {
 
 		final int id;
 		final String name;
@@ -175,7 +175,7 @@ public abstract class CorePlayerProfileHandler implements ProfileHandler, CacheH
 		final String mojangName;
 		final UUID mojangUUID;
 		
-		public RefListener(AtlasPlayer referent, ReferenceQueue<? super AtlasPlayer> q) {
+		public Ref(AtlasPlayer referent, ReferenceQueue<? super AtlasPlayer> q) {
 			super(referent, q);
 			this.id = referent.getID();
 			this.name = referent.getInternalName();

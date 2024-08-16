@@ -6,6 +6,6 @@ import de.atlasmc.NamespacedKey.Namespaced;
 
 public interface PluginConfiguration extends Namespaced {
 
-	public File getDirectory();
+	File getDirectory();
 
 }

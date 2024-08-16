@@ -17,7 +17,11 @@ public interface AtlasNode extends de.atlasmc.atlasnetwork.AtlasNode {
 	
 	Server getServer(UUID uuid);
 	
+	Collection<Server> getServers();
+	
 	Proxy getProxy(UUID uuid);
+	
+	Collection<Proxy> getProxies();
 	
 	Collection<ServerGroup> getServerGroups(); 
 

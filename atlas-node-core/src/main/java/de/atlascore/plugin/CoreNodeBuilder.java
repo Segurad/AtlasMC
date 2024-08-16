@@ -56,7 +56,7 @@ public class CoreNodeBuilder implements NodeBuilder {
 		for (String group : config.getStringList("node-groups", List.of())) {
 			if (nodeConfigs.containsKey(group))
 				continue;
-			NodeConfig cfg = network.getNodeConfig(group);
+			NodeConfig cfg = AtlasNetwork.getNodeConfig(group).get();
 			if (cfg == null) {
 				log.warn("Unable to load node config: {}", group);
 				continue;
@@ -85,7 +85,7 @@ public class CoreNodeBuilder implements NodeBuilder {
 	}
 	
 	private void resolveServerGroups(Collection<String> serverGroups) {
-		ServerManager smanager = network.getServerManager();
+		ServerManager smanager = AtlasNetwork.getServerManager();
 		if (serverGroups.isEmpty())
 			return;
 		for (String groupKey : serverGroups) {

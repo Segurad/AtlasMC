@@ -1586,7 +1586,7 @@ public class Material implements Namespaced {
 	 */
 	private final void registerMaterial() {
 		final NamespacedKey key = getNamespacedKey();
-		getRegistry().register(key, this);
+		getRegistry().register(null, key, this);
 		if (isItem())
 			REGISTRI_BY_IID.put((int) getItemID(), this);
 	}

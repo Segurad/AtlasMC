@@ -12,12 +12,12 @@ public class CorePacketOutPong implements PacketIO<PacketOutPong> {
 
 	@Override
 	public void read(PacketOutPong packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setPong(in.readLong());
+		packet.pong = in.readLong();
 	}
 
 	@Override
 	public void write(PacketOutPong packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeLong(packet.getPong());
+		out.writeLong(packet.pong);
 	}
 	
 	@Override

@@ -27,18 +27,12 @@ public class CorePermissionGroup extends CorePermissionContextHolder implements 
 	private final PermissionHolder permissions;
 	private final PermissionGroupHolder parents;
 	private final String name;
-	private final int id;
 	private final Map<String, String> contextProvider;
 	
 	public CorePermissionGroup(String name) {
-		this(name, -1);
-	}
-	
-	public CorePermissionGroup(String name, int id) {
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null!");
 		this.name = name;
-		this.id = id;
 		this.permissions = new CorePermissionHolder();
 		this.parents = new CorePermissionGroupHolder();
 		this.contextProvider = new HashMap<>();
@@ -174,11 +168,6 @@ public class CorePermissionGroup extends CorePermissionContextHolder implements 
 	public void setChatColor(Color color) {
 		chatColor = null;
 		this.chatColorRaw = color;
-	}
-	
-	@InternalAPI
-	public int getID() {
-		return id;
 	}
 
 	@Override

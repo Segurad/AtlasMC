@@ -164,7 +164,7 @@ public class MaterialLoader {
 						| InvocationTargetException e) {
 					throw new FactoryException("Error while instaciating factory!", e);
 				}
-				registry.register(name, factory);
+				registry.register(null, name, factory);
 				if (isDefault)
 					registry.setDefault(factory);
 				reader.endObject();

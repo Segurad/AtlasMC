@@ -3,7 +3,6 @@ package de.atlasmc.registry;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +24,9 @@ import javax.tools.Diagnostic.Kind;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 
+import de.atlasmc.util.configuration.Configuration;
+import de.atlasmc.util.configuration.ConfigurationSection;
+import de.atlasmc.util.configuration.MemoryConfiguration;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
 
 @SupportedAnnotationTypes({ 
@@ -33,8 +35,8 @@ import de.atlasmc.util.configuration.file.YamlConfiguration;
 @SupportedSourceVersion(SourceVersion.RELEASE_21)
 public class RegistryAnnotationProcessor extends AbstractProcessor {
 
-	private Map<String, String> registries;
-	private Map<String, Map<String, String>> registryEntries;
+	private Configuration registries;
+	private Configuration registryEntries;
 	
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -54,14 +56,19 @@ public class RegistryAnnotationProcessor extends AbstractProcessor {
 						String type = ele.toString();
 						Object target = values.get("target");
 						if (registries == null) {
-							registries = new HashMap<>();
+							registries = new MemoryConfiguration();
 						}
-						if (registries.containsKey(key)) {
-							String message = "Another type (" + registries.get(key) + ") with the given registry key is already present: " + key;
+						if (registries.contains(key)) {
+							ConfigurationSection other = registries.getConfigurationSection(key);
+							String otherTarget = other.getString("target");
+							String otherType = other.getString(type);
+							String message = "Another type (" + otherType + " : " + otherTarget + ") with the given registry key is already present: " + key;
 							processingEnv.getMessager().printMessage(Kind.ERROR, message, ele, mirror);
 						}
 						//System.out.println("holder: " + key + " : " + type + " : " + target);
-						registries.put(key, type + ":" + target);
+						ConfigurationSection registry = registries.createSection(key);
+						registry.set("target", target.toString());
+						registry.set("type", type);
 						processingEnv.getMessager().printMessage(Kind.NOTE, "Found registry: " + key + " type: " + type + " target: " + target);
 					}
 				}
@@ -74,20 +81,18 @@ public class RegistryAnnotationProcessor extends AbstractProcessor {
 						String key = (String) values.get("key");
 						String type = ele.toString();
 						if (registryEntries == null) {
-							registryEntries = new HashMap<>();
+							registryEntries = new MemoryConfiguration();
 						}
-						Map<String, String> entries = null;
-						if (registryEntries.containsKey(registry)) {
-							entries = registryEntries.get(registry);
-						} else {
-							registryEntries.put(registry, entries = new HashMap<>());
+						ConfigurationSection entries = registryEntries.getConfigurationSection(registry);
+						if (entries == null) {
+							entries = registryEntries.createSection(registry);
 						}
 						//System.out.println("value: " + key + " : " + type);
-						entries.put(key, type);
+						entries.set(key, type);
 						boolean isDefault = (boolean) values.get("isDefault");
 						processingEnv.getMessager().printMessage(Kind.NOTE, "Found value: " + key + " type: " + type + " registry: " + registry + " default: " + isDefault);
 						if (isDefault)
-							entries.put("registry:default", type);
+							entries.set("registry:default", type);
 					}
 				}
 			}
@@ -101,35 +106,48 @@ public class RegistryAnnotationProcessor extends AbstractProcessor {
 	}
 	
 	private void writeRegistriesFile() {
-		if (registries == null || registries.isEmpty()) {
+		if (registries == null) {
 			return;
 		}
 		Filer filter = processingEnv.getFiler();
 		String path = "META-INF/atlas/registries.yml";
-		YamlConfiguration registryConfig = null;
+		YamlConfiguration registryCfg = null;
 		try {
 			FileObject file = filter.getResource(StandardLocation.CLASS_OUTPUT, "", path);
 			InputStream in = file.openInputStream();
-			registryConfig = YamlConfiguration.loadConfiguration(in);
+			registryCfg = YamlConfiguration.loadConfiguration(in);
 		} catch(IOException e) {
 			// no file present
 		}
-		if (registryConfig == null) {
-			registryConfig = new YamlConfiguration();
+		if (registryCfg == null) {
+			registryCfg = new YamlConfiguration();
 		}
 		boolean changes = false;
-		for (String k : registries.keySet()) {
-			String v = registries.get(k);
+		for (String k : registries.getKeys()) {
+			ConfigurationSection v = registries.getConfigurationSection(k);
 			//System.out.println(k + " : " + v);
-			if (!v.equals(registryConfig.set(k, v)))
+			String target = v.getString("target");
+			String type = v.getString("type");
+			ConfigurationSection registry = registryCfg.getConfigurationSection(k);
+			if (registry == null) {
+				registry = registryCfg.createSection(k);
+				registry.set("type", type);
+				registry.set("target", target);
 				changes = true;
+				continue;
+			}
+			if (target.equals(registry.get("target")) && type.equals(registry.get("type")))
+				continue;
+			registry.set("type", type);
+			registry.set("target", target);
+			changes = true;
 		}
 		if (!changes)
 			return;
 		try {
 			FileObject file = filter.createResource(StandardLocation.CLASS_OUTPUT, "", path);
 			OutputStream out = file.openOutputStream();
-			registryConfig.save(out);
+			registryCfg.save(out);
 		} catch (IOException e) {
 			processingEnv.getMessager().printMessage(Kind.ERROR, "Unable to create " + path + ", " + e);
 			return;
@@ -138,49 +156,48 @@ public class RegistryAnnotationProcessor extends AbstractProcessor {
 	}
 	
 	private void writeRegistryEntriesFile() {
-		if (registryEntries == null || registryEntries.isEmpty()) {
+		if (registryEntries == null) {
 			return;
 		}
 		Filer filter = processingEnv.getFiler();
 		String path = "META-INF/atlas/registry-entries.yml";
-		YamlConfiguration registryConfig = null;
+		YamlConfiguration registryCfg = null;
 		try {
 			FileObject file = filter.getResource(StandardLocation.CLASS_OUTPUT, "", path);
 			InputStream in = file.openInputStream();
-			registryConfig = YamlConfiguration.loadConfiguration(in);
+			registryCfg = YamlConfiguration.loadConfiguration(in);
 		} catch(IOException e) {
 			// no file present
 		}
-		if (registryConfig == null) {
-			registryConfig = new YamlConfiguration();
+		if (registryCfg == null) {
+			registryCfg = new YamlConfiguration();
 		}
 		boolean changes = false;
-		for (String k : registryEntries.keySet()) {
-			Map<String, String> v = registryEntries.get(k);
-			List<String> presentValues = registryConfig.getStringList(k);
-			if (presentValues != null && !presentValues.isEmpty()) {
-				Map<String, String> presentValuesMap = new HashMap<>();
-				for (String present : presentValues) {
-					String[] parts = present.split(":", 2);
-					presentValuesMap.put(parts[1], parts[0]);
+		for (String registryKey : registryEntries.getKeys()) {
+			ConfigurationSection v = registryEntries.getConfigurationSection(registryKey);
+			ConfigurationSection registry = registryCfg.getConfigurationSection(registryKey);
+			if (registry == null)
+				registry = registryCfg.createSection(registryKey);
+			for (String key : v.getKeys()) {
+				Object value = v.get(key);
+				if (!registry.contains(key)) {
+					registry.set(key, value);
+					changes = true;
+					continue;
 				}
-				presentValuesMap.putAll(v);
-				v = presentValuesMap;
-			}
-			final List<String> data = new ArrayList<>(v.size());
-			v.forEach((key, type) -> {
-				data.add(type + ":" + key);
-			});
-			registryConfig.set(k, data);
-			if (!data.equals(presentValues))
+				Object present = registry.get(key);
+				if (value.equals(present))
+					continue;
+				registry.set(key, value);
 				changes = true;
+			}
 		}
 		if (!changes)
 			return;
 		try {
 			FileObject file = filter.createResource(StandardLocation.CLASS_OUTPUT, "", path);
 			OutputStream out = file.openOutputStream();
-			registryConfig.save(out);
+			registryCfg.save(out);
 		} catch (IOException e) {
 			processingEnv.getMessager().printMessage(Kind.ERROR, "Unable to create " + path + ", " + e);
 			return;

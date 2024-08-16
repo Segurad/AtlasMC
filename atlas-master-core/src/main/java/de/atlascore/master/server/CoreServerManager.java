@@ -7,18 +7,20 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.log.Log;
 import de.atlasmc.master.AtlasMaster;
 import de.atlasmc.master.server.Server;
 import de.atlasmc.master.server.ServerDeploymentMethod;
 import de.atlasmc.master.server.ServerGroup;
+import de.atlasmc.master.server.ServerGroupBuilder;
 import de.atlasmc.master.server.ServerManager;
+import de.atlasmc.registry.Registries;
+import de.atlasmc.registry.Registry;
 import de.atlasmc.tick.Tickable;
 
 public class CoreServerManager implements ServerManager, Tickable {
 
-	private final Map<NamespacedKey, ServerDeploymentMethod> deploymentMethods;
+	private final Registry<ServerDeploymentMethod> deploymentMethods;
 	private final ServerGroup fallBack;
 	private final Map<String, CoreServerGroup> serverGroups;
 	private final Map<UUID, Server> servers;
@@ -27,7 +29,7 @@ public class CoreServerManager implements ServerManager, Tickable {
 		this.serverGroups = new ConcurrentHashMap<>(serverGroups);
 		this.servers = new ConcurrentHashMap<>();
 		this.fallBack = fallBack;
-		this.deploymentMethods = new ConcurrentHashMap<>();
+		this.deploymentMethods = Registries.getInstanceRegistry(ServerDeploymentMethod.class);
 	}
 
 	@Override
@@ -57,12 +59,7 @@ public class CoreServerManager implements ServerManager, Tickable {
 		}
 	}
 	
-	@Override
-	public void addDeploymentMethod(NamespacedKey key, ServerDeploymentMethod method) {
-		this.deploymentMethods.put(key, method);
-	}
-	
-	private void deployServers(CoreServerGroup group) {
+	private void deployServers(ServerGroup group) {
 		ServerDeploymentMethod deployment = deploymentMethods.get(group.getDeploymentMethod());
 		int serverCount = group.getServerCount();
 		int serversNonFull = serverCount-group.getFullServerCount();
@@ -84,6 +81,29 @@ public class CoreServerManager implements ServerManager, Tickable {
 			groups.add(group);
 		}
 		return groups != null ? groups : List.of();
+	}
+
+	@Override
+	public ServerGroup createServerGroup(ServerGroupBuilder builder) {
+		if (builder.getName() == null)
+			throw new IllegalArgumentException("Name can not be null!");
+		CoreServerGroup group = serverGroups.get(builder.getName());
+		if (group != null)
+			return group;
+		group = new CoreServerGroup(this, builder);
+		serverGroups.put(group.getName(), group);
+		return group;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Collection<ServerGroup> getServerGroups() {
+		Collection<? extends ServerGroup> view = serverGroups.values();
+		return (Collection<ServerGroup>) view;
+	}
+
+	void addServer(CoreServer server) {
+		servers.put(server.getServerID(), server);
 	}
 
 }

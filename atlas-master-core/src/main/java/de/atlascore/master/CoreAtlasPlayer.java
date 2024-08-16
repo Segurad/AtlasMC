@@ -1,4 +1,4 @@
-package de.atlascore.atlasnetwork;
+package de.atlascore.master;
 
 import java.sql.Date;
 import java.util.UUID;
@@ -16,7 +16,7 @@ import de.atlasmc.permission.PermissionHandler;
  */
 public class CoreAtlasPlayer implements AtlasPlayer {
 	
-	private final CorePlayerProfileHandler handler;
+	private final CoreProfileManager handler;
 	private final int id;
 	private final String mojangName;
 	private final String internalName;
@@ -29,7 +29,7 @@ public class CoreAtlasPlayer implements AtlasPlayer {
 	private volatile Server currentServer;
 	private volatile PermissionHandler permhandler;
 	
-	public CoreAtlasPlayer(CorePlayerProfileHandler handler, int id, String mojangName, UUID mojangUUID, String name, UUID uuid, Date firstJoin, Date lastJoin) {
+	public CoreAtlasPlayer(CoreProfileManager handler, int id, String mojangName, UUID mojangUUID, String name, UUID uuid, Date firstJoin, Date lastJoin) {
 		this.handler = handler;
 		this.id = id;
 		this.mojangName = mojangName;

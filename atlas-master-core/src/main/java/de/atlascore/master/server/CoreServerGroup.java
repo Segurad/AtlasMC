@@ -6,31 +6,27 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.atlasnetwork.server.ServerConfig;
-import de.atlasmc.io.IOReadable;
-import de.atlasmc.io.IOWriteable;
 import de.atlasmc.master.node.AtlasNode;
 import de.atlasmc.master.server.Server;
 import de.atlasmc.master.server.ServerGroup;
+import de.atlasmc.master.server.ServerGroupBuilder;
 import de.atlasmc.tick.Tickable;
-import de.atlasmc.util.configuration.ConfigurationSection;
-import de.atlasmc.util.configuration.ConfigurationSerializeable;
-import io.netty.buffer.ByteBuf;
 
-public class CoreServerGroup implements Tickable, ServerGroup, ConfigurationSerializeable, IOReadable, IOWriteable {
+public class CoreServerGroup implements Tickable, ServerGroup  {
 	
-	protected String name;
-	protected ServerConfig config;
-	protected int maxServers;
-	protected int maxNonFullServers;
-	protected int minServers;
-	protected int minNonFullServers;
-	protected int newServerDelay;
-	protected float newServerOnUserLoad;
-	protected volatile boolean maintenance;
+	private final String name;
+	private final ServerConfig config;
+	private final int maxServers;
+	private final int maxNonFullServers;
+	private final int minServers;
+	private final int minNonFullServers;
+	private final int newServerDelay;
+	private final float newServerOnUserLoad;
+	private volatile boolean maintenance;
 	
 	// node selector
 	private float memoryUtilisation;
-	private int memoryThreshold;
+	private long memoryThreshold;
 	private NamespacedKey deploymentMethod;
 	private boolean internal;
 	
@@ -41,31 +37,30 @@ public class CoreServerGroup implements Tickable, ServerGroup, ConfigurationSeri
 	private int ticksUnsatisfied;
 	private int timeout;
 	
+	private CoreServerManager manager;
+	
 	private final Map<UUID, CoreServer> servers;
 	
-	public CoreServerGroup(ConfigurationSection config) {
-		if (config == null)
-			throw new IllegalArgumentException("Config can not be null!");
-		this.name = config.getString("name");
-		minServers = config.getInt("min-server");
-		maxServers = config.getInt("max-server");
-		newServerDelay = config.getInt("new-server-delay");
-		newServerOnUserLoad = config.getFloat("new-server-on-user-load");
-		maxNonFullServers = config.getInt("max-non-full-server");
-		minNonFullServers = config.getInt("min-non-full-server");
-		maintenance = config.getBoolean("maintenance");
-		ConfigurationSection serverCfg = config.getConfigurationSection("server-config");
-		this.config = new ServerConfig(serverCfg);
-		ConfigurationSection selectorCfg = config.getConfigurationSection("node-selector");
-		this.deploymentMethod = NamespacedKey.of(selectorCfg.getString("method", "atlas-master:server/default_deployment"));
-		this.internal = selectorCfg.getBoolean("internal", true);
-		this.memoryThreshold = selectorCfg.getInt("memory-threshold");
-		this.memoryUtilisation = selectorCfg.getFloat("memory-utilisation");
-		this.servers = new ConcurrentHashMap<>();
+	public CoreServerGroup(CoreServerManager manager, ServerGroupBuilder builder) {
+		this.manager = manager;
+		this.deploymentMethod = builder.getDeploymentMethod();
+		this.memoryThreshold = builder.getMemoryThreshold();
+		this.memoryUtilisation = builder.getMemoryUtilisation();
+		this.internal = builder.isInternal();
+		this.config = builder.getServerConfig().clone();
+		this.maxServers = builder.getMaxServers();
+		this.maxNonFullServers = builder.getMaxNonFullServers();
+		this.minServers = builder.getMinServers();
+		this.minNonFullServers = builder.getMinNonFullServers();
+		this.newServerDelay = builder.getNewServerDelay();
+		this.newServerOnUserLoad = builder.getNewServerOnUserLoad();
+		this.maintenance = builder.isMaintenance();
+		this.name = builder.getName();
+		servers = new ConcurrentHashMap<UUID, CoreServer>();
 	}
 	
 	// runtime
-	
+
 	@Override
 	public int getPlayerCount() {
 		return playerCount;
@@ -84,26 +79,27 @@ public class CoreServerGroup implements Tickable, ServerGroup, ConfigurationSeri
 		return maxPlayer;
 	}
 	
+	@Override
 	public NamespacedKey getDeploymentMethod() {
 		return deploymentMethod;
 	}
 	
-	public int getMemoryThreshold() {
+	@Override
+	public long getMemoryThreshold() {
 		return memoryThreshold;
 	}
 	
+	@Override
 	public float getMemoryUtilisation() {
 		return memoryUtilisation;
 	}
 	
+	@Override
 	public boolean isInternal() {
 		return internal;
 	}
 	
-	/**
-	 * Returns whether or not this group is unsatisfied.
-	 * @return true if unsatisfied
-	 */
+	@Override
 	public boolean isUnsatisfied() {
 		if (timeout > 0)
 			return false;
@@ -146,17 +142,14 @@ public class CoreServerGroup implements Tickable, ServerGroup, ConfigurationSeri
 		return servers.size();
 	}
 	
-	/**
-	 * Sets a timeout in ticks until this group becomes active again
-	 * If timeouted this group will not return true on {@link #isUnsatisfied()}
-	 * @param timeout
-	 */
+	@Override
 	public void setTimeout(int timeout) {
 		if (timeout < 0)
 			throw new IllegalArgumentException("Timeout may not be lower than 0: " + timeout);
 		this.timeout = timeout;
 	}
 	
+	@Override
 	public int getTimeout() {
 		return timeout;
 	}
@@ -168,6 +161,7 @@ public class CoreServerGroup implements Tickable, ServerGroup, ConfigurationSeri
 		if (node == null)
 			throw new IllegalArgumentException("Node can not be null!");
 		CoreServer server = new CoreServer(uuid, this, node);
+		manager.addServer(server);
 		return server;
 	}
 
@@ -225,24 +219,6 @@ public class CoreServerGroup implements Tickable, ServerGroup, ConfigurationSeri
 	@Override
 	public boolean isMaintenance() {
 		return maintenance;
-	}
-
-	@Override
-	public void write(ByteBuf buf) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void read(ByteBuf buf) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

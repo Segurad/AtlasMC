@@ -10,7 +10,7 @@ public interface PluginLoader {
 	 * @param file
 	 * @return true if loadable
 	 */
-	public boolean canLoad(File file);
+	boolean canLoad(File file);
 	
 	/**
 	 * Loads a Plugin and returns a representative instance e.g. the Main class.<br>
@@ -19,7 +19,7 @@ public interface PluginLoader {
 	 * @return Plugin or null if unable to load
 	 * @throws IOException 
 	 */
-	public Plugin load(File file) throws IOException;
+	Plugin load(File file) throws IOException;
 	
 	/**
 	 * Prepares a Plugin to be loaded later with this loader
@@ -27,8 +27,8 @@ public interface PluginLoader {
 	 * @return PreparedPlugin or null if unable to load
 	 * @throws IOException
 	 */
-	public PreparedPlugin preparePlugin(File file) throws IOException;
+	PreparedPlugin preparePlugin(File file) throws IOException;
 
-	public void remove(ClassLoader loader);
+	void remove(ClassLoader loader);
 
 }

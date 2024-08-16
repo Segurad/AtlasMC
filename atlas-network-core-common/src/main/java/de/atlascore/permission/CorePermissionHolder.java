@@ -12,7 +12,7 @@ import de.atlasmc.util.map.key.ImmutableCharKey;
 
 public class CorePermissionHolder implements PermissionHolder {
 	
-	private volatile Map<CharKey, Permission> permissions;
+	private Map<CharKey, Permission> permissions;
 
 	@Override
 	public Collection<Permission> getPermissions() {
