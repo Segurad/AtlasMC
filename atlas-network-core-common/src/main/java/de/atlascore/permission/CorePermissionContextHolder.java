@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionContext;
-import de.atlasmc.permission.PermissionContextProvider;
+import de.atlasmc.permission.ContextProvider;
 import de.atlasmc.permission.PermissionContextHolder;
 
 public class CorePermissionContextHolder implements PermissionContextHolder, Iterable<PermissionContext> {
@@ -19,14 +19,14 @@ public class CorePermissionContextHolder implements PermissionContextHolder, Ite
 	private Collection<PermissionContext> values;
 
 	@Override
-	public Collection<PermissionContext> getContexts() {
+	public Collection<PermissionContext> getPermissionContexts() {
 		if (values == null)
 			values = new ContextCollection(this);
 		return values;
 	}
 
 	@Override
-	public Collection<PermissionContext> getContexts(String key) {
+	public Collection<PermissionContext> getPermissionContexts(String key) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
 		Map<String, Map<String, PermissionContext>> map = permContext;
@@ -39,7 +39,7 @@ public class CorePermissionContextHolder implements PermissionContextHolder, Ite
 	}
 
 	@Override
-	public PermissionContext getContext(String key, String context) {
+	public PermissionContext getPermissionContext(String key, String context) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
 		if (context == null)
@@ -212,12 +212,12 @@ public class CorePermissionContextHolder implements PermissionContextHolder, Ite
 	}
 
 	@Override
-	public Permission getPermission(String permission, PermissionContextProvider provider, boolean allowWildcards) {
+	public Permission getPermission(String permission, ContextProvider provider, boolean allowWildcards) {
 		for (String key : permContext.keySet()) {
 			String value = provider.getContext(key);
 			if (value == null)
 				continue;
-			PermissionContext context = getContext(key, value);
+			PermissionContext context = getPermissionContext(key, value);
 			if (context == null)
 				continue;
 			Permission perm = context.getPermission(permission, allowWildcards);

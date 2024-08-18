@@ -20,5 +20,12 @@ public interface PermissionHolder extends Permissible {
 	void removePermission(String permission);
 	
 	void removePermission(Permission permission);
+	
+	boolean hasChangedPermissions();
+	
+	/**
+	 * Used to indicate that all changes have been persisted
+	 */
+	void changedPermissions();
  
 }

@@ -108,4 +108,9 @@ public abstract class CharKey implements CharSequence {
 		return new String(getBuf(), 0, length());
 	}
 	
+	@Override
+	public CharSequence subSequence(int start, int end) {
+		return new ImmutableCharKey(getBuf(), start, end);
+	}
+	
 }

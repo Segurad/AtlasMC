@@ -10,28 +10,17 @@ public interface Permissible {
 	 * @param permission
 	 * @return true if permission is present
 	 */
-	default boolean hasPermission(String permission) {
+	default boolean hasPermission(CharSequence permission) {
 		Permission perm = getPermission(permission);
 		return perm != null ? perm.value() != 0 : false;
 	}
 	
 	/**
 	 * Returns the permission of this given string.
-	 * If allow wild cards is true wild card permission checks will be performed
-	 * @param permission
-	 * @param allowWildcards
-	 * @return permission or null
-	 */
-	Permission getPermission(String permission, boolean allowWildcards);
-	
-	/**
-	 * Returns the permission of the given string with wild card checks
 	 * @param permission
 	 * @return permission or null
 	 */
-	default Permission getPermission(String permission) {
-		return getPermission(permission, true);
-	}
+	Permission getPermission(CharSequence permission);
 	
 	/**
 	 * Returns the value of the given permission or the given value if not present
@@ -39,7 +28,7 @@ public interface Permissible {
 	 * @param absent
 	 * @return value or absent value
 	 */
-	default int getPermissionValue(String permission, int absent) {
+	default int getPermissionValue(CharSequence permission, int absent) {
 		Permission perm = getPermission(permission);
 		return perm != null ? perm.value() : absent;
 	}

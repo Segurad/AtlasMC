@@ -7,22 +7,22 @@ import java.util.Collection;
  */
 public interface PermissionContextHolder {
 	
-	Collection<PermissionContext> getContexts();
+	Collection<PermissionContext> getPermissionContexts();
 	
-	Collection<PermissionContext> getContexts(String key);
+	Collection<PermissionContext> getPermissionContexts(String key);
 	
-	PermissionContext getContext(String key, String context);
+	PermissionContext getPermissionContext(String key, String context);
 	
-	default Permission getPermission(String permission, PermissionContextProvider provider) {
-		return getPermission(permission, provider, true);
-	}
-	
-	Permission getPermission(String permission, PermissionContextProvider provider, boolean allowWildcards);
+	Permission getPermission(String permission, ContextProvider provider);
 	
 	boolean addPermissionContext(PermissionContext context);
 	
 	boolean removePermissionContext(PermissionContext context);
 	
 	boolean removePermissionContext(String key, String context);
+	
+	boolean hasChangedPermissionContext();
+	
+	void changedPermissionContexts();
 
 }

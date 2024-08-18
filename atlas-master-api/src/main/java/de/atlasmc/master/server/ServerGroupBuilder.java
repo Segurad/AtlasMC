@@ -2,14 +2,16 @@ package de.atlasmc.master.server;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.atlasnetwork.server.ServerConfig;
+import de.atlasmc.master.AtlasMaster;
+import de.atlasmc.util.Builder;
 import de.atlasmc.util.configuration.ConfigurationSection;
 
-public class ServerGroupBuilder {
+public class ServerGroupBuilder implements Builder<ServerGroup> {
 	
 	private NamespacedKey deploymentMethod;
 	private long memoryThreshold;
 	private float memoryUtilisation;
-	private boolean internal;
+	private boolean internal = true;
 	private ServerConfig serverConfig;
 	private int maxServers;
 	private int maxNonFullServers;
@@ -23,6 +25,10 @@ public class ServerGroupBuilder {
 	public ServerGroupBuilder() {}
 	
 	public ServerGroupBuilder(ConfigurationSection config) {
+		setConfiguration(config);
+	}
+	
+	public ServerGroupBuilder setConfiguration(ConfigurationSection config) {
 		if (config == null)
 			throw new IllegalArgumentException("Config can not be null!");
 		name = config.getString("name");
@@ -40,6 +46,7 @@ public class ServerGroupBuilder {
 		internal = selectorCfg.getBoolean("internal", true);
 		memoryThreshold = selectorCfg.getInt("memory-threshold");
 		memoryUtilisation = selectorCfg.getFloat("memory-utilisation");
+		return this;
 	}
 	
 	public NamespacedKey getDeploymentMethod() {
@@ -157,6 +164,28 @@ public class ServerGroupBuilder {
 	public ServerGroupBuilder setName(String name) {
 		this.name = name;
 		return this;
+	}
+
+	@Override
+	public ServerGroup build() {
+		return AtlasMaster.getServerManager().createServerGroup(this);
+	}
+
+	@Override
+	public void clear() {
+		name = null;
+		minServers = 0;
+		maxServers = 0;
+		newServerDelay = 0;
+		newServerOnUserLoad = 0;
+		maxNonFullServers = 0;
+		minNonFullServers = 0;
+		isMaintenance = false;
+		serverConfig = null;
+		deploymentMethod = null;
+		internal = true;
+		memoryThreshold = 0;
+		memoryUtilisation = 0;
 	}
 
 }

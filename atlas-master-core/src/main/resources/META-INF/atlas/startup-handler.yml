@@ -1,0 +1,4 @@
+init-master:
+- de.atlascore.master.CoreInitMasterStageHandler
+load-master-data:
+- de.atlascore.master.CoreLoadMasterDataStageHandler

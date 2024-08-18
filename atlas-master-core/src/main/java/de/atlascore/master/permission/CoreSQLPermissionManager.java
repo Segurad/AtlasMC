@@ -4,7 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
+import de.atlascore.permission.CoreAbstractPermissionManager;
 import de.atlascore.permission.CorePermission;
 import de.atlascore.permission.CorePermissionContext;
 import de.atlascore.permission.CorePermissionGroup;
@@ -19,28 +27,127 @@ import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionContext;
 import de.atlasmc.permission.PermissionGroup;
 import de.atlasmc.permission.PermissionHandler;
+import de.atlasmc.util.concurrent.future.CompletableFuture;
+import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
 
-public class CoreSQLPermissionManager extends CorePermissionManager {
+public class CoreSQLPermissionManager extends CoreAbstractPermissionManager {
+
+	private final Map<UUID, CompletableFuture<PermissionHandler>> futureHandlers;
+	private final Map<Integer, CompletableFuture<PermissionContext>> futureContexts;
+	private final Map<String, CompletableFuture<PermissionGroup>> futureGroups;
+	
+	private final SQLFunction<UUID, PermissionHandler> loadHandler = this::internalLoadHandler;
+	private final SQLFunction<Integer, PermissionContext> loadContext = this::internalLoadContext;
+	private final SQLFunction<String, PermissionGroup> loadGroup = this::internalLoadGroup;
+	
+	public CoreSQLPermissionManager() {
+		futureHandlers = new ConcurrentHashMap<>();
+		futureContexts = new ConcurrentHashMap<>();
+		futureGroups = new ConcurrentHashMap<>();
+	}
+	
+	@Override
+	public Future<PermissionHandler> loadHandler(UUID uuid) {
+		return load(handlers, futureHandlers, uuid, loadHandler);
+	}
+	
+	@Override
+	public Future<PermissionContext> createContext(String key, String value) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
-	protected PermissionHandler loadHandler(AtlasPlayer player) {
+	public Future<PermissionContext> loadContext(int id) {
+		return load(contexts, futureContexts, id, loadContext);
+	}
+
+	@Override
+	public Future<Boolean> deleteContext(PermissionContext context) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Future<Boolean> saveContext(PermissionContext context) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Future<PermissionGroup> createGroup(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Future<PermissionGroup> loadGroup(String name) {
+		return load(groups, futureGroups, name, loadGroup);
+	}
+
+	@Override
+	public Future<Boolean> saveGroup(PermissionGroup group) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Future<Boolean> deleteGroup(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Future<Boolean> saveHandler(PermissionHandler handler) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Future<PermissionHandler> createHandler(UUID uuid) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	private <K, V> Future<V> load(Map<K, V> cache, Map<K, CompletableFuture<V>> futures, K key, SQLFunction<K, V> loadFunction) {
+		V value = cache.get(key);
+		if (value != null)
+			return CompleteFuture.of(value);
+		CompletableFuture<V> future = futures.get(key);
+		if (future != null)
+			return future;
+		synchronized (futureHandlers) {
+			value = cache.get(key);
+			if (value != null)
+				return CompleteFuture.of(value);
+			future = futures.get(key);
+			if (future != null)
+				return future;
+			future = new CompletableFuture<>();
+			futures.put(key, future);
+		}
 		Connection con = null;
 		try {
 			con = AtlasMaster.getDatabase().getConnection();
-			return internalLoadHandler(con, player);
+			value = loadFunction.load(con, key);
 		} catch (SQLException e) {
-			Atlas.getLogger().error("Error while loading permission handler!", e);
+			future.finish(null, e);
 		} finally {
 			if (con != null)
 				try {
 					con.close();
 				} catch (SQLException e) {}
 		}
-		return null;
+		cache.put(key, value);
+		synchronized (futures) {
+			future.finish(value);
+			futureHandlers.remove(key, future);
+		}
+		return future;
 	}
 
-	private PermissionHandler internalLoadHandler(Connection con, AtlasPlayer player) throws SQLException {
+	private PermissionHandler internalLoadHandler(Connection con, UUID uuid) throws SQLException {
 		final int userID = player.getID();
 		final CorePlayerPermissionHandler handler = new CorePlayerPermissionHandler();
 		// load permissions
@@ -69,7 +176,7 @@ public class CoreSQLPermissionManager extends CorePermissionManager {
 		result = stmt.executeQuery();
 		stmt.close();
 		while (result.next()) {
-			PermissionContext context = getContext(con, result.getInt(1), result.getString(2), result.getString(3));
+			PermissionContext context = internalLoadContext(con, result.getInt(1), result.getString(2), result.getString(3));
 			handler.addPermissionContext(context);
 		}
 		result.close();
@@ -85,30 +192,12 @@ public class CoreSQLPermissionManager extends CorePermissionManager {
 		con = null;
 		while (result.next()) {
 			String parentName = result.getString(1);
-			PermissionGroup parentGroup = getGroup(parentName, true);
+			PermissionGroup parentGroup = getGroup(parentName);
 			if (parentGroup != null)
 				handler.addPermissionGroup(parentGroup);
 		}
 		result.close();
 		return handler;
-	}
-
-	@Override
-	protected PermissionGroup loadGroup(String name) {
-		Connection con = null;
-		Future<PermissionGroup> future = null;
-		try {
-			con = AtlasMaster.getDatabase().getConnection();
-			return internalLoadGroup(con, name);
-		} catch (SQLException e) {
-			Atlas.getLogger().error("Error while loading permission group!", e);
-		} finally {
-			if (con != null)
-				try {
-					con.close();
-				} catch (SQLException e) {}
-		}
-		return null;
 	}
 
 	private PermissionGroup internalLoadGroup(Connection con, String name) throws SQLException {
@@ -162,7 +251,7 @@ public class CoreSQLPermissionManager extends CorePermissionManager {
 		result = stmt.executeQuery();
 		stmt.close();
 		while (result.next()) {
-			PermissionContext context = getContext(con, result.getInt(1), result.getString(2), result.getString(3));
+			PermissionContext context = internalLoadContext(con, result.getInt(1), result.getString(2), result.getString(3));
 			group.addPermissionContext(context);
 		}
 		result.close();
@@ -172,22 +261,49 @@ public class CoreSQLPermissionManager extends CorePermissionManager {
 				+ "ON group_id=perm_group_inherit.parent_id WHERE perm_group_inherit.group_id = ?");
 		stmt.setInt(1, groupID);
 		result = stmt.executeQuery();
-		stmt.close();
-		stmt = null;
 		con.close();
 		con = null;
+		ArrayList<Future<PermissionGroup>> futureGroups = null;
 		while (result.next()) {
 			String parentName = result.getString(1);
-			PermissionGroup parentGroup = getGroup(parentName, true);
+			PermissionGroup parentGroup = getGroup(parentName);
+			if (parentGroup == null) {
+				Future<PermissionGroup> futureGroup = loadGroup(parentName);
+				if (futureGroup.isDone()) {
+					parentGroup = futureGroup.getNow();
+					continue;
+				}
+				if (futureGroups == null)
+					futureGroups = new ArrayList<>();
+				futureGroups.add(futureGroup);
+			}
 			if (parentGroup != null)
 				group.addParent(parentGroup);
 		}
 		result.close();
+		stmt.close();
+		group.changedContext();
+		group.changedPermissionContexts();
+		group.changedGroup();
+		group.changedParents();
+		group.changedPermissions();
 		return group;
 	}
 
-	private CorePermissionContext getContext(Connection con, int id, String key, String value) throws SQLException {
-		CorePermissionContext context = new CorePermissionContext(key, value);
+	private PermissionContext internalLoadContext(Connection con, int id) throws SQLException {
+		PreparedStatement stmt = con.prepareStatement("SELECT ctx_key, ctx_value FROM perm_context WHERE context_id=?");
+		stmt.setInt(1, id);
+		ResultSet result = stmt.executeQuery();
+		if (!result.next())
+			return null;
+		String key = result.getString(1);
+		String value = result.getString(2);
+		stmt.close();
+		return internalLoadContext(con, id, key, value);
+	}
+	
+	private PermissionContext internalLoadContext(Connection con, int id, String key, String value) throws SQLException {
+		CorePermissionContext context = new CorePermissionContext(id, key, value);
 		PreparedStatement stmt = con.prepareStatement("SELECT perm, power FROM perm_context_perm WHERE context_id=?");
 		stmt.setInt(1, id);
 		ResultSet ctxPermResult = stmt.executeQuery();
@@ -198,31 +314,11 @@ public class CoreSQLPermissionManager extends CorePermissionManager {
 		ctxPermResult.close();
 		return context;
 	}
+	
+	private static interface SQLFunction<K, R> {
+		
+		R load(Connection connection, K key) throws SQLException;
 
-	@Override
-	public Permission createPermission(String permission) {
-		return createPermission(permission, 1);
-	}
-
-	@Override
-	public Permission createPermission(String permission, int value) {
-		return new CorePermission(permission, value);
-	}
-
-	@Override
-	public PermissionContext createContext(String key, String value) {
-		return new CorePermissionContext(key, value);
-	}
-
-	@Override
-	public PermissionGroup createGroup(String name) {
-		return new CorePermissionGroup(name);
-	}
-
-	@Override
-	public boolean removeGroup(String name) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 }

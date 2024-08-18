@@ -25,10 +25,10 @@ public class CoreServerManager implements ServerManager, Tickable {
 	private final Map<String, CoreServerGroup> serverGroups;
 	private final Map<UUID, Server> servers;
 	
-	public CoreServerManager(ServerGroup fallBack, Map<String, CoreServerGroup> serverGroups) {
-		this.serverGroups = new ConcurrentHashMap<>(serverGroups);
+	public CoreServerManager() {
+		this.serverGroups = new ConcurrentHashMap<>();
 		this.servers = new ConcurrentHashMap<>();
-		this.fallBack = fallBack;
+		this.fallBack = null;
 		this.deploymentMethods = Registries.getInstanceRegistry(ServerDeploymentMethod.class);
 	}
 

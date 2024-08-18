@@ -6,11 +6,11 @@ package de.atlasmc.permission;
  * A context is a combination of its key and the value.
  * There may be more than on PermissionContext that use the same key but not the same value
  * For example some permission are only required on some Servers or in some ServerGroups.
- * @see PermissionContextProvider
+ * @see ContextProvider
  */
 public interface PermissionContext extends PermissionHolder {
 	
-	String getName();
+	int getID();
 	
 	/**
 	 * Returns the key of this context

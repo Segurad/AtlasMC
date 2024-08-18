@@ -75,8 +75,9 @@ public class AtlasMasterBuilder implements Builder<Boolean> {
 		return profileManager;
 	}
 
-	public void setProfileManager(ProfileManager profileManager) {
+	public AtlasMasterBuilder setProfileManager(ProfileManager profileManager) {
 		this.profileManager = profileManager;
+		return this;
 	}
 
 	@Override

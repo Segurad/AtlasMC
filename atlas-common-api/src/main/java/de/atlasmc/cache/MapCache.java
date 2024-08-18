@@ -1,5 +1,7 @@
 package de.atlasmc.cache;
 
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.WeakReference;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.Iterator;
@@ -9,11 +11,21 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.util.ConcurrentLinkedList;
 import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
+import de.atlasmc.util.reference.WeakReference1;
 
+/**
+ * A {@link CacheHolder} that maps keys to values.
+ * This implementation will keep a reference to a value until a time to live is exceeded.
+ * After this a {@link WeakReference} will held to regain a object access until no references are left.
+ * This holder will not be automatically registered to a {@link CacheHandler}
+ * @param <K>
+ * @param <V>
+ */
 public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 	
 	private final Map<K, CacheEntry<K, V>> map;
 	private final ConcurrentLinkedList<CacheEntry<K, V>> ttlList;
+	private final ReferenceQueue<V> refQueue;
 	private EntrySet<K, V> entrySet;
 	private final int defaultTTL;
 	private volatile int currentTick;
@@ -26,6 +38,7 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 		this.defaultTTL = defaultTimeToLive;
 		this.map = new ConcurrentHashMap<>();
 		this.ttlList = new ConcurrentLinkedList<>();
+		this.refQueue = new ReferenceQueue<>();
 	}
 	
 	@Override
@@ -56,8 +69,16 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 	public V get(Object key) {
 		CacheEntry<K, V> entry = map.get(key);
 		int currentTick = this.currentTick;
-		if (entry.newttl < currentTick)
-			return null;
+		V value = entry.value;
+		if (value == null || entry.newttl < currentTick) {
+			value = entry.ref.get();
+			if (value != null) { // resurrect entry
+				entry.newttl = currentTick + entry.ttlIncrement;
+				entry.value = value;
+				insertTTL(entry);
+			}
+			return value;
+		}
 		entry.newttl += entry.ttlIncrement;
 		return entry.value;
 	}
@@ -68,8 +89,12 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 	}
 
 	public V put(K key, V value, int ttl) {
+		if (key == null)
+			throw new IllegalArgumentException("Key can not be null!");
+		if (value == null)
+			throw new IllegalArgumentException("Value can not be null!");
 		int currentTick = this.currentTick;
-		CacheEntry<K, V> newEntry = new CacheEntry<>(key, value, ttl, ttl + currentTick);
+		CacheEntry<K, V> newEntry = new CacheEntry<>(key, value, ttl, ttl + currentTick, refQueue);
 		CacheEntry<K, V> oldEntry = map.put(key, newEntry);
 		ttlList.remove(oldEntry);
 		insertTTL(newEntry);
@@ -99,6 +124,7 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 		return entrySet;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void cleanUp() {
 		int currentTick = ++this.currentTick;
@@ -106,7 +132,10 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 		CacheEntry<K, V> entry = null;
 		while ((entry = it.next()) != null) {
 			if (entry.ttl >= currentTick)
-				break;
+				continue;
+			entry.value = null;
+			if (!entry.ref.refersTo(null))
+				continue;
 			it.remove();
 			int newttl = entry.newttl;
 			if (newttl < currentTick) {
@@ -115,6 +144,11 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 			}
 			entry.ttl += newttl;
 			insertTTL(entry);
+		}
+		WeakReference1<?, CacheEntry<K, V>> ref = null;
+		while ((ref = (WeakReference1<?, CacheEntry<K, V>>) refQueue.poll()) != null) {
+			CacheEntry<K, V> e = ref.value1;	
+			map.remove(e.key, e);
 		}
 	}
 	
@@ -214,16 +248,18 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 		
 		public final K key;
 		public volatile V value;
+		public final WeakReference1<V, CacheEntry<K, V>> ref;
 		public final int ttlIncrement;
 		public volatile int ttl;
 		public volatile int newttl;
 		
-		public CacheEntry(K key, V value, int ttlIncrement, int ttl) {
+		public CacheEntry(K key, V value, int ttlIncrement, int ttl, ReferenceQueue<V> queue) {
 			this.key = key;
 			this.value = value;
 			this.ttlIncrement = ttlIncrement;
 			this.ttl = ttl;
 			this.newttl = ttl;
+			this.ref = new WeakReference1<>(value, queue, this);
 		}
 
 		@Override

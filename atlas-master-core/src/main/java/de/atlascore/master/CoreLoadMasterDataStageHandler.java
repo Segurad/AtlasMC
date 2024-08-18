@@ -1,40 +1,34 @@
 package de.atlascore.master;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.Map.Entry;
 
-import de.atlascore.master.permission.CoreSQLPermissionManager;
+import de.atlascore.master.server.CoreServerGroup;
 import de.atlasmc.Atlas;
-import de.atlasmc.atlasnetwork.NetworkInfo;
 import de.atlasmc.atlasnetwork.NodeConfig;
-import de.atlasmc.atlasnetwork.PermissionManager;
-import de.atlasmc.atlasnetwork.ProfileHandler;
 import de.atlasmc.atlasnetwork.NetworkInfo.SlotMode;
 import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.log.Log;
-import de.atlasmc.log.Logging;
+import de.atlasmc.master.AtlasMaster;
 import de.atlasmc.master.AtlasMasterBuilder;
+import de.atlasmc.master.server.ServerGroup;
+import de.atlasmc.master.server.ServerGroupBuilder;
 import de.atlasmc.master.server.ServerManager;
 import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionContext;
@@ -46,33 +40,14 @@ import de.atlasmc.util.NumberConversion;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
-import de.atlasmc.util.sql.SQLConnectionPool;
 
-public class CoreInitMasterHandler implements StartupStageHandler {
+class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 
-	private static final int MIN_SCHEMA_VERSION = 1;
-	private static final int CURRENT_SCHEMA_VERSION = 1;
-	private static final int MAX_SCHEMA_VERSION = 1000;
-	
 	private Log log;
 	
 	@Override
 	public void handleStage(StartupContext context) {
-		log = Logging.getLogger("Atlas-Master", "Atlas-Master");
-		
-		YamlConfiguration nodeCfg = YamlConfiguration.loadConfiguration(new File(Atlas.getWorkdir(), "node.yml"));
-		ConfigurationSection masterConfig = nodeCfg.getConfigurationSection("master");
-		ConfigurationSection dbConfig = masterConfig.getConfigurationSection("database");
-		SQLConnectionPool con = getDBConnection(dbConfig);
-		if (con == null) {
-			log.error("Unable to initialize database connection is not present!");
-			context.fail();
-		}
-		if (!prepareDB()) {
-			log.error("A problem occured while preparing the database!");
-			context.fail();
-		}
-		
+		log = AtlasMaster.getLogger();
 		File masterDir = new File(Atlas.getWorkdir(), "master");
 		FileUtils.ensureDir(masterDir);
 		File globalCfgFile = null;
@@ -98,275 +73,6 @@ public class CoreInitMasterHandler implements StartupStageHandler {
 		loadNodeGroups(nodeGroupsCfgFile);
 		loadProxyConfig(proxyCfgFile);
 		loadPermissions(permissionCfgFile);
-		
-		File nodeIDFile = new File(Atlas.getWorkdir(), "node-id.yml");
-		UUID nodeID = null;
-		if (nodeIDFile.exists()) {
-			YamlConfiguration nodeIDCfg = null;
-			try {
-				nodeIDCfg = YamlConfiguration.loadConfiguration(nodeIDFile);
-			} catch (IOException e) {
-				log.error("Error while loading node id file!", e);
-				context.fail(e);
-			}
-			String rawID = nodeIDCfg.getString("node-id");
-			if (rawID != null)
-				nodeID = UUID.fromString(rawID);
-		}
-		if (nodeID == null) {
-			nodeID = UUID.randomUUID();
-			YamlConfiguration nodeIDCfg = new YamlConfiguration();
-			nodeIDCfg.set("node-id", nodeID.toString());
-			try {
-				nodeIDCfg.save(nodeIDFile);
-			} catch (IOException e) {
-				log.error("Error while writing node id file!", e);
-				context.fail(e);
-			}
-		}
-		
-		permissionProvider = new CoreSQLPermissionManager(con);
-		AtlasMasterBuilder builder = context.getContext("builder");
-		builder.setLogger(log)
-			.setDatabase(con)
-			.setServerManager(new CoreServerManager(null, null))
-			.setProfileManager(new CoreSQLProfileManager());
-	}
-	
-	private void loadServerGroups(File file) {
-		log.info("Loading server groups...");
-		Configuration cfg = null;
-		try {
-			cfg = YamlConfiguration.loadConfiguration(file);
-		} catch (IOException e) {
-			log.error("Error while loading server groups!", e);
-			return;
-		}
-		List<ConfigurationSection> groupCfgs = cfg.getConfigurationList("server-groups");
-		for (ConfigurationSection groupCfg : groupCfgs) {
-			CoreServerGroup group = new CoreServerGroup(groupCfg);
-			serverGroups.put(group.getName(), group);
-			log.debug("registered group: {}", group.getName());
-		}
-	}
-	
-	private void loadProxyConfig(File file) {
-		log.info("Loading proxies...");
-		Configuration cfg = null;
-		try {
-			cfg = YamlConfiguration.loadConfiguration(file);
-		} catch (IOException e) {
-			log.error("Error while loading proxies!", e);
-			return;
-		}
-		List<ConfigurationSection> proxyCfgs = cfg.getConfigurationList("proxies");
-		for (ConfigurationSection proxyCfg : proxyCfgs) {
-			ProxyConfig proxy = new ProxyConfig(proxyCfg);
-			proxyConfigs.put(proxy.getName(), proxy);
-		}
-	}
-	
-	private void loadNodeGroups(File file) {
-		log.info("Loading node groups...");
-		Configuration cfg = null;
-		try {
-			cfg = YamlConfiguration.loadConfiguration(file);
-		} catch (IOException e) {
-			log.error("Error while loading node groups!", e);
-			return;
-		}
-		List<ConfigurationSection> nodeCfgs = cfg.getConfigurationList("node-groups");
-		for (ConfigurationSection groupCfg : nodeCfgs) {
-			NodeConfig group = new NodeConfig(groupCfg);
-			nodeConfigs.put(group.getName(), group);
-		}
-	}
-	
-	private void loadGlobalConfig(File file) {
-		log.info("Loading global config...");
-		Configuration cfg = null;
-		try {
-			cfg = YamlConfiguration.loadConfiguration(file);
-		} catch (IOException e) {
-			log.error("Error while loading global config!", e);
-			return;
-		}
-		String serverIcon = loadServerIconBase64(log, "server_icon.png");
-		String serverIconMaintenance = loadServerIconBase64(log, "server_icon_maintenance.png");
-		info = loadNetworkInfo(cfg.getConfigurationSection("network-info"), serverIcon);
-		infoMaintenance = loadNetworkInfo(cfg.getConfigurationSection("network-info-maintenance"), serverIconMaintenance);
-		slots = cfg.getInt("max-slots");
-		maintenance = cfg.getBoolean("maintenance");
-	}
-	
-	private CoreNetworkInfo loadNetworkInfo(ConfigurationSection config, String serverIcon) {
-		int slots = config.getInt("slots");
-		int slotDistance = config.getInt("slot-distance");
-		String rawSlotMode = config.getString("slot-mode");
-		SlotMode mode = SlotMode.valueOf(rawSlotMode.toUpperCase());
-		String motdFirstLine = config.getString("motd-first-line");
-		String motdSecondLine = config.getString("motd-second-line");
-		String motd = motdFirstLine + motdSecondLine; // TODO implement motd lining
-		String protocolText = config.getString("protocol-text");
-		boolean useProtocolText = config.getBoolean("use-protocol-text");
-		List<String> playerInfo = config.getStringList("player-info");
-		return new CoreNetworkInfo(slots, slotDistance, mode, motd, protocolText, serverIcon, playerInfo, useProtocolText);
-	}
-	
-	private String loadServerIconBase64(Log log, String filename) {
-		File iconFile = new File(Atlas.getWorkdir(), filename);
-		InputStream in = null;
-		int size = -1;
-		if (iconFile.exists()) {
-			try {
-				size = (int) iconFile.length();
-				in = new FileInputStream(iconFile);
-			} catch (FileNotFoundException e) {
-				log.error("Unable to find server icon!", e);
-			}
-		}
-		if (in == null) {
-			in = AtlasMasterBuilder.class.getResourceAsStream("/assets/server_icon.png");
-			try {
-				size = in.available();
-			} catch (IOException e) {
-				log.error("Error while loading server icon!", e);
-				try {
-					in.close();
-				} catch (IOException e1) {}
-			}
-		}
-		if (size == -1) {
-			return null;
-		}
-		byte[] data = new byte[size];
-		try {
-			log.debug("Server icon bytes read: {}", in.read(data));
-			in.close();
-		} catch (IOException e) {
-			log.error("Error while loading server icon!", e);
-		}
-		return Base64.getEncoder().encodeToString(data);
-	}
-	
-	private SQLConnectionPool getDBConnection(ConfigurationSection dbConfig) {
-		String dbName = dbConfig.getString("database");
-		this.schema = dbName;
-		String dbHost = dbConfig.getString("host");
-		int dbPort = dbConfig.getInt("port");
-		String dbUser = dbConfig.getString("user");
-		String dbPassword = dbConfig.getString("password");
-		int poolMinSize = dbConfig.getInt("pool-min-size");
-		int poolMaxSize = dbConfig.getInt("pool-max-size");
-		int poolMaxIdleCount = dbConfig.getInt("pool-max-idle-count", 1);
-		int poolIdleTimeout = dbConfig.getInt("pool-idle-timeout");
-		MysqlConnectionPoolDataSource src = new MysqlConnectionPoolDataSource();
-		try {
-			log.info("Connecting to database...");
-			src.setDatabaseName(dbName);
-			src.setPort(dbPort);
-			src.setServerName(dbHost);
-			src.setUser(dbUser);
-			src.setPassword(dbPassword);
-			src.getConnection().close();
-		} catch (SQLException e) {
-			log.error("Unable to establish database connection!", e);
-			return null;
-		}
-		log.info("Database connection established");
-		return new SQLConnectionPool(src, poolMinSize, poolMaxIdleCount, poolMaxSize, poolIdleTimeout);
-	}
-	
-	private boolean prepareDB() {
-		Connection con = null;
-		boolean prepared = false;
-		try {
-			con = this.con.getConnection();
-			PreparedStatement stmt = con.prepareStatement("SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=? AND TABLE_NAME = 'atlas';");
-			stmt.setString(1, schema);
-			ResultSet result = stmt.executeQuery();
-			boolean schemaPresent = result.next();
-			stmt.close();
-			result.close();
-			if (schemaPresent) {
-				stmt = con.prepareStatement("SELECT schema_version FROM atlas");
-				stmt.setFetchSize(1);
-				result = stmt.executeQuery();
-				if (result.next()) {
-					int schemaVersion = result.getInt(1);
-					if (schemaVersion >= MAX_SCHEMA_VERSION) {
-						log.error("Datase has a to up to date schema verion {} > {}! Please update Atlas or downgrade the schema version!", schemaVersion, CURRENT_SCHEMA_VERSION);
-					} else if (schemaVersion > CURRENT_SCHEMA_VERSION) {
-						log.warn("Database has newer schema version {} > {}!", schemaVersion, CURRENT_SCHEMA_VERSION);
-						prepared = true;
-					} else if (schemaVersion < MIN_SCHEMA_VERSION) {
-						log.error("Database has outdated incompatible schema version {} < {}! Atlas won't start until the schema is up to date!", schemaVersion, CURRENT_SCHEMA_VERSION);
-					} else if (schemaVersion < CURRENT_SCHEMA_VERSION) {
-						log.warn("Database has outdated schema version {} < {}! (Please update your schema version)", schemaVersion, CURRENT_SCHEMA_VERSION);
-						prepared = true;
-					} else {
-						prepared = true;
-					}
-				} else {
-					log.warn("Unable to read atlas database schema version! (Table emtpy?)");
-				}
-			} else {
-				log.info("Initializing database...");
-				InputStream in = getClass().getResourceAsStream("/master/atlas.sql");
-				if (in == null) {
-					log.error("SQL init file not found!");
-				} else {
-					List<String> sqls = new ArrayList<>();
-					StringBuilder builder = new StringBuilder(1024);
-					BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-					boolean begin = true;
-					try {
-						String line = null;
-						while ((line = reader.readLine()) != null) {
-							if (line.startsWith("-- atlas")) {
-								if (begin) {
-									begin = false;
-									builder.append(line);
-									builder.append('\n');
-									continue;
-								}
-								sqls.add(builder.toString());
-								builder.setLength(0);
-							}
-							builder.append(line);
-							builder.append('\n');
-						}
-						if (builder.length() > 0)
-							sqls.add(builder.toString());
-					} catch (IOException e) {
-						log.error("Error while reading init sql script!", e);
-					}
-					if (!sqls.isEmpty()) {
-						Statement s = con.createStatement();
-						s.execute("BEGIN");
-						for (String sql : sqls) {
-							s.execute(sql);
-						}
-						s.close();
-						PreparedStatement verionStmt = con.prepareStatement("INSERT INTO atlas (atlas_version, schema_version, installation_date) VALUES (?, ?, ?)");
-						verionStmt.setString(1, Atlas.FULL_VERSION);
-						verionStmt.setInt(2, CURRENT_SCHEMA_VERSION);
-						verionStmt.setDate(3, new Date(System.currentTimeMillis()));
-						verionStmt.execute();
-						verionStmt.close();
-						prepared = true;
-					}
-				}
-			}
-		} catch (SQLException e) {
-			log.error("Error while preparing database!", e);
-		} finally {
-			if (con != null)
-				try {
-					con.close();
-				} catch (SQLException e) {}
-		}
-		return prepared;
 	}
 	
 	private void loadPermissions(File file) {
@@ -468,7 +174,7 @@ public class CoreInitMasterHandler implements StartupStageHandler {
 		PreparedStatement ctxPermStmt = con.prepareStatement("INSERT INTO perm_context_perm (context_id, perm, power) VALUES (?, ?, ?)");
 		PreparedStatement groupCTXStmt = con.prepareStatement("INSERT INTO perm_group_perm_context (group_id, context_id) VALUES (?, ?)");
 		groupCTXStmt.setInt(1, groupID);
-		for (PermissionContext context : group.getContexts()) {
+		for (PermissionContext context : group.getPermissionContexts()) {
 			ctxStmt.setString(1, context.getContextKey());
 			ctxStmt.setString(2, context.getContext());
 			ctxStmt.execute();
@@ -604,6 +310,124 @@ public class CoreInitMasterHandler implements StartupStageHandler {
 			return false;
 		}
 		return true;
+	}
+	
+	private void loadServerGroups(File file) {
+		log.info("Loading server groups...");
+		Configuration cfg = null;
+		try {
+			cfg = YamlConfiguration.loadConfiguration(file);
+		} catch (IOException e) {
+			log.error("Error while loading server groups!", e);
+			return;
+		}
+		List<ConfigurationSection> groupCfgs = cfg.getConfigurationList("server-groups");
+		ServerManager manager = AtlasMaster.getServerManager();
+		ServerGroupBuilder builder = new ServerGroupBuilder();
+		for (ConfigurationSection groupCfg : groupCfgs) {
+			builder.setConfiguration(groupCfg);
+			ServerGroup group = manager.createServerGroup(builder);
+			log.debug("registered group: {}", group.getName());
+		}
+	}
+	
+	private void loadProxyConfig(File file) {
+		log.info("Loading proxies...");
+		Configuration cfg = null;
+		try {
+			cfg = YamlConfiguration.loadConfiguration(file);
+		} catch (IOException e) {
+			log.error("Error while loading proxies!", e);
+			return;
+		}
+		List<ConfigurationSection> proxyCfgs = cfg.getConfigurationList("proxies");
+		for (ConfigurationSection proxyCfg : proxyCfgs) {
+			ProxyConfig proxy = new ProxyConfig(proxyCfg);
+			proxyConfigs.put(proxy.getName(), proxy);
+		}
+	}
+	
+	private void loadNodeGroups(File file) {
+		log.info("Loading node groups...");
+		Configuration cfg = null;
+		try {
+			cfg = YamlConfiguration.loadConfiguration(file);
+		} catch (IOException e) {
+			log.error("Error while loading node groups!", e);
+			return;
+		}
+		List<ConfigurationSection> nodeCfgs = cfg.getConfigurationList("node-groups");
+		for (ConfigurationSection groupCfg : nodeCfgs) {
+			NodeConfig group = new NodeConfig(groupCfg);
+			nodeConfigs.put(group.getName(), group);
+		}
+	}
+	
+	private void loadGlobalConfig(File file) {
+		log.info("Loading global config...");
+		Configuration cfg = null;
+		try {
+			cfg = YamlConfiguration.loadConfiguration(file);
+		} catch (IOException e) {
+			log.error("Error while loading global config!", e);
+			return;
+		}
+		String serverIcon = loadServerIconBase64(log, "server_icon.png");
+		String serverIconMaintenance = loadServerIconBase64(log, "server_icon_maintenance.png");
+		info = loadNetworkInfo(cfg.getConfigurationSection("network-info"), serverIcon);
+		infoMaintenance = loadNetworkInfo(cfg.getConfigurationSection("network-info-maintenance"), serverIconMaintenance);
+		slots = cfg.getInt("max-slots");
+		maintenance = cfg.getBoolean("maintenance");
+	}
+	
+	private CoreNetworkInfo loadNetworkInfo(ConfigurationSection config, String serverIcon) {
+		int slots = config.getInt("slots");
+		int slotDistance = config.getInt("slot-distance");
+		String rawSlotMode = config.getString("slot-mode");
+		SlotMode mode = SlotMode.valueOf(rawSlotMode.toUpperCase());
+		String motdFirstLine = config.getString("motd-first-line");
+		String motdSecondLine = config.getString("motd-second-line");
+		String motd = motdFirstLine + motdSecondLine; // TODO implement motd lining
+		String protocolText = config.getString("protocol-text");
+		boolean useProtocolText = config.getBoolean("use-protocol-text");
+		List<String> playerInfo = config.getStringList("player-info");
+		return new CoreNetworkInfo(slots, slotDistance, mode, motd, protocolText, serverIcon, playerInfo, useProtocolText);
+	}
+	
+	private String loadServerIconBase64(Log log, String filename) {
+		File iconFile = new File(Atlas.getWorkdir(), filename);
+		InputStream in = null;
+		int size = -1;
+		if (iconFile.exists()) {
+			try {
+				size = (int) iconFile.length();
+				in = new FileInputStream(iconFile);
+			} catch (FileNotFoundException e) {
+				log.error("Unable to find server icon!", e);
+			}
+		}
+		if (in == null) {
+			in = AtlasMasterBuilder.class.getResourceAsStream("/assets/server_icon.png");
+			try {
+				size = in.available();
+			} catch (IOException e) {
+				log.error("Error while loading server icon!", e);
+				try {
+					in.close();
+				} catch (IOException e1) {}
+			}
+		}
+		if (size == -1) {
+			return null;
+		}
+		byte[] data = new byte[size];
+		try {
+			log.debug("Server icon bytes read: {}", in.read(data));
+			in.close();
+		} catch (IOException e) {
+			log.error("Error while loading server icon!", e);
+		}
+		return Base64.getEncoder().encodeToString(data);
 	}
 
 }

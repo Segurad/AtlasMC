@@ -8,7 +8,7 @@ import de.atlasmc.Color;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.permission.Permission;
-import de.atlasmc.permission.PermissionContextProvider;
+import de.atlasmc.permission.ContextProvider;
 import de.atlasmc.permission.PermissionGroup;
 import de.atlasmc.permission.PermissionGroupHolder;
 import de.atlasmc.permission.PermissionHolder;
@@ -84,16 +84,16 @@ public class CorePermissionGroup extends CorePermissionContextHolder implements 
 	}
 
 	@Override
-	public Permission getPermission(String permission, PermissionContextProvider provider, boolean allowWildcards, boolean deepInheritance) {
+	public Permission getPermission(String permission, ContextProvider provider, boolean allowWildcards, boolean deepInheritance) {
 		return internalGetPermission(permission, provider, allowWildcards, true, deepInheritance);
 	}
 
 	@Override
-	public Permission getPermissionNoInheritance(String permission, PermissionContextProvider provider, boolean allowWildcards) {
+	public Permission getPermissionNoInheritance(String permission, ContextProvider provider, boolean allowWildcards) {
 		return internalGetPermission(permission, provider, allowWildcards, false, false);
 	}
 	
-	private Permission internalGetPermission(String permission, PermissionContextProvider provider, boolean wildcards, boolean inheritance, boolean deep) {
+	private Permission internalGetPermission(String permission, ContextProvider provider, boolean wildcards, boolean inheritance, boolean deep) {
 		Permission perm = permissions.getPermission(permission, wildcards);
 		if (perm != null)
 			return perm;
