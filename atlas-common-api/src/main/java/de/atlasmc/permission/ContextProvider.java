@@ -2,8 +2,6 @@ package de.atlasmc.permission;
 
 import java.util.Map;
 
-import de.atlasmc.util.Pair;
-
 /**
  * Stores information abound the current context of the holder.
  * For example the current Server or ServerGroup.
@@ -11,17 +9,15 @@ import de.atlasmc.util.Pair;
  */
 public interface ContextProvider {
 	
-	Map<String, Pair<String, Boolean>> getContext();
+	Map<String, String> getContext();
 	
-	String setContext(String key, String context, boolean persistent);
+	String set(String key, String context);
 	
-	String removeContext(String key, String context);
+	boolean removeContext(String key, String context);
+	
+	String removeContext(String key);
 	
 	String getContext(String key);
-	
-	boolean isPersistent(String key);
-	
-	void setPersistent(String key, boolean peristent);
 	
 	boolean hasChangedContext();
 	

@@ -6,22 +6,24 @@ import de.atlasmc.Color;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatColor;
 
-public interface PermissionGroup extends PermissionHolder, PermissionContextHolder, ContextProvider {
-	
-	int getID();
+public interface PermissionGroup extends PermissionHolder, PermissionContextHolder {
 	
 	int getPower();
 	
-	default Permission getPermission(String permission) {
+	void setPower(int power);
+	
+	ContextProvider getContext();
+	
+	default Permission getPermission(CharSequence permission) {
 		return getPermission(permission, null, false);
 	}
 	
-	default Permission getPermission(String permission, boolean shallow) {
+	default Permission getPermission(CharSequence permission, boolean shallow) {
 		return getPermission(permission, null, shallow);
 	}
 	
 	@Override
-	default Permission getPermission(String permission, ContextProvider context) {
+	default Permission getPermission(CharSequence permission, ContextProvider context) {
 		return getPermission(permission, context, false);
 	}
 	
@@ -32,7 +34,7 @@ public interface PermissionGroup extends PermissionHolder, PermissionContextHold
 	 * @param shallow true if parents and parents of parents should be checked
 	 * @return permission or null
 	 */
-	Permission getPermission(String permission, ContextProvider context, boolean shallow);
+	Permission getPermission(CharSequence permission, ContextProvider context, boolean shallow);
 	
 	Collection<PermissionGroup> getParents();
 	
@@ -43,18 +45,32 @@ public interface PermissionGroup extends PermissionHolder, PermissionContextHold
 	String getName();
 
 	int getSortWeight();
+	
+	void setSortWeight(int weight);
 
 	Chat getPrefix();
+	
+	void setPrefix(Chat chat);
 
 	Chat getSuffix();
-
-	ChatColor getChatColor();
 	
-	Color getChatColorRaw();
+	void setSuffix(Chat chat);
 
-	ChatColor getNameColor();
+	Color getChatColor();
+	
+	void setChatColor(ChatColor color);
+	
+	void setChatColor(Color color);
+
+	Color getNameColor();
+	
+	void setNameColor(ChatColor color);
+	
+	void setNameColor(Color color);
 
 	boolean isDefault();
+	
+	void setDefault(boolean isDefault);
 	
 	boolean hasGroupChanged();
 	

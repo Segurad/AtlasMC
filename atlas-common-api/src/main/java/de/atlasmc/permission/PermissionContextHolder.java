@@ -13,7 +13,7 @@ public interface PermissionContextHolder {
 	
 	PermissionContext getPermissionContext(String key, String context);
 	
-	Permission getPermission(String permission, ContextProvider provider);
+	Permission getPermission(CharSequence permission, ContextProvider provider);
 	
 	boolean addPermissionContext(PermissionContext context);
 	

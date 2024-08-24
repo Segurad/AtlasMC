@@ -8,13 +8,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionHolder;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.map.key.ImmutableCharKey;
 
 public class CorePermissionHolder implements PermissionHolder {
 	
 	private Map<CharKey, Permission> permissions;
 	private volatile boolean changed;
 
+	Map<CharKey, Permission> permissions() {
+		return permissions;
+	}
+	
 	@Override
 	public Collection<Permission> getPermissions() {
 		Map<?, Permission> map = permissions;
@@ -51,7 +54,7 @@ public class CorePermissionHolder implements PermissionHolder {
 				}
 			}
 		}
-		Permission perm = map.put(new ImmutableCharKey(permission.permission()), permission);
+		Permission perm = map.put(CharKey.of(permission.permission()), permission);
 		if (!permission.equals(perm))
 			changed = true;
 	}

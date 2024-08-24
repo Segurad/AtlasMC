@@ -100,8 +100,8 @@ public class CoreAtlasPlayer implements AtlasPlayer {
 	}
 
 	@Override
-	public Permission getPermission(String permission, boolean allowWildcards) {
-		return permhandler != null ? permhandler.getPermission(permission, allowWildcards) : null;			
+	public Permission getPermission(CharSequence permission) {
+		return permhandler != null ? permhandler.getPermission(permission) : null;			
 	}
 
 	@Override

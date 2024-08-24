@@ -11,7 +11,7 @@ import de.atlasmc.util.annotation.ThreadSafe;
  * This class is a thread safe implementation of a LinkedList using volatile for the most reading operations and synchronized for manipulation
  */
 @ThreadSafe
-public class ConcurrentLinkedList<E> implements Iterable<E>, Collection<E> {
+public class ConcurrentLinkedList<E> implements Collection<E> {
 	
 	private volatile Node<E> head;
 	private volatile Node<E> tail;

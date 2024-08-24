@@ -58,12 +58,12 @@ public class CoreConsoleCommandSender implements ConsoleCommandSender {
 	}
 	
 	@Override
-	public Permission getPermission(String permission, boolean allowWildcards) {
+	public Permission getPermission(CharSequence permission) {
 		return null;
 	}
 	
 	@Override
-	public boolean hasPermission(String permission) {
+	public boolean hasPermission(CharSequence permission) {
 		return true;
 	}
 

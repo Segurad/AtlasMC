@@ -16,7 +16,7 @@ import de.atlascore.permission.CoreAbstractPermissionManager;
 import de.atlascore.permission.CorePermission;
 import de.atlascore.permission.CorePermissionContext;
 import de.atlascore.permission.CorePermissionGroup;
-import de.atlascore.permission.CorePlayerPermissionHandler;
+import de.atlascore.permission.CorePermissionHandler;
 import de.atlasmc.Atlas;
 import de.atlasmc.Color;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
@@ -33,13 +33,19 @@ import de.atlasmc.util.concurrent.future.Future;
 
 public class CoreSQLPermissionManager extends CoreAbstractPermissionManager {
 
-	private final Map<UUID, CompletableFuture<PermissionHandler>> futureHandlers;
+	private final Map<Integer, CompletableFuture<PermissionHandler>> futureHandlers;
 	private final Map<Integer, CompletableFuture<PermissionContext>> futureContexts;
 	private final Map<String, CompletableFuture<PermissionGroup>> futureGroups;
 	
-	private final SQLFunction<UUID, PermissionHandler> loadHandler = this::internalLoadHandler;
+	private final SQLFunction<Integer, PermissionHandler> loadHandler = this::internalLoadHandler;
 	private final SQLFunction<Integer, PermissionContext> loadContext = this::internalLoadContext;
 	private final SQLFunction<String, PermissionGroup> loadGroup = this::internalLoadGroup;
+	private final SQLFunction<Integer, PermissionHandler> createHandler = this::internalCreateHandler;
+	private final SQLFunction<Integer, PermissionContext> createContext = this::internalCreateContext;
+	private final SQLFunction<String, PermissionGroup> createGroup = this::internalCreateGroup;
+	private final SQLFunction<Integer, Boolean> deleteHandler;
+	private final SQLFunction<Integer, Boolean> deleteContext;
+	private final SQLFunction<String, Boolean> deleteGroup;
 	
 	public CoreSQLPermissionManager() {
 		futureHandlers = new ConcurrentHashMap<>();
@@ -48,8 +54,8 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager {
 	}
 	
 	@Override
-	public Future<PermissionHandler> loadHandler(UUID uuid) {
-		return load(handlers, futureHandlers, uuid, loadHandler);
+	public Future<PermissionHandler> loadHandler(int id) {
+		return load(handlers, futureHandlers, id, loadHandler);
 	}
 	
 	@Override
@@ -105,7 +111,7 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager {
 	}
 
 	@Override
-	public Future<PermissionHandler> createHandler(UUID uuid) {
+	public Future<PermissionHandler> createHandler(int id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -147,9 +153,9 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager {
 		return future;
 	}
 
-	private PermissionHandler internalLoadHandler(Connection con, UUID uuid) throws SQLException {
-		final int userID = player.getID();
-		final CorePlayerPermissionHandler handler = new CorePlayerPermissionHandler();
+	private PermissionHandler internalLoadHandler(Connection con,  int id) throws SQLException {
+		final int userID = id;
+		final CorePermissionHandler handler = new CorePermissionHandler(id, this);
 		// load permissions
 		PreparedStatement stmt = con.prepareStatement("SELECT perm, power FROM perm_user_perm WHERE user_id=?");
 		stmt.setInt(1, userID);
@@ -165,7 +171,7 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager {
 		result = stmt.executeQuery();
 		stmt.close();
 		while (result.next()) {
-			handler.setContext(result.getString(1), result.getString(2));
+			handler.getContext().set(result.getString(1), result.getString(2));
 		}
 		result.close();
 		// load context permissions
@@ -211,7 +217,7 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager {
 		}
 		// load group
 		int groupID = result.getInt(1);
-		CorePermissionGroup group = new CorePermissionGroup(name);
+		CorePermissionGroup group = new CorePermissionGroup(groupID, name);
 		group.setSortWeight(result.getInt(3));
 		group.setPrefix(ChatUtil.toChat(result.getString(4)));
 		group.setSuffix(ChatUtil.toChat(result.getString(5)));
@@ -240,7 +246,7 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager {
 		result = stmt.executeQuery();
 		stmt.close();
 		while (result.next()) {
-			group.setContext(result.getString(1), result.getString(2));
+			group.getContext().set(result.getString(1), result.getString(2));
 		}
 		result.close();
 		// load context permissions
@@ -282,7 +288,7 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager {
 		}
 		result.close();
 		stmt.close();
-		group.changedContext();
+		group.getContext().changedContext();
 		group.changedPermissionContexts();
 		group.changedGroup();
 		group.changedParents();

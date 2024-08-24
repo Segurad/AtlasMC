@@ -131,8 +131,8 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 		stmt.setInt(2, group.getSortWeight());
 		stmt.setString(3, group.getPrefix().toText());
 		stmt.setString(4, group.getPrefix().toText());
-		stmt.setInt(5, group.getChatColor().getColor().asRGB());
-		stmt.setInt(6, group.getNameColor().getID());
+		stmt.setInt(5, group.getChatColor().asRGB());
+		stmt.setInt(6, group.getNameColor().asRGB());
 		stmt.setInt(7, group.getPower());
 		stmt.setBoolean(8, group.isDefault());
 		stmt.execute();
@@ -257,7 +257,7 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 				for (String key : context.getKeys()) {
 					String value = context.getString(key);
 					if (key != null)
-						group.setContext(key, value);
+						group.set(key, value);
 				}
 			}
 			List<String> parents = groupCfg.getStringList("inherited-groups");

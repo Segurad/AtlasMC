@@ -15,9 +15,11 @@ import de.atlasmc.permission.PermissionContextHolder;
 
 public class CorePermissionContextHolder implements PermissionContextHolder, Iterable<PermissionContext> {
 	
-	private Map<String, Map<String, PermissionContext>> permContext;
+	protected Map<String, Map<String, PermissionContext>> permContext;
 	private Collection<PermissionContext> values;
-
+	private boolean changed;
+	
+	
 	@Override
 	public Collection<PermissionContext> getPermissionContexts() {
 		if (values == null)
@@ -57,7 +59,11 @@ public class CorePermissionContextHolder implements PermissionContextHolder, Ite
 	public boolean addPermissionContext(PermissionContext context) {
 		if (context == null)
 			throw new IllegalArgumentException("Context can not be null!");
-		getInnerMapSafe(context.getContextKey()).put(context.getContext(), context);
+		Map<String, PermissionContext> contexts = getInnerMapSafe(context.getContextKey());
+		PermissionContext old = contexts.put(context.getContext(), context);
+		if (context == old)
+			return true;
+		changed = true;
 		return true;
 	}
 
@@ -65,7 +71,16 @@ public class CorePermissionContextHolder implements PermissionContextHolder, Ite
 	public boolean removePermissionContext(PermissionContext context) {
 		if (context == null)
 			throw new IllegalArgumentException("Context can not be null!");
-		return removePermissionContext(context.getContextKey(), context.getContext());
+		Map<String, Map<String, PermissionContext>> map = permContext;
+		if (map == null)
+			return false;
+		Map<String, PermissionContext> contexts = map.get(context.getContextKey());
+		if (contexts == null)
+			return false;
+		if (!contexts.remove(context.getContext(), context))
+			return false;
+		changed = true;
+		return true;
 	}
 
 	@Override
@@ -80,7 +95,10 @@ public class CorePermissionContextHolder implements PermissionContextHolder, Ite
 		Map<String, PermissionContext> contexts = map.get(key);
 		if (contexts == null)
 			return false;
-		return contexts.remove(context) != null;
+		if (contexts.remove(context) == null)
+			return false;
+		changed = true;
+		return true;
 	}
 	
 	private Map<String, Map<String, PermissionContext>> getMainMapSafe() {
@@ -212,7 +230,9 @@ public class CorePermissionContextHolder implements PermissionContextHolder, Ite
 	}
 
 	@Override
-	public Permission getPermission(String permission, ContextProvider provider, boolean allowWildcards) {
+	public Permission getPermission(CharSequence permission, ContextProvider provider) {
+		if (provider == null)
+			throw new IllegalArgumentException("ContextProvider can not be null!");
 		for (String key : permContext.keySet()) {
 			String value = provider.getContext(key);
 			if (value == null)
@@ -220,12 +240,22 @@ public class CorePermissionContextHolder implements PermissionContextHolder, Ite
 			PermissionContext context = getPermissionContext(key, value);
 			if (context == null)
 				continue;
-			Permission perm = context.getPermission(permission, allowWildcards);
+			Permission perm = context.getPermission(permission);
 			if (perm == null)
 				continue;
 			return perm;
 		}
 		return null;
+	}
+
+	@Override
+	public boolean hasChangedPermissionContext() {
+		return changed;
+	}
+
+	@Override
+	public void changedPermissionContexts() {
+		changed = false;
 	}
 
 }

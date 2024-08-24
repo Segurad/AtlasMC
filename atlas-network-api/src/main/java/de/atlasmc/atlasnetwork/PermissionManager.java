@@ -1,7 +1,6 @@
 package de.atlasmc.atlasnetwork;
 
 import java.util.Collection;
-import java.util.UUID;
 
 import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionContext;
@@ -109,14 +108,14 @@ public interface PermissionManager {
 	 * @return handler
 	 */
 	@Nullable
-	PermissionHandler getHandler(UUID uuid);
+	PermissionHandler getHandler(int id);
 	
 	/**
 	 * Returns a future that returns the handler or null if not present
 	 * @param uuid
 	 * @return future handler
 	 */
-	Future<PermissionHandler> loadHandler(UUID uuid);
+	Future<PermissionHandler> loadHandler(int id);
 	
 	/**
 	 * Saves the given handler the future value will be true if successfully
@@ -130,7 +129,7 @@ public interface PermissionManager {
 	 * @param uuid
 	 * @return future handler
 	 */
-	Future<PermissionHandler> createHandler(UUID uuid);
+	Future<PermissionHandler> createHandler(int id);
 
 	/**
 	 * Returns a collection of all loaded groups

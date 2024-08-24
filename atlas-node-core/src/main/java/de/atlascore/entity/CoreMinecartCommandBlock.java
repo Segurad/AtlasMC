@@ -122,7 +122,7 @@ public class CoreMinecartCommandBlock extends CoreAbstractMinecart implements Mi
 	}
 
 	@Override
-	public Permission getPermission(String permission, boolean allowWildcards) {
+	public Permission getPermission(CharSequence permission) {
 		// TODO command block minecart Permission
 		return null;
 	}

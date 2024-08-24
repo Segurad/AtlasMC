@@ -2,7 +2,7 @@ package de.atlasmc.util.map.key;
 
 import java.util.Arrays;
 
-public final class ImmutableCharKey extends CharKey {
+final class ImmutableCharKey extends CharKey {
 	
 	private final char[] buf;
 	

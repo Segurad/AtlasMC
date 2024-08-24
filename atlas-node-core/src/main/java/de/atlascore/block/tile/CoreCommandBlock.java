@@ -182,7 +182,7 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 	}
 
 	@Override
-	public Permission getPermission(String permission, boolean allowWildcards) {
+	public Permission getPermission(CharSequence permission) {
 		// TODO has Permission command block
 		return null;
 	}

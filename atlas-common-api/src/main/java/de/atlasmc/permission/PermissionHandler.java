@@ -1,12 +1,21 @@
 package de.atlasmc.permission;
 
-import java.util.UUID;
-
 /**
  * Handles all stuff regarding permissions
  */
-public interface PermissionHandler extends PermissionGroupHolder, PermissionHolder, PermissionContextHolder, ContextProvider {
+public interface PermissionHandler extends PermissionGroupHolder, PermissionHolder, PermissionContextHolder {
 	
-	UUID getUUID();
+	ContextProvider getContext();
+	
+	ContextProvider getTempContext();
+	
+	String getContext(String key);
+	
+	/**
+	 * Returns the permission of set this handler.
+	 * @param permission
+	 * @return permission
+	 */
+	Permission getHandlerPermission(CharSequence permission);
 
 }

@@ -152,7 +152,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	}
 	
 	@Override
-	public Permission getPermission(String permission, boolean allowWildcards) {
+	public Permission getPermission(CharSequence permission) {
 		return getPermissionHandler().getPermission(permission);
 	}
 
