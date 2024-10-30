@@ -27,6 +27,7 @@ import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.log.Log;
 import de.atlasmc.master.AtlasMaster;
 import de.atlasmc.master.AtlasMasterBuilder;
+import de.atlasmc.master.PermissionManager;
 import de.atlasmc.master.server.ServerGroup;
 import de.atlasmc.master.server.ServerGroupBuilder;
 import de.atlasmc.master.server.ServerManager;
@@ -108,97 +109,7 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 		}
 	}
 	
-	private void insertPermissions(Connection con, Collection<PermissionGroup> groups) throws SQLException {
-		HashMap<PermissionGroup, Integer> inserted = new HashMap<>();
-		for (PermissionGroup group : groups) {
-			insertGroup(con, group, inserted);
-		}
-	}
-	
-	private void insertGroup(Connection con, PermissionGroup group, HashMap<PermissionGroup, Integer> inserted) throws SQLException {
-		if (inserted.containsKey(group))
-			return;
-		Collection<PermissionGroup> parents = group.getParents();
-		for (PermissionGroup parent : parents) {
-			insertGroup(con, parent, inserted);
-		}
-		if (inserted.containsKey(group)) {
-			log.warn("Permission group present after resolving inheritance! Circular inheritance possible? Group: {}", group.getName());
-			return;
-		}
-		PreparedStatement stmt = con.prepareStatement("INSERT INTO perm_groups (name, sort_weight, prefix, suffix, chat_color, name_color, power, is_default) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-		stmt.setString(1, group.getName());
-		stmt.setInt(2, group.getSortWeight());
-		stmt.setString(3, group.getPrefix().toText());
-		stmt.setString(4, group.getPrefix().toText());
-		stmt.setInt(5, group.getChatColor().asRGB());
-		stmt.setInt(6, group.getNameColor().asRGB());
-		stmt.setInt(7, group.getPower());
-		stmt.setBoolean(8, group.isDefault());
-		stmt.execute();
-		ResultSet result = stmt.executeQuery("SELECT LAST_INSERT_ID()");
-		if (!result.next()) {
-			stmt.close();
-			result.close();
-			log.error("Error while inserting group {}! (No id returned)", group.getName());
-			return;
-		}
-		final int groupID = result.getInt(1);
-		stmt.close();
-		result.close();
-		inserted.put(group, groupID);
-		stmt = con.prepareStatement("INSERT INTO perm_group_perm (group_id, perm, power) VALUES (?, ?, ?)");
-		stmt.setInt(1, groupID);
-		for (Permission perm : group.getPermissions()) {
-			stmt.setString(2, perm.permission());
-			stmt.setInt(3, perm.value());
-			stmt.execute();
-		}
-		stmt.close();
-		stmt = con.prepareStatement("INSERT INTO perm_group_context (group_id, ctx_key, ctx_value) VALUES (?, ?, ?)");
-		stmt.setInt(1, groupID);
-		for (Entry<String, String> entry : group.getContext().entrySet()) {
-			stmt.setString(2, entry.getKey());
-			stmt.setString(3, entry.getValue());
-			stmt.execute();
-		}
-		stmt.close();
-		stmt = con.prepareStatement("INSERT INTO perm_group_inherit (group_id, parent_id) VALUES (?, ?)");
-		stmt.setInt(1, groupID);
-		for (PermissionGroup parent : parents) {
-			stmt.setInt(2, inserted.get(parent));
-			stmt.execute();
-		}
-		stmt.close();
-		PreparedStatement ctxStmt = con.prepareStatement("INSERT INTO perm_context (ctx_key, ctx_value) VALUES (?, ?)");
-		PreparedStatement ctxPermStmt = con.prepareStatement("INSERT INTO perm_context_perm (context_id, perm, power) VALUES (?, ?, ?)");
-		PreparedStatement groupCTXStmt = con.prepareStatement("INSERT INTO perm_group_perm_context (group_id, context_id) VALUES (?, ?)");
-		groupCTXStmt.setInt(1, groupID);
-		for (PermissionContext context : group.getPermissionContexts()) {
-			ctxStmt.setString(1, context.getContextKey());
-			ctxStmt.setString(2, context.getContext());
-			ctxStmt.execute();
-			result = ctxStmt.executeQuery("SELECT LAST_INSERT_ID()");
-			if (!result.next()) {
-				result.close();
-				log.error("Error while inserting group {} context {}:{}! (No id returned)", group.getName(), context.getContextKey(), context.getContext());
-				continue;
-			}
-			final int ctxID = result.getInt(1);
-			result.close();
-			groupCTXStmt.setInt(2, ctxID);
-			groupCTXStmt.execute();
-			ctxPermStmt.setInt(1, ctxID);
-			for (Permission perm : context.getPermissions()) {
-				ctxPermStmt.setString(2, perm.permission());
-				ctxPermStmt.setInt(3, perm.value());
-				ctxPermStmt.execute();
-			}
-		}
-		ctxStmt.close();
-		ctxPermStmt.close();
-		groupCTXStmt.close();
-	}
+
 	
 	private Collection<PermissionGroup> loadPermissionFile(File file) {
 		Configuration cfg = null;
@@ -279,6 +190,7 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 	private List<Permission> getPermissions(List<String> raw) {
 		if (raw == null || raw.isEmpty())
 			return List.of();
+		PermissionManager permManager = AtlasMaster.getPermissionManager();
 		List<Permission> permissions = new ArrayList<>(raw.size());
 		for (String permission : raw) {
 			int value = -1;
@@ -291,7 +203,7 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 				}
 			} else
 				value = 1;
-			permissions.add(new CorePermission(splitt[0], value));
+			permissions.add(permManager.createPermission(splitt[0], value));
 		}
 		return permissions;
 	}

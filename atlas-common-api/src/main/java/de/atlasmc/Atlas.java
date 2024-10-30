@@ -25,8 +25,7 @@ public class Atlas implements SyncThreadHolder {
 	private static AtlasThread mainThread;
 	private static Plugin system;
 	
-	private Atlas() {}
-	
+	protected Atlas() {}
 	
 	static void initWorkDir(File workDir) {
 		synchronized (Atlas.class) {

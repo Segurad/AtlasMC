@@ -1,5 +1,5 @@
-my_group:
-  name: MyGroupName
+groups:
+- name: MyGroupName
   sort-weight: 1
   prefix: "&4My&5Group"
   suffix: "&eSomeSuffix"
@@ -26,5 +26,3 @@ my_group:
       - "my.node.group.permission"
   context: # key value based settings e.g prefix: "my displayed prefix"
     prefix: "Hello World"
-  inherited-groups:
-  - some_other_group

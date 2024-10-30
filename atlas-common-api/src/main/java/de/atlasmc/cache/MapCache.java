@@ -17,7 +17,7 @@ import de.atlasmc.util.reference.WeakReference1;
  * A {@link CacheHolder} that maps keys to values.
  * This implementation will keep a reference to a value until a time to live is exceeded.
  * After this a {@link WeakReference} will held to regain a object access until no references are left.
- * This holder will not be automatically registered to a {@link CacheHandler}
+ * This holder will not be automatically registered to a {@link CacheHandler}.
  * @param <K>
  * @param <V>
  */
@@ -48,27 +48,28 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 
 	@Override
 	public boolean containsKey(Object key) {
-		CacheEntry<K, V> entry = map.get(key);
-		return entry.newttl > currentTick;
+		return getNoTouch(key) != null;
 	}
 
 	@Override
 	public boolean containsValue(Object value) {
+		@SuppressWarnings("unchecked")
+		V entryValue = (V) value; // TODO test if try catch ClassCastException can should be used
 		for (CacheEntry<K, V> entry : map.values()) {
-			V v = entry.value;
-			if (v == value || (v != null && v.equals(value))) {
-				if (entry.newttl < currentTick)
-					continue;
+			if (entry.ref.refersTo(entryValue))
 				return true;
-			}
 		}
 		return false;
 	}
 
+	/**
+	 * Returns the entry mapped to the given key or null if not present.
+	 * If the entry is present in the cache the TTL will be updated.
+	 */
 	@Override
 	public V get(Object key) {
-		CacheEntry<K, V> entry = map.get(key);
-		int currentTick = this.currentTick;
+		final CacheEntry<K, V> entry = map.get(key);
+		final int currentTick = this.currentTick;
 		V value = entry.value;
 		if (value == null || entry.newttl < currentTick) {
 			value = entry.ref.get();
@@ -79,8 +80,22 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 			}
 			return value;
 		}
-		entry.newttl += entry.ttlIncrement;
+		entry.newttl = currentTick + entry.ttlIncrement;
 		return entry.value;
+	}
+	
+	/**
+	 * Returns the value mapped to the given key or null if not present.
+	 * Will not touch the entry and therefore will not update the TTL of the entry.
+	 * @param key
+	 * @return value or null
+	 */
+	public V getNoTouch(Object key) {
+		CacheEntry<K, V> entry = map.get(key);
+		if (entry == null)
+			return null;
+		V value = entry.ref.get();
+		return value;
 	}
 
 	@Override
@@ -108,7 +123,7 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 		CacheEntry<K, V> entry = map.remove(key);
 		if (entry.newttl < currentTick)
 			return null;
-		return entry.value;
+		return entry.ref.get();
 	}
 
 	@Override
@@ -117,6 +132,9 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 		ttlList.clear();
 	}
 
+	/**
+	 * Returns a entry set for all keys and values of this map. 
+	 */
 	@Override
 	public Set<Entry<K, V>> entrySet() {
 		if (entrySet == null)
@@ -142,7 +160,7 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 				map.remove(entry.key, entry);
 				continue;
 			}
-			entry.ttl += newttl;
+			entry.ttl = newttl;
 			insertTTL(entry);
 		}
 		WeakReference1<?, CacheEntry<K, V>> ref = null;
@@ -226,9 +244,10 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 				@SuppressWarnings("unchecked")
 				Entry<K, CacheEntry<K, V>> next = (Entry<K, CacheEntry<K, V>>) it.next();
 				CacheEntry<K, V> nextValue = next.getValue();
-				if (nextValue.ttl < currentTTL)
-					continue;
-				return nextValue;
+				if (nextValue.ttl >= currentTTL) // TTL is valid
+					return nextValue;
+				if (!nextValue.ref.refersTo(null)) // TTL ended but held alive by reference
+					return nextValue;
 			}
 			return null;
 		}
@@ -269,7 +288,7 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 
 		@Override
 		public V getValue() {
-			return value;
+			return ref.get();
 		}
 
 		@Override

@@ -1,5 +1,9 @@
 package de.atlasmc.master;
 
+import java.util.Collection;
+
+import de.atlasmc.atlasnetwork.NetworkInfo;
+import de.atlasmc.datarepository.Repository;
 import de.atlasmc.log.Log;
 import de.atlasmc.master.node.NodeManager;
 import de.atlasmc.master.proxy.ProxyManager;
@@ -16,6 +20,8 @@ public class AtlasMaster {
 	private static ProfileManager profileManager;
 	private static boolean init;
 	private static SQLConnectionPool database;
+	
+	protected AtlasMaster() {}
 	
 	static void init(AtlasMasterBuilder builder) {
 		synchronized (AtlasMaster.class) {
@@ -56,6 +62,36 @@ public class AtlasMaster {
 	
 	public static ProfileManager getProfileManager() {
 		return profileManager;
+	}
+
+	public static int getOnlinePlayerCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public static int getMaxPlayers() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public static NetworkInfo getNetworkInfo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static NetworkInfo getNetworkInfoMaintenance() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static boolean isMaintenance() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public static Collection<Repository> getRepositories() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

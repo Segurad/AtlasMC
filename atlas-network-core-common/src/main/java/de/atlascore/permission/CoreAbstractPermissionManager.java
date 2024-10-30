@@ -1,5 +1,6 @@
 package de.atlascore.permission;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +16,7 @@ import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionContext;
 import de.atlasmc.permission.PermissionGroup;
 import de.atlasmc.permission.PermissionHandler;
-import de.atlasmc.util.ConcurrentLinkedList;
+import de.atlasmc.util.CollectionView;
 import de.atlasmc.util.map.key.CharKey;
 
 public abstract class CoreAbstractPermissionManager implements PermissionManager {
@@ -24,20 +25,61 @@ public abstract class CoreAbstractPermissionManager implements PermissionManager
 	protected final MapCache<Integer, PermissionHandler> handlers;
 	protected final MapCache<Integer, PermissionContext> contexts;
 	private final MapCache<Collection<PermissionGroup>, CoreGroupSetPermission> groupSetCache;
+	private final Set<PermissionGroup> defaultGroups;
+	private final CollectionView<PermissionGroup> defaultGroupsView;
 	
 	public CoreAbstractPermissionManager() {
 		this.groups = new MapCache<>();
 		this.handlers = new MapCache<>();
 		this.contexts = new MapCache<>();
 		this.groupSetCache = new MapCache<>();
+		this.defaultGroups = new CopyOnWriteArraySet<>();
+		this.defaultGroupsView = new CollectionView<>(defaultGroups);
 		Caching.register(groups);
 		Caching.register(contexts);
 		Caching.register(handlers);
 		Caching.register(groupSetCache);
 	}
-
-	CoreGroupSetPermission getGroupSetPermissions(ConcurrentLinkedList<PermissionGroup> groups) {
-		Set<PermissionGroup> key = new CopyOnWriteArraySet<>(groups);
+	
+	protected void updateGroup(PermissionGroup group) {
+		boolean containsDefault = defaultGroups.contains(group);
+		synchronized (groupSetCache) { // update all cached sets containing the group
+			for (Entry<Collection<PermissionGroup>, CoreGroupSetPermission> entry : groupSetCache.entrySet()) {
+				Collection<PermissionGroup> keySet = entry.getKey();
+				if (!keySet.contains(group))
+					continue;
+				CoreGroupSetPermission oldGroupSet = entry.getValue();
+				CoreGroupSetPermission newGroupSet = buildGroupSet(keySet);
+				oldGroupSet.update(newGroupSet);
+			}
+		}
+		if (group.isDefault() != containsDefault) { // update defaults
+			synchronized (defaultGroups) {
+				containsDefault = defaultGroups.contains(group);
+				if (group.isDefault() != containsDefault) {
+					if (containsDefault) {
+						defaultGroups.remove(group);
+					} else {
+						defaultGroups.add(group);
+					}
+					// TODO notify existing default handlers
+				}
+			}
+		}
+		
+	}
+	
+	CoreGroupSetPermission getDefaultGroupSetPermissions() {
+		return getGroupSetPermissions(defaultGroups);
+	}
+	
+	CoreGroupSetPermission getGroupSetPermissions(Collection<PermissionGroup> groups) {
+		Set<PermissionGroup> key;
+		if (groups instanceof Set<PermissionGroup> set) {
+			key = set;
+		} else { 
+			key = new CopyOnWriteArraySet<>(groups);
+		}
 		CoreGroupSetPermission handler = groupSetCache.get(key);
 		if (handler != null)
 			return handler;
@@ -51,7 +93,10 @@ public abstract class CoreAbstractPermissionManager implements PermissionManager
 		return handler;
 	}
 	
-	private CoreGroupSetPermission buildGroupSet(ConcurrentLinkedList<PermissionGroup> groups) {
+	private CoreGroupSetPermission buildGroupSet(Collection<PermissionGroup> groups) {
+		PermissionGroup[] groupsArr = new PermissionGroup[groups.size()];
+		groups.toArray(groupsArr);
+		Arrays.sort(groupsArr, PermissionGroup.SORT_BY_POWER);
 		Map<CharKey, Permission> effectivePermissions = new HashMap<>();
 		Map<String, Map<String, PermissionContext>> effectiveContexts = new HashMap<>();
 		ContextProvider context = new CoreContextProvider();
@@ -90,6 +135,11 @@ public abstract class CoreAbstractPermissionManager implements PermissionManager
 				addPermissions(ctx.getPermissions(), effectiveCtx.permissions());
 			}
 		}
+	}
+	
+	@Override
+	public Collection<PermissionGroup> getDefaultGroups() {
+		return defaultGroupsView;
 	}
 	
 	@SuppressWarnings("unlikely-arg-type")

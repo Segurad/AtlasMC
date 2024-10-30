@@ -8,7 +8,6 @@ import de.atlasmc.chat.ChatColor;
 import de.atlasmc.permission.ContextProvider;
 import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionGroup;
-import de.atlasmc.permission.PermissionGroupHolder;
 import de.atlasmc.util.annotation.InternalAPI;
 
 public class CorePermissionGroup extends CorePermissionContextHolder implements PermissionGroup {
@@ -22,7 +21,6 @@ public class CorePermissionGroup extends CorePermissionContextHolder implements 
 	private int power;
 	private int weight;
 	private final CorePermissionHolder permissions;
-	private final PermissionGroupHolder parents;
 	private final String name;
 	private final ContextProvider contextProvider;
 	
@@ -34,7 +32,6 @@ public class CorePermissionGroup extends CorePermissionContextHolder implements 
 		this.id = id;
 		this.name = name;
 		this.permissions = new CorePermissionHolder();
-		this.parents = new CorePermissionGroupHolder();
 		this.contextProvider = new CoreContextProvider();
 	}
 	
@@ -70,21 +67,6 @@ public class CorePermissionGroup extends CorePermissionContextHolder implements 
 	@Override
 	public int getPower() {
 		return power;
-	}
-
-	@Override
-	public Collection<PermissionGroup> getParents() {
-		return parents.getGroups();
-	}
-
-	@Override
-	public void addParent(PermissionGroup group) {
-		parents.addPermissionGroup(group);
-	}
-
-	@Override
-	public void removeParent(PermissionGroup group) {
-		parents.removePermissionGroup(group);
 	}
 	
 	@Override
@@ -231,17 +213,7 @@ public class CorePermissionGroup extends CorePermissionContextHolder implements 
 	}
 
 	@Override
-	public boolean hasParentsChanged() {
-		return parents.hasGroupsChanged();
-	}
-
-	@Override
-	public void changedParents() {
-		parents.groupsChanged();
-	}
-
-	@Override
-	public Permission getPermission(CharSequence permission, ContextProvider context, boolean shallow) {
+	public Permission getPermission(CharSequence permission, ContextProvider context) {
 		Permission perm = permissions.getPermission(permission);
 		if (perm != null)
 			return perm;
@@ -250,14 +222,6 @@ public class CorePermissionGroup extends CorePermissionContextHolder implements 
 		perm = super.getPermission(permission, context);
 		if (perm != null)
 			return perm;
-		if (shallow)
-			return null;
-		Collection<PermissionGroup> parents = this.parents.getGroups();
-		for (PermissionGroup parent : parents) {
-			perm = parent.getPermission(permission, context, true);
-			if (perm != null)
-				return perm;
-		}
 		return null;
 	}
 

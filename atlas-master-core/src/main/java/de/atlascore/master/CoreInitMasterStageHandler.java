@@ -2,8 +2,6 @@ package de.atlascore.master;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,44 +12,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
-
-import java.util.Map.Entry;
 
 import de.atlascore.master.node.CoreNodeManager;
 import de.atlascore.master.permission.CoreSQLPermissionManager;
 import de.atlascore.master.proxy.CoreProxyManager;
 import de.atlascore.master.server.CoreServerManager;
 import de.atlasmc.Atlas;
-import de.atlasmc.atlasnetwork.NetworkInfo;
-import de.atlasmc.atlasnetwork.NodeConfig;
-import de.atlasmc.atlasnetwork.PermissionManager;
-import de.atlasmc.atlasnetwork.ProfileHandler;
-import de.atlasmc.atlasnetwork.NetworkInfo.SlotMode;
-import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
-import de.atlasmc.chat.ChatColor;
-import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.log.Log;
 import de.atlasmc.log.Logging;
 import de.atlasmc.master.AtlasMasterBuilder;
-import de.atlasmc.master.node.AtlasNode;
-import de.atlasmc.master.node.NodeManager;
-import de.atlasmc.master.server.ServerManager;
-import de.atlasmc.permission.Permission;
-import de.atlasmc.permission.PermissionContext;
-import de.atlasmc.permission.PermissionGroup;
 import de.atlasmc.plugin.StartupContext;
 import de.atlasmc.plugin.StartupStageHandler;
-import de.atlasmc.util.FileUtils;
-import de.atlasmc.util.NumberConversion;
-import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
 import de.atlasmc.util.sql.SQLConnectionPool;
@@ -63,6 +38,8 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 	private static final int MAX_SCHEMA_VERSION = 1000;
 	
 	private Log log;
+	private String dbName;
+	private SQLConnectionPool con;
 	
 	@Override
 	public void handleStage(StartupContext context) {
@@ -123,8 +100,7 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 	}
 	
 	private SQLConnectionPool getDBConnection(ConfigurationSection dbConfig) {
-		String dbName = dbConfig.getString("database");
-		this.schema = dbName;
+		dbName = dbConfig.getString("database");
 		String dbHost = dbConfig.getString("host");
 		int dbPort = dbConfig.getInt("port");
 		String dbUser = dbConfig.getString("user");
@@ -156,7 +132,7 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 		try {
 			con = this.con.getConnection();
 			PreparedStatement stmt = con.prepareStatement("SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=? AND TABLE_NAME = 'atlas';");
-			stmt.setString(1, schema);
+			stmt.setString(1, dbName);
 			ResultSet result = stmt.executeQuery();
 			boolean schemaPresent = result.next();
 			stmt.close();

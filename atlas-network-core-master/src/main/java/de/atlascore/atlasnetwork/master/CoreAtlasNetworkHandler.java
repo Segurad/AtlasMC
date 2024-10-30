@@ -1,26 +1,14 @@
 package de.atlascore.atlasnetwork.master;
 
-import java.security.PublicKey;
 import java.util.Collection;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlascore.atlasnetwork.CoreAbstractAtlasNetworkHandler;
-import de.atlascore.atlasnetwork.CoreAbstractAtlasNetworkHandlerBuilder;
-import de.atlascore.atlasnetwork.master.node.CoreNodeManager;
-import de.atlascore.atlasnetwork.master.server.CoreServerManager;
-import de.atlasmc.Atlas;
-import de.atlasmc.NamespacedKey;
-import de.atlasmc.atlasnetwork.AtlasNetwork;
-import de.atlasmc.atlasnetwork.AtlasNetworkHandler;
 import de.atlasmc.atlasnetwork.NetworkInfo;
 import de.atlasmc.atlasnetwork.NodeConfig;
 import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.datarepository.Repository;
 import de.atlasmc.master.AtlasMaster;
-import de.atlasmc.util.Builder;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
 
@@ -37,49 +25,45 @@ public class CoreAtlasNetworkHandler extends CoreAbstractAtlasNetworkHandler {
 
 	@Override
 	public int getOnlinePlayerCount() {
-		return onlineplayers;
+		return AtlasMaster.getOnlinePlayerCount();
 	}
 	
 	@Override
 	public int getMaxPlayers() {
-		return maxplayers;
+		return AtlasMaster.getMaxPlayers();
 	}
 
 	@Override
 	public NetworkInfo getNetworkInfo() {
-		return info;
+		return AtlasMaster.getNetworkInfo();
 	}
 
 	@Override
 	public NetworkInfo getNetworkInfoMaintenance() {
-		return infoMaintenance;
+		return AtlasMaster.getNetworkInfoMaintenance();
 	}
 
 	@Override
 	public boolean isMaintenance() {
-		return maintenance;
+		return AtlasMaster.isMaintenance();
 	}
 
 	@Override
 	public Future<NodeConfig> getNodeConfig(String name) {
-		return null;
+		return CompleteFuture.of(AtlasMaster.getNodeManager().getNodeConfig(name));
 	}
 
 	@Override
 	public Future<ProxyConfig> getProxyConfig(String name) {
-		return null;
+		return CompleteFuture.of(AtlasMaster.getProxyManager().getProxyConfig(name));
 	}
 
 	@Override
 	public Collection<Repository> getRepositories() {
-		// TODO Auto-generated method stub
-		return null;
+		return AtlasMaster.getRepositories();
 	}
 
 	@Override
-	public void tick() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void tick() {}
 
 }

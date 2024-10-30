@@ -54,10 +54,10 @@ public interface PermissionManager {
 	
 	/**
 	 * Deletes the given context the future value will be true if successfully
-	 * @param context
+	 * @param id
 	 * @return future success
 	 */
-	Future<Boolean> deleteContext(PermissionContext context);
+	Future<Boolean> deleteContext(int id);
 	
 	/**
 	 * Saves the given context the future value will be true if successfully
@@ -130,6 +130,8 @@ public interface PermissionManager {
 	 * @return future handler
 	 */
 	Future<PermissionHandler> createHandler(int id);
+	
+	Future<Boolean> deleteHandler(int id);
 
 	/**
 	 * Returns a collection of all loaded groups
@@ -142,5 +144,9 @@ public interface PermissionManager {
 	 * @return handlers
 	 */
 	Collection<PermissionHandler> getHandlers();
+	
+	Collection<PermissionGroup> getDefaultGroups();
+	
+	Future<Collection<PermissionGroup>> loadDefaultGroups();
 	
 }

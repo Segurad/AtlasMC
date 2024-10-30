@@ -1,12 +1,39 @@
 package de.atlasmc.permission;
 
-import java.util.Collection;
+import java.util.Comparator;
 
 import de.atlasmc.Color;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatColor;
 
 public interface PermissionGroup extends PermissionHolder, PermissionContextHolder {
+	
+	/**
+	 * Sorts {@link PermissionGroup}s by {@link #getPower()} in descending order.
+	 */
+	public static final Comparator<PermissionGroup> SORT_BY_POWER = (a, b) -> {
+		if (a == b)
+			return 0;
+		int powerA = a.getPower();
+		int powerB = b.getPower();
+		if (powerA == powerB)
+			return 0;
+		return powerA > powerB ? -1 : 1;
+	};
+	
+	/**
+	 * Sorts {@link PermissionGroup}s by {@link #getSortWeight()} in descending order.
+	 * If sort weight is equal {@link #getName()} is used
+	 */
+	public static final Comparator<PermissionGroup> SORT_BY_WEIGHT = (a, b) -> {
+		if (a == b)
+			return 0;
+		int weightA = a.getSortWeight();
+		int weightB = b.getSortWeight();
+		if (weightA == weightB)
+			return a.getName().compareTo(b.getName());
+		return weightA > weightB ? -1 : 1;
+	};
 	
 	int getPower();
 	
@@ -15,32 +42,16 @@ public interface PermissionGroup extends PermissionHolder, PermissionContextHold
 	ContextProvider getContext();
 	
 	default Permission getPermission(CharSequence permission) {
-		return getPermission(permission, null, false);
-	}
-	
-	default Permission getPermission(CharSequence permission, boolean shallow) {
-		return getPermission(permission, null, shallow);
-	}
-	
-	@Override
-	default Permission getPermission(CharSequence permission, ContextProvider context) {
-		return getPermission(permission, context, false);
+		return getPermission(permission, null);
 	}
 	
 	/**
-	 * Returns the permission of this given string. If allow wild cards is true wild card permission checks will be performed.
+	 * Returns the permission of this given string.
 	 * @param permission the permission to check
 	 * @param context the used context
-	 * @param shallow true if parents and parents of parents should be checked
 	 * @return permission or null
 	 */
-	Permission getPermission(CharSequence permission, ContextProvider context, boolean shallow);
-	
-	Collection<PermissionGroup> getParents();
-	
-	void addParent(PermissionGroup group);
-	
-	void removeParent(PermissionGroup group);
+	Permission getPermission(CharSequence permission, ContextProvider context);
 
 	String getName();
 
@@ -75,9 +86,7 @@ public interface PermissionGroup extends PermissionHolder, PermissionContextHold
 	boolean hasGroupChanged();
 	
 	void changedGroup();
-	
-	boolean hasParentsChanged();
-	
-	void changedParents();
+
+	int getID();
 
 }
