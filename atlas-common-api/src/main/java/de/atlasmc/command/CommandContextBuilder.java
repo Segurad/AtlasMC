@@ -84,6 +84,17 @@ public class CommandContextBuilder implements Builder<CommandContext> {
 		return this;
 	}
 	
+	/**
+	 * Adds the given argument as last parsed argument
+	 * @param argument
+	 * @return
+	 */
+	public CommandContextBuilder updateArguments(CommandArg argument) {
+		addParsedArg(argument);
+		setLastArg(argument);
+		return this;
+	}
+	
 	@Override
 	public CommandContext build() {
 		return new CommandContext(sender, rawCommand, command, parsedArgs, arguments, lastArg);

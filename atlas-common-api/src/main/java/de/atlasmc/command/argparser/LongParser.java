@@ -1,7 +1,6 @@
 package de.atlasmc.command.argparser;
 
 import java.util.Collection;
-import java.util.List;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.command.CommandStringReader;
@@ -43,7 +42,7 @@ public class LongParser implements VarArgParser<Long> {
 
 	@Override
 	public Collection<String> getExamples() {
-		return List.of(); // TODO examples
+		return IntParser.EXAMPLES;
 	}
 
 	@Override
@@ -56,11 +55,11 @@ public class LongParser implements VarArgParser<Long> {
 		int index = buf.writerIndex();
 		buf.writeByte(0);
 		int flags = 0;
-		if (min != Integer.MIN_VALUE) {
+		if (min != Long.MIN_VALUE) {
 			flags &= 0x1;
 			buf.writeLong(min);
 		}
-		if (max != Integer.MAX_VALUE) {
+		if (max != Long.MAX_VALUE) {
 			flags &= 0x2;
 			buf.writeLong(max);
 		}

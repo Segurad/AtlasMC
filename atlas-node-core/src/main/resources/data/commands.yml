@@ -79,11 +79,13 @@ commands:
   aliases:
   - repo
   cmd-description: "Command to interact with atlas data repository"
+  permission: atlas.repos
   args:
   - type: literal
     name: list
     description: "Lists all local repositories"
     executor: atlas-core:datarepo/list
+    permission: atlas.repos.list
   - type: var
     name: repo
     parser: brigadier:string
@@ -92,6 +94,7 @@ commands:
       name: status
       description: "Provides information about entries and untracked files within the given repository"
       executor: atlas-core:datarepo/status
+      permission: atlas.repos.status
       args:
       - type: var
         name: namespace
@@ -102,6 +105,7 @@ commands:
       name: list
       executor: atlas-core:datarepo/list
       description: "Lists all namespaces of the local repository"
+      permission: atlas.repos.list.namespace
     - type: literal
       name: create
       args:
@@ -110,6 +114,7 @@ commands:
         arg-key: toCreate
         aliases:
         - ns
+        permission: atlas.repos.create.namespace
         args:
         - type: var
           name: namespace
@@ -125,6 +130,7 @@ commands:
         arg-key: toCreate
         aliases:
         - e
+        permission: atlas.repos.create.entry
         args:
         - type: var
           name: namespace
@@ -143,22 +149,26 @@ commands:
       name: update
       description: "Updates all entries in all namespaces of the given repository"
       executor: atlas-core:datarepo/update
+      permission: atlas.repos.update
       args:
       - type: var
         name: namespace
         parser: brigadier:string
         description: "Updates all entries in the given namespace"
         executor: atlas-core:datarepo/update
+        permission: atlas.repos.update.namespace
         args:
         - type: var
           name: entry
           parser: brigadier:string
           description: "Upates the given entry"
           executor: atlas-core:datarepo/update
+          permission: atlas.repos.update.entry
     - type: literal
       name: delete
       description: "Deletes the given repository"
       executor: atlas-core:datarepo/delete
+      permission: atlas.repos.delete
       args:
       - type: literal
         name: confirm
@@ -169,6 +179,7 @@ commands:
         parser: brigadier:string
         description: "Deletes the given namespace of this repository"
         executor: atlas-core:datarepo/delete
+        permission: atlas.repos.delete.namespace
         args:
         - type: literal
           name: confirm
@@ -179,9 +190,58 @@ commands:
           parser: brigadier:string
           description: "Deletes the given entry of this repositories"
           executor: atlas-core:datarepo/delete
+          permission: atlas.repos.delete.entry
           args:
           - type: literal
             name: confirm
             description: "Deletes the given entry of this repository without any other confirmation"
             executor: atlas-core:datarepo/delete
+# === Plugin ================================================================
+- name: plugin
+  cmd-description: "Command to manage plugins"
+  permission: atlas.plugins
+  args:
+  - type: literal
+    name: list
+    description: "Lists all active plugins"
+    executor: atlas:dummy_executor
+    permission: atlas.plugins.list
+  - type: var
+    name: plugin
+    parser: brigadier:string
+    args:
+    - type: literal
+      name: configuration
+      aliases:
+      - config
+      - cfg
+      args:
+      - type: literal
+        name: list
+        description: "Lists all active configurations of the given plugin"
+        executor: atlas:dummy_executor
+      - type: var
+        name: config
+        parser: brigadier:string
+        args:
+        - type: literal
+          name: reload
+          description: "Reloads the given configuration"
+          executor: atlas:dummy_executor
+        - type: literal
+          name: unload
+          description: "Unloads the given configuration"
+          executor: atlas:dummy_executor
+      - type: literal
+        name: reload
+        description: "Reloads all configurations"
+        executor: atlas:dummy_executor
+    - type: literal
+      name: info
+      description: "Gives informations about the given plugin"
+      executor: atlas:dummy_executor
+    - type: literal
+      name: unload
+      description: "Unloads the given plugin"
+      executor: atlas:dummy_executor
         

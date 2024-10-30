@@ -31,6 +31,7 @@ import de.atlasmc.util.concurrent.future.CompletableFuture;
 import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
+import de.atlasmc.util.configuration.ConfigurationSerializeable;
 import de.atlasmc.util.configuration.InvalidConfigurationException;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
 import de.atlasmc.util.map.ConcurrentLinkedListMultimap;
@@ -80,6 +81,8 @@ public class Commands {
 	/**
 	 * Loads a command from the given {@link ConfigurationSection}
 	 * @param config 
+	 * @param inheritPermission
+	 * @param inheritSourceValidators
 	 * @return command
 	 * @throws InvalidConfigurationException
 	 */
@@ -102,7 +105,7 @@ public class Commands {
 					String key = argCfg.getString("template-name");
 					if (key == null)
 						continue;
-					CommandArg template = loadArg(argCfg, templates);
+					CommandArg template = loadArg(argCfg, templates, null, null);
 					if (template == null)
 						continue;
 					templates.put(key, template);
@@ -114,7 +117,7 @@ public class Commands {
 		if (aliaes != null)
 			command.getAliases().addAll(aliaes);
 		try {
-			loadArg(config, command, templates);
+			loadArg(config, command, templates, null, null);
 		} catch(Exception e) {
 			throw new InvalidConfigurationException("Error while loading command: " + cmdName, e);
 		}
@@ -143,7 +146,7 @@ public class Commands {
 		return commands;
 	}
 	
-	private static CommandArg loadArg(ConfigurationSection config, Map<String, CommandArg> templates) {
+	private static CommandArg loadArg(ConfigurationSection config, Map<String, CommandArg> templates, String permission, CommandSourceValidator validator) {
 		String tempKey = config.getString("template");
 		if (tempKey != null)
 			return templates.get(tempKey);
@@ -153,17 +156,20 @@ public class Commands {
 		CommandArg arg = null;
 		switch (type) {
 		case "literal":
-			arg = loadLiteralArg(config, templates);
+			arg = loadLiteralArg(config, templates, permission, validator);
 			break;
 		case "var":
-			arg = loadVarArg(config, templates);
+			arg = loadVarArg(config, templates, permission, validator);
 			break;
 		}
 		return arg;
 	}
 	
-	private static void loadArg(ConfigurationSection config, CommandArg arg, Map<String, CommandArg> templates) {
-		arg.setPermission(config.getString("permission"));
+	private static void loadArg(ConfigurationSection config, CommandArg arg, Map<String, CommandArg> templates, String permission, CommandSourceValidator validator) {
+		if (config.contains("permission")) {
+			permission = config.getString("permission");
+		}
+		arg.setPermission(permission);
 		String executorKey = config.getString("executor");
 		if (executorKey != null) {
 			Registry<CommandExecutor> registry = Registries.getInstanceRegistry(CommandExecutor.class);
@@ -175,7 +181,7 @@ public class Commands {
 		List<ConfigurationSection> literalArgs = config.getListOfType("args", ConfigurationSection.class);
 		if (literalArgs != null) {
 			for (ConfigurationSection argCfg : literalArgs) {
-				CommandArg childArg = loadArg(argCfg, templates);
+				CommandArg childArg = loadArg(argCfg, templates, permission, validator);
 				if (childArg != null) {
 					arg.setArg(childArg);
 				}
@@ -183,14 +189,18 @@ public class Commands {
 		}
 		String description = config.getString("description");
 		arg.setDescription(description);
-		String allowedSource = config.getString("allowed-source");
-		if (allowedSource != null) {
-			CommandSourceValidator validator = Registries.getInstanceRegistry(CommandSourceValidator.class).get(allowedSource);
-			arg.setSenderValidator(validator);
+		if (config.contains("allowed-source")) {
+			String allowedSource = config.getString("allowed-source");
+			if (allowedSource != null) {
+				CommandSourceValidator newvalidator = Registries.getInstanceRegistry(CommandSourceValidator.class).get(allowedSource);
+				if (newvalidator != null)
+					validator = newvalidator;
+			}
 		}
+		arg.setSourceValidator(validator);
 	}
 	
-	private static LiteralCommandArg loadLiteralArg(ConfigurationSection config, Map<String, CommandArg> templates) {
+	private static LiteralCommandArg loadLiteralArg(ConfigurationSection config, Map<String, CommandArg> templates, String permission, CommandSourceValidator validator) {
 		String argName = config.getString("name");
 		if (argName == null)
 			throw new InvalidConfigurationException("\"name\" is not defined!", config);
@@ -199,17 +209,17 @@ public class Commands {
 		if (aliaes != null)
 			arg.getAliases().addAll(aliaes);
 		arg.setArgKey(config.getString("arg-key"));
-		loadArg(config, arg, templates);
+		loadArg(config, arg, templates, permission, validator);
 		return arg;
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private static VarCommandArg loadVarArg(ConfigurationSection config, Map<String, CommandArg> templates) {
+	private static VarCommandArg loadVarArg(ConfigurationSection config, Map<String, CommandArg> templates, String permission, CommandSourceValidator validator) {
 		String argName = config.getString("name");
 		if (argName == null)
 			throw new InvalidConfigurationException("\"name\" is not defined!", config);
 		VarCommandArg arg = new VarCommandArg(argName);
-		loadArg(config, arg, templates);
+		loadArg(config, arg, templates, permission, validator);
 		// load parser
 		Object rawParser = config.get("parser");
 		if (rawParser == null)
@@ -234,13 +244,8 @@ public class Commands {
 		} else {
 			throw new InvalidConfigurationException("\"parser\" must be a String or Object!", config);
 		}
-		try {
-			VarArgParser<?> parser = parserClass.getConstructor(ConfigurationSection.class).newInstance(parserCfg);
-			arg.setParser(parser);
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-			throw new InvalidConfigurationException("Error while instaciating VarArgParser", e, config);
-		}
+		VarArgParser<?> parser = ConfigurationSerializeable.deserialize(parserCfg, parserClass);
+		arg.setParser(parser);
 		// Load suggestion type
 		Object rawSuggestionType = config.getString("suggestion");
 		if (rawSuggestionType != null) {
@@ -361,7 +366,7 @@ public class Commands {
 					String key = next.getArgKey();
 					if (key != null)
 						builder.addArgument(key, next.getName());
-					builder.addParsedArg(next);
+					builder.updateArguments(next);
 					currentArg = next;
 					continue;
 				}
@@ -372,8 +377,6 @@ public class Commands {
 				Collection<VarCommandArg> varArgs = currentArg.getVarArgs();
 				VarCommandArg next = null;
 				for (VarCommandArg varArg : varArgs) {
-					if (!varArg.canUse(sender))
-						continue;
 					final int cursor = reader.getCursor();
 					try {
 						VarArgParser<?> parser = varArg.getParser();
@@ -384,7 +387,7 @@ public class Commands {
 							continue;
 						builder
 						.addArgument(varArg.getName(), arg)
-						.addParsedArg(varArg);
+						.updateArguments(varArg);
 						next = varArg;
 						break;
 					} catch (CommandSyntaxException e) {
@@ -394,7 +397,7 @@ public class Commands {
 					}
 				}
 				if (next != null) {
-					builder.addParsedArg(next);
+					builder.updateArguments(next);
 					currentArg = next;
 					continue;
 				}
@@ -402,7 +405,6 @@ public class Commands {
 			// TODO implement redirects
 			break; // break no node found
 		}
-		builder.setLastArg(currentArg);
 		return builder.build();
 	}
 	

@@ -8,7 +8,7 @@ Plugin Resourcepaths:
 ---
 
 Atlas has a command API verry similar to mojangs bridadier.
-As Developer you have the powerfull option define your commands with simple YAML. There is no need to pares and verify commands yourself. You just need to implement the CommandExecutor that will handle your Command
+As Developer you have the powerfull option define your commands with simple YAML. There is no need to pares and verify commands yourself. You just need to implement the CommandExecutor that will handle your Command.
 
 See also:
 - [VarArgParser](var_arg_parser.md) for a list all default parsers
@@ -18,7 +18,7 @@ Example Command configuraon:
 
 ## commands.yml
 
-```yaml  
+```yaml
 commands:
 - name: Foo # <required> Name of the command
   aliases: # <optional> defines aliaes used within you command this is only applicable on the root element and literals

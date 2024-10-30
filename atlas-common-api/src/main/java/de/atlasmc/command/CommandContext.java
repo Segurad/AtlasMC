@@ -133,6 +133,12 @@ public class CommandContext {
 	 * @return true if successful 
 	 */
 	public boolean execute() {
+		CommandSourceValidator validator = lastArg.getSourceValidator();
+		if (validator != null && !validator.isValid(sender))
+			return false; // TODO InvalidCommandSourceException
+		String permission = lastArg.getPermission();
+		if (permission != null && sender.hasPermission(permission))
+			return false; // TODO NoPermissionException
 		CommandExecutor exe = lastArg.getExecutor();
 		if (exe != null)
 			return exe.execute(this);

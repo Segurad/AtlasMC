@@ -43,7 +43,7 @@ public class DoubleParser implements VarArgParser<Double> {
 
 	@Override
 	public Collection<String> getExamples() {
-		return List.of(); // TODO examples
+		return FloatParser.EXAMPLES;
 	}
 
 	@Override

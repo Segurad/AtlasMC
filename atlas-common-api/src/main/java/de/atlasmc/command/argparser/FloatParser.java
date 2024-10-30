@@ -15,6 +15,7 @@ public class FloatParser implements VarArgParser<Float> {
 
 	public static final int ID = 1;
 	public static final NamespacedKey KEY = NamespacedKey.of("brigadier:float");
+	public static final Collection<String> EXAMPLES = List.of("0", "1.2", ".5", "-1", "-.5", "-1234.56");
 	
 	private final float min;
 	private final float max;
@@ -43,7 +44,7 @@ public class FloatParser implements VarArgParser<Float> {
 
 	@Override
 	public Collection<String> getExamples() {
-		return List.of(); // TODO examples
+		return EXAMPLES;
 	}
 
 	@Override
@@ -56,11 +57,11 @@ public class FloatParser implements VarArgParser<Float> {
 		int index = buf.writerIndex();
 		buf.writeByte(0);
 		int flags = 0;
-		if (min != Integer.MIN_VALUE) {
+		if (min != Float.MIN_VALUE) {
 			flags &= 0x1;
 			buf.writeFloat(min);
 		}
-		if (max != Integer.MAX_VALUE) {
+		if (max != Float.MAX_VALUE) {
 			flags &= 0x2;
 			buf.writeFloat(max);
 		}

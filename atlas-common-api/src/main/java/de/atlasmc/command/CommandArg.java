@@ -15,7 +15,7 @@ public class CommandArg {
 	private String description;
 	private CommandExecutor executor;
 	private String permission;
-	private CommandSourceValidator senderValidator; 
+	private CommandSourceValidator sourceValidator; 
 	private List<CommandArg> args;
 	private Map<String, LiteralCommandArg> literalArgs;
 	private Map<String, LiteralCommandArg> literalArgAliases;
@@ -149,20 +149,12 @@ public class CommandArg {
 	}
 	
 	@Nullable
-	public CommandSourceValidator getSenderValidator() {
-		return senderValidator;
+	public CommandSourceValidator getSourceValidator() {
+		return sourceValidator;
 	}
 
-	public void setSenderValidator(@Nullable CommandSourceValidator senderValidator) {
-		this.senderValidator = senderValidator;
-	}
-	
-	public boolean canUse(@NotNull CommandSender sender) {
-		if (senderValidator != null && !senderValidator.isValid(sender))
-			return false;
-		if (permission != null && !sender.hasPermission(permission))
-			return false;
-		return true;
+	public void setSourceValidator(@Nullable CommandSourceValidator sourceValidator) {
+		this.sourceValidator = sourceValidator;
 	}
 	
 }

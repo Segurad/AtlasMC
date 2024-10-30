@@ -15,6 +15,7 @@ public class IntParser implements VarArgParser<Integer> {
 
 	public static final int ID = 3;
 	public static final NamespacedKey KEY = NamespacedKey.of("brigadier:integer");
+	public static final Collection<String> EXAMPLES = List.of("0", "123", "-123");
 	
 	private final int min;
 	private final int max;
@@ -43,7 +44,7 @@ public class IntParser implements VarArgParser<Integer> {
 
 	@Override
 	public Collection<String> getExamples() {
-		return List.of(); // TODO examples
+		return EXAMPLES;
 	}
 
 	@Override
