@@ -4,6 +4,8 @@
 
 Plugin Resourcepaths: 
 - [`/atlas-plugin.yml`](#atlas-pluginyml)
+- [`/setup.yml`](#setup) (only for  AtlasModules)
+- [`/server-setup.yml`](#setup)
 
 ---
 
@@ -33,4 +35,21 @@ soft-depends-on: # Plugins that must be loaded before this Plugin if present
 - PluginNameHere
 load-before: # Plugins this Plugin should be loaded before
 - PluginNameHere
+```
+
+## PluginHandle
+
+A plugin handles represent plugins for registration of new functionality or values. Handles allow you to register and unregister those bound to a context like a server or servergroup. For example if a servergroup requires a specific configuration of your minigame you just create a new plugin handle and register all listeners for this minigame with the newly created handle. If the servergroup is no longer required you can simply remove every listener with the removeAll function without the need of tracking the listeners yourself. If your implementation does not require this sort of registration you can simply use your plugin instance.
+
+## setup.yml
+Setup files are helpers for creating directories and extract resources of your plugin. The external paths have to be within the workdir of atlas for `setup.yml` or the workdir of the server for `server-setup.yml`.
+
+`server-setup.yml` and `setup.yml` share the same structure.
+
+```yaml
+directories: # creates directories
+- some/Path
+- some/Other/Path
+extract: # copies resources to the given path
+-  "resource/Path:target/Path"
 ```

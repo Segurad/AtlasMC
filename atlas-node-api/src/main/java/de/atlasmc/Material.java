@@ -3,6 +3,7 @@ package de.atlasmc;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.data.BlockDataFactory;

@@ -13,4 +13,6 @@ public interface NodeManager {
 
 	Collection<AtlasNode> getNodes();
 
+	void addNodeConfig(NodeConfig config);
+
 }

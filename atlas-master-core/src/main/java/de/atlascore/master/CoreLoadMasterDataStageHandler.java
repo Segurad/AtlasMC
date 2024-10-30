@@ -16,7 +16,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutionException;
 
+import de.atlascore.atlasnetwork.CoreNetworkInfo;
 import de.atlascore.master.server.CoreServerGroup;
 import de.atlasmc.Atlas;
 import de.atlasmc.atlasnetwork.NodeConfig;
@@ -28,14 +30,17 @@ import de.atlasmc.log.Log;
 import de.atlasmc.master.AtlasMaster;
 import de.atlasmc.master.AtlasMasterBuilder;
 import de.atlasmc.master.PermissionManager;
+import de.atlasmc.master.node.NodeManager;
+import de.atlasmc.master.proxy.ProxyManager;
 import de.atlasmc.master.server.ServerGroup;
 import de.atlasmc.master.server.ServerGroupBuilder;
 import de.atlasmc.master.server.ServerManager;
+import de.atlasmc.permission.ContextProvider;
 import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionContext;
 import de.atlasmc.permission.PermissionGroup;
-import de.atlasmc.plugin.StartupContext;
-import de.atlasmc.plugin.StartupStageHandler;
+import de.atlasmc.plugin.startup.StartupContext;
+import de.atlasmc.plugin.startup.StartupStageHandler;
 import de.atlasmc.util.FileUtils;
 import de.atlasmc.util.NumberConversion;
 import de.atlasmc.util.configuration.Configuration;
@@ -57,7 +62,7 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 		File serverGroupsCfgFile = null;
 		File proxyCfgFile = null;
 		boolean override = false;
-		if (arguments.containsKey("atlas.config.override")) {
+		if (Boolean.getBoolean(System.getProperty("atlas.config.override", "false"))) {
 			override = true;
 		}
 		try {
@@ -80,9 +85,9 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 		log.info("Loading permissions...");
 		Connection con = null;
 		try {
-			con = this.con.getConnection();
+			con = AtlasMaster.getDatabase().getConnection();
 			boolean load = true;
-			if (arguments.containsKey("atlas.config.permission.reload")) {
+			if (Boolean.getBoolean(System.getProperty("atlas.config.permission.reload"))) {
 				if (!dropPermissions(con)) {
 					con.close();
 					return;
@@ -96,8 +101,7 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 				result.close();
 			}
 			if (load) {
-				Collection<CorePermissionGroup> group = loadPermissionFile(file);
-				insertPermissions(con, group);
+				loadPermissionFile(file);
 			}
 		} catch (SQLException e) {
 			log.error("Error while loading permissions!", e);
@@ -111,23 +115,31 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 	
 
 	
-	private Collection<PermissionGroup> loadPermissionFile(File file) {
+	private void loadPermissionFile(File file) {
 		Configuration cfg = null;
 		try {
 			cfg = YamlConfiguration.loadConfiguration(file);
 		} catch (IOException e) {
 			log.error("Error while load permissions!", e);
-			return List.of();
+			return;
 		}
-		Map<String, PermissionGroup> groups = new HashMap<>();
-		Map<PermissionGroup, List<String>> unresolvedInheritance = new HashMap<>();
-		for (String groupKey : cfg.getKeys()) {
-			ConfigurationSection groupCfg = cfg.getConfigurationSection(groupKey);
+		PermissionManager permManager = AtlasMaster.getPermissionManager();
+		List<ConfigurationSection> groupCfgs = cfg.getConfigurationList("groups");
+		for (ConfigurationSection groupCfg : groupCfgs) {
 			if (groupCfg == null)
 				continue;
 			String name = groupCfg.getString("name");
-			CorePermissionGroup group = new CorePermissionGroup(name);
-			groups.put(groupKey, group);
+			if (name == null) {
+				log.warn("Group without \"name\" attribute found! (skipped)");
+				continue;
+			}
+			PermissionGroup group;
+			try {
+				group = permManager.createGroup(name).get();
+			} catch (InterruptedException | ExecutionException e) {
+				log.error("Error while creating group: " + name, e);
+				continue;
+			}
 			int sortWeight = groupCfg.getInt("sort-weight");
 			group.setSortWeight(sortWeight);
 			String prefix = groupCfg.getString("prefix");
@@ -155,7 +167,13 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 						List<Permission> permissions = getPermissions(contextPermsValuesCfg.getStringList(contextKeyValue));
 						if (permissions.isEmpty())
 							continue;
-						CorePermissionContext context = new CorePermissionContext(contextKey, contextKeyValue);
+						PermissionContext context;
+						try {
+							context = permManager.createContext(contextKey, contextKeyValue).get();
+						} catch (InterruptedException | ExecutionException e) {
+							log.error("Error while creating permission context \"" + contextKey + ":" + contextKeyValue + "\" for group: " + name, e);
+							continue;
+						}
 						for (Permission perm : permissions) {
 							context.setPermission(perm);
 						}
@@ -165,26 +183,16 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 			}
 			ConfigurationSection context = groupCfg.getConfigurationSection("context");
 			if (context != null) {
+				ContextProvider ctxProvider = group.getContext();
 				for (String key : context.getKeys()) {
 					String value = context.getString(key);
-					if (key != null)
-						group.set(key, value);
+					if (key == null)
+						continue;
+					ctxProvider.set(key, value);
 				}
 			}
-			List<String> parents = groupCfg.getStringList("inherited-groups");
-			if (parents != null)
-				unresolvedInheritance.put(group, parents);
+			permManager.saveGroup(group);
 		}
-		unresolvedInheritance.forEach((group, parents) -> {
-			for (String rawParent : parents) {
-				PermissionGroup parent = groups.get(rawParent);
-				if (parent != null)
-					group.addParent(group);
-				else
-					log.warn("Unresolved parent permission group \"{}\" for group \"{}\"", rawParent, group.getName());
-			}
-		});
-		return groups.values();
 	}
 	
 	private List<Permission> getPermissions(List<String> raw) {
@@ -252,10 +260,11 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 			log.error("Error while loading proxies!", e);
 			return;
 		}
+		ProxyManager proxyManager = AtlasMaster.getProxyManager();
 		List<ConfigurationSection> proxyCfgs = cfg.getConfigurationList("proxies");
 		for (ConfigurationSection proxyCfg : proxyCfgs) {
 			ProxyConfig proxy = new ProxyConfig(proxyCfg);
-			proxyConfigs.put(proxy.getName(), proxy);
+			proxyManager.addProxyConfig(proxy);
 		}
 	}
 	
@@ -268,10 +277,11 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 			log.error("Error while loading node groups!", e);
 			return;
 		}
+		NodeManager nodeManager = AtlasMaster.getNodeManager();
 		List<ConfigurationSection> nodeCfgs = cfg.getConfigurationList("node-groups");
 		for (ConfigurationSection groupCfg : nodeCfgs) {
 			NodeConfig group = new NodeConfig(groupCfg);
-			nodeConfigs.put(group.getName(), group);
+			nodeManager.addNodeConfig(group);
 		}
 	}
 	

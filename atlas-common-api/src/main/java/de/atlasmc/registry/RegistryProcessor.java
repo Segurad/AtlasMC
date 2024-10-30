@@ -3,27 +3,25 @@ package de.atlasmc.registry;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
+import javax.annotation.processing.Messager;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 
+import de.atlasmc.util.annotation.AnnotationProcessorUtils;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.MemoryConfiguration;
@@ -33,25 +31,26 @@ import de.atlasmc.util.configuration.file.YamlConfiguration;
 		"de.atlasmc.registry.RegistryHolder",
 		"de.atlasmc.registry.RegistryValue"})
 @SupportedSourceVersion(SourceVersion.RELEASE_21)
-public class RegistryAnnotationProcessor extends AbstractProcessor {
+public class RegistryProcessor extends AbstractProcessor {
 
 	private Configuration registries;
 	private Configuration registryEntries;
 	
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+		Messager log = processingEnv.getMessager();
 		if (roundEnv.processingOver()) {
-			processingEnv.getMessager().printMessage(Kind.NOTE, "Finished processing registry annotations");
+			log.printMessage(Kind.NOTE, "Finished processing registry annotations");
 			writeFiles();
 			return true;
 		}
-		processingEnv.getMessager().printMessage(Kind.NOTE, "Processing registry annotations");
+		log.printMessage(Kind.NOTE, "Processing registry annotations");
 		for (TypeElement annotation : annotations) {
 			if (annotation.toString().equals("de.atlasmc.registry.RegistryHolder")) {
 				for (Element ele : roundEnv.getElementsAnnotatedWith(annotation)) {
-					List<? extends AnnotationMirror> annotationMirrors = ele.getAnnotationMirrors();
+					Collection<AnnotationMirror> annotationMirrors = AnnotationProcessorUtils.getAnnotationMirrorsByType(ele, annotation);
 					for (AnnotationMirror mirror : annotationMirrors) {
-						Map<String, Object> values = getAnnotationValues(mirror);
+						Map<String, Object> values = AnnotationProcessorUtils.getAnnotationValues(mirror, processingEnv);
 						String key = (String) values.get("key");
 						String type = ele.toString();
 						Object target = values.get("target");
@@ -63,20 +62,20 @@ public class RegistryAnnotationProcessor extends AbstractProcessor {
 							String otherTarget = other.getString("target");
 							String otherType = other.getString(type);
 							String message = "Another type (" + otherType + " : " + otherTarget + ") with the given registry key is already present: " + key;
-							processingEnv.getMessager().printMessage(Kind.ERROR, message, ele, mirror);
+							log.printMessage(Kind.ERROR, message, ele, mirror);
 						}
 						//System.out.println("holder: " + key + " : " + type + " : " + target);
 						ConfigurationSection registry = registries.createSection(key);
 						registry.set("target", target.toString());
 						registry.set("type", type);
-						processingEnv.getMessager().printMessage(Kind.NOTE, "Found registry: " + key + " type: " + type + " target: " + target);
+						log.printMessage(Kind.NOTE, "Found registry: " + key + " type: " + type + " target: " + target);
 					}
 				}
 			} else if (annotation.toString().equals("de.atlasmc.registry.RegistryValue")) {
 				for (Element ele : roundEnv.getElementsAnnotatedWith(annotation)) {
-					List<? extends AnnotationMirror> annotationMirrors = ele.getAnnotationMirrors();
+					Collection<AnnotationMirror> annotationMirrors = AnnotationProcessorUtils.getAnnotationMirrorsByType(ele, annotation);
 					for (AnnotationMirror mirror : annotationMirrors) {
-						Map<String, Object> values = getAnnotationValues(mirror);
+						Map<String, Object> values = AnnotationProcessorUtils.getAnnotationValues(mirror, processingEnv);
 						String registry = (String) values.get("registry");
 						String key = (String) values.get("key");
 						String type = ele.toString();
@@ -90,7 +89,7 @@ public class RegistryAnnotationProcessor extends AbstractProcessor {
 						//System.out.println("value: " + key + " : " + type);
 						entries.set(key, type);
 						boolean isDefault = (boolean) values.get("isDefault");
-						processingEnv.getMessager().printMessage(Kind.NOTE, "Found value: " + key + " type: " + type + " registry: " + registry + " default: " + isDefault);
+						log.printMessage(Kind.NOTE, "Found value: " + key + " type: " + type + " registry: " + registry + " default: " + isDefault);
 						if (isDefault)
 							entries.set("registry:default", type);
 					}
@@ -109,11 +108,11 @@ public class RegistryAnnotationProcessor extends AbstractProcessor {
 		if (registries == null) {
 			return;
 		}
-		Filer filter = processingEnv.getFiler();
+		Filer filer = processingEnv.getFiler();
 		String path = "META-INF/atlas/registries.yml";
 		YamlConfiguration registryCfg = null;
 		try {
-			FileObject file = filter.getResource(StandardLocation.CLASS_OUTPUT, "", path);
+			FileObject file = filer.getResource(StandardLocation.CLASS_OUTPUT, "", path);
 			InputStream in = file.openInputStream();
 			registryCfg = YamlConfiguration.loadConfiguration(in);
 		} catch(IOException e) {
@@ -145,7 +144,7 @@ public class RegistryAnnotationProcessor extends AbstractProcessor {
 		if (!changes)
 			return;
 		try {
-			FileObject file = filter.createResource(StandardLocation.CLASS_OUTPUT, "", path);
+			FileObject file = filer.createResource(StandardLocation.CLASS_OUTPUT, "", path);
 			OutputStream out = file.openOutputStream();
 			registryCfg.save(out);
 		} catch (IOException e) {
@@ -203,17 +202,6 @@ public class RegistryAnnotationProcessor extends AbstractProcessor {
 			return;
 		}
 		processingEnv.getMessager().printMessage(Kind.NOTE, "Registry values written");
-	}
-	
-	private Map<String, Object> getAnnotationValues(AnnotationMirror mirror) {
-		Map<String, Object> values = new HashMap<>();
-		Elements elements = processingEnv.getElementUtils();
-		Map<? extends ExecutableElement, ? extends AnnotationValue> rawValues = elements.getElementValuesWithDefaults(mirror);
-		rawValues.forEach((k,v) -> {
-			//System.out.println(k.getSimpleName().toString() + " : " + v.getValue());
-			values.put(k.getSimpleName().toString(), v.getValue());
-		});
-		return values;
 	}
 
 }

@@ -1,12 +1,17 @@
 package de.atlasmc.plugin;
 
 import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Collection;
 import java.util.List;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.log.Log;
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 
-public interface Plugin {
+public interface Plugin extends PluginHandle {
 	
 	/**
 	 * Called directly after the Plugin is loaded.
@@ -35,28 +40,82 @@ public interface Plugin {
 	
 	void loadConfiguration(PluginConfiguration config);
 	
+	/**
+	 * Loads the configuration with the given context. 
+	 * If the configuration is already loaded the context will be added to the configuration.
+	 * A context may be anything.
+	 * In case the configuration is loaded by a server the context will be the loading server.
+	 * In case {@link #loadConfiguration(PluginConfiguration)} is used the context is the plugin.
+	 * @param config to load
+	 * @param context used to load the configuration
+	 */
+	void loadConfiguration(PluginConfiguration config, Object context);
+	
 	void unloadConfiguration(NamespacedKey config);
+	
+	/**
+	 * Request unloading of a configuration. If any other context refers to the configuration it remains loaded
+	 * @param config to unload
+	 * @param context used to load the configuration
+	 */
+	void unloadConfiguration(NamespacedKey config, Object context);
 	
 	void reloadConfiguration(NamespacedKey config);
 	
 	void reloadConfigurations();
 	
+	Collection<PluginConfiguration> getConfigurations();
+	
+	@Nullable
 	String getVersion();
 	
+	/**
+	 * Returns a list of all Authors
+	 * @return authors
+	 */
+	@NotNull
 	List<String> getAuthor();
 	
+	/**
+	 * Returns the plugins name
+	 * @return name
+	 */
+	@NotNull
 	String getName();
 	
+	/**
+	 * Returns the plugins description or null of none
+	 * @return description or null
+	 */
+	@Nullable
 	String getDescription();
 	
 	boolean isLoaded();
 	
 	boolean isEnabled();
 	
-	PluginLoader getPluginLoader();
+	/**
+	 * Whether or not this plugin will be keeped loaded without a depending server
+	 * @return true if keep loaded
+	 */
+	boolean isKeepLoaded();
 	
+	void setKeepLoaded(boolean keeploaded);
+	
+	@NotNull
+	PluginLoader getPluginLoader();
+
+	@NotNull
 	File getFile();
 	
+	@NotNull
 	Log getLogger();
+	
+	InputStream getResourceAsStream(String name);
+	
+	URL getResource(String name);
+	
+	@NotNull
+	Collection<PluginHandle> getHandles();
 
 }

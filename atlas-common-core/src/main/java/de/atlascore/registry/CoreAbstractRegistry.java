@@ -11,13 +11,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.plugin.Plugin;
+import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.registry.RegistryEntry;
 
 public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 
-	protected final Map<Plugin, Collection<RegistryEntry<T>>> pluginEntries;
+	protected final Map<PluginHandle, Collection<RegistryEntry<T>>> pluginEntries;
 	protected final Map<String, RegistryEntry<T>> entries;
 	protected final NamespacedKey key;
 	private volatile T defaultEntry;
@@ -64,7 +64,7 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	}
 
 	@Override
-	public boolean register(Plugin plugin, NamespacedKey key, T value) {
+	public boolean register(PluginHandle plugin, NamespacedKey key, T value) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
 		if (value == null)
@@ -79,7 +79,7 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	}
 
 	@Override
-	public boolean register(Plugin plugin, String key, T value) {
+	public boolean register(PluginHandle plugin, String key, T value) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
 		if (!NamespacedKey.NAMESPACED_KEY_PATTERN.matcher(key).matches())
@@ -96,7 +96,7 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	}
 	
 	@Override
-	public boolean register(Plugin plugin, final String[] keys, final T[] values) {
+	public boolean register(PluginHandle plugin, final String[] keys, final T[] values) {
 		if (keys == null)
 			throw new IllegalArgumentException("Keys can not be null!");
 		if (values == null)
@@ -124,7 +124,7 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 		return entries.size() > 0;
 	}
 	
-	private Collection<RegistryEntry<T>> pluginEntries(Plugin plugin) {
+	private Collection<RegistryEntry<T>> pluginEntries(PluginHandle plugin) {
 		Collection<RegistryEntry<T>> entries = pluginEntries.get(plugin);
 		if (entries == null)
 			return entries;
@@ -215,7 +215,7 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	}
 	
 	@Override
-	public synchronized boolean removePluginEntries(Plugin plugin) {
+	public synchronized boolean removePluginEntries(PluginHandle plugin) {
 		Collection<RegistryEntry<T>> entries = this.pluginEntries.remove(plugin);
 		if (entries == null)
 			return false;
@@ -229,7 +229,7 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	}
 	
 	@Override
-	public Collection<RegistryEntry<T>> getPluginEntries(Plugin plugin) {
+	public Collection<RegistryEntry<T>> getPluginEntries(PluginHandle plugin) {
 		return this.pluginEntries.get(plugin);
 	}
 	
@@ -263,11 +263,11 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	
 	protected static final class CoreRegistryEntry<T> implements RegistryEntry<T> {
 		
-		private final Plugin plugin;
+		private final PluginHandle plugin;
 		private final String key;
 		private final T value;
 		
-		public CoreRegistryEntry(Plugin plugin, String key, T value) {
+		public CoreRegistryEntry(PluginHandle plugin, String key, T value) {
 			this.plugin = plugin;
 			this.key = key;
 			this.value = value;
@@ -279,7 +279,7 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 		}
 
 		@Override
-		public Plugin plugin() {
+		public PluginHandle plugin() {
 			return plugin;
 		}
 

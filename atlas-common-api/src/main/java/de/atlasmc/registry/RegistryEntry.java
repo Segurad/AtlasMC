@@ -1,12 +1,12 @@
 package de.atlasmc.registry;
 
-import de.atlasmc.plugin.Plugin;
+import de.atlasmc.plugin.PluginHandle;
 
 public interface RegistryEntry<T> {
 	
 	T value();
 	
-	Plugin plugin();
+	PluginHandle plugin();
 	
 	String key();
 

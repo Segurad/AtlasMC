@@ -12,6 +12,7 @@ import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
+
 import java.io.IOException;
 import java.util.UUID;
 

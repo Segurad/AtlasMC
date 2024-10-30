@@ -1,13 +1,13 @@
 package de.atlascore.scheduler;
 
-import de.atlasmc.plugin.Plugin;
+import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.scheduler.AtlasTask;
 
 class CoreDelayedTask extends CoreRegisteredTask {
 
 	private long delay;
 	
-	public CoreDelayedTask(Plugin plugin, AtlasTask task, long delay) {
+	public CoreDelayedTask(PluginHandle plugin, AtlasTask task, long delay) {
 		super(plugin, task);
 		this.delay = delay;
 	}

@@ -63,11 +63,11 @@ public interface PluginManager {
 	 */
 	boolean unloadPlugins(Plugin... plugins);
 	
-	List<Plugin> getPlugins();
+	Collection<Plugin> getPlugins();
 	
 	Plugin getPlugin(String name);
 	
-	List<PluginLoader> getLoaders();
+	Collection<PluginLoader> getLoaders();
 	
 	/**
 	 * Adds a PluginLoader
@@ -89,18 +89,20 @@ public interface PluginManager {
 	 */
 	int getPluginCount();
 	
-	void registerEvents(Plugin plugin, Listener listener);
+	void registerEvents(PluginHandle plugin, Listener listener);
 	
-	void registerEvents(Plugin plugin, Listener listener, Object... context);
+	void registerEvents(PluginHandle plugin, Listener listener, Object... context);
 	
-	<E extends Event> void registerFunctionalListener(Plugin plugin, Class<E> eventClass, FunctionalListener<E> listener);
+	<E extends Event> void registerFunctionalListener(PluginHandle plugin, Class<E> eventClass, FunctionalListener<E> listener);
 	
-	<E extends Event> void registerFunctionalListener(Plugin plugin, Class<E> eventClass, FunctionalListener<E> listener,  Object... context);
+	<E extends Event> void registerFunctionalListener(PluginHandle plugin, Class<E> eventClass, FunctionalListener<E> listener,  Object... context);
 
-	<E extends Event> void registerFunctionalListener(Plugin plugin, Class<E> eventClass, FunctionalListener<E> listener, boolean ignoreCancelled, EventPriority priority);
+	<E extends Event> void registerFunctionalListener(PluginHandle plugin, Class<E> eventClass, FunctionalListener<E> listener, boolean ignoreCancelled, EventPriority priority);
 
-	<E extends Event> void registerFunctionalListener(Plugin plugin, Class<E> eventClass, FunctionalListener<E> listener, boolean ignoreCancelled, EventPriority priority, Object... context);	
+	<E extends Event> void registerFunctionalListener(PluginHandle plugin, Class<E> eventClass, FunctionalListener<E> listener, boolean ignoreCancelled, EventPriority priority, Object... context);	
 
+	void removeEvents(PluginHandle handle);
+	
 	void callEvent(Event event);
 	
 }

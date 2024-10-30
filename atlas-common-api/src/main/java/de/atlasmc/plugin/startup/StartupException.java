@@ -1,4 +1,4 @@
-package de.atlasmc.plugin;
+package de.atlasmc.plugin.startup;
 
 public class StartupException extends RuntimeException {
 

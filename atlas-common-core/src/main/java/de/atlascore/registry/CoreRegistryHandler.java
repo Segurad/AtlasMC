@@ -1,15 +1,25 @@
 package de.atlascore.registry;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.List;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.log.Log;
 import de.atlasmc.plugin.Plugin;
+import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.registry.ClassRegistry;
 import de.atlasmc.registry.InstanceRegistry;
+import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.registry.RegistryHandler;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
+import de.atlasmc.util.configuration.ConfigurationSection;
+import de.atlasmc.util.configuration.ConfigurationSerializeable;
+import de.atlasmc.util.configuration.file.YamlConfiguration;
 
 public class CoreRegistryHandler implements RegistryHandler {
 	
@@ -150,7 +160,7 @@ public class CoreRegistryHandler implements RegistryHandler {
 	}
 
 	@Override
-	public boolean removePluginEntries(Plugin plugin) {
+	public boolean removePluginEntries(PluginHandle plugin) {
 		if (plugin == null)
 			throw new IllegalArgumentException("Plugin can not be null!");
 		boolean changes = false;
@@ -159,6 +169,121 @@ public class CoreRegistryHandler implements RegistryHandler {
 				changes = true;
 		}
 		return changes;
+	}
+
+	@Override
+	public void loadRegistries(Plugin plugin) {
+		if (plugin == null)
+			throw new IllegalArgumentException("Plugin can not be null!");
+		InputStream in = plugin.getResourceAsStream("/META-INF/atlas/registries.yml");
+		if (in == null)
+			return;
+		Log logger = plugin.getLogger();
+		logger.info("Loading registries...");
+		YamlConfiguration registryConfig = null;
+		try {
+			registryConfig = YamlConfiguration.loadConfiguration(in);
+		} catch(IOException e) {
+			logger.error("Error while loading registries", e);
+			return;
+		}
+		loadRegistries(plugin, registryConfig);
+	}
+
+	@Override
+	public void loadRegistryEntries(Plugin plugin) {
+		if (plugin == null)
+			throw new IllegalArgumentException("Plugin can not be null!");
+		InputStream in = plugin.getResourceAsStream("/META-INF/atlas/registry-entries.yml");
+		if (in == null)
+			return;
+		Log logger = plugin.getLogger();
+		logger.info("Loading registry entries...");
+		YamlConfiguration registryEntryConfig = null;
+		try {
+			registryEntryConfig = YamlConfiguration.loadConfiguration(in);
+		} catch(IOException e) {
+			logger.error("Error while loading registry entries!", e);
+			return;
+		}
+		loadRegistryEntries(plugin, registryEntryConfig);
+	}
+
+	@Override
+	public void loadRegistries(PluginHandle plugin, ConfigurationSection config) {
+		if (plugin == null)
+			throw new IllegalArgumentException("Plugin can not be null!");
+		if (config == null)
+			throw new IllegalArgumentException("Configuration can not be null!");
+		Log logger = plugin.getPlugin().getLogger();
+		for (String key : config.getKeys()) {
+			ConfigurationSection regCfg = config.getConfigurationSection(key);
+			String rawClass = regCfg.getString("type");
+			Target target = Target.valueOf(regCfg.getString("target"));
+			try {
+				Class<?> registryType = Class.forName(rawClass);
+				createRegistry(NamespacedKey.of(key), registryType, target);
+				logger.debug("Created registry ({}) of type: {}", key, rawClass);
+			} catch (ClassNotFoundException e) {
+				logger.error("Registry ({}) class not found: {}", key, rawClass);
+				continue;
+			}
+		}
+	}
+
+	@Override
+	public void loadRegistryEntries(PluginHandle plugin, ConfigurationSection config) {
+		if (plugin == null)
+			throw new IllegalArgumentException("Plugin can not be null!");
+		if (config == null)
+			throw new IllegalArgumentException("Configuration can not be null!");
+		Log logger = plugin.getPlugin().getLogger();
+		for (String key : config.getKeys()) {
+			Registry<Object> registry = getRegistry(key);
+			if (registry == null) {
+				logger.warn("Unable to insert registry entries for registry: {} (missing)", key);
+				continue;
+			}
+			List<ConfigurationSection> entries = config.getConfigurationList(key);
+			for (ConfigurationSection entryCfg : entries) {
+				String rawClass = entryCfg.getString("type");
+				String entryKey = entryCfg.getString("key");
+				Class<?> entryClass = null;
+				try {
+					entryClass = Class.forName(rawClass);
+				} catch (ClassNotFoundException e) {
+					logger.error("Registry (" + key + ") entry class not found: " + rawClass, e);
+					continue;
+				}
+				Object entryValue = null;
+				if (registry.getTarget() == Target.CLASS) {
+					entryValue = entryClass;
+				} else {
+					ConfigurationSection cfg = entryCfg.getConfigurationSection("configuration");
+					if (cfg != null && entryClass.isAssignableFrom(ConfigurationSerializeable.class)) {
+						try {
+							entryValue = entryClass.getConstructor(ConfigurationSection.class).newInstance(cfg);
+						} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+								| InvocationTargetException | NoSuchMethodException | SecurityException e) {
+							logger.error("Unable to create instance of registry entry using configuration: " + entryClass.getName(), e);
+						}
+					} else {
+						try {
+							entryValue = entryClass.getConstructor().newInstance();
+						} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+								| InvocationTargetException | NoSuchMethodException | SecurityException e) {
+							logger.error("Unable to create instance of registry entry: " + entryClass.getName(), e);
+						}
+					}
+				}
+				if (Registries.DEFAULT_REGISTRY_KEY.equals(entryKey)) {
+					registry.setDefault(entryValue);
+					logger.debug("Registry ({}) set default: {}", key, entryClass.getName());
+				} else if (registry.register(plugin, key, entryValue)) {
+					logger.debug("Registry ({}) registered: {}={}", key, entryKey, entryClass.getName());
+				}
+			}
+		}
 	}
 
 }

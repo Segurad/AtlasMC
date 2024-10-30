@@ -1,9 +1,11 @@
 package de.atlasmc.master;
 
-import de.atlasmc.plugin.StartupContext;
-import de.atlasmc.plugin.StartupStageHandler;
+import de.atlasmc.plugin.startup.StartupContext;
+import de.atlasmc.plugin.startup.StartupHandlerRegister;
+import de.atlasmc.plugin.startup.StartupStageHandler;
 
-public class InitMasterHandler implements StartupStageHandler {
+@StartupHandlerRegister({ "init-master" })
+class InitMasterHandler implements StartupStageHandler {
 
 	@Override
 	public void prepareStage(StartupContext context) {

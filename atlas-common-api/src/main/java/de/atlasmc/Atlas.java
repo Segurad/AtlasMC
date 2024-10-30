@@ -10,6 +10,7 @@ import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginManager;
 import de.atlasmc.scheduler.Scheduler;
 import de.atlasmc.tick.AtlasThread;
+import de.atlasmc.util.annotation.InternalAPI;
 
 public class Atlas implements SyncThreadHolder {
 
@@ -91,6 +92,12 @@ public class Atlas implements SyncThreadHolder {
 		return Thread.currentThread() == mainThread;
 	}
 	
+	/**
+	 * Returns a plugin instance representing atlas.
+	 * Do not use this!!!
+	 * @return plugin
+	 */
+	@InternalAPI
 	public static Plugin getSystem() {
 		return system;
 	}

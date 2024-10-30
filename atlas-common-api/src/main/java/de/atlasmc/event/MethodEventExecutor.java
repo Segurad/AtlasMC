@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.plugin.Plugin;
+import de.atlasmc.plugin.PluginHandle;
 
 /**
  * EventExecutor implementation that invokes methods
@@ -13,7 +13,7 @@ public class MethodEventExecutor extends AbstractEventExecutor {
 	
 	private final Method method;
 	
-	public MethodEventExecutor(Plugin plugin, Class<? extends Event> eventClass, Method method, EventPriority priority, boolean ignoreCancelled, Listener listener) {
+	public MethodEventExecutor(PluginHandle plugin, Class<? extends Event> eventClass, Method method, EventPriority priority, boolean ignoreCancelled, Listener listener) {
 		super(plugin, eventClass, ignoreCancelled, priority, listener);
 		this.method = method;
 		method.setAccessible(true);
@@ -25,7 +25,7 @@ public class MethodEventExecutor extends AbstractEventExecutor {
 	 * @return list
 	 */
 	@SuppressWarnings("unchecked")
-	public static List<EventExecutor> getExecutors(Plugin plugin, Listener listener) {
+	public static List<EventExecutor> getExecutors(PluginHandle plugin, Listener listener) {
 		if (listener == null)
 			throw new IllegalArgumentException("Listener can not be null!");
 		List<EventExecutor> executors = null;

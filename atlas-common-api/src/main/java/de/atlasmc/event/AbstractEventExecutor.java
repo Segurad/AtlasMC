@@ -1,6 +1,6 @@
 package de.atlasmc.event;
 
-import de.atlasmc.plugin.Plugin;
+import de.atlasmc.plugin.PluginHandle;
 
 public abstract class AbstractEventExecutor implements EventExecutor {
 
@@ -8,9 +8,9 @@ public abstract class AbstractEventExecutor implements EventExecutor {
 	private final Class<? extends Event> eventClass;
 	private final EventPriority priority;
 	private final Listener listener;
-	private final Plugin plugin;
+	private final PluginHandle plugin;
 	
-	public AbstractEventExecutor(Plugin plugin, Class<? extends Event> eventClass, boolean ignoreCancelled, EventPriority priority, Listener listener) {
+	public AbstractEventExecutor(PluginHandle plugin, Class<? extends Event> eventClass, boolean ignoreCancelled, EventPriority priority, Listener listener) {
 		if (plugin == null)
 			throw new IllegalArgumentException("Plugin can not be null!");
 		if (eventClass == null)
@@ -47,7 +47,7 @@ public abstract class AbstractEventExecutor implements EventExecutor {
 	}
 
 	@Override
-	public Plugin getPlugin() {
+	public PluginHandle getPlugin() {
 		return plugin;
 	}
 

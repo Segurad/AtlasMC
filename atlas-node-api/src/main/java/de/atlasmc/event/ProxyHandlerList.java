@@ -1,7 +1,9 @@
 package de.atlasmc.event;
 
+import java.util.Collection;
+
 import de.atlasmc.log.Log;
-import de.atlasmc.plugin.Plugin;
+import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.proxy.LocalProxy;
 import de.atlasmc.util.ConcurrentLinkedList;
 import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
@@ -76,10 +78,10 @@ public class ProxyHandlerList extends HandlerList {
 	}
 	
 	@Override
-	public synchronized void unregisterListener(Plugin plugin) {
+	public synchronized void unregisterListener(PluginHandle plugin) {
 		super.unregisterListener(plugin);
-		for (LocalProxy proxy : proxyExecutors.keySet()) {
-			internalUnregister(plugin, proxyExecutors.get(proxy));
+		for (Collection<EventExecutor> executors : proxyExecutors.values()) {
+			internalUnregister(plugin, executors);
 		}
 	}
 

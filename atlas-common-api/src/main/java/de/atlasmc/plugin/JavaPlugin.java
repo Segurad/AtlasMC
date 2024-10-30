@@ -1,8 +1,12 @@
 package de.atlasmc.plugin;
 
 import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Collection;
 import java.util.List;
 
+import de.atlasmc.Atlas;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.event.Listener;
 import de.atlasmc.log.Log;
@@ -19,6 +23,9 @@ public class JavaPlugin implements Plugin {
 	private String description;
 	private boolean loaded;
 	private boolean enabled;
+	private volatile boolean keepLoaded;
+	
+	protected JavaPlugin() {}
 	
 	@Override
 	public final void load() {
@@ -53,6 +60,7 @@ public class JavaPlugin implements Plugin {
 		if (isEnabled())
 			throw new IllegalStateException("Plugin has the be disabled first!");
 		onUnload();
+		unloadHandle(this);
 		loaded = false;
 	}
 	
@@ -147,15 +155,69 @@ public class JavaPlugin implements Plugin {
 	}
 
 	@Override
-	public void loadConfiguration(PluginConfiguration config) {}
+	public void loadConfiguration(PluginConfiguration config) {
+		loadConfiguration(config, this);
+	}
 
 	@Override
-	public void unloadConfiguration(NamespacedKey config) {}
+	public void unloadConfiguration(NamespacedKey config) {
+		unloadConfiguration(config, this);
+	}
 
 	@Override
 	public void reloadConfiguration(NamespacedKey config) {}
+	
+	@Override
+	public void loadConfiguration(PluginConfiguration config, Object context) {}
 
 	@Override
-	public void reloadConfigurations() {}
+	public void unloadConfiguration(NamespacedKey config, Object context) {}
+
+	@Override
+	public void reloadConfigurations() {
+		for (PluginConfiguration cfg : getConfigurations()) {
+			reloadConfiguration(cfg.getNamespacedKey());
+		}
+	}
+	
+	@Override
+	public Collection<PluginConfiguration> getConfigurations() {
+		return List.of();
+	}
+
+	@Override
+	public Plugin getPlugin() {
+		return this;
+	}
+	
+	protected void unloadHandle(PluginHandle handle) {
+		Atlas.getPluginManager().removeEvents(handle);
+		Atlas.getScheduler().removeTasks(handle);
+	}
+
+	@Override
+	public Collection<PluginHandle> getHandles() {
+		return List.of();
+	}
+
+	@Override
+	public InputStream getResourceAsStream(String name) {
+		return getClass().getResourceAsStream(name);
+	}
+	
+	@Override
+	public URL getResource(String name) {
+		return getClass().getResource(name);
+	}
+
+	@Override
+	public boolean isKeepLoaded() {
+		return keepLoaded;
+	}
+
+	@Override
+	public void setKeepLoaded(boolean keeploaded) {
+		this.keepLoaded = keeploaded;
+	}
 
 }

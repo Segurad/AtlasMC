@@ -1,17 +1,17 @@
 package de.atlasmc.test;
 
 import de.atlasmc.Axis;
-import de.atlasmc.BossBar.BarColor;
-import de.atlasmc.BossBar.BarStyle;
-import de.atlasmc.chat.ChatColor;
-import de.atlasmc.inventory.InventoryType;
-import de.atlasmc.world.WorldEvent;
 import de.atlasmc.Difficulty;
 import de.atlasmc.Direction;
 import de.atlasmc.DyeColor;
 import de.atlasmc.Gamemode;
 import de.atlasmc.Instrument;
 import de.atlasmc.SoundCategory;
+import de.atlasmc.BossBar.BarColor;
+import de.atlasmc.BossBar.BarStyle;
+import de.atlasmc.chat.ChatColor;
+import de.atlasmc.inventory.InventoryType;
+import de.atlasmc.world.WorldEvent;
 
 import static de.atlastest.util.EnumTest.testCacheAndID;
 import static de.atlastest.util.EnumTest.testCacheMethods;

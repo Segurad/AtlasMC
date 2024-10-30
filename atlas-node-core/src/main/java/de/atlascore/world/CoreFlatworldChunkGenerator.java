@@ -16,6 +16,7 @@ import de.atlasmc.world.ChunkFactory;
 import de.atlasmc.world.ChunkGenerator;
 import de.atlasmc.world.ChunkSection;
 import de.atlasmc.world.World;
+
 import static de.atlascore.world.CoreChunkSection.getBlockIndex;
 
 public class CoreFlatworldChunkGenerator implements ChunkGenerator {

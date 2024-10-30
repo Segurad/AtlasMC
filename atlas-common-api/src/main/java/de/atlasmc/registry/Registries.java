@@ -3,9 +3,12 @@ package de.atlasmc.registry;
 import java.util.Collection;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.plugin.Plugin;
+import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.util.annotation.InternalAPI;
 import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.configuration.ConfigurationSection;
 
 public class Registries {
 	
@@ -78,6 +81,28 @@ public class Registries {
 	@NotNull
 	public static Collection<Registry<?>> getRegistries() {
 		return HANDLER.getRegistries();
+	}
+	
+	/**
+	 * @see RegistryHandler#loadRegistries(Plugin)
+	 */
+	public static void loadRegistries(Plugin plugin) {
+		HANDLER.loadRegistries(plugin);
+	}
+	
+	public static void loadRegistries(PluginHandle plugin, ConfigurationSection config) {
+		HANDLER.loadRegistries(plugin, config);
+	}
+	
+	/**
+	 * @see RegistryHandler#loadRegistryEntries(Plugin)
+	 */
+	public static void loadRegistryEntries(Plugin plugin) {
+		HANDLER.loadRegistryEntries(plugin);
+	}
+	
+	public static void loadRegistryEntries(PluginHandle plugin, ConfigurationSection config) {
+		HANDLER.loadRegistryEntries(plugin, config);
 	}
 	
 	@InternalAPI

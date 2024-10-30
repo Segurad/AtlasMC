@@ -18,8 +18,8 @@ import de.atlasmc.util.annotation.ThreadSafe;
 import de.atlasmc.util.nbt.CustomTagContainer;
 import de.atlasmc.util.nbt.NBTHolder;
 import de.atlasmc.world.Chunk;
-import de.atlasmc.world.EntityTracker.Perception;
 import de.atlasmc.world.World;
+import de.atlasmc.world.EntityTracker.Perception;
 
 public interface Entity extends NBTHolder, Nameable, Tickable {
 

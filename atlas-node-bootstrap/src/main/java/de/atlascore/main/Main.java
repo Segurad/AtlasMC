@@ -3,6 +3,8 @@ package de.atlascore.main;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 import java.security.KeyPair;
@@ -47,9 +49,9 @@ import de.atlasmc.log.Logging;
 import de.atlasmc.plugin.AtlasModul;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginManager;
-import de.atlasmc.plugin.StartupContext;
-import de.atlasmc.plugin.StartupException;
-import de.atlasmc.plugin.StartupStageHandler;
+import de.atlasmc.plugin.startup.StartupContext;
+import de.atlasmc.plugin.startup.StartupException;
+import de.atlasmc.plugin.startup.StartupStageHandler;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.registry.RegistryHandler;
@@ -106,7 +108,7 @@ public class Main {
 		Caching.init(new CoreCacheHandler());
 		if (altWorkDir)
 			log.info("Using alternativ work dir: {}", workDirPath);
-		if (arguments.containsKey("atlas.config.override")) {
+		if (Boolean.getBoolean(System.getProperty("atlas.config.override", "false"))) {
 			OVERRIDE_CONFIG = true;
 			log.info("Override configuration enabled!");
 		}
@@ -123,7 +125,7 @@ public class Main {
 		}
 		
 		ChatUtil.init(new CoreChatFactory());
-		Registries.init(loadRegistry(log));
+		Registries.init(new CoreRegistryHandler());
 		
 		PluginManager pluginManager = new CorePluginManager(log);
 		pluginManager.addLoader(new CoreJavaPluginLoader());
@@ -136,7 +138,9 @@ public class Main {
 		.setPluginManager(pluginManager)
 		.setScheduler(new CoreAtlasScheduler())
 		.setWorkDir(workDir)
+		.setSystem(CorePluginManager.SYSTEM)
 		.build();
+		
 		boolean isMaster = config.getBoolean("is-master");
 
 		StartupContext context = new StartupContext();
@@ -154,12 +158,21 @@ public class Main {
 					StartupContext.LOAD_MASTER_DATA);
 		}
 		
+		File modulDir = new File(workDir, "modules/");
+		
+		pluginManager.loadPlugins(modulDir);
+		Registries.loadRegistries(Atlas.getSystem());
+		Registries.loadRegistryEntries(Atlas.getSystem());
+		
+		initStartupHandler(log, context, Main.class.getResourceAsStream("/META-INF/atlas/startup-handler.yml"));
+		
 		for (Plugin plugin : pluginManager.getPlugins()) {
 			if (!(plugin instanceof AtlasModul modul))
 				continue;
 			if (!plugin.isEnabled())
 				continue;
 			modul.initStartupHandler(context);
+			initStartupHandler(log, context, plugin.getResourceAsStream("/META-INF/atlas/startup-handler.yml"));
 		}
 		
 		try {
@@ -182,31 +195,10 @@ public class Main {
 			}
 			System.exit(1);
 		}
+		
+		// -------- END OF STARTUP -----------------
 		loadCommands(log, workDir);
-		// load remote plugins
-		Collection<RepositoryEntry> entries = null;
-		try {
-			entries = Atlas.getDataHandler().getEntries(builder.getModules()).get();
-		} catch (Exception e) {
-			log.error("Error while fetching data for modules!", e);
-		}
-		File tmpCoremodulDir = new File(Atlas.getWorkdir(), "tmp/modules/");
-		tmpCoremodulDir.mkdirs();
-		if (entries != null) {
-			for (RepositoryEntry entry : entries) {
-				try {
-					entry.copyTo(tmpCoremodulDir);
-				} catch (Exception e) {
-					log.error("Error while copying data for modules!", e);
-				}
-			}
-		}
-		builder.setServerManager(new CoreNodeServerManager(workDir));
-		builder.setDefaultProtocol(new CoreProtocolAdapter());
-		File coremodulDir = new File(workDir, "modules/");
-		coremodulDir.mkdirs();
-		LocalAtlasNode node = builder.build();
-		HandshakeProtocol.DEFAULT_PROTOCOL.setPacketIO(0x00, new CorePacketMinecraftHandshake());
+		
 		Random rand = null;
 		log.info("Initializing Proxy...");
 		Registry<LocalProxyFactory> proxyFactories = Registries.getInstanceRegistry(LocalProxyFactory.class);
@@ -273,6 +265,33 @@ public class Main {
 		try {
 			Atlas.getMainThread().getThread().join();
 		} catch (InterruptedException e) {}
+	}
+	
+	private static void initStartupHandler(Log logger, StartupContext context, InputStream in) {
+		if (in == null)
+			return;
+		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(in);
+		for (String key : cfg.getKeys()) {
+			List<String> handlers = cfg.getStringList(key);
+			for (String rawHandlerClass : handlers) {
+				Class<?> handlerClass;
+				try {
+					handlerClass = Class.forName(rawHandlerClass);
+				} catch (ClassNotFoundException e) {
+					logger.error("Unable to find startup stage handler class for stage: " + key, e);
+					continue;
+				}
+				if (!handlerClass.isAssignableFrom(StartupStageHandler.class)) {
+					logger.error("Startup stage handler class is not accessible as StartupStageHandler: {}", rawHandlerClass);
+				}
+				@SuppressWarnings("unchecked")
+				Constructor<? extends StartupStageHandler> newHandler = (Constructor<? extends StartupStageHandler>) handlerClass.getConstructor();
+				newHandler.setAccessible(true);
+				StartupStageHandler handler = newHandler.newInstance();
+				context.addStageHandler(key, handler);
+				logger.debug("Added startup stage handler {} for stage: {}", key, rawHandlerClass);
+			}
+		}
 	}
 	
 	private static void prepareStage(StartupContext context) {
@@ -491,77 +510,6 @@ public class Main {
 		}
 		repoHandler.addRepo(repo);
 		return repoHandler;
-	}
-	
-	private static RegistryHandler loadRegistry(Log logger) {
-		logger.info("Loading registries...");
-		RegistryHandler handler = new CoreRegistryHandler();
-		YamlConfiguration registryConfig = null;
-		try {
-			registryConfig = YamlConfiguration.loadConfiguration(Main.class.getResourceAsStream("/META-INF/atlas/registries.yml"));
-		} catch(IOException e) {
-			logger.error("Error while loading registries", e);
-			return handler;
-		}
-		for (String key : registryConfig.getKeys()) {
-			String value = registryConfig.getString(key);
-			String[] parts = value.split(":");
-			String rawClass = parts[0];
-			Target target = Target.valueOf(parts[1]);
-			try {
-				Class<?> registryType = Class.forName(rawClass);
-				handler.createRegistry(NamespacedKey.of(key), registryType, target);
-				logger.debug("Created registry ({}) of type: {}", key, rawClass);
-			} catch (ClassNotFoundException e) {
-				logger.error("Registry ({}) class not found: {}", key, rawClass);
-				continue;
-			}
-		}
-		YamlConfiguration registryEntryConfig = null;
-		try {
-			registryEntryConfig = YamlConfiguration.loadConfiguration(Main.class.getResourceAsStream("/META-INF/atlas/registry-entries.yml"));
-		} catch(IOException e) {
-			logger.error("Error while loading registry entries", e);
-			return handler;
-		}
-		for (String key : registryEntryConfig.getKeys()) {
-			Registry<Object> registry = handler.getRegistry(key);
-			if (registry == null) {
-				logger.debug("Unable to insert registry entries for missing registry: {}", key);
-				continue;
-			}
-			List<String> rawEntries = registryEntryConfig.getStringList(key);
-			for (String rawEntry : rawEntries) {
-				String[] parts = rawEntry.split(":", 2);
-				String rawClass = parts[0];
-				String entryKey = parts[1];
-				Class<?> entryClass = null;
-				try {
-					entryClass = Class.forName(rawClass);
-				} catch (ClassNotFoundException e) {
-					logger.error("Registry (" + key + ") entry class not found: " + rawClass, e);
-					continue;
-				}
-				Object entryValue = null;
-				if (registry.getTarget() == Target.CLASS) {
-					entryValue = entryClass;
-				} else {
-					try {
-						entryValue = entryClass.getConstructor().newInstance();
-					} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-							| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-						logger.error("Unable to create instance of registry entry: " + entryClass.getName(), e);
-					}
-				}
-				if (Registries.DEFAULT_REGISTRY_KEY.equals(entryKey)) {
-					registry.setDefault(entryValue);
-					logger.debug("Registry ({}) set default: {}", key, entryClass.getName());
-				} else if (registry.register(null, parts[1], entryValue)) {
-					logger.debug("Registry ({}) registered: {}={}", key, entryKey, entryClass.getName());
-				}
-			}
-		}
-		return handler;
 	}
 
 }

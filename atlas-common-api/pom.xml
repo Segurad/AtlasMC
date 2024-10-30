@@ -37,8 +37,8 @@
 						<configuration>
 							<proc>only</proc>
 							<annotationProcessors>
-								<annotationProcessor>
-									de.atlasmc.registry.RegistryAnnotationProcessor</annotationProcessor>
+								<annotationProcessor>de.atlasmc.registry.RegistryProcessor</annotationProcessor>
+								<annotationProcessor>de.atlasmc.plugin.StartupHandlerRegister</annotationProcessor>
 							</annotationProcessors>
 						</configuration>
 					</execution>

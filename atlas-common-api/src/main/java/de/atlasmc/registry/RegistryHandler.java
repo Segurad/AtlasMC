@@ -4,7 +4,9 @@ import java.util.Collection;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.plugin.Plugin;
+import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.registry.RegistryHolder.Target;
+import de.atlasmc.util.configuration.ConfigurationSection;
 
 public interface RegistryHandler {
 
@@ -46,6 +48,22 @@ public interface RegistryHandler {
 
 	<T> Registry<T> createRegistry(Class<?> clazz, Target target);
 	
-	boolean removePluginEntries(Plugin plugin);
+	boolean removePluginEntries(PluginHandle plugin);
+	
+	/**
+	 * Loads all registries as defined in the manifest
+	 * @param plugin
+	 */
+	void loadRegistries(Plugin plugin);
+	
+	void loadRegistries(PluginHandle plugin, ConfigurationSection config);
+	
+	/**
+	 * Loads all registry entries as defined in the manifest
+	 * @param plugin
+	 */
+	void loadRegistryEntries(Plugin plugin);
+	
+	void loadRegistryEntries(PluginHandle plugin, ConfigurationSection config);
 
 }

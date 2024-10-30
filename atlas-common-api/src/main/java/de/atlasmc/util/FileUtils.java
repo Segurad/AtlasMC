@@ -8,10 +8,13 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import de.atlasmc.plugin.Plugin;
 import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.configuration.ConfigurationSection;
 
 public class FileUtils {
 	
@@ -38,6 +41,31 @@ public class FileUtils {
 			throw new FileNotFoundException("Resource not found: " + resource);
 		Files.copy(resourceStream, dest.toPath());
 		return dest;
+	}
+	
+	public static void runSetupConfiguration(File dest, ConfigurationSection config, Plugin plugin) throws IOException {
+		List<String> directories = config.getStringList("directories");
+		Path destPath = dest.toPath();
+		if (directories != null) {
+			for (String dir : directories) {
+				Path dirPath = getSecurePath(destPath, dir);
+				if (dirPath != null)
+					ensureDir(dirPath);
+			}
+		}
+		List<String> extracts = config.getStringList("extract");
+		for (String rawExtract : extracts) {
+			int delimeter = rawExtract.indexOf(':');
+			String resourceSrc = rawExtract.substring(0, delimeter);
+			String resourceDest = rawExtract.substring(delimeter+1);
+			Path resourceDestPath = getSecurePath(destPath, resourceDest);
+			if (resourceDestPath == null)
+				continue;
+			InputStream in = plugin.getResourceAsStream(resourceSrc);
+			if (in == null)
+				continue;
+			Files.copy(in, resourceDestPath);
+		}
 	}
 	
 	/**

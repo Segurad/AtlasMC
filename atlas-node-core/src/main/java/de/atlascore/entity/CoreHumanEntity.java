@@ -2,6 +2,7 @@ package de.atlascore.entity;
 
 import java.io.IOException;
 import java.util.UUID;
+
 import de.atlasmc.Material;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;

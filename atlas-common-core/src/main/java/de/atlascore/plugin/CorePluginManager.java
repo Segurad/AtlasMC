@@ -1,6 +1,8 @@
 package de.atlascore.plugin;
 
 import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,6 +25,7 @@ import de.atlasmc.log.Log;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginConfiguration;
 import de.atlasmc.plugin.PluginException;
+import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.plugin.PluginLoader;
 import de.atlasmc.plugin.PluginManager;
 import de.atlasmc.plugin.PreparedPlugin;
@@ -64,9 +67,9 @@ public class CorePluginManager implements PluginManager {
 			return false;
 		}
 		try {
-			plugin.getPluginLoader().remove(plugin.getClass().getClassLoader());
+			plugin.getPluginLoader().unload(plugin);
 		} catch (Exception e) {
-			logger.error("Error while removing classloader of plugin: " + plugin.getName() + " v" + plugin.getVersion(), e);
+			logger.error("Error while unloading plugin in pluginloader: " + plugin.getName() + " v" + plugin.getVersion(), e);
 			return false;
 		}
 		try {
@@ -365,27 +368,27 @@ public class CorePluginManager implements PluginManager {
 	}
 	
 	@Override
-	public void registerEvents(Plugin plugin, Listener listener) {
+	public void registerEvents(PluginHandle plugin, Listener listener) {
 		HandlerList.registerListener(plugin, listener);
 	}
 
 	@Override
-	public void registerEvents(Plugin plugin, Listener listener, Object... context) {
+	public void registerEvents(PluginHandle plugin, Listener listener, Object... context) {
 		HandlerList.registerListener(plugin, listener, context);
 	}
 	
 	@Override
-	public <E extends Event> void registerFunctionalListener(Plugin plugin, Class<E> eventClass, FunctionalListener<E> listener) {
+	public <E extends Event> void registerFunctionalListener(PluginHandle plugin, Class<E> eventClass, FunctionalListener<E> listener) {
 		HandlerList.registerFunctionalListener(plugin, eventClass, listener);
 	}
 
 	@Override
-	public <E extends Event> void registerFunctionalListener(Plugin plugin, Class<E> eventClass, FunctionalListener<E> listener, Object... context) {
+	public <E extends Event> void registerFunctionalListener(PluginHandle plugin, Class<E> eventClass, FunctionalListener<E> listener, Object... context) {
 		HandlerList.registerFunctionalListener(plugin, eventClass, listener, context);
 	}
 	
 	@Override
-	public <E extends Event> void registerFunctionalListener(Plugin plugin, Class<E> eventClass,
+	public <E extends Event> void registerFunctionalListener(PluginHandle plugin, Class<E> eventClass,
 			FunctionalListener<E> listener, boolean ignoreCancelled, EventPriority priority) {
 		HandlerList handlers = HandlerList.getHandlerListOf(eventClass);
 		FunctionalListenerExecutor exe = new FunctionalListenerExecutor(plugin, eventClass, listener, priority, ignoreCancelled);
@@ -393,7 +396,7 @@ public class CorePluginManager implements PluginManager {
 	}
 
 	@Override
-	public <E extends Event> void registerFunctionalListener(Plugin plugin, Class<E> eventClass,
+	public <E extends Event> void registerFunctionalListener(PluginHandle plugin, Class<E> eventClass,
 			FunctionalListener<E> listener, boolean ignoreCancelled, EventPriority priority, Object... context) {
 		HandlerList handlers = HandlerList.getHandlerListOf(eventClass);
 		FunctionalListenerExecutor exe = new FunctionalListenerExecutor(plugin, eventClass, listener, priority, ignoreCancelled);
@@ -478,6 +481,45 @@ public class CorePluginManager implements PluginManager {
 		public Log getLogger() {
 			return Atlas.getLogger();
 		}
+
+		@Override
+		public Plugin getPlugin() {
+			return this;
+		}
+
+		@Override
+		public Collection<PluginHandle> getHandles() {
+			return List.of();
+		}
+
+		@Override
+		public InputStream getResourceAsStream(String name) {
+			return getClass().getResourceAsStream(name);
+		}
+
+		@Override
+		public URL getResource(String name) {
+			return getClass().getResource(name);
+		}
+
+		@Override
+		public boolean isKeepLoaded() {
+			return true;
+		}
+
+		@Override
+		public void setKeepLoaded(boolean keeploaded) {}
+
+		@Override
+		public void loadConfiguration(PluginConfiguration config, Object context) {}
+
+		@Override
+		public void unloadConfiguration(NamespacedKey config, Object context) {}
+
+		@Override
+		public Collection<PluginConfiguration> getConfigurations() {
+			return List.of();
+		}
 		
 	}
 
@@ -494,6 +536,11 @@ public class CorePluginManager implements PluginManager {
 	@Override
 	public List<Future<Plugin>> loadPluginsAsync(Collection<File> files, boolean enable, boolean checkDependencies) {
 		return internalLoadPlugins(files, enable, checkDependencies, true);
+	}
+
+	@Override
+	public void removeEvents(PluginHandle handle) {
+		HandlerList.unregisterListenerGloabal(handle);
 	}
 	
 }

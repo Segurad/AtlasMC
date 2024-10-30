@@ -42,9 +42,9 @@ import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.tag.NBT;
 import de.atlasmc.world.Chunk;
+import de.atlasmc.world.World;
 import de.atlasmc.world.EntityTracker.Perception;
 import de.atlasmc.world.EntityTracker.TrackerBinding;
-import de.atlasmc.world.World;
 
 public class CoreEntity extends AbstractNBTBase implements Entity {
 	

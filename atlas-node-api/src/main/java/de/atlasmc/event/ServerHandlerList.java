@@ -1,12 +1,13 @@
 package de.atlasmc.event;
 
 import java.lang.ref.WeakReference;
+import java.util.Collection;
 import java.util.Iterator;
 
-import de.atlasmc.log.Log;
-import de.atlasmc.plugin.Plugin;
-import de.atlasmc.server.LocalServer;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
+import de.atlasmc.log.Log;
+import de.atlasmc.plugin.PluginHandle;
+import de.atlasmc.server.LocalServer;
 import de.atlasmc.util.ConcurrentLinkedList;
 import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
 import de.atlasmc.util.annotation.NotNull;
@@ -122,15 +123,14 @@ public class ServerHandlerList extends HandlerList {
 	}
 	
 	@Override
-	public synchronized void unregisterListener(Plugin plugin) {
+	public synchronized void unregisterListener(PluginHandle plugin) {
 		super.unregisterListener(plugin);
-		for (ServerGroup group : groupExecutors.keySet()) {
-			internalUnregister(plugin, groupExecutors.get(group));
+		for (Collection<EventExecutor> executors : groupExecutors.values()) {
+			internalUnregister(plugin, executors);
 		}
-		for (LocalServer server : serverExecutors.keySet()) {
-			internalUnregister(plugin, serverExecutors.get(server));
+		for (Collection<EventExecutor> executors : serverExecutors.values()) {
+			internalUnregister(plugin, executors);
 		}
-
 	}
 	
 	public static void unregisterServer(LocalServer server) {

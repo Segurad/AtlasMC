@@ -3,8 +3,8 @@ package de.atlascore.server;
 import java.io.File;
 import java.util.UUID;
 
-import de.atlasmc.LocalAtlasNode;
 import de.atlasmc.AtlasNode;
+import de.atlasmc.LocalAtlasNode;
 import de.atlasmc.atlasnetwork.server.ServerConfig;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.server.NodeServer;

@@ -1,14 +1,14 @@
 package de.atlascore.scheduler;
 
-import de.atlasmc.plugin.Plugin;
+import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.scheduler.AtlasTask;
 
 abstract class CoreRegisteredTask {
 	
 	private final AtlasTask task;
-	private final Plugin plugin;
+	private final PluginHandle plugin;
 
-	public CoreRegisteredTask(Plugin plugin, AtlasTask task) {
+	public CoreRegisteredTask(PluginHandle plugin, AtlasTask task) {
 		if (plugin == null)
 			throw new IllegalArgumentException("Plugin can not be null!");
 		if (task == null)
@@ -17,7 +17,7 @@ abstract class CoreRegisteredTask {
 		this.plugin = plugin;
 	}
 	
-	public Plugin getPlugin() {
+	public PluginHandle getPlugin() {
 		return plugin;
 	}
 	

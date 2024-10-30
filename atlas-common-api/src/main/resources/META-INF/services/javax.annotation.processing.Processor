@@ -1,1 +1,2 @@
-de.atlasmc.registry.RegistryAnnotationProcessor
+de.atlasmc.registry.RegistryProcessor
+de.atlasmc.plugin.StartupHandlerRegister

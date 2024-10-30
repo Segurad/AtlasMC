@@ -120,8 +120,10 @@ public class CoreJavaPluginLoader implements PluginLoader {
 	}
 
 	@Override
-	public void remove(ClassLoader loader) {
-		loaders.remove(loader);
+	public void unload(Plugin plugin) {
+		if (plugin.getPluginLoader() != this)
+			return;
+		loaders.remove(plugin.getClass().getClassLoader());
 	}
 
 }

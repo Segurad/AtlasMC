@@ -10,7 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.atlasmc.Atlas;
 import de.atlasmc.log.Log;
-import de.atlasmc.plugin.Plugin;
+import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.util.ConcurrentLinkedList;
 import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
 import de.atlasmc.util.annotation.NotNull;
@@ -201,7 +201,7 @@ public class HandlerList {
 			try {
 				exe.fireEvent(event);
 			} catch (Exception ex) {
-				exe.getPlugin().getLogger().error("Error while event handling for: " + event.getName(), ex);
+				exe.getPlugin().getPlugin().getLogger().error("Error while event handling for: " + event.getName(), ex);
 			}
 		}
 	}
@@ -227,7 +227,7 @@ public class HandlerList {
 			try {
 				exe.fireEvent(event);
 			} catch (Exception ex) {
-				exe.getPlugin().getLogger().error("Error while event handling for: " + event.getName(), ex);
+				exe.getPlugin().getPlugin().getLogger().error("Error while event handling for: " + event.getName(), ex);
 			}
 		}
 	}
@@ -250,7 +250,7 @@ public class HandlerList {
 	 * Unregisters the Listener of a Plugin from all HandlerLists
 	 * @param plugin
 	 */
-	public static void unregisterListenerGloabal(@NotNull Plugin plugin) {
+	public static void unregisterListenerGloabal(@NotNull PluginHandle plugin) {
 		synchronized (HANDLERS) {
 			for (WeakReference<HandlerList> ref : HANDLERS) {
 				if (ref.refersTo(null))
@@ -268,7 +268,7 @@ public class HandlerList {
 		internalUnregister(listener, globalExecutors);
 	}
 	
-	public synchronized void unregisterListener(Plugin plugin) {
+	public synchronized void unregisterListener(PluginHandle plugin) {
 		internalUnregister(plugin, globalExecutors);
 	}
 	
@@ -285,7 +285,7 @@ public class HandlerList {
 		}
 	}
 	
-	protected void internalUnregister(Plugin plugin, Collection<EventExecutor> executors) {
+	protected void internalUnregister(PluginHandle plugin, Collection<EventExecutor> executors) {
 		if (plugin == null)
 			return;
 		if (executors.isEmpty())
@@ -306,7 +306,7 @@ public class HandlerList {
 	 * @param listener
 	 * @param context the context in which this listener should be registered
 	 */
-	public static void registerListener(Plugin plugin, Listener listener, Object... context) {
+	public static void registerListener(PluginHandle plugin, Listener listener, Object... context) {
 		if (listener == null) 
 			return;
 		List<EventExecutor> exes = MethodEventExecutor.getExecutors(plugin, listener);
@@ -316,7 +316,7 @@ public class HandlerList {
 		}
 	}
 	
-	public static <E extends Event> void registerFunctionalListener(Plugin plugin, Class<E> eventClass, FunctionalListener<E> listener, Object... context) {
+	public static <E extends Event> void registerFunctionalListener(PluginHandle plugin, Class<E> eventClass, FunctionalListener<E> listener, Object... context) {
 		HandlerList handlers = getHandlerListOf(eventClass);
 		FunctionalListenerExecutor exe = new FunctionalListenerExecutor(plugin, eventClass, listener);
 		handlers.registerExecutor(exe, context);

@@ -1,4 +1,4 @@
-package de.atlasmc.plugin;
+package de.atlasmc.plugin.startup;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,6 +9,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import de.atlasmc.plugin.AtlasModul;
+import de.atlasmc.plugin.Plugin;
+import de.atlasmc.plugin.PluginLoader;
 import de.atlasmc.util.ListView;
 import de.atlasmc.util.map.ArrayListMultimap;
 import de.atlasmc.util.map.Multimap;
@@ -58,7 +61,7 @@ public class StartupContext {
 	
 	private Multimap<String, StartupStageHandler> stageHandlers;
 	private Set<Consumer<Throwable>> failHandlers;
-	private Set<Consumer<String>> newStageHandlers;
+	private Set<Consumer<String>> stageChangeHandlers;
 	private List<String> stages;
 	private List<String> stageView;
 	private int stage = 0;
@@ -69,7 +72,7 @@ public class StartupContext {
 	public StartupContext() {
 		stageHandlers = new ArrayListMultimap<>();
 		failHandlers = new HashSet<>();
-		newStageHandlers = new HashSet<>();
+		stageChangeHandlers = new HashSet<>();
 		context = new HashMap<>();
 		stages = new ArrayList<>();
 	}
@@ -161,7 +164,7 @@ public class StartupContext {
 	}
 	
 	private void onNewStage(String stage) {
-		for (Consumer<String> handler : newStageHandlers)
+		for (Consumer<String> handler : stageChangeHandlers)
 			handler.accept(stage);
 	}
 
@@ -264,12 +267,12 @@ public class StartupContext {
 		failHandlers.remove(handler);
 	}
 	
-	public void addNewStageHandler(Consumer<String> handler) {
-		newStageHandlers.add(handler);
+	public void addStageChangeHandler(Consumer<String> handler) {
+		stageChangeHandlers.add(handler);
 	}
 	
-	public void removeNewStageHandler(Consumer<String> handler) {
-		newStageHandlers.remove(handler);
+	public void removeStageChangeHandler(Consumer<String> handler) {
+		stageChangeHandlers.remove(handler);
 	}
 
 	public Collection<Consumer<Throwable>> getFailHandlers() {

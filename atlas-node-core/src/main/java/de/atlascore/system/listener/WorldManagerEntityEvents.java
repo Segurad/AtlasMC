@@ -8,10 +8,10 @@ import de.atlasmc.event.entity.EntityDamageByBlockEvent;
 import de.atlasmc.event.entity.EntityDamageByEntityEvent;
 import de.atlasmc.event.entity.EntityDamageEvent;
 import de.atlasmc.event.entity.EntityDamageEvent.DamageCause;
-import de.atlasmc.event.entity.EntitySpawnEvent;
-import de.atlasmc.event.entity.FoodLevelChangeEvent;
 import de.atlasmc.world.World;
 import de.atlasmc.world.WorldFlag;
+import de.atlasmc.event.entity.EntitySpawnEvent;
+import de.atlasmc.event.entity.FoodLevelChangeEvent;
 
 final class WorldManagerEntityEvents implements Listener {
 

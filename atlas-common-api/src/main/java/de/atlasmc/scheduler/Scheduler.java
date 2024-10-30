@@ -1,6 +1,6 @@
 package de.atlasmc.scheduler;
 
-import de.atlasmc.plugin.Plugin;
+import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.ThreadSafe;
 
@@ -13,7 +13,7 @@ public interface Scheduler {
 	 * @param task that should be run
 	 * @return task
 	 */
-	AtlasTask runSyncTask(Plugin plugin, Runnable task);
+	AtlasTask runSyncTask(PluginHandle plugin, Runnable task);
 	
 	/**
 	 * Runs a Task after a delay
@@ -22,7 +22,7 @@ public interface Scheduler {
 	 * @param delay in ticks
 	 * @return task
 	 */
-	AtlasTask runSyncTaskLater(Plugin plugin, Runnable task, long delay);
+	AtlasTask runSyncTaskLater(PluginHandle plugin, Runnable task, long delay);
 	
 	/**
 	 * Runs a Task after a delay at a fixed period of time with a max amount of repeats
@@ -33,7 +33,7 @@ public interface Scheduler {
 	 * @param repeats number of repeats
 	 * @return task
 	 */
-	AtlasTask runSyncTaskFor(Plugin plugin, Runnable task, long delay, long period, long repeats);
+	AtlasTask runSyncTaskFor(PluginHandle plugin, Runnable task, long delay, long period, long repeats);
 	
 	/**
 	 * Runs a Task after a delay at a fixed period of time
@@ -43,7 +43,7 @@ public interface Scheduler {
 	 * @param period in ticks
 	 * @return task
 	 */
-	AtlasTask runSyncRepeatingTask(Plugin plugin, Runnable task, long delay, long period);
+	AtlasTask runSyncRepeatingTask(PluginHandle plugin, Runnable task, long delay, long period);
 	
 	/**
 	 * Runs a Task at the next tick
@@ -51,7 +51,7 @@ public interface Scheduler {
 	 * @param task that should be run
 	 * @return task
 	 */
-	AtlasTask runAsyncTask(Plugin plugin, Runnable task);
+	AtlasTask runAsyncTask(PluginHandle plugin, Runnable task);
 	
 	/**
 	 * Runs a Task after a delay
@@ -60,7 +60,7 @@ public interface Scheduler {
 	 * @param delay
 	 * @return task
 	 */
-	AtlasTask runAsyncTaskLater(Plugin plugin, Runnable task, long delay);
+	AtlasTask runAsyncTaskLater(PluginHandle plugin, Runnable task, long delay);
 	
 	/**
 	 * Runs a Task after a delay at a fixed period of time with a max amount of repeats
@@ -71,7 +71,7 @@ public interface Scheduler {
 	 * @param repeats
 	 * @return task
 	 */
-	AtlasTask runAsyncTaskFor(Plugin plugin, Runnable task, long delay, long period, long repeats);
+	AtlasTask runAsyncTaskFor(PluginHandle plugin, Runnable task, long delay, long period, long repeats);
 	
 	/**
 	 * Runs a Task after a delay at a fixed period of time
@@ -81,7 +81,7 @@ public interface Scheduler {
 	 * @param period
 	 * @return task
 	 */
-	AtlasTask runAsyncRepeatingTask(Plugin plugin, Runnable task, long delay, long period);
+	AtlasTask runAsyncRepeatingTask(PluginHandle plugin, Runnable task, long delay, long period);
 
 	/**
 	 * Runs the queued tasks for the next tick sync<br>
@@ -120,6 +120,6 @@ public interface Scheduler {
 	 * Removes all task of the given Plugin
 	 * @param plugin
 	 */
-	void removeTasks(Plugin plugin);
+	void removeTasks(PluginHandle plugin);
 
 }

@@ -1,6 +1,7 @@
 package de.atlasmc.event;
 
-import de.atlasmc.plugin.Plugin;
+import de.atlasmc.plugin.PluginHandle;
+import de.atlasmc.util.annotation.NotNull;
 
 /**
  * This class contains informations of a {@link EventHandler}
@@ -36,26 +37,28 @@ public interface EventExecutor {
 		public void fireEvent(Event event) {}
 
 		@Override
-		public Plugin getPlugin() {
+		public PluginHandle getPlugin() {
 			return null;
 		}
 	};
 	
-	public Listener getListener();
+	Listener getListener();
 
-	public boolean getIgnoreCancelled();
+	boolean getIgnoreCancelled();
 	
-	public Class<? extends Event> getEventClass();
+	@NotNull
+	Class<? extends Event> getEventClass();
 	
-	public EventPriority getPriority();
+	@NotNull
+	EventPriority getPriority();
 	
-	public Plugin getPlugin();
+	PluginHandle getPlugin();
 	
 	/**
 	 * Invokes the EventHandler Method of this EventExecutor
 	 * @param event
 	 * @throws Exception 
 	 */
-	public void fireEvent(Event event) throws Exception;
+	void fireEvent(Event event) throws Exception;
 
 }

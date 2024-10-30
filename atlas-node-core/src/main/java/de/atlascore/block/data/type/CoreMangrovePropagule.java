@@ -8,6 +8,7 @@ import de.atlasmc.Material;
 import de.atlasmc.block.data.type.MangrovePropagule;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
+
 import static de.atlascore.block.data.type.CoreSapling.NBT_STAGE;
 
 public class CoreMangrovePropagule extends CoreAgeable implements MangrovePropagule {

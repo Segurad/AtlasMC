@@ -2,10 +2,10 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlasmc.Sound;
-import de.atlasmc.SoundCategory;
 import static de.atlasmc.io.AbstractPacket.*;
 
+import de.atlasmc.Sound;
+import de.atlasmc.SoundCategory;
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;

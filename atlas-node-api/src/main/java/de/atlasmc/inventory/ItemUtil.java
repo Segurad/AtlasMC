@@ -1,6 +1,7 @@
 package de.atlasmc.inventory;
 
 import java.util.List;
+
 import de.atlasmc.Material;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;

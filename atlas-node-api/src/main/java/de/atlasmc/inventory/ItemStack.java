@@ -1,6 +1,7 @@
 package de.atlasmc.inventory;
 
 import java.io.IOException;
+
 import de.atlasmc.Material;
 import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.util.map.key.CharKey;

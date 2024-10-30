@@ -29,6 +29,10 @@ public interface PluginLoader {
 	 */
 	PreparedPlugin preparePlugin(File file) throws IOException;
 
-	void remove(ClassLoader loader);
+	/**
+	 * Notifies the loader that the plugin is unloaded
+	 * @param plugin
+	 */
+	void unload(Plugin plugin);
 
 }

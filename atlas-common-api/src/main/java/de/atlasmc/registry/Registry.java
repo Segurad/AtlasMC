@@ -5,7 +5,7 @@ import java.util.Set;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
-import de.atlasmc.plugin.Plugin;
+import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.util.annotation.Nullable;
 
@@ -21,11 +21,11 @@ public interface Registry<T> extends Namespaced {
 	
 	T getOrDefault(NamespacedKey key, T defaultValue);
 	
-	boolean register(Plugin plugin, NamespacedKey key, T value);
+	boolean register(PluginHandle plugin, NamespacedKey key, T value);
 	
-	boolean register(Plugin plugin, String key, T value);
+	boolean register(PluginHandle plugin, String key, T value);
 	
-	boolean register(Plugin plugin, String[] keys, T[] values);
+	boolean register(PluginHandle plugin, String[] keys, T[] values);
 
 	@Nullable
 	T get(String key);
@@ -56,8 +56,8 @@ public interface Registry<T> extends Namespaced {
 	
 	Set<String> keySet();
 	
-	Collection<RegistryEntry<T>> getPluginEntries(Plugin plugin);
+	Collection<RegistryEntry<T>> getPluginEntries(PluginHandle plugin);
 	
-	boolean removePluginEntries(Plugin plugin);
+	boolean removePluginEntries(PluginHandle plugin);
 	
 }
