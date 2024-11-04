@@ -47,17 +47,5 @@
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.joml/joml -->
-		<dependency>
-			<groupId>org.joml</groupId>
-			<artifactId>joml</artifactId>
-			<version>1.10.5</version>
-		</dependency>
-		<!-- Apache-2.0 License -->
-		<dependency>
-			<groupId>io.netty</groupId>
-			<artifactId>netty-all</artifactId>
-			<version>4.1.72.Final</version>
-		</dependency>
 	</dependencies>
 </project>

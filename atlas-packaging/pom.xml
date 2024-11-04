@@ -12,6 +12,27 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>3.4.0</version>
+				<executions>
+					<execution>
+						<configuration>
+							<filesets>
+								<fileset>
+									<directory>
+										${project.build.directory}/classes</directory>
+									<!--Clean merged files before processing to avoid merging with old merged files -->
+									<includes>
+										<include>**/*.yml</include>
+									</includes>
+								</fileset>
+							</filesets>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
 				<version>3.5.2</version>
 				<dependencies>
