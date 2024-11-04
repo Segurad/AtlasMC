@@ -32,8 +32,8 @@ public class CoreServerManager implements ServerManager {
 	}
 
 	@Override
-	public Future<Collection<? extends ServerGroup>> getServerGroups(String... name) {
-		Collection<? extends ServerGroup> groups = manager.getServerGroups(name);
+	public Future<Collection<? extends ServerGroup>> getServerGroups(Collection<String> names) {
+		Collection<? extends ServerGroup> groups = manager.getServerGroups(names);
 		return CompleteFuture.of(groups);
 	}
 

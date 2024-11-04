@@ -1,34 +1,20 @@
 server-groups:
 - name: TestGroup
-  min-server: 1 # minimum amount of servers in this group 
-  max-server: -1 # max amount of servers in this group -1 for no limit
-  min-non-full-server: 0 # number of servers without state full
-  max-non-full-server: 0 # number of server with state not full 0 for unlimited
-  new-server-delay: 1200 # time in ticks this group must not be satisfied until a ne server is started
+  min-server: 1
+  max-server: -1
+  min-non-full-server: 0
+  max-non-full-server: 0
+  new-server-delay: 1200
   new-server-on-user-load: 1.0
   maintenance: false
   node-selector:
-    method: "atlas-master:server/default_deployment"
-    memory-threshold: 4000 # memory in mb
+    method: atlas-master:server/default_deployment
+    memory-threshold: 4000
     memory-utilisation: 0.5
-    internal: true # whether or not this group internal server or deploied
+    internal: true
   server-config:
-    server-factory: "atlas-core:localserver"
-    config:
-      # the following objects are optional and provide a deep configuration of all tasks
-      # a key may have a string or a object
-      # a string is directly interpreted as registry key for the task
-      # a object must contain the key "task-type" with a string as value that represents the registry key of the task
-      # if a key is named "default" all default tasks of the category will be loaded at this position if the value is true
-      # if one of the task configurations is not present the default tasks will be loaded for this tasks
-      startup-hooks: # tasks that will be executed in defined order on startup
-        default: true
-      shutdown-hooks: # tasks that will be executed in reverse order on shutdown
-        default: true
-      preparaton-tasks: # tasks that will be executed in defined order on preparation
-        default: true
-      tick-tasks: # tasks that will be executed each tick in defined order
-        default: true
+    server-factory: atlas-core:localserver
+    config: null
     static: false
     auto-stop-delay: 180
     auto-stop-users: 0

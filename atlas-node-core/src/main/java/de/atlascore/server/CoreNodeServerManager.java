@@ -23,11 +23,13 @@ public class CoreNodeServerManager implements NodeServerManager {
 	
 	private final Map<UUID, NodeServer> servers;
 	private final Multimap<ServerGroup, NodeServer> serverByGroup;
+	private final Map<String, ServerGroup> groups;
 	private final File tmpServerPath;
 	private final File staticServerPath;
 	
 	public CoreNodeServerManager(File workDir) {
 		this.servers = new ConcurrentHashMap<>();
+		this.groups = new ConcurrentHashMap<>();
 		this.serverByGroup = new CopyOnWriteArrayListMultimap<>();
 		tmpServerPath = new File(workDir, "tmp/servers/");
 		FileUtils.ensureDir(tmpServerPath);
@@ -85,6 +87,32 @@ public class CoreNodeServerManager implements NodeServerManager {
 			}
 		});
 		return server;
+	}
+
+	@Override
+	public boolean registerServerGroup(ServerGroup group) {
+		if (group == null)
+			throw new IllegalArgumentException("Group can not be null!");
+		return groups.put(group.getName(), group) != group;
+	}
+
+	@Override
+	public boolean unregisterServerGroup(ServerGroup group) {
+		if (group == null)
+			throw new IllegalArgumentException("Group can not be null!");
+		return groups.remove(group.getName(), group);
+	}
+
+	@Override
+	public Collection<ServerGroup> getServerGroups() {
+		return groups.values();
+	}
+
+	@Override
+	public ServerGroup getServerGroup(String name) {
+		if (name == null)
+			throw new IllegalArgumentException("Name can not be null!");
+		return groups.get(name);
 	}
 
 }

@@ -99,12 +99,6 @@ public class CoreWorld implements World {
 		return entityTracker.getEntitiesByClass(clazz);
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Collection<Entity> getEntitesByClasses(Class<? extends Entity>... classes) {
-		return entityTracker.getEntitesByClasses(classes);
-	}
-
 	@Override
 	public String getName() {
 		return name;

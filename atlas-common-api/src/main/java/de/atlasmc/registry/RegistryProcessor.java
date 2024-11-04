@@ -87,11 +87,14 @@ public class RegistryProcessor extends AbstractProcessor {
 							entries = registryEntries.createSection(registry);
 						}
 						//System.out.println("value: " + key + " : " + type);
-						entries.set(key, type);
+						ConfigurationSection entry = entries.createSection(key);
+						entry.set("type", type);
 						boolean isDefault = (boolean) values.get("isDefault");
 						log.printMessage(Kind.NOTE, "Found value: " + key + " type: " + type + " registry: " + registry + " default: " + isDefault);
-						if (isDefault)
-							entries.set("registry:default", type);
+						if (isDefault) {
+							ConfigurationSection defaultEntry = entries.createSection("registry:default");
+							defaultEntry.set("type", type);
+						}
 					}
 				}
 			}
@@ -177,17 +180,20 @@ public class RegistryProcessor extends AbstractProcessor {
 			ConfigurationSection registry = registryCfg.getConfigurationSection(registryKey);
 			if (registry == null)
 				registry = registryCfg.createSection(registryKey);
-			for (String key : v.getKeys()) {
-				Object value = v.get(key);
-				if (!registry.contains(key)) {
-					registry.set(key, value);
+			for (String entryKey : v.getKeys()) {
+				ConfigurationSection entry = v.getConfigurationSection(entryKey);
+				ConfigurationSection presentEntry = registry.getConfigurationSection(entryKey);
+				String newType = entry.getString("type");
+				if (presentEntry == null) {
+					presentEntry = registry.createSection(entryKey);
+					presentEntry.set("type", newType);
 					changes = true;
 					continue;
 				}
-				Object present = registry.get(key);
-				if (value.equals(present))
+				String presentType = presentEntry.getString("type");
+				if (newType.equals(presentType))
 					continue;
-				registry.set(key, value);
+				presentEntry.set("type", newType);
 				changes = true;
 			}
 		}

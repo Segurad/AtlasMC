@@ -1,7 +1,6 @@
 package de.atlasmc.command.argparser;
 
 import java.util.Collection;
-import java.util.List;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.command.CommandStringReader;

@@ -2,6 +2,7 @@ package de.atlascore.permission;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,7 +17,6 @@ import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionContext;
 import de.atlasmc.permission.PermissionGroup;
 import de.atlasmc.permission.PermissionHandler;
-import de.atlasmc.util.CollectionView;
 import de.atlasmc.util.map.key.CharKey;
 
 public abstract class CoreAbstractPermissionManager implements PermissionManager {
@@ -26,7 +26,7 @@ public abstract class CoreAbstractPermissionManager implements PermissionManager
 	protected final MapCache<Integer, PermissionContext> contexts;
 	private final MapCache<Collection<PermissionGroup>, CoreGroupSetPermission> groupSetCache;
 	private final Set<PermissionGroup> defaultGroups;
-	private final CollectionView<PermissionGroup> defaultGroupsView;
+	private final Collection<PermissionGroup> defaultGroupsView;
 	
 	public CoreAbstractPermissionManager() {
 		this.groups = new MapCache<>();
@@ -34,7 +34,7 @@ public abstract class CoreAbstractPermissionManager implements PermissionManager
 		this.contexts = new MapCache<>();
 		this.groupSetCache = new MapCache<>();
 		this.defaultGroups = new CopyOnWriteArraySet<>();
-		this.defaultGroupsView = new CollectionView<>(defaultGroups);
+		this.defaultGroupsView = Collections.unmodifiableCollection(defaultGroups);
 		Caching.register(groups);
 		Caching.register(contexts);
 		Caching.register(handlers);

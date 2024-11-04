@@ -18,6 +18,16 @@ import de.atlasmc.util.configuration.ConfigurationSection;
 
 public class FileUtils {
 	
+	public static final boolean CONFIG_OVERRIDE;
+	
+	static {
+		CONFIG_OVERRIDE = Boolean.getBoolean("atlas.config.override");
+	}
+	
+	public static File extractResource(File dest, String resource) throws IOException {
+		return extractResource(dest, resource, CONFIG_OVERRIDE);
+	}
+	
 	public static File extractResource(File dest, String resource, boolean override) throws IOException {
 		String callerName = Thread.currentThread().getStackTrace()[2].getClassName();
 		Class<?> caller;

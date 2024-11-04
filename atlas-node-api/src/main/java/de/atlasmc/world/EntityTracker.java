@@ -15,9 +15,6 @@ public interface EntityTracker {
 	
 	@NotNull
 	<T extends Entity> Collection<T> getEntitiesByClass(Class<T> clazz);
-
-	@NotNull
-	Collection<Entity> getEntitesByClasses(@SuppressWarnings("unchecked") Class<? extends Entity>... classes);
 	
 	Entity getEntity(int entityID);
 
@@ -29,12 +26,6 @@ public interface EntityTracker {
 
 	<T extends Entity, C extends Collection<T>> C getEntitesByClasses(int x, int z, Class<T> clazz, C entities);
 
-	Collection<Entity> getEntitesByClasses(int x, int z, @SuppressWarnings("unchecked") Class<? extends Entity>... classes);
-
-	<C extends Collection<Entity>> C getEntitiesByClasses(int x, int z, C entities, @SuppressWarnings("unchecked") Class<? extends Entity>... classes);
-
-	Entity getEntity(int x, int z, int entityID);
-	
 	/**
 	 * Tracks the given entity. should be called by the entity itself on {@link Entity#spawn(World, double, double, double, float, float)}
 	 * Returns the tracker binding the entity should use to communicate with the tracker and that contains the entities id

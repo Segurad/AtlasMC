@@ -11,7 +11,7 @@ public interface ServerManager {
 
 	Collection<ServerGroup> getServerGroups();
 	
-	Collection<ServerGroup> getServerGroups(String... name);
+	Collection<ServerGroup> getServerGroups(Collection<String> names);
 	
 	ServerGroup createServerGroup(ServerGroupBuilder server);
 	

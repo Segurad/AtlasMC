@@ -102,7 +102,7 @@ public class CoreJavaPluginLoader implements PluginLoader {
 	}
 
 	Class<?> getClassByName(String name, CoreJavaClassLoader source) throws ClassNotFoundException {
-		Class<?> clazz;
+		Class<?> clazz = null;
 		for (CoreJavaClassLoader loader : loaders) {
 			if (loader == source) 
 				continue;

@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.List;
 
+import de.atlascore.plugin.CorePluginManager;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.log.Log;
 import de.atlasmc.plugin.Plugin;
@@ -28,7 +28,7 @@ public class CoreRegistryHandler implements RegistryHandler {
 	
 	public CoreRegistryHandler() {
 		registries = new CoreInstanceRegistry<>(NamespacedKey.of(NamespacedKey.ATLAS, "registry_root"), Registry.class);
-		registries.register(null, registries.getKey(), registries);
+		registries.register(CorePluginManager.SYSTEM, registries.getNamespacedKey(), registries);
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class CoreRegistryHandler implements RegistryHandler {
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + target);
 		}
-		registries.register(null, key, registry);
+		registries.register(CorePluginManager.SYSTEM, key, registry);
 		return (Registry<T>) registry;
 	}
 
@@ -138,7 +138,7 @@ public class CoreRegistryHandler implements RegistryHandler {
 
 	@Override
 	public void registerRegistry(Registry<?> registry) {
-		this.registries.register(null, registry.getKey(), registry);
+		this.registries.register(CorePluginManager.SYSTEM, registry.getKey(), registry);
 	}
 
 	@Override
@@ -244,10 +244,10 @@ public class CoreRegistryHandler implements RegistryHandler {
 				logger.warn("Unable to insert registry entries for registry: {} (missing)", key);
 				continue;
 			}
-			List<ConfigurationSection> entries = config.getConfigurationList(key);
-			for (ConfigurationSection entryCfg : entries) {
+			ConfigurationSection entries = config.getConfigurationSection(key);
+			for (String entryKey : entries.getKeys()) {
+				ConfigurationSection entryCfg = entries.getConfigurationSection(entryKey);
 				String rawClass = entryCfg.getString("type");
-				String entryKey = entryCfg.getString("key");
 				Class<?> entryClass = null;
 				try {
 					entryClass = Class.forName(rawClass);
@@ -279,8 +279,10 @@ public class CoreRegistryHandler implements RegistryHandler {
 				if (Registries.DEFAULT_REGISTRY_KEY.equals(entryKey)) {
 					registry.setDefault(entryValue);
 					logger.debug("Registry ({}) set default: {}", key, entryClass.getName());
-				} else if (registry.register(plugin, key, entryValue)) {
+				} else if (registry.register(plugin, entryKey, entryValue)) {
 					logger.debug("Registry ({}) registered: {}={}", key, entryKey, entryClass.getName());
+				} else {
+					logger.warn("Registry ({}) tried to register value twice {}={}", key, entryKey, entryClass.getName());
 				}
 			}
 		}

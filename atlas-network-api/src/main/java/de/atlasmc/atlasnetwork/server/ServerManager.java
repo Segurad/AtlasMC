@@ -11,7 +11,7 @@ public interface ServerManager {
 	
 	Future<ServerGroup> getServerGroup(String name);
 	
-	Future<Collection<? extends ServerGroup>> getServerGroups(String... name);
+	Future<Collection<? extends ServerGroup>> getServerGroups(Collection<String> names);
 	
 	Future<Server> getServer(UUID uuid);
 	

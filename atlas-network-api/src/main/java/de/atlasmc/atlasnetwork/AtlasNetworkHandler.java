@@ -26,7 +26,11 @@ public interface AtlasNetworkHandler extends Tickable {
 	
 	Future<NodeConfig> getNodeConfig(String name);
 	
+	Future<Collection<NodeConfig>> getNodeConfigs(Collection<String> names);
+	
 	Future<ProxyConfig> getProxyConfig(String name);
+	
+	Future<Collection<ProxyConfig>> getProxyConfigs(Collection<String> names);
 
 	int getOnlinePlayerCount();
 

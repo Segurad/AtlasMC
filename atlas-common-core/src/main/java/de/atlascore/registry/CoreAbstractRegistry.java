@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 
+import de.atlascore.plugin.CorePluginManager;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.registry.Registry;
@@ -69,6 +70,8 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 			throw new IllegalArgumentException("Key can not be null!");
 		if (value == null)
 			throw new IllegalArgumentException("Value can not be null!");
+		if (plugin == null)
+			plugin = CorePluginManager.SYSTEM;
 		validateEntry(value);
 		CoreRegistryEntry<T> entry = new CoreRegistryEntry<T>(plugin, key.toString(), value);
 		if (entries.putIfAbsent(entry.key, entry) != null)
@@ -86,6 +89,8 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 			throw new IllegalArgumentException("Key must be a valid namespaced key: " + key);
 		if (value == null)
 			throw new IllegalArgumentException("Value can not be null!");
+		if (plugin == null)
+			plugin = CorePluginManager.SYSTEM;
 		validateEntry(value);
 		CoreRegistryEntry<T> entry = new CoreRegistryEntry<T>(plugin, key, value);
 		if (entries.putIfAbsent(entry.key, entry) != null)
@@ -103,6 +108,8 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 			throw new IllegalArgumentException("Values can not be null!");
 		if (keys.length != values.length)
 			throw new IllegalArgumentException("Keys and values must be the same length");
+		if (plugin == null)
+			plugin = CorePluginManager.SYSTEM;
 		Matcher match = NamespacedKey.NAMESPACED_KEY_PATTERN.matcher("");
 		for (int i = 0; i < keys.length; i++) {
 			match.reset(keys[i]);
@@ -126,11 +133,11 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	
 	private Collection<RegistryEntry<T>> pluginEntries(PluginHandle plugin) {
 		Collection<RegistryEntry<T>> entries = pluginEntries.get(plugin);
-		if (entries == null)
+		if (entries != null)
 			return entries;
 		synchronized (this) {
 			entries = pluginEntries.get(plugin);
-			if (entries == null)
+			if (entries != null)
 				return entries;
 			entries = new CopyOnWriteArrayList<>();
 			pluginEntries.put(plugin, entries);

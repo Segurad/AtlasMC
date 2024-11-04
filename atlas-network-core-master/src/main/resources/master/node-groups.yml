@@ -1,9 +1,9 @@
-node-groups:
+node-configs:
 - name: default-group
   proxies:
   - default-proxy
   server-groups:                                                                                                                                                                                                                                                                     
   - group_1
   - group_2
-  core-data:
+  core-modules:
   - "repo/plugin:my_plugin_1"

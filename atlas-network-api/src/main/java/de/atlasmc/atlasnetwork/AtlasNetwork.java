@@ -1,6 +1,7 @@
 package de.atlasmc.atlasnetwork;
 
 import java.security.PublicKey;
+import java.util.Collection;
 import java.util.UUID;
 
 import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
@@ -44,8 +45,16 @@ public class AtlasNetwork  {
 		return HANDLER.getNodeConfig(name);
 	}
 	
+	public static Future<Collection<NodeConfig>> getNodeConfigs(Collection<String> names) {
+		return HANDLER.getNodeConfigs(names);
+	}
+	
 	public static Future<ProxyConfig> getProxyConfig(String name) {
 		return HANDLER.getProxyConfig(name);
+	}
+	
+	public static Future<Collection<ProxyConfig>> getProxyConfigs(Collection<String> names) {
+		return HANDLER.getProxyConfigs(names);
 	}
 
 	public static int getOnlinePlayerCount() {

@@ -5,8 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.net.Socket;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -15,12 +13,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 import java.util.function.Consumer;
 
 import de.atlascore.cache.CoreCacheHandler;
 import de.atlascore.chat.CoreChatFactory;
+import de.atlascore.command.CoreConsoleCommandSender;
 import de.atlascore.datarepository.CoreCacheRepository;
 import de.atlascore.datarepository.CoreDataRepositoryHandler;
 import de.atlascore.datarepository.CoreLocalRepository;
@@ -31,18 +29,12 @@ import de.atlascore.registry.CoreRegistryHandler;
 import de.atlascore.scheduler.CoreAtlasScheduler;
 import de.atlasmc.Atlas;
 import de.atlasmc.AtlasBuilder;
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.cache.Caching;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.command.Command;
 import de.atlasmc.command.Commands;
 import de.atlasmc.datarepository.DataRepositoryHandler;
-import de.atlasmc.datarepository.RepositoryEntry;
-import de.atlasmc.event.Event;
-import de.atlasmc.event.EventExecutor;
 import de.atlasmc.event.HandlerList;
-import de.atlasmc.event.Listener;
-import de.atlasmc.event.MethodEventExecutor;
 import de.atlasmc.event.command.CommandEvent;
 import de.atlasmc.log.Log;
 import de.atlasmc.log.Logging;
@@ -51,11 +43,9 @@ import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginManager;
 import de.atlasmc.plugin.startup.StartupContext;
 import de.atlasmc.plugin.startup.StartupException;
+import de.atlasmc.plugin.startup.StartupFinalizedEvent;
 import de.atlasmc.plugin.startup.StartupStageHandler;
 import de.atlasmc.registry.Registries;
-import de.atlasmc.registry.Registry;
-import de.atlasmc.registry.RegistryHandler;
-import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.tick.AtlasThread;
 import de.atlasmc.util.EncryptionUtil;
 import de.atlasmc.util.FileUtils;
@@ -67,13 +57,7 @@ import de.atlasmc.util.configuration.file.YamlConfiguration;
 
 public class Main {
 	
-	private static boolean OVERRIDE_CONFIG;
-	private static final int MAX_RANDOM_PORT_TRIES = 10;
-	private static final int RANDOM_PORT_RANGE_START = 25000;
-	private static final int RANDOM_PORT_RANGE_END = 35000;
-	
 	public static void main(String[] args) {
-		OVERRIDE_CONFIG = false;
 		long startTime = System.currentTimeMillis();
 		System.out.println("\t       ____\n" + 
 				"\t      / /  \\     _________   __        ________    ______\n" + 
@@ -108,17 +92,16 @@ public class Main {
 		Caching.init(new CoreCacheHandler());
 		if (altWorkDir)
 			log.info("Using alternativ work dir: {}", workDirPath);
-		if (Boolean.getBoolean(System.getProperty("atlas.config.override", "false"))) {
-			OVERRIDE_CONFIG = true;
+		if (FileUtils.CONFIG_OVERRIDE) {
 			log.info("Override configuration enabled!");
 		}
 		KeyPair keyPair = getKeyPair(workDir, log);
 		FileConfiguration config = null;
 		try {
-			log.info("Loading node.yml...");
+			log.info("Loading bootstrap.yml...");
 			config = loadConfig(workDir);
 		} catch (Exception e) {
-			log.error("Error while loading node.yml!", e);
+			log.error("Error while loading bootstrap.yml!", e);
 		}
 		if (config == null) {
 			System.exit(1);
@@ -127,9 +110,17 @@ public class Main {
 		ChatUtil.init(new CoreChatFactory());
 		Registries.init(new CoreRegistryHandler());
 		
+		final CoreConsoleCommandSender console;
+		try {
+			console = new CoreConsoleCommandSender();
+		} catch (IOException e) {
+			log.error("Error while initializing console sender!", e);
+			System.exit(1);
+			return;
+		}
+		
 		PluginManager pluginManager = new CorePluginManager(log);
 		pluginManager.addLoader(new CoreJavaPluginLoader());
-		
 		new AtlasBuilder()
 		.setDataHandler(loadRepositories(log, workDir))
 		.setKeyPair(keyPair)
@@ -143,7 +134,7 @@ public class Main {
 		
 		boolean isMaster = config.getBoolean("is-master");
 
-		StartupContext context = new StartupContext();
+		StartupContext context = new StartupContext(log);
 		context.addStage(
 				StartupContext.LOAD_EXTRA_PLUGINS,
 				StartupContext.INIT_STAGES,
@@ -164,7 +155,17 @@ public class Main {
 		Registries.loadRegistries(Atlas.getSystem());
 		Registries.loadRegistryEntries(Atlas.getSystem());
 		
-		initStartupHandler(log, context, Main.class.getResourceAsStream("/META-INF/atlas/startup-handler.yml"));
+		Thread consoleDeamon = new Thread(() -> {
+			Atlas.getLogger().debug("Started console deamon!");
+			while (true) {
+				String command = console.readLine();
+				HandlerList.callEvent(new CommandEvent(console, command, true));
+			}
+		});
+		consoleDeamon.setDaemon(true);
+		loadCommands(log, workDir);
+		
+		initStartupHandler(log, context, Main.class.getResourceAsStream("/META-INF/atlas/startup-handlers.yml"));
 		
 		for (Plugin plugin : pluginManager.getPlugins()) {
 			if (!(plugin instanceof AtlasModul modul))
@@ -172,7 +173,7 @@ public class Main {
 			if (!plugin.isEnabled())
 				continue;
 			modul.initStartupHandler(context);
-			initStartupHandler(log, context, plugin.getResourceAsStream("/META-INF/atlas/startup-handler.yml"));
+			initStartupHandler(log, context, plugin.getResourceAsStream("/META-INF/atlas/startup-handlers.yml"));
 		}
 		
 		try {
@@ -181,7 +182,7 @@ public class Main {
 			prepareStage(context);
 			runStage(context);
 			finalizeStage(context);
-		} while (context.hasNextStage() && !context.hasFailed());
+		} while (!context.hasFailed() && context.nextStage());
 		} catch (StartupException e) {}
 		if (context.hasFailed()) {
 			Throwable cause = context.getCause();
@@ -195,101 +196,76 @@ public class Main {
 			}
 			System.exit(1);
 		}
-		
-		// -------- END OF STARTUP -----------------
-		loadCommands(log, workDir);
-		
-		Random rand = null;
-		log.info("Initializing Proxy...");
-		Registry<LocalProxyFactory> proxyFactories = Registries.getInstanceRegistry(LocalProxyFactory.class);
-		final int portRange = RANDOM_PORT_RANGE_END - RANDOM_PORT_RANGE_START;
-		for (ProxyConfig cfg : builder.getProxyConfigs()) {
-			NamespacedKey proxyKey = cfg.getFactory();
-			LocalProxyFactory factory = null;
-			if (proxyKey != null) {
-				factory = proxyFactories.get(proxyKey);
-				if (factory == null)
-					log.warn("No proxy factory found with key: {}", proxyKey);
-			}
-			if (factory == null) {
-				factory = proxyFactories.getDefault();
-				if (factory == null)
-					log.warn("No default proxy factory found!");
-				continue;
-			}
-			int port = cfg.getPort();
-			if (port == -1) {
-				int maxTries = MAX_RANDOM_PORT_TRIES;
-				while (maxTries > 0) {
-					maxTries--;
-					if (rand == null)
-						rand = new Random();
-					port = RANDOM_PORT_RANGE_START + rand.nextInt(portRange);
-					if (isPortAvailable(port)) {
-						break;
-					}
-					port = -1;
-				}
-				if (port == -1) {
-					log.warn("Unable to fetch random open port! ({} tries)", MAX_RANDOM_PORT_TRIES);
-					continue;
-				}
-			}
-			UUID proxyUUID = UUID.randomUUID();
-			LocalProxy proxy = factory.createProxy(proxyUUID, node, port, cfg);
-			proxy.setChannelInitHandler(new ChannelInitHandler(proxy));
-			proxy.run();
-			node.registerProxy(proxy);
-		}
-		CoreConsoleCommandSender console = null;
-		try {
-			console = new CoreConsoleCommandSender();
-		} catch (IOException e) {
-			log.error("Error while initializing console sender!", e);
-			System.exit(1);
-		}
-		builder.setConsoleSender(console);
-		node.setStatus(NodeStatus.ONLINE);
 		Atlas.getMainThread().runTask(() -> {
-			HandlerList.callEvent(new NodeInitializedEvent());
+			HandlerList.callEvent(new StartupFinalizedEvent());
 		});
-		Atlas.getMainThread().startThread();
-		ThreadWatchdog.watch(Atlas.getMainThread());
 		long endTime = System.currentTimeMillis();
 		double timeTotal = (endTime-startTime) / 1000.0;
 		log.info("{}-Node up and running after {} seconds", isMaster ? "Master" : "Minion", String.format("%,.3f", timeTotal));
-		while (node.getStatus() == NodeStatus.ONLINE) {
-			String command = console.readLine();
-			HandlerList.callEvent(new CommandEvent(console, command, true));
-		}
-		try {
-			Atlas.getMainThread().getThread().join();
-		} catch (InterruptedException e) {}
+
+		Atlas.getMainThread().startThread();
+		ThreadWatchdog.watch(Atlas.getMainThread());
+		consoleDeamon.start();
+		
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static void initStartupHandler(Log logger, StartupContext context, InputStream in) {
 		if (in == null)
 			return;
-		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(in);
+		logger.info("Loading startup handlers...");
+		YamlConfiguration cfg;
+		try {
+			cfg = YamlConfiguration.loadConfiguration(in);
+		} catch (IOException e) {
+			logger.error("Error while loading startup-handler.yml!", e);
+			System.exit(1);
+			return;
+		}
+		Map<String, StartupStageHandler> initializedHandlers = new HashMap<>();
 		for (String key : cfg.getKeys()) {
 			List<String> handlers = cfg.getStringList(key);
 			for (String rawHandlerClass : handlers) {
-				Class<?> handlerClass;
-				try {
-					handlerClass = Class.forName(rawHandlerClass);
-				} catch (ClassNotFoundException e) {
-					logger.error("Unable to find startup stage handler class for stage: " + key, e);
+				StartupStageHandler handler;
+				if (!initializedHandlers.containsKey(rawHandlerClass)) {
+					initializedHandlers.put(rawHandlerClass, null);
+					Class<?> handlerClass;
+					try {
+						handlerClass = Class.forName(rawHandlerClass);
+					} catch (ClassNotFoundException e) {
+						logger.error("Unable to find startup stage handler class for stage: " + key, e);
+						continue;
+					}
+					if (!StartupStageHandler.class.isAssignableFrom(handlerClass)) {
+						logger.error("Startup stage handler class is not accessible as StartupStageHandler: {}", rawHandlerClass);
+						continue;
+					}
+					Constructor<? extends StartupStageHandler> newHandler;
+					try {
+						newHandler = (Constructor<? extends StartupStageHandler>) handlerClass.getDeclaredConstructor();
+					} catch (NoSuchMethodException e) {
+						logger.error("No constructor found for startup handler: " + handlerClass.getName());
+						continue;
+					} catch (Exception e) {
+						logger.error("Error while fetching constructor for startup handler: " + handlerClass.getName(), e);
+						continue;
+					}
+					newHandler.setAccessible(true);
+					try {
+						handler = newHandler.newInstance();
+					} catch (Exception e) {;
+						logger.error("Error while creating new handler instance of: " + handlerClass.getName(), e);
+						continue;
+					}
+					initializedHandlers.put(rawHandlerClass, handler);
+				} else {
+					handler = initializedHandlers.get(rawHandlerClass);
+					logger.debug("Reusing handler {} for stage: {}", rawHandlerClass, key);
+				}
+				if (handler == null)
 					continue;
-				}
-				if (!handlerClass.isAssignableFrom(StartupStageHandler.class)) {
-					logger.error("Startup stage handler class is not accessible as StartupStageHandler: {}", rawHandlerClass);
-				}
-				@SuppressWarnings("unchecked")
-				Constructor<? extends StartupStageHandler> newHandler = (Constructor<? extends StartupStageHandler>) handlerClass.getConstructor();
-				newHandler.setAccessible(true);
-				StartupStageHandler handler = newHandler.newInstance();
 				context.addStageHandler(key, handler);
-				logger.debug("Added startup stage handler {} for stage: {}", key, rawHandlerClass);
+				logger.debug("Added startup stage handler {} for stage: {}", rawHandlerClass, key);
 			}
 		}
 	}
@@ -338,28 +314,12 @@ public class Main {
 			context.fail(e);
 		}
 	}
-	
-	private static boolean isPortAvailable(int port) {
-		Socket s = null;
-	    try {
-	        s = new Socket("localhost", port);
-	        return false; 
-	    } catch (IOException e) {
-	        return true;
-	    } finally {
-	        if( s != null){
-	            try {
-	                s.close();
-	            } catch (IOException e) {}
-	        }
-	    }
-	}
 
 	private static void loadCommands(Log log, File workDir) {
 		log.info("Loading commands...");
 		File commandFile = null;
 		try {
-			commandFile = FileUtils.extractResource(new File(workDir, "data/commands.yml"), "/data/commands.yml", OVERRIDE_CONFIG, Main.class);
+			commandFile = FileUtils.extractResource(new File(workDir, "data/commands.yml"), "/data/commands.yml", FileUtils.CONFIG_OVERRIDE, Main.class);
 		} catch (IOException e) {
 			log.error("Error while extracting commands.yml", e);
 			return;
@@ -382,18 +342,8 @@ public class Main {
 	}
 
 	private static FileConfiguration loadConfig(File workDir) throws IOException {
-		File nodeConfigFile = FileUtils.extractResource(new File(workDir, "node.yml"), "/node.yml", OVERRIDE_CONFIG, Main.class);
+		File nodeConfigFile = FileUtils.extractResource(new File(workDir, "bootstrap.yml"), "/bootstrap.yml", FileUtils.CONFIG_OVERRIDE, Main.class);
 		return YamlConfiguration.loadConfiguration(nodeConfigFile);
-	}
-	
-	private static void initDefaultExecutor(Log log, Listener listener) {
-		List<EventExecutor> exes = MethodEventExecutor.getExecutors(CorePluginManager.SYSTEM, listener);
-		for (EventExecutor exe : exes) {
-			Class<? extends Event> clazz = exe.getEventClass();
-			log.debug("Set default executor for event: {}", clazz.getSimpleName());
-			HandlerList handlers = HandlerList.getHandlerListOf(clazz);
-			handlers.setDefaultExecutor(exe);
-		}
 	}
 	
 	private static Map<String, String> getJVMArgs(String[] args) {

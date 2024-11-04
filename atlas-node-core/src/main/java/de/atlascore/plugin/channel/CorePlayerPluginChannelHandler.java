@@ -2,11 +2,12 @@ package de.atlascore.plugin.channel;
 
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutPluginMessage;
+import de.atlasmc.plugin.channel.AbstractPluginChannelHandler;
 import de.atlasmc.plugin.channel.PluginChannel;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
-public class CorePlayerPluginChannelHandler extends CoreAbstractPluginChannelHandler {
+public class CorePlayerPluginChannelHandler extends AbstractPluginChannelHandler {
 
 	private final PlayerConnection con;
 	

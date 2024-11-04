@@ -2,6 +2,7 @@ package de.atlasmc.plugin.startup;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -9,10 +10,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import de.atlasmc.log.Log;
 import de.atlasmc.plugin.AtlasModul;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginLoader;
-import de.atlasmc.util.ListView;
 import de.atlasmc.util.map.ArrayListMultimap;
 import de.atlasmc.util.map.Multimap;
 
@@ -68,17 +69,29 @@ public class StartupContext {
 	private boolean failed;
 	private Throwable cause;
 	private Map<String, Object> context;
+	private Map<String, Object> persistentContext;
+	private Log logger;
 
-	public StartupContext() {
-		stageHandlers = new ArrayListMultimap<>();
-		failHandlers = new HashSet<>();
-		stageChangeHandlers = new HashSet<>();
-		context = new HashMap<>();
-		stages = new ArrayList<>();
+	public StartupContext(Log logger) {
+		this.stageHandlers = new ArrayListMultimap<>();
+		this.failHandlers = new HashSet<>();
+		this.stageChangeHandlers = new HashSet<>();
+		this.context = new HashMap<>();
+		this.persistentContext = new HashMap<>();
+		this.stages = new ArrayList<>();
+		this.logger = logger;
+	}
+	
+	public Log getLogger() {
+		return logger;
 	}
 	
 	public Object setContex(String key, Object value) {
 		return context.put(key, value);
+	}
+	
+	public Object setPersistentContext(String key, Object value) {
+		return persistentContext.put(key, value);
 	}
 	
 	/**
@@ -87,6 +100,14 @@ public class StartupContext {
 	 */
 	public Map<String, Object> getContext() {
 		return context;
+	}
+	
+	/**
+	 * Returns the persistent context
+	 * @return persistent context
+	 */
+	public Map<String, Object> getPersistentContext() {
+		return persistentContext;
 	}
 	
 	/**
@@ -99,6 +120,12 @@ public class StartupContext {
 	@SuppressWarnings("unchecked")
 	public <T> T getContext(String key) {
 		Object value = context.get(key);
+		return value != null ? (T) value : null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> T getPersistentContext(String key) {
+		Object value = persistentContext.get(key);
 		return value != null ? (T) value : null;
 	}
 	
@@ -135,7 +162,8 @@ public class StartupContext {
 	 * @return handlers
 	 */
 	public Collection<StartupStageHandler> getStageHandlers() {
-		return stageHandlers.get(getStage());
+		Collection<StartupStageHandler> handlers = stageHandlers.get(getStage());
+		return handlers == null ? List.of() : handlers;
 	}
 
 	/**
@@ -144,7 +172,7 @@ public class StartupContext {
 	 */
 	public List<String> getStages() {
 		if (stageView == null)
-			stageView = new ListView<>(stages);
+			stageView = Collections.unmodifiableList(stages);
 		return stageView;
 	}
 

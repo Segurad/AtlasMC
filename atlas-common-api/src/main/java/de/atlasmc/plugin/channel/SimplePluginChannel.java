@@ -1,23 +1,19 @@
-package de.atlascore.plugin.channel;
+package de.atlasmc.plugin.channel;
 
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.plugin.channel.ChannelListener;
-import de.atlasmc.plugin.channel.PluginChannel;
-import de.atlasmc.plugin.channel.PluginChannelException;
-import de.atlasmc.plugin.channel.PluginChannelHandler;
 import io.netty.buffer.ByteBuf;
 
-public class CorePluginChannel implements PluginChannel {
+public class SimplePluginChannel implements PluginChannel {
 	
-	private final CoreAbstractPluginChannelHandler handler;
+	private final AbstractPluginChannelHandler handler;
 	private final NamespacedKey name;
 	private final Collection<ChannelListener> listener;
 	private volatile boolean unregistered;
 	
-	public CorePluginChannel(CoreAbstractPluginChannelHandler handler, NamespacedKey name) {
+	public SimplePluginChannel(AbstractPluginChannelHandler handler, NamespacedKey name) {
 		this.handler = handler;
 		this.name = name;
 		this.listener = new CopyOnWriteArrayList<>();

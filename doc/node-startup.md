@@ -3,7 +3,7 @@
 # Node Startup
 
 Plugin Resourcepaths: 
-- [`/META-INF/atlas/startup-handler.yml`](#startup-handleryml)
+- [`/META-INF/atlas/startup-handlers.yml`](#startup-handleryml)
 
 ---
 
@@ -34,7 +34,7 @@ The startup pocess provides a context `Map<String, Object>` used to share data b
 
 Stage handler may be automatically registered with `startup-handler.yml` or `@StartupHandlerRegister` annotation. Auto register stage handler must have a constructor without arguments.
 
-## startup-handler.yml
+## startup-handlers.yml
 ```yaml
 somestage: 
 - my.stage.Handler

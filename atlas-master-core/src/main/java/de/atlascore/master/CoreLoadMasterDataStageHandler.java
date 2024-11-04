@@ -11,18 +11,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
 
 import de.atlascore.atlasnetwork.CoreNetworkInfo;
-import de.atlascore.master.server.CoreServerGroup;
 import de.atlasmc.Atlas;
-import de.atlasmc.atlasnetwork.NodeConfig;
+import de.atlasmc.atlasnetwork.NetworkInfo;
 import de.atlasmc.atlasnetwork.NetworkInfo.SlotMode;
+import de.atlasmc.atlasnetwork.NodeConfig;
 import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.chat.ChatUtil;
@@ -40,6 +36,7 @@ import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionContext;
 import de.atlasmc.permission.PermissionGroup;
 import de.atlasmc.plugin.startup.StartupContext;
+import de.atlasmc.plugin.startup.StartupHandlerRegister;
 import de.atlasmc.plugin.startup.StartupStageHandler;
 import de.atlasmc.util.FileUtils;
 import de.atlasmc.util.NumberConversion;
@@ -47,6 +44,7 @@ import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
 
+@StartupHandlerRegister({ StartupContext.LOAD_MASTER_DATA })
 class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 
 	private Log log;
@@ -62,7 +60,7 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 		File serverGroupsCfgFile = null;
 		File proxyCfgFile = null;
 		boolean override = false;
-		if (Boolean.getBoolean(System.getProperty("atlas.config.override", "false"))) {
+		if (Boolean.getBoolean("atlas.config.override")) {
 			override = true;
 		}
 		try {
@@ -247,7 +245,7 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 		for (ConfigurationSection groupCfg : groupCfgs) {
 			builder.setConfiguration(groupCfg);
 			ServerGroup group = manager.createServerGroup(builder);
-			log.debug("registered group: {}", group.getName());
+			log.debug("Registered group: {}", group.getName());
 		}
 	}
 	
@@ -269,16 +267,16 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 	}
 	
 	private void loadNodeGroups(File file) {
-		log.info("Loading node groups...");
+		log.info("Loading node configs...");
 		Configuration cfg = null;
 		try {
 			cfg = YamlConfiguration.loadConfiguration(file);
 		} catch (IOException e) {
-			log.error("Error while loading node groups!", e);
+			log.error("Error while loading node configs!", e);
 			return;
 		}
 		NodeManager nodeManager = AtlasMaster.getNodeManager();
-		List<ConfigurationSection> nodeCfgs = cfg.getConfigurationList("node-groups");
+		List<ConfigurationSection> nodeCfgs = cfg.getConfigurationList("node-configs");
 		for (ConfigurationSection groupCfg : nodeCfgs) {
 			NodeConfig group = new NodeConfig(groupCfg);
 			nodeManager.addNodeConfig(group);
@@ -296,10 +294,14 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 		}
 		String serverIcon = loadServerIconBase64(log, "server_icon.png");
 		String serverIconMaintenance = loadServerIconBase64(log, "server_icon_maintenance.png");
-		info = loadNetworkInfo(cfg.getConfigurationSection("network-info"), serverIcon);
-		infoMaintenance = loadNetworkInfo(cfg.getConfigurationSection("network-info-maintenance"), serverIconMaintenance);
-		slots = cfg.getInt("max-slots");
-		maintenance = cfg.getBoolean("maintenance");
+		NetworkInfo info = loadNetworkInfo(cfg.getConfigurationSection("network-info"), serverIcon);
+		NetworkInfo infoMaintenance = loadNetworkInfo(cfg.getConfigurationSection("network-info-maintenance"), serverIconMaintenance);
+		int slots = cfg.getInt("max-slots");
+		boolean maintenance = cfg.getBoolean("maintenance");
+		AtlasMaster.setMaxSlots(slots);
+		AtlasMaster.setMaintenace(maintenance);
+		AtlasMaster.setNetworkInfo(info);
+		AtlasMaster.setNetworkInfoMaintenance(infoMaintenance);
 	}
 	
 	private CoreNetworkInfo loadNetworkInfo(ConfigurationSection config, String serverIcon) {

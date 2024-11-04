@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
+import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.registry.RegistryHolder;
@@ -152,7 +153,7 @@ public class EntityType implements Namespaced {
 	 * @param id the entityTypeID of this type
 	 * @param clazz the entity class needs to have a constructor({@link EntityType}, {@link UUID}, {@link World})
 	 */
-	public EntityType(NamespacedKey key, int id, Class<? extends Entity> clazz) {
+	public EntityType(PluginHandle handle, NamespacedKey key, int id, Class<? extends Entity> clazz) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
 		if (clazz == null) 
@@ -160,7 +161,7 @@ public class EntityType implements Namespaced {
 		this.key = key;
 		this.id = id;
 		this.clazz = clazz;
-		getRegistry().register(null, key, this);
+		getRegistry().register(handle, key, this);
 	}
 	
 	public Class<? extends Entity> getEntityClass() {

@@ -94,4 +94,24 @@ public class AtlasMaster {
 		return null;
 	}
 
+	public static void setMaxSlots(int slots) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public static void setMaintenace(boolean maintenance) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public static void setNetworkInfo(NetworkInfo info) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public static void setNetworkInfoMaintenance(NetworkInfo info) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

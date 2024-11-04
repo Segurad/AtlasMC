@@ -1,5 +1,6 @@
 package de.atlascore.atlasnetwork.master;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import de.atlascore.atlasnetwork.CoreAbstractAtlasNetworkHandler;
@@ -9,6 +10,8 @@ import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.datarepository.Repository;
 import de.atlasmc.master.AtlasMaster;
+import de.atlasmc.master.node.NodeManager;
+import de.atlasmc.master.proxy.ProxyManager;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
 
@@ -52,10 +55,40 @@ public class CoreAtlasNetworkHandler extends CoreAbstractAtlasNetworkHandler {
 	public Future<NodeConfig> getNodeConfig(String name) {
 		return CompleteFuture.of(AtlasMaster.getNodeManager().getNodeConfig(name));
 	}
+	
+	@Override
+	public Future<Collection<NodeConfig>> getNodeConfigs(Collection<String> names) {
+		if (names.isEmpty())
+			return CompleteFuture.getEmptyListFuture();
+		NodeManager nodeManager = AtlasMaster.getNodeManager();
+		ArrayList<NodeConfig> configs = new ArrayList<>(names.size());
+		for (String name : names) {
+			NodeConfig cfg = nodeManager.getNodeConfig(name);
+			if (cfg == null)
+				continue;
+			configs.add(cfg);
+		}
+		return CompleteFuture.of(configs);
+	}
 
 	@Override
 	public Future<ProxyConfig> getProxyConfig(String name) {
 		return CompleteFuture.of(AtlasMaster.getProxyManager().getProxyConfig(name));
+	}
+	
+	@Override
+	public Future<Collection<ProxyConfig>> getProxyConfigs(Collection<String> names) {
+		if (names.isEmpty())
+			return CompleteFuture.getEmptyListFuture();
+		ProxyManager proxyManager = AtlasMaster.getProxyManager();
+		ArrayList<ProxyConfig> configs = new ArrayList<>(names.size());
+		for (String name : names) {
+			ProxyConfig cfg = proxyManager.getProxyConfig(name);
+			if (cfg == null)
+				continue;
+			configs.add(cfg);
+		}
+		return CompleteFuture.of(configs);
 	}
 
 	@Override

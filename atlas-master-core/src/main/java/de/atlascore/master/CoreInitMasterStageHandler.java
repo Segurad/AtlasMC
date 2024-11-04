@@ -26,11 +26,14 @@ import de.atlasmc.log.Log;
 import de.atlasmc.log.Logging;
 import de.atlasmc.master.AtlasMasterBuilder;
 import de.atlasmc.plugin.startup.StartupContext;
+import de.atlasmc.plugin.startup.StartupHandlerRegister;
 import de.atlasmc.plugin.startup.StartupStageHandler;
+import de.atlasmc.util.FileUtils;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
 import de.atlasmc.util.sql.SQLConnectionPool;
 
+@StartupHandlerRegister({ StartupContext.INIT_MASTER })
 class CoreInitMasterStageHandler implements StartupStageHandler {
 
 	private static final int MIN_SCHEMA_VERSION = 1;
@@ -43,17 +46,23 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 	
 	@Override
 	public void handleStage(StartupContext context) {
-		log = Logging.getLogger("Atlas-Master", "Atlas-Master");
-		
-		YamlConfiguration nodeCfg = null;
+		log = context.getLogger();
+		File masterCfgFile = new File(Atlas.getWorkdir(), "master.yml");
 		try {
-			nodeCfg = YamlConfiguration.loadConfiguration(new File(Atlas.getWorkdir(), "node.yml"));
+			masterCfgFile = FileUtils.extractResource(masterCfgFile, "/master.yml");
 		} catch (IOException e) {
-			context.fail(e);
+			log.error("Error while extracting master.yml!");
 		}
-		ConfigurationSection masterConfig = nodeCfg.getConfigurationSection("master");
-		ConfigurationSection dbConfig = masterConfig.getConfigurationSection("database");
-		SQLConnectionPool con = getDBConnection(dbConfig);
+		YamlConfiguration masterCfg = null;
+		try {
+			masterCfg = YamlConfiguration.loadConfiguration(masterCfgFile);
+		} catch (IOException e) {
+			log.error("Error while loading master.yml!", e);
+			context.fail();
+			return;
+		}
+		ConfigurationSection dbConfig = masterCfg.getConfigurationSection("database");
+		con = getDBConnection(dbConfig);
 		if (con == null) {
 			log.error("Unable to initialize database connection is not present!");
 			context.fail();
@@ -62,7 +71,6 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 			log.error("A problem occured while preparing the database!");
 			context.fail();
 		}
-		
 		File nodeIDFile = new File(Atlas.getWorkdir(), "node-id.yml");
 		UUID nodeID = null;
 		if (nodeIDFile.exists()) {
@@ -90,7 +98,7 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 		}
 		
 		AtlasMasterBuilder builder = context.getContext("builder");
-		builder.setLogger(log)
+		builder.setLogger(Logging.getLogger("Atlas-Master", "Atlas-Master"))
 			.setDatabase(con)
 			.setNodeManager(new CoreNodeManager())
 			.setProxyManager(new CoreProxyManager())

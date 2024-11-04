@@ -18,6 +18,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import de.atlasmc.Atlas;
 import de.atlasmc.AtlasNode;
+import de.atlasmc.atlasnetwork.AtlasNetwork;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.atlasnetwork.ProfileHandler;
 import de.atlasmc.io.Packet;
@@ -57,7 +58,7 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 				packetOut.setVerifyToken(token);
 				handler.con.sendPacket(packet);
 			} else if (proxy.isSync()) {
-				ProfileHandler profiles = AtlasNode.getNetwork().getProfileHandler();
+				ProfileHandler profiles = AtlasNetwork.getProfileHandler();
 				AtlasPlayer player = profiles.getPlayer(packet.uuid);
 				if (player == null) {
 					// TODO request profile implementation

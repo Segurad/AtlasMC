@@ -59,5 +59,25 @@
 			<artifactId>atlas-node-bootstrap</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.atlas-project</groupId>
+			<artifactId>atlas-network-core-master</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.atlas-project</groupId>
+			<artifactId>atlas-network-core-minion</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.atlas-project</groupId>
+			<artifactId>atlas-node-core</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.atlas-project</groupId>
+			<artifactId>atlas-master-core</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>

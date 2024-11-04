@@ -3,13 +3,5 @@ node-groups:
 - test-group
 server-groups:
 - test-group
-is-master: true
-host: atlasmaster.mynetwork.org
-port: 666
-master:
-  database:
-    database: atlas
-    host: localhost
-    port: 3306
-    user: atlas
-    password: atlas
+proxy-configs:
+- test-config

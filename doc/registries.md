@@ -22,10 +22,10 @@ Registries are the main way of providing funktionality for Atlas itself and Plug
 
 ```yaml
 <registrykey>:
-- type: my.registry.entry
-  key: my:configurationserializablekey
-  configuration: # <optional> uses configuration for construction on ConfigurationSerializable
-    param1: value1
+  my:configurationserializable:
+    type: my.registry.entry 
+    configuration: # <optional> uses configuration for construction on ConfigurationSerializable
+      param1: value1
 ```
 
 ## List of atlas registries:

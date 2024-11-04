@@ -242,16 +242,6 @@ public class CoreChunk implements Chunk {
 	}
 
 	@Override
-	public Collection<Entity> getEntitiesByClasses(@SuppressWarnings("unchecked") Class<? extends Entity>... classes) {
-		return world.getEntityTracker().getEntitesByClasses(x, z, classes);
-	}
-
-	@Override
-	public <C extends Collection<Entity>> C getEntitiesByClasses(C entities, @SuppressWarnings("unchecked") Class<? extends Entity>... classes) {
-		return world.getEntityTracker().getEntitiesByClasses(x, z, entities, classes);
-	}
-
-	@Override
 	public World getWorld() {
 		return world;
 	}
@@ -301,7 +291,7 @@ public class CoreChunk implements Chunk {
 
 	@Override
 	public Entity getEntity(int entityID) {
-		return world.getEntityTracker().getEntity(x, z, entityID);
+		return world.getEntityTracker().getEntity(entityID);
 	}
 
 	@Override

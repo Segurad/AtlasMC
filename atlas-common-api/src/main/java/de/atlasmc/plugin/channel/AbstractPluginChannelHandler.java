@@ -1,20 +1,17 @@
-package de.atlascore.plugin.channel;
+package de.atlasmc.plugin.channel;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.plugin.channel.PluginChannel;
-import de.atlasmc.plugin.channel.PluginChannelException;
-import de.atlasmc.plugin.channel.PluginChannelHandler;
 import io.netty.buffer.ByteBuf;
 
-public abstract class CoreAbstractPluginChannelHandler implements PluginChannelHandler {
+public abstract class AbstractPluginChannelHandler implements PluginChannelHandler {
 
 	private Map<String, PluginChannel> channels;
 	
-	public CoreAbstractPluginChannelHandler() {
+	public AbstractPluginChannelHandler() {
 		channels = new ConcurrentHashMap<>();
 	}
 	
@@ -70,7 +67,7 @@ public abstract class CoreAbstractPluginChannelHandler implements PluginChannelH
 	 * @return
 	 */
 	protected PluginChannel createChannel(NamespacedKey channelName) {
-		return new CorePluginChannel(this, channelName);
+		return new SimplePluginChannel(this, channelName);
 	}
 	
 	/**

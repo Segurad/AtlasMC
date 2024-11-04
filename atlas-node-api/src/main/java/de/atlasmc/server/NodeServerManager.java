@@ -17,4 +17,12 @@ public interface NodeServerManager {
 
 	NodeServer deployServer(ServerGroup group);
 
+	boolean registerServerGroup(ServerGroup group);
+	
+	boolean unregisterServerGroup(ServerGroup group);
+	
+	Collection<ServerGroup> getServerGroups();
+	
+	ServerGroup getServerGroup(String name);
+
 }

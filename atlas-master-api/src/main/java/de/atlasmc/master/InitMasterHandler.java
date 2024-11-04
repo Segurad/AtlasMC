@@ -4,7 +4,7 @@ import de.atlasmc.plugin.startup.StartupContext;
 import de.atlasmc.plugin.startup.StartupHandlerRegister;
 import de.atlasmc.plugin.startup.StartupStageHandler;
 
-@StartupHandlerRegister({ "init-master" })
+@StartupHandlerRegister({ StartupContext.INIT_MASTER })
 class InitMasterHandler implements StartupStageHandler {
 
 	@Override

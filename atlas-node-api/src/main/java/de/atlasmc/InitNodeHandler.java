@@ -1,8 +1,10 @@
 package de.atlasmc;
 
 import de.atlasmc.plugin.startup.StartupContext;
+import de.atlasmc.plugin.startup.StartupHandlerRegister;
 import de.atlasmc.plugin.startup.StartupStageHandler;
 
+@StartupHandlerRegister({ StartupContext.INIT_NODE })
 class InitNodeHandler implements StartupStageHandler {
 
 	@Override

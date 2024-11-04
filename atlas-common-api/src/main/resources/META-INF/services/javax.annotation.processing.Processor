@@ -1,2 +1,2 @@
 de.atlasmc.registry.RegistryProcessor
-de.atlasmc.plugin.StartupHandlerRegister
+de.atlasmc.plugin.startup.StartupHandlerRegisterProcessor

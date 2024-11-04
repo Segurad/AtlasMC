@@ -70,7 +70,7 @@ public class CoreServerManager implements ServerManager, Tickable {
 	}
 
 	@Override
-	public Collection<ServerGroup> getServerGroups(String... names) {
+	public Collection<ServerGroup> getServerGroups(Collection<String> names) {
 		ArrayList<ServerGroup> groups = null;
 		for (String name : names) {
 			ServerGroup group = this.serverGroups.get(name);

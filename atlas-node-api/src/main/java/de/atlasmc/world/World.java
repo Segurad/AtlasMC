@@ -25,10 +25,6 @@ public interface World extends Tickable {
 	@NotNull
 	<T extends Entity> Collection<T> getEntitiesByClass(Class<T> clazz);
 
-	@SuppressWarnings("unchecked")
-	@NotNull
-	Collection<Entity> getEntitesByClasses(Class<? extends Entity>... classes);
-
 	@NotNull
 	String getName();
 	

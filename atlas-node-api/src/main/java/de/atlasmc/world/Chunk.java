@@ -177,10 +177,6 @@ public interface Chunk extends Tickable {
 	 */
 	void setBlockDataAt(BlockData data, int x, int y, int z);
 	
-	Collection<Entity> getEntitiesByClasses(@SuppressWarnings("unchecked") Class<? extends Entity>... classes);
-	
-	<C extends Collection<Entity>> C getEntitiesByClasses(C entities, @SuppressWarnings("unchecked") Class<? extends Entity>... classes);
-	
 	/**
 	 * Returns the current status of this Chunk
 	 * @return {@link ChunkStatus}

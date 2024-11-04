@@ -53,7 +53,7 @@ public class EntityTypeLoader {
 				if (!Entity.class.isAssignableFrom(entityClass))
 					throw new IllegalArgumentException("Entity class is not assignable from de.atlasmc.entity.Entity: " + entityClass.getName());
 				@SuppressWarnings("unchecked")
-				EntityType type = new EntityType(NamespacedKey.of(name), id, (Class<? extends Entity>) entityClass);
+				EntityType type = new EntityType(null, NamespacedKey.of(name), id, (Class<? extends Entity>) entityClass);
 				if (var != null) {
 					try {
 						Field field = EntityType.class.getDeclaredField(var);
