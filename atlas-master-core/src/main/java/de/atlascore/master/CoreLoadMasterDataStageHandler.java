@@ -14,8 +14,6 @@ import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import javax.swing.ImageIcon;
-
 import de.atlascore.atlasnetwork.CoreNetworkInfo;
 import de.atlasmc.Atlas;
 import de.atlasmc.atlasnetwork.NetworkInfo;

@@ -37,6 +37,34 @@ public final class MathUtil {
 		((z & 0x3FFFFFF) << 12) |
 		(y & 0xFFF);
 	}
+	
+	/**
+	 * 
+	 * @param chunkX the chunk x coordinate
+	 * @param chunkZ the chunk z coordinate
+	 * @return
+	 */
+	public static long toChunkPosition(int chunkX, int chunkZ) {
+		return (((long) chunkX) << 32) | chunkZ;
+	}
+	
+	public static long coordinatesToChunkPosition(double x, double z) {
+		return (((long) (((int)x) >> 4)) << 32) | (((int)z) >> 4);
+	}
+	
+	public static long coordinatesToChunkPosition(int x, int z) {
+		return (((long) (x >> 4)) << 32) | (z >> 4);
+	}
+	
+	public static int toChunkCoordinate(double value) {
+		int c = (int) value;
+		c >>= 4;
+		return c;
+	}
+	
+	public static int toChunkCoordinate(int value) {
+		return value >> 4;
+	}
 
 	public static long toPosition(double x, double y, double z) {
 		return toPosition(floor(x), floor(y),  floor(z));

@@ -32,13 +32,13 @@ import de.atlasmc.world.ChunkProvider;
 import de.atlasmc.world.ChunkProviderFactory;
 import de.atlasmc.world.ChunkViewer;
 import de.atlasmc.world.Dimension;
-import de.atlasmc.world.EntityTracker;
-import de.atlasmc.world.EntityTrackerFactory;
 import de.atlasmc.world.PlayerChunkListener;
 import de.atlasmc.world.World;
 import de.atlasmc.world.WorldBuilder;
 import de.atlasmc.world.WorldEvent;
 import de.atlasmc.world.WorldFlag;
+import de.atlasmc.world.entitytracker.EntityTracker;
+import de.atlasmc.world.entitytracker.EntityTrackerFactory;
 
 public class CoreWorld implements World {
 	

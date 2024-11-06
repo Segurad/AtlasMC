@@ -19,7 +19,7 @@ import de.atlasmc.util.nbt.CustomTagContainer;
 import de.atlasmc.util.nbt.NBTHolder;
 import de.atlasmc.world.Chunk;
 import de.atlasmc.world.World;
-import de.atlasmc.world.EntityTracker.Perception;
+import de.atlasmc.world.entitytracker.EntityPerception;
 
 public interface Entity extends NBTHolder, Nameable, Tickable {
 
@@ -275,12 +275,16 @@ public interface Entity extends NBTHolder, Nameable, Tickable {
 	
 	ViewerSet<Entity, Player> getViewers();
 	
-	Perception<?> getPerception();
+	EntityPerception getPerception();
 	
-	void setPerception(Perception<?> perception);
+	void setPerception(EntityPerception perception);
 	
 	double getPerceptionDistance();
 	
 	void setPerceptionDistance(double distance);
+	
+	void setTicking(boolean ticking);
+
+	boolean isTicking();
 	
 }

@@ -43,8 +43,8 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.tag.NBT;
 import de.atlasmc.world.Chunk;
 import de.atlasmc.world.World;
-import de.atlasmc.world.EntityTracker.Perception;
-import de.atlasmc.world.EntityTracker.TrackerBinding;
+import de.atlasmc.world.entitytracker.EntityPerception;
+import de.atlasmc.world.entitytracker.TrackerBinding;
 
 public class CoreEntity extends AbstractNBTBase implements Entity {
 	
@@ -199,8 +199,9 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	protected final Location oldLoc;
 	private Chunk chunk;
 	private List<String> scoreboardTags;
-	private Perception<?> perception;
+	private EntityPerception perception;
 	private double perceptionDistance;
+	private boolean ticking;
 	
 	// Update flags
 	private boolean teleported;
@@ -215,6 +216,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	public CoreEntity(EntityType type, UUID uuid) {
 		this.removed = true;
 		this.aremoved = true;
+		this.ticking = true;
 		this.type = type;
 		this.uuid = uuid;
 		this.loc = new Location(null, 0, 0, 0);
@@ -658,7 +660,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 		if (passengers != null) 
 			passengers.clear();
 		this.loc.set(world, x, y, z, yaw, pitch);
-		tracker = world.getEntityTracker().register(this, x, y ,z, perception);
+		tracker = world.getEntityTracker().register(this, perception);
 		chunk = getWorld().getChunk(loc);
 		fallDistance = 0;
 		fire = 0;
@@ -831,12 +833,12 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	}
 
 	@Override
-	public Perception<?> getPerception() {
+	public EntityPerception getPerception() {
 		return perception;
 	}
 
 	@Override
-	public void setPerception(Perception<?> perception) {
+	public void setPerception(EntityPerception perception) {
 		this.perception = perception;
 		if (tracker != null)
 			tracker.updatePerception(perception);
@@ -851,7 +853,20 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	public void setPerceptionDistance(double distance) {
 		this.perceptionDistance = distance;
 		if (tracker != null)
-			tracker.updatePerceptionDistance(distance);
+			tracker.updatePerceptionDistance();
+	}
+	
+	@Override
+	public void setTicking(boolean ticking) {
+		this.ticking = ticking;
+		TrackerBinding tracker = this.tracker;
+		if (tracker != null)
+			tracker.updateTicking(ticking);
+	}
+	
+	@Override
+	public boolean isTicking() {
+		return ticking;
 	}
 	
 }

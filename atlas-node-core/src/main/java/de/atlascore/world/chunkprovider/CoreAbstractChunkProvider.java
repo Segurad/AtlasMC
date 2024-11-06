@@ -4,6 +4,7 @@ import de.atlascore.block.CoreBlockAccess;
 import de.atlasmc.Location;
 import de.atlasmc.block.Block;
 import de.atlasmc.block.data.BlockData;
+import de.atlasmc.util.MathUtil;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
@@ -34,7 +35,7 @@ public abstract class CoreAbstractChunkProvider implements ChunkProvider {
 	@Override
 	public Chunk getChunk(int x, int z, boolean load) {
 		// X | Z
-		final long pos = x << 32 | z;
+		final long pos = MathUtil.toChunkPosition(x, z);
 		Chunk chunk = getCachedChunk(pos, x, z);
 		if (chunk != null)
 			return chunk;
@@ -63,7 +64,7 @@ public abstract class CoreAbstractChunkProvider implements ChunkProvider {
 	@Override
 	public Future<Chunk> getChunkLater(int x, int z) {
 		// X | Z
-		final long pos = x << 32 | z;
+		final long pos = MathUtil.toChunkPosition(x, z);
 		Chunk chunk = getCachedChunk(pos, x, z);
 		if (chunk != null)
 			return new CompleteFuture<>(chunk);

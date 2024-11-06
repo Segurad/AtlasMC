@@ -10,6 +10,7 @@ import de.atlasmc.util.Pair;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.InvalidConfigurationException;
+import de.atlasmc.world.entitytracker.EntityTrackerFactory;
 
 public class WorldBuilder implements Builder<World> {
 

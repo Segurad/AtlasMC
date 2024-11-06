@@ -16,6 +16,7 @@ import de.atlasmc.server.LocalServer;
 import de.atlasmc.tick.Tickable;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
+import de.atlasmc.world.entitytracker.EntityTracker;
 
 public interface World extends Tickable {
 
