@@ -69,6 +69,8 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 	@Override
 	public V get(Object key) {
 		final CacheEntry<K, V> entry = map.get(key);
+		if (entry == null)
+			return null;
 		final int currentTick = this.currentTick;
 		V value = entry.value;
 		if (value == null || entry.newttl < currentTick) {
@@ -111,8 +113,10 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 		int currentTick = this.currentTick;
 		CacheEntry<K, V> newEntry = new CacheEntry<>(key, value, ttl, ttl + currentTick, refQueue);
 		CacheEntry<K, V> oldEntry = map.put(key, newEntry);
-		ttlList.remove(oldEntry);
 		insertTTL(newEntry);
+		if (oldEntry == null)
+			return null;
+		ttlList.remove(oldEntry);
 		if (oldEntry.newttl < currentTick)
 			return null;
 		return oldEntry.value;
@@ -121,6 +125,8 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 	@Override
 	public V remove(Object key) {
 		CacheEntry<K, V> entry = map.remove(key);
+		if (entry == null)
+			return null;
 		if (entry.newttl < currentTick)
 			return null;
 		return entry.ref.get();
@@ -175,12 +181,13 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 		CacheEntry<K, V> entry = null;
 		int ttl = insert.ttl;
 		while ((entry = it.next()) != null) {
-			if (entry.newttl <= ttl) {
+			if (entry.newttl >= ttl) {
 				it.addBefor(insert);
 				return;
 			}
 		}
-		ttlList.add(entry);
+		// no bigger time found so add at end
+		ttlList.add(insert);
 	}
 
 	private static class EntrySet<K, V> extends AbstractSet<Entry<K, V>> {
@@ -212,7 +219,7 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 		
 		public EntryIterator(MapCache<K, V> cache) {
 			this.cache = cache;
-			it = cache.entrySet().iterator();
+			it = cache.map.entrySet().iterator();
 		}
 
 		@Override

@@ -141,10 +141,9 @@ public class ServerHandlerList extends HandlerList {
 				if (ref.refersTo(null))
 					continue;
 				HandlerList h = ref.get();
-				if (!(h instanceof ServerHandlerList)) 
+				if (!(h instanceof ServerHandlerList list)) 
 					continue;
-				ServerHandlerList sh = (ServerHandlerList) h;
-				sh.serverExecutors.remove(server);
+				list.serverExecutors.remove(server);
 			}
 		}
 	}

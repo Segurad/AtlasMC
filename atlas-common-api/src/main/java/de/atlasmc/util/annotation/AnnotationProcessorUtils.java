@@ -45,5 +45,18 @@ public class AnnotationProcessorUtils {
         }
         return matchingAnnotations;
     }
+    
+    public static String[] asStringArray(Object value) {
+		String[] array;
+		if (value instanceof List) {
+		    List<?> list = (List<?>) value;
+		    array = list.stream().map(Object::toString).toArray(String[]::new);
+		} else if (value instanceof String[]) {
+		    array = (String[]) value;
+		} else {
+		    throw new IllegalArgumentException("Unsupported annotation value type: " + (value != null ? value.getClass() : "null"));
+		}
+		return array;
+    }
 
 }

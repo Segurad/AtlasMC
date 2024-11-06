@@ -35,17 +35,23 @@ public class AbstractFuture<V> implements Future<V> {
 
 	@Override
 	public V get() throws InterruptedException, ExecutionException {
-		if (isDone())
-			return result;
-		synchronized (this) {
-			if (isDone())
-				return result;
-			wait();
-			Throwable cause = this.cause;
-			if (cause != null)
-				throw new ExecutionException(cause);
-			return result;
+		if (isDone()) {
+			return resultOrThrow();
 		}
+		synchronized (this) {
+			if (isDone()) {
+				return resultOrThrow();
+			}
+			wait();
+			return resultOrThrow();
+		}
+	}
+	
+	private V resultOrThrow() throws ExecutionException {
+		Throwable cause = this.cause;
+		if (cause != null)
+			throw new ExecutionException(cause);
+		return result;
 	}
 
 	@Override

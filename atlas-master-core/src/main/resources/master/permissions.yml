@@ -1,0 +1,26 @@
+groups:
+- name: User
+  sort-weight: 0
+  power: 0
+  default: true
+  prefix: "User"
+#  suffix: "Suffix"
+  chat-color: "&f"
+  name-color: "&f"
+#  permissions:
+#  - "some.permission:value"
+#  context-permissions:
+#    context-key:
+#      context-value:
+#      - "some.context.permission:value"
+#  context:
+#    context-key: context-value
+- name: Admin
+  sort-weight: 666
+  power: 666
+  prefix: "&4Admin"
+  chat-color: "&3"
+  name-color: "&4"
+  permissions:
+  - "atlas.join.maintenance"
+  - "atlas.join.full"

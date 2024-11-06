@@ -101,13 +101,24 @@ public class ConcurrentLinkedList<E> implements Collection<E> {
 		node.removed = true;
 		decrementCount();
 		Node<E> prev = prevValid(node), next = nextValid(node);
-		if (prev != null) prev.next = next;
-		if (next != null) next.prev = prev;
-		if (node == head) updateHead(next);
-		if (node == tail) updateTail(prev);
+		if (prev != null) 
+			prev.next = next;
+		if (next != null) 
+			next.prev = prev;
+		if (node == head) 
+			updateHead(next);
+		if (node == tail) 
+			updateTail(prev);
 	}
 	
+	/**
+	 * Returns the next valid node or null of none
+	 * @param node
+	 * @return node or null
+	 */
 	private Node<E> nextValid(Node<E> node) {
+		if (node == null)
+			return null;
 		node = node.next;
 		while (node != null) {
 			if (!node.removed) return node;
@@ -116,19 +127,35 @@ public class ConcurrentLinkedList<E> implements Collection<E> {
 		return null;
 	}
 	
+	/**
+	 * Returns the previous valid node or null of none
+	 * @param node
+	 * @return node or null
+	 */
 	private Node<E> prevValid(Node<E> node) {
+		if (node == null)
+			return null;
 		node = node.prev;
 		while (node != null) {
-			if (!node.removed) return node;
+			if (!node.removed) 
+				return node;
 			node = node.prev;
 		}
 		return null;
 	}
 	
+	/**
+	 * Sets the head node to the given node
+	 * @param node
+	 */
 	private void updateHead(Node<E> node) {
 		head = node;
 	}
 	
+	/**
+	 * Sets the tail node to the given node
+	 * @param node
+	 */
 	private void updateTail(Node<E> node) {
 		tail = node;
 	}
@@ -150,31 +177,26 @@ public class ConcurrentLinkedList<E> implements Collection<E> {
 	private synchronized void insertAfter(Node<E> node, E entry) {
 		if (entry == null)
 			throw new IllegalArgumentException("Entry can not be null!");
-		if (node.removed) 
-			node = prevValid(node);
 		if (node == null) {
 			addFirst(entry);
 			return;
 		}
+		if (node.removed) {
+			node = prevValid(node);
+		}
 		Node<E> next = nextValid(node);
 		Node<E> newNode = new Node<>(entry, node, next);
 		node.next = newNode;
-		next.prev = newNode;
+		if (next != null) {
+			next.prev = newNode;
+		} else {
+			updateTail(newNode);
+		}
 		incrementCount();
 	}
 	
 	private synchronized void insertBefor(Node<E> node, E entry) {
-		if (node.removed) 
-			node = nextValid(node);
-		if (node == null) {
-			add(entry);
-			return;
-		}
-		Node<E> prev = prevValid(node);
-		Node<E> newNode = new Node<>(entry, prev, node);
-		node.prev = newNode;
-		prev.next = newNode;
-		incrementCount();
+		insertAfter(prevValid(node), entry);
 	}
 	
 	private synchronized void incrementCount() {

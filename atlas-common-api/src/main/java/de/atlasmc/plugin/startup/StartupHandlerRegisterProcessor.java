@@ -51,15 +51,7 @@ public class StartupHandlerRegisterProcessor extends AbstractProcessor {
 				for (AnnotationMirror mirror : annotationMirrors) {
 					Map<String, Object> values = AnnotationProcessorUtils.getAnnotationValues(mirror, processingEnv);
 					Object value = values.get("value");
-					String[] stages;
-					if (value instanceof List) {
-					    List<?> list = (List<?>) value;
-					    stages = list.stream().map(Object::toString).toArray(String[]::new);
-					} else if (value instanceof String[]) {
-					    stages = (String[]) value;
-					} else {
-					    throw new IllegalArgumentException("Unsupported annotation value type: " + (value != null ? value.getClass() : "null"));
-					}
+					String[] stages = AnnotationProcessorUtils.asStringArray(value);
 					for (String stage : stages) {
 						stage = stage.substring(1, stage.length() - 1);
 						List<String> handlers = startup.getStringList(stage);

@@ -33,6 +33,7 @@ public class AtlasMaster {
 			logger = builder.getLogger();
 			permissionManager = builder.getPermissionManager();
 			profileManager = builder.getProfileManager();
+			database = builder.getDatabase();
 		}
 	}
 	

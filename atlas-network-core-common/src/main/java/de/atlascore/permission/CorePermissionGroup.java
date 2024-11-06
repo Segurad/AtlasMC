@@ -136,7 +136,7 @@ public class CorePermissionGroup extends CorePermissionContextHolder implements 
 	public void setChatColor(Color color) {
 		if (this.chatColor == color)
 			return;
-		if (color != null && this.chatColor.equals(color))
+		if (color != null && color.equals(this.chatColor))
 			return;
 		this.chatColor = color;
 		groupChanged = true;
@@ -161,7 +161,7 @@ public class CorePermissionGroup extends CorePermissionContextHolder implements 
 	public void setNameColor(Color color) {
 		if (this.nameColor == color)
 			return;
-		if (color != null && this.nameColor.equals(color))
+		if (color != null && color.equals(this.nameColor))
 			return;
 		this.nameColor = color;
 		groupChanged = true;

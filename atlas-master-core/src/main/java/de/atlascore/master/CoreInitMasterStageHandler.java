@@ -1,6 +1,5 @@
 package de.atlascore.master;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,9 +9,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
@@ -32,6 +28,7 @@ import de.atlasmc.util.FileUtils;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
 import de.atlasmc.util.sql.SQLConnectionPool;
+import de.atlasmc.util.sql.ScriptRunner;
 
 @StartupHandlerRegister({ StartupContext.INIT_MASTER })
 class CoreInitMasterStageHandler implements StartupStageHandler {
@@ -39,11 +36,11 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 	private static final int MIN_SCHEMA_VERSION = 1;
 	private static final int CURRENT_SCHEMA_VERSION = 1;
 	private static final int MAX_SCHEMA_VERSION = 1000;
-	
+
 	private Log log;
 	private String dbName;
 	private SQLConnectionPool con;
-	
+
 	@Override
 	public void handleStage(StartupContext context) {
 		log = context.getLogger();
@@ -96,17 +93,19 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 				context.fail(e);
 			}
 		}
-		
+
+		Log masterLogger = Logging.getLogger("Atlas-Master", "Atlas-Master");
+		masterLogger.sendToConsole(true);
 		AtlasMasterBuilder builder = context.getContext("builder");
-		builder.setLogger(Logging.getLogger("Atlas-Master", "Atlas-Master"))
-			.setDatabase(con)
-			.setNodeManager(new CoreNodeManager())
-			.setProxyManager(new CoreProxyManager())
-			.setServerManager(new CoreServerManager())
-			.setProfileManager(new CoreSQLProfileManager())
-			.setPermissionManager(new CoreSQLPermissionManager());
+		builder.setLogger(masterLogger)
+				.setDatabase(con)
+				.setNodeManager(new CoreNodeManager())
+				.setProxyManager(new CoreProxyManager())
+				.setServerManager(new CoreServerManager())
+				.setProfileManager(new CoreSQLProfileManager())
+				.setPermissionManager(new CoreSQLPermissionManager());
 	}
-	
+
 	private SQLConnectionPool getDBConnection(ConfigurationSection dbConfig) {
 		dbName = dbConfig.getString("database");
 		String dbHost = dbConfig.getString("host");
@@ -133,13 +132,14 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 		log.info("Database connection established");
 		return new SQLConnectionPool(src, poolMinSize, poolMaxIdleCount, poolMaxSize, poolIdleTimeout);
 	}
-	
+
 	private boolean prepareDB() {
 		Connection con = null;
 		boolean prepared = false;
 		try {
 			con = this.con.getConnection();
-			PreparedStatement stmt = con.prepareStatement("SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=? AND TABLE_NAME = 'atlas';");
+			PreparedStatement stmt = con.prepareStatement(
+					"SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=? AND TABLE_NAME = 'atlas';");
 			stmt.setString(1, dbName);
 			ResultSet result = stmt.executeQuery();
 			boolean schemaPresent = result.next();
@@ -152,14 +152,19 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 				if (result.next()) {
 					int schemaVersion = result.getInt(1);
 					if (schemaVersion >= MAX_SCHEMA_VERSION) {
-						log.error("Datase has a to up to date schema verion {} > {}! Please update Atlas or downgrade the schema version!", schemaVersion, CURRENT_SCHEMA_VERSION);
+						log.error(
+								"Datase has a to up to date schema verion {} > {}! Please update Atlas or downgrade the schema version!",
+								schemaVersion, CURRENT_SCHEMA_VERSION);
 					} else if (schemaVersion > CURRENT_SCHEMA_VERSION) {
 						log.warn("Database has newer schema version {} > {}!", schemaVersion, CURRENT_SCHEMA_VERSION);
 						prepared = true;
 					} else if (schemaVersion < MIN_SCHEMA_VERSION) {
-						log.error("Database has outdated incompatible schema version {} < {}! Atlas won't start until the schema is up to date!", schemaVersion, CURRENT_SCHEMA_VERSION);
+						log.error(
+								"Database has outdated incompatible schema version {} < {}! Atlas won't start until the schema is up to date!",
+								schemaVersion, CURRENT_SCHEMA_VERSION);
 					} else if (schemaVersion < CURRENT_SCHEMA_VERSION) {
-						log.warn("Database has outdated schema version {} < {}! (Please update your schema version)", schemaVersion, CURRENT_SCHEMA_VERSION);
+						log.warn("Database has outdated schema version {} < {}! (Please update your schema version)",
+								schemaVersion, CURRENT_SCHEMA_VERSION);
 						prepared = true;
 					} else {
 						prepared = true;
@@ -173,46 +178,18 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 				if (in == null) {
 					log.error("SQL init file not found!");
 				} else {
-					List<String> sqls = new ArrayList<>();
-					StringBuilder builder = new StringBuilder(1024);
-					BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-					boolean begin = true;
-					try {
-						String line = null;
-						while ((line = reader.readLine()) != null) {
-							if (line.startsWith("-- atlas")) {
-								if (begin) {
-									begin = false;
-									builder.append(line);
-									builder.append('\n');
-									continue;
-								}
-								sqls.add(builder.toString());
-								builder.setLength(0);
-							}
-							builder.append(line);
-							builder.append('\n');
-						}
-						if (builder.length() > 0)
-							sqls.add(builder.toString());
-					} catch (IOException e) {
-						log.error("Error while reading init sql script!", e);
-					}
-					if (!sqls.isEmpty()) {
-						Statement s = con.createStatement();
-						s.execute("BEGIN");
-						for (String sql : sqls) {
-							s.execute(sql);
-						}
-						s.close();
-						PreparedStatement verionStmt = con.prepareStatement("INSERT INTO atlas (atlas_version, schema_version, installation_date) VALUES (?, ?, ?)");
-						verionStmt.setString(1, Atlas.FULL_VERSION);
-						verionStmt.setInt(2, CURRENT_SCHEMA_VERSION);
-						verionStmt.setDate(3, new Date(System.currentTimeMillis()));
-						verionStmt.execute();
-						verionStmt.close();
-						prepared = true;
-					}
+					ScriptRunner runner = new ScriptRunner(con);
+					runner.setAutoCommit(true);
+					runner.setSendFullScript(false);
+					runner.runScript(new InputStreamReader(in));
+					PreparedStatement verionStmt = con.prepareStatement(
+							"INSERT INTO atlas (atlas_version, schema_version, installation_date) VALUES (?, ?, ?)");
+					verionStmt.setString(1, Atlas.FULL_VERSION);
+					verionStmt.setInt(2, CURRENT_SCHEMA_VERSION);
+					verionStmt.setDate(3, new Date(System.currentTimeMillis()));
+					verionStmt.execute();
+					verionStmt.close();
+					prepared = true;
 				}
 			}
 		} catch (SQLException e) {
@@ -221,7 +198,8 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 			if (con != null)
 				try {
 					con.close();
-				} catch (SQLException e) {}
+				} catch (SQLException e) {
+				}
 		}
 		return prepared;
 	}

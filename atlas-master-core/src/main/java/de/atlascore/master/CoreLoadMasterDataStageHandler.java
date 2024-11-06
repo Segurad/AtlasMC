@@ -14,6 +14,8 @@ import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import javax.swing.ImageIcon;
+
 import de.atlascore.atlasnetwork.CoreNetworkInfo;
 import de.atlasmc.Atlas;
 import de.atlasmc.atlasnetwork.NetworkInfo;
@@ -51,7 +53,7 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 	
 	@Override
 	public void handleStage(StartupContext context) {
-		log = AtlasMaster.getLogger();
+		log = context.getLogger();
 		File masterDir = new File(Atlas.getWorkdir(), "master");
 		FileUtils.ensureDir(masterDir);
 		File globalCfgFile = null;
@@ -85,7 +87,8 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 		try {
 			con = AtlasMaster.getDatabase().getConnection();
 			boolean load = true;
-			if (Boolean.getBoolean(System.getProperty("atlas.config.permission.reload"))) {
+			if (Boolean.getBoolean("atlas.config.permission.reload")) {
+				log.warn("Permission reload flag set!");
 				if (!dropPermissions(con)) {
 					con.close();
 					return;
@@ -114,6 +117,7 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 
 	
 	private void loadPermissionFile(File file) {
+		log.info("Loading permissions...");
 		Configuration cfg = null;
 		try {
 			cfg = YamlConfiguration.loadConfiguration(file);
@@ -134,7 +138,10 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 			PermissionGroup group;
 			try {
 				group = permManager.createGroup(name).get();
-			} catch (InterruptedException | ExecutionException e) {
+			} catch (InterruptedException e) {
+				log.error("Interrupted while creating group: " + name, e);
+				continue;
+			} catch (ExecutionException e) {
 				log.error("Error while creating group: " + name, e);
 				continue;
 			}
@@ -168,7 +175,10 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 						PermissionContext context;
 						try {
 							context = permManager.createContext(contextKey, contextKeyValue).get();
-						} catch (InterruptedException | ExecutionException e) {
+						} catch (InterruptedException e) {
+							log.error("Interrupted while creating permission context \"" + contextKey + ":" + contextKeyValue + "\" for group: " + name, e);
+							continue;
+						} catch (ExecutionException e) {
 							log.error("Error while creating permission context \"" + contextKey + ":" + contextKeyValue + "\" for group: " + name, e);
 							continue;
 						}
@@ -190,6 +200,7 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 				}
 			}
 			permManager.saveGroup(group);
+			log.debug("Added permission group: {}", group.getName());
 		}
 	}
 	

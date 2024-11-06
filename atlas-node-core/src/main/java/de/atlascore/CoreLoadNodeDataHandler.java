@@ -9,6 +9,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.atlascore.event.command.CoreCommandListener;
+import de.atlascore.event.inventory.CoreInventoryListener;
+import de.atlascore.event.player.CorePlayerListener;
+import de.atlascore.system.init.ContainerFactoryLoader;
+import de.atlascore.system.init.EntityTypeLoader;
+import de.atlascore.system.init.MaterialLoader;
+import de.atlascore.system.init.PotionEffectTypeLoader;
 import de.atlasmc.Atlas;
 import de.atlasmc.AtlasNode;
 import de.atlasmc.NamespacedKey;
@@ -17,6 +24,11 @@ import de.atlasmc.atlasnetwork.NodeConfig;
 import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.atlasnetwork.server.ServerManager;
+import de.atlasmc.event.Event;
+import de.atlasmc.event.EventExecutor;
+import de.atlasmc.event.HandlerList;
+import de.atlasmc.event.Listener;
+import de.atlasmc.event.MethodEventExecutor;
 import de.atlasmc.log.Log;
 import de.atlasmc.plugin.startup.StartupContext;
 import de.atlasmc.plugin.startup.StartupHandlerRegister;
@@ -96,6 +108,27 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 		for (ProxyConfig cfg : proxyConfigs.values()) {
 			proxyManager.createProxy(cfg);
 		}
+		// === init internals 
+		Log log = context.getLogger();
+		initDefaultExecutor(log, new CorePlayerListener());
+		initDefaultExecutor(log, new CoreInventoryListener());
+		initDefaultExecutor(log, new CoreCommandListener());
+		PotionEffectTypeLoader.loadPotionEffects();
+		try {
+			MaterialLoader.loadMaterial();
+		} catch (ClassNotFoundException e) {
+			log.error("Class not found while loading materials!", e);
+		} catch (IOException e) {
+			log.error("Error while loading materials!", e);
+		}
+		try {
+			EntityTypeLoader.loadEntityTypes();
+		} catch (ClassNotFoundException e) {
+			log.error("Class not found while loading entity types!", e);
+		} catch (IOException e) {
+			log.error("Error while loading entity types!", e);
+		}
+		ContainerFactoryLoader.loadContainerFactories();
 	}
 	
 	private void resolveServerGroups(Collection<String> serverGroupNames) {
@@ -132,6 +165,16 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 			if (proxyConfigs.containsKey(name))
 				continue;
 			log.warn("Unable to load proxy config: {}", name);
+		}
+	}
+	
+	private static void initDefaultExecutor(Log log, Listener listener) {
+		List<EventExecutor> exes = MethodEventExecutor.getExecutors(Atlas.getSystem(), listener);
+		for (EventExecutor exe : exes) {
+			Class<? extends Event> clazz = exe.getEventClass();
+			log.debug("Set default executor for event: {}", clazz.getSimpleName());
+			HandlerList handlers = HandlerList.getHandlerListOf(clazz);
+			handlers.setDefaultExecutor(exe);
 		}
 	}
 

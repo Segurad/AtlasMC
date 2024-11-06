@@ -182,6 +182,7 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager impl
 				value = loadFunction.apply(con, key);
 			} catch (Exception e) {
 				future.finish(null, e);
+				return future;
 			} finally {
 				if (con != null)
 					try {
@@ -223,6 +224,7 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager impl
 			success = deleteFunction.apply(con, key);
 		} catch (SQLException e) {
 			future.finish(null, e);
+			return;
 		} finally {
 			if (con != null)
 				try {
@@ -270,10 +272,13 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager impl
 		try {
 			con = AtlasMaster.getDatabase().getConnection();
 			value = loadFunction.apply(con, key);
-			if (value == null)
+			if (value == null) {
 				value = createFunction.apply(con, key);
+			}
 		} catch (SQLException e) {
+			e.printStackTrace();
 			future.finish(null, e);
+			return;
 		} finally {
 			if (con != null)
 				try {
@@ -329,9 +334,9 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager impl
 		PreparedStatement stmt = con.prepareStatement("SELECT group_id, name, sort_weight, prefix, suffix, chat_color, name_color, power, is_default FROM perm_groups WHERE name=?");
 		stmt.setString(1, name);
 		ResultSet result = stmt.executeQuery();
-		stmt.close();
-		if (result.next()) {
+		if (!result.next()) {
 			result.close();
+			stmt.close();
 			return null;
 		}
 		// load group
@@ -361,6 +366,7 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager impl
 		group.setPower(result.getInt(8));
 		group.setDefault(result.getBoolean(9));
 		result.close();
+		stmt.close();
 		// load permissions
 		stmt = con.prepareStatement("SELECT perm, power FROM perm_group_perm WHERE group_id=?");
 		stmt.setInt(1, groupID);

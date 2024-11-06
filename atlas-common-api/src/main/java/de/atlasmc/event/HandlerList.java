@@ -1,5 +1,7 @@
 package de.atlasmc.event;
 
+import java.lang.ref.Reference;
+import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -24,16 +26,16 @@ import de.atlasmc.util.annotation.ThreadSafe;
 public class HandlerList {
 	
 	protected static final List<WeakReference<HandlerList>> HANDLERS = new CopyOnWriteArrayList<>();
-	private static int lowID;
+	private static final ReferenceQueue<HandlerList> REF_QUEUE = new ReferenceQueue<>();
+	
 	
 	private final ConcurrentLinkedList<EventExecutor> globalExecutors;
-	private final int handlerID;
 	private EventExecutor defaultExecutor;
 	
 	public HandlerList() {
 		this.defaultExecutor = EventExecutor.NULL_EXECUTOR;
 		this.globalExecutors = new ConcurrentLinkedList<>();
-		handlerID = registerHandlerList();
+		registerHandlerList();
 	}
 	
 	/**
@@ -72,47 +74,18 @@ public class HandlerList {
 	}
 	
 	/**
-	 * Registers a HandlerList and returns the ID
-	 * @param handler
-	 * @return the handler's ID
+	 * Registers a HandlerList
 	 */
-	private final int registerHandlerList() {
-		synchronized (HANDLERS) {
-			final int size = HANDLERS.size();
-			int id = -1;
-			if (lowID == size) {
-				HANDLERS.add(lowID, new WeakReference<>(this));
-				id = lowID;
-				lowID++;
-			} else {
-				HANDLERS.set(lowID, new WeakReference<>(this));
-				id = lowID;
-				boolean result = false;
-				for (int i = lowID; i < size; i++) {
-					if (HANDLERS.get(i) != null) 
-						continue;
-					lowID = i;
-					result = true;
-					break;
-				}
-				if (!result) lowID = size;
-			}
-			return id;
-		}
+	private final void registerHandlerList() {
+		removeStaleEntries();
+		HANDLERS.add(new WeakReference<>(this, REF_QUEUE));
 	}
 	
-	@Override
-	protected void finalize() throws Throwable {
-		synchronized (HANDLERS) {
-			int id = this.getHandlerID();
-			HANDLERS.set(id, null);
-			if (id < lowID) 
-				lowID = id;
+	protected static final void removeStaleEntries() {
+		Reference<?> ref = null;
+		while ((ref = REF_QUEUE.poll()) != null) {
+			HANDLERS.remove(ref);
 		}
-	}
-	
-	public final int getHandlerID() {
-		return handlerID;
 	}
 	
 	public void registerExecutor(@NotNull EventExecutor executor) {
@@ -238,6 +211,7 @@ public class HandlerList {
 	 */
 	public static void unregisterListenerGlobal(@NotNull Listener listener) {
 		synchronized (HANDLERS) {
+			removeStaleEntries();
 			for (WeakReference<HandlerList> ref : HANDLERS) {
 				if (ref.refersTo(null))
 					continue;
@@ -252,6 +226,7 @@ public class HandlerList {
 	 */
 	public static void unregisterListenerGloabal(@NotNull PluginHandle plugin) {
 		synchronized (HANDLERS) {
+			removeStaleEntries();
 			for (WeakReference<HandlerList> ref : HANDLERS) {
 				if (ref.refersTo(null))
 					continue;

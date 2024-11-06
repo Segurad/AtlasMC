@@ -33,7 +33,7 @@ public class YamlConfiguration extends FileConfiguration {
 		dumpOptions.setDefaultFlowStyle(FlowStyle.BLOCK);
 		YamlRepresenter representer = new YamlRepresenter(dumpOptions);
 		representer.setDefaultFlowStyle(FlowStyle.BLOCK);
-		return new Yaml(representer);
+		return new Yaml(representer, dumpOptions);
 	}
 
 	@Override

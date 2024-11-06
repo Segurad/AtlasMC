@@ -62,6 +62,8 @@ public class AtlasNodeBuilder implements Builder<LocalAtlasNode> {
 	
 	@Override
 	public LocalAtlasNode build() {
+		if (factory == null)
+			throw new IllegalStateException("No node factory defined!");
 		return factory.createNode(this);
 	}
 
