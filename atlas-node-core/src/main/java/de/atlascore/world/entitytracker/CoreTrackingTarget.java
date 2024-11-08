@@ -44,7 +44,7 @@ class CoreTrackingTarget<T extends Entity> implements TrackingTarget<T> {
 			if (perception.source == entity || !perception.clazz.isInstance(entity))
 				continue;
 			int entityYChunk = MathUtil.toChunkCoordinate(entity.getY());
-			if (Math.abs(perception.chunkY - entityYChunk) > perception.perceptionDistance)
+			if (Math.abs(perception.chunkY - entityYChunk) > perception.perceptionRange)
 				continue;
 			perception.perception.add(entity);
 		}
@@ -64,7 +64,7 @@ class CoreTrackingTarget<T extends Entity> implements TrackingTarget<T> {
 			if (perception.source == entity || !perception.clazz.isInstance(entity))
 				continue;
 			int entityYChunk = MathUtil.toChunkCoordinate(entity.getY());
-			if (Math.abs(perception.chunkY - entityYChunk) > perception.perceptionDistance)
+			if (Math.abs(perception.chunkY - entityYChunk) > perception.perceptionRange)
 				continue;
 			perception.perception.remove(entity);
 		}
@@ -96,7 +96,8 @@ class CoreTrackingTarget<T extends Entity> implements TrackingTarget<T> {
 		int deltaX = perception.chunkX - newX;
 		int deltaY = perception.chunkY - newY;
 		int deltaZ = perception.chunkZ - newZ;
-		if (perception.perceptionDistance == 0) { // can only view current chunk
+		int maxRange = perception.perceptionRange;
+		if (maxRange <= 1) { // can only view current chunk
 			if (deltaX != 0 || deltaZ != 0) { // only update chunks if x z changes
 				CoreTrackedChunkEntry<T> oldChunk = chunks.get(MathUtil.toChunkPosition(perception.chunkX, perception.chunkZ)); 
 				if (oldChunk != null) {
@@ -109,9 +110,17 @@ class CoreTrackingTarget<T extends Entity> implements TrackingTarget<T> {
 			} else if (deltaY != 0) { // update entities in chunk if chunk section change
 				// TODO y change
 			}
+			return;
+		}
+		maxRange *= 2; // radius to diameter
+		if (deltaX > maxRange || deltaY > maxRange) {
+			// TODO rebuild full area
 		} else {
-			if (deltaX != 0 || deltaZ != 0) {
-				// TODO move region
+			if (deltaX != 0) {
+				// TODO move region X
+			}
+			if (deltaZ != 0) {
+				// TODO move region Z
 			}
 			if (deltaY != 0) {
 				// TODO rechecks all entity Y in area
@@ -121,8 +130,8 @@ class CoreTrackingTarget<T extends Entity> implements TrackingTarget<T> {
 	
 	void removePerception(CoreTrackedPerception<?> perception) {
 		perceptions.remove(perception);
-		final int maxDistance = perception.perceptionDistance;
-		
+		final int maxRange = perception.perceptionRange;
+		// TODO remove
 	}
 
 	@Override

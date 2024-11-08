@@ -12,14 +12,14 @@ public class CoreTrackedPerception<T extends Entity> {
 	int chunkX;
 	int chunkY;
 	int chunkZ;
-	int perceptionDistance;
+	int perceptionRange;
 	
 	@SuppressWarnings("unchecked")
 	public CoreTrackedPerception(EntityPerception perception, Entity source) {
 		this.perception = perception;
 		this.clazz = (Class<? extends T>) perception.tracking();
 		this.source = source;
-		this.perceptionDistance = (int) perception.getPerceptionDistance();
+		this.perceptionRange = (int) perception.range();
 	}
 	
 	public void register() {

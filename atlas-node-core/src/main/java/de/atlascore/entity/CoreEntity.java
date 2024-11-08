@@ -853,7 +853,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	public void setPerceptionDistance(double distance) {
 		this.perceptionDistance = distance;
 		if (tracker != null)
-			tracker.updatePerceptionDistance();
+			tracker.updatePerceptionRange();
 	}
 	
 	@Override

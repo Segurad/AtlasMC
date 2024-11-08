@@ -40,6 +40,9 @@ class CoreTrackedEntity<T extends Entity> implements TrackerBinding {
 		if (tracker == null)
 			throw new IllegalStateException("Tracker is unregistered!");
 		tracker.updatePosition(this, x, y, z);
+		this.x = x;
+		this.y = y;
+		this.z = z;
 		if (perception != null) {
 			perception.updatePosition(x, y, z);
 		}
@@ -53,10 +56,10 @@ class CoreTrackedEntity<T extends Entity> implements TrackerBinding {
 	}
 
 	@Override
-	public void updatePerceptionDistance() {
+	public void updatePerceptionRange() {
 		if (perception == null)
 			return;
-		this.perception.perceptionDistance = (int) this.perception.perception.getPerceptionDistance();
+		this.perception.perceptionRange = (int) this.perception.perception.range();
 		// TODO update perception
 	}
 

@@ -43,17 +43,37 @@ class CoreTrackedChunkEntry<T extends Entity> {
 		entitiesSize = size -1;
 	}
 	
+	public void updateEntityY(Entity entity, int oldY, int newY) {
+		final int size = perceptionsSize;
+		if (size == 0)
+			return;
+		final CoreTrackedPerception<?>[] perceptions = this.perceptions;
+		for (int i = 0; i < size; i++) {
+			CoreTrackedPerception<?> perception = perceptions[i];
+			if (perception.source == entity || !perception.clazz.isInstance(entity))
+				continue;
+			if (Math.abs(perception.chunkY - oldY) > perception.perceptionRange) {
+				if (Math.abs(perception.chunkY - newY) > perception.perceptionRange)
+					continue;
+				perception.perception.add(entity);
+			} else if (Math.abs(perception.chunkY - newY) > perception.perceptionRange) {
+				perception.perception.remove(entity);
+			}
+		}
+	}
+	
 	void addPerception(CoreTrackedPerception<?> perception, int chunkY) {
 		// add entities
 		final int size = this.entitiesSize;
 		final Entity[] entities = this.entities;
 		final EntityPerception p = perception.perception;
+		final int perceptionRange = perception.perceptionRange;
 		for (int i = 0; i < size; i++) {
 			Entity ent = entities[i];
 			if (perception.source == ent || !perception.clazz.isInstance(ent))
 				continue;
 			int entityYChunk = MathUtil.toChunkCoordinate(ent.getY());
-			if (Math.abs(perception.chunkY - entityYChunk) > perception.perceptionDistance)
+			if (Math.abs(chunkY - entityYChunk) > perceptionRange)
 				continue;
 			p.add(ent);
 		}
@@ -68,12 +88,13 @@ class CoreTrackedChunkEntry<T extends Entity> {
 		final int size = this.entitiesSize;
 		final Entity[] entities = this.entities;
 		final EntityPerception p = perception.perception;
+		final int perceptionRange = perception.perceptionRange;
 		for (int i = 0; i < size; i++) {
 			Entity ent = entities[i];
 			if (perception.source == ent || !perception.clazz.isInstance(ent))
 				continue;
 			int entityYChunk = MathUtil.toChunkCoordinate(ent.getY());
-			if (Math.abs(perception.chunkY - entityYChunk) > perception.perceptionDistance)
+			if (Math.abs(chunkY - entityYChunk) > perceptionRange)
 				continue;
 			p.remove(ent);
 		}

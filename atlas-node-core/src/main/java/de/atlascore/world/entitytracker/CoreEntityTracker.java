@@ -201,20 +201,32 @@ public class CoreEntityTracker implements EntityTracker {
 	void updatePosition(CoreTrackedEntity<?> entity, double x, double y, double z) {
 		long oldChunkIndex = MathUtil.coordinatesToChunkPosition(entity.x, entity.z);
 		long newChunkIndex = MathUtil.coordinatesToChunkPosition(x, z);
-		if (oldChunkIndex == newChunkIndex)
+		if (oldChunkIndex != newChunkIndex) {
+			Entity ent = entity.entity;
+			for (CoreTrackingTarget<?> target : fastTarget) {
+				if (!target.target.isInstance(entity))
+					continue;
+				@SuppressWarnings("unchecked")
+				CoreTrackingTarget<Entity> etrack = (CoreTrackingTarget<Entity>) target;
+				etrack.removeFromChunk(oldChunkIndex, ent);
+				etrack.addToChunk(newChunkIndex, ent);
+			}
 			return;
+		}
+		int oldY = MathUtil.toChunkCoordinate(entity.y);
+		int newY = MathUtil.toChunkCoordinate(y);
+		if (oldY == newY) {
+			return;
+		}
 		Entity ent = entity.entity;
 		for (CoreTrackingTarget<?> target : fastTarget) {
 			if (!target.target.isInstance(entity))
 				continue;
 			@SuppressWarnings("unchecked")
 			CoreTrackingTarget<Entity> etrack = (CoreTrackingTarget<Entity>) target;
-			etrack.removeFromChunk(oldChunkIndex, ent);
-			etrack.addToChunk(newChunkIndex, ent);
+			CoreTrackedChunkEntry<Entity> chunk = etrack.chunks.get(newChunkIndex);
+			chunk.updateEntityY(ent, oldY, newY);
 		}
-		entity.x = x;
-		entity.y = y;
-		entity.z = z;
 	}
 	
 	void removeEntity(CoreTrackedEntity<?> entity) {

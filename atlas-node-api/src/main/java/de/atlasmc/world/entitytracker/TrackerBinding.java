@@ -26,9 +26,9 @@ public interface TrackerBinding {
 	void updateTicking(boolean ticking);
 	
 	/**
-	 * Notifies the tracker that the perceptions distance has changed
+	 * Notifies the tracker that the perceptions range has changed
 	 */
-	void updatePerceptionDistance();
+	void updatePerceptionRange();
 	
 	/**
 	 * Unregisters this binding and so the entity from the tracker and makes it invalid
