@@ -1,7 +1,10 @@
 package de.atlasmc;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
+import de.atlasmc.util.NumberConversion;
 import de.atlasmc.util.annotation.NotNull;
 
 public class NamespacedKey {
@@ -13,12 +16,21 @@ public class NamespacedKey {
 	public static final String MINECRAFT = "minecraft";
 	public static final String ATLAS = "atlas";
 	
-	private final String key, namespace, combination;
-	private int hash;
+	private static final Map<String, NamespacedKey> CACHE;
+	
+	static {
+		String rawCacheSize = System.getProperty("de.atlasmc.namespacedkey.literalCacheSize");
+		int cacheSize = NumberConversion.toInt(rawCacheSize, 512);
+		CACHE = new ConcurrentHashMap<>(cacheSize);
+	}
+	
+	private final String key;
+	private final String namespace;
+	private final String combination;
 	
 	private NamespacedKey(String namespace, String key, String namespacedKey) {
 		this.key = key;
-		this.namespace = namespace;
+		this.namespace = namespace.intern();
 		this.combination = namespacedKey;
 	}
 	
@@ -74,13 +86,7 @@ public class NamespacedKey {
 
 	@Override
 	public int hashCode() {
-		if (hash != 0)
-			return hash;
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((key == null) ? 0 : key.hashCode());
-		result = prime * result + ((namespace == null) ? 0 : namespace.hashCode());
-		return hash = result;
+		return combination.hashCode();
 	}
 
 	@Override
@@ -92,15 +98,10 @@ public class NamespacedKey {
 		if (getClass() != obj.getClass())
 			return false;
 		NamespacedKey other = (NamespacedKey) obj;
-		if (key == null) {
-			if (other.key != null)
+		if (combination == null) {
+			if (other.combination != null)
 				return false;
-		} else if (!key.equals(other.key))
-			return false;
-		if (namespace == null) {
-			if (other.namespace != null)
-				return false;
-		} else if (!namespace.equals(other.namespace))
+		} else if (!combination.equals(other.combination))
 			return false;
 		return true;
 	}
@@ -108,6 +109,9 @@ public class NamespacedKey {
 	public static NamespacedKey of(String namespacedKey) {
 		if (namespacedKey == null)
 			throw new IllegalArgumentException("NamespacedKey can not be null!");
+		NamespacedKey k = CACHE.get(namespacedKey);
+		if (k != null)
+			return k;
 		int first = namespacedKey.indexOf(':');
 		if (first < 1 || !NAMESPACED_KEY_PATTERN.matcher(namespacedKey).matches())
 			throw new IllegalArgumentException("Invalid namespaced key: " + namespacedKey);
@@ -122,9 +126,27 @@ public class NamespacedKey {
 		if (key == null) 
 			throw new IllegalArgumentException("Name can not be null!");
 		String namespacedKey = namespace + ":" + key;
+		NamespacedKey k = CACHE.get(namespacedKey);
+		if (k != null)
+			return k;
 		if (!NAMESPACED_KEY_PATTERN.matcher(namespacedKey).matches())
 			throw new IllegalArgumentException("Invalid namespaced key: " + namespacedKey);
 		return new NamespacedKey(namespace, key, namespacedKey);
+	}
+	
+	public static NamespacedKey literal(String namespacedKey) {
+		if (namespacedKey == null)
+			throw new IllegalArgumentException("NamespacedKey can not be null!");
+		NamespacedKey k = CACHE.get(namespacedKey);
+		if (k != null)
+			return k;
+		k = of(namespacedKey);
+		k = CACHE.putIfAbsent(namespacedKey, k);
+		return k;
+	}
+	
+	public static void clearLiteralCache() {
+		CACHE.clear();
 	}
 
 }
