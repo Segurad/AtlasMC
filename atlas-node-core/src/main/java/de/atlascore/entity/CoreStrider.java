@@ -8,7 +8,6 @@ import de.atlasmc.entity.Strider;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -29,7 +28,7 @@ public class CoreStrider extends CoreAgeableMob implements Strider {
 	NBT_SADDLE = CharKey.literal("Saddle");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreAgeableMob.NBT_FIELDS);
+		NBT_FIELDS = CoreAgeableMob.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_SADDLE, (holder, reader) -> {
 			holder.setSaddle(reader.readByteTag() == 1);
 		});

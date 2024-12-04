@@ -9,7 +9,6 @@ import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -22,7 +21,7 @@ public class CoreMinecartHopper extends CoreAbstractMinecartContainer implements
 	// NBT_TRANSFER_COOLDOWN = "TransferCooldown"; TODO unnecessary
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreAbstractMinecartContainer.NBT_FIELDS);
+		NBT_FIELDS = CoreAbstractMinecartContainer.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_ENABLED, (holder, reader) -> {
 			holder.setEnabled(reader.readByteTag() == 1);
 		});

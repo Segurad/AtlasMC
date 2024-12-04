@@ -10,7 +10,7 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBlockData extends AbstractNBTBase implements BlockData {
 	
-	protected static final NBTFieldContainer<CoreBlockData> NBT_FIELDS = new NBTFieldContainer<>();
+	protected static final NBTFieldContainer<CoreBlockData> NBT_FIELDS = NBTFieldContainer.newContainer();
 	private final Material material;
 	
 	public CoreBlockData(Material material) {

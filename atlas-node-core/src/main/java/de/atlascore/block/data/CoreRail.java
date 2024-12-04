@@ -7,19 +7,18 @@ import java.util.Set;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Rail;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreRail extends CoreWaterlogged implements Rail {
 
-	protected static final ChildNBTFieldContainer<CoreRail> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreRail> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_SHAPE = CharKey.literal("shape");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreBlockData.NBT_FIELDS);
+		NBT_FIELDS = CoreBlockData.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_SHAPE, (holder, reader) -> {
 			holder.setShape(Shape.getByName(reader.readStringTag()));
 		});

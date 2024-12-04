@@ -8,14 +8,13 @@ import de.atlasmc.inventory.AbstractFurnaceInventory;
 import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreFurnace extends CoreAbstractContainerTile<AbstractFurnaceInventory> implements Furnace {
 
-	protected static final ChildNBTFieldContainer<CoreFurnace> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreFurnace> NBT_FIELDS;
 	
 	protected static final CharKey
 	BURN_TIME = CharKey.literal("BurnTime"),
@@ -27,7 +26,7 @@ public class CoreFurnace extends CoreAbstractContainerTile<AbstractFurnaceInvent
 	// RECIPE_AMOUNT_[INDEX] // Number of end products created by a recipe
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreAbstractContainerTile.NBT_FIELDS);
+		NBT_FIELDS = CoreAbstractContainerTile.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(BURN_TIME, (holder, reader) -> {
 			holder.getInventory().setFuelLevel(reader.readShortTag());
 		});

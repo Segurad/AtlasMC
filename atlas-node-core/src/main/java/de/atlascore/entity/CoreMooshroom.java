@@ -8,7 +8,6 @@ import de.atlasmc.entity.Mooshroom;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -27,7 +26,7 @@ public class CoreMooshroom extends CoreCow implements Mooshroom {
 	//NBT_EFFECT_DURATION = "EffectDuration";
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreCow.NBT_FIELDS);
+		NBT_FIELDS = CoreCow.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_TYPE, (holder, reader) -> {
 			holder.setVariant(Variant.getByNameID(reader.readStringTag()));
 		});

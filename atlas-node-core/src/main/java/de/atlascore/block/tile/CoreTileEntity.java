@@ -28,7 +28,7 @@ public class CoreTileEntity extends AbstractNBTBase implements TileEntity {
 	NBT_CUSTOM_NAME = CharKey.literal("CustomName");
 	
 	static {
-		NBT_FIELDS = new NBTFieldContainer<>();
+		NBT_FIELDS = NBTFieldContainer.newContainer();
 		NBT_FIELDS.setField(NBT_ID, (holder, reader) -> {
 			holder.setType(Material.getByName(reader.readStringTag()));
 		});

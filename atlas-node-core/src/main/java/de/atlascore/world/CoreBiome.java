@@ -56,7 +56,7 @@ public class CoreBiome extends AbstractNBTBase implements Biome {
 	NBT_TYPE = CharKey.literal("type");
 	
 	static {
-		NBT_FIELDS = new NBTFieldContainer<>();
+		NBT_FIELDS = NBTFieldContainer.newContainer();
 		NBT_FIELDS.setField(NBT_NAME, (holder, reader) -> {
 			holder.name = reader.readNamespacedKey();
 		});

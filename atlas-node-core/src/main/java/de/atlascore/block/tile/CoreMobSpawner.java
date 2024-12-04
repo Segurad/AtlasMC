@@ -7,13 +7,12 @@ import de.atlasmc.block.tile.MobSpawner;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreMobSpawner extends CoreTileEntity implements MobSpawner {
 
-	protected static final ChildNBTFieldContainer<CoreMobSpawner> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreMobSpawner> NBT_FIELDS;
 	
 	protected static final CharKey
 	DELAY = CharKey.literal("Delay"),
@@ -27,7 +26,7 @@ public class CoreMobSpawner extends CoreTileEntity implements MobSpawner {
 	SPAWN_RANGE = CharKey.literal("SpawnRange");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreTileEntity.NBT_FIELDS);
+		NBT_FIELDS = CoreTileEntity.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(SPAWN_DATA, (holder, reader) -> {
 			reader.readNextEntry();
 			EntityType type = null;

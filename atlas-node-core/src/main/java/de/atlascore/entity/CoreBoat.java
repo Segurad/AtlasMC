@@ -8,7 +8,6 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -31,7 +30,7 @@ public class CoreBoat extends CoreVehicle implements Boat {
 	NBT_TYPE = CharKey.literal("Type");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreVehicle.NBT_FIELDS);
+		NBT_FIELDS = CoreVehicle.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_TYPE, (holder, reader) -> {
 			holder.setBoatType(BoatType.getByNameID(reader.readStringTag()));
 		});

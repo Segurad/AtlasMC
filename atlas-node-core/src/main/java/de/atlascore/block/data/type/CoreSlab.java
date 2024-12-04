@@ -7,19 +7,18 @@ import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Slab;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreSlab extends CoreBlockData implements Slab {
 
-	protected static final ChildNBTFieldContainer<CoreSlab> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreSlab> NBT_FIELDS;
 	
 	protected static final CharKey
 	TYPE = CharKey.literal("type");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreBlockData.NBT_FIELDS);
+		NBT_FIELDS = CoreBlockData.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(TYPE, (holder, reader) -> {
 			holder.setType(Type.getByName(reader.readStringTag()));
 		});

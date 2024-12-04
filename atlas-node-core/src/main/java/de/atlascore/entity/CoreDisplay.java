@@ -13,7 +13,6 @@ import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -38,7 +37,7 @@ public class CoreDisplay extends CoreEntity implements Display {
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX + 15;
 	
-	protected static final ChildNBTFieldContainer<CoreDisplay> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreDisplay> NBT_FIELDS;
 	
 	private static final CharKey
 	NBT_BILLBOARD = CharKey.literal("billboard"),
@@ -61,7 +60,7 @@ public class CoreDisplay extends CoreEntity implements Display {
 	NBT_TRANSLATION = CharKey.literal("translation");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreEntity.NBT_FIELDS);
+		NBT_FIELDS = CoreEntity.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_BILLBOARD, (holder, reader) -> {
 			holder.setBillboard(Billboard.getByNameID(reader.readStringTag()));
 		});

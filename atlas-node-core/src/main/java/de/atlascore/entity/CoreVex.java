@@ -7,7 +7,6 @@ import de.atlasmc.entity.Vex;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 
 public class CoreVex extends CoreMob implements Vex {
@@ -26,7 +25,7 @@ public class CoreVex extends CoreMob implements Vex {
 	NBT_LIFE_TICKS = CharKey.literal("LifeTicks");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreMob.NBT_FIELDS);
+		NBT_FIELDS = CoreMob.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_LIFE_TICKS, (holder, reader) -> {
 			holder.setLifeTime(reader.readIntTag());
 		});

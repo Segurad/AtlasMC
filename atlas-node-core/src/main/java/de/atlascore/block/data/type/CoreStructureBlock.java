@@ -6,19 +6,18 @@ import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.StructureBlock;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreStructureBlock extends CoreBlockData implements StructureBlock {
 
-	protected static final ChildNBTFieldContainer<CoreStructureBlock> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreStructureBlock> NBT_FIELDS;
 	
 	protected static final CharKey
 	MODE = CharKey.literal("mode");
 
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreBlockData.NBT_FIELDS);
+		NBT_FIELDS = CoreBlockData.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(MODE, (holder, reader) -> {
 			holder.setMode(Mode.getByName(reader.readStringTag()));
 		});

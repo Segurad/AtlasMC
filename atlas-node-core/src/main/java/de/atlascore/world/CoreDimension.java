@@ -35,7 +35,7 @@ public class CoreDimension extends AbstractNBTBase implements Dimension {
 	NBT_HEIGHT = CharKey.literal("height");
 	
 	static {
-		NBT_FIELDS = new NBTFieldContainer<>();
+		NBT_FIELDS = NBTFieldContainer.newContainer();
 		NBT_FIELDS.setField(NBT_NAME, (holder, reader) -> {
 			holder.name = reader.readNamespacedKey();
 		});

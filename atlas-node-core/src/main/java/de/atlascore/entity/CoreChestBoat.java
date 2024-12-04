@@ -10,7 +10,6 @@ import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
@@ -18,7 +17,7 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreChestBoat extends CoreBoat implements ChestBoat {
 	
-	protected static final ChildNBTFieldContainer<CoreChestBoat> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreChestBoat> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_ITEMS = CharKey.literal("Items"),
@@ -26,7 +25,7 @@ public class CoreChestBoat extends CoreBoat implements ChestBoat {
 	NBT_LOOT_TABLE_SEED = CharKey.literal("LootTableSeed");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreBoat.NBT_FIELDS);
+		NBT_FIELDS = CoreBoat.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_ITEMS, (holder, reader) -> {
 			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {

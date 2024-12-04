@@ -10,14 +10,13 @@ import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreAllay extends CoreMob implements Allay {
 
-	protected static final ChildNBTFieldContainer<CoreAllay> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreAllay> NBT_FIELDS;
 	
 	private static final CharKey
 	NBT_CAN_DUPLICATE = CharKey.literal("CanDuplicate"),
@@ -25,7 +24,7 @@ public class CoreAllay extends CoreMob implements Allay {
 	NBT_INVENTORY = CharKey.literal("Inventory");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreMob.NBT_FIELDS);
+		NBT_FIELDS = CoreMob.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_CAN_DUPLICATE, (holder, reader) -> {
 			holder.setCanDuplicate(reader.readByteTag() == 1);
 		});

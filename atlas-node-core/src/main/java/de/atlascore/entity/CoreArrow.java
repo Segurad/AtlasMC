@@ -14,7 +14,6 @@ import de.atlasmc.potion.PotionData;
 import de.atlasmc.potion.PotionEffect;
 import de.atlasmc.potion.PotionEffectType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -39,7 +38,7 @@ public class CoreArrow extends CoreAbstractArrow implements Arrow {
 	NBT_POTION = CharKey.literal("Potion");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreAbstractArrow.NBT_FIELDS);
+		NBT_FIELDS = CoreAbstractArrow.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_CUSTOM_POTION_COLOR, (holder, reader) -> {
 			holder.setColor(reader.readIntTag());
 		});

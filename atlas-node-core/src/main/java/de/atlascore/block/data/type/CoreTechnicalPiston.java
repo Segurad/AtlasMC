@@ -6,19 +6,18 @@ import de.atlascore.block.data.CoreDirectional6Faces;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.TechnicalPiston;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTechnicalPiston extends CoreDirectional6Faces implements TechnicalPiston {
 
-	protected static final ChildNBTFieldContainer<CoreTechnicalPiston> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreTechnicalPiston> NBT_FIELDS;
 	
 	protected static final CharKey
 	TYPE = CharKey.literal("type");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreDirectional6Faces.NBT_FIELDS);
+		NBT_FIELDS = CoreDirectional6Faces.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(TYPE, (holder, reader) -> {
 			holder.setType(Type.getByName(reader.readStringTag()));
 		});

@@ -11,7 +11,6 @@ import de.atlasmc.block.tile.Beehive;
 import de.atlasmc.entity.Bee;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
@@ -20,7 +19,7 @@ import de.atlasmc.world.Chunk;
 
 public class CoreBeehive extends CoreTileEntity implements Beehive {
 
-	protected static final ChildNBTFieldContainer<CoreBeehive> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreBeehive> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_FLOWER_POS = CharKey.literal("FlowerPos"),
@@ -33,7 +32,7 @@ public class CoreBeehive extends CoreTileEntity implements Beehive {
 	NBT_ENTITY_DATA = CharKey.literal("EntityData");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreTileEntity.NBT_FIELDS);
+		NBT_FIELDS = CoreTileEntity.NBT_FIELDS.fork();
 		NBT_FIELDS.setContainer(NBT_FLOWER_POS)
 			.setField(NBT_X, (holder, reader)-> {
 				holder.setFlowerPosX(reader.readIntTag());

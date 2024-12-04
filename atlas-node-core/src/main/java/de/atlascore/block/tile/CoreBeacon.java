@@ -8,13 +8,12 @@ import de.atlasmc.inventory.BeaconInventory;
 import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBeacon extends CoreTileEntity implements Beacon {
 	
-	protected static final ChildNBTFieldContainer<CoreBeacon> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreBeacon> NBT_FIELDS;
 	
 	protected static final CharKey
 	LEVELS = CharKey.literal("Levels"),
@@ -22,7 +21,7 @@ public class CoreBeacon extends CoreTileEntity implements Beacon {
 	SECONDARY = CharKey.literal("Secondary");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreTileEntity.NBT_FIELDS);
+		NBT_FIELDS = CoreTileEntity.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(LEVELS, (holder, reader) -> {
 			holder.setLevel(reader.readIntTag());
 		});

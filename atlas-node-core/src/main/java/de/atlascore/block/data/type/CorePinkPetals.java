@@ -7,18 +7,17 @@ import de.atlascore.block.data.CoreDirectional4Faces;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.PinkPetals;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CorePinkPetals extends CoreDirectional4Faces implements PinkPetals {
 
-	protected static final ChildNBTFieldContainer<CorePinkPetals> NBT_FIELDS;
+	protected static final NBTFieldContainer<CorePinkPetals> NBT_FIELDS;
 	
 	private static final CharKey FLOWER_AMOUNT = CharKey.literal("flower_amount");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreDirectional4Faces.NBT_FIELDS);
+		NBT_FIELDS = CoreDirectional4Faces.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(FLOWER_AMOUNT, (holder, reader) -> {
 			holder.setFlowerAmount(reader.readIntTag());
 		});

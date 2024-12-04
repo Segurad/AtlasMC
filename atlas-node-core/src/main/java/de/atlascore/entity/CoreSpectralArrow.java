@@ -6,7 +6,6 @@ import java.util.UUID;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.SpectralArrow;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -18,7 +17,7 @@ public class CoreSpectralArrow extends CoreAbstractArrow implements SpectralArro
 	NBT_DURATION = CharKey.literal("Duration");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreAbstractProjectile.NBT_FIELDS);
+		NBT_FIELDS = CoreAbstractProjectile.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_DURATION, (holder, reader) -> {
 			holder.setDuration(reader.readIntTag());
 		});

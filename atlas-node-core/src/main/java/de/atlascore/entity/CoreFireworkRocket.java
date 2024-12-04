@@ -14,7 +14,6 @@ import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.meta.FireworkMeta;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -37,7 +36,7 @@ public class CoreFireworkRocket extends CoreAbstractProjectile implements Firewo
 	NBT_FIREWORK_ITEM = CharKey.literal("FireworkItem");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreAbstractProjectile.NBT_FIELDS);
+		NBT_FIELDS = CoreAbstractProjectile.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_LIFE, (holder, reader) -> {
 			holder.setLifeTime(reader.readIntTag());
 		});

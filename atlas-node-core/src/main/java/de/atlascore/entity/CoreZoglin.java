@@ -8,7 +8,6 @@ import de.atlasmc.entity.Zoglin;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -25,7 +24,7 @@ public class CoreZoglin extends CoreMob implements Zoglin {
 	NBT_IS_BABY = CharKey.literal("IsBaby");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreMob.NBT_FIELDS);
+		NBT_FIELDS = CoreMob.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_IS_BABY, (holder, reader) -> {
 			holder.setBaby(reader.readByteTag() == 1);
 		});

@@ -63,13 +63,13 @@ public class NBTIOSimpleTest {
 		testReader(reader, SIMPLE_TYPES_STRUCTURE);
 	}
 	
-	@SuppressWarnings("resource")
 	@Test
 	public void testNBTIOWriter() throws IOException {
 		ByteBuf buf = Unpooled.buffer(4096);
 		ByteBufOutputStream out = new ByteBufOutputStream(buf);
 		NBTIOWriter writer = new NBTIOWriter(out);
 		writer.writeNBT(SIMPLE_TYPES_STRUCTURE);
+		writer.close();
 		// load test buffer
 		InputStream in = NBTIOSimpleTest.class.getResourceAsStream("/nbt/simple_types.nbt");
 		ByteBuf testbuf = Unpooled.buffer();
@@ -77,12 +77,12 @@ public class NBTIOSimpleTest {
 		Assertions.assertEquals(testbuf, buf);
 	}
 	
-	@SuppressWarnings("resource")
 	@Test
 	public void testNBTNIOWriter() throws IOException {
 		ByteBuf buf = Unpooled.buffer(4096);
 		NBTNIOWriter writer = new NBTNIOWriter(buf);
 		writer.writeNBT(SIMPLE_TYPES_STRUCTURE);
+		writer.close();
 		// load test buffer
 		InputStream in = NBTIOSimpleTest.class.getResourceAsStream("/nbt/simple_types.nbt");
 		ByteBuf testbuf = Unpooled.buffer();
@@ -90,12 +90,12 @@ public class NBTIOSimpleTest {
 		Assertions.assertEquals(testbuf, buf);
 	}
 	
-	@SuppressWarnings("resource")
 	@Test
 	public void testSNBTWriter() throws IOException {
 		StringWriter stringWriter = new StringWriter();
 		SNBTWriter writer = new SNBTWriter(stringWriter);
 		writer.writeNBT(SIMPLE_TYPES_STRUCTURE);
+		writer.close();
 		
 		InputStream in = NBTIOSimpleTest.class.getResourceAsStream("/nbt/simple_types.snbt");
 		InputStreamReader reader = new InputStreamReader(in);

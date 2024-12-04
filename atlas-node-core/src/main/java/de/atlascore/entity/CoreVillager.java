@@ -13,7 +13,6 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
@@ -40,7 +39,7 @@ public class CoreVillager extends CoreAbstractVillager implements Villager {
 		NBT_XP = CharKey.literal("Xp");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreAbstractVillager.NBT_FIELDS);
+		NBT_FIELDS = CoreAbstractVillager.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_INVENTORY, (holder, reader) -> {
 			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {
@@ -66,12 +65,12 @@ public class CoreVillager extends CoreAbstractVillager implements Villager {
 			while (reader.getType() != TagType.TAG_END) {
 				final CharSequence value = reader.getFieldName();
 				if (NBT_PROFESSION.equals(value)) {
-					VillagerProfession prof = VillagerProfession.getByNameID(reader.readStringTag());
+					VillagerProfession prof = VillagerProfession.getByName(reader.readStringTag());
 					if (prof != null)
 						break;
 					holder.setVillagerProfession(prof);
 				} else if (NBT_TYPE.equals(value)) {
-					VillagerType type = VillagerType.getByNameID(reader.readStringTag());
+					VillagerType type = VillagerType.getByName(reader.readStringTag());
 					if (type != null)
 						break;
 					holder.setVillagerType(type);
@@ -217,8 +216,8 @@ public class CoreVillager extends CoreAbstractVillager implements Villager {
 			}
 		}
 		writer.writeCompoundTag(NBT_VILLAGER_DATA);
-		writer.writeStringTag(NBT_TYPE, getVillagerType().getNameID());
-		writer.writeStringTag(NBT_PROFESSION, getVillagerProfession().getNameID());
+		writer.writeStringTag(NBT_TYPE, getVillagerType().getName());
+		writer.writeStringTag(NBT_PROFESSION, getVillagerProfession().getName());
 		writer.writeIntTag(NBT_LEVEL, getLevel());
 		writer.writeEndTag();
 		writer.writeIntTag(NBT_XP, getXp());

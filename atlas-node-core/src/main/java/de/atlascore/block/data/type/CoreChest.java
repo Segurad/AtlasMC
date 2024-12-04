@@ -6,19 +6,18 @@ import de.atlascore.block.data.CoreDirectional4Faces;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Chest;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreChest extends CoreDirectional4Faces implements Chest {
 
-	protected static final ChildNBTFieldContainer<CoreChest> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreChest> NBT_FIELDS;
 	
 	protected static final CharKey
 	TYPE = CharKey.literal("type");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreDirectional4Faces.NBT_FIELDS);
+		NBT_FIELDS = CoreDirectional4Faces.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(TYPE, (holder, reader) -> {
 			holder.setType(Type.getByName(reader.readStringTag()));
 		});

@@ -6,14 +6,13 @@ import de.atlasmc.Material;
 import de.atlasmc.block.tile.Campfire;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreCampfire extends CoreTileEntity implements Campfire {
 	
-	protected static final ChildNBTFieldContainer<CoreCampfire> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreCampfire> NBT_FIELDS;
 	
 	protected static final CharKey
 	ITEMS = CharKey.literal("Items"),
@@ -21,7 +20,7 @@ public class CoreCampfire extends CoreTileEntity implements Campfire {
 	COOKING_TOTAL_TIMES = CharKey.literal("CookingTotalTimes");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreTileEntity.NBT_FIELDS);
+		NBT_FIELDS = CoreTileEntity.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(ITEMS, (holder, reader) -> {
 			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {

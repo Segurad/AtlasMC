@@ -1,7 +1,7 @@
 package de.atlasmc.util.nbt;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.util.map.key.CharKey;
 
@@ -15,15 +15,21 @@ public class NBTFieldContainer<H extends NBTHolder> {
 	private Map<CharSequence, NBTFieldContainer<H>> container;
 	private NBTField<H> defaultFieldHandler;
 	
+	protected NBTFieldContainer() {
+		// use create function
+	}
+	
 	public NBTField<H> getField(CharSequence key) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
-		if (!hasFields()) 
+		Map<CharSequence, NBTField<H>> fields = this.fields;
+		if (fields == null || fields.isEmpty()) 
 			return null;
 		return fields.get(key);
 	}
 	
 	public boolean hasFields() {
+		Map<CharSequence, NBTField<H>> fields = this.fields;
 		return fields != null && !fields.isEmpty();
 	}
 	
@@ -38,21 +44,33 @@ public class NBTFieldContainer<H extends NBTHolder> {
 			throw new IllegalArgumentException("Key can not be null!");
 		if (field == null) 
 			throw new IllegalArgumentException("Field can not be null!");
-		if (this.fields == null) 
-			this.fields= new HashMap<>();
-		this.fields.put(key, field);
+		Map<CharSequence, NBTField<H>> fields = this.fields;
+		if (fields == null) {
+			fields = initFields();
+		}
+		fields.put(key, field);
 		return this;
+	}
+	
+	private synchronized Map<CharSequence, NBTField<H>> initFields() {
+		Map<CharSequence, NBTField<H>> fields = this.fields;
+		if (fields == null) {
+			fields = this.fields = new ConcurrentHashMap<>();
+		}
+		return fields;
 	}
 	
 	public NBTFieldContainer<H> getContainer(CharSequence key) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
-		if (!hasContainer()) 
+		Map<CharSequence, NBTFieldContainer<H>> container = this.container;
+		if (container == null || container.isEmpty()) 
 			return null;
 		return container.get(key);
 	}
 	
 	public boolean hasContainer() {
+		Map<CharSequence, NBTFieldContainer<H>> container = this.container;
 		return container != null && !container.isEmpty();
 	}
 	
@@ -78,10 +96,20 @@ public class NBTFieldContainer<H extends NBTHolder> {
 			throw new IllegalArgumentException("Key can not be null!");
 		if (container == null) 
 			throw new IllegalArgumentException("Container can not be null!");
-		if (this.container == null) 
-			this.container = new HashMap<>();
-		this.container.put(key, container);
+		Map<CharSequence, NBTFieldContainer<H>> containers = this.container;
+		if (containers == null) {
+			containers = initContainer();
+		}
+		containers.put(key, container);
 		return container;
+	}
+	
+	private synchronized Map<CharSequence, NBTFieldContainer<H>> initContainer() {
+		Map<CharSequence, NBTFieldContainer<H>> fields = this.container;
+		if (fields == null) {
+			fields = this.container = new ConcurrentHashMap<>();
+		}
+		return fields;
 	}
 
 	public boolean hasUnknownFieldHandler() {
@@ -96,5 +124,17 @@ public class NBTFieldContainer<H extends NBTHolder> {
 		this.defaultFieldHandler = field;
 	}
 	
+	/**
+	 * Creates a new {@link NBTFieldContainer} containing that as access to all fields of this container.
+	 * @param <T>
+	 * @return child container
+	 */
+	public <T extends H> NBTFieldContainer<T> fork() {
+		return new ChildNBTFieldContainer<>(this);
+	}
+	
+	public static <H extends NBTHolder> NBTFieldContainer<H> newContainer() {
+		return new NBTFieldContainer<>();
+	}
 
 }

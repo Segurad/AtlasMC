@@ -9,14 +9,13 @@ import de.atlasmc.Material;
 import de.atlasmc.block.tile.Banner;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBanner extends CoreTileEntity implements Banner {
 	
-	protected static final ChildNBTFieldContainer<CoreBanner> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreBanner> NBT_FIELDS;
 	
 	protected static final CharKey
 	PATTERNS = CharKey.literal("Patterns"),
@@ -24,7 +23,7 @@ public class CoreBanner extends CoreTileEntity implements Banner {
 	PATTERN = CharKey.literal("Pattern");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreTileEntity.NBT_FIELDS);
+		NBT_FIELDS = CoreTileEntity.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(PATTERNS, (holder, reader) -> {
 			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {

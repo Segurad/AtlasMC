@@ -13,7 +13,6 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.MathUtil;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -41,7 +40,7 @@ public class CoreShulker extends CoreMob implements Shulker {
 	NBT_PEEK = CharKey.literal("Peek");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreMob.NBT_FIELDS);
+		NBT_FIELDS = CoreMob.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_ATTACHED_POS_X, (holder, reader) -> {
 			holder.setAttachedX(reader.readIntTag());
 		});

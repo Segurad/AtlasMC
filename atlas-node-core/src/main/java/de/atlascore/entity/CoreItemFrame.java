@@ -13,7 +13,6 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -36,7 +35,7 @@ public class CoreItemFrame extends CoreHanging implements ItemFrame {
 	NBT_FIXED = CharKey.literal("Fixed");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreEntity.NBT_FIELDS);
+		NBT_FIELDS = CoreEntity.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_ITEM_DROP_CHANCE, (holder, reader) -> {
 			holder.setItemDropChance(reader.readFloatTag());
 		});

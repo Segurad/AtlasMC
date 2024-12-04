@@ -9,7 +9,6 @@ import de.atlasmc.entity.PrimedTNT;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -26,7 +25,7 @@ public class CorePrimedTNT extends CoreEntity implements PrimedTNT {
 	NBT_FUSE = CharKey.literal("Fuse");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreEntity.NBT_FIELDS);
+		NBT_FIELDS = CoreEntity.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_FUSE, (holder, reader) -> {
 			holder.setFuseTime(reader.readShortTag());
 		});

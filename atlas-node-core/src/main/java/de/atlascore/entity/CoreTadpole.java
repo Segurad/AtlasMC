@@ -6,7 +6,6 @@ import java.util.UUID;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Tadpole;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -17,7 +16,7 @@ public class CoreTadpole extends CoreFish implements Tadpole {
 	private static final CharKey NBT_AGE = CharKey.literal("Age");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreFish.NBT_FIELDS);
+		NBT_FIELDS = CoreFish.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_AGE, (holder, reader) -> {
 			holder.setAge(reader.readIntTag());
 		});

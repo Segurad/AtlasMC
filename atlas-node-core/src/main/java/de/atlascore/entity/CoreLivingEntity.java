@@ -18,6 +18,7 @@ import org.joml.Vector3d;
 import de.atlasmc.Color;
 import de.atlasmc.Location;
 import de.atlasmc.Material;
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeInstance;
@@ -35,19 +36,19 @@ import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.entity.ProjectileLounchEvent;
 import de.atlasmc.inventory.EntityEquipment;
+import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutEntityEffect;
-import de.atlasmc.io.protocol.play.PacketOutUpdateAttributes;
 import de.atlasmc.io.protocol.play.PacketOutRemoveEntityEffect;
 import de.atlasmc.io.protocol.play.PacketOutSpawnEntity;
+import de.atlasmc.io.protocol.play.PacketOutUpdateAttributes;
 import de.atlasmc.potion.PotionEffect;
 import de.atlasmc.potion.PotionEffectType;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.map.ArrayListMultimap;
 import de.atlasmc.util.map.Multimap;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
@@ -103,8 +104,8 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	NBT_NAME = CharKey.literal("Name"),
 	NBT_BASE = CharKey.literal("Base"),
 	NBT_MODIFIERS = CharKey.literal("Modifiers"),
-	NBT_AMOUNT = CharKey.literal("Amount"),
-	NBT_OPERATION = CharKey.literal("Operation"),
+	NBT_AMOUNT = CharKey.literal("amount"),
+	NBT_OPERATION = CharKey.literal("operation"),
 	NBT_BRAIN = CharKey.literal("Brain"),
 	NBT_DEATH_TIME = CharKey.literal("DeathTime"),
 	NBT_FALL_FLYING = CharKey.literal("FallFlying"),
@@ -123,7 +124,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	NBT_PERSISTENCE_REQUIRED = CharKey.literal("PeristenceRequired");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreEntity.NBT_FIELDS);
+		NBT_FIELDS = CoreEntity.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_ABSORPTION_AMOUNT, (holder, reader) -> {
 			holder.setAbsorption(reader.readFloatTag());
 		});
@@ -178,26 +179,23 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 						reader.readNextEntry();
 						while (reader.getRestPayload() > 0) { // read list of AttributeModifier
 							double amount = 0;
-							String name = null;
 							Operation operation = null;
-							UUID uuid = null;
+							NamespacedKey id = null;
 							while (reader.getType() != TagType.TAG_END) { // read AttributeModifier compound
 								final CharSequence modifierKey = reader.getFieldName();
 								if (NBT_AMOUNT.equals(modifierKey))
 									amount = reader.readDoubleTag();
-								else if (NBT_NAME.equals(modifierKey))
-									name = reader.readStringTag();
+								else if (NBT_ID.equals(modifierKey))
+									id = reader.readNamespacedKey();
 								else if (NBT_OPERATION.equals(modifierKey))
-									operation = Operation.getByID(reader.readIntTag());
-								else if (NBT_UUID.equals(modifierKey))
-									uuid = reader.readUUID();
+									operation = Operation.getByName(reader.readStringTag());
 								else
 									reader.skipTag();
 							}
 							reader.readNextEntry(); // assemble Modifier
 							if (modifiers == null)
 								modifiers = new ArrayList<>();
-							modifiers.add(new AttributeModifier(uuid, name, amount, operation, null));
+							modifiers.add(new AttributeModifier(id, amount, operation, null));
 						}
 					}
 				}
@@ -511,6 +509,18 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		instance.addAttributeModififer(modifier);
 		return true;
 	}
+	
+	@Override
+	public List<AttributeModifier> getAttributeModifiers(Attribute attribute) {
+		if (attribute == null)
+			throw new IllegalArgumentException("Attribute can not be null!");
+		if (attributes == null || attributes.isEmpty()) 
+			return List.of();
+		AttributeInstance instance = attributes.get(attribute);
+		if (instance == null && !instance.hasModifiers())
+			return List.of();
+		return instance.getModifiers();
+	}
 
 	@Override
 	public boolean hasAttributeModifiers() {
@@ -554,7 +564,24 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		if (!hasAttribute(attribute))
 			return false;
 		AttributeInstance instance = getAttribute(attribute);
-		return instance.removeModifier(modifier.getUUID());
+		return instance.removeModifier(modifier);
+	}
+
+	@Override
+	public boolean removeAttributeModifier(EquipmentSlot slot) {
+		if (slot == null) 
+			throw new IllegalArgumentException("EquipmentSlot can not be null!");
+		if (!hasAttributeModifiers()) 
+			return false;
+		boolean changes = false;
+		for (Attribute a : attributes.keySet()) {
+			AttributeInstance instance = attributes.get(a);
+			if (instance == null && !instance.hasModifiers())
+				continue;
+			if (instance.removeModifier(slot));
+				changes = true;
+		}
+		return changes;
 	}
 
 	@Override
@@ -706,9 +733,8 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 				writer.writeListTag(NBT_MODIFIERS, TagType.COMPOUND, instance.getModifierCount());
 				for (AttributeModifier modifier : instance.getModifiers()) {
 					writer.writeDoubleTag(NBT_AMOUNT, modifier.getAmount());
-					writer.writeStringTag(NBT_NAME, modifier.getName());
-					writer.writeIntTag(NBT_OPERATION, modifier.getOperation().getID());
-					writer.writeUUID(NBT_UUID, modifier.getUUID());
+					writer.writeNamespacedKey(NBT_ID, modifier.getID());
+					writer.writeStringTag(NBT_OPERATION, modifier.getOperation().getName());
 					writer.writeEndTag();
 				}
 				writer.writeEndTag();

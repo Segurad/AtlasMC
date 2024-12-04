@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.UUID;
 import java.util.function.LongSupplier;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.MemoryConfiguration;
 import de.atlasmc.util.nbt.TagType;
@@ -137,6 +138,12 @@ public class NBTConfigurationWriter implements NBTWriter {
 
 	@Override
 	public void writeNBT(NBT nbt) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void writeNamespacedKey(CharSequence name, NamespacedKey key) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}

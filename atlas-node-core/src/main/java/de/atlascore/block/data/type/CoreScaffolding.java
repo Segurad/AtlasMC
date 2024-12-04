@@ -6,20 +6,19 @@ import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Scaffolding;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreScaffolding extends CoreWaterlogged implements Scaffolding {
 
-	protected static final ChildNBTFieldContainer<CoreScaffolding> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreScaffolding> NBT_FIELDS;
 	
 	protected static final CharKey
 	BOTTOM = CharKey.literal("bottom"),
 	DISTANCE = CharKey.literal("distance");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreWaterlogged.NBT_FIELDS);
+		NBT_FIELDS = CoreWaterlogged.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(BOTTOM, (holder, reader) -> {
 			holder.setBottom(reader.readByteTag() == 1);
 		});

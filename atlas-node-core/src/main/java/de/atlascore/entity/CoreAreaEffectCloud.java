@@ -14,7 +14,6 @@ import de.atlasmc.potion.PotionData;
 import de.atlasmc.potion.PotionEffect;
 import de.atlasmc.potion.PotionEffectType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -54,7 +53,7 @@ public class CoreAreaEffectCloud extends CoreEntity implements AreaEffectCloud {
 	NBT_WAIT_TIME = CharKey.literal("WaitTime");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreEntity.NBT_FIELDS);
+		NBT_FIELDS = CoreEntity.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_AGE, (holder, reader) -> {
 			holder.setAge(reader.readShortTag());
 		});
@@ -104,7 +103,7 @@ public class CoreAreaEffectCloud extends CoreEntity implements AreaEffectCloud {
 		});
 		NBT_FIELDS.setField(NBT_PARTICLE, (holder, reader) -> {
 			String raw = reader.readStringTag();
-			Particle particle = Particle.getByNameID(raw.substring(0, raw.indexOf(' ')));
+			Particle particle = Particle.getByName(raw.substring(0, raw.indexOf(' ')));
 			if (particle == null)
 				return;
 			// TODO add Particle Object data
@@ -328,7 +327,7 @@ public class CoreAreaEffectCloud extends CoreEntity implements AreaEffectCloud {
 		}
 		if (getOwner() != null)
 			writer.writeUUID(NBT_OWNER, getOwner());
-		writer.writeStringTag(NBT_PARTICLE, getParticle().getParticle().getNameID());
+		writer.writeStringTag(NBT_PARTICLE, getParticle().getParticle().getName());
 		writer.writeFloatTag(NBT_RADIUS, getRadius());
 		if (getPotionData() != null)
 			writer.writeStringTag(NBT_POTION, getPotionData().getName());

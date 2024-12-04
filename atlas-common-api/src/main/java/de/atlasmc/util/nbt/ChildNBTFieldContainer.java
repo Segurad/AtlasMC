@@ -6,11 +6,11 @@ import de.atlasmc.util.map.key.CharKey;
  * Stores {@link NBTField} and {@link NBTFieldContainer}
  * Overrides fields with the same key of the parent container
  */
-public class ChildNBTFieldContainer<H extends NBTHolder> extends NBTFieldContainer<H> {
+class ChildNBTFieldContainer<H extends NBTHolder> extends NBTFieldContainer<H> {
 	
 	private final NBTFieldContainer<? extends NBTHolder> parent;
 	
-	public ChildNBTFieldContainer(NBTFieldContainer<? extends NBTHolder> parent) {
+	ChildNBTFieldContainer(NBTFieldContainer<? extends NBTHolder> parent) {
 		if (parent == null) 
 			throw new IllegalArgumentException("Parent NBTFieldContainer can not be null!");
 		this.parent = parent;
@@ -48,14 +48,20 @@ public class ChildNBTFieldContainer<H extends NBTHolder> extends NBTFieldContain
 	 * @param key of the container
 	 * @return the new set container
 	 */
-	public NBTFieldContainer<H> setChildContainer(CharKey key) {
+	@SuppressWarnings("unchecked")
+	public NBTFieldContainer<H> setContainer(CharKey key) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
 		NBTFieldContainer<H> container = super.getContainer(key);
-		if (container == null) {
-			return super.setContainer(key);
+		if (container != null)
+			return container;
+		container = (NBTFieldContainer<H>) parent.getContainer(key);
+		if (container != null) {
+			container = super.setContainer(key, container.fork());
+		} else {
+			container = super.setContainer(key);
 		}
-		return super.setContainer(key, new ChildNBTFieldContainer<>(container));
+		return container;
 	}
 	
 	@SuppressWarnings("unchecked")

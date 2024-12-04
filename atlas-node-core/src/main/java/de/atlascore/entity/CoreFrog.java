@@ -9,7 +9,6 @@ import de.atlasmc.entity.Frog;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -25,9 +24,9 @@ public class CoreFrog extends CoreAgeableMob implements Frog {
 	private static final CharKey NBT_VARIANT = CharKey.literal("variant");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreAgeableMob.NBT_FIELDS);
+		NBT_FIELDS = CoreAgeableMob.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_VARIANT, (holder, reader) -> {
-			holder.setVariant(Variant.getByNameID(reader.readStringTag()));
+			holder.setVariant(Variant.getByName(reader.readStringTag()));
 		});
 	}
 	
@@ -80,7 +79,7 @@ public class CoreFrog extends CoreAgeableMob implements Frog {
 		super.toNBT(writer, systemData);
 		Variant variant = getVariant();
 		if (META_FROG_VARIANT.getDefaultData() != variant)
-			writer.writeStringTag(NBT_VARIANT, variant.getNameID());
+			writer.writeStringTag(NBT_VARIANT, variant.getName());
 	}
 
 }

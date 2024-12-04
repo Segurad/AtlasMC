@@ -8,7 +8,6 @@ import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Candle;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -20,7 +19,7 @@ public class CoreCandle extends CoreWaterlogged implements Candle {
 	NBT_CANDLES = CharKey.literal("candles");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreWaterlogged.NBT_FIELDS);
+		NBT_FIELDS = CoreWaterlogged.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_CANDLES, (holder, reader) -> {
 			holder.setCandles(reader.readIntTag());
 		});

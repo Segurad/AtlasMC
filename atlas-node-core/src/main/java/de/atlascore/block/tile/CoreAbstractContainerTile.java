@@ -9,7 +9,6 @@ import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
@@ -17,7 +16,7 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 
 public abstract class CoreAbstractContainerTile<I extends Inventory> extends CoreTileEntity implements AbstractContainerTile<I> {
 
-	protected static final ChildNBTFieldContainer<CoreAbstractContainerTile<?>> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreAbstractContainerTile<?>> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_LOCK = CharKey.literal("Lock"),
@@ -26,7 +25,7 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 	NBT_LOOT_TABLE_SEED = CharKey.literal("LootTableSeed");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreTileEntity.NBT_FIELDS);
+		NBT_FIELDS = CoreTileEntity.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_LOCK, (holder, reader) -> {
 			holder.setLock(ChatUtil.toChat(reader.readStringTag()));
 		});

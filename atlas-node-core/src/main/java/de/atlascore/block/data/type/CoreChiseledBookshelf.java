@@ -9,13 +9,12 @@ import de.atlascore.block.data.CoreDirectional4Faces;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.ChiseledBookshelf;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreChiseledBookshelf extends CoreDirectional4Faces implements ChiseledBookshelf {
 
-	protected static final ChildNBTFieldContainer<CoreChiseledBookshelf> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreChiseledBookshelf> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_SLOT_0_OCCUPIED = CharKey.literal("slot_0_occupied"),
@@ -26,7 +25,7 @@ public class CoreChiseledBookshelf extends CoreDirectional4Faces implements Chis
 	NBT_SLOT_5_OCCUPIED = CharKey.literal("slot_5_occupied");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreDirectional4Faces.NBT_FIELDS);
+		NBT_FIELDS = CoreDirectional4Faces.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_SLOT_0_OCCUPIED, (holder, reader) -> {
 			holder.setSlotOccupied(0, reader.readByteTag() == 1);
 		});

@@ -6,19 +6,18 @@ import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 
 public class CoreHopper extends CoreAbstractContainerTile<Inventory> implements Hopper {
 
-	protected static final ChildNBTFieldContainer<CoreHopper> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreHopper> NBT_FIELDS;
 	
 	protected static final CharKey
 	TRANSFER_COOLDOWN = CharKey.literal("TransferCooldown"),
 	TRANSFER_AMOUNT = CharKey.literal("TransferAmount");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreAbstractContainerTile.NBT_FIELDS);
+		NBT_FIELDS = CoreAbstractContainerTile.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(TRANSFER_COOLDOWN, (holder, reader) -> {
 			holder.setTransferCooldown(reader.readIntTag());
 		});

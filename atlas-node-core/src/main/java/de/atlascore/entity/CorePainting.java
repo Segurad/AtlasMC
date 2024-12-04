@@ -2,12 +2,12 @@ package de.atlascore.entity;
 
 import java.io.IOException;
 import java.util.UUID;
+
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Painting;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
@@ -24,9 +24,9 @@ public class CorePainting extends CoreHanging implements Painting {
 	NBT_MOTIVE = CharKey.literal("Motive");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreEntity.NBT_FIELDS);
+		NBT_FIELDS = CoreEntity.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_MOTIVE, (holder, reader) -> {
-			holder.setMotive(Motive.getByNameID(reader.readStringTag()));
+			holder.setMotive(Motive.getByName(reader.readStringTag()));
 		});
 	}
 	
@@ -73,7 +73,7 @@ public class CorePainting extends CoreHanging implements Painting {
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		writer.writeStringTag(NBT_MOTIVE, getMotive().getNameID());
+		writer.writeStringTag(NBT_MOTIVE, getMotive().getName());
 	}
 
 }

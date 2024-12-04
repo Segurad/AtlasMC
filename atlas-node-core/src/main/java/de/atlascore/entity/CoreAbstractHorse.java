@@ -12,7 +12,6 @@ import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.AbstractHorseInventory;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -44,7 +43,7 @@ public abstract class CoreAbstractHorse extends CoreAgeableMob implements Abstra
 	//NBT_TEMPER = "Temper"; TODO unnecessary (needed for taming)
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreAgeableMob.NBT_FIELDS);
+		NBT_FIELDS = CoreAgeableMob.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_BRED, (holder, reader) -> {
 			holder.setCanBred(reader.readByteTag() == 1);
 		});

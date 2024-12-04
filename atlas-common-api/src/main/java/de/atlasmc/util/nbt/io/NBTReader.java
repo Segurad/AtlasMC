@@ -253,4 +253,13 @@ public interface NBTReader extends Closeable {
 	 */
 	Number readNumber() throws IOException;
 
+	/**
+	 * Reads a byte tag as boolean
+	 * @return
+	 * @throws IOException
+	 */
+	default boolean readBoolean() throws IOException {
+		return readByteTag() == 1;
+	}
+
 }

@@ -1,16 +1,16 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
+import java.util.UUID;
+
 import de.atlasmc.entity.AbstractArrow;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import java.io.IOException;
-import java.util.UUID;
 
 public abstract class CoreAbstractArrow extends CoreAbstractProjectile implements AbstractArrow {
 
@@ -36,7 +36,7 @@ public abstract class CoreAbstractArrow extends CoreAbstractProjectile implement
 	NBT_SHAKE = CharKey.literal("shake");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreAbstractProjectile.NBT_FIELDS);
+		NBT_FIELDS = CoreAbstractProjectile.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_CRIT, (holder, reader) -> {
 			holder.setCritical(reader.readByteTag() == 1);
 		});

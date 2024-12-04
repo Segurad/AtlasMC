@@ -7,20 +7,19 @@ import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.SculkShrieker;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreSculkShrieker extends CoreWaterlogged implements SculkShrieker {
 
-	protected static final ChildNBTFieldContainer<CoreSculkShrieker> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreSculkShrieker> NBT_FIELDS;
 	
 	protected static final CharKey 
 	NBT_CAN_SUMMON = CharKey.literal("can_summon"),
 	NBT_SHRIEKING = CharKey.literal("shrieking");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreWaterlogged.NBT_FIELDS);
+		NBT_FIELDS = CoreWaterlogged.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_CAN_SUMMON, (holder, reader) -> {
 			holder.canSummon = reader.readByteTag() == 1;
 		});

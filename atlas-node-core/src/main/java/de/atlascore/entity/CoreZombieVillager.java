@@ -59,12 +59,12 @@ public class CoreZombieVillager extends CoreZombie implements ZombieVillager {
 			while (reader.getType() != TagType.TAG_END) {
 				final CharSequence value = reader.getFieldName();
 				if (NBT_PROFESSION.equals(value)) {
-					VillagerProfession prof = VillagerProfession.getByNameID(reader.readStringTag());
+					VillagerProfession prof = VillagerProfession.getByName(reader.readStringTag());
 					if (prof != null)
 						break;
 					villager.setVillagerProfession(prof);
 				} else if (NBT_TYPE.equals(value)) {
-					VillagerType type = VillagerType.getByNameID(reader.readStringTag());
+					VillagerType type = VillagerType.getByName(reader.readStringTag());
 					if (type != null)
 						break;
 					villager.setVillagerType(type);
@@ -198,8 +198,8 @@ public class CoreZombieVillager extends CoreZombie implements ZombieVillager {
 			writer.writeUUID(NBT_CONVERSION_PLAYER, getConversionPlayer());
 		writer.writeCompoundTag(NBT_VILLAGER_DATA);
 		writer.writeIntTag(NBT_LEVEL, getLevel());
-		writer.writeStringTag(NBT_PROFESSION, getVillagerProfession().getNameID());
-		writer.writeStringTag(NBT_TYPE, getVillagerType().getNameID());
+		writer.writeStringTag(NBT_PROFESSION, getVillagerProfession().getName());
+		writer.writeStringTag(NBT_TYPE, getVillagerType().getName());
 		writer.writeEndTag();
 		writer.writeIntTag(NBT_XP, getXp());
 		if (hasRecipes()) {

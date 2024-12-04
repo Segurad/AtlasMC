@@ -7,13 +7,12 @@ import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.type.Wall;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreWall extends CoreWaterlogged implements Wall {
 
-	protected static final ChildNBTFieldContainer<CoreWall> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreWall> NBT_FIELDS;
 	
 	protected static final CharKey
 	NORTH = CharKey.literal("north"),
@@ -23,7 +22,7 @@ public class CoreWall extends CoreWaterlogged implements Wall {
 	UP = CharKey.literal("up");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreWaterlogged.NBT_FIELDS);
+		NBT_FIELDS = CoreWaterlogged.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NORTH, (holder, reader) -> {
 			holder.setHeight(BlockFace.NORTH, Height.getByName(reader.readStringTag()));
 		});

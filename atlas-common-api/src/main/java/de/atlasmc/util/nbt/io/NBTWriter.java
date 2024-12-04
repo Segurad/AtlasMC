@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.UUID;
 import java.util.function.LongSupplier;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.tag.NBT;
 
@@ -37,6 +38,10 @@ public interface NBTWriter extends Closeable {
 	void writeByteArrayTag(CharSequence name, byte[] data, int offset, int length) throws IOException;
 	
 	void writeStringTag(CharSequence name, String value) throws IOException;
+	
+	default void writeNamespacedKey(CharSequence name, NamespacedKey key) throws IOException {
+		writeStringTag(name, key.toString());
+	}
 	
 	void writeListTag(CharSequence name, TagType payloadType, int payloadsize) throws IOException;
 	

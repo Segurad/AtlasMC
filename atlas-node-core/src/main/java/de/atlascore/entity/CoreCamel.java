@@ -10,7 +10,6 @@ import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.AbstractHorseInventory;
 import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -26,7 +25,7 @@ public class CoreCamel extends CoreAbstractHorse implements Camel {
 	private static final CharKey LAST_POSE_TICK = CharKey.literal("LastPoseTick");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreAbstractHorse.NBT_FIELDS);
+		NBT_FIELDS = CoreAbstractHorse.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(LAST_POSE_TICK, (holder, reader) -> {
 			holder.setLastPoseTick(reader.readLongTag());
 		});

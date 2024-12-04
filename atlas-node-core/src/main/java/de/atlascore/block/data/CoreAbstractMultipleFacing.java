@@ -8,13 +8,12 @@ import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.MultipleFacing;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public abstract class CoreAbstractMultipleFacing extends CoreBlockData implements MultipleFacing {
 	
-	protected static final ChildNBTFieldContainer<CoreAbstractMultipleFacing> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreAbstractMultipleFacing> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_NORTH = CharKey.literal("north"),
@@ -25,7 +24,7 @@ public abstract class CoreAbstractMultipleFacing extends CoreBlockData implement
 	NBT_DOWN = CharKey.literal("down");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreBlockData.NBT_FIELDS);
+		NBT_FIELDS = CoreBlockData.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_NORTH, (holder, reader) -> {
 			holder.setFace(BlockFace.NORTH, reader.readByteTag() == 1);
 		});

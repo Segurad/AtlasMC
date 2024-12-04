@@ -1,5 +1,8 @@
 package de.atlascore.entity;
 
+import java.io.IOException;
+import java.util.UUID;
+
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
@@ -8,13 +11,9 @@ import de.atlasmc.entity.FallingBlock;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
-
-import java.io.IOException;
-import java.util.UUID;
 
 public class CoreFallingBlock extends CoreEntity implements FallingBlock {
 	
@@ -37,7 +36,7 @@ public class CoreFallingBlock extends CoreEntity implements FallingBlock {
 	// TODO unused NBT_TIME = "Time";
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreEntity.NBT_FIELDS);
+		NBT_FIELDS = CoreEntity.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_BLOCK_STATE, (holder, reader) -> {
 			reader.readNextEntry();
 			Material mat = null;

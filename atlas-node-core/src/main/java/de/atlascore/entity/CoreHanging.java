@@ -7,7 +7,6 @@ import de.atlasmc.block.BlockFace;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Hanging;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -22,7 +21,7 @@ public class CoreHanging extends CoreEntity implements Hanging {
 	NBT_FACE = CharKey.literal("Facing");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreEntity.NBT_FIELDS);
+		NBT_FIELDS = CoreEntity.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_FACE, (holder, reader) -> {
 			switch (reader.readByteTag()) {
 			case 0:

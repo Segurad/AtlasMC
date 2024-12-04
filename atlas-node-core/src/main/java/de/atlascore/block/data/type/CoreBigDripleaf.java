@@ -7,19 +7,18 @@ import de.atlascore.block.data.CoreDirectional4Faces;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.BigDripleaf;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBigDripleaf extends CoreDirectional4Faces implements BigDripleaf {
 
-	protected static final ChildNBTFieldContainer<CoreBigDripleaf> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreBigDripleaf> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_TILT = CharKey.literal("tilt");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreDirectional4Faces.NBT_FIELDS);
+		NBT_FIELDS = CoreDirectional4Faces.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_TILT, (holder, reader) -> {
 			Tilt tilt = Tilt.getByName(reader.readStringTag());
 			holder.setTilt(tilt);

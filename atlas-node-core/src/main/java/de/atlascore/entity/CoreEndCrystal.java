@@ -10,7 +10,6 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.MathUtil;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -34,7 +33,7 @@ public class CoreEndCrystal extends CoreEntity implements EndCrystal {
 	NBT_SHOW_BOTTOM = CharKey.literal("ShowBottom");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreEntity.NBT_FIELDS);
+		NBT_FIELDS = CoreEntity.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_BEAM_TARGET, (holder, reader) -> {
 			reader.readNextEntry();
 			int x = 0;

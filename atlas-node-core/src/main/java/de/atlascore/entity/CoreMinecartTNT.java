@@ -6,7 +6,6 @@ import java.util.UUID;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.MinecartTNT;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -18,7 +17,7 @@ public class CoreMinecartTNT extends CoreAbstractMinecart implements MinecartTNT
 	NBT_FUSE = CharKey.literal("Fuse");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreAbstractMinecart.NBT_FIELDS);
+		NBT_FIELDS = CoreAbstractMinecart.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_FUSE, (holder, reader) -> {
 			holder.setFuseTime(reader.readIntTag());
 		});

@@ -8,7 +8,6 @@ import org.joml.Vector3d;
 import de.atlasmc.entity.AbstractFireball;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -24,7 +23,7 @@ public abstract class CoreAbstractFireball extends CoreAbstractProjectile implem
 	NBT_LIFE = CharKey.literal("life");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreAbstractProjectile.NBT_FIELDS);
+		NBT_FIELDS = CoreAbstractProjectile.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_DIRECTION, (holder, reader) -> {
 			double x;
 			double y;

@@ -11,7 +11,6 @@ import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 
@@ -29,7 +28,7 @@ public class CoreWarden extends CoreMob implements Warden {
 	NBT_SUSPECTS = CharKey.literal("suspects");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreMob.NBT_FIELDS);
+		NBT_FIELDS = CoreMob.NBT_FIELDS.fork();
 		NBTFieldContainer<CoreWarden> anger = NBT_FIELDS.setContainer(NBT_ANGER);
 		anger.setField(NBT_SUSPECTS, (holder, reader) -> {
 			reader.readNextEntry();

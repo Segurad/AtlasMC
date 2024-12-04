@@ -8,13 +8,12 @@ import de.atlasmc.inventory.BrewingInventory;
 import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBrewingStand extends CoreAbstractContainerTile<BrewingInventory> implements BrewingStand {
 	
-	protected static final ChildNBTFieldContainer<CoreBrewingStand> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreBrewingStand> NBT_FIELDS;
 	
 	protected static final CharKey
 	BREW_TIME = CharKey.literal("BrewTime"),
@@ -22,7 +21,7 @@ public class CoreBrewingStand extends CoreAbstractContainerTile<BrewingInventory
 	ITEMS = CharKey.literal("Items");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreAbstractContainerTile.NBT_FIELDS);
+		NBT_FIELDS = CoreAbstractContainerTile.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(BREW_TIME, (holder, reader) -> {
 			holder.getInventory().setBrewTime(reader.readIntTag());
 		});

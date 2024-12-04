@@ -8,7 +8,6 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Potion;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -20,7 +19,7 @@ public class CorePotion extends CoreThrowableProjectile implements Potion {
 	NBT_POTION = CharKey.literal("Potion");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreThrowableProjectile.NBT_FIELDS);
+		NBT_FIELDS = CoreThrowableProjectile.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_POTION, (holder, reader) -> {
 			reader.readNextEntry();
 			Material mat = null;

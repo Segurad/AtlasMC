@@ -13,7 +13,6 @@ import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.HorseInventory;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -31,7 +30,7 @@ public class CoreHorse extends CoreAbstractHorse implements Horse {
 	NBT_VARIANT = CharKey.literal("Variant");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreAbstractHorse.NBT_FIELDS);
+		NBT_FIELDS = CoreAbstractHorse.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_ARMOR_ITEM, (holder, reader) -> {
 			reader.readNextEntry();
 			Material mat = null;

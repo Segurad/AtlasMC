@@ -9,13 +9,12 @@ import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.type.RedstoneWire;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreRedstoneWire extends CoreAnaloguePowerable implements RedstoneWire {
 
-	protected static final ChildNBTFieldContainer<CoreRedstoneWire> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreRedstoneWire> NBT_FIELDS;
 	
 	protected static final CharKey
 	NORTH = CharKey.literal("north"),
@@ -24,7 +23,7 @@ public class CoreRedstoneWire extends CoreAnaloguePowerable implements RedstoneW
 	WEST = CharKey.literal("west");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreAnaloguePowerable.NBT_FIELDS);
+		NBT_FIELDS = CoreAnaloguePowerable.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NORTH, (holder, reader) -> {
 			holder.setFace(BlockFace.NORTH, Connection.getByName(reader.readStringTag()));
 		});

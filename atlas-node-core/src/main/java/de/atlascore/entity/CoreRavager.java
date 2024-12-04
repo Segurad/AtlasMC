@@ -6,7 +6,6 @@ import java.util.UUID;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Ravager;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -20,7 +19,7 @@ public class CoreRavager extends CoreRaider implements Ravager {
 	NBT_STUN_TICK = CharKey.literal("StunTick");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreRaider.NBT_FIELDS);
+		NBT_FIELDS = CoreRaider.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_ATTACK_TICK, (holder, reader) -> {
 			holder.setAttackCooldown(reader.readIntTag());
 		});

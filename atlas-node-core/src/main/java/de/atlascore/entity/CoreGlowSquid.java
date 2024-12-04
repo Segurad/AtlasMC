@@ -6,7 +6,6 @@ import java.util.UUID;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.GlowSquid;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -17,7 +16,7 @@ public class CoreGlowSquid extends CoreSquid implements GlowSquid {
 	private static final CharKey NBT_DARK_TICKS_REMAINING = CharKey.literal("DarkTicksRemaining");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreSquid.NBT_FIELDS);
+		NBT_FIELDS = CoreSquid.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_DARK_TICKS_REMAINING, (holder, reader) -> {
 			holder.setDarkTicksRemaining(reader.readIntTag());
 		});

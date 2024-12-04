@@ -10,7 +10,6 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.EulerAngle;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -61,7 +60,7 @@ public class CoreArmorStand extends CoreLivingEntity implements ArmorStand {
 	NBT_SMALL = CharKey.literal("Small");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreLivingEntity.NBT_FIELDS);
+		NBT_FIELDS = CoreLivingEntity.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_DISABLED_SLOTS, (holder, reader) -> {
 			holder.setSlotInteractionFlags(reader.readIntTag());
 		});

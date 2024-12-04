@@ -6,18 +6,17 @@ import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.SculkCatalyst;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreSculkCatalyst extends CoreBlockData implements SculkCatalyst {
 
-	protected static ChildNBTFieldContainer<CoreSculkCatalyst> NBT_FIELDS;
+	protected static NBTFieldContainer<CoreSculkCatalyst> NBT_FIELDS;
 	
 	private static final CharKey NBT_BLOOM = CharKey.literal("bloom");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreBlockData.NBT_FIELDS);
+		NBT_FIELDS = CoreBlockData.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_BLOOM, (holder, reader) -> {
 			holder.setBloom(reader.readByteTag() == 1);
 		});

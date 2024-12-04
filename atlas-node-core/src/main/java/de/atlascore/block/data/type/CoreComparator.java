@@ -7,19 +7,18 @@ import de.atlascore.block.data.CorePowerable;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.Comparator;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreComparator extends CoreDirectional4Faces implements Comparator {
 
-	protected static final ChildNBTFieldContainer<CoreComparator> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreComparator> NBT_FIELDS;
 	
 	protected static final CharKey
 	MODE = CharKey.literal("mode");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreDirectional4Faces.NBT_FIELDS);
+		NBT_FIELDS = CoreDirectional4Faces.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(MODE, (holder, reader) -> {
 			holder.setMode(Mode.getByName(reader.readStringTag()));
 		});

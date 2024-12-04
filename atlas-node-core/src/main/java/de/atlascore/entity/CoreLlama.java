@@ -14,7 +14,6 @@ import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.LlamaInventory;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -37,7 +36,7 @@ public class CoreLlama extends CoreChestedHorse implements Llama {
 	NBT_VARIANT = CharKey.literal("Variant");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreChestedHorse.NBT_FIELDS);
+		NBT_FIELDS = CoreChestedHorse.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_DECOR_ITEM, (holder, reader) -> {
 			reader.readNextEntry();
 			Material mat = null;

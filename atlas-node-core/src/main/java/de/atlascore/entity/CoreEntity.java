@@ -87,7 +87,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	
 	protected static final int LAST_META_INDEX = 7;
 	
-	protected static final NBTFieldContainer<CoreEntity> NBT_FIELDS = new NBTFieldContainer<>();
+	protected static final NBTFieldContainer<CoreEntity> NBT_FIELDS = NBTFieldContainer.newContainer();
 	
 	protected static final CharKey
 	NBT_AIR = CharKey.literal("Air"),
@@ -149,6 +149,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 			holder.setGravity(reader.readByteTag() == 0);
 		});
 		NBT_FIELDS.setField(NBT_ON_GROUND, (holder, reader) -> {
+			reader.skipTag();
 			// TODO skipped on ground
 			//((Entity) holder).setOnGround(reader.readByteTag() == 1);
 		});

@@ -9,14 +9,13 @@ import de.atlasmc.chat.ChatType;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.permission.Permission;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 
-	protected static final ChildNBTFieldContainer<CoreCommandBlock> NBT_FIELDS;
+	protected static final NBTFieldContainer<CoreCommandBlock> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_AUTO = CharKey.literal("auto"),
@@ -30,7 +29,7 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 	NBT_UPDATE_LAST_EXECUTION = CharKey.literal("UpdateLastExecution");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreTileEntity.NBT_FIELDS);
+		NBT_FIELDS = CoreTileEntity.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_AUTO, (holder, reader) -> {
 			holder.setAlwaysActive(reader.readByteTag() == 1);
 		});

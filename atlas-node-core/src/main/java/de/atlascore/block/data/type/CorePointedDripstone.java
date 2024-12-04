@@ -7,20 +7,19 @@ import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.type.PointedDripstone;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.ChildNBTFieldContainer;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CorePointedDripstone extends CoreWaterlogged implements PointedDripstone {
 
-	protected static ChildNBTFieldContainer<CorePointedDripstone> NBT_FIELDS;
+	protected static NBTFieldContainer<CorePointedDripstone> NBT_FIELDS;
 	
 	private static final CharKey
 	NBT_THICKNESS = CharKey.literal("thickness"),
 	NBT_VERTICAL_DIRECTION = CharKey.literal("vertical_direction");
 	
 	static {
-		NBT_FIELDS = new ChildNBTFieldContainer<>(CoreWaterlogged.NBT_FIELDS);
+		NBT_FIELDS = CoreWaterlogged.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_THICKNESS, (holder, reader) -> {
 			holder.setThickness(Thickness.getByNameID(reader.readStringTag()));
 		});
