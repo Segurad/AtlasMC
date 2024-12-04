@@ -2,18 +2,16 @@ package de.atlascore.potion;
 
 import java.util.UUID;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeModifier;
 import de.atlasmc.attribute.AttributeModifier.Operation;
 import de.atlasmc.entity.LivingEntity;
 import de.atlasmc.potion.PotionEffectType;
 
-public class CoreEffectSpeed extends CoreAbstractPotionEffect {
+public class CoreEffectSpeed extends CoreAbstractAttributeModifierPotionEffect {
 
-	protected static final String
-	MODIFIER_NAME_SPEED = "effect.moveSpeed";
-	protected static final UUID
-	MODIFIER_UUID_SPEED = UUID.fromString("91AEAA56-376B-4498-935B-2F7F68070635");
+	public static final NamespacedKey MODIFIER_ID = NamespacedKey.literal("minecraft:speed");
 	
 	public CoreEffectSpeed(PotionEffectType type, int amplifier, int duration, boolean reducedAmbient, boolean particles, boolean icon, UUID uuid) {
 		super(type, amplifier, duration, reducedAmbient, particles, icon, uuid);
@@ -22,13 +20,18 @@ public class CoreEffectSpeed extends CoreAbstractPotionEffect {
 	@Override
 	public void addEffect(LivingEntity entity) {
 		double amount = 0.2d*(amplifier+1);
-		AttributeModifier modifier = new AttributeModifier(MODIFIER_UUID_SPEED, MODIFIER_NAME_SPEED, amount, Operation.MULTIPLY_SCALAR_1);
+		AttributeModifier modifier = new AttributeModifier(modifierID, amount, Operation.ADD_MULTIPLIED_TOTAL);
 		entity.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, modifier);
 	}
 
 	@Override
 	public void removeEffect(LivingEntity entity) {
-		entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).removeModifier(MODIFIER_UUID_SPEED);
+		entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).removeModifier(modifierID);
+	}
+	
+	@Override
+	public NamespacedKey getDefaultModifierID() {
+		return MODIFIER_ID;
 	}
 
 }

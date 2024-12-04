@@ -6,28 +6,28 @@ import de.atlasmc.entity.Merchant.MerchantRecipe;
 
 public interface MerchantInventory extends Inventory {
 
-	public MerchantRecipe getRecipe(int index);
+	MerchantRecipe getRecipe(int index);
 
-	public int getRecipeCount();
+	int getRecipeCount();
 
-	public List<MerchantRecipe> getRecipes();
+	List<MerchantRecipe> getRecipes();
 
-	public void addRecipe(MerchantRecipe recipe);
+	void addRecipe(MerchantRecipe recipe);
 
-	public int getLevel();
+	int getLevel();
 	
-	public void setLevel(int level);
+	void setLevel(int level);
 
-	public int getExperience();
+	int getExperience();
 	
-	public void setExperience(int xp);
+	void setExperience(int xp);
 
-	public boolean getHideLevelProgress();
+	boolean getHideLevelProgress();
 	
-	public void setHideLevelProgress(boolean hide);
+	void setHideLevelProgress(boolean hide);
 
-	public boolean canRestock();
+	boolean canRestock();
 	
-	public void setCanRestock(boolean restock);
+	void setCanRestock(boolean restock);
 
 }

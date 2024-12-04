@@ -105,7 +105,7 @@ public class CoreChatFactory implements ChatFactory {
 				if (rawColor.charAt(0) == '#') {
 					rgb = Integer.parseInt(rawColor, 16);
 				} else
-					color = ChatColor.getByNameID(rawColor);
+					color = ChatColor.getByName(rawColor);
 				break;
 			case BaseComponent.JSON_HOVER_EVENT:
 				hoverEvent = readHoverEvent(reader);

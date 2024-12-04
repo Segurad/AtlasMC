@@ -709,10 +709,10 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			EquipmentSlot hand = packet.getHand();
 			PlayerInteractEvent.Action action;
 			if (block.getType().isAir()) {
-				if (hand == EquipmentSlot.HAND) {
+				if (hand == EquipmentSlot.MAIN_HAND) {
 					action = PlayerInteractEvent.Action.LEFT_CLICK_AIR;
 				} else action = PlayerInteractEvent.Action.RIGHT_CLICK_AIR;
-			} else if (hand == EquipmentSlot.HAND) {
+			} else if (hand == EquipmentSlot.MAIN_HAND) {
 				action = PlayerInteractEvent.Action.LEFT_CLICK_BLOCK;
 			} else action = PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK;
 			ItemStack item = player.getInventory().getItemInMainHand();

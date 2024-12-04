@@ -7,8 +7,8 @@ import de.atlasmc.entity.Llama;
  */
 public interface LlamaInventory extends AbstractHorseInventory {
 	
-	public ItemStack getDecor();
+	ItemStack getDecor();
 	
-	public void setDecor(ItemStack decor);
+	void setDecor(ItemStack decor);
 
 }

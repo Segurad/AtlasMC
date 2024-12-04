@@ -150,6 +150,11 @@ public interface Inventory extends Iterable<ItemStack> {
 	@UnsafeAPI
 	void setContentsUnsafe(ItemStack[] contents);
 	
+	/**
+	 * Returns whether or not this inventory contains a {@link ItemStack} with the given Material
+	 * @param material
+	 * @return true of present
+	 */
 	boolean contains(Material material);
 	
 	/**
@@ -169,6 +174,11 @@ public interface Inventory extends Iterable<ItemStack> {
 	 */
 	boolean hasViewers();
 
+	/**
+	 * Returns the displayed title of this inventory or null if none
+	 * @return title
+	 */
+	@Nullable
 	Chat getTitle();
 
 	/**
@@ -218,18 +228,25 @@ public interface Inventory extends Iterable<ItemStack> {
 	void updateSlots();
 
 	/**
-	 * Updates all slots of this inventory for a player
+	 * Updates all slots of this inventory for a player.
 	 * @param player
 	 */
 	void updateSlots(Player player);
 	
+	/**
+	 * Updates the properties of this inventory to all {@link #getViewers()}
+	 */
 	void updateProperties();
 	
+	/**
+	 * Updates the properties of this inventory to the given player.
+	 * @param player to update
+	 */
 	void updateProperties(Player player);
 
 	/**
-	 * Sets the Title of this Inventory. Players need to reopen it to receive the update.
-	 * @param title for this Inventory
+	 * Sets the title of this inventory. Players need to reopen it to receive the update.
+	 * @param title for this inventory
 	 */
 	void setTitle(Chat title);
 

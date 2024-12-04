@@ -1,9 +1,9 @@
 package de.atlascore.scoreboard.classic;
 
 import de.atlasmc.entity.Player;
-import de.atlasmc.scoreboard.ScoreboardView;
+import de.atlasmc.scoreboard.classic.ClassicScoreboardView;
 
-class CoreClassicScoreboardView implements ScoreboardView {
+class CoreClassicScoreboardView implements ClassicScoreboardView {
 
 	private final CoreScoreboard board;
 	private final Player player;

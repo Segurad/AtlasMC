@@ -13,20 +13,20 @@ public interface Ingredient {
 	 * Returns the list of usable items for this ingredient
 	 * @return list
 	 */
-	public List<ItemStack> getUseableItems();
+	List<ItemStack> getUseableItems();
 	
 	/**
 	 * Returns a usable item of this ingredient.
 	 * By default the first item of all usable items 
 	 * @return item
 	 */
-	public ItemStack getItem();
+	ItemStack getItem();
 	
 	/**
 	 * Tests if this item is compatible with this ingredient
 	 * @param item
 	 * @return true if test successfully
 	 */
-	public boolean test(ItemStack item);
+	boolean test(ItemStack item);
 
 }

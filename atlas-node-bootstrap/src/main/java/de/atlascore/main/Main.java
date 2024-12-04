@@ -144,7 +144,7 @@ public class Main {
 				StartupContext.FINALIZE_STARTUP);
 		if (isMaster) {
 			context.addStageAfter(
-					StartupContext.LOAD_EXTRA_PLUGINS,
+					StartupContext.INIT_STAGES,
 					StartupContext.INIT_MASTER,
 					StartupContext.LOAD_MASTER_DATA);
 		}

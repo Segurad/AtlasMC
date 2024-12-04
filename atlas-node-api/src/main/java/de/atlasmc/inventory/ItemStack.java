@@ -1,8 +1,12 @@
 package de.atlasmc.inventory;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.atlasmc.Material;
+import de.atlasmc.NamespacedKey;
+import de.atlasmc.inventory.component.ItemComponent;
 import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTHolder;
@@ -18,11 +22,13 @@ public class ItemStack implements NBTHolder {
 	NBT_ID = CharKey.literal("id"),
 	NBT_TAG = CharKey.literal("tag"),
 	NBT_CUSTOM_CREATIVE_LOCK = CharKey.literal("CustomCreativeLock"),
-	NBT_SLOT = CharKey.literal("Slot");
+	NBT_SLOT = CharKey.literal("Slot"),
+	NBT_COMPONENTS = CharKey.literal("components"); 
 	
 	private byte amount;
 	private Material type;
 	private ItemMeta meta;
+	private Map<NamespacedKey, ItemComponent> components;
 
 	/**
 	 * Creates a ItemStack of the Type {@link Material#AIR} with amount of 1
@@ -40,6 +46,50 @@ public class ItemStack implements NBTHolder {
 			throw new IllegalArgumentException("Material can not be null!");
 		type = material;
 		setAmount(amount);
+	}
+	
+	public Map<NamespacedKey, ItemComponent> getComponents() {
+		if (components == null)
+			return Map.of();
+		return components;
+	}
+	
+	public boolean hasComponents() {
+		return components != null && !components.isEmpty();
+	}
+	
+	public boolean hasComponent(NamespacedKey key) {
+		if (components == null)
+			return false;
+		return components.containsKey(key);
+	}
+	
+	public boolean hasComponent(Class<? extends ItemComponent> clazz) {
+		if (components == null || components.isEmpty())
+			return false;
+		return components.containsKey(ItemComponent.getComponentKey(clazz));
+	}
+	
+	public ItemComponent getComponent(NamespacedKey key) {
+		if (components == null)
+			return null;
+		return components.get(key);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends ItemComponent> T getComponent(Class<T> clazz) {
+		ItemComponent comp = components.get(ItemComponent.getComponentKey(clazz));
+		if (comp == null || !clazz.isInstance(comp))
+			return null;
+		return (T) comp;
+	}
+	
+	public ItemComponent setComponent(ItemComponent component) {
+		if (component == null)
+			throw new IllegalArgumentException("Component can not be null!");
+		if (components == null)
+			components = new HashMap<>();
+		return components.put(component.getNamespacedKey(), component);
 	}
 
 	public Material getType() {

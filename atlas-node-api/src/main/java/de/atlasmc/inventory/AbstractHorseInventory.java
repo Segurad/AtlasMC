@@ -2,8 +2,8 @@ package de.atlasmc.inventory;
 
 public interface AbstractHorseInventory extends Inventory {
 	
-	public ItemStack getSaddle();
+	ItemStack getSaddle();
 	
-	public void setSaddle(ItemStack saddle);
+	void setSaddle(ItemStack saddle);
 
 }

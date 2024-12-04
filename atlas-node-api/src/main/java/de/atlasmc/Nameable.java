@@ -4,8 +4,8 @@ import de.atlasmc.chat.Chat;
 
 public interface Nameable {
 	
-	public Chat getCustomName();
+	Chat getCustomName();
 	
-	public void setCustomName(Chat name);
+	void setCustomName(Chat name);
 
 }

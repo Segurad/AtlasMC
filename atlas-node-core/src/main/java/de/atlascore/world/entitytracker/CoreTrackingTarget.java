@@ -18,7 +18,7 @@ class CoreTrackingTarget<T extends Entity> implements TrackingTarget<T> {
 	final Set<T> entities;
 	final Set<T> entitiesView;
 	final Set<CoreTrackedPerception<T>> perceptions;
-	final Long2ObjectMap<CoreTrackedChunkEntry<T>> chunks;
+	final Long2ObjectMap<CoreTrackedChunk<T>> chunks;
 	
 	public CoreTrackingTarget(Class<T> target) {
 		this.target = target;
@@ -29,9 +29,9 @@ class CoreTrackingTarget<T extends Entity> implements TrackingTarget<T> {
 	}
 	
 	void addToChunk(long index, T entity) {
-		CoreTrackedChunkEntry<T> chunk = chunks.get(index);
+		CoreTrackedChunk<T> chunk = chunks.get(index);
 		if (chunk == null) {
-			chunks.put(index, chunk = new CoreTrackedChunkEntry<>());
+			chunks.put(index, chunk = new CoreTrackedChunk<>());
 			// TODO check if in perception
 		}
 		chunk.addEntity(entity);
@@ -51,7 +51,7 @@ class CoreTrackingTarget<T extends Entity> implements TrackingTarget<T> {
 	}
 	
 	void removeFromChunk(long index, T entity) {
-		CoreTrackedChunkEntry<T> chunk = chunks.get(index);
+		CoreTrackedChunk<T> chunk = chunks.get(index);
 		if (chunk == null)
 			return;
 		chunk.removeEntity(entity);
@@ -86,57 +86,130 @@ class CoreTrackingTarget<T extends Entity> implements TrackingTarget<T> {
 	@SuppressWarnings("unchecked")
 	void addPerception(CoreTrackedPerception<?> perception) {
 		perceptions.add((CoreTrackedPerception<T>) perception);
-		// TODO add
+		int maxRange = perception.perceptionRange;
+		if (maxRange <= 1) {
+			CoreTrackedChunk<T> chunk = chunks.get(MathUtil.toChunkPosition(perception.chunkX, perception.chunkZ));
+			if (chunk == null)
+				return;
+			chunk.addPerception(perception, perception.chunkY);
+		} else {
+			// TODO add full
+		}
 	}
 	
 	void updatePerception(CoreTrackedPerception<?> perception, double x, double y, double z) {
-		int newX = MathUtil.toChunkCoordinate(x);
-		int newY = MathUtil.toChunkCoordinate(y);
-		int newZ = MathUtil.toChunkCoordinate(z);
-		int deltaX = perception.chunkX - newX;
-		int deltaY = perception.chunkY - newY;
-		int deltaZ = perception.chunkZ - newZ;
+		final int oldX = perception.chunkX;
+		final int oldY = perception.chunkY;
+		final int oldZ = perception.chunkZ;
+		final int newX = MathUtil.toChunkCoordinate(x);
+		final int newY = MathUtil.toChunkCoordinate(y);
+		final int newZ = MathUtil.toChunkCoordinate(z);
+		final int deltaX = oldX - newX;
+		final int deltaY = oldY - newY;
+		final int deltaZ = oldZ - newZ;
 		int maxRange = perception.perceptionRange;
 		if (maxRange <= 1) { // can only view current chunk
 			if (deltaX != 0 || deltaZ != 0) { // only update chunks if x z changes
-				CoreTrackedChunkEntry<T> oldChunk = chunks.get(MathUtil.toChunkPosition(perception.chunkX, perception.chunkZ)); 
+				CoreTrackedChunk<T> oldChunk = chunks.get(MathUtil.toChunkPosition(oldX, oldZ)); 
 				if (oldChunk != null) {
-					oldChunk.removePerception(perception, perception.chunkY);
+					oldChunk.removePerception(perception, oldY);
 				}
-				CoreTrackedChunkEntry<T> newChunk = chunks.get(MathUtil.toChunkPosition(newX, newZ));
+				CoreTrackedChunk<T> newChunk = chunks.get(MathUtil.toChunkPosition(newX, newZ));
 				if (newChunk != null) {
 					newChunk.addPerception(perception, newY);
 				}
 			} else if (deltaY != 0) { // update entities in chunk if chunk section change
-				// TODO y change
+				CoreTrackedChunk<T> chunk = chunks.get(MathUtil.toChunkPosition(newX, newZ));
+				if (chunk != null) {
+					chunk.updatePerceptionY(perception, oldY, newY);
+				}
 			}
 			return;
 		}
-		maxRange *= 2; // radius to diameter
-		if (deltaX > maxRange || deltaY > maxRange) {
-			// TODO rebuild full area
+		if (deltaX > 2 || deltaY > 2) {
+			removeFullArea(perception, oldX, oldY, oldZ);
+			addFullArea(perception, newX, newY, newZ);
 		} else {
-			if (deltaX != 0) {
-				// TODO move region X
+	        // Handle X-axis movement
+	        if (deltaX != 0) {
+	            if (deltaX > 0) {
+	            	
+	            } else {
+	            	
+	            }
+	        }
+
+	        // Handle Z-axis movement, excluding chunks already processed by X-axis movement
+	        if (deltaZ != 0) {
+	            if (deltaZ > 0) {
+	            	
+	            } else {
+	            	
+	            }
+	        }
+
+	        // Handle Y-axis movement, update Y for all chunks in perception area if deltaY != 0
+	        if (deltaY != 0) {
+	        	final int maxX = newX + maxRange;
+	        	final int maxZ = newZ + maxRange;
+	            for (int xChunk = newX - maxRange; xChunk <= maxX; xChunk++) {
+	                for (int zChunk = newZ - maxRange; zChunk <= maxZ; zChunk++) {
+	                    CoreTrackedChunk<T> chunk = chunks.get(MathUtil.toChunkPosition(xChunk, zChunk));
+	                    if (chunk != null) {
+	                        chunk.updatePerceptionY(perception, oldY, newY);
+	                    }
+	                }
+	            }
+	        }
+		}
+	}
+	
+	private void addFullArea(CoreTrackedPerception<?> perception, int chunkX, int chunkY, int chunkZ) {
+		int maxRange = perception.perceptionRange;
+		final int maxX = chunkX + maxRange;
+		final int maxZ = chunkZ + maxRange;
+		final int minZ = chunkZ - maxRange;
+		for (int x = chunkX - maxRange; x <= maxX; x++) {
+			for (int z = minZ; z <= maxZ; z++) {
+				CoreTrackedChunk<T> chunk = chunks.get(MathUtil.toChunkPosition(x, z));
+				if (chunk != null) {
+					chunk.addPerception(perception, chunkY);
+				}
 			}
-			if (deltaZ != 0) {
-				// TODO move region Z
-			}
-			if (deltaY != 0) {
-				// TODO rechecks all entity Y in area
+		}
+	}
+
+	private void removeFullArea(CoreTrackedPerception<?> perception, int chunkX, int chunkY, int chunkZ) {
+		int maxRange = perception.perceptionRange;
+		final int maxX = chunkX + maxRange;
+		final int maxZ = chunkZ + maxRange;
+		final int minZ = chunkZ - maxRange;
+		for (int x = chunkX - maxRange; x <= maxX; x++) {
+			for (int z = minZ; z <= maxZ; z++) {
+				CoreTrackedChunk<T> chunk = chunks.get(MathUtil.toChunkPosition(x, z));
+				if (chunk != null) {
+					chunk.removePerception(perception, chunkY);
+				}
 			}
 		}
 	}
 	
 	void removePerception(CoreTrackedPerception<?> perception) {
 		perceptions.remove(perception);
-		final int maxRange = perception.perceptionRange;
-		// TODO remove
+		int maxRange = perception.perceptionRange;
+		if (maxRange <= 1) {
+			CoreTrackedChunk<T> chunk = chunks.get(MathUtil.toChunkPosition(perception.chunkX, perception.chunkZ));
+			if (chunk == null)
+				return;
+			chunk.removePerception(perception, perception.chunkY);
+		} else {
+			// TODO remove full
+		}
 	}
 
 	@Override
 	public Collection<T> getEntities(int x, int z) {
-		CoreTrackedChunkEntry<T> chunk = chunks.get(MathUtil.toChunkPosition(x, z));
+		CoreTrackedChunk<T> chunk = chunks.get(MathUtil.toChunkPosition(x, z));
 		if (chunk == null)
 			return List.of();
 		return chunk.getEntityView();
@@ -144,7 +217,7 @@ class CoreTrackingTarget<T extends Entity> implements TrackingTarget<T> {
 
 	@Override
 	public <C extends Collection<T>> C getEntities(int x, int z, C entities) {
-		CoreTrackedChunkEntry<T> chunk = chunks.get(MathUtil.toChunkPosition(x, z));
+		CoreTrackedChunk<T> chunk = chunks.get(MathUtil.toChunkPosition(x, z));
 		if (chunk == null)
 			return entities;
 		for (Entity e : chunk.entities) {

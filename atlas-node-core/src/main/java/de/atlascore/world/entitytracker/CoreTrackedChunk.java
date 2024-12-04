@@ -8,42 +8,42 @@ import de.atlasmc.entity.Entity;
 import de.atlasmc.util.MathUtil;
 import de.atlasmc.world.entitytracker.EntityPerception;
 
-class CoreTrackedChunkEntry<T extends Entity> {
-	
+class CoreTrackedChunk<T extends Entity> {
+
 	private static final int ENTITIES_INIT_CAPACITY = 5;
 	private static final float ENTITIES_GROW_FACTOR = 2;
 	private static final int PERCEPTIONS_INIT_CAPACITY = 5;
 	private static final float PERCEPTIONS_GROW_FACTOR = 2;
-	
+
 	Entity[] entities;
 	int entitiesSize;
 	private List<T> entitiesView;
 	CoreTrackedPerception<?>[] perceptions;
 	int perceptionsSize;
-	
-	public CoreTrackedChunkEntry() {
+
+	public CoreTrackedChunk() {
 		this.entities = new Entity[ENTITIES_INIT_CAPACITY];
 		this.perceptions = new CoreTrackedPerception<?>[PERCEPTIONS_INIT_CAPACITY];
 	}
-	
+
 	void addEntity(Entity entity) {
 		if (entities.length == entitiesSize) // check if grow is required
 			entities = Arrays.copyOf(entities, (int) (entitiesSize * ENTITIES_GROW_FACTOR));
 		entities[entitiesSize++] = entity;
 	}
-	
+
 	void removeEntity(Entity entity) {
 		final int size = entitiesSize;
 		for (int i = 0; i < size; i++) {
 			if (entities[i] != entity)
 				continue;
-			entities[i] = entities[size-1];
-			entities[size-1] = null;
+			entities[i] = entities[size - 1];
+			entities[size - 1] = null;
 		}
-		entitiesSize = size -1;
+		entitiesSize = size - 1;
 	}
-	
-	public void updateEntityY(Entity entity, int oldY, int newY) {
+
+	void updateEntityY(Entity entity, int oldY, int newY) {
 		final int size = perceptionsSize;
 		if (size == 0)
 			return;
@@ -61,7 +61,26 @@ class CoreTrackedChunkEntry<T extends Entity> {
 			}
 		}
 	}
-	
+
+	void updatePerceptionY(CoreTrackedPerception<?> perception, int oldY, int newY) {
+		final int size = entitiesSize;
+		if (size == 0)
+			return;
+		for (int i = 0; i < size; i++) {
+			Entity entity = entities[i];
+			if (perception.source == entity || !perception.clazz.isInstance(entity))
+				continue;
+			final double entityY = MathUtil.toChunkCoordinate(entity.getY());
+			if (Math.abs(oldY - entityY) > perception.perceptionRange) {
+				if (Math.abs(newY - entityY) > perception.perceptionRange)
+					continue;
+				perception.perception.add(entity);
+			} else if (Math.abs(newY - entityY) > perception.perceptionRange) {
+				perception.perception.remove(entity);
+			}
+		}
+	}
+
 	void addPerception(CoreTrackedPerception<?> perception, int chunkY) {
 		// add entities
 		final int size = this.entitiesSize;
@@ -82,8 +101,18 @@ class CoreTrackedChunkEntry<T extends Entity> {
 			perceptions = Arrays.copyOf(perceptions, (int) (perceptionsSize * PERCEPTIONS_GROW_FACTOR));
 		perceptions[perceptionsSize++] = perception;
 	}
-	
+
 	void removePerception(CoreTrackedPerception<?> perception, int chunkY) {
+		// remove perception
+		final int perceptionsSize = this.perceptionsSize;
+		for (int i = 0; i < perceptionsSize; i++) {
+			if (perceptions[i] != perception)
+				continue;
+			perceptions[i] = perceptions[perceptionsSize - 1];
+			perceptions[perceptionsSize - 1] = null;
+			this.perceptionsSize = perceptionsSize - 1;
+			break;
+		}
 		// remove entities
 		final int size = this.entitiesSize;
 		final Entity[] entities = this.entities;
@@ -98,31 +127,22 @@ class CoreTrackedChunkEntry<T extends Entity> {
 				continue;
 			p.remove(ent);
 		}
-		// remove perception
-		final int perceptionsSize = this.perceptionsSize;
-		for (int i = 0; i < perceptionsSize; i++) {
-			if (perceptions[i] != perception)
-				continue;
-			perceptions[i] = perceptions[perceptionsSize-1];
-			perceptions[perceptionsSize-1] = null;
-		}
-		this.perceptionsSize = perceptionsSize -1;
 	}
-	
+
 	List<T> getEntityView() {
 		if (entitiesView == null)
 			this.entitiesView = new EntityView<>(this);
 		return entitiesView;
 	}
-	
-	private static final class EntityView<T extends Entity> extends AbstractList<T> {
-		
-		private final CoreTrackedChunkEntry<T> chunk;
 
-		public EntityView(CoreTrackedChunkEntry<T> chunk) {
+	private static final class EntityView<T extends Entity> extends AbstractList<T> {
+
+		private final CoreTrackedChunk<T> chunk;
+
+		public EntityView(CoreTrackedChunk<T> chunk) {
 			this.chunk = chunk;
 		}
-		
+
 		@Override
 		public int size() {
 			return chunk.entitiesSize;
@@ -133,7 +153,7 @@ class CoreTrackedChunkEntry<T extends Entity> {
 		public T get(int index) {
 			return (T) chunk.entities[index];
 		}
-		
+
 	}
 
 }

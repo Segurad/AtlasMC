@@ -15,7 +15,7 @@ public class CorePacketInUseItemOn implements PacketIO<PacketInUseItemOn> {
 
 	@Override
 	public void read(PacketInUseItemOn packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.setHand(readVarInt(in) == 0 ? EquipmentSlot.HAND : EquipmentSlot.OFF_HAND);
+		packet.setHand(readVarInt(in) == 0 ? EquipmentSlot.MAIN_HAND : EquipmentSlot.OFF_HAND);
 		packet.setPosition(in.readLong());
 		packet.setFace(CorePacketInPlayerAction.FACES.get(readVarInt(in)));
 		packet.setCursurPositionX(in.readFloat());
@@ -27,7 +27,7 @@ public class CorePacketInUseItemOn implements PacketIO<PacketInUseItemOn> {
 
 	@Override
 	public void write(PacketInUseItemOn packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		writeVarInt(packet.getHand() == EquipmentSlot.HAND ? 0 : 1, out);
+		writeVarInt(packet.getHand() == EquipmentSlot.MAIN_HAND ? 0 : 1, out);
 		out.writeLong(packet.getPosition());
 		writeVarInt(CorePacketInPlayerAction.FACES.indexOf(packet.getFace()), out);
 		out.writeFloat(packet.getCursurPositionX());

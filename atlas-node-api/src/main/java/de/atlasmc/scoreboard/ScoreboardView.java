@@ -8,22 +8,22 @@ public interface ScoreboardView {
 	 * Returns the Player this view belongs to
 	 * @return player
 	 */
-	public Player getViewer();
+	Player getViewer();
 	
 	/**
 	 * Returns the handler of this view
 	 * @return handler
 	 */
-	public Object getHandler();
+	Object getHandler();
 	
 	/**
 	 * Called when the view is removed from the player
 	 */
-	public void remove();
+	void remove();
 	
 	/**
 	 * Called when the view is set to the player
 	 */
-	public void add();
+	void add();
 
 }

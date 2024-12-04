@@ -8,9 +8,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import de.atlasmc.Material;
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeModifier;
 import de.atlasmc.attribute.AttributeModifier.Operation;
@@ -54,7 +54,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 	NBT_SLOT = CharKey.literal("Slot");
 			
 	static {
-		NBT_FIELDS = new NBTFieldContainer<>();
+		NBT_FIELDS = NBTFieldContainer.newContainer();
 		NBT_FIELDS.setField(NBT_CAN_DESTROY, (holder, reader) -> {
 			List<Material> canDestroy = holder.getCanDestroy();
 			while (reader.getRestPayload() > 0) {
@@ -64,7 +64,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 		NBT_FIELDS.setField(NBT_CUSTOM_MODEL_DATA, (holder, reader) -> {
 			holder.setCustomModelData(reader.readIntTag());
 		});
-		NBTFieldContainer<CoreItemMeta> display = new NBTFieldContainer<>();
+		NBTFieldContainer<CoreItemMeta> display = NBTFieldContainer.newContainer();
 		NBT_FIELDS.setContainer(NBT_DISPLAY, display);
 		display.setField(NBT_NAME, (holder, reader) -> {
 			holder.setDisplayName(ChatUtil.toChat(reader.readStringTag()));
@@ -111,8 +111,7 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 			while (reader.getRestPayload() > 0) {
 				Attribute attribute = null;
 				double amount = 0;
-				String name = null;
-				UUID uuid = null;
+				NamespacedKey id = null;
 				EquipmentSlot slot = null;
 				Operation operation = null;
 				while (reader.getType() != TagType.TAG_END) {
@@ -121,22 +120,20 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 						amount = reader.readDoubleTag();
 					else if (NBT_ATTRIBUTE_NAME.equals(value))
 						attribute = Attribute.getByName(reader.readStringTag());
-					else if (NBT_NAME.equals(value))
-						name = reader.readStringTag();
 					else if (NBT_OPERATION.equals(value))
 						operation = Operation.getByID(reader.readIntTag());
-					else if (NBT_UUID.equals(value))
-						uuid = reader.readUUID();
+					else if (NBT_ID.equals(value))
+						id = reader.readNamespacedKey();
 					else if (NBT_SLOT.equals(value))
 						slot = EquipmentSlot.valueOf(reader.readStringTag().toUpperCase());
 					else
 						reader.skipTag();
 				}
 				reader.readNextEntry();
-				attributes.put(attribute, new AttributeModifier(uuid, name, amount, operation, slot));
+				attributes.put(attribute, new AttributeModifier(id, amount, operation, slot));
 			}
 		});
-		NBTFieldContainer<CoreItemMeta> atlas = new NBTFieldContainer<>();
+		NBTFieldContainer<CoreItemMeta> atlas = NBTFieldContainer.newContainer();
 		NBT_FIELDS.setContainer(NBT_ATLASMC, atlas);
 		atlas.setUnknownFieldHandler((holder, reader) -> {
 			holder.getCustomTagContainer().addCustomTag(reader.readNBT());
@@ -496,10 +493,9 @@ public class CoreItemMeta extends AbstractNBTBase implements ItemMeta {
 				for (AttributeModifier mod : attributes.get(attribute)) {
 					writer.writeDoubleTag(NBT_AMOUNT, mod.getAmount());
 					writer.writeStringTag(NBT_ATTRIBUTE_NAME, rawname);
-					writer.writeStringTag(NBT_NAME, mod.getName());
 					writer.writeIntTag(NBT_OPERATION, mod.getOperation().getID());
 					writer.writeStringTag(NBT_SLOT, mod.getSlot().name().toLowerCase());
-					writer.writeUUID(NBT_UUID, mod.getUUID());
+					writer.writeNamespacedKey(NBT_ID, mod.getID());
 					writer.writeEndTag();
 				}
 			}

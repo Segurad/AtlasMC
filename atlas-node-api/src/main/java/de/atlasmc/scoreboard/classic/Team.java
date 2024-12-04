@@ -8,56 +8,56 @@ import de.atlasmc.scoreboard.TeamOptionType;
 
 public interface Team {
 
-	public ChatColor getColor();
+	ChatColor getColor();
 	
-	public Chat getPrefix();
+	Chat getPrefix();
 	
-	public Chat getSuffix();
+	Chat getSuffix();
 	
-	public Chat getDisplayName();
+	Chat getDisplayName();
 	
-	public String getName();
+	String getName();
 	
-	public boolean getAllowFriedlyFire();
+	boolean getAllowFriedlyFire();
 	
-	public boolean canSeeInvisibleTeammeber();
+	boolean canSeeInvisibleTeammeber();
 	
-	public void setPrefix(Chat prefix);
+	void setPrefix(Chat prefix);
 	
-	public void setSuffix(Chat suffix);
+	void setSuffix(Chat suffix);
 	
-	public void setDisplayName(Chat display);
+	void setDisplayName(Chat display);
 	
-	public void setColor(ChatColor color);
+	void setColor(ChatColor color);
 	
-	public void setAllowFriedlyFire(boolean allow);
+	void setAllowFriedlyFire(boolean allow);
 	
-	public void setSeeInvisibleTeammeber(boolean see);
+	void setSeeInvisibleTeammeber(boolean see);
 	
-	public TeamOptionType getNameTagVisibility();
+	TeamOptionType getNameTagVisibility();
 	
-	public TeamOptionType getCollisionRule();
+	TeamOptionType getCollisionRule();
 	
-	public void setNameTagVisibility(TeamOptionType option);
+	void setNameTagVisibility(TeamOptionType option);
 	
-	public void setCollisionRule(TeamOptionType option);
+	void setCollisionRule(TeamOptionType option);
 	
-	public void unregister();
+	void unregister();
 	
-	public boolean isRegistered();
+	boolean isRegistered();
 	
-	public Scoreboard getScoreboard();
+	Scoreboard getScoreboard();
 	
-	public void update();
+	void update();
 
-	public List<String> getEntries();
+	List<String> getEntries();
 	
-	public boolean addEntry(String entry);
+	boolean addEntry(String entry);
 	
-	public boolean removeEntry(String entry);
+	boolean removeEntry(String entry);
 	
-	public boolean addEntry(List<String> entries);
+	boolean addEntry(List<String> entries);
 	
-	public boolean removeEntry(List<String> entries);
+	boolean removeEntry(List<String> entries);
 
 }

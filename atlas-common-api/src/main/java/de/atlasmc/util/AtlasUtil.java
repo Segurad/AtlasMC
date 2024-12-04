@@ -1,13 +1,27 @@
 package de.atlasmc.util;
 
+import java.util.List;
 import java.util.UUID;
 
 public class AtlasUtil {
 	
+	/**
+	 * UUID with value 0
+	 */
 	public static final UUID ZERO_UUID = new UUID(0, 0);
 	
 	private AtlasUtil() {}
 	
+	public static UUID uuidFromBytes(byte[] bytes) {
+		return uuidFromBytes(bytes, 0);
+	}
+	
+	/**
+	 * Converts the given bytes to a UUID. The given array must have at least 16 bytes available.
+	 * @param bytes
+	 * @param offset
+	 * @return UUID
+	 */
 	public static UUID uuidFromBytes(byte[] bytes, int offset) {
 		if (bytes.length - offset < 16)
 			throw new IllegalArgumentException("Need at least 16 readable bytes: " + (bytes.length - offset));
@@ -34,6 +48,13 @@ public class AtlasUtil {
 		return uuidToBytes(uuid, new byte[16], 0);
 	}
 	
+	/**
+	 * Converts the given UUID to bytes
+	 * @param uuid
+	 * @param buff
+	 * @param offset
+	 * @return
+	 */
 	public static byte[] uuidToBytes(UUID uuid, byte[] buff, int offset) {
 		if (uuid == null)
 			throw new IllegalArgumentException("UUID can not be null!");
@@ -51,6 +72,37 @@ public class AtlasUtil {
 			most >>>= 8;
 		}
 		return buff;
+	}
+	
+	/**
+	 * Removes the element at the given index and fills the gap with the last element
+	 * @param <T>
+	 * @param list to remove from
+	 * @param index to remove
+	 * @return the removed element
+	 */
+	public static <T> T fastRemove(List<T> list, int index) {
+		int last = list.size() - 1;
+		T removed = list.set(index, list.get(last));
+		list.set(last, null);
+		return removed;
+	}
+	
+	/**
+	 * Removes the given element and fills the gap with the last element
+	 * @param <T>
+	 * @param list to remove from
+	 * @param element to remove
+	 * @return true if removed
+	 */
+	public static <T> boolean fastRemove(List<T> list, Object element) {
+		int index = list.indexOf(element);
+		if (index == -1)
+			return false;
+		int last = list.size() - 1;
+		T removed = list.set(index, list.get(last));
+		list.set(last, null);
+		return removed != null;
 	}
 
 }

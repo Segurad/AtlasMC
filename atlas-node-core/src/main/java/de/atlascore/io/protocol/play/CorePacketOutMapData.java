@@ -29,7 +29,7 @@ public class CorePacketOutMapData implements PacketIO<PacketOutMapData> {
 					int type = readVarInt(in);
 					byte x = in.readByte();
 					byte z = in.readByte();
-					byte direction = in.readByte();
+					float direction = Math.clamp(in.readByte() * 16, 0, 360);
 					boolean name = in.readBoolean();
 					String dname = null;
 					if (name) 
@@ -66,7 +66,7 @@ public class CorePacketOutMapData implements PacketIO<PacketOutMapData> {
 				writeVarInt(i.getType().ordinal(), out);
 				out.writeByte(i.getX());
 				out.writeByte(i.getZ());
-				out.writeByte(i.getDirection());
+				out.writeByte((int) (i.getDirection() / 16));
 				out.writeBoolean(i.hasDisplayName());
 				if (i.hasDisplayName())
 					writeString(i.getDisplayName(), out);

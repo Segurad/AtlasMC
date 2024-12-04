@@ -43,7 +43,7 @@ public interface Player extends HumanEntity, Permissible, Messageable {
 	
 	void setLevel(int level, float progress);
 
-	public default void playEffect(SimpleLocation loc, WorldEvent effect) {
+	default void playEffect(SimpleLocation loc, WorldEvent effect) {
 		playEffect(loc, effect, null, true);
 	}
 	
@@ -54,7 +54,7 @@ public interface Player extends HumanEntity, Permissible, Messageable {
 	 * @param data
 	 * @implNote {@link #playEffect(int, int, int, WorldEvent, Object, boolean)}
 	 */
-	public default void playEffect(SimpleLocation loc, WorldEvent effect, Object data) {
+	default void playEffect(SimpleLocation loc, WorldEvent effect, Object data) {
 		playEffect(loc, effect, data, true);
 	}
 	

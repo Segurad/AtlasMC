@@ -128,7 +128,7 @@ public class CoreEntityTracker implements EntityTracker {
 
 	@Override
 	public Collection<Entity> getEntities(int x, int z) {
-		CoreTrackedChunkEntry<Entity> chunk = targetAll.chunks.get(MathUtil.toChunkPosition(x, z));
+		CoreTrackedChunk<Entity> chunk = targetAll.chunks.get(MathUtil.toChunkPosition(x, z));
 		return chunk == null ? List.of() : chunk.getEntityView();
 	}
 
@@ -144,7 +144,7 @@ public class CoreEntityTracker implements EntityTracker {
 		TrackingTarget<T> target = getTarget(clazz);
 		if (target != null)
 			return target.getEntities(x, z);
-		CoreTrackedChunkEntry<Entity> chunk = targetAll.chunks.get(MathUtil.toChunkPosition(x, z));
+		CoreTrackedChunk<Entity> chunk = targetAll.chunks.get(MathUtil.toChunkPosition(x, z));
 		if (chunk == null)
 			return List.of();
 		ArrayList<T> entities = new ArrayList<>();
@@ -162,7 +162,7 @@ public class CoreEntityTracker implements EntityTracker {
 		CoreTrackingTarget<?> target = (CoreTrackingTarget<?>) targets.get(clazz);
 		if (target == null)
 			target = targetAll;
-		CoreTrackedChunkEntry<?> chunk = target.chunks.get(MathUtil.toChunkPosition(x, z));
+		CoreTrackedChunk<?> chunk = target.chunks.get(MathUtil.toChunkPosition(x, z));
 		if (chunk == null || chunk.entitiesSize == 0)
 			return entities;
 		for (Entity e : chunk.entities) {
@@ -224,7 +224,7 @@ public class CoreEntityTracker implements EntityTracker {
 				continue;
 			@SuppressWarnings("unchecked")
 			CoreTrackingTarget<Entity> etrack = (CoreTrackingTarget<Entity>) target;
-			CoreTrackedChunkEntry<Entity> chunk = etrack.chunks.get(newChunkIndex);
+			CoreTrackedChunk<Entity> chunk = etrack.chunks.get(newChunkIndex);
 			chunk.updateEntityY(ent, oldY, newY);
 		}
 	}
@@ -235,7 +235,7 @@ public class CoreEntityTracker implements EntityTracker {
 			if (!target.target.isInstance(entity))
 				continue;
 			long chunkIndex = MathUtil.coordinatesToChunkPosition(entity.x, entity.y);
-			CoreTrackedChunkEntry<?> chunk = target.chunks.get(chunkIndex);
+			CoreTrackedChunk<?> chunk = target.chunks.get(chunkIndex);
 			chunk.removeEntity(e);
 			for (CoreTrackedPerception<?> perception : chunk.perceptions) {
 				if (!perception.clazz.isInstance(e))

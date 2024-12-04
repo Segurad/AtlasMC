@@ -2,18 +2,16 @@ package de.atlascore.potion;
 
 import java.util.UUID;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeModifier;
 import de.atlasmc.attribute.AttributeModifier.Operation;
 import de.atlasmc.entity.LivingEntity;
 import de.atlasmc.potion.PotionEffectType;
 
-public class CoreEffectHealthBoost extends CoreAbstractPotionEffect {
+public class CoreEffectHealthBoost extends CoreAbstractAttributeModifierPotionEffect {
 
-	protected static final String
-	MODIFIER_NAME_HEALTH = "effect.healthBoost";
-	protected static final UUID
-	MODIFIER_UUID_HEALTH = UUID.fromString("5D6F0BA2-1186-46AC-B896-C61C5CEE99CC");
+	public static final NamespacedKey MODIFIER_ID = NamespacedKey.literal("minecraft:health_boost");
 	
 	public CoreEffectHealthBoost(PotionEffectType type, int amplifier, int duration, boolean reducedAmbient, boolean particles, boolean icon, UUID uuid) {
 		super(type, amplifier, duration, reducedAmbient, particles, icon, uuid);
@@ -22,13 +20,18 @@ public class CoreEffectHealthBoost extends CoreAbstractPotionEffect {
 	@Override
 	public void addEffect(LivingEntity entity) {
 		double amount = 2d*(amplifier+1);
-		AttributeModifier modifier = new AttributeModifier(MODIFIER_UUID_HEALTH, MODIFIER_NAME_HEALTH, amount, Operation.ADD_NUMBER);
+		AttributeModifier modifier = new AttributeModifier(modifierID, amount, Operation.ADD_VALUE);
 		entity.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, modifier);
 	}
 
 	@Override
 	public void removeEffect(LivingEntity entity) {
-		entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).removeModifier(MODIFIER_UUID_HEALTH);
+		entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).removeModifier(modifierID);
+	}
+
+	@Override
+	public NamespacedKey getDefaultModifierID() {
+		return MODIFIER_ID;
 	}
 
 }

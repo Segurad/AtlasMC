@@ -3,8 +3,11 @@ package de.atlasmc.attribute;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Consumer;
+
+import de.atlasmc.NamespacedKey;
+import de.atlasmc.inventory.EquipmentSlot;
+import de.atlasmc.util.AtlasUtil;
 
 public class AttributeInstance {
 	
@@ -93,22 +96,40 @@ public class AttributeInstance {
 		if (updateListener != null)
 			updateListener.accept(this);
 	}
-
-	public boolean removeModifier(UUID uuid) {
-		if (uuid == null)
-			throw new IllegalArgumentException("UUID can not be null!");
+	
+	public boolean removeModifier(AttributeModifier modifier) {
+		if (modifier == null)
+			throw new IllegalArgumentException("Modifier can not be null!");
 		if (!hasModifiers())
 			return false;
 		boolean removed = false;
-		for (int i = 0; i < modifiers.size(); i++)
-			if (modifiers.get(i).getUUID().equals(uuid)) {
-				modifiers.remove(i--);
-				changed = true;
-				removed = true;
-			}
-		if (removed)
-			if (updateListener != null)
-				updateListener.accept(this);
+		for (int i = 0; i < modifiers.size(); i++) {
+			if (!modifier.equals(modifiers.get(i)))
+				continue;
+			AtlasUtil.fastRemove(modifiers, i--);
+			changed = true;
+			removed = true;
+		}
+		if (removed && updateListener != null)
+			updateListener.accept(this);
+		return removed;
+	}
+
+	public boolean removeModifier(NamespacedKey id) {
+		if (id == null)
+			throw new IllegalArgumentException("ID can not be null!");
+		if (!hasModifiers())
+			return false;
+		boolean removed = false;
+		for (int i = 0; i < modifiers.size(); i++) {
+			if (!id.equals(modifiers.get(i).getID()))
+				continue;
+			AtlasUtil.fastRemove(modifiers, i--);
+			changed = true;
+			removed = true;
+		}
+		if (removed && updateListener != null)
+			updateListener.accept(this);
 		return removed;
 	}
 	
@@ -127,23 +148,23 @@ public class AttributeInstance {
 		value = baseValue;
 		if (!hasModifiers())
 			return;
-		double scale = 0.0;
-		double scale_1 = 1.0;
+		double multiplyBase = 0.0;
+		double multiplyTotal = 1.0;
 		for (AttributeModifier mod : modifiers) {
 			switch (mod.getOperation()) {
-			case ADD_NUMBER:
+			case ADD_VALUE:
 				value += mod.getAmount();
 				break;
-			case ADD_SCALAR:
-				scale += mod.getAmount();
+			case ADD_MULTIPLIED_BASE:
+				multiplyBase += mod.getAmount();
 				break;
-			case MULTIPLY_SCALAR_1:
-				scale_1 += mod.getAmount();
+			case ADD_MULTIPLIED_TOTAL:
+				multiplyTotal += mod.getAmount();
 				break;
 			}
 		}
-		value *= scale;
-		value *= scale_1;
+		value += baseValue * multiplyBase;
+		value += value * multiplyTotal;
 	}
 	
 	/**
@@ -153,6 +174,24 @@ public class AttributeInstance {
 		recalcValue();
 		if (updateListener != null)
 			updateListener.accept(this);
+	}
+
+	public boolean removeModifier(EquipmentSlot slot) {
+		if (slot == null)
+			throw new IllegalArgumentException("Slot can not be null!");
+		if (!hasModifiers())
+			return false;
+		boolean removed = false;
+		for (int i = 0; i < modifiers.size(); i++) {
+			if (slot != modifiers.get(i).getSlot())
+				continue;
+			AtlasUtil.fastRemove(modifiers, i--);
+			changed = true;
+			removed = true;
+		}
+		if (removed && updateListener != null)
+			updateListener.accept(this);
+		return removed;
 	}
 
 }

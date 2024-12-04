@@ -2,14 +2,14 @@ package de.atlasmc.recipe;
 
 public interface RecipeBook {
 	
-	public BookType getType();
+	BookType getType();
 	
-	public boolean isOpen();
+	boolean isOpen();
 	
-	public void setOpen(boolean open);
+	void setOpen(boolean open);
 	
-	public boolean hasFilter();
+	boolean hasFilter();
 	
-	public void setFilter(boolean filter);
+	void setFilter(boolean filter);
 
 }

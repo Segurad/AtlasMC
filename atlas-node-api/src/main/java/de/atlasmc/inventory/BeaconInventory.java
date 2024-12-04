@@ -4,42 +4,42 @@ import de.atlasmc.potion.PotionEffect;
 
 public interface BeaconInventory extends Inventory {
 
-	public PotionEffect getPrimaryEffect();
+	PotionEffect getPrimaryEffect();
 	
-	public PotionEffect getSecondaryEffect();
+	PotionEffect getSecondaryEffect();
 
-	public void setPrimaryEffect(PotionEffect effect);
+	void setPrimaryEffect(PotionEffect effect);
 	
-	public void setSecondaryEffect(PotionEffect effect);
+	void setSecondaryEffect(PotionEffect effect);
 
-	public int getPrimaryID();
+	int getPrimaryID();
 	
-	public int getSecondaryID();
+	int getSecondaryID();
 	
 	/**
 	 * Sets the primary effect ID<br>
 	 * Use -1 for no effect
 	 * @param id
 	 */
-	public void setPrimaryID(int id);
+	void setPrimaryID(int id);
 	
 	/**
 	 * Sets the secondary effect ID<br>
 	 * Use -1 for no effect
 	 * @param id
 	 */
-	public void setSecondaryID(int id);
+	void setSecondaryID(int id);
 	
-	public int getPowerLevel();
+	int getPowerLevel();
 	
 	/**
 	 * Sets the power level between 0 and 4
 	 * @param power
 	 */
-	public void setPowerLevel(int power);
+	void setPowerLevel(int power);
 	
-	public ItemStack getItem();
+	ItemStack getItem();
 	
-	public void setItem(ItemStack item);
+	void setItem(ItemStack item);
 	
 }

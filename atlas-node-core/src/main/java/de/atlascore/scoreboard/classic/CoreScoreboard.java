@@ -19,6 +19,7 @@ import de.atlasmc.io.protocol.play.PacketOutUpdateScore;
 import de.atlasmc.scoreboard.DisplaySlot;
 import de.atlasmc.scoreboard.RenderType;
 import de.atlasmc.scoreboard.ScoreboardView;
+import de.atlasmc.scoreboard.classic.ClassicScoreboardView;
 import de.atlasmc.scoreboard.classic.Objective;
 import de.atlasmc.scoreboard.classic.Score;
 import de.atlasmc.scoreboard.classic.Scoreboard;
@@ -39,7 +40,7 @@ public class CoreScoreboard implements Scoreboard {
 	}
 	
 	@Override
-	public ScoreboardView createView(Player player, boolean apply) {
+	public ClassicScoreboardView createView(Player player, boolean apply) {
 		CoreClassicScoreboardView view = new CoreClassicScoreboardView(this, player);
 		if (apply)
 			player.setScoreboard(view);

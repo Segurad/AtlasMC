@@ -2,8 +2,8 @@ package de.atlasmc.inventory;
 
 public interface CartographyInventory extends Inventory {
 	
-	public ItemStack getResult();
+	ItemStack getResult();
 	
-	public void setResult(ItemStack result);
+	void setResult(ItemStack result);
 
 }

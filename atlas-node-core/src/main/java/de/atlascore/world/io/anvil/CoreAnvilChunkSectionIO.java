@@ -31,7 +31,7 @@ public class CoreAnvilChunkSectionIO extends AbstractNBTBase {
 	NBT_PROPERTIES = CharKey.literal("Properties");
 	
 	static {
-		NBT_FIELDS = new NBTFieldContainer<>();
+		NBT_FIELDS = NBTFieldContainer.newContainer();
 		NBT_FIELDS.setField(NBT_BLOCK_LIGHT, (holder, reader) -> {
 			if (holder.blocklight == null)
 				holder.blocklight = new byte[2048];

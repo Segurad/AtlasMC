@@ -1,17 +1,21 @@
 package de.atlascore.io.protocol.play;
 
+import static de.atlasmc.io.AbstractPacket.readIdentifier;
+import static de.atlasmc.io.AbstractPacket.readString;
+import static de.atlasmc.io.AbstractPacket.readVarInt;
+import static de.atlasmc.io.AbstractPacket.writeIdentifier;
+import static de.atlasmc.io.AbstractPacket.writeString;
+import static de.atlasmc.io.AbstractPacket.writeVarInt;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeInstance;
 import de.atlasmc.attribute.AttributeModifier;
 import de.atlasmc.attribute.AttributeModifier.Operation;
-
-import static de.atlasmc.io.AbstractPacket.*;
-
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
@@ -34,12 +38,10 @@ public class CorePacketOutUpdateAttributes implements PacketIO<PacketOutUpdateAt
 			int modifierCount = readVarInt(in);
 			List<AttributeModifier> modifiers = new ArrayList<>(attributeCount);
 			for (int j = 0; j < modifierCount; j++) {
-				long most = in.readLong();
-				long least = in.readLong();
+				NamespacedKey id = readIdentifier(in);
 				double amount = in.readDouble();
 				Operation op = Operation.getByID(i);
-				UUID uuid = new UUID(most, least);
-				AttributeModifier modifier = new AttributeModifier(uuid, null, amount, op);
+				AttributeModifier modifier = new AttributeModifier(id, amount, op);
 				modifiers.add(modifier);
 			}
 			instance.setModifiers(modifiers);
@@ -57,8 +59,7 @@ public class CorePacketOutUpdateAttributes implements PacketIO<PacketOutUpdateAt
 			out.writeDouble(i.getDefaultValue());
 			writeVarInt(i.getModifierCount(), out);
 			for (AttributeModifier mod : i.getModifiers()) {
-				out.writeLong(mod.getUUID().getMostSignificantBits());
-				out.writeLong(mod.getUUID().getLeastSignificantBits());
+				writeIdentifier(mod.getID(), out);
 				out.writeDouble(mod.getAmount());
 				out.writeByte(mod.getOperation().getID());
 			}

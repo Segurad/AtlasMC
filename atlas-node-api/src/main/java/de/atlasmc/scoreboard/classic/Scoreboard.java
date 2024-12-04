@@ -16,25 +16,25 @@ public interface Scoreboard {
 	 * @param apply if the view should be applied to the player
 	 * @return the view
 	 */
-	public ScoreboardView createView(Player player, boolean apply);
+	ClassicScoreboardView createView(Player player, boolean apply);
 	
 	/**
 	 * Returns a List of all current viewers
 	 * @return list of viewers
 	 */
-	public List<ScoreboardView> getViewers();
+	List<ScoreboardView> getViewers();
 	
-	public Objective getObjective(String name);
+	Objective getObjective(String name);
 
-	public Objective getObjective(DisplaySlot slot);
+	Objective getObjective(DisplaySlot slot);
 	
-	public List<Objective> getObjectives();
+	List<Objective> getObjectives();
 	
-	public Objective registerNewObjective(String name);
+	Objective registerNewObjective(String name);
 	
-	public Objective registerNewObjective(String name, Chat displayName);
+	Objective registerNewObjective(String name, Chat displayName);
 	
-	public Objective registerNewObjective(String name, Chat displayName, RenderType renderType);
+	Objective registerNewObjective(String name, Chat displayName, RenderType renderType);
 	
 	/**
 	 * Registers a new Team for this Scoreboard.<br>
@@ -42,14 +42,14 @@ public interface Scoreboard {
 	 * @param name
 	 * @return new team or registered team
 	 */
-	public Team registerNewTeam(String name);
+	Team registerNewTeam(String name);
 	
-	public List<Team> getTeams();
+	List<Team> getTeams();
 	
-	public Team getTeam(String name);
+	Team getTeam(String name);
 	
-	public void resetScores(String entry);
+	void resetScores(String entry);
 	
-	public void resetScores();
+	void resetScores();
 	
 }

@@ -152,7 +152,7 @@ public class CorePlayerInventory extends CoreInventory implements PlayerInventor
 	private void updateEquipmentSlot(int slot) {
 		EquipmentSlot equipmentSlot = null;
 		if (slot == heldSlot) {
-			equipmentSlot = EquipmentSlot.HAND;
+			equipmentSlot = EquipmentSlot.MAIN_HAND;
 		} else {
 			switch (slot) {
 			case SLOT_HEAD:

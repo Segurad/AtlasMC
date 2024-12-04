@@ -20,7 +20,7 @@ public class CoreGoatHornMeta extends CoreItemMeta implements GoatHornMeta {
 				return;
 			}
 			GoatHornMeta meta = (GoatHornMeta) holder;
-			meta.setInstrument(Instrument.getByNameID(reader.readStringTag()));
+			meta.setInstrument(Instrument.getByName(reader.readStringTag()));
 		});
 	}
 	

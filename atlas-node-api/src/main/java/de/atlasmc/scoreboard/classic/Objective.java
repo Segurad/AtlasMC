@@ -8,36 +8,36 @@ import de.atlasmc.scoreboard.RenderType;
 
 public interface Objective {
 	
-	public Scoreboard getScoreboard();
+	Scoreboard getScoreboard();
 	
-	public Score getScore(String name);
+	Score getScore(String name);
 	
-	public String getName();
+	String getName();
 	
-	public RenderType getRenderType();
+	RenderType getRenderType();
 
-	public void setRenderType(RenderType renderType);
+	void setRenderType(RenderType renderType);
 	
-	public Chat getDisplayName();
+	Chat getDisplayName();
 	
-	public void setDisplayName(Chat chat);
+	void setDisplayName(Chat chat);
 	
-	public void unregister();
+	void unregister();
 	
-	public boolean isRegistered();
+	boolean isRegistered();
 	
-	public DisplaySlot getDisplaySlot();
+	DisplaySlot getDisplaySlot();
 	
-	public void setDisplaySlot(DisplaySlot slot);
+	void setDisplaySlot(DisplaySlot slot);
 
-	public boolean hasScores();
+	boolean hasScores();
 
-	public List<Score> getScores();
+	List<Score> getScores();
 	
-	public void update();
+	void update();
 
-	public boolean resetScore(String name);
+	boolean resetScore(String name);
 	
-	public boolean hasScore(String name);
+	boolean hasScore(String name);
 	
 }

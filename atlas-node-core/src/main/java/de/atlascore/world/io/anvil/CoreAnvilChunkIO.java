@@ -40,7 +40,7 @@ public class CoreAnvilChunkIO extends AbstractNBTBase {
 	protected static final NBTFieldContainer<CoreAnvilChunkIO> NBT_FIELDS;
 	
 	static {
-		NBT_FIELDS = new NBTFieldContainer<>();
+		NBT_FIELDS = NBTFieldContainer.newContainer();
 		NBT_FIELDS.setField(NBT_STATUS, NBTField.skip());
 		NBT_FIELDS.setField(NBT_LAST_UPDATE, (holder, reader) -> {
 			holder.lastUpdate = reader.readLongTag();

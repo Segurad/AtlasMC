@@ -2,16 +2,16 @@ package de.atlasmc.scoreboard.classic;
 
 public interface Score {
 	
-	public String getName();
+	String getName();
 	
-	public Objective getObjective();
+	Objective getObjective();
 	
-	public int getScore();
+	int getScore();
 	
-	public void setScore(int score);
+	void setScore(int score);
 	
-	public boolean isSet();
+	boolean isSet();
 	
-	public void reset();
+	void reset();
 
 }

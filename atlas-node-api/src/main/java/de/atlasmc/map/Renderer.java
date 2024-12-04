@@ -7,7 +7,7 @@ public interface Renderer {
 	 * @param data
 	 * @return true if changes are made
 	 */
-	public default boolean render(MapData data) {
+	default boolean render(MapData data) {
 		return render(data, 0, 0);
 	}
 	
@@ -18,5 +18,5 @@ public interface Renderer {
 	 * @param offsetY
 	 * @return true if changes are made
 	 */
-	public boolean render(MapData data, int offsetX, int offsetY);
+	boolean render(MapData data, int offsetX, int offsetY);
 }

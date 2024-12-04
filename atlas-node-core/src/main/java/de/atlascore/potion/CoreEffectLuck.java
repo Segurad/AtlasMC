@@ -2,18 +2,16 @@ package de.atlascore.potion;
 
 import java.util.UUID;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeModifier;
 import de.atlasmc.attribute.AttributeModifier.Operation;
 import de.atlasmc.entity.LivingEntity;
 import de.atlasmc.potion.PotionEffectType;
 
-public class CoreEffectLuck extends CoreAbstractPotionEffect {
+public class CoreEffectLuck extends CoreAbstractAttributeModifierPotionEffect {
 
-	protected static final String
-	MODIFIER_NAME_LUCK = "effect.luck";
-	protected static final UUID
-	MODIFIER_UUID_LUCK = UUID.fromString("03C3C89D-7037-4B42-869F-B146BCB64D2E");
+	public static final NamespacedKey MODIFIER_ID = NamespacedKey.literal("minecraft:luck");
 	
 	public CoreEffectLuck(PotionEffectType type, int amplifier, int duration, boolean reducedAmbient, boolean particles, boolean icon, UUID uuid) {
 		super(type, amplifier, duration, reducedAmbient, particles, icon, uuid);
@@ -22,13 +20,18 @@ public class CoreEffectLuck extends CoreAbstractPotionEffect {
 	@Override
 	public void addEffect(LivingEntity entity) {
 		double amount = 1*(amplifier+1);
-		AttributeModifier modifier = new AttributeModifier(MODIFIER_UUID_LUCK, MODIFIER_NAME_LUCK, amount, Operation.ADD_NUMBER);
+		AttributeModifier modifier = new AttributeModifier(modifierID, amount, Operation.ADD_VALUE);
 		entity.addAttributeModifier(Attribute.GENERIC_LUCK, modifier);
 	}
 
 	@Override
 	public void removeEffect(LivingEntity entity) {
-		entity.getAttribute(Attribute.GENERIC_LUCK).removeModifier(MODIFIER_UUID_LUCK);
+		entity.getAttribute(Attribute.GENERIC_LUCK).removeModifier(modifierID);
+	}
+
+	@Override
+	public NamespacedKey getDefaultModifierID() {
+		return MODIFIER_ID;
 	}
 
 }

@@ -40,7 +40,7 @@ public interface Interaction extends Entity {
 		NBT_TIMESTAMP = CharKey.literal("timestamp");
 		
 		static {
-			NBT_FIELDS = new NBTFieldContainer<>();
+			NBT_FIELDS = NBTFieldContainer.newContainer();
 			NBT_FIELDS.setField(NBT_PLAYER, (holder, reader) -> {
 				holder.uuid = reader.readUUID();
 			});

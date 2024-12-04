@@ -6,43 +6,43 @@ import de.atlasmc.inventory.InventoryType.SlotType;
 
 public interface InventoryView {
 	
-	public void close();
+	void close();
 	
 	/**
 	 * Return the type of the top Inventory
 	 * @return
 	 */
-	public InventoryType getType();
+	InventoryType getType();
 	
 	/**
 	 * 
 	 * @return the owner of this view
 	 */
-	public Player getPlayer();
+	Player getPlayer();
 	
-	public Inventory getTopInventory();
+	Inventory getTopInventory();
 	
-	public Inventory getBottomInventory();
+	Inventory getBottomInventory();
 	
-	public void setCursor(ItemStack item);
+	void setCursor(ItemStack item);
 	
-	public void setCursorUnsafe(ItemStack item);
+	void setCursorUnsafe(ItemStack item);
 	
-	public ItemStack getCursor();
+	ItemStack getCursor();
 	
-	public ItemStack getCursorUnsafe();
+	ItemStack getCursorUnsafe();
 
-	public ItemStack getItem(int rawSlot);
+	ItemStack getItem(int rawSlot);
 	
-	public ItemStack getItemUnsafe(int rawSlot);
+	ItemStack getItemUnsafe(int rawSlot);
 	
-	public void setItem(int rawSlot, ItemStack item);
+	void setItem(int rawSlot, ItemStack item);
 	
-	public void setItemUnsafe(int rawSlot, ItemStack item);
+	void setItemUnsafe(int rawSlot, ItemStack item);
 	
-	public int countSlots();
+	int countSlots();
 	
-	public int convertSlot(int rawSlot);
+	int convertSlot(int rawSlot);
 	
 	/**
 	 * Converts from the normal slot to the raw slot
@@ -50,13 +50,13 @@ public interface InventoryView {
 	 * @param slot
 	 * @return
 	 */
-	public int convertSlot(Inventory inv, int slot);
+	int convertSlot(Inventory inv, int slot);
 	
-	public SlotType getSlotType(int rawSlot);
+	SlotType getSlotType(int rawSlot);
 	
-	public Inventory getInventory(int rawSlot);
+	Inventory getInventory(int rawSlot);
 	
-	public Chat getTitle();
+	Chat getTitle();
 	
 	/**
 	 * Returns the view id of the current view. 
@@ -64,5 +64,6 @@ public interface InventoryView {
 	 * Is always 0 for the default inventory.
 	 * @return view id
 	 */
-	public int getViewID();
+	int getViewID();
+	
 }
