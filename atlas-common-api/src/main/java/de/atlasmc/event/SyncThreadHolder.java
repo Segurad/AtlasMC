@@ -12,6 +12,6 @@ public interface SyncThreadHolder {
 	 * @return true if sync
 	 */
 	@ThreadSafe
-	public boolean isSync();
+	boolean isSync();
 	
 }
