@@ -3,8 +3,11 @@ package de.atlasmc.inventory;
 import java.util.List;
 
 import de.atlasmc.chat.Chat;
+import de.atlasmc.io.protocol.play.PacketOutOpenScreen;
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumValueCache;
 
-public enum InventoryType {
+public enum InventoryType implements EnumID, EnumValueCache {
 
 	GENERIC_9X1(0),
 	GENERIC_9X2(1),
@@ -34,7 +37,7 @@ public enum InventoryType {
 	CARTOGRAPHY(22),
 	STONECUTTER(23),
 	HORSE(-1), // Opened via PacketOutOpenHorseWindow
-	LLAMA(-1),
+	LLAMA(-2),
 	// --- non standard (types that are opened differently or only internal)
 	/**
 	 * A {@link PlayerInventory} only used internal.
@@ -112,7 +115,8 @@ public enum InventoryType {
 	}
 	
 	/**
-	 * 
+	 * Returns the protocol id.
+	 * Id's with negative values have dedicated packets an may not be opened with {@link PacketOutOpenScreen}
 	 * @return id for protocol
 	 */
 	public int getID() {

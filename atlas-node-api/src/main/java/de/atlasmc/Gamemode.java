@@ -2,7 +2,10 @@ package de.atlasmc;
 
 import java.util.List;
 
-public enum Gamemode {
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumValueCache;
+
+public enum Gamemode implements EnumID, EnumValueCache {
 	
 	SURVIVAL,
 	CREATIVE,

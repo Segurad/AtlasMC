@@ -2,7 +2,10 @@ package de.atlasmc;
 
 import java.util.List;
 
-public enum Axis {
+import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumValueCache;
+
+public enum Axis implements EnumName, EnumValueCache {
 	
 	X,
 	Y,
@@ -10,16 +13,33 @@ public enum Axis {
 
 	private static List<Axis> VALUES;
 	
+	private String name;
+	
+	private Axis() {
+		this.name = name().toLowerCase().intern();
+	}
+	
+	@Override
+	public String getName() {
+		return name;
+	}
+	
 	/**
-	 * Returns the Axis represented by the name or {@link #Y} if no matching Axis has been found
+	 * Returns the Axis represented by the name or null if no matching Axis has been found
 	 * @param name the name of the Axis
-	 * @return the Axis or {@link #Y}
+	 * @return the Axis or null
 	 */
 	public static Axis getByName(String name) {
-		for (Axis a : getValues()) {
-			if (a.name().equalsIgnoreCase(name)) return a;
+		if (name == null)
+			throw new IllegalArgumentException("Name can not be null!");
+		List<Axis> values = getValues();
+		final int size = values.size();
+		for (int i = 0; i < size; i++) {
+			Axis a = values.get(i);
+			if (a.name.equals(name)) 
+				return a;
 		}
-		return Y;
+		return null;
 	}
 	
 	/**

@@ -26,7 +26,7 @@ public class FireworkEffect implements NBTHolder {
 	NBT_TYPE = CharKey.literal("Type");
 	
 	public static enum Type {
-		BALL,
+		BALL_SMALL,
 		BALL_LARGE,
 		STAR,
 		CREEPER,
@@ -62,7 +62,7 @@ public class FireworkEffect implements NBTHolder {
 	}
 	
 	public FireworkEffect() {
-		type = Type.BALL;
+		type = Type.BALL_SMALL;
 	}
 	
 	public Type getType() {

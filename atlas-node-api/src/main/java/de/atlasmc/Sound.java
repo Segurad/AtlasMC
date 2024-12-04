@@ -2,7 +2,11 @@ package de.atlasmc;
 
 import java.util.List;
 
-public enum Sound {
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumValueCache;
+
+public enum Sound implements EnumName, EnumID, EnumValueCache {
 
 	ENTITY_ALLAY_AMBIENT_WITH_ITEM("minecraft:entity.allay.ambient_with_item"),
 	ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM("minecraft:entity.allay.ambient_without_item"),
@@ -1492,24 +1496,27 @@ public enum Sound {
 	
 	private static List<Sound> VALUES;
 	
-	private final String nameID;
+	private final String name;
 	
-	private Sound(String nameID) {
-		this.nameID = nameID;
+	private Sound(String name) {
+		this.name = name;
 	}
 	
-	public String getNameID() {
-		return nameID;
+	public String getName() {
+		return name;
 	}
 	
-	public static Sound getByNameID(String nameID) {
-		if (nameID == null)
-			throw new IllegalArgumentException("NameID can not be null!");
-		for (Sound value : getValues()) {
-			if (value.getNameID().equals(nameID))
-				return value;
+	public static Sound getByName(String name) {
+		if (name == null)
+			throw new IllegalArgumentException("Name can not be null!");
+		List<Sound> sounds = getValues();
+		final int size = sounds.size();
+		for (int i = 0; i < size; i++) {
+			Sound sound = sounds.get(i);
+			if (sound.getName().equals(name))
+				return sound;
 		}
-		throw new IllegalArgumentException("No value found with name: " + nameID);
+		return null;
 	}
 	
 	public static Sound getByID(int soundID) {

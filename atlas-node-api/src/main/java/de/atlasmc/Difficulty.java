@@ -2,7 +2,10 @@ package de.atlasmc;
 
 import java.util.List;
 
-public enum Difficulty {
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumValueCache;
+
+public enum Difficulty implements EnumID, EnumValueCache {
 	
 	PEACEFUL,
 	EASY,

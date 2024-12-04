@@ -204,7 +204,7 @@ abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> impleme
 			buff.appendBoolean(JSON_STRIKETHROUGH, true);
 		if (hasColor()) {
 			if (hasChatColor())
-				buff.appendText(JSON_COLOR, getColorChat().getNameID());
+				buff.appendText(JSON_COLOR, getColorChat().getName());
 			else
 				buff.appendText(JSON_COLOR, "#" + Integer.toHexString(color));
 		}

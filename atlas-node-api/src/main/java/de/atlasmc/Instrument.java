@@ -2,7 +2,11 @@ package de.atlasmc;
 
 import java.util.List;
 
-public enum Instrument {
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumValueCache;
+
+public enum Instrument implements EnumName, EnumValueCache {
 	
 	HARP,
 	BASEDRUM,
@@ -23,11 +27,28 @@ public enum Instrument {
 
 	private static List<Instrument> VALUES;
 	
+	private String name;
+	
+	private Instrument() {
+		this.name = name().toLowerCase().intern();
+	}
+	
+	@Override
+	public String getName() {
+		return name;
+	}
+	
 	public static Instrument getByName(String name) {
-		for (Instrument i : getValues()) {
-			if (i.name().equalsIgnoreCase(name)) return i;
+		if (name == null)
+			throw new IllegalArgumentException("Name can not be null!");
+		List<Instrument> values = getValues();
+		final int size = values.size();
+		for (int i = 0; i < size; i++) {
+			Instrument value = values.get(i);
+			if (value.name.equals(name)) 
+				return value;
 		}
-		return HARP;
+		return null;
 	}
 	
 	/**

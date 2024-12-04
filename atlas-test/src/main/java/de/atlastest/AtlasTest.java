@@ -9,6 +9,11 @@ import com.google.gson.stream.JsonReader;
 
 public class AtlasTest {
 	
+	/**
+	 * Random string for testing purpose
+	 */
+	public static final String RANDOM_TEST_STRING = "qMJrR8Fw6OBjQu7C1p0TBqaBFTVuT15nyfoJmmyYdnLSWBwRKkrTgFW0T66in53y";
+	
 	public static final String VERSION_PATH = "/1_20_2/";
 	
 	public static JsonReader getJsonResourceReader(String path) throws FileNotFoundException {

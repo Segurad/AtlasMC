@@ -2,16 +2,54 @@ package de.atlasmc.inventory;
 
 import java.util.List;
 
-public enum EquipmentSlot {
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumValueCache;
 
-	HAND,
-	OFF_HAND,
-	FEET,
-	LEGS,
-	CHEST,
-	HEAD;
+public enum EquipmentSlot implements EnumID, EnumName, EnumValueCache {
+
+	
+	MAIN_HAND("mainhand"),
+	OFF_HAND("offhand"),
+	FEET("feet"),
+	LEGS("legs"),
+	CHEST("chest"),
+	HEAD("head"),
+	/**
+	 * Slot that defines a general hand slot {@link MainHand} or {@link #OFF_HAND}
+	 */
+	HAND("hand"),
+	/**
+	 * Slot that defines a general body slot {@link #HEAD}, {@link #CHEST}, {@link #LEGS} or {@link #FEET}
+	 */
+	BODY("body"),
+	/**
+	 * Slot that defines any {@link EquipmentSlot}
+	 */
+	ANY("any");
 	
 	private static List<EquipmentSlot> VALUES;
+	
+	private String name;
+	
+	private EquipmentSlot(String name) {
+		this.name = name;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public static EquipmentSlot getByName(String name) {
+		List<EquipmentSlot> values = getValues();
+		final int size = values.size();
+		for (int i = 0; i < size; i++) {
+			EquipmentSlot slot = values.get(i);
+			if (slot.name.equals(name))
+				return slot;
+		}
+		return null;
+	}
 
 	public int getID() {
 		return ordinal();

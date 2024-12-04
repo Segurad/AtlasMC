@@ -3,6 +3,9 @@ package de.atlasmc.entity;
 import java.util.List;
 
 import de.atlasmc.DyeColor;
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumValueCache;
 
 public interface Cat extends Tameable {
 	
@@ -22,7 +25,7 @@ public interface Cat extends Tameable {
 	
 	public void setCollarColor(DyeColor color);
 	
-	public static enum Type {
+	public static enum Type implements EnumName, EnumID, EnumValueCache {
 		TABBY,
 		BLACK,
 		RED,
@@ -37,26 +40,32 @@ public interface Cat extends Tameable {
 		
 		private static List<Type> VALUES;
 		
-		private String nameID;
+		private String name;
 		
 		private Type() {
-			nameID = "minecraft:" + name().toLowerCase();
+			String name = "minecraft:" + name().toLowerCase();
+			this.name = name.intern();
 		}
 		
-		public String getNameID() {
-			return nameID;
+		@Override
+		public String getName() {
+			return name;
 		}
 		
-		public static Type getByNameID(String nameID) {
-			if (nameID == null)
-				throw new IllegalArgumentException("NameID can not be null!");
-			for (Type value : getValues()) {
-				if (value.getNameID().equals(nameID))
+		public static Type getByName(String name) {
+			if (name == null)
+				throw new IllegalArgumentException("Name can not be null!");
+			List<Type> values = getValues();
+			final int size = values.size();
+			for (int i = 0; i < size; i++) {
+				Type value = values.get(i);
+				if (value.name.equals(name))
 					return value;
 			}
-			throw new IllegalArgumentException("No value with name found: " + nameID);
+			return null;
 		}
 		
+		@Override
 		public int getID() {
 			return ordinal();
 		}

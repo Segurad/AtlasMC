@@ -2,13 +2,17 @@ package de.atlasmc.entity;
 
 import java.util.List;
 
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumValueCache;
+
 public interface Painting extends Hanging {
 
 	public Motive getMotive();
 	
 	public void setMotive(Motive motive);
 	
-	public static enum Motive {
+	public static enum Motive implements EnumID, EnumName, EnumValueCache {
 		KEBAB,
 		AZTEC,
 		ALBAN,
@@ -42,14 +46,16 @@ public interface Painting extends Hanging {
 
 		private static List<Motive> VALUES;
 		
-		private final String nameID;
+		private final String name;
 		
 		private Motive() {
-			this.nameID = "minecraft:".concat(name().toLowerCase());
+			String name = "minecraft:".concat(name().toLowerCase());
+			this.name = name.intern();
 		}
 		
-		public String getNameID() {
-			return nameID;
+		@Override
+		public String getName() {
+			return name;
 		}
 		
 		public static Motive getByID(int id) {
@@ -63,13 +69,11 @@ public interface Painting extends Hanging {
 		 */
 		public static List<Motive> getValues() {
 			if (VALUES == null)
-				synchronized (Motive.class) {
-					if (VALUES == null)
-						VALUES = List.of(values());
-				}
+				VALUES = List.of(values());
 			return VALUES;
 		}
 		
+		@Override
 		public int getID() {
 			return ordinal();
 		}
@@ -81,9 +85,14 @@ public interface Painting extends Hanging {
 			VALUES = null;
 		}
 
-		public static Motive getByNameID(String nameID) {
-			for (Motive motive : getValues()) {
-				if (motive.getNameID().equals(nameID))
+		public static Motive getByName(String name) {
+			if (name == null)
+				throw new IllegalArgumentException("Name can not be null!");
+			List<Motive> values = getValues();
+			final int size = values.size();
+			for (int i = 0; i < size; i++) {
+				Motive motive = values.get(i);
+				if (motive.name.equals(name))
 					return motive;
 			}
 			return null;

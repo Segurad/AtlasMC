@@ -2,7 +2,10 @@ package de.atlasmc;
 
 import java.util.List;
 
-public enum SoundCategory {
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumValueCache;
+
+public enum SoundCategory implements EnumID, EnumValueCache {
 	
 	MASTER,
 	MUSIC,
@@ -21,6 +24,7 @@ public enum SoundCategory {
 		return getValues().get(id);
 	}
 
+	@Override
 	public int getID() {
 		return ordinal();
 	}

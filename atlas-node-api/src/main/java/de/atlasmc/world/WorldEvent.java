@@ -5,8 +5,10 @@ import java.util.List;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.BlockData;
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumValueCache;
 
-public enum WorldEvent {
+public enum WorldEvent implements EnumID, EnumValueCache {
 	
 	// --- Sounds
 	DISPENSER_DISPENSES(1000, Type.SOUND),

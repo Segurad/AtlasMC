@@ -4,8 +4,11 @@ import java.util.List;
 
 import de.atlasmc.Color;
 import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumValueCache;
 
-public enum ChatColor {
+public enum ChatColor implements EnumName, EnumID, EnumValueCache {
 
 	BLACK('0', Color.fromRGB(0x000000)),
 	DARK_BLUE('1', Color.fromRGB(0x0000AA)),
@@ -49,7 +52,7 @@ public enum ChatColor {
 		this.formatID = formatID;
 		this.color = color;
 		this.consoleFormat = console;
-		this.name = this.name().toLowerCase();
+		this.name = this.name().toLowerCase().intern();
 	}
 	
 	/**
@@ -75,7 +78,7 @@ public enum ChatColor {
 		return ordinal();
 	}
 	
-	public String getNameID() {
+	public String getName() {
 		return name;
 	}
 
@@ -119,10 +122,15 @@ public enum ChatColor {
 		return null;
 	}
 	
-	public static ChatColor getByNameID(String name) {
-		for (ChatColor c : getValues()) {
-			if (c.getNameID().equals(name))
-				return c;
+	public static ChatColor getByName(String name) {
+		if (name == null)
+			throw new IllegalArgumentException("Name can not be null!");
+		List<ChatColor> colors = getValues();
+		final int size = colors.size();
+		for (int i = 0; i < size; i++) {
+			ChatColor color = colors.get(i);
+			if (color.name.equals(name))
+				return color;
 		}
 		return null;
 	}
@@ -154,7 +162,12 @@ public enum ChatColor {
 	}
 
 	public static ChatColor getByColor(Color color) {
-		for (ChatColor ccolor : getValues()) {
+		if (color == null)
+			throw new IllegalArgumentException("Color can not be null!");
+		List<ChatColor> colors = getValues();
+		final int size = colors.size();
+		for (int i = 0; i < size; i++) {
+			ChatColor ccolor = colors.get(i);
 			if (ccolor.color.equals(color))
 				return ccolor;
 		}

@@ -3,6 +3,9 @@ package de.atlasmc.entity;
 import java.util.List;
 
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumValueCache;
 
 public interface Villager extends AbstractVillager {
 	
@@ -95,7 +98,7 @@ public interface Villager extends AbstractVillager {
 		
 	}
 	
-	public static enum VillagerType {
+	public static enum VillagerType implements EnumName, EnumID, EnumValueCache {
 		DESERT("minecraft:desert"),
 		JUNGLE("minecraft:jungle"),
 		PLAINS("minecraft:plains"),
@@ -104,18 +107,20 @@ public interface Villager extends AbstractVillager {
 		SWAMP("minecraft:swamp"),
 		TAIGA("minecraft:taiga");
 		
-		private final String nameID;
-		
-		private VillagerType(String nameID) {
-			this.nameID = nameID;
-		}
-		
-		public String getNameID() {
-			return nameID;
-		}
-		
 		private static List<VillagerType> VALUES;
 		
+		private final String name;
+		
+		private VillagerType(String name) {
+			this.name = name.intern();
+		}
+		
+		@Override
+		public String getName() {
+			return name;
+		}
+		
+		@Override
 		public int getID() {
 			return ordinal();
 		}
@@ -142,9 +147,14 @@ public interface Villager extends AbstractVillager {
 			VALUES = null;
 		}
 
-		public static VillagerType getByNameID(String nameID) {
-			for (VillagerType type : getValues()) {
-				if (type.getNameID().equals(nameID))
+		public static VillagerType getByName(String name) {
+			if (name == null)
+				throw new IllegalArgumentException(name);
+			List<VillagerType> values = getValues();
+			final int size = values.size();
+			for (int i = 0; i < size; i++) {
+				VillagerType type = values.get(i);
+				if (type.name.equals(name))
 					return type;
 			}
 			return null;
@@ -152,7 +162,8 @@ public interface Villager extends AbstractVillager {
 		
 	}
 	
-	public static enum VillagerProfession {
+	public static enum VillagerProfession implements EnumName, EnumID, EnumValueCache {
+		
 		NONE("minecraft:none"),
 		ARMORER("minecraft:armorer"),
 		BUTCHER("minecraft:butcher"),
@@ -169,18 +180,20 @@ public interface Villager extends AbstractVillager {
 		TOOLSMITH("minecraft:toolsmith"),
 		WEAPONSMITH("minecraft:weaponsmith");
 		
-		private final String nameID;
-		
-		private VillagerProfession(String nameID) {
-			this.nameID = nameID;
-		}
-		
-		public String getNameID() {
-			return nameID;
-		}
-		
 		private static List<VillagerProfession> VALUES;
 		
+		private final String name;
+		
+		private VillagerProfession(String name) {
+			this.name = name.intern();
+		}
+		
+		@Override
+		public String getName() {
+			return name;
+		}
+		
+		@Override
 		public int getID() {
 			return ordinal();
 		}
@@ -207,10 +220,15 @@ public interface Villager extends AbstractVillager {
 			VALUES = null;
 		}
 
-		public static VillagerProfession getByNameID(String nameID) {
-			for (VillagerProfession prof : getValues()) {
-				if (prof.getNameID().equals(nameID))
-					return prof;
+		public static VillagerProfession getByName(String name) {
+			if (name == null)
+				throw new IllegalArgumentException("Name can not be null!");
+			List<VillagerProfession> professions = getValues();
+			final int size = professions.size();
+			for (int i = 0; i < size; i++) {
+				VillagerProfession profession = professions.get(i);
+				if (profession.name.equals(name))
+					return profession;
 			}
 			return null;
 		}

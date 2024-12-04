@@ -2,6 +2,9 @@ package de.atlasmc;
 
 import java.util.List;
 
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumValueCache;
+
 public class BossBar {
 	
 	private String title;
@@ -58,7 +61,7 @@ public class BossBar {
 		this.flags = flags;
 	}
 
-	public static enum BarColor {
+	public static enum BarColor implements EnumID, EnumValueCache {
 		PINK,
 		BLUE,
 		RED,
@@ -69,6 +72,7 @@ public class BossBar {
 		
 		private static List<BarColor> VALUES;
 		
+		@Override
 		public int getID() {
 			return ordinal();
 		}
@@ -97,7 +101,7 @@ public class BossBar {
 		
 	}
 	
-	public static enum BarStyle {
+	public static enum BarStyle implements EnumID, EnumValueCache {
 		NO_DIVISION,
 		SEGMENTED_6,
 		SEGMENTED_10,
@@ -106,6 +110,7 @@ public class BossBar {
 		
 		private static List<BarStyle> VALUES;
 		
+		@Override
 		public int getID() {
 			return ordinal();
 		}

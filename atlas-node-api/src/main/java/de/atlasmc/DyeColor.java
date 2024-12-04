@@ -2,7 +2,11 @@ package de.atlasmc;
 
 import java.util.List;
 
-public enum DyeColor {
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumValueCache;
+
+public enum DyeColor implements EnumID, EnumName, EnumValueCache {
 	
 	WHITE,
 	ORANGE,
@@ -23,8 +27,27 @@ public enum DyeColor {
 	
 	private static List<DyeColor> VALUES;
 	
+	private String name;
+	
+	private DyeColor() {
+		name = name().toLowerCase().intern();
+	}
+	
 	public static DyeColor getByID(int id) {
 		return getValues().get(id);
+	}
+	
+	public static DyeColor getByName(String name) {
+		if (name == null)
+			throw new IllegalArgumentException("Name can not be null!");
+		List<DyeColor> colors = getValues();
+		final int size = colors.size();
+		for (int i = 0; i < size; i++) {
+			DyeColor color = colors.get(i);
+			if (color.name.equals(name))
+				return color;
+		}
+		return null;
 	}
 	
 	public static DyeColor getByBanner(Material material) {
@@ -141,8 +164,14 @@ public enum DyeColor {
 		}
 	}
 
+	@Override
 	public int getID() {
 		return ordinal();
+	}
+	
+	@Override
+	public String getName() {
+		return name;
 	}
 	
 	/**

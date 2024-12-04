@@ -2,6 +2,10 @@ package de.atlasmc.entity;
 
 import java.util.List;
 
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumValueCache;
+
 public interface Frog extends Animal {
 
 	Variant getVariant();
@@ -12,33 +16,39 @@ public interface Frog extends Animal {
 	
 	void setTangueTarget(Entity entity);
 	
-	public static enum Variant {
+	public static enum Variant implements EnumID, EnumName, EnumValueCache {
 		TEMPERATE,
 		WARM,
 		COLD;
 		
 		private static List<Variant> VALUES;
 		
-		private String nameID;
+		private String name;
 		
 		private Variant() {
-			nameID = "minecraft:" + name().toLowerCase();
+			String name = "minecraft:" + name().toLowerCase();
+			this.name = name.intern();
 		}
 		
-		public String getNameID() {
-			return nameID;
+		@Override
+		public String getName() {
+			return name;
 		}
 		
-		public static Variant getByNameID(String nameID) {
-			if (nameID == null)
-				throw new IllegalArgumentException("NameID can not be null!");
-			for (Variant value : getValues()) {
-				if (value.getNameID().equals(nameID))
+		public static Variant getByName(String name) {
+			if (name == null)
+				throw new IllegalArgumentException("Name can not be null!");
+			List<Variant> values = getValues();
+			final int size = values.size();
+			for (int i = 0; i < size; i++) {
+				Variant value = values.get(i);
+				if (value.name.equals(name))
 					return value;
 			}
-			throw new IllegalArgumentException("No value with name found: " + nameID);
+			return null;
 		}
 		
+		@Override
 		public int getID() {
 			return ordinal();
 		}

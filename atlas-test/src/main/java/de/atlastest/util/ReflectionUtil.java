@@ -49,9 +49,10 @@ public class ReflectionUtil {
 			fail("Method " + method.getName() + " is not static in " + method.getDeclaringClass().getName());
 	}
 	
-	public static void isMethodPresentAndStatic(Class<?> clazz, String method, Class<?>... parameterTypes) {
+	public static Method isMethodPresentAndStatic(Class<?> clazz, String method, Class<?>... parameterTypes) {
 		Method m = isMethodPresent(clazz, method, parameterTypes);
 		isMethodStatic(m);
+		return m;
 	}
 
 }

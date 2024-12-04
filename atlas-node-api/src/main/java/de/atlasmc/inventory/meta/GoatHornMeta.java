@@ -2,6 +2,10 @@ package de.atlasmc.inventory.meta;
 
 import java.util.List;
 
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumValueCache;
+
 public interface GoatHornMeta extends ItemMeta {
 	
 	Instrument getInstrument();
@@ -10,7 +14,7 @@ public interface GoatHornMeta extends ItemMeta {
 	
 	GoatHornMeta clone();
 	
-	public static enum Instrument {
+	public static enum Instrument implements EnumName, EnumID, EnumValueCache {
 		
 		PONDER,
 		SING,
@@ -23,12 +27,14 @@ public interface GoatHornMeta extends ItemMeta {
 		
 		private static List<Instrument> VALUES;
 		
-		private String nameID;
+		private String name;
 		
 		private Instrument() {
-			this.nameID = "minecraft:" + name().toLowerCase() + "_goat_horn";
+			String name = "minecraft:" + name().toLowerCase() + "_goat_horn";
+			this.name = name.intern();
 		}
 		
+		@Override
 		public int getID() {
 			return ordinal();
 		}
@@ -55,19 +61,23 @@ public interface GoatHornMeta extends ItemMeta {
 			VALUES = null;
 		}
 		
+		@Override
 		public String getName() {
-			return nameID;
+			return name;
 		}
 		
-		public static Instrument getByNameID(String name) {
+		public static Instrument getByName(String name) {
 			if (name == null)
 				throw new IllegalArgumentException("Name can not be null!");
-			for (Instrument tilt : getValues()) {
-				if (tilt.getName().equals(name)) {
-					return tilt;
+			List<Instrument> instruments = getValues();
+			final int size = instruments.size();
+			for (int i = 0; i < size; i++) {
+				Instrument instrument = instruments.get(i);
+				if (instrument.name.equals(name)) {
+					return instrument;
 				}
 			}
-			throw new IllegalArgumentException("No value found with name: " + name);
+			return null;
 		}
 		
 	}

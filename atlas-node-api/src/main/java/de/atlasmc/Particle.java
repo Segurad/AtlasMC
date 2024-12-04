@@ -4,8 +4,11 @@ import java.util.List;
 
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumValueCache;
 
-public enum Particle {
+public enum Particle implements EnumName, EnumID, EnumValueCache {
 	
 	AMBIENT_ENTITY_EFFECT(0),
 	ANGRY_VILLAGER(1),
@@ -107,18 +110,20 @@ public enum Particle {
 	
 	private final int id;
 	private final Class<?> data;
-	private final String nameID;
+	private final String name;
 	
 	private Particle(int id, Class<?> data) {
 		this.id = id;
 		this.data = data;
-		this.nameID = "minecraft:" + name().toLowerCase();
+		String name = "minecraft:" + name().toLowerCase();
+		this.name = name.intern();
 	}
 	
 	private Particle(int id) {
 		this(id, void.class);
 	}
 	
+	@Override
 	public int getID() {
 		return id;
 	}
@@ -178,14 +183,21 @@ public enum Particle {
 		VALUES = null;
 	}
 	
-	public String getNameID() {
-		return nameID;
+	@Override
+	public String getName() {
+		return name;
 	}
 
-	public static Particle getByNameID(String nameID) {
-		for (Particle particle : getValues())
-			if (particle.getNameID().equals(nameID))
+	public static Particle getByName(String name) {
+		if (name == null)
+			throw new IllegalArgumentException("Name can not be null!");
+		List<Particle> particles = getValues();
+		final int size = particles.size();
+		for (int i = 0; i < size; i++) {
+			Particle particle = particles.get(i);
+			if (particle.name.equals(name))
 				return particle;
+		}
 		return null;
 	}
 	
