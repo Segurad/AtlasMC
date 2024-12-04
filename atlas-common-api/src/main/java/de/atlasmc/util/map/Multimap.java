@@ -47,5 +47,7 @@ public interface Multimap<K, V> {
 	boolean containsKey(Object key);
 
 	int size();
+	
+	int valuesSize();
 
 }

@@ -150,6 +150,16 @@ public abstract class AbstractMultimap<K, V> implements Multimap<K, V> {
 		return map.hashCode();
 	}
 	
+	@Override
+	public int valuesSize() {
+		if (isEmpty())
+			return 0;
+		int size = 0;
+		for (Collection<V> c : values())
+			size += c.size();
+		return size;
+	}
+	
 	protected abstract Collection<V> createCollection(int capacity);
 	
 }
