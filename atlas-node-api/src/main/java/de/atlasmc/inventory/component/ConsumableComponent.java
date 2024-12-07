@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.effect.ComponentEffect;
+import de.atlasmc.sound.Sound;
 
 public interface ConsumableComponent extends ItemComponent {
 	
@@ -17,18 +18,9 @@ public interface ConsumableComponent extends ItemComponent {
 	
 	void setAnimation(Animation animation);
 	
-	NamespacedKey getSound();
+	Sound getSound();
 	
-	void setSound(NamespacedKey sound);
-	
-	/**
-	 * Returns the sound range as float.
-	 * Will be {@link Float#NaN} if not set.
-	 * @return range
-	 */
-	float getSoundRange();
-	
-	void setSoundRange(float range);
+	void setSound(Sound sound);
 	
 	boolean hasParticles();
 	

@@ -9,10 +9,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 
 public abstract class AbstractPacket implements Packet {
-
-	private final int id;
-	private boolean cancelled;
-	private long timestamp;
 	
 	public static final int 
 		MAX_PACKET_LENGTH = 2097151,
@@ -21,6 +17,10 @@ public abstract class AbstractPacket implements Packet {
 	
 	private static final int SEGMENT_BITS = 0x7F;
 	private static final int CONTINUE_BIT = 0x80;
+	
+	private final int id;
+	private boolean cancelled;
+	private long timestamp;
 	
 	/**
 	 * 

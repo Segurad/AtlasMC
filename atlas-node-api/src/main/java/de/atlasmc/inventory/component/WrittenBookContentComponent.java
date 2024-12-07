@@ -4,6 +4,8 @@ import java.util.List;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumValueCache;
 
 public interface WrittenBookContentComponent extends ItemComponent {
 	
@@ -29,7 +31,8 @@ public interface WrittenBookContentComponent extends ItemComponent {
 	
 	void setResolved(boolean resolved);
 	
-	public static enum Generation {
+	public static enum Generation implements EnumID, EnumValueCache {
+		
 		ORGINAL,
 		COPY_OF_ORGINAL,
 		COPY_OF_COPY,
@@ -62,6 +65,7 @@ public interface WrittenBookContentComponent extends ItemComponent {
 		public static void freeValues() {
 			VALUES = null;
 		}
+		
 	}
 
 }

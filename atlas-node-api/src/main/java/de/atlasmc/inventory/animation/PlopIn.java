@@ -3,12 +3,11 @@ package de.atlasmc.inventory.animation;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import de.atlasmc.Sound;
-import de.atlasmc.SoundCategory;
 import de.atlasmc.entity.HumanEntity;
 import de.atlasmc.entity.Player;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.sound.Sound;
 import de.atlasmc.util.DummyTask;
 
 public final class PlopIn extends AbstractAnimation {
@@ -36,7 +35,7 @@ public final class PlopIn extends AbstractAnimation {
 						if (!(e instanceof Player))
 							continue;
 						Player p = (Player) e;
-						p.playSound(p, sound, SoundCategory.MASTER, 1, 1, 0); // TODO sound seeding
+						p.playSound(p, sound, 1, 1);
 					}
 				}
 				index++;

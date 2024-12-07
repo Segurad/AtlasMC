@@ -5,20 +5,19 @@ import java.util.Collection;
 import de.atlasmc.Location;
 import de.atlasmc.Particle;
 import de.atlasmc.SimpleLocation;
-import de.atlasmc.Sound;
-import de.atlasmc.SoundCategory;
 import de.atlasmc.block.Block;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.event.entity.EntitySpawnEvent;
 import de.atlasmc.server.LocalServer;
+import de.atlasmc.sound.SoundListener;
 import de.atlasmc.tick.Tickable;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.world.entitytracker.EntityTracker;
 
-public interface World extends Tickable {
+public interface World extends Tickable, SoundListener {
 
 	@NotNull
 	Collection<Entity> getEntities();
@@ -106,14 +105,6 @@ public interface World extends Tickable {
 	 * @return the given Location
 	 */
 	Location getSpawnLocation(Location loc);
-
-	void playSound(SimpleLocation loc, Sound sound, SoundCategory category, float volume, float pitch, long seed);
-
-	void playSound(SimpleLocation loc, String sound, SoundCategory category, float volume, float pitch, long seed, boolean fixedRange, float range);
-	
-	void playSound(Entity entity, Sound sound, SoundCategory category, float volume, float pitch, long seed);
-	
-	void playSound(Entity entity, String sound, SoundCategory category, float volume, float pitch, long seed, boolean fixedRange, float range);
 	
 	boolean hasFlag(WorldFlag flag);
 	

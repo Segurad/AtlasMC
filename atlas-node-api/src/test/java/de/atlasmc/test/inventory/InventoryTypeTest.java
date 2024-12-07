@@ -1,4 +1,4 @@
-package de.atlasmc.test.inventory.meta;
+package de.atlasmc.test.inventory;
 
 import org.junit.jupiter.api.Test;
 

@@ -1,36 +1,36 @@
-package de.atlasmc.test;
+package de.atlasmc.test.sound;
 
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
-import de.atlasmc.Sound;
+import de.atlasmc.sound.EnumSound;
 import de.atlastest.util.EnumTest;
 import de.atlastest.util.EnumTest.EnumTestCases;
 
-public class SoundTest implements EnumTestCases {
+public class EnumSoundTest implements EnumTestCases {
 	
 	@Test
 	@Override
 	public void testCacheMethods() {
-		EnumTest.testCacheMethods(Sound.class);
+		EnumTest.testCacheMethods(EnumSound.class);
 	}
 
 	@Test
 	@Override
 	public void testIDMethods() {
-		EnumTest.testIDMethods(Sound.class);
+		EnumTest.testIDMethods(EnumSound.class);
 	}
 
 	@Test
 	@Override
 	public void testNameMethods() {
-		EnumTest.testNameMethods(Sound.class);
+		EnumTest.testNameMethods(EnumSound.class);
 	}
 	
 	@Test
 	@Order(Integer.MAX_VALUE)
 	void testSoundTypes() throws Exception {
-		EnumTest.testRegistryProtocolEnum(Sound.class, "registry_minecraft_sound_event.json");
+		EnumTest.testRegistryProtocolEnum(EnumSound.class, "registry_minecraft_sound_event.json");
 	}
 
 }

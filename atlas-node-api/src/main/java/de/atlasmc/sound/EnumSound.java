@@ -1,12 +1,13 @@
-package de.atlasmc;
+package de.atlasmc.sound;
 
 import java.util.List;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.util.EnumID;
 import de.atlasmc.util.EnumName;
 import de.atlasmc.util.EnumValueCache;
 
-public enum Sound implements EnumName, EnumID, EnumValueCache {
+public enum EnumSound implements Sound, EnumName, EnumID, EnumValueCache {
 
 	ENTITY_ALLAY_AMBIENT_WITH_ITEM("minecraft:entity.allay.ambient_with_item"),
 	ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM("minecraft:entity.allay.ambient_without_item"),
@@ -1494,32 +1495,47 @@ public enum Sound implements EnumName, EnumID, EnumValueCache {
 	ENTITY_ZOMBIE_VILLAGER_HURT("minecraft:entity.zombie_villager.hurt"),
 	ENTITY_ZOMBIE_VILLAGER_STEP("minecraft:entity.zombie_villager.step");
 	
-	private static List<Sound> VALUES;
+	private static List<EnumSound> VALUES;
 	
-	private final String name;
+	private final NamespacedKey name;
 	
-	private Sound(String name) {
-		this.name = name;
+	private EnumSound(String name) {
+		this.name = NamespacedKey.literal(name);
 	}
 	
-	public String getName() {
+	@Override
+	public NamespacedKey getNamespacedKey() {
 		return name;
 	}
 	
-	public static Sound getByName(String name) {
+	public String getName() {
+		return name.toString();
+	}
+	
+	@Override
+	public float getFixedRange() {
+		return Float.NaN;
+	}
+	
+	@Override
+	public boolean hasFixedRange() {
+		return false;
+	}
+	
+	public static EnumSound getByName(String name) {
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null!");
-		List<Sound> sounds = getValues();
+		List<EnumSound> sounds = getValues();
 		final int size = sounds.size();
 		for (int i = 0; i < size; i++) {
-			Sound sound = sounds.get(i);
-			if (sound.getName().equals(name))
+			EnumSound sound = sounds.get(i);
+			if (sound.name.toString().equals(name))
 				return sound;
 		}
 		return null;
 	}
 	
-	public static Sound getByID(int soundID) {
+	public static EnumSound getByID(int soundID) {
 		return getValues().get(soundID);
 	}
 
@@ -1532,7 +1548,7 @@ public enum Sound implements EnumName, EnumID, EnumValueCache {
 	 * This method avoid allocation of a new array not like {@link #values()}.
 	 * @return list
 	 */
-	public static List<Sound> getValues() {
+	public static List<EnumSound> getValues() {
 		if (VALUES == null)
 			VALUES = List.of(values());
 		return VALUES;

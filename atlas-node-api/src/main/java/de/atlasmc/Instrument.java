@@ -2,7 +2,6 @@ package de.atlasmc;
 
 import java.util.List;
 
-import de.atlasmc.util.EnumID;
 import de.atlasmc.util.EnumName;
 import de.atlasmc.util.EnumValueCache;
 

@@ -11,7 +11,6 @@ import org.joml.Vector3d;
 
 import de.atlasmc.Location;
 import de.atlasmc.SimpleLocation;
-import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
@@ -31,6 +30,7 @@ import de.atlasmc.io.protocol.play.PacketOutSpawnEntity;
 import de.atlasmc.io.protocol.play.PacketOutUpdateEntityPositionAndRotation;
 import de.atlasmc.io.protocol.play.PacketOutUpdateEntityRotation;
 import de.atlasmc.server.LocalServer;
+import de.atlasmc.sound.Sound;
 import de.atlasmc.util.MathUtil;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.map.key.CharKey;
@@ -787,11 +787,6 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	@Override
 	public void causeSound(Sound sound, SoundCategory category, float volume, float pitch, long seed) {
 		getWorld().playSound(this, sound, category, volume, pitch, seed);
-	}
-	
-	@Override
-	public void causeSound(String sound, SoundCategory category, float volume, float pitch, long seed, boolean fixedRange, float range) {
-		getWorld().playSound(this, sound, category, volume, pitch, seed, fixedRange, range);
 	}
 
 	@Override

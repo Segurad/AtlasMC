@@ -1,18 +1,15 @@
 package de.atlasmc.inventory.component;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.sound.Sound;
 
 public interface InstrumentComponent extends ItemComponent {
 	
 	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:instrument");
 	
-	NamespacedKey getSound();
+	Sound getSound();
 	
-	void setSound(NamespacedKey sound);
-	
-	float getSoundRange();
-	
-	void setSoundRange(float range);
+	void setSound(Sound sound);
 	
 	int getUseDuration();
 	

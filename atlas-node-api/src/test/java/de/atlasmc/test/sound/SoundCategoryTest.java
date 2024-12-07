@@ -1,4 +1,4 @@
-package de.atlasmc.test;
+package de.atlasmc.test.sound;
 
 import de.atlasmc.SoundCategory;
 import de.atlastest.util.EnumTest;

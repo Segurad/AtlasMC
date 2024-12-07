@@ -2,13 +2,10 @@ package de.atlasmc.entity;
 
 import java.util.UUID;
 
-import org.joml.Vector3d;
-
 import de.atlasmc.Gamemode;
 import de.atlasmc.NodePlayer;
 import de.atlasmc.Particle;
 import de.atlasmc.SimpleLocation;
-import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.block.DiggingHandler;
@@ -21,9 +18,10 @@ import de.atlasmc.permission.Permissible;
 import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.scoreboard.ScoreboardView;
+import de.atlasmc.sound.SoundListener;
 import de.atlasmc.world.WorldEvent;
 
-public interface Player extends HumanEntity, Permissible, Messageable {
+public interface Player extends HumanEntity, Permissible, Messageable, SoundListener {
 	
 	PermissionHandler getPermissionHandler();
 	
@@ -124,52 +122,6 @@ public interface Player extends HumanEntity, Permissible, Messageable {
 	// --- Sound ---
 	
 	void stopSound(SoundCategory category, String sound);
-	
-	// Entity sound
-	
-	void playSound(Entity entity, Sound sound, SoundCategory category, float volume, float pitch, long seed);
-	
-	void playSound(Entity entity, String sound, SoundCategory category, float volume, float pitch, long seed, boolean fixedRange, float range);
-	
-	// Located sound
-	
-	default void playSound(Vector3d loc, Sound sound, float volume, float pitch, long seed) {
-		if (loc == null)
-			throw new IllegalArgumentException("Location can not be null!");
-		playSound(loc.x, loc.y, loc.z, sound, volume, pitch, seed);
-	}
-	
-	default void playSound(Vector3d loc, Sound sound, SoundCategory category, float volume, float pitch, long seed) {
-		if (loc == null)
-			throw new IllegalArgumentException("Location can not be null!");
-		playSound(loc.x, loc.y, loc.z, sound, category, volume, pitch, seed);
-	}
-	
-	default void playSound(double x, double y, double z, Sound sound, float volume, float pitch, long seed) {
-		playSound(x, y, z, sound, SoundCategory.MASTER, volume, pitch, seed);
-	}
-	
-	void playSound(double x, double y, double z, Sound sound, SoundCategory category, float volume, float pitch, long seed);
-
-	// Located named sound
-	
-	default void playSound(Vector3d loc, String sound, float volume, float pitch, long seed, boolean fixedRange, float range) {
-		if (loc == null)
-			throw new IllegalArgumentException("Location can not be null!");
-		playSound(loc.x, loc.y, loc.z, sound, volume, pitch, seed, fixedRange, range);
-	}
-	
-	default void playSound(Vector3d loc, String sound, SoundCategory category, float volume, float pitch, long seed, boolean fixedRange, float range) {
-		if (loc == null)
-			throw new IllegalArgumentException("Location can not be null!");
-		playSound(loc.x, loc.y, loc.z, sound, category, volume, pitch, seed, fixedRange, range);
-	}
-	
-	default void playSound(double x, double y, double z, String sound, float volume, float pitch, long seed, boolean fixedRange, float range) {
-		playSound(x, y, z, sound, SoundCategory.MASTER, volume, pitch, seed, fixedRange, range);
-	}
-	
-	void playSound(double x, double y, double z, String sound, SoundCategory category, float volume, float pitch, long seed, boolean fixedRange, float range);
 	
 	// --- Particle ---
 	

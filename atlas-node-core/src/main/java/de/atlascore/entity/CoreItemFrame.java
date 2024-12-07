@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.Material;
-import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.ItemFrame;
@@ -12,6 +11,8 @@ import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.sound.EnumSound;
+import de.atlasmc.sound.Sound;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -103,8 +104,8 @@ public class CoreItemFrame extends CoreHanging implements ItemFrame {
 	public void setItemStack(ItemStack item, boolean playSound) {
 		setItemStack(item);
 		if (playSound)
-			causeSound(item != null ? Sound.ENTITY_ITEM_FRAME_ADD_ITEM :
-				Sound.ENTITY_ITEM_FRAME_REMOVE_ITEM, SoundCategory.MASTER, 1.0f, 1.0f, 0); // TODO random seeding
+			causeSound(item != null ? EnumSound.ENTITY_ITEM_FRAME_ADD_ITEM :
+				EnumSound.ENTITY_ITEM_FRAME_REMOVE_ITEM, SoundCategory.MASTER, 1.0f, 1.0f, Sound.DEFAULT_SEED); // TODO random seeding
 	}
 
 	@Override

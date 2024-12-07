@@ -5,6 +5,7 @@ import java.util.Set;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.inventory.EquipmentSlot;
+import de.atlasmc.sound.Sound;
 
 public interface EquippableComponent extends ItemComponent {
 	
@@ -14,13 +15,9 @@ public interface EquippableComponent extends ItemComponent {
 	
 	void setSlot(EquipmentSlot slot);
 	
-	NamespacedKey getEquipSound();
+	Sound getEquipSound();
 	
-	void setEquipSound(NamespacedKey sound);
-	
-	float getEquipSoundRange();
-	
-	void setEquipSoundRange(float range);
+	void setEquipSound(Sound sound);
 	
 	Set<EntityType> getAllowedEntities();
 	

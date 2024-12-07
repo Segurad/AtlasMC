@@ -9,9 +9,8 @@ import org.joml.Vector3d;
 import de.atlasmc.Location;
 import de.atlasmc.Nameable;
 import de.atlasmc.SimpleLocation;
-import de.atlasmc.Sound;
-import de.atlasmc.SoundCategory;
 import de.atlasmc.server.LocalServer;
+import de.atlasmc.sound.SoundEmitter;
 import de.atlasmc.tick.Tickable;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.annotation.ThreadSafe;
@@ -21,7 +20,7 @@ import de.atlasmc.world.Chunk;
 import de.atlasmc.world.World;
 import de.atlasmc.world.entitytracker.EntityPerception;
 
-public interface Entity extends NBTHolder, Nameable, Tickable {
+public interface Entity extends NBTHolder, Nameable, Tickable, SoundEmitter {
 
 	public enum Animation {
 		SWING_MAIN_ARM,
@@ -268,10 +267,6 @@ public interface Entity extends NBTHolder, Nameable, Tickable {
 	 * @param yaw
 	 */
 	void spawn(World world, double x, double y, double z, float pitch, float yaw);
-	
-	void causeSound(Sound sound, SoundCategory category, float volume, float pitch, long seed);
-	
-	void causeSound(String sound, SoundCategory category, float volume, float pitch, long seed, boolean fixedRange, float range);
 	
 	ViewerSet<Entity, Player> getViewers();
 	

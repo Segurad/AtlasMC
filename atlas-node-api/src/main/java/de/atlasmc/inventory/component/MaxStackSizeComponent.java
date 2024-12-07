@@ -2,7 +2,7 @@ package de.atlasmc.inventory.component;
 
 import de.atlasmc.NamespacedKey;
 
-public interface MaxStackSizeComponent {
+public interface MaxStackSizeComponent extends ItemComponent {
 
 	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:max_stack_size");
 	

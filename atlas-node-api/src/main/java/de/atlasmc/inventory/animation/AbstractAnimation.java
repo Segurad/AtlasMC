@@ -1,7 +1,7 @@
 package de.atlasmc.inventory.animation;
 
-import de.atlasmc.Sound;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.sound.Sound;
 
 abstract class AbstractAnimation implements Animation {
 

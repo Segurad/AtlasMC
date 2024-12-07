@@ -13,7 +13,6 @@ import de.atlasmc.Material;
 import de.atlasmc.NodePlayer;
 import de.atlasmc.Particle;
 import de.atlasmc.SimpleLocation;
-import de.atlasmc.Sound;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.block.DiggingHandler;
@@ -48,6 +47,7 @@ import de.atlasmc.io.protocol.play.PacketOutWorldEvent;
 import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.scoreboard.ScoreboardView;
+import de.atlasmc.sound.Sound;
 import de.atlasmc.util.CooldownHandler;
 import de.atlasmc.util.MathUtil;
 import de.atlasmc.world.WorldEvent;
@@ -387,62 +387,40 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	public boolean hasPluginData() {
 		return pluginData != null;
 	}
-
+	
 	@Override
 	public void playSound(Entity entity, Sound sound, SoundCategory category, float volume, float pitch, long seed) {
-		playSound(entity, sound, null, category, volume, pitch, seed, false, 0);
-	}
-
-	@Override
-	public void playSound(Entity entity, String sound, SoundCategory category, float volume, float pitch, long seed, boolean fixedRange, float range) {
-		playSound(entity, null, sound, category, volume, pitch, seed, fixedRange, range);
-	}
-	
-	private void playSound(Entity entity, Sound sound, String identifier, SoundCategory category, float volume, float pitch, long seed, boolean fixedRange, float range) {
 		if (entity == null)
 			throw new IllegalArgumentException("Entity can not be null!");
-		if (sound == null || identifier == null)
+		if (sound == null)
 			throw new IllegalArgumentException("Sound can not be null!");
 		if (category == null)
 			throw new IllegalAccessError("Category can not be null!");
 		PacketOutEntitySoundEffect packet = new PacketOutEntitySoundEffect();
-		packet.setEntityID(entity.getID());
-		packet.setSound(sound);
-		packet.setIdentifier(identifier);
-		packet.setFixedRange(fixedRange);
-		packet.setRange(range);
-		packet.setCategory(category);
-		packet.setVolume(volume);
-		packet.setPitch(pitch);
-		packet.setSeed(seed);
+		packet.entityID = entity.getID();
+		packet.sound = sound;
+		packet.category = category;
+		packet.volume = volume;
+		packet.pitch = pitch;
+		packet.seed = seed;
 		con.sendPacked(packet);
 	}
-
+	
 	@Override
 	public void playSound(double x, double y, double z, Sound sound, SoundCategory category, float volume, float pitch, long seed) {
-		playSound(x, y, z, sound, null, category, volume, pitch, seed, false, 0);
-	}
-	
-	@Override
-	public void playSound(double x, double y, double z, String sound, SoundCategory category, float volume, float pitch, long seed, boolean fixedRange, float range) {
-		playSound(x, y, z, null, sound, category, volume, pitch, seed, fixedRange, range);
-	}
-	
-	private void playSound(double x, double y, double z, Sound sound, String identifier, SoundCategory category, float volume, float pitch, long seed, boolean fixedRange, float range) {
-		if (sound == null || identifier == null)
+		if (sound == null)
 			throw new IllegalArgumentException("Sound can not be null!");
 		if (category == null)
 			throw new IllegalAccessError("Category can not be null!");
 		PacketOutSoundEffect packet = new PacketOutSoundEffect();
-		packet.setLocation(x, y, z);
-		packet.setSound(sound);
-		packet.setIdentifier(identifier);
-		packet.setFixedRange(fixedRange);
-		packet.setRange(range);
-		packet.setCategory(category);
-		packet.setVolume(volume);
-		packet.setPitch(pitch);
-		packet.setSeed(seed);
+		packet.x = x;
+		packet.y = y;
+		packet.z = z;
+		packet.sound = sound;
+		packet.category = category;
+		packet.volume = volume;
+		packet.pitch = pitch;
+		packet.seed = seed;
 		con.sendPacked(packet);
 	}
 
