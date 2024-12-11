@@ -3,6 +3,8 @@ package de.atlasmc.io.protocol.play;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
+
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.util.palette.SingleValuePalette;
@@ -11,7 +13,7 @@ import de.atlasmc.world.ChunkSection;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
-@DefaultPacketID(PacketPlay.OUT_CHUNK_BIOMES)
+@DefaultPacketID(packetID = PacketPlay.OUT_CHUNK_BIOMES, definition = "chunk_biomes")
 public class PacketOutChunkBiomes extends AbstractPacket implements PacketPlayOut {
 	
 	public List<BiomeData> chunks;

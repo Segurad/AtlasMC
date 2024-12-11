@@ -6,7 +6,7 @@ import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutSetActionBarText;
 import io.netty.buffer.ByteBuf;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import java.io.IOException;
 
@@ -14,12 +14,12 @@ public class CorePacketOutSetActionBarText implements PacketIO<PacketOutSetActio
 
 	@Override
 	public void read(PacketOutSetActionBarText packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.text = readString(in, CHAT_MAX_LENGTH);
+		packet.text = readTextComponent(in);
 	}
 
 	@Override
 	public void write(PacketOutSetActionBarText packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		writeString(packet.text, out);
+		writeTextComponent(packet.text, out);
 	}
 
 	@Override

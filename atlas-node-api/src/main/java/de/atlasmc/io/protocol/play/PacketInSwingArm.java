@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.IN_SWING_ARM)
+@DefaultPacketID(packetID = PacketPlay.IN_SWING_ARM)
 public class PacketInSwingArm extends AbstractPacket implements PacketPlayIn {
 	
 	private int hand;

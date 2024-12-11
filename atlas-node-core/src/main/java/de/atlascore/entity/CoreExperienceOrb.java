@@ -21,9 +21,7 @@ public class CoreExperienceOrb extends CoreEntity implements ExperienceOrb {
 		VIEWER_ADD_FUNCTION = (holder, viewer) -> {
 			PlayerConnection con = viewer.getConnection();
 			PacketOutSpawnExperienceOrb packet = new PacketOutSpawnExperienceOrb();
-			packet.setEntityID(holder.getID());
-			packet.setLocation(holder.getX(), holder.getY(), holder.getZ());
-			packet.setExperience(((ExperienceOrb) holder).getExperience());
+			packet.setEntity((ExperienceOrb) holder);
 			con.sendPacked(packet);
 			((CoreExperienceOrb) holder).sendMetadata(viewer);
 		};

@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -15,14 +15,14 @@ public class CorePacketOutSetHeadRotation implements PacketIO<PacketOutSetHeadRo
 
 	@Override
 	public void read(PacketOutSetHeadRotation packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setEntityID(readVarInt(in));
-		packet.setYaw(MathUtil.fromAngle(in.readByte()));
+		packet.entityID = readVarInt(in);
+		packet.yaw = MathUtil.fromAngle(in.readByte());
 	}
 
 	@Override
 	public void write(PacketOutSetHeadRotation packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getEntityID(), out);
-		out.writeByte(MathUtil.toAngle(packet.getYaw()));
+		writeVarInt(packet.entityID, out);
+		out.writeByte(MathUtil.toAngle(packet.yaw));
 	}
 	
 	@Override

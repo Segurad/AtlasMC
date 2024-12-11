@@ -12,16 +12,16 @@ public class CorePacketOutPlayerAbilities implements PacketIO<PacketOutPlayerAbi
 
 	@Override
 	public void read(PacketOutPlayerAbilities packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setFlags(in.readByte());
-		packet.setFlySpeed(in.readFloat());
-		packet.setFovModifier(in.readFloat());
+		packet.flags = in.readByte();
+		packet.flySpeed = in.readFloat();
+		packet.fovModifier = in.readFloat();
 	}
 
 	@Override
 	public void write(PacketOutPlayerAbilities packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeByte(packet.getFlags());
-		out.writeFloat(packet.getFlySpeed());
-		out.writeFloat(packet.getFovModifier());
+		out.writeByte(packet.flags);
+		out.writeFloat(packet.flySpeed);
+		out.writeFloat(packet.fovModifier);
 	}
 	
 	@Override

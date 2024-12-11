@@ -1,8 +1,9 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.IOException;
+import static de.atlasmc.io.PacketUtil.readString;
+import static de.atlasmc.io.PacketUtil.writeString;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import java.io.IOException;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;

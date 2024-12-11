@@ -1,6 +1,7 @@
 package de.atlasmc.inventory;
 
 import de.atlasmc.entity.HumanEntity;
+import de.atlasmc.util.annotation.UnsafeAPI;
 
 public interface PlayerInventory extends Inventory {
 	
@@ -20,12 +21,38 @@ public interface PlayerInventory extends Inventory {
 	
 	void setBoots(ItemStack item);
 	
+	@UnsafeAPI
+	ItemStack getHelmetUnsafe();
+	
+	@UnsafeAPI
+	ItemStack getChestplateUnsafe();
+	
+	@UnsafeAPI
+	ItemStack getLeggingsUnsafe();
+	
+	@UnsafeAPI
+	ItemStack getBootsUnsafe();
+	
+	@UnsafeAPI
+	void setHelmetUnsafe(ItemStack item);
+
+	@UnsafeAPI
+	void setChestplateUnsafe(ItemStack item);
+	
+	@UnsafeAPI
+	void setLeggingsUnsafe(ItemStack item);
+	
+	@UnsafeAPI
+	void setBootsUnsafe(ItemStack item);
+	
 	ItemStack[] getArmorContents();
 	
+	@UnsafeAPI
 	ItemStack[] getArmorContentsUnsafe();
 	
 	void setArmorContents(ItemStack[] items);
 	
+	@UnsafeAPI
 	void setArmorContentsUnsafe(ItemStack[] items);
 	
 	HumanEntity getHolder();
@@ -37,6 +64,18 @@ public interface PlayerInventory extends Inventory {
 	ItemStack getItemInOffHand();
 	
 	void setItemInOffHand(ItemStack item);
+	
+	@UnsafeAPI
+	ItemStack getItemInMainHandUnsafe();
+	
+	@UnsafeAPI
+	void setItemInMainHandUnsafe(ItemStack item);
+
+	@UnsafeAPI
+	ItemStack getItemInOffHandUnsafe();
+	
+	@UnsafeAPI
+	void setItemInOffHandUnsafe(ItemStack item);
 
 	int getHeldItemSlot();
 	

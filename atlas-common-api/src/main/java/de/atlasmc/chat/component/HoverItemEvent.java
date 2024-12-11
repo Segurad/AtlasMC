@@ -1,24 +1,27 @@
 package de.atlasmc.chat.component;
 
-import de.atlasmc.util.JsonBuffer;
+import java.io.IOException;
+
+import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.tag.NBT;
 
 public class HoverItemEvent implements HoverEvent {
 	
 	public static final String 
 	JSON_ID = "id",
 	JSON_COUNT = "count",
-	JSON_TAG = "tag";
+	JSON_COMPONENT = "component";
 	
 	private final String id;
 	private final int count;
-	private final String tag;
+	private final NBT components;
 	
-	public HoverItemEvent(String id, int count, String tag) {
+	public HoverItemEvent(String id, int count, NBT components) {
 		if (id == null)
 			throw new IllegalArgumentException("ID can not be null!");
 		this.id = id;
 		this.count = count;
-		this.tag = tag;
+		this.components = components;
 	}
 
 	@Override
@@ -27,11 +30,11 @@ public class HoverItemEvent implements HoverEvent {
 	}
 
 	@Override
-	public void addContents(JsonBuffer buff) {
-		buff.append(JSON_ID, this.id);
-		buff.append(JSON_COUNT, this.count);
-		if (tag != null) {
-			buff.appendText(JSON_TAG, this.tag);
+	public void addContents(NBTWriter writer) throws IOException {
+		writer.writeStringTag(JSON_ID, this.id);
+		writer.writeIntTag(JSON_COUNT, this.count);
+		if (components != null) {
+			writer.writeNBT(components);
 		}
 	}
 
@@ -43,8 +46,8 @@ public class HoverItemEvent implements HoverEvent {
 		return count;
 	}
 	
-	public String getTag() {
-		return tag;
+	public NBT getComponents() {
+		return components;
 	}
 	
 }

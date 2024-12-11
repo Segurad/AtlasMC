@@ -1,15 +1,10 @@
 package de.atlasmc.io.protocol.configuration;
 
-import de.atlasmc.NamespacedKey;
-import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import io.netty.buffer.ByteBuf;
+import de.atlasmc.io.protocol.common.AbstractPacketPluginMessage;
 
-@DefaultPacketID(PacketConfiguration.IN_PLUGIN_MESSAGE)
-public class PacketInPluginMessage extends AbstractPacket implements PacketConfigurationIn {
-
-	public NamespacedKey channel;
-	public ByteBuf data;
+@DefaultPacketID(packetID = PacketConfiguration.IN_PLUGIN_MESSAGE, definition = "custom_payload")
+public class PacketInPluginMessage extends AbstractPacketPluginMessage implements PacketConfigurationIn {
 	
 	@Override
 	public int getDefaultID() {

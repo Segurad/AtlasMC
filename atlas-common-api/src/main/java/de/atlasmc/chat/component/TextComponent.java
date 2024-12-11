@@ -1,11 +1,14 @@
 package de.atlasmc.chat.component;
 
-import de.atlasmc.util.JsonBuffer;
+import java.io.IOException;
+
+import de.atlasmc.util.map.key.CharKey;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class TextComponent extends AbstractBaseComponent<TextComponent> {
 
-	public static final String
-	JSON_TEXT = "text";
+	public static final CharKey
+	JSON_TEXT = CharKey.literal("text");
 	
 	private String text;
 	
@@ -14,6 +17,11 @@ public class TextComponent extends AbstractBaseComponent<TextComponent> {
 	}
 
 	public TextComponent() {}
+	
+	@Override
+	protected String getType() {
+		return "text";
+	}
 
 	public TextComponent setValue(String text) {
 		this.text = text;
@@ -25,9 +33,9 @@ public class TextComponent extends AbstractBaseComponent<TextComponent> {
 	}
 	
 	@Override
-	public void addContents(JsonBuffer buff) {
-		buff.appendText(JSON_TEXT, text);
-		super.addContents(buff);
+	public void addContents(NBTWriter writer) throws IOException {
+		super.addContents(writer);
+		writer.writeStringTag(JSON_TEXT, text);
 	}
 
 	@Override

@@ -3,95 +3,32 @@ package de.atlasmc.io.protocol.play;
 import java.util.List;
 import java.util.UUID;
 
-import de.atlasmc.BossBar;
 import de.atlasmc.BossBar.BarColor;
-import de.atlasmc.BossBar.BarFlag;
 import de.atlasmc.BossBar.BarStyle;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumValueCache;
 
-@DefaultPacketID(PacketPlay.OUT_BOSS_BAR)
+@DefaultPacketID(packetID = PacketPlay.OUT_BOSS_BAR, definition = "boss_event")
 public class PacketOutBossBar extends AbstractPacket implements PacketPlayOut {
 	
-	private UUID uuid;
-	private BossBarAction action;
-	private BarColor color;
-	private BarStyle style;
-	private int flags;
-	private String title;
-	private float health;
-	
-	public UUID getUUID() {
-		return uuid;
-	}
-	
-	public void setUUID(UUID uuid) {
-		this.uuid = uuid;
-	}
-	
-	public BossBarAction getAction() {
-		return action;
-	}
-	
-	public void setAction(BossBarAction action) {
-		this.action = action;
-	}
-	
-	public BarColor getColor() {
-		return color;
-	}
-	
-	public void setColor(BarColor color) {
-		this.color = color;
-	}
-	
-	public BarStyle getStyle() {
-		return style;
-	}
-	
-	public void setStyle(BarStyle style) {
-		this.style = style;
-	}
-	
-	/**
-	 * Sets sets the {@link BarFlag}s for a {@link BossBar}
-	 * <ul>
-	 * <li>0x01 {@link BarFlag#DARKEN_SKY}</li>
-	 * <li>0x02 {@link BarFlag#PLAY_BOSS_MUSIC}</li>
-	 * <li>0x04 {@link BarFlag#CREATE_FOG}</li>
-	 * </ul>
-	 * @param flags
-	 */
-	public void setFlags(int flags) {
-		this.flags = flags;
-	}
-	
-	public int getFlags() {
-		return flags;
-	}
-	
-	public String getTitle() {
-		return title;
-	}
-	
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	
-	public float getHealth() {
-		return health;
-	}
-	
-	public void setHealth(float health) {
-		this.health = health;
-	}
+	public UUID uuid;
+	public BossBarAction action;
+	public BarColor color;
+	public BarStyle style;
+	public int flags;
+	public Chat title;
+	public float health;
 	
 	@Override
 	public int getDefaultID() {
 		return OUT_BOSS_BAR;
 	}
 	
-	public static enum BossBarAction {
+	public static enum BossBarAction implements EnumID, EnumValueCache {
+		
 		ADD,
 		REMOVE,
 		UPDATE_HEALTH,

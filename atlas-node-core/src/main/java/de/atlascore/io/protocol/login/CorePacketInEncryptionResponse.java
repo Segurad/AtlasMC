@@ -7,7 +7,7 @@ import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.login.PacketInEncryptionResponse;
 import io.netty.buffer.ByteBuf;
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CorePacketInEncryptionResponse implements PacketIO<PacketInEncryptionResponse> {
 

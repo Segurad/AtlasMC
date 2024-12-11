@@ -4,44 +4,16 @@ import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_SET_CONTAINER_CONTENT)
+@DefaultPacketID(packetID = PacketPlay.OUT_SET_CONTAINER_CONTENT, definition = "container_set_content")
 public class PacketOutSetContainerContents extends AbstractPacket implements PacketPlayOut {
 	
-	private int windowID;
-	private int stateID;
-	private ItemStack[] items;
-	private ItemStack carriedItem;
-	
-	public int getWindowID() {
-		return windowID;
-	}
-	
-	public void setWindowID(int windowID) {
-		this.windowID = windowID;
-	}
-	
-	public ItemStack[] getItems() {
-		return items;
-	}
+	public int windowID;
+	public int stateID;
+	public ItemStack[] items;
+	public ItemStack carriedItem;
 	
 	public void setItems(ItemStack... items) {
 		this.items = items;
-	}
-	
-	public ItemStack getCarriedItem() {
-		return carriedItem;
-	}
-	
-	public void setCarriedItem(ItemStack carriedItem) {
-		this.carriedItem = carriedItem;
-	}
-	
-	public int getStateID() {
-		return stateID;
-	}
-	
-	public void setStateID(int stateID) {
-		this.stateID = stateID;
 	}
 
 	@Override

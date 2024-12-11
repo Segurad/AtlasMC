@@ -1,10 +1,12 @@
 package de.atlasmc.chat.component;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.util.JsonBuffer;
 import de.atlasmc.util.annotation.Nullable;
+import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 /**
  * {@link ChatComponent} that translates its contents
@@ -17,9 +19,11 @@ public class TranslationComponent extends AbstractBaseComponent<TranslationCompo
 	
 	public static final String
 	JSON_TRANSLATE = "translate",
-	JSON_WITH = "with";
+	JSON_WITH = "with",
+	JSON_FALLBACK = "fallback";
 	
 	private String key;
+	private String fallback;
 	private List<ChatComponent> with;
 	
 	public TranslationComponent() {}
@@ -38,12 +42,26 @@ public class TranslationComponent extends AbstractBaseComponent<TranslationCompo
 		this.with = with;
 	}
 	
+	@Override
+	protected String getType() {
+		return "translatable";
+	}
+	
 	public String getKey() {
 		return key;
 	}
 	
 	public TranslationComponent setKey(String key) {
 		this.key = key;
+		return this;
+	}
+	
+	public String getFallback() {
+		return fallback;
+	}
+	
+	public TranslationComponent setFallback(String fallback) {
+		this.fallback = fallback;
 		return this;
 	}
 	
@@ -55,7 +73,7 @@ public class TranslationComponent extends AbstractBaseComponent<TranslationCompo
 	
 	public TranslationComponent setWith(List<ChatComponent> with) {
 		if (this.with == null) {
-			this.with = new ArrayList<ChatComponent>(with);
+			this.with = new ArrayList<>(with);
 		} else {
 			this.with.clear();
 			this.with.addAll(with);
@@ -82,20 +100,21 @@ public class TranslationComponent extends AbstractBaseComponent<TranslationCompo
 	
 	
 	@Override
-	public void addContents(JsonBuffer buff) {
-		buff.appendText(JSON_TRANSLATE, key);
+	public void addContents(NBTWriter writer) throws IOException {
+		super.addContents(writer);
+		writer.writeStringTag(JSON_TRANSLATE, key);
 		if (with != null) {
-			buff.beginArray(JSON_WITH);
-			for (ChatComponent comp : with) {
-				if (comp == null)
-					continue;
-				buff.beginObject(null);
-				comp.addContents(buff);
-				buff.endObject();
+			final int size = with.size();
+			writer.writeListTag(JSON_WITH, TagType.COMPOUND, size);
+			for (int i = 0; i < size; i++) {
+				ChatComponent comp = with.get(i);
+				writer.writeCompoundTag();
+				comp.addContents(writer);
+				writer.writeEndTag();
 			}
-			buff.endArray();
 		}
-		super.addContents(buff);
+		if (fallback != null)
+			writer.writeStringTag(JSON_FALLBACK, fallback);
 	}
 
 	@Override

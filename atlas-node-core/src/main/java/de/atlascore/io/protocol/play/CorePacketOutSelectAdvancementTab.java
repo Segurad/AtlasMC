@@ -7,7 +7,7 @@ import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutSelectAdvancementTab;
 import io.netty.buffer.ByteBuf;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import java.io.IOException;
 
@@ -16,12 +16,12 @@ public class CorePacketOutSelectAdvancementTab implements PacketIO<PacketOutSele
 	@Override
 	public void read(PacketOutSelectAdvancementTab packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		if (in.readBoolean())
-			packet.setTabID(readIdentifier(in));
+			packet.tabID = readIdentifier(in);
 	}
 
 	@Override
 	public void write(PacketOutSelectAdvancementTab packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		NamespacedKey tab = packet.getTabID();
+		NamespacedKey tab = packet.tabID;
 		if (tab == null) {
 			out.writeBoolean(false);
 		} else {

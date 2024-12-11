@@ -3,7 +3,7 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlasmc.inventory.EquipmentSlot;
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -15,12 +15,12 @@ public class CorePacketOutOpenBook implements PacketIO<PacketOutOpenBook> {
 
 	@Override
 	public void read(PacketOutOpenBook packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setHand(readVarInt(in) == 1 ? EquipmentSlot.OFF_HAND : EquipmentSlot.MAIN_HAND);
+		packet.hand = readVarInt(in) == 1 ? EquipmentSlot.OFF_HAND : EquipmentSlot.MAIN_HAND;
 	}
 
 	@Override
 	public void write(PacketOutOpenBook packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getHand() == EquipmentSlot.MAIN_HAND ? 0 : 1, out);
+		writeVarInt(packet.hand == EquipmentSlot.MAIN_HAND ? 0 : 1, out);
 	}
 
 	@Override

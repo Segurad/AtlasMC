@@ -4,27 +4,11 @@ import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.scoreboard.DisplaySlot;
 
-@DefaultPacketID(PacketPlay.OUT_DISPLAY_OBJECTIVE)
+@DefaultPacketID(packetID = PacketPlay.OUT_DISPLAY_OBJECTIVE, definition = "set_display_objective")
 public class PacketOutDisplayObjective extends AbstractPacket implements PacketPlayOut {
 	
-	private DisplaySlot position;
-	private String objective;
-	
-	public DisplaySlot getPosition() {
-		return position;
-	}
-	
-	public void setPosition(DisplaySlot position) {
-		this.position = position;
-	}
-	
-	public String getObjective() {
-		return objective;
-	}
-	
-	public void setObjective(String objective) {
-		this.objective = objective;
-	}
+	public DisplaySlot position;
+	public String objective;
 	
 	@Override
 	public int getDefaultID() {

@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_START_CONFIGURATION)
+@DefaultPacketID(packetID = PacketPlay.OUT_START_CONFIGURATION, definition = "start_configuration")
 public class PacketOutStartConfiguration extends AbstractPacket implements PacketPlayOut {
 
 	@Override

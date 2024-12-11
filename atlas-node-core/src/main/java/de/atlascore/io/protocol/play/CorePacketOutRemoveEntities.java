@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -21,12 +21,12 @@ public class CorePacketOutRemoveEntities implements PacketIO<PacketOutRemoveEnti
 		for (int i = 0; i < size; i++) {
 			entities[i] = readVarInt(in);
 		}
-		packet.setEntityIDs(entities);
+		packet.entityIDs = entities;
 	}
 
 	@Override
 	public void write(PacketOutRemoveEntities packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		int[] entities = packet.getEntityIDs();
+		int[] entities = packet.entityIDs;
 		if (entities != null) {
 			writeVarInt(entities.length, out);
 			for (int i : entities) {

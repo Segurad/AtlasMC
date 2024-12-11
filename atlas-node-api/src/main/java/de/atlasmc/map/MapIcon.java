@@ -1,12 +1,18 @@
 package de.atlasmc.map;
 
+import java.util.List;
+
+import de.atlasmc.chat.Chat;
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumValueCache;
+
 public class MapIcon implements Cloneable {
 	
 	private IconType type;
 	private int x;
 	private int z;
 	private float direction;
-	private String name;
+	private Chat name;
 	
 	public MapIcon(IconType type) {
 		this(type, 0, 0);
@@ -23,7 +29,8 @@ public class MapIcon implements Cloneable {
 		this.direction = direction;
 	}
 	
-	public enum IconType {
+	public enum IconType implements EnumID, EnumValueCache {
+		
 		WHITE_ARROW,
 		GREEN_ARROW,
 		RED_ARROW,
@@ -52,9 +59,35 @@ public class MapIcon implements Cloneable {
 		BLACK_BANNER,
 		TREASURE_MARKER;
 		
-		public static IconType getByID(int id) {
-			return values()[id];
+		private static List<IconType> VALUES;
+		
+		@Override
+		public int getID() {
+			return ordinal();
 		}
+		
+		public static IconType getByID(int id) {
+			return getValues().get(id);
+		}
+		
+		/**
+		 * Returns a immutable List of all Types.<br>
+		 * This method avoid allocation of a new array not like {@link #values()}.
+		 * @return list
+		 */
+		public static List<IconType> getValues() {
+			if (VALUES == null)
+				VALUES = List.of(values());
+			return VALUES;
+		}
+		
+		/**
+		 * Releases the system resources used from the values cache
+		 */
+		public static void freeValues() {
+			VALUES = null;
+		}
+		
 	}
 
 	public IconType getType() {
@@ -73,7 +106,7 @@ public class MapIcon implements Cloneable {
 		return direction;
 	}
 
-	public String getDisplayName() {
+	public Chat getDisplayName() {
 		return name;
 	}
 
@@ -93,7 +126,7 @@ public class MapIcon implements Cloneable {
 		this.direction = direction;
 	}
 
-	public void setDisplayName(String name) {
+	public void setDisplayName(Chat name) {
 		this.name = name;
 	}
 	

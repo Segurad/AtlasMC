@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_HURT_ANIMATION)
+@DefaultPacketID(packetID = PacketPlay.OUT_HURT_ANIMATION, definition = "hurt_animation")
 public class PacketOutHurtAnimation extends AbstractPacket implements PacketPlayOut {
 	
 	public int entityID;

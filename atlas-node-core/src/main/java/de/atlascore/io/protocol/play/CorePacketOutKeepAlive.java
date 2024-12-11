@@ -12,12 +12,12 @@ public class CorePacketOutKeepAlive implements PacketIO<PacketOutKeepAlive> {
 
 	@Override
 	public void read(PacketOutKeepAlive packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setKeepAlive(in.readLong());
+		packet.keepAliveID = in.readLong();
 	}
 
 	@Override
 	public void write(PacketOutKeepAlive packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeLong(packet.getKeepAlive());
+		out.writeLong(packet.keepAliveID);
 	}
 
 	@Override

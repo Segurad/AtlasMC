@@ -7,7 +7,7 @@ import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.login.PacketOutLoginPluginRequest;
 import io.netty.buffer.ByteBuf;
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CorePacketOutLoginPluginRequest implements PacketIO<PacketOutLoginPluginRequest> {
 
@@ -15,8 +15,7 @@ public class CorePacketOutLoginPluginRequest implements PacketIO<PacketOutLoginP
 	public void read(PacketOutLoginPluginRequest packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.messageID = readVarInt(in);
 		packet.channel = readIdentifier(in);
-		byte[] data = packet.data = new byte[in.readableBytes()];
-		in.readBytes(data);
+		packet.data = in.readBytes(in.readableBytes());
 	}
 
 	@Override

@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.IN_JIGSAW_GENERATE)
+@DefaultPacketID(packetID = PacketPlay.IN_JIGSAW_GENERATE)
 public class PacketInJigsawGenerate extends AbstractPacket implements PacketPlayIn {
 	
 	private long position;

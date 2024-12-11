@@ -140,9 +140,9 @@ public class CoreWorld implements World {
 			PlayerChunkListener player = (PlayerChunkListener) listener;
 			if (packet == null) {
 				packet = new PacketOutWorldEvent();
-				packet.setEvent(effect);
-				packet.setPosition(MathUtil.toPosition(loc));
-				packet.setData(effect.getDataValueByObject(data));
+				packet.event = effect;
+				packet.position = MathUtil.toPosition(loc);
+				packet.data = effect.getDataValueByObject(data);
 			}
 			player.getConnection().sendPacked(packet);
 		}
@@ -164,9 +164,11 @@ public class CoreWorld implements World {
 			PlayerChunkListener player = (PlayerChunkListener) listener;
 			if (packet == null) {
 				packet = new PacketOutParticle();
-				packet.setParticle(particle);
-				packet.setLocation(loc.x, loc.y, loc.z);
-				packet.setCount(amount);
+				packet.particle = particle;
+				packet.x = loc.x;
+				packet.y = loc.y;
+				packet.z = loc.z;
+				packet.count = amount;
 			}
 			player.getConnection().sendPacked(packet);
 		}

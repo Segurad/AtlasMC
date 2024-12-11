@@ -26,7 +26,7 @@ public class CoreProtocolConfiguration extends CoreAbstractProtocol<PacketConfig
 			new CorePacketOutKeepAlive(),
 			new CorePacketOutPing(),
 			new CorePacketOutRegistryData(),
-			new CorePacketOutResourcePack(),
+			new CorePacketOutAddResourcePack(),
 			new CorePacketOutFeatureFlags(),
 			new CorePacketOutUpdateTags()
 		});

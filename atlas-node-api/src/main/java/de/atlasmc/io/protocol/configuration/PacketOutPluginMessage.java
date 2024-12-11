@@ -1,14 +1,10 @@
 package de.atlasmc.io.protocol.configuration;
 
-import de.atlasmc.NamespacedKey;
-import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.protocol.common.AbstractPacketPluginMessage;
 
-@DefaultPacketID(PacketConfiguration.OUT_PLUGIN_MESSAGE)
-public class PacketOutPluginMessage extends AbstractPacket implements PacketConfigurationOut {
-
-	public NamespacedKey channel;
-	public byte[] data;
+@DefaultPacketID(packetID = PacketConfiguration.OUT_PLUGIN_MESSAGE, definition = "custom_message")
+public class PacketOutPluginMessage extends AbstractPacketPluginMessage implements PacketConfigurationOut {
 	
 	@Override
 	public int getDefaultID() {

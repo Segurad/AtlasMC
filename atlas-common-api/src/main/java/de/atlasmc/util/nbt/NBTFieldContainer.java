@@ -9,7 +9,7 @@ import de.atlasmc.util.map.key.CharKey;
  * Stores {@link NBTField} and {@link NBTFieldContainer}
  * @param <H> the type of the holder
  */
-public class NBTFieldContainer<H extends NBTHolder> {
+public class NBTFieldContainer<H> {
 	
 	private Map<CharSequence, NBTField<H>> fields;
 	private Map<CharSequence, NBTFieldContainer<H>> container;
@@ -133,7 +133,7 @@ public class NBTFieldContainer<H extends NBTHolder> {
 		return new ChildNBTFieldContainer<>(this);
 	}
 	
-	public static <H extends NBTHolder> NBTFieldContainer<H> newContainer() {
+	public static <H> NBTFieldContainer<H> newContainer() {
 		return new NBTFieldContainer<>();
 	}
 

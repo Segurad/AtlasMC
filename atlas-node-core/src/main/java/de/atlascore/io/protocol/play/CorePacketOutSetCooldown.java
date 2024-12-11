@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -14,14 +14,14 @@ public class CorePacketOutSetCooldown implements PacketIO<PacketOutSetCooldown> 
 
 	@Override
 	public void read(PacketOutSetCooldown packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setItemID(readVarInt(in));
-		packet.setCooldown(readVarInt(in));
+		packet.itemID = readVarInt(in);
+		packet.cooldown = readVarInt(in);
 	}
 
 	@Override
 	public void write(PacketOutSetCooldown packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getItemID(), out);
-		writeVarInt(packet.getCooldown(), out);
+		writeVarInt(packet.itemID, out);
+		writeVarInt(packet.cooldown, out);
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.io.ConnectionHandler;
@@ -15,16 +15,16 @@ public class CorePacketOutOpenScreen implements PacketIO<PacketOutOpenScreen> {
 
 	@Override
 	public void read(PacketOutOpenScreen packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setWindowID(readVarInt(in));
-		packet.setType(InventoryType.getByID(readVarInt(in)));
-		packet.setTitle(readString(in));
+		packet.windowID = readVarInt(in);
+		packet.type = InventoryType.getByID(readVarInt(in));
+		packet.title = readTextComponent(in);
 	}
 
 	@Override
 	public void write(PacketOutOpenScreen packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getWindowID(), out);
-		writeVarInt(packet.getType().getID(), out);
-		writeString(packet.getTitle(), out);
+		writeVarInt(packet.windowID, out);
+		writeVarInt(packet.type.getID(), out);
+		writeTextComponent(packet.title, out);
 	}
 	
 	@Override

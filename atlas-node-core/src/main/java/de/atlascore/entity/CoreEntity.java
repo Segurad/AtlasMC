@@ -22,7 +22,7 @@ import de.atlasmc.entity.data.MetaDataContainer;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.io.protocol.PlayerConnection;
-import de.atlasmc.io.protocol.play.PacketOutEntityTeleport;
+import de.atlasmc.io.protocol.play.PacketOutTeleportEntity;
 import de.atlasmc.io.protocol.play.PacketOutRemoveEntities;
 import de.atlasmc.io.protocol.play.PacketOutSetEntityMetadata;
 import de.atlasmc.io.protocol.play.PacketOutSetPassengers;
@@ -714,7 +714,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 			for (Entity ent : passengers)
 				passengerIDs[index++] = ent.getID();
 			PacketOutSetPassengers packet = new PacketOutSetPassengers();
-			packet.setVehicleID(getID());
+			packet.vehicleID = getID();
 			packet.setPassengers(passengerIDs);
 			for (Player viewer : viewers) {
 				PlayerConnection con = viewer.getConnection();
@@ -731,19 +731,23 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 					short dx = MathUtil.delta(loc.x, oldLoc.x);
 					short dy = MathUtil.delta(loc.y, oldLoc.y);
 					short dz = MathUtil.delta(loc.z, oldLoc.z);
-					packet.setEntityID(getID());
-					packet.setLocation(dx, dy, dz, loc.yaw, loc.pitch);
-					packet.setOnGround(isOnGround());
+					packet.entityID = getID();
+					packet.deltaX = dx;
+					packet.deltaY = dy;
+					packet.deltaZ = dz;
+					packet.yaw = loc.yaw;
+					packet.pitch = loc.pitch;
+					packet.onGround = isOnGround();
 					for (Player viewer : viewers) {
 						PlayerConnection con = viewer.getConnection();
 						con.sendPacked(packet);
 					}
 				} else {
 					PacketOutUpdateEntityRotation packet = new PacketOutUpdateEntityRotation();
-					packet.setEntityID(getID());
-					packet.setYaw(loc.yaw);
-					packet.setPitch(loc.pitch);
-					packet.setOnGround(isOnGround());
+					packet.entityID = getID();
+					packet.yaw = loc.yaw;
+					packet.pitch = loc.pitch;
+					packet.onGround = isOnGround();
 					for (Player viewer : viewers) {
 						PlayerConnection con = viewer.getConnection();
 						con.sendPacked(packet);
@@ -754,10 +758,14 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 		}
 		if (teleported) {
 			teleported = false;
-			PacketOutEntityTeleport packet = new PacketOutEntityTeleport();
-			packet.setEntityID(getID());
-			packet.setLocation(getX(), getY(), getZ(), getPitch(), getYaw());
-			packet.setOnGround(isOnGround());
+			PacketOutTeleportEntity packet = new PacketOutTeleportEntity();
+			packet.entityID = getID();
+			packet.x = loc.x;
+			packet.y = loc.y;
+			packet.z = loc.z;
+			packet.pitch = loc.pitch;
+			packet.yaw = loc.yaw;
+			packet.onGround = isOnGround();
 			for (Player viewer : viewers) {
 				PlayerConnection con = viewer.getConnection();
 				con.sendPacked(packet);
@@ -765,7 +773,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 		}
 		if (metaContainer.hasChanges()) {
 			PacketOutSetEntityMetadata packet = new PacketOutSetEntityMetadata();
-			packet.setEntityID(getID());
+			packet.entityID = getID();
 			packet.setChangedData(metaContainer);
 			for (Player viewer : viewers) {
 				PlayerConnection con = viewer.getConnection();
@@ -807,7 +815,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	protected void sendMetadata(Player player) {
 		PlayerConnection con = player.getConnection();
 		PacketOutSetEntityMetadata packet = new PacketOutSetEntityMetadata();
-		packet.setEntityID(getID());
+		packet.entityID = getID();
 		packet.setNonDefaultData(metaContainer);
 		con.sendPacked(packet);
 	}

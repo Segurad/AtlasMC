@@ -1,7 +1,9 @@
 package de.atlasmc.entity.data;
 
+import static de.atlasmc.io.PacketUtil.readVarInt;
+import static de.atlasmc.io.PacketUtil.writeVarInt;
+
 import de.atlasmc.block.BlockFace;
-import de.atlasmc.io.AbstractPacket;
 import io.netty.buffer.ByteBuf;
 
 public class DirectionMetaDataType extends MetaDataType<BlockFace> {
@@ -12,7 +14,7 @@ public class DirectionMetaDataType extends MetaDataType<BlockFace> {
 	
 	@Override
     public BlockFace read(ByteBuf in) {
-        int face = AbstractPacket.readVarInt(in);
+        int face = readVarInt(in);
         switch (face) {
             case 0:
                 return BlockFace.DOWN;
@@ -56,7 +58,7 @@ public class DirectionMetaDataType extends MetaDataType<BlockFace> {
             default:
                 throw new IllegalArgumentException("Invalid BlockFace: " + data.name());
         }
-        AbstractPacket.writeVarInt(i, out);
+        writeVarInt(i, out);
     }
 
 }

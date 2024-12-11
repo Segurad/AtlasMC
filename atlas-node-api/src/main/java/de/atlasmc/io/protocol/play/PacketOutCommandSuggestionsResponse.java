@@ -5,45 +5,13 @@ import java.util.List;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_COMMAND_SUGGESTIONS_RESPONSE)
+@DefaultPacketID(packetID = PacketPlay.OUT_COMMAND_SUGGESTIONS_RESPONSE, definition = "command_suggestions")
 public class PacketOutCommandSuggestionsResponse extends AbstractPacket implements PacketPlayOut {
 	
-	private int transactionID;
-	private int start;
-	private int length;
-	private List<Match> matches;
-	
-	public int getTransactionID() {
-		return transactionID;
-	}
-
-	public int getStart() {
-		return start;
-	}
-
-	public int getLength() {
-		return length;
-	}
-
-	public List<Match> getMatches() {
-		return matches;
-	}
-
-	public void setTransactionID(int transactionID) {
-		this.transactionID = transactionID;
-	}
-
-	public void setStart(int start) {
-		this.start = start;
-	}
-
-	public void setLength(int length) {
-		this.length = length;
-	}
-
-	public void setMatches(List<Match> matches) {
-		this.matches = matches;
-	}
+	public int transactionID;
+	public int start;
+	public int length;
+	public List<Match> matches;
 
 	@Override
 	public int getDefaultID() {

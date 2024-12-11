@@ -5,7 +5,7 @@ import java.util.List;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.IN_SEEN_ADVANCEMENTS)
+@DefaultPacketID(packetID = PacketPlay.IN_SEEN_ADVANCEMENTS)
 public class PacketInSeenAdvancements extends AbstractPacket implements PacketPlayIn {
 	
 	private Action action;

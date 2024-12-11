@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -16,21 +16,21 @@ public class CorePacketOutTagQueryResponse implements PacketIO<PacketOutTagQuery
 
 	@Override
 	public void read(PacketOutTagQueryResponse packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setTransactionID(readVarInt(in));
+		packet.transactionID = readVarInt(in);
 		NBTNIOReader reader = new NBTNIOReader(in, true);
-		packet.setNBT(reader.readNBT());
+		packet.nbt = reader.readNBT();
 		reader.close();
 	}
 
 	@Override
 	public void write(PacketOutTagQueryResponse packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getTransactionID(), out);
-		if (packet.getNBT() == null) {
+		writeVarInt(packet.transactionID, out);
+		if (packet.nbt == null) {
 			out.writeByte(0);
 			return;
 		}
 		NBTNIOWriter writer = new NBTNIOWriter(out, true);
-		writer.writeNBT(packet.getNBT());
+		writer.writeNBT(packet.nbt);
 		writer.close();
 	}
 

@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -14,12 +14,12 @@ public class CorePacketOutDisconnect implements PacketIO<PacketOutDisconnect> {
 
 	@Override
 	public void read(PacketOutDisconnect packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setReason(readString(in));
+		packet.reason = readTextComponent(in);
 	}
 
 	@Override
 	public void write(PacketOutDisconnect packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeString(packet.getReason(), out);
+		writeTextComponent(packet.reason, out);
 	}
 
 	@Override

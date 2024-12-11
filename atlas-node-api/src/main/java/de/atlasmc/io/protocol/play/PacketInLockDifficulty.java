@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.IN_LOCK_DIFFICULTY)
+@DefaultPacketID(packetID = PacketPlay.IN_LOCK_DIFFICULTY)
 public class PacketInLockDifficulty extends AbstractPacket implements PacketPlayIn {
 	
 	private boolean locked;

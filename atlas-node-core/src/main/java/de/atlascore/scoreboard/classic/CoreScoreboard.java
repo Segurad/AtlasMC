@@ -13,7 +13,6 @@ import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutDisplayObjective;
 import de.atlasmc.io.protocol.play.PacketOutUpdateObjectives;
 import de.atlasmc.io.protocol.play.PacketOutUpdateObjectives.Mode;
-import de.atlasmc.io.protocol.play.PacketOutUpdateScore.ScoreAction;
 import de.atlasmc.io.protocol.play.PacketOutUpdateTeams;
 import de.atlasmc.io.protocol.play.PacketOutUpdateScore;
 import de.atlasmc.scoreboard.DisplaySlot;
@@ -140,17 +139,17 @@ public class CoreScoreboard implements Scoreboard {
 	private void addTeam(Team team) {
 		teams.put(team.getName(), team);
 		PacketOutUpdateTeams packetTeams = new PacketOutUpdateTeams();
-		packetTeams.setName(team.getName());
-		packetTeams.setMode(PacketOutUpdateTeams.Mode.CREATE_TEAM);
-		packetTeams.setDisplayName(team.getDisplayName().toText());
+		packetTeams.name = team.getName();
+		packetTeams.mode = PacketOutUpdateTeams.Mode.CREATE_TEAM;
+		packetTeams.displayName = team.getDisplayName();
 		packetTeams.setAllowFriedlyFire(team.getAllowFriedlyFire());
 		packetTeams.setSeeInvisibleTeammeber(team.canSeeInvisibleTeammeber());
-		packetTeams.setCollisionRule(team.getCollisionRule());
-		packetTeams.setNameTagVisibility(team.getNameTagVisibility());
-		packetTeams.setColor(team.getColor());
-		packetTeams.setPrefix(team.getPrefix().toText());
-		packetTeams.setSuffix(team.getSuffix().toText());
-		packetTeams.setEntities(List.copyOf(team.getEntries()));
+		packetTeams.collisionRule = team.getCollisionRule();
+		packetTeams.nameTagVisibility = team.getNameTagVisibility();
+		packetTeams.color = team.getColor();
+		packetTeams.prefix = team.getPrefix();
+		packetTeams.suffix = team.getSuffix();
+		packetTeams.entities = List.copyOf(team.getEntries());
 		for (ScoreboardView view : viewers) {
 			PlayerConnection con = view.getViewer().getConnection();
 			con.sendPacked(packetTeams);
@@ -160,11 +159,10 @@ public class CoreScoreboard implements Scoreboard {
 	private void addObjective(Objective obj) {
 		objectives.put(obj.getName(), obj);
 		PacketOutUpdateObjectives packetObj = new PacketOutUpdateObjectives();
-		String name = obj.getName();
-		packetObj.setName(name);
-		packetObj.setMode(Mode.CREATE);
-		packetObj.setDisplayName(obj.getDisplayName().toText());
-		packetObj.setRenderType(obj.getRenderType());
+		packetObj.name = obj.getName();
+		packetObj.mode = Mode.CREATE;
+		packetObj.displayName = obj.getDisplayName();
+		packetObj.renderType = obj.getRenderType();
 		for (ScoreboardView view : viewers) {
 			PlayerConnection con = view.getViewer().getConnection();
 			con.sendPacked(packetObj);
@@ -174,8 +172,8 @@ public class CoreScoreboard implements Scoreboard {
 	void unregisterTeam(Team team) {
 		teams.remove(team.getName());
 		PacketOutUpdateTeams packetTeams = new PacketOutUpdateTeams();
-		packetTeams.setName(team.getName());
-		packetTeams.setMode(PacketOutUpdateTeams.Mode.REMOVE_TEAM);
+		packetTeams.name = team.getName();
+		packetTeams.mode = PacketOutUpdateTeams.Mode.REMOVE_TEAM;
 		for (ScoreboardView view : viewers) {
 			PlayerConnection con = view.getViewer().getConnection();
 			con.sendPacked(packetTeams);
@@ -189,19 +187,18 @@ public class CoreScoreboard implements Scoreboard {
 			for (Objective obj : objectives.values()) {
 				PacketOutUpdateObjectives packetObj = new PacketOutUpdateObjectives();
 				String name = obj.getName();
-				packetObj.setName(name);
-				packetObj.setMode(Mode.CREATE);
-				packetObj.setDisplayName(obj.getDisplayName().toText());
-				packetObj.setRenderType(obj.getRenderType());
+				packetObj.name = name;
+				packetObj.mode = Mode.CREATE;
+				packetObj.displayName = obj.getDisplayName();
+				packetObj.renderType = obj.getRenderType();
 				con.sendPacked(packetObj);
 				if (!obj.hasScores())
 					continue;
 				for (Score score : obj.getScores()) {
 					PacketOutUpdateScore packetScore = new PacketOutUpdateScore();
-					packetScore.setEntry(score.getName());
-					packetScore.setAction(ScoreAction.UPDATE);
-					packetScore.setObjective(name);
-					packetScore.setValue(score.getScore());
+					packetScore.entry = score.getName();
+					packetScore.objective = name;
+					packetScore.value = score.getScore();
 					con.sendPacked(packetScore);
 				}
 			}
@@ -209,17 +206,17 @@ public class CoreScoreboard implements Scoreboard {
 		if (!teams.isEmpty()) {
 			for (Team team : teams.values()) {
 				PacketOutUpdateTeams packetTeams = new PacketOutUpdateTeams();
-				packetTeams.setName(team.getName());
-				packetTeams.setMode(PacketOutUpdateTeams.Mode.CREATE_TEAM);
-				packetTeams.setDisplayName(team.getDisplayName().toText());
+				packetTeams.name = team.getName();
+				packetTeams.mode = PacketOutUpdateTeams.Mode.CREATE_TEAM;
+				packetTeams.displayName = team.getDisplayName();
 				packetTeams.setAllowFriedlyFire(team.getAllowFriedlyFire());
 				packetTeams.setSeeInvisibleTeammeber(team.canSeeInvisibleTeammeber());
-				packetTeams.setCollisionRule(team.getCollisionRule());
-				packetTeams.setNameTagVisibility(team.getNameTagVisibility());
-				packetTeams.setColor(team.getColor());
-				packetTeams.setPrefix(team.getPrefix().toText());
-				packetTeams.setSuffix(team.getSuffix().toText());
-				packetTeams.setEntities(List.copyOf(team.getEntries()));
+				packetTeams.collisionRule = team.getCollisionRule();
+				packetTeams.nameTagVisibility = team.getNameTagVisibility();
+				packetTeams.color = team.getColor();
+				packetTeams.prefix = team.getPrefix();
+				packetTeams.suffix = team.getSuffix();
+				packetTeams.entities = List.copyOf(team.getEntries());
 				con.sendPacked(packetTeams);
 			}
 		}
@@ -228,8 +225,8 @@ public class CoreScoreboard implements Scoreboard {
 			if (display == null) 
 				continue;
 			PacketOutDisplayObjective packetDisplay = new PacketOutDisplayObjective();
-			packetDisplay.setPosition(display.getDisplaySlot());
-			packetDisplay.setObjective(display.getName());
+			packetDisplay.position = display.getDisplaySlot();
+			packetDisplay.objective = display.getName();
 			con.sendPacked(packetDisplay);
 		}
 	}
@@ -240,17 +237,16 @@ public class CoreScoreboard implements Scoreboard {
 		if (!objectives.isEmpty()) {
 			for (Objective obj : objectives.values()) {
 				PacketOutUpdateObjectives packetObj = new PacketOutUpdateObjectives();
-				String name = obj.getName();
-				packetObj.setName(name);
-				packetObj.setMode(Mode.REMOVE);
+				packetObj.name = obj.getName();
+				packetObj.mode = Mode.REMOVE;
 				con.sendPacked(packetObj);
 			}
 		}
 		if (!teams.isEmpty()) {
 			for (Team team : teams.values()) {
 				PacketOutUpdateTeams packetTeams = new PacketOutUpdateTeams();
-				packetTeams.setName(team.getName());
-				packetTeams.setMode(PacketOutUpdateTeams.Mode.REMOVE_TEAM);
+				packetTeams.name = team.getName();
+				packetTeams.mode = PacketOutUpdateTeams.Mode.REMOVE_TEAM;
 				con.sendPacked(packetTeams);
 			}
 		}
@@ -265,9 +261,8 @@ public class CoreScoreboard implements Scoreboard {
 		if (slot != null)
 			slots[slot.getID()] = null;
 		PacketOutUpdateObjectives packetObj = new PacketOutUpdateObjectives();
-		String name = obj.getName();
-		packetObj.setName(name);
-		packetObj.setMode(Mode.REMOVE);
+		packetObj.name = obj.getName();
+		packetObj.mode = Mode.REMOVE;
 		for (ScoreboardView view : viewers) {
 			PlayerConnection con = view.getViewer().getConnection();
 			con.sendPacked(packetObj);
@@ -281,8 +276,8 @@ public class CoreScoreboard implements Scoreboard {
 		for (ScoreboardView view : viewers) {
 			PlayerConnection con = view.getViewer().getConnection();
 			PacketOutDisplayObjective packetDisplay = new PacketOutDisplayObjective();
-			packetDisplay.setPosition(slot);
-			packetDisplay.setObjective(object.getName());
+			packetDisplay.position = slot;
+			packetDisplay.objective = object.getName();
 			con.sendPacked(packetDisplay);
 		}
 	}

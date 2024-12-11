@@ -1,25 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.chat.Chat;
-import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.protocol.common.AbstractPacketDisconnect;
 
-@DefaultPacketID(PacketPlay.OUT_DISCONNECT)
-public class PacketOutDisconnect extends AbstractPacket implements PacketPlayOut {
-	
-	private String reason;
-	
-	public String getReason() {
-		return reason;
-	}
-	
-	public void setReason(String reason) {
-		this.reason = reason;
-	}
-	
-	public void setReason(Chat chat) {
-		this.reason = chat.toText();
-	}
+@DefaultPacketID(packetID = PacketPlay.OUT_DISCONNECT, definition = "disconnect")
+public class PacketOutDisconnect extends AbstractPacketDisconnect implements PacketPlayOut {
 	
 	@Override
 	public int getDefaultID() {

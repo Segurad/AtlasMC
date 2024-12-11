@@ -4,27 +4,11 @@ import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.util.nbt.tag.NBT;
 
-@DefaultPacketID(PacketPlay.OUT_TAG_QUERY_RESPONSE)
+@DefaultPacketID(packetID = PacketPlay.OUT_TAG_QUERY_RESPONSE, definition = "tag_query")
 public class PacketOutTagQueryResponse extends AbstractPacket implements PacketPlayOut {
 	
-	private int transactionID;
-	private NBT nbt;
-	
-	public int getTransactionID() {
-		return transactionID;
-	}
-	
-	public void setTransactionID(int transactionID) {
-		this.transactionID = transactionID;
-	}
-	
-	public NBT getNBT() {
-		return nbt;
-	}
-	
-	public void setNBT(NBT nbt) {
-		this.nbt = nbt;
-	}
+	public int transactionID;
+	public NBT nbt;
 	
 	@Override
 	public int getDefaultID() {

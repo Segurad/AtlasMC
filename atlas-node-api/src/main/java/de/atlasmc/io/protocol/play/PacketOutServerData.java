@@ -1,14 +1,14 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.chat.Chat;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_SERVER_DATA)
+@DefaultPacketID(packetID = PacketPlay.OUT_SERVER_DATA, definition = "server_data")
 public class PacketOutServerData extends AbstractPacket implements PacketPlayOut {
 
-	public String motd;
+	public Chat motd;
 	public byte[] icon;
-	public boolean enforceSecureChat;
 	
 	@Override
 	public int getDefaultID() {

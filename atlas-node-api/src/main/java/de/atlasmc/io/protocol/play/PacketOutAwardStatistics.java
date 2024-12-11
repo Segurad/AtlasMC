@@ -3,18 +3,10 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_AWARD_STATISTICS)
+@DefaultPacketID(packetID = PacketPlay.OUT_AWARD_STATISTICS, definition = "award_stats")
 public class PacketOutAwardStatistics extends AbstractPacket implements PacketPlayOut {
 	
-	private int[] statistics;
-	
-	public int[] getStatistics() {
-		return statistics;
-	}
-	
-	public void setStatistics(int[] statistics) {
-		this.statistics = statistics;
-	}
+	public int[] statistics;
 
 	@Override
 	public int getDefaultID() {

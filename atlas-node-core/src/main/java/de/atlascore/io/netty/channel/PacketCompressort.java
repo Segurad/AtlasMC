@@ -2,7 +2,7 @@ package de.atlascore.io.netty.channel;
 
 import java.util.zip.Deflater;
 
-import de.atlasmc.io.AbstractPacket;
+import de.atlasmc.io.PacketUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
@@ -27,11 +27,11 @@ public class PacketCompressort extends MessageToByteEncoder<ByteBuf> {
 	protected void encode(ChannelHandlerContext ctx, ByteBuf msg, ByteBuf out) throws Exception {
 		int bytes = msg.readableBytes();
 		if (bytes < threshold) { // if data is less than the threshold there is no need in compressing it
-			AbstractPacket.writeVarInt(0, out);
+			PacketUtil.writeVarInt(0, out);
 			out.writeBytes(msg);
 			return;
 		}
-		AbstractPacket.writeVarInt(bytes, out); // Uncompressed data length
+		PacketUtil.writeVarInt(bytes, out); // Uncompressed data length
 		// begin compression
 		def.setInput(msg.array(), msg.arrayOffset(), bytes);
 		def.finish();

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import de.atlasmc.block.BlockFace;
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;

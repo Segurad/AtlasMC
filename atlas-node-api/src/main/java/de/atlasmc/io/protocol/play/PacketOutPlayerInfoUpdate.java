@@ -5,11 +5,12 @@ import java.util.UUID;
 
 import de.atlasmc.Gamemode;
 import de.atlasmc.atlasnetwork.ProfileProperty;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.PlayerChatSignatureData;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_PLAYER_INFO_UPDATE)
+@DefaultPacketID(packetID = PacketPlay.OUT_PLAYER_INFO_UPDATE, definition = "player_info_update")
 public class PacketOutPlayerInfoUpdate extends AbstractPacket implements PacketPlayOut {
 	
 	public static final int 
@@ -21,24 +22,8 @@ public class PacketOutPlayerInfoUpdate extends AbstractPacket implements PacketP
 		ACTION_UPDATE_DISPLAY_NAME = 0x20;
 	
 	
-	private byte actions;
-	private List<PlayerInfo> info;
-	
-	public byte getActions() {
-		return actions;
-	}
-	
-	public void setActions(byte actions) {
-		this.actions = actions;
-	}
-	
-	public void setInfo(List<PlayerInfo> info) {
-		this.info = info;
-	}
-	
-	public List<PlayerInfo> getPlayers() {
-		return info;
-	}
+	public byte actions;
+	public List<PlayerInfo> info;
 	
 	@Override
 	public int getDefaultID() {
@@ -52,7 +37,7 @@ public class PacketOutPlayerInfoUpdate extends AbstractPacket implements PacketP
 		public List<ProfileProperty> properties;
 		public Gamemode gamemode;
 		public int ping;
-		public String displayName;
+		public Chat displayName;
 		public boolean listed;
 		public PlayerChatSignatureData chatSignature;
 		

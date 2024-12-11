@@ -5,10 +5,10 @@ import java.util.List;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.command.CommandStringReader;
-import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.registry.RegistryValue;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import io.netty.buffer.ByteBuf;
+import static de.atlasmc.io.PacketUtil.*;
 
 @RegistryValue(registry="atlas:command/var_arg_parser", key="brigadier:string")
 public class StringParser implements VarArgParser<String> {
@@ -40,7 +40,7 @@ public class StringParser implements VarArgParser<String> {
 
 	@Override
 	public void write(ByteBuf buf) {
-		AbstractPacket.writeVarInt(type.ordinal(), buf);
+		writeVarInt(type.ordinal(), buf);
 	}
 
 	@Override

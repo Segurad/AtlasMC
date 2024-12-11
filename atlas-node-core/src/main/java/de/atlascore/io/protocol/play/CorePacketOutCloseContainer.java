@@ -12,12 +12,12 @@ public class CorePacketOutCloseContainer implements PacketIO<PacketOutCloseConta
 
 	@Override
 	public void read(PacketOutCloseContainer packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setWindowID(in.readUnsignedByte());
+		packet.windowID = in.readUnsignedByte();
 	}
 
 	@Override
 	public void write(PacketOutCloseContainer packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeByte(packet.getWindowID());
+		out.writeByte(packet.windowID);
 	}
 	
 	@Override

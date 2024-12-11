@@ -18,6 +18,12 @@ public @interface DefaultPacketID {
 	 * 
 	 * @return the default packet ID
 	 */
-	int value() default -1;
+	int packetID();
+	
+	/**
+	 * 
+	 * @return
+	 */
+	String definition();
 
 }

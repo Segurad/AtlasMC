@@ -33,7 +33,7 @@ public interface Packet {
 		DefaultPacketID annotation = clazz.getAnnotation(DefaultPacketID.class);
 	    if (annotation == null) 
 	    	throw new IllegalArgumentException("Class does not contain DefaultPacketID annotation: " + clazz.getName());
-	    int id = annotation.value();
+	    int id = annotation.packetID();
 	    return id;
 	}
 	

@@ -340,10 +340,10 @@ public class CoreInventory implements Inventory {
 			if (!animation) id = -2;
 		PlayerConnection con = player.getConnection();
 		PacketOutSetContainerSlot packet = new PacketOutSetContainerSlot();
-		packet.setWindowID(id);
-		packet.setSlot(raw);
-		packet.setStateID(stateID);
-		packet.setItem(item);
+		packet.windowID = id;
+		packet.slot = raw;
+		packet.stateID = stateID;
+		packet.item = item;
 		con.sendPacked(packet);
 	}
 
@@ -370,8 +370,8 @@ public class CoreInventory implements Inventory {
 		int id = view.getViewID();
 		PlayerConnection con = player.getConnection();
 		PacketOutSetContainerContents packet = new PacketOutSetContainerContents();
-		packet.setWindowID(id);
-		packet.setStateID(stateID);
+		packet.windowID = id;
+		packet.stateID = stateID;
 		packet.setItems(items);
 		con.sendPacked(packet);
 	}
@@ -415,9 +415,9 @@ public class CoreInventory implements Inventory {
 		int windowID = player.getOpenInventory().getViewID();
 		PlayerConnection con = player.getConnection();
 		PacketOutSetContainerProperty packet = new PacketOutSetContainerProperty();
-		packet.setWindowID(windowID);
-		packet.setProperty(property);
-		packet.setValue(value);
+		packet.windowID = windowID;
+		packet.property = property;
+		packet.value = value;
 		con.sendPacked(packet);
 	}
 

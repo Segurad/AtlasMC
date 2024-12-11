@@ -1,10 +1,12 @@
 package de.atlascore.io.protocol.play;
 
-import static de.atlasmc.io.AbstractPacket.readString;
-import static de.atlasmc.io.AbstractPacket.readUUID;
-import static de.atlasmc.io.AbstractPacket.readVarInt;
-import static de.atlasmc.io.AbstractPacket.writeString;
-import static de.atlasmc.io.AbstractPacket.writeVarInt;
+import static de.atlasmc.io.PacketUtil.readString;
+import static de.atlasmc.io.PacketUtil.readTextComponent;
+import static de.atlasmc.io.PacketUtil.readUUID;
+import static de.atlasmc.io.PacketUtil.readVarInt;
+import static de.atlasmc.io.PacketUtil.writeString;
+import static de.atlasmc.io.PacketUtil.writeTextComponent;
+import static de.atlasmc.io.PacketUtil.writeVarInt;
 import static de.atlasmc.io.protocol.play.PacketOutPlayerInfoUpdate.ACTION_ADD_PLAYER;
 import static de.atlasmc.io.protocol.play.PacketOutPlayerInfoUpdate.ACTION_INIT_CHAT;
 import static de.atlasmc.io.protocol.play.PacketOutPlayerInfoUpdate.ACTION_UPDATE_DISPLAY_NAME;
@@ -22,6 +24,7 @@ import java.util.UUID;
 
 import de.atlasmc.Gamemode;
 import de.atlasmc.atlasnetwork.ProfileProperty;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.PlayerChatSignatureData;
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -37,7 +40,7 @@ public class CorePacketOutPlayerInfoUpdate implements PacketIO<PacketOutPlayerIn
 	@Override
 	public void read(PacketOutPlayerInfoUpdate packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		byte actions = in.readByte();
-		packet.setActions(actions);
+		packet.actions = actions;
 		final int count = readVarInt(in);
 		List<PlayerInfo> infos = new ArrayList<>(count);
 		for (int i = 0; i < count; i++) {
@@ -87,7 +90,7 @@ public class CorePacketOutPlayerInfoUpdate implements PacketIO<PacketOutPlayerIn
 			}
 			if ((actions & ACTION_UPDATE_DISPLAY_NAME) != 0) {
 				if (in.readBoolean()) {
-					info.displayName = readString(in, ACTION_INIT_CHAT);
+					info.displayName = readTextComponent(in);
 				}
 			}
 		}
@@ -95,11 +98,13 @@ public class CorePacketOutPlayerInfoUpdate implements PacketIO<PacketOutPlayerIn
 
 	@Override
 	public void write(PacketOutPlayerInfoUpdate packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		byte actions = packet.getActions();
+		byte actions = packet.actions;
 		out.writeByte(actions);
-		List<PlayerInfo> infos = packet.getPlayers();
-		writeVarInt(infos.size(), out);
-		for (PlayerInfo info : infos) {
+		List<PlayerInfo> infos = packet.info;
+		final int size = infos.size();
+		writeVarInt(size, out);
+		for (int i = 0; i < size; i++) {
+			PlayerInfo info = infos.get(i);
 			UUID uuid = info.uuid;
 			out.writeLong(uuid.getMostSignificantBits());
 			out.writeLong(uuid.getLeastSignificantBits());
@@ -151,12 +156,12 @@ public class CorePacketOutPlayerInfoUpdate implements PacketIO<PacketOutPlayerIn
 				writeVarInt(info.ping, out);
 			}
 			if ((actions & ACTION_UPDATE_DISPLAY_NAME) != 0) {
-				String name = info.displayName;
+				Chat name = info.displayName;
 				if (name == null) {
 					out.writeBoolean(false);
 				} else {
 					out.writeBoolean(true);
-					writeString(name, out);
+					writeTextComponent(name, out);
 				}
 			}
 		}

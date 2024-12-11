@@ -6,7 +6,7 @@ import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 import de.atlasmc.io.protocol.play.PacketInConfirmTeleport;
 import io.netty.buffer.ByteBuf;
 

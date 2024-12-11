@@ -12,12 +12,12 @@ public class CorePacketOutPing implements PacketIO<PacketOutPing>{
 
 	@Override
 	public void read(PacketOutPing packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.ping = in.readInt();
+		packet.id = in.readInt();
 	}
 
 	@Override
 	public void write(PacketOutPing packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		out.writeInt(packet.ping);
+		out.writeInt(packet.id);
 	}
 
 	@Override

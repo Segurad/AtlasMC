@@ -4,27 +4,11 @@ import de.atlasmc.Difficulty;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_CHANGE_DIFFICULTY)
+@DefaultPacketID(packetID = PacketPlay.OUT_CHANGE_DIFFICULTY, definition = "change_difficulty")
 public class PacketOutChangeDifficulty extends AbstractPacket implements PacketPlayOut {
 	
-	private Difficulty difficulty;
-	private boolean locked;
-	
-	public Difficulty getDifficulty() {
-		return difficulty;
-	}
-	
-	public void setDifficulty(Difficulty difficulty) {
-		this.difficulty = difficulty;
-	}
-	
-	public boolean isLocked() {
-		return locked;
-	}
-	
-	public void setLocked(boolean locked) {
-		this.locked = locked;
-	}
+	public Difficulty difficulty;
+	public boolean locked;
 	
 	@Override
 	public int getDefaultID() {

@@ -3,7 +3,7 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlasmc.entity.Entity.Animation;
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -15,14 +15,14 @@ public class CorePacketOutEntityAnimation implements PacketIO<PacketOutEntityAni
 
 	@Override
 	public void read(PacketOutEntityAnimation packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setEntityID(readVarInt(in));
-		packet.setAnimation(Animation.getByID(in.readUnsignedByte()));
+		packet.entityID = readVarInt(in);
+		packet.animation = Animation.getByID(in.readUnsignedByte());
 	}
 
 	@Override
 	public void write(PacketOutEntityAnimation packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getEntityID(), out);
-		out.writeByte(packet.getAnimation().getID());
+		writeVarInt(packet.entityID, out);
+		out.writeByte(packet.animation.getID());
 	}
 
 	@Override

@@ -2,49 +2,22 @@ package de.atlasmc.io.protocol.play;
 
 import java.util.List;
 
+import de.atlasmc.chat.Chat;
+import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.protocol.play.PacketOutUpdateScore.NumberFormatType;
 import de.atlasmc.scoreboard.RenderType;
 
-@DefaultPacketID(PacketPlay.OUT_UPDATE_OBJECTIVES)
+@DefaultPacketID(packetID = PacketPlay.OUT_UPDATE_OBJECTIVES, definition = "set_objective")
 public class PacketOutUpdateObjectives extends AbstractPacket implements PacketPlayOut {
 	
-	private String name;
-	private String displayName;
-	private Mode mode;
-	private RenderType renderType;
-	
-	public String getName() {
-		return name;
-	}
-
-	public String getDisplayName() {
-		return displayName;
-	}
-
-	public Mode getMode() {
-		return mode;
-	}
-
-	public RenderType getRenderType() {
-		return renderType;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
-
-	public void setMode(Mode mode) {
-		this.mode = mode;
-	}
-
-	public void setRenderType(RenderType renderType) {
-		this.renderType = renderType;
-	}
+	public String name;
+	public Mode mode;
+	public Chat displayName;
+	public RenderType renderType;
+	public NumberFormatType formatType;
+	public ChatComponent numberFormat;
 
 	@Override
 	public int getDefaultID() {

@@ -12,14 +12,14 @@ public class CorePacketOutUpdateTime implements PacketIO<PacketOutUpdateTime> {
 
 	@Override
 	public void read(PacketOutUpdateTime packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setWorldAge(in.readLong());
-		packet.setTimeOfDay(in.readLong());
+		packet.worldAge = in.readLong();
+		packet.timeOfDay = in.readLong();
 	}
 
 	@Override
 	public void write(PacketOutUpdateTime packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeLong(packet.getWorldAge());
-		out.writeLong(packet.getTimeOfDay());
+		out.writeLong(packet.worldAge);
+		out.writeLong(packet.timeOfDay);
 	}
 	
 	@Override

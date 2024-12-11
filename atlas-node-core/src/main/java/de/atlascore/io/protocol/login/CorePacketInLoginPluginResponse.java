@@ -7,7 +7,7 @@ import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.login.PacketInLoginPluginResponse;
 import io.netty.buffer.ByteBuf;
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CorePacketInLoginPluginResponse implements PacketIO<PacketInLoginPluginResponse> {
 
@@ -16,8 +16,7 @@ public class CorePacketInLoginPluginResponse implements PacketIO<PacketInLoginPl
 		packet.messageID = readVarInt(in);
 		packet.successful = in.readBoolean();
 		if (packet.successful) {
-			byte[] data = packet.data = new byte[in.readableBytes()];
-			in.readBytes(data);
+			packet.data = in.readBytes(in.readableBytes());
 		}
 	}
 

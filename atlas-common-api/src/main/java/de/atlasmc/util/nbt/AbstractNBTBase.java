@@ -23,40 +23,10 @@ public abstract class AbstractNBTBase implements NBTHolder {
 		@SuppressWarnings("unchecked")
 		NBTFieldContainer<NBTHolder> container = (NBTFieldContainer<NBTHolder>) getFieldContainerRoot();
 		final NBTHolder holder = getHolder();
-		readCompound(container, holder, reader);
-	}
-	
-	private void readCompound(NBTFieldContainer<NBTHolder> container, NBTHolder holder, NBTReader reader) throws IOException {
-		final int depth = reader.getDepth(); // set the root depth
-		while (depth <= reader.getDepth()) { // ensure to stay over or at root depth
-			TagType type = reader.getType();
-			if (type == TagType.TAG_END) {
-				reader.readNextEntry(); // return in parent compound
-				continue; // go to next iteration for further reading or break if reached end
-			}
-			final CharSequence key = reader.getFieldName();
-			if (type == TagType.COMPOUND) {
-				NBTFieldContainer<NBTHolder> childContainer = container.getContainer(key);
-				if (childContainer != null) { // enter compound if not null
-					reader.readNextEntry();
-					readCompound(childContainer, holder, reader);
-					continue;
-				} // if compound is null try read as field
-			}
-			NBTField<NBTHolder> field = container.getField(key);
-			if (field != null) { // if field exists set it
-				field.setField(holder, reader);
-			} else if (container.hasUnknownFieldHandler()) { // if field does not exist try to use unknown field handler
-				field = container.getUnknownFieldHandler();
-				field.setField(holder, reader);
-			} else if (useCustomTagContainer()) { // if not handler is present try to write in custom tags
-				getCustomTagContainer().addCustomTag(reader.readNBT());
-			} else {
-				reader.skipTag(); // fallback just skip
-			}
-		}
-		if (reader.getType() == TagType.TAG_END) // escape from component
-			reader.readNextEntry();
+		CustomTagContainer customTags = null;
+		if (useCustomTagContainer())
+			customTags = getCustomTagContainer();
+		NBTUtil.readNBT(container, holder, reader, customTags);
 	}
 	
 	protected abstract NBTFieldContainer<? extends NBTHolder> getFieldContainerRoot();

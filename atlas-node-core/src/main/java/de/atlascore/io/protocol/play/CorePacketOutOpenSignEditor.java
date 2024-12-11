@@ -12,14 +12,14 @@ public class CorePacketOutOpenSignEditor implements PacketIO<PacketOutOpenSignEd
 	
 	@Override
 	public void read(PacketOutOpenSignEditor packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setPosition(in.readLong());
-		packet.setFrontText(in.readBoolean());
+		packet.position = in.readLong();
+		packet.frontText = in.readBoolean();
 	}
 
 	@Override
 	public void write(PacketOutOpenSignEditor packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeLong(packet.getPosition());
-		out.writeBoolean(packet.isFrontText());
+		out.writeLong(packet.position);
+		out.writeBoolean(packet.frontText);
 	}
 
 	@Override

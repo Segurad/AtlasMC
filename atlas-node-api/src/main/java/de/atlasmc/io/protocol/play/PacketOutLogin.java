@@ -7,7 +7,7 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_LOGIN)
+@DefaultPacketID(packetID = PacketPlay.OUT_LOGIN, definition = "login")
 public class PacketOutLogin extends AbstractPacket implements PacketPlayOut {
 	
 	public int entityID;
@@ -19,7 +19,7 @@ public class PacketOutLogin extends AbstractPacket implements PacketPlayOut {
 	public boolean reducedDebugInfo = true;
 	public boolean respawnScreen = true;
 	public boolean limitedCrafting;
-	public NamespacedKey dimension;
+	public int dimension;
 	public NamespacedKey world;
 	public long seed;
 	public Gamemode gamemode;
@@ -29,6 +29,7 @@ public class PacketOutLogin extends AbstractPacket implements PacketPlayOut {
 	public NamespacedKey deathWorld;
 	public long deathPosition;
 	public int portalCooldown;
+	public boolean enforcesSecureChat;
 
 	@Override
 	public int getDefaultID() {

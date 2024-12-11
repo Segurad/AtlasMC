@@ -883,7 +883,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	 */
 	protected void sendAddEntityEffect(PotionEffect effect) {
 		PacketOutEntityEffect packet = new PacketOutEntityEffect();
-		packet.setEntityID(getID());
+		packet.entityID = getID();
 		packet.setEffect(effect);
 		for (Player viewer : viewers) {
 			PlayerConnection con = viewer.getConnection();
@@ -897,8 +897,8 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	 */
 	protected void sendRemoveEntityEffect(PotionEffectType type) {
 		PacketOutRemoveEntityEffect packet = new PacketOutRemoveEntityEffect();
-		packet.setEntityID(getID());
-		packet.setEffectID(type.getID());
+		packet.entityID = getID();
+		packet.effectID = type.getID();
 		for (Player viewer : viewers) {
 			PlayerConnection con = viewer.getConnection();
 			con.sendPacked(packet);
@@ -913,7 +913,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		PlayerConnection con = viewer.getConnection();
 		for (PotionEffect effect : getActivePotionEffects()) {
 			PacketOutEntityEffect packet = new PacketOutEntityEffect();
-			packet.setEntityID(getID());
+			packet.entityID = getID();
 			packet.setEffect(effect);
 			con.sendPacked(packet);
 		}
@@ -928,7 +928,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 			return;
 		PlayerConnection con = viewer.getConnection();
 		PacketOutUpdateAttributes packet = new PacketOutUpdateAttributes();
-		packet.setEntity(getID());
+		packet.entityID = getID();
 		packet.setCopyAttributes(attributes.values());
 		con.sendPacked(packet);
 	}
@@ -993,7 +993,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		if (updateAttributes) {
 			updateAttributes = false;
 			PacketOutUpdateAttributes packet = new PacketOutUpdateAttributes();
-			packet.setEntity(getID());
+			packet.entityID = getID();
 			packet.setCopyAttributes(changedAttributes);
 			changedAttributes.clear();
 			for (Player viewer : viewers) {

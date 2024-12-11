@@ -1,6 +1,10 @@
 package de.atlasmc.chat;
 
+import java.io.IOException;
+
 import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.util.nbt.io.NBTReader;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public interface ChatFactory {
 	
@@ -28,5 +32,9 @@ public interface ChatFactory {
 	String legacyToRawText(String legacy, char formatPrefix);
 
 	ChatComponent toComponent(Chat chat);
+	
+	Chat fromNBT(NBTReader reader) throws IOException;
+	
+	void toNBT(Chat chat, NBTWriter writer) throws IOException;
 
 }

@@ -6,5 +6,10 @@ public class BaseComponent extends AbstractBaseComponent<BaseComponent> implemen
 	protected BaseComponent getThis() {
 		return this;
 	}
+
+	@Override
+	protected String getType() {
+		return null;
+	}
 		
 }

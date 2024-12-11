@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_DAMAGE_EVENT)
+@DefaultPacketID(packetID = PacketPlay.OUT_DAMAGE_EVENT, definition = "damage_event")
 public class PacketOutDamageEvent extends AbstractPacket implements PacketPlayOut {
 
 	public int entityID;

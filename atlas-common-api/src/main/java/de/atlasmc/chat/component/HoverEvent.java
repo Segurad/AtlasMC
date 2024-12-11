@@ -1,8 +1,9 @@
 package de.atlasmc.chat.component;
 
+import java.io.IOException;
 import java.util.List;
 
-import de.atlasmc.util.JsonBuffer;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public interface HoverEvent {
 	
@@ -69,6 +70,6 @@ public interface HoverEvent {
 	
 	HoverAction getAction();
 
-	void addContents(JsonBuffer buff);
+	void addContents(NBTWriter writer) throws IOException;
 
 }

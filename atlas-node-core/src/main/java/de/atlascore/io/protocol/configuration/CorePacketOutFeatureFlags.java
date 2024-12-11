@@ -10,7 +10,7 @@ import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.configuration.PacketOutFeatureFlags;
 import io.netty.buffer.ByteBuf;
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CorePacketOutFeatureFlags implements PacketIO<PacketOutFeatureFlags> {
 

@@ -3,7 +3,7 @@ package de.atlascore.io.protocol.status;
 import java.io.IOException;
 import java.io.StringReader;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;

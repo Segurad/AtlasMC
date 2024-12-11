@@ -7,18 +7,18 @@ import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutSetSubtitleText;
 import io.netty.buffer.ByteBuf;
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CorePacketOutSetSubtitleText implements PacketIO<PacketOutSetSubtitleText> {
 
 	@Override
 	public void read(PacketOutSetSubtitleText packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.subtitle = readString(in, CHAT_MAX_LENGTH);
+		packet.subtitle = readTextComponent(in);
 	}
 
 	@Override
 	public void write(PacketOutSetSubtitleText packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		writeString(packet.subtitle, out);
+		writeTextComponent(packet.subtitle, out);
 	}
 
 	@Override

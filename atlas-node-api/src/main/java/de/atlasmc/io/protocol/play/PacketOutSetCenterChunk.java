@@ -6,27 +6,11 @@ import de.atlasmc.io.DefaultPacketID;
 /**
  * This packet is send whenever a player crosses a chunk border
  */
-@DefaultPacketID(PacketPlay.OUT_SET_CENTER_CHUNK)
+@DefaultPacketID(packetID = PacketPlay.OUT_SET_CENTER_CHUNK, definition = "set_chunk_cache_center")
 public class PacketOutSetCenterChunk extends AbstractPacket implements PacketPlayOut {
 	
-	private int chunkX;
-	private int chunkZ;
-	
-	public int getChunkX() {
-		return chunkX;
-	}
-	
-	public int getChunkZ() {
-		return chunkZ;
-	}
-	
-	public void setChunkX(int chunkX) {
-		this.chunkX = chunkX;
-	}
-	
-	public void setChunkZ(int chunkZ) {
-		this.chunkZ = chunkZ;
-	}
+	public int chunkX;
+	public int chunkZ;
 	
 	@Override
 	public int getDefaultID() {

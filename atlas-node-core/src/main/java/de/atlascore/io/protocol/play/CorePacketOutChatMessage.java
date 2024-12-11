@@ -10,7 +10,7 @@ import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutChatMessage;
 import io.netty.buffer.ByteBuf;
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CorePacketOutChatMessage implements PacketIO<PacketOutChatMessage> {
 
@@ -42,16 +42,16 @@ public class CorePacketOutChatMessage implements PacketIO<PacketOutChatMessage> 
 			}
 		}
 		if (in.readBoolean()) {
-			packet.unsignedContent = readString(in, CHAT_MAX_LENGTH);
+			packet.unsignedContent = readTextComponent(in);
 		}
 		packet.filterType = readVarInt(in);
 		if (packet.filterType == 2) {
 			packet.filterBits = readBitSet(in);
 		}
 		packet.chatType = readVarInt(in);
-		packet.name = readString(in, CHAT_MAX_LENGTH);
+		packet.senderName = readTextComponent(in);
 		if (in.readBoolean())
-			packet.targetName = readString(in, CHAT_MAX_LENGTH);
+			packet.targetName = readTextComponent(in);
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class CorePacketOutChatMessage implements PacketIO<PacketOutChatMessage> 
 		}
 		if (packet.unsignedContent != null) {
 			out.writeBoolean(true);
-			writeString(packet.unsignedContent, out);
+			writeTextComponent(packet.unsignedContent, out);
 		} else {
 			out.writeBoolean(false);
 		}
@@ -92,10 +92,10 @@ public class CorePacketOutChatMessage implements PacketIO<PacketOutChatMessage> 
 			writeBitSet(packet.filterBits, out);
 		}
 		writeVarInt(packet.chatType, out);
-		writeString(packet.name, out);
+		writeTextComponent(packet.senderName, out);
 		if (packet.targetName != null) {
 			out.writeBoolean(true);
-			writeString(packet.targetName, out);
+			writeTextComponent(packet.targetName, out);
 		} else {
 			out.writeBoolean(false);
 		}

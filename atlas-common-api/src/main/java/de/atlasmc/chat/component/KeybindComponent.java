@@ -1,11 +1,14 @@
 package de.atlasmc.chat.component;
 
-import de.atlasmc.util.JsonBuffer;
+import java.io.IOException;
+
+import de.atlasmc.util.map.key.CharKey;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class KeybindComponent extends AbstractBaseComponent<KeybindComponent> {
 
-	public static final String
-	JSON_KEYBIND = "keybind";
+	public static final CharKey
+	JSON_KEYBIND = CharKey.literal("keybind");
 	
 	public static final String
 	KEY_ATTACK = "key.attack",
@@ -49,15 +52,20 @@ public class KeybindComponent extends AbstractBaseComponent<KeybindComponent> {
 		this.key = key;
 	}
 	
+	@Override
+	protected String getType() {
+		return "keybind";
+	}
+	
 	public String getKey() {
 		return key;
 	}
 	
 	@Override
-	public void addContents(JsonBuffer buff) {
+	public void addContents(NBTWriter writer) throws IOException {
+		super.addContents(writer);
 		if (key != null)
-			buff.appendText(JSON_KEYBIND, key);
-		super.addContents(buff);
+			writer.writeStringTag(JSON_KEYBIND, key);
 	}
 
 	@Override

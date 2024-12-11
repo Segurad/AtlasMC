@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_DELETE_MESSAGE)
+@DefaultPacketID(packetID = PacketPlay.OUT_DELETE_MESSAGE, definition = "delete_message")
 public class PacketOutDeleteMessage extends AbstractPacket implements PacketPlayOut {
 
 	public int messageID;

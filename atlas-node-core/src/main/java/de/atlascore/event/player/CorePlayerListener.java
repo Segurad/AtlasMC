@@ -2,6 +2,7 @@ package de.atlascore.event.player;
 
 import de.atlasmc.Location;
 import de.atlasmc.SimpleLocation;
+import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.EventHandler;
 import de.atlasmc.event.Listener;
@@ -35,7 +36,7 @@ public class CorePlayerListener implements Listener {
 		}
 		PlayerConnection con = player.getConnection();
 		PacketOutSetHeldItem packet = new PacketOutSetHeldItem();
-		packet.setSlot(event.getOldSlot());
+		packet.slot = event.getOldSlot();
 		con.sendPacked(packet);
 	}
 	
@@ -43,7 +44,7 @@ public class CorePlayerListener implements Listener {
 	public void onPluginChannelUnknonw(PlayerPluginChannelUnknownEvent event) {
 		if (event.isIgnore())
 			return;
-		event.getPlayer().disconnect("Message on not registered plugin channel: " + event.getChannel());
+		event.getPlayer().disconnect(ChatUtil.toChat("Message on not registered plugin channel: " + event.getChannel()));
 	}
 	
 	@EventHandler

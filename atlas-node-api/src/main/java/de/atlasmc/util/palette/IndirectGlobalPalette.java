@@ -2,7 +2,7 @@ package de.atlasmc.util.palette;
 
 import java.util.Collection;
 
-import de.atlasmc.io.AbstractPacket;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 import de.atlasmc.util.MathUtil;
 import io.netty.buffer.ByteBuf;
 
@@ -66,7 +66,7 @@ public class IndirectGlobalPalette<E> extends AbstractIndirectPalette<E> {
 		final long[] values = this.values.array();
 		int globalValuesPerLong = 64 / globalBits;
 		int globalArraySize = MathUtil.upper(this.values.getCapacity() / (double) globalValuesPerLong);
-		AbstractPacket.writeVarInt(globalArraySize, buf);
+		writeVarInt(globalArraySize, buf);
 		final int bitsPerValue = this.values.getBitsPerValue();
 		final int mask = MathUtil.createBitMask(bitsPerValue);
 		long outValue = 0;
@@ -81,7 +81,7 @@ public class IndirectGlobalPalette<E> extends AbstractIndirectPalette<E> {
 				restBits -= bitsPerValue;
 				// handle global value
 				if (outRestBits < globalBits) { // write full value
-					AbstractPacket.writeVarLong(outValue, buf);
+					writeVarLong(outValue, buf);
 					outValue = 0;
 					outRestBits = 64;
 					outBitsToShift = 0;
@@ -94,7 +94,7 @@ public class IndirectGlobalPalette<E> extends AbstractIndirectPalette<E> {
 			}
 		}
 		if (outRestBits != 64) { // write rest data if present
-			AbstractPacket.writeVarLong(outValue, buf);
+			writeVarLong(outValue, buf);
 		}
 	}
 
@@ -103,7 +103,7 @@ public class IndirectGlobalPalette<E> extends AbstractIndirectPalette<E> {
 		int size = 1;
 		int globalValuesPerLong = 64 / globalBits;
 		int globalArraySize = MathUtil.upper(this.values.getCapacity() / (double) globalValuesPerLong);
-		size += AbstractPacket.getVarIntLength(globalArraySize);
+		size += getVarIntLength(globalArraySize);
 		size += globalArraySize * 9; // use max number of bytes to represent long values as varlong
 		return size;
 	}

@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.SoundCategory;
 import de.atlasmc.io.ConnectionHandler;
@@ -19,25 +19,25 @@ public class CorePacketOutStopSound implements PacketIO<PacketOutStopSound> {
 		if (flags == 0) 
 			return;
 		if ((flags & 0x1) == 0x1) {
-			packet.setCategory(SoundCategory.getByID(readVarInt(in)));
+			packet.category = SoundCategory.getByID(readVarInt(in));
 		}
 		if ((flags & 0x2) == 0x2) {
-			packet.setSound(readString(in));
+			packet.sound = readIdentifier(in);
 		}
 	}
 
 	@Override
 	public void write(PacketOutStopSound packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		int flags = 0;
-		if (packet.getCategory() != null)
+		if (packet.category != null)
 			flags |= 0x1;
-		if (packet.getSound() != null)
+		if (packet.sound != null)
 			flags |= 0x2;
 		out.writeByte(flags);
-		if (packet.getCategory() != null)
-			writeVarInt(packet.getCategory().getID(), out);
-		if (packet.getSound() != null)
-			writeString(packet.getSound(), out);
+		if (packet.category != null)
+			writeVarInt(packet.category.getID(), out);
+		if (packet.sound != null)
+			writeIdentifier(packet.sound, out);
 	}
 	
 	@Override

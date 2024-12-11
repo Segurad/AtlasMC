@@ -12,16 +12,16 @@ public class CorePacketOutSetTitleAnimationTimes implements PacketIO<PacketOutSe
 
 	@Override
 	public void read(PacketOutSetTitleAnimationTimes packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setFadeIn(in.readInt());
-		packet.setStay(in.readInt());
-		packet.setFadeOut(in.readInt());
+		packet.fadeIn = in.readInt();
+		packet.stay = in.readInt();
+		packet.fadeOut = in.readInt();
 	}
 
 	@Override
 	public void write(PacketOutSetTitleAnimationTimes packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeInt(packet.getFadeIn());
-		out.writeInt(packet.getStay());
-		out.writeInt(packet.getFadeOut());
+		out.writeInt(packet.fadeIn);
+		out.writeInt(packet.stay);
+		out.writeInt(packet.fadeOut);
 	}
 
 	@Override

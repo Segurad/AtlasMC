@@ -42,11 +42,16 @@ public class CorePlayerInventory extends CoreInventory implements PlayerInventor
 	
 	@Override
 	public SlotType getSlotType(int slot) {
-		if (slot < 0) return SlotType.OUTSIDE;		
-		if (slot <= 8) return SlotType.QUICKBAR;
-		if (slot <= 35) return SlotType.CONTAINER;
-		if (slot <= 39) return SlotType.ARMOR;
-		if (slot == 40) return SlotType.QUICKBAR;
+		if (slot < 0) 
+			return SlotType.OUTSIDE;		
+		if (slot <= 8) 
+			return SlotType.QUICKBAR;
+		if (slot <= 35) 
+			return SlotType.CONTAINER;
+		if (slot <= 39) 
+			return SlotType.ARMOR;
+		if (slot == 40) 
+			return SlotType.QUICKBAR;
 		return SlotType.OUTSIDE;
 	}
 
@@ -73,6 +78,26 @@ public class CorePlayerInventory extends CoreInventory implements PlayerInventor
 	@Override
 	public void setItemInOffHand(ItemStack item) {
 		setItem(SLOT_OFF_HAND, item);	
+	}
+	
+	@Override
+	public ItemStack getItemInMainHandUnsafe() { 
+		return getItemUnsafe(heldSlot);
+	}
+	
+	@Override
+	public void setItemInMainHandUnsafe(ItemStack item) {
+		setItemUnsafe(heldSlot, item);	
+	}
+
+	@Override
+	public ItemStack getItemInOffHandUnsafe() {
+		return getItemUnsafe(SLOT_OFF_HAND);
+	}
+	
+	@Override
+	public void setItemInOffHandUnsafe(ItemStack item) {
+		setItemUnsafe(SLOT_OFF_HAND, item);	
 	}
 
 	@Override
@@ -129,6 +154,46 @@ public class CorePlayerInventory extends CoreInventory implements PlayerInventor
 	}
 	
 	@Override
+	public ItemStack getHelmetUnsafe() {
+		return getItem(SLOT_HEAD);
+	}
+
+	@Override
+	public ItemStack getChestplateUnsafe() {
+		return getItem(SLOT_CHEST);
+	}
+
+	@Override
+	public ItemStack getLeggingsUnsafe() {
+		return getItem(SLOT_LEGS);
+	}
+
+	@Override
+	public ItemStack getBootsUnsafe() {
+		return getItem(SLOT_FEET);
+	}
+
+	@Override
+	public void setHelmetUnsafe(ItemStack item) {
+		setItem(SLOT_HEAD, item);
+	}
+
+	@Override
+	public void setChestplateUnsafe(ItemStack item) {
+		setItem(SLOT_CHEST, item);
+	}
+
+	@Override
+	public void setLeggingsUnsafe(ItemStack item) {
+		setItem(SLOT_LEGS, item);
+	}
+
+	@Override
+	public void setBootsUnsafe(ItemStack item) {
+		setItem(SLOT_FEET, item);
+	}
+	
+	@Override
 	public void setItem(int slot, ItemStack item, boolean animation) {
 		if (contents[slot] == item)
 			return;
@@ -176,8 +241,8 @@ public class CorePlayerInventory extends CoreInventory implements PlayerInventor
 		ArrayList<Pair<EquipmentSlot, ItemStack>> slots = new ArrayList<>(1);
 		slots.add(Pair.of(equipmentSlot, item));
 		PacketOutSetEquipment packet = new PacketOutSetEquipment();
-		packet.setSlots(slots);
-		packet.setEntityID(getHolder().getID());
+		packet.slots = slots;
+		packet.entityID = getHolder().getID();
 		for (Player viewer : getHolder().getViewers()) {
 			PlayerConnection con = viewer.getConnection();
 			con.sendPacked(packet);
@@ -248,8 +313,8 @@ public class CorePlayerInventory extends CoreInventory implements PlayerInventor
 			slots.add(Pair.of(EquipmentSlot.HEAD, items[3]));
 		}
 		PacketOutSetEquipment packet = new PacketOutSetEquipment();
-		packet.setSlots(slots);
-		packet.setEntityID(getHolder().getID());
+		packet.slots = slots;
+		packet.entityID = getHolder().getID();
 		for (Player viewer : getHolder().getViewers()) {
 			PlayerConnection con = viewer.getConnection();
 			con.sendPacked(packet);

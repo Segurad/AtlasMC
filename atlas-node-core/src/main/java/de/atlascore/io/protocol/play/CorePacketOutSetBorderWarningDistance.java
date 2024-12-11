@@ -6,7 +6,7 @@ import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutSetBorderWarningDistance;
 import io.netty.buffer.ByteBuf;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import java.io.IOException;
 

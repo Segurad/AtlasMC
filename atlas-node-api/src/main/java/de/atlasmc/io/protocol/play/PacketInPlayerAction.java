@@ -4,7 +4,7 @@ import de.atlasmc.block.BlockFace;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.IN_PLAYER_ACTION)
+@DefaultPacketID(packetID = PacketPlay.IN_PLAYER_ACTION)
 public class PacketInPlayerAction extends AbstractPacket implements PacketPlayIn {
 	
 	private int status;

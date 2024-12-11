@@ -1,10 +1,6 @@
 package de.atlascore.io.handshake;
 
-import static de.atlasmc.io.AbstractPacket.readString;
-import static de.atlasmc.io.AbstractPacket.readVarInt;
-import static de.atlasmc.io.AbstractPacket.writeString;
-import static de.atlasmc.io.AbstractPacket.writeVarInt;
-
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.AtlasNode;
@@ -21,7 +17,7 @@ import io.netty.buffer.ByteBuf;
 /**
  * Default Minecraft handshake
  */
-@DefaultPacketID(0x00)
+@DefaultPacketID(packetID = 0x00)
 public class CorePacketMinecraftHandshake extends HandshakePaketIO<PacketMinecraftHandshake> {
 
 	@Override

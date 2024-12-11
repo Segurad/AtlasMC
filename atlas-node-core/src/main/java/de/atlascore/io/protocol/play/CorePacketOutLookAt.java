@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -14,29 +14,29 @@ public class CorePacketOutLookAt implements PacketIO<PacketOutLookAt> {
 
 	@Override
 	public void read(PacketOutLookAt packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setAimWithEyes(readVarInt(in) == 1);
-		packet.setX(in.readDouble());
-		packet.setY(in.readDouble());
-		packet.setZ(in.readDouble());
+		packet.aimWithEyes = readVarInt(in) == 1;
+		packet.x = in.readDouble();
+		packet.y = in.readDouble();
+		packet.z = in.readDouble();
 		boolean hasEntity = in.readBoolean();
-		packet.setHasEntity(hasEntity);
+		packet.hasEntity = hasEntity;
 		if (!hasEntity) 
 			return;
-		packet.setEntityID(readVarInt(in));
-		packet.setAimAtEyes(readVarInt(in) == 1);
+		packet.entityID = readVarInt(in);
+		packet.aimAtEyes = readVarInt(in) == 1;
 	}
 
 	@Override
 	public void write(PacketOutLookAt packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getAimAtEyes() ? 1 : 0, out);
-		out.writeDouble(packet.getX());
-		out.writeDouble(packet.getY());
-		out.writeDouble(packet.getZ());
-		out.writeBoolean(packet.hasEntity());
-		if (!packet.hasEntity()) 
+		writeVarInt(packet.aimWithEyes ? 1 : 0, out);
+		out.writeDouble(packet.x);
+		out.writeDouble(packet.y);
+		out.writeDouble(packet.z);
+		out.writeBoolean(packet.hasEntity);
+		if (!packet.hasEntity) 
 			return;
-		writeVarInt(packet.getEntityID(), out);
-		writeVarInt(packet.getAimAtEyes() ? 1 : 0, out);
+		writeVarInt(packet.entityID, out);
+		writeVarInt(packet.aimAtEyes ? 1 : 0, out);
 	}
 
 	@Override

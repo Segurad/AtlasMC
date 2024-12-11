@@ -12,12 +12,12 @@ public class CorePacketOutPingResponse implements PacketIO<PacketOutPingResponse
 
 	@Override
 	public void read(PacketOutPingResponse packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.ping = in.readLong();
+		packet.payload = in.readLong();
 	}
 
 	@Override
 	public void write(PacketOutPingResponse packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		out.writeLong(packet.ping);
+		out.writeLong(packet.payload);
 	}
 
 	@Override

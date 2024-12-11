@@ -13,7 +13,7 @@ import de.atlasmc.io.protocol.configuration.PacketOutUpdateTags;
 import de.atlasmc.tag.Tag;
 import de.atlasmc.util.map.Multimap;
 import io.netty.buffer.ByteBuf;
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CorePacketOutUpdateTags implements PacketIO<PacketOutUpdateTags> {
 

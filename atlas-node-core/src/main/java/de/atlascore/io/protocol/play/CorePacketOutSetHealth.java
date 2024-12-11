@@ -2,38 +2,38 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
-import de.atlasmc.io.protocol.play.PacketOutUpdateHealth;
+import de.atlasmc.io.protocol.play.PacketOutSetHealth;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutSetHealth implements PacketIO<PacketOutUpdateHealth> {
+public class CorePacketOutSetHealth implements PacketIO<PacketOutSetHealth> {
 
 	@Override
-	public void read(PacketOutUpdateHealth packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setHealth(in.readFloat());
-		packet.setFood(readVarInt(in));
-		packet.setSaturation(in.readFloat());
+	public void read(PacketOutSetHealth packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.health = in.readFloat();
+		packet.food = readVarInt(in);
+		packet.saturation = in.readFloat();
 	}
 
 	@Override
-	public void write(PacketOutUpdateHealth packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeFloat(packet.getHealth());
-		writeVarInt(packet.getFood(), out);
-		out.writeFloat(packet.getSaturation());
+	public void write(PacketOutSetHealth packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		out.writeFloat(packet.health);
+		writeVarInt(packet.food, out);
+		out.writeFloat(packet.saturation);
 	}
 
 	@Override
-	public PacketOutUpdateHealth createPacketData() {
-		return new PacketOutUpdateHealth();
+	public PacketOutSetHealth createPacketData() {
+		return new PacketOutSetHealth();
 	}
 
 	@Override
 	public int getPacketID() {
-		return Packet.getDefaultPacketID(PacketOutUpdateHealth.class);
+		return Packet.getDefaultPacketID(PacketOutSetHealth.class);
 	}
 
 }

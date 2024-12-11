@@ -4,7 +4,7 @@ import de.atlasmc.chat.ChatMode;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.IN_CLIENT_INFORMATION)
+@DefaultPacketID(packetID = PacketPlay.IN_CLIENT_INFORMATION, definition = "client_information")
 public class PacketInClientInformation extends AbstractPacket implements PacketPlayIn {
 	
 	public String local;

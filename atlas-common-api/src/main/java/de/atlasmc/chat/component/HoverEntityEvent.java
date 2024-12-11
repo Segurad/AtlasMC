@@ -1,6 +1,9 @@
 package de.atlasmc.chat.component;
 
-import de.atlasmc.util.JsonBuffer;
+import java.io.IOException;
+import java.util.UUID;
+
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class HoverEntityEvent implements HoverEvent {
 
@@ -11,9 +14,9 @@ public class HoverEntityEvent implements HoverEvent {
 	
 	private final ChatComponent name;
 	private final String type;
-	private final String uuid;
+	private final UUID uuid;
 	
-	public HoverEntityEvent(String type, String uuid, ChatComponent name) {
+	public HoverEntityEvent(String type, UUID uuid, ChatComponent name) {
 		if (type == null)
 			throw new IllegalArgumentException("Type can not be null!");
 		if (uuid == null)
@@ -29,14 +32,14 @@ public class HoverEntityEvent implements HoverEvent {
 	}
 
 	@Override
-	public void addContents(JsonBuffer buff) {
+	public void addContents(NBTWriter writer) throws IOException {
 		if (this.name != null) {
-			buff.beginObject(JSON_NAME);
-			this.name.addContents(buff);
-			buff.endObject();
+			writer.writeCompoundTag(JSON_NAME);
+			this.name.addContents(writer);
+			writer.writeEndTag();
 		}
-		buff.append(JSON_TYPE, this.type);
-		buff.append(JSON_ID, this.uuid);
+		writer.writeStringTag(JSON_TYPE, this.type);
+		writer.writeStringTag(JSON_ID, this.uuid.toString());
 	}
 	
 	public ChatComponent getName() {
@@ -47,7 +50,7 @@ public class HoverEntityEvent implements HoverEvent {
 		return type;
 	}
 	
-	public String getUUID() {
+	public UUID getUUID() {
 		return uuid;
 	}
 

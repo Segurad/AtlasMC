@@ -79,7 +79,7 @@ public class ClickEvent {
 		
 	}
 	
-	public Object getValue() {
+	public String getValue() {
 		return value;
 	}
 	

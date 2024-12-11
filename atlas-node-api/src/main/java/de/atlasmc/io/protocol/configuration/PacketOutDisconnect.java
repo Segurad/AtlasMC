@@ -1,12 +1,10 @@
 package de.atlasmc.io.protocol.configuration;
 
-import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.protocol.common.AbstractPacketDisconnect;
 
-@DefaultPacketID(PacketConfiguration.OUT_DISCONNECT)
-public class PacketOutDisconnect extends AbstractPacket implements PacketConfigurationOut {
-
-	public String reason;
+@DefaultPacketID(packetID = PacketConfiguration.OUT_DISCONNECT, definition = "disconnect")
+public class PacketOutDisconnect extends AbstractPacketDisconnect implements PacketConfigurationOut {
 	
 	@Override
 	public int getDefaultID() {

@@ -173,10 +173,10 @@ public class CorePlayerDiggingHandler implements DiggingHandler {
 	 */
 	protected PacketOutSetBlockDestroyStage createAnimationPacket() {
 		PacketOutSetBlockDestroyStage packet = new PacketOutSetBlockDestroyStage();
-		packet.setEntityID(player.getID());
-		packet.setStage(stage);
+		packet.entityID = player.getID();
+		packet.stage = stage;
 		long pos = MathUtil.toPosition(block.getX(), block.getY(), block.getZ());
-		packet.setPosition(pos);
+		packet.position = pos;
 		return packet;
 	}
 

@@ -1,7 +1,7 @@
 package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;

@@ -46,4 +46,14 @@ public class Attribute {
 		return BY_NAME.get(name);
 	}
 
+	public static Attribute getByID(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public int getID() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.login;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -14,24 +14,26 @@ public class CorePacketOutEncryptionRequest implements PacketIO<PacketOutEncrypt
 
 	@Override
 	public void read(PacketOutEncryptionRequest packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setServerID(readString(in));
+		packet.serverID = readString(in);
 		int length = readVarInt(in);
 		byte[] publicKey = new byte[length];
 		in.readBytes(publicKey);
-		packet.setPublicKey(publicKey);
+		packet.publicKey = publicKey;
 		length = readVarInt(in);
 		byte[] verifyToken = new byte[length];
 		in.readBytes(verifyToken);
-		packet.setVerifyToken(verifyToken);
+		packet.verifyToken = verifyToken;
+		packet.authenticate = in.readBoolean();
 	}
 
 	@Override
 	public void write(PacketOutEncryptionRequest packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeString(packet.getServerID(), out);
-		writeVarInt(packet.getPublicKey().length, out);
-		out.writeBytes(packet.getPublicKey());
-		writeVarInt(packet.getVerifyToken().length, out);
-		out.writeBytes(packet.getVerifyToken());
+		writeString(packet.serverID, out);
+		writeVarInt(packet.publicKey.length, out);
+		out.writeBytes(packet.publicKey);
+		writeVarInt(packet.verifyToken.length, out);
+		out.writeBytes(packet.verifyToken);
+		out.writeBoolean(packet.authenticate);
 	}
 
 	@Override

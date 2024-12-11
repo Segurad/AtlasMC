@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.IN_KEEP_ALIVE)
+@DefaultPacketID(packetID = PacketPlay.IN_KEEP_ALIVE)
 public class PacketInKeepAlive extends AbstractPacket implements PacketPlayIn {
 	
 	private long keepAliveID;

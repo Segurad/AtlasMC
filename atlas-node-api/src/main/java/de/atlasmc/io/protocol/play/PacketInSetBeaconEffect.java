@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.IN_SET_BEACON_EFFECT)
+@DefaultPacketID(packetID = PacketPlay.IN_SET_BEACON_EFFECT)
 public class PacketInSetBeaconEffect extends AbstractPacket implements PacketPlayIn {
 	
 	private boolean hasPrimaryEffect;

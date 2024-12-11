@@ -3,18 +3,10 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_SET_RENDER_DISTANCE)
+@DefaultPacketID(packetID = PacketPlay.OUT_SET_RENDER_DISTANCE, definition = "set_chunk_cache_radius")
 public class PacketOutRenderDistance extends AbstractPacket implements PacketPlayOut {
 	
-	private int distance;
-	
-	public int getDistance() {
-		return distance;
-	}
-	
-	public void setDistance(int distance) {
-		this.distance = distance;
-	}
+	public int distance;
 	
 	@Override
 	public int getDefaultID() {

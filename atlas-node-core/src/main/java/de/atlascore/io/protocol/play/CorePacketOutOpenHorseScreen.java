@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -14,16 +14,16 @@ public class CorePacketOutOpenHorseScreen implements PacketIO<PacketOutOpenHorse
 
 	@Override
 	public void read(PacketOutOpenHorseScreen packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setWindowID(in.readByte());
-		packet.setSlots(readVarInt(in));
-		packet.setEntityID(in.readInt());
+		packet.windowID = in.readByte();
+		packet.slots = readVarInt(in);
+		packet.entityID = in.readInt();
 	}
 
 	@Override
 	public void write(PacketOutOpenHorseScreen packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeByte(packet.getWindowID());
-		writeVarInt(packet.getSlots(), out);
-		out.writeInt(packet.getEntityID());
+		out.writeByte(packet.windowID);
+		writeVarInt(packet.slots, out);
+		out.writeInt(packet.entityID);
 	}
 
 	@Override

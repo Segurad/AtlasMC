@@ -3,13 +3,16 @@ package de.atlasmc.entity;
 import java.util.UUID;
 
 import de.atlasmc.Gamemode;
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.NodePlayer;
 import de.atlasmc.Particle;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.block.DiggingHandler;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.Messageable;
+import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
@@ -19,6 +22,7 @@ import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.scoreboard.ScoreboardView;
 import de.atlasmc.sound.SoundListener;
+import de.atlasmc.util.annotation.UnsafeAPI;
 import de.atlasmc.world.WorldEvent;
 
 public interface Player extends HumanEntity, Permissible, Messageable, SoundListener {
@@ -121,23 +125,43 @@ public interface Player extends HumanEntity, Permissible, Messageable, SoundList
 
 	// --- Sound ---
 	
-	void stopSound(SoundCategory category, String sound);
+	void stopSound(SoundCategory category, NamespacedKey sound);
 	
 	// --- Particle ---
 	
-	void spawnParticle(Particle particle, double x, double y, double z, float particledata);
+	void spawnParticle(Particle particle, double x, double y, double z, float maxSpeed);
 	
-	void spawnParticle(Particle particle, double x, double y, double z, float particledata, int count);
+	void spawnParticle(Particle particle, double x, double y, double z, float maxSpeed, int count);
 	
-	void spawnParticle(Particle particle, double x, double y, double z, float particledata, int count, Object data);
+	void spawnParticle(Particle particle, double x, double y, double z, float maxSpeed, int count, Object data);
 	
-	void spawnParticle(Particle particle, double x, double y, double z, float offX, float offY, float offZ, float particledata, int count, Object data);
+	void spawnParticle(Particle particle, double x, double y, double z, float offX, float offY, float offZ, float maxSpeed, int count, Object data);
 	
 	// --- Inventory Stuff ---
 	
 	InventoryView getOpenInventory();
 	
 	void openInventory(Inventory inv);
+	
+	/**
+	 * Opens the book item given
+	 * @param book
+	 */
+	void openBook(ItemStack book);
+	
+	/**
+	 * Opens the book item given.
+	 * Will not create a copy of the book to open.
+	 * @param book
+	 */
+	@UnsafeAPI
+	void openBookUsafe(ItemStack book);
+	
+	/**
+	 * Opens the book item held in the specific hand
+	 * @param hand
+	 */
+	void openBook(EquipmentSlot hand);
 	
 	void closeInventory();
 
@@ -151,7 +175,7 @@ public interface Player extends HumanEntity, Permissible, Messageable, SoundList
 	
 	void updateItemOnCursor();
 
-	void disconnect(String message);
+	void disconnect(Chat message);
 	
 	DiggingHandler getDigging();
 	

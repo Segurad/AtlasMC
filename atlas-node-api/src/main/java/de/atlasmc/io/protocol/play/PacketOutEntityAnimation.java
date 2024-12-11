@@ -4,27 +4,11 @@ import de.atlasmc.entity.Entity.Animation;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_ENTITY_ANIMATION)
+@DefaultPacketID(packetID = PacketPlay.OUT_ENTITY_ANIMATION, definition = "animate")
 public class PacketOutEntityAnimation extends AbstractPacket implements PacketPlayOut {
 	
-	private Animation animation;
-	private int entityID;
-	
-	public Animation getAnimation() {
-		return animation;
-	}
-	
-	public void setAnimation(Animation animation) {
-		this.animation = animation;
-	}
-	
-	public int getEntityID() {
-		return entityID;
-	}
-	
-	public void setEntityID(int entityID) {
-		this.entityID = entityID;
-	}
+	public int entityID;
+	public Animation animation;
 	
 	@Override
 	public int getDefaultID() {

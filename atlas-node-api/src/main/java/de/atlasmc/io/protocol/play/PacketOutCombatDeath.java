@@ -1,13 +1,14 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.chat.Chat;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_COMBAT_DEATH)
+@DefaultPacketID(packetID = PacketPlay.OUT_COMBAT_DEATH, definition = "player_combat_kill")
 public class PacketOutCombatDeath extends AbstractPacket implements PacketPlayOut {
 
 	public int playerID;
-	public String deathMessage;
+	public Chat deathMessage;
 	
 	@Override
 	public int getDefaultID() {

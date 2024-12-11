@@ -3,27 +3,11 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_LINK_ENTITIES)
+@DefaultPacketID(packetID = PacketPlay.OUT_LINK_ENTITIES, definition = "set_entity_link")
 public class PacketOutLinkEntities extends AbstractPacket implements PacketPlayOut {
 	
-	private int holderEntityID;
-	private int attachedEntityID;
-	
-	public int getHolderEntityID() {
-		return holderEntityID;
-	}
-	
-	public void setHolderEntityID(int holderEntityID) {
-		this.holderEntityID = holderEntityID;
-	}
-	
-	public int getAttachedEntityID() {
-		return attachedEntityID;
-	}
-	
-	public void setAttachedEntityID(int attachedEntityID) {
-		this.attachedEntityID = attachedEntityID;
-	}
+	public int holderEntityID;
+	public int attachedEntityID;
 	
 	@Override
 	public int getDefaultID() {

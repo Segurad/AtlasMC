@@ -4,7 +4,7 @@ import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.PacketOutbound;
 
-@DefaultPacketID(PacketStatus.OUT_PONG)
+@DefaultPacketID(packetID = PacketStatus.OUT_PONG)
 public class PacketOutPong extends AbstractPacket implements PacketStatus, PacketOutbound {
 	
 	public long pong;

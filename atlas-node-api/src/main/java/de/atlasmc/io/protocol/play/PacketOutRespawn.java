@@ -1,85 +1,31 @@
 package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.Gamemode;
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.world.Dimension;
 
-@DefaultPacketID(PacketPlay.OUT_RESPAWN)
+@DefaultPacketID(packetID = PacketPlay.OUT_RESPAWN, definition = "respawn")
 public class PacketOutRespawn extends AbstractPacket implements PacketPlayOut {
 	
-	private Dimension dimension;
-	private String world;
-	private long seed;
-	private Gamemode gamemode;
-	private Gamemode previous;
-	private boolean debug;
-	private boolean flat;
-	private boolean copymeta;
-	
-	public Dimension getDimension() {
-		return dimension;
-	}
-
-	public String getWorld() {
-		return world;
-	}
-
-	public long getSeed() {
-		return seed;
-	}
-
-	public Gamemode getGamemode() {
-		return gamemode;
-	}
-
-	public Gamemode getPreviousGamemode() {
-		return previous;
-	}
-
-	public boolean isDebug() {
-		return debug;
-	}
-
-	public boolean isFlat() {
-		return flat;
-	}
-
-	public boolean isCopymeta() {
-		return copymeta;
-	}
-
-	public void setDimension(Dimension dimension) {
-		this.dimension = dimension;
-	}
-
-	public void setWorld(String world) {
-		this.world = world;
-	}
-
-	public void setSeed(long seed) {
-		this.seed = seed;
-	}
-
-	public void setGamemode(Gamemode gamemode) {
-		this.gamemode = gamemode;
-	}
-
-	public void setPrevious(Gamemode previous) {
-		this.previous = previous;
-	}
-
-	public void setDebug(boolean debug) {
-		this.debug = debug;
-	}
-
-	public void setFlat(boolean flat) {
-		this.flat = flat;
-	}
-
-	public void setCopymeta(boolean copymeta) {
-		this.copymeta = copymeta;
-	}
+	public int dimension;
+	public NamespacedKey world;
+	public long seed;
+	public Gamemode gamemode;
+	public Gamemode previous;
+	public boolean debug;
+	public boolean flat;
+	public NamespacedKey deathDimension;
+	public long deathLocation;
+	public int portalCooldown;
+	/**
+	 * <ul>
+	 * <li>0x01 = keep attributes</li>
+	 * <li>0x02 = keep metadata</li>
+	 * </ul>
+	 */
+	public int dataKept;
 
 	@Override
 	public int getDefaultID() {

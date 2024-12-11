@@ -4,7 +4,7 @@ import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.IN_SET_CREATIVE_MODE_SLOT)
+@DefaultPacketID(packetID = PacketPlay.IN_SET_CREATIVE_MODE_SLOT)
 public class PacketInSetCreativeModeSlot extends AbstractPacket implements PacketPlayIn {
 	
 	private int slot;

@@ -6,18 +6,10 @@ import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.recipe.Recipe;
 
-@DefaultPacketID(PacketPlay.OUT_UPDATE_RECIPES)
+@DefaultPacketID(packetID = PacketPlay.OUT_UPDATE_RECIPES, definition = "update_recipes")
 public class PacketOutUpdateRecipes extends AbstractPacket implements PacketPlayOut {
 	
-	private List<Recipe> recipes;
-	
-	public List<Recipe> getRecipes() {
-		return recipes;
-	}
-	
-	public void setRecipes(List<Recipe> recipes) {
-		this.recipes = recipes;
-	}
+	public List<Recipe> recipes;
 	
 	@Override
 	public int getDefaultID() {

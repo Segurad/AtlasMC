@@ -12,14 +12,14 @@ public class CorePacketOutUnloadChunk implements PacketIO<PacketOutUnloadChunk> 
 
 	@Override
 	public void read(PacketOutUnloadChunk packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setChunkX(in.readInt());
-		packet.setChunkZ(in.readInt());
+		packet.chunkX = in.readInt();
+		packet.chunkZ = in.readInt();
 	}
 
 	@Override
 	public void write(PacketOutUnloadChunk packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeInt(packet.getChunkX());
-		out.writeInt(packet.getChunkZ());
+		out.writeInt(packet.chunkX);
+		out.writeInt(packet.chunkZ);
 	}
 
 	@Override

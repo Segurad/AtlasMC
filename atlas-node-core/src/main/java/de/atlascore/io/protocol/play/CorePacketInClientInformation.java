@@ -3,7 +3,7 @@ package de.atlascore.io.protocol.play;
 import java.io.IOException;
 
 import de.atlasmc.chat.ChatMode;
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;

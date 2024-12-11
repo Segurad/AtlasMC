@@ -4,7 +4,7 @@ import de.atlasmc.SimpleLocation;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.IN_SET_PLAYER_ROTATION)
+@DefaultPacketID(packetID = PacketPlay.IN_SET_PLAYER_ROTATION)
 public class PacketInSetPlayerRotation extends AbstractPacket implements PacketPlayIn {
 	
 	private float yaw;

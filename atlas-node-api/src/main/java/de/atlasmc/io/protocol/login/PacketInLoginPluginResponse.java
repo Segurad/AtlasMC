@@ -1,15 +1,13 @@
 package de.atlasmc.io.protocol.login;
 
-import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.protocol.common.AbstractPacketPluginQuery;
 
-@DefaultPacketID(PacketLogin.IN_LOGIN_PLUGIN_RESPONSE)
-public class PacketInLoginPluginResponse extends AbstractPacket implements PacketLoginIn {
+@DefaultPacketID(packetID = PacketLogin.IN_LOGIN_PLUGIN_RESPONSE, definition = "custom_query_answer")
+public class PacketInLoginPluginResponse extends AbstractPacketPluginQuery implements PacketLoginIn {
 	
-	public int messageID;
 	public boolean successful;
-	public byte[] data;
-	
+
 	@Override
 	public int getDefaultID() {
 		return IN_LOGIN_PLUGIN_RESPONSE;

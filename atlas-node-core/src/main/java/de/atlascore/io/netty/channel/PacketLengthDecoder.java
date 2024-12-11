@@ -1,8 +1,10 @@
 package de.atlascore.io.netty.channel;
 
+import static de.atlasmc.io.PacketUtil.MAX_PACKET_LENGTH;
+import static de.atlasmc.io.PacketUtil.readVarInt;
+
 import java.util.List;
 
-import de.atlasmc.io.AbstractPacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -23,11 +25,11 @@ public class PacketLengthDecoder extends ByteToMessageDecoder {
 
 	protected Object decode(ChannelHandlerContext ctx, ByteBuf in) {
 		if (length == -1) {
-			length = AbstractPacket.readVarInt(in);
+			length = readVarInt(in);
 		}
 		if (in.readableBytes() < length) 
 			return null;
-		if (length > AbstractPacket.MAX_PACKET_LENGTH) {
+		if (length > MAX_PACKET_LENGTH) {
 			in.skipBytes(length);
 			length = -1;
 			return null;

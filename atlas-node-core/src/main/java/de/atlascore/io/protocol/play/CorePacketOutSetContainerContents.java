@@ -17,8 +17,8 @@ public class CorePacketOutSetContainerContents implements PacketIO<PacketOutSetC
 
 	@Override
 	public void read(PacketOutSetContainerContents packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setWindowID(in.readByte());
-		packet.setStateID(readVarInt(in));
+		packet.windowID = in.readByte();
+		packet.stateID = readVarInt(in);
 		final int count = in.readShort();
 		ItemStack[] slots = new ItemStack[count];
 		NBTNIOReader reader = new NBTNIOReader(in, true);
@@ -26,20 +26,20 @@ public class CorePacketOutSetContainerContents implements PacketIO<PacketOutSetC
 			slots[i] = readSlot(in, reader);
 		}
 		packet.setItems(slots);
-		packet.setCarriedItem(readSlot(in, reader));
+		packet.carriedItem = readSlot(in, reader);
 		reader.close();
 	}
 
 	@Override
 	public void write(PacketOutSetContainerContents packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeByte(packet.getWindowID());
-		writeVarInt(packet.getStateID(), out);
-		out.writeShort(packet.getItems().length);
+		out.writeByte(packet.windowID);
+		writeVarInt(packet.stateID, out);
+		out.writeShort(packet.items.length);
 		NBTNIOWriter writer = new NBTNIOWriter(out, true);
-		for (ItemStack i : packet.getItems()) {
+		for (ItemStack i : packet.items) {
 			writeSlot(i, out, writer);
 		}
-		writeSlot(packet.getCarriedItem(), out, writer);
+		writeSlot(packet.carriedItem, out, writer);
 		writer.close();
 	}
 

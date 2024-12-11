@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -14,20 +14,20 @@ public class CorePacketOutUpdateEntityPosition implements PacketIO<PacketOutUpda
 
 	@Override
 	public void read(PacketOutUpdateEntityPosition packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setEntityID(readVarInt(in));
-		packet.setDeltaX(in.readShort());
-		packet.setDeltaY(in.readShort());
-		packet.setDeltaZ(in.readShort());
-		packet.setOnGround(in.readBoolean());
+		packet.entityID = readVarInt(in);
+		packet.deltaX = in.readShort();
+		packet.deltaY = in.readShort();
+		packet.deltaZ = in.readShort();
+		packet.onGround = in.readBoolean();
 	}
 
 	@Override
 	public void write(PacketOutUpdateEntityPosition packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getEntityID(), out);
-		out.writeShort(packet.getDeltaX());
-		out.writeShort(packet.getDeltaY());
-		out.writeShort(packet.getDeltaZ());
-		out.writeBoolean(packet.isOnGround());
+		writeVarInt(packet.entityID, out);
+		out.writeShort(packet.deltaX);
+		out.writeShort(packet.deltaY);
+		out.writeShort(packet.deltaZ);
+		out.writeBoolean(packet.onGround);
 	}
 
 	@Override

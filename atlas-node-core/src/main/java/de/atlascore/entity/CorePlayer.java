@@ -10,6 +10,7 @@ import de.atlascore.inventory.CoreInventoryView;
 import de.atlascore.inventory.CorePlayerItemCooldownHandler;
 import de.atlasmc.Gamemode;
 import de.atlasmc.Material;
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.NodePlayer;
 import de.atlasmc.Particle;
 import de.atlasmc.SimpleLocation;
@@ -25,16 +26,19 @@ import de.atlasmc.entity.Player;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.inventory.InventoryCloseEvent;
 import de.atlasmc.event.inventory.InventoryOpenEvent;
+import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.MerchantInventory;
+import de.atlasmc.inventory.PlayerInventory;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutCloseContainer;
 import de.atlasmc.io.protocol.play.PacketOutEntitySoundEffect;
 import de.atlasmc.io.protocol.play.PacketOutGameEvent;
-import de.atlasmc.io.protocol.play.PacketOutGameEvent.ChangeReason;
+import de.atlasmc.io.protocol.play.PacketOutGameEvent.GameEventType;
 import de.atlasmc.io.protocol.play.PacketOutMerchantOffers;
+import de.atlasmc.io.protocol.play.PacketOutOpenBook;
 import de.atlasmc.io.protocol.play.PacketOutOpenScreen;
 import de.atlasmc.io.protocol.play.PacketOutParticle;
 import de.atlasmc.io.protocol.play.PacketOutSetContainerSlot;
@@ -42,7 +46,7 @@ import de.atlasmc.io.protocol.play.PacketOutSetExperiance;
 import de.atlasmc.io.protocol.play.PacketOutSoundEffect;
 import de.atlasmc.io.protocol.play.PacketOutSpawnEntity;
 import de.atlasmc.io.protocol.play.PacketOutStopSound;
-import de.atlasmc.io.protocol.play.PacketOutUpdateHealth;
+import de.atlasmc.io.protocol.play.PacketOutSetHealth;
 import de.atlasmc.io.protocol.play.PacketOutWorldEvent;
 import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionHandler;
@@ -119,15 +123,15 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 		view.setViewID(con.getNextInventoryID());
 		
 		PacketOutOpenScreen packet = new PacketOutOpenScreen();
-		packet.setWindowID(view.getViewID());
-		packet.setType(inv.getType());
-		packet.setTitle(inv.getTitle().toText());
+		packet.windowID = view.getViewID();
+		packet.type = inv.getType();
+		packet.title = inv.getTitle();
 		con.sendPacked(packet);
 		
 		inv.updateSlots(this);
 		
-		if (inv instanceof MerchantInventory) {
-			openMerchantInventory((MerchantInventory) inv);
+		if (inv instanceof MerchantInventory merchant) {
+			openMerchantInventory(merchant);
 		}
 	}
 	
@@ -142,13 +146,44 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 			copy.add(recipe.clone());
 		
 		PacketOutMerchantOffers packet = new PacketOutMerchantOffers();
-		packet.setTrades(copy);
-		packet.setLevel(inv.getLevel());
-		packet.setExperience(inv.getExperience());
-		packet.setRegular(!inv.getHideLevelProgress());
-		packet.setCanRestock(inv.canRestock());
+		packet.trades = copy;
+		packet.level = inv.getLevel();
+		packet.experience = inv.getExperience();
+		packet.regular = !inv.getHideLevelProgress();
+		packet.canRestock = inv.canRestock();
 		
 		con.sendPacked(packet);
+	}
+	
+	@Override
+	public void openBook(EquipmentSlot hand) {
+		if (hand == null)
+			throw new IllegalArgumentException("Hand can not be null!");
+		if (hand != EquipmentSlot.OFF_HAND && hand != EquipmentSlot.MAIN_HAND)
+			throw new IllegalArgumentException("Given slot does not match MAIN_HAND or OFF_HAND: " + hand.name());
+		PacketOutOpenBook packet = new PacketOutOpenBook();
+		packet.hand = hand;
+		con.sendPacked(packet);
+	}
+	
+	@Override
+	public void openBook(ItemStack book) {
+		if (book == null)
+			throw new IllegalArgumentException("Book can not be null!");
+		openBookUsafe(book.clone());
+	}
+	
+	@Override
+	public void openBookUsafe(ItemStack book) {
+		if (book == null)
+			throw new IllegalArgumentException("Book can not be null!");
+		PlayerInventory inv = getInventory();
+		ItemStack currentHand = inv.getItemInMainHandUnsafe();
+		inv.setItemInMainHandUnsafe(book);
+		PacketOutOpenBook packet = new PacketOutOpenBook();
+		packet.hand = EquipmentSlot.MAIN_HAND;
+		con.sendPacked(packet);
+		inv.setItemInMainHandUnsafe(currentHand);
 	}
 	
 	@Override
@@ -192,9 +227,9 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 		this.xp = exp;
 		this.xpBar = progress;
 		PacketOutSetExperiance packet = new PacketOutSetExperiance();
-		packet.setLevel(level);
-		packet.setExperienceBar(progress);
-		packet.setTotalExperience(exp);
+		packet.level = level;
+		packet.experienceBar = progress;
+		packet.totalExperience = exp;
 		con.sendPacked(packet);
 	}
 	
@@ -215,10 +250,10 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 		if (effect == null)
 			throw new IllegalArgumentException("Effect can not be null!");
 		PacketOutWorldEvent packet = new PacketOutWorldEvent();
-		packet.setEvent(effect);
-		packet.setPosition(MathUtil.toPosition(x, y, z));
-		packet.setData(effect.getDataValueByObject(data));
-		packet.setDisableRelativeVolume(!relativeSound);
+		packet.event = effect;
+		packet.position = MathUtil.toPosition(x, y, z);
+		packet.data = effect.getDataValueByObject(data);
+		packet.disableRelativeVolume = !relativeSound;
 		con.sendPacked(packet);
 	}
 
@@ -230,7 +265,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 		view.setTopInventory(getInventory().getCraftingInventory());
 		view.setViewID(0);
 		PacketOutCloseContainer packet = new PacketOutCloseContainer();
-		packet.setWindowID(con.getInventoryID());
+		packet.windowID = con.getInventoryID();
 		con.sendPacked(packet);
 	}
 
@@ -311,29 +346,33 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	public void setGamemode(Gamemode gamemode) {
 		this.gamemode = gamemode;
 		PacketOutGameEvent packet = new PacketOutGameEvent();
-		packet.setReason(ChangeReason.CHANGE_GAMEMODE);
-		packet.setValue(gamemode.ordinal());
+		packet.event = GameEventType.CHANGE_GAMEMODE;
+		packet.value = gamemode.ordinal();
 		con.sendPacked(packet);
 	}
 
 	@Override
 	public void updateItemOnCursor() {
 		PacketOutSetContainerSlot packet = new PacketOutSetContainerSlot();
-		packet.setWindowID(-1);
-		packet.setSlot(-1);
-		packet.setItem(cursorItem);
+		packet.windowID = -1;
+		packet.slot = -1;
+		packet.item = cursorItem;
 	}
 
 	@Override
-	public void spawnParticle(Particle particle, double x, double y, double z, float offX, float offY, float offZ, float particledata, int count, Object data) {
+	public void spawnParticle(Particle particle, double x, double y, double z, float offX, float offY, float offZ, float maxSpeed, int count, Object data) {
 		if (!particle.isValid(data)) throw new IllegalArgumentException("Data is not valid!");
 		PacketOutParticle packet = new PacketOutParticle();
-		packet.setParticle(particle);
-		packet.setLocation(x, y, z);
-		packet.setOffset(offX, offY, offZ);
-		packet.setData(particledata);
-		packet.setCount(count);
-		packet.setData(data);
+		packet.particle = particle;
+		packet.x = x;
+		packet.y = y;
+		packet.z = z;
+		packet.offX = offX;
+		packet.offY = offY;
+		packet.offZ = offZ;
+		packet.maxSpeed = maxSpeed;
+		packet.count = count;
+		packet.data = data;
 		con.sendPacked(packet);
 	}
 
@@ -425,10 +464,10 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	}
 
 	@Override
-	public void stopSound(SoundCategory category, String sound) {
+	public void stopSound(SoundCategory category, NamespacedKey sound) {
 		PacketOutStopSound packet = new PacketOutStopSound();
-		packet.setCategory(category);
-		packet.setSound(sound);
+		packet.category = category;
+		packet.sound = sound;
 		con.sendPacked(packet);
 	}
 
@@ -471,10 +510,10 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 		boolean healthUpdate = metaContainer.get(META_HEALTH).hasChanged();
 		super.update();
 		if (healthUpdate || updateFoodLevel) {
-			PacketOutUpdateHealth packet = new PacketOutUpdateHealth();
-			packet.setHealth(metaContainer.getData(META_HEALTH));
-			packet.setFood(getFoodLevel());
-			packet.setSaturation(getFoodSaturationLevel());
+			PacketOutSetHealth packet = new PacketOutSetHealth();
+			packet.health = metaContainer.getData(META_HEALTH);
+			packet.food = getFoodLevel();
+			packet.saturation = getFoodSaturationLevel();
 			con.sendPacked(packet);
 			updateFoodLevel = false;
 		}
@@ -487,7 +526,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	}
 
 	@Override
-	public void disconnect(String message) {
+	public void disconnect(Chat message) {
 		con.disconnect(message);
 	}
 

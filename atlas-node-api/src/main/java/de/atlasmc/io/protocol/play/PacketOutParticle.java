@@ -4,120 +4,20 @@ import de.atlasmc.Particle;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_PARTICLE)
+@DefaultPacketID(packetID = PacketPlay.OUT_PARTICLE, definition = "level_particles")
 public class PacketOutParticle extends AbstractPacket implements PacketPlayOut {
 	
-	private Particle particle;
-	private int count;
-	private double x;
-	private double y; 
-	private double z;
-	private float offX;
-	private float offY;
-	private float offZ;
-	private float maxSpeed;
-	private Object data;
-	private boolean longDistance;
-	
-	public Particle getParticle() {
-		return particle;
-	}
-
-	public int getCount() {
-		return count;
-	}
-
-	public double getX() {
-		return x;
-	}
-
-	public double getY() {
-		return y;
-	}
-
-	public double getZ() {
-		return z;
-	}
-
-	public float getOffX() {
-		return offX;
-	}
-
-	public float getOffY() {
-		return offY;
-	}
-
-	public float getOffZ() {
-		return offZ;
-	}
-
-	public Object getData() {
-		return data;
-	}
-
-	public boolean isLongDistance() {
-		return longDistance;
-	}
-
-	public void setParticle(Particle particle) {
-		this.particle = particle;
-	}
-
-	public void setCount(int count) {
-		this.count = count;
-	}
-
-	public void setX(double x) {
-		this.x = x;
-	}
-
-	public void setY(double y) {
-		this.y = y;
-	}
-	
-	public void setLocation(double x, double y, double z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-	}
-
-	public void setZ(double z) {
-		this.z = z;
-	}
-
-	public void setOffX(float offX) {
-		this.offX = offX;
-	}
-
-	public void setOffY(float offY) {
-		this.offY = offY;
-	}
-
-	public void setOffZ(float offZ) {
-		this.offZ = offZ;
-	}
-	
-	public void setOffset(float offX, float offY, float offZ) {
-		this.offX = offX;
-		this.offY = offY;
-		this.offZ = offZ;
-	}
-	
-	public float getMaxSpeed() {
-		return maxSpeed;
-	}
-	
-	public void setMaxSpeed(float maxSpeed) {
-		this.maxSpeed = maxSpeed;
-	}
-
-	public void setData(Object data) {
-		this.data = data;
-	}
-
-	public void setLongDistance(boolean longDistance) {
-		this.longDistance = longDistance;
-	}
+	public boolean longDistance;
+	public double x;
+	public double y; 
+	public double z;
+	public float offX;
+	public float offY;
+	public float offZ;
+	public float maxSpeed;
+	public int count;
+	public Particle particle;
+	public Object data;
 
 	@Override
 	public int getDefaultID() {

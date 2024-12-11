@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -23,8 +23,8 @@ public class CorePacketOutAwardStatistics implements PacketIO<PacketOutAwardStat
 
 	@Override
 	public void write(PacketOutAwardStatistics packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getStatistics().length/3, out);
-		for (int i : packet.getStatistics()) {
+		writeVarInt(packet.statistics.length/3, out);
+		for (int i : packet.statistics) {
 			writeVarInt(i, out);
 		}
 	}

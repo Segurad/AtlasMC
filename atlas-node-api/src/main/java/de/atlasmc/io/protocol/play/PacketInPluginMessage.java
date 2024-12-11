@@ -5,7 +5,7 @@ import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 import io.netty.buffer.ByteBuf;
 
-@DefaultPacketID(PacketPlay.IN_PLUGIN_MESSAGE)
+@DefaultPacketID(packetID = PacketPlay.IN_PLUGIN_MESSAGE)
 public class PacketInPluginMessage extends AbstractPacket implements PacketPlayIn {
 	
 	public NamespacedKey channel;

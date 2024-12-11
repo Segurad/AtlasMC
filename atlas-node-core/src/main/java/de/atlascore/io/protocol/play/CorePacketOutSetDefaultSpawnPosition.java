@@ -12,14 +12,14 @@ public class CorePacketOutSetDefaultSpawnPosition implements PacketIO<PacketOutS
 
 	@Override
 	public void read(PacketOutSetDefaultSpawnPosition packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setPosition(in.readLong());
-		packet.setAngel(in.readFloat());
+		packet.position = in.readLong();
+		packet.angel = in.readFloat();
 	}
 
 	@Override
 	public void write(PacketOutSetDefaultSpawnPosition packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeLong(packet.getPosition());
-		out.writeFloat(packet.getAngel());
+		out.writeLong(packet.position);
+		out.writeFloat(packet.angel);
 	}
 
 	@Override

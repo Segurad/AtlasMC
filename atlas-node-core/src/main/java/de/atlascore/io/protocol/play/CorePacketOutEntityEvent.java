@@ -12,14 +12,14 @@ public class CorePacketOutEntityEvent implements PacketIO<PacketOutEntityEvent> 
 
 	@Override
 	public void read(PacketOutEntityEvent packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setEntityID(in.readInt());
-		packet.setStatus(in.readByte());
+		packet.entityID = in.readInt();
+		packet.status = in.readByte();
 	}
 
 	@Override
 	public void write(PacketOutEntityEvent packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeInt(packet.getEntityID());
-		out.writeByte(packet.getStatus());
+		out.writeInt(packet.entityID);
+		out.writeByte(packet.status);
 	}
 
 	@Override

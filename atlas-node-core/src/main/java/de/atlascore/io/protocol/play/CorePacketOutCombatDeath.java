@@ -7,20 +7,20 @@ import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutCombatDeath;
 import io.netty.buffer.ByteBuf;
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CorePacketOutCombatDeath implements PacketIO<PacketOutCombatDeath> {
 
 	@Override
 	public void read(PacketOutCombatDeath packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.playerID = readVarInt(in);
-		packet.deathMessage = readString(in, CHAT_MAX_LENGTH);
+		packet.deathMessage = readTextComponent(in);
 	}
 
 	@Override
 	public void write(PacketOutCombatDeath packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		writeVarInt(packet.playerID, out);
-		writeString(packet.deathMessage, out);
+		writeTextComponent(packet.deathMessage, out);
 	}
 
 	@Override

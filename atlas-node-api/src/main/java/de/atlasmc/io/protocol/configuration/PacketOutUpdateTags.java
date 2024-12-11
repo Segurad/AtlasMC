@@ -8,7 +8,7 @@ import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.tag.Tag;
 import de.atlasmc.util.map.Multimap;
 
-@DefaultPacketID(PacketConfiguration.OUT_UPDATE_TAGS)
+@DefaultPacketID(packetID = PacketConfiguration.OUT_UPDATE_TAGS, definition = "update_tags")
 public class PacketOutUpdateTags extends AbstractPacket implements PacketConfigurationOut {
 
 	public Multimap<NamespacedKey, Tag<?>> tags;

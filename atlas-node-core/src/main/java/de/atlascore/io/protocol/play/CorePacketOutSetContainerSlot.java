@@ -14,18 +14,18 @@ public class CorePacketOutSetContainerSlot implements PacketIO<PacketOutSetConta
 
 	@Override
 	public void read(PacketOutSetContainerSlot packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setWindowID(in.readByte());
-		packet.setStateID(readVarInt(in));
-		packet.setSlot(in.readShort());
-		packet.setItem(readSlot(in));
+		packet.windowID = in.readByte();
+		packet.stateID = readVarInt(in);
+		packet.slot = in.readShort();
+		packet.item = readSlot(in);
 	}
 
 	@Override
 	public void write(PacketOutSetContainerSlot packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeByte(packet.getWindowID());
-		writeVarInt(packet.getStateID(), out);
-		out.writeShort(packet.getSlot());
-		writeSlot(packet.getItem(), out);
+		out.writeByte(packet.windowID);
+		writeVarInt(packet.stateID, out);
+		out.writeShort(packet.slot);
+		writeSlot(packet.item, out);
 	}
 
 	@Override

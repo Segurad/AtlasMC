@@ -1,12 +1,15 @@
 package de.atlasmc.chat.component;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.chat.component.ClickEvent.ClickAction;
-import de.atlasmc.util.JsonBuffer;
+import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.tag.NBT;
 
 public interface ChatComponent extends Chat, Cloneable {
 	
@@ -49,9 +52,11 @@ public interface ChatComponent extends Chat, Cloneable {
 	
 	ChatComponent setFont(String font);
 	
+	void toJson(NBTWriter writer) throws IOException;
+	
 	/**
 	 * Returns the RGB value of the color used or -1.
-	 * If set by {@link #color(ChatColor)} it will return the index+1 as negative
+	 * If set by {@link #setColor(ChatColor)} it will return the index+1 as negative
 	 * @return rgb or enum -(index+1) or -1
 	 */
 	int getColor();
@@ -73,7 +78,7 @@ public interface ChatComponent extends Chat, Cloneable {
 	 * Format is allowed but the dedicated methods should be used instead
 	 * @param color
 	 */
-	ChatComponent color(ChatColor color);
+	ChatComponent setColor(ChatColor color);
 	
 	/**
 	 * Returns whether or not this Component has a color
@@ -96,10 +101,10 @@ public interface ChatComponent extends Chat, Cloneable {
 	ChatComponent setHoverEvent(HoverEvent event);
 	
 	/**
-	 * Adds the contents of this component to the buffer
-	 * @param buff
+	 * Adds the contents of this component to the writer
+	 * @param writer
 	 */
-	void addContents(JsonBuffer buff);
+	void addContents(NBTWriter writer) throws IOException;
 	
 	List<ChatComponent> getExtra();
 	
@@ -143,8 +148,8 @@ public interface ChatComponent extends Chat, Cloneable {
 		return new KeybindComponent(key);
 	}
 	
-	static ScoreComponent score(String entry, String objective, String score) {
-		return new ScoreComponent(entry, objective, score);
+	static ScoreComponent score(String entry, String objective) {
+		return new ScoreComponent(entry, objective);
 	}
 	
 	static TranslationComponent translate() {
@@ -163,12 +168,20 @@ public interface ChatComponent extends Chat, Cloneable {
 		return new HoverTextEvent(component);
 	}
 	
-	static HoverEntityEvent hoverEntity(String type, String uuid, ChatComponent name) {
+	static HoverEntityEvent hoverEntity(String type, UUID uuid, ChatComponent name) {
 		return new HoverEntityEvent(type, uuid, name);
 	}
 	
-	static HoverItemEvent hoverItem(String type, int count, String tag) {
-		return new HoverItemEvent(type, count, tag);
+	static HoverItemEvent hoverItem(String type, int count, NBT components) {
+		return new HoverItemEvent(type, count, components);
+	}
+	
+	static SelectorComponent selector(String selector, ChatComponent separator) {
+		return new SelectorComponent(selector, separator);
+	}
+	
+	static NBTComponent nbt() {
+		return new NBTComponent();
 	}
 	
 }

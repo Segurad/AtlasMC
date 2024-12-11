@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -14,14 +14,14 @@ public class CorePacketOutSetTabListHeaderAndFooter implements PacketIO<PacketOu
 
 	@Override
 	public void read(PacketOutSetTabListHeaderAndFooter packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setHeader(readString(in));
-		packet.setFooter(readString(in));
+		packet.header = readTextComponent(in);
+		packet.footer = readTextComponent(in);
 	}
 
 	@Override
 	public void write(PacketOutSetTabListHeaderAndFooter packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeString(packet.getHeader(), out);
-		writeString(packet.getFooter(), out);
+		writeTextComponent(packet.header, out);
+		writeTextComponent(packet.footer, out);
 	}
 
 	@Override

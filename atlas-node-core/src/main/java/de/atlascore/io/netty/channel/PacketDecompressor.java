@@ -1,9 +1,10 @@
 package de.atlascore.io.netty.channel;
 
+import static de.atlasmc.io.PacketUtil.readVarInt;
+
 import java.util.List;
 import java.util.zip.Inflater;
 
-import de.atlasmc.io.AbstractPacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
@@ -18,7 +19,7 @@ public class PacketDecompressor extends MessageToMessageDecoder<ByteBuf> {
 	
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf msg, List<Object> out) throws Exception {
-		int uncompressedDataSize = AbstractPacket.readVarInt(msg);
+		int uncompressedDataSize = readVarInt(msg);
 		if (uncompressedDataSize == 0) {
 			out.add(msg);
 			return;

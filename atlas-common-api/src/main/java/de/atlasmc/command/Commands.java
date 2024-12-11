@@ -421,28 +421,28 @@ public class Commands {
 		final int size = ((commands.size()-first) % linesPerPage) + 1;
 		List<Chat> lines = new ArrayList<>(size);
 		lines.add(chat(
-				text("--- ").color(ChatColor.DARK_GRAY), 
-				text("Help").color(ChatColor.RED), 
-				text(" - ").color(ChatColor.DARK_GRAY), 
-				text("Commands").color(ChatColor.RED), 
-				text(" - ").color(ChatColor.DARK_GRAY), 
-				text("Page").color(ChatColor.RED),
-				text(" [").color(ChatColor.DARK_GRAY),
-				text(Integer.toString(page)).color(ChatColor.RED),
-				text("/").color(ChatColor.DARK_GRAY),
-				text(Integer.toString(maxPages)).color(ChatColor.RED),
-				text("] ---").color(ChatColor.DARK_GRAY)));
+				text("--- ").setColor(ChatColor.DARK_GRAY), 
+				text("Help").setColor(ChatColor.RED), 
+				text(" - ").setColor(ChatColor.DARK_GRAY), 
+				text("Commands").setColor(ChatColor.RED), 
+				text(" - ").setColor(ChatColor.DARK_GRAY), 
+				text("Page").setColor(ChatColor.RED),
+				text(" [").setColor(ChatColor.DARK_GRAY),
+				text(Integer.toString(page)).setColor(ChatColor.RED),
+				text("/").setColor(ChatColor.DARK_GRAY),
+				text(Integer.toString(maxPages)).setColor(ChatColor.RED),
+				text("] ---").setColor(ChatColor.DARK_GRAY)));
 		for (int i = 1; i < size; i++) {
 			Command cmd = commands.get(first++);
 			String description = cmd.getCommandDescription();
 			if (description == null)
 				description = "-";
 			lines.add(chat(
-					text("- ").color(ChatColor.DARK_GRAY),
-					text("/").color(ChatColor.RED),
-					text(cmd.getName()).color(ChatColor.DARK_GRAY),
-					text(" : ").color(ChatColor.RED),
-					text(description).color(ChatColor.GRAY)));
+					text("- ").setColor(ChatColor.DARK_GRAY),
+					text("/").setColor(ChatColor.RED),
+					text(cmd.getName()).setColor(ChatColor.DARK_GRAY),
+					text(" : ").setColor(ChatColor.RED),
+					text(description).setColor(ChatColor.GRAY)));
 		}
 		return lines;
 	}
@@ -457,20 +457,20 @@ public class Commands {
 		List<Chat> help = new ArrayList<>();
 		ChatComponent base = base();
 		help.add(base);
-		int size = buildHelp(first, last, 0, help, text("- ").color(ChatColor.DARK_GRAY).extra(text("/").color(ChatColor.RED)), command);
+		int size = buildHelp(first, last, 0, help, text("- ").setColor(ChatColor.DARK_GRAY).extra(text("/").setColor(ChatColor.RED)), command);
 		int maxPages = Math.ceilDiv(size, linesPerPage);
 		base.extra(
-				text("--- ").color(ChatColor.DARK_GRAY), 
-				text("Help").color(ChatColor.RED), 
-				text(" - ").color(ChatColor.DARK_GRAY), 
-				text(command.getName()).color(ChatColor.RED), 
-				text(" - ").color(ChatColor.DARK_GRAY), 
-				text("Page").color(ChatColor.RED),
-				text(" [").color(ChatColor.DARK_GRAY),
-				text(Integer.toString(page)).color(ChatColor.RED),
-				text("/").color(ChatColor.DARK_GRAY),
-				text(Integer.toString(maxPages)).color(ChatColor.RED),
-				text("] ---").color(ChatColor.DARK_GRAY));
+				text("--- ").setColor(ChatColor.DARK_GRAY), 
+				text("Help").setColor(ChatColor.RED), 
+				text(" - ").setColor(ChatColor.DARK_GRAY), 
+				text(command.getName()).setColor(ChatColor.RED), 
+				text(" - ").setColor(ChatColor.DARK_GRAY), 
+				text("Page").setColor(ChatColor.RED),
+				text(" [").setColor(ChatColor.DARK_GRAY),
+				text(Integer.toString(page)).setColor(ChatColor.RED),
+				text("/").setColor(ChatColor.DARK_GRAY),
+				text(Integer.toString(maxPages)).setColor(ChatColor.RED),
+				text("] ---").setColor(ChatColor.DARK_GRAY));
 		return help;
 	}
 	
@@ -484,12 +484,12 @@ public class Commands {
 		}
 		if (arg instanceof VarCommandArg) {
 			parent.extra(
-					text("<").color(ChatColor.RED),
-					text(arg.getName()).color(ChatColor.DARK_GRAY),
-					text(">").color(ChatColor.RED));
+					text("<").setColor(ChatColor.RED),
+					text(arg.getName()).setColor(ChatColor.DARK_GRAY),
+					text(">").setColor(ChatColor.RED));
 		} else {
 			parent.extra(
-					text(arg.getName()).color(ChatColor.DARK_GRAY));
+					text(arg.getName()).setColor(ChatColor.DARK_GRAY));
 		}
 		if (arg.hasExecutor()) {
 			if (size >= first) {
@@ -499,8 +499,8 @@ public class Commands {
 				} else {
 					help.add(chat(
 							parent, 
-							text(" : ").color(ChatColor.RED), 
-							text(arg.getDescription()).color(ChatColor.GRAY)));
+							text(" : ").setColor(ChatColor.RED), 
+							text(arg.getDescription()).setColor(ChatColor.GRAY)));
 				}
 			}
 			size++;

@@ -83,7 +83,7 @@ public final class MathUtil {
 	}
 
 	public static short delta(double var0, double var1) {
-		return (short) ((var0 * 32 - var1 * 32) * 128);
+		return (short) (var0 * 4096 - var1 * 4096);
 	}
 	
 	public static long sectionToPosition(int x, int y, int z) {

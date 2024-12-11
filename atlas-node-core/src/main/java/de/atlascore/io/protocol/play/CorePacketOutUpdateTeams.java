@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.chat.ChatColor;
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -19,88 +19,106 @@ public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> 
 
 	@Override
 	public void read(PacketOutUpdateTeams packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setName(readString(in));
+		packet.name = readString(in, MAX_IDENTIFIER_LENGTH);
 		Mode mode = Mode.getByID(in.readByte());
-		packet.setMode(mode);
+		packet.mode = mode;
 		switch (mode) {
-		case CREATE_TEAM: 
-			packet.setDisplayName(readString(in));
-			packet.setFlags(in.readByte());
-			packet.setNameTagVisibility(getNameTagVisibility(readString(in, 40)));
-			packet.setCollisionRule(getCollisionRule(readString(in, 40)));
-			packet.setColor(ChatColor.getByID(readVarInt(in)));
-			packet.setPrefix(readString(in));
-			packet.setSuffix(readString(in));
-			int size = readVarInt(in);
-			List<String> entities = new ArrayList<>(size);
-			for (int i = 0; i < size; i++) {
-				entities.add(readString(in, 32767));
+		case CREATE_TEAM: {
+				packet.displayName = readTextComponent(in);
+				packet.flags = in.readByte();
+				packet.nameTagVisibility = getNameTagVisibility(readString(in, 40));
+				packet.collisionRule = getCollisionRule(readString(in, 40));
+				packet.color = ChatColor.getByID(readVarInt(in));
+				packet.prefix = readTextComponent(in);
+				packet.suffix = readTextComponent(in);
+				final int size = readVarInt(in);
+				if (size > 0) {
+					List<String> entities = new ArrayList<>(size);
+					for (int i = 0; i < size; i++) {
+						entities.add(readString(in, MAX_IDENTIFIER_LENGTH));
+					}
+					packet.entities = (entities);
+				} else {
+					packet.entities = List.of();
+				}
+				break;
 			}
-			packet.setEntities(entities);
-			break;
 		case REMOVE_TEAM:
 			break;
 		case UPDATE_TEAM_INFO:
-			packet.setDisplayName(readString(in));
-			packet.setFlags(in.readByte());
-			packet.setNameTagVisibility(getNameTagVisibility(readString(in, 40)));
-			packet.setCollisionRule(getCollisionRule(readString(in, 40)));
-			packet.setColor(ChatColor.getByID(readVarInt(in)));
-			packet.setPrefix(readString(in));
-			packet.setSuffix(readString(in));
+			packet.displayName = readTextComponent(in);
+			packet.flags = in.readByte();
+			packet.nameTagVisibility = getNameTagVisibility(readString(in, 40));
+			packet.collisionRule = getCollisionRule(readString(in, 40));
+			packet.color = ChatColor.getByID(readVarInt(in));
+			packet.prefix = readTextComponent(in);
+			packet.suffix = readTextComponent(in);
 			break;
 		case ADD_ENTITIES:
-		case REMOVE_ENTITIES:
-			size = readVarInt(in);
-			entities = new ArrayList<>(size);
-			for (int i = 0; i < size; i++) {
-				entities.add(readString(in, 32767));
+		case REMOVE_ENTITIES: {
+				final int size = readVarInt(in);
+				if (size > 0) {
+					List<String> entities = new ArrayList<>(size);
+					for (int i = 0; i < size; i++) {
+						entities.add(readString(in, MAX_IDENTIFIER_LENGTH));
+					}
+					packet.entities = (entities);
+				} else {
+					packet.entities = List.of();
+				}
+				break;
 			}
-			packet.setEntities(entities);
-			break;
 		}
 	}
 
 	@Override
 	public void write(PacketOutUpdateTeams packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeString(packet.getName(), out);
-		out.writeByte(packet.getMode().getID());
-		switch (packet.getMode()) {
-		case CREATE_TEAM:
-			writeString(packet.getDisplayName(), out);
-			out.writeByte(packet.getFlags() & 0x03);
-			writeString(optionToStringNameTagVisible(packet.getNameTagVisibility()), out);
-			writeString(optionToStringCollision(packet.getCollisionRule()), out);
-			writeVarInt(packet.getColor().getID(), out);
-			writeString(packet.getPrefix(), out);
-			writeString(packet.getSuffix(), out);
-			if (packet.getEntities() == null) {
-				writeVarInt(0, out);
-				return;
+		writeString(packet.name, out);
+		out.writeByte(packet.mode.getID());
+		switch (packet.mode) {
+		case CREATE_TEAM: {
+				writeTextComponent(packet.displayName, out);
+				out.writeByte(packet.flags & 0x03);
+				writeString(optionToStringNameTagVisible(packet.nameTagVisibility), out);
+				writeString(optionToStringCollision(packet.collisionRule), out);
+				writeVarInt(packet.color.getID(), out);
+				writeTextComponent(packet.prefix, out);
+				writeTextComponent(packet.suffix, out);
+				if (packet.entities == null) {
+					writeVarInt(0, out);
+					break;
+				}
+				final int size = packet.entities.size();
+				writeVarInt(size, out);
+				for (int i = 0; i < size; i++) {
+					writeString(packet.entities.get(i), out);
+				}
+				break;
 			}
-			writeVarInt(packet.getEntities().size(), out);
-			for (String s : packet.getEntities()) {
-				writeString(s, out);
-			}
-			break;
 		case UPDATE_TEAM_INFO:
-			writeString(packet.getDisplayName(), out);
-			out.writeByte(packet.getFlags() & 0x03);
-			writeString(optionToStringNameTagVisible(packet.getNameTagVisibility()), out);
-			writeString(optionToStringCollision(packet.getCollisionRule()), out);
-			writeVarInt(packet.getColor().getID(), out);
-			writeString(packet.getPrefix(), out);
-			writeString(packet.getSuffix(), out);
+			writeTextComponent(packet.displayName, out);
+			out.writeByte(packet.flags & 0x03);
+			writeString(optionToStringNameTagVisible(packet.nameTagVisibility), out);
+			writeString(optionToStringCollision(packet.collisionRule), out);
+			writeVarInt(packet.color.getID(), out);
+			writeTextComponent(packet.prefix, out);
+			writeTextComponent(packet.suffix, out);
 			break;
 		case REMOVE_TEAM:
 			break;
 		case ADD_ENTITIES:
-		case REMOVE_ENTITIES:
-			writeVarInt(packet.getEntities().size(), out);
-			for (String s : packet.getEntities()) {
-				writeString(s, out);
+		case REMOVE_ENTITIES: {
+				if (packet.entities == null) {
+					writeVarInt(0, out);
+					break;
+				}
+				final int size = packet.entities.size();
+				writeVarInt(size, out);
+				for (int i = 0; i < size; i++) {
+					writeString(packet.entities.get(i), out);
+				}
+				break;
 			}
-			break;
 		}
 	}
 

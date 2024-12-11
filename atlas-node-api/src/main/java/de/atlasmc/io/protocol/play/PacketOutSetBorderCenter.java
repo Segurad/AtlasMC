@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_SET_BORDER_CENTER)
+@DefaultPacketID(packetID = PacketPlay.OUT_SET_BORDER_CENTER, definition = "set_border_center")
 public class PacketOutSetBorderCenter extends AbstractPacket implements PacketPlayOut {
 
 	public double x;

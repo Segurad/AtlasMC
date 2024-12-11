@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_CLEAR_TITLE)
+@DefaultPacketID(packetID = PacketPlay.OUT_CLEAR_TITLE, definition = "clear_titles")
 public class PacketOutClearTitle extends AbstractPacket implements PacketPlayOut {
 	
 	public boolean reset;

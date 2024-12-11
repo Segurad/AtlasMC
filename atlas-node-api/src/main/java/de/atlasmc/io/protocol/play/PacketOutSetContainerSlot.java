@@ -4,45 +4,13 @@ import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_SET_CONTAINER_SLOT)
+@DefaultPacketID(packetID = PacketPlay.OUT_SET_CONTAINER_SLOT, definition = "container_set_slot")
 public class PacketOutSetContainerSlot extends AbstractPacket implements PacketPlayOut {
 
-	private int windowID;
-	private int slot;
-	private int stateID;
-	private ItemStack item;
-	
-	public int getWindowID() {
-		return windowID;
-	}
-	
-	public void setWindowID(int windowID) {
-		this.windowID = windowID;
-	}
-	
-	public int getSlot() {
-		return slot;
-	}
-	
-	public void setSlot(int slot) {
-		this.slot = slot;
-	}
-	
-	public ItemStack getItem() {
-		return item;
-	}
-	
-	public void setItem(ItemStack item) {
-		this.item = item;
-	}
-	
-	public int getStateID() {
-		return stateID;
-	}
-	
-	public void setStateID(int stateID) {
-		this.stateID = stateID;
-	}
+	public int windowID;
+	public int slot;
+	public int stateID;
+	public ItemStack item;
 	
 	@Override
 	public int getDefaultID() {

@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -14,31 +14,31 @@ public class CorePacketOutUpdateLight implements PacketIO<PacketOutUpdateLight> 
 	
 	@Override
 	public void read(PacketOutUpdateLight packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setChunkX(readVarInt(in));
-		packet.setChunkZ(readVarInt(in));
-		packet.setSkyMask(readBitSet(in));
-		packet.setBlockMask(readBitSet(in));
-		packet.setEmptySkyMask(readBitSet(in));
-		packet.setEmptyBlockMask(readBitSet(in));
+		packet.chunkX = readVarInt(in);
+		packet.chunkZ = readVarInt(in);
+		packet.skyMask = readBitSet(in);
+		packet.blockMask = readBitSet(in);
+		packet.emptySkyMask = readBitSet(in);
+		packet.emptyBlockMask = readBitSet(in);
 		// Read sky light data
 		byte[][] skyLightSections = CorePacketOutChunkData.readLightData(in);
-		packet.setSkyLight(skyLightSections);
+		packet.skyLight = skyLightSections;
 		// Read block light data
 		byte[][] blockLightSections = CorePacketOutChunkData.readLightData(in);
-		packet.setBlockLight(blockLightSections);
+		packet.blockLight = blockLightSections;
 	}
 
 	@Override
 	public void write(PacketOutUpdateLight packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getChunkX(), out);
-		writeVarInt(packet.getChunkZ(), out);
-		writeBitSet(packet.getSkyMask(), out);
-		writeBitSet(packet.getBlockMask(), out);
-		writeBitSet(packet.getEmptySkyMask(), out);
-		writeBitSet(packet.getEmptyBlockMask(), out);
+		writeVarInt(packet.chunkX, out);
+		writeVarInt(packet.chunkZ, out);
+		writeBitSet(packet.skyMask, out);
+		writeBitSet(packet.blockMask, out);
+		writeBitSet(packet.emptySkyMask, out);
+		writeBitSet(packet.emptyBlockMask, out);
 		
-		CorePacketOutChunkData.writeLightData(packet.getSkyLight(), out);
-		CorePacketOutChunkData.writeLightData(packet.getBlockLight(), out);
+		CorePacketOutChunkData.writeLightData(packet.skyLight, out);
+		CorePacketOutChunkData.writeLightData(packet.blockLight, out);
 	}
 	
 	@Override

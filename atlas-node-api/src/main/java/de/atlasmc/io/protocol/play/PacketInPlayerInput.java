@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.IN_PLAYER_INPUT)
+@DefaultPacketID(packetID = PacketPlay.IN_PLAYER_INPUT)
 public class PacketInPlayerInput extends AbstractPacket implements PacketPlayIn {
 	
 	private float sideways,forward;

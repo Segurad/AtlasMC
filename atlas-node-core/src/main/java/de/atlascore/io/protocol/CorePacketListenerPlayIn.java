@@ -65,7 +65,7 @@ import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.PlayerSettings;
 import de.atlasmc.io.protocol.play.PacketInChangeDifficulty;
 import de.atlasmc.io.protocol.play.PacketInChangeRecipeBookSettings;
-import de.atlasmc.io.protocol.play.PacketInChatCommand;
+import de.atlasmc.io.protocol.play.PacketInSignedChatCommand;
 import de.atlasmc.io.protocol.play.PacketInChatMessage;
 import de.atlasmc.io.protocol.play.PacketInChunkBatchReceived;
 import de.atlasmc.io.protocol.play.PacketInClickContainer;
@@ -75,14 +75,14 @@ import de.atlasmc.io.protocol.play.PacketInClientCommand.StatusAction;
 import de.atlasmc.io.protocol.play.PacketInClientInformation;
 import de.atlasmc.io.protocol.play.PacketInCloseContainer;
 import de.atlasmc.io.protocol.play.PacketInCommandSuggestionsRequest;
-import de.atlasmc.io.protocol.play.PacketInConfigurationAcknowledged;
+import de.atlasmc.io.protocol.play.PacketInAcknowledgeConfiguration;
 import de.atlasmc.io.protocol.play.PacketInConfirmTeleport;
 import de.atlasmc.io.protocol.play.PacketInEditBook;
 import de.atlasmc.io.protocol.play.PacketInInteract;
 import de.atlasmc.io.protocol.play.PacketInJigsawGenerate;
 import de.atlasmc.io.protocol.play.PacketInKeepAlive;
 import de.atlasmc.io.protocol.play.PacketInLockDifficulty;
-import de.atlasmc.io.protocol.play.PacketInMessageAcknowledgment;
+import de.atlasmc.io.protocol.play.PacketInAcknowledgeMessage;
 import de.atlasmc.io.protocol.play.PacketInMoveVehicle;
 import de.atlasmc.io.protocol.play.PacketInPaddleBoat;
 import de.atlasmc.io.protocol.play.PacketInPickItem;
@@ -718,13 +718,13 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			ItemStack item = player.getInventory().getItemInMainHand();
 			HandlerList.callEvent(new PlayerInteractEvent(player, action, item, block, ray.getLastHitFace(), hand));
 		});
-		initHandler(PacketInMessageAcknowledgment.class, (con, packet) -> {
+		initHandler(PacketInAcknowledgeMessage.class, (con, packet) -> {
 			// TODO handle message acknowledgment
 		});
 		initHandler(PacketInPong.class, (con, packet) -> {
 			// TODO handle pong
 		});
-		initHandler(PacketInChatCommand.class, (con, packet) -> {
+		initHandler(PacketInSignedChatCommand.class, (con, packet) -> {
 			// TODO handle chat command
 		});
 		initHandler(PacketInPlayerSession.class, (con, packet) -> {
@@ -734,7 +734,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			con.setChunksPerTick(packet.chunksPerTick);
 			// TODO handle chunks batch received
 		});
-		initHandler(PacketInConfigurationAcknowledged.class, (con, packet) -> {
+		initHandler(PacketInAcknowledgeConfiguration.class, (con, packet) -> {
 			con.protocolChangeAcknowledged();
 		});
 		initHandler(PacketInPingRequest.class, (con, packet) -> {
@@ -763,7 +763,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 
 	@Override
 	protected void handle(Packet packet) {
-		if (holder.isWaitingForProtocolChange() && !(packet instanceof PacketInConfigurationAcknowledged))
+		if (holder.isWaitingForProtocolChange() && !(packet instanceof PacketInAcknowledgeConfiguration))
 			return;
 		@SuppressWarnings("unchecked")
 		PacketHandler<PlayerConnection, Packet> handler = (PacketHandler<PlayerConnection, Packet>) HANDLERS[packet.getID()];

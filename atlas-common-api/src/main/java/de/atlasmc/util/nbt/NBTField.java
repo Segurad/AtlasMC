@@ -5,7 +5,7 @@ import java.io.IOException;
 import de.atlasmc.util.nbt.io.NBTReader;
 
 @FunctionalInterface
-public interface NBTField<H extends NBTHolder> {
+public interface NBTField<H> {
 	
 	void setField(H holder, NBTReader reader) throws IOException;
 

@@ -109,7 +109,7 @@ public enum ChatColor implements EnumName, EnumID, EnumValueCache {
 			component.setUnderlined(true);
 			break;
 		default:
-			component.color(this);
+			component.setColor(this);
 			break;
 		}
 	}
@@ -139,6 +139,30 @@ public enum ChatColor implements EnumName, EnumID, EnumValueCache {
 		return getValues().get(id);
 	}
 	
+	public static ChatColor getByColor(Color color) {
+		if (color == null)
+			throw new IllegalArgumentException("Color can not be null!");
+		List<ChatColor> colors = getValues();
+		final int size = colors.size();
+		for (int i = 0; i < size; i++) {
+			ChatColor c = colors.get(i);
+			if (c.color.equals(color))
+				return c;
+		}
+		return null;
+	}
+	
+	public static ChatColor getByColor(int rgb) {
+		List<ChatColor> colors = getValues();
+		final int size = colors.size();
+		for (int i = 0; i < size; i++) {
+			ChatColor c = colors.get(i);
+			if (c.color.asRGB() == rgb)
+				return c;
+		}
+		return null;
+	}
+	
 	/**
 	 * Returns a immutable List of all Types.<br>
 	 * This method avoid allocation of a new array not like {@link #values()}.
@@ -159,19 +183,6 @@ public enum ChatColor implements EnumName, EnumID, EnumValueCache {
 	 */
 	public static void freeValues() {
 		VALUES = null;
-	}
-
-	public static ChatColor getByColor(Color color) {
-		if (color == null)
-			throw new IllegalArgumentException("Color can not be null!");
-		List<ChatColor> colors = getValues();
-		final int size = colors.size();
-		for (int i = 0; i < size; i++) {
-			ChatColor ccolor = colors.get(i);
-			if (ccolor.color.equals(color))
-				return ccolor;
-		}
-		return null;
 	}
 	
 }

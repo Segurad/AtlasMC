@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -15,14 +15,14 @@ public class CorePacketOutDisplayObjective implements PacketIO<PacketOutDisplayO
 
 	@Override
 	public void read(PacketOutDisplayObjective packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setPosition(DisplaySlot.getByID(in.readByte()));
-		packet.setObjective(readString(in, 32787));
+		packet.position = DisplaySlot.getByID(in.readByte());
+		packet.objective = readString(in, MAX_IDENTIFIER_LENGTH);
 	}
 
 	@Override
 	public void write(PacketOutDisplayObjective packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeByte(packet.getPosition().getID());
-		writeString(packet.getObjective(), out);
+		out.writeByte(packet.position.getID());
+		writeString(packet.objective, out);
 	}
 
 	@Override

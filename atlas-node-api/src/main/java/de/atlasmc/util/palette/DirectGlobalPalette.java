@@ -2,7 +2,7 @@ package de.atlasmc.util.palette;
 
 import java.util.Collection;
 
-import de.atlasmc.io.AbstractPacket;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 import de.atlasmc.util.MathUtil;
 import io.netty.buffer.ByteBuf;
 
@@ -63,9 +63,9 @@ public class DirectGlobalPalette<E> extends AbstractPalette<E> {
 		buf.writeByte(values.getBitsPerValue());
 		// write data
 		final long[] values = this.values.array();
-		AbstractPacket.writeVarInt(values.length, buf);
+		writeVarInt(values.length, buf);
 		for (long value : values) {
-			AbstractPacket.writeVarLong(value, buf);
+			writeVarLong(value, buf);
 		}
 	}
 	
@@ -73,7 +73,7 @@ public class DirectGlobalPalette<E> extends AbstractPalette<E> {
 	public long getSerializedSize() {
 		int size = 1;
 		long[] values = this.values.array();
-		size += AbstractPacket.getVarIntLength(values.length);
+		size += getVarIntLength(values.length);
 		size += values.length * 9; // use max number of bytes to represent long values as varlong
 		return size;
 	}

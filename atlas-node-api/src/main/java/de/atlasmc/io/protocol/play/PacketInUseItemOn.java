@@ -5,7 +5,7 @@ import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.IN_USE_ITEM_ON)
+@DefaultPacketID(packetID = PacketPlay.IN_USE_ITEM_ON)
 public class PacketInUseItemOn extends AbstractPacket implements PacketPlayIn {
 	
 	private EquipmentSlot hand;

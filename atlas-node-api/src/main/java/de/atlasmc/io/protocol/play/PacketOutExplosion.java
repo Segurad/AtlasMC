@@ -1,83 +1,27 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.Particle;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.sound.Sound;
 
-@DefaultPacketID(PacketPlay.OUT_EXPLOSION)
+@DefaultPacketID(packetID = PacketPlay.OUT_EXPLOSION, definition = "explode")
 public class PacketOutExplosion extends AbstractPacket implements PacketPlayOut {
 
-	private float x;
-	private float y;
-	private float z;
-	private float strength;
-	private float motionX;
-	private float motionY;
-	private float motionZ;
-	private byte[] records;
-
-	public float getX() {
-		return x;
-	}
-
-	public float getY() {
-		return y;
-	}
-
-	public float getZ() {
-		return z;
-	}
-
-	public float getStrength() {
-		return strength;
-	}
-
-	public float getMotionX() {
-		return motionX;
-	}
-
-	public float getMotionY() {
-		return motionY;
-	}
-
-	public float getMotionZ() {
-		return motionZ;
-	}
-
-	public byte[] getRecords() {
-		return records;
-	}
-
-	public void setX(float x) {
-		this.x = x;
-	}
-
-	public void setY(float y) {
-		this.y = y;
-	}
-
-	public void setZ(float z) {
-		this.z = z;
-	}
-
-	public void setStrength(float strength) {
-		this.strength = strength;
-	}
-
-	public void setMotionX(float motionX) {
-		this.motionX = motionX;
-	}
-
-	public void setMotionY(float motionY) {
-		this.motionY = motionY;
-	}
-
-	public void setMotionZ(float motionZ) {
-		this.motionZ = motionZ;
-	}
-
-	public void setRecords(byte[] records) {
-		this.records = records;
-	}
+	public float x;
+	public float y;
+	public float z;
+	public float strength;
+	public byte[] records;
+	public float motionX;
+	public float motionY;
+	public float motionZ;
+	public int blockInteraction;
+	public Particle smallExplosionParticle;
+	public Object smallExplosionParticleData;
+	public Particle largeExplosionParticle;
+	public Object largeExplosionParticleData;
+	public Sound explosionSound;
 	
 	@Override
 	public int getDefaultID() {

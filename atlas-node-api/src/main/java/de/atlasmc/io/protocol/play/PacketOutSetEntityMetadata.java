@@ -8,19 +8,11 @@ import de.atlasmc.entity.data.MetaDataContainer;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_SET_ENTITY_METADATA)
+@DefaultPacketID(packetID = PacketPlay.OUT_SET_ENTITY_METADATA, definition = "set_entity_meta")
 public class PacketOutSetEntityMetadata extends AbstractPacket implements PacketPlayOut {
 	
-	private int entityID;
-	private List<MetaData<?>> data;
-	
-	public int getEntityID() {
-		return entityID;
-	}
-	
-	public void setEntityID(int entityID) {
-		this.entityID = entityID;
-	}
+	public int entityID;
+	public List<MetaData<?>> data;
 	
 	/**
 	 * Sets all data of the {@link MetaDataContainer} to this packet that is not default
@@ -52,14 +44,6 @@ public class PacketOutSetEntityMetadata extends AbstractPacket implements Packet
 				data = new ArrayList<>();
 			data.add(meta.clone());
 		}
-	}
-	
-	public List<MetaData<?>> getData() {
-		return data;
-	}
-	
-	public void setData(List<MetaData<?>> data) {
-		this.data = data;
 	}
 	
 	@Override

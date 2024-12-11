@@ -1,7 +1,7 @@
 package de.atlascore.io.protocol.play;
 
-import static de.atlasmc.io.AbstractPacket.readVarInt;
-import static de.atlasmc.io.AbstractPacket.writeVarInt;
+import static de.atlasmc.io.PacketUtil.readVarInt;
+import static de.atlasmc.io.PacketUtil.writeVarInt;
 
 import java.io.IOException;
 
@@ -16,18 +16,18 @@ public class CorePacketOutUpdateEntityRotation implements PacketIO<PacketOutUpda
 
 	@Override
 	public void read(PacketOutUpdateEntityRotation packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setEntityID(readVarInt(in));
-		packet.setYaw(MathUtil.fromAngle(in.readUnsignedByte()));
-		packet.setPitch(MathUtil.fromAngle(in.readUnsignedByte()));
-		packet.setOnGround(in.readBoolean());
+		packet.entityID = readVarInt(in);
+		packet.yaw = MathUtil.fromAngle(in.readUnsignedByte());
+		packet.pitch = MathUtil.fromAngle(in.readUnsignedByte());
+		packet.onGround = in.readBoolean();
 	}
 
 	@Override
 	public void write(PacketOutUpdateEntityRotation packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getEntityID(), out);
-		out.writeByte(MathUtil.toAngle(packet.getYaw()));
-		out.writeByte(MathUtil.toAngle(packet.getPitch()));
-		out.writeBoolean(packet.isOnGround());
+		writeVarInt(packet.entityID, out);
+		out.writeByte(MathUtil.toAngle(packet.yaw));
+		out.writeByte(MathUtil.toAngle(packet.pitch));
+		out.writeBoolean(packet.onGround);
 	}
 
 	@Override

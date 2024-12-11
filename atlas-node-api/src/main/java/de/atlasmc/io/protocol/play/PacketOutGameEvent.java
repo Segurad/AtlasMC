@@ -4,38 +4,25 @@ import java.util.List;
 
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumValueCache;
 
-@DefaultPacketID(PacketPlay.OUT_GAME_EVENT)
+@DefaultPacketID(packetID = PacketPlay.OUT_GAME_EVENT, definition = "game_event")
 public class PacketOutGameEvent extends AbstractPacket implements PacketPlayOut {
 	
-	private ChangeReason reason;
-	private float value;
-	
-	public ChangeReason getReason() {
-		return reason;
-	}
-	
-	public void setReason(ChangeReason reason) {
-		this.reason = reason;
-	}
-	
-	public float getValue() {
-		return value;
-	}
-	
-	public void setValue(float value) {
-		this.value = value;
-	}
+	public GameEventType event;
+	public float value;
 	
 	@Override
 	public int getDefaultID() {
 		return OUT_GAME_EVENT;
 	}
 	
-	public static enum ChangeReason {
-		NO_RESPAWN_REASON,
-		END_RAINING,
+	public static enum GameEventType implements EnumID, EnumValueCache {
+		
+		NO_RESPAWN_BLOCK_AVAILABLE,
 		BEGIN_RAINING,
+		END_RAINING,
 		CHANGE_GAMEMODE,
 		WIN_GAME,
 		DEMO_EVENT,
@@ -43,16 +30,19 @@ public class PacketOutGameEvent extends AbstractPacket implements PacketPlayOut 
 		RAIN_LEVEL_CHANGE,
 		THUNDER_LEVEL_CHANGE,
 		PLAY_PUFFERFISH_STING_SOUND,
-		PLAY_ELDER_GUARDIAN_MOB_APEAREANCE,
-		ENABLE_RESPAWN_SCREEN;
+		PLAY_ELDER_GUARDIAN_MOB_APEARANCE,
+		ENABLE_RESPAWN_SCREEN,
+		LIMITED_CRAFTING,
+		START_WAITING_FOR_LEVEL_CHUNKS;
 		
-		private static List<ChangeReason> VALUES;
+		private static List<GameEventType> VALUES;
 		
+		@Override
 		public int getID() {
 			return ordinal();
 		}
 		
-		public static ChangeReason getByID(int id) {
+		public static GameEventType getByID(int id) {
 			return getValues().get(id);
 		}
 		
@@ -61,7 +51,7 @@ public class PacketOutGameEvent extends AbstractPacket implements PacketPlayOut 
 		 * This method avoid allocation of a new array not like {@link #values()}.
 		 * @return list
 		 */
-		public static List<ChangeReason> getValues() {
+		public static List<GameEventType> getValues() {
 			if (VALUES == null)
 				VALUES = List.of(values());
 			return VALUES;

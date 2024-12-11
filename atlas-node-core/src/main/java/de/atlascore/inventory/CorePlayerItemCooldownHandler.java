@@ -21,16 +21,16 @@ public class CorePlayerItemCooldownHandler extends CooldownHandler<Material> {
 	@Override
 	protected void onSetCooldown(Material key, int ticks, int previousTicks) {
 		PacketOutSetCooldown packet = new PacketOutSetCooldown();
-		packet.setItemID(key.getItemID());
-		packet.setCooldown(ticks);
+		packet.itemID = key.getItemID();
+		packet.cooldown = ticks;
 		player.getConnection().sendPacked(packet);
 	}
 	
 	@Override
 	protected void onRemoveCooldown(Material key, int ticks) {
 		PacketOutSetCooldown packet = new PacketOutSetCooldown();
-		packet.setItemID(key.getItemID());
-		packet.setCooldown(0);
+		packet.itemID = key.getItemID();
+		packet.cooldown = 0;
 		player.getConnection().sendPacked(packet);
 	}
 	
@@ -39,8 +39,8 @@ public class CorePlayerItemCooldownHandler extends CooldownHandler<Material> {
 		PlayerConnection con = player.getConnection();
 		for (Material key : keys) {
 			PacketOutSetCooldown packet = new PacketOutSetCooldown();
-			packet.setItemID(key.getItemID());
-			packet.setCooldown(0);
+			packet.itemID = key.getItemID();
+			packet.cooldown = 0;
 			con.sendPacked(packet);
 		}
 	}

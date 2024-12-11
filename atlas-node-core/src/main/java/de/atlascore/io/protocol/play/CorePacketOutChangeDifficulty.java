@@ -13,14 +13,14 @@ public class CorePacketOutChangeDifficulty implements PacketIO<PacketOutChangeDi
 
 	@Override
 	public void read(PacketOutChangeDifficulty packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setDifficulty(Difficulty.getByID(in.readUnsignedByte()));
-		packet.setLocked(in.readBoolean());
+		packet.difficulty = Difficulty.getByID(in.readUnsignedByte());
+		packet.locked = in.readBoolean();
 	}
 
 	@Override
 	public void write(PacketOutChangeDifficulty packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeByte(packet.getDifficulty().getID());
-		out.writeBoolean(packet.isLocked());
+		out.writeByte(packet.difficulty.getID());
+		out.writeBoolean(packet.locked);
 	}
 
 	@Override

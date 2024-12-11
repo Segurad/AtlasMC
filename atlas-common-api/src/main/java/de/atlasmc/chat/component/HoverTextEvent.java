@@ -1,6 +1,8 @@
 package de.atlasmc.chat.component;
 
-import de.atlasmc.util.JsonBuffer;
+import java.io.IOException;
+
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class HoverTextEvent implements HoverEvent {
 
@@ -22,8 +24,8 @@ public class HoverTextEvent implements HoverEvent {
 	}
 
 	@Override
-	public void addContents(JsonBuffer buff) {
-		component.addContents(buff);
+	public void addContents(NBTWriter writer) throws IOException {
+		component.addContents(writer);
 	}
 
 }

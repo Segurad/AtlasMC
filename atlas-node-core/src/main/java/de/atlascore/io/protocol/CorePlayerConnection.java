@@ -174,7 +174,7 @@ public class CorePlayerConnection implements PlayerConnection {
 			sendPacked(packet);
 		} else {
 			PacketOutKeepAlive packet = new PacketOutKeepAlive();
-			packet.setKeepAlive(lastKeepAlive);
+			packet.keepAliveID = lastKeepAlive;
 			sendPacked(packet);
 		}
 	}
@@ -224,12 +224,12 @@ public class CorePlayerConnection implements PlayerConnection {
 	@Override
 	public int teleport(double x, double y, double z, float yaw, float pitch) {
 		PacketOutSynchronizePlayerPosition packet = new PacketOutSynchronizePlayerPosition();
-		packet.setX(x);
-		packet.setY(y);
-		packet.setZ(z);
-		packet.setYaw(yaw);
-		packet.setPitch(pitch);
-		packet.setTeleportID(teleportID);
+		packet.x = x;
+		packet.y = y;
+		packet.z = z;
+		packet.yaw = yaw;
+		packet.pitch = pitch;
+		packet.teleportID = teleportID;
 		teleportConfirmed = false;
 		sendPacked(packet);
 		return teleportID++;
@@ -264,18 +264,18 @@ public class CorePlayerConnection implements PlayerConnection {
 		}
 		if (toAdd != null) {
 			PacketOutUpdateRecipes packet = new PacketOutUpdateRecipes();
-			packet.setRecipes(toAdd);
+			packet.recipes = toAdd;
 			sendPacked(packet);
 		}
 		if (toUnlock == null)
 			return;
 		PacketOutUpdateRecipeBook packet = new PacketOutUpdateRecipeBook();
 		if (notify) {
-			packet.setAction(RecipesAction.ADD);
-			packet.setTagged(toUnlock);
+			packet.action = RecipesAction.ADD;
+			packet.tagged = toUnlock;
 		} else {
-			packet.setAction(RecipesAction.INIT);
-			packet.setUntagged(toUnlock);
+			packet.action = RecipesAction.INIT;
+			packet.tagged = toUnlock;
 		}
 		setRecipeBookState(packet);
 		sendPacked(packet);
@@ -294,28 +294,28 @@ public class CorePlayerConnection implements PlayerConnection {
 		if (toRemove == null)
 			return;
 		PacketOutUpdateRecipeBook packet = new PacketOutUpdateRecipeBook();
-		packet.setAction(RecipesAction.REMOVE);
-		packet.setTagged(toRemove);
+		packet.action = RecipesAction.REMOVE;
+		packet.tagged = toRemove;
 		setRecipeBookState(packet);
 		sendPacked(packet);
 	}
 	
 	private void setRecipeBookState(PacketOutUpdateRecipeBook packet) {
 		RecipeBook book = getRecipeBook(BookType.CRAFTING);
-		packet.setCraftingBookOpen(book.isOpen());
-		packet.setCraftingBookFiltered(book.hasFilter());
+		packet.craftingOpen = book.isOpen();
+		packet.craftingFilter = book.hasFilter();
 		((CoreRecipeBook) book).setChanged(false);
 		book = getRecipeBook(BookType.FURNACE);
-		packet.setSmeltingBookOpen(book.isOpen());
-		packet.setSmeltingBookFiltered(book.hasFilter());
+		packet.smeltingOpen = book.isOpen();
+		packet.smeltingFilter = book.hasFilter();
 		((CoreRecipeBook) book).setChanged(false);
 		book = getRecipeBook(BookType.BLAST_FURNACE);
-		packet.setBlastingBookOpen(book.isOpen());
-		packet.setBlastingBookFiltered(book.hasFilter());
+		packet.blastFurnaceOpen = book.isOpen();
+		packet.blastFurnaceFilter = book.hasFilter();
 		((CoreRecipeBook) book).setChanged(false);
 		book = getRecipeBook(BookType.SMOKER);
-		packet.setSmokingBookOpen(book.isOpen());
-		packet.setSmokingBookFiltered(book.hasFilter());
+		packet.blastFurnaceOpen = book.isOpen();
+		packet.blastFurnaceFilter = book.hasFilter();
 		((CoreRecipeBook) book).setChanged(false);
 	}
 
@@ -338,7 +338,7 @@ public class CorePlayerConnection implements PlayerConnection {
 				recipesAvailable.add(recipe);
 			}
 		PacketOutUpdateRecipes packet = new PacketOutUpdateRecipes();
-		packet.setRecipes(toAdd);
+		packet.recipes = toAdd;
 		sendPacked(packet);
 	}
 
@@ -377,11 +377,11 @@ public class CorePlayerConnection implements PlayerConnection {
 	}
 
 	@Override
-	public void disconnect(String message) {
+	public void disconnect(Chat message) {
 		if (connection.isClosed())
 			return;
 		PacketOutDisconnect packet = new PacketOutDisconnect();
-		packet.setReason(message);
+		packet.reason = message;
 		connection.sendPacket(packet, (future) -> {
 			connection.close();
 		});
@@ -418,7 +418,7 @@ public class CorePlayerConnection implements PlayerConnection {
 		if (!update)
 			return;
 		PacketOutSelectAdvancementTab packet = new PacketOutSelectAdvancementTab();
-		packet.setTabID(tab);
+		packet.tabID = tab;
 		sendPacked(packet);
 	}
 

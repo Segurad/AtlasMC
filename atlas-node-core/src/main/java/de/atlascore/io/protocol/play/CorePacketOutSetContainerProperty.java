@@ -12,16 +12,16 @@ public class CorePacketOutSetContainerProperty implements PacketIO<PacketOutSetC
 
 	@Override
 	public void read(PacketOutSetContainerProperty packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setWindowID(in.readByte());
-		packet.setProperty(in.readShort());
-		packet.setValue(in.readShort());
+		packet.windowID = in.readByte();
+		packet.property = in.readShort();
+		packet.value = in.readShort();
 	}
 
 	@Override
 	public void write(PacketOutSetContainerProperty packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeByte(packet.getWindowID());
-		out.writeShort(packet.getProperty());
-		out.writeShort(packet.getValue());
+		out.writeByte(packet.windowID);
+		out.writeShort(packet.property);
+		out.writeShort(packet.value);
 	}
 	
 	@Override

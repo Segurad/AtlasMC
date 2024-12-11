@@ -1,9 +1,11 @@
 package de.atlasmc.entity.data;
 
+import static de.atlasmc.io.PacketUtil.readVarInt;
+import static de.atlasmc.io.PacketUtil.writeVarInt;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import de.atlasmc.io.AbstractPacket;
 import io.netty.buffer.ByteBuf;
 
 final class EnumMetaDataType<T extends Enum<T>> extends MetaDataType<T> {
@@ -29,7 +31,7 @@ final class EnumMetaDataType<T extends Enum<T>> extends MetaDataType<T> {
 	@Override
 	public T read(ByteBuf in) {
 		try {
-			return (T) getByID.invoke(null, AbstractPacket.readVarInt(in));
+			return (T) getByID.invoke(null, readVarInt(in));
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new IllegalStateException("Error while reading enum meta data type: " + getTypeClass().getName(), e);
 		}
@@ -38,7 +40,7 @@ final class EnumMetaDataType<T extends Enum<T>> extends MetaDataType<T> {
 	@Override
 	public void write(T data, ByteBuf out) {
 		try {
-			AbstractPacket.writeVarInt((int) getID.invoke(data), out);
+			writeVarInt((int) getID.invoke(data), out);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new IllegalStateException("Error while writing enum meta data type: " + getTypeClass().getName(), e);
 		}

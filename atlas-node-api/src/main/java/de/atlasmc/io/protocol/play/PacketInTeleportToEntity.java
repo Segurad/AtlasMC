@@ -5,7 +5,7 @@ import java.util.UUID;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.IN_TELEPORT_TO_ENTITY)
+@DefaultPacketID(packetID = PacketPlay.IN_TELEPORT_TO_ENTITY)
 public class PacketInTeleportToEntity extends AbstractPacket implements PacketPlayIn {
 	
 	private UUID uuid;

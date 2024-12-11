@@ -51,11 +51,11 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 			LocalProxy proxy = handler.con.getProxy();
 			if (proxy.getConfig().getPlayerAuthentication()) {
 				PacketOutEncryptionRequest packetOut = new PacketOutEncryptionRequest();
-				packetOut.setServerID(SERVER_ID);
-				packetOut.setPublicKey(Atlas.getKeyPair().getPublic().getEncoded());
+				packetOut.serverID = SERVER_ID;
+				packetOut.publicKey = Atlas.getKeyPair().getPublic().getEncoded();
 				byte[] token = generateVerifyToken();
 				handler.verifyToken = token;
-				packetOut.setVerifyToken(token);
+				packetOut.verifyToken = token;
 				handler.con.sendPacket(packet);
 			} else if (proxy.isSync()) {
 				ProfileHandler profiles = AtlasNetwork.getProfileHandler();

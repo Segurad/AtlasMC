@@ -9,27 +9,11 @@ import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.util.Pair;
 
-@DefaultPacketID(PacketPlay.OUT_SET_EQUIPMENT)
+@DefaultPacketID(packetID = PacketPlay.OUT_SET_EQUIPMENT, definition = "set_equipment")
 public class PacketOutSetEquipment extends AbstractPacket implements PacketPlayOut {
 	
-	private int entityID;
-	private List<Pair<EquipmentSlot, ItemStack>> slots;
-	
-	public int getEntityID() {
-		return entityID;
-	}
-	
-	public void setEntityID(int entityID) {
-		this.entityID = entityID;
-	}
-	
-	public List<Pair<EquipmentSlot, ItemStack>> getSlots() {
-		return slots;
-	}
-	
-	public void setSlots(List<Pair<EquipmentSlot, ItemStack>> slots) {
-		this.slots = slots;
-	}
+	public int entityID;
+	public List<Pair<EquipmentSlot, ItemStack>> slots;
 	
 	public void setSlot(EquipmentSlot slot, ItemStack item) {
 		slots = new ArrayList<>(1);

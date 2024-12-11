@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -14,20 +14,20 @@ public class CorePacketOutSetPassengers implements PacketIO<PacketOutSetPassenge
 
 	@Override
 	public void read(PacketOutSetPassengers packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setVehicleID(readVarInt(in));
+		packet.vehicleID = readVarInt(in);
 		final int size = readVarInt(in);
 		int[] passengers = new int[size];
 		for (int i = 0; i < size; i++) {
 			passengers[i] = readVarInt(in);
 		}
-		packet.setPassengers(passengers);
+		packet.passengers = passengers;
 	}
 
 	@Override
 	public void write(PacketOutSetPassengers packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getVehicleID(), out);
-		writeVarInt(packet.getPassengers().length, out);
-		for (int i : packet.getPassengers()) {
+		writeVarInt(packet.vehicleID, out);
+		writeVarInt(packet.passengers.length, out);
+		for (int i : packet.passengers) {
 			writeVarInt(i, out);
 		}
 	}

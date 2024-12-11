@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.event.player.PlayerResourcePackStatusEvent.ResourcePackStatus;
 import de.atlasmc.io.ConnectionHandler;

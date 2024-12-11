@@ -3,13 +3,13 @@ package de.atlasmc.util.palette;
 import java.util.Collection;
 import java.util.List;
 
-import de.atlasmc.io.AbstractPacket;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 import de.atlasmc.util.VariableValueArray;
 import io.netty.buffer.ByteBuf;
 
 public class SingleValuePalette<E> implements Palette<E> {
 	
-	public static final int NULL_PALETTE_SERIALIZED_SIZE = 1 + AbstractPacket.getVarIntLength(0) * 2;
+	public static final int NULL_PALETTE_SERIALIZED_SIZE = 1 + getVarIntLength(0) * 2;
 	
 	private final int capacity;
 	private BasePaletteEntry<E> entry;
@@ -119,7 +119,7 @@ public class SingleValuePalette<E> implements Palette<E> {
 
 	@Override
 	public void write(ByteBuf buf) {
-		AbstractPacket.writeVarInt(entry != null ? entry.paletteValue : 0, buf);
+		writeVarInt(entry != null ? entry.paletteValue : 0, buf);
 	}
 
 	@Override

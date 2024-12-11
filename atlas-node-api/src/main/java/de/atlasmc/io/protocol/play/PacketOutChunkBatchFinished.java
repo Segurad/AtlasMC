@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_CHUNK_BATCH_FINISHED)
+@DefaultPacketID(packetID = PacketPlay.OUT_CHUNK_BATCH_FINISHED, definition = "chunk_batch_finished")
 public class PacketOutChunkBatchFinished extends AbstractPacket implements PacketPlayOut {
 	
 	public int chunks;

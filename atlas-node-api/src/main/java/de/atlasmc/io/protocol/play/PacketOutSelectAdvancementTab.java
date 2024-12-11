@@ -4,18 +4,10 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_SELECT_ADVANCEMENT_TAB)
+@DefaultPacketID(packetID = PacketPlay.OUT_SELECT_ADVANCEMENT_TAB, definition = "select_advancements_tab")
 public class PacketOutSelectAdvancementTab extends AbstractPacket implements PacketPlayOut {
 	
-	private NamespacedKey tabID;
-	
-	public NamespacedKey getTabID() {
-		return tabID;
-	}
-	
-	public void setTabID(NamespacedKey tabID) {
-		this.tabID = tabID;
-	}
+	public NamespacedKey tabID;
 
 	@Override
 	public int getDefaultID() {

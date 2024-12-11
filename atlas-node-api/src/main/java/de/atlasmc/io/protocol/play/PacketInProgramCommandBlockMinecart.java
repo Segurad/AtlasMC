@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.IN_PROGRAM_COMMAND_BLOCK_MINECART)
+@DefaultPacketID(packetID = PacketPlay.IN_PROGRAM_COMMAND_BLOCK_MINECART)
 public class PacketInProgramCommandBlockMinecart extends AbstractPacket implements PacketPlayIn {
 	
 	private int entityID;

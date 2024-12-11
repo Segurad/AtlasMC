@@ -12,6 +12,8 @@ import de.atlasmc.SimpleLocation;
 import de.atlasmc.server.LocalServer;
 import de.atlasmc.sound.SoundEmitter;
 import de.atlasmc.tick.Tickable;
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumValueCache;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.annotation.ThreadSafe;
 import de.atlasmc.util.nbt.CustomTagContainer;
@@ -22,7 +24,8 @@ import de.atlasmc.world.entitytracker.EntityPerception;
 
 public interface Entity extends NBTHolder, Nameable, Tickable, SoundEmitter {
 
-	public enum Animation {
+	public enum Animation implements EnumID, EnumValueCache {
+		
 		SWING_MAIN_ARM,
 		TAKE_DAMAGE,
 		LEAVE_BED,
@@ -43,10 +46,7 @@ public interface Entity extends NBTHolder, Nameable, Tickable, SoundEmitter {
 		 */
 		public static List<Animation> getValues() {
 			if (VALUES == null)
-				synchronized (Animation.class) {
-					if (VALUES == null)
-						VALUES = List.of(values());
-				}
+				VALUES = List.of(values());
 			return VALUES;
 		}
 		
@@ -62,7 +62,9 @@ public interface Entity extends NBTHolder, Nameable, Tickable, SoundEmitter {
 		}
 		
 	}
-	public enum Pose {
+	
+	public enum Pose implements EnumID, EnumValueCache {
+		
 		STANDING,
 		FALL_FLYING,
 		SLEEPING,
@@ -84,10 +86,7 @@ public interface Entity extends NBTHolder, Nameable, Tickable, SoundEmitter {
 		 */
 		public static List<Pose> getValues() {
 			if (VALUES == null)
-				synchronized (Pose.class) {
-					if (VALUES == null)
-						VALUES = List.of(values());
-				}
+				VALUES = List.of(values());
 			return VALUES;
 		}
 		
@@ -103,6 +102,7 @@ public interface Entity extends NBTHolder, Nameable, Tickable, SoundEmitter {
 		}
 		
 	}
+	
 	void addScoreboardTag(String tag);
 	
 	int getAirTicks();

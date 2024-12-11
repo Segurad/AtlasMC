@@ -8,10 +8,10 @@ import java.util.Map;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.io.protocol.PlayerConnection;
+import de.atlasmc.io.protocol.play.PacketOutResetScore;
 import de.atlasmc.io.protocol.play.PacketOutUpdateObjectives;
 import de.atlasmc.io.protocol.play.PacketOutUpdateScore;
 import de.atlasmc.io.protocol.play.PacketOutUpdateObjectives.Mode;
-import de.atlasmc.io.protocol.play.PacketOutUpdateScore.ScoreAction;
 import de.atlasmc.scoreboard.DisplaySlot;
 import de.atlasmc.scoreboard.RenderType;
 import de.atlasmc.scoreboard.ScoreboardView;
@@ -117,11 +117,10 @@ class CoreObjective implements Objective {
 		if (unregistered)
 			throw new IllegalStateException("Objective not registered!");
 		PacketOutUpdateObjectives packetObj = new PacketOutUpdateObjectives();
-		String name = getName();
-		packetObj.setName(name);
-		packetObj.setMode(Mode.UPDATE_DISPLAY);
-		packetObj.setDisplayName(getDisplayName().toText());
-		packetObj.setRenderType(getRenderType());
+		packetObj.name = this.name;
+		packetObj.mode = Mode.UPDATE_DISPLAY;
+		packetObj.displayName = displayName;
+		packetObj.renderType = render;
 		for (ScoreboardView view : board.getViewersUnsafe()) {
 			PlayerConnection con = view.getViewer().getConnection();
 			con.sendPacked(packetObj);
@@ -135,10 +134,9 @@ class CoreObjective implements Objective {
 			scores = new HashMap<>();
 		scores.put(entry, value);
 		PacketOutUpdateScore packetScore = new PacketOutUpdateScore();
-		packetScore.setEntry(entry);
-		packetScore.setAction(ScoreAction.UPDATE);
-		packetScore.setObjective(getName());
-		packetScore.setValue(value);
+		packetScore.entry = entry;
+		packetScore.objective = this.name;
+		packetScore.value = value;
 		for (ScoreboardView view : board.getViewersUnsafe()) {
 			PlayerConnection con = view.getViewer().getConnection();
 			con.sendPacked(packetScore);
@@ -158,9 +156,9 @@ class CoreObjective implements Objective {
 		Integer val = scores.remove(name);
 		if (val == null)
 			return false;
-		PacketOutUpdateScore packetScore = new PacketOutUpdateScore();
-		packetScore.setEntry(name);
-		packetScore.setAction(ScoreAction.REMOVE);
+		PacketOutResetScore packetScore = new PacketOutResetScore();
+		packetScore.entityName = name;
+		packetScore.objectiveName = this.name;
 		for (ScoreboardView view : board.getViewersUnsafe()) {
 			PlayerConnection con = view.getViewer().getConnection();
 			con.sendPacked(packetScore);

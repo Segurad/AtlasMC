@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.login;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketLogin.OUT_SET_COMPRESSION)
+@DefaultPacketID(packetID = PacketLogin.OUT_SET_COMPRESSION, definition = "login_compression")
 public class PacketOutSetCompression extends AbstractPacket implements PacketLoginOut {
 	
 	public int threshold;

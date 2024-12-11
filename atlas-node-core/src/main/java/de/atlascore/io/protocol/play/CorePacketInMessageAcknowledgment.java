@@ -5,31 +5,30 @@ import java.io.IOException;
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
-import de.atlasmc.io.protocol.play.PacketInMessageAcknowledgment;
+import de.atlasmc.io.protocol.play.PacketInAcknowledgeMessage;
 import io.netty.buffer.ByteBuf;
-import static de.atlasmc.io.AbstractPacket.writeVarInt;
-import static de.atlasmc.io.AbstractPacket.readVarInt;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
-public class CorePacketInMessageAcknowledgment implements PacketIO<PacketInMessageAcknowledgment> {
+public class CorePacketInMessageAcknowledgment implements PacketIO<PacketInAcknowledgeMessage> {
 
 	@Override
-	public void read(PacketInMessageAcknowledgment packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void read(PacketInAcknowledgeMessage packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.messageID = readVarInt(in);		
 	}
 
 	@Override
-	public void write(PacketInMessageAcknowledgment packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void write(PacketInAcknowledgeMessage packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		writeVarInt(packet.messageID, out);
 	}
 
 	@Override
-	public PacketInMessageAcknowledgment createPacketData() {
-		return new PacketInMessageAcknowledgment();
+	public PacketInAcknowledgeMessage createPacketData() {
+		return new PacketInAcknowledgeMessage();
 	}
 
 	@Override
 	public int getPacketID() {
-		return Packet.getDefaultPacketID(PacketInMessageAcknowledgment.class);
+		return Packet.getDefaultPacketID(PacketInAcknowledgeMessage.class);
 	}
 
 }

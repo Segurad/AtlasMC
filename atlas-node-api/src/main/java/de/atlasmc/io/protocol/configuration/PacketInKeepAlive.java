@@ -1,12 +1,10 @@
 package de.atlasmc.io.protocol.configuration;
 
-import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.protocol.common.AbstractPacketKeepAlive;
 
-@DefaultPacketID(PacketConfiguration.IN_KEEP_ALIVE)
-public class PacketInKeepAlive extends AbstractPacket implements PacketConfigurationIn {
-
-	public long keepAliveID;
+@DefaultPacketID(packetID = PacketConfiguration.IN_KEEP_ALIVE, definition = "keep_alive")
+public class PacketInKeepAlive extends AbstractPacketKeepAlive implements PacketConfigurationIn {
 	
 	@Override
 	public int getDefaultID() {

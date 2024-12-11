@@ -12,14 +12,14 @@ public class CorePacketOutLinkEntities implements PacketIO<PacketOutLinkEntities
 
 	@Override
 	public void read(PacketOutLinkEntities packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setAttachedEntityID(in.readInt());
-		packet.setHolderEntityID(in.readInt());
+		packet.attachedEntityID = in.readInt();
+		packet.holderEntityID = in.readInt();
 	}
 
 	@Override
 	public void write(PacketOutLinkEntities packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeInt(packet.getAttachedEntityID());
-		out.writeInt(packet.getHolderEntityID());
+		out.writeInt(packet.attachedEntityID);
+		out.writeInt(packet.holderEntityID);
 	}
 
 	@Override

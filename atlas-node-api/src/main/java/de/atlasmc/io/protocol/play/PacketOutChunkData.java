@@ -1,11 +1,13 @@
 package de.atlasmc.io.protocol.play;
 
+import static de.atlasmc.io.PacketUtil.getVarIntLength;
+import static de.atlasmc.io.PacketUtil.writeVarInt;
+
 import java.io.IOException;
-import java.util.BitSet;
 
 import de.atlasmc.block.tile.TileEntity;
-import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.protocol.common.AbstractPacketChunkLight;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import de.atlasmc.world.Chunk;
@@ -14,11 +16,8 @@ import de.atlasmc.world.World;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
-@DefaultPacketID(PacketPlay.OUT_CHUNK_DATA_AND_UPDATE_LIGHT)
-public class PacketOutChunkData extends AbstractPacket implements PacketPlayOut {
-	
-	public int x;
-	public int z;
+@DefaultPacketID(packetID = PacketPlay.OUT_CHUNK_DATA_AND_UPDATE_LIGHT, definition = "level_chunk_with_light")
+public class PacketOutChunkData extends AbstractPacketChunkLight implements PacketPlayOut {
 	
 	public long[] motionBlocking;
 	
@@ -27,21 +26,13 @@ public class PacketOutChunkData extends AbstractPacket implements PacketPlayOut 
 	public int tileCount;
 	public ByteBuf tiles;
 	
-	public BitSet skyLightMask;
-	public BitSet blockLightMask;
-	public BitSet emptyBlockLightMask;
-	public BitSet emptySkyLightMask;
-	
-	public byte[][] blockLight;
-	public byte[][] skyLight;
-	
 	/**
 	 * Extracts all needed data from a Chunk to send it.
 	 * @param chunk
 	 */
 	public void setChunk(Chunk chunk) {
-		x = chunk.getX();
-		z = chunk.getZ();
+		chunkX = chunk.getX();
+		chunkZ = chunk.getZ();
 		motionBlocking = chunk.getHightMap().array().clone();
 		data = Unpooled.buffer(calcChunkDataSize(chunk));
 		ChunkSection[] sections = chunk.getSections();
@@ -88,7 +79,7 @@ public class PacketOutChunkData extends AbstractPacket implements PacketPlayOut 
 			size += 2; // block count short
 			if (section == null) {
 				size += 2; // palette bits per block * 2
-				size += AbstractPacket.getVarIntLength(0) * 4; // single value pallete 2 + empty long array 2
+				size += getVarIntLength(0) * 4; // single value pallete 2 + empty long array 2
 			} else {
 				size += section.getBlockData().getSerializedSize();
 				size += section.getBiomes().getSerializedSize();

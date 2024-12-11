@@ -1,9 +1,9 @@
 package de.atlascore.io.protocol.play;
 
-import static de.atlasmc.io.AbstractPacket.readIdentifier;
-import static de.atlasmc.io.AbstractPacket.readVarInt;
-import static de.atlasmc.io.AbstractPacket.writeVarInt;
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.PacketUtil.readIdentifier;
+import static de.atlasmc.io.PacketUtil.readVarInt;
+import static de.atlasmc.io.PacketUtil.writeIdentifier;
+import static de.atlasmc.io.PacketUtil.writeVarInt;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class CorePacketOutLogin implements PacketIO<PacketOutLogin> {
 		packet.reducedDebugInfo = in.readBoolean();
 		packet.respawnScreen = in.readBoolean();
 		packet.limitedCrafting = in.readBoolean();
-		packet.dimension = readIdentifier(in);
+		packet.dimension = readVarInt(in);
 		packet.world = readIdentifier(in);
 		packet.seed = in.readLong();
 		packet.gamemode = Gamemode.getByID(in.readUnsignedByte());
@@ -71,7 +71,7 @@ public class CorePacketOutLogin implements PacketIO<PacketOutLogin> {
 		out.writeBoolean(packet.reducedDebugInfo);
 		out.writeBoolean(packet.respawnScreen);
 		out.writeBoolean(packet.limitedCrafting);
-		writeIdentifier(packet.dimension, out);
+		writeVarInt(packet.dimension, out);
 		writeIdentifier(packet.world, out);
 		out.writeLong(packet.seed);
 		out.writeByte(packet.gamemode.getID());

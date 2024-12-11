@@ -6,7 +6,7 @@ import de.atlasmc.Color;
 import de.atlasmc.Particle;
 import de.atlasmc.Particle.DustOptions;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.io.AbstractPacket;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 import de.atlasmc.io.protocol.ProtocolUtil;
 import de.atlasmc.world.particle.ParticleObject;
 import io.netty.buffer.ByteBuf;
@@ -19,7 +19,7 @@ public final class ParticleMetaDataType extends MetaDataType<ParticleObject> {
 
 	@Override
 	public ParticleObject read(ByteBuf in) {
-		Particle p = Particle.getByID(AbstractPacket.readVarInt(in));
+		Particle p = Particle.getByID(readVarInt(in));
 		return new ParticleObject(p, read(p, in));
 	}
 
@@ -28,7 +28,7 @@ public final class ParticleMetaDataType extends MetaDataType<ParticleObject> {
 		switch (particle) {
 		case BLOCK:
 		case FALLING_DUST:
-			data = AbstractPacket.readVarInt(in);
+			data = readVarInt(in);
 			break;
 		case DUST:
 			float r = in.readFloat();
@@ -57,11 +57,11 @@ public final class ParticleMetaDataType extends MetaDataType<ParticleObject> {
 	
 	public void write(Particle particle, Object data, boolean dataOnly, ByteBuf out) {
 		if (!dataOnly) 
-			AbstractPacket.writeVarInt(particle.getID(), out);
+			writeVarInt(particle.getID(), out);
 		switch (particle) {
 		case BLOCK:
 		case FALLING_DUST: 
-			AbstractPacket.writeVarInt(data != null ? (int) data : 0, out);
+			writeVarInt(data != null ? (int) data : 0, out);
 			break;
 		case DUST:
 			if (data != null && data instanceof DustOptions) {

@@ -3,50 +3,19 @@ package de.atlasmc.io.protocol.play;
 import java.util.List;
 import java.util.Map;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.advancement.Advancement;
 import de.atlasmc.advancement.AdvancementProgress;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_UPDATE_ADVANCEMENTS)
+@DefaultPacketID(packetID = PacketPlay.OUT_UPDATE_ADVANCEMENTS, definition = "update_advancements")
 public class PacketOutUpdateAdvancements extends AbstractPacket implements PacketPlayOut {
 	
-	private boolean reset;
-	private List<String> remove;
-	private Map<String, Advancement> advancements;
-	private Map<String, AdvancementProgress> progress;
-	
-	public boolean isReset() {
-		return reset;
-	}
-	
-	public void setReset(boolean reset) {
-		this.reset = reset;
-	}
-	
-	public List<String> getRemove() {
-		return remove;
-	}
-	
-	public void setRemove(List<String> remove) {
-		this.remove = remove;
-	}
-	
-	public Map<String, Advancement> getAdvancements() {
-		return advancements;
-	}
-	
-	public void setAdvancements(Map<String, Advancement> advancements) {
-		this.advancements = advancements;
-	}
-	
-	public Map<String, AdvancementProgress> getProgress() {
-		return progress;
-	}
-	
-	public void setProgress(Map<String, AdvancementProgress> progress) {
-		this.progress = progress;
-	}
+	public boolean reset;
+	public List<NamespacedKey> remove;
+	public Map<String, Advancement> advancements;
+	public Map<String, AdvancementProgress> progress;
 	
 	@Override
 	public int getDefaultID() {

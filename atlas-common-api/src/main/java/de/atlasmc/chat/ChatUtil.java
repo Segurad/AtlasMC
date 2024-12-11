@@ -1,10 +1,13 @@
 package de.atlasmc.chat;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.util.annotation.ThreadSafe;
+import de.atlasmc.util.nbt.io.NBTReader;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 @ThreadSafe
 public final class ChatUtil {
@@ -160,5 +163,14 @@ public final class ChatUtil {
 	public static ChatComponent toComponent(Chat chat) {
 		return FACTORY.toComponent(chat);
 	}
+	
+	public static Chat fromNBT(NBTReader reader) throws IOException {
+		return FACTORY.fromNBT(reader);
+	}
+	
+	public static void toNBT(Chat chat, NBTWriter writer) throws IOException {
+		FACTORY.toNBT(chat, writer);
+	}
+
 	
 }

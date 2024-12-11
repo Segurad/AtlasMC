@@ -1,7 +1,6 @@
 package de.atlascore.io.protocol.play;
 
-import static de.atlasmc.io.AbstractPacket.readVarInt;
-import static de.atlasmc.io.AbstractPacket.writeVarInt;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import java.io.IOException;
 
@@ -16,24 +15,24 @@ public class CorePacketOutEntityUpdatePositionAndRotation implements PacketIO<Pa
 	
 	@Override
 	public void read(PacketOutUpdateEntityPositionAndRotation packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setEntityID(readVarInt(in));
-		packet.setDeltaX(in.readShort());
-		packet.setDeltaY(in.readShort());
-		packet.setDeltaZ(in.readShort());
-		packet.setYaw(MathUtil.fromAngle(in.readUnsignedByte()));
-		packet.setPitch(MathUtil.fromAngle(in.readUnsignedByte()));
-		packet.setOnGround(in.readBoolean());
+		packet.entityID = readVarInt(in);
+		packet.deltaX = in.readShort();
+		packet.deltaY = in.readShort();
+		packet.deltaZ = in.readShort();
+		packet.yaw = MathUtil.fromAngle(in.readUnsignedByte());
+		packet.pitch = MathUtil.fromAngle(in.readUnsignedByte());
+		packet.onGround = in.readBoolean();
 	}
 
 	@Override
 	public void write(PacketOutUpdateEntityPositionAndRotation packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getEntityID(), out);
-		out.writeShort(packet.getDeltaX());
-		out.writeShort(packet.getDeltaY());
-		out.writeShort(packet.getDeltaZ());
-		out.writeByte(MathUtil.toAngle(packet.getYaw()));
-		out.writeByte(MathUtil.toAngle(packet.getPitch()));
-		out.writeBoolean(packet.isOnGround());
+		writeVarInt(packet.entityID, out);
+		out.writeShort(packet.deltaX);
+		out.writeShort(packet.deltaY);
+		out.writeShort(packet.deltaZ);
+		out.writeByte(MathUtil.toAngle(packet.yaw));
+		out.writeByte(MathUtil.toAngle(packet.pitch));
+		out.writeBoolean(packet.onGround);
 	}
 
 	@Override

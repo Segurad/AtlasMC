@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -14,12 +14,12 @@ public class CorePacketOutRenderDistance implements PacketIO<PacketOutRenderDist
 
 	@Override
 	public void read(PacketOutRenderDistance packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setDistance(readVarInt(in));
+		packet.distance = readVarInt(in);
 	}
 
 	@Override
 	public void write(PacketOutRenderDistance packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getDistance(), out);
+		writeVarInt(packet.distance, out);
 	}
 
 	@Override

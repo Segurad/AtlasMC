@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -18,8 +18,8 @@ public class CorePacketOutChunkData implements PacketIO<PacketOutChunkData> {
 	@Override
 	public void read(PacketOutChunkData packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		// position
-		packet.x = in.readInt();
-		packet.z = in.readInt();
+		packet.chunkX = in.readInt();
+		packet.chunkZ = in.readInt();
 		// height map
 		NBTNIOReader reader = new NBTNIOReader(in, true);
 		reader.readNextEntry();
@@ -40,10 +40,10 @@ public class CorePacketOutChunkData implements PacketIO<PacketOutChunkData> {
 		packet.tileCount = readVarInt(in);
 		packet.tiles = in.readBytes(in.readableBytes());
 		// light
-		packet.skyLightMask = readBitSet(in);
-		packet.blockLightMask = readBitSet(in);
-		packet.emptySkyLightMask = readBitSet(in);
-		packet.emptyBlockLightMask = readBitSet(in);
+		packet.skyMask = readBitSet(in);
+		packet.blockMask = readBitSet(in);
+		packet.emptySkyMask = readBitSet(in);
+		packet.emptyBlockMask = readBitSet(in);
 		packet.skyLight = readLightData(in);
 		packet.blockLight = readLightData(in);
 	}
@@ -51,11 +51,11 @@ public class CorePacketOutChunkData implements PacketIO<PacketOutChunkData> {
 	@Override
 	public void write(PacketOutChunkData packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		// position
-		out.writeInt(packet.x);
-		out.writeInt(packet.z);
+		out.writeInt(packet.chunkX);
+		out.writeInt(packet.chunkZ);
 		// height map
 		NBTNIOWriter writer = new NBTNIOWriter(out, true);
-		writer.writeCompoundTag(null);
+		writer.writeCompoundTag();
 		writer.writeLongArrayTag("MOTION_BLOCKING", packet.motionBlocking);
 		writer.writeEndTag();
 		writer.close();
@@ -69,10 +69,10 @@ public class CorePacketOutChunkData implements PacketIO<PacketOutChunkData> {
 			out.writeBytes(packet.tiles);
 		}
 		// write light
-		writeBitSet(packet.skyLightMask, out);
-		writeBitSet(packet.blockLightMask, out);
-		writeBitSet(packet.emptySkyLightMask, out);
-		writeBitSet(packet.emptyBlockLightMask, out);
+		writeBitSet(packet.skyMask, out);
+		writeBitSet(packet.blockMask, out);
+		writeBitSet(packet.emptySkyMask, out);
+		writeBitSet(packet.emptyBlockMask, out);
 		writeLightData(packet.skyLight, out);
 		writeLightData(packet.blockLight, out);
 	}

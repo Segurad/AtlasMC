@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_SET_BORDER_SIZE)
+@DefaultPacketID(packetID = PacketPlay.OUT_SET_BORDER_SIZE, definition = "set_border_size")
 public class PacketOutSetBorderSize extends AbstractPacket implements PacketPlayOut {
 
 	public double diameter;

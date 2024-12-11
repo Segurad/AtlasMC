@@ -3,27 +3,11 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_ENTITY_EVENT)
+@DefaultPacketID(packetID = PacketPlay.OUT_ENTITY_EVENT, definition = "entity_event")
 public class PacketOutEntityEvent extends AbstractPacket implements PacketPlayOut {
 	
-	private int entityID;
-	private int status;
-	
-	public int getEntityID() {
-		return entityID;
-	}
-	
-	public void setEntityID(int entityID) {
-		this.entityID = entityID;
-	}
-	
-	public void setStatus(int status) {
-		this.status = status;
-	}
-	
-	public int getStatus() {
-		return status;
-	}
+	public int entityID;
+	public int status;
 	
 	@Override
 	public int getDefaultID() {

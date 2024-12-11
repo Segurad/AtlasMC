@@ -237,16 +237,16 @@ class CoreTeam implements Team {
 	
 	private void updateTeamInfo(Team team) {
 		PacketOutUpdateTeams packetTeams = new PacketOutUpdateTeams();
-		packetTeams.setName(team.getName());
-		packetTeams.setMode(PacketOutUpdateTeams.Mode.UPDATE_TEAM_INFO);
-		packetTeams.setDisplayName(team.getDisplayName().toText());
+		packetTeams.name = team.getName();
+		packetTeams.mode = PacketOutUpdateTeams.Mode.UPDATE_TEAM_INFO;
+		packetTeams.displayName = team.getDisplayName();
 		packetTeams.setAllowFriedlyFire(team.getAllowFriedlyFire());
 		packetTeams.setSeeInvisibleTeammeber(team.canSeeInvisibleTeammeber());
-		packetTeams.setCollisionRule(team.getCollisionRule());
-		packetTeams.setNameTagVisibility(team.getNameTagVisibility());
-		packetTeams.setColor(team.getColor());
-		packetTeams.setPrefix(team.getPrefix().toText());
-		packetTeams.setSuffix(team.getSuffix().toText());
+		packetTeams.collisionRule = team.getCollisionRule();
+		packetTeams.nameTagVisibility = team.getNameTagVisibility();
+		packetTeams.color = team.getColor();
+		packetTeams.suffix = team.getPrefix();
+		packetTeams.prefix = team.getSuffix();
 		for (ScoreboardView view : board.getViewersUnsafe()) {
 			PlayerConnection con = view.getViewer().getConnection();
 			con.sendPacked(packetTeams);
@@ -255,9 +255,9 @@ class CoreTeam implements Team {
 
 	private void editEntriesOfTeam(Team team, List<String> entries, PacketOutUpdateTeams.Mode mode) {
 		PacketOutUpdateTeams packetTeams = new PacketOutUpdateTeams();
-		packetTeams.setName(team.getName());
-		packetTeams.setMode(mode);
-		packetTeams.setEntities(entries);
+		packetTeams.name = team.getName();
+		packetTeams.mode = mode;
+		packetTeams.entities = entries;
 		for (ScoreboardView view : board.getViewersUnsafe()) {
 			PlayerConnection con = view.getViewer().getConnection();
 			con.sendPacked(packetTeams);

@@ -7,7 +7,7 @@ import java.util.List;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -19,7 +19,7 @@ public class CorePacketOutSetEntityMetadata implements PacketIO<PacketOutSetEnti
 
 	@Override
 	public void read(PacketOutSetEntityMetadata packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setEntityID(readVarInt(in));
+		packet.entityID = readVarInt(in);
 		List<MetaData<?>> data = null;
 		int index = 0;
 		while ((index = in.readUnsignedByte()) != 0xFF) {
@@ -33,13 +33,13 @@ public class CorePacketOutSetEntityMetadata implements PacketIO<PacketOutSetEnti
 			MetaData<?> meta = new MetaData(field, value);
 			data.add(meta);
 		}
-		packet.setData(data);
+		packet.data = data;
 	}
 
 	@Override
 	public void write(PacketOutSetEntityMetadata packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getEntityID(), out);
-		for (MetaData<?> data : packet.getData()) {
+		writeVarInt(packet.entityID, out);
+		for (MetaData<?> data : packet.data) {
 			out.writeByte(data.getIndex());
 			MetaDataType<?> type = data.getType();
 			writeVarInt(type.getTypeID(), out);

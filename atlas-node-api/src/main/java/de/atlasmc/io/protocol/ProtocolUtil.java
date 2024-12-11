@@ -3,15 +3,19 @@ package de.atlasmc.io.protocol;
 import java.io.IOException;
 
 import de.atlasmc.Material;
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.io.AbstractPacket;
+import de.atlasmc.io.PacketUtil;
+import de.atlasmc.sound.EnumSound;
+import de.atlasmc.sound.ResourceSound;
+import de.atlasmc.sound.Sound;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import io.netty.buffer.ByteBuf;
 
-public final class ProtocolUtil extends AbstractPacket {
+public class ProtocolUtil extends PacketUtil {
 	
-	private ProtocolUtil() {}
+	protected ProtocolUtil() {}
 
 	/**
 	 * Reads a Slot to ItemStack using a existing {@link NBTNIOReader}
@@ -98,9 +102,33 @@ public final class ProtocolUtil extends AbstractPacket {
 		return item;
 	}
 
-	@Override
-	public int getDefaultID() {
-		return 0;
+	public static Sound readSound(ByteBuf in) {
+		int soundID = readVarInt(in);
+		if (soundID > 0) {
+			return EnumSound.getByID(soundID-1);
+		} else {
+			NamespacedKey key = readIdentifier(in);
+			float fixedRange = Float.NaN;
+			if (in.readBoolean())
+				fixedRange = in.readFloat();
+			return new ResourceSound(key, fixedRange);
+		}
+	}
+	
+	public static void writeSound(Sound sound, ByteBuf out) {
+		if (sound instanceof EnumSound enumSound) {
+			writeVarInt(enumSound.getID()+1, out);
+		} else {
+			writeVarInt(0, out);
+			writeString(sound.getNamespacedKeyRaw(), out);
+			float fixedRange = sound.getFixedRange();
+			if (fixedRange != fixedRange) {
+				out.writeBoolean(false);
+			} else {
+				out.writeBoolean(true);
+				out.writeFloat(fixedRange);
+			}
+		}
 	}
 	
 }

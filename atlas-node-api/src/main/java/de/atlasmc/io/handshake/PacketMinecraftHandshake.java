@@ -3,7 +3,7 @@ package de.atlasmc.io.handshake;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(0x00)
+@DefaultPacketID(packetID = 0x00)
 public class PacketMinecraftHandshake extends AbstractPacket implements PacketHandshake {
 
 	private int protocolVersion;

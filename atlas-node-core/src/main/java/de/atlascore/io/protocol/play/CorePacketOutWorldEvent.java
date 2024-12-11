@@ -13,18 +13,18 @@ public class CorePacketOutWorldEvent implements PacketIO<PacketOutWorldEvent> {
 
 	@Override
 	public void read(PacketOutWorldEvent packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setEvent(WorldEvent.getByID(in.readInt()));
-		packet.setPosition(in.readLong());
-		packet.setData(in.readInt());
-		packet.setDisableRelativeVolume(in.readBoolean());
+		packet.event = WorldEvent.getByID(in.readInt());
+		packet.position = in.readLong();
+		packet.data = in.readInt();
+		packet.disableRelativeVolume = in.readBoolean();
 	}
 
 	@Override
 	public void write(PacketOutWorldEvent packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeInt(packet.getEvent().getID());
-		out.writeLong(packet.getPosition());
-		out.writeInt(packet.getData());
-		out.writeBoolean(packet.getDisableRelativeVolume());
+		out.writeInt(packet.event.getID());
+		out.writeLong(packet.position);
+		out.writeInt(packet.data);
+		out.writeBoolean(packet.disableRelativeVolume);
 	}
 	
 	@Override

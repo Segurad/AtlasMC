@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -14,18 +14,18 @@ public class CorePacketOutSetEntityVelocity implements PacketIO<PacketOutSetEnti
 
 	@Override
 	public void read(PacketOutSetEntityVelocity packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setEntityID(readVarInt(in));
-		packet.setVelocityX(in.readShort()/8000);
-		packet.setVelocityY(in.readShort()/8000);
-		packet.setVelocityZ(in.readShort()/8000);
+		packet.entityID = readVarInt(in);
+		packet.x = ((double)in.readShort())/8000d;
+		packet.y = ((double)in.readShort())/8000d;
+		packet.z = ((double)in.readShort())/8000d;
 	}
 
 	@Override
 	public void write(PacketOutSetEntityVelocity packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getEntityID(), out);
-		out.writeShort((int) (packet.getVelocityX()*8000));
-		out.writeShort((int) (packet.getVelocityY()*8000));
-		out.writeShort((int) (packet.getVelocityZ()*8000));
+		writeVarInt(packet.entityID, out);
+		out.writeShort((int) (packet.x*8000));
+		out.writeShort((int) (packet.y*8000));
+		out.writeShort((int) (packet.z*8000));
 	}
 	
 	@Override

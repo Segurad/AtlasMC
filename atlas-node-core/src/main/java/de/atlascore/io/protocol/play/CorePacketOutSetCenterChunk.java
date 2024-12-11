@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -14,14 +14,14 @@ public class CorePacketOutSetCenterChunk implements PacketIO<PacketOutSetCenterC
 
 	@Override
 	public void read(PacketOutSetCenterChunk packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setChunkX(readVarInt(in));
-		packet.setChunkZ(readVarInt(in));
+		packet.chunkX = readVarInt(in);
+		packet.chunkZ = readVarInt(in);
 	}
 
 	@Override
 	public void write(PacketOutSetCenterChunk packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getChunkX(), out);
-		writeVarInt(packet.getChunkZ(), out);
+		writeVarInt(packet.chunkX, out);
+		writeVarInt(packet.chunkZ, out);
 	}
 
 	@Override

@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.protocol.common.AbstractPacketSoundEffect;
 
-@DefaultPacketID(PacketPlay.OUT_SOUND_EFFECT)
+@DefaultPacketID(packetID = PacketPlay.OUT_SOUND_EFFECT, definition = "sound")
 public class PacketOutSoundEffect extends AbstractPacketSoundEffect implements PacketPlayOut {
 	
 	public double x;

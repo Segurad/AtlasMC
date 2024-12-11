@@ -4,7 +4,7 @@ import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.PacketInbound;
 
-@DefaultPacketID(PacketStatus.IN_REQUEST)
+@DefaultPacketID(packetID = PacketStatus.IN_REQUEST)
 public class PacketInRequest extends AbstractPacket implements PacketStatus, PacketInbound {
 	
 	@Override

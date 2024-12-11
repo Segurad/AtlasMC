@@ -1,20 +1,10 @@
 package de.atlasmc.io.protocol.login;
 
-import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.protocol.common.AbstractPacketDisconnect;
 
-@DefaultPacketID(PacketLogin.OUT_DISCONNECT)
-public class PacketOutDisconnect extends AbstractPacket implements PacketLoginOut {
-	
-	private String reason;
-	
-	public void setReason(String reason) {
-		this.reason = reason;
-	}
-	
-	public String getReason() {
-		return reason;
-	}
+@DefaultPacketID(packetID = PacketLogin.OUT_DISCONNECT, definition = "login_disconnect")
+public class PacketOutDisconnect extends AbstractPacketDisconnect implements PacketLoginOut {
 	
 	@Override
 	public int getDefaultID() {

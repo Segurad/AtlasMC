@@ -4,7 +4,7 @@ import de.atlasmc.event.player.PlayerResourcePackStatusEvent.ResourcePackStatus;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.IN_RESOURCE_PACK)
+@DefaultPacketID(packetID = PacketPlay.IN_RESOURCE_PACK)
 public class PacketInResourcePack extends AbstractPacket implements PacketPlayIn {
 	
 	private ResourcePackStatus status;

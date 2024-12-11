@@ -4,7 +4,7 @@ import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.recipe.BookType;
 
-@DefaultPacketID(PacketPlay.IN_CHANGE_RECIPE_BOOK_SETTINGS)
+@DefaultPacketID(packetID = PacketPlay.IN_CHANGE_RECIPE_BOOK_SETTINGS)
 public class PacketInChangeRecipeBookSettings extends AbstractPacket implements PacketPlayIn {
 	
 	private BookType bookType;

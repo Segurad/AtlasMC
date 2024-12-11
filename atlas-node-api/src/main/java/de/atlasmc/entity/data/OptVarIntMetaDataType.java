@@ -1,6 +1,8 @@
 package de.atlasmc.entity.data;
 
-import de.atlasmc.io.AbstractPacket;
+import static de.atlasmc.io.PacketUtil.readVarInt;
+import static de.atlasmc.io.PacketUtil.writeVarInt;
+
 import io.netty.buffer.ByteBuf;
 
 final class OptVarIntMetaDataType extends MetaDataType<Integer> {
@@ -11,15 +13,17 @@ final class OptVarIntMetaDataType extends MetaDataType<Integer> {
 	
     @Override
     public Integer read(ByteBuf in) {
-        int i = AbstractPacket.readVarInt(in);
+        int i = readVarInt(in);
         return i == 0 ? null : i - 1;
     }
 
     @Override
     public void write(Integer data, ByteBuf out) {
-        if (data == null) 
-        	AbstractPacket.writeVarInt(0, out);
-        AbstractPacket.writeVarInt(data + 1, out);
+        if (data == null) {
+        	writeVarInt(0, out);
+    	} else {
+        	writeVarInt(data + 1, out);
+        }
     }
 
 }

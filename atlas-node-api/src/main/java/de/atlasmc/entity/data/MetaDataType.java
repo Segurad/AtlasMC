@@ -1,5 +1,14 @@
 package de.atlasmc.entity.data;
 
+import static de.atlasmc.io.PacketUtil.readIdentifier;
+import static de.atlasmc.io.PacketUtil.readString;
+import static de.atlasmc.io.PacketUtil.readVarInt;
+import static de.atlasmc.io.PacketUtil.readVarLong;
+import static de.atlasmc.io.PacketUtil.writeIdentifier;
+import static de.atlasmc.io.PacketUtil.writeString;
+import static de.atlasmc.io.PacketUtil.writeVarInt;
+import static de.atlasmc.io.PacketUtil.writeVarLong;
+
 import java.io.IOException;
 import java.util.UUID;
 
@@ -20,7 +29,6 @@ import de.atlasmc.entity.Villager.VillagerData;
 import de.atlasmc.entity.Villager.VillagerProfession;
 import de.atlasmc.entity.Villager.VillagerType;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.protocol.ProtocolUtil;
 import de.atlasmc.util.EulerAngle;
 import de.atlasmc.util.MathUtil;
@@ -82,11 +90,11 @@ public abstract class MetaDataType<T> {
     	
     	@Override
     	public Long read(ByteBuf in) {
-    		return AbstractPacket.readVarLong(in);
+    		return readVarLong(in);
     	}
     	
     	public void write(Long data, ByteBuf out) {
-			AbstractPacket.writeVarLong(data, out);
+			writeVarLong(data, out);
     	};
     	
     };
@@ -109,12 +117,12 @@ public abstract class MetaDataType<T> {
 
         @Override
         public String read(ByteBuf in) {
-            return AbstractPacket.readString(in);
+            return readString(in);
         }
 
         @Override
         public void write(String data, ByteBuf out) {
-            AbstractPacket.writeString(data, out);
+            writeString(data, out);
         }
 
     };
@@ -123,12 +131,12 @@ public abstract class MetaDataType<T> {
 
         @Override
         public Chat read(ByteBuf in) {
-            return ChatUtil.toChat(AbstractPacket.readString(in));
+            return ChatUtil.toChat(readString(in));
         }
 
         @Override
         public void write(Chat data, ByteBuf out) {
-            AbstractPacket.writeString(data.toText(), out);
+            writeString(data.toText(), out);
         }
 
     };
@@ -139,7 +147,7 @@ public abstract class MetaDataType<T> {
         public Chat read(ByteBuf in) {
             if (!in.readBoolean()) 
             	return null;
-            return ChatUtil.toChat(AbstractPacket.readString(in));
+            return ChatUtil.toChat(readString(in));
         }
 
         @Override
@@ -147,7 +155,7 @@ public abstract class MetaDataType<T> {
             out.writeBoolean(data != null);
             if (data == null) 
             	return;
-            AbstractPacket.writeString(data.toText(), out);
+            writeString(data.toText(), out);
         }
 
     };
@@ -275,12 +283,12 @@ public abstract class MetaDataType<T> {
 
         @Override
         public Integer read(ByteBuf in) {
-            return AbstractPacket.readVarInt(in);
+            return readVarInt(in);
         }
 
         @Override
         public void write(Integer data, ByteBuf out) {
-            AbstractPacket.writeVarInt(data != null ? data : 0, out);
+            writeVarInt(data != null ? data : 0, out);
         }
 
     };
@@ -293,17 +301,17 @@ public abstract class MetaDataType<T> {
 
         @Override
         public VillagerData read(ByteBuf in) {
-            VillagerType t = VillagerType.getByID(AbstractPacket.readVarInt(in));
-            VillagerProfession p = VillagerProfession.getByID(AbstractPacket.readVarInt(in));
-            int lvl = AbstractPacket.readVarInt(in);
+            VillagerType t = VillagerType.getByID(readVarInt(in));
+            VillagerProfession p = VillagerProfession.getByID(readVarInt(in));
+            int lvl = readVarInt(in);
             return new VillagerData(t, p, lvl);
         }
 
         @Override
         public void write(VillagerData data, ByteBuf out) {
-            AbstractPacket.writeVarInt(data.getType().getID(), out);
-            AbstractPacket.writeVarInt(data.getProfession().getID(), out);
-            AbstractPacket.writeVarInt(data.getLevel(), out);
+            writeVarInt(data.getType().getID(), out);
+            writeVarInt(data.getProfession().getID(), out);
+            writeVarInt(data.getLevel(), out);
         }
 
     };
@@ -368,7 +376,7 @@ public abstract class MetaDataType<T> {
 		public Location read(ByteBuf in) {
 			if (!in.readBoolean())
 				return null;
-			NamespacedKey key = AbstractPacket.readIdentifier(in);
+			NamespacedKey key = readIdentifier(in);
 			long pos = in.readLong();
 			// TODO opt pos global to location
 			return null;
@@ -380,7 +388,7 @@ public abstract class MetaDataType<T> {
 				out.writeBoolean(false);
 			} else {
 				out.writeBoolean(true);
-				AbstractPacket.writeIdentifier(data.getWorld().getDimension().getNamespacedKey(), out);
+				writeIdentifier(data.getWorld().getDimension().getNamespacedKey(), out);
 				out.writeLong(MathUtil.toPosition(data));
 			}
 		}

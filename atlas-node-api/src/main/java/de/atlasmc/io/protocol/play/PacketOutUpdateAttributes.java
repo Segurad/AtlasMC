@@ -9,27 +9,11 @@ import de.atlasmc.attribute.AttributeModifier;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_UPDATE_ATTRIBUTES)
+@DefaultPacketID(packetID = PacketPlay.OUT_UPDATE_ATTRIBUTES, definition = "update_attributes")
 public class PacketOutUpdateAttributes extends AbstractPacket implements PacketPlayOut {
 	
-	private int entityID;
-	private List<AttributeInstance> attributes;
-	
-	public int getEntityID() {
-		return entityID;
-	}
-	
-	public List<AttributeInstance> getAttributes() {
-		return attributes;
-	}
-	
-	public void setEntity(int entityID) {
-		this.entityID = entityID;
-	}
-	
-	public void setAttributes(List<AttributeInstance> attributes) {
-		this.attributes = attributes;
-	}
+	public int entityID;
+	public List<AttributeInstance> attributes;
 	
 	public void setCopyAttributes(Collection<AttributeInstance> attributes) {
 		this.attributes = new ArrayList<>(attributes.size());

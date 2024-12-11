@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_INITIALIZE_WORLD_BORDER)
+@DefaultPacketID(packetID = PacketPlay.OUT_INITIALIZE_WORLD_BORDER, definition = "initialize_border")
 public class PacketOutInitializeWorldBorder extends AbstractPacket implements PacketPlayOut {
 
 	public double x;

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -17,13 +17,13 @@ public class CorePacketOutCommandSuggestionsResponse implements PacketIO<PacketO
 
 	@Override
 	public void read(PacketOutCommandSuggestionsResponse packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setTransactionID(readVarInt(in));
-		packet.setStart(readVarInt(in));
-		packet.setLength(readVarInt(in));
+		packet.transactionID = readVarInt(in);
+		packet.start = readVarInt(in);
+		packet.length = readVarInt(in);
 		int count = readVarInt(in);
 		List<Match> matches = new ArrayList<>(count);
 		while (count > 0) {
-			String match = readString(in, 32767);
+			String match = readString(in, MAX_IDENTIFIER_LENGTH);
 			boolean hasToolTip = in.readBoolean();
 			String toolTip = null;
 			if (hasToolTip) 
@@ -31,20 +31,27 @@ public class CorePacketOutCommandSuggestionsResponse implements PacketIO<PacketO
 			matches.add(new Match(match, toolTip));
 			count--;
 		}
-		packet.setMatches(matches);
+		packet.matches = matches;
 	}
 
 	@Override
 	public void write(PacketOutCommandSuggestionsResponse packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getTransactionID(), out);
-		writeVarInt(packet.getStart(), out);
-		writeVarInt(packet.getLength(), out);
-		writeVarInt(packet.getMatches().size(), out);
-		for (Match m : packet.getMatches()) {
+		writeVarInt(packet.transactionID, out);
+		writeVarInt(packet.start, out);
+		writeVarInt(packet.length, out);
+		List<Match> matches = packet.matches;
+		final int size = matches.size();
+		writeVarInt(size, out);
+		for (int i = 0; i < size; i++) {
+			Match m = matches.get(i);
 			writeString(m.getMatch(), out);
-			out.writeBoolean(m.hasToolTip());
-			if (m.hasToolTip()) 
+			String toolTip = m.getToolTip();
+			if (toolTip != null) { 
+				out.writeBoolean(true);
 				writeString(m.getToolTip(), out);
+			} else {
+				out.writeBoolean(false);
+			}
 		}
 	}
 	

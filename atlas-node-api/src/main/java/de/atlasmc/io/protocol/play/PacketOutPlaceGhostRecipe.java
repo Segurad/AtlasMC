@@ -4,7 +4,7 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_PLACE_GHOST_RECIPE)
+@DefaultPacketID(packetID = PacketPlay.OUT_PLACE_GHOST_RECIPE, definition = "place_ghost_recipe")
 public class PacketOutPlaceGhostRecipe extends AbstractPacket implements PacketPlayOut {
 	
 	public int windowID;

@@ -7,18 +7,18 @@ import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.configuration.PacketOutDisconnect;
 import io.netty.buffer.ByteBuf;
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CorePacketOutDisconnect implements PacketIO<PacketOutDisconnect> {
 
 	@Override
 	public void read(PacketOutDisconnect packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.reason = readString(in, CHAT_MAX_LENGTH);
+		packet.reason = readTextComponent(in);
 	}
 
 	@Override
 	public void write(PacketOutDisconnect packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		writeString(packet.reason, out);
+		writeTextComponent(packet.reason, out);
 	}
 
 	@Override

@@ -1,30 +1,37 @@
 package de.atlasmc.chat.component;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.chat.ChatUtil;
-import de.atlasmc.util.JsonBuffer;
+import de.atlasmc.util.map.key.CharKey;
+import de.atlasmc.util.nbt.NBTException;
+import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.io.SNBTWriter;
 
-abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> implements ChatComponent {
+public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> implements ChatComponent {
 	
-	public static final String
-	JSON_BOLD = "bold",
-	JSON_ITALIC = "italic",
-	JSON_UNDERLINED = "underlined",
-	JSON_OBFUSCATED = "obfuscated",
-	JSON_STRIKETHROUGH = "strikethrough",
-	JSON_COLOR = "color",
-	JSON_FONT = "font",
-	JSON_CLICK_EVENT = "clickEvent",
-	JSON_HOVER_EVENT = "hoverEvent",
-	JSON_EXTRA = "extra",
-	JSON_INSERTION = "insertion",
-	JSON_ACTION = "action", // for hover and click event
-	JSON_CONTENTS = "contents", // hover event
-	JSON_VALUE = "value"; // click event
+	public static final CharKey
+	JSON_BOLD = CharKey.literal("bold"),
+	JSON_ITALIC = CharKey.literal("italic"),
+	JSON_UNDERLINED = CharKey.literal("underlined"),
+	JSON_OBFUSCATED = CharKey.literal("obfuscated"),
+	JSON_STRIKETHROUGH = CharKey.literal("strikethrough"),
+	JSON_COLOR = CharKey.literal("color"),
+	JSON_FONT = CharKey.literal("font"),
+	JSON_CLICK_EVENT = CharKey.literal("clickEvent"),
+	JSON_HOVER_EVENT = CharKey.literal("hoverEvent"),
+	JSON_EXTRA = CharKey.literal("extra"),
+	JSON_INSERTION = CharKey.literal("insertion"),
+	JSON_ACTION = CharKey.literal("action"), // for hover and click event
+	JSON_CONTENTS = CharKey.literal("contents"), // hover event
+	JSON_VALUE = CharKey.literal("value"), // click event
+	JSON_TYPE = CharKey.literal("type");
 	
 	private byte flags; // 0x01 = bold, 0x02 = italic, 0x04 = underlined, 0x08 = obfuscated, 0x10 = strikethrough
 	private String font = ChatComponent.FONT_DEFAULT;
@@ -33,6 +40,8 @@ abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> impleme
 	private HoverEvent hoverEvent;
 	private List<ChatComponent> extra;
 	private String insertion;
+	
+	protected abstract String getType();
 	
 	@Override
 	public String getInsertion() {
@@ -109,7 +118,7 @@ abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> impleme
 
 	@Override
 	public ChatColor getColorChat() {
-		return color < -1 ? ChatColor.getByID(-(color+1)) : null;
+		return color < -1 ? ChatColor.getByColor(color) : null;
 	}
 
 	@Override
@@ -119,8 +128,8 @@ abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> impleme
 	}
 
 	@Override
-	public T color(ChatColor color) {
-		this.color = color == null ? -1 : -(color.getID()+1);
+	public T setColor(ChatColor color) {
+		this.color = color == null ? -1 : color.getColor().asRGB();
 		return getThis();
 	}
 
@@ -169,11 +178,23 @@ abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> impleme
 	
 	@Override
 	public String toJsonText() {
-		JsonBuffer buff = new JsonBuffer();
-		buff.beginObject(null);
-		addContents(buff);
-		buff.endObject();
-		return buff.toString();
+		StringWriter w = new StringWriter();
+		SNBTWriter writer = new SNBTWriter(w);
+		try {
+			writer.writeCompoundTag();
+			addContents(writer);
+			writer.writeEndTag();
+		} catch (IOException e) {
+			throw new NBTException("Error while writing component!", e);
+		}
+		return w.toString();
+	}
+	
+	@Override
+	public void toJson(NBTWriter writer) throws IOException {
+		writer.writeCompoundTag();
+		addContents(writer);
+		writer.writeEndTag();
 	}
 	
 	@Override
@@ -191,52 +212,54 @@ abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> impleme
 	 * @param buff
 	 */
 	@Override
-	public void addContents(final JsonBuffer buff) {
+	public void addContents(final NBTWriter writer) throws IOException {
+		String type = getType();
+		if (type != null)
+			writer.writeStringTag(JSON_TYPE, type);
 		if (isBold())
-			buff.appendBoolean(JSON_BOLD, true);
+			writer.writeByteTag(JSON_BOLD, true);
 		if (isItalic())
-			buff.appendBoolean(JSON_ITALIC, true);
+			writer.writeByteTag(JSON_ITALIC, true);
 		if (isUnderlined())
-			buff.appendBoolean(JSON_UNDERLINED, true);
+			writer.writeByteTag(JSON_UNDERLINED, true);
 		if (isObfuscated())
-			buff.appendBoolean(JSON_OBFUSCATED, true);
+			writer.writeByteTag(JSON_OBFUSCATED, true);
 		if (isStrikethrough())
-			buff.appendBoolean(JSON_STRIKETHROUGH, true);
+			writer.writeByteTag(JSON_STRIKETHROUGH, true);
 		if (hasColor()) {
 			if (hasChatColor())
-				buff.appendText(JSON_COLOR, getColorChat().getName());
+				writer.writeStringTag(JSON_COLOR, getColorChat().getName());
 			else
-				buff.appendText(JSON_COLOR, "#" + Integer.toHexString(color));
+				writer.writeStringTag(JSON_COLOR, "#" + Integer.toHexString(color));
 		}
 		if (insertion != null)
-			buff.append(JSON_INSERTION, insertion);
+			writer.writeStringTag(JSON_INSERTION, insertion);
 		if (!getFont().equals(ChatComponent.FONT_DEFAULT))
-			buff.appendText(JSON_FONT, getFont());
+			writer.writeStringTag(JSON_FONT, getFont());
 		final ClickEvent clickEvent = getClickEvent();
 		if (clickEvent != null) {
-			buff.beginObject(JSON_CLICK_EVENT)
-				.append(JSON_ACTION, clickEvent.getAction().getName())
-				.append(JSON_VALUE, clickEvent.getValue())
-				.endObject();
+			writer.writeCompoundTag(JSON_CLICK_EVENT);
+			writer.writeStringTag(JSON_ACTION, clickEvent.getAction().getName());
+			writer.writeStringTag(JSON_VALUE, clickEvent.getValue());
+			writer.writeEndTag();
 		}
 		final HoverEvent hoverEvent = getHoverEvent();
 		if (hoverEvent != null) {
-			buff.beginObject(JSON_HOVER_EVENT)
-				.append(JSON_ACTION, hoverEvent.getAction().getName())
-				.beginObject(JSON_CONTENTS);
-				hoverEvent.addContents(buff);
-			buff.endObject()
-				.endObject();
+			writer.writeCompoundTag(JSON_HOVER_EVENT);
+			writer.writeStringTag(JSON_ACTION, hoverEvent.getAction().getName());
+			writer.writeCompoundTag(JSON_CONTENTS);
+			hoverEvent.addContents(writer);
+			writer.writeEndTag();
+			writer.writeEndTag();
 		}
 		if (hasExtra()) {
 			final List<ChatComponent> extra = getExtra();
-			buff.beginArray(JSON_EXTRA);
+			writer.writeListTag(JSON_EXTRA, TagType.COMPOUND, extra.size());
 			for (ChatComponent comp : extra) {
-				buff.beginObject(null);
-				comp.addContents(buff);
-				buff.endObject();
+				writer.writeCompoundTag();
+				comp.addContents(writer);
+				writer.writeEndTag();
 			}
-			buff.endArray();
 		}
 	}
 	

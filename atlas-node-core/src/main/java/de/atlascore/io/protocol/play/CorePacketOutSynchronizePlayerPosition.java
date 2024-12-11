@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -14,24 +14,24 @@ public class CorePacketOutSynchronizePlayerPosition implements PacketIO<PacketOu
 
 	@Override
 	public void read(PacketOutSynchronizePlayerPosition packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setX(in.readDouble());
-		packet.setY(in.readDouble());
-		packet.setZ(in.readDouble());
-		packet.setYaw(in.readFloat());
-		packet.setPitch(in.readFloat());
-		packet.setFlags(in.readByte());
-		packet.setTeleportID(readVarInt(in));
+		packet.x = in.readDouble();
+		packet.y = in.readDouble();
+		packet.z = in.readDouble();
+		packet.yaw = in.readFloat();
+		packet.pitch = in.readFloat();
+		packet.flags = in.readByte();
+		packet.teleportID = readVarInt(in);
 	}
 
 	@Override
 	public void write(PacketOutSynchronizePlayerPosition packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeDouble(packet.getX());
-		out.writeDouble(packet.getY());
-		out.writeDouble(packet.getZ());
-		out.writeFloat(packet.getYaw());
-		out.writeFloat(packet.getPitch());
-		out.writeByte(packet.getFlags());
-		writeVarInt(packet.getTeleportID(), out);
+		out.writeDouble(packet.x);
+		out.writeDouble(packet.y);
+		out.writeDouble(packet.z);
+		out.writeFloat(packet.yaw);
+		out.writeFloat(packet.pitch);
+		out.writeByte(packet.flags);
+		writeVarInt(packet.teleportID, out);
 	}
 	
 	@Override

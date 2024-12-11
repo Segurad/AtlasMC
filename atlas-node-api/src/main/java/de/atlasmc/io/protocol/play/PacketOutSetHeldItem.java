@@ -3,18 +3,10 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_SET_HELD_ITEM)
+@DefaultPacketID(packetID = PacketPlay.OUT_SET_HELD_ITEM, definition = "set_carried_item")
 public class PacketOutSetHeldItem extends AbstractPacket implements PacketPlayOut {
 	
-	private int slot; 
-	
-	public int getSlot() {
-		return slot;
-	}
-	
-	public void setSlot(int slot) {
-		this.slot = slot;
-	}
+	public int slot;
 	
 	@Override
 	public int getDefaultID() {

@@ -7,14 +7,14 @@ import java.util.Map;
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
-import de.atlasmc.io.protocol.play.PacketInChatCommand;
+import de.atlasmc.io.protocol.play.PacketInSignedChatCommand;
 import io.netty.buffer.ByteBuf;
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
-public class CorePacketInChatCommand implements PacketIO<PacketInChatCommand> {
+public class CorePacketInSignedChatCommand implements PacketIO<PacketInSignedChatCommand> {
 
 	@Override
-	public void read(PacketInChatCommand packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void read(PacketInSignedChatCommand packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.command = readString(in);
 		packet.commandTimestamp = in.readLong();
 		packet.salt = in.readLong();
@@ -22,8 +22,8 @@ public class CorePacketInChatCommand implements PacketIO<PacketInChatCommand> {
 		if (argsCount > 0) {
 			Map<String, byte[]> args = packet.arguments = new HashMap<>(argsCount);
 			for (int i = 0; i < argsCount; i++) {
+				String arg = readString(in, 16);
 				byte[] signature = new byte[256];
-				String arg = readString(in);
 				in.readBytes(signature);
 				args.put(arg, signature);
 			}
@@ -33,7 +33,7 @@ public class CorePacketInChatCommand implements PacketIO<PacketInChatCommand> {
 	}
 
 	@Override
-	public void write(PacketInChatCommand packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void write(PacketInSignedChatCommand packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		writeString(packet.command, out);
 		out.writeLong(packet.commandTimestamp);
 		out.writeLong(packet.salt);
@@ -52,13 +52,13 @@ public class CorePacketInChatCommand implements PacketIO<PacketInChatCommand> {
 	}
 
 	@Override
-	public PacketInChatCommand createPacketData() {
-		return new PacketInChatCommand();
+	public PacketInSignedChatCommand createPacketData() {
+		return new PacketInSignedChatCommand();
 	}
 
 	@Override
 	public int getPacketID() {
-		return Packet.getDefaultPacketID(PacketInChatCommand.class);
+		return Packet.getDefaultPacketID(PacketInSignedChatCommand.class);
 	}
 
 }

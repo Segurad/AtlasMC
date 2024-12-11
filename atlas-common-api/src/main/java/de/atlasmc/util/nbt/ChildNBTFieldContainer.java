@@ -6,17 +6,17 @@ import de.atlasmc.util.map.key.CharKey;
  * Stores {@link NBTField} and {@link NBTFieldContainer}
  * Overrides fields with the same key of the parent container
  */
-class ChildNBTFieldContainer<H extends NBTHolder> extends NBTFieldContainer<H> {
+class ChildNBTFieldContainer<H> extends NBTFieldContainer<H> {
 	
-	private final NBTFieldContainer<? extends NBTHolder> parent;
+	private final NBTFieldContainer<?> parent;
 	
-	ChildNBTFieldContainer(NBTFieldContainer<? extends NBTHolder> parent) {
+	ChildNBTFieldContainer(NBTFieldContainer<?> parent) {
 		if (parent == null) 
 			throw new IllegalArgumentException("Parent NBTFieldContainer can not be null!");
 		this.parent = parent;
 	}
 	
-	public NBTFieldContainer<? extends NBTHolder> getParent() {
+	public NBTFieldContainer<?> getParent() {
 		return parent;
 	}
 	

@@ -7,15 +7,14 @@ import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.configuration.PacketOutPluginMessage;
 import io.netty.buffer.ByteBuf;
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CorePacketOutPluginMessage implements PacketIO<PacketOutPluginMessage> {
 
 	@Override
 	public void read(PacketOutPluginMessage packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.channel = readIdentifier(in);
-		byte[] data = packet.data = new byte[in.readableBytes()];
-		in.readBytes(data);
+		packet.data = in.readBytes(in.readableBytes());
 	}
 
 	@Override

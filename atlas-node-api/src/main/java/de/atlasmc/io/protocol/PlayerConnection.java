@@ -7,6 +7,7 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.NodePlayer;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.atlasnetwork.AtlasNode;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.Messageable;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.player.PlayerAnimationEvent;
@@ -174,7 +175,7 @@ public interface PlayerConnection extends Messageable {
 	 * Will disconnect the player form the network
 	 * @param message
 	 */
-	void disconnect(String message);
+	void disconnect(Chat message);
 	
 	LocalProxy getProxy();
 	

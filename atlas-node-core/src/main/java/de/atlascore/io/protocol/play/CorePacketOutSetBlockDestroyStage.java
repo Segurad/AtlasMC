@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -14,16 +14,16 @@ public class CorePacketOutSetBlockDestroyStage implements PacketIO<PacketOutSetB
 
 	@Override
 	public void read(PacketOutSetBlockDestroyStage packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setEntityID(readVarInt(in));
-		packet.setPosition(in.readLong());
-		packet.setStage(in.readByte());
+		packet.entityID = readVarInt(in);
+		packet.position = in.readLong();
+		packet.stage = in.readByte();
 	}
 
 	@Override
 	public void write(PacketOutSetBlockDestroyStage packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getEntityID(), out);
-		out.writeLong(packet.getPosition());
-		out.writeByte(packet.getStage());
+		writeVarInt(packet.entityID, out);
+		out.writeLong(packet.position);
+		out.writeByte(packet.stage);
 	}
 
 	@Override

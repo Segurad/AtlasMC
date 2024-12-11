@@ -4,6 +4,8 @@ import java.util.List;
 
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.ServerHandlerList;
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumValueCache;
 
 public class PlayerResourcePackStatusEvent extends PlayerEvent {
 	
@@ -29,11 +31,16 @@ public class PlayerResourcePackStatusEvent extends PlayerEvent {
 		return handlers;
 	}
 
-	public static enum ResourcePackStatus {
-		SUCCESSFULLY_LOADED,
+	public static enum ResourcePackStatus implements EnumID, EnumValueCache {
+		
+		SUCCESSFULLY_DOWNLOADED,
 		DECLINED,
 		FAILED_DOWNLOAD,
-		ACCEPTED;
+		ACCEPTED,
+		DOWNLOADED,
+		INVALID_URL,
+		FAILED_RELOAD,
+		DISCARDED;
 
 		private static List<ResourcePackStatus> VALUES;
 		

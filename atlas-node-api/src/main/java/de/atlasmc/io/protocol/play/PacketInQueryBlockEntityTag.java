@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.IN_QUERY_BLOCK_ENTITY_TAG)
+@DefaultPacketID(packetID = PacketPlay.IN_QUERY_BLOCK_ENTITY_TAG, definition = "query_block_tags")
 public class PacketInQueryBlockEntityTag extends AbstractPacket implements PacketPlayIn {
 
 	private int transactionID;

@@ -1,8 +1,9 @@
 package de.atlascore.io.protocol.play;
 
-import java.io.IOException;
+import static de.atlasmc.io.PacketUtil.readVarInt;
+import static de.atlasmc.io.PacketUtil.writeVarInt;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import java.io.IOException;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -14,16 +15,16 @@ public class CorePacketOutPickupItem implements PacketIO<PacketOutPickupItem> {
 
 	@Override
 	public void read(PacketOutPickupItem packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setCollectedID(readVarInt(in));
-		packet.setCollectorID(readVarInt(in));
-		packet.setPickupCount(readVarInt(in));
+		packet.collectedID = readVarInt(in);
+		packet.collectorID = readVarInt(in);
+		packet.pickupCount = readVarInt(in);
 	}
 
 	@Override
 	public void write(PacketOutPickupItem packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getCollectedID(), out);
-		writeVarInt(packet.getCollectorID(), out);
-		writeVarInt(packet.getPickupCount(), out);
+		writeVarInt(packet.collectedID, out);
+		writeVarInt(packet.collectorID, out);
+		writeVarInt(packet.pickupCount, out);
 	}
 
 	@Override

@@ -1,15 +1,10 @@
 package de.atlasmc.io.protocol.login;
 
-import de.atlasmc.NamespacedKey;
-import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.protocol.common.AbstractPacketPluginQuery;
 
-@DefaultPacketID(PacketLogin.OUT_LOGIN_PLUGIN_REQUEST)
-public class PacketOutLoginPluginRequest extends AbstractPacket implements PacketLoginOut {
-	
-	public int messageID;
-	public NamespacedKey channel;
-	public byte[] data;
+@DefaultPacketID(packetID = PacketLogin.OUT_LOGIN_PLUGIN_REQUEST, definition = "custom_query")
+public class PacketOutLoginPluginRequest extends AbstractPacketPluginQuery implements PacketLoginOut {
 	
 	@Override
 	public int getDefaultID() {

@@ -19,7 +19,7 @@ public class CorePacketOutSetEquipment implements PacketIO<PacketOutSetEquipment
 
 	@Override
 	public void read(PacketOutSetEquipment packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setEntityID(readVarInt(in));
+		packet.entityID = readVarInt(in);
 		List<Pair<EquipmentSlot, ItemStack>> slots = new ArrayList<>();
 		boolean next;
 		do {
@@ -29,13 +29,13 @@ public class CorePacketOutSetEquipment implements PacketIO<PacketOutSetEquipment
 			ItemStack item = readSlot(in);
 			slots.add(Pair.of(slot, item));
 		} while (next);
-		packet.setSlots(slots);
+		packet.slots = slots;
 	}
 	
 	@Override
 	public void write(PacketOutSetEquipment packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getEntityID(), out);
-		List<Pair<EquipmentSlot, ItemStack>> slots = packet.getSlots();
+		writeVarInt(packet.entityID, out);
+		List<Pair<EquipmentSlot, ItemStack>> slots = packet.slots;
 		final int size = slots.size();
 		for (int i = 0; i < size; i++) {
 			Pair<EquipmentSlot, ItemStack> pair = slots.get(i);

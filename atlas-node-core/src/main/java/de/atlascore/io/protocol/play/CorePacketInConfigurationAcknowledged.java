@@ -5,29 +5,29 @@ import java.io.IOException;
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
-import de.atlasmc.io.protocol.play.PacketInConfigurationAcknowledged;
+import de.atlasmc.io.protocol.play.PacketInAcknowledgeConfiguration;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInConfigurationAcknowledged implements PacketIO<PacketInConfigurationAcknowledged> {
+public class CorePacketInConfigurationAcknowledged implements PacketIO<PacketInAcknowledgeConfiguration> {
 
 	@Override
-	public void read(PacketInConfigurationAcknowledged packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void read(PacketInAcknowledgeConfiguration packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		// packet does not contain data
 	}
 
 	@Override
-	public void write(PacketInConfigurationAcknowledged packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void write(PacketInAcknowledgeConfiguration packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		// packet does not contain data
 	}
 
 	@Override
-	public PacketInConfigurationAcknowledged createPacketData() {
-		return new PacketInConfigurationAcknowledged();
+	public PacketInAcknowledgeConfiguration createPacketData() {
+		return new PacketInAcknowledgeConfiguration();
 	}
 
 	@Override
 	public int getPacketID() {
-		return Packet.getDefaultPacketID(PacketInConfigurationAcknowledged.class);
+		return Packet.getDefaultPacketID(PacketInAcknowledgeConfiguration.class);
 	}
 
 }

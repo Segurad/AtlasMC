@@ -3,36 +3,12 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(PacketPlay.OUT_SET_BLOCK_DESTROY_STAGE)
+@DefaultPacketID(packetID = PacketPlay.OUT_SET_BLOCK_DESTROY_STAGE, definition = "block_destruction")
 public class PacketOutSetBlockDestroyStage extends AbstractPacket implements PacketPlayOut {
 	
-	private int entityID;
-	private int stage;
-	private long position;
-	
-	public int getEntityID() {
-		return entityID;
-	}
-	
-	public void setEntityID(int entityID) {
-		this.entityID = entityID;
-	}
-	
-	public int getStage() {
-		return stage;
-	}
-	
-	public void setStage(int stage) {
-		this.stage = stage;
-	}
-	
-	public long getPosition() {
-		return position;
-	}
-	
-	public void setPosition(long position) {
-		this.position = position;
-	}
+	public int entityID;
+	public long position;
+	public int stage;
 	
 	@Override
 	public int getDefaultID() {

@@ -175,7 +175,7 @@ public class CorePacketOutUpdateRecipes implements PacketIO<PacketOutUpdateRecip
 			}
 		}
 		reader.close();
-		packet.setRecipes(recipes);
+		packet.recipes = recipes;
 	}
 	
 	protected AbstractCookingRecipe readCookingRecipe(AbstractCookingRecipe recipe, ByteBuf in, NBTNIOReader reader) throws IOException {
@@ -198,14 +198,18 @@ public class CorePacketOutUpdateRecipes implements PacketIO<PacketOutUpdateRecip
 
 	@Override
 	public void write(PacketOutUpdateRecipes packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		List<Recipe> recipes = packet.getRecipes();
+		List<Recipe> recipes = packet.recipes;
 		if (recipes == null) {
 			writeVarInt(0, out);
 			return;
 		}
-		writeVarInt(recipes.size(), out);
+		final int size = recipes.size();
+		writeVarInt(size, out);
+		if (size == 0)
+			return;
 		final NBTNIOWriter writer = new NBTNIOWriter(out, true);
-		for (Recipe recipe : recipes) {
+		for (int i = 0; i < size; i++) {
+			Recipe recipe = recipes.get(i);
 			writeString(recipe.getType().getNameID(), out);
 			writeString(recipe.getNamespacedKeyRaw(), out);
 			switch (recipe.getType()) {
@@ -231,8 +235,8 @@ public class CorePacketOutUpdateRecipes implements PacketIO<PacketOutUpdateRecip
 				// --- write ingredients in shape ---
 				String[] shape = shaped.getShape();
 				for (String line : shape)
-					for (int i = 0; i < line.length(); i++)
-						writeIngredient(shaped.getIngredient(line.charAt(i)), out, writer);
+					for (int j = 0; j < line.length(); j++)
+						writeIngredient(shaped.getIngredient(line.charAt(j)), out, writer);
 				// --- write result
 				writeSlot(shaped.getResult(), out, writer);
 				out.writeBoolean(shaped.getShowNotification());

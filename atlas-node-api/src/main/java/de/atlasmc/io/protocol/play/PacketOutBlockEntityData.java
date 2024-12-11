@@ -2,37 +2,14 @@ package de.atlasmc.io.protocol.play;
 
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
+import io.netty.buffer.ByteBuf;
 
-@DefaultPacketID(PacketPlay.OUT_BLOCK_ENTITY_DATA)
+@DefaultPacketID(packetID = PacketPlay.OUT_BLOCK_ENTITY_DATA, definition = "block_entity_data")
 public class PacketOutBlockEntityData extends AbstractPacket implements PacketPlayOut {
 	
-	private long position;
-	private TileUpdateAction action;
-	private byte[] data;
-	
-	public long getPosition() {
-		return position;
-	}
-	
-	public void setPosition(long position) {
-		this.position = position;
-	}
-	
-	public TileUpdateAction getAction() {
-		return action;
-	}
-	
-	public void setAction(TileUpdateAction action) {
-		this.action = action;
-	}
-	
-	public byte[] getData() {
-		return data;
-	}
-	
-	public void setData(byte[] data) {
-		this.data = data;
-	}
+	public long position;
+	public TileUpdateAction action;
+	public ByteBuf data;
 	
 	@Override
 	public int getDefaultID() {

@@ -2,7 +2,7 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.AbstractPacket.*;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
@@ -14,16 +14,16 @@ public class CorePacketOutSetExperience implements PacketIO<PacketOutSetExperian
 
 	@Override
 	public void read(PacketOutSetExperiance packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setExperienceBar(in.readFloat());
-		packet.setLevel(readVarInt(in));
-		packet.setTotalExperience(readVarInt(in));
+		packet.experienceBar = in.readFloat();
+		packet.level = readVarInt(in);
+		packet.totalExperience = readVarInt(in);
 	}
 
 	@Override
 	public void write(PacketOutSetExperiance packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeFloat(packet.getExperienceBar());
-		writeVarInt(packet.getLevel(), out);
-		writeVarInt(packet.getTotalExperience(), out);
+		out.writeFloat(packet.experienceBar);
+		writeVarInt(packet.level, out);
+		writeVarInt(packet.totalExperience, out);
 	}
 	
 	@Override
