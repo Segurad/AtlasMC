@@ -686,7 +686,9 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 		if (byteBuff == null || byteBuff.length < utflen) {
 			byteBuff = nameBuf = new byte[utflen];
 		}
-		int c, char2, char3;
+		int c;
+		int char2;
+		int char3;
 		int count = 0;
 		ioReadBytes(byteBuff, 0, utflen);
 		while (count < utflen) {

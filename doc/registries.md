@@ -1,8 +1,11 @@
-[Doc](doc.md) > [Development](doc.md#development) > [Registries]()
-
 # Registries
 
-Plugin Resourcepaths: 
+[Doc](doc.md) > [Development](doc.md#development) > [Registries](#registries)
+
+---
+
+Plugin Resourcepaths:
+
 - [`/META-INF/atlas/registies.yml`](#registriesyml)
 - [`/META-INF/atlas/registry-entries.yml`](#registry-entriesyml)
 
@@ -28,4 +31,4 @@ Registries are the main way of providing funktionality for Atlas itself and Plug
       param1: value1
 ```
 
-## List of atlas registries:
+## List of atlas registries

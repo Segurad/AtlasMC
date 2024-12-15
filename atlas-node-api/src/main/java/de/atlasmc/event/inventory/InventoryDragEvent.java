@@ -10,7 +10,8 @@ public class InventoryDragEvent extends InventoryInteractEvent {
 
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
-	private final ItemStack newCursor, oldCursor;
+	private final ItemStack newCursor;
+	private final ItemStack oldCursor;
 	private final DragType dragType;
 	private final Map<Integer, ItemStack> slots;
 	

@@ -12,7 +12,8 @@ import de.atlasmc.util.configuration.ConfigurationSerializeable;
  */
 public class ClassTileEntityFactory implements TileEntityFactory, ConfigurationSerializeable {
 	
-	private final Class<? extends TileEntity> tileInterface, tile;
+	private final Class<? extends TileEntity> tileInterface;
+	private final Class<? extends TileEntity> tile;
 	private final int tileID;
 	
 	/**

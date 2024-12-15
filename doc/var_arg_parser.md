@@ -1,5 +1,9 @@
 # VarArgParser
 
+[Doc](doc.md) > [Development](doc.md#development) > [Commands](commands.md) > [VarArgParser](#varargparser)
+
+---
+
 - [brigadier:bool](#brigadierbool)
 - [brigadier:float](#brigadierfloat)
 - [brigadier:double](#brigadierdouble)
@@ -57,6 +61,7 @@ type: brigadier:string
 # GREEDY_PHRASE = reads the input string until the end
 string-type: SINGLE_WORD # SINGLE_WORD | QUOTABLE_PHRASE | GREEDY_PHRASE
 ```
+
 ## minecraft:entity
 
 ```yaml

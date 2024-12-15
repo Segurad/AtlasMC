@@ -2,15 +2,16 @@ package de.atlasmc.chat.component;
 
 import java.io.IOException;
 
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.tag.NBT;
 
 public class HoverItemEvent implements HoverEvent {
 	
-	public static final String 
-	JSON_ID = "id",
-	JSON_COUNT = "count",
-	JSON_COMPONENT = "component";
+	public static final CharKey
+	JSON_ID = CharKey.literal("id"),
+	JSON_COUNT = CharKey.literal("count"),
+	JSON_COMPONENT = CharKey.literal("component");
 	
 	private final String id;
 	private final int count;

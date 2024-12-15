@@ -1,8 +1,10 @@
-[Doc](doc.md) > [Development](doc.md#development) > [Event Handling]()
-
 # EventHandling
 
-event handling is similar to the known system from Bukkit. Additionally it features listener registration on different level possible because of the design of atlas. by default all listeners are registered global listeners which will listen to every event regardless of its source. some events e.g. only used by server have different level. for servers you are able to register listeners directly for events only fired on a single server or his group. for custom events it is similar e.g. use a existing event group or create your own. 
+[Doc](doc.md) > [Development](doc.md#development) > [Event Handling](#eventhandling)
+
+---
+
+event handling is similar to the known system from Bukkit. Additionally it features listener registration on different level possible because of the design of atlas. by default all listeners are registered global listeners which will listen to every event regardless of its source. some events e.g. only used by server have different level. for servers you are able to register listeners directly for events only fired on a single server or his group. for custom events it is similar e.g. use a existing event group or create your own.
 
 AtlasEvents (all events fired by atlas)
 
@@ -34,11 +36,11 @@ additionally to the listener system with methods marked by annotations atlas fea
 
 ```java
 new FunctionalListenerExecutor(SomeEvent.class, (event)->{
-	// your listener code here
+    // your listener code here
 }, ignoreCancelled, EventPriority.NORMAL);
 
 Atlas.getPluginManager().registerFunctionListener(MY_PLUGUNG, SomeEvent.class, (event) -> {
-	// your listener code here
+    // your listener code here
 }, ignoreCancelled, EventPriority.NORMAL);
 ```
 

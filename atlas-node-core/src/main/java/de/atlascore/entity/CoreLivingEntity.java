@@ -517,7 +517,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		if (attributes == null || attributes.isEmpty()) 
 			return List.of();
 		AttributeInstance instance = attributes.get(attribute);
-		if (instance == null && !instance.hasModifiers())
+		if (instance == null || !instance.hasModifiers())
 			return List.of();
 		return instance.getModifiers();
 	}
@@ -867,7 +867,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 			return;
 		if (!activeEffects.containsKey(type))
 			return;
-		if (effects != null || !effects.isEmpty()) {
+		if (effects != null && !effects.isEmpty()) {
 			for (int i = 0; i < effects.size(); i++) {
 				if (effects.get(i).getType() == type)
 					effects.remove(i--);

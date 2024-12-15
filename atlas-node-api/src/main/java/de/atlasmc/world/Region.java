@@ -173,7 +173,9 @@ public class Region implements Cloneable {
 	}
 
 	public Region expand(Vector3d loc) {
-		final double x = loc.x, y = loc.y, z = loc.z;
+		final double x = loc.x;
+		final double y = loc.y;
+		final double z = loc.z;
 		loc1.set(Math.max(maxx, x), Math.max(maxy, y), Math.max(maxz, z));
 		loc2.set(Math.min(minx, x), Math.max(miny, y), Math.max(minz, z));
 		update();

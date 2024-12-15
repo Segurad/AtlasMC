@@ -1,40 +1,40 @@
 package de.atlasmc.util;
 
-public final class Triple<V1, V2, V3> {
+public final class Triple<A, B, C> {
 	
 	private static final Triple<?, ?, ?> NULL_TRIPLE = new Triple<>(null, null, null);
 	
-	private final V1 value1;
-	private final V2 value2;
-	private final V3 value3;
+	private final A value1;
+	private final B value2;
+	private final C value3;
 	
-	private Triple(V1 value1,V2 value2, V3 value3) {
+	private Triple(A value1,B value2, C value3) {
 		this.value1 = value1;
 		this.value2 = value2;
 		this.value3 = value3;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <V1, V2, V3> Triple<V1, V2, V3> of() {
-		return (Triple<V1, V2, V3>) NULL_TRIPLE;
+	public static <A, B, C> Triple<A, B, C> of() {
+		return (Triple<A, B, C>) NULL_TRIPLE;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <V1, V2, V3> Triple<V1, V2, V3> of(V1 value1, V2 value2, V3 value3) {
+	public static <A, B, C> Triple<A, B, C> of(A value1, B value2, C value3) {
 		if (value1 == null && value2 == null && value3 == null)
-			return (Triple<V1, V2, V3>) NULL_TRIPLE;
+			return (Triple<A, B, C>) NULL_TRIPLE;
 		return new Triple<>(value1, value2, value3);
 	}
 	
-	public V1 getValue1() {
+	public A getValue1() {
 		return value1;
 	}
 	
-	public V2 getValue2() {
+	public B getValue2() {
 		return value2;
 	}
 	
-	public V3 getValue3() {
+	public C getValue3() {
 		return value3;
 	}
 

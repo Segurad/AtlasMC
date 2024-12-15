@@ -18,8 +18,6 @@ import io.netty.buffer.ByteBufUtil;
 
 public class PacketUtil {
 	
-	protected PacketUtil() {}
-	
 	public static final int 
 	MAX_PACKET_LENGTH = 2097151,
 	CHAT_MAX_LENGTH = 262144,
@@ -27,6 +25,8 @@ public class PacketUtil {
 
 	private static final int SEGMENT_BITS = 0x7F;
 	private static final int CONTINUE_BIT = 0x80;
+	
+	protected PacketUtil() {}
 
 	public static int readVarInt(ByteBuf in) {
 	    int value = 0;

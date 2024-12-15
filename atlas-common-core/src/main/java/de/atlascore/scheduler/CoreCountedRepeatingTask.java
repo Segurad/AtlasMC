@@ -6,7 +6,8 @@ import de.atlasmc.scheduler.AtlasTask;
 class CoreCountedRepeatingTask extends CoreRegisteredTask {
 
 	private final long period;
-	private long delay, repeats;
+	private long delay;
+	private long repeats;
 	
 	public CoreCountedRepeatingTask(PluginHandle plugin, AtlasTask task, long delay, long period, long repeats) {
 		super(plugin, task);

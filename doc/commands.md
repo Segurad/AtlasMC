@@ -1,8 +1,11 @@
-[Doc](doc.md) > [Development](doc.md#development) > [Commands]()
-
 # Commands
 
-Plugin Resourcepaths: 
+[Doc](doc.md) > [Development](doc.md#development) > [Commands](#commands)
+
+---
+
+Plugin Resourcepaths:
+
 - [`/commands.yml`](#commandsyml)
 
 ---
@@ -11,6 +14,7 @@ Atlas has a command API verry similar to mojangs bridadier.
 As Developer you have the powerfull option define your commands with simple YAML. There is no need to pares and verify commands yourself. You just need to implement the CommandExecutor that will handle your Command.
 
 See also:
+
 - [VarArgParser](var_arg_parser.md) for a list all default parsers
 - [SuggestionTypes](suggestion_types.md) for a list of all default suggestion types
 

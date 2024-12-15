@@ -1,4 +1,7 @@
-[Doc](doc.md) > [Development](doc.md#development) > [Internal API]()
-
 # Internal API
+
+[Doc](doc.md) > [Development](doc.md#development) > [Internal API](#internal-api)
+
+---
+
 API used only be the system marked by __@InternalAPI__ .As internal marked API should never be called by anyone other than system this API meant to be used by.

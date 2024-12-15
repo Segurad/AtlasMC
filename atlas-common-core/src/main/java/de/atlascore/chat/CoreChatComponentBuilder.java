@@ -326,23 +326,19 @@ class CoreChatComponentBuilder implements Builder<ChatComponent> {
 			ChatComponent name = null;
 			while (reader.getType() != TagType.TAG_END) {
 				CharSequence key = reader.getFieldName();
-				switch (key) {
-				case HoverEntityEvent.JSON_ID:
+				if (HoverEntityEvent.JSON_ID.equals(key)) {
 					if (reader.getType() == TagType.STRING)
 						uuid = UUID.fromString(reader.readStringTag());
 					else
 						uuid = reader.readUUID();
-					break;
-				case HoverEntityEvent.JSON_NAME:
+				} else if (HoverEntityEvent.JSON_NAME.equals(key)) {
 					reader.readNextEntry();
 					CoreChatComponentBuilder builder = new CoreChatComponentBuilder();
 					NBTUtil.readNBT(NBT_FIELDS, builder, reader);
 					name = builder.build();
-					break;
-				case HoverEntityEvent.JSON_TYPE:
+				} else if (HoverEntityEvent.JSON_TYPE.equals(key)) {
 					type = reader.readStringTag();
-					break;
-				default:
+				} else {
 					reader.skipTag();
 				}
 			}
@@ -354,17 +350,13 @@ class CoreChatComponentBuilder implements Builder<ChatComponent> {
 			NBT components = null;
 			while (reader.getType() != TagType.TAG_END) {
 				CharSequence key = reader.getFieldName();
-				switch (key) {
-				case HoverItemEvent.JSON_ID:
+				if (HoverItemEvent.JSON_ID.equals(key)) {
 					id = reader.readStringTag();
-					break;
-				case HoverItemEvent.JSON_COUNT:
+				} else if (HoverItemEvent.JSON_COUNT.equals(key)) {
 					count = reader.readIntTag();
-					break;
-				case HoverItemEvent.JSON_COMPONENT:
+				} else if (HoverItemEvent.JSON_COMPONENT.equals(key)) {
 					components = reader.readNBT();
-					break;
-				default:
+				} else {
 					reader.skipTag();
 				}
 			}

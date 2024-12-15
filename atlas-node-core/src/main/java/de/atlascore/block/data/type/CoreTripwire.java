@@ -26,7 +26,9 @@ public class CoreTripwire extends CoreAbstractMultipleFacing implements Tripwire
 		});
 	}
 	
-	private boolean attached, powered, disarmed;
+	private boolean attached;
+	private boolean powered;
+	private boolean disarmed;
 	
 	public CoreTripwire(Material material) {
 		super(material, 4);

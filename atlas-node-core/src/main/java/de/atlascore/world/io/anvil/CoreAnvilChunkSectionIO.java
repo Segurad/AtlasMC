@@ -65,14 +65,13 @@ public class CoreAnvilChunkSectionIO {
 		});
 	}
 	
-	private byte[] blocklight, skylight;
+	private byte[] blocklight;
+	private byte[] skylight;
 	private boolean hasBlocklight;
 	private boolean hasSkylight;
 	private long[] indizes;
 	private byte hightIndex;
 	private List<BlockData> palette;
-	
-	public CoreAnvilChunkSectionIO() {}
 	
 	public void loadSections(Chunk chunk, NBTReader reader) throws IOException {
 	

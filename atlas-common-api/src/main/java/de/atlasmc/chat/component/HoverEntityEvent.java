@@ -3,14 +3,15 @@ package de.atlasmc.chat.component;
 import java.io.IOException;
 import java.util.UUID;
 
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class HoverEntityEvent implements HoverEvent {
 
-	public static final String
-	JSON_NAME = "name",
-	JSON_TYPE = "type",
-	JSON_ID = "id";
+	public static final CharKey
+	JSON_NAME = CharKey.literal("name"),
+	JSON_TYPE = CharKey.literal("type"),
+	JSON_ID = CharKey.literal("id");
 	
 	private final ChatComponent name;
 	private final String type;

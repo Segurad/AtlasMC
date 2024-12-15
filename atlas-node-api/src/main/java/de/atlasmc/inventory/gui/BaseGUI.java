@@ -118,7 +118,7 @@ public class BaseGUI implements GUI {
 
 	@Override
 	public void notifyClosedBy(Player player) {
-		if (listeners == null && listeners.isEmpty())
+		if (listeners == null || listeners.isEmpty())
 			return;
 		for (GUIListener l : listeners)
 			l.closedBy(player);

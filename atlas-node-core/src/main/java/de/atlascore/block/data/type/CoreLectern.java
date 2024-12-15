@@ -17,13 +17,16 @@ public class CoreLectern extends CoreDirectional4Faces implements Lectern {
 	
 	static {
 		NBT_FIELDS.setField(BOOK, (holder, reader) -> {
-			if (holder instanceof Lectern)
-			((Lectern) holder).setBook(reader.readByteTag() == 1);
-			else reader.skipTag();
+			if (holder instanceof Lectern) {
+				((Lectern) holder).setBook(reader.readByteTag() == 1);
+			} else {
+				reader.skipTag();
+			}
 		});
 	}
 	
-	private boolean book, powered;
+	private boolean book;
+	private boolean powered;
 	
 	public CoreLectern(Material material) {
 		super(material);
@@ -60,8 +63,10 @@ public class CoreLectern extends CoreDirectional4Faces implements Lectern {
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		if (isPowered()) writer.writeByteTag(CorePowerable.NBT_POWERED, true);
-		if (hasBook()) writer.writeByteTag(BOOK, true);
+		if (isPowered()) 
+			writer.writeByteTag(CorePowerable.NBT_POWERED, true);
+		if (hasBook()) 
+			writer.writeByteTag(BOOK, true);
 	}
 
 }

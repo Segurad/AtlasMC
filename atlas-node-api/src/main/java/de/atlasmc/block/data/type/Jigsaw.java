@@ -23,13 +23,13 @@ public interface Jigsaw extends BlockData {
 		NORTH_UP,
 		SOUTH_UP;
 		
+		private static List<Orientation> VALUES;
+		
 		private final String name;
 		
 		private Orientation() {
 			this.name = name().toLowerCase();
 		}
-		
-		private static List<Orientation> VALUES;
 		
 		public String getNameID() {
 			return name;

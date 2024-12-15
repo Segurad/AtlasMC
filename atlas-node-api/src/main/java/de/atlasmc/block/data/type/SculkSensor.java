@@ -19,13 +19,13 @@ public interface SculkSensor extends AnaloguePowerable, Waterlogged {
 		ACTIVE,
 		COOLDOWN;
 		
+		private static List<Phase> VALUES;
+		
 		private final String name;
 		
 		private Phase() {
 			this.name = name().toLowerCase();
 		}
-		
-		private static List<Phase> VALUES;
 		
 		public int getID() {
 			return ordinal();

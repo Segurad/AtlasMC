@@ -28,7 +28,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 public class CoreLocalProxy extends CoreProxy implements LocalProxy {
 
 	private ChannelInitializer<SocketChannel> handler;
-	private EventLoopGroup bossGroup, workerGroup;
+	private EventLoopGroup bossGroup;
+	private EventLoopGroup workerGroup;
 	private Channel channel;
 	private final ProxyConfig config;
 	private final Log logger;

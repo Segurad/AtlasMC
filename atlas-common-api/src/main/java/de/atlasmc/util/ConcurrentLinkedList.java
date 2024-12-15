@@ -100,7 +100,8 @@ public class ConcurrentLinkedList<E> implements Collection<E> {
 			return;
 		node.removed = true;
 		decrementCount();
-		Node<E> prev = prevValid(node), next = nextValid(node);
+		Node<E> prev = prevValid(node);
+		Node<E> next = nextValid(node);
 		if (prev != null) 
 			prev.next = next;
 		if (next != null) 

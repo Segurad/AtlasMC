@@ -1,8 +1,11 @@
-[Doc](doc.md) > [Development](doc.md#development) > [Plugins]()
-
 # Plugins
 
-Plugin Resourcepaths: 
+[Doc](doc.md) > [Development](doc.md#development) > [Plugins](#plugins)
+
+---
+
+Plugin Resourcepaths:
+
 - [`/atlas-plugin.yml`](#atlas-pluginyml)
 - [`/setup.yml`](#setup) (only for  AtlasModules)
 - [`/server-setup.yml`](#setup)
@@ -19,7 +22,8 @@ Because the APIs are loaded dynamically in Atlas a Plugin should depend on its r
 - Atlas-Network-API
 - Atlas-Node-API
 
-## atlas-plugin.yml 
+## atlas-plugin.yml
+
 ```yaml
 name: MyPluginName
 version: v1.0.0
@@ -42,6 +46,7 @@ load-before: # Plugins this Plugin should be loaded before
 A plugin handles represent plugins for registration of new functionality or values. Handles allow you to register and unregister those bound to a context like a server or servergroup. For example if a servergroup requires a specific configuration of your minigame you just create a new plugin handle and register all listeners for this minigame with the newly created handle. If the servergroup is no longer required you can simply remove every listener with the removeAll function without the need of tracking the listeners yourself. If your implementation does not require this sort of registration you can simply use your plugin instance.
 
 ## setup.yml
+
 Setup files are helpers for creating directories and extract resources of your plugin. The external paths have to be within the workdir of atlas for `setup.yml` or the workdir of the server for `server-setup.yml`.
 
 `server-setup.yml` and `setup.yml` share the same structure.

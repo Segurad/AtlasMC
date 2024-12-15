@@ -12,6 +12,11 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 @ThreadSafe
 public final class ChatUtil {
 	
+	/**
+	 * Represents a 'space' as component
+	 */
+	public static Chat ONE_SPACE;
+	public static Chat EMPTY;
 	private static ChatFactory FACTORY;
 	
 	public static final char DEFAULT_CHAT_FORMAT_PREFIX;
@@ -21,12 +26,6 @@ public final class ChatUtil {
 	}
 	
 	private ChatUtil() {}
-	
-	/**
-	 * Represents a 'space' as component
-	 */
-	public static Chat ONE_SPACE;
-	public static Chat EMPTY;
 	
 	public static Chat toChat(CharSequence chat) {
 		if (chat == null)

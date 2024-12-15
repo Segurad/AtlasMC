@@ -23,8 +23,6 @@ public interface Sniffer extends Animal {
 		
 		private static List<State> VALUES;
 		
-		private State() {}
-		
 		public String getNameID() {
 			return name();
 		}

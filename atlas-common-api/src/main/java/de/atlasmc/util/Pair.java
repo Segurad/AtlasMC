@@ -1,34 +1,34 @@
 package de.atlasmc.util;
 
-public final class Pair<V1, V2> {
+public final class Pair<A, B> {
 
 	private static final Pair<?, ?> NULL_PAIR = new Pair<>(null, null);
 	
-	private final V1 value1;
-	private final V2 value2;
+	private final A value1;
+	private final B value2;
 	
-	private Pair(V1 value1,V2 value2) {
+	private Pair(A value1,B value2) {
 		this.value1 = value1;
 		this.value2 = value2;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <V1, V2> Pair<V1, V2> of() {
-		return (Pair<V1, V2>) NULL_PAIR;
+	public static <A, B> Pair<A, B> of() {
+		return (Pair<A, B>) NULL_PAIR;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <V1, V2> Pair<V1, V2> of(V1 value1, V2 value2) {
+	public static <A, B> Pair<A, B> of(A value1, B value2) {
 		if (value1 == null && value2 == null)
-			return (Pair<V1, V2>) NULL_PAIR;
+			return (Pair<A, B>) NULL_PAIR;
 		return new Pair<>(value1, value2);
 	}
 	
-	public V1 getValue1() {
+	public A getValue1() {
 		return value1;
 	}
 	
-	public V2 getValue2() {
+	public B getValue2() {
 		return value2;
 	}
 
