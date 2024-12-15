@@ -15,12 +15,12 @@ public class CorePacketInTeleportToEntity implements PacketIO<PacketInTeleportTo
 	public void read(PacketInTeleportToEntity packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		long most = in.readLong();
 		long least = in.readLong();
-		packet.setUUID(new UUID(most, least));
+		packet.uuid = new UUID(most, least);
 	}
 
 	@Override
 	public void write(PacketInTeleportToEntity packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		UUID uuid = packet.getUUID();
+		UUID uuid = packet.uuid;
 		out.writeLong(uuid.getMostSignificantBits());
 		out.writeLong(uuid.getLeastSignificantBits());
 	}

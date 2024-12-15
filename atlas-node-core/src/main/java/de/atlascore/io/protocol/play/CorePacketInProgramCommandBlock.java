@@ -15,18 +15,18 @@ public class CorePacketInProgramCommandBlock implements PacketIO<PacketInProgram
 
 	@Override
 	public void read(PacketInProgramCommandBlock packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setPosition(in.readLong());
-		packet.setCommand(readString(in, 32767));
-		packet.setMode(Mode.getByID(readVarInt(in)));
-		packet.setFlags(in.readByte());
+		packet.position = in.readLong();
+		packet.command = readString(in, 32767);
+		packet.mode = Mode.getByID(readVarInt(in));
+		packet.flags = in.readByte();
 	}
 
 	@Override
 	public void write(PacketInProgramCommandBlock packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeLong(packet.getPosition());
-		writeString(packet.getCommand(), out);
-		writeVarInt(packet.getMode().getID(), out);
-		out.writeByte(packet.getFlags());
+		out.writeLong(packet.position);
+		writeString(packet.command, out);
+		writeVarInt(packet.mode.getID(), out);
+		out.writeByte(packet.flags);
 	}
 
 	@Override

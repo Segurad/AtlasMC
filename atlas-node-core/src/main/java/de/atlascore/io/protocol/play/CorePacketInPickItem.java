@@ -14,12 +14,12 @@ public class CorePacketInPickItem implements PacketIO<PacketInPickItem> {
 	
 	@Override
 	public void read(PacketInPickItem packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.setSlotToUse(readVarInt(in));
+		packet.slotToUse = readVarInt(in);
 	}
 
 	@Override
 	public void write(PacketInPickItem packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		writeVarInt(packet.getSlotToUse(), out);
+		writeVarInt(packet.slotToUse, out);
 	}
 
 	@Override

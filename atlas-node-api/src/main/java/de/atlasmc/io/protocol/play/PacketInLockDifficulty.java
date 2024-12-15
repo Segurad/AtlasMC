@@ -3,18 +3,10 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(packetID = PacketPlay.IN_LOCK_DIFFICULTY)
+@DefaultPacketID(packetID = PacketPlay.IN_LOCK_DIFFICULTY, definition = "lock_difficulty")
 public class PacketInLockDifficulty extends AbstractPacket implements PacketPlayIn {
 	
-	private boolean locked;
-	
-	public boolean isLocked() {
-		return locked;
-	}
-	
-	public void setLocked(boolean locked) {
-		this.locked = locked;
-	}
+	public boolean locked;
 	
 	@Override
 	public int getDefaultID() {

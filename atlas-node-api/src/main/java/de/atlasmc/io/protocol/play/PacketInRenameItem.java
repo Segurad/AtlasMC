@@ -3,18 +3,10 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(packetID = PacketPlay.IN_RENAME_ITEM)
+@DefaultPacketID(packetID = PacketPlay.IN_RENAME_ITEM, definition = "rename_item")
 public class  PacketInRenameItem extends AbstractPacket implements PacketPlayIn {
 	
-	private String itemName;
-	
-	public String getItemName() {
-		return itemName;
-	}
-	
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
-	}
+	public String itemName;
 
 	@Override
 	public int getDefaultID() {

@@ -13,33 +13,33 @@ public class CorePacketInChatMessage implements PacketIO<PacketInChatMessage> {
 
 	@Override
 	public void read(PacketInChatMessage packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.setMessage(readString(in, 256));
-		packet.setMessageTimestamp(in.readLong());
-		packet.setSalt(in.readLong());
+		packet.message = readString(in, 256);
+		packet.messageTimestamp = in.readLong();
+		packet.salt = in.readLong();
 		boolean hasSignature = in.readBoolean();
 		if (hasSignature) {
 			byte[] signature = new byte[256];
 			in.readBytes(signature);
-			packet.setSignature(signature);
+			packet.signature = signature;
 		}
-		packet.setMessageCount(readVarInt(in));
-		packet.setAcknowledged(readBitSet(in, 20));
+		packet.messageCount = readVarInt(in);
+		packet.acknowledged = readBitSet(in, 20);
 	}
 
 	@Override
 	public void write(PacketInChatMessage packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		writeString(packet.getMessage(), out);
-		out.writeLong(packet.getMessageTimestamp());
-		out.writeLong(packet.getSalt());
-		byte[] signature = packet.getSignature();
+		writeString(packet.message, out);
+		out.writeLong(packet.messageTimestamp);
+		out.writeLong(packet.salt);
+		byte[] signature = packet.signature;
 		if (signature != null) {
 			out.writeBoolean(true);
 			out.writeBytes(signature);
 		} else {
 			out.writeBoolean(false);
 		}
-		writeVarInt(packet.getMessageCount(), out);
-		writeBitSet(packet.getAcknowledged(), out);
+		writeVarInt(packet.messageCount, out);
+		writeBitSet(packet.acknowledged, out);
 	}
 	
 	@Override

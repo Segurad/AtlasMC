@@ -1,11 +1,14 @@
 package de.atlascore.io.handshake;
 
-import static de.atlasmc.io.protocol.ProtocolUtil.*;
+import static de.atlasmc.io.PacketUtil.readString;
+import static de.atlasmc.io.PacketUtil.readVarInt;
+import static de.atlasmc.io.PacketUtil.writeString;
+import static de.atlasmc.io.PacketUtil.writeVarInt;
+
 import java.io.IOException;
 
 import de.atlasmc.AtlasNode;
 import de.atlasmc.io.ConnectionHandler;
-import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.Protocol;
 import de.atlasmc.io.ProtocolException;
@@ -14,20 +17,16 @@ import de.atlasmc.io.handshake.PacketMinecraftHandshake;
 import de.atlasmc.io.protocol.ProtocolAdapter;
 import io.netty.buffer.ByteBuf;
 
-/**
- * Default Minecraft handshake
- */
-@DefaultPacketID(packetID = 0x00)
 public class CorePacketMinecraftHandshake extends HandshakePaketIO<PacketMinecraftHandshake> {
 
 	@Override
 	public void handle(ConnectionHandler handler, PacketMinecraftHandshake packet) {
-		ProtocolAdapter adapter = AtlasNode.getProtocolAdapter(packet.getProtocolVersion());
+		ProtocolAdapter adapter = AtlasNode.getProtocolAdapter(packet.protocolVersion);
 		if (adapter == null) {
 			handler.close();
 			return;
 		}
-		final int nextState = packet.getNextState();
+		final int nextState = packet.nextState;
 		if (nextState == 1) {
 			final Protocol prot = adapter.getStatusProtocol();
 			handler.setProtocol(prot, prot.createDefaultPacketListener(handler));
@@ -41,18 +40,18 @@ public class CorePacketMinecraftHandshake extends HandshakePaketIO<PacketMinecra
 
 	@Override
 	public void read(PacketMinecraftHandshake packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.setProtocolVersion(readVarInt(in));
-		packet.setAddress(readString(in, 255));
-		packet.setPort(in.readUnsignedShort());
-		packet.setNextState(readVarInt(in));
+		packet.protocolVersion = readVarInt(in);
+		packet.address = readString(in, 255);
+		packet.port = in.readUnsignedShort();
+		packet.nextState = readVarInt(in);
 	}
 
 	@Override
 	public void write(PacketMinecraftHandshake packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		writeVarInt(packet.getProtocolVersion(), out);
-		writeString(packet.getAddress(), out);
-		out.writeShort(packet.getPort());
-		writeVarInt(packet.getNextState(), out);
+		writeVarInt(packet.protocolVersion, out);
+		writeString(packet.address, out);
+		out.writeShort(packet.port);
+		writeVarInt(packet.nextState, out);
 	}
 
 	@Override

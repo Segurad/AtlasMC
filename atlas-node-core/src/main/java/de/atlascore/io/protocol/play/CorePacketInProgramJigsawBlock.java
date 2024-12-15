@@ -14,22 +14,26 @@ public class CorePacketInProgramJigsawBlock implements PacketIO<PacketInProgramJ
 
 	@Override
 	public void read(PacketInProgramJigsawBlock packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setPosition(in.readLong());
-		packet.setName(readString(in));
-		packet.setTarget(readString(in));
-		packet.setPool(readString(in));
-		packet.setFinalState(readString(in));
-		packet.setJointtype(readString(in));
+		packet.position = in.readLong();
+		packet.name = readIdentifier(in);
+		packet.target = readIdentifier(in);
+		packet.pool = readIdentifier(in);
+		packet.finalState = readString(in, MAX_IDENTIFIER_LENGTH);
+		packet.jointtype = readString(in, MAX_IDENTIFIER_LENGTH);
+		packet.selectionPriority = readVarInt(in);
+		packet.placementPriority = readVarInt(in);
 	}
 
 	@Override
 	public void write(PacketInProgramJigsawBlock packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeLong(packet.getPosition());
-		writeString(packet.getName(), out);
-		writeString(packet.getTarget(), out);
-		writeString(packet.getPool(), out);
-		writeString(packet.getFinalState(), out);
-		writeString(packet.getJointtype(), out);
+		out.writeLong(packet.position);
+		writeIdentifier(packet.name, out);
+		writeIdentifier(packet.target, out);
+		writeIdentifier(packet.pool, out);
+		writeString(packet.finalState, out);
+		writeString(packet.jointtype, out);
+		writeVarInt(packet.selectionPriority, out);
+		writeVarInt(packet.placementPriority, out);
 	}
 
 	@Override

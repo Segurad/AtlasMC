@@ -12,12 +12,12 @@ public class CorePacketInCloseContainer implements PacketIO<PacketInCloseContain
 
 	@Override
 	public void read(PacketInCloseContainer packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.setWindowID(in.readByte());
+		packet.windowID = in.readByte();
 	}
 
 	@Override
 	public void write(PacketInCloseContainer packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		out.writeByte(packet.getWindowID());
+		out.writeByte(packet.windowID);
 	}
 
 	@Override

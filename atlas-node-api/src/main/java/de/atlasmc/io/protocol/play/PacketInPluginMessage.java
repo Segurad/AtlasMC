@@ -1,15 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.NamespacedKey;
-import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import io.netty.buffer.ByteBuf;
+import de.atlasmc.io.protocol.common.AbstractPacketPluginMessage;
 
-@DefaultPacketID(packetID = PacketPlay.IN_PLUGIN_MESSAGE)
-public class PacketInPluginMessage extends AbstractPacket implements PacketPlayIn {
-	
-	public NamespacedKey channel;
-	public ByteBuf data;
+@DefaultPacketID(packetID = PacketPlay.IN_PLUGIN_MESSAGE, definition = "plugin_message")
+public class PacketInPluginMessage extends AbstractPacketPluginMessage implements PacketPlayIn {
 	
 	@Override
 	public int getDefaultID() {

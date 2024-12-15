@@ -14,14 +14,14 @@ public class CorePacketInSetCreativeModeSlot implements PacketIO<PacketInSetCrea
 	
 	@Override
 	public void read(PacketInSetCreativeModeSlot packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.setSlot(in.readShort());
-		packet.setClickedItem(readSlot(in));
+		packet.slot = in.readShort();
+		packet.clickedItem = readSlot(in);
 	}
 
 	@Override
 	public void write(PacketInSetCreativeModeSlot packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		out.writeShort(packet.getSlot());
-		writeSlot(packet.getClickedItem(), out);
+		out.writeShort(packet.slot);
+		writeSlot(packet.clickedItem, out);
 	}
 	
 	@Override

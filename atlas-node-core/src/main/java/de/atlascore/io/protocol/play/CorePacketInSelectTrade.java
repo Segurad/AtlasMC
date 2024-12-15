@@ -14,12 +14,12 @@ public class CorePacketInSelectTrade implements PacketIO<PacketInSelectTrade> {
 
 	@Override
 	public void read(PacketInSelectTrade packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setSelectedSlot(readVarInt(in));
+		packet.selectedSlot = readVarInt(in);
 	}
 
 	@Override
 	public void write(PacketInSelectTrade packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getSelectedSlot(), out);
+		writeVarInt(packet.selectedSlot, out);
 	}
 
 	@Override

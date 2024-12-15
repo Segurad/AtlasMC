@@ -14,16 +14,16 @@ public class CorePacketInProgramCommandBlockMinecart implements PacketIO<PacketI
 
 	@Override
 	public void read(PacketInProgramCommandBlockMinecart packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setEntityID(readVarInt(in));
-		packet.setCommand(readString(in, 32767));
-		packet.setTrackOutput(in.readBoolean());
+		packet.entityID = readVarInt(in);
+		packet.command = readString(in, 32767);
+		packet.trackOutput = in.readBoolean();
 	}
 
 	@Override
 	public void write(PacketInProgramCommandBlockMinecart packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getEntityID(), out);
-		writeString(packet.getCommand(), out);
-		out.writeBoolean(packet.getTrackOutput());
+		writeVarInt(packet.entityID, out);
+		writeString(packet.command, out);
+		out.writeBoolean(packet.trackOutput);
 	}
 
 	@Override

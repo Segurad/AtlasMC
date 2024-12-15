@@ -14,16 +14,16 @@ public class CorePacketInJigsawGenerate implements PacketIO<PacketInJigsawGenera
 	
 	@Override
 	public void read(PacketInJigsawGenerate packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.setPosition(in.readLong());
-		packet.setLevels(readVarInt(in));
-		packet.setKeepJigsaws(in.readBoolean());
+		packet.position = in.readLong();
+		packet.levels = readVarInt(in);
+		packet.keepJigsaws = in.readBoolean();
 	}
 
 	@Override
 	public void write(PacketInJigsawGenerate packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		out.writeLong(packet.getPosition());
-		writeVarInt(packet.getLevels(), out);
-		out.writeBoolean(packet.getKeepJigsaws());
+		out.writeLong(packet.position);
+		writeVarInt(packet.levels, out);
+		out.writeBoolean(packet.keepJigsaws);
 	}
 
 	@Override

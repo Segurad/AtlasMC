@@ -1,5 +1,6 @@
 package de.atlasmc.event.player;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.ServerHandlerList;
 
@@ -7,18 +8,18 @@ public class AdvancementsOpenEvent extends PlayerEvent {
 	
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
-	private String tabID;
+	private NamespacedKey tabID;
 	
-	public AdvancementsOpenEvent(Player player, String tabID) {
+	public AdvancementsOpenEvent(Player player, NamespacedKey tabID) {
 		super(player);
 		this.tabID = tabID;
 	}
 	
-	public String getTabID() {
+	public NamespacedKey getTabID() {
 		return tabID;
 	}
 	
-	public void setTabID(String tabID) {
+	public void setTabID(NamespacedKey tabID) {
 		this.tabID = tabID;
 	}
 

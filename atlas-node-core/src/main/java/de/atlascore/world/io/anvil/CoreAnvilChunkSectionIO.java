@@ -7,7 +7,6 @@ import java.util.List;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.AbstractNBTBase;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
@@ -17,7 +16,7 @@ import de.atlasmc.world.Chunk;
 /**
  * Class for handling the IO operations for chunk sections
  */
-public class CoreAnvilChunkSectionIO extends AbstractNBTBase {
+public class CoreAnvilChunkSectionIO {
 
 	protected static final NBTFieldContainer<CoreAnvilChunkSectionIO> NBT_FIELDS;
 	
@@ -83,21 +82,6 @@ public class CoreAnvilChunkSectionIO extends AbstractNBTBase {
 	
 	public void saveSections(Chunk chunk, NBTWriter writer) throws IOException {
 		
-	}
-	
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		throw new IllegalStateException("Illegal invokation use #loadSections");
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		throw new IllegalStateException("Illegal invokation use #saveSections");
-	}
-
-	@Override
-	protected NBTFieldContainer<? extends CoreAnvilChunkSectionIO> getFieldContainerRoot() {
-		return NBT_FIELDS;
 	}
 	
 	public void free() {

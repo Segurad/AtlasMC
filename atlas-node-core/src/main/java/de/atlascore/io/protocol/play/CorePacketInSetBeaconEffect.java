@@ -14,18 +14,20 @@ public class CorePacketInSetBeaconEffect implements PacketIO<PacketInSetBeaconEf
 	
 	@Override
 	public void read(PacketInSetBeaconEffect packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setHasPrimaryEffect(in.readBoolean());
-		packet.setPrimaryEffect(readVarInt(in));
-		packet.setHasSecondaryEffect(in.readBoolean());
-		packet.setSecondaryEffect(readVarInt(in));	
+		if (packet.hasPrimaryEffect = in.readBoolean())
+			packet.primaryEffect = readVarInt(in);
+		if (packet.hasSecondaryEffect = in.readBoolean());
+			packet.secondaryEffect = readVarInt(in);	
 	}
 
 	@Override
 	public void write(PacketInSetBeaconEffect packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeBoolean(packet.hasPrimaryEffect());
-		writeVarInt(packet.getPrimaryEffect(), out);
-		out.writeBoolean(packet.hasSecondaryEffect());
-		writeVarInt(packet.getSecondaryEffect(), out);
+		out.writeBoolean(packet.hasPrimaryEffect);
+		if (packet.hasPrimaryEffect)
+			writeVarInt(packet.primaryEffect, out);
+		out.writeBoolean(packet.hasSecondaryEffect);
+		if (packet.hasSecondaryEffect)
+			writeVarInt(packet.secondaryEffect, out);
 	}
 
 	@Override

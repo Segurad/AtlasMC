@@ -66,7 +66,11 @@ public class CoreProtocolPlay extends CoreAbstractProtocol<PacketPlayIn, PacketP
 				new CorePacketInPlayerSession(),
 				new CorePacketInChunkBatchReceived(),
 				new CorePacketInConfigurationAcknowledged(),
-				new CorePacketInPingRequest()
+				new CorePacketInPingRequest(),
+				new CorePacketInChatCommand(),
+				new CorePacketInChangeContainerSlotState(),
+				new CorePacketInCookieResponse(),
+				new CorePacketInDebugSampleSubscription()
 		}, new PacketIO[] {
 				new CorePacketOutSpawnEntity(),
 				new CorePacketOutSpawnExperienceOrb(),
@@ -180,7 +184,18 @@ public class CoreProtocolPlay extends CoreAbstractProtocol<PacketPlayIn, PacketP
 				new CorePacketOutSetSimulationDistance(),
 				new CorePacketOutSetSubtitleText(),
 				new CorePacketOutSetTitleText(),
-				new CorePacketOutStartConfiguration()
+				new CorePacketOutStartConfiguration(),
+				new CorePacketOutCookieRequest(),
+				new CorePacketOutDebugSample(),
+				new CorePacketOutResetScore(),
+				new CorePacketOutRemoveResourcePack(),
+				new CorePacketOutStoreCookie(),
+				new CorePacketOutSetTickingState(),
+				new CorePacketOutStepTick(),
+				new CorePacketOutTransfer(),
+				new CorePacketOutProjectilePower(),
+				new CorePacketOutCustomReportDetails(),
+				new CorePacketOutServerLinks()
 		});
 	}
 

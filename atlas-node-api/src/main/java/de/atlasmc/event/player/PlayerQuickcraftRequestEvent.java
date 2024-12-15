@@ -1,5 +1,6 @@
 package de.atlasmc.event.player;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.Cancellable;
 import de.atlasmc.event.ServerHandlerList;
@@ -11,18 +12,18 @@ public class PlayerQuickcraftRequestEvent extends PlayerEvent implements Cancell
 
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
-	private final String recipeID;
+	private final NamespacedKey recipeID;
 	
 	private boolean craftAll;
 	private boolean cancelled;
 	
-	public PlayerQuickcraftRequestEvent(Player player, String recipe, boolean craftAll) {
+	public PlayerQuickcraftRequestEvent(Player player, NamespacedKey recipe, boolean craftAll) {
 		super(player);
 		this.recipeID = recipe;
 		this.craftAll = craftAll;
 	}
 	
-	public String getRecipeID() {
+	public NamespacedKey getRecipeID() {
 		return recipeID;
 	}
 	

@@ -14,11 +14,13 @@ public class CorePacketInResourcePack implements PacketIO<PacketInResourcePack> 
 
 	@Override
 	public void read(PacketInResourcePack packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		packet.uuid = readUUID(in);
 		packet.status = ResourcePackStatus.getByID(readVarInt(in));
 	}
 
 	@Override
 	public void write(PacketInResourcePack packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		writeUUID(packet.uuid, out);
 		writeVarInt(packet.status.getID(), out);
 	}
 

@@ -4,45 +4,20 @@ import de.atlasmc.block.tile.CommandBlock.Mode;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(packetID = PacketPlay.IN_PROGRAM_COMMAND_BLOCK)
+@DefaultPacketID(packetID = PacketPlay.IN_PROGRAM_COMMAND_BLOCK, definition = "programm_command_block")
 public class PacketInProgramCommandBlock extends AbstractPacket implements PacketPlayIn {
 	
-	private long position;
-	private String command;
-	private Mode mode;
-	private int flags;
-	
-	public long getPosition() {
-		return position;
-	}
-	
-	public void setPosition(long position) {
-		this.position = position;
-	}
-	
-	public String getCommand() {
-		return command;
-	}
-	
-	public void setCommand(String command) {
-		this.command = command;
-	}
-	
-	public Mode getMode() {
-		return mode;
-	}
-	
-	public void setMode(Mode mode) {
-		this.mode = mode;
-	}
-	
-	public int getFlags() {
-		return flags;
-	}
-	
-	public void setFlags(int flags) {
-		this.flags = flags;
-	}
+	public long position;
+	public String command;
+	public Mode mode;
+	/**
+	 * <ul>
+	 * <li>0x01 = track output</li>
+	 * <li>0x02 = is conditional</li>
+	 * <li>0x04 = automatic</li>
+	 * </ul>
+	 */
+	public int flags;
 	
 	@Override
 	public int getDefaultID() {

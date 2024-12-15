@@ -214,6 +214,20 @@ public interface PlayerConnection extends Messageable {
 	boolean isClientOnGround();
 	
 	/**
+	 * Sets the selected trade index.
+	 * Currently only the client may change the selected slot.
+	 * Changing this without client input will cause a desync between server and client.
+	 * @param trade
+	 */
+	void setSelectedTrade(int trade);
+	
+	/**
+	 * Returns the selected trade index or -1 if no trade selected
+	 * @return index or -1
+	 */
+	int getSelectedTrade();
+	
+	/**
 	 * Only for updating value send by client
 	 * @param onGround
 	 */

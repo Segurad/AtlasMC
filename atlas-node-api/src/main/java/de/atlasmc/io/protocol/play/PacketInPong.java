@@ -1,12 +1,10 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.protocol.common.AbstractPacketPing;
 
-@DefaultPacketID(packetID = PacketPlay.IN_PONG)
-public class PacketInPong extends AbstractPacket implements PacketPlayIn {
-
-	public int id;
+@DefaultPacketID(packetID = PacketPlay.IN_PONG, definition = "pong")
+public class PacketInPong extends AbstractPacketPing implements PacketPlayIn {
 	
 	@Override
 	public int getDefaultID() {

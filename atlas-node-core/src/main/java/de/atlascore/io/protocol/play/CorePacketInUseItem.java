@@ -15,14 +15,18 @@ public class CorePacketInUseItem implements PacketIO<PacketInUseItem> {
 
 	@Override
 	public void read(PacketInUseItem packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setHand(readVarInt(in) == 0 ? EquipmentSlot.MAIN_HAND : EquipmentSlot.OFF_HAND);
-		packet.setSequence(readVarInt(in));
+		packet.hand = readVarInt(in) == 0 ? EquipmentSlot.MAIN_HAND : EquipmentSlot.OFF_HAND;
+		packet.sequence = readVarInt(in);
+		packet.yaw = in.readFloat();
+		packet.pitch = in.readFloat();
 	}
 
 	@Override
 	public void write(PacketInUseItem packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getHand() == EquipmentSlot.MAIN_HAND ? 0 : 1, out);
-		writeVarInt(packet.getSequence(), out);
+		writeVarInt(packet.hand == EquipmentSlot.MAIN_HAND ? 0 : 1, out);
+		writeVarInt(packet.sequence, out);
+		out.writeFloat(packet.yaw);
+		out.writeFloat(packet.pitch);
 	}
 	
 	@Override

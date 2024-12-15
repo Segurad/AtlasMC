@@ -8,22 +8,23 @@ import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketInPlayerCommand;
+import de.atlasmc.io.protocol.play.PacketInPlayerCommand.Action;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketInPlayerCommand implements PacketIO<PacketInPlayerCommand> {
 	
 	@Override
 	public void read(PacketInPlayerCommand packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.setEntityID(readVarInt(in));
-		packet.setActionID(readVarInt(in));
-		packet.setJumpboost(readVarInt(in));
+		packet.entityID = readVarInt(in);
+		packet.action = Action.getByID(readVarInt(in));
+		packet.jumpboost = readVarInt(in);
 	}
 
 	@Override
 	public void write(PacketInPlayerCommand packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		writeVarInt(packet.getEntityID(), out);
-		writeVarInt(packet.getActionID(), out);
-		writeVarInt(packet.getJumpboost(), out);
+		writeVarInt(packet.entityID, out);
+		writeVarInt(packet.action.getID(), out);
+		writeVarInt(packet.jumpboost, out);
 	}
 
 	@Override

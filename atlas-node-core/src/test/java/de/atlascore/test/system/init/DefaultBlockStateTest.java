@@ -24,7 +24,9 @@ public class DefaultBlockStateTest {
 	
 	@Test
 	void testDefaultBlockStateIDs() throws Exception {
-		Registries.init(new CoreRegistryHandler());
+		try {
+			Registries.init(new CoreRegistryHandler());
+		} catch (IllegalStateException e) {}
 		Registries.createInstanceRegistry(Material.class);
 		Registries.createInstanceRegistry(ItemMetaFactory.class);
 		Registries.createInstanceRegistry(BlockDataFactory.class);

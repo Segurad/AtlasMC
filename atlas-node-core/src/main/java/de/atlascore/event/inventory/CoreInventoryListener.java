@@ -26,8 +26,8 @@ public final class CoreInventoryListener implements Listener {
 
 	@EventHandler
 	public void onClick(InventoryClickEvent e) {
-		final int slot = e.getSlot();
 		final Inventory inv = e.getClickedInventory();
+		final int slot = e.getSlot();
 		final Player player = e.getWhoClicked();
 		final GUI gui = inv.getGUI();
 		if (gui != null) {
@@ -67,6 +67,7 @@ public final class CoreInventoryListener implements Listener {
 		if (gui != null) {
 			gui.notifyClosedBy(player);
 		}
+		player.getConnection().setSelectedTrade(-1);
 		// nothing to process cause inventory will be closed no matter what
 	}
 	

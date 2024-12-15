@@ -12,22 +12,22 @@ public class CorePacketInSetPlayerPositionAndRotation implements PacketIO<Packet
 
 	@Override
 	public void read(PacketInSetPlayerPositionAndRotation packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.setX(in.readDouble());
-		packet.setFeetY(in.readDouble());
-		packet.setZ(in.readDouble());
-		packet.setYaw(in.readFloat());
-		packet.setPitch(in.readFloat());
-		packet.setOnGround(in.readBoolean());
+		packet.x = in.readDouble();
+		packet.feetY = in.readDouble();
+		packet.z = in.readDouble();
+		packet.yaw = in.readFloat();
+		packet.pitch = in.readFloat();
+		packet.onGround = in.readBoolean();
 	}
 
 	@Override
 	public void write(PacketInSetPlayerPositionAndRotation packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		out.writeDouble(packet.getX());
-		out.writeDouble(packet.getFeetY());
-		out.writeDouble(packet.getZ());
-		out.writeFloat(packet.getYaw());
-		out.writeFloat(packet.getPitch());
-		out.writeBoolean(packet.isOnGround());
+		out.writeDouble(packet.x);
+		out.writeDouble(packet.feetY);
+		out.writeDouble(packet.z);
+		out.writeFloat(packet.yaw);
+		out.writeFloat(packet.pitch);
+		out.writeBoolean(packet.onGround);
 	}
 
 	@Override

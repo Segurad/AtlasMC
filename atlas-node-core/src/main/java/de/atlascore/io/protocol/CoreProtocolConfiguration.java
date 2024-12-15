@@ -18,7 +18,9 @@ public class CoreProtocolConfiguration extends CoreAbstractProtocol<PacketConfig
 			new CorePacketInFinishConfiguration(),
 			new CorePacketInKeepAlive(),
 			new CorePacketInPong(),
-			new CorePacketInResourcePack()
+			new CorePacketInResourcePack(),
+			new CorePacketInCookieResponse(),
+			new CorePacketInKnownPacks()
 		}, new PacketIO[] {
 			new CorePacketOutPluginMessage(),
 			new CorePacketOutDisconnect(),
@@ -28,7 +30,15 @@ public class CoreProtocolConfiguration extends CoreAbstractProtocol<PacketConfig
 			new CorePacketOutRegistryData(),
 			new CorePacketOutAddResourcePack(),
 			new CorePacketOutFeatureFlags(),
-			new CorePacketOutUpdateTags()
+			new CorePacketOutUpdateTags(),
+			new CorePacketOutCookieRequest(),
+			new CorePacketOutResetChat(),
+			new CorePacketOutRemoveResourcePack(),
+			new CorePacketOutStoreCookie(),
+			new CorePacketOutTransfer(),
+			new CorePacketOutKnownPacks(),
+			new CorePacketOutCustomReportDetails(),
+			new CorePacketOutServerLinks()
 		});
 	}
 

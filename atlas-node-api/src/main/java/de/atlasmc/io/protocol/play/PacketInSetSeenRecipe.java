@@ -1,20 +1,13 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(packetID = PacketPlay.IN_SET_SEEN_RECIPE)
+@DefaultPacketID(packetID = PacketPlay.IN_SET_SEEN_RECIPE, definition = "seen_recipe")
 public class PacketInSetSeenRecipe extends AbstractPacket implements PacketPlayIn {
 	
-	private String recipeID;
-	
-	public String getRecipeID() {
-		return recipeID;
-	}
-	
-	public void setRecipeID(String recipeID) {
-		this.recipeID = recipeID;
-	}
+	public NamespacedKey recipeID;
 	
 	@Override
 	public int getDefaultID() {

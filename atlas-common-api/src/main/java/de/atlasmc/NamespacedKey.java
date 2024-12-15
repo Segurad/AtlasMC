@@ -134,6 +134,7 @@ public class NamespacedKey {
 		return new NamespacedKey(namespace, key, namespacedKey);
 	}
 	
+	@NotNull
 	public static NamespacedKey literal(String namespacedKey) {
 		if (namespacedKey == null)
 			throw new IllegalArgumentException("NamespacedKey can not be null!");
@@ -141,7 +142,9 @@ public class NamespacedKey {
 		if (k != null)
 			return k;
 		k = of(namespacedKey);
-		k = CACHE.putIfAbsent(namespacedKey, k);
+		NamespacedKey cacheKey = CACHE.putIfAbsent(namespacedKey, k);
+		if (cacheKey != null)
+			k = cacheKey;
 		return k;
 	}
 	

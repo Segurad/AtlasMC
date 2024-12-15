@@ -14,12 +14,12 @@ public class CorePacketInSetSeenRecipe implements PacketIO<PacketInSetSeenRecipe
 
 	@Override
 	public void read(PacketInSetSeenRecipe packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setRecipeID(readString(in));
+		packet.recipeID = readIdentifier(in);
 	}
 
 	@Override
 	public void write(PacketInSetSeenRecipe packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeString(packet.getRecipeID(), out);
+		writeIdentifier(packet.recipeID, out);
 	}
 
 	@Override

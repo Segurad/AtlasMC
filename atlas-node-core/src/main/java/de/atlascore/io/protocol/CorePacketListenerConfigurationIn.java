@@ -15,8 +15,10 @@ import de.atlasmc.io.protocol.PlayerSettings;
 import de.atlasmc.io.protocol.configuration.PacketConfiguration;
 import de.atlasmc.io.protocol.configuration.PacketConfigurationIn;
 import de.atlasmc.io.protocol.configuration.PacketInClientInformation;
+import de.atlasmc.io.protocol.configuration.PacketInCookieResponse;
 import de.atlasmc.io.protocol.configuration.PacketInFinishConfiguration;
 import de.atlasmc.io.protocol.configuration.PacketInKeepAlive;
+import de.atlasmc.io.protocol.configuration.PacketInKnownPacks;
 import de.atlasmc.io.protocol.configuration.PacketInPluginMessage;
 import de.atlasmc.io.protocol.configuration.PacketInPong;
 import de.atlasmc.io.protocol.configuration.PacketInResourcePack;
@@ -90,6 +92,12 @@ public class CorePacketListenerConfigurationIn extends CoreAbstractPacketListene
 		});
 		initHandler(PacketInResourcePack.class, (con, packet) -> {
 			// TODO handle in resource pack
+		});
+		initHandler(PacketInCookieResponse.class, (con, packet) -> {
+			// TODO handle in cookie response
+		});
+		initHandler(PacketInKnownPacks.class, (con, packet) -> {
+			// TODO handle in known packs
 		});
 	}
 	

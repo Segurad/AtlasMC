@@ -15,12 +15,12 @@ public class CorePacketInClientCommand implements PacketIO<PacketInClientCommand
 	
 	@Override
 	public void read(PacketInClientCommand packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.setAction(StatusAction.getByID(readVarInt(in)));
+		packet.action = StatusAction.getByID(readVarInt(in));
 	}
 
 	@Override
 	public void write(PacketInClientCommand packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		writeVarInt(packet.getAction().getID(), out);
+		writeVarInt(packet.action.getID(), out);
 	}
 
 	@Override

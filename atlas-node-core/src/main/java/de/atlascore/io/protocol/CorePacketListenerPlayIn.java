@@ -26,7 +26,6 @@ import de.atlasmc.event.player.AdvancementsCloseEvent;
 import de.atlasmc.event.player.AdvancementsOpenEvent;
 import de.atlasmc.event.player.AsyncPlayerChatEvent;
 import de.atlasmc.event.player.PlayerAnimationEvent;
-import de.atlasmc.event.player.PlayerAnimationEvent.PlayerAnimationType;
 import de.atlasmc.event.player.PlayerChangeDisplayedSkinPartsEvent;
 import de.atlasmc.event.player.PlayerChatSettingsEvent;
 import de.atlasmc.event.player.PlayerDropItemEvent;
@@ -63,9 +62,12 @@ import de.atlasmc.inventory.PlayerInventory;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.PlayerSettings;
+import de.atlasmc.io.protocol.play.PacketInAcknowledgeConfiguration;
+import de.atlasmc.io.protocol.play.PacketInAcknowledgeMessage;
+import de.atlasmc.io.protocol.play.PacketInChangeContaierSlotState;
 import de.atlasmc.io.protocol.play.PacketInChangeDifficulty;
 import de.atlasmc.io.protocol.play.PacketInChangeRecipeBookSettings;
-import de.atlasmc.io.protocol.play.PacketInSignedChatCommand;
+import de.atlasmc.io.protocol.play.PacketInChatCommand;
 import de.atlasmc.io.protocol.play.PacketInChatMessage;
 import de.atlasmc.io.protocol.play.PacketInChunkBatchReceived;
 import de.atlasmc.io.protocol.play.PacketInClickContainer;
@@ -75,14 +77,14 @@ import de.atlasmc.io.protocol.play.PacketInClientCommand.StatusAction;
 import de.atlasmc.io.protocol.play.PacketInClientInformation;
 import de.atlasmc.io.protocol.play.PacketInCloseContainer;
 import de.atlasmc.io.protocol.play.PacketInCommandSuggestionsRequest;
-import de.atlasmc.io.protocol.play.PacketInAcknowledgeConfiguration;
 import de.atlasmc.io.protocol.play.PacketInConfirmTeleport;
+import de.atlasmc.io.protocol.play.PacketInCookieResponse;
+import de.atlasmc.io.protocol.play.PacketInDebugSampleSubscription;
 import de.atlasmc.io.protocol.play.PacketInEditBook;
 import de.atlasmc.io.protocol.play.PacketInInteract;
 import de.atlasmc.io.protocol.play.PacketInJigsawGenerate;
 import de.atlasmc.io.protocol.play.PacketInKeepAlive;
 import de.atlasmc.io.protocol.play.PacketInLockDifficulty;
-import de.atlasmc.io.protocol.play.PacketInAcknowledgeMessage;
 import de.atlasmc.io.protocol.play.PacketInMoveVehicle;
 import de.atlasmc.io.protocol.play.PacketInPaddleBoat;
 import de.atlasmc.io.protocol.play.PacketInPickItem;
@@ -114,6 +116,7 @@ import de.atlasmc.io.protocol.play.PacketInSetPlayerPosition;
 import de.atlasmc.io.protocol.play.PacketInSetPlayerPositionAndRotation;
 import de.atlasmc.io.protocol.play.PacketInSetPlayerRotation;
 import de.atlasmc.io.protocol.play.PacketInSetSeenRecipe;
+import de.atlasmc.io.protocol.play.PacketInSignedChatCommand;
 import de.atlasmc.io.protocol.play.PacketInSwingArm;
 import de.atlasmc.io.protocol.play.PacketInTeleportToEntity;
 import de.atlasmc.io.protocol.play.PacketInUpdateSign;
@@ -139,7 +142,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 		HANDLE_ASYNC = new boolean[PacketPlay.PACKET_COUNT_IN];
 		HANDLERS = new PacketHandler[PacketPlay.PACKET_COUNT_IN];
 		initHandler(PacketInConfirmTeleport.class, (con, packet) -> { // 0x00
-			if (packet.getTeleportID() == con.getTeleportID())
+			if (packet.teleportID == con.getTeleportID())
 				con.confirmTeleport();
 		});
 		initHandler(PacketInQueryBlockEntityTag.class, (con, packet) -> { // 0x01
@@ -151,10 +154,10 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			// TODO Button not available in multiplayer clarification needed
 		});
 		initHandler(PacketInChatMessage.class, (con, packet) -> { // 0x03
-			HandlerList.callEvent(new AsyncPlayerChatEvent(true, con.getPlayer(), packet.getMessage()));
+			HandlerList.callEvent(new AsyncPlayerChatEvent(true, con.getPlayer(), packet.message));
 		}, true);
 		initHandler(PacketInClientCommand.class, (con, packet) -> { // 0x04
-			if (packet.getAction() == StatusAction.RESPAWN) {
+			if (packet.action == StatusAction.RESPAWN) {
 				HandlerList.callEvent(new PlayerRespawnEvent(con.getPlayer()));
 			}
 		});
@@ -207,7 +210,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				return;
 			InventoryView view = con.getPlayer().getOpenInventory();
 			InventoryButtonType type = null;
-			int id = packet.getButtonID();
+			int id = packet.buttonID;
 			if (view.getType() == InventoryType.ENCHANTING) {
 				switch (id) {
 				case 0: 
@@ -251,23 +254,23 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			if (s == null) 
 				return;
 			int key = -1;
-			final int slot = packet.getSlot();
-			final int button = packet.getButton();
+			final int slot = packet.slot;
+			final int button = packet.button;
 			final InventoryView view = con.getPlayer().getOpenInventory();
-			int stateID = packet.getStateID();
+			int stateID = packet.stateID;
 			Inventory clickedInv = view.getInventory(slot);
 			if (clickedInv != null && stateID != clickedInv.getStateID()) {
 				clickedInv.updateSlots(con.getPlayer());
 				return; // inv out of sync resend to resync
 			}
-			if (packet.getMode() != 5) {
+			if (packet.mode != 5) {
 				InventoryAction action = InventoryAction.UNKNOWN;
 				ClickType click = ClickType.UNKNOWN;
 				final ItemStack slotItem = slot != -999 ? view.getItemUnsafe(slot) : null;
 				final ItemStack cursorItem = con.getPlayer().getItemOnCursorUnsafe();
 				if (slotItem == null && cursorItem == null)
 					action = InventoryAction.NOTHING;
-				switch (packet.getMode()) {
+				switch (packet.mode) {
 				case 0: 
 					if (button == 0) {
 						click = ClickType.LEFT;
@@ -316,7 +319,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 					}
 					break;
 				case 2:
-					key = packet.getButton();
+					key = packet.button;
 					click = ClickType.NUMBER_KEY;
 					if (slot == 40)
 						click = ClickType.SWAP_OFFHAND;
@@ -426,15 +429,15 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			// TODO handle packet
 		});
 		initHandler(PacketInQueryEntityTag.class, (con, packet) -> { // 0x0D
-			int transaction = packet.getTransactionID();
-			int entityID = packet.getEntityID();
+			int transaction = packet.transactionID;
+			int entityID = packet.entityID;
 			HandlerList.callEvent(new PlayerQueryEntityNBTEvent(con.getPlayer(), transaction, entityID));
 		});
 		initHandler(PacketInJigsawGenerate.class, (player, packet) -> { // 0x0F
 			// TODO handle packet
 		});
 		initHandler(PacketInKeepAlive.class, (con, packet) -> { // 0x10
-			if (packet.getKeepAliveID() != con.getLastKeepAlive()) 
+			if (packet.keepAliveID != con.getLastKeepAlive()) 
 				return;
 			con.confirmKeepAlive(packet.getTimestamp());
 		});
@@ -446,10 +449,12 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				return;
 			PlayerMoveEvent eventMove = con.getEventMove();
 			eventMove.setCancelled(false);
-			SimpleLocation clientLocation = con.getClientLocation();
-			packet.getLocation(clientLocation);
-			clientLocation.copyTo(eventMove.getTo());
-			con.setClientOnGround(packet.isOnGround());
+			SimpleLocation loc = con.getClientLocation();
+			loc.x = packet.x;
+			loc.y = packet.feetY;
+			loc.z = packet.z;
+			loc.copyTo(eventMove.getTo());
+			con.setClientOnGround(packet.onGround);
 			con.getPlayer().getLocation(eventMove.getFrom());
 			HandlerList.callEvent(eventMove);
 		});
@@ -458,10 +463,14 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				return;
 			PlayerMoveEvent eventMove = con.getEventMove();
 			eventMove.setCancelled(false);
-			SimpleLocation clientLocation = con.getClientLocation();
-			packet.getLocation(clientLocation);
-			clientLocation.copyTo(eventMove.getTo());
-			con.setClientOnGround(packet.isOnGround());
+			SimpleLocation loc = con.getClientLocation();
+			loc.x = packet.x;
+			loc.y = packet.feetY;
+			loc.z = packet.z;
+			loc.pitch = packet.pitch;
+			loc.yaw = packet.yaw;
+			loc.copyTo(eventMove.getTo());
+			con.setClientOnGround(packet.onGround);
 			con.getPlayer().getLocation(eventMove.getFrom());
 			HandlerList.callEvent(eventMove);
 		});
@@ -470,17 +479,18 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				return;
 			PlayerMoveEvent eventMove = con.getEventMove();
 			eventMove.setCancelled(false);
-			SimpleLocation clientLocation = con.getClientLocation();
-			packet.getLocation(clientLocation);
-			clientLocation.copyTo(eventMove.getTo());
-			con.setClientOnGround(packet.isOnGround());
+			SimpleLocation loc = con.getClientLocation();
+			loc.yaw = packet.yaw;
+			loc.pitch = packet.pitch;
+			loc.copyTo(eventMove.getTo());
+			con.setClientOnGround(packet.onGround);
 			con.getPlayer().getLocation(eventMove.getFrom());
 			HandlerList.callEvent(eventMove);
 		});
 		initHandler(PacketInSetPlayerOnGround.class, (con, packet) -> { // 0x15
 			if (!con.isTeleportConfirmed())
 				return;
-			con.setClientOnGround(packet.isOnGround());
+			con.setClientOnGround(packet.onGround);
 		});
 		initHandler(PacketInMoveVehicle.class, (con, packet) -> { // 0x16
 			// TODO handle packet
@@ -489,14 +499,14 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			// TODO handle packet
 		});
 		initHandler(PacketInPickItem.class, (con, packet) -> { // 0x18
-			HandlerList.callEvent(new PlayerPickItemEvent(con.getPlayer(), packet.getSlotToUse()));
+			HandlerList.callEvent(new PlayerPickItemEvent(con.getPlayer(), packet.slotToUse));
 		});
 		initHandler(PacketInPlaceRecipe.class, (con, packet) -> { // 0x19
-			int windowID = packet.getWindowID();
+			int windowID = packet.windowID;
 			if (con.getInventoryID() != windowID) 
 				return;
-			String recipe = packet.getRecipe();
-			boolean craftAll = packet.getMakeAll();
+			NamespacedKey recipe = packet.recipe;
+			boolean craftAll = packet.makeAll;
 			Player player = con.getPlayer();
 			HandlerList.callEvent(new PlayerQuickcraftRequestEvent(player, recipe, craftAll));
 		});
@@ -505,16 +515,16 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			HandlerList.callEvent(new PlayerToggleFlightEvent(player, packet.isFlying()));
 		});
 		initHandler(PacketInPlayerAction.class, (con, packet) -> { // 0x1B
-			final int status = packet.getStatus();
+			final int status = packet.status;
 			Player player = con.getPlayer();
 			switch (status) {
 			case 0: { // Start Digging
 				DiggingHandler handler = player.getDigging();
-				long pos = packet.getPosition();
+				long pos = packet.position;
 				int x = MathUtil.getPositionX(pos);
 				int y = MathUtil.getPositionY(pos);
 				int z = MathUtil.getPositionZ(pos);
-				handler.startDigging(packet.getFace(), player.getWorld(), x, y, z);
+				handler.startDigging(packet.face, player.getWorld(), x, y, z);
 				break;
 			}
 			case 1: { // Cancelled Digging
@@ -547,39 +557,42 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			}
 		});
 		initHandler(PacketInPlayerCommand.class, (con, packet) -> { // 0x1C
-			// TODO missing implementations
-			switch (packet.getActionID()) {
-			case 0: { // Start sneaking
+			switch (packet.action) {
+			case START_SNEAKING: {
 				PlayerToggleSneakEvent eventSneak = con.getEventSneak(); 
 				eventSneak.setSneaking(true);
 				HandlerList.callEvent(eventSneak);
 				break;
 			}
-			case 1: { // Stop sneaking
+			case STOP_SNEAKING: {
 				PlayerToggleSneakEvent eventSneak = con.getEventSneak(); 
 				eventSneak.setSneaking(false);
 				HandlerList.callEvent(eventSneak);
 				break;
 			}
-			case 2: // Leave Bed (GUI Button)
+			case LEAVE_BED:
 				HandlerList.callEvent(new PlayerLeaveBedEvent(con.getPlayer()));
 				break;
-			case 3: { // Start sprinting
+			case START_SPRINTING: {
 				PlayerToggleSprintEvent eventSprint = con.getEventSprint();
 				eventSprint.setSprinting(true);
 				HandlerList.callEvent(eventSprint);
 				break;
 			}
-			case 4: { // Stop sprinting
+			case STOP_SPRINTING: {
 				PlayerToggleSprintEvent eventSprint = con.getEventSprint();
 				eventSprint.setSprinting(false);
 				HandlerList.callEvent(eventSprint);
 				break;
 			}
-			case 5: // Start horse jump
-			case 6: // Stop horse jump
-			case 7: // Open horse inventory (mounted)
-			case 8: // start flying with elytra
+			case START_HORSE_JUMP:
+				// TODO start horse jump
+			case STOP_HORSE_JUMP:
+				// TODO stop horse jump
+			case OPEN_VEHICLE_INVENTORY:
+				// TODO open vehicle inventory
+			case START_FLYING_ELYTRA:
+				// TODO elytra fly
 				break;
 			}
 		});
@@ -588,34 +601,36 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 		});
 		initHandler(PacketInChangeRecipeBookSettings.class, (con, packet) -> { // 0x1E
 			Player player = con.getPlayer();
-			BookType type = packet.getBookType();
-			boolean open = packet.isBookOpen();
-			boolean filtered = packet.isFilterActive();
+			BookType type = packet.bookType;
+			boolean open = packet.bookOpen;
+			boolean filtered = packet.filterActive;
 			HandlerList.callEvent(new PlayerSetRecipeBookStateEvent(player, type, open, filtered));
 		});
 		initHandler(PacketInSetSeenRecipe.class, (con, packet) -> { // 0x1F
 			Player player = con.getPlayer();
-			HandlerList.callEvent(new PlayerSetDisplayRecipeEvent(player, packet.getRecipeID()));
+			HandlerList.callEvent(new PlayerSetDisplayRecipeEvent(player, packet.recipeID));
 		});
 		initHandler(PacketInRenameItem.class, (con, packet) -> { // 0x20
 			Player player = con.getPlayer();
-			HandlerList.callEvent(new SmithingNameInputEvent(player.getOpenInventory(), packet.getItemName()));
+			HandlerList.callEvent(new SmithingNameInputEvent(player.getOpenInventory(), packet.itemName));
 		});
 		initHandler(PacketInResourcePack.class, (con, packet) -> { // 0x21
 			Player player = con.getPlayer();
-			HandlerList.callEvent(new PlayerResourcePackStatusEvent(player, packet.getStatus()));
+			HandlerList.callEvent(new PlayerResourcePackStatusEvent(player, packet.uuid ,packet.status));
 		});
 		initHandler(PacketInSeenAdvancements.class, (con, packet) -> { // 0x22
 			Player player = con.getPlayer();
-			if (packet.getAction() == Action.OPEN) {
-				HandlerList.callEvent(new AdvancementsOpenEvent(player, packet.getTabID()));
+			if (packet.action == Action.OPEN) {
+				HandlerList.callEvent(new AdvancementsOpenEvent(player, packet.tabID));
 			} else {
 				HandlerList.callEvent(new AdvancementsCloseEvent(player));
 			}
 		});
 		initHandler(PacketInSelectTrade.class, (con, packet) -> { // 0x23
 			Player player = con.getPlayer();
-			HandlerList.callEvent(new SelectTradeEvent(player.getOpenInventory(), packet.getSelectedSlot()));
+			int oldID = con.getSelectedTrade();
+			con.setSelectedTrade(packet.selectedSlot);
+			HandlerList.callEvent(new SelectTradeEvent(player.getOpenInventory(), packet.selectedSlot, oldID));
 		});
 		initHandler(PacketInSetBeaconEffect.class, (listener, packet) -> { // 0x24
 			// int primaryID = packet.getPrimaryEffect();
@@ -627,30 +642,30 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 		initHandler(PacketInSetHeldItem.class, (con, packet) -> { // 0x25
 			PlayerHeldItemChangeEvent event = con.getEventHeldItemChange();
 			event.setCancelled(false);
-			event.setNewSlot(packet.getSlot());
+			event.setNewSlot(packet.slot);
 			HandlerList.callEvent(event);
 		});
 		initHandler(PacketInProgramCommandBlock.class, (con, packet) -> { // 0x26
 			Player player = con.getPlayer();
-			Location loc = MathUtil.getLocation(player.getWorld(), packet.getPosition());
-			boolean trackoutput = (packet.getFlags() & 0x01) == 0x01;
-			boolean conditional = (packet.getFlags() & 0x02) == 0x02;
-			boolean alwaysactive = (packet.getFlags() & 0x04) == 0x04;
-			String command = packet.getCommand();
-			HandlerList.callEvent(new PlayerUpdateCommandBlockEvent(player, loc, command, packet.getMode(), trackoutput, conditional, alwaysactive));
+			Location loc = MathUtil.getLocation(player.getWorld(), packet.position);
+			boolean trackoutput = (packet.flags & 0x01) == 0x01;
+			boolean conditional = (packet.flags & 0x02) == 0x02;
+			boolean alwaysactive = (packet.flags & 0x04) == 0x04;
+			String command = packet.command;
+			HandlerList.callEvent(new PlayerUpdateCommandBlockEvent(player, loc, command, packet.mode, trackoutput, conditional, alwaysactive));
 		});
 		initHandler(PacketInProgramCommandBlockMinecart.class, (con, packet) -> { // 0x27
 			Player player = con.getPlayer();
-			int entityID = packet.getEntityID();
-			String command = packet.getCommand();
-			boolean trackOutput = packet.getTrackOutput();
+			int entityID = packet.entityID;
+			String command = packet.command;
+			boolean trackOutput = packet.trackOutput;
 			HandlerList.callEvent(new PlayerUpdateCommandBlockMinecartEvent(player, entityID, command, trackOutput));
 		});
 		initHandler(PacketInSetCreativeModeSlot.class, (con, packet) -> { // 0x28
 			Player player = con.getPlayer();
 			InventoryView view = player.getOpenInventory();
-			int slot = packet.getSlot() < 0 ? -999 : packet.getSlot();
-			ItemStack item = packet.getClickedItem();
+			int slot = packet.slot < 0 ? -999 : packet.slot;
+			ItemStack item = packet.clickedItem;
 			HandlerList.callEvent(new InventoryCreativeClickEvent(view, slot, item));
 		});
 		initHandler(PacketInProgramJigsawBlock.class, (con, packet) -> { // 0x29
@@ -660,38 +675,37 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			// TODO handle packet
 		});
 		initHandler(PacketInUpdateSign.class, (con, packet) -> { // 0x2B
-			long pos = packet.getPosition();
+			long pos = packet.position;
 			Player player = con.getPlayer();
 			int x = MathUtil.getPositionX(pos);
 			int y = MathUtil.getPositionY(pos);
 			int z = MathUtil.getPositionZ(pos);
-			boolean front = packet.isFront();
+			boolean front = packet.isFront;
 			Block b = player.getWorld().getBlock(x, y, z);
 			String[] lines = new String[] {
-					packet.getLine1(),
-					packet.getLine2(),
-					packet.getLine3(),
-					packet.getLine4()
+					packet.line1,
+					packet.line2,
+					packet.line3,
+					packet.line4
 			};
 			HandlerList.callEvent(new SignChangeEvent(b, player, lines, front));
 		});
 		initHandler(PacketInSwingArm.class, (con, packet) -> { // 0x2C
 			PlayerAnimationEvent event = con.getEventAnimation();
-			event.setAnimation(packet.getHand() == 0 ? 
-					PlayerAnimationType.SWING_MAIN_HAND : PlayerAnimationType.SWING_OFF_HAND);
+			event.setAnimation(packet.hand);
 			event.setCancelled(false);
 			HandlerList.callEvent(event);
 		});
 		initHandler(PacketInTeleportToEntity.class, (con, packet) -> { // 0x2D
-			HandlerList.callEvent(new PlayerSpectateEvent(con.getPlayer(), packet.getUUID()));
+			HandlerList.callEvent(new PlayerSpectateEvent(con.getPlayer(), packet.uuid));
 		});
 		initHandler(PacketInUseItemOn.class, (con, packet) -> { // 0x2E
-			float cX = packet.getCursurPositionX();
-			float cY = packet.getCursurPositionY();
-			float cZ = packet.getCursurPositionZ();
-			EquipmentSlot hand = packet.getHand();
-			BlockFace face = packet.getFace();
-			long pos = packet.getPosition();
+			float cX = packet.cursorPosX;
+			float cY = packet.cursorPosY;
+			float cZ = packet.cursorPosZ;
+			EquipmentSlot hand = packet.hand;
+			BlockFace face = packet.face;
+			long pos = packet.position;
 			Player player = con.getPlayer();
 			Location loc = MathUtil.getLocation(player.getWorld(), pos);
 			Block block = new CoreBlockAccess(loc);
@@ -706,7 +720,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			Chunk chunk = ray.getFirstBlockHit(length);
 			Block block = new CoreBlockAccess(loc, chunk);
 			
-			EquipmentSlot hand = packet.getHand();
+			EquipmentSlot hand = packet.hand;
 			PlayerInteractEvent.Action action;
 			if (block.getType().isAir()) {
 				if (hand == EquipmentSlot.MAIN_HAND) {
@@ -739,6 +753,18 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 		});
 		initHandler(PacketInPingRequest.class, (con, packet) -> {
 			// TODO handle ping request
+		});
+		initHandler(PacketInChangeContaierSlotState.class, (con, packet) -> {
+			// TODO handle in change container slot state
+		});
+		initHandler(PacketInChatCommand.class, (con, packet) -> {
+			// TODO handle in command
+		});
+		initHandler(PacketInCookieResponse.class, (con, packet) -> {
+			// TODO handle cookie response
+		});
+		initHandler(PacketInDebugSampleSubscription.class, (con, packet) -> {
+			// TODO handle debug sample subscription
 		});
 	}
 

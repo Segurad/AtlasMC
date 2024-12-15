@@ -4,7 +4,6 @@ import de.atlasmc.Gamemode;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.world.Dimension;
 
 @DefaultPacketID(packetID = PacketPlay.OUT_RESPAWN, definition = "respawn")
 public class PacketOutRespawn extends AbstractPacket implements PacketPlayOut {

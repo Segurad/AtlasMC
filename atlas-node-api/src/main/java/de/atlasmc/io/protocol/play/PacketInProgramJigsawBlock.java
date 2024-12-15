@@ -1,65 +1,20 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(packetID = PacketPlay.IN_PROGRAM_JIGSAW_BLOCK)
+@DefaultPacketID(packetID = PacketPlay.IN_PROGRAM_JIGSAW_BLOCK, definition = "programm_jigsaw_block")
 public class PacketInProgramJigsawBlock extends AbstractPacket implements PacketPlayIn {
 	
-	private long position;
-	private String name;
-	private String target;
-	private String pool;
-	private String finalState;
-	private String jointtype;
-	
-	public long getPosition() {
-		return position;
-	}
-	
-	public void setPosition(long position) {
-		this.position = position;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public String getTarget() {
-		return target;
-	}
-	
-	public void setTarget(String target) {
-		this.target = target;
-	}
-	
-	public String getPool() {
-		return pool;
-	}
-	
-	public void setPool(String pool) {
-		this.pool = pool;
-	}
-	
-	public String getFinalState() {
-		return finalState;
-	}
-	
-	public void setFinalState(String finalState) {
-		this.finalState = finalState;
-	}
-	
-	public String getJointtype() {
-		return jointtype;
-	}
-	
-	public void setJointtype(String jointtype) {
-		this.jointtype = jointtype;
-	}
+	public long position;
+	public NamespacedKey name;
+	public NamespacedKey target;
+	public NamespacedKey pool;
+	public String finalState;
+	public String jointtype;
+	public int selectionPriority;
+	public int placementPriority;
 	
 	@Override
 	public int getDefaultID() {

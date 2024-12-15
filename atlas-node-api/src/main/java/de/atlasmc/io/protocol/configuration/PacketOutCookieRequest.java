@@ -4,7 +4,7 @@ import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.protocol.common.AbstractPacketCookieRequest;
 
 @DefaultPacketID(packetID = PacketConfiguration.OUT_COOKIE_REQUEST, definition = "cookie_request")
-public class PacketOutCookieRequrest extends AbstractPacketCookieRequest implements PacketConfigurationOut {
+public class PacketOutCookieRequest extends AbstractPacketCookieRequest implements PacketConfigurationOut {
 	
 	@Override
 	public int getDefaultID() {

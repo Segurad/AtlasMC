@@ -2,37 +2,24 @@ package de.atlasmc.io.protocol.play;
 
 import java.util.List;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumValueCache;
 
-@DefaultPacketID(packetID = PacketPlay.IN_SEEN_ADVANCEMENTS)
+@DefaultPacketID(packetID = PacketPlay.IN_SEEN_ADVANCEMENTS, definition = "seen_advancements")
 public class PacketInSeenAdvancements extends AbstractPacket implements PacketPlayIn {
 	
-	private Action action;
-	private String tabID;
-	
-	public Action getAction() {
-		return action;
-	}
-	
-	public String getTabID() {
-		return tabID;
-	}
-	
-	public void setAction(Action action) {
-		this.action = action;
-	}
-	
-	public void setTabID(String tabID) {
-		this.tabID = tabID;
-	}
+	public Action action;
+	public NamespacedKey tabID;
 	
 	@Override
 	public int getDefaultID() {
 		return IN_SEEN_ADVANCEMENTS;
 	}
 	
-	public static enum Action {
+	public static enum Action implements EnumID, EnumValueCache {
 		OPEN,
 		CLOSE;
 		

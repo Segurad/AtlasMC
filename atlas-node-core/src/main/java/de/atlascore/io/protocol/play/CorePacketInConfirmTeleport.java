@@ -14,12 +14,12 @@ public class CorePacketInConfirmTeleport implements PacketIO<PacketInConfirmTele
 
 	@Override
 	public void read(PacketInConfirmTeleport packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setTeleportID(readVarInt(in));
+		packet.teleportID = readVarInt(in);
 	}
 
 	@Override
 	public void write(PacketInConfirmTeleport packet, ByteBuf out, ConnectionHandler handler) {
-		writeVarInt(packet.getTeleportID(), out);
+		writeVarInt(packet.teleportID, out);
 	}
 
 	@Override

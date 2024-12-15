@@ -73,6 +73,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	private SimpleLocation clientLocation;
 	private boolean locationChanged;
 	private float chunksPerTick;
+	private int selectedTrade = -1;
 	
 	// Events
 	private PlayerAnimationEvent eventAnimation;
@@ -531,6 +532,16 @@ public class CorePlayerConnection implements PlayerConnection {
 	public void sendMessage(String message, ChatType type, String source, String target) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void setSelectedTrade(int trade) {
+		this.selectedTrade = trade;
+	}
+
+	@Override
+	public int getSelectedTrade() {
+		return selectedTrade;
 	}
 	
 	

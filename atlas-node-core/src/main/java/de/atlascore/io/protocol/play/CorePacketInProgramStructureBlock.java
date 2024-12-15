@@ -14,43 +14,43 @@ public class CorePacketInProgramStructureBlock implements PacketIO<PacketInProgr
 
 	@Override
 	public void read(PacketInProgramStructureBlock packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setPosition(in.readLong());
-		packet.setAction(readVarInt(in));
-		packet.setMode(readVarInt(in));
-		packet.setName(readString(in));
-		packet.setOffsetX(in.readByte());
-		packet.setOffsetY(in.readByte());
-		packet.setOffsetZ(in.readByte());
-		packet.setSizeX(in.readByte());
-		packet.setSizeY(in.readByte());
-		packet.setSizeZ(in.readByte());
-		packet.setMirror(readVarInt(in));
-		packet.setRotation(readVarInt(in));
-		packet.setMetadata(readString(in));
-		packet.setIntegrity(in.readFloat());
-		packet.setSeed(readVarLong(in));
-		packet.setFlags(in.readByte());
+		packet.position = in.readLong();
+		packet.action = readVarInt(in);
+		packet.mode = readVarInt(in);
+		packet.name = readString(in, MAX_IDENTIFIER_LENGTH);
+		packet.offsetX = in.readByte();
+		packet.offsetY = in.readByte();
+		packet.offsetZ = in.readByte();
+		packet.sizeX = in.readByte();
+		packet.sizeY = in.readByte();
+		packet.sizeZ = in.readByte();
+		packet.mirror = readVarInt(in);
+		packet.rotation = readVarInt(in);
+		packet.metadata = readString(in, 128);
+		packet.integrity = in.readFloat();
+		packet.seed = readVarLong(in);
+		packet.flags = in.readByte();
 		
 	}
 
 	@Override
 	public void write(PacketInProgramStructureBlock packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeLong(packet.getPosition());
-		writeVarInt(packet.getAction(), out);
-		writeVarInt(packet.getMode(), out);
-		writeString(packet.getName(), out);
-		out.writeByte(packet.getOffsetX());
-		out.writeByte(packet.getOffsetY());
-		out.writeByte(packet.getOffsetZ());
-		out.writeByte(packet.getSizeX());
-		out.writeByte(packet.getSizeY());
-		out.writeByte(packet.getSizeZ());
-		writeVarInt(packet.getMirror(), out);
-		writeVarInt(packet.getRotation(), out);
-		writeString(packet.getMetadata(), out);
-		out.writeFloat(packet.getIntegrity());
-		writeVarLong(packet.getSeed(), out);
-		out.writeByte(packet.getFlags());
+		out.writeLong(packet.position);
+		writeVarInt(packet.action, out);
+		writeVarInt(packet.mode, out);
+		writeString(packet.name, out);
+		out.writeByte(packet.offsetX);
+		out.writeByte(packet.offsetY);
+		out.writeByte(packet.offsetZ);
+		out.writeByte(packet.sizeX);
+		out.writeByte(packet.sizeY);
+		out.writeByte(packet.sizeZ);
+		writeVarInt(packet.mirror, out);
+		writeVarInt(packet.rotation, out);
+		writeString(packet.metadata, out);
+		out.writeFloat(packet.integrity);
+		writeVarLong(packet.seed, out);
+		out.writeByte(packet.flags);
 	}
 
 	@Override

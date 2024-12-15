@@ -1,5 +1,6 @@
 package de.atlasmc.event.player;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.ServerHandlerList;
 
@@ -7,14 +8,14 @@ public class PlayerSetDisplayRecipeEvent extends PlayerEvent {
 
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
-	private final String recipe;
+	private final NamespacedKey recipe;
 	
-	public PlayerSetDisplayRecipeEvent(Player player, String recipe) {
+	public PlayerSetDisplayRecipeEvent(Player player, NamespacedKey recipe) {
 		super(player);
 		this.recipe = recipe;
 	}
 	
-	public String getRecipe() {
+	public NamespacedKey getRecipe() {
 		return recipe;
 	}
 

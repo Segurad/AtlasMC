@@ -12,12 +12,12 @@ public class CorePacketInLockDifficulty implements PacketIO<PacketInLockDifficul
 	
 	@Override
 	public void read(PacketInLockDifficulty packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.setLocked(in.readBoolean());
+		packet.locked = in.readBoolean();
 	}
 
 	@Override
 	public void write(PacketInLockDifficulty packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		out.writeBoolean(packet.isLocked());
+		out.writeBoolean(packet.locked);
 	}
 	
 	@Override

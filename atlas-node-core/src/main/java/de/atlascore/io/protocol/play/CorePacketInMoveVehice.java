@@ -12,20 +12,20 @@ public class CorePacketInMoveVehice implements PacketIO<PacketInMoveVehicle> {
 
 	@Override
 	public void read(PacketInMoveVehicle packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setX(in.readDouble());
-		packet.setY(in.readDouble());
-		packet.setZ(in.readDouble());
-		packet.setYaw(in.readFloat());
-		packet.setPitch(in.readFloat());
+		packet.x = in.readDouble();
+		packet.y = in.readDouble();
+		packet.z = in.readDouble();
+		packet.yaw = in.readFloat();
+		packet.pitch = in.readFloat();
 	}
 
 	@Override
 	public void write(PacketInMoveVehicle packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeDouble(packet.getX());
-		out.writeDouble(packet.getY());
-		out.writeDouble(packet.getZ());
-		out.writeFloat(packet.getYaw());
-		out.writeFloat(packet.getPitch());
+		out.writeDouble(packet.x);
+		out.writeDouble(packet.y);
+		out.writeDouble(packet.z);
+		out.writeFloat(packet.yaw);
+		out.writeFloat(packet.pitch);
 	}
 
 	@Override

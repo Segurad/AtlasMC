@@ -12,16 +12,16 @@ public class CorePacketInPlayerInput implements PacketIO<PacketInPlayerInput> {
 
 	@Override
 	public void read(PacketInPlayerInput packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setSideways(in.readFloat());
-		packet.setForward(in.readFloat());
-		packet.setFlags(in.readByte());
+		packet.sideways = in.readFloat();
+		packet.forward = in.readFloat();
+		packet.flags = in.readByte();
 	}
 
 	@Override
 	public void write(PacketInPlayerInput packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeFloat(packet.getSideways());
-		out.writeFloat(packet.getForward());
-		out.writeByte(packet.getFlags());
+		out.writeFloat(packet.sideways);
+		out.writeFloat(packet.forward);
+		out.writeByte(packet.flags);
 	}
 	
 	@Override

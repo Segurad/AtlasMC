@@ -15,14 +15,14 @@ public class CorePacketInSeenAdvancements implements PacketIO<PacketInSeenAdvanc
 
 	@Override
 	public void read(PacketInSeenAdvancements packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.setAction(Action.getByID(in.readInt()));
-		packet.setTabID(readString(in));
+		packet.action = Action.getByID(in.readInt());
+		packet.tabID = readIdentifier(in);
 	}
 
 	@Override
 	public void write(PacketInSeenAdvancements packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		out.writeInt(packet.getAction().getID());
-		writeString(packet.getTabID(), out);
+		out.writeInt(packet.action.getID());
+		writeIdentifier(packet.tabID, out);
 	}
 	
 	@Override

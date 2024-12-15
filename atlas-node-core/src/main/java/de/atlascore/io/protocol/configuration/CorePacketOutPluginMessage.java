@@ -1,27 +1,10 @@
 package de.atlascore.io.protocol.configuration;
 
-import java.io.IOException;
-
-import de.atlasmc.io.ConnectionHandler;
+import de.atlascore.io.protocol.common.CoreAbstractPacketPluginMessage;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.configuration.PacketOutPluginMessage;
-import io.netty.buffer.ByteBuf;
-import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
-public class CorePacketOutPluginMessage implements PacketIO<PacketOutPluginMessage> {
-
-	@Override
-	public void read(PacketOutPluginMessage packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.channel = readIdentifier(in);
-		packet.data = in.readBytes(in.readableBytes());
-	}
-
-	@Override
-	public void write(PacketOutPluginMessage packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		writeIdentifier(packet.channel, out);
-		out.writeBytes(packet.data);
-	}
+public class CorePacketOutPluginMessage extends CoreAbstractPacketPluginMessage<PacketOutPluginMessage> {
 
 	@Override
 	public PacketOutPluginMessage createPacketData() {

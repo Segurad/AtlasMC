@@ -11,14 +11,14 @@ import de.atlasmc.entity.Player;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryHolder;
 import de.atlasmc.inventory.InventoryType;
+import de.atlasmc.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.gui.GUI;
-import de.atlasmc.inventory.InventoryType.SlotType;
 import de.atlasmc.io.protocol.PlayerConnection;
-import de.atlasmc.io.protocol.play.PacketOutSetContainerSlot;
 import de.atlasmc.io.protocol.play.PacketOutSetContainerContents;
 import de.atlasmc.io.protocol.play.PacketOutSetContainerProperty;
+import de.atlasmc.io.protocol.play.PacketOutSetContainerSlot;
 import de.atlasmc.util.iterator.ArrayIterator;
 
 public class CoreInventory implements Inventory {

@@ -27,6 +27,7 @@ import de.atlasmc.io.ProtocolException;
 import de.atlasmc.io.ProxyConnectionHandler;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.ProtocolAdapter;
+import de.atlasmc.io.protocol.login.PacketInCookieResponse;
 import de.atlasmc.io.protocol.login.PacketInEncryptionResponse;
 import de.atlasmc.io.protocol.login.PacketInLoginAcknowledged;
 import de.atlasmc.io.protocol.login.PacketInLoginPluginResponse;
@@ -123,6 +124,9 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 		initHandler(PacketInLoginPluginResponse.class, (handle, packet) -> {
 			// TODO handle plugin response
 		}, true);
+		initHandler(PacketInCookieResponse.class, (handler, packet) -> {
+			// TODO handle cookie response
+		}, false);
 	}
 	
 	private ProxyConnectionHandler con;

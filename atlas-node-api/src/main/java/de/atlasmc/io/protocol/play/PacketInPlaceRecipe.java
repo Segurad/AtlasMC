@@ -1,38 +1,15 @@
 package de.atlasmc.io.protocol.play;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(packetID = PacketPlay.IN_PLACE_RECIPE)
+@DefaultPacketID(packetID = PacketPlay.IN_PLACE_RECIPE, definition = "place_recipe")
 public class PacketInPlaceRecipe extends AbstractPacket implements PacketPlayIn {
 	
-	private int windowID;
-	private String recipe;
-	private boolean makeAll;
-	
-	public int getWindowID() {
-		return windowID;
-	}
-	
-	public void setWindowID(int windowID) {
-		this.windowID = windowID;
-	}
-	
-	public String getRecipe() {
-		return recipe;
-	}
-	
-	public void setRecipe(String recipe) {
-		this.recipe = recipe;
-	}
-	
-	public boolean getMakeAll() {
-		return makeAll;
-	}
-	
-	public void setMakeAll(boolean makeAll) {
-		this.makeAll = makeAll;
-	}
+	public int windowID;
+	public NamespacedKey recipe;
+	public boolean makeAll;
 	
 	@Override
 	public int getDefaultID() {

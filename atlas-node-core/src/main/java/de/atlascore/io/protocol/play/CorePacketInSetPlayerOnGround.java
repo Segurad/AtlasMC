@@ -12,12 +12,12 @@ public class CorePacketInSetPlayerOnGround implements PacketIO<PacketInSetPlayer
 
 	@Override
 	public void read(PacketInSetPlayerOnGround packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.setOnGround(in.readBoolean());
+		packet.onGround = in.readBoolean();
 	}
 
 	@Override
 	public void write(PacketInSetPlayerOnGround packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		out.writeBoolean(packet.isOnGround());
+		out.writeBoolean(packet.onGround);
 	}
 	
 	@Override

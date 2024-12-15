@@ -14,22 +14,22 @@ public class CorePacketInUpdateSign implements PacketIO<PacketInUpdateSign> {
 
 	@Override
 	public void read(PacketInUpdateSign packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setPosition(in.readLong());
-		packet.setFront(in.readBoolean());
-		packet.setLine1(readString(in, 384));
-		packet.setLine2(readString(in, 384));
-		packet.setLine3(readString(in, 384));
-		packet.setLine4(readString(in, 384));
+		packet.position = in.readLong();
+		packet.isFront = in.readBoolean();
+		packet.line1 = readString(in, 384);
+		packet.line2 = readString(in, 384);
+		packet.line3 = readString(in, 384);
+		packet.line4 = readString(in, 384);
 	}
 
 	@Override
 	public void write(PacketInUpdateSign packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeLong(packet.getPosition());
-		out.writeBoolean(packet.isFront());
-		writeString(packet.getLine1(), out);
-		writeString(packet.getLine2(), out);
-		writeString(packet.getLine3(), out);
-		writeString(packet.getLine4(), out);
+		out.writeLong(packet.position);
+		out.writeBoolean(packet.isFront);
+		writeString(packet.line1, out);
+		writeString(packet.line2, out);
+		writeString(packet.line3, out);
+		writeString(packet.line4, out);
 	}
 
 	@Override

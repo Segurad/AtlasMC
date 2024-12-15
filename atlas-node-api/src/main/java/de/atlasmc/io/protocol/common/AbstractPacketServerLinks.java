@@ -17,6 +17,14 @@ public abstract class AbstractPacketServerLinks extends AbstractPacket {
 		public Label label;
 		public String url;
 		
+		public ServerLink() {}
+		
+		public ServerLink(Label label, Chat customLabel, String url) {
+			this.label = label;
+			this.customLabel = customLabel;
+			this.url = url;
+		}
+		
 	}
 	
 	public static enum Label implements EnumID, EnumValueCache {

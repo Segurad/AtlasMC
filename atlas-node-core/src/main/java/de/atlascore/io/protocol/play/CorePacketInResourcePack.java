@@ -15,12 +15,12 @@ public class CorePacketInResourcePack implements PacketIO<PacketInResourcePack> 
 	
 	@Override
 	public void read(PacketInResourcePack packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setStatus(ResourcePackStatus.getByID(readVarInt(in)));
+		packet.status = ResourcePackStatus.getByID(readVarInt(in));
 	}
 
 	@Override
 	public void write(PacketInResourcePack packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getStatus().getID(), out);
+		writeVarInt(packet.status.getID(), out);
 	}
 	
 	@Override

@@ -14,14 +14,14 @@ public class CorePacketInCommandSuggestionsRequest implements PacketIO<PacketInC
 
 	@Override
 	public void read(PacketInCommandSuggestionsRequest packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setTransactionID(readVarInt(in));
-		packet.setText(readString(in));
+		packet.transactionID = readVarInt(in);
+		packet.text = readString(in);
 	}
 
 	@Override
 	public void write(PacketInCommandSuggestionsRequest packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getTransactionID(), out);
-		writeString(packet.getText(), out);
+		writeVarInt(packet.transactionID, out);
+		writeString(packet.text, out);
 	}
 	
 	@Override

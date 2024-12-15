@@ -4,7 +4,7 @@ import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.protocol.common.AbstractPacketCustomReportDetails;
 
 @DefaultPacketID(packetID = PacketConfiguration.OUT_CUSTOM_REPORT_DETAILS, definition = "custom_report_details")
-public class PacketOutCustomReportDefails extends AbstractPacketCustomReportDetails implements PacketConfigurationOut {
+public class PacketOutCustomReportDetails extends AbstractPacketCustomReportDetails implements PacketConfigurationOut {
 	
 	@Override
 	public int getDefaultID() {

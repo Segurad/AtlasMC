@@ -12,14 +12,14 @@ public class CorePacketInClickContainerButton implements PacketIO<PacketInClickC
 	
 	@Override
 	public void read(PacketInClickContainerButton packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.setWindowID(in.readByte());
-		packet.setButtonID(in.readByte());
+		packet.windowID = in.readByte();
+		packet.buttonID = in.readByte();
 	}
 
 	@Override
 	public void write(PacketInClickContainerButton packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		out.writeByte(packet.getWindowID());
-		out.writeByte(packet.getButtonID());
+		out.writeByte(packet.windowID);
+		out.writeByte(packet.buttonID);
 	}
 	
 	@Override

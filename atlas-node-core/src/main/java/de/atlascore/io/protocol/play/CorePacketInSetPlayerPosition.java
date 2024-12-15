@@ -12,18 +12,18 @@ public class CorePacketInSetPlayerPosition implements PacketIO<PacketInSetPlayer
 
 	@Override
 	public void read(PacketInSetPlayerPosition packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.setX(in.readDouble());
-		packet.setFeetY(in.readDouble());
-		packet.setZ(in.readDouble());
-		packet.setOnGround(in.readBoolean());
+		packet.x = in.readDouble();
+		packet.feetY = in.readDouble();
+		packet.z = in.readDouble();
+		packet.onGround = in.readBoolean();
 	}
 
 	@Override
 	public void write(PacketInSetPlayerPosition packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		out.writeDouble(packet.getX());
-		out.writeDouble(packet.getFeetY());
-		out.writeDouble(packet.getZ());
-		out.writeBoolean(packet.isOnGround());
+		out.writeDouble(packet.x);
+		out.writeDouble(packet.feetY);
+		out.writeDouble(packet.z);
+		out.writeBoolean(packet.onGround);
 	}
 	
 	@Override

@@ -28,18 +28,18 @@ public class CorePacketInPlayerAction implements PacketIO<PacketInPlayerAction> 
 	
 	@Override
 	public void read(PacketInPlayerAction packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.setStatus(readVarInt(in));
-		packet.setPosition(in.readLong());
-		packet.setFace(FACES.get(in.readByte()));
-		packet.setSequence(readVarInt(in));
+		packet.status = readVarInt(in);
+		packet.position = in.readLong();
+		packet.face = FACES.get(in.readByte());
+		packet.sequence = readVarInt(in);
 	}
 
 	@Override
 	public void write(PacketInPlayerAction packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		writeVarInt(packet.getStatus(), out);
-		out.writeLong(packet.getPosition());
-		out.writeByte(FACES.indexOf(packet.getFace()));
-		writeVarInt(packet.getSequence(), out);
+		writeVarInt(packet.status, out);
+		out.writeLong(packet.position);
+		out.writeByte(FACES.indexOf(packet.face));
+		writeVarInt(packet.sequence, out);
 	}
 
 	@Override

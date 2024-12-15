@@ -12,12 +12,12 @@ public class CorePacketInChangeDifficulty implements PacketIO<PacketInChangeDiff
 	
 	@Override
 	public void read(PacketInChangeDifficulty packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setDifficulty(in.readByte());
+		packet.difficulty = in.readByte();
 	}
 
 	@Override
 	public void write(PacketInChangeDifficulty packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeByte(packet.getDifficulty());
+		out.writeByte(packet.difficulty);
 	}
 
 	@Override

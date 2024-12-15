@@ -15,7 +15,7 @@ public class CorePacketInEditBook implements PacketIO<PacketInEditBook> {
 
 	@Override
 	public void read(PacketInEditBook packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.setSlot(readVarInt(in));
+		packet.slot = readVarInt(in);
 		int pageCount = readVarInt(in);
 		if (pageCount < 0 || pageCount > 200)
 			throw new ProtocolException("Invalid page count must be between 0 and 200: " + pageCount);
@@ -23,16 +23,16 @@ public class CorePacketInEditBook implements PacketIO<PacketInEditBook> {
 			String[] pages = new String[pageCount];
 			for (int i = 0; i < pageCount; i++)
 				pages[i] = readString(in, 8192);
-			packet.setPages(pages);
+			packet.pages = pages;
 		}
 		if (in.readBoolean())
-			packet.setTitle(readString(in, 128));
+			packet.title = readString(in, 128);
 	}
 
 	@Override
 	public void write(PacketInEditBook packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		writeVarInt(packet.getSlot(), out);
-		String[] pages = packet.getPages();
+		writeVarInt(packet.slot, out);
+		String[] pages = packet.pages;
 		if (pages == null || pages.length == 0) {
 			writeVarInt(0, out);
 		} else {
@@ -40,7 +40,7 @@ public class CorePacketInEditBook implements PacketIO<PacketInEditBook> {
 			for (String s : pages)
 				writeString(s, out);
 		}
-		String title = packet.getTitle();
+		String title = packet.title;
 		if (title == null) {
 			out.writeBoolean(false);
 		} else {

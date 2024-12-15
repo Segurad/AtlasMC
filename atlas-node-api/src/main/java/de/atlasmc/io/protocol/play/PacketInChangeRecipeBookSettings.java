@@ -4,36 +4,12 @@ import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.recipe.BookType;
 
-@DefaultPacketID(packetID = PacketPlay.IN_CHANGE_RECIPE_BOOK_SETTINGS)
+@DefaultPacketID(packetID = PacketPlay.IN_CHANGE_RECIPE_BOOK_SETTINGS, definition = "recipe_book_settings")
 public class PacketInChangeRecipeBookSettings extends AbstractPacket implements PacketPlayIn {
 	
-	private BookType bookType;
-	private boolean bookOpen;
-	private boolean filterActive;
-	
-	public BookType getBookType() {
-		return bookType;
-	}
-	
-	public void setBookType(BookType bookType) {
-		this.bookType = bookType;
-	}
-	
-	public boolean isBookOpen() {
-		return bookOpen;
-	}
-	
-	public void setBookOpen(boolean bookOpen) {
-		this.bookOpen = bookOpen;
-	}
-	
-	public boolean isFilterActive() {
-		return filterActive;
-	}
-	
-	public void setFilterActive(boolean filterActive) {
-		this.filterActive = filterActive;
-	}
+	public BookType bookType;
+	public boolean bookOpen;
+	public boolean filterActive;
 	
 	@Override
 	public int getDefaultID() {

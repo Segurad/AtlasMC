@@ -12,12 +12,12 @@ public class CorePacketInPlayerAbilities implements PacketIO<PacketInPlayerAbili
 
 	@Override
 	public void read(PacketInPlayerAbilities packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.setFlags(in.readByte());
+		packet.flags = in.readByte();
 	}
 
 	@Override
 	public void write(PacketInPlayerAbilities packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		out.writeByte(packet.getFlags());
+		out.writeByte(packet.flags);
 	}
 
 	@Override

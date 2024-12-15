@@ -1508,6 +1508,7 @@ public enum EnumSound implements Sound, EnumName, EnumID, EnumValueCache {
 		return name;
 	}
 	
+	@Override
 	public String getName() {
 		return name.toString();
 	}

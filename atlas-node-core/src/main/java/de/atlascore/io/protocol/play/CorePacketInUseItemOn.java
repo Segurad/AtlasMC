@@ -15,26 +15,26 @@ public class CorePacketInUseItemOn implements PacketIO<PacketInUseItemOn> {
 
 	@Override
 	public void read(PacketInUseItemOn packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.setHand(readVarInt(in) == 0 ? EquipmentSlot.MAIN_HAND : EquipmentSlot.OFF_HAND);
-		packet.setPosition(in.readLong());
-		packet.setFace(CorePacketInPlayerAction.FACES.get(readVarInt(in)));
-		packet.setCursurPositionX(in.readFloat());
-		packet.setCursurPositionY(in.readFloat());
-		packet.setCursurPositionZ(in.readFloat());	
-		packet.setInsideblock(in.readBoolean());
-		packet.setSequence(readVarInt(in));
+		packet.hand = readVarInt(in) == 0 ? EquipmentSlot.MAIN_HAND : EquipmentSlot.OFF_HAND;
+		packet.position = in.readLong();
+		packet.face = CorePacketInPlayerAction.FACES.get(readVarInt(in));
+		packet.cursorPosX = in.readFloat();
+		packet.cursorPosY = in.readFloat();
+		packet.cursorPosZ = in.readFloat();	
+		packet.insideBlock = in.readBoolean();
+		packet.sequence = readVarInt(in);
 	}
 
 	@Override
 	public void write(PacketInUseItemOn packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		writeVarInt(packet.getHand() == EquipmentSlot.MAIN_HAND ? 0 : 1, out);
-		out.writeLong(packet.getPosition());
-		writeVarInt(CorePacketInPlayerAction.FACES.indexOf(packet.getFace()), out);
-		out.writeFloat(packet.getCursurPositionX());
-		out.writeFloat(packet.getCursurPositionY());
-		out.writeFloat(packet.getCursurPositionZ());
-		out.writeBoolean(packet.isInsideblock());
-		writeVarInt(packet.getSequence(), out);
+		writeVarInt(packet.hand == EquipmentSlot.MAIN_HAND ? 0 : 1, out);
+		out.writeLong(packet.position);
+		writeVarInt(CorePacketInPlayerAction.FACES.indexOf(packet.face), out);
+		out.writeFloat(packet.cursorPosX);
+		out.writeFloat(packet.cursorPosY);
+		out.writeFloat(packet.cursorPosZ);
+		out.writeBoolean(packet.insideBlock);
+		writeVarInt(packet.sequence, out);
 	}
 
 	@Override

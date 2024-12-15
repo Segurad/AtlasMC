@@ -12,14 +12,14 @@ public class CorePacketInPaddleBoat implements PacketIO<PacketInPaddleBoat> {
 
 	@Override
 	public void read(PacketInPaddleBoat packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setLeftPaddle(in.readBoolean());
-		packet.setRightPaddle(in.readBoolean());
+		packet.leftPaddle = in.readBoolean();
+		packet.rightPaddle = in.readBoolean();
 	}
 
 	@Override
 	public void write(PacketInPaddleBoat packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		out.writeBoolean(packet.getLeftPaddleTurning());
-		out.writeBoolean(packet.getRightPaddleTurning());
+		out.writeBoolean(packet.leftPaddle);
+		out.writeBoolean(packet.rightPaddle);
 	}
 
 	@Override

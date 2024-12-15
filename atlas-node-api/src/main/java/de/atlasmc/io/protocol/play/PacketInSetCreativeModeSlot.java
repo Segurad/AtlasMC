@@ -4,27 +4,11 @@ import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(packetID = PacketPlay.IN_SET_CREATIVE_MODE_SLOT)
+@DefaultPacketID(packetID = PacketPlay.IN_SET_CREATIVE_MODE_SLOT, definition = "creative_mode_slot")
 public class PacketInSetCreativeModeSlot extends AbstractPacket implements PacketPlayIn {
 	
-	private int slot;
-	private ItemStack clickedItem;
-	
-	public int getSlot() {
-		return slot;
-	}
-	
-	public void setSlot(int slot) {
-		this.slot = slot;
-	}
-	
-	public ItemStack getClickedItem() {
-		return clickedItem;
-	}
-	
-	public void setClickedItem(ItemStack clickedItem) {
-		this.clickedItem = clickedItem;
-	}
+	public int slot;
+	public ItemStack clickedItem;
 	
 	@Override
 	public int getDefaultID() {

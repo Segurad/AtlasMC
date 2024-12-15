@@ -14,12 +14,12 @@ public class CorePacketInRenameItem implements PacketIO<PacketInRenameItem> {
 	
 	@Override
 	public void read(PacketInRenameItem packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		 packet.setItemName(readString(in, 32767));
+		 packet.itemName = readString(in, 32767);
 	}
 
 	@Override
 	public void write(PacketInRenameItem packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		writeString(packet.getItemName(), out);
+		writeString(packet.itemName, out);
 	}
 	
 	@Override

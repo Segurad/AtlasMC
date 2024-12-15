@@ -14,14 +14,14 @@ public class CorePacketInQueryEntityTag implements PacketIO<PacketInQueryEntityT
 
 	@Override
 	public void read(PacketInQueryEntityTag packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setTransactionID(readVarInt(in));
-		packet.setEntityID(readVarInt(in));
+		packet.transactionID = readVarInt(in);
+		packet.entityID = readVarInt(in);
 	}
 
 	@Override
 	public void write(PacketInQueryEntityTag packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getTransactionID(), out);
-		writeVarInt(packet.getEntityID(), out);
+		writeVarInt(packet.transactionID, out);
+		writeVarInt(packet.entityID, out);
 	}
 	
 	@Override

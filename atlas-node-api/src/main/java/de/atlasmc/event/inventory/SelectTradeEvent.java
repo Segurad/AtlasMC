@@ -9,11 +9,21 @@ public class SelectTradeEvent extends InventoryInteractEvent {
 
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
+	private final int oldTradeID;
 	private final int tradeID;
 	
-	public SelectTradeEvent(InventoryView view, int tradeID) {
+	public SelectTradeEvent(InventoryView view, int tradeID, int oldTradeID) {
 		super(view);
 		this.tradeID = tradeID;
+		this.oldTradeID = oldTradeID;
+	}
+
+	/**
+	 * Returns the selected trade index or -1 if none.
+	 * @return index or -1
+	 */
+	public int getOldTradeID() {
+		return oldTradeID;
 	}
 	
 	public int getTradeID() {
@@ -26,8 +36,9 @@ public class SelectTradeEvent extends InventoryInteractEvent {
 	 */
 	public Merchant getMerchant() {
 		InventoryHolder h = view.getTopInventory().getHolder();
-		if (h == null || !(h instanceof Merchant)) return null;
-		return (Merchant) h;
+		if (h == null || !(h instanceof Merchant merchant)) 
+			return null;
+		return merchant;
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package de.atlascore.io.protocol.play;
 
-import static de.atlasmc.io.PacketUtil.readString;
-import static de.atlasmc.io.PacketUtil.writeString;
+import static de.atlasmc.io.PacketUtil.readIdentifier;
+import static de.atlasmc.io.PacketUtil.writeIdentifier;
 
 import java.io.IOException;
 
@@ -15,16 +15,16 @@ public class CorePacketInPlaceRecipe implements PacketIO<PacketInPlaceRecipe> {
 
 	@Override
 	public void read(PacketInPlaceRecipe packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.setWindowID(in.readByte());
-		packet.setRecipe(readString(in));
-		packet.setMakeAll(in.readBoolean());
+		packet.windowID = in.readByte();
+		packet.recipe = readIdentifier(in);
+		packet.makeAll = in.readBoolean();
 	}
 
 	@Override
 	public void write(PacketInPlaceRecipe packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		out.writeByte(packet.getWindowID());
-		writeString(packet.getRecipe(), out);
-		out.writeBoolean(packet.getMakeAll());
+		out.writeByte(packet.windowID);
+		writeIdentifier(packet.recipe, out);
+		out.writeBoolean(packet.makeAll);
 	}
 	
 	@Override

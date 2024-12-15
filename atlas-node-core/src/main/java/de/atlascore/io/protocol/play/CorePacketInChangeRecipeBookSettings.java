@@ -15,16 +15,16 @@ public class CorePacketInChangeRecipeBookSettings implements PacketIO<PacketInCh
 	
 	@Override
 	public void read(PacketInChangeRecipeBookSettings packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.setBookType(BookType.getByID(readVarInt(in)));
-		packet.setBookOpen(in.readBoolean());
-		packet.setFilterActive(in.readBoolean());
+		packet.bookType = BookType.getByID(readVarInt(in));
+		packet.bookOpen = in.readBoolean();
+		packet.filterActive =in.readBoolean();
 	}
 
 	@Override
 	public void write(PacketInChangeRecipeBookSettings packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeVarInt(packet.getBookType().getID(), out);
-		out.writeBoolean(packet.isBookOpen());
-		out.writeBoolean(packet.isFilterActive());
+		writeVarInt(packet.bookType.getID(), out);
+		out.writeBoolean(packet.bookOpen);
+		out.writeBoolean(packet.filterActive);
 	}
 	
 	@Override

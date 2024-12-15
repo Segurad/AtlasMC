@@ -13,6 +13,13 @@ public abstract class AbstractPacketCustomReportDetails extends AbstractPacket {
 		public String title;
 		public String description;
 		
+		public Detail() {}
+		
+		public Detail(String title, String description) {
+			this.title = title;
+			this.description = description;
+		}
+		
 	}
 	
 }

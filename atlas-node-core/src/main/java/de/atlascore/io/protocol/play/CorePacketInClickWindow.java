@@ -1,11 +1,13 @@
 package de.atlascore.io.protocol.play;
 
+import static de.atlasmc.io.PacketUtil.readVarInt;
+import static de.atlasmc.io.PacketUtil.writeVarInt;
+import static de.atlasmc.io.protocol.ProtocolUtil.readSlot;
+import static de.atlasmc.io.protocol.ProtocolUtil.writeSlot;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import static de.atlasmc.io.AbstractPacket.*;
-import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.ConnectionHandler;
@@ -19,11 +21,11 @@ public class CorePacketInClickWindow implements PacketIO<PacketInClickContainer>
 
 	@Override
 	public void read(PacketInClickContainer packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.setWindowID(in.readByte());
-		packet.setStateID(readVarInt(in));
-		packet.setSlot(in.readShort());
-		packet.setButton(in.readByte());
-		packet.setMode(readVarInt(in));
+		packet.windowID = in.readByte();
+		packet.stateID = readVarInt(in);
+		packet.slot = in.readShort();
+		packet.button = in.readByte();
+		packet.mode = readVarInt(in);
 		int changeSize = readVarInt(in);
 		if (changeSize > 0) {
 			Map<Integer, ItemStack> changed = new HashMap<>(changeSize);
@@ -32,19 +34,19 @@ public class CorePacketInClickWindow implements PacketIO<PacketInClickContainer>
 				ItemStack item = readSlot(in);
 				changed.put(slot, item);
 			}
-			packet.setSlotsChanged(changed);
+			packet.slotsChanged = changed;
 		}
-		packet.setCarriedItem(readSlot(in));
+		packet.carriedItem = readSlot(in);
 	}
 
 	@Override
 	public void write(PacketInClickContainer packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		out.writeByte(packet.getWindowID());
-		writeVarInt(packet.getStateID(), out);
-		out.writeShort(packet.getSlot());
-		out.writeByte(packet.getButton());
-		writeVarInt(packet.getMode(), out);
-		Map<Integer, ItemStack> changed = packet.getSlotsChanged();
+		out.writeByte(packet.windowID);
+		writeVarInt(packet.stateID, out);
+		out.writeShort(packet.slot);
+		out.writeByte(packet.button);
+		writeVarInt(packet.mode, out);
+		Map<Integer, ItemStack> changed = packet.slotsChanged;
 		NBTNIOWriter writer = new NBTNIOWriter(out, true);
 		if (changed != null && !changed.isEmpty()) {
 			writeVarInt(changed.size(), out);
@@ -53,7 +55,7 @@ public class CorePacketInClickWindow implements PacketIO<PacketInClickContainer>
 				writeSlot(changed.get(key), out, writer);
 			}
 		}
-		writeSlot(packet.getCarriedItem(), out, writer);
+		writeSlot(packet.carriedItem, out, writer);
 		writer.close();
 	}
 

@@ -1,6 +1,7 @@
 package de.atlasmc.event.player;
 
 import java.util.List;
+import java.util.UUID;
 
 import de.atlasmc.entity.Player;
 import de.atlasmc.event.ServerHandlerList;
@@ -11,11 +12,17 @@ public class PlayerResourcePackStatusEvent extends PlayerEvent {
 	
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
+	private final UUID uuid;
 	private final ResourcePackStatus status;
 	
-	public PlayerResourcePackStatusEvent(Player player, ResourcePackStatus status) {
+	public PlayerResourcePackStatusEvent(Player player, UUID uuid, ResourcePackStatus status) {
 		super(player);
 		this.status = status;
+		this.uuid = uuid;
+	}
+	
+	public UUID getUUID() {
+		return uuid;
 	}
 	
 	public ResourcePackStatus getStatus() {

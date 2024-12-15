@@ -5,81 +5,17 @@ import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(packetID = PacketPlay.IN_USE_ITEM_ON)
+@DefaultPacketID(packetID = PacketPlay.IN_USE_ITEM_ON, definition = "use_item_on")
 public class PacketInUseItemOn extends AbstractPacket implements PacketPlayIn {
 	
-	private EquipmentSlot hand;
-	private BlockFace face;
-	private long pos;
-	private float curposx;
-	private float curposy;
-	private float curposz;
-	private boolean insideblock;
-	private int sequence;
-	
-	public EquipmentSlot getHand() {
-		return hand;
-	}
-	
-	public void setHand(EquipmentSlot hand) {
-		this.hand = hand;
-	}
-	
-	public long getPosition() {
-		return pos;
-	}
-	
-	public void setPosition(long pos) {
-		this.pos = pos;
-	}
-	
-	public BlockFace getFace() {
-		return face;
-	}
-	
-	public void setFace(BlockFace face) {
-		this.face = face;
-	}
-	
-	public float getCursurPositionX() {
-		return curposx;
-	}
-	
-	public void setCursurPositionX(float posX) {
-		this.curposx = posX;
-	}
-	
-	public float getCursurPositionY() {
-		return curposy;
-	}
-	
-	public void setCursurPositionY(float posY) {
-		this.curposy = posY;
-	}
-	
-	public float getCursurPositionZ() {
-		return curposz;
-	}
-	
-	public void setCursurPositionZ(float posZ) {
-		this.curposz = posZ;
-	}
-	
-	public boolean isInsideblock() {
-		return insideblock;
-	}
-	
-	public void setInsideblock(boolean insideblock) {
-		this.insideblock = insideblock;
-	}
-	
-	public int getSequence() {
-		return sequence;
-	}
-	
-	public void setSequence(int sequence) {
-		this.sequence = sequence;
-	}
+	public EquipmentSlot hand;
+	public long position;
+	public BlockFace face;
+	public float cursorPosX;
+	public float cursorPosY;
+	public float cursorPosZ;
+	public boolean insideBlock;
+	public int sequence;
 	
 	@Override
 	public int getDefaultID() {

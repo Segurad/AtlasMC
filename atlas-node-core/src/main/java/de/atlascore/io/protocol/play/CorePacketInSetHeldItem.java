@@ -12,12 +12,12 @@ public class CorePacketInSetHeldItem implements PacketIO<PacketInSetHeldItem> {
 
 	@Override
 	public void read(PacketInSetHeldItem packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.setSlot(in.readShort());
+		packet.slot = in.readShort();
 	}
 
 	@Override
 	public void write(PacketInSetHeldItem packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		out.writeShort(packet.getSlot());
+		out.writeShort(packet.slot);
 	}
 
 	@Override
