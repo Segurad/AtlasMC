@@ -1,6 +1,7 @@
 package de.atlasmc.tag;
 
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import de.atlasmc.NamespacedKey;
 import io.netty.buffer.ByteBuf;
@@ -14,6 +15,7 @@ public class LinkedTag<T> extends Tag<T> {
 	
 	public LinkedTag(NamespacedKey type, NamespacedKey identifier) {
 		super(type, identifier);
+		this.tagcontainer = new CopyOnWriteArraySet<>();
 	}
 
 	public void addTag(Tag<T> tag) {
@@ -27,7 +29,8 @@ public class LinkedTag<T> extends Tag<T> {
 	@Override
 	public boolean isTaged(T element) {
 		for (Tag<T> t : tagcontainer) {
-			if (t.isTaged(element)) return true;
+			if (t.isTaged(element)) 
+				return true;
 		}
 		return false;
 	}

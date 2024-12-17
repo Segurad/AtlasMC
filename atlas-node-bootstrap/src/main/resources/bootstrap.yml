@@ -1,1 +1,3 @@
-is-master: true
+features:
+- atlas:master
+- atlas:node

@@ -224,7 +224,7 @@ public class HandlerList {
 	 * Unregisters the Listener of a Plugin from all HandlerLists
 	 * @param plugin
 	 */
-	public static void unregisterListenerGloabal(@NotNull PluginHandle plugin) {
+	public static void unregisterListenerGlobal(@NotNull PluginHandle plugin) {
 		synchronized (HANDLERS) {
 			removeStaleEntries();
 			for (WeakReference<HandlerList> ref : HANDLERS) {

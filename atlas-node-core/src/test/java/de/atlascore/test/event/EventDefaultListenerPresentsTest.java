@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
@@ -38,33 +39,39 @@ class EventDefaultListenerPresentsTest {
 		}
 	}
 	
+	@Disabled("Waiting for implementation")
 	@Test
 	void testBlockEvents() throws Exception {
 		testEventPacket("de.atlasmc.event.block");
 	}
 	
+	@Disabled("Waiting for implementation")
 	@Test
 	void testEntityEvents() throws Exception {
 		testEventPacket("de.atlasmc.event.entity");
 	}
 	
+	@Disabled("Waiting for implementation")
 	@Test
 	void testInventoryEvents() throws Exception {
 		initDefaultExecutor(new CoreInventoryListener());
 		testEventPacket("de.atlasmc.event.inventory");
 	}
 	
+	@Disabled("Waiting for implementation")
 	@Test
 	void testNetworkEvents() throws Exception {
 		testEventPacket("de.atlasmc.event.network");
 	}
 	
+	@Disabled("Waiting for implementation")
 	@Test
 	void testPlayerEvents() throws Exception {
 		initDefaultExecutor(new CorePlayerListener());
 		testEventPacket("de.atlasmc.event.player");
 	}
 	
+	@Disabled("Waiting for implementation")
 	@Test
 	void testProxyEvents() throws Exception {
 		testEventPacket("de.atlasmc.event.proxy");

@@ -10,7 +10,7 @@ public interface NBTField<H> {
 	void setField(H holder, NBTReader reader) throws IOException;
 
 	@SuppressWarnings("unchecked")
-	public static <H extends NBTHolder> NBTField<H> skip() {
+	public static <H> NBTField<H> skip() {
 		return (NBTField<H>) AbstractNBTBase.SKIP;
 	}
 	

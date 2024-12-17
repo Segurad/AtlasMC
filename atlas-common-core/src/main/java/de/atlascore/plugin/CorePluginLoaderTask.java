@@ -16,16 +16,14 @@ public class CorePluginLoaderTask extends AtlasTask {
 	private final CorePluginManager pmanager;
 	private final CompletableFuture<Plugin> future;
 	private final PreparedPlugin plugin;
-	private final boolean async;
 	private final boolean enable;
 	private volatile boolean scheduled;
 	private volatile boolean ready;
 	
-	public CorePluginLoaderTask(CorePluginManager pmanager, PreparedPlugin plugin, boolean enable, boolean async) {
+	public CorePluginLoaderTask(CorePluginManager pmanager, PreparedPlugin plugin, boolean enable) {
 		this.pmanager = pmanager;
 		this.plugin = plugin;
 		this.future = new CompletableFuture<>();
-		this.async = async;
 		this.enable = enable;
 	}
 	
@@ -41,9 +39,7 @@ public class CorePluginLoaderTask extends AtlasTask {
 			cumFuture.add(new CommulativeFuture<>(plugin.getSoftDependencies()));
 		new CommulativeFuture<>(cumFuture).setListener((future) -> {
 			ready = true;
-			if (async) {
-				schedule();
-			}
+			schedule();
 		});
 	}
 	

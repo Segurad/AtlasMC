@@ -576,7 +576,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		boolean changes = false;
 		for (Attribute a : attributes.keySet()) {
 			AttributeInstance instance = attributes.get(a);
-			if (instance == null && !instance.hasModifiers())
+			if (instance == null || !instance.hasModifiers())
 				continue;
 			if (instance.removeModifier(slot));
 				changes = true;

@@ -3,17 +3,16 @@ package de.atlascore.world.io.anvil;
 import java.io.IOException;
 
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.AbstractNBTBase;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.Chunk;
 
 /**
  * Class for handling the IO operations for a chunk column
  */
-public class CoreAnvilChunkIO extends AbstractNBTBase {
+public class CoreAnvilChunkIO {
 	
 	protected static final CharKey
 	NBT_DATA_VERSION = CharKey.literal("DataVersion"),
@@ -67,7 +66,7 @@ public class CoreAnvilChunkIO extends AbstractNBTBase {
 	
 	public void loadChunk(Chunk chunk, NBTReader reader) throws IOException {
 		this.chunk = chunk;
-		fromNBT(reader);
+		NBTUtil.readNBT(NBT_FIELDS, this, reader);
 		// free
 		chunk = null;
 		lastUpdate = 0;
@@ -75,24 +74,6 @@ public class CoreAnvilChunkIO extends AbstractNBTBase {
 
 	public boolean checkVersion(int version) {
 		return true;
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		if (chunk == null)
-			throw new IllegalStateException("Chunk is not initialized! (use #loadChunk)");
-		super.fromNBT(reader);
-	}
-
-	@Override
-	protected NBTFieldContainer<? extends CoreAnvilChunkIO> getFieldContainerRoot() {
-		return NBT_FIELDS;
 	}
 
 }

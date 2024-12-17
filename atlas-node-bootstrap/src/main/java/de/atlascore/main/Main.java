@@ -29,6 +29,7 @@ import de.atlascore.registry.CoreRegistryHandler;
 import de.atlascore.scheduler.CoreAtlasScheduler;
 import de.atlasmc.Atlas;
 import de.atlasmc.AtlasBuilder;
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.cache.Caching;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.command.Command;
@@ -121,6 +122,13 @@ public class Main {
 		
 		PluginManager pluginManager = new CorePluginManager(log);
 		pluginManager.addLoader(new CoreJavaPluginLoader());
+		
+		List<String> rawFeatures = config.getStringList("features", List.of());
+		for (String raw : rawFeatures) {
+			pluginManager.addFeature(NamespacedKey.literal(raw));
+		}
+		boolean isMaster = pluginManager.hasFeature(NamespacedKey.of("atlas:master"));
+		
 		new AtlasBuilder()
 		.setDataHandler(loadRepositories(log, workDir))
 		.setKeyPair(keyPair)
@@ -131,8 +139,6 @@ public class Main {
 		.setWorkDir(workDir)
 		.setSystem(CorePluginManager.SYSTEM)
 		.build();
-		
-		boolean isMaster = config.getBoolean("is-master");
 
 		StartupContext context = new StartupContext(log);
 		context.addStage(

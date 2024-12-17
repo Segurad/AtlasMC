@@ -13,7 +13,6 @@ import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.common.AbstractPacketKnownPacks;
 import de.atlasmc.io.protocol.common.AbstractPacketKnownPacks.PackInfo;
-import de.atlasmc.io.protocol.configuration.PacketOutKnownPacks;
 import io.netty.buffer.ByteBuf;
 
 public abstract class CoreAbstractPacketKnownPacks<T extends AbstractPacketKnownPacks> implements PacketIO<T> {
