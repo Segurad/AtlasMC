@@ -11,7 +11,6 @@ import java.util.UUID;
 
 import de.atlasmc.entity.Entity;
 import de.atlasmc.util.MathUtil;
-import de.atlasmc.world.World;
 import de.atlasmc.world.entitytracker.EntityPerception;
 import de.atlasmc.world.entitytracker.EntityTracker;
 import de.atlasmc.world.entitytracker.TrackerBinding;
@@ -24,7 +23,6 @@ public class CoreEntityTracker implements EntityTracker {
 	private static final int TICKING_ENTITIES_INITIAL_CAPACITY = 32;
 	private static final float TICKING_ENTITIES_GROW_FACTOR = 2;
 	
-	private final World world;
 	private final Map<Class<?>, CoreTrackingTarget<?>> targets;
 	private final Collection<TrackingTarget<?>> targetView;
 	private CoreTrackingTarget<?>[] fastTarget;
@@ -39,10 +37,7 @@ public class CoreEntityTracker implements EntityTracker {
 
 	private int entityID;
 	
-	public CoreEntityTracker(World world) {
-		if (world == null)
-			throw new IllegalArgumentException("World can not be null!");
-		this.world = world;
+	public CoreEntityTracker() {
 		this.entityByID = new Int2ObjectOpenHashMap<>();
 		this.entityByUUID = new HashMap<>();
 		targetAll = new CoreTrackingTarget<>(Entity.class);
@@ -96,11 +91,6 @@ public class CoreEntityTracker implements EntityTracker {
 	}
 
 	@Override
-	public World getWorld() {
-		return world;
-	}
-
-	@Override
 	public Collection<Entity> getEntities() {
 		return entityByUUID.values();
 	}
@@ -124,6 +114,11 @@ public class CoreEntityTracker implements EntityTracker {
 	@Override
 	public Entity getEntity(int entityID) {
 		return entityByID.get(entityID);
+	}
+	
+	@Override
+	public Entity getEntity(UUID uuid) {
+		return entityByUUID.get(uuid);
 	}
 
 	@Override
@@ -186,15 +181,17 @@ public class CoreEntityTracker implements EntityTracker {
 			throw new IllegalArgumentException("Entity already registered!");
 		int entityID = this.entityID++;
 		CoreTrackedEntity<Entity> tracked = new CoreTrackedEntity<>(entityID, entity, tracker, this);
+		long chunkIndex = MathUtil.coordinatesToChunkPosition(tracked.x, tracked.z);
 		for (CoreTrackingTarget<?> target : fastTarget) {
 			if (!target.target.isInstance(entity))
 				continue;
 			@SuppressWarnings("unchecked")
 			CoreTrackingTarget<Entity> etrack = (CoreTrackingTarget<Entity>) target;
 			etrack.entities.add(entity);
-			long chunkIndex = MathUtil.coordinatesToChunkPosition(tracked.x, tracked.z);
 			etrack.addToChunk(chunkIndex, entity);
 		}
+		this.entityByID.put(entityID, entity);
+		this.entityByUUID.put(entity.getUUID(), entity);
 		return tracked;
 	}
 	
@@ -231,18 +228,17 @@ public class CoreEntityTracker implements EntityTracker {
 	
 	void removeEntity(CoreTrackedEntity<?> entity) {
 		final Entity e = entity.entity;
-		for (CoreTrackingTarget<?> target : targets.values()) {
-			if (!target.target.isInstance(entity))
+		long chunkIndex = MathUtil.coordinatesToChunkPosition(entity.x, entity.y);
+		for (CoreTrackingTarget<?> target : fastTarget) {
+			if (!target.target.isInstance(e))
 				continue;
-			long chunkIndex = MathUtil.coordinatesToChunkPosition(entity.x, entity.y);
-			CoreTrackedChunk<?> chunk = target.chunks.get(chunkIndex);
-			chunk.removeEntity(e);
-			for (CoreTrackedPerception<?> perception : chunk.perceptions) {
-				if (!perception.clazz.isInstance(e))
-					continue;
-				perception.perception.remove(e);
-			}
+			@SuppressWarnings("unchecked")
+			CoreTrackingTarget<Entity> etrack = (CoreTrackingTarget<Entity>) target;
+			etrack.entities.remove(e);
+			etrack.removeFromChunk(chunkIndex, e);
 		}
+		this.entityByID.remove(entity.id, e);
+		this.entityByUUID.remove(e.getUUID(), e);
 	}
 	
 	void addTicking(CoreTrackedEntity<?> entity) {
@@ -266,7 +262,8 @@ public class CoreEntityTracker implements EntityTracker {
 		CoreTrackedEntity<?> moved = entities[pointer] = entities[size];
 		entities[size] = null;
 		tickingEntitiesSize = size -1;
-		moved.tickingEntitiesPointer = pointer;
+		if (moved != null)
+			moved.tickingEntitiesPointer = pointer;
 		tickingEntitiesChanged = true;
 	}
 	

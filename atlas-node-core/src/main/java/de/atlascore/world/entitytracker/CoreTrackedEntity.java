@@ -7,7 +7,7 @@ import de.atlasmc.world.entitytracker.TrackerBinding;
 
 class CoreTrackedEntity<T extends Entity> implements TrackerBinding {
 	
-	int tickingEntitiesPointer;
+	int tickingEntitiesPointer = -1;
 	T entity;
 	CoreTrackedPerception<T> perception;
 	double x;
@@ -23,16 +23,9 @@ class CoreTrackedEntity<T extends Entity> implements TrackerBinding {
 		this.z = entity.getZ();
 		this.id = id;
 		this.tracker = tracker;
-		if (perception != null) {
-			this.perception = new CoreTrackedPerception<>(perception, entity);
-			@SuppressWarnings("unchecked")
-			CoreTrackingTarget<? extends T> target = (CoreTrackingTarget<? extends T>) tracker.getClosestTracker(this.perception.clazz);
-			this.perception.target = target;
-			this.perception.chunkX = MathUtil.toChunkCoordinate(x);
-			this.perception.chunkY = MathUtil.toChunkCoordinate(y);
-			this.perception.chunkZ = MathUtil.toChunkCoordinate(z);
-		}
-		updateTicking(entity.isTicking());
+		updatePerception(perception);
+		if (entity.isTicking())
+			tracker.addTicking(this);
 	}
 
 	@Override
@@ -43,6 +36,7 @@ class CoreTrackedEntity<T extends Entity> implements TrackerBinding {
 		this.x = x;
 		this.y = y;
 		this.z = z;
+		CoreTrackedPerception<T> perception = this.perception;
 		if (perception != null) {
 			perception.updatePosition(x, y, z);
 		}
@@ -52,21 +46,37 @@ class CoreTrackedEntity<T extends Entity> implements TrackerBinding {
 	public void updatePerception(EntityPerception perception) {
 		if (tracker == null)
 			throw new IllegalStateException("Tracker is unregistered!");
-		// TODO update perception
+		CoreTrackedPerception<T> currentPerception = this.perception;
+		if (currentPerception != null) {
+			currentPerception.unregister();
+			currentPerception = null;
+		}
+		if (perception != null) {
+			currentPerception = new CoreTrackedPerception<>(perception, entity);
+			@SuppressWarnings("unchecked")
+			CoreTrackingTarget<? extends T> target = (CoreTrackingTarget<? extends T>) tracker.getClosestTracker(this.perception.clazz);
+			currentPerception.target = target;
+			currentPerception.chunkX = MathUtil.toChunkCoordinate(x);
+			currentPerception.chunkY = MathUtil.toChunkCoordinate(y);
+			currentPerception.chunkZ = MathUtil.toChunkCoordinate(z);
+			currentPerception.register();
+		}
+		this.perception = currentPerception;
 	}
 
 	@Override
 	public void updatePerceptionRange() {
+		CoreTrackedPerception<T> perception = this.perception;
 		if (perception == null)
 			return;
-		this.perception.perceptionRange = (int) this.perception.perception.range();
-		// TODO update perception
+		perception.updateRange();
 	}
 
 	@Override
 	public void unregister() {
 		if (tracker == null)
 			return;
+		tracker.removeTicking(this);
 		tracker.removeEntity(this);
 		tracker = null;
 		perception = null;

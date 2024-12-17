@@ -1,6 +1,7 @@
 package de.atlasmc.world.entitytracker;
 
 import java.util.Collection;
+import java.util.UUID;
 
 import de.atlasmc.entity.Entity;
 import de.atlasmc.tick.Tickable;
@@ -20,9 +21,6 @@ public interface EntityTracker extends Tickable {
 	Collection<TrackingTarget<? extends Entity>> getTargets();
 	
 	@NotNull
-	World getWorld();
-	
-	@NotNull
 	Collection<Entity> getEntities();
 	
 	@NotNull
@@ -30,6 +28,9 @@ public interface EntityTracker extends Tickable {
 	
 	@Nullable
 	Entity getEntity(int entityID);
+	
+	@Nullable
+	Entity getEntity(UUID uuid);
 
 	@NotNull
 	Collection<Entity> getEntities(int x, int z);

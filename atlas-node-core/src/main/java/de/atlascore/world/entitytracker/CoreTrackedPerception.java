@@ -1,6 +1,7 @@
 package de.atlascore.world.entitytracker;
 
 import de.atlasmc.entity.Entity;
+import de.atlasmc.util.MathUtil;
 import de.atlasmc.world.entitytracker.EntityPerception;
 
 public class CoreTrackedPerception<T extends Entity> {
@@ -19,7 +20,7 @@ public class CoreTrackedPerception<T extends Entity> {
 		this.perception = perception;
 		this.clazz = (Class<? extends T>) perception.tracking();
 		this.source = source;
-		this.perceptionRange = (int) perception.range();
+		this.perceptionRange = MathUtil.toChunkCoordinate(perception.range());
 	}
 	
 	public void register() {
@@ -32,6 +33,12 @@ public class CoreTrackedPerception<T extends Entity> {
 
 	public void updatePosition(double x, double y, double z) {
 		target.updatePerception(this, x, y, z);
+	}
+	
+	public void updateRange() {
+		int newRange = MathUtil.toChunkCoordinate(perception.range());
+		target.updatePerceptionRange(this, newRange);
+		perceptionRange = newRange;
 	}
 
 }
