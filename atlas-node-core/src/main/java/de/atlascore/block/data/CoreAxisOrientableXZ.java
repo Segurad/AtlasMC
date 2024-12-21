@@ -5,13 +5,13 @@ import java.util.Set;
 import de.atlasmc.Axis;
 import de.atlasmc.Material;
 
-public class CoreOrientableXZ extends CoreOrientable {
+public class CoreAxisOrientableXZ extends CoreAxisOrientable {
 
 	private static final Set<Axis> ALLOWED_AXIS =
 			Set.of(Axis.X,
 					Axis.Z);
 	
-	public CoreOrientableXZ(Material material) {
+	public CoreAxisOrientableXZ(Material material) {
 		super(material, Axis.X);
 	}
 

@@ -1,24 +1,18 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Lantern;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreLantern extends CoreWaterlogged implements Lantern {
 
-	protected static final CharKey
-	HANGING = CharKey.literal("hanging");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(HANGING, (holder, reader) -> {
-			if (holder instanceof Lantern)
-			((Lantern) holder).setHanging(reader.readByteTag() == 1);
-			else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreWaterlogged.PROPERTIES, BlockDataProperty.HANGING);
 	}
 	
 	private boolean hanging;
@@ -44,9 +38,8 @@ public class CoreLantern extends CoreWaterlogged implements Lantern {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isHanging()) writer.writeByteTag(HANGING, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

@@ -1,23 +1,17 @@
 package de.atlascore.block.data;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Snowable;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.block.data.property.BlockDataProperty;
 
 public class CoreSnowable extends CoreBlockData implements Snowable {
 
-	protected static final CharKey
-	NBT_SNWOY = CharKey.literal("snowy");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(NBT_SNWOY, (holder, reader) -> {
-			if (holder instanceof Snowable)
-			((Snowable) holder).setSnowy(reader.readByteTag() == 1);
-			else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.SNOWY);
 	}
 	
 	private boolean snowy;
@@ -42,9 +36,8 @@ public class CoreSnowable extends CoreBlockData implements Snowable {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isSnowy()) writer.writeByteTag(NBT_SNWOY, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 	
 }

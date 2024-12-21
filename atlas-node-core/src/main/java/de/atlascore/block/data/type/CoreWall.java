@@ -1,43 +1,24 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Wall;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreWall extends CoreWaterlogged implements Wall {
 
-	protected static final NBTFieldContainer<CoreWall> NBT_FIELDS;
-	
-	protected static final CharKey
-	NORTH = CharKey.literal("north"),
-	EAST = CharKey.literal("east"),
-	WEST = CharKey.literal("west"),
-	SOUTH = CharKey.literal("south"),
-	UP = CharKey.literal("up");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS = CoreWaterlogged.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NORTH, (holder, reader) -> {
-			holder.setHeight(BlockFace.NORTH, Height.getByName(reader.readStringTag()));
-		});
-		NBT_FIELDS.setField(EAST, (holder, reader) -> {
-			holder.setHeight(BlockFace.EAST, Height.getByName(reader.readStringTag()));
-		});
-		NBT_FIELDS.setField(SOUTH, (holder, reader) -> {
-			holder.setHeight(BlockFace.SOUTH, Height.getByName(reader.readStringTag()));
-		});
-		NBT_FIELDS.setField(WEST, (holder, reader) -> {
-			holder.setHeight(BlockFace.WEST, Height.getByName(reader.readStringTag()));
-		});
-		NBT_FIELDS.setField(UP, (holder, reader) -> {
-			holder.setUp(reader.readByteTag() == 1);
-		});
+		PROPERTIES = merge(CoreWaterlogged.PROPERTIES,
+				BlockDataProperty.CON_NORTH,
+				BlockDataProperty.CON_EAST,
+				BlockDataProperty.CON_WEST,
+				BlockDataProperty.CON_SOUTH,
+				BlockDataProperty.UP);
 	}
 	
 	private boolean up;
@@ -96,23 +77,8 @@ public class CoreWall extends CoreWaterlogged implements Wall {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreWall> getFieldContainerRoot() {
-		return NBT_FIELDS;
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (getHeight(BlockFace.NORTH) != Height.NONE) 
-			writer.writeStringTag(NORTH, getHeight(BlockFace.NORTH).name().toLowerCase());
-		if (getHeight(BlockFace.EAST) != Height.NONE) 
-			writer.writeStringTag(EAST, getHeight(BlockFace.EAST).name().toLowerCase());
-		if (getHeight(BlockFace.SOUTH) != Height.NONE)
-			writer.writeStringTag(SOUTH, getHeight(BlockFace.SOUTH).name().toLowerCase());
-		if (getHeight(BlockFace.WEST) != Height.NONE) 
-			writer.writeStringTag(WEST, getHeight(BlockFace.WEST).name().toLowerCase());
-		if (isUp()) 
-			writer.writeByteTag(UP, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

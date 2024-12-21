@@ -3,7 +3,7 @@ package de.atlasmc;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.atlasmc.NamespacedKey.Namespaced;
+import de.atlasmc.NamespacedKey.ClientNamespaced;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.data.BlockDataFactory;
 import de.atlasmc.block.tile.TileEntity;
@@ -19,7 +19,7 @@ import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 
 @RegistryHolder(key="atlas:material")
-public class Material implements Namespaced {
+public class Material implements ClientNamespaced {
 	
 	private static Registry<Material> registry;
 	private static final Map<Integer, Material> REGISTRI_BY_IID;
@@ -1678,6 +1678,7 @@ public class Material implements Namespaced {
 	 * Returns the NamespacedKey used to send to the client
 	 * @return NamespacedKey
 	 */
+	@Override
 	public NamespacedKey getClientKey() {
 		return clientKey;
 	}

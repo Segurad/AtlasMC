@@ -1,16 +1,18 @@
 package de.atlasmc.inventory.component;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.nbt.AbstractNBTBase;
 
-public abstract class AbstractItemComponent extends AbstractNBTBase implements ItemComponent {
+public abstract class AbstractItemComponent implements ItemComponent {
 
 	protected final NamespacedKey key;
 	
 	public AbstractItemComponent(NamespacedKey key) {
+		if (key == null)
+			throw new IllegalArgumentException("Key can not be null!");
 		this.key = key;
 	}
 	
+	@Override
 	public boolean isServerOnly() {
 		return false;
 	}

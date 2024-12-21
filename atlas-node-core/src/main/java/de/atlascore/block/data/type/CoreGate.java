@@ -1,26 +1,21 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlascore.block.data.CoreOpenable;
-import de.atlascore.block.data.CorePowerable;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Gate;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreGate extends CoreDirectional4Faces implements Gate {
 
-	protected static final CharKey
-	IN_WALL = CharKey.literal("in_wall");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(IN_WALL, (holder, reader) -> {
-			if (holder instanceof Gate)
-			((Gate) holder).setInWall(reader.readByteTag() == 1);
-			else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, 
+				BlockDataProperty.OPEN,
+				BlockDataProperty.POWERED,
+				BlockDataProperty.IN_WALL);
 	}
 	
 	private boolean open;
@@ -71,11 +66,8 @@ public class CoreGate extends CoreDirectional4Faces implements Gate {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isOpen()) writer.writeByteTag(CoreOpenable.NBT_OPEN, true);
-		if (isPowered()) writer.writeByteTag(CorePowerable.NBT_POWERED, true);
-		if (isInWall()) writer.writeByteTag(IN_WALL, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

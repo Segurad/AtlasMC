@@ -1,12 +1,18 @@
 package de.atlascore.block.data;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.WaterloggedDirectional;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.block.data.property.BlockDataProperty;
 
 public class CoreWaterloggedDirectional4Faces extends CoreDirectional4Faces implements WaterloggedDirectional {
+	
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	
+	static {
+		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, BlockDataProperty.WATERLOGGED);
+	}
 	
 	private boolean waterlogged;
 	
@@ -32,10 +38,8 @@ public class CoreWaterloggedDirectional4Faces extends CoreDirectional4Faces impl
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isWaterlogged()) 
-			writer.writeByteTag(CoreWaterlogged.NBT_WATERLOGGED, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

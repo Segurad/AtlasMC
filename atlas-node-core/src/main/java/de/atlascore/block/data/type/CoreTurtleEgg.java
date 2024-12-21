@@ -1,23 +1,18 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreHatchable;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.TurtleEgg;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTurtleEgg extends CoreHatchable implements TurtleEgg {
 
-	protected static final CharKey NBT_EGGS = CharKey.literal("eggs");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(NBT_EGGS, (holder, reader) -> {
-			if (holder instanceof TurtleEgg)
-			((TurtleEgg) holder).setEggs(reader.readIntTag());
-			else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreHatchable.PROPERTIES, BlockDataProperty.EGGS);
 	}
 	
 	private int eggs;
@@ -55,10 +50,8 @@ public class CoreTurtleEgg extends CoreHatchable implements TurtleEgg {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (getEggs() > 1) 
-			writer.writeIntTag(NBT_EGGS, getEggs());
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

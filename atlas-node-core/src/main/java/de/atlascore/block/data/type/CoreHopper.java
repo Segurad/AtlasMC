@@ -1,17 +1,16 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import de.atlascore.block.data.CoreAbstractDirectional;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Hopper;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreHopper extends CoreAbstractDirectional implements Hopper {
-
+	
 	private static final Set<BlockFace> ALLOWED_FACES =
 			Set.of(BlockFace.NORTH,
 					BlockFace.EAST,
@@ -19,15 +18,10 @@ public class CoreHopper extends CoreAbstractDirectional implements Hopper {
 					BlockFace.WEST,
 					BlockFace.DOWN);
 	
-	protected static final CharKey
-	ENABLED = CharKey.literal("enabled");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(ENABLED, (holder, reader) -> {
-			if (holder instanceof Hopper)
-			((Hopper) holder).setEnabled(reader.readByteTag() == 1);
-			else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreAbstractDirectional.PROPERTIES, BlockDataProperty.ENABLED);
 	}
 	
 	private boolean enabled;
@@ -72,9 +66,8 @@ public class CoreHopper extends CoreAbstractDirectional implements Hopper {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isEnabled()) writer.writeByteTag(ENABLED, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

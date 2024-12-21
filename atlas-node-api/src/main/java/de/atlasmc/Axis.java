@@ -25,9 +25,9 @@ public enum Axis implements EnumName, EnumValueCache {
 	}
 	
 	/**
-	 * Returns the Axis represented by the name or null if no matching Axis has been found
-	 * @param name the name of the Axis
-	 * @return the Axis or null
+	 * Returns the value represented by the name or null if no matching value has been found
+	 * @param name the name of the value
+	 * @return value or null
 	 */
 	public static Axis getByName(String name) {
 		if (name == null)
@@ -35,9 +35,9 @@ public enum Axis implements EnumName, EnumValueCache {
 		List<Axis> values = getValues();
 		final int size = values.size();
 		for (int i = 0; i < size; i++) {
-			Axis a = values.get(i);
-			if (a.name.equals(name)) 
-				return a;
+			Axis value = values.get(i);
+			if (value.name.equals(name)) 
+				return value;
 		}
 		return null;
 	}

@@ -1,26 +1,24 @@
 package de.atlascore.block.data.type;
 
-import de.atlascore.block.data.CoreDirectional4Faces;
+import java.util.List;
+
+import de.atlascore.block.data.CoreWaterloggedDirectional4Faces;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.DecoratedPot;
 
-public class CoreDecoratedPot extends CoreDirectional4Faces implements DecoratedPot {
+public class CoreDecoratedPot extends CoreWaterloggedDirectional4Faces implements DecoratedPot {
 
-	private boolean waterlogged;
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	
+	static {
+		PROPERTIES = merge(CoreWaterloggedDirectional4Faces.PROPERTIES, BlockDataProperty.CRACKED);
+	}
+	
 	private boolean cracked;
 	
 	public CoreDecoratedPot(Material material) {
 		super(material);
-	}
-
-	@Override
-	public boolean isWaterlogged() {
-		return waterlogged;
-	}
-
-	@Override
-	public void setWaterlogged(boolean waterlogged) {
-		this.waterlogged = waterlogged;
 	}
 
 	@Override
@@ -35,12 +33,17 @@ public class CoreDecoratedPot extends CoreDirectional4Faces implements Decorated
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID() + (waterlogged?0:1) + (getFaceValue()*2) + (cracked?0:8);
+		return getMaterial().getBlockStateID() + (isWaterlogged()?0:1) + (getFaceValue()*2) + (cracked?0:8);
 	}
 	
 	@Override
 	public CoreDecoratedPot clone() {
 		return (CoreDecoratedPot) super.clone();
+	}
+	
+	@Override
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

@@ -1,14 +1,11 @@
 package de.atlasmc.block.data.type;
 
+import de.atlasmc.block.data.Distanced;
 import de.atlasmc.block.data.Waterlogged;
 
-public interface Leaves extends Waterlogged {
-	
-	int getDistance();
+public interface Leaves extends Waterlogged, Distanced {
 	
 	boolean isPersistent();
-	
-	void setDistance(int distance);
 	
 	void setPersistent(boolean persistent);
 

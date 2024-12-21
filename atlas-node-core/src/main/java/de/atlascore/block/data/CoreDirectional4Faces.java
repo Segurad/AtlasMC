@@ -10,7 +10,7 @@ import de.atlasmc.block.data.Directional;
  * {@link Directional} implementation that accepts the 4 faces NORTH, SOUTH, EAST and WEST
  */
 public class CoreDirectional4Faces extends CoreAbstractDirectional {
-
+	
 	private static final Set<BlockFace> ALLOWED_FACES =
 			Set.of(BlockFace.NORTH,
 					BlockFace.SOUTH,

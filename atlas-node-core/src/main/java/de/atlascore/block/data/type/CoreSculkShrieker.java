@@ -1,31 +1,20 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
-import de.atlascore.block.data.CoreBlockData;
 import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.SculkShrieker;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreSculkShrieker extends CoreWaterlogged implements SculkShrieker {
 
-	protected static final NBTFieldContainer<CoreSculkShrieker> NBT_FIELDS;
-	
-	protected static final CharKey 
-	NBT_CAN_SUMMON = CharKey.literal("can_summon"),
-	NBT_SHRIEKING = CharKey.literal("shrieking");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS = CoreWaterlogged.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_CAN_SUMMON, (holder, reader) -> {
-			holder.canSummon = reader.readByteTag() == 1;
-		});
-		NBT_FIELDS.setField(NBT_SHRIEKING, (holder, reader) -> {
-			holder.shrieking = reader.readByteTag() == 1;
-		});
+		PROPERTIES = merge(CoreWaterlogged.PROPERTIES, 
+				BlockDataProperty.CAN_SUMMON,
+				BlockDataProperty.SHRIEKING);
 	}
 	
 	private boolean canSummon;
@@ -66,17 +55,8 @@ public class CoreSculkShrieker extends CoreWaterlogged implements SculkShrieker 
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (canSummon)
-			writer.writeByteTag(NBT_CAN_SUMMON, true);
-		if (shrieking)
-			writer.writeByteTag(NBT_SHRIEKING, true);
-	}
-	
-	@Override
-	protected NBTFieldContainer<? extends CoreBlockData> getFieldContainerRoot() {
-		return NBT_FIELDS;
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

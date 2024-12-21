@@ -1,22 +1,25 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
-import java.util.EnumSet;
-import java.util.Set;
+import java.util.List;
 
-import de.atlascore.block.data.CoreAbstractMultipleFacing;
-import de.atlascore.block.data.CoreWaterlogged;
+import de.atlascore.block.data.CoreMultipleFacing4;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.GlassPane;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
-public class CoreGlassPane extends CoreAbstractMultipleFacing implements GlassPane {
+public class CoreGlassPane extends CoreMultipleFacing4 implements GlassPane {
 
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	
+	static {
+		PROPERTIES = merge(CoreMultipleFacing4.PROPERTIES, BlockDataProperty.WATERLOGGED);
+	}
+	
 	private boolean waterlogged;
 	
 	public CoreGlassPane(Material material) {
-		super(material, 4);
+		super(material);
 	}
 
 	@Override
@@ -30,11 +33,6 @@ public class CoreGlassPane extends CoreAbstractMultipleFacing implements GlassPa
 	}
 
 	@Override
-	public Set<BlockFace> getAllowedFaces() {
-		return EnumSet.range(BlockFace.NORTH, BlockFace.WEST);
-	}
-
-	@Override
 	public int getStateID() {
 		return getMaterial().getBlockStateID()+
 				(hasFace(BlockFace.WEST)?0:1)+
@@ -43,17 +41,10 @@ public class CoreGlassPane extends CoreAbstractMultipleFacing implements GlassPa
 				(hasFace(BlockFace.NORTH)?0:8)+
 				(hasFace(BlockFace.EAST)?0:16);
 	}
-
-	@Override
-	public boolean isValid(BlockFace face) {
-		if (face == null) throw new IllegalArgumentException("BlockFace can not null!");
-		return face.ordinal() < 4;
-	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isWaterlogged()) writer.writeByteTag(CoreWaterlogged.NBT_WATERLOGGED, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

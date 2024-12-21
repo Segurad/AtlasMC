@@ -4,44 +4,61 @@ import java.util.List;
 
 import org.joml.Vector3d;
 
-public enum BlockFace {
-	NORTH(0, 0, -1, 0f, -180f),
-	EAST(1, 0, 0, 0f, -90f),
-	SOUTH(0, 0, 1, 0f, 0f),
-	WEST(-1, 0, 0, 0f, 90f),
-	UP(0, 1, 0, -90f, 0f),
-	DOWN(0, -1, 0, 90f, 0f),
-	NORTH_EAST(1, 0, -1),
-	NORTH_WEST(-1, 0, -1),
-	SOUTH_EAST(1, 0, 1),
-	SOUTH_WEST(-1, 0, 1),
-	WEST_NORTH_WEST(-2, 0, -1),
-	NORTH_NORTH_WEST(-1, 0, -2),
-	NORTH_NORTH_EAST(1, 0, -2),
-	EAST_NORTH_EAST(2, 0, -1),
-	EAST_SOUTH_EAST(2, 0, 1),
-	SOUTH_SOUTH_EAST(1, 0, 2),
-	SOUTH_SOUTH_WEST(-1, 0, 2),
-	WEST_SOUTH_WEST(-2, 0, 1);
+import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumValueCache;
+
+public enum BlockFace implements EnumName, EnumValueCache {
+	NORTH(0, 0, -1, 0f, -180f, 8),
+	EAST(1, 0, 0, 0f, -90f, 12),
+	SOUTH(0, 0, 1, 0f, 0f, 0),
+	WEST(-1, 0, 0, 0f, 90f, 4),
+	UP(0, 1, 0, -90f, 0f, -1),
+	DOWN(0, -1, 0, 90f, 0f, -2),
+	NORTH_EAST(1, 0, -1, 10),
+	NORTH_WEST(-1, 0, -1, 6),
+	SOUTH_EAST(1, 0, 1, 14),
+	SOUTH_WEST(-1, 0, 1, 2),
+	WEST_NORTH_WEST(-2, 0, -1, 5),
+	NORTH_NORTH_WEST(-1, 0, -2, 7),
+	NORTH_NORTH_EAST(1, 0, -2, 9),
+	EAST_NORTH_EAST(2, 0, -1, 11),
+	EAST_SOUTH_EAST(2, 0, 1, 13),
+	SOUTH_SOUTH_EAST(1, 0, 2, 15),
+	SOUTH_SOUTH_WEST(-1, 0, 2, 1),
+	WEST_SOUTH_WEST(-2, 0, 1, 3);
 	
 	private static List<BlockFace> VALUES;
+	
+	private final String name;
 	
 	private final int modX;
 	private final int modY;
 	private final int modZ;
 	private final float pitch;
 	private final float yaw;
+	private final int rotation;
 	
-	private BlockFace(int modX, int modY, int modZ) {
-		this(modX, modY, modZ, 0, 0);
+	private BlockFace(int modX, int modY, int modZ, int rotation) {
+		this(modX, modY, modZ, 0, 0, rotation);
 	}
 	
-	private BlockFace(int modX, int modY, int modZ, float pitch, float yaw) {
+	private BlockFace(int modX, int modY, int modZ, float pitch, float yaw, int rotation) {
 		this.modX = modX;
 		this.modY = modY;
 		this.modZ = modZ;
 		this.pitch = pitch;
 		this.yaw = yaw;
+		this.rotation = rotation;
+		this.name = name().toLowerCase().intern();
+	}
+	
+	public int getRotation() {
+		return rotation;
+	}
+	
+	@Override
+	public String getName() {
+		return name;
 	}
 	
 	/**
@@ -78,10 +95,26 @@ public enum BlockFace {
 	}
 
 	public static BlockFace getByName(String name) {
-		name = name.toUpperCase();
-		for (BlockFace face : values()) {
-			if (face.name().equals(name)) {
-				return face;
+		if (name == null)
+			throw new IllegalArgumentException("Name can not be null!");
+		List<BlockFace> values = getValues();
+		final int size = values.size();
+		for (int i = 0; i < size; i++) {
+			BlockFace value = values.get(i);
+			if (value.name.equals(name)) {
+				return value;
+			};
+		}
+		return null;
+	}
+	
+	public static BlockFace getByRotation(int rotation) {
+		List<BlockFace> values = getValues();
+		final int size = values.size();
+		for (int i = 0; i < size; i++) {
+			BlockFace value = values.get(i);
+			if (value.rotation == rotation) {
+				return value;
 			};
 		}
 		return null;

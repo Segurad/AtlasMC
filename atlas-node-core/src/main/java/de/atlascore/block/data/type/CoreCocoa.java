@@ -1,15 +1,20 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
-import de.atlascore.block.data.CoreAgeable;
 import de.atlascore.block.data.CoreDirectional4Faces;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Cocoa;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreCocoa extends CoreDirectional4Faces implements Cocoa {
 
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	
+	static {
+		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, BlockDataProperty.AGE);
+	}
+	
 	private int age;
 	
 	public CoreCocoa(Material material) {
@@ -28,7 +33,8 @@ public class CoreCocoa extends CoreDirectional4Faces implements Cocoa {
 
 	@Override
 	public void setAge(int age) {
-		if (age > 2 || age < 0) throw new IllegalArgumentException("Age is not between 0 and 2: " + age);
+		if (age > 2 || age < 0) 
+			throw new IllegalArgumentException("Age is not between 0 and 2: " + age);
 		this.age = age;
 	}
 	
@@ -38,9 +44,8 @@ public class CoreCocoa extends CoreDirectional4Faces implements Cocoa {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (getAge() > 0) writer.writeIntTag(CoreAgeable.NBT_AGE, getAge());
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

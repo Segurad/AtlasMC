@@ -1,28 +1,20 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
-import de.atlascore.block.data.CoreBlockData;
-import de.atlascore.block.data.CoreLightable;
 import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Candle;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreCandle extends CoreWaterlogged implements Candle {
 
-	private static final NBTFieldContainer<CoreCandle> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_CANDLES = CharKey.literal("candles");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS = CoreWaterlogged.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_CANDLES, (holder, reader) -> {
-			holder.setCandles(reader.readIntTag());
-		});
+		PROPERTIES = merge(CoreWaterlogged.PROPERTIES, 
+				BlockDataProperty.CANDLES,
+				BlockDataProperty.LIT);
 	}
 	
 	private int candles;
@@ -61,22 +53,13 @@ public class CoreCandle extends CoreWaterlogged implements Candle {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (candles > 1)
-			writer.writeIntTag(NBT_CANDLES, candles);
-		if (lit)
-			writer.writeByteTag(CoreLightable.NBT_LIT, true);
-	}
-	
-	@Override
-	protected NBTFieldContainer<? extends CoreBlockData> getFieldContainerRoot() {
-		return NBT_FIELDS;
-	}
-	
-	@Override
 	public int getStateID() {
 		return super.getStateID() + (lit?0:2) + (candles-1)*4;
+	}
+	
+	@Override
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

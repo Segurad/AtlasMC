@@ -1,24 +1,18 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.RespawnAnchor;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreRespawnAnchor extends CoreBlockData implements RespawnAnchor {
 
-	protected static final CharKey
-	CHARGES = CharKey.literal("charges");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(CHARGES, (holder, reader) -> {
-			if (holder instanceof RespawnAnchor)
-			((RespawnAnchor) holder).setCharges(reader.readIntTag());
-			else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.CHARGES);
 	}
 	
 	private int charges;
@@ -39,7 +33,8 @@ public class CoreRespawnAnchor extends CoreBlockData implements RespawnAnchor {
 
 	@Override
 	public void setCharges(int charges) {
-		if (charges >  4 || charges < 0) throw new IllegalArgumentException("Charges is not between 0 and 4: " + charges);
+		if (charges >  4 || charges < 0) 
+			throw new IllegalArgumentException("Charges is not between 0 and 4: " + charges);
 		this.charges = charges;
 	}
 	
@@ -49,9 +44,8 @@ public class CoreRespawnAnchor extends CoreBlockData implements RespawnAnchor {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (getCharges() > 0) writer.writeIntTag(CHARGES, getCharges());
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

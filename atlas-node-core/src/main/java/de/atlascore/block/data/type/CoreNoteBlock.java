@@ -1,31 +1,21 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CorePowerable;
 import de.atlasmc.Instrument;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.NoteBlock;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreNoteBlock extends CorePowerable implements NoteBlock {
 
-	protected static final CharKey
-	INSTRUMENT = CharKey.literal("instrument"),
-	NOTE = CharKey.literal("note");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(INSTRUMENT, (holder, reader) -> {
-			if (holder instanceof NoteBlock)
-			((NoteBlock) holder).setInstrument(Instrument.getByName(reader.readStringTag()));
-			else reader.skipTag();
-		});
-		NBT_FIELDS.setField(NOTE, (holder, reader) -> {
-			if (holder instanceof NoteBlock)
-			((NoteBlock) holder).setNote(reader.readIntTag());
-			else reader.skipTag();
-		});
+		PROPERTIES = merge(CorePowerable.PROPERTIES, 
+				BlockDataProperty.INSTRUMENT,
+				BlockDataProperty.NOTE);
 	}
 	
 	private Instrument instrument;
@@ -63,10 +53,8 @@ public class CoreNoteBlock extends CorePowerable implements NoteBlock {
 	}
 
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (getInstrument() != Instrument.HARP) writer.writeStringTag(INSTRUMENT, getInstrument().name().toLowerCase());
-		if (getNote() > 0) writer.writeIntTag(NOTE, getNote());
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 	
 }

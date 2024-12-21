@@ -1,24 +1,18 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional6Faces;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Dispenser;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreDispenser extends CoreDirectional6Faces implements Dispenser {
 
-	protected static final CharKey
-	TRIGGERED = CharKey.literal("triggered");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(TRIGGERED, (holder, reader) -> {
-			if (holder instanceof Dispenser)
-			((Dispenser) holder).setTriggered(reader.readByteTag() == 1);
-			else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreDirectional6Faces.PROPERTIES, BlockDataProperty.TRIGGERED);
 	}
 	
 	public boolean triggered;
@@ -43,9 +37,8 @@ public class CoreDispenser extends CoreDirectional6Faces implements Dispenser {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isTriggered()) writer.writeByteTag(TRIGGERED, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

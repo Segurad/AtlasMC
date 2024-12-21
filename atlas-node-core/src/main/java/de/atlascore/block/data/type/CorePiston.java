@@ -1,24 +1,18 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional6Faces;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Piston;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CorePiston extends CoreDirectional6Faces implements Piston {
 
-	protected static final CharKey
-	EXTENDED = CharKey.literal("extended");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(EXTENDED, (holder, reader) -> {
-			if (holder instanceof Piston)
-			((Piston) holder).setExtended(reader.readByteTag() == 1);
-			else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreDirectional6Faces.PROPERTIES, BlockDataProperty.EXTENDED);
 	}
 	
 	private boolean extended;
@@ -43,9 +37,8 @@ public class CorePiston extends CoreDirectional6Faces implements Piston {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isExtended()) writer.writeByteTag(EXTENDED, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

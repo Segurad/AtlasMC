@@ -1,6 +1,7 @@
 package de.atlascore.inventory.meta;
 
 import java.io.IOException;
+import java.util.List;
 
 import de.atlasmc.DyeColor;
 import de.atlasmc.Material;
@@ -23,9 +24,9 @@ public class CoreTropicalFishBucketMeta extends CoreItemMeta implements Tropical
 			if (holder instanceof TropicalFishBucketMeta) {
 				TropicalFishBucketMeta meta = ((TropicalFishBucketMeta) holder);
 				int variant = reader.readIntTag();
-				DyeColor[] colors = DyeColor.values();
-				meta.setPatternColor(colors[variant >> 24]);
-				meta.setBodyColor(colors[(variant >> 16) & 0xFF]);
+				List<DyeColor> colors = DyeColor.getValues();
+				meta.setPatternColor(colors.get(variant >> 24));
+				meta.setBodyColor(colors.get((variant >> 16) & 0xFF));
 				meta.setPattern(Pattern.getByDataID(variant));
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});

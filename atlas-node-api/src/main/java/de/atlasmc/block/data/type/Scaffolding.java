@@ -1,13 +1,12 @@
 package de.atlasmc.block.data.type;
 
+import de.atlasmc.block.data.Distanced;
 import de.atlasmc.block.data.Waterlogged;
 
-public interface Scaffolding extends Waterlogged {
+public interface Scaffolding extends Waterlogged, Distanced {
 	
-	public int getDistance();
-	public int getMaxDistance();
-	public boolean isBottom();
-	public void setBottom(boolean bottom);
-	public void setDistance(int distance);
+	boolean isBottom();
+	
+	void setBottom(boolean bottom);
 
 }

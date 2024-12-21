@@ -1,23 +1,18 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.BubbleColumn;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBubbleColumn extends CoreBlockData implements BubbleColumn {
 	
-	protected static final CharKey DRAG = CharKey.literal("drag");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(DRAG, (holder, reader) -> {
-			if (holder instanceof BubbleColumn) {
-				((BubbleColumn) holder).setDrag(reader.readByteTag() == 1);
-			} else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.DRAG);
 	}
 	
 	private boolean drag;
@@ -43,8 +38,8 @@ public class CoreBubbleColumn extends CoreBlockData implements BubbleColumn {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isDrag()) writer.writeByteTag(DRAG, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
+	
 }

@@ -1,28 +1,20 @@
 package de.atlascore.block.data.type;
 
-import de.atlasmc.Material;
-import de.atlasmc.block.data.type.Lectern;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
-
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlascore.block.data.CorePowerable;
+import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
+import de.atlasmc.block.data.type.Lectern;
 
 public class CoreLectern extends CoreDirectional4Faces implements Lectern {
 
-	protected static final CharKey
-	BOOK = CharKey.literal("book");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(BOOK, (holder, reader) -> {
-			if (holder instanceof Lectern) {
-				((Lectern) holder).setBook(reader.readByteTag() == 1);
-			} else {
-				reader.skipTag();
-			}
-		});
+		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, 
+				BlockDataProperty.HAS_BOOK,
+				BlockDataProperty.POWERED);
 	}
 	
 	private boolean book;
@@ -61,12 +53,8 @@ public class CoreLectern extends CoreDirectional4Faces implements Lectern {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isPowered()) 
-			writer.writeByteTag(CorePowerable.NBT_POWERED, true);
-		if (hasBook()) 
-			writer.writeByteTag(BOOK, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

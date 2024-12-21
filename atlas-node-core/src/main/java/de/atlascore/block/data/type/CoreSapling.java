@@ -1,25 +1,18 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Sapling;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreSapling extends CoreBlockData implements Sapling {
 
-	protected static final CharKey
-	NBT_STAGE = CharKey.literal("stage");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(NBT_STAGE, (holder, reader) -> {
-			if (holder instanceof Sapling)
-				((Sapling) holder).setStage(reader.readIntTag());
-			else 
-				reader.skipTag();
-		});
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.STAGE);
 	}
 	
 	private int stage;
@@ -57,10 +50,8 @@ public class CoreSapling extends CoreBlockData implements Sapling {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (getStage() > 0) 
-			writer.writeIntTag(NBT_STAGE, getStage());
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 	
 }

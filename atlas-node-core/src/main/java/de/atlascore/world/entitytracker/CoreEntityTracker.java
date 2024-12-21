@@ -201,7 +201,7 @@ public class CoreEntityTracker implements EntityTracker {
 		if (oldChunkIndex != newChunkIndex) {
 			Entity ent = entity.entity;
 			for (CoreTrackingTarget<?> target : fastTarget) {
-				if (!target.target.isInstance(entity))
+				if (!target.target.isInstance(ent))
 					continue;
 				@SuppressWarnings("unchecked")
 				CoreTrackingTarget<Entity> etrack = (CoreTrackingTarget<Entity>) target;
@@ -217,7 +217,7 @@ public class CoreEntityTracker implements EntityTracker {
 		}
 		Entity ent = entity.entity;
 		for (CoreTrackingTarget<?> target : fastTarget) {
-			if (!target.target.isInstance(entity))
+			if (!target.target.isInstance(ent))
 				continue;
 			@SuppressWarnings("unchecked")
 			CoreTrackingTarget<Entity> etrack = (CoreTrackingTarget<Entity>) target;

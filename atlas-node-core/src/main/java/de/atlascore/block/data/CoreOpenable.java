@@ -1,26 +1,20 @@
 package de.atlascore.block.data;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Openable;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.block.data.property.BlockDataProperty;
 
 public class CoreOpenable extends CoreBlockData implements Openable {
 
-	private boolean open;
-	
-	public static final CharKey
-	NBT_OPEN = CharKey.literal("open");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(NBT_OPEN, (holder, reader) -> {
-			if (holder instanceof Openable) {
-				((Openable) holder).setOpen(reader.readByteTag() == 1);
-			} else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.OPEN);
 	}
+	
+	private boolean open;
 	
 	public CoreOpenable(Material material) {
 		super(material);
@@ -40,10 +34,10 @@ public class CoreOpenable extends CoreBlockData implements Openable {
 	public int getStateID() {
 		return super.getStateID()+(open?0:1);
 	}
-
+	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		writer.writeByteTag(NBT_OPEN, open);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
+
 }

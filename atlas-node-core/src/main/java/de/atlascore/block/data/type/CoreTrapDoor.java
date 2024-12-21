@@ -1,17 +1,23 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
-import de.atlascore.block.data.CoreBisected;
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlascore.block.data.CoreOpenable;
-import de.atlascore.block.data.CorePowerable;
-import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.TrapDoor;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTrapDoor extends CoreDirectional4Faces implements TrapDoor {
+	
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	
+	static {
+		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, 
+				BlockDataProperty.WATERLOGGED,
+				BlockDataProperty.HALF,
+				BlockDataProperty.OPEN,
+				BlockDataProperty.POWERED);
+	}
 	
 	private Half half;
 	private boolean open;
@@ -21,6 +27,11 @@ public class CoreTrapDoor extends CoreDirectional4Faces implements TrapDoor {
 	public CoreTrapDoor(Material material) {
 		super(material);
 		half = Half.BOTTOM;
+	}
+	
+	@Override
+	public CoreTrapDoor clone() {
+		return (CoreTrapDoor) super.clone();
 	}
 
 	@Override
@@ -78,16 +89,8 @@ public class CoreTrapDoor extends CoreDirectional4Faces implements TrapDoor {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (getHalf() != Half.BOTTOM) 
-			writer.writeStringTag(CoreBisected.NBT_HALF, half.getNameID());
-		if (isOpen()) 
-			writer.writeByteTag(CoreOpenable.NBT_OPEN, true);
-		if (isPowered()) 
-			writer.writeByteTag(CorePowerable.NBT_POWERED, true);
-		if (isWaterlogged()) 
-			writer.writeByteTag(CoreWaterlogged.NBT_WATERLOGGED, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

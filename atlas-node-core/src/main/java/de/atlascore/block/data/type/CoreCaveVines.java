@@ -1,14 +1,20 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreAgeable;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.CaveVines;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreCaveVines extends CoreAgeable implements CaveVines {
 
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	
+	static {
+		PROPERTIES = merge(CoreAgeable.PROPERTIES, BlockDataProperty.BERRIES);
+	}
+	
 	private boolean berries;
 	
 	public CoreCaveVines(Material material) {
@@ -31,10 +37,8 @@ public class CoreCaveVines extends CoreAgeable implements CaveVines {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (berries)
-			writer.writeByteTag(CoreCaveVinesPlant.NBT_BERRIES, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

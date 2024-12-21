@@ -1,16 +1,21 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional6Faces;
-import de.atlascore.block.data.CorePowerable;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Observer;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreObserver extends CoreDirectional6Faces implements Observer {
 
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	
+	static {
+		PROPERTIES = merge(CoreDirectional6Faces.PROPERTIES, BlockDataProperty.POWERED);
+	}
+	
 	private boolean powered;
 	
 	public CoreObserver(Material material) {
@@ -35,9 +40,8 @@ public class CoreObserver extends CoreDirectional6Faces implements Observer {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isPowered()) writer.writeByteTag(CorePowerable.NBT_POWERED, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

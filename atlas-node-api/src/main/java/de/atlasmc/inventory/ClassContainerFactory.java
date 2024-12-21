@@ -3,11 +3,12 @@ package de.atlasmc.inventory;
 import java.lang.reflect.InvocationTargetException;
 
 import de.atlasmc.chat.Chat;
+import de.atlasmc.util.Factory;
 
 /**
  * Class based {@link ContainerFactory} for Inventories or GUI by only using the Title and Holder
  */
-public class ClassContainerFactory<I extends Inventory> extends ContainerFactory<I> {
+public class ClassContainerFactory<I extends Inventory> extends ContainerFactory<I> implements Factory {
 	
 	private final Class<? extends I> clazz; 
 

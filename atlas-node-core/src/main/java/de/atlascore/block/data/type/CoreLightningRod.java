@@ -1,12 +1,23 @@
 package de.atlascore.block.data.type;
 
+import java.util.List;
+
 import de.atlascore.block.data.CoreDirectional6Faces;
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.LightningRod;
 
 public class CoreLightningRod extends CoreDirectional6Faces implements LightningRod {
 
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	
+	static {
+		PROPERTIES = merge(CoreDirectional6Faces.PROPERTIES, 
+				BlockDataProperty.WATERLOGGED,
+				BlockDataProperty.POWERED);
+	}
+	
 	private boolean waterlogged;
 	private boolean powered;
 	
@@ -37,6 +48,11 @@ public class CoreLightningRod extends CoreDirectional6Faces implements Lightning
 	@Override
 	public int getStateID() {
 		return getMaterial().getBlockStateID() + (waterlogged?0:1) + (powered?0:2) + getFaceValue()*4;
+	}
+	
+	@Override
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

@@ -17,12 +17,7 @@ public class CoreTileEntityMeta extends CoreItemMeta implements TileEntityMeta {
 		NBT_FIELDS.setField(NBT_BLOCK_ENTITY_TAG, (holder, reader) -> {
 			if (holder instanceof TileEntityMeta) {
 				TileEntityMeta meta = ((TileEntityMeta) holder);
-				TileEntity tile = meta.getType().createTileEntity();
-				if (tile == null) {
-					reader.skipTag();
-					return;
-				}
-				tile.fromNBT(reader);
+				TileEntity tile = TileEntity.getFromNBT(reader);
 				meta.setTileEntity(tile);
 			} else ((ItemMeta) holder).getCustomTagContainer().addCustomTag(reader.readNBT());
 		});

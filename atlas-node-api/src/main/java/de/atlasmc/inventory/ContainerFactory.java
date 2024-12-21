@@ -1,11 +1,12 @@
 package de.atlasmc.inventory;
 
 import de.atlasmc.chat.Chat;
+import de.atlasmc.util.Factory;
 
 /**
  * Factory for creating containers like {@link Inventory}
  */
-public abstract class ContainerFactory<I extends Inventory> {
+public abstract class ContainerFactory<I extends Inventory> implements Factory {
 	
 	/**
 	 * Factory that creates all types of generic inventories<br>

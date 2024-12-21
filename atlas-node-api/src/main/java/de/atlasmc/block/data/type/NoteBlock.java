@@ -5,9 +5,12 @@ import de.atlasmc.block.data.Powerable;
 
 public interface NoteBlock extends Powerable {
 	
-	public Instrument getInstrument();
-	public int getNote();
-	public void setInstrument(Instrument instrument);
-	public void setNote(int note);
+	Instrument getInstrument();
+	
+	int getNote();
+	
+	void setInstrument(Instrument instrument);
+	
+	void setNote(int note);
 
 }

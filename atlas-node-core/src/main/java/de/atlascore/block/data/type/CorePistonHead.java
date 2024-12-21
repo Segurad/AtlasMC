@@ -1,23 +1,17 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.PistonHead;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CorePistonHead extends CoreTechnicalPiston implements PistonHead {
 
-	protected static final CharKey
-	SHORT = CharKey.literal("short");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(SHORT, (holder, reader) -> {
-			if (holder instanceof PistonHead)
-			((PistonHead) holder).setShort(reader.readByteTag() == 1);
-			else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreTechnicalPiston.PROPERTIES, BlockDataProperty.SHORT);
 	}
 	
 	private boolean _short;
@@ -42,9 +36,8 @@ public class CorePistonHead extends CoreTechnicalPiston implements PistonHead {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isShort()) writer.writeByteTag(SHORT, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

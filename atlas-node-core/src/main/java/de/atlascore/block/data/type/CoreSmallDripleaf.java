@@ -1,16 +1,22 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
-import de.atlascore.block.data.CoreBisected;
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.SmallDripleaf;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreSmallDripleaf extends CoreDirectional4Faces implements SmallDripleaf {
 
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	
+	static {
+		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, 
+				BlockDataProperty.WATERLOGGED,
+				BlockDataProperty.HALF);
+	}
+	
 	private Half half;
 	private boolean waterlogged;
 	
@@ -54,12 +60,8 @@ public class CoreSmallDripleaf extends CoreDirectional4Faces implements SmallDri
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (waterlogged)
-			writer.writeByteTag(CoreWaterlogged.NBT_WATERLOGGED, true);
-		if (half != Half.LOWER)
-			writer.writeStringTag(CoreBisected.NBT_HALF, half.getNameID());
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

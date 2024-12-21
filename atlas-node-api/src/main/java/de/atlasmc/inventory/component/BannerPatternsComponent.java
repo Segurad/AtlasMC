@@ -2,7 +2,6 @@ package de.atlasmc.inventory.component;
 
 import java.util.List;
 
-import de.atlasmc.DyeColor;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.block.tile.Banner.Pattern;
 
@@ -13,8 +12,6 @@ public interface BannerPatternsComponent extends ItemComponent {
 	BannerPatternsComponent clone();
 	
 	void addPattern(Pattern pattern);
-	
-	DyeColor getBaseColor();
 	
 	Pattern getPattern(int index);
 	

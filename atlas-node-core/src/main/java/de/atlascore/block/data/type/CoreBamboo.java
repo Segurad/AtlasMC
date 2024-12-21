@@ -1,24 +1,19 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
-import de.atlascore.block.data.CoreAgeable;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Bamboo;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBamboo extends CoreSapling implements Bamboo {
 
-	protected static final CharKey
-	LEAVES = CharKey.literal("leaves");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(LEAVES, (holder, reader) -> {
-			if (holder instanceof Bamboo)
-			((Bamboo) holder).setLeaves(Leaves.getByName(reader.readStringTag()));
-			else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreSapling.PROPERTIES, 
+				BlockDataProperty.AGE,
+				BlockDataProperty.LEAVES);
 	}
 	
 	private int age;
@@ -57,10 +52,8 @@ public class CoreBamboo extends CoreSapling implements Bamboo {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		writer.writeIntTag(CoreAgeable.NBT_AGE, getAge());
-		writer.writeStringTag(LEAVES, getLeaves().name().toLowerCase());
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

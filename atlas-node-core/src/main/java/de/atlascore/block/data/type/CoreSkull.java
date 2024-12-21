@@ -1,15 +1,20 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
-import de.atlascore.block.data.CorePowerable;
 import de.atlascore.block.data.CoreRotatable;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Skull;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreSkull extends CoreRotatable implements Skull {
 
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	
+	static {
+		PROPERTIES = merge(CoreRotatable.PROPERTIES, BlockDataProperty.POWERED);
+	}
+	
 	private boolean powered;
 	
 	public CoreSkull(Material material) {
@@ -32,10 +37,8 @@ public class CoreSkull extends CoreRotatable implements Skull {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isPowered())
-			writer.writeByteTag(CorePowerable.NBT_POWERED, systemData);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

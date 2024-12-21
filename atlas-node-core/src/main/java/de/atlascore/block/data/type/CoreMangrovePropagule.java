@@ -1,20 +1,22 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreAgeable;
-import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.MangrovePropagule;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
-
-import static de.atlascore.block.data.type.CoreSapling.NBT_STAGE;
 
 public class CoreMangrovePropagule extends CoreAgeable implements MangrovePropagule {
 
-	protected static final CharKey
-	NBT_HANGING = CharKey.literal("hanging");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	
+	static {
+		PROPERTIES = merge(CoreAgeable.PROPERTIES, 
+				BlockDataProperty.WATERLOGGED,
+				BlockDataProperty.HANGING,
+				BlockDataProperty.STAGE);
+	}
 	
 	private boolean waterlogged;
 	private boolean hanging;
@@ -72,14 +74,8 @@ public class CoreMangrovePropagule extends CoreAgeable implements MangrovePropag
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (getStage() > 0) 
-			writer.writeIntTag(NBT_STAGE, getStage());
-		if (waterlogged)
-			writer.writeByteTag(CoreWaterlogged.NBT_WATERLOGGED, true);
-		if (hanging)
-			writer.writeByteTag(NBT_HANGING, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

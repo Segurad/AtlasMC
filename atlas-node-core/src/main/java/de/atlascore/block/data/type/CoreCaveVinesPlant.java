@@ -1,23 +1,18 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.CaveVinesPlant;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreCaveVinesPlant extends CoreBlockData implements CaveVinesPlant {
 
-	public static final CharKey NBT_BERRIES = CharKey.literal("berries");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(NBT_BERRIES, (holder, reader) -> {
-			if (holder instanceof CaveVinesPlant data) {
-				data.setBerries(reader.readByteTag() == 1);
-			} else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.BERRIES);
 	}
 	
 	private boolean berries;
@@ -42,10 +37,8 @@ public class CoreCaveVinesPlant extends CoreBlockData implements CaveVinesPlant 
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (berries)
-			writer.writeByteTag(NBT_BERRIES, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

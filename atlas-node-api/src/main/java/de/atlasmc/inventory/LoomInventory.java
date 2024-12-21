@@ -1,6 +1,6 @@
 package de.atlasmc.inventory;
 
-import de.atlasmc.block.tile.Banner.PatternType;
+import de.atlasmc.block.tile.Banner.EnumPatternType;
 
 public interface LoomInventory extends AbstractCraftingInventory {
 	
@@ -16,8 +16,8 @@ public interface LoomInventory extends AbstractCraftingInventory {
 	
 	void setPatternItem(ItemStack pattern);
 	
-	PatternType getPattern();
+	EnumPatternType getPattern();
 	
-	void setPattern(PatternType pattern);
+	void setPattern(EnumPatternType pattern);
 
 }

@@ -1,27 +1,19 @@
 package de.atlascore.block.data;
 
-import java.io.IOException;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Rail;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.block.data.property.BlockDataProperty;
 
 public class CoreRail extends CoreWaterlogged implements Rail {
 
-	protected static final NBTFieldContainer<CoreRail> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_SHAPE = CharKey.literal("shape");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS = CoreBlockData.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_SHAPE, (holder, reader) -> {
-			holder.setShape(Shape.getByName(reader.readStringTag()));
-		});
+		PROPERTIES = merge(CoreWaterlogged.PROPERTIES, BlockDataProperty.SHAPE);
 	}
 	
 	private Shape shape;
@@ -52,14 +44,8 @@ public class CoreRail extends CoreWaterlogged implements Rail {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreRail> getFieldContainerRoot() {
-		return NBT_FIELDS;
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		writer.writeStringTag(NBT_SHAPE, getShape().name().toLowerCase());
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

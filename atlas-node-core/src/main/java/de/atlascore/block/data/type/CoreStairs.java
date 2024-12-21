@@ -1,28 +1,21 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
-import de.atlascore.block.data.CoreBisected;
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Stairs;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreStairs extends CoreDirectional4Faces implements Stairs {
 
-	protected static final NBTFieldContainer<CoreStairs> NBT_FIELDS;
-	
-	protected static final CharKey
-	SHAPE = CharKey.literal("shape");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS = CoreDirectional4Faces.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(SHAPE, (holder, reader) -> {
-			holder.setShape(Shape.getByName(reader.readStringTag()));
-		});
+		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, 
+				BlockDataProperty.WATERLOGGED,
+				BlockDataProperty.HALF,
+				BlockDataProperty.SHAPE);
 	}
 	
 	private Half half;
@@ -33,6 +26,11 @@ public class CoreStairs extends CoreDirectional4Faces implements Stairs {
 		super(material);
 		this.half = Half.BOTTOM;
 		this.shape = Shape.STRAIGHT;
+	}
+	
+	@Override
+	public CoreStairs clone() {
+		return (CoreStairs) super.clone();
 	}
 
 	@Override
@@ -81,19 +79,8 @@ public class CoreStairs extends CoreDirectional4Faces implements Stairs {
 	}
 
 	@Override
-	protected NBTFieldContainer<? extends CoreStairs> getFieldContainerRoot() {
-		return NBT_FIELDS;
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isWaterlogged()) 
-			writer.writeByteTag(CoreWaterlogged.NBT_WATERLOGGED, true);
-		if (getHalf() != Half.BOTTOM) 
-			writer.writeStringTag(CoreBisected.NBT_HALF, half.getNameID());
-		if (getShape() != Shape.STRAIGHT) 
-			writer.writeStringTag(SHAPE, getShape().name().toLowerCase());
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 	
 }

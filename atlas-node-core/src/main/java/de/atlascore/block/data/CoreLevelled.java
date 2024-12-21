@@ -1,23 +1,17 @@
 package de.atlascore.block.data;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Levelled;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.block.data.property.BlockDataProperty;
 
 public class CoreLevelled extends CoreBlockData implements Levelled {
 
-	protected static final CharKey
-	LEVEL = CharKey.literal("level");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(LEVEL, (holder, reader) -> {
-			if (holder instanceof Levelled)
-			((Levelled) holder).setLevel(reader.readIntTag());
-			else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.LEVEL);
 	}
 	
 	private int level;
@@ -55,9 +49,8 @@ public class CoreLevelled extends CoreBlockData implements Levelled {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		writer.writeIntTag(LEVEL, getLevel());
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

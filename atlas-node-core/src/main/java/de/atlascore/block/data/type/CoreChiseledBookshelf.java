@@ -1,49 +1,26 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import de.atlascore.block.data.CoreBlockData;
 import de.atlascore.block.data.CoreDirectional4Faces;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.ChiseledBookshelf;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreChiseledBookshelf extends CoreDirectional4Faces implements ChiseledBookshelf {
 
-	protected static final NBTFieldContainer<CoreChiseledBookshelf> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_SLOT_0_OCCUPIED = CharKey.literal("slot_0_occupied"),
-	NBT_SLOT_1_OCCUPIED = CharKey.literal("slot_1_occupied"),
-	NBT_SLOT_2_OCCUPIED = CharKey.literal("slot_2_occupied"),
-	NBT_SLOT_3_OCCUPIED = CharKey.literal("slot_3_occupied"),
-	NBT_SLOT_4_OCCUPIED = CharKey.literal("slot_4_occupied"),
-	NBT_SLOT_5_OCCUPIED = CharKey.literal("slot_5_occupied");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS = CoreDirectional4Faces.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_SLOT_0_OCCUPIED, (holder, reader) -> {
-			holder.setSlotOccupied(0, reader.readByteTag() == 1);
-		});
-		NBT_FIELDS.setField(NBT_SLOT_1_OCCUPIED, (holder, reader) -> {
-			holder.setSlotOccupied(1, reader.readByteTag() == 1);
-		});
-		NBT_FIELDS.setField(NBT_SLOT_2_OCCUPIED, (holder, reader) -> {
-			holder.setSlotOccupied(2, reader.readByteTag() == 1);
-		});
-		NBT_FIELDS.setField(NBT_SLOT_3_OCCUPIED, (holder, reader) -> {
-			holder.setSlotOccupied(3, reader.readByteTag() == 1);
-		});
-		NBT_FIELDS.setField(NBT_SLOT_4_OCCUPIED, (holder, reader) -> {
-			holder.setSlotOccupied(4, reader.readByteTag() == 1);
-		});
-		NBT_FIELDS.setField(NBT_SLOT_5_OCCUPIED, (holder, reader) -> {
-			holder.setSlotOccupied(5, reader.readByteTag() == 1);
-		});
+		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, 
+				BlockDataProperty.SLOT_0_OCCUPIED,
+				BlockDataProperty.SLOT_1_OCCUPIED,
+				BlockDataProperty.SLOT_2_OCCUPIED,
+				BlockDataProperty.SLOT_3_OCCUPIED,
+				BlockDataProperty.SLOT_4_OCCUPIED,
+				BlockDataProperty.SLOT_5_OCCUPIED);
 	}
 	
 	private Set<Integer> slots;
@@ -88,23 +65,6 @@ public class CoreChiseledBookshelf extends CoreDirectional4Faces implements Chis
 			slots.remove(slot);
 		}
 	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isSlotOccupied(0))
-			writer.writeByteTag(NBT_SLOT_0_OCCUPIED, true);
-		if (isSlotOccupied(1))
-			writer.writeByteTag(NBT_SLOT_1_OCCUPIED, true);
-		if (isSlotOccupied(2))
-			writer.writeByteTag(NBT_SLOT_2_OCCUPIED, true);
-		if (isSlotOccupied(3))
-			writer.writeByteTag(NBT_SLOT_3_OCCUPIED, true);
-		if (isSlotOccupied(4))
-			writer.writeByteTag(NBT_SLOT_4_OCCUPIED, true);
-		if (isSlotOccupied(5))
-			writer.writeByteTag(NBT_SLOT_5_OCCUPIED, true);
-	}
 	
 	@Override
 	public int getStateID() {
@@ -119,8 +79,8 @@ public class CoreChiseledBookshelf extends CoreDirectional4Faces implements Chis
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreBlockData> getFieldContainerRoot() {
-		return NBT_FIELDS;
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

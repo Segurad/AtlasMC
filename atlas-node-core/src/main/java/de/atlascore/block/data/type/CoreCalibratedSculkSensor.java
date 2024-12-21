@@ -1,17 +1,22 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
-import de.atlascore.block.data.CoreAnaloguePowerable;
-import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlascore.block.data.CoreWaterlogged;
+import de.atlascore.block.data.CoreWaterloggedDirectional4Faces;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.CalibratedSculkSensor;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
-public class CoreCalibratedSculkSensor extends CoreDirectional4Faces implements CalibratedSculkSensor {
+public class CoreCalibratedSculkSensor extends CoreWaterloggedDirectional4Faces implements CalibratedSculkSensor {
 
-	private boolean waterlogged;
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	
+	static {
+		PROPERTIES = merge(CoreWaterloggedDirectional4Faces.PROPERTIES, 
+				BlockDataProperty.SCULK_SENSOR_PHASE,
+				BlockDataProperty.POWER);
+	}
+	
 	private Phase phase;
 	private int power;
 	
@@ -26,16 +31,6 @@ public class CoreCalibratedSculkSensor extends CoreDirectional4Faces implements 
 	}
 
 	@Override
-	public boolean isWaterlogged() {
-		return waterlogged;
-	}
-
-	@Override
-	public void setWaterlogged(boolean waterlogged) {
-		this.waterlogged = waterlogged;
-	}
-
-	@Override
 	public void setPhase(Phase phase) {
 		if (phase == null)
 			throw new IllegalArgumentException("Phase can not be null!");
@@ -44,18 +39,7 @@ public class CoreCalibratedSculkSensor extends CoreDirectional4Faces implements 
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID() + (waterlogged?0:1) + phase.getID()*2 + getPower()*6 + getFaceValue()*96;
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (waterlogged)
-			writer.writeByteTag(CoreWaterlogged.NBT_WATERLOGGED, true);
-		if (phase != Phase.INACTIVE)
-			writer.writeStringTag(CoreSculkSensor.NBT_SCULK_SENSOR_PHASE, phase.getName());
-		if (power > 0)
-			writer.writeIntTag(CoreAnaloguePowerable.NBT_POWER, power);
+		return getMaterial().getBlockStateID() + (isWaterlogged()?0:1) + phase.getID()*2 + getPower()*6 + getFaceValue()*96;
 	}
 	
 	@Override
@@ -78,6 +62,11 @@ public class CoreCalibratedSculkSensor extends CoreDirectional4Faces implements 
 		if (level > 15 || level < 0) 
 			throw new IllegalArgumentException("Power is not between 0 and 15: " + level);
 		this.power = level;
+	}
+	
+	@Override
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

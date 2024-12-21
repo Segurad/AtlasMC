@@ -9,6 +9,7 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.ItemComponent;
 import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.util.map.key.CharKey;
+import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.NBTHolder;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
@@ -258,6 +259,43 @@ public class ItemStack implements NBTHolder {
 		if (reader.getType() == TagType.TAG_END)
 			reader.skipTag();
 		return slot;
+	}
+	
+	public static ItemStack getFromNBT(NBTReader reader) throws IOException {
+		return getFromNBT(reader, true);
+	}
+	
+	/**
+	 * 
+	 * @param reader
+	 * @param readData whether or not {@link #fromNBT(NBT)} should be called
+	 * @return
+	 * @throws IOException
+	 */
+	public static ItemStack getFromNBT(NBTReader reader, boolean readData) throws IOException {
+		if (reader.getType() == TagType.TAG_END) { // Empty Tag 
+			reader.readNextEntry();
+			return null;
+		}
+		String rawMaterial = null;
+		if (!NBT_ID.equals(reader.getFieldName())) {
+			reader.mark();
+			reader.search(NBT_ID);
+			rawMaterial = reader.readStringTag();
+			reader.reset();
+		} else {
+			rawMaterial = reader.readStringTag();
+		}
+		if (rawMaterial == null) {
+			throw new NBTException("NBT did not container id field!");
+		}
+		Material material = Material.getByName(rawMaterial);
+		if (material == null) {
+			throw new NBTException("Not material found with name: " + rawMaterial);
+		}
+		ItemStack item = new ItemStack(material);
+		item.fromNBT(reader);
+		return item;
 	}
 	
 	@Override

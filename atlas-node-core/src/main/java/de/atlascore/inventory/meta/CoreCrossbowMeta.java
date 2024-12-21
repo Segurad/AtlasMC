@@ -32,16 +32,7 @@ public class CoreCrossbowMeta extends CoreDamageableMeta implements CrossbowMeta
 			List<ItemStack> projectiles = ((CrossbowMeta) holder).getChargedProjectiles();
 			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {
-				Material mat = null;
-				if (!NBT_ID.equals(reader.getFieldName())) {
-					reader.mark();
-					reader.search(NBT_ID);
-					mat = Material.getByName(reader.readStringTag());
-					reader.reset();
-				} else mat = Material.getByName(reader.readStringTag());
-				ItemStack item = new ItemStack(mat);
-				item.fromNBT(reader);
-				projectiles.add(item);
+				projectiles.add(ItemStack.getFromNBT(reader));
 			}
 		});
 	}
@@ -55,7 +46,8 @@ public class CoreCrossbowMeta extends CoreDamageableMeta implements CrossbowMeta
 
 	@Override
 	public void addChargedProjectile(ItemStack item) {
-		if (projectiles == null) projectiles = new ArrayList<>();
+		if (projectiles == null) 
+			projectiles = new ArrayList<>();
 		projectiles.add(item);
 	}
 

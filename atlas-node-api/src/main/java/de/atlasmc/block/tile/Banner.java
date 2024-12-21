@@ -4,31 +4,35 @@ import java.util.List;
 
 import de.atlasmc.DyeColor;
 import de.atlasmc.Nameable;
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumValueCache;
 
 public interface Banner extends TileEntity, Nameable {
 	
-	public void addPattern(Pattern pattern);
+	void addPattern(Pattern pattern);
 	
-	public DyeColor getBaseColor();
+	DyeColor getBaseColor();
 	
-	public void setBaseColor(DyeColor color, boolean wall);
+	void setBaseColor(DyeColor color, boolean wall);
 	
-	public Pattern getPattern(int index);
+	Pattern getPattern(int index);
 	
-	public List<Pattern> getPatterns();
+	List<Pattern> getPatterns();
 	
-	public int numberOfPatterns();
+	int numberOfPatterns();
 	
-	public Pattern removePattern(int index);
+	Pattern removePattern(int index);
 	
-	public void setPattern(int index, Pattern pattern);
+	void setPattern(int index, Pattern pattern);
 	
-	public void setPatterns(List<Pattern> pattern);
+	void setPatterns(List<Pattern> pattern);
 	
-	public Chat getCustomName();
+	Chat getCustomName();
 	
-	public void setCustomName(Chat name);
+	void setCustomName(Chat name);
 	
 	public static class Pattern {
 		
@@ -50,68 +54,127 @@ public interface Banner extends TileEntity, Nameable {
 		
 	}
 	
-	public static enum PatternType {
-		BOTTOM_STRIPE("bs"),
-		TOP_STRIPE("ts"),
-		LEFT_STRIPE("ls"),
-		RIGHT_STRIPE("rs"),
-		CENTER_STRIPE("cs"),
-		MIDDLE_STRIPE("ms"),
-		DOWN_RIGHT_STRIPE("drs"),
-		DOWN_LEFT_STRIPE("dls"),
-		SMALL_STRIPES("ss"),
-		CROSS("cr"),
-		SQUARE_CROSS("sc"),
-		LEFT_OF_DIAGONAL("ld"),
-		RIGHT_OF_UPSIDEDOWN_DIAGONAL("rud"),
-		LEFT_OF_UPSIDEDOWN_DIAGONAL("lud"),
-		RIGHT_OF_DIAGONAL("rd"),
-		VERTICAL_HALF("vh"),
-		VERTICAL_HALF_RIGHT("vhr"),
-		HORIZONTAL_HALF("hh"),
-		HORIZONTAL_HALF_BOTTOM("hhb"),
-		BOTTOM_LEFT("bl"),
-		BOTTOM_RIGHT("br"),
-		TOP_LEFT("tl"),
-		TOP_RIGHT("tr"),
-		BOTTOM_TRIANGEL("bt"),
-		TOP_TRIANGLE("tt"),
-		BOTTOM_TRIANGLE_SAWTOOTH("bts"),
-		TOP_TRIANGLE_SAWTOOTH("tts"),
-		MIDDLE_CIRCLE("mc"),
-		MIDDLE_RHOMBUS("mr"),
-		BORDER("bo"),
-		CURLY_BORDER("cbo"),
-		BRICK("bri"),
-		GRADIENT("gra"),
-		GRADIENT_UPSIDE_DOWN("gru"),
-		CREEPER("cre"),
-		SKULL("sku"),
-		FLOWER("flo"),
-		MOJANG("moj");
+	public static interface PatternType {}
+	
+	public static class ResourcePatternType implements PatternType {
 		
-		private final String identifier;
+		private final NamespacedKey assetID;
+		private final String translationKey;
 		
-		private PatternType(String identifier) {
-			this.identifier = identifier;
+		public ResourcePatternType(NamespacedKey key, String translationKey) {
+			this.assetID = key;
+			this.translationKey = translationKey;
 		}
 		
-		public String getIdentifier() {
-			return identifier;
+		public NamespacedKey getAssetID() {
+			return assetID;
 		}
 		
-		public static PatternType getByIdentifier(String identifier) {
-			if (identifier == null) throw new IllegalArgumentException("Identifier can not be null!");
-			for (PatternType pattern : values()) {
-				if (pattern.getIdentifier().equals(identifier)) return pattern;
+		public String getTranslationKey() {
+			return translationKey;
+		}
+		
+	}
+	
+	public static enum EnumPatternType implements PatternType, EnumID, EnumName, EnumValueCache {
+		
+		FULL_COLOR_FIELD("base"),
+		BOTTOM_STRIPE("stripe_bottom"),
+		TOP_STRIPE("stripe_top"),
+		LEFT_STRIPE("stripe_left"),
+		RIGHT_STRIPE("stripe_right"),
+		CENTER_STRIPE("stripe_center"),
+		MIDDLE_STRIPE("stripe_middle"),
+		DOWN_RIGHT_STRIPE("stripe_downright"),
+		DOWN_LEFT_STRIPE("stripe_downleft"),
+		SMALL_STRIPES("small_stripes"),
+		CROSS("cross"),
+		SQUARE_CROSS("straight_cross"),
+		LEFT_DIAGONAL("diagonal_left"),
+		RIGHT_DIAGONAL("diagonal_right"),
+		LEFT_UPSIDEDOWN_DIAGONAL("diagonal_up_left"),
+		RIGHT_UPSIDEDOWN_DIAGONAL("diagonal_up_right"),
+		VERTICAL_HALF("half_vertical"),
+		VERTICAL_HALF_RIGHT("half_vertical_right"),
+		HORIZONTAL_HALF("half_horizontal"),
+		HORIZONTAL_HALF_BOTTOM("half_horizontal_bottom"),
+		BOTTOM_LEFT("square_bottom_left"),
+		BOTTOM_RIGHT("square_bottom_right"),
+		TOP_LEFT("square_top_left"),
+		TOP_RIGHT("square_top_right"),
+		BOTTOM_TRIANGEL("triangle_bottom"),
+		TOP_TRIANGLE("triangle_top"),
+		BOTTOM_TRIANGLE_SAWTOOTH("triangles_bottom"),
+		TOP_TRIANGLE_SAWTOOTH("triangles_top"),
+		MIDDLE_CIRCLE("circle"),
+		MIDDLE_RHOMBUS("rhombus"),
+		BORDER("border"),
+		CURLY_BORDER("curly_border"),
+		BRICK("bricks"),
+		GRADIENT("gradient"),
+		GRADIENT_UPSIDE_DOWN("gradient_up"),
+		CREEPER("creeer"),
+		SKULL("skull"),
+		FLOWER("flower"),
+		MOJANG("mojang"),
+		GLOBE("globe"),
+		SNOUT("snout"),
+		FLOW("flow"),
+		GUSTER("guster");
+		
+		private static List<EnumPatternType> VALUES;
+		
+		private final String name;
+		
+		private EnumPatternType(String name) {
+			this.name = name;
+		}
+		
+		@Override
+		public String getName() {
+			return name;
+		}
+		
+		public static EnumPatternType getByName(String name) {
+			if (name == null) 
+				throw new IllegalArgumentException("Name can not be null!");
+			List<EnumPatternType> patterns = getValues();
+			final int size = patterns.size();
+			for (int i = 0; i < size; i++) {
+				EnumPatternType pattern = patterns.get(i);
+				if (pattern.name.toString().equals(name)) 
+					return pattern;
 			}
 			return null;
 		}
-
-		public int getLoomID() {
-			// TODO pattern loom id research
-			return 0;
+		
+		/**
+		 * Returns a immutable List of all Types.<br>
+		 * This method avoid allocation of a new array not like {@link #values()}.
+		 * @return list
+		 */
+		public static List<EnumPatternType> getValues() {
+			if (VALUES == null)
+				VALUES = List.of(values());
+			return VALUES;
 		}
+		
+		/**
+		 * Releases the system resources used from the values cache
+		 */
+		public static void freeValues() {
+			VALUES = null;
+		}
+
+		@Override
+		public int getID() {
+			return ordinal();
+		}
+		
+		public static EnumPatternType getByID(int id) {
+			return getValues().get(id);
+		}
+		
 	}
 
 }

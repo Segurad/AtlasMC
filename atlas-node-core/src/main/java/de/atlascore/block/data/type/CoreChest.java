@@ -1,44 +1,25 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
-import de.atlascore.block.data.CoreDirectional4Faces;
+import de.atlascore.block.data.CoreWaterloggedDirectional4Faces;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Chest;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
-public class CoreChest extends CoreDirectional4Faces implements Chest {
+public class CoreChest extends CoreWaterloggedDirectional4Faces implements Chest {
 
-	protected static final NBTFieldContainer<CoreChest> NBT_FIELDS;
-	
-	protected static final CharKey
-	TYPE = CharKey.literal("type");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS = CoreDirectional4Faces.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(TYPE, (holder, reader) -> {
-			holder.setType(Type.getByName(reader.readStringTag()));
-		});
+		PROPERTIES = merge(CoreWaterloggedDirectional4Faces.PROPERTIES, BlockDataProperty.TYPE);
 	}
 	
-	private boolean waterlogged;
 	private Type type;
 	
 	public CoreChest(Material material) {
 		super(material);
 		type = Type.SINGLE;
-	}
-
-	@Override
-	public boolean isWaterlogged() {
-		return waterlogged;
-	}
-
-	@Override
-	public void setWaterlogged(boolean waterlogged) {
-		this.waterlogged = waterlogged;
 	}
 
 	@Override
@@ -48,7 +29,8 @@ public class CoreChest extends CoreDirectional4Faces implements Chest {
 
 	@Override
 	public void setType(Type type) {
-		if (type == null) throw new IllegalArgumentException("Type can not be null!");
+		if (type == null) 
+			throw new IllegalArgumentException("Type can not be null!");
 		this.type = type;
 	}
 
@@ -57,18 +39,12 @@ public class CoreChest extends CoreDirectional4Faces implements Chest {
 		return getMaterial().getBlockStateID()+
 				getFaceValue()*6+
 				type.ordinal()*2+
-				(waterlogged?0:1);
+				(isWaterlogged()?0:1);
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreChest> getFieldContainerRoot() {
-		return NBT_FIELDS;
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (getType() != Type.SINGLE) writer.writeStringTag(TYPE, getType().name().toLowerCase());
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

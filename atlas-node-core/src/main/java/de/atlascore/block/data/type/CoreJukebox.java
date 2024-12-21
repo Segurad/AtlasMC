@@ -1,24 +1,18 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Jukebox;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreJukebox extends CoreBlockData implements Jukebox {
 
-	protected static final CharKey
-	HAS_RECORD = CharKey.literal("has_record");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(HAS_RECORD, (holder, reader) -> {
-			if (holder instanceof Jukebox)
-			((Jukebox) holder).setRecord(reader.readByteTag() == 1);
-			else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.HAS_RECORD);
 	}
 	
 	private boolean record;
@@ -43,9 +37,8 @@ public class CoreJukebox extends CoreBlockData implements Jukebox {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (hasRecord()) writer.writeByteTag(HAS_RECORD, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

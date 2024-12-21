@@ -1,26 +1,18 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
-import de.atlascore.block.data.CoreBlockData;
 import de.atlascore.block.data.CoreDirectional4Faces;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.PinkPetals;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CorePinkPetals extends CoreDirectional4Faces implements PinkPetals {
 
-	protected static final NBTFieldContainer<CorePinkPetals> NBT_FIELDS;
-	
-	private static final CharKey FLOWER_AMOUNT = CharKey.literal("flower_amount");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS = CoreDirectional4Faces.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(FLOWER_AMOUNT, (holder, reader) -> {
-			holder.setFlowerAmount(reader.readIntTag());
-		});
+		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, BlockDataProperty.FLOWER_AMOUNT);
 	}
 	
 	private int flowerAmount;
@@ -58,15 +50,8 @@ public class CorePinkPetals extends CoreDirectional4Faces implements PinkPetals 
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreBlockData> getFieldContainerRoot() {
-		return NBT_FIELDS;
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (flowerAmount != 1)
-			writer.writeIntTag(FLOWER_AMOUNT, flowerAmount);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

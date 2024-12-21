@@ -18,7 +18,7 @@ public interface NBTHolder {
 	 * @return the NBT without system data
 	 * @throws IOException 
 	 */
-	public default NBT toNBT() throws IOException {
+	default NBT toNBT() throws IOException {
 		return toNBT(false);
 	}
 	
@@ -28,7 +28,7 @@ public interface NBTHolder {
 	 * @return NBT 
 	 * @throws IOException 
 	 */
-	public default NBT toNBT(boolean systemData) throws IOException {
+	default NBT toNBT(boolean systemData) throws IOException {
 		NBTObjectWriter writer = new NBTObjectWriter();
 		NBT nbt = writer.toNBT();
 		toNBT(writer, systemData);
@@ -43,16 +43,16 @@ public interface NBTHolder {
 	 * @param systemData true if it is used system internal false while send to client
 	 * @throws IOException
 	 */
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException;
+	void toNBT(NBTWriter writer, boolean systemData) throws IOException;
 	
 	/**
 	 * Reads until a EndTag is reached and goes to the next entry by {@link NBTReader#readNextEntry()}
 	 * @param reader
 	 * @throws IOException
 	 */
-	public void fromNBT(NBTReader reader) throws IOException;
+	void fromNBT(NBTReader reader) throws IOException;
 	
-	public default void fromNBT(NBT nbt) throws IOException {
+	default void fromNBT(NBT nbt) throws IOException {
 		NBTObjectReader reader = new NBTObjectReader(nbt);
 		fromNBT(reader);
 		reader.close();

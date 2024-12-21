@@ -1,20 +1,30 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreAgeable;
-import de.atlascore.block.data.CoreBisected;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.PitcherCrop;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CorePitcherCrop extends CoreAgeable implements PitcherCrop {
 
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	
+	static {
+		PROPERTIES = merge(CoreAgeable.PROPERTIES, BlockDataProperty.HALF);
+	}
+	
 	private Half half;
 	
 	public CorePitcherCrop(Material material) {
 		super(material, 4);
 		half = Half.LOWER;
+	}
+	
+	@Override
+	public CorePitcherCrop clone() {
+		return (CorePitcherCrop) super.clone();
 	}
 
 	@Override
@@ -37,10 +47,8 @@ public class CorePitcherCrop extends CoreAgeable implements PitcherCrop {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (half != Half.LOWER)
-			writer.writeStringTag(CoreBisected.NBT_HALF, half.getNameID());
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

@@ -1,34 +1,24 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Bed;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBed extends CoreDirectional4Faces implements Bed {
 
-	private boolean occupied;
-	private Part part;
-	
-	protected static final CharKey
-	OCCUPIED = CharKey.literal("occupied"),
-	PART = CharKey.literal("part");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(OCCUPIED, (holder, reader) -> {
-			if (holder instanceof Bed) {
-				((Bed) holder).setOccupied(reader.readByteTag() == 1);
-			} else reader.skipTag();
-		});
-		NBT_FIELDS.setField(PART, (holder, reader) -> {
-			if (holder instanceof Bed) {
-				((Bed) holder).setPart(Part.getByName(reader.readStringTag()));
-			} else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, 
+				BlockDataProperty.OCCUPIED,
+				BlockDataProperty.PART);
 	}
+	
+	private boolean occupied;
+	private Part part;
 	
 	public CoreBed(Material material) {
 		super(material);
@@ -52,7 +42,8 @@ public class CoreBed extends CoreDirectional4Faces implements Bed {
 
 	@Override
 	public void setPart(Part part) {
-		if (part == null) throw new IllegalArgumentException("Part can not be null!");
+		if (part == null) 
+			throw new IllegalArgumentException("Part can not be null!");
 		this.part = part;
 	}
 	
@@ -62,10 +53,8 @@ public class CoreBed extends CoreDirectional4Faces implements Bed {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		writer.writeByteTag(OCCUPIED, occupied);
-		writer.writeStringTag(PART, part.name().toLowerCase());
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

@@ -1,14 +1,19 @@
 package de.atlasmc.block.data;
 
+import java.util.List;
+
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.util.nbt.NBTHolder;
 
 public interface BlockData extends Cloneable, NBTHolder {
 
-	public BlockData clone();
+	BlockData clone();
 	
-	public Material getMaterial();
+	Material getMaterial();
 	
-	public int getStateID();
+	int getStateID();
+
+	List<BlockDataProperty<?>> getProperties();
 	
 }

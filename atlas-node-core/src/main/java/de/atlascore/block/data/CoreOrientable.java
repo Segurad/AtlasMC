@@ -1,71 +1,46 @@
 package de.atlascore.block.data;
 
-import java.io.IOException;
-import java.util.Set;
+import java.util.List;
 
-import de.atlasmc.Axis;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Orientable;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.block.data.property.BlockDataProperty;
 
 public class CoreOrientable extends CoreBlockData implements Orientable {
 
-	private static final Set<Axis> ALLOWED_AXIS =
-			Set.of(Axis.X,
-					Axis.Y,
-					Axis.Z);
-	
-	protected static final CharKey
-	NBT_AXIS = CharKey.literal("axis");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(NBT_AXIS, (holder, reader) -> {
-			if (holder instanceof Orientable)
-			((Orientable) holder).setAxis(Axis.getByName(reader.readStringTag()));
-			else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.ORIENTATION);
 	}
 	
-	private Axis axis;
+	private Orientation orientation;
 	
 	public CoreOrientable(Material material) {
-		this(material, Axis.Y);
-	}
-	
-	public CoreOrientable(Material material, Axis axis) {
 		super(material);
-		setAxis(axis);
+		orientation = Orientation.NORTH_UP;
 	}
 
 	@Override
-	public Set<Axis> getAxes() {
-		return ALLOWED_AXIS;
+	public Orientation getOrientation() {
+		return orientation;
 	}
 
 	@Override
-	public Axis getAxis() {
-		return axis;
-	}
-
-	@Override
-	public void setAxis(Axis axis) {
-		if (axis == null)
-			throw new IllegalArgumentException("Axis can not be null!");
-		if (!getAxes().contains(axis))
-			throw new IllegalArgumentException("Axis is not valid: " + axis.name());
-		this.axis = axis;
+	public void setOrientation(Orientation orientation) {
+		if (orientation == null) 
+			throw new IllegalArgumentException("Orientation can not be null!");
+		this.orientation = orientation;
 	}
 	
 	@Override
 	public int getStateID() {
-		return super.getStateID()+axis.ordinal();
+		return getMaterial().getBlockStateID()+orientation.ordinal();
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		writer.writeStringTag(NBT_AXIS, getAxis().name().toLowerCase());
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

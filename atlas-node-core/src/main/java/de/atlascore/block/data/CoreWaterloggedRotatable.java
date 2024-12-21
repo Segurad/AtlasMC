@@ -1,12 +1,18 @@
 package de.atlascore.block.data;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.WaterloggedRotatable;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.block.data.property.BlockDataProperty;
 
 public class CoreWaterloggedRotatable extends CoreRotatable implements WaterloggedRotatable {
+	
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	
+	static {
+		PROPERTIES = merge(CoreRotatable.PROPERTIES, BlockDataProperty.WATERLOGGED);
+	}
 	
 	private boolean waterlogged;
 	
@@ -30,11 +36,10 @@ public class CoreWaterloggedRotatable extends CoreRotatable implements Waterlogg
 				(waterlogged?0:1)+
 				getRotationValue()*2;
 	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isWaterlogged()) writer.writeByteTag(CoreWaterlogged.NBT_WATERLOGGED, true);
-	}
 
+	@Override
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
+	}
+	
 }

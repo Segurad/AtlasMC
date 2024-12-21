@@ -1,15 +1,20 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlascore.block.data.CoreFaceAttachable;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Grindstone;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreGrindstone extends CoreDirectional4Faces implements Grindstone {
 
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	
+	static {
+		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, BlockDataProperty.FACE);
+	}
+	
 	private AttachedFace face;
 	
 	public CoreGrindstone(Material material) {
@@ -24,7 +29,8 @@ public class CoreGrindstone extends CoreDirectional4Faces implements Grindstone 
 
 	@Override
 	public void setAttachedFace(AttachedFace face) {
-		if (face == null) throw new IllegalArgumentException("AttachedFace can not be null!");
+		if (face == null) 
+			throw new IllegalArgumentException("AttachedFace can not be null!");
 		this.face = face;
 	}
 	
@@ -34,9 +40,8 @@ public class CoreGrindstone extends CoreDirectional4Faces implements Grindstone 
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (getAttachedFace() != AttachedFace.WALL) writer.writeStringTag(CoreFaceAttachable.NBT_FACE, getAttachedFace().name().toLowerCase());
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

@@ -20,7 +20,6 @@ public class CoreTileEntity extends AbstractNBTBase implements TileEntity {
 	protected static final NBTFieldContainer<CoreTileEntity> NBT_FIELDS;
 	
 	protected static final CharKey
-	NBT_ID = CharKey.literal("id"),
 	NBT_KEEP_PACKED = CharKey.literal("keepPacked"),
 	NBT_X = CharKey.literal("x"),
 	NBT_Y = CharKey.literal("y"),

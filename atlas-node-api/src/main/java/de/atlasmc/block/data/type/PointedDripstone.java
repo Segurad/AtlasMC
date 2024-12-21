@@ -3,6 +3,8 @@ package de.atlasmc.block.data.type;
 import java.util.List;
 
 import de.atlasmc.block.data.Waterlogged;
+import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumValueCache;
 
 public interface PointedDripstone extends Waterlogged {
 	
@@ -16,7 +18,7 @@ public interface PointedDripstone extends Waterlogged {
 	
 	PointedDripstone clone();
 	
-	public static enum Thickness {
+	public static enum Thickness implements EnumName, EnumValueCache {
 		
 		TIP_MERGE,
 		TIP,
@@ -26,24 +28,28 @@ public interface PointedDripstone extends Waterlogged {
 
 		private static List<Thickness> VALUES;
 		
-		private final String nameID;
+		private final String name;
 		
 		private Thickness() {
-			this.nameID = name().toLowerCase();
+			this.name = name().toLowerCase().intern();
 		}
 		
-		public String getNameID() {
-			return nameID;
+		@Override
+		public String getName() {
+			return name;
 		}
 		
-		public static Thickness getByNameID(String nameID) {
-			if (nameID == null)
-				throw new IllegalArgumentException("NameID can not be null!");
-			for (Thickness value : getValues()) {
-				if (value.getNameID().equals(nameID))
+		public static Thickness getByName(String name) {
+			if (name == null)
+				throw new IllegalArgumentException("Name can not be null!");
+			List<Thickness> values = getValues();
+			final int size = values.size();
+			for (int i = 0; i < size; i++) {
+				Thickness value = values.get(i);
+				if (value.name.equals(name))
 					return value;
 			}
-			throw new IllegalArgumentException("No value found with name: " + nameID);
+			return null;
 		}
 		
 		/**

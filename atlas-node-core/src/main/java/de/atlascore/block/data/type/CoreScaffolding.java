@@ -1,30 +1,20 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Scaffolding;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreScaffolding extends CoreWaterlogged implements Scaffolding {
 
-	protected static final NBTFieldContainer<CoreScaffolding> NBT_FIELDS;
-	
-	protected static final CharKey
-	BOTTOM = CharKey.literal("bottom"),
-	DISTANCE = CharKey.literal("distance");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS = CoreWaterlogged.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(BOTTOM, (holder, reader) -> {
-			holder.setBottom(reader.readByteTag() == 1);
-		});
-		NBT_FIELDS.setField(DISTANCE, (holder, reader) -> {
-			holder.setDistance(reader.readIntTag());
-		});
+		PROPERTIES = merge(CoreWaterlogged.PROPERTIES, 
+				BlockDataProperty.BOTTOM,
+				BlockDataProperty.DISTANCE);
 	}
 	
 	private boolean bottom;
@@ -33,11 +23,6 @@ public class CoreScaffolding extends CoreWaterlogged implements Scaffolding {
 	public CoreScaffolding(Material material) {
 		super(material);
 		distance = 7;
-	}
-	
-	@Override
-	protected NBTFieldContainer<? extends CoreScaffolding> getFieldContainerRoot() {
-		return NBT_FIELDS;
 	}
 
 	@Override
@@ -62,7 +47,8 @@ public class CoreScaffolding extends CoreWaterlogged implements Scaffolding {
 
 	@Override
 	public void setDistance(int distance) {
-		if (distance < 0 && distance > 7) throw new IllegalArgumentException("Distance is not between 0 and 7: " + distance);
+		if (distance < 0 && distance > 7) 
+			throw new IllegalArgumentException("Distance is not between 0 and 7: " + distance);
 		this.distance = distance;
 	}
 	
@@ -74,10 +60,8 @@ public class CoreScaffolding extends CoreWaterlogged implements Scaffolding {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isBottom()) writer.writeByteTag(BOTTOM, true);
-		if (getDistance() < 7) writer.writeByteTag(DISTANCE, getDistance());
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

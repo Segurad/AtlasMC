@@ -1,15 +1,20 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional6Faces;
-import de.atlascore.block.data.CoreOpenable;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Barrel;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBarrel extends CoreDirectional6Faces implements Barrel {
 
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	
+	static {
+		PROPERTIES = merge(CoreDirectional6Faces.PROPERTIES, BlockDataProperty.OPEN);
+	}
+	
 	private boolean open;
 	
 	public CoreBarrel(Material material) {
@@ -34,9 +39,8 @@ public class CoreBarrel extends CoreDirectional6Faces implements Barrel {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isOpen()) writer.writeByteTag(CoreOpenable.NBT_OPEN, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

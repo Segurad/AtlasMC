@@ -11,7 +11,7 @@ public interface TrimComponent extends AbstractTooltipComponent {
 	
 	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:trim");
 	
-	TrimMaterial getMaterial();
+	TrimMaterial getTrimMaterial();
 	
 	TrimPattern getTrimPattern();
 	

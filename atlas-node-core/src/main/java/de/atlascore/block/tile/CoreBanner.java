@@ -38,7 +38,7 @@ public class CoreBanner extends CoreTileEntity implements Banner {
 				}
 				reader.skipTag();
 				if (color == -999 || pattern == null) continue;
-				holder.addPattern(new Pattern(DyeColor.getByID(color), PatternType.getByIdentifier(pattern)));
+				holder.addPattern(new Pattern(DyeColor.getByID(color), EnumPatternType.getByName(pattern)));
 			}
 		});
 	}
@@ -63,8 +63,10 @@ public class CoreBanner extends CoreTileEntity implements Banner {
 
 	@Override
 	public void setBaseColor(DyeColor color, boolean wall) {
-		if (wall) setType(color.getWallBanner());
-		else setType(color.getBanner());
+		if (wall) 
+			setType(color.getWallBanner());
+		else 
+			setType(color.getBanner());
 	}
 
 	@Override
@@ -125,7 +127,7 @@ public class CoreBanner extends CoreTileEntity implements Banner {
 			writer.writeListTag(PATTERNS, TagType.COMPOUND, numberOfPatterns());
 			for (Pattern p : patterns) {
 				writer.writeIntTag(COLOR, p.getColor().getID());
-				writer.writeStringTag(PATTERN, p.getType().getIdentifier());
+				writer.writeStringTag(PATTERN, p.getType().toString());
 			}
 			writer.writeEndTag();
 		}

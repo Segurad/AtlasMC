@@ -1,22 +1,18 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Snow;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreSnow extends CoreBlockData implements Snow {
 
-	protected static final CharKey
-	LAYERS = CharKey.literal("layers");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(LAYERS, (holder, reader) -> {
-			((Snow) holder).setLayers(reader.readIntTag());
-		});
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.LAYERS);
 	}
 	
 	private int layers;
@@ -43,7 +39,8 @@ public class CoreSnow extends CoreBlockData implements Snow {
 
 	@Override
 	public void setLayers(int layers) {
-		if (layers < 1 || layers > 8) throw new IllegalArgumentException("NamespaceID is not between 1 and 8: " + layers);
+		if (layers < 1 || layers > 8) 
+			throw new IllegalArgumentException("NamespaceID is not between 1 and 8: " + layers);
 		this.layers = layers;
 	}
 
@@ -53,9 +50,8 @@ public class CoreSnow extends CoreBlockData implements Snow {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (getLayers() > 1) writer.writeIntTag(LAYERS, getLayers());
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 	
 }

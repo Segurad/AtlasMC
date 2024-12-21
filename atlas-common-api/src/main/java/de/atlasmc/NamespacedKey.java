@@ -50,8 +50,8 @@ public class NamespacedKey {
 	public static interface Namespaced {
 		
 		/**
-		 * Returns the name
-		 * @return name
+		 * Returns the key
+		 * @return key
 		 */
 		@NotNull
 		public default String getKey() {
@@ -78,9 +78,20 @@ public class NamespacedKey {
 		
 		/**
 		 * Returns the {@link NamespacedKey} of this Object
+		 * @return key
 		 */
 		@NotNull
-		public NamespacedKey getNamespacedKey();
+		NamespacedKey getNamespacedKey();
+		
+	}
+	
+	public static interface ClientNamespaced extends Namespaced {
+		
+		/**
+		 * Returns the {@link NamespacedKey} used client side of this Object
+		 * @return key
+		 */
+		NamespacedKey getClientKey();
 		
 	}
 

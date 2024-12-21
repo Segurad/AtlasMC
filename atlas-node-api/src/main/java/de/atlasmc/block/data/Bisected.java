@@ -2,13 +2,18 @@ package de.atlasmc.block.data;
 
 import java.util.List;
 
+import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumValueCache;
+
 public interface Bisected extends BlockData {
 	
-	public Half getHalf();
+	Half getHalf();
 	
-	public void setHalf(Half half);
+	void setHalf(Half half);
 	
-	public static enum Half {
+	Bisected clone();
+	
+	public static enum Half implements EnumName, EnumValueCache {
 		TOP(0),
 		UPPER(0),
 		BOTTOM(1),
@@ -17,25 +22,29 @@ public interface Bisected extends BlockData {
 		private static List<Half> VALUES;
 		
 		private int id;
-		private String nameID;
+		private String name;
 		
 		private Half(int id) {
 			this.id = id;
-			nameID = name().toLowerCase();
+			name = name().toLowerCase().intern();
 		}
 		
-		public String getNameID() {
-			return nameID;
+		@Override
+		public String getName() {
+			return name;
 		}
 		
-		public static Half getByNameID(String nameID) {
-			if (nameID == null)
-				throw new IllegalArgumentException("NameID can not be null!");
-			for (Half value : getValues()) {
-				if (value.getNameID().equals(nameID))
+		public static Half getByName(String name) {
+			if (name == null)
+				throw new IllegalArgumentException("Name can not be null!");
+			List<Half> values = getValues();
+			final int size = values.size();
+			for (int i = 0; i < size; i++) {
+				Half value = values.get(i);
+				if (value.name.equals(name))
 					return value;
 			}
-			throw new IllegalArgumentException("No value with name found: " + nameID);
+			return null;
 		}
 		
 		public int getID() {

@@ -1,17 +1,22 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 
-import de.atlascore.block.data.CorePowerable;
 import de.atlascore.block.data.CoreRail;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.RedstoneRail;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreRedstoneRail extends CoreRail implements RedstoneRail {
 
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	
+	static {
+		PROPERTIES = merge(CoreRail.PROPERTIES, BlockDataProperty.POWERED);
+	}
+	
 	private boolean powered;
 	
 	public CoreRedstoneRail(Material material) {
@@ -45,9 +50,8 @@ public class CoreRedstoneRail extends CoreRail implements RedstoneRail {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isPowered()) writer.writeByteTag(CorePowerable.NBT_POWERED, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

@@ -1,28 +1,22 @@
 package de.atlascore.block.data;
 
-import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.Directional;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.block.data.property.BlockDataProperty;
 
 public abstract class CoreAbstractDirectional extends CoreBlockData implements Directional {
-
-	private BlockFace face;
 	
-	protected static final CharKey NBT_FACING = CharKey.literal("facing");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(NBT_FACING, (holder, reader) -> {
-			if (holder instanceof Directional) {
-				BlockFace face = BlockFace.getByName(reader.readStringTag());
-				((Directional) holder).setFacing(face);
-			} else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.FACING);
 	}
+	
+	private BlockFace face;
 	
 	public CoreAbstractDirectional(Material material) {
 		this(material, BlockFace.NORTH);
@@ -69,10 +63,8 @@ public abstract class CoreAbstractDirectional extends CoreBlockData implements D
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (getFacing() != BlockFace.NORTH) 
-			writer.writeStringTag(NBT_FACING, face.name().toLowerCase());
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

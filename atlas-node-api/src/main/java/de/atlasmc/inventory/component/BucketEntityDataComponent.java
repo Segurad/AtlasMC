@@ -3,6 +3,7 @@ package de.atlasmc.inventory.component;
 import de.atlasmc.DyeColor;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.entity.Axolotl.Variant;
+import de.atlasmc.entity.Salmon.Type;
 import de.atlasmc.entity.TropicalFish.Pattern;
 
 public interface BucketEntityDataComponent extends ItemComponent {
@@ -54,5 +55,13 @@ public interface BucketEntityDataComponent extends ItemComponent {
 	void setPattern(Pattern pattern);
 	
 	void setPatternColor(DyeColor color);
+	
+	boolean isGlowing();
+	
+	void setGlowing(boolean glowing);
 
+	Type getSalmonType();
+	
+	void setSalmonType(Type type);
+	
 }

@@ -7,5 +7,7 @@ import de.atlasmc.block.data.Powerable;
 import de.atlasmc.block.data.Waterlogged;
 
 public interface TrapDoor extends Bisected, Directional, Openable, Powerable, Waterlogged {
+	
+	TrapDoor clone();
 
 }

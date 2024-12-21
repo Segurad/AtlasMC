@@ -1,15 +1,20 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
-import de.atlascore.block.data.CoreOrientable;
-import de.atlascore.block.data.CoreWaterlogged;
+import de.atlascore.block.data.CoreAxisOrientable;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Chain;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
-public class CoreChain extends CoreOrientable implements Chain {
+public class CoreChain extends CoreAxisOrientable implements Chain {
 
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	
+	static {
+		PROPERTIES = merge(CoreAxisOrientable.PROPERTIES, BlockDataProperty.WATERLOGGED);
+	}
+	
 	private boolean waterlogged;
 	
 	public CoreChain(Material material) {
@@ -34,9 +39,8 @@ public class CoreChain extends CoreOrientable implements Chain {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isWaterlogged()) writer.writeByteTag(CoreWaterlogged.NBT_WATERLOGGED, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

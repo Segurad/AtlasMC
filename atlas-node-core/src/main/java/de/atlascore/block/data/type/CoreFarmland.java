@@ -1,27 +1,22 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreBlockData;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Farmland;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreFarmland extends CoreBlockData implements Farmland {
 
-	private final int maxmoisture;
-	private int moisture;
-	
-	protected static final CharKey MOISTURE = CharKey.literal("moisture");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(MOISTURE, (holder, reader) -> {
-			if (Farmland.class.isInstance(holder)) {
-				((Farmland) holder).setMoisture(reader.readIntTag());
-			} else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.MOISTURE);
 	}
+	
+	private final int maxmoisture;
+	private int moisture;
 	
 	public CoreFarmland(Material material) {
 		super(material);
@@ -40,14 +35,14 @@ public class CoreFarmland extends CoreBlockData implements Farmland {
 
 	@Override
 	public void setMoisture(int moisture) {
-		if (moisture > maxmoisture || moisture < 0) throw new IllegalArgumentException("Level is not between 0 and " + maxmoisture + ": " + moisture);
+		if (moisture > maxmoisture || moisture < 0) 
+			throw new IllegalArgumentException("Level is not between 0 and " + maxmoisture + ": " + moisture);
 		this.moisture = moisture;
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		writer.writeIntTag(MOISTURE, moisture);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

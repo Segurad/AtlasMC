@@ -1,15 +1,21 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlascore.block.data.CoreFaceAttachable;
-import de.atlascore.block.data.CorePowerable;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Switch;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreSwitch extends CoreDirectional4Faces implements Switch {
+	
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	
+	static {
+		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, 
+				BlockDataProperty.POWERED,
+				BlockDataProperty.FACE);
+	}
 	
 	private AttachedFace face;
 	private boolean powered;
@@ -50,10 +56,8 @@ public class CoreSwitch extends CoreDirectional4Faces implements Switch {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isPowered()) writer.writeByteTag(CorePowerable.NBT_POWERED, true);
-		if (getAttachedFace() != AttachedFace.WALL) writer.writeStringTag(CoreFaceAttachable.NBT_FACE, getAttachedFace().name().toLowerCase());
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

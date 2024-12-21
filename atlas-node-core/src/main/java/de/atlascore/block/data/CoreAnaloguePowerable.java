@@ -1,23 +1,17 @@
 package de.atlascore.block.data;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.AnaloguePowerable;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.block.data.property.BlockDataProperty;
 
 public class CoreAnaloguePowerable extends CoreBlockData implements AnaloguePowerable {
 	
-	public static final CharKey 
-	NBT_POWER = CharKey.literal("power");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(NBT_POWER, (holder, reader) -> {
-			if (holder instanceof AnaloguePowerable) {
-				((AnaloguePowerable) holder).setPower(reader.readIntTag());
-			} else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.POWER);
 	}
 	
 	private int power;
@@ -49,9 +43,8 @@ public class CoreAnaloguePowerable extends CoreBlockData implements AnaloguePowe
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		writer.writeIntTag(NBT_POWER, power);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

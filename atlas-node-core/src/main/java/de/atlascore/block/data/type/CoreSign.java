@@ -10,6 +10,4 @@ public class CoreSign extends CoreWaterloggedRotatable implements Sign {
 		super(material);
 	}
 
-
-
 }

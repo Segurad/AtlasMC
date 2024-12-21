@@ -6,10 +6,14 @@ import de.atlasmc.block.BlockFace;
 
 public interface MultipleFacing extends BlockData {
 	
-	public Set<BlockFace> getAllowedFaces();
-	public Set<BlockFace> getFaces();
-	public boolean hasFace(BlockFace face);
-	public void setFace(BlockFace face, boolean has);
-	public boolean isValid(BlockFace face);
+	Set<BlockFace> getAllowedFaces();
+	
+	Set<BlockFace> getFaces();
+	
+	boolean hasFace(BlockFace face);
+	
+	void setFace(BlockFace face, boolean has);
+	
+	boolean isValid(BlockFace face);
 
 }

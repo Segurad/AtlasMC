@@ -97,7 +97,6 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	NBT_FALL_DISTANCE = CharKey.literal("FallDistance"),
 	NBT_FIRE = CharKey.literal("Fire"),
 	NBT_GLOWING = CharKey.literal("Glowing"),
-	NBT_ID = CharKey.literal("id"),
 	NBT_INVULNERABLE = CharKey.literal("Invulnerable"),
 	NBT_MOTION = CharKey.literal("Motion"), 
 	NBT_NO_GRAVITY = CharKey.literal("NoGravity"),

@@ -4,7 +4,8 @@ import de.atlasmc.block.data.Directional;
 
 public interface Piston extends Directional {
 	
-	public boolean isExtended();
-	public void setExtended(boolean extended);
+	boolean isExtended();
+	
+	void setExtended(boolean extended);
 
 }

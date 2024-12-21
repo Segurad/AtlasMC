@@ -1,49 +1,13 @@
 package de.atlascore.block.data;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.MultipleFacing;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public abstract class CoreAbstractMultipleFacing extends CoreBlockData implements MultipleFacing {
-	
-	protected static final NBTFieldContainer<CoreAbstractMultipleFacing> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_NORTH = CharKey.literal("north"),
-	NBT_SOUTH = CharKey.literal("south"),
-	NBT_EAST = CharKey.literal("east"),
-	NBT_WEST = CharKey.literal("west"),
-	NBT_UP = CharKey.literal("up"),
-	NBT_DOWN = CharKey.literal("down");
-	
-	static {
-		NBT_FIELDS = CoreBlockData.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_NORTH, (holder, reader) -> {
-			holder.setFace(BlockFace.NORTH, reader.readByteTag() == 1);
-		});
-		NBT_FIELDS.setField(NBT_SOUTH, (holder, reader) -> {
-			holder.setFace(BlockFace.SOUTH, reader.readByteTag() == 1);
-		});
-		NBT_FIELDS.setField(NBT_EAST, (holder, reader) -> {
-			holder.setFace(BlockFace.EAST, reader.readByteTag() == 1);
-		});
-		NBT_FIELDS.setField(NBT_WEST, (holder, reader) -> {
-			holder.setFace(BlockFace.WEST, reader.readByteTag() == 1);
-		});
-		NBT_FIELDS.setField(NBT_UP, (holder, reader) -> {
-			holder.setFace(BlockFace.UP, reader.readByteTag() == 1);
-		});
-		NBT_FIELDS.setField(NBT_DOWN, (holder, reader) -> {
-			holder.setFace(BlockFace.DOWN, reader.readByteTag() == 1);
-		});
-	}
 	
 	private Set<BlockFace> faces;
 	
@@ -87,27 +51,5 @@ public abstract class CoreAbstractMultipleFacing extends CoreBlockData implement
 	
 	@Override
 	public abstract boolean isValid(BlockFace face);
-	
-	@Override
-	protected NBTFieldContainer<? extends CoreAbstractMultipleFacing> getFieldContainerRoot() {
-		return NBT_FIELDS;
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (hasFace(BlockFace.NORTH)) 
-			writer.writeByteTag(NBT_NORTH, true);
-		if (hasFace(BlockFace.SOUTH)) 
-			writer.writeByteTag(NBT_SOUTH, true);
-		if (hasFace(BlockFace.EAST)) 
-			writer.writeByteTag(NBT_EAST, true);
-		if (hasFace(BlockFace.WEST)) 
-			writer.writeByteTag(NBT_WEST, true);
-		if (hasFace(BlockFace.UP)) 
-			writer.writeByteTag(NBT_UP, true);
-		if (hasFace(BlockFace.DOWN)) 
-			writer.writeByteTag(NBT_DOWN, true);
-	}
 
 }

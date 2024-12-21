@@ -1,23 +1,17 @@
 package de.atlascore.block.data;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Bisected;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.block.data.property.BlockDataProperty;
 
 public class CoreBisected extends CoreBlockData implements Bisected {
 	
-	public static final CharKey
-	NBT_HALF = CharKey.literal("half");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(NBT_HALF, (holder, reader) -> {
-			if (holder instanceof Bisected) {
-				((Bisected) holder).setHalf(Half.getByNameID(reader.readStringTag()));
-			} else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.HALF);
 	}
 	
 	private Half half;
@@ -27,6 +21,11 @@ public class CoreBisected extends CoreBlockData implements Bisected {
 		this.half = Half.BOTTOM;
 	}
 
+	@Override
+	public CoreBisected clone() {
+		return (CoreBisected) super.clone();
+	}
+	
 	@Override
 	public Half getHalf() {
 		return half;
@@ -47,9 +46,8 @@ public class CoreBisected extends CoreBlockData implements Bisected {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		writer.writeStringTag(NBT_HALF, half.getNameID());
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

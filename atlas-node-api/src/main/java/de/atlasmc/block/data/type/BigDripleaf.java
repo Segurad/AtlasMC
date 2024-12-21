@@ -2,6 +2,10 @@ package de.atlasmc.block.data.type;
 
 import java.util.List;
 
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumValueCache;
+
 public interface BigDripleaf extends Dripleaf {
 	
 	Tilt getTilt();
@@ -10,7 +14,7 @@ public interface BigDripleaf extends Dripleaf {
 	
 	BigDripleaf clone();
 	
-	public static enum Tilt {
+	public static enum Tilt implements EnumID, EnumName, EnumValueCache {
 		
 		NONE,
 		UNSTABLE,
@@ -22,9 +26,10 @@ public interface BigDripleaf extends Dripleaf {
 		private String name;
 		
 		private Tilt() {
-			this.name = name().toLowerCase();
+			this.name = name().toLowerCase().intern();
 		}
 		
+		@Override
 		public int getID() {
 			return ordinal();
 		}
@@ -51,6 +56,7 @@ public interface BigDripleaf extends Dripleaf {
 			VALUES = null;
 		}
 		
+		@Override
 		public String getName() {
 			return name;
 		}
@@ -58,12 +64,15 @@ public interface BigDripleaf extends Dripleaf {
 		public static Tilt getByName(String name) {
 			if (name == null)
 				throw new IllegalArgumentException("Name can not be null!");
-			for (Tilt tilt : getValues()) {
-				if (tilt.getName().equals(name)) {
+			List<Tilt> values = getValues();
+			final int size = values.size();
+			for (int i = 0; i < size; i++) {
+				Tilt tilt = values.get(i);
+				if (tilt.name.equals(name)) {
 					return tilt;
 				}
 			}
-			throw new IllegalArgumentException("No value with found with name: " + name);
+			return null;
 		}
 		
 	}

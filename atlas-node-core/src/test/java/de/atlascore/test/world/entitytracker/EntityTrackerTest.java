@@ -27,12 +27,30 @@ public class EntityTrackerTest {
 		TrackerBinding binding = tracker.register(entity, null);
 		assertNotNull(binding, "Binding was null!");
 		assertEquals(1, tracker.getEntities().size(), "Entity was not registered!");
+		
 		Entity returned = tracker.getEntity(binding.getID());
 		assertSame(entity, returned, "By id returned not same entity!");
 		returned = tracker.getEntity(uuid);
 		assertSame(entity, returned, "By uuid returned not same entity!");
 		binding.unregister();
 		assertEquals(0, tracker.getEntities().size(), "Entity was not unregistered!");
+	}
+	
+	@Test
+	public void testMove() {
+		EntityTracker tracker = new CoreEntityTracker();
+		assertTrue(tracker.getEntities().isEmpty(), "Tracker was not emtpy!");
+		
+		UUID uuid = UUID.randomUUID();
+		Entity entity = new CoreEntity(null, uuid);
+		TrackerBinding binding = tracker.register(entity, null);
+		assertNotNull(binding, "Binding was null!");
+		assertEquals(1, tracker.getEntities().size(), "Entity was not registered!");
+		
+		assertEquals(1, tracker.getEntities(0, 0).size(), "Entity was not in 0,0!");
+		binding.updatePosition(64, 0, 64);
+		assertEquals(0, tracker.getEntities(0, 0).size(), "Entity was still in 0,0!");
+		assertEquals(1, tracker.getEntities(4, 4).size(), "Entity was not in 4,4!");
 	}
 
 }

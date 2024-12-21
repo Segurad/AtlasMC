@@ -1,31 +1,23 @@
 package de.atlascore.block.data.type;
 
+import java.util.List;
+
+import de.atlascore.block.data.CoreWaterloggedDirectional4Faces;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Campfire;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
-import java.io.IOException;
+public class CoreCampfire extends CoreWaterloggedDirectional4Faces implements Campfire {
 
-import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlascore.block.data.CoreLightable;
-import de.atlascore.block.data.CoreWaterlogged;
-
-public class CoreCampfire extends CoreDirectional4Faces implements Campfire {
-
-	protected static final CharKey
-	SIGNALE_FIRE = CharKey.literal("signal_fire");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(SIGNALE_FIRE, (holder, reader) -> {
-			if (holder instanceof Campfire)
-			((Campfire) holder).setSignalFire(reader.readByteTag() == 1);
-			else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreWaterloggedDirectional4Faces.PROPERTIES, 
+				BlockDataProperty.LIT,
+				BlockDataProperty.SIGNAL_FIRE);
 	}
 	
 	private boolean lit;
-	private boolean waterlogged;
 	private boolean signalFire;
 	
 	public CoreCampfire(Material material) {
@@ -44,16 +36,6 @@ public class CoreCampfire extends CoreDirectional4Faces implements Campfire {
 	}
 
 	@Override
-	public boolean isWaterlogged() {
-		return waterlogged;
-	}
-
-	@Override
-	public void setWaterlogged(boolean waterlogged) {
-		this.waterlogged = waterlogged;
-	}
-
-	@Override
 	public boolean isSignalFire() {
 		return signalFire;
 	}
@@ -66,21 +48,15 @@ public class CoreCampfire extends CoreDirectional4Faces implements Campfire {
 	@Override
 	public int getStateID() {
 		return getMaterial().getBlockStateID()+
-				(waterlogged?0:1)+
+				(isWaterlogged()?0:1)+
 				(signalFire?0:2)+
 				(lit?0:4)+
 				getFaceValue()*8;
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isLit()) 
-			writer.writeByteTag(CoreLightable.NBT_LIT, true);
-		if (isWaterlogged()) 
-			writer.writeByteTag(CoreWaterlogged.NBT_WATERLOGGED, true);
-		if (isSignalFire()) 
-			writer.writeByteTag(SIGNALE_FIRE, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

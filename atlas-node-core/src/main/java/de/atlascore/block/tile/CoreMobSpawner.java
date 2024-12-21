@@ -5,7 +5,6 @@ import java.io.IOException;
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.MobSpawner;
 import de.atlasmc.entity.Entity;
-import de.atlasmc.entity.EntityType;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -29,15 +28,7 @@ public class CoreMobSpawner extends CoreTileEntity implements MobSpawner {
 		NBT_FIELDS = CoreTileEntity.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(SPAWN_DATA, (holder, reader) -> {
 			reader.readNextEntry();
-			EntityType type = null;
-			if (!NBT_ID.equals(reader.getFieldName())) {
-				reader.mark();
-				reader.search(NBT_ID);
-				type = EntityType.getByName(reader.readStringTag());
-				reader.reset();
-			} else type = EntityType.getByName(reader.readStringTag());
-			Entity ent = type.create(null);
-			ent.fromNBT(reader);
+			Entity ent = Entity.getFromNBT(reader);
 			holder.setDisplayedEntity(ent);
 		});
 		// TODO skipped fields of mob spawner

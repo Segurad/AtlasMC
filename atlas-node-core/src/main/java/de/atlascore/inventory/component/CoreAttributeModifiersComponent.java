@@ -19,7 +19,7 @@ import de.atlasmc.util.map.Multimap;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTField;
 import de.atlasmc.util.nbt.NBTFieldContainer;
-import de.atlasmc.util.nbt.NBTHolder;
+import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -200,7 +200,8 @@ public class CoreAttributeModifiersComponent extends AbstractItemComponent imple
 			NBTField<CoreAttributeModifiersComponent> field = NBT_FIELDS.getField(NBT_MODIFIERS);
 			field.setField(this, reader);
 		} else {
-			super.fromNBT(reader);
+			reader.readNextEntry();
+			NBTUtil.readNBT(NBT_FIELDS, this, reader);;
 		}
 	}
 
@@ -225,11 +226,6 @@ public class CoreAttributeModifiersComponent extends AbstractItemComponent imple
 		if (!showTooltip)
 			writer.writeByteTag(NBT_SHOW_IN_TOOLTIP, showTooltip);
 		writer.writeEndTag();
-	}
-	
-	@Override
-	protected NBTFieldContainer<? extends NBTHolder> getFieldContainerRoot() {
-		return NBT_FIELDS;
 	}
 
 }

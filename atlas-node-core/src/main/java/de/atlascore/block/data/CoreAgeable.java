@@ -1,23 +1,17 @@
 package de.atlascore.block.data;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.data.Ageable;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.block.data.property.BlockDataProperty;
 
 public class CoreAgeable extends CoreBlockData implements Ageable {
 	
-	public static final CharKey
-	NBT_AGE = CharKey.literal("age");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(NBT_AGE, (holder, reader) -> {
-			if (holder instanceof Ageable) {
-				((Ageable) holder).setAge(reader.readIntTag());
-			} else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.AGE);
 	}
 	
 	private int age;
@@ -55,9 +49,8 @@ public class CoreAgeable extends CoreBlockData implements Ageable {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		writer.writeIntTag(NBT_AGE, age);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

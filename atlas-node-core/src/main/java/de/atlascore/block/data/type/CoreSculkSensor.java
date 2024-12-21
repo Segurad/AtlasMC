@@ -1,24 +1,20 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
 import de.atlascore.block.data.CoreAnaloguePowerable;
-import de.atlascore.block.data.CoreWaterlogged;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.SculkSensor;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreSculkSensor extends CoreAnaloguePowerable implements SculkSensor {
 	
-	public static final CharKey NBT_SCULK_SENSOR_PHASE = CharKey.literal("sculk_sensor_phase");
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		NBT_FIELDS.setField(NBT_SCULK_SENSOR_PHASE, (holder, reader) -> {
-			if (holder instanceof SculkSensor data) {
-				data.setPhase(Phase.getByName(reader.readStringTag()));
-			} else reader.skipTag();
-		});
+		PROPERTIES = merge(CoreAnaloguePowerable.PROPERTIES, 
+				BlockDataProperty.WATERLOGGED,
+				BlockDataProperty.SCULK_SENSOR_PHASE);
 	}
 	
 	private boolean waterlogged;
@@ -57,12 +53,8 @@ public class CoreSculkSensor extends CoreAnaloguePowerable implements SculkSenso
 	}
 
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (waterlogged)
-			writer.writeByteTag(CoreWaterlogged.NBT_WATERLOGGED, true);
-		if (phase != Phase.INACTIVE)
-			writer.writeStringTag(NBT_SCULK_SENSOR_PHASE, phase.getName());
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 	
 	@Override

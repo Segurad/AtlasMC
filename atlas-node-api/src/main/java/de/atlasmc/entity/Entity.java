@@ -1,5 +1,6 @@
 package de.atlasmc.entity;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -16,14 +17,20 @@ import de.atlasmc.util.EnumID;
 import de.atlasmc.util.EnumValueCache;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.annotation.ThreadSafe;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.CustomTagContainer;
+import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.NBTHolder;
+import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.world.Chunk;
 import de.atlasmc.world.World;
 import de.atlasmc.world.entitytracker.EntityPerception;
 
 public interface Entity extends NBTHolder, Nameable, Tickable, SoundEmitter {
 
+	public static final CharKey NBT_ID = CharKey.literal("id");
+	
 	public enum Animation implements EnumID, EnumValueCache {
 		
 		SWING_MAIN_ARM,
@@ -101,6 +108,35 @@ public interface Entity extends NBTHolder, Nameable, Tickable, SoundEmitter {
 			VALUES = null;
 		}
 		
+	}
+	
+	public static Entity getFromNBT(NBTReader reader) throws IOException {
+		if (reader.getType() == TagType.TAG_END) { // Empty Tag 
+			reader.readNextEntry();
+			return null;
+		}
+		String rawType = null;
+		if (!NBT_ID.equals(reader.getFieldName())) {
+			reader.mark();
+			reader.search(NBT_ID);
+			rawType = reader.readStringTag();
+			reader.reset();
+		} else {
+			rawType = reader.readStringTag();
+		}
+		if (rawType == null) {
+			throw new NBTException("NBT did not container id field!");
+		}
+		EntityType type = EntityType.getByName(rawType);
+		if (type == null) {
+			throw new NBTException("Not entity type found with name: " + rawType);
+		}
+		Entity ent = type.create(null);
+		if (ent == null) {
+			throw new NBTException("Failed to create entity from entity type: " + type.getNamespacedKeyRaw());
+		}
+		ent.fromNBT(reader);
+		return ent;
 	}
 	
 	void addScoreboardTag(String tag);

@@ -1,14 +1,19 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
-import de.atlascore.block.data.CoreAttachable;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.HangingSign;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreHangingSign extends CoreSign implements HangingSign {
 
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	
+	static {
+		PROPERTIES = merge(CoreSign.PROPERTIES, BlockDataProperty.ATTACHED);
+	}
+	
 	private boolean attached;
 	
 	public CoreHangingSign(Material material) {
@@ -31,10 +36,8 @@ public class CoreHangingSign extends CoreSign implements HangingSign {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (attached)
-			writer.writeByteTag(CoreAttachable.NBT_ATTACHED, true);
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }

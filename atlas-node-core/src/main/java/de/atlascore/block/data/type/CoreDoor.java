@@ -1,38 +1,38 @@
 package de.atlascore.block.data.type;
 
-import java.io.IOException;
+import java.util.List;
 
-import de.atlascore.block.data.CoreBisected;
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlascore.block.data.CoreOpenable;
-import de.atlascore.block.data.CorePowerable;
 import de.atlasmc.Material;
+import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Door;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreDoor extends CoreDirectional4Faces implements Door {
+	
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	
+	static {
+		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, 
+				BlockDataProperty.HALF,
+				BlockDataProperty.HINGE,
+				BlockDataProperty.OPEN,
+				BlockDataProperty.POWERED);
+	}
 	
 	private Half half;
 	private Hinge hinge;
 	private boolean open;
 	private boolean powered;
 	
-	protected static final CharKey
-	HINGE = CharKey.literal("hinge");
-	
-	static {
-		NBT_FIELDS.setField(HINGE, (holder, reader) -> {
-			if (Door.class.isInstance(holder)) {
-				((Door) holder).setHinge(Hinge.getByName(reader.readStringTag()));
-			} else reader.skipTag();
-		});
-	}
-	
 	public CoreDoor(Material material) {
 		super(material);
 		half = Half.LOWER;
 		hinge = Hinge.LEFT;
+	}
+	
+	@Override
+	public CoreDoor clone() {
+		return (CoreDoor) super.clone();
 	}
 
 	@Override
@@ -92,16 +92,8 @@ public class CoreDoor extends CoreDirectional4Faces implements Door {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (getHalf() != Half.LOWER) 
-			writer.writeStringTag(CoreBisected.NBT_HALF, half.getNameID());
-		if (isOpen()) 
-			writer.writeByteTag(CoreOpenable.NBT_OPEN, true);
-		if (isPowered()) 
-			writer.writeByteTag(CorePowerable.NBT_POWERED, true);
-		if (getHinge() != Hinge.LEFT) 
-			writer.writeStringTag(HINGE, getHinge().name().toLowerCase());
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
 	}
 
 }
