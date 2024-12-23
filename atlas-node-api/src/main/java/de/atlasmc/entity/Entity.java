@@ -276,22 +276,39 @@ public interface Entity extends NBTHolder, Nameable, Tickable, SoundEmitter {
 	
 	void setFreezeTicks(int ticks);
 	
-	public default void teleport(SimpleLocation loc) {
-		if (loc == null)
-			throw new IllegalArgumentException("Location can not be null!");
-		teleport(loc.x, loc.y, loc.z, loc.yaw, loc.pitch);
+	default void teleport(SimpleLocation loc) {
+		teleport(loc, null, 0);
+	}
+	
+	default void teleport(SimpleLocation loc, int flags) {
+		teleport(loc, null, flags);
+	}
+	
+	default void teleport(SimpleLocation loc, Vector3d velocity) {
+		teleport(loc, velocity, 0);
 	}
 	
 	/**
-	 * Teleport to new coordinates and keeps yaw and pitch
-	 * @param x
-	 * @param y
-	 * @param z
+	 * Teleports the entity to the given position and applies the given velocity.
+	 * If the velocity is null the entities current velocity is used
+	 * @param loc
+	 * @param velocity
+	 * @param flags
 	 */
-	void teleport(double x, double y, double z);
+	void teleport(SimpleLocation loc, Vector3d velocity, int flags);
 	
-	void teleport(double x, double y, double z, float yaw, float pitch);
-
+	default void teleport(double x, double y, double z) {
+		teleport(x, y, z, 0);
+	}
+	
+	default void teleport(double x, double y, double z, float pitch, float yaw) {
+		teleport(x, y, z, pitch, yaw, 0);
+	}
+	
+	void teleport(double x, double y, double z, int flags);
+	
+	void teleport(double x, double y, double z, float pitch, float yaw, int flags);
+	
 	/**
 	 * This method is called by the System when the entity is spawned at another world and/or server.<br>
 	 * It resets the removed status when used.

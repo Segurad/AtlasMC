@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(packetID = PacketPlay.IN_ACKNOWLEDGE_MESSAGE, definition = "acknowledge_message")
+@DefaultPacketID(packetID = PacketPlay.IN_ACKNOWLEDGE_MESSAGE, definition = "chat_ack")
 public class PacketInAcknowledgeMessage extends AbstractPacket implements PacketPlayIn {
 
 	public int messageID;

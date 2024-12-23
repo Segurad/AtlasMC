@@ -6,7 +6,7 @@ import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(packetID = PacketPlay.IN_CLICK_CONTAINER, definition = "click_container")
+@DefaultPacketID(packetID = PacketPlay.IN_CLICK_CONTAINER, definition = "container_click")
 public class PacketInClickContainer extends AbstractPacket implements PacketPlayIn {
 
 	public int windowID;

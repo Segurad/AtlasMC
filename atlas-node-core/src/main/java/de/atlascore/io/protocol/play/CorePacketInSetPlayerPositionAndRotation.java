@@ -17,7 +17,7 @@ public class CorePacketInSetPlayerPositionAndRotation implements PacketIO<Packet
 		packet.z = in.readDouble();
 		packet.yaw = in.readFloat();
 		packet.pitch = in.readFloat();
-		packet.onGround = in.readBoolean();
+		packet.flags = in.readByte();
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public class CorePacketInSetPlayerPositionAndRotation implements PacketIO<Packet
 		out.writeDouble(packet.z);
 		out.writeFloat(packet.yaw);
 		out.writeFloat(packet.pitch);
-		out.writeBoolean(packet.onGround);
+		out.writeByte(packet.flags);
 	}
 
 	@Override

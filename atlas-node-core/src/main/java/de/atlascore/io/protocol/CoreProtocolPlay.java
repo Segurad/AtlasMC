@@ -33,10 +33,10 @@ public class CoreProtocolPlay extends CoreAbstractProtocol<PacketPlayIn, PacketP
 				new CorePacketInSetPlayerPosition(),
 				new CorePacketInSetPlayerPositionAndRotation(),
 				new CorePacketInSetPlayerRotation(),
-				new CorePacketInSetPlayerOnGround(),
+				new CorePacketInSetPlayerMoveFlags(),
 				new CorePacketInMoveVehice(),
 				new CorePacketInPaddleBoat(),
-				new CorePacketInPickItem(),
+				new CorePacketInPickItemFromBlock(),
 				new CorePacketInPlaceRecipe(),
 				new CorePacketInPlayerAbilities(),
 				new CorePacketInPlayerAction(),
@@ -70,7 +70,11 @@ public class CoreProtocolPlay extends CoreAbstractProtocol<PacketPlayIn, PacketP
 				new CorePacketInChatCommand(),
 				new CorePacketInChangeContainerSlotState(),
 				new CorePacketInCookieResponse(),
-				new CorePacketInDebugSampleSubscription()
+				new CorePacketInDebugSampleSubscription(),
+				new CorePacketInBundleItemSelected(),
+				new CorePacketInClientTickEnd(),
+				new CorePacketInPickItemFromEntity(),
+				new CorePacketInPlayerLoaded()
 		}, new PacketIO[] {
 				new CorePacketOutSpawnEntity(),
 				new CorePacketOutSpawnExperienceOrb(),
@@ -116,7 +120,7 @@ public class CoreProtocolPlay extends CoreAbstractProtocol<PacketPlayIn, PacketP
 				new CorePacketOutPlayerInfoUpdate(),
 				new CorePacketOutLookAt(),
 				new CorePacketOutSynchronizePlayerPosition(),
-				new CorePacketOutUpdateRecipeBook(),
+				new CorePacketOutRecipeBookSettings(),
 				new CorePacketOutRemoveEntities(),
 				new CorePacketOutRemoveEntityEffect(),
 				new CorePacketOutAddRessourcePack(),
@@ -146,7 +150,7 @@ public class CoreProtocolPlay extends CoreAbstractProtocol<PacketPlayIn, PacketP
 				new CorePacketOutSetTabListHeaderAndFooter(),
 				new CorePacketOutTagQueryResponse(),
 				new CorePacketOutPickupItem(),
-				new CorePacketOutEntityTeleport(),
+				new CorePacketOutTeleportEntity(),
 				new CorePacketOutUpdateAdvancements(),
 				new CorePacketOutUpdateAttributes(),
 				new CorePacketOutEntityEffect(),
@@ -195,7 +199,14 @@ public class CoreProtocolPlay extends CoreAbstractProtocol<PacketPlayIn, PacketP
 				new CorePacketOutTransfer(),
 				new CorePacketOutProjectilePower(),
 				new CorePacketOutCustomReportDetails(),
-				new CorePacketOutServerLinks()
+				new CorePacketOutServerLinks(),
+				new CorePacketOutMoveMinecartOnTrack(),
+				new CorePacketOutPlayerRotation(),
+				new CorePacketOutRecipeBookAdd(),
+				new CorePacketOutRecipeBookRemove(),
+				new CorePacketOutSetCursorItem(),
+				new CorePacketOutSetPlayerInventory(),
+				new CorePacketOutTeleportVehicle()
 		});
 	}
 

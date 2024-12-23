@@ -1,0 +1,170 @@
+{
+    "minecraft:allay_drop_item_on_block": {
+        "protocol_id": 51
+    },
+    "minecraft:any_block_use": {
+        "protocol_id": 40
+    },
+    "minecraft:avoid_vibration": {
+        "protocol_id": 52
+    },
+    "minecraft:bee_nest_destroyed": {
+        "protocol_id": 36
+    },
+    "minecraft:bred_animals": {
+        "protocol_id": 14
+    },
+    "minecraft:brewed_potion": {
+        "protocol_id": 10
+    },
+    "minecraft:changed_dimension": {
+        "protocol_id": 21
+    },
+    "minecraft:channeled_lightning": {
+        "protocol_id": 30
+    },
+    "minecraft:construct_beacon": {
+        "protocol_id": 11
+    },
+    "minecraft:consume_item": {
+        "protocol_id": 25
+    },
+    "minecraft:crafter_recipe_crafted": {
+        "protocol_id": 54
+    },
+    "minecraft:cured_zombie_villager": {
+        "protocol_id": 17
+    },
+    "minecraft:default_block_use": {
+        "protocol_id": 39
+    },
+    "minecraft:effects_changed": {
+        "protocol_id": 26
+    },
+    "minecraft:enchanted_item": {
+        "protocol_id": 8
+    },
+    "minecraft:enter_block": {
+        "protocol_id": 3
+    },
+    "minecraft:entity_hurt_player": {
+        "protocol_id": 7
+    },
+    "minecraft:entity_killed_player": {
+        "protocol_id": 2
+    },
+    "minecraft:fall_after_explosion": {
+        "protocol_id": 55
+    },
+    "minecraft:fall_from_height": {
+        "protocol_id": 48
+    },
+    "minecraft:filled_bucket": {
+        "protocol_id": 9
+    },
+    "minecraft:fishing_rod_hooked": {
+        "protocol_id": 29
+    },
+    "minecraft:hero_of_the_village": {
+        "protocol_id": 33
+    },
+    "minecraft:impossible": {
+        "protocol_id": 0
+    },
+    "minecraft:inventory_changed": {
+        "protocol_id": 4
+    },
+    "minecraft:item_durability_changed": {
+        "protocol_id": 19
+    },
+    "minecraft:item_used_on_block": {
+        "protocol_id": 38
+    },
+    "minecraft:kill_mob_near_sculk_catalyst": {
+        "protocol_id": 50
+    },
+    "minecraft:killed_by_arrow": {
+        "protocol_id": 32
+    },
+    "minecraft:levitation": {
+        "protocol_id": 20
+    },
+    "minecraft:lightning_strike": {
+        "protocol_id": 46
+    },
+    "minecraft:location": {
+        "protocol_id": 15
+    },
+    "minecraft:nether_travel": {
+        "protocol_id": 28
+    },
+    "minecraft:placed_block": {
+        "protocol_id": 24
+    },
+    "minecraft:player_generates_container_loot": {
+        "protocol_id": 41
+    },
+    "minecraft:player_hurt_entity": {
+        "protocol_id": 6
+    },
+    "minecraft:player_interacted_with_entity": {
+        "protocol_id": 44
+    },
+    "minecraft:player_killed_entity": {
+        "protocol_id": 1
+    },
+    "minecraft:recipe_crafted": {
+        "protocol_id": 53
+    },
+    "minecraft:recipe_unlocked": {
+        "protocol_id": 5
+    },
+    "minecraft:ride_entity_in_lava": {
+        "protocol_id": 49
+    },
+    "minecraft:shot_crossbow": {
+        "protocol_id": 31
+    },
+    "minecraft:slept_in_bed": {
+        "protocol_id": 16
+    },
+    "minecraft:slide_down_block": {
+        "protocol_id": 35
+    },
+    "minecraft:started_riding": {
+        "protocol_id": 45
+    },
+    "minecraft:summoned_entity": {
+        "protocol_id": 13
+    },
+    "minecraft:tame_animal": {
+        "protocol_id": 23
+    },
+    "minecraft:target_hit": {
+        "protocol_id": 37
+    },
+    "minecraft:thrown_item_picked_up_by_entity": {
+        "protocol_id": 42
+    },
+    "minecraft:thrown_item_picked_up_by_player": {
+        "protocol_id": 43
+    },
+    "minecraft:tick": {
+        "protocol_id": 22
+    },
+    "minecraft:used_ender_eye": {
+        "protocol_id": 12
+    },
+    "minecraft:used_totem": {
+        "protocol_id": 27
+    },
+    "minecraft:using_item": {
+        "protocol_id": 47
+    },
+    "minecraft:villager_trade": {
+        "protocol_id": 18
+    },
+    "minecraft:voluntary_exile": {
+        "protocol_id": 34
+    }
+}

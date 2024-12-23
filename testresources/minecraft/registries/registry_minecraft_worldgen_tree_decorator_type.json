@@ -1,0 +1,26 @@
+{
+    "minecraft:alter_ground": {
+        "protocol_id": 6
+    },
+    "minecraft:attached_to_leaves": {
+        "protocol_id": 7
+    },
+    "minecraft:beehive": {
+        "protocol_id": 5
+    },
+    "minecraft:cocoa": {
+        "protocol_id": 4
+    },
+    "minecraft:creaking_heart": {
+        "protocol_id": 3
+    },
+    "minecraft:leave_vine": {
+        "protocol_id": 1
+    },
+    "minecraft:pale_moss": {
+        "protocol_id": 2
+    },
+    "minecraft:trunk_vine": {
+        "protocol_id": 0
+    }
+}

@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(packetID = PacketPlay.IN_PROGRAM_STRUCTURE_BLOCK, definition = "programm_structure_block")
+@DefaultPacketID(packetID = PacketPlay.IN_PROGRAM_STRUCTURE_BLOCK, definition = "set_structure_block")
 public class PacketInProgramStructureBlock extends AbstractPacket implements PacketPlayIn {
 	
 	public long position;

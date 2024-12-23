@@ -37,7 +37,7 @@ public class CorePlayerInventory extends CoreInventory implements PlayerInventor
 	
 	@Override
 	public void setHolder(InventoryHolder holder) {
-		throw new RuntimeException("Can not set holder for PlayerInventory!");
+		throw new IllegalStateException("Can not set holder for PlayerInventory!");
 	}
 	
 	@Override
@@ -192,26 +192,16 @@ public class CorePlayerInventory extends CoreInventory implements PlayerInventor
 	public void setBootsUnsafe(ItemStack item) {
 		setItem(SLOT_FEET, item);
 	}
-	
-	@Override
-	public void setItem(int slot, ItemStack item, boolean animation) {
-		if (contents[slot] == item)
-			return;
-		super.setItem(slot, item, animation);
-		updateEquipmentSlot(slot);
-	}
-	
-	@Override
-	public void setItemUnsafe(int slot, ItemStack item, boolean animation) {
-		if (contents[slot] == item)
-			return;
-		super.setItemUnsafe(slot, item, animation);
-		updateEquipmentSlot(slot);
-	}
 
 	@Override
 	public CraftingInventory getCraftingInventory() {
 		return getHolder().getCraftingInventory();
+	}
+	
+	@Override
+	public void updateSlot(int slot, boolean animation) {
+		super.updateSlot(slot, animation);
+		updateEquipmentSlot(slot);
 	}
 	
 	private void updateEquipmentSlot(int slot) {
@@ -237,6 +227,8 @@ public class CorePlayerInventory extends CoreInventory implements PlayerInventor
 				break;
 			}
 		}
+		if (equipmentSlot == null)
+			return;
 		ItemStack item = getItemUnsafe(slot);
 		ArrayList<Pair<EquipmentSlot, ItemStack>> slots = new ArrayList<>(1);
 		slots.add(Pair.of(equipmentSlot, item));

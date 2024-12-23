@@ -4,7 +4,7 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(packetID = PacketPlay.IN_SET_SEEN_RECIPE, definition = "seen_recipe")
+@DefaultPacketID(packetID = PacketPlay.IN_SET_SEEN_RECIPE, definition = "recipe_book_seen_recipe")
 public class PacketInSetSeenRecipe extends AbstractPacket implements PacketPlayIn {
 	
 	public NamespacedKey recipeID;

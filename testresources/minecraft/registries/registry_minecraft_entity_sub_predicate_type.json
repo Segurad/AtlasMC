@@ -1,0 +1,62 @@
+{
+    "minecraft:axolotl": {
+        "protocol_id": 6
+    },
+    "minecraft:cat": {
+        "protocol_id": 17
+    },
+    "minecraft:fishing_hook": {
+        "protocol_id": 1
+    },
+    "minecraft:fox": {
+        "protocol_id": 7
+    },
+    "minecraft:frog": {
+        "protocol_id": 18
+    },
+    "minecraft:horse": {
+        "protocol_id": 10
+    },
+    "minecraft:lightning": {
+        "protocol_id": 0
+    },
+    "minecraft:llama": {
+        "protocol_id": 11
+    },
+    "minecraft:mooshroom": {
+        "protocol_id": 8
+    },
+    "minecraft:painting": {
+        "protocol_id": 16
+    },
+    "minecraft:parrot": {
+        "protocol_id": 13
+    },
+    "minecraft:player": {
+        "protocol_id": 2
+    },
+    "minecraft:rabbit": {
+        "protocol_id": 9
+    },
+    "minecraft:raider": {
+        "protocol_id": 4
+    },
+    "minecraft:salmon": {
+        "protocol_id": 14
+    },
+    "minecraft:sheep": {
+        "protocol_id": 5
+    },
+    "minecraft:slime": {
+        "protocol_id": 3
+    },
+    "minecraft:tropical_fish": {
+        "protocol_id": 15
+    },
+    "minecraft:villager": {
+        "protocol_id": 12
+    },
+    "minecraft:wolf": {
+        "protocol_id": 19
+    }
+}

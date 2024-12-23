@@ -5,7 +5,7 @@ import java.util.UUID;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(packetID = PacketPlay.IN_PLAYER_SESSION, definition = "player_session")
+@DefaultPacketID(packetID = PacketPlay.IN_PLAYER_SESSION, definition = "chat_session_update")
 public class PacketInPlayerSession extends AbstractPacket implements PacketPlayIn {
 
 	public UUID sessionID;

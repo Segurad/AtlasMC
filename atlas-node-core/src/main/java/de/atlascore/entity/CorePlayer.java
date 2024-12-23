@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 
+import org.joml.Vector3d;
+
 import de.atlascore.block.CorePlayerDiggingHandler;
 import de.atlascore.inventory.CoreInventoryView;
 import de.atlascore.inventory.CorePlayerItemCooldownHandler;
@@ -357,6 +359,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 		packet.windowID = -1;
 		packet.slot = -1;
 		packet.item = cursorItem;
+		con.sendPacked(packet);
 	}
 
 	@Override
@@ -520,9 +523,23 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	}
 	
 	@Override
-	public void teleport(double x, double y, double z, float yaw, float pitch) {
-		super.teleport(x, y, z, yaw, pitch);
-		con.teleport(x, y, z, yaw, pitch);
+	public void teleport(double x, double y, double z, int flags) {
+		super.teleport(x, y, z, flags);
+		con.teleport(x, y, z, loc.pitch, loc.yaw, motion, flags);
+	}
+	
+	@Override
+	public void teleport(double x, double y, double z, float pitch, float yaw, int flags) {
+		super.teleport(x, y, z, pitch, yaw, flags);
+		con.teleport(x, y, z, yaw, pitch, motion, flags);
+	}
+	
+	@Override
+	public void teleport(SimpleLocation loc, Vector3d velocity, int flags) {
+		super.teleport(loc, velocity, flags);
+		if (velocity == null)
+			velocity = super.motion;
+		con.teleport(loc, velocity, flags);
 	}
 
 	@Override

@@ -1,0 +1,92 @@
+{
+    "minecraft:ammo_use": {
+        "protocol_id": 13
+    },
+    "minecraft:armor_effectiveness": {
+        "protocol_id": 5
+    },
+    "minecraft:attributes": {
+        "protocol_id": 9
+    },
+    "minecraft:block_experience": {
+        "protocol_id": 21
+    },
+    "minecraft:crossbow_charge_time": {
+        "protocol_id": 24
+    },
+    "minecraft:crossbow_charging_sounds": {
+        "protocol_id": 25
+    },
+    "minecraft:damage": {
+        "protocol_id": 2
+    },
+    "minecraft:damage_immunity": {
+        "protocol_id": 1
+    },
+    "minecraft:damage_protection": {
+        "protocol_id": 0
+    },
+    "minecraft:equipment_drops": {
+        "protocol_id": 10
+    },
+    "minecraft:fishing_luck_bonus": {
+        "protocol_id": 20
+    },
+    "minecraft:fishing_time_reduction": {
+        "protocol_id": 19
+    },
+    "minecraft:hit_block": {
+        "protocol_id": 7
+    },
+    "minecraft:item_damage": {
+        "protocol_id": 8
+    },
+    "minecraft:knockback": {
+        "protocol_id": 4
+    },
+    "minecraft:location_changed": {
+        "protocol_id": 11
+    },
+    "minecraft:mob_experience": {
+        "protocol_id": 22
+    },
+    "minecraft:post_attack": {
+        "protocol_id": 6
+    },
+    "minecraft:prevent_armor_change": {
+        "protocol_id": 28
+    },
+    "minecraft:prevent_equipment_drop": {
+        "protocol_id": 27
+    },
+    "minecraft:projectile_count": {
+        "protocol_id": 17
+    },
+    "minecraft:projectile_piercing": {
+        "protocol_id": 14
+    },
+    "minecraft:projectile_spawned": {
+        "protocol_id": 15
+    },
+    "minecraft:projectile_spread": {
+        "protocol_id": 16
+    },
+    "minecraft:repair_with_xp": {
+        "protocol_id": 23
+    },
+    "minecraft:smash_damage_per_fallen_block": {
+        "protocol_id": 3
+    },
+    "minecraft:tick": {
+        "protocol_id": 12
+    },
+    "minecraft:trident_return_acceleration": {
+        "protocol_id": 18
+    },
+    "minecraft:trident_sound": {
+        "protocol_id": 26
+    },
+    "minecraft:trident_spin_attack_strength": {
+        "protocol_id": 29
+    }
+}

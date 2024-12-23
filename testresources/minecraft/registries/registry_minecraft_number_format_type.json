@@ -1,0 +1,11 @@
+{
+    "minecraft:blank": {
+        "protocol_id": 0
+    },
+    "minecraft:fixed": {
+        "protocol_id": 2
+    },
+    "minecraft:styled": {
+        "protocol_id": 1
+    }
+}

@@ -1,0 +1,122 @@
+{
+    "minecraft:apply_bonus": {
+        "protocol_id": 19
+    },
+    "minecraft:copy_components": {
+        "protocol_id": 31
+    },
+    "minecraft:copy_custom_data": {
+        "protocol_id": 24
+    },
+    "minecraft:copy_name": {
+        "protocol_id": 14
+    },
+    "minecraft:copy_state": {
+        "protocol_id": 25
+    },
+    "minecraft:enchant_randomly": {
+        "protocol_id": 3
+    },
+    "minecraft:enchant_with_levels": {
+        "protocol_id": 2
+    },
+    "minecraft:enchanted_count_increase": {
+        "protocol_id": 8
+    },
+    "minecraft:exploration_map": {
+        "protocol_id": 12
+    },
+    "minecraft:explosion_decay": {
+        "protocol_id": 21
+    },
+    "minecraft:fill_player_head": {
+        "protocol_id": 23
+    },
+    "minecraft:filtered": {
+        "protocol_id": 17
+    },
+    "minecraft:furnace_smelt": {
+        "protocol_id": 7
+    },
+    "minecraft:limit_count": {
+        "protocol_id": 18
+    },
+    "minecraft:modify_contents": {
+        "protocol_id": 16
+    },
+    "minecraft:reference": {
+        "protocol_id": 29
+    },
+    "minecraft:sequence": {
+        "protocol_id": 30
+    },
+    "minecraft:set_attributes": {
+        "protocol_id": 10
+    },
+    "minecraft:set_banner_pattern": {
+        "protocol_id": 26
+    },
+    "minecraft:set_book_cover": {
+        "protocol_id": 34
+    },
+    "minecraft:set_components": {
+        "protocol_id": 6
+    },
+    "minecraft:set_contents": {
+        "protocol_id": 15
+    },
+    "minecraft:set_count": {
+        "protocol_id": 0
+    },
+    "minecraft:set_custom_data": {
+        "protocol_id": 5
+    },
+    "minecraft:set_custom_model_data": {
+        "protocol_id": 39
+    },
+    "minecraft:set_damage": {
+        "protocol_id": 9
+    },
+    "minecraft:set_enchantments": {
+        "protocol_id": 4
+    },
+    "minecraft:set_firework_explosion": {
+        "protocol_id": 33
+    },
+    "minecraft:set_fireworks": {
+        "protocol_id": 32
+    },
+    "minecraft:set_instrument": {
+        "protocol_id": 28
+    },
+    "minecraft:set_item": {
+        "protocol_id": 1
+    },
+    "minecraft:set_loot_table": {
+        "protocol_id": 20
+    },
+    "minecraft:set_lore": {
+        "protocol_id": 22
+    },
+    "minecraft:set_name": {
+        "protocol_id": 11
+    },
+    "minecraft:set_ominous_bottle_amplifier": {
+        "protocol_id": 38
+    },
+    "minecraft:set_potion": {
+        "protocol_id": 27
+    },
+    "minecraft:set_stew_effect": {
+        "protocol_id": 13
+    },
+    "minecraft:set_writable_book_pages": {
+        "protocol_id": 36
+    },
+    "minecraft:set_written_book_pages": {
+        "protocol_id": 35
+    },
+    "minecraft:toggle_tooltips": {
+        "protocol_id": 37
+    }
+}

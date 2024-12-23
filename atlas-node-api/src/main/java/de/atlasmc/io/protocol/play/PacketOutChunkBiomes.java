@@ -13,7 +13,7 @@ import de.atlasmc.world.ChunkSection;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
-@DefaultPacketID(packetID = PacketPlay.OUT_CHUNK_BIOMES, definition = "chunk_biomes")
+@DefaultPacketID(packetID = PacketPlay.OUT_CHUNK_BIOMES, definition = "chunks_biomes")
 public class PacketOutChunkBiomes extends AbstractPacket implements PacketPlayOut {
 	
 	public List<BiomeData> chunks;

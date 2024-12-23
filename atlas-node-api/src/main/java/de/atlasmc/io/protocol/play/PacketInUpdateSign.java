@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.play;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(packetID = PacketPlay.IN_UPDATE_SIGN, definition = "update_sign")
+@DefaultPacketID(packetID = PacketPlay.IN_UPDATE_SIGN, definition = "sign_update")
 public class PacketInUpdateSign extends AbstractPacket implements PacketPlayIn {
 	
 	public long position;

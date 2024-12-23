@@ -25,7 +25,7 @@ public class EntityTypeTest {
 		} catch (IllegalStateException e) {}
 		Registries.createInstanceRegistry(EntityType.class);
 		EntityTypeLoader.loadEntityTypes();
-		JsonReader reader = AtlasTest.getJsonResourceReader("registry_minecraft_entity_type.json");
+		JsonReader reader = AtlasTest.getJsonResourceReader("/minecraft/registries/registry_minecraft_entity_type.json");
 		LinkedList<Executable> checks = new LinkedList<>();
 		reader.beginObject();
 		while(reader.peek() == JsonToken.NAME) {

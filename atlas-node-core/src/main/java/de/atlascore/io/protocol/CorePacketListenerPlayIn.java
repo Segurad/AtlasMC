@@ -64,6 +64,7 @@ import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.PlayerSettings;
 import de.atlasmc.io.protocol.play.PacketInAcknowledgeConfiguration;
 import de.atlasmc.io.protocol.play.PacketInAcknowledgeMessage;
+import de.atlasmc.io.protocol.play.PacketInBundleItemSelected;
 import de.atlasmc.io.protocol.play.PacketInChangeContaierSlotState;
 import de.atlasmc.io.protocol.play.PacketInChangeDifficulty;
 import de.atlasmc.io.protocol.play.PacketInChangeRecipeBookSettings;
@@ -75,6 +76,7 @@ import de.atlasmc.io.protocol.play.PacketInClickContainerButton;
 import de.atlasmc.io.protocol.play.PacketInClientCommand;
 import de.atlasmc.io.protocol.play.PacketInClientCommand.StatusAction;
 import de.atlasmc.io.protocol.play.PacketInClientInformation;
+import de.atlasmc.io.protocol.play.PacketInClientTickEnd;
 import de.atlasmc.io.protocol.play.PacketInCloseContainer;
 import de.atlasmc.io.protocol.play.PacketInCommandSuggestionsRequest;
 import de.atlasmc.io.protocol.play.PacketInConfirmTeleport;
@@ -87,13 +89,15 @@ import de.atlasmc.io.protocol.play.PacketInKeepAlive;
 import de.atlasmc.io.protocol.play.PacketInLockDifficulty;
 import de.atlasmc.io.protocol.play.PacketInMoveVehicle;
 import de.atlasmc.io.protocol.play.PacketInPaddleBoat;
-import de.atlasmc.io.protocol.play.PacketInPickItem;
+import de.atlasmc.io.protocol.play.PacketInPickItemFromBlock;
+import de.atlasmc.io.protocol.play.PacketInPickItemFromEntity;
 import de.atlasmc.io.protocol.play.PacketInPingRequest;
 import de.atlasmc.io.protocol.play.PacketInPlaceRecipe;
 import de.atlasmc.io.protocol.play.PacketInPlayerAbilities;
 import de.atlasmc.io.protocol.play.PacketInPlayerAction;
 import de.atlasmc.io.protocol.play.PacketInPlayerCommand;
 import de.atlasmc.io.protocol.play.PacketInPlayerInput;
+import de.atlasmc.io.protocol.play.PacketInPlayerLoaded;
 import de.atlasmc.io.protocol.play.PacketInPlayerSession;
 import de.atlasmc.io.protocol.play.PacketInPluginMessage;
 import de.atlasmc.io.protocol.play.PacketInPong;
@@ -111,7 +115,7 @@ import de.atlasmc.io.protocol.play.PacketInSelectTrade;
 import de.atlasmc.io.protocol.play.PacketInSetBeaconEffect;
 import de.atlasmc.io.protocol.play.PacketInSetCreativeModeSlot;
 import de.atlasmc.io.protocol.play.PacketInSetHeldItem;
-import de.atlasmc.io.protocol.play.PacketInSetPlayerOnGround;
+import de.atlasmc.io.protocol.play.PacketInSetPlayerMoveFlags;
 import de.atlasmc.io.protocol.play.PacketInSetPlayerPosition;
 import de.atlasmc.io.protocol.play.PacketInSetPlayerPositionAndRotation;
 import de.atlasmc.io.protocol.play.PacketInSetPlayerRotation;
@@ -454,7 +458,10 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			loc.y = packet.feetY;
 			loc.z = packet.z;
 			loc.copyTo(eventMove.getTo());
-			con.setClientOnGround(packet.onGround);
+			boolean onGround = (packet.flags & 0x01) == 0x01;
+			boolean pushWall = (packet.flags & 0x02) == 0x02;
+			con.setClientOnGround(onGround);
+			con.setClientPushWall(pushWall);
 			con.getPlayer().getLocation(eventMove.getFrom());
 			HandlerList.callEvent(eventMove);
 		});
@@ -470,7 +477,10 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			loc.pitch = packet.pitch;
 			loc.yaw = packet.yaw;
 			loc.copyTo(eventMove.getTo());
-			con.setClientOnGround(packet.onGround);
+			boolean onGround = (packet.flags & 0x01) == 0x01;
+			boolean pushWall = (packet.flags & 0x02) == 0x02;
+			con.setClientOnGround(onGround);
+			con.setClientPushWall(pushWall);
 			con.getPlayer().getLocation(eventMove.getFrom());
 			HandlerList.callEvent(eventMove);
 		});
@@ -483,14 +493,20 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			loc.yaw = packet.yaw;
 			loc.pitch = packet.pitch;
 			loc.copyTo(eventMove.getTo());
-			con.setClientOnGround(packet.onGround);
+			boolean onGround = (packet.flags & 0x01) == 0x01;
+			boolean pushWall = (packet.flags & 0x02) == 0x02;
+			con.setClientOnGround(onGround);
+			con.setClientPushWall(pushWall);
 			con.getPlayer().getLocation(eventMove.getFrom());
 			HandlerList.callEvent(eventMove);
 		});
-		initHandler(PacketInSetPlayerOnGround.class, (con, packet) -> { // 0x15
+		initHandler(PacketInSetPlayerMoveFlags.class, (con, packet) -> { // 0x15
 			if (!con.isTeleportConfirmed())
 				return;
-			con.setClientOnGround(packet.onGround);
+			boolean onGround = (packet.flags & 0x01) == 0x01;
+			boolean pushWall = (packet.flags & 0x02) == 0x02;
+			con.setClientOnGround(onGround);
+			con.setClientPushWall(pushWall);
 		});
 		initHandler(PacketInMoveVehicle.class, (con, packet) -> { // 0x16
 			// TODO handle packet
@@ -498,7 +514,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 		initHandler(PacketInPaddleBoat.class, (con, packet) -> { // 0x17
 			// TODO handle packet
 		});
-		initHandler(PacketInPickItem.class, (con, packet) -> { // 0x18
+		initHandler(PacketInPickItemFromBlock.class, (con, packet) -> { // 0x18
 			HandlerList.callEvent(new PlayerPickItemEvent(con.getPlayer(), packet.slotToUse));
 		});
 		initHandler(PacketInPlaceRecipe.class, (con, packet) -> { // 0x19
@@ -765,6 +781,18 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 		});
 		initHandler(PacketInDebugSampleSubscription.class, (con, packet) -> {
 			// TODO handle debug sample subscription
+		});
+		initHandler(PacketInBundleItemSelected.class, (con, packet) -> {
+			// TODO handle bundle item selected
+		});
+		initHandler(PacketInClientTickEnd.class, (con, packet) -> {
+			// TODO handle client tick end
+		});
+		initHandler(PacketInPickItemFromEntity.class, (con, packet) -> {
+			// TODO handle pick item from entity
+		});
+		initHandler(PacketInPlayerLoaded.class, (con, packet) -> {
+			// TODO handle player loaded
 		});
 	}
 

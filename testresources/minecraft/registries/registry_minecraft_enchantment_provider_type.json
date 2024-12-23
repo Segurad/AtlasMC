@@ -1,0 +1,11 @@
+{
+    "minecraft:by_cost": {
+        "protocol_id": 0
+    },
+    "minecraft:by_cost_with_difficulty": {
+        "protocol_id": 1
+    },
+    "minecraft:single": {
+        "protocol_id": 2
+    }
+}

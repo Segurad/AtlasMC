@@ -32,6 +32,7 @@ import de.atlasmc.io.protocol.play.PacketOutUpdateEntityRotation;
 import de.atlasmc.server.LocalServer;
 import de.atlasmc.sound.Sound;
 import de.atlasmc.util.MathUtil;
+import de.atlasmc.util.TeleportFlags;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.AbstractNBTBase;
@@ -571,18 +572,31 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	public void setInvulnerable(boolean invulnerable) {
 		this.invulnerable = invulnerable;
 	}
-
+	
 	@Override
-	public void teleport(double x, double y, double z) {
+	public void teleport(SimpleLocation loc, Vector3d velocity, int flags) {
+		if (loc == null)
+			throw new IllegalArgumentException("Location can not be null!");
 		teleported = true;
-		loc.set(x, y, z);
+		TeleportFlags.set(this.loc, loc, flags);
+		loc.copyTo(oldLoc);
+		if (velocity != null) {
+			TeleportFlags.set(this.motion, velocity.x, velocity.y, velocity.z, flags);
+			// TODO apply rotation to velocity
+		}
+	}
+	
+	@Override
+	public void teleport(double x, double y, double z, int flags) {
+		teleported = true;
+		TeleportFlags.set(this.loc, x, y, z, flags);
 		loc.copyTo(oldLoc);
 	}
 
 	@Override
-	public void teleport(double x, double y, double z, float yaw, float pitch) {
+	public void teleport(double x, double y, double z, float pitch, float yaw, int flags) {
 		teleported = true;
-		loc.set(x, y, z, yaw, pitch);
+		TeleportFlags.set(this.loc, x, y, z, pitch, yaw, flags);
 		loc.copyTo(oldLoc);
 	}
 

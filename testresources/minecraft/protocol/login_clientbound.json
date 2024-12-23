@@ -1,0 +1,8 @@
+{
+    "cookie_request": 5,
+    "custom_query": 4,
+    "hello": 1,
+    "login_compression": 3,
+    "login_disconnect": 0,
+    "login_finished": 2
+}

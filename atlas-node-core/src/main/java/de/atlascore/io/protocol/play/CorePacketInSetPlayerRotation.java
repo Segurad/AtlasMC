@@ -14,14 +14,14 @@ public class CorePacketInSetPlayerRotation implements PacketIO<PacketInSetPlayer
 	public void read(PacketInSetPlayerRotation packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.yaw = in.readFloat();
 		packet.pitch = in.readFloat();
-		packet.onGround = in.readBoolean();
+		packet.flags = in.readByte();
 	}
 
 	@Override
 	public void write(PacketInSetPlayerRotation packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		out.writeFloat(packet.yaw);
 		out.writeFloat(packet.pitch);
-		out.writeBoolean(packet.onGround);
+		out.writeByte(packet.flags);
 	}
 
 	@Override

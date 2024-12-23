@@ -1,0 +1,44 @@
+{
+    "minecraft:attribute_modifiers": {
+        "protocol_id": 11
+    },
+    "minecraft:bundle_contents": {
+        "protocol_id": 6
+    },
+    "minecraft:container": {
+        "protocol_id": 5
+    },
+    "minecraft:custom_data": {
+        "protocol_id": 4
+    },
+    "minecraft:damage": {
+        "protocol_id": 0
+    },
+    "minecraft:enchantments": {
+        "protocol_id": 1
+    },
+    "minecraft:firework_explosion": {
+        "protocol_id": 7
+    },
+    "minecraft:fireworks": {
+        "protocol_id": 8
+    },
+    "minecraft:jukebox_playable": {
+        "protocol_id": 13
+    },
+    "minecraft:potion_contents": {
+        "protocol_id": 3
+    },
+    "minecraft:stored_enchantments": {
+        "protocol_id": 2
+    },
+    "minecraft:trim": {
+        "protocol_id": 12
+    },
+    "minecraft:writable_book_content": {
+        "protocol_id": 9
+    },
+    "minecraft:written_book_content": {
+        "protocol_id": 10
+    }
+}

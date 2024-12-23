@@ -32,7 +32,7 @@ public class DefaultBlockStateTest {
 		Registries.createInstanceRegistry(BlockDataFactory.class);
 		Registries.createInstanceRegistry(TileEntityFactory.class);
 		MaterialLoader.loadMaterial();
-		JsonReader reader = AtlasTest.getJsonResourceReader("blocks.json");
+		JsonReader reader = AtlasTest.getJsonResourceReader("/minecraft/blocks.json");
 		reader.beginObject();
 		LinkedList<Throwable> checks = new LinkedList<>();
 		while (reader.peek() != JsonToken.END_OBJECT) {

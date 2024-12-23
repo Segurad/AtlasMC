@@ -4,7 +4,7 @@ import de.atlasmc.block.tile.CommandBlock.Mode;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(packetID = PacketPlay.IN_PROGRAM_COMMAND_BLOCK, definition = "programm_command_block")
+@DefaultPacketID(packetID = PacketPlay.IN_PROGRAM_COMMAND_BLOCK, definition = "set_command_block")
 public class PacketInProgramCommandBlock extends AbstractPacket implements PacketPlayIn {
 	
 	public long position;

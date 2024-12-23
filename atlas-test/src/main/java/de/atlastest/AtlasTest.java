@@ -14,14 +14,11 @@ public class AtlasTest {
 	 */
 	public static final String RANDOM_TEST_STRING = "qMJrR8Fw6OBjQu7C1p0TBqaBFTVuT15nyfoJmmyYdnLSWBwRKkrTgFW0T66in53y";
 	
-	public static final String VERSION_PATH = "/1_20_2/";
-	
 	public static JsonReader getJsonResourceReader(String path) throws FileNotFoundException {
 		return getJsonResourceReader(path, getCaller());
 	}
 	
 	public static JsonReader getJsonResourceReader(String path, Class<?> clazz) throws FileNotFoundException {
-		path = AtlasTest.VERSION_PATH + path;
 		URL resource = clazz.getResource(path);
 		if (resource == null) {
 			throw new FileNotFoundException(path);

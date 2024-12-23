@@ -1,9 +1,10 @@
 package de.atlascore.io.protocol;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+
+import org.joml.Vector3d;
 
 import de.atlascore.plugin.channel.CorePlayerPluginChannelHandler;
 import de.atlascore.recipe.CoreRecipeBook;
@@ -30,12 +31,10 @@ import de.atlasmc.io.protocol.ProtocolAdapter;
 import de.atlasmc.io.protocol.ProtocolPlay;
 import de.atlasmc.io.protocol.play.PacketOutDisconnect;
 import de.atlasmc.io.protocol.play.PacketOutKeepAlive;
+import de.atlasmc.io.protocol.play.PacketOutRecipeBookSettings;
 import de.atlasmc.io.protocol.play.PacketOutSelectAdvancementTab;
 import de.atlasmc.io.protocol.play.PacketOutStartConfiguration;
 import de.atlasmc.io.protocol.play.PacketOutSynchronizePlayerPosition;
-import de.atlasmc.io.protocol.play.PacketOutUpdateRecipeBook;
-import de.atlasmc.io.protocol.play.PacketOutUpdateRecipeBook.RecipesAction;
-import de.atlasmc.io.protocol.play.PacketOutUpdateRecipes;
 import de.atlasmc.log.Log;
 import de.atlasmc.plugin.channel.PluginChannelHandler;
 import de.atlasmc.proxy.LocalProxy;
@@ -70,6 +69,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	
 	// Client controlled values
 	private boolean clientOnGround;
+	private boolean clientPushWall;
 	private SimpleLocation clientLocation;
 	private boolean locationChanged;
 	private float chunksPerTick;
@@ -223,14 +223,36 @@ public class CorePlayerConnection implements PlayerConnection {
 	}
 	
 	@Override
-	public int teleport(double x, double y, double z, float yaw, float pitch) {
+	public int teleport(double x, double y, double z, float pitch, float yaw, Vector3d velocity, int flags) {
 		PacketOutSynchronizePlayerPosition packet = new PacketOutSynchronizePlayerPosition();
 		packet.x = x;
 		packet.y = y;
 		packet.z = z;
 		packet.yaw = yaw;
 		packet.pitch = pitch;
+		packet.velocityX = velocity.x;
+		packet.velocityY = velocity.y;
+		packet.velocityZ = velocity.z;
 		packet.teleportID = teleportID;
+		packet.flags = flags;
+		teleportConfirmed = false;
+		sendPacked(packet);
+		return teleportID++;
+	}
+	
+	@Override
+	public int teleport(SimpleLocation loc, Vector3d velocity, int flags) {
+		PacketOutSynchronizePlayerPosition packet = new PacketOutSynchronizePlayerPosition();
+		packet.x = loc.x;
+		packet.y = loc.y;
+		packet.z = loc.z;
+		packet.yaw = loc.yaw;
+		packet.pitch = loc.pitch;
+		packet.velocityX = velocity.x;
+		packet.velocityY = velocity.y;
+		packet.velocityZ = velocity.z;
+		packet.teleportID = teleportID;
+		packet.flags = flags;
 		teleportConfirmed = false;
 		sendPacked(packet);
 		return teleportID++;
@@ -248,60 +270,15 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void unlockRecipes(boolean notify, Recipe... recipes) {
-		List<Recipe> toAdd = null;
-		List<NamespacedKey> toUnlock = null;
-		for (Recipe recipe : recipes) {
-			if (recipesUnlocked.contains(recipe))
-				continue; // assuming the recipe is already available
-			if (toUnlock == null)
-				toUnlock = new ArrayList<>();
-			toUnlock.add(recipe.getNamespacedKey());
-			if (!recipesAvailable.contains(recipe)) {
-				if (toAdd == null)
-					toAdd = new ArrayList<>();
-				toAdd.add(recipe);
-				recipesAvailable.add(recipe);
-			}
-		}
-		if (toAdd != null) {
-			PacketOutUpdateRecipes packet = new PacketOutUpdateRecipes();
-			packet.recipes = toAdd;
-			sendPacked(packet);
-		}
-		if (toUnlock == null)
-			return;
-		PacketOutUpdateRecipeBook packet = new PacketOutUpdateRecipeBook();
-		if (notify) {
-			packet.action = RecipesAction.ADD;
-			packet.tagged = toUnlock;
-		} else {
-			packet.action = RecipesAction.INIT;
-			packet.tagged = toUnlock;
-		}
-		setRecipeBookState(packet);
-		sendPacked(packet);
+		// TODO implements
 	}
 
 	@Override
 	public void lockRecipes(Recipe... recipes) {
-		List<NamespacedKey> toRemove = null;
-		for (Recipe recipe : recipes) {
-			if (!recipesUnlocked.remove(recipe))
-				continue;
-			if (toRemove == null)
-				toRemove = new ArrayList<>();
-			toRemove.add(recipe.getNamespacedKey());
-		}
-		if (toRemove == null)
-			return;
-		PacketOutUpdateRecipeBook packet = new PacketOutUpdateRecipeBook();
-		packet.action = RecipesAction.REMOVE;
-		packet.tagged = toRemove;
-		setRecipeBookState(packet);
-		sendPacked(packet);
+		// TODO implement
 	}
 	
-	private void setRecipeBookState(PacketOutUpdateRecipeBook packet) {
+	private void setRecipeBookState(PacketOutRecipeBookSettings packet) {
 		RecipeBook book = getRecipeBook(BookType.CRAFTING);
 		packet.craftingOpen = book.isOpen();
 		packet.craftingFilter = book.hasFilter();
@@ -330,17 +307,7 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public void addRecipes(Recipe... recipes) {
-		List<Recipe> toAdd = null;
-		for (Recipe recipe : recipes)
-			if (!recipesAvailable.contains(recipe)) {
-				if (toAdd == null)
-					toAdd = new ArrayList<>();
-				toAdd.add(recipe);
-				recipesAvailable.add(recipe);
-			}
-		PacketOutUpdateRecipes packet = new PacketOutUpdateRecipes();
-		packet.recipes = toAdd;
-		sendPacked(packet);
+		// TODO implement
 	}
 
 	@Override
@@ -446,6 +413,16 @@ public class CorePlayerConnection implements PlayerConnection {
 	@Override
 	public void setClientOnGround(boolean onGround) {
 		this.clientOnGround = onGround;
+	}
+	
+	@Override
+	public boolean isClientPushWall() {
+		return clientPushWall;
+	}
+	
+	@Override
+	public void setClientPushWall(boolean pushWall) {
+		this.clientPushWall = pushWall;
 	}
 
 	@Override

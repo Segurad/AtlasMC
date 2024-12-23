@@ -1,0 +1,17 @@
+{
+    "minecraft:crafting_shaped": {
+        "protocol_id": 1
+    },
+    "minecraft:crafting_shapeless": {
+        "protocol_id": 0
+    },
+    "minecraft:furnace": {
+        "protocol_id": 2
+    },
+    "minecraft:smithing": {
+        "protocol_id": 4
+    },
+    "minecraft:stonecutter": {
+        "protocol_id": 3
+    }
+}

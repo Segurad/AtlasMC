@@ -1,0 +1,17 @@
+{
+    "minecraft:apply_effects": {
+        "protocol_id": 0
+    },
+    "minecraft:clear_all_effects": {
+        "protocol_id": 2
+    },
+    "minecraft:play_sound": {
+        "protocol_id": 4
+    },
+    "minecraft:remove_effects": {
+        "protocol_id": 1
+    },
+    "minecraft:teleport_randomly": {
+        "protocol_id": 3
+    }
+}

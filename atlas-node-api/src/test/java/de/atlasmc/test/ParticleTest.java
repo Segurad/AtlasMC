@@ -12,7 +12,7 @@ public class ParticleTest implements EnumTestCases {
 	@Test
 	@Order(Integer.MAX_VALUE)
 	void testParticles() throws Exception {
-		EnumTest.testRegistryProtocolEnum(Particle.class, "registry_minecraft_particle_type.json");
+		EnumTest.testRegistryProtocolEnum(Particle.class, "/minecraft/registries/registry_minecraft_particle_type.json");
 	}
 
 	@Test

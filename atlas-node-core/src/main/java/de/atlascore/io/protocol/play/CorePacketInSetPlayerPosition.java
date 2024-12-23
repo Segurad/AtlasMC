@@ -15,7 +15,7 @@ public class CorePacketInSetPlayerPosition implements PacketIO<PacketInSetPlayer
 		packet.x = in.readDouble();
 		packet.feetY = in.readDouble();
 		packet.z = in.readDouble();
-		packet.onGround = in.readBoolean();
+		packet.flags = in.readByte();
 	}
 
 	@Override
@@ -23,7 +23,7 @@ public class CorePacketInSetPlayerPosition implements PacketIO<PacketInSetPlayer
 		out.writeDouble(packet.x);
 		out.writeDouble(packet.feetY);
 		out.writeDouble(packet.z);
-		out.writeBoolean(packet.onGround);
+		out.writeByte(packet.flags);
 	}
 	
 	@Override

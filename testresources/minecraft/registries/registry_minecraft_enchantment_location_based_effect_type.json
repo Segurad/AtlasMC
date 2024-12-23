@@ -1,0 +1,44 @@
+{
+    "minecraft:all_of": {
+        "protocol_id": 0
+    },
+    "minecraft:apply_mob_effect": {
+        "protocol_id": 1
+    },
+    "minecraft:attribute": {
+        "protocol_id": 2
+    },
+    "minecraft:change_item_damage": {
+        "protocol_id": 3
+    },
+    "minecraft:damage_entity": {
+        "protocol_id": 4
+    },
+    "minecraft:explode": {
+        "protocol_id": 5
+    },
+    "minecraft:ignite": {
+        "protocol_id": 6
+    },
+    "minecraft:play_sound": {
+        "protocol_id": 7
+    },
+    "minecraft:replace_block": {
+        "protocol_id": 8
+    },
+    "minecraft:replace_disk": {
+        "protocol_id": 9
+    },
+    "minecraft:run_function": {
+        "protocol_id": 10
+    },
+    "minecraft:set_block_properties": {
+        "protocol_id": 11
+    },
+    "minecraft:spawn_particles": {
+        "protocol_id": 12
+    },
+    "minecraft:summon_entity": {
+        "protocol_id": 13
+    }
+}

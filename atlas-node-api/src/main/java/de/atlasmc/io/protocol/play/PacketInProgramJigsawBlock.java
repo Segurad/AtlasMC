@@ -4,7 +4,7 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(packetID = PacketPlay.IN_PROGRAM_JIGSAW_BLOCK, definition = "programm_jigsaw_block")
+@DefaultPacketID(packetID = PacketPlay.IN_PROGRAM_JIGSAW_BLOCK, definition = "set_jigsaw_block")
 public class PacketInProgramJigsawBlock extends AbstractPacket implements PacketPlayIn {
 	
 	public long position;

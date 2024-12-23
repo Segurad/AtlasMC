@@ -1,0 +1,26 @@
+{
+    "minecraft:any_fuel": {
+        "protocol_id": 1
+    },
+    "minecraft:composite": {
+        "protocol_id": 7
+    },
+    "minecraft:empty": {
+        "protocol_id": 0
+    },
+    "minecraft:item": {
+        "protocol_id": 2
+    },
+    "minecraft:item_stack": {
+        "protocol_id": 3
+    },
+    "minecraft:smithing_trim": {
+        "protocol_id": 5
+    },
+    "minecraft:tag": {
+        "protocol_id": 4
+    },
+    "minecraft:with_remainder": {
+        "protocol_id": 6
+    }
+}

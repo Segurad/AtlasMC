@@ -1,0 +1,10 @@
+{
+    "client_information": 0,
+    "cookie_response": 1,
+    "custom_payload": 2,
+    "finish_configuration": 3,
+    "keep_alive": 4,
+    "pong": 5,
+    "resource_pack": 6,
+    "select_known_packs": 7
+}

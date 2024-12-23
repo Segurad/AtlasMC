@@ -8,7 +8,7 @@ import de.atlasmc.entity.data.MetaDataContainer;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(packetID = PacketPlay.OUT_SET_ENTITY_METADATA, definition = "set_entity_meta")
+@DefaultPacketID(packetID = PacketPlay.OUT_SET_ENTITY_METADATA, definition = "set_entity_data")
 public class PacketOutSetEntityMetadata extends AbstractPacket implements PacketPlayOut {
 	
 	public int entityID;

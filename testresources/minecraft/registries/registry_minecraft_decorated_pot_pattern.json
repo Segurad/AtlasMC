@@ -1,0 +1,74 @@
+{
+    "minecraft:angler": {
+        "protocol_id": 0
+    },
+    "minecraft:archer": {
+        "protocol_id": 1
+    },
+    "minecraft:arms_up": {
+        "protocol_id": 2
+    },
+    "minecraft:blade": {
+        "protocol_id": 3
+    },
+    "minecraft:blank": {
+        "protocol_id": 23
+    },
+    "minecraft:brewer": {
+        "protocol_id": 4
+    },
+    "minecraft:burn": {
+        "protocol_id": 5
+    },
+    "minecraft:danger": {
+        "protocol_id": 6
+    },
+    "minecraft:explorer": {
+        "protocol_id": 7
+    },
+    "minecraft:flow": {
+        "protocol_id": 8
+    },
+    "minecraft:friend": {
+        "protocol_id": 9
+    },
+    "minecraft:guster": {
+        "protocol_id": 10
+    },
+    "minecraft:heart": {
+        "protocol_id": 11
+    },
+    "minecraft:heartbreak": {
+        "protocol_id": 12
+    },
+    "minecraft:howl": {
+        "protocol_id": 13
+    },
+    "minecraft:miner": {
+        "protocol_id": 14
+    },
+    "minecraft:mourner": {
+        "protocol_id": 15
+    },
+    "minecraft:plenty": {
+        "protocol_id": 16
+    },
+    "minecraft:prize": {
+        "protocol_id": 17
+    },
+    "minecraft:scrape": {
+        "protocol_id": 18
+    },
+    "minecraft:sheaf": {
+        "protocol_id": 19
+    },
+    "minecraft:shelter": {
+        "protocol_id": 20
+    },
+    "minecraft:skull": {
+        "protocol_id": 21
+    },
+    "minecraft:snort": {
+        "protocol_id": 22
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "minecraft:direct": {
+        "protocol_id": 2
+    },
+    "minecraft:random": {
+        "protocol_id": 0
+    },
+    "minecraft:random_group": {
+        "protocol_id": 1
+    }
+}

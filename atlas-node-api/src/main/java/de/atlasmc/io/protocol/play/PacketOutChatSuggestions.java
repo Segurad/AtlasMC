@@ -6,7 +6,7 @@ import java.util.List;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
-@DefaultPacketID(packetID = PacketPlay.OUT_CHAT_SUGGESTIONS, definition = "custom_chat_completion")
+@DefaultPacketID(packetID = PacketPlay.OUT_CHAT_SUGGESTIONS, definition = "custom_chat_completions")
 public class PacketOutChatSuggestions extends AbstractPacket implements PacketPlayOut {
 
 	/**

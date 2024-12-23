@@ -3,6 +3,8 @@ package de.atlasmc.io.protocol;
 import java.util.Collection;
 import java.util.List;
 
+import org.joml.Vector3d;
+
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NodePlayer;
 import de.atlasmc.SimpleLocation;
@@ -91,11 +93,22 @@ public interface PlayerConnection extends Messageable {
 	 * @param x
 	 * @param y
 	 * @param z
-	 * @param yaw
 	 * @param pitch
+	 * @param yaw
+	 * @param velocity
+	 * @param flags
 	 * @return teleport id
 	 */
-	int teleport(double x, double y, double z, float yaw, float pitch);
+	int teleport(double x, double y, double z, float pitch, float yaw, Vector3d velocity, int flags);
+
+	/**
+	 * Teleports the player and returns the id of the teleport
+	 * @param loc
+	 * @param velocity
+	 * @param flags
+	 * @return
+	 */
+	int teleport(SimpleLocation loc, Vector3d velocity, int flags);
 	
 	/**
 	 * Returns the id of the last teleport
@@ -232,6 +245,10 @@ public interface PlayerConnection extends Messageable {
 	 * @param onGround
 	 */
 	void setClientOnGround(boolean onGround);
+	
+	boolean isClientPushWall();
+	
+	void setClientPushWall(boolean pushWall);
 
 	PlayerSettings getSettings();
 

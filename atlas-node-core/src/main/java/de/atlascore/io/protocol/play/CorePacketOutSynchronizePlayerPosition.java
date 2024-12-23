@@ -14,24 +14,30 @@ public class CorePacketOutSynchronizePlayerPosition implements PacketIO<PacketOu
 
 	@Override
 	public void read(PacketOutSynchronizePlayerPosition packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+		packet.teleportID = readVarInt(in);
 		packet.x = in.readDouble();
 		packet.y = in.readDouble();
 		packet.z = in.readDouble();
+		packet.velocityX = in.readDouble();
+		packet.velocityY = in.readDouble();
+		packet.velocityZ = in.readDouble();
 		packet.yaw = in.readFloat();
 		packet.pitch = in.readFloat();
-		packet.flags = in.readByte();
-		packet.teleportID = readVarInt(in);
+		packet.flags = in.readInt();
 	}
 
 	@Override
 	public void write(PacketOutSynchronizePlayerPosition packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+		writeVarInt(packet.teleportID, out);
 		out.writeDouble(packet.x);
 		out.writeDouble(packet.y);
 		out.writeDouble(packet.z);
+		out.writeDouble(packet.velocityX);
+		out.writeDouble(packet.velocityY);
+		out.writeDouble(packet.velocityZ);
 		out.writeFloat(packet.yaw);
 		out.writeFloat(packet.pitch);
-		out.writeByte(packet.flags);
-		writeVarInt(packet.teleportID, out);
+		out.writeInt(packet.flags);
 	}
 	
 	@Override

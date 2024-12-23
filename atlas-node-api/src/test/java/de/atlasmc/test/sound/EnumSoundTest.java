@@ -30,7 +30,7 @@ public class EnumSoundTest implements EnumTestCases {
 	@Test
 	@Order(Integer.MAX_VALUE)
 	void testSoundTypes() throws Exception {
-		EnumTest.testRegistryProtocolEnum(EnumSound.class, "registry_minecraft_sound_event.json");
+		EnumTest.testRegistryProtocolEnum(EnumSound.class, "/minecraft/registries/registry_minecraft_sound_event.json");
 	}
 
 }

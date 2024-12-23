@@ -1,0 +1,107 @@
+{
+    "minecraft:banner_black": {
+        "protocol_id": 25
+    },
+    "minecraft:banner_blue": {
+        "protocol_id": 21
+    },
+    "minecraft:banner_brown": {
+        "protocol_id": 22
+    },
+    "minecraft:banner_cyan": {
+        "protocol_id": 19
+    },
+    "minecraft:banner_gray": {
+        "protocol_id": 17
+    },
+    "minecraft:banner_green": {
+        "protocol_id": 23
+    },
+    "minecraft:banner_light_blue": {
+        "protocol_id": 13
+    },
+    "minecraft:banner_light_gray": {
+        "protocol_id": 18
+    },
+    "minecraft:banner_lime": {
+        "protocol_id": 15
+    },
+    "minecraft:banner_magenta": {
+        "protocol_id": 12
+    },
+    "minecraft:banner_orange": {
+        "protocol_id": 11
+    },
+    "minecraft:banner_pink": {
+        "protocol_id": 16
+    },
+    "minecraft:banner_purple": {
+        "protocol_id": 20
+    },
+    "minecraft:banner_red": {
+        "protocol_id": 24
+    },
+    "minecraft:banner_white": {
+        "protocol_id": 10
+    },
+    "minecraft:banner_yellow": {
+        "protocol_id": 14
+    },
+    "minecraft:blue_marker": {
+        "protocol_id": 3
+    },
+    "minecraft:frame": {
+        "protocol_id": 1
+    },
+    "minecraft:jungle_temple": {
+        "protocol_id": 32
+    },
+    "minecraft:mansion": {
+        "protocol_id": 8
+    },
+    "minecraft:monument": {
+        "protocol_id": 9
+    },
+    "minecraft:player": {
+        "protocol_id": 0
+    },
+    "minecraft:player_off_limits": {
+        "protocol_id": 7
+    },
+    "minecraft:player_off_map": {
+        "protocol_id": 6
+    },
+    "minecraft:red_marker": {
+        "protocol_id": 2
+    },
+    "minecraft:red_x": {
+        "protocol_id": 26
+    },
+    "minecraft:swamp_hut": {
+        "protocol_id": 33
+    },
+    "minecraft:target_point": {
+        "protocol_id": 5
+    },
+    "minecraft:target_x": {
+        "protocol_id": 4
+    },
+    "minecraft:trial_chambers": {
+        "protocol_id": 34
+    },
+    "minecraft:village_desert": {
+        "protocol_id": 27
+    },
+    "minecraft:village_plains": {
+        "protocol_id": 28
+    },
+    "minecraft:village_savanna": {
+        "protocol_id": 29
+    },
+    "minecraft:village_snowy": {
+        "protocol_id": 30
+    },
+    "minecraft:village_taiga": {
+        "protocol_id": 31
+    }
+}
