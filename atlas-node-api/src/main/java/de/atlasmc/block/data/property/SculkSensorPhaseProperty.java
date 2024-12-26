@@ -1,27 +1,13 @@
 package de.atlasmc.block.data.property;
 
-import java.io.IOException;
-
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.data.type.SculkSensor;
 import de.atlasmc.block.data.type.SculkSensor.Phase;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 class SculkSensorPhaseProperty extends AbstractEnumProperty<Phase>{
 
 	public SculkSensorPhaseProperty() {
-		super("sculk_sensor_phase");
-	}
-
-	@Override
-	public Phase fromNBT(NBTReader reader) throws IOException {
-		return Phase.getByName(reader.readStringTag());
-	}
-
-	@Override
-	public void toNBT(Phase value, NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeStringTag(key, value.getName());
+		super("sculk_sensor_phase", Phase.class);
 	}
 
 	@Override

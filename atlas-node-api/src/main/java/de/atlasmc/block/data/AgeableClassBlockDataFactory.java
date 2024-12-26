@@ -3,7 +3,6 @@ package de.atlasmc.block.data;
 import java.lang.reflect.InvocationTargetException;
 
 import de.atlasmc.Material;
-import de.atlasmc.inventory.meta.ItemMeta;
 import de.atlasmc.util.FactoryException;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
@@ -15,7 +14,7 @@ public class AgeableClassBlockDataFactory extends ClassBlockDataFactory {
 
 	private final int maxage;
 	
-	public <I extends ItemMeta, A extends Ageable> AgeableClassBlockDataFactory(Class<A> dataInterface, Class<? extends A> data, int maxage) {
+	public <A extends Ageable> AgeableClassBlockDataFactory(Class<A> dataInterface, Class<? extends A> data, int maxage) {
 		super(dataInterface, data);
 		this.maxage = maxage;
 	}

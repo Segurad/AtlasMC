@@ -1,27 +1,13 @@
 package de.atlasmc.block.data.property;
 
-import java.io.IOException;
-
 import de.atlasmc.Axis;
-import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.data.AxisOrientable;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.block.data.BlockData;
 
 class AxisProperty extends AbstractEnumProperty<Axis> {
 
 	public AxisProperty() {
-		super("axis");
-	}
-
-	@Override
-	public Axis fromNBT(NBTReader reader) throws IOException {
-		return Axis.getByName(reader.readStringTag());
-	}
-
-	@Override
-	public void toNBT(Axis value, NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeStringTag(key, value.getName());
+		super("axis", Axis.class);
 	}
 
 	@Override

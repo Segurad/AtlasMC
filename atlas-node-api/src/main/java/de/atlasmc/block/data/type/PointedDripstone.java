@@ -80,24 +80,32 @@ public interface PointedDripstone extends Waterlogged {
 
 		private static List<VerticalDirection> VALUES;
 		
-		private final String nameID;
+		private final String name;
 		
 		private VerticalDirection() {
-			this.nameID = name().toLowerCase();
+			this.name = name().toLowerCase().intern();
 		}
 		
-		public String getNameID() {
-			return nameID;
+		public String getName() {
+			return name;
 		}
 		
-		public static VerticalDirection getByNameID(String nameID) {
-			if (nameID == null)
-				throw new IllegalArgumentException("NameID can not be null!");
-			for (VerticalDirection sound : getValues()) {
-				if (sound.getNameID().equals(nameID))
-					return sound;
+		/**
+		 * Returns the value represented by the name or null if no matching value has been found
+		 * @param name the name of the value
+		 * @return value or null
+		 */
+		public static VerticalDirection getByName(String name) {
+			if (name == null)
+				throw new IllegalArgumentException("Name can not be null!");
+			List<VerticalDirection> values = getValues();
+			final int size = values.size();
+			for (int i = 0; i < size; i++) {
+				VerticalDirection value = values.get(i);
+				if (value.name.equals(name)) 
+					return value;
 			}
-			throw new IllegalArgumentException("No value found with name: " + nameID);
+			return null;
 		}
 		
 		/**

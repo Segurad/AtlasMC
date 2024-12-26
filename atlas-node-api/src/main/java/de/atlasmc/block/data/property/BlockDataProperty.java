@@ -1,6 +1,7 @@
 package de.atlasmc.block.data.property;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -208,6 +209,10 @@ public abstract class BlockDataProperty<T> {
 	
 	public abstract T get(BlockData data);
 	
+	public abstract T fromString(String value);
+	
+	public abstract String toString(T value);
+	
 	public boolean match(BlockData data, T value) {
 		T present = get(data);
 		if (present == value)
@@ -238,6 +243,14 @@ public abstract class BlockDataProperty<T> {
 		if (typeProperties == null)
 			return null;
 		return typeProperties.get(type);
+	}
+	
+
+	public static Collection<BlockDataProperty<?>> getProperties(CharSequence key) {
+		Map<TagType, BlockDataProperty<?>> typeProperties = properties.get(key);
+		if (typeProperties == null)
+			return null;
+		return typeProperties.values();
 	}
 	
 	public static Map<BlockDataProperty<?>, Object> readProperties(NBTReader reader) throws IOException {

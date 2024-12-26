@@ -1,27 +1,13 @@
 package de.atlasmc.block.data.property;
 
-import java.io.IOException;
-
 import de.atlasmc.Instrument;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.data.type.NoteBlock;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 class InstrumentProperty extends AbstractEnumProperty<Instrument> {
 
 	public InstrumentProperty() {
-		super("instrument");
-	}
-
-	@Override
-	public Instrument fromNBT(NBTReader reader) throws IOException {
-		return Instrument.getByName(reader.readStringTag());
-	}
-
-	@Override
-	public void toNBT(Instrument value, NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeStringTag(key, value.getName());
+		super("instrument", Instrument.class);
 	}
 
 	@Override

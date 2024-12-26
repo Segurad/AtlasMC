@@ -26,5 +26,15 @@ public abstract class AbstractBooleanProperty extends BlockDataProperty<Boolean>
 	public void toNBT(Boolean value, NBTWriter writer, boolean systemData) throws IOException {
 		writer.writeByteTag(key, value);
 	}
+	
+	@Override
+	public Boolean fromString(String value) {
+		return Boolean.valueOf(value);
+	}
+	
+	@Override
+	public String toString(Boolean value) {
+		return value.toString();
+	}
 
 }

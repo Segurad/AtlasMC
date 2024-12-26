@@ -1,27 +1,13 @@
 package de.atlasmc.block.data.property;
 
-import java.io.IOException;
-
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.data.type.Bed;
 import de.atlasmc.block.data.type.Bed.Part;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 class PartProperty extends AbstractEnumProperty<Part> {
 
 	public PartProperty() {
-		super("part");
-	}
-
-	@Override
-	public Part fromNBT(NBTReader reader) throws IOException {
-		return Part.getByName(reader.readStringTag());
-	}
-
-	@Override
-	public void toNBT(Part value, NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeStringTag(key, value.getName());
+		super("part", Part.class);
 	}
 
 	@Override

@@ -1,27 +1,13 @@
 package de.atlasmc.block.data.property;
 
-import java.io.IOException;
-
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.data.type.TrialSpawner;
 import de.atlasmc.block.data.type.TrialSpawner.TrialSpawnerState;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 class TrialSpawnerStateProperty extends AbstractEnumProperty<TrialSpawnerState> {
 
 	public TrialSpawnerStateProperty() {
-		super("trial_spawner_state");
-	}
-
-	@Override
-	public TrialSpawnerState fromNBT(NBTReader reader) throws IOException {
-		return TrialSpawnerState.getByName(reader.readStringTag());
-	}
-
-	@Override
-	public void toNBT(TrialSpawnerState value, NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeStringTag(key, value.getName());
+		super("trial_spawner_state", TrialSpawnerState.class);
 	}
 
 	@Override

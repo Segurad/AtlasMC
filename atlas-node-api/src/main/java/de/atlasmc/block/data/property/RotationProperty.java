@@ -11,7 +11,7 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 class RotationProperty extends AbstractEnumProperty<BlockFace> {
 
 	public RotationProperty() {
-		super("rotation");
+		super("rotation", BlockFace.class);
 	}
 
 	@Override

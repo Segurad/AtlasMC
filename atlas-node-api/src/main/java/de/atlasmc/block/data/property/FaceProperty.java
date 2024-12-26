@@ -1,27 +1,13 @@
 package de.atlasmc.block.data.property;
 
-import java.io.IOException;
-
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.data.FaceAttachable;
 import de.atlasmc.block.data.FaceAttachable.AttachedFace;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 class FaceProperty extends AbstractEnumProperty<AttachedFace> {
 
 	public FaceProperty() {
-		super("face");
-	}
-
-	@Override
-	public AttachedFace fromNBT(NBTReader reader) throws IOException {
-		return AttachedFace.getByName(reader.readStringTag());
-	}
-
-	@Override
-	public void toNBT(AttachedFace value, NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeStringTag(key, value.getName());
+		super("face", AttachedFace.class);
 	}
 
 	@Override

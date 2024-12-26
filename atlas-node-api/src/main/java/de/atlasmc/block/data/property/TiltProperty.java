@@ -1,27 +1,13 @@
 package de.atlasmc.block.data.property;
 
-import java.io.IOException;
-
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.data.type.BigDripleaf;
 import de.atlasmc.block.data.type.BigDripleaf.Tilt;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 class TiltProperty extends AbstractEnumProperty<Tilt> {
 
 	public TiltProperty() {
-		super("tilt");
-	}
-
-	@Override
-	public Tilt fromNBT(NBTReader reader) throws IOException {
-		return Tilt.getByName(reader.readStringTag());
-	}
-
-	@Override
-	public void toNBT(Tilt value, NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeStringTag(key, value.getName());
+		super("tilt", Tilt.class);
 	}
 
 	@Override

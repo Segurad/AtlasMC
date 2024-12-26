@@ -26,5 +26,15 @@ public abstract class AbstractIntProperty extends BlockDataProperty<Integer> {
 	public void toNBT(Integer value, NBTWriter writer, boolean systemData) throws IOException {
 		writer.writeIntTag(key, 0);
 	}
+	
+	@Override
+	public Integer fromString(String value) {
+		return Integer.parseInt(value);
+	}
+	
+	@Override
+	public String toString(Integer value) {
+		return value.toString();
+	}
 
 }

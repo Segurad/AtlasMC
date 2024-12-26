@@ -1,27 +1,13 @@
 package de.atlasmc.block.data.property;
 
-import java.io.IOException;
-
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.data.type.PointedDripstone;
 import de.atlasmc.block.data.type.PointedDripstone.VerticalDirection;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 class VerticalDirectionProperty extends AbstractEnumProperty<VerticalDirection> {
 
 	public VerticalDirectionProperty() {
-		super("vertical_direction");
-	}
-
-	@Override
-	public VerticalDirection fromNBT(NBTReader reader) throws IOException {
-		return VerticalDirection.getByNameID(reader.readStringTag());
-	}
-
-	@Override
-	public void toNBT(VerticalDirection value, NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeStringTag(key, value.getNameID());
+		super("vertical_direction", VerticalDirection.class);
 	}
 
 	@Override
