@@ -12,7 +12,7 @@ public class CatTypeTest implements EnumTestCases {
 	@Test
 	@Order(Integer.MAX_VALUE)
 	void testCatTypes() throws Exception {
-		EnumTest.testRegistryProtocolEnum(Type.class, "registry_minecraft_cat_variant.json");
+		EnumTest.testRegistryProtocolEnum(Type.class, "/minecraft/registries/registry_minecraft_cat_variant.json");
 	}
 
 	@Test

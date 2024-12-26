@@ -3,9 +3,10 @@ package de.atlastest.util;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.EnumSet;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.function.Executable;
@@ -181,7 +182,7 @@ public class EnumTest {
 		final Method getByNameID = ReflectionUtils.tryToGetMethod(clazz, "getByName", String.class).get();
 		final Method getID = ReflectionUtils.tryToGetMethod(clazz, "getID").get();
 		final Method getByID = ReflectionUtils.tryToGetMethod(clazz, "getByID", int.class).get();
-		final LinkedList<Executable> checks = new LinkedList<>();
+		final Queue<Executable> checks = new ConcurrentLinkedQueue<>();
 		while (reader.peek() == JsonToken.NAME) {
 			String name = reader.nextName();
 			reader.beginObject();

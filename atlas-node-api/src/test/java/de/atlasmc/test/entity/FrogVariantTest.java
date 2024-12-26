@@ -12,7 +12,7 @@ public class FrogVariantTest implements EnumTestCases {
 	@Test
 	@Order(Integer.MAX_VALUE)
 	void testFrogVariant() throws Exception {
-		EnumTest.testRegistryProtocolEnum(Variant.class, "registry_minecraft_frog_variant.json");
+		EnumTest.testRegistryProtocolEnum(Variant.class, "/minecraft/registries/registry_minecraft_frog_variant.json");
 	}
 
 	@Test

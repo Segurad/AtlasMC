@@ -16,7 +16,6 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.data.BlockDataFactory;
 import de.atlasmc.block.tile.TileEntityFactory;
-import de.atlasmc.inventory.meta.ItemMetaFactory;
 import de.atlasmc.registry.Registries;
 import de.atlastest.AtlasTest;
 
@@ -28,7 +27,6 @@ public class DefaultBlockStateTest {
 			Registries.init(new CoreRegistryHandler());
 		} catch (IllegalStateException e) {}
 		Registries.createInstanceRegistry(Material.class);
-		Registries.createInstanceRegistry(ItemMetaFactory.class);
 		Registries.createInstanceRegistry(BlockDataFactory.class);
 		Registries.createInstanceRegistry(TileEntityFactory.class);
 		MaterialLoader.loadMaterial();

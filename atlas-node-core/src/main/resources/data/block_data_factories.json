@@ -32,17 +32,17 @@
                 }
             },
             {
-                "name": "atlas:orientable",
+                "name": "atlas:axisorientable",
                 "parameters": {
-                    "dataInterface": "de.atlasmc.block.data.Orientable",
-                    "data": "de.atlascore.block.data.CoreOrientable"
+                    "dataInterface": "de.atlasmc.block.data.AxisOrientable",
+                    "data": "de.atlascore.block.data.CoreAxisOrientable"
                 }
             },
             {
-                "name": "atlas:orientable_xz",
+                "name": "atlas:axisorientable_xz",
                 "parameters": {
-                    "dataInterface": "de.atlasmc.block.data.Orientable",
-                    "data": "de.atlascore.block.data.CoreOrientableXZ"
+                    "dataInterface": "de.atlasmc.block.data.AxisOrientable",
+                    "data": "de.atlascore.block.data.CoreAxisOrientableXZ"
                 }
             },
             {

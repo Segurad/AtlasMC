@@ -13,7 +13,6 @@ import de.atlasmc.Material;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.block.data.BlockDataFactory;
 import de.atlasmc.block.tile.TileEntityFactory;
-import de.atlasmc.inventory.meta.ItemMetaFactory;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.util.FactoryException;
@@ -33,8 +32,6 @@ public class MaterialLoader {
 	private static synchronized void load() throws IOException, ClassNotFoundException {
 		if (loaded)
 			return;
-		// load mdf
-		Registry<ItemMetaFactory> IMFs = loadFactories(ItemMetaFactory.class, "/data/item_meta_factories.json");
 		// load bdf
 		Registry<BlockDataFactory> BDFs = loadFactories(BlockDataFactory.class, "/data/block_data_factories.json");
 		// load tef
@@ -46,7 +43,6 @@ public class MaterialLoader {
 		while (reader.hasNext()) {
 			String name = reader.nextName();
 			reader.beginObject();
-			ItemMetaFactory IMF = null;
 			BlockDataFactory BDF = null;
 			TileEntityFactory TEF = null;
 			String var = null;
@@ -60,10 +56,6 @@ public class MaterialLoader {
 			while (reader.hasNext()) {
 				String key = reader.nextName();
 				switch(key) {
-				case "IMF":
-					String mdfKey = reader.nextString();
-					IMF = IMFs.get(mdfKey);
-					break;
 				case "BDF":
 					String bdfKey = reader.nextString();
 					BDF = BDFs.get(bdfKey);
@@ -98,18 +90,10 @@ public class MaterialLoader {
 					reader.skipValue();
 				}
 			}
-			// set default ItemMetaFactory for Blocks
-			if (IMF == null && blockID != -1) {
-				if (TEF != null) {
-					IMF = IMFs.get("atlas:tileentity");
-				} else {
-					IMF = IMFs.get("atlas:blockdata");
-				}
-			}
 			reader.endObject();
 			NamespacedKey nameKey = NamespacedKey.of(name);
 			NamespacedKey clientKey = clientName == null ? nameKey : NamespacedKey.of(clientName);
-			Material mat = new Material(nameKey, clientKey, itemID, blockStateID, blockID, amount, toughness, explosionResistance, IMF, BDF);
+			Material mat = new Material(nameKey, clientKey, itemID, blockStateID, blockID, amount, toughness, explosionResistance, BDF, null);
 			if (TEF != null)
 				mat.setTileEntityFactory(TEF);
 			if (var != null) {

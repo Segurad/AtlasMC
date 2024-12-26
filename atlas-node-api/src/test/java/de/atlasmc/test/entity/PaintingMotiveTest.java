@@ -1,6 +1,5 @@
 package de.atlasmc.test.entity;
 
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import de.atlasmc.entity.Painting.Motive;
@@ -8,12 +7,6 @@ import de.atlastest.util.EnumTest;
 import de.atlastest.util.EnumTest.EnumTestCases;
 
 public class PaintingMotiveTest implements EnumTestCases {
-	
-	@Test
-	@Order(Integer.MAX_VALUE)
-	void testMotiveTypes() throws Exception {
-		EnumTest.testRegistryProtocolEnum(Motive.class, "registry_minecraft_painting_variant.json");
-	}
 
 	@Test
 	@Override

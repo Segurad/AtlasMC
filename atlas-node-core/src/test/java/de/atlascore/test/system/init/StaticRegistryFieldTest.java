@@ -14,7 +14,6 @@ import de.atlasmc.block.data.BlockDataFactory;
 import de.atlasmc.block.tile.TileEntityFactory;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.inventory.ContainerFactory;
-import de.atlasmc.inventory.meta.ItemMetaFactory;
 import de.atlasmc.registry.Registries;
 
 public class StaticRegistryFieldTest {
@@ -31,7 +30,6 @@ public class StaticRegistryFieldTest {
 			Registries.init(new CoreRegistryHandler());
 		} catch (IllegalStateException e) {}
 		Registries.createInstanceRegistry(Material.class);
-		Registries.createInstanceRegistry(ItemMetaFactory.class);
 		Registries.createInstanceRegistry(BlockDataFactory.class);
 		Registries.createInstanceRegistry(TileEntityFactory.class);
 		MaterialLoader.loadMaterial();

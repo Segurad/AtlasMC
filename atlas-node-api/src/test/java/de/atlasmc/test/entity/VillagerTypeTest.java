@@ -12,7 +12,7 @@ public class VillagerTypeTest implements EnumTestCases {
 	@Test
 	@Order(Integer.MAX_VALUE)
 	void testVillagerTypes() throws Exception {
-		EnumTest.testRegistryProtocolEnum(VillagerType.class, "registry_minecraft_villager_type.json");
+		EnumTest.testRegistryProtocolEnum(VillagerType.class, "/minecraft/registries/registry_minecraft_villager_type.json");
 	}
 
 	@Test
