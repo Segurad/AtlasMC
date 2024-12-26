@@ -1,6 +1,9 @@
 package de.atlasmc.inventory.component;
 
+import java.io.IOException;
+
 import de.atlasmc.NamespacedKey;
+import io.netty.buffer.ByteBuf;
 
 public abstract class AbstractItemComponent implements ItemComponent {
 
@@ -14,7 +17,22 @@ public abstract class AbstractItemComponent implements ItemComponent {
 	
 	@Override
 	public boolean isServerOnly() {
-		return false;
+		return true;
+	}
+	
+	@Override
+	public ComponentType getType() {
+		return null;
+	}
+	
+	@Override
+	public void read(ByteBuf buf) throws IOException {
+		// not required for custom components
+	}
+	
+	@Override
+	public void write(ByteBuf buf) throws IOException {
+		// not required for custom components	
 	}
 
 	@Override

@@ -12,10 +12,13 @@ import de.atlasmc.block.tile.Banner.PatternType;
 import de.atlasmc.block.tile.Banner.ResourcePatternType;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.BannerPatternsComponent;
+import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
+import io.netty.buffer.ByteBuf;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CoreBannerPatternsComponent extends AbstractItemComponent implements BannerPatternsComponent {
 
@@ -144,6 +147,61 @@ public class CoreBannerPatternsComponent extends AbstractItemComponent implement
 			}
 			reader.readNextEntry();
 			addPattern(new Pattern(color, pattern));
+		}
+	}
+	
+	@Override
+	public ComponentType getType() {
+		return ComponentType.BANNER_PATTERNS;
+	}
+	
+	@Override
+	public boolean isServerOnly() {
+		return false;
+	}
+	
+	@Override
+	public void read(ByteBuf buf) {
+		final int count = readVarInt(buf);
+		if (count == 0) {
+			return;
+		}
+		List<Pattern> patterns = getPatterns();
+		patterns.clear();
+		for (int i = 0; i < count; i++) {
+			final int typeID = readVarInt(buf);
+			PatternType type;
+			if (typeID > 0) {
+				type = EnumPatternType.getByID(typeID-1);
+			} else {
+				NamespacedKey key = readIdentifier(buf);
+				String translation = readString(buf);
+				type = new ResourcePatternType(key, translation);
+			}
+			DyeColor color = DyeColor.getByID(readVarInt(buf));
+			patterns.add(new Pattern(color, type));
+		}
+	}
+	
+	@Override
+	public void write(ByteBuf buf) {
+		if (patterns == null || patterns.isEmpty()) {
+			writeVarInt(0, buf);
+			return;
+		}
+		final int size = patterns.size();
+		writeVarInt(size, buf);
+		for (int i = 0; i < size; i++) {
+			Pattern pattern = patterns.get(i);
+			PatternType type = pattern.getType();
+			if (type instanceof EnumPatternType enumType) {
+				writeVarInt(enumType.getID() + 1, buf);
+			} else if (type instanceof ResourcePatternType resource){
+				writeVarInt(0, buf);
+				writeIdentifier(resource.getAssetID(), buf);
+				writeString(resource.getTranslationKey(), buf);
+			}
+			writeVarInt(pattern.getColor().getID(), buf);
 		}
 	}
 

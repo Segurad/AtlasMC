@@ -117,18 +117,19 @@ public class NamespacedKey {
 		return true;
 	}
 
-	public static NamespacedKey of(String namespacedKey) {
+	public static NamespacedKey of(CharSequence namespacedKey) {
 		if (namespacedKey == null)
 			throw new IllegalArgumentException("NamespacedKey can not be null!");
 		NamespacedKey k = CACHE.get(namespacedKey);
 		if (k != null)
 			return k;
-		int first = namespacedKey.indexOf(':');
+		String rawKey = namespacedKey.toString();
+		int first = rawKey.indexOf(':');
 		if (first < 1 || !NAMESPACED_KEY_PATTERN.matcher(namespacedKey).matches())
 			throw new IllegalArgumentException("Invalid namespaced key: " + namespacedKey);
-		String namespace = namespacedKey.substring(0, first);
-		String key = namespacedKey.substring(first+1);
-		return new NamespacedKey(namespace, key, namespacedKey);
+		String namespace = rawKey.substring(0, first);
+		String key = rawKey.substring(first+1);
+		return new NamespacedKey(namespace, key, rawKey);
 	}
 	
 	public static NamespacedKey of(String namespace, String key) {

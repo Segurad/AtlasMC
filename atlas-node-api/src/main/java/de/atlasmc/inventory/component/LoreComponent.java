@@ -1,5 +1,6 @@
 package de.atlasmc.inventory.component;
 
+import java.util.Collection;
 import java.util.List;
 
 import de.atlasmc.NamespacedKey;
@@ -18,5 +19,7 @@ public interface LoreComponent extends ItemComponent {
 	void removeLore(Chat chat);
 	
 	LoreComponent clone();
+
+	void setLore(Collection<Chat> lore);
 
 }

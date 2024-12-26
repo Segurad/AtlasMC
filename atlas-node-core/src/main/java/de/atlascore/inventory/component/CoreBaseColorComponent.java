@@ -6,8 +6,11 @@ import de.atlasmc.DyeColor;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.BaseColorComponent;
+import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
+import io.netty.buffer.ByteBuf;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CoreBaseColorComponent extends AbstractItemComponent implements BaseColorComponent {
 
@@ -40,6 +43,30 @@ public class CoreBaseColorComponent extends AbstractItemComponent implements Bas
 	@Override
 	public void setColor(DyeColor color) {
 		this.color = color;
+	}
+	
+	@Override
+	public ComponentType getType() {
+		return ComponentType.BASE_COLOR;
+	}
+	
+	@Override
+	public boolean isServerOnly() {
+		return false;
+	}
+	
+	@Override
+	public void read(ByteBuf buf) {
+		color = DyeColor.getByID(readVarInt(buf));
+	}
+	
+	@Override
+	public void write(ByteBuf buf) {
+		if (color == null) {
+			writeVarInt(0, buf);
+		} else {
+			writeVarInt(color.getID(), buf);
+		}
 	}
 
 }

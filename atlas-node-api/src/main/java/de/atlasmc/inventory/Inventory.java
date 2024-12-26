@@ -88,16 +88,15 @@ public interface Inventory extends Iterable<ItemStack> {
 	 * @param item
 	 */
 	default void remove(ItemStack item) {
-		removeSimilar(item, false, false);
+		removeSimilar(item, false);
 	}
 	
 	/**
 	 * Removes all stacks in the inventory that are similar to the given stack
 	 * @param item
 	 * @param ignoreAmount
-	 * @param ignoreDamage
 	 */
-	void removeSimilar(ItemStack item, boolean ignoreAmount, boolean ignoreDamage);
+	void removeSimilar(ItemStack item, boolean ignoreAmount);
 	
 	/**
 	 * Removes all stacks in the inventory that match the given material

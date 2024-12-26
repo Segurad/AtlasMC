@@ -1,5 +1,6 @@
 package de.atlasmc.io.protocol.play;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.io.ProtocolException;
 import de.atlasmc.util.palette.SingleValuePalette;
 import de.atlasmc.world.Chunk;
 import de.atlasmc.world.ChunkSection;
@@ -32,7 +34,11 @@ public class PacketOutChunkBiomes extends AbstractPacket implements PacketPlayOu
 		if (chunk == null)
 			throw new IllegalArgumentException("Chunk can not be null!");
 		BiomeData data = new BiomeData();
-		data.setChunk(chunk);
+		try {
+			data.setChunk(chunk);
+		} catch (IOException e) {
+			throw new ProtocolException("Error while writing biome data!", e);
+		}
 		getChunks().add(data);
 	}
 
@@ -47,7 +53,7 @@ public class PacketOutChunkBiomes extends AbstractPacket implements PacketPlayOu
 		public int z;
 		public ByteBuf data;
 		
-		public void setChunk(Chunk chunk) {
+		public void setChunk(Chunk chunk) throws IOException {
 			x = chunk.getX();
 			z = chunk.getZ();
 			data = Unpooled.buffer(calcDataSize(chunk));

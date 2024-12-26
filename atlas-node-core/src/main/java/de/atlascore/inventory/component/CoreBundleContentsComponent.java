@@ -8,9 +8,12 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.BundleContentsComponent;
+import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
+import io.netty.buffer.ByteBuf;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CoreBundleContentsComponent extends AbstractItemComponent implements BundleContentsComponent {
 
@@ -77,6 +80,43 @@ public class CoreBundleContentsComponent extends AbstractItemComponent implement
 		if (items == null)
 			return;
 		items.remove(item);
+	}
+	
+	@Override
+	public ComponentType getType() {
+		return ComponentType.BUNDLE_CONTENTS;
+	}
+	
+	@Override
+	public boolean isServerOnly() {
+		return false;
+	}
+	
+	@Override
+	public void read(ByteBuf buf) throws IOException {
+		final int count = readVarInt(buf);
+		if (count == 0)
+			return;
+		List<ItemStack> items = getItems();
+		items.clear();
+		for (int i = 0; i < count; i++) {
+			items.add(readSlot(buf));
+		}
+	}
+	
+	@Override
+	public void write(ByteBuf buf) throws IOException {
+		if (items == null || items.isEmpty()) {
+			writeVarInt(0, buf);
+			return;
+		}
+		List<ItemStack> items = getItems();
+		final int size = items.size();
+		writeVarInt(size, buf);
+		for (int i = 0; i < size; i++) {
+			ItemStack item = items.get(i);
+			writeSlot(item, buf);
+		}
 	}
 
 }

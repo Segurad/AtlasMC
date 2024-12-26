@@ -8,25 +8,25 @@ import de.atlasmc.util.EnumValueCache;
 
 public enum EquipmentSlot implements EnumID, EnumName, EnumValueCache {
 
-	
+	/**
+	 * Slot that defines any {@link EquipmentSlot}
+	 */
+	ANY("any"),
 	MAIN_HAND("mainhand"),
 	OFF_HAND("offhand"),
-	FEET("feet"),
-	LEGS("legs"),
-	CHEST("chest"),
-	HEAD("head"),
 	/**
 	 * Slot that defines a general hand slot {@link MainHand} or {@link #OFF_HAND}
 	 */
 	HAND("hand"),
+	FEET("feet"),
+	LEGS("legs"),
+	CHEST("chest"),
+	HEAD("head"),
+	ARMOR("armor"),
 	/**
 	 * Slot that defines a general body slot {@link #HEAD}, {@link #CHEST}, {@link #LEGS} or {@link #FEET}
 	 */
-	BODY("body"),
-	/**
-	 * Slot that defines any {@link EquipmentSlot}
-	 */
-	ANY("any");
+	BODY("body");
 	
 	private static List<EquipmentSlot> VALUES;
 	

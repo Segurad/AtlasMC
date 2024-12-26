@@ -10,11 +10,15 @@ import de.atlasmc.entity.Salmon.Type;
 import de.atlasmc.entity.TropicalFish.Pattern;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.BucketEntityDataComponent;
+import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.NBTUtil;
+import de.atlasmc.util.nbt.io.NBTNIOReader;
+import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
+import io.netty.buffer.ByteBuf;
 
 public class CoreBucketEntityDataComponent extends AbstractItemComponent implements BucketEntityDataComponent {
 
@@ -100,6 +104,11 @@ public class CoreBucketEntityDataComponent extends AbstractItemComponent impleme
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		writer.writeCompoundTag(getNamespacedKeyRaw());
+		writeNBTContent(writer, systemData);
+		writer.writeEndTag();
+	}
+	
+	protected void writeNBTContent(NBTWriter writer, boolean systemData) throws IOException {
 		if (!ai)
 			writer.writeByteTag(NBT_NO_AI, true);
 		if (silent)
@@ -123,7 +132,6 @@ public class CoreBucketEntityDataComponent extends AbstractItemComponent impleme
 		}
 		if (type != null)
 			writer.writeStringTag(NBT_TYPE, type.getName());
-		writer.writeEndTag();
 	}
 
 	@Override
@@ -260,6 +268,32 @@ public class CoreBucketEntityDataComponent extends AbstractItemComponent impleme
 	@Override
 	public void setSalmonType(Type type) {
 		this.type = type;
+	}
+	
+	@Override
+	public ComponentType getType() {
+		return ComponentType.BUCKET_ENTITY_DATA;
+	}
+	
+	@Override
+	public boolean isServerOnly() {
+		return false;
+	}
+	
+	@Override
+	public void read(ByteBuf buf) throws IOException {
+		NBTReader reader = new NBTNIOReader(buf, true);
+		fromNBT(reader);
+		reader.close();
+	}
+	
+	@Override
+	public void write(ByteBuf buf) throws IOException {
+		NBTWriter writer = new NBTNIOWriter(buf, true);
+		writer.writeCompoundTag(null);
+		writeNBTContent(writer, false);
+		writer.writeEndTag();
+		writer.close();
 	}
 
 }

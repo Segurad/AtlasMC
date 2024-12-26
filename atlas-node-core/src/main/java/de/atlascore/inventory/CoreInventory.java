@@ -98,12 +98,12 @@ public class CoreInventory implements Inventory {
 	}
 	
 	@Override
-	public void removeSimilar(ItemStack item, boolean ignoreAmount, boolean ignoreDamage) {
+	public void removeSimilar(ItemStack item, boolean ignoreAmount) {
 		if (item == null)
 			throw new IllegalArgumentException("Item can not be null!");
 		for (int i = 0; i < size; i++) {
 			ItemStack slotitem = contents[i];
-			if (item.isSimilar(slotitem, ignoreAmount, ignoreDamage)) {
+			if (item.isSimilar(slotitem, ignoreAmount)) {
 				contents[i] = null;
 				if (autoUpdate) {
 					stateID++;
@@ -143,7 +143,7 @@ public class CoreInventory implements Inventory {
 			int missing = slotItem.getType().getMaxAmount()-slotItem.getAmount();
 			if (missing <= 0)
 				continue;
-			if (!slotItem.isSimilar(slotItem, true, false))
+			if (!slotItem.isSimilar(slotItem, true))
 				continue;
 			if (restAmount <= missing) {
 				ItemStack clone = slotItem.clone();

@@ -1,35 +1,74 @@
 package de.atlasmc.inventory;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import de.atlasmc.Material;
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.ItemComponent;
-import de.atlasmc.inventory.meta.ItemMeta;
+import de.atlasmc.inventory.component.ItemComponentFactory;
+import de.atlasmc.registry.Registries;
+import de.atlasmc.registry.Registry;
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTException;
+import de.atlasmc.util.nbt.NBTField;
+import de.atlasmc.util.nbt.NBTFieldContainer;
 import de.atlasmc.util.nbt.NBTHolder;
+import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.tag.NBT;
+import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
+import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 
 public class ItemStack implements NBTHolder {
 
-	protected static final CharKey
-	NBT_COUNT = CharKey.literal("Count"),
-	NBT_ID = CharKey.literal("id"),
-	NBT_TAG = CharKey.literal("tag"),
-	NBT_CUSTOM_CREATIVE_LOCK = CharKey.literal("CustomCreativeLock"),
-	NBT_SLOT = CharKey.literal("Slot"),
-	NBT_COMPONENTS = CharKey.literal("components"); 
+	protected static final NBTFieldContainer<ItemStack> NBT_FIELDS;
 	
-	private byte amount;
+	protected static final CharKey
+	NBT_COUNT = CharKey.literal("count"),
+	NBT_ID = CharKey.literal("id"),
+	NBT_SLOT = CharKey.literal("Slot"),
+	NBT_COMPONENTS = CharKey.literal("components"),
+	NBT_IGNORED_COMPONENTS = CharKey.literal("ignored-components");
+	
+	static {
+		NBT_FIELDS = NBTFieldContainer.newContainer();
+		NBT_FIELDS.setField(NBT_ID, NBTField.skip());
+		NBT_FIELDS.setField(NBT_COUNT, (holder, reader) -> {
+			holder.amount = reader.readIntTag();
+		});
+		NBT_FIELDS.setField(NBT_SLOT, (holder, reader) -> {
+			holder.slot = reader.readByteTag();
+		});
+		NBT_FIELDS.setField(NBT_COMPONENTS, (holder, reader) -> {
+			reader.readNextEntry();
+			Registry<ItemComponentFactory> registry = Registries.getInstanceRegistry(ItemComponentFactory.class);
+			while (reader.getType() != TagType.TAG_END) {
+				NamespacedKey key = NamespacedKey.of(reader.getFieldName());
+				ItemComponentFactory factory = registry.get(key);
+				holder.setComponent(factory.createComponent());
+			}
+			reader.readNextEntry();
+		});
+		NBT_FIELDS.setField(NBT_IGNORED_COMPONENTS, (holder, reader) -> {
+			reader.readNextEntry();
+			while (reader.getRestPayload() > 0) {
+				
+			}
+		});
+	}
+	
+	private short slot;
+	private int amount;
 	private Material type;
-	private ItemMeta meta;
 	private Map<NamespacedKey, ItemComponent> components;
+	private Set<ComponentType> ignoredComponents;
 
 	/**
 	 * Creates a ItemStack of the Type {@link Material#AIR} with amount of 1
@@ -49,88 +88,175 @@ public class ItemStack implements NBTHolder {
 		setAmount(amount);
 	}
 	
+	/**
+	 * Returns a map containing all components of this ItemStack
+	 * @return components
+	 */
+	@NotNull
 	public Map<NamespacedKey, ItemComponent> getComponents() {
 		if (components == null)
-			return Map.of();
+			components = new Object2ObjectArrayMap<>();
 		return components;
 	}
 	
+	/**
+	 * Returns whether or not this ItemStack has components
+	 * @return true if components present
+	 */
 	public boolean hasComponents() {
 		return components != null && !components.isEmpty();
 	}
 	
+	/**
+	 * Returns whether or not a component with the given key is present
+	 * @param key to check
+	 * @return true if present
+	 */
 	public boolean hasComponent(NamespacedKey key) {
 		if (components == null)
 			return false;
 		return components.containsKey(key);
 	}
 	
-	public boolean hasComponent(Class<? extends ItemComponent> clazz) {
-		if (components == null || components.isEmpty())
-			return false;
-		return components.containsKey(ItemComponent.getComponentKey(clazz));
-	}
-	
-	public ItemComponent getComponent(NamespacedKey key) {
-		if (components == null)
+	/**
+	 * Returns the component with the given key or null.
+	 * If no component with the given key is present a component will be created
+	 * @param <T> to cast
+	 * @param key of the component
+	 * @return component or null
+	 */
+	@Nullable
+	public <T extends ItemComponent> T getComponent(NamespacedKey key) {
+		if (key == null)
+			throw new IllegalArgumentException("Key can not be null!");
+		if (components != null || !components.isEmpty()) {
+			@SuppressWarnings("unchecked")
+			T component = (T) components.get(key);
+			if (component != null)
+				return component;
+		}
+		Registry<ItemComponentFactory> registry = Registries.getInstanceRegistry(ItemComponentFactory.class);
+		ItemComponentFactory factory = registry.get(key);
+		if (factory == null)
 			return null;
-		return components.get(key);
+		@SuppressWarnings("unchecked")
+		T component = (T) factory.createComponent();
+		getComponents().put(key, component);
+		return component;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public <T extends ItemComponent> T getComponent(Class<T> clazz) {
-		ItemComponent comp = components.get(ItemComponent.getComponentKey(clazz));
-		if (comp == null || !clazz.isInstance(comp))
+	/**
+	 * Returns the component with the given key or null.
+	 * If {@link #getComponent(NamespacedKey)} returns null and the key is not in {@link #getIgnoredComponents()}
+	 * {@link Material#getDefaultComponent(NamespacedKey)} will be used
+	 * @param <T> to cast
+	 * @param key of the component
+	 * @return component or null
+	 */
+	@Nullable
+	public <T extends ItemComponent> T getEffectiveComponent(NamespacedKey key) {
+		ItemComponent component = null;
+		if (components == null) {
+			component = components.get(key);
+		}
+		if (component == null) {
+			component = type.getDefaultComponent(key);
+			if (ignoredComponents != null && ignoredComponents.contains(component.getType()))
+				return null;
+		}
+		if (component == null)
 			return null;
-		return (T) comp;
+		@SuppressWarnings("unchecked")
+		T type = (T) component;
+		return type;
 	}
 	
+	/**
+	 * Sets a new ItemComponent and returns the previous value
+	 * @param component to set
+	 * @return component or null
+	 */
 	public ItemComponent setComponent(ItemComponent component) {
 		if (component == null)
 			throw new IllegalArgumentException("Component can not be null!");
+		return getComponents().put(component.getNamespacedKey(), component);
+	}
+	
+	/**
+	 * Removes the component with the given key
+	 * @param key to remove
+	 * @return component or null
+	 */
+	public ItemComponent removeComponent(NamespacedKey key) {
+		if (key == null)
+			throw new IllegalArgumentException("Key can not be null!");
 		if (components == null)
-			components = new HashMap<>();
-		return components.put(component.getNamespacedKey(), component);
+			return null;
+		return components.remove(key);
+	}
+	
+	/**
+	 * Returns a set containing key of all ignored default components.
+	 * @return keys
+	 */
+	@NotNull
+	public Set<ComponentType> getIgnoredComponents() {
+		if (ignoredComponents == null)
+			ignoredComponents = new ObjectArraySet<>();
+		return ignoredComponents;
 	}
 
+	/**
+	 * Whether or not ignored default components are present
+	 * @return true if ignored components
+	 */
+	public boolean hasIgnoredComponents() {
+		return ignoredComponents != null && !ignoredComponents.isEmpty();
+	}
+	
+	/**
+	 * Adds the given type to the ignored components set.
+	 * @param type
+	 */
+	public void addIgnoredComponent(ComponentType type) {
+		if (type == null)
+			throw new IllegalArgumentException("Type can not be null!");
+		getIgnoredComponents().add(type);
+	}
+	
+	/**
+	 * Removes the given type from the ignored components set.
+	 * @param type
+	 */
+	public void removeIgnoredComponent(ComponentType type) {
+		if (type == null)
+			throw new IllegalArgumentException("Type can not be null!");
+		if (ignoredComponents == null)
+			return;
+		ignoredComponents.remove(type);
+	}
+
+	/**
+	 * Returns the type of this ItemStack
+	 * @return type
+	 */
+	@NotNull
 	public Material getType() {
 		return type;
 	}
 	
+	/**
+	 * Returns the amount of this ItemStack.
+	 * @return amount
+	 */
 	public int getAmount() {
 		return amount;
 	}
 	
 	public void setAmount(int amount) {
-		if (amount < -128 || amount > 127) 
-			throw new IllegalArgumentException("Amount must be between -128 and 127: " + amount);
-		this.amount = (byte) amount;
-	}
-	
-	public ItemMeta getItemMeta() {
-		if (!hasItemMeta()) meta = type.createItemMeta();
-		return meta;
-	}
-	
-	public boolean hasItemMeta() {
-		return meta != null;
-	}
-	
-	public boolean setItemMeta(ItemMeta meta) {
-		if (type.isValidMeta(meta)) return false;
-		this.meta = meta;
-		return true;
-	}
-
-	/**
-	 * 
-	 * @return the NBT or null if the ItemStack has no ItemMeta
-	 * @throws IOException 
-	 */
-	public NBT getMetaAsNBT() throws IOException {
-		if (meta == null) 
-			return null;
-		return meta.toNBT();
+		if (amount < 1) 
+			throw new IllegalArgumentException("Amount must be higher than 0: " + amount);
+		this.amount = amount;
 	}
 
 	/**
@@ -140,20 +266,22 @@ public class ItemStack implements NBTHolder {
 	 * @return true if similar
 	 */
 	public boolean isSimilar(ItemStack item) {
-		return isSimilar(item, true, true);
+		return isSimilar(item, true);
 	}
 	
 	public ItemStack clone() {
 		try {
 			ItemStack clone = (ItemStack) super.clone();
-			if (hasItemMeta()) clone.setItemMeta(getItemMeta().clone());
+			if (components != null) 
+				clone.components = new Object2ObjectArrayMap<>(components);
+			if (ignoredComponents != null)
+				clone.ignoredComponents = new ObjectArraySet<>(ignoredComponents);
 			return clone;
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
+		} catch (CloneNotSupportedException e) {}
 		return null;
 	}
 
+	
 	public int getMaxStackSize() {
 		return type.getMaxAmount();
 	}
@@ -167,7 +295,7 @@ public class ItemStack implements NBTHolder {
 		if (!(obj instanceof ItemStack))
 			return false;
 		ItemStack item = (ItemStack) obj;
-		return isSimilar(item, false, false);
+		return isSimilar(item, false);
 	}
 	
 	/**
@@ -177,7 +305,7 @@ public class ItemStack implements NBTHolder {
 	 * @param ignoreDamage whether or not the damage values should be ignored in this comparison
 	 * @return true if similar
 	 */
-	public boolean isSimilar(ItemStack item, boolean ignoreAmount, boolean ignoreDamage) {
+	public boolean isSimilar(ItemStack item, boolean ignoreAmount) {
 		if (item == null) 
 			return false;
 		if (item == this) 
@@ -188,12 +316,15 @@ public class ItemStack implements NBTHolder {
 			return false; 
 		if (!ignoreAmount && amount != item.getAmount())
 			return false;
-		if (!hasItemMeta())
-			return !item.hasItemMeta();
-		if (!item.hasItemMeta())
+		if (components != null) {
+			if (item.components == null)
+				return false;
+			if (!components.equals(item.components))
+				return false;
+		} else if (item.components != null) {
 			return false;
-		ItemMeta meta = item.getItemMeta();
-		return meta.isSimilar(meta, ignoreDamage);
+		}
+		return true;
 	}
 	
 	/**
@@ -204,16 +335,26 @@ public class ItemStack implements NBTHolder {
 	 * @throws IOException 
 	 */
 	public void toSlot(NBTWriter writer, boolean systemData, int slot) throws IOException {
-		if (systemData)
-			writer.writeStringTag("id", getType().getNamespacedKeyRaw());
-		else
-			writer.writeStringTag("id", getType().getClientKey().toString());
-		writer.writeByteTag("Count", (byte) getAmount());
-		if (slot != -999) writer.writeByteTag(NBT_SLOT, slot);
-		if(hasItemMeta()) {
-			writer.writeCompoundTag("tag");
-			getItemMeta().toNBT(writer, systemData);
+		if (systemData) {
+			writer.writeStringTag(NBT_ID, getType().getNamespacedKeyRaw());
+		} else {
+			writer.writeStringTag(NBT_ID, getType().getClientKey().toString());
+		}
+		writer.writeByteTag(NBT_COUNT, (byte) getAmount());
+		if (slot != -999) 
+			writer.writeByteTag(NBT_SLOT, slot);
+		if(components != null && !components.isEmpty()) {
+			writer.writeCompoundTag(NBT_COMPONENTS);
+			for (ItemComponent comp : components.values()) {
+				comp.toNBT(writer, systemData);
+			}
 			writer.writeEndTag();
+		}
+		if (systemData && ignoredComponents != null && !ignoredComponents.isEmpty()) {
+			writer.writeListTag(NBT_IGNORED_COMPONENTS, TagType.STRING, ignoredComponents.size());
+			for (ComponentType type : ignoredComponents) {
+				writer.writeStringTag(null, type.getKey().toString());
+			}
 		}
 	}
 
@@ -224,7 +365,7 @@ public class ItemStack implements NBTHolder {
 
 	@Override
 	public void fromNBT(NBTReader reader) throws IOException {
-		fromSlot(reader);
+		NBTUtil.readNBT(NBT_FIELDS, this, reader);
 	}
 	
 	/**
@@ -234,30 +375,8 @@ public class ItemStack implements NBTHolder {
 	 * @throws IOException 
 	 */
 	public int fromSlot(NBTReader reader) throws IOException {
-		int slot = -999;
-		final int depth = reader.getDepth();
-		while (depth <= reader.getDepth()) {
-			final CharSequence value = reader.getFieldName();
-			if (NBT_COUNT.equals(value)) 
-				amount = reader.readByteTag();
-			else if (NBT_CUSTOM_CREATIVE_LOCK.equals(value)) 
-				reader.skipTag(); // TODO skip creative lock because i don't know if it is used
-			else if (NBT_ID.equals(value))
-				reader.readStringTag(); // TODO skipped material should be initiated by creating the stack
-			else if (NBT_SLOT.equals(value))
-				slot = reader.readByteTag();
-			else if (NBT_TAG.equals(value))
-				if (reader.getType() != TagType.COMPOUND) {
-					reader.skipTag();
-				} else {
-					reader.readNextEntry();
-					getItemMeta().fromNBT(reader);
-				}
-			else
-				reader.skipTag();
-		}
-		if (reader.getType() == TagType.TAG_END)
-			reader.skipTag();
+		slot = -999;
+		NBTUtil.readNBT(NBT_FIELDS, this, reader);
 		return slot;
 	}
 	
@@ -303,8 +422,10 @@ public class ItemStack implements NBTHolder {
 		int h = 1;
 		h = 31 * h + amount;
 		h = 31 * h + type.hashCode();
-		if (meta != null)
-			h = 31 * h + meta.hashCode();
+		if (components != null)
+			h = 31 * h + components.hashCode();
+		if (ignoredComponents != null)
+			h = 31 * h + ignoredComponents.hashCode();
 		return h;
 	}
 	

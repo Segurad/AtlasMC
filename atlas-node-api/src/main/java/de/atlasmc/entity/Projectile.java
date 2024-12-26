@@ -33,7 +33,8 @@ public interface Projectile extends Entity {
 		EXP_BOTTLE(ExpBottle.class),
 		POTION(Potion.class),
 		TRIDENT(Trident.class),
-		WITHER_SKULL(WitherSkull.class);
+		WITHER_SKULL(WitherSkull.class),
+		WIND_CHARGE(WindCharge.class);
 
 		private Class<? extends Projectile> pro;
 
@@ -77,6 +78,8 @@ public interface Projectile extends Entity {
 				return (Projectile) EntityType.TRIDENT.create(world);
 			case WITHER_SKULL:
 				return (Projectile) EntityType.WITHER_SKULL.create(world);
+			case WIND_CHARGE:
+				return (Projectile) EntityType.WIND_CHARGE.create(world);
 			default:
 				throw new IllegalStateException("Missing create implementation for type: " + this.name());
 			}

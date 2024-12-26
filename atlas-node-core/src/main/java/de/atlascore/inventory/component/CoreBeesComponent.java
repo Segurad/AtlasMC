@@ -9,10 +9,15 @@ import de.atlasmc.entity.Bee;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.BeesComponent;
+import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.io.NBTNIOReader;
+import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
+import io.netty.buffer.ByteBuf;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CoreBeesComponent extends AbstractItemComponent implements BeesComponent {
 	
@@ -110,6 +115,57 @@ public class CoreBeesComponent extends AbstractItemComponent implements BeesComp
 	@Override
 	public int getBeeCount() {
 		return bees == null ? 0 : bees.size();
+	}
+	
+	@Override
+	public ComponentType getType() {
+		return ComponentType.BEES;
+	}
+	
+	@Override
+	public boolean isServerOnly() {
+		return false;
+	}
+	
+	@Override
+	public void read(ByteBuf buf) throws IOException {
+		final int count = readVarInt(buf);
+		if (count == 0) {
+			return;
+		}
+		List<Bee> bees = getBees();
+		bees.clear();
+		NBTReader reader = new NBTNIOReader(buf, true);
+		for (int i = 0; i < count; i++) {
+			Entity ent = Entity.getFromNBT(reader);
+			int ticksInHive = readVarInt(buf);
+			int minTicksInHive = readVarInt(buf);
+			if (ent instanceof Bee bee) {
+				bee.setTicksInHive(ticksInHive);
+				bee.setHiveMinOccupationTicks(minTicksInHive);
+				bees.add(bee);
+			}
+		}
+		reader.close();
+	}
+	
+	@Override
+	public void write(ByteBuf buf) throws IOException {
+		if (bees == null || bees.isEmpty()) {
+			writeVarInt(0, buf);
+			return;
+		}
+		List<Bee> bees = getBees();
+		final int count = bees.size();
+		writeVarInt(count, buf);
+		NBTWriter writer = new NBTNIOWriter(buf, true);
+		for (int i = 0; i < count; i++) {
+			Bee bee = bees.get(i);
+			bee.toNBT(writer, false);
+			writeVarInt(bee.getTicksInHive(), buf);
+			writeVarInt(bee.getHiveMinOccupationTicks(), buf);
+		}
+		writer.close();
 	}
 
 }

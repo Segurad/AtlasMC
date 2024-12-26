@@ -10,8 +10,7 @@ import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.block.tile.TileEntityFactory;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.inventory.meta.ItemMeta;
-import de.atlasmc.inventory.meta.ItemMetaFactory;
+import de.atlasmc.inventory.component.ItemComponent;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.registry.RegistryHolder;
@@ -1440,7 +1439,7 @@ public class Material implements ClientNamespaced {
 	private final byte max;
 	private final float toughness;
 	private final float explosionResistance;
-	private ItemMetaFactory itemMetaFactory;
+	private Map<NamespacedKey, ItemComponent> defaultComponents;
 	private BlockDataFactory blockDataFactory;
 	private TileEntityFactory tileEntityFactory;
 	
@@ -1455,7 +1454,7 @@ public class Material implements ClientNamespaced {
 	 * @param explosionResistance
 	 * @param mdf null to use MetaDataFactory.DEFAULT
 	 */
-	public Material(NamespacedKey key, NamespacedKey clientKey, short itemID, short blockStateID, short blockID, byte maxAmount, float toughness, float explosionResistance, ItemMetaFactory itemMetaFactory, BlockDataFactory blockDataFactory) {
+	public Material(NamespacedKey key, NamespacedKey clientKey, short itemID, short blockStateID, short blockID, byte maxAmount, float toughness, float explosionResistance, BlockDataFactory blockDataFactory, Map<NamespacedKey, ItemComponent> components) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
 		if (clientKey == null)
@@ -1469,8 +1468,8 @@ public class Material implements ClientNamespaced {
 		this.toughness = toughness;
 		this.explosionResistance = explosionResistance;
 		registerMaterial();
-		setMetaDataFactory(itemMetaFactory);
 		setBlockDataFactory(blockDataFactory);
+		setDefaulComponents(components);
 	}
 	
 	public short getItemID() {
@@ -1493,22 +1492,6 @@ public class Material implements ClientNamespaced {
 		return explosionResistance;
 	}
 	
-	/**
-	 * Returns the Material's MetaDataFactory or MetaDataFactory#DEFAULT
-	 * @return MetaDataFactory
-	 */
-	public ItemMetaFactory getMetaDataFactory() {
-		return itemMetaFactory;
-	}
-	
-	public void setMetaDataFactory(ItemMetaFactory factory) {
-		if (factory == null) {
-			itemMetaFactory = Registries.getInstanceDefault(ItemMetaFactory.class);
-		} else {
-			itemMetaFactory = factory;
-		}
-	}
-	
 	public BlockDataFactory getBlockDataFactory() {
 		return blockDataFactory;
 	}
@@ -1529,10 +1512,6 @@ public class Material implements ClientNamespaced {
 		this.tileEntityFactory = factory;
 	}
 	
-	public ItemMeta createItemMeta() {
-		return itemMetaFactory.createMeta(this);
-	}
-	
 	public BlockData createBlockData() {
 		return blockDataFactory.createData(this);
 	}
@@ -1546,10 +1525,6 @@ public class Material implements ClientNamespaced {
 	
 	public int getTileID() {
 		return tileEntityFactory != null ? tileEntityFactory.getTileID() : -1;
-	}
-	
-	public boolean isValidMeta(ItemMeta meta) {
-		return itemMetaFactory.isValidMeta(meta);
 	}
 	
 	public boolean isValidData(BlockData data) {
@@ -1691,6 +1666,28 @@ public class Material implements ClientNamespaced {
 	@Nullable
 	public static Material getByItemID(int itemID) {
 		return REGISTRI_BY_IID.get(itemID);
+	}
+	
+	public boolean hasDefaultComponents() {
+		return !defaultComponents.isEmpty();
+	}
+
+	public <T extends ItemComponent> T getDefaultComponent(NamespacedKey key) {
+		@SuppressWarnings("unchecked")
+		T type = (T) defaultComponents.get(key);
+		return type;
+	}
+	
+	public Map<NamespacedKey, ItemComponent> getDefaultComponents() {
+		return defaultComponents;
+	}
+	
+	public void setDefaulComponents(Map<NamespacedKey, ItemComponent> components) {
+		if (components == null) {
+			this.defaultComponents = Map.of();
+		} else {
+			this.defaultComponents = Map.copyOf(components);
+		}
 	}
 	
 }

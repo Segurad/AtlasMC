@@ -9,8 +9,10 @@ import de.atlasmc.entity.data.MetaDataType;
 
 public class CoreSniffer extends CoreAgeableMob implements Sniffer {
 
-	protected static final MetaDataField<State> META_SNIFFER_STATE = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, State.IDLING, MetaDataType.SNIFFER_STATE);
-	protected static final MetaDataField<Integer> META_DROP_SEED_TICK = new MetaDataField<Integer>(CoreAgeableMob.LAST_META_INDEX+2, 0, MetaDataType.VAR_INT);
+	protected static final MetaDataField<State> 
+	META_SNIFFER_STATE = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, State.IDLING, MetaDataType.SNIFFER_STATE);
+	protected static final MetaDataField<Integer> 
+	META_DROP_SEED_TICK = new MetaDataField<Integer>(CoreAgeableMob.LAST_META_INDEX+2, 0, MetaDataType.VAR_INT);
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+2;
 	

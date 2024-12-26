@@ -8,7 +8,6 @@ public class ItemIngredient implements Ingredient {
 
 	private final List<ItemStack> items;
 	private final boolean ignoreAmount;
-	private final boolean ignoreDamage;
 	
 	public ItemIngredient(List<ItemStack> items) {
 		this(items, true, false);
@@ -21,7 +20,6 @@ public class ItemIngredient implements Ingredient {
 			throw new IllegalArgumentException("Items can not be empty!");
 		this.items = items;
 		this.ignoreAmount = ignoreAmount;
-		this.ignoreDamage = ignoreDamage;
 	}
 	
 	@Override
@@ -37,7 +35,7 @@ public class ItemIngredient implements Ingredient {
 	@Override
 	public boolean test(ItemStack item) {
 		for (ItemStack i : items)
-			if (i.isSimilar(item, ignoreAmount, ignoreDamage))
+			if (i.isSimilar(item, ignoreAmount))
 				return true;
 		return false;
 	}
@@ -47,7 +45,6 @@ public class ItemIngredient implements Ingredient {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (ignoreAmount ? 1231 : 1237);
-		result = prime * result + (ignoreDamage ? 1231 : 1237);
 		result = prime * result + ((items == null) ? 0 : items.hashCode());
 		return result;
 	}
@@ -62,8 +59,6 @@ public class ItemIngredient implements Ingredient {
 			return false;
 		ItemIngredient other = (ItemIngredient) obj;
 		if (ignoreAmount != other.ignoreAmount)
-			return false;
-		if (ignoreDamage != other.ignoreDamage)
 			return false;
 		if (items == null) {
 			if (other.items != null)

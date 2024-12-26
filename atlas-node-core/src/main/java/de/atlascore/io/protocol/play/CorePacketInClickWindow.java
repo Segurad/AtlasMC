@@ -14,7 +14,6 @@ import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketInClickContainer;
-import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketInClickWindow implements PacketIO<PacketInClickContainer> {
@@ -47,16 +46,14 @@ public class CorePacketInClickWindow implements PacketIO<PacketInClickContainer>
 		out.writeByte(packet.button);
 		writeVarInt(packet.mode, out);
 		Map<Integer, ItemStack> changed = packet.slotsChanged;
-		NBTNIOWriter writer = new NBTNIOWriter(out, true);
 		if (changed != null && !changed.isEmpty()) {
 			writeVarInt(changed.size(), out);
 			for (Integer key : changed.keySet()) {
 				out.writeShort(key);
-				writeSlot(changed.get(key), out, writer);
+				writeSlot(changed.get(key), out);
 			}
 		}
-		writeSlot(packet.carriedItem, out, writer);
-		writer.close();
+		writeSlot(packet.carriedItem, out);
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package de.atlasmc.util.palette;
 
+import java.io.IOException;
 import java.util.Collection;
 import de.atlasmc.util.VariableValueArray;
 import io.netty.buffer.ByteBuf;
@@ -116,7 +117,7 @@ public class AdaptivePalette<E> implements Palette<E> {
 	}
 
 	@Override
-	public void write(ByteBuf buf) {
+	public void write(ByteBuf buf) throws IOException {
 		palette.write(buf);	
 	}
 

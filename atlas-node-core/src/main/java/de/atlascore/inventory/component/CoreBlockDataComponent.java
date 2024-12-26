@@ -1,6 +1,7 @@
 package de.atlascore.inventory.component;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -10,9 +11,12 @@ import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.BlockDataComponent;
+import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
+import io.netty.buffer.ByteBuf;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CoreBlockDataComponent extends AbstractItemComponent implements BlockDataComponent {
 
@@ -101,6 +105,58 @@ public class CoreBlockDataComponent extends AbstractItemComponent implements Blo
 			@SuppressWarnings("unchecked")
 			BlockDataProperty<Object> property = (BlockDataProperty<Object>) entry.getKey();
 			property.set(data, entry.getValue());
+		}
+	}
+	
+	@Override
+	public ComponentType getType() {
+		return ComponentType.BLOCK_STATE;
+	}
+	
+	@Override
+	public boolean isServerOnly() {
+		return false;
+	}
+	
+	@Override
+	public void read(ByteBuf buf) throws IOException {
+		if (properties == null || properties.isEmpty()) {
+			writeVarInt(0, buf);
+			return;
+		}
+		Map<BlockDataProperty<?>, Object> properties = this.properties;
+		final int size = properties.size();
+		writeVarInt(size, buf);
+		for (Entry<BlockDataProperty<?>, Object> entry : properties.entrySet()) {
+			@SuppressWarnings("unchecked")
+			BlockDataProperty<Object> property = (BlockDataProperty<Object>) entry.getKey();
+			writeString(property.getKey(), buf);
+			writeString(property.toString(entry.getValue()), buf);
+		}
+	}
+	
+	@Override
+	public void write(ByteBuf buf) throws IOException {
+		final int count = readVarInt(buf);
+		if (count == 0)
+			return;
+		Map<BlockDataProperty<?>, Object> properties = getProperties();
+		properties.clear();
+		for (int i = 0; i < count; i++) {
+			String key = readString(buf);
+			String rawValue = readString(buf);
+			Collection<BlockDataProperty<?>> propertyTypes = BlockDataProperty.getProperties(key);
+			for (BlockDataProperty<?> property : propertyTypes) {
+				Object value = null;
+				try {
+					value = property.fromString(rawValue);
+				} catch(Exception e) {}
+				if (value == null)
+					continue;
+				properties.put(property, value);
+				break;
+			}
+			
 		}
 	}
 

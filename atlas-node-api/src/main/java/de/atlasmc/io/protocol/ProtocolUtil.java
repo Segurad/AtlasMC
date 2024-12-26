@@ -1,104 +1,96 @@
 package de.atlasmc.io.protocol;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
 
 import de.atlasmc.Material;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.component.ComponentType;
+import de.atlasmc.inventory.component.ItemComponent;
 import de.atlasmc.io.PacketUtil;
 import de.atlasmc.sound.EnumSound;
 import de.atlasmc.sound.ResourceSound;
 import de.atlasmc.sound.Sound;
-import de.atlasmc.util.nbt.io.NBTNIOReader;
-import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import io.netty.buffer.ByteBuf;
 
 public class ProtocolUtil extends PacketUtil {
 	
 	protected ProtocolUtil() {}
-
-	/**
-	 * Reads a Slot to ItemStack using a existing {@link NBTNIOReader}
-	 * @param in
-	 * @return a ItemStack or null if empty
-	 */
-	public static ItemStack readSlot(ByteBuf in, NBTNIOReader reader) throws IOException {
-		boolean present = in.readBoolean();
-		if (!present) 
-			return null;
-		int itemID = readVarInt(in);
-		byte amount = in.readByte();
-		Material mat = Material.getByItemID(itemID);
-		ItemStack item = new ItemStack(mat, amount);
-		byte comp = in.readByte();
-		if (comp == 0) 
-			return item;
-		item.getItemMeta().fromNBT(reader);
-		return item;
-	}
-	
-	public static void writeSlot(ItemStack item, ByteBuf out) throws IOException {
-		if (item == null) {
-			out.writeBoolean(false);
-			return;
-		}
-		out.writeBoolean(true);
-		writeVarInt(item.getType().getItemID(), out);
-		out.writeByte(item.getAmount());
-		if (!item.hasItemMeta())
-			out.writeByte(0);
-		else {
-			NBTNIOWriter writer = new NBTNIOWriter(out, true);
-			writer.writeCompoundTag(null);
-			item.getItemMeta().toNBT(writer, false);
-			writer.writeEndTag();
-			writer.close();
-		}
-	}
 	
 	/**
-	 * Writes a ItemStack as Slot using a existing {@link NBTNIOWriter}
-	 * @param item
-	 * @param out
-	 * @param writer
+	 * Writes the given ItemStack to the given buffer
+	 * @param item to write
+	 * @param out to write to
 	 * @throws IOException
 	 */
-	public static void writeSlot(ItemStack item, ByteBuf out, NBTNIOWriter writer) throws IOException {
-		if (item == null) {
-			out.writeBoolean(false);
+	public static void writeSlot(ItemStack item, ByteBuf out) throws IOException {
+		if (item == null || item.getAmount() == 0) {
+			writeVarInt(0, out);
 			return;
 		}
-		out.writeBoolean(true);
+		writeVarInt(item.getAmount(), out);
 		writeVarInt(item.getType().getItemID(), out);
-		out.writeByte(item.getAmount());
-		if (!item.hasItemMeta()) 
-			out.writeByte(0);
-		else {
-			writer.writeCompoundTag(null);
-			item.getItemMeta().toNBT(writer, false);
-			writer.writeEndTag();
+		final int ptrCompCount = out.readerIndex();
+		writeVarInt(0, out);
+		final int ptrIgnoredCount = out.readerIndex();
+		writeVarInt(0, out);
+		if (item.hasComponents()) {
+			int count = 0;
+			Map<NamespacedKey, ItemComponent> components = item.getComponents();
+			for (ItemComponent comp : components.values()) {
+				if (comp.isServerOnly())
+					continue;
+				count++;
+				writeVarInt(comp.getType().getID(), out);
+				comp.write(out);
+			}
+			if (count > 127) {
+				/*
+				 * Varints up to 127 only take one byte. To prevent data corruption throw exception
+				 */
+				throw new IllegalStateException("More than 127 ItemComponent written!");
+			} else if (count > 0) {
+				final int  ptrEnd = out.writerIndex();
+				out.writerIndex(ptrCompCount);
+				writeVarInt(count, out);
+				out.writerIndex(ptrEnd);
+			}
+		}
+		if (item.hasIgnoredComponents()) {
+			Set<ComponentType> ignored = item.getIgnoredComponents();
+			for (ComponentType type : ignored)
+				writeVarInt(type.getID(), out);
+			final int  ptrEnd = out.writerIndex();
+			out.writerIndex(ptrIgnoredCount);
+			writeVarInt(ignored.size(), out);
+			out.writerIndex(ptrEnd);
 		}
 	}
 	
 	/**
-	 * 
-	 * @param in
-	 * @return a ItemStack or null if empty
+	 * Reads a ItemStack from the buffer
+	 * @param in to read from
+	 * @return item or null
 	 */
 	public static ItemStack readSlot(ByteBuf in) throws IOException {
-		boolean present = in.readBoolean();
-		if (!present) 
+		final int amount = readVarInt(in);
+		if (amount == 0)
 			return null;
-		int itemID = readVarInt(in);
-		byte amount = in.readByte();
-		Material mat = Material.getByItemID(itemID);
-		ItemStack item = new ItemStack(mat, amount);
-		byte comp = in.readByte();
-		if (comp == 0) 
-			return item;
-		NBTNIOReader reader = new NBTNIOReader(in, true);
-		item.getItemMeta().fromNBT(reader);
-		reader.close();
+		Material material = Material.getByItemID(readVarInt(in));
+		ItemStack item = new ItemStack(material, amount);
+		final int compCount = readVarInt(in);
+		final int ignoredCount = readVarInt(in);
+		for (int i = 0; i < compCount; i++) {
+			ComponentType type = ComponentType.getByID(readVarInt(in));
+			ItemComponent comp = item.getComponent(type.getKey());
+			comp.read(in);
+		}
+		for (int i = 0; i < ignoredCount; i++) {
+			ComponentType type = ComponentType.getByID(readVarInt(in));
+			item.addIgnoredComponent(type);
+		}
 		return item;
 	}
 

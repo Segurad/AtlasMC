@@ -29,8 +29,9 @@ public class PacketOutChunkData extends AbstractPacketChunkLight implements Pack
 	/**
 	 * Extracts all needed data from a Chunk to send it.
 	 * @param chunk
+	 * @throws IOException 
 	 */
-	public void setChunk(Chunk chunk) {
+	public void setChunk(Chunk chunk) throws IOException {
 		chunkX = chunk.getX();
 		chunkZ = chunk.getZ();
 		motionBlocking = chunk.getHightMap().array().clone();

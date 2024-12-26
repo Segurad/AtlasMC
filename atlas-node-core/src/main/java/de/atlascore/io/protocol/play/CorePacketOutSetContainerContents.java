@@ -1,16 +1,17 @@
 package de.atlascore.io.protocol.play;
 
+import static de.atlasmc.io.PacketUtil.readVarInt;
+import static de.atlasmc.io.PacketUtil.writeVarInt;
+import static de.atlasmc.io.protocol.ProtocolUtil.readSlot;
+import static de.atlasmc.io.protocol.ProtocolUtil.writeSlot;
+
 import java.io.IOException;
 
 import de.atlasmc.inventory.ItemStack;
-import static de.atlasmc.io.protocol.ProtocolUtil.*;
-
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutSetContainerContents;
-import de.atlasmc.util.nbt.io.NBTNIOReader;
-import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutSetContainerContents implements PacketIO<PacketOutSetContainerContents> {
@@ -21,13 +22,11 @@ public class CorePacketOutSetContainerContents implements PacketIO<PacketOutSetC
 		packet.stateID = readVarInt(in);
 		final int count = in.readShort();
 		ItemStack[] slots = new ItemStack[count];
-		NBTNIOReader reader = new NBTNIOReader(in, true);
 		for (int i = 0; i < count; i++) {
-			slots[i] = readSlot(in, reader);
+			slots[i] = readSlot(in);
 		}
 		packet.setItems(slots);
-		packet.carriedItem = readSlot(in, reader);
-		reader.close();
+		packet.carriedItem = readSlot(in);
 	}
 
 	@Override
@@ -35,12 +34,10 @@ public class CorePacketOutSetContainerContents implements PacketIO<PacketOutSetC
 		out.writeByte(packet.windowID);
 		writeVarInt(packet.stateID, out);
 		out.writeShort(packet.items.length);
-		NBTNIOWriter writer = new NBTNIOWriter(out, true);
 		for (ItemStack i : packet.items) {
-			writeSlot(i, out, writer);
+			writeSlot(i, out);
 		}
-		writeSlot(packet.carriedItem, out, writer);
-		writer.close();
+		writeSlot(packet.carriedItem, out);
 	}
 
 	@Override

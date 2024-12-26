@@ -1,19 +1,20 @@
 package de.atlascore.io.protocol.play;
 
+import static de.atlasmc.io.PacketUtil.readVarInt;
+import static de.atlasmc.io.PacketUtil.writeVarInt;
+import static de.atlasmc.io.protocol.ProtocolUtil.readSlot;
+import static de.atlasmc.io.protocol.ProtocolUtil.writeSlot;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.entity.Merchant.MerchantRecipe;
 import de.atlasmc.inventory.ItemStack;
-import static de.atlasmc.io.protocol.ProtocolUtil.*;
-
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutMerchantOffers;
-import de.atlasmc.util.nbt.io.NBTNIOReader;
-import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutMerchantOffers implements PacketIO<PacketOutMerchantOffers> {
@@ -24,11 +25,10 @@ public class CorePacketOutMerchantOffers implements PacketIO<PacketOutMerchantOf
 		final int size = readVarInt(in);
 		if (size > 0) {
 			List<MerchantRecipe> recipes = new ArrayList<>(size);
-			NBTNIOReader reader = new NBTNIOReader(in, true);
 			for (int i = 0; i < size; i++) {
-				ItemStack in1 = readSlot(in, reader);
-				ItemStack out = readSlot(in, reader);
-				ItemStack in2 = readSlot(in, reader);
+				ItemStack in1 = readSlot(in);
+				ItemStack out = readSlot(in);
+				ItemStack in2 = readSlot(in);
 				int trades = in.readInt();
 				int maxtrades = in.readInt();
 				int xp = in.readInt();
@@ -47,7 +47,6 @@ public class CorePacketOutMerchantOffers implements PacketIO<PacketOutMerchantOf
 				
 				recipes.add(t);
 			}
-			reader.close();
 			packet.trades = recipes;
 		} else {
 			packet.trades = List.of();
@@ -65,12 +64,11 @@ public class CorePacketOutMerchantOffers implements PacketIO<PacketOutMerchantOf
 		final int size = trades.size();
 		writeVarInt(size, out);
 		if (size > 0) {
-			NBTNIOWriter writer = new NBTNIOWriter(out, true);
 			for (int i = 0; i < size; i++) {
 				MerchantRecipe t = trades.get(i);
-				writeSlot(t.getInputItem1(), out, writer);
-				writeSlot(t.getOutputItem(), out, writer);
-				writeSlot(t.getInputItem2(), out, writer);
+				writeSlot(t.getInputItem1(), out);
+				writeSlot(t.getOutputItem(), out);
+				writeSlot(t.getInputItem2(), out);
 				out.writeBoolean(t.isDisabled());
 				out.writeInt(t.getTrades());
 				out.writeInt(t.getMaxTrades());
@@ -79,7 +77,6 @@ public class CorePacketOutMerchantOffers implements PacketIO<PacketOutMerchantOf
 				out.writeFloat(t.getPriceMultiplier());
 				out.writeInt(t.getDemand());
 			}
-			writer.close();
 		}
 		writeVarInt(packet.level, out);
 		writeVarInt(packet.experience, out);

@@ -20,6 +20,7 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.entity.Armadillo.ArmadilloState;
 import de.atlasmc.entity.Cat.Type;
 import de.atlasmc.entity.Entity.Pose;
 import de.atlasmc.entity.Frog.Variant;
@@ -61,14 +62,18 @@ public abstract class MetaDataType<T> {
 	TYPE_ID_NBT = 16,
 	TYPE_ID_PARTICLE = 17,
 	TYPE_ID_VILLAGER_DATA = 18,
-	TYPE_ID_POSE = 20,
-	TYPE_ID_CAT_VARIANT = 21,
-	TYPE_ID_FROG_VARIANT = 22,
-	TYPE_ID_OPT_GLOBAL_POSITION = 23,
-	TYPE_ID_PAINTING_VARIANT = 24,
-	TYPE_ID_SNIFFER_STATE = 25,
-	TYPE_ID_VECTOR_3 = 26,
-	TYPE_ID_QUATERNION = 27;
+	TYPE_ID_OPT_VARINT = 20,
+	TYPE_ID_POSE = 21,
+	TYPE_ID_CAT_VARIANT = 22,
+	TYPE_ID_WOLF_VARIANT = 23,
+	TYPE_ID_FROG_VARIANT = 24,
+	TYPE_ID_OPT_GLOBAL_POSITION = 25,
+	TYPE_ID_PAINTING_VARIANT = 26,
+	TYPE_ID_SNIFFER_STATE = 27,
+	TYPE_ID_ARMADILLO_STATE = 28,
+	TYPE_ID_VECTOR_3 = 29,
+	TYPE_ID_QUATERNION = 30;
+	
 	
 	public static final MetaDataType<Byte> BYTE = new MetaDataType<>(TYPE_ID_BYTE, Number.class) {
 
@@ -473,5 +478,7 @@ public abstract class MetaDataType<T> {
 			throw new IllegalArgumentException("Invalid Type ID: " + id);
 		}
 	}
+	
+	public static final MetaDataType<ArmadilloState> ARMADILLO_STATE = new EnumMetaDataType<>(TYPE_ID_ARMADILLO_STATE, ArmadilloState.class);
 
 }
