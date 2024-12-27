@@ -147,10 +147,7 @@ public class CoreBlockDataComponent extends AbstractItemComponent implements Blo
 			String rawValue = readString(buf);
 			Collection<BlockDataProperty<?>> propertyTypes = BlockDataProperty.getProperties(key);
 			for (BlockDataProperty<?> property : propertyTypes) {
-				Object value = null;
-				try {
-					value = property.fromString(rawValue);
-				} catch(Exception e) {}
+				Object value = property.fromString(rawValue);
 				if (value == null)
 					continue;
 				properties.put(property, value);

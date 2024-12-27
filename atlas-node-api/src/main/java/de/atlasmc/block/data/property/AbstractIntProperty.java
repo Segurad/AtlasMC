@@ -29,7 +29,11 @@ public abstract class AbstractIntProperty extends BlockDataProperty<Integer> {
 	
 	@Override
 	public Integer fromString(String value) {
-		return Integer.parseInt(value);
+		try {
+			return Integer.parseInt(value);
+		} catch(NumberFormatException e) {
+			return null;
+		}
 	}
 	
 	@Override

@@ -29,7 +29,14 @@ public abstract class AbstractBooleanProperty extends BlockDataProperty<Boolean>
 	
 	@Override
 	public Boolean fromString(String value) {
-		return Boolean.valueOf(value);
+		switch (value) {
+		case "false":
+			return false;
+		case "true":
+			return true;
+		default:
+			return null;
+		}
 	}
 	
 	@Override

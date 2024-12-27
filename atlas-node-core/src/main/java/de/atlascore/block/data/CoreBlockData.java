@@ -15,7 +15,7 @@ public class CoreBlockData implements BlockData {
 	
 	protected static final List<BlockDataProperty<?>> PROPERTIES = List.of();
 	
-	private final Material material;
+	protected final Material material;
 	
 	public CoreBlockData(Material material) {
 		if (material == null) 

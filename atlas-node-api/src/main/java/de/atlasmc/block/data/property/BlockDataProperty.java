@@ -24,16 +24,17 @@ import de.atlasmc.block.data.type.PointedDripstone.VerticalDirection;
 import de.atlasmc.block.data.type.RedstoneWire.Connection;
 import de.atlasmc.block.data.type.SculkSensor.Phase;
 import de.atlasmc.block.data.type.TrialSpawner.TrialSpawnerState;
-import de.atlasmc.block.data.type.Wall.Height;
+import de.atlasmc.block.data.type.Vault.VaultState;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public abstract class BlockDataProperty<T> {
-	
+
 	private static final Map<CharSequence, Map<TagType, BlockDataProperty<?>>> properties = new ConcurrentHashMap<>();
-	
+
 	public static final BlockDataProperty<BlockFace> FACING = new FacingProperty();
 	public static final BlockDataProperty<Boolean> WATERLOGGED = new WaterloggedProperty();
 	public static final BlockDataProperty<Leaves> LEAVES = new LeavesProperty();
@@ -106,6 +107,9 @@ public abstract class BlockDataProperty<T> {
 	public static final BlockDataProperty<Boolean> EXTENDED = new ExtendedProperty();
 	public static final BlockDataProperty<Boolean> SHORT = new ShortProperty();
 	public static final BlockDataProperty<Thickness> THICKNESS = new ThicknessProperty();
+	public static final BlockDataProperty<VaultState> VAULT_STATE = new VaultStateProperty();
+	public static final BlockDataProperty<Boolean> TIP = new TipProperty();
+
 	/**
 	 * Used for because reasons:
 	 * <ul>
@@ -117,7 +121,7 @@ public abstract class BlockDataProperty<T> {
 	/**
 	 * Used for because reasons:
 	 * <ul>
-	 * <li>{@link de.atlasmc.block.data.type.Comparator.Mode}</li> 
+	 * <li>{@link de.atlasmc.block.data.type.Comparator.Mode}</li>
 	 * <li>{@link de.atlasmc.block.data.type.StructureBlock.Mode}</li>
 	 * </ul>
 	 */
@@ -174,13 +178,13 @@ public abstract class BlockDataProperty<T> {
 	public static final BlockDataProperty<Integer> EGGS = new EggsProperty();
 	public static final BlockDataProperty<Integer> AGE = new AgeProperty();
 	public static final BlockDataProperty<VerticalDirection> VERTICAL_DIRECTION = new VerticalDirectionProperty();
-	
+
 	protected final CharKey key;
-	
+
 	public BlockDataProperty(String key) {
 		this(CharKey.literal(key));
 	}
-	
+
 	public BlockDataProperty(CharKey key) {
 		this.key = key;
 		synchronized (properties) {
@@ -190,29 +194,51 @@ public abstract class BlockDataProperty<T> {
 			}
 			TagType type = getType();
 			if (typeProperties.containsKey(type))
-				throw new IllegalArgumentException("Property with key: " + key + " and type: " + type + " already exists!");
+				throw new IllegalArgumentException(
+						"Property with key: " + key + " and type: " + type + " already exists!");
 			typeProperties.put(type, this);
 		}
 	}
-	
+
 	public CharKey getKey() {
 		return key;
 	}
-	
+
+	/**
+	 * Returns the {@link TagType} of this property
+	 * @return tag type
+	 */
+	@NotNull
 	public abstract TagType getType();
-	
+
+	/**
+	 * Reads the property from a NBT steam
+	 * @param reader to read from
+	 * @return value
+	 * @throws IOException
+	 */
 	public abstract T fromNBT(NBTReader reader) throws IOException;
-	
+
 	public abstract void toNBT(T value, NBTWriter writer, boolean systemData) throws IOException;
 
 	public abstract void set(BlockData data, T value);
-	
+
+	/**
+	 * Returns the properties value of the given BlockData or null of not valid
+	 * @param data to fetch from
+	 * @return value or null if invalid
+	 */
 	public abstract T get(BlockData data);
-	
+
+	/**
+	 * Returns the value represented by the string or null if invalid
+	 * @param value
+	 * @return value or null
+	 */
 	public abstract T fromString(String value);
-	
+
 	public abstract String toString(T value);
-	
+
 	public boolean match(BlockData data, T value) {
 		T present = get(data);
 		if (present == value)
@@ -221,30 +247,29 @@ public abstract class BlockDataProperty<T> {
 			return present.equals(value);
 		return false;
 	}
-	
+
 	public abstract boolean supports(BlockData data);
-	
+
 	public void dataFromNBT(BlockData data, NBTReader reader) throws IOException {
 		T value = fromNBT(reader);
 		if (value == null)
 			return;
 		set(data, value);
 	}
-	
+
 	public void dataToNBT(BlockData data, NBTWriter writer, boolean systemData) throws IOException {
 		T value = get(data);
 		if (value == null)
 			return;
 		toNBT(value, writer, systemData);
 	}
-	
+
 	public static BlockDataProperty<?> getProperty(CharSequence key, TagType type) {
 		Map<TagType, BlockDataProperty<?>> typeProperties = properties.get(key);
 		if (typeProperties == null)
 			return null;
 		return typeProperties.get(type);
 	}
-	
 
 	public static Collection<BlockDataProperty<?>> getProperties(CharSequence key) {
 		Map<TagType, BlockDataProperty<?>> typeProperties = properties.get(key);
@@ -252,7 +277,7 @@ public abstract class BlockDataProperty<T> {
 			return null;
 		return typeProperties.values();
 	}
-	
+
 	public static Map<BlockDataProperty<?>, Object> readProperties(NBTReader reader) throws IOException {
 		Map<BlockDataProperty<?>, Object> properties = null;
 		while (reader.getType() != TagType.TAG_END) {
@@ -272,7 +297,7 @@ public abstract class BlockDataProperty<T> {
 			return Map.of();
 		return properties;
 	}
-	
+
 	public static void writeProperties(Map<BlockDataProperty<?>, ?> properties, NBTWriter writer, boolean systemData) throws IOException {
 		for (Entry<BlockDataProperty<?>, ?> entry : properties.entrySet()) {
 			@SuppressWarnings("unchecked")
@@ -280,5 +305,5 @@ public abstract class BlockDataProperty<T> {
 			property.toNBT(entry.getValue(), writer, systemData);
 		}
 	}
-	
+
 }

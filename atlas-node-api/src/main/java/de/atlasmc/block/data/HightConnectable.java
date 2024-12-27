@@ -1,30 +1,30 @@
-package de.atlasmc.block.data.type;
+package de.atlasmc.block.data;
 
 import java.util.List;
+import java.util.Set;
 
-import de.atlasmc.block.data.Directional;
-import de.atlasmc.block.data.Ominous;
+import de.atlasmc.block.BlockFace;
 import de.atlasmc.util.EnumName;
 import de.atlasmc.util.EnumValueCache;
 
-public interface Vault extends Directional, Ominous {
+public interface HightConnectable extends BlockData {
 	
-	VaultState getState();
+	Height getHeight(BlockFace face);
 	
-	void setState(VaultState state);
+	void setHeight(BlockFace face, Height height);
 	
-	public static enum VaultState implements EnumName, EnumValueCache {
+	Set<BlockFace> getAllowedFaces();
+	
+	public static enum Height implements EnumName, EnumValueCache {
+		NONE,
+		LOW,
+		TALL;
+
+		private static List<Height> VALUES;
 		
-		INACTIVE,
-		ACTIVE,
-		UNLOCKING,
-		EJECTING;
+		private String name;
 		
-		private static List<VaultState> VALUES;
-		
-		private final String name;
-		
-		private VaultState() {
+		private Height() {
 			this.name = name().toLowerCase().intern();
 		}
 		
@@ -33,14 +33,19 @@ public interface Vault extends Directional, Ominous {
 			return name;
 		}
 		
-		public static VaultState getByNameID(String name) {
+		/**
+		 * Returns the value represented by the name or null if no matching value has been found
+		 * @param name the name of the value
+		 * @return value or null
+		 */
+		public static Height getByName(String name) {
 			if (name == null)
 				throw new IllegalArgumentException("Name can not be null!");
-			List<VaultState> values = getValues();
+			List<Height> values = getValues();
 			final int size = values.size();
 			for (int i = 0; i < size; i++) {
-				VaultState value = values.get(i);
-				if (value.name.equals(name))
+				Height value = values.get(i);
+				if (value.name.equals(name)) 
 					return value;
 			}
 			return null;
@@ -51,7 +56,7 @@ public interface Vault extends Directional, Ominous {
 		 * This method avoid allocation of a new array not like {@link #values()}.
 		 * @return list
 		 */
-		public static List<VaultState> getValues() {
+		public static List<Height> getValues() {
 			if (VALUES == null)
 				VALUES = List.of(values());
 			return VALUES;

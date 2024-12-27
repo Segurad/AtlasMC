@@ -561,7 +561,7 @@
     "minecraft:dispenser": {
         "itemID": 691,
         "BDF": "atlas:dispenser",
-        "TEF": "atlas:dispenser",
+        "TEF": "minecraft:dispenser",
         "const": "DISPENSER",
         "blockStateID": 566,
         "blockID": 105
@@ -617,12 +617,6 @@
         "const": "COBWEB",
         "blockStateID": 2047,
         "blockID": 129
-    },
-    "minecraft:grass": {
-        "itemID": 173,
-        "const": "GRASS",
-        "blockStateID": 2005,
-        "blockID": 123
     },
     "minecraft:fern": {
         "itemID": 203,
@@ -1256,7 +1250,7 @@
     },
     "minecraft:spawner": {
         "itemID": 311,
-        "TEF": "atlas:mob_spawner",
+        "TEF": "minecraft:mob_spawner",
         "const": "SPAWNER",
         "blockStateID": 2916,
         "blockID": 182
@@ -1271,7 +1265,7 @@
     "minecraft:chest": {
         "itemID": 313,
         "BDF": "atlas:chest",
-        "TEF": "atlas:chest",
+        "TEF": "minecraft:chest",
         "const": "CHEST",
         "blockStateID": 3009,
         "blockID": 185
@@ -1310,7 +1304,7 @@
     "minecraft:furnace": {
         "itemID": 316,
         "BDF": "atlas:furnace",
-        "TEF": "atlas:furnace",
+        "TEF": "minecraft:furnace",
         "const": "FURNACE",
         "blockStateID": 4349,
         "blockID": 193
@@ -1475,7 +1469,7 @@
     "minecraft:jukebox": {
         "itemID": 324,
         "BDF": "atlas:jukebox",
-        "TEF": "atlas:jukebox",
+        "TEF": "minecraft:jukebox",
         "const": "JUKEBOX",
         "blockStateID": 5984,
         "blockID": 266
@@ -1930,7 +1924,7 @@
     },
     "minecraft:enchanting_table": {
         "itemID": 397,
-        "TEF": "atlas:enchanting_table",
+        "TEF": "minecraft:enchanting_table",
         "const": "ENCHANTING_TABLE",
         "blockStateID": 8163,
         "blockID": 350
@@ -1948,7 +1942,7 @@
         "blockID": 356
     },
     "minecraft:end_gateway": {
-        "TEF": "atlas:end_gateway",
+        "TEF": "minecraft:end_gateway",
         "amount": 0,
         "const": "END_GATEWAY",
         "blockStateID": 13527,
@@ -2002,7 +1996,7 @@
     "minecraft:ender_chest": {
         "itemID": 403,
         "BDF": "atlas:ender_chest",
-        "TEF": "atlas:ender_chest",
+        "TEF": "minecraft:ender_chest",
         "const": "ENDER_CHEST",
         "blockStateID": 8287,
         "blockID": 365
@@ -2065,14 +2059,14 @@
     "minecraft:command_block": {
         "itemID": 418,
         "BDF": "atlas:command_block",
-        "TEF": "atlas:command_block",
+        "TEF": "minecraft:command_block",
         "const": "COMMAND_BLOCK",
         "blockStateID": 8680,
         "blockID": 372
     },
     "minecraft:beacon": {
         "itemID": 419,
-        "TEF": "atlas:beacon",
+        "TEF": "minecraft:beacon",
         "const": "BEACON",
         "blockStateID": 8692,
         "blockID": 373
@@ -2290,7 +2284,7 @@
     "minecraft:trapped_chest": {
         "itemID": 701,
         "BDF": "atlas:chest",
-        "TEF": "atlas:chest",
+        "TEF": "minecraft:chest",
         "const": "TRAPPED_CHEST",
         "blockStateID": 9918,
         "blockID": 434
@@ -2331,7 +2325,7 @@
     "minecraft:hopper": {
         "itemID": 690,
         "BDF": "atlas:hopper",
-        "TEF": "atlas:hopper",
+        "TEF": "minecraft:hopper",
         "const": "HOPPER",
         "blockStateID": 10024,
         "blockID": 441
@@ -2378,7 +2372,7 @@
     "minecraft:dropper": {
         "itemID": 692,
         "BDF": "atlas:dispenser",
-        "TEF": "atlas:dropper",
+        "TEF": "minecraft:dropper",
         "const": "DROPPER",
         "blockStateID": 10143,
         "blockID": 447
@@ -2957,7 +2951,7 @@
     "minecraft:repeating_command_block": {
         "itemID": 537,
         "BDF": "atlas:command_block",
-        "TEF": "atlas:command_block",
+        "TEF": "minecraft:command_block",
         "const": "REPEATING_COMMAND_BLOCK",
         "blockStateID": 13528,
         "blockID": 632
@@ -2965,7 +2959,7 @@
     "minecraft:chain_command_block": {
         "itemID": 538,
         "BDF": "atlas:command_block",
-        "TEF": "atlas:command_block",
+        "TEF": "minecraft:command_block",
         "const": "CHAIN_COMMAND_BLOCK",
         "blockStateID": 13540,
         "blockID": 633
@@ -3017,7 +3011,7 @@
     "minecraft:shulker_box": {
         "itemID": 545,
         "BDF": "atlas:directional6f_up",
-        "TEF": "atlas:shulker_box",
+        "TEF": "minecraft:shulker_box",
         "const": "SHULKER_BOX",
         "blockStateID": 13575,
         "blockID": 641
@@ -3025,7 +3019,7 @@
     "minecraft:white_shulker_box": {
         "itemID": 546,
         "BDF": "atlas:directional6f_up",
-        "TEF": "atlas:shulker_box",
+        "TEF": "minecraft:shulker_box",
         "const": "WHITE_SHULKER_BOX",
         "blockStateID": 13581,
         "blockID": 642
@@ -3033,7 +3027,7 @@
     "minecraft:orange_shulker_box": {
         "itemID": 547,
         "BDF": "atlas:directional6f_up",
-        "TEF": "atlas:shulker_box",
+        "TEF": "minecraft:shulker_box",
         "const": "ORANGE_SHULKER_BOX",
         "blockStateID": 13587,
         "blockID": 643
@@ -3041,7 +3035,7 @@
     "minecraft:magenta_shulker_box": {
         "itemID": 548,
         "BDF": "atlas:directional6f_up",
-        "TEF": "atlas:shulker_box",
+        "TEF": "minecraft:shulker_box",
         "const": "MAGENTA_SHULKER_BOX",
         "blockStateID": 13593,
         "blockID": 644
@@ -3049,7 +3043,7 @@
     "minecraft:light_blue_shulker_box": {
         "itemID": 549,
         "BDF": "atlas:directional6f_up",
-        "TEF": "atlas:shulker_box",
+        "TEF": "minecraft:shulker_box",
         "const": "LIGHT_BLUE_SHULKER_BOX",
         "blockStateID": 13599,
         "blockID": 645
@@ -3057,7 +3051,7 @@
     "minecraft:yellow_shulker_box": {
         "itemID": 550,
         "BDF": "atlas:directional6f_up",
-        "TEF": "atlas:shulker_box",
+        "TEF": "minecraft:shulker_box",
         "const": "YELLOW_SHULKER_BOX",
         "blockStateID": 13605,
         "blockID": 646
@@ -3065,7 +3059,7 @@
     "minecraft:lime_shulker_box": {
         "itemID": 551,
         "BDF": "atlas:directional6f_up",
-        "TEF": "atlas:shulker_box",
+        "TEF": "minecraft:shulker_box",
         "const": "LIME_SHULKER_BOX",
         "blockStateID": 13611,
         "blockID": 647
@@ -3073,7 +3067,7 @@
     "minecraft:pink_shulker_box": {
         "itemID": 552,
         "BDF": "atlas:directional6f_up",
-        "TEF": "atlas:shulker_box",
+        "TEF": "minecraft:shulker_box",
         "const": "PINK_SHULKER_BOX",
         "blockStateID": 13617,
         "blockID": 648
@@ -3081,7 +3075,7 @@
     "minecraft:gray_shulker_box": {
         "itemID": 553,
         "BDF": "atlas:directional6f_up",
-        "TEF": "atlas:shulker_box",
+        "TEF": "minecraft:shulker_box",
         "const": "GRAY_SHULKER_BOX",
         "blockStateID": 13623,
         "blockID": 649
@@ -3089,7 +3083,7 @@
     "minecraft:light_gray_shulker_box": {
         "itemID": 554,
         "BDF": "atlas:directional6f_up",
-        "TEF": "atlas:shulker_box",
+        "TEF": "minecraft:shulker_box",
         "const": "LIGHT_GRAY_SHULKER_BOX",
         "blockStateID": 13629,
         "blockID": 650
@@ -3097,7 +3091,7 @@
     "minecraft:cyan_shulker_box": {
         "itemID": 555,
         "BDF": "atlas:directional6f_up",
-        "TEF": "atlas:shulker_box",
+        "TEF": "minecraft:shulker_box",
         "const": "CYAN_SHULKER_BOX",
         "blockStateID": 13635,
         "blockID": 651
@@ -3105,7 +3099,7 @@
     "minecraft:purple_shulker_box": {
         "itemID": 556,
         "BDF": "atlas:directional6f_up",
-        "TEF": "atlas:shulker_box",
+        "TEF": "minecraft:shulker_box",
         "const": "PURPLE_SHULKER_BOX",
         "blockStateID": 13641,
         "blockID": 652
@@ -3113,7 +3107,7 @@
     "minecraft:blue_shulker_box": {
         "itemID": 557,
         "BDF": "atlas:directional6f_up",
-        "TEF": "atlas:shulker_box",
+        "TEF": "minecraft:shulker_box",
         "const": "BLUE_SHULKER_BOX",
         "blockStateID": 13647,
         "blockID": 653
@@ -3121,7 +3115,7 @@
     "minecraft:brown_shulker_box": {
         "itemID": 558,
         "BDF": "atlas:directional6f_up",
-        "TEF": "atlas:shulker_box",
+        "TEF": "minecraft:shulker_box",
         "const": "BROWN_SHULKER_BOX",
         "blockStateID": 13653,
         "blockID": 654
@@ -3129,7 +3123,7 @@
     "minecraft:green_shulker_box": {
         "itemID": 559,
         "BDF": "atlas:directional6f_up",
-        "TEF": "atlas:shulker_box",
+        "TEF": "minecraft:shulker_box",
         "const": "GREEN_SHULKER_BOX",
         "blockStateID": 13659,
         "blockID": 655
@@ -3137,7 +3131,7 @@
     "minecraft:red_shulker_box": {
         "itemID": 560,
         "BDF": "atlas:directional6f_up",
-        "TEF": "atlas:shulker_box",
+        "TEF": "minecraft:shulker_box",
         "const": "RED_SHULKER_BOX",
         "blockStateID": 13665,
         "blockID": 656
@@ -3145,7 +3139,7 @@
     "minecraft:black_shulker_box": {
         "itemID": 561,
         "BDF": "atlas:directional6f_up",
-        "TEF": "atlas:shulker_box",
+        "TEF": "minecraft:shulker_box",
         "const": "BLACK_SHULKER_BOX",
         "blockStateID": 13671,
         "blockID": 657
@@ -4020,7 +4014,7 @@
     "minecraft:structure_block": {
         "itemID": 823,
         "BDF": "atlas:structure_block",
-        "TEF": "atlas:structure_block",
+        "TEF": "minecraft:structure_block",
         "const": "STRUCTURE_BLOCK",
         "blockStateID": 20369,
         "blockID": 860
@@ -4034,17 +4028,11 @@
     },
     "minecraft:turtle_helmet": {
         "itemID": 825,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "TURTLE_HELMET"
     },
-    "minecraft:scute": {
-        "itemID": 757,
-        "const": "SCUTE"
-    },
     "minecraft:flint_and_steel": {
         "itemID": 829,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "FLINT_AND_STEEL"
     },
@@ -4086,181 +4074,151 @@
     },
     "minecraft:wooden_sword": {
         "itemID": 849,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "WOODEN_SWORD"
     },
     "minecraft:wooden_shovel": {
         "itemID": 850,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "WOODEN_SHOVEL"
     },
     "minecraft:wooden_pickaxe": {
         "itemID": 851,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "WOODEN_PICKAXE"
     },
     "minecraft:wooden_axe": {
         "itemID": 852,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "WOODEN_AXE"
     },
     "minecraft:wooden_hoe": {
         "itemID": 853,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "WOODEN_HOE"
     },
     "minecraft:stone_sword": {
         "itemID": 854,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "STONE_SWORD"
     },
     "minecraft:stone_shovel": {
         "itemID": 855,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "STONE_SHOVEL"
     },
     "minecraft:stone_pickaxe": {
         "itemID": 856,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "STONE_PICKAXE"
     },
     "minecraft:stone_axe": {
         "itemID": 857,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "STONE_AXE"
     },
     "minecraft:stone_hoe": {
         "itemID": 858,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "STONE_HOE"
     },
     "minecraft:golden_sword": {
         "itemID": 859,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "GOLDEN_SWORD"
     },
     "minecraft:golden_shovel": {
         "itemID": 860,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "GOLDEN_SHOVEL"
     },
     "minecraft:golden_pickaxe": {
         "itemID": 861,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "GOLDEN_PICKAXE"
     },
     "minecraft:golden_axe": {
         "itemID": 862,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "GOLDEN_AXE"
     },
     "minecraft:golden_hoe": {
         "itemID": 863,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "GOLDEN_HOE"
     },
     "minecraft:iron_sword": {
         "itemID": 864,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "IRON_SWORD"
     },
     "minecraft:iron_shovel": {
         "itemID": 865,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "IRON_SHOVEL"
     },
     "minecraft:iron_pickaxe": {
         "itemID": 866,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "IRON_PICKAXE"
     },
     "minecraft:iron_axe": {
         "itemID": 867,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "IRON_AXE"
     },
     "minecraft:iron_hoe": {
         "itemID": 868,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "IRON_HOE"
     },
     "minecraft:diamond_sword": {
         "itemID": 869,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "DIAMOND_SWORD"
     },
     "minecraft:diamond_shovel": {
         "itemID": 870,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "DIAMOND_SHOVEL"
     },
     "minecraft:diamond_pickaxe": {
         "itemID": 871,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "DIAMOND_PICKAXE"
     },
     "minecraft:diamond_axe": {
         "itemID": 872,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "DIAMOND_AXE"
     },
     "minecraft:diamond_hoe": {
         "itemID": 873,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "DIAMOND_HOE"
     },
     "minecraft:netherite_sword": {
         "itemID": 874,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "NETHERITE_SWORD"
     },
     "minecraft:netherite_shovel": {
         "itemID": 875,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "NETHERITE_SHOVEL"
     },
     "minecraft:netherite_pickaxe": {
         "itemID": 876,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "NETHERITE_PICKAXE"
     },
     "minecraft:netherite_axe": {
         "itemID": 877,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "NETHERITE_AXE"
     },
     "minecraft:netherite_hoe": {
         "itemID": 878,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "NETHERITE_HOE"
     },
@@ -4306,145 +4264,121 @@
     },
     "minecraft:leather_helmet": {
         "itemID": 887,
-        "IMF": "atlas:leather_armor",
         "amount": 1,
         "const": "LEATHER_HELMET"
     },
     "minecraft:leather_chestplate": {
         "itemID": 888,
-        "IMF": "atlas:leather_armor",
         "amount": 1,
         "const": "LEATHER_CHESTPLATE"
     },
     "minecraft:leather_leggings": {
         "itemID": 889,
-        "IMF": "atlas:leather_armor",
         "amount": 1,
         "const": "LEATHER_LEGGINGS"
     },
     "minecraft:leather_boots": {
         "itemID": 890,
-        "IMF": "atlas:leather_armor",
         "amount": 1,
         "const": "LEATHER_BOOTS"
     },
     "minecraft:chainmail_helmet": {
         "itemID": 891,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "CHAINMAIL_HELMET"
     },
     "minecraft:chainmail_chestplate": {
         "itemID": 892,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "CHAINMAIL_CHESTPLATE"
     },
     "minecraft:chainmail_leggings": {
         "itemID": 893,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "CHAINMAIL_LEGGINGS"
     },
     "minecraft:chainmail_boots": {
         "itemID": 894,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "CHAINMAIL_BOOTS"
     },
     "minecraft:iron_helmet": {
         "itemID": 895,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "IRON_HELMET"
     },
     "minecraft:iron_chestplate": {
         "itemID": 896,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "IRON_CHESTPLATE"
     },
     "minecraft:iron_leggings": {
         "itemID": 897,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "IRON_LEGGINGS"
     },
     "minecraft:iron_boots": {
         "itemID": 898,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "IRON_BOOTS"
     },
     "minecraft:diamond_helmet": {
         "itemID": 899,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "DIAMOND_HELMET"
     },
     "minecraft:diamond_chestplate": {
         "itemID": 900,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "DIAMOND_CHESTPLATE"
     },
     "minecraft:diamond_leggings": {
         "itemID": 901,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "DIAMOND_LEGGINGS"
     },
     "minecraft:diamond_boots": {
         "itemID": 902,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "DIAMOND_BOOTS"
     },
     "minecraft:golden_helmet": {
         "itemID": 903,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "GOLDEN_HELMET"
     },
     "minecraft:golden_chestplate": {
         "itemID": 904,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "GOLDEN_CHESTPLATE"
     },
     "minecraft:golden_leggings": {
         "itemID": 905,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "GOLDEN_LEGGINGS"
     },
     "minecraft:golden_boots": {
         "itemID": 906,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "GOLDEN_BOOTS"
     },
     "minecraft:netherite_helmet": {
         "itemID": 907,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "NETHERITE_HELMET"
     },
     "minecraft:netherite_chestplate": {
         "itemID": 908,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "NETHERITE_CHESTPLATE"
     },
     "minecraft:netherite_leggings": {
         "itemID": 909,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "NETHERITE_LEGGINGS"
     },
     "minecraft:netherite_boots": {
         "itemID": 910,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "NETHERITE_BOOTS"
     },
@@ -4475,7 +4409,7 @@
     "minecraft:oak_sign": {
         "itemID": 917,
         "BDF": "atlas:sign",
-        "TEF": "atlas:sign",
+        "TEF": "minecraft:sign",
         "amount": 16,
         "const": "OAK_SIGN",
         "blockStateID": 4357,
@@ -4484,7 +4418,7 @@
     "minecraft:spruce_sign": {
         "itemID": 918,
         "BDF": "atlas:sign",
-        "TEF": "atlas:sign",
+        "TEF": "minecraft:sign",
         "amount": 16,
         "const": "SPRUCE_SIGN",
         "blockStateID": 4389,
@@ -4493,7 +4427,7 @@
     "minecraft:birch_sign": {
         "itemID": 919,
         "BDF": "atlas:sign",
-        "TEF": "atlas:sign",
+        "TEF": "minecraft:sign",
         "amount": 16,
         "const": "BIRCH_SIGN",
         "blockStateID": 4421,
@@ -4502,7 +4436,7 @@
     "minecraft:jungle_sign": {
         "itemID": 920,
         "BDF": "atlas:sign",
-        "TEF": "atlas:sign",
+        "TEF": "minecraft:sign",
         "amount": 16,
         "const": "JUNGLE_SIGN",
         "blockStateID": 4517,
@@ -4511,7 +4445,7 @@
     "minecraft:acacia_sign": {
         "itemID": 921,
         "BDF": "atlas:sign",
-        "TEF": "atlas:sign",
+        "TEF": "minecraft:sign",
         "amount": 16,
         "const": "ACACIA_SIGN",
         "blockStateID": 4453,
@@ -4520,7 +4454,7 @@
     "minecraft:dark_oak_sign": {
         "itemID": 923,
         "BDF": "atlas:sign",
-        "TEF": "atlas:sign",
+        "TEF": "minecraft:sign",
         "amount": 16,
         "const": "DARK_OAK_SIGN",
         "blockStateID": 4549,
@@ -4529,7 +4463,7 @@
     "minecraft:crimson_sign": {
         "itemID": 927,
         "BDF": "atlas:sign",
-        "TEF": "atlas:sign",
+        "TEF": "minecraft:sign",
         "amount": 16,
         "const": "CRIMSON_SIGN",
         "blockStateID": 20289,
@@ -4538,7 +4472,7 @@
     "minecraft:warped_sign": {
         "itemID": 928,
         "BDF": "atlas:sign",
-        "TEF": "atlas:sign",
+        "TEF": "minecraft:sign",
         "amount": 16,
         "const": "WARPED_SIGN",
         "blockStateID": 20321,
@@ -4546,7 +4480,7 @@
     },
     "minecraft:oak_wall_sign": {
         "BDF": "atlas:wall_sign",
-        "TEF": "atlas:sign",
+        "TEF": "minecraft:sign",
         "amount": 0,
         "const": "OAK_WALL_SIGN",
         "blockStateID": 4849,
@@ -4554,7 +4488,7 @@
     },
     "minecraft:spruce_wall_sign": {
         "BDF": "atlas:wall_sign",
-        "TEF": "atlas:sign",
+        "TEF": "minecraft:sign",
         "amount": 0,
         "const": "SPRUCE_WALL_SIGN",
         "blockStateID": 4857,
@@ -4562,7 +4496,7 @@
     },
     "minecraft:birch_wall_sign": {
         "BDF": "atlas:wall_sign",
-        "TEF": "atlas:sign",
+        "TEF": "minecraft:sign",
         "amount": 0,
         "const": "BIRCH_WALL_SIGN",
         "blockStateID": 4865,
@@ -4570,7 +4504,7 @@
     },
     "minecraft:jungle_wall_sign": {
         "BDF": "atlas:wall_sign",
-        "TEF": "atlas:sign",
+        "TEF": "minecraft:sign",
         "amount": 0,
         "const": "JUNGLE_WALL_SIGN",
         "blockStateID": 4889,
@@ -4578,7 +4512,7 @@
     },
     "minecraft:acacia_wall_sign": {
         "BDF": "atlas:wall_sign",
-        "TEF": "atlas:sign",
+        "TEF": "minecraft:sign",
         "amount": 0,
         "const": "ACACIA_WALL_SIGN",
         "blockStateID": 4873,
@@ -4586,7 +4520,7 @@
     },
     "minecraft:dark_oak_wall_sign": {
         "BDF": "atlas:wall_sign",
-        "TEF": "atlas:sign",
+        "TEF": "minecraft:sign",
         "amount": 0,
         "const": "DARK_OAK_WALL_SIGN",
         "blockStateID": 4897,
@@ -4594,7 +4528,7 @@
     },
     "minecraft:crimson_wall_sign": {
         "BDF": "atlas:wall_sign",
-        "TEF": "atlas:sign",
+        "TEF": "minecraft:sign",
         "amount": 0,
         "const": "CRIMSON_WALL_SIGN",
         "blockStateID": 20353,
@@ -4602,7 +4536,7 @@
     },
     "minecraft:warped_wall_sign": {
         "BDF": "atlas:wall_sign",
-        "TEF": "atlas:sign",
+        "TEF": "minecraft:sign",
         "amount": 0,
         "const": "WARPED_WALL_SIGN",
         "blockStateID": 20361,
@@ -4673,7 +4607,6 @@
     },
     "minecraft:tropical_fish_bucket": {
         "itemID": 951,
-        "IMF": "atlas:tropical_bucket",
         "amount": 1,
         "const": "TROPICAL_FISH_BUCKET"
     },
@@ -4720,12 +4653,10 @@
     },
     "minecraft:compass": {
         "itemID": 961,
-        "IMF": "atlas:compass",
         "const": "COMPASS"
     },
     "minecraft:fishing_rod": {
         "itemID": 980,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "FISHING_ROD"
     },
@@ -4991,12 +4922,10 @@
     },
     "minecraft:filled_map": {
         "itemID": 1031,
-        "IMF": "atlas:map",
         "const": "FILLED_MAP"
     },
     "minecraft:shears": {
         "itemID": 1032,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "SHEARS"
     },
@@ -5062,7 +4991,6 @@
     },
     "minecraft:potion": {
         "itemID": 1048,
-        "IMF": "atlas:potion",
         "amount": 1,
         "const": "POTION"
     },
@@ -5089,7 +5017,7 @@
     "minecraft:brewing_stand": {
         "itemID": 1053,
         "BDF": "atlas:brewing_stand",
-        "TEF": "atlas:brewing_stand",
+        "TEF": "minecraft:brewing_stand",
         "const": "BREWING_STAND",
         "blockStateID": 8164,
         "blockID": 351
@@ -5635,14 +5563,14 @@
     "minecraft:player_head": {
         "itemID": 1156,
         "BDF": "atlas:skull",
-        "TEF": "atlas:skull",
+        "TEF": "minecraft:skull",
         "const": "PLAYER_HEAD",
         "blockStateID": 9746,
         "blockID": 423
     },
     "minecraft:player_wall_head": {
         "BDF": "atlas:wall_skull",
-        "TEF": "atlas:skull",
+        "TEF": "minecraft:skull",
         "amount": 0,
         "const": "PLAYER_WALL_HEAD",
         "blockStateID": 9778,
@@ -5692,13 +5620,11 @@
     },
     "minecraft:carrot_on_a_stick": {
         "itemID": 799,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "CARROT_ON_A_STICK"
     },
     "minecraft:warped_fungus_on_a_stick": {
         "itemID": 800,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "WARPED_FUNGUS_ON_A_STICK"
     },
@@ -5712,17 +5638,14 @@
     },
     "minecraft:firework_rocket": {
         "itemID": 1163,
-        "IMF": "atlas:firework",
         "const": "FIREWORK_ROCKET"
     },
     "minecraft:firework_star": {
         "itemID": 1164,
-        "IMF": "atlas:firework_effect",
         "const": "FIREWORK_STAR"
     },
     "minecraft:enchanted_book": {
         "itemID": 1165,
-        "IMF": "atlas:enchantment_storage",
         "amount": 1,
         "const": "ENCHANTED_BOOK"
     },
@@ -5822,7 +5745,7 @@
     "minecraft:white_banner": {
         "itemID": 1185,
         "BDF": "atlas:banner",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "const": "WHITE_BANNER",
         "blockStateID": 11638,
         "blockID": 527
@@ -5830,7 +5753,7 @@
     "minecraft:orange_banner": {
         "itemID": 1186,
         "BDF": "atlas:banner",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "const": "ORANGE_BANNER",
         "blockStateID": 11654,
         "blockID": 528
@@ -5838,7 +5761,7 @@
     "minecraft:magenta_banner": {
         "itemID": 1187,
         "BDF": "atlas:banner",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "const": "MAGENTA_BANNER",
         "blockStateID": 11670,
         "blockID": 529
@@ -5846,7 +5769,7 @@
     "minecraft:light_blue_banner": {
         "itemID": 1188,
         "BDF": "atlas:banner",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "const": "LIGHT_BLUE_BANNER",
         "blockStateID": 11686,
         "blockID": 530
@@ -5854,7 +5777,7 @@
     "minecraft:yellow_banner": {
         "itemID": 1189,
         "BDF": "atlas:banner",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "const": "YELLOW_BANNER",
         "blockStateID": 11702,
         "blockID": 531
@@ -5862,7 +5785,7 @@
     "minecraft:lime_banner": {
         "itemID": 1190,
         "BDF": "atlas:banner",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "const": "LIME_BANNER",
         "blockStateID": 11718,
         "blockID": 532
@@ -5870,7 +5793,7 @@
     "minecraft:pink_banner": {
         "itemID": 1191,
         "BDF": "atlas:banner",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "const": "PINK_BANNER",
         "blockStateID": 11734,
         "blockID": 533
@@ -5878,7 +5801,7 @@
     "minecraft:gray_banner": {
         "itemID": 1192,
         "BDF": "atlas:banner",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "const": "GRAY_BANNER",
         "blockStateID": 11750,
         "blockID": 534
@@ -5886,7 +5809,7 @@
     "minecraft:light_gray_banner": {
         "itemID": 1193,
         "BDF": "atlas:banner",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "const": "LIGHT_GRAY_BANNER",
         "blockStateID": 11766,
         "blockID": 535
@@ -5894,7 +5817,7 @@
     "minecraft:cyan_banner": {
         "itemID": 1194,
         "BDF": "atlas:banner",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "const": "CYAN_BANNER",
         "blockStateID": 11782,
         "blockID": 536
@@ -5902,7 +5825,7 @@
     "minecraft:purple_banner": {
         "itemID": 1195,
         "BDF": "atlas:banner",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "const": "PURPLE_BANNER",
         "blockStateID": 11798,
         "blockID": 537
@@ -5910,7 +5833,7 @@
     "minecraft:blue_banner": {
         "itemID": 1196,
         "BDF": "atlas:banner",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "const": "BLUE_BANNER",
         "blockStateID": 11814,
         "blockID": 538
@@ -5918,7 +5841,7 @@
     "minecraft:brown_banner": {
         "itemID": 1197,
         "BDF": "atlas:banner",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "const": "BROWN_BANNER",
         "blockStateID": 11830,
         "blockID": 539
@@ -5926,7 +5849,7 @@
     "minecraft:green_banner": {
         "itemID": 1198,
         "BDF": "atlas:banner",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "const": "GREEN_BANNER",
         "blockStateID": 11846,
         "blockID": 540
@@ -5934,7 +5857,7 @@
     "minecraft:red_banner": {
         "itemID": 1199,
         "BDF": "atlas:banner",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "const": "RED_BANNER",
         "blockStateID": 11862,
         "blockID": 541
@@ -5942,14 +5865,14 @@
     "minecraft:black_banner": {
         "itemID": 1200,
         "BDF": "atlas:banner",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "const": "BLACK_BANNER",
         "blockStateID": 11878,
         "blockID": 542
     },
     "minecraft:white_wall_banner": {
         "BDF": "atlas:directional4f",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "amount": 0,
         "const": "WHITE_WALL_BANNER",
         "blockStateID": 11894,
@@ -5957,7 +5880,7 @@
     },
     "minecraft:orange_wall_banner": {
         "BDF": "atlas:directional4f",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "amount": 0,
         "const": "ORANGE_WALL_BANNER",
         "blockStateID": 11898,
@@ -5965,7 +5888,7 @@
     },
     "minecraft:magenta_wall_banner": {
         "BDF": "atlas:directional4f",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "amount": 0,
         "const": "MAGENTA_WALL_BANNER",
         "blockStateID": 11902,
@@ -5973,7 +5896,7 @@
     },
     "minecraft:light_blue_wall_banner": {
         "BDF": "atlas:directional4f",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "amount": 0,
         "const": "LIGHT_BLUE_WALL_BANNER",
         "blockStateID": 11906,
@@ -5981,7 +5904,7 @@
     },
     "minecraft:yellow_wall_banner": {
         "BDF": "atlas:directional4f",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "amount": 0,
         "const": "YELLOW_WALL_BANNER",
         "blockStateID": 11910,
@@ -5989,7 +5912,7 @@
     },
     "minecraft:lime_wall_banner": {
         "BDF": "atlas:directional4f",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "amount": 0,
         "const": "LIME_WALL_BANNER",
         "blockStateID": 11914,
@@ -5997,7 +5920,7 @@
     },
     "minecraft:pink_wall_banner": {
         "BDF": "atlas:directional4f",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "amount": 0,
         "const": "PINK_WALL_BANNER",
         "blockStateID": 11918,
@@ -6005,7 +5928,7 @@
     },
     "minecraft:gray_wall_banner": {
         "BDF": "atlas:directional4f",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "amount": 0,
         "const": "GRAY_WALL_BANNER",
         "blockStateID": 11922,
@@ -6013,7 +5936,7 @@
     },
     "minecraft:light_gray_wall_banner": {
         "BDF": "atlas:directional4f",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "amount": 0,
         "const": "LIGHT_GRAY_WALL_BANNER",
         "blockStateID": 11926,
@@ -6021,7 +5944,7 @@
     },
     "minecraft:cyan_wall_banner": {
         "BDF": "atlas:directional4f",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "amount": 0,
         "const": "CYAN_WALL_BANNER",
         "blockStateID": 11930,
@@ -6029,7 +5952,7 @@
     },
     "minecraft:purple_wall_banner": {
         "BDF": "atlas:directional4f",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "amount": 0,
         "const": "PURPLE_WALL_BANNER",
         "blockStateID": 11934,
@@ -6037,7 +5960,7 @@
     },
     "minecraft:blue_wall_banner": {
         "BDF": "atlas:directional4f",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "amount": 0,
         "const": "BLUE_WALL_BANNER",
         "blockStateID": 11938,
@@ -6045,7 +5968,7 @@
     },
     "minecraft:brown_wall_banner": {
         "BDF": "atlas:directional4f",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "amount": 0,
         "const": "BROWN_WALL_BANNER",
         "blockStateID": 11942,
@@ -6053,7 +5976,7 @@
     },
     "minecraft:green_wall_banner": {
         "BDF": "atlas:directional4f",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "amount": 0,
         "const": "GREEN_WALL_BANNER",
         "blockStateID": 11946,
@@ -6061,7 +5984,7 @@
     },
     "minecraft:red_wall_banner": {
         "BDF": "atlas:directional4f",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "amount": 0,
         "const": "RED_WALL_BANNER",
         "blockStateID": 11950,
@@ -6069,7 +5992,7 @@
     },
     "minecraft:black_wall_banner": {
         "BDF": "atlas:directional4f",
-        "TEF": "atlas:banner",
+        "TEF": "minecraft:banner",
         "amount": 0,
         "const": "BLACK_WALL_BANNER",
         "blockStateID": 11954,
@@ -6108,7 +6031,6 @@
     },
     "minecraft:splash_potion": {
         "itemID": 1210,
-        "IMF": "atlas:potion",
         "const": "SPLASH_POTION"
     },
     "minecraft:spectral_arrow": {
@@ -6117,23 +6039,19 @@
     },
     "minecraft:tipped_arrow": {
         "itemID": 1212,
-        "IMF": "atlas:potion",
         "const": "TIPPED_ARROW"
     },
     "minecraft:lingering_potion": {
         "itemID": 1213,
-        "IMF": "atlas:potion",
         "const": "LINGERING_POTION"
     },
     "minecraft:shield": {
         "itemID": 1214,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "SHIELD"
     },
     "minecraft:elytra": {
         "itemID": 802,
-        "IMF": "atlas:damageable",
         "amount": 1,
         "const": "ELYTRA"
     },
@@ -6177,7 +6095,6 @@
     },
     "minecraft:knowledge_book": {
         "itemID": 1218,
-        "IMF": "atlas:knowledge_book",
         "amount": 1,
         "const": "KNOWLEDGE_BOOK"
     },
@@ -6265,13 +6182,11 @@
     },
     "minecraft:crossbow": {
         "itemID": 1243,
-        "IMF": "atlas:crossbow",
         "amount": 1,
         "const": "CROSSBOW"
     },
     "minecraft:suspicious_stew": {
         "itemID": 1244,
-        "IMF": "atlas:suspicious_stew",
         "amount": 1,
         "const": "SUSPICIOUS_STEW"
     },
@@ -6322,7 +6237,7 @@
     "minecraft:barrel": {
         "itemID": 1258,
         "BDF": "atlas:barrel",
-        "TEF": "atlas:barrel",
+        "TEF": "minecraft:barrel",
         "const": "BARREL",
         "blockStateID": 19421,
         "blockID": 802
@@ -6330,7 +6245,7 @@
     "minecraft:smoker": {
         "itemID": 1259,
         "BDF": "atlas:furnace",
-        "TEF": "atlas:smoker",
+        "TEF": "minecraft:smoker",
         "const": "SMOKER",
         "blockStateID": 19433,
         "blockID": 803
@@ -6338,7 +6253,7 @@
     "minecraft:blast_furnace": {
         "itemID": 1260,
         "BDF": "atlas:furnace",
-        "TEF": "atlas:furnace",
+        "TEF": "minecraft:furnace",
         "const": "BLAST_FURNACE",
         "blockStateID": 19441,
         "blockID": 804
@@ -6365,7 +6280,7 @@
     "minecraft:lectern": {
         "itemID": 693,
         "BDF": "atlas:lectern",
-        "TEF": "atlas:lectern",
+        "TEF": "minecraft:lectern",
         "const": "LECTERN",
         "blockStateID": 19463,
         "blockID": 808
@@ -6417,7 +6332,7 @@
     "minecraft:campfire": {
         "itemID": 1271,
         "BDF": "atlas:campfire",
-        "TEF": "atlas:campfire",
+        "TEF": "minecraft:campfire",
         "const": "CAMPFIRE",
         "blockStateID": 19524,
         "blockID": 814
@@ -6442,7 +6357,7 @@
     "minecraft:bee_nest": {
         "itemID": 1275,
         "BDF": "atlas:beehive",
-        "TEF": "atlas:beehive",
+        "TEF": "minecraft:beehive",
         "const": "BEE_NEST",
         "blockStateID": 20410,
         "blockID": 864
@@ -6450,7 +6365,7 @@
     "minecraft:beehive": {
         "itemID": 1276,
         "BDF": "atlas:beehive",
-        "TEF": "atlas:beehive",
+        "TEF": "minecraft:beehive",
         "const": "BEEHIVE",
         "blockStateID": 20434,
         "blockID": 865
@@ -8339,12 +8254,10 @@
     },
     "minecraft:bundle": {
         "itemID": 963,
-        "IMF": "atlas:bundle",
         "const": "BUNDLE"
     },
     "minecraft:goat_horn": {
         "itemID": 1256,
-        "IMF": "atlas:goat_horn",
         "const": "GOAT_HORN"
     },
     "minecraft:mangrove_propagule": {
@@ -8384,7 +8297,6 @@
     },
     "minecraft:axolotl_bucket": {
         "itemID": 952,
-        "IMF": "atlas:tropical_bucket",
         "const": "AXOLOTL_BUCKET"
     },
     "minecraft:calibrated_sculk_sensor": {
@@ -8491,7 +8403,6 @@
     },
     "minecraft:tadpole_bucket": {
         "itemID": 953,
-        "IMF": "atlas:tropical_bucket",
         "const": "TADPOLE_BUCKET"
     },
     "minecraft:big_dripleaf_stem": {
@@ -8522,5 +8433,804 @@
         "const": "TORCHFLOWER_CROP",
         "blockStateID": 13508,
         "blockID": 626
+    },
+    "minecraft:armadillo_scute": {
+        "const": "ARMADILLO_SCUTE",
+        "itemID": 827
+    },
+    "minecraft:armadillo_spawn_egg": {
+        "const": "ARMADILLO_SPAWN_EGG",
+        "itemID": 1057
+    },
+    "minecraft:black_bundle": {
+        "const": "BLACK_BUNDLE",
+        "itemID": 979
+    },
+    "minecraft:blue_bundle": {
+        "const": "BLUE_BUNDLE",
+        "itemID": 975
+    },
+    "minecraft:bogged_spawn_egg": {
+        "const": "BOGGED_SPAWN_EGG",
+        "itemID": 1063
+    },
+    "minecraft:bolt_armor_trim_smithing_template": {
+        "const": "BOLT_ARMOR_TRIM_SMITHING_TEMPLATE",
+        "itemID": 1340
+    },
+    "minecraft:bordure_indented_banner_pattern": {
+        "const": "BORDURE_INDENTED_BANNER_PATTERN",
+        "itemID": 1255
+    },
+    "minecraft:breeze_rod": {
+        "const": "BREEZE_ROD",
+        "itemID": 1143
+    },
+    "minecraft:breeze_spawn_egg": {
+        "const": "BREEZE_SPAWN_EGG",
+        "itemID": 1064
+    },
+    "minecraft:brown_bundle": {
+        "const": "BROWN_BUNDLE",
+        "itemID": 976
+    },
+    "minecraft:creaking_spawn_egg": {
+        "const": "CREAKING_SPAWN_EGG",
+        "itemID": 1133
+    },
+    "minecraft:cyan_bundle": {
+        "const": "CYAN_BUNDLE",
+        "itemID": 973
+    },
+    "minecraft:field_masoned_banner_pattern": {
+        "const": "FIELD_MASONED_BANNER_PATTERN",
+        "itemID": 1254
+    },
+    "minecraft:flow_armor_trim_smithing_template": {
+        "const": "FLOW_ARMOR_TRIM_SMITHING_TEMPLATE",
+        "itemID": 1339
+    },
+    "minecraft:flow_banner_pattern": {
+        "const": "FLOW_BANNER_PATTERN",
+        "itemID": 1252
+    },
+    "minecraft:flow_pottery_sherd": {
+        "const": "FLOW_POTTERY_SHERD",
+        "itemID": 1349
+    },
+    "minecraft:gray_bundle": {
+        "const": "GRAY_BUNDLE",
+        "itemID": 971
+    },
+    "minecraft:green_bundle": {
+        "const": "GREEN_BUNDLE",
+        "itemID": 977
+    },
+    "minecraft:guster_banner_pattern": {
+        "const": "GUSTER_BANNER_PATTERN",
+        "itemID": 1253
+    },
+    "minecraft:guster_pottery_sherd": {
+        "const": "GUSTER_POTTERY_SHERD",
+        "itemID": 1351
+    },
+    "minecraft:light_blue_bundle": {
+        "const": "LIGHT_BLUE_BUNDLE",
+        "itemID": 967
+    },
+    "minecraft:light_gray_bundle": {
+        "const": "LIGHT_GRAY_BUNDLE",
+        "itemID": 972
+    },
+    "minecraft:lime_bundle": {
+        "const": "LIME_BUNDLE",
+        "itemID": 969
+    },
+    "minecraft:mace": {
+        "const": "MACE",
+        "itemID": 1144
+    },
+    "minecraft:magenta_bundle": {
+        "const": "MAGENTA_BUNDLE",
+        "itemID": 966
+    },
+    "minecraft:music_disc_creator": {
+        "const": "MUSIC_DISC_CREATOR",
+        "itemID": 1224
+    },
+    "minecraft:music_disc_creator_music_box": {
+        "const": "MUSIC_DISC_CREATOR_MUSIC_BOX",
+        "itemID": 1225
+    },
+    "minecraft:music_disc_precipice": {
+        "const": "MUSIC_DISC_PRECIPICE",
+        "itemID": 1238
+    },
+    "minecraft:ominous_bottle": {
+        "const": "OMINOUS_BOTTLE",
+        "itemID": 1384
+    },
+    "minecraft:ominous_trial_key": {
+        "const": "OMINOUS_TRIAL_KEY",
+        "itemID": 1382
+    },
+    "minecraft:orange_bundle": {
+        "const": "ORANGE_BUNDLE",
+        "itemID": 965
+    },
+    "minecraft:pale_oak_boat": {
+        "const": "PALE_OAK_BOAT",
+        "itemID": 817
+    },
+    "minecraft:pale_oak_chest_boat": {
+        "const": "PALE_OAK_CHEST_BOAT",
+        "itemID": 818
+    },
+    "minecraft:pink_bundle": {
+        "const": "PINK_BUNDLE",
+        "itemID": 970
+    },
+    "minecraft:purple_bundle": {
+        "const": "PURPLE_BUNDLE",
+        "itemID": 974
+    },
+    "minecraft:red_bundle": {
+        "const": "RED_BUNDLE",
+        "itemID": 978
+    },
+    "minecraft:resin_brick": {
+        "const": "RESIN_BRICK",
+        "itemID": 1167
+    },
+    "minecraft:scrape_pottery_sherd": {
+        "const": "SCRAPE_POTTERY_SHERD",
+        "itemID": 1359
+    },
+    "minecraft:trial_key": {
+        "const": "TRIAL_KEY",
+        "itemID": 1381
+    },
+    "minecraft:turtle_scute": {
+        "const": "TURTLE_SCUTE",
+        "itemID": 826
+    },
+    "minecraft:white_bundle": {
+        "const": "WHITE_BUNDLE",
+        "itemID": 964
+    },
+    "minecraft:wind_charge": {
+        "const": "WIND_CHARGE",
+        "itemID": 1140
+    },
+    "minecraft:wolf_armor": {
+        "const": "WOLF_ARMOR",
+        "itemID": 828
+    },
+    "minecraft:yellow_bundle": {
+        "const": "YELLOW_BUNDLE",
+        "itemID": 968
+    },
+    "minecraft:chiseled_copper": {
+        "const": "CHISELED_COPPER",
+        "itemID": 98,
+        "blockStateID": 23964,
+        "blockID": 973
+    },
+    "minecraft:chiseled_resin_bricks": {
+        "const": "CHISELED_RESIN_BRICKS",
+        "itemID": 382,
+        "blockStateID": 8045,
+        "blockID": 345
+    },
+    "minecraft:chiseled_tuff": {
+        "const": "CHISELED_TUFF",
+        "itemID": 16,
+        "blockStateID": 22916,
+        "blockID": 945
+    },
+    "minecraft:chiseled_tuff_bricks": {
+        "const": "CHISELED_TUFF_BRICKS",
+        "itemID": 25,
+        "blockStateID": 23328,
+        "blockID": 950
+    },
+    "minecraft:closed_eyeblossom": {
+        "const": "CLOSED_EYEBLOSSOM",
+        "itemID": 227,
+        "blockStateID": 27863,
+        "blockID": 1092
+    },
+    "minecraft:exposed_chiseled_copper": {
+        "const": "EXPOSED_CHISELED_COPPER",
+        "itemID": 99,
+        "blockStateID": 23963,
+        "blockID": 972
+    },
+    "minecraft:open_eyeblossom": {
+        "const": "OPEN_EYEBLOSSOM",
+        "itemID": 226,
+        "blockStateID": 27862,
+        "blockID": 1091
+    },
+    "minecraft:oxidized_chiseled_copper": {
+        "const": "OXIDIZED_CHISELED_COPPER",
+        "itemID": 101,
+        "blockStateID": 23961,
+        "blockID": 970
+    },
+    "minecraft:pale_moss_block": {
+        "const": "PALE_MOSS_BLOCK",
+        "itemID": 259,
+        "blockStateID": 27697,
+        "blockID": 1088
+    },
+    "minecraft:pale_oak_planks": {
+        "const": "PALE_OAK_PLANKS",
+        "itemID": 43,
+        "blockStateID": 25,
+        "blockID": 21
+    },
+    "minecraft:polished_tuff": {
+        "const": "POLISHED_TUFF",
+        "itemID": 17,
+        "blockStateID": 22505,
+        "blockID": 941
+    },
+    "minecraft:resin_block": {
+        "const": "RESIN_BLOCK",
+        "itemID": 377,
+        "blockStateID": 7633,
+        "blockID": 340
+    },
+    "minecraft:resin_bricks": {
+        "const": "RESIN_BRICKS",
+        "itemID": 378,
+        "blockStateID": 7634,
+        "blockID": 341
+    },
+    "minecraft:short_grass": {
+        "const": "SHORT_GRASS",
+        "itemID": 202,
+        "blockStateID": 2048,
+        "blockID": 130
+    },
+    "minecraft:tuff_bricks": {
+        "const": "TUFF_BRICKS",
+        "itemID": 21,
+        "blockStateID": 22917,
+        "blockID": 946
+    },
+    "minecraft:waxed_chiseled_copper": {
+        "const": "WAXED_CHISELED_COPPER",
+        "itemID": 118,
+        "blockStateID": 23968,
+        "blockID": 977
+    },
+    "minecraft:waxed_exposed_chiseled_copper": {
+        "const": "WAXED_EXPOSED_CHISELED_COPPER",
+        "itemID": 119,
+        "blockStateID": 23967,
+        "blockID": 976
+    },
+    "minecraft:waxed_oxidized_chiseled_copper": {
+        "const": "WAXED_OXIDIZED_CHISELED_COPPER",
+        "itemID": 121,
+        "blockStateID": 23965,
+        "blockID": 974
+    },
+    "minecraft:waxed_weathered_chiseled_copper": {
+        "const": "WAXED_WEATHERED_CHISELED_COPPER",
+        "itemID": 120,
+        "blockStateID": 23966,
+        "blockID": 975
+    },
+    "minecraft:weathered_chiseled_copper": {
+        "const": "WEATHERED_CHISELED_COPPER",
+        "itemID": 100,
+        "blockStateID": 23962,
+        "blockID": 971
+    },
+    "minecraft:potted_closed_eyeblossom": {
+        "const": "POTTED_CLOSED_EYEBLOSSOM",
+        "blockStateID": 27865,
+        "blockID": 1094
+    },
+    "minecraft:potted_open_eyeblossom": {
+        "const": "POTTED_OPEN_EYEBLOSSOM",
+        "blockStateID": 27864,
+        "blockID": 1093
+    },
+    "minecraft:potted_pale_oak_sapling": {
+        "const": "POTTED_PALE_OAK_SAPLING",
+        "blockStateID": 9350,
+        "blockID": 385
+    },
+    "minecraft:copper_door": {
+        "const": "COPPER_DOOR",
+        "itemID": 748,
+        "blockStateID": 24665,
+        "BDF": "atlas:door",
+        "blockID": 1002
+    },
+    "minecraft:copper_grate": {
+        "const": "COPPER_GRATE",
+        "itemID": 1364,
+        "blockStateID": 25689,
+        "BDF": "atlas:gate",
+        "blockID": 1018
+    },
+    "minecraft:copper_trapdoor": {
+        "const": "COPPER_TRAPDOOR",
+        "itemID": 769,
+        "blockStateID": 25177,
+        "BDF": "atlas:trap_door",
+        "blockID": 1010
+    },
+    "minecraft:exposed_copper_door": {
+        "const": "EXPOSED_COPPER_DOOR",
+        "itemID": 749,
+        "blockStateID": 24729,
+        "BDF": "atlas:door",
+        "blockID": 1003
+    },
+    "minecraft:exposed_copper_grate": {
+        "const": "EXPOSED_COPPER_GRATE",
+        "itemID": 1365,
+        "blockStateID": 25691,
+        "BDF": "atlas:gate",
+        "blockID": 1019
+    },
+    "minecraft:exposed_copper_trapdoor": {
+        "const": "EXPOSED_COPPER_TRAPDOOR",
+        "itemID": 770,
+        "blockStateID": 25241,
+        "BDF": "atlas:trap_door",
+        "blockID": 1011
+    },
+    "minecraft:oxidized_copper_door": {
+        "const": "OXIDIZED_COPPER_DOOR",
+        "itemID": 751,
+        "blockStateID": 24793,
+        "BDF": "atlas:door",
+        "blockID": 1004
+    },
+    "minecraft:oxidized_copper_grate": {
+        "const": "OXIDIZED_COPPER_GRATE",
+        "itemID": 1367,
+        "blockStateID": 25695,
+        "BDF": "atlas:gate",
+        "blockID": 1021
+    },
+    "minecraft:oxidized_copper_trapdoor": {
+        "const": "OXIDIZED_COPPER_TRAPDOOR",
+        "itemID": 772,
+        "blockStateID": 25305,
+        "BDF": "atlas:trap_door",
+        "blockID": 1012
+    },
+    "minecraft:pale_oak_button": {
+        "const": "PALE_OAK_BUTTON",
+        "itemID": 714,
+        "blockStateID": 9554,
+        "BDF": "atlas:switch",
+        "blockID": 414
+    },
+    "minecraft:pale_oak_door": {
+        "const": "PALE_OAK_DOOR",
+        "itemID": 743,
+        "blockStateID": 13155,
+        "BDF": "atlas:door",
+        "blockID": 616
+    },
+    "minecraft:pale_oak_fence": {
+        "const": "PALE_OAK_FENCE",
+        "itemID": 332,
+        "blockStateID": 12675,
+        "BDF": "atlas:fence",
+        "blockID": 607
+    },
+    "minecraft:pale_oak_fence_gate": {
+        "const": "PALE_OAK_FENCE_GATE",
+        "itemID": 784,
+        "blockStateID": 12387,
+        "BDF": "atlas:gate",
+        "blockID": 598
+    },
+    "minecraft:pale_oak_hanging_sign": {
+        "const": "PALE_OAK_HANGING_SIGN",
+        "itemID": 936,
+        "blockStateID": 5377,
+        "BDF": "atlas:hanging_sign",
+        "blockID": 225
+    },
+    "minecraft:pale_oak_leaves": {
+        "const": "PALE_OAK_LEAVES",
+        "itemID": 189,
+        "blockStateID": 448,
+        "BDF": "atlas:leaves",
+        "blockID": 95
+    },
+    "minecraft:pale_oak_log": {
+        "const": "PALE_OAK_LOG",
+        "itemID": 140,
+        "blockStateID": 157,
+        "BDF": "atlas:axisorientable",
+        "blockID": 56
+    },
+    "minecraft:pale_oak_pressure_plate": {
+        "const": "PALE_OAK_PRESSURE_PLATE",
+        "itemID": 730,
+        "blockStateID": 5897,
+        "BDF": "atlas:switch",
+        "blockID": 252
+    },
+    "minecraft:pale_oak_sapling": {
+        "const": "PALE_OAK_SAPLING",
+        "itemID": 56,
+        "blockStateID": 43,
+        "BDF": "atlas:sapling",
+        "blockID": 32
+    },
+    "minecraft:pale_oak_sign": {
+        "const": "PALE_OAK_SIGN",
+        "itemID": 924,
+        "blockStateID": 4581,
+        "BDF": "atlas:sign",
+        "blockID": 201
+    },
+    "minecraft:pale_oak_slab": {
+        "const": "PALE_OAK_SLAB",
+        "itemID": 271,
+        "blockStateID": 12083,
+        "BDF": "atlas:slab",
+        "blockID": 570
+    },
+    "minecraft:pale_oak_stairs": {
+        "const": "PALE_OAK_STAIRS",
+        "itemID": 412,
+        "blockStateID": 10923,
+        "BDF": "atlas:stairs",
+        "blockID": 483
+    },
+    "minecraft:pale_oak_trapdoor": {
+        "const": "PALE_OAK_TRAPDOOR",
+        "itemID": 764,
+        "blockStateID": 6578,
+        "BDF": "atlas:trap_door",
+        "blockID": 304
+    },
+    "minecraft:pale_oak_wood": {
+        "const": "PALE_OAK_WOOD",
+        "itemID": 177,
+        "blockStateID": 22,
+        "BDF": "atlas:axisorientable",
+        "blockID": 20
+    },
+    "minecraft:polished_tuff_slab": {
+        "const": "POLISHED_TUFF_SLAB",
+        "itemID": 18,
+        "blockStateID": 22506,
+        "BDF": "atlas:slab",
+        "blockID": 942
+    },
+    "minecraft:polished_tuff_stairs": {
+        "const": "POLISHED_TUFF_STAIRS",
+        "itemID": 19,
+        "blockStateID": 22512,
+        "BDF": "atlas:stairs",
+        "blockID": 943
+    },
+    "minecraft:polished_tuff_wall": {
+        "const": "POLISHED_TUFF_WALL",
+        "itemID": 20,
+        "blockStateID": 22592,
+        "BDF": "atlas:wall",
+        "blockID": 944
+    },
+    "minecraft:resin_brick_slab": {
+        "const": "RESIN_BRICK_SLAB",
+        "itemID": 380,
+        "blockStateID": 7715,
+        "BDF": "atlas:slab",
+        "blockID": 343
+    },
+    "minecraft:resin_brick_stairs": {
+        "const": "RESIN_BRICK_STAIRS",
+        "itemID": 379,
+        "blockStateID": 7635,
+        "BDF": "atlas:stairs",
+        "blockID": 342
+    },
+    "minecraft:resin_brick_wall": {
+        "const": "RESIN_BRICK_WALL",
+        "itemID": 381,
+        "blockStateID": 7721,
+        "BDF": "atlas:wall",
+        "blockID": 344
+    },
+    "minecraft:stripped_pale_oak_log": {
+        "const": "STRIPPED_PALE_OAK_LOG",
+        "itemID": 155,
+        "blockStateID": 189,
+        "BDF": "atlas:axisorientable",
+        "blockID": 67
+    },
+    "minecraft:stripped_pale_oak_wood": {
+        "const": "STRIPPED_PALE_OAK_WOOD",
+        "itemID": 166,
+        "blockStateID": 246,
+        "BDF": "atlas:axisorientable",
+        "blockID": 86
+    },
+    "minecraft:tuff_brick_slab": {
+        "const": "TUFF_BRICK_SLAB",
+        "itemID": 22,
+        "blockStateID": 22918,
+        "BDF": "atlas:slab",
+        "blockID": 947
+    },
+    "minecraft:tuff_brick_stairs": {
+        "const": "TUFF_BRICK_STAIRS",
+        "itemID": 23,
+        "blockStateID": 22924,
+        "BDF": "atlas:stairs",
+        "blockID": 948
+    },
+    "minecraft:tuff_brick_wall": {
+        "const": "TUFF_BRICK_WALL",
+        "itemID": 24,
+        "blockStateID": 23004,
+        "BDF": "atlas:wall",
+        "blockID": 949
+    },
+    "minecraft:tuff_slab": {
+        "const": "TUFF_SLAB",
+        "itemID": 13,
+        "blockStateID": 22095,
+        "BDF": "atlas:slab",
+        "blockID": 938
+    },
+    "minecraft:tuff_stairs": {
+        "const": "TUFF_STAIRS",
+        "itemID": 14,
+        "blockStateID": 22101,
+        "BDF": "atlas:stairs",
+        "blockID": 939
+    },
+    "minecraft:tuff_wall": {
+        "const": "TUFF_WALL",
+        "itemID": 15,
+        "blockStateID": 22181,
+        "BDF": "atlas:wall",
+        "blockID": 940
+    },
+    "minecraft:waxed_copper_door": {
+        "const": "WAXED_COPPER_DOOR",
+        "itemID": 752,
+        "blockStateID": 24921,
+        "BDF": "atlas:door",
+        "blockID": 1006
+    },
+    "minecraft:waxed_copper_grate": {
+        "const": "WAXED_COPPER_GRATE",
+        "itemID": 1368,
+        "blockStateID": 25697,
+        "BDF": "atlas:gate",
+        "blockID": 1022
+    },
+    "minecraft:waxed_copper_trapdoor": {
+        "const": "WAXED_COPPER_TRAPDOOR",
+        "itemID": 773,
+        "blockStateID": 25433,
+        "BDF": "atlas:trap_door",
+        "blockID": 1014
+    },
+    "minecraft:waxed_exposed_copper_door": {
+        "const": "WAXED_EXPOSED_COPPER_DOOR",
+        "itemID": 753,
+        "blockStateID": 24985,
+        "BDF": "atlas:door",
+        "blockID": 1007
+    },
+    "minecraft:waxed_exposed_copper_grate": {
+        "const": "WAXED_EXPOSED_COPPER_GRATE",
+        "itemID": 1369,
+        "blockStateID": 25699,
+        "BDF": "atlas:gate",
+        "blockID": 1023
+    },
+    "minecraft:waxed_exposed_copper_trapdoor": {
+        "const": "WAXED_EXPOSED_COPPER_TRAPDOOR",
+        "itemID": 774,
+        "blockStateID": 25497,
+        "BDF": "atlas:trap_door",
+        "blockID": 1015
+    },
+    "minecraft:waxed_oxidized_copper_door": {
+        "const": "WAXED_OXIDIZED_COPPER_DOOR",
+        "itemID": 755,
+        "blockStateID": 25049,
+        "BDF": "atlas:door",
+        "blockID": 1008
+    },
+    "minecraft:waxed_oxidized_copper_grate": {
+        "const": "WAXED_OXIDIZED_COPPER_GRATE",
+        "itemID": 1371,
+        "blockStateID": 25703,
+        "BDF": "atlas:gate",
+        "blockID": 1025
+    },
+    "minecraft:waxed_oxidized_copper_trapdoor": {
+        "const": "WAXED_OXIDIZED_COPPER_TRAPDOOR",
+        "itemID": 776,
+        "blockStateID": 25561,
+        "BDF": "atlas:trap_door",
+        "blockID": 1016
+    },
+    "minecraft:waxed_weathered_copper_door": {
+        "const": "WAXED_WEATHERED_COPPER_DOOR",
+        "itemID": 754,
+        "blockStateID": 25113,
+        "BDF": "atlas:door",
+        "blockID": 1009
+    },
+    "minecraft:waxed_weathered_copper_grate": {
+        "const": "WAXED_WEATHERED_COPPER_GRATE",
+        "itemID": 1370,
+        "blockStateID": 25701,
+        "BDF": "atlas:gate",
+        "blockID": 1024
+    },
+    "minecraft:waxed_weathered_copper_trapdoor": {
+        "const": "WAXED_WEATHERED_COPPER_TRAPDOOR",
+        "itemID": 775,
+        "blockStateID": 25625,
+        "BDF": "atlas:trap_door",
+        "blockID": 1017
+    },
+    "minecraft:weathered_copper_door": {
+        "const": "WEATHERED_COPPER_DOOR",
+        "itemID": 750,
+        "blockStateID": 24857,
+        "BDF": "atlas:door",
+        "blockID": 1005
+    },
+    "minecraft:weathered_copper_grate": {
+        "const": "WEATHERED_COPPER_GRATE",
+        "itemID": 1366,
+        "blockStateID": 25693,
+        "BDF": "atlas:gate",
+        "blockID": 1020
+    },
+    "minecraft:weathered_copper_trapdoor": {
+        "const": "WEATHERED_COPPER_TRAPDOOR",
+        "itemID": 771,
+        "blockStateID": 25369,
+        "BDF": "atlas:trap_door",
+        "blockID": 1013
+    },
+    "minecraft:pale_oak_wall_hanging_sign": {
+        "const": "PALE_OAK_WALL_HANGING_SIGN",
+        "blockStateID": 5753,
+        "BDF": "atlas:wall_sign",
+        "blockID": 237
+    },
+    "minecraft:pale_oak_wall_sign": {
+        "const": "PALE_OAK_WALL_SIGN",
+        "blockStateID": 4905,
+        "BDF": "atlas:wall_sign",
+        "blockID": 215
+    },
+    "minecraft:copper_bulb": {
+        "const": "COPPER_BULB",
+        "itemID": 1372,
+        "blockStateID": 25705,
+        "BDF": "atlas:bulb",
+        "blockID": 1026
+    },
+    "minecraft:crafter": {
+        "const": "CRAFTER",
+        "itemID": 1030,
+        "blockStateID": 27603,
+        "BDF": "atlas:crafter",
+        "blockID": 1084
+    },
+    "minecraft:exposed_copper_bulb": {
+        "const": "EXPOSED_COPPER_BULB",
+        "itemID": 1373,
+        "blockStateID": 25709,
+        "BDF": "atlas:bulb",
+        "blockID": 1027
+    },
+    "minecraft:oxidized_copper_bulb": {
+        "const": "OXIDIZED_COPPER_BULB",
+        "itemID": 1375,
+        "blockStateID": 25717,
+        "BDF": "atlas:bulb",
+        "blockID": 1029
+    },
+    "minecraft:waxed_copper_bulb": {
+        "const": "WAXED_COPPER_BULB",
+        "itemID": 1376,
+        "blockStateID": 25721,
+        "BDF": "atlas:bulb",
+        "blockID": 1030
+    },
+    "minecraft:waxed_exposed_copper_bulb": {
+        "const": "WAXED_EXPOSED_COPPER_BULB",
+        "itemID": 1377,
+        "blockStateID": 25725,
+        "BDF": "atlas:bulb",
+        "blockID": 1031
+    },
+    "minecraft:waxed_oxidized_copper_bulb": {
+        "const": "WAXED_OXIDIZED_COPPER_BULB",
+        "itemID": 1379,
+        "blockStateID": 25733,
+        "BDF": "atlas:bulb",
+        "blockID": 1033
+    },
+    "minecraft:waxed_weathered_copper_bulb": {
+        "const": "WAXED_WEATHERED_COPPER_BULB",
+        "itemID": 1378,
+        "blockStateID": 25729,
+        "BDF": "atlas:bulb",
+        "blockID": 1032
+    },
+    "minecraft:weathered_copper_bulb": {
+        "const": "WEATHERED_COPPER_BULB",
+        "itemID": 1374,
+        "blockStateID": 25713,
+        "BDF": "atlas:bulb",
+        "blockID": 1028
+    },
+    "minecraft:creaking_heart": {
+        "const": "CREAKING_HEART",
+        "itemID": 312,
+        "blockStateID": 2917,
+        "BDF": "atlas:creaking_heart",
+        "blockID": 183
+    },
+    "minecraft:heavy_core": {
+        "const": "HEAVY_CORE",
+        "itemID": 87,
+        "blockStateID": 27695,
+        "BDF": "atlas:waterlogged",
+        "blockID": 1087
+    },
+    "minecraft:pale_hanging_moss": {
+        "const": "PALE_HANGING_MOSS",
+        "itemID": 258,
+        "blockStateID": 27860,
+        "BDF": "atlas:hanging_moss",
+        "blockID": 1090
+    },
+    "minecraft:pale_moss_carpet": {
+        "const": "PALE_MOSS_CARPET",
+        "itemID": 257,
+        "blockStateID": 27698,
+        "BDF": "atlas:mossy_carpet",
+        "blockID": 1089
+    },
+    "minecraft:resin_clump": {
+        "const": "RESIN_CLUMP",
+        "itemID": 376,
+        "blockStateID": 7230,
+        "BDF": "atlas:resin_clumb",
+        "blockID": 333
+    },
+    "minecraft:trial_spawner": {
+        "const": "TRIAL_SPAWNER",
+        "itemID": 1380,
+        "blockStateID": 27651,
+        "BDF": "atlas:trial_spawner",
+        "blockID": 1085
+    },
+    "minecraft:vault": {
+        "const": "VAULT",
+        "itemID": 1383,
+        "blockStateID": 27663,
+        "BDF": "atlas:vault",
+        "blockID": 1086
     }
 }

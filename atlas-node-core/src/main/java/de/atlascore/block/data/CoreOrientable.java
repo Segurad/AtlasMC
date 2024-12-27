@@ -14,7 +14,7 @@ public class CoreOrientable extends CoreBlockData implements Orientable {
 		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.ORIENTATION);
 	}
 	
-	private Orientation orientation;
+	protected Orientation orientation;
 	
 	public CoreOrientable(Material material) {
 		super(material);
@@ -35,7 +35,7 @@ public class CoreOrientable extends CoreBlockData implements Orientable {
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+orientation.ordinal();
+		return material.getBlockStateID()+orientation.ordinal();
 	}
 	
 	@Override

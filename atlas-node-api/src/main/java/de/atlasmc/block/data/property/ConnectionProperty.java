@@ -2,10 +2,10 @@ package de.atlasmc.block.data.property;
 
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.BlockData;
+import de.atlasmc.block.data.HightConnectable;
+import de.atlasmc.block.data.HightConnectable.Height;
 import de.atlasmc.block.data.type.RedstoneWire;
 import de.atlasmc.block.data.type.RedstoneWire.Connection;
-import de.atlasmc.block.data.type.Wall;
-import de.atlasmc.block.data.type.Wall.Height;
 
 class ConnectionProperty extends AbstractMultiEnumProperty {
 
@@ -19,7 +19,7 @@ class ConnectionProperty extends AbstractMultiEnumProperty {
 	public void set(BlockData data, Enum<?> value) {
 		if (data instanceof RedstoneWire wire) {
 			wire.setFace(face, (Connection) value);
-		} else if (data instanceof Wall wall) {
+		} else if (data instanceof HightConnectable wall) {
 			wall.setHeight(face, (Height) value);
 		}
 	}
@@ -28,7 +28,7 @@ class ConnectionProperty extends AbstractMultiEnumProperty {
 	public Enum<?> get(BlockData data) {
 		if (data instanceof RedstoneWire wire) { 
 			return wire.getFace(face);
-		} else if (data instanceof Wall wall) {
+		} else if (data instanceof HightConnectable wall) {
 			return wall.getHeight(face);
 		}
 		return null;
@@ -36,7 +36,7 @@ class ConnectionProperty extends AbstractMultiEnumProperty {
 
 	@Override
 	public boolean supports(BlockData data) {
-		return data instanceof RedstoneWire || data instanceof Wall;
+		return data instanceof RedstoneWire || data instanceof HightConnectable;
 	}
 
 }

@@ -14,12 +14,12 @@ public interface TrialSpawner extends Ominous {
 	
 	public static enum TrialSpawnerState implements EnumName, EnumValueCache {
 		
-		ACTIVE,
-		COOLDOWN,
-		EJECTING_REWARD,
 		INACTIVE,
 		WAITING_FOR_PLAYERS,
-		WAITING_FOR_REWARD_EJECTION;
+		ACTIVE,
+		WAITING_FOR_REWARD_EJECTION,
+		EJECTING_REWARD,
+		COOLDOWN;
 		
 		private static List<TrialSpawnerState> VALUES;
 		

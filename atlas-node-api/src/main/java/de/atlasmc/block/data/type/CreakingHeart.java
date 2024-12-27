@@ -11,7 +11,5 @@ public interface CreakingHeart extends AxisOrientable {
 	boolean isNatural();
 	
 	void setNatural(boolean natural);
-	
-	CreakingHeart clone();
 
 }

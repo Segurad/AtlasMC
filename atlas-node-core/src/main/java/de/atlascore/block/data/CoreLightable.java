@@ -14,7 +14,7 @@ public class CoreLightable extends CoreBlockData implements Lightable {
 		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.LIT);
 	}
 	
-	private boolean lit;
+	protected boolean lit;
 	
 	public CoreLightable(Material material) {
 		super(material);
@@ -32,7 +32,7 @@ public class CoreLightable extends CoreBlockData implements Lightable {
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+(lit?0:1);
+		return material.getBlockStateID()+(lit?0:1);
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package de.atlascore.block.data;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -17,9 +18,7 @@ public class CoreAxisOrientable extends CoreBlockData implements AxisOrientable 
 	}
 	
 	private static final Set<Axis> ALLOWED_AXIS =
-			Set.of(Axis.X,
-					Axis.Y,
-					Axis.Z);
+			EnumSet.allOf(Axis.class);
 	
 	private Axis axis;
 	

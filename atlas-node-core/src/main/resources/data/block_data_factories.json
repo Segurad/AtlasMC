@@ -720,6 +720,62 @@
                     "dataInterface": "de.atlasmc.block.data.type.WallSkull",
                     "data": "de.atlascore.block.data.type.CoreWallSkull"
                 }
+            },
+            {
+                "name": "atlas:bulb",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Bulb",
+                    "data": "de.atlascore.block.data.type.CoreBulb"
+                }
+            },
+            {
+                "name": "atlas:crafter",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Crafter",
+                    "data": "de.atlascore.block.data.type.CoreCrafter"
+                }
+            },
+            {
+                "name": "atlas:vault",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.Vault",
+                    "data": "de.atlascore.block.data.type.CoreVault"
+                }
+            },
+            {
+                "name": "atlas:trial_spawner",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.TrialSpawner",
+                    "data": "de.atlascore.block.data.type.CoreTrialSpawner"
+                }
+            },
+            {
+                "name": "atlas:resin_clumb",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.ResinClumb",
+                    "data": "de.atlascore.block.data.type.CoreResinClumb"
+                }
+            },
+            {
+                "name": "atlas:mossy_carpet",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.MossyCarpet",
+                    "data": "de.atlascore.block.data.type.CoreMossyCarpet"
+                }
+            },
+            {
+                "name": "atlas:hanging_moss",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.HangingMoss",
+                    "data": "de.atlascore.block.data.type.CoreHangingMoss"
+                }
+            },
+            {
+                "name": "atlas:creaking_heart",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.block.data.type.CreakingHeart",
+                    "data": "de.atlascore.block.data.type.CoreCreakingHeart"
+                }
             }
         ]
     },
