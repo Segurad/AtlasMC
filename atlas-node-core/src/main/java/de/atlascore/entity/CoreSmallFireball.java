@@ -10,10 +10,5 @@ public class CoreSmallFireball extends CoreSizedFireball implements SmallFirebal
 	public CoreSmallFireball(EntityType type, UUID uuid) {
 		super(type, uuid);
 	}
-
-	@Override
-	public ProjectileType getProjectileType() {
-		return ProjectileType.SMALL_FIREBALL;
-	}
-
+	
 }

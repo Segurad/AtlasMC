@@ -19,9 +19,9 @@ public abstract class RealClickButton extends AbstractButton {
 	public ItemStack press(InventoryClickEvent e) {
 		ItemStack sitem = e.getCurrentItem();
 		ItemStack citem = e.getCursor();
-		if (sitem != null && sitem.getType() == Material.AIR) 
+		if (sitem != null && sitem.getType().getNamespacedKey().equals(Material.AIR)) 
 			sitem = null;
-		if (citem != null && citem.getType() == Material.AIR) 
+		if (citem != null && citem.getType().getNamespacedKey().equals(Material.AIR)) 
 			citem = null;
 		if (citem == null && sitem == null) 
 			return null;

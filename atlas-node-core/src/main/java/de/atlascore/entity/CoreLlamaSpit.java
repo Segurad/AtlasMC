@@ -11,9 +11,4 @@ public class CoreLlamaSpit extends CoreAbstractProjectile implements LlamaSpit {
 		super(type, uuid);
 	}
 
-	@Override
-	public ProjectileType getProjectileType() {
-		return ProjectileType.LLAMA_SPIT;
-	}
-
 }

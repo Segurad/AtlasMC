@@ -11,9 +11,4 @@ public class CoreExpBottle extends CoreThrowableProjectile implements ExpBottle 
 		super(type, uuid);
 	}
 
-	@Override
-	public ProjectileType getProjectileType() {
-		return ProjectileType.EXP_BOTTLE;
-	}
-
 }

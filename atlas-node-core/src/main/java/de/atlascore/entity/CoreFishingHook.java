@@ -36,11 +36,6 @@ public class CoreFishingHook extends CoreAbstractProjectile implements FishingHo
 	}
 
 	@Override
-	public ProjectileType getProjectileType() {
-		return ProjectileType.FISH_HOOK;
-	}
-
-	@Override
 	public Entity getHookedEntity() {
 		return hooked;
 	}

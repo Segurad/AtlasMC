@@ -1,6 +1,7 @@
 package de.atlasmc.registry;
 
 import static java.lang.annotation.ElementType.TYPE;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -17,8 +18,18 @@ public @interface RegistryHolder {
 	Target target() default Target.INSTANCE;
 	
 	public static enum Target {
+		/**
+		 * Registry that stores instances
+		 */
 		INSTANCE,
-		CLASS
+		/**
+		 * Registry that stores classes
+		 */
+		CLASS,
+		/**
+		 * Registry that supports ids for data synchronization
+		 */
+		PROTOCOL;
 	}
 
 }

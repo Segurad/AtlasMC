@@ -1,12 +1,12 @@
 package de.atlascore.registry;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.registry.Registry;
 import de.atlasmc.registry.RegistryHolder.Target;
-import de.atlasmc.registry.InstanceRegistry;
 
-public class CoreInstanceRegistry<T> extends CoreAbstractRegistry<T> implements InstanceRegistry<T> {
+public class CoreInstanceRegistry<T> extends CoreAbstractRegistry<T> implements Registry<T> {
 
-	public CoreInstanceRegistry(NamespacedKey key, Class<T> type) {
+	public CoreInstanceRegistry(NamespacedKey key, Class<?> type) {
 		super(key, type);
 	}
 
@@ -19,12 +19,6 @@ public class CoreInstanceRegistry<T> extends CoreAbstractRegistry<T> implements 
 	protected void validateEntry(T value) {
 		if (!type.isInstance(value))
 			throw new IllegalArgumentException("Value (" + value.getClass().getName() + ") is not a instance of the registries type: " + type.getName());
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public Class<T> getType() {
-		return (Class<T>) super.getType();
 	}
 
 }

@@ -34,9 +34,15 @@ public class CoreEnchantingTable extends CoreTileEntity implements EnchantingTab
 	}
 	
 	@Override
+	public boolean hasCustomName() {
+		return name != null;
+	}
+	
+	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		if (!systemData) return;
+		if (!systemData) 
+			return;
 		writer.writeStringTag(NBT_CUSTOM_NAME, name.toJsonText());
 	}
 

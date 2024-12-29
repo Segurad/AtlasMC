@@ -4,8 +4,8 @@ import org.joml.Vector3d;
 
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.Dispenser;
+import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Projectile;
-import de.atlasmc.entity.Projectile.ProjectileType;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.entity.ProjectileLounchEvent;
 import de.atlasmc.inventory.Inventory;
@@ -40,10 +40,10 @@ public class CoreDispenser extends CoreAbstractContainerTile<Inventory> implemen
 	}
 
 	@Override
-	public Projectile lounchProjectile(ProjectileType type, Vector3d velocity) {
+	public Projectile lounchProjectile(EntityType type, Vector3d velocity) {
 		if (type == null)
 			throw new IllegalArgumentException("Type can not be null!");
-		Projectile pro = type.create(getWorld());
+		Projectile pro = (Projectile) type.create(getWorld());
 		return lounchProjectile(pro, velocity);
 	}
 

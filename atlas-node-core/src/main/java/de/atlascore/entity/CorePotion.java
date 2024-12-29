@@ -43,11 +43,6 @@ public class CorePotion extends CoreThrowableProjectile implements Potion {
 	protected NBTFieldContainer<? extends CorePotion> getFieldContainerRoot() {
 		return NBT_FIELDS;
 	}
-
-	@Override
-	public ProjectileType getProjectileType() {
-		return ProjectileType.POTION;
-	}
 	
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {

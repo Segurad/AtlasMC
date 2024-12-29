@@ -11,9 +11,4 @@ public class CoreEnderPearl extends CoreThrowableProjectile implements EnderPear
 		super(type, uuid);
 	}
 
-	@Override
-	public ProjectileType getProjectileType() {
-		return ProjectileType.ENDER_PEARL;
-	}
-
 }

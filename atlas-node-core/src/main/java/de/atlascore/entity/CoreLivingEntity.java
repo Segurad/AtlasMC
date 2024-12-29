@@ -29,7 +29,6 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.LivingEntity;
 import de.atlasmc.entity.Player;
 import de.atlasmc.entity.Projectile;
-import de.atlasmc.entity.Projectile.ProjectileType;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
@@ -1025,10 +1024,10 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	}
 
 	@Override
-	public Projectile lounchProjectile(ProjectileType type, Vector3d velocity) {
+	public Projectile lounchProjectile(EntityType type, Vector3d velocity) {
 		if (type == null)
 			throw new IllegalArgumentException("Type can not be null!");
-		Projectile pro = type.create(getWorld());
+		Projectile pro = (Projectile) type.create(getWorld());
 		return lounchProjectile(pro, velocity);
 	}
 	

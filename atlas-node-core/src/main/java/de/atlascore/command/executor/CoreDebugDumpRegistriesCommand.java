@@ -32,10 +32,10 @@ public class CoreDebugDumpRegistriesCommand implements CommandExecutor {
 		YamlConfiguration dump = null;
 		if (target == null) {
 			dump = new YamlConfiguration();
-			Collection<Registry<?>> registries = Registries.getRegistries();
+			Registry<Registry<?>> registries = Registries.getRegistries();
 			List<ConfigurationSection> dumps = new ArrayList<>(registries.size());
 			dump.set("registries", dumps);
-			for (Registry<?> registry : registries) {
+			for (Registry<?> registry : registries.values()) {
 				ConfigurationSection dumpSection = new MemoryConfigurationSection(dump);
 				dumps.add(dumpSection);
 				dumpRegistry((Registry<Object>) registry, dumpSection);

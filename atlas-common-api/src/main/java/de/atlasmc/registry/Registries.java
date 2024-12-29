@@ -1,10 +1,12 @@
 package de.atlasmc.registry;
 
-import java.util.Collection;
+import java.util.function.ToIntFunction;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginHandle;
+import de.atlasmc.registry.ProtocolRegistry.Deserializer;
+import de.atlasmc.registry.ProtocolRegistry.Serializer;
 import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.util.annotation.InternalAPI;
 import de.atlasmc.util.annotation.NotNull;
@@ -17,60 +19,100 @@ public class Registries {
 	
 	private Registries() {}
 	
-	public static <T> T getInstanceDefault(Class<T> clazz) {
-		return HANDLER.getInstanceDefault(clazz);
-	}
-	
-	public static <T> Class<? extends T> getClassDefault(Class<T> clazz) {
-		return HANDLER.getClassDefault(clazz);
-	}
-	
 	public static <T> T getDefault(NamespacedKey key) {
 		return HANDLER.getDefault(key);
 	}
 	
-	public static <T> Registry<T> getRegistry(NamespacedKey key) {
+	public static <T> T getDefault(String key) {
+		return HANDLER.getDefault(key);
+	}
+	
+	public static <T> T getDefault(Class<?> clazz) {
+		return HANDLER.getDefault(clazz);
+	}
+	
+	public static <T extends Registry<?>> T getRegistry(Class<?> clazz) {
+		return HANDLER.getRegistry(clazz);
+	}
+	
+	public static <T extends Registry<?>> T getRegistry(NamespacedKey key) {
 		return HANDLER.getRegistry(key);
 	}
 	
-	public static <T> Registry<T> getRegistry(String key) {
+	public static <T extends Registry<?>> T getRegistry(String key) {
 		return HANDLER.getRegistry(key);
 	}
-
-	public static <T> InstanceRegistry<T> getInstanceRegistry(Class<T> clazz) {
-		return HANDLER.getInstanceRegistry(clazz);
+	
+	public static <T> T getValue(Class<?> registry, NamespacedKey key) {
+		Registry<T> reg = HANDLER.getRegistry(registry);
+		if (reg == null)
+			return null;
+		return reg.get(key);
 	}
 	
-	public static <T> ClassRegistry<? extends T> getClassRegistry(Class<T> clazz) {
-		return HANDLER.getClassRegistry(clazz);
+	public static <T> T getValue(NamespacedKey registry, NamespacedKey key) {
+		Registry<T> reg = HANDLER.getRegistry(registry);
+		if (reg == null)
+			return null;
+		return reg.get(key);
 	}
 	
-	public static <T> InstanceRegistry<T> createInstanceRegistry(NamespacedKey key, Class<T> clazz) {
-		return HANDLER.createInstanceRegistry(key, clazz);
+	public static <T> T getValue(String registry, NamespacedKey key) {
+		Registry<T> reg = HANDLER.getRegistry(registry);
+		if (reg == null)
+			return null;
+		return reg.get(key);
 	}
 	
-	public static <T> ClassRegistry<T> createClassRegistry(NamespacedKey key, Class<T> clazz) {
-		return HANDLER.createClassRegistry(key, clazz);
+	public static <T> T getValue(Class<?> registry, String key) {
+		Registry<T> reg = HANDLER.getRegistry(registry);
+		if (reg == null)
+			return null;
+		return reg.get(key);
 	}
 	
-	public static <T> Registry<T> createRegistry(NamespacedKey key, Class<?> clazz, Target target) {
+	public static <T> T getValue(NamespacedKey registry, String key) {
+		Registry<T> reg = HANDLER.getRegistry(registry);
+		if (reg == null)
+			return null;
+		return reg.get(key);
+	}
+	
+	public static <T> T getValue(String registry, String key) {
+		Registry<T> reg = HANDLER.getRegistry(registry);
+		if (reg == null)
+			return null;
+		return reg.get(key);
+	}
+	
+	@NotNull
+	public static <T extends Registry<?>> T createRegistry(NamespacedKey key, Class<?> clazz, Target target) {
 		return HANDLER.createRegistry(key, clazz, target);
 	}
 	
-	public static <T> InstanceRegistry<T> createInstanceRegistry(Class<T> clazz) {
-		return HANDLER.createInstanceRegistry(clazz);
+	@NotNull
+	public static <T extends Registry<?>> T createRegistry(Class<?> clazz) {
+		return HANDLER.createRegistry(clazz);
 	}
 	
-	public static <T> ClassRegistry<T> createClassRegistry(Class<T> clazz) {
-		return HANDLER.createClassRegistry(clazz);
+	public static <T> ProtocolRegistry<T> createRegistry(NamespacedKey key, Class<?> clazz, ToIntFunction<T> idSupplier, Deserializer<T> deserializer, Serializer<T> serializer) {
+		ProtocolRegistry<T> registry = createRegistry(key, clazz, Target.PROTOCOL);
+		registry.setIDSupplier(idSupplier);
+		registry.setDeserializer(deserializer);
+		registry.setSerializer(serializer);
+		return registry;
 	}
 	
-	public static <T> Registry<T> createRegistry(Class<?> clazz, Target target) {
-		return HANDLER.createRegistry(clazz, target);
+	public static <T> ProtocolRegistry<T> createRegistry(Class<?> clazz, ToIntFunction<T> idSupplier, Deserializer<T> deserializer, Serializer<T> serializer) {
+		ProtocolRegistry<T> registry = createRegistry(clazz);
+		registry.setIDSupplier(idSupplier);
+		registry.setDeserializer(deserializer);
+		registry.setSerializer(serializer);
+		return registry;
 	}
 	
-	public static void registerRegistry(Registry<?> registry) {
-		HANDLER.registerRegistry(registry);
+	public static boolean registerRegistry(Registry<?> registry) {
+		return HANDLER.registerRegistry(registry);
 	}
 	
 	@NotNull
@@ -79,7 +121,7 @@ public class Registries {
 	}
 	
 	@NotNull
-	public static Collection<Registry<?>> getRegistries() {
+	public static Registry<Registry<?>> getRegistries() {
 		return HANDLER.getRegistries();
 	}
 	
@@ -90,7 +132,7 @@ public class Registries {
 		HANDLER.loadRegistries(plugin);
 	}
 	
-	public static void loadRegistries(PluginHandle plugin, ConfigurationSection config) {
+	public static void loadRegistries(Plugin plugin, ConfigurationSection config) {
 		HANDLER.loadRegistries(plugin, config);
 	}
 	

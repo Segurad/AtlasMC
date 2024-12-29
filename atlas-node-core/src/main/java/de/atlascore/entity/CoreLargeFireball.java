@@ -11,9 +11,4 @@ public class CoreLargeFireball extends CoreSizedFireball implements LargeFirebal
 		super(type, uuid);
 	}
 
-	@Override
-	public ProjectileType getProjectileType() {
-		return ProjectileType.LARGE_FIREBALL;
-	}
-
 }

@@ -115,6 +115,13 @@
                 }
             },
             {
+                "name": "minecraft:blast_furnace",
+                "parameters": {
+                    "tileInterface": "de.atlasmc.block.tile.Furnace",
+                    "tile": "de.atlascore.block.tile.CoreFurnace"
+                }
+            },
+            {
                 "name": "minecraft:hopper",
                 "parameters": {
                     "tileInterface": "de.atlasmc.block.tile.Hopper",
@@ -184,6 +191,13 @@
                     "tileInterface": "de.atlasmc.block.tile.Chest",
                     "tile": "de.atlascore.block.tile.CoreChest",
                     "tileID": 1
+                }
+            },
+            {
+                "name": "minecraft:crafter",
+                "parameters": {
+                    "tileInterface": "de.atlasmc.block.tile.Crafter",
+                    "tile": "de.atlascore.block.tile.CoreCrafter"
                 }
             }
         ]

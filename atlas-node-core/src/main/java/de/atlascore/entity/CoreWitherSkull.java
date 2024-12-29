@@ -30,11 +30,6 @@ public class CoreWitherSkull extends CoreAbstractFireball implements WitherSkull
 	}
 
 	@Override
-	public ProjectileType getProjectileType() {
-		return ProjectileType.WITHER_SKULL;
-	}
-
-	@Override
 	public boolean isCharged() {
 		return metaContainer.getData(META_SKULL_CHARGED);
 	}

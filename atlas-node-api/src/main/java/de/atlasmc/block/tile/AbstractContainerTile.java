@@ -7,24 +7,22 @@ import de.atlasmc.inventory.InventoryHolder;
 
 public interface AbstractContainerTile<I extends Inventory> extends TileEntity, InventoryHolder, Nameable {
 	
-	public boolean hasCustomName();
-	
 	/**
 	 * Returns the {@link Inventory} of this Tile (creates a Inventory of not present)
 	 * @return the Inventory of this Tile
 	 */
-	public I getInventory();
+	I getInventory();
 	
 	/**
 	 * 
 	 * @return true if a inventory has been set
 	 */
-	public boolean hasInventory();
+	boolean hasInventory();
 
-	public void setLock(Chat lock);
+	void setLock(Chat lock);
 	
-	public boolean hasLock();
+	boolean hasLock();
 	
-	public Chat getLock();
+	Chat getLock();
 	
 }

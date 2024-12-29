@@ -878,12 +878,12 @@
                 "name": "atlas:multiple_facing_6_all",
                 "parameters": {
                     "faces": [
-                        "NORTH",
-                        "SOUTH",
-                        "EAST",
-                        "WEST",
-                        "UP",
-                        "DOWN"
+						"north",
+						"south",
+						"east",
+						"west",
+						"up",
+						"down"
                     ],
                     "dataInterface": "de.atlasmc.block.data.MultipleFacing",
                     "data": "de.atlascore.block.data.CoreMultipleFacing6"

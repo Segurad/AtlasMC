@@ -4,6 +4,7 @@ import de.atlascore.block.CoreBlock;
 import de.atlascore.block.CoreBlockAccess;
 import de.atlasmc.Gamemode;
 import de.atlasmc.Location;
+import de.atlasmc.Material;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.block.Block;
@@ -738,7 +739,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			
 			EquipmentSlot hand = packet.hand;
 			PlayerInteractEvent.Action action;
-			if (block.getType().isAir()) {
+			if (block.getType().getNamespacedKey().equals(Material.AIR)) {
 				if (hand == EquipmentSlot.MAIN_HAND) {
 					action = PlayerInteractEvent.Action.LEFT_CLICK_AIR;
 				} else action = PlayerInteractEvent.Action.RIGHT_CLICK_AIR;

@@ -1,16 +1,16 @@
 package de.atlascore.registry;
 
 import java.util.AbstractCollection;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.regex.Matcher;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
-import de.atlascore.plugin.CorePluginManager;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.registry.Registry;
@@ -24,6 +24,7 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	private volatile T defaultEntry;
 	protected final Class<?> type;
 	private Values values;
+	protected final Lock modifyLock = new ReentrantLock();
 	
 	public CoreAbstractRegistry(NamespacedKey key, Class<?> type) {
 		if (key == null)
@@ -65,84 +66,61 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	}
 
 	@Override
-	public boolean register(PluginHandle plugin, NamespacedKey key, T value) {
+	public RegistryEntry<T> register(PluginHandle plugin, NamespacedKey key, T value) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
-		if (value == null)
-			throw new IllegalArgumentException("Value can not be null!");
-		if (plugin == null)
-			plugin = CorePluginManager.SYSTEM;
-		validateEntry(value);
-		CoreRegistryEntry<T> entry = new CoreRegistryEntry<T>(plugin, key.toString(), value);
-		if (entries.putIfAbsent(entry.key, entry) != null)
-			return false;
-		Collection<RegistryEntry<T>> entries = pluginEntries(plugin);
-		entries.add(entry);
-		return true;
+		return internalRegister(plugin, key.toString(), value);
 	}
 
 	@Override
-	public boolean register(PluginHandle plugin, String key, T value) {
+	public RegistryEntry<T> register(PluginHandle plugin, String key, T value) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
 		if (!NamespacedKey.NAMESPACED_KEY_PATTERN.matcher(key).matches())
 			throw new IllegalArgumentException("Key must be a valid namespaced key: " + key);
-		if (value == null)
-			throw new IllegalArgumentException("Value can not be null!");
-		if (plugin == null)
-			plugin = CorePluginManager.SYSTEM;
-		validateEntry(value);
-		CoreRegistryEntry<T> entry = new CoreRegistryEntry<T>(plugin, key, value);
-		if (entries.putIfAbsent(entry.key, entry) != null)
-			return false;
-		Collection<RegistryEntry<T>> entries = pluginEntries(plugin);
-		entries.add(entry);
-		return true;
+		return internalRegister(plugin, key, value);
 	}
 	
-	@Override
-	public boolean register(PluginHandle plugin, final String[] keys, final T[] values) {
-		if (keys == null)
-			throw new IllegalArgumentException("Keys can not be null!");
-		if (values == null)
-			throw new IllegalArgumentException("Values can not be null!");
-		if (keys.length != values.length)
-			throw new IllegalArgumentException("Keys and values must be the same length");
+	protected RegistryEntry<T> internalRegister(PluginHandle plugin, String key, T value) {
 		if (plugin == null)
-			plugin = CorePluginManager.SYSTEM;
-		Matcher match = NamespacedKey.NAMESPACED_KEY_PATTERN.matcher("");
-		for (int i = 0; i < keys.length; i++) {
-			match.reset(keys[i]);
-			if (!match.matches())
-				throw new IllegalArgumentException("Key must be a valid namespaced key: " + keys[i]);
+			throw new IllegalArgumentException("Plugin can not be null!");
+		if (value == null)
+			throw new IllegalArgumentException("Value can not be null!");
+		validateEntry(value);
+		RegistryEntry<T> entry = createEntry(plugin, key, value);
+		RegistryEntry<T> old;
+		modifyLock.lock();
+		old = entries.put(key, entry);
+		if (old != null) {
+			Collection<RegistryEntry<T>> entries = pluginEntries(old.plugin());
+			entries.remove(old);
+			if (entries.isEmpty())
+				pluginEntries.remove(old.plugin(), entries);
+			onRemove(old);
 		}
-		ArrayList<CoreRegistryEntry<T>> entries = new ArrayList<>(keys.length);
-		for (int i = 0; i < keys.length; i++) {
-			T value = values[i];
-			validateEntry(value);
-			String key = keys[i];
-			CoreRegistryEntry<T> entry = new CoreRegistryEntry<T>(plugin, key, value);
-			if (this.entries.putIfAbsent(entry.key, entry) != null)
-				continue;
-			entries.add(entry);
-		}
-		Collection<RegistryEntry<T>> pluginEntries = pluginEntries(plugin);
-		pluginEntries.addAll(entries);
-		return entries.size() > 0;
+		Collection<RegistryEntry<T>> entries = pluginEntries(plugin);
+		entries.add(entry);
+		onAdd(entry);
+		modifyLock.unlock();
+		return old;
+	}
+	
+	protected RegistryEntry<T> createEntry(PluginHandle plugin, String key, T value) {
+		return new CoreRegistryEntry<T>(plugin, key, value);
 	}
 	
 	private Collection<RegistryEntry<T>> pluginEntries(PluginHandle plugin) {
 		Collection<RegistryEntry<T>> entries = pluginEntries.get(plugin);
 		if (entries != null)
 			return entries;
-		synchronized (this) {
-			entries = pluginEntries.get(plugin);
-			if (entries != null)
-				return entries;
-			entries = new CopyOnWriteArrayList<>();
-			pluginEntries.put(plugin, entries);
+		modifyLock.lock();
+		entries = pluginEntries.get(plugin);
+		if (entries != null)
 			return entries;
-		}
+		entries = new CopyOnWriteArrayList<>();
+		pluginEntries.put(plugin, entries);
+		modifyLock.unlock();
+		return entries;
 	}
 	
 	protected abstract void validateEntry(T value);
@@ -176,9 +154,11 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	}
 	
 	@Override
-	public synchronized T setDefault(T defaultEntry) {
+	public T setDefault(T defaultEntry) {
+		modifyLock.lock();
 		T old = this.defaultEntry;
 		this.defaultEntry = defaultEntry;
+		modifyLock.unlock();
 		return old;
 	}
 
@@ -189,12 +169,12 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	
 	@Override
 	public Set<String> keySet() {
-		return entries.keySet();
+		return Collections.unmodifiableSet(entries.keySet());
 	}
 	
 	@Override
 	public Collection<RegistryEntry<T>> entries() {
-		return entries.values();
+		return Collections.unmodifiableCollection(entries.values());
 	}
 	
 	@Override
@@ -212,32 +192,71 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	
 	@Override
 	public RegistryEntry<T> remove(String key) {
+		if (key == null)
+			throw new IllegalArgumentException("Key can not be null!");
+		modifyLock.lock();
 		RegistryEntry<T> entry = entries.remove(key);
-		if (entry == null)
+		if (entry == null) {
+			modifyLock.unlock();
 			return null;
+		}
 		Collection<RegistryEntry<T>> pluginEntries = this.pluginEntries.get(entry.plugin());
-		if (pluginEntries != null)
+		if (pluginEntries != null) {
 			pluginEntries.remove(entry);
+			if (pluginEntries.isEmpty())
+				this.pluginEntries.remove(entry.plugin(), pluginEntries);
+		}
+		onRemove(entry);
+		modifyLock.unlock();
 		return entry;
 	}
 	
+	/**
+	 * Notify removal of entry should always be in lock context
+	 * @param entry that was removed
+	 */
+	protected void onRemove(RegistryEntry<T> entry) {
+		// override in child
+	}
+	
+	/**
+	 * Notify addition of entry should always be in lock context
+	 * @param entry that was added
+	 */
+	protected void onAdd(RegistryEntry<T> entry) {
+		// override in child
+	}
+	
 	@Override
-	public synchronized boolean removePluginEntries(PluginHandle plugin) {
+	public boolean removePluginEntries(PluginHandle plugin) {
+		if (plugin == null)
+			throw new IllegalArgumentException("Plugin can not be null!");
+		modifyLock.lock();
 		Collection<RegistryEntry<T>> entries = this.pluginEntries.remove(plugin);
-		if (entries == null)
+		if (entries == null) {
+			modifyLock.unlock();
 			return false;
+		}
 		boolean changes = false;
 		for (RegistryEntry<T> entry : entries) {
-			if (this.entries.remove(entry.key(), entries))
-				changes = true;
+			if (!this.entries.remove(entry.key(), entries))
+				continue;
+			changes = true;
+			onRemove(entry);
 		}
 		entries.clear();
+		modifyLock.unlock();
 		return changes;
 	}
 	
 	@Override
+	public Set<PluginHandle> getHandles() {
+		return Collections.unmodifiableSet(pluginEntries.keySet());
+	}
+	
+	@Override
 	public Collection<RegistryEntry<T>> getPluginEntries(PluginHandle plugin) {
-		return this.pluginEntries.get(plugin);
+		return Collections.unmodifiableCollection(this.pluginEntries.get(plugin));
 	}
 	
 	private final class Values extends AbstractCollection<T> {
@@ -268,11 +287,11 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 		
 	}
 	
-	protected static final class CoreRegistryEntry<T> implements RegistryEntry<T> {
+	protected static class CoreRegistryEntry<T> implements RegistryEntry<T> {
 		
-		private final PluginHandle plugin;
-		private final String key;
-		private final T value;
+		public final PluginHandle plugin;
+		public final String key;
+		public final T value;
 		
 		public CoreRegistryEntry(PluginHandle plugin, String key, T value) {
 			this.plugin = plugin;

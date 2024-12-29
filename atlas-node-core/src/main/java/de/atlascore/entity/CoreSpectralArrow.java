@@ -35,11 +35,6 @@ public class CoreSpectralArrow extends CoreAbstractArrow implements SpectralArro
 	}
 
 	@Override
-	public ProjectileType getProjectileType() {
-		return ProjectileType.SPECTRAL_ARROW;
-	}
-
-	@Override
 	public void setDuration(int ticks) {
 		this.duration = ticks;
 	}

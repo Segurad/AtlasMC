@@ -65,7 +65,7 @@ public class CoreNodeServerManager implements NodeServerManager {
 	public NodeServer deployServer(ServerGroup group) {
 		Atlas.getLogger().debug("Deploing servergroup: ", group.getName());
 		ServerConfig config = group.getServerConfig();
-		Registry<ServerFactory> registry = Registries.getInstanceRegistry(ServerFactory.class);
+		Registry<ServerFactory> registry = Registries.getRegistry(ServerFactory.class);
 		ServerFactory factory = registry.get(config.getFactory());
 		if (factory == null)
 			throw new ServerDeploymentException("ServerFactory not found: " + config.getFactory());

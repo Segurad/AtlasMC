@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 import com.google.gson.stream.JsonReader;
 
+import de.atlascore.plugin.CorePluginManager;
 import de.atlasmc.Material;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.block.data.BlockDataFactory;
@@ -45,7 +45,6 @@ public class MaterialLoader {
 			reader.beginObject();
 			BlockDataFactory BDF = null;
 			TileEntityFactory TEF = null;
-			String var = null;
 			short itemID = -1;
 			short blockID = -1;
 			short blockStateID = -1;
@@ -63,9 +62,6 @@ public class MaterialLoader {
 				case "TEF":
 					String tefKey = reader.nextString();
 					TEF = TEFs.get(tefKey);
-					break;
-				case "const":
-					var = reader.nextString();
 					break;
 				case "itemID":
 					itemID = (short) reader.nextInt();
@@ -96,16 +92,11 @@ public class MaterialLoader {
 			Material mat = new Material(nameKey, clientKey, itemID, blockStateID, blockID, amount, toughness, explosionResistance, BDF, null);
 			if (TEF != null)
 				mat.setTileEntityFactory(TEF);
-			if (var != null) {
-				try {
-					Field field = Material.class.getDeclaredField(var);
-					field.setAccessible(true);
-				    field.set(null, mat);
-				} catch (Exception e) {
-					reader.close();
-					throw new IllegalStateException("Error while initializing field: " + var, e);
-				}
-			}
+			Material.REGISTRY.register(CorePluginManager.SYSTEM, nameKey, mat);
+			if (mat.isItem())
+				Material.ITEM_REGISTRY.register(CorePluginManager.SYSTEM, nameKey, mat);
+			if (mat.isBlock())
+				Material.BLOCK_REGISTRY.register(CorePluginManager.SYSTEM, nameKey, mat);
 		}
 		reader.endObject();
 		reader.close();
@@ -116,7 +107,7 @@ public class MaterialLoader {
 	private static <V> Registry<V> loadFactories(Class<V> clazz, String path) throws IOException, ClassNotFoundException {
 		InputStream in = MaterialLoader.class.getResourceAsStream(path);
 		JsonReader reader = new JsonReader(new InputStreamReader(in));
-		Registry<V> registry = Registries.getInstanceRegistry(clazz);
+		Registry<V> registry = Registries.getRegistry(clazz);
 		reader.beginArray();
 		while (reader.hasNext()) {
 			reader.beginObject();
@@ -146,9 +137,9 @@ public class MaterialLoader {
 					factory = (V) constructor.newInstance(cfg);
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 						| InvocationTargetException e) {
-					throw new FactoryException("Error while instaciating factory!", e);
+					throw new FactoryException("Error while instaciating factory: " + name, e);
 				}
-				registry.register(null, name, factory);
+				registry.register(CorePluginManager.SYSTEM, name, factory);
 				if (isDefault)
 					registry.setDefault(factory);
 				reader.endObject();

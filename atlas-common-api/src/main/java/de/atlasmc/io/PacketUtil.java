@@ -2,12 +2,22 @@ package de.atlasmc.io;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Collection;
 import java.util.UUID;
+import java.util.function.ToIntFunction;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.registry.ProtocolRegistry;
+import de.atlasmc.tag.Tag;
+import de.atlasmc.tag.Tags;
+import de.atlasmc.util.dataset.DataSet;
+import de.atlasmc.util.dataset.SingleValueDataSet;
+import de.atlasmc.util.dataset.TagDataSet;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
@@ -324,6 +334,52 @@ public class PacketUtil {
 	
 	public static void writeTextComponent(Chat text, NBTWriter writer) throws IOException {
 		ChatUtil.toNBT(text, writer);
+	}
+	
+	public static <T extends Namespaced> void writeDataSet(DataSet<T> set, ProtocolRegistry<T> registry, ByteBuf out) {
+		if (set instanceof TagDataSet tagSet) {
+			writeVarInt(0, out);
+			writeIdentifier(tagSet.getTag().getNamespacedKey(), out);
+		} else if (set.size() == 0) {
+			writeVarInt(1, out);
+		} else if (set instanceof SingleValueDataSet<T> singleValue) {
+			writeVarInt(2, out);
+			ToIntFunction<T> toInt = registry.getIDSupplier();
+			writeVarInt(toInt.applyAsInt(singleValue.getValue()), out);
+		} else {
+			Collection<T> values = set.values();
+			final int size = values.size() + 1;
+			writeVarInt(size, out);
+			final ToIntFunction<T> toInt = registry.getIDSupplier();
+			for (T value : values)
+				writeVarInt(toInt.applyAsInt(value), out);
+		}
+	}
+	
+	public static <T extends Namespaced> DataSet<T> readDataSet(ProtocolRegistry<T> registry, ByteBuf in) {
+		final int id = readVarInt(in);
+		if (id == 0) {
+			NamespacedKey key = readIdentifier(in);
+			Tag<T> tag = Tags.getTag(key);
+			if (tag == null)
+				throw new ProtocolException("Missing tag while reading data set: " + key);
+			return DataSet.of(tag);
+		}
+		final int count = id - 1;
+		if (count == 0)
+			return DataSet.of();
+		if (count == 1) {
+			T value = registry.getByID(id);
+			return DataSet.of(value);
+		}
+		ArrayList<T> values = new ArrayList<>(count);
+		for (int i = 0; i < count; i++) {
+			T value = registry.getByID(readVarInt(in));
+			if (value == null)
+				continue;
+			values.add(value);
+		}
+		return DataSet.of(values);
 	}
 	
 }

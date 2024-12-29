@@ -1,9 +1,14 @@
 package de.atlasmc.sound;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.util.map.key.CharKey;
 
 public class ResourceSound implements Sound {
 
+	protected static final CharKey
+	NBT_SOUND_ID = CharKey.literal("sound_id"),
+	NBT_RANGE = CharKey.literal("range");
+	
 	private final NamespacedKey key;
 	private final float fixedRange;
 	
@@ -26,7 +31,7 @@ public class ResourceSound implements Sound {
 
 	@Override
 	public boolean hasFixedRange() {
-		return fixedRange != fixedRange;
+		return fixedRange == fixedRange;
 	}
 
 }

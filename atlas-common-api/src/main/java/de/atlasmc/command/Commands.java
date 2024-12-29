@@ -24,7 +24,6 @@ import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.command.argparser.VarArgParser;
 import de.atlasmc.command.suggestion.SuggestionType;
 import de.atlasmc.plugin.Plugin;
-import de.atlasmc.registry.ClassRegistry;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
@@ -172,7 +171,7 @@ public class Commands {
 		arg.setPermission(permission);
 		String executorKey = config.getString("executor");
 		if (executorKey != null) {
-			Registry<CommandExecutor> registry = Registries.getInstanceRegistry(CommandExecutor.class);
+			Registry<CommandExecutor> registry = Registries.getRegistry(CommandExecutor.class);
 			CommandExecutor executor = registry.get(executorKey);
 			arg.setExecutor(executor);
 			if (executor == null)
@@ -192,7 +191,7 @@ public class Commands {
 		if (config.contains("allowed-source")) {
 			String allowedSource = config.getString("allowed-source");
 			if (allowedSource != null) {
-				CommandSourceValidator newvalidator = Registries.getInstanceRegistry(CommandSourceValidator.class).get(allowedSource);
+				CommandSourceValidator newvalidator = Registries.getValue(CommandSourceValidator.class, allowedSource);
 				if (newvalidator != null)
 					validator = newvalidator;
 			}
@@ -224,7 +223,7 @@ public class Commands {
 		Object rawParser = config.get("parser");
 		if (rawParser == null)
 			throw new InvalidConfigurationException("\"parser\" is not defined!", config);
-		ClassRegistry<? extends VarArgParser> parserRegistry = Registries.getClassRegistry(VarArgParser.class);
+		Registry<Class<? extends VarArgParser>> parserRegistry = Registries.getRegistry(VarArgParser.class);
 		Class<? extends VarArgParser> parserClass = null;
 		ConfigurationSection parserCfg = null;
 		if (rawParser instanceof String parserKey) {
@@ -270,7 +269,7 @@ public class Commands {
 					arg.setSuggestion(SuggestionType.SUMMONABLE_ENTITIES);
 					break;
 				default:
-					ClassRegistry<? extends SuggestionType> registry = Registries.getClassRegistry(SuggestionType.class);
+					Registry<Class<? extends SuggestionType>> registry = Registries.getRegistry(SuggestionType.class);
 					Class<? extends SuggestionType> suggestionClass = registry.get(suggestionKey);
 					if (suggestionClass != null) {
 						try {

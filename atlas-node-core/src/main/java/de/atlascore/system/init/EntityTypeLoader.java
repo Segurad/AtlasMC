@@ -3,9 +3,10 @@ package de.atlascore.system.init;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
+
 import com.google.gson.stream.JsonReader;
 
+import de.atlascore.plugin.CorePluginManager;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
@@ -24,16 +25,12 @@ public class EntityTypeLoader {
 			reader.beginObject();
 			while (reader.hasNext()) {
 				String name = reader.nextName();
-				String var = null;
 				String rawClass = null;
 				int id = -1;
 				reader.beginObject();
 				while (reader.hasNext()) {
 					String key = reader.nextName();
 					switch (key) {
-					case "const":
-						var = reader.nextString();
-						break;
 					case "id":
 						id = reader.nextInt();
 						break;
@@ -53,16 +50,8 @@ public class EntityTypeLoader {
 				if (!Entity.class.isAssignableFrom(entityClass))
 					throw new IllegalArgumentException("Entity class is not assignable from de.atlasmc.entity.Entity: " + entityClass.getName());
 				@SuppressWarnings("unchecked")
-				EntityType type = new EntityType(null, NamespacedKey.of(name), id, (Class<? extends Entity>) entityClass);
-				if (var != null) {
-					try {
-						Field field = EntityType.class.getDeclaredField(var);
-						field.setAccessible(true);
-					    field.set(null, type);
-					} catch (Exception e) {
-						throw new IllegalStateException("Error while initializing field: " + var, e);
-					}
-				}
+				EntityType type = new EntityType(NamespacedKey.of(name), id, (Class<? extends Entity>) entityClass);
+				EntityType.REGISTRY.register(CorePluginManager.SYSTEM, type.getNamespacedKey(), type);
 			}
 			reader.endObject();
 			reader.close();

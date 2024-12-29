@@ -14,11 +14,6 @@ public class CoreWindCharge extends CoreAbstractProjectile implements WindCharge
 	}
 
 	@Override
-	public ProjectileType getProjectileType() {
-		return ProjectileType.WIND_CHARGE;
-	}
-
-	@Override
 	public double getAccelerationPower() {
 		return accelerationPower;
 	}

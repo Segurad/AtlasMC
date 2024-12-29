@@ -29,9 +29,9 @@ public class StaticRegistryFieldTest {
 		try {
 			Registries.init(new CoreRegistryHandler());
 		} catch (IllegalStateException e) {}
-		Registries.createInstanceRegistry(Material.class);
-		Registries.createInstanceRegistry(BlockDataFactory.class);
-		Registries.createInstanceRegistry(TileEntityFactory.class);
+		Registries.createRegistry(Material.class);
+		Registries.createRegistry(BlockDataFactory.class);
+		Registries.createRegistry(TileEntityFactory.class);
 		MaterialLoader.loadMaterial();
 		StaticRegistryFieldTest.testNotNull(Material.class, Material.class);
 	}
@@ -41,7 +41,7 @@ public class StaticRegistryFieldTest {
 		try {
 			Registries.init(new CoreRegistryHandler());
 		} catch (IllegalStateException e) {}
-		Registries.createInstanceRegistry(EntityType.class);
+		Registries.createRegistry(EntityType.class);
 		EntityTypeLoader.loadEntityTypes();
 		StaticRegistryFieldTest.testNotNull(EntityType.class, EntityType.class);
 	}

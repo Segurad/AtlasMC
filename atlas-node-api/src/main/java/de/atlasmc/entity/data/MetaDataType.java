@@ -1,13 +1,6 @@
 package de.atlasmc.entity.data;
 
-import static de.atlasmc.io.PacketUtil.readIdentifier;
-import static de.atlasmc.io.PacketUtil.readString;
-import static de.atlasmc.io.PacketUtil.readVarInt;
-import static de.atlasmc.io.PacketUtil.readVarLong;
-import static de.atlasmc.io.PacketUtil.writeIdentifier;
-import static de.atlasmc.io.PacketUtil.writeString;
-import static de.atlasmc.io.PacketUtil.writeVarInt;
-import static de.atlasmc.io.PacketUtil.writeVarLong;
+import static de.atlasmc.io.PacketUtil.*;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -29,11 +22,14 @@ import de.atlasmc.entity.Sniffer.State;
 import de.atlasmc.entity.Villager.VillagerData;
 import de.atlasmc.entity.Villager.VillagerProfession;
 import de.atlasmc.entity.Villager.VillagerType;
+import de.atlasmc.entity.Wolf.WolfVariant;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.protocol.ProtocolUtil;
 import de.atlasmc.util.EulerAngle;
 import de.atlasmc.util.MathUtil;
+import de.atlasmc.util.dataset.DataSet;
 import de.atlasmc.util.nbt.tag.CompoundTag;
+import de.atlasmc.world.Biome;
 import io.netty.buffer.ByteBuf;
 
 /**
@@ -62,7 +58,7 @@ public abstract class MetaDataType<T> {
 	TYPE_ID_NBT = 16,
 	TYPE_ID_PARTICLE = 17,
 	TYPE_ID_VILLAGER_DATA = 18,
-	TYPE_ID_OPT_VARINT = 20,
+	TYPE_ID_OPT_VAR_INT = 20,
 	TYPE_ID_POSE = 21,
 	TYPE_ID_CAT_VARIANT = 22,
 	TYPE_ID_WOLF_VARIANT = 23,
@@ -321,8 +317,6 @@ public abstract class MetaDataType<T> {
 
     };
 	
-	public static final MetaDataType<Integer> OPT_VAR_INT = new OptVarIntMetaDataType(TYPE_ID_VAR_INT);
-	
 	public static final MetaDataType<Pose> POSE = new EnumMetaDataType<>(TYPE_ID_POSE, Pose.class);
     
     public static final MetaDataType<Type> CAT_VARIANT = new EnumMetaDataType<>(TYPE_ID_CAT_VARIANT, Type.class);
@@ -480,5 +474,37 @@ public abstract class MetaDataType<T> {
 	}
 	
 	public static final MetaDataType<ArmadilloState> ARMADILLO_STATE = new EnumMetaDataType<>(TYPE_ID_ARMADILLO_STATE, ArmadilloState.class);
+	
+	public static final MetaDataType<WolfVariant> WOLF_VARIANT = new MetaDataType<>(TYPE_ID_WOLF_VARIANT, WolfVariant.class) {
+
+		@Override
+		public WolfVariant read(ByteBuf in) {
+			int id = readVarInt(in);
+			if (id == 0) {
+				NamespacedKey wild = readIdentifier(in);
+				NamespacedKey tame = readIdentifier(in);
+				NamespacedKey angry = readIdentifier(in);
+				DataSet<Biome> biomes = readDataSet(Biome.REGISTRY, in);
+				return new WolfVariant(wild, tame, angry, biomes);
+			}
+			return WolfVariant.REGISTRY.getByID(id-1);
+		}
+
+		@Override
+		public void write(WolfVariant data, ByteBuf out) {
+			int id = data.getID();
+			if (id < 0) {
+				writeIdentifier(data.getWildTexture(), out);
+				writeIdentifier(data.getTameTexture(), out);
+				writeIdentifier(data.getAngryTexture(), out);
+				writeDataSet(data.getBiomes(), Biome.REGISTRY, out);
+			} else {
+				writeVarInt(id+1, out);
+			}
+		}
+		
+	};
+	
+	public static final MetaDataType<Integer> OPT_VAR_INT = new OptVarIntMetaDataType(TYPE_ID_OPT_VAR_INT);
 
 }

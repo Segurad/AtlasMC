@@ -118,6 +118,11 @@ public class CoreBanner extends CoreTileEntity implements Banner {
 	}
 	
 	@Override
+	public boolean hasCustomName() {
+		return name != null;
+	}
+	
+	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
 		if (systemData) {

@@ -15,11 +15,6 @@ public class CoreShulkerBullet extends CoreAbstractProjectile implements Shulker
 	}
 
 	@Override
-	public ProjectileType getProjectileType() {
-		return ProjectileType.SHULKER_BULLET;
-	}
-
-	@Override
 	public void setTarget(Entity target) {
 		this.target = target;
 	}

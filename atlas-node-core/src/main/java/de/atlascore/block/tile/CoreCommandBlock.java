@@ -120,6 +120,11 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 	public Chat getCustomName() {
 		return name;
 	}
+	
+	@Override
+	public boolean hasCustomName() {
+		return name != null;
+	}
 
 	@Override
 	public void setCommand(String command) {

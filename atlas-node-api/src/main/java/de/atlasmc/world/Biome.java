@@ -1,63 +1,73 @@
 package de.atlasmc.world;
 
-import de.atlasmc.Color;
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
-import de.atlasmc.util.nbt.NBTHolder;
+import de.atlasmc.registry.ProtocolRegistry;
+import de.atlasmc.registry.Registries;
+import de.atlasmc.registry.RegistryHolder;
+import de.atlasmc.registry.RegistryHolder.Target;
+import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
-public interface Biome extends NBTHolder, Namespaced {
+@RegistryHolder(key = "minecraft:worldgen/biome", target = Target.PROTOCOL)
+public class Biome implements Namespaced {
 	
-	public int getID();
+	public static final ProtocolRegistry<Biome> REGISTRY;
 
-	public String getPrecipitation();
-
-	public float getDepth();
-
-	public float getTemperature();
-
-	public float getScale();
-
-	public float getDownfall();
-
-	public String getCategory();
-
-	public String getTemperatureModifier();
-
-	public Color getWaterFogColor();
-
-	public Color getFogColor();
-
-	public Color getWaterColor();
-
-	public Color getFoliageColor();
-
-	public Color getGrassColor();
-
-	public String getGrassColorModifier();
-
-	public boolean isReplaceCurrentMusic();
-
-	public String getSound();
-
-	public int getMaxDelay();
-
-	public int getMinDelay();
-
-	public String getAmbientSound();
-
-	public String getAdditionsSound();
-
-	public double getTickChance();
-
-	public String getMoodSound();
-
-	public int getTickDelay();
-
-	public double getOffset();
-
-	public int getBlockSearchExtent();
-
-	public float getProbability();
-
-	public String getParticleType();
+	static {
+		REGISTRY = Registries.createRegistry(Biome.class);
+		REGISTRY.setIDSupplier(Biome::getID);
+		REGISTRY.setDeserializer((id, buf, reader) -> {
+			NamespacedKey key = readIdentifier(buf);
+			Biome biome = new Biome(key, id);
+			if (buf.readBoolean()) {
+				BiomeData data = new BiomeData();
+				biome.setData(data);
+				reader.readNextEntry();
+				data.fromNBT(reader);
+			}
+			return biome;
+		});
+		REGISTRY.setSerializer((data, buf, writer) -> {
+			writeIdentifier(data.getNamespacedKey(), buf);
+			if (data.data == null) {
+				buf.writeBoolean(false);
+			} else {
+				buf.writeBoolean(true);
+				writer.writeCompoundTag();
+				data.data.toNBT(writer, false);
+				writer.writeEndTag();
+			}
+		});
+	}
+	
+	private NamespacedKey name;
+	private int id;
+	private BiomeData data;
+	
+	public Biome(NamespacedKey name) {
+		this(name, -1);
+	}
+	
+	public Biome(NamespacedKey name, int id) {
+		this.name = name;
+		this.id = id;
+	}
+	
+	public BiomeData getData() {
+		return data;
+	}
+	
+	public void setData(BiomeData data) {
+		this.data = data;
+	}
+	
+	@Override
+	public NamespacedKey getNamespacedKey() {
+		return name;
+	}
+	
+	public int getID() {
+		return id;
+	}
 
 }

@@ -65,7 +65,7 @@ public class CoreChunkSection implements ChunkSection {
 	public int getBlockCount() {
 		int count = 0;
 		for (PaletteEntry<BlockData> entry : blockData.getEntries()) {
-			if (entry.getEntry().getMaterial().isAir())
+			if (entry.getEntry().getMaterial().getNamespacedKey().equals(Material.AIR))
 				continue;
 			count += entry.count();
 		}

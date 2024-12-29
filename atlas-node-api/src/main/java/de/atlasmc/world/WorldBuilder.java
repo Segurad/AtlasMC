@@ -51,7 +51,8 @@ public class WorldBuilder implements Builder<World> {
 			String optinalFactoryKey = optionalCfg.getString("factory");
 			if (optinalFactoryKey == null)
 				return Pair.of();
-			T factory = Registries.getInstanceRegistry(clazz).get(optinalFactoryKey);
+			Registry<T> registry = Registries.getRegistry(clazz);
+ 			T factory = registry.get(optinalFactoryKey);
 			if (factory == null)
 				throw new InvalidConfigurationException("Unable to find the defined \"" + key + ".factory\": " + optinalFactoryKey);
 			ConfigurationSection factoryCfg = optionalCfg.getConfigurationSection("config");
@@ -61,7 +62,7 @@ public class WorldBuilder implements Builder<World> {
 	}
 	
 	private <T> T getRequiredOptional(Class<T> clazz, String key, ConfigurationSection config) {
-		Registry<T> registry = Registries.getInstanceRegistry(clazz);
+		Registry<T> registry = Registries.getRegistry(clazz);
 		String raw = config.getString(key);
 		T value = null;
 		if (raw == null) {

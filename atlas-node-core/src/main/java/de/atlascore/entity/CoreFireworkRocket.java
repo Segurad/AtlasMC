@@ -84,11 +84,6 @@ public class CoreFireworkRocket extends CoreAbstractProjectile implements Firewo
 	}
 
 	@Override
-	public ProjectileType getProjectileType() {
-		return ProjectileType.FIREWORK_ROCKET;
-	}
-
-	@Override
 	public FireworksComponent getFireworkMeta() {
 		ItemStack item = getFirework();
 		if (item == null)
@@ -134,8 +129,6 @@ public class CoreFireworkRocket extends CoreAbstractProjectile implements Firewo
 
 	@Override
 	public void setFirework(ItemStack firework) {
-		if (firework != null && firework.getType() != Material.FIREWORK_ROCKET)
-			throw new IllegalArgumentException("Item must have the type FIREWORK_ROCKET");
 		metaContainer.get(META_FIREWORK_INFO).setData(firework);
 	}
 	

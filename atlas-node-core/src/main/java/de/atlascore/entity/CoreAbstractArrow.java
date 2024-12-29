@@ -81,9 +81,6 @@ public abstract class CoreAbstractArrow extends CoreAbstractProjectile implement
 	}
 
 	@Override
-	public abstract ProjectileType getProjectileType();
-
-	@Override
 	public boolean isCritical() {
 		return (metaContainer.getData(META_ABSTRACT_ARROW_FLAGS) & 0x1) == 0x1;
 	}

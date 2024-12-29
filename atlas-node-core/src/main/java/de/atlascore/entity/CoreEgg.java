@@ -11,9 +11,4 @@ public class CoreEgg extends CoreThrowableProjectile implements Egg {
 		super(type, uuid);
 	}
 
-	@Override
-	public ProjectileType getProjectileType() {
-		return ProjectileType.EGG;
-	}
-
 }

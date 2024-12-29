@@ -22,7 +22,8 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 	NBT_LOCK = CharKey.literal("Lock"),
 	NBT_ITEMS = CharKey.literal("Items"),
 	NBT_LOOT_TABLE = CharKey.literal("LootTable"),
-	NBT_LOOT_TABLE_SEED = CharKey.literal("LootTableSeed");
+	NBT_LOOT_TABLE_SEED = CharKey.literal("LootTableSeed"),
+	NBT_CUSTOM_NAME = CharKey.literal("CustomName");
 	
 	static {
 		NBT_FIELDS = CoreTileEntity.NBT_FIELDS.fork();
@@ -31,22 +32,21 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 		});
 		NBT_FIELDS.setField(NBT_ITEMS, (holder, reader) -> {
 			reader.readNextEntry();
+			Inventory inv = ((AbstractContainerTile<?>) holder).getInventory();
 			while (reader.getRestPayload() > 0) {
-				Inventory inv = ((AbstractContainerTile<?>) holder).getInventory();
-				Material mat = null;
-				if (!NBT_ID.equals(reader.getFieldName())) {
-					reader.mark();
-					reader.search(NBT_ID);
-					mat = Material.getByName(reader.readStringTag());
-					reader.reset();
-				} else mat = Material.getByName(reader.readStringTag());
-				ItemStack item = new ItemStack(mat);
+				ItemStack item = ItemStack.getFromNBT(reader, false);
+				if (item == null)
+					continue;
 				int slot = item.fromSlot(reader);
-				if (slot != -999) inv.setItem(slot, item);
+				if (slot != -999) 
+					inv.setItem(slot, item);
 			}
 		});
 		NBT_FIELDS.setField(NBT_LOOT_TABLE, NBTField.skip()); // TODO wait for loot table Registry
 		NBT_FIELDS.setField(NBT_LOOT_TABLE_SEED, NBTField.skip()); // ^ how about no?
+		NBT_FIELDS.setField(NBT_CUSTOM_NAME, (holder, reader) -> {
+			holder.setCustomName(ChatUtil.toChat(reader.readStringTag()));
+		});
 	}
 	
 	private Inventory inv;
@@ -75,7 +75,8 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 	@Override
 	public void setCustomName(Chat name) {
 		this.name = name; 
-		if (inv != null) inv.setTitle(name);
+		if (inv != null) 
+			inv.setTitle(name);
 	}
 
 	@Override
@@ -106,11 +107,12 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		if (!systemData) return;
+		if (!systemData) 
+			return;
 		if (hasCustomName())
-		writer.writeStringTag(NBT_CUSTOM_NAME, getCustomName().toJsonText());
+			writer.writeStringTag(NBT_CUSTOM_NAME, getCustomName().toJsonText());
 		if (hasLock())
-		writer.writeStringTag(NBT_LOCK, getLock().toJsonText());
+			writer.writeStringTag(NBT_LOCK, getLock().toJsonText());
 		if (inv != null) {
 			int count = inv.countItems();
 			if (count > 0) {
@@ -125,8 +127,11 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 					item.toSlot(writer, systemData, slot);
 					writer.writeEndTag();
 				}
-			} writer.writeListTag(NBT_ITEMS, TagType.TAG_END, 0);
-		} writer.writeListTag(NBT_ITEMS, TagType.TAG_END, 0);
+			}
+		}
+		if (name != null) {
+			writer.writeStringTag(NBT_CUSTOM_NAME, name.toJsonText());
+		}
 	}
 	
 	@Override

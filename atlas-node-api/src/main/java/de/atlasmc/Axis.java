@@ -13,7 +13,7 @@ public enum Axis implements EnumName, EnumValueCache {
 
 	private static List<Axis> VALUES;
 	
-	private String name;
+	private final String name;
 	
 	private Axis() {
 		this.name = name().toLowerCase().intern();

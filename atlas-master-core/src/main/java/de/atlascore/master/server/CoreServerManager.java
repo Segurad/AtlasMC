@@ -29,7 +29,7 @@ public class CoreServerManager implements ServerManager, Tickable {
 		this.serverGroups = new ConcurrentHashMap<>();
 		this.servers = new ConcurrentHashMap<>();
 		this.fallBack = null;
-		this.deploymentMethods = Registries.getInstanceRegistry(ServerDeploymentMethod.class);
+		this.deploymentMethods = Registries.getRegistry(ServerDeploymentMethod.class);
 	}
 
 	@Override

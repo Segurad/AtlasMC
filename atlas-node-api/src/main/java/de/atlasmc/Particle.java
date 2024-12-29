@@ -10,134 +10,194 @@ import de.atlasmc.util.EnumValueCache;
 
 public enum Particle implements EnumName, EnumID, EnumValueCache {
 	
-	AMBIENT_ENTITY_EFFECT(0),
-	ANGRY_VILLAGER(1),
-	BLOCK(2, BlockData.class),
-	BLOCK_MARKER(3),
-	BUBBLE(4),
-	CLOUD(5),
-	CRIT(6),
-	DAMAGE_INDICATOR(7),
-	DRAGON_BREATH(8),
-	DRIPPING_LAVA(9),
-	FALLING_LAVA(10),
-	LANDING_LAVA(11),
-	DRIPPING_WATER(12),
-	FALLING_WATER(13),
-	DUST(14, DustOptions.class),
-	DUST_COLOR_TRANSITION(15),
-	EFFECT(16),
-	ELDER_GUARDIAN(17),
-	ENCHANTED_HIT(18),
-	ENCHANT(19),
-	END_ROD(20),
-	ENTITY_EFFECT(21),
-	EXPLOSION_EMITTER(22),
-	EXPLOSION(23),
-	SONIC_BOOM(24),
-	FALLING_DUST(25, BlockData.class),
-	FIREWORK(26),
-	FISHING(27),
-	FLAME(28),
-	CHERRY_LEAVES(29),
-	SCULK_SOUL(30),
-	SCULK_CHARGE(31),
-	SCULK_CHARGE_POP(32),
-	SOUL_FIRE_FLAME(33),
-	SOUL(34),
-	FLASH(35),
-	HAPPY_VILLAGER(36),
-	COMPOSTER(37),
-	HEART(38),
-	INSTANT_EFFECT(39),
-	ITEM(40, ItemStack.class),
-	VIBRATION(41),
-	ITEM_SLIME(42),
-	ITEM_SNOWBALL(43),
-	LARGE_SMOKE(44),
-	LAVA(45),
-	MYCELIUM(46),
-	NOTE(47),
-	POOF(48),
-	PORTAL(49),
-	RAIN(50),
-	SMOKE(51),
-	SNEEZE(52),
-	SPIT(53),
-	SQUID_INK(54),
-	SWEEP_ATTACK(55),
-	TOTEM_OF_UNDYING(56),
-	UNDERWATER(57),
-	SPLASH(58),
-	WITCH(59),
-	BUBBLE_POP(60),
-	CURRENT_DOWN(61),
-	BUBBLE_COLUMN_UP(62),
-	NAUTILUS(63),
-	DOLPHIN(64),
-	CAMPFIRE_COSY_SMOKE(65),
-	CAMPFIRE_SIGNAL_SMOKE(66),
-	DRIPPING_HONEY(67),
-	FALLING_HONEY(68),
-	LANDING_HONEY(69),
-	FALLING_NECTAR(70),
-	FALLING_SPORE_BLOSSOM(71),
-	ASH(72),
-	CRIMSON_SPORE(73),
-	WARPED_SPORE(74),
-	SPORE_BLOSSOM_AIR(75),
-	DRIPPING_OBSIDIAN_TEAR(76),
-	FALLING_OBSIDIAN_TEAR(77),
-	LANDING_OBSIDIAN_TEAR(78),
-	REVERSE_PORTAL(79),
-	WHITE_ASH(80),
-	SMALL_FLAME(81),
-	SNOWFLAKE(82),
-	DRIPPING_DRIPSTONE_LAVA(83),
-	FALLING_DRIPSTONE_LAVA(84),
-	DRIPPING_DRIPSTONE_WATER(85),
-	FALLING_DRIPSTONE_WATER(86),
-	GLOW_SQUID_INK(87),
-	GLOW(88),
-	WAX_ON(89),
-	WAX_OFF(90),
-	ELECTRIC_SPARK(91),
-	SCRAPE(92),
-	SHRIEK(93),
-	EGG_CRACK(94);
+	ANGRY_VILLAGER,
+	BLOCK(BlockData.class),
+	BLOCK_MARKER(BlockData.class),
+	BUBBLE,
+	CLOUD,
+	CRIT,
+	DAMAGE_INDICATOR,
+	DRAGON_BREATH,
+	DRIPPING_LAVA,
+	FALLING_LAVA,
+	LANDING_LAVA,
+	DRIPPING_WATER,
+	FALLING_WATER,
+	DUST(DustColor.class),
+	DUST_COLOR_TRANSITION(DustColorTransition.class),
+	EFFECT,
+	ELDER_GUARDIAN,
+	ENCHANTED_HIT,
+	ENCHANT,
+	END_ROD,
+	ENTITY_EFFECT(Color.class),
+	EXPLOSION_EMITTER,
+	EXPLOSION,
+	GUST,
+	SMALL_GUST,
+	GUST_EMITTER_LARGE,
+	GUST_EMITTER_SMALL,
+	SONIC_BOOM,
+	FALLING_DUST(BlockData.class),
+	FIREWORK,
+	FISHING,
+	FLAME,
+	INFESTED,
+	CHERRY_LEAVES,
+	PALE_OAK_LEAVES,
+	SCULK_SOUL,
+	SCULK_CHARGE(Float.class),
+	SCULK_CHARGE_POP,
+	SOUL_FIRE_FLAME,
+	SOUL,
+	FLASH,
+	HAPPY_VILLAGER,
+	COMPOSTER,
+	HEART,
+	INSTANT_EFFECT,
+	ITEM(ItemStack.class),
+	VIBRATION(VibrationData.class),
+	TRAIL,
+	ITEM_SLIME,
+	ITEM_COBWEB,
+	ITEM_SNOWBALL,
+	LARGE_SMOKE,
+	LAVA,
+	MYCELIUM,
+	NOTE,
+	POOF,
+	PORTAL,
+	RAIN,
+	SMOKE,
+	WHITE_SMOKE,
+	SNEEZE,
+	SPIT,
+	SQUID_INK,
+	SWEEP_ATTACK,
+	TOTEM_OF_UNDYING,
+	UNDERWATER,
+	SPLASH,
+	WITCH,
+	BUBBLE_POP,
+	CURRENT_DOWN,
+	BUBBLE_COLUMN_UP,
+	NAUTILUS,
+	DOLPHIN,
+	CAMPFIRE_COSY_SMOKE,
+	CAMPFIRE_SIGNAL_SMOKE,
+	DRIPPING_HONEY,
+	FALLING_HONEY,
+	LANDING_HONEY,
+	FALLING_NECTAR,
+	FALLING_SPORE_BLOSSOM,
+	ASH,
+	CRIMSON_SPORE,
+	WARPED_SPORE,
+	SPORE_BLOSSOM_AIR,
+	DRIPPING_OBSIDIAN_TEAR,
+	FALLING_OBSIDIAN_TEAR,
+	LANDING_OBSIDIAN_TEAR,
+	REVERSE_PORTAL,
+	WHITE_ASH,
+	SMALL_FLAME,
+	SNOWFLAKE,
+	DRIPPING_DRIPSTONE_LAVA,
+	FALLING_DRIPSTONE_LAVA,
+	DRIPPING_DRIPSTONE_WATER,
+	FALLING_DRIPSTONE_WATER,
+	GLOW_SQUID_INK,
+	GLOW,
+	WAX_ON,
+	WAX_OFF,
+	ELECTRIC_SPARK,
+	SCRAPE,
+	/**
+	 * Has a Integer value for delay
+	 */
+	SHRIEK(Integer.class),
+	EGG_CRACK,
+	DUST_PLUME,
+	TRIAL_SPAWNER_DETECTION,
+	TRIAL_SPAWNER_DETECTION_OMINOUS,
+	VAULT_CONNECTION,
+	DUST_PILLAR(BlockData.class),
+	OMINOUS_SPAWNING,
+	RAID_OMEN,
+	TRIAL_OMEN,
+	BLOCK_CRUMBLE;
 	
 	private static List<Particle> VALUES;
 	
-	private final int id;
 	private final Class<?> data;
 	private final String name;
 	
-	private Particle(int id, Class<?> data) {
-		this.id = id;
+	private Particle(Class<?> data) {
 		this.data = data;
 		String name = "minecraft:" + name().toLowerCase();
 		this.name = name.intern();
 	}
 	
-	private Particle(int id) {
-		this(id, void.class);
+	private Particle() {
+		this(void.class);
 	}
 	
 	@Override
 	public int getID() {
-		return id;
+		return ordinal();
 	}
 	
 	public Class<?> getData() {
 		return data;
 	}
 	
-	public static class DustOptions {
+	public static class VibrationData {
+		
+		private boolean entity;
+		private SimpleLocation sourceLocation;
+		private int sourceEntity;
+		private float eyeHeight;
+		private int travelTicks;
+		
+		public VibrationData(SimpleLocation sourceLocation, int travelTicks) {
+			this.sourceLocation = sourceLocation;
+			this.travelTicks = travelTicks;
+		}
+		
+		public VibrationData(int entityID, float eyeHeight, int travelTicks) {
+			entity = true;
+			this.sourceEntity = entityID;
+			this.eyeHeight = eyeHeight;
+			this.travelTicks = travelTicks;
+		}
+		
+		public boolean isEntity() {
+			return entity;
+		}
+		
+		public int getSourceEntity() {
+			return sourceEntity;
+		}
+		
+		public float getEyeHeight() {
+			return eyeHeight;
+		}
+		
+		public int getTravelTicks() {
+			return travelTicks;
+		}
+		
+		public SimpleLocation getSourceLocation() {
+			return sourceLocation;
+		}
+		
+	}
+	
+	public static class DustColor {
 		
 		private final Color color;
 		private final float scale;
 		
-		public DustOptions(Color color, float scale) {
+		public DustColor(Color color, float scale) {
 			if (color == null) 
 				throw new IllegalArgumentException("Color can not be null!");
 			if (scale < 0.01 || scale > 4) 
@@ -148,6 +208,37 @@ public enum Particle implements EnumName, EnumID, EnumValueCache {
 		
 		public Color getColor() {
 			return color;
+		}
+		
+		public float getScale() {
+			return scale;
+		}
+	}
+	
+	public static class DustColorTransition {
+		
+		private final Color from;
+		private final Color to;
+		private final float scale;
+		
+		public DustColorTransition(Color from, Color to, float scale) {
+			if (from == null) 
+				throw new IllegalArgumentException("From can not be null!");
+			if (to == null)
+				throw new IllegalArgumentException("To can not be null!");
+			if (scale < 0.01 || scale > 4) 
+				throw new IllegalArgumentException("Size is not between 0.01 and 4: " + scale);
+			this.from = from;
+			this.to = to;
+			this.scale = scale;
+		}
+		
+		public Color getColorFrom() {
+			return from;
+		}
+		
+		public Color getColorTo() {
+			return to;
 		}
 		
 		public float getScale() {

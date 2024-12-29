@@ -48,7 +48,7 @@ public class ItemStack implements NBTHolder {
 		});
 		NBT_FIELDS.setField(NBT_COMPONENTS, (holder, reader) -> {
 			reader.readNextEntry();
-			Registry<ItemComponentFactory> registry = Registries.getInstanceRegistry(ItemComponentFactory.class);
+			Registry<ItemComponentFactory> registry = Registries.getRegistry(ItemComponentFactory.class);
 			while (reader.getType() != TagType.TAG_END) {
 				NamespacedKey key = NamespacedKey.of(reader.getFieldName());
 				ItemComponentFactory factory = registry.get(key);
@@ -79,6 +79,14 @@ public class ItemStack implements NBTHolder {
 	
 	public ItemStack(Material material) {
 		this(material, 1);
+	}
+	
+	public ItemStack(NamespacedKey key) {
+		this(key, 1);
+	}
+	
+	public ItemStack(NamespacedKey key, int amount) {
+		this(Material.get(key), amount);
 	}
 
 	public ItemStack(Material material, int amount) {
@@ -135,7 +143,7 @@ public class ItemStack implements NBTHolder {
 			if (component != null)
 				return component;
 		}
-		Registry<ItemComponentFactory> registry = Registries.getInstanceRegistry(ItemComponentFactory.class);
+		Registry<ItemComponentFactory> registry = Registries.getRegistry(ItemComponentFactory.class);
 		ItemComponentFactory factory = registry.get(key);
 		if (factory == null)
 			return null;

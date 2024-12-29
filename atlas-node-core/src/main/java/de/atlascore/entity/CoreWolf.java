@@ -20,8 +20,10 @@ public class CoreWolf extends CoreTameable implements Wolf {
 	META_COLLAR_COLOR = new MetaDataField<>(CoreTameable.LAST_META_INDEX+2, DyeColor.RED.getID(), MetaDataType.VAR_INT);
 	protected static final MetaDataField<Integer>
 	META_ANGER_TIME = new MetaDataField<>(CoreTameable.LAST_META_INDEX+3, 0, MetaDataType.VAR_INT);
+	protected static final MetaDataField<WolfVariant>
+	META_WOLF_VARIANT = new MetaDataField<>(CoreTameable.LAST_META_INDEX+4, null, MetaDataType.WOLF_VARIANT);
 	
-	protected static final int LAST_META_INDEX = CoreTameable.LAST_META_INDEX+3;
+	protected static final int LAST_META_INDEX = CoreTameable.LAST_META_INDEX+4;
 	
 	protected static final NBTFieldContainer<CoreWolf> NBT_FIELDS;
 	
@@ -56,6 +58,7 @@ public class CoreWolf extends CoreTameable implements Wolf {
 		metaContainer.set(META_IS_BEGGING);
 		metaContainer.set(META_COLLAR_COLOR);
 		metaContainer.set(META_ANGER_TIME);
+		metaContainer.set(META_WOLF_VARIANT);
 	}
 
 	@Override
@@ -111,6 +114,16 @@ public class CoreWolf extends CoreTameable implements Wolf {
 		if (isAngry())
 			writer.writeByteTag(NBT_ANGRY, true);
 		writer.writeByteTag(NBT_COLLAR_COLOR, getCollarColor().getID());
+	}
+
+	@Override
+	public WolfVariant getVariant() {
+		return metaContainer.getData(META_WOLF_VARIANT);
+	}
+
+	@Override
+	public void setVariant(WolfVariant variant) {
+		metaContainer.get(META_WOLF_VARIANT).setData(variant);
 	}
 
 }

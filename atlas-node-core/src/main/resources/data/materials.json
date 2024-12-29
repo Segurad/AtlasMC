@@ -6253,7 +6253,7 @@
     "minecraft:blast_furnace": {
         "itemID": 1260,
         "BDF": "atlas:furnace",
-        "TEF": "minecraft:furnace",
+        "TEF": "minecraft:blast_furnace",
         "const": "BLAST_FURNACE",
         "blockStateID": 19441,
         "blockID": 804
@@ -9133,6 +9133,7 @@
         "itemID": 1030,
         "blockStateID": 27603,
         "BDF": "atlas:crafter",
+        "TEF": "minecraft:crafter",
         "blockID": 1084
     },
     "minecraft:exposed_copper_bulb": {

@@ -226,7 +226,7 @@ public class CoreChunk implements Chunk {
 	public Material getBlockType(int x, int y, int z) {
 		ChunkSection section = getSection(y);
 		if (section == null) 
-			return Material.AIR;
+			return Material.get(Material.AIR);
 		return section.getBlockType(x, y, z);
 	}
 

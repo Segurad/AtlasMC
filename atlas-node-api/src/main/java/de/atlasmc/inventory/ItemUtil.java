@@ -3,6 +3,7 @@ package de.atlasmc.inventory;
 import java.util.List;
 
 import de.atlasmc.Material;
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.enchantments.Enchantment;
@@ -12,6 +13,10 @@ import de.atlasmc.inventory.component.LoreComponent;
 
 public class ItemUtil {
 
+	public static ItemStack getItemStack(NamespacedKey material, Chat name) {
+		return getItemStack(Material.get(material), name, null, 1);
+	}
+	
 	public static ItemStack getItemStack(Material material, Chat name) {
 		return getItemStack(material, name, null, 1);
 	}

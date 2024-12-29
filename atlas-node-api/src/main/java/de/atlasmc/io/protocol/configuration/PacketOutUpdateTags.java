@@ -1,18 +1,10 @@
 package de.atlasmc.io.protocol.configuration;
 
-import java.util.Map;
-
-import de.atlasmc.NamespacedKey;
-import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.tag.Tag;
-import de.atlasmc.util.map.Multimap;
+import de.atlasmc.io.protocol.common.AbstractPacketUpdateTags;
 
 @DefaultPacketID(packetID = PacketConfiguration.OUT_UPDATE_TAGS, definition = "update_tags")
-public class PacketOutUpdateTags extends AbstractPacket implements PacketConfigurationOut {
-
-	public Multimap<NamespacedKey, Tag<?>> tags;
-	public Map<NamespacedKey, Map<NamespacedKey, int[]>> rawTags;
+public class PacketOutUpdateTags extends AbstractPacketUpdateTags implements PacketConfigurationOut {
 	
 	@Override
 	public int getDefaultID() {

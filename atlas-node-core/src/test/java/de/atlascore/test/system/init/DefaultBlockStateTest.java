@@ -26,9 +26,9 @@ public class DefaultBlockStateTest {
 		try {
 			Registries.init(new CoreRegistryHandler());
 		} catch (IllegalStateException e) {}
-		Registries.createInstanceRegistry(Material.class);
-		Registries.createInstanceRegistry(BlockDataFactory.class);
-		Registries.createInstanceRegistry(TileEntityFactory.class);
+		Registries.createRegistry(Material.class);
+		Registries.createRegistry(BlockDataFactory.class);
+		Registries.createRegistry(TileEntityFactory.class);
 		MaterialLoader.loadMaterial();
 		JsonReader reader = AtlasTest.getJsonResourceReader("/minecraft/blocks.json");
 		reader.beginObject();
@@ -37,7 +37,7 @@ public class DefaultBlockStateTest {
 			String fail = null;
 			String rawMat = reader.nextName();
 			NamespacedKey matKey = NamespacedKey.of(rawMat);
-			Material mat = Material.getMaterial(matKey);
+			Material mat = Material.get(matKey);
 			// handle no material found
 			if (mat == null) {
 				reader.skipValue();
@@ -49,8 +49,6 @@ public class DefaultBlockStateTest {
 			while (reader.peek() != JsonToken.END_OBJECT) {
 				String attributeKey = reader.nextName();
 				if (!attributeKey.equals("states")) {
-					if (!attributeKey.equals("properties"))
-						System.out.println("Unknown key (" + attributeKey + ") found while analysing states for : " + rawMat);
 					reader.skipValue();
 					continue;
 				}
@@ -67,7 +65,8 @@ public class DefaultBlockStateTest {
 							id = reader.nextInt();
 							break;
 						case "default":
-							defaultState = true;
+							defaultState = reader.nextBoolean();
+							break;
 						default:
 							reader.skipValue();
 							break;

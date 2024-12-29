@@ -112,11 +112,6 @@ public class CoreArrow extends CoreAbstractArrow implements Arrow {
 	}
 
 	@Override
-	public ProjectileType getProjectileType() {
-		return ProjectileType.ARROW;
-	}
-
-	@Override
 	public void setColor(Color color) {
 		setColor(color.asRGB());
 	}

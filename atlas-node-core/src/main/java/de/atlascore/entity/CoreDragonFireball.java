@@ -11,9 +11,4 @@ public class CoreDragonFireball extends CoreAbstractFireball implements DragonFi
 		super(type, uuid);
 	}
 
-	@Override
-	public ProjectileType getProjectileType() {
-		return ProjectileType.DRAGON_FIREBALL;
-	}
-
 }

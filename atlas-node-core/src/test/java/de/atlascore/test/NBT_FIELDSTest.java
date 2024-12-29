@@ -21,7 +21,6 @@ public class NBT_FIELDSTest implements Consumer<Class<?>>{
 		ReflectionUtil.getClassesInPacket("de.atlascore.block.tile", this);
 		ReflectionUtil.getClassesInPacket("de.atlascore.block.data", this);
 		ReflectionUtil.getClassesInPacket("de.atlascore.block.data.type", this);
-		ReflectionUtil.getClassesInPacket("de.atlascore.inventory.meta", this);
 	}
 	
 	@Override

@@ -3,15 +3,14 @@ package de.atlascore.registry;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import de.atlascore.plugin.CorePluginManager;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.log.Log;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginHandle;
-import de.atlasmc.registry.ClassRegistry;
-import de.atlasmc.registry.InstanceRegistry;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.registry.RegistryHandler;
@@ -25,16 +24,17 @@ public class CoreRegistryHandler implements RegistryHandler {
 	
 	@SuppressWarnings("rawtypes")
 	private final Registry<Registry> registries;
+	private final Lock modifyLock = new ReentrantLock();
 	
 	public CoreRegistryHandler() {
-		registries = new CoreInstanceRegistry<>(NamespacedKey.of(NamespacedKey.ATLAS, "registry_root"), Registry.class);
+		registries = new CoreInstanceRegistry<>(NamespacedKey.literal("atlas:registry_root"), Registry.class);
 		registries.register(CorePluginManager.SYSTEM, registries.getNamespacedKey(), registries);
 	}
 
 	@Override
-	public <T> Registry<T> getRegistry(NamespacedKey key) {
+	public <T extends Registry<?>> T getRegistry(NamespacedKey key) {
 		@SuppressWarnings("unchecked")
-		Registry<T> registry = registries.get(key);
+		T registry = (T) registries.get(key);
 		return registry;
 	}
 
@@ -48,57 +48,89 @@ public class CoreRegistryHandler implements RegistryHandler {
 	}
 	
 	@Override
-	public <T> InstanceRegistry<T> createInstanceRegistry(NamespacedKey key, Class<T> clazz) {
-		InstanceRegistry<T> registry = new CoreInstanceRegistry<>(key, clazz);
-		registries.register(null, key, registry);
-		return registry;
-	}
-	
-	@Override
-	public <T> ClassRegistry<T> createClassRegistry(NamespacedKey key, Class<T> clazz) {
-		ClassRegistry<T> registry = new CoreClassRegistry<>(key, clazz);
-		registries.register(null, key, registry);
-		return registry;
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> Registry<T> createRegistry(NamespacedKey key, Class<?> clazz, Target target) {
-		Registry<?> registry = null;
-		switch (target) {
-		case INSTANCE: {
-			registry = createInstanceRegistry(key, clazz);
-			break;
-		}
-		case CLASS:
-			registry = new CoreClassRegistry<>(key, clazz);
-			break;
-		default:
-			throw new IllegalArgumentException("Unexpected value: " + target);
-		}
-		registries.register(CorePluginManager.SYSTEM, key, registry);
-		return (Registry<T>) registry;
-	}
-
-	@Override
-	public <T> Registry<T> getRegistry(String key) {
+	public <T> T getDefault(String key) {	
 		@SuppressWarnings("unchecked")
 		Registry<T> registry = registries.get(key);
-		return registry;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> InstanceRegistry<T> getInstanceRegistry(Class<T> clazz) {
-		Registry<?> registry = getRegistry(clazz);
-		if (registry instanceof InstanceRegistry reg)
-			return reg;
-		return null;
+		if (registry == null)
+			return null;
+		return registry.getDefault();
 	}
 	
 	@Override
-	public Registry<?> getRegistry(Class<?> clazz) {
-		return getRegistry(getRegistryKey(clazz));
+	public <T> T getDefault(Class<?> clazz) {
+		return getDefault(getRegistryKey(clazz));
+	}
+	
+	@Override
+	public <T extends Registry<?>> T createRegistry(NamespacedKey key, Class<?> clazz, Target target) {
+		if (key == null)
+			throw new IllegalArgumentException("Key can not be null!");
+		if (clazz == null)
+			throw new IllegalArgumentException("Class can not be null!");
+		if (target == null)
+			throw new IllegalArgumentException("Target can not be null!");
+		Registry<?> rawRegistry = checkPresentRegistry(key, clazz, target);
+		if (rawRegistry != null) {
+			@SuppressWarnings("unchecked")
+			T registry = (T) rawRegistry;
+			return registry;
+		}
+		modifyLock.lock();
+		try {
+			rawRegistry = checkPresentRegistry(key, clazz, target);
+			if (rawRegistry != null) {
+				modifyLock.unlock();
+				@SuppressWarnings("unchecked")
+				T registry = (T) rawRegistry;
+				return registry;
+			}
+		} catch(Exception e) {
+			modifyLock.unlock();
+			throw e;
+		}
+		switch (target) {
+		case INSTANCE:
+			rawRegistry = new CoreInstanceRegistry<>(key, clazz);
+			break;
+		case CLASS:
+			rawRegistry = new CoreClassRegistry<>(key, clazz);
+			break;
+		case PROTOCOL:
+			rawRegistry = new CoreProtocolRegistry<>(key, clazz);
+		default:
+			modifyLock.unlock();
+			throw new IllegalStateException("Unhandled target value: " + target);
+		}
+		registries.register(CorePluginManager.SYSTEM, key, rawRegistry);
+		modifyLock.unlock();
+		@SuppressWarnings("unchecked")
+		T registry = (T) rawRegistry;
+		return registry;
+	}
+	
+	private Registry<?> checkPresentRegistry(NamespacedKey key, Class<?> clazz, Target target) {
+		Registry<?> registry = getRegistry(key);
+		if (registry == null)
+			return null;
+		if (registry.getTarget() != target)
+			throw new IllegalStateException("Registry with different target already present: " + key + " | given [" + target + "] present [" + registry.getTarget() + "]");
+		if (!registry.getType().equals(clazz))
+			throw new IllegalStateException("Registry with different type already present: " + key + " | given [" + clazz.getName() + "] present [" + registry.getType().getName() + "]");
+		return registry;
+	}
+
+	@Override
+	public <T extends Registry<?>> T getRegistry(String key) {
+		@SuppressWarnings("unchecked")
+		T registry = (T) registries.get(key);
+		return registry;
+	}
+	
+	@Override
+	public <T extends Registry<?>> T getRegistry(Class<?> clazz) {
+		@SuppressWarnings("unchecked")
+		T registry = (T) getRegistry(getRegistryKey(clazz));
+		return registry;
 	}
 	
 	private String getRegistryKey(Class<?> clazz) {
@@ -109,54 +141,39 @@ public class CoreRegistryHandler implements RegistryHandler {
 	}
 
 	@Override
-	public <T> T getInstanceDefault(Class<T> clazz) {
-		InstanceRegistry<T> registry = getInstanceRegistry(clazz);
-		return registry != null ? registry.getDefault() : null;
+	public Registry<Registry<?>> getRegistries() {
+		Registry<?> rawRegistry = this.registries;
+		@SuppressWarnings("unchecked")
+		Registry<Registry<?>> registry = (Registry<Registry<?>>) rawRegistry;
+		return registry;
 	}
 
 	@Override
-	public <T> Class<? extends T> getClassDefault(Class<T> clazz) {
-		ClassRegistry<T> registry = getClassRegistry(clazz);
-		return registry != null ? registry.getDefault() : null;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> ClassRegistry<T> getClassRegistry(Class<T> clazz) {
-		Registry<?> registry = getRegistry(clazz);
-		if (registry instanceof ClassRegistry reg)
-			return reg;
-		return null;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public Collection<Registry<?>> getRegistries() {
-		Collection<?> registries = this.registries.values();
-		return (Collection<Registry<?>>) registries;
+	public boolean registerRegistry(Registry<?> registry) {
+		if (registry == null)
+			throw new IllegalArgumentException("Registry can not be null!");
+		NamespacedKey key = registry.getNamespacedKey();
+		if (registries.get(key) != null)
+			return false;
+		modifyLock.lock();
+		if (registries.get(key) != null) {
+			modifyLock.unlock();
+			return false;
+		}
+		this.registries.register(CorePluginManager.SYSTEM, key, registry);
+		modifyLock.unlock();
+		return true;
 	}
 
 	@Override
-	public void registerRegistry(Registry<?> registry) {
-		this.registries.register(CorePluginManager.SYSTEM, registry.getKey(), registry);
-	}
-
-	@Override
-	public <T> InstanceRegistry<T> createInstanceRegistry(Class<T> clazz) {
-		NamespacedKey key = NamespacedKey.of(getRegistryKey(clazz));
-		return createInstanceRegistry(key, clazz);
-	}
-
-	@Override
-	public <T> ClassRegistry<T> createClassRegistry(Class<T> clazz) {
-		NamespacedKey key = NamespacedKey.of(getRegistryKey(clazz));
-		return createClassRegistry(key, clazz);
-	}
-
-	@Override
-	public <T> Registry<T> createRegistry(Class<?> clazz, Target target) {
-		NamespacedKey key = NamespacedKey.of(getRegistryKey(clazz));
-		return createRegistry(key, clazz, target);
+	public <T extends Registry<?>> T createRegistry(Class<?> clazz) {
+		if (clazz == null)
+			throw new IllegalArgumentException("Class can not be null!");
+		RegistryHolder holder = clazz.getAnnotation(RegistryHolder.class);
+		if (holder == null)
+			throw new IllegalArgumentException("Class does not contain  RegistryHolder annotation: " + clazz.getName());
+		NamespacedKey key = NamespacedKey.of(holder.key());
+		return createRegistry(key, clazz, holder.target());
 	}
 
 	@Override
@@ -210,7 +227,7 @@ public class CoreRegistryHandler implements RegistryHandler {
 	}
 
 	@Override
-	public void loadRegistries(PluginHandle plugin, ConfigurationSection config) {
+	public void loadRegistries(Plugin plugin, ConfigurationSection config) {
 		if (plugin == null)
 			throw new IllegalArgumentException("Plugin can not be null!");
 		if (config == null)
@@ -279,10 +296,10 @@ public class CoreRegistryHandler implements RegistryHandler {
 				if (Registries.DEFAULT_REGISTRY_KEY.equals(entryKey)) {
 					registry.setDefault(entryValue);
 					logger.debug("Registry ({}) set default: {}", key, entryClass.getName());
-				} else if (registry.register(plugin, entryKey, entryValue)) {
+				} else if (registry.register(plugin, entryKey, entryValue) == null) {
 					logger.debug("Registry ({}) registered: {}={}", key, entryKey, entryClass.getName());
 				} else {
-					logger.warn("Registry ({}) tried to register value twice {}={}", key, entryKey, entryClass.getName());
+					logger.warn("Registry ({}) register value twice {}={}", key, entryKey, entryClass.getName());
 				}
 			}
 		}

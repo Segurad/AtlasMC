@@ -21,15 +21,32 @@ public interface Registry<T> extends Namespaced {
 	
 	T getOrDefault(NamespacedKey key, T defaultValue);
 	
-	boolean register(PluginHandle plugin, NamespacedKey key, T value);
+	/**
+	 * Registers a new entry for this registry.
+	 * Returns the previous entry with the given key if present.
+	 * @param plugin to associate with
+	 * @param key of the entry
+	 * @param value of the entry
+	 * @return previous or null
+	 */
+	@Nullable
+	RegistryEntry<T> register(PluginHandle plugin, NamespacedKey key, T value);
 	
-	boolean register(PluginHandle plugin, String key, T value);
-	
-	boolean register(PluginHandle plugin, String[] keys, T[] values);
+	/**
+	 * Registers a new entry for this registry.
+	 * Returns the previous entry with the given key if present.
+	 * @param plugin to associate with
+	 * @param key of the entry
+	 * @param value of the entry
+	 * @return previous or null
+	 */
+	@Nullable
+	RegistryEntry<T> register(PluginHandle plugin, String key, T value);
 
 	@Nullable
 	T get(String key);
 	
+	@Nullable
 	RegistryEntry<T> getEntry(String key);
 	
 	@Nullable
@@ -55,6 +72,8 @@ public interface Registry<T> extends Namespaced {
 	Collection<T> values();
 	
 	Set<String> keySet();
+	
+	Set<PluginHandle> getHandles();
 	
 	Collection<RegistryEntry<T>> getPluginEntries(PluginHandle plugin);
 	

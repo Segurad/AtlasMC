@@ -55,7 +55,7 @@ public class CoreProxyManager implements ProxyManager {
 	@Override
 	public LocalProxy createProxy(ProxyConfig config) {
 		Log log = Atlas.getLogger();
-		Registry<LocalProxyFactory> proxyFactories = Registries.getInstanceRegistry(LocalProxyFactory.class);
+		Registry<LocalProxyFactory> proxyFactories = Registries.getRegistry(LocalProxyFactory.class);
 		final int portRange = RANDOM_PORT_RANGE_END - RANDOM_PORT_RANGE_START;
 		NamespacedKey proxyKey = config.getFactory();
 		LocalProxyFactory factory = null;

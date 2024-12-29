@@ -71,11 +71,6 @@ public class CoreTrident extends CoreAbstractArrow implements Trident {
 	}
 
 	@Override
-	public ProjectileType getProjectileType() {
-		return ProjectileType.TRIDENT;
-	}
-
-	@Override
 	public void setLoyalityLevel(int level) {
 		metaContainer.get(META_LOYALITY_LEVEL).setData(level);
 	}

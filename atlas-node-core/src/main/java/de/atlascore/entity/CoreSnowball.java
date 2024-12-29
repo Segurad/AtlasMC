@@ -10,10 +10,5 @@ public class CoreSnowball extends CoreThrowableProjectile implements Snowball {
 	public CoreSnowball(EntityType type, UUID uuid) {
 		super(type, uuid);
 	}
-
-	@Override
-	public ProjectileType getProjectileType() {
-		return ProjectileType.SNOWBALL;
-	}
-
+	
 }

@@ -57,7 +57,7 @@ public class CoreBeehive extends CoreTileEntity implements Beehive {
 						ticksinhive = reader.readIntTag();
 					else if (NBT_ENTITY_DATA.equals(value)) {
 						reader.readNextEntry();
-						bee = (Bee) EntityType.BEE.create(holder.getWorld());
+						bee = (Bee) EntityType.get(EntityType.BEE).create(holder.getWorld());
 						if (bee != null)
 							bee.fromNBT(reader);
 					} else

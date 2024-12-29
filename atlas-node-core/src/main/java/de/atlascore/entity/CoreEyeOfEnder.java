@@ -11,9 +11,4 @@ public class CoreEyeOfEnder extends CoreThrowableProjectile implements EyeOfEnde
 		super(type, uuid);
 	}
 
-	@Override
-	public ProjectileType getProjectileType() {
-		return ProjectileType.EYE_OF_ENDER;
-	}
-
 }

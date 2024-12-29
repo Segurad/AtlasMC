@@ -184,7 +184,7 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 		if (cfg.contains("defaults"))
 			size += defaults.size();
 		ArrayList<AtlasThreadTask> tasks = new ArrayList<>(size);
-		Registry<AtlasThreadTaskFactory> registry = Registries.getInstanceRegistry(AtlasThreadTaskFactory.class);
+		Registry<AtlasThreadTaskFactory> registry = Registries.getRegistry(AtlasThreadTaskFactory.class);
 		for (Entry<String, Object> entry : cfg.getValues().entrySet()) {
 			String name = entry.getKey();
 			Object value = entry.getValue();
@@ -226,7 +226,7 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 	}
 	
 	private void buildDefaultTasks(List<Pair<String, String>> defaults, Collection<AtlasThreadTask>  tasks) {
-		Registry<AtlasThreadTaskFactory> registry = Registries.getInstanceRegistry(AtlasThreadTaskFactory.class);
+		Registry<AtlasThreadTaskFactory> registry = Registries.getRegistry(AtlasThreadTaskFactory.class);
 		for (Pair<String, String> rawTask : defaults) {
 			String key = rawTask.getValue2();
 			AtlasThreadTaskFactory factory = registry.get(key);
