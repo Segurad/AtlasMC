@@ -2,19 +2,24 @@
 
 - [Administration](#administration)
 - [Development](#development)
+- [Atlas Development](#atlas-development)
 
 ## Administration
 
-- [JVM Arguments](jvm_args.md)
-- [System Properties](properties.md)
+- [JVM Arguments](admin/jvm_args.md)
+- [System Properties](admin/properties.md)
 
 ## Development
 
-- [Plugin Development](plugins.md)
-- [Node Startup](node-startup.md)
-- [Thread structure](threads.md)
-- [Events](events.md)
-- [Internal API](internal_api.md)
-- [Unsafe API](unsafe_api.md)
-- [Registries](registries.md)
-- [Commands](commands.md)
+- [Plugin Development](dev/plugins.md)
+- [Node Startup](dev/node-startup.md)
+- [Thread structure](dev/threads.md)
+- [Events](dev/events.md)
+- [Internal API](dev/internal_api.md)
+- [Unsafe API](dev/unsafe_api.md)
+- [Registries](dev/registries.md)
+- [Commands](dev/commands.md)
+
+## Atlas Development
+
+- [Usefull resources](atlasdev/usefull_resources.md)

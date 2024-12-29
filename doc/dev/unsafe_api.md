@@ -1,6 +1,6 @@
 # Unsafe API
 
-[Doc](doc.md) > [Development](doc.md#development) > [Unsafe API](#unsafe-api)
+[Doc](../doc.md) > [Development](../doc.md#development) > [Unsafe API](#unsafe-api)
 
 ---
 

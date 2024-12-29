@@ -1,6 +1,6 @@
 # JVM Arguments
 
-[Doc](doc.md) > [Administration](doc.md#administration) > [JVM Arguments](#jvm-arguments)
+[Doc](../doc.md) > [Administration](../doc.md#administration) > [JVM Arguments](#jvm-arguments)
 
 ---
 

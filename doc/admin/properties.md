@@ -1,6 +1,6 @@
 # Properties
 
-[Doc](doc.md) > [Administration](doc.md#administration) > [Properties](#properties)
+[Doc](../doc.md) > [Administration](../doc.md#administration) > [Properties](#properties)
 
 ---
 

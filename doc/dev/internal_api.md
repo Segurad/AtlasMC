@@ -1,6 +1,6 @@
 # Internal API
 
-[Doc](doc.md) > [Development](doc.md#development) > [Internal API](#internal-api)
+[Doc](../doc.md) > [Development](../doc.md#development) > [Internal API](#internal-api)
 
 ---
 

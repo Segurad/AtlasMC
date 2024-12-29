@@ -1,6 +1,6 @@
 # Registries
 
-[Doc](doc.md) > [Development](doc.md#development) > [Registries](#registries)
+[Doc](../doc.md) > [Development](../doc.md#development) > [Registries](#registries)
 
 ---
 
@@ -17,7 +17,7 @@ Registries are the main way of providing funktionality for Atlas itself and Plug
 
 ```yaml
 <registrykey>:
-  targert: INSTANE # INSTANCE, CLASS
+  targert: INSTANE # INSTANCE, CLASS, PROTOCOL
   type: my.required.registry.type
 ```
 

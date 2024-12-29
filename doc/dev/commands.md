@@ -1,6 +1,6 @@
 # Commands
 
-[Doc](doc.md) > [Development](doc.md#development) > [Commands](#commands)
+[Doc](../doc.md) > [Development](../doc.md#development) > [Commands](#commands)
 
 ---
 

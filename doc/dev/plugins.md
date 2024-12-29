@@ -1,14 +1,14 @@
 # Plugins
 
-[Doc](doc.md) > [Development](doc.md#development) > [Plugins](#plugins)
+[Doc](../doc.md) > [Development](../doc.md#development) > [Plugins](#plugins)
 
 ---
 
 Plugin Resourcepaths:
 
 - [`/atlas-plugin.yml`](#atlas-pluginyml)
-- [`/setup.yml`](#setup) (only for  AtlasModules)
-- [`/server-setup.yml`](#setup)
+- [`/setup.yml`](#setupyml) (only for  AtlasModules)
+- [`/server-setup.yml`](#setupyml)
 
 ---
 
