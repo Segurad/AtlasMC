@@ -30,11 +30,11 @@ public class SNBTWriter implements NBTWriter {
 		ensureOpen();
 		if (depth == -1) 
 			throw new IOException("No NBT to close available!");
-		if (list != null && list.depth == depth && list.type != TagType.COMPOUND) 
+		if (list != null && list.depth == depth && list.type != TagType.COMPOUND) {
 			throw new IOException("Can not write EndTag to List");
+		}
 		depth--;
 		prepareTag(TagType.TAG_END, null);
-		out.write('}');
 		removeList();
 	}
 
@@ -253,20 +253,43 @@ public class SNBTWriter implements NBTWriter {
 	
 	private void prepareTag(TagType type, CharSequence name) throws IOException {
 		ensureOpen();
+		System.out.println("Type: " + type + " Name: " + name + " Depth: " + depth + (list != null ? " Payload: " + list.payload + " ListDepth " + list.depth : ""));
 		if (list != null && list.depth == depth) {
 			if (list.payload > 0) {
-				if (type != list.type && !(list.type == TagType.COMPOUND && type == TagType.TAG_END))
+				if (type != list.type && !(list.type == TagType.COMPOUND && type == TagType.TAG_END)) {
 					throw new IOException("TagType not campatiple with ListTag(" + list.type.name() + "):" + type.name());
+				}
+				if (type == TagType.TAG_END) {
+					out.write('}');
+					return; 
+				}
 				list.payload--;
-				if (list.payload == 0) 
+				if (separator) {
+					out.write(',');
+				} else {
+					separator = true;
+				}
+				if (list.payload == 0 && list.type != TagType.COMPOUND) {
 					removeList = true;
-			} else 
+				}
+				return;
+			} else if (list.type == TagType.COMPOUND) {
+				if (type == TagType.TAG_END) {
+					out.write('}');
+					removeList = true;
+				}
+				return;
+			} else {
 				throw new IOException("Max Listpayload reached!");
+			}
+		}
+		if (type == TagType.TAG_END) {
+			out.write('}');
+			separator = true;
+			return;
 		}
 		if (separator) {
-			if (type != TagType.TAG_END) {
-				out.write(',');
-			}
+			out.write(',');
 		} else {
 			separator = true;
 		}
@@ -286,10 +309,17 @@ public class SNBTWriter implements NBTWriter {
 	}
 	
 	private void addList(int payload, TagType payloadType) throws IOException {
-		if (payload <= 0) return;
+		if (removeList) {
+			removeList = false;
+		}
 		list = new ListData(payloadType, payload, ++depth, list);
 		separator = false;
 		out.write('[');
+		if (payload == 0) {
+			removeList = true;
+			removeList();
+			separator = true;
+		}
 	}
 	
 	private void removeList() throws IOException {
@@ -298,11 +328,13 @@ public class SNBTWriter implements NBTWriter {
 		removeList = false;
 		if (list == null) 
 			return;
-		if (list.depth != depth)
-			removeList = true;
 		list = list.parent;
 		depth--;
 		out.write(']');
+		if (list != null && list.payload == 0) {
+			removeList = true;
+			removeList();
+		}
 	}
 
 	protected final void ensureOpen() throws IOException {

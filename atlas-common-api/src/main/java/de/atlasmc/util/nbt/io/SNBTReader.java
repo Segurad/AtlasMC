@@ -1,5 +1,6 @@
 package de.atlasmc.util.nbt.io;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.UncheckedIOException;
@@ -77,7 +78,7 @@ public class SNBTReader extends AbstractNBTReader {
 	private int depth;
 	private int arrayTagPayload = -1;
 	private ListData list;
-	private Reader reader;
+	private BufferedReader reader;
 	private CharKeyBuffer buffer;
 	private CharKeyBuffer name;
 	private boolean closed;
@@ -86,7 +87,11 @@ public class SNBTReader extends AbstractNBTReader {
 	public SNBTReader(Reader in) throws IOException {
 		if (in == null)
 			throw new IllegalArgumentException("Reader can not be null!");
-		reader = in;
+		if (in instanceof BufferedReader reader) {
+			this.reader = reader;
+		} else {
+			this.reader = new BufferedReader(in);
+		}
 		prepareTag();
 	}
 

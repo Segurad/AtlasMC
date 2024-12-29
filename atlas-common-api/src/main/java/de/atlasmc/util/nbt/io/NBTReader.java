@@ -20,6 +20,7 @@ import de.atlasmc.util.nbt.tag.NBT;
  * while (reader.getRestPayload() > 0) {
  * 	// read element
  * }
+ * reader.readNextEntry(); // skip to next element after list
  * </pre>
  * Read {@link TagType#COMPOUND}
  * <pre>
@@ -38,6 +39,7 @@ import de.atlasmc.util.nbt.tag.NBT;
  * <pre>
  * reader.readNextEntry(); // skip to first element of list
  * while (reader.getRestPayload() > 0) {
+ *  reader.readNextEntry(); // skip to first element of compound
  * 	int element_1 = 0;
  * 	while (reader.getType() != TagType.TAG_END) {
  * 		switch (reader.getFieldName()) {
@@ -50,6 +52,7 @@ import de.atlasmc.util.nbt.tag.NBT;
  * 	// assemble your object
  * 	reader.readNextEntry(); // skip to next compound over TAG_END
  * }
+ * reader.readNextEntry(); // skip to next element after list
  * </pre>
  */
 public interface NBTReader extends Closeable {
@@ -78,16 +81,16 @@ public interface NBTReader extends Closeable {
 	TagType getListType() throws IOException;
 	
 	/**
-	 * Returns the number of elements remaining in the currently entered list {@link ListTag} or 0 if no current entered list.
+	 * Returns the number of elements remaining in the currently entered list {@link ListTag} or -1 if no current entered list.
 	 * May be 1 for more than one element in some implementations.
-	 * @return number of elements or 0
+	 * @return number of elements or -1
 	 * @throws IOException 
 	 */
 	int getRestPayload() throws IOException;
 	
 	/**
-	 * Returns the number of elements remaining in the ListTag or 0 if {@link #getType()} is not {@link TagType#LIST} 
-	 * @return number of elements or 0
+	 * Returns the number of elements remaining in the ListTag or -1 if {@link #getType()} is not {@link TagType#LIST} 
+	 * @return number of elements or -1
 	 * @throws IOException 
 	 */
 	int getNextPayload() throws IOException;
@@ -106,7 +109,7 @@ public interface NBTReader extends Closeable {
 	boolean isArrayTag();
 	
 	/**
-	 * Returns whether or not the next element is a entry of a list tag
+	 * Returns whether or not the next read element is a entry of a list tag
 	 * @return true if list
 	 */
 	boolean isList();

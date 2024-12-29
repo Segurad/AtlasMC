@@ -66,40 +66,25 @@ public abstract class AbstractNBTReader implements NBTReader {
 	@Override
 	public NBT readNBT() throws IOException {
 		final boolean isList = isList();
-		String name = isList ? null : getFieldName().toString();
-		switch (isList ? getListType() : getType()) {
+		String name;
+		if (isList) {
+			name = null;
+		} else {
+			CharSequence field =  getFieldName();
+			name = field == null ? null : field.toString();
+		}
+		switch (getType()) {
 		case BYTE: 
 			return NBT.createByteTag(name, readByteTag());
 		case BYTE_ARRAY: 
 			return NBT.createByteArrayTag(name, readByteArrayTag());
 		case COMPOUND: {
-			if (isList) {
-				final ListTag list = new ListTag(name, getListType());
-				readNextEntry(); // move out of list header
-				while (getRestPayload() > 0) {
-					CompoundTag compound = new CompoundTag(name);
-					final int depth = getDepth(); // root depth of compound
-					while (depth <= getDepth()) {
-						if (getType() == TagType.TAG_END) {
-							readNextEntry(); // move out of list or to next compound in list
-							continue;
-						}
-						compound.addTag(readNBT());
-					}
-					list.addTag(compound);
-				}
-				return list;
-			}
 			final CompoundTag compound = new CompoundTag(name);
 			readNextEntry(); // move to first compound entry
-			final int depth = getDepth(); // root depth of compound
-			while (depth <= getDepth()) {
-				if (getType() == TagType.TAG_END) {
-					readNextEntry(); // skip end
-					continue;
-				}
+			while (getType() != TagType.TAG_END) {
 				compound.addTag(readNBT());
 			}
+			readNextEntry(); // move out of compound
 			return compound;
 		}
 		case DOUBLE: 
@@ -111,19 +96,12 @@ public abstract class AbstractNBTReader implements NBTReader {
 		case INT_ARRAY: 
 			return NBT.createIntArrayTag(name, readIntArrayTag());
 		case LIST: 
-			if (isList) {
-				ListTag list = new ListTag(name, TagType.LIST);
-				readNextEntry();
-				while (getRestPayload() > 0) {
-					list.addTag(readNBT());
-				}
-				return list;
-			}
 			final ListTag list = new ListTag(name, getListType());
 			readNextEntry();
 			while (getRestPayload() > 0) {
 				list.addTag(readNBT());
 			}
+			readNextEntry();
 			return list;
 		case LONG: 
 			return NBT.createLongTag(name, readLongTag());

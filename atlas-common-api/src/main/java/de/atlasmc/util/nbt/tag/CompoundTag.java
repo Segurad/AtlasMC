@@ -22,7 +22,8 @@ public class CompoundTag extends AbstractCollectionTag<CompoundTag, List<NBT>> {
 	
 	public NBT getTag(String name) {
 		for (NBT nbt : data) {
-			if (nbt.getName().equals(name)) return nbt;
+			if (nbt.getName().equals(name)) 
+				return nbt;
 		}
 		return null;
 	}

@@ -55,10 +55,6 @@ public final class ListTag extends AbstractCollectionTag<ListTag, List<NBT>> imp
 	public TagType getType() {
 		return TagType.LIST;
 	}
-
-	public int size() {
-		return data.size();
-	}
 	
 	@Override
 	protected void add(NBT data) {
@@ -66,15 +62,16 @@ public final class ListTag extends AbstractCollectionTag<ListTag, List<NBT>> imp
 			throw new IllegalArgumentException("NBT can not be null!");
 		if (datatype != data.getType()) 
 			throw new IllegalArgumentException("Illegal TagType:" + data.getType().name() + " " + datatype.name() + " expected!");
+		data.setName(null);
 		super.add(data);
 	}
 	
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeListTag(name, datatype, data != null ? data.size() : 0);
+		writer.writeListTag(name, datatype, getPayloadSize());
 		if (data != null && !data.isEmpty())
 			for (NBT element : data)
-				writer.writeNBT(element);
+				element.toNBT(writer, systemData);
 	}
 
 	@Override

@@ -56,8 +56,17 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 	@Override
 	public int getRestPayload() throws IOException {
 		prepareTag();
-		if (list == null || list.depth != depth)
-			return 0;
+		if (list == null)
+			return -1;
+		if (list.depth != depth) {
+			if (type == TagType.LIST && list.depth == depth + 1) { // required for list in list reading
+				ListData parent = list.parent;
+				if (parent != null) {
+					return parent.payload;
+				}
+			}
+			return -1;
+		}
 		return list.payload;
 	}
 
@@ -65,7 +74,7 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 	public int getNextPayload() throws IOException {
 		prepareTag();
 		if (list == null || list.depth >= depth)
-			return 0;
+			return -1;
 		return list.depth;
 	}
 
@@ -73,24 +82,6 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 	public TagType getType() throws IOException {
 		prepareTag();
 		return type;
-	}
-
-	/**
-	 * Call to mark the current tag as consumed. In most cases this can be called
-	 * immediately.
-	 */
-	private void tagConsumed() {
-		prepared = false;
-		resetName();
-		arrayTagPayload = -1;
-		if (list != null && (depth == list.depth || (list.type == TagType.COMPOUND && list.depth + 1 == depth))) {
-			if (list.payload > 0) {
-				list.payload--;
-				if (list.payload <= 0)
-					removeList();
-			}
-			return;
-		}
 	}
 
 	@Override
@@ -406,38 +397,37 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 
 	protected void prepareTag(boolean skip) throws IOException {
 		ensureOpen();
-		if (prepared)
+		if (prepared) // avoid preparing again
 			return;
 		prepared = true;
 		if (isList()) {
-			type = list.type;
-			if (isArrayTag())
-				arrayTagPayload = ioReadInt();
-			return;
-		}
-		int rawTag = ioReadByte();
-		if (rawTag == -1)
-			throw new IOException("End of stream reached!");
-		type = TagType.getByID(rawTag);
-		if (type == TagType.TAG_END) {
-			return;
-//			resetName();
-//			depth--;
-//			if (list != null && depth == list.depth)
-//				type = TagType.LIST;
-		} else if (!unnamedRoot || depth != -1) {
-			if (!skip) {
-				readName(name);
-				hasName = true;
-			} else {
-				// skip name of tag
-				skipBytes(ioReadShort());
+			type = list.type; // set list type as active tag type
+		} else {
+			// prepare new tag type
+			int rawTag = ioReadByte();
+			if (rawTag == -1)
+				throw new IOException("End of stream reached!");
+			type = TagType.getByID(rawTag);
+			if (type == TagType.TAG_END) {
+				return; // no more preparation for end tag
+			}
+			// prepare name
+			if (!unnamedRoot || depth != -1) { // if require name reading
+				if (!skip) { // check if name can be skipped
+					readName(name);
+					hasName = true;
+				} else {
+					// skip name of tag
+					skipBytes(ioReadShort());
+				}
 			}
 		}
-		if (type == TagType.LIST)
-			addList();
-		else if (isArrayTag())
-			arrayTagPayload = ioReadInt();
+		// type specific preparation
+		if (type == TagType.LIST) {
+			addList(); // list specific preparation
+		} else if (isArrayTag()) {
+			arrayTagPayload = ioReadInt(); // prepare array tag size
+		}
 	}
 
 	protected void resetName() {
@@ -454,30 +444,16 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 		prepareTag(skipPrepare);
 		if (type == TagType.LIST) {
 			boolean entered = list.entered;
-			if (!list.entered) {
+			if (!entered) { // see if enter
 				depth++;
 				list.entered = true;
-			}
-			if (list.type == TagType.COMPOUND) {
-				depth++;
-				type = TagType.COMPOUND;
-				resetName();
 				prepared = false;
 				arrayTagPayload = -1;
-				prepared = true;
+				resetName();
 				return;
-			} else if (list.type == TagType.LIST) {
-				depth++;
-				addList();
-				resetName();
-				prepared = false;
-				arrayTagPayload = -1;
-				prepared = true;
-				return;
-			} else if (!entered) {
-				resetName();
-				prepared = false;
-				arrayTagPayload = -1;
+			} else if(getRestPayload() == 0) {
+				removeList();
+				tagConsumed();
 				return;
 			}
 		} else if (type == TagType.TAG_END) {
@@ -490,6 +466,27 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 			return;
 		}
 		throw new IOException("Next entry should only be called on LIST, COMPOUND or END: " + type.name());
+	}
+	
+	/**
+	 * Call to mark the current tag as consumed. In most cases this can be called
+	 * immediately.
+	 */
+	protected void tagConsumed() {
+		prepared = false;
+		resetName();
+		arrayTagPayload = -1;
+		if (list == null)
+			return;
+		if (depth != list.depth)
+			return;
+		if (list.payload > 0) {
+			list.payload--;
+		}
+		if (list.payload == 0) {
+			prepared = true;
+			type = TagType.LIST;
+		}
 	}
 
 	@Override
@@ -505,10 +502,6 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 		ensureOpen();
 		TagType type = TagType.getByID(ioReadByte());
 		int payload = ioReadInt();
-		if (payload <= 0) {
-			prepareTag();
-			return;
-		}
 		list = new ListData(type, payload, depth + 1, list);
 	}
 
@@ -517,8 +510,6 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 			return;
 		list = list.parent;
 		depth--;
-		if (list != null && depth == list.depth)
-			type = TagType.LIST;
 	}
 
 	@Override

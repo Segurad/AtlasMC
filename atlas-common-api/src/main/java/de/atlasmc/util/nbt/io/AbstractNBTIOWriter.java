@@ -163,11 +163,17 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 		ensureOpen();
 		if (list != null && list.depth == depth) {
 			if (list.payload > 0) {
-				if (type != list.type && !(list.type == TagType.COMPOUND && type == TagType.TAG_END))
+				if (type != list.type && !(list.type == TagType.COMPOUND && type == TagType.TAG_END)) {
 					throw new IOException("TagType not campatiple with ListTag(" + list.type.name() + "):" + type.name());
+				}
+				if (type == TagType.TAG_END) {
+					ioWriteByte(type.getID());
+					return;
+				}
 				list.payload--;
-				if (list.payload == 0) 
+				if (list.payload == 0) {
 					removeList();
+				}
 				return;
 			} else 
 				throw new IOException("Max Listpayload reached!");

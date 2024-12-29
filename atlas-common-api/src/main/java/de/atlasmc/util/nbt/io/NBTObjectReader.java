@@ -309,7 +309,7 @@ public class NBTObjectReader extends AbstractNBTReader {
 		} else if (current.getType() == TagType.LIST) {
 			ListTag list = (ListTag) current;
 			stack = new StackElement(stack, list);
-			if (list.getDataType() == TagType.COMPOUND && list.size() > 0) {
+			if (list.getDataType() == TagType.COMPOUND && list.getPayloadSize() > 0) {
 				CompoundTag nbt = (CompoundTag) stack.next();
 				stack = new StackElement(stack, nbt);
 			}

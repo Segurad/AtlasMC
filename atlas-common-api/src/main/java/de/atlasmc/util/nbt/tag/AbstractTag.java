@@ -63,7 +63,7 @@ abstract class AbstractTag implements NBT {
 			nbtWriter.writeNBT(this);
 			nbtWriter.close();
 		} catch (IOException e) {
-			throw new UncheckedIOException("Error while writing NBT to string!", e);
+			throw new UncheckedIOException("Error while writing NBT to string! (" + writer + ")", e);
 		}
 		return writer.toString();
 	}
