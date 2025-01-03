@@ -18,9 +18,11 @@ public interface ApplyEffects extends ComponentEffect {
 	
 	void setProbability(float probability);
 	
+	ApplyEffects clone();
+	
 	@Override
-	default ConsumeEffectType getType() {
-		return ConsumeEffectType.APPLY_EFFECTS;
+	default ComponentEffectType getType() {
+		return ComponentEffectType.APPLY_EFFECTS;
 	}
 
 }

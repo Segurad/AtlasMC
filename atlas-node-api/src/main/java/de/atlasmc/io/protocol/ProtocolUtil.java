@@ -10,6 +10,9 @@ import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.ItemComponent;
 import de.atlasmc.io.PacketUtil;
+import de.atlasmc.io.ProtocolException;
+import de.atlasmc.potion.PotionEffect;
+import de.atlasmc.potion.PotionEffectType;
 import de.atlasmc.sound.EnumSound;
 import de.atlasmc.sound.ResourceSound;
 import de.atlasmc.sound.Sound;
@@ -121,6 +124,35 @@ public class ProtocolUtil extends PacketUtil {
 				out.writeFloat(fixedRange);
 			}
 		}
+	}
+	
+	public static void writePotionEffect(PotionEffect effect, ByteBuf out) {
+		writeVarInt(effect.getType().getID(), out);
+		writeVarInt(effect.getAmplifier(), out);
+		writeVarInt(effect.getDuration(), out);
+		out.writeBoolean(effect.hasReducedAmbient());
+		out.writeBoolean(effect.hasParticels());
+		out.writeBoolean(effect.isShowingIcon());
+		out.writeBoolean(false); // hidden details
+	}
+	
+	public static PotionEffect readPotionEffect(ByteBuf in) {
+		final int id = readVarInt(in);
+		PotionEffectType type = PotionEffectType.getByID(id);
+		if (type == null)
+			throw new ProtocolException("Unable to find PotionEffectType with id: " + id);
+		int amplifier = readVarInt(in);
+		int duration = readVarInt(in);
+		boolean ambient = in.readBoolean();
+		boolean particles = in.readBoolean();
+		boolean icon = in.readBoolean();
+		while (in.readBoolean())  { // skip hidden details
+			readVarInt(in);
+			readVarInt(in);
+			in.readBoolean();
+			in.readBoolean();
+		}
+		return type.createEffect(amplifier, duration, ambient, particles, icon);
 	}
 	
 }

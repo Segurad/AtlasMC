@@ -15,6 +15,8 @@ import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.registry.ProtocolRegistry;
 import de.atlasmc.tag.Tag;
 import de.atlasmc.tag.Tags;
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.dataset.DataSet;
 import de.atlasmc.util.dataset.SingleValueDataSet;
 import de.atlasmc.util.dataset.TagDataSet;
@@ -200,10 +202,12 @@ public class PacketUtil {
 	    }
 	}
 	
+	@Nullable
 	public static String readString(ByteBuf in) {
 		return readString(in, Integer.MAX_VALUE);
 	}
 	
+	@NotNull
 	public static NamespacedKey readIdentifier(ByteBuf in) {
 		return NamespacedKey.of(readString(in, MAX_IDENTIFIER_LENGTH));
 	}
@@ -219,6 +223,7 @@ public class PacketUtil {
 	 * @return array
 	 * @throws IllegalArgumentException if length > maxLength
 	 */
+	@Nullable
 	public static byte[] readByteArray(ByteBuf in, int maxLength) {
 		int len = readVarInt(in);
 		if (len == 0) 
@@ -240,6 +245,7 @@ public class PacketUtil {
 		out.writeBytes(data);
 	}
 	
+	@Nullable
 	public static String readString(ByteBuf in, int maxLength) {
 		int len = readVarInt(in);
 		if (len == 0) 
@@ -269,10 +275,12 @@ public class PacketUtil {
 		out.writeBytes(buf);
 	}
 	
+	@NotNull
 	public static BitSet readBitSet(ByteBuf in) {
 		return readBitSet(in, 0);
 	}
 	
+	@NotNull
 	public static BitSet readBitSet(ByteBuf in, int maxBits) {
 		int numberOfLongs = readVarInt(in);
 		if (maxBits > 0) {
@@ -294,6 +302,7 @@ public class PacketUtil {
 		}
 	}
 	
+	@NotNull
 	public static UUID readUUID(ByteBuf in) {
 		long most = in.readLong();
 		long least = in.readLong();
@@ -356,6 +365,7 @@ public class PacketUtil {
 		}
 	}
 	
+	@NotNull
 	public static <T extends Namespaced> DataSet<T> readDataSet(ProtocolRegistry<T> registry, ByteBuf in) {
 		final int id = readVarInt(in);
 		if (id == 0) {

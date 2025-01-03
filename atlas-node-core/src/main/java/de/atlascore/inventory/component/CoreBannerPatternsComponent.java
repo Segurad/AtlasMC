@@ -148,6 +148,7 @@ public class CoreBannerPatternsComponent extends AbstractItemComponent implement
 			reader.readNextEntry();
 			addPattern(new Pattern(color, pattern));
 		}
+		reader.readNextEntry();
 	}
 	
 	@Override

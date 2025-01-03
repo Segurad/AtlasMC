@@ -164,6 +164,7 @@ public class ConcurrentLinkedList<E> implements Collection<E> {
 	private synchronized Node<E> internalAdd(E entry) {
 		if (entry == null)
 			throw new IllegalArgumentException("Entry can not be null!");
+		incrementCount();
 		if (head == null) {
 			head = new Node<>(entry, null, null);
 			tail = head;
@@ -171,7 +172,6 @@ public class ConcurrentLinkedList<E> implements Collection<E> {
 		}
 		tail.next = new Node<>(entry, tail, null);
 		tail = tail.next;
-		incrementCount();
 		return tail;
 	}
 	

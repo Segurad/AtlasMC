@@ -26,6 +26,7 @@ import de.atlasmc.block.data.type.SculkSensor.Phase;
 import de.atlasmc.block.data.type.TrialSpawner.TrialSpawnerState;
 import de.atlasmc.block.data.type.Vault.VaultState;
 import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
@@ -186,6 +187,8 @@ public abstract class BlockDataProperty<T> {
 	}
 
 	public BlockDataProperty(CharKey key) {
+		if (key == null)
+			throw new IllegalArgumentException("Key can not be null!");
 		this.key = key;
 		synchronized (properties) {
 			Map<TagType, BlockDataProperty<?>> typeProperties = properties.get(key);
@@ -200,6 +203,7 @@ public abstract class BlockDataProperty<T> {
 		}
 	}
 
+	@NotNull
 	public CharKey getKey() {
 		return key;
 	}
@@ -217,6 +221,7 @@ public abstract class BlockDataProperty<T> {
 	 * @return value
 	 * @throws IOException
 	 */
+	@Nullable
 	public abstract T fromNBT(NBTReader reader) throws IOException;
 
 	public abstract void toNBT(T value, NBTWriter writer, boolean systemData) throws IOException;
@@ -228,6 +233,7 @@ public abstract class BlockDataProperty<T> {
 	 * @param data to fetch from
 	 * @return value or null if invalid
 	 */
+	@Nullable
 	public abstract T get(BlockData data);
 
 	/**
@@ -235,6 +241,7 @@ public abstract class BlockDataProperty<T> {
 	 * @param value
 	 * @return value or null
 	 */
+	@Nullable
 	public abstract T fromString(String value);
 
 	public abstract String toString(T value);
@@ -264,6 +271,7 @@ public abstract class BlockDataProperty<T> {
 		toNBT(value, writer, systemData);
 	}
 
+	@Nullable
 	public static BlockDataProperty<?> getProperty(CharSequence key, TagType type) {
 		Map<TagType, BlockDataProperty<?>> typeProperties = properties.get(key);
 		if (typeProperties == null)
@@ -271,6 +279,7 @@ public abstract class BlockDataProperty<T> {
 		return typeProperties.get(type);
 	}
 
+	@Nullable
 	public static Collection<BlockDataProperty<?>> getProperties(CharSequence key) {
 		Map<TagType, BlockDataProperty<?>> typeProperties = properties.get(key);
 		if (typeProperties == null)
@@ -278,6 +287,7 @@ public abstract class BlockDataProperty<T> {
 		return typeProperties.values();
 	}
 
+	@NotNull
 	public static Map<BlockDataProperty<?>, Object> readProperties(NBTReader reader) throws IOException {
 		Map<BlockDataProperty<?>, Object> properties = null;
 		while (reader.getType() != TagType.TAG_END) {
@@ -299,6 +309,8 @@ public abstract class BlockDataProperty<T> {
 	}
 
 	public static void writeProperties(Map<BlockDataProperty<?>, ?> properties, NBTWriter writer, boolean systemData) throws IOException {
+		if (properties == null || properties.isEmpty())
+			return;
 		for (Entry<BlockDataProperty<?>, ?> entry : properties.entrySet()) {
 			@SuppressWarnings("unchecked")
 			BlockDataProperty<Object> property = (BlockDataProperty<Object>) entry.getKey();

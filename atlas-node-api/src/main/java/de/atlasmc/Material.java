@@ -2,7 +2,7 @@ package de.atlasmc;
 
 import java.util.Map;
 
-import de.atlasmc.NamespacedKey.ClientNamespaced;
+import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.data.BlockDataFactory;
 import de.atlasmc.block.tile.TileEntity;
@@ -18,7 +18,7 @@ import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 
 @RegistryHolder(key="atlas:material")
-public class Material implements ClientNamespaced {
+public class Material implements Namespaced {
 	
 	/**
 	 * Stores all Materials
@@ -1749,6 +1749,12 @@ public class Material implements ClientNamespaced {
 	 */
 	@Nullable
 	public static Material get(@NotNull NamespacedKey key) {
+		if (key == null)
+			throw new IllegalArgumentException("Key can not be null!");
+		return REGISTRY.get(key);
+	}
+	
+	public static Material get(String key) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
 		return REGISTRY.get(key);

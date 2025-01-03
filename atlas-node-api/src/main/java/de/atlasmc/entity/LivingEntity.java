@@ -91,6 +91,8 @@ public interface LivingEntity extends Damageable, Attributeable, ProjectileSourc
 	
 	public void removePotionEffect(PotionEffectType type);
 	
+	void removePotionEffects();
+	
 	public AttributeInstance getAttribute(Attribute attribute);
 	
 	public boolean hasAttribute(Attribute attribute);

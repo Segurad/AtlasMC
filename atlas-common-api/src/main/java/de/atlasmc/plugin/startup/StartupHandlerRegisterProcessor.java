@@ -51,7 +51,7 @@ public class StartupHandlerRegisterProcessor extends AbstractProcessor {
 				for (AnnotationMirror mirror : annotationMirrors) {
 					Map<String, Object> values = AnnotationProcessorUtils.getAnnotationValues(mirror, processingEnv);
 					Object value = values.get("value");
-					String[] stages = AnnotationProcessorUtils.asStringArray(value);
+					List<String> stages = AnnotationProcessorUtils.asStringList(value);
 					for (String stage : stages) {
 						stage = stage.substring(1, stage.length() - 1);
 						List<String> handlers = startup.getStringList(stage);

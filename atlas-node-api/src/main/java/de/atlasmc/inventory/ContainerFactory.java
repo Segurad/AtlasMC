@@ -1,7 +1,7 @@
 package de.atlasmc.inventory;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.util.Factory;
+import de.atlasmc.util.factory.Factory;
 
 /**
  * Factory for creating containers like {@link Inventory}

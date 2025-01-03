@@ -3,8 +3,6 @@ package de.atlascore.system.init;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 import com.google.gson.stream.JsonReader;
 
@@ -15,9 +13,6 @@ import de.atlasmc.block.data.BlockDataFactory;
 import de.atlasmc.block.tile.TileEntityFactory;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
-import de.atlasmc.util.FactoryException;
-import de.atlasmc.util.configuration.Configuration;
-import de.atlasmc.util.configuration.file.JsonConfiguration;
 
 public class MaterialLoader {
 	
@@ -33,9 +28,11 @@ public class MaterialLoader {
 		if (loaded)
 			return;
 		// load bdf
-		Registry<BlockDataFactory> BDFs = loadFactories(BlockDataFactory.class, "/data/block_data_factories.json");
+		Registry<BlockDataFactory> BDFs = Registries.getRegistry(BlockDataFactory.class);
+		Registries.loadBulkRegistryEntries(BDFs, CorePluginManager.SYSTEM, "/data/block_data_factories.json");
 		// load tef
-		Registry<TileEntityFactory> TEFs = loadFactories(TileEntityFactory.class, "/data/tile_entity_factories.json");
+		Registry<TileEntityFactory> TEFs = Registries.getRegistry(TileEntityFactory.class);
+		Registries.loadBulkRegistryEntries(TEFs, CorePluginManager.SYSTEM, "/data/tile_entity_factories.json");
 		// load mats
 		InputStream in = MaterialLoader.class.getResourceAsStream("/data/materials.json");
 		JsonReader reader = new JsonReader(new InputStreamReader(in));
@@ -101,54 +98,6 @@ public class MaterialLoader {
 		reader.endObject();
 		reader.close();
 		loaded = true;
-	}
-	
-	@SuppressWarnings("unchecked")
-	private static <V> Registry<V> loadFactories(Class<V> clazz, String path) throws IOException, ClassNotFoundException {
-		InputStream in = MaterialLoader.class.getResourceAsStream(path);
-		JsonReader reader = new JsonReader(new InputStreamReader(in));
-		Registry<V> registry = Registries.getRegistry(clazz);
-		reader.beginArray();
-		while (reader.hasNext()) {
-			reader.beginObject();
-			reader.nextName();
-			Class<?> factoryClass = Class.forName(reader.nextString());
-			Constructor<?> constructor = null;
-			try {
-				constructor = factoryClass.getConstructor(Configuration.class);
-			} catch (NoSuchMethodException | SecurityException e) {
-				throw new FactoryException("Error while fetching constructor!", e);
-			}
-			reader.nextName();
-			reader.beginArray();
-			while (reader.hasNext()) {
-				reader.beginObject();
-				reader.nextName();
-				String name = reader.nextString();
-				String key = reader.nextName();
-				boolean isDefault = false;
-				if (key.equals("default")) {
-					isDefault = reader.nextBoolean();
-					reader.nextName();
-				}
-				JsonConfiguration cfg = JsonConfiguration.loadConfiguration(reader);
-				V factory;
-				try {
-					factory = (V) constructor.newInstance(cfg);
-				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-						| InvocationTargetException e) {
-					throw new FactoryException("Error while instaciating factory: " + name, e);
-				}
-				registry.register(CorePluginManager.SYSTEM, name, factory);
-				if (isDefault)
-					registry.setDefault(factory);
-				reader.endObject();
-			}
-			reader.endArray();
-			reader.endObject();
-		}
-		reader.endArray();
-		return registry;
 	}
 
 }

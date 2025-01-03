@@ -2,7 +2,7 @@ package de.atlasmc.block.tile;
 
 import de.atlasmc.Material;
 import de.atlasmc.registry.RegistryHolder;
-import de.atlasmc.util.Factory;
+import de.atlasmc.util.factory.Factory;
 
 /**
  * Factory for creating {@link TileEntity}

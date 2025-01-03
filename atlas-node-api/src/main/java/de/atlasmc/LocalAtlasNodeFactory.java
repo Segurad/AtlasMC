@@ -1,6 +1,6 @@
 package de.atlasmc;
 
-import de.atlasmc.util.Factory;
+import de.atlasmc.util.factory.Factory;
 
 public interface LocalAtlasNodeFactory extends Factory {
 	

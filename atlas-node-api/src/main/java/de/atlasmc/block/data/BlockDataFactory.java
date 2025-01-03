@@ -2,7 +2,7 @@ package de.atlasmc.block.data;
 
 import de.atlasmc.Material;
 import de.atlasmc.registry.RegistryHolder;
-import de.atlasmc.util.Factory;
+import de.atlasmc.util.factory.Factory;
 
 /**
  * Factory for creation of {@link BlockData}

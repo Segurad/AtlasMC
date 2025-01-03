@@ -130,37 +130,12 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		NBT_FIELDS.setField(NBT_ACTIVE_EFFECTS, (holder, reader) -> {
 			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {
-				boolean reduceAmbient = false;
-				int amplifier = 0;
-				int duration = 0;
-				int id = -1;
-				boolean showParticles = true;
-				boolean showIcon = true;
-				while (reader.getType() != TagType.TAG_END) {
-					final CharSequence value = reader.getFieldName();
-					if (NBT_AMBIENT.equals(value))
-						reduceAmbient = reader.readByteTag() == 1;
-					else if (NBT_AMPLIFIER.equals(value))
-						amplifier = reader.readByteTag();
-					else if (NBT_DURATION.equals(value))
-						duration = reader.readIntTag();
-					else if (NBT_ID.equals(value))
-						id = reader.readByteTag();
-					else if (NBT_SHOW_PARTICLES.equals(value))
-						showParticles = reader.readByteTag() == 1;
-					else if (NBT_SHOW_ICON.equals(value))
-						showIcon = reader.readByteTag() == 1;
-					else
-						reader.skipTag();
-				}
-				PotionEffectType type = PotionEffectType.getByID(id);
-				if (duration <= 0 || type == null) {
-					reader.readNextEntry();
+				PotionEffect effect = PotionEffect.getFromNBT(reader);
+				if (effect == null)
 					continue;
-				}
-				reader.readNextEntry();
-				holder.addPotionEffect(type, amplifier, duration, reduceAmbient, showParticles, showIcon);
+				holder.internalAddPotionEffect(effect);
 			}
+			reader.readNextEntry();
 		});
 		NBT_FIELDS.setField(NBT_ATTRIBUTES, (holder, reader) -> {
 			reader.readNextEntry();
@@ -701,22 +676,12 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 			int effectCount = activeEffects.size() + (effects != null ? effects.size() : 0);
 			writer.writeListTag(NBT_ACTIVE_EFFECTS, TagType.COMPOUND, effectCount);
 			for (PotionEffect effect : activeEffects.values()) {
-				writer.writeByteTag(NBT_AMBIENT, effect.hasReducedAmbient());
-				writer.writeByteTag(NBT_AMPLIFIER, effect.getAmplifier());
-				writer.writeIntTag(NBT_DURATION, effect.getDuration());
-				writer.writeByteTag(NBT_ID, effect.getType().getID());
-				writer.writeByteTag(NBT_SHOW_PARTICLES, effect.hasParticels());
-				writer.writeByteTag(NBT_SHOW_ICON, effect.isShowingIcon());
+				PotionEffect.toNBT(effect, writer, systemData);
 				writer.writeEndTag();
 			}
 			if (effects != null)
 				for (PotionEffect effect : effects) {
-					writer.writeByteTag(NBT_AMBIENT, effect.hasReducedAmbient());
-					writer.writeByteTag(NBT_AMPLIFIER, effect.getAmplifier());
-					writer.writeIntTag(NBT_DURATION, effect.getDuration());
-					writer.writeByteTag(NBT_ID, effect.getType().getID());
-					writer.writeByteTag(NBT_SHOW_PARTICLES, effect.hasParticels());
-					writer.writeByteTag(NBT_SHOW_ICON, effect.isShowingIcon());
+					PotionEffect.toNBT(effect, writer, systemData);
 					writer.writeEndTag();
 				}
 		}
@@ -875,6 +840,18 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		activeEffects.remove(type).removeEffect(this);
 		sendRemoveEntityEffect(type);
 	}
+	
+	@Override
+	public void removePotionEffects() {
+		if (!hasPotionEffects())
+			return;
+		Set<PotionEffectType> keys = activeEffects.keySet();
+		PotionEffectType[] types = new PotionEffectType[keys.size()];
+		keys.toArray(types);
+		for (PotionEffectType type : types) {
+			removePotionEffect(type);
+		}
+ 	}
 	
 	/**
 	 * Sends a new PotionEffect to the current viewers

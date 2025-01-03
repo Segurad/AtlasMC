@@ -68,6 +68,7 @@ public class CoreAttributeModifiersComponent extends AbstractItemComponent imple
 				reader.readNextEntry();
 				attributes.put(attribute, new AttributeModifier(id, amount, operation, slot));
 			}
+			reader.readNextEntry();
 		});
 		NBT_FIELDS.setField(NBT_SHOW_IN_TOOLTIP, (holder, reader) -> {
 			holder.setShowTooltip(reader.readBoolean());
@@ -75,7 +76,7 @@ public class CoreAttributeModifiersComponent extends AbstractItemComponent imple
 	}
 	
 	private ListMultimap<Attribute, AttributeModifier> attributes;
-	private boolean showTooltip;
+	private boolean showTooltip = true;
 	
 	public CoreAttributeModifiersComponent(NamespacedKey key) {
 		super(key);
@@ -227,7 +228,7 @@ public class CoreAttributeModifiersComponent extends AbstractItemComponent imple
 			}
 		}
 		if (!showTooltip)
-			writer.writeByteTag(NBT_SHOW_IN_TOOLTIP, showTooltip);
+			writer.writeByteTag(NBT_SHOW_IN_TOOLTIP, false);
 		writer.writeEndTag();
 	}
 

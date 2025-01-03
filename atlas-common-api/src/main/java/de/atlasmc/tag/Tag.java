@@ -58,5 +58,9 @@ public class Tag<T> implements Namespaced {
 	public int size() {
 		return values.size();
 	}
+
+	public boolean isEmpty() {
+		return values.isEmpty();
+	}
 	
 }

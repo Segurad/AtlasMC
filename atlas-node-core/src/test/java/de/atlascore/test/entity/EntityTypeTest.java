@@ -1,4 +1,4 @@
-package de.atlascore.test.system.init;
+package de.atlascore.test.entity;
 
 import java.io.IOException;
 import java.util.LinkedList;

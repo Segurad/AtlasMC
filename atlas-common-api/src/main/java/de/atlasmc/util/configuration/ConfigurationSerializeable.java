@@ -5,6 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import de.atlasmc.util.annotation.NotNull;
+
 /**
  * Represents a Object that can be deserialized from a {@link ConfigurationSection}
  * and serialized as {@link ConfigurationSection}
@@ -58,6 +60,7 @@ public interface ConfigurationSerializeable {
 	 * Returns a configuration representation of this object 
 	 * @return configuration
 	 */
+	@NotNull
 	default ConfigurationSection toConfiguration() {
 		return toConfiguration(new MemoryConfiguration());
 	}
@@ -68,6 +71,7 @@ public interface ConfigurationSerializeable {
 	 * @param configuration
 	 * @return configuration
 	 */
+	@NotNull
 	<T extends ConfigurationSection> T toConfiguration(T configuration);
 	
 }

@@ -1,0 +1,42 @@
+[
+	{
+		"type": "de.atlasmc.inventory.component.effect.ClassComponentEffectFactory",
+		"configurations": [
+			{
+				"name": "minecraft:apply_effects",
+				"parameters": {
+					"effect": "de.atlascore.inventory.component.effect.CoreApplyEffects"
+				}
+			},
+			{
+				"name": "minecraft:remove_effects",
+				"parameters": {
+					"effect": "de.atlascore.inventory.component.effect.CoreRemoveEffects"
+				}
+			},
+			{
+				"name": "minecraft:teleport_randomly",
+				"parameters": {
+					"effect": "de.atlascore.inventory.component.effect.CoreTeleportRandomly"
+				}
+			},
+			{
+				"name": "minecraft:play_sound",
+				"parameters": {
+					"effect": "de.atlascore.inventory.component.effect.CorePlaySound"
+				}
+			}
+		]
+	},
+	{
+		"type": "de.atlasmc.inventory.component.effect.SingletonComponentEffectFactory",
+		"configurations": [
+			{
+				"name": "minecraft:clear_all_effects",
+				"parameters": {
+					"effect": "de.atlascore.inventory.component.effect.CoreClearAllEffects"
+				}
+			}
+		]
+	}
+]

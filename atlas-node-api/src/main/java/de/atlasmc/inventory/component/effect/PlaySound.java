@@ -1,25 +1,16 @@
 package de.atlasmc.inventory.component.effect;
 
-import de.atlasmc.NamespacedKey;
+import de.atlasmc.sound.Sound;
 
 public interface PlaySound extends ComponentEffect {
 	
-	NamespacedKey getSound();
+	Sound getSound();
 	
-	void setSound(NamespacedKey sound);
-	
-	/**
-	 * Returns the sound range as float.
-	 * Will be {@link Float#NaN} if not set.
-	 * @return range
-	 */
-	float getSoundRange();
-	
-	void setSoundRange(float range);
+	void setSound(Sound sound);
 	
 	@Override
-	default ConsumeEffectType getType() {
-		return ConsumeEffectType.PLAY_SOUND;
+	default ComponentEffectType getType() {
+		return ComponentEffectType.PLAY_SOUND;
 	}
 
 }

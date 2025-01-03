@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.atlasmc.NamespacedKey.Namespaced;
 
-class EmptyDataSet<T extends Namespaced> implements DataSet<T> {
+class EmptyDataSet<T extends Namespaced> extends AbstractDataSet<T> {
 
 	public static final EmptyDataSet<?> INSTANCE = new EmptyDataSet<>();
 	
@@ -24,6 +24,18 @@ class EmptyDataSet<T extends Namespaced> implements DataSet<T> {
 	@Override
 	public int size() {
 		return 0;
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return true;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		return super.equals(obj);
 	}
 
 }

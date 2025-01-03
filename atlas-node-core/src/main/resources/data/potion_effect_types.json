@@ -1,0 +1,197 @@
+{
+    "minecraft:absorption": {
+        "id": 21,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 2445989
+    },
+    "minecraft:bad_omen": {
+        "id": 30,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 745784
+    },
+    "minecraft:blindness": {
+        "id": 14,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 2039587
+    },
+    "minecraft:conduit_power": {
+        "id": 28,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 1950417
+    },
+    "minecraft:darkness": {
+        "id": 32,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 2696993
+    },
+    "minecraft:dolphins_grace": {
+        "id": 29,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 8954814
+    },
+    "minecraft:fire_resistance": {
+        "id": 11,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 16750848
+    },
+    "minecraft:glowing": {
+        "id": 23,
+        "effectClass": "de.atlascore.potion.CoreEffectGlowing",
+        "color": 9740385
+    },
+    "minecraft:haste": {
+        "id": 2,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 14270531
+    },
+    "minecraft:health_boost": {
+        "id": 20,
+        "effectClass": "de.atlascore.potion.CoreEffectHealthBoost",
+        "color": 16284963
+    },
+    "minecraft:hero_of_the_village": {
+        "id": 31,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 4521796
+    },
+    "minecraft:hunger": {
+        "id": 16,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 5797459
+    },
+    "minecraft:infested": {
+        "id": 38,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 9214860
+    },
+    "minecraft:instant_damage": {
+        "id": 6,
+        "effectClass": "de.atlascore.potion.CoreEffectInstantDamage",
+        "color": 11101546
+    },
+    "minecraft:instant_health": {
+        "id": 5,
+        "effectClass": "de.atlascore.potion.CoreEffectInstantHealth",
+        "color": 16262179
+    },
+    "minecraft:invisibility": {
+        "id": 13,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 16185078
+    },
+    "minecraft:jump_boost": {
+        "id": 7,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 16646020
+    },
+    "minecraft:levitation": {
+        "id": 24,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 13565951
+    },
+    "minecraft:luck": {
+        "id": 25,
+        "effectClass": "de.atlascore.potion.CoreEffectLuck",
+        "color": 5882118
+    },
+    "minecraft:mining_fatigue": {
+        "id": 3,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 4866583
+    },
+    "minecraft:nausea": {
+        "id": 8,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 5578058
+    },
+    "minecraft:night_vision": {
+        "id": 15,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 12779366
+    },
+    "minecraft:oozing": {
+        "id": 37,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 10092451
+    },
+    "minecraft:poison": {
+        "id": 18,
+        "effectClass": "de.atlascore.potion.CoreEffectPoison",
+        "color": 8889187
+    },
+    "minecraft:raid_omen": {
+        "id": 34,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 14565464
+    },
+    "minecraft:regeneration": {
+        "id": 9,
+        "effectClass": "de.atlascore.potion.CoreEffectRegeneration",
+        "color": 13458603
+    },
+    "minecraft:resistance": {
+        "id": 10,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 9520880
+    },
+    "minecraft:saturation": {
+        "id": 22,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 16262179
+    },
+    "minecraft:slow_falling": {
+        "id": 27,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 15978425
+    },
+    "minecraft:slowness": {
+        "id": 1,
+        "effectClass": "de.atlascore.potion.CoreEffectSlowness",
+        "color": 9154528
+    },
+    "minecraft:speed": {
+        "id": 0,
+        "effectClass": "de.atlascore.potion.CoreEffectSpeed",
+        "color": 3402751
+    },
+    "minecraft:strength": {
+        "id": 4,
+        "effectClass": "de.atlascore.potion.CoreEffectStrength",
+        "color": 16762624
+    },
+    "minecraft:trial_omen": {
+        "id": 33,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 1484454
+    },
+    "minecraft:unluck": {
+        "id": 26,
+        "effectClass": "de.atlascore.potion.CoreEffectUnluck",
+        "color": 12624973
+    },
+    "minecraft:water_breathing": {
+        "id": 12,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 10017472
+    },
+    "minecraft:weakness": {
+        "id": 17,
+        "effectClass": "de.atlascore.potion.CoreEffectWeakness",
+        "color": 4738376
+    },
+    "minecraft:weaving": {
+        "id": 36,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 7891290
+    },
+    "minecraft:wind_charged": {
+        "id": 35,
+        "effectClass": "de.atlascore.potion.CoreEffectNoEffect",
+        "color": 12438015
+    },
+    "minecraft:wither": {
+        "id": 19,
+        "effectClass": "de.atlascore.potion.CoreEffectWither",
+        "color": 7561558
+    }
+}

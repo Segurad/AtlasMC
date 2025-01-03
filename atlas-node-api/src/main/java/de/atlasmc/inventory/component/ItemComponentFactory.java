@@ -1,7 +1,7 @@
 package de.atlasmc.inventory.component;
 
 import de.atlasmc.registry.RegistryHolder;
-import de.atlasmc.util.Factory;
+import de.atlasmc.util.factory.Factory;
 
 @RegistryHolder(key="atlas:factory/item_component_factory")
 public interface ItemComponentFactory extends Factory {

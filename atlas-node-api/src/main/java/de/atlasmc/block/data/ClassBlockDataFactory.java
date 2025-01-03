@@ -1,18 +1,21 @@
 package de.atlasmc.block.data;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import de.atlasmc.Material;
-import de.atlasmc.util.FactoryException;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.ConfigurationSerializeable;
+import de.atlasmc.util.configuration.InvalidConfigurationException;
+import de.atlasmc.util.factory.FactoryException;
 
 /**
  * Class based {@link ItemMetaFactory} for Materials
  */
 public class ClassBlockDataFactory implements BlockDataFactory, ConfigurationSerializeable {
 	
+	private final Constructor<? extends BlockData> constructor;
 	protected final Class<? extends BlockData> dataInterface;
 	protected final Class<? extends BlockData> data;
 	
@@ -26,6 +29,11 @@ public class ClassBlockDataFactory implements BlockDataFactory, ConfigurationSer
 			throw new IllegalArgumentException("DataInterface is not assignable from Data!");
 		this.dataInterface = dataInterface;
 		this.data = data;
+		try {
+			this.constructor = data.getConstructor(Material.class);
+		} catch (NoSuchMethodException | SecurityException e) {
+			throw new FactoryException("Error while fetching constructor for class: " + data.getName(), e);
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -33,11 +41,20 @@ public class ClassBlockDataFactory implements BlockDataFactory, ConfigurationSer
 		if (cfg.contains("dataInterface")) {
 			String val = cfg.getString("dataInterface");
 			this.dataInterface = val == null ? BlockData.class : (Class<? extends BlockData>) Class.forName(val);
-		} else this.dataInterface = null;
+		} else {
+			throw new InvalidConfigurationException("Data interface not defined!");
+		}
 		if (cfg.contains("data")) {
 			String val = cfg.getString("data");
 			this.data = (Class<? extends BlockData>) Class.forName(val);
-		} else this.data = null;
+		} else {
+			throw new InvalidConfigurationException("Data ist not defined!");
+		}
+		try {
+			this.constructor = data.getConstructor(Material.class);
+		} catch (NoSuchMethodException | SecurityException e) {
+			throw new FactoryException("Error while fetching constructor for class: " + data.getName(), e);
+		}
 	}
 	
 	@Override
@@ -56,10 +73,10 @@ public class ClassBlockDataFactory implements BlockDataFactory, ConfigurationSer
 		if (data == null) 
 			return null;
 		try {
-			return data.getConstructor(Material.class).newInstance(material);
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException e) {
-			throw new FactoryException("Error while creating data", e);
+			return constructor.newInstance(material);
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			throw new FactoryException("Error while creating BlockData!", e);
 		}
 	}
 

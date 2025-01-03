@@ -1,9 +1,19 @@
 package de.atlasmc.util.dataset;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
+import de.atlasmc.registry.Registry;
 import de.atlasmc.tag.Tag;
+import de.atlasmc.tag.Tags;
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.nbt.NBTException;
+import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.io.NBTReader;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public interface DataSet<T extends Namespaced> {
 	
@@ -12,6 +22,8 @@ public interface DataSet<T extends Namespaced> {
 	boolean contains(T value);
 	
 	int size();
+	
+	boolean isEmpty();
 	
 	static <T extends Namespaced> DataSet<T> of() {
 		@SuppressWarnings("unchecked")
@@ -48,6 +60,60 @@ public interface DataSet<T extends Namespaced> {
 		if (values.size() == 1)
 			return of(values.iterator().next());
 		return new CollectionDataSet<>(values);
+	}
+	
+	@NotNull
+	static <T extends Namespaced> DataSet<T> getFromNBT(Registry<T> registry, NBTReader reader) throws IOException {
+		if (registry == null)
+			throw new IllegalArgumentException("Registry can not be null!");
+		TagType type = reader.getType();
+		switch (type) {
+		case STRING: {
+			String key = reader.readStringTag();
+			if (key.charAt(0) == '#') {
+				Tag<T> tag = Tags.getTag(NamespacedKey.of(key.substring(1)));
+				if (tag == null)
+					return DataSet.of();
+				return DataSet.of(tag);
+			} else {
+				T entry = registry.get(key);
+				if (entry == null)
+					return DataSet.of();
+				return DataSet.of(entry);
+			}
+		}
+		case LIST:
+			reader.readNextEntry();
+			ArrayList<T> types = new ArrayList<T>();
+			while (reader.getRestPayload() > 0) {
+				String key = reader.readStringTag();
+				types.add(registry.get(key));
+			}
+			reader.readNextEntry();
+			if (types.isEmpty())
+				return DataSet.of();
+			return DataSet.of(types);
+		default:
+			throw new NBTException("Unexpected type: " + type);
+		}
+	}
+	
+	static <T extends Namespaced> void toNBT(CharSequence key, DataSet<T> set, NBTWriter writer, boolean systemData) throws IOException {
+		if (set instanceof TagDataSet tags) {
+			writer.writeStringTag(key, "#" + tags.getTag().getNamespacedKeyRaw());
+		} else if (set instanceof SingleValueDataSet<T> single) {
+			T value = single.getValue();
+			writer.writeNamespacedKey(key, systemData ? value.getNamespacedKey() : value.getClientKey());
+		} else {
+			writer.writeListTag(key, TagType.STRING, set.size());
+			if (systemData) {
+				for (T value : set.values())
+					writer.writeNamespacedKey(key, value.getNamespacedKey());
+			} else {
+				for (T value : set.values())
+					writer.writeNamespacedKey(key, value.getClientKey());
+			}
+		}
 	}
 
 }

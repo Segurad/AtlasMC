@@ -1,6 +1,9 @@
 package de.atlasmc.inventory.component;
 
+import java.util.Map;
+
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.util.nbt.tag.NBT;
 
 public interface CustomDataComponent extends ItemComponent {
 	
@@ -8,6 +11,14 @@ public interface CustomDataComponent extends ItemComponent {
 	
 	CustomDataComponent clone();
 	
-	//TODO custom data
+	void add(NBT nbt);
+	
+	void removeNBT(NBT nbt);
+	
+	void removeNBT(String key);
+	
+	Map<String, NBT> getValues();
+	
+	boolean hasValues();
 
 }

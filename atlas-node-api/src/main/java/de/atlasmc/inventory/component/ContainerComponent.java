@@ -1,21 +1,20 @@
 package de.atlasmc.inventory.component;
 
-import java.util.Collection;
+import java.util.List;
 
 import de.atlasmc.Material;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.ItemStack;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 
 public interface ContainerComponent extends ItemComponent {
 	
 	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:container");
 	
-	Int2ObjectMap<ItemStack> getSlots();
-	
-	Collection<ItemStack> getItems();
+	List<ItemStack> getItems();
 	
 	boolean hasItems();
+	
+	void addItem(ItemStack item);
 	
 	void setItem(int slot, ItemStack item);
 	

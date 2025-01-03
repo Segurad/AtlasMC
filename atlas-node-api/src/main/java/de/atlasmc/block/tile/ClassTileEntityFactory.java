@@ -1,17 +1,20 @@
 package de.atlasmc.block.tile;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import de.atlasmc.Material;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.ConfigurationSerializeable;
+import de.atlasmc.util.factory.FactoryException;
 
 /**
  * Class based {@link TileEntityFactory}
  */
 public class ClassTileEntityFactory implements TileEntityFactory, ConfigurationSerializeable {
 	
+	private final Constructor<? extends TileEntity> constructor;
 	private final Class<? extends TileEntity> tileInterface;
 	private final Class<? extends TileEntity> tile;
 	private final int tileID;
@@ -29,6 +32,11 @@ public class ClassTileEntityFactory implements TileEntityFactory, ConfigurationS
 		if (!tileInterface.isAssignableFrom(tile)) 
 			throw new IllegalArgumentException("TileInterface is not assignable from Tile!");
 		this.tile = tile;
+		try {
+			this.constructor = tile.getConstructor(Material.class);
+		} catch (NoSuchMethodException | SecurityException e) {
+			throw new FactoryException("Error while fetching constructor for class: " + tile.getName(), e);
+		}
 		this.tileInterface = tileInterface;
 		this.tileID = tileID;
 	}
@@ -50,11 +58,9 @@ public class ClassTileEntityFactory implements TileEntityFactory, ConfigurationS
 		if (!material.isBlock()) 
 			throw new IllegalArgumentException("Material is not a Block!");
 		try {
-			return tile.getConstructor(Material.class).newInstance(material);
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException e) {
-			e.printStackTrace();
-			return null;
+			return constructor.newInstance(material);
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			throw new FactoryException("Error while creating tile entity", e);
 		}
 	}
 

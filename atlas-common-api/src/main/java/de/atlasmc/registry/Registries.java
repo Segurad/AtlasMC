@@ -1,8 +1,17 @@
 package de.atlasmc.registry;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.function.ToIntFunction;
 
+import com.google.gson.stream.JsonReader;
+
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.registry.ProtocolRegistry.Deserializer;
@@ -10,7 +19,10 @@ import de.atlasmc.registry.ProtocolRegistry.Serializer;
 import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.util.annotation.InternalAPI;
 import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
+import de.atlasmc.util.configuration.file.JsonConfiguration;
+import de.atlasmc.util.factory.FactoryException;
 
 public class Registries {
 	
@@ -145,6 +157,66 @@ public class Registries {
 	
 	public static void loadRegistryEntries(PluginHandle plugin, ConfigurationSection config) {
 		HANDLER.loadRegistryEntries(plugin, config);
+	}
+	
+	public static <T> void loadBulkRegistryEntries(Registry<T> registry, PluginHandle plugin, String resource) throws IOException {
+		if (registry == null)
+			throw new IllegalArgumentException("Registry can not be null!");
+		if (plugin == null)
+			throw new IllegalArgumentException("Plugincan not be null!");
+		if (resource == null)
+			throw new IllegalArgumentException("Resource can not be null!");
+		InputStream in = plugin.getPlugin().getResourceAsStream(resource);
+		if (in == null)
+			throw new IllegalArgumentException("No resource found: " + resource);
+		JsonReader reader = new JsonReader(new InputStreamReader(in));
+		Class<?> registryType = registry.getType();
+		reader.beginArray();
+		while (reader.hasNext()) {
+			JsonConfiguration config = JsonConfiguration.loadConfiguration(reader);
+			Class<T> typeClass;
+			String rawType = config.getString("type");
+			try {
+				@SuppressWarnings("unchecked")
+				Class<T> clazz = (Class<T>) Class.forName(rawType);
+				typeClass = clazz;
+			} catch (ClassNotFoundException e) {
+				throw new FactoryException("Error while fetching class: " + rawType);
+			}
+			if (!registryType.isAssignableFrom(typeClass))
+				throw new FactoryException("Given type (" + rawType + ") is not compatiple with registry: " + registry.getNamespacedKeyRaw());
+			Constructor<T> constructor = null;
+			try {
+				constructor = typeClass.getConstructor(Configuration.class);
+			} catch (NoSuchMethodException | SecurityException e) {
+				throw new FactoryException("Error while fetching constructor!", e);
+			}
+			List<ConfigurationSection> configurations = config.getConfigurationList("configurations");
+			for (ConfigurationSection cfg : configurations) {
+				String name = cfg.getString("name");
+				boolean isDefault = cfg.getBoolean("default", false);
+				ConfigurationSection params = cfg.getConfigurationSection("parameters");
+				T entry;
+				try {
+					entry = constructor.newInstance(params);
+				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+						| InvocationTargetException e) {
+					throw new FactoryException("Error while instaciating entry: " + name, e);
+				}
+				if (name == null) {
+					if (entry instanceof Namespaced keyed) {
+						registry.register(plugin, keyed.getNamespacedKey(), entry);
+					} else {
+						throw new FactoryException("No name specified and entry is not instance of Namespaced!");
+					}
+				} else {
+					registry.register(plugin, name, entry);
+				}
+				if (isDefault)
+					registry.setDefault(entry);
+			}
+		}
+		reader.endArray();
 	}
 	
 	@InternalAPI

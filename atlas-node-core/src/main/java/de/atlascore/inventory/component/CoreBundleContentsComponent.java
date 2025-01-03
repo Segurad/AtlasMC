@@ -54,6 +54,7 @@ public class CoreBundleContentsComponent extends AbstractItemComponent implement
 			ItemStack item = ItemStack.getFromNBT(reader);
 			addItem(item);
 		}
+		reader.readNextEntry();
 	}
 
 	@Override

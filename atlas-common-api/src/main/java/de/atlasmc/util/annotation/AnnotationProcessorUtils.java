@@ -46,13 +46,17 @@ public class AnnotationProcessorUtils {
         return matchingAnnotations;
     }
     
-    public static String[] asStringArray(Object value) {
-		String[] array;
-		if (value instanceof List) {
-		    List<?> list = (List<?>) value;
-		    array = list.stream().map(Object::toString).toArray(String[]::new);
-		} else if (value instanceof String[]) {
-		    array = (String[]) value;
+    public static List<String> asStringList(Object value) {
+    	List<String> array;
+		if (value instanceof List<?> list) {
+		    array = new ArrayList<>(list.size());
+		    for (Object v : list) {
+		    	String s = v.toString();
+		    	s = s.substring(1, s.length() - 1);
+		    	array.add(s);
+		    }
+		} else if (value instanceof String[] arr) {
+		    array = List.of(arr);
 		} else {
 		    throw new IllegalArgumentException("Unsupported annotation value type: " + (value != null ? value.getClass() : "null"));
 		}

@@ -91,6 +91,7 @@ public class CoreBeesComponent extends AbstractItemComponent implements BeesComp
 			}
 			reader.readNextEntry();
 		}
+		reader.readNextEntry();
 	}
 
 	@Override

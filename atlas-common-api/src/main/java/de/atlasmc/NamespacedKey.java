@@ -83,15 +83,13 @@ public class NamespacedKey {
 		@NotNull
 		NamespacedKey getNamespacedKey();
 		
-	}
-	
-	public static interface ClientNamespaced extends Namespaced {
-		
 		/**
 		 * Returns the {@link NamespacedKey} used client side of this Object
 		 * @return key
 		 */
-		NamespacedKey getClientKey();
+		default NamespacedKey getClientKey() {
+			return getNamespacedKey();
+		}
 		
 	}
 

@@ -1,4 +1,4 @@
-package de.atlasmc.util;
+package de.atlasmc.util.factory;
 
 /**
  * Interface that marks factories

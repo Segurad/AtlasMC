@@ -12,6 +12,7 @@ import java.util.Set;
 import de.atlascore.event.command.CoreCommandListener;
 import de.atlascore.event.inventory.CoreInventoryListener;
 import de.atlascore.event.player.CorePlayerListener;
+import de.atlascore.plugin.CorePluginManager;
 import de.atlascore.system.init.ContainerFactoryLoader;
 import de.atlascore.system.init.EntityTypeLoader;
 import de.atlascore.system.init.MaterialLoader;
@@ -29,11 +30,14 @@ import de.atlasmc.event.EventExecutor;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.Listener;
 import de.atlasmc.event.MethodEventExecutor;
+import de.atlasmc.inventory.component.effect.ComponentEffectFactory;
 import de.atlasmc.log.Log;
 import de.atlasmc.plugin.startup.StartupContext;
 import de.atlasmc.plugin.startup.StartupHandlerRegister;
 import de.atlasmc.plugin.startup.StartupStageHandler;
 import de.atlasmc.proxy.ProxyManager;
+import de.atlasmc.registry.Registries;
+import de.atlasmc.registry.Registry;
 import de.atlasmc.server.NodeServerManager;
 import de.atlasmc.util.FileUtils;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
@@ -113,7 +117,19 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 		initDefaultExecutor(log, new CorePlayerListener());
 		initDefaultExecutor(log, new CoreInventoryListener());
 		initDefaultExecutor(log, new CoreCommandListener());
-		PotionEffectTypeLoader.loadPotionEffects();
+		try {
+			Registry<ComponentEffectFactory> registry = Registries.getRegistry(ComponentEffectFactory.class);
+			Registries.loadBulkRegistryEntries(registry, CorePluginManager.SYSTEM, "");
+		} catch (IOException e) {
+			log.error("Error while loading ComponentEffectFactory");
+		}
+		try {
+			PotionEffectTypeLoader.loadPotionEffects();
+		} catch (ClassNotFoundException e) {
+			log.error("Class not found while loading materials!", e);
+		} catch (IOException e) {
+			log.error("Error while loading PotionEffectTypes");
+		}
 		try {
 			MaterialLoader.loadMaterial();
 		} catch (ClassNotFoundException e) {
