@@ -8,7 +8,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBoat extends CoreVehicle implements Boat {
@@ -24,7 +24,7 @@ public class CoreBoat extends CoreVehicle implements Boat {
 	
 	protected static final int LAST_META_INDEX = CoreVehicle.LAST_META_INDEX+4;
 	
-	protected static final NBTFieldContainer<CoreBoat> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreBoat> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_TYPE = CharKey.literal("Type");
@@ -41,7 +41,7 @@ public class CoreBoat extends CoreVehicle implements Boat {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreBoat> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreBoat> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

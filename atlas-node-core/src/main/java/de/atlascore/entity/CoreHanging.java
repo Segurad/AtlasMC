@@ -7,12 +7,12 @@ import de.atlasmc.block.BlockFace;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Hanging;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreHanging extends CoreEntity implements Hanging {
 
-	protected static final NBTFieldContainer<CorePainting> NBT_FIELDS;
+	protected static final NBTFieldSet<CorePainting> NBT_FIELDS;
 	
 	protected static final CharKey
 //	NBT_TILE_X = "TileX", TODO unnecessary
@@ -74,7 +74,7 @@ public class CoreHanging extends CoreEntity implements Hanging {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreEntity> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreEntity> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

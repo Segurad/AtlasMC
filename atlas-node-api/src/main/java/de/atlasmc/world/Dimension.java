@@ -6,13 +6,13 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.AbstractNBTBase;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.NBTHolder;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class Dimension extends AbstractNBTBase implements NBTHolder, Namespaced {
 	
-	protected final static NBTFieldContainer<Dimension> NBT_FIELDS;
+	protected final static NBTFieldSet<Dimension> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_NAME = CharKey.literal("name"),
@@ -36,14 +36,14 @@ public class Dimension extends AbstractNBTBase implements NBTHolder, Namespaced 
 	NBT_HEIGHT = CharKey.literal("height");
 	
 	static {
-		NBT_FIELDS = NBTFieldContainer.newContainer();
+		NBT_FIELDS = NBTFieldSet.newSet();
 		NBT_FIELDS.setField(NBT_NAME, (holder, reader) -> {
 			holder.name = reader.readNamespacedKey();
 		});
 		NBT_FIELDS.setField(NBT_ID, (holder, reader) -> {
 			holder.id = reader.readIntTag();
 		});
-		NBTFieldContainer<Dimension> DATA = NBT_FIELDS.setContainer(NBT_ELEMENT);
+		NBTFieldSet<Dimension> DATA = NBT_FIELDS.setSet(NBT_ELEMENT);
 		DATA.setField(NBT_AMBIENT_LIGHT, (holder, reader) -> {
 			holder.ambientLight = reader.readFloatTag();
 		});
@@ -169,7 +169,7 @@ public class Dimension extends AbstractNBTBase implements NBTHolder, Namespaced 
 	}
 
 	@Override
-	protected NBTFieldContainer<? extends Dimension> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends Dimension> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

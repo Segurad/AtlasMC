@@ -16,7 +16,7 @@ import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.NBTHolder;
 import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.TagType;
@@ -28,7 +28,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 
 public class ItemStack implements NBTHolder {
 
-	protected static final NBTFieldContainer<ItemStack> NBT_FIELDS;
+	protected static final NBTFieldSet<ItemStack> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_COUNT = CharKey.literal("count"),
@@ -38,7 +38,7 @@ public class ItemStack implements NBTHolder {
 	NBT_IGNORED_COMPONENTS = CharKey.literal("ignored-components");
 	
 	static {
-		NBT_FIELDS = NBTFieldContainer.newContainer();
+		NBT_FIELDS = NBTFieldSet.newSet();
 		NBT_FIELDS.setField(NBT_ID, NBTField.skip());
 		NBT_FIELDS.setField(NBT_COUNT, (holder, reader) -> {
 			holder.amount = reader.readIntTag();

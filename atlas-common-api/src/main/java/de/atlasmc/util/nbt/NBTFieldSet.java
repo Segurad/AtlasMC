@@ -6,16 +6,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import de.atlasmc.util.map.key.CharKey;
 
 /**
- * Stores {@link NBTField} and {@link NBTFieldContainer}
+ * Stores {@link NBTField} and {@link NBTFieldSet}
  * @param <H> the type of the holder
  */
-public class NBTFieldContainer<H> {
+public class NBTFieldSet<H> {
 	
 	private Map<CharSequence, NBTField<H>> fields;
-	private Map<CharSequence, NBTFieldContainer<H>> container;
+	private Map<CharSequence, NBTFieldSet<H>> sets;
 	private NBTField<H> defaultFieldHandler;
 	
-	protected NBTFieldContainer() {
+	protected NBTFieldSet() {
 		// use create function
 	}
 	
@@ -37,9 +37,9 @@ public class NBTFieldContainer<H> {
 	 * Sets a Field for the Key
 	 * @param key
 	 * @param field
-	 * @return this container
+	 * @return this set
 	 */
-	public NBTFieldContainer<H> setField(CharKey key, NBTField<H> field) {
+	public NBTFieldSet<H> setField(CharKey key, NBTField<H> field) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
 		if (field == null) 
@@ -60,54 +60,54 @@ public class NBTFieldContainer<H> {
 		return fields;
 	}
 	
-	public NBTFieldContainer<H> getContainer(CharSequence key) {
+	public NBTFieldSet<H> getSet(CharSequence key) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
-		Map<CharSequence, NBTFieldContainer<H>> container = this.container;
+		Map<CharSequence, NBTFieldSet<H>> container = this.sets;
 		if (container == null || container.isEmpty()) 
 			return null;
 		return container.get(key);
 	}
 	
-	public boolean hasContainer() {
-		Map<CharSequence, NBTFieldContainer<H>> container = this.container;
+	public boolean hasSets() {
+		Map<CharSequence, NBTFieldSet<H>> container = this.sets;
 		return container != null && !container.isEmpty();
 	}
 	
 	/**
-	 * Creates and sets a new {@link NBTFieldContainer} for the Key and returns it
-	 * @param key name key for this container
-	 * @return the created container
+	 * Creates and sets a new {@link NBTFieldSet} for the Key and returns it
+	 * @param key name key for this set
+	 * @return the created set
 	 */
-	public NBTFieldContainer<H> setContainer(CharKey key) {
+	public NBTFieldSet<H> setSet(CharKey key) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
-		return setContainer(key, new NBTFieldContainer<>());
+		return setSet(key, new NBTFieldSet<>());
 	}
 	
 	/**
-	 * Sets a {@link NBTFieldContainer} for the Key and returns it
-	 * @param key name key for this container
-	 * @param container the container that should be set
-	 * @return the set container
+	 * Sets a {@link NBTFieldSet} for the Key and returns it
+	 * @param key name key for this set
+	 * @param set the set that should be set
+	 * @return the set set
 	 */
-	public NBTFieldContainer<H> setContainer(CharKey key, NBTFieldContainer<H> container) {
+	public NBTFieldSet<H> setSet(CharKey key, NBTFieldSet<H> set) {
 		if (key == null) 
 			throw new IllegalArgumentException("Key can not be null!");
-		if (container == null) 
-			throw new IllegalArgumentException("Container can not be null!");
-		Map<CharSequence, NBTFieldContainer<H>> containers = this.container;
-		if (containers == null) {
-			containers = initContainer();
+		if (set == null) 
+			throw new IllegalArgumentException("Set can not be null!");
+		Map<CharSequence, NBTFieldSet<H>> sets = this.sets;
+		if (sets == null) {
+			sets = initSets();
 		}
-		containers.put(key, container);
-		return container;
+		sets.put(key, set);
+		return set;
 	}
 	
-	private synchronized Map<CharSequence, NBTFieldContainer<H>> initContainer() {
-		Map<CharSequence, NBTFieldContainer<H>> fields = this.container;
+	private synchronized Map<CharSequence, NBTFieldSet<H>> initSets() {
+		Map<CharSequence, NBTFieldSet<H>> fields = this.sets;
 		if (fields == null) {
-			fields = this.container = new ConcurrentHashMap<>();
+			fields = this.sets = new ConcurrentHashMap<>();
 		}
 		return fields;
 	}
@@ -125,16 +125,16 @@ public class NBTFieldContainer<H> {
 	}
 	
 	/**
-	 * Creates a new {@link NBTFieldContainer} containing that as access to all fields of this container.
+	 * Creates a new {@link NBTFieldSet} set that as access to all fields of this set.
 	 * @param <T>
-	 * @return child container
+	 * @return child set
 	 */
-	public <T extends H> NBTFieldContainer<T> fork() {
-		return new ChildNBTFieldContainer<>(this);
+	public <T extends H> NBTFieldSet<T> fork() {
+		return new ChildNBTFieldSet<>(this);
 	}
 	
-	public static <H> NBTFieldContainer<H> newContainer() {
-		return new NBTFieldContainer<>();
+	public static <H> NBTFieldSet<H> newSet() {
+		return new NBTFieldSet<>();
 	}
 
 }

@@ -8,7 +8,7 @@ import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.component.effect.TeleportRandomly;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -16,12 +16,12 @@ import io.netty.buffer.ByteBuf;
 
 public class CoreTeleportRandomly implements TeleportRandomly {
 
-	protected static final NBTFieldContainer<CoreTeleportRandomly> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreTeleportRandomly> NBT_FIELDS;
 	
 	protected static final CharKey NBT_DIAMETER = CharKey.literal("diameter");
 	
 	static {
-		NBT_FIELDS = NBTFieldContainer.newContainer();
+		NBT_FIELDS = NBTFieldSet.newSet();
 		NBT_FIELDS.setField(NBT_DIAMETER, (holder, reader) -> {
 			holder.diameter = reader.readFloatTag();
 		});

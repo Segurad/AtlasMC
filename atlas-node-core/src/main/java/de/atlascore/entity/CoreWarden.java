@@ -11,7 +11,7 @@ import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.TagType;
 
 public class CoreWarden extends CoreMob implements Warden {
@@ -20,7 +20,7 @@ public class CoreWarden extends CoreMob implements Warden {
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+1;
 	
-	protected static final NBTFieldContainer<CoreWarden> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreWarden> NBT_FIELDS;
 	
 	private static final CharKey
 	NBT_ANGER = CharKey.literal("anger"),
@@ -29,7 +29,7 @@ public class CoreWarden extends CoreMob implements Warden {
 	
 	static {
 		NBT_FIELDS = CoreMob.NBT_FIELDS.fork();
-		NBTFieldContainer<CoreWarden> anger = NBT_FIELDS.setContainer(NBT_ANGER);
+		NBTFieldSet<CoreWarden> anger = NBT_FIELDS.setSet(NBT_ANGER);
 		anger.setField(NBT_SUSPECTS, (holder, reader) -> {
 			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {
@@ -124,7 +124,7 @@ public class CoreWarden extends CoreMob implements Warden {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreLivingEntity> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreLivingEntity> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

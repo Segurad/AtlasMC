@@ -13,7 +13,7 @@ import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -37,7 +37,7 @@ public class CoreDisplay extends CoreEntity implements Display {
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX + 15;
 	
-	protected static final NBTFieldContainer<CoreDisplay> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreDisplay> NBT_FIELDS;
 	
 	private static final CharKey
 	NBT_BILLBOARD = CharKey.literal("billboard"),
@@ -64,7 +64,7 @@ public class CoreDisplay extends CoreEntity implements Display {
 		NBT_FIELDS.setField(NBT_BILLBOARD, (holder, reader) -> {
 			holder.setBillboard(Billboard.getByNameID(reader.readStringTag()));
 		});
-		NBTFieldContainer<CoreDisplay> transformation = NBT_FIELDS.setContainer(NBT_TRANSFORMATION);
+		NBTFieldSet<CoreDisplay> transformation = NBT_FIELDS.setSet(NBT_TRANSFORMATION);
 		transformation.setField(NBT_RIGHT_ROTATION, (holder, reader) -> {
 			reader.readNextEntry();
 			float x = reader.readFloatTag();
@@ -177,7 +177,7 @@ public class CoreDisplay extends CoreEntity implements Display {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreDisplay> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreDisplay> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

@@ -7,7 +7,7 @@ import de.atlasmc.entity.Vex;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 
 public class CoreVex extends CoreMob implements Vex {
 
@@ -16,7 +16,7 @@ public class CoreVex extends CoreMob implements Vex {
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+1;
 	
-	protected static final NBTFieldContainer<CoreVex> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreVex> NBT_FIELDS;
 	
 	protected static final CharKey
 	//NBT_BOUND_X = "BoundX", TODO unnecessary
@@ -38,7 +38,7 @@ public class CoreVex extends CoreMob implements Vex {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreVex> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreVex> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

@@ -38,7 +38,7 @@ import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.AbstractNBTBase;
 import de.atlasmc.util.nbt.CustomTagContainer;
 import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.tag.NBT;
@@ -88,7 +88,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	
 	protected static final int LAST_META_INDEX = 7;
 	
-	protected static final NBTFieldContainer<CoreEntity> NBT_FIELDS = NBTFieldContainer.newContainer();
+	protected static final NBTFieldSet<CoreEntity> NBT_FIELDS = NBTFieldSet.newSet();
 	
 	protected static final CharKey
 	NBT_AIR = CharKey.literal("Air"),
@@ -113,7 +113,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	NBT_UUID = CharKey.literal("UUID");
 	
 	static {
-		NBT_FIELDS.setContainer(NBT_ATLASMC).setUnknownFieldHandler((holder, reader) -> {
+		NBT_FIELDS.setSet(NBT_ATLASMC).setUnknownFieldHandler((holder, reader) -> {
 			holder.getCustomTagContainer().addSystemTag(reader.readNBT());
 		});
 		NBT_FIELDS.setField(NBT_AIR, (holder, reader) -> {
@@ -504,7 +504,7 @@ public class CoreEntity extends AbstractNBTBase implements Entity {
 	}
 
 	@Override
-	protected NBTFieldContainer<? extends CoreEntity> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreEntity> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

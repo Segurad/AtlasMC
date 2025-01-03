@@ -21,15 +21,15 @@ public abstract class AbstractNBTBase implements NBTHolder {
 		if (reader == null) 
 			throw new IllegalArgumentException("NBTReader can not be null!");
 		@SuppressWarnings("unchecked")
-		NBTFieldContainer<NBTHolder> container = (NBTFieldContainer<NBTHolder>) getFieldContainerRoot();
+		NBTFieldSet<NBTHolder> set = (NBTFieldSet<NBTHolder>) getFieldSetRoot();
 		final NBTHolder holder = getHolder();
 		CustomTagContainer customTags = null;
 		if (useCustomTagContainer())
 			customTags = getCustomTagContainer();
-		NBTUtil.readNBT(container, holder, reader, customTags);
+		NBTUtil.readNBT(set, holder, reader, customTags);
 	}
 	
-	protected abstract NBTFieldContainer<? extends NBTHolder> getFieldContainerRoot();
+	protected abstract NBTFieldSet<? extends NBTHolder> getFieldSetRoot();
 	
 	/**
 	 * Returns weather or not the child class has a {@link CustomTagContainer} that should be used to store unknown field

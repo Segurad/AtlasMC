@@ -9,7 +9,7 @@ import de.atlasmc.entity.Frog;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreFrog extends CoreAgeableMob implements Frog {
@@ -19,7 +19,7 @@ public class CoreFrog extends CoreAgeableMob implements Frog {
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+2;
 	
-	protected static final NBTFieldContainer<CoreFrog> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreFrog> NBT_FIELDS;
 	
 	private static final CharKey NBT_VARIANT = CharKey.literal("variant");
 	
@@ -49,7 +49,7 @@ public class CoreFrog extends CoreAgeableMob implements Frog {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreLivingEntity> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreLivingEntity> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

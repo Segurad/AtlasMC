@@ -8,7 +8,7 @@ import de.atlasmc.entity.Hoglin;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreHoglin extends CoreAgeableMob implements Hoglin {
@@ -18,7 +18,7 @@ public class CoreHoglin extends CoreAgeableMob implements Hoglin {
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+1;
 	
-	protected static final NBTFieldContainer<CoreHoglin> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreHoglin> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_IS_IMMUNE_TO_ZOMBIFICATION = CharKey.literal("IsImmuneToZombiefication"),
@@ -42,7 +42,7 @@ public class CoreHoglin extends CoreAgeableMob implements Hoglin {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreHoglin> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreHoglin> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

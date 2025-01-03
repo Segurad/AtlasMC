@@ -10,13 +10,13 @@ import de.atlasmc.util.EnumValueCache;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.AbstractNBTBase;
 import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.NBTHolder;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class BiomeEffects extends AbstractNBTBase {
 
-	protected static final NBTFieldContainer<BiomeEffects> NBT_FIELDS;
+	protected static final NBTFieldSet<BiomeEffects> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_FOG_COLOR = CharKey.literal("fog_color"),
@@ -41,7 +41,7 @@ public class BiomeEffects extends AbstractNBTBase {
 	NBT_REPLACE_CURRENT_MUSIC = CharKey.literal("replace_current_music");
 	
 	static {
-		NBT_FIELDS = NBTFieldContainer.newContainer();
+		NBT_FIELDS = NBTFieldSet.newSet();
 		NBT_FIELDS.setField(NBT_FOG_COLOR, (holder, reader) -> {
 			holder.fogColor = Color.fromRGB(reader.readIntTag());
 		});
@@ -67,7 +67,7 @@ public class BiomeEffects extends AbstractNBTBase {
 		NBT_FIELDS.setField(NBT_AMBIENT_SOUND, (holder, reader) -> {
 			holder.ambientSound = Sound.fromNBT(reader);
 		});
-		NBT_FIELDS.setContainer(NBT_MOOD_SOUND)
+		NBT_FIELDS.setSet(NBT_MOOD_SOUND)
 			.setField(NBT_SOUND, (holder, reader) -> {
 				holder.moodSound = Sound.fromNBT(reader);
 			}).setField(NBT_TICK_DELAY, (holder, reader) -> {
@@ -77,13 +77,13 @@ public class BiomeEffects extends AbstractNBTBase {
 			}).setField(NBT_OFFSET, (holder, reader) -> {
 				holder.moodOffset = reader.readDoubleTag();
 			});
-		NBT_FIELDS.setContainer(NBT_ADDITIONS_SOUND)
+		NBT_FIELDS.setSet(NBT_ADDITIONS_SOUND)
 			.setField(NBT_SOUND, (holder, reader) -> {
 				holder.additionsSound = Sound.fromNBT(reader);
 			}).setField(NBT_TICK_CHANGE, (holder, reader) -> {
 				holder.addtionsTickChance = reader.readDoubleTag();
 			});
-		NBT_FIELDS.setContainer(NBT_MUSIC)
+		NBT_FIELDS.setSet(NBT_MUSIC)
 			.setField(NBT_SOUND, (holder, reader) -> {
 				holder.music = Sound.fromNBT(reader);
 			}).setField(NBT_MIN_DELAY, (holder, reader) -> {
@@ -219,7 +219,7 @@ public class BiomeEffects extends AbstractNBTBase {
 	}
 
 	@Override
-	protected NBTFieldContainer<? extends NBTHolder> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends NBTHolder> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

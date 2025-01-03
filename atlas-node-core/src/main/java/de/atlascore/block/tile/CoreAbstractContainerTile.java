@@ -10,13 +10,13 @@ import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public abstract class CoreAbstractContainerTile<I extends Inventory> extends CoreTileEntity implements AbstractContainerTile<I> {
 
-	protected static final NBTFieldContainer<CoreAbstractContainerTile<?>> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreAbstractContainerTile<?>> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_LOCK = CharKey.literal("Lock"),
@@ -135,7 +135,7 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreAbstractContainerTile<?>> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreAbstractContainerTile<?>> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

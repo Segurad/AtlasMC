@@ -10,14 +10,14 @@ import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.AbstractNBTBase;
 import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.Chunk;
 import de.atlasmc.world.World;
 
 public class CoreTileEntity extends AbstractNBTBase implements TileEntity {
 	
-	protected static final NBTFieldContainer<CoreTileEntity> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreTileEntity> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_KEEP_PACKED = CharKey.literal("keepPacked"),
@@ -27,7 +27,7 @@ public class CoreTileEntity extends AbstractNBTBase implements TileEntity {
 	NBT_CUSTOM_NAME = CharKey.literal("CustomName");
 	
 	static {
-		NBT_FIELDS = NBTFieldContainer.newContainer();
+		NBT_FIELDS = NBTFieldSet.newSet();
 		NBT_FIELDS.setField(NBT_ID, (holder, reader) -> {
 			holder.setType(Material.getByName(reader.readStringTag()));
 		});
@@ -93,7 +93,7 @@ public class CoreTileEntity extends AbstractNBTBase implements TileEntity {
 	}
 
 	@Override
-	protected NBTFieldContainer<? extends CoreTileEntity> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreTileEntity> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

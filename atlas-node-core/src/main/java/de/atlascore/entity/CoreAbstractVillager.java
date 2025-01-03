@@ -12,7 +12,7 @@ import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.MerchantInventory;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -23,7 +23,7 @@ public class CoreAbstractVillager extends CoreAgeableMob implements AbstractVill
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+1;
 	
-	protected static final NBTFieldContainer<CoreAbstractVillager> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreAbstractVillager> NBT_FIELDS;
 	
 	protected static final CharKey
 		NBT_OFFERS = CharKey.literal("Offers"),
@@ -66,7 +66,7 @@ public class CoreAbstractVillager extends CoreAgeableMob implements AbstractVill
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreAbstractVillager> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreAbstractVillager> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

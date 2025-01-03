@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.world.Chunk;
@@ -36,10 +36,10 @@ public class CoreAnvilChunkIO {
 	NBT_INHABITED_TIME = CharKey.literal("InhabitedTime"),
 	NBT_BIOMES = CharKey.literal("Biomes");
 	
-	protected static final NBTFieldContainer<CoreAnvilChunkIO> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreAnvilChunkIO> NBT_FIELDS;
 	
 	static {
-		NBT_FIELDS = NBTFieldContainer.newContainer();
+		NBT_FIELDS = NBTFieldSet.newSet();
 		NBT_FIELDS.setField(NBT_STATUS, NBTField.skip());
 		NBT_FIELDS.setField(NBT_LAST_UPDATE, (holder, reader) -> {
 			holder.lastUpdate = reader.readLongTag();

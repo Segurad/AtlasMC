@@ -6,13 +6,13 @@ import de.atlasmc.Location;
 import de.atlasmc.Material;
 import de.atlasmc.block.tile.EndGateway;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.Chunk;
 
 public class CoreEndGateway extends CoreTileEntity implements EndGateway {
 
-	protected static final NBTFieldContainer<CoreEndGateway> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreEndGateway> NBT_FIELDS;
 	
 	protected static final CharKey
 	AGE = CharKey.literal("Age"),
@@ -34,7 +34,7 @@ public class CoreEndGateway extends CoreTileEntity implements EndGateway {
 		NBT_FIELDS.setField(RELATIVE_COORDINATES, (holder, reader) -> {
 			holder.setRelativeCoordinates(reader.readByteTag() == 1);
 		});
-		NBT_FIELDS.setContainer(EXIT_PORTAL)
+		NBT_FIELDS.setSet(EXIT_PORTAL)
 		.setField(PORTAL_X, (holder, reader) -> {
 			holder.exit.x = reader.readIntTag();
 		}).setField(PORTAL_Y, (holder, reader) -> {
@@ -108,7 +108,7 @@ public class CoreEndGateway extends CoreTileEntity implements EndGateway {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreEndGateway> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreEndGateway> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

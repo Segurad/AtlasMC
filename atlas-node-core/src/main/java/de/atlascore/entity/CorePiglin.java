@@ -12,7 +12,7 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -27,7 +27,7 @@ public class CorePiglin extends CoreAbstractPiglin implements Piglin {
 
 	protected static final int LAST_META_INDEX = CoreAbstractPiglin.LAST_META_INDEX+3;
 	
-	protected static final NBTFieldContainer<CorePiglin> NBT_FIELDS;
+	protected static final NBTFieldSet<CorePiglin> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_IS_BABY = CharKey.literal("IsBaby"),
@@ -67,7 +67,7 @@ public class CorePiglin extends CoreAbstractPiglin implements Piglin {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CorePiglin> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CorePiglin> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

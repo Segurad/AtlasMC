@@ -15,7 +15,7 @@ import de.atlasmc.inventory.component.effect.ComponentEffectType;
 import de.atlasmc.sound.EnumSound;
 import de.atlasmc.sound.Sound;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
@@ -25,7 +25,7 @@ import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CoreConsumableComponent extends AbstractItemComponent implements ConsumableComponent {
 
-	protected static final NBTFieldContainer<CoreConsumableComponent> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreConsumableComponent> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_CONSUME_SECONDS = CharKey.literal("consume_seconds"),
@@ -35,7 +35,7 @@ public class CoreConsumableComponent extends AbstractItemComponent implements Co
 	NBT_ON_CONSUME_EFFECTS = CharKey.literal("on_consume_effects");
 	
 	static {
-		NBT_FIELDS = NBTFieldContainer.newContainer();
+		NBT_FIELDS = NBTFieldSet.newSet();
 		NBT_FIELDS.setField(NBT_CONSUME_SECONDS, (holder, reader) -> {
 			holder.consumeSeconds = reader.readFloatTag();
 		});

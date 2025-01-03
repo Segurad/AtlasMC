@@ -11,7 +11,7 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreItem extends CoreEntity implements Item {
@@ -21,7 +21,7 @@ public class CoreItem extends CoreEntity implements Item {
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+1;
 	
-	protected static final NBTFieldContainer<CoreItem> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreItem> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_AGE = CharKey.literal("Age"),
@@ -69,7 +69,7 @@ public class CoreItem extends CoreEntity implements Item {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreItem> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreItem> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

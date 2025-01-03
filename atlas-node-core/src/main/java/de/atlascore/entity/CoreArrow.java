@@ -14,7 +14,7 @@ import de.atlasmc.potion.PotionData;
 import de.atlasmc.potion.PotionEffect;
 import de.atlasmc.potion.PotionEffectType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -25,7 +25,7 @@ public class CoreArrow extends CoreAbstractArrow implements Arrow {
 	
 	protected static final int LAST_META_INDEX = CoreAbstractArrow.LAST_META_INDEX+1;
 	
-	protected static final NBTFieldContainer<CoreArrow> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreArrow> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_CUSTOM_POTION_COLOR = CharKey.literal("CustomPotionColor"),
@@ -90,7 +90,7 @@ public class CoreArrow extends CoreAbstractArrow implements Arrow {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreArrow> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreArrow> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

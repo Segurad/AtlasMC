@@ -14,7 +14,7 @@ import de.atlasmc.potion.PotionData;
 import de.atlasmc.potion.PotionEffect;
 import de.atlasmc.potion.PotionEffectType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.particle.ParticleObject;
@@ -32,7 +32,7 @@ public class CoreAreaEffectCloud extends CoreEntity implements AreaEffectCloud {
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+4;
 	
-	protected static final NBTFieldContainer<CoreAreaEffectCloud> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreAreaEffectCloud> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_AGE = CharKey.literal("age"),
@@ -144,7 +144,7 @@ public class CoreAreaEffectCloud extends CoreEntity implements AreaEffectCloud {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreAreaEffectCloud> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreAreaEffectCloud> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

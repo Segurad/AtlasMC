@@ -6,13 +6,13 @@ import de.atlasmc.Material;
 import de.atlasmc.block.tile.Campfire;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreCampfire extends CoreTileEntity implements Campfire {
 	
-	protected static final NBTFieldContainer<CoreCampfire> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreCampfire> NBT_FIELDS;
 	
 	protected static final CharKey
 	ITEMS = CharKey.literal("Items"),
@@ -123,7 +123,7 @@ public class CoreCampfire extends CoreTileEntity implements Campfire {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreCampfire> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreCampfire> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

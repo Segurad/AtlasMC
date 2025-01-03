@@ -6,12 +6,12 @@ import de.atlasmc.Material;
 import de.atlasmc.block.tile.Jukebox;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreJukebox extends CoreTileEntity implements Jukebox {
 
-	protected static final NBTFieldContainer<CoreJukebox> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreJukebox> NBT_FIELDS;
 	
 	protected static final CharKey
 	RECORD_ITEM = CharKey.literal("RecordItem");
@@ -49,7 +49,7 @@ public class CoreJukebox extends CoreTileEntity implements Jukebox {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreJukebox> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreJukebox> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

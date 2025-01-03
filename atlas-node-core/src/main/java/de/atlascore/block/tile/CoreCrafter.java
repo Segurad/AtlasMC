@@ -7,14 +7,14 @@ import de.atlasmc.block.tile.Crafter;
 import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 
 public class CoreCrafter extends CoreAbstractContainerTile<Inventory> implements Crafter {
 
-	protected static final NBTFieldContainer<CoreCrafter> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreCrafter> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_CRAFTING_TICKS_REMAINING = CharKey.literal("crafting_ticks_remaining"),

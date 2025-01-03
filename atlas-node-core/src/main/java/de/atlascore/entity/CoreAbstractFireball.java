@@ -8,13 +8,13 @@ import org.joml.Vector3d;
 import de.atlasmc.entity.AbstractFireball;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public abstract class CoreAbstractFireball extends CoreAbstractProjectile implements AbstractFireball {
 
-	protected static final NBTFieldContainer<CoreAbstractFireball> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreAbstractFireball> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_DIRECTION = CharKey.literal("direction"),
@@ -66,7 +66,7 @@ public abstract class CoreAbstractFireball extends CoreAbstractProjectile implem
 	}
 
 	@Override
-	protected NBTFieldContainer<CoreAbstractFireball> getFieldContainerRoot() {
+	protected NBTFieldSet<CoreAbstractFireball> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

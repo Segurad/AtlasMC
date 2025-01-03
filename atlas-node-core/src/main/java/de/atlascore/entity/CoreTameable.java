@@ -9,7 +9,7 @@ import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTameable extends CoreAgeableMob implements Tameable {
@@ -25,7 +25,7 @@ public class CoreTameable extends CoreAgeableMob implements Tameable {
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+2;
 	
-	protected static final NBTFieldContainer<CoreTameable> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreTameable> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_OWNER = CharKey.literal("Owner"),
@@ -46,7 +46,7 @@ public class CoreTameable extends CoreAgeableMob implements Tameable {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreTameable> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreTameable> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

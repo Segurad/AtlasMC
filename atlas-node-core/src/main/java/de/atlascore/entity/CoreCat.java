@@ -9,7 +9,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreCat extends CoreTameable implements Cat {
@@ -25,7 +25,7 @@ public class CoreCat extends CoreTameable implements Cat {
 	
 	protected static final int LAST_META_INDEX = CoreTameable.LAST_META_INDEX+4;
 	
-	protected static final NBTFieldContainer<CoreCat> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreCat> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_CAT_TYPE = CharKey.literal("CatType"), // TODO will change to "Type" in 1.19 and switches from byte to NamespacedKey as id
@@ -47,7 +47,7 @@ public class CoreCat extends CoreTameable implements Cat {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreCat> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreCat> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

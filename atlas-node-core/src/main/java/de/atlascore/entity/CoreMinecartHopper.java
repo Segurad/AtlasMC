@@ -9,12 +9,12 @@ import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreMinecartHopper extends CoreAbstractMinecartContainer implements MinecartHopper {
 
-	protected static final NBTFieldContainer<CoreMinecartHopper> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreMinecartHopper> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_ENABLED = CharKey.literal("Enabled");
@@ -34,7 +34,7 @@ public class CoreMinecartHopper extends CoreAbstractMinecartContainer implements
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreMinecartHopper> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreMinecartHopper> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

@@ -8,7 +8,7 @@ import de.atlasmc.entity.Strider;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreStrider extends CoreAgeableMob implements Strider {
@@ -22,7 +22,7 @@ public class CoreStrider extends CoreAgeableMob implements Strider {
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+3;
 	
-	protected static final NBTFieldContainer<CoreStrider> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreStrider> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_SADDLE = CharKey.literal("Saddle");
@@ -39,7 +39,7 @@ public class CoreStrider extends CoreAgeableMob implements Strider {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreStrider> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreStrider> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

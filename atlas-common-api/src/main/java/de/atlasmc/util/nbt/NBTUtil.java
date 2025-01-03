@@ -8,22 +8,22 @@ public class NBTUtil {
 	
 	protected NBTUtil() {}
 	
-	public static <H> void readNBT(NBTFieldContainer<H> container, H holder, NBTReader reader) throws IOException {
-		readCompound(container, holder, reader, null);
+	public static <H> void readNBT(NBTFieldSet<H> set, H holder, NBTReader reader) throws IOException {
+		readCompound(set, holder, reader, null);
 	}
 
 	
-	public static <H> void readNBT(NBTFieldContainer<H> container, H holder, NBTReader reader, CustomTagContainer customTags) throws IOException {
-		if (container == null)
-			throw new IllegalArgumentException("Container can not be null!");
+	public static <H> void readNBT(NBTFieldSet<H> set, H holder, NBTReader reader, CustomTagContainer customTags) throws IOException {
+		if (set == null)
+			throw new IllegalArgumentException("Set can not be null!");
 		if (holder == null)
 			throw new IllegalArgumentException("Holder can not be null!");
 		if (reader == null)
 			throw new IllegalArgumentException("Reader can not be null!");
-		readCompound(container, holder, reader, customTags);
+		readCompound(set, holder, reader, customTags);
 	}
 
-	private static <H> void readCompound(NBTFieldContainer<H> container, H holder, NBTReader reader, CustomTagContainer customTags) throws IOException {
+	private static <H> void readCompound(NBTFieldSet<H> set, H holder, NBTReader reader, CustomTagContainer customTags) throws IOException {
 		final int depth = reader.getDepth(); // set the root depth
 		while (depth <= reader.getDepth()) { // ensure to stay over or at root depth
 			TagType type = reader.getType();
@@ -33,18 +33,18 @@ public class NBTUtil {
 			}
 			final CharSequence key = reader.getFieldName();
 			if (type == TagType.COMPOUND) {
-				NBTFieldContainer<H> childContainer = container.getContainer(key);
+				NBTFieldSet<H> childContainer = set.getSet(key);
 				if (childContainer != null) { // enter compound if not null
 					reader.readNextEntry();
 					readCompound(childContainer, holder, reader, customTags);
 					continue;
 				} // if compound is null try read as field
 			}
-			NBTField<H> field = container.getField(key);
+			NBTField<H> field = set.getField(key);
 			if (field != null) { // if field exists set it
 				field.setField(holder, reader);
-			} else if (container.hasUnknownFieldHandler()) { // if field does not exist try to use unknown field handler
-				field = container.getUnknownFieldHandler();
+			} else if (set.hasUnknownFieldHandler()) { // if field does not exist try to use unknown field handler
+				field = set.getUnknownFieldHandler();
 				field.setField(holder, reader);
 			} else if (customTags != null) { // if not handler is present try to write in custom tags
 				customTags.addCustomTag(reader.readNBT());

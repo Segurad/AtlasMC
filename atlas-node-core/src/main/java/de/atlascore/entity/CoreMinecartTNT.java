@@ -6,12 +6,12 @@ import java.util.UUID;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.MinecartTNT;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreMinecartTNT extends CoreAbstractMinecart implements MinecartTNT {
 
-	protected static final NBTFieldContainer<CoreMinecartTNT> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreMinecartTNT> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_FUSE = CharKey.literal("Fuse");
@@ -30,7 +30,7 @@ public class CoreMinecartTNT extends CoreAbstractMinecart implements MinecartTNT
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreMinecartTNT> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreMinecartTNT> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

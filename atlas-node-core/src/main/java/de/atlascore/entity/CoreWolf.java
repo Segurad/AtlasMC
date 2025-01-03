@@ -9,7 +9,7 @@ import de.atlasmc.entity.Wolf;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreWolf extends CoreTameable implements Wolf {
@@ -25,7 +25,7 @@ public class CoreWolf extends CoreTameable implements Wolf {
 	
 	protected static final int LAST_META_INDEX = CoreTameable.LAST_META_INDEX+4;
 	
-	protected static final NBTFieldContainer<CoreWolf> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreWolf> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_ANGRY = CharKey.literal("Angry"),
@@ -48,7 +48,7 @@ public class CoreWolf extends CoreTameable implements Wolf {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreWolf> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreWolf> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

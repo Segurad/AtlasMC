@@ -10,7 +10,7 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.EulerAngle;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -42,7 +42,7 @@ public class CoreArmorStand extends CoreLivingEntity implements ArmorStand {
 	
 	protected static final int LAST_META_INDEX = CoreLivingEntity.LAST_META_INDEX+7;
 	
-	protected static final NBTFieldContainer<CoreArmorStand> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreArmorStand> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_DISABLED_SLOTS = CharKey.literal("DisabledSlots"),
@@ -116,7 +116,7 @@ public class CoreArmorStand extends CoreLivingEntity implements ArmorStand {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreArmorStand> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreArmorStand> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

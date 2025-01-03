@@ -8,7 +8,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreAbstractPiglin extends CoreMob implements AbstractPiglin {
@@ -18,7 +18,7 @@ public class CoreAbstractPiglin extends CoreMob implements AbstractPiglin {
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+1;
 	
-	protected static final NBTFieldContainer<CoreAbstractPiglin> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreAbstractPiglin> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_IS_IMMUNE_TO_ZOMBIFICATION = CharKey.literal("IsImmuneToZombification");
@@ -36,7 +36,7 @@ public class CoreAbstractPiglin extends CoreMob implements AbstractPiglin {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreAbstractPiglin> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreAbstractPiglin> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

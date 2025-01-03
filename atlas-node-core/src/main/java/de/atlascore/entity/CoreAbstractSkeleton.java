@@ -6,12 +6,12 @@ import java.util.UUID;
 import de.atlasmc.entity.AbstractSkeleton;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreAbstractSkeleton extends CoreMob implements AbstractSkeleton {
 
-	protected static final NBTFieldContainer<CoreAbstractSkeleton> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreAbstractSkeleton> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_CAN_PICKUP_LOOT = CharKey.literal("CanPickUpLoot");
@@ -30,7 +30,7 @@ public class CoreAbstractSkeleton extends CoreMob implements AbstractSkeleton {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreAbstractSkeleton> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreAbstractSkeleton> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

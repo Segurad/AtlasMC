@@ -6,12 +6,12 @@ import java.util.UUID;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.SpectralArrow;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreSpectralArrow extends CoreAbstractArrow implements SpectralArrow {
 
-	protected static final NBTFieldContainer<CoreSpectralArrow> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreSpectralArrow> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_DURATION = CharKey.literal("Duration");
@@ -30,7 +30,7 @@ public class CoreSpectralArrow extends CoreAbstractArrow implements SpectralArro
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreSpectralArrow> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreSpectralArrow> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

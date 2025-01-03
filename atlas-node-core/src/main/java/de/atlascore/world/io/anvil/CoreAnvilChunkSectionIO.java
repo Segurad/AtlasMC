@@ -7,7 +7,7 @@ import java.util.List;
 import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -18,7 +18,7 @@ import de.atlasmc.world.Chunk;
  */
 public class CoreAnvilChunkSectionIO {
 
-	protected static final NBTFieldContainer<CoreAnvilChunkSectionIO> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreAnvilChunkSectionIO> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_BLOCK_LIGHT = CharKey.literal("BlockLight"),
@@ -30,7 +30,7 @@ public class CoreAnvilChunkSectionIO {
 	NBT_PROPERTIES = CharKey.literal("Properties");
 	
 	static {
-		NBT_FIELDS = NBTFieldContainer.newContainer();
+		NBT_FIELDS = NBTFieldSet.newSet();
 		NBT_FIELDS.setField(NBT_BLOCK_LIGHT, (holder, reader) -> {
 			if (holder.blocklight == null)
 				holder.blocklight = new byte[2048];

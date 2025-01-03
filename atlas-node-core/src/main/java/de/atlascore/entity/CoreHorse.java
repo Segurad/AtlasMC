@@ -13,7 +13,7 @@ import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.HorseInventory;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreHorse extends CoreAbstractHorse implements Horse {
@@ -23,7 +23,7 @@ public class CoreHorse extends CoreAbstractHorse implements Horse {
 	
 	protected static final int LAST_META_INDEX = CoreAbstractHorse.LAST_META_INDEX+1;
 	
-	protected static final NBTFieldContainer<CoreHorse> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreHorse> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_ARMOR_ITEM = CharKey.literal("ArmorItem"),
@@ -56,7 +56,7 @@ public class CoreHorse extends CoreAbstractHorse implements Horse {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreHorse> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreHorse> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

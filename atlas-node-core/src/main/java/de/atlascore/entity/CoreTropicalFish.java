@@ -10,7 +10,7 @@ import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTropicalFish extends CoreFish implements TropicalFish {
@@ -26,7 +26,7 @@ public class CoreTropicalFish extends CoreFish implements TropicalFish {
 	
 	protected static final int LAST_META_INDEX = CoreFish.LAST_META_INDEX+1;
 	
-	protected static final NBTFieldContainer<CoreTropicalFish> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreTropicalFish> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_VARIANT = CharKey.literal("Variant");
@@ -46,7 +46,7 @@ public class CoreTropicalFish extends CoreFish implements TropicalFish {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreTropicalFish> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreTropicalFish> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

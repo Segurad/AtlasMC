@@ -9,7 +9,7 @@ import de.atlasmc.entity.PrimedTNT;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CorePrimedTNT extends CoreEntity implements PrimedTNT {
@@ -19,7 +19,7 @@ public class CorePrimedTNT extends CoreEntity implements PrimedTNT {
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+1;
 	
-	protected static final NBTFieldContainer<CorePrimedTNT> NBT_FIELDS;
+	protected static final NBTFieldSet<CorePrimedTNT> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_FUSE = CharKey.literal("Fuse");
@@ -38,7 +38,7 @@ public class CorePrimedTNT extends CoreEntity implements PrimedTNT {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CorePrimedTNT> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CorePrimedTNT> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

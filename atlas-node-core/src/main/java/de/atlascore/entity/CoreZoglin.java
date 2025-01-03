@@ -8,7 +8,7 @@ import de.atlasmc.entity.Zoglin;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreZoglin extends CoreMob implements Zoglin {
@@ -18,7 +18,7 @@ public class CoreZoglin extends CoreMob implements Zoglin {
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX + 1;
 	
-	protected static final NBTFieldContainer<CoreZoglin> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreZoglin> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_IS_BABY = CharKey.literal("IsBaby");
@@ -35,7 +35,7 @@ public class CoreZoglin extends CoreMob implements Zoglin {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreZoglin> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreZoglin> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

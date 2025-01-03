@@ -9,13 +9,13 @@ import de.atlasmc.Material;
 import de.atlasmc.block.tile.Banner;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBanner extends CoreTileEntity implements Banner {
 	
-	protected static final NBTFieldContainer<CoreBanner> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreBanner> NBT_FIELDS;
 	
 	protected static final CharKey
 	PATTERNS = CharKey.literal("Patterns"),
@@ -139,7 +139,7 @@ public class CoreBanner extends CoreTileEntity implements Banner {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreBanner> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreBanner> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

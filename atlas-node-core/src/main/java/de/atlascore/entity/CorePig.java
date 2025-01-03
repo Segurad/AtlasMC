@@ -8,7 +8,7 @@ import de.atlasmc.entity.Pig;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CorePig extends CoreAgeableMob implements Pig {
@@ -20,7 +20,7 @@ public class CorePig extends CoreAgeableMob implements Pig {
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+2;
 	
-	protected static final NBTFieldContainer<CorePig> NBT_FIELDS;
+	protected static final NBTFieldSet<CorePig> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_SADDLE = CharKey.literal("Saddle");
@@ -37,7 +37,7 @@ public class CorePig extends CoreAgeableMob implements Pig {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CorePig> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CorePig> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

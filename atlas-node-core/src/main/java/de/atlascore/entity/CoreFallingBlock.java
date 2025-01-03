@@ -11,7 +11,7 @@ import de.atlasmc.entity.FallingBlock;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -22,7 +22,7 @@ public class CoreFallingBlock extends CoreEntity implements FallingBlock {
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+1;
 	
-	protected static final NBTFieldContainer<CoreFallingBlock> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreFallingBlock> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_BLOCK_STATE = CharKey.literal("BlockState"),
@@ -105,7 +105,7 @@ public class CoreFallingBlock extends CoreEntity implements FallingBlock {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreFallingBlock> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreFallingBlock> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

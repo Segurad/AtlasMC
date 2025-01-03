@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.AbstractNBTBase;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -33,14 +33,14 @@ public interface Interaction extends Entity {
 	
 	public static class PreviousInteraction extends AbstractNBTBase {
 		
-		protected static final NBTFieldContainer<PreviousInteraction> NBT_FIELDS;
+		protected static final NBTFieldSet<PreviousInteraction> NBT_FIELDS;
 		
 		protected static final CharKey
 		NBT_PLAYER = CharKey.literal("player"),
 		NBT_TIMESTAMP = CharKey.literal("timestamp");
 		
 		static {
-			NBT_FIELDS = NBTFieldContainer.newContainer();
+			NBT_FIELDS = NBTFieldSet.newSet();
 			NBT_FIELDS.setField(NBT_PLAYER, (holder, reader) -> {
 				holder.uuid = reader.readUUID();
 			});
@@ -76,7 +76,7 @@ public interface Interaction extends Entity {
 		}
 
 		@Override
-		protected NBTFieldContainer<? extends PreviousInteraction> getFieldContainerRoot() {
+		protected NBTFieldSet<? extends PreviousInteraction> getFieldSetRoot() {
 			return NBT_FIELDS;
 		}
 		

@@ -11,7 +11,7 @@ import de.atlasmc.potion.PotionEffectType;
 import de.atlasmc.util.dataset.DataSet;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -20,12 +20,12 @@ import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CoreRemoveEffects implements RemoveEffects {
 	
-	protected static final NBTFieldContainer<CoreRemoveEffects> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreRemoveEffects> NBT_FIELDS;
 	
 	protected static final CharKey NBT_EFFECTS = CharKey.literal("effects");
 	
 	static {
-		NBT_FIELDS = NBTFieldContainer.newContainer();
+		NBT_FIELDS = NBTFieldSet.newSet();
 		NBT_FIELDS.setField(NBT_EFFECTS, (holder, reader) -> {
 			holder.effects = DataSet.getFromNBT(PotionEffectType.REGISTRY, reader);
 		});

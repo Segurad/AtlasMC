@@ -12,7 +12,7 @@ import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.AbstractHorseInventory;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public abstract class CoreAbstractHorse extends CoreAgeableMob implements AbstractHorse {
@@ -32,7 +32,7 @@ public abstract class CoreAbstractHorse extends CoreAgeableMob implements Abstra
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+2;
 	
-	protected static final NBTFieldContainer<CoreAbstractHorse> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreAbstractHorse> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_BRED = CharKey.literal("Bred"),
@@ -78,7 +78,7 @@ public abstract class CoreAbstractHorse extends CoreAgeableMob implements Abstra
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreAbstractHorse> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreAbstractHorse> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

@@ -6,12 +6,12 @@ import java.util.UUID;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Ravager;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreRavager extends CoreRaider implements Ravager {
 
-	protected static final NBTFieldContainer<CoreRavager> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreRavager> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_ATTACK_TICK = CharKey.literal("AttackTick"),
@@ -40,7 +40,7 @@ public class CoreRavager extends CoreRaider implements Ravager {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreRavager> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreRavager> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

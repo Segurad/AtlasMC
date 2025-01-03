@@ -10,7 +10,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -25,7 +25,7 @@ public class CoreAbstractMinecart extends CoreVehicle implements AbstractMinecar
 	
 	protected static final int LAST_META_INDEX = CoreVehicle.LAST_META_INDEX+3;
 	
-	protected static final NBTFieldContainer<CoreAbstractMinecart> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreAbstractMinecart> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_CUSTOM_DISPLAY_TILE = CharKey.literal("CustomDisplayTile"),
@@ -76,7 +76,7 @@ public class CoreAbstractMinecart extends CoreVehicle implements AbstractMinecar
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreAbstractMinecart> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreAbstractMinecart> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

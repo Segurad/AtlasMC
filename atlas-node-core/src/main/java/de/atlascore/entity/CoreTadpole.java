@@ -6,12 +6,12 @@ import java.util.UUID;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Tadpole;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTadpole extends CoreFish implements Tadpole {
 
-	protected static final NBTFieldContainer<CoreTadpole> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreTadpole> NBT_FIELDS;
 	
 	private static final CharKey NBT_AGE = CharKey.literal("Age");
 	
@@ -46,7 +46,7 @@ public class CoreTadpole extends CoreFish implements Tadpole {
 	}
 
 	@Override
-	protected NBTFieldContainer<? extends CoreTadpole> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreTadpole> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

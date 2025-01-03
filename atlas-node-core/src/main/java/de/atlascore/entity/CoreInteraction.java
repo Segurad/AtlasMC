@@ -8,7 +8,7 @@ import de.atlasmc.entity.Interaction;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreInteraction extends CoreEntity implements Interaction {
@@ -19,7 +19,7 @@ public class CoreInteraction extends CoreEntity implements Interaction {
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+3;
 	
-	protected static final NBTFieldContainer<CoreInteraction> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreInteraction> NBT_FIELDS;
 	
 	private static final CharKey
 	NBT_WIDTH = CharKey.literal("width"),
@@ -70,7 +70,7 @@ public class CoreInteraction extends CoreEntity implements Interaction {
 	}
 
 	@Override
-	protected NBTFieldContainer<? extends CoreInteraction> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreInteraction> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

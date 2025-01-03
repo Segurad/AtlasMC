@@ -6,12 +6,12 @@ import java.util.UUID;
 import de.atlasmc.entity.Axolotl;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreAxolotl extends CoreAgeableMob implements Axolotl {
 
-	protected static final NBTFieldContainer<CoreAxolotl> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreAxolotl> NBT_FIELDS;
 	
 	private static final CharKey
 	NBT_FROM_BUCKET = CharKey.literal("FromBucket"),
@@ -36,7 +36,7 @@ public class CoreAxolotl extends CoreAgeableMob implements Axolotl {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreAxolotl> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreAxolotl> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

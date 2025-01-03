@@ -7,12 +7,12 @@ import de.atlasmc.block.tile.Sign;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreSign extends CoreTileEntity implements Sign {
 
-	protected static final NBTFieldContainer<CoreSign> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreSign> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_TEXT_1 = CharKey.literal("Text1"),
@@ -73,7 +73,7 @@ public class CoreSign extends CoreTileEntity implements Sign {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreSign> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreSign> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

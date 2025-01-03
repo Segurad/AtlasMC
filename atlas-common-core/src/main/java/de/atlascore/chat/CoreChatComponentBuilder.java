@@ -40,7 +40,7 @@ import de.atlasmc.chat.component.SelectorComponent;
 import de.atlasmc.chat.component.TextComponent;
 import de.atlasmc.chat.component.TranslationComponent;
 import de.atlasmc.util.Builder;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
@@ -48,10 +48,10 @@ import de.atlasmc.util.nbt.tag.NBT;
 
 class CoreChatComponentBuilder implements Builder<ChatComponent> {
 	
-	public static final NBTFieldContainer<CoreChatComponentBuilder> NBT_FIELDS;
+	public static final NBTFieldSet<CoreChatComponentBuilder> NBT_FIELDS;
 	
 	static {
-		NBT_FIELDS = NBTFieldContainer.newContainer();
+		NBT_FIELDS = NBTFieldSet.newSet();
 		NBT_FIELDS.setField(JSON_TYPE, (holder, reader) -> {
 			holder.type = reader.readStringTag();
 		});

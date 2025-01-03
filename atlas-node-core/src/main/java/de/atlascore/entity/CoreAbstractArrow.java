@@ -9,7 +9,7 @@ import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public abstract class CoreAbstractArrow extends CoreAbstractProjectile implements AbstractArrow {
@@ -21,7 +21,7 @@ public abstract class CoreAbstractArrow extends CoreAbstractProjectile implement
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+2;
 	
-	protected static final NBTFieldContainer<CoreAbstractArrow> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreAbstractArrow> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_CRIT = CharKey.literal("crit"),
@@ -64,7 +64,7 @@ public abstract class CoreAbstractArrow extends CoreAbstractProjectile implement
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreAbstractArrow> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreAbstractArrow> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

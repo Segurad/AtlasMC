@@ -14,7 +14,7 @@ import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.sound.EnumSound;
 import de.atlasmc.sound.Sound;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreItemFrame extends CoreHanging implements ItemFrame {
@@ -26,7 +26,7 @@ public class CoreItemFrame extends CoreHanging implements ItemFrame {
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+2;
 	
-	protected static final NBTFieldContainer<CoreItemFrame> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreItemFrame> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_ITEM_DROP_CHANCE = CharKey.literal("ItemDropChance"),
@@ -72,7 +72,7 @@ public class CoreItemFrame extends CoreHanging implements ItemFrame {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreItemFrame> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreItemFrame> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

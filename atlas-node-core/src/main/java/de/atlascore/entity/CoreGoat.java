@@ -8,7 +8,7 @@ import de.atlasmc.entity.Goat;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreGoat extends CoreAgeableMob implements Goat {
@@ -19,7 +19,7 @@ public class CoreGoat extends CoreAgeableMob implements Goat {
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+3;
 	
-	protected static final NBTFieldContainer<CoreGoat> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreGoat> NBT_FIELDS;
 	
 	private static final CharKey
 	NBT_HAS_LEFT_HORN = CharKey.literal("HasLeftHorn"),
@@ -57,7 +57,7 @@ public class CoreGoat extends CoreAgeableMob implements Goat {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreGoat> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreGoat> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

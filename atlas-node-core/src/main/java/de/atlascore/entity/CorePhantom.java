@@ -8,7 +8,7 @@ import de.atlasmc.entity.Phantom;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CorePhantom extends CoreMob implements Phantom {
@@ -18,7 +18,7 @@ public class CorePhantom extends CoreMob implements Phantom {
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+1;
 	
-	protected static final NBTFieldContainer<CorePhantom> NBT_FIELDS;
+	protected static final NBTFieldSet<CorePhantom> NBT_FIELDS;
 	
 	protected static final CharKey
 	//NBT_ANCHOR_X = "AX", TODO unnecessary
@@ -38,7 +38,7 @@ public class CorePhantom extends CoreMob implements Phantom {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CorePhantom> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CorePhantom> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

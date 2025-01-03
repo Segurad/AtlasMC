@@ -30,7 +30,7 @@ import de.atlasmc.util.dataset.DataSet;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
@@ -41,7 +41,7 @@ import io.netty.buffer.ByteBuf;
 
 public class CoreAbstractBlockPredicateComponent extends AbstractItemComponent implements AbstractBlockPredicateComponent {
 	
-	protected static final NBTFieldContainer<CoreAbstractBlockPredicateComponent> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreAbstractBlockPredicateComponent> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_PREDICATES = CharKey.literal("predicates"),
@@ -51,7 +51,7 @@ public class CoreAbstractBlockPredicateComponent extends AbstractItemComponent i
 	NBT_SHOW_IN_TOOLTIP = CharKey.literal("show_in_tooltip");
 	
 	static {
-		NBT_FIELDS = NBTFieldContainer.newContainer();
+		NBT_FIELDS = NBTFieldSet.newSet();
 		
 		final NBTField<CoreAbstractBlockPredicateComponent>
 		blocksField = (holder, reader) -> {
@@ -74,7 +74,7 @@ public class CoreAbstractBlockPredicateComponent extends AbstractItemComponent i
 				return; // avoid creating empty predicates
 			holder.addPredicate(new BlockDataPredicate(properties));
 		};
-		NBTFieldContainer<CoreAbstractBlockPredicateComponent> predicateFields = NBTFieldContainer.newContainer();
+		NBTFieldSet<CoreAbstractBlockPredicateComponent> predicateFields = NBTFieldSet.newSet();
 		predicateFields.setField(NBT_BLOCKS, blocksField);
 		predicateFields.setField(NBT_NBT, nbtField);
 		predicateFields.setField(NBT_STATE, stateField);

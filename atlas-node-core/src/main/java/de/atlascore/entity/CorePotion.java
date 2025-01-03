@@ -8,12 +8,12 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Potion;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CorePotion extends CoreThrowableProjectile implements Potion {
 	
-	protected static final NBTFieldContainer<CorePotion> NBT_FIELDS;
+	protected static final NBTFieldSet<CorePotion> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_POTION = CharKey.literal("Potion");
@@ -40,7 +40,7 @@ public class CorePotion extends CoreThrowableProjectile implements Potion {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CorePotion> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CorePotion> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

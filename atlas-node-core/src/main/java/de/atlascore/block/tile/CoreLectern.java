@@ -9,12 +9,12 @@ import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.LecternInventory;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreLectern extends CoreTileEntity implements Lectern {
 
-	protected static final NBTFieldContainer<CoreLectern> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreLectern> NBT_FIELDS;
 	
 	protected static final CharKey
 	BOOK = CharKey.literal("Book"),
@@ -76,7 +76,7 @@ public class CoreLectern extends CoreTileEntity implements Lectern {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreLectern> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreLectern> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

@@ -10,13 +10,13 @@ import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreAllay extends CoreMob implements Allay {
 
-	protected static final NBTFieldContainer<CoreAllay> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreAllay> NBT_FIELDS;
 	
 	private static final CharKey
 	NBT_CAN_DUPLICATE = CharKey.literal("CanDuplicate"),
@@ -59,7 +59,7 @@ public class CoreAllay extends CoreMob implements Allay {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreAllay> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreAllay> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

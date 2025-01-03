@@ -8,7 +8,7 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreAbstractSlime extends CoreMob implements AbstractSlime {
@@ -18,7 +18,7 @@ public class CoreAbstractSlime extends CoreMob implements AbstractSlime {
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+1;
 	
-	protected static final NBTFieldContainer<CoreAbstractSlime> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreAbstractSlime> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_SIZE = CharKey.literal("Size");
@@ -35,7 +35,7 @@ public class CoreAbstractSlime extends CoreMob implements AbstractSlime {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreAbstractSlime> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreAbstractSlime> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

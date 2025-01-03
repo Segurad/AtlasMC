@@ -6,12 +6,12 @@ import java.util.UUID;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.GlowSquid;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreGlowSquid extends CoreSquid implements GlowSquid {
 
-	protected static final NBTFieldContainer<CoreGlowSquid> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreGlowSquid> NBT_FIELDS;
 	
 	private static final CharKey NBT_DARK_TICKS_REMAINING = CharKey.literal("DarkTicksRemaining");
 	
@@ -29,7 +29,7 @@ public class CoreGlowSquid extends CoreSquid implements GlowSquid {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreLivingEntity> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreLivingEntity> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

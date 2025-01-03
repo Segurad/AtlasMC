@@ -7,7 +7,7 @@ import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.ContainerLootComponent;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
@@ -17,14 +17,14 @@ import io.netty.buffer.ByteBuf;
 
 public class CoreContainerLootComponent extends AbstractItemComponent implements ContainerLootComponent {
 
-	protected static final NBTFieldContainer<CoreContainerLootComponent> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreContainerLootComponent> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_LOOT_TABLE = CharKey.literal("loot_table"),
 	NBT_SEED = CharKey.literal("seed");
 	
 	static {
-		NBT_FIELDS = NBTFieldContainer.newContainer();
+		NBT_FIELDS = NBTFieldSet.newSet();
 		NBT_FIELDS.setField(NBT_LOOT_TABLE, (holder, reader) -> {
 			holder.lootTable = reader.readNamespacedKey();
 		});

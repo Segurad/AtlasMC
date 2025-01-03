@@ -7,13 +7,13 @@ import de.atlasmc.Material;
 import de.atlasmc.block.tile.Skull;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreSkull extends CoreTileEntity implements Skull {
 
-	protected static final NBTFieldContainer<CoreSkull> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreSkull> NBT_FIELDS;
 	
 	protected static final CharKey
 	EXTRA_TYPE = CharKey.literal("ExtraType"),
@@ -31,7 +31,7 @@ public class CoreSkull extends CoreTileEntity implements Skull {
 			holder.setPlayerName(reader.readStringTag());
 		};
 		NBT_FIELDS.setField(EXTRA_TYPE, name);
-		NBT_FIELDS.setContainer(OWNER)
+		NBT_FIELDS.setSet(OWNER)
 		.setField(UUID, (holder, reader) -> {
 			holder.setPlayerUUID(reader.readUUID());
 		}).setField(NAME, name).setField(PROPERTIES, (holder, reader) -> {
@@ -110,7 +110,7 @@ public class CoreSkull extends CoreTileEntity implements Skull {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreSkull> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreSkull> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

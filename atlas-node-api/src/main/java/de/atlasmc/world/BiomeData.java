@@ -8,13 +8,13 @@ import de.atlasmc.util.EnumValueCache;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.AbstractNBTBase;
 import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.NBTHolder;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class BiomeData extends AbstractNBTBase {
 
-	protected static final NBTFieldContainer<BiomeData> NBT_FIELDS;
+	protected static final NBTFieldSet<BiomeData> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_HAS_PRECIPITATION = CharKey.literal("has_precipitation"),
@@ -29,7 +29,7 @@ public class BiomeData extends AbstractNBTBase {
 	NBT_SPAWNN_COSTS = CharKey.literal("spawn_costs");
 	
 	static {
-		NBT_FIELDS = NBTFieldContainer.newContainer();
+		NBT_FIELDS = NBTFieldSet.newSet();
 		NBT_FIELDS.setField(NBT_HAS_PRECIPITATION, (holder, reader) -> {
 			holder.precipitation = reader.readBoolean();
 		});
@@ -133,7 +133,7 @@ public class BiomeData extends AbstractNBTBase {
 	}
 
 	@Override
-	protected NBTFieldContainer<? extends NBTHolder> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends NBTHolder> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

@@ -49,7 +49,7 @@ import de.atlasmc.util.map.ArrayListMultimap;
 import de.atlasmc.util.map.Multimap;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
@@ -89,7 +89,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+7;
 	
-	protected static final NBTFieldContainer<CoreLivingEntity> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreLivingEntity> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_ABSORPTION_AMOUNT = CharKey.literal("AbsorptionAmount"),
@@ -181,7 +181,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 				instance.setModifiers(modifiers);
 			}
 		});
-		NBT_FIELDS.setContainer(NBT_BRAIN).setUnknownFieldHandler(NBTField.skip()); // TODO skipped unknown brain contents till further use
+		NBT_FIELDS.setSet(NBT_BRAIN).setUnknownFieldHandler(NBTField.skip()); // TODO skipped unknown brain contents till further use
 		NBT_FIELDS.setField(NBT_DEATH_TIME, (holder, reader) -> {
 			holder.setDeathAnimationTime(reader.readShortTag());
 		});
@@ -354,7 +354,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	}
 
 	@Override
-	protected NBTFieldContainer<? extends CoreLivingEntity> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreLivingEntity> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

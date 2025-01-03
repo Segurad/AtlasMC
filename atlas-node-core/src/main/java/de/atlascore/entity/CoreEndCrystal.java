@@ -10,7 +10,7 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.MathUtil;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -23,7 +23,7 @@ public class CoreEndCrystal extends CoreEntity implements EndCrystal {
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+2;
 	
-	protected static final NBTFieldContainer<CoreEndCrystal> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreEndCrystal> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_BEAM_TARGET = CharKey.literal("BeamTarget"),
@@ -62,7 +62,7 @@ public class CoreEndCrystal extends CoreEntity implements EndCrystal {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreEndCrystal> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreEndCrystal> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

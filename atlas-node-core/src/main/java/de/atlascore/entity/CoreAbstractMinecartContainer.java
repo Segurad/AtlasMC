@@ -10,13 +10,13 @@ import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public abstract class CoreAbstractMinecartContainer extends CoreAbstractMinecart implements AbstractMinecartContainer {
 
-	protected static final NBTFieldContainer<CoreAbstractMinecartContainer> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreAbstractMinecartContainer> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_ITEMS = CharKey.literal("Items"),
@@ -53,7 +53,7 @@ public abstract class CoreAbstractMinecartContainer extends CoreAbstractMinecart
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreAbstractMinecartContainer> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreAbstractMinecartContainer> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

@@ -10,7 +10,7 @@ import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.CustomModelDataComponent;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTException;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
@@ -26,7 +26,7 @@ import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CoreCustomModelDataComponent extends AbstractItemComponent implements CustomModelDataComponent {
 	
-	protected static final NBTFieldContainer<CoreCustomModelDataComponent> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreCustomModelDataComponent> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_FLOATS = CharKey.literal("floats"),
@@ -35,7 +35,7 @@ public class CoreCustomModelDataComponent extends AbstractItemComponent implemen
 	NBT_COLORS = CharKey.literal("colors");
 	
 	static {
-		NBT_FIELDS = NBTFieldContainer.newContainer();
+		NBT_FIELDS = NBTFieldSet.newSet();
 		NBT_FIELDS.setField(NBT_FLOATS, (holder, reader) -> {
 			FloatArrayList floats = new FloatArrayList();
 			reader.readNextEntry();

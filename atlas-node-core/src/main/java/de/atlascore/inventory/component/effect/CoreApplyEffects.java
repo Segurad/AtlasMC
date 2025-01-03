@@ -17,7 +17,7 @@ import de.atlasmc.inventory.component.effect.ApplyEffects;
 import de.atlasmc.potion.PotionEffect;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
@@ -26,14 +26,14 @@ import io.netty.buffer.ByteBuf;
 
 public class CoreApplyEffects implements ApplyEffects {
 	
-	protected static final NBTFieldContainer<CoreApplyEffects> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreApplyEffects> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_PROPABILITY = CharKey.literal("probability"),
 	NBT_EFFECTS = CharKey.literal("effects");
 	
 	static {
-		NBT_FIELDS = NBTFieldContainer.newContainer();
+		NBT_FIELDS = NBTFieldSet.newSet();
 		NBT_FIELDS.setField(NBT_EFFECTS, (holder, reader) -> {
 			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {

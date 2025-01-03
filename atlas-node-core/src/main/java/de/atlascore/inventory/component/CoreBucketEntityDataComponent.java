@@ -12,7 +12,7 @@ import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.BucketEntityDataComponent;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
@@ -35,10 +35,10 @@ public class CoreBucketEntityDataComponent extends AbstractItemComponent impleme
 	NBT_BUCKET_VARIANT_TAG = CharKey.literal("BucketVariantTag"),
 	NBT_TYPE = CharKey.literal("type");
 	
-	protected static final NBTFieldContainer<CoreBucketEntityDataComponent> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreBucketEntityDataComponent> NBT_FIELDS;
 	
 	static {
-		NBT_FIELDS = NBTFieldContainer.newContainer();
+		NBT_FIELDS = NBTFieldSet.newSet();
 		NBT_FIELDS.setField(NBT_NO_AI, (holder, reader) -> {
 			holder.ai = !reader.readBoolean();
 		});

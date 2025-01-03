@@ -8,7 +8,7 @@ import de.atlasmc.entity.Parrot;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreParrot extends CoreTameable implements Parrot {
@@ -18,7 +18,7 @@ public class CoreParrot extends CoreTameable implements Parrot {
 	
 	protected static final int LAST_META_INDEX = CoreTameable.LAST_META_INDEX+1;
 	
-	protected static final NBTFieldContainer<CoreParrot> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreParrot> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_VARIANT = CharKey.literal("Variant");
@@ -35,7 +35,7 @@ public class CoreParrot extends CoreTameable implements Parrot {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreParrot> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreParrot> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

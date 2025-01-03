@@ -14,7 +14,7 @@ import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.LlamaInventory;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreLlama extends CoreChestedHorse implements Llama {
@@ -28,7 +28,7 @@ public class CoreLlama extends CoreChestedHorse implements Llama {
 
 	protected static final int LAST_META_INDEX = CoreChestedHorse.LAST_META_INDEX+3;
 	
-	protected static final NBTFieldContainer<CoreLlama> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreLlama> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_DECOR_ITEM = CharKey.literal("DecorItem"),
@@ -63,7 +63,7 @@ public class CoreLlama extends CoreChestedHorse implements Llama {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreLlama> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreLlama> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

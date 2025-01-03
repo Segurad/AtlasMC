@@ -13,7 +13,7 @@ import de.atlasmc.sound.EnumSound;
 import de.atlasmc.sound.Sound;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -21,12 +21,12 @@ import io.netty.buffer.ByteBuf;
 
 public class CorePlaySound implements PlaySound {
 
-	protected static final NBTFieldContainer<CorePlaySound> NBT_FIELDS;
+	protected static final NBTFieldSet<CorePlaySound> NBT_FIELDS;
 	
 	protected static final CharKey NBT_SOUND = CharKey.literal("sound");
 	
 	static {
-		NBT_FIELDS = NBTFieldContainer.newContainer();
+		NBT_FIELDS = NBTFieldSet.newSet();
 		NBT_FIELDS.setField(NBT_SOUND, (holder, reader) -> {
 			holder.sound = Sound.fromNBT(reader);
 		});

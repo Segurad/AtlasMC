@@ -9,12 +9,12 @@ import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreFurnace extends CoreAbstractContainerTile<AbstractFurnaceInventory> implements Furnace {
 
-	protected static final NBTFieldContainer<CoreFurnace> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreFurnace> NBT_FIELDS;
 	
 	protected static final CharKey
 	BURN_TIME = CharKey.literal("BurnTime"),
@@ -44,7 +44,7 @@ public class CoreFurnace extends CoreAbstractContainerTile<AbstractFurnaceInvent
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreFurnace> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreFurnace> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 

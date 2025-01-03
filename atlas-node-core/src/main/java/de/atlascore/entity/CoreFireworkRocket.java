@@ -14,7 +14,7 @@ import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.component.FireworksComponent;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreFireworkRocket extends CoreAbstractProjectile implements FireworkRocket {
@@ -28,7 +28,7 @@ public class CoreFireworkRocket extends CoreAbstractProjectile implements Firewo
 	
 	protected static final int LAST_META_INDEX = CoreAbstractProjectile.LAST_META_INDEX+3;
 	
-	protected static final NBTFieldContainer<CoreFireworkRocket> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreFireworkRocket> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_LIFE = CharKey.literal("Life"),
@@ -66,7 +66,7 @@ public class CoreFireworkRocket extends CoreAbstractProjectile implements Firewo
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreFireworkRocket> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreFireworkRocket> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 	

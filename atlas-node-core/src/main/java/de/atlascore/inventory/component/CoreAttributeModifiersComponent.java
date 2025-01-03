@@ -19,7 +19,7 @@ import de.atlasmc.util.map.ListMultimap;
 import de.atlasmc.util.map.Multimap;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
@@ -29,7 +29,7 @@ import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CoreAttributeModifiersComponent extends AbstractItemComponent implements AttributeModifiersComponent {
 
-	protected static final NBTFieldContainer<CoreAttributeModifiersComponent> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreAttributeModifiersComponent> NBT_FIELDS;
 	protected static final CharKey 
 	NBT_MODIFIERS = CharKey.literal("modifiers"),
 	NBT_TYPE = CharKey.literal("type"),
@@ -40,7 +40,7 @@ public class CoreAttributeModifiersComponent extends AbstractItemComponent imple
 	NBT_SHOW_IN_TOOLTIP = CharKey.literal("show_in_tooltip");
 	
 	static {
-		NBT_FIELDS = NBTFieldContainer.newContainer();
+		NBT_FIELDS = NBTFieldSet.newSet();
 		NBT_FIELDS.setField(NBT_MODIFIERS, (holder, reader) -> {
 			Multimap<Attribute, AttributeModifier> attributes = holder.getAttributeModifiers();
 			reader.readNextEntry();

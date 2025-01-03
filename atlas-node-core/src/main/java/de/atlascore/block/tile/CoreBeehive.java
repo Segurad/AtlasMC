@@ -12,14 +12,14 @@ import de.atlasmc.entity.Bee;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTException;
-import de.atlasmc.util.nbt.NBTFieldContainer;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.Chunk;
 
 public class CoreBeehive extends CoreTileEntity implements Beehive {
 
-	protected static final NBTFieldContainer<CoreBeehive> NBT_FIELDS;
+	protected static final NBTFieldSet<CoreBeehive> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_FLOWER_POS = CharKey.literal("FlowerPos"),
@@ -33,7 +33,7 @@ public class CoreBeehive extends CoreTileEntity implements Beehive {
 	
 	static {
 		NBT_FIELDS = CoreTileEntity.NBT_FIELDS.fork();
-		NBT_FIELDS.setContainer(NBT_FLOWER_POS)
+		NBT_FIELDS.setSet(NBT_FLOWER_POS)
 			.setField(NBT_X, (holder, reader)-> {
 				holder.setFlowerPosX(reader.readIntTag());
 			}).setField(NBT_Y, (holder, reader)-> {
@@ -185,7 +185,7 @@ public class CoreBeehive extends CoreTileEntity implements Beehive {
 	}
 	
 	@Override
-	protected NBTFieldContainer<? extends CoreBeehive> getFieldContainerRoot() {
+	protected NBTFieldSet<? extends CoreBeehive> getFieldSetRoot() {
 		return NBT_FIELDS;
 	}
 
