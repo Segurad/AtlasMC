@@ -39,30 +39,22 @@ The startup pocess provides a context `Map<String, Object>` used to share data b
 
 Stage handler may be automatically registered with `startup-handler.yml` or `@StartupHandlerRegister` annotation. Auto register stage handler must have a constructor without arguments.
 
-## startup-tasks.yml
+## startup-handlers.yml
 
 ```yaml
-tasks: 
-- type: my.stage.task
-  name: myplugin:sometask
-  goal: HANDLE
-  stage: somestage
-  dependencies:
-  - someplugin:task
-  soft-dependencies:
-  - someplugin:task
-  before:
-  - someplugin:task
+somestage: 
+- my.stage.Handler
+- my.other.stage.Handler
 ```
 
 ##  Annotation
 
 ```java
-@StartupTaskRegister(stage = "somestage", name = "myplugin:sometask", dependencies = { "someplugin:task" })
-class MyStartupTask implements StartupTask {
+@StartupHandlerRegister({ "somestage" })
+class MyStageHandler implements StartupStageHandler {
 
     @Override
-    public boolean run(StartupContext context) {
+    public void handleStage(StartupContext context) {
         // TODO handle stage
     }
 
