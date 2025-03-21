@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Gate;
 
@@ -22,8 +22,8 @@ public class CoreGate extends CoreDirectional4Faces implements Gate {
 	private boolean powered;
 	private boolean inWall;
 	
-	public CoreGate(Material material) {
-		super(material);
+	public CoreGate(BlockType type) {
+		super(type);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class CoreGate extends CoreDirectional4Faces implements Gate {
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return getType().getBlockStateID()+
 				(powered?0:1)+
 				(open?0:2)+
 				(inWall?0:4)+

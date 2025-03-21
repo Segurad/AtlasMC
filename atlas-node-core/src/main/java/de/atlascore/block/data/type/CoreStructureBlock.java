@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreBlockData;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.StructureBlock;
 
@@ -17,8 +17,8 @@ public class CoreStructureBlock extends CoreBlockData implements StructureBlock 
 	
 	private Mode mode;
 	
-	public CoreStructureBlock(Material material) {
-		super(material);
+	public CoreStructureBlock(BlockType type) {
+		super(type);
 		mode = Mode.LOAD;
 	}
 

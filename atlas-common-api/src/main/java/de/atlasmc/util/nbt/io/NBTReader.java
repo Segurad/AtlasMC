@@ -7,6 +7,8 @@ import java.util.function.IntConsumer;
 import java.util.function.LongConsumer;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.tag.ListTag;
 import de.atlasmc.util.nbt.tag.NBT;
@@ -71,6 +73,7 @@ public interface NBTReader extends Closeable {
 	 * @return sequence or null
 	 * @throws IOException 
 	 */
+	@Nullable
 	CharSequence getFieldName() throws IOException;
 	
 	/**
@@ -78,6 +81,7 @@ public interface NBTReader extends Closeable {
 	 * @return tag type or null
 	 * @throws IOException 
 	 */
+	@Nullable
 	TagType getListType() throws IOException;
 	
 	/**
@@ -100,13 +104,8 @@ public interface NBTReader extends Closeable {
 	 * @return tag type
 	 * @throws IOException 
 	 */
+	@NotNull
 	TagType getType() throws IOException;
-	
-	/**
-	 * Returns whether or not the current tag is a array tag
-	 * @return true if array tag
-	 */
-	boolean isArrayTag();
 	
 	/**
 	 * Returns whether or not the next read element is a entry of a list tag

@@ -7,6 +7,9 @@ import de.atlasmc.util.EnumID;
 import de.atlasmc.util.EnumName;
 import de.atlasmc.util.EnumValueCache;
 
+/**
+ * Represents all component types known to the client custom ones are not included.
+ */
 public enum ComponentType implements EnumID, EnumValueCache, EnumName {
 	
 	CUSTOM_DATA("minecraft:custom_data"),

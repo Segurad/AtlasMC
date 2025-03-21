@@ -3,8 +3,8 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreMultipleFacing4;
-import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Tripwire;
 
@@ -23,8 +23,8 @@ public class CoreTripwire extends CoreMultipleFacing4 implements Tripwire {
 	private boolean powered;
 	private boolean disarmed;
 	
-	public CoreTripwire(Material material) {
-		super(material);
+	public CoreTripwire(BlockType type) {
+		super(type);
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class CoreTripwire extends CoreMultipleFacing4 implements Tripwire {
 
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return getType().getBlockStateID()+
 				(hasFace(BlockFace.WEST)?0:1)+
 				(hasFace(BlockFace.SOUTH)?0:2)+
 				(powered?0:4)+

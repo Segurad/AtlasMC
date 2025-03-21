@@ -1,12 +1,12 @@
 package de.atlasmc.inventory.itempredicate;
 
-import de.atlasmc.Material;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.ItemType;
 
 public interface ItemPredicate {
 
 	boolean match(ItemStack item);
 	
-	boolean match(Material material);
+	boolean match(ItemType type);
 	
 }

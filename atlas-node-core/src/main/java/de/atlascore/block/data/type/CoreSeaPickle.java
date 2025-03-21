@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreWaterlogged;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.SeaPickle;
 
@@ -17,8 +17,8 @@ public class CoreSeaPickle extends CoreWaterlogged implements SeaPickle {
 	
 	private int pickles;
 	
-	public CoreSeaPickle(Material material) {
-		super(material);
+	public CoreSeaPickle(BlockType type) {
+		super(type);
 		pickles = 1;
 		setWaterlogged(true);
 	}

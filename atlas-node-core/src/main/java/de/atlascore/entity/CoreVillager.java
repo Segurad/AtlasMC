@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import de.atlasmc.Material;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Villager;
 import de.atlasmc.entity.data.MetaData;
@@ -43,19 +42,13 @@ public class CoreVillager extends CoreAbstractVillager implements Villager {
 		NBT_FIELDS.setField(NBT_INVENTORY, (holder, reader) -> {
 			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {
-				Material mat = null;
-				if (!NBT_ID.equals(reader.getFieldName())) {
-					reader.mark();
-					reader.search(NBT_ID);
-					mat = Material.getByName(reader.readStringTag());
-					reader.reset();
-				} else mat = Material.getByName(reader.readStringTag());
-				ItemStack item = new ItemStack(mat);
-				item.fromNBT(reader);
+				reader.readNextEntry();
+				ItemStack item = ItemStack.getFromNBT(reader);
 				holder.addPocketItem(item);
 			}
+			reader.readNextEntry();
 		});
-		NBT_FIELDS.setField(NBT_GOSSIPS, NBTField.skip()); // TODO skipped because i found a use case
+		NBT_FIELDS.setField(NBT_GOSSIPS, NBTField.skip()); // TODO skipped because not implemented
 		NBT_FIELDS.setField(NBT_LAST_GOSSIP_DECAY, NBTField.skip()); // TODO see gossip
 		NBT_FIELDS.setField(NBT_XP, (holder, reader) -> {
 			holder.setXp(reader.readIntTag());

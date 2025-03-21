@@ -1,7 +1,7 @@
 package de.atlascore.block;
 
 import de.atlasmc.Location;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.world.Chunk;
 
@@ -23,13 +23,13 @@ public class CoreBlock extends CoreBlockAccess {
 		this.data = data;
 	}
 	
-	public CoreBlock(Location loc, Material type) {
+	public CoreBlock(Location loc, BlockType type) {
 		this(loc, type.createBlockData());
 	}
 
 	@Override
-	public Material getType() {
-		return data.getMaterial();
+	public BlockType getType() {
+		return data.getType();
 	}
 	
 	@Override
@@ -43,12 +43,10 @@ public class CoreBlock extends CoreBlockAccess {
 	}
 	
 	@Override
-	public void setType(Material material) {
-		if (data.getMaterial() == material) 
+	public void setType(BlockType type) {
+		if (data.getType() == type) 
 			return;
-		if (!material.isBlock()) 
-			throw new IllegalArgumentException("Material must be a Block: " + material.getNamespacedKeyRaw());
-		data = material.createBlockData();
+		data = type.createBlockData();
 	}
 	
 	@Override

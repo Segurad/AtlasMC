@@ -1,6 +1,5 @@
 package de.atlascore.plugin;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -8,7 +7,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.CodeSigner;
 import java.security.CodeSource;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.JarEntry;
@@ -20,7 +18,6 @@ import de.atlasmc.log.Logging;
 import de.atlasmc.plugin.JavaPlugin;
 import de.atlasmc.plugin.PluginException;
 import de.atlasmc.util.ByteDataBuffer;
-import de.atlasmc.util.configuration.Configuration;
 
 public class CoreJavaClassLoader extends URLClassLoader {
 	
@@ -31,19 +28,19 @@ public class CoreJavaClassLoader extends URLClassLoader {
 	private final Map<String, Class<?>> classCache;
 	private final CoreJavaPluginLoader loader;
 	
-	public CoreJavaClassLoader(CoreJavaPluginLoader loader, File file, ClassLoader parent, Configuration info) throws IOException {
-		super(new URL[] { file.toURI().toURL() }, parent);
-		this.url = file.toURI().toURL();
-		this.jar = new JarFile(file);
+	public CoreJavaClassLoader(CorePrototypeJavaPlugin prototype, ClassLoader parent) throws IOException {
+		super(new URL[] { prototype.getFile().toURI().toURL() }, parent);
+		this.url = prototype.getFile().toURI().toURL();
+		this.jar = new JarFile(prototype.getFile());
 		this.manifest = jar.getManifest();
 		this.classCache = new ConcurrentHashMap<>();
-		this.loader = loader;
-		
+		this.loader = prototype.getLoader();
 		Class<?> mainClass = null;
+		final String main = prototype.getPluginInfo().getString("main");
 		try {
-			mainClass = Class.forName(info.getString("main"), true, this);
+			mainClass = Class.forName(main, true, this);
 		} catch (ClassNotFoundException e) {
-			throw new PluginException("Main class not found: " + info.getString("main") +"!");
+			throw new PluginException("Main class not found: " + main +"!");
 		}
 		if (!mainClass.isAssignableFrom(JavaPlugin.class))
 			throw new PluginException("Main class is not assignable from JavaPlugin!");
@@ -53,12 +50,8 @@ public class CoreJavaClassLoader extends URLClassLoader {
 				| NoSuchMethodException | SecurityException e) {
 			throw new PluginException("Unable to instanciate Plugin!", e);
 		}
-		String name = info.getString("name");
-		String version = info.getString("version");
-		List<String> author = List.copyOf(info.getStringList("author", List.of()));
-		String description = info.getString("description");
 		Log logger = Logging.getLogger(plugin.getName(), "Plugin");
-		plugin.init(file, loader, logger, name, version, author, description);
+		plugin.init(prototype, logger);
 	}
 
 	@Override

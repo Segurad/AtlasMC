@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreAgeable;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.CaveVines;
 
@@ -17,8 +17,8 @@ public class CoreCaveVines extends CoreAgeable implements CaveVines {
 	
 	private boolean berries;
 	
-	public CoreCaveVines(Material material) {
-		super(material, 25);
+	public CoreCaveVines(BlockType type) {
+		super(type, 25);
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class CoreCaveVines extends CoreAgeable implements CaveVines {
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+(berries?0:1)+getAge()*2;
+		return getType().getBlockStateID()+(berries?0:1)+getAge()*2;
 	}
 	
 	@Override

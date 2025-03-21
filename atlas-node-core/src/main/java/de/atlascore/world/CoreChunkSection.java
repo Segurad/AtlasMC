@@ -1,6 +1,6 @@
 package de.atlascore.world;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.util.NibbleArray;
 import de.atlasmc.util.palette.AdaptivePalette;
@@ -65,7 +65,7 @@ public class CoreChunkSection implements ChunkSection {
 	public int getBlockCount() {
 		int count = 0;
 		for (PaletteEntry<BlockData> entry : blockData.getEntries()) {
-			if (entry.getEntry().getMaterial().getNamespacedKey().equals(Material.AIR))
+			if (entry.getEntry().getType().getNamespacedKey().equals(BlockType.AIR))
 				continue;
 			count += entry.count();
 		}
@@ -89,9 +89,9 @@ public class CoreChunkSection implements ChunkSection {
 	}
 
 	@Override
-	public Material getBlockType(int x, int y, int z) {
+	public BlockType getBlockType(int x, int y, int z) {
 		BlockData data = blockData.getEntry(getBlockIndex(x, y, z));
-		return data != null ? data.getMaterial() : null;
+		return data != null ? data.getType() : null;
 	}
 
 	@Override

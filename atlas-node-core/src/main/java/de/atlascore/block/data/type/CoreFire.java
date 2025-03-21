@@ -4,8 +4,8 @@ import java.util.List;
 
 import de.atlascore.block.data.CoreAbstractMultipleFacing;
 import de.atlascore.block.data.CoreMultipleFacing5;
-import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Fire;
 
@@ -20,8 +20,8 @@ public class CoreFire extends CoreMultipleFacing5 implements Fire {
 	private int age;
 	private int maxage;
 	
-	public CoreFire(Material material) {
-		super(material);
+	public CoreFire(BlockType type) {
+		super(type);
 		this.age = 0;
 		this.maxage = 15;
 	}
@@ -45,7 +45,7 @@ public class CoreFire extends CoreMultipleFacing5 implements Fire {
 
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return getType().getBlockStateID()+
 				(hasFace(BlockFace.WEST)?0:1)+
 				(hasFace(BlockFace.UP)?0:2)+
 				(hasFace(BlockFace.SOUTH)?0:4)+

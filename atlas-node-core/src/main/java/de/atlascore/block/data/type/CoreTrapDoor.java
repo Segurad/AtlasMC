@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.TrapDoor;
 
@@ -24,8 +24,8 @@ public class CoreTrapDoor extends CoreDirectional4Faces implements TrapDoor {
 	private boolean powered;
 	private boolean waterlogged;
 	
-	public CoreTrapDoor(Material material) {
-		super(material);
+	public CoreTrapDoor(BlockType type) {
+		super(type);
 		half = Half.BOTTOM;
 	}
 	
@@ -80,7 +80,7 @@ public class CoreTrapDoor extends CoreDirectional4Faces implements TrapDoor {
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return getType().getBlockStateID()+
 				(waterlogged?0:1)+
 				(powered?0:2)+
 				(open?0:4)+

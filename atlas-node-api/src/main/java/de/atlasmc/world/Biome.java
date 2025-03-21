@@ -1,56 +1,33 @@
 package de.atlasmc.world;
 
+import java.io.IOException;
+
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.registry.ProtocolRegistry;
+import de.atlasmc.registry.ProtocolRegistryValueBase;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
-import static de.atlasmc.io.protocol.ProtocolUtil.*;
+import de.atlasmc.util.nbt.io.NBTReader;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 @RegistryHolder(key = "minecraft:worldgen/biome", target = Target.PROTOCOL)
-public class Biome implements Namespaced {
+public class Biome extends ProtocolRegistryValueBase {
 	
 	public static final ProtocolRegistry<Biome> REGISTRY;
 
 	static {
 		REGISTRY = Registries.createRegistry(Biome.class);
-		REGISTRY.setIDSupplier(Biome::getID);
-		REGISTRY.setDeserializer((id, buf, reader) -> {
-			NamespacedKey key = readIdentifier(buf);
-			Biome biome = new Biome(key, id);
-			if (buf.readBoolean()) {
-				BiomeData data = new BiomeData();
-				biome.setData(data);
-				reader.readNextEntry();
-				data.fromNBT(reader);
-			}
-			return biome;
-		});
-		REGISTRY.setSerializer((data, buf, writer) -> {
-			writeIdentifier(data.getNamespacedKey(), buf);
-			if (data.data == null) {
-				buf.writeBoolean(false);
-			} else {
-				buf.writeBoolean(true);
-				writer.writeCompoundTag();
-				data.data.toNBT(writer, false);
-				writer.writeEndTag();
-			}
-		});
 	}
 	
-	private NamespacedKey name;
-	private int id;
 	private BiomeData data;
 	
-	public Biome(NamespacedKey name) {
-		this(name, -1);
+	public Biome(NamespacedKey key) {
+		super(key, -1);
 	}
 	
-	public Biome(NamespacedKey name, int id) {
-		this.name = name;
-		this.id = id;
+	public Biome(NamespacedKey key, int id) {
+		super(key, id);
 	}
 	
 	public BiomeData getData() {
@@ -62,12 +39,37 @@ public class Biome implements Namespaced {
 	}
 	
 	@Override
-	public NamespacedKey getNamespacedKey() {
-		return name;
+	public boolean hasNBT() {
+		return data != null;
 	}
 	
-	public int getID() {
-		return id;
+	@Override
+	public void fromNBT(NBTReader reader) throws IOException {
+		data = new BiomeData();
+		data.fromNBT(reader);
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		if (data == null)
+			return;
+		data.toNBT(writer, systemData);
+	}
+	
+	public static Biome get(NamespacedKey key) {
+		return REGISTRY.get(key);
+	}
+	
+	public static Biome get(String key) {
+		return REGISTRY.get(key);
+	}
+	
+	public static Biome getByID(int id) {
+		return REGISTRY.getByID(id);
+	}
+	
+	public static ProtocolRegistry<Biome> getRegistry() {
+		return REGISTRY;
 	}
 
 }

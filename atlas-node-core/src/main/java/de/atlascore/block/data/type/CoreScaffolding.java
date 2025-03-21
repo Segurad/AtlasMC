@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreWaterlogged;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Scaffolding;
 
@@ -20,8 +20,8 @@ public class CoreScaffolding extends CoreWaterlogged implements Scaffolding {
 	private boolean bottom;
 	private int distance;
 	
-	public CoreScaffolding(Material material) {
-		super(material);
+	public CoreScaffolding(BlockType type) {
+		super(type);
 		distance = 7;
 	}
 

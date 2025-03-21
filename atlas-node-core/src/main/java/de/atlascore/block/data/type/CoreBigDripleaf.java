@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreWaterloggedDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.BigDripleaf;
 
@@ -17,8 +17,8 @@ public class CoreBigDripleaf extends CoreWaterloggedDirectional4Faces implements
 	
 	private Tilt tilt;
 	
-	public CoreBigDripleaf(Material material) {
-		super(material);
+	public CoreBigDripleaf(BlockType type) {
+		super(type);
 		tilt = Tilt.NONE;
 	}
 
@@ -36,7 +36,7 @@ public class CoreBigDripleaf extends CoreWaterloggedDirectional4Faces implements
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID() + (isWaterlogged()?0:1)+tilt.getID()*2+getFaceValue()*8;
+		return type.getBlockStateID() + (waterlogged?0:1)+tilt.getID()*2+getFaceValue()*8;
 	}
 	
 	@Override

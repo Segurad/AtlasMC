@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreWaterlogged;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.PointedDripstone;
 
@@ -20,8 +20,8 @@ public class CorePointedDripstone extends CoreWaterlogged implements PointedDrip
 	private Thickness thickness;
 	private VerticalDirection direction;
 	
-	public CorePointedDripstone(Material material) {
-		super(material);
+	public CorePointedDripstone(BlockType type) {
+		super(type);
 		thickness = Thickness.TIP;
 		direction = VerticalDirection.UP;
 	}

@@ -15,6 +15,7 @@ public class PacketInUseItemOn extends AbstractPacket implements PacketPlayIn {
 	public float cursorPosY;
 	public float cursorPosZ;
 	public boolean insideBlock;
+	public boolean worldBorderHit;
 	public int sequence;
 	
 	@Override

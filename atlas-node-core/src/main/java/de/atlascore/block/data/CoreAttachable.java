@@ -2,7 +2,7 @@ package de.atlascore.block.data;
 
 import java.util.List;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.Attachable;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
@@ -16,8 +16,8 @@ public class CoreAttachable extends CoreBlockData implements Attachable {
 	
 	private boolean attached;
 	
-	public CoreAttachable(Material material) {
-		super(material);
+	public CoreAttachable(BlockType type) {
+		super(type);
 	}
 	
 	@Override

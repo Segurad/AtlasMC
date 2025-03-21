@@ -1,6 +1,7 @@
 package de.atlasmc.util.nbt;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import de.atlasmc.util.nbt.tag.ByteArrayTag;
 import de.atlasmc.util.nbt.tag.ByteTag;
@@ -18,30 +19,38 @@ import de.atlasmc.util.nbt.tag.StringTag;
 
 public enum TagType {
 
-	TAG_END,
-	BYTE(true),
-	SHORT(true),
-	INT(true),
-	LONG(true),
-	FLOAT(true),
-	DOUBLE(true),
-	BYTE_ARRAY,
-	STRING,
-	LIST,
-	COMPOUND,
-	INT_ARRAY,
-	LONG_ARRAY;
+	TAG_END(null),
+	BYTE(ByteTag::new, true),
+	SHORT(ShortTag::new, true),
+	INT(IntTag::new, true),
+	LONG(LongTag::new, true),
+	FLOAT(FloatTag::new, true),
+	DOUBLE(DoubleTag::new, true),
+	BYTE_ARRAY(ByteArrayTag::new),
+	STRING(StringTag::new),
+	LIST(ListTag::new),
+	COMPOUND(CompoundTag::new),
+	INT_ARRAY(IntArrayTag::new),
+	LONG_ARRAY(LongArrayTag::new);
 	
 	private static List<TagType> VALUES;
 	
-	private boolean isNum;
+	private final boolean isNum;
+	private final boolean isArray;
+	private final Supplier<NBT> constructor;
 	
-	private TagType() {
-		this(false);
+	private TagType(Supplier<NBT> constructor) {
+		this(constructor, false);
 	}
 	
-	private TagType(boolean num) {
+	private TagType(Supplier<NBT> constructor, boolean num) {
+		this(constructor, num, false);
+	}
+	
+	private TagType(Supplier<NBT> constructor, boolean num, boolean array) {
 		this.isNum = num;
+		this.isArray = array;
+		this.constructor = constructor;
 	}
 	
 	public int getID() {
@@ -62,36 +71,13 @@ public enum TagType {
 	public boolean isNumber() {
 		return isNum;
 	}
+	
+	public boolean isArray() {
+		return isArray;
+	}
 
 	public NBT createTag() {
-		switch(this) {
-		case BYTE:
-			return new ByteTag();
-		case BYTE_ARRAY:
-			return new ByteArrayTag();
-		case COMPOUND:
-			return new CompoundTag();
-		case DOUBLE:
-			return new DoubleTag();
-		case FLOAT:
-			return new FloatTag();
-		case INT:
-			return new IntTag();
-		case INT_ARRAY:
-			return new IntArrayTag();
-		case LIST:
-			return new ListTag();
-		case LONG:
-			return new LongTag();
-		case LONG_ARRAY:
-			return new LongArrayTag();
-		case SHORT:
-			return new ShortTag();
-		case STRING:
-			return new StringTag();
-		default:
-			return null;
-		}
+		return constructor == null ? null : constructor.get();
 	}
 
 	public NBT createTag(Object field) {
@@ -99,34 +85,12 @@ public enum TagType {
 	}
 	
 	public NBT createTag(String name, Object field) {
-		switch (this) {
-		case BYTE:
-			return new ByteTag(name, (byte) field);
-		case BYTE_ARRAY:
-			return new ByteArrayTag(name, (byte[]) field);
-		case COMPOUND:
-			return new CompoundTag(name);
-		case DOUBLE:
-			return new DoubleTag(name, (double) field);
-		case FLOAT:
-			return new FloatTag(name, (float) field);
-		case INT:
-			return new IntTag(name, (int) field);
-		case INT_ARRAY:
-			return new IntArrayTag(name, (int[]) field);
-		case LIST:
-			return new ListTag(name, (TagType) field);
-		case LONG:
-			return new LongTag(name, (long) field);
-		case LONG_ARRAY:
-			return new LongArrayTag(name, (long[]) field);
-		case SHORT:
-			return new ShortTag(name, (short) field);
-		case STRING:
-			return new StringTag(name, (String) field);
-		default:
+		if (constructor == null)
 			return null;
-		}
+		NBT nbt = constructor.get();
+		nbt.setName(name);
+		nbt.setData(field);
+		return nbt;
 	}
 	
 	/**

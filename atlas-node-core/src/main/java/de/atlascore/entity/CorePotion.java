@@ -3,7 +3,6 @@ package de.atlascore.entity;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlasmc.Material;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Potion;
 import de.atlasmc.inventory.ItemStack;
@@ -22,15 +21,7 @@ public class CorePotion extends CoreThrowableProjectile implements Potion {
 		NBT_FIELDS = CoreThrowableProjectile.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_POTION, (holder, reader) -> {
 			reader.readNextEntry();
-			Material mat = null;
-			if (!NBT_ID.equals(reader.getFieldName())) {
-				reader.mark();
-				reader.search(NBT_ID);
-				mat = Material.getByName(reader.readStringTag());
-				reader.reset();
-			} else mat = Material.getByName(reader.readStringTag());
-			ItemStack item = new ItemStack(mat);
-			item.fromNBT(reader);
+			ItemStack item = ItemStack.getFromNBT(reader);
 			holder.setItem(item);
 		});
 	}

@@ -115,6 +115,7 @@ public class CoreBannerPatternsComponent extends AbstractItemComponent implement
 	public void fromNBT(NBTReader reader) throws IOException {
 		reader.readNextEntry();
 		while (reader.getRestPayload() > 0) {
+			reader.readNextEntry();
 			DyeColor color = null;
 			PatternType pattern = null;
 			while (reader.getType() != TagType.TAG_END) {

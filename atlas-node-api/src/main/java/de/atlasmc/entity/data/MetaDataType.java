@@ -487,7 +487,7 @@ public abstract class MetaDataType<T> {
 				DataSet<Biome> biomes = readDataSet(Biome.REGISTRY, in);
 				return new WolfVariant(wild, tame, angry, biomes);
 			}
-			return WolfVariant.REGISTRY.getByID(id-1);
+			return WolfVariant.getByID(id-1);
 		}
 
 		@Override

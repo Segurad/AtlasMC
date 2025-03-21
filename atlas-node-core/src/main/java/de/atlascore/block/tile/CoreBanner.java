@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.DyeColor;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.Banner;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.util.map.key.CharKey;
@@ -46,7 +46,7 @@ public class CoreBanner extends CoreTileEntity implements Banner {
 	private List<Pattern> patterns;
 	private Chat name;
 	
-	public CoreBanner(Material type) {
+	public CoreBanner(BlockType type) {
 		super(type);
 	}
 
@@ -71,7 +71,8 @@ public class CoreBanner extends CoreTileEntity implements Banner {
 
 	@Override
 	public Pattern getPattern(int index) {
-		if (patterns == null) return null;
+		if (patterns == null) 
+			return null;
 		return patterns.get(index);
 	}
 

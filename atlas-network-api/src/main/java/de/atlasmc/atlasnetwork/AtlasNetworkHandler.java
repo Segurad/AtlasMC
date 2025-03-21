@@ -22,7 +22,7 @@ public interface AtlasNetworkHandler extends Tickable {
 	
 	ProfileHandler getProfileHandler();
 	
-	PermissionManager getPermissionProvider();
+	PermissionManager getPermissionManager();
 	
 	Future<NodeConfig> getNodeConfig(String name);
 	

@@ -2,7 +2,7 @@ package de.atlascore.block.data;
 
 import java.util.List;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.Snowable;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
@@ -16,8 +16,8 @@ public class CoreSnowable extends CoreBlockData implements Snowable {
 	
 	private boolean snowy;
 	
-	public CoreSnowable(Material material) {
-		super(material);
+	public CoreSnowable(BlockType type) {
+		super(type);
 	}
 
 	@Override

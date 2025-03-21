@@ -6,12 +6,18 @@ import java.util.regex.Pattern;
 
 import de.atlasmc.util.NumberConversion;
 import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 
 public class NamespacedKey {
+
+	/**
+	 * Key for {@link Namespaced} classes that have no unique key
+	 */
+	public static final NamespacedKey INLINE_DEFINITION;
 	
-	public static final Pattern NAMESPACE_PATTERN = Pattern.compile("^[a-z0-9\\.\\-_]+$");
-	public static final Pattern KEY_PATTERN = Pattern.compile("^[a-z0-9\\.\\-_\\/]+$");
-	public static final Pattern NAMESPACED_KEY_PATTERN = Pattern.compile("^[a-z0-9\\.\\-_]+:[a-z0-9\\.\\-_\\/]+$");
+	public static final Pattern NAMESPACE_PATTERN = Pattern.compile("^[a-z0-9\\.\\-_\\/]+$");
+	public static final Pattern KEY_PATTERN = Pattern.compile("^[a-z0-9\\.\\-_\\/:]+$");
+	public static final Pattern NAMESPACED_KEY_PATTERN = Pattern.compile("^[a-z0-9\\.\\-_\\/]+:[a-z0-9\\.\\-_\\/:]+$");
 	
 	public static final String MINECRAFT = "minecraft";
 	public static final String ATLAS = "atlas";
@@ -22,6 +28,7 @@ public class NamespacedKey {
 		String rawCacheSize = System.getProperty("de.atlasmc.namespacedkey.literalCacheSize");
 		int cacheSize = NumberConversion.toInt(rawCacheSize, 512);
 		CACHE = new ConcurrentHashMap<>(cacheSize);
+		INLINE_DEFINITION = literal("atlas:inline-definition");
 	}
 	
 	private final String key;
@@ -45,6 +52,23 @@ public class NamespacedKey {
 	@Override
 	public String toString() {
 		return combination;
+	}
+	
+	/**
+	 * Returns whether or no {@link #getKey()} can be represented as valid {@link NamespacedKey}
+	 * @return true if child key
+	 */
+	public boolean hasChildKey() {
+		return key.indexOf(':') != -1;
+	}
+	
+	/**
+	 * Returns the {@link NamespacedKey} representation of {@link #getKey()} or null if not valid NamespacedKey
+	 * @return child or null
+	 */
+	@Nullable
+	public NamespacedKey getChildKey() {
+		return hasChildKey() ? NamespacedKey.of(key) : null;
 	}
 	
 	public static interface Namespaced {

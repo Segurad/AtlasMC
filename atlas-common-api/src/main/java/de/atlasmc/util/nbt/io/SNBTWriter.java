@@ -253,7 +253,6 @@ public class SNBTWriter implements NBTWriter {
 	
 	private void prepareTag(TagType type, CharSequence name) throws IOException {
 		ensureOpen();
-		System.out.println("Type: " + type + " Name: " + name + " Depth: " + depth + (list != null ? " Payload: " + list.payload + " ListDepth " + list.depth : ""));
 		if (list != null && list.depth == depth) {
 			if (list.payload > 0) {
 				if (type != list.type && !(list.type == TagType.COMPOUND && type == TagType.TAG_END)) {

@@ -3,6 +3,7 @@
 - [Administration](#administration)
 - [Development](#development)
 - [Atlas Development](#atlas-development)
+- [Misc](#misc)
 
 ## Administration
 
@@ -23,3 +24,7 @@
 ## Atlas Development
 
 - [Usefull resources](atlasdev/usefull_resources.md)
+
+## Misc
+
+- [Doc Styleguide](misc/page_template.md)

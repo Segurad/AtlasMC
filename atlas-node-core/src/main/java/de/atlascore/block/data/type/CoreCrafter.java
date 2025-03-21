@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreOrientable;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Crafter;
 
@@ -20,8 +20,8 @@ protected static final List<BlockDataProperty<?>> PROPERTIES;
 	protected boolean triggered;
 	protected boolean crafting;
 	
-	public CoreCrafter(Material material) {
-		super(material);
+	public CoreCrafter(BlockType type) {
+		super(type);
 	}
 	
 	@Override
@@ -51,7 +51,7 @@ protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	@Override
 	public int getStateID() {
-		return material.getBlockStateID()+(triggered?0:1)+orientation.ordinal()*2+(crafting?0:24);
+		return type.getBlockStateID()+(triggered?0:1)+orientation.ordinal()*2+(crafting?0:24);
 	}
 	
 	@Override

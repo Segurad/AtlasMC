@@ -3,7 +3,6 @@ package de.atlascore.entity;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlasmc.Material;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.HumanEntity;
@@ -14,6 +13,7 @@ import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.CraftingInventory;
 import de.atlasmc.inventory.InventoryType;
+import de.atlasmc.inventory.ItemType;
 import de.atlasmc.inventory.MainHand;
 import de.atlasmc.inventory.PlayerInventory;
 import de.atlasmc.util.CooldownHandler;
@@ -43,7 +43,7 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 	private Entity shoulderRight;
 	private Entity shoulderLeft;
 	private byte shoulderChanged; // 0x01 Right 0x02 Left
-	private final CooldownHandler<Material> cooldowns;
+	private final CooldownHandler<ItemType> cooldowns;
 	private int foodLevel = 20;
 	private float foodExhaustionLevel;
 	private float foodSaturationLevel;
@@ -53,7 +53,7 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 		this.cooldowns = createItemCooldownHander();
 	}
 	
-	protected CooldownHandler<Material> createItemCooldownHander() { 
+	protected CooldownHandler<ItemType> createItemCooldownHander() { 
 		return new CooldownHandler<>();
 	}
 	
@@ -197,28 +197,28 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 	}
 
 	@Override
-	public void setCooldown(Material material, int ticks) {
-		cooldowns.setCooldown(material, ticks);
+	public void setCooldown(ItemType type, int ticks) {
+		cooldowns.setCooldown(type, ticks);
 	}
 
 	@Override
-	public int getCooldown(Material material) {
-		return cooldowns.getCooldown(material);
+	public int getCooldown(ItemType type) {
+		return cooldowns.getCooldown(type);
 	}
 
 	@Override
-	public int getCooldownPast(Material material) {
-		return cooldowns.getCooldownPast(material);
+	public int getCooldownPast(ItemType type) {
+		return cooldowns.getCooldownPast(type);
 	}
 
 	@Override
-	public boolean hasCooldown(Material material) {
-		return cooldowns.hasCooldown(material);
+	public boolean hasCooldown(ItemType type) {
+		return cooldowns.hasCooldown(type);
 	}
 
 	@Override
-	public int removeCooldown(Material material) {
-		return cooldowns.removeCooldown(material);
+	public int removeCooldown(ItemType type) {
+		return cooldowns.removeCooldown(type);
 	}
 
 	@Override

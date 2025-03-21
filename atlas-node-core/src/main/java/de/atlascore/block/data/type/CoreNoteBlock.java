@@ -3,9 +3,9 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CorePowerable;
-import de.atlasmc.Instrument;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
+import de.atlasmc.block.data.type.Instrument;
 import de.atlasmc.block.data.type.NoteBlock;
 
 public class CoreNoteBlock extends CorePowerable implements NoteBlock {
@@ -21,8 +21,8 @@ public class CoreNoteBlock extends CorePowerable implements NoteBlock {
 	private Instrument instrument;
 	private byte note;
 	
-	public CoreNoteBlock(Material material) {
-		super(material);
+	public CoreNoteBlock(BlockType type) {
+		super(type);
 		this.instrument = Instrument.HARP;
 	}
 
@@ -49,7 +49,7 @@ public class CoreNoteBlock extends CorePowerable implements NoteBlock {
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+instrument.ordinal()*48+note*2+(isPowered()?0:1);
+		return type.getBlockStateID()+instrument.ordinal()*48+note*2+(powered?0:1);
 	}
 
 	@Override

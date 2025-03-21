@@ -17,22 +17,22 @@ class TypeProperty extends AbstractMultiEnumProperty {
 	@Override
 	public void set(BlockData data, Enum<?> value) {
 		if (data instanceof Chest chest) {
-			chest.setType((de.atlasmc.block.data.type.Chest.Type) value);
+			chest.setChestType((de.atlasmc.block.data.type.Chest.Type) value);
 		} else if (data instanceof Slab slab) {
-			slab.setType((de.atlasmc.block.data.type.Slab.Type) value);
+			slab.setSlabType((de.atlasmc.block.data.type.Slab.Type) value);
 		} else if (data instanceof TechnicalPiston piston) {
-			piston.setType((de.atlasmc.block.data.type.TechnicalPiston.Type) value);
+			piston.setPistonType((de.atlasmc.block.data.type.TechnicalPiston.Type) value);
 		}
 	}
 
 	@Override
 	public Enum<?> get(BlockData data) {
 		if (data instanceof Chest chest) {
-			chest.getType();
+			return chest.getChestType();
 		} else if (data instanceof Slab slab) {
-			slab.getType();
+			return slab.getSlabType();
 		} else if (data instanceof TechnicalPiston piston) {
-			piston.getType();
+			return piston.getPistonType();
 		}
 		return null;
 	}

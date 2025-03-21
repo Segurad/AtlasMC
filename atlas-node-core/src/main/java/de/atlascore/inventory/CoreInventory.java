@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import de.atlasmc.Material;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.entity.Player;
 import de.atlasmc.inventory.Inventory;
@@ -14,6 +13,7 @@ import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.ItemType;
 import de.atlasmc.inventory.gui.GUI;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutSetContainerContents;
@@ -82,12 +82,12 @@ public class CoreInventory implements Inventory {
 	}
 	
 	@Override
-	public void remove(Material material) {
-		if (material == null)
-			throw new IllegalArgumentException("Material can not be null!");
+	public void remove(ItemType type) {
+		if (type == null)
+			throw new IllegalArgumentException("Type can not be null!");
 		for (int i = 0; i < size; i++) {
 			ItemStack item = contents[i];
-			if (item != null && item.getType() == material) {
+			if (item != null && item.getType() == type) {
 				contents[i] = null;
 				if (autoUpdate) {
 					stateID++;
@@ -277,22 +277,25 @@ public class CoreInventory implements Inventory {
 	}
 
 	@Override
-	public boolean contains(Material material) {
+	public boolean contains(ItemType type) {
+		if (type == null)
+			throw new IllegalArgumentException("Type can not be null!");
 		for (ItemStack item : contents) {
-			if (item.getType() == material) return true;
+			if (item.getType() == type) 
+				return true;
 		}
 		return false;
 	}
 
 	@Override
-	public int count(Material material) {
-		if (material == null)
-			throw new IllegalArgumentException("Material can not be null!");
+	public int count(ItemType type) {
+		if (type == null)
+			throw new IllegalArgumentException("Type can not be null!");
 		int c = 0;
 		for (ItemStack item : contents) {
 			if (item == null) 
 				continue;
-			if (item.getType() == material) 
+			if (item.getType() == type) 
 				c += item.getAmount();
 		}
 		return c;
@@ -377,12 +380,12 @@ public class CoreInventory implements Inventory {
 	}
 
 	@Override
-	public void removeItems(Material material, int count) {
+	public void removeItems(ItemType type, int count) {
 		for (int i = 0; i < size; i++) {
 			ItemStack item = contents[i];
 			if (item == null) 
 				continue;
-			if (item.getType() != material) 
+			if (item.getType() != type) 
 				return;
 			if (count >= item.getAmount()) {
 				count -= item.getAmount();

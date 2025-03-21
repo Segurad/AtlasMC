@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreLightable;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Bulb;
 
@@ -17,8 +17,8 @@ public class CoreBulb extends CoreLightable implements Bulb {
 	
 	protected boolean powered;
 	
-	public CoreBulb(Material material) {
-		super(material);
+	public CoreBulb(BlockType type) {
+		super(type);
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class CoreBulb extends CoreLightable implements Bulb {
 
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID() + (lit?0:1) + (powered?0:2);
+		return getType().getBlockStateID() + (lit?0:1) + (powered?0:2);
 	}
 	
 	@Override

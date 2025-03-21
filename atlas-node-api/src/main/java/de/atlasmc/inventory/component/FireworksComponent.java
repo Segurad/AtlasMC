@@ -2,20 +2,20 @@ package de.atlasmc.inventory.component;
 
 import java.util.List;
 
-import de.atlasmc.FireworkEffect;
+import de.atlasmc.FireworkExplosion;
 import de.atlasmc.NamespacedKey;
 
 public interface FireworksComponent extends ItemComponent {
 
 	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:fireworks");
 	
-	List<FireworkEffect> getEffects();
+	List<FireworkExplosion> getExplosions();
 	
-	boolean hasEffects();
+	boolean hasExplosions();
 	
-	void addEffect(FireworkEffect effect);
+	void addExplosion(FireworkExplosion explosion);
 	
-	void removeEffect(FireworkEffect effect);
+	void removeExplosions(FireworkExplosion explosion);
 	
 	int getFlightDuration();
 	

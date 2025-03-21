@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreBlockData;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.HangingMoss;
 
@@ -17,8 +17,8 @@ public class CoreHangingMoss extends CoreBlockData implements HangingMoss {
 	
 	protected boolean tip;
 	
-	public CoreHangingMoss(Material material) {
-		super(material);
+	public CoreHangingMoss(BlockType type) {
+		super(type);
 		tip = true;
 	}
 
@@ -34,7 +34,7 @@ public class CoreHangingMoss extends CoreBlockData implements HangingMoss {
 	
 	@Override
 	public int getStateID() {
-		return material.getBlockStateID()+(tip?0:1);
+		return type.getBlockStateID()+(tip?0:1);
 	}
 	
 	@Override

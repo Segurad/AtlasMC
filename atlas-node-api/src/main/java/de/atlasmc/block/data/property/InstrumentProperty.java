@@ -1,7 +1,7 @@
 package de.atlasmc.block.data.property;
 
-import de.atlasmc.Instrument;
 import de.atlasmc.block.data.BlockData;
+import de.atlasmc.block.data.type.Instrument;
 import de.atlasmc.block.data.type.NoteBlock;
 
 class InstrumentProperty extends AbstractEnumProperty<Instrument> {

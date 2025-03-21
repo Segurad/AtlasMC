@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Switch;
 
@@ -20,8 +20,8 @@ public class CoreSwitch extends CoreDirectional4Faces implements Switch {
 	private AttachedFace face;
 	private boolean powered;
 	
-	public CoreSwitch(Material material) {
-		super(material);
+	public CoreSwitch(BlockType type) {
+		super(type);
 		face = AttachedFace.WALL;
 	}
 
@@ -49,7 +49,7 @@ public class CoreSwitch extends CoreDirectional4Faces implements Switch {
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return getType().getBlockStateID()+
 				(powered?0:1)+
 				getFaceValue()*2+
 				face.ordinal()*8;

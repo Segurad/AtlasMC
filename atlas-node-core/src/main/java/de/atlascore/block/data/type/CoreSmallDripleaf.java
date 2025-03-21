@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.SmallDripleaf;
 
@@ -20,8 +20,8 @@ public class CoreSmallDripleaf extends CoreDirectional4Faces implements SmallDri
 	private Half half;
 	private boolean waterlogged;
 	
-	public CoreSmallDripleaf(Material material) {
-		super(material);
+	public CoreSmallDripleaf(BlockType type) {
+		super(type);
 		half = Half.LOWER;
 	}
 
@@ -51,7 +51,7 @@ public class CoreSmallDripleaf extends CoreDirectional4Faces implements SmallDri
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID() + (waterlogged?0:1) + half.getID()*2 + getFaceValue()*4;
+		return getType().getBlockStateID() + (waterlogged?0:1) + half.getID()*2 + getFaceValue()*4;
 	}
 	
 	@Override

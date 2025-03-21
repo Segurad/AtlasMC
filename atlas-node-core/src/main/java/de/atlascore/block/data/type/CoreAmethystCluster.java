@@ -3,8 +3,8 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional6Faces;
-import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.AmethystCluster;
 
@@ -18,8 +18,8 @@ public class CoreAmethystCluster extends CoreDirectional6Faces implements Amethy
 	
 	private boolean waterlogged;
 	
-	public CoreAmethystCluster(Material material) {
-		super(material, BlockFace.UP);
+	public CoreAmethystCluster(BlockType type) {
+		super(type, BlockFace.UP);
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class CoreAmethystCluster extends CoreDirectional6Faces implements Amethy
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID() + (waterlogged?0:1) + getFaceValue()*2;
+		return getType().getBlockStateID() + (waterlogged?0:1) + getFaceValue()*2;
 	}
 	
 	@Override

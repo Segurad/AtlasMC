@@ -1,11 +1,10 @@
 package de.atlasmc.inventory.component;
 
 import java.util.List;
-
-import de.atlasmc.Material;
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.inventory.itempredicate.MaterialItemPredicate;
-import de.atlasmc.inventory.itempredicate.MaterialTagItemPredicate;
+import de.atlasmc.inventory.ItemType;
+import de.atlasmc.inventory.itempredicate.ItemTypePredicate;
+import de.atlasmc.inventory.itempredicate.TagItemPredicate;
 
 public interface ToolComponent extends ItemComponent {
 	
@@ -31,9 +30,9 @@ public interface ToolComponent extends ItemComponent {
 	
 	public static interface Rule {
 		
-		MaterialItemPredicate getBlockPredicate();
+		ItemTypePredicate getBlockPredicate();
 		
-		MaterialTagItemPredicate getBlockTagPredicate();
+		TagItemPredicate getBlockTagPredicate();
 		
 		float getSpeed();
 		
@@ -43,7 +42,7 @@ public interface ToolComponent extends ItemComponent {
 		
 		void setCorrectForDrop(boolean correct);
 		
-		boolean matches(Material material);
+		boolean matches(ItemType type);
 		
 	}
 

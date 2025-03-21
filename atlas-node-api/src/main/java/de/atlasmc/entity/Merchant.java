@@ -3,12 +3,12 @@ package de.atlasmc.entity;
 import java.io.IOException;
 import java.util.List;
 
-import de.atlasmc.Material;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.map.key.CharKey;
+import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.NBTHolder;
-import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -26,6 +26,8 @@ public interface Merchant {
 	
 	public static class MerchantRecipe implements Cloneable, NBTHolder {
 		
+		protected static final NBTFieldSet<MerchantRecipe> NBT_FIELDS;
+		
 		protected static final CharKey
 		NBT_ID = CharKey.literal("id"), // required for get material
 		NBT_BUY = CharKey.literal("buy"),
@@ -39,12 +41,49 @@ public interface Merchant {
 		NBT_USES = CharKey.literal("uses"),
 		NBT_XP = CharKey.literal("xp");
 		
+		static {
+			NBT_FIELDS = NBTFieldSet.newSet();
+			NBT_FIELDS.setField(NBT_BUY, (holder, reader) -> {
+				reader.readNextEntry();
+				holder.inputItem1 = ItemStack.getFromNBT(reader);
+			});
+			NBT_FIELDS.setField(NBT_BUY_B, (holder, reader) -> {
+				reader.readNextEntry();
+				holder.inputItem2 = ItemStack.getFromNBT(reader);
+			});
+			NBT_FIELDS.setField(NBT_DEMAND, (holder, reader) -> {
+				holder.demand = reader.readIntTag();
+			});
+			NBT_FIELDS.setField(NBT_MAX_USES, (holder, reader) -> {
+				holder.maxUses = reader.readIntTag();
+			});
+			NBT_FIELDS.setField(NBT_PRICE_MULTIPLIER, (holder, reader) -> {
+				holder.priceMultiplier = reader.readIntTag();
+			});
+			NBT_FIELDS.setField(NBT_REWARD_EXP, (holder, reader) -> {
+				holder.rewardExp = reader.readBoolean();
+			});
+			NBT_FIELDS.setField(NBT_SELL, (holder, reader) -> {
+				reader.readNextEntry();
+				holder.outputItem = ItemStack.getFromNBT(reader);
+			});
+			NBT_FIELDS.setField(NBT_SPECIAL_PRICE, (holder, reader) -> {
+				holder.specialPrice = reader.readIntTag();
+			});
+			NBT_FIELDS.setField(NBT_USES, (holder, reader) -> {
+				holder.uses = reader.readIntTag();
+			});
+			NBT_FIELDS.setField(NBT_XP, (holder, reader) -> {
+				holder.xp = reader.readIntTag();
+			});
+		}
+		
 		private ItemStack inputItem1;
 		private ItemStack inputItem2;
 		private ItemStack outputItem;
-		private boolean disabled;
-		private int trades;
-		private int maxTrades;
+		private boolean rewardExp;
+		private int uses;
+		private int maxUses;
 		private int xp;
 		private int specialPrice;
 		private int demand;
@@ -69,16 +108,16 @@ public interface Merchant {
 			return outputItem;
 		}
 
-		public boolean isDisabled() {
-			return disabled;
+		public boolean isRewardExp() {
+			return rewardExp;
 		}
 
-		public int getTrades() {
-			return trades;
+		public int getUses() {
+			return uses;
 		}
 
-		public int getMaxTrades() {
-			return maxTrades;
+		public int getMaxUses() {
+			return maxUses;
 		}
 
 		public int getXP() {
@@ -109,16 +148,16 @@ public interface Merchant {
 			this.outputItem = outputItem;
 		}
 
-		public void setDisabled(boolean disabled) {
-			this.disabled = disabled;
+		public void setRewardExp(boolean reward) {
+			this.rewardExp = reward;
 		}
 
-		public void setTrades(int trades) {
-			this.trades = trades;
+		public void setUses(int uses) {
+			this.uses = uses;
 		}
 
-		public void setMaxTrades(int maxTrades) {
-			this.maxTrades = maxTrades;
+		public void setMaxUses(int maxUses) {
+			this.maxUses = maxUses;
 		}
 
 		public void setXP(int xp) {
@@ -162,70 +201,33 @@ public interface Merchant {
 
 		@Override
 		public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-			if (hasInputItem1()) {
+			if (inputItem1 != null) {
 				writer.writeCompoundTag(NBT_BUY);
-				getInputItem1().toNBT(writer, systemData);
+				inputItem1.toNBT(writer, systemData);
 				writer.writeEndTag();
 			}
-			if (hasInputItem1()) {
+			if (inputItem2 != null) {
 				writer.writeCompoundTag(NBT_BUY_B);
-				getInputItem2().toNBT(writer, systemData);
-				writer.writeEndTag();
-			}
-			if (getOutputItem() != null) {
-				writer.writeCompoundTag(NBT_SELL);
-				getOutputItem().toNBT(writer, systemData);
+				inputItem2.toNBT(writer, systemData);
 				writer.writeEndTag();
 			}
 			writer.writeIntTag(NBT_DEMAND, demand);
-			writer.writeIntTag(NBT_MAX_USES, maxTrades);
+			writer.writeIntTag(NBT_MAX_USES, maxUses);
 			writer.writeFloatTag(NBT_PRICE_MULTIPLIER, priceMultiplier);
-			writer.writeIntTag(NBT_USES, trades);
+			writer.writeByteTag(NBT_REWARD_EXP, rewardExp);
+			if (outputItem != null) {
+				writer.writeCompoundTag(NBT_SELL);
+				outputItem.toNBT(writer, systemData);
+				writer.writeEndTag();
+			}
+			writer.writeIntTag(NBT_SPECIAL_PRICE, demand);
+			writer.writeIntTag(NBT_USES, uses);
 			writer.writeIntTag(NBT_XP, xp);
 		}
 
 		@Override
 		public void fromNBT(NBTReader reader) throws IOException {
-			while (reader.getType() != TagType.TAG_END) {
-				int itemID = 0;
-				final CharSequence value = reader.getFieldName();
-				if (NBT_BUY.equals(value))
-					itemID++;
-				else if (NBT_BUY_B.equals(value))
-					itemID++;
-				else if (NBT_SELL.equals(value)) {
-					reader.readNextEntry();
-					Material mat = null;
-					if (!NBT_ID.equals(reader.getFieldName())) {
-						reader.mark();
-						reader.search(NBT_ID);
-						mat = Material.getByName(reader.readStringTag());
-						reader.reset();
-					} else mat = Material.getByName(reader.readStringTag());
-					ItemStack item = new ItemStack(mat);
-					item.fromNBT(reader);
-					if (itemID == 2)
-						setInputItem1(item);
-					else if (itemID == 1)
-						setInputItem2(item);
-					else if (itemID == 0)
-						setOutputItem(item);
-				} else if (NBT_DEMAND.equals(value))
-					setDemand(reader.readIntTag());
-				else if (NBT_MAX_USES.equals(value))
-					setMaxTrades(reader.readIntTag());
-				else if (NBT_PRICE_MULTIPLIER.equals(value))
-					setPriceMultiplier(reader.readFloatTag());
-				else if (NBT_REWARD_EXP.equals(value))
-					reader.skipTag(); // TODO skipped reward xp flag
-				else if (NBT_SPECIAL_PRICE.equals(value))
-					setSpecialPrice(reader.readIntTag());
-				else if (NBT_USES.equals(value))
-					setTrades(reader.readIntTag());
-				else if (NBT_XP.equals(value))
-					setXP(reader.readIntTag());
-			}
-			reader.readNextEntry();
+			NBTUtil.readNBT(NBT_FIELDS, this, reader);
 		}
 	}
 

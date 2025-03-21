@@ -1,10 +1,8 @@
 package de.atlasmc.registry;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.registry.RegistryHolder.Target;
-import de.atlasmc.util.configuration.ConfigurationSection;
 
 public interface RegistryHandler {
 
@@ -29,21 +27,5 @@ public interface RegistryHandler {
 	boolean registerRegistry(Registry<?> registry);
 	
 	boolean removePluginEntries(PluginHandle plugin);
-	
-	/**
-	 * Loads all registries as defined in the manifest
-	 * @param plugin
-	 */
-	void loadRegistries(Plugin plugin);
-	
-	void loadRegistries(Plugin plugin, ConfigurationSection config);
-	
-	/**
-	 * Loads all registry entries as defined in the manifest
-	 * @param plugin
-	 */
-	void loadRegistryEntries(Plugin plugin);
-	
-	void loadRegistryEntries(PluginHandle plugin, ConfigurationSection config);
 
 }

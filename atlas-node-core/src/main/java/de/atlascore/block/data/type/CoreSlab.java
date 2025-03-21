@@ -2,27 +2,24 @@ package de.atlascore.block.data.type;
 
 import java.util.List;
 
-import de.atlascore.block.data.CoreBlockData;
-import de.atlasmc.Material;
+import de.atlascore.block.data.CoreWaterlogged;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Slab;
 
-public class CoreSlab extends CoreBlockData implements Slab {
+public class CoreSlab extends CoreWaterlogged implements Slab {
 
 	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreBlockData.PROPERTIES, 
-				BlockDataProperty.WATERLOGGED,
-				BlockDataProperty.TYPE);
+		PROPERTIES = merge(CoreWaterlogged.PROPERTIES, BlockDataProperty.TYPE);
 	}
 	
-	private boolean waterlogged;
-	private Type type;
+	protected Type slabType;
 	
-	public CoreSlab(Material material) {
-		super(material);
-		type = Type.BOTTOM;
+	public CoreSlab(BlockType type) {
+		super(type);
+		slabType = Type.BOTTOM;
 	}
 
 	@Override
@@ -36,22 +33,22 @@ public class CoreSlab extends CoreBlockData implements Slab {
 	}
 
 	@Override
-	public Type getType() {
-		return type;
+	public Type getSlabType() {
+		return slabType;
 	}
 
 	@Override
-	public void setType(Type type) {
+	public void setSlabType(Type type) {
 		if (type == null) 
 			throw new IllegalArgumentException("Type can not be null!");
-		this.type = type;
+		this.slabType = type;
 	}
 	
 	@Override
 	public int getStateID() {
 		return super.getStateID()+
 				(waterlogged?0:1)+
-				type.ordinal()*2;
+				slabType.ordinal()*2;
 	}
 
 	@Override

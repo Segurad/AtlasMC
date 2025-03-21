@@ -3,17 +3,18 @@ package de.atlasmc.block.data.property;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.Axis;
-import de.atlasmc.Instrument;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.Bisected.Half;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.data.FaceAttachable.AttachedFace;
 import de.atlasmc.block.data.Orientable.Orientation;
+import de.atlasmc.block.data.type.Instrument;
 import de.atlasmc.block.data.type.Bamboo.Leaves;
 import de.atlasmc.block.data.type.Bed.Part;
 import de.atlasmc.block.data.type.Bell.Attachment;
@@ -315,6 +316,17 @@ public abstract class BlockDataProperty<T> {
 			@SuppressWarnings("unchecked")
 			BlockDataProperty<Object> property = (BlockDataProperty<Object>) entry.getKey();
 			property.toNBT(entry.getValue(), writer, systemData);
+		}
+	}
+	
+	public static void writeProperties(BlockData data, NBTWriter writer, boolean systemData) throws IOException {
+		List<BlockDataProperty<?>> properties = data.getProperties();
+		if (properties.isEmpty())
+			return;
+		final int size = properties.size();
+		for (int i = 0; i < size; i++) {
+			BlockDataProperty<?> property = properties.get(i);
+			property.dataToNBT(data, writer, systemData);
 		}
 	}
 

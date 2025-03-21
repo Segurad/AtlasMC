@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreAgeable;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.MangrovePropagule;
 
@@ -22,8 +22,8 @@ public class CoreMangrovePropagule extends CoreAgeable implements MangrovePropag
 	private boolean hanging;
 	private int stage;
 	
-	public CoreMangrovePropagule(Material material) {
-		super(material, 3);
+	public CoreMangrovePropagule(BlockType type) {
+		super(type, 3);
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class CoreMangrovePropagule extends CoreAgeable implements MangrovePropag
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+(waterlogged?0:1)+stage*2+(hanging?0:4)+getAge()*8;
+		return getType().getBlockStateID()+(waterlogged?0:1)+stage*2+(hanging?0:4)+getAge()*8;
 	}
 	
 	@Override

@@ -64,6 +64,7 @@ public class CoreBeesComponent extends AbstractItemComponent implements BeesComp
 	public void fromNBT(NBTReader reader) throws IOException {
 		reader.readNextEntry();
 		while (reader.getRestPayload() > 0) {
+			reader.readNextEntry();
 			Bee bee = null;
 			int minTicksInHive = -1;
 			int ticksInHive = -1;

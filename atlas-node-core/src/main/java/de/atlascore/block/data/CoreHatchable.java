@@ -2,7 +2,7 @@ package de.atlascore.block.data;
 
 import java.util.List;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.Hatchable;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
@@ -17,12 +17,12 @@ public class CoreHatchable extends CoreBlockData implements Hatchable {
 	private int hatch;
 	private final int maxHatch;
 	
-	public CoreHatchable(Material material) {
-		this(material, 2);
+	public CoreHatchable(BlockType type) {
+		this(type, 2);
 	}
 	
-	public CoreHatchable(Material mater, int maxHatch) {
-		super(mater);
+	public CoreHatchable(BlockType type, int maxHatch) {
+		super(type);
 		this.maxHatch = maxHatch;
 	}
 	

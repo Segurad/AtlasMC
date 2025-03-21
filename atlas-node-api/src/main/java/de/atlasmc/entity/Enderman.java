@@ -1,31 +1,31 @@
 package de.atlasmc.entity;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.BlockData;
 
 public interface Enderman extends Monster {
 
-	public Material getCarriedBlockType();
+	BlockType getCarriedBlockType();
 	
-	public BlockData getCarriedBlock();
+	BlockData getCarriedBlock();
 	
-	public void setCarriedBlock(BlockData data);
+	void setCarriedBlock(BlockData data);
 	
-	public void setCarriedBlockType(Material type);
+	void setCarriedBlockType(BlockType type);
 	
 	/**
 	 * Sets the carried block as changed for the next update
 	 */
-	public void setCarriedBlockChanged();
+	void setCarriedBlockChanged();
 	
-	public boolean hasCarriedBlock();
+	boolean hasCarriedBlock();
 	
-	public void setScreaming(boolean screaming);
+	void setScreaming(boolean screaming);
 	
-	public boolean isScreaming();
+	boolean isScreaming();
 	
-	public void setStaring(boolean staring);
+	void setStaring(boolean staring);
 	
-	public boolean isStaring();
+	boolean isStaring();
 	
 }

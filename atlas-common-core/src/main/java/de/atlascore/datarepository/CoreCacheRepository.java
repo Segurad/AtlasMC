@@ -54,7 +54,7 @@ public class CoreCacheRepository extends CoreAbstractLocalRepository implements 
 	}
 
 	@Override
-	public Future<Collection<RepositoryEntryUpdate>> update() {
+	public Collection<RepositoryEntryUpdate> update() {
 		// TODO Auto-generated method stub
 		return null;
 	}

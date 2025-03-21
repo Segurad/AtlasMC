@@ -2,7 +2,7 @@ package de.atlascore.block.data;
 
 import java.util.List;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.Openable;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
@@ -16,8 +16,8 @@ public class CoreOpenable extends CoreBlockData implements Openable {
 	
 	private boolean open;
 	
-	public CoreOpenable(Material material) {
-		super(material);
+	public CoreOpenable(BlockType type) {
+		super(type);
 	}
 
 	@Override

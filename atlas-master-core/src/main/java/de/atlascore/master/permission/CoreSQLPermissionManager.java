@@ -27,7 +27,7 @@ import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionContext;
 import de.atlasmc.permission.PermissionGroup;
 import de.atlasmc.permission.PermissionHandler;
-import de.atlasmc.util.concurrent.future.CommulativeFuture;
+import de.atlasmc.util.concurrent.future.CumulativeFuture;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
@@ -676,7 +676,7 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager impl
 			futureGroups.add(loadGroup(name));
 		}
 		final CompletableFuture<Collection<PermissionGroup>> future = new CompletableFuture<>();
-		CommulativeFuture<PermissionGroup> groupsFuture = new CommulativeFuture<>(futureGroups);
+		CumulativeFuture<PermissionGroup> groupsFuture = new CumulativeFuture<>(futureGroups);
 		groupsFuture.setListener((f) -> {
 			Collection<Future<PermissionGroup>> futures = f.getNow();
 			ArrayList<PermissionGroup> groups = new ArrayList<>(futures.size());

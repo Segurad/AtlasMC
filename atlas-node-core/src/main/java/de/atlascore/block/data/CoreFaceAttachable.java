@@ -2,7 +2,7 @@ package de.atlascore.block.data;
 
 import java.util.List;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.FaceAttachable;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
@@ -16,8 +16,8 @@ public class CoreFaceAttachable extends CoreBlockData implements FaceAttachable 
 	
 	private AttachedFace face;
 	
-	public CoreFaceAttachable(Material material) {
-		super(material);
+	public CoreFaceAttachable(BlockType type) {
+		super(type);
 		face = AttachedFace.WALL;
 	}
 

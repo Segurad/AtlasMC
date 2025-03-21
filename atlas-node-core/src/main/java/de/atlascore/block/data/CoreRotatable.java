@@ -2,8 +2,8 @@ package de.atlascore.block.data;
 
 import java.util.List;
 
-import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.Rotatable;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
@@ -17,8 +17,8 @@ public class CoreRotatable extends CoreBlockData implements Rotatable {
 	
 	private BlockFace rotation;
 	
-	public CoreRotatable(Material material) {
-		super(material);
+	public CoreRotatable(BlockType type) {
+		super(type);
 		rotation = BlockFace.SOUTH;
 	}
 

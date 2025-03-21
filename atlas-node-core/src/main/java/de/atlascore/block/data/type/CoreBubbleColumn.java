@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreBlockData;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.BubbleColumn;
 
@@ -17,8 +17,8 @@ public class CoreBubbleColumn extends CoreBlockData implements BubbleColumn {
 	
 	private boolean drag;
 	
-	public CoreBubbleColumn(Material material) {
-		super(material);
+	public CoreBubbleColumn(BlockType type) {
+		super(type);
 		drag = true;
 	}
 

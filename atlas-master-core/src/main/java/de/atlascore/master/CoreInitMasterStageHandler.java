@@ -184,7 +184,7 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 					runner.runScript(new InputStreamReader(in));
 					PreparedStatement verionStmt = con.prepareStatement(
 							"INSERT INTO atlas (atlas_version, schema_version, installation_date) VALUES (?, ?, ?)");
-					verionStmt.setString(1, Atlas.FULL_VERSION);
+					verionStmt.setString(1, Atlas.getSystem().getVersion().toString());
 					verionStmt.setInt(2, CURRENT_SCHEMA_VERSION);
 					verionStmt.setDate(3, new Date(System.currentTimeMillis()));
 					verionStmt.execute();

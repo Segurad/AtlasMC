@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Vault;
 
@@ -20,8 +20,8 @@ public class CoreVault extends CoreDirectional4Faces implements Vault {
 	protected boolean ominous;
 	protected VaultState state;
 	
-	public CoreVault(Material material) {
-		super(material);
+	public CoreVault(BlockType type) {
+		super(type);
 		state = VaultState.INACTIVE;
 	}
 
@@ -49,7 +49,7 @@ public class CoreVault extends CoreDirectional4Faces implements Vault {
 	
 	@Override
 	public int getStateID() {
-		return material.getBlockStateID() + state.ordinal() + (ominous?0:4) + getFaceValue()*8;
+		return type.getBlockStateID() + state.ordinal() + (ominous?0:4) + getFaceValue()*8;
 	}
 	
 	@Override

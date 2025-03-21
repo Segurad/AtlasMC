@@ -1,6 +1,6 @@
 package de.atlasmc.block.data;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 
 /**
  * {@link ItemMetaFactory} implementation that clones a existing {@link BlockData}
@@ -25,15 +25,13 @@ public class CloneBlockDataFactory implements BlockDataFactory {
 	}
 
 	@Override
-	public BlockData createData(Material material) {
-		if (material == null) 
-			throw new IllegalArgumentException("Material can not be null!");
-		if (!material.isBlock()) 
-			throw new IllegalArgumentException("Material is not a Block!");
+	public BlockData createData(BlockType type) {
+		if (type == null) 
+			throw new IllegalArgumentException("Type can not be null!");
 		if (data == null) 
 			return null;
-		if (data.getMaterial() != material)
-			throw new IllegalArgumentException("Material does not match BlockData!");
+		if (data.getType() != type)
+			throw new IllegalArgumentException("Type does not match BlockData!");
 		return data.clone();
 	}
 

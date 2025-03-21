@@ -8,12 +8,12 @@ public class BaseClassFactory<T> implements Factory {
 	private final Constructor<? extends T> constructor;
 	protected final Class<? extends T> clazz;
 	
-	public BaseClassFactory(Class<? extends T>  clazz) {
+	public BaseClassFactory(Class<? extends T>  clazz, Class<?>... parameterTypes) {
 		if (clazz == null)
 			throw new IllegalArgumentException("Class can not be null!");
 		this.clazz = clazz;
 		try {
-			this.constructor = clazz.getConstructor();
+			this.constructor = clazz.getConstructor(parameterTypes);
 		} catch (NoSuchMethodException | SecurityException e) {
 			throw new FactoryException("Error while fetching constructor for class: " + clazz.getName(), e);
 		}

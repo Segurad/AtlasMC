@@ -45,8 +45,15 @@
 		</dependency>
 		<dependency>
 			<groupId>org.atlas-project</groupId>
+			<artifactId>atlas-common-api</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.atlas-project</groupId>
 			<artifactId>atlas-common-core</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.atlas-project</groupId>

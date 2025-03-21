@@ -1,6 +1,6 @@
 package de.atlascore.world;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.BlockData;
 
 public class CorePaletteEntry {
@@ -12,8 +12,8 @@ public class CorePaletteEntry {
 		this.data = data;
 	}
 
-	public Material getMaterial() {
-		return data.getMaterial();
+	public BlockType getType() {
+		return data.getType();
 	}
 
 }

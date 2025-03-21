@@ -1,6 +1,6 @@
 package de.atlasmc.entity;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.BlockData;
 
 public interface BlockDisplay extends Display {
@@ -9,8 +9,8 @@ public interface BlockDisplay extends Display {
 	
 	void setBlockData(BlockData data);
 
-	void setBlockDataType(Material mat);
+	void setBlockDataType(BlockType type);
 	
-	Material getBlockDataType();
+	BlockType getBlockDataType();
 
 }

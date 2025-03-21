@@ -3,7 +3,6 @@ package de.atlascore.entity;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlasmc.Material;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.ItemDisplay;
 import de.atlasmc.entity.data.MetaDataField;
@@ -27,14 +26,7 @@ public class CoreItemDisplay extends CoreDisplay implements ItemDisplay {
 		NBT_FIELDS.setField(NBT_ITEM, (holder, reader) -> {
 			if (holder instanceof ItemDisplay ent) {
 				reader.readNextEntry();
-				Material mat = null;
-				if (!NBT_ID.equals(reader.getFieldName())) {
-					reader.mark();
-					reader.search(NBT_ID);
-					mat = Material.getByName(reader.readStringTag());
-					reader.reset();
-				} else mat = Material.getByName(reader.readStringTag());
-				ItemStack item = new ItemStack(mat);
+				ItemStack item = ItemStack.getFromNBT(reader);
 				item.fromNBT(reader);
 				ent.setItem(item);
 			} else {

@@ -1,10 +1,10 @@
 package de.atlasmc.inventory.gui.button;
 
-import de.atlasmc.Material;
 import de.atlasmc.event.inventory.ClickType;
 import de.atlasmc.event.inventory.InventoryClickEvent;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.ItemType;
 
 /**
  * this button is meant to listen what will happen in this event
@@ -19,9 +19,9 @@ public abstract class RealClickButton extends AbstractButton {
 	public ItemStack press(InventoryClickEvent e) {
 		ItemStack sitem = e.getCurrentItem();
 		ItemStack citem = e.getCursor();
-		if (sitem != null && sitem.getType().getNamespacedKey().equals(Material.AIR)) 
+		if (sitem != null && sitem.getType().getNamespacedKey().equals(ItemType.AIR)) 
 			sitem = null;
-		if (citem != null && citem.getType().getNamespacedKey().equals(Material.AIR)) 
+		if (citem != null && citem.getType().getNamespacedKey().equals(ItemType.AIR)) 
 			citem = null;
 		if (citem == null && sitem == null) 
 			return null;

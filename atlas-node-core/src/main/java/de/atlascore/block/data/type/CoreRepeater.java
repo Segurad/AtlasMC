@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Repeater;
 
@@ -22,8 +22,8 @@ public class CoreRepeater extends CoreDirectional4Faces implements Repeater {
 	private boolean locked;
 	private int delay;
 	
-	public CoreRepeater(Material material) {
-		super(material);
+	public CoreRepeater(BlockType type) {
+		super(type);
 		delay = 1;
 	}
 
@@ -71,7 +71,7 @@ public class CoreRepeater extends CoreDirectional4Faces implements Repeater {
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return getType().getBlockStateID()+
 				(powered?0:1)+
 				(locked?0:2)+
 				getFaceValue()*4+

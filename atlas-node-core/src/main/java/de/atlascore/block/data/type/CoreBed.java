@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Bed;
 
@@ -20,8 +20,8 @@ public class CoreBed extends CoreDirectional4Faces implements Bed {
 	private boolean occupied;
 	private Part part;
 	
-	public CoreBed(Material material) {
-		super(material);
+	public CoreBed(BlockType type) {
+		super(type);
 		part = Part.FOOT;
 	}
 
@@ -49,7 +49,7 @@ public class CoreBed extends CoreDirectional4Faces implements Bed {
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+getFaceValue(getFacing())*4+(occupied?0:2)+part.ordinal();
+		return type.getBlockStateID()+getFaceValue()*4+(occupied?0:2)+part.ordinal();
 	}
 	
 	@Override

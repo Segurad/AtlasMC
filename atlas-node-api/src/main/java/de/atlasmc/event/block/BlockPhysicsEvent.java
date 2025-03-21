@@ -1,7 +1,7 @@
 package de.atlasmc.event.block;
 
-import de.atlasmc.Material;
 import de.atlasmc.block.Block;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.event.Cancellable;
 import de.atlasmc.event.ServerHandlerList;
@@ -27,8 +27,8 @@ public class BlockPhysicsEvent extends BlockEvent implements Cancellable {
 		return sourceBlock;
 	}
 	
-	public Material getChangedType() {
-		return changed.getMaterial();
+	public BlockType getChangedType() {
+		return changed.getType();
 	}
 
 	public BlockData getChanged() {

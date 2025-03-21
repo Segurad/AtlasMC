@@ -2,8 +2,8 @@ package de.atlascore.block.data;
 
 import java.util.Set;
 
-import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.block.BlockType;
 
 public class CoreDirectional6Faces extends CoreAbstractDirectional {
 	
@@ -15,12 +15,12 @@ public class CoreDirectional6Faces extends CoreAbstractDirectional {
 					BlockFace.UP,
 					BlockFace.DOWN);
 
-	public CoreDirectional6Faces(Material material) {
-		super(material);
+	public CoreDirectional6Faces(BlockType type) {
+		super(type);
 	}
 
-	public CoreDirectional6Faces(Material material, BlockFace face) {
-		super(material, face);
+	public CoreDirectional6Faces(BlockType type, BlockFace face) {
+		super(type, face);
 	}
 	
 	@Override
@@ -36,7 +36,7 @@ public class CoreDirectional6Faces extends CoreAbstractDirectional {
 
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+getFaceValue();
+		return getType().getBlockStateID()+getFaceValue();
 	}
 
 }

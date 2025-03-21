@@ -5,15 +5,15 @@ import static de.atlasmc.io.PacketUtil.writeVarInt;
 
 import java.io.IOException;
 import java.util.Set;
-import java.util.function.ToIntFunction;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.IOReadable;
 import de.atlasmc.io.IOWriteable;
 import de.atlasmc.registry.ProtocolRegistry;
+import de.atlasmc.registry.ProtocolRegistryValue;
 import io.netty.buffer.ByteBuf;
 
-public class ProtocolTag<E> extends Tag<E> implements IOWriteable, IOReadable {
+public class ProtocolTag<E extends ProtocolRegistryValue> extends Tag<E> implements IOWriteable, IOReadable {
 
 	private final ProtocolRegistry<E> registry;
 	
@@ -41,10 +41,9 @@ public class ProtocolTag<E> extends Tag<E> implements IOWriteable, IOReadable {
 			writeVarInt(0, buf);
 			return;
 		}
-		final ToIntFunction<E> toInt = registry.getIDSupplier();
 		writeVarInt(values.size(), buf);
 		for (E entry : values) {
-			writeVarInt(toInt.applyAsInt(entry), buf);
+			writeVarInt(entry.getID(), buf);
 		}
 	}
 

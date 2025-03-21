@@ -18,7 +18,7 @@ import de.atlasmc.log.Log;
 import de.atlasmc.scheduler.AtlasTask;
 import de.atlasmc.server.ServerDeploymentException;
 import de.atlasmc.util.FileUtils;
-import de.atlasmc.util.concurrent.future.CommulativeFuture;
+import de.atlasmc.util.concurrent.future.CumulativeFuture;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
 import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
@@ -95,7 +95,7 @@ public class CoreLocalServerPreparingTask extends AtlasTask {
 			futures.add(entry.makeAvailable());
 		}
 		data.clear();
-		CommulativeFuture<RepositoryEntry> cumFuture = new CommulativeFuture<>(futures);
+		CumulativeFuture<RepositoryEntry> cumFuture = new CumulativeFuture<>(futures);
 		cumFuture.setListener(future -> {
 			for (Future<RepositoryEntry> entryFuture : future.getNow()) {
 				if (entryFuture.isSuccess()) {
@@ -209,7 +209,7 @@ public class CoreLocalServerPreparingTask extends AtlasTask {
 			});
 			futures.add(pluginCfgFuture);
 		}
-		CommulativeFuture<Collection<RepositoryEntry>> cumFuture = new CommulativeFuture<>(futures);
+		CumulativeFuture<Collection<RepositoryEntry>> cumFuture = new CumulativeFuture<>(futures);
 		cumFuture.setListener((future) -> {
 			Atlas.getScheduler().runAsyncTaskLater(Atlas.getSystem(), this, 1L);
 		});

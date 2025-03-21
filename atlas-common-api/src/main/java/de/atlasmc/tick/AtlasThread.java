@@ -1,34 +1,44 @@
 package de.atlasmc.tick;
 
-import java.util.Collection;
-
 import de.atlasmc.log.Log;
-import de.atlasmc.util.ConcurrentLinkedList;
-import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
 
-public class AtlasThread extends TickingThread {
+public class AtlasThread<T> extends TickingThread {
 	
-	private final ConcurrentLinkedList<AtlasThreadTask> tickTasks;
-	private final ConcurrentLinkedList<AtlasThreadTask> shutdownHooks;
-	private final ConcurrentLinkedList<AtlasThreadTask> startupHooks;
+	private final AtlasThreadTaskManager<T> tickTasks;
+	private final AtlasThreadTaskManager<T> shutdownTasks;
+	private final AtlasThreadTaskManager<T> startupTasks;
+	private final T context;
 	private Future<Boolean> startupFuture;
 	private Future<Boolean> shutdownFuture;
 	
-	public AtlasThread(String name, int ticktime, Log logger, boolean exitOnError) {
+	public AtlasThread(String name, int ticktime, Log logger, boolean exitOnError,  T context) {
+		this(name, ticktime, logger, exitOnError, context, new AtlasThreadTaskManager<>(), new AtlasThreadTaskManager<>(), new AtlasThreadTaskManager<>());
+	}
+	
+	public AtlasThread(String name, int ticktime, Log logger, boolean exitOnError, T context,  
+			AtlasThreadTaskManager<T> startupTasks, AtlasThreadTaskManager<T> tickTasks, AtlasThreadTaskManager<T> shutdownTasks) {
 		super(name, ticktime, logger, exitOnError);
-		tickTasks = new ConcurrentLinkedList<>();
-		shutdownHooks = new ConcurrentLinkedList<>();
-		startupHooks = new ConcurrentLinkedList<>();
+		//if (context == null)
+		//	throw new IllegalArgumentException("Context can not be null!");
+		if (startupTasks == null)
+			throw new IllegalArgumentException("Startup tasks can not be null!");
+		if (tickTasks == null)
+			throw new IllegalArgumentException("Tick tasks can not be null!");
+		if (shutdownTasks == null)
+			throw new IllegalArgumentException("Shutdown tasks can not be null!");
+		this.context = context;
+		this.tickTasks = tickTasks;
+		this.shutdownTasks = shutdownTasks;
+		this.startupTasks = startupTasks;
 	}
 	
 	@Override
 	public void run() {
 		running = true;
-		runTasks(startupHooks, "Error in startup hook: ", -1);
-		startupHooks.clear();
+		runTasks(startupTasks, "Error in startup task: ", -1);
 		if (running) {
 			synchronized (this) {
 				((CompletableFuture<Boolean>) startupFuture).finish(true);
@@ -36,101 +46,40 @@ public class AtlasThread extends TickingThread {
 			}
 			super.run();
 		}
-		tickTasks.clear();
-		runTasks(shutdownHooks, "Error in shutdown hook: ", -1);
+		runTasks(shutdownTasks, "Error in shutdown task: ", -1);
 		synchronized (this) {
 			((CompletableFuture<Boolean>) shutdownFuture).finish(true);
 			shutdownFuture = CompleteFuture.getBooleanFuture(true);
 		}
 	}
 	
-	private void runTasks(Collection<AtlasThreadTask> tasks, String error, int tick) {
-		if (tasks.isEmpty())
+	private void runTasks(AtlasThreadTaskManager<T> tasks, String error, int tick) {
+		final AtlasThreadTask<T>[] fastTasks = tasks.fastTasks;
+		if (fastTasks.length == 0)
 			return;
-		for (AtlasThreadTask task : tasks) {
+		for (AtlasThreadTask<T> task : fastTasks) {
 			try {
-				task.tick(tick);
-			} catch(Exception e) {
-				logger.error(error + task.name(), e);
+				task.run(context, tick);
+			} catch (Exception e) {
+				logger.error(error + tasks.getTaskName(task), e);
 			}
 		}
 	}
 	
+	public AtlasThreadTaskManager<T> getTickTasks() {
+		return tickTasks;
+	}
+	
+	public AtlasThreadTaskManager<T> getStartupTasks() {
+		return startupTasks;
+	}
+	
+	public AtlasThreadTaskManager<T> getShutdownTasks() {
+		return shutdownTasks;
+	}
+	
 	protected void tick(int tick) {
 		runTasks(tickTasks, "Error in tick task: ", tick);
-	}
-
-	public boolean addStartupHook(AtlasThreadTask task) {
-		return startupHooks.add(task);
-	}
-
-	public boolean addBeforeStartupHook(String taskName, AtlasThreadTask task) {
-		return addBefore(startupHooks, taskName, task);
-	}
-
-	public boolean addAfterStartupHook(String taskName, AtlasThreadTask task) {
-		return addAfter(shutdownHooks, taskName, task);
-	}
-
-	public boolean removeStartupHook(AtlasThreadTask task) {
-		return startupHooks.remove(task);
-	}
-
-	public boolean addTickTask(AtlasThreadTask task) {
-		return tickTasks.add(task);
-	}
-
-	public boolean addBeforeTickTask(String taskName, AtlasThreadTask task) {
-		return addBefore(tickTasks, taskName, task);
-	}
-
-	public boolean addAfterTickTask(String taskName, AtlasThreadTask task) {
-		return addAfter(tickTasks, taskName, task);
-	}
-
-	public boolean removeTickTask(AtlasThreadTask task) {
-		return tickTasks.remove(task);
-	}
-
-	public boolean addShutdownHook(AtlasThreadTask task) {
-		shutdownHooks.addFirst(task);
-		return true;
-	}
-
-	public boolean addBeforeShutdownHook(String taskName, AtlasThreadTask task) {
-		return addAfter(shutdownHooks, taskName, task);
-	}
-
-	public boolean addAfterShutdownHook(String taskName, AtlasThreadTask task) {
-		return addBefore(tickTasks, taskName, task);
-	}
-
-	public boolean removeShutdownHook(AtlasThreadTask task) {
-		return shutdownHooks.remove(task);
-	}
-	
-	private boolean addBefore(ConcurrentLinkedList<AtlasThreadTask> tasks, String taskName, AtlasThreadTask task) {
-		LinkedListIterator<AtlasThreadTask> it = tasks.iterator();
-		AtlasThreadTask next = null;
-		while ((next = it.next()) != null) {
-			if (!next.name().equals(taskName))
-				continue;
-			it.addBefor(task);
-			return true;
-		}
-		return false;
-	}
-	
-	private boolean addAfter(ConcurrentLinkedList<AtlasThreadTask> tasks, String taskName, AtlasThreadTask task) {
-		LinkedListIterator<AtlasThreadTask> it = tasks.iterator();
-		AtlasThreadTask next = null;
-		while ((next = it.next()) != null) {
-			if (!next.name().equals(taskName))
-				continue;
-			it.add(task);
-			return true;
-		}
-		return false;
 	}
 
 	public Future<Boolean> startThread() {

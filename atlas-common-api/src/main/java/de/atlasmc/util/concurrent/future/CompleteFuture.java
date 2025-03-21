@@ -54,7 +54,7 @@ public class CompleteFuture<V> implements Future<V> {
 
 	@Override
 	public boolean cancel(boolean mayInterruptIfRunning) {
-		return false;
+		return false; // unable to cancel complete future
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class CompleteFuture<V> implements Future<V> {
 
 	@Override
 	public boolean isDone() {
-		return true;
+		return true; // complete future is always done
 	}
 
 	@Override
@@ -99,7 +99,7 @@ public class CompleteFuture<V> implements Future<V> {
 
 	@Override
 	public boolean isCancellable() {
-		return true;
+		return true; // complete may contain cancelled state
 	}
 	
 	/**
@@ -135,6 +135,11 @@ public class CompleteFuture<V> implements Future<V> {
 		return (Future<V>) EMPTY_MAP_FUTURE;
 	}
 	
+	/**
+	 * Returns a successful Future representation of the given boolean
+	 * @param value
+	 * @return future
+	 */
 	public static Future<Boolean> getBooleanFuture(boolean value) {
 		return value ? TRUE_FUTURE : FALSE_FUTURE;
 	}

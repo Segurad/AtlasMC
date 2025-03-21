@@ -2,7 +2,7 @@ package de.atlascore.block.data;
 
 import java.util.List;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.Ageable;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
@@ -14,15 +14,15 @@ public class CoreAgeable extends CoreBlockData implements Ageable {
 		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.AGE);
 	}
 	
-	private int age;
+	protected int age;
 	private int maxage;
 	
-	public CoreAgeable(Material material) {
-		this(material, 15);
+	public CoreAgeable(BlockType type) {
+		this(type, 15);
 	}
 	
-	public CoreAgeable(Material material, int maxage) {
-		super(material);
+	public CoreAgeable(BlockType type, int maxage) {
+		super(type);
 		this.maxage = maxage;
 	}
 

@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreAnaloguePowerable;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.DaylightDetectore;
 
@@ -17,8 +17,8 @@ public class CoreDaylightDetector extends CoreAnaloguePowerable implements Dayli
 	
 	private boolean inverted;
 	
-	public CoreDaylightDetector(Material material) {
-		super(material);
+	public CoreDaylightDetector(BlockType type) {
+		super(type);
 	}
 
 	@Override

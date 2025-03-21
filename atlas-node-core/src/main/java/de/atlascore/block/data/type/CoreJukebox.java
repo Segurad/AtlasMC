@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreBlockData;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Jukebox;
 
@@ -17,8 +17,8 @@ public class CoreJukebox extends CoreBlockData implements Jukebox {
 	
 	private boolean record;
 	
-	public CoreJukebox(Material material) {
-		super(material);
+	public CoreJukebox(BlockType type) {
+		super(type);
 	}
 
 	@Override

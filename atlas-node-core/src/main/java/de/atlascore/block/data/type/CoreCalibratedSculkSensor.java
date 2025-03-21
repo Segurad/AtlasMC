@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreWaterloggedDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.CalibratedSculkSensor;
 
@@ -20,8 +20,8 @@ public class CoreCalibratedSculkSensor extends CoreWaterloggedDirectional4Faces 
 	private Phase phase;
 	private int power;
 	
-	public CoreCalibratedSculkSensor(Material material) {
-		super(material);
+	public CoreCalibratedSculkSensor(BlockType type) {
+		super(type);
 		phase = Phase.INACTIVE;
 	}
 	
@@ -39,7 +39,7 @@ public class CoreCalibratedSculkSensor extends CoreWaterloggedDirectional4Faces 
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID() + (isWaterlogged()?0:1) + phase.getID()*2 + getPower()*6 + getFaceValue()*96;
+		return type.getBlockStateID() + (waterlogged?0:1) + phase.getID()*2 + power*6 + getFaceValue()*96;
 	}
 	
 	@Override

@@ -2,7 +2,7 @@ package de.atlascore.block.tile;
 
 import java.io.IOException;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.BrewingStand;
 import de.atlasmc.inventory.BrewingInventory;
 import de.atlasmc.inventory.ContainerFactory;
@@ -30,7 +30,7 @@ public class CoreBrewingStand extends CoreAbstractContainerTile<BrewingInventory
 		});
 	}
 	
-	public CoreBrewingStand(Material type) {
+	public CoreBrewingStand(BlockType type) {
 		super(type);
 	}
 

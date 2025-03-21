@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreHatchable;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.TurtleEgg;
 
@@ -17,8 +17,8 @@ public class CoreTurtleEgg extends CoreHatchable implements TurtleEgg {
 	
 	private int eggs;
 	
-	public CoreTurtleEgg(Material material) {
-		super(material);
+	public CoreTurtleEgg(BlockType type) {
+		super(type);
 		eggs = 1;
 	}
 

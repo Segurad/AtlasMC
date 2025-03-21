@@ -57,7 +57,7 @@ public class NBTObjectReader extends AbstractNBTReader {
 	@Override
 	public byte readByteTag() throws IOException {
 		ensureOpen();
-		if (current.getType() != TagType.BYTE)
+		if (!current.getType().isNumber())
 			throw new NBTException("Can not read as ByteTag: " + current.getType().name());
 		byte data = (byte) current.getData();
 		prepareTag();
@@ -67,7 +67,7 @@ public class NBTObjectReader extends AbstractNBTReader {
 	@Override
 	public short readShortTag() throws IOException {
 		ensureOpen();
-		if (current.getType() != TagType.SHORT)
+		if (!current.getType().isNumber())
 			throw new NBTException("Can not read as ShortTag: " + current.getType().name());
 		short data = (short) current.getData();
 		prepareTag();
@@ -77,7 +77,7 @@ public class NBTObjectReader extends AbstractNBTReader {
 	@Override
 	public int readIntTag() throws IOException {
 		ensureOpen();
-		if (current.getType() != TagType.INT)
+		if (!current.getType().isNumber())
 			throw new NBTException("Can not read as IntTag: " + current.getType().name());
 		int data = (int) current.getData();
 		prepareTag();
@@ -87,7 +87,7 @@ public class NBTObjectReader extends AbstractNBTReader {
 	@Override
 	public long readLongTag() throws IOException {
 		ensureOpen();
-		if (current.getType() != TagType.LONG)
+		if (!current.getType().isNumber())
 			throw new NBTException("Can not read as LongTag: " + current.getType().name());
 		long data = (long) current.getData();
 		prepareTag();
@@ -97,7 +97,7 @@ public class NBTObjectReader extends AbstractNBTReader {
 	@Override
 	public float readFloatTag() throws IOException {
 		ensureOpen();
-		if (current.getType() != TagType.FLOAT)
+		if (!current.getType().isNumber())
 			throw new NBTException("Can not read as FloatTag: " + current.getType().name());
 		float data = (float) current.getData();
 		prepareTag();
@@ -107,7 +107,7 @@ public class NBTObjectReader extends AbstractNBTReader {
 	@Override
 	public double readDoubleTag() throws IOException {
 		ensureOpen();
-		if (current.getType() != TagType.DOUBLE)
+		if (!current.getType().isNumber())
 			throw new NBTException("Can not read as DoubleTag: " + current.getType().name());
 		double data = (double) current.getData();
 		prepareTag();

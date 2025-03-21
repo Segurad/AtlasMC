@@ -15,7 +15,7 @@ public abstract class CoreAbstractAtlasNetworkHandlerBuilder<T extends CoreAbstr
 	private NodeManager nodeManager;
 	private ServerManager serverManager;
 	private ProfileHandler profileHandler;
-	private PermissionManager permissionProvider;
+	private PermissionManager permissionManager;
 	private UUID uuid;
 	private PublicKey publicKey;
 	
@@ -46,12 +46,12 @@ public abstract class CoreAbstractAtlasNetworkHandlerBuilder<T extends CoreAbstr
 		return getThis();
 	}
 
-	public PermissionManager getPermissionProvider() {
-		return permissionProvider;
+	public PermissionManager getPermissionManager() {
+		return permissionManager;
 	}
 	
-	public T setPermissionProvider(PermissionManager permissionProvider) {
-		this.permissionProvider = permissionProvider;
+	public T setPermissionManager(PermissionManager permissionManager) {
+		this.permissionManager = permissionManager;
 		return getThis();
 	}
 
@@ -80,7 +80,7 @@ public abstract class CoreAbstractAtlasNetworkHandlerBuilder<T extends CoreAbstr
 		nodeManager = null;
 		profileHandler = null;
 		serverManager = null;
-		permissionProvider = null;
+		permissionManager = null;
 		publicKey = null;
 		uuid = null;
 	}

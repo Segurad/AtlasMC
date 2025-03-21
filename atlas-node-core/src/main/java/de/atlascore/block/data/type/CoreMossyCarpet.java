@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreHightConnectable;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.MossyCarpet;
 
@@ -17,8 +17,8 @@ public class CoreMossyCarpet extends CoreHightConnectable implements MossyCarpet
 	
 	protected boolean bottom;
 	
-	public CoreMossyCarpet(Material material) {
-		super(material);
+	public CoreMossyCarpet(BlockType type) {
+		super(type);
 		bottom = true;
 	}
 

@@ -2,7 +2,7 @@ package de.atlascore.block.tile;
 
 import org.joml.Vector3d;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.Dispenser;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Projectile;
@@ -14,7 +14,7 @@ import de.atlasmc.world.World;
 
 public class CoreDispenser extends CoreAbstractContainerTile<Inventory> implements Dispenser {
 
-	public CoreDispenser(Material type) {
+	public CoreDispenser(BlockType type) {
 		super(type);
 	}
 
@@ -24,7 +24,7 @@ public class CoreDispenser extends CoreAbstractContainerTile<Inventory> implemen
 	}
 
 	@Override
-	public Projectile lounchProjectile(Projectile projectile, Vector3d velocity) {
+	public Projectile launchProjectile(Projectile projectile, Vector3d velocity) {
 		if (projectile == null)
 			throw new IllegalArgumentException("Projectile can not be null!");
 		World world = getWorld();
@@ -40,11 +40,11 @@ public class CoreDispenser extends CoreAbstractContainerTile<Inventory> implemen
 	}
 
 	@Override
-	public Projectile lounchProjectile(EntityType type, Vector3d velocity) {
+	public Projectile launchProjectile(EntityType type, Vector3d velocity) {
 		if (type == null)
 			throw new IllegalArgumentException("Type can not be null!");
 		Projectile pro = (Projectile) type.create(getWorld());
-		return lounchProjectile(pro, velocity);
+		return launchProjectile(pro, velocity);
 	}
 
 }

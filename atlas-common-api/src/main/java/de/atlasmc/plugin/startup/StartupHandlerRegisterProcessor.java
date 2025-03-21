@@ -20,6 +20,7 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.Elements;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import javax.tools.Diagnostic.Kind;
@@ -43,17 +44,17 @@ public class StartupHandlerRegisterProcessor extends AbstractProcessor {
 			writeProcessorFile();
 			return true;
 		}
+		final Elements elements = processingEnv.getElementUtils();
 		log.printMessage(Kind.NOTE, "Processing startup handler reguster annotation");
 		for (TypeElement annotation : annotations) {
 			for (Element ele : roundEnv.getElementsAnnotatedWith(annotation)) {
 				Collection<AnnotationMirror> annotationMirrors = AnnotationProcessorUtils.getAnnotationMirrorsByType(ele, annotation);
-				String type = ele.toString();
+				String type =  elements.getBinaryName((TypeElement) ele).toString();
 				for (AnnotationMirror mirror : annotationMirrors) {
 					Map<String, Object> values = AnnotationProcessorUtils.getAnnotationValues(mirror, processingEnv);
 					Object value = values.get("value");
 					List<String> stages = AnnotationProcessorUtils.asStringList(value);
 					for (String stage : stages) {
-						stage = stage.substring(1, stage.length() - 1);
 						List<String> handlers = startup.getStringList(stage);
 						if (handlers == null) {
 							handlers = new ArrayList<>();

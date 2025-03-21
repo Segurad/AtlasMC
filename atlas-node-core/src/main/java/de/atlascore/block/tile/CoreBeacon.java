@@ -2,7 +2,7 @@ package de.atlascore.block.tile;
 
 import java.io.IOException;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.Beacon;
 import de.atlasmc.inventory.BeaconInventory;
 import de.atlasmc.inventory.ContainerFactory;
@@ -35,13 +35,14 @@ public class CoreBeacon extends CoreTileEntity implements Beacon {
 	
 	private BeaconInventory inv;
 
-	public CoreBeacon(Material type) {
+	public CoreBeacon(BlockType type) {
 		super(type);
 	}
 
 	@Override
 	public BeaconInventory getInventory() {
-		if (inv == null) inv = ContainerFactory.BEACON_INV_FACTORY.create(InventoryType.BEACON, this);
+		if (inv == null) 
+			inv = ContainerFactory.BEACON_INV_FACTORY.create(InventoryType.BEACON, this);
 		return inv;
 	}
 

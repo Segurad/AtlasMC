@@ -1,6 +1,6 @@
 package de.atlascore.block.tile;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.Hopper;
 import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.Inventory;
@@ -29,7 +29,7 @@ public class CoreHopper extends CoreAbstractContainerTile<Inventory> implements 
 	private int cooldown;
 	private int transferAmount;
 	
-	public CoreHopper(Material type) {
+	public CoreHopper(BlockType type) {
 		super(type);
 	}
 	

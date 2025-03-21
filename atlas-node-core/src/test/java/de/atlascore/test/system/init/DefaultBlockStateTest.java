@@ -10,13 +10,13 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 
 import de.atlascore.registry.CoreRegistryHandler;
-import de.atlascore.system.init.MaterialLoader;
-import de.atlasmc.Material;
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.data.BlockDataFactory;
 import de.atlasmc.block.tile.TileEntityFactory;
 import de.atlasmc.registry.Registries;
+import de.atlascore.test.registry.RegistryTestHelper;
 import de.atlastest.AtlasTest;
 
 public class DefaultBlockStateTest { 
@@ -26,10 +26,12 @@ public class DefaultBlockStateTest {
 		try {
 			Registries.init(new CoreRegistryHandler());
 		} catch (IllegalStateException e) {}
-		Registries.createRegistry(Material.class);
+		Registries.createRegistry(BlockType.class);
 		Registries.createRegistry(BlockDataFactory.class);
 		Registries.createRegistry(TileEntityFactory.class);
-		MaterialLoader.loadMaterial();
+		RegistryTestHelper.loadBulk("/data/block_data_factories.json");
+		RegistryTestHelper.loadBulk("/data/tile_entity_factories.json");
+		RegistryTestHelper.loadBulk("/data/block_types.json");
 		JsonReader reader = AtlasTest.getJsonResourceReader("/minecraft/blocks.json");
 		reader.beginObject();
 		LinkedList<Throwable> checks = new LinkedList<>();
@@ -37,11 +39,11 @@ public class DefaultBlockStateTest {
 			String fail = null;
 			String rawMat = reader.nextName();
 			NamespacedKey matKey = NamespacedKey.of(rawMat);
-			Material mat = Material.get(matKey);
+			BlockType type = BlockType.get(matKey);
 			// handle no material found
-			if (mat == null) {
+			if (type == null) {
 				reader.skipValue();
-				checks.add(new AssertionFailedError("Cannot find Material with name: " + rawMat));
+				checks.add(new AssertionFailedError("Cannot find type with name: " + rawMat));
 				continue;
 			}
 			reader.beginObject();
@@ -75,11 +77,11 @@ public class DefaultBlockStateTest {
 					reader.endObject();
 					if (!defaultState)
 						continue;
-					BlockData data = mat.createBlockData();
+					BlockData data = type.createBlockData();
 					int stateID = data.getStateID();
 					if (id == stateID)
 						continue;
-					fail = "Internal Material block id does not match default state id: " + id + "  | " + stateID + " | " + mat.getNamespacedKeyRaw();
+					fail = "Internal type block id does not match default state id: " + id + "  | " + stateID + " | " + type.getNamespacedKeyRaw();
 				}
 				reader.endArray();
 			}

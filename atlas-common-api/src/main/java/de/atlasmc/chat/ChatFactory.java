@@ -35,6 +35,6 @@ public interface ChatFactory {
 	
 	Chat fromNBT(NBTReader reader) throws IOException;
 	
-	void toNBT(Chat chat, NBTWriter writer) throws IOException;
+	void toNBT(CharSequence key, Chat chat, NBTWriter writer) throws IOException;
 
 }

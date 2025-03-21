@@ -37,6 +37,7 @@ public class CoreApplyEffects implements ApplyEffects {
 		NBT_FIELDS.setField(NBT_EFFECTS, (holder, reader) -> {
 			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {
+				reader.readNextEntry();
 				PotionEffect effect = PotionEffect.getFromNBT(reader);
 				if (effect == null)
 					continue;

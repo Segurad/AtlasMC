@@ -3,8 +3,8 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreMultipleFacing6;
-import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.Waterlogged;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
@@ -18,8 +18,8 @@ public class CoreMultipleFacing6Waterlogged extends CoreMultipleFacing6 implemen
 	
 	private boolean waterlogged;
 	
-	public CoreMultipleFacing6Waterlogged(Material material) {
-		super(material);
+	public CoreMultipleFacing6Waterlogged(BlockType type) {
+		super(type);
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class CoreMultipleFacing6Waterlogged extends CoreMultipleFacing6 implemen
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return getType().getBlockStateID()+
 				(hasFace(BlockFace.WEST)?0:1)+
 				(waterlogged?0:2)+
 				(hasFace(BlockFace.UP)?0:4)+

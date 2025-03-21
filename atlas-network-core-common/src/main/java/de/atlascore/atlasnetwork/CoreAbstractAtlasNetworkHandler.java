@@ -22,9 +22,21 @@ public abstract class CoreAbstractAtlasNetworkHandler implements AtlasNetworkHan
 		this.nodeManager = builder.getNodeManager();
 		this.serverManager = builder.getServerManager();
 		this.profileHandler = builder.getProfileHandler();
-		this.permissionProvider = builder.getPermissionProvider();
+		this.permissionProvider = builder.getPermissionManager();
 		this.uuid = builder.getUUID();
 		this.publicKey = builder.getPublicKey();
+		if (nodeManager == null)
+			throw new IllegalArgumentException("NodeManager can not be null!");
+		if (serverManager == null)
+			throw new IllegalArgumentException("ServerManager can not be null!");
+		if (profileHandler == null)
+			throw new IllegalArgumentException("ProfileHandler can not be null!");
+		if (permissionProvider == null)
+			throw new IllegalArgumentException("PermissionProvider can not be null!");
+		if (uuid == null)
+			throw new IllegalArgumentException("UUID can not be null!");
+		if (publicKey == null)
+			throw new IllegalArgumentException("PublicKey can not be null!");
 	}
 
 	@Override
@@ -43,7 +55,7 @@ public abstract class CoreAbstractAtlasNetworkHandler implements AtlasNetworkHan
 	}
 
 	@Override
-	public PermissionManager getPermissionProvider() {
+	public PermissionManager getPermissionManager() {
 		return permissionProvider;
 	}
 

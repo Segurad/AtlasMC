@@ -3,8 +3,8 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreMultipleFacing4;
-import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.GlassPane;
 
@@ -18,7 +18,7 @@ public class CoreGlassPane extends CoreMultipleFacing4 implements GlassPane {
 	
 	private boolean waterlogged;
 	
-	public CoreGlassPane(Material material) {
+	public CoreGlassPane(BlockType material) {
 		super(material);
 	}
 
@@ -34,7 +34,7 @@ public class CoreGlassPane extends CoreMultipleFacing4 implements GlassPane {
 
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return getType().getBlockStateID()+
 				(hasFace(BlockFace.WEST)?0:1)+
 				(waterlogged?0:2)+
 				(hasFace(BlockFace.SOUTH)?0:4)+

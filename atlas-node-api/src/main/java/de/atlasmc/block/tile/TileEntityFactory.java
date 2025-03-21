@@ -1,6 +1,6 @@
 package de.atlasmc.block.tile;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.util.factory.Factory;
 
@@ -12,7 +12,7 @@ public interface TileEntityFactory extends Factory {
 	
 	boolean isValidTile(TileEntity tile);
 	
-	TileEntity createTile(Material material);
+	TileEntity createTile(BlockType type);
 
 	int getTileID();
 	

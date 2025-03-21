@@ -3,7 +3,7 @@ package de.atlascore.block.data;
 import java.util.Set;
 
 import de.atlasmc.Axis;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 
 public class CoreAxisOrientableXZ extends CoreAxisOrientable {
 
@@ -11,8 +11,8 @@ public class CoreAxisOrientableXZ extends CoreAxisOrientable {
 			Set.of(Axis.X,
 					Axis.Z);
 	
-	public CoreAxisOrientableXZ(Material material) {
-		super(material, Axis.X);
+	public CoreAxisOrientableXZ(BlockType type) {
+		super(type, Axis.X);
 	}
 
 	@Override
@@ -22,7 +22,7 @@ public class CoreAxisOrientableXZ extends CoreAxisOrientable {
 	
 	@Override
 	public int getStateID() {
-		return super.getStateID() + (getAxis() == Axis.X ? 0:1); 
+		return super.getStateID() + (axis == Axis.X ? 0:1); 
 	}
 
 }

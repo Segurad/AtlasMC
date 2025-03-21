@@ -2,7 +2,7 @@ package de.atlascore.block.data;
 
 import java.util.List;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.Levelled;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
@@ -14,15 +14,15 @@ public class CoreLevelled extends CoreBlockData implements Levelled {
 		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.LEVEL);
 	}
 	
-	private int level;
-	private final int maxlevel;
+	protected int level;
+	protected final int maxlevel;
 	
-	public CoreLevelled(Material material) {
-		this(material, 15);
+	public CoreLevelled(BlockType type) {
+		this(type, 15);
 	}
 	
-	public CoreLevelled(Material material, int maxlevel) {
-		super(material);
+	public CoreLevelled(BlockType type, int maxlevel) {
+		super(type);
 		this.maxlevel = maxlevel;
 	}
 

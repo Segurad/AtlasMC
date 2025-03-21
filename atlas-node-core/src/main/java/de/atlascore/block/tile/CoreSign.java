@@ -2,7 +2,7 @@ package de.atlascore.block.tile;
 
 import java.io.IOException;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.Sign;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
@@ -23,22 +23,22 @@ public class CoreSign extends CoreTileEntity implements Sign {
 	static {
 		NBT_FIELDS = CoreTileEntity.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_TEXT_1, (holder, reader) -> {
-			holder.setLine(0, ChatUtil.toChat(reader.readStringTag()));
+			holder.setLine(0, ChatUtil.fromNBT(reader));
 		});
 		NBT_FIELDS.setField(NBT_TEXT_2, (holder, reader) -> {
-			holder.setLine(1, ChatUtil.toChat(reader.readStringTag()));
+			holder.setLine(1, ChatUtil.fromNBT(reader));
 		});
 		NBT_FIELDS.setField(NBT_TEXT_3, (holder, reader) -> {
-			holder.setLine(2, ChatUtil.toChat(reader.readStringTag()));
+			holder.setLine(2, ChatUtil.fromNBT(reader));
 		});
 		NBT_FIELDS.setField(NBT_TEXT_4, (holder, reader) -> {
-			holder.setLine(3, ChatUtil.toChat(reader.readStringTag()));
+			holder.setLine(3, ChatUtil.fromNBT(reader));
 		});
 	}
 	
 	private Chat[] lines;
 	
-	public CoreSign(Material type) {
+	public CoreSign(BlockType type) {
 		super(type);
 	}
 
@@ -83,12 +83,12 @@ public class CoreSign extends CoreTileEntity implements Sign {
 		if (lines == null) 
 			return;
 		if (lines[0] != null)
-			writer.writeStringTag(NBT_TEXT_1, lines[0].toText());
+			ChatUtil.toNBT(NBT_TEXT_1, lines[0], writer);
 		if (lines[1] != null)
-			writer.writeStringTag(NBT_TEXT_2, lines[1].toText());
+			ChatUtil.toNBT(NBT_TEXT_1, lines[1], writer);
 		if (lines[2] != null)
-			writer.writeStringTag(NBT_TEXT_3, lines[2].toText());
+			ChatUtil.toNBT(NBT_TEXT_1, lines[2], writer);
 		if (lines[3] != null)
-			writer.writeStringTag(NBT_TEXT_4, lines[3].toText());
+			ChatUtil.toNBT(NBT_TEXT_1, lines[3], writer);
 	}
 }

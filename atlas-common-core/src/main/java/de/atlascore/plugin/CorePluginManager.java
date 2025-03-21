@@ -2,17 +2,19 @@ package de.atlascore.plugin;
 
 import java.io.File;
 import java.io.InputStream;
+import java.lang.ref.ReferenceQueue;
 import java.net.URL;
+import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Function;
 
 import de.atlasmc.Atlas;
 import de.atlasmc.NamespacedKey;
@@ -25,273 +27,130 @@ import de.atlasmc.event.Listener;
 import de.atlasmc.log.Log;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginConfiguration;
-import de.atlasmc.plugin.PluginException;
 import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.plugin.PluginLoader;
 import de.atlasmc.plugin.PluginManager;
-import de.atlasmc.plugin.PreparedPlugin;
+import de.atlasmc.plugin.PrototypePlugin;
+import de.atlasmc.plugin.Version;
+import de.atlasmc.util.concurrent.future.CompletableFuture;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
-import de.atlasmc.util.configuration.Configuration;
+import de.atlasmc.util.iterator.UnboxingIterator;
 
 public class CorePluginManager implements PluginManager {
 	
 	public static final Plugin SYSTEM = new AtlasSystemPlugin();
 	
+	final ReferenceQueue<Object> lockQueue;
 	private final Log logger;
-	private final Map<String, Plugin> plugins;
+	private final Map<String, CoreRegisteredPlugin> plugins;
+	private final Map<File, CoreRegisteredPlugin> pluginByFile;
+	private final Map<NamespacedKey, CoreRegisteredPlugin> pluginByRepo;
 	private final List<PluginLoader> loaders;
-	private final Map<String, Future<Plugin>> loading;
-	private final Lock lock;
 	private final Set<NamespacedKey> features;
+	private final Values values;
+	private final CorePluginManagerWorker worker;
 	
 	public CorePluginManager(Log logger) {
+		if (logger == null)
+			throw new IllegalArgumentException("Logger can not be null!");
 		this.logger = logger;
-		this.lock = new ReentrantLock();
 		this.plugins = new ConcurrentHashMap<>();
-		this.loading = new ConcurrentHashMap<>();
+		this.pluginByFile = new ConcurrentHashMap<>();
+		this.pluginByRepo = new ConcurrentHashMap<>();
 		this.loaders = new CopyOnWriteArrayList<>();
+		this.lockQueue = new ReferenceQueue<>();
 		this.features = ConcurrentHashMap.newKeySet();
+		this.values = new Values();
+		new CorePluginLockMonitor(lockQueue, logger).start();
+		this.worker = new CorePluginManagerWorker(logger);
+		worker.start();
 	}
 
 	@Override
-	public boolean unloadPlugin(Plugin plugin) {
+	public Future<Boolean> unloadPlugin(Plugin plugin, boolean force) {
 		if (plugin == null)
 			throw new IllegalArgumentException("Plugin can not be null!");
-		try {
-			plugin.disable();
-		} catch(Exception e) {
-			logger.error("Error while disabling plugin: " + plugin.getName() + " v" + plugin.getVersion(), e);
-			return false;
-		}
-		try {
-			plugin.unload();
-		} catch(Exception e) {
-			logger.error("Error while unloading plugin: " + plugin.getName() + " v" + plugin.getVersion(), e);
-			return false;
-		}
-		try {
-			plugin.getPluginLoader().unload(plugin);
-		} catch (Exception e) {
-			logger.error("Error while unloading plugin in pluginloader: " + plugin.getName() + " v" + plugin.getVersion(), e);
-			return false;
-		}
-		lock.lock();
-		plugins.remove(plugin.getName(), plugin);
-		lock.unlock();
-		return true;
+		CoreRegisteredPlugin registered = plugins.get(plugin.getName());
+		if (registered == null)
+			return CompleteFuture.getBooleanFuture(true);
+		CompletableFuture<Boolean> future = new CompletableFuture<>();
+		worker.queueTask(new CoreUnloadPluginTask(this, future, registered, force));
+		return future;
 	}
 	
 	@Override
-	public Future<Plugin> loadPlugin(File file, boolean enable) {
+	public Future<Plugin> loadPlugin(File file, Object lock) {
 		if (file.exists())
 			throw new IllegalArgumentException("File does not exist: " + file.getPath());
-		List<Future<Plugin>> futures = internalLoadPlugins(List.of(file), enable);
+		List<Future<Plugin>> futures = internalLoadPlugins(List.of(file), lock);
 		if (futures.isEmpty())
 			return CompleteFuture.getNullFuture();
 		return futures.get(0);
 	}
 	
 	@Override
-	public List<Future<Plugin>> loadPlugins(Collection<File> files, boolean enable) {
-		return internalLoadPlugins(files, enable);
-	}
-	
-	private List<Future<Plugin>> internalLoadPlugins(Collection<File> files, boolean enable) {
-		lock.lock();
-		List<Future<Plugin>> futures = new ArrayList<>(files.size());
-		Map<String, CorePluginLoaderTask> prepared = null;
-		Map<String, Future<Plugin>> loadingFuture = new HashMap<>(files.size());
-		for (File file : files) {
-			// prepare plugin
-			PreparedPlugin plugin = preparePlugin(file);
-			if (plugin == null) {
-				futures.add(new CompleteFuture<>(new PluginException("Unable to load plugin (no loader?): " + file)));
-				continue;
-			}
-			final String pluginName = plugin.getName();
-			// check if loading
-			Future<Plugin> future = loading.get(pluginName);
-			if (future != null) {
-				loadingFuture.put(pluginName, future);
-				futures.add(future);
-				continue;	
-			}
-			// check if loaded
-			Plugin p = plugins.get(pluginName);
-			if (p != null) {
-				Future<Plugin> f = CompleteFuture.of(p);
-				loadingFuture.put(pluginName, f);
-				futures.add(f);
-				continue;
-			}
-			// check if features a present
-			Configuration cfg = plugin.getPluginInfo();
-			List<String> rawFeatures = cfg.getStringList("required-features", List.of());
-			int featuresPresent = 0;
-			for (String raw : rawFeatures) {
-				if (!features.contains(NamespacedKey.of(raw))) {
-					logger.debug("Unable to load plugin {} feature not preset: {}", pluginName, raw);
-					break;
-				}
-				featuresPresent++;
-			}
-			if (featuresPresent < rawFeatures.size())
-				continue;
-			featuresPresent = 0;
-			rawFeatures = cfg.getStringList("soft-required-features", List.of());
-			for (String raw : rawFeatures) {
-				if (features.contains(NamespacedKey.of(raw))) {
-					featuresPresent++;
-				}
-			}
-			if (featuresPresent == 0 && !rawFeatures.isEmpty()) {
-				logger.debug("Unable to load plugin {} missing at least one feature: {}", pluginName, rawFeatures);
-				continue;
-			}
-			// add for loading
-			logger.debug("Prepared plugin: {}", pluginName);
-			if (prepared == null)
-				prepared = new HashMap<>();
-			CorePluginLoaderTask task = new CorePluginLoaderTask(this, plugin, enable);
-			this.loading.put(pluginName, task.getFuture());
-			prepared.put(pluginName, task);
-			loadingFuture.put(pluginName, task.getFuture());
-		}
-		lock.unlock();
-		if (prepared == null) {
-			// all plugins loaded or not able to load
-			return futures.isEmpty() ? List.of() : futures;
-		}
-		logger.debug("Resolving dependencies...");
-		for (CorePluginLoaderTask task : prepared.values()) {
-			// check load before
-			PreparedPlugin preped = task.getPlugin();
-			List<String> loadbefore = preped.getPluginInfo().getStringList("load-before");
-			if (loadbefore == null || loadbefore.isEmpty())
-				continue;
-			for (String name : loadbefore) {
-				CorePluginLoaderTask after = prepared.get(name);
-				if (after == null)
-					continue;
-				after.getPlugin().addSoftDependency(task.getFuture());
-			}
-			// resolve soft depends and depends on
-			resolveDependencies(preped, loadingFuture);
-		}
-		for (CorePluginLoaderTask preped : prepared.values()) {
-			preped.prepare();
-		}
-		logger.debug("Loading plugins...");
-		for (CorePluginLoaderTask preped : prepared.values()) {
-			if (preped.isReady() && !preped.isFinished()) {
-				preped.schedule();
-			}
-		}
-		return futures;
+	public Future<Plugin> loadRepoPlugin(NamespacedKey entry, Object lock) {
+		if (entry == null)
+			throw new IllegalArgumentException("Entry can not be null!");
+		List<Future<Plugin>> futures = internalLoadRepoPlugins(List.of(entry), lock);
+		if (futures.isEmpty())
+			return CompleteFuture.getNullFuture();
+		return futures.get(0);
 	}
 	
 	@Override
-	public List<Future<Plugin>> loadPlugins(File directory, boolean enable) {
+	public List<Future<Plugin>> loadPlugins(Collection<File> files, Object lock) {
+		return internalLoadPlugins(files, lock);
+	}
+	
+	@Override
+	public List<Future<Plugin>> loadPlugins(File directory, Object lock) {
 		if (directory == null)
 			throw new IllegalArgumentException("Directory can not be null!");
 		if (!directory.isDirectory())
 			throw new IllegalArgumentException("Directory does not exist: ".concat(directory.getPath()));
 		logger.debug("Loading plugins from directory: {}", directory.getPath());
-		return internalLoadPlugins(List.of(directory.listFiles()), enable);
+		return internalLoadPlugins(List.of(directory.listFiles()), lock);
 	}
 	
-	private void resolveDependencies(PreparedPlugin plugin, Map<String, Future<Plugin>> plugins) {
-		List<String> dependencies = plugin.getPluginInfo().getStringList("depends-on");
-		boolean missingDependencies = false;
-		for (String dependency : dependencies) {
-			Future<Plugin> future = plugins.get(dependency);
-			if (future != null) {
-				plugin.addDependency(future);
-				continue;
-			}
-			if (getPlugin(dependency) != null)
-				continue;
-			logger.warn("Missing dependency \"{}\" for plugin: {}", dependency, plugin.getName());
-			missingDependencies = true;
-		}
-		if (missingDependencies) {
-			logger.error("Unable to load plugin: {} (Missing dependencies)!", plugin.getName());
-			plugin.setInvalid();
-			return;
-		}
-		dependencies = plugin.getPluginInfo().getStringList("soft-depends-on");
-		for (String dependency : dependencies) {
-			Future<Plugin> future = plugins.get(dependency);
-			if (future != null) {
-				plugin.addSoftDependency(future);
-				continue;
-			}
-			if (getPlugin(dependency) != null)
-				continue;
-			logger.debug("Missing soft dependency \"{}\" for plugin: {}", dependency, plugin.getName());
-		}
+	@Override
+	public List<Future<Plugin>> loadRepoPlugins(Collection<NamespacedKey> entries, Object lock) {
+		if (entries == null)
+			throw new IllegalArgumentException("Entries can not be null!");
+		return internalLoadRepoPlugins(entries, lock);
 	}
 	
-	/**
-	 * Loads the source of the PreparedPlugin, it's dependencies, loads and enable the Plugin.
-	 * Returns null if failed to load the PreparedPlugin
-	 * @param prepared
-	 * @param enable
-	 * @return plugin
-	 * @throws PluginException
-	 */
-	Plugin loadPreparedPlugin(CorePluginLoaderTask task, boolean enable) {
-		PreparedPlugin prepared = task.getPlugin();
-		if (prepared.isInvalid())
-			return null;
-		if (prepared.isLoaded())
-			return prepared.getPlugin();
-		if (prepared.hasDependencies()) {
-			boolean missingDependencies = false;
-			for (Future<Plugin> dependency : prepared.getDependencies()) {
-				if (!dependency.isSuccess()) {
-					missingDependencies = true;
-					break;
-				}
-			}
-			if (missingDependencies) {
-				throw new PluginException("Unable to load plugin: " + prepared.getName() + " (Missing dependencies)!");
-			}
+	private List<Future<Plugin>> internalLoadPlugins(Collection<File> files, Object pluginLock) {
+		List<Future<Plugin>> futures = new ArrayList<>(files.size());
+		final Map<File, CompletableFuture<Plugin>> fileFutures = new HashMap<>(futures.size());
+		for (File file : files) {
+			CompletableFuture<Plugin> future = new CompletableFuture<>();
+			futures.add(future);
+			fileFutures.put(file, future);
 		}
-		Plugin plugin = null;
-		try {
-			plugin = prepared.load();
-		} catch (Exception e) {
-			prepared.setInvalid();
-			throw new PluginException("Error while loading plugin source: " + prepared.getName(), e);
-		}
-		if (plugin.isEnabled())
-			// plugin already loaded
-			return plugin;
-		try {
-			plugin.load();
-		} catch(Exception e) {
-			throw new PluginException("Error while loading plugin: " + plugin.getName() + " v" + plugin.getVersion(), e);
-		}
-		if (!enable) {
-			registerPlugin(plugin);
-			return plugin;
-		}
-		try {
-			plugin.enable();
-		} catch(Exception e) {
-			throw new PluginException("Error while enabling plugin: " + plugin.getName() + " v" + plugin.getVersion(), e);
-		}
-		registerPlugin(plugin);
-		return plugin;
+		worker.queueTask(new CoreLoadPluginTask(this, fileFutures, pluginLock));
+		return futures;
 	}
 	
-	private void registerPlugin(Plugin plugin) {
-		lock.lock();
-		plugins.put(plugin.getName(), plugin);
-		loading.remove(plugin.getName());
-		lock.unlock();
+	private List<Future<Plugin>> internalLoadRepoPlugins(Collection<NamespacedKey> entries, Object pluginLock) {
+		List<Future<Plugin>> futures = new ArrayList<>(entries.size());
+		final Map<NamespacedKey, CompletableFuture<Plugin>> fileFutures = new HashMap<>(futures.size());
+		for (NamespacedKey entry : entries) {
+			CompletableFuture<Plugin> future = new CompletableFuture<>();
+			futures.add(future);
+			fileFutures.put(entry, future);
+		}
+		worker.queueTask(new CoreLoadRepoPluginTask(this, fileFutures, pluginLock));
+		return futures;
+	}
+	
+	void internalRegisterPlugin(CoreRegisteredPlugin plugin) {
+		plugins.put(plugin.prototype.getName(), plugin);
+		pluginByFile.put(plugin.prototype.getFile(), plugin);
+		NamespacedKey repo = plugin.repoEntry;
+		if (repo != null)
+			pluginByRepo.put(repo, plugin);
 	}
 	
 	/**
@@ -299,10 +158,10 @@ public class CorePluginManager implements PluginManager {
 	 * @param file
 	 * @return PreparedPlugin or null
 	 */
-	private PreparedPlugin preparePlugin(File file) {
+	PrototypePlugin preparePlugin(File file) {
 		try {
 			for (PluginLoader loader : loaders) {
-				PreparedPlugin plugin = loader.preparePlugin(file);
+				PrototypePlugin plugin = loader.preparePlugin(file);
 				if (plugin == null) 
 					continue;
 				return plugin;
@@ -314,18 +173,8 @@ public class CorePluginManager implements PluginManager {
 	}
 
 	@Override
-	public boolean unloadPlugins(Plugin... plugins) {
-		boolean success = true;
-		for (Plugin plugin : plugins) {
-			if (!unloadPlugin(plugin))
-				success = false;
-		}
-		return success;
-	}
-
-	@Override
-	public List<Plugin> getPlugins() {
-		return List.copyOf(plugins.values());
+	public Collection<Plugin> getPlugins() {
+		return values;
 	}
 	
 	@Override
@@ -337,7 +186,8 @@ public class CorePluginManager implements PluginManager {
 	public Plugin getPlugin(String name) {
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null!");
-		return plugins.get(name);
+		CoreRegisteredPlugin plugin = plugins.get(name);
+		return plugin != null ? plugin.prototype.getPlugin() : null;
 	}
 
 	@Override
@@ -398,9 +248,127 @@ public class CorePluginManager implements PluginManager {
 	public void callEvent(Event event) {
 		HandlerList.callEvent(event);
 	}
+
+	@Override
+	public void removeEvents(PluginHandle handle) {
+		HandlerList.unregisterListenerGlobal(handle);
+	}
+
+	@Override
+	public Set<NamespacedKey> getFeatures() {
+		return features;
+	}
+
+	@Override
+	public boolean hasFeature(NamespacedKey feature) {
+		return features.contains(feature);
+	}
+
+	@Override
+	public void addFeature(NamespacedKey feature) {
+		features.add(feature);
+	}
+
+	@Override
+	public boolean removeFeature(NamespacedKey feature) {
+		return features.remove(feature);
+	}
+
+	@Override
+	public boolean lockPlugin(Plugin plugin, Object lock) {
+		if (plugin == null)
+			throw new IllegalArgumentException("Plugin can not be null!");
+		if (lock == null)
+			throw new IllegalArgumentException("Lock can not be null!");
+		CoreRegisteredPlugin registered = plugins.get(plugin.getName());
+		if (registered == null)
+			return false;
+		return registered.lock(lock);
+	}
+
+	@Override
+	public boolean unlockPlugin(Plugin plugin, Object lock) {
+		if (plugin == null)
+			throw new IllegalArgumentException("Plugin can not be null!");
+		if (lock == null)
+			throw new IllegalArgumentException("Lock can not be null!");
+		CoreRegisteredPlugin registered = plugins.get(plugin.getName());
+		if (registered == null)
+			return false;
+		return registered.unlock(lock);
+	}
+
+	@Override
+	public boolean isLocked(Plugin plugin) {
+		if (plugin == null)
+			throw new IllegalArgumentException("Plugin can not be null!");
+		CoreRegisteredPlugin registered = plugins.get(plugin.getName());
+		if (registered == null)
+			return false;
+		return !registered.isLocked();
+	}
+
+	@Override
+	public int clearLocks(Plugin plugin) {
+		if (plugin == null)
+			throw new IllegalArgumentException("Plugin can not be null!");
+		CoreRegisteredPlugin registered = plugins.get(plugin.getName());
+		if (registered == null)
+			return 0;
+		return registered.clearLocks();
+	}
+
+	@Override
+	public int lockCount(Plugin plugin) {
+		if (plugin == null)
+			throw new IllegalArgumentException("Plugin can not be null!");
+		CoreRegisteredPlugin registered = plugins.get(plugin.getName());
+		if (registered == null)
+			return 0;
+		return registered.lockCount();
+	}
+	
+	@Override
+	public boolean isKeepLoaded(Plugin plugin) {
+		CoreRegisteredPlugin pl = plugins.get(plugin.getName());
+		return pl.isKeepLoaded();
+	}
+	
+	@Override
+	public void setKeepLoaded(Plugin plugin, boolean keepLoaded) {
+		CoreRegisteredPlugin pl = plugins.get(plugin.getName());
+		pl.setKeepLoaded(keepLoaded);
+	}
+
+	Log getLogger() {
+		return logger;		
+	}
+	
+	CoreRegisteredPlugin getRegisteredPlugin(File file) {
+		return pluginByFile.get(file);
+	}
+	
+	CoreRegisteredPlugin getRegisteredPlugin(String name) {
+		return plugins.get(name);
+	}
+	
+	void removePlugin(CoreRegisteredPlugin plugin) {
+		plugins.remove(plugin.prototype.getName(), plugin);
+		pluginByFile.remove(plugin.prototype.getFile(), plugin);
+		if (plugin.repoEntry != null)
+			pluginByRepo.remove(plugin.repoEntry, plugin);
+	}
+
+	void tryUnloadPlugin(CoreRegisteredPlugin plugin) {
+		if (plugins.get(plugin.prototype.getName()) != plugin)
+			return;
+		worker.queueTask(new CoreUnloadPluginTask(this, new CompletableFuture<>(), plugin, false));
+	}
 	
 	private static class AtlasSystemPlugin implements Plugin {
 
+		private final Version version = new Version("v0.0.0-dev");
+		
 		@Override
 		public void load() {}
 
@@ -429,8 +397,8 @@ public class CorePluginManager implements PluginManager {
 		public void reloadConfigurations() {}
 
 		@Override
-		public String getVersion() {
-			return Atlas.FULL_VERSION;
+		public Version getVersion() {
+			return version;
 		}
 
 		@Override
@@ -494,14 +462,6 @@ public class CorePluginManager implements PluginManager {
 		}
 
 		@Override
-		public boolean isKeepLoaded() {
-			return true;
-		}
-
-		@Override
-		public void setKeepLoaded(boolean keeploaded) {}
-
-		@Override
 		public void loadConfiguration(PluginConfiguration config, Object context) {}
 
 		@Override
@@ -511,32 +471,70 @@ public class CorePluginManager implements PluginManager {
 		public Collection<PluginConfiguration> getConfigurations() {
 			return List.of();
 		}
+
+		@Override
+		public PrototypePlugin getPrototype() {
+			return null;
+		}
 		
 	}
+	
+	private final class Values extends AbstractCollection<Plugin> {
+		
+		private static final Function<CoreRegisteredPlugin, Plugin> UNBOX = (u) -> {
+			return u.prototype.getPlugin();
+		};
 
-	@Override
-	public void removeEvents(PluginHandle handle) {
-		HandlerList.unregisterListenerGlobal(handle);
-	}
+		@Override
+		public Iterator<Plugin> iterator() {
+			return new UnboxingIterator<>(plugins.values().iterator(), UNBOX, false);
+		}
 
-	@Override
-	public Set<NamespacedKey> getFeatures() {
-		return features;
-	}
+		@Override
+		public int size() {
+			return plugins.size();
+		}
 
-	@Override
-	public boolean hasFeature(NamespacedKey feature) {
-		return features.contains(feature);
-	}
+		@Override
+		public boolean contains(Object o) {
+			if (o instanceof Plugin plugin) {
+				CoreRegisteredPlugin registered = plugins.get(plugin.getName());
+				if (registered == null)
+					return false;
+				if (registered.prototype.getPlugin() == plugin)
+					return true;
+			}
+			return false;
+		}
 
-	@Override
-	public void addFeature(NamespacedKey feature) {
-		features.add(feature);
-	}
+		@Override
+		public boolean add(Plugin e) {
+			return false;
+		}
 
-	@Override
-	public boolean removeFeature(NamespacedKey feature) {
-		return features.remove(feature);
+		@Override
+		public boolean remove(Object o) {
+			return false;
+		}
+
+		@Override
+		public boolean addAll(Collection<? extends Plugin> c) {
+			return false;
+		}
+
+		@Override
+		public boolean removeAll(Collection<?> c) {
+			return false;
+		}
+
+		@Override
+		public boolean retainAll(Collection<?> c) {
+			return false;
+		}
+
+		@Override
+		public void clear() {}
+		
 	}
 	
 }

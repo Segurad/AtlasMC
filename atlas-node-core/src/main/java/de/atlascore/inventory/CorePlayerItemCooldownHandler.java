@@ -2,13 +2,13 @@ package de.atlascore.inventory;
 
 import java.util.Set;
 
-import de.atlasmc.Material;
 import de.atlasmc.entity.Player;
+import de.atlasmc.inventory.ItemType;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutSetCooldown;
 import de.atlasmc.util.CooldownHandler;
 
-public class CorePlayerItemCooldownHandler extends CooldownHandler<Material> {
+public class CorePlayerItemCooldownHandler extends CooldownHandler<ItemType> {
 	
 	private final Player player;
 	
@@ -19,27 +19,27 @@ public class CorePlayerItemCooldownHandler extends CooldownHandler<Material> {
 	}
 	
 	@Override
-	protected void onSetCooldown(Material key, int ticks, int previousTicks) {
+	protected void onSetCooldown(ItemType key, int ticks, int previousTicks) {
 		PacketOutSetCooldown packet = new PacketOutSetCooldown();
-		packet.itemID = key.getItemID();
+		packet.itemID = key.getID();
 		packet.cooldown = ticks;
 		player.getConnection().sendPacked(packet);
 	}
 	
 	@Override
-	protected void onRemoveCooldown(Material key, int ticks) {
+	protected void onRemoveCooldown(ItemType key, int ticks) {
 		PacketOutSetCooldown packet = new PacketOutSetCooldown();
-		packet.itemID = key.getItemID();
+		packet.itemID = key.getID();
 		packet.cooldown = 0;
 		player.getConnection().sendPacked(packet);
 	}
 	
 	@Override
-	protected void onClear(Set<Material> keys) {
+	protected void onClear(Set<ItemType> keys) {
 		PlayerConnection con = player.getConnection();
-		for (Material key : keys) {
+		for (ItemType key : keys) {
 			PacketOutSetCooldown packet = new PacketOutSetCooldown();
-			packet.itemID = key.getItemID();
+			packet.itemID = key.getID();
 			packet.cooldown = 0;
 			con.sendPacked(packet);
 		}

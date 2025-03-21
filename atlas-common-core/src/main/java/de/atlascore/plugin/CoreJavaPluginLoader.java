@@ -11,7 +11,6 @@ import java.util.jar.JarFile;
 import de.atlasmc.plugin.JavaPlugin;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginLoader;
-import de.atlasmc.plugin.PreparedPlugin;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
@@ -45,26 +44,19 @@ public class CoreJavaPluginLoader implements PluginLoader {
 
 	@Override
 	public Plugin load(File file) throws IOException {
-		if (file == null)
-			throw new IllegalArgumentException("File can not be null!");
-		if (!file.exists())
-			throw new FileNotFoundException("File does not exist: " + file.getPath());
-		if (!file.isFile())
-			throw new IllegalArgumentException("The file is not a valid file: " + file.getPath());
-		Configuration info = getInfo(file);
-		if (info == null)
-			return null;
-		String loaderName = info.getString("loader");
-		if (loaderName != null && !loaderName.equals(getClass().getName()))
-			return null;
-		CoreJavaClassLoader loader = new CoreJavaClassLoader(this, file, getClass().getClassLoader(), info);
+		CorePrototypeJavaPlugin prototype = preparePlugin(file);
+		return prototype.create();
+	}
+	
+	Plugin internalLoad(CorePrototypeJavaPlugin prototype) throws IOException {
+		CoreJavaClassLoader loader = new CoreJavaClassLoader(prototype, getClass().getClassLoader());
 		loaders.add(loader);
 		return loader.getPlugin();
 	}
 	
 
 	@Override
-	public PreparedPlugin preparePlugin(File file) throws IOException {
+	public CorePrototypeJavaPlugin preparePlugin(File file) throws IOException {
 		if (file == null)
 			throw new IllegalArgumentException("File can not be null!");
 		if (!file.exists())
@@ -77,7 +69,7 @@ public class CoreJavaPluginLoader implements PluginLoader {
 		String loaderName = info.getString("loader");
 		if (loaderName != null && !loaderName.equals(getClass().getName()))
 			return null;
-		return new CorePreparedJavaPlugin(info, file, this);
+		return new CorePrototypeJavaPlugin(this, file, info);
 	}
 
 	/**
@@ -111,12 +103,6 @@ public class CoreJavaPluginLoader implements PluginLoader {
 				return clazz;
 		}
 		return null;
-	}
-
-	Plugin loadPreparedPlugin(CorePreparedJavaPlugin prepared) throws IOException {
-		CoreJavaClassLoader loader = new CoreJavaClassLoader(this, prepared.getFile(), getClass().getClassLoader(), prepared.getPluginInfo());
-		loaders.add(loader);
-		return loader.getPlugin();
 	}
 
 	@Override

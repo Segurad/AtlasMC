@@ -22,6 +22,11 @@ public abstract class AbstractNBTReader implements NBTReader {
 		if (closed)
 			throw new IOException("Stream closed!");
 	}
+	
+	protected void ensureTag(TagType type) throws IOException {
+		if (type != getType())
+			throw new NBTException("Cannot read " + getType() + " as " + type);
+	}
 
 	@Override
 	public Number readNumber() throws IOException {
@@ -50,17 +55,6 @@ public abstract class AbstractNBTReader implements NBTReader {
 			throw new NBTException("Tried to read tag as number: " + type);
 		}
 		return data;
-	}
-	
-	@Override
-	public boolean isArrayTag() {
-		TagType type = null;
-		try {
-			type = getType();
-		} catch (IOException e) {}
-		return type == TagType.BYTE_ARRAY ||
-				type == TagType.INT_ARRAY ||
-				type == TagType.LONG_ARRAY;
 	}
 	
 	@Override
@@ -131,7 +125,9 @@ public abstract class AbstractNBTReader implements NBTReader {
 			// Handle Compound, List(Compound) and List(List)
 			if (type == TagType.COMPOUND || (type == TagType.LIST && (getListType() == TagType.COMPOUND || getListType() == TagType.LIST))) {
 				readNextEntry(); // progress to first element of list or compound
-			} else skipTag(); // progress to next
+			} else {
+				skipTag(); // progress to next
+			}
 		}
 	}
 	
@@ -149,11 +145,10 @@ public abstract class AbstractNBTReader implements NBTReader {
 	public void skipToEnd() throws IOException {
 		final int depth = getDepth();
 		while (depth <= getDepth()) {
-			if (getType() == TagType.TAG_END && depth == getDepth()) {
+			if (getType() == TagType.TAG_END && depth == getDepth())
 				readNextEntry();
-			} else {
+			else
 				skipTag();
-			}
 		}
 	}
 

@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional6Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.TechnicalPiston;
 
@@ -15,27 +15,28 @@ public class CoreTechnicalPiston extends CoreDirectional6Faces implements Techni
 		PROPERTIES = merge(CoreDirectional6Faces.PROPERTIES, BlockDataProperty.TYPE);
 	}
 	
-	private Type type;
+	protected Type pistonType;
 	
-	public CoreTechnicalPiston(Material material) {
-		super(material);
-		type = Type.NORMAL;
+	public CoreTechnicalPiston(BlockType type) {
+		super(type);
+		pistonType = Type.NORMAL;
 	}
 
 	@Override
-	public Type getType() {
-		return type;
+	public Type getPistonType() {
+		return pistonType;
 	}
 
 	@Override
-	public void setType(Type type) {
-		if (type == null) throw new IllegalArgumentException("Type can not be null!");
-		this.type = type;
+	public void setPistonType(Type type) {
+		if (type == null) 
+			throw new IllegalArgumentException("Type can not be null!");
+		this.pistonType = type;
 	}
 
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+getFaceValue()*2+type.ordinal();
+		return getType().getBlockStateID()+getFaceValue()*2+pistonType.ordinal();
 	}
 	
 	@Override

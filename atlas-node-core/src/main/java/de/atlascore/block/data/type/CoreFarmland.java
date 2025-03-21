@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreBlockData;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Farmland;
 
@@ -18,8 +18,8 @@ public class CoreFarmland extends CoreBlockData implements Farmland {
 	private final int maxmoisture;
 	private int moisture;
 	
-	public CoreFarmland(Material material) {
-		super(material);
+	public CoreFarmland(BlockType type) {
+		super(type);
 		maxmoisture = 7;
 	}
 

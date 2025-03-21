@@ -1,24 +1,24 @@
 package de.atlasmc.entity;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.BlockData;
 
 public interface AbstractMinecart extends Vehicle {
 	
-	public BlockData getCustomBlock();
+	BlockData getCustomBlock();
 	
-	public boolean hasCustomBlock();
+	boolean hasCustomBlock();
 	
-	public void setCustomBlock(BlockData data);
+	void setCustomBlock(BlockData data);
 	
-	public void setCustomBlockType(Material material);
+	void setCustomBlockType(BlockType type);
 	
-	public int getCustomBlockY();
+	int getCustomBlockY();
 	
-	public void setCustomBlockY(int y);
+	void setCustomBlockY(int y);
 	
-	public boolean getShowCustomBlock();
+	boolean getShowCustomBlock();
 
-	public void setShowCustomBlock(boolean show);
+	void setShowCustomBlock(boolean show);
 	
 }

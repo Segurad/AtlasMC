@@ -2,7 +2,7 @@ package de.atlascore.block.data.type;
 
 import java.util.List;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Bamboo;
 
@@ -19,8 +19,8 @@ public class CoreBamboo extends CoreSapling implements Bamboo {
 	private int age;
 	private Leaves leaves;
 	
-	public CoreBamboo(Material material) {
-		super(material, 1);
+	public CoreBamboo(BlockType type) {
+		super(type, 1);
 		leaves = Leaves.NONE;
 	}
 

@@ -2,7 +2,8 @@ package de.atlasmc.world;
 
 import java.util.Collection;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.Block;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.entity.Entity;
@@ -107,7 +108,7 @@ public interface Chunk extends Tickable {
 	 */
 	TileEntity setTileEntity(TileEntity tile, int x, int y, int z);
 	
-	TileEntity setTileEntity(Material material, int x, int y, int z);
+	TileEntity setTileEntity(BlockType type, int x, int y, int z);
 	
 	int getHighestBlockYAt(int x, int z);
 	
@@ -155,17 +156,17 @@ public interface Chunk extends Tickable {
 	 */
 	int getBlockState(int x, int y, int z);
 	
-	Material getBlockType(int x, int y, int z);
+	BlockType getBlockType(int x, int y, int z);
 	
 	/**
 	 * Sets the Material at the position<br>
 	 * Does not update changes for clients
-	 * @param material
+	 * @param type
 	 * @param x in this chunk
 	 * @param y in this chunk
 	 * @param z in this chunk
 	 */
-	void setBlockType(Material material, int x, int y, int z);
+	void setBlockType(BlockType type, int x, int y, int z);
 	
 	/**
 	 * Sets the BlockData at the position<br>

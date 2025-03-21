@@ -1,7 +1,7 @@
 package de.atlasmc.util.raytracing;
 
-import de.atlasmc.Material;
-import de.atlasmc.MaterialTags;
+import de.atlasmc.block.BlockType;
+import de.atlasmc.block.BlockTypeTags;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.tag.Tags;
 
@@ -10,12 +10,12 @@ public interface BlockRayCollisionRule {
 
 	public static BlockRayCollisionRule
 	IGNORE_AIR = (data) -> {
-		Material material = data.getMaterial();
-		return Tags.isTagged(MaterialTags.AIR, material);
+		BlockType type = data.getType();
+		return Tags.isTagged(BlockTypeTags.AIR, type);
 	},
 	IGNORE_FUID_AND_AIR = (data) -> {
-		Material material = data.getMaterial();
-		return Tags.isTagged(MaterialTags.AIR, material) || Tags.isTagged(MaterialTags.FLUID, material);
+		BlockType type = data.getType();
+		return Tags.isTagged(BlockTypeTags.AIR, type) || Tags.isTagged(BlockTypeTags.FLUID, type);
 	};
 	
 	public boolean isValid(BlockData data);

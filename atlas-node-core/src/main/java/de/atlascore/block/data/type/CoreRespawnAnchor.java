@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreBlockData;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.RespawnAnchor;
 
@@ -17,8 +17,8 @@ public class CoreRespawnAnchor extends CoreBlockData implements RespawnAnchor {
 	
 	private int charges;
 	
-	public CoreRespawnAnchor(Material material) {
-		super(material);
+	public CoreRespawnAnchor(BlockType type) {
+		super(type);
 	}
 
 	@Override

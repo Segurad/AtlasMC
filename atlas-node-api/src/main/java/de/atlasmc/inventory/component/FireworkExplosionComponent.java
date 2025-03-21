@@ -1,15 +1,15 @@
 package de.atlasmc.inventory.component;
 
-import de.atlasmc.FireworkEffect;
+import de.atlasmc.FireworkExplosion;
 import de.atlasmc.NamespacedKey;
 
 public interface FireworkExplosionComponent extends ItemComponent {
 	
 	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:firework_explosion");
 	
-	FireworkEffect getEffect();
+	FireworkExplosion getExplosion();
 	
-	void setEffect(FireworkEffect effect);
+	void setExplosion(FireworkExplosion effect);
 	
 	FireworkExplosionComponent clone();
 

@@ -2,7 +2,7 @@ package de.atlascore.block.tile;
 
 import java.io.IOException;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.AbstractContainerTile;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
@@ -32,8 +32,9 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 		});
 		NBT_FIELDS.setField(NBT_ITEMS, (holder, reader) -> {
 			reader.readNextEntry();
-			Inventory inv = ((AbstractContainerTile<?>) holder).getInventory();
+			Inventory inv = holder.getInventory();
 			while (reader.getRestPayload() > 0) {
+				reader.readNextEntry();
 				ItemStack item = ItemStack.getFromNBT(reader, false);
 				if (item == null)
 					continue;
@@ -41,6 +42,7 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 				if (slot != -999) 
 					inv.setItem(slot, item);
 			}
+			reader.readNextEntry();
 		});
 		NBT_FIELDS.setField(NBT_LOOT_TABLE, NBTField.skip()); // TODO wait for loot table Registry
 		NBT_FIELDS.setField(NBT_LOOT_TABLE_SEED, NBTField.skip()); // ^ how about no?
@@ -53,7 +55,7 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 	private Chat name;
 	private Chat lock;
 	
-	public CoreAbstractContainerTile(Material type) {
+	public CoreAbstractContainerTile(BlockType type) {
 		super(type);
 	}
 

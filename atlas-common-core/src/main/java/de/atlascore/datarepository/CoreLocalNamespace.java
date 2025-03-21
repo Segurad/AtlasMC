@@ -25,7 +25,6 @@ import de.atlasmc.datarepository.RepositoryEntryUpdate;
 import de.atlasmc.datarepository.RepositoryEntryUpdate.Change;
 import de.atlasmc.datarepository.RepositoryException;
 import de.atlasmc.datarepository.RepositoryNamespace;
-import de.atlasmc.util.DeleteFileVisitor;
 import de.atlasmc.util.FileUtils;
 import de.atlasmc.util.Pair;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
@@ -65,27 +64,27 @@ class CoreLocalNamespace implements RepositoryNamespace {
 	}
 
 	@Override
-	public Future<RepositoryEntry> getEntry(NamespacedKey key) {
+	public RepositoryEntry getEntry(NamespacedKey key) {
 		if (!namespace.equals(key.getNamespace()))
-			return CompleteFuture.getNullFuture();
-		return repo.getEntry(key);
+			return null;
+		return repo.getLocalEntry(key);
 	}
 
 	@Override
-	public Future<RepositoryEntry> getEntry(String key) {
-		return repo.getEntry(NamespacedKey.of(namespace, key));
+	public RepositoryEntry getEntry(String key) {
+		return repo.getLocalEntry(NamespacedKey.of(namespace, key));
 	}
 
 	@Override
-	public Future<RepositoryEntry> track(String key, String file) {
+	public RepositoryEntry track(String key, String file) {
 		File metaFile = new File(metaDir, key + ".json"); 
 		if (metaFile.exists())
-			return new CompleteFuture<>(new RepositoryException("Entry with name " + key + " already exist"));
+			throw new RepositoryException("Entry with name " + key + " already exist");
 		Path entryPath = FileUtils.getSecurePath(path, file);
 		if (entryPath == null)
-			return new CompleteFuture<>(new RepositoryException("Path does not represent a path within the namespace"));
+			throw new RepositoryException("Path does not represent a path within the namespace");
 		if (!Files.exists(entryPath))
-			return new CompleteFuture<>(new RepositoryException("Path does not exist!"));
+			throw new RepositoryException("Path does not exist!");
 		NamespacedKey nskey = NamespacedKey.of(namespace, key);
 		JsonConfiguration config = new JsonConfiguration();
 		config.set("key", nskey.toString());
@@ -122,15 +121,15 @@ class CoreLocalNamespace implements RepositoryNamespace {
 			byte[] rawTotalChecksum = totalDigest.digest();
 			config.set("checksum", HexFormat.of().formatHex(rawTotalChecksum));
 		} catch (IOException | NoSuchAlgorithmException e) {
-			return new CompleteFuture<>(e);
+			throw new RepositoryException("Error while calclating checksum!", e);
 		}
 		try {
 			config.save(metaFile);
 		} catch (IOException e) {
-			return new CompleteFuture<>(new RepositoryException("Error while writing meta file", e));
+			throw new RepositoryException("Error while writing meta file", e);
 		}
 		RepositoryEntry entry = repo.createEntry(nskey, config);
-		return CompleteFuture.of(entry);
+		return entry;
 	}
 	
 	@Override
@@ -168,7 +167,7 @@ class CoreLocalNamespace implements RepositoryNamespace {
 			return false;
 		JsonConfiguration config = JsonConfiguration.loadConfiguration(metaFile);
 		Path fileRoot = path.resolve(config.getString("root"));
-		Files.walkFileTree(fileRoot, DeleteFileVisitor.INSTANCE);
+		FileUtils.deleteDir(fileRoot);
 		return true;
 	}
 
@@ -308,12 +307,8 @@ class CoreLocalNamespace implements RepositoryNamespace {
 	}
 
 	@Override
-	public Future<Collection<RepositoryEntryUpdate>> update() {
-		try {
-			return CompleteFuture.of(internalUpdate());
-		} catch(IOException e) {
-			return new CompleteFuture<>(e);
-		}	
+	public Collection<RepositoryEntryUpdate> update() throws IOException {
+		return internalUpdate();
 	}
 
 	protected Collection<RepositoryEntryUpdate> internalUpdate() throws IOException {
@@ -342,19 +337,15 @@ class CoreLocalNamespace implements RepositoryNamespace {
 	}
 
 	@Override
-	public Future<Boolean> delete() {
-		try {
-			repo.removeNamespace(this);
-			internalDelete();
-		} catch(IOException e) {
-			return new CompleteFuture<>(e);
-		}
-		return CompleteFuture.of(true);
+	public boolean delete() throws IOException {
+		internalDelete();
+		repo.removeNamespace(this);
+		return true;
 	}
 	
 	protected void internalDelete() throws IOException {
-		Files.walkFileTree(metaDir.toPath(), DeleteFileVisitor.INSTANCE);
-		Files.walkFileTree(path, DeleteFileVisitor.INSTANCE);
+		FileUtils.deleteDir(metaDir);
+		FileUtils.deleteDir(path);
 	}
 
 }

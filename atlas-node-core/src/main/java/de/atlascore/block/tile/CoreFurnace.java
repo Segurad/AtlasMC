@@ -2,7 +2,7 @@ package de.atlascore.block.tile;
 
 import java.io.IOException;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.Furnace;
 import de.atlasmc.inventory.AbstractFurnaceInventory;
 import de.atlasmc.inventory.ContainerFactory;
@@ -39,7 +39,7 @@ public class CoreFurnace extends CoreAbstractContainerTile<AbstractFurnaceInvent
 		NBT_FIELDS.setField(RECIPE_USED_SIZE, NBTField.skip());
 	}
 	
-	public CoreFurnace(Material type) {
+	public CoreFurnace(BlockType type) {
 		super(type);
 	}
 	
@@ -50,11 +50,11 @@ public class CoreFurnace extends CoreAbstractContainerTile<AbstractFurnaceInvent
 
 	@Override
 	protected AbstractFurnaceInventory createInventory() {
-		if (getType().getNamespacedKey().equals(Material.FURNACE))
+		if (getType().getNamespacedKey().equals(BlockType.FURNACE))
 			return ContainerFactory.FURNACE_INV_FACTPRY.create(InventoryType.FURNACE, this);
-		if (getType().getNamespacedKey().equals(Material.BLAST_FURNACE))
+		if (getType().getNamespacedKey().equals(BlockType.BLAST_FURNACE))
 			return ContainerFactory.BLAST_FURNACE_INV_FACTORY.create(InventoryType.BLAST_FURNACE, this);
-		if (getType().getNamespacedKey().equals(Material.SMOKER))
+		if (getType().getNamespacedKey().equals(BlockType.SMOKER))
 			return ContainerFactory.SMOKER_INV_FACTORY.create(InventoryType.SMOKER, this);
 		return null;
 	}

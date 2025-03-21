@@ -1,6 +1,7 @@
 [
     {
         "type": "de.atlasmc.block.tile.ClassTileEntityFactory",
+        "registry": "atlas:factory/tile_entity_factory",
         "configurations": [
             {
                 "name": "minecraft:banner",
@@ -118,7 +119,8 @@
                 "name": "minecraft:blast_furnace",
                 "parameters": {
                     "tileInterface": "de.atlasmc.block.tile.Furnace",
-                    "tile": "de.atlascore.block.tile.CoreFurnace"
+                    "tile": "de.atlascore.block.tile.CoreFurnace",
+                    "tileID": 29
                 }
             },
             {
@@ -197,7 +199,8 @@
                 "name": "minecraft:crafter",
                 "parameters": {
                     "tileInterface": "de.atlasmc.block.tile.Crafter",
-                    "tile": "de.atlascore.block.tile.CoreCrafter"
+                    "tile": "de.atlascore.block.tile.CoreCrafter",
+                    "tileID": 42
                 }
             }
         ]

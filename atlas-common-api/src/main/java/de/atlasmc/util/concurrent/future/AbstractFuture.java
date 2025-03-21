@@ -1,6 +1,5 @@
 package de.atlasmc.util.concurrent.future;
 
-import java.lang.reflect.Array;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -57,20 +56,17 @@ public class AbstractFuture<V> implements Future<V> {
 	@Override
 	public V get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
 		if (isDone())
-			return result;
+			return resultOrThrow();
 		synchronized (this) {
 			if (isDone())
-				return result;
+				return resultOrThrow();
 			int nanos = 0;
 			if (unit.ordinal() < TimeUnit.MILLISECONDS.ordinal()) {
 				long val = TimeUnit.NANOSECONDS.convert(nanos, unit);
 				nanos = (int) (val % 1000000);
 			};
 			wait(TimeUnit.MILLISECONDS.convert(timeout, unit), nanos);
-			Throwable cause = this.cause;
-			if (cause != null)
-				throw new ExecutionException(cause);
-			return result;
+			return resultOrThrow();
 		}
 	}
 
@@ -89,7 +85,6 @@ public class AbstractFuture<V> implements Future<V> {
 		return done && result != null && cause == null && !isCancelled();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void setListener(FutureListener<V> listener) {
 		if (isDone()) {
@@ -104,12 +99,13 @@ public class AbstractFuture<V> implements Future<V> {
 			Object currentListener = this.listener;
 			if (currentListener == null) {
 				this.listener = listener;
-			} else if (currentListener instanceof Array) {
+			} else if (currentListener instanceof CopyOnWriteArraySet) {
+				@SuppressWarnings("unchecked")
 				CopyOnWriteArraySet<Object> ary =  (CopyOnWriteArraySet<Object>) currentListener;
 				ary.add(listener);
 			} else {
-				CopyOnWriteArraySet<FutureListener<V>> ary = new CopyOnWriteArraySet<>();
-				ary.add((FutureListener<V>) currentListener);
+				CopyOnWriteArraySet<Object> ary = new CopyOnWriteArraySet<>();
+				ary.add(currentListener);
 				ary.add(listener);
 				this.listener = ary;
 			}

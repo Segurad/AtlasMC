@@ -9,9 +9,9 @@ import de.atlasmc.util.EnumValueCache;
 
 public interface Chest extends Directional, Waterlogged {
 	
-	Type getType();
+	Type getChestType();
 	
-	void setType(Type type);
+	void setChestType(Type type);
 	
 	public static enum Type implements EnumName, EnumValueCache {
 		SINGLE,

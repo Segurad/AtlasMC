@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional6Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Piston;
 
@@ -17,8 +17,8 @@ public class CorePiston extends CoreDirectional6Faces implements Piston {
 	
 	private boolean extended;
 	
-	public CorePiston(Material material) {
-		super(material);
+	public CorePiston(BlockType type) {
+		super(type);
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class CorePiston extends CoreDirectional6Faces implements Piston {
 
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+getFaceValue()+(extended?0:6);
+		return type.getBlockStateID()+getFaceValue()+(extended?0:6);
 	}
 	
 	@Override

@@ -3,20 +3,20 @@ package de.atlascore.block.data;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.MultipleFacing;
 
 public abstract class CoreAbstractMultipleFacing extends CoreBlockData implements MultipleFacing {
 	
 	private Set<BlockFace> faces;
 	
-	public CoreAbstractMultipleFacing(Material material) {
-		this(material, 6);
+	public CoreAbstractMultipleFacing(BlockType type) {
+		this(type, 6);
 	}
 	
-	protected CoreAbstractMultipleFacing(Material material, int faces) {
-		super(material);
+	protected CoreAbstractMultipleFacing(BlockType type, int faces) {
+		super(type);
 		this.faces = new HashSet<>(faces);
 	}
 

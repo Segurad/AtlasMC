@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.Location;
-import de.atlasmc.Material;
 import de.atlasmc.SimpleLocation;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.Beehive;
 import de.atlasmc.entity.Bee;
 import de.atlasmc.entity.EntityType;
@@ -75,7 +75,7 @@ public class CoreBeehive extends CoreTileEntity implements Beehive {
 	private Location flower;
 	private List<Bee> bees;
 	
-	public CoreBeehive(Material type) {
+	public CoreBeehive(BlockType type) {
 		super(type);
 		flower = new Location(null, Double.NaN, Double.NaN, Double.NaN);
 	}

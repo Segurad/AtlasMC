@@ -167,8 +167,8 @@ public final class ChatUtil {
 		return FACTORY.fromNBT(reader);
 	}
 	
-	public static void toNBT(Chat chat, NBTWriter writer) throws IOException {
-		FACTORY.toNBT(chat, writer);
+	public static void toNBT(CharSequence key, Chat chat, NBTWriter writer) throws IOException {
+		FACTORY.toNBT(key, chat, writer);
 	}
 
 	

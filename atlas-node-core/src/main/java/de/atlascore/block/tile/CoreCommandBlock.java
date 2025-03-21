@@ -2,7 +2,7 @@ package de.atlascore.block.tile;
 
 import java.io.IOException;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.CommandBlock;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatType;
@@ -31,26 +31,26 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 	static {
 		NBT_FIELDS = CoreTileEntity.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_AUTO, (holder, reader) -> {
-			holder.setAlwaysActive(reader.readByteTag() == 1);
+			holder.setAlwaysActive(reader.readBoolean());
 		});
 		NBT_FIELDS.setField(NBT_COMMAND, (holder, reader) -> {
 			holder.setCommand(reader.readStringTag());
 		});
 		NBT_FIELDS.setField(NBT_CONDITION_MET, (holder, reader) -> {
-			holder.setConditional(reader.readByteTag() == 1);
+			holder.setConditional(reader.readBoolean());
 		});
 		NBT_FIELDS.setField(NBT_LAST_EXECUTION, NBTField.skip()); // TODO Wait for CommandBlock logic
 		NBT_FIELDS.setField(NBT_LAST_OUTPUT, (holder, reader) -> {
-			holder.setLastMessage(ChatUtil.toChat(reader.readStringTag()));
+			holder.setLastMessage(ChatUtil.fromNBT(reader));
 		});
 		NBT_FIELDS.setField(NBT_POWERED, (holder, reader) -> {
-			holder.setPowered(reader.readByteTag() == 1);
+			holder.setPowered(reader.readBoolean());
 		});
 		NBT_FIELDS.setField(NBT_SUCCESSCOUNT, (holder, reader) -> {
 			holder.setSuccessCount(reader.readIntTag());
 		});
 		NBT_FIELDS.setField(NBT_TRACKOUTPUT, (holder, reader) -> {
-			holder.setTrackOutput(reader.readByteTag() == 1);
+			holder.setTrackOutput(reader.readBoolean());
 		});
 		NBT_FIELDS.setField(NBT_UPDATE_LAST_EXECUTION, NBTField.skip()); // TODO see NBT_LAST_EXECUTION ^
 	}
@@ -65,7 +65,7 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 	private String command;
 	private int successCount;
 	
-	public CoreCommandBlock(Material type) {
+	public CoreCommandBlock(BlockType type) {
 		super(type);
 		mode = Mode.AUTO;
 		name = ChatUtil.toChat("@");
@@ -169,14 +169,14 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 			writer.writeByteTag(NBT_AUTO, isAlwaysActive());
 			writer.writeStringTag(NBT_COMMAND, getCommand());
 			writer.writeLongTag(NBT_LAST_EXECUTION, 0);
-			writer.writeStringTag(NBT_LAST_OUTPUT, getLastMessage().toJsonText());
+			ChatUtil.toNBT(NBT_LAST_OUTPUT, lastoutput, writer);
 			writer.writeByteTag(NBT_POWERED, isPowered());
 			writer.writeIntTag(NBT_SUCCESSCOUNT, getSuccessCount());
 			writer.writeByteTag(NBT_TRACKOUTPUT, getTrackOutput());
 			writer.writeByteTag(NBT_UPDATE_LAST_EXECUTION, true);
 		} else {
 			writer.writeStringTag(NBT_COMMAND, getCommand());
-			writer.writeStringTag(NBT_LAST_OUTPUT, getLastMessage().toJsonText());
+			ChatUtil.toNBT(NBT_LAST_OUTPUT, lastoutput, writer);
 		}
 	}
 	

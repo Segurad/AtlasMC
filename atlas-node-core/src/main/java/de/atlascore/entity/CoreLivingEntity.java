@@ -17,7 +17,6 @@ import org.joml.Vector3d;
 
 import de.atlasmc.Color;
 import de.atlasmc.Location;
-import de.atlasmc.Material;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.attribute.Attribute;
@@ -238,14 +237,8 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 					reader.skipTag();
 					continue;
 				}
-				Material mat = null;
-				if (!NBT_ID.equals(reader.getFieldName())) {
-					reader.mark();
-					reader.search(NBT_ID);
-					mat = Material.getByName(reader.readStringTag());
-					reader.reset();
-				} else mat = Material.getByName(reader.readStringTag());
-				ItemStack item = new ItemStack(mat);
+				reader.readNextEntry();
+				ItemStack item = ItemStack.getFromNBT(reader);
 				item.fromNBT(reader);
 				switch (index) {
 				case 0:
@@ -263,6 +256,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 				}
 				index++;
 			}
+			reader.readNextEntry();
 		});
 		NBT_FIELDS.setField(NBT_ATTACK_TIME, (holder, reader) -> {
 			holder.setAttackTime(reader.readShortTag());
@@ -306,15 +300,8 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 					reader.skipTag();
 					continue;
 				}
-				Material mat = null;
-				if (!NBT_ID.equals(reader.getFieldName())) {
-					reader.mark();
-					reader.search(NBT_ID);
-					mat = Material.getByName(reader.readStringTag());
-					reader.reset();
-				} else mat = Material.getByName(reader.readStringTag());
-				ItemStack item = new ItemStack(mat);
-				item.fromNBT(reader);
+				reader.readNextEntry();
+				ItemStack item = ItemStack.getFromNBT(reader);
 				switch (index) {
 				case 0:
 					equip.setMainHand(item);
@@ -986,7 +973,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	}
 
 	@Override
-	public Projectile lounchProjectile(Projectile projectile, Vector3d velocity) {
+	public Projectile launchProjectile(Projectile projectile, Vector3d velocity) {
 		if (projectile == null)
 			throw new IllegalArgumentException("Projectile can not be null!");
 		World world = getWorld();
@@ -1001,11 +988,11 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	}
 
 	@Override
-	public Projectile lounchProjectile(EntityType type, Vector3d velocity) {
+	public Projectile launchProjectile(EntityType type, Vector3d velocity) {
 		if (type == null)
 			throw new IllegalArgumentException("Type can not be null!");
 		Projectile pro = (Projectile) type.create(getWorld());
-		return lounchProjectile(pro, velocity);
+		return launchProjectile(pro, velocity);
 	}
 	
 	@Override

@@ -2,7 +2,7 @@ package de.atlascore.block.tile;
 
 import java.io.IOException;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.MobSpawner;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.util.map.key.CharKey;
@@ -37,7 +37,7 @@ public class CoreMobSpawner extends CoreTileEntity implements MobSpawner {
 	private Entity display;
 	private SpawnerConfiguration config;
 	
-	public CoreMobSpawner(Material type) {
+	public CoreMobSpawner(BlockType type) {
 		super(type);
 	}
 

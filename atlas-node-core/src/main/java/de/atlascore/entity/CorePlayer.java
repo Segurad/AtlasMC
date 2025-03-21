@@ -11,7 +11,6 @@ import de.atlascore.block.CorePlayerDiggingHandler;
 import de.atlascore.inventory.CoreInventoryView;
 import de.atlascore.inventory.CorePlayerItemCooldownHandler;
 import de.atlasmc.Gamemode;
-import de.atlasmc.Material;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NodePlayer;
 import de.atlasmc.Particle;
@@ -32,6 +31,7 @@ import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.ItemType;
 import de.atlasmc.inventory.MerchantInventory;
 import de.atlasmc.inventory.PlayerInventory;
 import de.atlasmc.io.protocol.PlayerConnection;
@@ -45,10 +45,10 @@ import de.atlasmc.io.protocol.play.PacketOutOpenScreen;
 import de.atlasmc.io.protocol.play.PacketOutParticle;
 import de.atlasmc.io.protocol.play.PacketOutSetContainerSlot;
 import de.atlasmc.io.protocol.play.PacketOutSetExperiance;
+import de.atlasmc.io.protocol.play.PacketOutSetHealth;
 import de.atlasmc.io.protocol.play.PacketOutSoundEffect;
 import de.atlasmc.io.protocol.play.PacketOutSpawnEntity;
 import de.atlasmc.io.protocol.play.PacketOutStopSound;
-import de.atlasmc.io.protocol.play.PacketOutSetHealth;
 import de.atlasmc.io.protocol.play.PacketOutWorldEvent;
 import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionHandler;
@@ -102,7 +102,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	}
 	
 	@Override
-	protected CooldownHandler<Material> createItemCooldownHander() {
+	protected CooldownHandler<ItemType> createItemCooldownHander() {
 		return new CorePlayerItemCooldownHandler(this);
 	}
 	

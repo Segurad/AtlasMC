@@ -31,10 +31,8 @@ public class CoreDataRepositoryCreateCommand implements CommandExecutor {
 				return true;
 			}
 			String entryname = context.getArgument("entryname", String.class);
-			namespace.track(entryname, path).setListener((future) -> {
-				if (future.isSuccess())
-					sender.sendMessage("Entry created");
-			});
+			namespace.track(entryname, path);
+			sender.sendMessage("Entry created");
 			break;
 		case "namespace":
 			repo.registerNamespace(namespacename, path);

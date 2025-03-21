@@ -45,6 +45,7 @@ public class CoreAttributeModifiersComponent extends AbstractItemComponent imple
 			Multimap<Attribute, AttributeModifier> attributes = holder.getAttributeModifiers();
 			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {
+				reader.readNextEntry();
 				Attribute attribute = null;
 				double amount = 0;
 				NamespacedKey id = null;

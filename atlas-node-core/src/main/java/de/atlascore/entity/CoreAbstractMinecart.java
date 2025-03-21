@@ -3,7 +3,7 @@ package de.atlascore.entity;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.entity.AbstractMinecart;
 import de.atlasmc.entity.EntityType;
@@ -44,17 +44,17 @@ public class CoreAbstractMinecart extends CoreVehicle implements AbstractMinecar
 		});
 		NBT_FIELDS.setField(NBT_DISPLAY_STATE, (holder, reader) -> {
 			reader.readNextEntry();
-			Material mat = null;
+			BlockType type = null;
 			BlockData data = null;
 			while (reader.getType() != TagType.TAG_END) {
 				final CharSequence value = reader.getFieldName();
 				if (NBT_NAME.equals(value))
-					mat = Material.getByName(reader.readStringTag());
+					type = BlockType.get(reader.readStringTag());
 				else if (NBT_PROPERTIES.equals(value))
-					if (mat == null)
+					if (type == null)
 						reader.skipTag();
 					else {
-						data = mat.createBlockData();
+						data = type.createBlockData();
 						reader.readNextEntry();
 						data.fromNBT(reader);
 					}
@@ -64,8 +64,8 @@ public class CoreAbstractMinecart extends CoreVehicle implements AbstractMinecar
 			reader.skipTag();
 			if (data != null)
 				holder.setCustomBlock(data);
-			else if (mat != null)
-				holder.setCustomBlockType(mat);
+			else if (type != null)
+				holder.setCustomBlockType(type);
 		});
 	}
 	
@@ -135,9 +135,9 @@ public class CoreAbstractMinecart extends CoreVehicle implements AbstractMinecar
 	}
 
 	@Override
-	public void setCustomBlockType(Material material) {
-		if (material != null)
-			setCustomBlock(material.createBlockData());
+	public void setCustomBlockType(BlockType type) {
+		if (type != null)
+			setCustomBlock(type.createBlockData());
 		else
 			setCustomBlock(null);
 	}
@@ -153,9 +153,9 @@ public class CoreAbstractMinecart extends CoreVehicle implements AbstractMinecar
 		if (customBlockData != null) {
 			writer.writeCompoundTag(NBT_DISPLAY_STATE);
 			if (systemData)
-				writer.writeStringTag(NBT_NAME, customBlockData.getMaterial().getNamespacedKeyRaw());
+				writer.writeStringTag(NBT_NAME, customBlockData.getType().getNamespacedKeyRaw());
 			else
-				writer.writeStringTag(NBT_NAME, customBlockData.getMaterial().getClientKey().toString());
+				writer.writeStringTag(NBT_NAME, customBlockData.getType().getClientKey().toString());
 			writer.writeCompoundTag(NBT_PROPERTIES);
 			customBlockData.toNBT(writer, systemData);
 			writer.writeEndTag();

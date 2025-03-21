@@ -3,7 +3,6 @@ package de.atlascore.entity;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlasmc.Material;
 import de.atlasmc.ProjectileSource;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
@@ -12,6 +11,7 @@ import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.ItemType;
 import de.atlasmc.inventory.component.FireworksComponent;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTFieldSet;
@@ -45,15 +45,7 @@ public class CoreFireworkRocket extends CoreAbstractProjectile implements Firewo
 		});
 		NBT_FIELDS.setField(NBT_FIREWORK_ITEM, (holder, reader) -> {
 			reader.readNextEntry();
-			Material mat = null;
-			if (!NBT_ID.equals(reader.getFieldName())) {
-				reader.mark();
-				reader.search(NBT_ID);
-				mat = Material.getByName(reader.readStringTag());
-				reader.reset();
-			} else mat = Material.getByName(reader.readStringTag());
-			ItemStack item = new ItemStack(mat);
-			item.fromNBT(reader);
+			ItemStack item = ItemStack.getFromNBT(reader);
 			holder.setFirework(item);
 		});
 	}
@@ -111,7 +103,7 @@ public class CoreFireworkRocket extends CoreAbstractProjectile implements Firewo
 		MetaData<ItemStack> data = metaContainer.get(META_FIREWORK_INFO);
 		ItemStack item = data.getData();
 		if (item == null)
-			item = new ItemStack(Material.FIREWORK_ROCKET);
+			item = new ItemStack(ItemType.FIREWORK_ROCKET);
 		item.setComponent(component);
 		metaContainer.get(META_FIREWORK_INFO).setData(item);
 		data.setChanged(true);

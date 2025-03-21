@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.PinkPetals;
 
@@ -17,8 +17,8 @@ public class CorePinkPetals extends CoreDirectional4Faces implements PinkPetals 
 	
 	private int flowerAmount;
 	
-	public CorePinkPetals(Material material) {
-		super(material);
+	public CorePinkPetals(BlockType type) {
+		super(type);
 		flowerAmount = 1;
 	}
 	
@@ -46,7 +46,7 @@ public class CorePinkPetals extends CoreDirectional4Faces implements PinkPetals 
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID() + (flowerAmount-1) + getFaceValue()*4;
+		return type.getBlockStateID() + (flowerAmount-1) + getFaceValue()*4;
 	}
 	
 	@Override

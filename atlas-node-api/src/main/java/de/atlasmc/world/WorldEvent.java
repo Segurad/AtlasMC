@@ -2,9 +2,9 @@ package de.atlasmc.world;
 
 import java.util.List;
 
-import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.BlockData;
+import de.atlasmc.inventory.ItemType;
 import de.atlasmc.util.EnumID;
 import de.atlasmc.util.EnumValueCache;
 
@@ -21,7 +21,7 @@ public enum WorldEvent implements EnumID, EnumValueCache {
 	WOODEN_TRAPDOOR_OPENED(1007, Type.SOUND),
 	FENCE_GATE_OPENED(1008, Type.SOUND),
 	FIRE_EXTINGUISHED(1009, Type.SOUND),
-	PLAY_RECORD(1010, Type.SOUND, Material.class),
+	PLAY_RECORD(1010, Type.SOUND, ItemType.class),
 	IRON_DOOR_CLOSED(1011, Type.SOUND),
 	WOODEN_DOOR_CLOSED(1012, Type.SOUND),
 	WOODEN_TRAPDOOR_CLOSED(1013, Type.SOUND),
@@ -156,8 +156,8 @@ public enum WorldEvent implements EnumID, EnumValueCache {
 			}
 		}
 		case PLAY_RECORD: {
-			Material mat = (Material) data;
-			return mat.getItemID();
+			ItemType type = (ItemType) data;
+			return type.getID();
 		}
 		default: return 0;
 		}

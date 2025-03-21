@@ -146,9 +146,9 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 			int sortWeight = groupCfg.getInt("sort-weight");
 			group.setSortWeight(sortWeight);
 			String prefix = groupCfg.getString("prefix");
-			group.setPrefix(ChatUtil.toChat(prefix));
+			group.setPrefix(prefix == null ? null : ChatUtil.toChat(prefix));
 			String suffix = groupCfg.getString("suffix");
-			group.setSuffix(ChatUtil.toChat(suffix));
+			group.setSuffix(suffix == null ? null : ChatUtil.toChat(suffix));
 			ChatColor chatColor = ChatColor.getByFormatID(groupCfg.getString("chat-color").charAt(1));
 			group.setChatColor(chatColor);
 			ChatColor nameColor = ChatColor.getByFormatID(groupCfg.getString("name-color").charAt(1));

@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreWaterlogged;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Leaves;
 
@@ -20,8 +20,8 @@ public class CoreLeaves extends CoreWaterlogged implements Leaves {
 	private int distance;
 	private boolean persistent;
 	
-	public CoreLeaves(Material material) {
-		super(material);
+	public CoreLeaves(BlockType type) {
+		super(type);
 		distance = 7;
 	}
 

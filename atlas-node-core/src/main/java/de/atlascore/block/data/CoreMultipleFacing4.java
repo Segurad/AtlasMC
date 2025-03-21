@@ -4,8 +4,8 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
 public class CoreMultipleFacing4 extends CoreAbstractMultipleFacing {
@@ -26,13 +26,13 @@ public class CoreMultipleFacing4 extends CoreAbstractMultipleFacing {
 					BlockFace.EAST,
 					BlockFace.WEST);
 	
-	public CoreMultipleFacing4(Material material) {
-		super(material);
+	public CoreMultipleFacing4(BlockType type) {
+		super(type);
 	}
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return getType().getBlockStateID()+
 				(hasFace(BlockFace.WEST)?0:1)+
 				(hasFace(BlockFace.SOUTH)?0:2)+
 				(hasFace(BlockFace.NORTH)?0:4)+

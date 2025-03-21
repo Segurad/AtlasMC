@@ -2,7 +2,7 @@ package de.atlascore.block.data;
 
 import java.util.List;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.WaterloggedDirectional;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
@@ -14,10 +14,10 @@ public class CoreWaterloggedDirectional4Faces extends CoreDirectional4Faces impl
 		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, BlockDataProperty.WATERLOGGED);
 	}
 	
-	private boolean waterlogged;
+	protected boolean waterlogged;
 	
-	public CoreWaterloggedDirectional4Faces(Material material) {
-		super(material);
+	public CoreWaterloggedDirectional4Faces(BlockType type) {
+		super(type);
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class CoreWaterloggedDirectional4Faces extends CoreDirectional4Faces impl
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return getType().getBlockStateID()+
 				(waterlogged?0:1)+
 				getFaceValue()*2;
 	}

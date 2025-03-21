@@ -1,20 +1,25 @@
 package de.atlasmc.entity;
 
+import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.UUID;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.NamespacedKey.Namespaced;
+import de.atlasmc.registry.ProtocolRegistry;
+import de.atlasmc.registry.ProtocolRegistryValue;
 import de.atlasmc.registry.Registries;
-import de.atlasmc.registry.Registry;
 import de.atlasmc.registry.RegistryHolder;
+import de.atlasmc.registry.RegistryHolder.Target;
+import de.atlasmc.util.nbt.io.NBTReader;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
-@RegistryHolder(key="atlas:entity_type")
-public class EntityType implements Namespaced {
+@RegistryHolder(key="atlas:entity_type", target = Target.PROTOCOL)
+public class EntityType implements ProtocolRegistryValue {
 	
-	public static final Registry<EntityType> REGISTRY;
+	private static final ProtocolRegistry<EntityType> REGISTRY;
 	
 	static {
 		REGISTRY = Registries.createRegistry(EntityType.class);
@@ -174,6 +179,7 @@ public class EntityType implements Namespaced {
 	private final NamespacedKey key;
 	private final Class<? extends Entity> clazz;
 	private final int id;
+	private final Constructor<? extends Entity> constructor;
 	
 	/**
 	 * Creates a new EntityType
@@ -189,6 +195,11 @@ public class EntityType implements Namespaced {
 		this.key = key;
 		this.id = id;
 		this.clazz = clazz;
+		try {
+			this.constructor = clazz.getConstructor(EntityType.class, UUID.class);
+		} catch (NoSuchMethodException | SecurityException e) {
+			throw new IllegalArgumentException("Error while fetching constructor of type: " + clazz.getName(), e);
+		}
 	}
 	
 	public Class<? extends Entity> getEntityClass() {
@@ -203,10 +214,9 @@ public class EntityType implements Namespaced {
 	 */
 	public Entity create(World world, UUID uuid) {
 		try {
-			return clazz.getConstructor(EntityType.class, UUID.class)
-			.newInstance(this, uuid);
-		} catch (NoSuchMethodException | SecurityException | InstantiationException 
-				| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			return constructor.newInstance(this, uuid);
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
 			throw new IllegalStateException("Error while creating Entity", e);
 		}
 	}
@@ -215,15 +225,13 @@ public class EntityType implements Namespaced {
 		return create(world, UUID.randomUUID());
 	}
 	
-	public int getTypeID() {
+	@Override
+	public int getID() {
 		return id;
 	}
 	
 	public static EntityType getByID(int id) {
-		for (EntityType type : REGISTRY.values()) {
-			if (type.getTypeID() == id) return type;
-		}
-		return null;
+		return REGISTRY.getByID(id);
 	}
 	
 	public static EntityType getByName(String name) {
@@ -237,6 +245,10 @@ public class EntityType implements Namespaced {
 		return REGISTRY.get(key);
 	}
 	
+	public static ProtocolRegistry<EntityType> getRegistry() {
+		return REGISTRY;
+	}
+	
 	public static Collection<EntityType> values() {
 		return REGISTRY.values();
 	}
@@ -244,6 +256,21 @@ public class EntityType implements Namespaced {
 	@Override
 	public NamespacedKey getNamespacedKey() {
 		return key;
+	}
+
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		// not required
+	}
+
+	@Override
+	public void fromNBT(NBTReader reader) throws IOException {
+		// not required
+	}
+
+	@Override
+	public boolean hasNBT() {
+		return false;
 	}
 
 }

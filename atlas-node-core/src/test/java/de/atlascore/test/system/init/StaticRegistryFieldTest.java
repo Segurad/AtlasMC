@@ -5,16 +5,8 @@ import java.lang.reflect.Field;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import de.atlascore.registry.CoreRegistryHandler;
 import de.atlascore.system.init.ContainerFactoryLoader;
-import de.atlascore.system.init.EntityTypeLoader;
-import de.atlascore.system.init.MaterialLoader;
-import de.atlasmc.Material;
-import de.atlasmc.block.data.BlockDataFactory;
-import de.atlasmc.block.tile.TileEntityFactory;
-import de.atlasmc.entity.EntityType;
 import de.atlasmc.inventory.ContainerFactory;
-import de.atlasmc.registry.Registries;
 
 public class StaticRegistryFieldTest {
 	
@@ -22,28 +14,6 @@ public class StaticRegistryFieldTest {
 	void testContainerFactoryLoader() throws IllegalArgumentException, IllegalAccessException {
 		ContainerFactoryLoader.loadContainerFactories();
 		StaticRegistryFieldTest.testNotNull(ContainerFactory.class, ContainerFactory.class);
-	}
-	
-	@Test
-	void testMaterialLoader() throws Exception {
-		try {
-			Registries.init(new CoreRegistryHandler());
-		} catch (IllegalStateException e) {}
-		Registries.createRegistry(Material.class);
-		Registries.createRegistry(BlockDataFactory.class);
-		Registries.createRegistry(TileEntityFactory.class);
-		MaterialLoader.loadMaterial();
-		StaticRegistryFieldTest.testNotNull(Material.class, Material.class);
-	}
-	
-	@Test
-	void testEntityTypeLoader() throws Exception {
-		try {
-			Registries.init(new CoreRegistryHandler());
-		} catch (IllegalStateException e) {}
-		Registries.createRegistry(EntityType.class);
-		EntityTypeLoader.loadEntityTypes();
-		StaticRegistryFieldTest.testNotNull(EntityType.class, EntityType.class);
 	}
 	
 	public static void testNotNull(Class<?> registry, Class<?> fieldType) throws IllegalArgumentException, IllegalAccessException {

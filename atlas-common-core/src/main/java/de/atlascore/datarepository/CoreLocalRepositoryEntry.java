@@ -70,7 +70,7 @@ public class CoreLocalRepositoryEntry implements RepositoryEntry, ConfigurationS
 	}
 
 	@Override
-	public Collection<? extends CoreLocalEntryFile> getFiles() {
+	public List<? extends CoreLocalEntryFile> getFiles() {
 		return files;
 	}
 

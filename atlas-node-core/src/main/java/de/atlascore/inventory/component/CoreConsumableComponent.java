@@ -51,6 +51,7 @@ public class CoreConsumableComponent extends AbstractItemComponent implements Co
 		NBT_FIELDS.setField(NBT_ON_CONSUME_EFFECTS, (holder, reader) -> {
 			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {
+				reader.readNextEntry();
 				ComponentEffect effect = ComponentEffect.getFromNBT(reader);
 				if (effect == null)
 					continue;

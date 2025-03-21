@@ -2,7 +2,7 @@ package de.atlascore.block.data;
 
 import java.util.List;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.Brushable;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
@@ -17,12 +17,12 @@ public class CoreBrushable extends CoreBlockData implements Brushable {
 	private final int maxDusted;
 	private int dusted;
 	
-	public CoreBrushable(Material material) {
-		this(material, 3);
+	public CoreBrushable(BlockType type) {
+		this(type, 3);
 	}
 	
-	public CoreBrushable(Material material, int maxDusted) {
-		super(material);
+	public CoreBrushable(BlockType type, int maxDusted) {
+		super(type);
 		this.maxDusted = maxDusted;
 	}
 

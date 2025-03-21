@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreAnaloguePowerable;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.SculkSensor;
 
@@ -20,8 +20,8 @@ public class CoreSculkSensor extends CoreAnaloguePowerable implements SculkSenso
 	private boolean waterlogged;
 	private Phase phase;
 	
-	public CoreSculkSensor(Material material) {
-		super(material);
+	public CoreSculkSensor(BlockType type) {
+		super(type);
 		phase = Phase.INACTIVE;
 	}
 	
@@ -49,7 +49,7 @@ public class CoreSculkSensor extends CoreAnaloguePowerable implements SculkSenso
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID() + (waterlogged?0:1) + phase.getID()*2 + getPower()*6;
+		return getType().getBlockStateID() + (waterlogged?0:1) + phase.getID()*2 + getPower()*6;
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package de.atlascore.block.data.type;
 
 import java.util.List;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.PistonHead;
 
@@ -14,25 +14,25 @@ public class CorePistonHead extends CoreTechnicalPiston implements PistonHead {
 		PROPERTIES = merge(CoreTechnicalPiston.PROPERTIES, BlockDataProperty.SHORT);
 	}
 	
-	private boolean _short;
+	private boolean isShort;
 	
-	public CorePistonHead(Material material) {
-		super(material);
+	public CorePistonHead(BlockType type) {
+		super(type);
 	}
 
 	@Override
 	public boolean isShort() {
-		return _short;
+		return isShort;
 	}
 
 	@Override
-	public void setShort(boolean _short) {
-		this._short = _short;
+	public void setShort(boolean isShort) {
+		this.isShort = isShort;
 	}
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+getFaceValue()*4+getType().ordinal()+(_short?0:2);
+		return getType().getBlockStateID()+getFaceValue()*4+pistonType.ordinal()+(isShort?0:2);
 	}
 	
 	@Override

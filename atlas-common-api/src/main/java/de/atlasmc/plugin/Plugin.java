@@ -64,10 +64,11 @@ public interface Plugin extends PluginHandle {
 	
 	void reloadConfigurations();
 	
+	@NotNull
 	Collection<PluginConfiguration> getConfigurations();
 	
-	@Nullable
-	String getVersion();
+	@NotNull
+	Version getVersion();
 	
 	/**
 	 * Returns a list of all Authors
@@ -94,16 +95,10 @@ public interface Plugin extends PluginHandle {
 	
 	boolean isEnabled();
 	
-	/**
-	 * Whether or not this plugin will be keeped loaded without a depending server
-	 * @return true if keep loaded
-	 */
-	boolean isKeepLoaded();
-	
-	void setKeepLoaded(boolean keeploaded);
-	
 	@NotNull
 	PluginLoader getPluginLoader();
+	
+	PrototypePlugin getPrototype();
 
 	@NotNull
 	File getFile();

@@ -133,7 +133,7 @@ public class Main {
 		.setDataHandler(loadRepositories(log, workDir))
 		.setKeyPair(keyPair)
 		.setLogger(log)
-		.setMainThread(new AtlasThread("Atlas-Main", 50, log, false))
+		.setMainThread(new AtlasThread<>("Atlas-Main", 50, log, false, null))
 		.setPluginManager(pluginManager)
 		.setScheduler(new CoreAtlasScheduler())
 		.setWorkDir(workDir)
@@ -153,6 +153,9 @@ public class Main {
 					StartupContext.INIT_STAGES,
 					StartupContext.INIT_MASTER,
 					StartupContext.LOAD_MASTER_DATA);
+			pluginManager.addFeature(NamespacedKey.literal("atlas:node-master"));
+		} else {
+			pluginManager.addFeature(NamespacedKey.literal("atlas:node-minion"));
 		}
 		
 		File modulDir = new File(workDir, "modules/");
@@ -192,7 +195,7 @@ public class Main {
 		} catch (StartupException e) {}
 		if (context.hasFailed()) {
 			Throwable cause = context.getCause();
-			log.error("Error while running startup!", cause);
+			log.error("Error while running startup! (stage: " + context.getStage() + ")", cause);
 			for (Consumer<Throwable> handler : context.getFailHandlers()) {
 				try {
 					handler.accept(cause);

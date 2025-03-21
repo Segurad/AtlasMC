@@ -2,10 +2,11 @@ package de.atlascore.block.tile;
 
 import java.io.IOException;
 
-import de.atlasmc.Material;
 import de.atlasmc.Nameable;
 import de.atlasmc.SimpleLocation;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.TileEntity;
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.AbstractNBTBase;
@@ -29,7 +30,7 @@ public class CoreTileEntity extends AbstractNBTBase implements TileEntity {
 	static {
 		NBT_FIELDS = NBTFieldSet.newSet();
 		NBT_FIELDS.setField(NBT_ID, (holder, reader) -> {
-			holder.setType(Material.getByName(reader.readStringTag()));
+			holder.setType(BlockType.get(reader.readStringTag()));
 		});
 		NBT_FIELDS.setField(NBT_X, (holder, reader) -> {
 			holder.x = reader.readIntTag();
@@ -41,32 +42,34 @@ public class CoreTileEntity extends AbstractNBTBase implements TileEntity {
 			holder.z = reader.readIntTag();
 		});
 		NBT_FIELDS.setField(NBT_CUSTOM_NAME, (holder, reader) -> {
-			if (holder instanceof Nameable)
-			((Nameable) holder).setCustomName(ChatUtil.toChat(reader.readStringTag()));
-			else reader.skipTag();
+			if (holder instanceof Nameable nameable) {
+				nameable.setCustomName(ChatUtil.fromNBT(reader));
+			} else  {
+				reader.skipTag();
+			}
 		});
 		NBT_FIELDS.setField(NBT_KEEP_PACKED, NBTField.skip()); // TODO Field skipped due to unknown behavior
 	}
 	
-	private Material type;
+	private BlockType type;
 	private int x;
 	private int y;
 	private int z;
 	private Chunk chunk;
 	
-	public CoreTileEntity(Material type) {
+	public CoreTileEntity(BlockType type) {
 		this.type = type;
 	}
 
 	@Override
-	public Material getType() {
+	public BlockType getType() {
 		return type;
 	}
 
 	@Override
-	public void setType(Material material) {
+	public void setType(BlockType material) {
 		if (!material.isValidTile(this))
-			throw new IllegalArgumentException("Tile ist not compatible with this Material: " + material.getNamespacedKeyRaw());
+			throw new IllegalArgumentException("Tile ist not compatible with this type: " + material.getNamespacedKeyRaw());
 		this.type = material;
 	}
 	
@@ -108,6 +111,11 @@ public class CoreTileEntity extends AbstractNBTBase implements TileEntity {
 		writer.writeIntTag(NBT_X, getX());
 		writer.writeIntTag(NBT_Y, getY());
 		writer.writeIntTag(NBT_Z, getZ());
+		if (this instanceof Nameable nameable) {
+			Chat name = nameable.getCustomName();
+			if (name != null)
+				ChatUtil.toNBT(NBT_CUSTOM_NAME, name, writer);
+		}
 	}
 
 	@Override

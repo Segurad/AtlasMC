@@ -4,11 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.Material;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.Chunk;
@@ -44,15 +42,11 @@ public class CoreAnvilChunkSectionIO {
 			reader.readNextEntry();
 			holder.palette = new ArrayList<>(reader.getRestPayload());
 			while (reader.getRestPayload() > 0) {
-				Material mat = Material.getByName(reader.readStringTag());
-				BlockData data = mat.createBlockData();
-				if (reader.getType() == TagType.COMPOUND) {
-					reader.readNextEntry();
-					data.fromNBT(reader);
-				}
-				holder.palette.add(data);
 				reader.readNextEntry();
+				BlockData data = BlockData.getFromNBT(reader);
+				holder.palette.add(data);
 			}
+			reader.readNextEntry();
 		});
 		NBT_FIELDS.setField(NBT_SKY_LIGHT, (holder, reader) -> {
 			if (holder.skylight == null)

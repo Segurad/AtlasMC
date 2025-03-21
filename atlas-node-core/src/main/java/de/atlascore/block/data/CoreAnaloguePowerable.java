@@ -2,7 +2,7 @@ package de.atlascore.block.data;
 
 import java.util.List;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.AnaloguePowerable;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
@@ -14,10 +14,10 @@ public class CoreAnaloguePowerable extends CoreBlockData implements AnaloguePowe
 		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.POWER);
 	}
 	
-	private int power;
+	protected int power;
 	
-	public CoreAnaloguePowerable(Material material) {
-		super(material);
+	public CoreAnaloguePowerable(BlockType type) {
+		super(type);
 	}
 
 	@Override

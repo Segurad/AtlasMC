@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.entity.Entity;
@@ -143,10 +143,10 @@ public class CoreChunk implements Chunk {
 	}
 	
 	@Override
-	public TileEntity setTileEntity(Material material, int x, int y, int z) {
+	public TileEntity setTileEntity(BlockType type, int x, int y, int z) {
 		TileEntity tile = null;
-		if (material != null) {
-			tile = material.createTileEntity();
+		if (type != null) {
+			tile = type.createTileEntity();
 			tile.setLocation(this, x, y, z);
 		}
 		return internalSetTileUnsafe(tile, x, y, z);
@@ -223,15 +223,15 @@ public class CoreChunk implements Chunk {
 	}
 
 	@Override
-	public Material getBlockType(int x, int y, int z) {
+	public BlockType getBlockType(int x, int y, int z) {
 		ChunkSection section = getSection(y);
 		if (section == null) 
-			return Material.get(Material.AIR);
+			return BlockType.get(BlockType.AIR);
 		return section.getBlockType(x, y, z);
 	}
 
 	@Override
-	public void setBlockType(Material material, int x, int y, int z) {
+	public void setBlockType(BlockType material, int x, int y, int z) {
 		setBlockDataAt(material.createBlockData(), x, y, z);
 	}
 

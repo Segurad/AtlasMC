@@ -13,8 +13,6 @@ import de.atlasmc.tick.AtlasThread;
 import de.atlasmc.util.annotation.InternalAPI;
 
 public class Atlas implements SyncThreadHolder {
-
-	public static final String FULL_VERSION = "atlasmc-dev";
 	
 	private static Scheduler scheduler;
 	private static Log logger;
@@ -23,8 +21,9 @@ public class Atlas implements SyncThreadHolder {
 	private static KeyPair keyPair;
 	private static DataRepositoryHandler dataHandler;
 	private static Atlas threadHolder;
-	private static AtlasThread mainThread;
+	private static AtlasThread<Atlas> mainThread;
 	private static Plugin system;
+	private static File tempDir;
 	
 	protected Atlas() {}
 	
@@ -33,6 +32,7 @@ public class Atlas implements SyncThreadHolder {
 			if (Atlas.workDir != null)
 				throw new IllegalStateException("Atlas already initialized!");
 			Atlas.workDir = workDir;
+			Atlas.tempDir = new File(workDir, "temp/");
 		}
 	}
 	
@@ -63,6 +63,10 @@ public class Atlas implements SyncThreadHolder {
 		return workDir;
 	}
 	
+	public static File getTempDir() {
+		return tempDir;
+	}
+	
 	public static KeyPair getKeyPair() {
 		return keyPair;
 	}
@@ -83,7 +87,7 @@ public class Atlas implements SyncThreadHolder {
 		return threadHolder;
 	}
 	
-	public static AtlasThread getMainThread() {
+	public static AtlasThread<Atlas> getMainThread() {
 		return mainThread;
 	}
 

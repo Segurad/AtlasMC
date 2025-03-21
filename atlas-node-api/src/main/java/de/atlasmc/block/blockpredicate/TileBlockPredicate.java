@@ -1,6 +1,6 @@
 package de.atlasmc.block.blockpredicate;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
 
@@ -33,7 +33,7 @@ public class TileBlockPredicate implements BlockPredicate {
 	}
 
 	@Override
-	public boolean matches(Material material) {
+	public boolean matches(BlockType type) {
 		return false;
 	}
 

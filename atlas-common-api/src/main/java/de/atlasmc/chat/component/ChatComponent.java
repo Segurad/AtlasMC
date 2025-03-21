@@ -52,7 +52,7 @@ public interface ChatComponent extends Chat, Cloneable {
 	
 	ChatComponent setFont(String font);
 	
-	void toJson(NBTWriter writer) throws IOException;
+	void toJson(CharSequence key, NBTWriter writer) throws IOException;
 	
 	/**
 	 * Returns the RGB value of the color used or -1.

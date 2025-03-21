@@ -3,7 +3,7 @@ package de.atlascore.entity;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.entity.EntityType;
@@ -39,17 +39,17 @@ public class CoreFallingBlock extends CoreEntity implements FallingBlock {
 		NBT_FIELDS = CoreEntity.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_BLOCK_STATE, (holder, reader) -> {
 			reader.readNextEntry();
-			Material mat = null;
+			BlockType type = null;
 			BlockData data = null;
 			while (reader.getType() != TagType.TAG_END) {
 				final CharSequence value = reader.getFieldName();
 				if (NBT_NAME.equals(value))
-					mat = Material.getByName(reader.readStringTag());
+					type = BlockType.get(reader.readStringTag());
 				else if (NBT_PROPERTIES.equals(value))
-					if (mat == null)
+					if (type == null)
 						reader.skipTag();
 					else {
-						data = mat.createBlockData();
+						data = type.createBlockData();
 						reader.readNextEntry();
 						data.fromNBT(reader);
 					}
@@ -59,8 +59,8 @@ public class CoreFallingBlock extends CoreEntity implements FallingBlock {
 			reader.skipTag();
 			if (data != null)
 				holder.setBlockData(data);
-			else if (mat != null)
-				holder.setBlockDataType(mat);
+			else if (type != null)
+				holder.setBlockDataType(type);
 		});
 		NBT_FIELDS.setField(NBT_DROP_ITEM, (holder, reader) -> {
 			holder.setDropItems(reader.readByteTag() == 1);
@@ -76,14 +76,7 @@ public class CoreFallingBlock extends CoreEntity implements FallingBlock {
 		});
 		NBT_FIELDS.setField(NBT_TILE_ENTITY_DATA, (holder, reader) -> {
 			reader.readNextEntry();
-			Material mat = null;
-			if (!NBT_ID.equals(reader.getFieldName())) {
-				reader.mark();
-				reader.search(NBT_ID);
-				mat = Material.getByName(reader.readStringTag());
-				reader.reset();
-			} else mat = Material.getByName(reader.readStringTag());
-			TileEntity tile = mat != null ? mat.createTileEntity() : null;
+			TileEntity tile = TileEntity.getFromNBT(reader);
 			if (tile == null) {
 				while (reader.getType() != TagType.TAG_END)
 					reader.skipTag();
@@ -136,8 +129,8 @@ public class CoreFallingBlock extends CoreEntity implements FallingBlock {
 	}
 
 	@Override
-	public Material getMaterial() {
-		return data == null ? tile == null ? null : tile.getType() : data.getMaterial();
+	public BlockType getBlockType() {
+		return data == null ? tile == null ? null : tile.getType() : data.getType();
 	}
 
 	@Override
@@ -156,11 +149,11 @@ public class CoreFallingBlock extends CoreEntity implements FallingBlock {
 	}
 
 	@Override
-	public void setBlockDataType(Material mat) {
-		if (mat == null)
+	public void setBlockDataType(BlockType type) {
+		if (type == null)
 			this.data = null;
 		else
-			this.data = mat.createBlockData();
+			this.data = type.createBlockData();
 	}
 
 	@Override
@@ -200,9 +193,9 @@ public class CoreFallingBlock extends CoreEntity implements FallingBlock {
 			BlockData data = getBlockData();
 			writer.writeCompoundTag(NBT_BLOCK_STATE);
 			if (systemData)
-				writer.writeStringTag(NBT_NAME, data.getMaterial().getNamespacedKeyRaw());
+				writer.writeStringTag(NBT_NAME, data.getType().getNamespacedKeyRaw());
 			else
-				writer.writeStringTag(NBT_NAME, data.getMaterial().getClientKey().toString());
+				writer.writeStringTag(NBT_NAME, data.getType().getClientKey().toString());
 			writer.writeCompoundTag(NBT_PROPERTIES);
 			data.toNBT(writer, systemData);
 			writer.writeEndTag();

@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import de.atlasmc.Color;
-import de.atlasmc.Material;
 import de.atlasmc.block.Block;
 import de.atlasmc.world.Region;
 import de.atlasmc.world.World;
@@ -318,7 +317,7 @@ public final class MapColor {
 		for (int z = 0; z < height; z++) {
 			for (int x = 0; x < width; x++) {
 				final Block b = world.getHighestBlockAt(wx+x, wz+z);
-				MapColor c = fromMaterial(b.getType());
+				MapColor c = byID(b.getType().getColorID());
 				int y = world.getHighestBlockYAt(wx+x, wz+z-1);
 				if (y > b.getY()) {
 					int ty = world.getHighestBlockYAt(wx+x, wz+z-2);
@@ -367,10 +366,6 @@ public final class MapColor {
 		final double deltaG = color.G-g;
 		final double deltaB = color.B-b;
 		return (deltaR*deltaR)+(deltaG*deltaG)+(deltaB*deltaB);
-	}
-	
-	public static MapColor fromMaterial(Material material) {
-		return COLOR_BLACK;
 	}
 
 	public static void writeIntToMapColorCache(File file) throws IOException {

@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.RedstoneWallTorch;
 
@@ -17,8 +17,8 @@ public class CoreRedstoneWallTorch extends CoreDirectional4Faces implements Reds
 	
 	private boolean lit;
 	
-	public CoreRedstoneWallTorch(Material material) {
-		super(material);
+	public CoreRedstoneWallTorch(BlockType type) {
+		super(type);
 		lit = true;
 	}
 
@@ -34,7 +34,7 @@ public class CoreRedstoneWallTorch extends CoreDirectional4Faces implements Reds
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return type.getBlockStateID()+
 				(lit?0:1)+
 				getFaceValue()*2;
 	}

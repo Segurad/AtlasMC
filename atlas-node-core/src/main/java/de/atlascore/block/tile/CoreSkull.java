@@ -3,7 +3,7 @@ package de.atlascore.block.tile;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.Skull;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTField;
@@ -65,7 +65,7 @@ public class CoreSkull extends CoreTileEntity implements Skull {
 	private String texture;
 	private UUID uuid;
 	
-	public CoreSkull(Material type) {
+	public CoreSkull(BlockType type) {
 		super(type);
 	}
 

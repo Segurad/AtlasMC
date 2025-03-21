@@ -3,72 +3,66 @@ package de.atlasmc.potion;
 import java.util.UUID;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.registry.ProtocolRegistry;
+import de.atlasmc.registry.ProtocolRegistryValueBase;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
 
 @RegistryHolder(key = "atlas:potion_effect_type", target = Target.PROTOCOL)
-public abstract class PotionEffectType implements Namespaced {
+public abstract class PotionEffectType extends ProtocolRegistryValueBase  {
 	
-	public static final ProtocolRegistry<PotionEffectType> REGISTRY;
+	private static final ProtocolRegistry<PotionEffectType> REGISTRY;
 
 	public static final NamespacedKey
-	SPEED = NamespacedKey.literal("minecraft:speed"),
-	SLOWNESS = NamespacedKey.literal("minecraft:slowness"),
-	HASTE = NamespacedKey.literal("minecraft:haste"),
-	MINING_FATIGUE = NamespacedKey.literal("minecraft:mining_fatigue"),
-	STRENGTH = NamespacedKey.literal("minecraft:strength"),
-	INSTANT_HEALTH = NamespacedKey.literal("minecraft:instant_health"),
-	INSTANT_DAMAGE = NamespacedKey.literal("minecraft:instant_damage"),
-	JUMP_BOOST = NamespacedKey.literal("minecraft:jump_boost"),
-	NAUSEA = NamespacedKey.literal("minecraft:nausea"),
-	REGENERATION = NamespacedKey.literal("minecraft:regeneration"),
-	RESISTANCE = NamespacedKey.literal("minecraft:resistance"),
-	FIRE_RESISTANCE = NamespacedKey.literal("minecraft:fire_resistance"),
-	WATER_BREATHING = NamespacedKey.literal("minecraft:water_breathing"),
-	INVISIBILITY = NamespacedKey.literal("minecraft:invisibility"),
-	BLINDNESS = NamespacedKey.literal("minecraft:blindness"),
-	NIGHT_VISION = NamespacedKey.literal("minecraft:night_vision"),
-	HUNGER = NamespacedKey.literal("minecraft:hunger"),
-	WEAKNESS = NamespacedKey.literal("minecraft:weakness"),
-	POISON = NamespacedKey.literal("minecraft:poison"),
-	WITHER = NamespacedKey.literal("minecraft:wither"),
-	HEALTH_BOOST = NamespacedKey.literal("minecraft:health_boost"),
 	ABSORPTION = NamespacedKey.literal("minecraft:absorption"),
-	SATURATION = NamespacedKey.literal("minecraft:saturation"),
+	BAD_OMEN = NamespacedKey.literal("minecraft:bad_omen"),
+	BLINDNESS = NamespacedKey.literal("minecraft:blindness"),
+	CONDUIT_POWER = NamespacedKey.literal("minecraft:conduit_power"),
+	DARKNESS = NamespacedKey.literal("minecraft:darkness"),
+	DOLPHINS_GRACE = NamespacedKey.literal("minecraft:dolphins_grace"),
+	FIRE_RESISTANCE = NamespacedKey.literal("minecraft:fire_resistance"),
 	GLOWING = NamespacedKey.literal("minecraft:glowing"),
+	HASTE = NamespacedKey.literal("minecraft:haste"),
+	HEALTH_BOOST = NamespacedKey.literal("minecraft:health_boost"),
+	HERO_OF_THE_VILLAGE = NamespacedKey.literal("minecraft:hero_of_the_village"),
+	HUNGER = NamespacedKey.literal("minecraft:hunger"),
+	INFESTED = NamespacedKey.literal("minecraft:infested"),
+	INSTANT_DAMAGE = NamespacedKey.literal("minecraft:instant_damage"),
+	INSTANT_HEALTH = NamespacedKey.literal("minecraft:instant_health"),
+	INVISIBILITY = NamespacedKey.literal("minecraft:invisibility"),
+	JUMP_BOOST = NamespacedKey.literal("minecraft:jump_boost"),
 	LEVITATION = NamespacedKey.literal("minecraft:levitation"),
 	LUCK = NamespacedKey.literal("minecraft:luck"),
-	UNLUCK = NamespacedKey.literal("minecraft:unluck"),
-	SLOW_FALLING = NamespacedKey.literal("minecraft:slow_falling"),
-	CONDUIT_POWER = NamespacedKey.literal("minecraft:conduit_power"),
-	DOLPHINS_GRACE = NamespacedKey.literal("minecraft:dolphins_grace"),
-	BAD_OMEN = NamespacedKey.literal("minecraft:bad_omen"),
-	HERO_OF_THE_VILLAGE = NamespacedKey.literal("minecraft:hero_of_the_village"),
-	DARKNESS = NamespacedKey.literal("minecraft:darkness"),
-	TRIAL_OMEN = NamespacedKey.literal("minecraft:trial_omen"),
-	RAID_OMEN = NamespacedKey.literal("minecraft:raid_omen"),
-	WIND_CHARGED = NamespacedKey.literal("minecraft:wind_charged"),
-	WEAVING = NamespacedKey.literal("minecraft:weaving"),
+	MINING_FATIGUE = NamespacedKey.literal("minecraft:mining_fatigue"),
+	NAUSEA = NamespacedKey.literal("minecraft:nausea"),
+	NIGHT_VISION = NamespacedKey.literal("minecraft:night_vision"),
 	OOZING = NamespacedKey.literal("minecraft:oozing"),
-	INFESTED = NamespacedKey.literal("minecraft:infested");
+	POISON = NamespacedKey.literal("minecraft:poison"),
+	RAID_OMEN = NamespacedKey.literal("minecraft:raid_omen"),
+	REGENERATION = NamespacedKey.literal("minecraft:regeneration"),
+	RESISTANCE = NamespacedKey.literal("minecraft:resistance"),
+	SATURATION = NamespacedKey.literal("minecraft:saturation"),
+	SLOWNESS = NamespacedKey.literal("minecraft:slowness"),
+	SLOW_FALLING = NamespacedKey.literal("minecraft:slow_falling"),
+	SPEED = NamespacedKey.literal("minecraft:speed"),
+	STRENGTH = NamespacedKey.literal("minecraft:strength"),
+	TRIAL_OMEN = NamespacedKey.literal("minecraft:trial_omen"),
+	UNLUCK = NamespacedKey.literal("minecraft:unluck"),
+	WATER_BREATHING = NamespacedKey.literal("minecraft:water_breathing"),
+	WEAKNESS = NamespacedKey.literal("minecraft:weakness"),
+	WEAVING = NamespacedKey.literal("minecraft:weaving"),
+	WIND_CHARGED = NamespacedKey.literal("minecraft:wind_charged"),
+	WITHER = NamespacedKey.literal("minecraft:wither");
 	
 	static {
 		REGISTRY = Registries.createRegistry(PotionEffectType.class);
-		REGISTRY.setIDSupplier(PotionEffectType::getID);
 	}
 	
-	private final NamespacedKey key;
-	private final int id;
 	private final int color;
 	
 	public PotionEffectType(NamespacedKey key, int id, int color) {
-		if (key == null)
-			throw new IllegalArgumentException("Key can not be null!");
-		this.key = key;
-		this.id = id;
+		super(key, id);
 		this.color = color;
 	}
 	

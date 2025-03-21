@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.EndPortalFrame;
 
@@ -17,8 +17,8 @@ public class CoreEndPortalFrame extends CoreDirectional4Faces implements EndPort
 	
 	private boolean eye;
 	
-	public CoreEndPortalFrame(Material material) {
-		super(material);
+	public CoreEndPortalFrame(BlockType type) {
+		super(type);
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class CoreEndPortalFrame extends CoreDirectional4Faces implements EndPort
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return getType().getBlockStateID()+
 				getFaceValue()+
 				(eye?0:4);
 	}

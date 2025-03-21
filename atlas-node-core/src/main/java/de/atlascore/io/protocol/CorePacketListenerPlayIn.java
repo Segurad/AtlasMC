@@ -4,11 +4,11 @@ import de.atlascore.block.CoreBlock;
 import de.atlascore.block.CoreBlockAccess;
 import de.atlasmc.Gamemode;
 import de.atlasmc.Location;
-import de.atlasmc.Material;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.block.Block;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.DiggingHandler;
 import de.atlasmc.chat.ChatMode;
 import de.atlasmc.entity.Player;
@@ -59,8 +59,10 @@ import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.ItemType;
 import de.atlasmc.inventory.PlayerInventory;
 import de.atlasmc.io.Packet;
+import de.atlasmc.io.ProtocolException;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.PlayerSettings;
 import de.atlasmc.io.protocol.play.PacketInAcknowledgeConfiguration;
@@ -726,7 +728,19 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			Player player = con.getPlayer();
 			Location loc = MathUtil.getLocation(player.getWorld(), pos);
 			Block block = new CoreBlockAccess(loc);
-			Block against = new CoreBlock(loc, player.getInventory().getItemInMainHand().getType());
+			ItemType itemType;
+			switch (hand) {
+			case MAIN_HAND: 
+				itemType = player.getInventory().getItemInMainHandUnsafe().getType();
+				break;
+			case OFF_HAND:
+				itemType = player.getInventory().getItemInOffHandUnsafe().getType();
+				break;
+			default:
+				throw new ProtocolException("Invalid equipment slot: " + hand);
+			}
+			BlockType blockType = itemType.getBlockType();
+			Block against = new CoreBlock(loc, blockType);
 			HandlerList.callEvent(new BlockPlaceEvent(block, against, player, hand, face, cX, cY, cZ));
 		});
 		initHandler(PacketInUseItem.class, (con, packet) -> { // 0x2F
@@ -739,7 +753,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			
 			EquipmentSlot hand = packet.hand;
 			PlayerInteractEvent.Action action;
-			if (block.getType().getNamespacedKey().equals(Material.AIR)) {
+			if (block.getType().getNamespacedKey().equals(ItemType.AIR)) {
 				if (hand == EquipmentSlot.MAIN_HAND) {
 					action = PlayerInteractEvent.Action.LEFT_CLICK_AIR;
 				} else action = PlayerInteractEvent.Action.RIGHT_CLICK_AIR;

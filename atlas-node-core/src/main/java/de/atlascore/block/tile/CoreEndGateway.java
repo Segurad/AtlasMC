@@ -3,7 +3,7 @@ package de.atlascore.block.tile;
 import java.io.IOException;
 
 import de.atlasmc.Location;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.EndGateway;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTFieldSet;
@@ -49,7 +49,7 @@ public class CoreEndGateway extends CoreTileEntity implements EndGateway {
 	private boolean relativeCoordinates;
 	private final Location exit;
 	
-	public CoreEndGateway(Material type) {
+	public CoreEndGateway(BlockType type) {
 		super(type);
 		exit = new Location(null, Double.NaN, Double.NaN, Double.NaN);
 	}

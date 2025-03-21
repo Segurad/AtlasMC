@@ -8,9 +8,9 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
-public class DeleteFileVisitor extends SimpleFileVisitor<Path> {
+final class DeleteFileVisitor extends SimpleFileVisitor<Path> {
 	
-	public static final FileVisitor<Path> INSTANCE = new DeleteFileVisitor();
+	static final FileVisitor<Path> INSTANCE = new DeleteFileVisitor();
 	
 	private DeleteFileVisitor() {}
 	

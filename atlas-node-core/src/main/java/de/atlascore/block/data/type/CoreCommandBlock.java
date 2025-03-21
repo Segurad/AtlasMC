@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional6Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.CommandBlock;
 
@@ -17,8 +17,8 @@ public class CoreCommandBlock extends CoreDirectional6Faces implements CommandBl
 	
 	private boolean conditional;
 	
-	public CoreCommandBlock(Material material) {
-		super(material);
+	public CoreCommandBlock(BlockType type) {
+		super(type);
 	}
 
 	@Override

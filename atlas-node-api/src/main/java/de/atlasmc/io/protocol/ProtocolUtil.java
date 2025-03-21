@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
-import de.atlasmc.Material;
+import de.atlasmc.FireworkExplosion;
+import de.atlasmc.FireworkExplosion.Shape;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.ItemType;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.ItemComponent;
 import de.atlasmc.io.PacketUtil;
@@ -34,7 +36,7 @@ public class ProtocolUtil extends PacketUtil {
 			return;
 		}
 		writeVarInt(item.getAmount(), out);
-		writeVarInt(item.getType().getItemID(), out);
+		writeVarInt(item.getType().getID(), out);
 		final int ptrCompCount = out.readerIndex();
 		writeVarInt(0, out);
 		final int ptrIgnoredCount = out.readerIndex();
@@ -81,8 +83,8 @@ public class ProtocolUtil extends PacketUtil {
 		final int amount = readVarInt(in);
 		if (amount == 0)
 			return null;
-		Material material = Material.getByItemID(readVarInt(in));
-		ItemStack item = new ItemStack(material, amount);
+		ItemType itemType = ItemType.getByID(readVarInt(in));
+		ItemStack item = new ItemStack(itemType, amount);
 		final int compCount = readVarInt(in);
 		final int ignoredCount = readVarInt(in);
 		for (int i = 0; i < compCount; i++) {
@@ -153,6 +155,52 @@ public class ProtocolUtil extends PacketUtil {
 			in.readBoolean();
 		}
 		return type.createEffect(amplifier, duration, ambient, particles, icon);
+	}
+	
+	public static void writeFireworkExplosion(FireworkExplosion explosion, ByteBuf out) {
+		writeVarInt(explosion.getShape().getID(), out);
+		int[] colors = explosion.getColors();
+		if (colors == null) {
+			writeVarInt(0, out);
+		} else {
+			writeVarInt(colors.length, out);
+			for (int i : colors)
+				out.writeInt(i);
+		}
+		int[] fadeColors = explosion.getFadeColors();
+		if (fadeColors == null) {
+			writeVarInt(0, out);
+		} else {
+			writeVarInt(fadeColors.length, out);
+			for (int i : fadeColors)
+				out.writeInt(i);
+		}
+		out.writeBoolean(explosion.hasTrail());
+		out.writeBoolean(explosion.hasTwinkel());
+	}
+	
+	public static FireworkExplosion readFireworkExplosion(ByteBuf in) {
+		FireworkExplosion explosion = new FireworkExplosion();
+		explosion.setShape(Shape.getByID(readVarInt(in)));
+		final int colorCount = readVarInt(in);
+		if (colorCount > 0) {
+			int[] colors = new int[colorCount];
+			for (int i = 0; i < colorCount; i++) {
+				colors[i] = in.readInt();
+			}
+			explosion.setColors(colors);
+		}
+		final int fadeColorCount = readVarInt(in);
+		if (fadeColorCount > 0) {
+			int[] fadeColors = new int[fadeColorCount];
+			for (int i = 0; i < fadeColorCount; i++) {
+				fadeColors[i] = in.readInt();
+			}
+			explosion.setFadeColors(fadeColors);
+		}
+		explosion.setTrail(in.readBoolean());
+		explosion.setTwinkel(in.readBoolean());
+		return explosion;
 	}
 	
 }

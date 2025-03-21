@@ -8,8 +8,9 @@ import de.atlasmc.util.EnumValueCache;
 
 public interface Slab extends Waterlogged {
 	
-	public Type getType();
-	public void setType(Type tpye);
+	Type getSlabType();
+	
+	void setSlabType(Type tpye);
 	
 	public static enum Type implements EnumName, EnumValueCache {
 		TOP,

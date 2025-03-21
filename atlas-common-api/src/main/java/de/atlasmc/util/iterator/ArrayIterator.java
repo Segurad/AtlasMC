@@ -6,7 +6,7 @@ public class ArrayIterator<E> implements Iterator<E> {
 
 	private final E[] array;
 	private int index;
-	private int end;
+	private final int end;
 	private final boolean canRemove;
 	
 	public ArrayIterator(E[] array, boolean canRemove) {

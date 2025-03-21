@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreWaterloggedDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.DecoratedPot;
 
@@ -17,8 +17,8 @@ public class CoreDecoratedPot extends CoreWaterloggedDirectional4Faces implement
 	
 	private boolean cracked;
 	
-	public CoreDecoratedPot(Material material) {
-		super(material);
+	public CoreDecoratedPot(BlockType type) {
+		super(type);
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class CoreDecoratedPot extends CoreWaterloggedDirectional4Faces implement
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID() + (isWaterlogged()?0:1) + (getFaceValue()*2) + (cracked?0:8);
+		return getType().getBlockStateID() + (isWaterlogged()?0:1) + (getFaceValue()*2) + (cracked?0:8);
 	}
 	
 	@Override

@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreBlockData;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.TrialSpawner;
 
@@ -20,8 +20,8 @@ public class CoreTrialSpawner extends CoreBlockData implements TrialSpawner {
 	protected boolean ominous;
 	protected TrialSpawnerState state;
 	
-	public CoreTrialSpawner(Material material) {
-		super(material);
+	public CoreTrialSpawner(BlockType type) {
+		super(type);
 		state = TrialSpawnerState.INACTIVE;
 	}
 
@@ -49,7 +49,7 @@ public class CoreTrialSpawner extends CoreBlockData implements TrialSpawner {
 	
 	@Override
 	public int getStateID() {
-		return material.getBlockStateID() + state.ordinal() + (ominous?0:6);
+		return type.getBlockStateID() + state.ordinal() + (ominous?0:6);
 	}
 	
 	@Override

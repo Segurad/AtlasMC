@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreBlockData;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.SculkCatalyst;
 
@@ -17,8 +17,8 @@ public class CoreSculkCatalyst extends CoreBlockData implements SculkCatalyst {
 	
 	private boolean bloom;
 	
-	public CoreSculkCatalyst(Material material) {
-		super(material);
+	public CoreSculkCatalyst(BlockType type) {
+		super(type);
 	}
 
 	@Override

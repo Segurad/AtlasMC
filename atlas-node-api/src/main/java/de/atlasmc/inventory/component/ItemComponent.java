@@ -6,26 +6,31 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.io.IOReadable;
 import de.atlasmc.io.IOWriteable;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.nbt.NBTHolder;
 
 public interface ItemComponent extends NBTHolder, Namespaced, Cloneable, IOReadable, IOWriteable {
 	
 	/**
-	 * Returns the value of the static COMPONENT_KEY field of the given class or null if not present
+	 * Returns the value of the static COMPONENT_KEY field of the given class
 	 * @param clazz
-	 * @return key or null
+	 * @return key
 	 */
+	@NotNull
 	public static NamespacedKey getComponentKey(Class<? extends ItemComponent> clazz) {
-		NamespacedKey key = null;
+		Field field;
 		try {
-			Field f = clazz.getDeclaredField("COMPONENT_KEY");
-			f.setAccessible(true);
-			key = (NamespacedKey) f.get(null);
-		} catch (NoSuchFieldException e) {
-			// nothing
-		} catch (SecurityException | IllegalArgumentException | IllegalAccessException e) {
-			throw new IllegalStateException("Error while accessing COMPONENT_KEY field of class: " + clazz.getName(), e);
+			field = clazz.getDeclaredField("COMPONENT_KEY");
+		} catch (NoSuchFieldException | SecurityException e) {
+			throw new IllegalArgumentException("Failed to fetch field COMPONENT_KEY from class: " + clazz.getName());
+		}
+		field.setAccessible(true);
+		NamespacedKey key;
+		try {
+			key = (NamespacedKey) field.get(null);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			throw new IllegalArgumentException("Failed to fetch value from COMPONENT_KEY field form clazz: " + clazz.getName());
 		}
 		return key;
 	}

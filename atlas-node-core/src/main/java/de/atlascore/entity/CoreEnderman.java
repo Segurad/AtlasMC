@@ -3,14 +3,13 @@ package de.atlascore.entity;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.entity.Enderman;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreEnderman extends CoreMob implements Enderman {
@@ -30,33 +29,14 @@ public class CoreEnderman extends CoreMob implements Enderman {
 	
 	static {
 		NBT_FIELDS.setField(NBT_CARRIED_BLOCK_STATE, (holder, reader) -> {
-			if (!(holder instanceof Enderman)) {
+			if (!(holder instanceof Enderman entity)) {
 				reader.skipTag();
 				return;
 			}
 			reader.readNextEntry();
-			Material mat = null;
-			BlockData data = null;
-			while (reader.getType() != TagType.TAG_END) {
-				final CharSequence value = reader.getFieldName();
-				if (NBT_NAME.equals(value))
-					mat = Material.getByName(reader.readStringTag());
-				else if (NBT_PROPERTIES.equals(value))
-					if (mat == null)
-						reader.skipTag();
-					else {
-						data = mat.createBlockData();
-						reader.readNextEntry();
-						data.fromNBT(reader);
-					}
-				else
-					reader.skipTag();
-			}
-			reader.skipTag();
+			BlockData data = BlockData.getFromNBT(reader);
 			if (data != null)
-				((Enderman) holder).setCarriedBlock(data);
-			else if (mat != null)
-				((Enderman) holder).setCarriedBlockType(mat);
+				entity.setCarriedBlock(data);
 		});
 	}
 	
@@ -103,8 +83,8 @@ public class CoreEnderman extends CoreMob implements Enderman {
 	}
 
 	@Override
-	public Material getCarriedBlockType() {
-		return block == null ? null : block.getMaterial();
+	public BlockType getCarriedBlockType() {
+		return block == null ? null : block.getType();
 	}
 
 	@Override
@@ -121,7 +101,7 @@ public class CoreEnderman extends CoreMob implements Enderman {
 	}
 
 	@Override
-	public void setCarriedBlockType(Material type) {
+	public void setCarriedBlockType(BlockType type) {
 		if (type != null) {
 			blockChanged = true;
 			block = type.createBlockData();
@@ -154,12 +134,9 @@ public class CoreEnderman extends CoreMob implements Enderman {
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		if (hasCarriedBlock()) {
+		if (block != null) {
 			writer.writeCompoundTag(NBT_CARRIED_BLOCK_STATE);
-			writer.writeStringTag(NBT_NAME, getCarriedBlockType().getNamespacedKeyRaw());
-			writer.writeCompoundTag(NBT_PROPERTIES);
 			block.toNBT(writer, systemData);
-			writer.writeEndTag();
 			writer.writeEndTag();
 		}
 	}

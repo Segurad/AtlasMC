@@ -4,7 +4,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.Rail;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
@@ -18,8 +18,8 @@ public class CoreRail extends CoreWaterlogged implements Rail {
 	
 	private Shape shape;
 	
-	public CoreRail(Material material) {
-		super(material);
+	public CoreRail(BlockType type) {
+		super(type);
 		shape = Shape.NORTH_SOUTH;
 	}
 

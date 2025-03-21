@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreWaterlogged;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.SculkShrieker;
 
@@ -20,8 +20,8 @@ public class CoreSculkShrieker extends CoreWaterlogged implements SculkShrieker 
 	private boolean canSummon;
 	private boolean shrieking;
 	
-	public CoreSculkShrieker(Material material) {
-		super(material);
+	public CoreSculkShrieker(BlockType type) {
+		super(type);
 	}
 
 	@Override

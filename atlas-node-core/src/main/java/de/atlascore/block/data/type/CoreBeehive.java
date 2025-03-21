@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Beehive;
 
@@ -17,8 +17,8 @@ public class CoreBeehive extends CoreDirectional4Faces implements Beehive {
 	
 	private int honeyLevel;
 	
-	public CoreBeehive(Material material) {
-		super(material);
+	public CoreBeehive(BlockType type) {
+		super(type);
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class CoreBeehive extends CoreDirectional4Faces implements Beehive {
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return getType().getBlockStateID()+
 				honeyLevel+
 				getFaceValue()*6;
 	}

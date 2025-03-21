@@ -1,8 +1,6 @@
 package de.atlasmc.block.data;
 
-import java.lang.reflect.InvocationTargetException;
-
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 
@@ -14,36 +12,27 @@ public class LevelledClassBlockDataFactory extends ClassBlockDataFactory {
 	private final int maxlevel;
 	
 	public <L extends Levelled> LevelledClassBlockDataFactory(Class<L> dataInterface, Class<? extends L> data, int maxlevel) {
-		super(dataInterface, data);
+		super(dataInterface, data, BlockType.class, int.class);
 		this.maxlevel = maxlevel;
 	}
 	
 	public LevelledClassBlockDataFactory(Configuration cfg) throws ClassNotFoundException {
-		super(cfg);
+		super(cfg, BlockType.class, int.class);
 		maxlevel = cfg.getInt("maxlevel");
 	}
 	
 	@Override
-	public BlockData createData(Material material) {
-		if (material == null) 
-			throw new IllegalArgumentException("Material can not be null!");
-		if (!material.isBlock()) 
-			throw new IllegalArgumentException("Material is not a Block!");
-		if (data == null) 
-			return null;
-		try {
-			return data.getConstructor(Material.class, int.class).newInstance(material, maxlevel);
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public BlockData createData(BlockType type) {
+		if (type == null) 
+			throw new IllegalArgumentException("Type can not be null!");
+		return create(type, maxlevel);
 	}
 	
 	@Override
 	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
+		super.toConfiguration(configuration);
 		configuration.set("maxlevel", maxlevel);
-		return super.toConfiguration(configuration);
+		return configuration;
 	}
 
 }

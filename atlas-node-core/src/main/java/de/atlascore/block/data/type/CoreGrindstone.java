@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Grindstone;
 
@@ -17,8 +17,8 @@ public class CoreGrindstone extends CoreDirectional4Faces implements Grindstone 
 	
 	private AttachedFace face;
 	
-	public CoreGrindstone(Material material) {
-		super(material);
+	public CoreGrindstone(BlockType type) {
+		super(type);
 		face = AttachedFace.WALL;
 	}
 

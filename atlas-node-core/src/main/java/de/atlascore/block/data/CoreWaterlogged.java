@@ -2,7 +2,7 @@ package de.atlascore.block.data;
 
 import java.util.List;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.Waterlogged;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
@@ -14,10 +14,10 @@ public class CoreWaterlogged extends CoreBlockData implements Waterlogged {
 		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.WATERLOGGED);
 	}
 	
-	private boolean waterlogged;
+	protected boolean waterlogged;
 	
-	public CoreWaterlogged(Material material) {
-		super(material);
+	public CoreWaterlogged(BlockType type) {
+		super(type);
 	}
 
 	@Override

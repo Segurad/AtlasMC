@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreHightConnectable;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Wall;
 
@@ -20,8 +20,8 @@ public class CoreWall extends CoreHightConnectable implements Wall {
 	protected boolean waterlogged;
 	protected boolean up;
 	
-	public CoreWall(Material material) {
-		super(material);
+	public CoreWall(BlockType type) {
+		super(type);
 		up = true;
 	}
 	
@@ -47,7 +47,7 @@ public class CoreWall extends CoreHightConnectable implements Wall {
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return getType().getBlockStateID()+
 				heights[3].ordinal()+ // WEST
 				(isWaterlogged()?0:3)+ 
 				(up?0:6)+

@@ -2,7 +2,7 @@ package de.atlascore.block.data;
 
 import java.util.List;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.Orientable;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
@@ -16,8 +16,8 @@ public class CoreOrientable extends CoreBlockData implements Orientable {
 	
 	protected Orientation orientation;
 	
-	public CoreOrientable(Material material) {
-		super(material);
+	public CoreOrientable(BlockType type) {
+		super(type);
 		orientation = Orientation.NORTH_UP;
 	}
 
@@ -35,7 +35,7 @@ public class CoreOrientable extends CoreBlockData implements Orientable {
 	
 	@Override
 	public int getStateID() {
-		return material.getBlockStateID()+orientation.ordinal();
+		return type.getBlockStateID()+orientation.ordinal();
 	}
 	
 	@Override

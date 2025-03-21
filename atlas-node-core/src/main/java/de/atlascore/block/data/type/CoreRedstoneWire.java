@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Set;
 
 import de.atlascore.block.data.CoreAnaloguePowerable;
-import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.RedstoneWire;
 
@@ -24,8 +24,8 @@ public class CoreRedstoneWire extends CoreAnaloguePowerable implements RedstoneW
 	
 	private Connection[] connections;
 	
-	public CoreRedstoneWire(Material material) {
-		super(material);
+	public CoreRedstoneWire(BlockType type) {
+		super(type);
 		this.connections = new Connection[] {
 			Connection.NONE,
 			Connection.NONE,	
@@ -61,10 +61,10 @@ public class CoreRedstoneWire extends CoreAnaloguePowerable implements RedstoneW
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return type.getBlockStateID()+
 				connections[3].ordinal()+ //WEST
 				connections[2].ordinal()*3+ //SOUTH
-				getPower()*9+
+				power*9+
 				connections[0].ordinal()*144+ //NORTH
 				connections[1].ordinal()*432; //EAST
 	}

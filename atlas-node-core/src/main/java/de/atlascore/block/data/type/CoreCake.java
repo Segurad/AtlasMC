@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreBlockData;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Cake;
 
@@ -17,8 +17,8 @@ public class CoreCake extends CoreBlockData implements Cake {
 	
 	private int bites;
 	
-	public CoreCake(Material material) {
-		super(material);
+	public CoreCake(BlockType type) {
+		super(type);
 	}
 
 	@Override

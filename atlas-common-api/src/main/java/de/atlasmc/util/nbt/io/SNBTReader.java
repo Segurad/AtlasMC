@@ -9,13 +9,13 @@ import java.util.function.LongConsumer;
 import java.util.regex.Pattern;
 
 import de.atlasmc.util.map.key.CharKeyBuffer;
+import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
 
 /**
- * {@link NBTReader} implementation to read NBT Json<br>
- * Only able to detect Compound, String, Number, List/Array
+ * {@link NBTReader} implementation to read NBT Json
  */
-public class SNBTReader extends AbstractNBTReader {
+public class SNBTReader extends AbstractNBTStreamReader {
 	
 	/**
 	 * Pattern for {@link TagType#DOUBLE} without suffix
@@ -74,17 +74,11 @@ public class SNBTReader extends AbstractNBTReader {
 	 */
 	private static final Pattern BYTE_PATTERN = Pattern.compile("[+-]?(?:0|[1-9][0-9]*)b", Pattern.CASE_INSENSITIVE);
 	
-	private TagType type;
-	private int depth;
-	private int arrayTagPayload = -1;
-	private ListData list;
 	private BufferedReader reader;
 	private CharKeyBuffer buffer;
-	private CharKeyBuffer name;
 	private boolean closed;
-	private boolean hasName;
 	
-	public SNBTReader(Reader in) throws IOException {
+	public SNBTReader(Reader in) {
 		if (in == null)
 			throw new IllegalArgumentException("Reader can not be null!");
 		if (in instanceof BufferedReader reader) {
@@ -92,211 +86,342 @@ public class SNBTReader extends AbstractNBTReader {
 		} else {
 			this.reader = new BufferedReader(in);
 		}
-		prepareTag();
 	}
-
+	
 	@Override
 	public void close() {
 		if (closed)
 			return;
-		closed = true;
+		super.close();
 		try {
 			reader.close();
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
 		reader = null;
-		name = null;
 		buffer = null;
 	}
 
 	@Override
-	public int getDepth() {
-		return depth;
-	}
-
-	@Override
-	public CharSequence getFieldName() {
-		return name.getView();
-	}
-
-	@Override
-	public TagType getListType() {
-		return list == null ? null : list.type;
-	}
-
-	@Override
-	public int getRestPayload() {
-		if (list == null || list.depth != depth) 
-			return 0;
-		return list.payload;
-	}
-	
-	@Override
-	public int getNextPayload() {
-		if (list == null || list.depth >= depth)
-			return 0;
-		return list.depth;
-	}
-
-	@Override
-	public TagType getType() {
-		return type;
-	}
-
-	@Override
-	public int getArrayTagPayload() {
-		return arrayTagPayload;
-	}
-
-	@Override
 	public void readByteArrayTag(IntConsumer dataConsumer) throws IOException {
-		// TODO Auto-generated method stub
-		
+		prepareTag();
+		ensureTag(TagType.BYTE_ARRAY);
+		if (dataConsumer == null)
+			throw new IllegalArgumentException("DataConsumer can not be null!");
+		final int payload = arrayTagPayload;
+		for (int i = 0; i < payload; i++)
+			dataConsumer.accept(ioReadByte());
+		tagConsumed();
 	}
 
 	@Override
 	public int readByteArrayTag(byte[] buf) throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+		prepareTag();
+		ensureTag(TagType.BYTE_ARRAY);
+		int bytesRead = 0;
+		for (int i = 0; i < buf.length; i++) {
+			if (arrayTagPayload <= 0)
+				break;
+			bytesRead++;
+			arrayTagPayload--;
+			buf[i] = ioReadByte();
+		}
+		if (arrayTagPayload <= 0)
+			tagConsumed();
+		return bytesRead;
 	}
 
 	@Override
 	public byte[] readByteArrayTag() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		prepareTag();
+		ensureTag(TagType.BYTE_ARRAY);
+		byte[] data = new byte[arrayTagPayload];
+		for (int i = 0; i < arrayTagPayload; i++)
+			data[i] = ioReadByte();
+		tagConsumed();
+		return data;
 	}
 
 	@Override
 	public byte readByteTag() throws IOException {
-		return (byte) readIntTag();
+		prepareTag();
+		byte data = 0;
+		if (type == TagType.BYTE) {
+			data = ioReadByte();
+		} else { // misc number read
+			switch (type) {
+			case BYTE:
+				data = ioReadByte();
+				break;
+			case SHORT:
+				data = (byte) ioReadShort();
+				break;
+			case LONG:
+				data = (byte) ioReadLong();
+				break;
+			case FLOAT:
+				data = (byte) ioReadFloat();
+				break;
+			case DOUBLE:
+				data = (byte) ioReadDouble();
+				break;
+			default:
+				throw new NBTException("Tried to read tag as number: " + type);
+			}
+		}
+		tagConsumed();
+		return data;
 	}
-
+	
 	@Override
 	public double readDoubleTag() throws IOException {
-		ensureOpen();
-		double value = Double.parseDouble(buffer.toString());
 		prepareTag();
-		return value;
+		double data = 0;
+		if (type == TagType.DOUBLE) {
+			data = ioReadDouble();
+		} else { // misc number read
+			switch (type) {
+			case BYTE:
+				data = ioReadDouble();
+				break;
+			case SHORT:
+				data = ioReadShort();
+				break;
+			case INT:
+				data = ioReadInt();
+				break;
+			case LONG:
+				data = ioReadLong();
+				break;
+			case FLOAT:
+				data = ioReadFloat();
+				break;
+			default:
+				throw new NBTException("Tried to read tag as number: " + type);
+			}
+		}
+		tagConsumed();
+		return data;
 	}
 
 	@Override
 	public float readFloatTag() throws IOException {
-		ensureOpen();
-		float value = Float.parseFloat(buffer.toString());
 		prepareTag();
-		return value;
+		float data = 0;
+		if (type == TagType.FLOAT) {
+			data = ioReadFloat();
+		} else { // misc number read
+			switch (type) {
+			case BYTE:
+				data = ioReadByte();
+				break;
+			case SHORT:
+				data = ioReadShort();
+				break;
+			case INT:
+				data = ioReadInt();
+				break;
+			case LONG:
+				data = ioReadLong();
+				break;
+			case DOUBLE:
+				data = (float) ioReadDouble();
+				break;
+			default:
+				throw new NBTException("Tried to read tag as number: " + type);
+			}
+		}
+		tagConsumed();
+		return data;
 	}
 
 	@Override
 	public void readIntArrayTag(IntConsumer dataConsumer) throws IOException {
-		// TODO Auto-generated method stub
-		
+		prepareTag();
+		ensureTag(TagType.INT_ARRAY);
+		if (dataConsumer == null)
+			throw new IllegalArgumentException("DataConsumer can not be null!");
+		final int payload = arrayTagPayload;
+		for (int i = 0; i < payload; i++)
+			dataConsumer.accept(ioReadInt());
+		tagConsumed();
 	}
 
 	@Override
 	public int readIntArrayTag(int[] buf) throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+		prepareTag();
+		ensureTag(TagType.INT_ARRAY);
+		int intsRead = 0;
+		for (int i = 0; i < buf.length; i++) {
+			if (arrayTagPayload <= 0)
+				break;
+			intsRead++;
+			arrayTagPayload--;
+			buf[i] = ioReadInt();
+		}
+		if (arrayTagPayload <= 0)
+			tagConsumed();
+		return intsRead;
 	}
 
 	@Override
 	public int[] readIntArrayTag() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		prepareTag();
+		ensureTag(TagType.INT_ARRAY);
+		int[] data = new int[arrayTagPayload];
+		for (int i = 0; i < data.length; i++) {
+			data[i] = ioReadInt();
+		}
+		tagConsumed();
+		return data;
 	}
 
 	@Override
 	public int readIntTag() throws IOException {
-		ensureOpen();
-		int value = Integer.parseInt(buffer, 0, buffer.length(), 10);
 		prepareTag();
-		return value;
+		int data = 0;
+		if (type == TagType.INT) {
+			data = ioReadInt();
+		} else { // misc number read
+			switch (type) {
+			case BYTE:
+				data = ioReadByte();
+				break;
+			case SHORT:
+				data = ioReadShort();
+				break;
+			case LONG:
+				data = (int) ioReadLong();
+				break;
+			case FLOAT:
+				data = (int) ioReadFloat();
+				break;
+			case DOUBLE:
+				data = (int) ioReadDouble();
+				break;
+			default:
+				throw new NBTException("Tried to read tag as number: " + type);
+			}
+		}
+		tagConsumed();
+		return data;
 	}
 
 	@Override
 	public void readLongArrayTag(LongConsumer dataConsumer) throws IOException {
-		// TODO Auto-generated method stub
-		
+		prepareTag();
+		ensureTag(TagType.LONG_ARRAY);
+		if (dataConsumer == null)
+			throw new IllegalArgumentException("DataConsumer can not be null!");
+		final int payload = arrayTagPayload;
+		for (int i = 0; i < payload; i++)
+			dataConsumer.accept(ioReadLong());
+		tagConsumed();
 	}
 
 	@Override
 	public int readLongArrayTag(long[] buf) throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+		prepareTag();
+		ensureTag(TagType.LONG_ARRAY);
+		int longsRead = 0;
+		for (int i = 0; i < buf.length; i++) {
+			if (arrayTagPayload <= 0)
+				break;
+			longsRead++;
+			arrayTagPayload--;
+			buf[i] = ioReadLong();
+		}
+		if (arrayTagPayload <= 0)
+			tagConsumed();
+		return longsRead;
 	}
 
 	@Override
 	public long[] readLongArrayTag() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		prepareTag();
+		ensureTag(TagType.LONG_ARRAY);
+		long[] data = new long[arrayTagPayload];
+		for (int i = 0; i < data.length; i++) {
+			data[i] = ioReadLong();
+		}
+		tagConsumed();
+		return data;
 	}
 
 	@Override
 	public long readLongTag() throws IOException {
-		ensureOpen();
-		long value = Long.parseLong(buffer, 0, buffer.length(), 10);
 		prepareTag();
-		return value;
-	}
-
-	@Override
-	public void readNextEntry() throws IOException {
-		ensureOpen();
-		if (type == TagType.LIST) {
-			if (list.type == TagType.COMPOUND) {
-				depth += 2;
-				prepareTag();
-				return;
-			} else if (list.type == TagType.LIST) {
-				depth++;
-				//addList();
-				return;
+		long data = 0;
+		if (type == TagType.LONG) {
+			data = ioReadLong();
+		} else { // misc number read
+			switch (type) {
+			case BYTE:
+				data = ioReadByte();
+				break;
+			case SHORT:
+				data = ioReadShort();
+				break;
+			case INT:
+				data = ioReadInt();
+				break;
+			case FLOAT:
+				data = (long) ioReadFloat();
+				break;
+			case DOUBLE:
+				data = (long) ioReadDouble();
+				break;
+			default:
+				throw new NBTException("Tried to read tag as number: " + type);
 			}
-		} else if (type == TagType.TAG_END) {
-			if (list != null && list.depth == depth && list.type == TagType.COMPOUND && list.payload > 0)
-				depth++;
-			prepareTag();
-			return;
-		} else if (type == TagType.COMPOUND) {
-			prepareTag();
-			return;
 		}
-		throw new IOException("Next entry should only be called on LIST, COMPOUND or END: " + type.name());
+		tagConsumed();
+		return data;
 	}
 
 	@Override
 	public short readShortTag() throws IOException {
-		return (short) readIntTag();
+		prepareTag();
+		short data = 0;
+		if (type == TagType.SHORT) {
+			data = ioReadShort();
+		} else { // misc number read
+			switch (type) {
+			case BYTE:
+				data = ioReadByte();
+				break;
+			case INT:
+				data = (short) ioReadInt();
+				break;
+			case LONG:
+				data = (short) ioReadLong();
+				break;
+			case FLOAT:
+				data = (short) ioReadFloat();
+				break;
+			case DOUBLE:
+				data = (short) ioReadDouble();
+				break;
+			default:
+				throw new NBTException("Tried to read tag as number: " + type);
+			}
+		}
+		tagConsumed();
+		return data;
 	}
+
 
 	@Override
 	public String readStringTag() throws IOException {
-		ensureOpen();
-		String value = buffer.toString();
 		prepareTag();
+		ensureTag(TagType.STRING);
+		String value = buffer.toString();
+		tagConsumed();
 		return value;
 	}
-
-	@Override
-	public void skipTag() throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mark() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void reset() {
-		// TODO Auto-generated method stub
-		
-	}
 	
-	private void prepareTag() throws IOException {
+	@Override
+	protected void prepareTag(boolean skip) throws IOException {
 		buffer.clear();
 		int c = skipWhitespaces();
 		if (c == -1)
@@ -367,15 +492,35 @@ public class SNBTReader extends AbstractNBTReader {
 		while (Character.isWhitespace(next = reader.read()));
 		return next;
 	}
-	
-	protected void resetName() {
-		name.clear();
-		hasName = false;
-	}
 
 	@Override
-	public boolean isList() {
-		return list != null && depth == list.depth;
+	protected void skipTag(boolean skip) throws IOException {
+		// TODO Auto-generated method stub
+		
 	}
-
+	
+	private byte ioReadByte() {
+		return 0;
+	}
+	
+	private int ioReadInt() {
+		return 0;
+	}
+	
+	private short ioReadShort() {
+		return 0;
+	}
+	
+	private float ioReadFloat() {
+		return 0;
+	}
+	
+	private double ioReadDouble() {
+		return 0;
+	}
+	
+	private long ioReadLong() {
+		return 0;
+	}
+	
 }

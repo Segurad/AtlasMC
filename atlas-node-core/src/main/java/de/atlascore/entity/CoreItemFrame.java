@@ -3,7 +3,6 @@ package de.atlascore.entity;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlasmc.Material;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.ItemFrame;
@@ -45,15 +44,7 @@ public class CoreItemFrame extends CoreHanging implements ItemFrame {
 		});
 		NBT_FIELDS.setField(NBT_ITEM, (holder, reader) -> {
 			reader.readNextEntry();
-			Material mat = null;
-			if (!NBT_ID.equals(reader.getFieldName())) {
-				reader.mark();
-				reader.search(NBT_ID);
-				mat = Material.getByName(reader.readStringTag());
-				reader.reset();
-			} else mat = Material.getByName(reader.readStringTag());
-			ItemStack item = new ItemStack(mat);
-			item.fromNBT(reader);
+			ItemStack item = ItemStack.getFromNBT(reader);
 			holder.setItemStack(item);
 		});
 		NBT_FIELDS.setField(NBT_INVISIBLE, (holder, reader) -> {

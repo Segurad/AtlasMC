@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreAxisOrientable;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Chain;
 
@@ -17,8 +17,8 @@ public class CoreChain extends CoreAxisOrientable implements Chain {
 	
 	private boolean waterlogged;
 	
-	public CoreChain(Material material) {
-		super(material);
+	public CoreChain(BlockType type) {
+		super(type);
 	}
 
 	@Override
@@ -33,9 +33,9 @@ public class CoreChain extends CoreAxisOrientable implements Chain {
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return type.getBlockStateID()+
 				(waterlogged?0:1)+
-				getAxis().ordinal()*2;
+				axis.ordinal()*2;
 	}
 	
 	@Override

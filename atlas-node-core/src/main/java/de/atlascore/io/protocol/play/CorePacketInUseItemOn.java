@@ -22,6 +22,7 @@ public class CorePacketInUseItemOn implements PacketIO<PacketInUseItemOn> {
 		packet.cursorPosY = in.readFloat();
 		packet.cursorPosZ = in.readFloat();	
 		packet.insideBlock = in.readBoolean();
+		packet.worldBorderHit = in.readBoolean();
 		packet.sequence = readVarInt(in);
 	}
 
@@ -34,6 +35,7 @@ public class CorePacketInUseItemOn implements PacketIO<PacketInUseItemOn> {
 		out.writeFloat(packet.cursorPosY);
 		out.writeFloat(packet.cursorPosZ);
 		out.writeBoolean(packet.insideBlock);
+		out.writeBoolean(packet.worldBorderHit);
 		writeVarInt(packet.sequence, out);
 	}
 

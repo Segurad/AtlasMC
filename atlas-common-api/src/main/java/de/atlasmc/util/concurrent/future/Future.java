@@ -19,7 +19,7 @@ public interface Future<V> extends java.util.concurrent.Future<V> {
 	void removeListener(FutureListener<V> listener);
 	
 	public static <V> Collection<V> getFutureResults(Collection<Future<V>> futures) {
-		CommulativeFuture<V> cumFuture = new CommulativeFuture<>(futures);
+		CumulativeFuture<V> cumFuture = new CumulativeFuture<>(futures);
 		Collection<Future<V>> finishedFutures = null;
 		try {
 			finishedFutures = cumFuture.get();

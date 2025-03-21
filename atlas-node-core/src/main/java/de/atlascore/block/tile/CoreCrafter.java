@@ -2,7 +2,7 @@ package de.atlascore.block.tile;
 
 import java.io.IOException;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.Crafter;
 import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.Inventory;
@@ -40,7 +40,7 @@ public class CoreCrafter extends CoreAbstractContainerTile<Inventory> implements
 	protected int craftingTicks;
 	protected boolean triggered;
 	
-	public CoreCrafter(Material type) {
+	public CoreCrafter(BlockType type) {
 		super(type);
 	}
 

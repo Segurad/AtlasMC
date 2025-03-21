@@ -7,16 +7,16 @@ import de.atlasmc.entity.Projectile;
 
 public interface ProjectileSource {
 	
-	Projectile lounchProjectile(Projectile projectile, Vector3d velocity);
+	Projectile launchProjectile(Projectile projectile, Vector3d velocity);
 	
-	Projectile lounchProjectile(EntityType type, Vector3d velocity);
+	Projectile launchProjectile(EntityType type, Vector3d velocity);
 	
-	default Projectile lounchProjectile(Projectile projectile) {
-		return lounchProjectile(projectile, null);
+	default Projectile launchProjectile(Projectile projectile) {
+		return launchProjectile(projectile, null);
 	}
 	
-	default Projectile lounchProjectile(EntityType type) {
-		return lounchProjectile(type, null);
+	default Projectile launchProjectile(EntityType type) {
+		return launchProjectile(type, null);
 	}
 
 }

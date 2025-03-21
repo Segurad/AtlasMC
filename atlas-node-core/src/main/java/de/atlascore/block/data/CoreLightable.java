@@ -2,7 +2,7 @@ package de.atlascore.block.data;
 
 import java.util.List;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.Lightable;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
@@ -16,8 +16,8 @@ public class CoreLightable extends CoreBlockData implements Lightable {
 	
 	protected boolean lit;
 	
-	public CoreLightable(Material material) {
-		super(material);
+	public CoreLightable(BlockType type) {
+		super(type);
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class CoreLightable extends CoreBlockData implements Lightable {
 	
 	@Override
 	public int getStateID() {
-		return material.getBlockStateID()+(lit?0:1);
+		return type.getBlockStateID()+(lit?0:1);
 	}
 	
 	@Override

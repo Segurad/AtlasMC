@@ -40,7 +40,7 @@ public class CorePacketOutSpawnEntity implements PacketIO<PacketOutSpawnEntity> 
 		UUID uuid = packet.uuid;
 		out.writeLong(uuid.getMostSignificantBits());
 		out.writeLong(uuid.getLeastSignificantBits());
-		writeVarInt(packet.type.getTypeID(), out);
+		writeVarInt(packet.type.getID(), out);
 		out.writeDouble(packet.x);
 		out.writeDouble(packet.y);
 		out.writeDouble(packet.z);

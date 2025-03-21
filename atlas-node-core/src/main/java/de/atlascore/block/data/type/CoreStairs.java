@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Stairs;
 
@@ -22,8 +22,8 @@ public class CoreStairs extends CoreDirectional4Faces implements Stairs {
 	private boolean waterlogged;
 	private Shape shape;
 	
-	public CoreStairs(Material material) {
-		super(material);
+	public CoreStairs(BlockType type) {
+		super(type);
 		this.half = Half.BOTTOM;
 		this.shape = Shape.STRAIGHT;
 	}
@@ -71,7 +71,7 @@ public class CoreStairs extends CoreDirectional4Faces implements Stairs {
 
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return getType().getBlockStateID()+
 				(waterlogged?0:1)+
 				shape.ordinal()*2+
 				half.getID()*10+

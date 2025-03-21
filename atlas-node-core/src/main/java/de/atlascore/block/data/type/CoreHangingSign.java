@@ -2,7 +2,7 @@ package de.atlascore.block.data.type;
 
 import java.util.List;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.HangingSign;
 
@@ -16,8 +16,8 @@ public class CoreHangingSign extends CoreSign implements HangingSign {
 	
 	private boolean attached;
 	
-	public CoreHangingSign(Material material) {
-		super(material);
+	public CoreHangingSign(BlockType type) {
+		super(type);
 	}
 
 	@Override

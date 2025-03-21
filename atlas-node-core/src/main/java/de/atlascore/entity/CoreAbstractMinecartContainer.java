@@ -3,7 +3,6 @@ package de.atlascore.entity;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlasmc.Material;
 import de.atlasmc.entity.AbstractMinecartContainer;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.inventory.Inventory;
@@ -26,21 +25,16 @@ public abstract class CoreAbstractMinecartContainer extends CoreAbstractMinecart
 	static {
 		NBT_FIELDS = CoreAbstractMinecart.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_ITEMS, (holder, reader) -> {
+			Inventory inv = holder.getInventory();
 			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {
-				Inventory inv = holder.getInventory();
-				Material mat = null;
-				if (!NBT_ID.equals(reader.getFieldName())) {
-					reader.mark();
-					reader.search(NBT_ID);
-					mat = Material.getByName(reader.readStringTag());
-					reader.reset();
-				} else mat = Material.getByName(reader.readStringTag());
-				ItemStack item = new ItemStack(mat);
+				reader.readNextEntry();
+				ItemStack item = ItemStack.getFromNBT(reader, false);
 				int slot = item.fromSlot(reader);
 				if (slot != -999) 
 					inv.setItem(slot, item);
 			}
+			reader.readNextEntry();
 		});
 		NBT_FIELDS.setField(NBT_LOOT_TABLE, NBTField.skip()); // TODO wait for loot table Registry
 		NBT_FIELDS.setField(NBT_LOOT_TABLE_SEED, NBTField.skip()); // ^ how about no?

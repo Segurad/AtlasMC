@@ -8,9 +8,9 @@ import de.atlasmc.util.EnumValueCache;
 
 public interface TechnicalPiston extends Directional {
 	
-	Type getType();
+	Type getPistonType();
 	
-	void setType(Type type);
+	void setPistonType(Type type);
 	
 	public static enum Type implements EnumName, EnumValueCache {
 		NORMAL,

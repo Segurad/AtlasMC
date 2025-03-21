@@ -15,6 +15,8 @@ public class MethodEventExecutor extends AbstractEventExecutor {
 	
 	public MethodEventExecutor(PluginHandle plugin, Class<? extends Event> eventClass, Method method, EventPriority priority, boolean ignoreCancelled, Listener listener) {
 		super(plugin, eventClass, ignoreCancelled, priority, listener);
+		if (method == null)
+			throw new IllegalArgumentException("Method can not be null!");
 		this.method = method;
 		method.setAccessible(true);
 	}	
@@ -24,7 +26,6 @@ public class MethodEventExecutor extends AbstractEventExecutor {
 	 * @param listener
 	 * @return list
 	 */
-	@SuppressWarnings("unchecked")
 	public static List<EventExecutor> getExecutors(PluginHandle plugin, Listener listener) {
 		if (listener == null)
 			throw new IllegalArgumentException("Listener can not be null!");
@@ -36,11 +37,13 @@ public class MethodEventExecutor extends AbstractEventExecutor {
 			if (method.getParameterCount() != 1) 
 				continue;
 			Class<?>[] params = method.getParameterTypes();
-			if (!Event.class.isAssignableFrom(params[0])) 
+			@SuppressWarnings("unchecked")
+			Class<? extends Event> eventClass = (Class<? extends Event>) params[0];
+			if (!Event.class.isAssignableFrom(eventClass)) 
 				continue;
 			if (executors == null)
 				executors = new ArrayList<>();
-			executors.add(new MethodEventExecutor(plugin, (Class<? extends Event>) params[0], method, handler.priority(), handler.ignoreCancelled(), listener));
+			executors.add(new MethodEventExecutor(plugin, eventClass, method, handler.priority(), handler.ignoreCancelled(), listener));
 		}
 		return executors == null ? List.of() : executors;
 	}

@@ -1,6 +1,5 @@
 package de.atlasmc.block.data.type;
 
-import de.atlasmc.Instrument;
 import de.atlasmc.block.data.Powerable;
 
 public interface NoteBlock extends Powerable {

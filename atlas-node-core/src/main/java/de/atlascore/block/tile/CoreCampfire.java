@@ -2,7 +2,7 @@ package de.atlascore.block.tile;
 
 import java.io.IOException;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.Campfire;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.map.key.CharKey;
@@ -24,18 +24,14 @@ public class CoreCampfire extends CoreTileEntity implements Campfire {
 		NBT_FIELDS.setField(ITEMS, (holder, reader) -> {
 			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {
-				Material mat = null;
-				if (!NBT_ID.equals(reader.getFieldName())) {
-					reader.mark();
-					reader.search(NBT_ID);
-					mat = Material.getByName(reader.readStringTag());
-					reader.reset();
-				} else mat = Material.getByName(reader.readStringTag());
-				ItemStack item = new ItemStack(mat);
+				reader.readNextEntry();
+				ItemStack item = ItemStack.getFromNBT(reader, false);
 				int slot = item.fromSlot(reader);
-				if (slot < 0 ||  slot > 4) continue;
+				if (slot < 0 ||  slot > 4) 
+					continue;
 				holder.setItem(slot, item);
 			}
+			reader.readNextEntry();
 		});
 		NBT_FIELDS.setField(COOKING_TIMES, (holder, reader) -> {
 			holder.setCookingTimes(reader.readIntArrayTag());
@@ -49,7 +45,7 @@ public class CoreCampfire extends CoreTileEntity implements Campfire {
 	private int[] cookingTimes;
 	private int[] cookingTotalTimes;
 
-	public CoreCampfire(Material type) {
+	public CoreCampfire(BlockType type) {
 		super(type);
 		cookingTimes = new int[4];
 		cookingTotalTimes = new int[4];

@@ -1,6 +1,7 @@
 package de.atlasmc.tick;
 
 import de.atlasmc.registry.RegistryHolder;
+import de.atlasmc.util.configuration.ConfigurationSection;
 
 @RegistryHolder(key="atlas:factory/atlas_thread_task")
 public interface AtlasThreadTaskFactory {
@@ -12,6 +13,6 @@ public interface AtlasThreadTaskFactory {
 	 * @param context
 	 * @return
 	 */
-	AtlasThreadTask createTask(String name, Object... context);
+	<T> AtlasThreadTask<T> createTask(ConfigurationSection config);
 
 }

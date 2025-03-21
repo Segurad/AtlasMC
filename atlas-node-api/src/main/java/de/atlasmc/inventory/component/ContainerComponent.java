@@ -2,9 +2,9 @@ package de.atlasmc.inventory.component;
 
 import java.util.List;
 
-import de.atlasmc.Material;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.ItemType;
 
 public interface ContainerComponent extends ItemComponent {
 	
@@ -20,7 +20,7 @@ public interface ContainerComponent extends ItemComponent {
 	
 	void removeItem(ItemStack item);
 	
-	void removeItem(Material material);
+	void removeItem(ItemType type);
 	
 	ContainerComponent clone();
 

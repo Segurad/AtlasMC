@@ -10,83 +10,19 @@ import de.atlasmc.util.map.key.CharKeyBuffer;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
 
-public abstract class AbstractNBTIOReader extends AbstractNBTReader {
+public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 
-	private TagType type;
-	private TagType markType;
-	private CharKeyBuffer name;
-	private boolean prepared;
-	private boolean markPrepared;
-	private boolean hasName;
-	private String markName;
-	private int depth = -1;
-	private int markDepth;
-	private ListData list;
-	private ListData markList;
-	private int arrayTagPayload = -1;
-	private int markArrayTagPayload = -1;
 	private final boolean unnamedRoot;
 	private byte[] nameBuf = null;
 
 	public AbstractNBTIOReader(boolean unnamedRoot) {
-		name = new CharKeyBuffer();
 		this.unnamedRoot = unnamedRoot;
-	}
-
-	@Override
-	public int getDepth() throws IOException {
-		if (depth < 0)
-			return depth;
-		prepareTag();
-		return depth;
-	}
-
-	@Override
-	public CharSequence getFieldName() throws IOException {
-		prepareTag();
-		return hasName ? name.getView() : null;
-	}
-
-	@Override
-	public TagType getListType() throws IOException {
-		prepareTag();
-		return list == null ? null : list.type;
-	}
-
-	@Override
-	public int getRestPayload() throws IOException {
-		prepareTag();
-		if (list == null)
-			return -1;
-		if (list.depth != depth) {
-			if (type == TagType.LIST && list.depth == depth + 1) { // required for list in list reading
-				ListData parent = list.parent;
-				if (parent != null) {
-					return parent.payload;
-				}
-			}
-			return -1;
-		}
-		return list.payload;
-	}
-
-	@Override
-	public int getNextPayload() throws IOException {
-		prepareTag();
-		if (list == null || list.depth >= depth)
-			return -1;
-		return list.depth;
-	}
-
-	@Override
-	public TagType getType() throws IOException {
-		prepareTag();
-		return type;
 	}
 
 	@Override
 	public void readByteArrayTag(IntConsumer dataConsumer) throws IOException {
 		prepareTag();
+		ensureTag(TagType.BYTE_ARRAY);
 		if (dataConsumer == null)
 			throw new IllegalArgumentException("DataConsumer can not be null!");
 		final int payload = arrayTagPayload;
@@ -98,6 +34,7 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 	@Override
 	public int readByteArrayTag(byte[] buf) throws IOException {
 		prepareTag();
+		ensureTag(TagType.BYTE_ARRAY);
 		int bytesRead = 0;
 		for (int i = 0; i < buf.length; i++) {
 			if (arrayTagPayload <= 0)
@@ -114,6 +51,7 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 	@Override
 	public byte[] readByteArrayTag() throws IOException {
 		prepareTag();
+		ensureTag(TagType.BYTE_ARRAY);
 		byte[] data = new byte[arrayTagPayload];
 		ioReadBytes(data);
 		tagConsumed();
@@ -216,6 +154,7 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 	@Override
 	public void readIntArrayTag(IntConsumer dataConsumer) throws IOException {
 		prepareTag();
+		ensureTag(TagType.INT_ARRAY);
 		if (dataConsumer == null)
 			throw new IllegalArgumentException("DataConsumer can not be null!");
 		final int payload = arrayTagPayload;
@@ -227,6 +166,7 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 	@Override
 	public int readIntArrayTag(int[] buf) throws IOException {
 		prepareTag();
+		ensureTag(TagType.INT_ARRAY);
 		int intsRead = 0;
 		for (int i = 0; i < buf.length; i++) {
 			if (arrayTagPayload <= 0)
@@ -243,6 +183,7 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 	@Override
 	public int[] readIntArrayTag() throws IOException {
 		prepareTag();
+		ensureTag(TagType.INT_ARRAY);
 		int[] data = new int[arrayTagPayload];
 		for (int i = 0; i < data.length; i++) {
 			data[i] = ioReadInt();
@@ -285,6 +226,7 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 	@Override
 	public void readLongArrayTag(LongConsumer dataConsumer) throws IOException {
 		prepareTag();
+		ensureTag(TagType.LONG_ARRAY);
 		if (dataConsumer == null)
 			throw new IllegalArgumentException("DataConsumer can not be null!");
 		final int payload = arrayTagPayload;
@@ -296,6 +238,7 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 	@Override
 	public int readLongArrayTag(long[] buf) throws IOException {
 		prepareTag();
+		ensureTag(TagType.LONG_ARRAY);
 		int longsRead = 0;
 		for (int i = 0; i < buf.length; i++) {
 			if (arrayTagPayload <= 0)
@@ -312,6 +255,7 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 	@Override
 	public long[] readLongArrayTag() throws IOException {
 		prepareTag();
+		ensureTag(TagType.LONG_ARRAY);
 		long[] data = new long[arrayTagPayload];
 		for (int i = 0; i < data.length; i++) {
 			data[i] = ioReadLong();
@@ -385,16 +329,14 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 	@Override
 	public String readStringTag() throws IOException {
 		prepareTag();
+		ensureTag(TagType.STRING);
 		byte[] buffer = new byte[ioReadShort()];
 		ioReadBytes(buffer);
 		tagConsumed();
 		return new String(buffer);
 	}
 
-	protected void prepareTag() throws IOException {
-		prepareTag(false);
-	}
-
+	@Override
 	protected void prepareTag(boolean skip) throws IOException {
 		ensureOpen();
 		if (prepared) // avoid preparing again
@@ -425,98 +367,30 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 		// type specific preparation
 		if (type == TagType.LIST) {
 			addList(); // list specific preparation
-		} else if (isArrayTag()) {
+		} else if (getType().isArray()) {
 			arrayTagPayload = ioReadInt(); // prepare array tag size
 		}
-	}
-
-	protected void resetName() {
-		name.clear();
-		hasName = false;
-	}
-
-	@Override
-	public void readNextEntry() throws IOException {
-		readNextEntry(false);
-	}
-
-	private void readNextEntry(boolean skipPrepare) throws IOException {
-		prepareTag(skipPrepare);
-		if (type == TagType.LIST) {
-			boolean entered = list.entered;
-			if (!entered) { // see if enter
-				depth++;
-				list.entered = true;
-				prepared = false;
-				arrayTagPayload = -1;
-				resetName();
-				return;
-			} else if(getRestPayload() == 0) {
-				removeList();
-				tagConsumed();
-				return;
-			}
-		} else if (type == TagType.TAG_END) {
-			depth--;
-			tagConsumed();
-			return;
-		} else if (type == TagType.COMPOUND) {
-			depth++;
-			tagConsumed();
-			return;
-		}
-		throw new IOException("Next entry should only be called on LIST, COMPOUND or END: " + type.name());
-	}
-	
-	/**
-	 * Call to mark the current tag as consumed. In most cases this can be called
-	 * immediately.
-	 */
-	protected void tagConsumed() {
-		prepared = false;
-		resetName();
-		arrayTagPayload = -1;
-		if (list == null)
-			return;
-		if (depth != list.depth)
-			return;
-		if (list.payload > 0) {
-			list.payload--;
-		}
-		if (list.payload == 0) {
-			prepared = true;
-			type = TagType.LIST;
-		}
-	}
-
-	@Override
-	public UUID readUUID() throws IOException {
-		ensureOpen();
-		int length = ioReadInt();
-		if (length != 4)
-			throw new NBTException("Invalid UUID data length: " + length);
-		return new UUID(ioReadLong(), ioReadLong());
 	}
 
 	private void addList() throws IOException {
 		ensureOpen();
 		TagType type = TagType.getByID(ioReadByte());
 		int payload = ioReadInt();
-		list = new ListData(type, payload, depth + 1, list);
+		addList(type, payload);
 	}
-
-	private void removeList() {
-		if (list == null)
-			return;
-		list = list.parent;
-		depth--;
+	
+	@Override
+	public UUID readUUID() throws IOException {
+		prepareTag();
+		ensureTag(TagType.INT_ARRAY);
+		if (arrayTagPayload != 4)
+			throw new NBTException("Invalid UUID data length: " + arrayTagPayload);
+		UUID uuid = new UUID(ioReadLong(), ioReadLong());
+		tagConsumed();
+		return uuid;
 	}
 
 	@Override
-	public void skipTag() throws IOException {
-		skipTag(false);
-	}
-
 	protected void skipTag(boolean skipPrepare) throws IOException {
 		prepareTag(skipPrepare);
 		final boolean isList = list != null && depth == list.depth;
@@ -597,73 +471,27 @@ public abstract class AbstractNBTIOReader extends AbstractNBTReader {
 		}
 	}
 
-	@Override
-	public void skipToEnd() throws IOException {
-		final int depth = getDepth();
-		while (depth <= getDepth()) {
-			if (getType() == TagType.TAG_END && depth == getDepth())
-				readNextEntry();
-			else
-				skipTag(true);
-		}
-	}
-
 	private void skipTag(int bytes, boolean skipPrepare) throws IOException {
 		skipBytes(bytes);
 		tagConsumed();
 	}
-
-	@Override
-	public boolean isList() {
-		return list != null && depth == list.depth;
-	}
-
+	
 	@Override
 	public void mark() {
-		markDepth = depth;
-		if (list != null) {
-			markList = list;
-			list.mark();
-		}
-		markName = name.toString();
-		markType = type;
-		markArrayTagPayload = arrayTagPayload;
-		markPrepared = prepared;
+		super.mark();
 		ioMark();
 	}
 
 	@Override
 	public void reset() {
-		depth = markDepth;
-		list = markList;
-		markList = null;
-		if (list != null)
-			list.reset();
-		name.clear();
-		name.append(markName);
-		markName = null;
-		type = markType;
-		arrayTagPayload = markArrayTagPayload;
-		markArrayTagPayload = -1;
-		prepared = markPrepared;
+		super.reset();
 		ioReset();
-	}
-
-	@Override
-	public int getArrayTagPayload() {
-		return arrayTagPayload;
 	}
 
 	@Override
 	public void close() {
 		super.close();
-		name = null;
-		hasName = false;
-		markName = null;
-		depth = Integer.MIN_VALUE;
-		markDepth = depth;
-		list = null;
-		markList = null;
+		nameBuf = null;
 	}
 
 	/*

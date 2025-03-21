@@ -1,8 +1,8 @@
 package de.atlascore.block;
 
 import de.atlasmc.Location;
-import de.atlasmc.Material;
 import de.atlasmc.block.Block;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.world.Biome;
@@ -28,7 +28,7 @@ public class CoreBlockAccess implements Block {
 	}
 
 	@Override
-	public Material getType() {
+	public BlockType getType() {
 		return chunk.getBlockType(getX(), getY(), getZ());
 	}
 
@@ -38,10 +38,8 @@ public class CoreBlockAccess implements Block {
 	}
 
 	@Override
-	public void setType(Material material) {
-		if (!material.isBlock()) 
-			throw new IllegalArgumentException("Material is not a Block: " + material.getNamespacedKeyRaw());
-		chunk.setBlockType(material, getX(), getY(), getZ());
+	public void setType(BlockType type) {
+		chunk.setBlockType(type, getX(), getY(), getZ());
 	}
 
 	@Override

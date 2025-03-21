@@ -3,7 +3,6 @@ package de.atlasmc.datarepository;
 import java.util.Collection;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.concurrent.future.Future;
 
 public interface LocalRepository extends Repository {
 	
@@ -20,10 +19,12 @@ public interface LocalRepository extends Repository {
 	
 	RepositoryNamespace getNamespace(NamespacedKey key);
 
+	RepositoryEntry getLocalEntry(NamespacedKey key);
+
 	/**
 	 * Updates all entries of all namespaces
 	 * @return returns a future of all updated entries
 	 */
-	Future<Collection<RepositoryEntryUpdate>> update();
+	Collection<RepositoryEntryUpdate> update();
 
 }

@@ -2,7 +2,7 @@ package de.atlascore.block.data;
 
 import java.util.List;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.WaterloggedRotatable;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
@@ -16,8 +16,8 @@ public class CoreWaterloggedRotatable extends CoreRotatable implements Waterlogg
 	
 	private boolean waterlogged;
 	
-	public CoreWaterloggedRotatable(Material material) {
-		super(material);
+	public CoreWaterloggedRotatable(BlockType type) {
+		super(type);
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class CoreWaterloggedRotatable extends CoreRotatable implements Waterlogg
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return getType().getBlockStateID()+
 				(waterlogged?0:1)+
 				getRotationValue()*2;
 	}

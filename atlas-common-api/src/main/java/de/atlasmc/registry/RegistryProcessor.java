@@ -17,6 +17,7 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
@@ -45,6 +46,7 @@ public class RegistryProcessor extends AbstractProcessor {
 			return true;
 		}
 		log.printMessage(Kind.NOTE, "Processing registry annotations");
+		final Elements elements = processingEnv.getElementUtils();
 		for (TypeElement annotation : annotations) {
 			if (annotation.toString().equals("de.atlasmc.registry.RegistryHolder")) {
 				for (Element ele : roundEnv.getElementsAnnotatedWith(annotation)) {
@@ -52,7 +54,7 @@ public class RegistryProcessor extends AbstractProcessor {
 					for (AnnotationMirror mirror : annotationMirrors) {
 						Map<String, Object> values = AnnotationProcessorUtils.getAnnotationValues(mirror, processingEnv);
 						String key = (String) values.get("key");
-						String type = ele.toString();
+						String type = elements.getBinaryName((TypeElement) ele).toString();
 						Object target = values.get("target");
 						if (registries == null) {
 							registries = new MemoryConfiguration();
@@ -78,7 +80,7 @@ public class RegistryProcessor extends AbstractProcessor {
 						Map<String, Object> values = AnnotationProcessorUtils.getAnnotationValues(mirror, processingEnv);
 						String registry = (String) values.get("registry");
 						String key = (String) values.get("key");
-						String type = ele.toString();
+						String type =  elements.getBinaryName((TypeElement) ele).toString();
 						if (registryEntries == null) {
 							registryEntries = new MemoryConfiguration();
 						}

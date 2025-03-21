@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.ChiseledBookshelf;
 
@@ -25,8 +25,8 @@ public class CoreChiseledBookshelf extends CoreDirectional4Faces implements Chis
 	
 	private Set<Integer> slots;
 	
-	public CoreChiseledBookshelf(Material material) {
-		super(material);
+	public CoreChiseledBookshelf(BlockType type) {
+		super(type);
 		slots = new HashSet<>(getMaxOccupiedSlots());
 	}
 	
@@ -68,7 +68,7 @@ public class CoreChiseledBookshelf extends CoreDirectional4Faces implements Chis
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID() + 
+		return getType().getBlockStateID() + 
 				(isSlotOccupied(0)?0:32) +
 				(isSlotOccupied(1)?0:16) +
 				(isSlotOccupied(2)?0:8) +

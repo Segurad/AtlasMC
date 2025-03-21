@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreLevelled;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Light;
 
@@ -17,8 +17,8 @@ public class CoreLight extends CoreLevelled implements Light {
 	
 	private boolean waterlogged;
 	
-	public CoreLight(Material material) {
-		super(material, 15);
+	public CoreLight(BlockType type) {
+		super(type, 15);
 		setLevel(15);
 	}
 
@@ -34,7 +34,7 @@ public class CoreLight extends CoreLevelled implements Light {
 
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID() + (waterlogged?0:1) + getLevel()*2;
+		return getType().getBlockStateID() + (waterlogged?0:1) + getLevel()*2;
 	}
 	
 	@Override

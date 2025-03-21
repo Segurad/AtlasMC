@@ -3,7 +3,7 @@ package de.atlascore.world;
 import java.util.Arrays;
 import java.util.List;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.util.NumberConversion;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
@@ -67,9 +67,9 @@ public class CoreFlatworldChunkGenerator implements ChunkGenerator {
 		int index = 0;
 		for (String raw : layers) {
 			String[] parts = raw.split(" : ");
-			Material mat = Material.getByName(parts[0]);
-			if (mat == null)
-				throw new InvalidConfigurationException("Unknown Material (" + parts[0] + ") at layer: " + index, config);
+			BlockType type = BlockType.get(parts[0]);
+			if (type == null)
+				throw new InvalidConfigurationException("Unknown BlockType (" + parts[0] + ") at layer: " + index, config);
 			int size = NumberConversion.toInt(parts[1], Integer.MIN_VALUE);
 			if (size == Integer.MIN_VALUE) {
 				throw new InvalidConfigurationException("Unable to parse layer with at layer: " + index, config);
@@ -77,10 +77,7 @@ public class CoreFlatworldChunkGenerator implements ChunkGenerator {
 			if (size < 1) {
 				throw new InvalidConfigurationException("Layer with must be greater than 0 (" + size + ") at layer: " + index, config);
 			}
-			if (!mat.isBlock()) {
-				throw new InvalidConfigurationException("Material must be a block (" + mat.getNamespacedKeyRaw() + ") at layer:" + index);
-			}
-			BlockData data = mat.createBlockData();
+			BlockData data = type.createBlockData();
 			this.blocks[index] = data;
 			this.layers[index] = size;
 			index++;

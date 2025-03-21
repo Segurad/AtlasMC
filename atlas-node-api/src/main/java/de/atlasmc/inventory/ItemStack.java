@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
-import de.atlasmc.Material;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.ItemComponent;
@@ -66,7 +65,7 @@ public class ItemStack implements NBTHolder {
 	
 	private short slot;
 	private int amount;
-	private Material type;
+	private ItemType type;
 	private Map<NamespacedKey, ItemComponent> components;
 	private Set<ComponentType> ignoredComponents;
 
@@ -74,10 +73,10 @@ public class ItemStack implements NBTHolder {
 	 * Creates a ItemStack of the Type {@link Material#AIR} with amount of 1
 	 */
 	public ItemStack() {
-		this(Material.AIR, 1);
+		this(ItemType.AIR, 1);
 	}
 	
-	public ItemStack(Material material) {
+	public ItemStack(ItemType material) {
 		this(material, 1);
 	}
 	
@@ -86,10 +85,10 @@ public class ItemStack implements NBTHolder {
 	}
 	
 	public ItemStack(NamespacedKey key, int amount) {
-		this(Material.get(key), amount);
+		this(ItemType.get(key), amount);
 	}
 
-	public ItemStack(Material material, int amount) {
+	public ItemStack(ItemType material, int amount) {
 		if (material == null) 
 			throw new IllegalArgumentException("Material can not be null!");
 		type = material;
@@ -153,6 +152,10 @@ public class ItemStack implements NBTHolder {
 		return component;
 	}
 	
+	public <T extends ItemComponent> T getComponent(Class<T> clazz) {
+		return getComponent(ItemComponent.getComponentKey(clazz));
+	}
+	
 	/**
 	 * Returns the component with the given key or null.
 	 * If {@link #getComponent(NamespacedKey)} returns null and the key is not in {@link #getIgnoredComponents()}
@@ -177,6 +180,10 @@ public class ItemStack implements NBTHolder {
 		@SuppressWarnings("unchecked")
 		T type = (T) component;
 		return type;
+	}
+	
+	public <T extends ItemComponent> T getEffectiveComponent(Class<T> clazz) {
+		return getEffectiveComponent(ItemComponent.getComponentKey(clazz));
 	}
 	
 	/**
@@ -249,7 +256,7 @@ public class ItemStack implements NBTHolder {
 	 * @return type
 	 */
 	@NotNull
-	public Material getType() {
+	public ItemType getType() {
 		return type;
 	}
 	
@@ -416,11 +423,11 @@ public class ItemStack implements NBTHolder {
 		if (rawMaterial == null) {
 			throw new NBTException("NBT did not container id field!");
 		}
-		Material material = Material.getByName(rawMaterial);
-		if (material == null) {
-			throw new NBTException("Not material found with name: " + rawMaterial);
+		ItemType type = ItemType.get(rawMaterial);
+		if (type == null) {
+			throw new NBTException("No type found with name: " + rawMaterial);
 		}
-		ItemStack item = new ItemStack(material);
+		ItemStack item = new ItemStack(type);
 		item.fromNBT(reader);
 		return item;
 	}

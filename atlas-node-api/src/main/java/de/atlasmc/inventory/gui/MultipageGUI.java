@@ -1,10 +1,10 @@
 package de.atlasmc.inventory.gui;
 
-import de.atlasmc.Material;
 import de.atlasmc.event.inventory.InventoryClickEvent;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.ItemType;
 import de.atlasmc.inventory.gui.button.AbstractButton;
 import de.atlasmc.inventory.gui.component.ComponentHandler;
 import de.atlasmc.inventory.gui.component.ItemComponentHandler;
@@ -13,6 +13,8 @@ import de.atlasmc.inventory.gui.component.PageComponent;
 
 public class MultipageGUI extends BaseGUI {
 
+	private static final ItemStack AIR = new ItemStack(ItemType.get(ItemType.AIR));
+	
 	private final int next;
 	private final int back;
 	private int page = 0;
@@ -20,7 +22,6 @@ public class MultipageGUI extends BaseGUI {
 	protected final ItemComponentHandler mhandler;
 	private ItemStack inext = null;
 	private ItemStack iback = null;
-	private final ItemStack air = new ItemStack(Material.AIR);
 	
 	public MultipageGUI(Inventory inv, int back, int next, int compLenght, int compDepth, int maxpages) {
 		this(inv, back, next, compLenght, compDepth, maxpages, 0, 0);
@@ -58,7 +59,7 @@ public class MultipageGUI extends BaseGUI {
 						if (page+2 == mltPageItems.getPages()) 
 							inv.setItem(next, inext);
 						if (page == 0) 
-							return air;
+							return AIR;
 					}
 				} else if (slot == next) {
 					if (page+1 < mltPageItems.getPages()) {
@@ -67,7 +68,7 @@ public class MultipageGUI extends BaseGUI {
 						if (page-1 == 0) 
 							inv.setItem(back, iback);
 						if (page+1 == mltPageItems.getPages()) 
-							return air;
+							return AIR;
 					}
 				}
 				return null;

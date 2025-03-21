@@ -1,11 +1,10 @@
 package de.atlasmc.inventory.component;
 
-import java.util.Set;
-
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.sound.Sound;
+import de.atlasmc.util.dataset.DataSet;
 
 public interface EquippableComponent extends ItemComponent {
 	
@@ -19,13 +18,11 @@ public interface EquippableComponent extends ItemComponent {
 	
 	void setEquipSound(Sound sound);
 	
-	Set<EntityType> getAllowedEntities();
+	DataSet<EntityType> getAllowedEntities();
 	
 	boolean hasAllowedEntities();
 	
-	void addAllowedEntity(EntityType type);
-	
-	void removeAllowedEntity(EntityType type);
+	void setAllowedEntities(DataSet<EntityType> entities);
 	
 	boolean isDispensable();
 	
@@ -39,9 +36,13 @@ public interface EquippableComponent extends ItemComponent {
 	
 	void setDamageOnHurt(boolean damage);
 	
-	String getCameraOverlay();
+	NamespacedKey getCameraOverlay();
 	
-	void setCameraOverlay(String overlay);
+	void setCameraOverlay(NamespacedKey overlay);
+	
+	NamespacedKey getAssetID();
+	
+	void setAssetID(NamespacedKey assetID);
 	
 	EquippableComponent clone();
 

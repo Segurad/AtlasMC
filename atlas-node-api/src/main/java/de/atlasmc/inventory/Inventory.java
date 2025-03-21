@@ -3,7 +3,6 @@ package de.atlasmc.inventory;
 import java.util.Iterator;
 import java.util.List;
 
-import de.atlasmc.Material;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.entity.Player;
 import de.atlasmc.inventory.InventoryType.SlotType;
@@ -99,10 +98,10 @@ public interface Inventory extends Iterable<ItemStack> {
 	void removeSimilar(ItemStack item, boolean ignoreAmount);
 	
 	/**
-	 * Removes all stacks in the inventory that match the given material
-	 * @param material
+	 * Removes all stacks in the inventory that match the given {@link ItemType}
+	 * @param type
 	 */
-	void remove(Material material);
+	void remove(ItemType type);
 	
 	/**
 	 * Adds the given items to this inventory and returns a list with items that could not be added.
@@ -150,20 +149,20 @@ public interface Inventory extends Iterable<ItemStack> {
 	void setContentsUnsafe(ItemStack[] contents);
 	
 	/**
-	 * Returns whether or not this inventory contains a {@link ItemStack} with the given Material
-	 * @param material
+	 * Returns whether or not this inventory contains a {@link ItemStack} with the given {@link ItemType}
+	 * @param type
 	 * @return true of present
 	 */
-	boolean contains(Material material);
+	boolean contains(ItemType type);
 	
 	/**
-	 * Returns the total amount of items with this material
-	 * @param material 
+	 * Returns the total amount of items with this {@link ItemType}
+	 * @param type 
 	 * @return total amount
 	 */
-	int count(Material material);
+	int count(ItemType type);
 	
-	void removeItems(Material material, int count);
+	void removeItems(ItemType type, int count);
 
 	List<Player> getViewers();
 	

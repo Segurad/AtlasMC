@@ -14,16 +14,12 @@ import de.atlasmc.util.annotation.InternalAPI;
 
 public class JavaPlugin implements Plugin {
 
+	private PrototypePlugin prototype;
 	private Log logger;
-	private File file;
-	private PluginLoader loader;
-	private String name;
-	private String version;
 	private List<String> author;
 	private String description;
 	private boolean loaded;
 	private boolean enabled;
-	private volatile boolean keepLoaded;
 	
 	protected JavaPlugin() {}
 	
@@ -95,8 +91,8 @@ public class JavaPlugin implements Plugin {
 	protected void onUnload() {}
 
 	@Override
-	public final String getVersion() {
-		return version;
+	public final Version getVersion() {
+		return prototype.getVersion();
 	}
 
 	@Override
@@ -106,7 +102,7 @@ public class JavaPlugin implements Plugin {
 
 	@Override
 	public final String getName() {
-		return name;
+		return prototype.getName();
 	}
 
 	@Override
@@ -125,33 +121,33 @@ public class JavaPlugin implements Plugin {
 	}
 
 	@InternalAPI
-	public final synchronized void init(File file, PluginLoader loader, Log logger, String name, String version, List<String> author, String description) {
-		if (this.loader != null)
-			throw new IllegalStateException("Plugin already initialized!");
-		if (loader == null)
-			throw new IllegalArgumentException("Loader can not be null!");
-		this.file = file;
-		this.loader = loader;
-		this.name = name;
-		this.version = version;
-		this.author = author;
-		this.description = description;
+	public final synchronized void init(PrototypePlugin prototype, Log logger) {
+		if (prototype == null)
+			throw new IllegalArgumentException("Prototype can not be null!");
+		if (logger == null)
+			throw new IllegalArgumentException("Logger can not be null!");
+		this.prototype = prototype;
 		this.logger = logger;
 	}
 
 	@Override
 	public final PluginLoader getPluginLoader() {
-		return loader;
+		return prototype.getLoader();
 	}
 
 	@Override
 	public final File getFile() {
-		return file;
+		return prototype.getFile();
 	}
 	
 	@Override
 	public final Log getLogger() {
 		return logger;
+	}
+	
+	@Override
+	public PrototypePlugin getPrototype() {
+		return prototype;
 	}
 
 	@Override
@@ -209,15 +205,10 @@ public class JavaPlugin implements Plugin {
 	public URL getResource(String name) {
 		return getClass().getResource(name);
 	}
-
+	
 	@Override
-	public boolean isKeepLoaded() {
-		return keepLoaded;
-	}
-
-	@Override
-	public void setKeepLoaded(boolean keeploaded) {
-		this.keepLoaded = keeploaded;
+	public String toString() {
+		return getName() + " " + getVersion();
 	}
 
 }

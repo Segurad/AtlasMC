@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreAgeable;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.PitcherCrop;
 
@@ -17,8 +17,8 @@ public class CorePitcherCrop extends CoreAgeable implements PitcherCrop {
 	
 	private Half half;
 	
-	public CorePitcherCrop(Material material) {
-		super(material, 4);
+	public CorePitcherCrop(BlockType type) {
+		super(type, 4);
 		half = Half.LOWER;
 	}
 	
@@ -43,7 +43,7 @@ public class CorePitcherCrop extends CoreAgeable implements PitcherCrop {
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID() + half.getID() + getAge()*2;
+		return type.getBlockStateID() + half.getID() + age*2;
 	}
 	
 	@Override

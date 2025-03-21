@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import de.atlasmc.Material;
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.blockpredicate.BlockDataPredicate;
 import de.atlasmc.block.blockpredicate.BlockPredicate;
-import de.atlasmc.block.blockpredicate.MaterialBlockPredicate;
+import de.atlasmc.block.blockpredicate.BlockTypePredicate;
 import de.atlasmc.block.blockpredicate.TileBlockPredicate;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.tile.TileEntity;
@@ -55,10 +55,10 @@ public class CoreAbstractBlockPredicateComponent extends AbstractItemComponent i
 		
 		final NBTField<CoreAbstractBlockPredicateComponent>
 		blocksField = (holder, reader) -> {
-			DataSet<Material> materials = DataSet.getFromNBT(Material.REGISTRY, reader);
-			if (materials.isEmpty())
+			DataSet<BlockType> types = DataSet.getFromNBT(BlockType.getRegistry(), reader);
+			if (types.isEmpty())
 				return; // avoid creating empty predicate
-			holder.addPredicate(new MaterialBlockPredicate(materials));
+			holder.addPredicate(new BlockTypePredicate(types));
 		},
 		nbtField = (holder, reader) -> {
 			reader.readNextEntry();
@@ -82,6 +82,7 @@ public class CoreAbstractBlockPredicateComponent extends AbstractItemComponent i
 		NBT_FIELDS.setField(NBT_PREDICATES, (holder, reader) -> {
 			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {
+				reader.readNextEntry();
 				NBTUtil.readNBT(predicateFields, holder, reader);
 			}
 			reader.readNextEntry();
@@ -152,9 +153,9 @@ public class CoreAbstractBlockPredicateComponent extends AbstractItemComponent i
 			writer.writeListTag(NBT_PREDICATES, TagType.COMPOUND, size);
 			for (int i = 0; i < size; i++) {
 				BlockPredicate predicate = predicates.get(i);
-				if (predicate instanceof MaterialBlockPredicate materialPredicate) {
-					DataSet<Material> materials = materialPredicate.getMaterials();
-					DataSet.toNBT(NBT_BLOCKS, materials, writer, systemData);
+				if (predicate instanceof BlockTypePredicate typePredicate) {
+					DataSet<BlockType> types = typePredicate.getMaterials();
+					DataSet.toNBT(NBT_BLOCKS, types, writer, systemData);
 				} else if (predicate instanceof TileBlockPredicate tilePredicate) {
 					writer.writeCompoundTag(NBT_NBT);
 					tilePredicate.getTile().toNBT(writer, systemData);
@@ -188,9 +189,9 @@ public class CoreAbstractBlockPredicateComponent extends AbstractItemComponent i
 			NBTWriter writer = null;
 			for (int i = 0; i < size; i++) {
 				BlockPredicate predicate = predicates.get(i);
-				if (predicate instanceof MaterialBlockPredicate materialPredicate) {
-					DataSet<Material> materials = materialPredicate.getMaterials();
-					writeDataSet(materials, Material.BLOCK_REGISTRY, buf);
+				if (predicate instanceof BlockTypePredicate typePredicate) {
+					DataSet<BlockType> types = typePredicate.getMaterials();
+					writeDataSet(types, BlockType.getRegistry(), buf);
 				} else if (predicate instanceof BlockDataPredicate block) {
 					Map<BlockDataProperty<?>, Object> properties = block.getProperties();
 					final int count = properties.size();
@@ -230,9 +231,9 @@ public class CoreAbstractBlockPredicateComponent extends AbstractItemComponent i
 			NBTReader reader = null;
 			for (int i = 0; i < size; i++) {
 				if (buf.readBoolean()) { // has blocks
-					DataSet<Material> materials = readDataSet(Material.BLOCK_REGISTRY, buf);
-					if (materials != null)
-						addPredicate(new MaterialBlockPredicate(materials));
+					DataSet<BlockType> types = readDataSet(BlockType.getRegistry(), buf);
+					if (types != null)
+						addPredicate(new BlockTypePredicate(types));
 				}
 				if (buf.readBoolean()) { // has properties
 					final int count = readVarInt(buf);

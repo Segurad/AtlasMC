@@ -1,20 +1,20 @@
 package de.atlasmc.inventory.component;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.inventory.itempredicate.MaterialItemPredicate;
-import de.atlasmc.inventory.itempredicate.MaterialTagItemPredicate;
+import de.atlasmc.inventory.itempredicate.ItemTypePredicate;
+import de.atlasmc.inventory.itempredicate.TagItemPredicate;
 
 public interface RepairableComponent extends ItemComponent {
 	
 	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:repairable");
 	
-	MaterialItemPredicate getMaterials();
+	ItemTypePredicate getMaterials();
 	
-	void setMaterials(MaterialItemPredicate predicate);
+	void setMaterials(ItemTypePredicate predicate);
 	
-	MaterialTagItemPredicate getMaterialTags();
+	TagItemPredicate getMaterialTags();
 	
-	void setMaterialTags(MaterialTagItemPredicate predicate);
+	void setMaterialTags(TagItemPredicate predicate);
 	
 	RepairableComponent clone();
 

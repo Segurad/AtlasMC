@@ -3,7 +3,6 @@ package de.atlascore.entity;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlasmc.Material;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Horse;
 import de.atlasmc.entity.data.MetaData;
@@ -33,15 +32,7 @@ public class CoreHorse extends CoreAbstractHorse implements Horse {
 		NBT_FIELDS = CoreAbstractHorse.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(NBT_ARMOR_ITEM, (holder, reader) -> {
 			reader.readNextEntry();
-			Material mat = null;
-			if (!NBT_ID.equals(reader.getFieldName())) {
-				reader.mark();
-				reader.search(NBT_ID);
-				mat = Material.getByName(reader.readStringTag());
-				reader.reset();
-			} else mat = Material.getByName(reader.readStringTag());
-			ItemStack item = new ItemStack(mat);
-			item.fromNBT(reader);
+			ItemStack item = ItemStack.getFromNBT(reader);
 			holder.getInventory().setArmor(item);
 		});
 		NBT_FIELDS.setField(NBT_VARIANT, (holder, reader) -> {

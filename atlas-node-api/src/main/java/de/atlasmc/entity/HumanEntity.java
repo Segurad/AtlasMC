@@ -1,50 +1,50 @@
 package de.atlasmc.entity;
 
-import de.atlasmc.Material;
 import de.atlasmc.inventory.CraftingInventory;
 import de.atlasmc.inventory.InventoryHolder;
 import de.atlasmc.inventory.MainHand;
 import de.atlasmc.inventory.PlayerInventory;
+import de.atlasmc.inventory.ItemType;
 
 public interface HumanEntity extends LivingEntity, InventoryHolder {
 	
-	public PlayerInventory getInventory();
+	PlayerInventory getInventory();
 	
-	public double getAdditionHearts();
+	double getAdditionHearts();
 	
-	public void setAdditionHearts(double value);
+	void setAdditionHearts(double value);
 	
-	public int getDisplayedSkinParts();
+	int getDisplayedSkinParts();
 	
-	public void setDisplayedSkinParts(int parts);
+	void setDisplayedSkinParts(int parts);
 	
-	public MainHand getMainHand();
+	MainHand getMainHand();
 	
-	public void setMainHand(MainHand mainhand);
+	void setMainHand(MainHand mainhand);
 	
-	public Entity getRightShoulder();
+	Entity getRightShoulder();
 	
-	public void setRightShoulder(Entity entity);
+	void setRightShoulder(Entity entity);
 	
-	public Entity getLeftShoulder();
+	Entity getLeftShoulder();
 	
-	public void setLeftShoulder(Entity entity);
+	void setLeftShoulder(Entity entity);
 
-	public CraftingInventory getCraftingInventory();
+	CraftingInventory getCraftingInventory();
 	
 	boolean isSneaking();
 	
 	void setSneaking(boolean sneaking);
 	
-	void setCooldown(Material material, int ticks);
+	void setCooldown(ItemType type, int ticks);
 	
-	int getCooldown(Material material);
+	int getCooldown(ItemType type);
 	
-	int getCooldownPast(Material material);
+	int getCooldownPast(ItemType type);
 	
-	boolean hasCooldown(Material material);
+	boolean hasCooldown(ItemType type);
 	
-	int removeCooldown(Material material);
+	int removeCooldown(ItemType type);
 	
 	int getFoodLevel();
 	

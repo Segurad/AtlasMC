@@ -1,6 +1,6 @@
 package de.atlasmc.block.data;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 
@@ -19,16 +19,17 @@ public class LightableBlockDataFactory extends ClassBlockDataFactory {
 	}
 	
 	@Override
-	public BlockData createData(Material material) {
-		Lightable data = (Lightable) super.createData(material);
+	public BlockData createData(BlockType type) {
+		Lightable data = (Lightable) super.createData(type);
 		data.setLit(lit);
 		return data;
 	}
 	
 	@Override
 	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
+		super.toConfiguration(configuration);
 		configuration.set("lit", lit);
-		return super.toConfiguration(configuration);
+		return configuration;
 	}
 
 }

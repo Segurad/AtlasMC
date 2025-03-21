@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreAxisOrientable;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.CreakingHeart;
 
@@ -20,8 +20,8 @@ public class CoreCreakingHeart extends CoreAxisOrientable implements CreakingHea
 	protected boolean active;
 	protected boolean natural;
 	
-	public CoreCreakingHeart(Material material) {
-		super(material);
+	public CoreCreakingHeart(BlockType type) {
+		super(type);
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class CoreCreakingHeart extends CoreAxisOrientable implements CreakingHea
 	
 	@Override
 	public int getStateID() {
-		return material.getBlockStateID()+(natural?0:1)+getAxis().ordinal()*2+(active?0:6);
+		return type.getBlockStateID()+(natural?0:1)+axis.ordinal()*2+(active?0:6);
 	}
 	
 	@Override

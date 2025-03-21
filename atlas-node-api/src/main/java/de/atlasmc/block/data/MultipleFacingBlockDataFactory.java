@@ -5,8 +5,8 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 
@@ -34,8 +34,8 @@ public class MultipleFacingBlockDataFactory extends ClassBlockDataFactory {
 	}
 	
 	@Override
-	public BlockData createData(Material material) {
-		MultipleFacing data = (MultipleFacing) super.createData(material);
+	public BlockData createData(BlockType type) {
+		MultipleFacing data = (MultipleFacing) super.createData(type);
 		if (faces.isEmpty())
 			return data;
 		for (BlockFace face : faces)

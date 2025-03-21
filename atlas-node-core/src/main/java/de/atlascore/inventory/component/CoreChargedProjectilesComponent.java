@@ -49,6 +49,7 @@ public class CoreChargedProjectilesComponent extends AbstractItemComponent imple
 	public void fromNBT(NBTReader reader) throws IOException {
 		reader.readNextEntry();
 		while (reader.getRestPayload() > 0) {
+			reader.readNextEntry();
 			addProjectile(ItemStack.getFromNBT(reader));
 		}
 		reader.readNextEntry();

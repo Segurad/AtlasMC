@@ -3,14 +3,13 @@ package de.atlascore.entity;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.entity.BlockDisplay;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBlockDisplay extends CoreDisplay implements BlockDisplay {
@@ -28,28 +27,7 @@ public class CoreBlockDisplay extends CoreDisplay implements BlockDisplay {
 		NBT_FIELDS.setField(NBT_BLOCK_STATE, (holder, reader) -> {
 			if (holder instanceof BlockDisplay ent) {
 				reader.readNextEntry();
-				Material mat = null;
-				BlockData data = null;
-				while (reader.getType() != TagType.TAG_END) {
-					final CharSequence value = reader.getFieldName();
-					if (NBT_NAME.equals(value))
-						mat = Material.getByName(reader.readStringTag());
-					else if (NBT_PROPERTIES.equals(value))
-						if (mat == null)
-							reader.skipTag();
-						else {
-							data = mat.createBlockData();
-							reader.readNextEntry();
-							data.fromNBT(reader);
-						}
-					else
-						reader.skipTag();
-				}
-				reader.skipTag();
-				if (data != null)
-					ent.setBlockData(data);
-				else if (mat != null)
-					ent.setBlockDataType(mat);
+				ent.setBlockData(BlockData.getFromNBT(reader));
 			} else {
 				reader.skipTag();
 			}
@@ -89,20 +67,20 @@ public class CoreBlockDisplay extends CoreDisplay implements BlockDisplay {
 	}
 
 	@Override
-	public void setBlockDataType(Material mat) {
+	public void setBlockDataType(BlockType type) {
 		int id = 0;
-		if (mat == null)
+		if (type == null)
 			block = null;
-		if (block == null || block.getMaterial() != mat) {
-			block = mat.createBlockData();
+		if (block == null || block.getType() != type) {
+			block = type.createBlockData();
 			id = block.getStateID();
 		}
 		metaContainer.get(META_DISPLAYED_BLOCK).setData(id);
 	}
 
 	@Override
-	public Material getBlockDataType() {
-		return block != null ? block.getMaterial() : null;
+	public BlockType getBlockDataType() {
+		return block != null ? block.getType() : null;
 	}
 	
 	@Override
@@ -110,7 +88,7 @@ public class CoreBlockDisplay extends CoreDisplay implements BlockDisplay {
 		super.toNBT(writer, systemData);
 		if (block != null) {
 			writer.writeCompoundTag(NBT_BLOCK_STATE);
-			writer.writeStringTag(NBT_NAME, block.getMaterial().getNamespacedKeyRaw());
+			writer.writeStringTag(NBT_NAME, block.getType().getNamespacedKeyRaw());
 			writer.writeCompoundTag(NBT_PROPERTIES);
 			block.toNBT(writer, systemData);
 			writer.writeEndTag();

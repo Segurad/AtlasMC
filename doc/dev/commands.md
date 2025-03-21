@@ -78,3 +78,9 @@ commands:
 Atlas provides a non functional executor called ```atlas:dummy_executor``` as placeholder.
 This executor does echo the command sender his used command.
 It can be used for defining command and implementing the required executors later.
+
+### Help Executor
+
+Executor ````atlas:help``` that prints the help for the used command.
+Accepts `page` as `int` for control over the page and `command` as `String` to set the command.
+If the command is not specified the used command will be used.

@@ -1,11 +1,11 @@
 package de.atlascore.block.data.type;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 
 public class CoreResinClumb extends CoreMultipleFacing6Waterlogged {
 
-	public CoreResinClumb(Material material) {
-		super(material);
+	public CoreResinClumb(BlockType type) {
+		super(type);
 	}
 
 }

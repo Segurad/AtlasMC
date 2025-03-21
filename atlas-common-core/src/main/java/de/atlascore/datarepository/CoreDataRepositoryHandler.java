@@ -26,7 +26,7 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 	private final Map<String, LocalRepository> localRepos;
 	private final Map<String, Repository> remotes;
 	private final Map<String, Repository> repoByNamespace;
-	private final Map<UUID, Repository> uuidToRepo;
+	private final Map<UUID, Repository> repoByUUID;
 	
 	public CoreDataRepositoryHandler(CacheRepository cache) {
 		if (cache == null)
@@ -35,7 +35,7 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 		localRepos = new ConcurrentHashMap<>();
 		remotes = new ConcurrentHashMap<>();
 		repoByNamespace = new ConcurrentHashMap<>();
-		uuidToRepo = new ConcurrentHashMap<>();
+		repoByUUID = new ConcurrentHashMap<>();
 	}
 
 	@Override
@@ -55,6 +55,11 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 	
 	@Override
 	public Future<RepositoryEntry> getEntry(NamespacedKey key, boolean load) {
+		if (key.hasChildKey()) {
+			NamespacedKey repoKey = key.getChildKey();
+			Repository repo = getRepo(key.getNamespace());
+			return repo.getEntry(repoKey);
+		}
 		RepositoryEntry entry = getLocal(key);
 		if (entry != null)
 			return new CompleteFuture<>(entry);
@@ -75,12 +80,12 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 		for (LocalRepository local : localRepos.values()) {
 			if (local.getNamespace(key.getKey()) == null)
 				continue;
-			entry = local.getEntry(key).getNow();
+			entry = local.getLocalEntry(key);
 			if (entry != null)
 				break;
 		}
 		if (entry == null)
-			cache.getEntry(key);
+			return cache.getLocalEntry(key);
 		return entry;
 	}
 	
@@ -97,7 +102,7 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 		Collection<? extends RepositoryNamespace> namespaces = repo.getNamespaces();
 		for (RepositoryNamespace namespace : namespaces)
 			repoByNamespace.putIfAbsent(namespace.getNamespace(), repo);
-		uuidToRepo.put(repo.getUUID(), repo);
+		repoByUUID.put(repo.getUUID(), repo);
 	}
 
 	@Override
@@ -113,7 +118,7 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 		Collection<? extends RepositoryNamespace> namespaces = repo.getNamespaces();
 		for (RepositoryNamespace namespace : namespaces)
 			repoByNamespace.putIfAbsent(namespace.getNamespace(), repo);
-		uuidToRepo.remove(repo.getUUID(), repo);
+		repoByUUID.remove(repo.getUUID(), repo);
 	}
 	
 	@Override
@@ -175,7 +180,7 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 	
 	@Override
 	public Repository getRepo(UUID uuid) {
-		return uuidToRepo.get(uuid);
+		return repoByUUID.get(uuid);
 	}
 
 	@Override

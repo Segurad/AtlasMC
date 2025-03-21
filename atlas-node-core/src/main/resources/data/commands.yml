@@ -21,24 +21,34 @@ commands:
         parser: brigadier:string
         executor: atlas-core:debug_dump_registries
         description: "Dumps the given registry to file"
+    - type: literal
+      name: tags
+      executor: atlas:dummy_executor
+      description: "Dumps all tags to file"
+      args:
+      - type: var
+        name: target
+        parser: brigadier:string
+        executor: atlas:dummy_executor
+        description: "Dumps the given tag to file"
 # === Help ====================================================================
 - name: help
   aliases:
   - "?"
   cmd-description: "Shows help about commands."
-  executor: atlas-core:help
+  executor: atlas:help
   templates:
   - template-name: page
     type: var
     name: page
-    executor: atlas-core:help
+    executor: atlas:help
     parser:
       type: brigadier:integer
       min: 1
   args:
   - type: var
     name: command
-    executor: atlas-core:help
+    executor: atlas:help
     parser: brigadier:string
     args:
     - template: page    

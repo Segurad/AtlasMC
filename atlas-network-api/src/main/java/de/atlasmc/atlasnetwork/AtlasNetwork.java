@@ -38,7 +38,7 @@ public class AtlasNetwork  {
 	}
 	
 	public static PermissionManager getPermissionProvider() {
-		return HANDLER.getPermissionProvider();
+		return HANDLER.getPermissionManager();
 	}
 	
 	public static Future<NodeConfig> getNodeConfig(String name) {

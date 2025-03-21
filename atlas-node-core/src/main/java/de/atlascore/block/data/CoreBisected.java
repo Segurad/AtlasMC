@@ -2,7 +2,7 @@ package de.atlascore.block.data;
 
 import java.util.List;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.Bisected;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
@@ -16,8 +16,8 @@ public class CoreBisected extends CoreBlockData implements Bisected {
 	
 	private Half half;
 	
-	public CoreBisected(Material material) {
-		super(material);
+	public CoreBisected(BlockType type) {
+		super(type);
 		this.half = Half.BOTTOM;
 	}
 

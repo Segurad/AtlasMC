@@ -1,13 +1,17 @@
 package de.atlasmc.entity;
 
+import java.io.IOException;
+
 import de.atlasmc.DyeColor;
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.registry.ProtocolRegistry;
+import de.atlasmc.registry.ProtocolRegistryValueBase;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.util.dataset.DataSet;
+import de.atlasmc.util.map.key.CharKey;
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.Biome;
 
 public interface Wolf extends Tameable {
@@ -37,28 +41,32 @@ public interface Wolf extends Tameable {
 	void setVariant(WolfVariant variant);
 	
 	@RegistryHolder(key = "minecraft:wolf_variant", target = Target.PROTOCOL)
-	public static class WolfVariant implements Namespaced {
+	public static class WolfVariant extends ProtocolRegistryValueBase {
 
-		public static final ProtocolRegistry<WolfVariant> REGISTRY;
+		private static final ProtocolRegistry<WolfVariant> REGISTRY;
+		
+		protected static final CharKey
+		NBT_WILD_TEXTURE = CharKey.literal("wild_texture"),
+		NBT_TAME_TEXTURE = CharKey.literal("tame_texture"),
+		NBT_ANGRY_TEXTURE = CharKey.literal("angry_texture"),
+		NBT_BIOMES = CharKey.literal("biomes");
 		
 		static {
 			REGISTRY = Registries.createRegistry(WolfVariant.class);
-			REGISTRY.setIDSupplier(WolfVariant::getID);
 		}
 		
 		private final NamespacedKey
-		key,
 		wildTexture,
 		tameTexture,
 		angryTexture;
 		private final DataSet<Biome> biomes;
-		private final int id;
 		
 		public WolfVariant(NamespacedKey wildTexture, NamespacedKey tameTexture, NamespacedKey angryTexture, DataSet<Biome> biomes) {
-			this(null, -1, wildTexture, tameTexture, angryTexture, biomes);
+			this(NamespacedKey.INLINE_DEFINITION, -1, wildTexture, tameTexture, angryTexture, biomes);
 		}
 		
 		public WolfVariant(NamespacedKey key, int id, NamespacedKey wildTexture, NamespacedKey tameTexture, NamespacedKey angryTexture, DataSet<Biome> biomes) {
+			super(key, id);
 			if (wildTexture == null)
 				throw new IllegalArgumentException("Wild texture can not be null!");
 			if (tameTexture == null)
@@ -67,19 +75,12 @@ public interface Wolf extends Tameable {
 				throw new IllegalArgumentException("Angry texture can not be null!");
 			if (biomes == null)
 				throw new IllegalArgumentException("Biomes can not be null!");
-			this.id = id;
-			this.key = key;
 			this.wildTexture = wildTexture;
 			this.tameTexture = tameTexture;
 			this.angryTexture = angryTexture;
 			this.biomes = biomes;
 		}
-		
-		@Override
-		public NamespacedKey getNamespacedKey() {
-			return key;
-		}
-		
+	
 		public NamespacedKey getAngryTexture() {
 			return angryTexture;
 		}
@@ -96,8 +97,29 @@ public interface Wolf extends Tameable {
 			return tameTexture;
 		}
 		
-		public int getID() {
-			return id;
+		@Override
+		public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+			writer.writeCompoundTag();
+			writer.writeNamespacedKey(NBT_WILD_TEXTURE, wildTexture);
+			writer.writeNamespacedKey(NBT_TAME_TEXTURE, tameTexture);
+			writer.writeNamespacedKey(NBT_ANGRY_TEXTURE, angryTexture);
+			DataSet.toNBT(NBT_BIOMES, biomes, writer, false);
+		}
+		
+		public static WolfVariant get(NamespacedKey key) {
+			return REGISTRY.get(key);
+		}
+		
+		public static WolfVariant get(String key) {
+			return REGISTRY.get(key);
+		}
+		
+		public static WolfVariant getByID(int id) {
+			return REGISTRY.getByID(id);
+		}
+		
+		public static ProtocolRegistry<WolfVariant> getRegistry() {
+			return REGISTRY;
 		}
 		
 	}

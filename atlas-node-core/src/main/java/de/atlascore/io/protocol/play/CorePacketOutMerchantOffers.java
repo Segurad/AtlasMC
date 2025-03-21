@@ -38,8 +38,8 @@ public class CorePacketOutMerchantOffers implements PacketIO<PacketOutMerchantOf
 				
 				MerchantRecipe t = new MerchantRecipe(in1, out);
 				t.setInputItem2(in2);
-				t.setTrades(trades);
-				t.setMaxTrades(maxtrades);
+				t.setUses(trades);
+				t.setMaxUses(maxtrades);
 				t.setXP(xp);
 				t.setSpecialPrice(specialPrice);
 				t.setPriceMultiplier(priceMulti);
@@ -69,9 +69,9 @@ public class CorePacketOutMerchantOffers implements PacketIO<PacketOutMerchantOf
 				writeSlot(t.getInputItem1(), out);
 				writeSlot(t.getOutputItem(), out);
 				writeSlot(t.getInputItem2(), out);
-				out.writeBoolean(t.isDisabled());
-				out.writeInt(t.getTrades());
-				out.writeInt(t.getMaxTrades());
+				out.writeBoolean(t.isRewardExp());
+				out.writeInt(t.getUses());
+				out.writeInt(t.getMaxUses());
 				out.writeInt(t.getXP());
 				out.writeInt(t.getSpecialPrice());
 				out.writeFloat(t.getPriceMultiplier());

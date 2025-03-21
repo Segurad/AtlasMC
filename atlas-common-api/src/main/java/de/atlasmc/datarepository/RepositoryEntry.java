@@ -2,7 +2,7 @@ package de.atlasmc.datarepository;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.List;
 
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.util.annotation.NotNull;
@@ -14,6 +14,11 @@ import de.atlasmc.util.concurrent.future.Future;
  */
 public interface RepositoryEntry extends Namespaced {
 	
+	/**
+	 * Returns the repository of this entry.
+	 * @return repository
+	 */
+	@NotNull
 	Repository getRepository();
 	
 	/**
@@ -21,7 +26,7 @@ public interface RepositoryEntry extends Namespaced {
 	 * @return files
 	 */
 	@NotNull
-	Collection<? extends EntryFile> getFiles();
+	List<? extends EntryFile> getFiles();
 	
 	/**
 	 * Returns whether or not this entry is local available. either a {@link LocalRepository} or a {@link CacheRepository}
@@ -31,12 +36,14 @@ public interface RepositoryEntry extends Namespaced {
 
 	/**
 	 * Returns whether or not this entry is a directory
-	 * @return
+	 * @return true if directory
 	 */
 	boolean isDirectory();
 	
 	/**
-	 * 
+	 * Copies all files of this entry to the given destination.
+	 * The destination must be a directory.
+	 * Existing files will not be overwritten.
 	 * @see #copyTo(File, boolean)
 	 * @param destination
 	 * @return
@@ -71,6 +78,7 @@ public interface RepositoryEntry extends Namespaced {
 	
 	boolean matchChecksum(byte[] checksum);
 	
+	@NotNull
 	Future<Boolean> delete();
 	
 	/**
@@ -92,6 +100,7 @@ public interface RepositoryEntry extends Namespaced {
 	 * Updates all files of this entry
 	 * @return future with this entry
 	 */
+	@NotNull
 	Future<RepositoryEntryUpdate> update();
 
 	/**
@@ -99,6 +108,7 @@ public interface RepositoryEntry extends Namespaced {
 	 * The entry provided by the future should be used for further usage.
 	 * @return future entry
 	 */
+	@NotNull
 	Future<RepositoryEntry> makeAvailable();
 
 }

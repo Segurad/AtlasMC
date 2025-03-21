@@ -2,7 +2,7 @@ package de.atlascore.block.tile;
 
 import java.io.IOException;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.Lectern;
 import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.InventoryType;
@@ -25,15 +25,8 @@ public class CoreLectern extends CoreTileEntity implements Lectern {
 	static {
 		NBT_FIELDS = CoreTileEntity.NBT_FIELDS.fork();
 		NBT_FIELDS.setField(BOOK, (holder, reader) -> {
-			Material mat = null;
-			if (!NBT_ID.equals(reader.getFieldName())) {
-				reader.mark();
-				reader.search(NBT_ID);
-				mat = Material.getByName(reader.readStringTag());
-				reader.reset();
-			} else mat = Material.getByName(reader.readStringTag());
-			ItemStack item = new ItemStack(mat);
-			item.fromNBT(reader);
+			reader.readNextEntry();
+			ItemStack item = ItemStack.getFromNBT(reader);
 			holder.setBook(item);
 		});
 		NBT_FIELDS.setField(PAGE, (holder, reader) -> {
@@ -41,13 +34,14 @@ public class CoreLectern extends CoreTileEntity implements Lectern {
 		});
 	}
 	
-	public CoreLectern(Material type) {
+	public CoreLectern(BlockType type) {
 		super(type);
 	}
 
 	@Override
 	public ItemStack getBook() {
-		if (inv == null) return null;
+		if (inv == null) 
+			return null;
 		return getInventory().getBook();
 	}
 

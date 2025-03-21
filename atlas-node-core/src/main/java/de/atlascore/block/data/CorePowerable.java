@@ -2,7 +2,7 @@ package de.atlascore.block.data;
 
 import java.util.List;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.Powerable;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
@@ -14,10 +14,10 @@ public class CorePowerable extends CoreBlockData implements Powerable {
 		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.POWERED);
 	}
 	
-	private boolean powered;
+	protected boolean powered;
 	
-	public CorePowerable(Material material) {
-		super(material);
+	public CorePowerable(BlockType type) {
+		super(type);
 	}
 
 	@Override

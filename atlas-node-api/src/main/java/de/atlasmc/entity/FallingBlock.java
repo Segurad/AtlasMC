@@ -1,41 +1,41 @@
 package de.atlasmc.entity;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.tile.TileEntity;
 
 public interface FallingBlock extends Entity {
 
-	public boolean canHurtEntities();
+	boolean canHurtEntities();
 	
-	public BlockData getBlockData();
+	BlockData getBlockData();
 	
-	public boolean canDropItems();
+	boolean canDropItems();
 	
-	public Material getMaterial();
+	BlockType getBlockType();
 	
-	public void setDropItems(boolean drop);
+	void setDropItems(boolean drop);
 	
-	public void setHurtEntities(boolean hurtEntities);
+	void setHurtEntities(boolean hurtEntities);
 	
-	public void setBlockData(BlockData data);
+	void setBlockData(BlockData data);
 	
-	public void setBlockDataType(Material mat);
+	void setBlockDataType(BlockType type);
 
-	public void setBaseDamage(float damage);
+	void setBaseDamage(float damage);
 	
-	public float getBaseDamage();
+	float getBaseDamage();
 
-	public void setMaxDamage(int damage);
+	void setMaxDamage(int damage);
 	
 	/**
 	 * Returns the max amount of damage this block can deal or -1 if no limit
 	 * @return amount or -1
 	 */
-	public int getMaxDamage();
+	int getMaxDamage();
 
-	public void setTileEntity(TileEntity tile);
+	void setTileEntity(TileEntity tile);
 	
-	public TileEntity getTileEntity();
+	TileEntity getTileEntity();
 	
 }

@@ -19,7 +19,7 @@ public final class AtlasBuilder implements Builder<Boolean> {
 	private PluginManager pluginManager;
 	private KeyPair keyPair;
 	private DataRepositoryHandler dataHandler;
-	private AtlasThread mainThread;
+	private AtlasThread<Atlas> mainThread;
 	private Plugin system;
 	
 	@Override
@@ -92,11 +92,11 @@ public final class AtlasBuilder implements Builder<Boolean> {
 		return this;
 	}
 	
-	public AtlasThread getMainThread() {
+	public AtlasThread<Atlas> getMainThread() {
 		return mainThread;
 	}
 	
-	public AtlasBuilder setMainThread(AtlasThread mainThread) {
+	public AtlasBuilder setMainThread(AtlasThread<Atlas> mainThread) {
 		this.mainThread = mainThread;
 		return this;
 	}

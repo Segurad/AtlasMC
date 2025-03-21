@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.atlasmc.Axis;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.AxisOrientable;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
@@ -20,14 +20,14 @@ public class CoreAxisOrientable extends CoreBlockData implements AxisOrientable 
 	private static final Set<Axis> ALLOWED_AXIS =
 			EnumSet.allOf(Axis.class);
 	
-	private Axis axis;
+	protected Axis axis;
 	
-	public CoreAxisOrientable(Material material) {
-		this(material, Axis.Y);
+	public CoreAxisOrientable(BlockType type) {
+		this(type, Axis.Y);
 	}
 	
-	public CoreAxisOrientable(Material material, Axis axis) {
-		super(material);
+	public CoreAxisOrientable(BlockType type, Axis axis) {
+		super(type);
 		setAxis(axis);
 	}
 

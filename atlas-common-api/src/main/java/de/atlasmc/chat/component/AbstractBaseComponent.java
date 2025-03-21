@@ -191,8 +191,8 @@ public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> 
 	}
 	
 	@Override
-	public void toJson(NBTWriter writer) throws IOException {
-		writer.writeCompoundTag();
+	public void toJson(CharSequence key, NBTWriter writer) throws IOException {
+		writer.writeCompoundTag(key);
 		addContents(writer);
 		writer.writeEndTag();
 	}

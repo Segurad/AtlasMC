@@ -2,16 +2,14 @@ package de.atlasmc.inventory;
 
 import java.util.Arrays;
 
-import de.atlasmc.Material;
-
 public class InventoryUtil {
 
-	public static void setPlaceholder(Inventory inv, Material material) {
-		setPlaceholder(inv, material, false);
+	public static void setPlaceholder(Inventory inv, ItemType type) {
+		setPlaceholder(inv, type, false);
 	}
 
-	public static void setPlaceholder(Inventory inv, Material material, boolean glow) {
-		setPlaceholder(inv, ItemUtil.getPlaceholder(material, glow));
+	public static void setPlaceholder(Inventory inv, ItemType type, boolean glow) {
+		setPlaceholder(inv, ItemUtil.getPlaceholder(type, glow));
 	}
 
 	public static void setPlaceholder(Inventory inv, ItemStack item) {
@@ -24,8 +22,8 @@ public class InventoryUtil {
 		inv.setContentsUnsafe(contents);
 	}
 
-	public static void setPlaceholder(Inventory inv, Material material, boolean glow, int line) {
-		setPlaceholder(inv, ItemUtil.getPlaceholder(material, glow), line);
+	public static void setPlaceholder(Inventory inv, ItemType type, boolean glow, int line) {
+		setPlaceholder(inv, ItemUtil.getPlaceholder(type, glow), line);
 	}
 
 	public static void setPlaceholder(Inventory inv, ItemStack item, int line) {

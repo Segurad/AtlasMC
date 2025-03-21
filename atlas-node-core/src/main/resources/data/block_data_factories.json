@@ -1,6 +1,7 @@
 [
     {
         "type": "de.atlasmc.block.data.ClassBlockDataFactory",
+        "registry": "atlas:factory/block_data_factory",
         "configurations": [
             {
                 "name": "atlas:blockdata",
@@ -781,6 +782,7 @@
     },
     {
         "type": "de.atlasmc.block.data.LevelledClassBlockDataFactory",
+        "registry": "atlas:factory/block_data_factory",
         "configurations": [
             {
                 "name": "atlas:levelled_3",
@@ -794,6 +796,7 @@
     },
     {
         "type": "de.atlasmc.block.data.DirectionalBlockDataFactory",
+        "registry": "atlas:factory/block_data_factory",
         "configurations": [
             {
                 "name": "atlas:directional6f_up",
@@ -807,6 +810,7 @@
     },
     {
         "type": "de.atlasmc.block.data.AgeableClassBlockDataFactory",
+        "registry": "atlas:factory/block_data_factory",
         "configurations": [
             {
                 "name": "atlas:ageable_15",
@@ -860,6 +864,7 @@
     },
     {
         "type": "de.atlasmc.block.data.LightableBlockDataFactory",
+        "registry": "atlas:factory/block_data_factory",
         "configurations": [
             {
                 "name": "atlas:lightable_lit",
@@ -873,17 +878,18 @@
     },
     {
         "type": "de.atlasmc.block.data.MultipleFacingBlockDataFactory",
+        "registry": "atlas:factory/block_data_factory",
         "configurations": [
             {
                 "name": "atlas:multiple_facing_6_all",
                 "parameters": {
                     "faces": [
-						"north",
-						"south",
-						"east",
-						"west",
-						"up",
-						"down"
+                        "north",
+                        "south",
+                        "east",
+                        "west",
+                        "up",
+                        "down"
                     ],
                     "dataInterface": "de.atlasmc.block.data.MultipleFacing",
                     "data": "de.atlascore.block.data.CoreMultipleFacing6"
@@ -893,6 +899,7 @@
     },
     {
         "type": "de.atlasmc.block.data.WaterloggedBlockDataFactory",
+        "registry": "atlas:factory/block_data_factory",
         "configurations": [
             {
                 "name": "atlas:waterlogged_true",

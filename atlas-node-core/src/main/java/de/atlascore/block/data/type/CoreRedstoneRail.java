@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.atlascore.block.data.CoreRail;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.RedstoneRail;
 
@@ -19,8 +19,8 @@ public class CoreRedstoneRail extends CoreRail implements RedstoneRail {
 	
 	private boolean powered;
 	
-	public CoreRedstoneRail(Material material) {
-		super(material);
+	public CoreRedstoneRail(BlockType type) {
+		super(type);
 	}
 
 	@Override

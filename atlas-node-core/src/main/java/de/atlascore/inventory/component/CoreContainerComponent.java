@@ -1,12 +1,17 @@
 package de.atlascore.inventory.component;
 
+import static de.atlasmc.io.PacketUtil.readVarInt;
+import static de.atlasmc.io.PacketUtil.writeVarInt;
+import static de.atlasmc.io.protocol.ProtocolUtil.readSlot;
+import static de.atlasmc.io.protocol.ProtocolUtil.writeSlot;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.Material;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.ItemType;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.ContainerComponent;
@@ -15,7 +20,6 @@ import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import io.netty.buffer.ByteBuf;
-import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CoreContainerComponent extends AbstractItemComponent implements ContainerComponent {
 
@@ -65,6 +69,7 @@ public class CoreContainerComponent extends AbstractItemComponent implements Con
 	public void fromNBT(NBTReader reader) throws IOException {
 		reader.readNextEntry();
 		while (reader.getRestPayload() > 0) {
+			reader.readNextEntry();
 			ItemStack item = null;
 			int slot = 0;
 			while (reader.getType() != TagType.TAG_END) {
@@ -119,12 +124,12 @@ public class CoreContainerComponent extends AbstractItemComponent implements Con
 	}
 
 	@Override
-	public void removeItem(Material material) {
+	public void removeItem(ItemType type) {
 		if (!hasItems())
 			return;
 		for (int i = 0; i < slots.size(); i++) {
 			ItemStack item = slots.get(i);
-			if (item.getType() != material)
+			if (item.getType() != type)
 				continue;
 			slots.remove(i);
 			break;

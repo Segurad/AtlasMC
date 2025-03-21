@@ -3,7 +3,6 @@ package de.atlascore.entity;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlasmc.Material;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Trident;
 import de.atlasmc.entity.data.MetaDataField;
@@ -26,18 +25,10 @@ public class CoreTrident extends CoreAbstractArrow implements Trident {
 	
 	static {
 		NBT_FIELDS.setField(NBT_TRIDENT, (holder, reader) -> {
-			if (holder instanceof Trident) {
+			if (holder instanceof Trident entity) {
 				reader.readNextEntry();
-				Material mat = null;
-				if (!NBT_ID.equals(reader.getFieldName())) {
-					reader.mark();
-					reader.search(NBT_ID);
-					mat = Material.getByName(reader.readStringTag());
-					reader.reset();
-				} else mat = Material.getByName(reader.readStringTag());
-				ItemStack item = new ItemStack(mat);
-				item.fromNBT(reader);
-				((Trident) holder).setItem(item);
+				ItemStack item = ItemStack.getFromNBT(reader);
+				entity.setItem(item);
 			} else reader.skipTag();
 		});
 	}

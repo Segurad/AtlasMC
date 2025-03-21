@@ -3,7 +3,6 @@ package de.atlascore.entity;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlasmc.Material;
 import de.atlasmc.entity.ChestedHorse;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
@@ -33,25 +32,20 @@ public class CoreChestedHorse extends CoreAbstractHorse implements ChestedHorse 
 			} else reader.skipTag();
 		});
 		NBT_FIELDS.setField(NBT_ITEMS, (holder, reader) -> {
-			if (!(holder instanceof ChestedHorse)) {
+			if (!(holder instanceof ChestedHorse entity)) {
 				reader.skipTag();
 				return;
 			}
 			reader.readNextEntry();
-			AbstractHorseInventory inv = ((ChestedHorse) holder).getInventory();
+			AbstractHorseInventory inv = entity.getInventory();
 			while (reader.getRestPayload() > 0) {
-				Material mat = null;
-				if (!NBT_ID.equals(reader.getFieldName())) {
-					reader.mark();
-					reader.search(NBT_ID);
-					mat = Material.getByName(reader.readStringTag());
-					reader.reset();
-				} else mat = Material.getByName(reader.readStringTag());
-				ItemStack item = new ItemStack(mat);
+				reader.readNextEntry();
+				ItemStack item = ItemStack.getFromNBT(reader, false);
 				int slot = item.fromSlot(reader);
 				if (inv.getSize() > slot && slot > 0)
 					inv.setItem(slot, item);
 			}
+			reader.readNextEntry();
 		});
 	}
 	

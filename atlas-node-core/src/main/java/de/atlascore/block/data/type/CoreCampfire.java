@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreWaterloggedDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Campfire;
 
@@ -20,8 +20,8 @@ public class CoreCampfire extends CoreWaterloggedDirectional4Faces implements Ca
 	private boolean lit;
 	private boolean signalFire;
 	
-	public CoreCampfire(Material material) {
-		super(material);
+	public CoreCampfire(BlockType type) {
+		super(type);
 		lit = true;
 	}
 
@@ -47,7 +47,7 @@ public class CoreCampfire extends CoreWaterloggedDirectional4Faces implements Ca
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return getType().getBlockStateID()+
 				(isWaterlogged()?0:1)+
 				(signalFire?0:2)+
 				(lit?0:4)+

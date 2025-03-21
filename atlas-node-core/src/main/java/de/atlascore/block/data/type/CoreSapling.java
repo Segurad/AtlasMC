@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreBlockData;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Sapling;
 
@@ -18,12 +18,12 @@ public class CoreSapling extends CoreBlockData implements Sapling {
 	private int stage;
 	private int maxstage;
 	
-	public CoreSapling(Material material) {
-		this(material, 1);
+	public CoreSapling(BlockType type) {
+		this(type, 1);
 	}
 	
-	public CoreSapling(Material material, int maxstage) {
-		super(material);
+	public CoreSapling(BlockType type, int maxstage) {
+		super(type);
 		this.maxstage = maxstage;
 	}
 

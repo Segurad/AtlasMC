@@ -1,7 +1,6 @@
 package de.atlascore.server;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -28,22 +27,22 @@ import de.atlasmc.server.ServerException;
 import de.atlasmc.tick.AtlasThread;
 import de.atlasmc.tick.AtlasThreadTask;
 import de.atlasmc.tick.AtlasThreadTaskFactory;
+import de.atlasmc.tick.AtlasThreadTaskManager;
 import de.atlasmc.util.Pair;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
+import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.world.World;
 
 public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServer {
 	
 	private static final List<Pair<String, String>> TASKS_ON_STARTUP;
-	private static final List<Pair<String, String>> TASKS_ON_PREPARATION;
 	private static final List<Pair<String, String>> TASKS_ON_SHUTDOWN;
 	private static final List<Pair<String, String>> TASKS_ON_TICK;
 	
 	static {
 		TASKS_ON_STARTUP = List.of();
-		TASKS_ON_PREPARATION = List.of();
 		TASKS_ON_SHUTDOWN = List.of();
 		TASKS_ON_TICK = List.of(
 				Pair.of("sync-events", "atlas-core:server/tick/events"),
@@ -56,7 +55,7 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 	private final Queue<Event> eventQueue;
 	private final Set<NodePlayer> players;
 	private final Set<World> worlds;
-	private AtlasThread thread;
+	private AtlasThread<CoreLocalServer> thread;
 	private Scheduler scheduler;
 	private final Log logger;
 	private volatile Status targetStatus;
@@ -148,16 +147,13 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 		}
 		status = Status.STARTUP;
 		logger.info("Starting...");
-		AtlasThread thread = this.thread = new AtlasThread(this.getServerName(), 50, logger, false);
+		AtlasThread<CoreLocalServer> thread = this.thread = new AtlasThread<>(this.getServerName(), 50, logger, false,  this);
 		logger.debug("Initializing startup hooks...");
-		for (AtlasThreadTask task : buildTasks(TASKS_ON_STARTUP, "startup-hooks"))
-			thread.addStartupHook(task);
+		buildTasks(thread.getStartupTasks(), TASKS_ON_STARTUP, "startup-tasks");
 		logger.debug("Initializing shutdown hooks...");
-		for (AtlasThreadTask task : buildTasks(TASKS_ON_SHUTDOWN, "shutdown-hooks"))
-			thread.addShutdownHook(task);
+		buildTasks(thread.getShutdownTasks(), TASKS_ON_SHUTDOWN, "shutdown-hooks");
 		logger.debug("Initializing tick tasks...");
-		for (AtlasThreadTask task : buildTasks(TASKS_ON_TICK, "tick-tasks"))
-			thread.addTickTask(task);
+		buildTasks(thread.getTickTasks(), TASKS_ON_TICK, "tick-tasks");
 		this.future = future = thread.startThread();
 		future.setListener((f) -> {
 			lock.lock();
@@ -171,30 +167,23 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 		return future;
 	}
 	
-	private Collection<AtlasThreadTask> buildTasks(List<Pair<String, String>> defaults, String tasksKey) {
+	private <T> void buildTasks(AtlasThreadTaskManager<T> taskManager, List<Pair<String, String>> defaults, String tasksKey) {
 		ConfigurationSection cfg = getConfig().getConfig().getConfigurationSection(tasksKey);
 		if (cfg == null) {
 			if (defaults.isEmpty())
-				return List.of();
-			ArrayList<AtlasThreadTask> tasks = new ArrayList<>(defaults.size());
-			buildDefaultTasks(defaults, tasks);
-			return tasks;
+				return;
+			buildDefaultTasks(defaults, taskManager);
+			return;
 		}
-		int size = cfg.getSize();
-		if (cfg.contains("defaults"))
-			size += defaults.size();
-		ArrayList<AtlasThreadTask> tasks = new ArrayList<>(size);
 		Registry<AtlasThreadTaskFactory> registry = Registries.getRegistry(AtlasThreadTaskFactory.class);
 		for (Entry<String, Object> entry : cfg.getValues().entrySet()) {
 			String name = entry.getKey();
 			Object value = entry.getValue();
 			// checking for defaults
 			if (name.equals("defaults")) {
-				if (value == null || !(value instanceof Boolean val))
+				if (Boolean.TRUE != value)
 					continue;
-				if (!val)
-					continue;
-				buildDefaultTasks(defaults, tasks);
+				buildDefaultTasks(defaults, taskManager);
 				continue;
 			}
 			// building task
@@ -202,9 +191,10 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 			ConfigurationSection taskCfg = null;
 			if (value instanceof String str) {
 				key = str;
+				taskCfg = Configuration.of();
 			} else if (value instanceof ConfigurationSection section) {
 				taskCfg = section;
-				key = section.getString("task-key");
+				key = section.getString("type");
 			}
 			if (key == null) {
 				logger.warn("Unable to locate task key for task: {}", name);
@@ -216,16 +206,15 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 				continue;
 			}
 			try {
-				AtlasThreadTask task = factory.createTask(name, this, taskCfg);
-				tasks.add(task);
+				AtlasThreadTask<T> task = factory.createTask(taskCfg);
+				taskManager.addTask(name, task);
 			} catch(Exception e) {
 				logger.error("Error while creating task: " + key, e);
 			}
 		}
-		return tasks;
 	}
 	
-	private void buildDefaultTasks(List<Pair<String, String>> defaults, Collection<AtlasThreadTask>  tasks) {
+	private <T> void buildDefaultTasks(List<Pair<String, String>> defaults, AtlasThreadTaskManager<T> taskManager) {
 		Registry<AtlasThreadTaskFactory> registry = Registries.getRegistry(AtlasThreadTaskFactory.class);
 		for (Pair<String, String> rawTask : defaults) {
 			String key = rawTask.getValue2();
@@ -234,12 +223,15 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 				logger.warn("Missing default task factory: {}", key);
 				continue;
 			}
+			AtlasThreadTask<T> task;
 			try {
-				AtlasThreadTask task = factory.createTask(rawTask.getValue1(), this);
-				tasks.add(task);
+				task = factory.createTask(null);
 			} catch(Exception e) {
 				logger.error("Error while creating default task: " + key, e);
+				continue;
 			}
+			if (!taskManager.addTask(rawTask.getValue1(), task))
+				logger.warn("Failed to add default task: " + rawTask.getValue1());
 		}
 	}
 	

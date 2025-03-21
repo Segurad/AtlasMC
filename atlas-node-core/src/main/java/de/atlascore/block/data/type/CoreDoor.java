@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Door;
 
@@ -24,8 +24,8 @@ public class CoreDoor extends CoreDirectional4Faces implements Door {
 	private boolean open;
 	private boolean powered;
 	
-	public CoreDoor(Material material) {
-		super(material);
+	public CoreDoor(BlockType type) {
+		super(type);
 		half = Half.LOWER;
 		hinge = Hinge.LEFT;
 	}
@@ -83,7 +83,7 @@ public class CoreDoor extends CoreDirectional4Faces implements Door {
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return type.getBlockStateID()+
 				(powered?0:1)+
 				(open?0:2)+
 				hinge.ordinal()*4+

@@ -98,6 +98,14 @@ public class CoreCustomModelDataComponent extends AbstractItemComponent implemen
 	@Override
 	public CoreCustomModelDataComponent clone() {
 		CoreCustomModelDataComponent clone = (CoreCustomModelDataComponent) super.clone();
+		if (floats != null)
+			clone.floats = new FloatArrayList(floats);
+		if (flags != null)
+			clone.flags = new BooleanArrayList(flags);
+		if (strings != null)
+			clone.strings = new ArrayList<>(strings);
+		if (colors != null)
+			clone.colors = new IntArrayList(colors);
 		return clone;
 	}
 

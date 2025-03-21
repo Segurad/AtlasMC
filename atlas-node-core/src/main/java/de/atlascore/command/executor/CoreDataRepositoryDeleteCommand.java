@@ -1,5 +1,7 @@
 package de.atlascore.command.executor;
 
+import java.io.IOException;
+
 import de.atlasmc.Atlas;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.command.CommandContext;
@@ -60,13 +62,16 @@ public class CoreDataRepositoryDeleteCommand implements CommandExecutor {
 		if (rawEntry == null) {
 			RepositoryNamespace namespace = repo.getNamespace(rawNamespace);
 			if (skipConfirm) {
-				namespace.delete().setListener((future) -> {
-					if (future.isSuccess() && future.getNow()) {
+				try {
+					if (namespace.delete()) {
 						sender.sendMessage("Namespace deleted");
 					} else {
 						sender.sendMessage("Failed to delete namespace!");
 					}
-				});
+				} catch (IOException e) {
+					sender.sendMessage("Error while deleting namespace!");
+					Atlas.getLogger().error("Erro while deleting namespace: " + rawNamespace, e);
+				}
 			} else {
 				Commands.awaitConfirm(sender, 1200).setListener((confirm) -> {
 					CommandContext ctx = confirm.getNow();

@@ -41,12 +41,7 @@ public class CoreChatFactory implements ChatFactory {
 	public ChatComponent jsonToComponent(CharSequence json) {
 		if (json == null)
 			throw new IllegalArgumentException("Json can not be null!");
-		SNBTReader reader;
-		try {
-			reader = new SNBTReader(new CharSequenceReader(json));
-		} catch (IOException e) {
-			throw new NBTException("Error while initializing reader!", e);
-		}
+		SNBTReader reader = new SNBTReader(new CharSequenceReader(json));
 		ChatComponent comp;
 		try {
 			comp = readComponent(reader);
@@ -285,9 +280,12 @@ public class CoreChatFactory implements ChatFactory {
 	}
 
 	@Override
-	public void toNBT(Chat chat, NBTWriter writer) throws IOException {
-		ChatComponent comp = toComponent(chat);
-		comp.toJson(writer);
+	public void toNBT(CharSequence key, Chat chat, NBTWriter writer) throws IOException {
+		if (chat instanceof ChatComponent comp) {
+			comp.toJson(key, writer);
+		} else {
+			writer.writeStringTag(key, chat.toText());
+		}
 	}
 
 }

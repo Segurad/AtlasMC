@@ -6,13 +6,12 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.UUID;
-import java.util.function.ToIntFunction;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.registry.ProtocolRegistry;
+import de.atlasmc.registry.ProtocolRegistryValue;
 import de.atlasmc.tag.Tag;
 import de.atlasmc.tag.Tags;
 import de.atlasmc.util.annotation.NotNull;
@@ -20,7 +19,6 @@ import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.dataset.DataSet;
 import de.atlasmc.util.dataset.SingleValueDataSet;
 import de.atlasmc.util.dataset.TagDataSet;
-import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import de.atlasmc.util.nbt.io.NBTReader;
@@ -315,25 +313,15 @@ public class PacketUtil {
 	}
 	
 	public static Chat readTextComponent(ByteBuf in) throws IOException {
-		int type = in.getByte(in.readerIndex());
-		Chat chat;
-		if (type == TagType.STRING.getID()) {
-			in.readByte();
-			int size = in.readShort();
-			byte[] buff = new byte[size];
-			in.readBytes(buff);
-			chat = ChatUtil.toChat(new String(buff));
-		} else {
-			NBTNIOReader reader = new NBTNIOReader(in, true);
-			chat = ChatUtil.fromNBT(reader);
-			reader.close();
-		}
+		NBTNIOReader reader = new NBTNIOReader(in, true);
+		Chat chat = ChatUtil.fromNBT(reader);
+		reader.close();
 		return chat;
 	}
 	
 	public static void writeTextComponent(Chat text, ByteBuf out) throws IOException {
-		NBTWriter writer = new NBTNIOWriter(out);
-		ChatUtil.toNBT(text, writer);
+		NBTWriter writer = new NBTNIOWriter(out, true);
+		ChatUtil.toNBT(null, text, writer);
 		writer.close();
 	}
 	
@@ -342,10 +330,10 @@ public class PacketUtil {
 	}
 	
 	public static void writeTextComponent(Chat text, NBTWriter writer) throws IOException {
-		ChatUtil.toNBT(text, writer);
+		ChatUtil.toNBT(null, text, writer);
 	}
 	
-	public static <T extends Namespaced> void writeDataSet(DataSet<T> set, ProtocolRegistry<T> registry, ByteBuf out) {
+	public static <T extends ProtocolRegistryValue> void writeDataSet(DataSet<T> set, ProtocolRegistry<T> registry, ByteBuf out) {
 		if (set instanceof TagDataSet tagSet) {
 			writeVarInt(0, out);
 			writeIdentifier(tagSet.getTag().getNamespacedKey(), out);
@@ -353,20 +341,18 @@ public class PacketUtil {
 			writeVarInt(1, out);
 		} else if (set instanceof SingleValueDataSet<T> singleValue) {
 			writeVarInt(2, out);
-			ToIntFunction<T> toInt = registry.getIDSupplier();
-			writeVarInt(toInt.applyAsInt(singleValue.getValue()), out);
+			writeVarInt(singleValue.getValue().getID(), out);
 		} else {
 			Collection<T> values = set.values();
 			final int size = values.size() + 1;
 			writeVarInt(size, out);
-			final ToIntFunction<T> toInt = registry.getIDSupplier();
 			for (T value : values)
-				writeVarInt(toInt.applyAsInt(value), out);
+				writeVarInt(value.getID(), out);
 		}
 	}
 	
 	@NotNull
-	public static <T extends Namespaced> DataSet<T> readDataSet(ProtocolRegistry<T> registry, ByteBuf in) {
+	public static <T extends ProtocolRegistryValue> DataSet<T> readDataSet(ProtocolRegistry<T> registry, ByteBuf in) {
 		final int id = readVarInt(in);
 		if (id == 0) {
 			NamespacedKey key = readIdentifier(in);

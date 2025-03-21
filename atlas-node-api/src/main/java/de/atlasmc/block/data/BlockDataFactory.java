@@ -1,6 +1,6 @@
 package de.atlasmc.block.data;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.util.factory.Factory;
 
@@ -14,9 +14,9 @@ public interface BlockDataFactory extends Factory {
 	
 	/**
 	 * 
-	 * @param material
+	 * @param type
 	 * @return a new BlockData
 	 */
-	BlockData createData(Material material);
+	BlockData createData(BlockType type);
 
 }

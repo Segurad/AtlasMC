@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Cocoa;
 
@@ -17,8 +17,8 @@ public class CoreCocoa extends CoreDirectional4Faces implements Cocoa {
 	
 	private int age;
 	
-	public CoreCocoa(Material material) {
-		super(material);
+	public CoreCocoa(BlockType type) {
+		super(type);
 	}
 
 	@Override

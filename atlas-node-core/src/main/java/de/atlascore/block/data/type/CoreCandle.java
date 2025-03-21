@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreWaterlogged;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Candle;
 
@@ -20,8 +20,8 @@ public class CoreCandle extends CoreWaterlogged implements Candle {
 	private int candles;
 	private boolean lit;
 	
-	public CoreCandle(Material material) {
-		super(material);
+	public CoreCandle(BlockType type) {
+		super(type);
 		candles = 1;
 	}
 

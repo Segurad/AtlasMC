@@ -8,6 +8,7 @@ import de.atlasmc.entity.LivingEntity;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.component.effect.RemoveEffects;
 import de.atlasmc.potion.PotionEffectType;
+import de.atlasmc.registry.Registries;
 import de.atlasmc.util.dataset.DataSet;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTField;
@@ -27,7 +28,7 @@ public class CoreRemoveEffects implements RemoveEffects {
 	static {
 		NBT_FIELDS = NBTFieldSet.newSet();
 		NBT_FIELDS.setField(NBT_EFFECTS, (holder, reader) -> {
-			holder.effects = DataSet.getFromNBT(PotionEffectType.REGISTRY, reader);
+			holder.effects = DataSet.getFromNBT(Registries.getRegistry(PotionEffectType.class), reader);
 		});
 		NBT_FIELDS.setField(NBT_TYPE, NBTField.skip());
 	}
@@ -61,12 +62,12 @@ public class CoreRemoveEffects implements RemoveEffects {
 
 	@Override
 	public void read(ByteBuf buf) throws IOException {
-		effects = readDataSet(PotionEffectType.REGISTRY, buf);
+		effects = readDataSet(Registries.getRegistry(PotionEffectType.class), buf);
 	}
 
 	@Override
 	public void write(ByteBuf buf) throws IOException {
-		writeDataSet(effects, PotionEffectType.REGISTRY, buf);
+		writeDataSet(effects, Registries.getRegistry(PotionEffectType.class), buf);
 	}
 
 	@Override

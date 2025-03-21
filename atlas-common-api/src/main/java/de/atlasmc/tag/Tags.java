@@ -8,8 +8,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.registry.ProtocolRegistry;
+import de.atlasmc.registry.ProtocolRegistryValue;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.util.map.CopyOnWriteArrayListMultimap;
 import de.atlasmc.util.map.Multimap;
@@ -31,7 +31,7 @@ public class Tags {
 		return createTag(key, clazz, null);
 	}
 	
-	public static <T extends Namespaced> ProtocolTag<T> createTag(NamespacedKey key, ProtocolRegistry<T> registry) {
+	public static <T extends ProtocolRegistryValue> ProtocolTag<T> createTag(NamespacedKey key, ProtocolRegistry<T> registry) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
 		if (registry == null)

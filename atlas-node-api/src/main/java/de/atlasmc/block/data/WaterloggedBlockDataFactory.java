@@ -1,6 +1,6 @@
 package de.atlasmc.block.data;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 
@@ -19,8 +19,8 @@ public class WaterloggedBlockDataFactory extends ClassBlockDataFactory {
 	}
 	
 	@Override
-	public BlockData createData(Material material) {
-		Waterlogged data = (Waterlogged) super.createData(material);
+	public BlockData createData(BlockType type) {
+		Waterlogged data = (Waterlogged) super.createData(type);
 		data.setWaterlogged(waterlogged);
 		return data;
 	}

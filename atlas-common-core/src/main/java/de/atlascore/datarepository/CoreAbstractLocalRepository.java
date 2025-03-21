@@ -19,8 +19,8 @@ import de.atlasmc.datarepository.EntryFile;
 import de.atlasmc.datarepository.LocalRepository;
 import de.atlasmc.datarepository.RepositoryEntry;
 import de.atlasmc.datarepository.RepositoryEntryUpdate;
+import de.atlasmc.datarepository.RepositoryException;
 import de.atlasmc.datarepository.RepositoryNamespace;
-import de.atlasmc.util.DeleteFileVisitor;
 import de.atlasmc.util.FileUtils;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
@@ -28,32 +28,23 @@ import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
 import de.atlasmc.util.reference.WeakReference1;
 
-public abstract class CoreAbstractLocalRepository implements LocalRepository, CacheHolder {
+public abstract class CoreAbstractLocalRepository extends CoreAbstractRepository implements LocalRepository, CacheHolder {
 	
-	private final String name;
-	private final UUID uuid;
 	protected final File metaDir;
 	private final File namespaceFile;
 	protected final Path dirPath; 
 	protected final Map<String, CoreLocalNamespace> namespaces;
 	protected final Map<NamespacedKey, WeakReference1<CoreLocalRepositoryEntry, NamespacedKey>> entryCache;
-	protected final boolean readonly;
 	private final ReferenceQueue<Object> refQueue = new ReferenceQueue<Object>();
 	
 	private YamlConfiguration namespacesConfig;
 	
 	public CoreAbstractLocalRepository(String name, UUID uuid, File dir, boolean readonly) {
+		super(name, uuid, readonly);
 		if (dir == null)
 			throw new IllegalArgumentException("Dir can not be null!");
 		FileUtils.ensureDir(dir);
-		if (name == null)
-			throw new IllegalArgumentException("Name can not be null!");
-		if (uuid == null)
-			throw new IllegalArgumentException("UUID can not be null!");
-		this.name = name;
-		this.uuid = uuid;
 		this.dirPath = dir.toPath();
-		this.readonly = readonly;
 		this.namespaces = new ConcurrentHashMap<>();
 		this.entryCache = new ConcurrentHashMap<>();
 		// init meta dir
@@ -61,16 +52,6 @@ public abstract class CoreAbstractLocalRepository implements LocalRepository, Ca
 		this.namespaceFile = new  File(metaDir, "namespaces.yml");
 		Caching.register(this);
 		init();
-	}
-	
-	@Override
-	public UUID getUUID() {
-		return uuid;
-	}
-	
-	@Override
-	public String getName() {
-		return name;
 	}
 	
 	protected void init() {
@@ -159,6 +140,22 @@ public abstract class CoreAbstractLocalRepository implements LocalRepository, Ca
 		return CompleteFuture.of(entry);
 	}
 	
+	@Override
+	public RepositoryEntry getLocalEntry(NamespacedKey key) {
+		if (key == null)
+			throw new IllegalArgumentException("Key can not be null!");
+		CoreLocalRepositoryEntry entry = getCachedEntry(key);
+		if (entry != null)
+			return entry;
+		try {
+			entry = loadEntry(key);
+		} catch (IOException e) {
+			throw new RepositoryException("Error while loading entry: " + key, e);
+		}
+		entryCache.put(key, new WeakReference1<>(entry, refQueue, key));
+		return entry;
+	}
+	
 	protected CoreLocalRepositoryEntry loadEntry(NamespacedKey key) throws IOException {
 		CoreLocalNamespace namespace = namespaces.get(key.getNamespace());
 		if (namespace == null)
@@ -176,11 +173,6 @@ public abstract class CoreAbstractLocalRepository implements LocalRepository, Ca
 			entryCache.remove(key);
 		}
 		return null;
-	}
-
-	@Override
-	public boolean isReadOnly() {
-		return readonly;
 	}
 	
 	protected CoreLocalRepositoryEntry createEntry(NamespacedKey key, ConfigurationSection config) {
@@ -246,7 +238,7 @@ public abstract class CoreAbstractLocalRepository implements LocalRepository, Ca
 	}
 	
 	@Override
-	public Future<Collection<RepositoryEntryUpdate>> update() {
+	public Collection<RepositoryEntryUpdate> update() {
 		ArrayList<RepositoryEntryUpdate> changes = new ArrayList<>();
 		for (CoreLocalNamespace ns : namespaces.values()) {
 			try {
@@ -255,13 +247,13 @@ public abstract class CoreAbstractLocalRepository implements LocalRepository, Ca
 				// TODO handle exceptions
 			}
 		}
-		return CompleteFuture.of(changes);
+		return changes;
 	}
 	
 	@Override
 	public Future<Boolean> delete() {
 		try {
-			Files.walkFileTree(metaDir.toPath(), DeleteFileVisitor.INSTANCE);
+			FileUtils.deleteDir(metaDir);
 			for (CoreLocalNamespace namespace : namespaces.values())
 				namespace.internalDelete();
 		} catch(IOException e) {

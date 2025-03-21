@@ -27,7 +27,7 @@ public interface PluginLoader {
 	 * @return PreparedPlugin or null if unable to load
 	 * @throws IOException
 	 */
-	PreparedPlugin preparePlugin(File file) throws IOException;
+	PrototypePlugin preparePlugin(File file) throws IOException;
 
 	/**
 	 * Notifies the loader that the plugin is unloaded

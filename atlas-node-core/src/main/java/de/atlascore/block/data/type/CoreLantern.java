@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreWaterlogged;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Lantern;
 
@@ -15,10 +15,10 @@ public class CoreLantern extends CoreWaterlogged implements Lantern {
 		PROPERTIES = merge(CoreWaterlogged.PROPERTIES, BlockDataProperty.HANGING);
 	}
 	
-	private boolean hanging;
+	protected boolean hanging;
 	
-	public CoreLantern(Material material) {
-		super(material);
+	public CoreLantern(BlockType type) {
+		super(type);
 	}
 
 	@Override

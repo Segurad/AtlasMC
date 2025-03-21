@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreWaterloggedDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Chest;
 
@@ -15,31 +15,31 @@ public class CoreChest extends CoreWaterloggedDirectional4Faces implements Chest
 		PROPERTIES = merge(CoreWaterloggedDirectional4Faces.PROPERTIES, BlockDataProperty.TYPE);
 	}
 	
-	private Type type;
+	private Type chestType;
 	
-	public CoreChest(Material material) {
-		super(material);
-		type = Type.SINGLE;
+	public CoreChest(BlockType type) {
+		super(type);
+		this.chestType = Type.SINGLE;
 	}
 
 	@Override
-	public Type getType() {
-		return type;
+	public Type getChestType() {
+		return chestType;
 	}
 
 	@Override
-	public void setType(Type type) {
+	public void setChestType(Type type) {
 		if (type == null) 
 			throw new IllegalArgumentException("Type can not be null!");
-		this.type = type;
+		this.chestType = type;
 	}
 
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return type.getBlockStateID()+
 				getFaceValue()*6+
-				type.ordinal()*2+
-				(isWaterlogged()?0:1);
+				chestType.ordinal()*2+
+				(waterlogged?0:1);
 	}
 	
 	@Override

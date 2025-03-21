@@ -1,5 +1,6 @@
 package de.atlascore.command.executor;
 
+import java.io.IOException;
 import java.util.Collection;
 
 import de.atlasmc.Atlas;
@@ -14,7 +15,6 @@ import de.atlasmc.datarepository.RepositoryEntryUpdate.Change;
 import de.atlasmc.datarepository.RepositoryNamespace;
 import de.atlasmc.registry.RegistryValue;
 import de.atlasmc.util.Pair;
-import de.atlasmc.util.concurrent.future.FutureListener;
 
 @RegistryValue(registry="atlas:command/executor", key="atlas-core:datarepo/update")
 public class CoreDataRepositoryUpdateCommand implements CommandExecutor {
@@ -28,33 +28,22 @@ public class CoreDataRepositoryUpdateCommand implements CommandExecutor {
 			sender.sendMessage("No repository found with name: " + rawRepo);
 			return true;
 		}
-		final FutureListener<Collection<RepositoryEntryUpdate>> listener = (future) -> {
-			if (future.isSuccess()) {
-				Collection<RepositoryEntryUpdate> updated = future.getNow();
-				if (updated.isEmpty()) {
-					sender.sendMessage("Nothing update...");
-					return;
-				}
-				for (RepositoryEntryUpdate update : updated) {
-					sender.sendMessage("=== Updated: " + update.getKey() + " ===");
-					for (Pair<String, Change> change : update.getFilesChanged())
-						sender.sendMessage("- " + change.getValue1() + " [" + change.getValue2().symbol() + "]");
-				}
-			} else {
-				sender.sendMessage("Failed to perform update!");
-			}
-		};
 		// Update full repo
 		String rawNamespace = context.getArgument("namespace", String.class, false);
 		if (rawNamespace == null) {
-			repo.update().setListener(listener);
+			notifyUpdate(sender, repo.update());
 			return true;
 		}
 		// Update full namespace
 		String rawEntry = context.getArgument("entry", String.class, false);
 		if (rawEntry == null) {
 			RepositoryNamespace namespace = repo.getNamespace(rawNamespace);
-			namespace.update().setListener(listener);
+			try {
+				notifyUpdate(sender, namespace.update());
+			} catch (IOException e) {
+				sender.sendMessage("Error while updating namespace!");
+				Atlas.getLogger().error("Error while updating namespace: " + rawNamespace, e);
+			}
 			return true;
 		}
 		// Upadete Entry
@@ -80,6 +69,18 @@ public class CoreDataRepositoryUpdateCommand implements CommandExecutor {
 			});
 		});
 		return true;
+	}
+	
+	private void notifyUpdate(CommandSender sender, Collection<RepositoryEntryUpdate> updated) {
+		if (updated.isEmpty()) {
+			sender.sendMessage("Nothing update...");
+			return;
+		}
+		for (RepositoryEntryUpdate update : updated) {
+			sender.sendMessage("=== Updated: " + update.getKey() + " ===");
+			for (Pair<String, Change> change : update.getFilesChanged())
+				sender.sendMessage("- " + change.getValue1() + " [" + change.getValue2().symbol() + "]");
+		}
 	}
 
 }

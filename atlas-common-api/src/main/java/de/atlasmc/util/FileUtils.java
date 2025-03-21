@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
@@ -147,6 +148,20 @@ public class FileUtils {
 		if (result.isEmpty())
 			return Set.of();
 		return result;
+	}
+	
+	public static void deleteDir(Path path) throws IOException {
+		Files.walkFileTree(path, DeleteFileVisitor.INSTANCE);
+	}
+
+	public static void deleteDir(File file) throws IOException {
+		if (file == null)
+			throw new IllegalArgumentException("File can not be null!");
+		deleteDir(file.toPath());
+	}
+	
+	public static FileVisitor<Path> deleteVisitor() {
+		return DeleteFileVisitor.INSTANCE;
 	}
 
 }

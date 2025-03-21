@@ -1,6 +1,6 @@
 package de.atlasmc.world;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.util.NibbleArray;
 import de.atlasmc.util.annotation.UnsafeAPI;
@@ -46,7 +46,7 @@ public interface ChunkSection {
 	 * @param z
 	 * @return
 	 */
-	Material getBlockType(int x, int y, int z);
+	BlockType getBlockType(int x, int y, int z);
 	
 	/**
 	 * 

@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Set;
 
 import de.atlascore.block.data.CoreAbstractDirectional;
-import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Hopper;
 
@@ -26,8 +26,8 @@ public class CoreHopper extends CoreAbstractDirectional implements Hopper {
 	
 	private boolean enabled;
 	
-	public CoreHopper(Material material) {
-		super(material, BlockFace.DOWN);
+	public CoreHopper(BlockType type) {
+		super(type, BlockFace.DOWN);
 		this.enabled = true;
 	}
 
@@ -48,7 +48,7 @@ public class CoreHopper extends CoreAbstractDirectional implements Hopper {
 
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return type.getBlockStateID()+
 				getFaceValue()+
 				(enabled?0:5);
 	}

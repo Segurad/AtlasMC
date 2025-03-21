@@ -2,7 +2,6 @@ package de.atlasmc.inventory;
 
 import java.util.List;
 
-import de.atlasmc.Material;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
@@ -13,16 +12,16 @@ import de.atlasmc.inventory.component.LoreComponent;
 
 public class ItemUtil {
 
-	public static ItemStack getItemStack(NamespacedKey material, Chat name) {
-		return getItemStack(Material.get(material), name, null, 1);
+	public static ItemStack getItemStack(NamespacedKey type, Chat name) {
+		return getItemStack(ItemType.get(type), name, null, 1);
 	}
 	
-	public static ItemStack getItemStack(Material material, Chat name) {
-		return getItemStack(material, name, null, 1);
+	public static ItemStack getItemStack(ItemType type, Chat name) {
+		return getItemStack(type, name, null, 1);
 	}
 
-	public static ItemStack getItemStack(Material material, Chat name, List<Chat> lore, int amount) {
-		ItemStack item = new ItemStack(material, amount);
+	public static ItemStack getItemStack(ItemType type, Chat name, List<Chat> lore, int amount) {
+		ItemStack item = new ItemStack(type, amount);
 		if (name != null) {
 			CustomNameComponent nameComp = item.getComponent(CustomNameComponent.COMPONENT_KEY);
 			nameComp.setCustomName(name);
@@ -34,8 +33,8 @@ public class ItemUtil {
 		return item;
 	}
 
-	public static ItemStack getPlaceholder(Material material, boolean glow) {
-		ItemStack item = new ItemStack(material);
+	public static ItemStack getPlaceholder(ItemType type, boolean glow) {
+		ItemStack item = new ItemStack(type);
 		CustomNameComponent nameComp = item.getComponent(CustomNameComponent.COMPONENT_KEY);
 		nameComp.setCustomName(ChatUtil.ONE_SPACE);
 		if (glow) {

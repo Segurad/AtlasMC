@@ -4,8 +4,8 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.HightConnectable;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
@@ -26,8 +26,8 @@ public class CoreHightConnectable extends CoreBlockData implements HightConnecta
 	
 	protected final Height[] heights;
 	
-	public CoreHightConnectable(Material material) {
-		super(material);
+	public CoreHightConnectable(BlockType type) {
+		super(type);
 		heights = new Height[] {
 				Height.NONE,
 				Height.NONE,
@@ -63,7 +63,7 @@ public class CoreHightConnectable extends CoreBlockData implements HightConnecta
 	
 	@Override
 	public int getStateID() {
-		return material.getBlockStateID()+
+		return type.getBlockStateID()+
 				heights[3].ordinal()+ // WEST
 				heights[2].ordinal()*3+ // SOUTH
 				heights[0].ordinal()*9+ // NORTH

@@ -1,6 +1,6 @@
 package de.atlascore.block.tile;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.ShulkerBox;
 import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.Inventory;
@@ -8,7 +8,7 @@ import de.atlasmc.inventory.InventoryType;
 
 public class CoreShulkerBox extends CoreAbstractContainerTile<Inventory> implements ShulkerBox {
 
-	public CoreShulkerBox(Material type) {
+	public CoreShulkerBox(BlockType type) {
 		super(type);
 	}
 

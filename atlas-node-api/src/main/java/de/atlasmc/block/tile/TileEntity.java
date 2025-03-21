@@ -2,8 +2,8 @@ package de.atlasmc.block.tile;
 
 import java.io.IOException;
 
-import de.atlasmc.Material;
 import de.atlasmc.SimpleLocation;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.util.annotation.InternalAPI;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTException;
@@ -19,9 +19,9 @@ public interface TileEntity extends NBTHolder, Cloneable {
 	
 	TileEntity clone();
 	
-	Material getType();
+	BlockType getType();
 	
-	void setType(Material material);
+	void setType(BlockType material);
 	
 	/**
 	 * Returns the <u><b>relative</b></u> Location of this Tile in the Chunk
@@ -49,25 +49,25 @@ public interface TileEntity extends NBTHolder, Cloneable {
 			reader.readNextEntry();
 			return null;
 		}
-		String rawMaterial = null;
+		String rawType = null;
 		if (!NBT_ID.equals(reader.getFieldName())) {
 			reader.mark();
 			reader.search(NBT_ID);
-			rawMaterial = reader.readStringTag();
+			rawType = reader.readStringTag();
 			reader.reset();
 		} else {
-			rawMaterial = reader.readStringTag();
+			rawType = reader.readStringTag();
 		}
-		if (rawMaterial == null) {
+		if (rawType == null) {
 			throw new NBTException("NBT did not container id field!");
 		}
-		Material material = Material.getByName(rawMaterial);
+		BlockType material = BlockType.get(rawType);
 		if (material == null) {
-			throw new NBTException("Not material found with name: " + rawMaterial);
+			throw new NBTException("No type found with name: " + rawType);
 		}
 		TileEntity tile = material.createTileEntity();
 		if (tile == null) {
-			throw new NBTException("Failed to create tile from material: " + material.getNamespacedKeyRaw());
+			throw new NBTException("Failed to create tile from type: " + material.getNamespacedKeyRaw());
 		}
 		tile.fromNBT(reader);
 		return tile;

@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Comparator;
 
@@ -20,8 +20,8 @@ public class CoreComparator extends CoreDirectional4Faces implements Comparator 
 	private Mode mode;
 	private boolean powered;
 	
-	public CoreComparator(Material material) {
-		super(material);
+	public CoreComparator(BlockType type) {
+		super(type);
 		mode = Mode.COMPARE;
 	}
 
@@ -48,7 +48,7 @@ public class CoreComparator extends CoreDirectional4Faces implements Comparator 
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return getType().getBlockStateID()+
 				(powered?0:1)+
 				mode.ordinal()*2+
 				getFaceValue()*4;

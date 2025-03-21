@@ -3,7 +3,6 @@ package de.atlascore.entity;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlasmc.Material;
 import de.atlasmc.entity.Allay;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.inventory.Inventory;
@@ -35,18 +34,12 @@ public class CoreAllay extends CoreMob implements Allay {
 			Inventory inv = holder.getInventory();
 			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {
-				Material mat = null;
-				if (!NBT_ID.equals(reader.getFieldName())) {
-					reader.mark();
-					reader.search(NBT_ID);
-					mat = Material.getByName(reader.readStringTag());
-					reader.reset();
-				} else 
-					mat = Material.getByName(reader.readStringTag());
-				ItemStack item = new ItemStack(mat);
+				reader.readNextEntry();
+				ItemStack item = ItemStack.getFromNBT(reader);
 				item.fromNBT(reader);
 				inv.addItem(item);
 			}
+			reader.readNextEntry();
 		});
 	}
 	

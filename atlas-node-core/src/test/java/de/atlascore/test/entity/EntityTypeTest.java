@@ -11,9 +11,9 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 
 import de.atlascore.registry.CoreRegistryHandler;
-import de.atlascore.system.init.EntityTypeLoader;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.registry.Registries;
+import de.atlascore.test.registry.RegistryTestHelper;
 import de.atlastest.AtlasTest;
 
 public class EntityTypeTest {
@@ -24,7 +24,7 @@ public class EntityTypeTest {
 			Registries.init(new CoreRegistryHandler());
 		} catch (IllegalStateException e) {}
 		Registries.createRegistry(EntityType.class);
-		EntityTypeLoader.loadEntityTypes();
+		RegistryTestHelper.loadBulk("/data/entity_types.json");
 		JsonReader reader = AtlasTest.getJsonResourceReader("/minecraft/registries/registry_minecraft_entity_type.json");
 		LinkedList<Executable> checks = new LinkedList<>();
 		reader.beginObject();
@@ -44,8 +44,8 @@ public class EntityTypeTest {
 				if (type == null) {
 					Assertions.fail("Missing entity type: " + name + "(" + protocolID + ")");
 				} else {
-					if (type.getTypeID() != protocolID) {
-						Assertions.fail("ID missmatch for entity type " + name + " was " + type.getTypeID() + " expected " + protocolID);
+					if (type.getID() != protocolID) {
+						Assertions.fail("ID missmatch for entity type " + name + " was " + type.getID() + " expected " + protocolID);
 					}
 				}
 			});

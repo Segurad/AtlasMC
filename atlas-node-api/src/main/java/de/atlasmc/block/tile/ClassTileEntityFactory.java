@@ -3,7 +3,7 @@ package de.atlasmc.block.tile;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.ConfigurationSerializeable;
@@ -33,7 +33,7 @@ public class ClassTileEntityFactory implements TileEntityFactory, ConfigurationS
 			throw new IllegalArgumentException("TileInterface is not assignable from Tile!");
 		this.tile = tile;
 		try {
-			this.constructor = tile.getConstructor(Material.class);
+			this.constructor = tile.getConstructor(BlockType.class);
 		} catch (NoSuchMethodException | SecurityException e) {
 			throw new FactoryException("Error while fetching constructor for class: " + tile.getName(), e);
 		}
@@ -52,13 +52,11 @@ public class ClassTileEntityFactory implements TileEntityFactory, ConfigurationS
 	}
 
 	@Override
-	public TileEntity createTile(Material material) {
-		if (material == null) 
-			throw new IllegalArgumentException("Material can not be null!");
-		if (!material.isBlock()) 
-			throw new IllegalArgumentException("Material is not a Block!");
+	public TileEntity createTile(BlockType type) {
+		if (type == null) 
+			throw new IllegalArgumentException("Type can not be null!");
 		try {
-			return constructor.newInstance(material);
+			return constructor.newInstance(type);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new FactoryException("Error while creating tile entity", e);
 		}

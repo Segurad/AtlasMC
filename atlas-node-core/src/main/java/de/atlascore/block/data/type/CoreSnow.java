@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreBlockData;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Snow;
 
@@ -17,8 +17,8 @@ public class CoreSnow extends CoreBlockData implements Snow {
 	
 	private int layers;
 	
-	public CoreSnow(Material material) {
-		super(material);
+	public CoreSnow(BlockType type) {
+		super(type);
 		layers = 1;
 	}
 

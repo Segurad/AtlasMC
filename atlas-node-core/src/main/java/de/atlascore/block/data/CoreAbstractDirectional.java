@@ -3,8 +3,8 @@ package de.atlascore.block.data;
 import java.util.List;
 import java.util.Set;
 
-import de.atlasmc.Material;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.Directional;
 import de.atlasmc.block.data.property.BlockDataProperty;
 
@@ -18,12 +18,12 @@ public abstract class CoreAbstractDirectional extends CoreBlockData implements D
 	
 	private BlockFace face;
 	
-	public CoreAbstractDirectional(Material material) {
-		this(material, BlockFace.NORTH);
+	public CoreAbstractDirectional(BlockType type) {
+		this(type, BlockFace.NORTH);
 	}
 	
-	public CoreAbstractDirectional(Material material, BlockFace face) {
-		super(material);
+	public CoreAbstractDirectional(BlockType type, BlockFace face) {
+		super(type);
 		this.face = face;
 	}
 

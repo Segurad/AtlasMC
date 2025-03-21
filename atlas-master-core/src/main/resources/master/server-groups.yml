@@ -14,7 +14,21 @@ server-groups:
     internal: true
   server-config:
     server-factory: atlas-core:localserver
-    config: null
+    config:
+      startup-tasks:
+        sometask: myplugin:some_task
+        default: true
+        someothertask: 
+          type: myplugin:some_other_task
+          # other task configuration parameters
+      shutdown-tasks:
+        sometask: myplugin:some_task
+        default: true
+        someothertask: myplugin:some_other_task
+      tick-tasks:
+        sometask: myplugin:some_task
+        default: true
+        someothertask: myplugin:some_other_task
     static: false
     auto-stop-delay: 180
     auto-stop-users: 0

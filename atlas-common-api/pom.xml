@@ -23,8 +23,7 @@
 						</goals>
 						<configuration>
 							<proc>none</proc>
-							<!-- Configuration for the first compilation (if
-							any) -->
+							<!-- Configuration for the first compilation (if any) -->
 						</configuration>
 					</execution>
 					<!-- Second execution: Run annotation processing -->

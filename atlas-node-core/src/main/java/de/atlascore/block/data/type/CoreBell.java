@@ -3,7 +3,7 @@ package de.atlascore.block.data.type;
 import java.util.List;
 
 import de.atlascore.block.data.CoreDirectional4Faces;
-import de.atlasmc.Material;
+import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.data.type.Bell;
 
@@ -20,8 +20,8 @@ public class CoreBell extends CoreDirectional4Faces implements Bell {
 	private boolean powered;
 	private Attachment attachment;
 	
-	public CoreBell(Material material) {
-		super(material);
+	public CoreBell(BlockType type) {
+		super(type);
 		attachment = Attachment.FLOOR;
 	}
 
@@ -49,7 +49,7 @@ public class CoreBell extends CoreDirectional4Faces implements Bell {
 	
 	@Override
 	public int getStateID() {
-		return getMaterial().getBlockStateID()+
+		return type.getBlockStateID()+
 				(powered?0:1)+
 				getFaceValue()*2+
 				attachment.ordinal()*8;

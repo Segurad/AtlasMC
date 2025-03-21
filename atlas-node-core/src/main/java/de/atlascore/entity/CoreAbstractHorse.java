@@ -3,7 +3,6 @@ package de.atlascore.entity;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.atlasmc.Material;
 import de.atlasmc.entity.AbstractHorse;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaData;
@@ -55,15 +54,7 @@ public abstract class CoreAbstractHorse extends CoreAgeableMob implements Abstra
 		});
 		NBT_FIELDS.setField(NBT_SADDLE_ITEM, (holder, reader) -> {
 			reader.readNextEntry();
-			Material mat = null;
-			if (!NBT_ID.equals(reader.getFieldName())) {
-				reader.mark();
-				reader.search(NBT_ID);
-				mat = Material.getByName(reader.readStringTag());
-				reader.reset();
-			} else mat = Material.getByName(reader.readStringTag());
-			ItemStack item = new ItemStack(mat);
-			item.fromNBT(reader);
+			ItemStack item = ItemStack.getFromNBT(reader);
 			holder.getInventory().setSaddle(item);
 		});
 		NBT_FIELDS.setField(NBT_TAME, (holder, reader) -> {

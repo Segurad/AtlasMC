@@ -31,4 +31,21 @@ Registries are the main way of providing funktionality for Atlas itself and Plug
       param1: value1
 ```
 
+## bulk registry entry format
+```json
+[
+  {
+    "type": "some.configuration.serializable.type",
+    "registry": "myplugin:registrykey",
+    "configurations": [
+        {
+          "name": "myplugin:entrykey",
+          "default": false,
+          "parameters": {}
+        }
+    ]
+  }
+]
+```
+
 ## List of atlas registries
