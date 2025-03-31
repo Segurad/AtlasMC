@@ -13,6 +13,22 @@ import de.atlasmc.util.nbt.tag.NBT;
  */
 public class SNBTWriter implements NBTWriter {
 	
+	private static final String[] REPLACEMENT_CHARS;
+	
+	static {
+	    REPLACEMENT_CHARS = new String[128];
+	    for (int i = 0; i <= 0x1f; i++) {
+	      REPLACEMENT_CHARS[i] = String.format("\\u%04x", i);
+	    }
+	    REPLACEMENT_CHARS['"'] = "\\\"";
+	    REPLACEMENT_CHARS['\\'] = "\\\\";
+	    REPLACEMENT_CHARS['\t'] = "\\t";
+	    REPLACEMENT_CHARS['\b'] = "\\b";
+	    REPLACEMENT_CHARS['\n'] = "\\n";
+	    REPLACEMENT_CHARS['\r'] = "\\r";
+	    REPLACEMENT_CHARS['\f'] = "\\f";
+	}
+	
 	private int depth;
 	private ListData list;
 	private boolean closed;
@@ -114,38 +130,10 @@ public class SNBTWriter implements NBTWriter {
 		out.write('"');
 		for (int i = 0; i < value.length(); i++) {
 			char c = value.charAt(i);
-			switch (c) {
-			case '"':
-				out.write('\\');
-				out.write('"');
-				break;
-			case '\\':
-				out.write('\\');
-				out.write('\\');
-				break;
-			case '\t':
-				out.write('\\');
-				out.write('t');
-				break;
-			case '\b':
-				out.write('\\');
-				out.write('b');
-				break;
-			case '\n':
-				out.write('\\');
-				out.write('n');
-				break;
-			case '\r':
-				out.write('\\');
-				out.write('r');
-				break;
-			case '\f':
-				out.write('\\');
-				out.write('f');
-				break;
-			default:
+			if (c < 0x1f) {
+				out.write(REPLACEMENT_CHARS[c]);
+			} else {
 				out.write(c);
-				break;
 			}
 		}
 		out.write('"');

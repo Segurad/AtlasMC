@@ -42,8 +42,10 @@ public class NBTNIOReader extends AbstractNBTIOReader {
 	}
 
 	@Override
-	protected byte ioReadByte() {
-		return in.readByte();
+	protected int ioReadByte() {
+		if (in.readableBytes() > 0)
+			return in.readByte();
+		return -1;
 	}
 
 	@Override

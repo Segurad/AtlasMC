@@ -41,7 +41,7 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 				break;
 			bytesRead++;
 			arrayTagPayload--;
-			buf[i] = ioReadByte();
+			buf[i] = (byte) ioReadByte();
 		}
 		if (arrayTagPayload <= 0)
 			tagConsumed();
@@ -63,11 +63,11 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 		prepareTag();
 		byte data = 0;
 		if (type == TagType.BYTE) {
-			data = ioReadByte();
+			data = (byte) ioReadByte();
 		} else { // misc number read
 			switch (type) {
 			case BYTE:
-				data = ioReadByte();
+				data =  (byte) ioReadByte();
 				break;
 			case SHORT:
 				data = (byte) ioReadShort();
@@ -98,7 +98,7 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 		} else { // misc number read
 			switch (type) {
 			case BYTE:
-				data = ioReadDouble();
+				data = ioReadByte();
 				break;
 			case SHORT:
 				data = ioReadShort();
@@ -304,7 +304,7 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 		} else { // misc number read
 			switch (type) {
 			case BYTE:
-				data = ioReadByte();
+				data = (short) ioReadByte();
 				break;
 			case INT:
 				data = (short) ioReadInt();
@@ -383,7 +383,7 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 	public UUID readUUID() throws IOException {
 		prepareTag();
 		ensureTag(TagType.INT_ARRAY);
-		if (arrayTagPayload != 4)
+		if (arrayTagPayload != 4) // must be 4 int values to combine as 2 longs
 			throw new NBTException("Invalid UUID data length: " + arrayTagPayload);
 		UUID uuid = new UUID(ioReadLong(), ioReadLong());
 		tagConsumed();
@@ -565,7 +565,12 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 
 	protected abstract int ioReadInt() throws IOException;
 
-	protected abstract byte ioReadByte() throws IOException;
+	/**
+	 * Reads the next byte or -1 if end of stream
+	 * @return
+	 * @throws IOException
+	 */
+	protected abstract int ioReadByte() throws IOException;
 
 	protected void ioReadBytes(byte[] buffer) throws IOException {
 		ioReadBytes(buffer, 0, buffer.length);

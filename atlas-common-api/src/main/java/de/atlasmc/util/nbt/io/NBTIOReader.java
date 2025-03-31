@@ -58,9 +58,10 @@ public class NBTIOReader extends AbstractNBTIOReader {
 	}
 
 	@Override
-	protected byte ioReadByte() throws IOException {
-		if (readBuf())
+	protected int ioReadByte() throws IOException {
+		if (readBuf()) {
 			return buf.readByte();
+		}
 		byte val = (byte) in.read();
 		if (writeBuf) 
 			buf.writeByte(val);

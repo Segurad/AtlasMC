@@ -14,10 +14,5 @@
 			<artifactId>atlas-network-api</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>org.atlas-project</groupId>
-			<artifactId>atlas-common-core</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 </project>

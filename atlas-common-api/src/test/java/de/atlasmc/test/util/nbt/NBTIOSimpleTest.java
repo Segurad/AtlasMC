@@ -1,5 +1,6 @@
 package de.atlasmc.test.util.nbt;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -16,6 +17,7 @@ import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.SNBTReader;
+import de.atlasmc.util.nbt.io.SNBTTokenizingReader;
 import de.atlasmc.util.nbt.io.SNBTWriter;
 import de.atlasmc.util.nbt.tag.CompoundTag;
 import de.atlasmc.util.nbt.tag.NBT;
@@ -66,7 +68,7 @@ public class NBTIOSimpleTest {
 	}
 	
 	@Test
-	public void testNBTIOReader() {
+	public void testNBTIOReader() throws IOException {
 		InputStream in = NBTIOSimpleTest.class.getResourceAsStream("/nbt/simple_types.nbt");
 		NBTIOReader reader = new NBTIOReader(in);
 		testReader(reader, SIMPLE_TYPES_STRUCTURE);
@@ -88,7 +90,19 @@ public class NBTIOSimpleTest {
 		SNBTReader reader = new SNBTReader(new InputStreamReader(in));
 		testReader(reader, SIMPLE_TYPES_STRUCTURE);
 	}
-
+	
+	@Test
+	public void testSNBTTokenizingReader() throws IOException {
+		InputStream in = NBTIOSimpleTest.class.getResourceAsStream("/nbt/simple_types.snbt");
+		BufferedReader bufreader = new BufferedReader(new InputStreamReader(in));
+        StringBuilder result = new StringBuilder();
+        String line;
+        while ((line = bufreader.readLine()) != null) {
+            result.append(line);
+        }
+		SNBTTokenizingReader reader = new SNBTTokenizingReader(result.toString());
+		testReader(reader, SIMPLE_TYPES_STRUCTURE);
+	}
 	
 	@Test
 	public void testNBTIOWriter() throws IOException {
@@ -146,7 +160,7 @@ public class NBTIOSimpleTest {
 	 * @param reader
 	 * @throws IOException
 	 */
-	public static void traceReader(NBTIOReader reader) throws IOException {
+	public static void traceReader(NBTReader reader) throws IOException {
 		reader.readNextEntry();
 		final int depth = reader.getDepth();
 		while (reader.getDepth() >= depth) {
@@ -164,7 +178,6 @@ public class NBTIOSimpleTest {
 			}
 			System.out.println("value: " + reader.readNBT());
 		}
-		reader.readNextEntry();
 	}
 	
 }

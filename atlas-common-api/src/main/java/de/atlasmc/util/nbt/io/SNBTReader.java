@@ -77,6 +77,8 @@ public class SNBTReader extends AbstractNBTStreamReader {
 	private BufferedReader reader;
 	private CharKeyBuffer buffer;
 	private boolean closed;
+	private int line = 0;
+	private int column = 0;
 	
 	public SNBTReader(Reader in) {
 		if (in == null)
@@ -422,23 +424,140 @@ public class SNBTReader extends AbstractNBTStreamReader {
 	
 	@Override
 	protected void prepareTag(boolean skip) throws IOException {
+		ensureOpen();
+		if (prepared)
+			return;
+		prepared = true;
 		buffer.clear();
-		int c = skipWhitespaces();
+		if (isList()) {
+			type = list.type;
+		} else {
+			readKey();
+		}
+		int c = read(true);
+		if (c == -1)
+			throw new IOException("Unexpected end of stream!" + positionString());
+		switch (c) {
+		case '{': // compound type
+			type = TagType.COMPOUND;
+			return;
+		case '[': // list or array of some type
+			reader.mark(2);
+			c = read(false);
+			TagType arrayType = null;
+			switch (c) {
+			case 'B':
+				arrayType = TagType.BYTE_ARRAY;
+				break;
+			case 'I':
+				arrayType = TagType.INT_ARRAY;
+				break;
+			case 'L':
+				arrayType = TagType.LONG_ARRAY;
+				break;
+			default:
+				reader.reset();
+				// list
+				return;
+			}
+			int delimiter = read(false);
+			reader.reset();
+			if (delimiter == ';') {
+				type = arrayType;
+				reader.skip(2); // forward array type
+			}
+			return;
+		default: // some value
+		}
+	}
+	
+	private void readEscaped(int endchar) throws IOException {
+		boolean escaped = false;
+		int read = -1;
+		while ((read = read(false)) > 0) { // escaped char
+			if (escaped) {
+				switch (read) {
+				case '\\', '"', '\'':
+					break;
+				case 'n':
+					read = '\n';
+					break;
+				case 't':
+					read = '\t';
+					break;
+				case 'b':
+					read = '\b';
+					break;
+				case 'r':
+					read = '\r';
+					break;
+				case 'f':
+					read = '\f';
+					break;
+				default:
+					throw new IOException("Unknown Escaped char (" + (char) read + ")" + positionString());
+				}
+				buffer.append((char) read);
+				escaped = false;
+				continue;
+			}
+			if (read == endchar)
+				return; // end reached
+			if (read == '\\') { // next char is escaped char
+				escaped = true;
+				continue;
+			}
+			buffer.append((char) read); // add read char
+		}
+	}
+	
+	private void readKey() throws IOException {
+		int c = read(true);
 		if (c == -1)
 			return;
-		if (c == '"')
-			readEscapedKey();
-		else
-			readKey(c);
-		
+		boolean ended = false;
+		if (c == '"' || c == '\'') {
+			readEscaped(c);
+		} else {
+			buffer.append((char) c);
+			int read = -1;
+			while ((read = read(false)) > 0 && !Character.isWhitespace(read)) {
+				if (read == ':') {
+					ended = true;
+					break;
+				}
+				buffer.append((char) read);
+			}
+		}
+		if (!ended) {
+			c = read(true);
+			if (c != ':')
+				throw new IOException("Expected key end (:) not: " + (char) c + positionString());
+		}
+		hasName = true;
+		name.clear();
+		name.append(buffer);
+		buffer.clear();
 	}
 	
-	private void readEscapedKey() {
-		
+	private String positionString() {
+		return " (at line: " + line + " column: " + column + ")";
 	}
 	
-	private void readKey(int c) {
-		
+	private int read(boolean skipWihtespaces) throws IOException {
+		while (true) {
+			int c = reader.read();
+			if (c == -1)
+				return -1;
+			column++;
+			if (c == '\n') {
+				line++;
+				column = 0;
+			}
+			if (skipWihtespaces && Character.isWhitespace(c))
+				continue;
+			return c;
+		}
 	}
 	
 	@SuppressWarnings("unlikely-arg-type")
@@ -480,17 +599,6 @@ public class SNBTReader extends AbstractNBTStreamReader {
 				return false;
 		}
 		return true;
-	}
-	
-	/**
-	 * Skips all white spaces and returns the next read char or -1 if end of stream
-	 * @return char or -1
-	 * @throws IOException 
-	 */
-	private int skipWhitespaces() throws IOException {
-		int next = -1;
-		while (Character.isWhitespace(next = reader.read()));
-		return next;
 	}
 
 	@Override
