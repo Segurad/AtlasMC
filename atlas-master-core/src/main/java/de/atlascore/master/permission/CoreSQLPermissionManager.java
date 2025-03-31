@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlascore.permission.CoreAbstractPermissionManager;
@@ -28,6 +29,7 @@ import de.atlasmc.permission.PermissionContext;
 import de.atlasmc.permission.PermissionGroup;
 import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.util.concurrent.future.CumulativeFuture;
+import de.atlasmc.util.AtlasUtil;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
@@ -35,16 +37,16 @@ import de.atlasmc.util.sql.SQLFunction;
 
 public class CoreSQLPermissionManager extends CoreAbstractPermissionManager implements PermissionManager {
 
-	private final Map<Integer, CompletableFuture<PermissionHandler>> futureHandlers;
+	private final Map<UUID, CompletableFuture<PermissionHandler>> futureHandlers;
 	private final Map<Integer, CompletableFuture<PermissionContext>> futureContexts;
 	private final Map<String, CompletableFuture<PermissionGroup>> futureGroups;
 	
-	private final SQLFunction<Integer, PermissionHandler> loadHandler = this::internalLoadHandler;
+	private final SQLFunction<UUID, PermissionHandler> loadHandler = this::internalLoadHandler;
 	private final SQLFunction<Integer, PermissionContext> loadContext = this::internalLoadContext;
 	private final SQLFunction<String, PermissionGroup> loadGroup = this::internalLoadGroup;
-	private final SQLFunction<Integer, PermissionHandler> createHandler = this::internalCreateHandler;
+	private final SQLFunction<UUID, PermissionHandler> createHandler = this::internalCreateHandler;
 	private final SQLFunction<String, PermissionGroup> createGroup = this::internalCreateGroup;
-	private final SQLFunction<Integer, Boolean> deleteHandler = this::internalDeleteHandler;
+	private final SQLFunction<UUID, Boolean> deleteHandler = this::internalDeleteHandler;
 	private final SQLFunction<Integer, Boolean> deleteContext = this::internalDeleteContext;
 	private final SQLFunction<String, Boolean> deleteGroup = this::internalDeleteGroup;
 	private final SQLFunction<PermissionHandler, Boolean> saveHandler = this::internalSaveHandler;
@@ -58,12 +60,12 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager impl
 	}
 	
 	@Override
-	public Future<PermissionHandler> loadHandler(int id) {
-		return loadHandler(null, id);
+	public Future<PermissionHandler> loadHandler(UUID uuid) {
+		return loadHandler(null, uuid);
 	}
 	
-	private Future<PermissionHandler> loadHandler(Connection con, int id) {
-		return load(con, handlers, futureHandlers, id, loadHandler);
+	private Future<PermissionHandler> loadHandler(Connection con, UUID uuid) {
+		return load(con, handlers, futureHandlers, uuid, loadHandler);
 	}
 	
 	@Override
@@ -134,13 +136,13 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager impl
 	}
 	
 	@Override
-	public Future<Boolean> deleteHandler(int id) {
-		return delete(handlers, futureHandlers, id, deleteHandler);
+	public Future<Boolean> deleteHandler(UUID uuid) {
+		return delete(handlers, futureHandlers, uuid, deleteHandler);
 	}
 
 	@Override
-	public Future<PermissionHandler> createHandler(int id) {
-		return create(handlers, futureHandlers, id, loadHandler, createHandler);
+	public Future<PermissionHandler> createHandler(UUID uuid) {
+		return create(handlers, futureHandlers, uuid, loadHandler, createHandler);
 	}
 	
 	private <V> Future<Boolean> save(V value, SQLFunction<V, Boolean> saveFunction) {
@@ -292,12 +294,12 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager impl
 		}
 	}
 
-	private PermissionHandler internalLoadHandler(Connection con,  int id) throws SQLException {
-		final int userID = id;
-		final CorePermissionHandler handler = new CorePermissionHandler(id, this);
+	private PermissionHandler internalLoadHandler(final Connection con,  final UUID uuid) throws SQLException {
+		final CorePermissionHandler handler = new CorePermissionHandler(uuid, this);
+		final byte[] uuidBytes = AtlasUtil.uuidToBytes(uuid);
 		// load context
 		PreparedStatement stmt = con.prepareStatement("SELECT ctx_key, ctx_value FROM perm_user_context WHERE user_id=?");
-		stmt.setInt(1, userID);
+		stmt.setBytes(1, uuidBytes);
 		ResultSet result = stmt.executeQuery();
 		while (result.next()) {
 			handler.getContext().set(result.getString(1), result.getString(2));
@@ -306,7 +308,7 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager impl
 		stmt.close();
 		// load groups
 		stmt = con.prepareStatement("SELECT group FROM perm_user_group WHERE user_id = ?");
-		stmt.setInt(1, userID);
+		stmt.setBytes(1, uuidBytes);
 		result = stmt.executeQuery();
 		if (!result.isBeforeFirst()) {
 			ArrayList<Future<PermissionGroup>> futureGroups = new ArrayList<>();
@@ -432,8 +434,8 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager impl
 		return context;
 	}
 	
-	private PermissionHandler internalCreateHandler(Connection con, int id) throws SQLException {
-		return new CorePermissionHandler(id, this);
+	private PermissionHandler internalCreateHandler(Connection con, UUID uuid) throws SQLException {
+		return new CorePermissionHandler(uuid, this);
 	}
 	
 	private PermissionGroup internalCreateGroup(Connection con, String name) throws SQLException {
@@ -481,30 +483,33 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager impl
 		return stmt.executeUpdate() > 0;
 	}
 	
-	private boolean internalDeleteHandler(Connection con, int id) throws SQLException {
+	private boolean internalDeleteHandler(Connection con, UUID uuid) throws SQLException {
+		final byte[] uuidBytes = AtlasUtil.uuidToBytes(uuid);
 		PreparedStatement stmt = con.prepareStatement("DELETE FROM perm_user_context WHERE user_id = ?");
-		stmt.setInt(1, id);
+		stmt.setBytes(1, uuidBytes);
 		stmt.execute();
 		stmt.close();
 		stmt = con.prepareStatement("DELETE FROM perm_user_group WHERE user_id = ?");
-		stmt.setInt(1, id);
+		stmt.setBytes(1, uuidBytes);
 		stmt.execute();
 		stmt.close();
 		return true;
 	}
 	
 	private boolean internalSaveHandler(Connection con, PermissionHandler handler) throws SQLException {
-		int id = handler.getID();
+		byte[] uuidBytes = null;
 		ContextProvider context = handler.getContext();
 		if (context.hasChangedContext()) {
 			PreparedStatement stmt = con.prepareStatement("DELETE FROM perm_user_context WHERE user_id = ?");
-			stmt.setInt(1, id);
+			if (uuidBytes == null)
+				uuidBytes = AtlasUtil.uuidToBytes(handler.getUUID());
+			stmt.setBytes(1, uuidBytes);
 			stmt.execute();
 			stmt.close();
 			Map<String, String> ctx = context.getContext();
 			if (!ctx.isEmpty()) {
 				stmt = con.prepareStatement("INSERT INTO perm_user_context (user_id, ctx_key, ctx_value) VALUES (?, ?, ?)");
-				stmt.setInt(1, id);
+				stmt.setBytes(1, uuidBytes);
 				for (Entry<String, String> entry : ctx.entrySet()) {
 					stmt.setString(2, entry.getKey());
 					stmt.setString(3, entry.getValue());
@@ -517,13 +522,15 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager impl
 		}
 		if (handler.hasGroupsChanged()) {
 			PreparedStatement stmt = con.prepareStatement("DELETE FROM perm_user_group WHERE user_id = ?");
-			stmt.setInt(1, id);
+			if (uuidBytes == null)
+				uuidBytes = AtlasUtil.uuidToBytes(handler.getUUID());
+			stmt.setBytes(1, uuidBytes);
 			stmt.execute();
 			stmt.close();
 			Collection<PermissionGroup> groups = handler.getGroups();
 			if (!groups.isEmpty()) {
 				stmt = con.prepareStatement("INSERT INTO perm_user_group (user_id, group) VALUES (?, ?)");
-				stmt.setInt(1, id);
+				stmt.setBytes(1, uuidBytes);
 				for (PermissionGroup group : groups) {
 					stmt.setString(2, group.getName());
 					stmt.addBatch();

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import de.atlasmc.atlasnetwork.PermissionManager;
@@ -22,7 +23,7 @@ import de.atlasmc.util.map.key.CharKey;
 public abstract class CoreAbstractPermissionManager implements PermissionManager {
 	
 	protected final MapCache<String, PermissionGroup> groups;
-	protected final MapCache<Integer, PermissionHandler> handlers;
+	protected final MapCache<UUID, PermissionHandler> handlers;
 	protected final MapCache<Integer, PermissionContext> contexts;
 	private final MapCache<Collection<PermissionGroup>, CoreGroupSetPermission> groupSetCache;
 	private final Set<PermissionGroup> defaultGroups;
@@ -179,8 +180,8 @@ public abstract class CoreAbstractPermissionManager implements PermissionManager
 	}
 
 	@Override
-	public PermissionHandler getHandler(int id) {
-		return handlers.get(id);
+	public PermissionHandler getHandler(UUID uuid) {
+		return handlers.get(uuid);
 	}
 
 	@Override

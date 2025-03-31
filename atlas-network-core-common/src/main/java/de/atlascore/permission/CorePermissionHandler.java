@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import de.atlasmc.permission.ContextProvider;
 import de.atlasmc.permission.Permission;
@@ -17,7 +18,7 @@ public class CorePermissionHandler extends CorePermissionGroupHolder implements 
 
 	private static final PermissionContext[] EMPTY = {};
 	
-	private final int id;
+	private final UUID uuid;
 	private final ContextProvider contextProvider;
 	private final ContextProvider tempProvider;
 	
@@ -25,8 +26,8 @@ public class CorePermissionHandler extends CorePermissionGroupHolder implements 
 	private CoreGroupSetPermission groupSet;
 	private PermissionContext[] activeContexts = EMPTY;
 	
-	public CorePermissionHandler(int id, CoreAbstractPermissionManager manager) {
-		this.id = id;
+	public CorePermissionHandler(UUID uuid, CoreAbstractPermissionManager manager) {
+		this.uuid = uuid;
 		contextProvider = new CorePermissionHandlerContextProvider(this);
 		tempProvider = new CorePermissionHandlerContextProvider(this);
 		this.manager = manager;
@@ -84,8 +85,9 @@ public class CorePermissionHandler extends CorePermissionGroupHolder implements 
 		}
 	}
 	
-	public int getID() {
-		return id;
+	@Override
+	public UUID getUUID() {
+		return uuid;
 	}
 
 	@Override

@@ -2,47 +2,30 @@ package de.atlasmc.atlasnetwork;
 
 import java.util.UUID;
 
+import de.atlasmc.util.concurrent.future.Future;
+
 public interface ProfileHandler {
-	
-	default AtlasPlayer getPlayer(String name) {
-		return getPlayer(name, true);
-	}
 	
 	/**
 	 * Returns the player profile of a player with the internal name
 	 * @param name
-	 * @param load if the profile should be loaded
 	 * @return player or null
 	 */
-	AtlasPlayer getPlayer(String name, boolean load);
-	
-	default AtlasPlayer getPlayer(UUID uuid) {
-		return getPlayer(uuid, true);
-	}
+	AtlasPlayer getPlayer(String name);
 	
 	/**
 	 * Returns the player profile of a player with the internal uuid
 	 * @param uuid
-	 * @param load if the profile should be loaded
 	 * @return player or null
 	 */
-	AtlasPlayer getPlayer(UUID uuid, boolean load);
-	
-	default AtlasPlayer getPlayerByMojang(UUID uuid) {
-		return getPlayerByMojang(uuid, true);
-	}
+	AtlasPlayer getPlayer(UUID uuid);
 	
 	/**
 	 * Returns the player profile of a player with the mojang uuid
 	 * @param uuid
-	 * @param load if the profile should be loaded
 	 * @return player or null
 	 */
-	AtlasPlayer getPlayerByMojang(UUID uuid, boolean load);
-	
-	default AtlasPlayer getPlayerByMojang(String name) {
-		return getPlayerByMojang(name, true);
-	}
+	AtlasPlayer getPlayerByMojang(UUID uuid);
 	
 	/**
 	 * Returns the player profile of a player with the mojang name
@@ -50,18 +33,14 @@ public interface ProfileHandler {
 	 * @param load if the profile should be loaded
 	 * @return player or null
 	 */
-	AtlasPlayer getPlayerByMojang(String name, boolean load);
+	AtlasPlayer getPlayerByMojang(String name);
 	
-	default AtlasPlayer getPlayer(int id) {
-		return getPlayer(id, true);
-	}
+	Future<AtlasPlayer> loadPlayer(String name);
 	
-	/**
-	 * Return the player profile of a player with the internal id
-	 * @param id
-	 * @param load if the profile should be loaded
-	 * @return player or null
-	 */
-	AtlasPlayer getPlayer(int id, boolean load);
+	Future<AtlasPlayer> loadPlayer(UUID uuid);
+	
+	Future<AtlasPlayer> loadPlayerByMojang(String name);
+	
+	Future<AtlasPlayer> loadPlayerByMojang(UUID uuid);
 
 }

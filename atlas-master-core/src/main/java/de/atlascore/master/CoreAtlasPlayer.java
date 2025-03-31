@@ -1,7 +1,9 @@
 package de.atlascore.master;
 
+import java.net.InetAddress;
 import java.sql.Date;
 import java.util.UUID;
+import java.util.concurrent.Future;
 
 import de.atlasmc.atlasnetwork.AtlasPlayer;
 import de.atlasmc.atlasnetwork.proxy.Proxy;
@@ -17,7 +19,6 @@ import de.atlasmc.permission.PermissionHandler;
 public class CoreAtlasPlayer implements AtlasPlayer {
 	
 	private final CoreProfileManager handler;
-	private final int id;
 	private final String mojangName;
 	private final String internalName;
 	private final UUID mojangUUID;
@@ -29,9 +30,8 @@ public class CoreAtlasPlayer implements AtlasPlayer {
 	private volatile Server currentServer;
 	private volatile PermissionHandler permhandler;
 	
-	public CoreAtlasPlayer(CoreProfileManager handler, int id, String mojangName, UUID mojangUUID, String name, UUID uuid, Date firstJoin, Date lastJoin) {
+	public CoreAtlasPlayer(CoreProfileManager handler, String mojangName, UUID mojangUUID, String name, UUID uuid, Date firstJoin, Date lastJoin) {
 		this.handler = handler;
-		this.id = id;
 		this.mojangName = mojangName;
 		this.mojangUUID = mojangUUID;
 		this.internalName = name;
@@ -60,16 +60,12 @@ public class CoreAtlasPlayer implements AtlasPlayer {
 		return currentServer;
 	}
 
+	@Override
 	public UUID getInternalUUID() {
 		return internalUUID;
 	}
 
-	public void setInternalUUID(UUID uuid) {
-		if (uuid == null)
-			throw new IllegalArgumentException("UUID can not be null!");
-		handler.updateInternalUUID(this, uuid);
-	}
-
+	@Override
 	public String getInternalName() {
 		return internalName;
 	}
@@ -81,13 +77,9 @@ public class CoreAtlasPlayer implements AtlasPlayer {
 	}
 
 	@Override
-	public int getID() {
-		return id;
-	}
-
-	@Override
-	public void sendToServer(Server server) {
-		// TODO Auto-generated 
+	public Future<Boolean> sendToServer(Server server) {
+		// TODO implement
+		throw new UnsupportedOperationException("Not implemented!");
 	}
 
 	@Override
@@ -136,18 +128,31 @@ public class CoreAtlasPlayer implements AtlasPlayer {
 	public Date getLastJoin() {
 		return lastJoin;
 	}
-	
-	public void setLastJoin(Date date) {
-		if (date == null)
-			throw new IllegalArgumentException("Date can not be null!");
-		this.lastJoin = date;	
-		handler.updateLastJoind(this, date);
-	}
 
 	@Override
 	public void sendMessage(String message, ChatType type, String source, String target) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public boolean isOnline() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public InetAddress getIPAddress() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setLastJoinDate(Date date) {
+		if (date == null)
+			throw new IllegalArgumentException("Date can not be null!");
+		this.lastJoin = date;	
+		handler.updateLastJoind(this, date);
 	}
 
 }
