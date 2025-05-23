@@ -1,6 +1,6 @@
 # Plugins
 
-[Doc](../doc.md) > [Development](../doc.md#development) > [Plugins](#plugins)
+[Doc](../index.md) > [Development](../index.md#development) > [Plugins](#plugins)
 
 ---
 

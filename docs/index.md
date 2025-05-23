@@ -19,7 +19,7 @@
 - [Internal API](dev/internal_api.md)
 - [Unsafe API](dev/unsafe_api.md)
 - [Registries](dev/registries.md)
-- [Commands](dev/commands.md)
+- [Commands](dev/commands/commands.md)
 
 ## Atlas Development
 

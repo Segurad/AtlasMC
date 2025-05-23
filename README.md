@@ -1,5 +1,5 @@
 
-![Atlas](atlas-master-core/src/main/resources/assets/server_icon.png)
+![Atlas](docs/images/atlas.png)
 
 # AtlasMC 
 
@@ -19,7 +19,7 @@ Atlas aims for Administrative flexibility by providing powerfull configuration o
 
 For Developers Atlas provides a powerfull API that is mostly based of the Bukkit API. It is not possible to direktly use Bukkit plugins but this helps to allow relatively easy port existing Plugins to Atlas. Additionally the API supports direct access to Protocol as well as some other low level access or unsafe options for a more flexible access.
 
-For more information see the [Docs](./doc/doc.md)
+For more information see the [Docs](./docs/index.md)
 
 !!! <u>AtlasMC is <b>NOT</b> designed to give a Vanilla experience</u> !!!
 

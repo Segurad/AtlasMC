@@ -1,6 +1,6 @@
 # Page Title
 
-[Doc](../doc.md) > [Misc](../doc.md#misc) > [Page Title](#page-title)
+[Doc](../index.md) > [Misc](../index.md#misc) > [Page Title](#page-title)
 
 ---
 

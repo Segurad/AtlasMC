@@ -1,6 +1,6 @@
 # VarArgParser
 
-[Doc](../doc.md) > [Development](../doc.md#development) > [Commands](commands.md) > [VarArgParser](#varargparser)
+[Doc](../../index.md) > [Development](../../index.md#development) > [Commands](commands.md) > [VarArgParser](#varargparser)
 
 ---
 

@@ -1,6 +1,6 @@
 # Usefull Resources
 
-[Doc](../doc.md) > [Atlas Development](../doc.md#atlasdevelopment) > [Usefull Resources](#usefull-resources)
+[Doc](../index.md) > [Atlas Development](../index.md#atlasdevelopment) > [Usefull Resources](#usefull-resources)
 
 ---
 

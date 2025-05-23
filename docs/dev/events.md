@@ -1,6 +1,6 @@
 # EventHandling
 
-[Doc](../doc.md) > [Development](../doc.md#development) > [Event Handling](#eventhandling)
+[Doc](../index.md) > [Development](../index.md#development) > [Event Handling](#eventhandling)
 
 ---
 

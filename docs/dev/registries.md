@@ -1,6 +1,6 @@
 # Registries
 
-[Doc](../doc.md) > [Development](../doc.md#development) > [Registries](#registries)
+[Doc](../index.md) > [Development](../index.md#development) > [Registries](#registries)
 
 ---
 

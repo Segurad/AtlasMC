@@ -1,6 +1,6 @@
 # Node Startup
 
-[Doc](../doc.md) > [Development](../doc.md#development) > [Node Startup](#node-startup)
+[Doc](../index.md) > [Development](../index.md#development) > [Node Startup](#node-startup)
 
 ---
 

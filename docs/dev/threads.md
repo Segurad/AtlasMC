@@ -1,6 +1,6 @@
 # Threads
 
-[Doc](../doc.md) > [Development](../doc.md#development) > [Threads](#threads)
+[Doc](../index.md) > [Development](../index.md#development) > [Threads](#threads)
 
 ---
 

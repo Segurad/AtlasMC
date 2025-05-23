@@ -1,0 +1,51 @@
+site_name: AtlasMC Docs
+theme:
+  name: material
+  favicon: images/atlas.png
+  logo: images/atlas.png
+  features:
+#  - navigation.path
+   - navigation.instant
+   - navigation.instant.progress
+   - navigation.tabs
+   - navigation.sections
+   - toc.integrate
+   - navigation.top
+   - search.suggest
+   - search.highlight
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: red
+      accent: red
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: red
+      accent: red
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+nav:
+- Index: index.md
+- Administration:
+  - admin/jvm_args.md
+  - admin/properties.md
+- Development:
+  - dev/internal_api.md
+  - dev/unsafe_api.md
+  - dev/threads.md
+  - dev/plugins.md
+  - dev/events.md
+  - dev/node-startup.md
+  - dev/registries.md
+  - Commands: 
+    - dev/commands/commands.md
+    - dev/commands/var_arg_parser.md
+    - dev/commands/suggestion_types.md
+     
