@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import de.atlasmc.util.nbt.TagType;
@@ -15,9 +14,9 @@ import de.atlasmc.util.nbt.io.NBTIOReader;
 import de.atlasmc.util.nbt.io.NBTIOWriter;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
+import de.atlasmc.util.nbt.io.NBTObjectReader;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.SNBTReader;
-import de.atlasmc.util.nbt.io.SNBTTokenizingReader;
 import de.atlasmc.util.nbt.io.SNBTWriter;
 import de.atlasmc.util.nbt.tag.CompoundTag;
 import de.atlasmc.util.nbt.tag.NBT;
@@ -80,19 +79,13 @@ public class NBTIOSimpleTest {
 		ByteBuf buff = Unpooled.buffer();
 		buff.writeBytes(in, in.available());
 		NBTNIOReader reader = new NBTNIOReader(buff);
+		//traceReader(reader);
 		testReader(reader, SIMPLE_TYPES_STRUCTURE);
 	}
 
-	@Disabled("waiting for snbt reader implementation")
+
 	@Test
 	public void testSNBTReader() throws IOException {
-		InputStream in = NBTIOSimpleTest.class.getResourceAsStream("/nbt/simple_types.snbt");
-		SNBTReader reader = new SNBTReader(new InputStreamReader(in));
-		testReader(reader, SIMPLE_TYPES_STRUCTURE);
-	}
-	
-	@Test
-	public void testSNBTTokenizingReader() throws IOException {
 		InputStream in = NBTIOSimpleTest.class.getResourceAsStream("/nbt/simple_types.snbt");
 		BufferedReader bufreader = new BufferedReader(new InputStreamReader(in));
         StringBuilder result = new StringBuilder();
@@ -100,7 +93,8 @@ public class NBTIOSimpleTest {
         while ((line = bufreader.readLine()) != null) {
             result.append(line);
         }
-		SNBTTokenizingReader reader = new SNBTTokenizingReader(result.toString());
+		SNBTReader reader = new SNBTReader(result.toString());
+		//traceReader(reader);
 		testReader(reader, SIMPLE_TYPES_STRUCTURE);
 	}
 	
@@ -146,6 +140,13 @@ public class NBTIOSimpleTest {
 		Assertions.assertEquals(testString.toString(), stringWriter.toString());
 	}
 	
+	@Test
+	public void testNBTObjectRead() throws IOException {
+		NBTObjectReader reader = new NBTObjectReader(SIMPLE_TYPES_STRUCTURE);
+		//traceReader(reader);
+		testReader(reader, SIMPLE_TYPES_STRUCTURE);
+	}
+	
 	private void testReader(NBTReader reader, NBT sampleData) {
 		try {
 			NBT nbt = reader.readNBT();
@@ -168,15 +169,21 @@ public class NBTIOSimpleTest {
 			CharSequence name = reader.getFieldName();
 			if (reader.isList()) {
 				type = reader.getListType();
-				name = "*listelement*";
+				name = "*listelement* payload: " + reader.getRestPayload();
+				if (reader.getRestPayload() == 0) {
+					System.out.println("list end: next");
+					reader.readNextEntry();
+					continue;
+				}
 			}
-			System.out.println("read " + type + "(" + name + ")" + (type == TagType.LIST ? "[" + reader.getListType() + "]" : "") + " depth: " + reader.getDepth());
+			System.out.println("read " + type + "(" + name + ")" + (type == TagType.LIST ? "[" + reader.getListType() + "] payload: " + reader.getNextPayload() : "") + " depth: " + reader.getDepth());
 			if (type == TagType.COMPOUND || type == TagType.LIST || type == TagType.TAG_END) {
 				reader.readNextEntry();
 				System.out.println("next");
 				continue;
 			}
-			System.out.println("value: " + reader.readNBT());
+			NBT value = reader.readNBT();
+			System.out.println("value | " + value.getClass() + ": " + value);
 		}
 	}
 	

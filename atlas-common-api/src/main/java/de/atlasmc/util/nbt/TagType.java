@@ -24,7 +24,7 @@ import de.atlasmc.util.nbt.tag.StringTag;
 
 public enum TagType implements EnumID, EnumValueCache {
 
-	TAG_END(null),
+	TAG_END(() -> { return EndTag.INSTANCE; }),
 	BYTE(ByteTag::new, true),
 	SHORT(ShortTag::new, true),
 	INT(IntTag::new, true),

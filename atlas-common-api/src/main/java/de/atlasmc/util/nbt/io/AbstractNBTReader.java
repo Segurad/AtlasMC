@@ -24,14 +24,21 @@ public abstract class AbstractNBTReader implements NBTReader {
 	}
 	
 	protected void ensureTag(TagType type) throws IOException {
-		if (type != getType())
-			throw new NBTException("Cannot read " + getType() + " as " + type);
+		final TagType current = getType();
+		if (type != current)
+			throw new NBTException("Cannot read " + current + " as " + type);
+	}
+	
+	protected void ensureNumberTag(TagType type) throws IOException {
+		if (!type.isNumber())
+			throw new NBTException("Cannot read tag as number: " + type);
 	}
 
 	@Override
 	public Number readNumber() throws IOException {
 		Number data = null;
 		TagType type = getType();
+		ensureNumberTag(type);
 		switch (type) {
 		case BYTE:
 			data = readByteTag();
@@ -52,7 +59,7 @@ public abstract class AbstractNBTReader implements NBTReader {
 			data = readDoubleTag();
 			break;
 		default:
-			throw new NBTException("Tried to read tag as number: " + type);
+			ensureNumberTag(type);
 		}
 		return data;
 	}

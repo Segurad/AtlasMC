@@ -1,634 +1,360 @@
 package de.atlasmc.util.nbt.io;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.UncheckedIOException;
-import java.util.function.IntConsumer;
-import java.util.function.LongConsumer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.atlasmc.util.map.key.CharKeyBuffer;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.tag.ByteArrayTag;
+import de.atlasmc.util.nbt.tag.ByteTag;
+import de.atlasmc.util.nbt.tag.CompoundTag;
+import de.atlasmc.util.nbt.tag.IntArrayTag;
+import de.atlasmc.util.nbt.tag.IntTag;
+import de.atlasmc.util.nbt.tag.ListTag;
+import de.atlasmc.util.nbt.tag.LongArrayTag;
+import de.atlasmc.util.nbt.tag.LongTag;
+import de.atlasmc.util.nbt.tag.NBT;
+import it.unimi.dsi.fastutil.bytes.ByteArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 
-/**
- * {@link NBTReader} implementation to read NBT Json
- */
-public class SNBTReader extends AbstractNBTStreamReader {
+public class SNBTReader extends NBTObjectReader {
 	
-	/**
-	 * Pattern for {@link TagType#DOUBLE} without suffix
-	 * optional prefixed with +/-
-	 * numbers. or optional number . numbers
-	 * optional e followed by numbers optional prefixed with +/-
-	 */
-	private static final Pattern DOUBLE_NOT_SUFFIXED_PATTERN = Pattern.compile("[+-]?(?:[0-9]+[.]|[0-9]*[.][0-9]+)(?:e[-+]?[0-9]+)?", Pattern.CASE_INSENSITIVE);
+	// Raw regex
+	// (?:(?<key>(?:(?:(?<!\\)(?:\\{2})*\"(?:(?<!\\)(?:\\{2})*\\\"|[^\"])+(?<!\\)(?:\\{2})*\")|(?:[\w-+/\\]+)))\s*:\s*)?(?:(?<compound>\{)|(?<list>\[(?:[BILbil];)?)|(?<float>[+-]?(?:[0-9]+[.]|[0-9]*[.][0-9]+)(?:e[-+]?[0-9]+)?[FDfd])|(?<int>[+-]?(?:0|[1-9][0-9]*)[LBSlbs]?)|(?<string>(?:(?<!\\)(?:\\{2})*\"(?:(?<!\\)(?:\\{2})*\\\"|[^\"])+(?<!\\)(?:\\{2})*\")|(?:[\w-+/\\]+)))\s*(?<end>(?:(?:[\]\}]\s*)+,?)|,)?\s*
+	private static final Pattern TOKENIZER = Pattern.compile("(?:(?<key>(?:(?:(?<!\\\\)(?:\\\\{2})*\\\"(?:(?<!\\\\)(?:\\\\{2})*\\\\\\\"|[^\\\"])+(?<!\\\\)(?:\\\\{2})*\\\")|(?:[\\w-+/\\\\]+)))\\s*:\\s*)?(?:(?<compound>\\{)|(?<list>\\[(?:[BILbil];)?)|(?<float>[+-]?(?:[0-9]+[.]|[0-9]*[.][0-9]+)(?:e[-+]?[0-9]+)?[FDfd])|(?<int>[+-]?(?:0|[1-9][0-9]*)[LBSlbs]?)|(?<string>(?:(?<!\\\\)(?:\\\\{2})*\\\"(?:(?<!\\\\)(?:\\\\{2})*\\\\\\\"|[^\\\"])+(?<!\\\\)(?:\\\\{2})*\\\")|(?:[\\w-+/\\\\]+)))\\s*(?<end>(?:(?:[\\]\\}]\\s*)+,?)|,)?\\s*");
+	private static final int 
+	KEY_TOKEN,
+	COMPOUND_TOKEN,
+	LIST_TOKEN,
+	FLOAT_TOKEN,
+	INT_TOKEN,
+	STRING_TOKEN,
+	END_TOKEN;
 	
-	/**
-	 * Pattern for {@link TagType#DOUBLE} with suffix
-	 * optional prefixed with +/-
-	 * numbers. or optional number . numbers
-	 * optional e followed by numbers optional prefixed with +/-
-	 * suffixed with 'd'
-	 */
-	private static final Pattern DOUBLE_PATTERN = Pattern.compile("[+-]?(?:[0-9]+[.]?|[0-9]*[.][0-9]+)(?:e[-+]?[0-9]+)?d", Pattern.CASE_INSENSITIVE);
+	private static final int GROUP_COUNT;
 	
-	/**
-	 * Pattern for {@link TagType#FLOAT}
-	 * optional prefixed with +/-
-	 * numbers. or optional number . numbers
-	 * optional e followed by numbers optional prefixed with +/-
-	 * suffixed with 'f'
-	 */
-	private static final Pattern FLOAT_PATTERN = Pattern.compile("[+-]?(?:[0-9]+[.]?|[0-9]*[.][0-9]+)(?:e[-+]?[0-9]+)?f", Pattern.CASE_INSENSITIVE);
-	
-	/**
-	 * Pattern for {@link TagType#LONG}
-	 * optional prefixed with +/-
-	 * 0 or any number combination not starting with 0
-	 * suffixed with 'l'
-	 */
-	private static final Pattern LONG_PATTERN = Pattern.compile("[+-]?(?:0|[1-9][0-9]*)l", Pattern.CASE_INSENSITIVE);
-	
-	/**
-	 * Pattern for {@link TagType#INT}
-	 * optional prefixed with +/-
-	 * 0 or any number combination not starting with 0
-	 */
-	private static final Pattern INT_PATTERN = Pattern.compile("[+-]?(?:0|[1-9][0-9]*)");
-	
-	/**
-	 * Pattern for {@link TagType#SHORT}
-	 * optional prefixed with +/-
-	 * 0 or any number combination not starting with 0
-	 * suffixed with 's'
-	 */
-	private static final Pattern SHORT_PATTERN = Pattern.compile("[+-]?(?:0|[1-9][0-9]*)s", Pattern.CASE_INSENSITIVE);
-	
-	/**
-	 * Pattern for {@link TagType#BYTE}
-	 * optional prefixed with +/-
-	 * 0 or any number combination not starting with 0
-	 * suffixed with 'b'
-	 */
-	private static final Pattern BYTE_PATTERN = Pattern.compile("[+-]?(?:0|[1-9][0-9]*)b", Pattern.CASE_INSENSITIVE);
-	
-	private BufferedReader reader;
-	private CharKeyBuffer buffer;
-	private boolean closed;
-	private int line = 0;
-	private int column = 0;
-	
-	public SNBTReader(Reader in) {
-		if (in == null)
-			throw new IllegalArgumentException("Reader can not be null!");
-		if (in instanceof BufferedReader reader) {
-			this.reader = reader;
-		} else {
-			this.reader = new BufferedReader(in);
-		}
+	static {
+		Map<String, Integer> groups = TOKENIZER.namedGroups();
+		KEY_TOKEN = groups.get("key");
+		COMPOUND_TOKEN = groups.get("compound");
+		LIST_TOKEN = groups.get("list");
+		FLOAT_TOKEN = groups.get("float");
+		INT_TOKEN = groups.get("int");
+		STRING_TOKEN = groups.get("string");
+		END_TOKEN = groups.get("end");
+		GROUP_COUNT = groups.size();
 	}
 	
-	@Override
-	public void close() {
-		if (closed)
-			return;
-		super.close();
-		try {
-			reader.close();
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
-		reader = null;
-		buffer = null;
+	public SNBTReader(CharSequence snbt) {
+		super(toObject(snbt));
 	}
-
-	@Override
-	public void readByteArrayTag(IntConsumer dataConsumer) throws IOException {
-		prepareTag();
-		ensureTag(TagType.BYTE_ARRAY);
-		if (dataConsumer == null)
-			throw new IllegalArgumentException("DataConsumer can not be null!");
-		final int payload = arrayTagPayload;
-		for (int i = 0; i < payload; i++)
-			dataConsumer.accept(ioReadByte());
-		tagConsumed();
+	
+	
+	
+	private static NBT toObject(CharSequence snbt) {
+		List<Token> tokens = buildTokens(snbt);
+		ListIterator<Token> iterator = tokens.listIterator();
+		NBT nbt = toNBT(iterator);
+		if (nbt != null && nbt.getName() == null)
+			nbt.setName(""); // true unnamed root only in nbt io stream
+		return nbt;
 	}
-
-	@Override
-	public int readByteArrayTag(byte[] buf) throws IOException {
-		prepareTag();
-		ensureTag(TagType.BYTE_ARRAY);
-		int bytesRead = 0;
-		for (int i = 0; i < buf.length; i++) {
-			if (arrayTagPayload <= 0)
-				break;
-			bytesRead++;
-			arrayTagPayload--;
-			buf[i] = ioReadByte();
-		}
-		if (arrayTagPayload <= 0)
-			tagConsumed();
-		return bytesRead;
-	}
-
-	@Override
-	public byte[] readByteArrayTag() throws IOException {
-		prepareTag();
-		ensureTag(TagType.BYTE_ARRAY);
-		byte[] data = new byte[arrayTagPayload];
-		for (int i = 0; i < arrayTagPayload; i++)
-			data[i] = ioReadByte();
-		tagConsumed();
-		return data;
-	}
-
-	@Override
-	public byte readByteTag() throws IOException {
-		prepareTag();
-		byte data = 0;
-		if (type == TagType.BYTE) {
-			data = ioReadByte();
-		} else { // misc number read
-			switch (type) {
-			case BYTE:
-				data = ioReadByte();
-				break;
-			case SHORT:
-				data = (byte) ioReadShort();
-				break;
-			case LONG:
-				data = (byte) ioReadLong();
-				break;
-			case FLOAT:
-				data = (byte) ioReadFloat();
-				break;
-			case DOUBLE:
-				data = (byte) ioReadDouble();
-				break;
-			default:
-				throw new NBTException("Tried to read tag as number: " + type);
+	
+	private static NBT toNBT(ListIterator<Token> iterator) {
+		String key = null;
+		while (iterator.hasNext()) {
+			Token next = iterator.next();
+			if (COMPOUND_TOKEN == next.tokenType) {
+				return toCompoundTag(key, iterator);
+			} else if (LIST_TOKEN == next.tokenType) {
+				return toArrayTag(key, next.token, iterator);
+			} else if (FLOAT_TOKEN == next.tokenType) {
+				return toFloatTag(key, next.token);
+			} else if (INT_TOKEN == next.tokenType) {
+				return toIntTag(key, next.token);
+			} else if (KEY_TOKEN == next.tokenType) {
+				if (key != null)
+					throw new NBTException("Tag may not contain two keys! Token: " + iterator.previousIndex());
+				key = unescape(next.token);
+				continue;
+			} else if (STRING_TOKEN == next.tokenType) {
+				return TagType.STRING.createTag(key, unescape(next.token));
+			} else if (END_TOKEN == next.tokenType) {
+				if (key != null)
+					throw new NBTException("EndTag may not have a key! Token: " + iterator.previousIndex());
+				return null;
+			} else {
+				Map<String, Integer> groups = TOKENIZER.namedGroups();
+				String group = "Unknown Group";
+				for (Entry<String, Integer> entry : groups.entrySet()) {
+					if (entry.getValue() != next.tokenType)
+						continue;
+					group = entry.getKey();
+					break;
+				}
+				throw new NBTException("Unknown token type: " + group + " (" + next.tokenType + ") Token: " + iterator.previousIndex());
 			}
 		}
-		tagConsumed();
-		return data;
+		throw new NBTException("Unable to find token!");
 	}
 	
-	@Override
-	public double readDoubleTag() throws IOException {
-		prepareTag();
-		double data = 0;
-		if (type == TagType.DOUBLE) {
-			data = ioReadDouble();
-		} else { // misc number read
-			switch (type) {
-			case BYTE:
-				data = ioReadDouble();
-				break;
-			case SHORT:
-				data = ioReadShort();
-				break;
-			case INT:
-				data = ioReadInt();
-				break;
-			case LONG:
-				data = ioReadLong();
-				break;
-			case FLOAT:
-				data = ioReadFloat();
-				break;
-			default:
-				throw new NBTException("Tried to read tag as number: " + type);
+	private static List<Token> buildTokens(CharSequence snbt) {
+		Matcher matcher = TOKENIZER.matcher(snbt);
+		List<Token> tokens = new ArrayList<>();
+		int match = 0;
+		while (matcher.find()) {
+			match++;
+			for (int i = 1; i <= GROUP_COUNT; i++) {
+				String value = matcher.group(i);
+				if (value == null)
+					continue;
+				if (i == END_TOKEN) {
+					final int length = value.length();
+					for (int j = 0; j < length; j++) {
+						char c = value.charAt(j);
+						if (c == ',' || Character.isWhitespace(c))
+							continue;
+						switch (c) {
+						case '}':
+							tokens.add(new Token(i, "}"));
+							break;
+						case ']':
+							tokens.add(new Token(i, "]"));
+							break;
+						default:
+							throw new IllegalArgumentException("Unknown char in end token: " + c + " <" + value + "> match: "+ match + " index: " + tokens.size());
+						}
+					}
+				} else {
+					tokens.add(new Token(i, value));
+				}
 			}
 		}
-		tagConsumed();
-		return data;
-	}
-
-	@Override
-	public float readFloatTag() throws IOException {
-		prepareTag();
-		float data = 0;
-		if (type == TagType.FLOAT) {
-			data = ioReadFloat();
-		} else { // misc number read
-			switch (type) {
-			case BYTE:
-				data = ioReadByte();
-				break;
-			case SHORT:
-				data = ioReadShort();
-				break;
-			case INT:
-				data = ioReadInt();
-				break;
-			case LONG:
-				data = ioReadLong();
-				break;
-			case DOUBLE:
-				data = (float) ioReadDouble();
-				break;
-			default:
-				throw new NBTException("Tried to read tag as number: " + type);
-			}
-		}
-		tagConsumed();
-		return data;
-	}
-
-	@Override
-	public void readIntArrayTag(IntConsumer dataConsumer) throws IOException {
-		prepareTag();
-		ensureTag(TagType.INT_ARRAY);
-		if (dataConsumer == null)
-			throw new IllegalArgumentException("DataConsumer can not be null!");
-		final int payload = arrayTagPayload;
-		for (int i = 0; i < payload; i++)
-			dataConsumer.accept(ioReadInt());
-		tagConsumed();
-	}
-
-	@Override
-	public int readIntArrayTag(int[] buf) throws IOException {
-		prepareTag();
-		ensureTag(TagType.INT_ARRAY);
-		int intsRead = 0;
-		for (int i = 0; i < buf.length; i++) {
-			if (arrayTagPayload <= 0)
-				break;
-			intsRead++;
-			arrayTagPayload--;
-			buf[i] = ioReadInt();
-		}
-		if (arrayTagPayload <= 0)
-			tagConsumed();
-		return intsRead;
-	}
-
-	@Override
-	public int[] readIntArrayTag() throws IOException {
-		prepareTag();
-		ensureTag(TagType.INT_ARRAY);
-		int[] data = new int[arrayTagPayload];
-		for (int i = 0; i < data.length; i++) {
-			data[i] = ioReadInt();
-		}
-		tagConsumed();
-		return data;
-	}
-
-	@Override
-	public int readIntTag() throws IOException {
-		prepareTag();
-		int data = 0;
-		if (type == TagType.INT) {
-			data = ioReadInt();
-		} else { // misc number read
-			switch (type) {
-			case BYTE:
-				data = ioReadByte();
-				break;
-			case SHORT:
-				data = ioReadShort();
-				break;
-			case LONG:
-				data = (int) ioReadLong();
-				break;
-			case FLOAT:
-				data = (int) ioReadFloat();
-				break;
-			case DOUBLE:
-				data = (int) ioReadDouble();
-				break;
-			default:
-				throw new NBTException("Tried to read tag as number: " + type);
-			}
-		}
-		tagConsumed();
-		return data;
-	}
-
-	@Override
-	public void readLongArrayTag(LongConsumer dataConsumer) throws IOException {
-		prepareTag();
-		ensureTag(TagType.LONG_ARRAY);
-		if (dataConsumer == null)
-			throw new IllegalArgumentException("DataConsumer can not be null!");
-		final int payload = arrayTagPayload;
-		for (int i = 0; i < payload; i++)
-			dataConsumer.accept(ioReadLong());
-		tagConsumed();
-	}
-
-	@Override
-	public int readLongArrayTag(long[] buf) throws IOException {
-		prepareTag();
-		ensureTag(TagType.LONG_ARRAY);
-		int longsRead = 0;
-		for (int i = 0; i < buf.length; i++) {
-			if (arrayTagPayload <= 0)
-				break;
-			longsRead++;
-			arrayTagPayload--;
-			buf[i] = ioReadLong();
-		}
-		if (arrayTagPayload <= 0)
-			tagConsumed();
-		return longsRead;
-	}
-
-	@Override
-	public long[] readLongArrayTag() throws IOException {
-		prepareTag();
-		ensureTag(TagType.LONG_ARRAY);
-		long[] data = new long[arrayTagPayload];
-		for (int i = 0; i < data.length; i++) {
-			data[i] = ioReadLong();
-		}
-		tagConsumed();
-		return data;
-	}
-
-	@Override
-	public long readLongTag() throws IOException {
-		prepareTag();
-		long data = 0;
-		if (type == TagType.LONG) {
-			data = ioReadLong();
-		} else { // misc number read
-			switch (type) {
-			case BYTE:
-				data = ioReadByte();
-				break;
-			case SHORT:
-				data = ioReadShort();
-				break;
-			case INT:
-				data = ioReadInt();
-				break;
-			case FLOAT:
-				data = (long) ioReadFloat();
-				break;
-			case DOUBLE:
-				data = (long) ioReadDouble();
-				break;
-			default:
-				throw new NBTException("Tried to read tag as number: " + type);
-			}
-		}
-		tagConsumed();
-		return data;
-	}
-
-	@Override
-	public short readShortTag() throws IOException {
-		prepareTag();
-		short data = 0;
-		if (type == TagType.SHORT) {
-			data = ioReadShort();
-		} else { // misc number read
-			switch (type) {
-			case BYTE:
-				data = ioReadByte();
-				break;
-			case INT:
-				data = (short) ioReadInt();
-				break;
-			case LONG:
-				data = (short) ioReadLong();
-				break;
-			case FLOAT:
-				data = (short) ioReadFloat();
-				break;
-			case DOUBLE:
-				data = (short) ioReadDouble();
-				break;
-			default:
-				throw new NBTException("Tried to read tag as number: " + type);
-			}
-		}
-		tagConsumed();
-		return data;
-	}
-
-
-	@Override
-	public String readStringTag() throws IOException {
-		prepareTag();
-		ensureTag(TagType.STRING);
-		String value = buffer.toString();
-		tagConsumed();
-		return value;
+		return tokens;
 	}
 	
-	@Override
-	protected void prepareTag(boolean skip) throws IOException {
-		ensureOpen();
-		if (prepared)
-			return;
-		prepared = true;
-		buffer.clear();
-		if (isList()) {
-			type = list.type;
-		} else {
-			readKey();
-		}
-		int c = read(true);
-		if (c == -1)
-			throw new IOException("Unexpected end of stream!" + positionString());
-		switch (c) {
-		case '{': // compound type
-			type = TagType.COMPOUND;
-			return;
-		case '[': // list or array of some type
-			reader.mark(2);
-			c = read(false);
-			TagType arrayType = null;
-			switch (c) {
-			case 'B':
-				arrayType = TagType.BYTE_ARRAY;
-				break;
-			case 'I':
-				arrayType = TagType.INT_ARRAY;
-				break;
-			case 'L':
-				arrayType = TagType.LONG_ARRAY;
-				break;
-			default:
-				reader.reset();
-				// list
-				return;
-			}
-			int delimiter = read(false);
-			reader.reset();
-			if (delimiter == ';') {
-				type = arrayType;
-				reader.skip(2); // forward array type
-			}
-			return;
-		default: // some value
+	private static NBT toFloatTag(String key, String rawValue) {
+		final int index = rawValue.length() - 1;
+		final char last = rawValue.charAt(index);
+		String truncated = rawValue.substring(0, index);
+		switch (last) {
+		case 'D', 'd':
+			return TagType.DOUBLE.createTag(key, Double.parseDouble(truncated));
+		case 'F', 'f':
+			return TagType.FLOAT.createTag(key, Float.parseFloat(truncated));
+		default:
+			throw new NBTException("Unknown suffix for float token: " + last);
 		}
 	}
 	
-	private void readEscaped(int endchar) throws IOException {
+	private static NBT toIntTag(String key, String rawValue) {
+		final int index = rawValue.length() - 1;
+		final char last = rawValue.charAt(index);
+		if (Character.isDigit(last)) {
+			return TagType.INT.createTag(key, Integer.parseInt(rawValue));
+		}
+		String truncated = rawValue.substring(0, index);
+		switch (last) {
+		case 'L', 'd':
+			return TagType.LONG.createTag(key, Long.parseLong(truncated));
+		case 'B', 'b':
+			return TagType.BYTE.createTag(key, Byte.parseByte(truncated));
+		case 'S', 's':
+			return TagType.SHORT.createTag(key, Short.parseShort(truncated));
+		default:
+			throw new NBTException("Unknown suffix for int token: " + last);
+		}
+	}
+	
+	private static String unescape(String rawValue) {
+		final int length = rawValue.length();
+		if (length == 0)
+			return rawValue;
+		char first = rawValue.charAt(0);
+		if (first != '"' && first != '\'')
+			return rawValue;
+		if (length == 2)
+			return "";
+		StringBuilder builder = new StringBuilder(length - 2);
 		boolean escaped = false;
-		int read = -1;
-		while ((read = read(false)) > 0) { // escaped char
+		for (int i = 1; i < length - 1; i++) {
+			char c = rawValue.charAt(i);
 			if (escaped) {
-				switch (read) {
+				switch (c) {
 				case '\\', '"', '\'':
 					break;
 				case 'n':
-					read = '\n';
+					c = '\n';
 					break;
 				case 't':
-					read = '\t';
+					c = '\t';
 					break;
 				case 'b':
-					read = '\b';
+					c = '\b';
 					break;
 				case 'r':
-					read = '\r';
+					c = '\r';
 					break;
 				case 'f':
-					read = '\f';
+					c = '\f';
 					break;
 				default:
-					throw new IOException("Unknown Escaped char (" + (char) read + ")" + positionString());
+					throw new NBTException("Unknown Escaped char (" + c + ") in value: " + rawValue);
 				}
-				buffer.append((char) read);
+				builder.append(c);
 				escaped = false;
 				continue;
 			}
-			if (read == endchar)
-				return; // end reached
-			if (read == '\\') { // next char is escaped char
+			if (c == '\\') { // next char is escaped char
 				escaped = true;
 				continue;
 			}
-			buffer.append((char) read); // add read char
+			builder.append(c); // add read char
 		}
+		return builder.toString();
 	}
 	
-	private void readKey() throws IOException {
-		int c = read(true);
-		if (c == -1)
-			return;
-		boolean ended = false;
-		if (c == '"' || c == '\'') {
-			readEscaped(c);
-		} else {
-			buffer.append((char) c);
-			int read = -1;
-			while ((read = read(false)) > 0 && !Character.isWhitespace(read)) {
-				if (read == ':') {
-					ended = true;
-					break;
-				}
-				buffer.append((char) read);
-			}
-		}
-		if (!ended) {
-			c = read(true);
-			if (c != ':')
-				throw new IOException("Expected key end (:) not: " + (char) c + positionString());
-		}
-		hasName = true;
-		name.clear();
-		name.append(buffer);
-		buffer.clear();
-	}
-	
-	private String positionString() {
-		return " (at line: " + line + " column: " + column + ")";
-	}
-	
-	private int read(boolean skipWihtespaces) throws IOException {
-		while (true) {
-			int c = reader.read();
-			if (c == -1)
-				return -1;
-			column++;
-			if (c == '\n') {
-				line++;
-				column = 0;
-			}
-			if (skipWihtespaces && Character.isWhitespace(c))
+	private static NBT toCompoundTag(String key, ListIterator<Token> iterator) {
+		CompoundTag compound = new CompoundTag(key);
+		boolean end = false;
+		while (iterator.hasNext()) {
+			int nextIndex = iterator.nextIndex();
+			NBT tag = toNBT(iterator);
+			if (tag != null) {
+				if (tag.getName() == null)
+					throw new NBTException("CompoundTag element may not have null key! Token: " + nextIndex);
+				compound.addTag(tag);
 				continue;
-			return c;
+			}
+			nextIndex = iterator.previousIndex();
+			Token endToken = iterator.previous();
+			if (!endToken.token.equals("}"))
+				throw new NBTException("Invalid end token(" + endToken.token + "): " + nextIndex);
+			iterator.next();
+			end = true;
+			break;
+		}
+		if (!end)
+			throw new NBTException("No end token found!");
+		return compound;
+	}
+	
+	private static NBT toArrayTag(String key, String token, ListIterator<Token> iterator) {
+		if (token.length() > 1) { // array
+			TagType arrayType = null;
+			TagType elementType = null;
+			Object values = null;
+			boolean end = false;
+			switch (token.charAt(1)) {
+			case 'I', 'i':
+				arrayType = TagType.INT_ARRAY;
+				elementType = TagType.INT;
+				values = new IntArrayList();
+				break;
+			case 'B', 'b':
+				arrayType = TagType.BYTE_ARRAY;
+				elementType = TagType.BYTE;
+				values = new ByteArrayList();
+				break;
+			case 'L', 'l':
+				arrayType = TagType.LONG_ARRAY;
+				elementType = TagType.LONG;
+				values = new LongArrayList();
+				break;
+			default:
+				throw new NBTException("Unknown list token(" + token + "): " + iterator.previousIndex());
+			}
+			while (iterator.hasNext()) {
+				int nextIndex = iterator.nextIndex();
+				NBT tag = toNBT(iterator);
+				if (tag != null) {
+					if (tag.getName() != null)
+						throw new NBTException("Array element may not have key! Token: " + nextIndex);
+					if (tag.getType() != elementType)
+						throw new NBTException(arrayType + " may not contain elements of type: " + tag.getType() + "! Token: " + nextIndex);
+					switch (elementType) {
+					case INT:
+						IntArrayList intList = (IntArrayList) values;
+						intList.add(((IntTag)tag).asInteger());
+						break;
+					case BYTE:
+						ByteArrayList byteList = (ByteArrayList) values;
+						byteList.add(((ByteTag)tag).asByte());
+						break;
+					case LONG:
+						LongArrayList longList = (LongArrayList) values;
+						longList.add(((LongTag)tag).asLong());
+						break;
+					default:
+						throw new NBTException("Unexpected element type: " + elementType);
+					}
+					continue;
+				}
+				nextIndex = iterator.previousIndex();
+				Token endToken = iterator.previous();
+				if (!endToken.token.equals("]"))
+					throw new NBTException("Invalid end token(" + endToken.token + "): " + nextIndex);
+				iterator.next();
+				end = true;
+				break;
+			}
+			if (!end)
+				throw new NBTException("No end token found!");
+			switch (arrayType) {
+			case BYTE_ARRAY:
+				return new ByteArrayTag(key, ((ByteArrayList) values).toByteArray());
+			case INT_ARRAY:
+				return new IntArrayTag(key, ((IntArrayList) values).toIntArray());
+			case LONG_ARRAY:
+				return new LongArrayTag(key, ((LongArrayList) values).toLongArray());
+			default:
+				throw new NBTException("Unexpected array type: " + arrayType);
+			}
+		} else { // list
+			ListTag list = new ListTag();
+			list.setName(key);
+			boolean end = false;
+			while (iterator.hasNext()) {
+				int nextIndex = iterator.nextIndex();
+				NBT tag = toNBT(iterator);
+				if (tag != null) {
+					if (tag.getName() != null)
+						throw new NBTException("ListTag element may not have key! Token: " + nextIndex);
+					list.addTag(tag);
+					continue;
+				}
+				nextIndex = iterator.previousIndex();
+				Token endToken = iterator.previous();
+				if (!endToken.token.equals("]"))
+					throw new NBTException("Invalid end token(" + endToken.token + "): " + nextIndex);
+				iterator.next();
+				end = true;
+				break;
+			}
+			if (!end)
+				throw new NBTException("No end token found!");
+			if (list.getPayloadSize() == 0)
+				return new ListTag(key, TagType.TAG_END);
+			return list;
 		}
 	}
 	
-	@SuppressWarnings("unlikely-arg-type")
-	private TagType identifySimpleType() {
-		if (DOUBLE_PATTERN.matcher(buffer).matches()) {
-			buffer.setLength(buffer.length()-1);
-			return TagType.DOUBLE;
-		} else if (FLOAT_PATTERN.matcher(buffer).matches()) {
-			buffer.setLength(buffer.length()-1);
-			return TagType.FLOAT;
-		} else if (LONG_PATTERN.matcher(buffer).matches()) {
-			buffer.setLength(buffer.length()-1);
-			return TagType.LONG;
-		} else if (SHORT_PATTERN.matcher(buffer).matches()) {
-			buffer.setLength(buffer.length()-1);
-			return TagType.SHORT;
-		} else if (BYTE_PATTERN.matcher(buffer).matches()) {
-			buffer.setLength(buffer.length()-1);
-			return TagType.BYTE;
-		} else if (DOUBLE_NOT_SUFFIXED_PATTERN.matcher(buffer).matches()) {
-			return TagType.DOUBLE;
-		} else if (INT_PATTERN.matcher(buffer).matches()) {
-			return TagType.INT;
-		} else if (buffer.equals(Boolean.toString(true))) {
-			buffer.setLength(0);
-			buffer.append('1');
-			return TagType.BYTE;
-		} else if (buffer.equals(Boolean.toString(false))) {
-			buffer.setLength(0);
-			buffer.append('0');
-			return TagType.BYTE;
-		} return TagType.STRING;
-	}
-	
-	private boolean find(char charr) throws IOException {
-		int read = -1;
-		while ((read = reader.read()) != charr) {
-			if (read == -1) // End of stream
-				return false;
+	private static class Token {
+		
+		public final int tokenType;
+		public final String token;
+		
+		public Token(int tokenType, String token) {
+			this.tokenType = tokenType;
+			this.token = token;
 		}
-		return true;
-	}
-
-	@Override
-	protected void skipTag(boolean skip) throws IOException {
-		// TODO Auto-generated method stub
 		
 	}
-	
-	private byte ioReadByte() {
-		return 0;
-	}
-	
-	private int ioReadInt() {
-		return 0;
-	}
-	
-	private short ioReadShort() {
-		return 0;
-	}
-	
-	private float ioReadFloat() {
-		return 0;
-	}
-	
-	private double ioReadDouble() {
-		return 0;
-	}
-	
-	private long ioReadLong() {
-		return 0;
-	}
-	
+
 }

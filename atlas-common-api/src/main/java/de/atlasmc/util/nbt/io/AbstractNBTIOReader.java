@@ -66,8 +66,8 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 			data = (byte) ioReadByte();
 		} else { // misc number read
 			switch (type) {
-			case BYTE:
-				data =  (byte) ioReadByte();
+			case INT:
+				data =  (byte) ioReadInt();
 				break;
 			case SHORT:
 				data = (byte) ioReadShort();

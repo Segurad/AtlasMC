@@ -10,7 +10,6 @@ import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.BaseComponent;
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.chat.component.TextComponent;
-import de.atlasmc.util.CharSequenceReader;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.TagType;
@@ -41,7 +40,7 @@ public class CoreChatFactory implements ChatFactory {
 	public ChatComponent jsonToComponent(CharSequence json) {
 		if (json == null)
 			throw new IllegalArgumentException("Json can not be null!");
-		SNBTReader reader = new SNBTReader(new CharSequenceReader(json));
+		SNBTReader reader = new SNBTReader(json);
 		ChatComponent comp;
 		try {
 			comp = readComponent(reader);

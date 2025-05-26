@@ -60,6 +60,8 @@ public final class ListTag extends AbstractCollectionTag<ListTag, List<NBT>> imp
 	protected void add(NBT data) {
 		if (data == null) 
 			throw new IllegalArgumentException("NBT can not be null!");
+		if (datatype == null)
+			datatype = data.getType();
 		if (datatype != data.getType()) 
 			throw new IllegalArgumentException("Illegal TagType:" + data.getType().name() + " " + datatype.name() + " expected!");
 		data.setName(null);
