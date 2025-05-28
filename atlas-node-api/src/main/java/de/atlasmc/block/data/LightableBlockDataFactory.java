@@ -1,7 +1,6 @@
 package de.atlasmc.block.data;
 
 import de.atlasmc.block.BlockType;
-import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 
 public class LightableBlockDataFactory extends ClassBlockDataFactory {
@@ -13,7 +12,7 @@ public class LightableBlockDataFactory extends ClassBlockDataFactory {
 		this.lit = lit;
 	}
 	
-	public LightableBlockDataFactory(Configuration cfg) throws ClassNotFoundException {
+	public LightableBlockDataFactory(ConfigurationSection cfg) throws ClassNotFoundException {
 		super(cfg);
 		lit = cfg.getBoolean("lit");
 	}

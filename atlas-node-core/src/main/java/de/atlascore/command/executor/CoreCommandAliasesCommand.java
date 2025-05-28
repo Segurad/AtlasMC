@@ -7,21 +7,30 @@ import de.atlasmc.command.CommandSender;
 import de.atlasmc.command.Commands;
 import de.atlasmc.registry.RegistryValue;
 
-@RegistryValue(registry="atlas:command/executor", key="atlas-core:aliases")
+@RegistryValue(registry="atlas:command/executor", key="atlas:aliases")
 public class CoreCommandAliasesCommand implements CommandExecutor {
 
 	@Override
 	public boolean execute(CommandContext context) {
-		String command = context.getArgument("command", String.class);
+		String command = context.getArgument("command", String.class, false);
 		CommandSender sender = context.getSender();
-		Command cmd = Commands.getCommand(command);
-		if (cmd == null) {
-			context.getSender().sendMessage("No command found with name: " + command);
+		if (command != null) {
+			Command cmd = Commands.getCommand(command);
+			if (cmd == null) {
+				context.getSender().sendMessage("No command found with name: " + command);
+			} else {
+				sender.sendMessage("--- Aliases: " + command + " ---");
+				if (cmd.hasAliases()) {
+					for (String alias : cmd.getAliases())
+						sender.sendMessage("- " + alias);
+				}
+			}
 		} else {
 			sender.sendMessage("--- Aliases: " + command + " ---");
-			if (cmd.hasAliases()) {
-				for (String alias : cmd.getAliases())
-					sender.sendMessage(alias);
+			for (Command cmd : Commands.getCommands()) {
+				if (!cmd.hasAliases())
+					continue;
+				sender.sendMessage("- /" + cmd.getName() + " [" + String.join(", ", cmd.getAliases()) + "]");
 			}
 		}
 		return true;

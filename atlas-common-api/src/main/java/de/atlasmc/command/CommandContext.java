@@ -137,7 +137,7 @@ public class CommandContext {
 		if (validator != null && !validator.isValid(sender))
 			return false; // TODO InvalidCommandSourceException
 		String permission = lastArg.getPermission();
-		if (permission != null && sender.hasPermission(permission))
+		if (permission != null && !sender.hasPermission(permission))
 			return false; // TODO NoPermissionException
 		CommandExecutor exe = lastArg.getExecutor();
 		if (exe != null)

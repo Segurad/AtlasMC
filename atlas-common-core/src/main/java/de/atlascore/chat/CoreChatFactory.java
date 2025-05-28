@@ -143,6 +143,9 @@ public class CoreChatFactory implements ChatFactory {
 				textStart = i;
 			}
 		}
+		if (readText) {
+			current.setValue(legacy.subSequence(textStart, legacy.length()).toString());
+		}
 		return base;
 	}
 
@@ -214,6 +217,7 @@ public class CoreChatFactory implements ChatFactory {
 			throw new IllegalArgumentException("Component can not be null!");
 		StringBuilder builder = new StringBuilder();
 		buildConsole(builder, component);
+		builder.append(ChatColor.RESET.getConsoleFormat());
 		return builder.toString();
 	}
 	

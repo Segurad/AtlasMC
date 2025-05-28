@@ -1,7 +1,6 @@
 package de.atlasmc.block.data;
 
 import de.atlasmc.block.BlockType;
-import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 
 public class WaterloggedBlockDataFactory extends ClassBlockDataFactory {
@@ -13,7 +12,7 @@ public class WaterloggedBlockDataFactory extends ClassBlockDataFactory {
 		this.waterlogged = waterlogged;
 	}
 	
-	public WaterloggedBlockDataFactory(Configuration cfg) throws ClassNotFoundException {
+	public WaterloggedBlockDataFactory(ConfigurationSection cfg) throws ClassNotFoundException {
 		super(cfg);
 		waterlogged = cfg.getBoolean("waterlogged");
 	}

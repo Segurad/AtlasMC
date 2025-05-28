@@ -7,7 +7,6 @@ import java.util.Set;
 
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.BlockType;
-import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 
 /**
@@ -24,7 +23,7 @@ public class MultipleFacingBlockDataFactory extends ClassBlockDataFactory {
 		this.faces = faces;
 	}
 	
-	public MultipleFacingBlockDataFactory(Configuration cfg) throws ClassNotFoundException {
+	public MultipleFacingBlockDataFactory(ConfigurationSection cfg) throws ClassNotFoundException {
 		super(cfg);
 		List<String> rawFaces = cfg.getStringList("faces");
 		List<BlockFace> faces = new ArrayList<>(rawFaces.size());

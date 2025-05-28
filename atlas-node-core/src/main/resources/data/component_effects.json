@@ -1,6 +1,7 @@
 [
 	{
 		"type": "de.atlasmc.inventory.component.effect.ClassComponentEffectFactory",
+		"registry": "atlas:factory/component_effect_factory",
 		"configurations": [
 			{
 				"name": "minecraft:apply_effects",
@@ -30,6 +31,7 @@
 	},
 	{
 		"type": "de.atlasmc.inventory.component.effect.SingletonComponentEffectFactory",
+		"registry": "atlas:factory/component_effect_factory",
 		"configurations": [
 			{
 				"name": "minecraft:clear_all_effects",

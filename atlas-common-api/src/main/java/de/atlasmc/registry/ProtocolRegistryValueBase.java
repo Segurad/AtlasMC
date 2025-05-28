@@ -3,6 +3,7 @@ package de.atlasmc.registry;
 import java.io.IOException;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -22,6 +23,22 @@ public class ProtocolRegistryValueBase implements ProtocolRegistryValue {
 			this.clientKey = clientKey;
 		}
 		this.id = id;
+	}
+	
+	protected ProtocolRegistryValueBase(String key, String clientKey, int id) {
+		if (key == null)
+			throw new IllegalArgumentException("Key can not be null!");
+		this.key = NamespacedKey.literal(key);
+		if (clientKey == null) {
+			this.clientKey = this.key;
+		} else {
+			this.clientKey = NamespacedKey.literal(clientKey);
+		}
+		this.id = id;
+	}
+	
+	protected ProtocolRegistryValueBase(ConfigurationSection cfg) {
+		this(cfg.getString("key"), cfg.getString("clientKey"), cfg.getInt("id", -1));
 	}
 	
 	protected ProtocolRegistryValueBase(NamespacedKey key, int id) {

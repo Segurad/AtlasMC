@@ -17,7 +17,6 @@ import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.util.annotation.InternalAPI;
 import de.atlasmc.util.annotation.NotNull;
-import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.ConfigurationSerializeable;
 import de.atlasmc.util.configuration.file.JsonConfiguration;
@@ -246,7 +245,12 @@ public class Registries {
 		reader.beginArray();
 		while (reader.hasNext()) {
 			JsonConfiguration config = JsonConfiguration.loadConfiguration(reader);
-			Registry<Object> registry = Registries.getRegistry(config.getString("registry"));
+			String key = config.getString("registry");
+			if (key == null)
+				throw new FactoryException("No registry key defined in resource: " + resource);
+			Registry<Object> registry = Registries.getRegistry(key);
+			if (registry == null)
+				throw new FactoryException("Unable to find registry: " + key);
 			Class<?> registryType = registry.getType();
 			Class<?> typeClass;
 			String rawType = config.getString("type");
@@ -260,9 +264,9 @@ public class Registries {
 				throw new FactoryException("Given type (" + rawType + ") is not compatiple with registry: " + registry.getNamespacedKeyRaw());
 			Constructor<?> constructor = null;
 			try {
-				constructor = typeClass.getConstructor(Configuration.class);
+				constructor = typeClass.getConstructor(ConfigurationSection.class);
 			} catch (NoSuchMethodException | SecurityException e) {
-				throw new FactoryException("Error while fetching constructor!", e);
+				throw new FactoryException("Error while fetching constructor of type: " + typeClass, e);
 			}
 			List<ConfigurationSection> configurations = config.getConfigurationList("configurations");
 			for (ConfigurationSection cfg : configurations) {
@@ -274,7 +278,7 @@ public class Registries {
 					entry = constructor.newInstance(params);
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 						| InvocationTargetException e) {
-					throw new FactoryException("Error while instaciating entry: " + name, e);
+					throw new FactoryException("Error while instaciating entry: " + name + " of type: " + typeClass, e);
 				}
 				if (name == null) {
 					if (entry instanceof Namespaced keyed) {

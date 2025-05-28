@@ -10,6 +10,7 @@ import de.atlasmc.registry.ProtocolRegistryValueBase;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
+import de.atlasmc.util.configuration.ConfigurationSection;
 
 @RegistryHolder(key = "minecraft:item", target = Target.PROTOCOL)
 public class ItemType extends ProtocolRegistryValueBase {
@@ -1409,8 +1410,8 @@ public class ItemType extends ProtocolRegistryValueBase {
 	
 	private Map<NamespacedKey, ItemComponent> defaultComponents;
 	
-	public ItemType() {
-		super();
+	public ItemType(ConfigurationSection cfg) {
+		super(cfg.getString("key"), cfg.getString("clientKey"), cfg.getInt("itemID", -1));
 	}
 	
 	public boolean hasDefaultComponents() {

@@ -22,9 +22,9 @@ class CoreAtlasNetworkConnectMasterStageHandler implements StartupStageHandler {
 		CoreAtlasNetworkHandlerBuilder builder = context.getContext("builder");
 		builder.setNodeManager(new CoreNodeManager())
 			.setServerManager(new CoreServerManager(AtlasMaster.getServerManager()))
-			.setProfileHandler(null)
+			.setProfileHandler(AtlasMaster.getProfileManager())
 			.setPermissionManager(AtlasMaster.getPermissionManager())
-			.setUUID(null)
+			.setUUID(AtlasMaster.getUUID())
 			.setPublicKey(Atlas.getKeyPair().getPublic());
 	}
 	

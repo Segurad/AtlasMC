@@ -99,6 +99,7 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 		AtlasMasterBuilder builder = context.getContext("builder");
 		builder.setLogger(masterLogger)
 				.setDatabase(con)
+				.setUUID(nodeID)
 				.setNodeManager(new CoreNodeManager())
 				.setProxyManager(new CoreProxyManager())
 				.setServerManager(new CoreServerManager())

@@ -2,7 +2,6 @@ package de.atlasmc.block.data;
 
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.BlockType;
-import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 
 public class DirectionalBlockDataFactory extends ClassBlockDataFactory {
@@ -16,7 +15,7 @@ public class DirectionalBlockDataFactory extends ClassBlockDataFactory {
 		this.direction = direction;
 	}
 	
-	public DirectionalBlockDataFactory(Configuration cfg) throws ClassNotFoundException {
+	public DirectionalBlockDataFactory(ConfigurationSection cfg) throws ClassNotFoundException {
 		super(cfg);
 		direction = BlockFace.valueOf(cfg.getString("direction"));
 	}

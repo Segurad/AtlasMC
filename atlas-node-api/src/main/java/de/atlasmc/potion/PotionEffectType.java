@@ -8,6 +8,7 @@ import de.atlasmc.registry.ProtocolRegistryValueBase;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
+import de.atlasmc.util.configuration.ConfigurationSection;
 
 @RegistryHolder(key = "atlas:potion_effect_type", target = Target.PROTOCOL)
 public abstract class PotionEffectType extends ProtocolRegistryValueBase  {
@@ -64,6 +65,11 @@ public abstract class PotionEffectType extends ProtocolRegistryValueBase  {
 	public PotionEffectType(NamespacedKey key, int id, int color) {
 		super(key, id);
 		this.color = color;
+	}
+	
+	public PotionEffectType(ConfigurationSection cfg) {
+		super(cfg);
+		this.color = cfg.getInt("color");
 	}
 	
 	public int getColor() {

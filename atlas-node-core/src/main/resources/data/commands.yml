@@ -58,17 +58,18 @@ commands:
   aliases:
   - a
   cmd-description: "Provides information about command aliases"
+  executor: atlas:aliases
   args:
   - type: var
     name: command
     parser: brigadier:string
     description: "Provides a list of all aliases of the given command"
-    executor: atlas-core:aliases
+    executor: atlas:aliases
 # === Info ===================================================================
 - name: info
   cmd-description: "Shows some general system information"
   allowed-sources: CONSOLE
-  executor: atlas-core:info
+  executor: atlas:info
   permission: atlas.info
 # === confirm ================================================================
 - name: confirmation

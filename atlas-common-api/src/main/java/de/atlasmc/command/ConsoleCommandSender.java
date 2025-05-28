@@ -9,5 +9,9 @@ public interface ConsoleCommandSender extends CommandSender {
 	String readLine(String prompt, Character mask);
 	
 	String readLine(Character mask);
+	
+	boolean hasColors();
+	
+	void setUseColor(boolean colors);
 
 }

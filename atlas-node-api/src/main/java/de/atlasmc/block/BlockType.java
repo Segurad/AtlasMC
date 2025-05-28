@@ -9,7 +9,12 @@ import de.atlasmc.map.MapColor;
 import de.atlasmc.registry.ProtocolRegistry;
 import de.atlasmc.registry.ProtocolRegistryValueBase;
 import de.atlasmc.registry.Registries;
+import de.atlasmc.registry.Registry;
+import de.atlasmc.registry.RegistryHolder;
+import de.atlasmc.registry.RegistryHolder.Target;
+import de.atlasmc.util.configuration.ConfigurationSection;
 
+@RegistryHolder(key = "minecraft:block", target = Target.PROTOCOL)
 public class BlockType extends ProtocolRegistryValueBase {
 	
 	private static final ProtocolRegistry<BlockType> REGISTRY;
@@ -1128,6 +1133,24 @@ public class BlockType extends ProtocolRegistryValueBase {
 		this.toughness = toughness;
 		this.explosionResistance = explosionResistance;
 		this.colorID = colorID;
+	}
+	
+	public BlockType(ConfigurationSection cfg) {
+		super(cfg.getString("key"), cfg.getString("clientKey"), cfg.getInt("blockID", -1));
+		this.blockStateID = (short) cfg.getInt("blockStateID");
+		this.toughness = cfg.getFloat("toughness");
+		this.explosionResistance = cfg.getFloat("explosionResistance");
+		this.colorID = (byte) cfg.getInt("colorID");
+		String tileKey = cfg.getString("tileEntityFactory");
+		if (tileKey != null) {
+			Registry<TileEntityFactory> tileFactory = Registries.getRegistry(TileEntityFactory.class);
+			this.tileEntityFactory = tileFactory.get(tileKey);
+		}
+		String blockKey = cfg.getString("blockDataFactory");
+		if (blockKey != null) {
+			Registry<BlockDataFactory> blockFactory = Registries.getRegistry(BlockDataFactory.class);
+			this.blockDataFactory = blockFactory.get(blockKey);
+		}
 	}
 	
 	/**

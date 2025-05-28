@@ -1,5 +1,7 @@
 package de.atlasmc.master;
 
+import java.util.UUID;
+
 import de.atlasmc.log.Log;
 import de.atlasmc.master.node.NodeManager;
 import de.atlasmc.master.proxy.ProxyManager;
@@ -16,6 +18,7 @@ public class AtlasMasterBuilder implements Builder<Boolean> {
 	private PermissionManager permissionManager;
 	private ProfileManager profileManager;
 	private SQLConnectionPool database;
+	private UUID uuid;
 
 	public SQLConnectionPool getDatabase() {
 		return database;
@@ -79,6 +82,15 @@ public class AtlasMasterBuilder implements Builder<Boolean> {
 		this.profileManager = profileManager;
 		return this;
 	}
+	
+	public UUID getUUID() {
+		return uuid;
+	}
+	
+	public AtlasMasterBuilder setUUID(UUID uuid) {
+		this.uuid = uuid;
+		return this;
+	}
 
 	@Override
 	public Boolean build() {
@@ -94,6 +106,7 @@ public class AtlasMasterBuilder implements Builder<Boolean> {
 		profileManager = null;
 		proxyManager = null;
 		serverManager = null;
+		uuid = null;
 	}
 
 }

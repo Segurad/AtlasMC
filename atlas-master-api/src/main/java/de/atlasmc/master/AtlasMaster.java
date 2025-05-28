@@ -1,6 +1,7 @@
 package de.atlasmc.master;
 
 import java.util.Collection;
+import java.util.UUID;
 
 import de.atlasmc.atlasnetwork.NetworkInfo;
 import de.atlasmc.datarepository.Repository;
@@ -20,6 +21,7 @@ public class AtlasMaster {
 	private static ProfileManager profileManager;
 	private static boolean init;
 	private static SQLConnectionPool database;
+	private static UUID uuid;
 	
 	protected AtlasMaster() {}
 	
@@ -34,6 +36,7 @@ public class AtlasMaster {
 			permissionManager = builder.getPermissionManager();
 			profileManager = builder.getProfileManager();
 			database = builder.getDatabase();
+			uuid = builder.getUUID();
 		}
 	}
 	
@@ -113,6 +116,10 @@ public class AtlasMaster {
 	public static void setNetworkInfoMaintenance(NetworkInfo info) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public static UUID getUUID() {
+		return uuid;
 	}
 
 }

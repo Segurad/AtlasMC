@@ -15,11 +15,11 @@ public class CoreDataRepositoryListCommand implements CommandExecutor {
 	public boolean execute(CommandContext context) {
 		CommandSender sender = context.getSender();
 		String reponame = context.getArgument("repo", String.class, false);
-		if (reponame == null) {
+		if (reponame != null) {
 			LocalRepository repo = Atlas.getDataHandler().getLocalRepo(reponame);
 			if (repo != null) {
 				for (RepositoryNamespace ns : repo.getNamespaces()) {
-					sender.sendMessage(" - " + ns.getNamespace());
+					sender.sendMessage("- " + ns.getNamespace());
 				}
 			} else {
 				sender.sendMessage("No repository found with name: " + reponame);
@@ -28,7 +28,7 @@ public class CoreDataRepositoryListCommand implements CommandExecutor {
 		}
 		sender.sendMessage("--- Repositories ---");
 		for (LocalRepository repo : Atlas.getDataHandler().getLocalRepos()) {
-			sender.sendMessage(" - " + repo.getName());
+			sender.sendMessage("- " + repo.getName());
 		}
 		return true;
 	}

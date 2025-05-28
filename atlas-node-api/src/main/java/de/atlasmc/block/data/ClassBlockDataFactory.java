@@ -1,15 +1,14 @@
 package de.atlasmc.block.data;
 
 import de.atlasmc.block.BlockType;
-import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.ConfigurationSerializeable;
-import de.atlasmc.util.factory.BaseClassFactory;
+import de.atlasmc.util.factory.ClassFactory;
 
 /**
  * Class based {@link ItemMetaFactory} for Materials
  */
-public class ClassBlockDataFactory extends BaseClassFactory<BlockData> implements BlockDataFactory, ConfigurationSerializeable {
+public class ClassBlockDataFactory extends ClassFactory<BlockData> implements BlockDataFactory, ConfigurationSerializeable {
 	
 	protected final Class<? extends BlockData> dataInterface;
 	
@@ -28,19 +27,19 @@ public class ClassBlockDataFactory extends BaseClassFactory<BlockData> implement
 	 * @param data class must have a constructor ({@link BlockType})
 	 */
 	protected <B extends BlockData> ClassBlockDataFactory(Class<B> dataInterface, Class<? extends B> data, Class<?>... parameterTypes) {
-		super(data);
+		super(data, parameterTypes);
 		if (dataInterface == null)
 			throw new IllegalArgumentException("DataInterface can not be null!");
 		if (!dataInterface.isAssignableFrom(data))
-			throw new IllegalArgumentException("DataInterface is not assignable from Data!");
+			throw new IllegalArgumentException("DataInterface (" + dataInterface + ") is not assignable from Data (" + data + ")!");
 		this.dataInterface = dataInterface;
 	}
 	
-	protected ClassBlockDataFactory(ConfigurationSection cfg, Class<?>... parameterTypes) throws ClassNotFoundException {
+	protected ClassBlockDataFactory(ConfigurationSection cfg, Class<?>... parameterTypes) {
 		this(getClass(cfg.getString("dataInterface")), getClass(cfg.getString("data")), parameterTypes);
 	}
 	
-	public ClassBlockDataFactory(Configuration cfg) throws ClassNotFoundException {
+	public ClassBlockDataFactory(ConfigurationSection cfg) {
 		this(cfg, BlockType.class);
 	}
 

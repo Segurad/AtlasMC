@@ -56,6 +56,7 @@ public class CommandContextBuilder implements Builder<CommandContext> {
 	
 	public CommandContextBuilder setCommand(Command command) {
 		this.command = command;
+		setLastArg(command);
 		return this;
 	}
 	

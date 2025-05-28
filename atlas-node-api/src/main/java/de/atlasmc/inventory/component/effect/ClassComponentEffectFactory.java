@@ -2,15 +2,15 @@ package de.atlasmc.inventory.component.effect;
 
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.ConfigurationSerializeable;
-import de.atlasmc.util.factory.BaseClassFactory;
+import de.atlasmc.util.factory.ClassFactory;
 
-public class ClassComponentEffectFactory extends BaseClassFactory<ComponentEffect> implements ComponentEffectFactory, ConfigurationSerializeable {
+public class ClassComponentEffectFactory extends ClassFactory<ComponentEffect> implements ComponentEffectFactory, ConfigurationSerializeable {
 	
 	public ClassComponentEffectFactory(Class<? extends ComponentEffect>  clazz) {
 		super(clazz);
 	}
 	
-	public ClassComponentEffectFactory(ConfigurationSection config) throws ClassNotFoundException {
+	public ClassComponentEffectFactory(ConfigurationSection config) {
 		this(getClass(config.getString("effect")));
 	}
 	

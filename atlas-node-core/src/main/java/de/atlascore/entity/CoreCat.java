@@ -28,14 +28,13 @@ public class CoreCat extends CoreTameable implements Cat {
 	protected static final NBTFieldSet<CoreCat> NBT_FIELDS;
 	
 	protected static final CharKey
-	NBT_CAT_TYPE = CharKey.literal("CatType"), // TODO will change to "Type" in 1.19 and switches from byte to NamespacedKey as id
+	NBT_VARIANT = CharKey.literal("variant"), 
 	NBT_COLLAR_COLOR = CharKey.literal("CollarColor");
-	// NBT_Type = "Type", TODO 1.19
 	
 	static {
 		NBT_FIELDS = CoreTameable.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_CAT_TYPE, (holder, reader) -> {
-			holder.setCatType(Type.getByID(reader.readByteTag()));
+		NBT_FIELDS.setField(NBT_VARIANT, (holder, reader) -> {
+			holder.setCatType(Type.getByName(reader.readStringTag()));
 		});
 		NBT_FIELDS.setField(NBT_COLLAR_COLOR, (holder, reader) -> {
 			holder.setCollarColor(DyeColor.getByID(reader.readByteTag()));
@@ -112,7 +111,7 @@ public class CoreCat extends CoreTameable implements Cat {
 	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
-		writer.writeByteTag(NBT_CAT_TYPE, getCatType().getID());
+		writer.writeByteTag(NBT_VARIANT, getCatType().getID());
 		writer.writeByteTag(NBT_COLLAR_COLOR, getCollarColor().getID());
 	}
 

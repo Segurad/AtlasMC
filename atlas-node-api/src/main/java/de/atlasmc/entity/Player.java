@@ -70,6 +70,8 @@ public interface Player extends HumanEntity, Permissible, Messageable, SoundList
 	void playEffect(SimpleLocation loc, WorldEvent effect, Object data, boolean relativeSound);
 	
 	void playEffect(int x, int y, int z, WorldEvent effect, Object data, boolean relativeSound);
+	
+	void setConnection(PlayerConnection con);
 
 	PlayerConnection getConnection();
 	

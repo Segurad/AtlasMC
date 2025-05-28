@@ -2,15 +2,15 @@ package de.atlasmc.inventory.component;
 
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.ConfigurationSerializeable;
-import de.atlasmc.util.factory.BaseClassFactory;
+import de.atlasmc.util.factory.ClassFactory;
 
-public class ClassItemComponentFactory extends BaseClassFactory<ItemComponent> implements ItemComponentFactory, ConfigurationSerializeable {
+public class ClassItemComponentFactory extends ClassFactory<ItemComponent> implements ItemComponentFactory, ConfigurationSerializeable {
 
 	public ClassItemComponentFactory(Class<? extends ItemComponent> clazz) {
 		super(clazz);
 	}
 	
-	public ClassItemComponentFactory(ConfigurationSection config) throws ClassNotFoundException {
+	public ClassItemComponentFactory(ConfigurationSection config) {
 		super(getClass(config.getString("component")));
 	}
 

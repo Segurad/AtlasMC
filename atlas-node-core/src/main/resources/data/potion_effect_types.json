@@ -1,6 +1,6 @@
 [
     {
-        "type": "de.atlasmc.potion.PotionEffectType",
+        "type": "de.atlascore.potion.CoreClassPotionEffectType",
         "registry": "atlas:potion_effect_type",
         "configurations": [
             {
@@ -8,6 +8,7 @@
                 "parameters": {
                     "key": "minecraft:absorption",
                     "id": 21,
+					"color": 2445989,
                     "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
                 }
             },
@@ -16,6 +17,7 @@
                 "parameters": {
                     "key": "minecraft:bad_omen",
                     "id": 30,
+					"color": 14565464,
                     "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
                 }
             },
@@ -24,6 +26,7 @@
                 "parameters": {
                     "key": "minecraft:blindness",
                     "id": 14,
+					"color": 2039587,
                     "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
                 }
             },

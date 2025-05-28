@@ -1,7 +1,6 @@
 package de.atlasmc.block.data;
 
 import de.atlasmc.block.BlockType;
-import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 
 /**
@@ -16,7 +15,7 @@ public class LevelledClassBlockDataFactory extends ClassBlockDataFactory {
 		this.maxlevel = maxlevel;
 	}
 	
-	public LevelledClassBlockDataFactory(Configuration cfg) throws ClassNotFoundException {
+	public LevelledClassBlockDataFactory(ConfigurationSection cfg) throws ClassNotFoundException {
 		super(cfg, BlockType.class, int.class);
 		maxlevel = cfg.getInt("maxlevel");
 	}

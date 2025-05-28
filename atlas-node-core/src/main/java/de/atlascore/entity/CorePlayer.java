@@ -92,12 +92,9 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	private Object pluginData;
 	private DiggingHandler digging;
 	
-	public CorePlayer(EntityType type, UUID uuid, PlayerConnection con) {
+	public CorePlayer(EntityType type, UUID uuid) {
 		super(type, uuid);
 		view = new CoreInventoryView(this, getInventory(), getCraftingInventory(), 0);
-		this.con = con;
-		this.nodePlayer = con.getNodePlayer();
-		this.atlasPlayer = con.getNodePlayer().getAtlasPlayer();
 		this.digging = new CorePlayerDiggingHandler(this);
 	}
 	
@@ -299,6 +296,18 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 		return this.cursorItem;
 	}
 
+	@Override
+	public void setConnection(PlayerConnection con) {
+		this.con = con;
+		if (con != null) {
+			this.nodePlayer = con.getNodePlayer();
+			this.atlasPlayer = con.getNodePlayer().getAtlasPlayer();
+		} else {
+			this.nodePlayer = null;
+			this.atlasPlayer = null;
+		}
+	}
+	
 	@Override
 	public PlayerConnection getConnection() {
 		return con;

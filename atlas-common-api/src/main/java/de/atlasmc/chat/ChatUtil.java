@@ -110,7 +110,7 @@ public final class ChatUtil {
 	}
 	
 	public static ChatComponent legacyToComponent(CharSequence legacy) {
-		return legacyToComponent(legacy, '§');
+		return legacyToComponent(legacy, DEFAULT_CHAT_FORMAT_PREFIX);
 	}
 	
 	public static ChatComponent legacyToComponent(CharSequence legacy, char formatPrefix) {
@@ -118,7 +118,7 @@ public final class ChatUtil {
 	}
 	
 	public static String componentToLegacy(ChatComponent component) {
-		return componentToLegacy(component, '§');
+		return componentToLegacy(component, DEFAULT_CHAT_FORMAT_PREFIX);
 	}
 	
 	/**

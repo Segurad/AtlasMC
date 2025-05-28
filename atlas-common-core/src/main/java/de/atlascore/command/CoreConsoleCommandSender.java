@@ -15,6 +15,7 @@ public class CoreConsoleCommandSender implements ConsoleCommandSender {
 
 	private final Console console;
 	private final Scanner scanner;
+	private volatile boolean colorConsole = true;
 	
 	public CoreConsoleCommandSender() throws IOException {
 		this.console = System.console();
@@ -69,21 +70,47 @@ public class CoreConsoleCommandSender implements ConsoleCommandSender {
 
 	@Override
 	public void sendMessage(Chat chat) {
-		sendMessage(chat.toComponent());
+		if (colorConsole) {
+			internalSend(ChatUtil.componentToConsole(chat.toComponent()));
+		} else {
+			internalSend(chat.toRawText());
+		}
 	}
 
 	@Override
 	public void sendMessage(String message) {
-		sendMessage(ChatUtil.legacyToComponent(message));
+		if (colorConsole) {
+			sendMessage(ChatUtil.legacyToComponent(message));
+		} else {
+			internalSend(ChatUtil.legacyToRawText(message));
+		}
 	}
 
 	@Override
 	public void sendMessage(String message, ChatType type, String source, String target) {
+		if (colorConsole) {
 		sendMessage(ChatUtil.legacyToComponent(message));
+		} else {
+			internalSend(ChatUtil.legacyToRawText(message));
+		}
 	}
 	
 	private void sendMessage(ChatComponent chat) {
-		System.out.println(ChatUtil.componentToConsole(chat));
+		internalSend(ChatUtil.componentToConsole(chat));
+	}
+	
+	private void internalSend(String message) {
+		System.out.println(message);
+	}
+	
+	@Override
+	public boolean hasColors() {
+		return colorConsole;
+	}
+	
+	@Override
+	public void setUseColor(boolean colors) {
+		this.colorConsole = colors;
 	}
 
 	@Override

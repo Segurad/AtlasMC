@@ -1,6 +1,5 @@
 package de.atlasmc.entity;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
@@ -9,15 +8,16 @@ import java.util.UUID;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.registry.ProtocolRegistry;
 import de.atlasmc.registry.ProtocolRegistryValue;
+import de.atlasmc.registry.ProtocolRegistryValueBase;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.configuration.ConfigurationSection;
+import de.atlasmc.util.factory.ClassFactory;
 import de.atlasmc.world.World;
 
 @RegistryHolder(key="atlas:entity_type", target = Target.PROTOCOL)
-public class EntityType implements ProtocolRegistryValue {
+public class EntityType extends ProtocolRegistryValueBase implements ProtocolRegistryValue {
 	
 	private static final ProtocolRegistry<EntityType> REGISTRY;
 	
@@ -176,9 +176,7 @@ public class EntityType implements ProtocolRegistryValue {
 	ZOMBIE_VILLAGER = NamespacedKey.literal("minecraft:zombie_villager"),
 	ZOMBIFIED_PIGLIN = NamespacedKey.literal("minecraft:zombified_piglin");
 	
-	private final NamespacedKey key;
 	private final Class<? extends Entity> clazz;
-	private final int id;
 	private final Constructor<? extends Entity> constructor;
 	
 	/**
@@ -188,18 +186,17 @@ public class EntityType implements ProtocolRegistryValue {
 	 * @param clazz the entity class needs to have a constructor({@link EntityType}, {@link UUID}, {@link World})
 	 */
 	public EntityType(NamespacedKey key, int id, Class<? extends Entity> clazz) {
-		if (key == null)
-			throw new IllegalArgumentException("Key can not be null!");
+		super(key, id);
 		if (clazz == null) 
 			throw new IllegalArgumentException("Class can not be null!");
-		this.key = key;
-		this.id = id;
 		this.clazz = clazz;
-		try {
-			this.constructor = clazz.getConstructor(EntityType.class, UUID.class);
-		} catch (NoSuchMethodException | SecurityException e) {
-			throw new IllegalArgumentException("Error while fetching constructor of type: " + clazz.getName(), e);
-		}
+		this.constructor = ClassFactory.getConstructor(clazz, EntityType.class, UUID.class);
+	}
+	
+	public EntityType(ConfigurationSection cfg) {
+		super(cfg);
+		this.clazz = ClassFactory.getClass(cfg.getString("entityClass"));
+		this.constructor = ClassFactory.getConstructor(clazz, EntityType.class, UUID.class);
 	}
 	
 	public Class<? extends Entity> getEntityClass() {
@@ -225,11 +222,6 @@ public class EntityType implements ProtocolRegistryValue {
 		return create(world, UUID.randomUUID());
 	}
 	
-	@Override
-	public int getID() {
-		return id;
-	}
-	
 	public static EntityType getByID(int id) {
 		return REGISTRY.getByID(id);
 	}
@@ -251,26 +243,6 @@ public class EntityType implements ProtocolRegistryValue {
 	
 	public static Collection<EntityType> values() {
 		return REGISTRY.values();
-	}
-
-	@Override
-	public NamespacedKey getNamespacedKey() {
-		return key;
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		// not required
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		// not required
-	}
-
-	@Override
-	public boolean hasNBT() {
-		return false;
 	}
 
 }
