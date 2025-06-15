@@ -7,10 +7,10 @@ import java.util.regex.Pattern;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.configuration.ConfigurationSection;
-import de.atlasmc.util.configuration.ConfigurationSerializeable;
+import de.atlasmc.util.configuration.ConfigurationSerializable;
 import de.atlasmc.util.configuration.MemoryConfiguration;
 
-public class ProxyConfig implements Cloneable, ConfigurationSerializeable {
+public class ProxyConfig implements Cloneable, ConfigurationSerializable {
 	
 	private final String name;
 	private final NamespacedKey factory;

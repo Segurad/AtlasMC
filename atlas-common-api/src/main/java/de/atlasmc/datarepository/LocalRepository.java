@@ -3,6 +3,7 @@ package de.atlasmc.datarepository;
 import java.util.Collection;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface LocalRepository extends Repository {
 	
@@ -15,16 +16,20 @@ public interface LocalRepository extends Repository {
 	 */
 	boolean registerNamespace(String namespace, String path);
 
+	@NotNull
 	RepositoryNamespace getNamespace(String key);
 	
+	@NotNull
 	RepositoryNamespace getNamespace(NamespacedKey key);
 
+	@NotNull
 	RepositoryEntry getLocalEntry(NamespacedKey key);
 
 	/**
 	 * Updates all entries of all namespaces
 	 * @return returns a future of all updated entries
 	 */
+	@NotNull
 	Collection<RepositoryEntryUpdate> update();
 
 }

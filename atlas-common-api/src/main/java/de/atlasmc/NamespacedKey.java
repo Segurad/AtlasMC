@@ -41,10 +41,12 @@ public class NamespacedKey {
 		this.combination = namespacedKey;
 	}
 	
+	@NotNull
 	public String getKey() {
 		return key;
 	}
 	
+	@NotNull
 	public String getNamespace() {
 		return namespace;
 	}
@@ -108,9 +110,11 @@ public class NamespacedKey {
 		NamespacedKey getNamespacedKey();
 		
 		/**
-		 * Returns the {@link NamespacedKey} used client side of this Object
+		 * Returns the {@link NamespacedKey} used client side of this Object.
+		 * If no other client key is defined {@link #getNamespacedKey()} should be returned.
 		 * @return key
 		 */
+		@NotNull
 		default NamespacedKey getClientKey() {
 			return getNamespacedKey();
 		}
@@ -139,6 +143,7 @@ public class NamespacedKey {
 		return true;
 	}
 
+	@NotNull
 	public static NamespacedKey of(CharSequence namespacedKey) {
 		if (namespacedKey == null)
 			throw new IllegalArgumentException("NamespacedKey can not be null!");
@@ -154,6 +159,7 @@ public class NamespacedKey {
 		return new NamespacedKey(namespace, key, rawKey);
 	}
 	
+	@NotNull
 	public static NamespacedKey of(String namespace, String key) {
 		if (namespace == null) 
 			throw new IllegalArgumentException("Namespace can not be null!");

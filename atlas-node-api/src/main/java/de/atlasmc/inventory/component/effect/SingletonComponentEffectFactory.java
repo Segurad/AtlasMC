@@ -1,10 +1,10 @@
 package de.atlasmc.inventory.component.effect;
 
 import de.atlasmc.util.configuration.ConfigurationSection;
-import de.atlasmc.util.configuration.ConfigurationSerializeable;
+import de.atlasmc.util.configuration.ConfigurationSerializable;
 import de.atlasmc.util.factory.BaseSingletonFactory;
 
-public class SingletonComponentEffectFactory extends BaseSingletonFactory<ComponentEffect> implements ComponentEffectFactory, ConfigurationSerializeable {
+public class SingletonComponentEffectFactory extends BaseSingletonFactory<ComponentEffect> implements ComponentEffectFactory, ConfigurationSerializable {
 
 	public SingletonComponentEffectFactory(Class<?> clazz) {
 		super(clazz);

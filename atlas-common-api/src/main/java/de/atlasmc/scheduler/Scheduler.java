@@ -13,6 +13,7 @@ public interface Scheduler {
 	 * @param task that should be run
 	 * @return task
 	 */
+	@NotNull
 	AtlasTask runSyncTask(PluginHandle plugin, Runnable task);
 	
 	/**
@@ -22,6 +23,7 @@ public interface Scheduler {
 	 * @param delay in ticks
 	 * @return task
 	 */
+	@NotNull
 	AtlasTask runSyncTaskLater(PluginHandle plugin, Runnable task, long delay);
 	
 	/**
@@ -33,6 +35,7 @@ public interface Scheduler {
 	 * @param repeats number of repeats
 	 * @return task
 	 */
+	@NotNull
 	AtlasTask runSyncTaskFor(PluginHandle plugin, Runnable task, long delay, long period, long repeats);
 	
 	/**
@@ -43,6 +46,7 @@ public interface Scheduler {
 	 * @param period in ticks
 	 * @return task
 	 */
+	@NotNull
 	AtlasTask runSyncRepeatingTask(PluginHandle plugin, Runnable task, long delay, long period);
 	
 	/**
@@ -51,6 +55,7 @@ public interface Scheduler {
 	 * @param task that should be run
 	 * @return task
 	 */
+	@NotNull
 	AtlasTask runAsyncTask(PluginHandle plugin, Runnable task);
 	
 	/**
@@ -60,6 +65,7 @@ public interface Scheduler {
 	 * @param delay
 	 * @return task
 	 */
+	@NotNull
 	AtlasTask runAsyncTaskLater(PluginHandle plugin, Runnable task, long delay);
 	
 	/**
@@ -71,6 +77,7 @@ public interface Scheduler {
 	 * @param repeats
 	 * @return task
 	 */
+	@NotNull
 	AtlasTask runAsyncTaskFor(PluginHandle plugin, Runnable task, long delay, long period, long repeats);
 	
 	/**
@@ -81,6 +88,7 @@ public interface Scheduler {
 	 * @param period
 	 * @return task
 	 */
+	@NotNull
 	AtlasTask runAsyncRepeatingTask(PluginHandle plugin, Runnable task, long delay, long period);
 
 	/**

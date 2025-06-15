@@ -98,6 +98,7 @@ public interface Plugin extends PluginHandle {
 	@NotNull
 	PluginLoader getPluginLoader();
 	
+	@NotNull
 	PrototypePlugin getPrototype();
 
 	@NotNull
@@ -106,8 +107,10 @@ public interface Plugin extends PluginHandle {
 	@NotNull
 	Log getLogger();
 	
+	@Nullable
 	InputStream getResourceAsStream(String name);
 	
+	@Nullable
 	URL getResource(String name);
 	
 	@NotNull

@@ -7,6 +7,7 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.registry.RegistryHolder.Target;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 
 public interface Registry<T> extends Namespaced {
@@ -63,18 +64,25 @@ public interface Registry<T> extends Namespaced {
 	
 	int size();
 	
+	@NotNull
 	Target getTarget();
 	
+	@NotNull
 	Class<?> getType();
 	
+	@NotNull
 	Collection<RegistryEntry<T>> entries();
 	
+	@NotNull
 	Collection<T> values();
 	
+	@NotNull
 	Set<String> keySet();
 	
+	@NotNull
 	Set<PluginHandle> getHandles();
 	
+	@NotNull
 	Collection<RegistryEntry<T>> getPluginEntries(PluginHandle plugin);
 	
 	boolean removePluginEntries(PluginHandle plugin);

@@ -6,7 +6,7 @@ import org.yaml.snakeyaml.representer.Representer;
 
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
-import de.atlasmc.util.configuration.ConfigurationSerializeable;
+import de.atlasmc.util.configuration.ConfigurationSerializable;
 import de.atlasmc.util.configuration.MemoryConfiguration;
 
 public class YamlRepresenter extends Representer {
@@ -14,7 +14,7 @@ public class YamlRepresenter extends Representer {
 	public YamlRepresenter(DumperOptions options) {
 		super(options);
 		super.multiRepresenters.put(ConfigurationSection.class, new RepresentConfigurationSection());
-		super.multiRepresenters.put(ConfigurationSerializeable.class, new RepresentConfigurationSerializeable());
+		super.multiRepresenters.put(ConfigurationSerializable.class, new RepresentConfigurationSerializeable());
 	}
 	
 	private class RepresentConfigurationSection extends RepresentMap {
@@ -30,7 +30,7 @@ public class YamlRepresenter extends Representer {
 		
 		@Override
 		public Node representData(Object data) {
-			ConfigurationSerializeable value = (ConfigurationSerializeable) data;
+			ConfigurationSerializable value = (ConfigurationSerializable) data;
 			Configuration cfg = new MemoryConfiguration();
 			cfg.set("type", value.getClass().getName());
 			value.toConfiguration(cfg.createSection("configuration"));

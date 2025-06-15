@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
+import de.atlasmc.util.annotation.NotNull;
 
 public class Tag<T> implements Namespaced {
 	
@@ -29,6 +30,7 @@ public class Tag<T> implements Namespaced {
 		return identifier;
 	}
 	
+	@NotNull
 	public Class<?> getType() {
 		return type;
 	}
@@ -37,9 +39,11 @@ public class Tag<T> implements Namespaced {
 		return values.contains(element);
 	}
 	
+	@NotNull
 	public Set<T> getValues() {
+		Set<T> view = this.view;
 		if (view == null)
-			view = Collections.unmodifiableSet(values);
+			view = this.view = Collections.unmodifiableSet(values);
 		return view;
 	}
 	

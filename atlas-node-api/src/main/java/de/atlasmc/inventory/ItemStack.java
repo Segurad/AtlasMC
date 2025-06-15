@@ -21,12 +21,16 @@ import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.serialization.NBTSerializable;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 import de.atlasmc.util.nbt.tag.NBT;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 
-public class ItemStack implements NBTHolder {
+public class ItemStack implements NBTHolder, NBTSerializable {
 
+	public static final NBTSerializationHandler<ItemStack> NBT_HANDLER;
+	
 	protected static final NBTFieldSet<ItemStack> NBT_FIELDS;
 	
 	protected static final CharKey
@@ -37,6 +41,11 @@ public class ItemStack implements NBTHolder {
 	NBT_IGNORED_COMPONENTS = CharKey.literal("ignored-components");
 	
 	static {
+		NBT_HANDLER = NBTSerializationHandler
+				.builder(ItemStack.class)
+				.intTag("count", ItemStack::getAmount, ItemStack::setAmount, 1)
+				.build();
+		
 		NBT_FIELDS = NBTFieldSet.newSet();
 		NBT_FIELDS.setField(NBT_ID, NBTField.skip());
 		NBT_FIELDS.setField(NBT_COUNT, (holder, reader) -> {
@@ -442,6 +451,11 @@ public class ItemStack implements NBTHolder {
 		if (ignoredComponents != null)
 			h = 31 * h + ignoredComponents.hashCode();
 		return h;
+	}
+
+	@Override
+	public NBTSerializationHandler<ItemStack> getNBTHandler() {
+		return NBT_HANDLER;
 	}
 	
 }

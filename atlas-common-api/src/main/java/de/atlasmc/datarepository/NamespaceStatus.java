@@ -12,6 +12,7 @@ public interface NamespaceStatus {
 	@NotNull
 	Collection<String> untracked();
 	
+	@NotNull
 	RepositoryNamespace namespace();
 	
 	void track(String key, String file);

@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.List;
 
 import de.atlasmc.util.configuration.ConfigurationSection;
-import de.atlasmc.util.configuration.ConfigurationSerializeable;
+import de.atlasmc.util.configuration.ConfigurationSerializable;
 
-public class NodeConfig implements ConfigurationSerializeable {
+public class NodeConfig implements ConfigurationSerializable {
 	
 	private final String name;
 	private final Collection<String> proxies;

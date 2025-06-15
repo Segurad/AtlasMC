@@ -1,10 +1,10 @@
 package de.atlasmc.inventory.component;
 
 import de.atlasmc.util.configuration.ConfigurationSection;
-import de.atlasmc.util.configuration.ConfigurationSerializeable;
+import de.atlasmc.util.configuration.ConfigurationSerializable;
 import de.atlasmc.util.factory.ClassFactory;
 
-public class ClassItemComponentFactory extends ClassFactory<ItemComponent> implements ItemComponentFactory, ConfigurationSerializeable {
+public class ClassItemComponentFactory extends ClassFactory<ItemComponent> implements ItemComponentFactory, ConfigurationSerializable {
 
 	public ClassItemComponentFactory(Class<? extends ItemComponent> clazz) {
 		super(clazz);

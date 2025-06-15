@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.UUID;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.concurrent.future.Future;
 
 /**
@@ -15,10 +17,13 @@ public interface DataRepositoryHandler {
 	 * Returns the local {@link CacheRepository}
 	 * @return cache
 	 */
+	@NotNull
 	CacheRepository getCache();
 	
+	@NotNull
 	Collection<LocalRepository> getLocalRepos();
 	
+	@NotNull
 	Collection<Repository> getRemoteRepos();
 	
 	void addRepo(Repository repo);
@@ -30,6 +35,7 @@ public interface DataRepositoryHandler {
 	 * @param key
 	 * @return future
 	 */
+	@NotNull
 	Future<RepositoryEntry> getEntry(NamespacedKey key);
 	
 	/**
@@ -38,14 +44,19 @@ public interface DataRepositoryHandler {
 	 * @param load whether or not the entry should be requested from remote
 	 * @return future
 	 */
+	@NotNull
 	Future<RepositoryEntry> getEntry(NamespacedKey key, boolean load);
 
+	@NotNull
 	Future<Collection<RepositoryEntry>> getEntries(Collection<NamespacedKey> keys);
 
+	@Nullable
 	LocalRepository getLocalRepo(String name);
 
+	@Nullable
 	Repository getRepo(String name);
 	
+	@Nullable
 	Repository getRepo(UUID uuid);
 
 	void addRepos(Collection<Repository> repositories);

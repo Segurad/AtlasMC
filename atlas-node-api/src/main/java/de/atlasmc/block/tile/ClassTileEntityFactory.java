@@ -2,13 +2,13 @@ package de.atlasmc.block.tile;
 
 import de.atlasmc.block.BlockType;
 import de.atlasmc.util.configuration.ConfigurationSection;
-import de.atlasmc.util.configuration.ConfigurationSerializeable;
+import de.atlasmc.util.configuration.ConfigurationSerializable;
 import de.atlasmc.util.factory.ClassFactory;
 
 /**
  * Class based {@link TileEntityFactory}
  */
-public class ClassTileEntityFactory extends ClassFactory<TileEntity> implements TileEntityFactory, ConfigurationSerializeable {
+public class ClassTileEntityFactory extends ClassFactory<TileEntity> implements TileEntityFactory, ConfigurationSerializable {
 	
 	private final Class<? extends TileEntity> tileInterface;
 	private final int tileID;

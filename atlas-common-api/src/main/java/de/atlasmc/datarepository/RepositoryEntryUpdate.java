@@ -4,9 +4,11 @@ import java.util.Collection;
 
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.util.Pair;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface RepositoryEntryUpdate extends Namespaced {
 	
+	@NotNull
 	Collection<Pair<String, Change>> getFilesChanged();
 	
 	boolean hasFilesChanged();

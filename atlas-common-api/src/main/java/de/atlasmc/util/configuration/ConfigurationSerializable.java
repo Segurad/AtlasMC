@@ -10,12 +10,12 @@ import de.atlasmc.util.annotation.NotNull;
 /**
  * Represents a Object that can be deserialized from a {@link ConfigurationSection}
  * and serialized as {@link ConfigurationSection}
- * Every class implementing {@link ConfigurationSerializeable} is expected to have a constructor accepting
+ * Every class implementing {@link ConfigurationSerializable} is expected to have a constructor accepting
  * a {@link ConfigurationSection} as only parameter
  */
-public interface ConfigurationSerializeable {
+public interface ConfigurationSerializable {
 	
-	public static <T extends ConfigurationSerializeable> T deserialize(ConfigurationSection section, Class<T> clazz) {
+	public static <T extends ConfigurationSerializable> T deserialize(ConfigurationSection section, Class<T> clazz) {
 		Constructor<T> constructor;
 		try {
 			constructor = clazz.getConstructor(ConfigurationSection.class);
@@ -32,11 +32,11 @@ public interface ConfigurationSerializeable {
 		return instance;
 	}
 	
-	public static <T extends ConfigurationSerializeable> Collection<T> deserialize(Collection<ConfigurationSection> sections, Class<T> clazz) {
+	public static <T extends ConfigurationSerializable> Collection<T> deserialize(Collection<ConfigurationSection> sections, Class<T> clazz) {
 		return deserialize(new ArrayList<>(sections.size()), clazz);
 	}
 	
-	public static <T extends ConfigurationSerializeable, C extends Collection<T>> C deserialize(Collection<ConfigurationSection> sections, Class<T> clazz, C buf) {
+	public static <T extends ConfigurationSerializable, C extends Collection<T>> C deserialize(Collection<ConfigurationSection> sections, Class<T> clazz, C buf) {
 		Constructor<T> constructor;
 		try {
 			constructor = clazz.getConstructor(ConfigurationSection.class);

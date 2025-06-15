@@ -113,23 +113,6 @@ public class CoreAbstractBlockDataComponent extends AbstractItemComponent implem
 	
 	@Override
 	public void read(ByteBuf buf) throws IOException {
-		if (properties == null || properties.isEmpty()) {
-			writeVarInt(0, buf);
-			return;
-		}
-		Map<BlockDataProperty<?>, Object> properties = this.properties;
-		final int size = properties.size();
-		writeVarInt(size, buf);
-		for (Entry<BlockDataProperty<?>, Object> entry : properties.entrySet()) {
-			@SuppressWarnings("unchecked")
-			BlockDataProperty<Object> property = (BlockDataProperty<Object>) entry.getKey();
-			writeString(property.getKey(), buf);
-			writeString(property.toString(entry.getValue()), buf);
-		}
-	}
-	
-	@Override
-	public void write(ByteBuf buf) throws IOException {
 		final int count = readVarInt(buf);
 		if (count == 0)
 			return;
@@ -146,7 +129,23 @@ public class CoreAbstractBlockDataComponent extends AbstractItemComponent implem
 				properties.put(property, value);
 				break;
 			}
-			
+		}
+	}
+	
+	@Override
+	public void write(ByteBuf buf) throws IOException {
+		if (properties == null || properties.isEmpty()) {
+			writeVarInt(0, buf);
+			return;
+		}
+		Map<BlockDataProperty<?>, Object> properties = this.properties;
+		final int size = properties.size();
+		writeVarInt(size, buf);
+		for (Entry<BlockDataProperty<?>, Object> entry : properties.entrySet()) {
+			@SuppressWarnings("unchecked")
+			BlockDataProperty<Object> property = (BlockDataProperty<Object>) entry.getKey();
+			writeString(property.getKey(), buf);
+			writeString(property.toString(entry.getValue()), buf);
 		}
 	}
 

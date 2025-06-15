@@ -6,11 +6,19 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.io.IOReadable;
 import de.atlasmc.io.IOWriteable;
+import de.atlasmc.registry.Registries;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
-import de.atlasmc.util.nbt.NBTHolder;
+import de.atlasmc.util.nbt.serialization.NBTSerializable;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public interface ItemComponent extends NBTHolder, Namespaced, Cloneable, IOReadable, IOWriteable {
+public interface ItemComponent extends NBTSerializable, Namespaced, Cloneable, IOReadable, IOWriteable {
+	
+	public static final NBTSerializationHandler<ItemComponent> 
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(ItemComponent.class)
+					.fieldKeyConstructor(Registries.getRegistry(ItemComponentFactory.class), ItemComponentFactory::createComponent)
+					.build();
 	
 	/**
 	 * Returns the value of the static COMPONENT_KEY field of the given class

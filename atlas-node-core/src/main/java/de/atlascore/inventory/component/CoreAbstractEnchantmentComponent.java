@@ -1,25 +1,29 @@
 package de.atlascore.inventory.component;
 
+import static de.atlasmc.io.PacketUtil.readVarInt;
+import static de.atlasmc.io.PacketUtil.writeVarInt;
+
 import java.io.IOException;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.inventory.component.AbstractEnchantmentComponent;
-import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTFieldSet;
 import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap.Entry;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
-public class CoreAbstractEnchantmentComponent extends AbstractItemComponent implements AbstractEnchantmentComponent {
+public class CoreAbstractEnchantmentComponent extends CoreAbstractTooltipComponent implements AbstractEnchantmentComponent {
 
+	protected static final NBTSerializationHandler<CoreAbstractEnchantmentComponent> NBT_HANDLER;
+	
 	protected static final NBTFieldSet<CoreAbstractEnchantmentComponent> NBT_FIELDS;
 	
 	protected static final CharKey
@@ -27,6 +31,12 @@ public class CoreAbstractEnchantmentComponent extends AbstractItemComponent impl
 	NBT_SHOW_IN_TOOLTIP = CharKey.literal("show_in_tooltip");
 	
 	static {
+		NBT_HANDLER = NBTSerializationHandler
+				.builder(CoreAbstractEnchantmentComponent.class)
+				.include(CoreAbstractTooltipComponent.NBT_HANDLER)
+				.compoundMapNamespaced2Int("levels", CoreAbstractEnchantmentComponent::getStoredEnchants, Enchantment::getEnchantment)
+				.build();
+		
 		NBT_FIELDS = NBTFieldSet.newSet();
 		NBT_FIELDS.setField(NBT_LEVELS, (holder, reader) -> {
 			reader.readNextEntry();

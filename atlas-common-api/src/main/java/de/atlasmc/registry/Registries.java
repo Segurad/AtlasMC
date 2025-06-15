@@ -18,7 +18,7 @@ import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.util.annotation.InternalAPI;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.configuration.ConfigurationSection;
-import de.atlasmc.util.configuration.ConfigurationSerializeable;
+import de.atlasmc.util.configuration.ConfigurationSerializable;
 import de.atlasmc.util.configuration.file.JsonConfiguration;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
 import de.atlasmc.util.factory.FactoryException;
@@ -205,7 +205,7 @@ public class Registries {
 					entryValue = entryClass;
 				} else {
 					ConfigurationSection cfg = entryCfg.getConfigurationSection("configuration");
-					if (cfg != null && entryClass.isAssignableFrom(ConfigurationSerializeable.class)) {
+					if (cfg != null && entryClass.isAssignableFrom(ConfigurationSerializable.class)) {
 						try {
 							entryValue = entryClass.getConstructor(ConfigurationSection.class).newInstance(cfg);
 						} catch (InstantiationException | IllegalAccessException | IllegalArgumentException

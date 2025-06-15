@@ -1,7 +1,10 @@
 package de.atlasmc.log;
 
+import de.atlasmc.util.annotation.NotNull;
+
 public interface Log {
 	
+	@NotNull
 	String getName();
 	
 	boolean isSendToConsole();

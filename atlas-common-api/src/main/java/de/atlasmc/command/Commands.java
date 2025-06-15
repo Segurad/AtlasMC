@@ -30,7 +30,7 @@ import de.atlasmc.util.concurrent.future.CompletableFuture;
 import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
-import de.atlasmc.util.configuration.ConfigurationSerializeable;
+import de.atlasmc.util.configuration.ConfigurationSerializable;
 import de.atlasmc.util.configuration.InvalidConfigurationException;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
 import de.atlasmc.util.map.ConcurrentLinkedListMultimap;
@@ -243,7 +243,7 @@ public class Commands {
 		} else {
 			throw new InvalidConfigurationException("\"parser\" must be a String or Object!", config);
 		}
-		VarArgParser<?> parser = ConfigurationSerializeable.deserialize(parserCfg, parserClass);
+		VarArgParser<?> parser = ConfigurationSerializable.deserialize(parserCfg, parserClass);
 		arg.setParser(parser);
 		// Load suggestion type
 		Object rawSuggestionType = config.getString("suggestion");

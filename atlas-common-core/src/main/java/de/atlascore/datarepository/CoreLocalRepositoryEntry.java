@@ -16,10 +16,10 @@ import de.atlasmc.datarepository.RepositoryEntryUpdate;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.util.configuration.ConfigurationSection;
-import de.atlasmc.util.configuration.ConfigurationSerializeable;
+import de.atlasmc.util.configuration.ConfigurationSerializable;
 import de.atlasmc.util.configuration.MemoryConfigurationSection;
 
-public class CoreLocalRepositoryEntry implements RepositoryEntry, ConfigurationSerializeable {
+public class CoreLocalRepositoryEntry implements RepositoryEntry, ConfigurationSerializable {
 
 	private final CoreAbstractLocalRepository repo;
 	private final NamespacedKey key;

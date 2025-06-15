@@ -7,10 +7,10 @@ import de.atlasmc.command.CommandStringReader;
 import de.atlasmc.io.IOWriteable;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
-import de.atlasmc.util.configuration.ConfigurationSerializeable;
+import de.atlasmc.util.configuration.ConfigurationSerializable;
 
 @RegistryHolder(key="atlas:command/var_arg_parser", target=Target.CLASS)
-public interface VarArgParser<T> extends Namespaced, IOWriteable, ConfigurationSerializeable {
+public interface VarArgParser<T> extends Namespaced, IOWriteable, ConfigurationSerializable {
 	
 	int getID();
 	

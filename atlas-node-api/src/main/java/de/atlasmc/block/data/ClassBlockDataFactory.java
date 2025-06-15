@@ -2,13 +2,13 @@ package de.atlasmc.block.data;
 
 import de.atlasmc.block.BlockType;
 import de.atlasmc.util.configuration.ConfigurationSection;
-import de.atlasmc.util.configuration.ConfigurationSerializeable;
+import de.atlasmc.util.configuration.ConfigurationSerializable;
 import de.atlasmc.util.factory.ClassFactory;
 
 /**
  * Class based {@link ItemMetaFactory} for Materials
  */
-public class ClassBlockDataFactory extends ClassFactory<BlockData> implements BlockDataFactory, ConfigurationSerializeable {
+public class ClassBlockDataFactory extends ClassFactory<BlockData> implements BlockDataFactory, ConfigurationSerializable {
 	
 	protected final Class<? extends BlockData> dataInterface;
 	
