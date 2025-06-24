@@ -3,7 +3,7 @@ package de.atlasmc.util.nbt.tag;
 public abstract class NumberTag extends AbstractTag {
 	
 	public NumberTag(String name) {
-		this.name = name;
+		super(name);
 	}
 	
 	public NumberTag() {}

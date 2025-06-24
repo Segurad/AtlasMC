@@ -56,7 +56,7 @@ public final class LongTag extends NumberTag {
 	}
 
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+	public void toNBT(CharSequence name, NBTWriter writer, boolean systemData) throws IOException {
 		writer.writeLongTag(name, data);
 	}
 

@@ -24,7 +24,7 @@ public class MapNamespaced2Int<T, K extends Namespaced> extends NBTField<T> {
 	}
 
 	@Override
-	public void serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
+	public boolean serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
 		final Object2IntMap<K> map = mapSupplier.apply(value);
 		writer.writeCompoundTag(key);
 		for (Entry<K> entry : map.object2IntEntrySet()) {
@@ -33,6 +33,7 @@ public class MapNamespaced2Int<T, K extends Namespaced> extends NBTField<T> {
 			writer.writeIntTag(nkey.toString(), entry.getIntValue());
 		}
 		writer.writeEndTag();
+		return true;
 	}
 
 	@Override

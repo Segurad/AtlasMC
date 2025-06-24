@@ -11,35 +11,36 @@ import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 
 public class IntField<T> extends NBTField<T> {
 	
-	private final ToIntFunction<T> supplier;
-	private final ObjIntConsumer<T> consumer;
+	private final ToIntFunction<T> get;
+	private final ObjIntConsumer<T> set;
 	private final int defaultValue;
 	
-	public IntField(CharSequence key, ToIntFunction<T> supplier, ObjIntConsumer<T> consumer) {
+	public IntField(CharSequence key, ToIntFunction<T> get, ObjIntConsumer<T> set) {
 		super(key, TagType.INT, false);
-		this.supplier = supplier;
-		this.consumer = consumer;
+		this.get = get;
+		this.set = set;
 		this.defaultValue = 0;
 	}
 	
-	public IntField(CharSequence key, ToIntFunction<T> supplier, ObjIntConsumer<T> consumer, int defaultValue) {
+	public IntField(CharSequence key, ToIntFunction<T> get, ObjIntConsumer<T> set, int defaultValue) {
 		super(key, TagType.INT, true);
-		this.supplier = supplier;
-		this.consumer = consumer;
+		this.get = get;
+		this.set = set;
 		this.defaultValue = defaultValue;
 	}
 
 	@Override
-	public void serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
-		int v = supplier.applyAsInt(value);
+	public boolean serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
+		int v = get.applyAsInt(value);
 		if (useDefault && v == defaultValue)
-			return;
+			return true;
 		writer.writeIntTag(key, v);
+		return true;
 	}
 
 	@Override
 	public void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException {
-		consumer.accept(value, reader.readIntTag());
+		set.accept(value, reader.readIntTag());
 	}
 
 }

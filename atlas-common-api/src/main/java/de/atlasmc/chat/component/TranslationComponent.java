@@ -1,12 +1,9 @@
 package de.atlasmc.chat.component;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.util.annotation.Nullable;
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 /**
  * {@link ChatComponent} that translates its contents
@@ -17,6 +14,13 @@ import de.atlasmc.util.nbt.io.NBTWriter;
  */
 public class TranslationComponent extends AbstractBaseComponent<TranslationComponent> {
 	
+	public static final NBTSerializationHandler<TranslationComponent>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(TranslationComponent.class)
+					.string("key", TranslationComponent::getKey, TranslationComponent::setKey)
+					.string("fallback", TranslationComponent::getFallback, TranslationComponent::setFallback)
+					.build();
+	
 	public static final String
 	JSON_TRANSLATE = "translate",
 	JSON_WITH = "with",
@@ -26,25 +30,9 @@ public class TranslationComponent extends AbstractBaseComponent<TranslationCompo
 	private String fallback;
 	private List<ChatComponent> with;
 	
-	public TranslationComponent() {}
-	
-	public TranslationComponent(String key) {
-		this.key = key;
-	}
-	
-	/**
-	 * Creates a new TranslationComponent
-	 * @param key which is translated
-	 * @param with optional arguments that will be inserted at %s
-	 */
-	public TranslationComponent(@Nullable String key, @Nullable List<ChatComponent> with) {
-		this.key = key;
-		this.with = with;
-	}
-	
 	@Override
-	protected String getType() {
-		return "translatable";
+	public ComponentType getType() {
+		return ComponentType.TRANSLATABLE;
 	}
 	
 	public String getKey() {
@@ -95,26 +83,6 @@ public class TranslationComponent extends AbstractBaseComponent<TranslationCompo
 			this.with.add(c);
 		}
 		return this;
-	}
-	
-	
-	
-	@Override
-	public void addContents(NBTWriter writer) throws IOException {
-		super.addContents(writer);
-		writer.writeStringTag(JSON_TRANSLATE, key);
-		if (with != null) {
-			final int size = with.size();
-			writer.writeListTag(JSON_WITH, TagType.COMPOUND, size);
-			for (int i = 0; i < size; i++) {
-				ChatComponent comp = with.get(i);
-				writer.writeCompoundTag();
-				comp.addContents(writer);
-				writer.writeEndTag();
-			}
-		}
-		if (fallback != null)
-			writer.writeStringTag(JSON_FALLBACK, fallback);
 	}
 
 	@Override

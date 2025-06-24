@@ -1,46 +1,51 @@
 package de.atlasmc.chat.component;
 
-import java.io.IOException;
-
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public class ScoreComponent extends AbstractBaseComponent<ScoreComponent> {
 
-	public static final CharKey
-	JSON_SCORE = CharKey.literal("score"),
-	JSON_NAME = CharKey.literal("name"),
-	JSON_OBJECTIVE = CharKey.literal("objective");
+	public static final NBTSerializationHandler<ScoreComponent>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(ScoreComponent.class)
+					.include(AbstractBaseComponent.NBT_HANDLER)
+					.beginComponent("score")
+					.string("name", ScoreComponent::getName, ScoreComponent::setName)
+					.string("objective", ScoreComponent::getObjective, ScoreComponent::setObjective)
+					.endComponent()
+					.build();
 	
-	private String entry;
+	private String name;
 	private String objective;
-
-	public ScoreComponent(String entry, String objective) {
-		if (entry == null)
-			throw new IllegalArgumentException("Entry can not be null!");
-		if (objective == null)
-			throw new IllegalArgumentException("Objective can not be null!");
-		this.entry = entry;
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String getObjective() {
+		return objective;
+	}
+	
+	public void setObjective(String objective) {
 		this.objective = objective;
 	}
 	
 	@Override
-	protected String getType() {
-		return "score";
-	}
-	
-	@Override
-	public void addContents(NBTWriter writer) throws IOException {
-		super.addContents(writer);
-		writer.writeCompoundTag(JSON_SCORE);
-		writer.writeStringTag(JSON_OBJECTIVE, objective);
-		writer.writeStringTag(JSON_NAME, entry);
-		writer.writeEndTag();
+	public ComponentType getType() {
+		return ComponentType.SCORE;
 	}
 
 	@Override
 	protected ScoreComponent getThis() {
 		return this;
+	}
+	
+	@Override
+	public NBTSerializationHandler<? extends ScoreComponent> getNBTHandler() {
+		return NBT_HANDLER;
 	}
 	
 }

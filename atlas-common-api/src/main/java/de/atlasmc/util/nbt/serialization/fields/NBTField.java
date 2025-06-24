@@ -10,8 +10,8 @@ import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 
 public abstract class NBTField<T> {
 	
-	public final TagType type;
 	public final CharKey key;
+	public final TagType type;
 	public final boolean useDefault;
 	
 	public NBTField(CharSequence key, TagType type, boolean useDefault) {
@@ -20,8 +20,8 @@ public abstract class NBTField<T> {
 		this.useDefault = useDefault;
 	}
 	
-	public abstract void serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException;
+	public abstract boolean serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException;
 	
 	public abstract void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException;
-
+	
 }

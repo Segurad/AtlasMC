@@ -11,18 +11,19 @@ import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 
 public class StringField<T> extends AbstractObjectField<T, String> {
 	
-	public StringField(CharSequence key, Function<T, String> supplier, BiConsumer<T, String> consumer) {
-		super(key, TagType.STRING, supplier, consumer);
+	public StringField(CharSequence key, Function<T, String> get, BiConsumer<T, String> set) {
+		super(key, TagType.STRING, get, set);
 	}
 
 	@Override
-	public void serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
-		writer.writeStringTag(key, supplier.apply(value));
+	public boolean serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
+		writer.writeStringTag(key, get.apply(value));
+		return true;
 	}
 
 	@Override
 	public void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException {
-		consumer.accept(value, reader.readStringTag());
+		set.accept(value, reader.readStringTag());
 	}
 
 }

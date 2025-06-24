@@ -13,22 +13,28 @@ public interface SerializationHandler<T, I, O, C> {
 	 * @param value to serialize
 	 * @param ouput the output
 	 * @param context a arbitrary context for serialization
+	 * @return true if success
 	 * @throws IOException
 	 */
-	void serialize(T value, O ouput, C context) throws IOException;
+	boolean serialize(T value, O ouput, C context) throws IOException;
 	
 	default T deserialize(I input) throws IOException {
 		return deserialize(input, getDefaultContext());
 	}
 	
+	default T deserialize(I input, C context) throws IOException {
+		return deserialize(null, input, context);
+	}
+	
 	/**
 	 * Deserialize the the input to a object
+	 * @param value the object deserialized to
 	 * @param input the input
-	 * @return deserialized object
 	 * @param context a arbitrary context for serialization
+	 * @return deserialized object
 	 * @throws IOException
 	 */
-	T deserialize(I input, C context) throws IOException;
+	T deserialize(T value, I input, C context) throws IOException;
 	
 	C getDefaultContext();
 

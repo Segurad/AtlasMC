@@ -37,9 +37,9 @@ public class CompoundTag extends AbstractCollectionTag<CompoundTag, List<NBT>> {
 	public Iterator<NBT> iterator() {
 		return data.iterator();
 	}
-
+	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+	public void toNBT(CharSequence name, NBTWriter writer, boolean systemData) throws IOException {
 		writer.writeCompoundTag(name);
 		if (data != null && !data.isEmpty()) {
 			for (NBT entry : data) {

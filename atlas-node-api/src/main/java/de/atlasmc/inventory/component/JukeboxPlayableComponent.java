@@ -10,7 +10,7 @@ public interface JukeboxPlayableComponent extends ItemComponent {
 	public static final NBTSerializationHandler<JukeboxPlayableComponent> 
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(JukeboxPlayableComponent.class)
-					.namespacedKeyTag(COMPONENT_KEY.toString(), JukeboxPlayableComponent::getSong, JukeboxPlayableComponent::setSong)
+					.namespacedKey(COMPONENT_KEY.toString(), JukeboxPlayableComponent::getSong, JukeboxPlayableComponent::setSong)
 					.build();
 	
 	NamespacedKey getSong();

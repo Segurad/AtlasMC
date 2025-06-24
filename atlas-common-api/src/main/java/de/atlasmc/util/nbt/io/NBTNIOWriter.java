@@ -55,7 +55,7 @@ public class NBTNIOWriter extends AbstractNBTIOWriter {
 	}
 
 	@Override
-	public void close() {
+	public void close() throws IOException {
 		super.close();
 		out = null;
 	}

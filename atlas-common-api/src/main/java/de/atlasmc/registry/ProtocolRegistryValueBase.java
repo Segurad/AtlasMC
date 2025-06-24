@@ -1,13 +1,9 @@
 package de.atlasmc.registry;
 
-import java.io.IOException;
-
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.util.configuration.ConfigurationSection;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
-public class ProtocolRegistryValueBase implements ProtocolRegistryValue {
+public abstract class ProtocolRegistryValueBase implements ProtocolRegistryValue {
 
 	protected final NamespacedKey key;
 	protected final NamespacedKey clientKey;
@@ -62,16 +58,6 @@ public class ProtocolRegistryValueBase implements ProtocolRegistryValue {
 	@Override
 	public int getID() {
 		return id;
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		throw new UnsupportedOperationException();
 	}
 
 	@Override

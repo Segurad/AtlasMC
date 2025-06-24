@@ -226,16 +226,16 @@ public interface NBTReader extends Closeable {
 	 * @throws IOException 
 	 * @see #search(String, TagType, boolean)
 	 */
-	default void search(CharSequence key) throws IOException {
-		search(key, null);
+	default boolean search(CharSequence key) throws IOException {
+		return search(key, null);
 	}
 	
 	/**
 	 * @throws IOException 
 	 * @see #search(String, TagType, boolean)
 	 */
-	default void search(CharSequence key, TagType type) throws IOException {
-		search(key, type, false);
+	default boolean search(CharSequence key, TagType type) throws IOException {
+		return search(key, type, false);
 	}
 	
 	/**
@@ -244,9 +244,10 @@ public interface NBTReader extends Closeable {
 	 * @param key the searched key
 	 * @param type the searched {@link TagType}
 	 * @param list if the type should be used as list of type (ignored if type is null)
+	 * @return success
 	 * @throws IOException 
 	 */
-	void search(CharSequence key, TagType type, boolean list) throws IOException;
+	boolean search(CharSequence key, TagType type, boolean list) throws IOException;
 	
 	/**
 	 * Reads the current tag as number

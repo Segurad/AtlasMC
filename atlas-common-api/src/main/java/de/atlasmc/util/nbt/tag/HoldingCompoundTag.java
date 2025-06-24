@@ -39,7 +39,7 @@ public class HoldingCompoundTag extends AbstractTag {
 	}
 
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+	public void toNBT(CharSequence name, NBTWriter writer, boolean systemData) throws IOException {
 		writer.writeCompoundTag(name);
 		value.toNBT(writer, systemData);
 		writer.writeEndTag();

@@ -25,13 +25,14 @@ public class MapNamespacedType<T, K extends Namespaced & NBTSerializable> extend
 	}
 
 	@Override
-	public void serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
+	public boolean serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
 		final Map<NamespacedKey, K> map = mapSupplier.apply(value);
 		writer.writeCompoundTag(key);
 		for (K entry : map.values()) {
 			handler.serialize(entry, writer, context);
 		}
 		writer.writeEndTag();
+		return true;
 	}
 
 	@Override

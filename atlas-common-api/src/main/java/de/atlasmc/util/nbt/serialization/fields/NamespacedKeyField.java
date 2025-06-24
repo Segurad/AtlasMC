@@ -12,21 +12,22 @@ import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 
 public class NamespacedKeyField<T> extends AbstractObjectField<T, NamespacedKey> {
 	
-	public NamespacedKeyField(CharSequence key, Function<T, NamespacedKey> supplier, BiConsumer<T, NamespacedKey> consumer) {
-		super(key, TagType.STRING, supplier, consumer, true);
+	public NamespacedKeyField(CharSequence key, Function<T, NamespacedKey> get, BiConsumer<T, NamespacedKey> set) {
+		super(key, TagType.STRING, get, set, true);
 	}
 
 	@Override
-	public void serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
-		NamespacedKey key = supplier.apply(value);
+	public boolean serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
+		NamespacedKey key = get.apply(value);
 		if (key == null)
-			return;
+			return true;
 		writer.writeStringTag(this.key, key.toString());
+		return true;
 	}
 
 	@Override
 	public void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException {
-		consumer.accept(value, NamespacedKey.of(reader.readStringTag()));
+		set.accept(value, NamespacedKey.of(reader.readStringTag()));
 	}
 
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UncheckedIOException;
 
+import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.io.SNBTWriter;
 
 abstract class AbstractTag implements NBT {
@@ -53,6 +54,11 @@ abstract class AbstractTag implements NBT {
 		if (getType() != other.getType())
 			return false;
 		return true;
+	}
+	
+	@Override
+	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		toNBT(name, writer, systemData);
 	}
 	
 	@Override

@@ -11,35 +11,36 @@ import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 
 public class LongField<T> extends NBTField<T> {
 	
-	private final ToLongFunction<T> supplier;
-	private final ObjLongConsumer<T> consumer;
+	private final ToLongFunction<T> get;
+	private final ObjLongConsumer<T> set;
 	private final long defaultValue;
 	
-	public LongField(CharSequence key, ToLongFunction<T> supplier, ObjLongConsumer<T> consumer) {
+	public LongField(CharSequence key, ToLongFunction<T> get, ObjLongConsumer<T> set) {
 		super(key, TagType.LONG, false);
-		this.supplier = supplier;
-		this.consumer = consumer;
+		this.get = get;
+		this.set = set;
 		this.defaultValue = 0;
 	}
 	
-	public LongField(CharSequence key, ToLongFunction<T> supplier, ObjLongConsumer<T> consumer, long defaultValue) {
+	public LongField(CharSequence key, ToLongFunction<T> get, ObjLongConsumer<T> set, long defaultValue) {
 		super(key, TagType.LONG, true);
-		this.supplier = supplier;
-		this.consumer = consumer;
+		this.get = get;
+		this.set = set;
 		this.defaultValue = defaultValue;
 	}
 
 	@Override
-	public void serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
-		long v = supplier.applyAsLong(value);
+	public boolean serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
+		long v = get.applyAsLong(value);
 		if (useDefault && v == defaultValue)
-			return;
+			return true;
 		writer.writeLongTag(key, v);
+		return true;
 	}
 
 	@Override
 	public void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException {
-		consumer.accept(value, reader.readLongTag());
+		set.accept(value, reader.readLongTag());
 	}
 
 }

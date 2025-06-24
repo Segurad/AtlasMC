@@ -11,7 +11,7 @@ import de.atlasmc.util.nbt.tag.NBT;
 /**
  * {@link NBTWriter} implementation for SNBT
  */
-public class SNBTWriter implements NBTWriter {
+public class SNBTWriter extends AbstractNBTWriter {
 	
 	private static final String[] REPLACEMENT_CHARS;
 	
@@ -31,7 +31,6 @@ public class SNBTWriter implements NBTWriter {
 	
 	private int depth;
 	private ListData list;
-	private boolean closed;
 	private Writer out;
 	private boolean separator;
 	private boolean removeList;
@@ -323,17 +322,12 @@ public class SNBTWriter implements NBTWriter {
 			removeList();
 		}
 	}
-
-	protected final void ensureOpen() throws IOException {
-		if (closed)
-			throw new IOException("Stream closed!");
-	}
 	
 	@Override
-	public void close() throws IOException {
+	public void close() throws IOException{
+		super.close();
 		out.close();
 		out = null;
-		closed = true;
 		list = null;
 	}
 

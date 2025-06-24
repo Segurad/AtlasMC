@@ -17,7 +17,7 @@ public abstract class CoreAbstractTooltipComponent extends AbstractItemComponent
 	static {
 		NBT_HANDLER = NBTSerializationHandler
 				.builder(CoreAbstractTooltipComponent.class)
-				.boolTag("show_in_tooltip", CoreAbstractTooltipComponent::isShowTooltip, CoreAbstractTooltipComponent::setShowTooltip, false)
+				.bool("show_in_tooltip", CoreAbstractTooltipComponent::isShowTooltip, CoreAbstractTooltipComponent::setShowTooltip, false)
 				.build();
 	}
 	

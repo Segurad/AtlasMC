@@ -96,13 +96,18 @@ public final class Color {
 	}
 
 	public Color(float red, float green, float blue) {
+		this(red, green, blue, 0);
+	}
+	
+	public Color(float red, float green, float blue, float alpha) {
 		red = Math.clamp(0, red, 1.0f);
 		green = Math.clamp(0, green, 1.0f);
 		blue = Math.clamp(0, blue, 1.0f);
-		r = (byte) (red == 1.0 ? 255 : red *256);
-		g = (byte) (green == 1.0 ? 255 : green *256);
-		b = (byte) (blue == 1.0 ? 255 : blue *256);
-		a = 0;
+		alpha = Math.clamp(0, green, 1.0f);
+		r = (byte) (red == 1.0 ? 255 : red * 256);
+		g = (byte) (green == 1.0 ? 255 : green * 256);
+		b = (byte) (blue == 1.0 ? 255 : blue * 256);
+		a = (byte) (alpha == 1.0 ? 255 : blue * 256);
 		this.name = "RGB";
 	}
 	

@@ -11,35 +11,36 @@ import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 
 public class ShortField<T> extends NBTField<T> {
 	
-	private final ToShortFunction<T> supplier;
-	private final ObjShortConsumer<T> consumer;
+	private final ToShortFunction<T> get;
+	private final ObjShortConsumer<T> set;
 	private final short defaultValue;
 	
-	public ShortField(CharSequence key, ToShortFunction<T> supplier, ObjShortConsumer<T> consumer) {
+	public ShortField(CharSequence key, ToShortFunction<T> get, ObjShortConsumer<T> set) {
 		super(key, TagType.SHORT, false);
-		this.supplier = supplier;
-		this.consumer = consumer;
+		this.get = get;
+		this.set = set;
 		this.defaultValue = 0;
 	}
 	
-	public ShortField(CharSequence key, ToShortFunction<T> supplier, ObjShortConsumer<T> consumer, short defaultValue) {
+	public ShortField(CharSequence key, ToShortFunction<T> get, ObjShortConsumer<T> set, short defaultValue) {
 		super(key, TagType.SHORT, true);
-		this.supplier = supplier;
-		this.consumer = consumer;
+		this.get = get;
+		this.set = set;
 		this.defaultValue = defaultValue;
 	}
 
 	@Override
-	public void serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
-		short v = supplier.applyAsShort(value);
+	public boolean serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
+		short v = get.applyAsShort(value);
 		if (useDefault && v == defaultValue)
-			return;
+			return true;
 		writer.writeShortTag(key, v);
+		return true;
 	}
 
 	@Override
 	public void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException {
-		consumer.accept(value, reader.readShortTag());
+		set.accept(value, reader.readShortTag());
 	}
 
 }

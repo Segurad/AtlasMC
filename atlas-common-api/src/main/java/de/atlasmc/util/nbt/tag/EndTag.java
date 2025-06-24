@@ -48,4 +48,9 @@ public class EndTag implements NBT {
 		return INSTANCE;
 	}
 
+	@Override
+	public void toNBT(CharSequence name, NBTWriter writer, boolean systemData) throws IOException {
+		writer.writeEndTag();
+	}
+
 }

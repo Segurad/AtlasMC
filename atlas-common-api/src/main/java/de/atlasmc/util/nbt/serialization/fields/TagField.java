@@ -14,16 +14,17 @@ import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 
 public class TagField<T, K> extends AbstractObjectField<T, Tag<K>> {
 
-	public TagField(CharSequence key, Function<T, Tag<K>> supplier, BiConsumer<T, Tag<K>> consumer) {
-		super(key, TagType.STRING, supplier, consumer);
+	public TagField(CharSequence key, Function<T, Tag<K>> get, BiConsumer<T, Tag<K>> set) {
+		super(key, TagType.STRING, get, set);
 	}
 
 	@Override
-	public void serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
-		Tag<K> tag = supplier.apply(value);
+	public boolean serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
+		Tag<K> tag = get.apply(value);
 		if (tag == null)
-			return;
+			return true;
 		writer.writeStringTag(key, "#" + tag.getNamespace());
+		return true;
 	}
 
 	@Override
@@ -32,7 +33,7 @@ public class TagField<T, K> extends AbstractObjectField<T, Tag<K>> {
 		if (v.charAt(0) != '#')
 			return;
 		Tag<K> tag = Tags.getTag(NamespacedKey.of(v.substring(1)));
-		consumer.accept(value, tag);
+		set.accept(value, tag);
 	}
 
 }

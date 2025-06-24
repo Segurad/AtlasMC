@@ -11,35 +11,36 @@ import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 
 public class BooleanField<T> extends NBTField<T> {
 	
-	private final ToBooleanFunction<T> supplier;
-	private final ObjBooleanConsumer<T> consumer;
+	private final ToBooleanFunction<T> get;
+	private final ObjBooleanConsumer<T> set;
 	private final boolean defaultValue;
 	
-	public BooleanField(CharSequence key, ToBooleanFunction<T> supplier, ObjBooleanConsumer<T> consumer) {
+	public BooleanField(CharSequence key, ToBooleanFunction<T> get, ObjBooleanConsumer<T> set) {
 		super(key, TagType.BYTE, false);
-		this.supplier = supplier;
-		this.consumer = consumer;
+		this.get = get;
+		this.set = set;
 		this.defaultValue = false;
 	}
 	
-	public BooleanField(CharSequence key, ToBooleanFunction<T> supplier, ObjBooleanConsumer<T> consumer, boolean defaultValue) {
+	public BooleanField(CharSequence key, ToBooleanFunction<T> get, ObjBooleanConsumer<T> set, boolean defaultValue) {
 		super(key, TagType.BYTE, true);
-		this.supplier = supplier;
-		this.consumer = consumer;
+		this.get = get;
+		this.set = set;
 		this.defaultValue = defaultValue;
 	}
 
 	@Override
-	public void serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
-		boolean v = supplier.applyAsBoolean(value);
+	public boolean serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
+		boolean v = get.applyAsBoolean(value);
 		if (useDefault &&  v == defaultValue)
-			return;
+			return true;
 		writer.writeByteTag(key, v);
+		return true;
 	}
 
 	@Override
 	public void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException {
-		consumer.accept(value, reader.readBoolean());
+		set.accept(value, reader.readBoolean());
 	}
 
 }

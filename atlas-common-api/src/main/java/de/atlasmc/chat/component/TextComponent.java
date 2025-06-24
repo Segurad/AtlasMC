@@ -1,14 +1,15 @@
 package de.atlasmc.chat.component;
 
-import java.io.IOException;
-
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public class TextComponent extends AbstractBaseComponent<TextComponent> {
 
-	public static final CharKey
-	JSON_TEXT = CharKey.literal("text");
+	public static final NBTSerializationHandler<TextComponent>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(TextComponent.class)
+					.include(AbstractBaseComponent.NBT_HANDLER)
+					.string("text", TextComponent::getValue, TextComponent::setValue)
+					.build();
 	
 	private String text;
 	
@@ -19,8 +20,8 @@ public class TextComponent extends AbstractBaseComponent<TextComponent> {
 	public TextComponent() {}
 	
 	@Override
-	protected String getType() {
-		return "text";
+	public ComponentType getType() {
+		return ComponentType.TEXT;
 	}
 
 	public TextComponent setValue(String text) {
@@ -31,16 +32,15 @@ public class TextComponent extends AbstractBaseComponent<TextComponent> {
 	public String getValue() {
 		return text;
 	}
-	
-	@Override
-	public void addContents(NBTWriter writer) throws IOException {
-		super.addContents(writer);
-		writer.writeStringTag(JSON_TEXT, text);
-	}
 
 	@Override
 	protected TextComponent getThis() {
 		return this;
+	}
+	
+	@Override
+	public NBTSerializationHandler<? extends ChatComponent> getNBTHandler() {
+		return NBT_HANDLER;
 	}
 
 }

@@ -164,7 +164,14 @@ public class NBTObjectWriter implements NBTWriter {
 
 	@Override
 	public void writeNBT(NBT nbt) throws IOException {
-		highestContainer.setData(nbt);
+		highestContainer.setData(nbt.clone());
+	}
+	
+	@Override
+	public void writeNBT(CharSequence name, NBT nbt) throws IOException {
+		NBT copy = nbt.clone();
+		copy.setName(name != null ? name.toString() : null);
+		highestContainer.setData(copy);
 	}
 
 	public NBT toNBT() {

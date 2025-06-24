@@ -11,7 +11,6 @@ import de.atlasmc.chat.component.BaseComponent;
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.chat.component.TextComponent;
 import de.atlasmc.util.nbt.NBTException;
-import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
@@ -43,20 +42,12 @@ public class CoreChatFactory implements ChatFactory {
 		SNBTReader reader = new SNBTReader(json);
 		ChatComponent comp;
 		try {
-			comp = readComponent(reader);
+			comp = ChatComponent.NBT_HANDLER.deserialize(reader);
 		} catch (IOException e) {
 			throw new NBTException("Error while parsing chat!", e);
 		} finally {
 			reader.close();
 		}
-		return comp;
-	}
-	
-	private ChatComponent readComponent(NBTReader reader) throws IOException {
-		CoreChatComponentBuilder builder = new CoreChatComponentBuilder();
-		NBTUtil.readNBT(CoreChatComponentBuilder.NBT_FIELDS, builder, reader);
-		ChatComponent comp = builder.build();
-		builder.clear();
 		return comp;
 	}
 
@@ -130,12 +121,12 @@ public class CoreChatFactory implements ChatFactory {
 				ChatColor color = ChatColor.getByFormatID(c);
 				if (color != null)
 					color.modify(current);
-				else if (c == 'x') {
+				else if (c == '#') {
 					if (i+6 >= legacy.length())
 						return base;
 					int rgb = Integer.parseInt(legacy, i+1, i+6, 16);
 					i+=6;
-					current.setColor(rgb);
+					current.setColor(Color.fromRGB(rgb));
 				}
 				continue;
 			} else if (!readText) {
@@ -245,7 +236,7 @@ public class CoreChatFactory implements ChatFactory {
 				}
 			}
 			if (component.hasColor()) {
-				builder.append(Color.asConsoleColor(component.getColor()));
+				builder.append(component.getColor().asConsoleColor());
 			}
 			if (component instanceof TextComponent text) {
 				builder.append(text.getValue());
@@ -276,7 +267,8 @@ public class CoreChatFactory implements ChatFactory {
 			}
 			return comp;
 		} else if (type == TagType.COMPOUND) {
-			return readComponent(reader);
+			reader.readNextEntry();
+			return ChatComponent.NBT_HANDLER.deserialize(reader);
 		} else {
 			throw new NBTException("Unexpected element type: " + type.name());
 		}
@@ -285,7 +277,9 @@ public class CoreChatFactory implements ChatFactory {
 	@Override
 	public void toNBT(CharSequence key, Chat chat, NBTWriter writer) throws IOException {
 		if (chat instanceof ChatComponent comp) {
-			comp.toJson(key, writer);
+			writer.writeCompoundTag(key);
+			ChatComponent.NBT_HANDLER.serialize(comp, writer);
+			writer.writeEndTag();
 		} else {
 			writer.writeStringTag(key, chat.toText());
 		}

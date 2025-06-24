@@ -6,13 +6,15 @@ import de.atlasmc.util.serialization.SerializationHandler;
 
 public interface NBTSerializationHandler<T extends NBTSerializable> extends SerializationHandler<T, NBTReader, NBTWriter, NBTSerializationContext> {
 	
+	Class<? extends T> getType();
+	
 	@Override
 	default NBTSerializationContext getDefaultContext() {
 		return NBTSerializationContext.DEFAULT_SERVER;
 	}
 	
 	public static <T extends NBTSerializable> NBTSerializationHandlerBuilder<T> builder(Class<T> clazz) {
-		return new NBTSerializationHandlerBuilder<>();
+		return new NBTSerializationHandlerBuilder<>(clazz);
 	}
 
 }

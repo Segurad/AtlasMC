@@ -6,42 +6,41 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import de.atlasmc.Color;
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.chat.ChatUtil;
-import de.atlasmc.util.map.key.CharKey;
+import de.atlasmc.chat.component.event.click.ClickEvent;
+import de.atlasmc.chat.component.event.hover.HoverEvent;
 import de.atlasmc.util.nbt.NBTException;
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.io.SNBTWriter;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> implements ChatComponent {
 	
-	public static final CharKey
-	JSON_BOLD = CharKey.literal("bold"),
-	JSON_ITALIC = CharKey.literal("italic"),
-	JSON_UNDERLINED = CharKey.literal("underlined"),
-	JSON_OBFUSCATED = CharKey.literal("obfuscated"),
-	JSON_STRIKETHROUGH = CharKey.literal("strikethrough"),
-	JSON_COLOR = CharKey.literal("color"),
-	JSON_FONT = CharKey.literal("font"),
-	JSON_CLICK_EVENT = CharKey.literal("clickEvent"),
-	JSON_HOVER_EVENT = CharKey.literal("hoverEvent"),
-	JSON_EXTRA = CharKey.literal("extra"),
-	JSON_INSERTION = CharKey.literal("insertion"),
-	JSON_ACTION = CharKey.literal("action"), // for hover and click event
-	JSON_CONTENTS = CharKey.literal("contents"), // hover event
-	JSON_VALUE = CharKey.literal("value"), // click event
-	JSON_TYPE = CharKey.literal("type");
-	
 	private byte flags; // 0x01 = bold, 0x02 = italic, 0x04 = underlined, 0x08 = obfuscated, 0x10 = strikethrough
 	private String font = ChatComponent.FONT_DEFAULT;
-	private int color = -1;
+	private Color color = null;
+	private ChatColor chatColor = null;
+	private Color shadowColor = null;
 	private ClickEvent clickEvent;
 	private HoverEvent hoverEvent;
 	private List<ChatComponent> extra;
 	private String insertion;
 	
-	protected abstract String getType();
+	@Override
+	public Color getShadowColor() {
+		return shadowColor;
+	}
+	
+	@Override
+	public void setShadowColor(Color color) {
+		this.shadowColor = color;
+	}
+	
+	@Override
+	public boolean hasShadowColor() {
+		return shadowColor != null;
+	}
 	
 	@Override
 	public String getInsertion() {
@@ -112,24 +111,24 @@ public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> 
 	}
 
 	@Override
-	public int getColor() {
+	public Color getColor() {
 		return color;
 	}
 
 	@Override
 	public ChatColor getColorChat() {
-		return color < -1 ? ChatColor.getByColor(color) : null;
+		return chatColor;
 	}
 
 	@Override
-	public T setColor(int rgb) {
+	public T setColor(Color rgb) {
 		color = rgb;
 		return getThis();
 	}
 
 	@Override
 	public T setColor(ChatColor color) {
-		this.color = color == null ? -1 : color.getColor().asRGB();
+		this.chatColor = color;
 		return getThis();
 	}
 
@@ -168,12 +167,12 @@ public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> 
 	
 	@Override
 	public boolean hasChatColor() {
-		return color < -1;
+		return color != null;
 	}
 	
 	@Override
 	public boolean hasColor() {
-		return color != -1;
+		return color != null;
 	}
 	
 	@Override
@@ -182,19 +181,14 @@ public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> 
 		SNBTWriter writer = new SNBTWriter(w);
 		try {
 			writer.writeCompoundTag();
-			addContents(writer);
+			@SuppressWarnings("unchecked")
+			NBTSerializationHandler<ChatComponent> handler = (NBTSerializationHandler<ChatComponent>) getNBTHandler();
+			handler.serialize(this, writer);
 			writer.writeEndTag();
 		} catch (IOException e) {
 			throw new NBTException("Error while writing component!", e);
 		}
 		return w.toString();
-	}
-	
-	@Override
-	public void toJson(CharSequence key, NBTWriter writer) throws IOException {
-		writer.writeCompoundTag(key);
-		addContents(writer);
-		writer.writeEndTag();
 	}
 	
 	@Override
@@ -205,62 +199,6 @@ public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> 
 	@Override
 	public String toString() {
 		return toJsonText();
-	}
-	
-	/**
-	 * Write the contents of this component
-	 * @param buff
-	 */
-	@Override
-	public void addContents(final NBTWriter writer) throws IOException {
-		String type = getType();
-		if (type != null)
-			writer.writeStringTag(JSON_TYPE, type);
-		if (isBold())
-			writer.writeByteTag(JSON_BOLD, true);
-		if (isItalic())
-			writer.writeByteTag(JSON_ITALIC, true);
-		if (isUnderlined())
-			writer.writeByteTag(JSON_UNDERLINED, true);
-		if (isObfuscated())
-			writer.writeByteTag(JSON_OBFUSCATED, true);
-		if (isStrikethrough())
-			writer.writeByteTag(JSON_STRIKETHROUGH, true);
-		if (hasColor()) {
-			if (hasChatColor())
-				writer.writeStringTag(JSON_COLOR, getColorChat().getName());
-			else
-				writer.writeStringTag(JSON_COLOR, "#" + Integer.toHexString(color));
-		}
-		if (insertion != null)
-			writer.writeStringTag(JSON_INSERTION, insertion);
-		if (!getFont().equals(ChatComponent.FONT_DEFAULT))
-			writer.writeStringTag(JSON_FONT, getFont());
-		final ClickEvent clickEvent = getClickEvent();
-		if (clickEvent != null) {
-			writer.writeCompoundTag(JSON_CLICK_EVENT);
-			writer.writeStringTag(JSON_ACTION, clickEvent.getAction().getName());
-			writer.writeStringTag(JSON_VALUE, clickEvent.getValue());
-			writer.writeEndTag();
-		}
-		final HoverEvent hoverEvent = getHoverEvent();
-		if (hoverEvent != null) {
-			writer.writeCompoundTag(JSON_HOVER_EVENT);
-			writer.writeStringTag(JSON_ACTION, hoverEvent.getAction().getName());
-			writer.writeCompoundTag(JSON_CONTENTS);
-			hoverEvent.addContents(writer);
-			writer.writeEndTag();
-			writer.writeEndTag();
-		}
-		if (hasExtra()) {
-			final List<ChatComponent> extra = getExtra();
-			writer.writeListTag(JSON_EXTRA, TagType.COMPOUND, extra.size());
-			for (ChatComponent comp : extra) {
-				writer.writeCompoundTag();
-				comp.addContents(writer);
-				writer.writeEndTag();
-			}
-		}
 	}
 	
 	@Override

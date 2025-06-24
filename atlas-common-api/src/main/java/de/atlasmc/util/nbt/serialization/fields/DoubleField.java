@@ -11,35 +11,36 @@ import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 
 public class DoubleField<T> extends NBTField<T> {
 	
-	private final ToDoubleFunction<T> supplier;
-	private final ObjDoubleConsumer<T> consumer;
+	private final ToDoubleFunction<T> get;
+	private final ObjDoubleConsumer<T> set;
 	private final double defaultValue;
 	
-	public DoubleField(CharSequence key, ToDoubleFunction<T> supplier, ObjDoubleConsumer<T> consumer) {
+	public DoubleField(CharSequence key, ToDoubleFunction<T> get, ObjDoubleConsumer<T> set) {
 		super(key, TagType.DOUBLE, false);
-		this.supplier = supplier;
-		this.consumer = consumer;
+		this.get = get;
+		this.set = set;
 		this.defaultValue = 0;
 	}
 	
-	public DoubleField(CharSequence key, ToDoubleFunction<T> supplier, ObjDoubleConsumer<T> consumer, double defaultValue) {
+	public DoubleField(CharSequence key, ToDoubleFunction<T> get, ObjDoubleConsumer<T> set, double defaultValue) {
 		super(key, TagType.DOUBLE, true);
-		this.supplier = supplier;
-		this.consumer = consumer;
+		this.get = get;
+		this.set = set;
 		this.defaultValue = defaultValue;
 	}
 
 	@Override
-	public void serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
-		double v = supplier.applyAsDouble(value);
+	public boolean serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
+		double v = get.applyAsDouble(value);
 		if (useDefault && v == defaultValue)
-			return;
+			return true;
 		writer.writeDoubleTag(key, v);
+		return true;
 	}
 
 	@Override
 	public void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException {
-		consumer.accept(value, reader.readDoubleTag());
+		set.accept(value, reader.readDoubleTag());
 	}
 
 }

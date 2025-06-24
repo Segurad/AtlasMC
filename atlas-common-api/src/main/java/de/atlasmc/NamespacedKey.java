@@ -8,7 +8,7 @@ import de.atlasmc.util.NumberConversion;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 
-public class NamespacedKey {
+public class NamespacedKey implements CharSequence {
 
 	/**
 	 * Key for {@link Namespaced} classes that have no unique key
@@ -190,6 +190,21 @@ public class NamespacedKey {
 	
 	public static void clearLiteralCache() {
 		CACHE.clear();
+	}
+
+	@Override
+	public int length() {
+		return combination.length();
+	}
+
+	@Override
+	public char charAt(int index) {
+		return combination.charAt(index);
+	}
+
+	@Override
+	public CharSequence subSequence(int start, int end) {
+		return combination.subSequence(start, end);
 	}
 
 }

@@ -57,9 +57,9 @@ public final class ByteArrayTag extends AbstractTag {
 		}
 		return true;
 	}
-
+	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+	public void toNBT(CharSequence name, NBTWriter writer, boolean systemData) throws IOException {
 		writer.writeByteArrayTag(name, data);
 	}
 

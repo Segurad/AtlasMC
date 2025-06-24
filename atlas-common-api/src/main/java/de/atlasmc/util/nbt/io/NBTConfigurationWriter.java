@@ -8,12 +8,11 @@ import java.util.function.LongSupplier;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.MemoryConfiguration;
 import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.tag.NBT;
 
 /**
  * NBT writing for configurations
  */
-public class NBTConfigurationWriter implements NBTWriter {
+public class NBTConfigurationWriter extends AbstractNBTWriter {
 	
 	private LinkedList<ConfigurationSection> stack;
 	private ConfigurationSection current;
@@ -40,6 +39,7 @@ public class NBTConfigurationWriter implements NBTWriter {
 
 	@Override
 	public void close() throws IOException {
+		super.close();
 		stack = null;
 		current = null;
 		root = null;
@@ -131,12 +131,6 @@ public class NBTConfigurationWriter implements NBTWriter {
 
 	@Override
 	public void writeLongArrayTag(CharSequence name, int length, LongSupplier supplier) throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void writeNBT(NBT nbt) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}

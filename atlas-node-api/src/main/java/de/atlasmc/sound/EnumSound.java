@@ -1,13 +1,13 @@
 package de.atlasmc.sound;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.EnumID;
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.EnumValueCache;
+import de.atlasmc.util.AtlasEnum;
 
-public enum EnumSound implements Sound, EnumName, EnumID, EnumValueCache {
+public enum EnumSound implements Sound, AtlasEnum {
 
 	ENTITY_ALLAY_AMBIENT_WITH_ITEM("minecraft:entity.allay.ambient_with_item"),
 	ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM("minecraft:entity.allay.ambient_without_item"),
@@ -1661,7 +1661,16 @@ public enum EnumSound implements Sound, EnumName, EnumID, EnumValueCache {
 	EVENT_MOB_EFFECT_TRIAL_OMEN("minecraft:event.mob_effect.trial_omen"),
 	EVENT_MOB_EFFECT_RAID_OMEN("minecraft:event.mob_effect.raid_omen");
 	
+	private static final Map<String, EnumSound> BY_NAME;
 	private static List<EnumSound> VALUES;
+	
+	static {
+		Map<String, EnumSound> map = new HashMap<>();
+		for (EnumSound value : values()) {
+			map.put(value.name.toString(), value);
+		}
+		BY_NAME = Map.copyOf(map);
+	}
 	
 	private final NamespacedKey name;
 	
@@ -1692,14 +1701,7 @@ public enum EnumSound implements Sound, EnumName, EnumID, EnumValueCache {
 	public static EnumSound getByName(String name) {
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null!");
-		List<EnumSound> sounds = getValues();
-		final int size = sounds.size();
-		for (int i = 0; i < size; i++) {
-			EnumSound sound = sounds.get(i);
-			if (sound.name.toString().equals(name))
-				return sound;
-		}
-		return null;
+		return BY_NAME.get(name);
 	}
 	
 	public static EnumSound getByID(int soundID) {

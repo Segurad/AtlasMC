@@ -22,6 +22,7 @@ import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.serialization.NBTSerializable;
+import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 import de.atlasmc.util.nbt.tag.NBT;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
@@ -370,7 +371,9 @@ public class ItemStack implements NBTHolder, NBTSerializable {
 		if(components != null && !components.isEmpty()) {
 			writer.writeCompoundTag(NBT_COMPONENTS);
 			for (ItemComponent comp : components.values()) {
-				comp.toNBT(writer, systemData);
+				@SuppressWarnings("unchecked")
+				NBTSerializationHandler<ItemComponent> handler = (NBTSerializationHandler<ItemComponent>) comp.getNBTHandler();
+				handler.serialize(comp, writer, systemData ? NBTSerializationContext.DEFAULT_SERVER : NBTSerializationContext.DEFAULT_CLIENT);
 			}
 			writer.writeEndTag();
 		}

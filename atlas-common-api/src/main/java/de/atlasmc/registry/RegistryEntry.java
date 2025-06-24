@@ -2,6 +2,7 @@ package de.atlasmc.registry;
 
 import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.map.key.CharKey;
 
 public interface RegistryEntry<T> {
 	
@@ -12,6 +13,6 @@ public interface RegistryEntry<T> {
 	PluginHandle plugin();
 	
 	@NotNull
-	String key();
+	CharKey key();
 
 }

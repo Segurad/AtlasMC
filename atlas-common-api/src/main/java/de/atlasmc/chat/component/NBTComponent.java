@@ -1,20 +1,20 @@
 package de.atlasmc.chat.component;
 
-import java.io.IOException;
-
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public class NBTComponent extends AbstractBaseComponent<NBTComponent> {
 	
-	public static final CharKey
-	JSON_SOURCE = CharKey.literal("source"),
-	JSON_NBT = CharKey.literal("nbt"),
-	JSON_INTERPRET = CharKey.literal("interpret"),
-	JSON_SEPARATOR = CharKey.literal("separator"),
-	JSON_BLOCK = CharKey.literal("block"),
-	JSON_ENTITY = CharKey.literal("entity"),
-	JSON_STORAGE = CharKey.literal("storage");
+	public static final NBTSerializationHandler<NBTComponent>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(NBTComponent.class)
+					.string("source", NBTComponent::getSource, NBTComponent::setSource)
+					.string("nbt", NBTComponent::getNbtPath, NBTComponent::setNbtPath)
+					.bool("interpret", NBTComponent::isInterpret, NBTComponent::setInterpret, false)
+					.compoundType("separator", NBTComponent::getSeparator, NBTComponent::setSeparator, ChatComponent.NBT_HANDLER)
+					.string("block", NBTComponent::getBlock, NBTComponent::setBlock)
+					.string("entity", NBTComponent::getEntity, NBTComponent::setEntity)
+					.string("storage", NBTComponent::getStorage, NBTComponent::setStorage)
+					.build();
 	
 	private String source;
 	private String nbtPath;
@@ -23,31 +23,10 @@ public class NBTComponent extends AbstractBaseComponent<NBTComponent> {
 	private String block;
 	private String entity;
 	private String storage;
-	
-	@Override
-	public void addContents(NBTWriter writer) throws IOException {
-		super.addContents(writer);
-		writer.writeStringTag(JSON_NBT, nbtPath);
-		if (source != null)
-			writer.writeStringTag(JSON_SOURCE, source);
-		if (interpret)
-			writer.writeByteTag(JSON_INTERPRET, true);
-		if (separator != null) {
-			writer.writeCompoundTag(JSON_SEPARATOR);
-			separator.addContents(writer);
-			writer.writeEndTag();
-		}
-		if (block != null)
-			writer.writeStringTag(JSON_BLOCK, block);
-		if (entity != null)
-			writer.writeStringTag(JSON_ENTITY, entity);
-		if (storage != null)
-			writer.writeStringTag(JSON_STORAGE, storage);
-	}
 
 	@Override
-	protected String getType() {
-		return "nbt";
+	public ComponentType getType() {
+		return ComponentType.NBT;
 	}
 
 	@Override

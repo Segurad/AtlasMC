@@ -1,23 +1,52 @@
 package de.atlasmc.chat.component;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import de.atlasmc.Color;
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatColor;
-import de.atlasmc.chat.component.ClickEvent.ClickAction;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.chat.component.event.click.ClickEvent;
+import de.atlasmc.chat.component.event.hover.HoverEntityEvent;
+import de.atlasmc.chat.component.event.hover.HoverEvent;
+import de.atlasmc.chat.component.event.hover.HoverItemEvent;
+import de.atlasmc.chat.component.event.hover.HoverTextEvent;
+import de.atlasmc.util.annotation.Nullable;
+import de.atlasmc.util.nbt.serialization.NBTSerializable;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 import de.atlasmc.util.nbt.tag.NBT;
 
-public interface ChatComponent extends Chat, Cloneable {
+public interface ChatComponent extends Chat, Cloneable, NBTSerializable {
 	
 	public static final String 
 		FONT_DEFAULT = "minecraft:default",
 		FONT_ALT = "minecraft:alt",
 		FONT_UNIFORM = "minecraft:uniform";
 	
+	public static final NBTSerializationHandler<ChatComponent> 
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(ChatComponent.class)
+					.searchKeyEnumConstructor("type", ComponentType::getByNameID, ComponentType::createComponent, ChatComponent::getType)
+					.defaultConstructor(BaseComponent::new)
+					.redirectAfterConstruction(true)
+					.bool("bold", ChatComponent::isBold, ChatComponent::setBold, false)
+					.bool("italic", ChatComponent::isItalic, ChatComponent::setItalic, false)
+					.bool("underlined", ChatComponent::isUnderlined, ChatComponent::setUnderlined, false)
+					.bool("obfuscated", ChatComponent::isObfuscated, ChatComponent::setObfuscated, false)
+					.bool("strikethrough", ChatComponent::isStrikethrough, ChatComponent::setStrikethrough, false)
+					.color("shadow_color", ChatComponent::getShadowColor, ChatComponent::setShadowColor)
+					.chatColorColor("color", ChatComponent::getColorChat, ChatComponent::setColor, ChatComponent::getColor, ChatComponent::setColor)
+					.string("font", ChatComponent::getFont, ChatComponent::setFont)
+					.typeList("extra", ChatComponent::getExtra, ChatComponent.NBT_HANDLER)
+					.string("insertion", ChatComponent::getInsertion, ChatComponent::setInsertion)
+					.compoundType("click_event", ChatComponent::getClickEvent, ChatComponent::setClickEvent, ClickEvent.NBT_HANDLER)
+					.compoundType("hover_event", ChatComponent::getHoverEvent, ChatComponent::setHoverEvent, HoverEvent.NBT_HANDLER)
+					.build();
+	
+	@Nullable
+	ComponentType getType();
 	
 	String getInsertion();
 	
@@ -52,14 +81,11 @@ public interface ChatComponent extends Chat, Cloneable {
 	
 	ChatComponent setFont(String font);
 	
-	void toJson(CharSequence key, NBTWriter writer) throws IOException;
-	
 	/**
-	 * Returns the RGB value of the color used or -1.
-	 * If set by {@link #setColor(ChatColor)} it will return the index+1 as negative
-	 * @return rgb or enum -(index+1) or -1
+	 * Returns the color.
+	 * @return rgb
 	 */
-	int getColor();
+	Color getColor();
 	
 	/**
 	 * Returns the ChatColor represented by the color or null
@@ -68,10 +94,10 @@ public interface ChatComponent extends Chat, Cloneable {
 	ChatColor getColorChat();
 	
 	/**
-	 * Sets the color as RGB value or -1 to remove or -({@link ChatColor#getID()}+1) for chat color
+	 * Sets the color
 	 * @param rgb
 	 */
-	ChatComponent setColor(int rgb);
+	ChatComponent setColor(Color rgb);
 	
 	/**
 	 * Sets the color by {@link ChatColor} or null to remove.
@@ -100,15 +126,15 @@ public interface ChatComponent extends Chat, Cloneable {
 	
 	ChatComponent setHoverEvent(HoverEvent event);
 	
-	/**
-	 * Adds the contents of this component to the writer
-	 * @param writer
-	 */
-	void addContents(NBTWriter writer) throws IOException;
-	
 	List<ChatComponent> getExtra();
 	
 	boolean hasExtra();
+	
+	Color getShadowColor();
+	
+	void setShadowColor(Color color);
+	
+	boolean hasShadowColor();
 	
 	ChatComponent addExtra(ChatComponent component);
 	
@@ -117,6 +143,11 @@ public interface ChatComponent extends Chat, Cloneable {
 	ChatComponent setExtra(Collection<ChatComponent> extra);
 	
 	ChatComponent clone();
+	
+	@Override
+	default NBTSerializationHandler<? extends ChatComponent> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 	static BaseComponent chat(ChatComponent... components) {
 		BaseComponent comp = new BaseComponent();
@@ -145,11 +176,16 @@ public interface ChatComponent extends Chat, Cloneable {
 	}
 	
 	static KeybindComponent key(String key) {
-		return new KeybindComponent(key);
+		KeybindComponent comp = new KeybindComponent();
+		comp.setKey(key);
+		return comp;
 	}
 	
-	static ScoreComponent score(String entry, String objective) {
-		return new ScoreComponent(entry, objective);
+	static ScoreComponent score(String name, String objective) {
+		ScoreComponent comp = new ScoreComponent();
+		comp.setName(name);
+		comp.setObjective(objective);
+		return comp;
 	}
 	
 	static TranslationComponent translate() {
@@ -157,23 +193,31 @@ public interface ChatComponent extends Chat, Cloneable {
 	}
 	
 	static TranslationComponent translate(String key) {
-		return new TranslationComponent(key);
+		TranslationComponent comp = new TranslationComponent();
+		comp.setKey(key);
+		return comp;
 	}
 	
-	static ClickEvent click(ClickAction action, String value) {
-		return new ClickEvent(action, value);
+	static HoverTextEvent hoverText(Chat value) {
+		HoverTextEvent event = new HoverTextEvent();
+		event.setValue(value);
+		return event;
 	}
 	
-	static HoverTextEvent hoverText(ChatComponent component) {
-		return new HoverTextEvent(component);
+	static HoverEntityEvent hoverEntity(NamespacedKey type, UUID uuid, ChatComponent name) {
+		HoverEntityEvent event = new HoverEntityEvent();
+		event.setType(type);
+		event.setUUUID(uuid);
+		event.setName(name);
+		return event;
 	}
 	
-	static HoverEntityEvent hoverEntity(String type, UUID uuid, ChatComponent name) {
-		return new HoverEntityEvent(type, uuid, name);
-	}
-	
-	static HoverItemEvent hoverItem(String type, int count, NBT components) {
-		return new HoverItemEvent(type, count, components);
+	static HoverItemEvent hoverItem(NamespacedKey type, int count, NBT components) {
+		HoverItemEvent event = new HoverItemEvent();
+		event.setID(type);
+		event.setCount(count);
+		event.setComponents(components);
+		return event;
 	}
 	
 	static SelectorComponent selector(String selector, ChatComponent separator) {

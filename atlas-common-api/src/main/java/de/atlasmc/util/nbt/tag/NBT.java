@@ -1,7 +1,10 @@
 package de.atlasmc.util.nbt.tag;
 
+import java.io.IOException;
+
 import de.atlasmc.util.nbt.NBTHolder;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.io.NBTWriter;
 
 public interface NBT extends Cloneable, NBTHolder {
 	
@@ -28,6 +31,16 @@ public interface NBT extends Cloneable, NBTHolder {
 	TagType getType();
 	
 	NBT clone();
+	
+	/**
+	 * Write the NBT of the Holder
+	 * Does not create a new CompoundTag
+	 * @param name the name used instead {@link #getName()}
+	 * @param writer
+	 * @param systemData true if it is used system internal false while send to client
+	 * @throws IOException
+	 */
+	void toNBT(CharSequence name, NBTWriter writer, boolean systemData) throws IOException;
 	
 	public static ByteTag createByteTag(String name, int data) {
 		return new ByteTag(name, (byte) data);

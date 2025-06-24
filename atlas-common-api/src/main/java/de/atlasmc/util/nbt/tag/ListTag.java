@@ -69,7 +69,7 @@ public final class ListTag extends AbstractCollectionTag<ListTag, List<NBT>> imp
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+	public void toNBT(CharSequence name, NBTWriter writer, boolean systemData) throws IOException {
 		writer.writeListTag(name, datatype, getPayloadSize());
 		if (data != null && !data.isEmpty())
 			for (NBT element : data)

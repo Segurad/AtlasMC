@@ -2,8 +2,7 @@ package de.atlasmc.block.data;
 
 import java.util.List;
 
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.EnumValueCache;
+import de.atlasmc.util.AtlasEnum;
 
 public interface Bisected extends BlockData {
 	
@@ -13,7 +12,7 @@ public interface Bisected extends BlockData {
 	
 	Bisected clone();
 	
-	public static enum Half implements EnumName, EnumValueCache {
+	public static enum Half implements AtlasEnum {
 		TOP(0),
 		UPPER(0),
 		BOTTOM(1),
@@ -21,8 +20,8 @@ public interface Bisected extends BlockData {
 
 		private static List<Half> VALUES;
 		
-		private int id;
-		private String name;
+		private final int id;
+		private final String name;
 		
 		private Half(int id) {
 			this.id = id;
@@ -35,8 +34,6 @@ public interface Bisected extends BlockData {
 		}
 		
 		public static Half getByName(String name) {
-			if (name == null)
-				throw new IllegalArgumentException("Name can not be null!");
 			List<Half> values = getValues();
 			final int size = values.size();
 			for (int i = 0; i < size; i++) {
@@ -47,6 +44,7 @@ public interface Bisected extends BlockData {
 			return null;
 		}
 		
+		@Override
 		public int getID() {
 			return id;
 		}

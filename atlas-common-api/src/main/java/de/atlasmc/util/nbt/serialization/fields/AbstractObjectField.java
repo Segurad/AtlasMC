@@ -7,17 +7,17 @@ import de.atlasmc.util.nbt.TagType;
 
 public abstract class AbstractObjectField<T, K> extends NBTField<T> {
 	
-	protected final Function<T, K> supplier;
-	protected final BiConsumer<T, K> consumer;
+	protected final Function<T, K> get;
+	protected final BiConsumer<T, K> set;
 	
-	public AbstractObjectField(CharSequence key, TagType type, Function<T, K> supplier, BiConsumer<T, K> consumer) {
-		this(key, type, supplier, consumer, true);
+	public AbstractObjectField(CharSequence key, TagType type, Function<T, K> get, BiConsumer<T, K> set) {
+		this(key, type, get, set, true);
 	}
 	
-	public AbstractObjectField(CharSequence key, TagType type, Function<T, K> supplier, BiConsumer<T, K> consumer, boolean useDefault) {
+	public AbstractObjectField(CharSequence key, TagType type, Function<T, K> get, BiConsumer<T, K> set, boolean useDefault) {
 		super(key, type, useDefault);
-		this.supplier = supplier;
-		this.consumer = consumer;
+		this.get = get;
+		this.set = set;
 	}
 
 }

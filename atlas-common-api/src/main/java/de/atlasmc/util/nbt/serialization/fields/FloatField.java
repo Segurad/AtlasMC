@@ -11,35 +11,36 @@ import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 
 public class FloatField<T> extends NBTField<T> {
 	
-	private final ToFloatFunction<T> supplier;
-	private final ObjFloatConsumer<T> consumer;
+	private final ToFloatFunction<T> get;
+	private final ObjFloatConsumer<T> set;
 	private final float defaultValue;
 	
-	public FloatField(CharSequence key, ToFloatFunction<T> supplier, ObjFloatConsumer<T> consumer) {
+	public FloatField(CharSequence key, ToFloatFunction<T> get, ObjFloatConsumer<T> set) {
 		super(key, TagType.FLOAT, false);
-		this.supplier = supplier;
-		this.consumer = consumer;
+		this.get = get;
+		this.set = set;
 		this.defaultValue = 0;
 	}
 	
-	public FloatField(CharSequence key, ToFloatFunction<T> supplier, ObjFloatConsumer<T> consumer, float defaultValue) {
+	public FloatField(CharSequence key, ToFloatFunction<T> get, ObjFloatConsumer<T> set, float defaultValue) {
 		super(key, TagType.FLOAT, true);
-		this.supplier = supplier;
-		this.consumer = consumer;
+		this.get = get;
+		this.set = set;
 		this.defaultValue = defaultValue;
 	}
 
 	@Override
-	public void serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
-		float v = supplier.applyAsFloat(value);
+	public boolean serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
+		float v = get.applyAsFloat(value);
 		if (useDefault && v == defaultValue)
-			return;
+			return true;
 		writer.writeFloatTag(key, v);
+		return true;
 	}
 
 	@Override
 	public void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException {
-		consumer.accept(value, reader.readFloatTag());
+		set.accept(value, reader.readFloatTag());
 	}
 
 }

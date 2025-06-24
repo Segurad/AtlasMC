@@ -15,11 +15,12 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.registry.RegistryEntry;
+import de.atlasmc.util.map.key.CharKey;
 
 public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 
 	protected final Map<PluginHandle, Collection<RegistryEntry<T>>> pluginEntries;
-	protected final Map<String, RegistryEntry<T>> entries;
+	protected final Map<CharKey, RegistryEntry<T>> entries;
 	protected final NamespacedKey key;
 	private volatile T defaultEntry;
 	protected final Class<?> type;
@@ -48,37 +49,28 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	}
 
 	@Override
-	public T get(NamespacedKey key) {
+	public T get(CharSequence key) {
 		return getOrDefault(key, null);
 	}
 	
 	@Override
-	public T getOrDefault(NamespacedKey key) {
+	public T getOrDefault(CharSequence key) {
 		return getOrDefault(key, this.defaultEntry);
 	}
 	
 	@Override
-	public T getOrDefault(NamespacedKey key, T defaultValue) {
+	public T getOrDefault(CharSequence key, T defaultValue) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
-		RegistryEntry<T> value = entries.get(key.toString());
+		RegistryEntry<T> value = entries.get(key);
 		return value != null ? value.value() : defaultValue;
 	}
 
 	@Override
-	public RegistryEntry<T> register(PluginHandle plugin, NamespacedKey key, T value) {
+	public RegistryEntry<T> register(PluginHandle plugin, CharSequence key, T value) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
 		return internalRegister(plugin, key.toString(), value);
-	}
-
-	@Override
-	public RegistryEntry<T> register(PluginHandle plugin, String key, T value) {
-		if (key == null)
-			throw new IllegalArgumentException("Key can not be null!");
-		if (!NamespacedKey.NAMESPACED_KEY_PATTERN.matcher(key).matches())
-			throw new IllegalArgumentException("Key must be a valid namespaced key: " + key);
-		return internalRegister(plugin, key, value);
 	}
 	
 	protected RegistryEntry<T> internalRegister(PluginHandle plugin, String key, T value) {
@@ -87,10 +79,11 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 		if (value == null)
 			throw new IllegalArgumentException("Value can not be null!");
 		validateEntry(value);
-		RegistryEntry<T> entry = createEntry(plugin, key, value);
+		CharKey ckey = CharKey.literal(key);
+		RegistryEntry<T> entry = createEntry(plugin, ckey, value);
 		RegistryEntry<T> old;
 		modifyLock.lock();
-		old = entries.put(key, entry);
+		old = entries.put(ckey, entry);
 		if (old != null) {
 			Collection<RegistryEntry<T>> entries = pluginEntries(old.plugin());
 			entries.remove(old);
@@ -105,7 +98,7 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 		return old;
 	}
 	
-	protected RegistryEntry<T> createEntry(PluginHandle plugin, String key, T value) {
+	protected RegistryEntry<T> createEntry(PluginHandle plugin, CharKey key, T value) {
 		return new CoreRegistryEntry<T>(plugin, key, value);
 	}
 	
@@ -124,28 +117,10 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	}
 	
 	protected abstract void validateEntry(T value);
-
-	@Override
-	public T get(String key) {
-		return getOrDefault(key, null);
-	}
 	
 	@Override
-	public RegistryEntry<T> getEntry(String key) {
+	public RegistryEntry<T> getEntry(CharSequence key) {
 		return entries.get(key);
-	}
-	
-	@Override
-	public T getOrDefault(String key) {
-		return getOrDefault(key, this.defaultEntry);
-	}
-	
-	@Override
-	public T getOrDefault(String key, T defaultValue) {
-		if (key == null)
-			throw new IllegalArgumentException("Key can not be null!");
-		RegistryEntry<T> value = entries.get(key);
-		return value != null ? value.value() : defaultValue;
 	}
 	
 	@Override
@@ -168,7 +143,7 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	}
 	
 	@Override
-	public Set<String> keySet() {
+	public Set<CharKey> keySet() {
 		return Collections.unmodifiableSet(entries.keySet());
 	}
 	
@@ -186,12 +161,7 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	}
 	
 	@Override
-	public RegistryEntry<T> remove(NamespacedKey key) {
-		return remove(key.toString());
-	}
-	
-	@Override
-	public RegistryEntry<T> remove(String key) {
+	public RegistryEntry<T> remove(CharSequence key) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
 		modifyLock.lock();
@@ -287,13 +257,18 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 		
 	}
 	
+	@Override
+	public boolean containsKey(CharSequence key) {
+		return entries.containsKey(key);
+	}
+	
 	protected static class CoreRegistryEntry<T> implements RegistryEntry<T> {
 		
 		public final PluginHandle plugin;
-		public final String key;
+		public final CharKey key;
 		public final T value;
 		
-		public CoreRegistryEntry(PluginHandle plugin, String key, T value) {
+		public CoreRegistryEntry(PluginHandle plugin, CharKey key, T value) {
 			this.plugin = plugin;
 			this.key = key;
 			this.value = value;
@@ -310,7 +285,7 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 		}
 
 		@Override
-		public String key() {
+		public CharKey key() {
 			return key;
 		}
 		

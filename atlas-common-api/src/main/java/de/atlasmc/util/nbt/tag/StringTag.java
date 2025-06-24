@@ -52,7 +52,7 @@ public final class StringTag extends AbstractTag {
 	}
 
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+	public void toNBT(CharSequence name, NBTWriter writer, boolean systemData) throws IOException {
 		writer.writeStringTag(name, data);
 	}
 

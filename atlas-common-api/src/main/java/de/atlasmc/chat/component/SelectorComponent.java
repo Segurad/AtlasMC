@@ -1,15 +1,16 @@
 package de.atlasmc.chat.component;
 
-import java.io.IOException;
-
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public class SelectorComponent extends AbstractBaseComponent<SelectorComponent> {
 	
-	public static final CharKey
-	JSON_SELECTOR = CharKey.literal("selector"),
-	JSON_SEPARATOR = CharKey.literal("separator");
+	public static final NBTSerializationHandler<SelectorComponent>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(SelectorComponent.class)
+					.include(AbstractBaseComponent.NBT_HANDLER)
+					.string("selector", SelectorComponent::getSelector, SelectorComponent::setSelector)
+					.compoundType("separator", SelectorComponent::getSeparator, SelectorComponent::setSeparator, ChatComponent.NBT_HANDLER)
+					.build();
 	
 	private String selector;
 	private ChatComponent separator;
@@ -21,6 +22,10 @@ public class SelectorComponent extends AbstractBaseComponent<SelectorComponent> 
 		this.separator = separator;
 	}
 	
+	public void setSelector(String selector) {
+		this.selector = selector;
+	}
+	
 	public String getSelector() {
 		return selector;
 	}
@@ -29,20 +34,13 @@ public class SelectorComponent extends AbstractBaseComponent<SelectorComponent> 
 		return separator;
 	}
 	
-	@Override
-	public void addContents(NBTWriter writer) throws IOException {
-		super.addContents(writer);
-		writer.writeStringTag(JSON_SELECTOR, selector);
-		if (separator != null) {
-			writer.writeCompoundTag(JSON_SEPARATOR);
-			separator.addContents(writer);
-			writer.writeEndTag();
-		}
+	public void setSeparator(ChatComponent separator) {
+		this.separator = separator;
 	}
 	
 	@Override
-	protected String getType() {
-		return "selector";
+	public ComponentType getType() {
+		return ComponentType.SELECTOR;
 	}
 	
 	@Override

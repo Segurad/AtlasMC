@@ -6,13 +6,11 @@ import java.util.UUID;
 import java.util.function.LongSupplier;
 
 import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.tag.NBT;
 
-public abstract class AbstractNBTIOWriter implements NBTWriter {
+public abstract class AbstractNBTIOWriter extends AbstractNBTWriter {
 	
 	private int depth;
 	private ListData list;
-	private boolean closed;
 	private final boolean unnamedRoot;
 	private byte[] nameBuf;
 	
@@ -151,14 +149,6 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 		}
 	}
 	
-	@Override
-	public void writeNBT(NBT nbt) throws IOException {
-		ensureOpen();
-		if (nbt == null) 
-			throw new IllegalArgumentException("NBT can not be null!");
-		nbt.toNBT(this, true);
-	}
-	
 	private void prepareTag(TagType type, CharSequence name) throws IOException {
 		ensureOpen();
 		if (list != null && list.depth == depth) {
@@ -198,16 +188,12 @@ public abstract class AbstractNBTIOWriter implements NBTWriter {
 		depth--;
 	}
 	
-	public void close() {
-		closed = true;
+	@Override
+	public void close() throws IOException {
+		super.close();
 		depth = Integer.MIN_VALUE;
 		list = null;
 		nameBuf = null;
-	}
-	
-	protected final void ensureOpen() throws IOException {
-		if (closed)
-			throw new IOException("Stream closed!");
 	}
 	
 	/*

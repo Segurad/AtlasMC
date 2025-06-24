@@ -8,7 +8,7 @@ public class BaseComponent extends AbstractBaseComponent<BaseComponent> implemen
 	}
 
 	@Override
-	protected String getType() {
+	public ComponentType getType() {
 		return null;
 	}
 		

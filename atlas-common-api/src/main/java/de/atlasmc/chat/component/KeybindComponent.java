@@ -1,14 +1,15 @@
 package de.atlasmc.chat.component;
 
-import java.io.IOException;
-
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public class KeybindComponent extends AbstractBaseComponent<KeybindComponent> {
 
-	public static final CharKey
-	JSON_KEYBIND = CharKey.literal("keybind");
+	public static final NBTSerializationHandler<KeybindComponent> 
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(KeybindComponent.class)
+					.include(AbstractBaseComponent.NBT_HANDLER)
+					.string("keybind", KeybindComponent::getKey, KeybindComponent::setKey)
+					.build();
 	
 	public static final String
 	KEY_ATTACK = "key.attack",
@@ -48,29 +49,27 @@ public class KeybindComponent extends AbstractBaseComponent<KeybindComponent> {
 	
 	private String key;
 	
-	public KeybindComponent(String key) {
-		this.key = key;
-	}
-	
 	@Override
-	protected String getType() {
-		return "keybind";
+	public ComponentType getType() {
+		return ComponentType.KEYBIND;
 	}
 	
 	public String getKey() {
 		return key;
 	}
 	
-	@Override
-	public void addContents(NBTWriter writer) throws IOException {
-		super.addContents(writer);
-		if (key != null)
-			writer.writeStringTag(JSON_KEYBIND, key);
+	public void setKey(String key) {
+		this.key = key;
 	}
 
 	@Override
 	protected KeybindComponent getThis() {
 		return this;
+	}
+	
+	@Override
+	public NBTSerializationHandler<? extends KeybindComponent> getNBTHandler() {
+		return NBT_HANDLER;
 	}
 
 }

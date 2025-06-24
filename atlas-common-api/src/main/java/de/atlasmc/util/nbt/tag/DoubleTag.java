@@ -46,7 +46,7 @@ public final class DoubleTag extends NumberTag {
 	}
 
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+	public void toNBT(CharSequence name, NBTWriter writer, boolean systemData) throws IOException {
 		writer.writeDoubleTag(name, data);
 	}
 

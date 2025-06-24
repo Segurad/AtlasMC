@@ -54,4 +54,9 @@ public interface ItemComponent extends NBTSerializable, Namespaced, Cloneable, I
 
 	boolean isServerOnly();
 	
+	@Override
+	default NBTSerializationHandler<? extends ItemComponent> getNBTHandler() {
+		return NBT_HANDLER;
+	}
+	
 }

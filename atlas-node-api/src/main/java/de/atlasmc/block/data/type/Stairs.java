@@ -5,8 +5,7 @@ import java.util.List;
 import de.atlasmc.block.data.Bisected;
 import de.atlasmc.block.data.Directional;
 import de.atlasmc.block.data.Waterlogged;
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.EnumValueCache;
+import de.atlasmc.util.AtlasEnum;
 
 public interface Stairs extends Bisected, Directional, Waterlogged {
 	
@@ -16,7 +15,7 @@ public interface Stairs extends Bisected, Directional, Waterlogged {
 	
 	Stairs clone();
 	
-	public static enum Shape implements EnumName, EnumValueCache {
+	public static enum Shape implements AtlasEnum {
 		STRAIGHT,
 		INNER_LEFT,
 		INNER_RIGHT,
@@ -32,6 +31,11 @@ public interface Stairs extends Bisected, Directional, Waterlogged {
 		}
 		
 		@Override
+		public int getID() {
+			return ordinal();
+		}
+		
+		@Override
 		public String getName() {
 			return name;
 		}
@@ -44,7 +48,7 @@ public interface Stairs extends Bisected, Directional, Waterlogged {
 		public static Shape getByName(String name) {
 			if (name == null)
 				throw new IllegalArgumentException("Name can not be null!");
-			List<Shape> values = getValues();
+			final List<Shape> values = getValues();
 			final int size = values.size();
 			for (int i = 0; i < size; i++) {
 				Shape value = values.get(i);

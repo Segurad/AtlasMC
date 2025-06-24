@@ -11,35 +11,36 @@ import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 
 public class ByteField<T> extends NBTField<T> {
 	
-	private final ToByteFunction<T> supplier;
-	private final ObjByteConsumer<T> consumer;
+	private final ToByteFunction<T> get;
+	private final ObjByteConsumer<T> set;
 	private final byte defaultValue;
 	
-	public ByteField(CharSequence key, ToByteFunction<T> supplier, ObjByteConsumer<T> consumer) {
+	public ByteField(CharSequence key, ToByteFunction<T> get, ObjByteConsumer<T> set) {
 		super(key, TagType.BYTE, false);
-		this.supplier = supplier;
-		this.consumer = consumer;
+		this.get = get;
+		this.set = set;
 		this.defaultValue = 0;
 	}
 	
-	public ByteField(CharSequence key, ToByteFunction<T> supplier, ObjByteConsumer<T> consumer, byte defaultValue) {
+	public ByteField(CharSequence key, ToByteFunction<T> get, ObjByteConsumer<T> set, byte defaultValue) {
 		super(key, TagType.BYTE, true);
-		this.supplier = supplier;
-		this.consumer = consumer;
+		this.get = get;
+		this.set = set;
 		this.defaultValue = defaultValue;
 	}
 
 	@Override
-	public void serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
-		byte v = supplier.applyAsByte(value);
+	public boolean serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
+		byte v = get.applyAsByte(value);
 		if (useDefault && v == defaultValue)
-			return;
+			return true;
 		writer.writeByteTag(key, v);
+		return true;
 	}
 
 	@Override
 	public void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException {
-		consumer.accept(value, reader.readByteTag());
+		set.accept(value, reader.readByteTag());
 	}
 
 }

@@ -84,4 +84,6 @@ public interface NBTWriter extends Closeable {
 	
 	void writeNBT(NBT nbt) throws IOException;
 	
+	void writeNBT(CharSequence name, NBT nbt) throws IOException;
+	
 }

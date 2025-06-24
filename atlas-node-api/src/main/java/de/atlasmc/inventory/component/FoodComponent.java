@@ -13,7 +13,7 @@ public interface FoodComponent extends ItemComponent {
 					.beginComponent(COMPONENT_KEY.toString())
 					.intTag("nutrition", FoodComponent::getNutrition, FoodComponent::setNutrition, 0)
 					.floatTag("saturation", FoodComponent::getSaturation, FoodComponent::setSaturation, 0)
-					.boolTag("can_always_eat", FoodComponent::isAlwaysEatable, FoodComponent::setAlwaysEatable, false)
+					.bool("can_always_eat", FoodComponent::isAlwaysEatable, FoodComponent::setAlwaysEatable, false)
 					.endComponent()
 					.build();
 	
