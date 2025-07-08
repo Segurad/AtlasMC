@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.function.ObjLongConsumer;
 import java.util.function.ToLongFunction;
 
-import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
@@ -15,15 +14,8 @@ public class LongField<T> extends NBTField<T> {
 	private final ObjLongConsumer<T> set;
 	private final long defaultValue;
 	
-	public LongField(CharSequence key, ToLongFunction<T> get, ObjLongConsumer<T> set) {
-		super(key, TagType.LONG, false);
-		this.get = get;
-		this.set = set;
-		this.defaultValue = 0;
-	}
-	
-	public LongField(CharSequence key, ToLongFunction<T> get, ObjLongConsumer<T> set, long defaultValue) {
-		super(key, TagType.LONG, true);
+	public LongField(CharSequence key, ToLongFunction<T> get, ObjLongConsumer<T> set, boolean useDefault, long defaultValue) {
+		super(key, LONG, useDefault);
 		this.get = get;
 		this.set = set;
 		this.defaultValue = defaultValue;

@@ -6,7 +6,6 @@ import java.util.function.Function;
 
 import de.atlasmc.Color;
 import de.atlasmc.chat.ChatColor;
-import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
@@ -17,7 +16,7 @@ public class ChatColorColorField<T> extends AbstractObjectField<T, ChatColor> {
 	protected final BiConsumer<T, Color> setColor;
 	
 	public ChatColorColorField(CharSequence key, Function<T, ChatColor> getChat, BiConsumer<T, ChatColor> setChat, Function<T, Color> getColor, BiConsumer<T, Color> setColor) {
-		super(key, TagType.STRING, getChat, setChat, true);
+		super(key, STRING, getChat, setChat, true);
 		this.getColor = getColor;
 		this.setColor = setColor;
 	}

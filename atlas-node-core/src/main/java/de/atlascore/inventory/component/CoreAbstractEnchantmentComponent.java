@@ -8,52 +8,12 @@ import java.io.IOException;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.inventory.component.AbstractEnchantmentComponent;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.NBTUtil;
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap.Entry;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 public class CoreAbstractEnchantmentComponent extends CoreAbstractTooltipComponent implements AbstractEnchantmentComponent {
-
-	protected static final NBTSerializationHandler<CoreAbstractEnchantmentComponent> NBT_HANDLER;
-	
-	protected static final NBTFieldSet<CoreAbstractEnchantmentComponent> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_LEVELS = CharKey.literal("levels"),
-	NBT_SHOW_IN_TOOLTIP = CharKey.literal("show_in_tooltip");
-	
-	static {
-		NBT_HANDLER = NBTSerializationHandler
-				.builder(CoreAbstractEnchantmentComponent.class)
-				.include(CoreAbstractTooltipComponent.NBT_HANDLER)
-				.compoundMapNamespaced2Int("levels", CoreAbstractEnchantmentComponent::getStoredEnchants, Enchantment::getEnchantment)
-				.build();
-		
-		NBT_FIELDS = NBTFieldSet.newSet();
-		NBT_FIELDS.setField(NBT_LEVELS, (holder, reader) -> {
-			reader.readNextEntry();
-			while (reader.getType() != TagType.TAG_END) {
-				CharSequence key = reader.getFieldName();
-				int level = reader.readIntTag();
-				Enchantment ench = Enchantment.getEnchantment(key.toString());
-				if (ench == null)
-					continue;
-				holder.addEnchant(ench, level);
-			}
-			reader.readNextEntry();
-		});
-		NBT_FIELDS.setField(NBT_SHOW_IN_TOOLTIP, (holder, reader) -> {
-			holder.showInTooltip = reader.readBoolean();
-		});
-	}
 	
 	private Object2IntMap<Enchantment> enchantments;
 	private boolean showInTooltip;
@@ -79,27 +39,6 @@ public class CoreAbstractEnchantmentComponent extends CoreAbstractTooltipCompone
 	@Override
 	public void setShowTooltip(boolean show) {
 		this.showInTooltip = show;
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		 writer.writeCompoundTag(key.toString());
-		 if (hasEnchants()) {
-			 writer.writeCompoundTag(NBT_LEVELS);
-			 for (Entry<Enchantment> entry : enchantments.object2IntEntrySet()) {
-				 writer.writeIntTag(entry.getKey().getNamespacedKeyRaw(), entry.getIntValue());
-			 }
-			 writer.writeEndTag();
-		 }
-		 if (!showInTooltip)
-			 writer.writeByteTag(NBT_SHOW_IN_TOOLTIP, showInTooltip);
-		 writer.writeEndTag();
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		reader.readNextEntry();
-		NBTUtil.readNBT(NBT_FIELDS, this, reader);
 	}
 
 	@Override

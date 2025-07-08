@@ -14,9 +14,6 @@ import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ChargedProjectilesComponent;
 import de.atlasmc.inventory.component.ComponentType;
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import io.netty.buffer.ByteBuf;
 
 public class CoreChargedProjectilesComponent extends AbstractItemComponent implements ChargedProjectilesComponent {
@@ -30,29 +27,6 @@ public class CoreChargedProjectilesComponent extends AbstractItemComponent imple
 	@Override
 	public CoreChargedProjectilesComponent clone() {
 		return (CoreChargedProjectilesComponent) super.clone();
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		if (!hasProjectiles())
-			return;
-		final int size = projectiles.size();
-		writer.writeListTag(key.toString(), TagType.COMPOUND, size);
-		for (int i = 0; i < size; i++) {
-			ItemStack item = projectiles.get(i);
-			item.toNBT(writer, systemData);
-			writer.writeEndTag();
-		}
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		reader.readNextEntry();
-		while (reader.getRestPayload() > 0) {
-			reader.readNextEntry();
-			addProjectile(ItemStack.getFromNBT(reader));
-		}
-		reader.readNextEntry();
 	}
 
 	@Override

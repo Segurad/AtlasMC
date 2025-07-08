@@ -5,7 +5,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
@@ -13,7 +12,7 @@ import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 public class NamespacedKeyField<T> extends AbstractObjectField<T, NamespacedKey> {
 	
 	public NamespacedKeyField(CharSequence key, Function<T, NamespacedKey> get, BiConsumer<T, NamespacedKey> set) {
-		super(key, TagType.STRING, get, set, true);
+		super(key, STRING, get, set, true);
 	}
 
 	@Override

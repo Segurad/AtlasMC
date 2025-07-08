@@ -1,5 +1,7 @@
 package de.atlasmc.inventory.component;
 
+import java.util.function.Function;
+
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.registry.ProtocolRegistry;
@@ -8,8 +10,8 @@ import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.sound.EnumSound;
+import de.atlasmc.sound.ResourceSound;
 import de.atlasmc.sound.Sound;
-import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
@@ -20,18 +22,16 @@ public class Instrument extends ProtocolRegistryValueBase implements NBTSerializ
 	
 	private static final ProtocolRegistry<Instrument> REGISTRY;
 	
-	public static final CharKey
-	NBT_SOUND_EVENT = CharKey.literal("sound_event"),
-	NBT_USE_DURATION = CharKey.literal("use_duration"),
-	NBT_RANGE = CharKey.literal("range"),
-	NBT_DESCRIPTION = CharKey.literal("description");
-	
 	static {
 		REGISTRY = Registries.createRegistry(Instrument.class);
 		NBT_HANDLER = NBTSerializationHandler
 						.builder(Instrument.class)
+						.defaultConstructor(Instrument::new)
 						.chat("description", Instrument::getDescription, Instrument::setDescription)
-						.registryValue("sound_event", Instrument::getSound, Instrument::setSound, , null)
+						.interfacedEnumStringField("sound_event", (Function<Instrument, Sound>) Instrument::getSound, Instrument::setSound, EnumSound::getByName, null)
+						.compoundType("sound_event", (Function<Instrument, Sound>) Instrument::getSound, Instrument::setSound, ResourceSound.NBT_HANDLER)
+						.floatField("use_duration", Instrument::getUseDuration, Instrument::setUseDuration, 0)
+						.floatField("range", Instrument::getRange, Instrument::setRange, 0)
 						.build();
 	}
 	
@@ -39,6 +39,8 @@ public class Instrument extends ProtocolRegistryValueBase implements NBTSerializ
 	private float useDuration;
 	private float range;
 	private Chat description;
+	
+	public Instrument() {}
 	
 	public Instrument(Sound sound, float useDuration, float range, Chat description) {
 		super();
@@ -60,12 +62,24 @@ public class Instrument extends ProtocolRegistryValueBase implements NBTSerializ
 		return sound;
 	}
 	
+	public void setSound(Sound sound) {
+		this.sound = sound;
+	}
+	
 	public float getUseDuration() {
 		return useDuration;
 	}
 	
+	public void setUseDuration(float useDuration) {
+		this.useDuration = useDuration;
+	}
+	
 	public float getRange() {
 		return range;
+	}
+	
+	public void setRange(float range) {
+		this.range = range;
 	}
 	
 	public Chat getDescription() {

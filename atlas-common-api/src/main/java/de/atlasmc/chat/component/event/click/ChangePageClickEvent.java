@@ -8,7 +8,7 @@ public final class ChangePageClickEvent implements ClickEvent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(ChangePageClickEvent.class)
 					.include(ClickEvent.NBT_HANDLER)
-					.intTag("page", ChangePageClickEvent::getPage, ChangePageClickEvent::setPage)
+					.intField("page", ChangePageClickEvent::getPage, ChangePageClickEvent::setPage)
 					.build();
 	
 	private int page;

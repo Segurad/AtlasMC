@@ -1,19 +1,24 @@
 package de.atlasmc.block.tile;
 
 import de.atlasmc.inventory.Inventory;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Hopper extends AbstractContainerTile<Inventory> {
 	
-	public int getTransferCooldown();
+	public static final NBTSerializationHandler<Hopper>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Hopper.class)
+					.include(AbstractContainerTile.NBT_HANDLER)
+					.intField("TransferCooldown", Hopper::getTransferCooldown, Hopper::setTransferCooldown)
+					.build();
 	
-	public void setTransferCooldown(int cooldown);
-
-	public int getTransferAmount();
-
-	/**
-	 * Sets the max amount of items transfered each transfer
-	 * @param amount
-	 */
-	public void setTransferAmount(int amount);
+	int getTransferCooldown();
+	
+	void setTransferCooldown(int cooldown);
+	
+	@Override
+	default NBTSerializationHandler<? extends Hopper> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 
 }

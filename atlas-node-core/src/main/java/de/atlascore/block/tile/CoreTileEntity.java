@@ -1,61 +1,24 @@
 package de.atlascore.block.tile;
 
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
-import de.atlasmc.Nameable;
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.TileEntity;
-import de.atlasmc.chat.Chat;
-import de.atlasmc.chat.ChatUtil;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.AbstractNBTBase;
-import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.inventory.component.ItemComponent;
 import de.atlasmc.world.Chunk;
 import de.atlasmc.world.World;
 
-public class CoreTileEntity extends AbstractNBTBase implements TileEntity {
-	
-	protected static final NBTFieldSet<CoreTileEntity> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_KEEP_PACKED = CharKey.literal("keepPacked"),
-	NBT_X = CharKey.literal("x"),
-	NBT_Y = CharKey.literal("y"),
-	NBT_Z = CharKey.literal("z"),
-	NBT_CUSTOM_NAME = CharKey.literal("CustomName");
-	
-	static {
-		NBT_FIELDS = NBTFieldSet.newSet();
-		NBT_FIELDS.setField(NBT_ID, (holder, reader) -> {
-			holder.setType(BlockType.get(reader.readStringTag()));
-		});
-		NBT_FIELDS.setField(NBT_X, (holder, reader) -> {
-			holder.x = reader.readIntTag();
-		});
-		NBT_FIELDS.setField(NBT_Y, (holder, reader) -> {
-			holder.y = reader.readIntTag();
-		});
-		NBT_FIELDS.setField(NBT_Z, (holder, reader) -> {
-			holder.z = reader.readIntTag();
-		});
-		NBT_FIELDS.setField(NBT_CUSTOM_NAME, (holder, reader) -> {
-			if (holder instanceof Nameable nameable) {
-				nameable.setCustomName(ChatUtil.fromNBT(reader));
-			} else  {
-				reader.skipTag();
-			}
-		});
-		NBT_FIELDS.setField(NBT_KEEP_PACKED, NBTField.skip()); // TODO Field skipped due to unknown behavior
-	}
+public class CoreTileEntity implements TileEntity {
 	
 	private BlockType type;
 	private int x;
 	private int y;
 	private int z;
 	private Chunk chunk;
+	private Map<NamespacedKey, ItemComponent> components;
 	
 	public CoreTileEntity(BlockType type) {
 		this.type = type;
@@ -77,10 +40,20 @@ public class CoreTileEntity extends AbstractNBTBase implements TileEntity {
 	public int getX() {
 		return x;
 	}
+	
+	@Override
+	public void setX(int x) {
+		this.x = x;
+	}
 
 	@Override
 	public int getY() {
 		return y;
+	}
+	
+	@Override
+	public void setY(int y) {
+		this.y = y;
 	}
 
 	@Override
@@ -88,34 +61,16 @@ public class CoreTileEntity extends AbstractNBTBase implements TileEntity {
 		return z;
 	}
 	
+	@Override
+	public void setZ(int z) {
+		this.z = z;
+	}
+	
 	public TileEntity clone() {
 		try {
 			return (TileEntity) super.clone();
 		} catch (CloneNotSupportedException e) {}
 		return null;
-	}
-
-	@Override
-	protected NBTFieldSet<? extends CoreTileEntity> getFieldSetRoot() {
-		return NBT_FIELDS;
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		if (!systemData) { 
-			writer.writeStringTag(NBT_ID, getType().getClientKey().toString());
-			return;
-		}
-		writer.writeStringTag(NBT_ID, getType().getNamespacedKeyRaw());
-		writer.writeByteTag(NBT_KEEP_PACKED, 0);
-		writer.writeIntTag(NBT_X, getX());
-		writer.writeIntTag(NBT_Y, getY());
-		writer.writeIntTag(NBT_Z, getZ());
-		if (this instanceof Nameable nameable) {
-			Chat name = nameable.getCustomName();
-			if (name != null)
-				ChatUtil.toNBT(NBT_CUSTOM_NAME, name, writer);
-		}
 	}
 
 	@Override
@@ -144,6 +99,18 @@ public class CoreTileEntity extends AbstractNBTBase implements TileEntity {
 	@Override
 	public int getID() {
 		return type.getTileID();
+	}
+
+	@Override
+	public Map<NamespacedKey, ItemComponent> getComponents() {
+		if (components == null)
+			components = new HashMap<>();
+		return components;
+	}
+
+	@Override
+	public boolean hasComponents() {
+		return components != null && !components.isEmpty();
 	}
 
 }

@@ -4,21 +4,19 @@ import java.io.IOException;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public class CompoundTypeField<T, K extends NBTSerializable> extends NBTField<T> {
+public class CompoundTypeField<T, K> extends NBTField<T> {
 	
 	private final Function<T, ? super K> get;
 	private final BiConsumer<T, ? super K> set;
 	private final NBTSerializationHandler<K> handler;
 	
 	public CompoundTypeField(CharSequence key, Function<T, ? super K> get, BiConsumer<T, ? super K> set, NBTSerializationHandler<K> handler) {
-		super(key, TagType.COMPOUND, true);
+		super(key, COMPOUND, true);
 		this.handler = handler;
 		this.set = set;
 		this.get = get;

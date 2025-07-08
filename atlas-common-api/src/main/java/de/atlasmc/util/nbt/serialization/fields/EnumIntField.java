@@ -3,20 +3,20 @@ package de.atlasmc.util.nbt.serialization.fields;
 import java.io.IOException;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.EnumID;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 
-public class NamedEnumField<T, K extends Enum<?> & EnumName> extends AbstractObjectField<T, K> {
+public class EnumIntField<T, K extends Enum<?> & EnumID> extends AbstractObjectField<T, K> {
 
-	private final Function<String, K> enumSupplier;
+	private final IntFunction<K> enumSupplier;
 	private final K defaultValue;
 	
-	public NamedEnumField(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, Function<String, K> enumSupplier, K defaultValue) {
-		super(key, TagType.STRING, get, set, true);
+	public EnumIntField(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, IntFunction<K> enumSupplier, K defaultValue) {
+		super(key, STRING, get, set, true);
 		this.enumSupplier = enumSupplier;
 		this.defaultValue = defaultValue;
 	}
@@ -26,13 +26,13 @@ public class NamedEnumField<T, K extends Enum<?> & EnumName> extends AbstractObj
 		K v = get.apply(value);
 		if (useDefault && v == defaultValue)
 			return true;
-		writer.writeStringTag(key, v.getName());
+		writer.writeIntTag(key, v.getID());
 		return true;
 	}
 
 	@Override
 	public void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException {
-		K v = enumSupplier.apply(reader.readStringTag());
+		K v = enumSupplier.apply(reader.readIntTag());
 		set.accept(value, v);
 	}
 

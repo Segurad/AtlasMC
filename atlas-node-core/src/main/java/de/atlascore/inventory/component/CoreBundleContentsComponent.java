@@ -1,5 +1,10 @@
 package de.atlascore.inventory.component;
 
+import static de.atlasmc.io.PacketUtil.readVarInt;
+import static de.atlasmc.io.PacketUtil.writeVarInt;
+import static de.atlasmc.io.protocol.ProtocolUtil.readSlot;
+import static de.atlasmc.io.protocol.ProtocolUtil.writeSlot;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,11 +14,7 @@ import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.BundleContentsComponent;
 import de.atlasmc.inventory.component.ComponentType;
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import io.netty.buffer.ByteBuf;
-import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CoreBundleContentsComponent extends AbstractItemComponent implements BundleContentsComponent {
 
@@ -31,31 +32,6 @@ public class CoreBundleContentsComponent extends AbstractItemComponent implement
 		if (clone == null)
 			return null;
 		return clone;
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		if (items == null || items.isEmpty())
-			return;
-		List<ItemStack> items = this.items;
-		final int size = items.size();
-		writer.writeListTag(getNamespacedKeyRaw(), TagType.COMPOUND, size);
-		for (int i = 0; i < size; i++) {
-			ItemStack item = items.get(i);
-			item.toNBT(writer, systemData);
-			writer.writeEndTag();
-		}
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		reader.readNextEntry();
-		while (reader.getRestPayload() > 0) {
-			reader.readNextEntry();
-			ItemStack item = ItemStack.getFromNBT(reader);
-			addItem(item);
-		}
-		reader.readNextEntry();
 	}
 
 	@Override

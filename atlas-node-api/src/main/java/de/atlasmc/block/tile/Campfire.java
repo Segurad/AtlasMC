@@ -1,31 +1,46 @@
 package de.atlasmc.block.tile;
 
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Campfire extends TileEntity {
 	
-	public ItemStack[] getItems();
+	static final NBTSerializationHandler<Campfire>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Campfire.class)
+					.include(TileEntity.NBT_HANDLER)
+					.typeArraySearchByteIndexField("Items", "slot", null, Campfire::getItems, ItemStack.NBT_HANDLER)
+					.intArray("CookingTimes", Campfire::getCookingTimes, Campfire::setCookingTimes)
+					.intArray("CookingTotalTimes", Campfire::getTotalCookingTimes, Campfire::setTotalCookingTimes)
+					.build();
 	
-	public void setItems(ItemStack[] items);
+	ItemStack[] getItems();
 	
-	public ItemStack getItem(int index);
+	void setItems(ItemStack[] items);
 	
-	public void setItem(int index, ItemStack item);
+	ItemStack getItem(int index);
 	
-	public int[] getCookingTimes();
+	void setItem(int index, ItemStack item);
 	
-	public void setCookingTimes(int[] cookingTimes);
+	int[] getCookingTimes();
 	
-	public void setCookingTime(int index, int time);
+	void setCookingTimes(int[] cookingTimes);
 	
-	public int getCookingTime(int index);
+	void setCookingTime(int index, int time);
 	
-	public int[] getTotalCookingTimes();
+	int getCookingTime(int index);
 	
-	public void setTotalCookingTimes(int[] totalCookingTimes);
+	int[] getTotalCookingTimes();
 	
-	public void setTotalCookingTime(int index, int time);
+	void setTotalCookingTimes(int[] totalCookingTimes);
 	
-	public int getTotalCookingTime(int index);
+	void setTotalCookingTime(int index, int time);
+	
+	int getTotalCookingTime(int index);
+	
+	@Override
+	default NBTSerializationHandler<? extends Campfire> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 
 }

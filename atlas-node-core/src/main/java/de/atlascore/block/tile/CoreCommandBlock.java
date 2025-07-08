@@ -1,62 +1,16 @@
 package de.atlascore.block.tile;
 
-import java.io.IOException;
-
 import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.CommandBlock;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatType;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.permission.Permission;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
-
-	protected static final NBTFieldSet<CoreCommandBlock> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_AUTO = CharKey.literal("auto"),
-	NBT_COMMAND = CharKey.literal("conditionMet"),
-	NBT_CONDITION_MET = CharKey.literal("LastExecution"),
-	NBT_LAST_EXECUTION = CharKey.literal("LastExecution"),
-	NBT_LAST_OUTPUT = CharKey.literal("LastOutput"),
-	NBT_POWERED = CharKey.literal("powered"),
-	NBT_SUCCESSCOUNT = CharKey.literal("SuccessCount"),
-	NBT_TRACKOUTPUT = CharKey.literal("TrackOutput"),
-	NBT_UPDATE_LAST_EXECUTION = CharKey.literal("UpdateLastExecution");
-	
-	static {
-		NBT_FIELDS = CoreTileEntity.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_AUTO, (holder, reader) -> {
-			holder.setAlwaysActive(reader.readBoolean());
-		});
-		NBT_FIELDS.setField(NBT_COMMAND, (holder, reader) -> {
-			holder.setCommand(reader.readStringTag());
-		});
-		NBT_FIELDS.setField(NBT_CONDITION_MET, (holder, reader) -> {
-			holder.setConditional(reader.readBoolean());
-		});
-		NBT_FIELDS.setField(NBT_LAST_EXECUTION, NBTField.skip()); // TODO Wait for CommandBlock logic
-		NBT_FIELDS.setField(NBT_LAST_OUTPUT, (holder, reader) -> {
-			holder.setLastMessage(ChatUtil.fromNBT(reader));
-		});
-		NBT_FIELDS.setField(NBT_POWERED, (holder, reader) -> {
-			holder.setPowered(reader.readBoolean());
-		});
-		NBT_FIELDS.setField(NBT_SUCCESSCOUNT, (holder, reader) -> {
-			holder.setSuccessCount(reader.readIntTag());
-		});
-		NBT_FIELDS.setField(NBT_TRACKOUTPUT, (holder, reader) -> {
-			holder.setTrackOutput(reader.readBoolean());
-		});
-		NBT_FIELDS.setField(NBT_UPDATE_LAST_EXECUTION, NBTField.skip()); // TODO see NBT_LAST_EXECUTION ^
-	}
 	
 	private Mode mode;
-	private boolean conditional;
+	private boolean conditionMet;
 	private boolean alwaysActive;
 	private boolean trackOutput;
 	private boolean powered;
@@ -64,6 +18,8 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 	private Chat lastoutput;
 	private String command;
 	private int successCount;
+	private boolean updateLastExecution;
+	private long lastExecution;
 	
 	public CoreCommandBlock(BlockType type) {
 		super(type);
@@ -82,13 +38,13 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 	}
 
 	@Override
-	public boolean isConditional() {
-		return conditional;
+	public boolean isConditionMet() {
+		return conditionMet;
 	}
 
 	@Override
-	public void setConditional(boolean conditional) {
-		this.conditional = conditional;
+	public void setConditionMet(boolean conditional) {
+		this.conditionMet = conditional;
 	}
 
 	@Override
@@ -160,30 +116,6 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 	public int getSuccessCount() {
 		return successCount;
 	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (systemData) {
-			writer.writeStringTag(NBT_CUSTOM_NAME, getCustomName().toJsonText());
-			writer.writeByteTag(NBT_AUTO, isAlwaysActive());
-			writer.writeStringTag(NBT_COMMAND, getCommand());
-			writer.writeLongTag(NBT_LAST_EXECUTION, 0);
-			ChatUtil.toNBT(NBT_LAST_OUTPUT, lastoutput, writer);
-			writer.writeByteTag(NBT_POWERED, isPowered());
-			writer.writeIntTag(NBT_SUCCESSCOUNT, getSuccessCount());
-			writer.writeByteTag(NBT_TRACKOUTPUT, getTrackOutput());
-			writer.writeByteTag(NBT_UPDATE_LAST_EXECUTION, true);
-		} else {
-			writer.writeStringTag(NBT_COMMAND, getCommand());
-			ChatUtil.toNBT(NBT_LAST_OUTPUT, lastoutput, writer);
-		}
-	}
-	
-	@Override
-	protected NBTFieldSet<? extends CoreCommandBlock> getFieldSetRoot() {
-		return NBT_FIELDS;
-	}
 
 	@Override
 	public Permission getPermission(CharSequence permission) {
@@ -216,5 +148,25 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 	@Override
 	public void sendMessage(String message, ChatType type, String source, String target) {
 		sendMessage(message);
+	}
+
+	@Override
+	public long getLastExecution() {
+		return lastExecution;
+	}
+
+	@Override
+	public void setLastExecution(long lastExecution) {
+		this.lastExecution = lastExecution;
+	}
+
+	@Override
+	public boolean getUpdateLastExecution() {
+		return updateLastExecution;
+	}
+
+	@Override
+	public void setUpdateLastExecution(boolean value) {
+		this.updateLastExecution = value;
 	}
 }

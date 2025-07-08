@@ -1,6 +1,7 @@
 package de.atlasmc.block.tile;
 
 import java.util.List;
+import java.util.function.Function;
 
 import de.atlasmc.DyeColor;
 import de.atlasmc.Nameable;
@@ -9,8 +10,20 @@ import de.atlasmc.chat.Chat;
 import de.atlasmc.util.EnumID;
 import de.atlasmc.util.EnumName;
 import de.atlasmc.util.EnumValueCache;
+import de.atlasmc.util.nbt.serialization.NBTSerializable;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Banner extends TileEntity, Nameable {
+	
+	public static final NBTSerializationHandler<Banner>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Banner.class)
+					.include(TileEntity.NBT_HANDLER)
+					.include(Nameable.NBT_HANDLER)
+					.typeList("patterns", Banner::hasPatterns, Banner::getPatterns, Pattern.NBT_HANDLER)
+					.build();
+	
+	boolean hasPatterns();
 	
 	void addPattern(Pattern pattern);
 	
@@ -34,10 +47,26 @@ public interface Banner extends TileEntity, Nameable {
 	
 	void setCustomName(Chat name);
 	
-	public static class Pattern {
+	@Override
+	default NBTSerializationHandler<? extends Banner> getNBTHandler() {
+		return NBT_HANDLER;
+	}
+	
+	public static class Pattern implements NBTSerializable {
 		
-		private final DyeColor color;
-		private final PatternType type;
+		public static final NBTSerializationHandler<Pattern>
+		NBT_HANDLER = NBTSerializationHandler
+						.builder(Pattern.class)
+						.defaultConstructor(Pattern::new)
+						.enumStringField("color", Pattern::getColor, Pattern::setColor, DyeColor::getByName, null)
+						.interfacedEnumStringField("pattern", (Function<Pattern, PatternType>) Pattern::getType, Pattern::setType, EnumPatternType::getByName, null)
+						.compoundType("pattern", (Function<Pattern, PatternType>) Pattern::getType, Pattern::setType, ResourcePatternType.NBT_HANDLER)
+						.build();
+		
+		private DyeColor color;
+		private PatternType type;
+		
+		public Pattern() {}
 		
 		public Pattern(DyeColor color, PatternType type) {
 			this.color = color;
@@ -48,18 +77,41 @@ public interface Banner extends TileEntity, Nameable {
 			return color;
 		}
 		
+		public void setColor(DyeColor color) {
+			this.color = color;
+		}
+		
 		public PatternType getType() {
 			return type;
+		}
+		
+		public void setType(PatternType type) {
+			this.type = type;
+		}
+		
+		@Override
+		public NBTSerializationHandler<? extends Pattern> getNBTHandler() {
+			return NBT_HANDLER;
 		}
 		
 	}
 	
 	public static interface PatternType {}
 	
-	public static class ResourcePatternType implements PatternType {
+	public static class ResourcePatternType implements PatternType, NBTSerializable {
 		
-		private final NamespacedKey assetID;
-		private final String translationKey;
+		public static final NBTSerializationHandler<ResourcePatternType>
+		NBT_HANDLER = NBTSerializationHandler
+						.builder(ResourcePatternType.class)
+						.defaultConstructor(ResourcePatternType::new)
+						.namespacedKey("asset_id", ResourcePatternType::getAssetID, ResourcePatternType::setAssetID)
+						.string("translation_key", ResourcePatternType::getTranslationKey, ResourcePatternType::setTranslationKey)
+						.build();
+		
+		private NamespacedKey assetID;
+		private String translationKey;
+		
+		private ResourcePatternType() {}
 		
 		public ResourcePatternType(NamespacedKey key, String translationKey) {
 			this.assetID = key;
@@ -72,6 +124,19 @@ public interface Banner extends TileEntity, Nameable {
 		
 		public String getTranslationKey() {
 			return translationKey;
+		}
+		
+		public void setAssetID(NamespacedKey assetID) {
+			this.assetID = assetID;
+		}
+		
+		public void setTranslationKey(String translationKey) {
+			this.translationKey = translationKey;
+		}
+		
+		@Override
+		public NBTSerializationHandler<? extends ResourcePatternType> getNBTHandler() {
+			return NBT_HANDLER;
 		}
 		
 	}

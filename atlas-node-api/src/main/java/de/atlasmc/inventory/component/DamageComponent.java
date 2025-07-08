@@ -8,7 +8,7 @@ public interface DamageComponent extends ItemComponent {
 	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:damage");
 	
 	public static NBTSerializationHandler<DamageComponent> NBT_HANDLER = NBTSerializationHandler.builder(DamageComponent.class)
-			.intTag(COMPONENT_KEY.toString(), DamageComponent::getDamage, DamageComponent::setDamage)
+			.intField(COMPONENT_KEY.toString(), DamageComponent::getDamage, DamageComponent::setDamage)
 			.build();
 	
 	int getDamage();

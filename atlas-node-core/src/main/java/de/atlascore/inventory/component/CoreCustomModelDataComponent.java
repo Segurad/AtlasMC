@@ -1,5 +1,10 @@
 package de.atlascore.inventory.component;
 
+import static de.atlasmc.io.PacketUtil.readString;
+import static de.atlasmc.io.PacketUtil.readVarInt;
+import static de.atlasmc.io.PacketUtil.writeString;
+import static de.atlasmc.io.PacketUtil.writeVarInt;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,13 +13,6 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.CustomModelDataComponent;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTException;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.NBTUtil;
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 import it.unimi.dsi.fastutil.booleans.BooleanList;
@@ -22,69 +20,8 @@ import it.unimi.dsi.fastutil.floats.FloatArrayList;
 import it.unimi.dsi.fastutil.floats.FloatList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CoreCustomModelDataComponent extends AbstractItemComponent implements CustomModelDataComponent {
-	
-	protected static final NBTFieldSet<CoreCustomModelDataComponent> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_FLOATS = CharKey.literal("floats"),
-	NBT_FLAGS = CharKey.literal("flags"),
-	NBT_STRINGS = CharKey.literal("strings"),
-	NBT_COLORS = CharKey.literal("colors");
-	
-	static {
-		NBT_FIELDS = NBTFieldSet.newSet();
-		NBT_FIELDS.setField(NBT_FLOATS, (holder, reader) -> {
-			FloatArrayList floats = new FloatArrayList();
-			reader.readNextEntry();
-			while (reader.getRestPayload() > 0) {
-				floats.add(reader.readFloatTag());
-			}
-			reader.readNextEntry();
-			floats.trim();
-			holder.floats = floats;
-		});
-		NBT_FIELDS.setField(NBT_FLAGS, (holder, reader) -> {
-			BooleanArrayList flags = new BooleanArrayList();
-			reader.readNextEntry();
-			while (reader.getRestPayload() > 0) {
-				flags.add(reader.readBoolean());
-			}
-			reader.readNextEntry();
-			flags.trim();
-			holder.flags = flags;
-		});
-		NBT_FIELDS.setField(NBT_STRINGS, (holder, reader) -> {
-			ArrayList<String> strings = new ArrayList<>();
-			reader.readNextEntry();
-			while (reader.getRestPayload() > 0) {
-				strings.add(reader.readStringTag());
-			}
-			reader.readNextEntry();
-			strings.trimToSize();
-			holder.strings = strings;
-		});
-		NBT_FIELDS.setField(NBT_COLORS, (holder, reader) -> {
-			TagType listType = reader.getListType();
-			if (listType == TagType.LIST) {
-				reader.skipTag();
-				// i don't care about this mess
-			} else if (listType == TagType.INT) {
-				IntArrayList colors = new IntArrayList();
-				reader.readNextEntry();
-				while (reader.getRestPayload() > 0) {
-					colors.add(reader.readIntTag());
-				}
-				reader.readNextEntry();
-				colors.trim();
-				holder.colors = colors;
-			} else {
-				throw new NBTException("Unexpected list type: " + listType);
-			}
-		});
-	}
 	
 	private FloatList floats;
 	private BooleanList flags;
@@ -107,46 +44,6 @@ public class CoreCustomModelDataComponent extends AbstractItemComponent implemen
 		if (colors != null)
 			clone.colors = new IntArrayList(colors);
 		return clone;
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeCompoundTag(key.toString());
-		if (floats != null) {
-			final int size = floats.size();
-			writer.writeListTag(NBT_FLOATS, TagType.FLOAT, size);
-			for (int i = 0; i < size; i++) {
-				writer.writeFloatTag(null, floats.getFloat(i));
-			}
-		}
-		if (flags != null) {
-			final int size = flags.size();
-			writer.writeListTag(NBT_FLAGS, TagType.BYTE, size);
-			for (int i = 0; i < size; i++) {
-				writer.writeByteTag(null, flags.getBoolean(i));
-			}
-		}
-		if (strings != null) {
-			final int size = strings.size();
-			writer.writeListTag(NBT_STRINGS, TagType.STRING, size);
-			for (int i = 0; i < size; i++) {
-				writer.writeStringTag(null, strings.get(i));
-			}
-		}
-		if (colors != null) {
-			final int size = colors.size();
-			writer.writeListTag(NBT_COLORS, TagType.INT, size);
-			for (int i = 0; i < size; i++) {
-				writer.writeIntTag(null, colors.getInt(i));
-			}
-		}
-		writer.writeEndTag();
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		reader.readNextEntry();
-		NBTUtil.readNBT(NBT_FIELDS, this, reader);
 	}
 
 	@Override

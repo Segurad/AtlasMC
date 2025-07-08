@@ -11,9 +11,9 @@ public interface FoodComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(FoodComponent.class)
 					.beginComponent(COMPONENT_KEY.toString())
-					.intTag("nutrition", FoodComponent::getNutrition, FoodComponent::setNutrition, 0)
-					.floatTag("saturation", FoodComponent::getSaturation, FoodComponent::setSaturation, 0)
-					.bool("can_always_eat", FoodComponent::isAlwaysEatable, FoodComponent::setAlwaysEatable, false)
+					.intField("nutrition", FoodComponent::getNutrition, FoodComponent::setNutrition, 0)
+					.floatField("saturation", FoodComponent::getSaturation, FoodComponent::setSaturation, 0)
+					.boolField("can_always_eat", FoodComponent::isAlwaysEatable, FoodComponent::setAlwaysEatable, false)
 					.endComponent()
 					.build();
 	

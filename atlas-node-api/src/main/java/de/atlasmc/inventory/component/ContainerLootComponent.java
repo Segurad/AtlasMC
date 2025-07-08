@@ -12,7 +12,7 @@ public interface ContainerLootComponent extends ItemComponent {
 					.builder(ContainerLootComponent.class)
 					.beginComponent(COMPONENT_KEY.toString())
 					.namespacedKey("loot_table", ContainerLootComponent::getLootTableKey, ContainerLootComponent::setLootTableKey)
-					.longTag("seed", ContainerLootComponent::getSeed, ContainerLootComponent::setSeed, 0)
+					.longField("seed", ContainerLootComponent::getSeed, ContainerLootComponent::setSeed, 0)
 					.endComponent()
 					.build();
 	

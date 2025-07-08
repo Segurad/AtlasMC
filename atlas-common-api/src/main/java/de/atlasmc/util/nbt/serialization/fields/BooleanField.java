@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import de.atlasmc.util.function.ObjBooleanConsumer;
 import de.atlasmc.util.function.ToBooleanFunction;
-import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
@@ -15,15 +14,8 @@ public class BooleanField<T> extends NBTField<T> {
 	private final ObjBooleanConsumer<T> set;
 	private final boolean defaultValue;
 	
-	public BooleanField(CharSequence key, ToBooleanFunction<T> get, ObjBooleanConsumer<T> set) {
-		super(key, TagType.BYTE, false);
-		this.get = get;
-		this.set = set;
-		this.defaultValue = false;
-	}
-	
-	public BooleanField(CharSequence key, ToBooleanFunction<T> get, ObjBooleanConsumer<T> set, boolean defaultValue) {
-		super(key, TagType.BYTE, true);
+	public BooleanField(CharSequence key, ToBooleanFunction<T> get, ObjBooleanConsumer<T> set, boolean useDefault, boolean defaultValue) {
+		super(key, BYTE, useDefault);
 		this.get = get;
 		this.set = set;
 		this.defaultValue = defaultValue;

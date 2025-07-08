@@ -8,9 +8,6 @@ import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.EnchantableComponent;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.NBTUtil;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import io.netty.buffer.ByteBuf;
 
 import static de.atlasmc.io.protocol.ProtocolUtil.*;
@@ -38,19 +35,6 @@ public class CoreEnchantableComponent extends AbstractItemComponent implements E
 	@Override
 	public CoreEnchantableComponent clone() {
 		return (CoreEnchantableComponent) super.clone();
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeCompoundTag(key.toString());
-		writer.writeIntTag(NBT_VALUE, value);
-		writer.writeEndTag();
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		reader.readNextEntry();
-		NBTUtil.readNBT(NBT_FIELDS, this, reader);
 	}
 
 	@Override

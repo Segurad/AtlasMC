@@ -8,6 +8,7 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.ItemComponent;
 import de.atlasmc.inventory.component.ItemComponentFactory;
+import de.atlasmc.inventory.component.ItemComponentHolder;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.util.annotation.NotNull;
@@ -28,7 +29,7 @@ import de.atlasmc.util.nbt.tag.NBT;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 
-public class ItemStack implements NBTHolder, NBTSerializable {
+public class ItemStack implements NBTHolder, NBTSerializable, ItemComponentHolder {
 
 	public static final NBTSerializationHandler<ItemStack> NBT_HANDLER;
 	
@@ -44,7 +45,7 @@ public class ItemStack implements NBTHolder, NBTSerializable {
 	static {
 		NBT_HANDLER = NBTSerializationHandler
 				.builder(ItemStack.class)
-				.intTag("count", ItemStack::getAmount, ItemStack::setAmount, 1)
+				.intField("count", ItemStack::getAmount, ItemStack::setAmount, 1)
 				.build();
 		
 		NBT_FIELDS = NBTFieldSet.newSet();
@@ -110,60 +111,16 @@ public class ItemStack implements NBTHolder, NBTSerializable {
 	 * @return components
 	 */
 	@NotNull
+	@Override
 	public Map<NamespacedKey, ItemComponent> getComponents() {
 		if (components == null)
 			components = new Object2ObjectArrayMap<>();
 		return components;
 	}
 	
-	/**
-	 * Returns whether or not this ItemStack has components
-	 * @return true if components present
-	 */
+	@Override
 	public boolean hasComponents() {
 		return components != null && !components.isEmpty();
-	}
-	
-	/**
-	 * Returns whether or not a component with the given key is present
-	 * @param key to check
-	 * @return true if present
-	 */
-	public boolean hasComponent(NamespacedKey key) {
-		if (components == null)
-			return false;
-		return components.containsKey(key);
-	}
-	
-	/**
-	 * Returns the component with the given key or null.
-	 * If no component with the given key is present a component will be created
-	 * @param <T> to cast
-	 * @param key of the component
-	 * @return component or null
-	 */
-	@Nullable
-	public <T extends ItemComponent> T getComponent(NamespacedKey key) {
-		if (key == null)
-			throw new IllegalArgumentException("Key can not be null!");
-		if (components != null || !components.isEmpty()) {
-			@SuppressWarnings("unchecked")
-			T component = (T) components.get(key);
-			if (component != null)
-				return component;
-		}
-		Registry<ItemComponentFactory> registry = Registries.getRegistry(ItemComponentFactory.class);
-		ItemComponentFactory factory = registry.get(key);
-		if (factory == null)
-			return null;
-		@SuppressWarnings("unchecked")
-		T component = (T) factory.createComponent();
-		getComponents().put(key, component);
-		return component;
-	}
-	
-	public <T extends ItemComponent> T getComponent(Class<T> clazz) {
-		return getComponent(ItemComponent.getComponentKey(clazz));
 	}
 	
 	/**
@@ -194,30 +151,6 @@ public class ItemStack implements NBTHolder, NBTSerializable {
 	
 	public <T extends ItemComponent> T getEffectiveComponent(Class<T> clazz) {
 		return getEffectiveComponent(ItemComponent.getComponentKey(clazz));
-	}
-	
-	/**
-	 * Sets a new ItemComponent and returns the previous value
-	 * @param component to set
-	 * @return component or null
-	 */
-	public ItemComponent setComponent(ItemComponent component) {
-		if (component == null)
-			throw new IllegalArgumentException("Component can not be null!");
-		return getComponents().put(component.getNamespacedKey(), component);
-	}
-	
-	/**
-	 * Removes the component with the given key
-	 * @param key to remove
-	 * @return component or null
-	 */
-	public ItemComponent removeComponent(NamespacedKey key) {
-		if (key == null)
-			throw new IllegalArgumentException("Key can not be null!");
-		if (components == null)
-			return null;
-		return components.remove(key);
 	}
 	
 	/**

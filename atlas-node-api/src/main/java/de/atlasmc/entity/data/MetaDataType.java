@@ -1,6 +1,13 @@
 package de.atlasmc.entity.data;
 
-import static de.atlasmc.io.PacketUtil.*;
+import static de.atlasmc.io.PacketUtil.readIdentifier;
+import static de.atlasmc.io.PacketUtil.readString;
+import static de.atlasmc.io.PacketUtil.readVarInt;
+import static de.atlasmc.io.PacketUtil.readVarLong;
+import static de.atlasmc.io.PacketUtil.writeIdentifier;
+import static de.atlasmc.io.PacketUtil.writeString;
+import static de.atlasmc.io.PacketUtil.writeVarInt;
+import static de.atlasmc.io.PacketUtil.writeVarLong;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -27,9 +34,7 @@ import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.protocol.ProtocolUtil;
 import de.atlasmc.util.EulerAngle;
 import de.atlasmc.util.MathUtil;
-import de.atlasmc.util.dataset.DataSet;
 import de.atlasmc.util.nbt.tag.CompoundTag;
-import de.atlasmc.world.Biome;
 import io.netty.buffer.ByteBuf;
 
 /**
@@ -484,8 +489,7 @@ public abstract class MetaDataType<T> {
 				NamespacedKey wild = readIdentifier(in);
 				NamespacedKey tame = readIdentifier(in);
 				NamespacedKey angry = readIdentifier(in);
-				DataSet<Biome> biomes = readDataSet(Biome.REGISTRY, in);
-				return new WolfVariant(wild, tame, angry, biomes);
+				return new WolfVariant(wild, tame, angry);
 			}
 			return WolfVariant.getByID(id-1);
 		}
@@ -497,7 +501,6 @@ public abstract class MetaDataType<T> {
 				writeIdentifier(data.getWildTexture(), out);
 				writeIdentifier(data.getTameTexture(), out);
 				writeIdentifier(data.getAngryTexture(), out);
-				writeDataSet(data.getBiomes(), Biome.REGISTRY, out);
 			} else {
 				writeVarInt(id+1, out);
 			}

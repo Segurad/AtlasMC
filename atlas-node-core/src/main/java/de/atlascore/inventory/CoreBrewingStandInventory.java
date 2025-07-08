@@ -1,12 +1,11 @@
 package de.atlascore.inventory;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.entity.Player;
 import de.atlasmc.inventory.BrewingInventory;
 import de.atlasmc.inventory.InventoryHolder;
 import de.atlasmc.inventory.InventoryType;
-import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.InventoryType.SlotType;
+import de.atlasmc.inventory.ItemStack;
 
 public class CoreBrewingStandInventory extends CoreInventory implements BrewingInventory {
 
@@ -14,14 +13,14 @@ public class CoreBrewingStandInventory extends CoreInventory implements BrewingI
 	PROPERTY_BREW_TIME = 0,
 	PROPERTY_FUEL_TIME = 1;
 	
-	private int fuel;
-	private int maxfuel;
-	private int brewingTime;
-	private int dfuel;
-	private int dbrewingTime = 400;
-	
 	public CoreBrewingStandInventory(Chat title, InventoryHolder holder) {
 		super(5, 3, InventoryType.BREWING, title, holder);
+		properties[PROPERTY_BREW_TIME] = 400;
+	}
+	
+	@Override
+	protected int getPropertyCount() {
+		return 2;
 	}
 	
 	@Override
@@ -41,53 +40,21 @@ public class CoreBrewingStandInventory extends CoreInventory implements BrewingI
 
 	@Override
 	public int getFuelLevel() {
-		return fuel;
+		return properties[PROPERTY_FUEL_TIME];
 	}
 
 	@Override
 	public void setFuelLevel(int value) {
-		this.fuel = value;
-	}
-
-	@Override
-	public int getMaxFuelLevel() {
-		return maxfuel;
-	}
-
-	@Override
-	public void setMaxFuelLevel(int value) {
-		this.maxfuel = value;
-	}
-
-	@Override
-	public int getDisplayFuel() {
-		return dfuel;
-	}
-
-	@Override
-	public void setDisplayFuel(int value) {
-		this.dfuel = value;
 		updateProperty(PROPERTY_FUEL_TIME, value);
 	}
 
 	@Override
 	public int getBrewTime() {
-		return brewingTime;
+		return properties[PROPERTY_BREW_TIME];
 	}
 
 	@Override
 	public void setBrewTime(int value) {
-		this.brewingTime = value;
-	}
-
-	@Override
-	public int getDisplayBrewTime() {
-		return dbrewingTime;
-	}
-
-	@Override
-	public void setDisplayBrewTime(int value) {
-		this.dbrewingTime = value;
 		updateProperty(PROPERTY_BREW_TIME, value);
 	}
 
@@ -109,19 +76,6 @@ public class CoreBrewingStandInventory extends CoreInventory implements BrewingI
 	@Override
 	public void setIngredient(ItemStack ingredient) {
 		setItem(3, ingredient);
-	}
-	
-	@Override
-	public void updateProperties() {
-		for (Player p : getViewers()) {
-			updateProperties(p);
-		}
-	}
-
-	@Override
-	public void updateProperties(Player player) {
-		updateProperty(PROPERTY_BREW_TIME, dfuel, player);
-		updateProperty(PROPERTY_FUEL_TIME, dbrewingTime, player);
 	}
 	
 }

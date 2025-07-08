@@ -5,7 +5,6 @@ import java.util.Map;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.enchantments.Enchantment;
-import de.atlasmc.entity.Player;
 import de.atlasmc.inventory.EnchantingInventory;
 import de.atlasmc.inventory.InventoryHolder;
 import de.atlasmc.inventory.InventoryType;
@@ -25,64 +24,65 @@ public class CoreEnchantingInventory extends CoreInventory implements Enchanting
 	PROPERTY_ENCH_LVL_MID = 8,
 	PROPERTY_ENCH_LVL_BOT = 9;
 	
-	private short dseed = (short) 0xFFAA0123;
-	private short lvlTop = 10;
-	private short lvlMid = 20;
-	private short lvlBot = 30;
-	private short dtopID = -1;
-	private short dmidID = -1;
-	private short dbotID = -1;
-	private	short dtopLvl = -1;
-	private short dmidLvl = -1;
-	private short dbotLvl = -1;
 	private Map<Enchantment, Integer> topEnch;
 	private Map<Enchantment, Integer> midEnch;
 	private Map<Enchantment, Integer> botEnch;
 	
 	public CoreEnchantingInventory(Chat title, InventoryHolder holder) {
 		super(2, 1, InventoryType.ENCHANTING, title, holder);
+		properties[PROPERTY_LVL_REQUIREMENT_TOP] = 10;
+		properties[PROPERTY_LVL_REQUIREMENT_MID] = 20;
+		properties[PROPERTY_LVL_REQUIREMENT_BOT] = 30;
+		properties[PROPERTY_ENCH_SEED] = 0xCAFFEE;
+		properties[PROPERTY_ENCH_ID_TOP] = -1;
+		properties[PROPERTY_ENCH_ID_MID] = -1;
+		properties[PROPERTY_ENCH_ID_BOT] = -1;
+		properties[PROPERTY_ENCH_LVL_TOP] = -1;
+		properties[PROPERTY_ENCH_LVL_MID] = -1;
+		properties[PROPERTY_ENCH_LVL_BOT] = -1;
+	}
+	
+	@Override
+	protected int getPropertyCount() {
+		return 10;
 	}
 
 	@Override
 	public int getRequiredLevelTop() {
-		return lvlTop;
+		return properties[PROPERTY_LVL_REQUIREMENT_TOP];
 	}
 
 	@Override
 	public int getRequiredLevelMiddle() {
-		return lvlMid;
+		return properties[PROPERTY_LVL_REQUIREMENT_MID];
 	}
 
 	@Override
 	public int getRequiredLevelBottom() {
-		return lvlBot;
+		return properties[PROPERTY_LVL_REQUIREMENT_BOT];
 	}
 	
 	@Override
 	public void setRequiredLevelTop(int level) {
-		this.lvlTop = (short) level;
 		updateProperty(PROPERTY_LVL_REQUIREMENT_TOP, level);
 	}
 	
 	@Override
 	public void setRequiredLevelMiddle(int level) {
-		this.lvlMid = (short) level;
 		updateProperty(PROPERTY_LVL_REQUIREMENT_MID, level);
 	}
 	
 	@Override
 	public void setRequiredLevelBottom(int level) {
-		this.lvlBot = (short) level;
 		updateProperty(PROPERTY_LVL_REQUIREMENT_BOT, level);
 	}
 
 	@Override
 	public int getDisplaySeed() {
-		return dseed;
+		return properties[PROPERTY_ENCH_SEED];
 	}
 	
 	public void setDisplayedSeed(int seed) {
-		this.dseed = (short) seed;
 		updateProperty(PROPERTY_ENCH_SEED, seed);
 	}
 
@@ -106,67 +106,61 @@ public class CoreEnchantingInventory extends CoreInventory implements Enchanting
 
 	@Override
 	public int getDisplayTopEnchantID() {
-		return dtopID;
+		return properties[PROPERTY_ENCH_ID_TOP];
 	}
 
 	@Override
 	public int getDisplayMiddleEnchantID() {
-		return dmidID;
+		return properties[PROPERTY_ENCH_ID_MID];
 	}
 
 	@Override
 	public int getDisplayBottomEnchantID() {
-		return dbotID;
+		return properties[PROPERTY_ENCH_ID_BOT];
 	}
 
 	@Override
 	public int getDisplayTopEnchantLevel() {
-		return dtopLvl;
+		return properties[PROPERTY_ENCH_LVL_TOP];
 	}
 
 	@Override
 	public int getDisplayMiddleEnchantLevel() {
-		return dmidLvl;
+		return properties[PROPERTY_ENCH_LVL_MID];
 	}
 
 	@Override
 	public int getDisplayBottomEnchantLevel() {
-		return dbotLvl;
+		return properties[PROPERTY_ENCH_LVL_BOT];
 	}
 
 	@Override
 	public void setDisplayTopEnchantID(int enchantID) {
-		this.dtopID = (short) enchantID;
 		updateProperty(PROPERTY_ENCH_ID_TOP, enchantID);
 	}
 
 	@Override
 	public void setDisplayMiddleEnchantID(int enchantID) {
-		this.dmidID = (short) enchantID;
 		updateProperty(PROPERTY_ENCH_ID_MID, enchantID);
 	}
 
 	@Override
 	public void setDisplayBottomEnchantID(int enchantID) {
-		this.dbotID = (short) enchantID;
 		updateProperty(PROPERTY_ENCH_ID_BOT, enchantID);
 	}
 
 	@Override
 	public void setDisplayTopEnchantLevel(int level) {
-		this.dtopLvl = (short) level;
 		updateProperty(PROPERTY_ENCH_LVL_TOP, level);
 	}
 
 	@Override
 	public void setDisplayMiddleEnchantLevel(int level) {
-		this.dmidLvl = (short) level;
 		updateProperty(PROPERTY_ENCH_LVL_MID, level);
 	}
 
 	@Override
 	public void setDisplayBottomEnchantLevel(int level) {
-		this.dbotLvl = (short) level;
 		updateProperty(PROPERTY_ENCH_LVL_BOT, level);
 	}
 
@@ -188,26 +182,6 @@ public class CoreEnchantingInventory extends CoreInventory implements Enchanting
 	@Override
 	public void setSecondary(ItemStack secondary) {
 		setItem(1, secondary);
-	}
-	
-	@Override
-	public void updateProperties() {
-		for (Player p : getViewers()) {
-			updateProperties(p);
-		}
-	}
-	
-	@Override
-	public void updateProperties(Player player) {
-		updateProperty(PROPERTY_LVL_REQUIREMENT_TOP, lvlTop, player);
-		updateProperty(PROPERTY_LVL_REQUIREMENT_MID, lvlMid, player);
-		updateProperty(PROPERTY_LVL_REQUIREMENT_BOT, lvlBot, player);
-		updateProperty(PROPERTY_ENCH_ID_TOP, dtopID, player);
-		updateProperty(PROPERTY_ENCH_ID_MID, dmidID, player);
-		updateProperty(PROPERTY_ENCH_ID_BOT, dbotID, player);
-		updateProperty(PROPERTY_ENCH_LVL_TOP, dtopLvl, player);
-		updateProperty(PROPERTY_ENCH_LVL_MID, dmidLvl, player);
-		updateProperty(PROPERTY_ENCH_LVL_BOT, dbotLvl, player);
 	}
 
 }

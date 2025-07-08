@@ -1,18 +1,16 @@
 package de.atlascore.inventory.component;
 
+import static de.atlasmc.io.PacketUtil.readTextComponent;
+import static de.atlasmc.io.PacketUtil.writeTextComponent;
+
 import java.io.IOException;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
-import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.CustomNameComponent;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import io.netty.buffer.ByteBuf;
-
-import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CoreCustomNameComponent extends AbstractItemComponent implements CustomNameComponent {
 
@@ -25,17 +23,6 @@ public class CoreCustomNameComponent extends AbstractItemComponent implements Cu
 	@Override
 	public CoreCustomNameComponent clone() {
 		return (CoreCustomNameComponent) super.clone();
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		if (customName != null)
-			ChatUtil.toNBT(key.toString(), customName, writer);
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		customName = ChatUtil.fromNBT(reader);
 	}
 
 	@Override

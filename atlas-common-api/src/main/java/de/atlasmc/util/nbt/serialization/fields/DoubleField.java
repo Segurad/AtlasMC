@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.function.ObjDoubleConsumer;
 import java.util.function.ToDoubleFunction;
 
-import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
@@ -15,15 +14,8 @@ public class DoubleField<T> extends NBTField<T> {
 	private final ObjDoubleConsumer<T> set;
 	private final double defaultValue;
 	
-	public DoubleField(CharSequence key, ToDoubleFunction<T> get, ObjDoubleConsumer<T> set) {
-		super(key, TagType.DOUBLE, false);
-		this.get = get;
-		this.set = set;
-		this.defaultValue = 0;
-	}
-	
-	public DoubleField(CharSequence key, ToDoubleFunction<T> get, ObjDoubleConsumer<T> set, double defaultValue) {
-		super(key, TagType.DOUBLE, true);
+	public DoubleField(CharSequence key, ToDoubleFunction<T> get, ObjDoubleConsumer<T> set, boolean useDefault, double defaultValue) {
+		super(key, DOUBLE, useDefault);
 		this.get = get;
 		this.set = set;
 		this.defaultValue = defaultValue;

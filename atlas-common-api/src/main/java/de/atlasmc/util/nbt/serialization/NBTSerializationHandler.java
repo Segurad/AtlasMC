@@ -4,7 +4,7 @@ import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.serialization.SerializationHandler;
 
-public interface NBTSerializationHandler<T extends NBTSerializable> extends SerializationHandler<T, NBTReader, NBTWriter, NBTSerializationContext> {
+public interface NBTSerializationHandler<T> extends SerializationHandler<T, NBTReader, NBTWriter, NBTSerializationContext> {
 	
 	Class<? extends T> getType();
 	

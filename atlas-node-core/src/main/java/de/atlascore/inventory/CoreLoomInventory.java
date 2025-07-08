@@ -2,7 +2,6 @@ package de.atlascore.inventory;
 
 import de.atlasmc.block.tile.Banner.EnumPatternType;
 import de.atlasmc.chat.Chat;
-import de.atlasmc.entity.Player;
 import de.atlasmc.inventory.InventoryHolder;
 import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.InventoryType.SlotType;
@@ -14,10 +13,13 @@ public class CoreLoomInventory extends CoreInventory implements LoomInventory {
 	protected static final byte
 	PROPERTY_PATTERN = 0;
 	
-	private EnumPatternType pattern;
-	
 	public CoreLoomInventory(Chat title, InventoryHolder holder) {
 		super(4, 3, InventoryType.LOOM, title, holder);
+	}
+	
+	@Override
+	protected int getPropertyCount() {
+		return 1;
 	}
 	
 	@Override
@@ -76,25 +78,12 @@ public class CoreLoomInventory extends CoreInventory implements LoomInventory {
 
 	@Override
 	public EnumPatternType getPattern() {
-		return pattern;
+		return EnumPatternType.getByID(properties[PROPERTY_PATTERN]);
 	}
 
 	@Override
 	public void setPattern(EnumPatternType pattern) {
-		this.pattern = pattern;
 		updateProperty(PROPERTY_PATTERN, pattern.getID());
 	}
 	
-	@Override
-	public void updateProperties() {
-		for (Player p : getViewers()) {
-			updateProperties(p);
-		}
-	}
-	
-	@Override
-	public void updateProperties(Player player) {
-		updateProperty(PROPERTY_PATTERN, pattern.getID(), player);
-	}
-
 }

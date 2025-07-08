@@ -1,12 +1,11 @@
 package de.atlascore.inventory;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.entity.Player;
 import de.atlasmc.inventory.BeaconInventory;
 import de.atlasmc.inventory.InventoryHolder;
 import de.atlasmc.inventory.InventoryType;
-import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.InventoryType.SlotType;
+import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.potion.PotionEffect;
 
 public class CoreBeaconInventory extends CoreInventory implements BeaconInventory {
@@ -18,14 +17,18 @@ public class CoreBeaconInventory extends CoreInventory implements BeaconInventor
 	
 	private PotionEffect primary;
 	private PotionEffect secondary;
-	private int primaryid = -1;
-	private int secondaryid = -1;
-	private int power;
 	
 	public CoreBeaconInventory(Chat title, InventoryHolder holder) {
 		super(1, 0, InventoryType.BEACON, title, holder);
+		properties[PROPERTY_POWER_LEVEL] = -1;
+		properties[PROPERTY_SECOND_POTION_ID] = -1;
 	}
 
+	@Override
+	protected int getPropertyCount() {
+		return 3;
+	}
+	
 	@Override
 	public SlotType getSlotType(int slot) {
 		if (slot == 0) {
@@ -56,35 +59,33 @@ public class CoreBeaconInventory extends CoreInventory implements BeaconInventor
 
 	@Override
 	public int getPrimaryID() {
-		return primaryid;
+		return properties[PROPERTY_FIRST_POTION_ID];
 	}
 
 	@Override
 	public int getSecondaryID() {
-		return secondaryid;
+		return properties[PROPERTY_SECOND_POTION_ID];
 	}
 
 	@Override
 	public void setPrimaryID(int id) {
-		this.primaryid = id;
 		updateProperty(PROPERTY_FIRST_POTION_ID, id);
 	}
 
 	@Override
 	public void setSecondaryID(int id) {
-		this.secondaryid = id;
 		updateProperty(PROPERTY_SECOND_POTION_ID, id);
 	}
 
 	@Override
 	public int getPowerLevel() {
-		return power;
+		return properties[PROPERTY_POWER_LEVEL];
 	}
 
 	@Override
 	public void setPowerLevel(int power) {
-		if (power < 0 || power > 4) throw new IllegalArgumentException("Power must be between 0 and 4: " + power);
-		this.power = power;
+		if (power < 0 || power > 4) 
+			throw new IllegalArgumentException("Power must be between 0 and 4: " + power);
 		updateProperty(PROPERTY_POWER_LEVEL, power);
 	}
 
@@ -96,20 +97,6 @@ public class CoreBeaconInventory extends CoreInventory implements BeaconInventor
 	@Override
 	public void setItem(ItemStack item) {
 		setItem(0, item);
-	}
-	
-	@Override
-	public void updateProperties() {
-		for (Player p : getViewers()) {
-			updateProperties(p);
-		}
-	}
-
-	@Override
-	public void updateProperties(Player player) {
-		updateProperty(PROPERTY_POWER_LEVEL, power, player);
-		updateProperty(PROPERTY_FIRST_POTION_ID, primaryid, player);
-		updateProperty(PROPERTY_SECOND_POTION_ID, secondaryid, player);
 	}
 	
 }

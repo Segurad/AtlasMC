@@ -20,12 +20,14 @@ import de.atlasmc.io.protocol.play.PacketOutSetContainerContents;
 import de.atlasmc.io.protocol.play.PacketOutSetContainerProperty;
 import de.atlasmc.io.protocol.play.PacketOutSetContainerSlot;
 import de.atlasmc.util.iterator.ArrayIterator;
+import it.unimi.dsi.fastutil.ints.IntArrays;
 
 public class CoreInventory implements Inventory {
 
 	protected final ItemStack[] contents;
 	protected final int storageSize;
 	protected final List<Player> viewers;
+	protected final int[] properties;
 	private final int size;
 	private int stateID;
 	private InventoryHolder holder;
@@ -46,6 +48,13 @@ public class CoreInventory implements Inventory {
 		this.holder = holder;
 		this.title = title;
 		this.type = type;
+		int count = getPropertyCount();
+		properties = count == 0 ? IntArrays.EMPTY_ARRAY : new int[count];
+		
+	}
+	
+	protected int getPropertyCount() {
+		return 0;
 	}
 	
 	@Override
@@ -352,8 +361,13 @@ public class CoreInventory implements Inventory {
 
 	@Override
 	public void updateSlots() {
-		ItemStack[] contents = getContentsUnsafe();
-		for (Player player : viewers) {
+		final List<Player> viewers = this.viewers;
+		final int viewerCount = viewers.size();
+		if (viewerCount == 0)
+			return;
+		final ItemStack[] contents = getContentsUnsafe();
+		for (int i = 0; i < size; i++) {
+			final Player player = viewers.get(i);
 			internalUpdateSlots(player, contents);
 		}
 	}
@@ -409,8 +423,14 @@ public class CoreInventory implements Inventory {
 	 * @param value the property value
 	 */
 	protected void updateProperty(int property, int value) {
-		for (Player p : getViewers()) {
-			updateProperties(p);
+		this.properties[property] = value;
+		final List<Player> viewers = this.viewers;
+		final int viewerCount = viewers.size();
+		if (viewerCount == 0)
+			return;
+		for (int i = 0; i < viewerCount; i++) {
+			final Player player = viewers.get(i);
+			updateProperty(property, value, player);
 		}
 	}
 	
@@ -426,10 +446,33 @@ public class CoreInventory implements Inventory {
 
 
 	@Override
-	public void updateProperties() {}
+	public void updateProperties() {
+		final List<Player> viewers = this.viewers;
+		final int viewerCount = viewers.size();
+		if (viewerCount == 0)
+			return;
+		final int[] properties = this.properties;
+		final int size = properties.length;
+		if (size == 0)
+			return;
+		for (int i = 0; i < viewerCount; i++) {
+			final Player player = viewers.get(i);
+			for (int j = 0; j < size; j++) {
+				updateProperty(j, properties[j], player);
+			}
+		}
+	}
 
 	@Override
-	public void updateProperties(Player player) {}
+	public void updateProperties(Player player) {
+		final int[] properties = this.properties;
+		final int size = properties.length;
+		if (size == 0)
+			return;
+		for (int i = 0; i < size; i++) {
+			updateProperty(i, properties[i], player);
+		}
+	}
 
 	@Override
 	public void setTitle(Chat title) {

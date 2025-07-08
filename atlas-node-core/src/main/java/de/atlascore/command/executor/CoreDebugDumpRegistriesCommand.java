@@ -92,7 +92,7 @@ public class CoreDebugDumpRegistriesCommand implements CommandExecutor {
 			} else {
 				entryClass = entryValue.getClass();
 			}
-			values.set(entry.key(), entryClass.getName());
+			values.set(entry.key().toString(), entryClass.getName());
 		}
 	}
 	

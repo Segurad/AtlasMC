@@ -1,7 +1,6 @@
 package de.atlascore.inventory;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.entity.Player;
 import de.atlasmc.inventory.InventoryHolder;
 import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.ItemStack;
@@ -11,20 +10,22 @@ public class CoreLecternInventory extends CoreInventory implements LecternInvent
 
 	protected static final byte PROPERTY_PAGE_NUMBER = 0;
 	
-	private int page;
-	
 	public CoreLecternInventory(Chat title, InventoryHolder holder) {
 		super(1, InventoryType.LECTERN, title, holder);
+	}
+	
+	@Override
+	protected int getPropertyCount() {
+		return 1;
 	}
 
 	@Override
 	public int getPage() {
-		return page;
+		return properties[PROPERTY_PAGE_NUMBER];
 	}
 
 	@Override
 	public void setPage(int page) {
-		this.page = page;
 		updateProperty(PROPERTY_PAGE_NUMBER, page);
 	}
 
@@ -36,18 +37,6 @@ public class CoreLecternInventory extends CoreInventory implements LecternInvent
 	@Override
 	public void setBook(ItemStack book) {
 		setItem(0, book);
-	}
-	
-	@Override
-	public void updateProperties() {
-		for (Player p : getViewers()) {
-			updateProperties(p);
-		}
-	}
-	
-	@Override
-	public void updateProperties(Player player) {
-		updateProperty(PROPERTY_PAGE_NUMBER, page, player);
 	}
 
 }

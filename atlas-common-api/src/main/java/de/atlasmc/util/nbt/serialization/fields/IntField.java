@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.function.ObjIntConsumer;
 import java.util.function.ToIntFunction;
 
-import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
@@ -15,15 +14,8 @@ public class IntField<T> extends NBTField<T> {
 	private final ObjIntConsumer<T> set;
 	private final int defaultValue;
 	
-	public IntField(CharSequence key, ToIntFunction<T> get, ObjIntConsumer<T> set) {
-		super(key, TagType.INT, false);
-		this.get = get;
-		this.set = set;
-		this.defaultValue = 0;
-	}
-	
-	public IntField(CharSequence key, ToIntFunction<T> get, ObjIntConsumer<T> set, int defaultValue) {
-		super(key, TagType.INT, true);
+	public IntField(CharSequence key, ToIntFunction<T> get, ObjIntConsumer<T> set, boolean useDefault, int defaultValue) {
+		super(key, INT, useDefault);
 		this.get = get;
 		this.set = set;
 		this.defaultValue = defaultValue;

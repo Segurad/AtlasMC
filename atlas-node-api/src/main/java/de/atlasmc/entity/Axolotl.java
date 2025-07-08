@@ -2,6 +2,9 @@ package de.atlasmc.entity;
 
 import java.util.List;
 
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumValueCache;
+
 public interface Axolotl extends Animal {
 	
 	Variant getVariant();
@@ -12,7 +15,7 @@ public interface Axolotl extends Animal {
 	
 	void setFromBucket(boolean bucket);
 	
-	public static enum Variant {
+	public static enum Variant implements EnumID, EnumValueCache {
 		
 		LUCY,
 		WILD,
@@ -22,6 +25,7 @@ public interface Axolotl extends Animal {
 		
 		private static List<Variant> VALUES;
 		
+		@Override
 		public int getID() {
 			return ordinal();
 		}

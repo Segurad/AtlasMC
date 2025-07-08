@@ -1,7 +1,6 @@
 package de.atlascore.inventory.component;
 
 import java.io.IOException;
-import java.util.List;
 
 import de.atlasmc.DyeColor;
 import de.atlasmc.NamespacedKey;
@@ -11,85 +10,25 @@ import de.atlasmc.entity.TropicalFish.Pattern;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.BucketEntityDataComponent;
 import de.atlasmc.inventory.component.ComponentType;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 import io.netty.buffer.ByteBuf;
 
 public class CoreBucketEntityDataComponent extends AbstractItemComponent implements BucketEntityDataComponent {
-
-	protected static final CharKey
-	NBT_NO_AI = CharKey.literal("NoAI"),
-	NBT_SILENT = CharKey.literal("Silent"),
-	NBT_NO_GRAVITY = CharKey.literal("NoGravity"),
-	NBT_GLOWING = CharKey.literal("Glowing"),
-	NBT_INVULNERABLE = CharKey.literal("Invulnerable"),
-	NBT_HEALTH = CharKey.literal("Health"),
-	NBT_AGE = CharKey.literal("Age"),
-	NBT_VARIANT = CharKey.literal("Variant"),
-	NBT_HUNTING_COOLDOWN = CharKey.literal("HuntingCooldown"),
-	NBT_BUCKET_VARIANT_TAG = CharKey.literal("BucketVariantTag"),
-	NBT_TYPE = CharKey.literal("type");
 	
-	protected static final NBTFieldSet<CoreBucketEntityDataComponent> NBT_FIELDS;
-	
-	static {
-		NBT_FIELDS = NBTFieldSet.newSet();
-		NBT_FIELDS.setField(NBT_NO_AI, (holder, reader) -> {
-			holder.ai = !reader.readBoolean();
-		});
-		NBT_FIELDS.setField(NBT_SILENT, (holder, reader) -> {
-			holder.silent = reader.readBoolean();
-		});
-		NBT_FIELDS.setField(NBT_NO_GRAVITY, (holder, reader) -> {
-			holder.gravity = !reader.readBoolean();
-		});
-		NBT_FIELDS.setField(NBT_GLOWING, (holder, reader) -> {
-			holder.glowing = reader.readBoolean();
-		});
-		NBT_FIELDS.setField(NBT_INVULNERABLE, (holder, reader) -> {
-			holder.invulnerable = reader.readBoolean();
-		});
-		NBT_FIELDS.setField(NBT_HEALTH, (holder, reader) -> {
-			holder.health = reader.readFloatTag();
-		});
-		NBT_FIELDS.setField(NBT_AGE, (holder, reader) -> {
-			holder.age = reader.readIntTag();
-		});
-		NBT_FIELDS.setField(NBT_VARIANT, (holder, reader) -> {
-			holder.variant = Variant.getByID(reader.readIntTag());
-		});
-		NBT_FIELDS.setField(NBT_HUNTING_COOLDOWN, (holder, reader) -> {
-			holder.huntingCooldown = reader.readLongTag();
-		});
-		NBT_FIELDS.setField(NBT_BUCKET_VARIANT_TAG, (holder, reader) -> {
-			int variant = reader.readIntTag();
-			List<DyeColor> colors = DyeColor.getValues();
-			holder.patternColor = colors.get(variant >> 24);
-			holder.bodyColor = colors.get((variant >> 16) & 0xFF);
-			holder.pattern = Pattern.getByDataID(variant);
-		});
-		NBT_FIELDS.setField(NBT_TYPE, (holder, reader) -> {
-			holder.type = Type.getByName(reader.readStringTag());
-		});
-	}
-	
-	private boolean ai = true;
+	private boolean noAi;
 	private boolean silent;
-	private boolean gravity = true;
+	private boolean noGravity;
 	private boolean glowing;
 	private boolean invulnerable;
 	private float health;
 	private int age;
 	private Variant variant;
 	private long huntingCooldown;
-	private DyeColor patternColor;
-	private DyeColor bodyColor;
-	private Pattern pattern;
+	private int tropicalFishVariant;
 	private Type type;
 	
 	public CoreBucketEntityDataComponent(NamespacedKey key) {
@@ -101,53 +40,22 @@ public class CoreBucketEntityDataComponent extends AbstractItemComponent impleme
 		return (CoreBucketEntityDataComponent) super.clone();
 	}
 	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeCompoundTag(getNamespacedKeyRaw());
-		writeNBTContent(writer, systemData);
-		writer.writeEndTag();
+	public int getTropicalFishVariant() {
+		return tropicalFishVariant;
 	}
 	
-	protected void writeNBTContent(NBTWriter writer, boolean systemData) throws IOException {
-		if (!ai)
-			writer.writeByteTag(NBT_NO_AI, true);
-		if (silent)
-			writer.writeByteTag(NBT_SILENT, true);
-		if (!gravity)
-			writer.writeByteTag(NBT_NO_GRAVITY, true);
-		if (glowing)
-			writer.writeByteTag(NBT_GLOWING, true);
-		if (invulnerable)
-			writer.writeByteTag(NBT_INVULNERABLE, true);
-		if (health != 0.0f)
-			writer.writeFloatTag(NBT_HEALTH, health);
-		if (age != 0)
-			writer.writeIntTag(NBT_AGE, age);
-		if (variant != null)
-			writer.writeIntTag(NBT_VARIANT, variant.getID());
-		if (huntingCooldown != 0)
-			writer.writeLongTag(NBT_HUNTING_COOLDOWN, huntingCooldown);
-		if (pattern != null && bodyColor != null && patternColor != null) {
-			writer.writeIntTag(NBT_BUCKET_VARIANT_TAG, pattern.getDataID() + bodyColor.getID() << 16 + patternColor.getID() << 24);
-		}
-		if (type != null)
-			writer.writeStringTag(NBT_TYPE, type.getName());
+	public void setTropicalFishVariant(int tropicalFishVariant) {
+		this.tropicalFishVariant = tropicalFishVariant;
 	}
 
 	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		reader.readNextEntry();
-		NBTUtil.readNBT(NBT_FIELDS, this, reader);
+	public boolean hasNoAI() {
+		return noAi;
 	}
 
 	@Override
-	public boolean hasAI() {
-		return ai;
-	}
-
-	@Override
-	public void setAI(boolean ai) {
-		this.ai = ai;
+	public void setNoAI(boolean ai) {
+		this.noAi = ai;
 	}
 
 	@Override
@@ -161,13 +69,13 @@ public class CoreBucketEntityDataComponent extends AbstractItemComponent impleme
 	}
 
 	@Override
-	public boolean hasGravity() {
-		return gravity;
+	public boolean hasNoGravity() {
+		return noGravity;
 	}
 
 	@Override
-	public void setGravity(boolean gravity) {
-		this.gravity = gravity;
+	public void setNoGravity(boolean gravity) {
+		this.noGravity = gravity;
 	}
 
 	@Override
@@ -222,32 +130,38 @@ public class CoreBucketEntityDataComponent extends AbstractItemComponent impleme
 
 	@Override
 	public DyeColor getBodyColor() {
-		return bodyColor;
+		return DyeColor.getByID((tropicalFishVariant >> 16) & 0xFF);
 	}
 
 	@Override
 	public Pattern getPattern() {
-		return pattern;
+		return Pattern.getByDataID(tropicalFishVariant);
 	}
 
 	@Override
 	public DyeColor getPatternColor() {
-		return patternColor;
+		return DyeColor.getByID(tropicalFishVariant >> 24);
 	}
 
 	@Override
 	public void setBodyColor(DyeColor color) {
-		this.bodyColor = color;
+		int variant = this.tropicalFishVariant & 0xFF00FF;
+		variant |= color.getID() << 16;
+		this.tropicalFishVariant = variant;
 	}
 
 	@Override
 	public void setPattern(Pattern pattern) {
-		this.pattern = pattern;
+		int variant = this.tropicalFishVariant & 0xFFFF00;
+		variant |= pattern.getDataID();
+		this.tropicalFishVariant = variant;
 	}
 
 	@Override
 	public void setPatternColor(DyeColor color) {
-		this.patternColor = color;
+		int variant = this.tropicalFishVariant & 0xFFFF;
+		variant |= color.getID() << 24;
+		this.tropicalFishVariant = variant;
 	}
 
 	@Override
@@ -283,16 +197,14 @@ public class CoreBucketEntityDataComponent extends AbstractItemComponent impleme
 	@Override
 	public void read(ByteBuf buf) throws IOException {
 		NBTReader reader = new NBTNIOReader(buf, true);
-		fromNBT(reader);
+		BucketEntityDataComponent.NBT_HANDLER.deserialize(this, reader, NBTSerializationContext.DEFAULT_CLIENT);
 		reader.close();
 	}
 	
 	@Override
 	public void write(ByteBuf buf) throws IOException {
 		NBTWriter writer = new NBTNIOWriter(buf, true);
-		writer.writeCompoundTag(null);
-		writeNBTContent(writer, false);
-		writer.writeEndTag();
+		BucketEntityDataComponent.NBT_HANDLER.serialize(this, writer, NBTSerializationContext.DEFAULT_CLIENT);
 		writer.close();
 	}
 

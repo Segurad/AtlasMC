@@ -6,27 +6,27 @@ import java.util.function.Function;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
+import de.atlasmc.util.function.ToBooleanFunction;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public class MapNamespacedType<T, K extends Namespaced & NBTSerializable> extends NBTField<T> {
+public class MapNamespacedType<T, K extends Namespaced> extends AbstractCollectionField<T, Map<NamespacedKey, K>> {
 
-	private final Function<T, Map<NamespacedKey, K>> mapSupplier;
 	private final NBTSerializationHandler<K> handler;
 	
-	public MapNamespacedType(CharSequence key, Function<T, Map<NamespacedKey, K>> mapSupplier, NBTSerializationHandler<K> handler) {
-		super(key, TagType.COMPOUND, false);
-		this.mapSupplier = mapSupplier;
+	public MapNamespacedType(CharSequence key, ToBooleanFunction<T> has, Function<T, Map<NamespacedKey, K>> getMap, NBTSerializationHandler<K> handler) {
+		super(key, COMPOUND, has, getMap, true);
 		this.handler = handler;
 	}
 
 	@Override
 	public boolean serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
-		final Map<NamespacedKey, K> map = mapSupplier.apply(value);
+		if (has != null && !has.applyAsBoolean(value))
+			return true;
+		final Map<NamespacedKey, K> map = get.apply(value);
 		writer.writeCompoundTag(key);
 		for (K entry : map.values()) {
 			handler.serialize(entry, writer, context);
@@ -37,7 +37,7 @@ public class MapNamespacedType<T, K extends Namespaced & NBTSerializable> extend
 
 	@Override
 	public void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException {
-		final Map<NamespacedKey, K> map = mapSupplier.apply(value);
+		final Map<NamespacedKey, K> map = get.apply(value);
 		reader.readNextEntry();
 		while (reader.getType() != TagType.TAG_END) {
 			K entry = handler.deserialize(reader);

@@ -5,45 +5,70 @@ import java.util.List;
 import de.atlasmc.Nameable;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.command.CommandSender;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface CommandBlock extends TileEntity, Nameable, CommandSender {
 	
-	public Mode getMode();
+	public static final NBTSerializationHandler<CommandBlock>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(CommandBlock.class)
+					.include(TileEntity.NBT_HANDLER)
+					.boolField("auto", CommandBlock::isAlwaysActive, CommandBlock::setAlwaysActive)
+					.string("Command", CommandBlock::getCommand, CommandBlock::setCommand)
+					.boolField("conditionMet", CommandBlock::isConditionMet, CommandBlock::setConditionMet)
+					.chat("CustomName", CommandBlock::getCustomName, CommandBlock::setCustomName)
+					.longField("LastExecution", CommandBlock::getLastExecution, CommandBlock::setLastExecution)
+					.chat("LastOutput", CommandBlock::getLastMessage, CommandBlock::setLastMessage)
+					.boolField("powered", CommandBlock::isPowered, CommandBlock::setPowered)
+					.intField("SuccessCount", CommandBlock::getSuccessCount, CommandBlock::setSuccessCount)
+					.boolField("TrackOutput", CommandBlock::getTrackOutput, CommandBlock::setTrackOutput)
+					.boolField("UpdateLastExecution", CommandBlock::getUpdateLastExecution, CommandBlock::setUpdateLastExecution)
+					.build();
 	
-	public void setMode(Mode mode);
+	Mode getMode();
 	
-	public boolean isConditional();
+	void setMode(Mode mode);
 	
-	public void setConditional(boolean conditional);
+	boolean isConditionMet();
 	
-	public boolean isAlwaysActive();
+	void setConditionMet(boolean conditional);
 	
-	public void setAlwaysActive(boolean alwaysActive);
+	boolean isAlwaysActive();
 	
-	public boolean getTrackOutput();
+	void setAlwaysActive(boolean alwaysActive);
 	
-	public void setTrackOutput(boolean trackOutput);
+	boolean getTrackOutput();
 	
-	public void setCommand(String command);
+	void setTrackOutput(boolean trackOutput);
 	
-	public String getCommand();
+	void setCommand(String command);
 	
-	public Chat getLastMessage();
+	String getCommand();
+	
+	Chat getLastMessage();
 	
 	/**
 	 * While {@link #sendMessage(Chat)} does only set the last message if {@link #getTrackOutput()} is true,
 	 * this method will always set the last output
 	 * @param message
 	 */
-	public void setLastMessage(Chat message);
+	void setLastMessage(Chat message);
 	
-	public void setPowered(boolean powered);
+	void setPowered(boolean powered);
 	
-	public boolean isPowered();
+	boolean isPowered();
 	
-	public void setSuccessCount(int count);
+	void setSuccessCount(int count);
 	
-	public int getSuccessCount();
+	int getSuccessCount();
+	
+	long getLastExecution();
+	
+	void setLastExecution(long lastExecution);
+	
+	boolean getUpdateLastExecution();
+	
+	void setUpdateLastExecution(boolean value);
 	
 	public static enum Mode {
 		SEQUENCE,
@@ -78,6 +103,11 @@ public interface CommandBlock extends TileEntity, Nameable, CommandSender {
 			VALUES = null;
 		}
 
+	}
+	
+	@Override
+	default NBTSerializationHandler<? extends CommandBlock> getNBTHandler() {
+		return NBT_HANDLER;
 	}
 
 }

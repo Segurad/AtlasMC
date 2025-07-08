@@ -1,21 +1,31 @@
 package de.atlasmc.block.tile;
 
-import java.io.IOException;
-
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.block.BlockType;
+import de.atlasmc.inventory.component.ItemComponent;
+import de.atlasmc.inventory.component.ItemComponentHolder;
+import de.atlasmc.registry.Registries;
 import de.atlasmc.util.annotation.InternalAPI;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTException;
-import de.atlasmc.util.nbt.NBTHolder;
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTReader;
+import de.atlasmc.util.nbt.serialization.NBTSerializable;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 import de.atlasmc.world.Chunk;
 import de.atlasmc.world.World;
 
-public interface TileEntity extends NBTHolder, Cloneable {
+public interface TileEntity extends Cloneable, NBTSerializable, ItemComponentHolder {
 
 	public static final CharKey NBT_ID = CharKey.literal("id");
+	
+	public static final NBTSerializationHandler<TileEntity>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(TileEntity.class)
+					.searchKeyConstructor("id", Registries.getRegistry(BlockType.class), BlockType::createTileEntity, TileEntity::getType)
+					.redirectAfterConstruction(true)
+					.intField("x", TileEntity::getX, TileEntity::setX)
+					.intField("y", TileEntity::getY, TileEntity::setY)
+					.intField("z", TileEntity::getZ, TileEntity::setZ)
+					.compoundMapNamespacedType("components", TileEntity::hasComponents, TileEntity::getComponents, ItemComponent.NBT_HANDLER)
+					.build();
 	
 	TileEntity clone();
 	
@@ -35,6 +45,12 @@ public interface TileEntity extends NBTHolder, Cloneable {
 	
 	int getZ();
 	
+	void setX(int x);
+	
+	void setY(int y);
+	
+	void setZ(int z);
+	
 	Chunk getChunk();
 	
 	World getWorld();
@@ -44,33 +60,9 @@ public interface TileEntity extends NBTHolder, Cloneable {
 
 	int getID();
 	
-	public static TileEntity getFromNBT(NBTReader reader) throws IOException {
-		if (reader.getType() == TagType.TAG_END) { // Empty Tag 
-			reader.readNextEntry();
-			return null;
-		}
-		String rawType = null;
-		if (!NBT_ID.equals(reader.getFieldName())) {
-			reader.mark();
-			reader.search(NBT_ID);
-			rawType = reader.readStringTag();
-			reader.reset();
-		} else {
-			rawType = reader.readStringTag();
-		}
-		if (rawType == null) {
-			throw new NBTException("NBT did not container id field!");
-		}
-		BlockType material = BlockType.get(rawType);
-		if (material == null) {
-			throw new NBTException("No type found with name: " + rawType);
-		}
-		TileEntity tile = material.createTileEntity();
-		if (tile == null) {
-			throw new NBTException("Failed to create tile from type: " + material.getNamespacedKeyRaw());
-		}
-		tile.fromNBT(reader);
-		return tile;
+	@Override
+	default NBTSerializationHandler<? extends TileEntity> getNBTHandler() {
+		return NBT_HANDLER;
 	}
 	
 }

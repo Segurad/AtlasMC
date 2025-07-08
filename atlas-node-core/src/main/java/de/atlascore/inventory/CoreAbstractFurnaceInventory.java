@@ -1,12 +1,11 @@
 package de.atlascore.inventory;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.entity.Player;
 import de.atlasmc.inventory.AbstractFurnaceInventory;
 import de.atlasmc.inventory.InventoryHolder;
 import de.atlasmc.inventory.InventoryType;
-import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.InventoryType.SlotType;
+import de.atlasmc.inventory.ItemStack;
 
 public class CoreAbstractFurnaceInventory extends CoreInventory implements AbstractFurnaceInventory {
 
@@ -16,14 +15,14 @@ public class CoreAbstractFurnaceInventory extends CoreInventory implements Abstr
 	PROPERTY_PROGRESS = 2,
 	PROPERTY_MAX_PROGRESS = 3;
 	
-	private int progress;
-	private int fuel;
-	private int maxprogress;
-	private int maxfuel;
-	
 	public CoreAbstractFurnaceInventory(InventoryType type, Chat title, InventoryHolder holder) {
 		super(3, 2, type, title, holder);
-		this.maxprogress = 200;
+		properties[PROPERTY_MAX_FUEL_LEVEL] = 200;
+	}
+	
+	@Override
+	protected int getPropertyCount() {
+		return 4;
 	}
 	
 	@Override
@@ -62,61 +61,42 @@ public class CoreAbstractFurnaceInventory extends CoreInventory implements Abstr
 
 	@Override
 	public int getFuelLevel() {
-		return fuel;
+		return properties[PROPERTY_FUEL_LEVEL];
 	}
 
 	@Override
 	public void setFuelLevel(int value) {
-		this.fuel = value;
 		updateProperty(PROPERTY_FUEL_LEVEL, value);
 	}
 
 	@Override
 	public int getMaxFuelLevel() {
-		return maxfuel;
+		return properties[PROPERTY_MAX_FUEL_LEVEL];
 	}
 
 	@Override
 	public void setMaxFuelLevel(int value) {
-		this.maxfuel = value;
 		updateProperty(PROPERTY_MAX_FUEL_LEVEL, value);
 	}
 
 	@Override
 	public int getProgress() {
-		return progress;
+		return properties[PROPERTY_PROGRESS];
 	}
 
 	@Override
 	public void setProgress(int value) {
-		this.progress = value;
 		updateProperty(PROPERTY_PROGRESS, value);
 	}
 
 	@Override
 	public int getMaxProgress() {
-		return maxprogress;
+		return properties[PROPERTY_MAX_PROGRESS];
 	}
 
 	@Override
 	public void setMaxProgress(int value) {
-		this.maxprogress = value;
 		updateProperty(PROPERTY_MAX_PROGRESS, value);
-	}
-	
-	@Override
-	public void updateProperties() {
-		for (Player p : getViewers()) {
-			updateProperties(p);
-		}
-	}
-	
-	@Override
-	public void updateProperties(Player player) {
-		updateProperty(PROPERTY_MAX_FUEL_LEVEL, maxfuel, player);
-		updateProperty(PROPERTY_FUEL_LEVEL, fuel, player);
-		updateProperty(PROPERTY_MAX_PROGRESS, progress, player);
-		updateProperty(PROPERTY_PROGRESS, progress, player);
 	}
 	
 }

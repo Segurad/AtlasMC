@@ -37,10 +37,12 @@ final class NBTMetaDataType extends MetaDataType<CompoundTag> {
             else
                 writer.writeNBT(data);
         } catch (IOException e) {
-        	writer.close();
         	throw new IllegalStateException("Error while writing NBT meta data!", e);
-        }
-        writer.close();
+        } finally {
+			try {
+				writer.close();
+			} catch (IOException e) {}
+		}
     }
 
     @Override

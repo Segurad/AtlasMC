@@ -1,7 +1,6 @@
 package de.atlascore.inventory;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.entity.Player;
 import de.atlasmc.inventory.InventoryHolder;
 import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.ItemStack;
@@ -12,10 +11,14 @@ public class CoreStonecutterInventory extends CoreInventory implements Stonecutt
 	protected static final byte
 	PROPERTY_SELECTED_RECIPE = 0;
 	
-	private short selectedRecipe = -1;
-	
 	public CoreStonecutterInventory(Chat title, InventoryHolder holder) {
 		super(2, InventoryType.STONECUTTER, title, holder);
+		properties[PROPERTY_SELECTED_RECIPE] = -1;
+	}
+	
+	@Override
+	protected int getPropertyCount() {
+		return 1;
 	}
 
 	@Override
@@ -40,25 +43,12 @@ public class CoreStonecutterInventory extends CoreInventory implements Stonecutt
 
 	@Override
 	public int getSelectedRecipe() {
-		return selectedRecipe;
+		return properties[PROPERTY_SELECTED_RECIPE];
 	}
 
 	@Override
 	public void setSelectedRecipe(int value) {
-		selectedRecipe = (short) value;
 		updateProperty(PROPERTY_SELECTED_RECIPE, value);
-	}
-	
-	@Override
-	public void updateProperties() {
-		for (Player p : getViewers()) {
-			updateProperties(p);
-		}
-	}
-	
-	@Override
-	public void updateProperties(Player player) {
-		updateProperty(PROPERTY_SELECTED_RECIPE, selectedRecipe, player);
 	}
 
 }

@@ -1,42 +1,24 @@
 package de.atlasmc.sound;
 
-import java.io.IOException;
+import java.util.function.Function;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
-import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.registry.ProtocolRegistryValueBase;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.NBTUtil;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.serialization.NBTSerializable;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public class JukeboxSong extends ProtocolRegistryValueBase {
+public class JukeboxSong extends ProtocolRegistryValueBase implements NBTSerializable {
 	
-	protected static final NBTFieldSet<JukeboxSong> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_SOUND_EVENT = CharKey.literal("sound_event"),
-	NBT_DESCRIPTION = CharKey.literal("description"),
-	NBT_LENGTH_IN_SECONDS = CharKey.literal("length_in_seconds"),
-	NBT_COMPARATOR_OUTPUT = CharKey.literal("comparator_output");
-	
-	static {
-		NBT_FIELDS = NBTFieldSet.newSet();
-		NBT_FIELDS.setField(NBT_SOUND_EVENT, (holder, reader) -> {
-			holder.sound = Sound.fromNBT(reader);
-		});
-		NBT_FIELDS.setField(NBT_DESCRIPTION, (holder, reader) -> {
-			holder.description = ChatUtil.fromNBT(reader);
-		});
-		NBT_FIELDS.setField(NBT_COMPARATOR_OUTPUT, (holder, reader) -> {
-			holder.comparatorOutput = reader.readIntTag();
-		});
-		NBT_FIELDS.setField(NBT_LENGTH_IN_SECONDS, (holder, reader) -> {
-			holder.length = reader.readFloatTag();
-		});
-	}
+	public static final NBTSerializationHandler<JukeboxSong>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(JukeboxSong.class)
+					.interfacedEnumStringField("sound_event", (Function<JukeboxSong, Sound>)  JukeboxSong::getSound, JukeboxSong::setSound, EnumSound::getByName, null)
+					.compoundType("sound_event", (Function<JukeboxSong, Sound>) JukeboxSong::getSound, JukeboxSong::setSound, ResourceSound.NBT_HANDLER)
+					.chat("description", JukeboxSong::getDescription, JukeboxSong::setDescription)
+					.floatField("length_in_seconds", JukeboxSong::getLength, JukeboxSong::setLength)
+					.intField("comparator_output", JukeboxSong::getComparatorOutput, JukeboxSong::setComparatorOutput, 0)
+					.build();
 	
 	private Sound sound;
 	private Chat description;
@@ -54,23 +36,47 @@ public class JukeboxSong extends ProtocolRegistryValueBase {
 		this.length = length;
 		this.comparatorOutput = comparatorOutput;
 	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		Sound.toNBT(NBT_SOUND_EVENT, sound, writer, systemData);
-		ChatUtil.toNBT(NBT_DESCRIPTION, description, writer);
-		writer.writeFloatTag(NBT_LENGTH_IN_SECONDS, length);
-		writer.writeIntTag(NBT_COMPARATOR_OUTPUT, comparatorOutput);
+	
+	public Sound getSound() {
+		return sound;
 	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		NBTUtil.readNBT(NBT_FIELDS, this, reader);
+	
+	public void setSound(Sound sound) {
+		this.sound = sound;
+	}
+	
+	public Chat getDescription() {
+		return description;
+	}
+	
+	public void setDescription(Chat description) {
+		this.description = description;
+	}
+	
+	public float getLength() {
+		return length;
+	}
+	
+	public void setLength(float length) {
+		this.length = length;
+	}
+	
+	public int getComparatorOutput() {
+		return comparatorOutput;
+	}
+	
+	public void setComparatorOutput(int comparatorOutput) {
+		this.comparatorOutput = comparatorOutput;
 	}
 
 	@Override
 	public boolean hasNBT() {
 		return true;
+	}
+
+	@Override
+	public NBTSerializationHandler<? extends JukeboxSong> getNBTHandler() {
+		return NBT_HANDLER;
 	}
 
 }

@@ -1,6 +1,7 @@
 package de.atlasmc.util.nbt.serialization.fields;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -14,8 +15,8 @@ public class RawField<T> extends AbstractObjectField<T, NBT> {
 
 	private final boolean includeKey;
 	
-	public RawField(CharSequence key, TagType type, Function<T, NBT> get, BiConsumer<T, NBT> set, boolean includeKey) {
-		super(key, type, get, set, true);
+	public RawField(CharSequence key, List<TagType> types, Function<T, NBT> get, BiConsumer<T, NBT> set, boolean includeKey) {
+		super(key, types, get, set, true);
 		this.includeKey = includeKey;
 	}
 

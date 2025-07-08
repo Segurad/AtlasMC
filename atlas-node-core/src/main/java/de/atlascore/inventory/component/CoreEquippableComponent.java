@@ -1,5 +1,14 @@
 package de.atlascore.inventory.component;
 
+import static de.atlasmc.io.PacketUtil.readDataSet;
+import static de.atlasmc.io.PacketUtil.readIdentifier;
+import static de.atlasmc.io.PacketUtil.readVarInt;
+import static de.atlasmc.io.PacketUtil.writeDataSet;
+import static de.atlasmc.io.PacketUtil.writeIdentifier;
+import static de.atlasmc.io.PacketUtil.writeVarInt;
+import static de.atlasmc.io.protocol.ProtocolUtil.readSound;
+import static de.atlasmc.io.protocol.ProtocolUtil.writeSound;
+
 import java.io.IOException;
 
 import de.atlasmc.NamespacedKey;
@@ -12,11 +21,6 @@ import de.atlasmc.registry.Registries;
 import de.atlasmc.sound.EnumSound;
 import de.atlasmc.sound.Sound;
 import de.atlasmc.util.dataset.DataSet;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.NBTUtil;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
@@ -26,51 +30,12 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap.Entry;
 import it.unimi.dsi.fastutil.objects.Object2IntMaps;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
-import static de.atlasmc.io.protocol.ProtocolUtil.*;
-
 public class CoreEquippableComponent extends AbstractItemComponent implements EquippableComponent {
-
-	protected static final NBTFieldSet<CoreEquippableComponent> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_SLOT = CharKey.literal("slot"),
-	NBT_EQUIP_SOUND = CharKey.literal("equip_sound"),
-	NBT_ASSET_ID = CharKey.literal("asset_id"),
-	NBT_ALLOWED_ENTITIES = CharKey.literal("allowed_entities"),
-	NBT_DISPENSABLE = CharKey.literal("dispensable"),
-	NBT_SWAPPABLE = CharKey.literal("swappable"),
-	NBT_DAMAGE_ON_HURT = CharKey.literal("damage_on_hurt"),
-	NBT_CAMERA_OVERLAY = CharKey.literal("camera_overlay");
 	
 	protected static final Object2IntMap<EquipmentSlot> SLOT_TO_ID;
 	protected static final Int2ObjectMap<EquipmentSlot> ID_TO_SLOT;
 	
 	static {
-		NBT_FIELDS = NBTFieldSet.newSet();
-		NBT_FIELDS.setField(NBT_SLOT, (holder, reader) -> {
-			holder.slot = EquipmentSlot.getByName(reader.readStringTag());
-		});
-		NBT_FIELDS.setField(NBT_EQUIP_SOUND, (holder, reader) -> {
-			holder.setEquipSound(Sound.fromNBT(reader));
-		});
-		NBT_FIELDS.setField(NBT_ASSET_ID, (holder, reader) -> {
-			holder.assetID = reader.readNamespacedKey();
-		});
-		NBT_FIELDS.setField(NBT_ALLOWED_ENTITIES, (holder, reader) -> {
-			holder.allowedEntities = DataSet.getFromNBT(Registries.getRegistry(EntityType.class), reader);
-		});
-		NBT_FIELDS.setField(NBT_DISPENSABLE, (holder, reader) -> {
-			holder.dispensable = reader.readBoolean();
-		});
-		NBT_FIELDS.setField(NBT_SWAPPABLE, (holder, reader) -> {
-			holder.swappable = reader.readBoolean();
-		});
-		NBT_FIELDS.setField(NBT_DAMAGE_ON_HURT, (holder, reader) -> {
-			holder.damageOnHurt = reader.readBoolean();
-		});
-		NBT_FIELDS.setField(NBT_CAMERA_OVERLAY, (holder, reader) -> {
-			holder.cameraOverlay = reader.readNamespacedKey();
-		});
 		Object2IntMap<EquipmentSlot> slotToID = new Object2IntOpenHashMap<>();
 		slotToID.put(EquipmentSlot.MAIN_HAND, 0);
 		slotToID.put(EquipmentSlot.FEET, 1);
@@ -94,6 +59,7 @@ public class CoreEquippableComponent extends AbstractItemComponent implements Eq
 	private boolean dispensable;
 	private boolean swappable;
 	private boolean damageOnHurt;
+	private boolean equipOnInteract;
 	private NamespacedKey cameraOverlay;
 	
 	public CoreEquippableComponent(NamespacedKey key) {
@@ -101,6 +67,7 @@ public class CoreEquippableComponent extends AbstractItemComponent implements Eq
 		dispensable = true;
 		swappable = true;
 		damageOnHurt = true;
+		equipOnInteract = true;
 		equipSound = EnumSound.ITEM_ARMOR_EQUIP_GENERIC;
 	}
 	
@@ -109,33 +76,15 @@ public class CoreEquippableComponent extends AbstractItemComponent implements Eq
 		CoreEquippableComponent clone = (CoreEquippableComponent) super.clone();
 		return clone;
 	}
-
+	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeCompoundTag(key.toString());
-		if (slot != null)
-			writer.writeStringTag(NBT_SLOT, slot.getName());
-		if (equipSound != EnumSound.ITEM_ARMOR_EQUIP_GENERIC)
-			Sound.toNBT(NBT_EQUIP_SOUND, equipSound, writer, systemData);
-		if (assetID != null)
-			writer.writeNamespacedKey(NBT_ASSET_ID, assetID);
-		if (allowedEntities != null)
-			DataSet.toNBT(NBT_ALLOWED_ENTITIES, allowedEntities, writer, systemData);
-		if (!dispensable)
-			writer.writeByteTag(NBT_DISPENSABLE, false);
-		if (!swappable)
-			writer.writeByteTag(NBT_SWAPPABLE, false);
-		if (!damageOnHurt)
-			writer.writeByteTag(NBT_DAMAGE_ON_HURT, false);
-		if (cameraOverlay != null)
-			writer.writeNamespacedKey(NBT_CAMERA_OVERLAY, cameraOverlay);
-		writer.writeEndTag();
+	public boolean isEquipOnInteract() {
+		return equipOnInteract;
 	}
-
+	
 	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		reader.readNextEntry();
-		NBTUtil.readNBT(NBT_FIELDS, this, reader);
+	public void setEquipOnInteract(boolean equipOnInteract) {
+		this.equipOnInteract = equipOnInteract;
 	}
 
 	@Override

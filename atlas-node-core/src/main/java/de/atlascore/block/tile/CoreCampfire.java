@@ -1,49 +1,14 @@
 package de.atlascore.block.tile;
 
-import java.io.IOException;
-
 import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.Campfire;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreCampfire extends CoreTileEntity implements Campfire {
 	
-	protected static final NBTFieldSet<CoreCampfire> NBT_FIELDS;
-	
-	protected static final CharKey
-	ITEMS = CharKey.literal("Items"),
-	COOKING_TIMES = CharKey.literal("CookingTimes"),
-	COOKING_TOTAL_TIMES = CharKey.literal("CookingTotalTimes");
-	
-	static {
-		NBT_FIELDS = CoreTileEntity.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(ITEMS, (holder, reader) -> {
-			reader.readNextEntry();
-			while (reader.getRestPayload() > 0) {
-				reader.readNextEntry();
-				ItemStack item = ItemStack.getFromNBT(reader, false);
-				int slot = item.fromSlot(reader);
-				if (slot < 0 ||  slot > 4) 
-					continue;
-				holder.setItem(slot, item);
-			}
-			reader.readNextEntry();
-		});
-		NBT_FIELDS.setField(COOKING_TIMES, (holder, reader) -> {
-			holder.setCookingTimes(reader.readIntArrayTag());
-		});
-		NBT_FIELDS.setField(COOKING_TOTAL_TIMES, (holder, reader) -> {
-			holder.setTotalCookingTimes(reader.readIntArrayTag());
-		});
-	}
-	
-	private ItemStack[] items;
-	private int[] cookingTimes;
-	private int[] cookingTotalTimes;
+	private final ItemStack[] items;
+	private final int[] cookingTimes;
+	private final int[] cookingTotalTimes;
 
 	public CoreCampfire(BlockType type) {
 		super(type);
@@ -99,45 +64,17 @@ public class CoreCampfire extends CoreTileEntity implements Campfire {
 
 	@Override
 	public void setItems(ItemStack[] items) {
-		for (int i = 0; i < 4 && i < items.length; i++) {
-			this.items[i] = items[i];
-		}
+		System.arraycopy(items, 0, this.items, 0, 4);
 	}
 
 	@Override
 	public void setCookingTimes(int[] cookingTimes) {
-		for (int i = 0; i < 4 && i < items.length; i++) {
-			this.cookingTimes[i] = cookingTimes[i];
-		}
+		System.arraycopy(cookingTimes, 0, this.cookingTimes, 0, 4);
 	}
 
 	@Override
 	public void setTotalCookingTimes(int[] totalCookingTimes) {
-		for (int i = 0; i < 4 && i < items.length; i++) {
-			this.cookingTotalTimes[i] = cookingTotalTimes[i];
-		}
-	}
-	
-	@Override
-	protected NBTFieldSet<? extends CoreCampfire> getFieldSetRoot() {
-		return NBT_FIELDS;
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		int count = 0;
-		for (int i = 0; i < 4; i++) if (items[i] != null) count++;
-		writer.writeListTag(ITEMS, TagType.COMPOUND, count);
-		for (int i = 0; i < 4; i++) {
-			if (items[i] == null)
-				continue;
-			writer.writeCompoundTag();	
-			items[i].toSlot(writer, systemData, i);
-			writer.writeEndTag();
-		}
-		writer.writeIntArrayTag(COOKING_TIMES, getCookingTimes());
-		writer.writeIntArrayTag(COOKING_TOTAL_TIMES, getTotalCookingTimes());
+		System.arraycopy(totalCookingTimes, 0, this.cookingTotalTimes, 0, 4);
 	}
 
 }
