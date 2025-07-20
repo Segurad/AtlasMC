@@ -79,6 +79,14 @@ public class DataSetField<T, K extends Namespaced> extends AbstractObjectField<T
 			}
 		}
 		case LIST:
+			TagType listType = reader.getListType();
+			if (listType == TagType.TAG_END || reader.getNextPayload() == 0) {
+				reader.readNextEntry();
+				reader.readNextEntry();
+				return;
+			}
+			if (listType != TagType.STRING)
+				throw new NBTException("Expected list of type STRING but was: " + listType);
 			reader.readNextEntry();
 			ArrayList<K> types = new ArrayList<K>();
 			while (reader.getRestPayload() > 0) {

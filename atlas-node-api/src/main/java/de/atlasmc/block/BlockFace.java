@@ -8,12 +8,12 @@ import de.atlasmc.util.EnumName;
 import de.atlasmc.util.EnumValueCache;
 
 public enum BlockFace implements EnumName, EnumValueCache {
-	NORTH(0, 0, -1, 0f, -180f, 8),
-	EAST(1, 0, 0, 0f, -90f, 12),
-	SOUTH(0, 0, 1, 0f, 0f, 0),
-	WEST(-1, 0, 0, 0f, 90f, 4),
-	UP(0, 1, 0, -90f, 0f, -1),
-	DOWN(0, -1, 0, 90f, 0f, -2),
+	NORTH(0, 0, -1, 0f, -180f, 8, 2),
+	EAST(1, 0, 0, 0f, -90f, 12, 5),
+	SOUTH(0, 0, 1, 0f, 0f, 0, 3),
+	WEST(-1, 0, 0, 0f, 90f, 4, 4),
+	UP(0, 1, 0, -90f, 0f, -1, 1),
+	DOWN(0, -1, 0, 90f, 0f, -2, 0),
 	NORTH_EAST(1, 0, -1, 10),
 	NORTH_WEST(-1, 0, -1, 6),
 	SOUTH_EAST(1, 0, 1, 14),
@@ -31,6 +31,7 @@ public enum BlockFace implements EnumName, EnumValueCache {
 	
 	private final String name;
 	
+	private final int faceID;
 	private final int modX;
 	private final int modY;
 	private final int modZ;
@@ -39,10 +40,11 @@ public enum BlockFace implements EnumName, EnumValueCache {
 	private final int rotation;
 	
 	private BlockFace(int modX, int modY, int modZ, int rotation) {
-		this(modX, modY, modZ, 0, 0, rotation);
+		this(modX, modY, modZ, 0, 0, rotation, -1);
 	}
 	
-	private BlockFace(int modX, int modY, int modZ, float pitch, float yaw, int rotation) {
+	private BlockFace(int modX, int modY, int modZ, float pitch, float yaw, int rotation, int faceID) {
+		this.faceID = faceID;
 		this.modX = modX;
 		this.modY = modY;
 		this.modZ = modZ;
@@ -118,6 +120,29 @@ public enum BlockFace implements EnumName, EnumValueCache {
 			};
 		}
 		return null;
+	}
+	
+	public static BlockFace getByFaceID(int facing) {
+		switch(facing) {
+		case 0:
+			return DOWN;
+		case 1:
+			return UP;
+		case 2:
+			return NORTH;
+		case 3:
+			return SOUTH;
+		case 4:
+			return WEST;
+		case 5:
+			return EAST;
+		default:
+			throw new IllegalArgumentException("Invalid face id: " + facing);
+		}
+	}
+	
+	public int getFaceID() {
+		return faceID;
 	}
 	
 	/**

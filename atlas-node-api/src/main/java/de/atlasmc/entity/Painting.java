@@ -2,17 +2,28 @@ package de.atlasmc.entity;
 
 import java.util.List;
 
-import de.atlasmc.util.EnumID;
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.EnumValueCache;
+import de.atlasmc.util.AtlasEnum;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Painting extends Hanging {
 
-	public Motive getMotive();
+	public static final NBTSerializationHandler<Painting>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Painting.class)
+					.include(Hanging.NBT_HANDLER)
+					.enumStringField("motive", Painting::getMotive, Painting::setMotive, Motive::getByName, Motive.KEBAB)
+					.build();
 	
-	public void setMotive(Motive motive);
+	Motive getMotive();
 	
-	public static enum Motive implements EnumID, EnumName, EnumValueCache {
+	void setMotive(Motive motive);
+	
+	@Override
+	default NBTSerializationHandler<? extends Painting> getNBTHandler() {
+		return NBT_HANDLER;
+	}
+	
+	public static enum Motive implements AtlasEnum {
 		KEBAB,
 		AZTEC,
 		ALBAN,

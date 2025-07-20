@@ -9,8 +9,8 @@ import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.EntityDataComponent;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 import io.netty.buffer.ByteBuf;
 
 public class CoreEntityDataComponent extends AbstractItemComponent implements EntityDataComponent {
@@ -27,21 +27,6 @@ public class CoreEntityDataComponent extends AbstractItemComponent implements En
 		if (entity != null)
 			clone.entity = entity; // TODO copy entity
 		return clone;
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		if (entity == null)
-			return;
-		writer.writeCompoundTag(key.toString());
-		entity.toNBT(writer, systemData);
-		writer.writeEndTag();
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		reader.readNextEntry();
-		entity = Entity.getFromNBT(reader);
 	}
 
 	@Override
@@ -68,7 +53,7 @@ public class CoreEntityDataComponent extends AbstractItemComponent implements En
 	public void read(ByteBuf buf) throws IOException {
 		NBTNIOReader reader = new NBTNIOReader(buf, true);
 		reader.readNextEntry();
-		entity = Entity.getFromNBT(reader);
+		entity = Entity.NBT_HANDLER.deserialize(reader, NBTSerializationContext.DEFAULT_CLIENT);
 		reader.close();
 	}
 	
@@ -76,8 +61,11 @@ public class CoreEntityDataComponent extends AbstractItemComponent implements En
 	public void write(ByteBuf buf) throws IOException {
 		NBTNIOWriter writer = new NBTNIOWriter(buf, true);
 		writer.writeCompoundTag();
-		if (entity != null)
-			entity.toNBT(writer, false);
+		if (entity != null) {
+			@SuppressWarnings("unchecked")
+			NBTSerializationHandler<Entity> handler = (NBTSerializationHandler<Entity>) entity.getNBTHandler();
+			handler.serialize(entity, writer, NBTSerializationContext.DEFAULT_CLIENT);
+		}
 		writer.writeEndTag();
 	}
 

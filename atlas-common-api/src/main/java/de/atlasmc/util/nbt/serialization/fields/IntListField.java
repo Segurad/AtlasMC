@@ -38,8 +38,11 @@ public class IntListField<T> extends AbstractCollectionField<T, IntList> {
 		switch(reader.getType()) {
 		case LIST: {
 			TagType listType = reader.getListType();
-			if (listType == TagType.TAG_END || reader.getNextPayload() == 0)
+			if (listType == TagType.TAG_END || reader.getNextPayload() == 0) {
+				reader.readNextEntry();
+				reader.readNextEntry();
 				return;
+			}
 			if (listType != TagType.INT)
 				throw new NBTException("Expected list of type INT but was: " + listType);
 			final IntList list = get.apply(value);

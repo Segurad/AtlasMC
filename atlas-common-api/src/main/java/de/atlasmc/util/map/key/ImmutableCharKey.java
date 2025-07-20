@@ -7,10 +7,14 @@ final class ImmutableCharKey extends CharKey {
 	private final char[] buf;
 	
 	public ImmutableCharKey(CharSequence sequence) {
-		final int length = sequence.length();
-		buf = new char[length];
-		for (int i = 0; i < length; i++)
-			buf[i] = sequence.charAt(i);
+		if (sequence instanceof String string) {
+			buf = string.toCharArray();
+		} else {
+			final int length = sequence.length();
+			buf = new char[length];
+			for (int i = 0; i < length; i++)
+				buf[i] = sequence.charAt(i);
+		}
 	}
 	
 	public ImmutableCharKey(char[] chars) {

@@ -1,10 +1,9 @@
 package de.atlasmc.block.tile;
 
 import de.atlasmc.Nameable;
-import de.atlasmc.chat.Chat;
 import de.atlasmc.inventory.Inventory;
 import de.atlasmc.inventory.InventoryHolder;
-import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.ItemPredicate;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface AbstractContainerTile<I extends Inventory> extends TileEntity, InventoryHolder, Nameable {
@@ -15,8 +14,8 @@ public interface AbstractContainerTile<I extends Inventory> extends TileEntity, 
 					.builder(AbstractContainerTile.class)
 					.include(TileEntity.NBT_HANDLER)
 					.include(Nameable.NBT_HANDLER)
-					.typeArraySearchByteIndexField("Items", "Slot", AbstractContainerTile::hasInventory, (value) -> { return value.getInventory().getContentsUnsafe(); }, ItemStack.NBT_HANDLER)
-					.chat("Lock", AbstractContainerTile::getLock, AbstractContainerTile::setLock)
+					.include(InventoryHolder.NBT_HANDLER)
+					.typeComponentField("lock", AbstractContainerTile::getLock, AbstractContainerTile::setLock, ItemPredicate.NBT_HANDLER)
 					.build();
 	
 	/**
@@ -24,18 +23,12 @@ public interface AbstractContainerTile<I extends Inventory> extends TileEntity, 
 	 * @return the Inventory of this Tile
 	 */
 	I getInventory();
-	
-	/**
-	 * 
-	 * @return true if a inventory has been set
-	 */
-	boolean hasInventory();
 
-	void setLock(Chat lock);
+	void setLock(ItemPredicate lock);
 	
 	boolean hasLock();
 	
-	Chat getLock();
+	ItemPredicate getLock();
 	
 	@SuppressWarnings("rawtypes")
 	@Override

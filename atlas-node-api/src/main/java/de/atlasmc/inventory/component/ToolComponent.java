@@ -3,12 +3,25 @@ package de.atlasmc.inventory.component;
 import java.util.List;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.ItemType;
-import de.atlasmc.inventory.itempredicate.ItemTypePredicate;
-import de.atlasmc.inventory.itempredicate.TagItemPredicate;
+import de.atlasmc.util.dataset.DataSet;
+import de.atlasmc.util.nbt.serialization.NBTSerializable;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface ToolComponent extends ItemComponent {
 	
 	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:tool");
+	
+	public static final NBTSerializationHandler<ToolComponent>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(ToolComponent.class)
+					.include(ItemComponent.NBT_HANDLER)
+					.beginComponent(COMPONENT_KEY)
+					.floatField("default_mining_speed", ToolComponent::getDefaultMinigSpeed, ToolComponent::setDefaultMinigSpeed, 1)
+					.intField("damage_per_block", ToolComponent::getDamagePerBlock, ToolComponent::setDamagePerBlock, 1)
+					.boolField("can_destroy_blocks_in_creative", ToolComponent::canDestroyBlocksInCreative, ToolComponent::setDestroyBlockInCreative, true)
+					.typeList("rules", ToolComponent::hasRules, ToolComponent::getRules, Rule.NBT_HANDLER)
+					.endComponent()
+					.build();
 	
 	float getDefaultMinigSpeed();
 	
@@ -17,6 +30,10 @@ public interface ToolComponent extends ItemComponent {
 	int getDamagePerBlock();
 	
 	void setDamagePerBlock(int damage);
+	
+	boolean canDestroyBlocksInCreative();
+	
+	void setDestroyBlockInCreative(boolean can);
 	
 	List<Rule> getRules();
 	
@@ -28,21 +45,54 @@ public interface ToolComponent extends ItemComponent {
 	
 	void removeRule(Rule rule);
 	
-	public static interface Rule {
+	@Override
+	default NBTSerializationHandler<? extends ToolComponent> getNBTHandler() {
+		return NBT_HANDLER;
+	}
+	
+	public static class Rule implements NBTSerializable {
 		
-		ItemTypePredicate getBlockPredicate();
+		public static final NBTSerializationHandler<Rule>
+		NBT_HANDLER = NBTSerializationHandler
+						.builder(Rule.class)
+						.defaultConstructor(Rule::new)
+						.dataSetField("blocks", Rule::getBlocks, Rule::setBlocks, ItemType.getRegistry())
+						.floatField("speed", Rule::getSpeed, Rule::setSpeed)
+						.boolField("correct_for_drops", Rule::isCorrectForDrops, Rule::setCorrectForDrops, false)
+						.build();
 		
-		TagItemPredicate getBlockTagPredicate();
+		private DataSet<ItemType> blocks;
+		private float speed;
+		private boolean correctForDrops;
 		
-		float getSpeed();
+		public DataSet<ItemType> getBlocks() {
+			return blocks;
+		}
 		
-		void setSpeed(float speed);
+		public void setBlocks(DataSet<ItemType> blocks) {
+			this.blocks = blocks;
+		}
 		
-		boolean isCorredForDrops();
+		public float getSpeed() {
+			return speed;
+		}
 		
-		void setCorrectForDrop(boolean correct);
+		public void setSpeed(float speed) {
+			this.speed = speed;
+		}
 		
-		boolean matches(ItemType type);
+		public boolean isCorrectForDrops() {
+			return correctForDrops;
+		}
+		
+		public void setCorrectForDrops(boolean correctForDrops) {
+			this.correctForDrops = correctForDrops;
+		}
+		
+		@Override
+		public NBTSerializationHandler<? extends NBTSerializable> getNBTHandler() {
+			return NBT_HANDLER;
+		}
 		
 	}
 

@@ -35,8 +35,11 @@ public class FloatListField<T> extends AbstractCollectionField<T, FloatList> {
 	@Override
 	public void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException {
 		TagType listType = reader.getListType();
-		if (listType == TagType.TAG_END || reader.getNextPayload() == 0)
+		if (listType == TagType.TAG_END || reader.getNextPayload() == 0) {
+			reader.readNextEntry();
+			reader.readNextEntry();
 			return;
+		}
 		if (listType != TagType.FLOAT)
 			throw new NBTException("Expected list of type FLOAT but was: " + listType);
 		final FloatList list = get.apply(value);

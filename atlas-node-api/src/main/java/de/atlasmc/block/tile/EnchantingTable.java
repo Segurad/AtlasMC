@@ -1,8 +1,7 @@
 package de.atlasmc.block.tile;
 
-import de.atlasmc.Nameable;
-import de.atlasmc.inventory.InventoryHolder;
+import de.atlasmc.inventory.EnchantingInventory;
 
-public interface EnchantingTable extends TileEntity, InventoryHolder, Nameable {
+public interface EnchantingTable extends AbstractContainerTile<EnchantingInventory> {
 
 }

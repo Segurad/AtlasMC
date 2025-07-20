@@ -9,10 +9,11 @@ import de.atlasmc.entity.Projectile;
 public abstract class CoreAbstractProjectile extends CoreEntity implements Projectile {
 
 	private ProjectileSource source;
-	private boolean bounce;
+	private UUID ownerID;
+	private boolean leftOwner;
 	
-	public CoreAbstractProjectile(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreAbstractProjectile(EntityType type) {
+		super(type);
 	}
 
 	@Override
@@ -21,18 +22,28 @@ public abstract class CoreAbstractProjectile extends CoreEntity implements Proje
 	}
 
 	@Override
-	public boolean doesBounce() {
-		return bounce;
-	}
-
-	@Override
 	public void setShooter(ProjectileSource source) {
 		this.source = source;
 	}
-
+	
 	@Override
-	public void setBounce(boolean bounce) {
-		this.bounce = bounce;
+	public UUID getShooterUUID() {
+		return ownerID;
 	}
-
+	
+	@Override
+	public void setShooterUUID(UUID uuid) {
+		this.ownerID = uuid;
+	}
+	
+	@Override
+	public boolean hasLeftOwner() {
+		return leftOwner;
+	}
+	
+	@Override
+	public void setLeftOwner(boolean value) {
+		this.leftOwner = value;
+	}
+	
 }

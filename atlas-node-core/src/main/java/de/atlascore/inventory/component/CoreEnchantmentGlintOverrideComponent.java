@@ -6,8 +6,6 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.EnchantmentGlintOverrideComponent;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import io.netty.buffer.ByteBuf;
 
 public class CoreEnchantmentGlintOverrideComponent extends AbstractItemComponent implements EnchantmentGlintOverrideComponent {
@@ -22,17 +20,6 @@ public class CoreEnchantmentGlintOverrideComponent extends AbstractItemComponent
 	@Override
 	public CoreEnchantmentGlintOverrideComponent clone() {
 		return (CoreEnchantmentGlintOverrideComponent) super.clone();
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		if (!glint)
-			writer.writeByteTag(key.toString(), false);
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		glint = reader.readBoolean();
 	}
 
 	@Override

@@ -15,17 +15,9 @@ import de.atlasmc.inventory.ItemType;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.ContainerComponent;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import io.netty.buffer.ByteBuf;
 
 public class CoreContainerComponent extends AbstractItemComponent implements ContainerComponent {
-
-	protected static final CharKey
-	NBT_ITEM = CharKey.literal("item"),
-	NBT_SLOT = CharKey.literal("slot");
 	
 	private List<ItemStack> slots;
 	
@@ -45,47 +37,6 @@ public class CoreContainerComponent extends AbstractItemComponent implements Con
 			}
 		}
 		return clone;
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		if (hasItems()) {
-			writer.writeListTag(key.toString(), TagType.COMPOUND, 0);
-			return;
-		}
-		final int size = slots.size();
-		writer.writeListTag(key.toString(), TagType.COMPOUND, slots.size());
-		for (int i = 0; i < size; i++) {
-			writer.writeCompoundTag();
-			writer.writeCompoundTag(NBT_ITEM);
-			slots.get(i).toNBT(writer, systemData);
-			writer.writeEndTag();
-			writer.writeIntTag(NBT_SLOT, i);
-			writer.writeEndTag();
-		}
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		reader.readNextEntry();
-		while (reader.getRestPayload() > 0) {
-			reader.readNextEntry();
-			ItemStack item = null;
-			int slot = 0;
-			while (reader.getType() != TagType.TAG_END) {
-				CharSequence key = reader.getFieldName();
-				if (NBT_ITEM.equals(key)) {
-					item = ItemStack.getFromNBT(reader);
-				} else if (NBT_SLOT.equals(key)) {
-					slot = reader.readIntTag();
-				}
-			}
-			reader.readNextEntry();
-			if (item == null)
-				continue;
-			getItems().add(slot, item);
-		}
-		reader.readNextEntry();
 	}
 
 	@Override

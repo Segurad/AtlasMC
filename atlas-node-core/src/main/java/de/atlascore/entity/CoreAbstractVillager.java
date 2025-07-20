@@ -112,6 +112,11 @@ public class CoreAbstractVillager extends CoreAgeableMob implements AbstractVill
 			inv = ContainerFactory.MERCHANT_INV_FACTORY.create(InventoryType.MERCHANT, this);
 		return inv;
 	}
+	
+	@Override
+	public boolean hasInventory() {
+		return inv != null;
+	}
 
 	@Override
 	public void addRecipe(MerchantRecipe recipe) {

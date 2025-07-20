@@ -12,12 +12,11 @@ import de.atlasmc.util.nbt.serialization.constructor.FieldKeyConstructor;
 import de.atlasmc.util.nbt.serialization.constructor.SearchFieldEnumConstructor;
 import de.atlasmc.util.nbt.serialization.constructor.SearchFieldRegistryConstructor;
 
-public class NBTSerializationHandlerBuilder<T extends NBTSerializable> extends AbstractNBTCompoundFieldBuilder<T, NBTSerializationHandlerBuilder<T>>  implements Builder<NBTSerializationHandler<T>> {
+public class NBTSerializationHandlerBuilder<T> extends AbstractNBTCompoundFieldBuilder<T, NBTSerializationHandlerBuilder<T>>  implements Builder<NBTSerializationHandler<T>> {
 	
 	private final Class<T> clazz;
 	private Constructor<T> constructor;
 	private Supplier<T> defaultConstructor;
-	private boolean redirectAfterConstruction;
 	
 	protected NBTSerializationHandlerBuilder(Class<T> clazz) {
 		this.clazz = clazz;
@@ -32,15 +31,9 @@ public class NBTSerializationHandlerBuilder<T extends NBTSerializable> extends A
 	@Override
 	public void clear() {
 		this.constructor = null;
-		this.redirectAfterConstruction = false;
 	}
 	
 	public NBTSerializationHandlerBuilder<T> include(NBTSerializationHandler<? super T> include) {
-		return this;
-	}
-	
-	public NBTSerializationHandlerBuilder<T> redirectAfterConstruction(boolean redirect) {
-		this.redirectAfterConstruction = redirect;
 		return this;
 	}
 	

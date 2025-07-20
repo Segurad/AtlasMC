@@ -168,6 +168,11 @@ public abstract class CoreAbstractHorse extends CoreAgeableMob implements Abstra
 		return inv;
 	}
 	
+	@Override
+	public boolean hasInventory() {
+		return inv != null;
+	}
+	
 	protected abstract AbstractHorseInventory createInventory();
 	
 	@Override

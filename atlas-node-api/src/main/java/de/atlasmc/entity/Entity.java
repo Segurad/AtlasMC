@@ -1,7 +1,5 @@
 package de.atlasmc.entity;
 
-import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,6 +8,7 @@ import org.joml.Vector3d;
 import de.atlasmc.Location;
 import de.atlasmc.Nameable;
 import de.atlasmc.SimpleLocation;
+import de.atlasmc.registry.Registries;
 import de.atlasmc.server.LocalServer;
 import de.atlasmc.sound.SoundEmitter;
 import de.atlasmc.tick.Tickable;
@@ -17,135 +16,51 @@ import de.atlasmc.util.EnumID;
 import de.atlasmc.util.EnumValueCache;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.annotation.ThreadSafe;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.CustomTagContainer;
-import de.atlasmc.util.nbt.NBTException;
-import de.atlasmc.util.nbt.NBTHolder;
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTReader;
+import de.atlasmc.util.nbt.serialization.NBTSerializable;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 import de.atlasmc.world.Chunk;
 import de.atlasmc.world.World;
 import de.atlasmc.world.entitytracker.EntityPerception;
 
-public interface Entity extends NBTHolder, Nameable, Tickable, SoundEmitter {
-
-	public static final CharKey NBT_ID = CharKey.literal("id");
+public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitter {
 	
-	public enum Animation implements EnumID, EnumValueCache {
-		
-		SWING_MAIN_ARM,
-		TAKE_DAMAGE,
-		LEAVE_BED,
-		SWING_OFFHAND,
-		CRITICAL_EFFECT,
-		MAGIC_CRITICAL_EFFECT;
-		
-		private static List<Animation> VALUES;
-		
-		public static Animation getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<Animation> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-		
-		public int getID() {
-			return ordinal();
-		}
-		
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
-		}
-		
-	}
-	
-	public enum Pose implements EnumID, EnumValueCache {
-		
-		STANDING,
-		FALL_FLYING,
-		SLEEPING,
-		SWIMMING,
-		SPIN_ATTACK,
-		SNEAKING,
-		DYING;
-		
-		private static List<Pose> VALUES;
-		
-		public static Pose getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<Pose> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-		
-		public int getID() {
-			return ordinal();
-		}
-		
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
-		}
-		
-	}
-	
-	public static Entity getFromNBT(NBTReader reader) throws IOException {
-		if (reader.getType() == TagType.TAG_END) { // Empty Tag 
-			reader.readNextEntry();
-			return null;
-		}
-		String rawType = null;
-		if (!NBT_ID.equals(reader.getFieldName())) {
-			reader.mark();
-			reader.search(NBT_ID);
-			rawType = reader.readStringTag();
-			reader.reset();
-		} else {
-			rawType = reader.readStringTag();
-		}
-		if (rawType == null) {
-			throw new NBTException("NBT did not container id field!");
-		}
-		EntityType type = EntityType.getByName(rawType);
-		if (type == null) {
-			throw new NBTException("Not entity type found with name: " + rawType);
-		}
-		Entity ent = type.create(null);
-		if (ent == null) {
-			throw new NBTException("Failed to create entity from entity type: " + type.getNamespacedKeyRaw());
-		}
-		ent.fromNBT(reader);
-		return ent;
-	}
+	public static final NBTSerializationHandler<Entity>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Entity.class)
+					.searchKeyConstructor("id", Registries.getRegistry(EntityType.class), EntityType::createEntity, Entity::getType)
+					.shortField("Air", Entity::getAirTicks, Entity::setAirTicks, (short) 300)
+					.include(Nameable.NBT_HANDLER)
+					.boolField("CustomNameVisible", Entity::isCustomNameVisible, Entity::setCustomNameVisible, false)
+					// data
+					.doubleField("fall_distance", Entity::getFallDistance, Entity::setFallDistance, 0)
+					.shortField("Fire", Entity::getFireTicks, Entity::setFireTicks, (short) 0)
+					.boolField("Glowing", Entity::isGlowing, Entity::setGlowing, false)
+					.boolField("HasVisualFire", Entity::hasVisualFire, Entity::setVisualFire, false)
+					.boolField("Invulnerable", Entity::isInvulnerable, Entity::setInvulnerable, false)
+					// Motion
+					.boolField("NoGravity", Entity::hasNoGravity, Entity::setNoGravity, false)
+					.boolField("OnGround", Entity::isOnGround, Entity::setOnGround, true)
+					// Passengers (not implemented because recursive)
+					.intField("PortalCooldown", Entity::getPortalCooldown, Entity::setPortalCooldown, 0)
+					// Pos
+					// Rotation
+					.boolField("Silent", Entity::isSilent, Entity::setSilent)
+					.stringListField("Tags", Entity::hasScoreboardTags, Entity::getScoreboardTags)
+					.intField("TicksFrozen", Entity::getFreezeTicks, Entity::setFreezeTicks, 0)
+					.uuid("UUID", Entity::getUUID, Entity::setUUID)
+					.build();
 	
 	void addScoreboardTag(String tag);
 	
 	int getAirTicks();
 	
-	float getFallDistance();
+	double getFallDistance();
 	
 	short getFireTicks();
+	
+	boolean hasVisualFire();
+	
+	void setVisualFire(boolean fire);
 	
 	/**
 	 * 
@@ -159,11 +74,9 @@ public interface Entity extends NBTHolder, Nameable, Tickable, SoundEmitter {
 	
 	SimpleLocation getLocation(SimpleLocation loc);
 	
-	CustomTagContainer getCustomTagContainer();
-	
 	Pose getPose();
 	
-	Collection<String> getScoreboardTags();
+	List<String> getScoreboardTags();
 	
 	LocalServer getServer();
 	
@@ -197,7 +110,7 @@ public interface Entity extends NBTHolder, Nameable, Tickable, SoundEmitter {
 
 	float getYaw();
 	
-	boolean hasGravity();
+	boolean hasNoGravity();
 	
 	boolean hasScoreboardTags();
 	
@@ -209,13 +122,15 @@ public interface Entity extends NBTHolder, Nameable, Tickable, SoundEmitter {
 	
 	boolean isGlowing();
 	
+	void setGlowing(boolean glowing);
+	
 	boolean isInvisible();
 	
 	void setInvisible(boolean invisible);
 	
 	boolean isOnGround();
 	
-	boolean isOnFire();
+	void setOnGround(boolean onGround);
 	
 	boolean isSilent();
 	
@@ -254,13 +169,12 @@ public interface Entity extends NBTHolder, Nameable, Tickable, SoundEmitter {
 
 	void setCustomNameVisible(boolean value);
 
-	void setFallDistance(float distance);
+	void setFallDistance(double distance);
 	
 	void setFireTicks(int ticks);
 
-	void setGlowing(boolean glowing);
 
-	void setGravity(boolean gravity);
+	void setNoGravity(boolean gravity);
 	
 	void setInvulnerable(boolean invulnerable);
 
@@ -334,5 +248,89 @@ public interface Entity extends NBTHolder, Nameable, Tickable, SoundEmitter {
 	void setTicking(boolean ticking);
 
 	boolean isTicking();
+	
+	@Override
+	default NBTSerializationHandler<? extends Entity> getNBTHandler() {
+		return NBT_HANDLER;
+	}
+	
+	public static enum Animation implements EnumID, EnumValueCache {
+		
+		SWING_MAIN_ARM,
+		TAKE_DAMAGE,
+		LEAVE_BED,
+		SWING_OFFHAND,
+		CRITICAL_EFFECT,
+		MAGIC_CRITICAL_EFFECT;
+		
+		private static List<Animation> VALUES;
+		
+		public static Animation getByID(int id) {
+			return getValues().get(id);
+		}
+		
+		/**
+		 * Returns a immutable List of all Types.<br>
+		 * This method avoid allocation of a new array not like {@link #values()}.
+		 * @return list
+		 */
+		public static List<Animation> getValues() {
+			if (VALUES == null)
+				VALUES = List.of(values());
+			return VALUES;
+		}
+		
+		public int getID() {
+			return ordinal();
+		}
+		
+		/**
+		 * Releases the system resources used from the values cache
+		 */
+		public static void freeValues() {
+			VALUES = null;
+		}
+		
+	}
+	
+	public static enum Pose implements EnumID, EnumValueCache {
+		
+		STANDING,
+		FALL_FLYING,
+		SLEEPING,
+		SWIMMING,
+		SPIN_ATTACK,
+		SNEAKING,
+		DYING;
+		
+		private static List<Pose> VALUES;
+		
+		public static Pose getByID(int id) {
+			return getValues().get(id);
+		}
+		
+		/**
+		 * Returns a immutable List of all Types.<br>
+		 * This method avoid allocation of a new array not like {@link #values()}.
+		 * @return list
+		 */
+		public static List<Pose> getValues() {
+			if (VALUES == null)
+				VALUES = List.of(values());
+			return VALUES;
+		}
+		
+		public int getID() {
+			return ordinal();
+		}
+		
+		/**
+		 * Releases the system resources used from the values cache
+		 */
+		public static void freeValues() {
+			VALUES = null;
+		}
+		
+	}
 	
 }

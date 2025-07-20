@@ -16,9 +16,6 @@ import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.inventory.component.AbstractBlockDataComponent;
 import de.atlasmc.inventory.component.AbstractItemComponent;
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import io.netty.buffer.ByteBuf;
 
 public class CoreAbstractBlockDataComponent extends AbstractItemComponent implements AbstractBlockDataComponent {
@@ -38,28 +35,6 @@ public class CoreAbstractBlockDataComponent extends AbstractItemComponent implem
 			clone.properties = new HashMap<>(properties);
 		}
 		return clone;
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		if (properties == null)
-			return;
-		writer.writeCompoundTag(getNamespacedKeyRaw());
-		BlockDataProperty.writeProperties(properties, writer, systemData);
-		writer.writeEndTag();
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		reader.readNextEntry();
-		if (reader.getType() == TagType.TAG_END) {
-			reader.readNextEntry();
-			return;
-		}
-		Map<BlockDataProperty<?>, Object> properties = BlockDataProperty.readProperties(reader);
-		if (properties == null || properties.isEmpty())
-			return;
-		setProperties(properties);
 	}
 
 	@Override

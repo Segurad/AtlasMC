@@ -1,15 +1,37 @@
 package de.atlasmc.entity;
 
+import java.util.UUID;
+
 import de.atlasmc.ProjectileSource;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Projectile extends Entity {
 	
-	ProjectileSource getShooter();
+	public static final NBTSerializationHandler<Projectile>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Projectile.class)
+					.include(Entity.NBT_HANDLER)
+					// ignore because event will be triggered by shooter 
+					//.boolField("HasBeenShot", Projectile::hasBeenShot, Projectile::setBeenShoot, true)
+					.boolField("LeftOwner", Projectile::hasLeftOwner, Projectile::setLeftOwner, false)
+					.uuid("Owner", Projectile::getShooterUUID, Projectile::setShooterUUID)
+					.build();
 	
-	boolean doesBounce();
+	ProjectileSource getShooter();
 	
 	void setShooter(ProjectileSource source);
 	
-	void setBounce(boolean bounce);
+	UUID getShooterUUID();
+	
+	void setShooterUUID(UUID uuid);
+	
+	boolean hasLeftOwner();
+	
+	void setLeftOwner(boolean value);
+	
+	@Override
+	default NBTSerializationHandler<? extends Projectile> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 }

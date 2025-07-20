@@ -1,6 +1,15 @@
 package de.atlasmc.inventory.component.effect;
 
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+
 public interface TeleportRandomly extends ComponentEffect {
+	
+	public static final NBTSerializationHandler<TeleportRandomly>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(TeleportRandomly.class)
+					.include(ComponentEffect.NBT_HANDLER)
+					.floatField("diameter", TeleportRandomly::getDiameter, TeleportRandomly::setDiameter, 16)
+					.build();
 	
 	float getDiameter();
 	
@@ -9,8 +18,8 @@ public interface TeleportRandomly extends ComponentEffect {
 	TeleportRandomly clone();
 	
 	@Override
-	default ComponentEffectType getType() {
-		return ComponentEffectType.TELEPORT_RANDOMLY;
+	default NBTSerializationHandler<? extends TeleportRandomly> getNBTHandler() {
+		return NBT_HANDLER;
 	}
 
 }

@@ -5,25 +5,21 @@ import de.atlasmc.event.ServerHandlerList;
 import de.atlasmc.inventory.BeaconInventory;
 import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.InventoryView;
-import de.atlasmc.potion.PotionEffect;
+import de.atlasmc.potion.PotionEffectType;
 
 public class BeaconEffectChangeEvent extends InventoryEvent implements Cancellable {
 
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
-	private PotionEffect newPrimary;
-	private PotionEffect newSecondary;
+	private PotionEffectType newPrimary;
+	private PotionEffectType newSecondary;
 	private boolean cancelled;
-	private int newPrimaryID;
-	private int newSecondaryID;
 	
-	public BeaconEffectChangeEvent(InventoryView view, PotionEffect newPrimary, PotionEffect newSecondary, int primaryID, int secondaryID) {
+	public BeaconEffectChangeEvent(InventoryView view, PotionEffectType newPrimary, PotionEffectType newSecondary) {
 		super(view);
 		if (view.getType() != InventoryType.BEACON) throw new IllegalArgumentException("Inventory must have the Type BEACON: " + view.getType());
 		this.newPrimary = newPrimary;
 		this.newSecondary = newSecondary;
-		this.newPrimaryID = primaryID;
-		this.newSecondaryID = secondaryID;
 	}
 	
 	@Override
@@ -31,52 +27,28 @@ public class BeaconEffectChangeEvent extends InventoryEvent implements Cancellab
 		return (BeaconInventory) super.getInventory();
 	}
 	
-	public PotionEffect getNewPrimary() {
+	public PotionEffectType getNewPrimaryEffect() {
 		return newPrimary;
 	}
 	
-	public PotionEffect getNewSecondary() {
+	public PotionEffectType getNewSecondaryEffect() {
 		return newSecondary;
 	}
 	
-	public void setNewPrimaryEffect(PotionEffect effect) {
+	public void setNewPrimaryEffect(PotionEffectType effect) {
 		this.newPrimary = effect;
 	}
 	
-	public void setNewSecondaryEffect(PotionEffect effect) {
+	public void setNewSecondaryEffect(PotionEffectType effect) {
 		this.newSecondary = effect;
 	}
 	
-	public int getNewPrimaryID() {
-		return newPrimaryID;
+	public PotionEffectType getPrimaryEffect() {
+		return getInventory().getPrimaryEffectType();
 	}
 	
-	public int getNewSecondaryID() {
-		return newSecondaryID;
-	}
-	
-	public void setNewPrimaryID(int newPrimaryID) {
-		this.newPrimaryID = newPrimaryID;
-	}
-	
-	public void setNewSecondaryID(int newSecondaryID) {
-		this.newSecondaryID = newSecondaryID;
-	}
-	
-	public PotionEffect getPrimaryEffect() {
-		return getInventory().getPrimaryEffect();
-	}
-	
-	public PotionEffect getSecondaryEffect() {
-		return getInventory().getSecondaryEffect();
-	}
-	
-	public int getPrimaryID() {
-		return getInventory().getPrimaryID();
-	}
-	
-	public int getSecondaryID() {
-		return getInventory().getSecondaryID();
+	public PotionEffectType getSecondaryEffect() {
+		return getInventory().getSecondaryEffectType();
 	}
 	
 	@Override

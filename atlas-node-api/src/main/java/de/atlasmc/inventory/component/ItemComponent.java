@@ -18,7 +18,6 @@ public interface ItemComponent extends NBTSerializable, Namespaced, Cloneable, I
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(ItemComponent.class)
 					.fieldKeyConstructor(Registries.getRegistry(ItemComponentFactory.class), ItemComponentFactory::createComponent)
-					.redirectAfterConstruction(true)
 					.build();
 	
 	/**

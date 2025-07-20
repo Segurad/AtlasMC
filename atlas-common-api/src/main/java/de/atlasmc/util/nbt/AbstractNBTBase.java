@@ -23,29 +23,10 @@ public abstract class AbstractNBTBase implements NBTHolder {
 		@SuppressWarnings("unchecked")
 		NBTFieldSet<NBTHolder> set = (NBTFieldSet<NBTHolder>) getFieldSetRoot();
 		final NBTHolder holder = getHolder();
-		CustomTagContainer customTags = null;
-		if (useCustomTagContainer())
-			customTags = getCustomTagContainer();
-		NBTUtil.readNBT(set, holder, reader, customTags);
+		NBTUtil.readNBT(set, holder, reader);
 	}
 	
 	protected abstract NBTFieldSet<? extends NBTHolder> getFieldSetRoot();
-	
-	/**
-	 * Returns weather or not the child class has a {@link CustomTagContainer} that should be used to store unknown field
-	 * @return should use {@link CustomTagContainer}
-	 */
-	protected boolean useCustomTagContainer() {
-		return false;
-	}
-	
-	/**
-	 * If the child class has a {@link CustomTagContainer} that should be used to store unknown field this method should be overridden 
-	 * @return a {@link CustomTagContainer}
-	 */
-	protected CustomTagContainer getCustomTagContainer() {
-		return null;
-	}
 	
 	/**
 	 * Returns the holder for this NBT data

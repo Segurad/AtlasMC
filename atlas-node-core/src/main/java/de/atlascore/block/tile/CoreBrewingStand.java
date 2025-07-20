@@ -19,7 +19,7 @@ public class CoreBrewingStand extends CoreAbstractContainerTile<BrewingInventory
 
 	@Override
 	public int getFuelLevel() {
-		if (!hasInventory())
+		if (inv == null)
 			return 0;
 		return getInventory().getFuelLevel();
 	}
@@ -31,7 +31,7 @@ public class CoreBrewingStand extends CoreAbstractContainerTile<BrewingInventory
 
 	@Override
 	public int getBrewTime() {
-		if (!hasInventory())
+		if (inv == null)
 			return 400;
 		return getInventory().getFuelLevel();
 	}

@@ -34,9 +34,12 @@ public class StringListField<T> extends AbstractCollectionField<T, List<String>>
 
 	@Override
 	public void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException {
-		TagType listType = reader.getListType();
-		if (listType == TagType.TAG_END || reader.getNextPayload() == 0)
+		final TagType listType = reader.getListType();
+		if (listType == TagType.TAG_END || reader.getNextPayload() == 0) {
+			reader.readNextEntry();
+			reader.readNextEntry();
 			return;
+		}
 		if (listType != TagType.STRING)
 			throw new NBTException("Expected list of type STRING but was: " + listType);
 		final List<String> list = get.apply(value);

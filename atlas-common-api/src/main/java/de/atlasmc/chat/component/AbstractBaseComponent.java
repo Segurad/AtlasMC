@@ -278,6 +278,11 @@ public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> 
 		return this;
 	}
 	
+	@Override
+	public boolean isComponent() {
+		return true;
+	}
+	
 	protected abstract T getThis();
 	
 }

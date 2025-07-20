@@ -1,16 +1,14 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
-import java.util.UUID;
-
+import de.atlasmc.block.data.BlockData;
 import de.atlasmc.entity.AbstractArrow;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.sound.EnumSound;
+import de.atlasmc.sound.Sound;
 
 public abstract class CoreAbstractArrow extends CoreAbstractProjectile implements AbstractArrow {
 
@@ -21,51 +19,19 @@ public abstract class CoreAbstractArrow extends CoreAbstractProjectile implement
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+2;
 	
-	protected static final NBTFieldSet<CoreAbstractArrow> NBT_FIELDS;
+	private double damage = 2;
+	private boolean pickupable; 
+	private int lifetime = 1200;
+	private byte shake;
+	private boolean inGround;
+	private BlockData blockDataIn;
+	private boolean shotFromCrossbow;
+	private Sound hitSound = EnumSound.ENTITY_ARROW_HIT;
+	private ItemStack item;
+	private ItemStack weapon;
 	
-	protected static final CharKey
-	NBT_CRIT = CharKey.literal("crit"),
-	NBT_DAMAGE = CharKey.literal("damage"),
-//	NBT_IN_BLOCK_STATE = "inBlockState", TODO unused in block state
-//	NBT_X_TILE = "xTile",
-//	NBT_Y_TILE = "yTile",
-//	NBT_Z_TILE = "zTile",
-//	NBT_IN_GROUND = "inGround",
-	NBT_LIFE = CharKey.literal("life"),
-	NBT_PICKUP = CharKey.literal("pickup"),
-	NBT_SHAKE = CharKey.literal("shake");
-	
-	static {
-		NBT_FIELDS = CoreAbstractProjectile.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_CRIT, (holder, reader) -> {
-			holder.setCritical(reader.readByteTag() == 1);
-		});
-		NBT_FIELDS.setField(NBT_DAMAGE, (holder, reader) -> {
-			holder.setDamage(reader.readDoubleTag());
-		});
-		NBT_FIELDS.setField(NBT_LIFE, (holder, reader) -> {
-			holder.setLifeTime(reader.readShortTag());
-		});
-		NBT_FIELDS.setField(NBT_PICKUP, (holder, reader) -> {
-			holder.setPickupable(reader.readByteTag() == 1);
-		});
-		NBT_FIELDS.setField(NBT_SHAKE, (holder, reader) -> {
-			holder.setShakeOnImpact(reader.readByteTag() == 1);
-		});
-	}
-	
-	private double damage;
-	private boolean pickupable;
-	private boolean shakeOnImpact;
-	private int lifetime = -1;
-	
-	public CoreAbstractArrow(EntityType type, UUID uuid) {
-		super(type, uuid);
-	}
-	
-	@Override
-	protected NBTFieldSet<? extends CoreAbstractArrow> getFieldSetRoot() {
-		return NBT_FIELDS;
+	public CoreAbstractArrow(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -112,16 +78,6 @@ public abstract class CoreAbstractArrow extends CoreAbstractProjectile implement
 	}
 
 	@Override
-	public void setShakeOnImpact(boolean shake) {
-		this.shakeOnImpact = shake;
-	}
-	
-	@Override
-	public boolean isShakingOnImpact() {
-		return shakeOnImpact;
-	}
-
-	@Override
 	public void setLifeTime(int ticks) {
 		this.lifetime = ticks;
 	}
@@ -140,18 +96,75 @@ public abstract class CoreAbstractArrow extends CoreAbstractProjectile implement
 	public boolean isPickupable() {
 		return pickupable;
 	}
-	
+
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isCritical())
-			writer.writeByteTag(NBT_CRIT, true);
-		writer.writeDoubleTag(NBT_DAMAGE, getDamage());
-		writer.writeShortTag(NBT_LIFE, getLifeTime());
-		if (isPickupable())
-			writer.writeByteTag(NBT_PICKUP, true);
-		if (isShakingOnImpact())
-			writer.writeByteTag(NBT_SHAKE, true);
+	public ItemStack getItem() {
+		return item;
+	}
+
+	@Override
+	public void setItem(ItemStack item) {
+		this.item = item;
+	}
+
+	@Override
+	public ItemStack getWeapon() {
+		return weapon;
+	}
+
+	@Override
+	public void setWeapon(ItemStack weapon) {
+		this.weapon = weapon;
+	}
+
+	@Override
+	public Sound getHitSound() {
+		return hitSound;
+	}
+
+	@Override
+	public void setHitSound(Sound sound) {
+		this.hitSound = sound;
+	}
+
+	@Override
+	public boolean isShotFromCrossbow() {
+		return shotFromCrossbow;
+	}
+
+	@Override
+	public void setShotFromCrossbow(boolean value) {
+		this.shotFromCrossbow = value;
+	}
+
+	@Override
+	public BlockData getBlockDataIn() {
+		return blockDataIn;
+	}
+
+	@Override
+	public void setBlockDataIn(BlockData data) {
+		this.blockDataIn = data;
+	}
+
+	@Override
+	public boolean isInGround() {
+		return inGround;
+	}
+
+	@Override
+	public void setInGround(boolean inGround) {
+		this.inGround = inGround;
+	}
+
+	@Override
+	public int getShake() {
+		return shake;
+	}
+
+	@Override
+	public void setShake(int shake) {
+		this.shake = (byte) shake;
 	}
 
 }

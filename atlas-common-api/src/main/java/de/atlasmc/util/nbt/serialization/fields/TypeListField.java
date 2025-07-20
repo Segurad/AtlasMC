@@ -30,8 +30,11 @@ public class TypeListField<T, K> extends AbstractCollectionField<T, List<K>> {
 		}
 		final List<K> list = get.apply(value);
 		final int size = list.size();
-		if (size == 0 && useDefault)
+		if (size == 0) {
+			if (!useDefault)
+				writer.writeListTag(key, TagType.COMPOUND, 0);
 			return true;
+		}
 		writer.writeListTag(key, TagType.COMPOUND, size);
 		for (int i = 0; i < size; i++) {
 			writer.writeCompoundTag();
@@ -45,8 +48,11 @@ public class TypeListField<T, K> extends AbstractCollectionField<T, List<K>> {
 	@Override
 	public void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException {
 		TagType listType = reader.getListType();
-		if (listType == TagType.TAG_END || reader.getNextPayload() == 0)
+		if (listType == TagType.TAG_END || reader.getNextPayload() == 0) {
+			reader.readNextEntry();
+			reader.readNextEntry();
 			return;
+		}
 		if (listType != TagType.COMPOUND)
 			throw new NBTException("Expected list of type COMPOUND but was: " + listType);
 		final List<K> list = get.apply(value);

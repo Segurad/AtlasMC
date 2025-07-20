@@ -99,6 +99,10 @@ public abstract class PotionEffectType extends ProtocolRegistryValueBase  {
 	
 	public abstract PotionEffect createEffect(int amplifier, int duration, boolean reducedAmbient, boolean particles, boolean icon, UUID uuid);
 	
+	public PotionEffect createEffect() {
+		return createEffect(0, 1);
+	}
+	
 	@Override
 	public NamespacedKey getNamespacedKey() {
 		return key;

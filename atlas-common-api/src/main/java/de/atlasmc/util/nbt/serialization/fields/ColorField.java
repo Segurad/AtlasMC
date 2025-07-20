@@ -14,8 +14,11 @@ import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 
 public class ColorField<T> extends AbstractObjectField<T, Color> {
 
-	public ColorField(CharSequence key, Function<T, Color> get, BiConsumer<T, Color> set) {
-		super(key, List.of(TagType.INT, TagType.LIST), get, set, true);
+	private final int defaultValue;
+	
+	public ColorField(CharSequence key, Function<T, Color> get, BiConsumer<T, Color> set, boolean useDefault, int defaultValue) {
+		super(key, List.of(TagType.INT, TagType.LIST), get, set, useDefault);
+		this.defaultValue = defaultValue;
 	}
 
 	@Override
@@ -23,7 +26,10 @@ public class ColorField<T> extends AbstractObjectField<T, Color> {
 		Color c = get.apply(value);
 		if (c == null)
 			return true;
-		writer.writeIntTag(key, c.asARGB());
+		int v = c.asARGB();
+		if (useDefault && v == defaultValue)
+			return true;
+		writer.writeIntTag(key, v);
 		return true;
 	}
 

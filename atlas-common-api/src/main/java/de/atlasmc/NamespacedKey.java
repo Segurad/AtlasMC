@@ -152,10 +152,23 @@ public class NamespacedKey implements CharSequence {
 			return k;
 		String rawKey = namespacedKey.toString();
 		int first = rawKey.indexOf(':');
-		if (first < 1 || !NAMESPACED_KEY_PATTERN.matcher(namespacedKey).matches())
-			throw new IllegalArgumentException("Invalid namespaced key: " + namespacedKey);
-		String namespace = rawKey.substring(0, first);
-		String key = rawKey.substring(first+1);
+		String namespace;
+		String key;
+		if (first == -1) {
+			namespace = MINECRAFT;
+			key = namespacedKey.toString();
+			rawKey = namespace + ":" + key;
+			k = CACHE.get(rawKey);
+			if (k != null)
+				return k;
+			if (!KEY_PATTERN.matcher(key).matches())
+				throw new IllegalArgumentException("Invalid key: " + rawKey);
+		} else if (NAMESPACED_KEY_PATTERN.matcher(namespacedKey).matches()) {
+			namespace = rawKey.substring(0, first);
+			key = rawKey.substring(first+1);
+		} else {
+			throw new IllegalArgumentException("Invalid namespaced key: " + rawKey);
+		}
 		return new NamespacedKey(namespace, key, rawKey);
 	}
 	

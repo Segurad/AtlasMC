@@ -1,8 +1,5 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
-import java.util.UUID;
-
 import de.atlasmc.SoundCategory;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.ItemFrame;
@@ -12,9 +9,6 @@ import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.sound.EnumSound;
 import de.atlasmc.sound.Sound;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreItemFrame extends CoreHanging implements ItemFrame {
 
@@ -25,46 +19,11 @@ public class CoreItemFrame extends CoreHanging implements ItemFrame {
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+2;
 	
-	protected static final NBTFieldSet<CoreItemFrame> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_ITEM_DROP_CHANCE = CharKey.literal("ItemDropChance"),
-	NBT_ITEM_ROTATION = CharKey.literal("ItemRotation"),
-	NBT_ITEM = CharKey.literal("Item"),
-	NBT_INVISIBLE = CharKey.literal("Invisible"),
-	NBT_FIXED = CharKey.literal("Fixed");
-	
-	static {
-		NBT_FIELDS = CoreEntity.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_ITEM_DROP_CHANCE, (holder, reader) -> {
-			holder.setItemDropChance(reader.readFloatTag());
-		});
-		NBT_FIELDS.setField(NBT_ITEM_ROTATION, (holder, reader) -> {
-			holder.setRotation(Rotation.getByID(reader.readByteTag()));
-		});
-		NBT_FIELDS.setField(NBT_ITEM, (holder, reader) -> {
-			reader.readNextEntry();
-			ItemStack item = ItemStack.getFromNBT(reader);
-			holder.setItemStack(item);
-		});
-		NBT_FIELDS.setField(NBT_INVISIBLE, (holder, reader) -> {
-			holder.setInvisible(reader.readByteTag() == 1);
-		});
-		NBT_FIELDS.setField(NBT_FIXED, (holder, reader) -> {
-			holder.setFixed(reader.readByteTag() == 1);
-		});
-	}
-	
 	private boolean fixed;
 	private float dropChance = 1.0f;
 	
-	public CoreItemFrame(EntityType type, UUID uuid) {
-		super(type, uuid);
-	}
-	
-	@Override
-	protected NBTFieldSet<? extends CoreItemFrame> getFieldSetRoot() {
-		return NBT_FIELDS;
+	public CoreItemFrame(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -94,9 +53,10 @@ public class CoreItemFrame extends CoreHanging implements ItemFrame {
 	@Override
 	public void setItemStack(ItemStack item, boolean playSound) {
 		setItemStack(item);
-		if (playSound)
-			causeSound(item != null ? EnumSound.ENTITY_ITEM_FRAME_ADD_ITEM :
-				EnumSound.ENTITY_ITEM_FRAME_REMOVE_ITEM, SoundCategory.MASTER, 1.0f, 1.0f, Sound.DEFAULT_SEED); // TODO random seeding
+		if (!playSound)
+			return;
+		Sound sound = item != null ? EnumSound.ENTITY_ITEM_FRAME_ADD_ITEM : EnumSound.ENTITY_ITEM_FRAME_REMOVE_ITEM;
+		causeSound(sound, SoundCategory.MASTER, 1.0f, 1.0f, Sound.DEFAULT_SEED); // TODO random seeding
 	}
 
 	@Override
@@ -127,21 +87,6 @@ public class CoreItemFrame extends CoreHanging implements ItemFrame {
 	@Override
 	public float getItemDropChance() {
 		return dropChance;
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		writer.writeFloatTag(NBT_ITEM_DROP_CHANCE, getItemDropChance());
-		if (getItem() != null) {
-			writer.writeCompoundTag(NBT_ITEM);
-			getItem().toNBT(writer, systemData);
-			writer.writeEndTag();
-		}
-		writer.writeByteTag(NBT_ITEM_ROTATION, getRotation().getID());
-		writer.writeByteTag(NBT_INVISIBLE, isInvisible());
-		writer.writeByteTag(NBT_FIXED, isFixed());
-		
 	}
 
 }

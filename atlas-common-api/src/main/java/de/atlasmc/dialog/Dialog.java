@@ -12,7 +12,6 @@ public interface Dialog extends NBTSerializable, Namespaced {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(Dialog.class)
 					.searchKeyConstructor("type", Registries.getRegistry(DialogType.class), DialogType::createDialog, Dialog::getType)
-					.redirectAfterConstruction(true)
 					.build();
 	
 	DialogType getType();

@@ -1,8 +1,5 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
-import java.util.UUID;
-
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -12,10 +9,6 @@ import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreDisplay extends CoreEntity implements Display {
 
@@ -37,119 +30,8 @@ public class CoreDisplay extends CoreEntity implements Display {
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX + 15;
 	
-	protected static final NBTFieldSet<CoreDisplay> NBT_FIELDS;
-	
-	private static final CharKey
-	NBT_BILLBOARD = CharKey.literal("billboard"),
-	NBT_BRIGHTNESS = CharKey.literal("brightness"),
-		NBT_BLOCK = CharKey.literal("block"),
-		NBT_SKY = CharKey.literal("sky"),
-	NBT_GLOW_COLOR_OVERRIDE = CharKey.literal("glow_color_override"),
-	NBT_HEIGHT = CharKey.literal("height"),
-	NBT_WIDTH = CharKey.literal("width"),
-	NBT_INTERPOLATION_DURATION = CharKey.literal("interpolation_duration"),
-	NBT_TELEPORT_DURATION = CharKey.literal("teleport_duration"),
-	NBT_START_INTERPOLATION = CharKey.literal("start_interpolation"),
-	NBT_SHADOW_RADIUS = CharKey.literal("shadow_radius"),
-	NBT_SHADOW_STRENGTH = CharKey.literal("shadow_strength"),
-	NBT_VIEW_RANGE = CharKey.literal("view_range"),
-	NBT_TRANSFORMATION = CharKey.literal("transformation"),
-	NBT_RIGHT_ROTATION = CharKey.literal("right_rotation"),
-	NBT_LEFT_ROTATION = CharKey.literal("left_rotation"),
-	NBT_SCALE = CharKey.literal("scale"),
-	NBT_TRANSLATION = CharKey.literal("translation");
-	
-	static {
-		NBT_FIELDS = CoreEntity.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_BILLBOARD, (holder, reader) -> {
-			holder.setBillboard(Billboard.getByNameID(reader.readStringTag()));
-		});
-		NBTFieldSet<CoreDisplay> transformation = NBT_FIELDS.setSet(NBT_TRANSFORMATION);
-		transformation.setField(NBT_RIGHT_ROTATION, (holder, reader) -> {
-			reader.readNextEntry();
-			float x = reader.readFloatTag();
-			float y = reader.readFloatTag();
-			float z = reader.readFloatTag();
-			float w = reader.readFloatTag();
-			MetaData<Quaternionf> meta = holder.metaContainer.get(META_RIGHT_ROTATION);
-			meta.getData().set(x, y, z, w);
-			meta.setChanged(true);
-		});
-		transformation.setField(NBT_LEFT_ROTATION, (holder, reader) -> {
-			reader.readNextEntry();
-			float x = reader.readFloatTag();
-			float y = reader.readFloatTag();
-			float z = reader.readFloatTag();
-			float w = reader.readFloatTag();
-			MetaData<Quaternionf> meta = holder.metaContainer.get(META_RIGHT_ROTATION);
-			meta.getData().set(x, y, z, w);
-			meta.setChanged(true);
-		});
-		transformation.setField(NBT_SCALE, (holder, reader) -> {
-			reader.readNextEntry();
-			float x = reader.readFloatTag();
-			float y = reader.readFloatTag();
-			float z = reader.readFloatTag();
-			MetaData<Vector3f> meta = holder.metaContainer.get(META_SCALE);
-			meta.getData().set(x, y, z);
-			meta.setChanged(true);
-		});
-		transformation.setField(NBT_TRANSLATION, (holder, reader) -> {
-			reader.readNextEntry();
-			float x = reader.readFloatTag();
-			float y = reader.readFloatTag();
-			float z = reader.readFloatTag();
-			MetaData<Vector3f> meta = holder.metaContainer.get(META_TRANSLATION);
-			meta.getData().set(x, y, z);
-			meta.setChanged(true);
-		});
-		NBT_FIELDS.setField(NBT_GLOW_COLOR_OVERRIDE, (holder, reader) -> {
-			holder.metaContainer.get(META_GLOW_COLOR_OVERRIDE).setData(reader.readIntTag());
-		});
-		NBT_FIELDS.setField(NBT_WIDTH, (holder, reader) -> {
-			holder.setDisplayWidth(reader.readIntTag());
-		});
-		NBT_FIELDS.setField(NBT_HEIGHT, (holder, reader) -> {
-			holder.setDisplayHeight(reader.readIntTag());
-		});
-		NBT_FIELDS.setField(NBT_INTERPOLATION_DURATION, (holder, reader) -> {
-			holder.setTransformationInterpolationDuration(reader.readIntTag());
-		});
-		NBT_FIELDS.setField(NBT_TELEPORT_DURATION, (holder, reader) -> {
-			holder.setPositionInterpolationDuration(reader.readIntTag());
-		});
-		NBT_FIELDS.setField(NBT_START_INTERPOLATION, (holder, reader) -> {
-			holder.setInterpolationDelay(reader.readIntTag());
-		});
-		NBT_FIELDS.setField(NBT_SHADOW_RADIUS, (holder, reader) -> {
-			holder.setShadowRadius(reader.readFloatTag());
-		});
-		NBT_FIELDS.setField(NBT_SHADOW_STRENGTH, (holder, reader) -> {
-			holder.setShadowStrength(reader.readFloatTag());
-		});
-		NBT_FIELDS.setField(NBT_VIEW_RANGE, (holder, reader) -> {
-			holder.setViewRange(reader.readFloatTag());
-		});
-		NBT_FIELDS.setField(NBT_BRIGHTNESS, (holder, reader) -> {
-			reader.readNextEntry();
-			CharSequence name = reader.getFieldName();
-			int blockLight = 0;
-			int skyLight = 0;
-			while (reader.getType() != TagType.TAG_END) {
-				if (NBT_BLOCK.equals(name)) {
-					blockLight = reader.readIntTag();
-				} else if (NBT_SKY.equals(name)) {
-					skyLight = reader.readIntTag();
-				} else {
-					reader.skipTag();
-				}
-			}
-			holder.setBrightness(new Brightness(blockLight, skyLight));
-		});
-	}
-	
-	public CoreDisplay(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreDisplay(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -174,11 +56,6 @@ public class CoreDisplay extends CoreEntity implements Display {
 	@Override
 	protected int getMetaContainerSize() {
 		return LAST_META_INDEX + 1;
-	}
-	
-	@Override
-	protected NBTFieldSet<? extends CoreDisplay> getFieldSetRoot() {
-		return NBT_FIELDS;
 	}
 	
 	@Override
@@ -233,23 +110,23 @@ public class CoreDisplay extends CoreEntity implements Display {
 	}
 
 	@Override
-	public int getDisplayWidth() {
+	public float getDisplayWidth() {
 		return metaContainer.getData(META_WIDTH).intValue();
 	}
 
 	@Override
-	public void setDisplayWidth(int width) {
-		metaContainer.get(META_WIDTH).setData((float) width);
+	public void setDisplayWidth(float width) {
+		metaContainer.get(META_WIDTH).setData(width);
 	}
 
 	@Override
-	public int getDisplayHeight() {
+	public float getDisplayHeight() {
 		return metaContainer.getData(META_HEIGHT).intValue();
 	}
 
 	@Override
-	public void setDisplayHeight(int height) {
-		metaContainer.get(META_HEIGHT).setData((float) height);
+	public void setDisplayHeight(float height) {
+		metaContainer.get(META_HEIGHT).setData(height);
 	}
 
 	@Override
@@ -304,11 +181,7 @@ public class CoreDisplay extends CoreEntity implements Display {
 
 	@Override
 	public Transformation getTransformation() {
-		Vector3f scale = new Vector3f(metaContainer.getData(META_SCALE));
-		Vector3f translation = new Vector3f(metaContainer.getData(META_TRANSLATION));
-		Quaternionf rightRotation = new Quaternionf(metaContainer.getData(META_RIGHT_ROTATION));
-		Quaternionf leftRotation = new Quaternionf(metaContainer.getData(META_LEFT_ROTATION));
-		return new Transformation(scale, translation, rightRotation, leftRotation);
+		return getTransformation(new Transformation());
 	}
 	
 	@Override
@@ -367,101 +240,6 @@ public class CoreDisplay extends CoreEntity implements Display {
 				leftRotation.setChanged(true);
 			}
 		}
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		int billboard = metaContainer.getData(META_BILLBOARD);
-		if (billboard != META_BILLBOARD.getDefaultData())
-			writer.writeByteTag(NBT_BILLBOARD, billboard);
-		if (hasBrightness()) {
-			writer.writeCompoundTag(NBT_BRIGHTNESS);
-			Brightness brightness = getBrightness();
-			writer.writeIntTag(NBT_BLOCK, brightness.getBlockLightLevel());
-			writer.writeIntTag(NBT_SKY, brightness.getSkyLightLevel());
-			writer.writeEndTag();
-		}
-		int interpolationDuration = getTransformationInterpolationDuration();
-		if (interpolationDuration != 0)
-			writer.writeIntTag(NBT_INTERPOLATION_DURATION, interpolationDuration);
-		int positionInterpostaionDuration = getPositionInterpolationDuration();
-		if (positionInterpostaionDuration != 0)
-			writer.writeIntTag(NBT_TELEPORT_DURATION, positionInterpostaionDuration);
-		int interpolationDelay = getInterpolationDelay();
-		if (interpolationDelay != 0)
-			writer.writeIntTag(NBT_START_INTERPOLATION, interpolationDelay);
-		boolean transformation = false;
-		MetaData<Vector3f> scale = metaContainer.get(META_SCALE);
-		if (!scale.isDefault()) {
-			if (!transformation) {
-				writer.writeCompoundTag(NBT_TRANSFORMATION);
-				transformation = true;
-			}
-			Vector3f vec = scale.getData();
-			writer.writeListTag(NBT_SCALE, TagType.FLOAT, 3);
-			writer.writeFloatTag(null, vec.x);
-			writer.writeFloatTag(null, vec.y);
-			writer.writeFloatTag(null, vec.z);
-		}
-		MetaData<Vector3f> translation = metaContainer.get(META_TRANSLATION);
-		if (!translation.isDefault()) {
-			if (!transformation) {
-				writer.writeCompoundTag(NBT_TRANSFORMATION);
-				transformation = true;
-			}
-			Vector3f vec = translation.getData();
-			writer.writeListTag(NBT_TRANSLATION, TagType.FLOAT, 3);
-			writer.writeFloatTag(null, vec.x);
-			writer.writeFloatTag(null, vec.y);
-			writer.writeFloatTag(null, vec.z);
-		}
-		MetaData<Quaternionf> rightRotation = metaContainer.get(META_RIGHT_ROTATION);
-		if (!rightRotation.isDefault()) {
-			if (!transformation) {
-				writer.writeCompoundTag(NBT_TRANSFORMATION);
-				transformation = true;
-			}
-			Quaternionf quat = rightRotation.getData();
-			writer.writeListTag(NBT_RIGHT_ROTATION, TagType.FLOAT, 4);
-			writer.writeFloatTag(null, quat.x);
-			writer.writeFloatTag(null, quat.y);
-			writer.writeFloatTag(null, quat.z);
-			writer.writeFloatTag(null, quat.w);
-		}
-		MetaData<Quaternionf> leftRotation = metaContainer.get(META_LEFT_ROTATION);
-		if (!leftRotation.isDefault()) {
-			if (!transformation) {
-				writer.writeCompoundTag(NBT_TRANSFORMATION);
-				transformation = true;
-			}
-			Quaternionf quat = leftRotation.getData();
-			writer.writeListTag(NBT_LEFT_ROTATION, TagType.FLOAT, 4);
-			writer.writeFloatTag(null, quat.x);
-			writer.writeFloatTag(null, quat.y);
-			writer.writeFloatTag(null, quat.z);
-			writer.writeFloatTag(null, quat.w);
-		}
-		if (transformation)
-			writer.writeEndTag();
-		float shadowStrength = metaContainer.getData(META_SHADOW_STRENGTH);
-		if (shadowStrength != META_SHADOW_STRENGTH.getDefaultData())
-			writer.writeFloatTag(NBT_SHADOW_STRENGTH, shadowStrength);
-		float shadowRadius = metaContainer.getData(META_SHADOW_RADIUS);
-		if (shadowRadius != META_SHADOW_RADIUS.getDefaultData())
-			writer.writeFloatTag(NBT_SHADOW_RADIUS, shadowRadius);
-		float viewRange = metaContainer.getData(META_VIEW_RANGE);
-		if (viewRange != META_VIEW_RANGE.getDefaultData())
-			writer.writeFloatTag(NBT_VIEW_RANGE, viewRange);
-		int color = metaContainer.getData(META_GLOW_COLOR_OVERRIDE);
-		if (color != META_GLOW_COLOR_OVERRIDE.getDefaultData())
-			writer.writeIntTag(NBT_GLOW_COLOR_OVERRIDE, color);
-		float width = metaContainer.getData(META_WIDTH);
-		if (width != META_WIDTH.getDefaultData())
-			writer.writeIntTag(NBT_WIDTH, (int) width);
-		float height = metaContainer.getData(META_HEIGHT);
-		if (height != META_HEIGHT.getDefaultData())
-			writer.writeIntTag(NBT_HEIGHT, (int) height);
 	}
 
 	@Override

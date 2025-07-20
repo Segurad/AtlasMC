@@ -1,7 +1,5 @@
 package de.atlasmc.sound;
 
-import java.util.function.Function;
-
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.registry.ProtocolRegistryValueBase;
@@ -13,8 +11,7 @@ public class JukeboxSong extends ProtocolRegistryValueBase implements NBTSeriali
 	public static final NBTSerializationHandler<JukeboxSong>
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(JukeboxSong.class)
-					.interfacedEnumStringField("sound_event", (Function<JukeboxSong, Sound>)  JukeboxSong::getSound, JukeboxSong::setSound, EnumSound::getByName, null)
-					.compoundType("sound_event", (Function<JukeboxSong, Sound>) JukeboxSong::getSound, JukeboxSong::setSound, ResourceSound.NBT_HANDLER)
+					.addField(Sound.getNBTSoundField("sound_event", JukeboxSong::getSound, JukeboxSong::setSound, null))
 					.chat("description", JukeboxSong::getDescription, JukeboxSong::setDescription)
 					.floatField("length_in_seconds", JukeboxSong::getLength, JukeboxSong::setLength)
 					.intField("comparator_output", JukeboxSong::getComparatorOutput, JukeboxSong::setComparatorOutput, 0)

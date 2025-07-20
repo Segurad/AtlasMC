@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.util.nbt.io.NBTReader;
@@ -32,8 +33,8 @@ public class RegistryValueField<T, K extends Namespaced> extends AbstractObjectF
 
 	@Override
 	public void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException {
-		String rawKey = reader.readStringTag();
-		K v = registry.get(rawKey);
+		NamespacedKey key = reader.readNamespacedKey();
+		K v = registry.get(key);
 		set.accept(value, v);
 	}
 

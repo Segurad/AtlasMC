@@ -1,5 +1,10 @@
 package de.atlascore.inventory.component;
 
+import static de.atlasmc.io.PacketUtil.readVarInt;
+import static de.atlasmc.io.PacketUtil.writeVarInt;
+import static de.atlasmc.io.protocol.ProtocolUtil.readSound;
+import static de.atlasmc.io.protocol.ProtocolUtil.writeSound;
+
 import java.io.IOException;
 import java.net.ProtocolException;
 import java.util.ArrayList;
@@ -10,56 +15,12 @@ import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.ConsumableComponent;
 import de.atlasmc.inventory.component.effect.ComponentEffect;
-import de.atlasmc.inventory.component.effect.ComponentEffectFactory;
 import de.atlasmc.inventory.component.effect.ComponentEffectType;
 import de.atlasmc.sound.EnumSound;
 import de.atlasmc.sound.Sound;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.NBTUtil;
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import io.netty.buffer.ByteBuf;
-import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CoreConsumableComponent extends AbstractItemComponent implements ConsumableComponent {
-
-	protected static final NBTFieldSet<CoreConsumableComponent> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_CONSUME_SECONDS = CharKey.literal("consume_seconds"),
-	NBT_ANIMATION = CharKey.literal("animation"),
-	NBT_SOUND = CharKey.literal("sound"),
-	NBT_HAS_CONSUME_PARTICLES = CharKey.literal("has_consume_particles"),
-	NBT_ON_CONSUME_EFFECTS = CharKey.literal("on_consume_effects");
-	
-	static {
-		NBT_FIELDS = NBTFieldSet.newSet();
-		NBT_FIELDS.setField(NBT_CONSUME_SECONDS, (holder, reader) -> {
-			holder.consumeSeconds = reader.readFloatTag();
-		});
-		NBT_FIELDS.setField(NBT_ANIMATION, (holder, reader) -> {
-			holder.setAnimation(Animation.getByName(reader.readStringTag()));
-		});
-		NBT_FIELDS.setField(NBT_SOUND, (holder, reader) -> {
-			holder.setSound(Sound.fromNBT(reader));
-		});
-		NBT_FIELDS.setField(NBT_HAS_CONSUME_PARTICLES, (holder, reader) -> {
-			holder.setParticles(reader.readBoolean());
-		});
-		NBT_FIELDS.setField(NBT_ON_CONSUME_EFFECTS, (holder, reader) -> {
-			reader.readNextEntry();
-			while (reader.getRestPayload() > 0) {
-				reader.readNextEntry();
-				ComponentEffect effect = ComponentEffect.getFromNBT(reader);
-				if (effect == null)
-					continue;
-				holder.addEffect(effect);
-			}
-			reader.readNextEntry();
-		});
-	}
 	
 	private float consumeSeconds;
 	private Animation animation;
@@ -78,35 +39,6 @@ public class CoreConsumableComponent extends AbstractItemComponent implements Co
 	@Override
 	public CoreConsumableComponent clone() {
 		return (CoreConsumableComponent) super.clone();
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeCompoundTag(key.toString());
-		if (consumeSeconds != 1.6f)
-			writer.writeFloatTag(NBT_CONSUME_SECONDS, consumeSeconds);
-		if (animation != Animation.EAT)
-			writer.writeStringTag(NBT_ANIMATION, animation.getName());
-		if (sound != EnumSound.ENTITY_GENERIC_EAT)
-			Sound.toNBT(NBT_SOUND, sound, writer, systemData);
-		if (!particles)
-			writer.writeByteTag(NBT_HAS_CONSUME_PARTICLES, false);
-		if (hasEffects()) {
-			final int size = effects.size();
-			writer.writeListTag(NBT_ON_CONSUME_EFFECTS, TagType.COMPOUND, size);
-			for (int i = 0; i < size; i++) {
-				ComponentEffect effect = effects.get(i);
-				effect.toNBT(writer, systemData);
-				writer.writeEndTag();
-			}
-		}
-		writer.writeEndTag();
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		reader.readNextEntry();
-		NBTUtil.readNBT(NBT_FIELDS, this, reader);
 	}
 
 	@Override
@@ -205,10 +137,7 @@ public class CoreConsumableComponent extends AbstractItemComponent implements Co
 			ComponentEffectType type = ComponentEffectType.getByID(typeID);
 			if (type == null)
 				throw new ProtocolException("Unknown component type with id: " + typeID);
-			ComponentEffectFactory factory = ComponentEffectFactory.REGISTRY.get(type.getNamespacedKey());
-			if (factory == null)
-				throw new IllegalStateException("No component effect factory found with key: " + type.getNamespacedKey());
-			ComponentEffect effect = factory.createEffect();
+			ComponentEffect effect = type.createEffect();
 			effect.read(buf);
 		}
 	}

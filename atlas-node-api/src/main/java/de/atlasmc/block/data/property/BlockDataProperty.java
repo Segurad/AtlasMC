@@ -3,23 +3,24 @@ package de.atlasmc.block.data.property;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 import de.atlasmc.Axis;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.block.data.Bisected.Half;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.data.FaceAttachable.AttachedFace;
+import de.atlasmc.block.data.HightConnectable.Height;
 import de.atlasmc.block.data.Orientable.Orientation;
-import de.atlasmc.block.data.type.Instrument;
 import de.atlasmc.block.data.type.Bamboo.Leaves;
 import de.atlasmc.block.data.type.Bed.Part;
 import de.atlasmc.block.data.type.Bell.Attachment;
 import de.atlasmc.block.data.type.BigDripleaf.Tilt;
 import de.atlasmc.block.data.type.Door.Hinge;
+import de.atlasmc.block.data.type.Instrument;
 import de.atlasmc.block.data.type.PointedDripstone.Thickness;
 import de.atlasmc.block.data.type.PointedDripstone.VerticalDirection;
 import de.atlasmc.block.data.type.RedstoneWire.Connection;
@@ -28,10 +29,12 @@ import de.atlasmc.block.data.type.TrialSpawner.TrialSpawnerState;
 import de.atlasmc.block.data.type.Vault.VaultState;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
+import de.atlasmc.util.function.ToBooleanFunction;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.serialization.fields.NBTField;
 
 public abstract class BlockDataProperty<T> {
 
@@ -309,7 +312,7 @@ public abstract class BlockDataProperty<T> {
 		return properties;
 	}
 
-	public static void writeProperties(Map<BlockDataProperty<?>, ?> properties, NBTWriter writer, boolean systemData) throws IOException {
+	public static void writeProperties(Map<BlockDataProperty<?>, Object> properties, NBTWriter writer, boolean systemData) throws IOException {
 		if (properties == null || properties.isEmpty())
 			return;
 		for (Entry<BlockDataProperty<?>, ?> entry : properties.entrySet()) {
@@ -319,15 +322,12 @@ public abstract class BlockDataProperty<T> {
 		}
 	}
 	
-	public static void writeProperties(BlockData data, NBTWriter writer, boolean systemData) throws IOException {
-		List<BlockDataProperty<?>> properties = data.getProperties();
-		if (properties.isEmpty())
-			return;
-		final int size = properties.size();
-		for (int i = 0; i < size; i++) {
-			BlockDataProperty<?> property = properties.get(i);
-			property.dataToNBT(data, writer, systemData);
-		}
+	public static <T extends BlockData> NBTField<T> getBlockDataPropertiesField(CharSequence key) {
+		return new BlockDataPropertiesField<>(key);
+	}
+	
+	public static <T> NBTField<T> getBlockDataPropertiesMapField(CharSequence key, ToBooleanFunction<T> has, Function<T, Map<BlockDataProperty<?>, Object>> getCollection) {
+		return new BlockDataPropertiesMapField<>(key, has, getCollection);
 	}
 
 }

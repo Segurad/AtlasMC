@@ -1,8 +1,5 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
-import java.util.UUID;
-
 import de.atlasmc.Color;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
@@ -11,8 +8,6 @@ import de.atlasmc.entity.TextDisplay;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTextDisplay extends CoreDisplay implements TextDisplay {
 
@@ -24,69 +19,8 @@ public class CoreTextDisplay extends CoreDisplay implements TextDisplay {
 	
 	protected static final int LAST_META_INDEX = CoreDisplay.LAST_META_INDEX+5;
 	
-	private static final CharKey
-	NBT_ALIGNMENT = CharKey.literal("alignment"),
-	NBT_BACKGROUND = CharKey.literal("background"),
-	NBT_DEFAULT_BACKGROUND = CharKey.literal("default_background"),
-	NBT_LINE_WIDTH = CharKey.literal("line_width"),
-	NBT_SEE_THROUGH = CharKey.literal("shadow"),
-	NBT_TEXT = CharKey.literal("text"),
-	NBT_TEXT_OPACITY = CharKey.literal("text_opacity");
-	
-	static {
-		NBT_FIELDS.setField(NBT_ALIGNMENT, (holder, reader) -> {
-			if (holder instanceof TextDisplay ent) {
-				ent.setAlignment(TextAlignment.getByNameID(reader.readStringTag()));
-			} else {
-				reader.skipTag();
-			}
-		});
-		NBT_FIELDS.setField(NBT_BACKGROUND, (holder, reader) -> {
-			if (holder instanceof TextDisplay ent) {
-				ent.setBackgroundColor(Color.fromRGB(reader.readIntTag()));
-			} else {
-				reader.skipTag();
-			}
-		});
-		NBT_FIELDS.setField(NBT_DEFAULT_BACKGROUND, (holder, reader) -> {
-			if (holder instanceof TextDisplay ent) {
-				ent.setDefaultBachground(reader.readByteTag() == 1);
-			} else {
-				reader.skipTag();
-			}
-		});
-		NBT_FIELDS.setField(NBT_LINE_WIDTH, (holder, reader) -> {
-			if (holder instanceof TextDisplay ent) {
-				ent.setLineWidth(reader.readIntTag());
-			} else {
-				reader.skipTag();
-			}
-		});
-		NBT_FIELDS.setField(NBT_SEE_THROUGH, (holder, reader) -> {
-			if (holder instanceof TextDisplay ent) {
-				ent.setSeeThrough(reader.readByteTag() == 1);
-			} else {
-				reader.skipTag();
-			}
-		});
-		NBT_FIELDS.setField(NBT_TEXT, (holder, reader) -> {
-			if (holder instanceof TextDisplay ent) {
-				ent.setText(ChatUtil.toChat(reader.readStringTag()));
-			} else {
-				reader.skipTag();
-			}
-		});
-		NBT_FIELDS.setField(NBT_TEXT_OPACITY, (holder, reader) -> {
-			if (holder instanceof TextDisplay ent) {
-				ent.setTextOpacity(reader.readByteTag() & 0xFF);
-			} else {
-				reader.skipTag();
-			}
-		});
-	}
-	
-	public CoreTextDisplay(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreTextDisplay(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -218,30 +152,6 @@ public class CoreTextDisplay extends CoreDisplay implements TextDisplay {
 	@Override
 	public void setTextOpacity(int opacity) {
 		metaContainer.get(META_TEXT_OPACITY).setData((byte) opacity);
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		TextAlignment alignment = getAlignment();
-		if (alignment != TextAlignment.CENTER) {
-			writer.writeStringTag(NBT_ALIGNMENT, alignment.getNameID());
-		}
-		MetaData<Integer> background = metaContainer.get(META_BACKGROUND_COLOR);
-		if (!background.isDefault()) {
-			writer.writeIntTag(NBT_BACKGROUND, background.getData());
-		}
-		if (hasDefaultBackground())
-			writer.writeByteTag(NBT_DEFAULT_BACKGROUND, true);
-		MetaData<Integer> lineWidth = metaContainer.get(META_LINE_WIDTH);
-		if (!lineWidth.isDefault())
-			writer.writeIntTag(NBT_LINE_WIDTH, lineWidth.getData());
-		if (isSeeThrough())
-			writer.writeByteTag(NBT_SEE_THROUGH, true);
-		int opacity = getTextOpacity();
-		if (opacity != 0xFF)
-			writer.writeByteTag(NBT_TEXT_OPACITY, opacity);
-		writer.writeStringTag(NBT_TEXT, getText().toText());
 	}
 
 }

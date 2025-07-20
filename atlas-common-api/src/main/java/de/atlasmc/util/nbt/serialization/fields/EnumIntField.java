@@ -16,7 +16,7 @@ public class EnumIntField<T, K extends Enum<?> & EnumID> extends AbstractObjectF
 	private final K defaultValue;
 	
 	public EnumIntField(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, IntFunction<K> enumSupplier, K defaultValue) {
-		super(key, STRING, get, set, true);
+		super(key, INT, get, set, true);
 		this.enumSupplier = enumSupplier;
 		this.defaultValue = defaultValue;
 	}

@@ -6,7 +6,7 @@ import de.atlasmc.inventory.InventoryHolder;
 import de.atlasmc.inventory.InventoryType;
 import de.atlasmc.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.potion.PotionEffect;
+import de.atlasmc.potion.PotionEffectType;
 
 public class CoreBeaconInventory extends CoreInventory implements BeaconInventory {
 
@@ -15,8 +15,8 @@ public class CoreBeaconInventory extends CoreInventory implements BeaconInventor
 	PROPERTY_FIRST_POTION_ID = 1,
 	PROPERTY_SECOND_POTION_ID = 2;
 	
-	private PotionEffect primary;
-	private PotionEffect secondary;
+	private PotionEffectType primary;
+	private PotionEffectType secondary;
 	
 	public CoreBeaconInventory(Chat title, InventoryHolder holder) {
 		super(1, 0, InventoryType.BEACON, title, holder);
@@ -38,43 +38,25 @@ public class CoreBeaconInventory extends CoreInventory implements BeaconInventor
 	}
 	
 	@Override
-	public PotionEffect getPrimaryEffect() {
+	public PotionEffectType getPrimaryEffectType() {
 		return primary;
 	}
 
 	@Override
-	public PotionEffect getSecondaryEffect() {
+	public PotionEffectType getSecondaryEffectType() {
 		return secondary;
 	}
 
 	@Override
-	public void setPrimaryEffect(PotionEffect effect) {
+	public void setPrimaryEffectType(PotionEffectType effect) {
 		this.primary = effect;
+		updateProperty(PROPERTY_FIRST_POTION_ID, effect == null ? -1 : effect.getID());
 	}
 
 	@Override
-	public void setSecondaryEffect(PotionEffect effect) {
+	public void setSecondaryEffectType(PotionEffectType effect) {
 		this.secondary = effect;
-	}
-
-	@Override
-	public int getPrimaryID() {
-		return properties[PROPERTY_FIRST_POTION_ID];
-	}
-
-	@Override
-	public int getSecondaryID() {
-		return properties[PROPERTY_SECOND_POTION_ID];
-	}
-
-	@Override
-	public void setPrimaryID(int id) {
-		updateProperty(PROPERTY_FIRST_POTION_ID, id);
-	}
-
-	@Override
-	public void setSecondaryID(int id) {
-		updateProperty(PROPERTY_SECOND_POTION_ID, id);
+		updateProperty(PROPERTY_SECOND_POTION_ID, effect == null ? -1 : effect.getID());
 	}
 
 	@Override

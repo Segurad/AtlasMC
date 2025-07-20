@@ -1,31 +1,20 @@
 package de.atlasmc.entity;
 
-import java.util.List;
-
 import de.atlasmc.Color;
-import de.atlasmc.potion.PotionData;
-import de.atlasmc.potion.PotionEffect;
+import de.atlasmc.inventory.component.PotionContentsComponent;
 
 public interface Arrow extends AbstractArrow {
 
-	public Color getColor();
+	Color getColor();
 	
-	public void setColor(Color color);
+	void setColor(Color color);
 	
-	public int getColorRGB();
+	int getColorRGB();
 	
-	public void setColor(int rgb);
-
-	public void addPotionEffect(PotionEffect effect);
+	void setColorRGB(int color);
 	
-	public List<PotionEffect> getPotionEffects();
+	PotionContentsComponent getPotionContents();
 	
-	public boolean hasPotionEffects();
-	
-	public void removePotionEffect(PotionEffect effect);
-
-	public void setPotionData(PotionData data);
-	
-	public PotionData getPotionData();
+	void setPotionContents(PotionContentsComponent contents);
 	
 }

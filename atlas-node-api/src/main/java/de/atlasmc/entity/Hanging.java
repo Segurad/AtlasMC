@@ -1,11 +1,19 @@
 package de.atlasmc.entity;
 
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Hanging extends Entity {
 	
-	public BlockFace getAttachedFace();
+	public static final NBTSerializationHandler<Hanging>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Hanging.class)
+					.include(Entity.NBT_HANDLER)
+					.enumByteField("Facing", Hanging::getAttachedFace, Hanging::setFacingDirection, BlockFace::getByFaceID, BlockFace::getFaceID, BlockFace.SOUTH)
+					.build();
 	
-	public void setFacingDirection(BlockFace face);
+	BlockFace getAttachedFace();
+	
+	void setFacingDirection(BlockFace face);
 
 }

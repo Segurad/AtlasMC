@@ -7,23 +7,19 @@ import de.atlasmc.util.nbt.io.NBTReader;
 public class NBTUtil {
 	
 	protected NBTUtil() {}
-	
-	public static <H> void readNBT(NBTFieldSet<H> set, H holder, NBTReader reader) throws IOException {
-		readCompound(set, holder, reader, null);
-	}
 
 	
-	public static <H> void readNBT(NBTFieldSet<H> set, H holder, NBTReader reader, CustomTagContainer customTags) throws IOException {
+	public static <H> void readNBT(NBTFieldSet<H> set, H holder, NBTReader reader) throws IOException {
 		if (set == null)
 			throw new IllegalArgumentException("Set can not be null!");
 		if (holder == null)
 			throw new IllegalArgumentException("Holder can not be null!");
 		if (reader == null)
 			throw new IllegalArgumentException("Reader can not be null!");
-		readCompound(set, holder, reader, customTags);
+		readCompound(set, holder, reader);
 	}
 
-	private static <H> void readCompound(NBTFieldSet<H> set, H holder, NBTReader reader, CustomTagContainer customTags) throws IOException {
+	private static <H> void readCompound(NBTFieldSet<H> set, H holder, NBTReader reader) throws IOException {
 		final int depth = reader.getDepth(); // set the root depth
 		while (depth <= reader.getDepth()) { // ensure to stay over or at root depth
 			TagType type = reader.getType();
@@ -36,7 +32,7 @@ public class NBTUtil {
 				NBTFieldSet<H> childContainer = set.getSet(key);
 				if (childContainer != null) { // enter compound if not null
 					reader.readNextEntry();
-					readCompound(childContainer, holder, reader, customTags);
+					readCompound(childContainer, holder, reader);
 					continue;
 				} // if compound is null try read as field
 			}
@@ -46,8 +42,6 @@ public class NBTUtil {
 			} else if (set.hasUnknownFieldHandler()) { // if field does not exist try to use unknown field handler
 				field = set.getUnknownFieldHandler();
 				field.setField(holder, reader);
-			} else if (customTags != null) { // if not handler is present try to write in custom tags
-				customTags.addCustomTag(reader.readNBT());
 			} else {
 				reader.skipTag(); // fallback just skip
 			}

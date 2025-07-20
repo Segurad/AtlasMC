@@ -1,15 +1,9 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
-import java.util.UUID;
-
 import de.atlasmc.entity.Boat;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreBoat extends CoreVehicle implements Boat {
 
@@ -24,25 +18,8 @@ public class CoreBoat extends CoreVehicle implements Boat {
 	
 	protected static final int LAST_META_INDEX = CoreVehicle.LAST_META_INDEX+4;
 	
-	protected static final NBTFieldSet<CoreBoat> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_TYPE = CharKey.literal("Type");
-	
-	static {
-		NBT_FIELDS = CoreVehicle.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_TYPE, (holder, reader) -> {
-			holder.setBoatType(BoatType.getByNameID(reader.readStringTag()));
-		});
-	}
-	
-	public CoreBoat(EntityType type, UUID uuid) {
-		super(type, uuid);
-	}
-	
-	@Override
-	protected NBTFieldSet<? extends CoreBoat> getFieldSetRoot() {
-		return NBT_FIELDS;
+	public CoreBoat(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -60,11 +37,6 @@ public class CoreBoat extends CoreVehicle implements Boat {
 	}
 
 	@Override
-	public BoatType getBoatType() {
-		return BoatType.getByID(metaContainer.getData(META_BOAT_TYPE));
-	}
-
-	@Override
 	public boolean isLeftPaddleTurning() {
 		return metaContainer.getData(META_LEFT_PADDLE_TURNING);
 	}
@@ -78,12 +50,7 @@ public class CoreBoat extends CoreVehicle implements Boat {
 	public int getSplashTimer() {
 		return metaContainer.getData(META_SPLASH_TIMER);
 	}
-
-	@Override
-	public void setBoatType(BoatType type) {
-		metaContainer.get(META_BOAT_TYPE).setData(type.getID());
-	}
-
+	
 	@Override
 	public void setLeftPaddleTurning(boolean turning) {
 		metaContainer.get(META_LEFT_PADDLE_TURNING).setData(turning);
@@ -94,10 +61,4 @@ public class CoreBoat extends CoreVehicle implements Boat {
 		metaContainer.get(META_RIGHT_PADDLE_TURNING).setData(turning);
 	}
 
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		writer.writeStringTag(NBT_TYPE, getBoatType().getNameID());
-	}
-	
 }

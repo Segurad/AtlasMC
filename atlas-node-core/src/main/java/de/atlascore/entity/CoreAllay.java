@@ -62,6 +62,11 @@ public class CoreAllay extends CoreMob implements Allay {
 			inv = InventoryType.GENERIC_9X1.create(this);
 		return inv;
 	}
+	
+	@Override
+	public boolean hasInventory() {
+		return inv != null;
+	}
 
 	@Override
 	public boolean canDuplicate() {

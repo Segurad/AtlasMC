@@ -7,38 +7,38 @@ import de.atlasmc.inventory.InventoryHolder;
 
 public interface AbstractHorse extends Animal, InventoryHolder {
 	
-	public boolean isTamed();
+	boolean isTamed();
 	
-	public void setTamed(boolean tamed);
+	void setTamed(boolean tamed);
 	
-	public boolean isSaddled();
+	boolean isSaddled();
 	
-	public void setSaddled(boolean saddled);
+	void setSaddled(boolean saddled);
 	
-	public boolean canBred();
+	boolean canBred();
 	
-	public void setCanBred(boolean bred);
+	void setCanBred(boolean bred);
 	
-	public boolean isEating();
+	boolean isEating();
 	
-	public void setEating(boolean eating);
+	void setEating(boolean eating);
 	
-	public boolean isRearing();
+	boolean isRearing();
 	
-	public void setRearing(boolean rearing);
+	void setRearing(boolean rearing);
 	
-	public boolean isMouthOpen();
+	boolean isMouthOpen();
 	
-	public void setMouthOpen(boolean open);
+	void setMouthOpen(boolean open);
 	
-	public UUID getOwner();
+	UUID getOwner();
 
-	public void setOwner(UUID owner);
+	void setOwner(UUID owner);
 	
 	/**
 	 * May not return the same Inventory every time e.g. {@link ChestedHorse} may return a new Inventory if the has chest value is changed
 	 * @return inventory
 	 */
-	public AbstractHorseInventory getInventory();
+	AbstractHorseInventory getInventory();
 	
 }

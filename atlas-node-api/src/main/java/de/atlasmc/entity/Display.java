@@ -7,8 +7,30 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import de.atlasmc.Color;
+import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumValueCache;
+import de.atlasmc.util.nbt.serialization.NBTSerializable;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Display extends Entity {
+	
+	public static final NBTSerializationHandler<Display>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Display.class)
+					.include(Entity.NBT_HANDLER)
+					.enumStringField("billboard", Display::getBillboard, Display::setBillboard, Billboard::getByName, Billboard.FIXED)
+					.typeComponentField("brightness", Display::getBrightness, Display::setBrightness, Brightness.NBT_HANDLER)
+					.color("glow_color_override", Display::getGlowColorOverride, Display::setGlowColorOverride)
+					.floatField("height", Display::getDisplayHeight, Display::setDisplayHeight, 0)
+					.floatField("width", Display::getDisplayWidth, Display::setDisplayWidth, 0)
+					.intField("interpolation_duration", Display::getTransformationInterpolationDuration, Display::setTransformationInterpolationDuration, 0)
+					.intField("teleport_duration", Display::getPositionInterpolationDuration, Display::setPositionInterpolationDuration, 0)
+					.intField("start_interpolation", Display::getInterpolationDelay, Display::setInterpolationDelay, 0)
+					.floatField("shadow_radius", Display::getShadowRadius, Display::setShadowRadius, 0)
+					.floatField("shadow_strength", Display::getShadowStrength, Display::setShadowStrength, 0)
+					.floatField("view_range", Display::getViewRange, Display::setViewRange, 1)
+					.typeComponentField("transformation", Display::getTransformation, Display::setTransformation, Transformation.NBT_HANDLER)
+					.build();
 	
 	Brightness getBrightness();
 	
@@ -24,13 +46,13 @@ public interface Display extends Entity {
 	
 	void setGlowColorOverride(Color color);
 	
-	int getDisplayWidth();
+	float getDisplayWidth();
 	
-	void setDisplayWidth(int width);
+	void setDisplayWidth(float width);
 	
-	int getDisplayHeight();
+	float getDisplayHeight();
 	
-	void setDisplayHeight(int height);
+	void setDisplayHeight(float height);
 	
 	int getTransformationInterpolationDuration();
 	
@@ -62,12 +84,30 @@ public interface Display extends Entity {
 	
 	void setTransformation(Transformation transformation);
 	
-	public static final class Transformation {
+	@Override
+	default NBTSerializationHandler<? extends Display> getNBTHandler() {
+		return NBT_HANDLER;
+	}
+	
+	public static final class Transformation implements NBTSerializable, Cloneable  {
+		
+		public static final NBTSerializationHandler<Transformation>
+		NBT_HANDLER = NBTSerializationHandler
+						.builder(Transformation.class)
+						.quaternionf("right_rotation", Transformation::getRotationRight, Transformation::setRotationRight)
+						.vector3f("scale", Transformation::getScale, Transformation::setScale)
+						.quaternionf("left_rotation", Transformation::getRotationLeft, Transformation::setRotationLeft)
+						.vector3f("translation", Transformation::getTranslation, Transformation::setTranslation)
+						.build();
 		
 		private final Vector3f scale;
 		private final Vector3f translation;
 		private final Quaternionf rotationRight;
 		private final Quaternionf rotationLeft;
+		
+		public Transformation() {
+			this(new Vector3f(), new Vector3f(), new Quaternionf(), new Quaternionf());
+		}
 		
 		public Transformation(Vector3f scale, Vector3f translation, Quaternionf rotationRight, Quaternionf rotationLeft)  {
 			this.scale = scale;
@@ -80,16 +120,36 @@ public interface Display extends Entity {
 			return scale;
 		}
 		
+		public Transformation setScale(Vector3f scale) {
+			this.scale.set(scale);
+			return this;
+		}
+		
 		public Vector3f getTranslation() {
 			return translation;
+		}
+		
+		public Transformation setTranslation(Vector3f translation) {
+			this.translation.set(translation);
+			return this;
 		}
 		
 		public Quaternionf getRotationLeft() {
 			return rotationLeft;
 		}
 		
+		public Transformation setRotationLeft(Quaternionf rotation) {
+			this.rotationLeft.set(rotation);
+			return this;
+		}
+		
 		public Quaternionf getRotationRight() {
 			return rotationRight;
+		}
+		
+		public Transformation setRotationRight(Quaternionf rotation) {
+			this.rotationRight.set(rotation);
+			return this;
 		}
 
 		@Override
@@ -111,30 +171,58 @@ public interface Display extends Entity {
 					&& Objects.equals(translation, other.translation);
 		}
 		
+		@Override
+		public Transformation clone() {
+			return new Transformation(new Vector3f(scale), new Vector3f(translation), new Quaternionf(rotationRight), new Quaternionf(rotationLeft));
+		}
+		
+		@Override
+		public NBTSerializationHandler<? extends Transformation> getNBTHandler() {
+			return NBT_HANDLER;
+		}
+		
 	}
 	
-	public static final class Brightness {
+	public static final class Brightness implements NBTSerializable {
 		
-		private final int blockLightLevel;
-		private final int skyLightLevel;
+		public static final NBTSerializationHandler<Brightness>
+		NBT_HANDLER = NBTSerializationHandler
+						.builder(Brightness.class)
+						.defaultConstructor(Brightness::new)
+						.intField("block", Brightness::getBlockLightLevel, Brightness::setBlockLightLevel)
+						.intField("sky", Brightness::getSkyLightLevel, Brightness::setSkyLightLevel)
+						.build();
+		
+		private int blockLightLevel;
+		private int skyLightLevel;
 		
 		public Brightness(int blockLightLevel, int skyLightLevel) {
-			if (blockLightLevel < 0 || blockLightLevel > 15) {
-				throw new IllegalArgumentException("Block light level must be between 0 and 15: " + blockLightLevel);
-			}
-			if (skyLightLevel < 0 || skyLightLevel > 15) {
-				throw new IllegalArgumentException("Sky light level must be between 0 and 15: " + skyLightLevel);
-			}
-			this.blockLightLevel = blockLightLevel;
-			this.skyLightLevel = skyLightLevel;
+			setBlockLightLevel(blockLightLevel);
+			setSkyLightLevel(skyLightLevel);
 		}
+		
+		private Brightness() {}
 		
 		public int getBlockLightLevel() {
 			return blockLightLevel;
 		}
 		
+		private void setBlockLightLevel(int blockLightLevel) {
+			if (blockLightLevel < 0 || blockLightLevel > 15) {
+				throw new IllegalArgumentException("Block light level must be between 0 and 15: " + blockLightLevel);
+			}
+			this.blockLightLevel = blockLightLevel;
+		}
+		
 		public int getSkyLightLevel() {
 			return skyLightLevel;
+		}
+		
+		private void setSkyLightLevel(int skyLightLevel) {
+			if (skyLightLevel < 0 || skyLightLevel > 15) {
+				throw new IllegalArgumentException("Sky light level must be between 0 and 15: " + skyLightLevel);
+			}
+			this.skyLightLevel = skyLightLevel;
 		}
 
 		@Override
@@ -154,9 +242,14 @@ public interface Display extends Entity {
 			return blockLightLevel == other.blockLightLevel && skyLightLevel == other.skyLightLevel;
 		}
 		
+		@Override
+		public NBTSerializationHandler<? extends Brightness> getNBTHandler() {
+			return NBT_HANDLER;
+		}
+		
 	}
 	
-	public static enum Billboard {
+	public static enum Billboard implements EnumName, EnumValueCache {
 
 		/**
 		 * Vertical and horizontal axis are fixed
@@ -177,24 +270,28 @@ public interface Display extends Entity {
 		
 		private static List<Billboard> VALUES;
 		
-		private String nameID;
+		private String name;
 		
 		private Billboard() {
-			nameID = name().toLowerCase();
+			name = name().toLowerCase();
 		}
 		
-		public String getNameID() {
-			return nameID;
+		@Override
+		public String getName() {
+			return name;
 		}
 		
-		public static Billboard getByNameID(String nameID) {
-			if (nameID == null)
+		public static Billboard getByName(String name) {
+			if (name == null)
 				throw new IllegalArgumentException("NameID can not be null!");
-			for (Billboard value : getValues()) {
-				if (value.getNameID().equals(nameID))
+			final List<Billboard> values = getValues();
+			final int size = values.size();
+			for (int i = 0; i < size; i++) {
+				Billboard value = values.get(i);
+				if (value.name.equals(name))
 					return value;
 			}
-			throw new IllegalArgumentException("No value with name found: " + nameID);
+			throw new IllegalArgumentException("No value with name found: " + name);
 		}
 		
 		public int getID() {

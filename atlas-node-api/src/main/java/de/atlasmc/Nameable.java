@@ -2,13 +2,12 @@ package de.atlasmc;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.util.annotation.Nullable;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 /**
  * A object that supports a custom name
  */
-public interface Nameable extends NBTSerializable {
+public interface Nameable {
 	
 	public static final NBTSerializationHandler<Nameable>
 	NBT_HANDLER = NBTSerializationHandler

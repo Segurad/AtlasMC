@@ -48,4 +48,10 @@ public interface Chat {
 	 */
 	boolean hasJson();
 	
+	/**
+	 * Whether or not the chat can be casted directly to {@link ChatComponent}
+	 * @return true if can be casted
+	 */
+	boolean isComponent();
+	
 }

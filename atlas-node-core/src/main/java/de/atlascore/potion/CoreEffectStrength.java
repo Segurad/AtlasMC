@@ -19,7 +19,7 @@ public class CoreEffectStrength extends CoreAbstractAttributeModifierPotionEffec
 
 	@Override
 	public void addEffect(LivingEntity entity) {
-		double amount = 1.5d*(amplifier+1);
+		double amount = 1.5d*(getAmplifier()+1);
 		AttributeModifier modifer = new AttributeModifier(modifierID, amount, Operation.ADD_VALUE);
 		entity.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, modifer);
 	}

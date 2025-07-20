@@ -3,8 +3,19 @@ package de.atlasmc.entity;
 import java.util.List;
 
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumValueCache;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface ItemDisplay extends Display {
+	
+	public static final NBTSerializationHandler<ItemDisplay>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(ItemDisplay.class)
+					.include(Display.NBT_HANDLER)
+					.typeComponentField("item", ItemDisplay::getItem, ItemDisplay::setItem, ItemStack.NBT_HANDLER)
+					.enumStringField("item_display", ItemDisplay::getRenderType, ItemDisplay::setRenderType, RenderType::getByName, RenderType.NONE)
+					.build();
 	
 	ItemStack getItem();
 	
@@ -14,7 +25,12 @@ public interface ItemDisplay extends Display {
 	
 	void setRenderType(RenderType renderType);
 	
-	public static enum RenderType {
+	@Override
+	default NBTSerializationHandler<? extends ItemDisplay> getNBTHandler() {
+		return NBT_HANDLER;
+	}
+	
+	public static enum RenderType implements EnumName, EnumValueCache {
 		
 		NONE,
 		THIRDPERSON_LEFT_HAND,
@@ -28,24 +44,28 @@ public interface ItemDisplay extends Display {
 		
 		private static List<RenderType> VALUES;
 		
-		private String nameID;
+		private String name;
 		
 		private RenderType() {
-			nameID = name().toLowerCase();
+			name = name().toLowerCase();
 		}
 		
-		public String getNameID() {
-			return nameID;
+		@Override
+		public String getName() {
+			return name;
 		}
 		
-		public static RenderType getByNameID(String nameID) {
-			if (nameID == null)
-				throw new IllegalArgumentException("NameID can not be null!");
-			for (RenderType value : getValues()) {
-				if (value.getNameID().equals(nameID))
+		public static RenderType getByName(String name) {
+			if (name == null)
+				throw new IllegalArgumentException("Name can not be null!");
+			final List<RenderType> values = getValues();
+			final int size = values.size();
+			for (int i = 0; i < size; i++) {
+				RenderType value = values.get(i);
+				if (value.name.equals(name))
 					return value;
 			}
-			throw new IllegalArgumentException("No value with name found: " + nameID);
+			throw new IllegalArgumentException("No value with name found: " + name);
 		}
 		
 		public int getID() {

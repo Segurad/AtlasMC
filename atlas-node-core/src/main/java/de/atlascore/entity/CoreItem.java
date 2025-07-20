@@ -1,6 +1,5 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.entity.EntityType;
@@ -9,9 +8,6 @@ import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreItem extends CoreEntity implements Item {
 
@@ -20,48 +16,14 @@ public class CoreItem extends CoreEntity implements Item {
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+1;
 	
-	protected static final NBTFieldSet<CoreItem> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_AGE = CharKey.literal("Age"),
-	NBT_ITEM = CharKey.literal("Item"),
-	NBT_OWNER = CharKey.literal("Owner"),
-	NBT_PICKUP_DELAY = CharKey.literal("PickupDelay"),
-	NBT_THROWER = CharKey.literal("Thrower");
-	
-	static {
-		NBT_FIELDS = CoreEntity.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_AGE, (holder, reader) -> {
-			holder.setLifeTime(reader.readShortTag());
-		});
-		NBT_FIELDS.setField(NBT_ITEM, (holder, reader) -> {
-			reader.readNextEntry();
-			ItemStack item = ItemStack.getFromNBT(reader);
-			holder.setItemStack(item);
-		});
-		NBT_FIELDS.setField(NBT_OWNER, (holder, reader) -> {
-			holder.setOwner(reader.readUUID());
-		});
-		NBT_FIELDS.setField(NBT_PICKUP_DELAY, (holder, reader) -> {
-			holder.setPickupDelay(reader.readIntTag());
-		});
-		NBT_FIELDS.setField(NBT_THROWER, (holder, reader) -> {
-			holder.setThrower(reader.readUUID());
-		});
-	}
-	
-	private short age;
+	private short health = 5;
+	private short age = 6000;
 	private short pickupDelay;
 	private UUID owner;
 	private UUID thrower;
 	
-	public CoreItem(EntityType type, UUID uuid) {
-		super(type, uuid);
-	}
-	
-	@Override
-	protected NBTFieldSet<? extends CoreItem> getFieldSetRoot() {
-		return NBT_FIELDS;
+	public CoreItem(EntityType type) {
+		super(type);
 	}
 
 	@Override
@@ -76,12 +38,12 @@ public class CoreItem extends CoreEntity implements Item {
 	}
 	
 	@Override
-	public ItemStack getItemStack() {
+	public ItemStack getItem() {
 		return metaContainer.getData(META_ITEM);
 	}
 
 	@Override
-	public void setItemStack(ItemStack item) {
+	public void setItem(ItemStack item) {
 		MetaData<ItemStack> data = metaContainer.get(META_ITEM);
 		data.setData(item);
 		data.setChanged(true);
@@ -126,21 +88,15 @@ public class CoreItem extends CoreEntity implements Item {
 	public int getLifeTime() {
 		return age;
 	}
-	
+
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		writer.writeShortTag(NBT_AGE, LAST_META_INDEX);
-		if (getItemStack() != null) {
-			writer.writeCompoundTag(NBT_ITEM);
-			getItemStack().toNBT(writer, systemData);
-			writer.writeEndTag();
-		}
-		if (getOwner() != null)
-			writer.writeUUID(NBT_OWNER, getOwner());
-		writer.writeShortTag(NBT_PICKUP_DELAY, getPickupDelay());
-		if (getThrower() != null)
-			writer.writeUUID(NBT_THROWER, getThrower());
+	public int getHealth() {
+		return health;
+	}
+
+	@Override
+	public void setHealth(int health) {
+		this.health = (short) health;
 	}
 
 }

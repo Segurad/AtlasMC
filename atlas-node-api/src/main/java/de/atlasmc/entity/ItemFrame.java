@@ -3,32 +3,51 @@ package de.atlasmc.entity;
 import java.util.List;
 
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumValueCache;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface ItemFrame extends Hanging {
+	
+	public static final NBTSerializationHandler<ItemFrame>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(ItemFrame.class)
+					.include(Hanging.NBT_HANDLER)
+					.boolField("Fixed", ItemFrame::isFixed, ItemFrame::setFixed)
+					.boolField("Invisible", ItemFrame::isInvisible, ItemFrame::setInvisible)
+					.typeComponentField("Item", ItemFrame::getItem, ItemFrame::setItemStack, ItemStack.NBT_HANDLER)
+					.floatField("ItemDropChance", ItemFrame::getItemDropChance, ItemFrame::setItemDropChance, 1)
+					.enumByteField("ItemRotation", ItemFrame::getRotation, ItemFrame::setRotation, Rotation::getByID, Rotation::getID, Rotation.NONE)
+					.build();
 
-	public ItemStack getItem();
+	ItemStack getItem();
 	
-	public void setItemStack(ItemStack item);
+	void setItemStack(ItemStack item);
 	
-	public void setItemStack(ItemStack item, boolean playSound);
+	void setItemStack(ItemStack item, boolean playSound);
 	
-	public Rotation getRotation();
+	Rotation getRotation();
 	
-	public void setRotation(Rotation rotation);
+	void setRotation(Rotation rotation);
 	
-	public void setFixed(boolean fixed);
+	void setFixed(boolean fixed);
 	
 	/**
 	 * Returns whether or not this {@link ItemFrame} will stay at its position when the block it is on gets removed
 	 * @return fixed
 	 */
-	public boolean isFixed();
+	boolean isFixed();
 
-	public void setItemDropChance(float chance);
+	void setItemDropChance(float chance);
 	
-	public float getItemDropChance();
+	float getItemDropChance();
 	
-	public static enum Rotation {
+	@Override
+	default NBTSerializationHandler<? extends ItemFrame> getNBTHandler() {
+		return NBT_HANDLER;
+	}
+	
+	public static enum Rotation implements EnumID, EnumValueCache {
 		NONE,
 		CLOCKWISE_45,
 		CLOCKWISE_90,

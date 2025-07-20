@@ -60,7 +60,7 @@ public interface Banner extends TileEntity, Nameable {
 						.defaultConstructor(Pattern::new)
 						.enumStringField("color", Pattern::getColor, Pattern::setColor, DyeColor::getByName, null)
 						.interfacedEnumStringField("pattern", (Function<Pattern, PatternType>) Pattern::getType, Pattern::setType, EnumPatternType::getByName, null)
-						.compoundType("pattern", (Function<Pattern, PatternType>) Pattern::getType, Pattern::setType, ResourcePatternType.NBT_HANDLER)
+						.typeComponentField("pattern", (Function<Pattern, PatternType>) Pattern::getType, Pattern::setType, ResourcePatternType.NBT_HANDLER)
 						.build();
 		
 		private DyeColor color;

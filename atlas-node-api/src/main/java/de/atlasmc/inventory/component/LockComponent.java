@@ -3,7 +3,7 @@ package de.atlasmc.inventory.component;
 import java.util.Collection;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.inventory.itempredicate.ItemPredicate;
+import de.atlasmc.inventory.ItemPredicate;
 
 public interface LockComponent extends ItemComponent {
 	

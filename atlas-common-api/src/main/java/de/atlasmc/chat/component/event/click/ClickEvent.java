@@ -9,7 +9,6 @@ public interface ClickEvent extends NBTSerializable {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(ClickEvent.class)
 					.searchKeyEnumConstructor("action", ClickAction::getByName, ClickAction::createEvent, ClickEvent::getAction)
-					.redirectAfterConstruction(true)
 					.build();
 	
 	ClickAction getAction();

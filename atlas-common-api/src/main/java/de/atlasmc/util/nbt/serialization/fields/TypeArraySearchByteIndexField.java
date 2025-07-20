@@ -29,6 +29,8 @@ public class TypeArraySearchByteIndexField<T, K> extends AbstractCollectionField
 			return true;
 		final K[] array = get.apply(value);
 		final int size = array.length;
+		if (size == 0)
+			return true;
 		int count = 0;
 		for (int i = 0; i < size; i++) {
 			if (array[i] != null)
@@ -49,8 +51,14 @@ public class TypeArraySearchByteIndexField<T, K> extends AbstractCollectionField
 
 	@Override
 	public void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException {
-		if (reader.getListType() != TagType.COMPOUND)
-			throw new NBTException("Expected float tag but was: " + reader.getListType());
+		final TagType listType = reader.getListType();
+		if (listType == TagType.TAG_END || reader.getNextPayload() == 0) {
+			reader.readNextEntry();
+			reader.readNextEntry();
+			return;
+		}
+		if (listType != TagType.COMPOUND)
+			throw new NBTException("Expected float tag but was: " + listType);
 		final K[] array = get.apply(value);
 		reader.readNextEntry();
 		while (reader.getRestPayload() > 0) {

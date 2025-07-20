@@ -14,6 +14,7 @@ import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.factory.ClassFactory;
+import de.atlasmc.util.factory.FactoryException;
 import de.atlasmc.world.World;
 
 @RegistryHolder(key="atlas:entity_type", target = Target.PROTOCOL)
@@ -190,7 +191,7 @@ public class EntityType extends ProtocolRegistryValueBase implements ProtocolReg
 		if (clazz == null) 
 			throw new IllegalArgumentException("Class can not be null!");
 		this.clazz = clazz;
-		this.constructor = ClassFactory.getConstructor(clazz, EntityType.class, UUID.class);
+		this.constructor = ClassFactory.getConstructor(clazz, EntityType.class);
 	}
 	
 	public EntityType(ConfigurationSection cfg) {
@@ -206,20 +207,15 @@ public class EntityType extends ProtocolRegistryValueBase implements ProtocolReg
 	/**
 	 * Creates and returns a Entity based on the class by {@link #getEntityClass()}.<br>
 	 * The created Entity is marked as removed and need to be spawned. 
-	 * @param uuid the UUID of this Entity
 	 * @return the new Entity
 	 */
-	public Entity create(World world, UUID uuid) {
+	public Entity createEntity() {
 		try {
-			return constructor.newInstance(this, uuid);
+			return constructor.newInstance(this);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
-			throw new IllegalStateException("Error while creating Entity", e);
+			throw new FactoryException("Error while creating Entity", e);
 		}
-	}
-	
-	public Entity create(World world) {
-		return create(world, UUID.randomUUID());
 	}
 	
 	public static EntityType getByID(int id) {

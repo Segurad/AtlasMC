@@ -9,7 +9,7 @@ public interface Jukebox extends TileEntity {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(Jukebox.class)
 					.include(TileEntity.NBT_HANDLER)
-					.compoundType("RecordItem", Jukebox::getRecordItem, Jukebox::setRecordItem, ItemStack.NBT_HANDLER)
+					.typeComponentField("RecordItem", Jukebox::getRecordItem, Jukebox::setRecordItem, ItemStack.NBT_HANDLER)
 					.longField("ticks_since_song_started", Jukebox::getTicksSinceSongStarted, Jukebox::setTicksSinceSongStarted)
 					.build();
 	

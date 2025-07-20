@@ -1,41 +1,27 @@
 package de.atlascore.inventory.component.effect;
 
+import static de.atlasmc.io.PacketUtil.readDataSet;
+import static de.atlasmc.io.PacketUtil.writeDataSet;
+
 import java.io.IOException;
 import java.util.Objects;
 
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.LivingEntity;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.component.effect.ComponentEffectType;
 import de.atlasmc.inventory.component.effect.RemoveEffects;
 import de.atlasmc.potion.PotionEffectType;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.util.dataset.DataSet;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.NBTUtil;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import io.netty.buffer.ByteBuf;
-import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
-public class CoreRemoveEffects implements RemoveEffects {
-	
-	protected static final NBTFieldSet<CoreRemoveEffects> NBT_FIELDS;
-	
-	protected static final CharKey NBT_EFFECTS = CharKey.literal("effects");
-	
-	static {
-		NBT_FIELDS = NBTFieldSet.newSet();
-		NBT_FIELDS.setField(NBT_EFFECTS, (holder, reader) -> {
-			holder.effects = DataSet.getFromNBT(Registries.getRegistry(PotionEffectType.class), reader);
-		});
-		NBT_FIELDS.setField(NBT_TYPE, NBTField.skip());
-	}
+public class CoreRemoveEffects extends CoreAbstractEffect implements RemoveEffects {
 
 	private DataSet<PotionEffectType> effects;
 	
-	public CoreRemoveEffects() {
+	public CoreRemoveEffects(ComponentEffectType type) {
+		super(type);
 		effects = DataSet.of();
 	}
 	
@@ -46,18 +32,6 @@ public class CoreRemoveEffects implements RemoveEffects {
 				entity.removePotionEffect(type);
 			}
 		}
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeStringTag(NBT_TYPE, getType().getNamespacedKeyRaw());
-		if (hasEffects())
-			DataSet.toNBT(NBT_EFFECTS, effects, writer, systemData);
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		NBTUtil.readNBT(NBT_FIELDS, this, reader);
 	}
 
 	@Override
@@ -90,23 +64,22 @@ public class CoreRemoveEffects implements RemoveEffects {
 	
 	@Override
 	public CoreRemoveEffects clone() {
-		try {
-			return (CoreRemoveEffects) super.clone();
-		} catch (CloneNotSupportedException e) {
-		}
-		return null;
+		return (CoreRemoveEffects) super.clone();
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(effects);
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(effects);
+		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;

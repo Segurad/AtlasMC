@@ -19,7 +19,7 @@ public class CoreEffectHealthBoost extends CoreAbstractAttributeModifierPotionEf
 
 	@Override
 	public void addEffect(LivingEntity entity) {
-		double amount = 2d*(amplifier+1);
+		double amount = 2d*(getAmplifier()+1);
 		AttributeModifier modifier = new AttributeModifier(modifierID, amount, Operation.ADD_VALUE);
 		entity.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, modifier);
 	}

@@ -1,7 +1,5 @@
 package de.atlascore.entity;
 
-import java.util.UUID;
-
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Vehicle;
 import de.atlasmc.entity.data.MetaDataField;
@@ -18,8 +16,8 @@ public class CoreVehicle extends CoreEntity implements Vehicle {
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+3;
 
-	public CoreVehicle(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreVehicle(EntityType type) {
+		super(type);
 	}
 	
 	@Override

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.entity.LivingEntity;
+import de.atlasmc.registry.Registries;
 import de.atlasmc.util.annotation.InternalAPI;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
@@ -12,8 +13,15 @@ import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface PotionEffect extends Cloneable {
+	
+	public static final NBTSerializationHandler<PotionEffect>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(PotionEffect.class)
+					.searchKeyConstructor("id", Registries.getRegistry(PotionEffectType.class), PotionEffectType::createEffect, PotionEffect::getType)
+					.build();
 	
 	public static final CharKey
 	NBT_ID = CharKey.literal("id"),

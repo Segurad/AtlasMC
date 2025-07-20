@@ -4,14 +4,28 @@ import java.util.List;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.effect.ComponentEffect;
+import de.atlasmc.sound.EnumSound;
 import de.atlasmc.sound.Sound;
 import de.atlasmc.util.EnumID;
 import de.atlasmc.util.EnumName;
 import de.atlasmc.util.EnumValueCache;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface ConsumableComponent extends ItemComponent {
 	
 	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:consumable");
+	
+	public static final NBTSerializationHandler<ConsumableComponent>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(ConsumableComponent.class)
+					.beginComponent(COMPONENT_KEY)
+					.floatField("consume_seconds", ConsumableComponent::getConsumeSeconds, ConsumableComponent::setConsumeSeconds, 1.6f)
+					.enumStringField("animation", ConsumableComponent::getAnimation, ConsumableComponent::setAnimation, Animation::getByName, Animation.EAT)
+					.addField(Sound.getNBTSoundField("sound", ConsumableComponent::getSound, ConsumableComponent::setSound, EnumSound.ENTITY_GENERIC_EAT))
+					.boolField("has_consume_particles", ConsumableComponent::hasParticles, ConsumableComponent::setParticles)
+					.typeList("on_consume_effects", ConsumableComponent::hasEffects, ConsumableComponent::getEffects, ComponentEffect.NBT_HANDLER)
+					.endComponent()
+					.build();
 	
 	float getConsumeSeconds();
 	

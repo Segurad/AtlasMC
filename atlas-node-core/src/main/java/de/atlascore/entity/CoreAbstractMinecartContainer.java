@@ -59,6 +59,11 @@ public abstract class CoreAbstractMinecartContainer extends CoreAbstractMinecart
 	}
 	
 	@Override
+	public boolean hasInventory() {
+		return inv != null;
+	}
+	
+	@Override
 	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		super.toNBT(writer, systemData);
 		if (inv != null) {

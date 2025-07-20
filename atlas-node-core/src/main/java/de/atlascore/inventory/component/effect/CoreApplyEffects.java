@@ -14,45 +14,18 @@ import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.LivingEntity;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.component.effect.ApplyEffects;
+import de.atlasmc.inventory.component.effect.ComponentEffectType;
 import de.atlasmc.potion.PotionEffect;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.NBTUtil;
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import io.netty.buffer.ByteBuf;
 
-public class CoreApplyEffects implements ApplyEffects {
-	
-	protected static final NBTFieldSet<CoreApplyEffects> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_PROPABILITY = CharKey.literal("probability"),
-	NBT_EFFECTS = CharKey.literal("effects");
-	
-	static {
-		NBT_FIELDS = NBTFieldSet.newSet();
-		NBT_FIELDS.setField(NBT_EFFECTS, (holder, reader) -> {
-			reader.readNextEntry();
-			while (reader.getRestPayload() > 0) {
-				reader.readNextEntry();
-				PotionEffect effect = PotionEffect.getFromNBT(reader);
-				if (effect == null)
-					continue;
-				holder.addEffect(effect);
-			}
-			reader.readNextEntry();
-		});
-		NBT_FIELDS.setField(NBT_PROPABILITY, (holder, reader) -> {
-			holder.probability = reader.readFloatTag();
-		});
-		NBT_FIELDS.setField(NBT_TYPE, NBTField.skip());
-	}
+public class CoreApplyEffects extends CoreAbstractEffect implements ApplyEffects {
 
 	private List<PotionEffect> effects;
 	private float probability;
+
+	public CoreApplyEffects(ComponentEffectType type) {
+		super(type);
+	}
 	
 	@Override
 	public void apply(Entity target, ItemStack item) {
@@ -66,28 +39,6 @@ public class CoreApplyEffects implements ApplyEffects {
 			PotionEffect effect = effects.get(i);
 			entity.addPotionEffect(effect);
 		}
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeStringTag(NBT_TYPE, getType().getNamespacedKeyRaw());
-		if (hasEffects()) {
-			final int size = effects.size();
-			writer.writeListTag(NBT_EFFECTS, TagType.COMPOUND, size);
-			for (int i = 0; i < size; i++) {
-				PotionEffect effect = effects.get(i);
-				writer.writeCompoundTag();
-				PotionEffect.toNBT(effect, writer, systemData);
-				writer.writeEndTag();
-			}
-		}
-		if (probability != 1.0f)
-			writer.writeFloatTag(NBT_PROPABILITY, probability);
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		NBTUtil.readNBT(NBT_FIELDS, this, reader);
 	}
 
 	@Override
@@ -156,31 +107,30 @@ public class CoreApplyEffects implements ApplyEffects {
 	
 	@Override
 	public CoreApplyEffects clone() {
-		try {
-			CoreApplyEffects clone = (CoreApplyEffects) super.clone();
-			if (hasEffects()) {
-				clone.effects = new ArrayList<>();
-				final int size = effects.size();
-				for (int i = 0; i < size; i++) {
-					clone.effects.add(effects.get(i).clone());
-				}
+		CoreApplyEffects clone = (CoreApplyEffects) super.clone();
+		if (hasEffects()) {
+			clone.effects = new ArrayList<>();
+			final int size = effects.size();
+			for (int i = 0; i < size; i++) {
+				clone.effects.add(effects.get(i).clone());
 			}
-			return clone;
-		} catch (CloneNotSupportedException e) {
-			return null;
 		}
+		return clone;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(effects, probability);
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(effects, probability);
+		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;

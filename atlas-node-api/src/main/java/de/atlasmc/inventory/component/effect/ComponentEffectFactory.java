@@ -10,6 +10,6 @@ public interface ComponentEffectFactory extends Factory {
 
 	public static final Registry<ComponentEffectFactory> REGISTRY = Registries.createRegistry(ComponentEffectFactory.class);
 	
-	ComponentEffect createEffect();
+	ComponentEffect createEffect(ComponentEffectType type);
 	
 }

@@ -79,6 +79,11 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 			inv = ContainerFactory.PLAYER_INV_FACTORY.create(InventoryType.PLAYER, this);
 		return inv;
 	}
+	
+	@Override
+	public boolean hasInventory() {
+		return inv != null;
+	}
 
 	@Override
 	public double getAdditionHearts() {

@@ -9,7 +9,6 @@ public interface HoverEvent extends NBTSerializable {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(HoverEvent.class)
 					.searchKeyEnumConstructor("action", HoverAction::getByName, HoverAction::createEvent, HoverEvent::getAction)
-					.redirectAfterConstruction(true)
 					.build();
 	
 	HoverAction getAction();

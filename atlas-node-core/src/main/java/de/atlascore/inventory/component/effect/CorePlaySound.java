@@ -8,51 +8,22 @@ import java.util.Objects;
 
 import de.atlasmc.entity.Entity;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.component.effect.ComponentEffectType;
 import de.atlasmc.inventory.component.effect.PlaySound;
-import de.atlasmc.sound.EnumSound;
 import de.atlasmc.sound.Sound;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.NBTUtil;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import io.netty.buffer.ByteBuf;
 
-public class CorePlaySound implements PlaySound {
+public class CorePlaySound extends CoreAbstractEffect implements PlaySound {
 
-	protected static final NBTFieldSet<CorePlaySound> NBT_FIELDS;
-	
-	protected static final CharKey NBT_SOUND = CharKey.literal("sound");
-	
-	static {
-		NBT_FIELDS = NBTFieldSet.newSet();
-		NBT_FIELDS.setField(NBT_SOUND, (holder, reader) -> {
-			holder.sound = Sound.fromNBT(reader);
-		});
-		NBT_FIELDS.setField(NBT_TYPE, NBTField.skip());
-	}
-	
 	private Sound sound;
 	
-	public CorePlaySound() {
-		setSound(null);
+	public CorePlaySound(ComponentEffectType type) {
+		super(type);
 	}
 	
 	@Override
 	public void apply(Entity target, ItemStack item) {
 		target.causeSound(sound);
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeStringTag(NBT_TYPE, getType().getNamespacedKeyRaw());
-		Sound.toNBT(NBT_SOUND, sound, writer, systemData);
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		NBTUtil.readNBT(NBT_FIELDS, this, reader);
 	}
 
 	@Override
@@ -72,30 +43,27 @@ public class CorePlaySound implements PlaySound {
 
 	@Override
 	public void setSound(Sound sound) {
-		if (sound == null)
-			this.sound = EnumSound.BLOCK_NOTE_BLOCK_PLING;
-		else
-			this.sound = sound;
+		this.sound = sound;
 	}
 	
 	@Override
 	public CorePlaySound clone() {
-		try {
-			return (CorePlaySound) super.clone();
-		} catch (CloneNotSupportedException e) {}
-		return null;
+		return (CorePlaySound) super.clone();
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(sound);
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(sound);
+		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;

@@ -13,7 +13,7 @@ public interface NBTSerializationHandler<T> extends SerializationHandler<T, NBTR
 		return NBTSerializationContext.DEFAULT_SERVER;
 	}
 	
-	public static <T extends NBTSerializable> NBTSerializationHandlerBuilder<T> builder(Class<T> clazz) {
+	public static <T> NBTSerializationHandlerBuilder<T> builder(Class<T> clazz) {
 		return new NBTSerializationHandlerBuilder<>(clazz);
 	}
 

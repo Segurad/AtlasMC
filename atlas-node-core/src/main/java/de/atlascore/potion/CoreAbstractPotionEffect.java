@@ -5,15 +5,28 @@ import java.util.UUID;
 import de.atlasmc.entity.LivingEntity;
 import de.atlasmc.potion.PotionEffect;
 import de.atlasmc.potion.PotionEffectType;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public abstract class CoreAbstractPotionEffect implements PotionEffect {
 	
-	private final PotionEffectType type;
-	private final boolean icon;
-	private final boolean particles;
-	private final boolean reducedAmbient;
-	private final UUID uuid;
-	protected final int amplifier;
+	public static final NBTSerializationHandler<CoreAbstractPotionEffect>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(CoreAbstractPotionEffect.class)
+					.include(PotionEffect.NBT_HANDLER)
+					.byteField("amplifier", CoreAbstractPotionEffect::getAmplifier, CoreAbstractPotionEffect::setAmplifier, (byte) 0)
+					.intField("duration", CoreAbstractPotionEffect::getDuration, CoreAbstractPotionEffect::setDuration, 1)
+					.boolField("ambient", CoreAbstractPotionEffect::hasReducedAmbient, CoreAbstractPotionEffect::setReducedAmbient, false)
+					.boolField("show_particles", CoreAbstractPotionEffect::hasParticels, CoreAbstractPotionEffect::setParticles, true)
+					.boolField("show_icon", CoreAbstractPotionEffect::isShowingIcon, CoreAbstractPotionEffect::setIcon, true)
+					.uuid("uuid", CoreAbstractPotionEffect::getUUID, CoreAbstractPotionEffect::setUUID)
+					.build();
+	
+	private PotionEffectType type;
+	private boolean icon;
+	private boolean particles;
+	private boolean reducedAmbient;
+	private UUID uuid;
+	private int amplifier;
 	protected int duration;
 	
 	public CoreAbstractPotionEffect(PotionEffectType type, int amplifier, int duration, boolean reducedAmbient, boolean particles, boolean icon, UUID uuid) {
@@ -79,6 +92,30 @@ public abstract class CoreAbstractPotionEffect implements PotionEffect {
 	@Override
 	public UUID getUUID() {
 		return uuid;
+	}
+	
+	private void setAmplifier(int amplifier) {
+		this.amplifier = amplifier;
+	}
+	
+	private void setDuration(int duration) {
+		this.duration = duration;
+	}
+	
+	private void setReducedAmbient(boolean reducedAmbient) {
+		this.reducedAmbient = reducedAmbient;
+	}
+	
+	private void setParticles(boolean particles) {
+		this.particles = particles;
+	}
+	
+	private void setIcon(boolean icon) {
+		this.icon = icon;
+	}
+	
+	private void setUUID(UUID uuid) {
+		this.uuid = uuid;
 	}
 
 }

@@ -30,7 +30,6 @@ public interface ChatComponent extends Chat, Cloneable, NBTSerializable {
 					.builder(ChatComponent.class)
 					.searchKeyEnumConstructor("type", ComponentType::getByNameID, ComponentType::createComponent, ChatComponent::getType)
 					.defaultConstructor(BaseComponent::new)
-					.redirectAfterConstruction(true)
 					.boolField("bold", ChatComponent::isBold, ChatComponent::setBold, false)
 					.boolField("italic", ChatComponent::isItalic, ChatComponent::setItalic, false)
 					.boolField("underlined", ChatComponent::isUnderlined, ChatComponent::setUnderlined, false)
@@ -41,8 +40,8 @@ public interface ChatComponent extends Chat, Cloneable, NBTSerializable {
 					.string("font", ChatComponent::getFont, ChatComponent::setFont)
 					.typeList("extra", ChatComponent::hasExtra, ChatComponent::getExtra, ChatComponent.NBT_HANDLER)
 					.string("insertion", ChatComponent::getInsertion, ChatComponent::setInsertion)
-					.compoundType("click_event", ChatComponent::getClickEvent, ChatComponent::setClickEvent, ClickEvent.NBT_HANDLER)
-					.compoundType("hover_event", ChatComponent::getHoverEvent, ChatComponent::setHoverEvent, HoverEvent.NBT_HANDLER)
+					.typeComponentField("click_event", ChatComponent::getClickEvent, ChatComponent::setClickEvent, ClickEvent.NBT_HANDLER)
+					.typeComponentField("hover_event", ChatComponent::getHoverEvent, ChatComponent::setHoverEvent, HoverEvent.NBT_HANDLER)
 					.build();
 	
 	@Nullable

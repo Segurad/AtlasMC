@@ -5,46 +5,21 @@ import java.util.Objects;
 
 import de.atlasmc.entity.Entity;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.component.effect.ComponentEffectType;
 import de.atlasmc.inventory.component.effect.TeleportRandomly;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.NBTUtil;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import io.netty.buffer.ByteBuf;
 
-public class CoreTeleportRandomly implements TeleportRandomly {
-
-	protected static final NBTFieldSet<CoreTeleportRandomly> NBT_FIELDS;
-	
-	protected static final CharKey NBT_DIAMETER = CharKey.literal("diameter");
-	
-	static {
-		NBT_FIELDS = NBTFieldSet.newSet();
-		NBT_FIELDS.setField(NBT_DIAMETER, (holder, reader) -> {
-			holder.diameter = reader.readFloatTag();
-		});
-		NBT_FIELDS.setField(NBT_TYPE, NBTField.skip());
-	}
+public class CoreTeleportRandomly extends CoreAbstractEffect implements TeleportRandomly {
 	
 	private float diameter = 16.0f;
+	
+	public CoreTeleportRandomly(ComponentEffectType type) {
+		super(type);
+	}
 	
 	@Override
 	public void apply(Entity target, ItemStack item) {
 		// TODO teleport random
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeStringTag(NBT_TYPE, getType().getNamespacedKeyRaw());
-		if (diameter != 16.0f)
-			writer.writeFloatTag(NBT_DIAMETER, diameter);
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		NBTUtil.readNBT(NBT_FIELDS, this, reader);
 	}
 
 	@Override
@@ -69,22 +44,22 @@ public class CoreTeleportRandomly implements TeleportRandomly {
 	
 	@Override
 	public CoreTeleportRandomly clone() {
-		try {
-			return (CoreTeleportRandomly) super.clone();
-		} catch (CloneNotSupportedException e) {}
-		return null;
+		return (CoreTeleportRandomly) super.clone();
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(diameter);
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(diameter);
+		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;

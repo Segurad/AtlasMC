@@ -3,8 +3,17 @@ package de.atlasmc.inventory.component.effect;
 import java.util.List;
 
 import de.atlasmc.potion.PotionEffect;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface ApplyEffects extends ComponentEffect {
+	
+	public static final NBTSerializationHandler<ApplyEffects>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(ApplyEffects.class)
+					.include(ComponentEffect.NBT_HANDLER)
+					.typeList("effects", ApplyEffects::hasEffects, ApplyEffects::getEffects, PotionEffect.NBT_HANDLER)
+					.floatField("probability", ApplyEffects::getProbability, ApplyEffects::setProbability, 1)
+					.build();
 	
 	List<PotionEffect> getEffects();
 	
@@ -21,8 +30,8 @@ public interface ApplyEffects extends ComponentEffect {
 	ApplyEffects clone();
 	
 	@Override
-	default ComponentEffectType getType() {
-		return ComponentEffectType.APPLY_EFFECTS;
+	default NBTSerializationHandler<? extends ApplyEffects> getNBTHandler() {
+		return NBT_HANDLER;
 	}
 
 }

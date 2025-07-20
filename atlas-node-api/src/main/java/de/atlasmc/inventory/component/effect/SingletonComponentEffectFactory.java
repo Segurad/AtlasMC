@@ -21,7 +21,7 @@ public class SingletonComponentEffectFactory extends BaseSingletonFactory<Compon
 	}
 
 	@Override
-	public ComponentEffect createEffect() {
+	public ComponentEffect createEffect(ComponentEffectType type) {
 		return super.create();
 	}
 

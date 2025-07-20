@@ -1,7 +1,5 @@
 package de.atlasmc.inventory.component;
 
-import java.util.function.Function;
-
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.registry.ProtocolRegistry;
@@ -9,8 +7,6 @@ import de.atlasmc.registry.ProtocolRegistryValueBase;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
-import de.atlasmc.sound.EnumSound;
-import de.atlasmc.sound.ResourceSound;
 import de.atlasmc.sound.Sound;
 import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
@@ -28,8 +24,7 @@ public class Instrument extends ProtocolRegistryValueBase implements NBTSerializ
 						.builder(Instrument.class)
 						.defaultConstructor(Instrument::new)
 						.chat("description", Instrument::getDescription, Instrument::setDescription)
-						.interfacedEnumStringField("sound_event", (Function<Instrument, Sound>) Instrument::getSound, Instrument::setSound, EnumSound::getByName, null)
-						.compoundType("sound_event", (Function<Instrument, Sound>) Instrument::getSound, Instrument::setSound, ResourceSound.NBT_HANDLER)
+						.addField(Sound.getNBTSoundField("sound_event", Instrument::getSound, Instrument::setSound, null))
 						.floatField("use_duration", Instrument::getUseDuration, Instrument::setUseDuration, 0)
 						.floatField("range", Instrument::getRange, Instrument::setRange, 0)
 						.build();

@@ -20,7 +20,7 @@ public class CoreEffectSlowness extends CoreAbstractAttributeModifierPotionEffec
 
 	@Override
 	public void addEffect(LivingEntity entity) {
-		double amount = -0.15d*(amplifier+1);
+		double amount = -0.15d*(getAmplifier()+1);
 		AttributeModifier modifier = new AttributeModifier(modifierID, amount, Operation.ADD_MULTIPLIED_TOTAL);
 		entity.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, modifier);
 	}

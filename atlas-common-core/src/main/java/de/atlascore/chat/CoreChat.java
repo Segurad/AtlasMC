@@ -102,5 +102,10 @@ public class CoreChat implements Chat {
 	public ChatComponent toComponent() {
 		return ChatUtil.toComponent(this);
 	}
+	
+	@Override
+	public boolean isComponent() {
+		return false;
+	}
 
 }

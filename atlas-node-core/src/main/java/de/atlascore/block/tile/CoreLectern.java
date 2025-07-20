@@ -45,5 +45,10 @@ public class CoreLectern extends CoreTileEntity implements Lectern {
 			inv = ContainerFactory.LECTERN_INV_FACTORY.create(InventoryType.LECTERN, this);
 		return inv;
 	}
+	
+	@Override
+	public boolean hasInventory() {
+		return inv != null;
+	}
 
 }

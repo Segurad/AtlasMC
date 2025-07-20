@@ -5,8 +5,15 @@ import java.util.Map;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface ItemComponentHolder {
+	
+	public static final NBTSerializationHandler<ItemComponentHolder>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(ItemComponentHolder.class)
+					.compoundMapNamespacedType("components", ItemComponentHolder::hasComponents, ItemComponentHolder::getComponents, ItemComponent.NBT_HANDLER)
+					.build();
 	
 	Map<NamespacedKey, ItemComponent> getComponents();
 

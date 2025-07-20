@@ -46,6 +46,7 @@ public class ItemStack implements NBTHolder, NBTSerializable, ItemComponentHolde
 		NBT_HANDLER = NBTSerializationHandler
 				.builder(ItemStack.class)
 				.intField("count", ItemStack::getAmount, ItemStack::setAmount, 1)
+				.include(ItemComponentHolder.NBT_HANDLER)
 				.build();
 		
 		NBT_FIELDS = NBTFieldSet.newSet();

@@ -1,34 +1,24 @@
 package de.atlasmc.inventory;
 
-import de.atlasmc.potion.PotionEffect;
+import de.atlasmc.potion.PotionEffectType;
 
 public interface BeaconInventory extends Inventory {
 
-	PotionEffect getPrimaryEffect();
+	PotionEffectType getPrimaryEffectType();
 	
-	PotionEffect getSecondaryEffect();
-
-	void setPrimaryEffect(PotionEffect effect);
-	
-	void setSecondaryEffect(PotionEffect effect);
-
-	int getPrimaryID();
-	
-	int getSecondaryID();
+	PotionEffectType getSecondaryEffectType();
 	
 	/**
-	 * Sets the primary effect ID<br>
-	 * Use -1 for no effect
+	 * Sets the primary effect<br>
 	 * @param id
 	 */
-	void setPrimaryID(int id);
+	void setPrimaryEffectType(PotionEffectType effect);
 	
 	/**
-	 * Sets the secondary effect ID<br>
-	 * Use -1 for no effect
+	 * Sets the secondary effect<br>
 	 * @param id
 	 */
-	void setSecondaryID(int id);
+	void setSecondaryEffectType(PotionEffectType effect);
 	
 	int getPowerLevel();
 	

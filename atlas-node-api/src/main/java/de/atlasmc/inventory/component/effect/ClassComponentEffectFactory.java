@@ -7,7 +7,7 @@ import de.atlasmc.util.factory.ClassFactory;
 public class ClassComponentEffectFactory extends ClassFactory<ComponentEffect> implements ComponentEffectFactory, ConfigurationSerializable {
 	
 	public ClassComponentEffectFactory(Class<? extends ComponentEffect>  clazz) {
-		super(clazz);
+		super(clazz, ComponentEffectType.class);
 	}
 	
 	public ClassComponentEffectFactory(ConfigurationSection config) {
@@ -15,8 +15,8 @@ public class ClassComponentEffectFactory extends ClassFactory<ComponentEffect> i
 	}
 	
 	@Override
-	public ComponentEffect createEffect() {
-		return super.create();
+	public ComponentEffect createEffect(ComponentEffectType type) {
+		return super.create(type);
 	}
 
 	@Override

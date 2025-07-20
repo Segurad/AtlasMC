@@ -20,7 +20,6 @@ public interface TileEntity extends Cloneable, NBTSerializable, ItemComponentHol
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(TileEntity.class)
 					.searchKeyConstructor("id", Registries.getRegistry(BlockType.class), BlockType::createTileEntity, TileEntity::getType)
-					.redirectAfterConstruction(true)
 					.intField("x", TileEntity::getX, TileEntity::setX)
 					.intField("y", TileEntity::getY, TileEntity::setY)
 					.intField("z", TileEntity::getZ, TileEntity::setZ)

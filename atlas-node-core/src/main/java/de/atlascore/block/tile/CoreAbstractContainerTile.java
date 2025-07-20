@@ -4,17 +4,17 @@ import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.AbstractContainerTile;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.inventory.Inventory;
+import de.atlasmc.inventory.ItemPredicate;
 
 public abstract class CoreAbstractContainerTile<I extends Inventory> extends CoreTileEntity implements AbstractContainerTile<I> {
 	
-	private I inv;
-	private Chat name;
-	private Chat lock;
+	protected I inv;
+	protected Chat name;
+	protected ItemPredicate lock;
 	
 	public CoreAbstractContainerTile(BlockType type) {
 		super(type);
 	}
-
 
 	@Override
 	public I getInventory() {
@@ -43,7 +43,7 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 	}
 
 	@Override
-	public void setLock(Chat lock) {
+	public void setLock(ItemPredicate lock) {
 		this.lock = lock;
 	}
 
@@ -58,7 +58,7 @@ public abstract class CoreAbstractContainerTile<I extends Inventory> extends Cor
 	}
 
 	@Override
-	public Chat getLock() {
+	public ItemPredicate getLock() {
 		return lock;
 	}
 	

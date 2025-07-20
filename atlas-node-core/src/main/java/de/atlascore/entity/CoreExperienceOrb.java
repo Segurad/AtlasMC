@@ -1,7 +1,5 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
-import java.util.UUID;
 import java.util.function.BiConsumer;
 
 import de.atlasmc.entity.Entity;
@@ -11,9 +9,6 @@ import de.atlasmc.entity.Player;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutSpawnExperienceOrb;
 import de.atlasmc.util.ViewerSet;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreExperienceOrb extends CoreEntity implements ExperienceOrb {
 
@@ -25,35 +20,15 @@ public class CoreExperienceOrb extends CoreEntity implements ExperienceOrb {
 			con.sendPacked(packet);
 			((CoreExperienceOrb) holder).sendMetadata(viewer);
 		};
-	
-	protected static final NBTFieldSet<CoreExperienceOrb> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_AGE = CharKey.literal("Age"),
-	NBT_VALUE = CharKey.literal("Value");
-	
-	static {
-		NBT_FIELDS = CoreEntity.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_AGE, (holder, reader) -> {
-			holder.setLifeTime(reader.readShortTag());
-		});
-		NBT_FIELDS.setField(NBT_VALUE, (holder, reader) -> {
-			holder.setExperience(reader.readShortTag());
-		});
-	}
 		
-	private short lifeTime;
+	private short lifeTime = 6000;
 	private short xp;
+	private short health = 5;
+	private int count = 1;
 	
-	public CoreExperienceOrb(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreExperienceOrb(EntityType type) {
+		super(type);
 	}
-	
-	@Override
-	protected NBTFieldSet<? extends CoreExperienceOrb> getFieldSetRoot() {
-		return NBT_FIELDS;
-	}
-
 	@Override
 	protected ViewerSet<Entity, Player> createViewerSet() {
 		return new ViewerSet<>(this, VIEWER_ADD_FUNCTION, VIEWER_REMOVE_FUNCTION);
@@ -78,12 +53,21 @@ public class CoreExperienceOrb extends CoreEntity implements ExperienceOrb {
 	public int getLifeTime() {
 		return lifeTime;
 	}
-	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		writer.writeIntTag(NBT_AGE, getLifeTime());
-		writer.writeIntTag(NBT_VALUE, getExperience());
+	public int getHealth() {
+		return health;
+	}
+	@Override
+	public void setHealth(int health) {
+		this.health = (short) health;
+	}
+	@Override
+	public int getCount() {
+		return count;
+	}
+	@Override
+	public void setCount(int count) {
+		this.count = count;
 	}
 
 }

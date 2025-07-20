@@ -12,7 +12,7 @@ public class HoverEntityEvent implements HoverEvent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(HoverEntityEvent.class)
 					.include(HoverEvent.NBT_HANDLER)
-					.compoundType("name", HoverEntityEvent::getName, HoverEntityEvent::setName, ChatComponent.NBT_HANDLER)
+					.typeComponentField("name", HoverEntityEvent::getName, HoverEntityEvent::setName, ChatComponent.NBT_HANDLER)
 					.namespacedKey("id", HoverEntityEvent::getType, HoverEntityEvent::setType)
 					.uuid("uuid", HoverEntityEvent::getUUID, HoverEntityEvent::setUUUID)
 					.build();

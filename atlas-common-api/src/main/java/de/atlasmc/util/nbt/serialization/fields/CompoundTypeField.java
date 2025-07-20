@@ -17,6 +17,8 @@ public class CompoundTypeField<T, K> extends NBTField<T> {
 	
 	public CompoundTypeField(CharSequence key, Function<T, ? super K> get, BiConsumer<T, ? super K> set, NBTSerializationHandler<K> handler) {
 		super(key, COMPOUND, true);
+		if (handler == null)
+			throw new IllegalArgumentException("Handler can not be null!");
 		this.handler = handler;
 		this.set = set;
 		this.get = get;

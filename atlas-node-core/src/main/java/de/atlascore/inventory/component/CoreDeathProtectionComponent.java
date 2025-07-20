@@ -1,5 +1,8 @@
 package de.atlascore.inventory.component;
 
+import static de.atlasmc.io.PacketUtil.readVarInt;
+import static de.atlasmc.io.PacketUtil.writeVarInt;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,36 +12,10 @@ import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.DeathProtectionComponent;
 import de.atlasmc.inventory.component.effect.ComponentEffect;
-import de.atlasmc.inventory.component.effect.ComponentEffectFactory;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.NBTUtil;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.inventory.component.effect.ComponentEffectType;
 import io.netty.buffer.ByteBuf;
-import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CoreDeathProtectionComponent extends AbstractItemComponent implements DeathProtectionComponent {
-
-	protected static final NBTFieldSet<CoreDeathProtectionComponent> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_DEATH_EFFECTS = CharKey.literal("death_effects");
-	
-	static {
-		NBT_FIELDS = NBTFieldSet.newSet();
-		NBT_FIELDS.setField(NBT_DEATH_EFFECTS, (holder, reader) -> {
-			reader.readNextEntry();
-			while (reader.getRestPayload() > 0) {
-				reader.readNextEntry();
-				ComponentEffect effect = ComponentEffect.getFromNBT(reader);
-				if (effect == null)
-					continue;
-				holder.addEffect(effect);
-			}
-			reader.readNextEntry();
-		});
-	}
 	
 	private List<ComponentEffect> effects;
 	
@@ -58,22 +35,6 @@ public class CoreDeathProtectionComponent extends AbstractItemComponent implemen
 			}
 		}
 		return clone;
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeCompoundTag(key.toString());
-		if (hasEffects()) {
-			final int size = effects.size();
-			writer.writeListTag(null, null, size);
-		}
-		writer.writeEndTag();
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		reader.readNextEntry();
-		NBTUtil.readNBT(NBT_FIELDS, this, reader);
 	}
 
 	@Override
@@ -117,10 +78,8 @@ public class CoreDeathProtectionComponent extends AbstractItemComponent implemen
 		final int count = readVarInt(buf);
 		if (count > 0) {
 			for (int i = 0; i < count; i++) {
-				ComponentType type = ComponentType.getByID(readVarInt(buf));
-				ComponentEffectFactory factory = ComponentEffectFactory.REGISTRY.get(type.getKey());
-				ComponentEffect effect = factory.createEffect();
-				addEffect(effect);
+				ComponentEffectType type = ComponentEffectType.getByID(readVarInt(buf));
+				addEffect(type.createEffect());
 			}
 		}
 	}
