@@ -2,12 +2,12 @@ package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
 
-import de.atlasmc.Particle;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.play.PacketOutParticle;
+import de.atlasmc.world.particle.ParticleType;
 import io.netty.buffer.ByteBuf;
 
 import static de.atlasmc.io.protocol.ProtocolUtil.*;
@@ -25,7 +25,7 @@ public class CorePacketOutParticle implements PacketIO<PacketOutParticle> {
 		packet.offZ = in.readFloat();
 		packet.maxSpeed = in.readFloat();
 		packet.count = in.readInt();
-		packet.particle = Particle.getByID(readVarInt(in));
+		packet.particle = ParticleType.getByID(readVarInt(in));
 		packet.data = MetaDataType.PARTICLE.read(packet.particle, in);
 	}
 

@@ -3,6 +3,8 @@ package de.atlasmc.entity;
 import java.util.Collection;
 import java.util.List;
 
+import org.joml.Vector3i;
+
 import de.atlasmc.Color;
 import de.atlasmc.Location;
 import de.atlasmc.ProjectileSource;
@@ -13,9 +15,86 @@ import de.atlasmc.attribute.Attributeable;
 import de.atlasmc.inventory.EntityEquipment;
 import de.atlasmc.potion.PotionEffect;
 import de.atlasmc.potion.PotionEffectType;
+import de.atlasmc.util.annotation.UnsafeAPI;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public interface LivingEntity extends Damageable, Attributeable, ProjectileSource {
+public interface LivingEntity extends Entity, Attributeable, ProjectileSource {
+	
+	public static final NBTSerializationHandler<LivingEntity>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(LivingEntity.class)
+					.include(Entity.NBT_HANDLER)
+					.floatField("AbsorptionAmount", LivingEntity::getAbsorption, LivingEntity::setAbsorption, 0)
+					.typeCollection("active_effects", LivingEntity::hasPotionEffects, LivingEntity::getActivePotionEffects, LivingEntity::addPotionEffect, PotionEffect.NBT_HANDLER)
+					// attributes
+					// Brain
+					.boolField("CanPickUpLoot", LivingEntity::canPickUpLoot, LivingEntity::setPickUpLoot, false)
+					.shortField("DeathTime", LivingEntity::getDeathAnimationTime, LivingEntity::setDeathAnimationTime, (short) 0)
+					.innerTypeCompoundField("drop_chances", LivingEntity::getEquipment, EntityEquipment.NBT_DROP_CHANCE_HANDLER)
+					.innerTypeCompoundField("equipment", LivingEntity::getEquipment, EntityEquipment.NBT_EQUIPMENT_HANDLER)
+					.boolField("FallFlying", LivingEntity::isFallFlying, LivingEntity::setFallFlying, false)
+					.floatField("Health", LivingEntity::getHealth, LivingEntity::setHealth)
+					.vector3i("home_pos", LivingEntity::getHomePositionUnsafe, LivingEntity::setHomePosition)
+					.intField("home_radius", LivingEntity::getHomeRadius, LivingEntity::setHomeRadius, 0)
+					.intField("HurtByTimestamp", LivingEntity::getLastHurtTime, LivingEntity::setLastHurtTime, 0)
+					.shortField("HurtTime", LivingEntity::getHurtAnimationTime, LivingEntity::setHurtAnimationTime, (short) 0)
+					// leash
+					.boolField("LeftHanded", LivingEntity::isLeftHanded, LivingEntity::setLeftHanded, false)
+					// locator_bar_icon
+					.boolField("NoAI", LivingEntity::hasNoAI, LivingEntity::setNoAi, false)
+					.boolField("PersistenceRequired", LivingEntity::isPersistent, LivingEntity::setPersistent, false)
+					.vector3i("sleeping_pos", LivingEntity::getSleepingPositionUnsafe, LivingEntity::setSleeptingPosition)
+					.string("Team", LivingEntity::getTeam, LivingEntity::setTeam)
+					.build();
+	
+	String getTeam();
+	
+	void setTeam(String team);
+	
+	@UnsafeAPI
+	Vector3i getSleepingPositionUnsafe();
+	
+	Vector3i getSleepingPosition();
+	
+	void setSleeptingPosition(Vector3i pos);
+	
+	boolean isPersistent();
+	
+	void setPersistent(boolean persistent);
+	
+	boolean hasNoAI();
+	
+	void setNoAi(boolean ai);
+	
+	boolean isLeftHanded();
+	
+	void setLeftHanded(boolean left);
+	
+	int getLastHurtTime();
+	
+	void setLastHurtTime(int time);
+	
+	int getHomeRadius();
+	
+	void setHomeRadius(int radius);
+	
+	@UnsafeAPI
+	Vector3i getHomePositionUnsafe();
+	
+	Vector3i getHomePosition();
+	
+	void setHomePosition(Vector3i pos);
 
+	boolean canPickUpLoot();
+	
+	void setPickUpLoot(boolean can);
+	
+	void damage(float damage);
+	
+	float getHealth();
+	
+	void setHealth(float health);
+	
 	float getHeadPitch();
 	
 	int getDisplayedArrows();
@@ -142,5 +221,10 @@ public interface LivingEntity extends Damageable, Attributeable, ProjectileSourc
 	Location getEyeLocation(Location location);
 	
 	SimpleLocation getEyeLocation(SimpleLocation location);
+	
+	@Override
+	default NBTSerializationHandler<? extends LivingEntity> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 }

@@ -3,7 +3,6 @@ package de.atlasmc.world;
 import java.util.Collection;
 
 import de.atlasmc.Location;
-import de.atlasmc.Particle;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.block.Block;
 import de.atlasmc.block.data.BlockData;
@@ -16,6 +15,7 @@ import de.atlasmc.tick.Tickable;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.world.entitytracker.EntityTracker;
+import de.atlasmc.world.particle.ParticleType;
 
 public interface World extends Tickable, SoundListener {
 
@@ -91,7 +91,7 @@ public interface World extends Tickable, SoundListener {
 
 	void playEffect(SimpleLocation loc, WorldEvent effect, Object data, int radius);
 
-	void spawnParticle(Particle particle, SimpleLocation loc, int amount);
+	void spawnParticle(ParticleType particle, SimpleLocation loc, int amount);
 
 	/**
 	 * Returns the spawn Location of this world

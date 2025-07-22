@@ -2,8 +2,17 @@ package de.atlasmc.entity;
 
 import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.BlockData;
+import de.atlasmc.entity.data.AngerableMob;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public interface Enderman extends Monster {
+public interface Enderman extends Monster, AngerableMob {
+	
+	public static final NBTSerializationHandler<Enderman>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Enderman.class)
+					.include(Monster.NBT_HANDLER)
+					.typeCompoundField("carriedBlockState", Enderman::getCarriedBlock, Enderman::setCarriedBlock, BlockData.NBT_HANDLER)
+					.build();
 
 	BlockType getCarriedBlockType();
 	
@@ -27,5 +36,10 @@ public interface Enderman extends Monster {
 	void setStaring(boolean staring);
 	
 	boolean isStaring();
+	
+	@Override
+	default NBTSerializationHandler<? extends Enderman> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 }

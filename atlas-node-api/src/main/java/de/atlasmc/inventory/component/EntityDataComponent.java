@@ -11,7 +11,7 @@ public interface EntityDataComponent extends ItemComponent {
 	public static final NBTSerializationHandler<EntityDataComponent>
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(EntityDataComponent.class)
-					.typeComponentField(COMPONENT_KEY, EntityDataComponent::getEntity, EntityDataComponent::setEntity, Entity.NBT_HANDLER)
+					.typeCompoundField(COMPONENT_KEY, EntityDataComponent::getEntity, EntityDataComponent::setEntity, Entity.NBT_HANDLER)
 					.build();
 	
 	Entity getEntity();

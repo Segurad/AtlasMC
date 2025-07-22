@@ -1,13 +1,17 @@
 package de.atlasmc.potion;
 
-public class PotionData {
+import de.atlasmc.NamespacedKey;
+import de.atlasmc.NamespacedKey.Namespaced;
+import de.atlasmc.registry.Registry;
 
-	public static PotionData getByName(String name) {
-		// TODO Auto-generated method stub
+public class PotionData implements Namespaced {
+	
+	public static Registry<PotionData> getRegistry() {
 		return null;
 	}
 
-	public String getName() {
+	@Override
+	public NamespacedKey getNamespacedKey() {
 		// TODO Auto-generated method stub
 		return null;
 	}

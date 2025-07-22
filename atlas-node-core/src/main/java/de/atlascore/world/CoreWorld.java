@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Collection;
 
 import de.atlasmc.Location;
-import de.atlasmc.Particle;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.block.Block;
@@ -39,6 +38,7 @@ import de.atlasmc.world.WorldEvent;
 import de.atlasmc.world.WorldFlag;
 import de.atlasmc.world.entitytracker.EntityTracker;
 import de.atlasmc.world.entitytracker.EntityTrackerFactory;
+import de.atlasmc.world.particle.ParticleType;
 
 public class CoreWorld implements World {
 	
@@ -149,7 +149,7 @@ public class CoreWorld implements World {
 	}
 
 	@Override
-	public void spawnParticle(Particle particle, SimpleLocation loc, int amount) {
+	public void spawnParticle(ParticleType particle, SimpleLocation loc, int amount) {
 		if (loc == null)
 			throw new IllegalArgumentException("Location can not be null!");
 		if (particle == null)
@@ -320,7 +320,7 @@ public class CoreWorld implements World {
 
 	@Override
 	public Entity spawnEntity(EntityType type, double x, double y, double z, float pitch, float yaw) {
-		Entity ent = type.create(this);
+		Entity ent = type.createEntity();
 		return spawnEntity(ent, x, y, z, pitch, yaw) ? ent : null;
 	}
 

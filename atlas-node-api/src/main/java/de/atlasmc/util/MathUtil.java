@@ -1,6 +1,7 @@
 package de.atlasmc.util;
 
 import org.joml.Vector3d;
+import org.joml.Vector3i;
 
 import de.atlasmc.Location;
 import de.atlasmc.SimpleLocation;
@@ -73,6 +74,10 @@ public final class MathUtil {
 	public static long toPosition(SimpleLocation loc) {
 		return toPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 	}
+	
+	public static long toPosition(Vector3i loc) {
+		return toPosition(loc.x, loc.y, loc.z);
+	}
 
 	public static int toAngle(float value) {
 		return floor(value * 256 / 360);
@@ -122,6 +127,13 @@ public final class MathUtil {
 	
 	public static Location getLocation(World world, Location loc, long position) {
 		return loc.set(world, getPositionX(position), getPositionY(position), getPositionZ(position));
+	}
+	
+	public static Vector3i getPositionVector(Vector3i loc, long position) {
+		loc.x = getPositionX(position);
+		loc.y = getPositionY(position);
+		loc.z = getPositionZ(position);
+		return loc;
 	}
 	
 	@SuppressWarnings("unchecked")

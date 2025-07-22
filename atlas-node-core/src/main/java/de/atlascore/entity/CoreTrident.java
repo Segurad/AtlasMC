@@ -1,15 +1,10 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
-import java.util.UUID;
-
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Trident;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTrident extends CoreAbstractArrow implements Trident {
 
@@ -20,23 +15,11 @@ public class CoreTrident extends CoreAbstractArrow implements Trident {
 	
 	protected static final int LAST_META_INDEX = CoreAbstractArrow.LAST_META_INDEX+2;
 	
-	protected static final CharKey
-	NBT_TRIDENT = CharKey.literal("Trident");
-	
-	static {
-		NBT_FIELDS.setField(NBT_TRIDENT, (holder, reader) -> {
-			if (holder instanceof Trident entity) {
-				reader.readNextEntry();
-				ItemStack item = ItemStack.getFromNBT(reader);
-				entity.setItem(item);
-			} else reader.skipTag();
-		});
-	}
-	
 	private ItemStack item;
+	private boolean dealtDamage;
 	
-	public CoreTrident(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreTrident(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -87,13 +70,13 @@ public class CoreTrident extends CoreAbstractArrow implements Trident {
 	}
 
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (hasItem()) {
-			writer.writeCompoundTag(NBT_TRIDENT);
-			getItem().toNBT(writer, systemData);
-			writer.writeEndTag();
-		}
+	public boolean hasDealtDamage() {
+		return dealtDamage;
+	}
+
+	@Override
+	public void setDealtDamage(boolean dealtDamage) {
+		this.dealtDamage = dealtDamage;
 	}
 	
 }

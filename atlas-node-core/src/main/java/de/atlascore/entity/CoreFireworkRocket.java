@@ -1,8 +1,5 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
-import java.util.UUID;
-
 import de.atlasmc.ProjectileSource;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
@@ -13,9 +10,6 @@ import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.ItemType;
 import de.atlasmc.inventory.component.FireworksComponent;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreFireworkRocket extends CoreAbstractProjectile implements FireworkRocket {
 	
@@ -28,38 +22,11 @@ public class CoreFireworkRocket extends CoreAbstractProjectile implements Firewo
 	
 	protected static final int LAST_META_INDEX = CoreAbstractProjectile.LAST_META_INDEX+3;
 	
-	protected static final NBTFieldSet<CoreFireworkRocket> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_LIFE = CharKey.literal("Life"),
-	NBT_LIFE_TIME = CharKey.literal("LifeTime"),
-	NBT_FIREWORK_ITEM = CharKey.literal("FireworkItem");
-	
-	static {
-		NBT_FIELDS = CoreAbstractProjectile.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_LIFE, (holder, reader) -> {
-			holder.setLifeTime(reader.readIntTag());
-		});
-		NBT_FIELDS.setField(NBT_LIFE_TIME, (holder, reader) -> {
-			holder.setMaxLifeTime(reader.readIntTag());
-		});
-		NBT_FIELDS.setField(NBT_FIREWORK_ITEM, (holder, reader) -> {
-			reader.readNextEntry();
-			ItemStack item = ItemStack.getFromNBT(reader);
-			holder.setFirework(item);
-		});
-	}
-	
 	private int lifeTime;
 	private int maxLifeTime;
 	
-	public CoreFireworkRocket(EntityType type, UUID uuid) {
-		super(type, uuid);
-	}
-	
-	@Override
-	protected NBTFieldSet<? extends CoreFireworkRocket> getFieldSetRoot() {
-		return NBT_FIELDS;
+	public CoreFireworkRocket(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -153,18 +120,6 @@ public class CoreFireworkRocket extends CoreAbstractProjectile implements Firewo
 	@Override
 	public int getMaxLifeTime() {
 		return maxLifeTime;
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		writer.writeIntTag(NBT_LIFE, getLifeTime());
-		writer.writeIntTag(NBT_LIFE_TIME, getMaxLifeTime());
-		if (getFirework() != null) {
-			writer.writeCompoundTag(NBT_FIREWORK_ITEM);
-			getFirework().toNBT(writer, systemData);
-			writer.writeEndTag();
-		}
 	}
 
 }

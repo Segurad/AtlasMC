@@ -15,8 +15,8 @@ public interface Sign extends TileEntity {
 					.builder(Sign.class)
 					.include(TileEntity.NBT_HANDLER)
 					.boolField("is_waxed", Sign::isWaxed, Sign::setWaxed)
-					.typeComponentField("front_text", Sign::getFrontText, Sign::setFrontText, SignText.NBT_HANDLER)
-					.typeComponentField("back_text", Sign::getBackText, Sign::setBackText, SignText.NBT_HANDLER)
+					.typeCompoundField("front_text", Sign::getFrontText, Sign::setFrontText, SignText.NBT_HANDLER)
+					.typeCompoundField("back_text", Sign::getBackText, Sign::setBackText, SignText.NBT_HANDLER)
 					.build();
 	
 	boolean isWaxed();

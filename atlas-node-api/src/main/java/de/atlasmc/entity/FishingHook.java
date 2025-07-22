@@ -1,9 +1,9 @@
 package de.atlasmc.entity;
 
-public interface FishingHook extends Projectile {
+public interface FishingHook extends Entity {
 	
-	public Entity getHookedEntity();
-	
-	public void setHookedEntity(Entity hooked);
+	Entity getHookedEntity();
+
+	void setHookedEntity(Entity hooked);
 
 }

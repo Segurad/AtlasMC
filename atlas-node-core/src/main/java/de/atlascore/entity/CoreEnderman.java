@@ -1,16 +1,12 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
-import java.util.UUID;
-
 import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.entity.Enderman;
 import de.atlasmc.entity.EntityType;
+import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreEnderman extends CoreMob implements Enderman {
 	
@@ -22,29 +18,13 @@ public class CoreEnderman extends CoreMob implements Enderman {
 	META_IS_STARING = new MetaDataField<>(CoreMob.LAST_META_INDEX + 3, false, MetaDataType.BOOLEAN);
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+3;
-
-	protected static final CharKey
-	NBT_CARRIED_BLOCK_STATE = CharKey.literal("carriedBlockState"),
-	NBT_PROPERTIES = CharKey.literal("Properties");
-	
-	static {
-		NBT_FIELDS.setField(NBT_CARRIED_BLOCK_STATE, (holder, reader) -> {
-			if (!(holder instanceof Enderman entity)) {
-				reader.skipTag();
-				return;
-			}
-			reader.readNextEntry();
-			BlockData data = BlockData.getFromNBT(reader);
-			if (data != null)
-				entity.setCarriedBlock(data);
-		});
-	}
 	
 	private BlockData block;
 	private boolean blockChanged;
+	private int angerTime;
 	
-	public CoreEnderman(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreEnderman(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -132,13 +112,24 @@ public class CoreEnderman extends CoreMob implements Enderman {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (block != null) {
-			writer.writeCompoundTag(NBT_CARRIED_BLOCK_STATE);
-			block.toNBT(writer, systemData);
-			writer.writeEndTag();
-		}
+	public boolean isAngry() {
+		return (metaContainer.getData(META_MOB_FLAGS) & FLAG_IS_ANGRY) == FLAG_IS_ANGRY;
+	}
+
+	@Override
+	public void setAngry(boolean angry) {
+		MetaData<Byte> data = metaContainer.get(META_MOB_FLAGS);
+		data.setData((byte) (angry ? data.getData() | FLAG_IS_ANGRY : data.getData() & ~FLAG_IS_ANGRY));
+	}
+
+	@Override
+	public int getAngerTime() {
+		return angerTime;
+	}
+
+	@Override
+	public void setAngerTime(int ticks) {
+		this.angerTime = ticks;
 	}
 
 }

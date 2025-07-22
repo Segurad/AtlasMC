@@ -3,32 +3,35 @@ package de.atlasmc.entity.data;
 import java.io.IOException;
 
 import de.atlasmc.Color;
-import de.atlasmc.Particle;
-import de.atlasmc.Particle.DustColor;
-import de.atlasmc.Particle.DustColorTransition;
-import de.atlasmc.Particle.VibrationData;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.inventory.ItemStack;
 import static de.atlasmc.io.protocol.ProtocolUtil.*;
+
 import de.atlasmc.io.protocol.ProtocolUtil;
 import de.atlasmc.util.MathUtil;
+import de.atlasmc.world.particle.Particle;
 import de.atlasmc.world.particle.ParticleObject;
+import de.atlasmc.world.particle.ParticleType;
+import de.atlasmc.world.particle.ParticleType.DustColor;
+import de.atlasmc.world.particle.ParticleType.DustColorTransition;
+import de.atlasmc.world.particle.ParticleType.VibrationData;
 import io.netty.buffer.ByteBuf;
 
-public final class ParticleMetaDataType extends MetaDataType<ParticleObject> {
+public final class ParticleMetaDataType extends MetaDataType<Particle> {
 
 	public ParticleMetaDataType(int type) {
 		super(type, ParticleObject.class);
 	}
 
 	@Override
-	public ParticleObject read(ByteBuf in) {
-		Particle p = Particle.getByID(readVarInt(in));
-		return new ParticleObject(p, read(p, in));
+	public Particle read(ByteBuf in) {
+		ParticleType p = ParticleType.getByID(readVarInt(in));
+		// TODO read
+		return null;
 	}
 
-	public Object read(Particle particle, ByteBuf in) {
+	public Object read(ParticleType particle, ByteBuf in) {
 		Object data = null;
 		switch (particle) {
 		case BLOCK:
@@ -90,11 +93,11 @@ public final class ParticleMetaDataType extends MetaDataType<ParticleObject> {
 	}
 	
 	@Override
-	public void write(ParticleObject data, ByteBuf out) {
-		write(data.getParticle(), data.getData(), false, out);
+	public void write(Particle data, ByteBuf out) {
+		// TODO write
 	}
 	
-	public void write(Particle particle, Object data, boolean dataOnly, ByteBuf out) {
+	public void write(ParticleType particle, Object data, boolean dataOnly, ByteBuf out) {
 		if (!dataOnly) 
 			writeVarInt(particle.getID(), out);
 		switch (particle) {
@@ -195,7 +198,7 @@ public final class ParticleMetaDataType extends MetaDataType<ParticleObject> {
 	}
 	
 	@Override
-	public ParticleObject copyData(ParticleObject data) {
+	public Particle copyData(Particle data) {
 		return data.clone();
 	}
 

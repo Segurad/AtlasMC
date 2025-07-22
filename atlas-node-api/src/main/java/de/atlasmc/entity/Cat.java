@@ -6,24 +6,38 @@ import de.atlasmc.DyeColor;
 import de.atlasmc.util.EnumID;
 import de.atlasmc.util.EnumName;
 import de.atlasmc.util.EnumValueCache;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Cat extends Tameable {
 	
-	public Type getCatType();
+	public static final NBTSerializationHandler<Cat>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Cat.class)
+					.include(Tameable.NBT_HANDLER)
+					.enumByteField("CollarColor", Cat::getCollarColor, Cat::setCollarColor, DyeColor::getByID, DyeColor::getID, DyeColor.RED)
+					.enumStringField("variant", Cat::getCatType, Cat::setCatType, Type::getByName, Type.BLACK)
+					.build();
 	
-	public void setCatType(Type type);
+	Type getCatType();
 	
-	public boolean isLying();
+	void setCatType(Type type);
 	
-	public void setLying(boolean lying);
+	boolean isLying();
 	
-	public boolean isRelaxed();
+	void setLying(boolean lying);
 	
-	public void setRelaxed(boolean relaxed);
+	boolean isRelaxed();
 	
-	public DyeColor getCollarColor();
+	void setRelaxed(boolean relaxed);
 	
-	public void setCollarColor(DyeColor color);
+	DyeColor getCollarColor();
+	
+	void setCollarColor(DyeColor color);
+	
+	@Override
+	default NBTSerializationHandler<? extends Cat> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 	public static enum Type implements EnumName, EnumID, EnumValueCache {
 		TABBY,

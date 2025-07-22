@@ -1,15 +1,22 @@
 package de.atlasmc.entity;
 
-import java.io.IOException;
 import java.util.UUID;
 
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.AbstractNBTBase;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.serialization.NBTSerializable;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Interaction extends Entity {
+	
+	public static final NBTSerializationHandler<Interaction>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Interaction.class)
+					.include(Entity.NBT_HANDLER)
+					.floatField("width", Interaction::getWidth, Interaction::setWidth, 1)
+					.floatField("height", Interaction::getHeight, Interaction::setHeight, 1)
+					.boolField("response", Interaction::isResponsive, Interaction::setResponsive, false)
+					.typeCompoundField("attack", Interaction::getLastAttack, Interaction::setLastAttack, PreviousInteraction.NBT_HANDLER)
+					.typeCompoundField("interaction", Interaction::getLastInteraction, Interaction::setLastInteraction, PreviousInteraction.NBT_HANDLER)
+					.build();
 	
 	void setWidth(float width);
 	
@@ -31,29 +38,26 @@ public interface Interaction extends Entity {
 	
 	void setLastInteraction(PreviousInteraction interaction);
 	
-	public static class PreviousInteraction extends AbstractNBTBase {
+	@Override
+	default NBTSerializationHandler<? extends Interaction> getNBTHandler() {
+		return NBT_HANDLER;
+	}
+	
+	public static class PreviousInteraction implements NBTSerializable {
 		
-		protected static final NBTFieldSet<PreviousInteraction> NBT_FIELDS;
-		
-		protected static final CharKey
-		NBT_PLAYER = CharKey.literal("player"),
-		NBT_TIMESTAMP = CharKey.literal("timestamp");
-		
-		static {
-			NBT_FIELDS = NBTFieldSet.newSet();
-			NBT_FIELDS.setField(NBT_PLAYER, (holder, reader) -> {
-				holder.uuid = reader.readUUID();
-			});
-			NBT_FIELDS.setField(NBT_TIMESTAMP, (holder, reader) -> {
-				holder.timestamp = reader.readLongTag();
-			});
-		}
+		public static final NBTSerializationHandler<PreviousInteraction>
+		NBT_HANDLER = NBTSerializationHandler
+						.builder(PreviousInteraction.class)
+						.defaultConstructor(PreviousInteraction::new)
+						.uuid("player", PreviousInteraction::getUUID, PreviousInteraction::setUUID)
+						.longField("timestamp", PreviousInteraction::getTimestamp, PreviousInteraction::setTimestamp)
+						.build();
 		
 		private UUID uuid;
 		private long timestamp;
 		
-		public PreviousInteraction(NBTReader reader) throws IOException {
-			fromNBT(reader);
+		private PreviousInteraction() {
+			// empty constructor for deserialisation
 		}
 		
 		public PreviousInteraction(UUID uuid, long timestamp) {
@@ -65,19 +69,21 @@ public interface Interaction extends Entity {
 			return timestamp;
 		}
 		
+		private void setTimestamp(long timestamp) {
+			this.timestamp = timestamp;
+		}
+		
 		public UUID getUUID() {
 			return uuid;
 		}
-
-		@Override
-		public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-			writer.writeUUID(NBT_PLAYER, uuid);
-			writer.writeLongTag(NBT_TIMESTAMP, timestamp);
+		
+		private void setUUID(UUID uuid) {
+			this.uuid = uuid;
 		}
-
+		
 		@Override
-		protected NBTFieldSet<? extends PreviousInteraction> getFieldSetRoot() {
-			return NBT_FIELDS;
+		public NBTSerializationHandler<? extends NBTSerializable> getNBTHandler() {
+			return NBT_HANDLER;
 		}
 		
 	}

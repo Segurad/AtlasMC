@@ -2,24 +2,40 @@ package de.atlasmc.entity;
 
 import de.atlasmc.DyeColor;
 import de.atlasmc.inventory.LlamaInventory;
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Llama extends ChestedHorse {
 	
-	public int getStrength();
+	public static final NBTSerializationHandler<Llama>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Llama.class)
+					.include(ChestedHorse.NBT_HANDLER)
+					.intField("Strength", Llama::getStrength, Llama::setStrength, 3)
+					.enumIntField("Variant", Llama::getColor, Llama::setColor, LlamaColor::getByID, LlamaColor.CREAMY)
+					.build();
+					
 	
-	public void setStrength(int strength);
+	int getStrength();
 	
-	public DyeColor getCarpetColor();
+	void setStrength(int strength);
 	
-	public void setCarpedColor(DyeColor color);
+	DyeColor getCarpetColor();
 	
-	public LlamaColor getColor();
+	void setCarpedColor(DyeColor color);
 	
-	public void setColor(LlamaColor color);
+	LlamaColor getColor();
 	
-	public LlamaInventory getInventory();
+	void setColor(LlamaColor color);
 	
-	public static enum LlamaColor {
+	LlamaInventory getInventory();
+	
+	@Override
+	default NBTSerializationHandler<? extends Llama> getNBTHandler() {
+		return NBT_HANDLER;
+	}
+	
+	public static enum LlamaColor implements EnumID {
 		CREAMY,
 		WHITE,
 		BROWN,

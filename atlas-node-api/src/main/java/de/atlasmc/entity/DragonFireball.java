@@ -1,5 +1,5 @@
 package de.atlasmc.entity;
 
-public interface DragonFireball extends AbstractFireball {
+public interface DragonFireball extends AcceleratingProjectile {
 
 }

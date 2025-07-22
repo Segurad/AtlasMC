@@ -14,7 +14,7 @@ public interface AbstractArrow extends Projectile {
 					.include(Projectile.NBT_HANDLER)
 					.boolField("crit", AbstractArrow::isCritical, AbstractArrow::setCritical, false)
 					.doubleField("damage", AbstractArrow::getDamage, AbstractArrow::setDamage, 2)
-					.typeComponentField("inBlockState", AbstractArrow::getBlockDataIn, AbstractArrow::setBlockDataIn, BlockData.NBT_HANDLER)
+					.typeCompoundField("inBlockState", AbstractArrow::getBlockDataIn, AbstractArrow::setBlockDataIn, BlockData.NBT_HANDLER)
 					.boolField("inGround", AbstractArrow::isInGround, AbstractArrow::setInGround, false)
 					.shortField("life", AbstractArrow::getLifeTime, AbstractArrow::setLifeTime, (short) 1200)
 					.boolField("pickup", AbstractArrow::isPickupable, AbstractArrow::setPickupable, true)
@@ -22,8 +22,8 @@ public interface AbstractArrow extends Projectile {
 					.byteField("shake", AbstractArrow::getShake, AbstractArrow::setShake, (byte) 0)
 					.boolField("ShotFromCrossbow", AbstractArrow::isShotFromCrossbow, AbstractArrow::setShotFromCrossbow)
 					.addField(Sound.getNBTSoundField("SoundEvent", AbstractArrow::getHitSound, AbstractArrow::setHitSound, EnumSound.ENTITY_ARROW_HIT))
-					.typeComponentField("item", AbstractArrow::getItem, AbstractArrow::setItem, ItemStack.NBT_HANDLER)
-					.typeComponentField("weapon", AbstractArrow::getWeapon, AbstractArrow::setWeapon, ItemStack.NBT_HANDLER)
+					.typeCompoundField("item", AbstractArrow::getItem, AbstractArrow::setItem, ItemStack.NBT_HANDLER)
+					.typeCompoundField("weapon", AbstractArrow::getWeapon, AbstractArrow::setWeapon, ItemStack.NBT_HANDLER)
 					.build();
 	
 	ItemStack getItem();

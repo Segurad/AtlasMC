@@ -1,21 +1,39 @@
 package de.atlasmc.entity;
 
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Trident extends AbstractArrow {
 	
-	public int getLoyalityLevel();
+	public static final NBTSerializationHandler<Trident>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Trident.class)
+					.include(AbstractArrow.NBT_HANDLER)
+					.boolField("DealtDamage", Trident::hasDealtDamage, Trident::setDealtDamage, false)
+					.typeCompoundField("item", Trident::getItem, Trident::setItem, ItemStack.NBT_HANDLER)
+					.build();
 	
-	public void setLoyalityLevel(int level);
+	int getLoyalityLevel();
 	
-	public boolean hasEnchantmentGlint();
+	void setLoyalityLevel(int level);
+	
+	boolean hasEnchantmentGlint();
 
-	public void setEnchantmentGlint(boolean glint);
+	void setEnchantmentGlint(boolean glint);
 
-	public void setItem(ItemStack item);
+	boolean hasDealtDamage();
 	
-	public ItemStack getItem();
+	void setDealtDamage(boolean dealtDamage);
 	
-	public boolean hasItem();
+	void setItem(ItemStack item);
+	
+	ItemStack getItem();
+	
+	boolean hasItem();
+	
+	@Override
+	default NBTSerializationHandler<? extends AbstractArrow> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 }

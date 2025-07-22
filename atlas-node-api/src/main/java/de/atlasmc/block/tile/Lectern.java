@@ -11,7 +11,7 @@ public interface Lectern extends TileEntity, InventoryHolder {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(Lectern.class)
 					.include(TileEntity.NBT_HANDLER)
-					.typeComponentField("Book", Lectern::getBook, Lectern::setBook, ItemStack.NBT_HANDLER)
+					.typeCompoundField("Book", Lectern::getBook, Lectern::setBook, ItemStack.NBT_HANDLER)
 					.intField("Page", Lectern::getPage, Lectern::setPage)
 					.build();
 	

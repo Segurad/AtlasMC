@@ -4,12 +4,25 @@ import java.util.List;
 
 import de.atlasmc.util.EnumName;
 import de.atlasmc.util.EnumValueCache;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Salmon extends Fish {
+	
+	public static final NBTSerializationHandler<Salmon>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Salmon.class)
+					.include(Fish.NBT_HANDLER)
+					.enumStringField("type", Salmon::getSalmonType, Salmon::setSalmonType, Type::getByName, Type.MEDIUM)
+					.build();
 
 	Type getSalmonType();
 	
 	void setSalmonType(Type type);
+	
+	@Override
+	default NBTSerializationHandler<? extends Fish> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 	public static enum Type implements EnumName, EnumValueCache {
 		SMALL,

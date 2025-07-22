@@ -9,9 +9,10 @@ import de.atlasmc.entity.ShulkerBullet;
 public class CoreShulkerBullet extends CoreAbstractProjectile implements ShulkerBullet {
 
 	private Entity target;
+	private UUID targetUUID;
 	
-	public CoreShulkerBullet(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreShulkerBullet(EntityType type) {
+		super(type);
 	}
 
 	@Override
@@ -22,6 +23,16 @@ public class CoreShulkerBullet extends CoreAbstractProjectile implements Shulker
 	@Override
 	public Entity getTarget() {
 		return target;
+	}
+
+	@Override
+	public void setTargetUUID(UUID uuid) {
+		this.targetUUID = uuid;
+	}
+
+	@Override
+	public UUID getTargetUUID() {
+		return targetUUID;
 	}
 
 }

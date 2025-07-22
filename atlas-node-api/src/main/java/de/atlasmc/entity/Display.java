@@ -19,7 +19,7 @@ public interface Display extends Entity {
 					.builder(Display.class)
 					.include(Entity.NBT_HANDLER)
 					.enumStringField("billboard", Display::getBillboard, Display::setBillboard, Billboard::getByName, Billboard.FIXED)
-					.typeComponentField("brightness", Display::getBrightness, Display::setBrightness, Brightness.NBT_HANDLER)
+					.typeCompoundField("brightness", Display::getBrightness, Display::setBrightness, Brightness.NBT_HANDLER)
 					.color("glow_color_override", Display::getGlowColorOverride, Display::setGlowColorOverride)
 					.floatField("height", Display::getDisplayHeight, Display::setDisplayHeight, 0)
 					.floatField("width", Display::getDisplayWidth, Display::setDisplayWidth, 0)
@@ -29,7 +29,7 @@ public interface Display extends Entity {
 					.floatField("shadow_radius", Display::getShadowRadius, Display::setShadowRadius, 0)
 					.floatField("shadow_strength", Display::getShadowStrength, Display::setShadowStrength, 0)
 					.floatField("view_range", Display::getViewRange, Display::setViewRange, 1)
-					.typeComponentField("transformation", Display::getTransformation, Display::setTransformation, Transformation.NBT_HANDLER)
+					.typeCompoundField("transformation", Display::getTransformation, Display::setTransformation, Transformation.NBT_HANDLER)
 					.build();
 	
 	Brightness getBrightness();

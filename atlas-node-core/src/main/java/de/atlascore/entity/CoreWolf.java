@@ -1,16 +1,10 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
-import java.util.UUID;
-
 import de.atlasmc.DyeColor;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Wolf;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreWolf extends CoreTameable implements Wolf {
 
@@ -25,31 +19,10 @@ public class CoreWolf extends CoreTameable implements Wolf {
 	
 	protected static final int LAST_META_INDEX = CoreTameable.LAST_META_INDEX+4;
 	
-	protected static final NBTFieldSet<CoreWolf> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_ANGRY = CharKey.literal("Angry"),
-	NBT_COLLAR_COLOR = CharKey.literal("CollarColor");
-	
-	static {
-		NBT_FIELDS = CoreTameable.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_COLLAR_COLOR, (holder, reader) -> {
-			holder.setCollarColor(DyeColor.getByID(reader.readByteTag()));
-		});
-		NBT_FIELDS.setField(NBT_ANGRY, (holder, reader) -> {
-			holder.setAngry(reader.readByteTag() == 1);
-		});
-	}
-	
 	private int angerTicks = -1;
 	
-	public CoreWolf(EntityType type, UUID uuid) {
-		super(type, uuid);
-	}
-	
-	@Override
-	protected NBTFieldSet<? extends CoreWolf> getFieldSetRoot() {
-		return NBT_FIELDS;
+	public CoreWolf(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -106,14 +79,6 @@ public class CoreWolf extends CoreTameable implements Wolf {
 	@Override
 	public void setAngerTime(int anger) {
 		this.angerTicks = anger;
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isAngry())
-			writer.writeByteTag(NBT_ANGRY, true);
-		writer.writeByteTag(NBT_COLLAR_COLOR, getCollarColor().getID());
 	}
 
 	@Override

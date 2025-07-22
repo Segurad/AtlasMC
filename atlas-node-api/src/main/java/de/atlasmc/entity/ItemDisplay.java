@@ -13,7 +13,7 @@ public interface ItemDisplay extends Display {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(ItemDisplay.class)
 					.include(Display.NBT_HANDLER)
-					.typeComponentField("item", ItemDisplay::getItem, ItemDisplay::setItem, ItemStack.NBT_HANDLER)
+					.typeCompoundField("item", ItemDisplay::getItem, ItemDisplay::setItem, ItemStack.NBT_HANDLER)
 					.enumStringField("item_display", ItemDisplay::getRenderType, ItemDisplay::setRenderType, RenderType::getByName, RenderType.NONE)
 					.build();
 	

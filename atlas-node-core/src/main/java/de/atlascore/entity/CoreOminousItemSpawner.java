@@ -1,7 +1,5 @@
 package de.atlascore.entity;
 
-import java.util.UUID;
-
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.OminousItemSpawner;
 import de.atlasmc.inventory.ItemStack;
@@ -11,8 +9,8 @@ public class CoreOminousItemSpawner extends CoreEntity implements OminousItemSpa
 	protected ItemStack item;
 	protected long spawnTicks;
 	
-	public CoreOminousItemSpawner(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreOminousItemSpawner(EntityType type) {
+		super(type);
 	}
 
 	@Override

@@ -9,7 +9,7 @@ public class SelectorComponent extends AbstractBaseComponent<SelectorComponent> 
 					.builder(SelectorComponent.class)
 					.include(AbstractBaseComponent.NBT_HANDLER)
 					.string("selector", SelectorComponent::getSelector, SelectorComponent::setSelector)
-					.typeComponentField("separator", SelectorComponent::getSeparator, SelectorComponent::setSeparator, ChatComponent.NBT_HANDLER)
+					.typeCompoundField("separator", SelectorComponent::getSeparator, SelectorComponent::setSeparator, ChatComponent.NBT_HANDLER)
 					.build();
 	
 	private String selector;

@@ -1,6 +1,5 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.entity.AbstractHorse;
@@ -9,17 +8,21 @@ import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.AbstractHorseInventory;
-import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public abstract class CoreAbstractHorse extends CoreAgeableMob implements AbstractHorse {
 
+	protected static final int 
+	FLAG_IS_TAME = 0x02,
+	FLAG_IS_SADDLED = 0x04,
+	FLAG_CAN_BRED = 0x08,
+	FLAG_IS_EATING = 0x10,
+	FLAG_IS_REARING = 0x20,
+	FLAG_IS_MOUTH_OPEN = 0x40;
+	
 	/**
 	 * 0x02 - Is Tame<br>
 	 * 0x04 - Is saddled<br>
-	 * 0x08 - can bred<br>
+	 * 0x08 - can breed<br>
 	 * 0x10 - Is eating<br>
 	 * 0x20 - Is rearing<br>
 	 * 0x40 - Is mouth open
@@ -31,46 +34,11 @@ public abstract class CoreAbstractHorse extends CoreAgeableMob implements Abstra
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+2;
 	
-	protected static final NBTFieldSet<CoreAbstractHorse> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_BRED = CharKey.literal("Bred"),
-	NBT_EATING_HAYSTACK = CharKey.literal("EatingHaystack"),
-	NBT_OWNER = CharKey.literal("Owner"),
-	NBT_SADDLE_ITEM = CharKey.literal("SaddleItem"),
-	NBT_TAME = CharKey.literal("Tame");
-	//NBT_TEMPER = "Temper"; TODO unnecessary (needed for taming)
-	
-	static {
-		NBT_FIELDS = CoreAgeableMob.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_BRED, (holder, reader) -> {
-			holder.setCanBred(reader.readByteTag() == 1);
-		});
-		NBT_FIELDS.setField(NBT_EATING_HAYSTACK, (holder, reader) -> {
-			holder.setEating(reader.readByteTag() == 1);
-		});
-		NBT_FIELDS.setField(NBT_OWNER, (holder, reader) -> {
-			holder.setOwner(reader.readUUID());
-		});
-		NBT_FIELDS.setField(NBT_SADDLE_ITEM, (holder, reader) -> {
-			reader.readNextEntry();
-			ItemStack item = ItemStack.getFromNBT(reader);
-			holder.getInventory().setSaddle(item);
-		});
-		NBT_FIELDS.setField(NBT_TAME, (holder, reader) -> {
-			holder.setTamed(reader.readByteTag() == 1);
-		});
-	}
-	
 	protected AbstractHorseInventory inv;
+	private int temper;
 	
-	public CoreAbstractHorse(EntityType type, UUID uuid) {
-		super(type, uuid);
-	}
-	
-	@Override
-	protected NBTFieldSet<? extends CoreAbstractHorse> getFieldSetRoot() {
-		return NBT_FIELDS;
+	public CoreAbstractHorse(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -87,27 +55,27 @@ public abstract class CoreAbstractHorse extends CoreAgeableMob implements Abstra
 
 	@Override
 	public boolean isSaddled() {
-		return (metaContainer.getData(META_HORSE_FLAGS) & 0x04) == 0x04;
+		return (metaContainer.getData(META_HORSE_FLAGS) & FLAG_IS_SADDLED) == FLAG_IS_SADDLED;
 	}
 
 	@Override
 	public boolean canBred() {
-		return (metaContainer.getData(META_HORSE_FLAGS) & 0x08) == 0x08;
+		return (metaContainer.getData(META_HORSE_FLAGS) & FLAG_CAN_BRED) == FLAG_CAN_BRED;
 	}
 
 	@Override
 	public boolean isEating() {
-		return (metaContainer.getData(META_HORSE_FLAGS) & 0x10) == 0x10;
+		return (metaContainer.getData(META_HORSE_FLAGS) & FLAG_IS_EATING) == FLAG_IS_EATING;
 	}
 
 	@Override
 	public boolean isRearing() {
-		return (metaContainer.getData(META_HORSE_FLAGS) & 0x20) == 0x20;
+		return (metaContainer.getData(META_HORSE_FLAGS) & FLAG_IS_REARING) == FLAG_IS_REARING;
 	}
 
 	@Override
 	public boolean isMouthOpen() {
-		return (metaContainer.getData(META_HORSE_FLAGS) & 0x40) == 0x40;
+		return (metaContainer.getData(META_HORSE_FLAGS) & FLAG_IS_MOUTH_OPEN) == FLAG_IS_MOUTH_OPEN;
 	}
 
 	@Override
@@ -117,43 +85,43 @@ public abstract class CoreAbstractHorse extends CoreAgeableMob implements Abstra
 
 	@Override
 	public boolean isTamed() {
-		return (metaContainer.getData(META_HORSE_FLAGS) & 0x02) == 0x02;
+		return (metaContainer.getData(META_HORSE_FLAGS) & FLAG_IS_TAME) == FLAG_IS_TAME;
 	}
 
 	@Override
 	public void setTamed(boolean tamed) {
 		MetaData<Byte> data = metaContainer.get(META_HORSE_FLAGS);
-		data.setData((byte) (tamed ? data.getData() | 0x02 : data.getData() & 0xFD));
+		data.setData((byte) (tamed ? data.getData() | FLAG_IS_TAME : data.getData() &  ~FLAG_IS_TAME));
 	}
 
 	@Override
 	public void setSaddled(boolean saddled) {
 		MetaData<Byte> data = metaContainer.get(META_HORSE_FLAGS);
-		data.setData((byte) (saddled ? data.getData() | 0x04 : data.getData() & 0xFB));
+		data.setData((byte) (saddled ? data.getData() | FLAG_IS_SADDLED : data.getData() & ~FLAG_IS_SADDLED));
 	}
 
 	@Override
-	public void setCanBred(boolean bred) {
+	public void setCanBred(boolean breed) {
 		MetaData<Byte> data = metaContainer.get(META_HORSE_FLAGS);
-		data.setData((byte) (bred ? data.getData() | 0x08 : data.getData() & 0xF7));
+		data.setData((byte) (breed ? data.getData() | FLAG_CAN_BRED : data.getData() & ~FLAG_CAN_BRED));
 	}
 
 	@Override
 	public void setEating(boolean eating) {
 		MetaData<Byte> data = metaContainer.get(META_HORSE_FLAGS);
-		data.setData((byte) (eating ? data.getData() | 0x10 : data.getData() & 0xEF));
+		data.setData((byte) (eating ? data.getData() | FLAG_IS_EATING : data.getData() & ~FLAG_IS_EATING));
 	}
 
 	@Override
 	public void setRearing(boolean rearing) {
 		MetaData<Byte> data = metaContainer.get(META_HORSE_FLAGS);
-		data.setData((byte) (rearing ? data.getData() | 0x20 : data.getData() & 0xDF));
+		data.setData((byte) (rearing ? data.getData() | FLAG_IS_REARING : data.getData() & ~FLAG_IS_REARING));
 	}
 
 	@Override
 	public void setMouthOpen(boolean open) {
 		MetaData<Byte> data = metaContainer.get(META_HORSE_FLAGS);
-		data.setData((byte) (open ? data.getData() | 0x40 : data.getData() & 0xBF));
+		data.setData((byte) (open ? data.getData() | FLAG_IS_MOUTH_OPEN : data.getData() & ~FLAG_IS_MOUTH_OPEN));
 	}
 
 	@Override
@@ -174,23 +142,15 @@ public abstract class CoreAbstractHorse extends CoreAgeableMob implements Abstra
 	}
 	
 	protected abstract AbstractHorseInventory createInventory();
-	
+
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (canBred())
-			writer.writeByteTag(NBT_BRED, true);
-		if (isEating())
-			writer.writeByteTag(NBT_EATING_HAYSTACK, true);
-		if (getOwner() != null)
-			writer.writeUUID(NBT_OWNER, getOwner());
-		if (inv != null && getInventory().getSaddle() != null) {
-			writer.writeCompoundTag(NBT_SADDLE_ITEM);
-			getInventory().getSaddle().toNBT(writer, systemData);
-			writer.writeEndTag();
-		}
-		if (isTamed())
-			writer.writeByteTag(NBT_TAME, true);
+	public int getTemper() {
+		return temper;
+	}
+
+	@Override
+	public void setTemper(int temper) {
+		this.temper = temper;
 	}
 
 }

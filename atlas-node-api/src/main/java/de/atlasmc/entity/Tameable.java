@@ -2,18 +2,34 @@ package de.atlasmc.entity;
 
 import java.util.UUID;
 
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+
 public interface Tameable extends Animal {
 	
-	public boolean isSitting();
+	public static final NBTSerializationHandler<Tameable>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Tameable.class)
+					.include(Animal.NBT_HANDLER)
+					.uuid("Owner", Tameable::getOwner, Tameable::setOwner)
+					.boolField("Sitting", Tameable::isSitting, Tameable::setSitting, false)
+					.boolField("Tame", Tameable::isTamed, Tameable::setTamed, false) // non standard
+					.build();
 	
-	public void setSitting(boolean sitting);
+	boolean isSitting();
 	
-	public boolean isTamed();
+	void setSitting(boolean sitting);
 	
-	public void setTamed(boolean tamed);
+	boolean isTamed();
 	
-	public UUID getOwner();
+	void setTamed(boolean tamed);
 	
-	public void setOwner(UUID owner);
+	UUID getOwner();
+	
+	void setOwner(UUID owner);
+	
+	@Override
+	default NBTSerializationHandler<? extends Tameable> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 
 }

@@ -10,7 +10,7 @@ public interface BlockDisplay extends Display {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(BlockDisplay.class)
 					.include(Display.NBT_HANDLER)
-					.typeComponentField("block_state", BlockDisplay::getBlockData, BlockDisplay::setBlockData, BlockData.NBT_HANDLER)
+					.typeCompoundField("block_state", BlockDisplay::getBlockData, BlockDisplay::setBlockData, BlockData.NBT_HANDLER)
 					.build();
 	
 	BlockData getBlockData();

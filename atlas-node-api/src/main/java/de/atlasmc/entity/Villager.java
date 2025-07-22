@@ -55,7 +55,7 @@ public interface Villager extends AbstractVillager {
 	
 	/**
 	 * Sets whether or not this Villager is ready for breeding.<br>
-	 * This value does not reset over time like {@link Breedable#isInLove()}
+	 * This value does not reset over time like {@link Breedable#getInLove()}
 	 * @param willing
 	 */
 	public void setWilling(boolean willing);

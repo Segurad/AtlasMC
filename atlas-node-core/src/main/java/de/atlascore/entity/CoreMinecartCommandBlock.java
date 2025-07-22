@@ -1,8 +1,5 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
-import java.util.UUID;
-
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatType;
 import de.atlasmc.chat.ChatUtil;
@@ -11,8 +8,6 @@ import de.atlasmc.entity.MinecartCommandBlock;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.permission.Permission;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreMinecartCommandBlock extends CoreAbstractMinecart implements MinecartCommandBlock {
 
@@ -23,40 +18,11 @@ public class CoreMinecartCommandBlock extends CoreAbstractMinecart implements Mi
 	
 	protected static final int LAST_META_INDEX = CoreAbstractMinecart.LAST_META_INDEX+2;
 	
-	protected static final CharKey
-	NBT_COMMAND = CharKey.literal("Command"),
-	NBT_LAST_OUTPUT = CharKey.literal("LastOutput"),
-	NBT_SUCCESS_COUNT = CharKey.literal("SuccessCount"),
-	NBT_TRACK_OUTPUT = CharKey.literal("TrackOutput");
-	
-	static {
-		NBT_FIELDS.setField(NBT_COMMAND, (holder, reader) -> {
-			if (holder instanceof MinecartCommandBlock) {
-				((MinecartCommandBlock) holder).setCommand(reader.readStringTag());
-			} else reader.skipTag();
-		});
-		NBT_FIELDS.setField(NBT_LAST_OUTPUT, (holder, reader) -> {
-			if (holder instanceof MinecartCommandBlock) {
-				((MinecartCommandBlock) holder).setLastMessage(ChatUtil.toChat(reader.readStringTag()));
-			} else reader.skipTag();
-		});
-		NBT_FIELDS.setField(NBT_SUCCESS_COUNT, (holder, reader) -> {
-			if (holder instanceof MinecartCommandBlock) {
-				((MinecartCommandBlock) holder).setRedstoneSignal(reader.readIntTag());
-			} else reader.skipTag();
-		});
-		NBT_FIELDS.setField(NBT_TRACK_OUTPUT, (holder, reader) -> {
-			if (holder instanceof MinecartCommandBlock) {
-				((MinecartCommandBlock) holder).setTrackOutput(reader.readByteTag() == 1);
-			} else reader.skipTag();
-		});
-	}
-	
-	protected byte redstoneSignal;
+	protected int redstoneSignal;
 	protected boolean trackOutput;
 	
-	public CoreMinecartCommandBlock(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreMinecartCommandBlock(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -110,15 +76,6 @@ public class CoreMinecartCommandBlock extends CoreAbstractMinecart implements Mi
 	@Override
 	public boolean isTrackingOutput() {
 		return trackOutput;
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		writer.writeStringTag(NBT_COMMAND, getCommand());
-		writer.writeStringTag(NBT_LAST_OUTPUT, getLastMessage().toText());
-		writer.writeIntTag(NBT_SUCCESS_COUNT, getRedstoneSignal());
-		writer.writeByteTag(NBT_TRACK_OUTPUT, isTrackingOutput());
 	}
 
 	@Override

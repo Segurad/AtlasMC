@@ -2,13 +2,29 @@ package de.atlasmc.entity;
 
 import java.util.List;
 
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumValueCache;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+
 public interface EnderDragon extends Mob {
 	
-	public DragonPhase getPhase();
+	public static final NBTSerializationHandler<EnderDragon>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(EnderDragon.class)
+					.include(Mob.NBT_HANDLER)
+					.enumIntField("DragonPhase", EnderDragon::getPhase, EnderDragon::setPhase, DragonPhase::getByID, DragonPhase.HOVERING)
+					.build();
 	
-	public void setPhase(DragonPhase phase);
+	DragonPhase getPhase();
 	
-	public static enum DragonPhase {
+	void setPhase(DragonPhase phase);
+	
+	@Override
+	default NBTSerializationHandler<? extends EnderDragon> getNBTHandler() {
+		return NBT_HANDLER;
+	}
+	
+	public static enum DragonPhase implements EnumID, EnumValueCache {
 		CIRCLING,
 		STRAFING,
 		FLYING_TO_PORTAL,
@@ -45,6 +61,7 @@ public interface EnderDragon extends Mob {
 			VALUES = null;
 		}
 
+		@Override
 		public int getID() {
 			return ordinal();
 		}

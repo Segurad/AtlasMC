@@ -13,7 +13,7 @@ public interface Item extends Entity {
 					.include(Entity.NBT_HANDLER)
 					.shortField("Age", Item::getLifeTime, Item::setLifeTime, (short) 6000)
 					.shortField("Health", Item::getHealth, Item::setHealth, (short) 5)
-					.typeComponentField("Item", Item::getItem, Item::setItem, ItemStack.NBT_HANDLER)
+					.typeCompoundField("Item", Item::getItem, Item::setItem, ItemStack.NBT_HANDLER)
 					.uuid("Owner", Item::getOwner, Item::setOwner)
 					.shortField("PickupDelay", Item::getPickupDelay, Item::setPickupDelay, (short) 0)
 					.uuid("Thrower", Item::getThrower, Item::setThrower)

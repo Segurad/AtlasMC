@@ -21,7 +21,7 @@ public class ItemPredicate implements NBTSerializable, ItemComponentHolder, Pred
 					.builder(ItemPredicate.class)
 					.dataSetField("items", ItemPredicate::getItems, ItemPredicate::setItems, ItemType.getRegistry())
 					.intNullableField("count", ItemPredicate::getCount, ItemPredicate::setCount, null)
-					.typeComponentField("count", ItemPredicate::getRange, ItemPredicate::setRange, IntRange.NBT_HANDLER)
+					.typeCompoundField("count", ItemPredicate::getRange, ItemPredicate::setRange, IntRange.NBT_HANDLER)
 					.include(ItemComponentHolder.NBT_HANDLER)
 					.compoundMapNamespacedType("predicates", ItemPredicate::hasPredicates, ItemPredicate::getPredicates, ItemComponentPredicate.NBT_HANDLER)
 					.build();

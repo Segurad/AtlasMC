@@ -16,6 +16,7 @@ import de.atlasmc.util.EnumID;
 import de.atlasmc.util.EnumValueCache;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.annotation.ThreadSafe;
+import de.atlasmc.util.annotation.UnsafeAPI;
 import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 import de.atlasmc.world.Chunk;
@@ -37,12 +38,12 @@ public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitte
 					.boolField("Glowing", Entity::isGlowing, Entity::setGlowing, false)
 					.boolField("HasVisualFire", Entity::hasVisualFire, Entity::setVisualFire, false)
 					.boolField("Invulnerable", Entity::isInvulnerable, Entity::setInvulnerable, false)
-					// Motion
+					.vector3d("Motion", Entity::getVelocityUnsafe, Entity::setVelocity)
 					.boolField("NoGravity", Entity::hasNoGravity, Entity::setNoGravity, false)
 					.boolField("OnGround", Entity::isOnGround, Entity::setOnGround, true)
 					// Passengers (not implemented because recursive)
 					.intField("PortalCooldown", Entity::getPortalCooldown, Entity::setPortalCooldown, 0)
-					// Pos
+					.vector3d("Pos", Entity::getLocationUnsafe, Entity::setLocation)
 					// Rotation
 					.boolField("Silent", Entity::isSilent, Entity::setSilent)
 					.stringListField("Tags", Entity::hasScoreboardTags, Entity::getScoreboardTags)
@@ -68,7 +69,14 @@ public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitte
 	 */
 	int getID();
 	
+	@UnsafeAPI
+	Location getLocationUnsafe();
+	
 	Location getLocation();
+	
+	void setLocation(Vector3d loc);
+	
+	void setLocation(SimpleLocation loc);
 	
 	Location getLocation(Location loc);
 	
@@ -87,6 +95,9 @@ public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitte
 	 * @return UUID
 	 */
 	UUID getUUID();
+	
+	@UnsafeAPI
+	Vector3d getVelocityUnsafe();
 	
 	Vector3d getVelocity();
 	

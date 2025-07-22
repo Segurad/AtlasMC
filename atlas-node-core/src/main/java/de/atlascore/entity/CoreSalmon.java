@@ -1,16 +1,14 @@
 package de.atlascore.entity;
 
-import java.util.UUID;
-
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Salmon;
 
 public class CoreSalmon extends CoreFish implements Salmon {
 
-	private Type type;
+	private Type type = Type.MEDIUM;
 	
-	public CoreSalmon(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreSalmon(EntityType type) {
+		super(type);
 	}
 
 	@Override

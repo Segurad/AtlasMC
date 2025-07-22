@@ -1,23 +1,38 @@
 package de.atlasmc.entity;
 
-import de.atlasmc.SimpleLocation;
+import org.joml.Vector3i;
+
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface EndCrystal extends Entity {
+	
+	public static final NBTSerializationHandler<EndCrystal>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(EndCrystal.class)
+					.include(Entity.NBT_HANDLER)
+					.vector3i("beam_target", EndCrystal::getBeamTarget, EndCrystal::setBeamTarget)
+					.boolField("ShowBottom", EndCrystal::getShowBottom, EndCrystal::setShowBottom, false)
+					.build();
 
-	public SimpleLocation getBeamTarget();
+	Vector3i getBeamTarget();
 	
-	public SimpleLocation getBeamTarget(SimpleLocation loc);
+	Vector3i getBeamTarget(Vector3i loc);
 	
-	public void setBeamTarget(SimpleLocation loc);
+	void setBeamTarget(Vector3i loc);
 	
-	public void setBeamTarget(int x, int y, int z);
+	void setBeamTarget(int x, int y, int z);
 	
-	public boolean hasTarget();
+	boolean hasTarget();
 	
-	public void resetTarget();
+	void resetTarget();
 	
-	public boolean getShowBottom();
+	boolean getShowBottom();
 	
-	public void setShowBottom(boolean show);
+	void setShowBottom(boolean show);
+	
+	@Override
+	default NBTSerializationHandler<? extends EndCrystal> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 }

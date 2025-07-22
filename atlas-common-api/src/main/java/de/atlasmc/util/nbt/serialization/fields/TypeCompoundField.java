@@ -9,13 +9,13 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public class CompoundTypeField<T, K> extends NBTField<T> {
+public class TypeCompoundField<T, K> extends NBTField<T> {
 	
 	private final Function<T, ? super K> get;
 	private final BiConsumer<T, ? super K> set;
 	private final NBTSerializationHandler<K> handler;
 	
-	public CompoundTypeField(CharSequence key, Function<T, ? super K> get, BiConsumer<T, ? super K> set, NBTSerializationHandler<K> handler) {
+	public TypeCompoundField(CharSequence key, Function<T, ? super K> get, BiConsumer<T, ? super K> set, NBTSerializationHandler<K> handler) {
 		super(key, COMPOUND, true);
 		if (handler == null)
 			throw new IllegalArgumentException("Handler can not be null!");

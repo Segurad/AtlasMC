@@ -1,21 +1,19 @@
 package de.atlascore.entity;
 
-import java.util.UUID;
-
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.WitherSkull;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 
-public class CoreWitherSkull extends CoreAbstractFireball implements WitherSkull {
+public class CoreWitherSkull extends CoreAbstractAcceleratingProjectile implements WitherSkull {
 
 	protected static final MetaDataField<Boolean>
-	META_SKULL_CHARGED = new MetaDataField<>(CoreAbstractFireball.LAST_META_INDEX+1, false, MetaDataType.BOOLEAN);
+	META_SKULL_CHARGED = new MetaDataField<>(CoreAbstractAcceleratingProjectile.LAST_META_INDEX+1, false, MetaDataType.BOOLEAN);
 	
-	protected static final int LAST_META_INDEX = CoreAbstractFireball.LAST_META_INDEX+1;
+	protected static final int LAST_META_INDEX = CoreAbstractAcceleratingProjectile.LAST_META_INDEX+1;
 	
-	public CoreWitherSkull(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreWitherSkull(EntityType type) {
+		super(type);
 	}
 	
 	@Override

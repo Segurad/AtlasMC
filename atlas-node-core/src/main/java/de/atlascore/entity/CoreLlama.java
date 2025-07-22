@@ -1,8 +1,5 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
-import java.util.UUID;
-
 import de.atlasmc.DyeColor;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Llama;
@@ -10,11 +7,7 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.AbstractHorseInventory;
 import de.atlasmc.inventory.ContainerFactory;
-import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.LlamaInventory;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreLlama extends CoreChestedHorse implements Llama {
 
@@ -27,35 +20,8 @@ public class CoreLlama extends CoreChestedHorse implements Llama {
 
 	protected static final int LAST_META_INDEX = CoreChestedHorse.LAST_META_INDEX+3;
 	
-	protected static final NBTFieldSet<CoreLlama> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_DECOR_ITEM = CharKey.literal("DecorItem"),
-	NBT_STRENGTH = CharKey.literal("Strength"),
-	NBT_VARIANT = CharKey.literal("Variant");
-	
-	static {
-		NBT_FIELDS = CoreChestedHorse.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_DECOR_ITEM, (holder, reader) -> {
-			reader.readNextEntry();
-			ItemStack item = ItemStack.getFromNBT(reader);
-			holder.getInventory().setDecor(item);
-		});
-		NBT_FIELDS.setField(NBT_STRENGTH, (holder, reader) -> {
-			holder.setStrength(reader.readIntTag());
-		});
-		NBT_FIELDS.setField(NBT_VARIANT, (holder, reader) -> {
-			holder.setColor(LlamaColor.getByID(reader.readIntTag()));
-		});
-	}
-	
-	public CoreLlama(EntityType type, UUID uuid) {
-		super(type, uuid);
-	}
-	
-	@Override
-	protected NBTFieldSet<? extends CoreLlama> getFieldSetRoot() {
-		return NBT_FIELDS;
+	public CoreLlama(EntityType type) {
+		super(type);
 	}
 
 	@Override
@@ -123,18 +89,6 @@ public class CoreLlama extends CoreChestedHorse implements Llama {
 	@Override
 	public void setChest(boolean chest) {
 		metaContainer.get(META_HORSE_HAS_CHEST).setData(chest);
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (inv != null && getInventory().getDecor() != null) {
-			writer.writeCompoundTag(NBT_DECOR_ITEM);
-			getInventory().getDecor().toNBT(writer, systemData);
-			writer.writeEndTag();
-		}
-		writer.writeIntTag(NBT_STRENGTH, getStrength());
-		writer.writeIntTag(NBT_VARIANT, getColor().getID());
 	}
 	
 }

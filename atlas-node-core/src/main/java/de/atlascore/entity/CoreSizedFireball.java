@@ -1,22 +1,20 @@
 package de.atlascore.entity;
 
-import java.util.UUID;
-
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.SizedFireball;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
 
-public abstract class CoreSizedFireball extends CoreAbstractFireball implements SizedFireball {
+public abstract class CoreSizedFireball extends CoreAbstractAcceleratingProjectile implements SizedFireball {
 
 	protected static final MetaDataField<ItemStack>
-	META_FIREBALL_ITEM = new MetaDataField<>(CoreAbstractFireball.LAST_META_INDEX+1, null, MetaDataType.SLOT);
+	META_FIREBALL_ITEM = new MetaDataField<>(CoreAbstractAcceleratingProjectile.LAST_META_INDEX+1, null, MetaDataType.SLOT);
 	
-	protected static final int LAST_META_INDEX = CoreAbstractFireball.LAST_META_INDEX+1;
+	protected static final int LAST_META_INDEX = CoreAbstractAcceleratingProjectile.LAST_META_INDEX+1;
 	
-	public CoreSizedFireball(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreSizedFireball(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -31,12 +29,12 @@ public abstract class CoreSizedFireball extends CoreAbstractFireball implements 
 	}
 
 	@Override
-	public ItemStack getDisplayItem() {
+	public ItemStack getItem() {
 		return metaContainer.getData(META_FIREBALL_ITEM);
 	}
 
 	@Override
-	public void setDisplayItem(ItemStack item) {
+	public void setItem(ItemStack item) {
 		metaContainer.get(META_FIREBALL_ITEM).setData(item);
 	}
 

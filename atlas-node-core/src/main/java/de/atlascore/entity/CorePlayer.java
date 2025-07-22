@@ -13,7 +13,6 @@ import de.atlascore.inventory.CorePlayerItemCooldownHandler;
 import de.atlasmc.Gamemode;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NodePlayer;
-import de.atlasmc.Particle;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
@@ -57,6 +56,7 @@ import de.atlasmc.sound.Sound;
 import de.atlasmc.util.CooldownHandler;
 import de.atlasmc.util.MathUtil;
 import de.atlasmc.world.WorldEvent;
+import de.atlasmc.world.particle.ParticleType;
 
 public class CorePlayer extends CoreHumanEntity implements Player {
 	
@@ -372,7 +372,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	}
 
 	@Override
-	public void spawnParticle(Particle particle, double x, double y, double z, float offX, float offY, float offZ, float maxSpeed, int count, Object data) {
+	public void spawnParticle(ParticleType particle, double x, double y, double z, float offX, float offY, float offZ, float maxSpeed, int count, Object data) {
 		if (!particle.isValid(data)) throw new IllegalArgumentException("Data is not valid!");
 		PacketOutParticle packet = new PacketOutParticle();
 		packet.particle = particle;
@@ -389,17 +389,17 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	}
 
 	@Override
-	public void spawnParticle(Particle particle, double x, double y, double z, float particledata) {
+	public void spawnParticle(ParticleType particle, double x, double y, double z, float particledata) {
 		spawnParticle(particle, x, y, z, particledata, 1);
 	}
 
 	@Override
-	public void spawnParticle(Particle particle, double x, double y, double z, float particledata, int count) {
+	public void spawnParticle(ParticleType particle, double x, double y, double z, float particledata, int count) {
 		spawnParticle(particle, x, y, z, particledata, count, null);
 	}
 
 	@Override
-	public void spawnParticle(Particle particle, double x, double y, double z, float particledata, int count, Object data) {
+	public void spawnParticle(ParticleType particle, double x, double y, double z, float particledata, int count, Object data) {
 		spawnParticle(particle, x, y, z, 0, 0, 0, particledata, count, data);
 	}
 

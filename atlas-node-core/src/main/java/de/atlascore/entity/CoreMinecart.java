@@ -8,7 +8,7 @@ import de.atlasmc.entity.Minecart;
 public class CoreMinecart extends CoreAbstractMinecart implements Minecart {
 
 	public CoreMinecart(EntityType type, UUID uuid) {
-		super(type, uuid);
+		super(type);
 	}
 
 }

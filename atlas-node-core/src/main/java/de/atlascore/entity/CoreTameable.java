@@ -1,6 +1,5 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.entity.EntityType;
@@ -8,11 +7,12 @@ import de.atlasmc.entity.Tameable;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTameable extends CoreAgeableMob implements Tameable {
+	
+	protected static final int
+	FLAG_IS_SITTING = 0x01,
+	FLAG_IS_TAMED = 0x04;
 	
 	/**
 	 * 0x01 - Is sitting<br>
@@ -25,29 +25,8 @@ public class CoreTameable extends CoreAgeableMob implements Tameable {
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+2;
 	
-	protected static final NBTFieldSet<CoreTameable> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_OWNER = CharKey.literal("Owner"),
-	NBT_SITTING = CharKey.literal("Sitting");
-	
-	static {
-		NBT_FIELDS = CoreAgeableMob.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_OWNER, (holder, reader) -> {
-			holder.setOwner(reader.readUUID());
-		});
-		NBT_FIELDS.setField(NBT_SITTING, (holder, reader) -> {
-			holder.setSitting(reader.readByteTag() == 1);
-		});
-	}
-	
-	public CoreTameable(EntityType type, UUID uuid) {
-		super(type, uuid);
-	}
-	
-	@Override
-	protected NBTFieldSet<? extends CoreTameable> getFieldSetRoot() {
-		return NBT_FIELDS;
+	public CoreTameable(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -64,24 +43,24 @@ public class CoreTameable extends CoreAgeableMob implements Tameable {
 
 	@Override
 	public boolean isSitting() {
-		return (metaContainer.getData(META_TAMEABLE_FLAGS) & 0x01) == 0x01;
+		return (metaContainer.getData(META_TAMEABLE_FLAGS) & FLAG_IS_SITTING) == FLAG_IS_SITTING;
 	}
 
 	@Override
 	public void setSitting(boolean sitting) {
 		MetaData<Byte> data = metaContainer.get(META_TAMEABLE_FLAGS);
-		data.setData((byte) (sitting ? data.getData() | 0x01 : data.getData() & 0xFE));
+		data.setData((byte) (sitting ? data.getData() | FLAG_IS_SITTING : data.getData() & ~FLAG_IS_SITTING));
 	}
 
 	@Override
 	public boolean isTamed() {
-		return (metaContainer.getData(META_TAMEABLE_FLAGS) & 0x04) == 0x04;
+		return (metaContainer.getData(META_TAMEABLE_FLAGS) & FLAG_IS_TAMED) == FLAG_IS_TAMED;
 	}
 
 	@Override
 	public void setTamed(boolean tamed) {
 		MetaData<Byte> data = metaContainer.get(META_TAMEABLE_FLAGS);
-		data.setData((byte) (tamed ? data.getData() | 0x04 : data.getData() & 0xFB));
+		data.setData((byte) (tamed ? data.getData() | FLAG_IS_TAMED : data.getData() & ~FLAG_IS_TAMED));
 	}
 
 	@Override
@@ -92,15 +71,6 @@ public class CoreTameable extends CoreAgeableMob implements Tameable {
 	@Override
 	public void setOwner(UUID owner) {
 		metaContainer.get(META_OWNER).setData(owner);
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (getOwner() != null)
-			writer.writeUUID(NBT_OWNER, getOwner());
-		if (isSitting())
-			writer.writeByteTag(NBT_SITTING, true);
 	}
 
 }

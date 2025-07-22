@@ -5,13 +5,13 @@ import static de.atlasmc.io.protocol.ProtocolUtil.writeVarInt;
 
 import java.io.IOException;
 
-import de.atlasmc.Particle;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.protocol.ProtocolUtil;
 import de.atlasmc.io.protocol.play.PacketOutExplosion;
+import de.atlasmc.world.particle.ParticleType;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutExplosion implements PacketIO<PacketOutExplosion> {
@@ -30,9 +30,9 @@ public class CorePacketOutExplosion implements PacketIO<PacketOutExplosion> {
 		packet.motionY = in.readFloat();
 		packet.motionZ = in.readFloat();
 		packet.blockInteraction = readVarInt(in);
-		packet.smallExplosionParticle = Particle.getByID(readVarInt(in));
+		packet.smallExplosionParticle = ParticleType.getByID(readVarInt(in));
 		packet.smallExplosionParticleData = MetaDataType.PARTICLE.read(packet.smallExplosionParticle, in);
-		packet.largeExplosionParticle = Particle.getByID(readVarInt(in));
+		packet.largeExplosionParticle = ParticleType.getByID(readVarInt(in));
 		packet.largeExplosionParticleData = MetaDataType.PARTICLE.read(packet.smallExplosionParticle, in);
 		packet.explosionSound = ProtocolUtil.readSound(in);
 	}

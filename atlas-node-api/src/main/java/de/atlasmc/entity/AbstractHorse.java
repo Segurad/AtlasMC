@@ -4,8 +4,24 @@ import java.util.UUID;
 
 import de.atlasmc.inventory.AbstractHorseInventory;
 import de.atlasmc.inventory.InventoryHolder;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface AbstractHorse extends Animal, InventoryHolder {
+	
+	public static final NBTSerializationHandler<AbstractHorse>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(AbstractHorse.class)
+					.include(Animal.NBT_HANDLER)
+					.boolField("Bred", AbstractHorse::canBred, AbstractHorse::setCanBred, false)
+					.boolField("EatingHaystack", AbstractHorse::isEating, AbstractHorse::setEating, false)
+					.uuid("Owner", AbstractHorse::getOwner, AbstractHorse::setOwner)
+					.boolField("Tame", AbstractHorse::isTamed, AbstractHorse::setTamed, false)
+					.intField("Temper", AbstractHorse::getTemper, AbstractHorse::setTemper, 0)
+					.build();
+	
+	int getTemper();
+	
+	void setTemper(int temper);
 	
 	boolean isTamed();
 	
@@ -40,5 +56,10 @@ public interface AbstractHorse extends Animal, InventoryHolder {
 	 * @return inventory
 	 */
 	AbstractHorseInventory getInventory();
+	
+	@Override
+	default NBTSerializationHandler<? extends AbstractHorse> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 }

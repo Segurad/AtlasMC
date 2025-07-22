@@ -23,7 +23,8 @@ public class EntityTrackerTest {
 		assertTrue(tracker.getEntities().isEmpty(), "Tracker was not emtpy!");
 		
 		UUID uuid = UUID.randomUUID();
-		Entity entity = new CoreEntity(null, uuid);
+		Entity entity = new CoreEntity(null);
+		entity.setUUID(uuid);
 		TrackerBinding binding = tracker.register(entity, null);
 		assertNotNull(binding, "Binding was null!");
 		assertEquals(1, tracker.getEntities().size(), "Entity was not registered!");
@@ -41,8 +42,7 @@ public class EntityTrackerTest {
 		EntityTracker tracker = new CoreEntityTracker();
 		assertTrue(tracker.getEntities().isEmpty(), "Tracker was not emtpy!");
 		
-		UUID uuid = UUID.randomUUID();
-		Entity entity = new CoreEntity(null, uuid);
+		Entity entity = new CoreEntity(null);
 		TrackerBinding binding = tracker.register(entity, null);
 		assertNotNull(binding, "Binding was null!");
 		assertEquals(1, tracker.getEntities().size(), "Entity was not registered!");

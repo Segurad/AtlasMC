@@ -5,7 +5,6 @@ import java.util.UUID;
 import de.atlasmc.Gamemode;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NodePlayer;
-import de.atlasmc.Particle;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.SoundCategory;
 import de.atlasmc.atlasnetwork.AtlasPlayer;
@@ -24,6 +23,7 @@ import de.atlasmc.scoreboard.ScoreboardView;
 import de.atlasmc.sound.SoundListener;
 import de.atlasmc.util.annotation.UnsafeAPI;
 import de.atlasmc.world.WorldEvent;
+import de.atlasmc.world.particle.ParticleType;
 
 public interface Player extends HumanEntity, Permissible, Messageable, SoundListener {
 	
@@ -131,13 +131,13 @@ public interface Player extends HumanEntity, Permissible, Messageable, SoundList
 	
 	// --- Particle ---
 	
-	void spawnParticle(Particle particle, double x, double y, double z, float maxSpeed);
+	void spawnParticle(ParticleType particle, double x, double y, double z, float maxSpeed);
 	
-	void spawnParticle(Particle particle, double x, double y, double z, float maxSpeed, int count);
+	void spawnParticle(ParticleType particle, double x, double y, double z, float maxSpeed, int count);
 	
-	void spawnParticle(Particle particle, double x, double y, double z, float maxSpeed, int count, Object data);
+	void spawnParticle(ParticleType particle, double x, double y, double z, float maxSpeed, int count, Object data);
 	
-	void spawnParticle(Particle particle, double x, double y, double z, float offX, float offY, float offZ, float maxSpeed, int count, Object data);
+	void spawnParticle(ParticleType particle, double x, double y, double z, float offX, float offY, float offZ, float maxSpeed, int count, Object data);
 	
 	// --- Inventory Stuff ---
 	

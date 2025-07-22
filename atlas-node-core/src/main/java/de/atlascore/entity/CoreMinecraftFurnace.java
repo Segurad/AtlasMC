@@ -1,12 +1,9 @@
 package de.atlascore.entity;
 
-import java.util.UUID;
-
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.MinecartFurnace;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.util.map.key.CharKey;
 
 public class CoreMinecraftFurnace extends CoreAbstractMinecart implements MinecartFurnace {
 
@@ -15,23 +12,12 @@ public class CoreMinecraftFurnace extends CoreAbstractMinecart implements Mineca
 	
 	protected static final int LAST_META_INDEX = CoreAbstractMinecart.LAST_META_INDEX+1;
 	
-	protected static final CharKey
-	NBT_FUEL = CharKey.literal("fuel");
-//	NBT_PUSH_X = "PushX", TODO ignored
-//	NBT_PUSH_Z = "PushZ";
-	
-	static {
-		NBT_FIELDS.setField(NBT_FUEL, (holder, reader) -> {
-			if (holder instanceof MinecartFurnace) {
-				((MinecartFurnace) holder).setFuelLevel(reader.readShortTag());
-			} else reader.skipTag();
-		});
-	}
-	
 	private int fuelLevel = -1;
+	private double pushX;
+	private double pushZ;
 	
-	public CoreMinecraftFurnace(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreMinecraftFurnace(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -63,6 +49,26 @@ public class CoreMinecraftFurnace extends CoreAbstractMinecart implements Mineca
 	@Override
 	public int getFuelLevel() {
 		return fuelLevel;
+	}
+	
+	@Override
+	public double getPushX() {
+		return pushX;
+	}
+	
+	@Override
+	public void setPushX(double x) {
+		this.pushX = x;
+	}
+	
+	@Override
+	public double getPushZ() {
+		return pushZ;
+	}
+	
+	@Override
+	public void setPushZ(double z) {
+		this.pushZ = z;
 	}
 
 }

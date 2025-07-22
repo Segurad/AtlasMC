@@ -40,8 +40,8 @@ public interface ChatComponent extends Chat, Cloneable, NBTSerializable {
 					.string("font", ChatComponent::getFont, ChatComponent::setFont)
 					.typeList("extra", ChatComponent::hasExtra, ChatComponent::getExtra, ChatComponent.NBT_HANDLER)
 					.string("insertion", ChatComponent::getInsertion, ChatComponent::setInsertion)
-					.typeComponentField("click_event", ChatComponent::getClickEvent, ChatComponent::setClickEvent, ClickEvent.NBT_HANDLER)
-					.typeComponentField("hover_event", ChatComponent::getHoverEvent, ChatComponent::setHoverEvent, HoverEvent.NBT_HANDLER)
+					.typeCompoundField("click_event", ChatComponent::getClickEvent, ChatComponent::setClickEvent, ClickEvent.NBT_HANDLER)
+					.typeCompoundField("hover_event", ChatComponent::getHoverEvent, ChatComponent::setHoverEvent, HoverEvent.NBT_HANDLER)
 					.build();
 	
 	@Nullable

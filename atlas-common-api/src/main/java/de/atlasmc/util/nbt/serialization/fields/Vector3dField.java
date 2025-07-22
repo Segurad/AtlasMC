@@ -41,7 +41,7 @@ public class Vector3dField<T> extends AbstractObjectField<T, Vector3d> {
 		if (listType != TagType.DOUBLE)
 			throw new NBTException("Expected list of type DOUBLE but was: " + listType);
 		reader.readNextEntry();
-		Vector3d vec = new Vector3d();
+		Vector3d vec = get.apply(value);
 		vec.x = reader.readDoubleTag();
 		vec.y = reader.readDoubleTag();
 		vec.z = reader.readDoubleTag();

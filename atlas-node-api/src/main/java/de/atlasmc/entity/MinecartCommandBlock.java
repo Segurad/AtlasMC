@@ -2,28 +2,44 @@ package de.atlasmc.entity;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.command.CommandSender;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public interface MinecartCommandBlock extends CommandSender {
+public interface MinecartCommandBlock extends AbstractMinecart, CommandSender {
 	
-	public String getCommand();
+	public static final NBTSerializationHandler<MinecartCommandBlock>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(MinecartCommandBlock.class)
+					.include(AbstractMinecart.NBT_HANDLER)
+					.string("Command", MinecartCommandBlock::getCommand, MinecartCommandBlock::setCommand)
+					.chat("LastOutput", MinecartCommandBlock::getLastMessage, MinecartCommandBlock::setLastMessage)
+					.intField("SucessCount", MinecartCommandBlock::getRedstoneSignal, MinecartCommandBlock::setRedstoneSignal)
+					.boolField("TrackOutput", MinecartCommandBlock::isTrackingOutput, MinecartCommandBlock::setTrackOutput, false)
+					.build();
 	
-	public Chat getLastMessage();
+	String getCommand();
+	
+	Chat getLastMessage();
 
-	public void setCommand(String command);
+	void setCommand(String command);
 	
 	/**
 	 * While {@link #sendMessage(Chat)} does only set the last message if {@link #isTrackingOutput()} is true,
 	 * this method will always set the last output
 	 * @param message
 	 */
-	public void setLastMessage(Chat message);
+	void setLastMessage(Chat message);
 
-	public void setRedstoneSignal(int signal);
+	void setRedstoneSignal(int signal);
 	
-	public int getRedstoneSignal();
+	int getRedstoneSignal();
 
-	public void setTrackOutput(boolean track);
+	void setTrackOutput(boolean track);
 	
-	public boolean isTrackingOutput();
+	boolean isTrackingOutput();
+	
+	@Override
+	default NBTSerializationHandler<? extends MinecartCommandBlock> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 }

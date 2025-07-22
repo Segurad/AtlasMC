@@ -3,17 +3,16 @@ package de.atlasmc.world.particle;
 import java.lang.reflect.InvocationTargetException;
 
 import de.atlasmc.Location;
-import de.atlasmc.Particle;
 import de.atlasmc.entity.Player;
 import de.atlasmc.util.EulerAngle;
 
 public class ParticleObject implements Animation, Cloneable {
 
-	private final Particle particle;
+	private final ParticleType particle;
 	private final int amount;
 	private Object data;
 	
-	public ParticleObject(Particle particle, int amount, Object data) {
+	public ParticleObject(ParticleType particle, int amount, Object data) {
 		if (particle == null) 
 			throw new IllegalArgumentException("Particle can not be null!");
 		this.amount = amount;
@@ -23,15 +22,15 @@ public class ParticleObject implements Animation, Cloneable {
 		this.data = data;
 	}
 	
-	public ParticleObject(Particle effect) {
+	public ParticleObject(ParticleType effect) {
 		this(effect, 1, null);
 	}
 	
-	public ParticleObject(Particle effect, int amount) {
+	public ParticleObject(ParticleType effect, int amount) {
 		this(effect, amount, null);
 	}
 	
-	public ParticleObject(Particle effect, Object data) {
+	public ParticleObject(ParticleType effect, Object data) {
 		this(effect, 1, data);
 	}
 
@@ -45,7 +44,7 @@ public class ParticleObject implements Animation, Cloneable {
 		loc.getWorld().spawnParticle(particle, loc, amount);
 	}
 
-	public Particle getParticle() {
+	public ParticleType getParticle() {
 		return particle;
 	}
 	

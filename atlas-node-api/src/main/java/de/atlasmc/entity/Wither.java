@@ -1,21 +1,35 @@
 package de.atlasmc.entity;
 
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+
 public interface Wither extends Monster {
 	
-	public Entity getCenterHeadTarget();
+	public static final NBTSerializationHandler<Wither>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Wither.class)
+					.include(Monster.NBT_HANDLER)
+					.intField("Invul", Wither::getInvulnerableTime, Wither::setInvulnerableTime, 0)
+					.build();
 	
-	public Entity getLeftHeadTarget();
+	Entity getCenterHeadTarget();
 	
-	public Entity getRightHeadTarget();
+	Entity getLeftHeadTarget();
 	
-	public int getInvulnerableTime();
+	Entity getRightHeadTarget();
 	
-	public void setInvulnerable(int time);
+	int getInvulnerableTime();
 	
-	public void setCenterHeadTarget(Entity entity);
+	void setInvulnerableTime(int time);
 	
-	public void setLeftHeadTarget(Entity entity);
+	void setCenterHeadTarget(Entity entity);
 	
-	public void setRightHeadTarget(Entity entity);
+	void setLeftHeadTarget(Entity entity);
+	
+	void setRightHeadTarget(Entity entity);
 
+	@Override
+	default NBTSerializationHandler<? extends Wither> getNBTHandler() {
+		return NBT_HANDLER;
+	}
+	
 }

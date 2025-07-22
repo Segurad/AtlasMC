@@ -1,7 +1,5 @@
 package de.atlascore.entity;
 
-import java.util.UUID;
-
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.ThrowableProjectile;
 import de.atlasmc.entity.data.MetaDataField;
@@ -15,8 +13,8 @@ public abstract class CoreThrowableProjectile extends CoreAbstractProjectile imp
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+1;
 	
-	public CoreThrowableProjectile(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreThrowableProjectile(EntityType type) {
+		super(type);
 	}
 	
 	@Override

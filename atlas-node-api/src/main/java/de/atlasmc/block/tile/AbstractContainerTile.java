@@ -15,7 +15,7 @@ public interface AbstractContainerTile<I extends Inventory> extends TileEntity, 
 					.include(TileEntity.NBT_HANDLER)
 					.include(Nameable.NBT_HANDLER)
 					.include(InventoryHolder.NBT_HANDLER)
-					.typeComponentField("lock", AbstractContainerTile::getLock, AbstractContainerTile::setLock, ItemPredicate.NBT_HANDLER)
+					.typeCompoundField("lock", AbstractContainerTile::getLock, AbstractContainerTile::setLock, ItemPredicate.NBT_HANDLER)
 					.build();
 	
 	/**

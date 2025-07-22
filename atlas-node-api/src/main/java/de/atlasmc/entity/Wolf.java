@@ -2,6 +2,7 @@ package de.atlasmc.entity;
 
 import de.atlasmc.DyeColor;
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.entity.data.AngerableMob;
 import de.atlasmc.registry.ProtocolRegistry;
 import de.atlasmc.registry.ProtocolRegistryValueBase;
 import de.atlasmc.registry.Registries;
@@ -11,7 +12,17 @@ import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public interface Wolf extends Tameable {
+public interface Wolf extends Tameable, AngerableMob {
+	
+	public static final NBTSerializationHandler<Wolf>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Wolf.class)
+					.include(Tameable.NBT_HANDLER)
+					.include(AngerableMob.NBT_HANDLER)
+					.enumByteField("CollarColor", Wolf::getCollarColor, Wolf::setCollarColor, DyeColor::getByID, DyeColor::getID, DyeColor.RED)
+					.registryValue("variant", Wolf::getVariant, Wolf::setVariant, WolfVariant.getRegistry())
+					// sound_variant
+					.build();
 	
 	boolean isBegging();
 	
@@ -21,21 +32,14 @@ public interface Wolf extends Tameable {
 	
 	void setCollarColor(DyeColor color);
 	
-	/**
-	 * Returns the time in ticks until the angry state of this Wolf will be reset or -1 if no time
-	 * @return ticks or -1
-	 */
-	int getAngerTime();
-	
-	void setAngerTime(int ticks);
-	
-	void setAngry(boolean angry);
-	
-	boolean isAngry();
-	
 	WolfVariant getVariant();
 	
 	void setVariant(WolfVariant variant);
+	
+	@Override
+	default NBTSerializationHandler<? extends Wolf> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 	@RegistryHolder(key = "minecraft:wolf_variant", target = Target.PROTOCOL)
 	public static class WolfVariant extends ProtocolRegistryValueBase implements NBTSerializable {

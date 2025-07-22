@@ -9,20 +9,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import org.joml.Vector3d;
+import org.joml.Vector3i;
 
 import de.atlasmc.Color;
 import de.atlasmc.Location;
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.SimpleLocation;
 import de.atlasmc.attribute.Attribute;
 import de.atlasmc.attribute.AttributeInstance;
 import de.atlasmc.attribute.AttributeModifier;
-import de.atlasmc.attribute.AttributeModifier.Operation;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.LivingEntity;
@@ -35,7 +33,6 @@ import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.entity.ProjectileLounchEvent;
 import de.atlasmc.inventory.EntityEquipment;
 import de.atlasmc.inventory.EquipmentSlot;
-import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutEntityEffect;
 import de.atlasmc.io.protocol.play.PacketOutRemoveEntityEffect;
@@ -46,10 +43,6 @@ import de.atlasmc.potion.PotionEffectType;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.map.ArrayListMultimap;
 import de.atlasmc.util.map.Multimap;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.world.World;
 
@@ -88,240 +81,8 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+7;
 	
-	protected static final NBTFieldSet<CoreLivingEntity> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_ABSORPTION_AMOUNT = CharKey.literal("AbsorptionAmount"),
-	NBT_ACTIVE_EFFECTS = CharKey.literal("ActiveEffects"),
-	NBT_AMBIENT = CharKey.literal("Ambient"),
-	NBT_AMPLIFIER = CharKey.literal("Amplifier"),
-	NBT_DURATION = CharKey.literal("Duration"),
-	NBT_SHOW_PARTICLES = CharKey.literal("ShowParticles"),
-	NBT_SHOW_ICON = CharKey.literal("ShowIcon"),
-	NBT_ATTRIBUTES = CharKey.literal("Attributes"),
-	NBT_NAME = CharKey.literal("Name"),
-	NBT_BASE = CharKey.literal("Base"),
-	NBT_MODIFIERS = CharKey.literal("Modifiers"),
-	NBT_AMOUNT = CharKey.literal("amount"),
-	NBT_OPERATION = CharKey.literal("operation"),
-	NBT_BRAIN = CharKey.literal("Brain"),
-	NBT_DEATH_TIME = CharKey.literal("DeathTime"),
-	NBT_FALL_FLYING = CharKey.literal("FallFlying"),
-	NBT_HEALTH = CharKey.literal("Health"),
-	NBT_HURT_BY_TIMESTAMP = CharKey.literal("HurtByTimeStamp"),
-	NBT_HURT_TIME = CharKey.literal("HurtTime"),
-	NBT_ARMOR_DROP_CHANCE = CharKey.literal("ArmorDropChance"),
-	NBT_ARMOR_ITEMS = CharKey.literal("ArmorItems"),
-	NBT_ATTACK_TIME = CharKey.literal("AttackTime"),
-	NBT_DEATH_LOOT_TABLE = CharKey.literal("DeathLootTable"),
-	NBT_DEATH_LOOT_TABLE_SEED = CharKey.literal("DeathLootTableSeed"),
-	NBT_HAND_DROP_CHANCE = CharKey.literal("HandDropChance"),
-	NBT_HAND_ITEMS = CharKey.literal("HandItems"),
-	NBT_LEASH = CharKey.literal("Leash"),
-	NBT_LEASHED = CharKey.literal("Leashed"),
-	NBT_PERSISTENCE_REQUIRED = CharKey.literal("PeristenceRequired");
-	
-	static {
-		NBT_FIELDS = CoreEntity.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_ABSORPTION_AMOUNT, (holder, reader) -> {
-			holder.setAbsorption(reader.readFloatTag());
-		});
-		NBT_FIELDS.setField(NBT_ACTIVE_EFFECTS, (holder, reader) -> {
-			reader.readNextEntry();
-			while (reader.getRestPayload() > 0) {
-				PotionEffect effect = PotionEffect.getFromNBT(reader);
-				if (effect == null)
-					continue;
-				holder.internalAddPotionEffect(effect);
-			}
-			reader.readNextEntry();
-		});
-		NBT_FIELDS.setField(NBT_ATTRIBUTES, (holder, reader) -> {
-			reader.readNextEntry();
-			while (reader.getRestPayload() > 0) { // read list of Attribute
-				Attribute attribute = null;
-				double base = 0;
-				List<AttributeModifier> modifiers = null;
-				while (reader.getType() != TagType.TAG_END) { // read Attribute compound
-					final CharSequence attributeKey = reader.getFieldName();
-					if (NBT_NAME.equals(attributeKey))
-						attribute = Attribute.getByName(reader.readStringTag());
-					else if (NBT_BASE.equals(attributeKey))
-						base = reader.readDoubleTag();
-					else if (NBT_MODIFIERS.equals(attributeKey)) {
-						reader.readNextEntry();
-						while (reader.getRestPayload() > 0) { // read list of AttributeModifier
-							double amount = 0;
-							Operation operation = null;
-							NamespacedKey id = null;
-							while (reader.getType() != TagType.TAG_END) { // read AttributeModifier compound
-								final CharSequence modifierKey = reader.getFieldName();
-								if (NBT_AMOUNT.equals(modifierKey))
-									amount = reader.readDoubleTag();
-								else if (NBT_ID.equals(modifierKey))
-									id = reader.readNamespacedKey();
-								else if (NBT_OPERATION.equals(modifierKey))
-									operation = Operation.getByName(reader.readStringTag());
-								else
-									reader.skipTag();
-							}
-							reader.readNextEntry(); // assemble Modifier
-							if (modifiers == null)
-								modifiers = new ArrayList<>();
-							modifiers.add(new AttributeModifier(id, amount, operation, null));
-						}
-					}
-				}
-				reader.readNextEntry(); // assemble Attribute
-				if (attribute == null)
-					continue;
-				AttributeInstance instance = holder.getAttribute(attribute);
-				instance.setBaseValue(base);
-				instance.setModifiers(modifiers);
-			}
-		});
-		NBT_FIELDS.setSet(NBT_BRAIN).setUnknownFieldHandler(NBTField.skip()); // TODO skipped unknown brain contents till further use
-		NBT_FIELDS.setField(NBT_DEATH_TIME, (holder, reader) -> {
-			holder.setDeathAnimationTime(reader.readShortTag());
-		});
-		NBT_FIELDS.setField(NBT_FALL_FLYING, (holder, reader) -> {
-			holder.setFallFlying(reader.readByteTag() == 1);
-		});
-		NBT_FIELDS.setField(NBT_HEALTH, (holder, reader) -> {
-			holder.setHealth(reader.readFloatTag());
-		});
-		NBT_FIELDS.setField(NBT_HURT_BY_TIMESTAMP, NBTField.skip()); // TODO useless
-		NBT_FIELDS.setField(NBT_HURT_TIME, (holder, reader) -> {
-			holder.setHurtAnimationTime(reader.readShortTag());
-		});
-		NBT_FIELDS.setField(NBT_ARMOR_DROP_CHANCE, (holder, reader) -> {
-			EntityEquipment equip = holder.getEquipment();
-			if (equip == null) {
-				reader.skipTag();
-				return;
-			}
-			int index = 0;
-			reader.readNextEntry();
-			while (reader.getRestPayload() > 0) {
-				if (index > 3) {
-					reader.skipTag();
-					continue;
-				}
-				switch (index) {
-				case 0:
-					equip.setBootsDropChance(reader.readFloatTag());
-					break;
-				case 1:
-					equip.setLeggingsDropChance(reader.readFloatTag());
-					break;
-				case 2:
-					equip.setChestplateDropChance(reader.readFloatTag());
-					break;
-				case 3:
-					equip.setHelmetDropChance(reader.readFloatTag());
-					break;
-				}
-				index++;
-			}
-		});
-		NBT_FIELDS.setField(NBT_ARMOR_ITEMS, (holder, reader) -> {
-			EntityEquipment equip = holder.getEquipment();
-			if (equip == null) {
-				reader.skipTag();
-				return;
-			}
-			int index = 0;
-			reader.readNextEntry();
-			while (reader.getRestPayload() > 0) {
-				if (index > 3) {
-					reader.skipTag();
-					continue;
-				}
-				reader.readNextEntry();
-				ItemStack item = ItemStack.getFromNBT(reader);
-				item.fromNBT(reader);
-				switch (index) {
-				case 0:
-					equip.setBoots(item);
-					break;
-				case 1:
-					equip.setLeggings(item);
-					break;
-				case 2:
-					equip.setChestplate(item);
-					break;
-				case 3:
-					equip.setHelmet(item);
-					break;
-				}
-				index++;
-			}
-			reader.readNextEntry();
-		});
-		NBT_FIELDS.setField(NBT_ATTACK_TIME, (holder, reader) -> {
-			holder.setAttackTime(reader.readShortTag());
-		});
-		NBT_FIELDS.setField(NBT_DEATH_LOOT_TABLE, NBTField.skip()); // TODO skipped until loot table implementation
-		NBT_FIELDS.setField(NBT_DEATH_LOOT_TABLE_SEED, NBTField.skip()); // TODO skipped until loot table implementation
-		NBT_FIELDS.setField(NBT_HAND_DROP_CHANCE, (holder, reader) -> {
-			EntityEquipment equip = holder.getEquipment();
-			if (equip == null) {
-				reader.skipTag();
-				return;
-			}
-			int index = 0;
-			reader.readNextEntry();
-			while (reader.getRestPayload() > 0) {
-				if (index > 1) {
-					reader.skipTag();
-					continue;
-				}
-				switch (index) {
-				case 0:
-					equip.setMainHandDropChance(reader.readFloatTag());
-					break;
-				case 1:
-					equip.setOffHandChance(reader.readFloatTag());
-					break;
-				}
-				index++;
-			}
-		});
-		NBT_FIELDS.setField(NBT_HAND_ITEMS, (holder, reader) -> {
-			EntityEquipment equip = holder.getEquipment();
-			if (equip == null) {
-				reader.skipTag();
-				return;
-			}
-			int index = 0;
-			reader.readNextEntry();
-			while (reader.getRestPayload() > 0) {
-				if (index > 1) {
-					reader.skipTag();
-					continue;
-				}
-				reader.readNextEntry();
-				ItemStack item = ItemStack.getFromNBT(reader);
-				switch (index) {
-				case 0:
-					equip.setMainHand(item);
-					break;
-				case 1:
-					equip.setOffHand(item);
-					break;
-				}
-				index++;
-			}
-		});
-		NBT_FIELDS.setField(NBT_LEASH, NBTField.skip()); // TODO skipped for reasons i dont know
-		NBT_FIELDS.setField(NBT_LEASHED, NBTField.skip()); // TODO see NBT_LEASH
-		NBT_FIELDS.setField(NBT_PERSISTENCE_REQUIRED, (holder, reader) -> {
-			holder.setRemoveWhenFarAway(reader.readByteTag() == 0);
-		});
-	}
-	
 	private boolean healthChanged;
-	private double health;
+	private float health;
 	private float absorption;
 	private Map<Attribute, AttributeInstance> attributes;
 	private Consumer<AttributeInstance> attributeUpdateListener;
@@ -332,17 +93,21 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	private short attackTime;
 	private boolean fallFlying;
 	private boolean removeWhenFaraway;
+	private String team;
+	private Vector3i sleepingPos;
+	private Vector3i homePos;
+	private int homeRadius;
+	private boolean noAI;
+	private int lastHurtTime;
+	private boolean canPickupLoot;
+	private boolean persistent;
+	private boolean isLefHanded;
 	
 	private boolean updateAttributes;
 	private Set<AttributeInstance> changedAttributes;
 	
-	public CoreLivingEntity(EntityType type, UUID uuid) {
-		super(type, uuid);
-	}
-
-	@Override
-	protected NBTFieldSet<? extends CoreLivingEntity> getFieldSetRoot() {
-		return NBT_FIELDS;
+	public CoreLivingEntity(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -383,12 +148,12 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	}
 
 	@Override
-	public double getHealth() {
+	public float getHealth() {
 		return health;
 	}
 
 	@Override
-	public void setHealth(double health) {
+	public void setHealth(float health) {
 		this.health = health;
 		this.healthChanged = true;
 	}
@@ -654,92 +419,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	public void setHurtAnimationTime(int time) {
 		this.hurtTime = (short) time;
 	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		writer.writeFloatTag(NBT_ABSORPTION_AMOUNT, getAbsorption());
-		if (hasPotionEffects()) {
-			int effectCount = activeEffects.size() + (effects != null ? effects.size() : 0);
-			writer.writeListTag(NBT_ACTIVE_EFFECTS, TagType.COMPOUND, effectCount);
-			for (PotionEffect effect : activeEffects.values()) {
-				PotionEffect.toNBT(effect, writer, systemData);
-				writer.writeEndTag();
-			}
-			if (effects != null)
-				for (PotionEffect effect : effects) {
-					PotionEffect.toNBT(effect, writer, systemData);
-					writer.writeEndTag();
-				}
-		}
-		if (hasAttributes()) {
-			writer.writeListTag(NBT_ATTRIBUTES, TagType.COMPOUND, attributes.size());
-			for (AttributeInstance instance : attributes.values()) {
-				writer.writeStringTag(NBT_NAME, instance.getAttribute().getName());
-				writer.writeDoubleTag(NBT_BASE, instance.getBaseValue());
-				if (!instance.hasModifiers()) {
-					writer.writeEndTag();
-					continue;
-				}
-				writer.writeListTag(NBT_MODIFIERS, TagType.COMPOUND, instance.getModifierCount());
-				for (AttributeModifier modifier : instance.getModifiers()) {
-					writer.writeDoubleTag(NBT_AMOUNT, modifier.getAmount());
-					writer.writeNamespacedKey(NBT_ID, modifier.getID());
-					writer.writeStringTag(NBT_OPERATION, modifier.getOperation().getName());
-					writer.writeEndTag();
-				}
-				writer.writeEndTag();
-			}
-		}
-		if (hasBrain()) {
-			writer.writeCompoundTag(NBT_BRAIN);
-			writeBrain(writer, systemData);
-			writer.writeEndTag();
-		}
-		writer.writeShortTag(NBT_DEATH_TIME, getDeathAnimationTime());
-		if (isFallFlying())
-			writer.writeByteTag(NBT_FALL_FLYING, true);
-		writer.writeFloatTag(NBT_HEALTH, (float) getHealth());
-		// TODO useless writer.writeIntTag(NBT_HURT_BY_TIMESTAMP, 0);
-		writer.writeShortTag(NBT_HURT_TIME, getHurtAnimationTime());
-		if (getEquipment() != null) {
-			EntityEquipment equip = getEquipment();
-			if (equip.hasArmorDropChance()) {
-				writer.writeListTag(NBT_ARMOR_DROP_CHANCE, TagType.FLOAT, 4);
-				writer.writeFloatTag(null, equip.getBootsDropChance());
-				writer.writeFloatTag(null, equip.getLeggingsDropChance());
-				writer.writeFloatTag(null, equip.getChestplateDropChance());
-				writer.writeFloatTag(null, equip.getHelmetDropChance());
-			}
-			if (equip.hasArmor()) {
-				writer.writeListTag(NBT_ARMOR_ITEMS, TagType.COMPOUND, 4);
-				equip.getBoots().toNBT(writer, systemData);
-				writer.writeEndTag();
-				equip.getLeggings().toNBT(writer, systemData);
-				writer.writeEndTag();
-				equip.getChestplate().toNBT(writer, systemData);
-				writer.writeEndTag();
-				equip.getHelmet().toNBT(writer, systemData);
-				writer.writeEndTag();
-			}
-			if (equip.hasHandItemDropChance()) {
-				writer.writeListTag(NBT_HAND_DROP_CHANCE, TagType.FLOAT, 2);
-				writer.writeFloatTag(null, equip.getMainHandDropChance());
-				writer.writeFloatTag(null, equip.getOffHandDropChance());
-			}
-			if (equip.hasHandItem()) {
-				writer.writeListTag(NBT_HAND_ITEMS, TagType.COMPOUND, 2);
-				equip.getMainHand().toNBT(writer, systemData);
-				writer.writeEndTag();
-				equip.getOffHand().toNBT(writer, systemData);
-				writer.writeEndTag();
-			}
-		}
-		if (getAttackTime() > 0)
-			writer.writeShortTag(NBT_ATTACK_TIME, getAttackTime());
-		if (getRemoveWhenFarAway())
-			writer.writeByteTag(NBT_PERSISTENCE_REQUIRED, true);
-	}
+
 
 	@Override
 	public int getHurtAnimationTime() {
@@ -967,7 +647,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	}
 
 	@Override
-	public void damage(double damage) {
+	public void damage(float damage) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -991,7 +671,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	public Projectile launchProjectile(EntityType type, Vector3d velocity) {
 		if (type == null)
 			throw new IllegalArgumentException("Type can not be null!");
-		Projectile pro = (Projectile) type.create(getWorld());
+		Projectile pro = (Projectile) type.createEntity();
 		return launchProjectile(pro, velocity);
 	}
 	
@@ -1017,6 +697,106 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		loc.copyTo(location);
 		location.y += getEyeHeight();
 		return location;
+	}
+
+	@Override
+	public String getTeam() {
+		return team;
+	}
+
+	@Override
+	public void setTeam(String team) {
+		this.team = team;
+	}
+
+	@Override
+	public Vector3i getSleepingPositionUnsafe() {
+		return sleepingPos;
+	}
+
+	@Override
+	public Vector3i getSleepingPosition() {
+		return new Vector3i(sleepingPos);
+	}
+
+	@Override
+	public void setSleeptingPosition(Vector3i pos) {
+		sleepingPos.set(pos);
+	}
+
+	@Override
+	public boolean isPersistent() {
+		return persistent;
+	}
+
+	@Override
+	public void setPersistent(boolean persistent) {
+		this.persistent = persistent;
+	}
+
+	@Override
+	public boolean hasNoAI() {
+		return noAI;
+	}
+
+	@Override
+	public void setNoAi(boolean ai) {
+		this.noAI = ai;
+	}
+
+	@Override
+	public boolean isLeftHanded() {
+		return isLefHanded;
+	}
+
+	@Override
+	public void setLeftHanded(boolean left) {
+		this.isLefHanded = left;
+	}
+
+	@Override
+	public int getLastHurtTime() {
+		return lastHurtTime;
+	}
+
+	@Override
+	public void setLastHurtTime(int time) {
+		this.lastHurtTime = time;
+	}
+
+	@Override
+	public int getHomeRadius() {
+		return homeRadius;
+	}
+
+	@Override
+	public void setHomeRadius(int radius) {
+		this.homeRadius = radius;
+	}
+
+	@Override
+	public Vector3i getHomePositionUnsafe() {
+		return homePos;
+	}
+
+	@Override
+	public Vector3i getHomePosition() {
+		return new Vector3i(homePos);
+	}
+
+	@Override
+	public void setHomePosition(Vector3i pos) {
+		this.homePos.set(pos);
+	}
+
+	@Override
+	public boolean canPickUpLoot() {
+		return canPickupLoot;
+	}
+
+	@Override
+	public void setPickUpLoot(boolean can) {
+		this.canPickupLoot = can;
 	}
 
 }

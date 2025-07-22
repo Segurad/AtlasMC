@@ -1,21 +1,15 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
-import java.util.UUID;
-
 import de.atlasmc.DyeColor;
 import de.atlasmc.entity.Cat;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreCat extends CoreTameable implements Cat {
 	
 	protected static final MetaDataField<Integer>
-	META_CAT_TYPE = new MetaDataField<>(CoreTameable.LAST_META_INDEX+1, 1, MetaDataType.VAR_INT);
+	META_CAT_TYPE = new MetaDataField<>(CoreTameable.LAST_META_INDEX+1, Type.BLACK.getID(), MetaDataType.VAR_INT);
 	protected static final MetaDataField<Boolean>
 	META_IS_LYING = new MetaDataField<>(CoreTameable.LAST_META_INDEX+2, false, MetaDataType.BOOLEAN);
 	protected static final MetaDataField<Boolean>
@@ -25,31 +19,10 @@ public class CoreCat extends CoreTameable implements Cat {
 	
 	protected static final int LAST_META_INDEX = CoreTameable.LAST_META_INDEX+4;
 	
-	protected static final NBTFieldSet<CoreCat> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_VARIANT = CharKey.literal("variant"), 
-	NBT_COLLAR_COLOR = CharKey.literal("CollarColor");
-	
-	static {
-		NBT_FIELDS = CoreTameable.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_VARIANT, (holder, reader) -> {
-			holder.setCatType(Type.getByName(reader.readStringTag()));
-		});
-		NBT_FIELDS.setField(NBT_COLLAR_COLOR, (holder, reader) -> {
-			holder.setCollarColor(DyeColor.getByID(reader.readByteTag()));
-		});
+	public CoreCat(EntityType type) {
+		super(type);
 	}
-	
-	public CoreCat(EntityType type, UUID uuid) {
-		super(type, uuid);
-	}
-	
-	@Override
-	protected NBTFieldSet<? extends CoreCat> getFieldSetRoot() {
-		return NBT_FIELDS;
-	}
-	
+
 	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
@@ -106,13 +79,6 @@ public class CoreCat extends CoreTameable implements Cat {
 		if (color == null)
 			throw new IllegalArgumentException("Color can not be null!");
 		metaContainer.get(META_COLLAR_COLOR).setData(color.getID());		
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		writer.writeByteTag(NBT_VARIANT, getCatType().getID());
-		writer.writeByteTag(NBT_COLLAR_COLOR, getCollarColor().getID());
 	}
 
 }

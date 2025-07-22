@@ -3,12 +3,24 @@ package de.atlasmc.entity;
 import java.util.UUID;
 
 import de.atlasmc.event.entity.EntityGrowEvent;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public interface AgeableMob extends PathfinderMob {
+public interface AgeableMob extends Mob {
 	
-	public boolean isBaby();
+	public static final NBTSerializationHandler<AgeableMob>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(AgeableMob.class)
+					.include(LivingEntity.NBT_HANDLER)
+					.intField("Age", AgeableMob::getAge, AgeableMob::setAge, 0)
+					.boolField("IsBaby", AgeableMob::isBaby, AgeableMob::setBaby, false) // non standard
+					.intField("ForcedAge", AgeableMob::getForcedAge, AgeableMob::setForcedAge, 0)
+					.intField("InLove", AgeableMob::getInLove, AgeableMob::setInLove, 0)
+					.uuid("LoveCause", AgeableMob::getLoveCause, AgeableMob::setLoveCause)
+					.build();
 	
-	public void setBaby(boolean baby);
+	boolean isBaby();
+	
+	void setBaby(boolean baby);
 	
 	/**
 	 * Sets the age value of this Entity.<br>
@@ -20,29 +32,38 @@ public interface AgeableMob extends PathfinderMob {
 	 * </ul>
 	 * @param age
 	 */
-	public void setAge(int age);
+	void setAge(int age);
 	
 	/**
 	 * Returns the age value of this Entity.<br>
 	 * @return age
 	 * @see #setAge(int)
 	 */
-	public int getAge();
+	int getAge();
+	
+	int getForcedAge();
+	
+	void setForcedAge(int age);
 
 	/**
 	 * Sets the time in ticks this entity is in love mode.
 	 * @param time
 	 */
-	public void setInLove(int time);
+	void setInLove(int time);
 
-	public int isInLove();
+	int getInLove();
 
 	/**
 	 * Sets the UUID of the Entity that causes the love state.
 	 * @param uuid
 	 */
-	public void setLoveCause(UUID uuid);
+	void setLoveCause(UUID uuid);
 	
-	public UUID getLoveCause();
+	UUID getLoveCause();
+	
+	@Override
+	default NBTSerializationHandler<? extends AgeableMob> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 }

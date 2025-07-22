@@ -1,6 +1,7 @@
 package de.atlasmc.util.nbt.serialization;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import java.util.function.ToLongFunction;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
+import org.joml.Vector3i;
 
 import de.atlasmc.Color;
 import de.atlasmc.NamespacedKey;
@@ -47,7 +49,7 @@ import de.atlasmc.util.nbt.serialization.fields.ByteField;
 import de.atlasmc.util.nbt.serialization.fields.ChatColorColorField;
 import de.atlasmc.util.nbt.serialization.fields.ChatListField;
 import de.atlasmc.util.nbt.serialization.fields.ColorField;
-import de.atlasmc.util.nbt.serialization.fields.CompoundTypeField;
+import de.atlasmc.util.nbt.serialization.fields.TypeCompoundField;
 import de.atlasmc.util.nbt.serialization.fields.DataSetField;
 import de.atlasmc.util.nbt.serialization.fields.DoubleField;
 import de.atlasmc.util.nbt.serialization.fields.EnumByteField;
@@ -55,6 +57,7 @@ import de.atlasmc.util.nbt.serialization.fields.EnumIntField;
 import de.atlasmc.util.nbt.serialization.fields.EnumStringField;
 import de.atlasmc.util.nbt.serialization.fields.FloatField;
 import de.atlasmc.util.nbt.serialization.fields.FloatListField;
+import de.atlasmc.util.nbt.serialization.fields.InnerTypeCompoundField;
 import de.atlasmc.util.nbt.serialization.fields.IntArrayField;
 import de.atlasmc.util.nbt.serialization.fields.IntField;
 import de.atlasmc.util.nbt.serialization.fields.IntListField;
@@ -74,11 +77,13 @@ import de.atlasmc.util.nbt.serialization.fields.StringListField;
 import de.atlasmc.util.nbt.serialization.fields.StringToObjectField;
 import de.atlasmc.util.nbt.serialization.fields.TagField;
 import de.atlasmc.util.nbt.serialization.fields.TypeArraySearchByteIndexField;
+import de.atlasmc.util.nbt.serialization.fields.TypeCollectionField;
 import de.atlasmc.util.nbt.serialization.fields.TypeListField;
 import de.atlasmc.util.nbt.serialization.fields.TypeListSearchIntIndexField;
 import de.atlasmc.util.nbt.serialization.fields.UUIDField;
 import de.atlasmc.util.nbt.serialization.fields.Vector3dField;
 import de.atlasmc.util.nbt.serialization.fields.Vector3fField;
+import de.atlasmc.util.nbt.serialization.fields.Vector3iField;
 import de.atlasmc.util.nbt.tag.NBT;
 import it.unimi.dsi.fastutil.booleans.BooleanList;
 import it.unimi.dsi.fastutil.floats.FloatList;
@@ -177,15 +182,19 @@ public abstract class AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCo
 	
 	public <K extends Namespaced & NBTSerializable> B registryValue(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, Registry<K> registry, NBTSerializationHandler<K> handler) {
 		registryValue(key, get, set, registry);
-		return typeComponentField(key, get, set, handler);
+		return typeCompoundField(key, get, set, handler);
 	}
 	
 	public B namespacedKey(CharSequence key, Function<T, NamespacedKey> get, BiConsumer<T, NamespacedKey> set) {
 		return addField(new NamespacedKeyField<>(key, get, set));
 	}
 	
-	public <K> B typeComponentField(CharSequence key, Function<T, ? super K> get, BiConsumer<T, ? super K> set, NBTSerializationHandler<K> handler) {
-		return addField(new CompoundTypeField<>(key, get, set, handler));
+	public <K> B typeCompoundField(CharSequence key, Function<T, ? super K> get, BiConsumer<T, ? super K> set, NBTSerializationHandler<K> handler) {
+		return addField(new TypeCompoundField<>(key, get, set, handler));
+	}
+	
+	public <K> B innerTypeCompoundField(CharSequence key, Function<T, ? super K> get, NBTSerializationHandler<K> handler) {
+		return addField(new InnerTypeCompoundField<>(key, get, handler));
 	}
 	
 	public <K extends Namespaced> B compoundMapNamespaced2Int(CharSequence key, ToBooleanFunction<T> has, Function<T, Object2IntMap<K>> getMap, Function<String, K> keySupplier) {
@@ -229,7 +238,7 @@ public abstract class AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCo
 	}
 	
 	public B chat(CharSequence key, Function<T, Chat> get, BiConsumer<T, Chat> set) {
-		typeComponentField(key, get, set, ChatComponent.NBT_HANDLER);			
+		typeCompoundField(key, get, set, ChatComponent.NBT_HANDLER);			
 		return stringToObject(key, get, set, stringToChat, chatToString);
 		// list format will be ignored
 	}
@@ -257,6 +266,14 @@ public abstract class AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCo
 	
 	public <K> B typeList(CharSequence key, ToBooleanFunction<T> has, Function<T, List<K>> getList, NBTSerializationHandler<K> handler, boolean optional) {
 		return addField(new TypeListField<>(key, has, getList, handler, optional));
+	}
+	
+	public <K> B typeCollection(CharSequence key, ToBooleanFunction<T> has, Function<T, Collection<K>> get, BiConsumer<T, K> set, NBTSerializationHandler<K> handler) {
+		return typeCollection(key, has, get, set, handler, true);
+	}
+	
+	public <K> B typeCollection(CharSequence key, ToBooleanFunction<T> has, Function<T, Collection<K>> get, BiConsumer<T, K> set, NBTSerializationHandler<K> handler, boolean optional) {
+		return addField(new TypeCollectionField<>(key, has, get, set, handler, optional));
 	}
 	
 	public <K> B typeListSearchIntIndexField(CharSequence key, CharSequence indexKey, ToBooleanFunction<T> has, Function<T, List<K>> get, NBTSerializationHandler<K> handler, boolean optional) {
@@ -297,6 +314,10 @@ public abstract class AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCo
 	
 	public B vector3f(CharSequence key, Function<T, Vector3f> get, BiConsumer<T, Vector3f> set) {
 		return addField(new Vector3fField<>(key, get, set));
+	}
+	
+	public B vector3i(CharSequence key, Function<T, Vector3i> get, BiConsumer<T, Vector3i> set) {
+		return addField(new Vector3iField<>(key, get, set));
 	}
 	
 	public B vector3d(CharSequence key, Function<T, Vector3d> get, BiConsumer<T, Vector3d> set) {

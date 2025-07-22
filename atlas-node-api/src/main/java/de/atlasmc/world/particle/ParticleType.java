@@ -1,14 +1,16 @@
-package de.atlasmc;
+package de.atlasmc.world.particle;
 
 import java.util.List;
 
+import de.atlasmc.Color;
+import de.atlasmc.SimpleLocation;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.util.EnumID;
 import de.atlasmc.util.EnumName;
 import de.atlasmc.util.EnumValueCache;
 
-public enum Particle implements EnumName, EnumID, EnumValueCache {
+public enum ParticleType implements EnumName, EnumID, EnumValueCache {
 	
 	ANGRY_VILLAGER,
 	BLOCK(BlockData.class),
@@ -126,18 +128,18 @@ public enum Particle implements EnumName, EnumID, EnumValueCache {
 	TRIAL_OMEN,
 	BLOCK_CRUMBLE;
 	
-	private static List<Particle> VALUES;
+	private static List<ParticleType> VALUES;
 	
 	private final Class<?> data;
 	private final String name;
 	
-	private Particle(Class<?> data) {
+	private ParticleType(Class<?> data) {
 		this.data = data;
 		String name = "minecraft:" + name().toLowerCase();
 		this.name = name.intern();
 	}
 	
-	private Particle() {
+	private ParticleType() {
 		this(void.class);
 	}
 	
@@ -246,7 +248,7 @@ public enum Particle implements EnumName, EnumID, EnumValueCache {
 		}
 	}
 
-	public static Particle getByID(int id) {
+	public static ParticleType getByID(int id) {
 		return getValues().get(id);
 	}
 
@@ -261,7 +263,7 @@ public enum Particle implements EnumName, EnumID, EnumValueCache {
 	 * This method avoid allocation of a new array not like {@link #values()}.
 	 * @return list
 	 */
-	public static List<Particle> getValues() {
+	public static List<ParticleType> getValues() {
 		if (VALUES == null)
 			VALUES = List.of(values());
 		return VALUES;
@@ -279,13 +281,13 @@ public enum Particle implements EnumName, EnumID, EnumValueCache {
 		return name;
 	}
 
-	public static Particle getByName(String name) {
+	public static ParticleType getByName(String name) {
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null!");
-		List<Particle> particles = getValues();
+		List<ParticleType> particles = getValues();
 		final int size = particles.size();
 		for (int i = 0; i < size; i++) {
-			Particle particle = particles.get(i);
+			ParticleType particle = particles.get(i);
 			if (particle.name.equals(name))
 				return particle;
 		}

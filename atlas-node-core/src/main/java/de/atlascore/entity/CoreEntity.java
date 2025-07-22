@@ -699,5 +699,25 @@ public class CoreEntity implements Entity {
 	public void setOnGround(boolean onGround) {
 		this.onGround = onGround;
 	}
+
+	@Override
+	public Location getLocationUnsafe() {
+		return loc;
+	}
+
+	@Override
+	public void setLocation(Vector3d loc) {
+		loc.set(loc);
+	}
+
+	@Override
+	public void setLocation(SimpleLocation loc) {
+		loc.set(loc);
+	}
+
+	@Override
+	public Vector3d getVelocityUnsafe() {
+		return motion;
+	}
 	
 }

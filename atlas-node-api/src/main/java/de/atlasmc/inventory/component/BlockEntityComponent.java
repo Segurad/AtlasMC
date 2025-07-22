@@ -12,7 +12,7 @@ public interface BlockEntityComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(BlockEntityComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.typeComponentField(COMPONENT_KEY, BlockEntityComponent::getTileEntity, BlockEntityComponent::setTileEntity, TileEntity.NBT_HANDLER)
+					.typeCompoundField(COMPONENT_KEY, BlockEntityComponent::getTileEntity, BlockEntityComponent::setTileEntity, TileEntity.NBT_HANDLER)
 					.build();
 	
 	@Override

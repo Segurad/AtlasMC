@@ -1,8 +1,8 @@
 package de.atlasmc.io.protocol.play;
 
-import de.atlasmc.Particle;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.world.particle.ParticleType;
 
 @DefaultPacketID(packetID = PacketPlay.OUT_PARTICLE, definition = "level_particles")
 public class PacketOutParticle extends AbstractPacket implements PacketPlayOut {
@@ -16,7 +16,7 @@ public class PacketOutParticle extends AbstractPacket implements PacketPlayOut {
 	public float offZ;
 	public float maxSpeed;
 	public int count;
-	public Particle particle;
+	public ParticleType particle;
 	public Object data;
 
 	@Override
