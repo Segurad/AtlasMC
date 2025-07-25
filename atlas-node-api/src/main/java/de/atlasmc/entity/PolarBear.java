@@ -1,9 +1,25 @@
 package de.atlasmc.entity;
 
-public interface PolarBear extends Animal {
-	
-	public boolean isStandingUp();
-	
-	public void setStandingUp(boolean standing);
+import de.atlasmc.entity.data.AngerableMob;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
+public interface PolarBear extends Animal, AngerableMob {
+	
+	public static final NBTSerializationHandler<PolarBear>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(PolarBear.class)
+					.include(Animal.NBT_HANDLER)
+					.include(AngerableMob.NBT_HANDLER)
+					.boolField("StandingUp", PolarBear::isStandingUp, PolarBear::setStandingUp, false) // non standard
+					.build();
+	
+	boolean isStandingUp();
+	
+	void setStandingUp(boolean standing);
+
+	@Override
+	default NBTSerializationHandler<? extends PolarBear> getNBTHandler() {
+		return NBT_HANDLER;
+	}
+	
 }

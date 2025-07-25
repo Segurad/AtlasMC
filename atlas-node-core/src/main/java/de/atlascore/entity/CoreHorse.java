@@ -1,8 +1,5 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
-import java.util.UUID;
-
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Horse;
 import de.atlasmc.entity.data.MetaData;
@@ -10,10 +7,6 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.HorseInventory;
-import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreHorse extends CoreAbstractHorse implements Horse {
 
@@ -22,33 +15,18 @@ public class CoreHorse extends CoreAbstractHorse implements Horse {
 	
 	protected static final int LAST_META_INDEX = CoreAbstractHorse.LAST_META_INDEX+1;
 	
-	protected static final NBTFieldSet<CoreHorse> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_ARMOR_ITEM = CharKey.literal("ArmorItem"),
-	NBT_VARIANT = CharKey.literal("Variant");
-	
-	static {
-		NBT_FIELDS = CoreAbstractHorse.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_ARMOR_ITEM, (holder, reader) -> {
-			reader.readNextEntry();
-			ItemStack item = ItemStack.getFromNBT(reader);
-			holder.getInventory().setArmor(item);
-		});
-		NBT_FIELDS.setField(NBT_VARIANT, (holder, reader) -> {
-			int variant = reader.readIntTag();
-			holder.setColor(HorseColor.getByID(variant & 0xFF));
-			holder.setStyle(Style.getByID(variant >> 8 & 0xFF));
-		});
-	}
-	
-	public CoreHorse(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreHorse(EntityType type) {
+		super(type);
 	}
 	
 	@Override
-	protected NBTFieldSet<? extends CoreHorse> getFieldSetRoot() {
-		return NBT_FIELDS;
+	public int getVariantID() {
+		return metaContainer.getData(META_HORSE_VARIANT);
+	}
+	
+	@Override
+	public void setVariantID(int id) {
+		metaContainer.get(META_HORSE_VARIANT).setData(id);
 	}
 	
 	@Override
@@ -96,17 +74,6 @@ public class CoreHorse extends CoreAbstractHorse implements Horse {
 	@Override
 	protected HorseInventory createInventory() {
 		return ContainerFactory.HORSE_INV_FACTORY.create(this);
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (inv != null && getInventory().getArmor() != null) {
-			writer.writeCompoundTag(NBT_ARMOR_ITEM);
-			getInventory().getArmor().toNBT(writer, systemData);
-			writer.writeEndTag();
-		}
-		writer.writeIntTag(NBT_VARIANT, metaContainer.getData(META_HORSE_VARIANT));
 	}
 
 }

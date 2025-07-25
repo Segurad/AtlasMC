@@ -401,6 +401,11 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	}
 	
 	@Override
+	public Collection<AttributeInstance> getAttributes() {
+		return attributes != null ? attributes.values() : List.of();
+	}
+	
+	@Override
 	public boolean hasAttribute(Attribute attribute) {
 		return attribute != null && attributes.containsKey(attribute);
 	}

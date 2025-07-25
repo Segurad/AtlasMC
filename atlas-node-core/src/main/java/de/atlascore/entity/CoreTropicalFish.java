@@ -1,17 +1,11 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
-import java.util.UUID;
-
 import de.atlasmc.DyeColor;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.TropicalFish;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreTropicalFish extends CoreFish implements TropicalFish {
 
@@ -26,28 +20,8 @@ public class CoreTropicalFish extends CoreFish implements TropicalFish {
 	
 	protected static final int LAST_META_INDEX = CoreFish.LAST_META_INDEX+1;
 	
-	protected static final NBTFieldSet<CoreTropicalFish> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_VARIANT = CharKey.literal("Variant");
-	
-	static {
-		NBT_FIELDS = CoreFish.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_VARIANT, (holder, reader) -> {
-			int variant = reader.readIntTag();
-			holder.setPattern(Pattern.getByDataID(variant));
-			holder.setBaseColor(DyeColor.getByID(variant >> 16 & 0xFF));
-			holder.setPatternColor(DyeColor.getByID(variant >> 24 & 0xFF));
-		});
-	}
-	
-	public CoreTropicalFish(EntityType type, UUID uuid) {
-		super(type, uuid);
-	}
-	
-	@Override
-	protected NBTFieldSet<? extends CoreTropicalFish> getFieldSetRoot() {
-		return NBT_FIELDS;
+	public CoreTropicalFish(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -99,11 +73,15 @@ public class CoreTropicalFish extends CoreFish implements TropicalFish {
 		MetaData<Integer> data = metaContainer.get(META_TROPICAL_VARIANT);
 		data.setData((data.getData() & 0xFF000000) | (color.getID() << 24));
 	}
-	
+
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		writer.writeIntTag(NBT_VARIANT, metaContainer.getData(META_TROPICAL_VARIANT));
+	public int getVariantID() {
+		return metaContainer.getData(META_TROPICAL_VARIANT);
+	}
+
+	@Override
+	public void setVariantID(int id) {
+		metaContainer.get(META_TROPICAL_VARIANT).setData(id);
 	}
 
 }

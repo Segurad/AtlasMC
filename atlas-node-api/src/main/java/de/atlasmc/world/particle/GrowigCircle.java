@@ -1,8 +1,9 @@
 package de.atlasmc.world.particle;
 
+import org.joml.Vector3f;
+
 import de.atlasmc.Location;
 import de.atlasmc.entity.Player;
-import de.atlasmc.util.EulerAngle;
 
 public class GrowigCircle extends Circle {
 
@@ -28,7 +29,7 @@ public class GrowigCircle extends Circle {
 	}
 	
 	@Override
-	public void play(Player player, Location loc, EulerAngle angle) {
+	public void play(Player player, Location loc, Vector3f angle) {
 		if (delay > 0) {
 			Runnable rable = new Runnable() {
 				int repeats = GrowigCircle.this.repeats;
@@ -67,7 +68,7 @@ public class GrowigCircle extends Circle {
 	}
 	
 	@Override
-	public void playAll(Location loc, EulerAngle angle) {
+	public void playAll(Location loc, Vector3f angle) {
 		if (delay > 0) {
 			Runnable rable = new Runnable() {
 				int repeats = GrowigCircle.this.repeats;

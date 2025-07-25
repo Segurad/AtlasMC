@@ -1,8 +1,7 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import de.atlasmc.entity.EntityType;
@@ -10,13 +9,18 @@ import de.atlasmc.entity.Fox;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreFox extends CoreAgeableMob implements Fox {
 
+	protected static final int 
+	FLAG_IS_SITTING = 0x01,
+	FLAG_IS_CROUCHING = 0x04,
+	FLAG_IS_INTERESTED = 0x08,
+	FLAG_IS_POUNCING = 0x10,
+	FLAG_IS_SLEEPING = 0x20,
+	FLAG_IS_FACEPLANTED = 0x40,
+	FLAG_IS_DEFENDING = 0x80;
+	
 	protected static final MetaDataField<Integer>
 	META_FOX_TYPE = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, 0, MetaDataType.VAR_INT);
 	/**
@@ -37,40 +41,10 @@ public class CoreFox extends CoreAgeableMob implements Fox {
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+4;
 	
-	protected static final NBTFieldSet<CoreFox> NBT_FIELDS;
+	private List<UUID> trusted;
 	
-	protected static final CharKey
-	NBT_TRUSTED = CharKey.literal("Trusted"),
-	NBT_TYPE = CharKey.literal("Type"),
-	NBT_SLEEPING = CharKey.literal("Sleeping"),
-	NBT_SITTING = CharKey.literal("Sitting"),
-	NBT_CROUCHING = CharKey.literal("Crouching");
-	
-	static {
-		NBT_FIELDS = CoreAgeableMob.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_TRUSTED, (holder, reader) -> {
-			while (reader.getRestPayload() > 0) {
-				holder.addTrusted(reader.readUUID());
-			}
-		});
-		NBT_FIELDS.setField(NBT_TYPE, (holder, reader) -> {
-			holder.setFoxType(Type.getByNameID(reader.readStringTag()));
-		});
-		NBT_FIELDS.setField(NBT_SLEEPING, (holder, reader) -> {
-			holder.setSleeping(reader.readByteTag() == 1);
-		});
-		NBT_FIELDS.setField(NBT_SITTING, (holder, reader) -> {
-			holder.setSitting(reader.readByteTag() == 1);
-		});
-		NBT_FIELDS.setField(NBT_CROUCHING, (holder, reader) -> {
-			holder.setCrouching(reader.readByteTag() == 1);
-		});
-	}
-	
-	private Set<UUID> trusted;
-	
-	public CoreFox(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreFox(EntityType type) {
+		super(type);
 	}
 
 	@Override
@@ -88,43 +62,38 @@ public class CoreFox extends CoreAgeableMob implements Fox {
 	}
 	
 	@Override
-	protected NBTFieldSet<? extends CoreFox> getFieldSetRoot() {
-		return NBT_FIELDS;
-	}
-	
-	@Override
 	public Type getFoxType() {
 		return Type.getByID(metaContainer.getData(META_FOX_TYPE));
 	}
 
 	@Override
 	public boolean isSitting() {
-		return (metaContainer.getData(META_FOX_FLAGS) & 0x01) == 0x01;
+		return (metaContainer.getData(META_FOX_FLAGS) & FLAG_IS_SITTING) == FLAG_IS_SITTING;
 	}
 
 	@Override
 	public boolean isInterested() {
-		return (metaContainer.getData(META_FOX_FLAGS) & 0x08) == 0x08;
+		return (metaContainer.getData(META_FOX_FLAGS) & FLAG_IS_INTERESTED) == FLAG_IS_INTERESTED;
 	}
 
 	@Override
 	public boolean isPouncing() {
-		return (metaContainer.getData(META_FOX_FLAGS) & 0x10) == 0x10;
+		return (metaContainer.getData(META_FOX_FLAGS) & FLAG_IS_POUNCING) == FLAG_IS_POUNCING;
 	}
 
 	@Override
 	public boolean isSleeping() {
-		return (metaContainer.getData(META_FOX_FLAGS) & 0x20) == 0x20;
+		return (metaContainer.getData(META_FOX_FLAGS) & FLAG_IS_SLEEPING) == FLAG_IS_SLEEPING;
 	}
 
 	@Override
 	public boolean isFaceplanted() {
-		return (metaContainer.getData(META_FOX_FLAGS) & 0x40) == 0x40;
+		return (metaContainer.getData(META_FOX_FLAGS) & FLAG_IS_FACEPLANTED) == FLAG_IS_FACEPLANTED;
 	}
 
 	@Override
 	public boolean isDefending() {
-		return (metaContainer.getData(META_FOX_FLAGS) & 0x80) == 0x80;
+		return (metaContainer.getData(META_FOX_FLAGS) & FLAG_IS_DEFENDING) == FLAG_IS_DEFENDING;
 	}
 
 	@Override
@@ -147,37 +116,37 @@ public class CoreFox extends CoreAgeableMob implements Fox {
 	@Override
 	public void setSitting(boolean sitting) {
 		MetaData<Byte> data = metaContainer.get(META_FOX_FLAGS);
-		data.setData((byte) (sitting ? data.getData() | 0x01 : data.getData() & 0xFE));
+		data.setData((byte) (sitting ? data.getData() | FLAG_IS_SITTING : data.getData() & ~FLAG_IS_SITTING));
 	}
 
 	@Override
 	public void setInterested(boolean interested) {
 		MetaData<Byte> data = metaContainer.get(META_FOX_FLAGS);
-		data.setData((byte) (interested ? data.getData() | 0x08 : data.getData() & 0xF7));
+		data.setData((byte) (interested ? data.getData() | FLAG_IS_INTERESTED : data.getData() & ~FLAG_IS_INTERESTED));
 	}
 
 	@Override
 	public void setPouncing(boolean pouncing) {
 		MetaData<Byte> data = metaContainer.get(META_FOX_FLAGS);
-		data.setData((byte) (pouncing ? data.getData() | 0x10 : data.getData() & 0xEF));
+		data.setData((byte) (pouncing ? data.getData() | FLAG_IS_POUNCING : data.getData() & ~FLAG_IS_POUNCING));
 	}
 
 	@Override
 	public void setSleeping(boolean sleeping) {
 		MetaData<Byte> data = metaContainer.get(META_FOX_FLAGS);
-		data.setData((byte) (sleeping ? data.getData() | 0x20 : data.getData() & 0xDF));
+		data.setData((byte) (sleeping ? data.getData() | FLAG_IS_SLEEPING : data.getData() & ~FLAG_IS_SLEEPING));
 	}
 
 	@Override
 	public void setFaceplanted(boolean faceplanted) {
 		MetaData<Byte> data = metaContainer.get(META_FOX_FLAGS);
-		data.setData((byte) (faceplanted ? data.getData() | 0x40 : data.getData() & 0xBF));
+		data.setData((byte) (faceplanted ? data.getData() | FLAG_IS_FACEPLANTED : data.getData() & ~FLAG_IS_FACEPLANTED));
 	}
 
 	@Override
 	public void setDefending(boolean defending) {
 		MetaData<Byte> data = metaContainer.get(META_FOX_FLAGS);
-		data.setData((byte) (defending ? data.getData() | 0x80 : data.getData() & 0x7F));		
+		data.setData((byte) (defending ? data.getData() | FLAG_IS_DEFENDING : data.getData() & ~FLAG_IS_DEFENDING));		
 	}
 
 	@Override
@@ -193,12 +162,12 @@ public class CoreFox extends CoreAgeableMob implements Fox {
 	@Override
 	public void setCrouching(boolean crouching) {
 		MetaData<Byte> data = metaContainer.get(META_FOX_FLAGS);
-		data.setData((byte) (crouching ? data.getData() | 0x04 : data.getData() & 0xFB));
+		data.setData((byte) (crouching ? data.getData() | FLAG_IS_CROUCHING : data.getData() & ~FLAG_IS_CROUCHING));
 	}
 	
 	@Override
 	public boolean isCrouching() {
-		return (metaContainer.getData(META_FOX_FLAGS) & 0x04) == 0x04;
+		return (metaContainer.getData(META_FOX_FLAGS) & FLAG_IS_CROUCHING) == FLAG_IS_CROUCHING;
 	}
 
 	@Override
@@ -216,9 +185,9 @@ public class CoreFox extends CoreAgeableMob implements Fox {
 	}
 
 	@Override
-	public Set<UUID> getTrusted() {
+	public List<UUID> getTrusted() {
 		if (trusted == null)
-			trusted = new HashSet<>();
+			trusted = new ArrayList<>();
 		return trusted;
 	}
 
@@ -232,24 +201,6 @@ public class CoreFox extends CoreAgeableMob implements Fox {
 	@Override
 	public boolean hasTrusted() {
 		return trusted != null && !trusted.isEmpty();
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (hasTrusted()) {
-			Set<UUID> trusted = getTrusted();
-			writer.writeListTag(NBT_TRUSTED, TagType.INT_ARRAY, trusted.size());
-			for (UUID uuid : trusted)
-				writer.writeUUID(null, uuid);
-		}
-		writer.writeStringTag(NBT_TYPE, getFoxType().getNameID());
-		if (isSleeping())
-			writer.writeByteTag(NBT_SLEEPING, true);
-		if (isSitting())
-			writer.writeByteTag(NBT_SITTING, true);
-		if (isCrouching())
-			writer.writeByteTag(NBT_CROUCHING, true);
 	}
 
 }

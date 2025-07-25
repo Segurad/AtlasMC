@@ -4,16 +4,26 @@ import java.util.List;
 
 import de.atlasmc.util.EnumID;
 import de.atlasmc.util.EnumValueCache;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public interface Axolotl extends Animal {
+public interface Axolotl extends Fish, AgeableMob {
+	
+	public static final NBTSerializationHandler<Axolotl>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Axolotl.class)
+					.include(AgeableMob.NBT_HANDLER)
+					.include(Fish.NBT_HANDLER)
+					.enumIntField("Variant", Axolotl::getVariant, Axolotl::setVariant, Variant::getByID, Variant.LUCY)
+					.build();
 	
 	Variant getVariant();
 	
 	void setVariant(Variant variant);
-	
-	boolean isFromBucket();
-	
-	void setFromBucket(boolean bucket);
+
+	@Override
+	default NBTSerializationHandler<? extends Axolotl> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 	public static enum Variant implements EnumID, EnumValueCache {
 		

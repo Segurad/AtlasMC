@@ -1,30 +1,44 @@
 package de.atlasmc.entity;
 
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+
 public interface Zombie extends Monster {
 	
-	public boolean isBaby();
+	public static final NBTSerializationHandler<Zombie>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Zombie.class)
+					.include(Monster.NBT_HANDLER)
+					.boolField("CanBreakDoors", Zombie::canBreakDoors, Zombie::setCanBreakDoors, false)
+					.intField("DrownedConverionTime", Zombie::getDrownedConverionTime, Zombie::setDrownedConversionTime, -1)
+					//.intField("InWaterTime", null, null)
+					.boolField("IsBaby", Zombie::isBaby, Zombie::setBaby, false)
+					.boolField("IsBecomingDrowned", Zombie::isBecomingDrowned, Zombie::setBecomingDorwned, false) // non standard
+					.build();
 	
-	public boolean isBecomingDrowned();
-
-	public void setBaby(boolean baby);
+	boolean isBaby();
 	
-	public void setBecomingDorwned(boolean drowned);
+	boolean isBecomingDrowned();
 
-	public void setCanBreakDoors(boolean breakDoor);
+	void setBaby(boolean baby);
 	
-	public boolean canBreakDoors();
+	void setBecomingDorwned(boolean drowned);
 
-	public void setDrownedConversionTime(int ticks);
+	void setCanBreakDoors(boolean breakDoor);
+	
+	boolean canBreakDoors();
+
+	void setDrownedConversionTime(int ticks);
 	
 	/**
 	 * Returns the ticks in which this Zombie will be converted to a Drowned.<br>
 	 * Will be -1 if no conversion is happening
 	 * @return ticks or -1
 	 */
-	public int getDrownedConverionTime();
-
-	public void setCanPickupLoot(boolean canPickup);
+	int getDrownedConverionTime();
 	
-	public boolean canPickupLoot();
+	@Override
+	default NBTSerializationHandler<? extends Zombie> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 }

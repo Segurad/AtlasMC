@@ -1,57 +1,39 @@
 package de.atlasmc.entity;
 
 import de.atlasmc.DyeColor;
-import de.atlasmc.Location;
-import de.atlasmc.SimpleLocation;
 import de.atlasmc.block.BlockFace;
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Shulker extends AbstractGolem {
 	
-	public BlockFace getAttachedFace();
+	public static final NBTSerializationHandler<Shulker>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Shulker.class)
+					.include(AbstractGolem.NBT_HANDLER)
+					.enumByteField("AttachFace", Shulker::getAttachedFace, Shulker::setAttachedFace, BlockFace::getByFaceID, BlockFace::getFaceID, BlockFace.DOWN)
+					.enumByteField("Color", Shulker::getColor, Shulker::setColor, DyeColor::getByID, DyeColor::getID, DyeColor.MAGENTA)
+					.byteField("Peek", Shulker::getShieldHeight, Shulker::setShieldHeight, (byte) 16)
+					.build();
 	
-	public void setAttachedFace(BlockFace attached);
+	@NotNull
+	BlockFace getAttachedFace();
 	
-	/**
-	 * Returns the Blocks Location this Shulker is attached to or null if non
-	 * @return Location or null
-	 */
-	public Location getAttachedPosition();
+	void setAttachedFace(@NotNull BlockFace attached);
 	
-	/**
-	 * Returns the Blocks Location this Shulker is attached to using the given Location or null if non
-	 * @param loc
-	 * @return Location or null
-	 */
-	public Location getAttachedPosition(Location loc);
+	int getShieldHeight();
 	
-	/**
-	 * Sets the Blocks position this Shulker is attached to
-	 * @param loc or null to reset
-	 */
-	public void setAttachedPosition(SimpleLocation loc);
+	void setShieldHeight(int height);
 	
-	public void setAttachedPosition(int x, int y, int z);
-	
-	public int getAttachedX();
-	
-	public int getAttachedY();
-	
-	public int getAttachedZ();
-	
-	public void setAttachedX(int posX);
-	
-	public void setAttachedY(int posY);
-	
-	public void setAttachedZ(int posZ);
-	
-	public boolean hasAttachedPosition();
-	
-	public int getShieldHeight();
-	
-	public void setShieldHeight(int height);
-	
-	public DyeColor getColor();
+	@Nullable
+	DyeColor getColor();
 
-	public void setColor(DyeColor color);
+	void setColor(@Nullable DyeColor color);
+	
+	@Override
+	default NBTSerializationHandler<? extends Shulker> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 }

@@ -1,6 +1,5 @@
 package de.atlascore.inventory.component;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -17,64 +16,10 @@ import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.util.map.ArrayListMultimap;
 import de.atlasmc.util.map.ListMultimap;
 import de.atlasmc.util.map.Multimap;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.NBTUtil;
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import io.netty.buffer.ByteBuf;
 import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CoreAttributeModifiersComponent extends AbstractItemComponent implements AttributeModifiersComponent {
-
-	protected static final NBTFieldSet<CoreAttributeModifiersComponent> NBT_FIELDS;
-	protected static final CharKey 
-	NBT_MODIFIERS = CharKey.literal("modifiers"),
-	NBT_TYPE = CharKey.literal("type"),
-	NBT_SLOT = CharKey.literal("slot"),
-	NBT_ID = CharKey.literal("id"),
-	NBT_AMOUNT = CharKey.literal("amount"),
-	NBT_OPERATION = CharKey.literal("operation"),
-	NBT_SHOW_IN_TOOLTIP = CharKey.literal("show_in_tooltip");
-	
-	static {
-		NBT_FIELDS = NBTFieldSet.newSet();
-		NBT_FIELDS.setField(NBT_MODIFIERS, (holder, reader) -> {
-			Multimap<Attribute, AttributeModifier> attributes = holder.getAttributeModifiers();
-			reader.readNextEntry();
-			while (reader.getRestPayload() > 0) {
-				reader.readNextEntry();
-				Attribute attribute = null;
-				double amount = 0;
-				NamespacedKey id = null;
-				EquipmentSlot slot = null;
-				Operation operation = null;
-				while (reader.getType() != TagType.TAG_END) {
-					final CharSequence value = reader.getFieldName();
-					if (NBT_AMOUNT.equals(value))
-						amount = reader.readDoubleTag();
-					else if (NBT_TYPE.equals(value))
-						attribute = Attribute.getByName(reader.readStringTag());
-					else if (NBT_OPERATION.equals(value))
-						operation = Operation.getByName(reader.readStringTag());
-					else if (NBT_ID.equals(value))
-						id = reader.readNamespacedKey();
-					else if (NBT_SLOT.equals(value))
-						slot = EquipmentSlot.valueOf(reader.readStringTag().toUpperCase());
-					else
-						reader.skipTag();
-				}
-				reader.readNextEntry();
-				attributes.put(attribute, new AttributeModifier(id, amount, operation, slot));
-			}
-			reader.readNextEntry();
-		});
-		NBT_FIELDS.setField(NBT_SHOW_IN_TOOLTIP, (holder, reader) -> {
-			holder.setShowTooltip(reader.readBoolean());
-		});
-	}
 	
 	private ListMultimap<Attribute, AttributeModifier> attributes;
 	private boolean showTooltip = true;
@@ -170,16 +115,6 @@ public class CoreAttributeModifiersComponent extends AbstractItemComponent imple
 	}
 	
 	@Override
-	public boolean isShowTooltip() {
-		return showTooltip;
-	}
-
-	@Override
-	public void setShowTooltip(boolean show) {
-		this.showTooltip = show;
-	}
-	
-	@Override
 	public CoreAttributeModifiersComponent clone() {
 		CoreAttributeModifiersComponent clone =  (CoreAttributeModifiersComponent) super.clone();
 		if (clone == null)
@@ -199,40 +134,6 @@ public class CoreAttributeModifiersComponent extends AbstractItemComponent imple
 		return clone;
 	}
 	
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		if (reader.getType() == TagType.LIST) { // in some cases the tag may be a list instead of a compound
-			NBTField<CoreAttributeModifiersComponent> field = NBT_FIELDS.getField(NBT_MODIFIERS);
-			field.setField(this, reader);
-		} else {
-			reader.readNextEntry();
-			NBTUtil.readNBT(NBT_FIELDS, this, reader);;
-		}
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeCompoundTag(key.toString());
-		if (hasAttributeModifiers()) {
-			Multimap<Attribute, AttributeModifier> attributes = getAttributeModifiers();
-			writer.writeListTag(NBT_MODIFIERS, TagType.COMPOUND, attributes.valuesSize());
-			for (Attribute attribute : attributes.keySet()) {
-				final String rawname = attribute.getName();
-				for (AttributeModifier mod : attributes.get(attribute)) {
-					writer.writeStringTag(NBT_TYPE, rawname);
-					writer.writeStringTag(NBT_SLOT, mod.getSlot().getName());
-					writer.writeNamespacedKey(NBT_ID, mod.getID());
-					writer.writeDoubleTag(NBT_AMOUNT, mod.getAmount());
-					writer.writeStringTag(NBT_OPERATION, mod.getOperation().getName());
-					writer.writeEndTag();
-				}
-			}
-		}
-		if (!showTooltip)
-			writer.writeByteTag(NBT_SHOW_IN_TOOLTIP, false);
-		writer.writeEndTag();
-	}
-
 	@Override
 	public ComponentType getType() {
 		return ComponentType.ATTRIBUTE_MODIFIERS;

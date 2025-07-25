@@ -8,7 +8,7 @@ import de.atlasmc.entity.EntityType;
 public class CoreCod extends CoreFish implements Cod {
 
 	public CoreCod(EntityType type, UUID uuid) {
-		super(type, uuid);
+		super(type);
 	}
 
 }

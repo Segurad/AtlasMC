@@ -1,7 +1,5 @@
 package de.atlascore.entity;
 
-import java.util.UUID;
-
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Guardian;
@@ -19,8 +17,8 @@ public class CoreGuardian extends CoreMob implements Guardian {
 	
 	private Entity target;
 	
-	public CoreGuardian(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreGuardian(EntityType type) {
+		super(type);
 	}
 	
 	@Override

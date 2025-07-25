@@ -1,17 +1,33 @@
 package de.atlasmc.entity;
 
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+
 public interface Strider extends Animal {
 	
-	public int getBoostTime();
+	public static final NBTSerializationHandler<Strider>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Strider.class)
+					.include(Animal.NBT_HANDLER)
+					.intField("BoostTime", Strider::getBoostTime, Strider::setBoostTime, 0)
+					.boolField("IsShaking", Strider::isShaking, Strider::setShaking, false)
+					.boolField("HasSaddle", Strider::hasSaddle, Strider::setSaddle, false)
+					.build();
 	
-	public void setBoostTime(int time);
+	int getBoostTime();
 	
-	public boolean isShaking();
+	void setBoostTime(int time);
 	
-	public void setShaking(boolean shaking);
+	boolean isShaking();
 	
-	public boolean hasSaddle();
+	void setShaking(boolean shaking);
+	
+	boolean hasSaddle();
 
-	public void setSaddle(boolean saddle);
+	void setSaddle(boolean saddle);
+	
+	@Override
+	default NBTSerializationHandler<? extends Strider> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 }

@@ -8,8 +8,17 @@ import java.util.function.Consumer;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.EquipmentSlot;
 import de.atlasmc.util.AtlasUtil;
+import de.atlasmc.util.nbt.serialization.NBTSerializable;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public class AttributeInstance {
+public class AttributeInstance implements NBTSerializable {
+	
+	public static final NBTSerializationHandler<AttributeInstance>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(AttributeInstance.class)
+					.doubleField("base", AttributeInstance::getBaseValue, AttributeInstance::setBaseValue, 0)
+					.typeList("modifiers", AttributeInstance::hasModifiers, AttributeInstance::getModifiers, AttributeModifier.NBT_HANDLER)
+					.build();
 	
 	private final Consumer<AttributeInstance> updateListener;
 	private final Attribute attribute;
@@ -148,7 +157,7 @@ public class AttributeInstance {
 		value = baseValue;
 		if (!hasModifiers())
 			return;
-		double multiplyBase = 0.0;
+		double multiplyBase = 1.0;
 		double multiplyTotal = 1.0;
 		for (AttributeModifier mod : modifiers) {
 			switch (mod.getOperation()) {
@@ -159,7 +168,7 @@ public class AttributeInstance {
 				multiplyBase += mod.getAmount();
 				break;
 			case ADD_MULTIPLIED_TOTAL:
-				multiplyTotal += mod.getAmount();
+				multiplyTotal += 1 + mod.getAmount();
 				break;
 			}
 		}
@@ -192,6 +201,11 @@ public class AttributeInstance {
 		if (removed && updateListener != null)
 			updateListener.accept(this);
 		return removed;
+	}
+	
+	@Override
+	public NBTSerializationHandler<? extends AttributeInstance> getNBTHandler() {
+		return NBT_HANDLER;
 	}
 
 }

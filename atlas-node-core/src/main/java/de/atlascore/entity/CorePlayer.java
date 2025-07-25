@@ -2,7 +2,6 @@ package de.atlascore.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.function.BiConsumer;
 
 import org.joml.Vector3d;
@@ -87,13 +86,14 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	private int xp;
 	private float xpBar;
 	private Gamemode gamemode;
+	private Gamemode previousGamemode;
 	private ItemStack cursorItem;
 	private boolean canBuild;
 	private Object pluginData;
 	private DiggingHandler digging;
 	
-	public CorePlayer(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CorePlayer(EntityType type) {
+		super(type);
 		view = new CoreInventoryView(this, getInventory(), getCraftingInventory(), 0);
 		this.digging = new CorePlayerDiggingHandler(this);
 	}
@@ -580,6 +580,16 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	@Override
 	public void sendTranslation(String key, Object... values) {
 		con.sendTranslation(key, values);
+	}
+
+	@Override
+	public Gamemode getPreviousGamemode() {
+		return previousGamemode;
+	}
+
+	@Override
+	public void setPreviousGamemode(Gamemode gamemode) {
+		this.previousGamemode = gamemode;
 	}
 
 }

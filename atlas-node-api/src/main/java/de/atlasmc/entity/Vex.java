@@ -1,12 +1,21 @@
 package de.atlasmc.entity;
 
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+
 public interface Vex extends Monster {
 	
-	public boolean isAttacking();
+	public static final NBTSerializationHandler<Vex>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Vex.class)
+					.intField("life_ticks", Vex::getLifeTime, Vex::setLifeTime, -1)
+					.boolField("IsAttacking", Vex::isAttacking, Vex::setAttacking, false) // non standard
+					.build();
 	
-	public void setAttacking(boolean attacking);
+	boolean isAttacking();
+	
+	void setAttacking(boolean attacking);
 
-	public void setLifeTime(int ticks);
+	void setLifeTime(int ticks);
 	
 	/**
 	 * Returns the time in ticks until this vex takes damage.<br>
@@ -14,6 +23,11 @@ public interface Vex extends Monster {
 	 * Will be -1 if not counting
 	 * @return ticks or -1
 	 */
-	public int getLifeTime();
+	int getLifeTime();
+	
+	@Override
+	default NBTSerializationHandler<? extends Vex> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 
 }

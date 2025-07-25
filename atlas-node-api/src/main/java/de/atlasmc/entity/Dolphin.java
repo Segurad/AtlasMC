@@ -1,33 +1,44 @@
 package de.atlasmc.entity;
 
-import de.atlasmc.SimpleLocation;
+import org.joml.Vector3i;
+
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Dolphin extends WaterAnimal {
 	
-	public default SimpleLocation getTreasurePosition() {
-		return getTreasurePosition(new SimpleLocation());
+	public static final NBTSerializationHandler<Dolphin>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Dolphin.class)
+					.include(WaterAnimal.NBT_HANDLER)
+					.intField("Moistness", Dolphin::getMoistureLevel, Dolphin::setMoistureLevel, 2400)
+					.boolField("GotFish", Dolphin::hasFish, Dolphin::setFish, false)
+					.build();
+	
+	default Vector3i getTreasurePosition() {
+		return getTreasurePosition(new Vector3i());
 	}
 	
-	public SimpleLocation getTreasurePosition(SimpleLocation loc);
+	Vector3i getTreasurePosition(Vector3i loc);
 	
-	public default void setTreasurePosition(SimpleLocation loc) {
-		setTreasurePosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+	default void setTreasurePosition(Vector3i loc) {
+		setTreasurePosition(loc.x, loc.y, loc.z);
 	}
 	
-	public void setTreasurePosition(int x, int y, int z);
+	void setTreasurePosition(int x, int y, int z);
 	
-	public boolean hasFish();
+	boolean hasFish();
 	
-	public void setFish(boolean fish);
+	void setFish(boolean fish);
 	
-	public int getMoistureLevel();
+	int getMoistureLevel();
 	
-	public void setMoistureLevel(int level);
+	void setMoistureLevel(int level);
 	
-	public int getMaxMoistureLevel();
-
-	public boolean canPickupLoot();
+	int getMaxMoistureLevel();
 	
-	public void setCanPickupLoot(boolean canPickup);
+	@Override
+	default NBTSerializationHandler<? extends LivingEntity> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 
 }

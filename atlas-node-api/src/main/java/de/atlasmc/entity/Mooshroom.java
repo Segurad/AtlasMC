@@ -1,12 +1,23 @@
 package de.atlasmc.entity;
 
-public interface Mooshroom extends Cow {
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumName;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+
+public interface Mooshroom extends AgeableMob {
 	
-	public Variant getVariant();
+	public static final NBTSerializationHandler<Mooshroom>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Mooshroom.class)
+					.include(AgeableMob.NBT_HANDLER)
+					.enumStringField("Type", Mooshroom::getVariant, Mooshroom::setVariant, Variant::getByName, Variant.RED)
+					.build();
 	
-	public void setVariant(Variant variant);
+	Variant getVariant();
 	
-	public static enum Variant {
+	void setVariant(Variant variant);
+	
+	public static enum Variant implements EnumName, EnumID {
 		RED("red"),
 		BROWN("brown");
 		
@@ -16,7 +27,7 @@ public interface Mooshroom extends Cow {
 			this.name = name;
 		}
 		
-		public String getNameID() {
+		public String getName() {
 			return name;
 		}
 		
@@ -35,8 +46,8 @@ public interface Mooshroom extends Cow {
 			}
 		}
 		
-		public static Variant getByNameID(String name) {
-			if (BROWN.getNameID().equals(name))
+		public static Variant getByName(String name) {
+			if (BROWN.getName().equals(name))
 				return BROWN;
 			else return RED;
 		}

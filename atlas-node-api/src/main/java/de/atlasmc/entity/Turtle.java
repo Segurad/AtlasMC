@@ -2,47 +2,48 @@ package de.atlasmc.entity;
 
 import de.atlasmc.Location;
 import de.atlasmc.SimpleLocation;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Turtle extends Animal {
 	
-	public default Location getHome() {
-		return getHome(new Location(getWorld()));
-	}
-
-	public Location getHome(Location loc);
+	public static final NBTSerializationHandler<Turtle>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Turtle.class)
+					.include(Animal.NBT_HANDLER)
+					.boolField("has_egg", Turtle::hasEgg, Turtle::setEgg, false)
+					.build();
 	
-	public default void setHome(SimpleLocation loc) {
-		setHome(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-	}
+	boolean hasEgg();
 	
-	public void setHome(int x, int y, int z);
+	void setEgg(boolean egg);
 	
-	public boolean hasEgg();
+	boolean isLayingEgg();
 	
-	public void setEgg(boolean egg);
+	void setLayingEgg(boolean laying);
 	
-	public boolean hasLayingEgg();
-	
-	public void setLayingEgg(boolean laying);
-	
-	public default Location getTravelPos() {
+	default Location getTravelPos() {
 		return getTravelPos(new Location(getWorld()));
 	}
 	
-	public Location getTravelPos(Location loc);
+	Location getTravelPos(Location loc);
 	
-	public default void setTravelPos(SimpleLocation loc) {
+	default void setTravelPos(SimpleLocation loc) {
 		setTravelPos(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 	}
 	
-	public void setTravelPos(int x, int y, int z);
+	void setTravelPos(int x, int y, int z);
 	
-	public boolean isGoingHome();
+	boolean isGoingHome();
 	
-	public void setGoingHome(boolean home);
+	void setGoingHome(boolean home);
 	
-	public boolean isTraveling();
+	boolean isTraveling();
 
-	public void setTraveling(boolean traveling);
+	void setTraveling(boolean traveling);
+	
+	@Override
+	default NBTSerializationHandler<? extends Turtle> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 }

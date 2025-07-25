@@ -3,18 +3,35 @@ package de.atlasmc.entity;
 import java.util.List;
 
 import de.atlasmc.inventory.HorseInventory;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Horse extends AbstractHorse {
 	
-	public HorseColor getColor();
+	public static final NBTSerializationHandler<Horse>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Horse.class)
+					.include(AbstractHorse.NBT_HANDLER)
+					.intField("Variant", Horse::getVariantID, Horse::setVariantID, 0)
+					.build();
 	
-	public void setColor(HorseColor color);
+	HorseColor getColor();
 	
-	public Style getStyle();
+	void setColor(HorseColor color);
 	
-	public void setStyle(Style style);
+	Style getStyle();
 	
-	public HorseInventory getInventory();
+	void setStyle(Style style);
+	
+	int getVariantID();
+	
+	void setVariantID(int id);
+	
+	HorseInventory getInventory();
+	
+	@Override
+	default NBTSerializationHandler<? extends Horse> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 	public static enum HorseColor {
 		WHITE,

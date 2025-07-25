@@ -15,6 +15,7 @@ import de.atlasmc.attribute.Attributeable;
 import de.atlasmc.inventory.EntityEquipment;
 import de.atlasmc.potion.PotionEffect;
 import de.atlasmc.potion.PotionEffectType;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.UnsafeAPI;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
@@ -26,7 +27,7 @@ public interface LivingEntity extends Entity, Attributeable, ProjectileSource {
 					.include(Entity.NBT_HANDLER)
 					.floatField("AbsorptionAmount", LivingEntity::getAbsorption, LivingEntity::setAbsorption, 0)
 					.typeCollection("active_effects", LivingEntity::hasPotionEffects, LivingEntity::getActivePotionEffects, LivingEntity::addPotionEffect, PotionEffect.NBT_HANDLER)
-					// attributes
+					.typeCollectionInnerSearchKey("attributes", LivingEntity::hasAttributes, LivingEntity::getAttributes, "id", Attribute::getByName, LivingEntity::getAttribute, AttributeInstance::getAttribute, true)
 					// Brain
 					.boolField("CanPickUpLoot", LivingEntity::canPickUpLoot, LivingEntity::setPickUpLoot, false)
 					.shortField("DeathTime", LivingEntity::getDeathAnimationTime, LivingEntity::setDeathAnimationTime, (short) 0)
@@ -172,6 +173,10 @@ public interface LivingEntity extends Entity, Attributeable, ProjectileSource {
 	
 	void removePotionEffects();
 	
+	@NotNull
+	Collection<AttributeInstance> getAttributes();
+	
+	@NotNull
 	AttributeInstance getAttribute(Attribute attribute);
 	
 	boolean hasAttribute(Attribute attribute);

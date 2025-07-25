@@ -69,7 +69,7 @@ public interface Cat extends Tameable {
 		public static Type getByName(String name) {
 			if (name == null)
 				throw new IllegalArgumentException("Name can not be null!");
-			List<Type> values = getValues();
+			final List<Type> values = getValues();
 			final int size = values.size();
 			for (int i = 0; i < size; i++) {
 				Type value = values.get(i);

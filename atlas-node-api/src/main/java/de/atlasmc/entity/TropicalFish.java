@@ -3,21 +3,38 @@ package de.atlasmc.entity;
 import java.util.List;
 
 import de.atlasmc.DyeColor;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface TropicalFish extends Fish {
 	
-	public Pattern getPattern();
+	public static final NBTSerializationHandler<TropicalFish>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(TropicalFish.class)
+					.include(Fish.NBT_HANDLER)
+					.intField("Variant", TropicalFish::getVariantID, TropicalFish::setVariantID, 0)
+					.build();
 	
-	public void setPattern(Pattern pattern);
+	Pattern getPattern();
 	
-	public DyeColor getBaseColor();
+	void setPattern(Pattern pattern);
 	
-	public void setBaseColor(DyeColor color);
+	DyeColor getBaseColor();
 	
-	public DyeColor getPatternColor();
+	void setBaseColor(DyeColor color);
 	
-	public void setPatternColor(DyeColor color);
+	DyeColor getPatternColor();
+	
+	void setPatternColor(DyeColor color);
 
+	int getVariantID();
+	
+	void setVariantID(int id);
+	
+	@Override
+	default NBTSerializationHandler<? extends TropicalFish> getNBTHandler() {
+		return NBT_HANDLER;
+	}
+	
 	public static enum Pattern {
 		KOB(0, false),
 		FLOPPER(0, true),

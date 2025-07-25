@@ -2,9 +2,10 @@ package de.atlasmc.world.particle;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.joml.Vector3f;
+
 import de.atlasmc.Location;
 import de.atlasmc.entity.Player;
-import de.atlasmc.util.EulerAngle;
 
 public class ParticleObject implements Animation, Cloneable {
 
@@ -35,12 +36,12 @@ public class ParticleObject implements Animation, Cloneable {
 	}
 
 	@Override
-	public void play(Player player, Location loc, EulerAngle angle) {
+	public void play(Player player, Location loc, Vector3f angle) {
 		player.spawnParticle(particle, loc.x, loc.y, loc.z,0 ,0 ,0 ,0 ,amount, this);
 	}
 	
 	@Override
-	public void playAll(Location loc, EulerAngle angle) {
+	public void playAll(Location loc, Vector3f angle) {
 		loc.getWorld().spawnParticle(particle, loc, amount);
 	}
 

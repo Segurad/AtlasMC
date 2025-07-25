@@ -4,23 +4,47 @@ import java.util.List;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.EquipmentSlot;
+import de.atlasmc.util.AtlasEnum;
+import de.atlasmc.util.nbt.serialization.NBTSerializable;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public class AttributeModifier implements Cloneable {
+public class AttributeModifier implements Cloneable, NBTSerializable {
 
+	public static final NBTSerializationHandler<AttributeModifier>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(AttributeModifier.class)
+					.defaultConstructor(AttributeModifier::new)
+					.doubleField("amount", AttributeModifier::getAmount, AttributeModifier::setAmount, 0)
+					.namespacedKey("id", AttributeModifier::getID, AttributeModifier::setID)
+					.enumStringField("operation", AttributeModifier::getOperation, AttributeModifier::setOperation, Operation::getByName, Operation.ADD_VALUE)
+					.enumStringField("slot", AttributeModifier::getSlot, AttributeModifier::setSlot, EquipmentSlot::getByName, EquipmentSlot.ANY)
+					// TODO display
+					.build();
+	
 	private double amount;
-	private Operation operation;
-	private final NamespacedKey id;
-	private EquipmentSlot slot;
+	private Operation operation = Operation.ADD_VALUE;
+	private NamespacedKey id;
+	private EquipmentSlot slot = EquipmentSlot.ANY;
+	
+	private AttributeModifier() {
+		// for internal use
+	}
 	
 	public AttributeModifier(NamespacedKey id, double amount, Operation operation) {
-		this(id, amount, operation, null);
+		this(id, amount, operation, EquipmentSlot.ANY);
 	}
 	
 	public AttributeModifier(NamespacedKey id, double amount, Operation operation, EquipmentSlot slot) {
 		this.amount = amount;
 		this.id = id;
-		this.operation = operation;
-		this.slot = slot;
+		if (operation != null)
+			this.operation = operation;
+		if (slot != null)
+			this.slot = slot;
+	}
+	
+	public void setID(NamespacedKey id) {
+		this.id = id;
 	}
 
 	public EquipmentSlot getSlot() {
@@ -35,7 +59,7 @@ public class AttributeModifier implements Cloneable {
 		return operation;
 	}
 	
-	public static enum Operation {
+	public static enum Operation implements AtlasEnum {
 		/**
 		 * Adds the value to the base value of the attribute
 		 */
@@ -57,10 +81,12 @@ public class AttributeModifier implements Cloneable {
 			this.name = name;
 		}
 		
+		@Override
 		public String getName() {
 			return name;
 		}
 		
+		@Override
 		public int getID() {
 			return ordinal();
 		}
@@ -161,6 +187,11 @@ public class AttributeModifier implements Cloneable {
 		if (slot != other.slot)
 			return false;
 		return true;
+	}
+
+	@Override
+	public NBTSerializationHandler<? extends AttributeModifier> getNBTHandler() {
+		return NBT_HANDLER;
 	}
 
 }

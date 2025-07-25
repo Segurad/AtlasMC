@@ -2,14 +2,14 @@ package de.atlasmc.entity;
 
 public interface Guardian extends Monster {
 	
-	public boolean isRetractingSpikes();
+	boolean isRetractingSpikes();
 	
-	public Entity getTarget();
+	Entity getTarget();
 	
-	public boolean hasTarget();
+	boolean hasTarget();
 	
-	public void setTarget(Entity target);
+	void setTarget(Entity target);
 	
-	public void setRetractingSpikes(boolean retracting);
+	void setRetractingSpikes(boolean retracting);
 
 }

@@ -2,7 +2,17 @@ package de.atlasmc.entity;
 
 import java.util.List;
 
+import de.atlasmc.util.AtlasEnum;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+
 public interface Sniffer extends Animal {
+	
+	public static final NBTSerializationHandler<Sniffer>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Sniffer.class)
+					.include(Animal.NBT_HANDLER)
+					.enumStringField("SnifferState", Sniffer::getState, Sniffer::setState, State::getByName, State.IDLING) // non standard
+					.build();
 	
 	State getState();
 	
@@ -12,7 +22,12 @@ public interface Sniffer extends Animal {
 	
 	void setDropSeedAtTick(int tick);
 	
-	public static enum State {
+	@Override
+	default NBTSerializationHandler<? extends Sniffer> getNBTHandler() {
+		return NBT_HANDLER;
+	}
+	
+	public static enum State implements AtlasEnum {
 		IDLING,
 		FEELING_HAPPY,
 		SCENTING,
@@ -23,20 +38,22 @@ public interface Sniffer extends Animal {
 		
 		private static List<State> VALUES;
 		
-		public String getNameID() {
+		@Override
+		public String getName() {
 			return name();
 		}
 		
-		public static State getByNameID(String nameID) {
-			if (nameID == null)
+		public static State getByName(String name) {
+			if (name == null)
 				throw new IllegalArgumentException("NameID can not be null!");
 			for (State value : getValues()) {
-				if (value.getNameID().equals(nameID))
+				if (value.getName().equals(name))
 					return value;
 			}
-			throw new IllegalArgumentException("No value with name found: " + nameID);
+			throw new IllegalArgumentException("No value with name found: " + name);
 		}
 		
+		@Override
 		public int getID() {
 			return ordinal();
 		}

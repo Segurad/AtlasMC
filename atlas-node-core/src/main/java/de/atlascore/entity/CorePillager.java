@@ -1,11 +1,12 @@
 package de.atlascore.entity;
 
-import java.util.UUID;
-
+import java.util.ArrayList;
+import java.util.List;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Pillager;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
+import de.atlasmc.inventory.ItemStack;
 
 public class CorePillager extends CoreRaider implements Pillager {
 
@@ -14,8 +15,10 @@ public class CorePillager extends CoreRaider implements Pillager {
 	
 	protected static final int LAST_META_INDEX = CoreRaider.LAST_META_INDEX+1;
 	
-	public CorePillager(EntityType type, UUID uuid) {
-		super(type, uuid);
+	private List<ItemStack> pocketItems;
+	
+	public CorePillager(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -37,6 +40,18 @@ public class CorePillager extends CoreRaider implements Pillager {
 	@Override
 	public void setCharging(boolean charging) {
 		metaContainer.get(META_IS_CELEBRATING).setData(charging);
+	}
+
+	@Override
+	public List<ItemStack> getPocketItems() {
+		if (pocketItems == null)
+			pocketItems = new ArrayList<>();
+		return pocketItems;
+	}
+
+	@Override
+	public boolean hasPocketItems() {
+		return pocketItems != null && !pocketItems.isEmpty();
 	}
 
 }

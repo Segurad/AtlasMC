@@ -99,7 +99,8 @@ public enum DyeColor implements EnumID, EnumName, EnumValueCache {
 	}
 	
 	public static DyeColor getByID(int id) {
-		return getValues().get(id);
+		final List<DyeColor> colors = getValues();
+		return id >= colors.size() ? null : colors.get(id);
 	}
 	
 	public static DyeColor getByName(String name) {

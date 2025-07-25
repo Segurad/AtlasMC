@@ -3,31 +3,48 @@ package de.atlasmc.entity;
 import java.util.List;
 
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Piglin extends AbstractPiglin {
 	
-	public boolean isBaby();
+	public static final NBTSerializationHandler<Piglin>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Piglin.class)
+					.boolField("CannotHunt", Piglin::cannotHunt, Piglin::setCannotHunt, false)
+					.typeList("Inventory", Piglin::hasPocketItems, Piglin::getPocketItems, ItemStack.NBT_HANDLER)
+					.boolField("IsBaby", Piglin::isBaby, Piglin::setBaby, false)
+					// non standard
+					.boolField("IsDancing", Piglin::isDancing, Piglin::setDancing, false)
+					.boolField("IsChargingCrossbow", Piglin::isChargingCrossbow, Piglin::setChargingCorssbow, false)
+					.build();
 	
-	public void setBaby(boolean baby);
+	boolean isBaby();
 	
-	public boolean isChargingCrossbow();
+	void setBaby(boolean baby);
 	
-	public void setChargingCorssbow(boolean charging);
+	boolean isChargingCrossbow();
 	
-	public boolean isDancing();
+	void setChargingCorssbow(boolean charging);
+	
+	boolean isDancing();
 
-	public void setDancing(boolean dancing);
+	void setDancing(boolean dancing);
 
-	public void setCanHunt(boolean hunt);
+	void setCannotHunt(boolean hunt);
 	
-	public boolean canHunt();
+	boolean cannotHunt();
 	
-	public List<ItemStack> getPocketItems();
+	List<ItemStack> getPocketItems();
 	
-	public boolean hasPockItems();
+	boolean hasPocketItems();
 	
-	public void addPocketItem(ItemStack item);
+	void addPocketItem(ItemStack item);
 	
-	public void removePocketItem(ItemStack item);
+	void removePocketItem(ItemStack item);
+	
+	@Override
+	default NBTSerializationHandler<? extends Piglin> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 }

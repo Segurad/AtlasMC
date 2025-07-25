@@ -1,7 +1,5 @@
 package de.atlascore.entity;
 
-import java.util.UUID;
-
 import de.atlasmc.entity.Armadillo;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
@@ -16,8 +14,8 @@ public class CoreArmadillo extends CoreAgeableMob implements Armadillo {
 	
 	protected int scuteTime;
 	
-	public CoreArmadillo(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreArmadillo(EntityType type) {
+		super(type);
 	}
 	
 	@Override

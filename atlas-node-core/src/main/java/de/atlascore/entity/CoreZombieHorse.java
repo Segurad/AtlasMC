@@ -10,7 +10,7 @@ import de.atlasmc.inventory.ContainerFactory;
 public class CoreZombieHorse extends CoreAbstractHorse implements ZombieHorse {
 
 	public CoreZombieHorse(EntityType type, UUID uuid) {
-		super(type, uuid);
+		super(type);
 	}
 
 	@Override

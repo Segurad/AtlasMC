@@ -1,7 +1,5 @@
 package de.atlascore.entity;
 
-import java.util.UUID;
-
 import de.atlasmc.entity.Blaze;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaData;
@@ -15,8 +13,8 @@ public class CoreBlaze extends CoreMob implements Blaze {
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+1;
 	
-	public CoreBlaze(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreBlaze(EntityType type) {
+		super(type);
 	}
 	
 	@Override

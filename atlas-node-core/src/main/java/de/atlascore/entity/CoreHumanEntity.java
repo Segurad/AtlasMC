@@ -1,8 +1,6 @@
 package de.atlascore.entity;
 
 import java.io.IOException;
-import java.util.UUID;
-
 import de.atlasmc.entity.Entity;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.HumanEntity;
@@ -18,6 +16,9 @@ import de.atlasmc.inventory.MainHand;
 import de.atlasmc.inventory.PlayerInventory;
 import de.atlasmc.util.CooldownHandler;
 import de.atlasmc.util.nbt.NBTException;
+import de.atlasmc.util.nbt.io.NBTObjectWriter;
+import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 import de.atlasmc.util.nbt.tag.CompoundTag;
 
 public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
@@ -47,9 +48,16 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 	private int foodLevel = 20;
 	private float foodExhaustionLevel;
 	private float foodSaturationLevel;
+	protected boolean flying;
+	protected boolean instantbuild;
+	protected boolean invulnerable;
+	protected boolean canBuild;
+	protected boolean canFly;
+	protected float flySpeed;
+	protected float walkSpeed;
 	
-	public CoreHumanEntity(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreHumanEntity(EntityType type) {
+		super(type);
 		this.cooldowns = createItemCooldownHander();
 	}
 	
@@ -176,7 +184,14 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 			metaContainer.get(shoulder).setData(null);
 		else {
 			try {
-				metaContainer.get(shoulder).setData((CompoundTag) entity.toNBT());
+				@SuppressWarnings("unchecked")
+				NBTSerializationHandler<Entity> handler = (NBTSerializationHandler<Entity>) entity.getNBTHandler();
+				NBTObjectWriter writer = new NBTObjectWriter();
+				writer.writeCompoundTag();
+				handler.serialize(entity, writer, NBTSerializationContext.DEFAULT_CLIENT);
+				writer.writeEndTag();
+				CompoundTag tag = (CompoundTag) writer.toNBT();
+				metaContainer.get(shoulder).setData(tag);
 			} catch (IOException e) {
 				throw new NBTException("Error while createing entity nbt!", e);
 			}
@@ -256,6 +271,66 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 	@Override
 	public void setFoodSaturationLevel(float level) {
 		this.foodSaturationLevel = level;
+	}
+
+	@Override
+	public float getWalkSpeed() {
+		return walkSpeed;
+	}
+
+	@Override
+	public void setWalkSpeed(float speed) {
+		this.walkSpeed = speed;
+	}
+
+	@Override
+	public boolean canFly() {
+		return canFly;
+	}
+
+	@Override
+	public void setCanFly(boolean canFly) {
+		this.canFly = canFly;
+	}
+
+	@Override
+	public boolean isFlying() {
+		return flying;
+	}
+
+	@Override
+	public void setFlying(boolean flying) {
+		this.flying = flying;
+	}
+
+	@Override
+	public float getFlySpeed() {
+		return flySpeed;
+	}
+
+	@Override
+	public void setFlySpeed(float flySpeed) {
+		this.flySpeed = flySpeed;
+	}
+
+	@Override
+	public boolean canInstaBuild() {
+		return instantbuild;
+	}
+
+	@Override
+	public void setInstaBuild(boolean instabuild) {
+		this.instantbuild = instabuild;
+	}
+
+	@Override
+	public boolean canBuild() {
+		return canBuild;
+	}
+
+	@Override
+	public void setCanBuild(boolean canBuild) {
+		this.canBuild = canBuild;
 	}
 
 }

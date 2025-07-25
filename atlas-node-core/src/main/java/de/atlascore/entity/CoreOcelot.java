@@ -1,7 +1,5 @@
 package de.atlascore.entity;
 
-import java.util.UUID;
-
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Ocelot;
 import de.atlasmc.entity.data.MetaDataField;
@@ -14,8 +12,8 @@ public class CoreOcelot extends CoreAgeableMob implements Ocelot {
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+1;
 	
-	public CoreOcelot(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreOcelot(EntityType type) {
+		super(type);
 	}
 	
 	@Override

@@ -2,45 +2,66 @@ package de.atlasmc.entity;
 
 import java.util.List;
 
+import de.atlasmc.util.AtlasEnum;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+
 public interface Panda extends Animal {
 	
-	public int getBreedTimer();
+	public static final NBTSerializationHandler<Panda>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Panda.class)
+					.include(Animal.NBT_HANDLER)
+					.enumStringField("HiddenGene", Panda::getHiddenGene, Panda::setHiddenGene, Gene::getByName, Gene.NORMAL)
+					.enumStringField("MainGene", Panda::getMainGene, Panda::setMainGene, Gene::getByName, Gene.NORMAL)
+					// non standard
+					.boolField("IsSneezing", Panda::isSneezing, Panda::setSneezing, false)
+					.boolField("IsRolling", Panda::isRolling, Panda::setRolling, false)
+					.boolField("IsSitting", Panda::isSitting, Panda::setSitting, false)
+					.boolField("IsOnBack", Panda::isOnBack, Panda::setOnBack, false)
+					.build();
 	
-	public void setBreedTimer(int time);
+	int getBreedTimer();
 	
-	public int getSneezeTimer();
+	void setBreedTimer(int time);
 	
-	public void setSneezeTimer(int time);
+	int getSneezeTimer();
 	
-	public int getEatTimer();
+	void setSneezeTimer(int time);
 	
-	public void setEatTimer(int time);
+	int getEatTimer();
 	
-	public Gene getMainGene();
+	void setEatTimer(int time);
 	
-	public void setMainGene(Gene gene);
+	Gene getMainGene();
 	
-	public Gene getHiddenGene();
+	void setMainGene(Gene gene);
 	
-	public void setHiddenGene(Gene gene);
+	Gene getHiddenGene();
 	
-	public boolean isSneezing();
+	void setHiddenGene(Gene gene);
 	
-	public void setSneezing(boolean sneezing);
+	boolean isSneezing();
 	
-	public boolean isRolling();
+	void setSneezing(boolean sneezing);
 	
-	public void setRolling(boolean rolling);
+	boolean isRolling();
 	
-	public boolean isSitting();
+	void setRolling(boolean rolling);
 	
-	public void setSitting(boolean sitting);
+	boolean isSitting();
 	
-	public boolean isOnBack();
+	void setSitting(boolean sitting);
 	
-	public void setOnBack(boolean onback);
+	boolean isOnBack();
 	
-	public static enum Gene {
+	void setOnBack(boolean onback);
+	
+	@Override
+	default NBTSerializationHandler<? extends Panda> getNBTHandler() {
+		return NBT_HANDLER;
+	}
+	
+	public static enum Gene implements AtlasEnum {
 		NORMAL(false),
 		LAZY(false),
 		WORRIED(false),
@@ -82,7 +103,7 @@ public interface Panda extends Animal {
 			return VALUES;
 		}
 
-		public static Gene getByNameID(String name) {
+		public static Gene getByName(String name) {
 			for (Gene gene : getValues()) {
 				if (gene.name.equals(name))
 					return gene;
@@ -90,7 +111,7 @@ public interface Panda extends Animal {
 			return null;
 		}
 		
-		public String getNameID() {
+		public String getName() {
 			return name;
 		}
 		

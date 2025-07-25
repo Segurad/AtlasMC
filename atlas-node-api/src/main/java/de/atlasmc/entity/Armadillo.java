@@ -5,8 +5,17 @@ import java.util.List;
 import de.atlasmc.util.EnumID;
 import de.atlasmc.util.EnumName;
 import de.atlasmc.util.EnumValueCache;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Armadillo extends Animal {
+	
+	public static final NBTSerializationHandler<Armadillo>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Armadillo.class)
+					.include(Animal.NBT_HANDLER)
+					.intField("scute_time", Armadillo::getScuteTime, Armadillo::setScuteTime, -1)
+					.enumStringField("state", Armadillo::getState, Armadillo::setState, ArmadilloState::getByName, ArmadilloState.IDLE)
+					.build();
 	
 	int getScuteTime();
 	
@@ -15,6 +24,11 @@ public interface Armadillo extends Animal {
 	ArmadilloState getState();
 	
 	void setState(ArmadilloState state);
+	
+	@Override
+	default NBTSerializationHandler<? extends Armadillo> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 	public static enum ArmadilloState implements EnumName, EnumValueCache, EnumID {
 		

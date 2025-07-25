@@ -1,17 +1,33 @@
 package de.atlasmc.entity;
 
-public interface Ravager extends Raider {
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-	public void setAttackCooldown(int ticks);
+public interface Ravager extends Raider {
 	
-	public int getAttackCooldown();
+	public static final NBTSerializationHandler<Ravager>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Ravager.class)
+					.include(Raider.NBT_HANDLER)
+					.intField("AttackTick", Ravager::getAttackCooldown, Ravager::setAttackCooldown, 0)
+					.intField("RoarTick", Ravager::getRoarTime, Ravager::setRoarTime, 0)
+					.intField("StunTick", Ravager::getStunTime, Ravager::setStunTime, 0)
+					.build();
+
+	void setAttackCooldown(int ticks);
 	
-	public void setRoarTime(int ticks);
+	int getAttackCooldown();
 	
-	public int getRoarTime();
+	void setRoarTime(int ticks);
 	
-	public void setStunTime(int ticks);
+	int getRoarTime();
 	
-	public int getStunTime();
+	void setStunTime(int ticks);
+	
+	int getStunTime();
+	
+	@Override
+	default NBTSerializationHandler<? extends Ravager> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 
 }

@@ -13,7 +13,7 @@ public class CoreEffectInstantDamage extends CoreAbstractPotionEffect {
 
 	@Override
 	public void addEffect(LivingEntity entity) {
-		entity.damage(3*Math.pow(2, getAmplifier()));
+		entity.damage((float) (3*Math.pow(2, getAmplifier())));
 		// TODO add heal to undead
 	}
 	

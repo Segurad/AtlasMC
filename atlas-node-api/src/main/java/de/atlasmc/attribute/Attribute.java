@@ -4,9 +4,12 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Attribute {
+import de.atlasmc.NamespacedKey;
+import de.atlasmc.NamespacedKey.Namespaced;
+
+public class Attribute implements Namespaced {
 	
-	private static final Map<String, Attribute> BY_NAME;
+	private static final Map<NamespacedKey, Attribute> BY_NAME;
 	
 	public static final Attribute
 	GENERIC_MAX_HEALTH = new Attribute("generic.max_health"),
@@ -27,23 +30,28 @@ public class Attribute {
 		BY_NAME = new ConcurrentHashMap<>();
 	}
 	
-	private final String rawName;
+	private final NamespacedKey key;
 	
-	public Attribute(String rawName) {
-		this.rawName = rawName;
-		BY_NAME.put(rawName, this);
+	private Attribute(String key) {
+		this.key = NamespacedKey.literal(key);
+		BY_NAME.put(this.key, this);
 	}
 	
 	public static Collection<Attribute> getValues() {
 		return BY_NAME.values();
 	}
 
-	public String getName() {
-		return rawName;
+	@Override
+	public NamespacedKey getNamespacedKey() {
+		return key;
 	}
-
+	
 	public static Attribute getByName(String name) {
-		return BY_NAME.get(name);
+		return BY_NAME.get(NamespacedKey.of(name));
+	}
+	
+	public static Attribute getByName(NamespacedKey name) {
+		return BY_NAME.get(NamespacedKey.of(name));
 	}
 
 	public static Attribute getByID(int id) {

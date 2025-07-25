@@ -22,10 +22,22 @@ import de.atlasmc.plugin.Plugin;
 import de.atlasmc.scoreboard.ScoreboardView;
 import de.atlasmc.sound.SoundListener;
 import de.atlasmc.util.annotation.UnsafeAPI;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 import de.atlasmc.world.WorldEvent;
 import de.atlasmc.world.particle.ParticleType;
 
 public interface Player extends HumanEntity, Permissible, Messageable, SoundListener {
+	
+	public static final NBTSerializationHandler<Player>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Player.class)
+					.include(HumanEntity.NBT_HANDLER)
+					.enumIntField("playerGameType", Player::getGamemode, Player::setGamemode, Gamemode::getByID, Gamemode.SURVIVAL)
+					.enumIntField("previousPlayerGameType", Player::getPreviousGamemode, Player::setPreviousGamemode, Gamemode::getByID, null)
+					.intField("XpLevel", Player::getLevel, Player::setLevel, 0)
+					.floatField("XpP", Player::getExpBar, Player::setExpBar, 0)
+					.intField("XpTotal", Player::getExp, Player::setExp, 0)
+					.build();
 	
 	PermissionHandler getPermissionHandler();
 	
@@ -90,6 +102,10 @@ public interface Player extends HumanEntity, Permissible, Messageable, SoundList
 	Gamemode getGamemode();
 	
 	void setGamemode(Gamemode gamemode);
+	
+	Gamemode getPreviousGamemode();
+	
+	void setPreviousGamemode(Gamemode gamemode);
 	
 	/**
 	 * Returns a Object stored by a {@link Plugin}<br>

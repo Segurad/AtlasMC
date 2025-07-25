@@ -1,17 +1,11 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
-import java.util.UUID;
-
 import de.atlasmc.entity.Camel;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.AbstractHorseInventory;
 import de.atlasmc.inventory.InventoryType;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreCamel extends CoreAbstractHorse implements Camel {
 
@@ -20,19 +14,8 @@ public class CoreCamel extends CoreAbstractHorse implements Camel {
 	
 	protected static final int LAST_META_INDEX = CoreAbstractHorse.LAST_META_INDEX+2;
 	
-	protected static final NBTFieldSet<CoreCamel> NBT_FIELDS;
-	
-	private static final CharKey LAST_POSE_TICK = CharKey.literal("LastPoseTick");
-	
-	static {
-		NBT_FIELDS = CoreAbstractHorse.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(LAST_POSE_TICK, (holder, reader) -> {
-			holder.setLastPoseTick(reader.readLongTag());
-		});
-	}
-	
-	public CoreCamel(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreCamel(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -45,11 +28,6 @@ public class CoreCamel extends CoreAbstractHorse implements Camel {
 		super.initMetaContainer();
 		metaContainer.set(META_DASHING);
 		metaContainer.set(META_LAST_POSE_TICK);
-	}
-	
-	@Override
-	protected NBTFieldSet<? extends CoreCamel> getFieldSetRoot() {
-		return NBT_FIELDS;
 	}
 
 	@Override
@@ -75,14 +53,6 @@ public class CoreCamel extends CoreAbstractHorse implements Camel {
 	@Override
 	protected AbstractHorseInventory createInventory() {
 		return (AbstractHorseInventory) InventoryType.HORSE.create(this);
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		long lastPose = getLastPoseTick();
-		if (lastPose != 0)
-			writer.writeLongTag(LAST_POSE_TICK, lastPose);
 	}
 
 }

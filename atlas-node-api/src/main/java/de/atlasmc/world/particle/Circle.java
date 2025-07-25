@@ -3,9 +3,10 @@ package de.atlasmc.world.particle;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Vector3f;
+
 import de.atlasmc.Location;
 import de.atlasmc.entity.Player;
-import de.atlasmc.util.EulerAngle;
 
 public class Circle implements Animation {
 
@@ -34,14 +35,14 @@ public class Circle implements Animation {
 	}
 	
 	@Override
-	public void play(Player player, Location loc, EulerAngle angle) {
+	public void play(Player player, Location loc, Vector3f angle) {
 		for(Location l : getLocations(loc, radius)) {
 			anm.play(player, l, angle);
 		}
 	}
 
 	@Override
-	public void playAll(Location loc, EulerAngle angle) {
+	public void playAll(Location loc, Vector3f angle) {
 		for(Location l : getLocations(loc, radius)) {
 			anm.playAll(l, angle);
 		}

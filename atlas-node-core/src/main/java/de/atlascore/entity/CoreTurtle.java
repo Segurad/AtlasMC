@@ -1,6 +1,6 @@
 package de.atlascore.entity;
 
-import java.util.UUID;
+import org.joml.Vector3i;
 
 import de.atlasmc.Location;
 import de.atlasmc.entity.EntityType;
@@ -8,7 +8,6 @@ import de.atlasmc.entity.Turtle;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.util.MathUtil;
-import de.atlasmc.util.map.key.CharKey;
 
 public class CoreTurtle extends CoreAgeableMob implements Turtle {
 
@@ -27,25 +26,8 @@ public class CoreTurtle extends CoreAgeableMob implements Turtle {
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+6;
 	
-	protected static final CharKey
-//	NBT_HOME_POS_X = "HomePosX", TODO unused 
-//	NBT_HOME_POS_Y = "HomePosY",
-//	NBT_HOME_POS_Z = "HomePosZ",
-//	NBT_TRAVEL_POS_X = "TravelPosX",
-//	NBT_TRAVEL_POS_Y = "TravelPosY",
-//	NBT_TRAVEL_POS_Z = "TravelPosZ",
-	NBT_HAS_EGG = CharKey.literal("HasEgg");
-	
-	static {
-		NBT_FIELDS.setField(NBT_HAS_EGG, (holder, reader) -> {
-			if (holder instanceof Turtle) {
-				((Turtle) holder).setEgg(reader.readByteTag() == 1);
-			} else reader.skipTag();
-		});
-	}
-	
-	public CoreTurtle(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreTurtle(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -70,7 +52,7 @@ public class CoreTurtle extends CoreAgeableMob implements Turtle {
 	}
 
 	@Override
-	public boolean hasLayingEgg() {
+	public boolean isLayingEgg() {
 		return metaContainer.getData(META_IS_LAYING_EGG);
 	}
 
@@ -83,15 +65,11 @@ public class CoreTurtle extends CoreAgeableMob implements Turtle {
 	public boolean isTraveling() {
 		return metaContainer.getData(META_IS_TRAVELING);
 	}
-
+	
 	@Override
-	public Location getHome(Location loc) {
-		return MathUtil.getLocation(getWorld(), loc, metaContainer.getData(META_HOME_POS));
-	}
-
-	@Override
-	public void setHome(int x, int y, int z) {
-		metaContainer.get(META_HOME_POS).setData(MathUtil.toPosition(x, y, z));
+	public void setHomePosition(Vector3i pos) {
+		super.setHomePosition(pos);
+		metaContainer.get(META_HOME_POS).setData(MathUtil.toPosition(pos));
 	}
 
 	@Override

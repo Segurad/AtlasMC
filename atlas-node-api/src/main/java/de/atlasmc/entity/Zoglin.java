@@ -1,9 +1,23 @@
 package de.atlasmc.entity;
 
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+
 public interface Zoglin extends Monster {
 	
-	public boolean isBaby();
+	public static final NBTSerializationHandler<Zoglin>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Zoglin.class)
+					.include(Monster.NBT_HANDLER)
+					.boolField("IsBaby", Zoglin::isBaby, Zoglin::setBaby, false)
+					.build();
+	
+	boolean isBaby();
 
-	public void setBaby(boolean baby);
+	void setBaby(boolean baby);
+	
+	@Override
+	default NBTSerializationHandler<? extends LivingEntity> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 }

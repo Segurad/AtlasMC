@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.ObjDoubleConsumer;
@@ -39,6 +40,7 @@ import de.atlasmc.util.function.ObjFloatConsumer;
 import de.atlasmc.util.function.ObjShortConsumer;
 import de.atlasmc.util.function.ToBooleanFunction;
 import de.atlasmc.util.function.ToFloatFunction;
+import de.atlasmc.util.map.Multimap;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
@@ -66,6 +68,7 @@ import de.atlasmc.util.nbt.serialization.fields.InterfacedEnumStringField;
 import de.atlasmc.util.nbt.serialization.fields.LongField;
 import de.atlasmc.util.nbt.serialization.fields.MapNamespaced2Int;
 import de.atlasmc.util.nbt.serialization.fields.MapNamespacedType;
+import de.atlasmc.util.nbt.serialization.fields.MultimapType2TypeList;
 import de.atlasmc.util.nbt.serialization.fields.NBTField;
 import de.atlasmc.util.nbt.serialization.fields.NamespacedKeyField;
 import de.atlasmc.util.nbt.serialization.fields.QuaternionfField;
@@ -78,9 +81,11 @@ import de.atlasmc.util.nbt.serialization.fields.StringToObjectField;
 import de.atlasmc.util.nbt.serialization.fields.TagField;
 import de.atlasmc.util.nbt.serialization.fields.TypeArraySearchByteIndexField;
 import de.atlasmc.util.nbt.serialization.fields.TypeCollectionField;
+import de.atlasmc.util.nbt.serialization.fields.TypeCollectionInnerSearchKeyField;
 import de.atlasmc.util.nbt.serialization.fields.TypeListField;
 import de.atlasmc.util.nbt.serialization.fields.TypeListSearchIntIndexField;
 import de.atlasmc.util.nbt.serialization.fields.UUIDField;
+import de.atlasmc.util.nbt.serialization.fields.UUIDListField;
 import de.atlasmc.util.nbt.serialization.fields.Vector3dField;
 import de.atlasmc.util.nbt.serialization.fields.Vector3fField;
 import de.atlasmc.util.nbt.serialization.fields.Vector3iField;
@@ -205,6 +210,14 @@ public abstract class AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCo
 		return addField(new MapNamespacedType<>(key, has, getMap, handler));
 	}
 	
+	public <K extends Namespaced, V> B multimapType2TypeList(CharSequence key, ToBooleanFunction<T> has, Function<T, Multimap<K, V>> getMap, CharSequence keyField, Function<NamespacedKey, K> keySupplier, NBTSerializationHandler<V> handler) {
+		return addField(new MultimapType2TypeList<>(key, has, getMap, keyField, keySupplier, handler));
+	}
+	
+	public <K extends Namespaced> B compoundMapNamespacedType2Type(CharSequence key, ToBooleanFunction<T> has, Function<T, Map<NamespacedKey, K>> getMap, NBTSerializationHandler<K> handler) {
+		return addField(new MapNamespacedType<>(key, has, getMap, handler));
+	}
+	
 	public B color(CharSequence key, Function<T, Color> get, BiConsumer<T, Color> set) {
 		return addField(new ColorField<>(key, get, set, false, 0));
 	}
@@ -255,6 +268,10 @@ public abstract class AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCo
 		return addField(new UUIDField<>(key, get, set));
 	}
 	
+	public B uuidList(CharSequence key, ToBooleanFunction<T> has, Function<T, List<UUID>> getList, boolean optional) {
+		return addField(new UUIDListField<>(key, has, getList, optional));
+	}
+	
 	public B intArray(CharSequence key, Function<T, int[]> get, BiConsumer<T, int[]> set) {
 		return addField(new IntArrayField<>(key, get, set));
 	}
@@ -274,6 +291,10 @@ public abstract class AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCo
 	
 	public <K> B typeCollection(CharSequence key, ToBooleanFunction<T> has, Function<T, Collection<K>> get, BiConsumer<T, K> set, NBTSerializationHandler<K> handler, boolean optional) {
 		return addField(new TypeCollectionField<>(key, has, get, set, handler, optional));
+	}
+	
+	public <K extends NBTSerializable, C extends Namespaced> B typeCollectionInnerSearchKey(CharSequence key, ToBooleanFunction<T> has, Function<T, Collection<K>> get, CharSequence keyField, Function<NamespacedKey, C> keySupplier, BiFunction<T, C, K> constructor, Function<K, C> keyReverse, boolean optional) {
+		return addField(new TypeCollectionInnerSearchKeyField<>(key, has, get, keyField, keySupplier, constructor, keyReverse, optional));
 	}
 	
 	public <K> B typeListSearchIntIndexField(CharSequence key, CharSequence indexKey, ToBooleanFunction<T> has, Function<T, List<K>> get, NBTSerializationHandler<K> handler, boolean optional) {

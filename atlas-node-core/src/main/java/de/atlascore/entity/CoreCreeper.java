@@ -1,14 +1,9 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
-import java.util.UUID;
-
 import de.atlasmc.entity.Creeper;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreCreeper extends CoreMob implements Creeper {
 	
@@ -20,41 +15,12 @@ public class CoreCreeper extends CoreMob implements Creeper {
 	META_IS_IGNITED = new MetaDataField<>(CoreMob.LAST_META_INDEX+3, false, MetaDataType.BOOLEAN);
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+3;
-
-	protected static final CharKey
-	NBT_EXPLOSION_RADIUS = CharKey.literal("ExplosionRadius"),
-	NBT_FUSE = CharKey.literal("Fuse"),
-	NBT_IGNITED = CharKey.literal("Ignited"),
-	NBT_POWERED = CharKey.literal("Powered");
-	
-	static {
-		NBT_FIELDS.setField(NBT_EXPLOSION_RADIUS, (holder, reader) -> {
-			if (holder instanceof Creeper) {
-				((Creeper) holder).setExplosionRadius(reader.readByteTag());
-			} else reader.skipTag();
-		});
-		NBT_FIELDS.setField(NBT_FUSE, (holder, reader) -> {
-			if (holder instanceof Creeper) {
-				((Creeper) holder).setFuseTime(reader.readShortTag());
-			} else reader.skipTag();
-		});
-		NBT_FIELDS.setField(NBT_IGNITED, (holder, reader) -> {
-			if (holder instanceof Creeper) {
-				((Creeper) holder).setIgnited(reader.readByteTag() == 1);
-			} else reader.skipTag();
-		});
-		NBT_FIELDS.setField(NBT_POWERED, (holder, reader) -> {
-			if (holder instanceof Creeper) {
-				((Creeper) holder).setChared(reader.readByteTag() == 1);
-			} else reader.skipTag();
-		});
-	}
 	
 	private int fuzeTime = -1;
 	private int radius = 3;
 	
-	public CoreCreeper(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreCreeper(EntityType type) {
+		super(type);
 	}
 
 	@Override
@@ -120,15 +86,6 @@ public class CoreCreeper extends CoreMob implements Creeper {
 	@Override
 	public int getExplosionRadius() {
 		return radius;
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		writer.writeByteTag(NBT_EXPLOSION_RADIUS, getExplosionRadius());
-		writer.writeShortTag(NBT_FUSE, getFuseTime());
-		writer.writeByteTag(NBT_IGNITED, isIgnited());
-		writer.writeByteTag(NBT_POWERED, isChared());
 	}
 	
 }

@@ -1,51 +1,86 @@
 package de.atlasmc.entity;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
+
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.EnumName;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Fox extends Animal {
 	
-	public Type getFoxType();
+	public static final NBTSerializationHandler<Fox>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Fox.class)
+					.include(Animal.NBT_HANDLER)
+					.boolField("Crouching", Fox::isCrouching, Fox::setCrouching, false)
+					.boolField("Sitting", Fox::isSitting, Fox::setSitting, false)
+					.boolField("Sleeping", Fox::isSleeping, Fox::setSleeping, false)
+					.uuidList("Trusted", Fox::hasTrusted, Fox::getTrusted, true)
+					.enumStringField("Type", Fox::getFoxType, Fox::setFoxType, Type::getByName, Type.RED)
+					.build();
 	
-	public void setFoxType(Type type);
+	Type getFoxType();
 	
-	public boolean isSitting();
+	void setFoxType(Type type);
 	
-	public void setSitting(boolean sitting);
+	boolean isSitting();
 	
-	public boolean isInterested();
+	void setSitting(boolean sitting);
 	
-	public void setInterested(boolean interested);
+	boolean isInterested();
 	
-	public boolean isPouncing();
+	void setInterested(boolean interested);
 	
-	public void setPouncing(boolean pouncing);
+	boolean isPouncing();
 	
-	public boolean isSleeping();
+	void setPouncing(boolean pouncing);
 	
-	public void setSleeping(boolean sleeping);
+	boolean isSleeping();
 	
-	public boolean isFaceplanted();
+	void setSleeping(boolean sleeping);
 	
-	public void setFaceplanted(boolean faceplanted);
+	boolean isFaceplanted();
 	
-	public boolean isDefending();
+	void setFaceplanted(boolean faceplanted);
 	
-	public void setDefending(boolean defending);
+	boolean isDefending();
 	
-	public UUID getFirstTrusted();
+	void setDefending(boolean defending);
 	
-	public void setFirstTrusted(UUID uuid);
+	UUID getFirstTrusted();
 	
-	public UUID getSecondTrusted();
+	void setFirstTrusted(UUID uuid);
 	
-	public void setSecondTrusted(UUID uuid);
+	UUID getSecondTrusted();
 	
-	public boolean isCrouching();
+	void setSecondTrusted(UUID uuid);
 	
-	public void setCrouching(boolean crouching);
+	boolean isCrouching();
 	
-	public static enum Type {
+	void setCrouching(boolean crouching);
+
+	void addTrusted(UUID trusted);
+	
+	boolean isTrusted(UUID trusted);
+
+	List<UUID> getTrusted();
+	
+	boolean hasTrusted();
+	
+	/**
+	 * Removes the UUID from the trusted set
+	 * @param trusted
+	 * @return true if UUID was present and removed
+	 */
+	boolean removeTrusted(UUID trusted);
+	
+	@Override
+	default NBTSerializationHandler<? extends Fox> getNBTHandler() {
+		return NBT_HANDLER;
+	}
+
+	public static enum Type implements EnumName, EnumID {
 		RED,
 		SNOW;
 		
@@ -55,7 +90,8 @@ public interface Fox extends Animal {
 			name = name().toLowerCase();
 		}
 		
-		public String getNameID() {
+		@Override
+		public String getName() {
 			return name;
 		}
  
@@ -70,11 +106,12 @@ public interface Fox extends Animal {
 			}
 		}
 
+		@Override
 		public int getID() {
 			return ordinal();
 		}
 
-		public static Type getByNameID(String name) {
+		public static Type getByName(String name) {
 			switch (name) {
 			case "red":
 				return RED;
@@ -85,20 +122,5 @@ public interface Fox extends Animal {
 			}
 		}
 	}
-
-	public void addTrusted(UUID trusted);
 	
-	public boolean isTrusted(UUID trusted);
-	
-	public Set<UUID> getTrusted();
-	
-	public boolean hasTrusted();
-	
-	/**
-	 * Removes the UUID from the trusted set
-	 * @param trusted
-	 * @return true if UUID was present and removed
-	 */
-	public boolean removeTrusted(UUID trusted);
-
 }

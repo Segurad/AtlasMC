@@ -1,15 +1,9 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
-import java.util.UUID;
-
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Zombie;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreZombie extends CoreMob implements Zombie {
 
@@ -20,42 +14,12 @@ public class CoreZombie extends CoreMob implements Zombie {
 	META_IS_BECOMING_DROWNED = new MetaDataField<>(CoreMob.LAST_META_INDEX+3, false, MetaDataType.BOOLEAN);
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+3;
-	
-	protected static final NBTFieldSet<CoreZombie> NBT_FIELDS;
-	
-	protected static final CharKey
-		NBT_IS_BABY = CharKey.literal("IsBaby"),
-		NBT_CAN_BREAK_DOORS = CharKey.literal("CanBreakDoors"),
-		NBT_CAN_PICKUP_LOOT = CharKey.literal("CanPickUpLoot"),
-		NBT_DROWNED_CONVERSION_TIME = CharKey.literal("DrownedConverionTime");
-	
-	static {
-		NBT_FIELDS = CoreMob.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_IS_BABY, (holder, reader) -> {
-			holder.setBaby(reader.readByteTag() == 1);
-		});
-		NBT_FIELDS.setField(NBT_CAN_BREAK_DOORS, (holder, reader) -> {
-			holder.setCanBreakDoors(reader.readByteTag() == 1);
-		});
-		NBT_FIELDS.setField(NBT_DROWNED_CONVERSION_TIME, (holder, reader) -> {
-			holder.setDrownedConversionTime(reader.readIntTag());
-		});
-		NBT_FIELDS.setField(NBT_CAN_PICKUP_LOOT, (holder, reader) -> {
-			holder.setCanPickupLoot(reader.readByteTag() == 1);
-		});
-	}
-	
+
 	private boolean canBreakDoor;
-	private boolean canPickupLoot;
 	private int drownedConverionTime = -1;
 	
-	public CoreZombie(EntityType type, UUID uuid) {
-		super(type, uuid);
-	}
-	
-	@Override
-	protected NBTFieldSet<? extends CoreZombie> getFieldSetRoot() {
-		return NBT_FIELDS;
+	public CoreZombie(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -108,29 +72,6 @@ public class CoreZombie extends CoreMob implements Zombie {
 	@Override
 	public int getDrownedConverionTime() {
 		return drownedConverionTime;
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isBaby())
-			writer.writeByteTag(NBT_IS_BABY, true);
-		if (canBreakDoors())
-			writer.writeByteTag(NBT_CAN_BREAK_DOORS, true);
-		if (getDrownedConverionTime() > -1)
-			writer.writeIntTag(NBT_DROWNED_CONVERSION_TIME, getDrownedConverionTime());
-		if (canPickupLoot())
-			writer.writeByteTag(NBT_CAN_PICKUP_LOOT, true);
-	}
-
-	@Override
-	public void setCanPickupLoot(boolean canPickup) {
-		this.canPickupLoot = canPickup;
-	}
-
-	@Override
-	public boolean canPickupLoot() {
-		return canPickupLoot;
 	}
 
 }

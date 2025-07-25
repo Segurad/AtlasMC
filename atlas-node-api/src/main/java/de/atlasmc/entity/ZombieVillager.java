@@ -2,42 +2,35 @@ package de.atlasmc.entity;
 
 import java.util.UUID;
 
-import de.atlasmc.entity.Villager.VillagerProfession;
-import de.atlasmc.entity.Villager.VillagerType;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public interface ZombieVillager extends Zombie, Merchant {
+public interface ZombieVillager extends Zombie, AbstractVillager {
 	
-	public boolean isConverting();
+	public static final NBTSerializationHandler<ZombieVillager>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(ZombieVillager.class)
+					.include(Zombie.NBT_HANDLER)
+					.include(AbstractVillager.NBT_HANDLER)
+					.intField("ConversionTime", ZombieVillager::getConversionTime, ZombieVillager::setConversionTime, -1)
+					.uuid("ConversionPlayer", ZombieVillager::getConversionPlayer, ZombieVillager::setConversionPlayer)
+					.boolField("IsConverting", ZombieVillager::isConverting, ZombieVillager::setConverting, false)
+					.build();
 	
-	public VillagerType getVillagerType();
-	
-	public VillagerProfession getVillagerProfession();
-	
-	public int getLevel();
-	
-	public void setConverting(boolean converting);
-	
-	public void setVillagerType(VillagerType type);
-	
-	public void setVillagerProfession(VillagerProfession profession);
-	
-	public void setLevel(int level);
+	boolean isConverting();
 
-	public void setXp(int xp);
-
-	public int getXp();
-
-	public void setConversionPlayer(UUID uuid);
+	void setConversionPlayer(UUID uuid);
 	
-	public UUID getConversionPlayer();
+	UUID getConversionPlayer();
 
-	public void setConversionTime(int ticks);
+	void setConversionTime(int ticks);
 	
 	/**
 	 * Returns the number of ticks it takes until this {@link ZombieVillager} is converted to a {@link Villager}.<br>
 	 * Will be -1 if no conversion is happening
 	 * @return ticks or -1
 	 */
-	public int getConversionTime();
+	int getConversionTime();
+
+	void setConverting(boolean converting);
 	
 }

@@ -1,9 +1,8 @@
 package de.atlascore.entity;
 
-import java.util.UUID;
-
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.PolarBear;
+import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 
@@ -14,8 +13,10 @@ public class CorePolarBear extends CoreAgeableMob implements PolarBear {
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+1;
 	
-	public CorePolarBear(EntityType type, UUID uuid) {
-		super(type, uuid);
+	private int angerTime;
+	
+	public CorePolarBear(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -37,6 +38,27 @@ public class CorePolarBear extends CoreAgeableMob implements PolarBear {
 	@Override
 	public void setStandingUp(boolean standing) {
 		metaContainer.get(META_IS_STANDING_UP).setData(standing);
+	}
+
+	@Override
+	public boolean isAngry() {
+		return (metaContainer.getData(META_MOB_FLAGS) & FLAG_IS_ANGRY) == FLAG_IS_ANGRY;
+	}
+
+	@Override
+	public void setAngry(boolean angry) {
+		MetaData<Byte> data = metaContainer.get(META_MOB_FLAGS);
+		data.setData((byte) (angry ? data.getData() | FLAG_IS_ANGRY : data.getData() & ~FLAG_IS_ANGRY));
+	}
+
+	@Override
+	public int getAngerTime() {
+		return angerTime;
+	}
+
+	@Override
+	public void setAngerTime(int ticks) {
+		this.angerTime = ticks;
 	}
 
 }

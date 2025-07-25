@@ -1,19 +1,12 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Piglin;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CorePiglin extends CoreAbstractPiglin implements Piglin {
 	
@@ -26,44 +19,13 @@ public class CorePiglin extends CoreAbstractPiglin implements Piglin {
 
 	protected static final int LAST_META_INDEX = CoreAbstractPiglin.LAST_META_INDEX+3;
 	
-	protected static final NBTFieldSet<CorePiglin> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_IS_BABY = CharKey.literal("IsBaby"),
-	NBT_CANNOT_HUNT = CharKey.literal("CannotHunt"),
-	NBT_INVENTORY = CharKey.literal("Inventory");
-	
-	static {
-		NBT_FIELDS = CoreAbstractPiglin.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_IS_BABY, (holder, reader) -> {
-			holder.setBaby(reader.readByteTag() == 1);
-		});
-		NBT_FIELDS.setField(NBT_CANNOT_HUNT, (holder, reader) -> {
-			holder.setCanHunt(reader.readByteTag() == 0);
-		});
-		NBT_FIELDS.setField(NBT_INVENTORY, (holder, reader) -> {
-			reader.readNextEntry();
-			while (reader.getRestPayload() > 0) {
-				reader.readNextEntry();
-				ItemStack item = ItemStack.getFromNBT(reader);
-				holder.addPocketItem(item);
-			}
-			reader.readNextEntry();
-		});
-	}
-	
 	private List<ItemStack> pocketItems;
 	private boolean canHunt;
 	
-	public CorePiglin(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CorePiglin(EntityType type) {
+		super(type);
 	}
-	
-	@Override
-	protected NBTFieldSet<? extends CorePiglin> getFieldSetRoot() {
-		return NBT_FIELDS;
-	}
-	
+
 	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
@@ -108,12 +70,12 @@ public class CorePiglin extends CoreAbstractPiglin implements Piglin {
 	}
 
 	@Override
-	public void setCanHunt(boolean hunt) {
+	public void setCannotHunt(boolean hunt) {
 		this.canHunt = hunt;
 	}
 
 	@Override
-	public boolean canHunt() {
+	public boolean cannotHunt() {
 		return canHunt;
 	}
 
@@ -125,7 +87,7 @@ public class CorePiglin extends CoreAbstractPiglin implements Piglin {
 	}
 
 	@Override
-	public boolean hasPockItems() {
+	public boolean hasPocketItems() {
 		return pocketItems != null && !pocketItems.isEmpty();
 	}
 
@@ -138,26 +100,9 @@ public class CorePiglin extends CoreAbstractPiglin implements Piglin {
 
 	@Override
 	public void removePocketItem(ItemStack item) {
-		if (!hasPockItems())
+		if (!hasPocketItems())
 			return;
 		getPocketItems().remove(item);
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isBaby())
-			writer.writeByteTag(NBT_IS_BABY, true);
-		if (!canHunt())
-			writer.writeByteTag(NBT_CANNOT_HUNT, true);
-		if (hasPockItems()) {
-			List<ItemStack> items = getPocketItems();
-			writer.writeListTag(NBT_INVENTORY, TagType.COMPOUND, items.size());
-			for (ItemStack item : items) {
-				item.toNBT(writer, systemData);
-				writer.writeEndTag();
-			}
-		}
 	}
 
 }

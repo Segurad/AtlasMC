@@ -1,13 +1,20 @@
 package de.atlasmc.entity;
 
-public interface ZombifiedPiglin extends Zombie {
+import de.atlasmc.entity.data.AngerableMob;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-	public void setAngerTime(int ticks);
+public interface ZombifiedPiglin extends Zombie, AngerableMob  {
 	
-	public int getAngerTime();
+	public static final NBTSerializationHandler<ZombifiedPiglin>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(ZombifiedPiglin.class)
+					.include(Zombie.NBT_HANDLER)
+					.include(AngerableMob.NBT_HANDLER)
+					.build();
 	
-	public boolean isAngry();
-	
-	public void setAngry(boolean angry);
+	@Override
+	default NBTSerializationHandler<? extends ZombifiedPiglin> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 
 }

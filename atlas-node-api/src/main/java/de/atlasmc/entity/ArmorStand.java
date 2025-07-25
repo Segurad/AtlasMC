@@ -1,70 +1,111 @@
 package de.atlasmc.entity;
 
-import de.atlasmc.util.EulerAngle;
+import org.joml.Vector3f;
+
+import de.atlasmc.util.annotation.UnsafeAPI;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface ArmorStand extends LivingEntity {
+	
+	public static final NBTSerializationHandler<ArmorStand>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(ArmorStand.class)
+					.include(LivingEntity.NBT_HANDLER)
+					.intField("DisabledSlots", ArmorStand::getSlotInteractionFlags, ArmorStand::setSlotInteractionFlags, 0)
+					.boolField("Invisible", ArmorStand::isInvisible, ArmorStand::setInvisible, false)
+					.boolField("Marker", ArmorStand::isMarker, ArmorStand::setMarker, false)
+					.boolField("NoBasePlate", ArmorStand::hasNoBasePlate, ArmorStand::setNoBasePlate, false)
+					.beginComponent("Pose")
+					.vector3f("Body", ArmorStand::getBodyPoseUnsafe, ArmorStand::setBodyPose)
+					.vector3f("Head", ArmorStand::getHeadPoseUnsafe, ArmorStand::setHeadPose)
+					.vector3f("LeftArm", ArmorStand::getLeftArmPoseUnsafe, ArmorStand::setLeftArmPose)
+					.vector3f("LeftLeg", ArmorStand::getLeftLegPoseUnsafe, ArmorStand::setLeftLegPose)
+					.vector3f("RightArm", ArmorStand::getRightArmPoseUnsafe, ArmorStand::setRightArmPose)
+					.vector3f("RightLeg", ArmorStand::getRightLegPoseUnsafe, ArmorStand::setRightLegPose)
+					.endComponent()
+					.boolField("ShowArms", ArmorStand::hasArms, ArmorStand::setArms, false)
+					.boolField("Small", ArmorStand::isSmall, ArmorStand::setSmall, false)
+					.build();
 
-	public default EulerAngle getBodyPose() {
-		return getBodyPose(new EulerAngle());
+	default Vector3f getBodyPose() {
+		return getBodyPose(new Vector3f());
 	}
 
-	public default EulerAngle getHeadPose() {
-		return getHeadPose(new EulerAngle());
+	default Vector3f getHeadPose() {
+		return getHeadPose(new Vector3f());
 	}
 
-	public default EulerAngle getLeftArmPose() {
-		return getLeftArmPose(new EulerAngle());
+	default Vector3f getLeftArmPose() {
+		return getLeftArmPose(new Vector3f());
 	}
 
-	public default EulerAngle getLeftLegPose() {
-		return getLeftLegPose(new EulerAngle());
+	default Vector3f getLeftLegPose() {
+		return getLeftLegPose(new Vector3f());
 	}
 
-	public default EulerAngle getRightArmPose() {
-		return getRightArmPose(new EulerAngle());
+	default Vector3f getRightArmPose() {
+		return getRightArmPose(new Vector3f());
 	}
 
-	public default EulerAngle getRightLegPose() {
-		return getRightLegPose(new EulerAngle());
+	default Vector3f getRightLegPose() {
+		return getRightLegPose(new Vector3f());
 	}
 	
-	public EulerAngle getBodyPose(EulerAngle angle);
+	@UnsafeAPI
+	Vector3f getBodyPoseUnsafe();
 
-	public EulerAngle getHeadPose(EulerAngle angle);
+	@UnsafeAPI
+	Vector3f getHeadPoseUnsafe();
 
-	public EulerAngle getLeftArmPose(EulerAngle angle);
+	@UnsafeAPI
+	Vector3f getLeftArmPoseUnsafe();
 
-	public EulerAngle getLeftLegPose(EulerAngle angle);
+	@UnsafeAPI
+	Vector3f getLeftLegPoseUnsafe();
 
-	public EulerAngle getRightArmPose(EulerAngle angle);
+	@UnsafeAPI
+	Vector3f getRightArmPoseUnsafe();
 
-	public EulerAngle getRightLegPose(EulerAngle angle);
-
-	public void setBodyPose(EulerAngle angle);
-
-	public void setBodyPose(float x, float y, float z);
+	@UnsafeAPI
+	Vector3f getRightLegPoseUnsafe();
 	
-	public void setHeadPose(EulerAngle angle);
-	
-	public void setHeadPose(float x, float y, float z);
+	Vector3f getBodyPose(Vector3f angle);
 
-	public void setLeftArmPose(EulerAngle angle);
+	Vector3f getHeadPose(Vector3f angle);
 
-	public void setLeftArmPose(float x, float y, float z);
-	
-	public void setLeftLegPose(EulerAngle angle);
-	
-	public void setLeftLegPose(float x, float y, float z);
+	Vector3f getLeftArmPose(Vector3f angle);
 
-	public void setRightArmPose(EulerAngle angle);
-	
-	public void setRightArmPose(float x, float y, float z);
+	Vector3f getLeftLegPose(Vector3f angle);
 
-	public void setRightLegPose(EulerAngle angle);
+	Vector3f getRightArmPose(Vector3f angle);
+
+	Vector3f getRightLegPose(Vector3f angle);
+
+	void setBodyPose(Vector3f angle);
+
+	void setBodyPose(float x, float y, float z);
 	
-	public void setRightLegPose(float x, float y, float z);
+	void setHeadPose(Vector3f angle);
 	
-	public default EulerAngle getLimbPos(LimbType limb, EulerAngle angle) {
+	void setHeadPose(float x, float y, float z);
+
+	void setLeftArmPose(Vector3f angle);
+
+	void setLeftArmPose(float x, float y, float z);
+	
+	void setLeftLegPose(Vector3f angle);
+	
+	void setLeftLegPose(float x, float y, float z);
+
+	void setRightArmPose(Vector3f angle);
+	
+	void setRightArmPose(float x, float y, float z);
+
+	void setRightLegPose(Vector3f angle);
+	
+	void setRightLegPose(float x, float y, float z);
+	
+	default Vector3f getLimbPos(LimbType limb, Vector3f angle) {
 		if (limb == null)
 			throw new IllegalArgumentException("Limb can not be null!");
 		switch (limb) {
@@ -85,7 +126,7 @@ public interface ArmorStand extends LivingEntity {
 		}
 	}
 	
-	public default void setLimbPos(LimbType limb, EulerAngle angle) {
+	default void setLimbPos(LimbType limb, Vector3f angle) {
 		if (limb == null)
 			throw new IllegalArgumentException("Limb can not be null!");
 		switch (limb) {
@@ -118,25 +159,25 @@ public interface ArmorStand extends LivingEntity {
 		}
 	}
 	
-	public boolean isSmall();
+	boolean isSmall();
 	
-	public void setSmall(boolean small);
+	void setSmall(boolean small);
 	
-	public boolean hasArms();
+	boolean hasArms();
 	
-	public void setArms(boolean arms);
+	void setArms(boolean arms);
 	
-	public boolean hasBasePlate();
+	boolean hasNoBasePlate();
 	
-	public void setBasePlate(boolean baseplate);
+	void setNoBasePlate(boolean baseplate);
 	
 	/**
 	 * Returns whether or not this {@link ArmorStand} is a marker. Meaning having no hitbox
 	 * @return true if is a marker
 	 */
-	public boolean isMarker();
+	boolean isMarker();
 	
-	public void setMarker(boolean marker);
+	void setMarker(boolean marker);
 	
 	public static enum LimbType {
 		HEAD, BODY, RIGHT_LEG, LEFT_LEG, RIGHT_ARM, LEFT_ARM;
@@ -147,7 +188,7 @@ public interface ArmorStand extends LivingEntity {
 	 * @see #getSlotInteractionFlags()
 	 * @param flags the interaction flags
 	 */
-	public void setSlotInteractionFlags(int flags);
+	void setSlotInteractionFlags(int flags);
 	
 	/**
 	 * Returns the slot interaction flags as integer
@@ -173,6 +214,11 @@ public interface ArmorStand extends LivingEntity {
 	 * </table>
 	 * @return flags
 	 */
-	public int getSlotInteractionFlags();
+	int getSlotInteractionFlags();
+	
+	@Override
+	default NBTSerializationHandler<? extends ArmorStand> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 
 }

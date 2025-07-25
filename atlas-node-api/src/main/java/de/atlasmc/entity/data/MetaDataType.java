@@ -20,19 +20,18 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.block.BlockFace;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.entity.AbstractVillager.VillagerData;
+import de.atlasmc.entity.AbstractVillager.VillagerProfession;
+import de.atlasmc.entity.AbstractVillager.VillagerType;
 import de.atlasmc.entity.Armadillo.ArmadilloState;
 import de.atlasmc.entity.Cat.Type;
 import de.atlasmc.entity.Entity.Pose;
 import de.atlasmc.entity.Frog.Variant;
 import de.atlasmc.entity.Painting.Motive;
 import de.atlasmc.entity.Sniffer.State;
-import de.atlasmc.entity.Villager.VillagerData;
-import de.atlasmc.entity.Villager.VillagerProfession;
-import de.atlasmc.entity.Villager.VillagerType;
 import de.atlasmc.entity.Wolf.WolfVariant;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.protocol.ProtocolUtil;
-import de.atlasmc.util.EulerAngle;
 import de.atlasmc.util.MathUtil;
 import de.atlasmc.util.nbt.tag.CompoundTag;
 import io.netty.buffer.ByteBuf;
@@ -206,22 +205,22 @@ public abstract class MetaDataType<T> {
 
     };
 	
-	public static final MetaDataType<EulerAngle> ROTATION = new MetaDataType<>(TYPE_ID_ROTATION, EulerAngle.class) {
+	public static final MetaDataType<Vector3f> ROTATION = new MetaDataType<>(TYPE_ID_ROTATION, Vector3f.class) {
 
         @Override
-        public EulerAngle read(ByteBuf in) {
-            return new EulerAngle(in.readFloat(), in.readFloat(), in.readFloat());
+        public Vector3f read(ByteBuf in) {
+            return new Vector3f(in.readFloat(), in.readFloat(), in.readFloat());
         }
 
         @Override
-        public void write(EulerAngle data, ByteBuf out) {
-            out.writeFloat(data.getX());
-            out.writeFloat(data.getY());
-            out.writeFloat(data.getZ());
+        public void write(Vector3f data, ByteBuf out) {
+            out.writeFloat(data.x);
+            out.writeFloat(data.y);
+            out.writeFloat(data.z);
         }
 
-        public EulerAngle copyData(EulerAngle data) {
-            return data.clone();
+        public Vector3f copyData(Vector3f data) {
+            return new Vector3f(data);
         }
 
     };

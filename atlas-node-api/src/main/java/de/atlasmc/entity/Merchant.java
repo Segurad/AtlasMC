@@ -1,82 +1,70 @@
 package de.atlasmc.entity;
 
-import java.io.IOException;
 import java.util.List;
 
+import de.atlasmc.inventory.InventoryHolder;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.inventory.MerchantInventory;
 import de.atlasmc.util.annotation.NotNull;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.NBTHolder;
-import de.atlasmc.util.nbt.NBTUtil;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.serialization.NBTSerializable;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public interface Merchant {
+public interface Merchant extends InventoryHolder {
 
-	public MerchantRecipe getRecipe(int index);
+	public static final NBTSerializationHandler<Merchant>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Merchant.class)
+					.beginComponent("Offers")
+					.typeList("Recipes", Merchant::hasRecipes, Merchant::getRecipes, MerchantRecipe.NBT_HANDLER)
+					.endComponent()
+					.intField("HeadShakeTimer", Merchant::getHeadShakeTimer, Merchant::setHeadShakeTimer)
+					.build();
 	
-	public int getRecipeCount();
+	int getHeadShakeTimer();
 	
-	public List<MerchantRecipe> getRecipes();
+	void setHeadShakeTimer(int time);
 	
-	public void addRecipe(MerchantRecipe recipe);
+	MerchantInventory getInventory();
 	
-	public boolean hasRecipes();
+	default MerchantRecipe getRecipe(int index) {
+		return hasInventory() ? getInventory().getRecipe(index) : null;
+	}
+
+	default int getRecipeCount() {
+		return hasInventory() ? getInventory().getRecipeCount() : 0;
+	}
+
+	default List<MerchantRecipe> getRecipes() {
+		return getInventory().getRecipes();
+	}
+
+	default void addRecipe(MerchantRecipe recipe) {
+		if (recipe == null)
+			throw new IllegalArgumentException("Recipe can not be null!");
+		getInventory().addRecipe(recipe);
+	}
+
+	default boolean hasRecipes() {
+		return hasInventory() && getInventory().getRecipeCount() > 0;
+	}
 	
-	public static class MerchantRecipe implements Cloneable, NBTHolder {
+	public static class MerchantRecipe implements Cloneable, NBTSerializable {
 		
-		protected static final NBTFieldSet<MerchantRecipe> NBT_FIELDS;
-		
-		protected static final CharKey
-		NBT_ID = CharKey.literal("id"), // required for get material
-		NBT_BUY = CharKey.literal("buy"),
-		NBT_BUY_B = CharKey.literal("buyB"),
-		NBT_DEMAND = CharKey.literal("demand"),
-		NBT_MAX_USES = CharKey.literal("maxUses"),
-		NBT_PRICE_MULTIPLIER = CharKey.literal("priceMultiplier"),
-		NBT_REWARD_EXP = CharKey.literal("rewardExp"),
-		NBT_SELL = CharKey.literal("sell"),
-		NBT_SPECIAL_PRICE = CharKey.literal("specialPrice"),
-		NBT_USES = CharKey.literal("uses"),
-		NBT_XP = CharKey.literal("xp");
-		
-		static {
-			NBT_FIELDS = NBTFieldSet.newSet();
-			NBT_FIELDS.setField(NBT_BUY, (holder, reader) -> {
-				reader.readNextEntry();
-				holder.inputItem1 = ItemStack.getFromNBT(reader);
-			});
-			NBT_FIELDS.setField(NBT_BUY_B, (holder, reader) -> {
-				reader.readNextEntry();
-				holder.inputItem2 = ItemStack.getFromNBT(reader);
-			});
-			NBT_FIELDS.setField(NBT_DEMAND, (holder, reader) -> {
-				holder.demand = reader.readIntTag();
-			});
-			NBT_FIELDS.setField(NBT_MAX_USES, (holder, reader) -> {
-				holder.maxUses = reader.readIntTag();
-			});
-			NBT_FIELDS.setField(NBT_PRICE_MULTIPLIER, (holder, reader) -> {
-				holder.priceMultiplier = reader.readIntTag();
-			});
-			NBT_FIELDS.setField(NBT_REWARD_EXP, (holder, reader) -> {
-				holder.rewardExp = reader.readBoolean();
-			});
-			NBT_FIELDS.setField(NBT_SELL, (holder, reader) -> {
-				reader.readNextEntry();
-				holder.outputItem = ItemStack.getFromNBT(reader);
-			});
-			NBT_FIELDS.setField(NBT_SPECIAL_PRICE, (holder, reader) -> {
-				holder.specialPrice = reader.readIntTag();
-			});
-			NBT_FIELDS.setField(NBT_USES, (holder, reader) -> {
-				holder.uses = reader.readIntTag();
-			});
-			NBT_FIELDS.setField(NBT_XP, (holder, reader) -> {
-				holder.xp = reader.readIntTag();
-			});
-		}
+		public static final NBTSerializationHandler<MerchantRecipe>
+		NBT_HANDLER = NBTSerializationHandler
+						.builder(MerchantRecipe.class)
+						.defaultConstructor(MerchantRecipe::new)
+						.typeCompoundField("buy", MerchantRecipe::getInputItem1, MerchantRecipe::setInputItem1, ItemStack.NBT_HANDLER)
+						.typeCompoundField("buyB", MerchantRecipe::getInputItem2, MerchantRecipe::setInputItem2, ItemStack.NBT_HANDLER)
+						.intField("demand", MerchantRecipe::getDemand, MerchantRecipe::setDemand, 0)
+						.intField("maxUses", MerchantRecipe::getMaxUses, MerchantRecipe::setMaxUses, 0)
+						.floatField("priceMultiplier", MerchantRecipe::getPriceMultiplier, MerchantRecipe::setPriceMultiplier, 0)
+						.boolField("rewarded", MerchantRecipe::isRewardExp, MerchantRecipe::setRewardExp, false)
+						.typeCompoundField("sell", MerchantRecipe::getOutputItem, MerchantRecipe::setOutputItem, ItemStack.NBT_HANDLER)
+						.intField("specialPRice", MerchantRecipe::getSpecialPrice, MerchantRecipe::setSpecialPrice, 0)
+						.intField("uses", MerchantRecipe::getUses, MerchantRecipe::setUses, 0)
+						.intField("xp", MerchantRecipe::getXP, MerchantRecipe::setXP, 0)
+						.build();
 		
 		private ItemStack inputItem1;
 		private ItemStack inputItem2;
@@ -198,37 +186,12 @@ public interface Merchant {
 				clone.setInputItem2(inputItem2.clone());
 			return clone;
 		}
-
+		
 		@Override
-		public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-			if (inputItem1 != null) {
-				writer.writeCompoundTag(NBT_BUY);
-				inputItem1.toNBT(writer, systemData);
-				writer.writeEndTag();
-			}
-			if (inputItem2 != null) {
-				writer.writeCompoundTag(NBT_BUY_B);
-				inputItem2.toNBT(writer, systemData);
-				writer.writeEndTag();
-			}
-			writer.writeIntTag(NBT_DEMAND, demand);
-			writer.writeIntTag(NBT_MAX_USES, maxUses);
-			writer.writeFloatTag(NBT_PRICE_MULTIPLIER, priceMultiplier);
-			writer.writeByteTag(NBT_REWARD_EXP, rewardExp);
-			if (outputItem != null) {
-				writer.writeCompoundTag(NBT_SELL);
-				outputItem.toNBT(writer, systemData);
-				writer.writeEndTag();
-			}
-			writer.writeIntTag(NBT_SPECIAL_PRICE, demand);
-			writer.writeIntTag(NBT_USES, uses);
-			writer.writeIntTag(NBT_XP, xp);
+		public NBTSerializationHandler<? extends MerchantRecipe> getNBTHandler() {
+			return NBT_HANDLER;
 		}
-
-		@Override
-		public void fromNBT(NBTReader reader) throws IOException {
-			NBTUtil.readNBT(NBT_FIELDS, this, reader);
-		}
+		
 	}
 
 }

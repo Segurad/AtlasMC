@@ -1,15 +1,10 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
-import java.util.UUID;
-
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Panda;
 import de.atlasmc.entity.data.MetaData;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CorePanda extends CoreAgeableMob implements Panda {
 
@@ -20,9 +15,16 @@ public class CorePanda extends CoreAgeableMob implements Panda {
 	protected static final MetaDataField<Integer>
 	META_TIMER_EAT = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+3, 0, MetaDataType.VAR_INT);
 	protected static final MetaDataField<Byte>
-	META_GENE_MAIN = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+4, (byte) 0, MetaDataType.BYTE);
+	META_GENE_MAIN = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+4, (byte) Gene.NORMAL.getID(), MetaDataType.BYTE);
 	protected static final MetaDataField<Byte>
-	META_GENE_HIDDEN = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+5, (byte) 0, MetaDataType.BYTE);
+	META_GENE_HIDDEN = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+5, (byte) Gene.NORMAL.getID(), MetaDataType.BYTE);
+	
+	protected static final int
+	FLAG_IS_SNEEZING = 0x02,
+	FLAG_IS_ROLLING = 0x04,
+	FLAG_IS_SITTING = 0x08,
+	FLAG_IS_ON_BACK = 0x10;
+	
 	/**
 	 * 0x02 - Is Sneezing<br>
 	 * 0x04 - Is rolling<br>
@@ -34,25 +36,8 @@ public class CorePanda extends CoreAgeableMob implements Panda {
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+6;
 	
-	protected static final CharKey
-	NBT_MAIN_GENE = CharKey.literal("MainGene"),
-	NBT_HIDDEN_GENE = CharKey.literal("HiddenGene");
-	
-	static {
-		NBT_FIELDS.setField(NBT_MAIN_GENE, (holder, reader) -> {
-			if (holder instanceof Panda) {
-				((Panda) holder).setMainGene(Gene.getByNameID(reader.readStringTag()));
-			} else reader.skipTag();
-		});
-		NBT_FIELDS.setField(NBT_HIDDEN_GENE, (holder, reader) -> {
-			if (holder instanceof Panda) {
-				((Panda) holder).setHiddenGene(Gene.getByNameID(reader.readStringTag()));
-			} else reader.skipTag();
-		});
-	}
-	
-	public CorePanda(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CorePanda(EntityType type) {
+		super(type);
 	}
 
 	@Override
@@ -98,22 +83,22 @@ public class CorePanda extends CoreAgeableMob implements Panda {
 
 	@Override
 	public boolean isSneezing() {
-		return (metaContainer.getData(META_PANDA_FLAGS) & 0x02) == 0x02;
+		return (metaContainer.getData(META_PANDA_FLAGS) & FLAG_IS_SNEEZING) == FLAG_IS_SNEEZING;
 	}
 
 	@Override
 	public boolean isRolling() {
-		return (metaContainer.getData(META_PANDA_FLAGS) & 0x04) == 0x04;
+		return (metaContainer.getData(META_PANDA_FLAGS) & FLAG_IS_ROLLING) == FLAG_IS_ROLLING;
 	}
 
 	@Override
 	public boolean isSitting() {
-		return (metaContainer.getData(META_PANDA_FLAGS) & 0x08) == 0x08;
+		return (metaContainer.getData(META_PANDA_FLAGS) & FLAG_IS_SITTING) == FLAG_IS_SITTING;
 	}
 
 	@Override
 	public boolean isOnBack() {
-		return (metaContainer.getData(META_PANDA_FLAGS) & 0x10) == 0x10;
+		return (metaContainer.getData(META_PANDA_FLAGS) & FLAG_IS_ON_BACK) == FLAG_IS_ON_BACK;
 	}
 
 	@Override
@@ -148,32 +133,25 @@ public class CorePanda extends CoreAgeableMob implements Panda {
 	@Override
 	public void setSneezing(boolean sneezing) {
 		MetaData<Byte> data = metaContainer.get(META_PANDA_FLAGS);
-		data.setData((byte) (sneezing ? data.getData() | 0x02 : data.getData() & 0xFD));
+		data.setData((byte) (sneezing ? data.getData() | FLAG_IS_SNEEZING : data.getData() & ~FLAG_IS_SNEEZING));
 	}
 
 	@Override
 	public void setRolling(boolean rolling) {
 		MetaData<Byte> data = metaContainer.get(META_PANDA_FLAGS);
-		data.setData((byte) (rolling ? data.getData() | 0x04 : data.getData() & 0xFB));
+		data.setData((byte) (rolling ? data.getData() | FLAG_IS_ROLLING : data.getData() & ~FLAG_IS_ROLLING));
 	}
 
 	@Override
 	public void setSitting(boolean sitting) {
 		MetaData<Byte> data = metaContainer.get(META_PANDA_FLAGS);
-		data.setData((byte) (sitting ? data.getData() | 0x08 : data.getData() & 0xF7));
+		data.setData((byte) (sitting ? data.getData() | FLAG_IS_SITTING : data.getData() & ~FLAG_IS_SITTING));
 	}
 
 	@Override
 	public void setOnBack(boolean onback) {
 		MetaData<Byte> data = metaContainer.get(META_PANDA_FLAGS);
-		data.setData((byte) (onback ? data.getData() | 0x10 : data.getData() & 0xEF));
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		writer.writeStringTag(NBT_MAIN_GENE, getMainGene().getNameID());
-		writer.writeStringTag(NBT_HIDDEN_GENE, getHiddenGene().getNameID());
+		data.setData((byte) (onback ? data.getData() | FLAG_IS_ON_BACK : data.getData() & ~FLAG_IS_ON_BACK));
 	}
 
 }

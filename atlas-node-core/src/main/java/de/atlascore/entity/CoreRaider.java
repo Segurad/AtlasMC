@@ -1,7 +1,5 @@
 package de.atlascore.entity;
 
-import java.util.UUID;
-
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Raider;
 import de.atlasmc.entity.data.MetaDataField;
@@ -14,8 +12,8 @@ public class CoreRaider extends CoreMob implements Raider {
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+1;
 	
-	public CoreRaider(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreRaider(EntityType type) {
+		super(type);
 	}
 
 	@Override

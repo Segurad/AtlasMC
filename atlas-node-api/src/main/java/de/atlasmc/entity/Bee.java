@@ -1,57 +1,72 @@
 package de.atlasmc.entity;
 
-import java.util.UUID;
+import org.joml.Vector3i;
 
-import de.atlasmc.Location;
+import de.atlasmc.entity.data.AngerableMob;
+import de.atlasmc.util.annotation.UnsafeAPI;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public interface Bee extends Animal {
+public interface Bee extends Animal, AngerableMob {
 
-	public boolean isAngry();
+	public static final NBTSerializationHandler<Bee>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Bee.class)
+					.include(Animal.NBT_HANDLER)
+					.include(AngerableMob.NBT_HANDLER)
+					.intField("CannotEnterHiveTicks", Bee::getTicksCannotEnterHive, Bee::setTicksCannotEnterHive, 0)
+					.intField("CropsGrownSincePollination", Bee::getCropsGrownSincePollination, Bee::setCropsGrownSincePollination, 0)
+					.vector3i("flower_pos", Bee::getFlowerLocationUnsafe, Bee::setFlowerLocation)
+					.boolField("HasNectar", Bee::hasNectar, Bee::setNectar, false)
+					.boolField("HasStung", Bee::hasStung, Bee::setStung, false)
+					.vector3i("hive_pos", Bee::getHiveLocationUnsafe, Bee::setHiveLocation)
+					.intField("TicksSincePollination", Bee::getTicksSincePollination, Bee::setTicksSincePollination, 0)
+					.build();
 	
-	public void setAngry(boolean angry);
+	boolean hasStung();
 	
-	public boolean hasStung();
+	void setStung(boolean stung);
 	
-	public void setStung(boolean stung);
+	boolean hasNectar();
 	
-	public boolean hasNectar();
-	
-	public void setNectar(boolean nectar);
-	
-	public int getAnger();
+	void setNectar(boolean nectar);
 
-	public void setAnger(int ticks);
+	void setHiveLocation(Vector3i location);
 	
-	public int getTicksInHive();
+	default Vector3i getHiveLocation() {
+		return getHiveLocation(new Vector3i());
+	}
 	
-	public int getHiveMinOccupationTicks();
+	Vector3i getHiveLocation(Vector3i vec);
 	
-	public void setTicksInHive(int ticks);
+	@UnsafeAPI
+	Vector3i getHiveLocationUnsafe();
 	
-	public void setHiveMinOccupationTicks(int ticks);
-
-	public void setHiveLocation(Location location);
+	void setFlowerLocation(Vector3i location);
 	
-	public Location getHiveLocation();
+	@UnsafeAPI
+	Vector3i getFlowerLocationUnsafe();
 	
-	public void setFlowerLocation(Location location);
+	default Vector3i getFlowerLocation() {
+		return getFlowerLocation(new Vector3i());
+	}
 	
-	public Location getFlowerLocation();
-
-	public void setTicksSincePollination(int ticks);
+	Vector3i getFlowerLocation(Vector3i vec);
 	
-	public int getTicksSincePollination();
+	void setTicksSincePollination(int ticks);
 	
-	public void setTicksCannotEnterHive(int ticks);
+	int getTicksSincePollination();
 	
-	public int getTicksCannotEnterHive();
+	void setTicksCannotEnterHive(int ticks);
 	
-	public void setCropsGrownSincePollination(int crops);
+	int getTicksCannotEnterHive();
 	
-	public int getCropsGrownSincePollination();
-
-	public void setHurtBy(UUID uuid);
+	void setCropsGrownSincePollination(int crops);
 	
-	public UUID getHurtBy();
+	int getCropsGrownSincePollination();
+	
+	@Override
+	default NBTSerializationHandler<? extends Bee> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 }

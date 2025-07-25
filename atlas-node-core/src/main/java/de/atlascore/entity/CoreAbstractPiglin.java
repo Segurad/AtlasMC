@@ -1,15 +1,9 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
-import java.util.UUID;
-
 import de.atlasmc.entity.AbstractPiglin;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreAbstractPiglin extends CoreMob implements AbstractPiglin {
 
@@ -18,26 +12,8 @@ public class CoreAbstractPiglin extends CoreMob implements AbstractPiglin {
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+1;
 	
-	protected static final NBTFieldSet<CoreAbstractPiglin> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_IS_IMMUNE_TO_ZOMBIFICATION = CharKey.literal("IsImmuneToZombification");
-	// NBT_TIME_IN_OVERWORLD = "TimeInOverworld"; TODO unnecessary
-	
-	static {
-		NBT_FIELDS = CoreMob.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_IS_IMMUNE_TO_ZOMBIFICATION, (holder, reader) -> {
-			holder.setImmune(reader.readByteTag() == 1);
-		});
-	}
-	
-	public CoreAbstractPiglin(EntityType type, UUID uuid) {
-		super(type, uuid);
-	}
-	
-	@Override
-	protected NBTFieldSet<? extends CoreAbstractPiglin> getFieldSetRoot() {
-		return NBT_FIELDS;
+	public CoreAbstractPiglin(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -59,13 +35,6 @@ public class CoreAbstractPiglin extends CoreMob implements AbstractPiglin {
 	@Override
 	public void setImmune(boolean immune) {
 		metaContainer.get(META_IMMUNE).setData(immune);		
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (isImmune())
-			writer.writeByteTag(NBT_IS_IMMUNE_TO_ZOMBIFICATION, true);
 	}
 	
 }

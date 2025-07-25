@@ -1,32 +1,18 @@
 package de.atlascore.entity;
 
-import java.io.IOException;
-import java.util.UUID;
-
+import java.util.ArrayList;
+import java.util.List;
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.WanderingTrader;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.inventory.ItemStack;
 
-public class CoreWanderingTrader extends CoreAbstractVillager implements WanderingTrader {
-
-	protected static final CharKey
-	NBT_DESPAWN_DELAY = CharKey.literal("DespawnDelay");
-	//NBT_WANDER_TARGET = "WanderTarget";
+public class CoreWanderingTrader extends CoreMerchant implements WanderingTrader {
 	
-	static {
-		NBT_FIELDS.setField(NBT_DESPAWN_DELAY, (holder, reader) -> {
-			if (holder instanceof WanderingTrader) {
-				((WanderingTrader) holder).setDespawnDelay(reader.readIntTag());
-			} else reader.skipTag();
-		});
-		//NBT_FIELDS.setField(NBT_WANDER_TARGET, NBTField.SKIP); TODO wandering target 
-	}
-	
+	private List<ItemStack> pocket;
 	private int despawnDelay;
 	
-	public CoreWanderingTrader(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreWanderingTrader(EntityType type) {
+		super(type);
 	}
 
 	@Override
@@ -40,9 +26,15 @@ public class CoreWanderingTrader extends CoreAbstractVillager implements Wanderi
 	}
 
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		writer.writeIntTag(NBT_DESPAWN_DELAY, getDespawnDelay());
+	public List<ItemStack> getPocketItems() {
+		if (pocket == null)
+			pocket = new ArrayList<>();
+		return pocket;
+	}
+
+	@Override
+	public boolean hasPocketItems() {
+		return pocket != null && !pocket.isEmpty();
 	}
 	
 }

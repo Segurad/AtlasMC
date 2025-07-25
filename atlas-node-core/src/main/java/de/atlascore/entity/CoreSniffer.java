@@ -1,7 +1,5 @@
 package de.atlascore.entity;
 
-import java.util.UUID;
-
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Sniffer;
 import de.atlasmc.entity.data.MetaDataField;
@@ -16,8 +14,8 @@ public class CoreSniffer extends CoreAgeableMob implements Sniffer {
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+2;
 	
-	public CoreSniffer(EntityType type, UUID uuid) {
-		super(type, uuid);
+	public CoreSniffer(EntityType type) {
+		super(type);
 	}
 	
 	@Override

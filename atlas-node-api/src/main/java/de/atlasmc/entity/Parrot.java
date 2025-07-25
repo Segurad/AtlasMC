@@ -1,12 +1,27 @@
 package de.atlasmc.entity;
 
+import de.atlasmc.util.EnumID;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+
 public interface Parrot extends Tameable {
 	
-	public Type getParrotType();
+	public static final NBTSerializationHandler<Parrot>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Parrot.class)
+					.include(Tameable.NBT_HANDLER)
+					.enumIntField("Variant", Parrot::getParrotType, Parrot::setParrotType, Type::getByID, Type.RED_BLUE)
+					.build();
 	
-	public void setParrotType(Type type);
+	Type getParrotType();
 	
-	public static enum Type {
+	void setParrotType(Type type);
+	
+	@Override
+	default NBTSerializationHandler<? extends Parrot> getNBTHandler() {
+		return NBT_HANDLER;
+	}
+	
+	public static enum Type implements EnumID {
 		RED_BLUE,
 		BLUE,
 		GREEN,

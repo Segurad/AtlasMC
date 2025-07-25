@@ -2,12 +2,18 @@ package de.atlasmc.entity;
 
 import java.util.List;
 
-import de.atlasmc.util.EnumID;
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.EnumValueCache;
+import de.atlasmc.util.AtlasEnum;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Frog extends Animal {
 
+	public static final NBTSerializationHandler<Frog>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Frog.class)
+					.include(Animal.NBT_HANDLER)
+					.enumStringField("variant", Frog::getVariant, Frog::setVariant, Variant::getByName, Variant.TEMPERATE)
+					.build();
+	
 	Variant getVariant();
 	
 	void setVariant(Variant variant);
@@ -16,7 +22,12 @@ public interface Frog extends Animal {
 	
 	void setTangueTarget(Entity entity);
 	
-	public static enum Variant implements EnumID, EnumName, EnumValueCache {
+	@Override
+	default NBTSerializationHandler<? extends Frog> getNBTHandler() {
+		return NBT_HANDLER;
+	}
+	
+	public static enum Variant implements AtlasEnum {
 		TEMPERATE,
 		WARM,
 		COLD;

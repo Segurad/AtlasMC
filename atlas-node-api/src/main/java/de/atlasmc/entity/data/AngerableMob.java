@@ -1,8 +1,18 @@
 package de.atlasmc.entity.data;
 
 import de.atlasmc.entity.LivingEntity;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface AngerableMob extends LivingEntity {
+	
+	public static final NBTSerializationHandler<AngerableMob>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(AngerableMob.class)
+					.include(LivingEntity.NBT_HANDLER)
+					.intField("AngerTime", AngerableMob::getAngerTime, AngerableMob::setAngerTime, 0)
+					// AngryAt
+					.boolField("IsAngry", AngerableMob::isAngry, AngerableMob::setAngry, false) // non standard
+					.build();
 	
 	boolean isAngry();
 	
@@ -15,5 +25,10 @@ public interface AngerableMob extends LivingEntity {
 	int getAngerTime();
 	
 	void setAngerTime(int ticks);
+	
+	@Override
+	default NBTSerializationHandler<? extends AngerableMob> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 
 }

@@ -1,45 +1,24 @@
 package de.atlascore.entity;
 
-import java.util.UUID;
-
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.Vex;
 import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
 
 public class CoreVex extends CoreMob implements Vex {
 
+	protected static final int
+	FLAG_IS_ATTACKING = 0x01;
+	
 	protected static final MetaDataField<Byte>
 	META_VEX_FLAGS = new MetaDataField<>(CoreMob.LAST_META_INDEX+1, (byte) 0, MetaDataType.BYTE);
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+1;
 	
-	protected static final NBTFieldSet<CoreVex> NBT_FIELDS;
-	
-	protected static final CharKey
-	//NBT_BOUND_X = "BoundX", TODO unnecessary
-	//NBT_BOUND_Y = "BoundY",
-	//NBT_BOUND_Z = "BoundZ",
-	NBT_LIFE_TICKS = CharKey.literal("LifeTicks");
-	
-	static {
-		NBT_FIELDS = CoreMob.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_LIFE_TICKS, (holder, reader) -> {
-			holder.setLifeTime(reader.readIntTag());
-		});
-	}
-	
 	private int lifetime = -1;
 	
-	public CoreVex(EntityType type, UUID uuid) {
-		super(type, uuid);
-	}
-	
-	@Override
-	protected NBTFieldSet<? extends CoreVex> getFieldSetRoot() {
-		return NBT_FIELDS;
+	public CoreVex(EntityType type) {
+		super(type);
 	}
 	
 	@Override
@@ -55,12 +34,12 @@ public class CoreVex extends CoreMob implements Vex {
 
 	@Override
 	public boolean isAttacking() {
-		return metaContainer.getData(META_VEX_FLAGS) == 0x01;
+		return metaContainer.getData(META_VEX_FLAGS) == FLAG_IS_ATTACKING;
 	}
 
 	@Override
 	public void setAttacking(boolean attacking) {
-		metaContainer.get(META_VEX_FLAGS).setData((byte) (attacking ? 0x01 : 0x00));	
+		metaContainer.get(META_VEX_FLAGS).setData((byte) (attacking ? FLAG_IS_ATTACKING : ~FLAG_IS_ATTACKING));	
 	}
 
 	@Override

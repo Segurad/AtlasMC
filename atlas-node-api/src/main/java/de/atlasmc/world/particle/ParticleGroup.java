@@ -3,9 +3,10 @@ package de.atlasmc.world.particle;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Vector3f;
+
 import de.atlasmc.Location;
 import de.atlasmc.entity.Player;
-import de.atlasmc.util.EulerAngle;
 
 public class ParticleGroup implements Animation {
 
@@ -36,14 +37,16 @@ public class ParticleGroup implements Animation {
 	}
 
 	@Override
-	public void play(Player player, Location loc, EulerAngle angle) {
+	public void play(Player player, Location loc, Vector3f angle) {
 		animations.forEach(a -> a.play(player, loc, angle));
-		if (next != null) next.play(player, loc, angle);
+		if (next != null) 
+			next.play(player, loc, angle);
 	}
 
 	@Override
-	public void playAll(Location loc, EulerAngle angle) {
+	public void playAll(Location loc, Vector3f angle) {
 		animations.forEach(a -> a.playAll(loc, angle));
-		if (next != null) next.playAll(loc, angle);
+		if (next != null) 
+			next.playAll(loc, angle);
 	}
 }
