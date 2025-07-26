@@ -53,7 +53,7 @@ public class PacketUtil {
 	        position += 7;
 
 	        if (position >= 32) 
-	        	throw new RuntimeException("VarInt is too big");
+	        	throw new ProtocolException("VarInt is too big");
 	    }
 
 	    return value;
@@ -74,7 +74,7 @@ public class PacketUtil {
 	        position += 7;
 
 	        if (position >= 64) 
-	        	throw new RuntimeException("VarLong is too big");
+	        	throw new ProtocolException("VarLong is too big");
 	    }
 
 	    return value;

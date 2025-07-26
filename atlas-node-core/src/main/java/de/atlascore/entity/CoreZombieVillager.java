@@ -119,7 +119,9 @@ public class CoreZombieVillager extends CoreZombie implements ZombieVillager {
 	}
 
 	@Override
-	public void setHeadShakeTimer(int time) {}
+	public void setHeadShakeTimer(int time) {
+		// unsupported
+	}
 
 	@Override
 	public void addXp(int xp) {

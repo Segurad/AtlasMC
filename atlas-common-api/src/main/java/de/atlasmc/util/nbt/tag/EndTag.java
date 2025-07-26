@@ -28,7 +28,9 @@ public class EndTag implements NBT {
 	}
 
 	@Override
-	public void setName(String name) {}
+	public void setName(String name) {
+		// holds no name
+	}
 
 	@Override
 	public Object getData() {
@@ -36,7 +38,9 @@ public class EndTag implements NBT {
 	}
 
 	@Override
-	public void setData(Object data) {}
+	public void setData(Object data) {
+		// holds no data
+	}
 
 	@Override
 	public TagType getType() {

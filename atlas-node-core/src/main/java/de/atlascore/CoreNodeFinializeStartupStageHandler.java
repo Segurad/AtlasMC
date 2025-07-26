@@ -10,7 +10,9 @@ import de.atlasmc.plugin.startup.StartupStageHandler;
 class CoreNodeFinializeStartupStageHandler implements StartupStageHandler {
 
 	@Override
-	public void handleStage(StartupContext context) {}
+	public void handleStage(StartupContext context) {
+		// not required
+	}
 	
 	@Override
 	public void finalizeStage(StartupContext context) {

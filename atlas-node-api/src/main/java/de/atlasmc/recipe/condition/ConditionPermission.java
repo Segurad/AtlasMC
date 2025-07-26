@@ -16,7 +16,9 @@ public final class ConditionPermission implements Condition {
 	}
 
 	@Override
-	public void pay(Player player) {}
+	public void pay(Player player) {
+		// not required
+	}
 
 	@Override
 	public boolean isPayCondition() {

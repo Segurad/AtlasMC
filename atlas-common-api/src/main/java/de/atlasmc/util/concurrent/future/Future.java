@@ -24,7 +24,7 @@ public interface Future<V> extends java.util.concurrent.Future<V> {
 		try {
 			finishedFutures = cumFuture.get();
 		} catch (InterruptedException | ExecutionException e) {
-			throw new RuntimeException(e);
+			throw new FutureException("Error while awaiting result!", e);
 		}
 		ArrayList<V> results = new ArrayList<>(); 
 		for (Future<V> future : finishedFutures) {

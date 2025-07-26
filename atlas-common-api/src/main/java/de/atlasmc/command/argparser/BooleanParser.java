@@ -22,7 +22,9 @@ public class BooleanParser implements VarArgParser<Boolean> {
 	}
 
 	@Override
-	public void write(ByteBuf buf) {}
+	public void write(ByteBuf buf) {
+		// not required
+	}
 
 	@Override
 	public int getID() {

@@ -394,7 +394,8 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 	protected void skipTag(boolean skipPrepare) throws IOException {
 		prepareTag(skipPrepare);
 		final boolean isList = list != null && depth == list.depth;
-		switch (isList ? list.type : type) {
+		final TagType type = isList ? list.type : this.type;
+		switch (type) {
 		case BYTE:
 			skipTag(1, skipPrepare);
 			break;
@@ -468,6 +469,8 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 		case TAG_END:
 			readNextEntry(skipPrepare);
 			break;
+		default:
+			throw new NBTException("Unexpected type: " + type);
 		}
 	}
 

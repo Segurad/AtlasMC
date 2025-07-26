@@ -21,6 +21,8 @@ public abstract class AtlasTask implements Runnable {
 	 * It does nothing by default if you need it, simply override it<br>
 	 */
 	@ThreadSafe
-	public void notifiyShutdown() {}
+	public void notifiyShutdown() {
+		// override as needed
+	}
 	
 }

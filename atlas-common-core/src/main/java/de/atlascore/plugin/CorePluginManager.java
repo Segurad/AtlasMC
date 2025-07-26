@@ -370,31 +370,49 @@ public class CorePluginManager implements PluginManager {
 		private final Version version = new Version("v0.0.0-dev");
 		
 		@Override
-		public void load() {}
+		public void load() {
+			// not required
+		}
 
 		@Override
-		public void enable() {}
+		public void enable() {
+			// not required
+		}
 
 		@Override
-		public void disable() {}
+		public void disable() {
+			// not required
+		}
 
 		@Override
-		public void unload() {}
+		public void unload() {
+			// not required
+		}
 
 		@Override
-		public void reload() {}
+		public void reload() {
+			// not required
+		}
 
 		@Override
-		public void loadConfiguration(PluginConfiguration config) {}
+		public void loadConfiguration(PluginConfiguration config) {
+			// not required
+		}
 
 		@Override
-		public void unloadConfiguration(NamespacedKey config) {}
+		public void unloadConfiguration(NamespacedKey config) {
+			// not required
+		}
 
 		@Override
-		public void reloadConfiguration(NamespacedKey config) {}
+		public void reloadConfiguration(NamespacedKey config) {
+			// not required
+		}
 
 		@Override
-		public void reloadConfigurations() {}
+		public void reloadConfigurations() {
+			// not required
+		}
 
 		@Override
 		public Version getVersion() {

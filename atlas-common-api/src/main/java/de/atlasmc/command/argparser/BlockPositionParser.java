@@ -23,7 +23,9 @@ public class BlockPositionParser implements VarArgParser<ArgumentVector3i> {
 	}
 
 	@Override
-	public void write(ByteBuf buf) {}
+	public void write(ByteBuf buf) {
+		// not required
+	}
 
 	@Override
 	public int getID() {

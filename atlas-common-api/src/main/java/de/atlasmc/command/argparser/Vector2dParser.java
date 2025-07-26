@@ -23,7 +23,9 @@ public class Vector2dParser implements VarArgParser<ArgumentVector2d> {
 	}
 
 	@Override
-	public void write(ByteBuf buf) {}
+	public void write(ByteBuf buf) {
+		// not required
+	}
 
 	@Override
 	public int getID() {

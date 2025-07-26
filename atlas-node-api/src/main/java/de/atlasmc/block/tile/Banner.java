@@ -207,7 +207,7 @@ public interface Banner extends TileEntity, Nameable {
 			final int size = patterns.size();
 			for (int i = 0; i < size; i++) {
 				EnumPatternType pattern = patterns.get(i);
-				if (pattern.name.toString().equals(name)) 
+				if (pattern.name.equals(name)) 
 					return pattern;
 			}
 			return null;

@@ -1,17 +1,17 @@
 
-![Atlas](docs/images/atlas.png)
+# AtlasMC
 
-# AtlasMC 
+![Atlas](docs/images/atlas.png)
 
 <b>IN DEVELOPEMENT</b>
 
-```
+```text
 Atlas is currently in development and so are not all features implemented correctly yet and it is not in a useable State.
 ```
 
 AtlasMC is a build from the Ground Minecraft Server Software. The goal is to provide a flexible and powerfull engine for Developers and Administrators who do not require vanilla features.
 
-Atlas is designed to connect multiple Atlas-Nodes as Cluster or Atlas-Network. One Node will be the Master-Node managing the resources of the other Minion-Nodes. 
+Atlas is designed to connect multiple Atlas-Nodes as Cluster or Atlas-Network. One Node will be the Master-Node managing the resources of the other Minion-Nodes.
 
 Each node will deploy "servers" as internals servers which are simply threads sharing a JVM. A planned feature will be "deployed server" which are other third party implementations started Processes by the node.
 

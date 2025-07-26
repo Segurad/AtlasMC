@@ -16,9 +16,13 @@ public class CoreEffectNoEffect extends CoreAbstractPotionEffect {
 	}
 
 	@Override
-	public void addEffect(LivingEntity entity) {}
+	public void addEffect(LivingEntity entity) {
+		// not required
+	}
 
 	@Override
-	public void removeEffect(LivingEntity entity) {}
+	public void removeEffect(LivingEntity entity) {
+		// not required
+	}
 
 }

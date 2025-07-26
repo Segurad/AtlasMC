@@ -45,7 +45,7 @@ public class PacketDefaultIDConsistensyTest {
 				packet = (Packet) clazz.getDeclaredConstructor().newInstance();
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-				throw new RuntimeException("Exception while instanciating Packet class", e);
+				throw new AssertionError("Exception while instanciating Packet class", e);
 			}
 			if (id != packet.getDefaultID()) {
 				checks.add(() -> Assertions.fail(clazz.getName() + " default ids do not match!"));

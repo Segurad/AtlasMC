@@ -58,7 +58,9 @@ public class MultiToggleButton implements Button {
 		return states[state];
 	}
 
-	public void unauthorizedClick(Player player) {}
+	public void unauthorizedClick(Player player) {
+		// override as needed
+	}
 
 	@Override
 	public boolean hasIcon() {

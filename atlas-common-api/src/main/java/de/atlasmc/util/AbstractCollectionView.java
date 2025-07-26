@@ -72,6 +72,8 @@ public class AbstractCollectionView<E, C extends Collection<E>> implements Colle
 	}
 
 	@Override
-	public void clear() {}
+	public void clear() {
+		// not required
+	}
 
 }

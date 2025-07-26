@@ -29,37 +29,59 @@ public class MockPlugin implements Plugin {
 	}
 
 	@Override
-	public void load() {}
+	public void load() {
+		// mock
+	}
 
 	@Override
-	public void enable() {}
+	public void enable() {
+		// mock
+	}
 
 	@Override
-	public void disable() {}
+	public void disable() {
+		// mock
+	}
 
 	@Override
-	public void unload() {}
+	public void unload() {
+		// mock
+	}
 
 	@Override
-	public void reload() {}
+	public void reload() {
+		// mock
+	}
 
 	@Override
-	public void loadConfiguration(PluginConfiguration config) {}
+	public void loadConfiguration(PluginConfiguration config) {
+		// mock
+	}
 
 	@Override
-	public void loadConfiguration(PluginConfiguration config, Object context) {}
+	public void loadConfiguration(PluginConfiguration config, Object context) {
+		// mock
+	}
 
 	@Override
-	public void unloadConfiguration(NamespacedKey config) {}
+	public void unloadConfiguration(NamespacedKey config) {
+		// mock
+	}
 
 	@Override
-	public void unloadConfiguration(NamespacedKey config, Object context) {}
+	public void unloadConfiguration(NamespacedKey config, Object context) {
+		// mock
+	}
 
 	@Override
-	public void reloadConfiguration(NamespacedKey config) {}
+	public void reloadConfiguration(NamespacedKey config) {
+		// mock
+	}
 
 	@Override
-	public void reloadConfigurations() {}
+	public void reloadConfigurations() {
+		// mock
+	}
 
 	@Override
 	public Collection<PluginConfiguration> getConfigurations() {

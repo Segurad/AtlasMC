@@ -398,6 +398,38 @@ public abstract class MetaDataType<T> {
 	
     };
     
+    public static final MetaDataType<ArmadilloState> ARMADILLO_STATE = new EnumMetaDataType<>(TYPE_ID_ARMADILLO_STATE, ArmadilloState.class);
+	
+	public static final MetaDataType<WolfVariant> WOLF_VARIANT = new MetaDataType<>(TYPE_ID_WOLF_VARIANT, WolfVariant.class) {
+
+		@Override
+		public WolfVariant read(ByteBuf in) {
+			int id = readVarInt(in);
+			if (id == 0) {
+				NamespacedKey wild = readIdentifier(in);
+				NamespacedKey tame = readIdentifier(in);
+				NamespacedKey angry = readIdentifier(in);
+				return new WolfVariant(wild, tame, angry);
+			}
+			return WolfVariant.getByID(id-1);
+		}
+
+		@Override
+		public void write(WolfVariant data, ByteBuf out) {
+			int id = data.getID();
+			if (id < 0) {
+				writeIdentifier(data.getWildTexture(), out);
+				writeIdentifier(data.getTameTexture(), out);
+				writeIdentifier(data.getAngryTexture(), out);
+			} else {
+				writeVarInt(id+1, out);
+			}
+		}
+		
+	};
+	
+	public static final MetaDataType<Integer> OPT_VAR_INT = new OptVarIntMetaDataType(TYPE_ID_OPT_VAR_INT);
+    
 	private final int type;
 	private final boolean optional;
 	private final Class<?> clazz;
@@ -476,37 +508,5 @@ public abstract class MetaDataType<T> {
 			throw new IllegalArgumentException("Invalid Type ID: " + id);
 		}
 	}
-	
-	public static final MetaDataType<ArmadilloState> ARMADILLO_STATE = new EnumMetaDataType<>(TYPE_ID_ARMADILLO_STATE, ArmadilloState.class);
-	
-	public static final MetaDataType<WolfVariant> WOLF_VARIANT = new MetaDataType<>(TYPE_ID_WOLF_VARIANT, WolfVariant.class) {
-
-		@Override
-		public WolfVariant read(ByteBuf in) {
-			int id = readVarInt(in);
-			if (id == 0) {
-				NamespacedKey wild = readIdentifier(in);
-				NamespacedKey tame = readIdentifier(in);
-				NamespacedKey angry = readIdentifier(in);
-				return new WolfVariant(wild, tame, angry);
-			}
-			return WolfVariant.getByID(id-1);
-		}
-
-		@Override
-		public void write(WolfVariant data, ByteBuf out) {
-			int id = data.getID();
-			if (id < 0) {
-				writeIdentifier(data.getWildTexture(), out);
-				writeIdentifier(data.getTameTexture(), out);
-				writeIdentifier(data.getAngryTexture(), out);
-			} else {
-				writeVarInt(id+1, out);
-			}
-		}
-		
-	};
-	
-	public static final MetaDataType<Integer> OPT_VAR_INT = new OptVarIntMetaDataType(TYPE_ID_OPT_VAR_INT);
 
 }

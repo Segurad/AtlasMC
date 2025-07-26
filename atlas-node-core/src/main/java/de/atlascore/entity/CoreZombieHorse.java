@@ -1,7 +1,5 @@
 package de.atlascore.entity;
 
-import java.util.UUID;
-
 import de.atlasmc.entity.EntityType;
 import de.atlasmc.entity.ZombieHorse;
 import de.atlasmc.inventory.AbstractHorseInventory;
@@ -9,7 +7,7 @@ import de.atlasmc.inventory.ContainerFactory;
 
 public class CoreZombieHorse extends CoreAbstractHorse implements ZombieHorse {
 
-	public CoreZombieHorse(EntityType type, UUID uuid) {
+	public CoreZombieHorse(EntityType type) {
 		super(type);
 	}
 

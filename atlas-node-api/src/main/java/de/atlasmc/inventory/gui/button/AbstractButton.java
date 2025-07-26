@@ -50,7 +50,9 @@ public abstract class AbstractButton implements Button {
 	}
 
 	@Override
-	public void unauthorizedClick(Player player) {}
+	public void unauthorizedClick(Player player) {
+		// handle in child as needed
+	}
 	
 	@Override
 	public AbstractButton clone() {

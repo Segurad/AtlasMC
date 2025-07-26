@@ -34,10 +34,14 @@ public class CoreEffectRegeneration extends CoreAbstractPotionEffect {
 	}
 
 	@Override
-	public void addEffect(LivingEntity entity) {}
+	public void addEffect(LivingEntity entity) {
+		// not required
+	}
 
 	@Override
-	public void removeEffect(LivingEntity entity) {}
+	public void removeEffect(LivingEntity entity) {
+		// not required
+	}
 
 	@Override
 	public int tick(LivingEntity entity, boolean active) {

@@ -6,7 +6,9 @@ public interface StartupStageHandler {
 	 * Called to prepare a stage. Should be used to fill the context with required data e.g. Builders
 	 * @param context
 	 */
-	default void prepareStage(StartupContext context) {}
+	default void prepareStage(StartupContext context) {
+		// override as needed
+	}
 	
 	/**
 	 * Called to load data and prepare initialization.
@@ -19,6 +21,8 @@ public interface StartupStageHandler {
 	 * Called to initialize everything
 	 * @param context
 	 */
-	default void finalizeStage(StartupContext context) {}
+	default void finalizeStage(StartupContext context) {
+		// override as needed
+	}
 
 }

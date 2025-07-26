@@ -1,3 +1,4 @@
+
 # Plugins
 
 [Doc](../index.md) > [Development](../index.md#development) > [Plugins](#plugins)
@@ -52,7 +53,7 @@ soft-required-features: # Features only one must be present
 
 Dependencies are other Plugins required for the plugin. They may be Specified in the following format.
 
-```
+```text
 <order><type> <name> <operation> <version>
 <order><type> <name> <from> - <to>
 <Name>
@@ -66,7 +67,7 @@ Defines the order in which Plugins are loaded.
 
 - `+` loads the Plugin after the dependency.
 - `-` loads the Plugin befor the dependency.
-- `~` does not affect the load order. 
+- `~` does not affect the load order.
 
 It is not required to define a order value. If not defined it defaults to `+` loading the Plugin after the dependency.
 

@@ -82,7 +82,8 @@ public class CoreNetworkInfo implements NetworkInfo {
 		version.set("protocol", maintenance ? -1 : protocol);
 		// Player
 		ConfigurationSection players = statusInfo.createSection("players");
-		int maxPlayers = 0, onlinePlayers = 0;
+		int maxPlayers = 0;
+		int onlinePlayers = 0;
 		switch (mode) {
 		case NORMAL: 
 			onlinePlayers = onlinePlayerCount;

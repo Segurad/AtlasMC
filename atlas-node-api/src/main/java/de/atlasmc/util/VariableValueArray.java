@@ -237,7 +237,9 @@ public class VariableValueArray implements Cloneable {
 		}
 		
 		@Override
-		public void set(int index, int value) {}
+		public void set(int index, int value) {
+			// no set in immutable
+		}
 		
 		@Override
 		public int replace(int index, int value) {

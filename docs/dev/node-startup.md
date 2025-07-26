@@ -1,3 +1,4 @@
+
 # Node Startup
 
 [Doc](../index.md) > [Development](../index.md#development) > [Node Startup](#node-startup)
@@ -47,7 +48,7 @@ somestage:
 - my.other.stage.Handler
 ```
 
-##  Annotation
+## Annotation
 
 ```java
 @StartupHandlerRegister({ "somestage" })

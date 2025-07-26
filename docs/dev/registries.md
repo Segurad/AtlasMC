@@ -1,3 +1,4 @@
+
 # Registries
 
 [Doc](../index.md) > [Development](../index.md#development) > [Registries](#registries)
@@ -32,6 +33,7 @@ Registries are the main way of providing funktionality for Atlas itself and Plug
 ```
 
 ## bulk registry entry format
+
 ```json
 [
   {

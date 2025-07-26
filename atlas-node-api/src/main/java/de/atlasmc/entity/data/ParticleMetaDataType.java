@@ -8,7 +8,6 @@ import de.atlasmc.block.data.BlockData;
 import de.atlasmc.inventory.ItemStack;
 import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
-import de.atlasmc.io.protocol.ProtocolUtil;
 import de.atlasmc.util.MathUtil;
 import de.atlasmc.world.particle.Particle;
 import de.atlasmc.world.particle.ParticleObject;
@@ -58,7 +57,7 @@ public final class ParticleMetaDataType extends MetaDataType<Particle> {
 			break;
 		case ITEM:
 			try {
-				data = ProtocolUtil.readSlot(in);
+				data = readSlot(in);
 			} catch (IOException e) {
 				throw new IllegalStateException("Error while reading particle meta data!", e);
 			}
@@ -148,7 +147,7 @@ public final class ParticleMetaDataType extends MetaDataType<Particle> {
 		case ITEM:
 			if (data instanceof ItemStack item) {
 				try {
-					ProtocolUtil.writeSlot(item, out);
+					writeSlot(item, out);
 				} catch (IOException e) {
 					throw new IllegalStateException("Error while writing particle meta data!", e);
 				}

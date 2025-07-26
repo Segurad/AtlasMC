@@ -69,7 +69,8 @@ public class ComponentIterator<E> implements ListIterator<E> {
 
 	@Override
 	public void set(E e) {
-		int x = direction ? this.x-1 : this.x, y = this.y;
+		int x = direction ? this.x-1 : this.x;
+		int y = this.y;
 		if (x < 0) {
 			x = comp.getLengthX()-1;
 			y--;

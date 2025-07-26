@@ -27,13 +27,17 @@ public interface GUIListener {
 		void openedBy(Player player);
 		
 		@Override
-		default void closedBy(Player player) {}
+		default void closedBy(Player player) { 
+			// not required 
+		}
 		
 		@Override
 		default void click(InventoryClickEvent event) {}
 	
 		@Override
-		default void removed() {}
+		default void removed() { 
+			// not required 
+		}
 		
 	}
 	
@@ -44,15 +48,21 @@ public interface GUIListener {
 	static interface GUICloseListener extends GUIListener {
 		
 		@Override
-		default void openedBy(Player player) {}
+		default void openedBy(Player player) {
+			// not required
+		}
 		
 		void closedBy(Player player);
 		
 		@Override
-		default void click(InventoryClickEvent event) {}
+		default void click(InventoryClickEvent event) {
+			// not required
+		}
 		
 		@Override
-		default void removed() {}
+		default void removed() {
+			// not required
+		}
 		
 	}
 
@@ -63,16 +73,22 @@ public interface GUIListener {
 	static interface GUIClickListener extends GUIListener {
 		
 		@Override
-		default void openedBy(Player player) {}
+		default void openedBy(Player player) {
+			// not required
+		}
 		
 		@Override
-		default void closedBy(Player player) {}
+		default void closedBy(Player player) {
+			// not required
+		}
 		
 		@Override
 		void click(InventoryClickEvent event);
 	
 		@Override
-		default void removed() {}
+		default void removed() {
+			// not required
+		}
 		
 	}
 

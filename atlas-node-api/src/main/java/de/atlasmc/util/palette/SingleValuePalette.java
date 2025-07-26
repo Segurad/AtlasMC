@@ -67,7 +67,9 @@ public class SingleValuePalette<E> implements Palette<E> {
 	public void setRawEntry(int index, int entryValue) {}
 
 	@Override
-	public void optimize() {}
+	public void optimize() {
+		// not required
+	}
 
 	@Override
 	public int getEntryValue(E entry) {

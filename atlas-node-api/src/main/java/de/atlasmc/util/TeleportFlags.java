@@ -6,8 +6,6 @@ import de.atlasmc.SimpleLocation;
 
 public class TeleportFlags {
 	
-	protected TeleportFlags() {}
-	
 	public static final int
 	RELATIVE_X = 0x0001,
 	RELATIVE_Y = 0x0002,
@@ -18,6 +16,10 @@ public class TeleportFlags {
 	RELATIVE_VELOCITY_Y = 0x0040,
 	RELATIVE_VELOCITY_Z = 0x0080,
 	ROTATE_VELOCITY = 0x0100;
+	
+	protected TeleportFlags() {
+		// class should not be constructed as is
+	}
 	
 	public static boolean isRelativeX(int flags) {
 		return (flags & RELATIVE_X) == RELATIVE_X;

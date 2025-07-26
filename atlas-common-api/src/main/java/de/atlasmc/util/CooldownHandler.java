@@ -120,7 +120,9 @@ public class CooldownHandler<K> implements Tickable {
 	 */
 	protected void onRemoveCooldown(K key, int ticks) {}
 	
-	protected void onClear(Set<K> keys) {}
+	protected void onClear(Set<K> keys) {
+		// override as needed
+	}
 	
 	private static class Info<K> {
 		private final int startTick;

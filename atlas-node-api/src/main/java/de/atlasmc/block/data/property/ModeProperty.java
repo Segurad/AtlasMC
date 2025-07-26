@@ -7,17 +7,15 @@ import de.atlasmc.block.data.type.StructureBlock;
 class ModeProperty extends AbstractMultiEnumProperty {
 
 	public ModeProperty() {
-		super("mode", 
-				de.atlasmc.block.data.type.Comparator.Mode.class,
-				de.atlasmc.block.data.type.StructureBlock.Mode.class);
+		super("mode", Comparator.Mode.class, StructureBlock.Mode.class);
 	}
 
 	@Override
 	public void set(BlockData data, Enum<?> value) {
 		if (data instanceof Comparator  comp) {
-			comp.setMode((de.atlasmc.block.data.type.Comparator.Mode) value);
+			comp.setMode((Comparator.Mode) value);
 		} else if (data instanceof StructureBlock struc) {
-			struc.setMode((de.atlasmc.block.data.type.StructureBlock.Mode) value);
+			struc.setMode((StructureBlock.Mode) value);
 		}
 	}
 

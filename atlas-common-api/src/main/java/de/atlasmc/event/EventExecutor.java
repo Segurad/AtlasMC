@@ -34,7 +34,9 @@ public interface EventExecutor {
 		}
 
 		@Override
-		public void fireEvent(Event event) {}
+		public void fireEvent(Event event) {
+			// not required
+		}
 
 		@Override
 		public PluginHandle getPlugin() {

@@ -21,7 +21,9 @@ public class JavaPlugin implements Plugin {
 	private boolean loaded;
 	private boolean enabled;
 	
-	protected JavaPlugin() {}
+	protected JavaPlugin() {
+		// override as needed
+	}
 	
 	@Override
 	public final void load() {
@@ -64,31 +66,41 @@ public class JavaPlugin implements Plugin {
 	 * Override to get notified when this Plugin should perform a internal reload.
 	 */
 	@Override
-	public void reload() {}
+	public void reload() {
+		// override as needed
+	}
 	
 	/**
 	 * Override this to get notified when this Plugin should be loaded.
 	 * During load all necessary systems should be created.
 	 */
-	protected void onLoad() {}
+	protected void onLoad() {
+		// override as needed
+	}
 
 	/**
 	 * Override this to get notified when this Plugin should be enabled.
 	 * During enable all systems like {@link Listener}s should be registered and set enabled.
 	 */
-	protected void onEnable() {}
+	protected void onEnable() {
+		// override as needed
+	}
 
 	/**
 	 * Override this to get notified when this Plugin should be disabled.
 	 * During disable all systems like {@link Listener}s should be unregistered and set disabled.
 	 */
-	protected void onDisable() {}
+	protected void onDisable() {
+		// override as needed
+	}
 
 	/**
 	 * Override this to get notified when this Plugin should be unloaded.
 	 * During unload all systems and resources should be freed for GC.
 	 */
-	protected void onUnload() {}
+	protected void onUnload() {
+		// override as needed
+	}
 
 	@Override
 	public final Version getVersion() {
@@ -161,13 +173,19 @@ public class JavaPlugin implements Plugin {
 	}
 
 	@Override
-	public void reloadConfiguration(NamespacedKey config) {}
+	public void reloadConfiguration(NamespacedKey config) {
+		// override as needed
+	}
 	
 	@Override
-	public void loadConfiguration(PluginConfiguration config, Object context) {}
+	public void loadConfiguration(PluginConfiguration config, Object context) {
+		// override as needed
+	}
 
 	@Override
-	public void unloadConfiguration(NamespacedKey config, Object context) {}
+	public void unloadConfiguration(NamespacedKey config, Object context) {
+		// override as needed
+	}
 
 	@Override
 	public void reloadConfigurations() {

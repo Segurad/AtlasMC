@@ -8,20 +8,17 @@ import de.atlasmc.block.data.type.TechnicalPiston;
 class TypeProperty extends AbstractMultiEnumProperty {
 	
 	public TypeProperty() {
-		super("type",
-				de.atlasmc.block.data.type.Chest.Type.class, 
-				de.atlasmc.block.data.type.Slab.Type.class, 
-				de.atlasmc.block.data.type.TechnicalPiston.Type.class);
+		super("type", Chest.Type.class, Slab.Type.class, TechnicalPiston.Type.class);
 	}
 
 	@Override
 	public void set(BlockData data, Enum<?> value) {
 		if (data instanceof Chest chest) {
-			chest.setChestType((de.atlasmc.block.data.type.Chest.Type) value);
+			chest.setChestType((Chest.Type) value);
 		} else if (data instanceof Slab slab) {
-			slab.setSlabType((de.atlasmc.block.data.type.Slab.Type) value);
+			slab.setSlabType((Slab.Type) value);
 		} else if (data instanceof TechnicalPiston piston) {
-			piston.setPistonType((de.atlasmc.block.data.type.TechnicalPiston.Type) value);
+			piston.setPistonType((TechnicalPiston.Type) value);
 		}
 	}
 

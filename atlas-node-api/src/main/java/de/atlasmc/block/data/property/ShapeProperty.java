@@ -7,17 +7,15 @@ import de.atlasmc.block.data.type.Stairs;
 class ShapeProperty extends AbstractMultiEnumProperty {
 
 	public ShapeProperty() {
-		super("shape", 
-				de.atlasmc.block.data.Rail.Shape.class, 
-				de.atlasmc.block.data.type.Stairs.Shape.class);
+		super("shape", Rail.Shape.class, Stairs.Shape.class);
 	}
 
 	@Override
 	public void set(BlockData data, Enum<?> value) {
 		if (data instanceof Rail rail) {
-			rail.setShape((de.atlasmc.block.data.Rail.Shape) value);
+			rail.setShape((Rail.Shape) value);
 		} else if (data instanceof Stairs stairs) {
-			stairs.setShape((de.atlasmc.block.data.type.Stairs.Shape) value);
+			stairs.setShape((Stairs.Shape) value);
 		}
 	}
 
