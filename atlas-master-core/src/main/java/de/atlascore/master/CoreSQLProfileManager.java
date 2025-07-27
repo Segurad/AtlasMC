@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 import de.atlasmc.atlasnetwork.AtlasNetworkException;
-import de.atlasmc.atlasnetwork.AtlasPlayer;
+import de.atlasmc.atlasnetwork.player.AtlasPlayer;
 import de.atlasmc.master.AtlasMaster;
 import de.atlasmc.util.AtlasUtil;
 import de.atlasmc.util.concurrent.future.CompleteFuture;

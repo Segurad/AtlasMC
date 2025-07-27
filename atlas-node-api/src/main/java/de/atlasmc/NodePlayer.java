@@ -2,7 +2,7 @@ package de.atlasmc;
 
 import java.util.UUID;
 
-import de.atlasmc.atlasnetwork.AtlasPlayer;
+import de.atlasmc.atlasnetwork.player.AtlasPlayer;
 import de.atlasmc.chat.Messageable;
 import de.atlasmc.entity.Player;
 import de.atlasmc.io.protocol.PlayerConnection;

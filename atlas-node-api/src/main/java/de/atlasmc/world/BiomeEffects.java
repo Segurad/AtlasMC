@@ -1,105 +1,52 @@
 package de.atlasmc.world;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.Color;
 import de.atlasmc.sound.Sound;
 import de.atlasmc.util.EnumName;
 import de.atlasmc.util.EnumValueCache;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.AbstractNBTBase;
-import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.NBTHolder;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
+import de.atlasmc.util.nbt.serialization.NBTSerializable;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public class BiomeEffects extends AbstractNBTBase {
+public class BiomeEffects implements NBTSerializable {
 
-	protected static final NBTFieldSet<BiomeEffects> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_FOG_COLOR = CharKey.literal("fog_color"),
-	NBT_SKY_COLOR = CharKey.literal("sky_color"),
-	NBT_WATER_COLOR = CharKey.literal("water_color"),
-	NBT_WATER_FOG_COLOR = CharKey.literal("water_fog_color"),
-	NBT_FOLIAGE_COLOR = CharKey.literal("foliage_color"),
-	NBT_GRASS_COLOR = CharKey.literal("grass_color"),
-	NBT_GRASS_COLOR_MODIFIER = CharKey.literal("grass_color_modifier"),
-	NBT_PARTICLE = CharKey.literal("particle"),
-	NBT_AMBIENT_SOUND = CharKey.literal("ambient_sound"),
-	NBT_MOOD_SOUND = CharKey.literal("mood_sound"),
-	NBT_SOUND = CharKey.literal("sound"),
-	NBT_TICK_DELAY = CharKey.literal("tick_delay"),
-	NBT_BLOCK_SEARCH_EXTENT = CharKey.literal("block_search_extent"),
-	NBT_OFFSET = CharKey.literal("offset"),
-	NBT_ADDITIONS_SOUND = CharKey.literal("additions_sound"),
-	NBT_TICK_CHANGE = CharKey.literal("tick_chance"),
-	NBT_MUSIC = CharKey.literal("music"),
-	NBT_MIN_DELAY = CharKey.literal("min_delay"),
-	NBT_MAX_DELAY = CharKey.literal("max_delay"),
-	NBT_REPLACE_CURRENT_MUSIC = CharKey.literal("replace_current_music");
-	
-	static {
-		NBT_FIELDS = NBTFieldSet.newSet();
-		NBT_FIELDS.setField(NBT_FOG_COLOR, (holder, reader) -> {
-			holder.fogColor = Color.fromRGB(reader.readIntTag());
-		});
-		NBT_FIELDS.setField(NBT_SKY_COLOR, (holder, reader) -> {
-			holder.skyColor = Color.fromRGB(reader.readIntTag());
-		});
-		NBT_FIELDS.setField(NBT_WATER_COLOR, (holder, reader) -> {
-			holder.waterColor = Color.fromRGB(reader.readIntTag());
-		});
-		NBT_FIELDS.setField(NBT_WATER_FOG_COLOR, (holder, reader) -> {
-			holder.waterFogColor = Color.fromRGB(reader.readIntTag());
-		});
-		NBT_FIELDS.setField(NBT_FOLIAGE_COLOR, (holder, reader) -> {
-			holder.foliageColor = Color.fromRGB(reader.readIntTag());
-		});
-		NBT_FIELDS.setField(NBT_GRASS_COLOR, (holder, reader) -> {
-			holder.grassColor = Color.fromRGB(reader.readIntTag());
-		});
-		NBT_FIELDS.setField(NBT_GRASS_COLOR_MODIFIER, (holder, reader) -> {
-			holder.setGrassColorModifier(GrassColorModifier.getByName(reader.readStringTag()));
-		});
-		NBT_FIELDS.setField(NBT_PARTICLE, NBTField.skip()); // TODO particle
-		NBT_FIELDS.setField(NBT_AMBIENT_SOUND, (holder, reader) -> {
-			holder.ambientSound = Sound.fromNBT(reader);
-		});
-		NBT_FIELDS.setSet(NBT_MOOD_SOUND)
-			.setField(NBT_SOUND, (holder, reader) -> {
-				holder.moodSound = Sound.fromNBT(reader);
-			}).setField(NBT_TICK_DELAY, (holder, reader) -> {
-				holder.moodTickDelay = reader.readIntTag();
-			}).setField(NBT_BLOCK_SEARCH_EXTENT, (holder, reader) -> {
-				holder.moodBlockSearchExtent = reader.readIntTag();
-			}).setField(NBT_OFFSET, (holder, reader) -> {
-				holder.moodOffset = reader.readDoubleTag();
-			});
-		NBT_FIELDS.setSet(NBT_ADDITIONS_SOUND)
-			.setField(NBT_SOUND, (holder, reader) -> {
-				holder.additionsSound = Sound.fromNBT(reader);
-			}).setField(NBT_TICK_CHANGE, (holder, reader) -> {
-				holder.addtionsTickChance = reader.readDoubleTag();
-			});
-		NBT_FIELDS.setSet(NBT_MUSIC)
-			.setField(NBT_SOUND, (holder, reader) -> {
-				holder.music = Sound.fromNBT(reader);
-			}).setField(NBT_MIN_DELAY, (holder, reader) -> {
-				holder.musicMinDelay = reader.readIntTag();
-			}).setField(NBT_MAX_DELAY, (holder, reader) -> {
-				holder.musicMaxDelay = reader.readIntTag();
-			}).setField(NBT_REPLACE_CURRENT_MUSIC, (holder, reader) -> {
-				holder.replaceCurrentMusic = reader.readBoolean();
-			});
-	}
+	public static final NBTSerializationHandler<BiomeEffects>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(BiomeEffects.class)
+					.defaultConstructor(BiomeEffects::new)
+					.color("fog_color", BiomeEffects::getFogColor, BiomeEffects::setFogColor)
+					.color("sky_color", BiomeEffects::getSkyColor, BiomeEffects::setSkyColor)
+					.color("water_color", BiomeEffects::getWaterColor, BiomeEffects::setWaterColor)
+					.color("water_fog_color", BiomeEffects::getWaterFogColor, BiomeEffects::setWaterFogColor)
+					.color("foliage_color", BiomeEffects::getFoliageColor, BiomeEffects::setFoliageColor)
+					.color("dry_foliage_color", BiomeEffects::getDryFoliageColor, BiomeEffects::setDryFoliageColor)
+					.color("grass_color", BiomeEffects::getGrassColor, BiomeEffects::setGrassColor)
+					.enumStringField("grass_color_modifier", BiomeEffects::getGrassColorModifier, BiomeEffects::setGrassColorModifier, GrassColorModifier::getByName, GrassColorModifier.NONE)
+					//.beginComponent("particle")
+					.addField(Sound.getNBTSoundField("ambient_sound", BiomeEffects::getAmbientSound, BiomeEffects::setAmbientSound, null))
+					.beginComponent("mood_sound", BiomeEffects::hasMoodSound)
+					.addField(Sound.getNBTSoundField("sound", BiomeEffects::getMoodSound, BiomeEffects::setMoodSound, null))
+					.intField("tick_delay", BiomeEffects::getMoodTickDelay, BiomeEffects::setMoodTickDelay, 0)
+					.intField("block_search_extent", BiomeEffects::getMoodBlockSearchExtent, BiomeEffects::setMoodBlockSearchExtent, 0)
+					.doubleField("offset", BiomeEffects::getMoodOffset, BiomeEffects::setMoodOffset, 0)
+					.endComponent()
+					.beginComponent("additions_sound", BiomeEffects::hasAdditionsSound)
+					.addField(Sound.getNBTSoundField("sound", BiomeEffects::getAdditionsSound, BiomeEffects::setAdditionsSound, null))
+					.doubleField("tick_chance", BiomeEffects::getAddtionsTickChance, BiomeEffects::setAddtionsTickChance)
+					.endComponent()
+					.typeList("music", BiomeEffects::hasMusic, BiomeEffects::getMusic, BiomeMusic.NBT_HANDLER)
+					.build();
 	
 	private Color fogColor;
 	private Color skyColor;
 	private Color waterColor;
 	private Color waterFogColor;
 	private Color foliageColor;
+	private Color dryFoliageColor;
 	private Color grassColor;
 	private GrassColorModifier grassColorModifier;
 	private Sound ambientSound;
@@ -108,119 +55,167 @@ public class BiomeEffects extends AbstractNBTBase {
 	private int moodBlockSearchExtent;
 	private double moodOffset;
 	private Sound additionsSound;
-	private double addtionsTickChance;
-	private Sound music;
-	private int musicMinDelay;
-	private int musicMaxDelay;
-	private boolean replaceCurrentMusic;
+	private double additionsTickChance;
+	private List<BiomeMusic> music;
 	
 	public BiomeEffects() {
 		grassColorModifier = GrassColorModifier.NONE;
 	}
 	
+	public boolean hasMusic() {
+		return music != null && !music.isEmpty();
+	}
+	
+	@NotNull
+	public List<BiomeMusic> getMusic() {
+		if (music == null)
+			music = new ArrayList<>();
+		return music;
+	}
+	
+	public boolean hasAdditionsSound() {
+		return additionsSound != null;
+	}
+	
+	@Nullable
+	public Sound getAdditionsSound() {
+		return additionsSound;
+	}
+	
+	public void setAdditionsSound(@Nullable Sound additionsSound) {
+		this.additionsSound = additionsSound;
+	}
+	
+	public double getAddtionsTickChance() {
+		return additionsTickChance;
+	}
+	
+	public void setAddtionsTickChance(double addtionsTickChance) {
+		this.additionsTickChance = addtionsTickChance;
+	}
+	
+	@Nullable
+	public Sound getAmbientSound() {
+		return ambientSound;
+	}
+	
+	public void setAmbientSound(@Nullable Sound ambientSound) {
+		this.ambientSound = ambientSound;
+	}
+	
+	public boolean hasMoodSound() {
+		return moodSound != null;
+	}
+	
+	public Sound getMoodSound() {
+		return moodSound;
+	}
+	
+	public int getMoodTickDelay() {
+		return moodTickDelay;
+	}
+	
+	public void setMoodTickDelay(int moodTickDelay) {
+		this.moodTickDelay = moodTickDelay;
+	}
+	
+	public int getMoodBlockSearchExtent() {
+		return moodBlockSearchExtent;
+	}
+	
+	public void setMoodBlockSearchExtent(int moodBlockSearchExtent) {
+		this.moodBlockSearchExtent = moodBlockSearchExtent;
+	}
+	
+	public double getMoodOffset() {
+		return moodOffset;
+	}
+	
+	public void setMoodOffset(double moodOffset) {
+		this.moodOffset = moodOffset;
+	}
+	
+	public void setMoodSound(Sound moodSound) {
+		this.moodSound = moodSound;
+	}
+	
+	@Nullable
 	public Color getFogColor() {
 		return fogColor;
 	}
 	
-	public void setFogColor(Color fogColor) {
+	public void setFogColor(@Nullable Color fogColor) {
 		this.fogColor = fogColor;
 	}
 	
+	@Nullable
 	public Color getSkyColor() {
 		return skyColor;
 	}
 	
-	public void setSkyColor(Color skyColor) {
+	public void setSkyColor(@Nullable Color skyColor) {
 		this.skyColor = skyColor;
 	}
 	
+	@Nullable
 	public Color getWaterColor() {
 		return waterColor;
 	}
 	
-	public void setWaterColor(Color waterColor) {
+	public void setWaterColor(@Nullable Color waterColor) {
 		this.waterColor = waterColor;
 	}
 	
+	@Nullable
 	public Color getWaterFogColor() {
 		return waterFogColor;
 	}
 	
-	public void setWaterFogColor(Color waterFogColor) {
+	public void setWaterFogColor(@Nullable Color waterFogColor) {
 		this.waterFogColor = waterFogColor;
 	}
 	
+	@Nullable
 	public Color getFoliageColor() {
 		return foliageColor;
 	}
 	
-	public void setFoliageColor(Color foliageColor) {
+	public void setFoliageColor(@Nullable Color foliageColor) {
 		this.foliageColor = foliageColor;
 	}
 	
+	@Nullable
+	public Color getDryFoliageColor() {
+		return dryFoliageColor;
+	}
+	
+	public void setDryFoliageColor(@Nullable Color dryFoliageColor) {
+		this.dryFoliageColor = dryFoliageColor;
+	}
+	
+	@Nullable
 	public Color getGrassColor() {
 		return grassColor;
 	}
 	
-	public void setGrassColor(Color grassColor) {
+	public void setGrassColor(@Nullable Color grassColor) {
 		this.grassColor = grassColor;
 	}
 	
+	@NotNull
 	public GrassColorModifier getGrassColorModifier() {
 		return grassColorModifier;
 	}
 	
-	public void setGrassColorModifier(GrassColorModifier modifier) {
+	public void setGrassColorModifier(@NotNull GrassColorModifier modifier) {
 		if (modifier == null)
 			throw new IllegalArgumentException("Modififer can not be null!");
 		this.grassColorModifier = modifier;
 	}
-
+	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		if (fogColor != null)
-			writer.writeIntTag(NBT_FOG_COLOR, fogColor.asRGB());
-		if (skyColor != null)
-			writer.writeIntTag(NBT_SKY_COLOR, skyColor.asRGB());
-		if (waterColor != null)
-			writer.writeIntTag(NBT_WATER_COLOR, waterColor.asRGB());
-		if (waterFogColor != null)
-			writer.writeIntTag(NBT_WATER_FOG_COLOR, waterFogColor.asRGB());
-		if (foliageColor != null)
-			writer.writeIntTag(NBT_FOLIAGE_COLOR, foliageColor.asRGB());
-		if (grassColor != null)
-			writer.writeIntTag(NBT_GRASS_COLOR, grassColor.asRGB());
-		if (grassColorModifier != GrassColorModifier.NONE)
-			writer.writeStringTag(NBT_GRASS_COLOR_MODIFIER, grassColorModifier.getName());
-		if (ambientSound != null)
-			Sound.toNBT(NBT_AMBIENT_SOUND, ambientSound, writer, systemData);
-		if (moodSound != null) {
-			writer.writeCompoundTag(NBT_MOOD_SOUND);
-			Sound.toNBT(NBT_SOUND, moodSound, writer, systemData);
-			writer.writeIntTag(NBT_TICK_DELAY, moodTickDelay);
-			writer.writeIntTag(NBT_BLOCK_SEARCH_EXTENT, moodBlockSearchExtent);
-			writer.writeDoubleTag(NBT_OFFSET, moodOffset);
-			writer.writeEndTag();
-		}
-		if (additionsSound != null) {
-			writer.writeCompoundTag(NBT_ADDITIONS_SOUND);
-			Sound.toNBT(NBT_SOUND, additionsSound, writer, systemData);
-			writer.writeDoubleTag(NBT_OFFSET, addtionsTickChance);
-			writer.writeEndTag();
-		}
-		if (music != null) {
-			writer.writeCompoundTag(NBT_MUSIC);
-			Sound.toNBT(NBT_SOUND, music, writer, systemData);
-			writer.writeIntTag(NBT_MIN_DELAY, musicMinDelay);
-			writer.writeIntTag(NBT_MAX_DELAY, musicMaxDelay);
-			writer.writeByteTag(NBT_REPLACE_CURRENT_MUSIC, replaceCurrentMusic);
-			writer.writeEndTag();
-		}
-	}
-
-	@Override
-	protected NBTFieldSet<? extends NBTHolder> getFieldSetRoot() {
-		return NBT_FIELDS;
+	public NBTSerializationHandler<? extends BiomeEffects> getNBTHandler() {
+		return NBT_HANDLER;
 	}
 	
 	public static enum GrassColorModifier implements EnumName, EnumValueCache {

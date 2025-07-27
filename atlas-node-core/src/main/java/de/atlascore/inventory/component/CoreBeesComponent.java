@@ -5,30 +5,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.block.tile.Beehive.Occupant;
 import de.atlasmc.entity.Bee;
-import de.atlasmc.entity.Entity;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.BeesComponent;
 import de.atlasmc.inventory.component.ComponentType;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 import io.netty.buffer.ByteBuf;
 import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
-public class CoreBeesComponent extends AbstractItemComponent implements BeesComponent {
-	
-	protected static final CharKey
-	NBT_ENTITY_DATA = CharKey.literal("entity_data"),
-	NBT_MIN_TICKS_IN_HIVE = CharKey.literal("min_ticks_in_hive"),
-	NBT_TICKS_IN_HIVE = CharKey.literal("ticks_in_hive");
+public class CoreBeesComponent extends AbstractItemComponent implements BeesComponent {;
 	
 	private static final int DEFAULT_BEES_SIZE = 5;
 	
-	private List<Bee> bees;
+	private List<Occupant> bees;
 	
 	public CoreBeesComponent(NamespacedKey key) {
 		super(key);
@@ -41,62 +36,14 @@ public class CoreBeesComponent extends AbstractItemComponent implements BeesComp
 			return null;
 		return clone;
 	}
-
+	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		List<Bee> bees = this.bees;
-		if (bees == null || bees.isEmpty())
-			return;
-		final int size = bees.size();
-		writer.writeListTag(getNamespacedKeyRaw(), TagType.COMPOUND, size);
-		for (int i = 0; i < size; i++) {
-			writer.writeCompoundTag(NBT_ENTITY_DATA);
-			Bee bee = bees.get(i);
-			bee.toNBT(writer, systemData);
-			writer.writeEndTag();
-			writer.writeIntTag(NBT_MIN_TICKS_IN_HIVE, bee.getHiveMinOccupationTicks());
-			writer.writeIntTag(NBT_TICKS_IN_HIVE, bee.getTicksInHive());
-			writer.writeEndTag();
-		}
+	public boolean hasBees() {
+		return bees != null && !bees.isEmpty();
 	}
 
 	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		reader.readNextEntry();
-		while (reader.getRestPayload() > 0) {
-			reader.readNextEntry();
-			Bee bee = null;
-			int minTicksInHive = -1;
-			int ticksInHive = -1;
-			while (reader.getType() != TagType.TAG_END) {
-				CharSequence key = reader.getFieldName();
-				if (NBT_ENTITY_DATA.equals(key)) {
-					reader.readNextEntry();
-					Entity ent = Entity.getFromNBT(reader); 
-					if (ent instanceof Bee b)
-						bee = b;
-				} else if (NBT_MIN_TICKS_IN_HIVE.equals(key)) {
-					minTicksInHive = reader.readIntTag();
-				} else if (NBT_TICKS_IN_HIVE.equals(key)) {
-					ticksInHive = reader.readIntTag();
-				} else {
-					reader.skipTag();
-				}
-			}
-			if (bee != null) {
-				if (minTicksInHive != -1)
-					bee.setHiveMinOccupationTicks(minTicksInHive);
-				if (ticksInHive != -1)
-					bee.setTicksInHive(ticksInHive);
-				addBee(bee);
-			}
-			reader.readNextEntry();
-		}
-		reader.readNextEntry();
-	}
-
-	@Override
-	public List<Bee> getBees() {
+	public List<Occupant> getBees() {
 		if (bees == null)
 			bees = new ArrayList<>(DEFAULT_BEES_SIZE);
 		return bees;
@@ -104,14 +51,22 @@ public class CoreBeesComponent extends AbstractItemComponent implements BeesComp
 
 	@Override
 	public void removeBee(Bee bee) {
-		if (bees == null)
+		if (!hasBees())
 			return;
-		bees.remove(bee);
+		final List<Occupant> list = bees;
+		final int size = bees.size();
+		for (int i = 0; i < size; i++) {
+			Occupant o = list.get(i);
+			if (o.getBee().equals(bee)) {
+				list.remove(i);
+				return;
+			}
+		}
 	}
 
 	@Override
 	public void addBee(Bee bee) {
-		getBees().add(bee);
+		getBees().add(new Occupant(bee));
 	}
 
 	@Override
@@ -135,18 +90,15 @@ public class CoreBeesComponent extends AbstractItemComponent implements BeesComp
 		if (count == 0) {
 			return;
 		}
-		List<Bee> bees = getBees();
+		List<Occupant> bees = getBees();
 		bees.clear();
 		NBTReader reader = new NBTNIOReader(buf, true);
 		for (int i = 0; i < count; i++) {
-			Entity ent = Entity.getFromNBT(reader);
+			NBTSerializationHandler<? extends Bee> handler = Bee.NBT_HANDLER;
+			Bee bee = handler.deserialize(reader);
 			int ticksInHive = readVarInt(buf);
 			int minTicksInHive = readVarInt(buf);
-			if (ent instanceof Bee bee) {
-				bee.setTicksInHive(ticksInHive);
-				bee.setHiveMinOccupationTicks(minTicksInHive);
-				bees.add(bee);
-			}
+			bees.add(new Occupant(bee, minTicksInHive, ticksInHive));
 		}
 		reader.close();
 	}
@@ -157,15 +109,17 @@ public class CoreBeesComponent extends AbstractItemComponent implements BeesComp
 			writeVarInt(0, buf);
 			return;
 		}
-		List<Bee> bees = getBees();
+		List<Occupant> bees = getBees();
 		final int count = bees.size();
 		writeVarInt(count, buf);
 		NBTWriter writer = new NBTNIOWriter(buf, true);
 		for (int i = 0; i < count; i++) {
-			Bee bee = bees.get(i);
-			bee.toNBT(writer, false);
-			writeVarInt(bee.getTicksInHive(), buf);
-			writeVarInt(bee.getHiveMinOccupationTicks(), buf);
+			writer.writeCompoundTag();
+			Occupant occupant = bees.get(i);
+			occupant.writeToNBT(writer, NBTSerializationContext.DEFAULT_CLIENT);
+			writer.writeEndTag();
+			writeVarInt(occupant.getTicksInHive(), buf);
+			writeVarInt(occupant.getMinTicksInHive(), buf);
 		}
 		writer.close();
 	}

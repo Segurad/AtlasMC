@@ -5,7 +5,7 @@ import java.sql.Date;
 import java.util.UUID;
 import java.util.concurrent.Future;
 
-import de.atlasmc.atlasnetwork.AtlasPlayer;
+import de.atlasmc.atlasnetwork.player.AtlasPlayer;
 import de.atlasmc.atlasnetwork.proxy.Proxy;
 import de.atlasmc.atlasnetwork.server.Server;
 import de.atlasmc.chat.Chat;

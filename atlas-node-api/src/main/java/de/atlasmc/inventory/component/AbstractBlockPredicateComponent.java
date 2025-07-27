@@ -2,7 +2,7 @@ package de.atlasmc.inventory.component;
 
 import java.util.List;
 
-import de.atlasmc.block.blockpredicate.BlockPredicate;
+import de.atlasmc.block.BlockPredicate;
 
 public interface AbstractBlockPredicateComponent extends AbstractTooltipComponent {
 	

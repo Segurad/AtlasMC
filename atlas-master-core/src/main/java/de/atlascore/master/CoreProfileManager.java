@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.atlasmc.atlasnetwork.AtlasPlayer;
+import de.atlasmc.atlasnetwork.player.AtlasPlayer;
 import de.atlasmc.cache.CacheHolder;
 import de.atlasmc.cache.Caching;
 import de.atlasmc.master.ProfileManager;

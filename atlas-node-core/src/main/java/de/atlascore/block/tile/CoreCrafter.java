@@ -1,44 +1,20 @@
 package de.atlascore.block.tile;
 
-import java.io.IOException;
-
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.block.BlockType;
 import de.atlasmc.block.tile.Crafter;
 import de.atlasmc.inventory.ContainerFactory;
 import de.atlasmc.inventory.Inventory;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 
 public class CoreCrafter extends CoreAbstractContainerTile<Inventory> implements Crafter {
-
-	protected static final NBTFieldSet<CoreCrafter> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_CRAFTING_TICKS_REMAINING = CharKey.literal("crafting_ticks_remaining"),
-	NBT_TRIGGERED = CharKey.literal("triggered"),
-	NBT_DISABLED_SLOTS = CharKey.literal("disabled_slots");
-	
-	static {
-		NBT_FIELDS = CoreAbstractContainerTile.NBT_FIELDS.fork();
-		NBT_FIELDS.setField(NBT_CRAFTING_TICKS_REMAINING, (holder, reader) -> {
-			holder.setCraftingticksRemaining(reader.readIntTag());
-		});
-		NBT_FIELDS.setField(NBT_TRIGGERED, (holder, reader) -> {
-			holder.setTriggered(reader.readBoolean());
-		});
-		NBT_FIELDS.setField(NBT_DISABLED_SLOTS, (holder, reader) -> {
-			int[] disabled = reader.readIntArrayTag();
-			for (int i : disabled)
-				holder.setSlotDisabled(i, true);
-		});
-	}
 	
 	protected IntSet disabledSlots;
 	protected int craftingTicks;
 	protected boolean triggered;
+	protected NamespacedKey lootTable;
+	protected long lootTableSeed;
 	
 	public CoreCrafter(BlockType type) {
 		super(type);
@@ -100,19 +76,25 @@ public class CoreCrafter extends CoreAbstractContainerTile<Inventory> implements
 	public void setTriggered(boolean triggered) {
 		this.triggered = triggered;
 	}
-	
+
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		super.toNBT(writer, systemData);
-		if (!systemData)
-			return;
-		if (disabledSlots != null && !disabledSlots.isEmpty()) {
-			writer.writeIntArrayTag(NBT_DISABLED_SLOTS, disabledSlots.toIntArray());
-		}
-		if (triggered)
-			writer.writeByteTag(NBT_TRIGGERED, true);
-		if (craftingTicks != 0)
-			writer.writeIntTag(NBT_CRAFTING_TICKS_REMAINING, craftingTicks);
+	public NamespacedKey getLootTable() {
+		return lootTable;
+	}
+
+	@Override
+	public void setLootTable(NamespacedKey key) {
+		this.lootTable = key;
+	}
+
+	@Override
+	public long getLootTableSeed() {
+		return lootTableSeed;
+	}
+
+	@Override
+	public void setLootTableSeed(long seed) {
+		this.lootTableSeed = seed;
 	}
 
 }

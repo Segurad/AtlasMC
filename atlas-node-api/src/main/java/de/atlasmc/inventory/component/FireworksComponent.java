@@ -4,10 +4,21 @@ import java.util.List;
 
 import de.atlasmc.FireworkExplosion;
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface FireworksComponent extends ItemComponent {
 
 	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:fireworks");
+	
+	public static final NBTSerializationHandler<FireworksComponent>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(FireworksComponent.class)
+					.include(ItemComponent.NBT_HANDLER)
+					.beginComponent(COMPONENT_KEY)
+					.typeList("explosion", FireworksComponent::hasExplosions, FireworksComponent::getExplosions, FireworkExplosion.NBT_HANDLER)
+					.byteField("flight_duration", FireworksComponent::getFlightDuration, FireworksComponent::setFlightDuration, (byte) 1)
+					.endComponent()
+					.build();
 	
 	List<FireworkExplosion> getExplosions();
 	
@@ -22,5 +33,10 @@ public interface FireworksComponent extends ItemComponent {
 	void setFlightDuration(int duration);
 	
 	FireworksComponent clone();
+	
+	@Override
+	default NBTSerializationHandler<? extends FireworksComponent> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 }

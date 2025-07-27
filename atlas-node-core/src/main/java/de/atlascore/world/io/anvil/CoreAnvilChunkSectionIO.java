@@ -43,7 +43,7 @@ public class CoreAnvilChunkSectionIO {
 			holder.palette = new ArrayList<>(reader.getRestPayload());
 			while (reader.getRestPayload() > 0) {
 				reader.readNextEntry();
-				BlockData data = BlockData.getFromNBT(reader);
+				BlockData data = BlockData.NBT_HANDLER.deserialize(reader);
 				holder.palette.add(data);
 			}
 			reader.readNextEntry();

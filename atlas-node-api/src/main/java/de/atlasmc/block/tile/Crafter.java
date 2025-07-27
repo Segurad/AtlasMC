@@ -1,9 +1,21 @@
 package de.atlasmc.block.tile;
 
 import de.atlasmc.inventory.Inventory;
+import de.atlasmc.inventory.loot.LootTableHolder;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 import it.unimi.dsi.fastutil.ints.IntSet;
 
-public interface Crafter extends AbstractContainerTile<Inventory> {
+public interface Crafter extends AbstractContainerTile<Inventory>, LootTableHolder {
+	
+	public static final NBTSerializationHandler<Crafter>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Crafter.class)
+					.include(AbstractContainerTile.NBT_HANDLER)
+					.include(LootTableHolder.NBT_HANDLER)
+					.intField("crafting_ticks_remaining", Crafter::getCraftingTicksRemaining, Crafter::setCraftingticksRemaining, 0)
+					.boolField("triggered", Crafter::isTriggered, Crafter::setTriggered, false)
+					.intSetField("disabled_slots", Crafter::hasDisabledSlots, Crafter::getDisabledSlots)
+					.build();
 	
 	int getCraftingTicksRemaining();
 	
@@ -20,5 +32,10 @@ public interface Crafter extends AbstractContainerTile<Inventory> {
 	boolean isTriggered();
 	
 	void setTriggered(boolean triggered);
+	
+	@Override
+	default NBTSerializationHandler<? extends Crafter> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 
 }

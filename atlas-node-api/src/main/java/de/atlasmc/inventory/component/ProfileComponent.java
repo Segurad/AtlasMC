@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.atlasnetwork.ProfileProperty;
+import de.atlasmc.atlasnetwork.player.ProfileProperty;
 
 public interface ProfileComponent extends ItemComponent {
 	

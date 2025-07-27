@@ -64,6 +64,7 @@ import de.atlasmc.util.nbt.serialization.fields.IntArrayField;
 import de.atlasmc.util.nbt.serialization.fields.IntField;
 import de.atlasmc.util.nbt.serialization.fields.IntListField;
 import de.atlasmc.util.nbt.serialization.fields.IntNullableField;
+import de.atlasmc.util.nbt.serialization.fields.IntSetField;
 import de.atlasmc.util.nbt.serialization.fields.InterfacedEnumStringField;
 import de.atlasmc.util.nbt.serialization.fields.LongField;
 import de.atlasmc.util.nbt.serialization.fields.MapNamespaced2Int;
@@ -93,6 +94,7 @@ import de.atlasmc.util.nbt.tag.NBT;
 import it.unimi.dsi.fastutil.booleans.BooleanList;
 import it.unimi.dsi.fastutil.floats.FloatList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 
 public abstract class AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCompoundFieldBuilder<T, B>> {
@@ -349,7 +351,15 @@ public abstract class AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCo
 		return addField(new QuaternionfField<>(key, get, set));
 	}
 	
+	public B intSetField(CharSequence key, ToBooleanFunction<T> has, Function<T, IntSet> get) {
+		return addField(new IntSetField<>(key, has, get));
+	}
+	
 	public B beginComponent(CharSequence key) {
+		return beginComponent(key, null);
+	}
+	
+	public B beginComponent(CharSequence key, ToBooleanFunction<T> has) {
 		// TODO begin
 		return getThis();
 	}

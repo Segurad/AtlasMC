@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.login;
 import java.util.List;
 import java.util.UUID;
 
-import de.atlasmc.atlasnetwork.ProfileProperty;
+import de.atlasmc.atlasnetwork.player.ProfileProperty;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 

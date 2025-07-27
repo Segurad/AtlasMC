@@ -334,6 +334,10 @@ public class PacketUtil {
 	}
 	
 	public static <T extends ProtocolRegistryValue> void writeDataSet(DataSet<T> set, ProtocolRegistry<T> registry, ByteBuf out) {
+		if (set == null) {
+			writeVarInt(1, out);
+			return;
+		}
 		if (set instanceof TagDataSet tagSet) {
 			writeVarInt(0, out);
 			writeIdentifier(tagSet.getTag().getNamespacedKey(), out);

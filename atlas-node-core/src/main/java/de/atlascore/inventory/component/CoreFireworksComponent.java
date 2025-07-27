@@ -9,39 +9,10 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.FireworksComponent;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.NBTUtil;
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import io.netty.buffer.ByteBuf;
 import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
 public class CoreFireworksComponent extends AbstractItemComponent implements FireworksComponent {
-
-	protected static final NBTFieldSet<CoreFireworksComponent> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_EXPLOSIONS = CharKey.literal("explosions"),
-	NBT_FLIGHT_DURATION = CharKey.literal("flight_duration");
-	
-	static {
-		NBT_FIELDS = NBTFieldSet.newSet();
-		NBT_FIELDS.setField(NBT_EXPLOSIONS, (holder ,reader) -> {
-			reader.readNextEntry();
-			while (reader.getRestPayload() > 0) {
-				reader.readNextEntry();
-				FireworkExplosion explosion = new FireworkExplosion();
-				explosion.fromNBT(reader);
-				holder.addExplosion(explosion);
-			}
-			reader.readNextEntry();
-		});
-		NBT_FIELDS.setField(NBT_FLIGHT_DURATION, (holder, reader) -> {
-			holder.flightDuration = reader.readByteTag() & 0xFF;
-		});
-	}
 	
 	private List<FireworkExplosion> explosions; 
 	private int flightDuration;
@@ -63,30 +34,6 @@ public class CoreFireworksComponent extends AbstractItemComponent implements Fir
 			}
 		}
 		return clone;
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeCompoundTag(key.toString());
-		if (hasExplosions()) {
-			final int size = explosions.size();
-			writer.writeListTag(NBT_EXPLOSIONS, TagType.COMPOUND, size);
-			for (int i = 0; i < size; i++) {
-				FireworkExplosion explosion = explosions.get(i);
-				writer.writeCompoundTag();
-				explosion.toNBT(writer, systemData);
-				writer.writeEndTag();
-			}
-		}
-		if (flightDuration != 1)
-			writer.writeByteTag(NBT_FLIGHT_DURATION, flightDuration);
-		writer.writeEndTag();
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		reader.readNextEntry();
-		NBTUtil.readNBT(NBT_FIELDS, this, reader);
 	}
 
 	@Override

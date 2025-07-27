@@ -19,6 +19,7 @@ public class ItemPredicate implements NBTSerializable, ItemComponentHolder, Pred
 	public static final NBTSerializationHandler<ItemPredicate>
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(ItemPredicate.class)
+					.defaultConstructor(ItemPredicate::new)
 					.dataSetField("items", ItemPredicate::getItems, ItemPredicate::setItems, ItemType.getRegistry())
 					.intNullableField("count", ItemPredicate::getCount, ItemPredicate::setCount, null)
 					.typeCompoundField("count", ItemPredicate::getRange, ItemPredicate::setRange, IntRange.NBT_HANDLER)

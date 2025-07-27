@@ -3,7 +3,7 @@ package de.atlasmc.test.entity;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
-import de.atlasmc.entity.Villager.VillagerType;
+import de.atlasmc.entity.AbstractVillager.VillagerType;
 import de.atlastest.util.EnumTest;
 import de.atlastest.util.EnumTest.EnumTestCases;
 

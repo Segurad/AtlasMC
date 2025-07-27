@@ -4,6 +4,7 @@ import java.security.PublicKey;
 import java.util.Collection;
 import java.util.UUID;
 
+import de.atlasmc.atlasnetwork.player.ProfileHandler;
 import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
 import de.atlasmc.atlasnetwork.server.ServerManager;
 import de.atlasmc.util.annotation.InternalAPI;

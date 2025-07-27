@@ -1,33 +1,36 @@
 package de.atlasmc.block.tile;
 
-import java.util.UUID;
+import de.atlasmc.atlasnetwork.player.PlayerProfile;
+import de.atlasmc.sound.EnumSound;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Skull extends TileEntity {
 	
-	public String getTextureSignature();
+	public static final NBTSerializationHandler<Skull>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(Skull.class)
+					.include(TileEntity.NBT_HANDLER)
+					.string("custom_name", Skull::getCustomName, Skull::setCustomName)
+					.enumStringField("note_block_sound", Skull::getNoteBlockSound, Skull::setNoteBlockSound, EnumSound::getByName, null)
+					.typeCompoundField("profile", Skull::getProfile, Skull::setProfile, PlayerProfile.NBT_HANDLER)
+					.stringToObject("profile", Skull::getProfile, Skull::setProfile, PlayerProfile::new, PlayerProfile::getName)
+					.build();
 	
-	/**
-	 * Private Key of Mojang-Server (Yggdrasil) send as Base64 String<br>
-	 * Only if required by the Texture
-	 * @param signature
-	 */
-	public void setTextureSignature(String signature);
+	String getCustomName();
 	
-	public String getTextureValue();
+	void setCustomName(String name);
 	
-	/**
-	 * Textures (Skin and Cape) as JSON-Object encoded in Base64<br>
-	 * Usually the skin server url has to be <u>http://textures.minecraft.net/texture/</u> 
-	 * @param value
-	 */
-	public void setTextureValue(String value);
+	PlayerProfile getProfile();
 	
-	public UUID getPlayerUUID();
+	void setProfile(PlayerProfile profile);
 	
-	public void setPlayerUUID(UUID uuid);
+	EnumSound getNoteBlockSound();
 	
-	public String getPlayerName();
+	void setNoteBlockSound(EnumSound sound);
 	
-	public void setPlayerName(String name);
+	@Override
+	default NBTSerializationHandler<? extends Skull> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 }

@@ -1,6 +1,6 @@
 package de.atlasmc.chat.placeholder;
 
-import de.atlasmc.atlasnetwork.AtlasPlayer;
+import de.atlasmc.atlasnetwork.player.AtlasPlayer;
 import de.atlasmc.util.map.key.CharKey;
 
 public interface PlaceholderProvider {

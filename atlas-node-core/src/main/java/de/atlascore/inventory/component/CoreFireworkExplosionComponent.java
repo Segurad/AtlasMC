@@ -7,8 +7,6 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.FireworkExplosionComponent;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import io.netty.buffer.ByteBuf;
 import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
@@ -26,22 +24,6 @@ public class CoreFireworkExplosionComponent extends AbstractItemComponent implem
 		if (explosion != null)
 			clone.explosion = explosion.clone();
 		return clone;
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		if (explosion == null)
-			return;
-		writer.writeCompoundTag(key.toString());
-		explosion.toNBT(writer, systemData);
-		writer.writeEndTag();
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		reader.readNextEntry();
-		explosion = new FireworkExplosion();
-		explosion.fromNBT(reader);
 	}
 
 	@Override

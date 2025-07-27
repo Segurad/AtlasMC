@@ -3,7 +3,7 @@ package de.atlascore.io.protocol;
 import java.util.UUID;
 
 import de.atlasmc.NodePlayer;
-import de.atlasmc.atlasnetwork.AtlasPlayer;
+import de.atlasmc.atlasnetwork.player.AtlasPlayer;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatType;
 import de.atlasmc.entity.Player;

@@ -1,15 +1,11 @@
 package de.atlasmc.world;
 
-import java.io.IOException;
-
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.registry.ProtocolRegistry;
 import de.atlasmc.registry.ProtocolRegistryValueBase;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 @RegistryHolder(key = "minecraft:worldgen/biome", target = Target.PROTOCOL)
 public class Biome extends ProtocolRegistryValueBase {
@@ -41,19 +37,6 @@ public class Biome extends ProtocolRegistryValueBase {
 	@Override
 	public boolean hasNBT() {
 		return data != null;
-	}
-	
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		data = new BiomeData();
-		data.fromNBT(reader);
-	}
-	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		if (data == null)
-			return;
-		data.toNBT(writer, systemData);
 	}
 	
 	public static Biome get(NamespacedKey key) {

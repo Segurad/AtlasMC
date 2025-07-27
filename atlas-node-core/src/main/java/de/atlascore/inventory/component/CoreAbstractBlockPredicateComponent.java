@@ -10,90 +10,26 @@ import static de.atlasmc.io.PacketUtil.writeVarInt;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.block.BlockPredicate;
 import de.atlasmc.block.BlockType;
-import de.atlasmc.block.blockpredicate.BlockDataPredicate;
-import de.atlasmc.block.blockpredicate.BlockPredicate;
-import de.atlasmc.block.blockpredicate.BlockTypePredicate;
-import de.atlasmc.block.blockpredicate.TileBlockPredicate;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.inventory.component.AbstractBlockPredicateComponent;
 import de.atlasmc.inventory.component.AbstractItemComponent;
-import de.atlasmc.io.ProtocolException;
 import de.atlasmc.util.dataset.DataSet;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTException;
-import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.NBTUtil;
-import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 import io.netty.buffer.ByteBuf;
 
 public class CoreAbstractBlockPredicateComponent extends AbstractItemComponent implements AbstractBlockPredicateComponent {
-	
-	protected static final NBTFieldSet<CoreAbstractBlockPredicateComponent> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_PREDICATES = CharKey.literal("predicates"),
-	NBT_BLOCKS = CharKey.literal("blocks"),
-	NBT_NBT = CharKey.literal("nbt"),
-	NBT_STATE = CharKey.literal("state"),
-	NBT_SHOW_IN_TOOLTIP = CharKey.literal("show_in_tooltip");
-	
-	static {
-		NBT_FIELDS = NBTFieldSet.newSet();
-		
-		final NBTField<CoreAbstractBlockPredicateComponent>
-		blocksField = (holder, reader) -> {
-			DataSet<BlockType> types = DataSet.getFromNBT(BlockType.getRegistry(), reader);
-			if (types.isEmpty())
-				return; // avoid creating empty predicate
-			holder.addPredicate(new BlockTypePredicate(types));
-		},
-		nbtField = (holder, reader) -> {
-			reader.readNextEntry();
-			TileEntity tile = TileEntity.getFromNBT(reader);
-			if (tile == null)
-				return; // avoid creating empty predicates
-			holder.addPredicate(new TileBlockPredicate(tile));
-		},
-		stateField = (holder, reader) -> {
-			reader.readNextEntry();
-			Map<BlockDataProperty<?>, Object> properties = BlockDataProperty.readProperties(reader);
-			if (properties.isEmpty())
-				return; // avoid creating empty predicates
-			holder.addPredicate(new BlockDataPredicate(properties));
-		};
-		NBTFieldSet<CoreAbstractBlockPredicateComponent> predicateFields = NBTFieldSet.newSet();
-		predicateFields.setField(NBT_BLOCKS, blocksField);
-		predicateFields.setField(NBT_NBT, nbtField);
-		predicateFields.setField(NBT_STATE, stateField);
-		
-		NBT_FIELDS.setField(NBT_PREDICATES, (holder, reader) -> {
-			reader.readNextEntry();
-			while (reader.getRestPayload() > 0) {
-				reader.readNextEntry();
-				NBTUtil.readNBT(predicateFields, holder, reader);
-			}
-			reader.readNextEntry();
-		});
-		NBT_FIELDS.setField(NBT_BLOCKS, blocksField);
-		NBT_FIELDS.setField(NBT_NBT, nbtField);
-		NBT_FIELDS.setField(NBT_STATE, stateField);
-		NBT_FIELDS.setField(NBT_SHOW_IN_TOOLTIP, (holder, reader) -> {
-			holder.showInToolTip = reader.readBoolean();
-		});
-	}
 	
 	private List<BlockPredicate> predicates;
 	private boolean showInToolTip = true;
@@ -144,42 +80,6 @@ public class CoreAbstractBlockPredicateComponent extends AbstractItemComponent i
 	public void setShowTooltip(boolean show) {
 		this.showInToolTip = show;
 	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeCompoundTag(key.toString());
-		if (hasPredicates()) {
-			final int size = predicates.size();
-			writer.writeListTag(NBT_PREDICATES, TagType.COMPOUND, size);
-			for (int i = 0; i < size; i++) {
-				BlockPredicate predicate = predicates.get(i);
-				if (predicate instanceof BlockTypePredicate typePredicate) {
-					DataSet<BlockType> types = typePredicate.getMaterials();
-					DataSet.toNBT(NBT_BLOCKS, types, writer, systemData);
-				} else if (predicate instanceof TileBlockPredicate tilePredicate) {
-					writer.writeCompoundTag(NBT_NBT);
-					tilePredicate.getTile().toNBT(writer, systemData);
-					writer.writeEndTag();
-				} else if (predicate instanceof BlockDataPredicate block) {
-					writer.writeCompoundTag(NBT_STATE);
-					BlockDataProperty.writeProperties(block.getProperties(), writer, systemData);
-					writer.writeEndTag();
-				} else {
-					throw new NBTException("Unsupported block predicate: " + predicate.getClass().getName());
-				}
-				writer.writeEndTag();
-			}
-		}
-		if (!showInToolTip)
-			writer.writeByteTag(NBT_SHOW_IN_TOOLTIP, false);
-		writer.writeEndTag();
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		reader.readNextEntry();
-		NBTUtil.readNBT(NBT_FIELDS, this, reader);
-	}
 	
 	@Override
 	public void write(ByteBuf buf) throws IOException {
@@ -189,11 +89,15 @@ public class CoreAbstractBlockPredicateComponent extends AbstractItemComponent i
 			NBTWriter writer = null;
 			for (int i = 0; i < size; i++) {
 				BlockPredicate predicate = predicates.get(i);
-				if (predicate instanceof BlockTypePredicate typePredicate) {
-					DataSet<BlockType> types = typePredicate.getMaterials();
+				DataSet<BlockType> types = predicate.getTypes();
+				boolean hasTypes = types != null && !types.isEmpty();
+				buf.writeBoolean(hasTypes);
+				if (hasTypes)
 					writeDataSet(types, BlockType.getRegistry(), buf);
-				} else if (predicate instanceof BlockDataPredicate block) {
-					Map<BlockDataProperty<?>, Object> properties = block.getProperties();
+				boolean hasStates = predicate.hasStates();
+				buf.writeBoolean(hasStates);
+				if (hasStates) {
+					Map<BlockDataProperty<?>, Object> properties = predicate.getStates();
 					final int count = properties.size();
 					writeVarInt(count, buf);
 					for (Entry<BlockDataProperty<?>, Object> entry : properties.entrySet()) {
@@ -204,14 +108,16 @@ public class CoreAbstractBlockPredicateComponent extends AbstractItemComponent i
 						buf.writeBoolean(true);
 						writeString(property.toString(value), buf);
 					}
-				} else if (predicate instanceof TileBlockPredicate tilePredicate) {
+				}
+				TileEntity tile = predicate.getTile();
+				buf.writeBoolean(tile != null);
+				if (tile != null) {
 					if (writer == null)
 						writer = new NBTNIOWriter(buf, true);
 					writer.writeCompoundTag();
-					tilePredicate.getTile().toNBT(writer, false);
+					if (tile != null)
+						tile.writeToNBT(writer, NBTSerializationContext.DEFAULT_CLIENT);
 					writer.writeEndTag();
-				} else {
-					throw new ProtocolException("Unsupported block predicate: " + predicate.getClass().getName());
 				}
 			}
 			if (writer != null)
@@ -230,15 +136,17 @@ public class CoreAbstractBlockPredicateComponent extends AbstractItemComponent i
 		if (size > 0) {
 			NBTReader reader = null;
 			for (int i = 0; i < size; i++) {
+				BlockPredicate predicate = null;
 				if (buf.readBoolean()) { // has blocks
 					DataSet<BlockType> types = readDataSet(BlockType.getRegistry(), buf);
-					if (types != null)
-						addPredicate(new BlockTypePredicate(types));
+					if (predicate == null)
+						predicate = new BlockPredicate();
+					predicate.setTypes(types);
 				}
 				if (buf.readBoolean()) { // has properties
 					final int count = readVarInt(buf);
 					if (count > 0) {
-						Map<BlockDataProperty<?>, Object> props = new HashMap<>();
+						Map<BlockDataProperty<?>, Object> props = null;
 						for (int j = 0; j < count; j++) {
 							String name = readString(buf);
 							if (buf.readBoolean()) { // check if exact value
@@ -249,6 +157,11 @@ public class CoreAbstractBlockPredicateComponent extends AbstractItemComponent i
 									value = property.fromString(rawValue);
 									if (value == null)
 										continue;
+									if (props == null) {
+										if (predicate == null)
+											predicate = new BlockPredicate();
+										props = predicate.getStates();
+									}
 									props.put(property, value);
 									break;
 								}
@@ -258,17 +171,16 @@ public class CoreAbstractBlockPredicateComponent extends AbstractItemComponent i
 								readString(buf); // max
 							}
 						}
-						if (!props.isEmpty())
-							addPredicate(new BlockDataPredicate(props));
 					}
 				}
 				if (buf.readBoolean()) { // has nbt
 					if (reader == null)
 						reader = new NBTNIOReader(buf, true);
 					reader.readNextEntry();
-					TileEntity tile = TileEntity.getFromNBT(reader);
-					if (tile != null)
-						addPredicate(new TileBlockPredicate(tile));
+					TileEntity tile = TileEntity.NBT_HANDLER.deserialize(reader);
+					if (predicate == null)
+						predicate = new BlockPredicate();
+					predicate.setTile(tile);
 				}
 			}
 			if (reader != null)

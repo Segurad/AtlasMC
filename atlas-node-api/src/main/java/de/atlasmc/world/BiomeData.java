@@ -1,81 +1,35 @@
 package de.atlasmc.world;
 
-import java.io.IOException;
 import java.util.List;
 
 import de.atlasmc.util.EnumName;
 import de.atlasmc.util.EnumValueCache;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.AbstractNBTBase;
-import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.NBTHolder;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.serialization.NBTSerializable;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public class BiomeData extends AbstractNBTBase {
-
-	protected static final NBTFieldSet<BiomeData> NBT_FIELDS;
+public class BiomeData implements NBTSerializable {
 	
-	protected static final CharKey
-	NBT_HAS_PRECIPITATION = CharKey.literal("has_precipitation"),
-	NBT_TEMPERATURE = CharKey.literal("temperature"),
-	NBT_TEMPERATURE_MODIFIER = CharKey.literal("temperature_modifier"),
-	NBT_DOWNFALL = CharKey.literal("downfall"),
-	NBT_EFFECTS = CharKey.literal("effects"),
-	NBT_CARVES = CharKey.literal("carves"),
-	NBT_FEATURES = CharKey.literal("features"),
-	NBT_CREATURE_SPAWN_PROBABILITY = CharKey.literal("creature_spawn_probability"),
-	NBT_SPAWNERS = CharKey.literal("spawners"),
-	NBT_SPAWNN_COSTS = CharKey.literal("spawn_costs");
-	
-	static {
-		NBT_FIELDS = NBTFieldSet.newSet();
-		NBT_FIELDS.setField(NBT_HAS_PRECIPITATION, (holder, reader) -> {
-			holder.precipitation = reader.readBoolean();
-		});
-		NBT_FIELDS.setField(NBT_TEMPERATURE, (holder, reader) -> {
-			holder.temperature = reader.readFloatTag();
-		});
-		NBT_FIELDS.setField(NBT_TEMPERATURE_MODIFIER, (holder, reader) -> {
-			holder.setTemperatureModifier(TemperatureModifier.getByName(reader.readStringTag()));
-		});
-		NBT_FIELDS.setField(NBT_DOWNFALL, (holder, reader) -> {
-			holder.downfall = reader.readFloatTag();
-		});
-		NBT_FIELDS.setField(NBT_EFFECTS, (holder, reader) -> {
-			reader.readNextEntry();
-			holder.effects = new BiomeEffects();
-			holder.effects.fromNBT(reader);
-		});
-		NBT_FIELDS.setField(NBT_CARVES, NBTField.skip()); // Separate implementation with world generation
-		NBT_FIELDS.setField(NBT_FEATURES, NBTField.skip()); // Separate implementation with world generation
-		NBT_FIELDS.setField(NBT_CREATURE_SPAWN_PROBABILITY, (holder, reader) -> {
-			holder.creatureSpawnProbability = reader.readFloatTag();
-		});
-		NBT_FIELDS.setField(NBT_SPAWNERS, NBTField.skip()); // TODO Biome spawner
-		NBT_FIELDS.setField(NBT_SPAWNN_COSTS, NBTField.skip()); // TODO Biome spawner
-	}
+	public static final NBTSerializationHandler<BiomeData>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(BiomeData.class)
+					.boolField("has_precipitation", BiomeData::hasPrecipitation, BiomeData::setPrecipitation, false)
+					.floatField("temparature", BiomeData::getTemperature, BiomeData::setTemperature, 0)
+					.enumStringField("temperature_modifier", BiomeData::getTemperatureModifier, BiomeData::setTemperatureModifier, TemperatureModifier::getByName, TemperatureModifier.NONE)
+					.floatField("downfall", BiomeData::getDownfall, BiomeData::setDownfall, 0)
+					.typeCompoundField("effects", BiomeData::getEffects, BiomeData::setEffects, BiomeEffects.NBT_HANDLER)
+					.build();
 	
 	private boolean precipitation;
 	private float temperature;
 	private TemperatureModifier temperatureModifier;
 	private float downfall;
 	private BiomeEffects effects;
-	private float creatureSpawnProbability;
 	
 	public BiomeData() {
 		temperatureModifier = TemperatureModifier.NONE;
 	}
 	
-	public float getCreatureSpawnProbability() {
-		return creatureSpawnProbability;
-	}
-	
-	public void setCreatureSpawnProbability(float creatureSpawnProbability) {
-		this.creatureSpawnProbability = creatureSpawnProbability;
-	}
-	
-	public void setEffect(BiomeEffects effects) {
+	public void setEffects(BiomeEffects effects) {
 		this.effects = effects;
 	}
 	
@@ -89,7 +43,7 @@ public class BiomeData extends AbstractNBTBase {
 		this.temperatureModifier = modifier;
 	}
 	
-	public BiomeEffects getEffect() {
+	public BiomeEffects getEffects() {
 		return effects;
 	}
 
@@ -118,23 +72,8 @@ public class BiomeData extends AbstractNBTBase {
 	}
 	
 	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		writer.writeByteTag(NBT_HAS_PRECIPITATION, precipitation);
-		writer.writeFloatTag(NBT_TEMPERATURE, temperature);
-		if (temperatureModifier != TemperatureModifier.NONE)
-			writer.writeStringTag(NBT_TEMPERATURE, temperatureModifier.name);
-		writer.writeFloatTag(NBT_DOWNFALL, downfall);
-		if (effects != null) {
-			writer.writeCompoundTag(NBT_EFFECTS);
-			effects.toNBT(writer, systemData);
-			writer.writeEndTag();
-		}
-		writer.writeFloatTag(NBT_CREATURE_SPAWN_PROBABILITY, creatureSpawnProbability);
-	}
-
-	@Override
-	protected NBTFieldSet<? extends NBTHolder> getFieldSetRoot() {
-		return NBT_FIELDS;
+	public NBTSerializationHandler<? extends BiomeData> getNBTHandler() {
+		return NBT_HANDLER;
 	}
 	
 	public static enum TemperatureModifier implements EnumName, EnumValueCache {

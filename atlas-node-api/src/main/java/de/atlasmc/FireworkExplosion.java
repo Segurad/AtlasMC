@@ -1,49 +1,25 @@
 package de.atlasmc;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import de.atlasmc.util.EnumID;
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.EnumValueCache;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.NBTHolder;
-import de.atlasmc.util.nbt.NBTUtil;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.AtlasEnum;
+import de.atlasmc.util.nbt.serialization.NBTSerializable;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public class FireworkExplosion implements NBTHolder {
+public class FireworkExplosion implements NBTSerializable {
 	
-	protected static final NBTFieldSet<FireworkExplosion> NBT_FIELDS;
-	
-	protected static final CharKey
-	NBT_COLORS = CharKey.literal("color"),
-	NBT_FADE_COLORS = CharKey.literal("fade_colors"),
-	NBT_HAS_TWINKEL = CharKey.literal("has_twinkel"),
-	NBT_HAS_TRAIL = CharKey.literal("has_trail"),
-	NBT_SHAPE = CharKey.literal("shape");
-	
-	static {
-		NBT_FIELDS = NBTFieldSet.newSet();
-		NBT_FIELDS.setField(NBT_SHAPE, (holder, reader) -> {
-			holder.shape = Shape.getByName(reader.readStringTag());
-		});
-		NBT_FIELDS.setField(NBT_COLORS, (holder, reader) -> {
-			holder.colors = reader.readIntArrayTag();
-		});
-		NBT_FIELDS.setField(NBT_FADE_COLORS, (holder, reader) -> {
-			holder.fadeColors = reader.readIntArrayTag();
-		});
-		NBT_FIELDS.setField(NBT_HAS_TRAIL, (holder, reader) -> {
-			holder.trail = reader.readBoolean();
-		});
-		NBT_FIELDS.setField(NBT_HAS_TWINKEL, (holder, reader) -> {
-			holder.twinkel = reader.readBoolean();
-		});
-	}
+	public static final NBTSerializationHandler<FireworkExplosion>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(FireworkExplosion.class)
+					.defaultConstructor(FireworkExplosion::new)
+					.enumStringField("shape", FireworkExplosion::getShape, FireworkExplosion::setShape, Shape::getByName, Shape.SMALL_BALL)
+					.intArray("colors", FireworkExplosion::getColors, FireworkExplosion::setColors)
+					.intArray("fade_colors", FireworkExplosion::getFadeColors, FireworkExplosion::setFadeColors)
+					.boolField("has_trail", FireworkExplosion::hasTrail, FireworkExplosion::setTrail, false)
+					.boolField("has_twinkle", FireworkExplosion::hasTwinkel, FireworkExplosion::setTwinkel, false)
+					.build();
 	
 	private int[] colors;
 	private int[] fadeColors;
@@ -97,25 +73,6 @@ public class FireworkExplosion implements NBTHolder {
 		this.fadeColors = fadeColors;
 	}
 	
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		if (shape != Shape.SMALL_BALL)
-			writer.writeStringTag(NBT_SHAPE, shape.name);
-		if (colors != null)
-			writer.writeIntArrayTag(NBT_COLORS, colors);
-		if (fadeColors != null)
-			writer.writeIntArrayTag(NBT_FADE_COLORS, fadeColors);
-		if (trail)
-			writer.writeByteTag(NBT_HAS_TRAIL, true);
-		if (twinkel)
-			writer.writeByteTag(NBT_HAS_TWINKEL, true);
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		NBTUtil.readNBT(NBT_FIELDS, this, reader);
-	}
-	
 	public FireworkExplosion clone() {
 		FireworkExplosion clone = null;
 		try {
@@ -132,7 +89,12 @@ public class FireworkExplosion implements NBTHolder {
 		return clone;
 	}
 	
-	public static enum Shape implements EnumName, EnumID, EnumValueCache {
+	@Override
+	public NBTSerializationHandler<? extends FireworkExplosion> getNBTHandler() {
+		return NBT_HANDLER;
+	}
+	
+	public static enum Shape implements AtlasEnum {
 		SMALL_BALL,
 		LARGE_BALL,
 		STAR,

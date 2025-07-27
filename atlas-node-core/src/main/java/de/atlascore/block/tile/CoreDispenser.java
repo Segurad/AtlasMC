@@ -43,7 +43,7 @@ public class CoreDispenser extends CoreAbstractContainerTile<Inventory> implemen
 	public Projectile launchProjectile(EntityType type, Vector3d velocity) {
 		if (type == null)
 			throw new IllegalArgumentException("Type can not be null!");
-		Projectile pro = (Projectile) type.create(getWorld());
+		Projectile pro = (Projectile) type.createEntity();
 		return launchProjectile(pro, velocity);
 	}
 

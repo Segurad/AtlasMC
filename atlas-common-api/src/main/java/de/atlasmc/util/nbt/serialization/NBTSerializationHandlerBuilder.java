@@ -17,9 +17,11 @@ public class NBTSerializationHandlerBuilder<T> extends AbstractNBTCompoundFieldB
 	private final Class<T> clazz;
 	private Constructor<T> constructor;
 	private Supplier<T> defaultConstructor;
+	private boolean redirectAfterConstruction;
 	
 	protected NBTSerializationHandlerBuilder(Class<T> clazz) {
 		this.clazz = clazz;
+		redirectAfterConstruction = NBTSerializable.class.isAssignableFrom(clazz);
 	}
 	
 	@Override

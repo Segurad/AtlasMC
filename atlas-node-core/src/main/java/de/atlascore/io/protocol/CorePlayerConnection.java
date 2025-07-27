@@ -11,7 +11,7 @@ import de.atlascore.recipe.CoreRecipeBook;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NodePlayer;
 import de.atlasmc.SimpleLocation;
-import de.atlasmc.atlasnetwork.AtlasPlayer;
+import de.atlasmc.atlasnetwork.player.AtlasPlayer;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatType;
 import de.atlasmc.entity.Player;

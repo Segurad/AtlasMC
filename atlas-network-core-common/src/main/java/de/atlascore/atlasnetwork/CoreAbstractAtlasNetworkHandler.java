@@ -6,7 +6,7 @@ import java.util.UUID;
 import de.atlasmc.atlasnetwork.AtlasNetworkHandler;
 import de.atlasmc.atlasnetwork.NodeManager;
 import de.atlasmc.atlasnetwork.PermissionManager;
-import de.atlasmc.atlasnetwork.ProfileHandler;
+import de.atlasmc.atlasnetwork.player.ProfileHandler;
 import de.atlasmc.atlasnetwork.server.ServerManager;
 
 public abstract class CoreAbstractAtlasNetworkHandler implements AtlasNetworkHandler {

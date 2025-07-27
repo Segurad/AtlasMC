@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import de.atlasmc.Gamemode;
-import de.atlasmc.atlasnetwork.ProfileProperty;
+import de.atlasmc.atlasnetwork.player.ProfileProperty;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.PlayerChatSignatureData;
 import de.atlasmc.io.AbstractPacket;

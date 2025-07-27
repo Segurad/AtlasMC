@@ -1,4 +1,4 @@
-package de.atlasmc.atlasnetwork;
+package de.atlasmc.atlasnetwork.player;
 
 import java.util.UUID;
 

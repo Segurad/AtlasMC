@@ -6,7 +6,7 @@ import java.util.List;
 
 import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
-import de.atlasmc.atlasnetwork.ProfileProperty;
+import de.atlasmc.atlasnetwork.player.ProfileProperty;
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;

@@ -3,7 +3,7 @@ package de.atlasmc.chat.placeholder;
 import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.Atlas;
-import de.atlasmc.atlasnetwork.AtlasPlayer;
+import de.atlasmc.atlasnetwork.player.AtlasPlayer;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.annotation.ThreadSafe;
 import de.atlasmc.util.map.key.CharKey;
