@@ -98,25 +98,15 @@ public class Region implements Cloneable {
 	}
 	
 	public boolean contains(double x, double y, double z) {
-		if (isIntersecting(getMinX(), getWidhtX(), x, 0)) {
-			if (isIntersecting(getMinY(), getHeight(), y, 0)) {
-				if (isIntersecting(getMinZ(), getWidhtZ(), z, 0)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return isIntersecting(getMinX(), getWidhtX(), x, 0) &&
+				isIntersecting(getMinY(), getHeight(), y, 0) &&
+				isIntersecting(getMinZ(), getWidhtZ(), z, 0);
 	}
 
 	public boolean isIntersecting(Region region) {
-		if (isIntersecting(getMinX(), getWidhtX(), region.getMinX(), region.getWidhtX())) {
-			if (isIntersecting(getMinY(), getHeight(), region.getMinY(), region.getHeight())) {
-				if (isIntersecting(getMinZ(), getWidhtZ(), region.getMinZ(), region.getWidhtZ())) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return isIntersecting(getMinX(), getWidhtX(), region.getMinX(), region.getWidhtX()) &&
+			   isIntersecting(getMinY(), getHeight(), region.getMinY(), region.getHeight()) &&
+			   isIntersecting(getMinZ(), getWidhtZ(), region.getMinZ(), region.getWidhtZ());
 	}
 
 	protected final boolean isIntersecting(double l1, double w1, double l2, double w2) {

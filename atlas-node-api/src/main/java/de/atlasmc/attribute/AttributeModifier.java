@@ -184,9 +184,7 @@ public class AttributeModifier implements Cloneable, NBTSerializable {
 			return false;
 		if (operation != other.operation)
 			return false;
-		if (slot != other.slot)
-			return false;
-		return true;
+		return slot == other.slot;
 	}
 
 	@Override

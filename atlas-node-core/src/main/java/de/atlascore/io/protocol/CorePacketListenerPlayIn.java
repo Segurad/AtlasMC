@@ -229,6 +229,8 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				case 2: 
 					type = InventoryButtonType.ENCHANTING_BOTTOM_EMCHANTMENT; 
 					break;
+				default:
+					throw new ProtocolException("Unknown button id for Enchanting Inventory: " + id);
 				}
 				id = -1;
 			} else if (view.getType() == InventoryType.LECTERN) {
@@ -246,9 +248,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 					type = InventoryButtonType.LECTERN_OPEN_PAGE_NUMBER; 
 					break;
 				}
-				if (id < 100) {
-					id = -1;
-				} else id -= 100;
+				id = id < 100 ? -1 : id - 100;
 			} else if (view.getType() == InventoryType.STONECUTTER) {
 				type = InventoryButtonType.STONECUTTER_RECIPE_NUMBER;
 			} else if (view.getType() == InventoryType.LOOM) {
@@ -573,6 +573,8 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				ItemStack offHand = inv.getItemInOffHand();
 				HandlerList.callEvent(new PlayerSwapHandItemsEvent(player, mainHand, offHand));
 				break;
+			default:
+				throw new ProtocolException("Unknown status: " + status);
 			}
 		});
 		initHandler(PacketInPlayerCommand.class, (con, packet) -> { // 0x1C
@@ -613,6 +615,8 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			case START_FLYING_ELYTRA:
 				// TODO elytra fly
 				break;
+			default:
+				throw new ProtocolException("Unknown action: " + packet.action);
 			}
 		});
 		initHandler(PacketInPlayerInput.class, (con, packet) -> { // 0x1D

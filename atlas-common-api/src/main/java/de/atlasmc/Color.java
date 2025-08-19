@@ -234,9 +234,7 @@ public final class Color {
 		if (obj.getClass() != Color.class)
 			return false;
 		Color color = (Color) obj;
-		if (r != color.r || g != color.g || b != color.b || a != color.a)
-			return false;
-		return true;
+		return r == color.r && g == color.g && b == color.b && a == color.a;
 	}
 	
 }

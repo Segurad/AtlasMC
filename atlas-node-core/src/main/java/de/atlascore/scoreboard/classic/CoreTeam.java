@@ -83,16 +83,12 @@ class CoreTeam implements Team {
 
 	@Override
 	public void setPrefix(Chat prefix) {
-		if (prefix == null)
-			prefix = ChatUtil.EMPTY;
-		this.prefix = prefix;
+		this.prefix = prefix != null ? suffix : ChatUtil.EMPTY;
 	}
 
 	@Override
 	public void setSuffix(Chat suffix) {
-		if (suffix == null)
-			suffix = ChatUtil.EMPTY;
-		this.suffix = suffix;
+		this.suffix = suffix != null ? suffix : ChatUtil.EMPTY;
 	}
 
 	@Override
@@ -112,9 +108,7 @@ class CoreTeam implements Team {
 
 	@Override
 	public void setDisplayName(Chat display) {
-		if (display == null)
-			display = ChatUtil.EMPTY;
-		this.display = display;
+		this.display = display != null ? display : ChatUtil.EMPTY;
 	}
 
 	@Override

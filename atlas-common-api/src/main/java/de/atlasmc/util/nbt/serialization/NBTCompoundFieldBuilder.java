@@ -23,6 +23,9 @@ import it.unimi.dsi.fastutil.objects.ObjectIterator;
 
 public class NBTCompoundFieldBuilder<T> extends NBTField<T> implements Builder<NBTField<T>> {
 
+	private final List<NBTField<T>> fieldOrder = new ArrayList<>();
+	private final List<Map<CharKey, NBTField<T>>> typeFields = new ArrayList<>(AbstractNBTCompoundFieldBuilder.TYPE_COUNT);
+	private final Object2IntMap<NBTField<T>> refCounts = new Object2IntLinkedOpenCustomHashMap<>(IdentityStrategy.getInstance());
 	public ToBooleanFunction<T> has;
 	public NBTCompoundFieldBuilder<T> parent;
 	private boolean buildPrepared = true;
@@ -34,6 +37,7 @@ public class NBTCompoundFieldBuilder<T> extends NBTField<T> implements Builder<N
 	public NBTCompoundFieldBuilder(CharSequence key, ToBooleanFunction<T> has, NBTCompoundFieldBuilder<T> parent) {
 		super(key, COMPOUND, true);
 		this.has = has;
+		this.parent = parent;
 	}
 	
 	public ToBooleanFunction<T> getHas() {
@@ -43,10 +47,6 @@ public class NBTCompoundFieldBuilder<T> extends NBTField<T> implements Builder<N
 	public void setHas(ToBooleanFunction<T> has) {
 		this.has = has;
 	}
-
-	private final List<NBTField<T>> fieldOrder = new ArrayList<>();
-	private final List<Map<CharKey, NBTField<T>>> typeFields = new ArrayList<>(AbstractNBTCompoundFieldBuilder.TYPE_COUNT);
-	private final Object2IntMap<NBTField<T>> refCounts = new Object2IntLinkedOpenCustomHashMap<>(IdentityStrategy.getInstance());
 
 	private void prepareBuild() {
 		if (buildPrepared)
@@ -76,10 +76,14 @@ public class NBTCompoundFieldBuilder<T> extends NBTField<T> implements Builder<N
 			}
 			iter.remove();
 		}
-		if (remap == null)
+		remapBuildCompoundFields(remap);
+	}
+	
+	private void remapBuildCompoundFields(Map<NBTField<T>, NBTField<T>> remap) {
+		if (remap == null || remap.isEmpty())
 			return;
 		final Map<CharKey, NBTField<T>> compoundMap = typeFields.get(TagType.COMPOUND.getID() - 1);
-		for (java.util.Map.Entry<NBTField<T>, NBTField<T>> entry : remap.entrySet()) {
+		for (Map.Entry<NBTField<T>, NBTField<T>> entry : remap.entrySet()) {
 			NBTField<T> oldKey = entry.getKey();
 			NBTField<T> key = entry.getValue();
 			int count = refCounts.removeInt(oldKey);
@@ -167,15 +171,15 @@ public class NBTCompoundFieldBuilder<T> extends NBTField<T> implements Builder<N
 				typeFields.set(id, fields = new HashMap<>());
 			NBTField<T> old = fields.put(field.key, field);
 			refCount++;
-			if (old == null)
-				continue;
-			if (old == field) {
-				refCount--;
-				continue;
+			if (old != null) {
+				if (old == field) {
+					refCount--;
+				} else {
+					int oldRefCount = refCounts.getInt(old);
+					oldRefCount--;
+					refCounts.put(old, oldRefCount);
+				}
 			}
-			int oldRefCount = refCounts.getInt(old);
-			oldRefCount--;
-			refCounts.put(old, oldRefCount);
 		}
 		refCounts.put(field, refCount);
 		return this;

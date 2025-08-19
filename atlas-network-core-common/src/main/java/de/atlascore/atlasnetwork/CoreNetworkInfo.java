@@ -102,6 +102,8 @@ public class CoreNetworkInfo implements NetworkInfo {
 			onlinePlayers = slots;
 			maxPlayers = slots + slotDistance;
 			break;
+		default:
+			throw new IllegalStateException("Unknown slot mode: " + mode);
 		}
 		players.set("max", maxPlayers);
 		players.set("online", onlinePlayers);

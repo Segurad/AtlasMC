@@ -225,10 +225,10 @@ public class CorePlayerInventory extends CoreInventory implements PlayerInventor
 			case SLOT_OFF_HAND:
 				equipmentSlot = EquipmentSlot.OFF_HAND;
 				break;
+			default:
+				return;
 			}
 		}
-		if (equipmentSlot == null)
-			return;
 		ItemStack item = getItemUnsafe(slot);
 		ArrayList<Pair<EquipmentSlot, ItemStack>> slots = new ArrayList<>(1);
 		slots.add(Pair.of(equipmentSlot, item));

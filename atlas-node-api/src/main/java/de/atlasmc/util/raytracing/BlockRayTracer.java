@@ -58,8 +58,6 @@ public class BlockRayTracer implements VoxelRayConsumer {
 		}
 		lastHit = passed;
 		BlockData data = chunk.getBlockDataAt(MathUtil.floor(x), MathUtil.floor(y), MathUtil.floor(z));
-		if (rule.isValid(data))
-			return true;
-		return false;
+		return rule.isValid(data);
 	}
 }

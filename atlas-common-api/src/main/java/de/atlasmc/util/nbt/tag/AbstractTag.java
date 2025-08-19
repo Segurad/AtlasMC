@@ -51,9 +51,7 @@ abstract class AbstractTag implements NBT {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (getType() != other.getType())
-			return false;
-		return true;
+		return getType() == other.getType();
 	}
 	
 	@Override

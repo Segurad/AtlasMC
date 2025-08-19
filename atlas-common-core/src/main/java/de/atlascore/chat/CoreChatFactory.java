@@ -176,11 +176,9 @@ public class CoreChatFactory implements ChatFactory {
 		return builder.toString();
 	}
 	
-	private void buildRawText(StringBuilder builder, ChatComponent component) {
-		if (!(component instanceof TextComponent) || component.getClass() != BaseComponent.class) {	
-			if (component instanceof TextComponent text) {
-				builder.append(text.getValue());
-			}
+	private void buildRawText(StringBuilder builder, ChatComponent component) {	
+		if (component instanceof TextComponent text) {
+			builder.append(text.getValue());
 		}
 		if (component.hasExtra()) {
 			for (ChatComponent child : component.getExtra()) {

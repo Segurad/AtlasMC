@@ -46,15 +46,17 @@ public class CoreAnvilRegionFile {
 			if (!parts[3].equals("mcr")) 
 				throw new IllegalArgumentException("Invalid file name! Type .mcr excpected but found: " + parts[3]);
 			try {
-				x = Integer.parseInt(parts[1]);
-				z = Integer.parseInt(parts[2]);
+				this.x = Integer.parseInt(parts[1]);
+				this.z = Integer.parseInt(parts[2]);
+				this.mcrFile = file;
 			} catch (NumberFormatException e) {
 				throw new IllegalArgumentException("Invalid file name! Does not contian a valid coordinate pair: " + file.getName());
 			}
-		} else file = new File(file, "r." + x + "." + z + ".mcr");
-		this.x = x;
-		this.z = z;
-		this.mcrFile = file;
+		} else {
+			this.mcrFile = new File(file, "r." + x + "." + z + ".mcr");
+			this.x = x;
+			this.z = z;
+		}
 	}
 	
 	public int getRegionX() {
@@ -147,11 +149,7 @@ public class CoreAnvilRegionFile {
 		if (getClass() != obj.getClass())
 			return false;
 		CoreAnvilRegionFile other = (CoreAnvilRegionFile) obj;
-		if (x != other.x)
-			return false;
-		if (z != other.z)
-			return false;
-		return true;
+		return x == other.x && z == other.z;
 	}
 
 	public Future<Collection<Chunk>> loadChunks(World world, ChunkFactory chunkFactory) {

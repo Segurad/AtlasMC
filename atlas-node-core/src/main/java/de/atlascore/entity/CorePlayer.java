@@ -272,9 +272,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	public void setItemOnCursor(ItemStack item) {
 		if (this.cursorItem == item)
 			return;
-		if (item != null)
-			item = item.clone();
-		this.cursorItem = item;
+		this.cursorItem = item != null ? item.clone() : null;
 		updateItemOnCursor();
 	}
 

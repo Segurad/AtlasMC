@@ -53,9 +53,7 @@ public class CoreMinecartCommandBlock extends CoreAbstractMinecart implements Mi
 
 	@Override
 	public void setLastMessage(Chat message) {
-		if (message == null)
-			message = ChatUtil.EMPTY;
-		metaContainer.get(META_LAST_OUTPUT).setData(message);
+		metaContainer.get(META_LAST_OUTPUT).setData(message != null ? message : ChatUtil.EMPTY);
 	}
 
 	@Override
@@ -91,10 +89,8 @@ public class CoreMinecartCommandBlock extends CoreAbstractMinecart implements Mi
 
 	@Override
 	public void sendMessage(Chat chat) {
-		if (chat == null)
-			chat = ChatUtil.EMPTY;
 		if (isTrackingOutput())
-			metaContainer.set(META_LAST_OUTPUT, chat);
+			metaContainer.set(META_LAST_OUTPUT, chat != null ? chat : ChatUtil.EMPTY);
 	}
 
 	@Override

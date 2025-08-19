@@ -72,9 +72,7 @@ class CoreObjective implements Objective {
 
 	@Override
 	public void setDisplayName(Chat chat) {
-		if (chat == null)
-			chat = ChatUtil.EMPTY;
-		this.displayName = chat;
+		this.displayName = chat != null ? chat : ChatUtil.EMPTY;
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
+import java.net.ProtocolException;
 import java.util.UUID;
 
 import static de.atlasmc.io.protocol.ProtocolUtil.*;
@@ -46,6 +47,8 @@ public class CorePacketOutBossBar implements PacketIO<PacketOutBossBar> {
 		case UPDATE_FLAGS: 
 			packet.flags = in.readUnsignedByte();
 			break;
+		default:
+			throw new ProtocolException("Unknown action: " + action);
 		}
 	}
 
@@ -76,6 +79,8 @@ public class CorePacketOutBossBar implements PacketIO<PacketOutBossBar> {
 			break;
 		case UPDATE_FLAGS: out.writeByte(packet.flags);
 			break;
+		default:
+			throw new ProtocolException("Unknown action: " + packet.action);
 		}
 	}
 	

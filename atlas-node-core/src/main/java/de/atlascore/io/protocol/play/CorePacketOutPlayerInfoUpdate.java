@@ -59,24 +59,22 @@ public class CorePacketOutPlayerInfoUpdate implements PacketIO<PacketOutPlayerIn
 					}
 				}
 			}
-			if ((actions & ACTION_INIT_CHAT) != 0) {
-				if (in.readBoolean()) {
-					UUID sid = readUUID(in);
-					long expiration = in.readLong();
-					int keySize = readVarInt(in);
-					byte[] rawKey = new byte[keySize];
-					in.readBytes(rawKey);
-					PublicKey key = null;
-					try {
-						key = EncryptionUtil.publicKeyByBytes(rawKey);
-					} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-						throw new ProtocolException("Exception while reading public key!", e);
-					}
-					int sigSize = readVarInt(in);
-					byte[] signature = new byte[sigSize];
-					PlayerChatSignatureData sigData = new PlayerChatSignatureData(sid, expiration, key, signature);
-					info.chatSignature = sigData;
+			if ((actions & ACTION_INIT_CHAT) != 0 && in.readBoolean()) {
+				UUID sid = readUUID(in);
+				long expiration = in.readLong();
+				int keySize = readVarInt(in);
+				byte[] rawKey = new byte[keySize];
+				in.readBytes(rawKey);
+				PublicKey key = null;
+				try {
+					key = EncryptionUtil.publicKeyByBytes(rawKey);
+				} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+					throw new ProtocolException("Exception while reading public key!", e);
 				}
+				int sigSize = readVarInt(in);
+				byte[] signature = new byte[sigSize];
+				PlayerChatSignatureData sigData = new PlayerChatSignatureData(sid, expiration, key, signature);
+				info.chatSignature = sigData;
 			}
 			if ((actions & ACTION_UPDATE_GAMEMODE) != 0) {
 				Gamemode gamemode = Gamemode.getByID(readVarInt(in));

@@ -45,9 +45,7 @@ public class CorePermission implements Permission {
 				return false;
 		} else if (!permission.equals(other.permission))
 			return false;
-		if (value != other.value)
-			return false;
-		return true;
+		return value == other.value;
 	}
 
 }

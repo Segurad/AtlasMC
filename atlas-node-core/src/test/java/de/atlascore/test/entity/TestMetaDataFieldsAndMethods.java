@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import de.atlascore.system.init.ContainerFactoryLoader;
@@ -66,13 +65,13 @@ public class TestMetaDataFieldsAndMethods implements Consumer<Class<?>> {
 		try {
 			construct = clazz.getConstructor(EntityType.class, UUID.class);
 		} catch (NoSuchMethodException | SecurityException e) {
-			Assertions.fail("Entity constructor(EntityType, UUID) missing: " + clazz.getName(), e);
+			fail("Entity constructor(EntityType, UUID) missing: " + clazz.getName(), e);
 		}
 		try {
 			construct.newInstance(null, null);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
-			Assertions.fail("Fail to create Entity instance: " + clazz.getName(), e);
+			fail("Fail to create Entity instance: " + clazz.getName(), e);
 		}
 	}
 

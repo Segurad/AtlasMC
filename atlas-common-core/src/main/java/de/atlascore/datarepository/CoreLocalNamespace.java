@@ -204,9 +204,7 @@ class CoreLocalNamespace implements RepositoryNamespace {
 					return true;
 			}
 		}
-		if (!shallow && !files.isEmpty())
-			return true;
-		return false;
+		return !shallow && !files.isEmpty();
 	}
 
 	public Future<RepositoryEntryUpdate> update(CoreLocalRepositoryEntry entry, boolean shallow) {

@@ -160,6 +160,8 @@ public class Commands {
 		case "var":
 			arg = loadVarArg(config, templates, permission, validator);
 			break;
+		default:
+			throw new InvalidConfigurationException("Unknwon arg type: " + type);
 		}
 		return arg;
 	}

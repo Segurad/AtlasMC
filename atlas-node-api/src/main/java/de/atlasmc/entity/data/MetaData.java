@@ -1,5 +1,7 @@
 package de.atlasmc.entity.data;
 
+import de.atlasmc.util.CloneException;
+
 /**
  * Stores data of a {@link MetaData}, keeps track of changes and contains {@link MetaDataField} information
  * @param <T>
@@ -79,12 +81,10 @@ public class MetaData<T> implements Cloneable {
 		try {
 			clone = (MetaData<T>) super.clone();
 		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
+			throw new CloneException();
 		}
-		if (clone != null) {
-			if (data != null)
-				clone.data = field.getType().copyData(data);
-		}
+		if (data != null)
+			clone.data = field.getType().copyData(data);
 		return clone;
 	}
 

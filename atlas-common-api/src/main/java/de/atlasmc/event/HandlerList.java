@@ -45,9 +45,7 @@ public class HandlerList {
 	 * @param defaultExecutor
 	 */
 	public void setDefaultExecutor(EventExecutor defaultExecutor) {
-		if (defaultExecutor == null) 
-			defaultExecutor = EventExecutor.NULL_EXECUTOR;
-		this.defaultExecutor = defaultExecutor;
+		this.defaultExecutor = defaultExecutor != null ? defaultExecutor : EventExecutor.NULL_EXECUTOR;
 	}
 	
 	/**

@@ -78,9 +78,7 @@ public class CoreCreeper extends CoreMob implements Creeper {
 	public void setExplosionRadius(int radius) {
 		if (radius > 127)
 			throw new IllegalArgumentException("Radius can not be higher than 127: " + radius);
-		if (radius < 0)
-			radius = 0;
-		this.radius = radius;	
+		this.radius = Math.max(radius, 0);	
 	}
 
 	@Override

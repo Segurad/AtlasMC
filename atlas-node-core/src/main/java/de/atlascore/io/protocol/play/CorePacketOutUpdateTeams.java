@@ -1,6 +1,7 @@
 package de.atlascore.io.protocol.play;
 
 import java.io.IOException;
+import java.net.ProtocolException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +69,8 @@ public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> 
 				}
 				break;
 			}
+		default:
+			throw new ProtocolException("Unknown mode: " + packet.mode);
 		}
 	}
 
@@ -119,6 +122,8 @@ public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> 
 				}
 				break;
 			}
+		default:
+			throw new ProtocolException("Unknown mode: " + packet.mode);
 		}
 	}
 

@@ -79,9 +79,7 @@ public class CoreInventory implements Inventory {
 	public void setItem(int slot, ItemStack item, boolean animation) {
 		if (contents[slot] == item)
 			return;
-		if (item != null)
-			item = item.clone();
-		contents[slot] = item;
+		contents[slot] = item != null ? item.clone() : null;
 		if (autoUpdate) {
 			stateID++;
 			updateSlot(slot, animation);
@@ -393,18 +391,19 @@ public class CoreInventory implements Inventory {
 
 	@Override
 	public void removeItems(ItemType type, int count) {
+		int remaining = count;
 		for (int i = 0; i < size; i++) {
 			ItemStack item = contents[i];
 			if (item == null) 
 				continue;
 			if (item.getType() != type) 
 				return;
-			if (count >= item.getAmount()) {
-				count -= item.getAmount();
+			if (remaining >= item.getAmount()) {
+				remaining -= item.getAmount();
 				contents[i] = null;
 				continue;
 			}
-			item.setAmount(item.getAmount()-count);
+			item.setAmount(item.getAmount() - remaining);
 			updateSlot(i, true);
 			break;
 		}

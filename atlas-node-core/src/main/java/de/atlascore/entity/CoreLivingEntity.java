@@ -360,25 +360,25 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 			activeEffects = new HashMap<>();
 		PotionEffectType type = effect.getType();
 		PotionEffect activeEffect = activeEffects.get(type);
-		effect = effect.clone();
+		PotionEffect clone = effect.clone();
 		if (activeEffect == null) {
-			activeEffects.put(type, effect);
-		} else if (activeEffect.getAmplifier() > effect.getAmplifier() 
-				|| (activeEffect.getAmplifier() == effect.getAmplifier() 
-				&& activeEffect.getDuration() >= effect.getDuration())) { 
+			activeEffects.put(type, clone);
+		} else if (activeEffect.getAmplifier() > clone.getAmplifier() 
+				|| (activeEffect.getAmplifier() == clone.getAmplifier() 
+				&& activeEffect.getDuration() >= clone.getDuration())) { 
 			// move new effect to effects when amplifier < or duration < when amplifier equals
 			if (effects != null)
 				effects = new ArrayList<>();
-			effects.add(effect);
+			effects.add(clone);
 			return;
 		} else {
-			activeEffects.put(type, effect);
+			activeEffects.put(type, clone);
 			if (effects != null)
 				effects = new ArrayList<>();
 			effects.add(activeEffect);
 		}
-		effect.addEffect(this);
-		sendAddEntityEffect(effect);
+		clone.addEffect(this);
+		sendAddEntityEffect(clone);
 	}
 
 	@Override

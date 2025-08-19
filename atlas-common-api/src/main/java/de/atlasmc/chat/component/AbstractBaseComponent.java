@@ -17,7 +17,13 @@ import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> implements ChatComponent {
 	
-	private byte flags; // 0x01 = bold, 0x02 = italic, 0x04 = underlined, 0x08 = obfuscated, 0x10 = strikethrough
+	private static final int
+	FLAG_BOLD = 0x01,
+	FLAG_ITALIC = 0x02,
+	FLAG_UNDERLINED = 0x04,
+	FLAG_OBFUSCATED = 0x08,
+	FLAG_STRIKETHROUGH = 0x10;
+	private byte flags;
 	private String font = ChatComponent.FONT_DEFAULT;
 	private Color color = null;
 	private ChatColor chatColor = null;
@@ -55,45 +61,45 @@ public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> 
 	
 	@Override
 	public boolean isBold() {
-		return (flags & 0x01) == 0x01;
+		return (flags & FLAG_BOLD) == FLAG_BOLD;
 	}
 
 	@Override
 	public T setBold(boolean bold) {
-		flags = (byte) (bold ? flags | 0x01 : flags & 0xFE);
+		flags = (byte) (bold ? flags | FLAG_BOLD : flags & ~FLAG_BOLD);
 		return getThis();
 	}
 
 	@Override
 	public boolean isItalic() {
-		return (flags & 0x02) == 0x02;
+		return (flags & FLAG_ITALIC) == FLAG_ITALIC;
 	}
 
 	@Override
 	public T setItalic(boolean italic) {
-		flags = (byte) (italic ? flags | 0x02 : flags & 0xFD);
+		flags = (byte) (italic ? flags | FLAG_ITALIC : flags & ~FLAG_ITALIC);
 		return getThis();
 	}
 
 	@Override
 	public boolean isUnderlined() {
-		return (flags & 0x04) == 0x04;
+		return (flags & FLAG_UNDERLINED) == FLAG_UNDERLINED;
 	}
 
 	@Override
 	public T setUnderlined(boolean underlined) {
-		flags = (byte) (underlined ? flags | 0x04 : flags & 0xFB);
+		flags = (byte) (underlined ? flags | FLAG_UNDERLINED : flags & ~FLAG_UNDERLINED);
 		return getThis();
 	}
 
 	@Override
 	public boolean isObfuscated() {
-		return (flags & 0x08) == 0x08;
+		return (flags & FLAG_OBFUSCATED) == FLAG_OBFUSCATED;
 	}
 
 	@Override
 	public T setObfuscated(boolean obfuscated) {
-		flags = (byte) (obfuscated ? flags | 0x08 : flags & 0xF7);
+		flags = (byte) (obfuscated ? flags | FLAG_OBFUSCATED : flags & ~FLAG_OBFUSCATED);
 		return getThis();
 	}
 
@@ -104,9 +110,7 @@ public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> 
 
 	@Override
 	public T setFont(String font) {
-		if (font == null)
-			font = ChatComponent.FONT_DEFAULT;
-		this.font = font;
+		this.font = font != null ? font : ChatComponent.FONT_DEFAULT;
 		return getThis();
 	}
 
@@ -134,12 +138,12 @@ public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> 
 
 	@Override
 	public boolean isStrikethrough() {
-		return (flags & 0x10) == 0x10;
+		return (flags & FLAG_STRIKETHROUGH) == FLAG_STRIKETHROUGH;
 	}
 
 	@Override
 	public T setStrikethrough(boolean strikethrough) {
-		flags = (byte) (strikethrough ? flags | 0x10 : flags & 0xEF);
+		flags = (byte) (strikethrough ? flags | FLAG_STRIKETHROUGH : flags & ~FLAG_STRIKETHROUGH);
 		return getThis();
 	}
 

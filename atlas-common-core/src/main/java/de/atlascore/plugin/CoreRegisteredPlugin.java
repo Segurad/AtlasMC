@@ -101,13 +101,7 @@ final class CoreRegisteredPlugin {
 	}
 	
 	public boolean isAlive() {
-		if (keepLoaded)
-			return true;
-		if (!locks.isEmpty())
-			return true;
-		if (!depending.isEmpty())
-			return true;
-		return false;
+		return keepLoaded || !locks.isEmpty() || !depending.isEmpty();
 	}
 	
 	private void checkPluginDeath() {
