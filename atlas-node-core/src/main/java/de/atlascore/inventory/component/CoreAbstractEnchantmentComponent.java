@@ -5,22 +5,21 @@ import static de.atlasmc.io.PacketUtil.writeVarInt;
 
 import java.io.IOException;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.enchantments.Enchantment;
 import de.atlasmc.inventory.component.AbstractEnchantmentComponent;
+import de.atlasmc.inventory.component.AbstractItemComponent;
+import de.atlasmc.inventory.component.ComponentType;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap.Entry;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
-public class CoreAbstractEnchantmentComponent extends CoreAbstractTooltipComponent implements AbstractEnchantmentComponent {
+public class CoreAbstractEnchantmentComponent extends AbstractItemComponent implements AbstractEnchantmentComponent {
 	
 	private Object2IntMap<Enchantment> enchantments;
-	private boolean showInTooltip;
 	
-	public CoreAbstractEnchantmentComponent(NamespacedKey key) {
-		super(key);
-		this.showInTooltip = true;
+	public CoreAbstractEnchantmentComponent(ComponentType type) {
+		super(type);
 	}
 	
 	@Override
@@ -29,16 +28,6 @@ public class CoreAbstractEnchantmentComponent extends CoreAbstractTooltipCompone
 		if (enchantments != null)
 			clone.enchantments = new Object2IntOpenHashMap<>(enchantments);
 		return clone;
-	}
-
-	@Override
-	public boolean isShowTooltip() {
-		return showInTooltip;
-	}
-
-	@Override
-	public void setShowTooltip(boolean show) {
-		this.showInTooltip = show;
 	}
 
 	@Override
@@ -97,7 +86,6 @@ public class CoreAbstractEnchantmentComponent extends CoreAbstractTooltipCompone
 		} else {
 			writeVarInt(0, buf);
 		}
-		buf.writeBoolean(showInTooltip);
 	}
 	
 	@Override
@@ -115,7 +103,6 @@ public class CoreAbstractEnchantmentComponent extends CoreAbstractTooltipCompone
 				addEnchant(ench, level);
 			}
 		}
-		showInTooltip = buf.readBoolean();
 	}
 
 }

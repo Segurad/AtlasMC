@@ -3,6 +3,7 @@ package de.atlascore.chat;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.util.CloneException;
 
 public class CoreChat implements Chat {
 	
@@ -87,6 +88,15 @@ public class CoreChat implements Chat {
 	@Override
 	public boolean hasJson() {
 		return json != null;
+	}
+	
+	@Override
+	public CoreChat clone() {
+		try {
+			return (CoreChat) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new CloneException(e);
+		}
 	}
 	
 	@Override

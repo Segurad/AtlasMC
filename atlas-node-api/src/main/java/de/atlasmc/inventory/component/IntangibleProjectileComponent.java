@@ -1,11 +1,22 @@
 package de.atlasmc.inventory.component;
 
-import de.atlasmc.NamespacedKey;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface IntangibleProjectileComponent extends ItemComponent {
 	
-	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:intangible_projectile");
+	public static final NBTSerializationHandler<IntangibleProjectileComponent>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(IntangibleProjectileComponent.class)
+					.include(ItemComponent.NBT_HANDLER)
+					.beginComponent(ComponentType.INTANGIBLE_PROJECTILE)
+					.endComponent()
+					.build();
 	
 	IntangibleProjectileComponent clone();
 
+	@Override
+	default NBTSerializationHandler<? extends ItemComponent> getNBTHandler() {
+		return NBT_HANDLER;
+	}
+	
 }

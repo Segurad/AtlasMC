@@ -16,8 +16,8 @@ public class CoreContainerLootComponent extends AbstractItemComponent implements
 	private NamespacedKey lootTable;
 	private long seed;
 	
-	public CoreContainerLootComponent(NamespacedKey key) {
-		super(key);
+	public CoreContainerLootComponent(ComponentType type) {
+		super(type);
 	}
 	
 	@Override
@@ -26,33 +26,23 @@ public class CoreContainerLootComponent extends AbstractItemComponent implements
 	}
 
 	@Override
-	public NamespacedKey getLootTableKey() {
+	public NamespacedKey getLootTable() {
 		return lootTable;
 	}
 
 	@Override
-	public void setLootTableKey(NamespacedKey key) {
+	public void setLootTable(NamespacedKey key) {
 		this.lootTable = key;
 	}
 
 	@Override
-	public long getSeed() {
+	public long getLootTableSeed() {
 		return seed;
 	}
 
 	@Override
-	public void setSeed(long seed) {
+	public void setLootTableSeed(long seed) {
 		this.seed = seed;
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.CONTAINER_LOOT;
-	}
-	
-	@Override
-	public boolean isServerOnly() {
-		return false;
 	}
 	
 	@Override

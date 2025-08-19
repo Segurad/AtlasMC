@@ -3,7 +3,6 @@ package de.atlascore.inventory.component;
 import java.io.IOException;
 
 import de.atlasmc.Color;
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.DyedColorComponent;
@@ -13,8 +12,8 @@ public class CoreDyedColorComponent extends AbstractItemComponent implements Dye
 	
 	private Color color;
 	
-	public CoreDyedColorComponent(NamespacedKey key) {
-		super(key);
+	public CoreDyedColorComponent(ComponentType type) {
+		super(type);
 	}
 	
 	@Override
@@ -30,16 +29,6 @@ public class CoreDyedColorComponent extends AbstractItemComponent implements Dye
 	@Override
 	public void setColor(Color color) {
 		this.color = color;
-	}
-	
-	@Override
-	public boolean isServerOnly() {
-		return false;
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.DYED_COLOR;
 	}
 	
 	@Override

@@ -43,10 +43,8 @@ public class ProtocolUtil extends PacketUtil {
 		writeVarInt(0, out);
 		if (item.hasComponents()) {
 			int count = 0;
-			Map<NamespacedKey, ItemComponent> components = item.getComponents();
+			Map<ComponentType, ItemComponent> components = item.getComponents();
 			for (ItemComponent comp : components.values()) {
-				if (comp.isServerOnly())
-					continue;
 				count++;
 				writeVarInt(comp.getType().getID(), out);
 				comp.write(out);
@@ -89,7 +87,7 @@ public class ProtocolUtil extends PacketUtil {
 		final int ignoredCount = readVarInt(in);
 		for (int i = 0; i < compCount; i++) {
 			ComponentType type = ComponentType.getByID(readVarInt(in));
-			ItemComponent comp = item.getComponent(type.getKey());
+			ItemComponent comp = item.getComponent(type);
 			comp.read(in);
 		}
 		for (int i = 0; i < ignoredCount; i++) {

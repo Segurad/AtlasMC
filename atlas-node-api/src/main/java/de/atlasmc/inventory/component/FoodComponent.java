@@ -1,16 +1,14 @@
 package de.atlasmc.inventory.component;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface FoodComponent extends ItemComponent {
-	
-	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:food");
-	
+
 	public static final NBTSerializationHandler<FoodComponent> 
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(FoodComponent.class)
-					.beginComponent(COMPONENT_KEY.toString())
+					.include(ItemComponent.NBT_HANDLER)
+					.beginComponent(ComponentType.FOOD)
 					.intField("nutrition", FoodComponent::getNutrition, FoodComponent::setNutrition, 0)
 					.floatField("saturation", FoodComponent::getSaturation, FoodComponent::setSaturation, 0)
 					.boolField("can_always_eat", FoodComponent::isAlwaysEatable, FoodComponent::setAlwaysEatable, false)

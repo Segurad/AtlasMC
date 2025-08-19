@@ -5,18 +5,18 @@ import de.atlasmc.util.configuration.ConfigurationSerializable;
 import de.atlasmc.util.factory.ClassFactory;
 
 public class ClassItemComponentFactory extends ClassFactory<ItemComponent> implements ItemComponentFactory, ConfigurationSerializable {
-
+	
 	public ClassItemComponentFactory(Class<? extends ItemComponent> clazz) {
-		super(clazz);
+		super(clazz, ComponentType.class);
 	}
 	
 	public ClassItemComponentFactory(ConfigurationSection config) {
-		super(getClass(config.getString("component")));
+		super(getClass(config.getString("component")), ComponentType.class);
 	}
 
 	@Override
-	public ItemComponent createComponent() {
-		return super.create();
+	public ItemComponent createComponent(ComponentType type) {
+		return super.create(type);
 	}
 
 	@Override

@@ -1,5 +1,9 @@
 package de.atlasmc.util;
 
+import de.atlasmc.util.annotation.Nullable;
+import de.atlasmc.util.annotation.ThreadSafe;
+
+@ThreadSafe
 public final class Pair<A, B> {
 
 	private static final Pair<?, ?> NULL_PAIR = new Pair<>(null, null);
@@ -12,22 +16,24 @@ public final class Pair<A, B> {
 		this.value2 = value2;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static <A, B> Pair<A, B> of() {
-		return (Pair<A, B>) NULL_PAIR;
+		@SuppressWarnings("unchecked")
+		Pair<A, B> value = (Pair<A, B>) NULL_PAIR;
+		return value;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static <A, B> Pair<A, B> of(A value1, B value2) {
 		if (value1 == null && value2 == null)
-			return (Pair<A, B>) NULL_PAIR;
+			return of();
 		return new Pair<>(value1, value2);
 	}
 	
+	@Nullable
 	public A getValue1() {
 		return value1;
 	}
 	
+	@Nullable
 	public B getValue2() {
 		return value2;
 	}

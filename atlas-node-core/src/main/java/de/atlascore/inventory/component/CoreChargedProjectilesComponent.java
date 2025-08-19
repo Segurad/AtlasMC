@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ChargedProjectilesComponent;
@@ -20,8 +19,8 @@ public class CoreChargedProjectilesComponent extends AbstractItemComponent imple
 	
 	private List<ItemStack> projectiles;
 	
-	public CoreChargedProjectilesComponent(NamespacedKey key) {
-		super(key);
+	public CoreChargedProjectilesComponent(ComponentType type) {
+		super(type);
 	}
 	
 	@Override
@@ -53,16 +52,6 @@ public class CoreChargedProjectilesComponent extends AbstractItemComponent imple
 		if (projectiles == null)
 			return;
 		projectiles.remove(item);
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.CHARGED_PROJECTILES;
-	}
-	
-	@Override
-	public boolean isServerOnly() {
-		return false;
 	}
 	
 	@Override

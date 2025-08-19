@@ -21,25 +21,9 @@ public class CoreRegistryHandler implements RegistryHandler {
 		registries = new CoreInstanceRegistry<>(NamespacedKey.literal("atlas:registry_root"), Registry.class);
 		registries.register(CorePluginManager.SYSTEM, registries.getNamespacedKey(), registries);
 	}
-
-	@Override
-	public <T extends Registry<?>> T getRegistry(NamespacedKey key) {
-		@SuppressWarnings("unchecked")
-		T registry = (T) registries.get(key);
-		return registry;
-	}
-
-	@Override
-	public <T> T getDefault(NamespacedKey key) {
-		@SuppressWarnings("unchecked")
-		Registry<T> registry = registries.get(key);
-		if (registry == null)
-			return null;
-		return registry.getDefault();
-	}
 	
 	@Override
-	public <T> T getDefault(String key) {	
+	public <T> T getDefault(CharSequence key) {	
 		@SuppressWarnings("unchecked")
 		Registry<T> registry = registries.get(key);
 		if (registry == null)
@@ -112,7 +96,7 @@ public class CoreRegistryHandler implements RegistryHandler {
 	}
 
 	@Override
-	public <T extends Registry<?>> T getRegistry(String key) {
+	public <T extends Registry<?>> T getRegistry(CharSequence key) {
 		@SuppressWarnings("unchecked")
 		T registry = (T) registries.get(key);
 		return registry;
@@ -125,11 +109,12 @@ public class CoreRegistryHandler implements RegistryHandler {
 		return registry;
 	}
 	
-	private String getRegistryKey(Class<?> clazz) {
+	@Override
+	public NamespacedKey getRegistryKey(Class<?> clazz) {
 		RegistryHolder holder = clazz.getAnnotation(RegistryHolder.class);
 		if (holder == null)
 			throw new IllegalArgumentException("Class does not contain  RegistryHolder annotation: " + clazz.getName());
-		return holder.key();
+		return NamespacedKey.literal(holder.key());
 	}
 
 	@Override

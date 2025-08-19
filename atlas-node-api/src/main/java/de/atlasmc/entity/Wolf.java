@@ -8,6 +8,7 @@ import de.atlasmc.registry.ProtocolRegistryValueBase;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
+import de.atlasmc.registry.RegistryKey;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
@@ -20,7 +21,7 @@ public interface Wolf extends Tameable, AngerableMob {
 					.include(Tameable.NBT_HANDLER)
 					.include(AngerableMob.NBT_HANDLER)
 					.enumByteField("CollarColor", Wolf::getCollarColor, Wolf::setCollarColor, DyeColor::getByID, DyeColor::getID, DyeColor.RED)
-					.registryValue("variant", Wolf::getVariant, Wolf::setVariant, WolfVariant.getRegistry())
+					.registryValue("variant", Wolf::getVariant, Wolf::setVariant, WolfVariant.REGISTRY_KEY)
 					// sound_variant
 					.build();
 	
@@ -44,7 +45,7 @@ public interface Wolf extends Tameable, AngerableMob {
 	@RegistryHolder(key = "minecraft:wolf_variant", target = Target.PROTOCOL)
 	public static class WolfVariant extends ProtocolRegistryValueBase implements NBTSerializable {
 
-		private static final ProtocolRegistry<WolfVariant> REGISTRY;
+		public static final RegistryKey<WolfVariant> REGISTRY_KEY = Registries.getRegistryKey(WolfVariant.class);
 		
 		public static final NBTSerializationHandler<WolfVariant>
 		NBT_HANDLER = NBTSerializationHandler
@@ -62,10 +63,6 @@ public interface Wolf extends Tameable, AngerableMob {
 		NBT_TAME_TEXTURE = CharKey.literal("tame_texture"),
 		NBT_ANGRY_TEXTURE = CharKey.literal("angry_texture"),
 		NBT_BIOMES = CharKey.literal("biomes");
-		
-		static {
-			REGISTRY = Registries.createRegistry(WolfVariant.class);
-		}
 		
 		private NamespacedKey
 		wildTexture,
@@ -116,19 +113,19 @@ public interface Wolf extends Tameable, AngerableMob {
 		}
 		
 		public static WolfVariant get(NamespacedKey key) {
-			return REGISTRY.get(key);
+			return getRegistry().get(key);
 		}
 		
 		public static WolfVariant get(String key) {
-			return REGISTRY.get(key);
+			return getRegistry().get(key);
 		}
 		
 		public static WolfVariant getByID(int id) {
-			return REGISTRY.getByID(id);
+			return getRegistry().getByID(id);
 		}
 		
 		public static ProtocolRegistry<WolfVariant> getRegistry() {
-			return REGISTRY;
+			return REGISTRY_KEY.getRegistry();
 		}
 		
 		@Override

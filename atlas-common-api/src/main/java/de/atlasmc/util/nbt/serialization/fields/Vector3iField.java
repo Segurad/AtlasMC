@@ -28,6 +28,8 @@ public class Vector3iField<T> extends AbstractObjectField<T, Vector3i> {
 	@Override
 	public void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException {
 		Vector3i vec = get.apply(value);
+		if (vec == null)
+			vec = new Vector3i();
 		int[] data = reader.readIntArrayTag();
 		vec.x = data[0];
 		vec.y = data[1];

@@ -2,7 +2,6 @@ package de.atlascore.inventory.component;
 
 import java.io.IOException;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
@@ -17,8 +16,8 @@ public class CoreEntityDataComponent extends AbstractItemComponent implements En
 
 	private Entity entity;
 	
-	public CoreEntityDataComponent(NamespacedKey key) {
-		super(key);
+	public CoreEntityDataComponent(ComponentType type) {
+		super(type);
 	}
 	
 	@Override
@@ -37,16 +36,6 @@ public class CoreEntityDataComponent extends AbstractItemComponent implements En
 	@Override
 	public void setEntity(Entity entity) {
 		this.entity = entity;
-	}
-	
-	@Override
-	public boolean isServerOnly() {
-		return false;
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.ENTITY_DATA;
 	}
 	
 	@Override

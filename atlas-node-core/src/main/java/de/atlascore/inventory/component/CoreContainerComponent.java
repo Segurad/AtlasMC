@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.ItemType;
 import de.atlasmc.inventory.component.AbstractItemComponent;
@@ -21,8 +20,8 @@ public class CoreContainerComponent extends AbstractItemComponent implements Con
 	
 	private List<ItemStack> slots;
 	
-	public CoreContainerComponent(NamespacedKey key) {
-		super(key);
+	public CoreContainerComponent(ComponentType type) {
+		super(type);
 	}
 
 	@Override
@@ -85,16 +84,6 @@ public class CoreContainerComponent extends AbstractItemComponent implements Con
 			slots.remove(i);
 			break;
 		}
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.CONTAINER;
-	}
-	
-	@Override
-	public boolean isServerOnly() {
-		return false;
 	}
 	
 	@Override

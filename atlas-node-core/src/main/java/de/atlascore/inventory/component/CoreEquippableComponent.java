@@ -62,8 +62,8 @@ public class CoreEquippableComponent extends AbstractItemComponent implements Eq
 	private boolean equipOnInteract;
 	private NamespacedKey cameraOverlay;
 	
-	public CoreEquippableComponent(NamespacedKey key) {
-		super(key);
+	public CoreEquippableComponent(ComponentType type) {
+		super(type);
 		dispensable = true;
 		swappable = true;
 		damageOnHurt = true;
@@ -174,16 +174,6 @@ public class CoreEquippableComponent extends AbstractItemComponent implements Eq
 	@Override
 	public void setAssetID(NamespacedKey assetID) {
 		this.assetID = assetID;
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.EQUIPPABLE;
-	}
-	
-	@Override
-	public boolean isServerOnly() {
-		return false;
 	}
 	
 	@Override

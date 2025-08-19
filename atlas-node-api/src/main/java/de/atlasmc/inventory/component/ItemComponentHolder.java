@@ -2,9 +2,8 @@ package de.atlasmc.inventory.component;
 
 import java.util.Map;
 
-import de.atlasmc.NamespacedKey;
-import de.atlasmc.registry.Registries;
-import de.atlasmc.registry.Registry;
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface ItemComponentHolder {
@@ -12,10 +11,11 @@ public interface ItemComponentHolder {
 	public static final NBTSerializationHandler<ItemComponentHolder>
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(ItemComponentHolder.class)
-					.compoundMapNamespacedType("components", ItemComponentHolder::hasComponents, ItemComponentHolder::getComponents, ItemComponent.NBT_HANDLER)
+					.compoundMapNamespacedType2Type("components", ItemComponentHolder::hasComponents, ItemComponentHolder::getComponents, ItemComponent.NBT_HANDLER, ItemComponent::getType)
 					.build();
 	
-	Map<NamespacedKey, ItemComponent> getComponents();
+	@NotNull
+	Map<ComponentType, ItemComponent> getComponents();
 
 	/**
 	 * Returns whether or not this ItemStack has components
@@ -24,37 +24,30 @@ public interface ItemComponentHolder {
 	boolean hasComponents();
 	
 	/**
-	 * Returns whether or not a component with the given key is present
-	 * @param key to check
+	 * Returns whether or not a component with the given type is present
+	 * @param type to check
 	 * @return true if present
 	 */
-	default boolean hasComponent(NamespacedKey key) {
+	default boolean hasComponent(@NotNull ComponentType type) {
 		if (!hasComponents())
 			return false;
-		return getComponents().containsKey(key);
+		return getComponents().containsKey(type);
 	}
 	
-	default <T extends ItemComponent> T getComponent(NamespacedKey key) {
-		if (key == null)
+	@NotNull
+	default <T extends ItemComponent> T getComponent(@NotNull ComponentType type) {
+		if (type == null)
 			throw new IllegalArgumentException("Key can not be null!");
 		if (hasComponents()) {
 			@SuppressWarnings("unchecked")
-			T component = (T) getComponents().get(key);
+			T component = (T) getComponents().get(type);
 			if (component != null)
 				return component;
 		}
-		Registry<ItemComponentFactory> registry = Registries.getRegistry(ItemComponentFactory.class);
-		ItemComponentFactory factory = registry.get(key);
-		if (factory == null)
-			return null;
 		@SuppressWarnings("unchecked")
-		T component = (T) factory.createComponent();
-		getComponents().put(key, component);
+		T component = (T) type.createItemComponent();
+		getComponents().put(type, component);
 		return component;
-	}
-	
-	default <T extends ItemComponent> T getComponent(Class<T> clazz) {
-		return getComponent(ItemComponent.getComponentKey(clazz));
 	}
 	
 	/**
@@ -62,23 +55,25 @@ public interface ItemComponentHolder {
 	 * @param component to set
 	 * @return component or null
 	 */
-	default ItemComponent setComponent(ItemComponent component) {
+	@Nullable
+	default ItemComponent setComponent(@NotNull ItemComponent component) {
 		if (component == null)
 			throw new IllegalArgumentException("Component can not be null!");
-		return getComponents().put(component.getNamespacedKey(), component);
+		return getComponents().put(component.getType(), component);
 	}
 	
 	/**
-	 * Removes the component with the given key
-	 * @param key to remove
+	 * Removes the component with the given type
+	 * @param type to remove
 	 * @return component or null
 	 */
-	default ItemComponent removeComponent(NamespacedKey key) {
-		if (key == null)
-			throw new IllegalArgumentException("Key can not be null!");
+	@Nullable
+	default ItemComponent removeComponent(@NotNull ComponentType type) {
+		if (type == null)
+			throw new IllegalArgumentException("Type can not be null!");
 		if (hasComponents())
 			return null;
-		return getComponents().remove(key);
+		return getComponents().remove(type);
 	}
 	
 }

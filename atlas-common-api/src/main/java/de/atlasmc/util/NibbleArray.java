@@ -1,5 +1,7 @@
 package de.atlasmc.util;
 
+import de.atlasmc.util.annotation.NotNull;
+
 public class NibbleArray {
 	
 	private final byte[] values;
@@ -61,6 +63,7 @@ public class NibbleArray {
 	 * Returns the backing byte array
 	 * @return byte array
 	 */
+	@NotNull
 	public byte[] array() {
 		return values;
 	}

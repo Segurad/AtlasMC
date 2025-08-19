@@ -3,6 +3,7 @@ package de.atlasmc.inventory.component.predicate;
 import java.util.function.Predicate;
 
 import de.atlasmc.NamespacedKey.Namespaced;
+import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.ItemComponent;
 import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
@@ -13,6 +14,8 @@ public interface ItemComponentPredicate extends Namespaced, NBTSerializable, Pre
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(ItemComponentPredicate.class)
 					.build();
+	
+	ComponentType getType();
 	
 	@Override
 	default NBTSerializationHandler<? extends ItemComponentPredicate> getNBTHandler() {

@@ -6,7 +6,6 @@ import java.util.List;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.entity.Player;
 import de.atlasmc.inventory.InventoryType.SlotType;
-import de.atlasmc.inventory.gui.GUI;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.annotation.UnsafeAPI;
 
@@ -260,19 +259,6 @@ public interface Inventory extends Iterable<ItemStack> {
 	 */
 	@UnsafeAPI
 	Iterator<ItemStack> iteratorUnsafe();
-	
-	/**
-	 * Returns the {@link GUI} currently set or null
-	 * @return GUI or null
-	 */
-	@Nullable
-	GUI getGUI();
-	
-	/**
-	 * Sets a GUI or removes the current if set to null
-	 * @param gui or null
-	 */
-	void setGUI(@Nullable GUI gui);
 
 	/**
 	 * Sets whether or not this inventory should propagate changes to its {@link #getViewers()}.

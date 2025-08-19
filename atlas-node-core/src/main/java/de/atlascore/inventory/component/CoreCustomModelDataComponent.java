@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.CustomModelDataComponent;
@@ -28,8 +27,8 @@ public class CoreCustomModelDataComponent extends AbstractItemComponent implemen
 	private List<String> strings;
 	private IntList colors;
 	
-	public CoreCustomModelDataComponent(NamespacedKey key) {
-		super(key);
+	public CoreCustomModelDataComponent(ComponentType type) {
+		super(type);
 	}
 	
 	@Override
@@ -100,11 +99,6 @@ public class CoreCustomModelDataComponent extends AbstractItemComponent implemen
 		IntList current = getColors();
 		current.clear();
 		current.addAll(colors);
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.CUSTOM_MODEL_DATA;
 	}
 	
 	@Override

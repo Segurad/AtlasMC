@@ -3,7 +3,6 @@ package de.atlascore.inventory.component;
 import java.io.IOException;
 
 import de.atlasmc.FireworkExplosion;
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.FireworkExplosionComponent;
@@ -14,8 +13,8 @@ public class CoreFireworkExplosionComponent extends AbstractItemComponent implem
 
 	private FireworkExplosion explosion;
 	
-	public CoreFireworkExplosionComponent(NamespacedKey key) {
-		super(key);
+	public CoreFireworkExplosionComponent(ComponentType type) {
+		super(type);
 	}
 	
 	@Override
@@ -34,16 +33,6 @@ public class CoreFireworkExplosionComponent extends AbstractItemComponent implem
 	@Override
 	public void setExplosion(FireworkExplosion explosion) {
 		this.explosion = explosion;
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.FIREWORK_EXPLOSION;
-	}
-	
-	@Override
-	public boolean isServerOnly() {
-		return false;
 	}
 	
 	@Override

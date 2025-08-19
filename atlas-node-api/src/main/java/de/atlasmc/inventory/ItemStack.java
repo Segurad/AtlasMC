@@ -7,33 +7,21 @@ import java.util.Set;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.ItemComponent;
-import de.atlasmc.inventory.component.ItemComponentFactory;
 import de.atlasmc.inventory.component.ItemComponentHolder;
-import de.atlasmc.registry.Registries;
-import de.atlasmc.registry.Registry;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTException;
-import de.atlasmc.util.nbt.NBTField;
-import de.atlasmc.util.nbt.NBTFieldSet;
-import de.atlasmc.util.nbt.NBTHolder;
-import de.atlasmc.util.nbt.NBTUtil;
 import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
-import de.atlasmc.util.nbt.tag.NBT;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 
-public class ItemStack implements NBTHolder, NBTSerializable, ItemComponentHolder {
+public class ItemStack implements NBTSerializable, ItemComponentHolder {
 
 	public static final NBTSerializationHandler<ItemStack> NBT_HANDLER;
-	
-	protected static final NBTFieldSet<ItemStack> NBT_FIELDS;
 	
 	protected static final CharKey
 	NBT_COUNT = CharKey.literal("count"),
@@ -48,37 +36,11 @@ public class ItemStack implements NBTHolder, NBTSerializable, ItemComponentHolde
 				.intField("count", ItemStack::getAmount, ItemStack::setAmount, 1)
 				.include(ItemComponentHolder.NBT_HANDLER)
 				.build();
-		
-		NBT_FIELDS = NBTFieldSet.newSet();
-		NBT_FIELDS.setField(NBT_ID, NBTField.skip());
-		NBT_FIELDS.setField(NBT_COUNT, (holder, reader) -> {
-			holder.amount = reader.readIntTag();
-		});
-		NBT_FIELDS.setField(NBT_SLOT, (holder, reader) -> {
-			holder.slot = reader.readByteTag();
-		});
-		NBT_FIELDS.setField(NBT_COMPONENTS, (holder, reader) -> {
-			reader.readNextEntry();
-			Registry<ItemComponentFactory> registry = Registries.getRegistry(ItemComponentFactory.class);
-			while (reader.getType() != TagType.TAG_END) {
-				NamespacedKey key = NamespacedKey.of(reader.getFieldName());
-				ItemComponentFactory factory = registry.get(key);
-				holder.setComponent(factory.createComponent());
-			}
-			reader.readNextEntry();
-		});
-		NBT_FIELDS.setField(NBT_IGNORED_COMPONENTS, (holder, reader) -> {
-			reader.readNextEntry();
-			while (reader.getRestPayload() > 0) {
-				
-			}
-		});
 	}
 	
-	private short slot;
 	private int amount;
 	private ItemType type;
-	private Map<NamespacedKey, ItemComponent> components;
+	private Map<ComponentType, ItemComponent> components;
 	private Set<ComponentType> ignoredComponents;
 
 	/**
@@ -113,7 +75,7 @@ public class ItemStack implements NBTHolder, NBTSerializable, ItemComponentHolde
 	 */
 	@NotNull
 	@Override
-	public Map<NamespacedKey, ItemComponent> getComponents() {
+	public Map<ComponentType, ItemComponent> getComponents() {
 		if (components == null)
 			components = new Object2ObjectArrayMap<>();
 		return components;
@@ -133,7 +95,7 @@ public class ItemStack implements NBTHolder, NBTSerializable, ItemComponentHolde
 	 * @return component or null
 	 */
 	@Nullable
-	public <T extends ItemComponent> T getEffectiveComponent(NamespacedKey key) {
+	public <T extends ItemComponent> T getEffectiveComponent(ComponentType key) {
 		ItemComponent component = null;
 		if (components == null) {
 			component = components.get(key);
@@ -148,10 +110,6 @@ public class ItemStack implements NBTHolder, NBTSerializable, ItemComponentHolde
 		@SuppressWarnings("unchecked")
 		T type = (T) component;
 		return type;
-	}
-	
-	public <T extends ItemComponent> T getEffectiveComponent(Class<T> clazz) {
-		return getEffectiveComponent(ItemComponent.getComponentKey(clazz));
 	}
 	
 	/**
@@ -317,65 +275,6 @@ public class ItemStack implements NBTHolder, NBTSerializable, ItemComponentHolde
 				writer.writeStringTag(null, type.getKey().toString());
 			}
 		}
-	}
-
-	@Override
-	public void toNBT(NBTWriter writer, boolean systemData) throws IOException {
-		toSlot(writer, systemData, -999);
-	}
-
-	@Override
-	public void fromNBT(NBTReader reader) throws IOException {
-		NBTUtil.readNBT(NBT_FIELDS, this, reader);
-	}
-	
-	/**
-	 * Same as {@link #fromSlot(NBTReader)} but does return the slot number while reading slot NBT
-	 * @param reader the NBTReader should be used
-	 * @return the slot number or -999 if not present
-	 * @throws IOException 
-	 */
-	public int fromSlot(NBTReader reader) throws IOException {
-		slot = -999;
-		NBTUtil.readNBT(NBT_FIELDS, this, reader);
-		return slot;
-	}
-	
-	public static ItemStack getFromNBT(NBTReader reader) throws IOException {
-		return getFromNBT(reader, true);
-	}
-	
-	/**
-	 * 
-	 * @param reader
-	 * @param readData whether or not {@link #fromNBT(NBT)} should be called
-	 * @return
-	 * @throws IOException
-	 */
-	public static ItemStack getFromNBT(NBTReader reader, boolean readData) throws IOException {
-		if (reader.getType() == TagType.TAG_END) { // Empty Tag 
-			reader.readNextEntry();
-			return null;
-		}
-		String rawMaterial = null;
-		if (!NBT_ID.equals(reader.getFieldName())) {
-			reader.mark();
-			reader.search(NBT_ID);
-			rawMaterial = reader.readStringTag();
-			reader.reset();
-		} else {
-			rawMaterial = reader.readStringTag();
-		}
-		if (rawMaterial == null) {
-			throw new NBTException("NBT did not container id field!");
-		}
-		ItemType type = ItemType.get(rawMaterial);
-		if (type == null) {
-			throw new NBTException("No type found with name: " + rawMaterial);
-		}
-		ItemStack item = new ItemStack(type);
-		item.fromNBT(reader);
-		return item;
 	}
 	
 	@Override

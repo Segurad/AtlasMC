@@ -1,31 +1,26 @@
 package de.atlasmc.inventory.component;
 
-import java.util.List;
-import java.util.UUID;
-
-import de.atlasmc.NamespacedKey;
-import de.atlasmc.atlasnetwork.player.ProfileProperty;
+import de.atlasmc.atlasnetwork.player.PlayerProfile;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface ProfileComponent extends ItemComponent {
+
+	public static final NBTSerializationHandler<ProfileComponent>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(ProfileComponent.class)
+					.include(ItemComponent.NBT_HANDLER)
+					.typeCompoundField(ComponentType.PROFILE, ProfileComponent::getProfile, ProfileComponent::setProfile, PlayerProfile.NBT_HANDLER)
+					.build();
 	
-	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:profile");
+	PlayerProfile getProfile();
 	
-	String getName();
-	
-	void setName(String name);
-	
-	UUID getUUID();
-	
-	void setUUID(UUID uuid);
-	
-	List<ProfileProperty> getProperties();
-	
-	boolean hasProperties();
-	
-	void addProperty(ProfileProperty property);
-	
-	void removeProperty(ProfileProperty property);
+	void setProfile(PlayerProfile profile);
 	
 	ProfileComponent clone();
+	
+	@Override
+	default NBTSerializationHandler<? extends ItemComponent> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 
 }

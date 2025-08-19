@@ -1,14 +1,14 @@
 package de.atlasmc.inventory.component;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface DamageComponent extends ItemComponent {
 	
-	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:damage");
-	
-	public static NBTSerializationHandler<DamageComponent> NBT_HANDLER = NBTSerializationHandler.builder(DamageComponent.class)
-			.intField(COMPONENT_KEY.toString(), DamageComponent::getDamage, DamageComponent::setDamage)
+	public static NBTSerializationHandler<DamageComponent> 
+	NBT_HANDLER = NBTSerializationHandler
+			.builder(DamageComponent.class)
+			.include(ItemComponent.NBT_HANDLER)
+			.intField(ComponentType.DAMAGE, DamageComponent::getDamage, DamageComponent::setDamage)
 			.build();
 	
 	int getDamage();

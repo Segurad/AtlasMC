@@ -2,7 +2,7 @@ package de.atlasmc.chat;
 
 import de.atlasmc.chat.component.ChatComponent;
 
-public interface Chat {
+public interface Chat extends Cloneable {
 
 	/**
 	 * Always returns the text in legacy format.
@@ -53,5 +53,7 @@ public interface Chat {
 	 * @return true if can be casted
 	 */
 	boolean isComponent();
+	
+	Chat clone();
 	
 }

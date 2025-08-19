@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.block.BlockPredicate;
 import de.atlasmc.block.BlockType;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.inventory.component.AbstractBlockPredicateComponent;
 import de.atlasmc.inventory.component.AbstractItemComponent;
+import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.util.dataset.DataSet;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
@@ -34,8 +34,8 @@ public class CoreAbstractBlockPredicateComponent extends AbstractItemComponent i
 	private List<BlockPredicate> predicates;
 	private boolean showInToolTip = true;
 
-	public CoreAbstractBlockPredicateComponent(NamespacedKey key) {
-		super(key);
+	public CoreAbstractBlockPredicateComponent(ComponentType type) {
+		super(type);
 	}
 	
 	@Override
@@ -69,16 +69,6 @@ public class CoreAbstractBlockPredicateComponent extends AbstractItemComponent i
 		if (predicates == null)
 			return;
 		predicates.remove(predicate);
-	}
-
-	@Override
-	public boolean isShowTooltip() {
-		return showInToolTip;
-	}
-
-	@Override
-	public void setShowTooltip(boolean show) {
-		this.showInToolTip = show;
 	}
 	
 	@Override

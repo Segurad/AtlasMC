@@ -11,13 +11,11 @@ import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface EquippableComponent extends ItemComponent {
 	
-	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:equippable");
-	
 	public static final NBTSerializationHandler<EquippableComponent>
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(EquippableComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(COMPONENT_KEY)
+					.beginComponent(ComponentType.EQUIPPABLE)
 					.enumStringField("slot", EquippableComponent::getSlot, EquippableComponent::setSlot, EquipmentSlot::getByName, null)
 					.addField(Sound.getNBTSoundField("equip_sound", EquippableComponent::getEquipSound, EquippableComponent::setEquipSound, EnumSound.ITEM_ARMOR_EQUIP_GENERIC))
 					.namespacedKey("asset_id", EquippableComponent::getAssetID, EquippableComponent::setAssetID)

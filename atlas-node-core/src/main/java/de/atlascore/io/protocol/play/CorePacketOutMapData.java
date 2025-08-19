@@ -73,9 +73,9 @@ public class CorePacketOutMapData implements PacketIO<PacketOutMapData> {
 			for (int i = 0; i < size; i++) {
 				MapIcon icon = icons.get(i);
 				writeVarInt(icon.getType().getID(), out);
-				out.writeByte(icon.getX());
-				out.writeByte(icon.getZ());
-				out.writeByte((int) (icon.getDirection() / 16));
+				out.writeByte((int) icon.getX());
+				out.writeByte((int) icon.getZ());
+				out.writeByte((int) (icon.getRotation() / 16));
 				out.writeBoolean(icon.hasDisplayName());
 				if (icon.hasDisplayName())
 					writeTextComponent(icon.getDisplayName(), nbtWriter);

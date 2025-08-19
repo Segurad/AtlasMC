@@ -18,7 +18,7 @@ import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 import de.atlasmc.util.nbt.tag.NBT;
 
-public interface ChatComponent extends Chat, Cloneable, NBTSerializable {
+public interface ChatComponent extends Chat, NBTSerializable {
 	
 	public static final String 
 		FONT_DEFAULT = "minecraft:default",

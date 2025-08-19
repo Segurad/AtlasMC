@@ -10,7 +10,6 @@ import java.net.ProtocolException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.ConsumableComponent;
@@ -28,8 +27,8 @@ public class CoreConsumableComponent extends AbstractItemComponent implements Co
 	private List<ComponentEffect> effects;
 	private boolean particles;
 	
-	public CoreConsumableComponent(NamespacedKey key) {
-		super(key);
+	public CoreConsumableComponent(ComponentType type) {
+		super(type);
 		consumeSeconds = 1.6f;
 		particles = true;
 		animation = Animation.EAT;
@@ -109,16 +108,6 @@ public class CoreConsumableComponent extends AbstractItemComponent implements Co
 		if (effects == null)
 			return;
 		effects.remove(effect);
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.CONSUMABLE;
-	}
-	
-	@Override
-	public boolean isServerOnly() {
-		return false;
 	}
 	
 	@Override

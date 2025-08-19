@@ -1,11 +1,22 @@
 package de.atlasmc.inventory.component;
 
-import de.atlasmc.NamespacedKey;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public interface UnbreakableComponent extends AbstractTooltipComponent {
+public interface UnbreakableComponent extends ItemComponent {
 	
-	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:unbreakable");
+	public static final NBTSerializationHandler<UnbreakableComponent>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(UnbreakableComponent.class)
+					.include(ItemComponent.NBT_HANDLER)
+					.beginComponent(ComponentType.UNBREAKABLE)
+					.endComponent()
+					.build();
 
 	UnbreakableComponent clone();
+	
+	@Override
+	default NBTSerializationHandler<? extends ItemComponent> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 }

@@ -3,10 +3,16 @@ package de.atlasmc.inventory.component;
 import java.util.List;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface PotDecorationComponent extends ItemComponent {
 	
-	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:pot_decorations");
+	public static final NBTSerializationHandler<PotDecorationComponent>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(PotDecorationComponent.class)
+					.include(ItemComponent.NBT_HANDLER)
+					.namespacedKeyListField(ComponentType.POT_DECORATIONS, PotDecorationComponent::hasDecorations, PotDecorationComponent::getDecorations)
+					.build();
 	
 	List<NamespacedKey> getDecorations();
 	
@@ -17,5 +23,10 @@ public interface PotDecorationComponent extends ItemComponent {
 	void removeDecoration(NamespacedKey key);
 	
 	PotDecorationComponent clone();
+	
+	@Override
+	default NBTSerializationHandler<? extends ItemComponent> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 
 }

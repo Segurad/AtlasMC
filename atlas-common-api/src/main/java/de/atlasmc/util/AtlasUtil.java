@@ -3,6 +3,9 @@ package de.atlasmc.util;
 import java.util.List;
 import java.util.UUID;
 
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
+
 public class AtlasUtil {
 	
 	/**
@@ -12,7 +15,8 @@ public class AtlasUtil {
 	
 	private AtlasUtil() {}
 	
-	public static UUID uuidFromBytes(byte[] bytes) {
+	@NotNull
+	public static UUID uuidFromBytes(@NotNull byte[] bytes) {
 		return uuidFromBytes(bytes, 0);
 	}
 	
@@ -22,7 +26,8 @@ public class AtlasUtil {
 	 * @param offset
 	 * @return UUID
 	 */
-	public static UUID uuidFromBytes(byte[] bytes, int offset) {
+	@NotNull
+	public static UUID uuidFromBytes(@NotNull byte[] bytes, int offset) {
 		if (bytes.length - offset < 16)
 			throw new IllegalArgumentException("Need at least 16 readable bytes: " + (bytes.length - offset));
 		long most = bytes[offset++] & 0xFF;
@@ -44,7 +49,8 @@ public class AtlasUtil {
 		return new UUID(most, least);
 	}
 	
-	public static byte[] uuidToBytes(UUID uuid) {
+	@NotNull
+	public static byte[] uuidToBytes(@NotNull UUID uuid) {
 		return uuidToBytes(uuid, new byte[16], 0);
 	}
 	
@@ -55,7 +61,8 @@ public class AtlasUtil {
 	 * @param offset
 	 * @return
 	 */
-	public static byte[] uuidToBytes(UUID uuid, byte[] buff, int offset) {
+	@NotNull
+	public static byte[] uuidToBytes(@NotNull UUID uuid, @NotNull byte[] buff, int offset) {
 		if (uuid == null)
 			throw new IllegalArgumentException("UUID can not be null!");
 		if (buff.length - offset < 16)
@@ -81,7 +88,8 @@ public class AtlasUtil {
 	 * @param index to remove
 	 * @return the removed element
 	 */
-	public static <T> T fastRemove(List<T> list, int index) {
+	@Nullable
+	public static <T> T fastRemove(@NotNull List<T> list, int index) {
 		int last = list.size() - 1;
 		T removed = list.set(index, list.get(last));
 		list.set(last, null);
@@ -95,7 +103,9 @@ public class AtlasUtil {
 	 * @param element to remove
 	 * @return true if removed
 	 */
-	public static <T> boolean fastRemove(List<T> list, Object element) {
+	public static <T> boolean fastRemove(@NotNull List<T> list, @NotNull Object element) {
+		if (element == null)
+			throw new IllegalArgumentException("Element can not be null!");
 		int index = list.indexOf(element);
 		if (index == -1)
 			return false;

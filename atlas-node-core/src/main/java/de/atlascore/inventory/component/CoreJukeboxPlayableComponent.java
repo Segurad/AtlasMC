@@ -2,14 +2,15 @@ package de.atlascore.inventory.component;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.AbstractItemComponent;
+import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.JukeboxPlayableComponent;
 
 public class CoreJukeboxPlayableComponent extends AbstractItemComponent implements JukeboxPlayableComponent {
 	
 	private NamespacedKey song;
 	
-	public CoreJukeboxPlayableComponent(NamespacedKey key) {
-		super(key);
+	public CoreJukeboxPlayableComponent(ComponentType type) {
+		super(type);
 	}
 	
 	@Override

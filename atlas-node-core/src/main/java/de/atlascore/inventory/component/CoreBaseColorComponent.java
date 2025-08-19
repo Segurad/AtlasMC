@@ -4,7 +4,6 @@ import static de.atlasmc.io.PacketUtil.readVarInt;
 import static de.atlasmc.io.PacketUtil.writeVarInt;
 
 import de.atlasmc.DyeColor;
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.BaseColorComponent;
 import de.atlasmc.inventory.component.ComponentType;
@@ -14,8 +13,8 @@ public class CoreBaseColorComponent extends AbstractItemComponent implements Bas
 
 	private DyeColor color;
 	
-	public CoreBaseColorComponent(NamespacedKey key) {
-		super(key);
+	public CoreBaseColorComponent(ComponentType type) {
+		super(type);
 	}
 	
 	@Override
@@ -31,16 +30,6 @@ public class CoreBaseColorComponent extends AbstractItemComponent implements Bas
 	@Override
 	public void setColor(DyeColor color) {
 		this.color = color;
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.BASE_COLOR;
-	}
-	
-	@Override
-	public boolean isServerOnly() {
-		return false;
 	}
 	
 	@Override

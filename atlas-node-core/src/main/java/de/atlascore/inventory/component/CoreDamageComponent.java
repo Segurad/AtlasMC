@@ -5,7 +5,6 @@ import static de.atlasmc.io.PacketUtil.writeVarInt;
 
 import java.io.IOException;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.DamageComponent;
@@ -15,8 +14,8 @@ public class CoreDamageComponent extends AbstractItemComponent implements Damage
 	
 	private int damage;
 	
-	public CoreDamageComponent(NamespacedKey key) {
-		super(key);
+	public CoreDamageComponent(ComponentType type) {
+		super(type);
 	}
 	
 	@Override
@@ -32,16 +31,6 @@ public class CoreDamageComponent extends AbstractItemComponent implements Damage
 	@Override
 	public void setDamage(int damage) {
 		this.damage = damage;
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.DAMAGE;
-	}
-	
-	@Override
-	public boolean isServerOnly() {
-		return false;
 	}
 	
 	@Override

@@ -5,12 +5,11 @@ import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface JukeboxPlayableComponent extends ItemComponent {
 	
-	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:jukebox_playable");
-	
 	public static final NBTSerializationHandler<JukeboxPlayableComponent> 
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(JukeboxPlayableComponent.class)
-					.namespacedKey(COMPONENT_KEY.toString(), JukeboxPlayableComponent::getSong, JukeboxPlayableComponent::setSong)
+					.include(ItemComponent.NBT_HANDLER)
+					.namespacedKey(ComponentType.JUKEBOX_PLAYABLE, JukeboxPlayableComponent::getSong, JukeboxPlayableComponent::setSong)
 					.build();
 	
 	NamespacedKey getSong();

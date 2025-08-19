@@ -11,6 +11,6 @@ public interface ItemComponentFactory extends Factory {
 	 * @param material
 	 * @return a new ItemMeta
 	 */
-	ItemComponent createComponent();
+	ItemComponent createComponent(ComponentType type);
 	
 }

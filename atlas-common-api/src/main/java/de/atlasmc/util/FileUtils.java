@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.configuration.ConfigurationSection;
 
 public class FileUtils {
@@ -86,7 +87,8 @@ public class FileUtils {
 	 * @param child
 	 * @return child path or null
 	 */
-	public static Path getSecurePath(Path parent, String child) {
+	@Nullable
+	public static Path getSecurePath(@NotNull Path parent, @NotNull String child) {
 		Path path = parent.resolve(child);
 		if (parent.equals(path))
 			return null;
@@ -99,7 +101,7 @@ public class FileUtils {
 	 * @param file
 	 * @thows {@link IllegalArgumentException} if the given file is present and is not a directory
 	 */
-	public static void ensureDir(File file) {
+	public static void ensureDir(@NotNull File file) {
 		if (file.exists()) {
 			if (!file.isDirectory())
 				throw new IllegalArgumentException("The given file does not represent a directory: " + file);
@@ -114,7 +116,7 @@ public class FileUtils {
 	 * @param path
 	 * @thows {@link IllegalArgumentException} if the given path is present and is not a directory
 	 */
-	public static void ensureDir(Path path) {
+	public static void ensureDir(@NotNull Path path) {
 		if (Files.exists(path)) {
 			if (!Files.isDirectory(path))
 				throw new IllegalArgumentException("The given file does not represent a directory: " + path);
@@ -134,7 +136,7 @@ public class FileUtils {
 	 * @throws IOException
 	 */
 	@NotNull
-	public static Set<Path> getFiles(Path path) throws IOException {
+	public static Set<Path> getFiles(@NotNull Path path) throws IOException {
 		if (!Files.isDirectory(path))
 			return Set.of();
 		Set<Path> result = new HashSet<>();
@@ -150,16 +152,17 @@ public class FileUtils {
 		return result;
 	}
 	
-	public static void deleteDir(Path path) throws IOException {
+	public static void deleteDir(@NotNull Path path) throws IOException {
 		Files.walkFileTree(path, DeleteFileVisitor.INSTANCE);
 	}
 
-	public static void deleteDir(File file) throws IOException {
+	public static void deleteDir(@NotNull File file) throws IOException {
 		if (file == null)
 			throw new IllegalArgumentException("File can not be null!");
 		deleteDir(file.toPath());
 	}
 	
+	@NotNull
 	public static FileVisitor<Path> deleteVisitor() {
 		return DeleteFileVisitor.INSTANCE;
 	}

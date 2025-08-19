@@ -1,8 +1,6 @@
 package de.atlasmc.util.nbt.serialization;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -30,7 +28,8 @@ import de.atlasmc.chat.ChatColor;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.registry.Registry;
-import de.atlasmc.tag.Tag;
+import de.atlasmc.registry.RegistryKey;
+import de.atlasmc.tag.TagKey;
 import de.atlasmc.util.EnumID;
 import de.atlasmc.util.EnumName;
 import de.atlasmc.util.dataset.DataSet;
@@ -41,55 +40,8 @@ import de.atlasmc.util.function.ObjShortConsumer;
 import de.atlasmc.util.function.ToBooleanFunction;
 import de.atlasmc.util.function.ToFloatFunction;
 import de.atlasmc.util.map.Multimap;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.serialization.fields.BooleanField;
-import de.atlasmc.util.nbt.serialization.fields.BooleanListField;
-import de.atlasmc.util.nbt.serialization.fields.ByteArrayField;
-import de.atlasmc.util.nbt.serialization.fields.ByteField;
-import de.atlasmc.util.nbt.serialization.fields.ChatColorColorField;
-import de.atlasmc.util.nbt.serialization.fields.ChatListField;
-import de.atlasmc.util.nbt.serialization.fields.ColorField;
-import de.atlasmc.util.nbt.serialization.fields.TypeCompoundField;
-import de.atlasmc.util.nbt.serialization.fields.DataSetField;
-import de.atlasmc.util.nbt.serialization.fields.DoubleField;
-import de.atlasmc.util.nbt.serialization.fields.EnumByteField;
-import de.atlasmc.util.nbt.serialization.fields.EnumIntField;
-import de.atlasmc.util.nbt.serialization.fields.EnumStringField;
-import de.atlasmc.util.nbt.serialization.fields.FloatField;
-import de.atlasmc.util.nbt.serialization.fields.FloatListField;
-import de.atlasmc.util.nbt.serialization.fields.InnerTypeCompoundField;
-import de.atlasmc.util.nbt.serialization.fields.IntArrayField;
-import de.atlasmc.util.nbt.serialization.fields.IntField;
-import de.atlasmc.util.nbt.serialization.fields.IntListField;
-import de.atlasmc.util.nbt.serialization.fields.IntNullableField;
-import de.atlasmc.util.nbt.serialization.fields.IntSetField;
-import de.atlasmc.util.nbt.serialization.fields.InterfacedEnumStringField;
-import de.atlasmc.util.nbt.serialization.fields.LongField;
-import de.atlasmc.util.nbt.serialization.fields.MapNamespaced2Int;
-import de.atlasmc.util.nbt.serialization.fields.MapNamespacedType;
-import de.atlasmc.util.nbt.serialization.fields.MultimapType2TypeList;
-import de.atlasmc.util.nbt.serialization.fields.NBTField;
-import de.atlasmc.util.nbt.serialization.fields.NamespacedKeyField;
-import de.atlasmc.util.nbt.serialization.fields.QuaternionfField;
-import de.atlasmc.util.nbt.serialization.fields.RawField;
-import de.atlasmc.util.nbt.serialization.fields.RegistryValueField;
-import de.atlasmc.util.nbt.serialization.fields.ShortField;
-import de.atlasmc.util.nbt.serialization.fields.StringField;
-import de.atlasmc.util.nbt.serialization.fields.StringListField;
-import de.atlasmc.util.nbt.serialization.fields.StringToObjectField;
-import de.atlasmc.util.nbt.serialization.fields.TagField;
-import de.atlasmc.util.nbt.serialization.fields.TypeArraySearchByteIndexField;
-import de.atlasmc.util.nbt.serialization.fields.TypeCollectionField;
-import de.atlasmc.util.nbt.serialization.fields.TypeCollectionInnerSearchKeyField;
-import de.atlasmc.util.nbt.serialization.fields.TypeListField;
-import de.atlasmc.util.nbt.serialization.fields.TypeListSearchIntIndexField;
-import de.atlasmc.util.nbt.serialization.fields.UUIDField;
-import de.atlasmc.util.nbt.serialization.fields.UUIDListField;
-import de.atlasmc.util.nbt.serialization.fields.Vector3dField;
-import de.atlasmc.util.nbt.serialization.fields.Vector3fField;
-import de.atlasmc.util.nbt.serialization.fields.Vector3iField;
+import de.atlasmc.util.nbt.serialization.fields.*;
 import de.atlasmc.util.nbt.tag.NBT;
 import it.unimi.dsi.fastutil.booleans.BooleanList;
 import it.unimi.dsi.fastutil.floats.FloatList;
@@ -99,23 +51,16 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 
 public abstract class AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCompoundFieldBuilder<T, B>> {
 	
-	private static final int TYPE_COUNT = TagType.getValues().size() - 1; // tag end (0) is not used
+	protected static final int TYPE_COUNT = TagType.getValues().size() - 1; // tag end (0) is not used
 	
-	private List<Map<CharKey, NBTField<T>>> typeFields = new ArrayList<>(TYPE_COUNT);
+	protected final NBTCompoundFieldBuilder<T> root = new NBTCompoundFieldBuilder<>();
+	protected NBTCompoundFieldBuilder<T> builder = root;
 	
 	private static final Function<Chat, String> chatToString = Chat::toText;
 	private static final Function<String, Chat> stringToChat = ChatUtil::toChat;
 	
 	public B addField(NBTField<T> field) {
-		for (TagType type : field.types) {
-			final int id = type.getID() - 1; // tag end (0) is not used 
-			Map<CharKey, NBTField<T>> fields = typeFields.get(id);
-			if (fields == null)
-				typeFields.set(id, fields = new HashMap<>());
-			if (field.key == null)
-				throw new NBTException("Key of field can not be null!");
-			fields.put(field.key, field);
-		}
+		builder.addField(field);
 		return getThis();
 	}
 	
@@ -183,11 +128,15 @@ public abstract class AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCo
 		return addField(new StringField<>(key, get, set));
 	}
 	
-	public <K extends Namespaced> B registryValue(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, Registry<K> registry) {
+	public <K extends Namespaced> B registryValue(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, RegistryKey<K> registry) {
 		return addField(new RegistryValueField<>(key, get, set, registry));
 	}
 	
-	public <K extends Namespaced & NBTSerializable> B registryValue(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, Registry<K> registry, NBTSerializationHandler<K> handler) {
+	public <K extends Namespaced> B registryValueList(CharSequence key, ToBooleanFunction<T> has, Function<T, List<K>> get, RegistryKey<K> registry) {
+		return addField(new RegistryValueListField<>(key, has, get, registry));
+	}
+	
+	public <K extends Namespaced & NBTSerializable> B registryValue(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, RegistryKey<K> registry, NBTSerializationHandler<K> handler) {
 		registryValue(key, get, set, registry);
 		return typeCompoundField(key, get, set, handler);
 	}
@@ -212,12 +161,16 @@ public abstract class AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCo
 		return addField(new MapNamespacedType<>(key, has, getMap, handler));
 	}
 	
+	public <K> B compoundMapString2Type(CharSequence key, ToBooleanFunction<T> has, Function<T, Map<String, K>> getMap, NBTSerializationHandler<K> handler) {
+		return addField(new MapString2TypeField<>(key, has, getMap, handler));
+	}
+	
 	public <K extends Namespaced, V> B multimapType2TypeList(CharSequence key, ToBooleanFunction<T> has, Function<T, Multimap<K, V>> getMap, CharSequence keyField, Function<NamespacedKey, K> keySupplier, NBTSerializationHandler<V> handler) {
 		return addField(new MultimapType2TypeList<>(key, has, getMap, keyField, keySupplier, handler));
 	}
 	
-	public <K extends Namespaced> B compoundMapNamespacedType2Type(CharSequence key, ToBooleanFunction<T> has, Function<T, Map<NamespacedKey, K>> getMap, NBTSerializationHandler<K> handler) {
-		return addField(new MapNamespacedType<>(key, has, getMap, handler));
+	public <K, V> B compoundMapNamespacedType2Type(CharSequence key, ToBooleanFunction<T> has, Function<T, Map<K, V>> getMap, NBTSerializationHandler<V> handler, Function<V, K> getKey) {
+		return addField(new MapNamespacedType2Type<>(key, has, getMap, handler, getKey));
 	}
 	
 	public B color(CharSequence key, Function<T, Color> get, BiConsumer<T, Color> set) {
@@ -311,7 +264,7 @@ public abstract class AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCo
 		return addField(new DataSetField<>(key, get, set, registry));
 	}
 	
-	public <K> B tagField(CharSequence key, Function<T, Tag<K>> get, BiConsumer<T, Tag<K>> set) {
+	public <K> B tagField(CharSequence key, Function<T, TagKey<K>> get, BiConsumer<T, TagKey<K>> set) {
 		return addField(new TagField<>(key, get, set));
 	}
 	
@@ -325,6 +278,10 @@ public abstract class AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCo
 	
 	public B stringListField(CharSequence key, ToBooleanFunction<T> has, Function<T, List<String>> getCollection) {
 		return addField(new StringListField<>(key, has, getCollection));
+	}
+	
+	public B namespacedKeyListField(CharSequence key, ToBooleanFunction<T> has, Function<T, List<NamespacedKey>> getCollection) {
+		return addField(new NamespacedKeyListField<>(key, has, getCollection));
 	}
 	
 	public B booleanListField(CharSequence key, ToBooleanFunction<T> has, Function<T, BooleanList> getCollection) {

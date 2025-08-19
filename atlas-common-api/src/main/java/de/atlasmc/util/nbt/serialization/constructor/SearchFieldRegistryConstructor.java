@@ -5,7 +5,7 @@ import java.util.function.Function;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
-import de.atlasmc.registry.Registry;
+import de.atlasmc.registry.RegistryKey;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
@@ -18,7 +18,7 @@ public class SearchFieldRegistryConstructor<T, K extends Namespaced> extends Abs
 	private final CharKey keyField;
 	private final Function<T, K> keyReverseSupplier;
 	
-	public SearchFieldRegistryConstructor(CharSequence keyField, Registry<K> registry, Function<K, T> constructor, Function<T, K> keyReverseSupplier) {
+	public SearchFieldRegistryConstructor(CharSequence keyField, RegistryKey<K> registry, Function<K, T> constructor, Function<T, K> keyReverseSupplier) {
 		super(registry, constructor);
 		this.keyField = CharKey.literal(keyField);
 		this.keyReverseSupplier = keyReverseSupplier;
@@ -36,7 +36,7 @@ public class SearchFieldRegistryConstructor<T, K extends Namespaced> extends Abs
 		} else {
 			key = reader.readStringTag();
 		}
-		K regValue = registry.get(key);
+		K regValue = registry.getValue(key);
 		return constructor.apply(regValue);
 	}
 

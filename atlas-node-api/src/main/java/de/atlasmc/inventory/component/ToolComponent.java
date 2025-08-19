@@ -1,21 +1,19 @@
 package de.atlasmc.inventory.component;
 
 import java.util.List;
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.ItemType;
+import de.atlasmc.util.CloneException;
 import de.atlasmc.util.dataset.DataSet;
 import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface ToolComponent extends ItemComponent {
 	
-	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:tool");
-	
 	public static final NBTSerializationHandler<ToolComponent>
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(ToolComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(COMPONENT_KEY)
+					.beginComponent(ComponentType.TOOL)
 					.floatField("default_mining_speed", ToolComponent::getDefaultMinigSpeed, ToolComponent::setDefaultMinigSpeed, 1)
 					.intField("damage_per_block", ToolComponent::getDamagePerBlock, ToolComponent::setDamagePerBlock, 1)
 					.boolField("can_destroy_blocks_in_creative", ToolComponent::canDestroyBlocksInCreative, ToolComponent::setDestroyBlockInCreative, true)
@@ -39,18 +37,28 @@ public interface ToolComponent extends ItemComponent {
 	
 	boolean hasRules();
 	
-	Rule createRule();
+	ToolComponent clone();
 	
-	void addRule(Rule rule);
+	default boolean addRule(Rule rule) {
+		if (rule == null)
+			throw new IllegalArgumentException("Rule can not be null!");
+		return getRules().add(rule);
+	}
 	
-	void removeRule(Rule rule);
+	default boolean removeRule(Rule rule) {
+		if (rule == null)
+			throw new IllegalArgumentException("Rule can not be null!");
+		if (hasRules())
+			return getRules().remove(rule);
+		return false;
+	}
 	
 	@Override
 	default NBTSerializationHandler<? extends ToolComponent> getNBTHandler() {
 		return NBT_HANDLER;
 	}
 	
-	public static class Rule implements NBTSerializable {
+	public static class Rule implements NBTSerializable, Cloneable {
 		
 		public static final NBTSerializationHandler<Rule>
 		NBT_HANDLER = NBTSerializationHandler
@@ -92,6 +100,15 @@ public interface ToolComponent extends ItemComponent {
 		@Override
 		public NBTSerializationHandler<? extends NBTSerializable> getNBTHandler() {
 			return NBT_HANDLER;
+		}
+		
+		@Override
+		public Rule clone() {
+			try {
+				return (Rule) super.clone();
+			} catch (CloneNotSupportedException e) {
+				throw new CloneException(e);
+			}
 		}
 		
 	}

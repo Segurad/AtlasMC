@@ -7,6 +7,7 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.ItemType;
+import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.PotionContentsComponent;
 
 public class CoreArrow extends CoreAbstractArrow implements Arrow {
@@ -61,7 +62,7 @@ public class CoreArrow extends CoreAbstractArrow implements Arrow {
 		if (item == null) {
 			setColor(null);
 		} else {
-			PotionContentsComponent comp = item.getEffectiveComponent(PotionContentsComponent.COMPONENT_KEY);
+			PotionContentsComponent comp = item.getEffectiveComponent(ComponentType.get(ComponentType.POTION_CONTENTS));
 			if (comp == null) {
 				setColor(null);
 			} else {
@@ -73,7 +74,7 @@ public class CoreArrow extends CoreAbstractArrow implements Arrow {
 	@Override
 	public PotionContentsComponent getPotionContents() {
 		ItemStack item = getItem();
-		return item == null ? null : item.getEffectiveComponent(PotionContentsComponent.COMPONENT_KEY);
+		return item == null ? null : item.getEffectiveComponent(ComponentType.get(ComponentType.POTION_CONTENTS));
 	}
 
 	@Override

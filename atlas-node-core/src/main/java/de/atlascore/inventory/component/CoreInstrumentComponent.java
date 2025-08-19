@@ -9,7 +9,6 @@ import static de.atlasmc.io.protocol.ProtocolUtil.writeSound;
 
 import java.io.IOException;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
@@ -22,8 +21,8 @@ public class CoreInstrumentComponent extends AbstractItemComponent implements In
 	
 	private Instrument instrument;
 	
-	public CoreInstrumentComponent(NamespacedKey key) {
-		super(key);
+	public CoreInstrumentComponent(ComponentType type) {
+		super(type);
 	}
 	
 	@Override
@@ -39,16 +38,6 @@ public class CoreInstrumentComponent extends AbstractItemComponent implements In
 	@Override
 	public void setInstrument(Instrument instrument) {
 		this.instrument = instrument;
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.INSTRUMENT;
-	}
-	
-	@Override
-	public boolean isServerOnly() {
-		return false;
 	}
 	
 	@Override

@@ -4,22 +4,20 @@ import java.util.Map;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.block.BlockType;
+import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.ItemComponent;
 import de.atlasmc.registry.ProtocolRegistry;
 import de.atlasmc.registry.ProtocolRegistryValueBase;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
+import de.atlasmc.registry.RegistryKey;
 import de.atlasmc.util.configuration.ConfigurationSection;
 
 @RegistryHolder(key = "minecraft:item", target = Target.PROTOCOL)
 public class ItemType extends ProtocolRegistryValueBase {
 	
-	private static final ProtocolRegistry<ItemType> REGISTRY;
-	
-	static {
-		REGISTRY = Registries.createRegistry(ItemType.class);
-	}
+	public static final RegistryKey<ItemType> REGISTRY_KEY = Registries.getRegistryKey(ItemType.class);
 	
 	public static final NamespacedKey
 	ACACIA_BOAT = NamespacedKey.literal("minecraft:acacia_boat"),
@@ -1408,23 +1406,23 @@ public class ItemType extends ProtocolRegistryValueBase {
 	ZOMBIE_VILLAGER_SPAWN_EGG = NamespacedKey.literal("minecraft:zombie_villager_spawn_egg"),
 	ZOMBIFIED_PIGLIN_SPAWN_EGG = NamespacedKey.literal("minecraft:zombified_piglin_spawn_egg");
 	
-	private Map<NamespacedKey, ItemComponent> defaultComponents;
+	private Map<ComponentType, ItemComponent> defaultComponents;
 	
 	public ItemType(ConfigurationSection cfg) {
-		super(cfg.getString("key"), cfg.getString("clientKey"), cfg.getInt("itemID", -1));
+		super(cfg);
 	}
 	
 	public boolean hasDefaultComponents() {
 		return !defaultComponents.isEmpty();
 	}
 
-	public <T extends ItemComponent> T getDefaultComponent(NamespacedKey key) {
+	public <T extends ItemComponent> T getDefaultComponent(ComponentType key) {
 		@SuppressWarnings("unchecked")
 		T type = (T) defaultComponents.get(key);
 		return type;
 	}
 	
-	public Map<NamespacedKey, ItemComponent> getDefaultComponents() {
+	public Map<ComponentType, ItemComponent> getDefaultComponents() {
 		return defaultComponents;
 	}
 	
@@ -1436,7 +1434,7 @@ public class ItemType extends ProtocolRegistryValueBase {
 		return BlockType.get(key);
 	}
 	
-	public void setDefaulComponents(Map<NamespacedKey, ItemComponent> components) {
+	public void setDefaulComponents(Map<ComponentType, ItemComponent> components) {
 		if (components == null) {
 			this.defaultComponents = Map.of();
 		} else {
@@ -1445,19 +1443,19 @@ public class ItemType extends ProtocolRegistryValueBase {
 	}
 	
 	public static ItemType get(NamespacedKey key) {
-		return REGISTRY.get(key);
+		return getRegistry().get(key);
 	}
 	
-	public static ItemType get(String key) {
-		return REGISTRY.get(key);
+	public static ItemType get(CharSequence key) {
+		return getRegistry().get(key);
 	}
 	
 	public static ItemType getByID(int id) {
-		return REGISTRY.getByID(id);
+		return getRegistry().getByID(id);
 	}
 	
 	public static ProtocolRegistry<ItemType> getRegistry() {
-		return REGISTRY;
+		return REGISTRY_KEY.getRegistry();
 	}
 
 }

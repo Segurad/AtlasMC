@@ -1,20 +1,31 @@
 package de.atlasmc.inventory.component;
 
-import java.util.List;
-
 import de.atlasmc.Color;
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.potion.PotionData;
 import de.atlasmc.potion.PotionEffect;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public interface PotionContentsComponent extends ItemComponent {
+public interface PotionContentsComponent extends AbstractPotionEffectComponent {
 	
-	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:potion_contents");
+	public static final NBTSerializationHandler<PotionContentsComponent>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(PotionContentsComponent.class)
+					.include(AbstractPotionEffectComponent.NBT_HANDLER)
+					.beginComponent(ComponentType.POTION_CONTENTS, PotionContentsComponent::hasCustomData)
+					.registryValue("potion", PotionContentsComponent::getPotionData, PotionContentsComponent::setPotionData, PotionData.REGISTRY_KEY)
+					.color("custom_color", PotionContentsComponent::getCustomColor, PotionContentsComponent::setCustomColor)
+					.chat("custom_name", PotionContentsComponent::getCustomName, PotionContentsComponent::setCustomName)
+					.typeList("custom_effects", PotionContentsComponent::hasEffects, PotionContentsComponent::getEffects, PotionEffect.NBT_HANDLER)
+					.endComponent()
+					.registryValue(ComponentType.POTION_CONTENTS, PotionContentsComponent::getPotionData, PotionContentsComponent::setPotionData, PotionData.REGISTRY_KEY)
+					.build();
 	
 	PotionData getPotionData();
 	
 	void setPotionData(PotionData data);
+	
+	boolean hasCustomData();
 	
 	Color getCustomColor();
 	
@@ -24,14 +35,11 @@ public interface PotionContentsComponent extends ItemComponent {
 	
 	void setCustomName(Chat name);
 	
-	List<PotionEffect> getEffects();
-	
-	boolean hasEffects();
-	
-	void addEffect(PotionEffect effect);
-	
-	void removeEffect(PotionEffect effect);
-	
 	PotionContentsComponent clone();
 
+	@Override
+	default NBTSerializationHandler<? extends PotionContentsComponent> getNBTHandler() {
+		return NBT_HANDLER;
+	}
+	
 }

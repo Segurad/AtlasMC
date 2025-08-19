@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import de.atlasmc.util.CloneException;
 import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public class PlayerProfile implements NBTSerializable {
+public class PlayerProfile implements NBTSerializable, Cloneable {
 	
 	public static final NBTSerializationHandler<PlayerProfile>
 	NBT_HANDLER = NBTSerializationHandler
@@ -54,6 +55,22 @@ public class PlayerProfile implements NBTSerializable {
 		if (properties == null)
 			properties = new ArrayList<>();
 		return properties;
+	}
+	
+	@Override
+	public PlayerProfile clone() {
+		try {
+			PlayerProfile profile = (PlayerProfile) super.clone();
+			if (hasProperties()) {
+				profile.properties = new ArrayList<>(properties.size());
+				for (ProfileProperty property : properties) {
+					profile.properties.add(property.clone());
+				}
+			}
+			return profile;
+		} catch (CloneNotSupportedException e) {
+			throw new CloneException(e);
+		}
 	}
 	
 	@Override

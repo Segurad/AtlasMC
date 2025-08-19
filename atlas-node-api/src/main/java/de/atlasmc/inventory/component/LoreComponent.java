@@ -2,24 +2,51 @@ package de.atlasmc.inventory.component;
 
 import java.util.Collection;
 import java.util.List;
-
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface LoreComponent extends ItemComponent {
 	
-	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:lore");
+	public static final NBTSerializationHandler<LoreComponent>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(LoreComponent.class)
+					.include(ItemComponent.NBT_HANDLER)
+					.chatList(ComponentType.LORE, LoreComponent::hasLore, LoreComponent::getLore, true)
+					.build();
 	
+	@NotNull
 	List<Chat> getLore();
 	
 	boolean hasLore();
 	
-	void addLore(Chat chat);
+	default boolean addLore(@NotNull Chat chat) {
+		if (chat == null)
+			throw new IllegalArgumentException("Chat can not be null!");
+		return getLore().add(chat);
+	}
 	
-	void removeLore(Chat chat);
+	default boolean removeLore(@NotNull Chat chat) {
+		if (chat == null)
+			throw new IllegalArgumentException("Chat can not be null!");
+		if (hasLore())
+			return getLore().remove(chat);
+		return false;
+	}
 	
 	LoreComponent clone();
 
-	void setLore(Collection<Chat> lore);
+	default void setLore(@NotNull Collection<Chat> lore) {
+		if (lore == null)
+			throw new IllegalArgumentException("Lore can not be null!");
+		List<Chat> list = getLore();
+		list.clear();
+		list.addAll(lore);
+	}
+	
+	@Override
+	default NBTSerializationHandler<? extends LoreComponent> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 
 }

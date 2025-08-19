@@ -1,22 +1,22 @@
 package de.atlasmc.inventory.component;
 
-import java.util.List;
-
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.potion.PotionEffect;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public interface SuspiciousStewEffectsComponent extends ItemComponent {
+public interface SuspiciousStewEffectsComponent extends AbstractPotionEffectComponent {
 	
-	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:suspicious_stew_effects");
-
-	List<PotionEffect> getEffects();
-	
-	boolean hasEffects();
-	
-	void addEffects(PotionEffect effect);
-	
-	void removeEffects(PotionEffect effect);
+	public static final NBTSerializationHandler<SuspiciousStewEffectsComponent>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(SuspiciousStewEffectsComponent.class)
+					.include(AbstractPotionEffectComponent.NBT_HANDLER)
+					.typeList(ComponentType.SUSPICIOUS_STEW_EFFECTS, SuspiciousStewEffectsComponent::hasEffects, SuspiciousStewEffectsComponent::getEffects, PotionEffect.NBT_HANDLER)
+					.build();
 	
 	SuspiciousStewEffectsComponent clone();
+	
+	@Override
+	default NBTSerializationHandler<? extends SuspiciousStewEffectsComponent> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 }

@@ -1,17 +1,9 @@
 package de.atlasmc.inventory.component;
 
 import de.atlasmc.enchantments.Enchantment;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 
-public interface AbstractEnchantmentComponent extends AbstractTooltipComponent {
-	
-	static final NBTSerializationHandler<AbstractEnchantmentComponent>
-	NBT_HANDLER = NBTSerializationHandler
-			.builder(AbstractEnchantmentComponent.class)
-			.include(AbstractTooltipComponent.NBT_HANDLER)
-			.compoundMapNamespaced2Int("levels", AbstractEnchantmentComponent::hasEnchants, AbstractEnchantmentComponent::getStoredEnchants, Enchantment::getEnchantment)
-			.build();
+public interface AbstractEnchantmentComponent extends ItemComponent {
 	
 	void addEnchant(Enchantment ench, int level);
 	
@@ -27,11 +19,6 @@ public interface AbstractEnchantmentComponent extends AbstractTooltipComponent {
 	
 	void removeEnchant(Enchantment ench);
 	
-	AbstractTooltipComponent clone();
-	
-	@Override
-	default NBTSerializationHandler<? extends AbstractEnchantmentComponent> getNBTHandler() {
-		return NBT_HANDLER;
-	}
+	AbstractEnchantmentComponent clone();
 
 }

@@ -2,7 +2,6 @@ package de.atlascore.inventory.component;
 
 import java.io.IOException;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.MapIDComponent;
@@ -12,8 +11,8 @@ public class CoreMapIDComponent extends AbstractItemComponent implements MapIDCo
 
 	private int mapID;
 	
-	public CoreMapIDComponent(NamespacedKey key) {
-		super(key);
+	public CoreMapIDComponent(ComponentType type) {
+		super(type);
 	}
 	
 	public CoreMapIDComponent clone() {
@@ -28,16 +27,6 @@ public class CoreMapIDComponent extends AbstractItemComponent implements MapIDCo
 	@Override
 	public void setMapID(int id) {
 		this.mapID = id;
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.MAP_ID;
-	}
-	
-	@Override
-	public boolean isServerOnly() {
-		return false;
 	}
 	
 	@Override

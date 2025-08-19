@@ -5,21 +5,20 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.tag.Tag;
-import de.atlasmc.tag.Tags;
+import de.atlasmc.tag.TagKey;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 
-public class TagField<T, K> extends AbstractObjectField<T, Tag<K>> {
+public class TagField<T, K> extends AbstractObjectField<T, TagKey<K>> {
 
-	public TagField(CharSequence key, Function<T, Tag<K>> get, BiConsumer<T, Tag<K>> set) {
+	public TagField(CharSequence key, Function<T, TagKey<K>> get, BiConsumer<T, TagKey<K>> set) {
 		super(key, STRING, get, set);
 	}
 
 	@Override
 	public boolean serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
-		Tag<K> tag = get.apply(value);
+		TagKey<K> tag = get.apply(value);
 		if (tag == null)
 			return true;
 		writer.writeStringTag(key, "#" + tag.getNamespace());
@@ -31,7 +30,7 @@ public class TagField<T, K> extends AbstractObjectField<T, Tag<K>> {
 		String v = reader.readStringTag();
 		if (v.charAt(0) != '#')
 			return;
-		Tag<K> tag = Tags.getTag(NamespacedKey.of(v.substring(1)));
+		TagKey<K> tag = new TagKey<>(NamespacedKey.of(v.substring(1)));
 		set.accept(value, tag);
 	}
 

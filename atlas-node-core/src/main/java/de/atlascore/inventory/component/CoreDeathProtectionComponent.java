@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.DeathProtectionComponent;
@@ -19,8 +18,8 @@ public class CoreDeathProtectionComponent extends AbstractItemComponent implemen
 	
 	private List<ComponentEffect> effects;
 	
-	public CoreDeathProtectionComponent(NamespacedKey key) {
-		super(key);
+	public CoreDeathProtectionComponent(ComponentType type) {
+		super(type);
 	}
 	
 	@Override
@@ -59,16 +58,6 @@ public class CoreDeathProtectionComponent extends AbstractItemComponent implemen
 		if (effects == null)
 			return;
 		effects.remove(effect);
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.DEATH_PROTECTION;
-	}
-	
-	@Override
-	public boolean isServerOnly() {
-		return false;
 	}
 	
 	@Override

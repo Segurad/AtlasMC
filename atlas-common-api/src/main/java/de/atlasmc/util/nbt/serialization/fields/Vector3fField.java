@@ -42,6 +42,8 @@ public class Vector3fField<T> extends AbstractObjectField<T, Vector3f> {
 			throw new NBTException("Expected list of type FLOAT but was: " + listType);
 		reader.readNextEntry();
 		Vector3f vec = get.apply(value);
+		if (vec == null)
+			vec = new Vector3f();
 		vec.x = reader.readFloatTag();
 		vec.y = reader.readFloatTag();
 		vec.z = reader.readFloatTag();

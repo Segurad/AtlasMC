@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.CustomDataComponent;
@@ -19,8 +18,8 @@ public class CoreCustomDataComponent extends AbstractItemComponent implements Cu
 
 	private Map<String, NBT> values;
 	
-	public CoreCustomDataComponent(NamespacedKey key) {
-		super(key);
+	public CoreCustomDataComponent(ComponentType type) {
+		super(type);
 	}
 	
 	@Override
@@ -64,11 +63,6 @@ public class CoreCustomDataComponent extends AbstractItemComponent implements Cu
 	@Override
 	public boolean hasValues() {
 		return values != null && !values.isEmpty();
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.CUSTOM_DATA;
 	}
 	
 	@Override

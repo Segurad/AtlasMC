@@ -27,8 +27,8 @@ public class CoreBannerPatternsComponent extends AbstractItemComponent implement
 	
 	private List<Pattern> patterns;
 	
-	public CoreBannerPatternsComponent(NamespacedKey key) {
-		super(key);
+	public CoreBannerPatternsComponent(ComponentType type) {
+		super(type);
 	}
 
 	@Override
@@ -88,16 +88,6 @@ public class CoreBannerPatternsComponent extends AbstractItemComponent implement
 			clone.patterns = new ArrayList<>(patterns);
 		}
 		return clone;
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.BANNER_PATTERNS;
-	}
-	
-	@Override
-	public boolean isServerOnly() {
-		return false;
 	}
 	
 	@Override

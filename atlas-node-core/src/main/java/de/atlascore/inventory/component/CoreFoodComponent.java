@@ -5,7 +5,6 @@ import static de.atlasmc.io.PacketUtil.writeVarInt;
 
 import java.io.IOException;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.FoodComponent;
@@ -17,8 +16,8 @@ public class CoreFoodComponent extends AbstractItemComponent implements FoodComp
 	private float saturation;
 	private boolean canAlwaysEat;
 	
-	public CoreFoodComponent(NamespacedKey key) {
-		super(key);
+	public CoreFoodComponent(ComponentType type) {
+		super(type);
 	}
 	
 	@Override
@@ -54,16 +53,6 @@ public class CoreFoodComponent extends AbstractItemComponent implements FoodComp
 	@Override
 	public void setAlwaysEatable(boolean eatable) {
 		this.canAlwaysEat = eatable;
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.FOOD;
-	}
-	
-	@Override
-	public boolean isServerOnly() {
-		return false;
 	}
 	
 	@Override

@@ -22,9 +22,8 @@ import static de.atlasmc.io.protocol.ProtocolUtil.*;
 public class CoreAttributeModifiersComponent extends AbstractItemComponent implements AttributeModifiersComponent {
 	
 	private ListMultimap<Attribute, AttributeModifier> attributes;
-	private boolean showTooltip = true;
 	
-	public CoreAttributeModifiersComponent(NamespacedKey key) {
+	public CoreAttributeModifiersComponent(ComponentType key) {
 		super(key);
 	}
 	
@@ -133,16 +132,6 @@ public class CoreAttributeModifiersComponent extends AbstractItemComponent imple
 		}
 		return clone;
 	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.ATTRIBUTE_MODIFIERS;
-	}
-	
-	@Override
-	public boolean isServerOnly() {
-		return false;
-	}
 
 	@Override
 	public void read(ByteBuf buf) {
@@ -160,7 +149,6 @@ public class CoreAttributeModifiersComponent extends AbstractItemComponent imple
 			AttributeModifier modifier = new AttributeModifier(modifierID, amount, operation, slot);
 			modifiers.put(attribute, modifier);
 		}
-		showTooltip = buf.readBoolean();
 	}
 
 	@Override
@@ -183,7 +171,6 @@ public class CoreAttributeModifiersComponent extends AbstractItemComponent imple
 				writeVarInt(modifier.getSlot().getID(), buf);
 			}
 		}
-		buf.writeBoolean(showTooltip);
 	}
 
 }

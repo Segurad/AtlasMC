@@ -1,28 +1,17 @@
 package de.atlasmc.inventory.component;
 
-import de.atlasmc.NamespacedKey;
+import de.atlasmc.inventory.loot.LootTableHolder;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public interface ContainerLootComponent extends ItemComponent {
-	
-	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:container_loot");
+public interface ContainerLootComponent extends ItemComponent, LootTableHolder {
 	
 	public static final NBTSerializationHandler<ContainerLootComponent> 
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(ContainerLootComponent.class)
-					.beginComponent(COMPONENT_KEY.toString())
-					.namespacedKey("loot_table", ContainerLootComponent::getLootTableKey, ContainerLootComponent::setLootTableKey)
-					.longField("seed", ContainerLootComponent::getSeed, ContainerLootComponent::setSeed, 0)
+					.beginComponent(ComponentType.CONTAINER_LOOT)
+					.include(LootTableHolder.NBT_HANDLER)
 					.endComponent()
 					.build();
-	
-	NamespacedKey getLootTableKey();
-	
-	void setLootTableKey(NamespacedKey key);
-	
-	long getSeed();
-	
-	void setSeed(long seed);
 	
 	ContainerLootComponent clone();
 

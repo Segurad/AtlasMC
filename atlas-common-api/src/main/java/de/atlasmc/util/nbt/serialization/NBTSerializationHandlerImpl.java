@@ -1,0 +1,71 @@
+package de.atlasmc.util.nbt.serialization;
+
+import java.io.IOException;
+import java.util.function.Supplier;
+
+import de.atlasmc.util.nbt.NBTException;
+import de.atlasmc.util.nbt.io.NBTReader;
+import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.nbt.serialization.constructor.Constructor;
+import de.atlasmc.util.nbt.serialization.fields.NBTCompoundField;
+
+public class NBTSerializationHandlerImpl<T> implements NBTSerializationHandler<T> {
+
+	private final Class<T> type;
+	private final boolean redirectAfterConstruction;
+	private final Constructor<T> constructor;
+	private final Supplier<T> defaultConstrcutor;
+	private final NBTCompoundField<T> fields;
+	
+	public NBTSerializationHandlerImpl(NBTSerializationHandlerBuilder<T> builder) {
+		this.type = builder.getType();
+		this.redirectAfterConstruction = builder.isRedirectAfterConstruction();
+		this.constructor = builder.getConstructor();
+		this.defaultConstrcutor = builder.getDefaultConstructor();
+		this.fields = builder.buildFields();
+	}
+	
+	@Override
+	public boolean serialize(T value, NBTWriter ouput, NBTSerializationContext context) throws IOException {
+		if (redirectAfterConstruction && value instanceof NBTSerializable serializable) {
+			@SuppressWarnings("unchecked")
+			NBTSerializationHandler<T> handler = (NBTSerializationHandler<T>) serializable.getNBTHandler();
+			if (handler != this) {
+				return handler.serialize(value, ouput, context);
+			}
+		}
+		if (constructor != null)
+			constructor.serialize(value, ouput, context);
+		if (fields != null)
+			return fields.serialize(value, ouput, context);
+		return true;
+	}
+
+	@Override
+	public T deserialize(T value, NBTReader input, NBTSerializationContext context) throws IOException {
+		if (value == null) {
+			if (constructor != null)
+				value = constructor.construct(input, context);
+			if (value == null && defaultConstrcutor != null) {
+				value = defaultConstrcutor.get();
+				if (value == null)
+					throw new NBTException("Unable to construct type!");
+			}
+		}
+		if (redirectAfterConstruction && value instanceof NBTSerializable serializable) {
+			@SuppressWarnings("unchecked")
+			NBTSerializationHandler<T> handler = (NBTSerializationHandler<T>) serializable.getNBTHandler();
+			if (handler != this) {
+				return handler.deserialize(value, input, context);
+			}
+		}
+		fields.deserialize(value, input, context);
+		return value;
+	}
+
+	@Override
+	public Class<T> getType() {
+		return type;
+	}
+
+}

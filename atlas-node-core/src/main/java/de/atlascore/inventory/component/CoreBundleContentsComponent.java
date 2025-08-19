@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.BundleContentsComponent;
@@ -22,8 +21,8 @@ public class CoreBundleContentsComponent extends AbstractItemComponent implement
 	
 	private List<ItemStack> items;
 	
-	public CoreBundleContentsComponent(NamespacedKey key) {
-		super(key);
+	public CoreBundleContentsComponent(ComponentType type) {
+		super(type);
 	}
 
 	@Override
@@ -58,16 +57,6 @@ public class CoreBundleContentsComponent extends AbstractItemComponent implement
 		if (items == null)
 			return;
 		items.remove(item);
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.BUNDLE_CONTENTS;
-	}
-	
-	@Override
-	public boolean isServerOnly() {
-		return false;
 	}
 	
 	@Override

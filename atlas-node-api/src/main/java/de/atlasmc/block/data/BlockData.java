@@ -12,7 +12,7 @@ public interface BlockData extends Cloneable, NBTSerializable {
 	public static final NBTSerializationHandler<BlockData>
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(BlockData.class)
-					.searchKeyConstructor("Name", BlockType.getRegistry(), BlockType::createBlockData, BlockData::getType)
+					.searchKeyConstructor("Name", BlockType.REGISTRY_KEY, BlockType::createBlockData, BlockData::getType)
 					.addField(BlockDataProperty.getBlockDataPropertiesField("Properties"))
 					.build();
 	

@@ -147,6 +147,8 @@ public class NamespacedKey implements CharSequence {
 	public static NamespacedKey of(CharSequence namespacedKey) {
 		if (namespacedKey == null)
 			throw new IllegalArgumentException("NamespacedKey can not be null!");
+		if (namespacedKey instanceof NamespacedKey key)
+			return key;
 		NamespacedKey k = CACHE.get(namespacedKey);
 		if (k != null)
 			return k;

@@ -1,38 +1,26 @@
 package de.atlasmc.inventory.component;
 
-import java.util.Collection;
-
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.ItemPredicate;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface LockComponent extends ItemComponent {
 	
-	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:lock");
+	public static final NBTSerializationHandler<LockComponent>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(LockComponent.class)
+					.include(ItemComponent.NBT_HANDLER)
+					.typeCompoundField(ComponentType.LOCK, LockComponent::getPredicate, LockComponent::setPredicate, ItemPredicate.NBT_HANDLER)
+					.build();
 	
-	int getMinCount();
+	ItemPredicate getPredicate();
 	
-	int getMaxCount();
-	
-	void setMinCount(int min);
-	
-	void setMaxCount(int max);
-	
-	Collection<ItemComponent> getComponents();
-	
-	boolean hasComponents();
-	
-	void addComponent(ItemComponent component);
-	
-	void removeComponent(ItemComponent component);
-	
-	Collection<ItemPredicate> getPredicates();
-	
-	boolean hasPredicates();
-	
-	void addPredicate(ItemPredicate predicate);
-	
-	void removePredicate(ItemPredicate predicate);
+	void setPredicate(ItemPredicate predicate);
 	
 	LockComponent clone();
+	
+	@Override
+	default NBTSerializationHandler<? extends ItemComponent> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 
 }

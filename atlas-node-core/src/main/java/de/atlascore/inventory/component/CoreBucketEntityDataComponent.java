@@ -3,7 +3,6 @@ package de.atlascore.inventory.component;
 import java.io.IOException;
 
 import de.atlasmc.DyeColor;
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.entity.Axolotl.Variant;
 import de.atlasmc.entity.Salmon.Type;
 import de.atlasmc.entity.TropicalFish.Pattern;
@@ -31,8 +30,8 @@ public class CoreBucketEntityDataComponent extends AbstractItemComponent impleme
 	private int tropicalFishVariant;
 	private Type type;
 	
-	public CoreBucketEntityDataComponent(NamespacedKey key) {
-		super(key);
+	public CoreBucketEntityDataComponent(ComponentType type) {
+		super(type);
 	}
 
 	@Override
@@ -182,16 +181,6 @@ public class CoreBucketEntityDataComponent extends AbstractItemComponent impleme
 	@Override
 	public void setSalmonType(Type type) {
 		this.type = type;
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.BUCKET_ENTITY_DATA;
-	}
-	
-	@Override
-	public boolean isServerOnly() {
-		return false;
 	}
 	
 	@Override

@@ -1,15 +1,25 @@
 package de.atlasmc.inventory.component;
 
-import de.atlasmc.NamespacedKey;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface OminousBottleAmplifierComponent extends ItemComponent {
 	
-	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:ominous_bottle_amplifier");
+	public static final NBTSerializationHandler<OminousBottleAmplifierComponent>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(OminousBottleAmplifierComponent.class)
+					.include(ItemComponent.NBT_HANDLER)
+					.intField(ComponentType.OMINOUS_BOTTLE_AMPLIFIER, OminousBottleAmplifierComponent::getAmplifier, OminousBottleAmplifierComponent::setAmplifier, 0)
+					.build();
 	
 	int getAmplifier();
 	
 	void setAmplifier(int amplifier);
 	
 	OminousBottleAmplifierComponent clone();
+	
+	@Override
+	default NBTSerializationHandler<? extends OminousBottleAmplifierComponent> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 
 }

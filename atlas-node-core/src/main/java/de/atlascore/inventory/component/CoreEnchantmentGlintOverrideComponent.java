@@ -2,7 +2,6 @@ package de.atlascore.inventory.component;
 
 import java.io.IOException;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.EnchantmentGlintOverrideComponent;
@@ -12,8 +11,8 @@ public class CoreEnchantmentGlintOverrideComponent extends AbstractItemComponent
 
 	private boolean glint;
 	
-	public CoreEnchantmentGlintOverrideComponent(NamespacedKey key) {
-		super(key);
+	public CoreEnchantmentGlintOverrideComponent(ComponentType type) {
+		super(type);
 		this.glint = true;
 	}
 	
@@ -30,16 +29,6 @@ public class CoreEnchantmentGlintOverrideComponent extends AbstractItemComponent
 	@Override
 	public void setGlint(boolean glint) {
 		this.glint = glint;
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.ENCHANTMENT_GLINT_OVERRIDE;
-	}
-	
-	@Override
-	public boolean isServerOnly() {
-		return false;
 	}
 	
 	@Override

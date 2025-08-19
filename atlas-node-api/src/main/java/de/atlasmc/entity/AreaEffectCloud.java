@@ -22,7 +22,7 @@ public interface AreaEffectCloud extends Entity {
 					.typeList("potion_contents", AreaEffectCloud::hasPotionEffects, AreaEffectCloud::getPotionEffects, PotionEffect.NBT_HANDLER)
 					.uuid("Owner", AreaEffectCloud::getOwner, AreaEffectCloud::setOwner)
 					.typeCompoundField("custom_particle", AreaEffectCloud::getParticle, AreaEffectCloud::setParticle, Particle.NBT_HANDLER)
-					.registryValue("Potion", AreaEffectCloud::getPotionData, AreaEffectCloud::setPotionData, PotionData.getRegistry())
+					.registryValue("Potion", AreaEffectCloud::getPotionData, AreaEffectCloud::setPotionData, PotionData.REGISTRY_KEY)
 					.floatField("potion_duration_scale", AreaEffectCloud::getPotionDurationScale, AreaEffectCloud::setPotionDurationScale, 1)
 					.floatField("Radius", AreaEffectCloud::getRadius, AreaEffectCloud::setRadius, 0.5f)
 					.floatField("RadiusOnUse", AreaEffectCloud::getRadiusOnUse, AreaEffectCloud::setRadiusOnUse, 0)

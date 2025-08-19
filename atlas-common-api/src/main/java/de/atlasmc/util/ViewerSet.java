@@ -121,7 +121,7 @@ public class ViewerSet<H, V> extends HashSet<V> {
 		public void remove() {
 			iterator.remove();
 			if (lastReturned != null)
-			set.removeFunction.accept(holder, lastReturned);
+				set.removeFunction.accept(holder, lastReturned);
 			lastReturned = null;
 		}
 		

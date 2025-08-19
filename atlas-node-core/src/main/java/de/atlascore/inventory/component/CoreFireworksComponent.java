@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.FireworkExplosion;
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.FireworksComponent;
@@ -17,8 +16,8 @@ public class CoreFireworksComponent extends AbstractItemComponent implements Fir
 	private List<FireworkExplosion> explosions; 
 	private int flightDuration;
 	
-	public CoreFireworksComponent(NamespacedKey key) {
-		super(key);
+	public CoreFireworksComponent(ComponentType type) {
+		super(type);
 		flightDuration = 1;
 	}
 	
@@ -67,16 +66,6 @@ public class CoreFireworksComponent extends AbstractItemComponent implements Fir
 	@Override
 	public void setFlightDuration(int duration) {
 		this.flightDuration = duration;
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.FIREWORKS;
-	}
-	
-	@Override
-	public boolean isServerOnly() {
-		return false;
 	}
 	
 	@Override

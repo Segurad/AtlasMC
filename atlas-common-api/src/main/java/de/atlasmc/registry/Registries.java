@@ -30,11 +30,7 @@ public class Registries {
 	
 	private Registries() {}
 	
-	public static <T> T getDefault(NamespacedKey key) {
-		return HANDLER.getDefault(key);
-	}
-	
-	public static <T> T getDefault(String key) {
+	public static <T> T getDefault(CharSequence key) {
 		return HANDLER.getDefault(key);
 	}
 	
@@ -42,54 +38,30 @@ public class Registries {
 		return HANDLER.getDefault(clazz);
 	}
 	
+	public static <T> RegistryKey<T> getRegistryKey(Class<T> clazz) {
+		return getRegistryKey(HANDLER.getRegistryKey(clazz));
+	}
+	
+	public static <T> RegistryKey<T> getRegistryKey(CharSequence key) {
+		return new RegistryKey<>(NamespacedKey.of(key));
+	}
+	
 	public static <T extends Registry<?>> T getRegistry(Class<?> clazz) {
 		return HANDLER.getRegistry(clazz);
 	}
 	
-	public static <T extends Registry<?>> T getRegistry(NamespacedKey key) {
+	public static <T extends Registry<?>> T getRegistry(CharSequence key) {
 		return HANDLER.getRegistry(key);
 	}
 	
-	public static <T extends Registry<?>> T getRegistry(String key) {
-		return HANDLER.getRegistry(key);
-	}
-	
-	public static <T> T getValue(Class<?> registry, NamespacedKey key) {
+	public static <T> T getValue(Class<?> registry, CharSequence key) {
 		Registry<T> reg = HANDLER.getRegistry(registry);
 		if (reg == null)
 			return null;
 		return reg.get(key);
 	}
 	
-	public static <T> T getValue(NamespacedKey registry, NamespacedKey key) {
-		Registry<T> reg = HANDLER.getRegistry(registry);
-		if (reg == null)
-			return null;
-		return reg.get(key);
-	}
-	
-	public static <T> T getValue(String registry, NamespacedKey key) {
-		Registry<T> reg = HANDLER.getRegistry(registry);
-		if (reg == null)
-			return null;
-		return reg.get(key);
-	}
-	
-	public static <T> T getValue(Class<?> registry, String key) {
-		Registry<T> reg = HANDLER.getRegistry(registry);
-		if (reg == null)
-			return null;
-		return reg.get(key);
-	}
-	
-	public static <T> T getValue(NamespacedKey registry, String key) {
-		Registry<T> reg = HANDLER.getRegistry(registry);
-		if (reg == null)
-			return null;
-		return reg.get(key);
-	}
-	
-	public static <T> T getValue(String registry, String key) {
+	public static <T> T getValue(CharSequence registry, CharSequence key) {
 		Registry<T> reg = HANDLER.getRegistry(registry);
 		if (reg == null)
 			return null;

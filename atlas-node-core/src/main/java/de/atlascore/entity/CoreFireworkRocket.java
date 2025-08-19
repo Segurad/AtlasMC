@@ -9,6 +9,7 @@ import de.atlasmc.entity.data.MetaDataField;
 import de.atlasmc.entity.data.MetaDataType;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.ItemType;
+import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.FireworksComponent;
 
 public class CoreFireworkRocket extends CoreAbstractProjectile implements FireworkRocket {
@@ -47,7 +48,7 @@ public class CoreFireworkRocket extends CoreAbstractProjectile implements Firewo
 		ItemStack item = getFirework();
 		if (item == null)
 			return null;
-		return item.getComponent(FireworksComponent.COMPONENT_KEY);
+		return item.getComponent(ComponentType.get(ComponentType.FIREWORKS));
 	}
 
 	@Override

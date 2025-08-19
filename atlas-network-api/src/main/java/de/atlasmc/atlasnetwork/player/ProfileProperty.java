@@ -1,9 +1,10 @@
 package de.atlasmc.atlasnetwork.player;
 
+import de.atlasmc.util.CloneException;
 import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
-public class ProfileProperty implements NBTSerializable {
+public class ProfileProperty implements NBTSerializable, Cloneable {
 
 	public static final NBTSerializationHandler<ProfileProperty>
 	NBT_HANDLER = NBTSerializationHandler
@@ -50,6 +51,15 @@ public class ProfileProperty implements NBTSerializable {
 	
 	public void setSignature(String signature) {
 		this.signature = signature;
+	}
+	
+	@Override
+	public ProfileProperty clone() {
+		try {
+			return (ProfileProperty) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new CloneException(e);
+		}
 	}
 	
 	@Override

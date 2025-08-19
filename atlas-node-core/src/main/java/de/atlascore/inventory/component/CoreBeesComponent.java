@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.block.tile.Beehive.Occupant;
 import de.atlasmc.entity.Bee;
 import de.atlasmc.inventory.component.AbstractItemComponent;
@@ -19,14 +18,14 @@ import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 import io.netty.buffer.ByteBuf;
 import static de.atlasmc.io.protocol.ProtocolUtil.*;
 
-public class CoreBeesComponent extends AbstractItemComponent implements BeesComponent {;
+public class CoreBeesComponent extends AbstractItemComponent implements BeesComponent {
 	
 	private static final int DEFAULT_BEES_SIZE = 5;
 	
 	private List<Occupant> bees;
 	
-	public CoreBeesComponent(NamespacedKey key) {
-		super(key);
+	public CoreBeesComponent(ComponentType type) {
+		super(type);
 	}
 	
 	@Override
@@ -72,16 +71,6 @@ public class CoreBeesComponent extends AbstractItemComponent implements BeesComp
 	@Override
 	public int getBeeCount() {
 		return bees == null ? 0 : bees.size();
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.BEES;
-	}
-	
-	@Override
-	public boolean isServerOnly() {
-		return false;
 	}
 	
 	@Override

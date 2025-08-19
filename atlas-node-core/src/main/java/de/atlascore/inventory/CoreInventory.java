@@ -14,7 +14,6 @@ import de.atlasmc.inventory.InventoryType.SlotType;
 import de.atlasmc.inventory.InventoryView;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.inventory.ItemType;
-import de.atlasmc.inventory.gui.GUI;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.play.PacketOutSetContainerContents;
 import de.atlasmc.io.protocol.play.PacketOutSetContainerProperty;
@@ -33,7 +32,6 @@ public class CoreInventory implements Inventory {
 	private InventoryHolder holder;
 	private final InventoryType type;
 	private Chat title;
-	private GUI gui;
 	private boolean autoUpdate;
 	
 	public CoreInventory(int size, InventoryType type, Chat title, InventoryHolder holder) {
@@ -492,21 +490,6 @@ public class CoreInventory implements Inventory {
 	public void clear() {
 		Arrays.fill(contents, null);	
 		updateSlots();
-	}
-
-	@Override
-	public GUI getGUI() {
-		return gui;
-	}
-
-	@Override
-	public void setGUI(GUI gui) {
-		if (gui != null && gui.getInventory() != this)
-			throw new IllegalArgumentException("Can only asigne gui with this inventory!");
-		GUI oldGUI = this.gui;
-		this.gui = gui;
-		if (oldGUI != null)
-			oldGUI.notifyRemoved();
 	}
 
 	@Override

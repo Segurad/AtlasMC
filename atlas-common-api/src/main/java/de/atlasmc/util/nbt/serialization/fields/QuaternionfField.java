@@ -42,7 +42,9 @@ public class QuaternionfField<T> extends AbstractObjectField<T, Quaternionf> {
 		if (listType != TagType.FLOAT)
 			throw new NBTException("Expected list of type FLOAT but was: " + listType);
 		reader.readNextEntry();
-		Quaternionf vec = new Quaternionf();
+		Quaternionf vec = get.apply(value);
+		if (vec == null)
+			vec = new Quaternionf();
 		vec.w = reader.readFloatTag();
 		vec.x = reader.readFloatTag();
 		vec.y = reader.readFloatTag();

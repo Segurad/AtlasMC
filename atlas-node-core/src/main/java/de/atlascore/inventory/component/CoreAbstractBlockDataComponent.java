@@ -11,19 +11,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.block.data.BlockData;
 import de.atlasmc.block.data.property.BlockDataProperty;
 import de.atlasmc.inventory.component.AbstractBlockDataComponent;
 import de.atlasmc.inventory.component.AbstractItemComponent;
+import de.atlasmc.inventory.component.ComponentType;
 import io.netty.buffer.ByteBuf;
 
 public class CoreAbstractBlockDataComponent extends AbstractItemComponent implements AbstractBlockDataComponent {
 
 	private Map<BlockDataProperty<?>, Object> properties;
 	
-	public CoreAbstractBlockDataComponent(NamespacedKey key) {
-		super(key);
+	public CoreAbstractBlockDataComponent(ComponentType type) {
+		super(type);
 	}
 
 	@Override

@@ -4,7 +4,7 @@ import java.util.List;
 
 import de.atlasmc.block.BlockPredicate;
 
-public interface AbstractBlockPredicateComponent extends AbstractTooltipComponent {
+public interface AbstractBlockPredicateComponent extends ItemComponent {
 	
 	List<BlockPredicate> getPredicates();
 	

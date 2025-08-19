@@ -1,16 +1,26 @@
 package de.atlasmc.inventory.component;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.sound.EnumSound;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface NoteBlockSoundComponent extends ItemComponent {
 	
-	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:note_block_sound");
-	
+	public static final NBTSerializationHandler<NoteBlockSoundComponent>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(NoteBlockSoundComponent.class)
+					.include(ItemComponent.NBT_HANDLER)
+					.enumStringField(ComponentType.NOTE_BLOCK_SOUND, NoteBlockSoundComponent::getSound, NoteBlockSoundComponent::setSound, EnumSound::getByName, null)
+					.build();
+					
 	EnumSound getSound();
 	
 	void setSound(EnumSound sound);
 	
 	NoteBlockSoundComponent clone();
+	
+	@Override
+	default NBTSerializationHandler<? extends NoteBlockSoundComponent> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 
 }

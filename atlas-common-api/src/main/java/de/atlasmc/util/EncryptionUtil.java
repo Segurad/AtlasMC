@@ -16,6 +16,8 @@ import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
+import de.atlasmc.util.annotation.NotNull;
+
 public final class EncryptionUtil {
 	
 	private EncryptionUtil() {}
@@ -30,11 +32,13 @@ public final class EncryptionUtil {
 		return new KeyPair(publicKey, privateKey);
 	}
 	
-	public static String keyToString(PublicKey key) {
+	@NotNull
+	public static String keyToString(@NotNull PublicKey key) {
 		return keyToString(key, "PUBLIC");
 	}
 	
-	public static String keyToString(PrivateKey key) {
+	@NotNull
+	public static String keyToString(@NotNull PrivateKey key) {
 		return keyToString(key, "PRIVATE");
 	}
 	
@@ -45,6 +49,8 @@ public final class EncryptionUtil {
 	}
 	
 	private static String keyToString(Key key, String name) {
+		if (key == null)
+			throw new IllegalArgumentException("Key can not be null!");
 		String base64 = Base64.getEncoder().encodeToString(key.getEncoded());
 		String keyData = "";
 		for (int i = 0; i < base64.length(); i += 65)  {

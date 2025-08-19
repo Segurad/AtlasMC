@@ -2,7 +2,6 @@ package de.atlascore.inventory.component;
 
 import java.io.IOException;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.block.tile.TileEntity;
 import de.atlasmc.inventory.component.AbstractItemComponent;
 import de.atlasmc.inventory.component.BlockEntityComponent;
@@ -18,8 +17,8 @@ public class CoreBlockEntityComponent extends AbstractItemComponent implements B
 
 	private TileEntity tile;
 	
-	public CoreBlockEntityComponent(NamespacedKey key) {
-		super(key);
+	public CoreBlockEntityComponent(ComponentType type) {
+		super(type);
 	}
 
 	@Override
@@ -41,16 +40,6 @@ public class CoreBlockEntityComponent extends AbstractItemComponent implements B
 			clone.tile = tile.clone();
 		}
 		return clone;
-	}
-	
-	@Override
-	public ComponentType getType() {
-		return ComponentType.BLOCK_ENTITY_DATA;
-	}
-	
-	@Override
-	public boolean isServerOnly() {
-		return false;
 	}
 	
 	@Override

@@ -2,6 +2,10 @@ package de.atlasmc;
 
 import java.util.List;
 
+import de.atlasmc.util.annotation.Nullable;
+import de.atlasmc.util.annotation.ThreadSafe;
+
+@ThreadSafe
 public final class Color {
 	
 	public static final Color 
@@ -111,6 +115,7 @@ public final class Color {
 		this.name = "RGB";
 	}
 	
+	@Nullable
 	public String getName() {
 		return name;
 	}

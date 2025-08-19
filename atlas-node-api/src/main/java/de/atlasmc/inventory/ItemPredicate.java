@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
 
-import de.atlasmc.NamespacedKey;
+import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.ItemComponent;
 import de.atlasmc.inventory.component.ItemComponentHolder;
 import de.atlasmc.inventory.component.predicate.ItemComponentPredicate;
@@ -24,14 +24,14 @@ public class ItemPredicate implements NBTSerializable, ItemComponentHolder, Pred
 					.intNullableField("count", ItemPredicate::getCount, ItemPredicate::setCount, null)
 					.typeCompoundField("count", ItemPredicate::getRange, ItemPredicate::setRange, IntRange.NBT_HANDLER)
 					.include(ItemComponentHolder.NBT_HANDLER)
-					.compoundMapNamespacedType("predicates", ItemPredicate::hasPredicates, ItemPredicate::getPredicates, ItemComponentPredicate.NBT_HANDLER)
+					.compoundMapNamespacedType2Type("predicates", ItemPredicate::hasPredicates, ItemPredicate::getPredicates, ItemComponentPredicate.NBT_HANDLER, ItemComponentPredicate::getType)
 					.build();
 
 	private DataSet<ItemType> items;
 	private Integer count;
 	private IntRange range;
-	private Map<NamespacedKey, ItemComponent> components;
-	private Map<NamespacedKey, ItemComponentPredicate> predicates;
+	private Map<ComponentType, ItemComponent> components;
+	private Map<ComponentType, ItemComponentPredicate> predicates;
 	
 	public DataSet<ItemType> getItems() {
 		return items;
@@ -57,7 +57,9 @@ public class ItemPredicate implements NBTSerializable, ItemComponentHolder, Pred
 		this.range = range;
 	}
 	
-	public Map<NamespacedKey, ItemComponentPredicate> getPredicates() {
+	public Map<ComponentType, ItemComponentPredicate> getPredicates() {
+		if (predicates == null)
+			predicates = new HashMap<>();
 		return predicates;
 	}
 	
@@ -66,7 +68,7 @@ public class ItemPredicate implements NBTSerializable, ItemComponentHolder, Pred
 	}
 	
 	@Override
-	public Map<NamespacedKey, ItemComponent> getComponents() {
+	public Map<ComponentType, ItemComponent> getComponents() {
 		if (components == null)
 			components = new HashMap<>();
 		return components;
@@ -95,15 +97,15 @@ public class ItemPredicate implements NBTSerializable, ItemComponentHolder, Pred
 		if (hasComponents()) {
 			if (!t.hasComponents())
 				return false;
-			final Map<NamespacedKey, ItemComponent> comps = t.getComponents();
+			final Map<ComponentType, ItemComponent> comps = t.getComponents();
 			if (!components.equals(comps))
 				return false;
 		}
 		if (hasPredicates()) {
 			if (!t.hasComponents())
 				return false;
-			final Map<NamespacedKey, ItemComponent> comps = t.getComponents();
-			for (Entry<NamespacedKey, ItemComponentPredicate> entry : predicates.entrySet()) {
+			final Map<ComponentType, ItemComponent> comps = t.getComponents();
+			for (Entry<ComponentType, ItemComponentPredicate> entry : predicates.entrySet()) {
 				final ItemComponent comp = comps.get(entry.getKey());
 				if (!entry.getValue().test(comp))
 					return false;

@@ -1,146 +1,133 @@
 package de.atlasmc.inventory.component;
 
-import java.util.List;
-
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.EnumID;
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.EnumValueCache;
+import de.atlasmc.registry.ProtocolRegistry;
+import de.atlasmc.registry.ProtocolRegistryValueBase;
+import de.atlasmc.registry.Registries;
+import de.atlasmc.registry.Registry;
+import de.atlasmc.registry.RegistryHolder;
+import de.atlasmc.registry.RegistryKey;
+import de.atlasmc.registry.RegistryHolder.Target;
+import de.atlasmc.util.configuration.ConfigurationSection;
 
 /**
  * Represents all component types known to the client custom ones are not included.
  */
-public enum ComponentType implements EnumID, EnumValueCache, EnumName {
+@RegistryHolder(key = "atlas:component_type", target = Target.PROTOCOL)
+public class ComponentType extends ProtocolRegistryValueBase {
 	
-	CUSTOM_DATA("minecraft:custom_data"),
-	MAX_STACK_SIZE("minecraft:max_stack_size"),
-	MAX_DAMAGE("minecraft:max_damage"),
-	DAMAGE("minecraft:damage"),
-	UNBREAKABLE("minecraft:unbreakable"),
-	CUSTOM_NAME("minecraft:custom_name"),
-	ITEM_NAME("minecraft:item_name"),
-	ITEM_MODEL("minecraft:item_model"),
-	LORE("minecraft:lore"),
-	RARITY("minecraft:rarity"),
-	ENCHANTMENTS("minecraft:enchantments"),
-	CAN_PLACE_ON("minecraft:can_place_on"),
-	CAN_BREAK("minecraft:can_break"),
-	ATTRIBUTE_MODIFIERS("minecraft:attribute_modifiers"),
-	CUSTOM_MODEL_DATA("minecraft:custom_model_data"),
-	HIDE_ADDITIONAL_TOOLTIP("minecraft:hide_additional_tooltip"),
-	HIDE_TOOLTIP("minecraft:hide_tooltip"),
-	REPAIR_COST("minecraft:repair_cost"),
-	CREATIVE_SLOT_LOCK("minecraft:creative_slot_lock"),
-	ENCHANTMENT_GLINT_OVERRIDE("minecraft:enchantment_glint_override"),
-	INTANGIBLE_PROJECTILE("minecraft:intangible_projectile"),
-	FOOD("minecraft:food"),
-	CONSUMABLE("minecraft:consumable"),
-	USE_REMAINDER("minecraft:use_remainder"),
-	USE_COOLDOWN("minecraft:use_cooldown"),
-	DAMAGE_RESISTANT("minecraft:damage_resistant"),
-	TOOL("minecraft:tool"),
-	ENCHANTABLE("minecraft:enchantable"),
-	EQUIPPABLE("minecraft:equippable"),
-	REPAIRABLE("minecraft:repairable"),
-	GLIDER("minecraft:glider"),
-	TOOLTIP_STYLE("minecraft:tooltip_style"),
-	DEATH_PROTECTION("minecraft:death_protection"),
-	STORED_ENCHANTMENTS("minecraft:stored_enchantments"),
-	DYED_COLOR("minecraft:dyed_color"),
-	MAP_COLOR("minecraft:map_color"),
-	MAP_ID("minecraft:map_id"),
-	MAP_DECORATIONS("minecraft:map_decorations"),
-	MAP_POST_PROCESSING("minecraft:map_post_processing"),
-	CHARGED_PROJECTILES("minecraft:charged_projectiles"),
-	BUNDLE_CONTENTS("minecraft:bundle_contents"),
-	POTION_CONTENTS("minecraft:potion_contents"),
-	SUSPICIOUS_STEW_EFFECTS("minecraft:suspicious_stew_effects"),
-	WRITABLE_BOOK_CONTENT("minecraft:writable_book_content"),
-	WRITTEN_BOOK_CONTENT("minecraft:written_book_content"),
-	TRIM("minecraft:trim"),
-	DEBUG_STICK_STATE("minecraft:debug_stick_state"),
-	ENTITY_DATA("minecraft:entity_data"),
-	BUCKET_ENTITY_DATA("minecraft:bucket_entity_data"),
-	BLOCK_ENTITY_DATA("minecraft:block_entity_data"),
-	INSTRUMENT("minecraft:instrument"),
-	OMINOUS_BOTTLE_AMPLIFIER("minecraft:ominous_bottle_amplifier"),
-	JUKEBOX_PLAYABLE("minecraft:jukebox_playable"),
-	RECIPES("minecraft:recipes"),
-	LODESTONE_TRACKER("minecraft:lodestone_tracker"),
-	FIREWORK_EXPLOSION("minecraft:firework_explosion"),
-	FIREWORKS("minecraft:fireworks"),
-	PROFILE("minecraft:profile"),
-	NOTE_BLOCK_SOUND("minecraft:note_block_sound"),
-	BANNER_PATTERNS("minecraft:banner_patterns"),
-	BASE_COLOR("minecraft:base_color"),
-	POT_DECORATIONS("minecraft:pot_decorations"),
-	CONTAINER("minecraft:container"),
-	BLOCK_STATE("minecraft:block_state"),
-	BEES("minecraft:bees"),
-	LOCK("minecraft:lock"),
-	CONTAINER_LOOT("minecraft:container_loot");
+	public static final RegistryKey<ComponentType> REGISTRY_KEY = Registries.getRegistryKey(ComponentType.class);
 	
-	private static List<ComponentType> VALUES;
+	public static final NamespacedKey
+	CUSTOM_DATA = NamespacedKey.literal("minecraft:custom_data"),
+	MAX_STACK_SIZE = NamespacedKey.literal("minecraft:max_stack_size"),
+	MAX_DAMAGE = NamespacedKey.literal("minecraft:max_damage"),
+	DAMAGE = NamespacedKey.literal("minecraft:damage"),
+	UNBREAKABLE = NamespacedKey.literal("minecraft:unbreakable"),
+	CUSTOM_NAME = NamespacedKey.literal("minecraft:custom_name"),
+	ITEM_NAME = NamespacedKey.literal("minecraft:item_name"),
+	ITEM_MODEL = NamespacedKey.literal("minecraft:item_model"),
+	LORE = NamespacedKey.literal("minecraft:lore"),
+	RARITY = NamespacedKey.literal("minecraft:rarity"),
+	ENCHANTMENTS = NamespacedKey.literal("minecraft:enchantments"),
+	CAN_PLACE_ON = NamespacedKey.literal("minecraft:can_place_on"),
+	CAN_BREAK = NamespacedKey.literal("minecraft:can_break"),
+	ATTRIBUTE_MODIFIERS = NamespacedKey.literal("minecraft:attribute_modifiers"),
+	CUSTOM_MODEL_DATA = NamespacedKey.literal("minecraft:custom_model_data"),
+	REPAIR_COST = NamespacedKey.literal("minecraft:repair_cost"),
+	CREATIVE_SLOT_LOCK = NamespacedKey.literal("minecraft:creative_slot_lock"),
+	ENCHANTMENT_GLINT_OVERRIDE = NamespacedKey.literal("minecraft:enchantment_glint_override"),
+	INTANGIBLE_PROJECTILE = NamespacedKey.literal("minecraft:intangible_projectile"),
+	FOOD = NamespacedKey.literal("minecraft:food"),
+	CONSUMABLE = NamespacedKey.literal("minecraft:consumable"),
+	USE_REMAINDER = NamespacedKey.literal("minecraft:use_remainder"),
+	USE_COOLDOWN = NamespacedKey.literal("minecraft:use_cooldown"),
+	DAMAGE_RESISTANT = NamespacedKey.literal("minecraft:damage_resistant"),
+	TOOL = NamespacedKey.literal("minecraft:tool"),
+	ENCHANTABLE = NamespacedKey.literal("minecraft:enchantable"),
+	EQUIPPABLE = NamespacedKey.literal("minecraft:equippable"),
+	REPAIRABLE = NamespacedKey.literal("minecraft:repairable"),
+	GLIDER = NamespacedKey.literal("minecraft:glider"),
+	TOOLTIP_STYLE = NamespacedKey.literal("minecraft:tooltip_style"),
+	DEATH_PROTECTION = NamespacedKey.literal("minecraft:death_protection"),
+	STORED_ENCHANTMENTS = NamespacedKey.literal("minecraft:stored_enchantments"),
+	DYED_COLOR = NamespacedKey.literal("minecraft:dyed_color"),
+	MAP_COLOR = NamespacedKey.literal("minecraft:map_color"),
+	MAP_ID = NamespacedKey.literal("minecraft:map_id"),
+	MAP_DECORATIONS = NamespacedKey.literal("minecraft:map_decorations"),
+	MAP_POST_PROCESSING = NamespacedKey.literal("minecraft:map_post_processing"),
+	CHARGED_PROJECTILES = NamespacedKey.literal("minecraft:charged_projectiles"),
+	BUNDLE_CONTENTS = NamespacedKey.literal("minecraft:bundle_contents"),
+	POTION_CONTENTS = NamespacedKey.literal("minecraft:potion_contents"),
+	SUSPICIOUS_STEW_EFFECTS = NamespacedKey.literal("minecraft:suspicious_stew_effects"),
+	WRITABLE_BOOK_CONTENT = NamespacedKey.literal("minecraft:writable_book_content"),
+	WRITTEN_BOOK_CONTENT = NamespacedKey.literal("minecraft:written_book_content"),
+	TRIM = NamespacedKey.literal("minecraft:trim"),
+	DEBUG_STICK_STATE = NamespacedKey.literal("minecraft:debug_stick_state"),
+	ENTITY_DATA = NamespacedKey.literal("minecraft:entity_data"),
+	BUCKET_ENTITY_DATA = NamespacedKey.literal("minecraft:bucket_entity_data"),
+	BLOCK_ENTITY_DATA = NamespacedKey.literal("minecraft:block_entity_data"),
+	INSTRUMENT = NamespacedKey.literal("minecraft:instrument"),
+	OMINOUS_BOTTLE_AMPLIFIER = NamespacedKey.literal("minecraft:ominous_bottle_amplifier"),
+	JUKEBOX_PLAYABLE = NamespacedKey.literal("minecraft:jukebox_playable"),
+	RECIPES = NamespacedKey.literal("minecraft:recipes"),
+	LODESTONE_TRACKER = NamespacedKey.literal("minecraft:lodestone_tracker"),
+	FIREWORK_EXPLOSION = NamespacedKey.literal("minecraft:firework_explosion"),
+	FIREWORKS = NamespacedKey.literal("minecraft:fireworks"),
+	PROFILE = NamespacedKey.literal("minecraft:profile"),
+	NOTE_BLOCK_SOUND = NamespacedKey.literal("minecraft:note_block_sound"),
+	BANNER_PATTERNS = NamespacedKey.literal("minecraft:banner_patterns"),
+	BASE_COLOR = NamespacedKey.literal("minecraft:base_color"),
+	POT_DECORATIONS = NamespacedKey.literal("minecraft:pot_decorations"),
+	CONTAINER = NamespacedKey.literal("minecraft:container"),
+	BLOCK_STATE = NamespacedKey.literal("minecraft:block_state"),
+	BEES = NamespacedKey.literal("minecraft:bees"),
+	LOCK = NamespacedKey.literal("minecraft:lock"),
+	CONTAINER_LOOT = NamespacedKey.literal("minecraft:container_loot"),
+	BREAK_SOUND = NamespacedKey.literal("minecraft:break_sound"),
+	BLOCKS_ATTACKS = NamespacedKey.literal("minecraft:blocks_attacks"),
+	IDENTIFIER = NamespacedKey.literal("atlas:identifier"),
+	POTION_DURATION_SCALE = NamespacedKey.literal("minecraft:potion_duration_scale"),
+	PROVIDES_BANNER_PATTERNS = NamespacedKey.literal("minecraft:provides_banner_patterns"),
+	PROVIDES_TRIM_MATERIAL = NamespacedKey.literal("minecraft:provides_trim_material"),
+	TOOLTIP_DISPLAY = NamespacedKey.literal("minecraft:tooltip_display"),
+	WEAPON = NamespacedKey.literal("minecraft:weapon");
+
+	private ItemComponentFactory factory;
 	
-	private NamespacedKey key;
-	
-	private ComponentType(String key) {
-		this.key = NamespacedKey.literal(key);
+	public ComponentType(ConfigurationSection cfg) {
+		super(cfg);
+		Registry<ItemComponentFactory> registry = Registries.getRegistry(ItemComponentFactory.class);
+		String factoryKey = cfg.getString("factory", "");
+		factory = registry.getOrDefault(factoryKey);
 	}
 	
-	public NamespacedKey getKey() {
-		return key;
+	public ItemComponent createItemComponent() {
+		return factory != null ? factory.createComponent(this) : null;
 	}
 	
-	@Override
-	public int getID() {
-		return ordinal();
+	public ItemComponentFactory getFactory() {
+		return factory;
+	}
+	
+	public void setFactory(ItemComponentFactory factory) {
+		this.factory = factory;
+	}
+	
+	public static ComponentType get(NamespacedKey key) {
+		return getRegistry().get(key);
+	}
+	
+	public static ComponentType nget(CharSequence key) {
+		return getRegistry().get(key);
 	}
 	
 	public static ComponentType getByID(int id) {
-		return getValues().get(id);
+		return getRegistry().getByID(id);
 	}
 	
-	@Override
-	public String getName() {
-		return key.toString();
+	public static ProtocolRegistry<ComponentType> getRegistry() {
+		return REGISTRY_KEY.getRegistry();
 	}
-	
-	/**
-	 * Returns the value represented by the name or null if no matching value has been found
-	 * @param name the name of the value
-	 * @return value or null
-	 */
-	public static ComponentType getByName(String name) {
-		if (name == null)
-			throw new IllegalArgumentException("Name can not be null!");
-		List<ComponentType> values = getValues();
-		final int size = values.size();
-		for (int i = 0; i < size; i++) {
-			ComponentType value = values.get(i);
-			if (value.key.toString().equals(name)) 
-				return value;
-		}
-		return null;
-	}
-	
-	/**
-	 * Returns a immutable List of all Types.<br>
-	 * This method avoid allocation of a new array not like {@link #values()}.
-	 * @return list
-	 */
-	public static List<ComponentType> getValues() {
-		if (VALUES == null)
-			VALUES = List.of(values());
-		return VALUES;
-	}
-	
-	/**
-	 * Releases the system resources used from the values cache
-	 */
-	public static void freeValues() {
-		VALUES = null;
-	}
-
 
 }

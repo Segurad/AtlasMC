@@ -2,34 +2,74 @@ package de.atlasmc.inventory.component;
 
 import java.util.List;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.util.EnumID;
 import de.atlasmc.util.EnumValueCache;
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface WrittenBookContentComponent extends ItemComponent {
 	
-	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:written_book_content");
+	public static final NBTSerializationHandler<WrittenBookContentComponent>
+	NBT_HANDLER = NBTSerializationHandler
+					.builder(WrittenBookContentComponent.class)
+					.include(ItemComponent.NBT_HANDLER)
+					.beginComponent(ComponentType.WRITTEN_BOOK_CONTENT)
+					.chatList("pages", WrittenBookContentComponent::hasPages, WrittenBookContentComponent::getPages, true)
+					.beginComponent("title")
+					.string("raw", WrittenBookContentComponent::getTitle, WrittenBookContentComponent::setTitle)
+					.endComponent()
+					.string("author", WrittenBookContentComponent::getAuthor, WrittenBookContentComponent::setAuthor)
+					.enumIntField("generation", WrittenBookContentComponent::getGeneration, WrittenBookContentComponent::setGeneration, Generation::getByID, Generation.ORGINAL)
+					.boolField("resolved", WrittenBookContentComponent::isResolved, WrittenBookContentComponent::setResolved, false)
+					.endComponent()
+					.build();
 	
+	@Nullable
+	String getTitle();
+	
+	void setTitle(String title);
+	
+	@NotNull
 	List<Chat> getPages();
 	
 	boolean hasPages();
 	
-	void addPage(Chat page);
+	default boolean addPage(@NotNull Chat page) {
+		if (page == null)
+			throw new IllegalArgumentException("Page can not be null!");
+		return getPages().add(page);
+	}
 	
-	void removePage(Chat page);
+	default boolean removePage(@NotNull Chat page) {
+		if (page == null)
+			throw new IllegalArgumentException("Page can not be null!");
+		if (hasPages())
+			return getPages().remove(page);
+		return false;
+	}
 	
+	@Nullable
 	String getAuthor();
 	
 	void setAuthor(String author);
 	
+	@NotNull
 	Generation getGeneration();
 	
-	void setGeneration(Generation generation);
+	void setGeneration(@NotNull Generation generation);
 	
 	boolean isResolved();
 	
 	void setResolved(boolean resolved);
+	
+	WrittenBookContentComponent clone();
+	
+	@Override
+	default NBTSerializationHandler<? extends ItemComponent> getNBTHandler() {
+		return NBT_HANDLER;
+	}
 	
 	public static enum Generation implements EnumID, EnumValueCache {
 		

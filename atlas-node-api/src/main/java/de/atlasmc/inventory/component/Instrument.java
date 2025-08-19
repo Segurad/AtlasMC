@@ -7,6 +7,7 @@ import de.atlasmc.registry.ProtocolRegistryValueBase;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
+import de.atlasmc.registry.RegistryKey;
 import de.atlasmc.sound.Sound;
 import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
@@ -16,10 +17,9 @@ public class Instrument extends ProtocolRegistryValueBase implements NBTSerializ
 	
 	public static final NBTSerializationHandler<Instrument> NBT_HANDLER;
 	
-	private static final ProtocolRegistry<Instrument> REGISTRY;
+	public static final RegistryKey<Instrument> REGISTRY_KEY = Registries.getRegistryKey(Instrument.class);
 	
 	static {
-		REGISTRY = Registries.createRegistry(Instrument.class);
 		NBT_HANDLER = NBTSerializationHandler
 						.builder(Instrument.class)
 						.defaultConstructor(Instrument::new)
@@ -86,19 +86,19 @@ public class Instrument extends ProtocolRegistryValueBase implements NBTSerializ
 	}
 
 	public static Instrument get(NamespacedKey key) {
-		return REGISTRY.get(key);
+		return getRegistry().get(key);
 	}
 	
 	public static Instrument get(String key) {
-		return REGISTRY.get(key);
+		return getRegistry().get(key);
 	}
 	
 	public static Instrument getByID(int id) {
-		return REGISTRY.getByID(id);
+		return getRegistry().getByID(id);
 	}
 	
 	public static ProtocolRegistry<Instrument> getRegistry() {
-		return REGISTRY;
+		return REGISTRY_KEY.getRegistry();
 	}
 	
 	@Override

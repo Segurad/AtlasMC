@@ -1,26 +1,23 @@
 package de.atlasmc.inventory.component;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.entity.DamageType;
-import de.atlasmc.tag.Tag;
+import de.atlasmc.tag.TagKey;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface DamageResistantComponent extends ItemComponent {
-	
-	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:damage_resistant");
 	
 	public static final NBTSerializationHandler<DamageResistantComponent>
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(DamageResistantComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(COMPONENT_KEY)
+					.beginComponent(ComponentType.DAMAGE_RESISTANT)
 					.tagField("types", DamageResistantComponent::getDamageTypes, DamageResistantComponent::setDamageTypes)
 					.endComponent()
 					.build();
 	
-	Tag<DamageType> getDamageTypes();
+	TagKey<DamageType> getDamageTypes();
 	
-	void setDamageTypes(Tag<DamageType> types);
+	void setDamageTypes(TagKey<DamageType> types);
 	
 	DamageResistantComponent clone();
 	

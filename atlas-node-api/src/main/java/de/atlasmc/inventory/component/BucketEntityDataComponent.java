@@ -1,7 +1,6 @@
 package de.atlasmc.inventory.component;
 
 import de.atlasmc.DyeColor;
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.entity.Axolotl.Variant;
 import de.atlasmc.entity.Salmon.Type;
 import de.atlasmc.entity.TropicalFish.Pattern;
@@ -9,13 +8,11 @@ import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface BucketEntityDataComponent extends ItemComponent {
 	
-	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:block_entity_data");
-	
 	public static final NBTSerializationHandler<BucketEntityDataComponent>
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(BucketEntityDataComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(COMPONENT_KEY)
+					.beginComponent(ComponentType.BUCKET_ENTITY_DATA)
 					.boolField("NoAI", BucketEntityDataComponent::hasNoAI, BucketEntityDataComponent::setNoAI, false)
 					.boolField("Silent", BucketEntityDataComponent::isSilent, BucketEntityDataComponent::setSilent, false)
 					.boolField("NoGravity", BucketEntityDataComponent::hasNoGravity, BucketEntityDataComponent::setNoGravity, false)

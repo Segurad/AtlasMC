@@ -1,8 +1,13 @@
 package de.atlasmc.event.entity;
 
+import de.atlasmc.entity.DamageType;
 import de.atlasmc.entity.Entity;
 import de.atlasmc.event.Cancellable;
 import de.atlasmc.event.ServerHandlerList;
+import de.atlasmc.registry.Registries;
+import de.atlasmc.util.dataset.DataSet;
+import de.atlasmc.util.nbt.serialization.NBTSerializable;
+import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public class EntityDamageEvent extends EntityEvent implements Cancellable {
 	
@@ -29,6 +34,63 @@ public class EntityDamageEvent extends EntityEvent implements Cancellable {
 		
 		double calcFinalDamage(Entity damager, Entity damagee, double damage);
 	
+	}
+	
+	public static class DamageReduction implements NBTSerializable {
+		
+		public static final NBTSerializationHandler<DamageReduction>
+		NBT_HANDLER = NBTSerializationHandler
+						.builder(DamageReduction.class)
+						.defaultConstructor(DamageReduction::new)
+						.setRedirectAfterConstruction(false)
+						.dataSetField("type", DamageReduction::getTypes, DamageReduction::setTypes, Registries.getRegistry(DamageType.class))
+						.floatField("base", DamageReduction::getBase, DamageReduction::setBase, 0)
+						.floatField("factor", DamageReduction::getFactor, DamageReduction::setFactor, 0)
+						.floatField("horizontal_blocking_angle", DamageReduction::getBlockAngle, DamageReduction::setBlockAngle, 90)
+						.build();
+		
+		private DataSet<DamageType> types;
+		private float base;
+		private float factor;
+		private float blockAngle = 90;
+		
+		public DataSet<DamageType> getTypes() {
+			return types;
+		}
+		
+		public void setTypes(DataSet<DamageType> types) {
+			this.types = types;
+		}
+		
+		public float getBase() {
+			return base;
+		}
+		
+		public void setBase(float base) {
+			this.base = base;
+		}
+		
+		public float getFactor() {
+			return factor;
+		}
+		
+		public void setFactor(float factor) {
+			this.factor = factor;
+		}
+		
+		public float getBlockAngle() {
+			return blockAngle;
+		}
+		
+		public void setBlockAngle(float blockAngle) {
+			this.blockAngle = blockAngle;
+		}
+
+		@Override
+		public NBTSerializationHandler<? extends DamageReduction> getNBTHandler() {
+			return NBT_HANDLER;
+		}
+		
 	}
 	
 	public static class DamageCause {

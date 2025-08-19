@@ -2,18 +2,16 @@ package de.atlasmc.inventory.component;
 
 import java.util.List;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.block.tile.Banner.Pattern;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface BannerPatternsComponent extends ItemComponent {
 	
-	public static final NamespacedKey COMPONENT_KEY = NamespacedKey.literal("minecraft:banner_patterns");
-	
 	public static final NBTSerializationHandler<BannerPatternsComponent>
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(BannerPatternsComponent.class)
-					.typeList(COMPONENT_KEY, BannerPatternsComponent::hasPatterns, BannerPatternsComponent::getPatterns, Pattern.NBT_HANDLER)
+					.include(ItemComponent.NBT_HANDLER)
+					.typeList(ComponentType.BANNER_PATTERNS, BannerPatternsComponent::hasPatterns, BannerPatternsComponent::getPatterns, Pattern.NBT_HANDLER)
 					.build();
 	
 	BannerPatternsComponent clone();

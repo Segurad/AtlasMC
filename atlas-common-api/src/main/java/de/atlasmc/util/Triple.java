@@ -1,5 +1,9 @@
 package de.atlasmc.util;
 
+import de.atlasmc.util.annotation.Nullable;
+import de.atlasmc.util.annotation.ThreadSafe;
+
+@ThreadSafe
 public final class Triple<A, B, C> {
 	
 	private static final Triple<?, ?, ?> NULL_TRIPLE = new Triple<>(null, null, null);
@@ -14,26 +18,29 @@ public final class Triple<A, B, C> {
 		this.value3 = value3;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static <A, B, C> Triple<A, B, C> of() {
-		return (Triple<A, B, C>) NULL_TRIPLE;
+		@SuppressWarnings("unchecked")
+		Triple<A, B, C> value = (Triple<A, B, C>) NULL_TRIPLE;
+		return value;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static <A, B, C> Triple<A, B, C> of(A value1, B value2, C value3) {
 		if (value1 == null && value2 == null && value3 == null)
-			return (Triple<A, B, C>) NULL_TRIPLE;
+			return of();
 		return new Triple<>(value1, value2, value3);
 	}
 	
+	@Nullable
 	public A getValue1() {
 		return value1;
 	}
 	
+	@Nullable
 	public B getValue2() {
 		return value2;
 	}
 	
+	@Nullable
 	public C getValue3() {
 		return value3;
 	}
