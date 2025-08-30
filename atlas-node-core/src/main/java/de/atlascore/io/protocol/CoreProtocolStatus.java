@@ -25,7 +25,7 @@ public class CoreProtocolStatus extends CoreAbstractProtocol<PacketInbound, Pack
 	}
 
 	@Override
-	public PacketListener createDefaultPacketListener(Object o) {
+	public PacketListener createDefaultPacketListenerIn(Object o) {
 		return new CorePacketListenerStatus((ProxyConnectionHandler) o);
 	}
 

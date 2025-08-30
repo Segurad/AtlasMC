@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
-import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
+import org.mariadb.jdbc.MariaDbPoolDataSource;
 
 import de.atlascore.master.node.CoreNodeManager;
 import de.atlascore.master.permission.CoreSQLPermissionManager;
@@ -33,9 +33,9 @@ import de.atlasmc.util.sql.ScriptRunner;
 @StartupHandlerRegister({ StartupContext.INIT_MASTER })
 class CoreInitMasterStageHandler implements StartupStageHandler {
 
-	private static final int MIN_SCHEMA_VERSION = 1;
-	private static final int CURRENT_SCHEMA_VERSION = 1;
-	private static final int MAX_SCHEMA_VERSION = 1000;
+	private static final int MIN_SCHEMA_VERSION = 0;
+	private static final int CURRENT_SCHEMA_VERSION = 0;
+	private static final int MAX_SCHEMA_VERSION = 100;
 
 	private Log log;
 	private String dbName;
@@ -116,15 +116,19 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 		int poolMinSize = dbConfig.getInt("pool-min-size");
 		int poolMaxSize = dbConfig.getInt("pool-max-size");
 		int poolMaxIdleCount = dbConfig.getInt("pool-max-idle-count", 1);
-		int poolIdleTimeout = dbConfig.getInt("pool-idle-timeout");
-		MysqlConnectionPoolDataSource src = new MysqlConnectionPoolDataSource();
+		int poolIdleTimeout = dbConfig.getInt("pool-idle-timeout", (int) TimeUnit.MINUTES.toMillis(5));
+		String url = "jdbc:mariadb://" + dbHost + ":" + dbPort + "/" + dbName;
+		String params = dbConfig.getString("parameters");
+		if (params != null && !params.isBlank())
+			url += "?" + params;
+		MariaDbPoolDataSource src = new MariaDbPoolDataSource();
 		try {
 			log.info("Connecting to database...");
-			src.setDatabaseName(dbName);
-			src.setPort(dbPort);
-			src.setServerName(dbHost);
-			src.setUser(dbUser);
-			src.setPassword(dbPassword);
+			try {
+				src.setUser(dbUser);
+				src.setPassword(dbPassword);
+			} catch(SQLException e) { /* Silence no url set */  }
+			src.setUrl(url);
 			src.getConnection().close();
 		} catch (SQLException e) {
 			log.error("Unable to establish database connection!", e);
@@ -135,19 +139,16 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 	}
 
 	private boolean prepareDB() {
-		Connection con = null;
-		boolean prepared = false;
-		try {
-			con = this.con.getConnection();
+		try (Connection con = this.con.getConnection(true)) {
 			PreparedStatement stmt = con.prepareStatement(
-					"SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=? AND TABLE_NAME = 'atlas';");
+					"SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=? AND TABLE_NAME = 'schema_versions';");
 			stmt.setString(1, dbName);
 			ResultSet result = stmt.executeQuery();
 			boolean schemaPresent = result.next();
 			stmt.close();
 			result.close();
 			if (schemaPresent) {
-				stmt = con.prepareStatement("SELECT schema_version FROM atlas");
+				stmt = con.prepareStatement("SELECT version FROM schema_versions WHERE plugin = 'atlas-master'");
 				stmt.setFetchSize(1);
 				result = stmt.executeQuery();
 				if (result.next()) {
@@ -158,7 +159,7 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 								schemaVersion, CURRENT_SCHEMA_VERSION);
 					} else if (schemaVersion > CURRENT_SCHEMA_VERSION) {
 						log.warn("Database has newer schema version {} > {}!", schemaVersion, CURRENT_SCHEMA_VERSION);
-						prepared = true;
+						return true;
 					} else if (schemaVersion < MIN_SCHEMA_VERSION) {
 						log.error(
 								"Database has outdated incompatible schema version {} < {}! Atlas won't start until the schema is up to date!",
@@ -166,9 +167,9 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 					} else if (schemaVersion < CURRENT_SCHEMA_VERSION) {
 						log.warn("Database has outdated schema version {} < {}! (Please update your schema version)",
 								schemaVersion, CURRENT_SCHEMA_VERSION);
-						prepared = true;
+						return true;
 					} else {
-						prepared = true;
+						return true;
 					}
 				} else {
 					log.warn("Unable to read atlas database schema version! (Table emtpy?)");
@@ -184,25 +185,22 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 					runner.setSendFullScript(false);
 					runner.runScript(new InputStreamReader(in));
 					PreparedStatement verionStmt = con.prepareStatement(
-							"INSERT INTO atlas (atlas_version, schema_version, installation_date) VALUES (?, ?, ?)");
-					verionStmt.setString(1, Atlas.getSystem().getVersion().toString());
-					verionStmt.setInt(2, CURRENT_SCHEMA_VERSION);
-					verionStmt.setDate(3, new Date(System.currentTimeMillis()));
+							"INSERT INTO schema_versions (name, plugin, plugin-version, version) VALUES (?, ?, ?, ?)");
+					verionStmt.setString(1, "atlas-master");
+					verionStmt.setString(2, "atlas-master");
+					verionStmt.setString(3, Atlas.getSystem().getVersion().toString());
+					verionStmt.setInt(4, CURRENT_SCHEMA_VERSION);
 					verionStmt.execute();
 					verionStmt.close();
-					prepared = true;
+					return true;
 				}
 			}
 		} catch (SQLException e) {
 			log.error("Error while preparing database!", e);
-		} finally {
-			if (con != null)
-				try {
-					con.close();
-				} catch (SQLException e) {
-				}
+		} catch (InterruptedException e) {
+			log.error("Interrupted while waiting for connection!", e);
 		}
-		return prepared;
+		return false;
 	}
 
 }

@@ -3,7 +3,6 @@ package de.atlasmc.entity.spawncondition;
 import java.util.function.Predicate;
 
 import de.atlasmc.Location;
-import de.atlasmc.registry.Registries;
 import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
@@ -12,7 +11,7 @@ public interface Condition extends Predicate<Location>, NBTSerializable {
 	public static final NBTSerializationHandler<Condition>
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(Condition.class)
-					.searchKeyConstructor("type", Registries.getRegistry(ConditionType.class), ConditionType::createCondition, Condition::getType)
+					.searchKeyConstructor("type", ConditionType.REGISTRY_KEY, ConditionType::createCondition, Condition::getType)
 					.build();
 
 	ConditionType getType();

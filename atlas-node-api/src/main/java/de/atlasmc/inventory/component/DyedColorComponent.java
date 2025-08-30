@@ -8,7 +8,7 @@ public interface DyedColorComponent extends ItemComponent {
 	public static final NBTSerializationHandler<DyedColorComponent>
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(DyedColorComponent.class)
-					.color(ComponentType.DYED_COLOR, DyedColorComponent::getColor, DyedColorComponent::setColor)
+					.color(ComponentType.DYED_COLOR.getNamespacedKey(), DyedColorComponent::getColor, DyedColorComponent::setColor)
 					.build();
 	
 	Color getColor();

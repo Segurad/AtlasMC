@@ -10,7 +10,7 @@ public interface ProvidesBannerPatternsComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(ProvidesBannerPatternsComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.tagField(ComponentType.PROVIDES_BANNER_PATTERNS, ProvidesBannerPatternsComponent::getPatterns, ProvidesBannerPatternsComponent::setPatterns)
+					.tagField(ComponentType.PROVIDES_BANNER_PATTERNS.getNamespacedKey(), ProvidesBannerPatternsComponent::getPatterns, ProvidesBannerPatternsComponent::setPatterns)
 					.build();
 
 	TagKey<PatternType> getPatterns();

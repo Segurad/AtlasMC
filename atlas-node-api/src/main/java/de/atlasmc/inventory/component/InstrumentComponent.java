@@ -8,7 +8,7 @@ public interface InstrumentComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(InstrumentComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.registryValue(ComponentType.INSTRUMENT, InstrumentComponent::getInstrument, InstrumentComponent::setInstrument, Instrument.REGISTRY_KEY, Instrument.NBT_HANDLER)
+					.registryValue(ComponentType.INSTRUMENT.getNamespacedKey(), InstrumentComponent::getInstrument, InstrumentComponent::setInstrument, Instrument.REGISTRY_KEY, Instrument.NBT_HANDLER)
 					.build();
 	
 	Instrument getInstrument();

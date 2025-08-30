@@ -12,7 +12,7 @@ public interface LoreComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(LoreComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.chatList(ComponentType.LORE, LoreComponent::hasLore, LoreComponent::getLore, true)
+					.chatList(ComponentType.LORE.getNamespacedKey(), LoreComponent::hasLore, LoreComponent::getLore, true)
 					.build();
 	
 	@NotNull

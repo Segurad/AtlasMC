@@ -12,7 +12,7 @@ public interface IdentifierComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(IdentifierComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.namespacedKey(ComponentType.IDENTIFIER, IdentifierComponent::getIdentifier, IdentifierComponent::setIdentifier)
+					.namespacedKey(ComponentType.IDENTIFIER.getNamespacedKey(), IdentifierComponent::getIdentifier, IdentifierComponent::setIdentifier)
 					.build();
 	
 	void setIdentifier(NamespacedKey id);

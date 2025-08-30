@@ -13,7 +13,7 @@ public interface ConsumableComponent extends ItemComponent {
 	public static final NBTSerializationHandler<ConsumableComponent>
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(ConsumableComponent.class)
-					.beginComponent(ComponentType.CONSUMABLE)
+					.beginComponent(ComponentType.CONSUMABLE.getNamespacedKey())
 					.floatField("consume_seconds", ConsumableComponent::getConsumeSeconds, ConsumableComponent::setConsumeSeconds, 1.6f)
 					.enumStringField("animation", ConsumableComponent::getAnimation, ConsumableComponent::setAnimation, Animation::getByName, Animation.EAT)
 					.addField(Sound.getNBTSoundField("sound", ConsumableComponent::getSound, ConsumableComponent::setSound, EnumSound.ENTITY_GENERIC_EAT))

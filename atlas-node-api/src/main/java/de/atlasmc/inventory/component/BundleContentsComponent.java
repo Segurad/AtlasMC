@@ -11,7 +11,7 @@ public interface BundleContentsComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(BundleContentsComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.typeList(ComponentType.BUNDLE_CONTENTS, BundleContentsComponent::hasItems, BundleContentsComponent::getItems, ItemStack.NBT_HANDLER)
+					.typeList(ComponentType.BUNDLE_CONTENTS.getNamespacedKey(), BundleContentsComponent::hasItems, BundleContentsComponent::getItems, ItemStack.NBT_HANDLER)
 					.build();
 	
 	List<ItemStack> getItems();

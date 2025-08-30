@@ -2,6 +2,7 @@ package de.atlascore.io.netty.channel;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.PacketUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -20,8 +21,11 @@ public class PacketEncoder extends MessageToByteEncoder<Packet> {
 	
 	@Override
 	protected void encode(ChannelHandlerContext ctx, Packet msg, ByteBuf out) throws Exception {
+		final int packetID = msg.getID();
 		PacketUtil.writeVarInt(msg.getID(), out);
-		handler.getProtocol().writePacket(msg, out, handler);
+		@SuppressWarnings("unchecked")
+		PacketIO<Packet> io = (PacketIO<Packet>) handler.getProtocol().getHandlerOut(packetID);
+		io.write(msg, out, handler);
 	}
 
 }

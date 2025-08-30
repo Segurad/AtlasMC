@@ -11,7 +11,7 @@ public interface FireworksComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(FireworksComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(ComponentType.FIREWORKS)
+					.beginComponent(ComponentType.FIREWORKS.getNamespacedKey())
 					.typeList("explosion", FireworksComponent::hasExplosions, FireworksComponent::getExplosions, FireworkExplosion.NBT_HANDLER)
 					.byteField("flight_duration", FireworksComponent::getFlightDuration, FireworksComponent::setFlightDuration, (byte) 1)
 					.endComponent()

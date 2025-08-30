@@ -8,7 +8,7 @@ public interface PotionDurationScaleComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(PotionDurationScaleComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.floatField(ComponentType.POTION_DURATION_SCALE, PotionDurationScaleComponent::getScale, PotionDurationScaleComponent::setScale, 1)
+					.floatField(ComponentType.POTION_DURATION_SCALE.getNamespacedKey(), PotionDurationScaleComponent::getScale, PotionDurationScaleComponent::setScale, 1)
 					.build();
 	
 	float getScale();

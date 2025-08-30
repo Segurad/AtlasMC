@@ -9,7 +9,7 @@ public interface CustomNameComponent extends ItemComponent, Nameable {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(CustomNameComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.chat(ComponentType.CUSTOM_NAME, CustomNameComponent::getCustomName, CustomNameComponent::setCustomName)
+					.chat(ComponentType.CUSTOM_NAME.getNamespacedKey(), CustomNameComponent::getCustomName, CustomNameComponent::setCustomName)
 					.build();
 	
 	CustomNameComponent clone();

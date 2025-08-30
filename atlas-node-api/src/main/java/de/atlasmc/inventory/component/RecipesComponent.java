@@ -11,7 +11,7 @@ public interface RecipesComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(RecipesComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.namespacedKeyListField(ComponentType.RECIPES, RecipesComponent::hasRecipes, RecipesComponent::getRecipes)
+					.namespacedKeyListField(ComponentType.RECIPES.getNamespacedKey(), RecipesComponent::hasRecipes, RecipesComponent::getRecipes)
 					.build();
 	
 	List<NamespacedKey> getRecipes();

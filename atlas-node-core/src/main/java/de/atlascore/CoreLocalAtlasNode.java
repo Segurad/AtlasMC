@@ -1,6 +1,7 @@
 package de.atlascore;
 
 import java.security.PublicKey;
+import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -92,6 +93,18 @@ public class CoreLocalAtlasNode implements LocalAtlasNode {
 	@Override
 	public ProxyManager getProxyManager() {
 		return proxyManager;
+	}
+
+	@Override
+	public Collection<NodePlayer> getPlayers() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getPlayerCount() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

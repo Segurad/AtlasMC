@@ -141,11 +141,19 @@ public class CoreInventory implements Inventory {
 		int restAmount = item.getAmount();
 		if (restAmount <= 0)
 			return 0;
+		restAmount = fillStacks(item, restAmount);
+		return fillGaps(item, restAmount);
+	}
+	
+	private int fillStacks(ItemStack item, int count) {
+		int restAmount = count;
+		final int itemMax = item.getMaxAmount();
+		// stack to existing stacks
 		for (int i = 0; i < storageSize; i++) {
 			ItemStack slotItem = contents[i];
 			if (slotItem == null)
 				continue;
-			int missing = slotItem.getType().getMaxAmount()-slotItem.getAmount();
+			int missing = itemMax-slotItem.getAmount();
 			if (missing <= 0)
 				continue;
 			if (!slotItem.isSimilar(slotItem, true))
@@ -161,10 +169,16 @@ public class CoreInventory implements Inventory {
 			clone.setAmount(clone.getAmount()+missing);
 			setItem(i, clone, false);
 		}
+		return restAmount;
+	}
+	
+	private int fillGaps(ItemStack item, int count) {
+		final int itemMax = item.getMaxAmount();
+		int restAmount = count;
 		for (int i = 0; i < storageSize; i++) {
 			if (contents[i] == null) {
-				if (restAmount > item.getType().getMaxAmount()) {
-					restAmount -= item.getType().getMaxAmount();
+				if (restAmount > itemMax) {
+					restAmount -= itemMax;
 					setItem(i, item, false);
 				} else {
 					ItemStack clone = item.clone();

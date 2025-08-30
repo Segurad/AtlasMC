@@ -10,7 +10,7 @@ public interface DamageResistantComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(DamageResistantComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(ComponentType.DAMAGE_RESISTANT)
+					.beginComponent(ComponentType.DAMAGE_RESISTANT.getNamespacedKey())
 					.tagField("types", DamageResistantComponent::getDamageTypes, DamageResistantComponent::setDamageTypes)
 					.endComponent()
 					.build();

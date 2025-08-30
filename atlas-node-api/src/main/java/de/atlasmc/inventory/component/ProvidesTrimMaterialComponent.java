@@ -9,7 +9,7 @@ public interface ProvidesTrimMaterialComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(ProvidesTrimMaterialComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.registryValue(ComponentType.PROVIDES_TRIM_MATERIAL, ProvidesTrimMaterialComponent::getMaterial, ProvidesTrimMaterialComponent::setMaterial, TrimMaterial.REGISTRY_KEY)
+					.registryValue(ComponentType.PROVIDES_TRIM_MATERIAL.getNamespacedKey(), ProvidesTrimMaterialComponent::getMaterial, ProvidesTrimMaterialComponent::setMaterial, TrimMaterial.REGISTRY_KEY)
 					.build();
 	
 	TrimMaterial getMaterial();

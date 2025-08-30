@@ -3,7 +3,6 @@ package de.atlasmc.potion;
 import java.util.UUID;
 
 import de.atlasmc.entity.LivingEntity;
-import de.atlasmc.registry.Registries;
 import de.atlasmc.util.annotation.InternalAPI;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
@@ -14,7 +13,7 @@ public interface PotionEffect extends Cloneable {
 	public static final NBTSerializationHandler<PotionEffect>
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(PotionEffect.class)
-					.searchKeyConstructor("id", Registries.getRegistry(PotionEffectType.class), PotionEffectType::createEffect, PotionEffect::getType)
+					.searchKeyConstructor("id", PotionEffectType.REGISTRY_KEY, PotionEffectType::createEffect, PotionEffect::getType)
 					.build();
 	
 	PotionEffect clone();

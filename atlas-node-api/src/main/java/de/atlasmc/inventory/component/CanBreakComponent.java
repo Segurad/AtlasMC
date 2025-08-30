@@ -9,7 +9,7 @@ public interface CanBreakComponent extends AbstractBlockPredicateComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(CanBreakComponent.class)
 					.include(AbstractBlockPredicateComponent.NBT_HANDLER)
-					.typeList(ComponentType.CAN_BREAK, CanBreakComponent::hasPredicates, CanBreakComponent::getPredicates, BlockPredicate.NBT_HANDLER)
+					.typeList(ComponentType.CAN_BREAK.getNamespacedKey(), CanBreakComponent::hasPredicates, CanBreakComponent::getPredicates, BlockPredicate.NBT_HANDLER)
 					.build();
 	
 	CanBreakComponent clone();

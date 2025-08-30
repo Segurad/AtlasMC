@@ -44,45 +44,45 @@ public class CorePermissionHandler extends CorePermissionGroupHolder implements 
 				newCtx = groupCtxs.get(newValue);
 			}
 		}
-		if (oldCtx == null && newCtx == null)
-			return; // no changes everything is null
 		if (oldCtx == newCtx)
-			return; // no changes everything is equal
-		synchronized (this) {
-			PermissionContext[] oldActive = this.activeContexts;
-			PermissionContext[] newContexts = null;
-			if (oldCtx == null) {
-				if (newCtx != null) { // new ctx active
-					newContexts = Arrays.copyOf(oldActive, oldActive.length + 1);
-					newContexts[newContexts.length - 1] = newCtx;
-				}
-			} else if (newCtx == null) { // ctx no longer active
-				int length = oldActive.length - 1;
-				if (length < 1) {
-					activeContexts = EMPTY;
-					return; // avoid creating empty arrays
-				}
-				PermissionContext[] newActive = new PermissionContext[oldActive.length - 1];
-				int i = 0;
-				for (PermissionContext ctx : oldActive) {
-					if (ctx == oldCtx)
-						continue;
-					newActive[i] = ctx;
-				}
-			} else if (oldCtx != newCtx) { // ctx has changed
-				newContexts = oldActive;
-				final int length = newContexts.length;
-				for (int i = 0; i < length; i++) {
-					if (newContexts[i] != oldCtx)
-						continue;
-					newContexts[i] = newCtx;
-					break;
-				}
-			} else { // no changes
-				newContexts = oldActive;
+			return;
+		rebuildActivePermissionContexts(oldCtx, newCtx);
+	}
+	
+	private synchronized void rebuildActivePermissionContexts(PermissionContext oldCtx, PermissionContext newCtx) {
+		PermissionContext[] oldActive = this.activeContexts;
+		PermissionContext[] newContexts = null;
+		if (oldCtx == null) {
+			if (newCtx != null) { // new ctx active
+				newContexts = Arrays.copyOf(oldActive, oldActive.length + 1);
+				newContexts[newContexts.length - 1] = newCtx;
 			}
-			activeContexts = newContexts;
+		} else if (newCtx == null) { // ctx no longer active
+			int length = oldActive.length - 1;
+			if (length < 1) {
+				activeContexts = EMPTY;
+				return; // avoid creating empty arrays
+			}
+			PermissionContext[] newActive = new PermissionContext[oldActive.length - 1];
+			int i = 0;
+			for (PermissionContext ctx : oldActive) {
+				if (ctx == oldCtx)
+					continue;
+				newActive[i] = ctx;
+			}
+		} else if (oldCtx != newCtx) { // ctx has changed
+			newContexts = oldActive;
+			final int length = newContexts.length;
+			for (int i = 0; i < length; i++) {
+				if (newContexts[i] != oldCtx)
+					continue;
+				newContexts[i] = newCtx;
+				break;
+			}
+		} else { // no changes
+			newContexts = oldActive;
 		}
+		activeContexts = newContexts;
 	}
 	
 	@Override

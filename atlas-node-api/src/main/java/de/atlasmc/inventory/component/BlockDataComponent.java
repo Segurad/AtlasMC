@@ -9,7 +9,7 @@ public interface BlockDataComponent extends AbstractBlockDataComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(BlockDataComponent.class)
 					.include(AbstractBlockDataComponent.NBT_HANDLER)
-					.addField(BlockDataProperty.getBlockDataPropertiesMapField(ComponentType.BLOCK_STATE, BlockDataComponent::hasProperties, BlockDataComponent::getProperties))
+					.addField(BlockDataProperty.getBlockDataPropertiesMapField(ComponentType.BLOCK_STATE.getNamespacedKey(), BlockDataComponent::hasProperties, BlockDataComponent::getProperties))
 					.build();
 	
 	BlockDataComponent clone();

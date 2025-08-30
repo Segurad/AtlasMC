@@ -92,12 +92,12 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 			try {
 				secret = cipher.doFinal(packet.secret);
 			} catch (IllegalBlockSizeException | BadPaddingException e) {
-				throw new ProtocolException("Unable to decrypt secret!", e, packet, handler.con.getProtocol());
+				throw new ProtocolException("Unable to decrypt secret!", e, handler.con.getProtocol(), packet);
 			}
 			try {
 				token = cipher.doFinal(packet.verifyToken);
 			} catch (IllegalBlockSizeException | BadPaddingException e) {
-				throw new ProtocolException("Unable to decrypt verify token!", e, packet, handler.con.getProtocol());
+				throw new ProtocolException("Unable to decrypt verify token!", e, handler.con.getProtocol(), packet);
 			}
 			if (!token.equals(handler.verifyToken)) {
 				throw new ProtocolException("Client send invalid verify token!");
@@ -119,7 +119,7 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 			ProtocolAdapter adapter = AtlasNode.getProtocolAdapter(version);
 			Protocol configuration = adapter.getConfigurationProtocol();
 			PlayerConnection con = new CorePlayerConnection(handler.player, handler.con, adapter);
-			handler.con.setProtocol(configuration, configuration.createDefaultPacketListener(con));
+			handler.con.setProtocol(configuration, configuration.createDefaultPacketListenerIn(con));
 		}, true);
 		initHandler(PacketInLoginPluginResponse.class, (handle, packet) -> {
 			// TODO handle plugin response

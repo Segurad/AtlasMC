@@ -15,7 +15,7 @@ public interface WrittenBookContentComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(WrittenBookContentComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(ComponentType.WRITTEN_BOOK_CONTENT)
+					.beginComponent(ComponentType.WRITTEN_BOOK_CONTENT.getNamespacedKey())
 					.chatList("pages", WrittenBookContentComponent::hasPages, WrittenBookContentComponent::getPages, true)
 					.beginComponent("title")
 					.string("raw", WrittenBookContentComponent::getTitle, WrittenBookContentComponent::setTitle)

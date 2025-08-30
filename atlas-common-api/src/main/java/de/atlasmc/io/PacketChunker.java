@@ -1,5 +1,7 @@
 package de.atlasmc.io;
 
+import de.atlasmc.util.annotation.Nullable;
+
 /**
  * Used when large amounts of data should be transfered.
  * The {@link ConnectionHandler} will request the packet when the last one was written.
@@ -14,6 +16,7 @@ public interface PacketChunker<P extends Packet> {
 	 * The chunker must be re send to the connection
 	 * @return chunk or null
 	 */
-	public Packet nextChunk();
+	@Nullable
+	Packet nextChunk();
 
 }

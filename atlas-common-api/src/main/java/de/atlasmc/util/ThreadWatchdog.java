@@ -23,7 +23,7 @@ public class ThreadWatchdog extends TickingThread {
 	}
 	
 	private ThreadWatchdog() {
-		super("Watchdog", 5000, Logging.getLogger("Watchdog", "Atlas"), false);
+		super("Atlas-Watchdog-Daemon", 5000, Logging.getLogger("Watchdog", "Atlas"), false);
 		logger.sendToConsole(true);
 		setDaemon(true);
 	}

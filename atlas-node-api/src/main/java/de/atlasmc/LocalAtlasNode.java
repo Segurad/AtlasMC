@@ -1,5 +1,6 @@
 package de.atlasmc;
 
+import java.util.Collection;
 import java.util.UUID;
 
 import de.atlasmc.atlasnetwork.AtlasNode;
@@ -24,6 +25,10 @@ public interface LocalAtlasNode extends AtlasNode {
 	NodePlayer getPlayer(String name);
 	
 	NodePlayer getPlayer(UUID name);
+	
+	Collection<NodePlayer> getPlayers();
+	
+	int getPlayerCount();
 	
 	void setStatus(NodeStatus status);
 

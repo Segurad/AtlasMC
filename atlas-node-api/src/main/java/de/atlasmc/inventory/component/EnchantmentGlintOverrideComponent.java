@@ -8,7 +8,7 @@ public interface EnchantmentGlintOverrideComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(EnchantmentGlintOverrideComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.boolField(ComponentType.ENCHANTMENT_GLINT_OVERRIDE, EnchantmentGlintOverrideComponent::hasGlint, EnchantmentGlintOverrideComponent::setGlint)
+					.boolField(ComponentType.ENCHANTMENT_GLINT_OVERRIDE.getNamespacedKey(), EnchantmentGlintOverrideComponent::hasGlint, EnchantmentGlintOverrideComponent::setGlint)
 					.build();
 	
 	boolean hasGlint();

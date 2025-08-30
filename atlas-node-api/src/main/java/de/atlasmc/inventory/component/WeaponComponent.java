@@ -8,7 +8,7 @@ public interface WeaponComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(WeaponComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(ComponentType.WEAPON)
+					.beginComponent(ComponentType.WEAPON.getNamespacedKey())
 					.intField("item_damage_per_attack", WeaponComponent::getItemDamagePerAttack, WeaponComponent::setItemDamagePerAttack, 0)
 					.floatField("disable_blocking_for_seconds", WeaponComponent::getDisableBlockSeconds, WeaponComponent::setDisableBlockSeconds, 0)
 					.endComponent()

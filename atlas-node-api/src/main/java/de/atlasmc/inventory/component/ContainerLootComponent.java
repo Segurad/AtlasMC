@@ -8,7 +8,7 @@ public interface ContainerLootComponent extends ItemComponent, LootTableHolder {
 	public static final NBTSerializationHandler<ContainerLootComponent> 
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(ContainerLootComponent.class)
-					.beginComponent(ComponentType.CONTAINER_LOOT)
+					.beginComponent(ComponentType.CONTAINER_LOOT.getNamespacedKey())
 					.include(LootTableHolder.NBT_HANDLER)
 					.endComponent()
 					.build();

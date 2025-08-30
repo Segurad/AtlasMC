@@ -16,7 +16,7 @@ public interface TrimComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(TrimComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(ComponentType.TRIM)
+					.beginComponent(ComponentType.TRIM.getNamespacedKey())
 					.registryValue("pattern", TrimComponent::getTrimMaterial, TrimComponent::setTrimMaterial, TrimMaterial.REGISTRY_KEY)
 					.registryValue("material", TrimComponent::getTrimPattern, TrimComponent::setTrimPattern, TrimPattern.REGISTRY_KEY)
 					.endComponent()

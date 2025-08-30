@@ -7,13 +7,22 @@ import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import javax.sql.ConnectionEvent;
 import javax.sql.ConnectionEventListener;
 import javax.sql.ConnectionPoolDataSource;
 import javax.sql.PooledConnection;
 
+import de.atlasmc.util.NumberConversion;
+
 public class SQLConnectionPool {
+	
+	public static final long DEFAULT_FETCH_TIMOUT;
+	
+	static {
+		DEFAULT_FETCH_TIMOUT = NumberConversion.toLong(System.getProperty("de.atlasmc.util.sql.defaultConnectionPoolFetchTimout"), 500);
+	}
 	
 	private ConnectionPoolDataSource source;
 	private BlockingQueue<PoolEntry> consAvailable;
@@ -39,23 +48,47 @@ public class SQLConnectionPool {
 		this.consFetched = ConcurrentHashMap.newKeySet();
 	}
 	
-	public Connection getConnection() throws SQLException {
-		return getConnection(true);
+	public Connection getConnection(boolean block) throws SQLException, InterruptedException {
+		return block ? getConnection(DEFAULT_FETCH_TIMOUT, TimeUnit.MILLISECONDS) : getConnection();
 	}
 	
-	private synchronized Connection getConnection(boolean block) throws SQLException {
+	public synchronized Connection getConnection() throws SQLException {
 		ensureOpen();
 		PoolEntry con = null;
-		long maxIdleTime = System.currentTimeMillis() - maxIdleTimeout;
+		final long maxIdleTime = System.currentTimeMillis() - maxIdleTimeout;
 		do {
 			con = consAvailable.poll();
 			if (con == null) {
-				if (maxSize == 0 || size < maxSize) {
+				if (maxSize == 0 || size < maxSize) { // can create new connections
 					con = createConnection();
 				} else {
 					return null;
 				}
-			} else if (con.lastActive >= maxIdleTime) {
+			} else if (con.lastActive < maxIdleTime) {
+				con.discard();
+				con = null;
+			}
+		} while (con == null);
+		consFetched.add(con);
+		return con.getConnection();
+	}
+	
+	public synchronized Connection getConnection(long timeout, TimeUnit unit) throws SQLException, InterruptedException {
+		ensureOpen();
+		PoolEntry con = null;
+		final long maxIdleTime = System.currentTimeMillis() - maxIdleTimeout;
+		do {
+			con = consAvailable.poll();
+			if (con == null) {
+				if (maxSize == 0 || size < maxSize) { // can create new connections
+					con = createConnection();
+				} else if (timeout > 0) { // blocks until new connection is available
+					con = consAvailable.poll(timeout, unit);
+				} else {
+					return null;
+				}
+			}
+			if (con.lastActive < maxIdleTime) {
 				con.discard();
 				con = null;
 			}

@@ -9,7 +9,7 @@ public interface ItemNameComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(ItemNameComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.chat(ComponentType.ITEM_NAME, ItemNameComponent::getName, ItemNameComponent::setName)
+					.chat(ComponentType.ITEM_NAME.getNamespacedKey(), ItemNameComponent::getName, ItemNameComponent::setName)
 					.build();
 	
 	Chat getName();

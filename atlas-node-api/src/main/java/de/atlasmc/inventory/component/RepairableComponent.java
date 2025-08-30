@@ -10,7 +10,7 @@ public interface RepairableComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(RepairableComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(ComponentType.REPAIRABLE)
+					.beginComponent(ComponentType.REPAIRABLE.getNamespacedKey())
 					.dataSetField("items", RepairableComponent::getItems, RepairableComponent::setItems, ItemType.getRegistry())
 					.endComponent()
 					.build();

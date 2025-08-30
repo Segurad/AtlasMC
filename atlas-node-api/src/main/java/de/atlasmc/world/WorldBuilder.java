@@ -9,7 +9,7 @@ import de.atlasmc.util.Builder;
 import de.atlasmc.util.Pair;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.configuration.ConfigurationSection;
-import de.atlasmc.util.configuration.InvalidConfigurationException;
+import de.atlasmc.util.configuration.ConfigurationException;
 import de.atlasmc.world.entitytracker.EntityTrackerFactory;
 
 public class WorldBuilder implements Builder<World> {
@@ -42,7 +42,7 @@ public class WorldBuilder implements Builder<World> {
 	 * @param key section key
 	 * @param config the config used
 	 * @return pair of factory and config or empty
-	 * @throws InvalidConfigurationException if the defined factory is not found
+	 * @throws ConfigurationException if the defined factory is not found
 	 */
 	@NotNull
 	private <T> Pair<T, ConfigurationSection> getOptionalFactory(Class<T> clazz, String key, ConfigurationSection config) {
@@ -54,7 +54,7 @@ public class WorldBuilder implements Builder<World> {
 			Registry<T> registry = Registries.getRegistry(clazz);
  			T factory = registry.get(optinalFactoryKey);
 			if (factory == null)
-				throw new InvalidConfigurationException("Unable to find the defined \"" + key + ".factory\": " + optinalFactoryKey);
+				throw new ConfigurationException("Unable to find the defined \"" + key + ".factory\": " + optinalFactoryKey);
 			ConfigurationSection factoryCfg = optionalCfg.getConfigurationSection("config");
 			return Pair.of(factory, factoryCfg);
 		}
@@ -70,7 +70,7 @@ public class WorldBuilder implements Builder<World> {
 		} else {
 			value = registry.get(key);
 			if (value == null)
-				throw new InvalidConfigurationException("Unable to find the defined \"" + key + "\": " + raw);
+				throw new ConfigurationException("Unable to find the defined \"" + key + "\": " + raw);
 		}
 		return value;
 	}

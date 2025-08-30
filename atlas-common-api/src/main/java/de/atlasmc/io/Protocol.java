@@ -1,25 +1,55 @@
 package de.atlasmc.io;
 
-import java.io.IOException;
+import de.atlasmc.util.annotation.Nullable;
 
-import io.netty.buffer.ByteBuf;
-
+/**
+ * A network protocol
+ */
 public interface Protocol {
 	
+	/**
+	 * Returns a packet handler for the given id.
+	 * @param id
+	 * @return handler or null
+	 */
+	@Nullable
 	PacketIO<? extends Packet> getHandlerIn(int id);
 	
+	/**
+	 * Returns the packet handler for the given id.
+	 * @param id
+	 * @return handler or null
+	 */
+	@Nullable
 	PacketIO<? extends Packet> getHandlerOut(int id);
 	
+	/**
+	 * Returns a new packet for the given id.
+	 * @param id
+	 * @return packet or null
+	 */
+	@Nullable
 	Packet createPacketIn(int id);
 	
+	/**
+	 * Returns a new packet for the given id.
+	 * @param id
+	 * @return packet or null
+	 */
+	@Nullable
 	Packet createPacketOut(int id);
 	
-	<P extends Packet> P readPacket(P packet, ByteBuf in, ConnectionHandler con) throws IOException;
-	
-	<P extends Packet> P writePacket(P packet, ByteBuf out, ConnectionHandler con) throws IOException;
-	
+	/**
+	 * Returns the protocols version id
+	 * @return version id
+	 */
 	int getVersion();
 	
-	PacketListener createDefaultPacketListener(Object o);
+	/**
+	 * Creates the default packet listener for this protocol
+	 * @param o
+	 * @return listener
+	 */
+	PacketListener createDefaultPacketListenerIn(Object o);
 
 }

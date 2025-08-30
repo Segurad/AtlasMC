@@ -8,7 +8,7 @@ public interface MapIDComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(MapIDComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.intField(ComponentType.MAP_ID, MapIDComponent::getMapID, MapIDComponent::setMapID)
+					.intField(ComponentType.MAP_ID.getNamespacedKey(), MapIDComponent::getMapID, MapIDComponent::setMapID)
 					.build();
 	
 	int getMapID();

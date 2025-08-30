@@ -13,7 +13,7 @@ public interface ToolComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(ToolComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(ComponentType.TOOL)
+					.beginComponent(ComponentType.TOOL.getNamespacedKey())
 					.floatField("default_mining_speed", ToolComponent::getDefaultMinigSpeed, ToolComponent::setDefaultMinigSpeed, 1)
 					.intField("damage_per_block", ToolComponent::getDamagePerBlock, ToolComponent::setDamagePerBlock, 1)
 					.boolField("can_destroy_blocks_in_creative", ToolComponent::canDestroyBlocksInCreative, ToolComponent::setDestroyBlockInCreative, true)

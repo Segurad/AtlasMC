@@ -11,14 +11,22 @@ public class ProtocolException extends RuntimeException {
 	private final Protocol protocol;
 	
 	public ProtocolException(String message) {
-		this(message, null);
+		this(message, null, null);
+	}
+	
+	public ProtocolException(String message, Protocol protocol) {
+		this(message, null, protocol, null);
+	}
+	
+	public ProtocolException(String message, Protocol protocol, Packet packet) {
+		this(message, null, protocol, packet);
 	}
 	
 	public ProtocolException(String message, Throwable cause) {
 		this(message, cause, null, null);
 	}
 	
-	public ProtocolException(String message, Throwable cause, Packet packet, Protocol protocol) {
+	public ProtocolException(String message, Throwable cause, Protocol protocol, Packet packet) {
 		super(message, cause);
 		this.packet = packet;
 		this.protocol = protocol;

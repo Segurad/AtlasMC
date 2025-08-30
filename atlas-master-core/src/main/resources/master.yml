@@ -1,4 +1,5 @@
 database:
+  parameters: null
   database: atlas
   host: localhost
   port: 3306

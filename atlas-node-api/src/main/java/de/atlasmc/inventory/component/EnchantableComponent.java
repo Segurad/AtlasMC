@@ -7,7 +7,7 @@ public interface EnchantableComponent extends ItemComponent {
 	public static final NBTSerializationHandler<EnchantableComponent>
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(EnchantableComponent.class)
-					.intField(ComponentType.ENCHANTABLE, EnchantableComponent::getValue, EnchantableComponent::setValue)
+					.intField(ComponentType.ENCHANTABLE.getNamespacedKey(), EnchantableComponent::getValue, EnchantableComponent::setValue)
 					.build();
 	
 	int getValue();

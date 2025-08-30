@@ -11,7 +11,7 @@ public interface PotDecorationComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(PotDecorationComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.namespacedKeyListField(ComponentType.POT_DECORATIONS, PotDecorationComponent::hasDecorations, PotDecorationComponent::getDecorations)
+					.namespacedKeyListField(ComponentType.POT_DECORATIONS.getNamespacedKey(), PotDecorationComponent::hasDecorations, PotDecorationComponent::getDecorations)
 					.build();
 	
 	List<NamespacedKey> getDecorations();

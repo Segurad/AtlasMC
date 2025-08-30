@@ -4,7 +4,6 @@ import org.joml.Vector3i;
 
 import de.atlasmc.block.BlockType;
 import de.atlasmc.inventory.component.ItemComponentHolder;
-import de.atlasmc.registry.Registries;
 import de.atlasmc.util.annotation.InternalAPI;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.UnsafeAPI;
@@ -18,7 +17,7 @@ public interface TileEntity extends Cloneable, NBTSerializable, ItemComponentHol
 	public static final NBTSerializationHandler<TileEntity>
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(TileEntity.class)
-					.searchKeyConstructor("id", Registries.getRegistry(BlockType.class), BlockType::createTileEntity, TileEntity::getType)
+					.searchKeyConstructor("id", BlockType.REGISTRY_KEY, BlockType::createTileEntity, TileEntity::getType)
 					.intField("x", TileEntity::getX, TileEntity::setX)
 					.intField("y", TileEntity::getY, TileEntity::setY)
 					.intField("z", TileEntity::getZ, TileEntity::setZ)

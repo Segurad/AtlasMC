@@ -12,7 +12,7 @@ public interface BeesComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(BeesComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.typeList(ComponentType.BEES, BeesComponent::hasBees, BeesComponent::getBees, Occupant.NBT_HANDLER)
+					.typeList(ComponentType.BEES.getNamespacedKey(), BeesComponent::hasBees, BeesComponent::getBees, Occupant.NBT_HANDLER)
 					.build();
 	
 	BeesComponent clone();

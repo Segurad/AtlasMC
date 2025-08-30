@@ -2,6 +2,7 @@ package de.atlasmc.util.nbt.io;
 
 import java.io.IOException;
 
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.map.key.CharKeyBuffer;
 import de.atlasmc.util.nbt.TagType;
 
@@ -34,7 +35,7 @@ public abstract class AbstractNBTStreamReader extends AbstractNBTReader {
 	}
 	
 	@Override
-	public CharSequence getFieldName() throws IOException {
+	public CharKey getFieldName() throws IOException {
 		prepareTag();
 		return hasName ? name.getView() : null;
 	}

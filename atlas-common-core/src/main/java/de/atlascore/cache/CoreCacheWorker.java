@@ -8,8 +8,9 @@ class CoreCacheWorker extends TickingThread {
 	private final CoreCacheHandler handler;
 	
 	public CoreCacheWorker(CoreCacheHandler handler) {
-		super("Cache-Worker", 50, Logging.getLogger("Cache", "Atlas"));
+		super("Atlas-Cache-Daemon", 50, Logging.getLogger("Cache", "Atlas"));
 		this.handler = handler;
+		setDaemon(true);
 	}
 	
 	@Override

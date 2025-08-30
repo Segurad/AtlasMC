@@ -8,7 +8,7 @@ public interface OminousBottleAmplifierComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(OminousBottleAmplifierComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.intField(ComponentType.OMINOUS_BOTTLE_AMPLIFIER, OminousBottleAmplifierComponent::getAmplifier, OminousBottleAmplifierComponent::setAmplifier, 0)
+					.intField(ComponentType.OMINOUS_BOTTLE_AMPLIFIER.getNamespacedKey(), OminousBottleAmplifierComponent::getAmplifier, OminousBottleAmplifierComponent::setAmplifier, 0)
 					.build();
 	
 	int getAmplifier();

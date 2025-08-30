@@ -6,7 +6,7 @@ import java.util.List;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.util.configuration.Configuration;
-import de.atlasmc.util.configuration.InvalidConfigurationException;
+import de.atlasmc.util.configuration.ConfigurationException;
 
 public abstract class AbstractPrototypePlugin implements PrototypePlugin {
 
@@ -27,10 +27,10 @@ public abstract class AbstractPrototypePlugin implements PrototypePlugin {
 		this.pluginInfo = pluginInfo;
 		this.name = pluginInfo.getString("name");
 		if (name == null)
-			throw new InvalidConfigurationException("Name is not defined!");
+			throw new ConfigurationException("Name is not defined!");
 		String rawVersion = pluginInfo.getString("version");
 		if (rawVersion == null)
-			throw new InvalidConfigurationException("Version is not defined!");
+			throw new ConfigurationException("Version is not defined!");
 		this.version = new Version(rawVersion);
 		List<String> rawDependencies = pluginInfo.getStringList("dependencies", List.of());
 		List<Dependency> dependencies = new ArrayList<>(rawDependencies.size());

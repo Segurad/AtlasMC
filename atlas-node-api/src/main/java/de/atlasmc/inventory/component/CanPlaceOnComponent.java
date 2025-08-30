@@ -9,7 +9,7 @@ public interface CanPlaceOnComponent extends AbstractBlockPredicateComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(CanPlaceOnComponent.class)
 					.include(AbstractBlockPredicateComponent.NBT_HANDLER)
-					.typeList(ComponentType.CAN_PLACE_ON, CanPlaceOnComponent::hasPredicates, CanPlaceOnComponent::getPredicates, BlockPredicate.NBT_HANDLER)
+					.typeList(ComponentType.CAN_PLACE_ON.getNamespacedKey(), CanPlaceOnComponent::hasPredicates, CanPlaceOnComponent::getPredicates, BlockPredicate.NBT_HANDLER)
 					.build();
 
 	CanPlaceOnComponent clone();

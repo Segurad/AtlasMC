@@ -9,7 +9,7 @@ public interface StoredEnchantmentComponent extends AbstractEnchantmentComponent
 	NBT_HANDLER = NBTSerializationHandler
 			.builder(StoredEnchantmentComponent.class)
 			.include(AbstractEnchantmentComponent.NBT_HANDLER)
-			.compoundMapNamespaced2Int(ComponentType.STORED_ENCHANTMENTS, StoredEnchantmentComponent::hasEnchants, StoredEnchantmentComponent::getStoredEnchants, Enchantment::getEnchantment)
+			.compoundMapNamespaced2Int(ComponentType.STORED_ENCHANTMENTS.getNamespacedKey(), StoredEnchantmentComponent::hasEnchants, StoredEnchantmentComponent::getStoredEnchants, Enchantment::getEnchantment)
 			.build();
 	
 	StoredEnchantmentComponent clone();

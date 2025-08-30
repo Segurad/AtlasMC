@@ -31,13 +31,16 @@ public class NBTCompoundFieldBuilder<T> extends NBTField<T> implements Builder<N
 	private boolean buildPrepared = true;
 	
 	public NBTCompoundFieldBuilder() {
-		this(null, null, null);
+		this("root", null, null);
 	}
 	
 	public NBTCompoundFieldBuilder(CharSequence key, ToBooleanFunction<T> has, NBTCompoundFieldBuilder<T> parent) {
 		super(key, COMPOUND, true);
 		this.has = has;
 		this.parent = parent;
+		for (int i = 0; i < AbstractNBTCompoundFieldBuilder.TYPE_COUNT; i++) {
+			typeFields.add(i, null);
+		}
 	}
 	
 	public ToBooleanFunction<T> getHas() {

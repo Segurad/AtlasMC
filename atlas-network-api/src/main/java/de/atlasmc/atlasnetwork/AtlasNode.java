@@ -18,7 +18,8 @@ public interface AtlasNode {
 	public static enum NodeStatus {
 		OFFLINE,
 		STARTING,
-		ONLINE
+		ONLINE,
+		SHUTING_DOWN;
 	}
 	
 }

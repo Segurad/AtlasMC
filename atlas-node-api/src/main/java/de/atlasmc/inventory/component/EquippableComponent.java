@@ -15,7 +15,7 @@ public interface EquippableComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(EquippableComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(ComponentType.EQUIPPABLE)
+					.beginComponent(ComponentType.EQUIPPABLE.getNamespacedKey())
 					.enumStringField("slot", EquippableComponent::getSlot, EquippableComponent::setSlot, EquipmentSlot::getByName, null)
 					.addField(Sound.getNBTSoundField("equip_sound", EquippableComponent::getEquipSound, EquippableComponent::setEquipSound, EnumSound.ITEM_ARMOR_EQUIP_GENERIC))
 					.namespacedKey("asset_id", EquippableComponent::getAssetID, EquippableComponent::setAssetID)

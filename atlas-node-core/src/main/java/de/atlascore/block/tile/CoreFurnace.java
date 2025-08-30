@@ -14,11 +14,11 @@ public class CoreFurnace extends CoreAbstractContainerTile<AbstractFurnaceInvent
 
 	@Override
 	protected AbstractFurnaceInventory createInventory() {
-		if (getType().getNamespacedKey() == BlockType.FURNACE)
+		if (getType() == BlockType.FURNACE.get())
 			return ContainerFactory.FURNACE_INV_FACTPRY.create(InventoryType.FURNACE, this);
-		if (getType().getNamespacedKey() == BlockType.BLAST_FURNACE)
+		if (getType() == BlockType.BLAST_FURNACE.get())
 			return ContainerFactory.BLAST_FURNACE_INV_FACTORY.create(InventoryType.BLAST_FURNACE, this);
-		if (getType().getNamespacedKey() == BlockType.SMOKER)
+		if (getType() == BlockType.SMOKER.get())
 			return ContainerFactory.SMOKER_INV_FACTORY.create(InventoryType.SMOKER, this);
 		return null;
 	}

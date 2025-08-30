@@ -11,7 +11,7 @@ public interface WritableBookContentComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(WritableBookContentComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(ComponentType.WRITABLE_BOOK_CONTENT)
+					.beginComponent(ComponentType.WRITABLE_BOOK_CONTENT.getNamespacedKey())
 					.stringListField("pages", WritableBookContentComponent::hasPages, WritableBookContentComponent::getPages)
 					.endComponent()
 					.build();

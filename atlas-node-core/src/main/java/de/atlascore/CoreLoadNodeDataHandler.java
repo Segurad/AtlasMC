@@ -2,6 +2,7 @@ package de.atlascore;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,6 +35,7 @@ import de.atlasmc.proxy.ProxyManager;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.server.NodeServerManager;
 import de.atlasmc.util.FileUtils;
+import de.atlasmc.util.configuration.file.JsonConfiguration;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
 
 @StartupHandlerRegister({ StartupContext.LOAD_NODE_DATA })
@@ -107,28 +109,41 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 			proxyManager.createProxy(cfg);
 		}
 		// === init internals 
-		Log log = context.getLogger();
 		initDefaultExecutor(log, new CorePlayerListener());
 		initDefaultExecutor(log, new CoreInventoryListener());
 		initDefaultExecutor(log, new CoreCommandListener());
-		// Block
-		loadRegistry("/data/block_data_factories.json");
-		loadRegistry("/data/tile_entity_factories.json");
-		loadRegistry("/data/block_types.json");
-		// Item
-		loadRegistry("/data/component_effects.json");
-		loadRegistry("/data/item_types.json");
-		// Misc
-		loadRegistry("/data/potion_effect_types.json");
-		loadRegistry("/data/entity_types.json");
+		loadData();
 		ContainerFactoryLoader.loadContainerFactories();
 	}
 	
-	private void loadRegistry(String resource) {
+	private void loadData() {
+		InputStream indexStream = Atlas.getSystem().getResourceAsStream("/data/data.json");
+		if (indexStream == null)
+			log.debug("No data index found");
+		JsonConfiguration index;
 		try {
-			Registries.loadBulkRegistryEntries(Atlas.getSystem(), resource);
+			index = JsonConfiguration.loadConfiguration(indexStream);
 		} catch (IOException e) {
-			log.error("Error while loading " + resource, e);
+			log.error("Error while loading data index!", e);
+			return;
+		} finally {
+			try {
+				indexStream.close();
+			} catch (IOException e) {}
+		}
+		List<String> registries = index.getStringList("registries", List.of());
+		for (String regFile : registries) {
+			loadRegistry(regFile);
+		}
+	}
+	
+	private void loadRegistry(String resource) {
+		String file = "/data/registries/" + resource;
+		try {
+			Registries.loadBulkRegistryEntries(Atlas.getSystem(), file);
+			log.debug("Loaded data registry file: {}", file);
+		} catch (Exception e) {
+			log.error("Error while loading: " + file, e);
 		}
 	}
 	

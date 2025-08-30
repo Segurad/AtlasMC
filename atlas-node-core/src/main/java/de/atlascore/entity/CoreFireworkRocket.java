@@ -48,7 +48,7 @@ public class CoreFireworkRocket extends CoreAbstractProjectile implements Firewo
 		ItemStack item = getFirework();
 		if (item == null)
 			return null;
-		return item.getComponent(ComponentType.get(ComponentType.FIREWORKS));
+		return item.getComponent(ComponentType.FIREWORKS.get());
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class CoreFireworkRocket extends CoreAbstractProjectile implements Firewo
 		MetaData<ItemStack> data = metaContainer.get(META_FIREWORK_INFO);
 		ItemStack item = data.getData();
 		if (item == null)
-			item = new ItemStack(ItemType.FIREWORK_ROCKET);
+			item = new ItemStack(ItemType.FIREWORK_ROCKET.get());
 		item.setComponent(component);
 		metaContainer.get(META_FIREWORK_INFO).setData(item);
 		data.setChanged(true);

@@ -19,8 +19,9 @@ public class CoreSchedulerThread extends TickingThread {
 	private volatile int workerCount;
 	
 	public CoreSchedulerThread(CoreAtlasScheduler scheduler, int minWorkers, int workerMaxIdleTime, int asyncWorkerGCTime) {
-		super("Atlas-Scheduler", 50, Logging.getLogger("Scheduler", "Atlas"), false);
+		super("Atlas-Scheduler-Deamon", 50, Logging.getLogger("Scheduler", "Atlas"), false);
 		getLogger().sendToConsole(true);
+		setDaemon(true);
 		this.scheduler = scheduler;
 		this.workerQueue = new ConcurrentLinkedQueue<>();
 		this.fetchedWorkers = new ConcurrentLinkedList<>();

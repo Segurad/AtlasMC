@@ -11,7 +11,7 @@ public interface BannerPatternsComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(BannerPatternsComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.typeList(ComponentType.BANNER_PATTERNS, BannerPatternsComponent::hasPatterns, BannerPatternsComponent::getPatterns, Pattern.NBT_HANDLER)
+					.typeList(ComponentType.BANNER_PATTERNS.getNamespacedKey(), BannerPatternsComponent::hasPatterns, BannerPatternsComponent::getPatterns, Pattern.NBT_HANDLER)
 					.build();
 	
 	BannerPatternsComponent clone();

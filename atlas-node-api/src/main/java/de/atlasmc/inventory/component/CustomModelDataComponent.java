@@ -13,7 +13,7 @@ public interface CustomModelDataComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(CustomModelDataComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(ComponentType.CUSTOM_MODEL_DATA)
+					.beginComponent(ComponentType.CUSTOM_MODEL_DATA.getNamespacedKey())
 					.floatListField("floats", CustomModelDataComponent::hasFloats, CustomModelDataComponent::getFloats)
 					.booleanListField("flags", CustomModelDataComponent::hasFlags, CustomModelDataComponent::getFlags)
 					.stringListField("strings", CustomModelDataComponent::hasStrings, CustomModelDataComponent::getStrings)

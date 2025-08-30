@@ -211,7 +211,7 @@ public class CoreProtocolPlay extends CoreAbstractProtocol<PacketPlayIn, PacketP
 	}
 
 	@Override
-	public PacketListener createDefaultPacketListener(Object o) {
+	public PacketListener createDefaultPacketListenerIn(Object o) {
 		if (o instanceof PlayerConnection con)
 			return new CorePacketListenerPlayIn(con);
 		throw new IllegalArgumentException("Expected PlayerConnection but got: " + o.getClass().getName());

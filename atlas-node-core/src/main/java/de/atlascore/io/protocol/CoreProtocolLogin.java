@@ -39,7 +39,7 @@ public class CoreProtocolLogin extends CoreAbstractProtocol<PacketInbound, Packe
 	}
 
 	@Override
-	public PacketListener createDefaultPacketListener(Object o) {
+	public PacketListener createDefaultPacketListenerIn(Object o) {
 		return new CorePacketListenerLoginIn((ProxyConnectionHandler) o);
 	}
 

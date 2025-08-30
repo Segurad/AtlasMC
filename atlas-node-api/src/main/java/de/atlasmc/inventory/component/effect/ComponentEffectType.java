@@ -7,24 +7,21 @@ import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
+import de.atlasmc.registry.RegistryKey;
+import de.atlasmc.registry.RegistryValueKey;
 import de.atlasmc.util.configuration.ConfigurationSection;
 
 @RegistryHolder(key = "minecraft:component_effect", target = Target.PROTOCOL)
 public class ComponentEffectType extends ProtocolRegistryValueBase {
 	
-	private static final ProtocolRegistry<ComponentEffectType> REGISTRY;
+	public static final RegistryKey<ComponentEffectType> REGISTRY_KEY = Registries.getRegistryKey(ComponentEffectType.class);
 	
-	static {
-		REGISTRY = Registries.getRegistry(ComponentEffectType.class);
-	}
-	
-	public static final NamespacedKey
-	APPLY_EFFECTS = NamespacedKey.of("minecraft:apply_effects"),
-	REMOVE_EFFECTS = NamespacedKey.literal("minecraft:remove_effects"),
-	CLEAR_ALL_EFFECTS = NamespacedKey.literal("minecraft:clear_all_effects"),
-	TELEPORT_RANDOMLY = NamespacedKey.literal("minecraft:teleport_randomly"),
-	PLAY_SOUND = NamespacedKey.literal("minecraft:play_sound");
-	
+	public static final RegistryValueKey<ComponentEffectType>
+	APPLY_EFFECTS = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.of("minecraft:apply_effects")),
+	REMOVE_EFFECTS = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:remove_effects")),
+	CLEAR_ALL_EFFECTS = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:clear_all_effects")),
+	TELEPORT_RANDOMLY = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:teleport_randomly")),
+	PLAY_SOUND = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:play_sound"));
 	
 	private final ComponentEffectFactory factory;
 	
@@ -38,20 +35,16 @@ public class ComponentEffectType extends ProtocolRegistryValueBase {
 		return factory.createEffect(this);
 	}
 
-	public static ComponentEffectType get(NamespacedKey key) {
-		return REGISTRY.get(key);
-	}
-	
-	public static ComponentEffectType get(String key) {
-		return REGISTRY.get(key);
+	public static ComponentEffectType get(CharSequence key) {
+		return REGISTRY_KEY.getValue(key);
 	}
 	
 	public static ComponentEffectType getByID(int id) {
-		return REGISTRY.getByID(id);
+		return getRegistry().getByID(id);
 	}
 	
 	public static ProtocolRegistry<ComponentEffectType> getRegistry() {
-		return REGISTRY;
+		return REGISTRY_KEY.getRegistry();
 	}
 	
 }

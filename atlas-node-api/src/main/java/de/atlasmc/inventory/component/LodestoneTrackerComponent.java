@@ -11,7 +11,7 @@ public interface LodestoneTrackerComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(LodestoneTrackerComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(ComponentType.LODESTONE_TRACKER)
+					.beginComponent(ComponentType.LODESTONE_TRACKER.getNamespacedKey())
 					.beginComponent("target", LodestoneTrackerComponent::hasTarget)
 					.vector3i("pos", LodestoneTrackerComponent::getLocation, LodestoneTrackerComponent::setLocation)
 					.namespacedKey("dimension", LodestoneTrackerComponent::getDimension, LodestoneTrackerComponent::setDimension)

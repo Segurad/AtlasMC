@@ -1,15 +1,12 @@
 package de.atlasmc.io.handshake;
 
-import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.PacketListener;
 import de.atlasmc.io.Protocol;
 import de.atlasmc.io.ProxyConnectionHandler;
-import io.netty.buffer.ByteBuf;
 
 public class HandshakeProtocol implements Protocol {
 
@@ -31,7 +28,7 @@ public class HandshakeProtocol implements Protocol {
 	}
 
 	@Override
-	public PacketListener createDefaultPacketListener(Object o) {
+	public PacketListener createDefaultPacketListenerIn(Object o) {
 		if (o instanceof ProxyConnectionHandler con)
 			return new HandshakePacketListener(con, this);
 		else 
@@ -44,26 +41,6 @@ public class HandshakeProtocol implements Protocol {
 	
 	public HandshakePaketIO<?> getPacketIO(int id) {
 		return packets.get(id);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <P extends Packet> P readPacket(P packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		HandshakePaketIO<P> io = (HandshakePaketIO<P>) packets.get(packet.getID());
-		if (io == null)
-			return null;
-		io.read(packet, in, con);
-		return packet;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <P extends Packet> P writePacket(P packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		HandshakePaketIO<P> io = (HandshakePaketIO<P>) packets.get(packet.getID());
-		if (io == null)
-			return null;
-		io.write(packet, out, con);
-		return packet;
 	}
 
 	@Override

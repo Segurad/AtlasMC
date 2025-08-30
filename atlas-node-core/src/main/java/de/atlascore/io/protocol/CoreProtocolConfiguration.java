@@ -43,7 +43,7 @@ public class CoreProtocolConfiguration extends CoreAbstractProtocol<PacketConfig
 	}
 
 	@Override
-	public PacketListener createDefaultPacketListener(Object o) {
+	public PacketListener createDefaultPacketListenerIn(Object o) {
 		if (o instanceof PlayerConnection con)
 			return new CorePacketListenerConfigurationIn(con);
 		throw new IllegalArgumentException("Expected PlayerConnection but got: " + o.getClass().getName());

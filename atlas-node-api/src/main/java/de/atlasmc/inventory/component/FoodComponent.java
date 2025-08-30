@@ -8,7 +8,7 @@ public interface FoodComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(FoodComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(ComponentType.FOOD)
+					.beginComponent(ComponentType.FOOD.getNamespacedKey())
 					.intField("nutrition", FoodComponent::getNutrition, FoodComponent::setNutrition, 0)
 					.floatField("saturation", FoodComponent::getSaturation, FoodComponent::setSaturation, 0)
 					.boolField("can_always_eat", FoodComponent::isAlwaysEatable, FoodComponent::setAlwaysEatable, false)

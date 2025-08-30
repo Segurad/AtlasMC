@@ -15,14 +15,14 @@ import java.lang.annotation.Target;
 public @interface DefaultPacketID {
 	
 	/**
-	 * 
+	 * The default packet id for this packet
 	 * @return the default packet ID
 	 */
 	int packetID();
 	
 	/**
-	 * 
-	 * @return
+	 * Named identifier of this packet
+	 * @return identifier
 	 */
 	String definition();
 

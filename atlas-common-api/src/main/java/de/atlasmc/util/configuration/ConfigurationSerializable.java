@@ -27,7 +27,7 @@ public interface ConfigurationSerializable {
 			instance = constructor.newInstance(section);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
-			throw new InvalidConfigurationException("Error while creating new instance of class: " + clazz.getName(), e);
+			throw new ConfigurationException("Error while creating new instance of class: " + clazz.getName(), e);
 		}
 		return instance;
 	}
@@ -49,7 +49,7 @@ public interface ConfigurationSerializable {
 				instance = constructor.newInstance(section);
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException e) {
-				throw new InvalidConfigurationException("Error while creating new instance of class: " + clazz.getName(), e);
+				throw new ConfigurationException("Error while creating new instance of class: " + clazz.getName(), e);
 			}
 			buf.add(instance);
 		}

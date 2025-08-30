@@ -1,17 +1,24 @@
 package de.atlasmc.io.protocol;
 
+import de.atlasmc.util.annotation.NotNull;
+
 public interface ProtocolAdapter {
 
-	public int getVersion();
+	int getVersion();
 	
-	public String getVersionString();
+	@NotNull
+	String getVersionString();
 	
-	public ProtocolStatus getStatusProtocol();
+	@NotNull
+	ProtocolStatus getStatusProtocol();
 	
-	public ProtocolLogin getLoginProtocol();
+	@NotNull
+	ProtocolLogin getLoginProtocol();
 	
-	public ProtocolPlay getPlayProtocol();
+	@NotNull
+	ProtocolPlay getPlayProtocol();
 	
-	public ProtocolConfiguration getConfigurationProtocol();
+	@NotNull
+	ProtocolConfiguration getConfigurationProtocol();
 	
 }

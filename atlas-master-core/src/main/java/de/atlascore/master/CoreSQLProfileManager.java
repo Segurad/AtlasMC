@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.UUID;
 
 import de.atlasmc.atlasnetwork.AtlasNetworkException;
@@ -17,10 +16,8 @@ import de.atlasmc.util.concurrent.future.Future;
 public class CoreSQLProfileManager extends CoreProfileManager  {
 	
 	private Future<AtlasPlayer> queryProfile(String key, Object value) {
-		Connection con = null;
 		AtlasPlayer player;
-		try {
-			con = AtlasMaster.getDatabase().getConnection();
+		try (Connection con = AtlasMaster.getDatabase().getConnection(true)) {
 			PreparedStatement stmt = con.prepareStatement("SELECT mojang_uuid, internal_uuid, mojang_name, internal_name, join_first, join_last FROM profiles WHERE " + key + "=?");
 			stmt.setObject(1, value);
 			ResultSet result = stmt.executeQuery();
@@ -34,20 +31,9 @@ public class CoreSQLProfileManager extends CoreProfileManager  {
 				Date lastJoin = result.getDate(6);
 				profile = new CoreAtlasPlayer(this, mName, mUUID, iName, iUUID, firstJoin, lastJoin);
 			}
-			stmt.close();
-			result.close();
 			player = profile;
-		} catch (SQLException e) {
-			if (con != null)
-				try {
-					con.close();
-				} catch (SQLException e1) {}
+		} catch (Exception e) {
 			return new CompleteFuture<>(null, new AtlasNetworkException("Error while querrying player profile!", e));
-		} finally {
-			if (con != null)
-				try {
-					con.close();
-				} catch (SQLException e) {}
 		}
 		if (player == null)
 			return CompleteFuture.getNullFuture();
@@ -88,59 +74,31 @@ public class CoreSQLProfileManager extends CoreProfileManager  {
 	}
 
 	protected void updateLastJoind(AtlasPlayer player, Date date) {
-		Connection con = null;
-		try {
-			con = AtlasMaster.getDatabase().getConnection();
+		try (Connection con = AtlasMaster.getDatabase().getConnection(true)) {
 			PreparedStatement stmt = con.prepareStatement("UPDATE profiles SET join_last=? WHERE internal_uuid=?");
 			stmt.setObject(1, date);
 			stmt.setBytes(2, AtlasUtil.uuidToBytes(player.getInternalUUID()));
 			stmt.execute();
-			stmt.close();
-			con.close();
-		} catch (SQLException e) {
-			if (con != null)
-				try {
-					con.close();
-				} catch (SQLException e1) {}
+		} catch (Exception e) {
 			throw new AtlasNetworkException("Error while updating player profile!", e);
-		} finally {
-			if (con != null)
-				try {
-					con.close();
-				} catch (SQLException e) {}
 		}
 	}
 
 	@Override
 	protected void updateInternalName(AtlasPlayer player, String name) {
-		Connection con = null;
-		try {
-			con = AtlasMaster.getDatabase().getConnection();
+		try (Connection con = AtlasMaster.getDatabase().getConnection(true)) {
 			PreparedStatement stmt = con.prepareStatement("UPDATE profiles SET internal_name=? WHERE internal_uuid=?");
 			stmt.setString(1, name);
 			stmt.setBytes(2, AtlasUtil.uuidToBytes(player.getInternalUUID()));
 			stmt.execute();
-			stmt.close();
-			con.close();
-		} catch (SQLException e) {
-			if (con != null)
-				try {
-					con.close();
-				} catch (SQLException e1) {}
+		} catch (Exception e) {
 			throw new AtlasNetworkException("Error while updating player profile!", e);
-		} finally {
-			if (con != null)
-				try {
-					con.close();
-				} catch (SQLException e) {}
 		}
 	}
 
 	@Override
 	protected AtlasPlayer internalCreatePlayer(UUID mojangUUID, UUID internalUUID, String mojangName, String internalName, Date firstJoin) {
-		Connection con = null;
-		try {
-			con = AtlasMaster.getDatabase().getConnection();
+		try (Connection con = AtlasMaster.getDatabase().getConnection(true)) {
 			PreparedStatement stmt = con.prepareStatement("INSERT INTO profiles (mojang_uuid, internal_uuid, mojang_name, internal_name, join_first, join_last) VALUES (?, ?, ?, ?, ?, ?)");
 			stmt.setBytes(1, AtlasUtil.uuidToBytes(mojangUUID));
 			stmt.setBytes(2, AtlasUtil.uuidToBytes(internalUUID));
@@ -149,19 +107,8 @@ public class CoreSQLProfileManager extends CoreProfileManager  {
 			stmt.setDate(5, firstJoin);
 			stmt.setDate(6, firstJoin);
 			stmt.execute();
-			stmt.close();
-			con.close();
-		} catch (SQLException e) {
-			if (con != null)
-				try {
-					con.close();
-				} catch (SQLException e1) {}
+		} catch (Exception e) {
 			throw new AtlasNetworkException("Error while creating player profile!", e);
-		} finally {
-			if (con != null)
-				try {
-					con.close();
-				} catch (SQLException e) {}
 		}
 		return new CoreAtlasPlayer(this, mojangName, mojangUUID, internalName, internalUUID, firstJoin, firstJoin);
 	}

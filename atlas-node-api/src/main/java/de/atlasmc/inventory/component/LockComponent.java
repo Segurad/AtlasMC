@@ -9,7 +9,7 @@ public interface LockComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(LockComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.typeCompoundField(ComponentType.LOCK, LockComponent::getPredicate, LockComponent::setPredicate, ItemPredicate.NBT_HANDLER)
+					.typeCompoundField(ComponentType.LOCK.getNamespacedKey(), LockComponent::getPredicate, LockComponent::setPredicate, ItemPredicate.NBT_HANDLER)
 					.build();
 	
 	ItemPredicate getPredicate();

@@ -1,30 +1,37 @@
 package de.atlasmc.io;
 
+/**
+ * A packet containing data for network operations
+ */
 public interface Packet {
 	
-	public boolean isCancelled();
+	/**
+	 * Whether or not this packet is cancelled
+	 * @return
+	 */
+	boolean isCancelled();
 	
-	public void setCancelled(boolean cancelled);
+	void setCancelled(boolean cancelled);
 	
 	/**
 	 * Return the Time this Packet arrived in milliseconds and 0 if it is outbound
 	 * @return 
 	 */
-	public long getTimestamp();
+	long getTimestamp();
 	
-	public void setTimestamp(long timestamp);
+	void setTimestamp(long timestamp);
 	
 	/**
-	 * 
+	 * The id used for this packet
 	 * @return the packet id
 	 */
-	public int getID();
+	int getID();
 	
 	/**
-	 * 
-	 * @return the packet id based on latest supported protocol (754 | v1.16.5)
+	 * The id used by the latest supported protocol version
+	 * @return the packet id based on latest supported protocol
 	 */
-	public int getDefaultID();
+	int getDefaultID();
 	
 	/**
 	 * Returns the packet id provided by the {@link DefaultPacketID} annotation

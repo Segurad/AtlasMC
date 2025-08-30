@@ -8,7 +8,7 @@ import de.atlasmc.block.data.BlockData;
 import de.atlasmc.util.NumberConversion;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
 import de.atlasmc.util.concurrent.future.Future;
-import de.atlasmc.util.configuration.InvalidConfigurationException;
+import de.atlasmc.util.configuration.ConfigurationException;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.palette.Palette;
 import de.atlasmc.world.Chunk;
@@ -60,7 +60,7 @@ public class CoreFlatworldChunkGenerator implements ChunkGenerator {
 		this.startheight = config.getInt("start-height");
 		List<String> layers = config.getStringList("layers");
 		if (layers == null)
-			throw new InvalidConfigurationException("\"layers\" is not defined!");
+			throw new ConfigurationException("\"layers\" is not defined!");
 		this.layers = new int[layers.size()];
 		Arrays.fill(this.layers, -1);
 		this.blocks = new BlockData[layers.size()];
@@ -69,13 +69,13 @@ public class CoreFlatworldChunkGenerator implements ChunkGenerator {
 			String[] parts = raw.split(" : ");
 			BlockType type = BlockType.get(parts[0]);
 			if (type == null)
-				throw new InvalidConfigurationException("Unknown BlockType (" + parts[0] + ") at layer: " + index, config);
+				throw new ConfigurationException("Unknown BlockType (" + parts[0] + ") at layer: " + index, config);
 			int size = NumberConversion.toInt(parts[1], Integer.MIN_VALUE);
 			if (size == Integer.MIN_VALUE) {
-				throw new InvalidConfigurationException("Unable to parse layer with at layer: " + index, config);
+				throw new ConfigurationException("Unable to parse layer with at layer: " + index, config);
 			}
 			if (size < 1) {
-				throw new InvalidConfigurationException("Layer with must be greater than 0 (" + size + ") at layer: " + index, config);
+				throw new ConfigurationException("Layer with must be greater than 0 (" + size + ") at layer: " + index, config);
 			}
 			BlockData data = type.createBlockData();
 			this.blocks[index] = data;

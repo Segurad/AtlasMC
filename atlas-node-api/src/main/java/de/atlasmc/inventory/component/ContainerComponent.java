@@ -12,7 +12,7 @@ public interface ContainerComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(ContainerComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.typeListSearchIntIndexField(ComponentType.CONTAINER, "slot", ContainerComponent::hasItems, ContainerComponent::getItems, ItemStack.NBT_HANDLER, true)
+					.typeListSearchIntIndexField(ComponentType.CONTAINER.getNamespacedKey(), "slot", ContainerComponent::hasItems, ContainerComponent::getItems, ItemStack.NBT_HANDLER, true)
 					.build();
 	
 	List<ItemStack> getItems();

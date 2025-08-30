@@ -8,7 +8,7 @@ public interface RepairCostComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(RepairCostComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.intField(ComponentType.REPAIR_COST, RepairCostComponent::getRepairCost, RepairCostComponent::setRepairCost, 0)
+					.intField(ComponentType.REPAIR_COST.getNamespacedKey(), RepairCostComponent::getRepairCost, RepairCostComponent::setRepairCost, 0)
 					.build();
 	
 	int getRepairCost();

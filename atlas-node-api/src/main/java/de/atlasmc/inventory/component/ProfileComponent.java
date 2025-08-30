@@ -9,7 +9,7 @@ public interface ProfileComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(ProfileComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.typeCompoundField(ComponentType.PROFILE, ProfileComponent::getProfile, ProfileComponent::setProfile, PlayerProfile.NBT_HANDLER)
+					.typeCompoundField(ComponentType.PROFILE.getNamespacedKey(), ProfileComponent::getProfile, ProfileComponent::setProfile, PlayerProfile.NBT_HANDLER)
 					.build();
 	
 	PlayerProfile getProfile();

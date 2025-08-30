@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.IntConsumer;
 import java.util.function.LongConsumer;
 
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.tag.CompoundTag;
 import de.atlasmc.util.nbt.tag.EndTag;
@@ -304,9 +305,9 @@ public class NBTObjectReader extends AbstractNBTReader {
 	}
 	
 	@Override
-	public String getFieldName() throws IOException {
+	public CharKey getFieldName() throws IOException {
 		prepareTag();
-		return current != null ? current.getName() : null;
+		return current != null ? CharKey.of(current.getName()) : null;
 	}
 
 	@Override

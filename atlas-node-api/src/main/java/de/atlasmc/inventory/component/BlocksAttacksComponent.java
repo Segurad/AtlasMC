@@ -17,7 +17,7 @@ public interface BlocksAttacksComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(BlocksAttacksComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(ComponentType.BLOCKS_ATTACKS)
+					.beginComponent(ComponentType.BLOCKS_ATTACKS.getNamespacedKey())
 					.floatField("block_delay_seconds", BlocksAttacksComponent::getBlockDelay, BlocksAttacksComponent::setBlockDelay, 0)
 					.floatField("disable_cooldown_scale", BlocksAttacksComponent::getDisableCooldownScale, BlocksAttacksComponent::setDisableCooldownScale, 1)
 					.typeList("damage_reductions", BlocksAttacksComponent::hasReduction, BlocksAttacksComponent::getReduction, DamageReduction.NBT_HANDLER)

@@ -12,7 +12,7 @@ public interface BucketEntityDataComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(BucketEntityDataComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(ComponentType.BUCKET_ENTITY_DATA)
+					.beginComponent(ComponentType.BUCKET_ENTITY_DATA.getNamespacedKey())
 					.boolField("NoAI", BucketEntityDataComponent::hasNoAI, BucketEntityDataComponent::setNoAI, false)
 					.boolField("Silent", BucketEntityDataComponent::isSilent, BucketEntityDataComponent::setSilent, false)
 					.boolField("NoGravity", BucketEntityDataComponent::hasNoGravity, BucketEntityDataComponent::setNoGravity, false)

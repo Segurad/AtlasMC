@@ -8,7 +8,7 @@ public interface GliderComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(GliderComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(ComponentType.GLIDER)
+					.beginComponent(ComponentType.GLIDER.getNamespacedKey())
 					.endComponent()
 					.build();
 	

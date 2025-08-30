@@ -4,8 +4,10 @@ import java.util.List;
 
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
+import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.PacketUtil;
 import de.atlasmc.io.Protocol;
+import de.atlasmc.io.ProtocolException;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -24,15 +26,14 @@ public class PacketDecoder extends ByteToMessageDecoder {
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 		int id = PacketUtil.readVarInt(in);
-		System.out.println("Decode packet: " + id);
 		Protocol prot = handler.getProtocol();
-		System.out.println(prot.getClass().getName());
+		@SuppressWarnings("unchecked")
+		PacketIO<Packet> io = (PacketIO<Packet>) prot.getHandlerIn(id);
+		if (io == null)
+			throw new ProtocolException("Invalid Packet ID: " + id, prot, null);
 		Packet packet = prot.createPacketIn(id);
-		if (packet == null)
-			throw new IllegalStateException("Invalid Packet ID: " + id);
-		System.out.println(packet.getClass().getName());
 		packet.setTimestamp(System.currentTimeMillis());
-		prot.readPacket(packet, in, handler);
+		io.read(packet, in, handler);
 		out.add(packet);
 	}
 	

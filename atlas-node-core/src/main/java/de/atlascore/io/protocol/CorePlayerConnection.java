@@ -472,10 +472,10 @@ public class CorePlayerConnection implements PlayerConnection {
 				return;
 			boolean inConfiguration = this.inConfiguration;
 			if (inConfiguration) {
-				connection.setProtocol(protocolPlay, protocolPlay.createDefaultPacketListener(this));
+				connection.setProtocol(protocolPlay, protocolPlay.createDefaultPacketListenerIn(this));
 			} else {
 				Protocol prot = protocol.getConfigurationProtocol();
-				connection.setProtocol(prot, prot.createDefaultPacketListener(this));
+				connection.setProtocol(prot, prot.createDefaultPacketListenerIn(this));
 			}
 			this.inConfiguration = !inConfiguration;
 			waitingForProtocolChange = false;

@@ -9,7 +9,7 @@ public interface SuspiciousStewEffectsComponent extends AbstractPotionEffectComp
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(SuspiciousStewEffectsComponent.class)
 					.include(AbstractPotionEffectComponent.NBT_HANDLER)
-					.typeList(ComponentType.SUSPICIOUS_STEW_EFFECTS, SuspiciousStewEffectsComponent::hasEffects, SuspiciousStewEffectsComponent::getEffects, PotionEffect.NBT_HANDLER)
+					.typeList(ComponentType.SUSPICIOUS_STEW_EFFECTS.getNamespacedKey(), SuspiciousStewEffectsComponent::hasEffects, SuspiciousStewEffectsComponent::getEffects, PotionEffect.NBT_HANDLER)
 					.build();
 	
 	SuspiciousStewEffectsComponent clone();

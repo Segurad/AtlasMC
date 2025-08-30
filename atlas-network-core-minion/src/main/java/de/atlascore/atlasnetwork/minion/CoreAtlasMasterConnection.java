@@ -6,7 +6,8 @@ import de.atlasmc.log.Log;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.MultiThreadIoEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.Future;
@@ -28,7 +29,7 @@ public class CoreAtlasMasterConnection {
 	
 	public synchronized void connect(GenericFutureListener<? extends Future<? super Void>> listener) {
 		if (workerGroup != null)
-			workerGroup = new NioEventLoopGroup();
+			workerGroup = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
 		Bootstrap b = new Bootstrap();
 		b.group(workerGroup);
 		b.channel(NioSocketChannel.class);

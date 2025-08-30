@@ -2,6 +2,9 @@ package de.atlasmc.log;
 
 import de.atlasmc.util.annotation.NotNull;
 
+/**
+ * A logger
+ */
 public interface Log {
 	
 	@NotNull

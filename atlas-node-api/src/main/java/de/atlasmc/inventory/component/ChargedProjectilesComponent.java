@@ -11,7 +11,7 @@ public interface ChargedProjectilesComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(ChargedProjectilesComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.typeList(ComponentType.CHARGED_PROJECTILES, ChargedProjectilesComponent::hasProjectiles, ChargedProjectilesComponent::getProjectiles, ItemStack.NBT_HANDLER)
+					.typeList(ComponentType.CHARGED_PROJECTILES.getNamespacedKey(), ChargedProjectilesComponent::hasProjectiles, ChargedProjectilesComponent::getProjectiles, ItemStack.NBT_HANDLER)
 					.build();
 	
 	List<ItemStack> getProjectiles();

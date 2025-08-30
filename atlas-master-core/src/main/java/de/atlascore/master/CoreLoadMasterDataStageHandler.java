@@ -81,9 +81,7 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 	
 	private void loadPermissions(File file) {
 		log.info("Loading permissions...");
-		Connection con = null;
-		try {
-			con = AtlasMaster.getDatabase().getConnection();
+		try (Connection con = AtlasMaster.getDatabase().getConnection()) {
 			boolean load = true;
 			if (Boolean.getBoolean("atlas.config.permission.reload")) {
 				log.warn("Permission reload flag set!");
@@ -104,11 +102,6 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 			}
 		} catch (SQLException e) {
 			log.error("Error while loading permissions!", e);
-		} finally {
-			if (con != null)
-				try {
-					con.close();
-				} catch (SQLException e) {}
 		}
 	}
 	

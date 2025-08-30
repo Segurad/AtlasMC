@@ -8,6 +8,7 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.inventory.component.ComponentType;
 import de.atlasmc.inventory.component.ItemComponent;
 import de.atlasmc.inventory.component.ItemComponentHolder;
+import de.atlasmc.inventory.component.MaxStackSizeComponent;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.map.key.CharKey;
@@ -47,19 +48,11 @@ public class ItemStack implements NBTSerializable, ItemComponentHolder {
 	 * Creates a ItemStack of the Type {@link Material#AIR} with amount of 1
 	 */
 	public ItemStack() {
-		this(ItemType.AIR, 1);
+		this(ItemType.AIR.get(), 1);
 	}
 	
 	public ItemStack(ItemType material) {
 		this(material, 1);
-	}
-	
-	public ItemStack(NamespacedKey key) {
-		this(key, 1);
-	}
-	
-	public ItemStack(NamespacedKey key, int amount) {
-		this(ItemType.get(key), amount);
 	}
 
 	public ItemStack(ItemType material, int amount) {
@@ -170,6 +163,11 @@ public class ItemStack implements NBTSerializable, ItemComponentHolder {
 		return amount;
 	}
 	
+	public int getMaxAmount() {
+		MaxStackSizeComponent comp = getEffectiveComponent(ComponentType.MAX_STACK_SIZE.get());
+		return comp == null ? 1 : comp.getMaxStackSize();
+	}
+	
 	public void setAmount(int amount) {
 		if (amount < 1) 
 			throw new IllegalArgumentException("Amount must be higher than 0: " + amount);
@@ -196,11 +194,6 @@ public class ItemStack implements NBTSerializable, ItemComponentHolder {
 			return clone;
 		} catch (CloneNotSupportedException e) {}
 		return null;
-	}
-
-	
-	public int getMaxStackSize() {
-		return type.getMaxAmount();
 	}
 	
 	@Override

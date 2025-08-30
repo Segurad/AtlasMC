@@ -2,7 +2,6 @@ package de.atlasmc.entity;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
 import java.util.UUID;
 
 import de.atlasmc.NamespacedKey;
@@ -11,6 +10,8 @@ import de.atlasmc.registry.ProtocolRegistryValue;
 import de.atlasmc.registry.ProtocolRegistryValueBase;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
+import de.atlasmc.registry.RegistryKey;
+import de.atlasmc.registry.RegistryValueKey;
 import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.factory.ClassFactory;
@@ -20,162 +21,158 @@ import de.atlasmc.world.World;
 @RegistryHolder(key="atlas:entity_type", target = Target.PROTOCOL)
 public class EntityType extends ProtocolRegistryValueBase implements ProtocolRegistryValue {
 	
-	private static final ProtocolRegistry<EntityType> REGISTRY;
+	public static final RegistryKey<EntityType> REGISTRY_KEY = Registries.getRegistryKey(EntityType.class);
 	
-	static {
-		REGISTRY = Registries.createRegistry(EntityType.class);
-	}
-	
-	public static final NamespacedKey
-	ACACIA_BOAT = NamespacedKey.literal("minecraft:acacia_boat"),
-	ACACIA_CHEST_BOAT = NamespacedKey.literal("minecraft:acacia_chest_boat"),
-	ALLAY = NamespacedKey.literal("minecraft:allay"),
-	AREA_EFFECT_CLOUD = NamespacedKey.literal("minecraft:area_effect_cloud"),
-	ARMADILLO = NamespacedKey.literal("minecraft:armadillo"),
-	ARMOR_STAND = NamespacedKey.literal("minecraft:armor_stand"),
-	ARROW = NamespacedKey.literal("minecraft:arrow"),
-	AXOLOTL = NamespacedKey.literal("minecraft:axolotl"),
-	BAMBOO_CHEST_RAFT = NamespacedKey.literal("minecraft:bamboo_chest_raft"),
-	BAMBOO_RAFT = NamespacedKey.literal("minecraft:bamboo_raft"),
-	BAT = NamespacedKey.literal("minecraft:bat"),
-	BEE = NamespacedKey.literal("minecraft:bee"),
-	BIRCH_BOAT = NamespacedKey.literal("minecraft:birch_boat"),
-	BIRCH_CHEST_BOAT = NamespacedKey.literal("minecraft:birch_chest_boat"),
-	BLAZE = NamespacedKey.literal("minecraft:blaze"),
-	BLOCK_DISPLAY = NamespacedKey.literal("minecraft:block_display"),
-	BOGGED = NamespacedKey.literal("minecraft:bogged"),
-	BREEZE = NamespacedKey.literal("minecraft:breeze"),
-	BREEZE_WIND_CHARGE = NamespacedKey.literal("minecraft:breeze_wind_charge"),
-	CAMEL = NamespacedKey.literal("minecraft:camel"),
-	CAT = NamespacedKey.literal("minecraft:cat"),
-	CAVE_SPIDER = NamespacedKey.literal("minecraft:cave_spider"),
-	CHERRY_BOAT = NamespacedKey.literal("minecraft:cherry_boat"),
-	CHERRY_CHEST_BOAT = NamespacedKey.literal("minecraft:cherry_chest_boat"),
-	CHEST_MINECART = NamespacedKey.literal("minecraft:chest_minecart"),
-	CHICKEN = NamespacedKey.literal("minecraft:chicken"),
-	COD = NamespacedKey.literal("minecraft:cod"),
-	COMMAND_BLOCK_MINECART = NamespacedKey.literal("minecraft:command_block_minecart"),
-	COW = NamespacedKey.literal("minecraft:cow"),
-	CREAKING = NamespacedKey.literal("minecraft:creaking"),
-	CREEPER = NamespacedKey.literal("minecraft:creeper"),
-	DARK_OAK_BOAT = NamespacedKey.literal("minecraft:dark_oak_boat"),
-	DARK_OAK_CHEST_BOAT = NamespacedKey.literal("minecraft:dark_oak_chest_boat"),
-	DOLPHIN = NamespacedKey.literal("minecraft:dolphin"),
-	DONKEY = NamespacedKey.literal("minecraft:donkey"),
-	DRAGON_FIREBALL = NamespacedKey.literal("minecraft:dragon_fireball"),
-	DROWNED = NamespacedKey.literal("minecraft:drowned"),
-	EGG = NamespacedKey.literal("minecraft:egg"),
-	ELDER_GUARDIAN = NamespacedKey.literal("minecraft:elder_guardian"),
-	ENDERMAN = NamespacedKey.literal("minecraft:enderman"),
-	ENDERMITE = NamespacedKey.literal("minecraft:endermite"),
-	ENDER_DRAGON = NamespacedKey.literal("minecraft:ender_dragon"),
-	ENDER_PEARL = NamespacedKey.literal("minecraft:ender_pearl"),
-	END_CRYSTAL = NamespacedKey.literal("minecraft:end_crystal"),
-	EVOKER = NamespacedKey.literal("minecraft:evoker"),
-	EVOKER_FANGS = NamespacedKey.literal("minecraft:evoker_fangs"),
-	EXPERIENCE_BOTTLE = NamespacedKey.literal("minecraft:experience_bottle"),
-	EXPERIENCE_ORB = NamespacedKey.literal("minecraft:experience_orb"),
-	EYE_OF_ENDER = NamespacedKey.literal("minecraft:eye_of_ender"),
-	FALLING_BLOCK = NamespacedKey.literal("minecraft:falling_block"),
-	FIREBALL = NamespacedKey.literal("minecraft:fireball"),
-	FIREWORK_ROCKET = NamespacedKey.literal("minecraft:firework_rocket"),
-	FISHING_BOBBER = NamespacedKey.literal("minecraft:fishing_bobber"),
-	FOX = NamespacedKey.literal("minecraft:fox"),
-	FROG = NamespacedKey.literal("minecraft:frog"),
-	FURNACE_MINECART = NamespacedKey.literal("minecraft:furnace_minecart"),
-	GHAST = NamespacedKey.literal("minecraft:ghast"),
-	GIANT = NamespacedKey.literal("minecraft:giant"),
-	GLOW_ITEM_FRAME = NamespacedKey.literal("minecraft:glow_item_frame"),
-	GLOW_SQUID = NamespacedKey.literal("minecraft:glow_squid"),
-	GOAT = NamespacedKey.literal("minecraft:goat"),
-	GUARDIAN = NamespacedKey.literal("minecraft:guardian"),
-	HOGLIN = NamespacedKey.literal("minecraft:hoglin"),
-	HOPPER_MINECART = NamespacedKey.literal("minecraft:hopper_minecart"),
-	HORSE = NamespacedKey.literal("minecraft:horse"),
-	HUSK = NamespacedKey.literal("minecraft:husk"),
-	ILLUSIONER = NamespacedKey.literal("minecraft:illusioner"),
-	INTERACTION = NamespacedKey.literal("minecraft:interaction"),
-	IRON_GOLEM = NamespacedKey.literal("minecraft:iron_golem"),
-	ITEM = NamespacedKey.literal("minecraft:item"),
-	ITEM_DISPLAY = NamespacedKey.literal("minecraft:item_display"),
-	ITEM_FRAME = NamespacedKey.literal("minecraft:item_frame"),
-	JUNGLE_BOAT = NamespacedKey.literal("minecraft:jungle_boat"),
-	JUNGLE_CHEST_BOAT = NamespacedKey.literal("minecraft:jungle_chest_boat"),
-	LEASH_KNOT = NamespacedKey.literal("minecraft:leash_knot"),
-	LIGHTNING_BOLT = NamespacedKey.literal("minecraft:lightning_bolt"),
-	LLAMA = NamespacedKey.literal("minecraft:llama"),
-	LLAMA_SPIT = NamespacedKey.literal("minecraft:llama_spit"),
-	MAGMA_CUBE = NamespacedKey.literal("minecraft:magma_cube"),
-	MANGROVE_BOAT = NamespacedKey.literal("minecraft:mangrove_boat"),
-	MANGROVE_CHEST_BOAT = NamespacedKey.literal("minecraft:mangrove_chest_boat"),
-	MARKER = NamespacedKey.literal("minecraft:marker"),
-	MINECART = NamespacedKey.literal("minecraft:minecart"),
-	MOOSHROOM = NamespacedKey.literal("minecraft:mooshroom"),
-	MULE = NamespacedKey.literal("minecraft:mule"),
-	OAK_BOAT = NamespacedKey.literal("minecraft:oak_boat"),
-	OAK_CHEST_BOAT = NamespacedKey.literal("minecraft:oak_chest_boat"),
-	OCELOT = NamespacedKey.literal("minecraft:ocelot"),
-	OMINOUS_ITEM_SPAWNER = NamespacedKey.literal("minecraft:ominous_item_spawner"),
-	PAINTING = NamespacedKey.literal("minecraft:painting"),
-	PALE_OAK_BOAT = NamespacedKey.literal("minecraft:pale_oak_boat"),
-	PALE_OAK_CHEST_BOAT = NamespacedKey.literal("minecraft:pale_oak_chest_boat"),
-	PANDA = NamespacedKey.literal("minecraft:panda"),
-	PARROT = NamespacedKey.literal("minecraft:parrot"),
-	PHANTOM = NamespacedKey.literal("minecraft:phantom"),
-	PIG = NamespacedKey.literal("minecraft:pig"),
-	PIGLIN = NamespacedKey.literal("minecraft:piglin"),
-	PIGLIN_BRUTE = NamespacedKey.literal("minecraft:piglin_brute"),
-	PILLAGER = NamespacedKey.literal("minecraft:pillager"),
-	PLAYER = NamespacedKey.literal("minecraft:player"),
-	POLAR_BEAR = NamespacedKey.literal("minecraft:polar_bear"),
-	POTION = NamespacedKey.literal("minecraft:potion"),
-	PUFFERFISH = NamespacedKey.literal("minecraft:pufferfish"),
-	RABBIT = NamespacedKey.literal("minecraft:rabbit"),
-	RAVAGER = NamespacedKey.literal("minecraft:ravager"),
-	SALMON = NamespacedKey.literal("minecraft:salmon"),
-	SHEEP = NamespacedKey.literal("minecraft:sheep"),
-	SHULKER = NamespacedKey.literal("minecraft:shulker"),
-	SHULKER_BULLET = NamespacedKey.literal("minecraft:shulker_bullet"),
-	SILVERFISH = NamespacedKey.literal("minecraft:silverfish"),
-	SKELETON = NamespacedKey.literal("minecraft:skeleton"),
-	SKELETON_HORSE = NamespacedKey.literal("minecraft:skeleton_horse"),
-	SLIME = NamespacedKey.literal("minecraft:slime"),
-	SMALL_FIREBALL = NamespacedKey.literal("minecraft:small_fireball"),
-	SNIFFER = NamespacedKey.literal("minecraft:sniffer"),
-	SNOWBALL = NamespacedKey.literal("minecraft:snowball"),
-	SNOW_GOLEM = NamespacedKey.literal("minecraft:snow_golem"),
-	SPAWNER_MINECART = NamespacedKey.literal("minecraft:spawner_minecart"),
-	SPECTRAL_ARROW = NamespacedKey.literal("minecraft:spectral_arrow"),
-	SPIDER = NamespacedKey.literal("minecraft:spider"),
-	SPRUCE_BOAT = NamespacedKey.literal("minecraft:spruce_boat"),
-	SPRUCE_CHEST_BOAT = NamespacedKey.literal("minecraft:spruce_chest_boat"),
-	SQUID = NamespacedKey.literal("minecraft:squid"),
-	STRAY = NamespacedKey.literal("minecraft:stray"),
-	STRIDER = NamespacedKey.literal("minecraft:strider"),
-	TADPOLE = NamespacedKey.literal("minecraft:tadpole"),
-	TEXT_DISPLAY = NamespacedKey.literal("minecraft:text_display"),
-	TNT = NamespacedKey.literal("minecraft:tnt"),
-	TNT_MINECART = NamespacedKey.literal("minecraft:tnt_minecart"),
-	TRADER_LLAMA = NamespacedKey.literal("minecraft:trader_llama"),
-	TRIDENT = NamespacedKey.literal("minecraft:trident"),
-	TROPICAL_FISH = NamespacedKey.literal("minecraft:tropical_fish"),
-	TURTLE = NamespacedKey.literal("minecraft:turtle"),
-	VEX = NamespacedKey.literal("minecraft:vex"),
-	VILLAGER = NamespacedKey.literal("minecraft:villager"),
-	VINDICATOR = NamespacedKey.literal("minecraft:vindicator"),
-	WANDERING_TRADER = NamespacedKey.literal("minecraft:wandering_trader"),
-	WARDEN = NamespacedKey.literal("minecraft:warden"),
-	WIND_CHARGE = NamespacedKey.literal("minecraft:wind_charge"),
-	WITCH = NamespacedKey.literal("minecraft:witch"),
-	WITHER = NamespacedKey.literal("minecraft:wither"),
-	WITHER_SKELETON = NamespacedKey.literal("minecraft:wither_skeleton"),
-	WITHER_SKULL = NamespacedKey.literal("minecraft:wither_skull"),
-	WOLF = NamespacedKey.literal("minecraft:wolf"),
-	ZOGLIN = NamespacedKey.literal("minecraft:zoglin"),
-	ZOMBIE = NamespacedKey.literal("minecraft:zombie"),
-	ZOMBIE_HORSE = NamespacedKey.literal("minecraft:zombie_horse"),
-	ZOMBIE_VILLAGER = NamespacedKey.literal("minecraft:zombie_villager"),
-	ZOMBIFIED_PIGLIN = NamespacedKey.literal("minecraft:zombified_piglin");
+	public static final RegistryValueKey<EntityType>
+	ACACIA_BOAT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:acacia_boat")),
+	ACACIA_CHEST_BOAT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:acacia_chest_boat")),
+	ALLAY = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:allay")),
+	AREA_EFFECT_CLOUD = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:area_effect_cloud")),
+	ARMADILLO = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:armadillo")),
+	ARMOR_STAND = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:armor_stand")),
+	ARROW = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:arrow")),
+	AXOLOTL = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:axolotl")),
+	BAMBOO_CHEST_RAFT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:bamboo_chest_raft")),
+	BAMBOO_RAFT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:bamboo_raft")),
+	BAT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:bat")),
+	BEE = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:bee")),
+	BIRCH_BOAT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:birch_boat")),
+	BIRCH_CHEST_BOAT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:birch_chest_boat")),
+	BLAZE = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:blaze")),
+	BLOCK_DISPLAY = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:block_display")),
+	BOGGED = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:bogged")),
+	BREEZE = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:breeze")),
+	BREEZE_WIND_CHARGE = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:breeze_wind_charge")),
+	CAMEL = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:camel")),
+	CAT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:cat")),
+	CAVE_SPIDER = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:cave_spider")),
+	CHERRY_BOAT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:cherry_boat")),
+	CHERRY_CHEST_BOAT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:cherry_chest_boat")),
+	CHEST_MINECART = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:chest_minecart")),
+	CHICKEN = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:chicken")),
+	COD = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:cod")),
+	COMMAND_BLOCK_MINECART = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:command_block_minecart")),
+	COW = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:cow")),
+	CREAKING = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:creaking")),
+	CREEPER = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:creeper")),
+	DARK_OAK_BOAT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:dark_oak_boat")),
+	DARK_OAK_CHEST_BOAT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:dark_oak_chest_boat")),
+	DOLPHIN = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:dolphin")),
+	DONKEY = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:donkey")),
+	DRAGON_FIREBALL = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:dragon_fireball")),
+	DROWNED = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:drowned")),
+	EGG = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:egg")),
+	ELDER_GUARDIAN = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:elder_guardian")),
+	ENDERMAN = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:enderman")),
+	ENDERMITE = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:endermite")),
+	ENDER_DRAGON = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:ender_dragon")),
+	ENDER_PEARL = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:ender_pearl")),
+	END_CRYSTAL = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:end_crystal")),
+	EVOKER = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:evoker")),
+	EVOKER_FANGS = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:evoker_fangs")),
+	EXPERIENCE_BOTTLE = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:experience_bottle")),
+	EXPERIENCE_ORB = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:experience_orb")),
+	EYE_OF_ENDER = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:eye_of_ender")),
+	FALLING_BLOCK = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:falling_block")),
+	FIREBALL = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:fireball")),
+	FIREWORK_ROCKET = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:firework_rocket")),
+	FISHING_BOBBER = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:fishing_bobber")),
+	FOX = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:fox")),
+	FROG = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:frog")),
+	FURNACE_MINECART = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:furnace_minecart")),
+	GHAST = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:ghast")),
+	GIANT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:giant")),
+	GLOW_ITEM_FRAME = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:glow_item_frame")),
+	GLOW_SQUID = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:glow_squid")),
+	GOAT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:goat")),
+	GUARDIAN = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:guardian")),
+	HOGLIN = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:hoglin")),
+	HOPPER_MINECART = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:hopper_minecart")),
+	HORSE = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:horse")),
+	HUSK = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:husk")),
+	ILLUSIONER = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:illusioner")),
+	INTERACTION = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:interaction")),
+	IRON_GOLEM = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:iron_golem")),
+	ITEM = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:item")),
+	ITEM_DISPLAY = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:item_display")),
+	ITEM_FRAME = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:item_frame")),
+	JUNGLE_BOAT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:jungle_boat")),
+	JUNGLE_CHEST_BOAT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:jungle_chest_boat")),
+	LEASH_KNOT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:leash_knot")),
+	LIGHTNING_BOLT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:lightning_bolt")),
+	LLAMA = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:llama")),
+	LLAMA_SPIT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:llama_spit")),
+	MAGMA_CUBE = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:magma_cube")),
+	MANGROVE_BOAT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:mangrove_boat")),
+	MANGROVE_CHEST_BOAT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:mangrove_chest_boat")),
+	MARKER = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:marker")),
+	MINECART = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:minecart")),
+	MOOSHROOM = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:mooshroom")),
+	MULE = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:mule")),
+	OAK_BOAT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:oak_boat")),
+	OAK_CHEST_BOAT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:oak_chest_boat")),
+	OCELOT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:ocelot")),
+	OMINOUS_ITEM_SPAWNER = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:ominous_item_spawner")),
+	PAINTING = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:painting")),
+	PALE_OAK_BOAT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:pale_oak_boat")),
+	PALE_OAK_CHEST_BOAT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:pale_oak_chest_boat")),
+	PANDA = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:panda")),
+	PARROT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:parrot")),
+	PHANTOM = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:phantom")),
+	PIG = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:pig")),
+	PIGLIN = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:piglin")),
+	PIGLIN_BRUTE = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:piglin_brute")),
+	PILLAGER = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:pillager")),
+	PLAYER = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:player")),
+	POLAR_BEAR = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:polar_bear")),
+	POTION = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:potion")),
+	PUFFERFISH = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:pufferfish")),
+	RABBIT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:rabbit")),
+	RAVAGER = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:ravager")),
+	SALMON = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:salmon")),
+	SHEEP = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:sheep")),
+	SHULKER = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:shulker")),
+	SHULKER_BULLET = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:shulker_bullet")),
+	SILVERFISH = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:silverfish")),
+	SKELETON = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:skeleton")),
+	SKELETON_HORSE = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:skeleton_horse")),
+	SLIME = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:slime")),
+	SMALL_FIREBALL = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:small_fireball")),
+	SNIFFER = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:sniffer")),
+	SNOWBALL = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:snowball")),
+	SNOW_GOLEM = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:snow_golem")),
+	SPAWNER_MINECART = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:spawner_minecart")),
+	SPECTRAL_ARROW = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:spectral_arrow")),
+	SPIDER = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:spider")),
+	SPRUCE_BOAT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:spruce_boat")),
+	SPRUCE_CHEST_BOAT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:spruce_chest_boat")),
+	SQUID = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:squid")),
+	STRAY = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:stray")),
+	STRIDER = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:strider")),
+	TADPOLE = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:tadpole")),
+	TEXT_DISPLAY = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:text_display")),
+	TNT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:tnt")),
+	TNT_MINECART = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:tnt_minecart")),
+	TRADER_LLAMA = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:trader_llama")),
+	TRIDENT = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:trident")),
+	TROPICAL_FISH = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:tropical_fish")),
+	TURTLE = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:turtle")),
+	VEX = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:vex")),
+	VILLAGER = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:villager")),
+	VINDICATOR = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:vindicator")),
+	WANDERING_TRADER = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:wandering_trader")),
+	WARDEN = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:warden")),
+	WIND_CHARGE = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:wind_charge")),
+	WITCH = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:witch")),
+	WITHER = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:wither")),
+	WITHER_SKELETON = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:wither_skeleton")),
+	WITHER_SKULL = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:wither_skull")),
+	WOLF = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:wolf")),
+	ZOGLIN = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:zoglin")),
+	ZOMBIE = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:zombie")),
+	ZOMBIE_HORSE = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:zombie_horse")),
+	ZOMBIE_VILLAGER = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:zombie_villager")),
+	ZOMBIFIED_PIGLIN = new RegistryValueKey<>(REGISTRY_KEY, NamespacedKey.literal("minecraft:zombified_piglin"));
 	
 	private final Class<? extends Entity> clazz;
 	private final Constructor<? extends Entity> constructor;
@@ -197,7 +194,7 @@ public class EntityType extends ProtocolRegistryValueBase implements ProtocolReg
 	public EntityType(ConfigurationSection cfg) {
 		super(cfg);
 		this.clazz = ClassFactory.getClass(cfg.getString("entityClass"));
-		this.constructor = ClassFactory.getConstructor(clazz, EntityType.class, UUID.class);
+		this.constructor = ClassFactory.getConstructor(clazz, EntityType.class);
 	}
 	
 	public Class<? extends Entity> getEntityClass() {
@@ -219,26 +216,22 @@ public class EntityType extends ProtocolRegistryValueBase implements ProtocolReg
 	}
 	
 	public static EntityType getByID(int id) {
-		return REGISTRY.getByID(id);
+		return getRegistry().getByID(id);
 	}
 	
 	public static EntityType getByName(String name) {
-		EntityType ent = REGISTRY.get(name);
+		EntityType ent = REGISTRY_KEY.getValue(name);
 		if (ent == null)
 			throw new IllegalArgumentException("No value found with name: " + name);
 		return ent;
 	}
 	
 	public static EntityType get(NamespacedKey key) {
-		return REGISTRY.get(key);
+		return REGISTRY_KEY.getValue(key);
 	}
 	
 	public static ProtocolRegistry<EntityType> getRegistry() {
-		return REGISTRY;
-	}
-	
-	public static Collection<EntityType> values() {
-		return REGISTRY.values();
+		return REGISTRY_KEY.getRegistry();
 	}
 
 }

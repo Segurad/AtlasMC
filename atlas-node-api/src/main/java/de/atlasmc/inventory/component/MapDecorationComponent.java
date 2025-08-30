@@ -11,7 +11,7 @@ public interface MapDecorationComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(MapDecorationComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.compoundMapString2Type(ComponentType.MAP_DECORATIONS, MapDecorationComponent::hasDecoration, MapDecorationComponent::getDecorations, MapIcon.NBT_HANDLER)
+					.compoundMapString2Type(ComponentType.MAP_DECORATIONS.getNamespacedKey(), MapDecorationComponent::hasDecoration, MapDecorationComponent::getDecorations, MapIcon.NBT_HANDLER)
 					.build();
 	
 	Map<String, MapIcon> getDecorations();

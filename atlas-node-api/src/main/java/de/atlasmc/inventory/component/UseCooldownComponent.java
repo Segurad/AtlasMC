@@ -9,7 +9,7 @@ public interface UseCooldownComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(UseCooldownComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(ComponentType.USE_COOLDOWN)
+					.beginComponent(ComponentType.USE_COOLDOWN.getNamespacedKey())
 					.floatField("seconds", UseCooldownComponent::getSeconds, UseCooldownComponent::setSeconds)
 					.namespacedKey("cooldown_group", UseCooldownComponent::getGroup, UseCooldownComponent::setGroup)
 					.endComponent()

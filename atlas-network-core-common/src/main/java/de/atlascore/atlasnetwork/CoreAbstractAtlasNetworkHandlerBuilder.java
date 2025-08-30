@@ -8,6 +8,7 @@ import de.atlasmc.atlasnetwork.NodeManager;
 import de.atlasmc.atlasnetwork.PermissionManager;
 import de.atlasmc.atlasnetwork.player.ProfileHandler;
 import de.atlasmc.atlasnetwork.server.ServerManager;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.util.Builder;
 
 public abstract class CoreAbstractAtlasNetworkHandlerBuilder<T extends CoreAbstractAtlasNetworkHandlerBuilder<T>> implements Builder<AtlasNetworkHandler> {
@@ -18,6 +19,7 @@ public abstract class CoreAbstractAtlasNetworkHandlerBuilder<T extends CoreAbstr
 	private PermissionManager permissionManager;
 	private UUID uuid;
 	private PublicKey publicKey;
+	private ConnectionHandler connection;
 	
 	public NodeManager getNodeManager() {
 		return nodeManager;
@@ -71,6 +73,15 @@ public abstract class CoreAbstractAtlasNetworkHandlerBuilder<T extends CoreAbstr
 	public T setPublicKey(PublicKey publicKey) {
 		this.publicKey = publicKey;
 		return getThis();
+	}
+	
+	public T setConnection(ConnectionHandler connection) {
+		this.connection = connection;
+		return getThis();
+	}
+	
+	public ConnectionHandler getConnection() {
+		return connection;
 	}
 	
 	public abstract T getThis();

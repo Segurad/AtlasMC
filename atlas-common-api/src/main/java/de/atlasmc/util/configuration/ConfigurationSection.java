@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 
 /**
@@ -13,14 +14,19 @@ public interface ConfigurationSection {
 
 	boolean contains(String path);
 
+	@Nullable
 	ConfigurationSection getConfigurationSection(String path);
 	
+	@Nullable
 	Object get(String path);
 	
+	@Nullable
 	Object get(String path, Object def);
 	
+	@Nullable
 	String getString(String path);
 	
+	@Nullable
 	String getString(String path, String def);
 
 	int getInt(String path);
@@ -43,24 +49,34 @@ public interface ConfigurationSection {
 	
 	float getFloat(String path, float def);
 	
+	@Nullable
 	List<String> getStringList(String path);
 	
+	@Nullable
 	List<String> getStringList(String path, List<String> def);
 	
+	@Nullable
 	List<ConfigurationSection> getConfigurationList(String path);
 	
+	@Nullable
 	List<ConfigurationSection> getConfigurationList(String path, List<ConfigurationSection> def);
 	
+	@Nullable
 	<T> List<T> getListOfType(String path, Class<T> clazz);
 	
+	@Nullable
 	<T> List<T> getListOfType(String path, Class<T> clazz, List<T> def);
 	
+	@Nullable
 	List<?> getList(String path);
 	
+	@Nullable
 	List<?> getList(String path, List<?> def);
 	
+	@NotNull
 	ConfigurationSection createSection(String path);
 	
+	@NotNull
 	Configuration getRoot();
 	
 	/**
@@ -81,8 +97,10 @@ public interface ConfigurationSection {
 	@Nullable
 	Object remove(String path);
 	
+	@NotNull
 	Map<String, Object> getValues();
 	
+	@NotNull
 	Set<String> getKeys();
 	
 	/**

@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Empty immutable implementation of {@link Configuration}
+ */
 final class EmptyConfiguration implements Configuration {
 	
 	public static final ConfigurationSection INSTANCE = new EmptyConfiguration();

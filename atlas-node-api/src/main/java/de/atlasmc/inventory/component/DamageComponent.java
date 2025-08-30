@@ -8,7 +8,7 @@ public interface DamageComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 			.builder(DamageComponent.class)
 			.include(ItemComponent.NBT_HANDLER)
-			.intField(ComponentType.DAMAGE, DamageComponent::getDamage, DamageComponent::setDamage)
+			.intField(ComponentType.DAMAGE.getNamespacedKey(), DamageComponent::getDamage, DamageComponent::setDamage)
 			.build();
 	
 	int getDamage();

@@ -19,12 +19,12 @@
 			<artifactId>atlas-network-core-common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		<!-- GPLv2 with FOSS exception -->
-		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<!-- LGPL-2.1 -->
+		<!-- https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client -->
 		<dependency>
-			<groupId>com.mysql</groupId>
-			<artifactId>mysql-connector-j</artifactId>
-			<version>9.1.0</version>
+		    <groupId>org.mariadb.jdbc</groupId>
+		    <artifactId>mariadb-java-client</artifactId>
+		    <version>3.5.5</version>
 		</dependency>
 	</dependencies>
 </project>

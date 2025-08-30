@@ -8,7 +8,6 @@ import org.joml.Vector3d;
 import de.atlasmc.Location;
 import de.atlasmc.Nameable;
 import de.atlasmc.SimpleLocation;
-import de.atlasmc.registry.Registries;
 import de.atlasmc.server.LocalServer;
 import de.atlasmc.sound.SoundEmitter;
 import de.atlasmc.tick.Tickable;
@@ -28,7 +27,7 @@ public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitte
 	public static final NBTSerializationHandler<Entity>
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(Entity.class)
-					.searchKeyConstructor("id", Registries.getRegistry(EntityType.class), EntityType::createEntity, Entity::getType)
+					.searchKeyConstructor("id", EntityType.REGISTRY_KEY, EntityType::createEntity, Entity::getType)
 					.shortField("Air", Entity::getAirTicks, Entity::setAirTicks, (short) 300)
 					.include(Nameable.NBT_HANDLER)
 					.boolField("CustomNameVisible", Entity::isCustomNameVisible, Entity::setCustomNameVisible, false)

@@ -9,7 +9,7 @@ public interface TooltipStyleComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(TooltipStyleComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.namespacedKey(ComponentType.TOOLTIP_STYLE, TooltipStyleComponent::getStyle, TooltipStyleComponent::setStyle)
+					.namespacedKey(ComponentType.TOOLTIP_STYLE.getNamespacedKey(), TooltipStyleComponent::getStyle, TooltipStyleComponent::setStyle)
 					.build();
 	
 	NamespacedKey getStyle();

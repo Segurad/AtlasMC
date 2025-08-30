@@ -9,6 +9,7 @@ import java.util.function.LongConsumer;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
+import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.tag.ListTag;
 import de.atlasmc.util.nbt.tag.NBT;
@@ -69,12 +70,12 @@ public interface NBTReader extends Closeable {
 	int getDepth() throws IOException;
 	
 	/**
-	 * Returns the current fields name as {@link CharSequence} or null
-	 * @return sequence or null
+	 * Returns the current fields name or null
+	 * @return name or null
 	 * @throws IOException 
 	 */
 	@Nullable
-	CharSequence getFieldName() throws IOException;
+	CharKey getFieldName() throws IOException;
 	
 	/**
 	 * Returns the {@link TagType} of highest list contents or null

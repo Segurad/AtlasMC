@@ -11,16 +11,16 @@ public interface PacketListener {
 	 * @param packet
 	 * @throws IOException
 	 */
-	public void handlePacket(Packet packet) throws IOException;
+	void handlePacket(Packet packet) throws IOException;
 	
 	/**
 	 * Handle queued packets sync if needed
 	 * @throws IOException
 	 */
-	public void handleSyncPackets(Log logger);
+	void handleSyncPackets(Log logger);
 	
-	public void handleUnregister();
+	void handleUnregister();
 
-	public boolean hasSyncPackets();
+	boolean hasSyncPackets();
 
 }

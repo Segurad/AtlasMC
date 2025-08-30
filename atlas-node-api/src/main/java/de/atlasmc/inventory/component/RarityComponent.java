@@ -11,7 +11,7 @@ public interface RarityComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(RarityComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.enumStringField(ComponentType.RARITY, RarityComponent::getRarity, RarityComponent::setRarity, Rarity::getByName, null)
+					.enumStringField(ComponentType.RARITY.getNamespacedKey(), RarityComponent::getRarity, RarityComponent::setRarity, Rarity::getByName, null)
 					.build();
 	
 	Rarity getRarity();

@@ -285,7 +285,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 							if (cursorItem == null) {
 								action = InventoryAction.PICKUP_ALL;
 							} else if (slotItem.isSimilar(cursorItem)) {
-								if (slotItem.getAmount() < slotItem.getMaxStackSize()) {
+								if (slotItem.getAmount() < slotItem.getMaxAmount()) {
 									action = InventoryAction.PLACE_SOME;
 								} else {
 									action = InventoryAction.NOTHING;
@@ -302,7 +302,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 							if (cursorItem == null) {
 								action = InventoryAction.PICKUP_HALF;
 							} else if (slotItem.isSimilar(cursorItem)) {
-								if (slotItem.getAmount() < slotItem.getMaxStackSize()) {
+								if (slotItem.getAmount() < slotItem.getMaxAmount()) {
 									action = InventoryAction.PLACE_ONE;
 								} else {
 									action = InventoryAction.NOTHING;
@@ -757,7 +757,8 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			
 			EquipmentSlot hand = packet.hand;
 			PlayerInteractEvent.Action action;
-			if (block.getType().getNamespacedKey().equals(ItemType.AIR)) {
+			final BlockType air = BlockType.AIR.get();
+			if (air == block.getType()) {
 				if (hand == EquipmentSlot.MAIN_HAND) {
 					action = PlayerInteractEvent.Action.LEFT_CLICK_AIR;
 				} else action = PlayerInteractEvent.Action.RIGHT_CLICK_AIR;

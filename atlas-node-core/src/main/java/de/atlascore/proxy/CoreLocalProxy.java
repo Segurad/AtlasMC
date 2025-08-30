@@ -18,7 +18,8 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.MultiThreadIoEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
@@ -57,15 +58,15 @@ public class CoreLocalProxy extends CoreProxy implements LocalProxy {
 	public void run() {
 		if (isRunnning()) 
 			throw new RuntimeException("Proxy already running!");
-		bossGroup = new NioEventLoopGroup();
-		workerGroup = new NioEventLoopGroup();
-			ServerBootstrap b = new ServerBootstrap();
-			b.group(bossGroup, workerGroup);
-			b.channel(NioServerSocketChannel.class);
-			b.childHandler(handler);
-			b.option(ChannelOption.SO_BACKLOG, 128);
-			b.childOption(ChannelOption.SO_KEEPALIVE, true);
-			channel = b.bind(getPort()).channel();
+		bossGroup = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
+		workerGroup = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
+		ServerBootstrap b = new ServerBootstrap();
+		b.group(bossGroup, workerGroup);
+		b.channel(NioServerSocketChannel.class);
+		b.childHandler(handler);
+		b.option(ChannelOption.SO_BACKLOG, 128);
+		b.childOption(ChannelOption.SO_KEEPALIVE, true);
+		channel = b.bind(getPort()).channel();
 		logger.info("Proxy running on {}", getPort());
 	}
 	

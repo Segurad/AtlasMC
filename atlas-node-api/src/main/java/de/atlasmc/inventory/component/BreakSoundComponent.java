@@ -9,7 +9,7 @@ public interface BreakSoundComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(BreakSoundComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.addField(Sound.getNBTSoundField(ComponentType.BREAK_SOUND, BreakSoundComponent::getSound, BreakSoundComponent::setSound, null))
+					.addField(Sound.getNBTSoundField(ComponentType.BREAK_SOUND.getNamespacedKey(), BreakSoundComponent::getSound, BreakSoundComponent::setSound, null))
 					.build();
 	
 	Sound getSound();

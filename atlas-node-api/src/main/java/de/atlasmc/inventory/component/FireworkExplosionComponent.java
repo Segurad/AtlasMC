@@ -9,7 +9,7 @@ public interface FireworkExplosionComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(FireworkExplosionComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.typeCompoundField(ComponentType.FIREWORK_EXPLOSION, FireworkExplosionComponent::getExplosion, FireworkExplosionComponent::setExplosion, FireworkExplosion.NBT_HANDLER)
+					.typeCompoundField(ComponentType.FIREWORK_EXPLOSION.getNamespacedKey(), FireworkExplosionComponent::getExplosion, FireworkExplosionComponent::setExplosion, FireworkExplosion.NBT_HANDLER)
 					.build();
 	
 	FireworkExplosion getExplosion();

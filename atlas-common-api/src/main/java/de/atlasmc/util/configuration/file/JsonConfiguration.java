@@ -192,7 +192,7 @@ public class JsonConfiguration extends FileConfiguration {
 		return cfg;
 	}
 
-	public static FileConfiguration loadConfiguration(InputStream input) throws IOException {
+	public static JsonConfiguration loadConfiguration(InputStream input) throws IOException {
 		JsonConfiguration cfg = new JsonConfiguration();
 		cfg.load(input);
 		return cfg;

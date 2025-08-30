@@ -14,6 +14,7 @@ class CoreAtlasNetworkConnectMasterStageHandler implements StartupStageHandler {
 
 	@Override
 	public void prepareStage(StartupContext context) {
+		context.getLogger().info("Connecting to master...");
 		context.setContex("builder", new CoreAtlasNetworkHandlerBuilder());
 	}
 	
@@ -32,6 +33,7 @@ class CoreAtlasNetworkConnectMasterStageHandler implements StartupStageHandler {
 	public void finalizeStage(StartupContext context) {
 		CoreAtlasNetworkHandlerBuilder builder = context.getContext("builder");
 		AtlasNetwork.init(builder.build());
+		context.getLogger().info("Connected to master successfully...");
 	}
 
 }

@@ -8,7 +8,6 @@ import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
-import de.atlasmc.util.map.key.CharKey;
 
 public interface Registry<T> extends Namespaced {
 	
@@ -56,7 +55,7 @@ public interface Registry<T> extends Namespaced {
 	Collection<T> values();
 	
 	@NotNull
-	Set<CharKey> keySet();
+	Set<String> keySet();
 	
 	@NotNull
 	Set<PluginHandle> getHandles();

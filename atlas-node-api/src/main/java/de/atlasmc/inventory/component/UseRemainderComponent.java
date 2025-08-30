@@ -9,7 +9,7 @@ public interface UseRemainderComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(UseRemainderComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.typeCompoundField(ComponentType.USE_REMAINDER, UseRemainderComponent::getItem, UseRemainderComponent::setItem, ItemStack.NBT_HANDLER)
+					.typeCompoundField(ComponentType.USE_REMAINDER.getNamespacedKey(), UseRemainderComponent::getItem, UseRemainderComponent::setItem, ItemStack.NBT_HANDLER)
 					.build();
 	
 	ItemStack getItem();

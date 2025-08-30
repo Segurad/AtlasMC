@@ -9,7 +9,7 @@ public interface ItemModelComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(ItemModelComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.namespacedKey(ComponentType.ITEM_MODEL, ItemModelComponent::getModel, ItemModelComponent::setModel)
+					.namespacedKey(ComponentType.ITEM_MODEL.getNamespacedKey(), ItemModelComponent::getModel, ItemModelComponent::setModel)
 					.build();
 	
 	NamespacedKey getModel();

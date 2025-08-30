@@ -31,7 +31,7 @@ import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.ConfigurationSerializable;
-import de.atlasmc.util.configuration.InvalidConfigurationException;
+import de.atlasmc.util.configuration.ConfigurationException;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
 import de.atlasmc.util.map.ConcurrentLinkedListMultimap;
 import de.atlasmc.util.map.Multimap;
@@ -83,14 +83,14 @@ public class Commands {
 	 * @param inheritPermission
 	 * @param inheritSourceValidators
 	 * @return command
-	 * @throws InvalidConfigurationException
+	 * @throws ConfigurationException
 	 */
 	public static Command loadCommand(ConfigurationSection config) {
 		if (config == null)
 			throw new IllegalArgumentException("config can not be null!");
 		String cmdName = config.getString("name");
 		if (cmdName == null)
-			throw new InvalidConfigurationException("\"name\" is not defined!", config);
+			throw new ConfigurationException("\"name\" is not defined!", config);
 		Command command = new Command(cmdName);
 		String cmdDescription = config.getString("cmd-description");
 		command.setCommandDescription(cmdDescription);
@@ -110,7 +110,7 @@ public class Commands {
 					templates.put(key, template);
 				}
 			} catch(Exception e) {
-				throw new InvalidConfigurationException("Error while loading templates for command: " + cmdName, e);
+				throw new ConfigurationException("Error while loading templates for command: " + cmdName, e);
 			}
 		}
 		if (aliaes != null)
@@ -118,7 +118,7 @@ public class Commands {
 		try {
 			loadArg(config, command, templates, null, null);
 		} catch(Exception e) {
-			throw new InvalidConfigurationException("Error while loading command: " + cmdName, e);
+			throw new ConfigurationException("Error while loading command: " + cmdName, e);
 		}
 		return command;
 	}
@@ -129,7 +129,7 @@ public class Commands {
 	 * @return commands or empty collection
 	 * @throws FileNotFoundException
 	 * @throws IOException
-	 * @throws InvalidConfigurationException
+	 * @throws ConfigurationException
 	 */
 	public static Collection<Command> loadCommands(File file) throws IOException {
 		if (file == null)
@@ -161,7 +161,7 @@ public class Commands {
 			arg = loadVarArg(config, templates, permission, validator);
 			break;
 		default:
-			throw new InvalidConfigurationException("Unknwon arg type: " + type);
+			throw new ConfigurationException("Unknwon arg type: " + type);
 		}
 		return arg;
 	}
@@ -177,7 +177,7 @@ public class Commands {
 			CommandExecutor executor = registry.get(executorKey);
 			arg.setExecutor(executor);
 			if (executor == null)
-				throw new InvalidConfigurationException("No executor with name: " + executorKey);
+				throw new ConfigurationException("No executor with name: " + executorKey);
 		}
 		List<ConfigurationSection> literalArgs = config.getListOfType("args", ConfigurationSection.class);
 		if (literalArgs != null) {
@@ -204,7 +204,7 @@ public class Commands {
 	private static LiteralCommandArg loadLiteralArg(ConfigurationSection config, Map<String, CommandArg> templates, String permission, CommandSourceValidator validator) {
 		String argName = config.getString("name");
 		if (argName == null)
-			throw new InvalidConfigurationException("\"name\" is not defined!", config);
+			throw new ConfigurationException("\"name\" is not defined!", config);
 		LiteralCommandArg arg = new LiteralCommandArg(argName);
 		List<String> aliaes = config.getStringList("aliases");
 		if (aliaes != null)
@@ -218,32 +218,32 @@ public class Commands {
 	private static VarCommandArg loadVarArg(ConfigurationSection config, Map<String, CommandArg> templates, String permission, CommandSourceValidator validator) {
 		String argName = config.getString("name");
 		if (argName == null)
-			throw new InvalidConfigurationException("\"name\" is not defined!", config);
+			throw new ConfigurationException("\"name\" is not defined!", config);
 		VarCommandArg arg = new VarCommandArg(argName);
 		loadArg(config, arg, templates, permission, validator);
 		// load parser
 		Object rawParser = config.get("parser");
 		if (rawParser == null)
-			throw new InvalidConfigurationException("\"parser\" is not defined!", config);
+			throw new ConfigurationException("\"parser\" is not defined!", config);
 		Registry<Class<? extends VarArgParser>> parserRegistry = Registries.getRegistry(VarArgParser.class);
 		Class<? extends VarArgParser> parserClass = null;
 		ConfigurationSection parserCfg = null;
 		if (rawParser instanceof String parserKey) {
 			parserClass = parserRegistry.get(parserKey);
 			if (parserClass == null)
-				throw new InvalidConfigurationException("Unable to find the defined parser: " + parserKey);
+				throw new ConfigurationException("Unable to find the defined parser: " + parserKey);
 			parserCfg = Configuration.of();
 		} else if (rawParser instanceof ConfigurationSection parserConfig) {
 			String parserKey = parserConfig.getString("type");
 			if (parserKey != null) {
 				parserClass = parserRegistry.get(parserKey);
 				if (parserClass == null)
-					throw new InvalidConfigurationException("Unable to find the defined parser: " + parserKey);
+					throw new ConfigurationException("Unable to find the defined parser: " + parserKey);
 			} else
-				throw new InvalidConfigurationException("\"type\" is not defined!", config);
+				throw new ConfigurationException("\"type\" is not defined!", config);
 			parserCfg = parserConfig;
 		} else {
-			throw new InvalidConfigurationException("\"parser\" must be a String or Object!", config);
+			throw new ConfigurationException("\"parser\" must be a String or Object!", config);
 		}
 		VarArgParser<?> parser = ConfigurationSerializable.deserialize(parserCfg, parserClass);
 		arg.setParser(parser);
@@ -279,10 +279,10 @@ public class Commands {
 							arg.setSuggestion(suggestion);
 						} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 								| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-							throw new InvalidConfigurationException("Error while instaciating SuggestionType", e, config);
+							throw new ConfigurationException("Error while instaciating SuggestionType", e, config);
 						}
 					} else {
-						throw new InvalidConfigurationException("Unable to find the defined suggestion type: " + suggestionKey, config);
+						throw new ConfigurationException("Unable to find the defined suggestion type: " + suggestionKey, config);
 					}
 					break;
 				}

@@ -8,7 +8,7 @@ public interface MaxDamageComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(MaxDamageComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.intField(ComponentType.MAX_DAMAGE, MaxDamageComponent::getMaxDamage, MaxDamageComponent::setMaxDamage, 0)
+					.intField(ComponentType.MAX_DAMAGE.getNamespacedKey(), MaxDamageComponent::getMaxDamage, MaxDamageComponent::setMaxDamage, 0)
 					.build();
 	
 	int getMaxDamage();

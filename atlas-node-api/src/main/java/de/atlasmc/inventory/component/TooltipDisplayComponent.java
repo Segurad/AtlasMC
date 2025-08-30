@@ -10,7 +10,7 @@ public interface TooltipDisplayComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(TooltipDisplayComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(ComponentType.TOOLTIP_DISPLAY)
+					.beginComponent(ComponentType.TOOLTIP_DISPLAY.getNamespacedKey())
 					.boolField("hide_tooltip", TooltipDisplayComponent::isHideTooltip, TooltipDisplayComponent::setHideTooltip, false)
 					.registryValueList("hidden_components", TooltipDisplayComponent::hasHiddenComponents, TooltipDisplayComponent::getHiddenComponents, ComponentType.REGISTRY_KEY)
 					.endComponent()

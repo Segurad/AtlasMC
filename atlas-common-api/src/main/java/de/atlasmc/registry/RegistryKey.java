@@ -4,7 +4,7 @@ import de.atlasmc.NamespacedAccessKey;
 import de.atlasmc.NamespacedKey;
 
 public class RegistryKey<T> extends NamespacedAccessKey<Registry<T>> {
-
+	
 	public RegistryKey(NamespacedKey key) {
 		super(key);
 	}

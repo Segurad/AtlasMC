@@ -9,7 +9,7 @@ public interface BaseColorComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(BaseColorComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.enumStringField(ComponentType.BASE_COLOR, BaseColorComponent::getColor, BaseColorComponent::setColor, DyeColor::getByName, null)
+					.enumStringField(ComponentType.BASE_COLOR.getNamespacedKey(), BaseColorComponent::getColor, BaseColorComponent::setColor, DyeColor::getByName, null)
 					.build();
 	
 	BaseColorComponent clone();

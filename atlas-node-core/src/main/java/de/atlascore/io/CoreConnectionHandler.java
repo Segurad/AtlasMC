@@ -81,7 +81,7 @@ public abstract class CoreConnectionHandler implements ConnectionHandler {
 	
 	public CoreConnectionHandler(SocketChannel channel) {
 		this(channel, HandshakeProtocol.DEFAULT_PROTOCOL);
-		registerPacketListener(HandshakeProtocol.DEFAULT_PROTOCOL.createDefaultPacketListener(this));
+		registerPacketListener(HandshakeProtocol.DEFAULT_PROTOCOL.createDefaultPacketListenerIn(this));
 	}
 	
 	public CoreConnectionHandler(SocketChannel channel, Protocol protocol) {

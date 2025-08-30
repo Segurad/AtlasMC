@@ -8,7 +8,7 @@ public interface MaxStackSizeComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(MaxStackSizeComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.intField(ComponentType.MAX_STACK_SIZE, MaxStackSizeComponent::getMaxStackSize, MaxStackSizeComponent::setMaxStackSize, 0)
+					.intField(ComponentType.MAX_STACK_SIZE.getNamespacedKey(), MaxStackSizeComponent::getMaxStackSize, MaxStackSizeComponent::setMaxStackSize, 0)
 					.build();
 	
 	int getMaxStackSize();

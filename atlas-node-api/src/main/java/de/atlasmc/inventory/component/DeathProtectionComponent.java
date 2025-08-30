@@ -10,7 +10,7 @@ public interface DeathProtectionComponent extends ItemComponent {
 	public static final NBTSerializationHandler<DeathProtectionComponent>
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(DeathProtectionComponent.class)
-					.beginComponent(ComponentType.DEATH_PROTECTION)
+					.beginComponent(ComponentType.DEATH_PROTECTION.getNamespacedKey())
 					.typeList("death_effects", DeathProtectionComponent::hasEffects, DeathProtectionComponent::getEffects, ComponentEffect.NBT_HANDLER)
 					.endComponent()
 					.build();

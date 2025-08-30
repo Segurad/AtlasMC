@@ -9,7 +9,7 @@ public interface JukeboxPlayableComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(JukeboxPlayableComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.namespacedKey(ComponentType.JUKEBOX_PLAYABLE, JukeboxPlayableComponent::getSong, JukeboxPlayableComponent::setSong)
+					.namespacedKey(ComponentType.JUKEBOX_PLAYABLE.getNamespacedKey(), JukeboxPlayableComponent::getSong, JukeboxPlayableComponent::setSong)
 					.build();
 	
 	NamespacedKey getSong();

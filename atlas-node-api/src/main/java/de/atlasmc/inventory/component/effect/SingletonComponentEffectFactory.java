@@ -2,16 +2,18 @@ package de.atlasmc.inventory.component.effect;
 
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.ConfigurationSerializable;
-import de.atlasmc.util.factory.BaseSingletonFactory;
+import de.atlasmc.util.factory.ClassFactory;
 
-public class SingletonComponentEffectFactory extends BaseSingletonFactory<ComponentEffect> implements ComponentEffectFactory, ConfigurationSerializable {
+public class SingletonComponentEffectFactory extends ClassFactory<ComponentEffect> implements ComponentEffectFactory, ConfigurationSerializable {
 
-	public SingletonComponentEffectFactory(Class<?> clazz) {
+	private ComponentEffect instance;
+	
+	public SingletonComponentEffectFactory(Class<? extends ComponentEffect> clazz) {
 		super(clazz);
 	}
 	
 	public SingletonComponentEffectFactory(ConfigurationSection config) throws ClassNotFoundException {
-		super(Class.forName(config.getString("effect")));
+		super(getClass(config.getString("effect")), ComponentEffectType.class);
 	}
 
 	@Override
@@ -22,7 +24,11 @@ public class SingletonComponentEffectFactory extends BaseSingletonFactory<Compon
 
 	@Override
 	public ComponentEffect createEffect(ComponentEffectType type) {
-		return super.create();
+		ComponentEffect instance = this.instance;
+		if (instance.getType() == type)
+			return instance;
+		this.instance = instance = create(type);
+		return instance;
 	}
 
 }

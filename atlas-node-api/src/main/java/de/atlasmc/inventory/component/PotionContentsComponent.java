@@ -12,13 +12,13 @@ public interface PotionContentsComponent extends AbstractPotionEffectComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(PotionContentsComponent.class)
 					.include(AbstractPotionEffectComponent.NBT_HANDLER)
-					.beginComponent(ComponentType.POTION_CONTENTS, PotionContentsComponent::hasCustomData)
+					.beginComponent(ComponentType.POTION_CONTENTS.getNamespacedKey(), PotionContentsComponent::hasCustomData)
 					.registryValue("potion", PotionContentsComponent::getPotionData, PotionContentsComponent::setPotionData, PotionData.REGISTRY_KEY)
 					.color("custom_color", PotionContentsComponent::getCustomColor, PotionContentsComponent::setCustomColor)
 					.chat("custom_name", PotionContentsComponent::getCustomName, PotionContentsComponent::setCustomName)
 					.typeList("custom_effects", PotionContentsComponent::hasEffects, PotionContentsComponent::getEffects, PotionEffect.NBT_HANDLER)
 					.endComponent()
-					.registryValue(ComponentType.POTION_CONTENTS, PotionContentsComponent::getPotionData, PotionContentsComponent::setPotionData, PotionData.REGISTRY_KEY)
+					.registryValue(ComponentType.POTION_CONTENTS.getNamespacedKey(), PotionContentsComponent::getPotionData, PotionContentsComponent::setPotionData, PotionData.REGISTRY_KEY)
 					.build();
 	
 	PotionData getPotionData();

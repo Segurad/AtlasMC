@@ -62,7 +62,7 @@ public class CoreArrow extends CoreAbstractArrow implements Arrow {
 		if (item == null) {
 			setColor(null);
 		} else {
-			PotionContentsComponent comp = item.getEffectiveComponent(ComponentType.get(ComponentType.POTION_CONTENTS));
+			PotionContentsComponent comp = item.getEffectiveComponent(ComponentType.POTION_CONTENTS.get());
 			if (comp == null) {
 				setColor(null);
 			} else {
@@ -74,14 +74,14 @@ public class CoreArrow extends CoreAbstractArrow implements Arrow {
 	@Override
 	public PotionContentsComponent getPotionContents() {
 		ItemStack item = getItem();
-		return item == null ? null : item.getEffectiveComponent(ComponentType.get(ComponentType.POTION_CONTENTS));
+		return item == null ? null : item.getEffectiveComponent(ComponentType.POTION_CONTENTS.get());
 	}
 
 	@Override
 	public void setPotionContents(PotionContentsComponent contents) {
 		ItemStack item = getItem();
 		if (item == null)
-			item = new ItemStack(ItemType.TIPPED_ARROW);
+			item = new ItemStack(ItemType.TIPPED_ARROW.get());
 		item.setComponent(contents);
 		setItem(item);
 	}

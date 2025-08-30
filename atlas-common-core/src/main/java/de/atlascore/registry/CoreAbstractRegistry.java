@@ -15,12 +15,11 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.registry.RegistryEntry;
-import de.atlasmc.util.map.key.CharKey;
 
 public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 
 	protected final Map<PluginHandle, Collection<RegistryEntry<T>>> pluginEntries;
-	protected final Map<CharKey, RegistryEntry<T>> entries;
+	protected final Map<String, RegistryEntry<T>> entries;
 	protected final NamespacedKey key;
 	private volatile T defaultEntry;
 	protected final Class<?> type;
@@ -62,7 +61,7 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	public T getOrDefault(CharSequence key, T defaultValue) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");
-		RegistryEntry<T> value = entries.get(key);
+		RegistryEntry<T> value = entries.get(key.toString());
 		return value != null ? value.value() : defaultValue;
 	}
 
@@ -79,11 +78,10 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 		if (value == null)
 			throw new IllegalArgumentException("Value can not be null!");
 		validateEntry(value);
-		CharKey ckey = CharKey.literal(key);
-		RegistryEntry<T> entry = createEntry(plugin, ckey, value);
+		RegistryEntry<T> entry = createEntry(plugin, key, value);
 		RegistryEntry<T> old;
 		modifyLock.lock();
-		old = entries.put(ckey, entry);
+		old = entries.put(key, entry);
 		if (old != null) {
 			Collection<RegistryEntry<T>> entries = pluginEntries(old.plugin());
 			entries.remove(old);
@@ -98,7 +96,7 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 		return old;
 	}
 	
-	protected RegistryEntry<T> createEntry(PluginHandle plugin, CharKey key, T value) {
+	protected RegistryEntry<T> createEntry(PluginHandle plugin, String key, T value) {
 		return new CoreRegistryEntry<T>(plugin, key, value);
 	}
 	
@@ -143,7 +141,7 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	}
 	
 	@Override
-	public Set<CharKey> keySet() {
+	public Set<String> keySet() {
 		return Collections.unmodifiableSet(entries.keySet());
 	}
 	
@@ -265,10 +263,10 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	protected static class CoreRegistryEntry<T> implements RegistryEntry<T> {
 		
 		public final PluginHandle plugin;
-		public final CharKey key;
+		public final String key;
 		public final T value;
 		
-		public CoreRegistryEntry(PluginHandle plugin, CharKey key, T value) {
+		public CoreRegistryEntry(PluginHandle plugin, String key, T value) {
 			this.plugin = plugin;
 			this.key = key;
 			this.value = value;
@@ -285,7 +283,7 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 		}
 
 		@Override
-		public CharKey key() {
+		public String key() {
 			return key;
 		}
 		

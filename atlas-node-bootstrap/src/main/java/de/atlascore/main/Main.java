@@ -89,6 +89,7 @@ public class Main {
 		log.sendToConsole(true);
 		log.info("VM-Name: {}", System.getProperty("java.vm.name"));
 		log.info("VM-Verions: {}", System.getProperty("java.vm.version"));
+		log.info("VM-Vendor: {}", System.getProperty("java.vendor"));
 		log.info("OS-Name: {}", System.getProperty("os.name"));
 		Caching.init(new CoreCacheHandler());
 		if (altWorkDir)
@@ -165,12 +166,12 @@ public class Main {
 		Registries.loadRegistryEntries(Atlas.getSystem());
 		
 		Thread consoleDeamon = new Thread(() -> {
-			Atlas.getLogger().debug("Started console deamon!");
+			Atlas.getLogger().debug("Started console daemon!");
 			while (true) {
 				String command = console.readLine();
 				HandlerList.callEvent(new CommandEvent(console, command, true));
 			}
-		});
+		}, "Atlas-Console-Daemon");
 		consoleDeamon.setDaemon(true);
 		loadCommands(log, workDir);
 		
@@ -215,7 +216,6 @@ public class Main {
 		Atlas.getMainThread().startThread();
 		ThreadWatchdog.watch(Atlas.getMainThread());
 		consoleDeamon.start();
-		
 	}
 	
 	@SuppressWarnings("unchecked")

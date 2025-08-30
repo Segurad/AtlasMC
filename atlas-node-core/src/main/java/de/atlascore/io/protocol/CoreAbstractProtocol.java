@@ -1,21 +1,16 @@
 package de.atlascore.io.protocol;
 
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
-
 import de.atlasmc.io.PacketIO;
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketInbound;
 import de.atlasmc.io.PacketOutbound;
 import de.atlasmc.io.Protocol;
-import io.netty.buffer.ByteBuf;
 
 public abstract class CoreAbstractProtocol<I extends PacketInbound, O extends PacketOutbound> implements Protocol {
 	
-	private final List<PacketIO<? extends I>> packetIn;
-	private final List<PacketIO<? extends O>> packetOut;
+	private final PacketIO<?>[] packetIn;
+	private final PacketIO<?>[] packetOut;
 	private final int COUNT_IN;
 	private final int COUNT_OUT;
 	
@@ -24,8 +19,8 @@ public abstract class CoreAbstractProtocol<I extends PacketInbound, O extends Pa
 		sort(out);
 		COUNT_IN = in.length;
 		COUNT_OUT = out.length;
-		packetIn = List.of(in);
-		packetOut = List.of(out);
+		packetIn = in.clone();
+		packetOut = in.clone();
 	}
 	
 	private void sort(PacketIO<?>[] ary) {
@@ -41,38 +36,6 @@ public abstract class CoreAbstractProtocol<I extends PacketInbound, O extends Pa
 		return CoreProtocolAdapter.VERSION;
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Override
-	public <P extends Packet> P readPacket(P packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		PacketIO<P> handler = null;
-		if (packet instanceof PacketInbound)
-			handler = (PacketIO<P>) getHandlerIn(packet.getID());
-		else if (packet instanceof PacketOutbound)
-			handler = (PacketIO<P>) getHandlerOut(packet.getID());
-		else
-			throw new IOException("Unable to read this packet! (Packet is not instance of PacketPlayIn or PacketPlayOut)");
-		if (handler == null)
-			throw new IOException("Unable to find handler for packet: " + packet.getClass());
-		handler.read(packet, in, con);
-		return packet;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <P extends Packet> P writePacket(P packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		PacketIO<P> handler = null;
-		if (packet instanceof PacketInbound)
-			handler = (PacketIO<P>) getHandlerIn(packet.getID());
-		else if (packet instanceof PacketOutbound)
-			handler = (PacketIO<P>) getHandlerOut(packet.getID());
-		else
-			throw new IOException("Unable to write this packet! (Packet is not instance of PacketPlayIn or PacketPlayOut)");
-		if (handler == null)
-			throw new IOException("Unable to find handler for packet: " + packet.getClass());
-		handler.write(packet, out, con);
-		return packet;
-	}
-	
 	@Override
 	public Packet createPacketIn(int id) {
 		return getHandlerIn(id).createPacketData();
@@ -85,14 +48,18 @@ public abstract class CoreAbstractProtocol<I extends PacketInbound, O extends Pa
 	
 	public PacketIO<? extends I> getHandlerIn(int id) {
 		if (id >= COUNT_IN || id < 0)
-			throw new IllegalArgumentException("Invalid packet id: " + id);
-		return packetIn.get(id);
+			return null;
+		@SuppressWarnings("unchecked")
+		PacketIO<? extends I> packet = (PacketIO<? extends I>) packetIn[id];
+		return packet;
 	}
 
 	public PacketIO<? extends O> getHandlerOut(int id) {
 		if (id >= COUNT_OUT || id < 0)
-			throw new IllegalArgumentException("Invalid packet id: " + id);
-		return packetOut.get(id);
+			return null;
+		@SuppressWarnings("unchecked")
+		PacketIO<? extends O> packet = (PacketIO<? extends O>) packetOut[id];
+		return packet;
 	}
 
 }

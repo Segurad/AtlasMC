@@ -8,7 +8,7 @@ public interface IntangibleProjectileComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(IntangibleProjectileComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(ComponentType.INTANGIBLE_PROJECTILE)
+					.beginComponent(ComponentType.INTANGIBLE_PROJECTILE.getNamespacedKey())
 					.endComponent()
 					.build();
 	

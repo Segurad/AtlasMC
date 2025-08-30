@@ -8,7 +8,7 @@ public interface UnbreakableComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(UnbreakableComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.beginComponent(ComponentType.UNBREAKABLE)
+					.beginComponent(ComponentType.UNBREAKABLE.getNamespacedKey())
 					.endComponent()
 					.build();
 

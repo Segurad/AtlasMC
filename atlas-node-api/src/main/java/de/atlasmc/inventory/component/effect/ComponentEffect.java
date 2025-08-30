@@ -4,7 +4,6 @@ import de.atlasmc.entity.Entity;
 import de.atlasmc.inventory.ItemStack;
 import de.atlasmc.io.IOReadable;
 import de.atlasmc.io.IOWriteable;
-import de.atlasmc.registry.Registries;
 import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
@@ -13,7 +12,7 @@ public interface ComponentEffect extends NBTSerializable, IOReadable, IOWriteabl
 	public static final NBTSerializationHandler<ComponentEffect>
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(ComponentEffect.class)
-					.searchKeyConstructor("type", Registries.getRegistry(ComponentEffectType.class), ComponentEffectType::createEffect, ComponentEffect::getType)
+					.searchKeyConstructor("type", ComponentEffectType.REGISTRY_KEY, ComponentEffectType::createEffect, ComponentEffect::getType)
 					.build();
 	
 	ComponentEffectType getType();
