@@ -6,7 +6,7 @@ import java.util.UUID;
 import java.util.concurrent.Future;
 
 import de.atlasmc.atlasnetwork.player.AtlasPlayer;
-import de.atlasmc.atlasnetwork.proxy.Proxy;
+import de.atlasmc.atlasnetwork.proxy.AtlasSocket;
 import de.atlasmc.atlasnetwork.server.Server;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatType;
@@ -25,8 +25,8 @@ public class CoreAtlasPlayer implements AtlasPlayer {
 	private final UUID internalUUID;
 	private final Date firstJoin;
 	private volatile Date lastJoin;
-	private volatile Proxy originProxy;
-	private volatile Proxy proxy;
+	private volatile AtlasSocket originProxy;
+	private volatile AtlasSocket proxy;
 	private volatile Server currentServer;
 	private volatile PermissionHandler permhandler;
 	
@@ -48,11 +48,11 @@ public class CoreAtlasPlayer implements AtlasPlayer {
 		return mojangUUID;
 	}
 
-	public Proxy getOriginProxy() {
+	public AtlasSocket getOriginProxy() {
 		return originProxy;
 	}
 
-	public Proxy getProxy() {
+	public AtlasSocket getProxy() {
 		return proxy;
 	}
 

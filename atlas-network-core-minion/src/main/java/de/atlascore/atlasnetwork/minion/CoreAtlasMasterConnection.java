@@ -1,6 +1,6 @@
 package de.atlascore.atlasnetwork.minion;
 
-import de.atlascore.io.SimpleConnectionHandler;
+import de.atlascore.io.CoreSocketConnectionHandler;
 import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.log.Log;
 import io.netty.bootstrap.Bootstrap;
@@ -36,7 +36,7 @@ public class CoreAtlasMasterConnection {
 		b.handler(new ChannelInitializer<SocketChannel>() {
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
-				connection = new SimpleConnectionHandler(ch, logger);
+				connection = new CoreSocketConnectionHandler(ch, logger);
 			}
 		});
 		b.connect(host, port).addListener(listener);

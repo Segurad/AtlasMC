@@ -2,16 +2,16 @@ package de.atlasmc.master.proxy;
 
 import java.util.UUID;
 
-import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
+import de.atlasmc.atlasnetwork.proxy.SocketConfig;
 
 public interface ProxyManager {
 	
 	Proxy getProxy(UUID uuid);
 	
-	ProxyConfig getProxyConfig(String name);
+	SocketConfig getProxyConfig(String name);
 	
-	boolean addProxyConfig(ProxyConfig config);
+	boolean addProxyConfig(SocketConfig config);
 	
-	boolean removeProxyConfig(ProxyConfig config);
+	boolean removeProxyConfig(SocketConfig config);
 
 }

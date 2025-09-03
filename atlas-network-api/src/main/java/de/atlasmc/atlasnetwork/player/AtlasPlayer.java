@@ -5,7 +5,7 @@ import java.sql.Date;
 import java.util.UUID;
 import java.util.concurrent.Future;
 
-import de.atlasmc.atlasnetwork.proxy.Proxy;
+import de.atlasmc.atlasnetwork.proxy.AtlasSocket;
 import de.atlasmc.atlasnetwork.server.Server;
 import de.atlasmc.chat.Messageable;
 import de.atlasmc.permission.Permissible;
@@ -34,7 +34,7 @@ public interface AtlasPlayer extends Messageable, Permissible {
 	 * @return proxy
 	 */
 	@Nullable
-	Proxy getOriginProxy();
+	AtlasSocket getOriginProxy();
 	
 	/**
 	 * Returns the Proxy the player is currently at e.g. of when connected to another node in the network.
@@ -42,7 +42,7 @@ public interface AtlasPlayer extends Messageable, Permissible {
 	 * @return proxy
 	 */
 	@Nullable
-	Proxy getProxy();
+	AtlasSocket getProxy();
 	
 	/**
 	 * Returns whether or not the player is online.

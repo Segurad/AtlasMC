@@ -7,7 +7,7 @@ import de.atlasmc.log.Log;
 public interface PacketListener {
 	
 	/**
-	 * Handle a inbound {@link Packet}
+	 * Handle a {@link Packet}
 	 * @param packet
 	 * @throws IOException
 	 */

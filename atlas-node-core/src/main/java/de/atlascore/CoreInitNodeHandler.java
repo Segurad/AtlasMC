@@ -2,8 +2,8 @@ package de.atlascore;
 
 import de.atlascore.io.handshake.CorePacketMinecraftHandshake;
 import de.atlascore.io.protocol.CoreProtocolAdapter;
-import de.atlascore.proxy.CoreProxyManager;
 import de.atlascore.server.CoreNodeServerManager;
+import de.atlascore.socket.CoreSocketManager;
 import de.atlasmc.Atlas;
 import de.atlasmc.AtlasNodeBuilder;
 import de.atlasmc.atlasnetwork.AtlasNetwork;
@@ -22,7 +22,7 @@ class CoreInitNodeHandler implements StartupStageHandler {
 		builder.setServerManager(new CoreNodeServerManager(Atlas.getWorkdir()))
 			.setUUID(AtlasNetwork.getNodeUUID())
 			.setFactory(new CoreLocalAtlasNodeFactory())
-			.setProxyManager(new CoreProxyManager())
+			.setProxyManager(new CoreSocketManager())
 			.setProtocolAdapterHandler(new ProtocolAdapterHandler());
 		builder.getProtocolAdapterHandler().setProtocol(new CoreProtocolAdapter());
 		HandshakeProtocol.DEFAULT_PROTOCOL.setPacketIO(0x00, new CorePacketMinecraftHandshake());

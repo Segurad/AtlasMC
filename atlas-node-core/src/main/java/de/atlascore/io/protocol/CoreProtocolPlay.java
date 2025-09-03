@@ -217,4 +217,9 @@ public class CoreProtocolPlay extends CoreAbstractProtocol<PacketPlayIn, PacketP
 		throw new IllegalArgumentException("Expected PlayerConnection but got: " + o.getClass().getName());
 	}
 
+	@Override
+	public PacketListener createDefaultPacketListenerOut(Object o) {
+		return null;
+	}
+
 }

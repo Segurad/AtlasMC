@@ -1,5 +1,5 @@
 package de.atlasmc.master.proxy;
 
-public interface Proxy extends de.atlasmc.atlasnetwork.proxy.Proxy {
+public interface Proxy extends de.atlasmc.atlasnetwork.proxy.AtlasSocket {
 
 }

@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 import de.atlasmc.atlasnetwork.player.ProfileHandler;
-import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
+import de.atlasmc.atlasnetwork.proxy.SocketConfig;
 import de.atlasmc.atlasnetwork.server.ServerManager;
 import de.atlasmc.util.annotation.InternalAPI;
 import de.atlasmc.util.annotation.NotNull;
@@ -50,11 +50,11 @@ public class AtlasNetwork  {
 		return HANDLER.getNodeConfigs(names);
 	}
 	
-	public static Future<ProxyConfig> getProxyConfig(String name) {
+	public static Future<SocketConfig> getProxyConfig(String name) {
 		return HANDLER.getProxyConfig(name);
 	}
 	
-	public static Future<Collection<ProxyConfig>> getProxyConfigs(Collection<String> names) {
+	public static Future<Collection<SocketConfig>> getProxyConfigs(Collection<String> names) {
 		return HANDLER.getProxyConfigs(names);
 	}
 

@@ -51,5 +51,12 @@ public interface Protocol {
 	 * @return listener
 	 */
 	PacketListener createDefaultPacketListenerIn(Object o);
+	
+	/**
+	 * Creates the default packet listener for this protocol
+	 * @param o
+	 * @return listener
+	 */
+	PacketListener createDefaultPacketListenerOut(Object o);
 
 }

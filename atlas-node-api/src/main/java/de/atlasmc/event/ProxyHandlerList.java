@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import de.atlasmc.log.Log;
 import de.atlasmc.plugin.PluginHandle;
-import de.atlasmc.proxy.LocalProxy;
+import de.atlasmc.socket.NodeSocket;
 import de.atlasmc.util.ConcurrentLinkedList;
 import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
 import de.atlasmc.util.annotation.NotNull;
@@ -12,14 +12,14 @@ import de.atlasmc.util.map.ConcurrentLinkedListMultimap;
 
 public class ProxyHandlerList extends HandlerList {
 	
-	private final ConcurrentLinkedListMultimap<LocalProxy, EventExecutor> proxyExecutors;
+	private final ConcurrentLinkedListMultimap<NodeSocket, EventExecutor> proxyExecutors;
 	
 	public ProxyHandlerList() {
 		super();
 		proxyExecutors = new ConcurrentLinkedListMultimap<>();
 	}
 	
-	public void registerExecutor(LocalProxy proxy, EventExecutor executor) {
+	public void registerExecutor(NodeSocket proxy, EventExecutor executor) {
 		if (proxyExecutors.containsKey(proxy)) {
 			register(proxyExecutors.get(proxy), executor);
 		} else proxyExecutors.put(proxy, executor);
@@ -29,8 +29,8 @@ public class ProxyHandlerList extends HandlerList {
 	public void registerExecutor(EventExecutor executor, Object... handleroptions) {
 		if (handleroptions != null) {
 			for (Object o : handleroptions) {
-				if (LocalProxy.class.isInstance(o)) {
-					registerExecutor((LocalProxy) o, executor);
+				if (NodeSocket.class.isInstance(o)) {
+					registerExecutor((NodeSocket) o, executor);
 				} else registerExecutor(executor);
 			}
 		} else registerExecutor(executor);
@@ -41,7 +41,7 @@ public class ProxyHandlerList extends HandlerList {
 	 * @param proxy
 	 * @return LinkedListIterator or null
 	 */
-	public LinkedListIterator<EventExecutor> getExecutors(@NotNull LocalProxy proxy) {
+	public LinkedListIterator<EventExecutor> getExecutors(@NotNull NodeSocket proxy) {
 		if (proxy == null)
 			return null;
 		final ConcurrentLinkedList<EventExecutor> list = proxyExecutors.get(proxy);
@@ -53,7 +53,7 @@ public class ProxyHandlerList extends HandlerList {
 	@Override
 	protected void callEvent(Event event, boolean cancelled) {
 		@SuppressWarnings("unchecked")
-		final LocalProxy proxy = ((GenericEvent<LocalProxy, ?>) event).getEventSource();
+		final NodeSocket proxy = ((GenericEvent<NodeSocket, ?>) event).getEventSource();
 		final Log log = proxy.getLogger();
 		final LinkedListIterator<EventExecutor> proxyexes = getExecutors(proxy);
 		final LinkedListIterator<EventExecutor> globalexes = getExecutors();
@@ -72,7 +72,7 @@ public class ProxyHandlerList extends HandlerList {
 	@Override
 	public synchronized void unregisterListener(Listener listener) {
 		super.unregisterListener(listener);
-		for (LocalProxy proxy : proxyExecutors.keySet()) {
+		for (NodeSocket proxy : proxyExecutors.keySet()) {
 			internalUnregister(listener, proxyExecutors.get(proxy));
 		}
 	}

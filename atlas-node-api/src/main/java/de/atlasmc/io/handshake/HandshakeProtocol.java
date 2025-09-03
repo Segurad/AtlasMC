@@ -2,11 +2,11 @@ package de.atlasmc.io.handshake;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.PacketListener;
 import de.atlasmc.io.Protocol;
-import de.atlasmc.io.ProxyConnectionHandler;
 
 public class HandshakeProtocol implements Protocol {
 
@@ -29,10 +29,12 @@ public class HandshakeProtocol implements Protocol {
 
 	@Override
 	public PacketListener createDefaultPacketListenerIn(Object o) {
-		if (o instanceof ProxyConnectionHandler con)
-			return new HandshakePacketListener(con, this);
-		else 
-			return null;
+		return new HandshakePacketListener((ConnectionHandler) o, this);
+	}
+	
+	@Override
+	public PacketListener createDefaultPacketListenerOut(Object o) {
+		return null;
 	}
 	
 	public void setPacketIO(int id, HandshakePaketIO<? extends PacketHandshake> io) {

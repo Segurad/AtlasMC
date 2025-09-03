@@ -19,7 +19,7 @@ import de.atlasmc.Atlas;
 import de.atlasmc.atlasnetwork.NetworkInfo;
 import de.atlasmc.atlasnetwork.NetworkInfo.SlotMode;
 import de.atlasmc.atlasnetwork.NodeConfig;
-import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
+import de.atlasmc.atlasnetwork.proxy.SocketConfig;
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.log.Log;
@@ -263,7 +263,7 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 		ProxyManager proxyManager = AtlasMaster.getProxyManager();
 		List<ConfigurationSection> proxyCfgs = cfg.getConfigurationList("proxies");
 		for (ConfigurationSection proxyCfg : proxyCfgs) {
-			ProxyConfig proxy = new ProxyConfig(proxyCfg);
+			SocketConfig proxy = new SocketConfig(proxyCfg);
 			proxyManager.addProxyConfig(proxy);
 		}
 	}

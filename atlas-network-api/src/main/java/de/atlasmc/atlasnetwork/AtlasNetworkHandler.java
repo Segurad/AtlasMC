@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 import de.atlasmc.atlasnetwork.player.ProfileHandler;
-import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
+import de.atlasmc.atlasnetwork.proxy.SocketConfig;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.atlasnetwork.server.ServerManager;
 import de.atlasmc.datarepository.Repository;
@@ -38,10 +38,10 @@ public interface AtlasNetworkHandler extends Tickable {
 	Future<Collection<NodeConfig>> getNodeConfigs(Collection<String> names);
 	
 	@NotNull
-	Future<ProxyConfig> getProxyConfig(String name);
+	Future<SocketConfig> getProxyConfig(String name);
 	
 	@NotNull
-	Future<Collection<ProxyConfig>> getProxyConfigs(Collection<String> names);
+	Future<Collection<SocketConfig>> getProxyConfigs(Collection<String> names);
 
 	int getOnlinePlayerCount();
 

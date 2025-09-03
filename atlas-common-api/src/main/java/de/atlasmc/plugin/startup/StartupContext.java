@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -14,6 +15,8 @@ import de.atlasmc.log.Log;
 import de.atlasmc.plugin.AtlasModul;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginLoader;
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.map.ArrayListMultimap;
 import de.atlasmc.util.map.Multimap;
 
@@ -73,23 +76,30 @@ public class StartupContext {
 	private Log logger;
 
 	public StartupContext(Log logger) {
+		this.logger = Objects.requireNonNull(logger);
 		this.stageHandlers = new ArrayListMultimap<>();
 		this.failHandlers = new HashSet<>();
 		this.stageChangeHandlers = new HashSet<>();
 		this.context = new HashMap<>();
 		this.persistentContext = new HashMap<>();
 		this.stages = new ArrayList<>();
-		this.logger = logger;
 	}
 	
+	/**
+	 * Returns the logger used for startup
+	 * @return logger
+	 */
+	@NotNull
 	public Log getLogger() {
 		return logger;
 	}
 	
+	@Nullable
 	public Object setContex(String key, Object value) {
 		return context.put(key, value);
 	}
 	
+	@Nullable
 	public Object setPersistentContext(String key, Object value) {
 		return persistentContext.put(key, value);
 	}
@@ -98,6 +108,7 @@ public class StartupContext {
 	 * Returns the context
 	 * @return context
 	 */
+	@NotNull
 	public Map<String, Object> getContext() {
 		return context;
 	}
@@ -106,6 +117,7 @@ public class StartupContext {
 	 * Returns the persistent context
 	 * @return persistent context
 	 */
+	@NotNull
 	public Map<String, Object> getPersistentContext() {
 		return persistentContext;
 	}
@@ -117,22 +129,31 @@ public class StartupContext {
 	 * @return value of this key
 	 * @throws ClassCastException if the returned type is not compatible
 	 */
-	@SuppressWarnings("unchecked")
+	@Nullable
 	public <T> T getContext(String key) {
-		Object value = context.get(key);
-		return value != null ? (T) value : null;
+		Object raw = context.get(key);
+		if (raw == null)
+			return null;
+		@SuppressWarnings("unchecked")
+		T value = (T) raw;
+		return value;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@Nullable
 	public <T> T getPersistentContext(String key) {
-		Object value = persistentContext.get(key);
-		return value != null ? (T) value : null;
+		Object raw = persistentContext.get(key);
+		if (raw == null)
+			return null;
+		@SuppressWarnings("unchecked")
+		T value = (T) raw;
+		return value;
 	}
 	
 	/**
 	 * Returns the current stage
 	 * @return stage
 	 */
+	@NotNull
 	public String getStage() {
 		return stages.get(stage);
 	}
@@ -161,6 +182,7 @@ public class StartupContext {
 	 * Returns a collection of all handlers for the current stage
 	 * @return handlers
 	 */
+	@NotNull
 	public Collection<StartupStageHandler> getStageHandlers() {
 		Collection<StartupStageHandler> handlers = stageHandlers.get(getStage());
 		return handlers == null ? List.of() : handlers;
@@ -170,6 +192,7 @@ public class StartupContext {
 	 * Returns a unmodifiable collection of that reflects all present stages
 	 * @return stages
 	 */
+	@NotNull
 	public List<String> getStages() {
 		if (stageView == null)
 			stageView = Collections.unmodifiableList(stages);
@@ -197,43 +220,30 @@ public class StartupContext {
 	}
 
 	public boolean addStageBefore(String before, String... stages) {
-		if (stages == null || stages.length == 0)
-			return false;
-		if (!this.stages.contains(before))
-			return false;
-		int i = this.stages.indexOf(before);
-		if (this.stage >= i)
-			return false;
-		ArrayList<String> added = new ArrayList<>(stages.length);
-		boolean changes = false;
-		for (String stage : stages) {
-			if (this.stages.contains(stage))
-				return false;
-			this.stages.add(i++, stage);
-			changes = true;
-			added.add(stage);
-		}
-		for (String add : added)
-			onNewStage(add);
-		return changes;
+		return addStage(before, true, stages);
 	}
 
 	public boolean addStageAfter(String after, String... stages) {
+		return addStage(after, false, stages);
+	}
+	
+	private boolean addStage(String stage, final boolean before, String[] stages) {
 		if (stages == null || stages.length == 0)
 			return false;
-		if (!this.stages.contains(after))
-			return false;
-		int i = this.stages.indexOf(after);
-		if (this.stage > i)
+		int i = this.stages.indexOf(stage);
+		if (i == -1 || this.stage > (before ? i-1 : i))
 			return false;
 		ArrayList<String> added = new ArrayList<>(stages.length);
 		boolean changes = false;
-		for (String stage : stages) {
+		for (String s : stages) {
 			if (this.stages.contains(stage))
-				return false;
-			this.stages.add(++i, stage);
+				continue;
+			if (before)
+				this.stages.add(i++, s);
+			else
+				this.stages.add(++i, s);
 			changes = true;
-			added.add(stage);
+			added.add(s);
 		}
 		for (String add : added)
 			onNewStage(add);
@@ -252,6 +262,7 @@ public class StartupContext {
 	 * Returns he failure cause
 	 * @return cause
 	 */
+	@Nullable
 	public Throwable getCause() {
 		return cause;
 	}

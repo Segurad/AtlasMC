@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import de.atlasmc.io.protocol.ProtocolAdapter;
 import de.atlasmc.io.protocol.ProtocolAdapterHandler;
-import de.atlasmc.proxy.ProxyManager;
 import de.atlasmc.server.NodeServerManager;
+import de.atlasmc.socket.SocketManager;
 
 public class AtlasNode {
 	
@@ -49,8 +49,8 @@ public class AtlasNode {
 		return INSTANCE.getProtocolAdapterHandler();
 	}
 
-	public static ProxyManager getProxyManager() {
-		return INSTANCE.getProxyManager();
+	public static SocketManager getSocketManager() {
+		return INSTANCE.getSocketManager();
 	}
 
 }

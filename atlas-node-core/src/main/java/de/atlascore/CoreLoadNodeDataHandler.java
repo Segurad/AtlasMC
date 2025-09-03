@@ -19,7 +19,7 @@ import de.atlasmc.AtlasNode;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.atlasnetwork.AtlasNetwork;
 import de.atlasmc.atlasnetwork.NodeConfig;
-import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
+import de.atlasmc.atlasnetwork.proxy.SocketConfig;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.atlasnetwork.server.ServerManager;
 import de.atlasmc.event.Event;
@@ -31,9 +31,9 @@ import de.atlasmc.log.Log;
 import de.atlasmc.plugin.startup.StartupContext;
 import de.atlasmc.plugin.startup.StartupHandlerRegister;
 import de.atlasmc.plugin.startup.StartupStageHandler;
-import de.atlasmc.proxy.ProxyManager;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.server.NodeServerManager;
+import de.atlasmc.socket.SocketManager;
 import de.atlasmc.util.FileUtils;
 import de.atlasmc.util.configuration.file.JsonConfiguration;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
@@ -42,7 +42,7 @@ import de.atlasmc.util.configuration.file.YamlConfiguration;
 class CoreLoadNodeDataHandler implements StartupStageHandler {
 
 	private Log log;
-	private Map<String, ProxyConfig> proxyConfigs;
+	private Map<String, SocketConfig> proxyConfigs;
 	private Map<String, ServerGroup> serverGroups;
 	private Map<String, NodeConfig> nodeConfigs;
 	private Set<NamespacedKey> modules;
@@ -104,9 +104,9 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 		for (ServerGroup group : serverGroups.values()) {
 			serverManager.registerServerGroup(group);
 		}
-		ProxyManager proxyManager = AtlasNode.getProxyManager();
-		for (ProxyConfig cfg : proxyConfigs.values()) {
-			proxyManager.createProxy(cfg);
+		SocketManager proxyManager = AtlasNode.getSocketManager();
+		for (SocketConfig cfg : proxyConfigs.values()) {
+			proxyManager.createSocket(cfg);
 		}
 		// === init internals 
 		initDefaultExecutor(log, new CorePlayerListener());
@@ -167,14 +167,14 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 	}
 	
 	private void resolveProxies(Collection<String> proxyNames) {
-		Collection<ProxyConfig> proxies;
+		Collection<SocketConfig> proxies;
 		try {
 			proxies = AtlasNetwork.getProxyConfigs(proxyNames).get();
 		} catch (Exception e) {
 			log.error("Error while loading proxy configs!", e);
 			return;
 		}
-		for (ProxyConfig cfg : proxies) {
+		for (SocketConfig cfg : proxies) {
 			proxyConfigs.put(cfg.getName(), cfg);
 		}
 		for (String name : proxyNames) {

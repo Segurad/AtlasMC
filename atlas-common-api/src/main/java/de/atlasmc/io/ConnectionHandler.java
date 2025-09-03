@@ -8,6 +8,7 @@ import java.security.InvalidKeyException;
 import javax.crypto.SecretKey;
 
 import de.atlasmc.log.Log;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.ThreadSafe;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
@@ -29,6 +30,7 @@ public interface ConnectionHandler {
 	
 	void setProtocol(Protocol protocol, PacketListener listener);
 	
+	@NotNull
 	Protocol getProtocol();
 	
 	boolean registerPacketListener(PacketListener listener);
@@ -59,6 +61,7 @@ public interface ConnectionHandler {
 	
 	void handleSyncPackets(Log logger);
 	
+	@NotNull
 	Log getLogger();
 
 }

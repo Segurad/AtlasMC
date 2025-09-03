@@ -22,8 +22,8 @@ import de.atlasmc.event.player.PlayerMoveEvent;
 import de.atlasmc.event.player.PlayerToggleSneakEvent;
 import de.atlasmc.event.player.PlayerToggleSprintEvent;
 import de.atlasmc.inventory.ItemStack;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Protocol;
-import de.atlasmc.io.ProxyConnectionHandler;
 import de.atlasmc.io.protocol.PacketProtocol;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.PlayerSettings;
@@ -37,11 +37,11 @@ import de.atlasmc.io.protocol.play.PacketOutStartConfiguration;
 import de.atlasmc.io.protocol.play.PacketOutSynchronizePlayerPosition;
 import de.atlasmc.log.Log;
 import de.atlasmc.plugin.channel.PluginChannelHandler;
-import de.atlasmc.proxy.LocalProxy;
 import de.atlasmc.recipe.BookType;
 import de.atlasmc.recipe.Recipe;
 import de.atlasmc.recipe.RecipeBook;
 import de.atlasmc.server.LocalServer;
+import de.atlasmc.socket.NodeSocket;
 import de.atlasmc.util.annotation.ThreadSafe;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
@@ -50,7 +50,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	
 	private Player player;
 	private final NodePlayer aplayer;
-	private final ProxyConnectionHandler connection;
+	private final ConnectionHandler connection;
 	private final ProtocolAdapter protocol;
 	private final ProtocolPlay protocolPlay;
 	private LocalServer server;
@@ -93,7 +93,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	private List<Recipe> recipesAvailable;
 	
 	
-	public CorePlayerConnection(AtlasPlayer player, ProxyConnectionHandler connection, ProtocolAdapter protocol) {
+	public CorePlayerConnection(AtlasPlayer player, ConnectionHandler connection, ProtocolAdapter protocol) {
 		this.aplayer = new CoreNodePlayer(this, player);
 		this.connection = connection;
 		this.protocol = protocol;
@@ -356,8 +356,8 @@ public class CorePlayerConnection implements PlayerConnection {
 	}
 
 	@Override
-	public LocalProxy getProxy() {
-		return connection.getProxy();
+	public NodeSocket getSocket() {
+		return connection.getSocket();
 	}
 
 	@Override

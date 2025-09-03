@@ -19,11 +19,11 @@ import de.atlasmc.event.player.PlayerToggleSneakEvent;
 import de.atlasmc.event.player.PlayerToggleSprintEvent;
 import de.atlasmc.log.Log;
 import de.atlasmc.plugin.channel.PluginChannelHandler;
-import de.atlasmc.proxy.LocalProxy;
 import de.atlasmc.recipe.BookType;
 import de.atlasmc.recipe.Recipe;
 import de.atlasmc.recipe.RecipeBook;
 import de.atlasmc.server.LocalServer;
+import de.atlasmc.socket.NodeSocket;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.annotation.ThreadSafe;
 import io.netty.util.concurrent.Future;
@@ -190,7 +190,7 @@ public interface PlayerConnection extends Messageable {
 	 */
 	void disconnect(Chat message);
 	
-	LocalProxy getProxy();
+	NodeSocket getSocket();
 	
 	/**
 	 * Returns the currently open advancement tab of the player or null if none.

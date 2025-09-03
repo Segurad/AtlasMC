@@ -49,7 +49,37 @@
 		<!-- Apache-2.0 License -->
 		<dependency>
 			<groupId>io.netty</groupId>
-			<artifactId>netty-all</artifactId>
+			<artifactId>netty-buffer</artifactId>
+			<version>${dependency.netty.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-common</artifactId>
+			<version>${dependency.netty.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-handler</artifactId>
+			<version>${dependency.netty.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-transport</artifactId>
+			<version>${dependency.netty.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-transport-native-epoll</artifactId>
+			<version>${dependency.netty.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-transport-native-kqueue</artifactId>
+			<version>${dependency.netty.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-transport-native-io_uring</artifactId>
 			<version>${dependency.netty.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.joml/joml -->
@@ -64,6 +94,12 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>${dependency.gson.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.google.errorprone</groupId>
+      				<artifactId>error_prone_annotations</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- Apache-2.0 License -->
 		<!-- https://github.com/snakeyaml/snakeyaml -->

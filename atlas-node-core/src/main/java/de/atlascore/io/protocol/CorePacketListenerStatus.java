@@ -2,9 +2,9 @@ package de.atlascore.io.protocol;
 
 import de.atlasmc.atlasnetwork.AtlasNetwork;
 import de.atlasmc.atlasnetwork.NetworkInfo;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketListener;
-import de.atlasmc.io.ProxyConnectionHandler;
 import de.atlasmc.io.protocol.status.PacketInPing;
 import de.atlasmc.io.protocol.status.PacketOutPong;
 import de.atlasmc.io.protocol.status.PacketOutResponse;
@@ -12,9 +12,9 @@ import de.atlasmc.log.Log;
 
 public class CorePacketListenerStatus implements PacketListener {
 
-	private final ProxyConnectionHandler handler;
+	private final ConnectionHandler handler;
 	
-	public CorePacketListenerStatus(ProxyConnectionHandler handler) {
+	public CorePacketListenerStatus(ConnectionHandler handler) {
 		this.handler = handler;
 	}
 	

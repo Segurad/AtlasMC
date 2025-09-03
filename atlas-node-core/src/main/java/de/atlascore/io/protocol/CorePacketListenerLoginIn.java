@@ -21,10 +21,10 @@ import de.atlasmc.AtlasNode;
 import de.atlasmc.atlasnetwork.AtlasNetwork;
 import de.atlasmc.atlasnetwork.player.AtlasPlayer;
 import de.atlasmc.atlasnetwork.player.ProfileHandler;
+import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.Protocol;
 import de.atlasmc.io.ProtocolException;
-import de.atlasmc.io.ProxyConnectionHandler;
 import de.atlasmc.io.protocol.PlayerConnection;
 import de.atlasmc.io.protocol.ProtocolAdapter;
 import de.atlasmc.io.protocol.login.PacketInCookieResponse;
@@ -35,7 +35,7 @@ import de.atlasmc.io.protocol.login.PacketInLoginStart;
 import de.atlasmc.io.protocol.login.PacketLogin;
 import de.atlasmc.io.protocol.login.PacketOutEncryptionRequest;
 import de.atlasmc.io.protocol.login.PacketOutLoginSuccess;
-import de.atlasmc.proxy.LocalProxy;
+import de.atlasmc.socket.NodeSocket;
 
 public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePacketListenerLoginIn, Packet> {
 
@@ -49,7 +49,7 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 		HANDLERS = new PacketHandler[PacketLogin.PACKET_COUNT_IN];
 		HANDLE_ASYNC = new boolean[PacketLogin.PACKET_COUNT_IN];
 		initHandler(PacketInLoginStart.class, (handler, packet) -> {
-			LocalProxy proxy = handler.con.getProxy();
+			NodeSocket proxy = handler.con.getSocket();
 			if (proxy.getConfig().getPlayerAuthentication()) {
 				PacketOutEncryptionRequest packetOut = new PacketOutEncryptionRequest();
 				packetOut.serverID = SERVER_ID;
@@ -129,7 +129,7 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 		}, false);
 	}
 	
-	private ProxyConnectionHandler con;
+	private ConnectionHandler con;
 	private AtlasPlayer player;
 	private volatile byte[] verifyToken;
 	
@@ -139,7 +139,7 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 	    HANDLE_ASYNC[id] = async;
 	}
 
-	public CorePacketListenerLoginIn(ProxyConnectionHandler handler) {
+	public CorePacketListenerLoginIn(ConnectionHandler handler) {
 		super(null, PacketLogin.PACKET_COUNT_IN);
 		holder = this;
 		con = handler;

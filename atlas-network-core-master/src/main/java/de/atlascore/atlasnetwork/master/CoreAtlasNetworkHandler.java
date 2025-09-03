@@ -6,7 +6,7 @@ import java.util.Collection;
 import de.atlascore.atlasnetwork.CoreAbstractAtlasNetworkHandler;
 import de.atlasmc.atlasnetwork.NetworkInfo;
 import de.atlasmc.atlasnetwork.NodeConfig;
-import de.atlasmc.atlasnetwork.proxy.ProxyConfig;
+import de.atlasmc.atlasnetwork.proxy.SocketConfig;
 import de.atlasmc.atlasnetwork.server.ServerGroup;
 import de.atlasmc.datarepository.Repository;
 import de.atlasmc.master.AtlasMaster;
@@ -72,18 +72,18 @@ public class CoreAtlasNetworkHandler extends CoreAbstractAtlasNetworkHandler {
 	}
 
 	@Override
-	public Future<ProxyConfig> getProxyConfig(String name) {
+	public Future<SocketConfig> getProxyConfig(String name) {
 		return CompleteFuture.of(AtlasMaster.getProxyManager().getProxyConfig(name));
 	}
 	
 	@Override
-	public Future<Collection<ProxyConfig>> getProxyConfigs(Collection<String> names) {
+	public Future<Collection<SocketConfig>> getProxyConfigs(Collection<String> names) {
 		if (names.isEmpty())
 			return CompleteFuture.getEmptyListFuture();
 		ProxyManager proxyManager = AtlasMaster.getProxyManager();
-		ArrayList<ProxyConfig> configs = new ArrayList<>(names.size());
+		ArrayList<SocketConfig> configs = new ArrayList<>(names.size());
 		for (String name : names) {
-			ProxyConfig cfg = proxyManager.getProxyConfig(name);
+			SocketConfig cfg = proxyManager.getProxyConfig(name);
 			if (cfg == null)
 				continue;
 			configs.add(cfg);

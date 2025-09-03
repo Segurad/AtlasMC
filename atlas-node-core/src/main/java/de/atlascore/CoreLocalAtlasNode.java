@@ -11,16 +11,16 @@ import de.atlasmc.AtlasNodeBuilder;
 import de.atlasmc.LocalAtlasNode;
 import de.atlasmc.NodePlayer;
 import de.atlasmc.io.protocol.ProtocolAdapterHandler;
-import de.atlasmc.proxy.LocalProxy;
-import de.atlasmc.proxy.ProxyManager;
 import de.atlasmc.server.NodeServer;
 import de.atlasmc.server.NodeServerManager;
+import de.atlasmc.socket.NodeSocket;
+import de.atlasmc.socket.SocketManager;
 
 public class CoreLocalAtlasNode implements LocalAtlasNode {
 	
 	private final ProtocolAdapterHandler adapterHandler;
-	private final ProxyManager proxyManager;
-	private final Map<UUID, LocalProxy> proxies;
+	private final SocketManager proxyManager;
+	private final Map<UUID, NodeSocket> proxies;
 	private final NodeServerManager smanager;
 	private final UUID uuid;
 	private NodeStatus status;
@@ -59,7 +59,7 @@ public class CoreLocalAtlasNode implements LocalAtlasNode {
 	}
 
 	@Override
-	public LocalProxy getProxy(UUID uuid) {
+	public NodeSocket getSocket(UUID uuid) {
 		return proxies.get(uuid);
 	}
 	
@@ -91,7 +91,7 @@ public class CoreLocalAtlasNode implements LocalAtlasNode {
 	}
 
 	@Override
-	public ProxyManager getProxyManager() {
+	public SocketManager getSocketManager() {
 		return proxyManager;
 	}
 

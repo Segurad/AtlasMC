@@ -8,8 +8,8 @@ import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatType;
 import de.atlasmc.entity.Player;
 import de.atlasmc.io.protocol.PlayerConnection;
-import de.atlasmc.proxy.LocalProxy;
 import de.atlasmc.server.NodeServer;
+import de.atlasmc.socket.NodeSocket;
 
 public class CoreNodePlayer implements NodePlayer {
 
@@ -78,8 +78,8 @@ public class CoreNodePlayer implements NodePlayer {
 	}
 
 	@Override
-	public LocalProxy getProxy() {
-		return con.getProxy();
+	public NodeSocket getProxy() {
+		return con.getSocket();
 	}
 
 	@Override

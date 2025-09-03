@@ -6,8 +6,8 @@ import de.atlasmc.atlasnetwork.player.AtlasPlayer;
 import de.atlasmc.chat.Messageable;
 import de.atlasmc.entity.Player;
 import de.atlasmc.io.protocol.PlayerConnection;
-import de.atlasmc.proxy.LocalProxy;
 import de.atlasmc.server.NodeServer;
+import de.atlasmc.socket.NodeSocket;
 
 public interface NodePlayer extends Messageable {
 	
@@ -25,7 +25,7 @@ public interface NodePlayer extends Messageable {
 	
 	AtlasPlayer getAtlasPlayer();
 	
-	LocalProxy getProxy();
+	NodeSocket getProxy();
 	
 	NodeServer getLocalServer();
 
