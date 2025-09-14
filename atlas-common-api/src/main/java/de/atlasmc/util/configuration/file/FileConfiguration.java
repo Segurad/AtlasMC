@@ -13,13 +13,14 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import de.atlasmc.util.configuration.ConfigurationSection;
+import de.atlasmc.util.configuration.ConfigurationSerializable;
+import de.atlasmc.util.configuration.ListConfigurationSection;
 import de.atlasmc.util.configuration.MemoryConfiguration;
-import de.atlasmc.util.configuration.MemoryConfigurationSection;
 
 public abstract class FileConfiguration extends MemoryConfiguration {
 	
@@ -75,28 +76,43 @@ public abstract class FileConfiguration extends MemoryConfiguration {
 	protected void mapToSection(Map<?, ?> map, ConfigurationSection section) {
 		if (map == null)
 			return;
-		map.forEach((key, value) -> {
+		final boolean autoSerialize = getSettings().isAutoSerialize();
+		mapToSection(true, autoSerialize, map, section);
+	}
+	
+	private Object mapToSection(boolean root, boolean autoSerialize, Map<?, ?> map, ConfigurationSection section) {
+		for (Entry<?, ?> entry : map.entrySet()) {
+			final String key = (String) entry.getKey();
+			final Object value = entry.getValue();
 			if (value instanceof Map mapValue) {
-				mapToSection(mapValue, section.createSection((String) key));
+				ConfigurationSection s = section.createSection(key);
+				section.set(key, mapToSection(false, autoSerialize, mapValue, s));
+			} else if (value instanceof List list) {
+				ListConfigurationSection listSection = section.createListSection(key);
+				remapList(autoSerialize, list, listSection);
 			} else {
-				if (value instanceof List) {
-					@SuppressWarnings("unchecked")
-					List<Object> list = (List<Object>) value;
-					final int size = list.size();
-					for (int i = 0; i < size; i++) {
-						Object listValue = list.get(i);
-						if (listValue == null)
-							continue;
-						if (!(listValue instanceof LinkedHashMap mapListValue))
-							continue;
-						ConfigurationSection listSection = new MemoryConfigurationSection(section);
-						list.set(i, listSection);
-						mapToSection(mapListValue, listSection);
-					}
-				}
-				section.set((String) key, value);
+				section.set(key, value);
 			}
-		});
+		};
+		if (root || !autoSerialize)
+			return section;
+		String clazz = section.getString("==");
+		if (clazz == null)
+			return section;
+		return ConfigurationSerializable.deserialize(section, clazz);
+	}
+	
+	private void remapList(boolean autoSerialize, List<?> list, ListConfigurationSection listSection) {
+		for (Object listValue : list) {
+			if (listValue instanceof Map mapListValue) {
+				ConfigurationSection s = listSection.addSection();
+				listSection.set(listSection.size() - 1, mapToSection(false, autoSerialize, mapListValue, s));
+			} else if (listValue instanceof List l) {
+				remapList(autoSerialize, l, listSection.addListSection());
+			} else {
+				listSection.add(listValue);
+			}
+		}
 	}
 	
 }

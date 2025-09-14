@@ -1,7 +1,6 @@
 package de.atlasmc.io.netty.channel;
 
 import de.atlascore.io.CoreSocketConnectionHandler;
-import de.atlasmc.socket.NodeSocket;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 

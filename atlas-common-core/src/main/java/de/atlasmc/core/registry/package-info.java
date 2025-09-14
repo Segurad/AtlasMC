@@ -1,0 +1,1 @@
+package de.atlasmc.core.registry;

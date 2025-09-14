@@ -1,0 +1,57 @@
+package de.atlasmc.core.node.block.data;
+
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
+
+import de.atlasmc.node.block.BlockFace;
+import de.atlasmc.node.block.BlockType;
+import de.atlasmc.node.block.data.property.BlockDataProperty;
+
+public class CoreMultipleFacing4 extends CoreAbstractMultipleFacing {
+
+	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	
+	static {
+		PROPERTIES = merge(CoreAbstractMultipleFacing.PROPERTIES,
+				BlockDataProperty.NORTH,
+				BlockDataProperty.SOUTH,
+				BlockDataProperty.EAST,
+				BlockDataProperty.WEST);
+	}
+	
+	private static final Set<BlockFace> ALLOWED_FACES =
+			EnumSet.of(BlockFace.NORTH,
+					BlockFace.SOUTH,
+					BlockFace.EAST,
+					BlockFace.WEST);
+	
+	public CoreMultipleFacing4(BlockType type) {
+		super(type);
+	}
+	
+	@Override
+	public int getStateID() {
+		return getType().getBlockStateID()+
+				(hasFace(BlockFace.WEST)?0:1)+
+				(hasFace(BlockFace.SOUTH)?0:2)+
+				(hasFace(BlockFace.NORTH)?0:4)+
+				(hasFace(BlockFace.EAST)?0:8);
+	}
+	
+	@Override
+	public boolean isValid(BlockFace face) {
+		return face.ordinal()<4;
+	}
+	
+	@Override
+	public Set<BlockFace> getAllowedFaces() {
+		return ALLOWED_FACES;
+	}
+	
+	@Override
+	public List<BlockDataProperty<?>> getProperties() {
+		return PROPERTIES;
+	}
+
+}

@@ -7,7 +7,7 @@ import de.atlasmc.master.proxy.Proxy;
 import de.atlasmc.master.server.Server;
 import de.atlasmc.master.server.ServerGroup;
 
-public interface AtlasNode extends de.atlasmc.atlasnetwork.AtlasNode {
+public interface AtlasNode extends de.atlasmc.network.AtlasNode {
 
 	long getMaxHeapSize();
 

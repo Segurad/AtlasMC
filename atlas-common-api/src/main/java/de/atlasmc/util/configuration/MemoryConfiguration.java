@@ -2,23 +2,19 @@ package de.atlasmc.util.configuration;
 
 public class MemoryConfiguration extends MemoryConfigurationSection implements Configuration {
 
+	private final ConfigurationSettings settings = new ConfigurationSettings();
+	
 	public MemoryConfiguration() {}
 
 	public MemoryConfiguration(ConfigurationSection configuration) {
-		copySection(this, configuration);
+		addConfiguration(configuration);
+	}
+
+	@Override
+	public ConfigurationSettings getSettings() {
+		return settings;
 	}
 	
-	private void copySection(ConfigurationSection parent, ConfigurationSection section) {
-		if (section == null)
-			return;
-		section.getValues().forEach((key, value) -> {
-			if (value instanceof ConfigurationSection child) {
-				ConfigurationSection newSection = parent.createSection(key);
-				copySection(newSection, child);
-			} else {
-				parent.set(key, value);
-			}
-		});
-	}
+	
 	
 }

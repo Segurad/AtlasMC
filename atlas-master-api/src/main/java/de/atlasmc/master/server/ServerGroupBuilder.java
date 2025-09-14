@@ -1,8 +1,8 @@
 package de.atlasmc.master.server;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.atlasnetwork.server.ServerConfig;
 import de.atlasmc.master.AtlasMaster;
+import de.atlasmc.network.server.ServerConfig;
 import de.atlasmc.util.Builder;
 import de.atlasmc.util.configuration.ConfigurationSection;
 

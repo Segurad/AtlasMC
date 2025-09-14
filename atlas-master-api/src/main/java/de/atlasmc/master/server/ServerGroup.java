@@ -5,7 +5,7 @@ import java.util.UUID;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.master.node.AtlasNode;
 
-public interface ServerGroup extends de.atlasmc.atlasnetwork.server.ServerGroup {
+public interface ServerGroup extends de.atlasmc.network.server.ServerGroup {
 	
 	NamespacedKey getDeploymentMethod();
 	

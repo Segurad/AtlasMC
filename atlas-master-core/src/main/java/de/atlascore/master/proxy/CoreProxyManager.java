@@ -4,9 +4,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.atlasmc.atlasnetwork.proxy.SocketConfig;
 import de.atlasmc.master.proxy.Proxy;
 import de.atlasmc.master.proxy.ProxyManager;
+import de.atlasmc.network.socket.SocketConfig;
 
 public class CoreProxyManager implements ProxyManager {
 	

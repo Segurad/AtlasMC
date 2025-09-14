@@ -6,9 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.UUID;
 
-import de.atlasmc.atlasnetwork.AtlasNetworkException;
-import de.atlasmc.atlasnetwork.player.AtlasPlayer;
 import de.atlasmc.master.AtlasMaster;
+import de.atlasmc.network.AtlasNetworkException;
+import de.atlasmc.network.player.AtlasPlayer;
 import de.atlasmc.util.AtlasUtil;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;

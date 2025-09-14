@@ -21,7 +21,7 @@ public class YamlRepresenter extends Representer {
 		
 		@Override
 		public Node representData(Object data) {
-			return super.representData(((ConfigurationSection)data).getValues());
+			return super.representData(((ConfigurationSection)data).asMap());
 		}
 		
 	}
@@ -34,7 +34,7 @@ public class YamlRepresenter extends Representer {
 			Configuration cfg = new MemoryConfiguration();
 			cfg.set("type", value.getClass().getName());
 			value.toConfiguration(cfg.createSection("configuration"));
-			return super.representData(cfg.getValues());
+			return super.representData(cfg.asMap());
 		}
 		
 	}

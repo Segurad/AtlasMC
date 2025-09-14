@@ -1,6 +1,6 @@
 package de.atlasmc.master.server;
 
-public interface Server extends de.atlasmc.atlasnetwork.server.Server {
+public interface Server extends de.atlasmc.network.server.Server {
 	
 	void setStatus(Status status);
 	

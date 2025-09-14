@@ -5,11 +5,11 @@ import java.sql.Date;
 import java.util.UUID;
 import java.util.concurrent.Future;
 
-import de.atlasmc.atlasnetwork.player.AtlasPlayer;
-import de.atlasmc.atlasnetwork.proxy.AtlasSocket;
-import de.atlasmc.atlasnetwork.server.Server;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatType;
+import de.atlasmc.network.player.AtlasPlayer;
+import de.atlasmc.network.server.Server;
+import de.atlasmc.network.socket.AtlasSocket;
 import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionHandler;
 

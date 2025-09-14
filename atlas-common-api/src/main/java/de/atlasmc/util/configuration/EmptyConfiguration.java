@@ -139,7 +139,7 @@ final class EmptyConfiguration implements Configuration {
 	}
 
 	@Override
-	public Map<String, Object> getValues() {
+	public Map<String, Object> asMap() {
 		return Map.of();
 	}
 
@@ -149,7 +149,7 @@ final class EmptyConfiguration implements Configuration {
 	}
 
 	@Override
-	public int getSize() {
+	public int size() {
 		return 0;
 	}
 
@@ -162,12 +162,17 @@ final class EmptyConfiguration implements Configuration {
 	}
 
 	@Override
-	public List<ConfigurationSection> getConfigurationList(String path) {
+	public ConfigurationSection getParent() {
 		return null;
 	}
 
 	@Override
-	public List<ConfigurationSection> getConfigurationList(String path, List<ConfigurationSection> def) {
+	public ListConfigurationSection createListSection(String path) {
+		return null;
+	}
+
+	@Override
+	public ConfigurationSettings getSettings() {
 		return null;
 	}
 

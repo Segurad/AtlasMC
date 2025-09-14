@@ -1,0 +1,38 @@
+package de.atlasmc.core.node.io.protocol.configuration;
+
+import static de.atlasmc.node.io.protocol.ProtocolUtil.*;
+
+import java.io.IOException;
+
+import de.atlasmc.io.ConnectionHandler;
+import de.atlasmc.io.Packet;
+import de.atlasmc.io.PacketIO;
+import de.atlasmc.node.event.player.PlayerResourcePackStatusEvent.ResourcePackStatus;
+import de.atlasmc.node.io.protocol.configuration.PacketInResourcePack;
+import io.netty.buffer.ByteBuf;
+
+public class CorePacketInResourcePack implements PacketIO<PacketInResourcePack> {
+
+	@Override
+	public void read(PacketInResourcePack packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		packet.uuid = readUUID(in);
+		packet.status = ResourcePackStatus.getByID(readVarInt(in));
+	}
+
+	@Override
+	public void write(PacketInResourcePack packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		writeUUID(packet.uuid, out);
+		writeVarInt(packet.status.getID(), out);
+	}
+
+	@Override
+	public PacketInResourcePack createPacketData() {
+		return new PacketInResourcePack();
+	}
+
+	@Override
+	public int getPacketID() {
+		return Packet.getDefaultPacketID(PacketInResourcePack.class);
+	}
+
+}

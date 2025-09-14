@@ -14,14 +14,14 @@ import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.atlascore.permission.CoreAbstractPermissionManager;
-import de.atlascore.permission.CorePermissionContext;
-import de.atlascore.permission.CorePermissionGroup;
-import de.atlascore.permission.CorePermissionHandler;
 import de.atlasmc.Color;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.core.permission.CoreAbstractPermissionManager;
+import de.atlasmc.core.permission.CorePermissionContext;
+import de.atlasmc.core.permission.CorePermissionGroup;
+import de.atlasmc.core.permission.CorePermissionHandler;
 import de.atlasmc.master.AtlasMaster;
 import de.atlasmc.master.PermissionManager;
 import de.atlasmc.permission.ContextProvider;

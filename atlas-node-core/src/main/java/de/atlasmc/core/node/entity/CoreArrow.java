@@ -1,0 +1,91 @@
+package de.atlasmc.core.node.entity;
+
+import de.atlasmc.Color;
+import de.atlasmc.node.entity.Arrow;
+import de.atlasmc.node.entity.EntityType;
+import de.atlasmc.node.entity.data.MetaDataField;
+import de.atlasmc.node.entity.data.MetaDataType;
+import de.atlasmc.node.inventory.ItemStack;
+import de.atlasmc.node.inventory.ItemType;
+import de.atlasmc.node.inventory.component.ComponentType;
+import de.atlasmc.node.inventory.component.PotionContentsComponent;
+
+public class CoreArrow extends CoreAbstractArrow implements Arrow {
+
+	protected static final MetaDataField<Integer>
+	META_COLOR = new MetaDataField<>(CoreAbstractArrow.LAST_META_INDEX+1, -1, MetaDataType.VAR_INT);
+	
+	protected static final int LAST_META_INDEX = CoreAbstractArrow.LAST_META_INDEX+1;
+	
+	public CoreArrow(EntityType type) {
+		super(type);
+	}
+	
+	@Override
+	protected void initMetaContainer() {
+		super.initMetaContainer();
+		metaContainer.set(META_COLOR);
+	}
+
+	@Override
+	protected int getMetaContainerSize() {
+		return LAST_META_INDEX+1;
+	}
+	
+	@Override
+	public Color getColor() {
+		int color = getColorRGB();
+		return color == -1 ? null : Color.fromRGB(color);
+	}
+
+	@Override
+	public void setColor(Color color) {
+		setColorRGB(color == null ? -1 : color.asRGB());
+	}
+
+	@Override
+	public int getColorRGB() {
+		return metaContainer.getData(META_COLOR);
+	}
+
+	@Override
+	public void setColorRGB(int rgb) {
+		if (rgb < 0)
+			metaContainer.get(META_COLOR).setData(-1);
+		else
+			metaContainer.get(META_COLOR).setData(rgb & 0xFFFFFF);
+	}
+	
+	@Override
+	public void setItem(ItemStack item) {
+		super.setItem(item);
+		if (item == null) {
+			setColor(null);
+		} else {
+			PotionContentsComponent comp = item.getEffectiveComponent(ComponentType.POTION_CONTENTS.get());
+			if (comp == null) {
+				setColor(null);
+			} else {
+				setColor(comp.getCustomColor());
+			}
+		}
+	}
+
+	@Override
+	public PotionContentsComponent getPotionContents() {
+		ItemStack item = getItem();
+		return item == null ? null : item.getEffectiveComponent(ComponentType.POTION_CONTENTS.get());
+	}
+
+	@Override
+	public void setPotionContents(PotionContentsComponent contents) {
+		ItemStack item = getItem();
+		if (item == null)
+			item = new ItemStack(ItemType.TIPPED_ARROW.get());
+		item.setComponent(contents);
+		setItem(item);
+	}
+	
+	
+
+}

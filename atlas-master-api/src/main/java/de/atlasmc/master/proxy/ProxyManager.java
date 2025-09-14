@@ -2,7 +2,7 @@ package de.atlasmc.master.proxy;
 
 import java.util.UUID;
 
-import de.atlasmc.atlasnetwork.proxy.SocketConfig;
+import de.atlasmc.network.socket.SocketConfig;
 
 public interface ProxyManager {
 	

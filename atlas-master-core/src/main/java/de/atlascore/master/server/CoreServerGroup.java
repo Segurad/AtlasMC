@@ -5,11 +5,11 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.atlasnetwork.server.ServerConfig;
 import de.atlasmc.master.node.AtlasNode;
 import de.atlasmc.master.server.Server;
 import de.atlasmc.master.server.ServerGroup;
 import de.atlasmc.master.server.ServerGroupBuilder;
+import de.atlasmc.network.server.ServerConfig;
 import de.atlasmc.tick.Tickable;
 
 public class CoreServerGroup implements Tickable, ServerGroup  {

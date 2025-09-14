@@ -5,6 +5,8 @@ package de.atlasmc.util.configuration;
  */
 public interface Configuration extends ConfigurationSection {
 
+	ConfigurationSettings getSettings();
+	
 	public static ConfigurationSection of() {
 		return EmptyConfiguration.INSTANCE;
 	}

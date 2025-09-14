@@ -1,0 +1,8 @@
+package de.atlasmc.node.block.data;
+
+public interface Waterlogged extends BlockData {
+	
+	public boolean isWaterlogged();
+	public void setWaterlogged(boolean waterlogged);
+
+}

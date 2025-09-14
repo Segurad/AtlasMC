@@ -8,10 +8,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.atlasmc.atlasnetwork.player.AtlasPlayer;
 import de.atlasmc.cache.CacheHolder;
 import de.atlasmc.cache.Caching;
 import de.atlasmc.master.ProfileManager;
+import de.atlasmc.network.player.AtlasPlayer;
 
 public abstract class CoreProfileManager implements ProfileManager, CacheHolder {
 	

@@ -15,7 +15,23 @@ import de.atlasmc.util.annotation.NotNull;
  */
 public interface ConfigurationSerializable {
 	
+	@NotNull
+	public static <T extends ConfigurationSerializable> T deserialize(ConfigurationSection section, String className) {
+		Class<T> clazz;
+		try {
+			@SuppressWarnings("unchecked")
+			Class<T> c = (Class<T>) Class.forName(className);
+			clazz = c;
+		} catch (ClassNotFoundException e) {
+			throw new ConfigurationException(e);
+		}
+		return deserialize(section, clazz);
+	}
+	
+	@NotNull
 	public static <T extends ConfigurationSerializable> T deserialize(ConfigurationSection section, Class<T> clazz) {
+		if (ConfigurationSerializable.class.isInstance(clazz))
+			throw new IllegalArgumentException("Class must be assignable from ConfigurationSerializable: " + clazz.getName());
 		Constructor<T> constructor;
 		try {
 			constructor = clazz.getConstructor(ConfigurationSection.class);
@@ -33,10 +49,12 @@ public interface ConfigurationSerializable {
 	}
 	
 	public static <T extends ConfigurationSerializable> Collection<T> deserialize(Collection<ConfigurationSection> sections, Class<T> clazz) {
-		return deserialize(new ArrayList<>(sections.size()), clazz);
+		return deserialize(sections, clazz, new ArrayList<>(sections.size()));
 	}
 	
 	public static <T extends ConfigurationSerializable, C extends Collection<T>> C deserialize(Collection<ConfigurationSection> sections, Class<T> clazz, C buf) {
+		if (ConfigurationSerializable.class.isInstance(clazz))
+			throw new IllegalArgumentException("Class must be assignable from ConfigurationSerializable: " + clazz.getName());
 		Constructor<T> constructor;
 		try {
 			constructor = clazz.getConstructor(ConfigurationSection.class);
@@ -68,10 +86,10 @@ public interface ConfigurationSerializable {
 	/**
 	 * Adds this a representation of this object to the given configuration and returns it
 	 * @param <T>
-	 * @param configuration
-	 * @return configuration
+	 * @param config
+	 * @return the given configuration
 	 */
 	@NotNull
-	<T extends ConfigurationSection> T toConfiguration(T configuration);
+	<T extends ConfigurationSection> T toConfiguration(@NotNull T config);
 	
 }

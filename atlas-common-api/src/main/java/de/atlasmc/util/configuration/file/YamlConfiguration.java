@@ -31,6 +31,7 @@ public class YamlConfiguration extends FileConfiguration {
 	protected Yaml createYaml() {
 		DumperOptions dumpOptions = new DumperOptions();
 		dumpOptions.setDefaultFlowStyle(FlowStyle.BLOCK);
+		dumpOptions.setProcessComments(true);
 		YamlRepresenter representer = new YamlRepresenter(dumpOptions);
 		representer.setDefaultFlowStyle(FlowStyle.BLOCK);
 		return new Yaml(representer, dumpOptions);
@@ -38,12 +39,12 @@ public class YamlConfiguration extends FileConfiguration {
 
 	@Override
 	public String saveToString() {
-		return yaml.dump(getValues());
+		return yaml.dump(asMap());
 	}
 	
 	@Override
 	public void save(Writer writer) throws IOException {
-		yaml.dump(getValues(), writer);
+		yaml.dump(asMap(), writer);
 	}
 
 	@Override

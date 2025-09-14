@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.atlasmc.atlasnetwork.NodeConfig;
 import de.atlasmc.master.node.AtlasNode;
 import de.atlasmc.master.node.NodeManager;
+import de.atlasmc.network.NodeConfig;
 
 public class CoreNodeManager implements NodeManager {
 	

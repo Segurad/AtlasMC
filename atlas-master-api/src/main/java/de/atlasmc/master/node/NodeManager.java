@@ -3,7 +3,7 @@ package de.atlasmc.master.node;
 import java.util.Collection;
 import java.util.UUID;
 
-import de.atlasmc.atlasnetwork.NodeConfig;
+import de.atlasmc.network.NodeConfig;
 
 public interface NodeManager {
 	

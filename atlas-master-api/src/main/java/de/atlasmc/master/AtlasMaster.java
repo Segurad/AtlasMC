@@ -3,12 +3,12 @@ package de.atlasmc.master;
 import java.util.Collection;
 import java.util.UUID;
 
-import de.atlasmc.atlasnetwork.NetworkInfo;
 import de.atlasmc.datarepository.Repository;
 import de.atlasmc.log.Log;
 import de.atlasmc.master.node.NodeManager;
 import de.atlasmc.master.proxy.ProxyManager;
 import de.atlasmc.master.server.ServerManager;
+import de.atlasmc.network.NetworkInfo;
 import de.atlasmc.util.sql.SQLConnectionPool;
 
 public class AtlasMaster {
