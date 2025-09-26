@@ -4,7 +4,7 @@ public class ConfigurationSettings  {
 
 	private boolean preserveComments = true;
 	private boolean beautify = false;
-	private boolean autoSerialize = true;
+	private boolean autoSerialize = false;
 	
 	public boolean isPreserveComments() {
 		return preserveComments;

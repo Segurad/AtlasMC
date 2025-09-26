@@ -23,4 +23,3 @@ connection-config:
   enable-compression: true # network compression
   compression-threshold: 1024
   compression-buffer-size: 4096
-	

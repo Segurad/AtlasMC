@@ -51,7 +51,7 @@
 						<configuration>
 							<transformers>
 								<transformer
-									implementation="de.atlas.shade.transformer.YamlTransformer">
+									implementation="de.atlasmc.shade.transformer.YamlTransformer">
 									<target>${project.build.directory}/classes</target>
 								</transformer>
 							</transformers>
@@ -67,7 +67,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>de.atlascore.main.Main</mainClass>
+							<mainClass>de.atlasmc.bootstrap.Main</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
