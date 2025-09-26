@@ -1,4 +1,4 @@
-package de.atlasmc.io;
+package de.atlasmc.io.connection;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -7,6 +7,11 @@ import java.security.InvalidKeyException;
 
 import javax.crypto.SecretKey;
 
+import de.atlasmc.io.IOExceptionHandler;
+import de.atlasmc.io.Packet;
+import de.atlasmc.io.PacketChunker;
+import de.atlasmc.io.PacketListener;
+import de.atlasmc.io.Protocol;
 import de.atlasmc.log.Log;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.ThreadSafe;

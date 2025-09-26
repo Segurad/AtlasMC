@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutPlayerInfoRemove;
 import io.netty.buffer.ByteBuf;
 

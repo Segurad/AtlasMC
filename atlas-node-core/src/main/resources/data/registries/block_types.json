@@ -1,6 +1,6 @@
 [
     {
-        "type": "de.atlasmc.block.BlockType",
+        "type": "de.atlasmc.node.block.BlockType",
         "registry": "minecraft:block",
         "configurations": [
             {

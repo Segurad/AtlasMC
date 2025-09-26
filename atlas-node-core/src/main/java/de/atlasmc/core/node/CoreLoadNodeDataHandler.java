@@ -21,12 +21,12 @@ import de.atlasmc.event.EventExecutor;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.Listener;
 import de.atlasmc.event.MethodEventExecutor;
+import de.atlasmc.io.socket.SocketConfig;
 import de.atlasmc.log.Log;
 import de.atlasmc.network.AtlasNetwork;
 import de.atlasmc.network.NodeConfig;
 import de.atlasmc.network.server.ServerGroup;
 import de.atlasmc.network.server.ServerManager;
-import de.atlasmc.network.socket.SocketConfig;
 import de.atlasmc.node.AtlasNode;
 import de.atlasmc.node.io.socket.SocketManager;
 import de.atlasmc.node.server.NodeServerManager;
@@ -70,7 +70,7 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 			return;
 		}
 		List<String> nodeConfigNames = config.getStringList("node-configs", List.of());
-		Set<String> proxyConfigNames = new HashSet<>();
+		Set<String> socketConfigNames = new HashSet<>();
 		Set<String> serverGroupNames = new HashSet<>();
 		if (!nodeConfigNames.isEmpty()) {
 			Collection<NodeConfig> nodeConfigs;
@@ -82,16 +82,16 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 				return;
 			}
 			for (NodeConfig cfg : nodeConfigs) {
-				proxyConfigNames.addAll(cfg.getProxies());
+				socketConfigNames.addAll(cfg.getProxies());
 				serverGroupNames.addAll(cfg.getServerGroups());
 				for (String module : cfg.getCoreModules())
 					modules.add(NamespacedKey.of(module));
 				this.nodeConfigs.put(cfg.getName(), cfg);
 			}
 		}
-		proxyConfigNames.addAll(config.getStringList("proxies", List.of()));
-		if (!proxyConfigNames.isEmpty()) {
-			resolveProxies(proxyConfigNames);
+		socketConfigNames.addAll(config.getStringList("sockets", List.of()));
+		if (!socketConfigNames.isEmpty()) {
+			resolveSockets(socketConfigNames);
 		}
 		serverGroupNames.addAll(config.getStringList("server-groups", List.of()));
 		if (!serverGroupNames.isEmpty()) {
@@ -104,9 +104,9 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 		for (ServerGroup group : serverGroups.values()) {
 			serverManager.registerServerGroup(group);
 		}
-		SocketManager proxyManager = AtlasNode.getSocketManager();
+		SocketManager socketManager = AtlasNode.getSocketManager();
 		for (SocketConfig cfg : proxyConfigs.values()) {
-			proxyManager.createSocket(cfg);
+			socketManager.createSocket(cfg);
 		}
 		// === init internals 
 		initDefaultExecutor(log, new CorePlayerListener());
@@ -166,10 +166,10 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 		}
 	}
 	
-	private void resolveProxies(Collection<String> proxyNames) {
+	private void resolveSockets(Collection<String> proxyNames) {
 		Collection<SocketConfig> proxies;
 		try {
-			proxies = AtlasNetwork.getProxyConfigs(proxyNames).get();
+			proxies = AtlasNetwork.getSocketConfigs(proxyNames).get();
 		} catch (Exception e) {
 			log.error("Error while loading proxy configs!", e);
 			return;

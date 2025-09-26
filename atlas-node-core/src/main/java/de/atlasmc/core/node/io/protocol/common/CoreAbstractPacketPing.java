@@ -2,8 +2,8 @@ package de.atlasmc.core.node.io.protocol.common;
 
 import java.io.IOException;
 
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.common.AbstractPacketPing;
 import io.netty.buffer.ByteBuf;
 

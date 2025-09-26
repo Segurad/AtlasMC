@@ -1,10 +1,9 @@
-package de.atlasmc.core.node.io;
+package de.atlasmc.io.connection;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.IOExceptionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketChunker;
@@ -12,7 +11,7 @@ import de.atlasmc.io.PacketListener;
 import de.atlasmc.io.Protocol;
 import de.atlasmc.log.Log;
 
-public abstract class CoreAbstractConnectionHandler implements ConnectionHandler {
+public abstract class AbstractConnectionHandler implements ConnectionHandler {
 
 	protected final Log log;
 	private volatile Protocol protocol;
@@ -22,7 +21,7 @@ public abstract class CoreAbstractConnectionHandler implements ConnectionHandler
 	protected volatile int compressionThreshold;
 	private volatile IOExceptionHandler errHandler;
 	
-	public CoreAbstractConnectionHandler(Log log, Protocol protocol) {
+	public AbstractConnectionHandler(Log log, Protocol protocol) {
 		this.log = Objects.requireNonNull(log);
 		this.listeners = new PacketListener[2];
 		this.protocol = Objects.requireNonNull(protocol);

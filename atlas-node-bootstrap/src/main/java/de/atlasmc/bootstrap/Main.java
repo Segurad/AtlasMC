@@ -161,9 +161,17 @@ public class Main {
 		
 		File modulDir = new File(workDir, "modules/");
 		
-		pluginManager.loadPlugins(modulDir);
+		try {
+			ConfigurationSection setup = YamlConfiguration.loadConfiguration(Atlas.getSystem().getResourceAsStream("core-system.yml"));
+			FileUtils.runSetupConfiguration(workDir, setup, Atlas.getSystem());
+		} catch (Exception e) {
+			log.error("Error while running setup!", e);
+		}
+		
 		Registries.loadRegistries(Atlas.getSystem());
 		Registries.loadRegistryEntries(Atlas.getSystem());
+		
+		pluginManager.loadPlugins(modulDir);
 		
 		Thread consoleDeamon = new Thread(() -> {
 			Atlas.getLogger().debug("Started console daemon!");

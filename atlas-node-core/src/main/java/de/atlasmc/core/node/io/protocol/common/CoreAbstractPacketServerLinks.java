@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.common.AbstractPacketServerLinks;
 import de.atlasmc.node.io.protocol.common.AbstractPacketServerLinks.Label;
 import de.atlasmc.node.io.protocol.common.AbstractPacketServerLinks.ServerLink;

@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.util.Collection;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.common.AbstractPacketUpdateTags;
 import de.atlasmc.registry.ProtocolRegistry;
 import de.atlasmc.registry.Registries;

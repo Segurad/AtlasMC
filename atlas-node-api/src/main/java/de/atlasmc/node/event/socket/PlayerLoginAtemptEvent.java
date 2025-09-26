@@ -1,7 +1,9 @@
 package de.atlasmc.node.event.socket;
 
-import de.atlasmc.io.ConnectionHandler;
+import de.atlasmc.io.connection.ConnectionHandler;
+import de.atlasmc.io.connection.ServerSocketConnectionHandler;
 import de.atlasmc.node.event.ProxyHandlerList;
+import de.atlasmc.node.io.socket.NodeSocket;
 
 public class PlayerLoginAtemptEvent extends SocketEvent {
 
@@ -10,7 +12,7 @@ public class PlayerLoginAtemptEvent extends SocketEvent {
 	private final ConnectionHandler handler;
 	
 	public PlayerLoginAtemptEvent(ConnectionHandler handler) {
-		super(handler.getSocket());
+		super((NodeSocket) ((ServerSocketConnectionHandler) handler).getSocket());
 		this.handler = handler;
 	}
 	

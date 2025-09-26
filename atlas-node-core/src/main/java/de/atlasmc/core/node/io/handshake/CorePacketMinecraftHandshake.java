@@ -7,14 +7,14 @@ import static de.atlasmc.io.PacketUtil.writeVarInt;
 
 import java.io.IOException;
 
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.Protocol;
 import de.atlasmc.io.ProtocolException;
+import de.atlasmc.io.connection.ConnectionHandler;
+import de.atlasmc.io.protocol.handshake.HandshakePaketIO;
 import de.atlasmc.node.AtlasNode;
-import de.atlasmc.node.io.handshake.HandshakePaketIO;
-import de.atlasmc.node.io.handshake.PacketMinecraftHandshake;
 import de.atlasmc.node.io.protocol.ProtocolAdapter;
+import de.atlasmc.node.io.protocol.handshake.PacketMinecraftHandshake;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketMinecraftHandshake extends HandshakePaketIO<PacketMinecraftHandshake> {

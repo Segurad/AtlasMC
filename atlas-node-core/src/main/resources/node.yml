@@ -1,7 +1,9 @@
 node-groups:
 - default-group
-- test-group
 server-groups:
-- test-group
-proxy-configs:
-- test-config
+- default-group
+host: localhost
+port: 25565
+external-host: node-01.mydomain.com
+socket-config: default-socket
+# optional socket definition

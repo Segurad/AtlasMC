@@ -1,5 +1,6 @@
 package de.atlasmc.io;
 
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.util.annotation.Nullable;
 
 /**

@@ -2,6 +2,7 @@ package de.atlasmc.io;
 
 import java.io.IOException;
 
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.util.annotation.NotNull;
 import io.netty.buffer.ByteBuf;
 

@@ -7,7 +7,6 @@ import java.util.Objects;
 
 import de.atlasmc.io.socket.SocketConfig.ChannelType;
 import de.atlasmc.log.Log;
-import de.atlasmc.util.configuration.ConfigurationSection;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -62,17 +61,17 @@ public class ServerSocket implements Closeable {
 		b.group(bossGroup, workerGroup);
 		b.channel(type.getServerSocektChannelClass());
 		b.childHandler(handler);
-		ConfigurationSection options = config.getChannelOptions();
-		if (options != null) {
-			for (Entry<String, Object> entry : options.asMap().entrySet()) {
-				ChannelOption<Object> option = ChannelOption.valueOf(entry.getKey());
+		if (!config.getChannelOptions().isEmpty()) {
+			for (Entry<ChannelOption<?>, Object> entry : config.getChannelOptions().entrySet()) {
+				@SuppressWarnings("unchecked")
+				ChannelOption<Object> option = (ChannelOption<Object>) entry.getKey(); 
 				b.option(option, entry.getValue());
 			}
 		}
-		ConfigurationSection childOptions = config.getChildChannelOptions();
-		if (childOptions != null) {
-			for (Entry<String, Object> entry : options.asMap().entrySet()) {
-				ChannelOption<Object> option = ChannelOption.valueOf(entry.getKey());
+		if (!config.getChildChannelOptions().isEmpty()) {
+			for (Entry<ChannelOption<?>, Object> entry : config.getChildChannelOptions().entrySet()) {
+				@SuppressWarnings("unchecked")
+				ChannelOption<Object> option = (ChannelOption<Object>) entry.getKey(); 
 				b.childOption(option, entry.getValue());
 			}
 		}

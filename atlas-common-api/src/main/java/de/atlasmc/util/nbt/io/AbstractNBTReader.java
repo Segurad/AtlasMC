@@ -18,17 +18,31 @@ public abstract class AbstractNBTReader implements NBTReader {
 		this.closed = true;
 	}
 	
+	/**
+	 * Ensures that the read is still open
+	 * @throws IOException
+	 */
 	protected void ensureOpen() throws IOException {
 		if (closed)
 			throw new IOException("Stream closed!");
 	}
 	
+	/**
+	 * Ensures that the current tag is the same as the given tag
+	 * @param type to check
+	 * @throws IOException
+	 */
 	protected void ensureTag(TagType type) throws IOException {
 		final TagType current = getType();
 		if (type != current)
 			throw new NBTException("Cannot read " + current + " as " + type);
 	}
 	
+	/**
+	 * Ensures that the given type represents a numerical type by {@link TagType#isNumber()}
+	 * @param type to check
+	 * @throws IOException
+	 */
 	protected void ensureNumberTag(TagType type) throws IOException {
 		if (!type.isNumber())
 			throw new NBTException("Cannot read tag as number: " + type);
@@ -59,7 +73,7 @@ public abstract class AbstractNBTReader implements NBTReader {
 			data = readDoubleTag();
 			break;
 		default:
-			ensureNumberTag(type);
+			throw new NBTException("Unsupported nunmber type: " + type);
 		}
 		return data;
 	}

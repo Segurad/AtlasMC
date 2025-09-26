@@ -1,4 +1,4 @@
-package de.atlasmc.core.node.io;
+package de.atlasmc.io.connection;
 
 import java.net.InetSocketAddress;
 import java.security.InvalidAlgorithmParameterException;
@@ -12,9 +12,9 @@ import de.atlasmc.log.Log;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 
-public class CoreLocalConnectionHandler extends CoreAbstractConnectionHandler {
+public class LocalConnectionHandler extends AbstractConnectionHandler {
 
-	public CoreLocalConnectionHandler(Log log, Protocol protocol) {
+	public LocalConnectionHandler(Log log, Protocol protocol) {
 		super(log, protocol);
 	}
 

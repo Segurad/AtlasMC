@@ -4,9 +4,9 @@ import java.security.PublicKey;
 import java.util.Collection;
 import java.util.UUID;
 
+import de.atlasmc.io.socket.SocketConfig;
 import de.atlasmc.network.player.ProfileHandler;
 import de.atlasmc.network.server.ServerManager;
-import de.atlasmc.network.socket.SocketConfig;
 import de.atlasmc.util.annotation.InternalAPI;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.concurrent.future.Future;
@@ -50,12 +50,12 @@ public class AtlasNetwork  {
 		return HANDLER.getNodeConfigs(names);
 	}
 	
-	public static Future<SocketConfig> getProxyConfig(String name) {
-		return HANDLER.getProxyConfig(name);
+	public static Future<SocketConfig> getSocketConfig(String name) {
+		return HANDLER.getSocketConfig(name);
 	}
 	
-	public static Future<Collection<SocketConfig>> getProxyConfigs(Collection<String> names) {
-		return HANDLER.getProxyConfigs(names);
+	public static Future<Collection<SocketConfig>> getSocketConfigs(Collection<String> names) {
+		return HANDLER.getSocketConfigs(names);
 	}
 
 	public static int getOnlinePlayerCount() {

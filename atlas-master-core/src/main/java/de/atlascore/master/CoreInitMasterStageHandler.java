@@ -15,7 +15,7 @@ import org.mariadb.jdbc.MariaDbPoolDataSource;
 
 import de.atlascore.master.node.CoreNodeManager;
 import de.atlascore.master.permission.CoreSQLPermissionManager;
-import de.atlascore.master.proxy.CoreProxyManager;
+import de.atlascore.master.proxy.CoreSocketManager;
 import de.atlascore.master.server.CoreServerManager;
 import de.atlasmc.Atlas;
 import de.atlasmc.log.Log;
@@ -101,7 +101,7 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 				.setDatabase(con)
 				.setUUID(nodeID)
 				.setNodeManager(new CoreNodeManager())
-				.setProxyManager(new CoreProxyManager())
+				.setProxyManager(new CoreSocketManager())
 				.setServerManager(new CoreServerManager())
 				.setProfileManager(new CoreSQLProfileManager())
 				.setPermissionManager(new CoreSQLPermissionManager());

@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.entity.data.MetaData;
 import de.atlasmc.node.entity.data.MetaDataField;
 import de.atlasmc.node.entity.data.MetaDataType;

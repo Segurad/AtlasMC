@@ -7,9 +7,9 @@ import static de.atlasmc.io.PacketUtil.writeVarInt;
 
 import java.io.IOException;
 
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.Gamemode;
 import de.atlasmc.node.io.protocol.play.PacketOutRespawn;
 import io.netty.buffer.ByteBuf;

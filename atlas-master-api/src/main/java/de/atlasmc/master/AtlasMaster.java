@@ -6,14 +6,14 @@ import java.util.UUID;
 import de.atlasmc.datarepository.Repository;
 import de.atlasmc.log.Log;
 import de.atlasmc.master.node.NodeManager;
-import de.atlasmc.master.proxy.ProxyManager;
 import de.atlasmc.master.server.ServerManager;
+import de.atlasmc.master.socket.SocketManager;
 import de.atlasmc.network.NetworkInfo;
 import de.atlasmc.util.sql.SQLConnectionPool;
 
 public class AtlasMaster {
 
-	private static ProxyManager proxyManager;
+	private static SocketManager proxyManager;
 	private static ServerManager serverManager;
 	private static NodeManager nodeManager;
 	private static Log logger;
@@ -56,7 +56,7 @@ public class AtlasMaster {
 		return serverManager;
 	}
 	
-	public static ProxyManager getProxyManager() {
+	public static SocketManager getSocketManager() {
 		return proxyManager;
 	}
 	

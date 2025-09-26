@@ -9,6 +9,9 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.tag.NBT;
 
+/**
+ * Interface for writing data as NBT.
+ */
 public interface NBTWriter extends Closeable {
 	
 	void writeEndTag() throws IOException;
@@ -65,7 +68,7 @@ public interface NBTWriter extends Closeable {
 	void writeIntArrayTag(CharSequence name, int[] data, int offset, int length) throws IOException;
 	
 	/**
-	 * Writes a UUID as IntArrayTag
+	 * Writes a UUID as {@link TagType#INT_ARRAY}
 	 * @param name
 	 * @param uuid
 	 * @throws IOException

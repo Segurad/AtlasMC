@@ -5,13 +5,13 @@ import java.util.Collection;
 
 import de.atlasmc.core.network.CoreAbstractAtlasNetworkHandler;
 import de.atlasmc.datarepository.Repository;
+import de.atlasmc.io.socket.SocketConfig;
 import de.atlasmc.master.AtlasMaster;
 import de.atlasmc.master.node.NodeManager;
-import de.atlasmc.master.proxy.ProxyManager;
+import de.atlasmc.master.socket.SocketManager;
 import de.atlasmc.network.NetworkInfo;
 import de.atlasmc.network.NodeConfig;
 import de.atlasmc.network.server.ServerGroup;
-import de.atlasmc.network.socket.SocketConfig;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
 
@@ -72,18 +72,18 @@ public class CoreAtlasNetworkHandler extends CoreAbstractAtlasNetworkHandler {
 	}
 
 	@Override
-	public Future<SocketConfig> getProxyConfig(String name) {
-		return CompleteFuture.of(AtlasMaster.getProxyManager().getProxyConfig(name));
+	public Future<SocketConfig> getSocketConfig(String name) {
+		return CompleteFuture.of(AtlasMaster.getSocketManager().getSocketConfig(name));
 	}
 	
 	@Override
-	public Future<Collection<SocketConfig>> getProxyConfigs(Collection<String> names) {
+	public Future<Collection<SocketConfig>> getSocketConfigs(Collection<String> names) {
 		if (names.isEmpty())
 			return CompleteFuture.getEmptyListFuture();
-		ProxyManager proxyManager = AtlasMaster.getProxyManager();
+		SocketManager proxyManager = AtlasMaster.getSocketManager();
 		ArrayList<SocketConfig> configs = new ArrayList<>(names.size());
 		for (String name : names) {
-			SocketConfig cfg = proxyManager.getProxyConfig(name);
+			SocketConfig cfg = proxyManager.getSocketConfig(name);
 			if (cfg == null)
 				continue;
 			configs.add(cfg);

@@ -24,10 +24,10 @@ import java.util.UUID;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.PlayerChatSignatureData;
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.ProtocolException;
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.network.player.ProfileProperty;
 import de.atlasmc.node.Gamemode;
 import de.atlasmc.node.io.protocol.play.PacketOutPlayerInfoUpdate;

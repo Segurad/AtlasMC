@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.common.AbstractPacketCustomReportDetails;
 import de.atlasmc.node.io.protocol.common.AbstractPacketCustomReportDetails.Detail;
 import io.netty.buffer.ByteBuf;

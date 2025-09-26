@@ -1,8 +1,8 @@
 package de.atlasmc.io.netty.channel;
 
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketListener;
+import de.atlasmc.io.connection.ConnectionHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 

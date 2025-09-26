@@ -1,0 +1,16 @@
+directories:
+- master/servers/
+- dir: master/node-groups/
+  files:
+  - /master/default-node-group.yml:default-node-group.yml
+- dir: master/server-groups/
+  files:
+  - /master/default-server-group.yml:default-server-group.yml
+- dir: master/sockets/
+  files:
+  - /master/default-socket.yml:default-socket.yml
+files:
+- /master/global.yml:master/global.yml
+- /master/master.yml:master/master.yml
+- /master/permissions.yml:master/permissions.yml
+  

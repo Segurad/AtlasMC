@@ -7,9 +7,9 @@ import static de.atlasmc.io.PacketUtil.readVarInt;
 import static de.atlasmc.io.PacketUtil.writeTextComponent;
 import static de.atlasmc.node.io.protocol.ProtocolUtil.*;
 
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateObjectives;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateObjectives.Mode;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateScore.NumberFormatType;

@@ -1,12 +1,12 @@
-package de.atlasmc.node.io.handshake;
+package de.atlasmc.io.protocol.handshake;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.PacketListener;
 import de.atlasmc.io.Protocol;
+import de.atlasmc.io.connection.ConnectionHandler;
 
 public class HandshakeProtocol implements Protocol {
 

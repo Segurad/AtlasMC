@@ -1,7 +1,7 @@
 package de.atlasmc.core.network.minion;
 
-import de.atlasmc.core.node.io.CoreSocketConnectionHandler;
-import de.atlasmc.io.ConnectionHandler;
+import de.atlasmc.io.connection.ConnectionHandler;
+import de.atlasmc.io.connection.SocketConnectionHandler;
 import de.atlasmc.log.Log;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
@@ -36,7 +36,7 @@ public class CoreAtlasMasterConnection {
 		b.handler(new ChannelInitializer<SocketChannel>() {
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
-				connection = new CoreSocketConnectionHandler(ch, logger);
+				connection = new SocketConnectionHandler(ch, logger);
 			}
 		});
 		b.connect(host, port).addListener(listener);

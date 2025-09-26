@@ -2,6 +2,7 @@ package de.atlasmc.util.configuration;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import de.atlasmc.util.NumberConversion;
@@ -161,11 +162,20 @@ public interface ConfigurationSection {
 	Object set(@NotNull String path, @Nullable Object value);
 	
 	/**
-	 * Adds the contents of the section to this configuration
+	 * Adds the contents of the section to this configuration. Will not replace existing keys.
 	 * @param config
 	 */
 	default void addConfiguration(@NotNull ConfigurationSection config) {
-		copySection(this, config);
+		addConfiguration(config, false);
+	}
+	
+	/**
+	 * Adds the contents of the section to this configuration.
+	 * @param config
+	 * @param replace
+	 */
+	default void addConfiguration(@NotNull ConfigurationSection config, boolean replace) {
+		copySection(this, config, replace);
 	}
 	
 	/**
@@ -197,18 +207,54 @@ public interface ConfigurationSection {
 	 * Copies the contents of one section to another
 	 * @param dest
 	 * @param src
+	 * @param replace
 	 */
-	public static void copySection(@NotNull ConfigurationSection dest, ConfigurationSection src) {
+	public static void copySection(@NotNull ConfigurationSection dest, ConfigurationSection src, boolean replace) {
 		if (src == null)
 			return;
-		src.asMap().forEach((key, value) -> {
+		if (dest instanceof ListConfigurationSection listDest && src instanceof ListConfigurationSection listSrc) {
+			copyListSection(listDest, listSrc, replace);
+			return;
+		}
+		for (Entry<String, Object> entry : src.asMap().entrySet()) {
+			final String key = entry.getKey();
+			final Object value = entry.getValue();
 			if (value instanceof ConfigurationSection child) {
-				ConfigurationSection newSection = dest.createSection(key);
-				copySection(newSection, child);
+				if (child instanceof ListConfigurationSection list) {
+					ListConfigurationSection newSection = dest.createListSection(key);
+					copyListSection(newSection, list, replace);
+				} else {
+					ConfigurationSection newSection = dest.createSection(key);
+					copySection(newSection, child, replace);
+				}
 			} else {
+				if (!replace && dest.contains(key))
+					return;
 				dest.set(key, value);
 			}
-		});
+		}
+	}
+	
+	/**
+	 * Copies the contents of one list to another
+	 * @param dest
+	 * @param src
+	 * @param replace
+	 */
+	public static void copyListSection(ListConfigurationSection dest, ListConfigurationSection src, boolean replace) {
+		for (Object value : src) {
+			if (value instanceof ConfigurationSection child) {
+				if (child instanceof ListConfigurationSection list) {
+					ListConfigurationSection newSection = dest.addListSection();
+					copyListSection(newSection, list, replace);
+				} else {
+					ConfigurationSection newSection = dest.addSection();
+					copySection(newSection, child, replace);
+				}
+			} else {
+				dest.add(value);
+			}
+		}
 	}
 
 }

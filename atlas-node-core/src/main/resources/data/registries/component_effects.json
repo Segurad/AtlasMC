@@ -1,42 +1,42 @@
 [
 	{
-		"type": "de.atlasmc.inventory.component.effect.ClassComponentEffectFactory",
+		"type": "de.atlasmc.node.inventory.component.effect.ClassComponentEffectFactory",
 		"registry": "atlas:factory/component_effect_factory",
 		"configurations": [
 			{
 				"name": "minecraft:apply_effects",
 				"parameters": {
-					"effect": "de.atlascore.inventory.component.effect.CoreApplyEffects"
+					"effect": "de.atlasmc.core.node.inventory.component.effect.CoreApplyEffects"
 				}
 			},
 			{
 				"name": "minecraft:remove_effects",
 				"parameters": {
-					"effect": "de.atlascore.inventory.component.effect.CoreRemoveEffects"
+					"effect": "de.atlasmc.core.node.inventory.component.effect.CoreRemoveEffects"
 				}
 			},
 			{
 				"name": "minecraft:teleport_randomly",
 				"parameters": {
-					"effect": "de.atlascore.inventory.component.effect.CoreTeleportRandomly"
+					"effect": "de.atlasmc.core.node.inventory.component.effect.CoreTeleportRandomly"
 				}
 			},
 			{
 				"name": "minecraft:play_sound",
 				"parameters": {
-					"effect": "de.atlascore.inventory.component.effect.CorePlaySound"
+					"effect": "de.atlasmc.core.node.inventory.component.effect.CorePlaySound"
 				}
 			}
 		]
 	},
 	{
-		"type": "de.atlasmc.inventory.component.effect.SingletonComponentEffectFactory",
+		"type": "de.atlasmc.node.inventory.component.effect.SingletonComponentEffectFactory",
 		"registry": "atlas:factory/component_effect_factory",
 		"configurations": [
 			{
 				"name": "minecraft:clear_all_effects",
 				"parameters": {
-					"effect": "de.atlascore.inventory.component.effect.CoreClearAllEffects"
+					"effect": "de.atlasmc.core.node.inventory.component.effect.CoreClearAllEffects"
 				}
 			}
 		]

@@ -5,8 +5,8 @@ import static de.atlasmc.node.io.protocol.ProtocolUtil.*;
 import java.io.IOException;
 import java.net.ProtocolException;
 
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.common.AbstractPacketCookieData;
 import io.netty.buffer.ByteBuf;
 

@@ -3,7 +3,7 @@ package de.atlasmc.node.io.socket;
 import java.util.Collection;
 import java.util.UUID;
 
-import de.atlasmc.network.socket.SocketConfig;
+import de.atlasmc.io.socket.SocketConfig;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.annotation.ThreadSafe;

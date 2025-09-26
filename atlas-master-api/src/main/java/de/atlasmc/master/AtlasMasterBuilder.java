@@ -4,14 +4,14 @@ import java.util.UUID;
 
 import de.atlasmc.log.Log;
 import de.atlasmc.master.node.NodeManager;
-import de.atlasmc.master.proxy.ProxyManager;
 import de.atlasmc.master.server.ServerManager;
+import de.atlasmc.master.socket.SocketManager;
 import de.atlasmc.util.Builder;
 import de.atlasmc.util.sql.SQLConnectionPool;
 
 public class AtlasMasterBuilder implements Builder<Boolean> {
 	
-	private ProxyManager proxyManager;
+	private SocketManager proxyManager;
 	private ServerManager serverManager;
 	private NodeManager nodeManager;
 	private Log logger;
@@ -29,11 +29,11 @@ public class AtlasMasterBuilder implements Builder<Boolean> {
 		return this;
 	}
 	
-	public ProxyManager getProxyManager() {
+	public SocketManager getProxyManager() {
 		return proxyManager;
 	}
 
-	public AtlasMasterBuilder setProxyManager(ProxyManager proxyManager) {
+	public AtlasMasterBuilder setProxyManager(SocketManager proxyManager) {
 		this.proxyManager = proxyManager;
 		return this;
 	}

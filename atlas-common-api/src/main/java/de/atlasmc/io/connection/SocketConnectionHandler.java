@@ -1,4 +1,4 @@
-package de.atlasmc.core.node.io;
+package de.atlasmc.io.connection;
 
 import java.net.InetSocketAddress;
 import java.security.InvalidAlgorithmParameterException;
@@ -20,8 +20,8 @@ import de.atlasmc.io.netty.channel.PacketEncryptor;
 import de.atlasmc.io.netty.channel.PacketLengthDecoder;
 import de.atlasmc.io.netty.channel.PacketLengthEncoder;
 import de.atlasmc.io.netty.channel.PacketProcessor;
+import de.atlasmc.io.protocol.handshake.HandshakeProtocol;
 import de.atlasmc.log.Log;
-import de.atlasmc.node.io.handshake.HandshakeProtocol;
 import de.atlasmc.util.annotation.ThreadSafe;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelPipeline;
@@ -33,7 +33,7 @@ import io.netty.util.concurrent.GenericFutureListener;
  * Connection handler implementation for {@link SocketChannel}
  */
 @ThreadSafe
-public class CoreSocketConnectionHandler extends CoreAbstractConnectionHandler {
+public class SocketConnectionHandler extends AbstractConnectionHandler {
 	
 	protected static final String
 	CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER = "outbound_exception_handler",
@@ -71,12 +71,12 @@ public class CoreSocketConnectionHandler extends CoreAbstractConnectionHandler {
 	private volatile boolean encryption;
 	private final Queue<Object> queue; // contains Packet and FuturePacket
 	
-	public CoreSocketConnectionHandler(SocketChannel channel, Log log) {
+	public SocketConnectionHandler(SocketChannel channel, Log log) {
 		this(channel, log, HandshakeProtocol.DEFAULT_PROTOCOL);
 		registerPacketListener(HandshakeProtocol.DEFAULT_PROTOCOL.createDefaultPacketListenerIn(this));
 	}
 	
-	public CoreSocketConnectionHandler(SocketChannel channel, Log log, Protocol protocol) {
+	public SocketConnectionHandler(SocketChannel channel, Log log, Protocol protocol) {
 		super(log, protocol);
 		queue = new ConcurrentLinkedQueue<>();
 		this.channel = Objects.requireNonNull(channel);

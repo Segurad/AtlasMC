@@ -1,20 +1,21 @@
 package de.atlasmc.io.netty.channel;
 
-import de.atlascore.io.CoreSocketConnectionHandler;
+import de.atlasmc.io.connection.ServerSocketConnectionHandler;
+import de.atlasmc.io.socket.ServerSocket;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 
 public class DefaultChannelInitHandler extends ChannelInitializer<SocketChannel> {
 
-	private final NodeSocket proxy;
+	private final ServerSocket socket;
 	
-	public DefaultChannelInitHandler(NodeSocket proxy) {
-		this.proxy = proxy;
+	public DefaultChannelInitHandler(ServerSocket socket) {
+		this.socket = socket;
 	}
 	
 	@Override
 	protected void initChannel(SocketChannel ch) throws Exception {
-		proxy.addSyncConnection(new CoreSocketConnectionHandler(ch, proxy.getLogger()));
+		new ServerSocketConnectionHandler(socket, ch, socket.getLogger());
 	}
 
 }

@@ -10,8 +10,8 @@ import static de.atlasmc.io.PacketUtil.writeUUID;
 
 import java.io.IOException;
 
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.common.AbstractPacketAddResourcePack;
 import io.netty.buffer.ByteBuf;
 

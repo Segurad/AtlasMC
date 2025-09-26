@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketInSignedChatCommand;
 import io.netty.buffer.ByteBuf;
 

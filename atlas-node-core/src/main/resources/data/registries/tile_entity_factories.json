@@ -1,205 +1,205 @@
 [
     {
-        "type": "de.atlasmc.block.tile.ClassTileEntityFactory",
+        "type": "de.atlasmc.node.block.tile.ClassTileEntityFactory",
         "registry": "atlas:factory/tile_entity_factory",
         "configurations": [
             {
                 "name": "minecraft:banner",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.Banner",
-                    "tile": "de.atlascore.block.tile.CoreBanner",
+                    "tileInterface": "de.atlasmc.node.block.tile.Banner",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreBanner",
                     "tileID": 20
                 }
             },
             {
                 "name": "minecraft:barrel",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.Barrel",
-                    "tile": "de.atlascore.block.tile.CoreBarrel",
+                    "tileInterface": "de.atlasmc.node.block.tile.Barrel",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreBarrel",
                     "tileID": 27
                 }
             },
             {
                 "name": "minecraft:beacon",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.Beacon",
-                    "tile": "de.atlascore.block.tile.CoreBeacon",
+                    "tileInterface": "de.atlasmc.node.block.tile.Beacon",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreBeacon",
                     "tileID": 15
                 }
             },
             {
                 "name": "minecraft:beehive",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.Beehive",
-                    "tile": "de.atlascore.block.tile.CoreBeehive",
+                    "tileInterface": "de.atlasmc.node.block.tile.Beehive",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreBeehive",
                     "tileID": 34
                 }
             },
             {
                 "name": "minecraft:brewing_stand",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.BrewingStand",
-                    "tile": "de.atlascore.block.tile.CoreBrewingStand",
+                    "tileInterface": "de.atlasmc.node.block.tile.BrewingStand",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreBrewingStand",
                     "tileID": 12
                 }
             },
             {
                 "name": "minecraft:campfire",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.Campfire",
-                    "tile": "de.atlascore.block.tile.CoreCampfire",
+                    "tileInterface": "de.atlasmc.node.block.tile.Campfire",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreCampfire",
                     "tileID": 33
                 }
             },
             {
                 "name": "minecraft:command_block",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.CommandBlock",
-                    "tile": "de.atlascore.block.tile.CoreCommandBlock",
+                    "tileInterface": "de.atlasmc.node.block.tile.CommandBlock",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreCommandBlock",
                     "tileID": 23
                 }
             },
             {
                 "name": "minecraft:dispenser",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.Dispenser",
-                    "tile": "de.atlascore.block.tile.CoreDispenser",
+                    "tileInterface": "de.atlasmc.node.block.tile.Dispenser",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreDispenser",
                     "tileID": 5
                 }
             },
             {
                 "name": "minecraft:dropper",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.Dropper",
-                    "tile": "de.atlascore.block.tile.CoreDropper",
+                    "tileInterface": "de.atlasmc.node.block.tile.Dropper",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreDropper",
                     "tileID": 6
                 }
             },
             {
                 "name": "minecraft:enchanting_table",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.EnchantingTable",
-                    "tile": "de.atlascore.block.tile.CoreEnchantingTable",
+                    "tileInterface": "de.atlasmc.node.block.tile.EnchantingTable",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreEnchantingTable",
                     "tileID": 13
                 }
             },
             {
                 "name": "minecraft:ender_chest",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.EnderChest",
-                    "tile": "de.atlascore.block.tile.CoreEnderChest",
+                    "tileInterface": "de.atlasmc.node.block.tile.EnderChest",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreEnderChest",
                     "tileID": 3
                 }
             },
             {
                 "name": "minecraft:end_gateway",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.EndGateway",
-                    "tile": "de.atlascore.block.tile.CoreEndGateway",
+                    "tileInterface": "de.atlasmc.node.block.tile.EndGateway",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreEndGateway",
                     "tileID": 22
                 }
             },
             {
                 "name": "minecraft:furnace",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.Furnace",
-                    "tile": "de.atlascore.block.tile.CoreFurnace",
+                    "tileInterface": "de.atlasmc.node.block.tile.Furnace",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreFurnace",
                     "tileID": 0
                 }
             },
             {
                 "name": "minecraft:smoker",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.Furnace",
-                    "tile": "de.atlascore.block.tile.CoreFurnace",
+                    "tileInterface": "de.atlasmc.node.block.tile.Furnace",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreFurnace",
                     "tileID": 28
                 }
             },
             {
                 "name": "minecraft:blast_furnace",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.Furnace",
-                    "tile": "de.atlascore.block.tile.CoreFurnace",
+                    "tileInterface": "de.atlasmc.node.block.tile.Furnace",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreFurnace",
                     "tileID": 29
                 }
             },
             {
                 "name": "minecraft:hopper",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.Hopper",
-                    "tile": "de.atlascore.block.tile.CoreHopper",
+                    "tileInterface": "de.atlasmc.node.block.tile.Hopper",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreHopper",
                     "tileID": 18
                 }
             },
             {
                 "name": "minecraft:jukebox",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.Jukebox",
-                    "tile": "de.atlascore.block.tile.CoreJukebox",
+                    "tileInterface": "de.atlasmc.node.block.tile.Jukebox",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreJukebox",
                     "tileID": 4
                 }
             },
             {
                 "name": "minecraft:lectern",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.Lectern",
-                    "tile": "de.atlascore.block.tile.CoreLectern",
+                    "tileInterface": "de.atlasmc.node.block.tile.Lectern",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreLectern",
                     "tileID": 30
                 }
             },
             {
                 "name": "minecraft:mob_spawner",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.MobSpawner",
-                    "tile": "de.atlascore.block.tile.CoreMobSpawner",
+                    "tileInterface": "de.atlasmc.node.block.tile.MobSpawner",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreMobSpawner",
                     "tileID": 9
                 }
             },
             {
                 "name": "minecraft:shulker_box",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.ShulkerBox",
-                    "tile": "de.atlascore.block.tile.CoreShulkerBox",
+                    "tileInterface": "de.atlasmc.node.block.tile.ShulkerBox",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreShulkerBox",
                     "tileID": 24
                 }
             },
             {
                 "name": "minecraft:sign",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.Sign",
-                    "tile": "de.atlascore.block.tile.CoreSign",
+                    "tileInterface": "de.atlasmc.node.block.tile.Sign",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreSign",
                     "tileID": 7
                 }
             },
             {
                 "name": "minecraft:skull",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.Skull",
-                    "tile": "de.atlascore.block.tile.CoreSkull",
+                    "tileInterface": "de.atlasmc.node.block.tile.Skull",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreSkull",
                     "tileID": 16
                 }
             },
             {
                 "name": "minecraft:structure_block",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.StructureBlock",
-                    "tile": "de.atlascore.block.tile.CoreStructureBlock",
+                    "tileInterface": "de.atlasmc.node.block.tile.StructureBlock",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreStructureBlock",
                     "tileID": 21
                 }
             },
             {
                 "name": "minecraft:chest",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.Chest",
-                    "tile": "de.atlascore.block.tile.CoreChest",
+                    "tileInterface": "de.atlasmc.node.block.tile.Chest",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreChest",
                     "tileID": 1
                 }
             },
             {
                 "name": "minecraft:crafter",
                 "parameters": {
-                    "tileInterface": "de.atlasmc.block.tile.Crafter",
-                    "tile": "de.atlascore.block.tile.CoreCrafter",
+                    "tileInterface": "de.atlasmc.node.block.tile.Crafter",
+                    "tile": "de.atlasmc.core.node.block.tile.CoreCrafter",
                     "tileID": 42
                 }
             }

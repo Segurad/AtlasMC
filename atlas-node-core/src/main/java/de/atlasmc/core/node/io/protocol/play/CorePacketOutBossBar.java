@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.net.ProtocolException;
 import java.util.UUID;
 
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.BossBar.BarColor;
 import de.atlasmc.node.BossBar.BarStyle;
 import de.atlasmc.node.io.protocol.play.PacketOutBossBar;

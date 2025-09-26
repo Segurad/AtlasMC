@@ -1,6 +1,6 @@
 [
     {
-        "type": "de.atlasmc.inventory.ItemType",
+        "type": "de.atlasmc.node.inventory.ItemType",
         "registry": "minecraft:item",
         "configurations": [
             {

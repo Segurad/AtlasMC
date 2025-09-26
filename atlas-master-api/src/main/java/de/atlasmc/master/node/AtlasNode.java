@@ -3,9 +3,9 @@ package de.atlasmc.master.node;
 import java.util.Collection;
 import java.util.UUID;
 
-import de.atlasmc.master.proxy.Proxy;
 import de.atlasmc.master.server.Server;
 import de.atlasmc.master.server.ServerGroup;
+import de.atlasmc.master.socket.NodeSocket;
 
 public interface AtlasNode extends de.atlasmc.network.AtlasNode {
 
@@ -19,9 +19,9 @@ public interface AtlasNode extends de.atlasmc.network.AtlasNode {
 	
 	Collection<Server> getServers();
 	
-	Proxy getProxy(UUID uuid);
+	NodeSocket getProxy(UUID uuid);
 	
-	Collection<Proxy> getProxies();
+	Collection<NodeSocket> getProxies();
 	
 	Collection<ServerGroup> getServerGroups(); 
 

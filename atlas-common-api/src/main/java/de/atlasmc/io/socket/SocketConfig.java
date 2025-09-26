@@ -1,9 +1,16 @@
 package de.atlasmc.io.socket;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import de.atlasmc.io.connection.ConnectionConfig;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.ConfigurationSerializable;
 import de.atlasmc.util.configuration.MemoryConfiguration;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.IoHandlerFactory;
 import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollIoHandler;
@@ -24,33 +31,88 @@ import io.netty.channel.uring.IoUringSocketChannel;
 
 public class SocketConfig implements ConfigurationSerializable {
 	
+	private String name;
+	private ChannelType type;
+	private int bossThreads;
+	private int workerThreads;
+	private Map<ChannelOption<?>, Object> channelOptions;
+	private Map<ChannelOption<?>, Object> childChannelOptions;
+	private int port;
+	private String host;
+	private Map<String, ConnectionConfig> conConfigs;
 	private Configuration config;
 	
 	public SocketConfig(ConfigurationSection config) {
+		this.name = config.getString("name");
+		String rawChannel = config.getString("channel-type");
+		this.type = rawChannel != null ? ChannelType.valueOf(rawChannel) : ChannelType.getDefault();
+		this.channelOptions = buildChannelOptions(config.getConfigurationSection("channel-options"));
+		this.childChannelOptions = buildChannelOptions(config.getConfigurationSection("child-channel-options"));
+		this.bossThreads = config.getInt("boss-threads");
+		this.workerThreads = config.getInt("worker-threads");
+		this.port = config.getInt("port");
+		this.host = config.getString("host");
+		this.conConfigs = new HashMap<>();
+		List<ConfigurationSection> conConfigs = config.getConfigurationList("connection-config");
+		for (ConfigurationSection conConfig : conConfigs) {
+			ConnectionConfig cfg = ConfigurationSerializable.deserializeSafe(conConfig, ConnectionConfig.class);
+			this.conConfigs.put(cfg.getName(), cfg);
+		}
 		this.config = new MemoryConfiguration(config);
 	}
 	
+	public Configuration getConfig() {
+		return config;
+	}
+	
+	public String getHost() {
+		return host;
+	}
+	
+	public void setHost(String host) {
+		this.host = host;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
 	public ChannelType getType() {
-		String raw = config.getString("channel-type");
-		if (raw == null)
-			return ChannelType.getDefault();
-		return ChannelType.valueOf(raw);
+		return type;
 	}
 	
 	public int getBossThreads() {
-		return config.getInt("boss-threads");
+		return bossThreads;
 	}
 	
 	public int getWorkerThreads() {
-		return config.getInt("worker-threads");
+		return workerThreads;
 	}
 	
-	public ConfigurationSection getChannelOptions() {
-		return config.getConfigurationSection("channel-options");
+	public Map<ChannelOption<?>, Object> getChannelOptions() {
+		return channelOptions;
 	}
 	
-	public ConfigurationSection getChildChannelOptions() {
-		return config.getConfigurationSection("child-channel-options");
+	public Map<ChannelOption<?>, Object> getChildChannelOptions() {
+		return childChannelOptions;
+	}
+	
+	public int getPort() {
+		return port;
+	}
+	
+	private static Map<ChannelOption<?>, Object> buildChannelOptions(ConfigurationSection config) {
+		Map<ChannelOption<?>, Object> options = new HashMap<>();
+		if (config == null)
+			return options;
+		for (Entry<String, Object> entry : config.asMap().entrySet()) {
+			String key = entry.getKey();
+			if (!ChannelOption.exists(key))
+				continue;
+			ChannelOption<?> option = ChannelOption.valueOf(key);
+			options.put(option, entry.getValue());
+		}
+		return options;
 	}
 	
 	@Override
@@ -109,6 +171,11 @@ public class SocketConfig implements ConfigurationSerializable {
 			return NIO;
 		}
 		
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends ConnectionConfig> T getConnectionConfig(String key) {
+		return (T) conConfigs.get(key);
 	}
 
 }

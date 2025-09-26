@@ -108,6 +108,9 @@ Setup files are helpers for creating directories and extract resources of your p
 directories: # creates directories
 - some/Path
 - some/Other/Path
+- dir: some/dir/Path 
+  files: # will be extracted if dir is created or override flag is set
+  - resource/Path:target/Path/InDir/
 extract: # copies resources to the given path
 -  resource/Path:target/Path
 ```

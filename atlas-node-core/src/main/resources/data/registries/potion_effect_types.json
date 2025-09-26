@@ -1,6 +1,6 @@
 [
     {
-        "type": "de.atlascore.potion.CoreClassPotionEffectType",
+        "type": "de.atlasmc.core.node.potion.CoreClassPotionEffectType",
         "registry": "atlas:potion_effect_type",
         "configurations": [
             {
@@ -9,7 +9,7 @@
                     "key": "minecraft:absorption",
                     "id": 21,
 					"color": 2445989,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -18,7 +18,7 @@
                     "key": "minecraft:bad_omen",
                     "id": 30,
 					"color": 14565464,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -27,7 +27,7 @@
                     "key": "minecraft:blindness",
                     "id": 14,
 					"color": 2039587,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -35,7 +35,7 @@
                 "parameters": {
                     "key": "minecraft:conduit_power",
                     "id": 28,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -43,7 +43,7 @@
                 "parameters": {
                     "key": "minecraft:darkness",
                     "id": 32,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -51,7 +51,7 @@
                 "parameters": {
                     "key": "minecraft:dolphins_grace",
                     "id": 29,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -59,7 +59,7 @@
                 "parameters": {
                     "key": "minecraft:fire_resistance",
                     "id": 11,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -67,7 +67,7 @@
                 "parameters": {
                     "key": "minecraft:glowing",
                     "id": 23,
-                    "effectClass": "de.atlascore.potion.CoreEffectGlowing"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectGlowing"
                 }
             },
             {
@@ -75,7 +75,7 @@
                 "parameters": {
                     "key": "minecraft:haste",
                     "id": 2,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -83,7 +83,7 @@
                 "parameters": {
                     "key": "minecraft:health_boost",
                     "id": 20,
-                    "effectClass": "de.atlascore.potion.CoreEffectHealthBoost"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectHealthBoost"
                 }
             },
             {
@@ -91,7 +91,7 @@
                 "parameters": {
                     "key": "minecraft:hero_of_the_village",
                     "id": 31,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -99,7 +99,7 @@
                 "parameters": {
                     "key": "minecraft:hunger",
                     "id": 16,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -107,7 +107,7 @@
                 "parameters": {
                     "key": "minecraft:infested",
                     "id": 38,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -115,7 +115,7 @@
                 "parameters": {
                     "key": "minecraft:instant_damage",
                     "id": 6,
-                    "effectClass": "de.atlascore.potion.CoreEffectInstantDamage"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectInstantDamage"
                 }
             },
             {
@@ -123,7 +123,7 @@
                 "parameters": {
                     "key": "minecraft:instant_health",
                     "id": 5,
-                    "effectClass": "de.atlascore.potion.CoreEffectInstantHealth"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectInstantHealth"
                 }
             },
             {
@@ -131,7 +131,7 @@
                 "parameters": {
                     "key": "minecraft:invisibility",
                     "id": 13,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -139,7 +139,7 @@
                 "parameters": {
                     "key": "minecraft:jump_boost",
                     "id": 7,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -147,7 +147,7 @@
                 "parameters": {
                     "key": "minecraft:levitation",
                     "id": 24,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -155,7 +155,7 @@
                 "parameters": {
                     "key": "minecraft:luck",
                     "id": 25,
-                    "effectClass": "de.atlascore.potion.CoreEffectLuck"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectLuck"
                 }
             },
             {
@@ -163,7 +163,7 @@
                 "parameters": {
                     "key": "minecraft:mining_fatigue",
                     "id": 3,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -171,7 +171,7 @@
                 "parameters": {
                     "key": "minecraft:nausea",
                     "id": 8,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -179,7 +179,7 @@
                 "parameters": {
                     "key": "minecraft:night_vision",
                     "id": 15,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -187,7 +187,7 @@
                 "parameters": {
                     "key": "minecraft:oozing",
                     "id": 37,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -195,7 +195,7 @@
                 "parameters": {
                     "key": "minecraft:poison",
                     "id": 18,
-                    "effectClass": "de.atlascore.potion.CoreEffectPoison"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectPoison"
                 }
             },
             {
@@ -203,7 +203,7 @@
                 "parameters": {
                     "key": "minecraft:raid_omen",
                     "id": 34,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -211,7 +211,7 @@
                 "parameters": {
                     "key": "minecraft:regeneration",
                     "id": 9,
-                    "effectClass": "de.atlascore.potion.CoreEffectRegeneration"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectRegeneration"
                 }
             },
             {
@@ -219,7 +219,7 @@
                 "parameters": {
                     "key": "minecraft:resistance",
                     "id": 10,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -227,7 +227,7 @@
                 "parameters": {
                     "key": "minecraft:saturation",
                     "id": 22,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -235,7 +235,7 @@
                 "parameters": {
                     "key": "minecraft:slow_falling",
                     "id": 27,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -243,7 +243,7 @@
                 "parameters": {
                     "key": "minecraft:slowness",
                     "id": 1,
-                    "effectClass": "de.atlascore.potion.CoreEffectSlowness"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectSlowness"
                 }
             },
             {
@@ -251,7 +251,7 @@
                 "parameters": {
                     "key": "minecraft:speed",
                     "id": 0,
-                    "effectClass": "de.atlascore.potion.CoreEffectSpeed"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectSpeed"
                 }
             },
             {
@@ -259,7 +259,7 @@
                 "parameters": {
                     "key": "minecraft:strength",
                     "id": 4,
-                    "effectClass": "de.atlascore.potion.CoreEffectStrength"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectStrength"
                 }
             },
             {
@@ -267,7 +267,7 @@
                 "parameters": {
                     "key": "minecraft:trial_omen",
                     "id": 33,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -275,7 +275,7 @@
                 "parameters": {
                     "key": "minecraft:unluck",
                     "id": 26,
-                    "effectClass": "de.atlascore.potion.CoreEffectUnluck"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectUnluck"
                 }
             },
             {
@@ -283,7 +283,7 @@
                 "parameters": {
                     "key": "minecraft:water_breathing",
                     "id": 12,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -291,7 +291,7 @@
                 "parameters": {
                     "key": "minecraft:weakness",
                     "id": 17,
-                    "effectClass": "de.atlascore.potion.CoreEffectWeakness"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectWeakness"
                 }
             },
             {
@@ -299,7 +299,7 @@
                 "parameters": {
                     "key": "minecraft:weaving",
                     "id": 36,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -307,7 +307,7 @@
                 "parameters": {
                     "key": "minecraft:wind_charged",
                     "id": 35,
-                    "effectClass": "de.atlascore.potion.CoreEffectNoEffect"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectNoEffect"
                 }
             },
             {
@@ -315,7 +315,7 @@
                 "parameters": {
                     "key": "minecraft:wither",
                     "id": 19,
-                    "effectClass": "de.atlascore.potion.CoreEffectWither"
+                    "effectClass": "de.atlasmc.core.node.potion.CoreEffectWither"
                 }
             }
         ]

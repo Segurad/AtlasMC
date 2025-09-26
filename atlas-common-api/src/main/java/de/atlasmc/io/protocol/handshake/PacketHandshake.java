@@ -1,4 +1,4 @@
-package de.atlasmc.node.io.handshake;
+package de.atlasmc.io.protocol.handshake;
 
 import de.atlasmc.io.PacketInbound;
 import de.atlasmc.io.PacketOutbound;

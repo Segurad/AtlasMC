@@ -23,7 +23,7 @@ public class QuaternionfField<T> extends AbstractObjectField<T, Quaternionf> {
 		final Quaternionf vec = get.apply(value);
 		if (vec == null)
 			return true;
-		writer.writeListTag(key, TagType.FLOAT, 3);
+		writer.writeListTag(key, TagType.FLOAT, 4);
 		writer.writeFloatTag(null, vec.w);
 		writer.writeFloatTag(null, vec.x);
 		writer.writeFloatTag(null, vec.y);

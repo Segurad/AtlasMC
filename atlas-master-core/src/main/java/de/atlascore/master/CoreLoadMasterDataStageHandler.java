@@ -18,19 +18,19 @@ import de.atlasmc.Atlas;
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.core.network.CoreNetworkInfo;
+import de.atlasmc.io.socket.SocketConfig;
 import de.atlasmc.log.Log;
 import de.atlasmc.master.AtlasMaster;
 import de.atlasmc.master.AtlasMasterBuilder;
 import de.atlasmc.master.PermissionManager;
 import de.atlasmc.master.node.NodeManager;
-import de.atlasmc.master.proxy.ProxyManager;
 import de.atlasmc.master.server.ServerGroup;
 import de.atlasmc.master.server.ServerGroupBuilder;
 import de.atlasmc.master.server.ServerManager;
+import de.atlasmc.master.socket.SocketManager;
 import de.atlasmc.network.NetworkInfo;
-import de.atlasmc.network.NodeConfig;
 import de.atlasmc.network.NetworkInfo.SlotMode;
-import de.atlasmc.network.socket.SocketConfig;
+import de.atlasmc.network.NodeConfig;
 import de.atlasmc.permission.ContextProvider;
 import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionContext;
@@ -54,28 +54,16 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 		log = context.getLogger();
 		File masterDir = new File(Atlas.getWorkdir(), "master");
 		FileUtils.ensureDir(masterDir);
-		File globalCfgFile = null;
-		File nodeGroupsCfgFile = null;
-		File permissionCfgFile = null;
-		File serverGroupsCfgFile = null;
-		File proxyCfgFile = null;
-		boolean override = false;
-		if (Boolean.getBoolean("atlas.config.override")) {
-			override = true;
-		}
-		try {
-			globalCfgFile = FileUtils.extractResource(new File(masterDir, "global.yml"), "/master/global.yml", override);
-			nodeGroupsCfgFile = FileUtils.extractResource(new File(masterDir, "node-groups.yml"), "/master/node-groups.yml", override);
-			permissionCfgFile = FileUtils.extractResource(new File(masterDir, "permissions.yml"), "/master/permissions.yml", override);
-			serverGroupsCfgFile = FileUtils.extractResource(new File(masterDir, "server-groups.yml"), "/master/server-groups.yml", override);
-			proxyCfgFile = FileUtils.extractResource(new File(masterDir, "proxy.yml"), "/master/proxy.yml", override);
-		} catch (IOException e) {
-			log.error("Error while extracting master configurations!", e);
-		}
+		File globalCfgFile = new File(Atlas.getWorkdir(), "master/globals.yml");
+		File nodeGroupsDir = new File(Atlas.getWorkdir(), "master/node-groups/");
+		File permissionCfgFile = new File(Atlas.getWorkdir(), "master/permissions.yml");
+		File serverGroupsDir = new File(Atlas.getWorkdir(), "master/server-groups/");
+		//File serversDir = new File(Atlas.getWorkdir(), "master/servers/");
+		File socketsDir = new File(Atlas.getWorkdir(), "master/sockets/");
 		loadGlobalConfig(globalCfgFile);
-		loadServerGroups(serverGroupsCfgFile);
-		loadNodeGroups(nodeGroupsCfgFile);
-		loadProxyConfig(proxyCfgFile);
+		loadServerGroups(serverGroupsDir);
+		loadNodeGroups(nodeGroupsDir);
+		loadSocketConfig(socketsDir);
 		loadPermissions(permissionCfgFile);
 	}
 	
@@ -232,55 +220,58 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 		return true;
 	}
 	
-	private void loadServerGroups(File file) {
+	private void loadServerGroups(File dir) {
 		log.info("Loading server groups...");
-		Configuration cfg = null;
-		try {
-			cfg = YamlConfiguration.loadConfiguration(file);
-		} catch (IOException e) {
-			log.error("Error while loading server groups!", e);
+		final File[] files = dir.listFiles(FileUtils.YAML_FILE_FILTER);
+		if (files.length == 0)
 			return;
-		}
-		List<ConfigurationSection> groupCfgs = cfg.getConfigurationList("server-groups");
-		ServerManager manager = AtlasMaster.getServerManager();
-		ServerGroupBuilder builder = new ServerGroupBuilder();
-		for (ConfigurationSection groupCfg : groupCfgs) {
-			builder.setConfiguration(groupCfg);
+		final ServerManager manager = AtlasMaster.getServerManager();
+		final ServerGroupBuilder builder = new ServerGroupBuilder();
+		for (File file : files) {
+			Configuration cfg;
+			try {
+				cfg = YamlConfiguration.loadConfiguration(dir);
+			} catch (IOException e) {
+				log.error("Error while loading server group: " + file, e);
+				continue;
+			}
+			builder.setConfiguration(cfg);
 			ServerGroup group = manager.createServerGroup(builder);
 			log.debug("Registered group: {}", group.getName());
+			builder.clear();
 		}
 	}
 	
-	private void loadProxyConfig(File file) {
-		log.info("Loading proxies...");
-		Configuration cfg = null;
-		try {
-			cfg = YamlConfiguration.loadConfiguration(file);
-		} catch (IOException e) {
-			log.error("Error while loading proxies!", e);
-			return;
-		}
-		ProxyManager proxyManager = AtlasMaster.getProxyManager();
-		List<ConfigurationSection> proxyCfgs = cfg.getConfigurationList("proxies");
-		for (ConfigurationSection proxyCfg : proxyCfgs) {
-			SocketConfig proxy = new SocketConfig(proxyCfg);
-			proxyManager.addProxyConfig(proxy);
+	private void loadSocketConfig(File dir) {
+		log.info("Loading sockets...");
+		final File[] files = dir.listFiles(FileUtils.YAML_FILE_FILTER);
+		final SocketManager socketManager = AtlasMaster.getSocketManager();
+		for (File file : files) {
+			Configuration cfg;
+			try {
+				cfg = YamlConfiguration.loadConfiguration(file);
+			} catch (IOException e) {
+				log.error("Error while loading sockets: " + file, e);
+				continue;
+			}
+			SocketConfig socket = new SocketConfig(cfg);
+			socketManager.addSocketConfig(socket);
 		}
 	}
 	
-	private void loadNodeGroups(File file) {
+	private void loadNodeGroups(File dir) {
 		log.info("Loading node configs...");
-		Configuration cfg = null;
-		try {
-			cfg = YamlConfiguration.loadConfiguration(file);
-		} catch (IOException e) {
-			log.error("Error while loading node configs!", e);
-			return;
-		}
-		NodeManager nodeManager = AtlasMaster.getNodeManager();
-		List<ConfigurationSection> nodeCfgs = cfg.getConfigurationList("node-configs");
-		for (ConfigurationSection groupCfg : nodeCfgs) {
-			NodeConfig group = new NodeConfig(groupCfg);
+		final File[] files = dir.listFiles(FileUtils.YAML_FILE_FILTER);
+		final NodeManager nodeManager = AtlasMaster.getNodeManager();
+		for (File file : files) {
+			Configuration cfg;
+			try {
+				cfg = YamlConfiguration.loadConfiguration(file);
+			} catch (IOException e) {
+				log.error("Error while loading node configs: " + file, e);
+				continue;
+			}
+			NodeConfig group = new NodeConfig(cfg);
 			nodeManager.addNodeConfig(group);
 		}
 	}

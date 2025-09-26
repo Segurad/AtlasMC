@@ -15,7 +15,7 @@ import de.atlasmc.util.nbt.tag.ListTag;
 import de.atlasmc.util.nbt.tag.NBT;
 
 /**
- * Reader for NBT Data<br>
+ * Interface for reading NBT data<br>
  * <h2>Usage Examples</h2><br>
  * Read {@link TagType#LIST}
  * <pre>
@@ -64,7 +64,7 @@ public interface NBTReader extends Closeable {
 	 * Returns the Depth in the current NBT Structure.
 	 * The depth will increase by 1 for each ListTag or CompoundTag entered with {@link #readNextEntry()}.
 	 * For ListTag of CompoundTag this increase will be 2 because the first compound is automatically entered.
-	 * @return
+	 * @return depth
 	 * @throws IOException 
 	 */
 	int getDepth() throws IOException;
@@ -127,54 +127,109 @@ public interface NBTReader extends Closeable {
 	 */
 	int getArrayTagPayload();
 	
+	/**
+	 * Reads the current tag as byte array and consumes the values with the given consumer.
+	 * @param dataConsumer
+	 * @throws IOException
+	 */
 	void readByteArrayTag(IntConsumer dataConsumer) throws IOException;
 	
 	/**
-	 * Reads a byte array tag to the given buffer.
+	 * Reads current tag as byte array to the given buffer.
 	 * @param buf
 	 * @return number of read bytes
 	 * @throws IOException
 	 */
 	int readByteArrayTag(byte[] buf) throws IOException;
 	
+	/**
+	 * Reads the current tag as byte array.
+	 * @return byte array
+	 * @throws IOException
+	 */
 	byte[] readByteArrayTag() throws IOException;
 	
+	/**
+	 * Reads the current tag as byte.
+	 * @return byte
+	 * @throws IOException
+	 */
 	byte readByteTag() throws IOException;
 	
+	/**
+	 * Reads the current tag as double.
+	 * @return double
+	 * @throws IOException
+	 */
 	double readDoubleTag() throws IOException;
 	
+	/**
+	 * Reads the current tag as float.
+	 * @return float
+	 * @throws IOException
+	 */
 	float readFloatTag() throws IOException;
 	
+	/**
+	 * Reads the current tag as int array and consumes the values with the given consumer.
+	 * @param dataConsumer
+	 * @throws IOException
+	 */
 	void readIntArrayTag(IntConsumer dataConsumer) throws IOException;
 	
 	/**
-	 * Reads a int array tag to the given buffer.
+	 * Reads the current tag as int array to the given buffer.
 	 * @param buf
 	 * @return number of read integer
 	 * @throws IOException
 	 */
 	int readIntArrayTag(int[] buf) throws IOException;
 	
+	/**
+	 * Reads the current tag as int array.
+	 * @return
+	 * @throws IOException
+	 */
 	int[] readIntArrayTag() throws IOException;
 	
+	/**
+	 * Reads the current tag as int.
+	 * @return int
+	 * @throws IOException
+	 */
 	int readIntTag() throws IOException;
 	
+	/**
+	 * Reads the current tag as long array and consumes the values with the given consumer.
+	 * @param dataConsumer
+	 * @throws IOException
+	 */
 	void readLongArrayTag(LongConsumer dataConsumer) throws IOException;
 	
 	/**
-	 * Reads a long array tag to the given buffer.
+	 * Reads current tag as long array to the given buffer.
 	 * @param buf
 	 * @return number of read long
 	 * @throws IOException
 	 */
 	int readLongArrayTag(long[] buf) throws IOException;
 	
+	/**
+	 * Reads the current tag as long array.
+	 * @return long array
+	 * @throws IOException
+	 */
 	long[] readLongArrayTag() throws IOException;
 	
+	/**
+	 * Reads the current tag as long.
+	 * @return long
+	 * @throws IOException
+	 */
 	long readLongTag() throws IOException;
 	
 	/**
-	 * 
+	 * Reads the current tag and returns a object representation of it.
 	 * @return the next tag
 	 */
 	NBT readNBT() throws IOException;
@@ -186,16 +241,31 @@ public interface NBTReader extends Closeable {
 	 */
 	void readNextEntry() throws IOException;
 	
+	/**
+	 * Reads the current tag as short
+	 * @return short
+	 * @throws IOException
+	 */
 	short readShortTag() throws IOException;
 	
+	/**
+	 * Reads the current tag as String
+	 * @return String
+	 * @throws IOException
+	 */
 	String readStringTag() throws IOException;
 	
+	/**
+	 * Reads the current tag as String and converts to {@link NamespacedKey}
+	 * @return NamespacedKey
+	 * @throws IOException
+	 */
 	default NamespacedKey readNamespacedKey() throws IOException {
 		return NamespacedKey.of(readStringTag());
 	}
 
 	/**
-	 * Reads a IntArrayTag as UUID
+	 * Reads a {@link TagType#INT_ARRAY} as UUID
 	 * @return
 	 * @throws IOException
 	 */

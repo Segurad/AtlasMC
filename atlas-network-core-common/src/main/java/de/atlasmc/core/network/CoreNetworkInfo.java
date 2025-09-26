@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import de.atlasmc.chat.placeholder.PlaceholderHandler;
 import de.atlasmc.network.NetworkInfo;
+import de.atlasmc.network.chat.placeholder.PlaceholderHandler;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.MemoryConfigurationSection;
 import de.atlasmc.util.configuration.file.JsonConfiguration;

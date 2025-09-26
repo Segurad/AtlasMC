@@ -5,9 +5,9 @@ import static de.atlasmc.node.io.protocol.ProtocolUtil.*;
 import java.io.IOException;
 import java.io.StringReader;
 
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.status.PacketOutResponse;
 import de.atlasmc.util.configuration.file.JsonConfiguration;
 import io.netty.buffer.ByteBuf;

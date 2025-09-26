@@ -17,12 +17,15 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import de.atlasmc.Atlas;
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.Protocol;
 import de.atlasmc.io.ProtocolException;
+import de.atlasmc.io.connection.ConnectionHandler;
+import de.atlasmc.io.connection.ServerSocketConnectionHandler;
+import de.atlasmc.io.socket.SocketConfig;
 import de.atlasmc.network.AtlasNetwork;
 import de.atlasmc.network.player.AtlasPlayer;
+import de.atlasmc.network.player.PlayerConnectionConfig;
 import de.atlasmc.network.player.ProfileHandler;
 import de.atlasmc.node.AtlasNode;
 import de.atlasmc.node.io.protocol.PlayerConnection;
@@ -49,8 +52,10 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 		HANDLERS = new PacketHandler[PacketLogin.PACKET_COUNT_IN];
 		HANDLE_ASYNC = new boolean[PacketLogin.PACKET_COUNT_IN];
 		initHandler(PacketInLoginStart.class, (handler, packet) -> {
-			NodeSocket proxy = handler.con.getSocket();
-			if (proxy.getConfig().getPlayerAuthentication()) {
+			NodeSocket proxy = (NodeSocket) ((ServerSocketConnectionHandler) handler.con).getSocket();
+			SocketConfig config = proxy.getConfig();
+			PlayerConnectionConfig conConfig = config.getConnectionConfig("player-connection");
+			if (conConfig.hasAuthentication()) {
 				PacketOutEncryptionRequest packetOut = new PacketOutEncryptionRequest();
 				packetOut.serverID = SERVER_ID;
 				packetOut.publicKey = Atlas.getKeyPair().getPublic().getEncoded();

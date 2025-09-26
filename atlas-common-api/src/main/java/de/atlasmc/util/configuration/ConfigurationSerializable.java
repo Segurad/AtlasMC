@@ -15,6 +15,23 @@ import de.atlasmc.util.annotation.NotNull;
  */
 public interface ConfigurationSerializable {
 	
+	public static <C extends ConfigurationSerializable, T extends C> T deserializeSafe(ConfigurationSection section, Class<C> required) {
+		String raw = section.getString("==");
+		if (raw == null)
+			throw new ConfigurationException("No field found with name \"==\"!");
+		Class<T> clazz;
+		try {
+			@SuppressWarnings("unchecked")
+			Class<T> c = (Class<T>) Class.forName(raw);
+			clazz = c;
+		} catch (ClassNotFoundException e) {
+			throw new ConfigurationException(e);
+		}
+		if (!required.isAssignableFrom(clazz))
+			throw new ConfigurationException("Deserialization class must be assignable from " + required + ":" + clazz);
+		return deserialize(section, clazz);
+	}
+	
 	@NotNull
 	public static <T extends ConfigurationSerializable> T deserialize(ConfigurationSection section, String className) {
 		Class<T> clazz;

@@ -1,0 +1,26 @@
+name: default-socket
+port: 4000
+host: 127.0.0.1
+type: EPOLL
+worker-threads: 3
+boss-threads: 1
+channel-options:
+  SO_BACKLOG: 128
+child-channel-options:
+  SO_KEEPALIVE: true
+mode: open
+connection-config:
+- ==: de.atlasmc.network.player.PlayerConnectionConfiguration 
+  name: player_connection
+  timeout: 600
+  rate-limit: 20
+  max-chunks-per-tick: 5
+  authentication: false # authenticate players when join from external (online mode)
+  match-domains: true # match login domains user send to allow only domains set for this network to reject ip scanners
+  domain-whitelist: # regex patterns
+  - my\.domain\.org # the direct domain
+  - "[a-zA-Z]+\\.join\\.domain\\.org" # join with somthing.join.domain.org
+  enable-compression: true # network compression
+  compression-threshold: 1024
+  compression-buffer-size: 4096
+	

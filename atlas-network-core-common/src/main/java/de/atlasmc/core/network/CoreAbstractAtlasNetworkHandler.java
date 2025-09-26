@@ -4,7 +4,7 @@ import java.security.PublicKey;
 import java.util.Objects;
 import java.util.UUID;
 
-import de.atlasmc.io.ConnectionHandler;
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.network.AtlasNetworkHandler;
 import de.atlasmc.network.NodeManager;
 import de.atlasmc.network.PermissionManager;

@@ -4,43 +4,43 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.atlasmc.master.proxy.Proxy;
-import de.atlasmc.master.proxy.ProxyManager;
-import de.atlasmc.network.socket.SocketConfig;
+import de.atlasmc.io.socket.SocketConfig;
+import de.atlasmc.master.socket.NodeSocket;
+import de.atlasmc.master.socket.SocketManager;
 
-public class CoreProxyManager implements ProxyManager {
+public class CoreSocketManager implements SocketManager {
 	
-	private Map<UUID, Proxy> proxies;
+	private Map<UUID, NodeSocket> sockets;
 	private Map<String, SocketConfig> configs;
 
-	public CoreProxyManager() {
-		this.proxies = new ConcurrentHashMap<>();
+	public CoreSocketManager() {
+		this.sockets = new ConcurrentHashMap<>();
 		this.configs = new ConcurrentHashMap<>();
 	}
 	
 	@Override
-	public Proxy getProxy(UUID uuid) {
+	public NodeSocket getSocket(UUID uuid) {
 		if (uuid == null)
 			throw new IllegalArgumentException("UUID can not be null!");
-		return proxies.get(uuid);
+		return sockets.get(uuid);
 	}
 
 	@Override
-	public SocketConfig getProxyConfig(String name) {
+	public SocketConfig getSocketConfig(String name) {
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null!");
 		return configs.get(name);
 	}
 
 	@Override
-	public boolean addProxyConfig(SocketConfig config) {
+	public boolean addSocketConfig(SocketConfig config) {
 		if (config == null)
 			throw new IllegalArgumentException("Config can not be null!");
 		return configs.putIfAbsent(config.getName(), config) == null;
 	}
 
 	@Override
-	public boolean removeProxyConfig(SocketConfig config) {
+	public boolean removeSocketConfig(SocketConfig config) {
 		if (config == null)
 			throw new IllegalArgumentException("Config can not be null!");
 		return configs.remove(config.getName(), config);

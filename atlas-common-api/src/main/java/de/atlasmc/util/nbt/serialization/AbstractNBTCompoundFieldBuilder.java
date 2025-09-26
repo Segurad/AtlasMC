@@ -88,6 +88,10 @@ public abstract class AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCo
 		return addField(new LongField<>(key, get, set, false, 0));
 	}
 	
+	public B longNullableField(CharSequence key, Function<T, Long> get, BiConsumer<T, Long> set) {
+		return addField(new LongObjectField<>(key, get, set));
+	}
+	
 	public B longField(CharSequence key, ToLongFunction<T> get, ObjLongConsumer<T> set, long defaultValue) {
 		return addField(new LongField<>(key, get, set, true, defaultValue));
 	}

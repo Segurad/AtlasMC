@@ -11,8 +11,9 @@ import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatType;
 import de.atlasmc.core.node.plugin.channel.CorePlayerPluginChannelHandler;
 import de.atlasmc.core.node.recipe.CoreRecipeBook;
-import de.atlasmc.io.ConnectionHandler;
 import de.atlasmc.io.Protocol;
+import de.atlasmc.io.connection.ConnectionHandler;
+import de.atlasmc.io.connection.ServerSocketConnectionHandler;
 import de.atlasmc.log.Log;
 import de.atlasmc.network.player.AtlasPlayer;
 import de.atlasmc.node.NodePlayer;
@@ -357,7 +358,7 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public NodeSocket getSocket() {
-		return connection.getSocket();
+		return (NodeSocket) ((ServerSocketConnectionHandler) connection).getSocket();
 	}
 
 	@Override

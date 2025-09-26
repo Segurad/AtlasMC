@@ -8,15 +8,10 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.atlasmc.NamespacedKey;
-import de.atlasmc.io.netty.channel.DefaultChannelInitHandler;
-import de.atlasmc.network.socket.SocketConfig;
+import de.atlasmc.io.socket.SocketConfig;
 import de.atlasmc.node.AtlasNode;
 import de.atlasmc.node.io.socket.NodeSocket;
-import de.atlasmc.node.io.socket.NodeSocketFactory;
 import de.atlasmc.node.io.socket.SocketManager;
-import de.atlasmc.registry.Registries;
-import de.atlasmc.registry.Registry;
 import de.atlasmc.util.configuration.ConfigurationException;
 
 public class CoreSocketManager implements SocketManager {
@@ -53,24 +48,11 @@ public class CoreSocketManager implements SocketManager {
 
 	@Override
 	public NodeSocket createSocket(SocketConfig config) {
-		Registry<NodeSocketFactory> proxyFactories = Registries.getRegistry(NodeSocketFactory.class);
-		NamespacedKey socketKey = config.getFactory();
-		NodeSocketFactory factory = null;
-		if (socketKey != null) {
-			factory = proxyFactories.get(socketKey);
-			if (factory == null)
-				throw new ConfigurationException("No proxy factory found with key: " + socketKey);
-		} else {
-			factory = proxyFactories.getDefault();
-			if (factory == null)
-				throw new ConfigurationException("No default proxy factory found!");
-		}
 		int port = config.getPort();
 		if (port == -1)
 			port = findRandomPort();
 		UUID socketUUID = UUID.randomUUID();
-		NodeSocket socket = factory.createProxy(socketUUID, AtlasNode.getAtlas(), port, config);
-		socket.setChannelInitHandler(new DefaultChannelInitHandler(socket));
+		NodeSocket socket = new CoreNodeSocket(socketUUID, AtlasNode.getAtlas(), port, config);
 		socket.open();
 		registerSocket(socket);
 		return socket;

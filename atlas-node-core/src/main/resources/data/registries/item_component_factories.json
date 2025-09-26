@@ -1,432 +1,432 @@
 [
 	{
-		"type": "de.atlasmc.inventory.component.ClassItemComponentFactory",
+		"type": "de.atlasmc.node.inventory.component.ClassItemComponentFactory",
 		"registry": "atlas:factory/item_component_factory",
 		"configurations": [
 			{
 				"name": "minecraft:attribute_modifiers",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreAttributeModifiersComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreAttributeModifiersComponent"
 				}
 			},
 			{
 				"name": "minecraft:banner_patterns",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreBannerPatternsComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreBannerPatternsComponent"
 				}
 			},
 			{
 				"name": "minecraft:base_color",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreBaseColorComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreBaseColorComponent"
 				}
 			},
 			{
 				"name": "minecraft:bees",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreBeesComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreBeesComponent"
 				}
 			},
 			{
 				"name": "minecraft:block_entity_data",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreBlockEntityComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreBlockEntityComponent"
 				}
 			},
 			{
 				"name": "minecraft:block_state",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreBlockDataComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreBlockDataComponent"
 				}
 			},
 			{
 				"name": "minecraft:block_attacks",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreBlocksAttacksComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreBlocksAttacksComponent"
 				}
 			},
 			{
 				"name": "minecraft:break_sound",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreBreakSoundComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreBreakSoundComponent"
 				}
 			},
 			{
 				"name": "minecraft:bucket_entity_data",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreBucketEntityDataComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreBucketEntityDataComponent"
 				}
 			},
 			{
 				"name": "minecarft:bundle_contents",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreBundleContentsComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreBundleContentsComponent"
 				}
 			},
 			{
 				"name": "minecraft:can_break",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreCanBreakComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreCanBreakComponent"
 				}
 			},
 			{
 				"name": "minecraft:can_place_on",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreCanPlaceOnComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreCanPlaceOnComponent"
 				}
 			},
 			{
 				"name": "minecraft:charged_projectiles",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreChargedProjectilesComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreChargedProjectilesComponent"
 				}
 			},
 			{
 				"name": "minecraft:consumable",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreConsumableComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreConsumableComponent"
 				}
 			},
 			{
 				"name": "minecraft:container",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreContainerComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreContainerComponent"
 				}
 			}, 
 			{
 				"name": "minecraft:container_loot",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreContainerLootComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreContainerLootComponent"
 				}
 			},
 			{
 				"name": "minecraft:custom_data",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreCustomDataComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreCustomDataComponent"
 				}
 			},
 			{
 				"name": "minecraft:custom_model_data",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreCustomModelDataComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreCustomModelDataComponent"
 				}
 			},
 			{
 				"name": "minecraft:custom_name",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreCustomNameComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreCustomNameComponent"
 				}	
 			},
 			{
 				"name": "minecraft:damage",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreDamageComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreDamageComponent"
 				}
 			},
 			{
 				"name": "minecraft:damage_resistant",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreDamageResistantComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreDamageResistantComponent"
 				}
 			},
 			{
 				"name": "minecraft:debug_stick_state",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreDebugStickStateComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreDebugStickStateComponent"
 				}
 			},
 			{
 				"name": "minecraft:death_protection",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreDeathProtectionComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreDeathProtectionComponent"
 				}
 			},
 			{
 				"name": "mineacraft:dyed_color",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreDyedColorComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreDyedColorComponent"
 				}
 			},
 			{
 				"name": "minecraft:enchantable",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreEnchantableComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreEnchantableComponent"
 				}
 			},
 			{
 				"name": "minecraft:enchantments",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreEnchantmentComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreEnchantmentComponent"
 				}
 			},
 			{
 				"name": "minecraft:entity_data",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreEntityDataComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreEntityDataComponent"
 				}
 			},
 			{
 				"name": "minecraft:equippable",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreEquippableComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreEquippableComponent"
 				}
 			},
 			{
 				"name": "minecraft:firework_explosion",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreFireworkExplosionComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreFireworkExplosionComponent"
 				}
 			},
 			{
 				"name": "minecraft:fireworks",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreFireworksComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreFireworksComponent"
 				}
 			},
 			{
 				"name": "minecraft:food",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreFoodComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreFoodComponent"
 				}
 			},
 			{
 				"name": "minecraft:instrument",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreInstrumentComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreInstrumentComponent"
 				}
 			},
 			{
 				"name": "minecraft:intangible_projectile",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreIntangibleProjectileComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreIntangibleProjectileComponent"
 				}
 			},
 			{
 				"name": "minecraft:item_model",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreItemModelComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreItemModelComponent"
 				}
 			},
 			{
 				"name": "minecraft:item_name",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreItemNameComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreItemNameComponent"
 				}
 			},
 			{
 				"name": "minecraft:jukebox_playable",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreJukeboxPlayableComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreJukeboxPlayableComponent"
 				}
 			},
 			{
 				"name": "minecraft:lock",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreLockComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreLockComponent"
 				}
 			},
 			{
 				"name": "minecraft:lodestone_tracker",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreLodestoneTrackerComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreLodestoneTrackerComponent"
 				}
 			},
 			{
 				"name": "minecraft:lore",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreLoreComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreLoreComponent"
 				}
 			},
 			{
 				"name": "minecraft:map_color",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreMapColorComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreMapColorComponent"
 				}
 			},
 			{
 				"name": "minecraft:map_decorations",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreMapDecorationComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreMapDecorationComponent"
 				}
 			},
 			{
 				"name": "minecraft:map_id",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreMapIDComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreMapIDComponent"
 				}
 			},
 			{
 				"name": "minecraft:max_damage",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreMaxDamageComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreMaxDamageComponent"
 				}
 			},
 			{
 				"name": "minecraft:max_stack_size",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreMaxStackSizeComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreMaxStackSizeComponent"
 				}
 			},
 			{
 				"name": "minecraft:note_block_sound",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreNoteBlockSoundComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreNoteBlockSoundComponent"
 				}
 			},
 			{
 				"name": "minecraft:ominous_bottle_amplifier",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreOminousBottleAmplifierComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreOminousBottleAmplifierComponent"
 				}
 			},
 			{
 				"name": "minecraft:pot_decorations",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CorePotDecorationsComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CorePotDecorationsComponent"
 				}
 			}, 
 			{
 				"name": "minecraft:potion_contents",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CorePotionConentsComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CorePotionConentsComponent"
 				}
 			}, 
 			{
 				"name": "minecraft:potion_duration_scale",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CorePotionDurationScaleComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CorePotionDurationScaleComponent"
 				}
 			}, 
 			{
 				"name": "minecraft:profile",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreProfileComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreProfileComponent"
 				}
 			},
 			{
 				"name": "minecraft:provides_banner_patterns",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreProvidesBannerPatternsComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreProvidesBannerPatternsComponent"
 				}
 			},
 			{
 				"name": "minecraft:provides_trim_material",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreProvidesTrimMaterialComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreProvidesTrimMaterialComponent"
 				}
 			},
 			{
 				"name": "minecraft:rarity",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreRarityComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreRarityComponent"
 				}
 			},
 			{
 				"name": "minecraft:recipes",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreRecipesComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreRecipesComponent"
 				}
 			},
 			{
 				"name": "minecraft:repairable",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreRepairableComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreRepairableComponent"
 				}
 			},
 			{
 				"name": "minecraft:repair_cost",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreRepairCostComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreRepairCostComponent"
 				}
 			},
 			{
 				"name": "minecraft:stored_enchantments",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreStoredEnchantmentsComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreStoredEnchantmentsComponent"
 				}
 			},
 			{
 				"name": "minecraft:suspicious_stew_effects",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreSuspiciousStewEffectsComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreSuspiciousStewEffectsComponent"
 				}
 			},
 			{
 				"name": "minecraft:tool",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreToolComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreToolComponent"
 				}
 			},
 			{
 				"name": "minecraft:tooltip_display",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreTooltipDisplayComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreTooltipDisplayComponent"
 				}
 			},
 			{
 				"name": "minecraft:tooltip_style",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreTooltipStyleComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreTooltipStyleComponent"
 				}
 			},
 			{
 				"name": "minecraft:trim",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreTrimComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreTrimComponent"
 				}
 			},
 			{
 				"name": "minecraft:use_cooldown",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreUseCooldownComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreUseCooldownComponent"
 				}
 			},
 			{
 				"name": "minecraft:use_remainder",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreUseRemainderComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreUseRemainderComponent"
 				}
 			},
 			{
 				"name": "minecraft:weapon",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreWeaponComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreWeaponComponent"
 				}
 			},
 			{
 				"name": "minecraft:writable_book_content",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreWritableBookContentComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreWritableBookContentComponent"
 				}
 			},
 			{
 				"name": "minecraft:written_book_content",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreWrittenBookContent"	
+					"component": "de.atlasmc.core.node.inventory.component.CoreWrittenBookContent"	
 				}
 			}
 		]
 	},
 	{
-		"type": "de.atlasmc.inventory.component.SingletonItemComponentFactory",
+		"type": "de.atlasmc.node.inventory.component.SingletonItemComponentFactory",
 		"registry": "atlas:factory/item_component_factory",
 		"configurations": [
 			{
 				"name": "minecraft:unbreakable",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreUnbreakableComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreUnbreakableComponent"
 				}
 			},
 			{
 				"name": "minecraft:glider",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreGliderComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreGliderComponent"
 				}
 			},
 			{
 				"name": "minecraft:enchantment_glint_override",
 				"parameters": {
-					"component": "de.atlascore.inventory.component.CoreEnchantmentGlintOverrideComponent"
+					"component": "de.atlasmc.core.node.inventory.component.CoreEnchantmentGlintOverrideComponent"
 				}
 			}
 		]

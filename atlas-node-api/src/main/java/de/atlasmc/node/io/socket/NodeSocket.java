@@ -3,10 +3,10 @@ package de.atlasmc.node.io.socket;
 import java.io.Closeable;
 
 import de.atlasmc.event.SyncThreadHolder;
-import de.atlasmc.io.ConnectionHandler;
+import de.atlasmc.io.connection.ConnectionHandler;
+import de.atlasmc.io.socket.SocketConfig;
 import de.atlasmc.log.Log;
 import de.atlasmc.network.socket.AtlasSocket;
-import de.atlasmc.network.socket.SocketConfig;
 import de.atlasmc.tick.Tickable;
 
 /**

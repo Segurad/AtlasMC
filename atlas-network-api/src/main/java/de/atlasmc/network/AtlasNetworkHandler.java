@@ -5,11 +5,11 @@ import java.util.Collection;
 import java.util.UUID;
 
 import de.atlasmc.datarepository.Repository;
-import de.atlasmc.io.ConnectionHandler;
+import de.atlasmc.io.connection.ConnectionHandler;
+import de.atlasmc.io.socket.SocketConfig;
 import de.atlasmc.network.player.ProfileHandler;
 import de.atlasmc.network.server.ServerGroup;
 import de.atlasmc.network.server.ServerManager;
-import de.atlasmc.network.socket.SocketConfig;
 import de.atlasmc.tick.Tickable;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.concurrent.future.Future;
@@ -38,10 +38,10 @@ public interface AtlasNetworkHandler extends Tickable {
 	Future<Collection<NodeConfig>> getNodeConfigs(Collection<String> names);
 	
 	@NotNull
-	Future<SocketConfig> getProxyConfig(String name);
+	Future<SocketConfig> getSocketConfig(String name);
 	
 	@NotNull
-	Future<Collection<SocketConfig>> getProxyConfigs(Collection<String> names);
+	Future<Collection<SocketConfig>> getSocketConfigs(Collection<String> names);
 
 	int getOnlinePlayerCount();
 
