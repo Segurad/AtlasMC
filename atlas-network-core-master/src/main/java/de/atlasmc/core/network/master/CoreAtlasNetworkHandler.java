@@ -1,4 +1,4 @@
-package de.atlascore.network.master;
+package de.atlasmc.core.network.master;
 
 import java.util.ArrayList;
 import java.util.Collection;

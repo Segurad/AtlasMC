@@ -1,4 +1,4 @@
-package de.atlascore.network.master;
+package de.atlasmc.core.network.master;
 
 public class CoreMasterBuilderFactory {
 

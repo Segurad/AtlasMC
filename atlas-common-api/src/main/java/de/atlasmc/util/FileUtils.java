@@ -26,8 +26,8 @@ public class FileUtils {
 	public static final boolean CONFIG_OVERRIDE;
 	
 	public static final FileFilter 
-	YAML_FILE_FILTER = new ExtensionFileFilter("json"),
-	JSON_FILE_FILTER = new ExtensionFileFilter("yml", "yaml");
+	JSON_FILE_FILTER = new ExtensionFileFilter("json"),
+	YAML_FILE_FILTER = new ExtensionFileFilter("yml", "yaml");
 	
 	static {
 		CONFIG_OVERRIDE = Boolean.getBoolean("atlas.config.override");
@@ -70,6 +70,7 @@ public class FileUtils {
 		final List<?> directories = config.getList("directories");
 		final Path destPath = dest.toPath();
 		if (directories != null && !directories.isEmpty()) {
+			final Log log = plugin.getLogger();
 			for (Object entry : directories) {
 				String dir;
 				List<String> files = null;
@@ -84,7 +85,10 @@ public class FileUtils {
 				final Path dirPath = getSecurePath(destPath, dir);
 				if (dirPath == null)
 					continue;
-				if ((ensureDir(dirPath) || override) && files != null && files.isEmpty()) {
+				boolean dirCreated = ensureDir(dirPath);
+				if (dirCreated)
+					log.debug("Setup created dir: {}", dirPath);
+				if ((dirCreated || override) && files != null && !files.isEmpty()) {
 					extractFiles(dirPath, files, plugin, override);
 				}
 			}
@@ -95,7 +99,7 @@ public class FileUtils {
 	}
 	
 	private static void extractFiles(Path destPath, List<String> files, Plugin plugin, boolean override) throws IOException {
-		Log log = plugin.getLogger();
+		final Log log = plugin.getLogger();
 		for (String rawExtract : files) {
 			int delimeter = rawExtract.indexOf(':');
 			String resourceSrc = rawExtract.substring(0, delimeter);
@@ -103,7 +107,7 @@ public class FileUtils {
 			Path resourceDestPath = getSecurePath(destPath, resourceDest);
 			if (resourceDestPath == null)
 				continue;
-			if (Files.exists(destPath)) {
+			if (Files.exists(resourceDestPath)) {
 				if (override) {
 					Files.delete(resourceDestPath);
 				} else {
@@ -116,6 +120,7 @@ public class FileUtils {
 				continue;
 			}
 			Files.copy(in, resourceDestPath);
+			log.debug("Setup extracted resource: {}", resourceDestPath);
 		}
 	}
 	

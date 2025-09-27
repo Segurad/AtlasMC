@@ -1,4 +1,4 @@
-package de.atlascore.master;
+package de.atlasmc.core.master;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -54,7 +54,7 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 		log = context.getLogger();
 		File masterDir = new File(Atlas.getWorkdir(), "master");
 		FileUtils.ensureDir(masterDir);
-		File globalCfgFile = new File(Atlas.getWorkdir(), "master/globals.yml");
+		File globalCfgFile = new File(Atlas.getWorkdir(), "master/global.yml");
 		File nodeGroupsDir = new File(Atlas.getWorkdir(), "master/node-groups/");
 		File permissionCfgFile = new File(Atlas.getWorkdir(), "master/permissions.yml");
 		File serverGroupsDir = new File(Atlas.getWorkdir(), "master/server-groups/");
@@ -230,7 +230,7 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 		for (File file : files) {
 			Configuration cfg;
 			try {
-				cfg = YamlConfiguration.loadConfiguration(dir);
+				cfg = YamlConfiguration.loadConfiguration(file);
 			} catch (IOException e) {
 				log.error("Error while loading server group: " + file, e);
 				continue;
@@ -243,7 +243,7 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 	}
 	
 	private void loadSocketConfig(File dir) {
-		log.info("Loading sockets...");
+		log.info("Loading sockets configs...");
 		final File[] files = dir.listFiles(FileUtils.YAML_FILE_FILTER);
 		final SocketManager socketManager = AtlasMaster.getSocketManager();
 		for (File file : files) {
@@ -256,11 +256,12 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 			}
 			SocketConfig socket = new SocketConfig(cfg);
 			socketManager.addSocketConfig(socket);
+			log.debug("Registered config: {}", socket.getName());
 		}
 	}
 	
 	private void loadNodeGroups(File dir) {
-		log.info("Loading node configs...");
+		log.info("Loading node groups...");
 		final File[] files = dir.listFiles(FileUtils.YAML_FILE_FILTER);
 		final NodeManager nodeManager = AtlasMaster.getNodeManager();
 		for (File file : files) {
@@ -273,6 +274,7 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 			}
 			NodeConfig group = new NodeConfig(cfg);
 			nodeManager.addNodeConfig(group);
+			log.debug("Registered group: {}", group.getName());
 		}
 	}
 	

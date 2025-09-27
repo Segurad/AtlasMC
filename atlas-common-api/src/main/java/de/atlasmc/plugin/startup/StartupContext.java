@@ -236,8 +236,6 @@ public class StartupContext {
 		ArrayList<String> added = new ArrayList<>(stages.length);
 		boolean changes = false;
 		for (String s : stages) {
-			if (this.stages.contains(stage))
-				continue;
 			if (before)
 				this.stages.add(i++, s);
 			else

@@ -1,4 +1,4 @@
-package de.atlascore.network.master.node;
+package de.atlasmc.core.network.master.node;
 
 import java.util.Collection;
 import java.util.Map;

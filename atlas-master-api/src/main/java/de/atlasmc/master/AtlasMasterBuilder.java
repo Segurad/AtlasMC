@@ -11,7 +11,7 @@ import de.atlasmc.util.sql.SQLConnectionPool;
 
 public class AtlasMasterBuilder implements Builder<Boolean> {
 	
-	private SocketManager proxyManager;
+	private SocketManager socketManager;
 	private ServerManager serverManager;
 	private NodeManager nodeManager;
 	private Log logger;
@@ -29,12 +29,12 @@ public class AtlasMasterBuilder implements Builder<Boolean> {
 		return this;
 	}
 	
-	public SocketManager getProxyManager() {
-		return proxyManager;
+	public SocketManager getSocketManager() {
+		return socketManager;
 	}
 
-	public AtlasMasterBuilder setProxyManager(SocketManager proxyManager) {
-		this.proxyManager = proxyManager;
+	public AtlasMasterBuilder setSocketManager(SocketManager proxyManager) {
+		this.socketManager = proxyManager;
 		return this;
 	}
 
@@ -104,7 +104,7 @@ public class AtlasMasterBuilder implements Builder<Boolean> {
 		nodeManager = null;
 		permissionManager = null;
 		profileManager = null;
-		proxyManager = null;
+		socketManager = null;
 		serverManager = null;
 		uuid = null;
 	}

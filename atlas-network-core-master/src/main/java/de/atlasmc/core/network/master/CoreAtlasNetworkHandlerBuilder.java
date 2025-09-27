@@ -1,4 +1,4 @@
-package de.atlascore.network.master;
+package de.atlasmc.core.network.master;
 
 import de.atlasmc.core.network.CoreAbstractAtlasNetworkHandlerBuilder;
 import de.atlasmc.network.AtlasNetworkHandler;

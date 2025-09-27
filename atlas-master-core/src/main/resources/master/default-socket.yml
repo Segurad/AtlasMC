@@ -10,7 +10,7 @@ child-channel-options:
   SO_KEEPALIVE: true
 mode: open
 connection-config:
-- ==: de.atlasmc.network.player.PlayerConnectionConfiguration 
+- ==: de.atlasmc.network.player.PlayerConnectionConfig
   name: player_connection
   timeout: 600
   rate-limit: 20

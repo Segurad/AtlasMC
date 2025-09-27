@@ -7,14 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
 import org.apache.maven.plugins.shade.relocation.Relocator;
 import org.apache.maven.plugins.shade.resource.ReproducibleResourceTransformer;
 
-import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
 
 public class YamlTransformer implements ReproducibleResourceTransformer {
@@ -41,38 +39,10 @@ public class YamlTransformer implements ReproducibleResourceTransformer {
 			resources.put(resource, new ResourceFile(cfg, time));
 			return;
 		}
-		merge(cfg, presentCfg.config);
+		presentCfg.config.addConfiguration(cfg, false);
 		presentCfg.changed = true;
 		if (time > presentCfg.time)
 			presentCfg.time = time;
-	}
-	
-	private void merge(ConfigurationSection src, ConfigurationSection cfg) {
-		final Set<String> destKeys = cfg.getKeys();
-		for (String key : src.getKeys()) {
-			if (destKeys.contains(key)) {
-				Object destvalue = cfg.get(key);
-				if (destvalue instanceof ConfigurationSection section) {
-					Object srcValue = src.get(key);
-					if (srcValue instanceof ConfigurationSection srcSection) {
-						merge(srcSection, section);
-					}
-				} else if (destvalue instanceof List) {
-					@SuppressWarnings("unchecked")
-					List<Object> list = (List<Object>) destvalue;
-					Object srcValue = src.get(key);
-					if (srcValue instanceof List srcList) {
-						for (Object srcEntry : srcList) {
-							if (list.contains(srcEntry))
-								continue;
-							list.add(srcEntry);
-						}
-					}
-				}
-			} else {
-				cfg.set(key, src.get(key));
-			}
-		}
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Supplier;
 
 import de.atlasmc.io.connection.ConnectionConfig;
 import de.atlasmc.util.configuration.Configuration;
@@ -21,6 +22,7 @@ import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.channel.uring.IoUring;
 import io.netty.channel.uring.IoUringIoHandler;
 import io.netty.channel.uring.IoUringServerSocketChannel;
 import io.netty.channel.uring.IoUringSocketChannel;
@@ -119,15 +121,15 @@ public class SocketConfig implements ConfigurationSerializable {
 	
 	public static enum ChannelType {
 		
-		IO_URING(IoUringServerSocketChannel.class, IoUringSocketChannel.class, IoUringIoHandler.newFactory()),
-		EPOLL(EpollServerSocketChannel.class, EpollSocketChannel.class, EpollIoHandler.newFactory()),
-		NIO(NioServerSocketChannel.class, NioSocketChannel.class, NioIoHandler.newFactory());
+		IO_URING(IoUringServerSocketChannel.class, IoUringSocketChannel.class, IoUringIoHandler::newFactory),
+		EPOLL(EpollServerSocketChannel.class, EpollSocketChannel.class, EpollIoHandler::newFactory),
+		NIO(NioServerSocketChannel.class, NioSocketChannel.class, NioIoHandler::newFactory);
 		
 		private final Class<? extends ServerSocketChannel> serverSocektChannelClass;
 		private final Class<? extends SocketChannel> socketChannelClass;
-		private final IoHandlerFactory defaultHandlerFactory;
+		private final Supplier<IoHandlerFactory> defaultHandlerFactory;
 		
-		private ChannelType(Class<? extends ServerSocketChannel> serverChannelClass, Class<? extends SocketChannel> channelClass, IoHandlerFactory defaultHandlerFactory) {
+		private ChannelType(Class<? extends ServerSocketChannel> serverChannelClass, Class<? extends SocketChannel> channelClass, Supplier<IoHandlerFactory> defaultHandlerFactory) {
 			this.serverSocektChannelClass = serverChannelClass;
 			this.socketChannelClass = channelClass;
 			this.defaultHandlerFactory = defaultHandlerFactory;
@@ -144,7 +146,7 @@ public class SocketConfig implements ConfigurationSerializable {
 		public boolean isAvailable() {
 			switch(this) {
 			case IO_URING:
-				return IO_URING.isAvailable();
+				return IoUring.isAvailable();
 			case EPOLL:
 				return Epoll.isAvailable();
 			case NIO:
@@ -155,7 +157,7 @@ public class SocketConfig implements ConfigurationSerializable {
 		}
 		
 		public IoHandlerFactory getDefaultFactory() {
-			return defaultHandlerFactory;
+			return defaultHandlerFactory.get();
 		}
 		
 		public static ChannelType getDefault() {

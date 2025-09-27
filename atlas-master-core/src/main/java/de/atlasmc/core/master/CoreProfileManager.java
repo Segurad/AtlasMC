@@ -1,4 +1,4 @@
-package de.atlascore.master;
+package de.atlasmc.core.master;
 
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;

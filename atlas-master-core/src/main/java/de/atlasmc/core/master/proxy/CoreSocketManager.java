@@ -1,4 +1,4 @@
-package de.atlascore.master.proxy;
+package de.atlasmc.core.master.proxy;
 
 import java.util.Map;
 import java.util.UUID;

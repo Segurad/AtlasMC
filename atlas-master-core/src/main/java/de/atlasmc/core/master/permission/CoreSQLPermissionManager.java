@@ -1,4 +1,4 @@
-package de.atlascore.master.permission;
+package de.atlasmc.core.master.permission;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

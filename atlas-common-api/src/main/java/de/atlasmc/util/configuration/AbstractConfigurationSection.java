@@ -66,6 +66,9 @@ public abstract class AbstractConfigurationSection implements ConfigurationSecti
 		}
 		String key = path.substring(searchIndex);
 		if (section == this) {
+			Object present = internalGet(key);
+			if (present instanceof ConfigurationSection presentSection)
+				return presentSection;
 			ConfigurationSection newSection = createSection();
 			internalSet(key, newSection);
 			return newSection;
@@ -93,6 +96,9 @@ public abstract class AbstractConfigurationSection implements ConfigurationSecti
 		}
 		String key = path.substring(searchIndex);
 		if (section == this) {
+			Object present = internalGet(key);
+			if (present instanceof ListConfigurationSection presentSection)
+				return presentSection;
 			ListConfigurationSection newSection = createListSection();
 			internalSet(key, newSection);
 			return newSection;

@@ -1,4 +1,4 @@
-package de.atlascore.master;
+package de.atlasmc.core.master;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,18 +13,17 @@ import java.util.concurrent.TimeUnit;
 
 import org.mariadb.jdbc.MariaDbPoolDataSource;
 
-import de.atlascore.master.node.CoreNodeManager;
-import de.atlascore.master.permission.CoreSQLPermissionManager;
-import de.atlascore.master.proxy.CoreSocketManager;
-import de.atlascore.master.server.CoreServerManager;
 import de.atlasmc.Atlas;
+import de.atlasmc.core.master.node.CoreNodeManager;
+import de.atlasmc.core.master.permission.CoreSQLPermissionManager;
+import de.atlasmc.core.master.proxy.CoreSocketManager;
+import de.atlasmc.core.master.server.CoreServerManager;
 import de.atlasmc.log.Log;
 import de.atlasmc.log.Logging;
 import de.atlasmc.master.AtlasMasterBuilder;
 import de.atlasmc.plugin.startup.StartupContext;
 import de.atlasmc.plugin.startup.StartupHandlerRegister;
 import de.atlasmc.plugin.startup.StartupStageHandler;
-import de.atlasmc.util.FileUtils;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
 import de.atlasmc.util.sql.SQLConnectionPool;
@@ -44,16 +43,11 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 	@Override
 	public void handleStage(StartupContext context) {
 		log = context.getLogger();
-		File masterCfgFile = new File(Atlas.getWorkdir(), "master.yml");
-		try {
-			masterCfgFile = FileUtils.extractResource(masterCfgFile, "/master.yml");
-		} catch (IOException e) {
-			log.error("Error while extracting master.yml!");
-		}
-		YamlConfiguration masterCfg = null;
+		File masterCfgFile = new File(Atlas.getWorkdir(), "master/master.yml");
+		YamlConfiguration masterCfg;
 		try {
 			masterCfg = YamlConfiguration.loadConfiguration(masterCfgFile);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error("Error while loading master.yml!", e);
 			context.fail();
 			return;
@@ -101,7 +95,7 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 				.setDatabase(con)
 				.setUUID(nodeID)
 				.setNodeManager(new CoreNodeManager())
-				.setProxyManager(new CoreSocketManager())
+				.setSocketManager(new CoreSocketManager())
 				.setServerManager(new CoreServerManager())
 				.setProfileManager(new CoreSQLProfileManager())
 				.setPermissionManager(new CoreSQLPermissionManager());

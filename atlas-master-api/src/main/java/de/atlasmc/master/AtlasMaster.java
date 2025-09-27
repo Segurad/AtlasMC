@@ -1,6 +1,7 @@
 package de.atlasmc.master;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
 
 import de.atlasmc.datarepository.Repository;
@@ -13,7 +14,7 @@ import de.atlasmc.util.sql.SQLConnectionPool;
 
 public class AtlasMaster {
 
-	private static SocketManager proxyManager;
+	private static SocketManager socketManager;
 	private static ServerManager serverManager;
 	private static NodeManager nodeManager;
 	private static Log logger;
@@ -29,14 +30,14 @@ public class AtlasMaster {
 		synchronized (AtlasMaster.class) {
 			if (init)
 				throw new IllegalStateException("Master already initialized!");
-			proxyManager = builder.getProxyManager();
-			serverManager = builder.getServerManager();
-			nodeManager = builder.getNodeManager();
-			logger = builder.getLogger();
-			permissionManager = builder.getPermissionManager();
-			profileManager = builder.getProfileManager();
-			database = builder.getDatabase();
-			uuid = builder.getUUID();
+			socketManager = Objects.requireNonNull(builder.getSocketManager());
+			serverManager = Objects.requireNonNull(builder.getServerManager());
+			nodeManager = Objects.requireNonNull(builder.getNodeManager());
+			logger = Objects.requireNonNull(builder.getLogger());
+			permissionManager = Objects.requireNonNull(builder.getPermissionManager());
+			profileManager = Objects.requireNonNull(builder.getProfileManager());
+			database = Objects.requireNonNull(builder.getDatabase());
+			uuid = Objects.requireNonNull(builder.getUUID());
 		}
 	}
 	
@@ -57,7 +58,7 @@ public class AtlasMaster {
 	}
 	
 	public static SocketManager getSocketManager() {
-		return proxyManager;
+		return socketManager;
 	}
 	
 	public static PermissionManager getPermissionManager() {

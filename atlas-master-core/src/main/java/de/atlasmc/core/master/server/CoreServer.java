@@ -1,4 +1,4 @@
-package de.atlascore.master.server;
+package de.atlasmc.core.master.server;
 
 import java.util.UUID;
 

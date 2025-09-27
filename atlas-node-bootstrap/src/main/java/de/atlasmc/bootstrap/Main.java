@@ -161,8 +161,8 @@ public class Main {
 		
 		File modulDir = new File(workDir, "modules/");
 		
-		try {
-			ConfigurationSection setup = YamlConfiguration.loadConfiguration(Atlas.getSystem().getResourceAsStream("core-system.yml"));
+		try (InputStream in = Atlas.getSystem().getResourceAsStream("/core-setup.yml")) {
+			ConfigurationSection setup = YamlConfiguration.loadConfiguration(in);
 			FileUtils.runSetupConfiguration(workDir, setup, Atlas.getSystem());
 		} catch (Exception e) {
 			log.error("Error while running setup!", e);
