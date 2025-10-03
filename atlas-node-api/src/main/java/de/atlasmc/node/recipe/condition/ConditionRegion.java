@@ -17,7 +17,9 @@ public final class ConditionRegion implements Condition {
 	}
 
 	@Override
-	public void pay(Player player) {}
+	public void pay(Player player) {
+		// not required
+	}
 
 	@Override
 	public boolean isPayCondition() {

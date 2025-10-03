@@ -2,6 +2,8 @@ package de.atlasmc.node.util;
 
 import java.util.Arrays;
 
+import de.atlasmc.util.CloneException;
+
 public class VariableValueArray implements Cloneable {
 	
 	private int capacity; // Number of values that can be stored
@@ -205,7 +207,7 @@ public class VariableValueArray implements Cloneable {
 		try {
 			clone = (VariableValueArray) super.clone();
 		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
+			throw new CloneException(e);
 		}
 		if (clone == null)
 			return null;
@@ -247,7 +249,9 @@ public class VariableValueArray implements Cloneable {
 		}
 		
 		@Override
-		public void resize(int bitsPerValue) {}
+		public void resize(int bitsPerValue) {
+			// not required
+		}
 		
 	}
 

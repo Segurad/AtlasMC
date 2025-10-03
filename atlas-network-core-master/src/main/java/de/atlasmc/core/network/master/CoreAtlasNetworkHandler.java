@@ -97,6 +97,8 @@ public class CoreAtlasNetworkHandler extends CoreAbstractAtlasNetworkHandler {
 	}
 
 	@Override
-	public void tick() {}
+	public void tick() {
+		// not required
+	}
 
 }

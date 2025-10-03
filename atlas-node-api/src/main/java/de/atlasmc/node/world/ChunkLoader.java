@@ -1,6 +1,8 @@
 package de.atlasmc.node.world;
 
 import java.util.Collection;
+
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.concurrent.future.Future;
 
 /**
@@ -16,7 +18,8 @@ public interface ChunkLoader {
 	 * @param z position of the chunk
 	 * @return a chunk or null if not present
 	 */
-	public Future<Chunk> loadChunk(int x, int z);
+	@NotNull
+	Future<Chunk> loadChunk(int x, int z);
 	
 	/**
 	 * Try to load all chunks of a region
@@ -25,12 +28,13 @@ public interface ChunkLoader {
 	 * @param z position of the region
 	 * @return list containing all present chunks
 	 */
-	public Future<Collection<Chunk>> loadRegion(int x, int z);
+	@NotNull
+	Future<Collection<Chunk>> loadRegion(int x, int z);
 	
 	/**
 	 * Saves a chunk with its position
 	 * @param chunk that should be saved
 	 */
-	public void saveChunk(Chunk chunk);
+	void saveChunk(@NotNull Chunk chunk);
 
 }

@@ -11,8 +11,6 @@ import java.util.Iterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Assertions;
-
 public class ReflectionUtil {
 	
 	private ReflectionUtil() {}
@@ -37,7 +35,7 @@ public class ReflectionUtil {
 		try {
 			return clazz.getDeclaredMethod(method, parameterTypes);
 		} catch (NoSuchMethodException e) {
-			Assertions.fail("Method " + method + " is not present in " + clazz.getName(), e);
+			fail("Method " + method + " is not present in " + clazz.getName(), e);
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		}

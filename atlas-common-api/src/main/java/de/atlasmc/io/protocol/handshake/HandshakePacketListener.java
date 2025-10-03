@@ -26,10 +26,14 @@ public class HandshakePacketListener implements PacketListener {
 	}
 
 	@Override
-	public void handleUnregister() {}
+	public void handleUnregister() {
+		// not required
+	}
 
 	@Override
-	public void handleSyncPackets(Log logger) {}
+	public void handleSyncPackets(Log logger) {
+		// not required
+	}
 
 	@Override
 	public boolean hasSyncPackets() {

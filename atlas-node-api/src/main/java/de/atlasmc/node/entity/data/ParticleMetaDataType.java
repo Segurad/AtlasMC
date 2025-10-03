@@ -86,7 +86,7 @@ public final class ParticleMetaDataType extends MetaDataType<Particle> {
 			data = in.readFloat();
 			break;
 		default:
-			break;
+			break; // no data for other types
 		}
 		return data;
 	}
@@ -191,7 +191,7 @@ public final class ParticleMetaDataType extends MetaDataType<Particle> {
 			}
 			break;
 		default: 
-			break;
+			break; // no data for other types
 		}
 		
 	}

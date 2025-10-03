@@ -12,12 +12,12 @@ public class CorePacketOutCommands implements PacketIO<PacketOutCommands> {
 
 	@Override
 	public void read(PacketOutCommands packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		
+		// TODO implement
 	}
 
 	@Override
 	public void write(PacketOutCommands packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		
+		// TODO implement
 	}
 
 	@Override

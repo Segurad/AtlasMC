@@ -170,6 +170,8 @@ public class AttributeInstance implements NBTSerializable {
 			case ADD_MULTIPLIED_TOTAL:
 				multiplyTotal += 1 + mod.getAmount();
 				break;
+			default:
+				throw new IllegalArgumentException("Unknwon operation: " + mod.getOperation());
 			}
 		}
 		value += baseValue * multiplyBase;

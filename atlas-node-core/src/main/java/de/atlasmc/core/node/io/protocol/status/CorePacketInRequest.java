@@ -11,10 +11,14 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketInRequest implements PacketIO<PacketInRequest> {
 
 	@Override
-	public void read(PacketInRequest packet, ByteBuf in, ConnectionHandler con) throws IOException {}
+	public void read(PacketInRequest packet, ByteBuf in, ConnectionHandler con) throws IOException {
+		// not required
+	}
 
 	@Override
-	public void write(PacketInRequest packet, ByteBuf out, ConnectionHandler con) throws IOException {}
+	public void write(PacketInRequest packet, ByteBuf out, ConnectionHandler con) throws IOException {
+		// not required
+	}
 
 	@Override
 	public PacketInRequest createPacketData() {

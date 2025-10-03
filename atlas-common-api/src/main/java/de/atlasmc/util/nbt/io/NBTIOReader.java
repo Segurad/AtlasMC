@@ -140,7 +140,8 @@ public class NBTIOReader extends AbstractNBTIOReader {
 		if (bytes < 1)
 			return;
 		if (!writeBuf) {
-			in.skip(bytes);
+			if (in.skip(bytes) != bytes)
+				throw new IOException("Failed to skip required byte count!");
 			return;
 		}
 		buf.copyFromInput(in, bytes);

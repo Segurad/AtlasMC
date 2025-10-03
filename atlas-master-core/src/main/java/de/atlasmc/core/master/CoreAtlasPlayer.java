@@ -116,7 +116,7 @@ public class CoreAtlasPlayer implements AtlasPlayer {
 	}
 	
 	private void sendInternalMessage(String message) {
-		
+		// TODO implement
 	}
 
 	@Override

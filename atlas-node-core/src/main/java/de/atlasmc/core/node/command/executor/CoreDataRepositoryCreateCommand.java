@@ -38,6 +38,9 @@ public class CoreDataRepositoryCreateCommand implements CommandExecutor {
 			repo.registerNamespace(namespacename, path);
 			sender.sendMessage("Namespace created");
 			break;
+		default:
+			sender.sendMessage("Unknown option: " + toCreate);
+			break;
 		}
 		return true;
 	}

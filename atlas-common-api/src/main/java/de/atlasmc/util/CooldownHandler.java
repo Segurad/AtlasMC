@@ -111,14 +111,18 @@ public class CooldownHandler<K> implements Tickable {
 	 * @param ticks cool down
 	 * @param previousTicks tick remaining until expiration if the key was present in this handler 
 	 */
-	protected void onSetCooldown(K key, int ticks, int previousTicks) {}
+	protected void onSetCooldown(K key, int ticks, int previousTicks) {
+		// override in child
+	}
 	
 	/**
 	 * Called when a Key is removed from this handler
 	 * @param key the removed key
 	 * @param ticks remaining until expiration
 	 */
-	protected void onRemoveCooldown(K key, int ticks) {}
+	protected void onRemoveCooldown(K key, int ticks) {
+		// override in child
+	}
 	
 	protected void onClear(Set<K> keys) {
 		// override as needed

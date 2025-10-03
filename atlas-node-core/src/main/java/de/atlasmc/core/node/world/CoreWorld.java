@@ -64,29 +64,31 @@ public class CoreWorld implements World {
 			throw new IllegalStateException("Name can not be null!");
 		if (dimension == null)
 			throw new IllegalStateException("Dimension can not be null!");
-		ChunkFactory chunkFactory = builder.getChunkFactory();
-		ConfigurationSection chunkGenConfig = builder.getChunkGeneratorConfig();
-		ChunkGeneratorFactory chunkGenFactory = builder.getChunkGenerator();
-		ChunkGenerator chunkGen = null;
-		if (chunkGenFactory != null)
-			 chunkGenFactory.createChunkGenerator(this, chunkFactory, chunkGenConfig);
-		File worldDir = builder.getWorldDir();
-		ConfigurationSection chunkLoaderConfig = builder.getChunkLoaderConfig();
-		ChunkLoaderFactory chunkLoaderFactory = builder.getChunkLoader();
-		ChunkLoader chunkLoader = null;
-		if (chunkLoaderFactory != null)
-			chunkLoader = chunkLoaderFactory.createChunkLoader(this, worldDir, chunkFactory, chunkLoaderConfig);
-		ConfigurationSection providerCfg = builder.getChunkProviderConfig();
-		ChunkProviderFactory chunkProviderFactory = builder.getChunkProviderFactory();
-		if (chunkProviderFactory == null)
-			throw new IllegalStateException("ChunkProviderFactoy can not be null!");
-		this.chunks = chunkProviderFactory.createProvider(this, chunkGen, chunkLoader, providerCfg);
+		this.chunks = buildChunkProvider(builder);
 		if (chunks == null)
 			throw new IllegalStateException("No chunk provider initialized!");
 		EntityTrackerFactory entityTrackerFactory = builder.getEntityTracker();
 		if (entityTrackerFactory == null)
 			throw new IllegalArgumentException("EntityTrackerFactory can not be null!");
 		this.entityTracker = entityTrackerFactory.createEntityTracker(this);
+	}
+	
+	private ChunkProvider buildChunkProvider(WorldBuilder builder) {
+		final ChunkProviderFactory chunkProviderFactory = builder.getChunkProviderFactory();
+		if (chunkProviderFactory == null)
+			throw new IllegalStateException("ChunkProviderFactoy can not be null!");
+		final ChunkFactory chunkFactory = builder.getChunkFactory();
+		ChunkGeneratorFactory chunkGenFactory = builder.getChunkGenerator();
+		ChunkGenerator chunkGen = null; // may be null in case no chunks need to be generated
+		if (chunkGenFactory != null)
+			 chunkGenFactory.createChunkGenerator(this, chunkFactory, builder.getChunkGeneratorConfig());
+		final File worldDir = builder.getWorldDir();
+		ChunkLoaderFactory chunkLoaderFactory = builder.getChunkLoader();
+		ChunkLoader chunkLoader = null; // may be null i case no world needs to be loaded or saved
+		if (chunkLoaderFactory != null)
+			chunkLoader = chunkLoaderFactory.createChunkLoader(this, worldDir, chunkFactory, builder.getChunkLoaderConfig());
+		ConfigurationSection providerCfg = builder.getChunkProviderConfig();
+		return chunkProviderFactory.createProvider(this, chunkGen, chunkLoader, providerCfg);
 	}
 
 	@Override

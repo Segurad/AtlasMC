@@ -36,7 +36,9 @@ public class CorePacketListenerStatus implements PacketListener {
 	}
 
 	@Override
-	public void handleUnregister() {}
+	public void handleUnregister() {
+		// not required
+	}
 
 	@Override
 	public void handleSyncPackets(Log logger) {

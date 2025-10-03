@@ -138,7 +138,7 @@ public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> 
 		case "never":
 			return TeamOptionType.NEVER;
 		default:
-			return TeamOptionType.ALWAYS;
+			throw new IllegalArgumentException("Unknown option: " + nameTagVisibility);
 		}
 	}
 
@@ -153,7 +153,7 @@ public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> 
 		case "never":
 			return TeamOptionType.NEVER;
 		default:
-			return TeamOptionType.ALWAYS;
+			throw new IllegalArgumentException("Unknown option: " + collisionRule);
 		}
 	}
 	
@@ -167,8 +167,9 @@ public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> 
 			return "hideForOtherTeam";
 		case NEVER:
 			return "never";
+		default:
+			throw new IllegalArgumentException("Unknwon option: " + option);
 		}
-		return null;
 	}
 	
 	private String optionToStringCollision(TeamOptionType option) {
@@ -181,8 +182,9 @@ public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> 
 			return "pushOwnTeam";
 		case NEVER:
 			return "never";
+		default:
+			throw new IllegalArgumentException("Unknown option: " + option);
 		}
-		return null;
 	}
 	
 	@Override

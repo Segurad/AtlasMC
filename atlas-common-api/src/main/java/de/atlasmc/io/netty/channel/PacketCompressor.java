@@ -20,7 +20,7 @@ public class PacketCompressor extends MessageToByteEncoder<ByteBuf> {
 	public PacketCompressor(int threshold, int bufsize) {
 		this.threshold = threshold;
 		this.def = new Deflater();
-		this.buf = new byte[8192];
+		this.buf = new byte[bufsize];
 	}
 	
 	@Override

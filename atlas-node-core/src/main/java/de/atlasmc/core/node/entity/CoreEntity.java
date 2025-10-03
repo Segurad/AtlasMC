@@ -508,7 +508,7 @@ public class CoreEntity implements Entity {
 	 * Called before {@link #update()} to make last changes before the entity is updated to the client
 	 */
 	protected void prepUpdate() {
-		
+		// implemented in child
 	}
 	
 	/**

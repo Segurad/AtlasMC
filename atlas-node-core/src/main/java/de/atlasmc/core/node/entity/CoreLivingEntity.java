@@ -1,6 +1,5 @@
 package de.atlasmc.core.node.entity;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -44,7 +43,6 @@ import de.atlasmc.node.world.World;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.map.ArrayListMultimap;
 import de.atlasmc.util.map.Multimap;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 
@@ -449,8 +447,6 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	protected boolean hasBrain() {
 		return false;
 	}
-	
-	protected void writeBrain(NBTWriter writer, boolean systemData) throws IOException {}
 
 	@Override
 	public void setRemoveWhenFarAway(boolean remove) {

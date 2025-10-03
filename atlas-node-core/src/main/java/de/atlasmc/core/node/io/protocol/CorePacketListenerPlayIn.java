@@ -383,6 +383,8 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 						action = InventoryAction.COLLECT_TO_CURSOR; // TODO check if any items of type are present else NOTHING
 					}
 					break;
+				default:
+					throw new IllegalArgumentException("Unknown mode: " + packet.mode);
 				}
 				HandlerList.callEvent(new InventoryClickEvent(view, slot, click, action, key));
 			} else {
@@ -407,6 +409,8 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				case 10:
 					// ending middle drag
 					break;
+				default:
+					throw new IllegalArgumentException("Unknown button: " + button);
 				}
 				
 				//HandlerList.callEvent(new InventoryDragEvent(player.getOpenInventory(), newCursor, oldCursor, dragItems));

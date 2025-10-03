@@ -11,7 +11,9 @@ final class EmptyConfiguration implements Configuration {
 	
 	public static final ConfigurationSection INSTANCE = new EmptyConfiguration();
 
-	private EmptyConfiguration() {}
+	private EmptyConfiguration() {
+		// private constructor
+	}
 	
 	@Override
 	public boolean contains(String path) {
@@ -154,7 +156,9 @@ final class EmptyConfiguration implements Configuration {
 	}
 
 	@Override
-	public void clear() {}
+	public void clear() {
+		// not required
+	}
 
 	@Override
 	public Object remove(String path) {

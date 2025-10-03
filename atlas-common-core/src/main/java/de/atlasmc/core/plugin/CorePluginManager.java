@@ -480,10 +480,14 @@ public class CorePluginManager implements PluginManager {
 		}
 
 		@Override
-		public void loadConfiguration(PluginConfiguration config, Object context) {}
+		public void loadConfiguration(PluginConfiguration config, Object context) {
+			// not required
+		}
 
 		@Override
-		public void unloadConfiguration(NamespacedKey config, Object context) {}
+		public void unloadConfiguration(NamespacedKey config, Object context) {
+			// not required
+		}
 
 		@Override
 		public Collection<PluginConfiguration> getConfigurations() {

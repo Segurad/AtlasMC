@@ -65,7 +65,10 @@ public class SingleValuePalette<E> implements Palette<E> {
 	}
 
 	@Override
-	public void setRawEntry(int index, int entryValue) {}
+	public void setRawEntry(int index, int entryValue) {
+		// not required
+	}
+	
 
 	@Override
 	public void optimize() {
@@ -78,7 +81,9 @@ public class SingleValuePalette<E> implements Palette<E> {
 	}
 
 	@Override
-	public void recount() {}
+	public void recount() {
+		// not required
+	}
 
 	@Override
 	public int size() {
