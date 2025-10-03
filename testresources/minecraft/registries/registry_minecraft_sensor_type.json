@@ -3,34 +3,37 @@
         "protocol_id": 10
     },
     "minecraft:armadillo_temptations": {
-        "protocol_id": 20
+        "protocol_id": 21
     },
     "minecraft:axolotl_attackables": {
-        "protocol_id": 15
-    },
-    "minecraft:axolotl_temptations": {
         "protocol_id": 16
     },
+    "minecraft:axolotl_temptations": {
+        "protocol_id": 17
+    },
     "minecraft:breeze_attack_entity_sensor": {
-        "protocol_id": 25
+        "protocol_id": 27
     },
     "minecraft:camel_temptations": {
-        "protocol_id": 19
+        "protocol_id": 20
     },
     "minecraft:dummy": {
         "protocol_id": 0
     },
     "minecraft:frog_attackables": {
-        "protocol_id": 21
+        "protocol_id": 23
     },
     "minecraft:frog_temptations": {
-        "protocol_id": 18
+        "protocol_id": 19
     },
     "minecraft:goat_temptations": {
-        "protocol_id": 17
+        "protocol_id": 18
     },
     "minecraft:golem_detected": {
         "protocol_id": 9
+    },
+    "minecraft:happy_ghast_temptations": {
+        "protocol_id": 22
     },
     "minecraft:hoglin_specific_sensor": {
         "protocol_id": 13
@@ -39,10 +42,13 @@
         "protocol_id": 5
     },
     "minecraft:is_in_water": {
-        "protocol_id": 22
+        "protocol_id": 24
     },
     "minecraft:nearest_adult": {
         "protocol_id": 14
+    },
+    "minecraft:nearest_adult_any_type": {
+        "protocol_id": 15
     },
     "minecraft:nearest_bed": {
         "protocol_id": 4
@@ -66,7 +72,7 @@
         "protocol_id": 8
     },
     "minecraft:sniffer_temptations": {
-        "protocol_id": 24
+        "protocol_id": 26
     },
     "minecraft:villager_babies": {
         "protocol_id": 7
@@ -75,6 +81,6 @@
         "protocol_id": 6
     },
     "minecraft:warden_entity_sensor": {
-        "protocol_id": 23
+        "protocol_id": 25
     }
 }

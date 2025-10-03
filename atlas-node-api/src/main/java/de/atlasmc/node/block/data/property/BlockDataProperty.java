@@ -114,6 +114,7 @@ public abstract class BlockDataProperty<T> {
 	public static final BlockDataProperty<Thickness> THICKNESS = new ThicknessProperty();
 	public static final BlockDataProperty<VaultState> VAULT_STATE = new VaultStateProperty();
 	public static final BlockDataProperty<Boolean> TIP = new TipProperty();
+	public static final BlockDataProperty<Integer> HYDRATION = new HydrationProperty();
 
 	/**
 	 * Used for because reasons:
@@ -128,6 +129,7 @@ public abstract class BlockDataProperty<T> {
 	 * <ul>
 	 * <li>{@link de.atlasmc.node.block.data.type.Comparator.Mode}</li>
 	 * <li>{@link de.atlasmc.node.block.data.type.StructureBlock.Mode}</li>
+	 * <li>{@link de.atlasmc.node.block.data.type.TestBlock.Mode}</li>
 	 * </ul>
 	 */
 	public static final BlockDataProperty<Enum<?>> MODE = new ModeProperty();
@@ -183,6 +185,7 @@ public abstract class BlockDataProperty<T> {
 	public static final BlockDataProperty<Integer> EGGS = new EggsProperty();
 	public static final BlockDataProperty<Integer> AGE = new AgeProperty();
 	public static final BlockDataProperty<VerticalDirection> VERTICAL_DIRECTION = new VerticalDirectionProperty();
+	public static final BlockDataProperty<Integer> SEGMENT_AMOUNT = new SegmentAmountProperty();
 
 	protected final CharKey key;
 

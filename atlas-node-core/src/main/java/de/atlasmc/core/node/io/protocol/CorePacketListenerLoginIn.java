@@ -152,7 +152,7 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 	
 	private static String createServerHash(PublicKey key, SecretKey secret) throws Exception {
 		MessageDigest md = MessageDigest.getInstance("SHA-1");
-		md.update(SERVER_ID.getBytes("ISO_8859_1"));
+		md.update(SERVER_ID.getBytes("ISO-8859-1"));
 		md.update(key.getEncoded());
 		md.update(secret.getEncoded());
 		byte[] data = md.digest();

@@ -2,7 +2,6 @@ package de.atlasmc.node.entity;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.node.DyeColor;
-import de.atlasmc.node.entity.data.AngerableMob;
 import de.atlasmc.registry.ProtocolRegistry;
 import de.atlasmc.registry.ProtocolRegistryValueBase;
 import de.atlasmc.registry.Registries;

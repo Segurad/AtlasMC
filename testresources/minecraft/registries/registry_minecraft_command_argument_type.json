@@ -18,7 +18,7 @@
         "protocol_id": 5
     },
     "minecraft:angle": {
-        "protocol_id": 27
+        "protocol_id": 28
     },
     "minecraft:block_pos": {
         "protocol_id": 8
@@ -36,124 +36,133 @@
         "protocol_id": 9
     },
     "minecraft:component": {
-        "protocol_id": 17
+        "protocol_id": 18
+    },
+    "minecraft:dialog": {
+        "protocol_id": 55
     },
     "minecraft:dimension": {
-        "protocol_id": 40
+        "protocol_id": 41
     },
     "minecraft:entity": {
         "protocol_id": 6
     },
     "minecraft:entity_anchor": {
-        "protocol_id": 37
+        "protocol_id": 38
     },
     "minecraft:float_range": {
-        "protocol_id": 39
+        "protocol_id": 40
     },
     "minecraft:function": {
-        "protocol_id": 36
+        "protocol_id": 37
     },
     "minecraft:game_profile": {
         "protocol_id": 7
     },
     "minecraft:gamemode": {
-        "protocol_id": 41
+        "protocol_id": 42
     },
     "minecraft:heightmap": {
-        "protocol_id": 49
+        "protocol_id": 51
+    },
+    "minecraft:hex_color": {
+        "protocol_id": 17
     },
     "minecraft:int_range": {
-        "protocol_id": 38
+        "protocol_id": 39
     },
     "minecraft:item_predicate": {
         "protocol_id": 15
     },
     "minecraft:item_slot": {
-        "protocol_id": 33
+        "protocol_id": 34
     },
     "minecraft:item_slots": {
-        "protocol_id": 34
+        "protocol_id": 35
     },
     "minecraft:item_stack": {
         "protocol_id": 14
     },
     "minecraft:loot_modifier": {
-        "protocol_id": 52
+        "protocol_id": 54
     },
     "minecraft:loot_predicate": {
-        "protocol_id": 51
+        "protocol_id": 53
     },
     "minecraft:loot_table": {
-        "protocol_id": 50
+        "protocol_id": 52
     },
     "minecraft:message": {
-        "protocol_id": 19
-    },
-    "minecraft:nbt_compound_tag": {
         "protocol_id": 20
     },
-    "minecraft:nbt_path": {
-        "protocol_id": 22
-    },
-    "minecraft:nbt_tag": {
+    "minecraft:nbt_compound_tag": {
         "protocol_id": 21
     },
-    "minecraft:objective": {
+    "minecraft:nbt_path": {
         "protocol_id": 23
     },
-    "minecraft:objective_criteria": {
+    "minecraft:nbt_tag": {
+        "protocol_id": 22
+    },
+    "minecraft:objective": {
         "protocol_id": 24
     },
-    "minecraft:operation": {
+    "minecraft:objective_criteria": {
         "protocol_id": 25
     },
-    "minecraft:particle": {
+    "minecraft:operation": {
         "protocol_id": 26
     },
-    "minecraft:resource": {
-        "protocol_id": 45
+    "minecraft:particle": {
+        "protocol_id": 27
     },
-    "minecraft:resource_key": {
+    "minecraft:resource": {
         "protocol_id": 46
     },
-    "minecraft:resource_location": {
-        "protocol_id": 35
-    },
-    "minecraft:resource_or_tag": {
-        "protocol_id": 43
-    },
-    "minecraft:resource_or_tag_key": {
-        "protocol_id": 44
-    },
-    "minecraft:rotation": {
-        "protocol_id": 28
-    },
-    "minecraft:score_holder": {
-        "protocol_id": 30
-    },
-    "minecraft:scoreboard_slot": {
-        "protocol_id": 29
-    },
-    "minecraft:style": {
-        "protocol_id": 18
-    },
-    "minecraft:swizzle": {
-        "protocol_id": 31
-    },
-    "minecraft:team": {
-        "protocol_id": 32
-    },
-    "minecraft:template_mirror": {
+    "minecraft:resource_key": {
         "protocol_id": 47
     },
-    "minecraft:template_rotation": {
+    "minecraft:resource_location": {
+        "protocol_id": 36
+    },
+    "minecraft:resource_or_tag": {
+        "protocol_id": 44
+    },
+    "minecraft:resource_or_tag_key": {
+        "protocol_id": 45
+    },
+    "minecraft:resource_selector": {
         "protocol_id": 48
     },
+    "minecraft:rotation": {
+        "protocol_id": 29
+    },
+    "minecraft:score_holder": {
+        "protocol_id": 31
+    },
+    "minecraft:scoreboard_slot": {
+        "protocol_id": 30
+    },
+    "minecraft:style": {
+        "protocol_id": 19
+    },
+    "minecraft:swizzle": {
+        "protocol_id": 32
+    },
+    "minecraft:team": {
+        "protocol_id": 33
+    },
+    "minecraft:template_mirror": {
+        "protocol_id": 49
+    },
+    "minecraft:template_rotation": {
+        "protocol_id": 50
+    },
     "minecraft:time": {
-        "protocol_id": 42
+        "protocol_id": 43
     },
     "minecraft:uuid": {
-        "protocol_id": 53
+        "protocol_id": 56
     },
     "minecraft:vec2": {
         "protocol_id": 11

@@ -1,6 +1,7 @@
 {
     "client_information": 0,
     "cookie_response": 1,
+    "custom_click_action": 8,
     "custom_payload": 2,
     "finish_configuration": 3,
     "keep_alive": 4,

@@ -58,9 +58,17 @@ public interface ConnectionHandler {
 	
 	boolean isEncryotionEnabled();
 	
-	void setCompression(int threshold);
+	void setCompressionThreshold(int threshold);
 	
 	int getCompressionThreshold();
+	
+	void setDecompression(boolean enable);
+	
+	boolean hasCompression();
+	
+	void setCompression(boolean enbale);
+	
+	boolean hasDecompression();
 	
 	void handlePacket(Packet packet) throws IOException;
 	

@@ -2,7 +2,6 @@ package de.atlasmc.node.entity;
 
 import org.joml.Vector3i;
 
-import de.atlasmc.node.entity.data.AngerableMob;
 import de.atlasmc.util.annotation.UnsafeAPI;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 

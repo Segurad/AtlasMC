@@ -72,4 +72,28 @@ public class LocalConnectionHandler extends AbstractConnectionHandler {
 		return null;
 	}
 
+	@Override
+	public void setDecompression(boolean enable) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean hasCompression() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setCompression(boolean enbale) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean hasDecompression() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

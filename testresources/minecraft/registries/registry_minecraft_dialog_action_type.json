@@ -1,0 +1,29 @@
+{
+    "minecraft:change_page": {
+        "protocol_id": 4
+    },
+    "minecraft:copy_to_clipboard": {
+        "protocol_id": 5
+    },
+    "minecraft:custom": {
+        "protocol_id": 6
+    },
+    "minecraft:dynamic/custom": {
+        "protocol_id": 8
+    },
+    "minecraft:dynamic/run_command": {
+        "protocol_id": 7
+    },
+    "minecraft:open_url": {
+        "protocol_id": 0
+    },
+    "minecraft:run_command": {
+        "protocol_id": 1
+    },
+    "minecraft:show_dialog": {
+        "protocol_id": 3
+    },
+    "minecraft:suggest_command": {
+        "protocol_id": 2
+    }
+}

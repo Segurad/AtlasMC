@@ -1,6 +1,5 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.node.entity.data.AngerableMob;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface PolarBear extends Animal, AngerableMob {

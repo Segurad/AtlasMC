@@ -1,0 +1,14 @@
+{
+    "minecraft:boolean": {
+        "protocol_id": 0
+    },
+    "minecraft:number_range": {
+        "protocol_id": 1
+    },
+    "minecraft:single_option": {
+        "protocol_id": 2
+    },
+    "minecraft:text": {
+        "protocol_id": 3
+    }
+}

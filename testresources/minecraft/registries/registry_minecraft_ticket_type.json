@@ -1,0 +1,26 @@
+{
+    "minecraft:dragon": {
+        "protocol_id": 1
+    },
+    "minecraft:ender_pearl": {
+        "protocol_id": 6
+    },
+    "minecraft:forced": {
+        "protocol_id": 4
+    },
+    "minecraft:player_loading": {
+        "protocol_id": 2
+    },
+    "minecraft:player_simulation": {
+        "protocol_id": 3
+    },
+    "minecraft:portal": {
+        "protocol_id": 5
+    },
+    "minecraft:start": {
+        "protocol_id": 0
+    },
+    "minecraft:unknown": {
+        "protocol_id": 7
+    }
+}

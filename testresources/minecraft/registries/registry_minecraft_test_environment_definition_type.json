@@ -1,0 +1,17 @@
+{
+    "minecraft:all_of": {
+        "protocol_id": 0
+    },
+    "minecraft:function": {
+        "protocol_id": 4
+    },
+    "minecraft:game_rules": {
+        "protocol_id": 1
+    },
+    "minecraft:time_of_day": {
+        "protocol_id": 2
+    },
+    "minecraft:weather": {
+        "protocol_id": 3
+    }
+}

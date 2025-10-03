@@ -2,7 +2,7 @@ package de.atlasmc.node.block.data.type;
 
 import de.atlasmc.node.block.data.Directional;
 
-public interface PinkPetals extends Directional {
+public interface Flower extends Directional {
 	
 	int getFlowerAmount();
 	
@@ -10,6 +10,6 @@ public interface PinkPetals extends Directional {
 	
 	int getMaxFlowerAmount();
 
-	PinkPetals clone();
+	Flower clone();
 	
 }

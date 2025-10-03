@@ -36,7 +36,7 @@
         "protocol_id": 8
     },
     "minecraft:lightning_rod": {
-        "protocol_id": 19
+        "protocol_id": 20
     },
     "minecraft:lodestone": {
         "protocol_id": 18
@@ -52,6 +52,9 @@
     },
     "minecraft:shepherd": {
         "protocol_id": 10
+    },
+    "minecraft:test_instance": {
+        "protocol_id": 19
     },
     "minecraft:toolsmith": {
         "protocol_id": 11

@@ -148,8 +148,6 @@ public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitte
 	
 	boolean isSwimming();
 	
-	boolean hasCustomName();
-	
 	boolean isInvulnerable();
 	
 	/**

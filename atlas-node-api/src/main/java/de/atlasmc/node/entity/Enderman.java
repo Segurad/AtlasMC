@@ -2,7 +2,6 @@ package de.atlasmc.node.entity;
 
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.BlockData;
-import de.atlasmc.node.entity.data.AngerableMob;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Enderman extends Monster, AngerableMob {

@@ -16,5 +16,13 @@ public class RegistryValueKey<T> extends NamespacedAccessKey<T> {
 	public T get() {
 		return registry.getValue(key);
 	}
+	
+	public static <T> RegistryValueKey<T> of(RegistryKey<T> registry, String key) {
+		return new RegistryValueKey<>(registry, NamespacedKey.of(key));
+	}
+	
+	public static <T> RegistryValueKey<T> ofLiteral(RegistryKey<T> registry, String key) {
+		return new RegistryValueKey<>(registry, NamespacedKey.literal(key));
+	}
 
 }

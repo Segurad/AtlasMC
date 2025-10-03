@@ -128,7 +128,7 @@ public abstract class AbstractConnectionHandler implements ConnectionHandler {
 	}
 
 	@Override
-	public void setCompression(int threshold) {
+	public void setCompressionThreshold(int threshold) {
 		if (threshold < 0)
 			threshold = 0;
 		if (compressionThreshold == threshold)

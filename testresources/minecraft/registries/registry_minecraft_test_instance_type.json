@@ -1,0 +1,8 @@
+{
+    "minecraft:block_based": {
+        "protocol_id": 0
+    },
+    "minecraft:function": {
+        "protocol_id": 1
+    }
+}

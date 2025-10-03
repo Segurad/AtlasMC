@@ -239,7 +239,7 @@
                 "name": "minecraft:giant",
                 "parameters": {
                     "key": "minecraft:giant",
-                    "id": 56,
+                    "id": 57,
                     "entityClass": "de.atlasmc.core.node.entity.CoreGiant"
                 }
             },
@@ -247,7 +247,7 @@
                 "name": "minecraft:guardian",
                 "parameters": {
                     "key": "minecraft:guardian",
-                    "id": 60,
+                    "id": 61,
                     "entityClass": "de.atlasmc.core.node.entity.CoreGuardian"
                 }
             },
@@ -255,7 +255,7 @@
                 "name": "minecraft:horse",
                 "parameters": {
                     "key": "minecraft:horse",
-                    "id": 63,
+                    "id": 64,
                     "entityClass": "de.atlasmc.core.node.entity.CoreHorse"
                 }
             },
@@ -263,7 +263,7 @@
                 "name": "minecraft:hoglin",
                 "parameters": {
                     "key": "minecraft:hoglin",
-                    "id": 61,
+                    "id": 62,
                     "entityClass": "de.atlasmc.core.node.entity.CoreHoglin"
                 }
             },
@@ -271,7 +271,7 @@
                 "name": "minecraft:husk",
                 "parameters": {
                     "key": "minecraft:husk",
-                    "id": 64,
+                    "id": 65,
                     "entityClass": "de.atlasmc.core.node.entity.CoreHusk"
                 }
             },
@@ -279,7 +279,7 @@
                 "name": "minecraft:illusioner",
                 "parameters": {
                     "key": "minecraft:illusioner",
-                    "id": 65,
+                    "id": 66,
                     "entityClass": "de.atlasmc.core.node.entity.CoreIllusioner"
                 }
             },
@@ -287,7 +287,7 @@
                 "name": "minecraft:iron_golem",
                 "parameters": {
                     "key": "minecraft:iron_golem",
-                    "id": 67,
+                    "id": 68,
                     "entityClass": "de.atlasmc.core.node.entity.CoreIronGolem"
                 }
             },
@@ -295,7 +295,7 @@
                 "name": "minecraft:item",
                 "parameters": {
                     "key": "minecraft:item",
-                    "id": 68,
+                    "id": 69,
                     "entityClass": "de.atlasmc.core.node.entity.CoreItem"
                 }
             },
@@ -303,7 +303,7 @@
                 "name": "minecraft:item_frame",
                 "parameters": {
                     "key": "minecraft:item_frame",
-                    "id": 70,
+                    "id": 71,
                     "entityClass": "de.atlasmc.core.node.entity.CoreItemFrame"
                 }
             },
@@ -319,7 +319,7 @@
                 "name": "minecraft:leash_knot",
                 "parameters": {
                     "key": "minecraft:leash_knot",
-                    "id": 73,
+                    "id": 74,
                     "entityClass": "de.atlasmc.core.node.entity.CoreLeashKnot"
                 }
             },
@@ -327,7 +327,7 @@
                 "name": "minecraft:lightning_bolt",
                 "parameters": {
                     "key": "minecraft:lightning_bolt",
-                    "id": 74,
+                    "id": 75,
                     "entityClass": "de.atlasmc.core.node.entity.CoreLightningBolt"
                 }
             },
@@ -335,7 +335,7 @@
                 "name": "minecraft:llama",
                 "parameters": {
                     "key": "minecraft:llama",
-                    "id": 75,
+                    "id": 76,
                     "entityClass": "de.atlasmc.core.node.entity.CoreLlama"
                 }
             },
@@ -343,7 +343,7 @@
                 "name": "minecraft:llama_spit",
                 "parameters": {
                     "key": "minecraft:llama_spit",
-                    "id": 76,
+                    "id": 77,
                     "entityClass": "de.atlasmc.core.node.entity.CoreLlamaSpit"
                 }
             },
@@ -351,7 +351,7 @@
                 "name": "minecraft:magma_cube",
                 "parameters": {
                     "key": "minecraft:magma_cube",
-                    "id": 77,
+                    "id": 78,
                     "entityClass": "de.atlasmc.core.node.entity.CoreMagmaCube"
                 }
             },
@@ -359,7 +359,7 @@
                 "name": "minecraft:minecart",
                 "parameters": {
                     "key": "minecraft:minecart",
-                    "id": 81,
+                    "id": 82,
                     "entityClass": "de.atlasmc.core.node.entity.CoreMinecart"
                 }
             },
@@ -391,7 +391,7 @@
                 "name": "minecraft:hopper_minecart",
                 "parameters": {
                     "key": "minecraft:hopper_minecart",
-                    "id": 62,
+                    "id": 63,
                     "entityClass": "de.atlasmc.core.node.entity.CoreMinecartHopper"
                 }
             },
@@ -399,7 +399,7 @@
                 "name": "minecraft:spawner_minecart",
                 "parameters": {
                     "key": "minecraft:spawner_minecart",
-                    "id": 115,
+                    "id": 117,
                     "entityClass": "de.atlasmc.core.node.entity.CoreMinecartSpawner"
                 }
             },
@@ -407,7 +407,7 @@
                 "name": "minecraft:tnt_minecart",
                 "parameters": {
                     "key": "minecraft:tnt_minecart",
-                    "id": 126,
+                    "id": 128,
                     "entityClass": "de.atlasmc.core.node.entity.CoreMinecartTNT"
                 }
             },
@@ -415,7 +415,7 @@
                 "name": "minecraft:mule",
                 "parameters": {
                     "key": "minecraft:mule",
-                    "id": 83,
+                    "id": 84,
                     "entityClass": "de.atlasmc.core.node.entity.CoreMule"
                 }
             },
@@ -423,7 +423,7 @@
                 "name": "minecraft:mooshroom",
                 "parameters": {
                     "key": "minecraft:mooshroom",
-                    "id": 82,
+                    "id": 83,
                     "entityClass": "de.atlasmc.core.node.entity.CoreMooshroom"
                 }
             },
@@ -431,7 +431,7 @@
                 "name": "minecraft:ocelot",
                 "parameters": {
                     "key": "minecraft:ocelot",
-                    "id": 86,
+                    "id": 87,
                     "entityClass": "de.atlasmc.core.node.entity.CoreOcelot"
                 }
             },
@@ -439,7 +439,7 @@
                 "name": "minecraft:painting",
                 "parameters": {
                     "key": "minecraft:painting",
-                    "id": 88,
+                    "id": 89,
                     "entityClass": "de.atlasmc.core.node.entity.CorePainting"
                 }
             },
@@ -447,7 +447,7 @@
                 "name": "minecraft:panda",
                 "parameters": {
                     "key": "minecraft:panda",
-                    "id": 91,
+                    "id": 92,
                     "entityClass": "de.atlasmc.core.node.entity.CorePanda"
                 }
             },
@@ -455,7 +455,7 @@
                 "name": "minecraft:parrot",
                 "parameters": {
                     "key": "minecraft:parrot",
-                    "id": 92,
+                    "id": 93,
                     "entityClass": "de.atlasmc.core.node.entity.CoreParrot"
                 }
             },
@@ -463,7 +463,7 @@
                 "name": "minecraft:phantom",
                 "parameters": {
                     "key": "minecraft:phantom",
-                    "id": 93,
+                    "id": 94,
                     "entityClass": "de.atlasmc.core.node.entity.CorePhantom"
                 }
             },
@@ -471,7 +471,7 @@
                 "name": "minecraft:pig",
                 "parameters": {
                     "key": "minecraft:pig",
-                    "id": 94,
+                    "id": 95,
                     "entityClass": "de.atlasmc.core.node.entity.CorePig"
                 }
             },
@@ -479,7 +479,7 @@
                 "name": "minecraft:piglin",
                 "parameters": {
                     "key": "minecraft:piglin",
-                    "id": 95,
+                    "id": 96,
                     "entityClass": "de.atlasmc.core.node.entity.CorePiglin"
                 }
             },
@@ -487,7 +487,7 @@
                 "name": "minecraft:piglin_brute",
                 "parameters": {
                     "key": "minecraft:piglin_brute",
-                    "id": 96,
+                    "id": 97,
                     "entityClass": "de.atlasmc.core.node.entity.CorePiglinBrute"
                 }
             },
@@ -495,7 +495,7 @@
                 "name": "minecraft:pillager",
                 "parameters": {
                     "key": "minecraft:pillager",
-                    "id": 97,
+                    "id": 98,
                     "entityClass": "de.atlasmc.core.node.entity.CorePillager"
                 }
             },
@@ -503,7 +503,7 @@
                 "name": "minecraft:polar_bear",
                 "parameters": {
                     "key": "minecraft:polar_bear",
-                    "id": 98,
+                    "id": 99,
                     "entityClass": "de.atlasmc.core.node.entity.CorePolarBear"
                 }
             },
@@ -511,7 +511,7 @@
                 "name": "minecraft:tnt",
                 "parameters": {
                     "key": "minecraft:tnt",
-                    "id": 125,
+                    "id": 127,
                     "entityClass": "de.atlasmc.core.node.entity.CorePrimedTNT"
                 }
             },
@@ -519,7 +519,7 @@
                 "name": "minecraft:pufferfish",
                 "parameters": {
                     "key": "minecraft:pufferfish",
-                    "id": 100,
+                    "id": 102,
                     "entityClass": "de.atlasmc.core.node.entity.CorePufferFish"
                 }
             },
@@ -527,7 +527,7 @@
                 "name": "minecraft:rabbit",
                 "parameters": {
                     "key": "minecraft:rabbit",
-                    "id": 101,
+                    "id": 103,
                     "entityClass": "de.atlasmc.core.node.entity.CoreRabbit"
                 }
             },
@@ -535,7 +535,7 @@
                 "name": "minecraft:ravager",
                 "parameters": {
                     "key": "minecraft:ravager",
-                    "id": 102,
+                    "id": 104,
                     "entityClass": "de.atlasmc.core.node.entity.CoreRavager"
                 }
             },
@@ -543,7 +543,7 @@
                 "name": "minecraft:salmon",
                 "parameters": {
                     "key": "minecraft:salmon",
-                    "id": 103,
+                    "id": 105,
                     "entityClass": "de.atlasmc.core.node.entity.CoreSalmon"
                 }
             },
@@ -551,7 +551,7 @@
                 "name": "minecraft:sheep",
                 "parameters": {
                     "key": "minecraft:sheep",
-                    "id": 104,
+                    "id": 106,
                     "entityClass": "de.atlasmc.core.node.entity.CoreSheep"
                 }
             },
@@ -559,7 +559,7 @@
                 "name": "minecraft:shulker",
                 "parameters": {
                     "key": "minecraft:shulker",
-                    "id": 105,
+                    "id": 107,
                     "entityClass": "de.atlasmc.core.node.entity.CoreShulker"
                 }
             },
@@ -567,7 +567,7 @@
                 "name": "minecraft:shulker_bullet",
                 "parameters": {
                     "key": "minecraft:shulker_bullet",
-                    "id": 106,
+                    "id": 108,
                     "entityClass": "de.atlasmc.core.node.entity.CoreShulkerBullet"
                 }
             },
@@ -575,7 +575,7 @@
                 "name": "minecraft:silverfish",
                 "parameters": {
                     "key": "minecraft:silverfish",
-                    "id": 107,
+                    "id": 109,
                     "entityClass": "de.atlasmc.core.node.entity.CoreSilverfish"
                 }
             },
@@ -583,7 +583,7 @@
                 "name": "minecraft:skeleton",
                 "parameters": {
                     "key": "minecraft:skeleton",
-                    "id": 108,
+                    "id": 110,
                     "entityClass": "de.atlasmc.core.node.entity.CoreSkeleton"
                 }
             },
@@ -591,7 +591,7 @@
                 "name": "minecraft:skeleton_horse",
                 "parameters": {
                     "key": "minecraft:skeleton_horse",
-                    "id": 109,
+                    "id": 111,
                     "entityClass": "de.atlasmc.core.node.entity.CoreSkeletonHorse"
                 }
             },
@@ -599,7 +599,7 @@
                 "name": "minecraft:slime",
                 "parameters": {
                     "key": "minecraft:slime",
-                    "id": 110,
+                    "id": 112,
                     "entityClass": "de.atlasmc.core.node.entity.CoreSlime"
                 }
             },
@@ -607,7 +607,7 @@
                 "name": "minecraft:small_fireball",
                 "parameters": {
                     "key": "minecraft:small_fireball",
-                    "id": 111,
+                    "id": 113,
                     "entityClass": "de.atlasmc.core.node.entity.CoreSmallFireball"
                 }
             },
@@ -615,7 +615,7 @@
                 "name": "minecraft:snow_golem",
                 "parameters": {
                     "key": "minecraft:snow_golem",
-                    "id": 114,
+                    "id": 116,
                     "entityClass": "de.atlasmc.core.node.entity.CoreSnowGolem"
                 }
             },
@@ -623,7 +623,7 @@
                 "name": "minecraft:snowball",
                 "parameters": {
                     "key": "minecraft:snowball",
-                    "id": 113,
+                    "id": 115,
                     "entityClass": "de.atlasmc.core.node.entity.CoreSnowball"
                 }
             },
@@ -631,7 +631,7 @@
                 "name": "minecraft:spectral_arrow",
                 "parameters": {
                     "key": "minecraft:spectral_arrow",
-                    "id": 116,
+                    "id": 118,
                     "entityClass": "de.atlasmc.core.node.entity.CoreSpectralArrow"
                 }
             },
@@ -639,7 +639,7 @@
                 "name": "minecraft:spider",
                 "parameters": {
                     "key": "minecraft:spider",
-                    "id": 117,
+                    "id": 119,
                     "entityClass": "de.atlasmc.core.node.entity.CoreSpider"
                 }
             },
@@ -647,7 +647,7 @@
                 "name": "minecraft:squid",
                 "parameters": {
                     "key": "minecraft:squid",
-                    "id": 120,
+                    "id": 122,
                     "entityClass": "de.atlasmc.core.node.entity.CoreSquid"
                 }
             },
@@ -655,7 +655,7 @@
                 "name": "minecraft:stray",
                 "parameters": {
                     "key": "minecraft:stray",
-                    "id": 121,
+                    "id": 123,
                     "entityClass": "de.atlasmc.core.node.entity.CoreStray"
                 }
             },
@@ -663,7 +663,7 @@
                 "name": "minecraft:strider",
                 "parameters": {
                     "key": "minecraft:strider",
-                    "id": 122,
+                    "id": 124,
                     "entityClass": "de.atlasmc.core.node.entity.CoreStrider"
                 }
             },
@@ -692,18 +692,10 @@
                 }
             },
             {
-                "name": "minecraft:potion",
-                "parameters": {
-                    "key": "minecraft:potion",
-                    "id": 99,
-                    "entityClass": "de.atlasmc.core.node.entity.CorePotion"
-                }
-            },
-            {
                 "name": "minecraft:trident",
                 "parameters": {
                     "key": "minecraft:trident",
-                    "id": 128,
+                    "id": 130,
                     "entityClass": "de.atlasmc.core.node.entity.CoreTrident"
                 }
             },
@@ -711,7 +703,7 @@
                 "name": "minecraft:trader_llama",
                 "parameters": {
                     "key": "minecraft:trader_llama",
-                    "id": 127,
+                    "id": 129,
                     "entityClass": "de.atlasmc.core.node.entity.CoreTraderLlama"
                 }
             },
@@ -719,7 +711,7 @@
                 "name": "minecraft:tropical_fish",
                 "parameters": {
                     "key": "minecraft:tropical_fish",
-                    "id": 129,
+                    "id": 131,
                     "entityClass": "de.atlasmc.core.node.entity.CoreTropicalFish"
                 }
             },
@@ -727,7 +719,7 @@
                 "name": "minecraft:turtle",
                 "parameters": {
                     "key": "minecraft:turtle",
-                    "id": 130,
+                    "id": 132,
                     "entityClass": "de.atlasmc.core.node.entity.CoreTurtle"
                 }
             },
@@ -735,7 +727,7 @@
                 "name": "minecraft:vex",
                 "parameters": {
                     "key": "minecraft:vex",
-                    "id": 131,
+                    "id": 133,
                     "entityClass": "de.atlasmc.core.node.entity.CoreVex"
                 }
             },
@@ -743,7 +735,7 @@
                 "name": "minecraft:villager",
                 "parameters": {
                     "key": "minecraft:villager",
-                    "id": 132,
+                    "id": 134,
                     "entityClass": "de.atlasmc.core.node.entity.CoreVillager"
                 }
             },
@@ -751,7 +743,7 @@
                 "name": "minecraft:vindicator",
                 "parameters": {
                     "key": "minecraft:vindicator",
-                    "id": 133,
+                    "id": 135,
                     "entityClass": "de.atlasmc.core.node.entity.CoreVindicator"
                 }
             },
@@ -759,7 +751,7 @@
                 "name": "minecraft:wandering_trader",
                 "parameters": {
                     "key": "minecraft:wandering_trader",
-                    "id": 134,
+                    "id": 136,
                     "entityClass": "de.atlasmc.core.node.entity.CoreWanderingTrader"
                 }
             },
@@ -767,7 +759,7 @@
                 "name": "minecraft:witch",
                 "parameters": {
                     "key": "minecraft:witch",
-                    "id": 137,
+                    "id": 139,
                     "entityClass": "de.atlasmc.core.node.entity.CoreWitch"
                 }
             },
@@ -775,7 +767,7 @@
                 "name": "minecraft:wither",
                 "parameters": {
                     "key": "minecraft:wither",
-                    "id": 138,
+                    "id": 140,
                     "entityClass": "de.atlasmc.core.node.entity.CoreWither"
                 }
             },
@@ -783,7 +775,7 @@
                 "name": "minecraft:wither_skeleton",
                 "parameters": {
                     "key": "minecraft:wither_skeleton",
-                    "id": 139,
+                    "id": 141,
                     "entityClass": "de.atlasmc.core.node.entity.CoreWitherSkeleton"
                 }
             },
@@ -791,7 +783,7 @@
                 "name": "minecraft:wither_skull",
                 "parameters": {
                     "key": "minecraft:wither_skull",
-                    "id": 140,
+                    "id": 142,
                     "entityClass": "de.atlasmc.core.node.entity.CoreWitherSkull"
                 }
             },
@@ -799,7 +791,7 @@
                 "name": "minecraft:wolf",
                 "parameters": {
                     "key": "minecraft:wolf",
-                    "id": 141,
+                    "id": 143,
                     "entityClass": "de.atlasmc.core.node.entity.CoreWolf"
                 }
             },
@@ -807,7 +799,7 @@
                 "name": "minecraft:zoglin",
                 "parameters": {
                     "key": "minecraft:zoglin",
-                    "id": 142,
+                    "id": 144,
                     "entityClass": "de.atlasmc.core.node.entity.CoreZoglin"
                 }
             },
@@ -815,7 +807,7 @@
                 "name": "minecraft:zombie",
                 "parameters": {
                     "key": "minecraft:zombie",
-                    "id": 143,
+                    "id": 145,
                     "entityClass": "de.atlasmc.core.node.entity.CoreZombie"
                 }
             },
@@ -823,7 +815,7 @@
                 "name": "minecraft:zombie_horse",
                 "parameters": {
                     "key": "minecraft:zombie_horse",
-                    "id": 144,
+                    "id": 146,
                     "entityClass": "de.atlasmc.core.node.entity.CoreZombieHorse"
                 }
             },
@@ -831,7 +823,7 @@
                 "name": "minecraft:zombified_piglin",
                 "parameters": {
                     "key": "minecraft:zombified_piglin",
-                    "id": 146,
+                    "id": 148,
                     "entityClass": "de.atlasmc.core.node.entity.CoreZombifiedPiglin"
                 }
             },
@@ -839,7 +831,7 @@
                 "name": "minecraft:player",
                 "parameters": {
                     "key": "minecraft:player",
-                    "id": 147,
+                    "id": 149,
                     "entityClass": "de.atlasmc.core.node.entity.CorePlayer"
                 }
             },
@@ -847,7 +839,7 @@
                 "name": "minecraft:fishing_bobber",
                 "parameters": {
                     "key": "minecraft:fishing_bobber",
-                    "id": 148,
+                    "id": 150,
                     "entityClass": "de.atlasmc.core.node.entity.CoreFishingHook"
                 }
             },
@@ -895,7 +887,7 @@
                 "name": "minecraft:glow_item_frame",
                 "parameters": {
                     "key": "minecraft:glow_item_frame",
-                    "id": 57,
+                    "id": 58,
                     "entityClass": "de.atlasmc.core.node.entity.CoreGlowItemFrame"
                 }
             },
@@ -903,7 +895,7 @@
                 "name": "minecraft:glow_squid",
                 "parameters": {
                     "key": "minecraft:glow_squid",
-                    "id": 58,
+                    "id": 59,
                     "entityClass": "de.atlasmc.core.node.entity.CoreGlowSquid"
                 }
             },
@@ -911,7 +903,7 @@
                 "name": "minecraft:goat",
                 "parameters": {
                     "key": "minecraft:goat",
-                    "id": 59,
+                    "id": 60,
                     "entityClass": "de.atlasmc.core.node.entity.CoreGoat"
                 }
             },
@@ -919,7 +911,7 @@
                 "name": "minecraft:interaction",
                 "parameters": {
                     "key": "minecraft:interaction",
-                    "id": 66,
+                    "id": 67,
                     "entityClass": "de.atlasmc.core.node.entity.CoreInteraction"
                 }
             },
@@ -927,7 +919,7 @@
                 "name": "minecraft:item_display",
                 "parameters": {
                     "key": "minecraft:item_display",
-                    "id": 69,
+                    "id": 70,
                     "entityClass": "de.atlasmc.core.node.entity.CoreItemDisplay"
                 }
             },
@@ -935,7 +927,7 @@
                 "name": "minecraft:marker",
                 "parameters": {
                     "key": "minecraft:marker",
-                    "id": 80,
+                    "id": 81,
                     "entityClass": "de.atlasmc.core.node.entity.CoreMarker"
                 }
             },
@@ -943,7 +935,7 @@
                 "name": "minecraft:sniffer",
                 "parameters": {
                     "key": "minecraft:sniffer",
-                    "id": 112,
+                    "id": 114,
                     "entityClass": "de.atlasmc.core.node.entity.CoreSniffer"
                 }
             },
@@ -951,7 +943,7 @@
                 "name": "minecraft:tadpole",
                 "parameters": {
                     "key": "minecraft:tadpole",
-                    "id": 123,
+                    "id": 125,
                     "entityClass": "de.atlasmc.core.node.entity.CoreTadpole"
                 }
             },
@@ -959,7 +951,7 @@
                 "name": "minecraft:text_display",
                 "parameters": {
                     "key": "minecraft:text_display",
-                    "id": 124,
+                    "id": 126,
                     "entityClass": "de.atlasmc.core.node.entity.CoreTextDisplay"
                 }
             },
@@ -967,7 +959,7 @@
                 "name": "minecraft:zombie_villager",
                 "parameters": {
                     "key": "minecraft:zombie_villager",
-                    "id": 145,
+                    "id": 147,
                     "entityClass": "de.atlasmc.core.node.entity.CoreZombieVillager"
                 }
             },
@@ -975,7 +967,7 @@
                 "name": "minecraft:warden",
                 "parameters": {
                     "key": "minecraft:warden",
-                    "id": 135,
+                    "id": 137,
                     "entityClass": "de.atlasmc.core.node.entity.CoreWarden"
                 }
             },
@@ -1023,7 +1015,7 @@
                 "name": "minecraft:jungle_boat",
                 "parameters": {
                     "key": "minecraft:jungle_boat",
-                    "id": 71,
+                    "id": 72,
                     "entityClass": "de.atlasmc.core.node.entity.CoreBoat"
                 }
             },
@@ -1031,7 +1023,7 @@
                 "name": "minecraft:mangrove_boat",
                 "parameters": {
                     "key": "minecraft:mangrove_boat",
-                    "id": 78,
+                    "id": 79,
                     "entityClass": "de.atlasmc.core.node.entity.CoreBoat"
                 }
             },
@@ -1039,7 +1031,7 @@
                 "name": "minecraft:oak_boat",
                 "parameters": {
                     "key": "minecraft:oak_boat",
-                    "id": 84,
+                    "id": 85,
                     "entityClass": "de.atlasmc.core.node.entity.CoreBoat"
                 }
             },
@@ -1047,7 +1039,7 @@
                 "name": "minecraft:pale_oak_boat",
                 "parameters": {
                     "key": "minecraft:pale_oak_boat",
-                    "id": 89,
+                    "id": 90,
                     "entityClass": "de.atlasmc.core.node.entity.CoreBoat"
                 }
             },
@@ -1055,7 +1047,7 @@
                 "name": "minecraft:spruce_boat",
                 "parameters": {
                     "key": "minecraft:spruce_boat",
-                    "id": 118,
+                    "id": 120,
                     "entityClass": "de.atlasmc.core.node.entity.CoreBoat"
                 }
             },
@@ -1103,7 +1095,7 @@
                 "name": "minecraft:jungle_chest_boat",
                 "parameters": {
                     "key": "minecraft:jungle_chest_boat",
-                    "id": 72,
+                    "id": 73,
                     "entityClass": "de.atlasmc.core.node.entity.CoreChestBoat"
                 }
             },
@@ -1111,7 +1103,7 @@
                 "name": "minecraft:mangrove_chest_boat",
                 "parameters": {
                     "key": "minecraft:mangrove_chest_boat",
-                    "id": 79,
+                    "id": 80,
                     "entityClass": "de.atlasmc.core.node.entity.CoreChestBoat"
                 }
             },
@@ -1119,7 +1111,7 @@
                 "name": "minecraft:oak_chest_boat",
                 "parameters": {
                     "key": "minecraft:oak_chest_boat",
-                    "id": 85,
+                    "id": 86,
                     "entityClass": "de.atlasmc.core.node.entity.CoreChestBoat"
                 }
             },
@@ -1127,7 +1119,7 @@
                 "name": "minecraft:pale_oak_chest_boat",
                 "parameters": {
                     "key": "minecraft:pale_oak_chest_boat",
-                    "id": 90,
+                    "id": 91,
                     "entityClass": "de.atlasmc.core.node.entity.CoreChestBoat"
                 }
             },
@@ -1135,7 +1127,7 @@
                 "name": "minecraft:spruce_chest_boat",
                 "parameters": {
                     "key": "minecraft:spruce_chest_boat",
-                    "id": 119,
+                    "id": 121,
                     "entityClass": "de.atlasmc.core.node.entity.CoreChestBoat"
                 }
             },
@@ -1183,7 +1175,7 @@
                 "name": "minecraft:ominous_item_spawner",
                 "parameters": {
                     "key": "minecraft:ominous_item_spawner",
-                    "id": 87,
+                    "id": 88,
                     "entityClass": "de.atlasmc.core.node.entity.CoreOminousItemSpawner"
                 }
             },
@@ -1191,8 +1183,32 @@
                 "name": "minecraft:wind_charge",
                 "parameters": {
                     "key": "minecraft:wind_charge",
-                    "id": 136,
+                    "id": 138,
                     "entityClass": "de.atlasmc.core.node.entity.CoreWindCharge"
+                }
+            },
+            {
+                "name": "minecraft:lingering_potion",
+                "parameters": {
+                    "key": "minecraft:lingering_potion",
+                    "id": 101,
+                    "entityClass": "de.atlasmc.core.node.entity.CorePotion"
+                }
+            },
+            {
+                "name": "minecraft:splash_potion",
+                "parameters": {
+                    "key": "minecraft:splash_potion",
+                    "id": 100,
+                    "entityClass": "de.atlasmc.core.node.entity.CorePotion"
+                }
+            },
+            {
+                "name": "minecraft:happy_ghast",
+                "parameters": {
+                    "key": "minecraft:happy_ghast",
+                    "id": 56,
+                    "entityClass": "de.atlasmc.core.node.entity.CoreHappyGhast"
                 }
             }
         ]

@@ -7,17 +7,17 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
-public class PacketCompressort extends MessageToByteEncoder<ByteBuf> {
+public class PacketCompressor extends MessageToByteEncoder<ByteBuf> {
 
 	private final Deflater def;
 	private final byte[] buf;
 	private final int threshold;
 	
-	public PacketCompressort(int threshold) {
+	public PacketCompressor(int threshold) {
 		this(threshold, 8192);
 	}
 	
-	public PacketCompressort(int threshold, int bufsize) {
+	public PacketCompressor(int threshold, int bufsize) {
 		this.threshold = threshold;
 		this.def = new Deflater();
 		this.buf = new byte[8192];

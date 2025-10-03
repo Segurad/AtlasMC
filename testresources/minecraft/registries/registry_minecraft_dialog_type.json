@@ -1,0 +1,17 @@
+{
+    "minecraft:confirmation": {
+        "protocol_id": 4
+    },
+    "minecraft:dialog_list": {
+        "protocol_id": 2
+    },
+    "minecraft:multi_action": {
+        "protocol_id": 3
+    },
+    "minecraft:notice": {
+        "protocol_id": 0
+    },
+    "minecraft:server_links": {
+        "protocol_id": 1
+    }
+}

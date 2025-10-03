@@ -1,4 +1,5 @@
 {
+    "clear_dialog": 17,
     "cookie_request": 0,
     "custom_payload": 1,
     "custom_report_details": 15,
@@ -12,6 +13,7 @@
     "resource_pack_push": 9,
     "select_known_packs": 14,
     "server_links": 16,
+    "show_dialog": 18,
     "store_cookie": 10,
     "transfer": 11,
     "update_enabled_features": 12,

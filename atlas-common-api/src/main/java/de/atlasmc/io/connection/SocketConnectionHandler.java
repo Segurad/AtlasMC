@@ -11,7 +11,7 @@ import javax.crypto.SecretKey;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.Protocol;
 import de.atlasmc.io.netty.channel.ErrorHandler;
-import de.atlasmc.io.netty.channel.PacketCompressort;
+import de.atlasmc.io.netty.channel.PacketCompressor;
 import de.atlasmc.io.netty.channel.PacketDecoder;
 import de.atlasmc.io.netty.channel.PacketDecompressor;
 import de.atlasmc.io.netty.channel.PacketDecryptor;
@@ -24,7 +24,6 @@ import de.atlasmc.io.protocol.handshake.HandshakeProtocol;
 import de.atlasmc.log.Log;
 import de.atlasmc.util.annotation.ThreadSafe;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
@@ -70,6 +69,8 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 	protected final SocketChannel channel;
 	private volatile boolean encryption;
 	private final Queue<Object> queue; // contains Packet and FuturePacket
+	private volatile PacketDecompressor decompressor; // use lock over this
+	private volatile PacketCompressor compressor; // use lock over this
 	
 	public SocketConnectionHandler(SocketChannel channel, Log log) {
 		this(channel, log, HandshakeProtocol.DEFAULT_PROTOCOL);
@@ -180,7 +181,7 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 	}
 	
 	@Override
-	public void setCompression(int threshold) {
+	public void setCompressionThreshold(int threshold) {
 		if (threshold < 0)
 			threshold = 0;
 		if (compressionThreshold == threshold)
@@ -189,16 +190,51 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 			if (compressionThreshold == threshold)
 				return;
 			compressionThreshold = threshold;
-			if (threshold == 0) {
-				ChannelPipeline pipe = channel.pipeline();
-				pipe.remove(CHANNEL_PIPE_PACKET_COMPRESSOR);
-				pipe.remove(CHANNEL_PIPE_PACKET_DECOMPRESSOR);
-			} else {
-				channel.pipeline()
-				.addAfter(CHANNEL_PIPE_PACKET_LENGTH_DECODER, CHANNEL_PIPE_PACKET_DECOMPRESSOR, new PacketDecompressor())
-				.addAfter(CHANNEL_PIPE_PACKET_LENGTH_ENCODER, CHANNEL_PIPE_PACKET_COMPRESSOR, new PacketCompressort(threshold));
+			if (hasCompression()) {
+				setCompression(false);
+				setCompression(true);
 			}
 		}
+	}
+	
+	@Override
+	public synchronized void setCompression(boolean enbale) {
+		PacketCompressor compressor = this.compressor;
+		if (compressor != null == enbale)
+			return;
+		if (enbale) {
+			compressor = new PacketCompressor(compressionThreshold);
+			channel.pipeline().addAfter(CHANNEL_PIPE_PACKET_LENGTH_ENCODER, CHANNEL_PIPE_PACKET_COMPRESSOR, compressor);
+			this.compressor = compressor;
+		} else {
+			channel.pipeline().remove(compressor);
+			this.compressor = null;
+		}
+	}
+	
+	@Override
+	public synchronized void setDecompression(boolean enable) {
+		PacketDecompressor decompressor = this.decompressor;
+		if (decompressor != null == enable)
+			return;
+		if (enable) {
+			decompressor = new PacketDecompressor();
+			channel.pipeline().addAfter(CHANNEL_PIPE_PACKET_LENGTH_DECODER, CHANNEL_PIPE_PACKET_DECOMPRESSOR, decompressor);
+			this.decompressor = decompressor;
+		} else {
+			channel.pipeline().remove(decompressor);
+			this.decompressor = null;
+		}
+	}
+	
+	@Override
+	public boolean hasCompression() {
+		return compressor != null;
+	}
+	
+	@Override
+	public boolean hasDecompression() {
+		return decompressor != null;
 	}
 	
 	static class FuturePacket {

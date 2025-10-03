@@ -1,7 +1,7 @@
 package de.atlasmc.node.block.data.property;
 
 import de.atlasmc.node.block.data.BlockData;
-import de.atlasmc.node.block.data.type.PinkPetals;
+import de.atlasmc.node.block.data.type.Flower;
 
 class FlowerAmountProperty extends AbstractIntProperty {
 
@@ -11,20 +11,20 @@ class FlowerAmountProperty extends AbstractIntProperty {
 
 	@Override
 	public void set(BlockData data, Integer value) {
-		if (data instanceof PinkPetals petals)
+		if (data instanceof Flower petals)
 			petals.setFlowerAmount(value);
 	}
 
 	@Override
 	public Integer get(BlockData data) {
-		if (data instanceof PinkPetals petals)
+		if (data instanceof Flower petals)
 			return petals.getFlowerAmount();
 		return null;
 	}
 
 	@Override
 	public boolean supports(BlockData data) {
-		return data instanceof PinkPetals;
+		return data instanceof Flower;
 	}
 
 }

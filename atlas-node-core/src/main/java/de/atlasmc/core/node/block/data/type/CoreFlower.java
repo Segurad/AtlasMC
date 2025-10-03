@@ -5,9 +5,9 @@ import java.util.List;
 import de.atlasmc.core.node.block.data.CoreDirectional4Faces;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.property.BlockDataProperty;
-import de.atlasmc.node.block.data.type.PinkPetals;
+import de.atlasmc.node.block.data.type.Flower;
 
-public class CorePinkPetals extends CoreDirectional4Faces implements PinkPetals {
+public class CoreFlower extends CoreDirectional4Faces implements Flower {
 
 	protected static final List<BlockDataProperty<?>> PROPERTIES;
 	
@@ -17,14 +17,14 @@ public class CorePinkPetals extends CoreDirectional4Faces implements PinkPetals 
 	
 	private int flowerAmount;
 	
-	public CorePinkPetals(BlockType type) {
+	public CoreFlower(BlockType type) {
 		super(type);
 		flowerAmount = 1;
 	}
 	
 	@Override
-	public CorePinkPetals clone() {
-		return (CorePinkPetals) super.clone();
+	public CoreFlower clone() {
+		return (CoreFlower) super.clone();
 	}
 
 	@Override

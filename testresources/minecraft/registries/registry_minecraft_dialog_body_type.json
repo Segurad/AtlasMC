@@ -1,0 +1,8 @@
+{
+    "minecraft:item": {
+        "protocol_id": 0
+    },
+    "minecraft:plain_message": {
+        "protocol_id": 1
+    }
+}

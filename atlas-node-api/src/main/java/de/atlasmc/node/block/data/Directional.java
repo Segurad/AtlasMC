@@ -3,13 +3,16 @@ package de.atlasmc.node.block.data;
 import java.util.Set;
 
 import de.atlasmc.node.block.BlockFace;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Directional extends BlockData {
 	
-	public Set<BlockFace> getFaces();
+	@NotNull
+	Set<BlockFace> getFaces();
 	
-	public BlockFace getFacing();
+	@NotNull
+	BlockFace getFacing();
 	
-	public void setFacing(BlockFace face);
+	void setFacing(@NotNull BlockFace face);
 
 }

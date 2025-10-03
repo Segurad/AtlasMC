@@ -625,10 +625,10 @@
                 }
             },
             {
-                "name": "atlas:pink_petals",
+                "name": "atlas:flower",
                 "parameters": {
-                    "dataInterface": "de.atlasmc.node.block.data.type.PinkPetals",
-                    "data": "de.atlasmc.core.node.block.data.type.CorePinkPetals"
+                    "dataInterface": "de.atlasmc.node.block.data.type.Flower",
+                    "data": "de.atlasmc.core.node.block.data.type.CoreFlower"
                 }
             },
             {
@@ -776,6 +776,27 @@
                 "parameters": {
                     "dataInterface": "de.atlasmc.node.block.data.type.CreakingHeart",
                     "data": "de.atlasmc.core.node.block.data.type.CoreCreakingHeart"
+                }
+            },
+            {
+                "name": "atlas:dired_ghast",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.node.block.data.type.DriedGhast",
+                    "data": "de.atlasmc.core.node.block.data.type.CoreDriedGhast"
+                }
+            },
+            {
+                "name": "atlas:leaf_litter",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.node.block.data.type.LeafLitter",
+                    "data": "de.atlasmc.core.node.block.data.type.CoreLeafLitter"
+                }
+            },
+            {
+                "name": "atlas:test_block",
+                "parameters": {
+                    "dataInterface": "de.atlasmc.node.block.data.type.TestBlock",
+                    "data": "de.atlasmc.core.node.block.data.type.CoreTestBlock"
                 }
             }
         ]

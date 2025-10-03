@@ -125,6 +125,12 @@
     "minecraft:structure_block": {
         "protocol_id": 21
     },
+    "minecraft:test_block": {
+        "protocol_id": 45
+    },
+    "minecraft:test_instance_block": {
+        "protocol_id": 46
+    },
     "minecraft:trapped_chest": {
         "protocol_id": 2
     },

@@ -5,6 +5,9 @@
     "minecraft:attached_to_leaves": {
         "protocol_id": 7
     },
+    "minecraft:attached_to_logs": {
+        "protocol_id": 9
+    },
     "minecraft:beehive": {
         "protocol_id": 5
     },
@@ -19,6 +22,9 @@
     },
     "minecraft:pale_moss": {
         "protocol_id": 2
+    },
+    "minecraft:place_on_ground": {
+        "protocol_id": 8
     },
     "minecraft:trunk_vine": {
         "protocol_id": 0

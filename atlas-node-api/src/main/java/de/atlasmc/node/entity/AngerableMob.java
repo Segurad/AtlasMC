@@ -1,6 +1,5 @@
-package de.atlasmc.node.entity.data;
+package de.atlasmc.node.entity;
 
-import de.atlasmc.node.entity.LivingEntity;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface AngerableMob extends LivingEntity {

@@ -156,7 +156,7 @@
         "protocol_id": 51
     },
     "minecraft:fishing_bobber": {
-        "protocol_id": 148
+        "protocol_id": 150
     },
     "minecraft:fox": {
         "protocol_id": 52
@@ -171,279 +171,285 @@
         "protocol_id": 55
     },
     "minecraft:giant": {
-        "protocol_id": 56
-    },
-    "minecraft:glow_item_frame": {
         "protocol_id": 57
     },
-    "minecraft:glow_squid": {
+    "minecraft:glow_item_frame": {
         "protocol_id": 58
     },
-    "minecraft:goat": {
+    "minecraft:glow_squid": {
         "protocol_id": 59
     },
-    "minecraft:guardian": {
+    "minecraft:goat": {
         "protocol_id": 60
     },
-    "minecraft:hoglin": {
+    "minecraft:guardian": {
         "protocol_id": 61
     },
-    "minecraft:hopper_minecart": {
+    "minecraft:happy_ghast": {
+        "protocol_id": 56
+    },
+    "minecraft:hoglin": {
         "protocol_id": 62
     },
-    "minecraft:horse": {
+    "minecraft:hopper_minecart": {
         "protocol_id": 63
     },
-    "minecraft:husk": {
+    "minecraft:horse": {
         "protocol_id": 64
     },
-    "minecraft:illusioner": {
+    "minecraft:husk": {
         "protocol_id": 65
     },
-    "minecraft:interaction": {
+    "minecraft:illusioner": {
         "protocol_id": 66
     },
-    "minecraft:iron_golem": {
+    "minecraft:interaction": {
         "protocol_id": 67
     },
-    "minecraft:item": {
+    "minecraft:iron_golem": {
         "protocol_id": 68
     },
-    "minecraft:item_display": {
+    "minecraft:item": {
         "protocol_id": 69
     },
-    "minecraft:item_frame": {
+    "minecraft:item_display": {
         "protocol_id": 70
     },
-    "minecraft:jungle_boat": {
+    "minecraft:item_frame": {
         "protocol_id": 71
     },
-    "minecraft:jungle_chest_boat": {
+    "minecraft:jungle_boat": {
         "protocol_id": 72
     },
-    "minecraft:leash_knot": {
+    "minecraft:jungle_chest_boat": {
         "protocol_id": 73
     },
-    "minecraft:lightning_bolt": {
+    "minecraft:leash_knot": {
         "protocol_id": 74
     },
-    "minecraft:llama": {
+    "minecraft:lightning_bolt": {
         "protocol_id": 75
     },
-    "minecraft:llama_spit": {
+    "minecraft:lingering_potion": {
+        "protocol_id": 101
+    },
+    "minecraft:llama": {
         "protocol_id": 76
     },
-    "minecraft:magma_cube": {
+    "minecraft:llama_spit": {
         "protocol_id": 77
     },
-    "minecraft:mangrove_boat": {
+    "minecraft:magma_cube": {
         "protocol_id": 78
     },
-    "minecraft:mangrove_chest_boat": {
+    "minecraft:mangrove_boat": {
         "protocol_id": 79
     },
-    "minecraft:marker": {
+    "minecraft:mangrove_chest_boat": {
         "protocol_id": 80
     },
-    "minecraft:minecart": {
+    "minecraft:marker": {
         "protocol_id": 81
     },
-    "minecraft:mooshroom": {
+    "minecraft:minecart": {
         "protocol_id": 82
     },
-    "minecraft:mule": {
+    "minecraft:mooshroom": {
         "protocol_id": 83
     },
-    "minecraft:oak_boat": {
+    "minecraft:mule": {
         "protocol_id": 84
     },
-    "minecraft:oak_chest_boat": {
+    "minecraft:oak_boat": {
         "protocol_id": 85
     },
-    "minecraft:ocelot": {
+    "minecraft:oak_chest_boat": {
         "protocol_id": 86
     },
-    "minecraft:ominous_item_spawner": {
+    "minecraft:ocelot": {
         "protocol_id": 87
     },
-    "minecraft:painting": {
+    "minecraft:ominous_item_spawner": {
         "protocol_id": 88
     },
-    "minecraft:pale_oak_boat": {
+    "minecraft:painting": {
         "protocol_id": 89
     },
-    "minecraft:pale_oak_chest_boat": {
+    "minecraft:pale_oak_boat": {
         "protocol_id": 90
     },
-    "minecraft:panda": {
+    "minecraft:pale_oak_chest_boat": {
         "protocol_id": 91
     },
-    "minecraft:parrot": {
+    "minecraft:panda": {
         "protocol_id": 92
     },
-    "minecraft:phantom": {
+    "minecraft:parrot": {
         "protocol_id": 93
     },
-    "minecraft:pig": {
+    "minecraft:phantom": {
         "protocol_id": 94
     },
-    "minecraft:piglin": {
+    "minecraft:pig": {
         "protocol_id": 95
     },
-    "minecraft:piglin_brute": {
+    "minecraft:piglin": {
         "protocol_id": 96
     },
-    "minecraft:pillager": {
+    "minecraft:piglin_brute": {
         "protocol_id": 97
     },
-    "minecraft:player": {
-        "protocol_id": 147
-    },
-    "minecraft:polar_bear": {
+    "minecraft:pillager": {
         "protocol_id": 98
     },
-    "minecraft:potion": {
+    "minecraft:player": {
+        "protocol_id": 149
+    },
+    "minecraft:polar_bear": {
         "protocol_id": 99
     },
     "minecraft:pufferfish": {
-        "protocol_id": 100
-    },
-    "minecraft:rabbit": {
-        "protocol_id": 101
-    },
-    "minecraft:ravager": {
         "protocol_id": 102
     },
-    "minecraft:salmon": {
+    "minecraft:rabbit": {
         "protocol_id": 103
     },
-    "minecraft:sheep": {
+    "minecraft:ravager": {
         "protocol_id": 104
     },
-    "minecraft:shulker": {
+    "minecraft:salmon": {
         "protocol_id": 105
     },
-    "minecraft:shulker_bullet": {
+    "minecraft:sheep": {
         "protocol_id": 106
     },
-    "minecraft:silverfish": {
+    "minecraft:shulker": {
         "protocol_id": 107
     },
-    "minecraft:skeleton": {
+    "minecraft:shulker_bullet": {
         "protocol_id": 108
     },
-    "minecraft:skeleton_horse": {
+    "minecraft:silverfish": {
         "protocol_id": 109
     },
-    "minecraft:slime": {
+    "minecraft:skeleton": {
         "protocol_id": 110
     },
-    "minecraft:small_fireball": {
+    "minecraft:skeleton_horse": {
         "protocol_id": 111
     },
-    "minecraft:sniffer": {
+    "minecraft:slime": {
         "protocol_id": 112
     },
-    "minecraft:snow_golem": {
-        "protocol_id": 114
-    },
-    "minecraft:snowball": {
+    "minecraft:small_fireball": {
         "protocol_id": 113
     },
-    "minecraft:spawner_minecart": {
-        "protocol_id": 115
+    "minecraft:sniffer": {
+        "protocol_id": 114
     },
-    "minecraft:spectral_arrow": {
+    "minecraft:snow_golem": {
         "protocol_id": 116
     },
-    "minecraft:spider": {
+    "minecraft:snowball": {
+        "protocol_id": 115
+    },
+    "minecraft:spawner_minecart": {
         "protocol_id": 117
     },
-    "minecraft:spruce_boat": {
+    "minecraft:spectral_arrow": {
         "protocol_id": 118
     },
-    "minecraft:spruce_chest_boat": {
+    "minecraft:spider": {
         "protocol_id": 119
     },
-    "minecraft:squid": {
+    "minecraft:splash_potion": {
+        "protocol_id": 100
+    },
+    "minecraft:spruce_boat": {
         "protocol_id": 120
     },
-    "minecraft:stray": {
+    "minecraft:spruce_chest_boat": {
         "protocol_id": 121
     },
-    "minecraft:strider": {
+    "minecraft:squid": {
         "protocol_id": 122
     },
-    "minecraft:tadpole": {
+    "minecraft:stray": {
         "protocol_id": 123
     },
-    "minecraft:text_display": {
+    "minecraft:strider": {
         "protocol_id": 124
     },
-    "minecraft:tnt": {
+    "minecraft:tadpole": {
         "protocol_id": 125
     },
-    "minecraft:tnt_minecart": {
+    "minecraft:text_display": {
         "protocol_id": 126
     },
-    "minecraft:trader_llama": {
+    "minecraft:tnt": {
         "protocol_id": 127
     },
-    "minecraft:trident": {
+    "minecraft:tnt_minecart": {
         "protocol_id": 128
     },
-    "minecraft:tropical_fish": {
+    "minecraft:trader_llama": {
         "protocol_id": 129
     },
-    "minecraft:turtle": {
+    "minecraft:trident": {
         "protocol_id": 130
     },
-    "minecraft:vex": {
+    "minecraft:tropical_fish": {
         "protocol_id": 131
     },
-    "minecraft:villager": {
+    "minecraft:turtle": {
         "protocol_id": 132
     },
-    "minecraft:vindicator": {
+    "minecraft:vex": {
         "protocol_id": 133
     },
-    "minecraft:wandering_trader": {
+    "minecraft:villager": {
         "protocol_id": 134
     },
-    "minecraft:warden": {
+    "minecraft:vindicator": {
         "protocol_id": 135
     },
-    "minecraft:wind_charge": {
+    "minecraft:wandering_trader": {
         "protocol_id": 136
     },
-    "minecraft:witch": {
+    "minecraft:warden": {
         "protocol_id": 137
     },
-    "minecraft:wither": {
+    "minecraft:wind_charge": {
         "protocol_id": 138
     },
-    "minecraft:wither_skeleton": {
+    "minecraft:witch": {
         "protocol_id": 139
     },
-    "minecraft:wither_skull": {
+    "minecraft:wither": {
         "protocol_id": 140
     },
-    "minecraft:wolf": {
+    "minecraft:wither_skeleton": {
         "protocol_id": 141
     },
-    "minecraft:zoglin": {
+    "minecraft:wither_skull": {
         "protocol_id": 142
     },
-    "minecraft:zombie": {
+    "minecraft:wolf": {
         "protocol_id": 143
     },
-    "minecraft:zombie_horse": {
+    "minecraft:zoglin": {
         "protocol_id": 144
     },
-    "minecraft:zombie_villager": {
+    "minecraft:zombie": {
         "protocol_id": 145
     },
-    "minecraft:zombified_piglin": {
+    "minecraft:zombie_horse": {
         "protocol_id": 146
+    },
+    "minecraft:zombie_villager": {
+        "protocol_id": 147
+    },
+    "minecraft:zombified_piglin": {
+        "protocol_id": 148
     }
 }

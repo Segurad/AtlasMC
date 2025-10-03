@@ -1,0 +1,11 @@
+{
+    "minecraft:biome": {
+        "protocol_id": 2
+    },
+    "minecraft:moon_brightness": {
+        "protocol_id": 1
+    },
+    "minecraft:structure": {
+        "protocol_id": 0
+    }
+}
