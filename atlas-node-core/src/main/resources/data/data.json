@@ -4,7 +4,7 @@
 		"tile_entity_factories.json",
 		"block_types.json",
 		"item_component_factories.json",
-		"component_effects.json"
+		"component_effects.json",
 		"item_types.json",
 		"entity_types.json",
 		"potion_effect_types.json",

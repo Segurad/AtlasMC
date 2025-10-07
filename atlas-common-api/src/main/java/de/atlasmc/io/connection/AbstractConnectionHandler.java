@@ -23,8 +23,8 @@ public abstract class AbstractConnectionHandler implements ConnectionHandler {
 	
 	public AbstractConnectionHandler(Log log, Protocol protocol) {
 		this.log = Objects.requireNonNull(log);
-		this.listeners = new PacketListener[2];
 		this.protocol = Objects.requireNonNull(protocol);
+		this.listeners = new PacketListener[2];
 		this.errHandler = IOExceptionHandler.UNHANDLED;
 	}
 

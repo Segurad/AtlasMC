@@ -1,6 +1,7 @@
 package de.atlasmc.core.node.io.protocol;
 
 import de.atlasmc.core.node.io.protocol.play.*;
+import de.atlasmc.io.AbstractProtocol;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.PacketListener;
 import de.atlasmc.node.io.protocol.PlayerConnection;
@@ -8,7 +9,7 @@ import de.atlasmc.node.io.protocol.ProtocolPlay;
 import de.atlasmc.node.io.protocol.play.PacketPlayIn;
 import de.atlasmc.node.io.protocol.play.PacketPlayOut;
 
-public class CoreProtocolPlay extends CoreAbstractProtocol<PacketPlayIn, PacketPlayOut> implements ProtocolPlay {
+public class CoreProtocolPlay extends AbstractProtocol<PacketPlayIn, PacketPlayOut> implements ProtocolPlay {
 	
 	@SuppressWarnings("unchecked")
 	public CoreProtocolPlay() {
@@ -208,6 +209,11 @@ public class CoreProtocolPlay extends CoreAbstractProtocol<PacketPlayIn, PacketP
 				new CorePacketOutSetPlayerInventory(),
 				new CorePacketOutTeleportVehicle()
 		});
+	}
+	
+	@Override
+	public int getVersion() {
+		return CoreProtocolAdapter.VERSION;
 	}
 
 	@Override

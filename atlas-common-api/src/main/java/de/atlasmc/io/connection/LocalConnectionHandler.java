@@ -67,12 +67,6 @@ public class LocalConnectionHandler extends AbstractConnectionHandler {
 	}
 
 	@Override
-	public Log getLogger() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void setDecompression(boolean enable) {
 		// TODO Auto-generated method stub
 		

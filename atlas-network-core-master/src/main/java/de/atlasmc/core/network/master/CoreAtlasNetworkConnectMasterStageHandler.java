@@ -1,8 +1,10 @@
 package de.atlasmc.core.network.master;
 
 import de.atlasmc.Atlas;
+import de.atlasmc.core.network.io.atlasprotocol.CoreAtlasProtocol;
 import de.atlasmc.core.network.master.node.CoreNodeManager;
 import de.atlasmc.core.network.master.server.CoreServerManager;
+import de.atlasmc.io.connection.LocalConnectionHandler;
 import de.atlasmc.master.AtlasMaster;
 import de.atlasmc.network.AtlasNetwork;
 import de.atlasmc.plugin.startup.StartupContext;
@@ -26,7 +28,8 @@ class CoreAtlasNetworkConnectMasterStageHandler implements StartupStageHandler {
 			.setProfileHandler(AtlasMaster.getProfileManager())
 			.setPermissionManager(AtlasMaster.getPermissionManager())
 			.setUUID(AtlasMaster.getUUID())
-			.setPublicKey(Atlas.getKeyPair().getPublic());
+			.setPublicKey(Atlas.getKeyPair().getPublic())
+			.setConnection(new LocalConnectionHandler(context.getLogger(), CoreAtlasProtocol.INSTANCE));
 	}
 	
 	@Override

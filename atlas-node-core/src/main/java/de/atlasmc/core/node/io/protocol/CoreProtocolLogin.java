@@ -11,6 +11,7 @@ import de.atlasmc.core.node.io.protocol.login.CorePacketOutEncryptionRequest;
 import de.atlasmc.core.node.io.protocol.login.CorePacketOutLoginPluginRequest;
 import de.atlasmc.core.node.io.protocol.login.CorePacketOutLoginSuccess;
 import de.atlasmc.core.node.io.protocol.login.CorePacketOutSetCompression;
+import de.atlasmc.io.AbstractProtocol;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.PacketInbound;
 import de.atlasmc.io.PacketListener;
@@ -18,7 +19,7 @@ import de.atlasmc.io.PacketOutbound;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.ProtocolLogin;
 
-public class CoreProtocolLogin extends CoreAbstractProtocol<PacketInbound, PacketOutbound> implements ProtocolLogin {
+public class CoreProtocolLogin extends AbstractProtocol<PacketInbound, PacketOutbound> implements ProtocolLogin {
 	
 	@SuppressWarnings("unchecked")
 	public CoreProtocolLogin() {
@@ -36,6 +37,11 @@ public class CoreProtocolLogin extends CoreAbstractProtocol<PacketInbound, Packe
 				new CorePacketOutLoginPluginRequest(),
 				new CorePacketOutCookieRequest()
 		});
+	}
+	
+	@Override
+	public int getVersion() {
+		return CoreProtocolAdapter.VERSION;
 	}
 
 	@Override

@@ -3,15 +3,20 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.atlas-project</groupId>
+		<groupId>de.atlasmc</groupId>
 		<artifactId>atlas-mc</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>atlas-network-core-common</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>org.atlas-project</groupId>
+			<groupId>de.atlasmc</groupId>
 			<artifactId>atlas-network-api</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>de.atlasmc</groupId>
+			<artifactId>atlas-node-api</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

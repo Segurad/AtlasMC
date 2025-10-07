@@ -50,6 +50,7 @@ public interface Protocol {
 	 * @param o
 	 * @return listener
 	 */
+	@Nullable
 	PacketListener createDefaultPacketListenerIn(Object o);
 	
 	/**
@@ -57,6 +58,7 @@ public interface Protocol {
 	 * @param o
 	 * @return listener
 	 */
+	@Nullable
 	PacketListener createDefaultPacketListenerOut(Object o);
 
 }

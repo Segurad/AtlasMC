@@ -8,7 +8,7 @@ import de.atlasmc.io.connection.ConnectionHandler;
 @FunctionalInterface
 public interface IOExceptionHandler {
 	
-	public static IOExceptionHandler UNHANDLED = (con, cause) -> { return false; };
+	public static final IOExceptionHandler UNHANDLED = (con, cause) -> { return false; };
 	
 	/**
 	 * 
@@ -16,6 +16,6 @@ public interface IOExceptionHandler {
 	 * @param cause the exception
 	 * @return true if handled
 	 */
-	public boolean handle(ConnectionHandler con, Throwable cause);
+	boolean handle(ConnectionHandler con, Throwable cause);
 
 }
