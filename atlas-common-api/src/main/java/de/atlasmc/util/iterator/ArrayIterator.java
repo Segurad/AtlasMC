@@ -5,12 +5,12 @@ import java.util.Iterator;
 public class ArrayIterator<E> implements Iterator<E> {
 
 	private final E[] array;
-	private int index;
+	private int index = -1;
 	private final int end;
 	private final boolean canRemove;
 	
-	public ArrayIterator(E[] array, boolean canRemove) {
-		this(array, canRemove, 0, array.length);
+	public ArrayIterator(E[] array, boolean canModify) {
+		this(array, canModify, 0, array.length);
 	}
 	
 	public ArrayIterator(E[] array, boolean canRemove, int from, int to) {
@@ -22,27 +22,22 @@ public class ArrayIterator<E> implements Iterator<E> {
 	
 	@Override
 	public boolean hasNext() {
-		for (int i = index+1; i < end; i++)
-			if (array[i] != null)
-				return true;
-		return false;
+		return index < end;
 	}
 
 	@Override
 	public E next() {
+		if (!hasNext())
+			throw new IndexOutOfBoundsException();
 		index++;
-		for (; index < end; index++)
-			if (array[index] != null)
-				return array[index];
-		return null;
+		return array[index];
+
 	}
 
 	@Override
 	public void remove() {
 		if (canRemove)
 			array[index] = null;
-		else
-			Iterator.super.remove();
 	}
 	
 }

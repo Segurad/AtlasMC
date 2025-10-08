@@ -2,12 +2,12 @@ package de.atlasmc.node.event.socket;
 
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.io.connection.ServerSocketConnectionHandler;
-import de.atlasmc.node.event.ProxyHandlerList;
+import de.atlasmc.node.event.SocketHandlerList;
 import de.atlasmc.node.io.socket.NodeSocket;
 
 public class PlayerLoginAtemptEvent extends SocketEvent {
 
-	private static final ProxyHandlerList handlers = new ProxyHandlerList();
+	private static final SocketHandlerList handlers = new SocketHandlerList();
 	
 	private final ConnectionHandler handler;
 	
@@ -21,11 +21,11 @@ public class PlayerLoginAtemptEvent extends SocketEvent {
 	}
 
 	@Override
-	public ProxyHandlerList getHandlers() {
+	public SocketHandlerList getHandlers() {
 		return handlers;
 	}
 	
-	public static ProxyHandlerList getHandlerList() {
+	public static SocketHandlerList getHandlerList() {
 		return handlers;
 	}
 

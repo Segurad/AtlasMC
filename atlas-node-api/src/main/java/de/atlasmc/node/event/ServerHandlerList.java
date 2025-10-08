@@ -1,8 +1,9 @@
 package de.atlasmc.node.event;
 
 import java.lang.ref.WeakReference;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.event.Event;
 import de.atlasmc.event.EventExecutor;
@@ -14,38 +15,25 @@ import de.atlasmc.log.Log;
 import de.atlasmc.network.server.ServerGroup;
 import de.atlasmc.node.server.LocalServer;
 import de.atlasmc.plugin.PluginHandle;
-import de.atlasmc.util.ConcurrentLinkedList;
-import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
 import de.atlasmc.util.annotation.NotNull;
-import de.atlasmc.util.map.ConcurrentLinkedListMultimap;
 
 public class ServerHandlerList extends HandlerList {
 	
-	private final ConcurrentLinkedListMultimap<ServerGroup, EventExecutor> groupExecutors;
-	private final ConcurrentLinkedListMultimap<LocalServer, EventExecutor> serverExecutors;
+	private final Map<ServerGroup, EventExecutor[]> groupExecutors;
+	private final Map<LocalServer, EventExecutor[]> serverExecutors;
 	
 	public ServerHandlerList() {
 		super();
-		this.groupExecutors = new ConcurrentLinkedListMultimap<>();
-		this.serverExecutors = new ConcurrentLinkedListMultimap<>();
+		this.groupExecutors = new ConcurrentHashMap<>();
+		this.serverExecutors = new ConcurrentHashMap<>();
 	}
 	
 	public void registerExecutor(ServerGroup group, EventExecutor executor) {
-		if (group == null || executor == null) 
-			return;
-		if (groupExecutors.containsKey(group)) {
-			register(groupExecutors.get(group), executor);
-		} else 
-			groupExecutors.put(group, executor);
+		register(group, groupExecutors, executor);
 	}
 	
 	public void registerExecutor(LocalServer server, EventExecutor executor) {
-		if (server == null || executor == null) 
-			return;
-		if (serverExecutors.containsKey(server)) {
-			register(serverExecutors.get(server), executor);
-		} else 
-			serverExecutors.put(server, executor);
+		register(server, serverExecutors, executor);
 	}
 	
 	@Override
@@ -62,31 +50,21 @@ public class ServerHandlerList extends HandlerList {
 	}
 	
 	/**
-	 * Returns the LinkedListIterator or null if ServerGroup not present
+	 * Returns the iterator or null if ServerGroup not present
 	 * @param group
-	 * @return LinkedListIterator or null
+	 * @return iterator or null
 	 */
-	public LinkedListIterator<EventExecutor> getExecutors(@NotNull ServerGroup group) {
-		if (group == null) 
-			return null;
-		final ConcurrentLinkedList<EventExecutor> list = groupExecutors.get(group);
-		if (list == null || list.isEmpty()) 
-			return null;
-		return list.iterator();
+	public Iterator<EventExecutor> getExecutors(@NotNull ServerGroup group) {
+		return getContextIterator(group, groupExecutors);
 	}
 	
 	/**
-	 * Returns the LinkedListIterator or null if LocalServer not present
+	 * Returns the iterator or null if LocalServer not present
 	 * @param server
-	 * @return LinkedListIterator or null
+	 * @return iterator or null
 	 */
-	public LinkedListIterator<EventExecutor> getExecutors(@NotNull LocalServer server) {
-		if (server == null) 
-			return null;
-		final ConcurrentLinkedList<EventExecutor> list = serverExecutors.get(server);
-		if (list == null || list.isEmpty()) 
-			return null;
-		return list.iterator();
+	public Iterator<EventExecutor> getExecutors(@NotNull LocalServer server) {
+		return getContextIterator(server, serverExecutors);
 	}
 	
 	@Override
@@ -94,54 +72,52 @@ public class ServerHandlerList extends HandlerList {
 		@SuppressWarnings("unchecked")
 		final LocalServer server = ((GenericEvent<LocalServer, ?>) event).getEventSource();
 		final Log log = server.getLogger();
-		final LinkedListIterator<EventExecutor> groupexes = getExecutors(server.getGroup());
-		final LinkedListIterator<EventExecutor> serverexes = getExecutors(server);
-		final LinkedListIterator<EventExecutor> globalexes = getExecutors();
+		final EventExecutor[] groupexes = this.groupExecutors.get(server.getGroup());
+		final EventExecutor[] serverexes = this.serverExecutors.get(server);
+		final EventExecutor[] globalexes = this.globalExecutors;
+		final EventExecutor defaultHandler = this.defaultExecutor;
 		if (groupexes != null || serverexes != null || globalexes != null) {
-			for (EventPriority prio : EventPriority.getValues()) {
-				if (prio == EventPriority.MONITOR)
-					fireDefaultExecutor(event, log);
-				fireEvents(serverexes, prio, event, cancelled, log);
-				fireEvents(groupexes, prio, event, cancelled, log);
-				fireEvents(globalexes, prio, event, cancelled, log);
+			int serverIndex = 0;
+			int groupIndex = 0;
+			int globalIndex = 0;
+			final int monitor = EventPriority.MONITOR.ordinal();
+			for (int i = 0; i <= monitor; i++) {
+				if (i == monitor)
+					fireDefaultExecutor(defaultHandler, event, log);
+				serverIndex = fireEvents(serverexes, serverIndex, i, event, cancelled, log);
+				groupIndex = fireEvents(groupexes, groupIndex, i, event, cancelled, log);
+				globalIndex = fireEvents(globalexes, globalIndex, i, event, cancelled, log);
 			}
 		} else {
-			fireDefaultExecutor(event, log);
+			fireDefaultExecutor(defaultHandler, event, log);
 		}
 	}
 	
 	@Override
-	public synchronized void unregisterListener(Listener listener) {
-		if (listener == null) 
-			return;
-		super.unregisterListener(listener);
-		for (ServerGroup group : groupExecutors.keySet()) {
-			Iterator<EventExecutor> it = groupExecutors.get(group).iterator();
-			while(it.hasNext()) {
-				EventExecutor exe = it.next();
-				if (exe.getListener() == listener) 
-					it.remove();
-			}
-		}
-		for (LocalServer server : serverExecutors.keySet()) {
-			internalUnregister(listener, serverExecutors.get(server));
-		}
+	public void unregisterListener(Listener listener) {
+		if (listener == null)
+			throw new IllegalArgumentException("Listener can not be null!");
+		modLock.lock();
+		globalExecutors = super.internalUnregister(listener, globalExecutors);
+		super.internalUnregister(listener, serverExecutors);
+		super.internalUnregister(listener, groupExecutors);
+		modLock.unlock();
 	}
 	
 	@Override
 	public synchronized void unregisterListener(PluginHandle plugin) {
-		super.unregisterListener(plugin);
-		for (Collection<EventExecutor> executors : groupExecutors.values()) {
-			internalUnregister(plugin, executors);
-		}
-		for (Collection<EventExecutor> executors : serverExecutors.values()) {
-			internalUnregister(plugin, executors);
-		}
+		if (plugin == null)
+			throw new IllegalArgumentException("Plugin can not be null!");
+		modLock.lock();
+		globalExecutors = super.internalUnregister(plugin, globalExecutors);
+		super.internalUnregister(plugin, serverExecutors);
+		super.internalUnregister(plugin, groupExecutors);
+		modLock.unlock();
 	}
 	
 	public static void unregisterServer(LocalServer server) {
 		if (server == null) 
-			return;
+			throw new IllegalArgumentException("Server can not be null!");
 		synchronized (HANDLERS) {
 			for (WeakReference<HandlerList> ref : HANDLERS) {
 				if (ref.refersTo(null))

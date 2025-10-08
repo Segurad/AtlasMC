@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.List;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.log.Log;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 
@@ -103,9 +102,6 @@ public interface Plugin extends PluginHandle {
 
 	@NotNull
 	File getFile();
-	
-	@NotNull
-	Log getLogger();
 	
 	@Nullable
 	InputStream getResourceAsStream(String name);

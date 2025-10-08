@@ -5,19 +5,21 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import de.atlasmc.Atlas;
 import de.atlasmc.log.Log;
 import de.atlasmc.plugin.PluginHandle;
-import de.atlasmc.util.ConcurrentLinkedList;
-import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.annotation.ThreadSafe;
+import de.atlasmc.util.iterator.ArrayIterator;
 
 /**
  * This class holds all {@link EventExecutor} for the Event it is used
@@ -25,16 +27,18 @@ import de.atlasmc.util.annotation.ThreadSafe;
 @ThreadSafe
 public class HandlerList {
 	
+	protected static final EventExecutor[] EMPTY = new EventExecutor[0];
 	protected static final List<WeakReference<HandlerList>> HANDLERS = new CopyOnWriteArrayList<>();
 	private static final ReferenceQueue<HandlerList> REF_QUEUE = new ReferenceQueue<>();
 	
 	
-	private final ConcurrentLinkedList<EventExecutor> globalExecutors;
-	private EventExecutor defaultExecutor;
+	protected final Lock modLock = new ReentrantLock();
+	protected volatile EventExecutor[] globalExecutors;
+	protected volatile EventExecutor defaultExecutor;
 	
 	public HandlerList() {
 		this.defaultExecutor = EventExecutor.NULL_EXECUTOR;
-		this.globalExecutors = new ConcurrentLinkedList<>();
+		this.globalExecutors = EMPTY;
 		registerHandlerList();
 	}
 	
@@ -61,9 +65,9 @@ public class HandlerList {
 	 * @param event
 	 * @param log the logger error should be send to
 	 */
-	protected void fireDefaultExecutor(Event event, Log log) {
+	protected void fireDefaultExecutor(EventExecutor executor, Event event, Log log) {
 		try {
-			defaultExecutor.fireEvent(event);
+			executor.fireEvent(event);
 		} catch (InvocationTargetException ex) {
 			log.error("Error while event handling with default handler for: " + event.getName(), ex.getCause());
 		} catch (Exception ex) {
@@ -72,7 +76,7 @@ public class HandlerList {
 	}
 	
 	/**
-	 * Registers a HandlerList
+	 * Registers this HandlerList
 	 */
 	private final void registerHandlerList() {
 		removeStaleEntries();
@@ -97,26 +101,50 @@ public class HandlerList {
 	}
 	
 	/**
-	 * Inserts a executor to the list and groups it with other executors of the same priority
+	 * Creates a ordered copy of the given array with the executor inserted
 	 * @param exes
 	 * @param executor
 	 */
-	protected synchronized void register(ConcurrentLinkedList<EventExecutor> exes, EventExecutor executor) {
-		LinkedListIterator<EventExecutor> it = exes.iterator();
-		final int ordinal = executor.getPriority().ordinal();
-		while(it.hasNext()) {
-			EventExecutor exe = it.next();
-			if (exe.getPriority().ordinal() > ordinal) {
-				if (it.hasPrevious()) {
-					it.previous();
-					it.add(executor);
-					return;
-				}
-				exes.addFirst(executor);
-				return;
+	protected EventExecutor[] register(final EventExecutor[] exes, final EventExecutor executor) {
+		final int priority = executor.getPriority().ordinal();
+		int insertIndex = -1;
+		for (int i = 0; i < exes.length; i++) {
+			EventExecutor exe = exes[i];
+			if (exe == executor)
+				return exes; // no need for modification already present
+			if (exes[i].getPriority().ordinal() > priority) {
+				insertIndex = i;
+				break;
 			}
 		}
-		exes.add(executor);
+		EventExecutor[] newExes = new EventExecutor[exes.length + 1];
+		System.arraycopy(exes, 0, newExes, 0, insertIndex);
+		newExes[insertIndex] = executor;
+		System.arraycopy(exes, insertIndex, newExes, insertIndex + 1, exes.length - insertIndex);
+		return newExes;
+	}
+	
+	protected <T> void register(final T context, final Map<T, EventExecutor[]> contextExecutors, final EventExecutor executor) {
+		if (context == null)
+			throw new IllegalArgumentException("Context can not be null!");
+		if (executor == null)
+			throw new IllegalArgumentException("Executor can not be null!");
+		modLock.lock();
+		final EventExecutor[] executors = contextExecutors.get(context);
+		if (executors == null || executors.length == 0) {
+			contextExecutors.put(context, new EventExecutor[] { executor });
+		}
+		final EventExecutor[] newExecutors = register(executors, executor);
+		if (executors != newExecutors)
+			contextExecutors.put(context, newExecutors);
+		modLock.unlock();
+	}
+	
+	protected static <T> Iterator<EventExecutor> getContextIterator(T context, Map<T, EventExecutor[]> contextExecutors) {
+		if (context == null)
+			throw new IllegalArgumentException("Context can not be null!");
+		final EventExecutor[] list = contextExecutors.get(context);
+		return list == null || list.length == 0 ? null : new ArrayIterator<>(list, false);
 	}
 	
 	/**
@@ -124,10 +152,8 @@ public class HandlerList {
 	 * @return iterator or null
 	 */
 	@Nullable
-	public LinkedListIterator<EventExecutor> getExecutors() {
-		if (globalExecutors.isEmpty())
-			return null;
-		return globalExecutors.iterator();
+	public Iterator<EventExecutor> getExecutors() {
+		return new ArrayIterator<>(globalExecutors, false);
 	}
 	
 	/**
@@ -142,9 +168,8 @@ public class HandlerList {
 			if (event instanceof GenericEvent<?, ?> gEvent) {
 				if (!gEvent.getSyncThreadHolder().isSync())
 					throw new EventException("Tried to call sync event asynchronous!");
-			} else {
-				if (!Atlas.isMainThread())
-					throw new EventException("Tried to call sync event asynchronous!");
+			} else if (!Atlas.isMainThread()) {
+				throw new EventException("Tried to call sync event asynchronous!");
 			}
 		}
 		final HandlerList handlers = event.getHandlers();
@@ -158,21 +183,27 @@ public class HandlerList {
 	 * @param cancellable
 	 */
 	protected void callEvent(final Event event, boolean cancellable) {
-		final Log logger = Atlas.getLogger();
-		if (globalExecutors.isEmpty()) {
-			fireDefaultExecutor(event, logger);
+		final Log log = Atlas.getLogger();
+		final EventExecutor[] handlers = globalExecutors;
+		final EventExecutor defaultHandler = defaultExecutor;
+		if (handlers.length == 0) {
+			fireDefaultExecutor(defaultHandler, event, log);
 			return;
 		}
-		boolean defaultHandler = false;
+		fireExecutors(event, handlers, defaultHandler, log);
+	}
+	
+	protected void fireExecutors(final Event event, final EventExecutor[] executors, final EventExecutor defaultHandler, final Log log) {
+		boolean defaultHandlerFired = false;
 		for (EventExecutor exe : globalExecutors){
-			if (exe.getPriority() == EventPriority.MONITOR && !defaultHandler) {
-				defaultHandler = true;
-				fireDefaultExecutor(event, logger);
+			if (exe.getPriority() == EventPriority.MONITOR && !defaultHandlerFired) {
+				defaultHandlerFired = true;
+				fireDefaultExecutor(defaultHandler, event, log);
 			}
 			try {
 				exe.fireEvent(event);
 			} catch (Exception ex) {
-				exe.getPlugin().getPlugin().getLogger().error("Error while event handling for: " + event.getName(), ex);
+				exe.getPlugin().getLogger().error("Error while event handling for: " + event.getName(), ex);
 			}
 		}
 	}
@@ -184,23 +215,25 @@ public class HandlerList {
 	 * @param event event
 	 * @param log the logger all error should be send to
 	 * @param cancellable whether or not the event extends {@link Cancellable}
+	 * @return next index
 	 */
-	protected static void fireEvents(final LinkedListIterator<EventExecutor> executors, final EventPriority priority, final Event event, final boolean cancellable, Log log) {
-		if (executors == null || !executors.hasNext()) 
-			return;
-		final int prio = priority.ordinal();
-		for (EventExecutor exe = executors.peekNext(); exe != null; exe = executors.peekNext()) {
-			if (exe.getPriority().ordinal() > prio) 
-				break;
-			executors.gotoPeeked();
+	protected static int fireEvents(final EventExecutor[] executors, final int start, final int priority, final Event event, final boolean cancellable, Log log) {
+		if (start >= executors.length) 
+			return start;
+		final int length = executors.length;
+		for (int i = start; i < length; i++) {
+			EventExecutor exe = executors[i];
+			if (exe.getPriority().ordinal() > priority) 
+				return i;
 			if (exe.getIgnoreCancelled() && (!cancellable && ((Cancellable) event).isCancelled()))
 				continue;
 			try {
 				exe.fireEvent(event);
 			} catch (Exception ex) {
-				exe.getPlugin().getPlugin().getLogger().error("Error while event handling for: " + event.getName(), ex);
+				exe.getPlugin().getLogger().error("Error while event handling for: " + event.getName(), ex);
 			}
 		}
+		return length; // list fully iterated no executors left
 	}
 	
 	/**
@@ -213,7 +246,10 @@ public class HandlerList {
 			for (WeakReference<HandlerList> ref : HANDLERS) {
 				if (ref.refersTo(null))
 					continue;
-				ref.get().unregisterListener(listener);
+				HandlerList list = ref.get();
+				if (list == null)
+					continue;
+				list.unregisterListener(listener);
 			}
 		}
 	}
@@ -228,7 +264,10 @@ public class HandlerList {
 			for (WeakReference<HandlerList> ref : HANDLERS) {
 				if (ref.refersTo(null))
 					continue;
-				ref.get().unregisterListener(plugin);
+				HandlerList list = ref.get();
+				if (list == null)
+					continue;
+				list.unregisterListener(plugin);
 			}
 		}
 	}
@@ -237,37 +276,110 @@ public class HandlerList {
 	 * Unregisters the Listener from this HandlerList
 	 * @param listener
 	 */
-	public synchronized void unregisterListener(Listener listener) {
-		internalUnregister(listener, globalExecutors);
-	}
-	
-	public synchronized void unregisterListener(PluginHandle plugin) {
-		internalUnregister(plugin, globalExecutors);
-	}
-	
-	protected void internalUnregister(Listener listener, Collection<EventExecutor> executors) {
+	public void unregisterListener(Listener listener) {
 		if (listener == null)
-			return;
-		if (executors.isEmpty())
-			return;
-		Iterator<EventExecutor> it = executors.iterator();
-		while(it.hasNext()) {
-			EventExecutor exe = it.next();
-			if (exe.getListener() == listener) 
-				it.remove();
+			throw new IllegalArgumentException("Listener can not be null!");
+		modLock.lock();
+		globalExecutors = internalUnregister(listener, globalExecutors);
+		modLock.unlock();
+	}
+	
+	public void unregisterListener(PluginHandle plugin) {
+		if (plugin == null)
+			throw new IllegalArgumentException("Plugin can not be null!");
+		modLock.lock();
+		globalExecutors = internalUnregister(plugin, globalExecutors);
+		modLock.unlock();
+	}
+	
+	/**
+	 * 
+	 * @param listener
+	 * @param executors
+	 * @return
+	 */
+	protected static EventExecutor[] internalUnregister(final Listener listener, final EventExecutor[] executors) {
+		if (listener == null)
+			throw new IllegalArgumentException("Listener can not be null!");
+		final int length = executors.length;
+		if (length == 0)
+			return executors;
+		int newLength = length;
+		for (EventExecutor exe : executors) {
+			if (exe.getListener() == listener)
+				newLength--;
+		}
+		if (newLength == length)
+			return executors; // no modification required
+		if (newLength == 0)
+			return EMPTY;
+		final EventExecutor[] newExes = new EventExecutor[newLength];
+		for (int i = 0, j = 0; i < length; i++) {
+			EventExecutor exe = executors[i];
+			if (exe.getListener() == listener)
+				continue;
+			newExes[j++] = exe;
+		}
+		return executors;
+	}
+	
+	protected static void internalUnregister(final Listener listener, final Map<?, EventExecutor[]> contextExecutors) {
+		for (Entry<?, EventExecutor[]> entry : contextExecutors.entrySet()) {
+			final Object key = entry.getKey();
+			final EventExecutor[] executors = entry.getValue();
+			final EventExecutor[] newExecutors = internalUnregister(listener, executors);
+			if (executors == newExecutors)
+				continue;
+			if (newExecutors.length == 0) {
+				contextExecutors.remove(key, entry.getValue());
+			} else {
+				entry.setValue(newExecutors);
+			}
 		}
 	}
 	
-	protected void internalUnregister(PluginHandle plugin, Collection<EventExecutor> executors) {
+	/**
+	 * 
+	 * @param plugin
+	 * @param executors
+	 */
+	protected static EventExecutor[] internalUnregister(PluginHandle plugin, EventExecutor[] executors) {
 		if (plugin == null)
-			return;
-		if (executors.isEmpty())
-			return;
-		Iterator<EventExecutor> it = executors.iterator();
-		while(it.hasNext()) {
-			EventExecutor exe = it.next();
-			if (exe.getPlugin() == plugin) 
-				it.remove();
+			throw new IllegalArgumentException("Plugin can not be null!");
+		final int length = executors.length;
+		if (length == 0)
+			return executors;
+		int newLength = length;
+		for (EventExecutor exe : executors) {
+			if (exe.getPlugin() == plugin)
+				newLength--;
+		}
+		if (newLength == length)
+			return executors; // no modification required
+		if (newLength == 0)
+			return EMPTY;
+		final EventExecutor[] newExes = new EventExecutor[newLength];
+		for (int i = 0, j = 0; i < length; i++) {
+			EventExecutor exe = executors[i];
+			if (exe.getPlugin() == plugin)
+				continue;
+			newExes[j++] = exe;
+		}
+		return executors;
+	}
+	
+	protected static void internalUnregister(final PluginHandle plugin, final Map<?, EventExecutor[]> contextExecutors) {
+		for (Entry<?, EventExecutor[]> entry : contextExecutors.entrySet()) {
+			final Object key = entry.getKey();
+			final EventExecutor[] executors = entry.getValue();
+			final EventExecutor[] newExecutors = internalUnregister(plugin, executors);
+			if (executors == newExecutors)
+				continue;
+			if (newExecutors.length == 0) {
+				contextExecutors.remove(key, entry.getValue());
+			} else {
+				entry.setValue(newExecutors);
+			}
 		}
 	}
 	
@@ -281,7 +393,9 @@ public class HandlerList {
 	 */
 	public static void registerListener(PluginHandle plugin, Listener listener, Object... context) {
 		if (listener == null) 
-			return;
+			throw new IllegalArgumentException("Listener can not be null!");
+		if (plugin == null)
+			throw new IllegalArgumentException("Plugin can not be null!");
 		List<EventExecutor> exes = MethodEventExecutor.getExecutors(plugin, listener);
 		for (EventExecutor exe : exes) {
 			HandlerList handlers = getHandlerListOf(exe.getEventClass());
@@ -289,7 +403,19 @@ public class HandlerList {
 		}
 	}
 	
+	/**
+	 * Registers a functional listener for a given event
+	 * @param <E> type of event
+	 * @param plugin the plugin this listener belongs to
+	 * @param eventClass the event type the listener handles
+	 * @param listener the listener function
+	 * @param context optional context for registration
+	 */
 	public static <E extends Event> void registerFunctionalListener(PluginHandle plugin, Class<E> eventClass, FunctionalListener<E> listener, Object... context) {
+		if (listener == null) 
+			throw new IllegalArgumentException("Listener can not be null!");
+		if (plugin == null)
+			throw new IllegalArgumentException("Plugin can not be null!");
 		HandlerList handlers = getHandlerListOf(eventClass);
 		FunctionalListenerExecutor exe = new FunctionalListenerExecutor(plugin, eventClass, listener);
 		handlers.registerExecutor(exe, context);
@@ -309,9 +435,8 @@ public class HandlerList {
 		} catch (SecurityException e) {
 			throw new EventException("Unable to access static getHandlerList method in: " + eventClass.getName());
 		}
-		HandlerList h = null;
+		HandlerList h;
 		try {
-			m.setAccessible(true);
 			h = (HandlerList) m.invoke(null);
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new EventException("Unable to call static getHandlerList method!", e);

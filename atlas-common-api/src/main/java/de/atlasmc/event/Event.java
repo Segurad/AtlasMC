@@ -26,6 +26,10 @@ public abstract class Event {
 		return async;
 	}
 
+	/**
+	 * Returns the name of this event
+	 * @return name
+	 */
 	public String getName() {
 		return getClass().getSimpleName();
 	}

@@ -44,16 +44,37 @@ public interface EventExecutor {
 		}
 	};
 	
+	/**
+	 * Returns the listener this handler belongs to
+	 * @return listener
+	 */
+	@NotNull
 	Listener getListener();
 
+	/**
+	 * Returns whether or not this handler is ignored when the event is canclled
+	 * @return true if ignore
+	 */
 	boolean getIgnoreCancelled();
 	
+	/**
+	 * Returns the event class this handler handles
+	 * @return
+	 */
 	@NotNull
 	Class<? extends Event> getEventClass();
 	
+	/**
+	 * Returns the {@link EventPriority} for the handler
+	 * @return priority
+	 */
 	@NotNull
 	EventPriority getPriority();
 	
+	/**
+	 * Returns the {@link PluginHandle} this handler belongs to
+	 * @return handle
+	 */
 	PluginHandle getPlugin();
 	
 	/**
