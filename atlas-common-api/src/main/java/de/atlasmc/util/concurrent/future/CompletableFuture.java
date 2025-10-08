@@ -3,13 +3,13 @@ package de.atlasmc.util.concurrent.future;
 public class CompletableFuture<V> extends AbstractFuture<V> {
 	
 	@Override
-	public void finish(V result) {
-		super.finish(result, null);
+	public void complete(V result) {
+		super.complete(result, null);
 	}
 	
 	@Override
-	public void finish(V result, Throwable cause) {
-		super.finish(result, cause);
+	public void complete(V result, Throwable cause) {
+		super.complete(result, cause);
 	}
 
 	

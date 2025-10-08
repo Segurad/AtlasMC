@@ -18,7 +18,7 @@ public class MethodEventExecutor extends AbstractEventExecutor {
 		if (method == null)
 			throw new IllegalArgumentException("Method can not be null!");
 		this.method = method;
-		method.setAccessible(true);
+		method.setAccessible(true); // we set this accessible because event handler may be private for API clarity
 	}	
 	
 	/**

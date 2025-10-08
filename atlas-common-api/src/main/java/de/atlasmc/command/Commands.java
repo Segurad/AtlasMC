@@ -311,7 +311,7 @@ public class Commands {
 			return;
 		}
 		confirmations.remove(sender, future);
-		future.finish(context);
+		future.complete(context);
 	}
 	
 	public static Command getCommand(String name) {

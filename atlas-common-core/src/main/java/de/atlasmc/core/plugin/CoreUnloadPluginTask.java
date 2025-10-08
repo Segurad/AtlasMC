@@ -22,11 +22,11 @@ final class CoreUnloadPluginTask implements Runnable {
 	@Override
 	public void run() {
 		if (!force && plugin.isAlive()) {
-			future.finish(false);
+			future.complete(false);
 			return;
 		}
 		if (manager.getRegisteredPlugin(plugin.prototype.getName()) == plugin) {
-			future.finish(true);
+			future.complete(true);
 			return;
 		}
 		Plugin pl = plugin.prototype.getPlugin();
@@ -36,21 +36,21 @@ final class CoreUnloadPluginTask implements Runnable {
 		} catch (Exception e) {
 			PluginException ex = new PluginException("Error while disabling plugin!", e);
 			log.error(ex);
-			future.finish(false, ex);
+			future.complete(false, ex);
 		}
 		try {
 			pl.unload();
 		} catch (Exception e) {
 			PluginException ex = new PluginException("Error while unloading plugin!", e);
 			log.error(ex);
-			future.finish(false, ex);
+			future.complete(false, ex);
 		}
 		manager.removePlugin(plugin);
 		plugin.clearDependencies();
 		plugin.clearDepending();
 		plugin.clearLocks();
 		plugin.setKeepLoaded(false);
-		future.finish(true);
+		future.complete(true);
 	}
 
 }

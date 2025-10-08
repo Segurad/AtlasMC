@@ -44,7 +44,7 @@ public class AnvilChunkLoaderTask implements ChunkWorkerTask {
 			new CoreAnvilChunkIO().loadChunk(chunk, nbtReader);
 		} catch (IOException e) {
 			logger.error("Error while processing chunk!", e);
-			future.finish(null, e);
+			future.complete(null, e);
 		} finally {
 			if (nbtReader != null) {
 				nbtReader.close();
@@ -60,7 +60,7 @@ public class AnvilChunkLoaderTask implements ChunkWorkerTask {
 				} catch (IOException e) {}
 			}
 		}
-		future.finish(chunk);
+		future.complete(chunk);
 	}
 	
 	private InputStream getCompressedStream(byte compression, InputStream in, int buffersize) throws IOException {

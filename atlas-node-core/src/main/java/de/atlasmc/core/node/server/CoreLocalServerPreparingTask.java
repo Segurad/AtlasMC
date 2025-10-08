@@ -57,7 +57,7 @@ public class CoreLocalServerPreparingTask extends AtlasTask {
 			} catch (IOException e) {
 				log.error("Error while writing server config!", e);
 				failed = true;
-				future.finish(false);
+				future.complete(false);
 				return;
 			}
 		}
@@ -218,7 +218,7 @@ public class CoreLocalServerPreparingTask extends AtlasTask {
 	@Override
 	public void run() {
 		if (failed) {
-			future.finish(false);
+			future.complete(false);
 			return;
 		}
 		switch(stage) {
@@ -241,10 +241,10 @@ public class CoreLocalServerPreparingTask extends AtlasTask {
 		case 4:
 			stage++;
 			copyEntries();
-			future.finish(true);
+			future.complete(true);
 			break;
 		default:
-			future.finish(false, new ServerDeploymentException("Invalid stage: " + stage));
+			future.complete(false, new ServerDeploymentException("Invalid stage: " + stage));
 		}
 	}
 

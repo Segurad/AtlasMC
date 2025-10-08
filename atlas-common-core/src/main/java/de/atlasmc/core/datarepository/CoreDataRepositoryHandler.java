@@ -135,7 +135,7 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 				synchronized (entries) {
 					entries.add(entry);
 					if (waiting.decrementAndGet() <= 0 && futureAll != null)
-						futureAll.finish(entries);
+						futureAll.complete(entries);
 				}
 				continue;
 			}
@@ -149,7 +149,7 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 					synchronized (entries) {
 						entries.add(futureEntry);
 						if (waiting.decrementAndGet() <= 0)
-							finalFuture.finish(entries);
+							finalFuture.complete(entries);
 					}
 				};
 			}

@@ -169,20 +169,20 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager impl
 			try (Connection c = AtlasMaster.getDatabase().getConnection(true)) {
 				value = loadFunction.apply(c, key);
 			} catch (Exception e) {
-				future.finish(null, e);
+				future.complete(null, e);
 				return future;
 			}
 		} else {
 			try {
 				value = loadFunction.apply(con, key);
 			} catch (SQLException e) {
-				future.finish(null, e);
+				future.complete(null, e);
 				return future;
 			}
 		}
 		cache.put(key, value);
 		synchronized (futures) {
-			future.finish(value);
+			future.complete(value);
 			futureHandlers.remove(key, future);
 		}
 		return future;
@@ -205,12 +205,12 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager impl
 		try (Connection con = AtlasMaster.getDatabase().getConnection()) {
 			success = deleteFunction.apply(con, key);
 		} catch (SQLException e) {
-			future.finish(null, e);
+			future.complete(null, e);
 			return;
 		}
 		if (success)
 			cache.remove(key);
-		future.finish(success);
+		future.complete(success);
 	}
 	
 	private <K, V> Future<V> create(Map<K, V> cache, Map<K, CompletableFuture<V>> futures, K key, SQLFunction<K, V> loadFunction, SQLFunction<K, V> createFunction) {
@@ -230,7 +230,7 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager impl
 				oldFuture.setListener((f) -> {
 					V v = f.getNow();
 					if (v != null) {
-						createFuture.finish(v);
+						createFuture.complete(v);
 						return;
 					}
 					create0(createFuture, cache, futures, key, loadFunction, createFunction);
@@ -251,12 +251,12 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager impl
 				value = createFunction.apply(con, key);
 			}
 		} catch (Exception e) {
-			future.finish(null, e);
+			future.complete(null, e);
 			return;
 		}
 		cache.put(key, value);
 		synchronized (futures) {
-			future.finish(value);
+			future.complete(value);
 			futureHandlers.remove(key, future);
 		}
 	}
@@ -653,7 +653,7 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager impl
 					continue;
 				groups.add(group);
 			}
-			future.finish(groups);
+			future.complete(groups);
 		});
 		return future;
 	}

@@ -62,7 +62,7 @@ public class CoreLoadRepoPluginTask implements Runnable {
 				NamespacedKey key = entry.getKey();
 				String msg = "Failed to copy repository entry to temp dir for plugin: " + key;
 				log.error(msg, e);
-				entryFutures.get(key).finish(null, new PluginException(msg));
+				entryFutures.get(key).complete(null, new PluginException(msg));
 			}
 		}
 		if (files.isEmpty())
@@ -98,7 +98,7 @@ public class CoreLoadRepoPluginTask implements Runnable {
 				if (!value.isSuccess()) {
 					String msg = "Failed to load data for repositry entry: " + key;
 					log.error(msg, value.cause());
-					entryFutures.get(key).finish(null, new PluginException(msg, value.cause()));
+					entryFutures.get(key).complete(null, new PluginException(msg, value.cause()));
 					iter.remove();
 				}
 			}
@@ -133,7 +133,7 @@ public class CoreLoadRepoPluginTask implements Runnable {
 				if (!value.isSuccess()) {
 					String msg = "Failed to request repositry entry: " + key;
 					log.error(msg, value.cause());
-					entryFutures.get(key).finish(null, new PluginException(msg, value.cause()));
+					entryFutures.get(key).complete(null, new PluginException(msg, value.cause()));
 					iter.remove();
 				}
 			}

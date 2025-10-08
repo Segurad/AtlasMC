@@ -76,6 +76,8 @@ public final class ParticleMetaDataType extends MetaDataType<Particle> {
 				ticks = readVarInt(in);
 				data = new VibrationData(entityID, eyeHeight, ticks);
 				break;
+			default:
+				throw new IllegalArgumentException("Unknown type: " + type);
 			}
 			break;
 		}

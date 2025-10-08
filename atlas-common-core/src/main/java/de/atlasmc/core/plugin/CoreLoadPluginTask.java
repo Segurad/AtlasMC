@@ -155,7 +155,7 @@ final class CoreLoadPluginTask implements Runnable {
 				CompletableFuture<Plugin> future = entry.getValue();
 				String msg = "Unable to load plugin (no loader?): " + file;
 				log.error(msg);
-				future.finish(null, new PluginException(msg));
+				future.complete(null, new PluginException(msg));
 				continue;
 			}
 			List<NamespacedKey> features = prototype.getRequiredFeatures();
@@ -168,7 +168,7 @@ final class CoreLoadPluginTask implements Runnable {
 					CompletableFuture<Plugin> future = entry.getValue();
 					String msg = "Required feature: " + feature + " is unsatisfied in plugin: " + prototype;
 					log.error(msg);
-					future.finish(null, new PluginException(msg));
+					future.complete(null, new PluginException(msg));
 					break;
 				}
 			}
@@ -188,7 +188,7 @@ final class CoreLoadPluginTask implements Runnable {
 				CompletableFuture<Plugin> future = entry.getValue();
 				String msg = "Some soft required features are unsatisfied in plugin: " + prototype;
 				log.error(msg);
-				future.finish(null, new PluginException(msg));
+				future.complete(null, new PluginException(msg));
 				continue;
 			}
 			plugins.put(prototype.getName(), new CoreRegisteredPlugin(manager, prototype, null));
@@ -291,7 +291,7 @@ final class CoreLoadPluginTask implements Runnable {
 	private void fail(CoreRegisteredPlugin plugin, Exception cause) {
 		CompletableFuture<Plugin> future = fileFutures.get(plugin.prototype.getFile());
 		if (future != null && !future.isDone())
-			future.finish(null, cause);
+			future.complete(null, cause);
 	}
 
 }

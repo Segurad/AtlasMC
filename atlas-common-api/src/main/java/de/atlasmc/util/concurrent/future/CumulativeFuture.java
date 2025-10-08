@@ -30,7 +30,7 @@ public class CumulativeFuture<V> extends AbstractFuture<List<Future<V>>> {
 					break;
 				}
 			}
-			this.finish(result);
+			this.complete(result);
 		};
 		final int size = 0;
 		for (int i = 0; i < size; i++) {

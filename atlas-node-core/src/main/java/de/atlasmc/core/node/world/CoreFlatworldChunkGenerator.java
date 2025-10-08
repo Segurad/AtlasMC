@@ -108,7 +108,7 @@ public class CoreFlatworldChunkGenerator implements ChunkGenerator {
 					}
 				}
 			}
-			future.finish(chunk);
+			future.complete(chunk);
 		});
 		return future;
 	}

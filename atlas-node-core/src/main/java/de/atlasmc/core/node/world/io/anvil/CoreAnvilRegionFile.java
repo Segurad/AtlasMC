@@ -170,7 +170,7 @@ public class CoreAnvilRegionFile {
 			synchronized (chunks) {
 				chunks.add(chunkFuture.getNow());
 				if (missing.decrementAndGet() <= 0)
-					future.finish(chunks);
+					future.complete(chunks);
 			}
 		};
 		for (int x = 0; x < 32; x++) {

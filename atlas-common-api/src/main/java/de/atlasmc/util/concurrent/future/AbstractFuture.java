@@ -133,11 +133,11 @@ public class AbstractFuture<V> implements Future<V> {
 		}
 	}
 	
-	protected void finish(V result) {
-		finish(result, null);
+	protected void complete(V result) {
+		complete(result, null);
 	}
 	
-	protected void finish(V result, Throwable cause) {
+	protected void complete(V result, Throwable cause) {
 		if (isDone())
 			throw new IllegalStateException("Already complete");
 		synchronized (this) {

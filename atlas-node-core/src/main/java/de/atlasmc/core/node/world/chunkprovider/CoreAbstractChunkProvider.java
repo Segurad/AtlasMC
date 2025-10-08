@@ -74,7 +74,7 @@ public abstract class CoreAbstractChunkProvider implements ChunkProvider {
 			if (cause != null) {
 				world.getServer().runTask(() -> {
 					world.getServer().getLogger().error("Error while loading chunk", cause);
-					future.finish(null, cause);
+					future.complete(null, cause);
 				});
 				return;
 			}
@@ -82,7 +82,7 @@ public abstract class CoreAbstractChunkProvider implements ChunkProvider {
 			if (c != null) {
 				world.getServer().runTask(() -> {
 					addCachedChunk(pos, chunk);
-					future.finish(c);
+					future.complete(c);
 				});
 				return;
 			}
@@ -97,7 +97,7 @@ public abstract class CoreAbstractChunkProvider implements ChunkProvider {
 			if (cause != null) {
 				world.getServer().runTask(() -> {
 					world.getServer().getLogger().error("Error while generating chunk", cause);
-					future.finish(null, cause);
+					future.complete(null, cause);
 				});
 				return;
 			}
@@ -105,7 +105,7 @@ public abstract class CoreAbstractChunkProvider implements ChunkProvider {
 			world.getServer().runTask(() -> {
 				if (c != null)
 					addCachedChunk(pos, c);
-				future.finish(c);
+				future.complete(c);
 			});
 		});
 	}

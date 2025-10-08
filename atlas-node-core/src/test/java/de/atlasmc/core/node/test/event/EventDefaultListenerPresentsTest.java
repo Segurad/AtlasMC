@@ -1,12 +1,14 @@
 package de.atlasmc.core.node.test.event;
 
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -87,20 +89,19 @@ class EventDefaultListenerPresentsTest {
 					continue;
 				if (!Modifier.isStatic(m.getModifiers())) 
 					continue;
-				m.setAccessible(true);
 				HandlerList handlers = null;
 				try {
 					handlers = (HandlerList) m.invoke(clazz);
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					e.printStackTrace();
+					fail(e);
 				}
 				if (handlers.getDefaultExecutor() == null || handlers.getDefaultExecutor() == EventExecutor.NULL_EXECUTOR) {
-					checks.add(() -> Assertions.fail("Missing DefaultExecutor: " + clazz.getName()));
+					checks.add(() -> fail("Missing DefaultExecutor: " + clazz.getName()));
 				}
 				break;
 			}
 		});
-		Assertions.assertAll("Missing default Executors", checks);
+		assertAll("Missing default Executors", checks);
 	}
 
 }
