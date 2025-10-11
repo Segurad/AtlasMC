@@ -67,14 +67,14 @@ public class JsonConfiguration extends FileConfiguration {
 			writer.name(key);
 		if (value == null) {
 			writer.nullValue();
-		} else if (value instanceof ConfigurationSection) {
-			writer.beginObject();
-			writeSection((ConfigurationSection) value, writer);
-			writer.endObject();
 		} else if (value instanceof List) {
 			writer.beginArray();
 			writeList((List<Object>) value, writer);
 			writer.endArray();
+		} else if (value instanceof ConfigurationSection) {
+			writer.beginObject();
+			writeSection((ConfigurationSection) value, writer);
+			writer.endObject();
 		} else if (value instanceof Number) {
 			writer.value((Number) value);
 		} else {

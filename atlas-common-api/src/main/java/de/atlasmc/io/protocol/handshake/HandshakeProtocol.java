@@ -12,7 +12,7 @@ public class HandshakeProtocol implements Protocol {
 
 	public static final HandshakeProtocol DEFAULT_PROTOCOL;
 
-	private final ConcurrentHashMap<Integer, HandshakePaketIO<?>> packets;
+	private final ConcurrentHashMap<Integer, HandshakePacketIO<?>> packets;
 	
 	static {
 		DEFAULT_PROTOCOL = new HandshakeProtocol();
@@ -37,17 +37,17 @@ public class HandshakeProtocol implements Protocol {
 		return null;
 	}
 	
-	public void setPacketIO(int id, HandshakePaketIO<? extends PacketHandshake> io) {
+	public void setPacketIO(int id, HandshakePacketIO<? extends PacketHandshake> io) {
 		packets.put(id, io);
 	}
 	
-	public HandshakePaketIO<?> getPacketIO(int id) {
+	public HandshakePacketIO<?> getPacketIO(int id) {
 		return packets.get(id);
 	}
 
 	@Override
 	public Packet createPacketIn(int id) {
-		HandshakePaketIO<?> io = packets.get(id);
+		HandshakePacketIO<?> io = packets.get(id);
 		if (io == null)
 			return null;
 		return io.createPacketData();

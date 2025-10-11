@@ -52,8 +52,8 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 		HANDLERS = new PacketHandler[PacketLogin.PACKET_COUNT_IN];
 		HANDLE_ASYNC = new boolean[PacketLogin.PACKET_COUNT_IN];
 		initHandler(PacketInLoginStart.class, (handler, packet) -> {
-			NodeSocket proxy = (NodeSocket) ((ServerSocketConnectionHandler) handler.con).getSocket();
-			SocketConfig config = proxy.getConfig();
+			NodeSocket socket = (NodeSocket) ((ServerSocketConnectionHandler) handler.con).getSocket();
+			SocketConfig config = socket.getConfig();
 			PlayerConnectionConfig conConfig = config.getConnectionConfig("player-connection");
 			if (conConfig.hasAuthentication()) {
 				PacketOutEncryptionRequest packetOut = new PacketOutEncryptionRequest();
@@ -63,7 +63,7 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 				handler.verifyToken = token;
 				packetOut.verifyToken = token;
 				handler.con.sendPacket(packet);
-			} else if (proxy.isSync()) {
+			} else if (socket.isSync()) {
 				ProfileHandler profiles = AtlasNetwork.getProfileHandler();
 				AtlasPlayer player = profiles.getPlayer(packet.uuid);
 				if (player == null) {

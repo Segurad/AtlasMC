@@ -23,6 +23,10 @@ public class AtlasMaster {
 	private static boolean init;
 	private static SQLConnectionPool database;
 	private static UUID uuid;
+	private static volatile NetworkInfo networkInfo;
+	private static volatile NetworkInfo networkInfoMaintenance;
+	private static volatile boolean maintenance;
+	private static volatile int maxSlots;
 	
 	protected AtlasMaster() {}
 	
@@ -74,24 +78,20 @@ public class AtlasMaster {
 		return 0;
 	}
 
-	public static int getMaxPlayers() {
-		// TODO Auto-generated method stub
-		return 0;
+	public static int getMaxSlots() {
+		return maxSlots;
 	}
 
 	public static NetworkInfo getNetworkInfo() {
-		// TODO Auto-generated method stub
-		return null;
+		return networkInfo;
 	}
 
 	public static NetworkInfo getNetworkInfoMaintenance() {
-		// TODO Auto-generated method stub
-		return null;
+		return networkInfoMaintenance;
 	}
 
 	public static boolean isMaintenance() {
-		// TODO Auto-generated method stub
-		return false;
+		return maintenance;
 	}
 
 	public static Collection<Repository> getRepositories() {
@@ -100,23 +100,19 @@ public class AtlasMaster {
 	}
 
 	public static void setMaxSlots(int slots) {
-		// TODO Auto-generated method stub
-		
+		AtlasMaster.maxSlots = slots;
 	}
 
 	public static void setMaintenace(boolean maintenance) {
-		// TODO Auto-generated method stub
-		
+		AtlasMaster.maintenance = maintenance;
 	}
 
 	public static void setNetworkInfo(NetworkInfo info) {
-		// TODO Auto-generated method stub
-		
+		AtlasMaster.networkInfo = info;
 	}
 
 	public static void setNetworkInfoMaintenance(NetworkInfo info) {
-		// TODO Auto-generated method stub
-		
+		AtlasMaster.networkInfoMaintenance = info;
 	}
 
 	public static UUID getUUID() {

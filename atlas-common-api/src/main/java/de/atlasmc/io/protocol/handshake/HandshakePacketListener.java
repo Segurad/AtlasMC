@@ -17,9 +17,8 @@ public class HandshakePacketListener implements PacketListener {
 
 	@Override
 	public void handlePacket(Packet packet) {
-		handler.getLogger().debug("[{}] Handshaking ID: {}", handler.getRemoteAddress(), packet.getID());
 		@SuppressWarnings("unchecked")
-		HandshakePaketIO<Packet> handler = (HandshakePaketIO<Packet>) protocol.getPacketIO(packet.getID());
+		HandshakePacketIO<Packet> handler = (HandshakePacketIO<Packet>) protocol.getPacketIO(packet.getID());
 		if (handler == null)
 			throw new IllegalStateException("No handler for handshake with id (" + packet.getID() + ") found!");
 		handler.handle(this.handler, packet);

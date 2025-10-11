@@ -3,6 +3,7 @@ package de.atlasmc.core.node;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetSocketAddress;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,6 +36,7 @@ import de.atlasmc.plugin.startup.StartupHandlerRegister;
 import de.atlasmc.plugin.startup.StartupStageHandler;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.util.FileUtils;
+import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.file.JsonConfiguration;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
 
@@ -42,14 +44,12 @@ import de.atlasmc.util.configuration.file.YamlConfiguration;
 class CoreLoadNodeDataHandler implements StartupStageHandler {
 
 	private Log log;
-	private Map<String, SocketConfig> proxyConfigs;
 	private Map<String, ServerGroup> serverGroups;
 	private Map<String, NodeConfig> nodeConfigs;
 	private Set<NamespacedKey> modules;
 	
 	@Override
 	public void handleStage(StartupContext context) {
-		proxyConfigs = new HashMap<>();
 		serverGroups = new HashMap<>();
 		modules = new HashSet<>();
 		nodeConfigs = new HashMap<>();
@@ -70,7 +70,6 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 			return;
 		}
 		List<String> nodeConfigNames = config.getStringList("node-configs", List.of());
-		Set<String> socketConfigNames = new HashSet<>();
 		Set<String> serverGroupNames = new HashSet<>();
 		if (!nodeConfigNames.isEmpty()) {
 			Collection<NodeConfig> nodeConfigs;
@@ -82,16 +81,11 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 				return;
 			}
 			for (NodeConfig cfg : nodeConfigs) {
-				socketConfigNames.addAll(cfg.getProxies());
 				serverGroupNames.addAll(cfg.getServerGroups());
 				for (String module : cfg.getCoreModules())
 					modules.add(NamespacedKey.of(module));
 				this.nodeConfigs.put(cfg.getName(), cfg);
 			}
-		}
-		socketConfigNames.addAll(config.getStringList("sockets", List.of()));
-		if (!socketConfigNames.isEmpty()) {
-			resolveSockets(socketConfigNames);
 		}
 		serverGroupNames.addAll(config.getStringList("server-groups", List.of()));
 		if (!serverGroupNames.isEmpty()) {
@@ -105,8 +99,18 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 			serverManager.registerServerGroup(group);
 		}
 		SocketManager socketManager = AtlasNode.getSocketManager();
-		for (SocketConfig cfg : proxyConfigs.values()) {
-			socketManager.createSocket(cfg);
+		List<ConfigurationSection> sockets = config.getConfigurationList("sockets");
+		if (sockets != null && !sockets.isEmpty()) {
+			for (ConfigurationSection socketCfg : sockets) {
+				SocketConfig socket = resolveSocket(socketCfg.getString("config"));
+				InetSocketAddress host = new InetSocketAddress(socketCfg.getString("host"), socketCfg.getInt("port", 25565));
+				InetSocketAddress externalHost = null;
+				if (socketCfg.contains("external-host")) {
+					externalHost = new InetSocketAddress(socketCfg.getString("external-host"), socketCfg.getInt("external-port", host.getPort()));
+				}
+				log.info("Creating socket: {}", socket.getName());
+				socketManager.createSocket(socket, host, externalHost);
+			}
 		}
 		// === init internals 
 		initDefaultExecutor(log, new CorePlayerListener());
@@ -166,22 +170,17 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 		}
 	}
 	
-	private void resolveSockets(Collection<String> proxyNames) {
-		Collection<SocketConfig> proxies;
+	private SocketConfig resolveSocket(String configName) {
+		SocketConfig socket;
 		try {
-			proxies = AtlasNetwork.getSocketConfigs(proxyNames).get();
+			socket = AtlasNetwork.getSocketConfig(configName).get();
 		} catch (Exception e) {
-			log.error("Error while loading proxy configs!", e);
-			return;
+			log.error("Error while loading socket configs!", e);
+			return null;
 		}
-		for (SocketConfig cfg : proxies) {
-			proxyConfigs.put(cfg.getName(), cfg);
-		}
-		for (String name : proxyNames) {
-			if (proxyConfigs.containsKey(name))
-				continue;
-			log.warn("Unable to load proxy config: {}", name);
-		}
+		if (socket == null)
+			log.warn("Unable to load socket config: {}", configName);
+		return socket;
 	}
 	
 	private static void initDefaultExecutor(Log log, Listener listener) {

@@ -2,8 +2,9 @@ node-groups:
 - default-group
 server-groups:
 - default-group
-host: localhost
-port: 25565
-external-host: node-01.mydomain.com
-socket-config: default-socket
-# optional socket definition
+sockets:
+- host: localhost
+  port: 25565
+#  external-host: node-01.mydomain.com
+#  external-port: 25565
+  config: default-socket

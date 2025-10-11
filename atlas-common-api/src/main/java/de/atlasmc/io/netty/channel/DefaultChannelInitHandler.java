@@ -15,6 +15,7 @@ public class DefaultChannelInitHandler extends ChannelInitializer<SocketChannel>
 	
 	@Override
 	protected void initChannel(SocketChannel ch) throws Exception {
+		socket.getLogger().debug("New connection from: {}", ch.remoteAddress());
 		new ServerSocketConnectionHandler(socket, ch, socket.getLogger());
 	}
 

@@ -15,7 +15,7 @@ public abstract class AbstractProtocol<I extends PacketInbound, O extends Packet
 		COUNT_IN = in.length;
 		COUNT_OUT = out.length;
 		packetIn = in.clone();
-		packetOut = in.clone();
+		packetOut = out.clone();
 	}
 	
 	private void sort(PacketIO<?>[] ary) {

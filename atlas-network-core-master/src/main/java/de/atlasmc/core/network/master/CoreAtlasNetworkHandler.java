@@ -33,7 +33,7 @@ public class CoreAtlasNetworkHandler extends CoreAbstractAtlasNetworkHandler {
 	
 	@Override
 	public int getMaxPlayers() {
-		return AtlasMaster.getMaxPlayers();
+		return AtlasMaster.getMaxSlots();
 	}
 
 	@Override

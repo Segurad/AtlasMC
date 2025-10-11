@@ -1,6 +1,4 @@
 name: default-socket
-port: 4000
-host: 127.0.0.1
 type: EPOLL
 worker-threads: 3
 boss-threads: 1
@@ -11,7 +9,7 @@ child-channel-options:
 mode: open
 connection-config:
 - ==: de.atlasmc.network.player.PlayerConnectionConfig
-  name: player_connection
+  name: player-connection
   timeout: 600
   rate-limit: 20
   max-chunks-per-tick: 5

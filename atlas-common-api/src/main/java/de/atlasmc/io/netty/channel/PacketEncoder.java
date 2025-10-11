@@ -4,7 +4,9 @@ import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.PacketUtil;
 import de.atlasmc.io.connection.ConnectionHandler;
+import de.atlasmc.io.connection.SocketConnectionHandler;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
@@ -26,6 +28,14 @@ public class PacketEncoder extends MessageToByteEncoder<Packet> {
 		@SuppressWarnings("unchecked")
 		PacketIO<Packet> io = (PacketIO<Packet>) handler.getProtocol().getHandlerOut(packetID);
 		io.write(msg, out, handler);
+		
+		handler.getLogger().debug("Encoded packet: {}", msg.getClass().getSimpleName());
+		
+		if (msg.isTerminating()) {
+			Channel channel = ctx.channel();
+			channel.pipeline().addAfter(ctx.name(), SocketConnectionHandler.CHANNEL_PIPE_OUTBOUND_NO_PROTOCOL, OutboundNoProtocolHandler.INSTANCE);
+			handler.getLogger().debug("Outbound protocol termination!");
+		}
 	}
 
 }

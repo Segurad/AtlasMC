@@ -11,18 +11,19 @@ import de.atlasmc.io.Packet;
 import de.atlasmc.io.Protocol;
 import de.atlasmc.io.ProtocolException;
 import de.atlasmc.io.connection.ConnectionHandler;
-import de.atlasmc.io.protocol.handshake.HandshakePaketIO;
+import de.atlasmc.io.protocol.handshake.HandshakePacketIO;
 import de.atlasmc.node.AtlasNode;
 import de.atlasmc.node.io.protocol.ProtocolAdapter;
 import de.atlasmc.node.io.protocol.handshake.PacketMinecraftHandshake;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketMinecraftHandshake extends HandshakePaketIO<PacketMinecraftHandshake> {
+public class CorePacketMinecraftHandshake extends HandshakePacketIO<PacketMinecraftHandshake> {
 
 	@Override
 	public void handle(ConnectionHandler handler, PacketMinecraftHandshake packet) {
 		ProtocolAdapter adapter = AtlasNode.getProtocolAdapter(packet.protocolVersion);
 		if (adapter == null) {
+			handler.getLogger().debug("No Protocol with found with version: {}", packet.protocolVersion);
 			handler.close();
 			return;
 		}

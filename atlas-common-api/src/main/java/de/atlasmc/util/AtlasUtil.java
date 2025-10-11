@@ -20,6 +20,14 @@ public class AtlasUtil {
 		return uuidFromBytes(bytes, 0);
 	}
 	
+	@NotNull
+	public static String getShortUUID(@NotNull UUID uuid) {
+		String raw = uuid.toString();
+		int index = raw.indexOf('-');
+		return raw.substring(0, index);
+	}
+	
+	
 	/**
 	 * Converts the given bytes to a UUID. The given array must have at least 16 bytes available.
 	 * @param bytes

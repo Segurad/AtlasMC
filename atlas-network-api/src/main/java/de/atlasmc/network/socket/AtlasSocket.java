@@ -1,5 +1,6 @@
 package de.atlasmc.network.socket;
 
+import java.net.InetSocketAddress;
 import java.util.UUID;
 
 import de.atlasmc.network.AtlasNode;
@@ -13,12 +14,13 @@ public interface AtlasSocket {
 	@NotNull
 	AtlasNode getNode();
 	
-	int getPort();
-	
 	@NotNull
 	UUID getUUID();
 	
 	@NotNull
-	String getHost();
+	InetSocketAddress getHost();
+	
+	@NotNull
+	InetSocketAddress getExternalHost();
 
 }

@@ -19,6 +19,10 @@ public interface Packet {
 	 */
 	long getTimestamp();
 	
+	/**
+	 * Sets the time when the packet arrived
+	 * @param timestamp
+	 */
 	void setTimestamp(long timestamp);
 	
 	/**
@@ -32,6 +36,12 @@ public interface Packet {
 	 * @return the packet id based on latest supported protocol
 	 */
 	int getDefaultID();
+	
+	/**
+	 * Whether or not this packet will terminate packet processing for protocol change
+	 * @return true if terminating
+	 */
+	boolean isTerminating();
 	
 	/**
 	 * Returns the packet id provided by the {@link DefaultPacketID} annotation

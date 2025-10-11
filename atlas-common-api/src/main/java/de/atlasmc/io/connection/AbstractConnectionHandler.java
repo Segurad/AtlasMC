@@ -14,7 +14,7 @@ import de.atlasmc.log.Log;
 public abstract class AbstractConnectionHandler implements ConnectionHandler {
 
 	protected final Log log;
-	private volatile Protocol protocol;
+	protected volatile Protocol protocol;
 	protected final Object listenerLock = new Object();
 	private int listenerCount;
 	private PacketListener[] listeners;
@@ -79,6 +79,7 @@ public abstract class AbstractConnectionHandler implements ConnectionHandler {
 			}
 			// add listener
 			listeners[listenerCount++] = listener;
+			log.debug("Registered packet listener: {}", listener.getClass().getSimpleName());
 			return true;
 		}
 	}

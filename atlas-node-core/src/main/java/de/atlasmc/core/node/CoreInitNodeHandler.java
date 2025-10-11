@@ -2,13 +2,17 @@ package de.atlasmc.core.node;
 
 import de.atlasmc.Atlas;
 import de.atlasmc.core.node.io.handshake.CorePacketMinecraftHandshake;
+import de.atlasmc.core.node.io.handshake.CorePacketMinecraftLegacyHandshake;
 import de.atlasmc.core.node.io.protocol.CoreProtocolAdapter;
 import de.atlasmc.core.node.io.socket.CoreSocketManager;
 import de.atlasmc.core.node.server.CoreNodeServerManager;
+import de.atlasmc.io.Packet;
 import de.atlasmc.io.protocol.handshake.HandshakeProtocol;
 import de.atlasmc.network.AtlasNetwork;
 import de.atlasmc.node.AtlasNodeBuilder;
 import de.atlasmc.node.io.protocol.ProtocolAdapterHandler;
+import de.atlasmc.node.io.protocol.handshake.PacketMinecraftHandshake;
+import de.atlasmc.node.io.protocol.handshake.PacketMinecraftLegacyHandshake;
 import de.atlasmc.plugin.startup.StartupContext;
 import de.atlasmc.plugin.startup.StartupHandlerRegister;
 import de.atlasmc.plugin.startup.StartupStageHandler;
@@ -25,7 +29,8 @@ class CoreInitNodeHandler implements StartupStageHandler {
 			.setProxyManager(new CoreSocketManager())
 			.setProtocolAdapterHandler(new ProtocolAdapterHandler());
 		builder.getProtocolAdapterHandler().setProtocol(new CoreProtocolAdapter());
-		HandshakeProtocol.DEFAULT_PROTOCOL.setPacketIO(0x00, new CorePacketMinecraftHandshake());
+		HandshakeProtocol.DEFAULT_PROTOCOL.setPacketIO(Packet.getDefaultPacketID(PacketMinecraftHandshake.class), new CorePacketMinecraftHandshake());
+		HandshakeProtocol.DEFAULT_PROTOCOL.setPacketIO(Packet.getDefaultPacketID(PacketMinecraftLegacyHandshake.class), new CorePacketMinecraftLegacyHandshake());
 	}
 
 }

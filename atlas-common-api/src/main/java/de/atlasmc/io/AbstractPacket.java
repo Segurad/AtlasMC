@@ -47,5 +47,10 @@ public abstract class AbstractPacket implements Packet {
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
 	}
+	
+	@Override
+	public boolean isTerminating() {
+		return false;
+	}
 
 }

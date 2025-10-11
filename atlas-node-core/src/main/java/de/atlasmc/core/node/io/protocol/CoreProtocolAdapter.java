@@ -5,8 +5,8 @@ import de.atlasmc.node.io.protocol.ProtocolConfiguration;
 
 public class CoreProtocolAdapter implements ProtocolAdapter {
 
-	public static final int VERSION = 764;
-	public static final String VERSION_STRING = "[AtlasMC]";
+	public static final int VERSION = 773;
+	public static final String VERSION_STRING = "v1.21.10";
 	private final CoreProtocolStatus status;
 	private final CoreProtocolLogin login;
 	private final CoreProtocolPlay play;
@@ -26,7 +26,7 @@ public class CoreProtocolAdapter implements ProtocolAdapter {
 
 	@Override
 	public String getVersionString() {
-		return "v1.20.2";
+		return VERSION_STRING;
 	}
 
 	@Override

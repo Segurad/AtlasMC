@@ -41,9 +41,9 @@ Configuration:
         TimeBasedTriggeringPolicy: {}
         OnStartupTriggeringPolicy:
             minSize: 1
-    - name: proxyLogFile
-      fileName: "${logDir}/proxy/latest.log"
-      filePattern: "${logDir}/proxy/log_%d{yyyy-MM-dd}.log"
+    - name: socketLogFile
+      fileName: "${logDir}/socket/latest.log"
+      filePattern: "${logDir}/socket/log_%d{yyyy-MM-dd}.log"
       PatternLayout:
         Pattern: ${defaultFilePattern}
       Policies:
@@ -83,11 +83,11 @@ Configuration:
       AppenderRef:
       - ref: defaultLogFile
       - ref: defaultConsoleLog
-    - name: Proxy
+    - name: Socket
       level: debug
       additivity: false
       AppenderRef:
-      - ref: proxyLogFile
+      - ref: socketLogFile
       - ref: defaultConsoleLog
     - name: Server
       level: debug

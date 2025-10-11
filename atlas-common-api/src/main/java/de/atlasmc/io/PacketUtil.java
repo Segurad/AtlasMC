@@ -33,8 +33,8 @@ public class PacketUtil {
 	CHAT_MAX_LENGTH = 262144,
     MAX_IDENTIFIER_LENGTH = 32767;
 
-	private static final int SEGMENT_BITS = 0x7F;
-	private static final int CONTINUE_BIT = 0x80;
+	public static final int VAR_SEGMENT_BITS = 0x7F;
+	public static final int VAR_CONTINUE_BIT = 0x80;
 	
 	protected PacketUtil() {}
 
@@ -45,9 +45,9 @@ public class PacketUtil {
 
 	    while (true) {
 	        currentByte = in.readByte();
-	        value |= (currentByte & SEGMENT_BITS) << position;
+	        value |= (currentByte & VAR_SEGMENT_BITS) << position;
 
-	        if ((currentByte & CONTINUE_BIT) == 0) 
+	        if ((currentByte & VAR_CONTINUE_BIT) == 0) 
 	        	break;
 
 	        position += 7;
@@ -66,9 +66,9 @@ public class PacketUtil {
 
 	    while (true) {
 	        currentByte = in.readByte();
-	        value |= (long) (currentByte & SEGMENT_BITS) << position;
+	        value |= (long) (currentByte & VAR_SEGMENT_BITS) << position;
 
-	        if ((currentByte & CONTINUE_BIT) == 0) 
+	        if ((currentByte & VAR_CONTINUE_BIT) == 0) 
 	        	break;
 
 	        position += 7;
@@ -87,12 +87,12 @@ public class PacketUtil {
 	 */
 	public static void writeVarInt(int value, ByteBuf out) {
 	    while (true) {
-	        if ((value & ~SEGMENT_BITS) == 0) {
+	        if ((value & ~VAR_SEGMENT_BITS) == 0) {
 	            out.writeByte(value);
 	            return;
 	        }
 
-	        out.writeByte((value & SEGMENT_BITS) | CONTINUE_BIT);
+	        out.writeByte((value & VAR_SEGMENT_BITS) | VAR_CONTINUE_BIT);
 
 	        // Note: >>> means that the sign bit is shifted with the rest of the number rather than being left alone
 	        value >>>= 7;
@@ -107,12 +107,12 @@ public class PacketUtil {
 	public static void writeVarIntArray(int[] values, ByteBuf out) {
 		for (int value : values) {
 			while (true) {
-		        if ((value & ~SEGMENT_BITS) == 0) {
+		        if ((value & ~VAR_SEGMENT_BITS) == 0) {
 		            out.writeByte(value);
 		            break;
 		        }
 
-		        out.writeByte((value & SEGMENT_BITS) | CONTINUE_BIT);
+		        out.writeByte((value & VAR_SEGMENT_BITS) | VAR_CONTINUE_BIT);
 
 		        // Note: >>> means that the sign bit is shifted with the rest of the number rather than being left alone
 		        value >>>= 7;
@@ -128,7 +128,7 @@ public class PacketUtil {
 	public static int getVarIntLength(int value) {
 		int i = 0;
 		while (true) {
-	        if ((value & ~SEGMENT_BITS) == 0) {
+	        if ((value & ~VAR_SEGMENT_BITS) == 0) {
 	            i++;
 	            return i;
 	        }
@@ -148,7 +148,7 @@ public class PacketUtil {
 	public static int getVarLongLength(long value) {
 		int length = 0;
 		while (true) {
-	        if ((value & ~((long) SEGMENT_BITS)) == 0) {
+	        if ((value & ~((long) VAR_SEGMENT_BITS)) == 0) {
 	            length++;
 	            return length;
 	        }
@@ -168,12 +168,12 @@ public class PacketUtil {
 	public static void writeVarLongArray(long[] values, ByteBuf out) {
 		for (long value : values) {
 			while (true) {
-		        if ((value & ~((long) SEGMENT_BITS)) == 0) {
+		        if ((value & ~((long) VAR_SEGMENT_BITS)) == 0) {
 		            out.writeByte((int) value);
 		            break;
 		        }
 
-		        out.writeByte((int) ((value & SEGMENT_BITS) | CONTINUE_BIT));
+		        out.writeByte((int) ((value & VAR_SEGMENT_BITS) | VAR_CONTINUE_BIT));
 
 		        // Note: >>> means that the sign bit is shifted with the rest of the number rather than being left alone
 		        value >>>= 7;
@@ -188,12 +188,12 @@ public class PacketUtil {
 	 */
 	public static void writeVarLong(long value, ByteBuf out) {
 	    while (true) {
-	        if ((value & ~((long) SEGMENT_BITS)) == 0) {
+	        if ((value & ~((long) VAR_SEGMENT_BITS)) == 0) {
 	            out.writeByte((int) value);
 	            return;
 	        }
 
-	        out.writeByte((int) ((value & SEGMENT_BITS) | CONTINUE_BIT));
+	        out.writeByte((int) ((value & VAR_SEGMENT_BITS) | VAR_CONTINUE_BIT));
 
 	        // Note: >>> means that the sign bit is shifted with the rest of the number rather than being left alone
 	        value >>>= 7;

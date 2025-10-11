@@ -1,5 +1,6 @@
 package de.atlasmc.node.io.socket;
 
+import java.net.InetSocketAddress;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -22,6 +23,6 @@ public interface SocketManager {
 	Collection<NodeSocket> getSockets();
 	
 	@NotNull
-	NodeSocket createSocket(@NotNull SocketConfig config);
+	NodeSocket createSocket(@NotNull SocketConfig config, InetSocketAddress host, InetSocketAddress externalHost);
 
 }

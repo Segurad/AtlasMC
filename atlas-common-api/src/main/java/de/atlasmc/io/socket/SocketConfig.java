@@ -35,8 +35,6 @@ public class SocketConfig implements ConfigurationSerializable {
 	private int workerThreads;
 	private Map<ChannelOption<?>, Object> channelOptions;
 	private Map<ChannelOption<?>, Object> childChannelOptions;
-	private int port;
-	private String host;
 	private Map<String, ConnectionConfig> conConfigs;
 	private Configuration config;
 	
@@ -48,8 +46,6 @@ public class SocketConfig implements ConfigurationSerializable {
 		this.childChannelOptions = buildChannelOptions(config.getConfigurationSection("child-channel-options"));
 		this.bossThreads = config.getInt("boss-threads");
 		this.workerThreads = config.getInt("worker-threads");
-		this.port = config.getInt("port");
-		this.host = config.getString("host");
 		this.conConfigs = new HashMap<>();
 		List<ConfigurationSection> conConfigs = config.getConfigurationList("connection-config");
 		for (ConfigurationSection conConfig : conConfigs) {
@@ -61,14 +57,6 @@ public class SocketConfig implements ConfigurationSerializable {
 	
 	public Configuration getConfig() {
 		return config;
-	}
-	
-	public String getHost() {
-		return host;
-	}
-	
-	public void setHost(String host) {
-		this.host = host;
 	}
 	
 	public String getName() {
@@ -93,10 +81,6 @@ public class SocketConfig implements ConfigurationSerializable {
 	
 	public Map<ChannelOption<?>, Object> getChildChannelOptions() {
 		return childChannelOptions;
-	}
-	
-	public int getPort() {
-		return port;
 	}
 	
 	private static Map<ChannelOption<?>, Object> buildChannelOptions(ConfigurationSection config) {

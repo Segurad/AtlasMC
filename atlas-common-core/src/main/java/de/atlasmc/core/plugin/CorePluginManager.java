@@ -555,7 +555,9 @@ public class CorePluginManager implements PluginManager {
 		}
 
 		@Override
-		public void clear() {}
+		public void clear() {
+			// not required
+		}
 		
 	}
 	

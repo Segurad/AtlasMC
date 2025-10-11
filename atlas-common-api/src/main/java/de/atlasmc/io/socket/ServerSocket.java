@@ -23,14 +23,13 @@ public class ServerSocket implements Closeable {
 	private ServerChannel channel;
 	private final SocketConfig config;
 	private final Log logger;
-	private final String host;
-	private final int port;
+	private final InetSocketAddress host;
 	
-	public ServerSocket(String host, int port, SocketConfig config, Log logger) {
-		this.host = host;
-		this.port = port;
+	public ServerSocket(InetSocketAddress host, SocketConfig config, Log logger) {
+		this.host = Objects.requireNonNull(host);
 		this.config = Objects.requireNonNull(config);
 		this.logger = Objects.requireNonNull(logger);
+		this.logger.sendToConsole(true);
 	}
 
 	public void setChannelInitHandler(ChannelInitializer<SocketChannel> handler) {
@@ -41,11 +40,7 @@ public class ServerSocket implements Closeable {
 		return channel != null && !channel.isOpen();
 	}
 	
-	public int getPort() {
-		return port;
-	}
-	
-	public String getHost() {
+	public InetSocketAddress getHost() {
 		return host;
 	}
 	
@@ -75,14 +70,8 @@ public class ServerSocket implements Closeable {
 				b.childOption(option, entry.getValue());
 			}
 		}
-		if (host != null) {
-			channel = (ServerChannel) b.bind(host, port).channel();
-			logger.info("Socket running on {}:{}", host, getPort());
-		} else {
-			InetSocketAddress address = new InetSocketAddress(port);
-			channel = (ServerChannel) b.bind(address).channel();
-			logger.info("Socket running on {}:{}", address.getAddress().toString(), getPort());
-		}
+		channel = (ServerChannel) b.bind(host).channel();
+		logger.info("Socket running on {}:{}", host.getHostString(), host.getPort());
 	}
 	
 	@Override

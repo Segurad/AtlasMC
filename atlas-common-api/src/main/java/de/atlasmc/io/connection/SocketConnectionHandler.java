@@ -9,8 +9,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.crypto.SecretKey;
 
 import de.atlasmc.io.Packet;
+import de.atlasmc.io.PacketListener;
 import de.atlasmc.io.Protocol;
-import de.atlasmc.io.netty.channel.ErrorHandler;
+import de.atlasmc.io.netty.channel.InboundErrorHandler;
+import de.atlasmc.io.netty.channel.OutboundErrorHandler;
 import de.atlasmc.io.netty.channel.PacketCompressor;
 import de.atlasmc.io.netty.channel.PacketDecoder;
 import de.atlasmc.io.netty.channel.PacketDecompressor;
@@ -24,7 +26,9 @@ import de.atlasmc.io.protocol.handshake.HandshakeProtocol;
 import de.atlasmc.log.Log;
 import de.atlasmc.util.annotation.ThreadSafe;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.flow.FlowControlHandler;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 
@@ -34,16 +38,19 @@ import io.netty.util.concurrent.GenericFutureListener;
 @ThreadSafe
 public class SocketConnectionHandler extends AbstractConnectionHandler {
 	
-	protected static final String
+	public static final String
 	CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER = "outbound_exception_handler",
 	CHANNEL_PIPE_PACKET_DECRYPTOR = "packet_decryptor",
 	CHANNEL_PIPE_PACKET_ENCRYPTOR = "packet_encryptor",
 	CHANNEL_PIPE_PACKET_LENGTH_DECODER = "packet_length_decoder",
+	CHANNEL_PIPE_FLOW_CONTROLLER = "flow_controller",
 	CHANNEL_PIPE_PACKET_DECOMPRESSOR = "packet_decompressor",
 	CHANNEL_PIPE_PACKET_LENGTH_ENCODER = "packet_length_encoder",
 	CHANNEL_PIPE_PACKET_COMPRESSOR = "packet_compressor",
+	CHANNEL_PIPE_INBOUND_NO_PROTOCOL = "inbound_no_protocol",
 	CHANNEL_PIPE_PACKET_DECODER = "packet_decoder",
 	CHANNEL_PIPE_PACKET_ENCODER = "packet_encoder",
+	CHANNEL_PIPE_OUTBOUND_NO_PROTOCOL = "outbound_no_protocol",
 	CHANNEL_PIPE_PACKET_PROCESSOR = "packet_processor",
 	CHANNEL_PIPE_INBOUND_EXCEPTION_HANDLER = "inbound_exception_handler";
 	
@@ -55,11 +62,14 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 	 *  <tr><td>X		</td><td>IN 	  	</td><td>packet_decryptor 			</td></tr>
 	 *  <tr><td>X		</td><td>OUT		</td><td>packet_encryptor 			</td></tr>
 	 *  <tr><td> 		</td><td>IN 		</td><td>packet_length_decoder		</td></tr>
+	 *  <tr><td>		</td><td>IN			</td><td>flow_controller			</td></tr>
 	 *  <tr><td>X		</td><td>IN 		</td><td>packet_decompressor		</td></tr>
 	 *  <tr><td> 		</td><td>OUT		</td><td>packet_length_encoder		</td></tr>
 	 *  <tr><td>X		</td><td>OUT		</td><td>packet_compressor			</td></tr>
+	 *  <tr><td>X		</td><td>IN			</td><td>inbound_no_protocol		</td></tr>
 	 *  <tr><td>		</td><td>IN 		</td><td>packet_decoder				</td></tr>
 	 *  <tr><td>		</td><td>OUT		</td><td>packet_encoder				</td></tr>
+	 *  <tr><td>X		</td><td>OUT		</td><td>outbound_no_protocol		</td></tr>
 	 *  <tr><td>		</td><td>IN 		</td><td>packet_processor			</td></tr>
 	 *  <tr><td>		</td><td>IN 		</td><td>inbound_exception_handler 	</td></tr>
 	 *  </table>
@@ -83,13 +93,14 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 		this.channel = Objects.requireNonNull(channel);
 		
 		channel.pipeline()
-		.addLast(CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER, new ErrorHandler("Error while handling outbound packet!", this))
+		.addLast(CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER, new OutboundErrorHandler(this.getLogger()))
 		.addLast(CHANNEL_PIPE_PACKET_LENGTH_DECODER, new PacketLengthDecoder())
 		.addLast(CHANNEL_PIPE_PACKET_LENGTH_ENCODER, PacketLengthEncoder.INSTANCE)
+		.addLast(CHANNEL_PIPE_FLOW_CONTROLLER, new FlowControlHandler())
 		.addLast(CHANNEL_PIPE_PACKET_DECODER, new PacketDecoder(this))
 		.addLast(CHANNEL_PIPE_PACKET_ENCODER, new PacketEncoder(this))
 		.addLast(CHANNEL_PIPE_PACKET_PROCESSOR, new PacketProcessor(this))
-		.addLast(CHANNEL_PIPE_INBOUND_EXCEPTION_HANDLER, new ErrorHandler("Error while handling inbound packet!", this))
+		.addLast(CHANNEL_PIPE_INBOUND_EXCEPTION_HANDLER, new InboundErrorHandler(this.getLogger()))
 		;
 	}
 	
@@ -172,6 +183,25 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 			.addAfter(CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER, CHANNEL_PIPE_PACKET_ENCRYPTOR, new PacketEncryptor(secret))
 			.addAfter(CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER, CHANNEL_PIPE_PACKET_DECRYPTOR, new PacketDecryptor(secret));
 			encryption = true;
+		}
+	}
+	
+	@Override
+	public synchronized void setProtocol(Protocol protocol, PacketListener listener) {
+		if (protocol == null) 
+			throw new IllegalArgumentException("Protocol can not be null!");
+		synchronized (listenerLock) {
+			log.debug("Switching Protocol to: {}", protocol.getClass().getSimpleName());
+			this.protocol = protocol;
+			removeAllPacketListener();
+			if (listener != null)
+				registerPacketListener(listener);
+			ChannelPipeline pipeline = channel.pipeline();
+			if (pipeline.get(CHANNEL_PIPE_INBOUND_NO_PROTOCOL) != null)
+				channel.pipeline().remove(CHANNEL_PIPE_INBOUND_NO_PROTOCOL);
+			if (pipeline.get(CHANNEL_PIPE_OUTBOUND_NO_PROTOCOL) != null)
+				channel.pipeline().remove(CHANNEL_PIPE_OUTBOUND_NO_PROTOCOL);
+			channel.config().setAutoRead(true);
 		}
 	}
 	

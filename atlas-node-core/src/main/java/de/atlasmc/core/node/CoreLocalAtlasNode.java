@@ -2,10 +2,8 @@ package de.atlasmc.core.node;
 
 import java.security.PublicKey;
 import java.util.Collection;
-import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
 import de.atlasmc.Atlas;
 import de.atlasmc.node.AtlasNodeBuilder;
 import de.atlasmc.node.LocalAtlasNode;
@@ -19,23 +17,17 @@ import de.atlasmc.node.server.NodeServerManager;
 public class CoreLocalAtlasNode implements LocalAtlasNode {
 	
 	private final ProtocolAdapterHandler adapterHandler;
-	private final SocketManager proxyManager;
-	private final Map<UUID, NodeSocket> proxies;
+	private final SocketManager socketManager;
 	private final NodeServerManager smanager;
 	private final UUID uuid;
-	private NodeStatus status;
+	private volatile NodeStatus status;
 	
 	public CoreLocalAtlasNode(AtlasNodeBuilder builder) {
-		this.uuid = builder.getUUID();
-		this.adapterHandler = new ProtocolAdapterHandler();
-		this.proxies = new ConcurrentHashMap<>();
-		this.smanager = builder.getServerManager();
-		this.proxyManager = builder.getProxyManager();
+		this.uuid = Objects.requireNonNull(builder.getUUID());
+		this.adapterHandler = Objects.requireNonNull(builder.getProtocolAdapterHandler());
+		this.smanager = Objects.requireNonNull(builder.getServerManager());
+		this.socketManager = Objects.requireNonNull(builder.getProxyManager());
 		this.status = NodeStatus.STARTING;
-		if (uuid == null)
-			throw new IllegalArgumentException("UUID can not be null!");
-		if (smanager == null)
-			throw new IllegalArgumentException("ServerManager can not be null!");
 	}
 	
 	@Override
@@ -60,7 +52,7 @@ public class CoreLocalAtlasNode implements LocalAtlasNode {
 
 	@Override
 	public NodeSocket getSocket(UUID uuid) {
-		return proxies.get(uuid);
+		return socketManager.getSocket(uuid);
 	}
 	
 	@Override
@@ -92,7 +84,7 @@ public class CoreLocalAtlasNode implements LocalAtlasNode {
 
 	@Override
 	public SocketManager getSocketManager() {
-		return proxyManager;
+		return socketManager;
 	}
 
 	@Override
