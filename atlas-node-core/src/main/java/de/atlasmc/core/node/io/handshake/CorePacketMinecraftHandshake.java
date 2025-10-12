@@ -30,10 +30,10 @@ public class CorePacketMinecraftHandshake extends HandshakePacketIO<PacketMinecr
 		final int nextState = packet.nextState;
 		if (nextState == 1) {
 			final Protocol prot = adapter.getStatusProtocol();
-			handler.setProtocol(prot, prot.createDefaultPacketListenerIn(handler));
+			handler.setProtocol(prot, prot.createDefaultPacketListenerServerbound(handler));
 		} else if (nextState == 2) {
 			final Protocol prot = adapter.getLoginProtocol();
-			handler.setProtocol(prot, prot.createDefaultPacketListenerIn(handler));
+			handler.setProtocol(prot, prot.createDefaultPacketListenerServerbound(handler));
 		} else {
 			throw new ProtocolException("Invalid id for next protocol state: " + nextState);
 		}

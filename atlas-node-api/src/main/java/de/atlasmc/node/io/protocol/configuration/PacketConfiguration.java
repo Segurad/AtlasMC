@@ -6,7 +6,7 @@ public interface PacketConfiguration extends PacketProtocol {
 	
 	public static final int
 	PACKET_COUNT_IN = 8,
-	PACKET_COUNT_OUT = 17;
+	PACKET_COUNT_OUT = 19;
 	
 	public static final int 
 	IN_CLIENT_INFORMATION = 0x00,
@@ -35,6 +35,8 @@ public interface PacketConfiguration extends PacketProtocol {
 	OUT_UPDATE_TAGS = 0x0D,
 	OUT_KNOWN_PACKS = 0x0E,
 	OUT_CUSTOM_REPORT_DETAILS = 0x0F,
-	OUT_SERVER_LINKS = 0x10;
+	OUT_SERVER_LINKS = 0x10,
+	OUT_CLEAR_DIALOG = 0x11,
+	OUT_SHOW_DIALOG = 0x12;
 
 }

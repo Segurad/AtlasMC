@@ -2,7 +2,7 @@ package de.atlasmc.io;
 
 import java.util.Arrays;
 
-public abstract class AbstractProtocol<I extends PacketInbound, O extends PacketOutbound> implements Protocol {
+public abstract class AbstractProtocol<I extends PacketServerbound, O extends PacketClientbound> implements Protocol {
 	
 	private final PacketIO<?>[] packetIn;
 	private final PacketIO<?>[] packetOut;
@@ -27,19 +27,19 @@ public abstract class AbstractProtocol<I extends PacketInbound, O extends Packet
 	}
 	
 	@Override
-	public I createPacketIn(int id) {
-		PacketIO<? extends I> handler = getHandlerIn(id);
+	public I createPacketServerbound(int id) {
+		PacketIO<? extends I> handler = getHandlerServerbound(id);
 		return handler != null ? handler.createPacketData() : null;
 	}
 
 	@Override
-	public O createPacketOut(int id) {
-		PacketIO<? extends O> handler = getHandlerOut(id);
+	public O createPacketClientbound(int id) {
+		PacketIO<? extends O> handler = getHandlerClientbound(id);
 		return handler != null ? handler.createPacketData() : null;
 	}
 	
 	@Override
-	public PacketIO<? extends I> getHandlerIn(int id) {
+	public PacketIO<? extends I> getHandlerServerbound(int id) {
 		if (id >= COUNT_IN || id < 0)
 			return null;
 		@SuppressWarnings("unchecked")
@@ -48,7 +48,7 @@ public abstract class AbstractProtocol<I extends PacketInbound, O extends Packet
 	}
 
 	@Override
-	public PacketIO<? extends O> getHandlerOut(int id) {
+	public PacketIO<? extends O> getHandlerClientbound(int id) {
 		if (id >= COUNT_OUT || id < 0)
 			return null;
 		@SuppressWarnings("unchecked")

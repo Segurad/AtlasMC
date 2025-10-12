@@ -3,8 +3,6 @@ package de.atlasmc.core.node.io.protocol.common;
 import static de.atlasmc.node.io.protocol.ProtocolUtil.*;
 
 import java.io.IOException;
-import java.net.ProtocolException;
-
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.common.AbstractPacketCookieData;
@@ -28,9 +26,7 @@ public abstract class CoreAbstractPacketCookieResponse<T extends AbstractPacketC
 	public void read(T packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.key = readIdentifier(in);
 		if (in.readBoolean()) {
-			int size = readVarInt(in);
-			if (size > 5120)
-				throw new ProtocolException("Cookie payload exceeded 5120 bytes: " + size);
+			int size = readArrayLength(in, 5120);
 			packet.payload = in.readBytes(size);
 		}
 	}

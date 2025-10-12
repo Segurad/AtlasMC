@@ -6,9 +6,9 @@ import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.log.Log;
 import de.atlasmc.network.AtlasNetwork;
 import de.atlasmc.network.NetworkInfo;
-import de.atlasmc.node.io.protocol.status.PacketInPing;
-import de.atlasmc.node.io.protocol.status.PacketOutPong;
-import de.atlasmc.node.io.protocol.status.PacketOutResponse;
+import de.atlasmc.node.io.protocol.status.ServerboundPing;
+import de.atlasmc.node.io.protocol.status.ClientboundResponse;
+import de.atlasmc.node.io.protocol.status.ClientboundPong;
 
 public class CorePacketListenerStatus implements PacketListener {
 
@@ -21,14 +21,14 @@ public class CorePacketListenerStatus implements PacketListener {
 	@Override
 	public void handlePacket(Packet packet) {
 		if (packet.getID() == 0) {
-			PacketOutResponse response = new PacketOutResponse();
+			ClientboundResponse response = new ClientboundResponse();
 			NetworkInfo info = AtlasNetwork.getNetworkInfo();
 			int version = handler.getProtocol().getVersion();
 			response.response = info.getStatusInfo(version);
 			handler.sendPacket(response);
 		} else if (packet.getID() == 1) {
-			PacketInPing ping = (PacketInPing) packet;
-			PacketOutPong pong = new PacketOutPong();
+			ServerboundPing ping = (ServerboundPing) packet;
+			ClientboundPong pong = new ClientboundPong();
 			pong.pong = ping.ping;
 			handler.sendPacket(pong);
 			handler.close();

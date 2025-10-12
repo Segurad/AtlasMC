@@ -7,29 +7,29 @@ import java.io.IOException;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
-import de.atlasmc.node.io.protocol.configuration.PacketOutDisconnect;
+import de.atlasmc.node.io.protocol.configuration.ClientboundDisconnect;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutDisconnect implements PacketIO<PacketOutDisconnect> {
+public class CorePacketOutDisconnect implements PacketIO<ClientboundDisconnect> {
 
 	@Override
-	public void read(PacketOutDisconnect packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void read(ClientboundDisconnect packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.reason = readTextComponent(in);
 	}
 
 	@Override
-	public void write(PacketOutDisconnect packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void write(ClientboundDisconnect packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		writeTextComponent(packet.reason, out);
 	}
 
 	@Override
-	public PacketOutDisconnect createPacketData() {
-		return new PacketOutDisconnect();
+	public ClientboundDisconnect createPacketData() {
+		return new ClientboundDisconnect();
 	}
 
 	@Override
 	public int getPacketID() {
-		return Packet.getDefaultPacketID(PacketOutDisconnect.class);
+		return Packet.getDefaultPacketID(ClientboundDisconnect.class);
 	}
 
 }

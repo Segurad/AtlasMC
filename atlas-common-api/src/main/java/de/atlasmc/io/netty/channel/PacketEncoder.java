@@ -26,7 +26,7 @@ public class PacketEncoder extends MessageToByteEncoder<Packet> {
 		final int packetID = msg.getID();
 		PacketUtil.writeVarInt(msg.getID(), out);
 		@SuppressWarnings("unchecked")
-		PacketIO<Packet> io = (PacketIO<Packet>) handler.getProtocol().getHandlerOut(packetID);
+		PacketIO<Packet> io = (PacketIO<Packet>) handler.getProtocol().getHandlerClientbound(packetID);
 		io.write(msg, out, handler);
 		
 		handler.getLogger().debug("Encoded packet: {}", msg.getClass().getSimpleName());

@@ -200,6 +200,13 @@ public class PacketUtil {
 	    }
 	}
 	
+	public static int readArrayLength(ByteBuf in, int max) {
+		int length = readVarInt(in);
+		if (length > max)
+			throw new ProtocolException("Invalid array length:" + length + " expected: " + max);
+		return length;
+	}
+	
 	@Nullable
 	public static String readString(ByteBuf in) {
 		return readString(in, Integer.MAX_VALUE);
@@ -223,11 +230,9 @@ public class PacketUtil {
 	 */
 	@Nullable
 	public static byte[] readByteArray(ByteBuf in, int maxLength) {
-		int len = readVarInt(in);
+		int len = readArrayLength(in, maxLength);
 		if (len == 0) 
 			return null;
-		if (len > maxLength) 
-			throw new IllegalArgumentException("Invalid byte array length:" + len + " expected: " + maxLength);
 		byte[] buff = new byte[len];
 		in.readBytes(buff);
 		return buff;

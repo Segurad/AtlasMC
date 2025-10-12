@@ -13,18 +13,18 @@ import de.atlasmc.node.event.player.PlayerViewDistanceChangeEvent;
 import de.atlasmc.node.io.protocol.PlayerConnection;
 import de.atlasmc.node.io.protocol.PlayerSettings;
 import de.atlasmc.node.io.protocol.configuration.PacketConfiguration;
-import de.atlasmc.node.io.protocol.configuration.PacketConfigurationIn;
-import de.atlasmc.node.io.protocol.configuration.PacketInClientInformation;
-import de.atlasmc.node.io.protocol.configuration.PacketInCookieResponse;
-import de.atlasmc.node.io.protocol.configuration.PacketInFinishConfiguration;
-import de.atlasmc.node.io.protocol.configuration.PacketInKeepAlive;
-import de.atlasmc.node.io.protocol.configuration.PacketInKnownPacks;
-import de.atlasmc.node.io.protocol.configuration.PacketInPluginMessage;
-import de.atlasmc.node.io.protocol.configuration.PacketInPong;
-import de.atlasmc.node.io.protocol.configuration.PacketInResourcePack;
+import de.atlasmc.node.io.protocol.configuration.PacketConfigurationServerbound;
+import de.atlasmc.node.io.protocol.configuration.ServerboundClientInformation;
+import de.atlasmc.node.io.protocol.configuration.ServerboundCookieResponse;
+import de.atlasmc.node.io.protocol.configuration.ServerboundFinishConfiguration;
+import de.atlasmc.node.io.protocol.configuration.ServerboundKeepAlive;
+import de.atlasmc.node.io.protocol.configuration.ServerboundKnownPacks;
+import de.atlasmc.node.io.protocol.configuration.ServerboundPluginMessage;
+import de.atlasmc.node.io.protocol.configuration.ServerboundPong;
+import de.atlasmc.node.io.protocol.configuration.ServerboundResourcePack;
 import de.atlasmc.plugin.channel.PluginChannel;
 
-public class CorePacketListenerConfigurationIn extends CoreAbstractPacketListener<PlayerConnection, PacketConfigurationIn> {
+public class CorePacketListenerConfigurationIn extends CoreAbstractPacketListener<PlayerConnection, PacketConfigurationServerbound> {
 
 	private static final PacketHandler<?,?>[] HANDLERS;
 	private static final boolean[] HANDLE_ASYNC;
@@ -32,7 +32,7 @@ public class CorePacketListenerConfigurationIn extends CoreAbstractPacketListene
 	static {
 		HANDLE_ASYNC = new boolean[PacketConfiguration.PACKET_COUNT_IN];
 		HANDLERS = new PacketHandler[PacketConfiguration.PACKET_COUNT_IN];
-		initHandler(PacketInClientInformation.class, (con, packet) -> {
+		initHandler(ServerboundClientInformation.class, (con, packet) -> {
 			PlayerSettings settings = con.getSettings();
 			// Chat settings
 			boolean chatColors = packet.chatColors;
@@ -72,13 +72,13 @@ public class CorePacketListenerConfigurationIn extends CoreAbstractPacketListene
 				HandlerList.callEvent(new PlayerLocaleChangeEvent(con.getPlayer(), clientLocale));
 			}
 		});
-		initHandler(PacketInFinishConfiguration.class, (con, packet) -> {
+		initHandler(ServerboundFinishConfiguration.class, (con, packet) -> {
 			con.protocolChangeAcknowledged();
 		});
-		initHandler(PacketInKeepAlive.class, (con, packet) -> {
+		initHandler(ServerboundKeepAlive.class, (con, packet) -> {
 			// TODO handle keep alive
 		});
-		initHandler(PacketInPluginMessage.class, (con, packet) -> {
+		initHandler(ServerboundPluginMessage.class, (con, packet) -> {
 			System.out.println(packet.channel.toString());
 			PluginChannel channel = con.getPluginChannelHandler().getChannel(packet.channel);
 			if (channel == null) {
@@ -87,25 +87,25 @@ public class CorePacketListenerConfigurationIn extends CoreAbstractPacketListene
 				channel.handleMessage(packet.data);
 			}
 		});
-		initHandler(PacketInPong.class, (con, packet) -> {
+		initHandler(ServerboundPong.class, (con, packet) -> {
 			// TODO handle in pong
 		});
-		initHandler(PacketInResourcePack.class, (con, packet) -> {
+		initHandler(ServerboundResourcePack.class, (con, packet) -> {
 			// TODO handle in resource pack
 		});
-		initHandler(PacketInCookieResponse.class, (con, packet) -> {
+		initHandler(ServerboundCookieResponse.class, (con, packet) -> {
 			// TODO handle in cookie response
 		});
-		initHandler(PacketInKnownPacks.class, (con, packet) -> {
+		initHandler(ServerboundKnownPacks.class, (con, packet) -> {
 			// TODO handle in known packs
 		});
 	}
 	
-	private static <T extends PacketConfigurationIn> void initHandler(Class<T> clazz, PacketHandler<PlayerConnection, T> handler) {
+	private static <T extends PacketConfigurationServerbound> void initHandler(Class<T> clazz, PacketHandler<PlayerConnection, T> handler) {
 		initHandler(clazz, handler, false);
 	}
 		
-	private static <T extends PacketConfigurationIn> void initHandler(Class<T> clazz, PacketHandler<PlayerConnection, T> handler, boolean async) {
+	private static <T extends PacketConfigurationServerbound> void initHandler(Class<T> clazz, PacketHandler<PlayerConnection, T> handler, boolean async) {
 		int id = Packet.getDefaultPacketID(clazz);
 	    HANDLERS[id] = handler;
 	    HANDLE_ASYNC[id] = async;
@@ -122,7 +122,7 @@ public class CorePacketListenerConfigurationIn extends CoreAbstractPacketListene
 
 	@Override
 	protected void handle(Packet packet) {
-		if (holder.isWaitingForProtocolChange() && !(packet instanceof PacketInFinishConfiguration)) {
+		if (holder.isWaitingForProtocolChange() && !(packet instanceof ServerboundFinishConfiguration)) {
 			return;
 		}
 		@SuppressWarnings("unchecked")

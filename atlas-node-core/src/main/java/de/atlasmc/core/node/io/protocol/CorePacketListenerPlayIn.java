@@ -77,7 +77,7 @@ import de.atlasmc.node.io.protocol.play.PacketInChunkBatchReceived;
 import de.atlasmc.node.io.protocol.play.PacketInClickContainer;
 import de.atlasmc.node.io.protocol.play.PacketInClickContainerButton;
 import de.atlasmc.node.io.protocol.play.PacketInClientCommand;
-import de.atlasmc.node.io.protocol.play.PacketInClientInformation;
+import de.atlasmc.node.io.protocol.play.ServerboundClientInformation;
 import de.atlasmc.node.io.protocol.play.PacketInClientTickEnd;
 import de.atlasmc.node.io.protocol.play.PacketInCloseContainer;
 import de.atlasmc.node.io.protocol.play.PacketInCommandSuggestionsRequest;
@@ -168,7 +168,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				HandlerList.callEvent(new PlayerRespawnEvent(con.getPlayer()));
 			}
 		});
-		initHandler(PacketInClientInformation.class, (con, packet) -> { // 0x05
+		initHandler(ServerboundClientInformation.class, (con, packet) -> { // 0x05
 			PlayerSettings settings = con.getSettings();
 			// Chat settings
 			boolean chatColors = packet.chatColors;

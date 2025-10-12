@@ -28,12 +28,12 @@ public class HandshakeProtocol implements Protocol {
 	}
 
 	@Override
-	public PacketListener createDefaultPacketListenerIn(Object o) {
+	public PacketListener createDefaultPacketListenerServerbound(Object o) {
 		return new HandshakePacketListener((ConnectionHandler) o, this);
 	}
 	
 	@Override
-	public PacketListener createDefaultPacketListenerOut(Object o) {
+	public PacketListener createDefaultPacketListenerClientbound(Object o) {
 		return null;
 	}
 	
@@ -46,7 +46,7 @@ public class HandshakeProtocol implements Protocol {
 	}
 
 	@Override
-	public Packet createPacketIn(int id) {
+	public Packet createPacketServerbound(int id) {
 		HandshakePacketIO<?> io = packets.get(id);
 		if (io == null)
 			return null;
@@ -54,18 +54,18 @@ public class HandshakeProtocol implements Protocol {
 	}
 
 	@Override
-	public Packet createPacketOut(int id) {
-		return createPacketIn(id);
+	public Packet createPacketClientbound(int id) {
+		return createPacketServerbound(id);
 	}
 
 	@Override
-	public PacketIO<? extends Packet> getHandlerIn(int id) {
+	public PacketIO<? extends Packet> getHandlerServerbound(int id) {
 		return packets.get(id);
 	}
 
 	@Override
-	public PacketIO<? extends Packet> getHandlerOut(int id) {
-		return getHandlerIn(id);
+	public PacketIO<? extends Packet> getHandlerClientbound(int id) {
+		return getHandlerServerbound(id);
 	}
 
 }

@@ -2,18 +2,18 @@ package de.atlasmc.core.node.io.protocol.configuration;
 
 import de.atlasmc.core.node.io.protocol.common.CoreAbstractPacketCookieResponse;
 import de.atlasmc.io.Packet;
-import de.atlasmc.node.io.protocol.configuration.PacketInCookieResponse;
+import de.atlasmc.node.io.protocol.configuration.ServerboundCookieResponse;
 
-public class CorePacketInCookieResponse extends CoreAbstractPacketCookieResponse<PacketInCookieResponse> {
+public class CorePacketInCookieResponse extends CoreAbstractPacketCookieResponse<ServerboundCookieResponse> {
 
 	@Override
-	public PacketInCookieResponse createPacketData() {
-		return new PacketInCookieResponse();
+	public ServerboundCookieResponse createPacketData() {
+		return new ServerboundCookieResponse();
 	}
 
 	@Override
 	public int getPacketID() {
-		return Packet.getDefaultPacketID(PacketInCookieResponse.class);
+		return Packet.getDefaultPacketID(ServerboundCookieResponse.class);
 	}
 
 }

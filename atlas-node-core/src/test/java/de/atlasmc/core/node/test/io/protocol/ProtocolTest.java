@@ -51,7 +51,7 @@ public class ProtocolTest {
 		for (int i = 0; i < packetCountIn; i++) {
 			PacketIO<?> handler = null;
 			try {
-				handler = protocol.getHandlerIn(i);
+				handler = protocol.getHandlerServerbound(i);
 			} catch(Exception e) {}
 			if (handler == null)
 				continue;
@@ -61,7 +61,7 @@ public class ProtocolTest {
 		for (int i = 0; i < packetCountOut; i++) {
 			PacketIO<?> handler = null;
 			try {
-				handler = protocol.getHandlerOut(i);
+				handler = protocol.getHandlerClientbound(i);
 			} catch(Exception e) {}
 			if (handler == null)
 				continue;

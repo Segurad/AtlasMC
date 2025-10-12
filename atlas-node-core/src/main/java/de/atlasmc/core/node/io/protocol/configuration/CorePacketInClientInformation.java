@@ -1,50 +1,19 @@
 package de.atlasmc.core.node.io.protocol.configuration;
 
-import static de.atlasmc.node.io.protocol.ProtocolUtil.*;
-
-import java.io.IOException;
-
-import de.atlasmc.chat.ChatMode;
+import de.atlasmc.core.node.io.protocol.common.CoreAbstractPacketClientInformation;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
-import de.atlasmc.io.connection.ConnectionHandler;
-import de.atlasmc.node.io.protocol.configuration.PacketInClientInformation;
-import io.netty.buffer.ByteBuf;
+import de.atlasmc.node.io.protocol.configuration.ServerboundClientInformation;
 
-public class CorePacketInClientInformation implements PacketIO<PacketInClientInformation> {
+public class CorePacketInClientInformation extends CoreAbstractPacketClientInformation<ServerboundClientInformation> {
 
 	@Override
-	public void read(PacketInClientInformation packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.local = readString(in, 16);
-		packet.viewDistance = in.readByte();
-		packet.chatMode = ChatMode.getByID(readVarInt(in));
-		packet.chatColors = in.readBoolean();
-		packet.skinParts = in.readUnsignedByte();
-		packet.mainHand = readVarInt(in);
-		packet.enableTextFiltering = in.readBoolean();
-		packet.allowServerListing = in.readBoolean();
-	}
-
-	@Override
-	public void write(PacketInClientInformation packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		writeString(packet.local, out);
-		out.writeByte(packet.viewDistance);
-		writeVarInt(packet.chatMode.getID(), out);
-		out.writeBoolean(packet.chatColors);
-		out.writeByte(packet.skinParts);
-		writeVarInt(packet.mainHand, out);
-		out.writeBoolean(packet.enableTextFiltering);
-		out.writeBoolean(packet.allowServerListing);
-	}
-
-	@Override
-	public PacketInClientInformation createPacketData() {
-		return new PacketInClientInformation();
+	public ServerboundClientInformation createPacketData() {
+		return new ServerboundClientInformation();
 	}
 
 	@Override
 	public int getPacketID() {
-		return Packet.getDefaultPacketID(PacketInClientInformation.class);
+		return Packet.getDefaultPacketID(ServerboundClientInformation.class);
 	}
 
 }

@@ -13,7 +13,7 @@ public interface Protocol {
 	 * @return handler or null
 	 */
 	@Nullable
-	PacketIO<? extends Packet> getHandlerIn(int id);
+	PacketIO<? extends Packet> getHandlerServerbound(int id);
 	
 	/**
 	 * Returns the packet handler for the given id.
@@ -21,7 +21,7 @@ public interface Protocol {
 	 * @return handler or null
 	 */
 	@Nullable
-	PacketIO<? extends Packet> getHandlerOut(int id);
+	PacketIO<? extends Packet> getHandlerClientbound(int id);
 	
 	/**
 	 * Returns a new packet for the given id.
@@ -29,7 +29,7 @@ public interface Protocol {
 	 * @return packet or null
 	 */
 	@Nullable
-	Packet createPacketIn(int id);
+	Packet createPacketServerbound(int id);
 	
 	/**
 	 * Returns a new packet for the given id.
@@ -37,7 +37,7 @@ public interface Protocol {
 	 * @return packet or null
 	 */
 	@Nullable
-	Packet createPacketOut(int id);
+	Packet createPacketClientbound(int id);
 	
 	/**
 	 * Returns the protocols version id
@@ -51,7 +51,7 @@ public interface Protocol {
 	 * @return listener
 	 */
 	@Nullable
-	PacketListener createDefaultPacketListenerIn(Object o);
+	PacketListener createDefaultPacketListenerServerbound(Object o);
 	
 	/**
 	 * Creates the default packet listener for this protocol
@@ -59,6 +59,6 @@ public interface Protocol {
 	 * @return listener
 	 */
 	@Nullable
-	PacketListener createDefaultPacketListenerOut(Object o);
+	PacketListener createDefaultPacketListenerClientbound(Object o);
 
 }

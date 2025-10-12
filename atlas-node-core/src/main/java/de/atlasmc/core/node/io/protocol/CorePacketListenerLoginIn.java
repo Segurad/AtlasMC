@@ -26,18 +26,19 @@ import de.atlasmc.io.socket.SocketConfig;
 import de.atlasmc.network.AtlasNetwork;
 import de.atlasmc.network.player.AtlasPlayer;
 import de.atlasmc.network.player.PlayerConnectionConfig;
+import de.atlasmc.network.player.PlayerProfile;
 import de.atlasmc.network.player.ProfileHandler;
 import de.atlasmc.node.AtlasNode;
 import de.atlasmc.node.io.protocol.PlayerConnection;
 import de.atlasmc.node.io.protocol.ProtocolAdapter;
-import de.atlasmc.node.io.protocol.login.PacketInCookieResponse;
-import de.atlasmc.node.io.protocol.login.PacketInEncryptionResponse;
-import de.atlasmc.node.io.protocol.login.PacketInLoginAcknowledged;
-import de.atlasmc.node.io.protocol.login.PacketInLoginPluginResponse;
-import de.atlasmc.node.io.protocol.login.PacketInLoginStart;
+import de.atlasmc.node.io.protocol.login.ServerboundCookieResponse;
+import de.atlasmc.node.io.protocol.login.ServerboundEncryptionResponse;
+import de.atlasmc.node.io.protocol.login.ServerboundLoginAcknowledged;
+import de.atlasmc.node.io.protocol.login.ServerboundLoginPluginResponse;
+import de.atlasmc.node.io.protocol.login.ServerboundLoginStart;
 import de.atlasmc.node.io.protocol.login.PacketLogin;
-import de.atlasmc.node.io.protocol.login.PacketOutEncryptionRequest;
-import de.atlasmc.node.io.protocol.login.PacketOutLoginSuccess;
+import de.atlasmc.node.io.protocol.login.ClientboundEncryptionRequest;
+import de.atlasmc.node.io.protocol.login.ClientboundLoginSuccess;
 import de.atlasmc.node.io.socket.NodeSocket;
 
 public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePacketListenerLoginIn, Packet> {
@@ -51,12 +52,12 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 	static {
 		HANDLERS = new PacketHandler[PacketLogin.PACKET_COUNT_IN];
 		HANDLE_ASYNC = new boolean[PacketLogin.PACKET_COUNT_IN];
-		initHandler(PacketInLoginStart.class, (handler, packet) -> {
+		initHandler(ServerboundLoginStart.class, (handler, packet) -> {
 			NodeSocket socket = (NodeSocket) ((ServerSocketConnectionHandler) handler.con).getSocket();
 			SocketConfig config = socket.getConfig();
 			PlayerConnectionConfig conConfig = config.getConnectionConfig("player-connection");
 			if (conConfig.hasAuthentication()) {
-				PacketOutEncryptionRequest packetOut = new PacketOutEncryptionRequest();
+				ClientboundEncryptionRequest packetOut = new ClientboundEncryptionRequest();
 				packetOut.serverID = SERVER_ID;
 				packetOut.publicKey = Atlas.getKeyPair().getPublic().getEncoded();
 				byte[] token = generateVerifyToken();
@@ -69,17 +70,18 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 				if (player == null) {
 					// TODO request profile implementation
 				}
-				PacketOutLoginSuccess packetOut = new PacketOutLoginSuccess();
-				packetOut.uuid = player.getInternalUUID();
-				packetOut.username = player.getInternalName();
-				// TODO packetOut.properties =
+				ClientboundLoginSuccess packetOut = new ClientboundLoginSuccess();
+				PlayerProfile profile = new PlayerProfile();
+				profile.setName(player.getInternalName());
+				profile.setUUID(player.getInternalUUID());
+				packetOut.profile = profile;
 				handler.player = player;
 				handler.con.sendPacket(packetOut);
 			} else {
 				handler.syncQueue.add(packet);
 			}
 		}, true);
-		initHandler(PacketInEncryptionResponse.class, (handler, packet) -> {
+		initHandler(ServerboundEncryptionResponse.class, (handler, packet) -> {
 			PrivateKey privateKey = Atlas.getKeyPair().getPrivate();
 			Cipher cipher = null;
 			try {
@@ -119,23 +121,23 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 				throw new ProtocolException("Failed to create server id hash!");
 			}
 		}, true);
-		initHandler(PacketInLoginAcknowledged.class, (handler, packet) -> {
+		initHandler(ServerboundLoginAcknowledged.class, (handler, packet) -> {
 			int version = handler.con.getProtocol().getVersion();
 			ProtocolAdapter adapter = AtlasNode.getProtocolAdapter(version);
 			Protocol configuration = adapter.getConfigurationProtocol();
 			PlayerConnection con = new CorePlayerConnection(handler.player, handler.con, adapter);
-			handler.con.setProtocol(configuration, configuration.createDefaultPacketListenerIn(con));
+			handler.con.setProtocol(configuration, configuration.createDefaultPacketListenerServerbound(con));
 		}, true);
-		initHandler(PacketInLoginPluginResponse.class, (handle, packet) -> {
+		initHandler(ServerboundLoginPluginResponse.class, (handle, packet) -> {
 			// TODO handle plugin response
 		}, true);
-		initHandler(PacketInCookieResponse.class, (handler, packet) -> {
+		initHandler(ServerboundCookieResponse.class, (handler, packet) -> {
 			// TODO handle cookie response
 		}, false);
 	}
 	
-	private ConnectionHandler con;
-	private AtlasPlayer player;
+	private final ConnectionHandler con;
+	private volatile AtlasPlayer player;
 	private volatile byte[] verifyToken;
 	
 	private static <T extends PacketLogin> void initHandler(Class<T> clazz, PacketHandler<CorePacketListenerLoginIn, T> handler, boolean async) {

@@ -6,13 +6,13 @@ import de.atlasmc.core.node.io.protocol.status.CorePacketOutPong;
 import de.atlasmc.core.node.io.protocol.status.CorePacketOutResponse;
 import de.atlasmc.io.AbstractProtocol;
 import de.atlasmc.io.PacketIO;
-import de.atlasmc.io.PacketInbound;
+import de.atlasmc.io.PacketServerbound;
 import de.atlasmc.io.PacketListener;
-import de.atlasmc.io.PacketOutbound;
+import de.atlasmc.io.PacketClientbound;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.ProtocolStatus;
 
-public class CoreProtocolStatus extends AbstractProtocol<PacketInbound, PacketOutbound> implements ProtocolStatus {
+public class CoreProtocolStatus extends AbstractProtocol<PacketServerbound, PacketClientbound> implements ProtocolStatus {
 	
 	@SuppressWarnings("unchecked")
 	public CoreProtocolStatus() {
@@ -31,12 +31,12 @@ public class CoreProtocolStatus extends AbstractProtocol<PacketInbound, PacketOu
 	}
 
 	@Override
-	public PacketListener createDefaultPacketListenerIn(Object o) {
+	public PacketListener createDefaultPacketListenerServerbound(Object o) {
 		return new CorePacketListenerStatus((ConnectionHandler) o);
 	}
 	
 	@Override
-	public PacketListener createDefaultPacketListenerOut(Object o) {
+	public PacketListener createDefaultPacketListenerClientbound(Object o) {
 		return null;
 	}
 

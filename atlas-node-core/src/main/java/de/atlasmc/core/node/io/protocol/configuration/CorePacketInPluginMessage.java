@@ -2,18 +2,18 @@ package de.atlasmc.core.node.io.protocol.configuration;
 
 import de.atlasmc.core.node.io.protocol.common.CoreAbstractPacketPluginMessage;
 import de.atlasmc.io.Packet;
-import de.atlasmc.node.io.protocol.configuration.PacketInPluginMessage;
+import de.atlasmc.node.io.protocol.configuration.ServerboundPluginMessage;
 
-public class CorePacketInPluginMessage extends CoreAbstractPacketPluginMessage<PacketInPluginMessage> {
+public class CorePacketInPluginMessage extends CoreAbstractPacketPluginMessage<ServerboundPluginMessage> {
 
 	@Override
-	public PacketInPluginMessage createPacketData() {
-		return new PacketInPluginMessage();
+	public ServerboundPluginMessage createPacketData() {
+		return new ServerboundPluginMessage();
 	}
 
 	@Override
 	public int getPacketID() {
-		return Packet.getDefaultPacketID(PacketInPluginMessage.class);
+		return Packet.getDefaultPacketID(ServerboundPluginMessage.class);
 	}
 
 }

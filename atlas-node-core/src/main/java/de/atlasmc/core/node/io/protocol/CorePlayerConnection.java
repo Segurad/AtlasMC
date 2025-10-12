@@ -171,7 +171,7 @@ public class CorePlayerConnection implements PlayerConnection {
 		lastKeepAlive = System.currentTimeMillis();
 		keepAliveResponse = false;
 		if (inConfiguration) {
-			de.atlasmc.node.io.protocol.configuration.PacketOutKeepAlive packet = new de.atlasmc.node.io.protocol.configuration.PacketOutKeepAlive();
+			de.atlasmc.node.io.protocol.configuration.ClientboundKeepAlive packet = new de.atlasmc.node.io.protocol.configuration.ClientboundKeepAlive();
 			packet.keepAliveID = lastKeepAlive;
 			sendPacked(packet);
 		} else {
@@ -473,10 +473,10 @@ public class CorePlayerConnection implements PlayerConnection {
 				return;
 			boolean inConfiguration = this.inConfiguration;
 			if (inConfiguration) {
-				connection.setProtocol(protocolPlay, protocolPlay.createDefaultPacketListenerIn(this));
+				connection.setProtocol(protocolPlay, protocolPlay.createDefaultPacketListenerServerbound(this));
 			} else {
 				Protocol prot = protocol.getConfigurationProtocol();
-				connection.setProtocol(prot, prot.createDefaultPacketListenerIn(this));
+				connection.setProtocol(prot, prot.createDefaultPacketListenerServerbound(this));
 			}
 			this.inConfiguration = !inConfiguration;
 			waitingForProtocolChange = false;

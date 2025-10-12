@@ -8,31 +8,31 @@ import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.event.player.PlayerResourcePackStatusEvent.ResourcePackStatus;
-import de.atlasmc.node.io.protocol.configuration.PacketInResourcePack;
+import de.atlasmc.node.io.protocol.configuration.ServerboundResourcePack;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInResourcePack implements PacketIO<PacketInResourcePack> {
+public class CorePacketInResourcePack implements PacketIO<ServerboundResourcePack> {
 
 	@Override
-	public void read(PacketInResourcePack packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void read(ServerboundResourcePack packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.uuid = readUUID(in);
 		packet.status = ResourcePackStatus.getByID(readVarInt(in));
 	}
 
 	@Override
-	public void write(PacketInResourcePack packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void write(ServerboundResourcePack packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		writeUUID(packet.uuid, out);
 		writeVarInt(packet.status.getID(), out);
 	}
 
 	@Override
-	public PacketInResourcePack createPacketData() {
-		return new PacketInResourcePack();
+	public ServerboundResourcePack createPacketData() {
+		return new ServerboundResourcePack();
 	}
 
 	@Override
 	public int getPacketID() {
-		return Packet.getDefaultPacketID(PacketInResourcePack.class);
+		return Packet.getDefaultPacketID(ServerboundResourcePack.class);
 	}
 
 }

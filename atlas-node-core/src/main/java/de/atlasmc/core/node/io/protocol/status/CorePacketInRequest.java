@@ -5,29 +5,29 @@ import java.io.IOException;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
-import de.atlasmc.node.io.protocol.status.PacketInRequest;
+import de.atlasmc.node.io.protocol.status.ServerboundRequest;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInRequest implements PacketIO<PacketInRequest> {
+public class CorePacketInRequest implements PacketIO<ServerboundRequest> {
 
 	@Override
-	public void read(PacketInRequest packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void read(ServerboundRequest packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		// not required
 	}
 
 	@Override
-	public void write(PacketInRequest packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void write(ServerboundRequest packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		// not required
 	}
 
 	@Override
-	public PacketInRequest createPacketData() {
-		return new PacketInRequest();
+	public ServerboundRequest createPacketData() {
+		return new ServerboundRequest();
 	}
 
 	@Override
 	public int getPacketID() {
-		return Packet.getDefaultPacketID(PacketInRequest.class);
+		return Packet.getDefaultPacketID(ServerboundRequest.class);
 	}
 
 }

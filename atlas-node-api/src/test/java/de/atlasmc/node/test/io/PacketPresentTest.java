@@ -12,8 +12,8 @@ import com.google.gson.stream.JsonReader;
 
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketInbound;
-import de.atlasmc.io.PacketOutbound;
+import de.atlasmc.io.PacketServerbound;
+import de.atlasmc.io.PacketClientbound;
 import de.atlasmc.node.io.protocol.configuration.PacketConfiguration;
 import de.atlasmc.node.io.protocol.login.PacketLogin;
 import de.atlasmc.node.io.protocol.play.PacketPlay;
@@ -74,7 +74,7 @@ public class PacketPresentTest {
 				return;
 			String definition = annotation.definition();
 			int id = annotation.packetID();
-			if (PacketInbound.class.isAssignableFrom(packetClass)) {
+			if (PacketServerbound.class.isAssignableFrom(packetClass)) {
 				Integer shouldID = in.get(definition);
 				if (shouldID == null) {
 					errors.add(new AssertionError("Packet class (" + packetClass.getName() + ") with unknown definition: " + definition));
@@ -84,7 +84,7 @@ public class PacketPresentTest {
 				if (id == shouldID)
 					return;
 				errors.add(new AssertionError("Expected packet id (" + shouldID + ") but was (" + id + ") in packet: " + definition + " class: " + packetClass.getName()));
-			} else if (PacketOutbound.class.isAssignableFrom(packetClass)) {
+			} else if (PacketClientbound.class.isAssignableFrom(packetClass)) {
 				Integer shouldID = out.get(definition);
 				if (shouldID == null) {
 					errors.add(new AssertionError("Packet class (" + packetClass.getName() + ") with unknown definition: " + definition));
@@ -134,9 +134,9 @@ public class PacketPresentTest {
 			} catch (IllegalArgumentException e) {}
 			if (id == -1)
 				return;
-			if (PacketInbound.class.isAssignableFrom(packetClass)) {
+			if (PacketServerbound.class.isAssignableFrom(packetClass)) {
 				packetIDsIn.remove(id);
-			} else if (PacketOutbound.class.isAssignableFrom(packetClass)) {
+			} else if (PacketClientbound.class.isAssignableFrom(packetClass)) {
 				packetIDsOut.remove(id);
 			}
 		});

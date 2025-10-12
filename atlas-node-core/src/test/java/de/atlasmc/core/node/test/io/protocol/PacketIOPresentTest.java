@@ -9,8 +9,8 @@ import org.opentest4j.MultipleFailuresError;
 
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
-import de.atlasmc.io.PacketInbound;
-import de.atlasmc.io.PacketOutbound;
+import de.atlasmc.io.PacketServerbound;
+import de.atlasmc.io.PacketClientbound;
 import de.atlasmc.node.io.protocol.configuration.PacketConfiguration;
 import de.atlasmc.node.io.protocol.login.PacketLogin;
 import de.atlasmc.node.io.protocol.play.PacketPlay;
@@ -60,9 +60,9 @@ public class PacketIOPresentTest {
 			} catch (IllegalArgumentException e) {}
 			if (id == -1)
 				return;
-			if (PacketInbound.class.isAssignableFrom(packetClass)) {
+			if (PacketServerbound.class.isAssignableFrom(packetClass)) {
 				packetIDsIn.remove(id);
-			} else if (PacketOutbound.class.isAssignableFrom(packetClass)) {
+			} else if (PacketClientbound.class.isAssignableFrom(packetClass)) {
 				packetIDsOut.remove(id);
 			}
 		});

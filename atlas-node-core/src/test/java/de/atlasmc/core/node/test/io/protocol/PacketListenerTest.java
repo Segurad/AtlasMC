@@ -12,7 +12,7 @@ import de.atlasmc.core.node.io.protocol.CorePacketListenerConfigurationIn;
 import de.atlasmc.core.node.io.protocol.CorePacketListenerLoginIn;
 import de.atlasmc.core.node.io.protocol.CorePacketListenerPlayIn;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketInbound;
+import de.atlasmc.io.PacketServerbound;
 import de.atlasmc.test.util.ReflectionUtil;
 
 public class PacketListenerTest {
@@ -38,7 +38,7 @@ public class PacketListenerTest {
 		Object handlers = handlerField.get(null);
 		LinkedList<AssertionFailedError> checks = new LinkedList<>();
 		ReflectionUtil.getClassesInPacket(packet, (clazz) -> {
-			if (!PacketInbound.class.isAssignableFrom(clazz))
+			if (!PacketServerbound.class.isAssignableFrom(clazz))
 				return;
 			int id = -1;
 			try {

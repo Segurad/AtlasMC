@@ -13,18 +13,18 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
-import de.atlasmc.node.io.protocol.configuration.PacketOutRegistryData;
-import de.atlasmc.node.io.protocol.configuration.PacketOutRegistryData.RegistryEntry;
+import de.atlasmc.node.io.protocol.configuration.ClientboundRegistryData;
+import de.atlasmc.node.io.protocol.configuration.ClientboundRegistryData.RegistryEntry;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.tag.NBT;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutRegistryData implements PacketIO<PacketOutRegistryData> {
+public class CorePacketOutRegistryData implements PacketIO<ClientboundRegistryData> {
 	
 	@Override
-	public void read(PacketOutRegistryData packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void read(ClientboundRegistryData packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.registryID = readIdentifier(in);
 		final int count = readVarInt(in);
 		if (count == 0)
@@ -46,7 +46,7 @@ public class CorePacketOutRegistryData implements PacketIO<PacketOutRegistryData
 	}
 
 	@Override
-	public void write(PacketOutRegistryData packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void write(ClientboundRegistryData packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		writeIdentifier(packet.registryID, out);
 		List<RegistryEntry> entries = packet.entries;
 		if (entries == null) {
@@ -76,13 +76,13 @@ public class CorePacketOutRegistryData implements PacketIO<PacketOutRegistryData
 	}
 
 	@Override
-	public PacketOutRegistryData createPacketData() {
-		return new PacketOutRegistryData();
+	public ClientboundRegistryData createPacketData() {
+		return new ClientboundRegistryData();
 	}
 
 	@Override
 	public int getPacketID() {
-		return Packet.getDefaultPacketID(PacketOutRegistryData.class);
+		return Packet.getDefaultPacketID(ClientboundRegistryData.class);
 	}
 
 }

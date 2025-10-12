@@ -1,10 +1,10 @@
 package de.atlasmc.network.io.protocol;
 
-import de.atlasmc.io.PacketOutbound;
+import de.atlasmc.io.PacketClientbound;
 
 /**
  * Packets directed to network master
  */
-public interface AtlasPacketOut extends AtlasPacket, PacketOutbound {
+public interface AtlasPacketOut extends AtlasPacket, PacketClientbound {
 
 }

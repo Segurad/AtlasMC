@@ -2,18 +2,18 @@ package de.atlasmc.core.node.io.protocol.configuration;
 
 import de.atlasmc.core.node.io.protocol.common.CoreAbstractPacketServerLinks;
 import de.atlasmc.io.Packet;
-import de.atlasmc.node.io.protocol.configuration.PacketOutServerLinks;
+import de.atlasmc.node.io.protocol.configuration.ClientboundServerLinks;
 
-public class CorePacketOutServerLinks extends CoreAbstractPacketServerLinks<PacketOutServerLinks> {
+public class CorePacketOutServerLinks extends CoreAbstractPacketServerLinks<ClientboundServerLinks> {
 
 	@Override
-	public PacketOutServerLinks createPacketData() {
-		return new PacketOutServerLinks();
+	public ClientboundServerLinks createPacketData() {
+		return new ClientboundServerLinks();
 	}
 
 	@Override
 	public int getPacketID() {
-		return Packet.getDefaultPacketID(PacketOutServerLinks.class);
+		return Packet.getDefaultPacketID(ClientboundServerLinks.class);
 	}
 
 }

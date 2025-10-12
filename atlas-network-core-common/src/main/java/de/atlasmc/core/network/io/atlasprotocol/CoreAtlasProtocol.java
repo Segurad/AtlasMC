@@ -21,13 +21,13 @@ public class CoreAtlasProtocol extends AbstractProtocol<AtlasPacketIn, AtlasPack
 	}
 
 	@Override
-	public PacketListener createDefaultPacketListenerIn(Object o) {
+	public PacketListener createDefaultPacketListenerServerbound(Object o) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public PacketListener createDefaultPacketListenerOut(Object o) {
+	public PacketListener createDefaultPacketListenerClientbound(Object o) {
 		// TODO Auto-generated method stub
 		return null;
 	}

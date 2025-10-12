@@ -1,7 +1,7 @@
 package de.atlasmc.node.io.protocol.play;
 
-import de.atlasmc.io.PacketInbound;
+import de.atlasmc.io.PacketServerbound;
 
-public interface PacketPlayIn extends PacketPlay, PacketInbound {
+public interface PacketPlayIn extends PacketPlay, PacketServerbound {
 
 }

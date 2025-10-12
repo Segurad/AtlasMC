@@ -6,10 +6,10 @@ import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.PacketListener;
 import de.atlasmc.node.io.protocol.PlayerConnection;
 import de.atlasmc.node.io.protocol.ProtocolConfiguration;
-import de.atlasmc.node.io.protocol.configuration.PacketConfigurationIn;
-import de.atlasmc.node.io.protocol.configuration.PacketConfigurationOut;
+import de.atlasmc.node.io.protocol.configuration.PacketConfigurationServerbound;
+import de.atlasmc.node.io.protocol.configuration.PacketConfigurationClientbound;
 
-public class CoreProtocolConfiguration extends AbstractProtocol<PacketConfigurationIn, PacketConfigurationOut> implements ProtocolConfiguration {
+public class CoreProtocolConfiguration extends AbstractProtocol<PacketConfigurationServerbound, PacketConfigurationClientbound> implements ProtocolConfiguration {
 
 	@SuppressWarnings("unchecked")
 	public CoreProtocolConfiguration() {
@@ -49,14 +49,14 @@ public class CoreProtocolConfiguration extends AbstractProtocol<PacketConfigurat
 	}
 
 	@Override
-	public PacketListener createDefaultPacketListenerIn(Object o) {
+	public PacketListener createDefaultPacketListenerServerbound(Object o) {
 		if (o instanceof PlayerConnection con)
 			return new CorePacketListenerConfigurationIn(con);
 		throw new IllegalArgumentException("Expected PlayerConnection but got: " + o.getClass().getName());
 	}
 
 	@Override
-	public PacketListener createDefaultPacketListenerOut(Object o) {
+	public PacketListener createDefaultPacketListenerClientbound(Object o) {
 		return null;
 	}
 

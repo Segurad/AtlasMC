@@ -84,7 +84,7 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 	
 	public SocketConnectionHandler(SocketChannel channel, Log log) {
 		this(channel, log, HandshakeProtocol.DEFAULT_PROTOCOL);
-		registerPacketListener(HandshakeProtocol.DEFAULT_PROTOCOL.createDefaultPacketListenerIn(this));
+		registerPacketListener(HandshakeProtocol.DEFAULT_PROTOCOL.createDefaultPacketListenerServerbound(this));
 	}
 	
 	public SocketConnectionHandler(SocketChannel channel, Log log, Protocol protocol) {

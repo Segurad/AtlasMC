@@ -10,13 +10,13 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
-import de.atlasmc.node.io.protocol.configuration.PacketOutFeatureFlags;
+import de.atlasmc.node.io.protocol.configuration.ClientboundFeatureFlags;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutFeatureFlags implements PacketIO<PacketOutFeatureFlags> {
+public class CorePacketOutFeatureFlags implements PacketIO<ClientboundFeatureFlags> {
 
 	@Override
-	public void read(PacketOutFeatureFlags packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void read(ClientboundFeatureFlags packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		final int size = readVarInt(in);
 		if (size <= 0)
 			return;
@@ -27,7 +27,7 @@ public class CorePacketOutFeatureFlags implements PacketIO<PacketOutFeatureFlags
 	}
 
 	@Override
-	public void write(PacketOutFeatureFlags packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void write(ClientboundFeatureFlags packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		List<NamespacedKey> flags = packet.flags;
 		if (flags == null || flags.isEmpty()) {
 			writeVarInt(0, out);
@@ -39,13 +39,13 @@ public class CorePacketOutFeatureFlags implements PacketIO<PacketOutFeatureFlags
 	}
 
 	@Override
-	public PacketOutFeatureFlags createPacketData() {
-		return new PacketOutFeatureFlags();
+	public ClientboundFeatureFlags createPacketData() {
+		return new ClientboundFeatureFlags();
 	}
 
 	@Override
 	public int getPacketID() {
-		return Packet.getDefaultPacketID(PacketOutFeatureFlags.class);
+		return Packet.getDefaultPacketID(ClientboundFeatureFlags.class);
 	}
 
 }

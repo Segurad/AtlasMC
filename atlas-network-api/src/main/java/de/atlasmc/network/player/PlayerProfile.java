@@ -57,6 +57,10 @@ public class PlayerProfile implements NBTSerializable, Cloneable {
 		return properties;
 	}
 	
+	public void addProperty(ProfileProperty property) {
+		getProperties().add(property);
+	}
+	
 	@Override
 	public PlayerProfile clone() {
 		try {
