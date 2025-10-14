@@ -1,9 +1,6 @@
 package de.atlasmc.node.entity;
 
-import java.util.List;
-
-import de.atlasmc.util.EnumID;
-import de.atlasmc.util.EnumValueCache;
+import de.atlasmc.IDHolder;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Axolotl extends Fish, AgeableMob {
@@ -13,7 +10,7 @@ public interface Axolotl extends Fish, AgeableMob {
 					.builder(Axolotl.class)
 					.include(AgeableMob.NBT_HANDLER)
 					.include(Fish.NBT_HANDLER)
-					.enumIntField("Variant", Axolotl::getVariant, Axolotl::setVariant, Variant::getByID, Variant.LUCY)
+					.enumIntField("Variant", Axolotl::getVariant, Axolotl::setVariant, Variant.class, Variant.LUCY)
 					.build();
 	
 	Variant getVariant();
@@ -25,7 +22,7 @@ public interface Axolotl extends Fish, AgeableMob {
 		return NBT_HANDLER;
 	}
 	
-	public static enum Variant implements EnumID, EnumValueCache {
+	public static enum Variant implements IDHolder {
 		
 		LUCY,
 		WILD,
@@ -33,33 +30,9 @@ public interface Axolotl extends Fish, AgeableMob {
 		CYAN,
 		BLUE;
 		
-		private static List<Variant> VALUES;
-		
 		@Override
 		public int getID() {
 			return ordinal();
-		}
-		
-		public static Variant getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<Variant> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
 		}
 		
 	}

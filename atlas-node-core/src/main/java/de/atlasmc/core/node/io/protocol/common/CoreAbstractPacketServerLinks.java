@@ -12,6 +12,8 @@ import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.common.AbstractPacketServerLinks;
 import de.atlasmc.node.io.protocol.common.AbstractPacketServerLinks.Label;
 import de.atlasmc.node.io.protocol.common.AbstractPacketServerLinks.ServerLink;
+import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.EnumUtil.EnumData;
 import io.netty.buffer.ByteBuf;
 
 public abstract class CoreAbstractPacketServerLinks<T extends AbstractPacketServerLinks> implements PacketIO<T> {
@@ -24,11 +26,12 @@ public abstract class CoreAbstractPacketServerLinks<T extends AbstractPacketServ
 			return;
 		}
 		ArrayList<ServerLink> links = new ArrayList<>(count);
+		EnumData<Label> enumData = EnumUtil.getData(Label.class);
 		for (int i = 0; i < count; i++) {
 			Chat customLabel = null;
 			Label label = null;
 			if (in.readBoolean()) {
-				label = Label.getByID(readVarInt(in));
+				label = enumData.getByID(readVarInt(in));
 			} else {
 				customLabel = readTextComponent(in);
 			}

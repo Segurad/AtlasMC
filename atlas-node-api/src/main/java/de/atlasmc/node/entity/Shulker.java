@@ -13,7 +13,7 @@ public interface Shulker extends AbstractGolem {
 					.builder(Shulker.class)
 					.include(AbstractGolem.NBT_HANDLER)
 					.enumByteField("AttachFace", Shulker::getAttachedFace, Shulker::setAttachedFace, BlockFace::getByFaceID, BlockFace::getFaceID, BlockFace.DOWN)
-					.enumByteField("Color", Shulker::getColor, Shulker::setColor, DyeColor::getByID, DyeColor::getID, DyeColor.MAGENTA)
+					.enumByteField("Color", Shulker::getColor, Shulker::setColor, DyeColor.class, DyeColor::getID, DyeColor.MAGENTA)
 					.byteField("Peek", Shulker::getShieldHeight, Shulker::setShieldHeight, (byte) 16)
 					.build();
 	

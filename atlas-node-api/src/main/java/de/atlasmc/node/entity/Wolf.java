@@ -19,7 +19,7 @@ public interface Wolf extends Tameable, AngerableMob {
 					.builder(Wolf.class)
 					.include(Tameable.NBT_HANDLER)
 					.include(AngerableMob.NBT_HANDLER)
-					.enumByteField("CollarColor", Wolf::getCollarColor, Wolf::setCollarColor, DyeColor::getByID, DyeColor::getID, DyeColor.RED)
+					.enumByteField("CollarColor", Wolf::getCollarColor, Wolf::setCollarColor, DyeColor.class, DyeColor::getID, DyeColor.RED)
 					.registryValue("variant", Wolf::getVariant, Wolf::setVariant, WolfVariant.REGISTRY_KEY)
 					// sound_variant
 					.build();

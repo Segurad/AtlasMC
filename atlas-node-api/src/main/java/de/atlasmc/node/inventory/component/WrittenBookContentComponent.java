@@ -2,9 +2,8 @@ package de.atlasmc.node.inventory.component;
 
 import java.util.List;
 
+import de.atlasmc.IDHolder;
 import de.atlasmc.chat.Chat;
-import de.atlasmc.util.EnumID;
-import de.atlasmc.util.EnumValueCache;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
@@ -21,7 +20,7 @@ public interface WrittenBookContentComponent extends ItemComponent {
 					.string("raw", WrittenBookContentComponent::getTitle, WrittenBookContentComponent::setTitle)
 					.endComponent()
 					.string("author", WrittenBookContentComponent::getAuthor, WrittenBookContentComponent::setAuthor)
-					.enumIntField("generation", WrittenBookContentComponent::getGeneration, WrittenBookContentComponent::setGeneration, Generation::getByID, Generation.ORGINAL)
+					.enumIntField("generation", WrittenBookContentComponent::getGeneration, WrittenBookContentComponent::setGeneration, Generation.class, Generation.ORGINAL)
 					.boolField("resolved", WrittenBookContentComponent::isResolved, WrittenBookContentComponent::setResolved, false)
 					.endComponent()
 					.build();
@@ -71,39 +70,16 @@ public interface WrittenBookContentComponent extends ItemComponent {
 		return NBT_HANDLER;
 	}
 	
-	public static enum Generation implements EnumID, EnumValueCache {
+	public static enum Generation implements IDHolder {
 		
 		ORGINAL,
 		COPY_OF_ORGINAL,
 		COPY_OF_COPY,
 		TATTERED;
 
-		private static List<Generation> VALUES;
-		
+		@Override
 		public int getID() {
 			return ordinal();
-		}
-		
-		public static Generation getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<Generation> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-		
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
 		}
 		
 	}

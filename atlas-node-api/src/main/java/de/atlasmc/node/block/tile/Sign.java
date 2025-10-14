@@ -38,7 +38,7 @@ public interface Sign extends TileEntity {
 						.builder(SignText.class)
 						.defaultConstructor(SignText::new)
 						.boolField("has_glowing_text", SignText::isGlowing, SignText::setGlowing)
-						.enumStringField("color", SignText::getColor, SignText::setColor, ChatColor::getByName, ChatColor.BLACK)
+						.enumStringField("color", SignText::getColor, SignText::setColor, ChatColor.class, ChatColor.BLACK)
 						.chatList("messages", SignText::hasMessages, SignText::getMessages, true)
 						.build();
 		

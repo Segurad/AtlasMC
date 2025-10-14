@@ -13,6 +13,8 @@ import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutMapData;
 import de.atlasmc.node.map.MapIcon;
 import de.atlasmc.node.map.MapIcon.IconType;
+import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.EnumUtil.EnumData;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import de.atlasmc.util.nbt.io.NBTReader;
@@ -28,6 +30,7 @@ public class CorePacketOutMapData implements PacketIO<PacketOutMapData> {
 		packet.locked = in.readBoolean();
 		if (in.readBoolean()) {
 			final int count = readVarInt(in);
+			final EnumData<IconType> iconType = EnumUtil.getData(IconType.class);
 			if (count > 0) {
 				List<MapIcon> icons = new ArrayList<>(count);
 				NBTReader nbtReader = new NBTNIOReader(in, true);
@@ -40,7 +43,7 @@ public class CorePacketOutMapData implements PacketIO<PacketOutMapData> {
 					Chat dname = null;
 					if (name) 
 						dname = readTextComponent(nbtReader);
-					MapIcon icon = new MapIcon(IconType.getByID(type), x, z, direction);
+					MapIcon icon = new MapIcon(iconType.getByID(type), x, z, direction);
 					icon.setDisplayName(dname);
 					icons.add(icon);
 				}

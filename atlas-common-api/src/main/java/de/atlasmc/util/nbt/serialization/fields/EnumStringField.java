@@ -5,19 +5,20 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 
-public class EnumStringField<T, K extends Enum<?> & EnumName> extends AbstractObjectField<T, K> {
+public class EnumStringField<T, K extends Enum<K> & EnumName> extends AbstractObjectField<T, K> {
 
-	private final Function<String, K> enumSupplier;
+	private final Class<K> clazz;
 	private final K defaultValue;
 	
-	public EnumStringField(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, Function<String, K> enumSupplier, K defaultValue) {
+	public EnumStringField(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, Class<K> clazz, K defaultValue) {
 		super(key, STRING, get, set, true);
-		this.enumSupplier = enumSupplier;
 		this.defaultValue = defaultValue;
+		this.clazz = clazz;
 	}
 
 	@Override
@@ -31,7 +32,7 @@ public class EnumStringField<T, K extends Enum<?> & EnumName> extends AbstractOb
 
 	@Override
 	public void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException {
-		K v = enumSupplier.apply(reader.readStringTag());
+		K v = EnumUtil.getByName(clazz, reader.readStringTag());
 		set.accept(value, v);
 	}
 

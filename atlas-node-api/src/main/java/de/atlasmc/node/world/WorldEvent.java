@@ -1,14 +1,11 @@
 package de.atlasmc.node.world;
 
-import java.util.List;
-
+import de.atlasmc.IDHolder;
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.inventory.ItemType;
-import de.atlasmc.util.EnumID;
-import de.atlasmc.util.EnumValueCache;
 
-public enum WorldEvent implements EnumID, EnumValueCache {
+public enum WorldEvent implements IDHolder {
 	
 	// --- Sounds
 	DISPENSER_DISPENSES(1000, Type.SOUND),
@@ -84,8 +81,6 @@ public enum WorldEvent implements EnumID, EnumValueCache {
 	COPPER_REMOVE_WAX(3004, Type.PARTICLE),
 	COPPER_SCRAPE_OXIDATION(3005, Type.PARTICLE);
 	
-	private static List<WorldEvent> VALUES;
-	
 	private int id;
 	private Class<?> clazz;
 	private Type type;
@@ -104,6 +99,7 @@ public enum WorldEvent implements EnumID, EnumValueCache {
 		return type;
 	}
 
+	@Override
 	public int getID() {
 		return id;
 	}
@@ -111,17 +107,12 @@ public enum WorldEvent implements EnumID, EnumValueCache {
 	public Class<?> getData() {
 		return clazz;
 	}
-
-	public static WorldEvent getByID(int id) {
-		for (WorldEvent e : getValues()) {
-			if (e.getID() == id) return e;
-		}
-		return null;
-	}
 	
 	public static enum Type {
+		
 		SOUND,
 		PARTICLE
+		
 	}
 	
 	public int getDataValueByObject(Object data) {
@@ -161,24 +152,6 @@ public enum WorldEvent implements EnumID, EnumValueCache {
 		}
 		default: return 0;
 		}
-	}
-	
-	/**
-	 * Returns a immutable List of all Types.<br>
-	 * This method avoid allocation of a new array not like {@link #values()}.
-	 * @return list
-	 */
-	public static List<WorldEvent> getValues() {
-		if (VALUES == null)
-			VALUES = List.of(values());
-		return VALUES;
-	}
-	
-	/**
-	 * Releases the system resources used from the values cache
-	 */
-	public static void freeValues() {
-		VALUES = null;
 	}
 
 }

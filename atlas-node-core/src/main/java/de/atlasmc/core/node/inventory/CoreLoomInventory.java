@@ -6,6 +6,7 @@ import de.atlasmc.node.inventory.InventoryHolder;
 import de.atlasmc.node.inventory.InventoryType;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.inventory.LoomInventory;
+import de.atlasmc.util.EnumUtil;
 import de.atlasmc.node.inventory.InventoryType.SlotType;
 
 public class CoreLoomInventory extends CoreInventory implements LoomInventory {
@@ -78,7 +79,7 @@ public class CoreLoomInventory extends CoreInventory implements LoomInventory {
 
 	@Override
 	public EnumPatternType getPattern() {
-		return EnumPatternType.getByID(properties[PROPERTY_PATTERN]);
+		return EnumUtil.getByID(EnumPatternType.class, properties[PROPERTY_PATTERN]);
 	}
 
 	@Override

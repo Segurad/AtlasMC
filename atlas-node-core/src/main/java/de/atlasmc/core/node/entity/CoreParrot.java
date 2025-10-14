@@ -7,8 +7,8 @@ import de.atlasmc.node.entity.data.MetaDataType;
 
 public class CoreParrot extends CoreTameable implements Parrot {
 
-	protected static final MetaDataField<Integer>
-	META_PARROT_TYPE = new MetaDataField<>(CoreTameable.LAST_META_INDEX+1, 0, MetaDataType.VAR_INT);
+	protected static final MetaDataField<Type>
+	META_PARROT_TYPE = new MetaDataField<>(CoreTameable.LAST_META_INDEX+1, Type.RED_BLUE, MetaDataType.getVarIntEnumType(Type.class));
 	
 	protected static final int LAST_META_INDEX = CoreTameable.LAST_META_INDEX+1;
 	
@@ -29,14 +29,14 @@ public class CoreParrot extends CoreTameable implements Parrot {
 
 	@Override
 	public Type getParrotType() {
-		return Type.getByID(metaContainer.getData(META_PARROT_TYPE));
+		return metaContainer.getData(META_PARROT_TYPE);
 	}
 
 	@Override
 	public void setParrotType(Type type) {
 		if (type == null)
 			throw new IllegalArgumentException("Type can not be null!");
-		metaContainer.get(META_PARROT_TYPE).setData(type.getID());
+		metaContainer.get(META_PARROT_TYPE).setData(type);
 	}
 
 }

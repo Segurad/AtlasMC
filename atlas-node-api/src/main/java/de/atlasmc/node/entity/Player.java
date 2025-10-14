@@ -32,8 +32,8 @@ public interface Player extends HumanEntity, Permissible, Messageable, SoundList
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(Player.class)
 					.include(HumanEntity.NBT_HANDLER)
-					.enumIntField("playerGameType", Player::getGamemode, Player::setGamemode, Gamemode::getByID, Gamemode.SURVIVAL)
-					.enumIntField("previousPlayerGameType", Player::getPreviousGamemode, Player::setPreviousGamemode, Gamemode::getByID, null)
+					.enumIntField("playerGameType", Player::getGamemode, Player::setGamemode, Gamemode.class, Gamemode.SURVIVAL)
+					.enumIntField("previousPlayerGameType", Player::getPreviousGamemode, Player::setPreviousGamemode, Gamemode.class, null)
 					.intField("XpLevel", Player::getLevel, Player::setLevel, 0)
 					.floatField("XpP", Player::getExpBar, Player::setExpBar, 0)
 					.intField("XpTotal", Player::getExp, Player::setExp, 0)

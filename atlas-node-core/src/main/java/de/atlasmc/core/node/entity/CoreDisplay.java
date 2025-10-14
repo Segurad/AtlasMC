@@ -19,7 +19,7 @@ public class CoreDisplay extends CoreEntity implements Display {
 	protected static final MetaDataField<Vector3f> META_SCALE = new MetaDataField<>(CoreEntity.LAST_META_INDEX+5, new Vector3f(1f,1f,1f), MetaDataType.VECTOR_3);
 	protected static final MetaDataField<Quaternionf> META_LEFT_ROTATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+6, new Quaternionf(), MetaDataType.QUATERNION);
 	protected static final MetaDataField<Quaternionf> META_RIGHT_ROTATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+7, new Quaternionf(), MetaDataType.QUATERNION);
-	protected static final MetaDataField<Byte> META_BILLBOARD = new MetaDataField<>(CoreEntity.LAST_META_INDEX+8, (byte) 0, MetaDataType.BYTE); 
+	protected static final MetaDataField<Billboard> META_BILLBOARD = new MetaDataField<>(CoreEntity.LAST_META_INDEX+8, Billboard.FIXED, MetaDataType.getByteEnumType(Billboard.class)); 
 	protected static final MetaDataField<Integer> META_BRIGHTNESS_OVERRIDE = new MetaDataField<>(CoreEntity.LAST_META_INDEX+9, -1, MetaDataType.VAR_INT);
 	protected static final MetaDataField<Float> META_VIEW_RANGE = new MetaDataField<>(CoreEntity.LAST_META_INDEX+10, 1f, MetaDataType.FLOAT);
 	protected static final MetaDataField<Float> META_SHADOW_RADIUS = new MetaDataField<>(CoreEntity.LAST_META_INDEX+11, 0f, MetaDataType.FLOAT);
@@ -83,14 +83,14 @@ public class CoreDisplay extends CoreEntity implements Display {
 
 	@Override
 	public Billboard getBillboard() { 
-		return Billboard.getByID(metaContainer.getData(META_BILLBOARD));
+		return metaContainer.getData(META_BILLBOARD);
 	}
 
 	@Override
 	public void setBillboard(Billboard billboard) {
 		if (billboard == null)
 			throw new IllegalArgumentException("Billboard can not be null!");
-		metaContainer.get(META_BILLBOARD).setData((byte) billboard.getID());
+		metaContainer.get(META_BILLBOARD).setData(billboard);
 	}
 
 	@Override

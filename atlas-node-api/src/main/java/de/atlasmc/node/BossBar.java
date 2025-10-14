@@ -1,9 +1,6 @@
 package de.atlasmc.node;
 
-import java.util.List;
-
-import de.atlasmc.util.EnumID;
-import de.atlasmc.util.EnumValueCache;
+import de.atlasmc.IDHolder;
 
 public class BossBar {
 	
@@ -76,7 +73,8 @@ public class BossBar {
 		}
 	}
 
-	public static enum BarColor implements EnumID, EnumValueCache {
+	public static enum BarColor implements IDHolder {
+		
 		PINK,
 		BLUE,
 		RED,
@@ -85,75 +83,30 @@ public class BossBar {
 		PURPLE,
 		WHITE;
 		
-		private static List<BarColor> VALUES;
-		
 		@Override
 		public int getID() {
 			return ordinal();
 		}
 		
-		public static BarColor getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<BarColor> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-		
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
-		}
-		
 	}
 	
-	public static enum BarStyle implements EnumID, EnumValueCache {
+	public static enum BarStyle implements IDHolder {
+		
 		NO_DIVISION,
 		SEGMENTED_6,
 		SEGMENTED_10,
 		SEGMENTED_12,
 		SEGMENTED_20;
 		
-		private static List<BarStyle> VALUES;
-		
 		@Override
 		public int getID() {
 			return ordinal();
 		}
-		
-		public static BarStyle getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<BarStyle> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-		
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
-		}
+
 	}
 	
 	public static enum BarFlag {
+		
 		DARKEN_SKY(0x1),
 		PLAY_BOSS_MUSIC(0x2),
 		CREATE_FOG(0x4);

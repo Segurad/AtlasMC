@@ -6,6 +6,7 @@ import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Shulker;
 import de.atlasmc.node.entity.data.MetaDataField;
 import de.atlasmc.node.entity.data.MetaDataType;
+import de.atlasmc.util.EnumUtil;
 
 public class CoreShulker extends CoreMob implements Shulker {
 
@@ -60,7 +61,7 @@ public class CoreShulker extends CoreMob implements Shulker {
 	@Override
 	public DyeColor getColor() {
 		int color = metaContainer.getData(META_COLOR);
-		return color == 16 ? null : DyeColor.getByID(color);
+		return color == 16 ? null : EnumUtil.getByID(DyeColor.class, color);
 	}
 
 	@Override

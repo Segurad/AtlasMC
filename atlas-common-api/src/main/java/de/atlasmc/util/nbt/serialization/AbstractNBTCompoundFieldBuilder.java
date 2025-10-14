@@ -21,6 +21,7 @@ import org.joml.Vector3f;
 import org.joml.Vector3i;
 
 import de.atlasmc.Color;
+import de.atlasmc.IDHolder;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.chat.Chat;
@@ -30,8 +31,8 @@ import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.registry.Registry;
 import de.atlasmc.registry.RegistryKey;
 import de.atlasmc.tag.TagKey;
-import de.atlasmc.util.EnumID;
 import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.dataset.DataSet;
 import de.atlasmc.util.function.ObjBooleanConsumer;
 import de.atlasmc.util.function.ObjByteConsumer;
@@ -51,7 +52,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 
 public abstract class AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCompoundFieldBuilder<T, B>> {
 	
-	protected static final int TYPE_COUNT = TagType.getValues().size() - 1; // tag end (0) is not used
+	protected static final int TYPE_COUNT = EnumUtil.getValues(TagType.class).size() - 1; // tag end (0) is not used
 	
 	protected final NBTCompoundFieldBuilder<T> root = new NBTCompoundFieldBuilder<>();
 	protected NBTCompoundFieldBuilder<T> builder = root;
@@ -193,20 +194,24 @@ public abstract class AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCo
 		return addField(new StringToObjectField<>(key, get, set, stringToObject, objectToString));
 	}
 	
-	public <K extends Enum<?> & EnumName> B enumStringField(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, Function<String, K> enumSupplier, K defaultValue) {
-		return addField(new EnumStringField<>(key, get, set, enumSupplier, defaultValue));
+	public <K extends Enum<K> & EnumName> B enumStringField(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, Class<K> clazz, K defaultValue) {
+		return addField(new EnumStringField<>(key, get, set, clazz, defaultValue));
 	}
 	
-	public <K extends Enum<?>> B enumByteField(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, IntFunction<K> enumSupplier, ToIntFunction<K> idSupplier, K defaultValue) {
+	public <K extends Enum<K>> B enumByteField(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, IntFunction<K> enumSupplier, ToIntFunction<K> idSupplier, K defaultValue) {
 		return addField(new EnumByteField<>(key, get, set, enumSupplier, idSupplier, defaultValue));
 	}
 	
-	public <K extends Enum<?> & EnumID> B enumIntField(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, IntFunction<K> enumSupplier, K defaultValue) {
-		return addField(new EnumIntField<>(key, get, set, enumSupplier, defaultValue));
+	public <K extends Enum<K>> B enumByteField(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, Class<K> clazz, ToIntFunction<K> idSupplier, K defaultValue) {
+		return addField(new EnumByteField<>(key, get, set, EnumUtil.getData(clazz)::getByID, idSupplier, defaultValue));
 	}
 	
-	public <K extends Enum<?> & EnumName> B interfacedEnumStringField(CharSequence key, Function<T, ? super K> get, BiConsumer<T, ? super K> set, Function<String, K> enumSupplier, K defaultValue) {
-		return addField(new InterfacedEnumStringField<>(key, get, set, enumSupplier, defaultValue));
+	public <K extends Enum<K> & IDHolder> B enumIntField(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, Class<K> clazz, K defaultValue) {
+		return addField(new EnumIntField<>(key, get, set, clazz, defaultValue));
+	}
+	
+	public <K extends Enum<K> & EnumName> B interfacedEnumStringField(CharSequence key, Function<T, ? super K> get, BiConsumer<T, ? super K> set, Class<K> clazz, K defaultValue) {
+		return addField(new InterfacedEnumStringField<>(key, get, set, clazz, defaultValue));
 	}
 	
 	public B chat(CharSequence key, Function<T, Chat> get, BiConsumer<T, Chat> set) {

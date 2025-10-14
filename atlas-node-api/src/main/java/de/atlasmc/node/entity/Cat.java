@@ -1,11 +1,8 @@
 package de.atlasmc.node.entity;
 
-import java.util.List;
-
+import de.atlasmc.IDHolder;
 import de.atlasmc.node.DyeColor;
-import de.atlasmc.util.EnumID;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.EnumValueCache;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Cat extends Tameable {
@@ -14,8 +11,8 @@ public interface Cat extends Tameable {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(Cat.class)
 					.include(Tameable.NBT_HANDLER)
-					.enumByteField("CollarColor", Cat::getCollarColor, Cat::setCollarColor, DyeColor::getByID, DyeColor::getID, DyeColor.RED)
-					.enumStringField("variant", Cat::getCatType, Cat::setCatType, Type::getByName, Type.BLACK)
+					.enumByteField("CollarColor", Cat::getCollarColor, Cat::setCollarColor, DyeColor.class, DyeColor::getID, DyeColor.RED)
+					.enumStringField("variant", Cat::getCatType, Cat::setCatType, Type.class, Type.BLACK)
 					.build();
 	
 	Type getCatType();
@@ -39,7 +36,8 @@ public interface Cat extends Tameable {
 		return NBT_HANDLER;
 	}
 	
-	public static enum Type implements EnumName, EnumID, EnumValueCache {
+	public static enum Type implements EnumName, IDHolder {
+
 		TABBY,
 		BLACK,
 		RED,
@@ -51,8 +49,6 @@ public interface Cat extends Tameable {
 		WHITE,
 		JELLIE,
 		ALL_BLACK;
-		
-		private static List<Type> VALUES;
 		
 		private String name;
 		
@@ -66,44 +62,9 @@ public interface Cat extends Tameable {
 			return name;
 		}
 		
-		public static Type getByName(String name) {
-			if (name == null)
-				throw new IllegalArgumentException("Name can not be null!");
-			final List<Type> values = getValues();
-			final int size = values.size();
-			for (int i = 0; i < size; i++) {
-				Type value = values.get(i);
-				if (value.name.equals(name))
-					return value;
-			}
-			return null;
-		}
-		
 		@Override
 		public int getID() {
 			return ordinal();
-		}
-		
-		public static Type getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<Type> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
 		}
 		
 	}

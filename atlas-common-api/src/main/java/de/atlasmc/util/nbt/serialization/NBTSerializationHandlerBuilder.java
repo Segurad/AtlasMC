@@ -82,8 +82,8 @@ public class NBTSerializationHandlerBuilder<T> extends AbstractNBTCompoundFieldB
 		return this;
 	}
 	
-	public <K extends Enum<?> & EnumName> NBTSerializationHandlerBuilder<T> searchKeyEnumConstructor(CharSequence keyField, Function<String, K> enumSupplier, Function<K, T> constructor, Function<T, K> keyReverseSupplier) {
-		this.constructor = new SearchFieldEnumConstructor<>(keyField, enumSupplier, constructor, keyReverseSupplier);
+	public <K extends Enum<K> & EnumName> NBTSerializationHandlerBuilder<T> searchKeyEnumConstructor(CharSequence keyField, Class<K> clazz, Function<K, T> constructor, Function<T, K> keyReverseSupplier) {
+		this.constructor = new SearchFieldEnumConstructor<>(keyField, clazz, constructor, keyReverseSupplier);
 		return this;
 	}
 	

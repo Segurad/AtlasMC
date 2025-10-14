@@ -9,6 +9,7 @@ import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.entity.Entity.Animation;
 import de.atlasmc.node.io.protocol.play.PacketOutEntityAnimation;
+import de.atlasmc.util.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutEntityAnimation implements PacketIO<PacketOutEntityAnimation> {
@@ -16,7 +17,7 @@ public class CorePacketOutEntityAnimation implements PacketIO<PacketOutEntityAni
 	@Override
 	public void read(PacketOutEntityAnimation packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.entityID = readVarInt(in);
-		packet.animation = Animation.getByID(in.readUnsignedByte());
+		packet.animation = EnumUtil.getByID(Animation.class, in.readUnsignedByte());
 	}
 
 	@Override

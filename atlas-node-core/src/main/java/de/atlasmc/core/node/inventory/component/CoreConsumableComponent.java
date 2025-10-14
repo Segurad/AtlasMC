@@ -17,6 +17,7 @@ import de.atlasmc.node.inventory.component.effect.ComponentEffect;
 import de.atlasmc.node.inventory.component.effect.ComponentEffectType;
 import de.atlasmc.node.sound.EnumSound;
 import de.atlasmc.node.sound.Sound;
+import de.atlasmc.util.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CoreConsumableComponent extends AbstractItemComponent implements ConsumableComponent {
@@ -113,7 +114,7 @@ public class CoreConsumableComponent extends AbstractItemComponent implements Co
 	@Override
 	public void read(ByteBuf buf) throws IOException {
 		consumeSeconds = buf.readFloat();
-		setAnimation(Animation.getByID(readVarInt(buf)));
+		setAnimation(EnumUtil.getByID(Animation.class, readVarInt(buf)));
 		setSound(readSound(buf));
 		particles = buf.readBoolean();
 		final int count = readVarInt(buf);

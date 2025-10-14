@@ -6,6 +6,7 @@ import de.atlasmc.node.entity.Sheep;
 import de.atlasmc.node.entity.data.MetaData;
 import de.atlasmc.node.entity.data.MetaDataField;
 import de.atlasmc.node.entity.data.MetaDataType;
+import de.atlasmc.util.EnumUtil;
 
 public class CoreSheep extends CoreAgeableMob implements Sheep {
 
@@ -31,7 +32,7 @@ public class CoreSheep extends CoreAgeableMob implements Sheep {
 
 	@Override
 	public DyeColor getColor() {
-		return DyeColor.getByID(metaContainer.getData(META_SHEEP_FLAGS) & 0xF);
+		return EnumUtil.getByID(DyeColor.class, metaContainer.getData(META_SHEEP_FLAGS) & 0xF);
 	}
 
 	@Override

@@ -15,9 +15,11 @@ import java.util.UUID;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import de.atlasmc.IDHolder;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.Location;
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.entity.AbstractVillager.VillagerData;
@@ -33,6 +35,7 @@ import de.atlasmc.node.entity.Wolf.WolfVariant;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.io.protocol.ProtocolUtil;
 import de.atlasmc.node.util.MathUtil;
+import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.nbt.tag.CompoundTag;
 import io.netty.buffer.ByteBuf;
 
@@ -306,8 +309,8 @@ public abstract class MetaDataType<T> {
 
         @Override
         public VillagerData read(ByteBuf in) {
-            VillagerType t = VillagerType.getByID(readVarInt(in));
-            VillagerProfession p = VillagerProfession.getByID(readVarInt(in));
+            VillagerType t = EnumUtil.getByID(VillagerType.class, readVarInt(in));
+            VillagerProfession p = EnumUtil.getByID(VillagerProfession.class, readVarInt(in));
             int lvl = readVarInt(in);
             return new VillagerData(t, p, lvl);
         }
@@ -321,11 +324,11 @@ public abstract class MetaDataType<T> {
 
     };
 	
-	public static final MetaDataType<Pose> POSE = new EnumMetaDataType<>(TYPE_ID_POSE, Pose.class);
+	public static final MetaDataType<Pose> POSE = getVarIntEnumType(TYPE_ID_POSE, Pose.class);
     
-    public static final MetaDataType<Type> CAT_VARIANT = new EnumMetaDataType<>(TYPE_ID_CAT_VARIANT, Type.class);
+    public static final MetaDataType<Type> CAT_VARIANT = getVarIntEnumType(TYPE_ID_CAT_VARIANT, Type.class);
 	
-    public static final MetaDataType<Motive> PAINTING_VARIANT = new EnumMetaDataType<>(TYPE_ID_PAINTING_VARIANT, Motive.class);
+    public static final MetaDataType<Motive> PAINTING_VARIANT = getVarIntEnumType(TYPE_ID_PAINTING_VARIANT, Motive.class);
 
     public static final MetaDataType<Vector3f> VECTOR_3 = new MetaDataType<>(TYPE_ID_VECTOR_3, Vector3f.class) {
 
@@ -368,9 +371,9 @@ public abstract class MetaDataType<T> {
 		
     };
     
-    public static final MetaDataType<Variant> FROG_VARIANT = new EnumMetaDataType<>(TYPE_ID_FROG_VARIANT, Variant.class);
+    public static final MetaDataType<Variant> FROG_VARIANT = getVarIntEnumType(TYPE_ID_FROG_VARIANT, Variant.class);
     
-    public static final MetaDataType<State> SNIFFER_STATE = new EnumMetaDataType<>(TYPE_ID_SNIFFER_STATE, State.class);
+    public static final MetaDataType<State> SNIFFER_STATE = getVarIntEnumType(TYPE_ID_SNIFFER_STATE, State.class);
     
     public static final MetaDataType<Location> OPT_GLOBAL_POSITION = new MetaDataType<>(TYPE_ID_OPT_GLOBAL_POSITION, Location.class, true) {
 
@@ -398,7 +401,7 @@ public abstract class MetaDataType<T> {
 	
     };
     
-    public static final MetaDataType<ArmadilloState> ARMADILLO_STATE = new EnumMetaDataType<>(TYPE_ID_ARMADILLO_STATE, ArmadilloState.class);
+    public static final MetaDataType<ArmadilloState> ARMADILLO_STATE = getVarIntEnumType(TYPE_ID_ARMADILLO_STATE, ArmadilloState.class);
 	
 	public static final MetaDataType<WolfVariant> WOLF_VARIANT = new MetaDataType<>(TYPE_ID_WOLF_VARIANT, WolfVariant.class) {
 
@@ -429,7 +432,9 @@ public abstract class MetaDataType<T> {
 	};
 	
 	public static final MetaDataType<Integer> OPT_VAR_INT = new OptVarIntMetaDataType(TYPE_ID_OPT_VAR_INT);
-    
+	
+	public static final MetaDataType<DyeColor> VAR_INT_COLOR = getVarIntEnumType(DyeColor.class);
+	
 	private final int type;
 	private final boolean optional;
 	private final Class<?> clazz;
@@ -507,6 +512,18 @@ public abstract class MetaDataType<T> {
 		default:
 			throw new IllegalArgumentException("Invalid Type ID: " + id);
 		}
+	}
+	
+	public static <T extends Enum<T> & IDHolder> MetaDataType<T> getVarIntEnumType(Class<T> clazz) {
+		return getVarIntEnumType(TYPE_ID_VAR_INT, clazz);
+	}
+	
+	public static <T extends Enum<T> & IDHolder> MetaDataType<T> getByteEnumType(Class<T> clazz) {
+		return new ByteEnumType<>(TYPE_ID_BYTE, clazz);
+	}
+	
+	private static <T extends Enum<T> & IDHolder> MetaDataType<T> getVarIntEnumType(int id, Class<T> clazz) {
+		return new VarIntEnumMetaDataType<>(id, clazz);
 	}
 
 }

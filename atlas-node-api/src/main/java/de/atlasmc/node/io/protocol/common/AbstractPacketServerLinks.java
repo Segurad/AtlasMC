@@ -2,10 +2,9 @@ package de.atlasmc.node.io.protocol.common;
 
 import java.util.List;
 
+import de.atlasmc.IDHolder;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.io.AbstractPacket;
-import de.atlasmc.util.EnumID;
-import de.atlasmc.util.EnumValueCache;
 
 public abstract class AbstractPacketServerLinks extends AbstractPacket {
 
@@ -27,7 +26,7 @@ public abstract class AbstractPacketServerLinks extends AbstractPacket {
 		
 	}
 	
-	public static enum Label implements EnumID, EnumValueCache {
+	public static enum Label implements IDHolder {
 		
 		BUG_REPORT,
 		COMMUNITY_GUIDELINES,
@@ -40,32 +39,9 @@ public abstract class AbstractPacketServerLinks extends AbstractPacket {
 		NEWS,
 		ANNOUCEMENTS;
 		
-		private static List<Label> VALUES;
-		
+		@Override
 		public int getID() {
 			return ordinal();
-		}
-		
-		public static Label getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<Label> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-		
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
 		}
 		
 	}

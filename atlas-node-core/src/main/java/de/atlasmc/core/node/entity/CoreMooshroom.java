@@ -4,6 +4,7 @@ import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Mooshroom;
 import de.atlasmc.node.entity.data.MetaDataField;
 import de.atlasmc.node.entity.data.MetaDataType;
+import de.atlasmc.util.EnumUtil;
 
 public class CoreMooshroom extends CoreAgeableMob implements Mooshroom {
 
@@ -29,7 +30,7 @@ public class CoreMooshroom extends CoreAgeableMob implements Mooshroom {
 
 	@Override
 	public Variant getVariant() {
-		return Variant.getByName(metaContainer.getData(META_SHROOM_TYPE));
+		return EnumUtil.getByName(Variant.class, metaContainer.getData(META_SHROOM_TYPE));
 	}
 
 	@Override

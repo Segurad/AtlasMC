@@ -1,12 +1,10 @@
 package de.atlasmc.node.event.player;
 
-import java.util.List;
 import java.util.UUID;
 
+import de.atlasmc.IDHolder;
 import de.atlasmc.node.entity.Player;
 import de.atlasmc.node.event.ServerHandlerList;
-import de.atlasmc.util.EnumID;
-import de.atlasmc.util.EnumValueCache;
 
 public class PlayerResourcePackStatusEvent extends PlayerEvent {
 	
@@ -38,7 +36,7 @@ public class PlayerResourcePackStatusEvent extends PlayerEvent {
 		return handlers;
 	}
 
-	public static enum ResourcePackStatus implements EnumID, EnumValueCache {
+	public static enum ResourcePackStatus implements IDHolder {
 		
 		SUCCESSFULLY_DOWNLOADED,
 		DECLINED,
@@ -49,32 +47,9 @@ public class PlayerResourcePackStatusEvent extends PlayerEvent {
 		FAILED_RELOAD,
 		DISCARDED;
 
-		private static List<ResourcePackStatus> VALUES;
-		
+		@Override
 		public int getID() {
 			return ordinal();
-		}
-		
-		public static ResourcePackStatus getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<ResourcePackStatus> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-		
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
 		}
 		
 	}

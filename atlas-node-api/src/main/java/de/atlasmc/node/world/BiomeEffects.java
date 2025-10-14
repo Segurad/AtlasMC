@@ -6,7 +6,6 @@ import java.util.List;
 import de.atlasmc.Color;
 import de.atlasmc.node.sound.Sound;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.EnumValueCache;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.nbt.serialization.NBTSerializable;
@@ -25,7 +24,7 @@ public class BiomeEffects implements NBTSerializable {
 					.color("foliage_color", BiomeEffects::getFoliageColor, BiomeEffects::setFoliageColor)
 					.color("dry_foliage_color", BiomeEffects::getDryFoliageColor, BiomeEffects::setDryFoliageColor)
 					.color("grass_color", BiomeEffects::getGrassColor, BiomeEffects::setGrassColor)
-					.enumStringField("grass_color_modifier", BiomeEffects::getGrassColorModifier, BiomeEffects::setGrassColorModifier, GrassColorModifier::getByName, GrassColorModifier.NONE)
+					.enumStringField("grass_color_modifier", BiomeEffects::getGrassColorModifier, BiomeEffects::setGrassColorModifier, GrassColorModifier.class, GrassColorModifier.NONE)
 					//.beginComponent("particle")
 					.addField(Sound.getNBTSoundField("ambient_sound", BiomeEffects::getAmbientSound, BiomeEffects::setAmbientSound, null))
 					.beginComponent("mood_sound", BiomeEffects::hasMoodSound)
@@ -218,14 +217,12 @@ public class BiomeEffects implements NBTSerializable {
 		return NBT_HANDLER;
 	}
 	
-	public static enum GrassColorModifier implements EnumName, EnumValueCache {
+	public static enum GrassColorModifier implements EnumName {
 		
 		NONE,
 		DARK_FOREST,
 		SWAMP;
 
-		private static List<GrassColorModifier> VALUES;
-		
 		private final String name;
 		
 		private GrassColorModifier() {
@@ -235,42 +232,6 @@ public class BiomeEffects implements NBTSerializable {
 		@Override
 		public String getName() {
 			return name;
-		}
-		
-		/**
-		 * Returns the value represented by the name or null if no matching value has been found
-		 * @param name the name of the value
-		 * @return value or null
-		 */
-		public static GrassColorModifier getByName(String name) {
-			if (name == null)
-				throw new IllegalArgumentException("Name can not be null!");
-			List<GrassColorModifier> values = getValues();
-			final int size = values.size();
-			for (int i = 0; i < size; i++) {
-				GrassColorModifier value = values.get(i);
-				if (value.name.equals(name)) 
-					return value;
-			}
-			return null;
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<GrassColorModifier> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-		
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
 		}
 		
 	}

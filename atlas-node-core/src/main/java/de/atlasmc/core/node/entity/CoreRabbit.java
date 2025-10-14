@@ -4,6 +4,7 @@ import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Rabbit;
 import de.atlasmc.node.entity.data.MetaDataField;
 import de.atlasmc.node.entity.data.MetaDataType;
+import de.atlasmc.util.EnumUtil;
 
 public class CoreRabbit extends CoreAgeableMob implements Rabbit {
 
@@ -29,7 +30,7 @@ public class CoreRabbit extends CoreAgeableMob implements Rabbit {
 	
 	@Override
 	public Type getRabbitType() {
-		return Type.getByID(metaContainer.getData(META_RABBIT_TYPE));
+		return EnumUtil.getByID(Type.class, metaContainer.getData(META_RABBIT_TYPE));
 	}
 
 	@Override

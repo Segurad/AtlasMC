@@ -9,6 +9,7 @@ import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.SoundCategory;
 import de.atlasmc.node.io.protocol.play.PacketOutStopSound;
+import de.atlasmc.util.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutStopSound implements PacketIO<PacketOutStopSound> {
@@ -19,7 +20,7 @@ public class CorePacketOutStopSound implements PacketIO<PacketOutStopSound> {
 		if (flags == 0) 
 			return;
 		if ((flags & 0x1) == 0x1) {
-			packet.category = SoundCategory.getByID(readVarInt(in));
+			packet.category = EnumUtil.getByID(SoundCategory.class, readVarInt(in));
 		}
 		if ((flags & 0x2) == 0x2) {
 			packet.sound = readIdentifier(in);

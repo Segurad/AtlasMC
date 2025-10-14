@@ -12,6 +12,7 @@ import de.atlasmc.node.entity.data.MetaDataType;
 import de.atlasmc.node.io.protocol.ProtocolUtil;
 import de.atlasmc.node.io.protocol.play.PacketOutExplosion;
 import de.atlasmc.node.world.particle.ParticleType;
+import de.atlasmc.util.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutExplosion implements PacketIO<PacketOutExplosion> {
@@ -30,9 +31,9 @@ public class CorePacketOutExplosion implements PacketIO<PacketOutExplosion> {
 		packet.motionY = in.readFloat();
 		packet.motionZ = in.readFloat();
 		packet.blockInteraction = readVarInt(in);
-		packet.smallExplosionParticle = ParticleType.getByID(readVarInt(in));
+		packet.smallExplosionParticle = EnumUtil.getByID(ParticleType.class, readVarInt(in));
 		packet.smallExplosionParticleData = MetaDataType.PARTICLE.read(packet.smallExplosionParticle, in);
-		packet.largeExplosionParticle = ParticleType.getByID(readVarInt(in));
+		packet.largeExplosionParticle = EnumUtil.getByID(ParticleType.class, readVarInt(in));
 		packet.largeExplosionParticleData = MetaDataType.PARTICLE.read(packet.smallExplosionParticle, in);
 		packet.explosionSound = ProtocolUtil.readSound(in);
 	}

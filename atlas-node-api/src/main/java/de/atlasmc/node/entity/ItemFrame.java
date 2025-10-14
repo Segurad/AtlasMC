@@ -1,10 +1,7 @@
 package de.atlasmc.node.entity;
 
-import java.util.List;
-
+import de.atlasmc.IDHolder;
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.util.EnumID;
-import de.atlasmc.util.EnumValueCache;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface ItemFrame extends Hanging {
@@ -17,7 +14,7 @@ public interface ItemFrame extends Hanging {
 					.boolField("Invisible", ItemFrame::isInvisible, ItemFrame::setInvisible)
 					.typeCompoundField("Item", ItemFrame::getItem, ItemFrame::setItemStack, ItemStack.NBT_HANDLER)
 					.floatField("ItemDropChance", ItemFrame::getItemDropChance, ItemFrame::setItemDropChance, 1)
-					.enumByteField("ItemRotation", ItemFrame::getRotation, ItemFrame::setRotation, Rotation::getByID, Rotation::getID, Rotation.NONE)
+					.enumByteField("ItemRotation", ItemFrame::getRotation, ItemFrame::setRotation, Rotation.class, Rotation::getID, Rotation.NONE)
 					.build();
 
 	ItemStack getItem();
@@ -47,7 +44,8 @@ public interface ItemFrame extends Hanging {
 		return NBT_HANDLER;
 	}
 	
-	public static enum Rotation implements EnumID, EnumValueCache {
+	public static enum Rotation implements IDHolder {
+		
 		NONE,
 		CLOCKWISE_45,
 		CLOCKWISE_90,
@@ -57,27 +55,11 @@ public interface ItemFrame extends Hanging {
 		COUNTER_CLOCKWISE_90,
 		COUNTER_CLOCKWISE_45;
 		
-		public static List<Rotation> VALUES;
-		
+		@Override
 		public int getID() {
 			return ordinal();
 		}
-		
-		public static Rotation getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<Rotation> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-
+	
 	}
 	
 }

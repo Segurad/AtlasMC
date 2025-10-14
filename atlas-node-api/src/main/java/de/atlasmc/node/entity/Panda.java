@@ -1,8 +1,7 @@
 package de.atlasmc.node.entity;
 
-import java.util.List;
-
-import de.atlasmc.util.AtlasEnum;
+import de.atlasmc.IDHolder;
+import de.atlasmc.util.EnumName;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Panda extends Animal {
@@ -11,8 +10,8 @@ public interface Panda extends Animal {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(Panda.class)
 					.include(Animal.NBT_HANDLER)
-					.enumStringField("HiddenGene", Panda::getHiddenGene, Panda::setHiddenGene, Gene::getByName, Gene.NORMAL)
-					.enumStringField("MainGene", Panda::getMainGene, Panda::setMainGene, Gene::getByName, Gene.NORMAL)
+					.enumStringField("HiddenGene", Panda::getHiddenGene, Panda::setHiddenGene, Gene.class, Gene.NORMAL)
+					.enumStringField("MainGene", Panda::getMainGene, Panda::setMainGene, Gene.class, Gene.NORMAL)
 					// non standard
 					.boolField("IsSneezing", Panda::isSneezing, Panda::setSneezing, false)
 					.boolField("IsRolling", Panda::isRolling, Panda::setRolling, false)
@@ -61,7 +60,7 @@ public interface Panda extends Animal {
 		return NBT_HANDLER;
 	}
 	
-	public static enum Gene implements AtlasEnum {
+	public static enum Gene implements IDHolder, EnumName {
 		NORMAL(false),
 		LAZY(false),
 		WORRIED(false),
@@ -69,8 +68,6 @@ public interface Panda extends Animal {
 		BROWN(true),
 		WEAK(true),
 		AGGRESSIVE(false);
-		
-		private static List<Gene> VALUES;
 		
 		private final boolean receccive;
 		private final String name;
@@ -84,33 +81,12 @@ public interface Panda extends Animal {
 			return receccive;
 		}
 		
+		@Override
 		public int getID() {
 			return ordinal();
 		}
 		
-		public static Gene getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<Gene> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-
-		public static Gene getByName(String name) {
-			for (Gene gene : getValues()) {
-				if (gene.name.equals(name))
-					return gene;
-			}
-			return null;
-		}
-		
+		@Override
 		public String getName() {
 			return name;
 		}

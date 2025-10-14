@@ -1,6 +1,6 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.EnumID;
+import de.atlasmc.IDHolder;
 import de.atlasmc.util.EnumName;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
@@ -10,14 +10,15 @@ public interface Mooshroom extends AgeableMob {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(Mooshroom.class)
 					.include(AgeableMob.NBT_HANDLER)
-					.enumStringField("Type", Mooshroom::getVariant, Mooshroom::setVariant, Variant::getByName, Variant.RED)
+					.enumStringField("Type", Mooshroom::getVariant, Mooshroom::setVariant, Variant.class, Variant.RED)
 					.build();
 	
 	Variant getVariant();
 	
 	void setVariant(Variant variant);
 	
-	public static enum Variant implements EnumName, EnumID {
+	public static enum Variant implements EnumName, IDHolder {
+		
 		RED("red"),
 		BROWN("brown");
 		
@@ -27,29 +28,14 @@ public interface Mooshroom extends AgeableMob {
 			this.name = name;
 		}
 		
+		@Override
 		public String getName() {
 			return name;
 		}
 		
+		@Override
 		public int getID() {
 			return ordinal();
-		}
-		
-		public static Variant getByID(int id) {
-			switch (id) {
-			case 0:
-				return RED;
-			case 1:
-				return BROWN;
-			default:
-				return RED;
-			}
-		}
-		
-		public static Variant getByName(String name) {
-			if (BROWN.getName().equals(name))
-				return BROWN;
-			else return RED;
 		}
 		
 	}

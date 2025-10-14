@@ -7,13 +7,14 @@ import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutWorldEvent;
 import de.atlasmc.node.world.WorldEvent;
+import de.atlasmc.util.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutWorldEvent implements PacketIO<PacketOutWorldEvent> {
 
 	@Override
 	public void read(PacketOutWorldEvent packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.event = WorldEvent.getByID(in.readInt());
+		packet.event = EnumUtil.getByID(WorldEvent.class, in.readInt());
 		packet.position = in.readLong();
 		packet.data = in.readInt();
 		packet.disableRelativeVolume = in.readBoolean();

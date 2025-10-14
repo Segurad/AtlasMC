@@ -14,8 +14,8 @@ public class CoreItemFrame extends CoreHanging implements ItemFrame {
 
 	protected static final MetaDataField<ItemStack>
 	META_FRAME_ITEM = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, null, MetaDataType.SLOT);
-	protected static final MetaDataField<Integer>
-	META_FRAME_ROTATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+2, 0, MetaDataType.VAR_INT);
+	protected static final MetaDataField<Rotation>
+	META_FRAME_ROTATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+2, Rotation.NONE, MetaDataType.getVarIntEnumType(Rotation.class));
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+2;
 	
@@ -61,12 +61,12 @@ public class CoreItemFrame extends CoreHanging implements ItemFrame {
 
 	@Override
 	public Rotation getRotation() {
-		return Rotation.getByID(metaContainer.getData(META_FRAME_ROTATION));
+		return metaContainer.getData(META_FRAME_ROTATION);
 	}
 
 	@Override
 	public void setRotation(Rotation rotation) {
-		metaContainer.get(META_FRAME_ROTATION).setData(rotation.getID());
+		metaContainer.get(META_FRAME_ROTATION).setData(rotation);
 	}
 
 	@Override

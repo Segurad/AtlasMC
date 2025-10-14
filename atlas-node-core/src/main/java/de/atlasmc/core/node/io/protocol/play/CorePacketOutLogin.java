@@ -15,6 +15,7 @@ import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.Gamemode;
 import de.atlasmc.node.io.protocol.play.PacketOutLogin;
+import de.atlasmc.util.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutLogin implements PacketIO<PacketOutLogin> {
@@ -39,10 +40,10 @@ public class CorePacketOutLogin implements PacketIO<PacketOutLogin> {
 		packet.dimension = readVarInt(in);
 		packet.world = readIdentifier(in);
 		packet.seed = in.readLong();
-		packet.gamemode = Gamemode.getByID(in.readUnsignedByte());
+		packet.gamemode = EnumUtil.getByID(Gamemode.class, in.readUnsignedByte());
 		int oldGamemode = in.readByte();
 		if (oldGamemode != -1)
-			packet.oldGamemode = Gamemode.getByID(oldGamemode);
+			packet.oldGamemode = EnumUtil.getByID(Gamemode.class, oldGamemode);
 		packet.debug = in.readBoolean();
 		packet.flat = in.readBoolean();
 		if (in.readBoolean()) {

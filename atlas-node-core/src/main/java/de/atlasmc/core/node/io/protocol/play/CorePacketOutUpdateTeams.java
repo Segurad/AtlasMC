@@ -14,6 +14,7 @@ import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateTeams;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateTeams.Mode;
 import de.atlasmc.node.scoreboard.TeamOptionType;
+import de.atlasmc.util.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> {
@@ -29,7 +30,7 @@ public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> 
 				packet.flags = in.readByte();
 				packet.nameTagVisibility = getNameTagVisibility(readString(in, 40));
 				packet.collisionRule = getCollisionRule(readString(in, 40));
-				packet.color = ChatColor.getByID(readVarInt(in));
+				packet.color = EnumUtil.getByID(ChatColor.class, readVarInt(in));
 				packet.prefix = readTextComponent(in);
 				packet.suffix = readTextComponent(in);
 				final int size = readVarInt(in);
@@ -51,7 +52,7 @@ public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> 
 			packet.flags = in.readByte();
 			packet.nameTagVisibility = getNameTagVisibility(readString(in, 40));
 			packet.collisionRule = getCollisionRule(readString(in, 40));
-			packet.color = ChatColor.getByID(readVarInt(in));
+			packet.color = EnumUtil.getByID(ChatColor.class, readVarInt(in));
 			packet.prefix = readTextComponent(in);
 			packet.suffix = readTextComponent(in);
 			break;

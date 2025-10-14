@@ -10,8 +10,8 @@ public class CoreWolf extends CoreTameable implements Wolf {
 
 	protected static final MetaDataField<Boolean>
 	META_IS_BEGGING = new MetaDataField<>(CoreTameable.LAST_META_INDEX+1, false, MetaDataType.BOOLEAN);
-	protected static final MetaDataField<Integer>
-	META_COLLAR_COLOR = new MetaDataField<>(CoreTameable.LAST_META_INDEX+2, DyeColor.RED.getID(), MetaDataType.VAR_INT);
+	protected static final MetaDataField<DyeColor>
+	META_COLAR_COLOR = new MetaDataField<>(CoreTameable.LAST_META_INDEX+2, DyeColor.RED, MetaDataType.getVarIntEnumType(DyeColor.class));
 	protected static final MetaDataField<Integer>
 	META_ANGER_TIME = new MetaDataField<>(CoreTameable.LAST_META_INDEX+3, 0, MetaDataType.VAR_INT);
 	protected static final MetaDataField<WolfVariant>
@@ -29,7 +29,7 @@ public class CoreWolf extends CoreTameable implements Wolf {
 	protected void initMetaContainer() {
 		super.initMetaContainer();
 		metaContainer.set(META_IS_BEGGING);
-		metaContainer.set(META_COLLAR_COLOR);
+		metaContainer.set(META_COLAR_COLOR);
 		metaContainer.set(META_ANGER_TIME);
 		metaContainer.set(META_WOLF_VARIANT);
 	}
@@ -51,14 +51,14 @@ public class CoreWolf extends CoreTameable implements Wolf {
 
 	@Override
 	public DyeColor getCollarColor() {
-		return DyeColor.getByID(metaContainer.getData(META_COLLAR_COLOR));
+		return metaContainer.getData(META_COLAR_COLOR);
 	}
 
 	@Override
 	public void setCollarColor(DyeColor color) {
 		if (color == null)
 			throw new IllegalArgumentException("Color can not be null!");
-		metaContainer.get(META_COLLAR_COLOR).setData(color.getID());
+		metaContainer.get(META_COLAR_COLOR).setData(color);
 	}
 
 	@Override

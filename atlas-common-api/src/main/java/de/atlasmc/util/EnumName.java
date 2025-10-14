@@ -1,10 +1,13 @@
 package de.atlasmc.util;
 
+import de.atlasmc.util.annotation.NotNull;
+
 /**
- * Every enum implementing this interface is required to have a static getByName(String) method returning the corresponding enum
+ * Enum identified with specific name
  */
 public interface EnumName {
 
+	@NotNull
 	String getName();
 	
 }

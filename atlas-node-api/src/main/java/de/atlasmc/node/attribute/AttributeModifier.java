@@ -1,10 +1,9 @@
 package de.atlasmc.node.attribute;
 
-import java.util.List;
-
+import de.atlasmc.IDHolder;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.node.inventory.EquipmentSlot;
-import de.atlasmc.util.AtlasEnum;
+import de.atlasmc.util.EnumName;
 import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
@@ -16,8 +15,8 @@ public class AttributeModifier implements Cloneable, NBTSerializable {
 					.defaultConstructor(AttributeModifier::new)
 					.doubleField("amount", AttributeModifier::getAmount, AttributeModifier::setAmount, 0)
 					.namespacedKey("id", AttributeModifier::getID, AttributeModifier::setID)
-					.enumStringField("operation", AttributeModifier::getOperation, AttributeModifier::setOperation, Operation::getByName, Operation.ADD_VALUE)
-					.enumStringField("slot", AttributeModifier::getSlot, AttributeModifier::setSlot, EquipmentSlot::getByName, EquipmentSlot.ANY)
+					.enumStringField("operation", AttributeModifier::getOperation, AttributeModifier::setOperation, Operation.class, Operation.ADD_VALUE)
+					.enumStringField("slot", AttributeModifier::getSlot, AttributeModifier::setSlot, EquipmentSlot.class, EquipmentSlot.ANY)
 					// TODO display
 					.build();
 	
@@ -59,7 +58,7 @@ public class AttributeModifier implements Cloneable, NBTSerializable {
 		return operation;
 	}
 	
-	public static enum Operation implements AtlasEnum {
+	public static enum Operation implements IDHolder, EnumName {
 		/**
 		 * Adds the value to the base value of the attribute
 		 */
@@ -73,8 +72,6 @@ public class AttributeModifier implements Cloneable, NBTSerializable {
 		 */
 		ADD_MULTIPLIED_TOTAL("add_multiplied_total");
 
-		private static List<Operation> VALUES;
-		
 		private String name;
 		
 		private Operation(String name) {
@@ -89,39 +86,6 @@ public class AttributeModifier implements Cloneable, NBTSerializable {
 		@Override
 		public int getID() {
 			return ordinal();
-		}
-		
-		public static Operation getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		public static Operation getByName(String name) {
-			List<Operation> values = getValues();
-			final int size = values.size();
-			for (int i = 0; i < size; i++) {
-				Operation operation = values.get(i);
-				if (operation.name.equals(name))
-					return operation;
-			}
-			return null;
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<Operation> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-		
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
 		}
 		
 	}

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.function.Function;
 
 import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
@@ -11,15 +12,15 @@ import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 
-public class SearchFieldEnumConstructor<T, K extends Enum<?> & EnumName> implements Constructor<T> {
+public class SearchFieldEnumConstructor<T, K extends Enum<K> & EnumName> implements Constructor<T> {
 
-	private final Function<String, K> enumSupplier;
+	private final Class<K> clazz;
 	private final Function<K, T> constructor;
 	private final Function<T, K> keyReverseSupplier;
 	private final CharKey keyField;
 	
-	public SearchFieldEnumConstructor(CharSequence keyField, Function<String, K> enumSupplier, Function<K, T> constructor, Function<T, K> keyReverseSupplier) {
-		this.enumSupplier = enumSupplier;
+	public SearchFieldEnumConstructor(CharSequence keyField, Class<K> clazz, Function<K, T> constructor, Function<T, K> keyReverseSupplier) {
+		this.clazz = clazz;
 		this.constructor = constructor;
 		this.keyField = CharKey.literal(keyField);
 		this.keyReverseSupplier = keyReverseSupplier;
@@ -37,7 +38,7 @@ public class SearchFieldEnumConstructor<T, K extends Enum<?> & EnumName> impleme
 		} else {
 			key = reader.readStringTag();
 		}
-		K regValue = enumSupplier.apply(key);
+		K regValue = EnumUtil.getByName(clazz, key);
 		return constructor.apply(regValue);
 	}
 

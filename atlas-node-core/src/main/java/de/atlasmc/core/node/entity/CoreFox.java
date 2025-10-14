@@ -21,8 +21,8 @@ public class CoreFox extends CoreAgeableMob implements Fox {
 	FLAG_IS_FACEPLANTED = 0x40,
 	FLAG_IS_DEFENDING = 0x80;
 	
-	protected static final MetaDataField<Integer>
-	META_FOX_TYPE = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, 0, MetaDataType.VAR_INT);
+	protected static final MetaDataField<Type>
+	META_FOX_TYPE = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, Type.RED, MetaDataType.getVarIntEnumType(Type.class));
 	/**
 	 * 0x01 - Is sitting<br>
 	 * 0x04 - Is crouching<br>
@@ -63,7 +63,7 @@ public class CoreFox extends CoreAgeableMob implements Fox {
 	
 	@Override
 	public Type getFoxType() {
-		return Type.getByID(metaContainer.getData(META_FOX_TYPE));
+		return metaContainer.getData(META_FOX_TYPE);
 	}
 
 	@Override
@@ -108,9 +108,7 @@ public class CoreFox extends CoreAgeableMob implements Fox {
 
 	@Override
 	public void setFoxType(Type type) {
-		if (type == null)
-			throw new IllegalArgumentException("Type can not be null!");
-		metaContainer.get(META_FOX_TYPE).setData(type.getID());
+		metaContainer.get(META_FOX_TYPE).setData(type);
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import de.atlasmc.node.Gamemode;
 import de.atlasmc.node.NodePlayer;
 import de.atlasmc.node.entity.Player;
 import de.atlasmc.registry.RegistryValue;
+import de.atlasmc.util.EnumUtil;
 
 @RegistryValue(registry = "atlas:command/executor", key="atlas-core:gamemode")
 public class CoreGamemodeCommand implements CommandExecutor {
@@ -22,7 +23,7 @@ public class CoreGamemodeCommand implements CommandExecutor {
 		Gamemode gamemode = null;
 		Integer id = context.getArgument("gamemodeID", Integer.class, false);
 		if (id != null) {
-			gamemode = Gamemode.getByID(id);
+			gamemode = EnumUtil.getByID(Gamemode.class, id);
 		}
 		if (gamemode == null) {
 			context.getArgument("gamemode", Gamemode.class);

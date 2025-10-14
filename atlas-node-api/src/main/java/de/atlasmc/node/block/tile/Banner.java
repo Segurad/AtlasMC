@@ -3,13 +3,12 @@ package de.atlasmc.node.block.tile;
 import java.util.List;
 import java.util.function.Function;
 
+import de.atlasmc.IDHolder;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.Nameable;
-import de.atlasmc.util.EnumID;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.EnumValueCache;
 import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
@@ -58,8 +57,8 @@ public interface Banner extends TileEntity, Nameable {
 		NBT_HANDLER = NBTSerializationHandler
 						.builder(Pattern.class)
 						.defaultConstructor(Pattern::new)
-						.enumStringField("color", Pattern::getColor, Pattern::setColor, DyeColor::getByName, null)
-						.interfacedEnumStringField("pattern", (Function<Pattern, PatternType>) Pattern::getType, Pattern::setType, EnumPatternType::getByName, null)
+						.enumStringField("color", Pattern::getColor, Pattern::setColor, DyeColor.class, null)
+						.interfacedEnumStringField("pattern", (Function<Pattern, PatternType>) Pattern::getType, Pattern::setType, EnumPatternType.class, null)
 						.typeCompoundField("pattern", (Function<Pattern, PatternType>) Pattern::getType, Pattern::setType, ResourcePatternType.NBT_HANDLER)
 						.build();
 		
@@ -141,7 +140,7 @@ public interface Banner extends TileEntity, Nameable {
 		
 	}
 	
-	public static enum EnumPatternType implements PatternType, EnumID, EnumName, EnumValueCache {
+	public static enum EnumPatternType implements PatternType, IDHolder, EnumName {
 		
 		FULL_COLOR_FIELD("base"),
 		BOTTOM_STRIPE("stripe_bottom"),
@@ -186,9 +185,7 @@ public interface Banner extends TileEntity, Nameable {
 		SNOUT("snout"),
 		FLOW("flow"),
 		GUSTER("guster");
-		
-		private static List<EnumPatternType> VALUES;
-		
+
 		private final String name;
 		
 		private EnumPatternType(String name) {
@@ -199,45 +196,10 @@ public interface Banner extends TileEntity, Nameable {
 		public String getName() {
 			return name;
 		}
-		
-		public static EnumPatternType getByName(String name) {
-			if (name == null) 
-				throw new IllegalArgumentException("Name can not be null!");
-			List<EnumPatternType> patterns = getValues();
-			final int size = patterns.size();
-			for (int i = 0; i < size; i++) {
-				EnumPatternType pattern = patterns.get(i);
-				if (pattern.name.equals(name)) 
-					return pattern;
-			}
-			return null;
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<EnumPatternType> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-		
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
-		}
 
 		@Override
 		public int getID() {
 			return ordinal();
-		}
-		
-		public static EnumPatternType getByID(int id) {
-			return getValues().get(id);
 		}
 		
 	}

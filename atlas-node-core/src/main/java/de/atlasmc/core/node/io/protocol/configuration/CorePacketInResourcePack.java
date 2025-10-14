@@ -9,6 +9,7 @@ import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.event.player.PlayerResourcePackStatusEvent.ResourcePackStatus;
 import de.atlasmc.node.io.protocol.configuration.ServerboundResourcePack;
+import de.atlasmc.util.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketInResourcePack implements PacketIO<ServerboundResourcePack> {
@@ -16,7 +17,7 @@ public class CorePacketInResourcePack implements PacketIO<ServerboundResourcePac
 	@Override
 	public void read(ServerboundResourcePack packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.uuid = readUUID(in);
-		packet.status = ResourcePackStatus.getByID(readVarInt(in));
+		packet.status = EnumUtil.getByID(ResourcePackStatus.class, readVarInt(in));
 	}
 
 	@Override

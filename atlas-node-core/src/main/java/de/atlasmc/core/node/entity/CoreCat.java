@@ -8,14 +8,14 @@ import de.atlasmc.node.entity.data.MetaDataType;
 
 public class CoreCat extends CoreTameable implements Cat {
 	
-	protected static final MetaDataField<Integer>
-	META_CAT_TYPE = new MetaDataField<>(CoreTameable.LAST_META_INDEX+1, Type.BLACK.getID(), MetaDataType.VAR_INT);
+	protected static final MetaDataField<Type>
+	META_CAT_TYPE = new MetaDataField<>(CoreTameable.LAST_META_INDEX+1, Type.BLACK, MetaDataType.getVarIntEnumType(Type.class));
 	protected static final MetaDataField<Boolean>
 	META_IS_LYING = new MetaDataField<>(CoreTameable.LAST_META_INDEX+2, false, MetaDataType.BOOLEAN);
 	protected static final MetaDataField<Boolean>
 	META_IS_RELAXED = new MetaDataField<>(CoreTameable.LAST_META_INDEX+3, false, MetaDataType.BOOLEAN);
-	protected static final MetaDataField<Integer>
-	META_COLLAR_COLOR = new MetaDataField<>(CoreTameable.LAST_META_INDEX+4, DyeColor.RED.getID(), MetaDataType.VAR_INT);
+	protected static final MetaDataField<DyeColor>
+	META_COLLAR_COLOR = new MetaDataField<>(CoreTameable.LAST_META_INDEX+4, DyeColor.RED, MetaDataType.getVarIntEnumType(DyeColor.class));
 	
 	protected static final int LAST_META_INDEX = CoreTameable.LAST_META_INDEX+4;
 	
@@ -39,14 +39,14 @@ public class CoreCat extends CoreTameable implements Cat {
 
 	@Override
 	public Type getCatType() {
-		return Type.getByID(metaContainer.getData(META_CAT_TYPE));
+		return metaContainer.getData(META_CAT_TYPE);
 	}
 
 	@Override
 	public void setCatType(Type type) {
 		if (type == null)
 			throw new IllegalArgumentException("Type can not be null!");
-		metaContainer.get(META_CAT_TYPE).setData(type.getID());
+		metaContainer.get(META_CAT_TYPE).setData(type);
 	}
 
 	@Override
@@ -71,14 +71,14 @@ public class CoreCat extends CoreTameable implements Cat {
 
 	@Override
 	public DyeColor getCollarColor() {
-		return DyeColor.getByID(metaContainer.getData(META_COLLAR_COLOR));
+		return metaContainer.getData(META_COLLAR_COLOR);
 	}
 
 	@Override
 	public void setCollarColor(DyeColor color) {
 		if (color == null)
 			throw new IllegalArgumentException("Color can not be null!");
-		metaContainer.get(META_COLLAR_COLOR).setData(color.getID());		
+		metaContainer.get(META_COLLAR_COLOR).setData(color);		
 	}
 
 }

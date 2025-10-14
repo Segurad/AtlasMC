@@ -18,6 +18,7 @@ import de.atlasmc.node.potion.PotionEffectType;
 import de.atlasmc.node.sound.EnumSound;
 import de.atlasmc.node.sound.ResourceSound;
 import de.atlasmc.node.sound.Sound;
+import de.atlasmc.util.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class ProtocolUtil extends PacketUtil {
@@ -100,7 +101,7 @@ public class ProtocolUtil extends PacketUtil {
 	public static Sound readSound(ByteBuf in) {
 		int soundID = readVarInt(in);
 		if (soundID > 0) {
-			return EnumSound.getByID(soundID-1);
+			return EnumUtil.getByID(EnumSound.class, soundID-1);
 		} else {
 			NamespacedKey key = readIdentifier(in);
 			float fixedRange = Float.NaN;
@@ -179,7 +180,7 @@ public class ProtocolUtil extends PacketUtil {
 	
 	public static FireworkExplosion readFireworkExplosion(ByteBuf in) {
 		FireworkExplosion explosion = new FireworkExplosion();
-		explosion.setShape(Shape.getByID(readVarInt(in)));
+		explosion.setShape(EnumUtil.getByID(Shape.class, readVarInt(in)));
 		final int colorCount = readVarInt(in);
 		if (colorCount > 0) {
 			int[] colors = new int[colorCount];

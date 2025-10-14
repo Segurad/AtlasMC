@@ -9,7 +9,7 @@ public interface NoteBlockSoundComponent extends ItemComponent {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(NoteBlockSoundComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.enumStringField(ComponentType.NOTE_BLOCK_SOUND.getNamespacedKey(), NoteBlockSoundComponent::getSound, NoteBlockSoundComponent::setSound, EnumSound::getByName, null)
+					.enumStringField(ComponentType.NOTE_BLOCK_SOUND.getNamespacedKey(), NoteBlockSoundComponent::getSound, NoteBlockSoundComponent::setSound, EnumSound.class, null)
 					.build();
 					
 	EnumSound getSound();

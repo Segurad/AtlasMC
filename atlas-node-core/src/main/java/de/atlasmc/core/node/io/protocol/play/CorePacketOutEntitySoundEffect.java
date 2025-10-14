@@ -11,6 +11,7 @@ import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.SoundCategory;
 import de.atlasmc.node.io.protocol.ProtocolUtil;
 import de.atlasmc.node.io.protocol.play.PacketOutEntitySoundEffect;
+import de.atlasmc.util.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutEntitySoundEffect implements PacketIO<PacketOutEntitySoundEffect> {
@@ -18,7 +19,7 @@ public class CorePacketOutEntitySoundEffect implements PacketIO<PacketOutEntityS
 	@Override
 	public void read(PacketOutEntitySoundEffect packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.sound = ProtocolUtil.readSound(in);
-		packet.category = SoundCategory.getByID(readVarInt(in));
+		packet.category = EnumUtil.getByID(SoundCategory.class, readVarInt(in));
 		packet.entityID = readVarInt(in);
 		packet.volume = in.readFloat();
 		packet.pitch = in.readFloat();

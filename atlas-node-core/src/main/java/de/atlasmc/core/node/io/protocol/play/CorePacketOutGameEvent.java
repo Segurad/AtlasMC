@@ -7,13 +7,14 @@ import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutGameEvent;
 import de.atlasmc.node.io.protocol.play.PacketOutGameEvent.GameEventType;
+import de.atlasmc.util.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutGameEvent implements PacketIO<PacketOutGameEvent> {
 
 	@Override
 	public void read(PacketOutGameEvent packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.event = GameEventType.getByID(in.readUnsignedByte());
+		packet.event = EnumUtil.getByID(GameEventType.class, in.readUnsignedByte());
 		packet.value = in.readFloat();
 	}
 

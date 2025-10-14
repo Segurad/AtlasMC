@@ -8,16 +8,18 @@ import de.atlasmc.node.entity.data.MetaDataType;
 
 public class CorePanda extends CoreAgeableMob implements Panda {
 
+	protected static final MetaDataType<Gene> META_TYPE_GENE = MetaDataType.getByteEnumType(Gene.class);
+	
 	protected static final MetaDataField<Integer>
 	META_TIMER_BREED = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, 0, MetaDataType.VAR_INT);
 	protected static final MetaDataField<Integer>
 	META_TIMER_SNEEZE = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+2, 0, MetaDataType.VAR_INT);
 	protected static final MetaDataField<Integer>
 	META_TIMER_EAT = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+3, 0, MetaDataType.VAR_INT);
-	protected static final MetaDataField<Byte>
-	META_GENE_MAIN = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+4, (byte) Gene.NORMAL.getID(), MetaDataType.BYTE);
-	protected static final MetaDataField<Byte>
-	META_GENE_HIDDEN = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+5, (byte) Gene.NORMAL.getID(), MetaDataType.BYTE);
+	protected static final MetaDataField<Gene>
+	META_GENE_MAIN = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+4, Gene.NORMAL, META_TYPE_GENE);
+	protected static final MetaDataField<Gene>
+	META_GENE_HIDDEN = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+5, Gene.NORMAL, META_TYPE_GENE);
 	
 	protected static final int
 	FLAG_IS_SNEEZING = 0x02,
@@ -73,12 +75,12 @@ public class CorePanda extends CoreAgeableMob implements Panda {
 
 	@Override
 	public Gene getMainGene() {
-		return Gene.getByID(metaContainer.getData(META_GENE_MAIN));
+		return metaContainer.getData(META_GENE_MAIN);
 	}
 
 	@Override
 	public Gene getHiddenGene() {
-		return Gene.getByID(metaContainer.getData(META_GENE_HIDDEN));
+		return metaContainer.getData(META_GENE_HIDDEN);
 	}
 
 	@Override
@@ -118,16 +120,12 @@ public class CorePanda extends CoreAgeableMob implements Panda {
 
 	@Override
 	public void setMainGene(Gene gene) {
-		if (gene == null)
-			throw new IllegalArgumentException("Gene can not be null!");
-		metaContainer.get(META_GENE_MAIN).setData((byte) gene.getID());		
+		metaContainer.get(META_GENE_MAIN).setData(gene);
 	}
 
 	@Override
 	public void setHiddenGene(Gene gene) {
-		if (gene == null)
-			throw new IllegalArgumentException("Gene can not be null!");
-		metaContainer.get(META_GENE_HIDDEN).setData((byte) gene.getID());
+		metaContainer.get(META_GENE_HIDDEN).setData(gene);
 	}
 
 	@Override

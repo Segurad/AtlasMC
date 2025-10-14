@@ -3,12 +3,12 @@ package de.atlasmc.chat;
 import java.util.List;
 
 import de.atlasmc.Color;
+import de.atlasmc.IDHolder;
 import de.atlasmc.chat.component.ChatComponent;
-import de.atlasmc.util.EnumID;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.EnumValueCache;
+import de.atlasmc.util.EnumUtil;
 
-public enum ChatColor implements EnumName, EnumID, EnumValueCache {
+public enum ChatColor implements EnumName, IDHolder {
 
 	BLACK('0', Color.fromRGB(0x000000)),
 	DARK_BLUE('1', Color.fromRGB(0x0000AA)),
@@ -33,8 +33,6 @@ public enum ChatColor implements EnumName, EnumID, EnumValueCache {
 	ITALIC('o', ""), // TODO research italic console format
 	RESET('r', "\033[0m");
 	
-	private static List<ChatColor> VALUES;
-
 	private final char formatID;
 	private final Color color;
 	private final String consoleFormat;
@@ -74,10 +72,12 @@ public enum ChatColor implements EnumName, EnumID, EnumValueCache {
 		return consoleFormat;
 	}
 	
+	@Override
 	public int getID() {
 		return ordinal();
 	}
 	
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -115,34 +115,17 @@ public enum ChatColor implements EnumName, EnumID, EnumValueCache {
 	}
 
 	public static ChatColor getByFormatID(char id) {
-		for (ChatColor c : getValues()) {
+		for (ChatColor c : EnumUtil.getValues(ChatColor.class)) {
 			if (c.getFormatID() == id) 
 				return c;
 		}
 		return null;
 	}
 	
-	public static ChatColor getByName(String name) {
-		if (name == null)
-			throw new IllegalArgumentException("Name can not be null!");
-		List<ChatColor> colors = getValues();
-		final int size = colors.size();
-		for (int i = 0; i < size; i++) {
-			ChatColor color = colors.get(i);
-			if (color.name.equals(name))
-				return color;
-		}
-		return null;
-	}
-	
-	public static ChatColor getByID(int id) {
-		return getValues().get(id);
-	}
-	
 	public static ChatColor getByColor(Color color) {
 		if (color == null)
 			throw new IllegalArgumentException("Color can not be null!");
-		List<ChatColor> colors = getValues();
+		List<ChatColor> colors = EnumUtil.getValues(ChatColor.class);
 		final int size = colors.size();
 		for (int i = 0; i < size; i++) {
 			ChatColor c = colors.get(i);
@@ -153,7 +136,7 @@ public enum ChatColor implements EnumName, EnumID, EnumValueCache {
 	}
 	
 	public static ChatColor getByColor(int rgb) {
-		List<ChatColor> colors = getValues();
+		List<ChatColor> colors = EnumUtil.getValues(ChatColor.class);
 		final int size = colors.size();
 		for (int i = 0; i < size; i++) {
 			ChatColor c = colors.get(i);
@@ -162,27 +145,6 @@ public enum ChatColor implements EnumName, EnumID, EnumValueCache {
 		}
 		return null;
 	}
-	
-	/**
-	 * Returns a immutable List of all Types.<br>
-	 * This method avoid allocation of a new array not like {@link #values()}.
-	 * @return list
-	 */
-	public static List<ChatColor> getValues() {
-		if (VALUES == null) {
-			synchronized (ChatColor.class) {
-				if (VALUES == null)
-					VALUES = List.of(values());
-			}
-		}
-		return VALUES;
-	}
-	
-	/**
-	 * Releases the system resources used from the values cache
-	 */
-	public static void freeValues() {
-		VALUES = null;
-	}
+
 	
 }

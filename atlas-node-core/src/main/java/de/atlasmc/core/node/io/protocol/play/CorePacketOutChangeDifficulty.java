@@ -7,13 +7,14 @@ import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.Difficulty;
 import de.atlasmc.node.io.protocol.play.PacketOutChangeDifficulty;
+import de.atlasmc.util.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutChangeDifficulty implements PacketIO<PacketOutChangeDifficulty> {
 
 	@Override
 	public void read(PacketOutChangeDifficulty packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.difficulty = Difficulty.getByID(in.readUnsignedByte());
+		packet.difficulty = EnumUtil.getByID(Difficulty.class, in.readUnsignedByte());
 		packet.locked = in.readBoolean();
 	}
 

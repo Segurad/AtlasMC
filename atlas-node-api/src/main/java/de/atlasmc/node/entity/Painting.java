@@ -1,8 +1,7 @@
 package de.atlasmc.node.entity;
 
-import java.util.List;
-
-import de.atlasmc.util.AtlasEnum;
+import de.atlasmc.IDHolder;
+import de.atlasmc.util.EnumName;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Painting extends Hanging {
@@ -11,7 +10,7 @@ public interface Painting extends Hanging {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(Painting.class)
 					.include(Hanging.NBT_HANDLER)
-					.enumStringField("motive", Painting::getMotive, Painting::setMotive, Motive::getByName, Motive.KEBAB)
+					.enumStringField("motive", Painting::getMotive, Painting::setMotive, Motive.class, Motive.KEBAB)
 					.build();
 	
 	Motive getMotive();
@@ -23,7 +22,8 @@ public interface Painting extends Hanging {
 		return NBT_HANDLER;
 	}
 	
-	public static enum Motive implements AtlasEnum {
+	public static enum Motive implements IDHolder, EnumName {
+		
 		KEBAB,
 		AZTEC,
 		ALBAN,
@@ -55,8 +55,6 @@ public interface Painting extends Hanging {
 		FIRE,
 		DONKEY_KONG;
 
-		private static List<Motive> VALUES;
-		
 		private final String name;
 		
 		private Motive() {
@@ -69,44 +67,9 @@ public interface Painting extends Hanging {
 			return name;
 		}
 		
-		public static Motive getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<Motive> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-		
 		@Override
 		public int getID() {
 			return ordinal();
-		}
-		
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
-		}
-
-		public static Motive getByName(String name) {
-			if (name == null)
-				throw new IllegalArgumentException("Name can not be null!");
-			List<Motive> values = getValues();
-			final int size = values.size();
-			for (int i = 0; i < size; i++) {
-				Motive motive = values.get(i);
-				if (motive.name.equals(name))
-					return motive;
-			}
-			return null;
 		}
 		
 	}

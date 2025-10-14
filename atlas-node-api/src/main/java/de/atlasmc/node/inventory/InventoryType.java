@@ -1,13 +1,9 @@
 package de.atlasmc.node.inventory;
 
-import java.util.List;
-
+import de.atlasmc.IDHolder;
 import de.atlasmc.chat.Chat;
-import de.atlasmc.node.io.protocol.play.PacketOutOpenScreen;
-import de.atlasmc.util.EnumID;
-import de.atlasmc.util.EnumValueCache;
 
-public enum InventoryType implements EnumID, EnumValueCache {
+public enum InventoryType implements IDHolder {
 
 	GENERIC_9X1(0),
 	GENERIC_9X2(1),
@@ -90,10 +86,8 @@ public enum InventoryType implements EnumID, EnumValueCache {
 	 * The crafting section of the player's inventory<br>
 	 * Containing 4 {@link SlotType#CRAFTING} and 1 {@link SlotType#RESULT}
 	 */
-	CRAFTING(-1)
+	CRAFTING(-3)
 	;
-	
-	private static List<InventoryType> VALUES;
 	
 	private final int id;
 
@@ -114,31 +108,9 @@ public enum InventoryType implements EnumID, EnumValueCache {
 		}
 	}
 	
-	/**
-	 * Returns the protocol id.
-	 * Id's with negative values have dedicated packets an may not be opened with {@link PacketOutOpenScreen}
-	 * @return id for protocol
-	 */
+	@Override
 	public int getID() {
 		return id;
-	}
-	
-	/**
-	 * Returns a immutable List of all Types.<br>
-	 * This method avoid allocation of a new array not like {@link #values()}.
-	 * @return list
-	 */
-	public static List<InventoryType> getValues() {
-		if (VALUES == null)
-			VALUES = List.of(values());
-		return VALUES;
-	}
-	
-	/**
-	 * Releases the system resources used from the values cache
-	 */
-	public static void freeValues() {
-		VALUES = null;
 	}
 	
 	public Inventory create(Chat title) {
@@ -210,14 +182,8 @@ public enum InventoryType implements EnumID, EnumValueCache {
 		}
 	}
 	
-	public static InventoryType getByID(int id) {
-		for (InventoryType t : getValues()) {
-			if (t.getID() == id) return t;
-		}
-		return null;
-	}
-	
 	public static enum SlotType {
+		
 		ARMOR,
 		CONTAINER,
 		CRAFTING,
@@ -225,6 +191,7 @@ public enum InventoryType implements EnumID, EnumValueCache {
 		OUTSIDE,
 		QUICKBAR,
 		RESULT;
+		
 	}
 	
 }

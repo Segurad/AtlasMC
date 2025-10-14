@@ -1,10 +1,10 @@
 package de.atlasmc.node;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
-import de.atlasmc.util.AtlasEnum;
+import de.atlasmc.IDHolder;
+import de.atlasmc.util.EnumName;
 import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
@@ -14,7 +14,7 @@ public class FireworkExplosion implements NBTSerializable {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(FireworkExplosion.class)
 					.defaultConstructor(FireworkExplosion::new)
-					.enumStringField("shape", FireworkExplosion::getShape, FireworkExplosion::setShape, Shape::getByName, Shape.SMALL_BALL)
+					.enumStringField("shape", FireworkExplosion::getShape, FireworkExplosion::setShape, Shape.class, Shape.SMALL_BALL)
 					.intArray("colors", FireworkExplosion::getColors, FireworkExplosion::setColors)
 					.intArray("fade_colors", FireworkExplosion::getFadeColors, FireworkExplosion::setFadeColors)
 					.boolField("has_trail", FireworkExplosion::hasTrail, FireworkExplosion::setTrail, false)
@@ -94,15 +94,14 @@ public class FireworkExplosion implements NBTSerializable {
 		return NBT_HANDLER;
 	}
 	
-	public static enum Shape implements AtlasEnum {
+	public static enum Shape implements IDHolder, EnumName {
+		
 		SMALL_BALL,
 		LARGE_BALL,
 		STAR,
 		CREEPER,
 		BURST;
 
-		private static List<Shape> VALUES;
-		
 		private final String name;
 		
 		private Shape() {
@@ -114,51 +113,11 @@ public class FireworkExplosion implements NBTSerializable {
 			return ordinal();
 		}
 		
-		public static Shape getByID(int id) {
-			return getValues().get(id);
-		}
-		
 		@Override
 		public String getName() {
 			return name;
 		}
 		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<Shape> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-		
-		
-		/**
-		 * Returns the value represented by the name or null if no matching value has been found
-		 * @param name the name of the value
-		 * @return value or null
-		 */
-		public static Shape getByName(String name) {
-			if (name == null)
-				throw new IllegalArgumentException("Name can not be null!");
-			List<Shape> values = getValues();
-			final int size = values.size();
-			for (int i = 0; i < size; i++) {
-				Shape value = values.get(i);
-				if (value.name.equals(name)) 
-					return value;
-			}
-			return null;
-		}
-		
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
-		}
 	}
 
 	@Override

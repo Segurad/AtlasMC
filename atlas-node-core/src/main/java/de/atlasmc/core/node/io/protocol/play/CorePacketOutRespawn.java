@@ -12,6 +12,7 @@ import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.Gamemode;
 import de.atlasmc.node.io.protocol.play.PacketOutRespawn;
+import de.atlasmc.util.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutRespawn implements PacketIO<PacketOutRespawn> {
@@ -21,10 +22,10 @@ public class CorePacketOutRespawn implements PacketIO<PacketOutRespawn> {
 		packet.dimension = readVarInt(in);
 		packet.world = readIdentifier(in);
 		packet.seed = in.readLong();
-		packet.gamemode = Gamemode.getByID(in.readUnsignedByte());
+		packet.gamemode = EnumUtil.getByID(Gamemode.class, in.readUnsignedByte());
 		int rawPreviousGamemode = readVarInt(in);
 		if (rawPreviousGamemode != -1)
-			packet.previous = Gamemode.getByID(rawPreviousGamemode);
+			packet.previous = EnumUtil.getByID(Gamemode.class, rawPreviousGamemode);
 		packet.debug = in.readBoolean();
 		packet.flat = in.readBoolean();
 		if (in.readBoolean()) {

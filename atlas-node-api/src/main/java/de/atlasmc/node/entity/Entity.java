@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.joml.Vector3d;
 
+import de.atlasmc.IDHolder;
 import de.atlasmc.node.Location;
 import de.atlasmc.node.Nameable;
 import de.atlasmc.node.SimpleLocation;
@@ -14,8 +15,6 @@ import de.atlasmc.node.world.Chunk;
 import de.atlasmc.node.world.World;
 import de.atlasmc.node.world.entitytracker.EntityPerception;
 import de.atlasmc.tick.Tickable;
-import de.atlasmc.util.EnumID;
-import de.atlasmc.util.EnumValueCache;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.annotation.ThreadSafe;
 import de.atlasmc.util.annotation.UnsafeAPI;
@@ -262,7 +261,7 @@ public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitte
 		return NBT_HANDLER;
 	}
 	
-	public static enum Animation implements EnumID, EnumValueCache {
+	public static enum Animation implements IDHolder {
 		
 		SWING_MAIN_ARM,
 		TAKE_DAMAGE,
@@ -271,37 +270,14 @@ public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitte
 		CRITICAL_EFFECT,
 		MAGIC_CRITICAL_EFFECT;
 		
-		private static List<Animation> VALUES;
-		
-		public static Animation getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<Animation> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-		
+		@Override
 		public int getID() {
 			return ordinal();
 		}
 		
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
-		}
-		
 	}
 	
-	public static enum Pose implements EnumID, EnumValueCache {
+	public static enum Pose implements IDHolder {
 		
 		STANDING,
 		FALL_FLYING,
@@ -311,32 +287,9 @@ public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitte
 		SNEAKING,
 		DYING;
 		
-		private static List<Pose> VALUES;
-		
-		public static Pose getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<Pose> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-		
+		@Override
 		public int getID() {
 			return ordinal();
-		}
-		
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
 		}
 		
 	}

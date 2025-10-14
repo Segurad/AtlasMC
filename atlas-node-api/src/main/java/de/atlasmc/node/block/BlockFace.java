@@ -1,13 +1,11 @@
 package de.atlasmc.node.block;
 
-import java.util.List;
-
 import org.joml.Vector3d;
 
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.EnumValueCache;
 
-public enum BlockFace implements EnumName, EnumValueCache {
+public enum BlockFace implements EnumName {
+	
 	NORTH(0, 0, -1, 0f, -180f, 8, 2),
 	EAST(1, 0, 0, 0f, -90f, 12, 5),
 	SOUTH(0, 0, 1, 0f, 0f, 0, 3),
@@ -27,7 +25,33 @@ public enum BlockFace implements EnumName, EnumValueCache {
 	SOUTH_SOUTH_WEST(-1, 0, 2, 1),
 	WEST_SOUTH_WEST(-2, 0, 1, 3);
 	
-	private static List<BlockFace> VALUES;
+	private static final BlockFace[] BY_FACE_ID = new BlockFace[]{ 
+			DOWN,
+			UP,
+			NORTH,
+			SOUTH,
+			WEST,
+			EAST 
+	};
+	
+	private static final BlockFace[] BY_ROTATION = new BlockFace[] {
+			SOUTH,
+			SOUTH_SOUTH_WEST,
+			SOUTH_WEST,
+			WEST_SOUTH_WEST,
+			WEST,
+			WEST_NORTH_WEST,
+			NORTH_WEST,
+			NORTH_NORTH_WEST,
+			NORTH,
+			NORTH_NORTH_EAST,
+			NORTH_EAST,
+			EAST_NORTH_EAST,
+			EAST,
+			EAST_SOUTH_EAST,
+			SOUTH_EAST,
+			SOUTH_SOUTH_EAST
+	};
 	
 	private final String name;
 	
@@ -91,76 +115,21 @@ public enum BlockFace implements EnumName, EnumValueCache {
 		return modZ;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public <T extends Vector3d> T modifiy(T loc) {
-		return (T) loc.add(modX, modY, modZ);
-	}
-
-	public static BlockFace getByName(String name) {
-		if (name == null)
-			throw new IllegalArgumentException("Name can not be null!");
-		List<BlockFace> values = getValues();
-		final int size = values.size();
-		for (int i = 0; i < size; i++) {
-			BlockFace value = values.get(i);
-			if (value.name.equals(name)) {
-				return value;
-			};
-		}
-		return null;
+		loc.add(loc);
+		return loc;
 	}
 	
 	public static BlockFace getByRotation(int rotation) {
-		List<BlockFace> values = getValues();
-		final int size = values.size();
-		for (int i = 0; i < size; i++) {
-			BlockFace value = values.get(i);
-			if (value.rotation == rotation) {
-				return value;
-			};
-		}
-		return null;
+		return BY_ROTATION[rotation];
 	}
 	
-	public static BlockFace getByFaceID(int facing) {
-		switch(facing) {
-		case 0:
-			return DOWN;
-		case 1:
-			return UP;
-		case 2:
-			return NORTH;
-		case 3:
-			return SOUTH;
-		case 4:
-			return WEST;
-		case 5:
-			return EAST;
-		default:
-			throw new IllegalArgumentException("Invalid face id: " + facing);
-		}
+	public static BlockFace getByFaceID(int faceID) {
+		return BY_FACE_ID[faceID];
 	}
 	
 	public int getFaceID() {
 		return faceID;
-	}
-	
-	/**
-	 * Returns a immutable List of all Types.<br>
-	 * This method avoid allocation of a new array not like {@link #values()}.
-	 * @return list
-	 */
-	public static List<BlockFace> getValues() {
-		if (VALUES == null)
-			VALUES = List.of(values());
-		return VALUES;
-	}
-	
-	/**
-	 * Releases the system resources used from the values cache
-	 */
-	public static void freeValues() {
-		VALUES = null;
 	}
 
 }

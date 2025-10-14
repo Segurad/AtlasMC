@@ -1,13 +1,10 @@
 package de.atlasmc.node.sound;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import de.atlasmc.IDHolder;
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.AtlasEnum;
+import de.atlasmc.util.EnumName;
 
-public enum EnumSound implements Sound, AtlasEnum {
+public enum EnumSound implements Sound, IDHolder, EnumName {
 
 	ENTITY_ALLAY_AMBIENT_WITH_ITEM("minecraft:entity.allay.ambient_with_item"),
 	ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM("minecraft:entity.allay.ambient_without_item"),
@@ -1738,17 +1735,6 @@ public enum EnumSound implements Sound, AtlasEnum {
 	EVENT_MOB_EFFECT_RAID_OMEN("minecraft:event.mob_effect.raid_omen"),
 	ITEM_SADDLE_UNEQUIP("minecraft:item.saddle.unequip");
 	
-	private static final Map<String, EnumSound> BY_NAME;
-	private static List<EnumSound> VALUES;
-	
-	static {
-		Map<String, EnumSound> map = new HashMap<>();
-		for (EnumSound value : values()) {
-			map.put(value.name.toString(), value);
-		}
-		BY_NAME = Map.copyOf(map);
-	}
-	
 	private final NamespacedKey name;
 	
 	private EnumSound(String name) {
@@ -1774,37 +1760,10 @@ public enum EnumSound implements Sound, AtlasEnum {
 	public boolean hasFixedRange() {
 		return false;
 	}
-	
-	public static EnumSound getByName(String name) {
-		if (name == null)
-			throw new IllegalArgumentException("Name can not be null!");
-		return BY_NAME.get(name);
-	}
-	
-	public static EnumSound getByID(int soundID) {
-		return getValues().get(soundID);
-	}
 
+	@Override
 	public int getID() {
 		return ordinal();
-	}
-	
-	/**
-	 * Returns a immutable List of all Types.<br>
-	 * This method avoid allocation of a new array not like {@link #values()}.
-	 * @return list
-	 */
-	public static List<EnumSound> getValues() {
-		if (VALUES == null)
-			VALUES = List.of(values());
-		return VALUES;
-	}
-	
-	/**
-	 * Releases the system resources used from the values cache
-	 */
-	public static void freeValues() {
-		VALUES = null;
 	}
 
 }

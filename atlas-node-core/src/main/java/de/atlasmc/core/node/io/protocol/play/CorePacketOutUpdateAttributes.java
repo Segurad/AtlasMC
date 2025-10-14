@@ -18,6 +18,8 @@ import de.atlasmc.node.attribute.AttributeInstance;
 import de.atlasmc.node.attribute.AttributeModifier;
 import de.atlasmc.node.attribute.AttributeModifier.Operation;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateAttributes;
+import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.EnumUtil.EnumData;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutUpdateAttributes implements PacketIO<PacketOutUpdateAttributes> {
@@ -27,6 +29,7 @@ public class CorePacketOutUpdateAttributes implements PacketIO<PacketOutUpdateAt
 		packet.entityID = readVarInt(in);
 		final int attributeCount = in.readInt();
 		List<AttributeInstance> attributes = new ArrayList<>(attributeCount);
+		EnumData<Operation> enumData = EnumUtil.getData(Operation.class);
 		for (int i = 0; i < attributeCount; i++) {
 			int typeID = readVarInt(in);
 			Attribute type = Attribute.getByID(typeID);
@@ -38,7 +41,7 @@ public class CorePacketOutUpdateAttributes implements PacketIO<PacketOutUpdateAt
 			for (int j = 0; j < modifierCount; j++) {
 				NamespacedKey id = readIdentifier(in);
 				double amount = in.readDouble();
-				Operation op = Operation.getByID(i);
+				Operation op = enumData.getByID(i);
 				AttributeModifier modifier = new AttributeModifier(id, amount, op);
 				modifiers.add(modifier);
 			}

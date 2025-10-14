@@ -9,6 +9,7 @@ import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.inventory.InventoryType;
 import de.atlasmc.node.io.protocol.play.PacketOutOpenScreen;
+import de.atlasmc.util.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutOpenScreen implements PacketIO<PacketOutOpenScreen> {
@@ -16,7 +17,7 @@ public class CorePacketOutOpenScreen implements PacketIO<PacketOutOpenScreen> {
 	@Override
 	public void read(PacketOutOpenScreen packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.windowID = readVarInt(in);
-		packet.type = InventoryType.getByID(readVarInt(in));
+		packet.type = EnumUtil.getByID(InventoryType.class, readVarInt(in));
 		packet.title = readTextComponent(in);
 	}
 

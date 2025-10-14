@@ -1,16 +1,13 @@
 package de.atlasmc.node.world.particle;
 
-import java.util.List;
-
 import de.atlasmc.Color;
+import de.atlasmc.IDHolder;
 import de.atlasmc.node.SimpleLocation;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.util.EnumID;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.EnumValueCache;
 
-public enum ParticleType implements EnumName, EnumID, EnumValueCache {
+public enum ParticleType implements EnumName, IDHolder {
 	
 	ANGRY_VILLAGER,
 	BLOCK(BlockData.class),
@@ -127,8 +124,6 @@ public enum ParticleType implements EnumName, EnumID, EnumValueCache {
 	RAID_OMEN,
 	TRIAL_OMEN,
 	BLOCK_CRUMBLE;
-	
-	private static List<ParticleType> VALUES;
 	
 	private final Class<?> data;
 	private final String name;
@@ -248,50 +243,15 @@ public enum ParticleType implements EnumName, EnumID, EnumValueCache {
 		}
 	}
 
-	public static ParticleType getByID(int id) {
-		return getValues().get(id);
-	}
-
 	public boolean isValid(Object data) {
 		if (this.data == null) 
 			return data == null;
 		return this.data.isInstance(data);
 	}
 	
-	/**
-	 * Returns a immutable List of all Types.<br>
-	 * This method avoid allocation of a new array not like {@link #values()}.
-	 * @return list
-	 */
-	public static List<ParticleType> getValues() {
-		if (VALUES == null)
-			VALUES = List.of(values());
-		return VALUES;
-	}
-	
-	/**
-	 * Releases the system resources used from the values cache
-	 */
-	public static void freeValues() {
-		VALUES = null;
-	}
-	
 	@Override
 	public String getName() {
 		return name;
-	}
-
-	public static ParticleType getByName(String name) {
-		if (name == null)
-			throw new IllegalArgumentException("Name can not be null!");
-		List<ParticleType> particles = getValues();
-		final int size = particles.size();
-		for (int i = 0; i < size; i++) {
-			ParticleType particle = particles.get(i);
-			if (particle.name.equals(name))
-				return particle;
-		}
-		return null;
 	}
 	
 }

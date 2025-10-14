@@ -15,6 +15,7 @@ import de.atlasmc.node.world.particle.ParticleType;
 import de.atlasmc.node.world.particle.ParticleType.DustColor;
 import de.atlasmc.node.world.particle.ParticleType.DustColorTransition;
 import de.atlasmc.node.world.particle.ParticleType.VibrationData;
+import de.atlasmc.util.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public final class ParticleMetaDataType extends MetaDataType<Particle> {
@@ -25,7 +26,7 @@ public final class ParticleMetaDataType extends MetaDataType<Particle> {
 
 	@Override
 	public Particle read(ByteBuf in) {
-		ParticleType p = ParticleType.getByID(readVarInt(in));
+		ParticleType p = EnumUtil.getByID(ParticleType.class, readVarInt(in));
 		// TODO read
 		return null;
 	}

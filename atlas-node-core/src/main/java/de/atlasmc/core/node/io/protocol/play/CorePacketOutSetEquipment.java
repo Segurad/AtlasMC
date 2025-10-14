@@ -12,6 +12,7 @@ import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.inventory.EquipmentSlot;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.io.protocol.play.PacketOutSetEquipment;
+import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.Pair;
 import io.netty.buffer.ByteBuf;
 
@@ -25,7 +26,7 @@ public class CorePacketOutSetEquipment implements PacketIO<PacketOutSetEquipment
 		do {
 			int raw = in.readByte();
 			next = (raw & 0x80) != 0x00;
-			EquipmentSlot slot = EquipmentSlot.getByID(raw & 0x7F);
+			EquipmentSlot slot = EnumUtil.getByID(EquipmentSlot.class, raw & 0x7F);
 			ItemStack item = readSlot(in);
 			slots.add(Pair.of(slot, item));
 		} while (next);

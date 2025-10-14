@@ -1,14 +1,13 @@
 package de.atlasmc.node.entity;
 
-import java.util.List;
 import java.util.Objects;
 
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import de.atlasmc.Color;
+import de.atlasmc.IDHolder;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.EnumValueCache;
 import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
@@ -18,7 +17,7 @@ public interface Display extends Entity {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(Display.class)
 					.include(Entity.NBT_HANDLER)
-					.enumStringField("billboard", Display::getBillboard, Display::setBillboard, Billboard::getByName, Billboard.FIXED)
+					.enumStringField("billboard", Display::getBillboard, Display::setBillboard, Billboard.class, Billboard.FIXED)
 					.typeCompoundField("brightness", Display::getBrightness, Display::setBrightness, Brightness.NBT_HANDLER)
 					.color("glow_color_override", Display::getGlowColorOverride, Display::setGlowColorOverride)
 					.floatField("height", Display::getDisplayHeight, Display::setDisplayHeight, 0)
@@ -249,7 +248,7 @@ public interface Display extends Entity {
 		
 	}
 	
-	public static enum Billboard implements EnumName, EnumValueCache {
+	public static enum Billboard implements EnumName, IDHolder {
 
 		/**
 		 * Vertical and horizontal axis are fixed
@@ -267,9 +266,7 @@ public interface Display extends Entity {
 		 * pivots around center point
 		 */
 		CENTER;
-		
-		private static List<Billboard> VALUES;
-		
+
 		private String name;
 		
 		private Billboard() {
@@ -281,43 +278,9 @@ public interface Display extends Entity {
 			return name;
 		}
 		
-		public static Billboard getByName(String name) {
-			if (name == null)
-				throw new IllegalArgumentException("NameID can not be null!");
-			final List<Billboard> values = getValues();
-			final int size = values.size();
-			for (int i = 0; i < size; i++) {
-				Billboard value = values.get(i);
-				if (value.name.equals(name))
-					return value;
-			}
-			throw new IllegalArgumentException("No value with name found: " + name);
-		}
-		
+		@Override
 		public int getID() {
 			return ordinal();
-		}
-		
-		public static Billboard getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<Billboard> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
 		}
 
 	}

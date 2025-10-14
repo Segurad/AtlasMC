@@ -7,6 +7,7 @@ import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.BaseColorComponent;
 import de.atlasmc.node.inventory.component.ComponentType;
+import de.atlasmc.util.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CoreBaseColorComponent extends AbstractItemComponent implements BaseColorComponent {
@@ -34,7 +35,7 @@ public class CoreBaseColorComponent extends AbstractItemComponent implements Bas
 	
 	@Override
 	public void read(ByteBuf buf) {
-		color = DyeColor.getByID(readVarInt(buf));
+		color = EnumUtil.getByID(DyeColor.class, readVarInt(buf));
 	}
 	
 	@Override

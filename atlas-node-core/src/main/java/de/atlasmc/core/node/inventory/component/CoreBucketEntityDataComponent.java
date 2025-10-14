@@ -9,6 +9,7 @@ import de.atlasmc.node.entity.TropicalFish.Pattern;
 import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.BucketEntityDataComponent;
 import de.atlasmc.node.inventory.component.ComponentType;
+import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import de.atlasmc.util.nbt.io.NBTReader;
@@ -129,7 +130,7 @@ public class CoreBucketEntityDataComponent extends AbstractItemComponent impleme
 
 	@Override
 	public DyeColor getBodyColor() {
-		return DyeColor.getByID((tropicalFishVariant >> 16) & 0xFF);
+		return EnumUtil.getByID(DyeColor.class, ((tropicalFishVariant >> 16) & 0xFF));
 	}
 
 	@Override
@@ -139,7 +140,7 @@ public class CoreBucketEntityDataComponent extends AbstractItemComponent impleme
 
 	@Override
 	public DyeColor getPatternColor() {
-		return DyeColor.getByID(tropicalFishVariant >> 24);
+		return EnumUtil.getByID(DyeColor.class, tropicalFishVariant >> 24);
 	}
 
 	@Override

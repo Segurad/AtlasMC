@@ -9,6 +9,7 @@ import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketInPlayerCommand;
 import de.atlasmc.node.io.protocol.play.PacketInPlayerCommand.Action;
+import de.atlasmc.util.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketInPlayerCommand implements PacketIO<PacketInPlayerCommand> {
@@ -16,7 +17,7 @@ public class CorePacketInPlayerCommand implements PacketIO<PacketInPlayerCommand
 	@Override
 	public void read(PacketInPlayerCommand packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.entityID = readVarInt(in);
-		packet.action = Action.getByID(readVarInt(in));
+		packet.action = EnumUtil.getByID(Action.class, readVarInt(in));
 		packet.jumpboost = readVarInt(in);
 	}
 

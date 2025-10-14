@@ -1,8 +1,7 @@
 package de.atlasmc.node.entity;
 
-import java.util.List;
-
-import de.atlasmc.util.AtlasEnum;
+import de.atlasmc.IDHolder;
+import de.atlasmc.util.EnumName;
 import de.atlasmc.util.annotation.UnsafeAPI;
 import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
@@ -50,8 +49,8 @@ public interface AbstractVillager extends Merchant {
 						.builder(VillagerData.class)
 						.defaultConstructor(VillagerData::new)
 						.intField("level", VillagerData::getLevel, VillagerData::setLevel, 1)
-						.enumStringField("profession", VillagerData::getProfession, VillagerData::setProfession, VillagerProfession::getByName, VillagerProfession.NONE)
-						.enumStringField("type", VillagerData::getType, VillagerData::setType, VillagerType::getByName, VillagerType.PLAINS)
+						.enumStringField("profession", VillagerData::getProfession, VillagerData::setProfession, VillagerProfession.class, VillagerProfession.NONE)
+						.enumStringField("type", VillagerData::getType, VillagerData::setType, VillagerType.class, VillagerType.PLAINS)
 						.build();
 		
 		private VillagerType type;
@@ -113,7 +112,8 @@ public interface AbstractVillager extends Merchant {
 		
 	}
 	
-	public static enum VillagerType implements AtlasEnum {
+	public static enum VillagerType implements EnumName, IDHolder {
+		
 		DESERT("minecraft:desert"),
 		JUNGLE("minecraft:jungle"),
 		PLAINS("minecraft:plains"),
@@ -121,8 +121,6 @@ public interface AbstractVillager extends Merchant {
 		SNOW("minecraft:snow"),
 		SWAMP("minecraft:swamp"),
 		TAIGA("minecraft:taiga");
-		
-		private static List<VillagerType> VALUES;
 		
 		private final String name;
 		
@@ -140,44 +138,9 @@ public interface AbstractVillager extends Merchant {
 			return ordinal();
 		}
 		
-		public static VillagerType getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<VillagerType> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-		
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
-		}
-
-		public static VillagerType getByName(String name) {
-			if (name == null)
-				throw new IllegalArgumentException(name);
-			List<VillagerType> values = getValues();
-			final int size = values.size();
-			for (int i = 0; i < size; i++) {
-				VillagerType type = values.get(i);
-				if (type.name.equals(name))
-					return type;
-			}
-			return null;
-		}
-		
 	}
 	
-	public static enum VillagerProfession implements AtlasEnum {
+	public static enum VillagerProfession implements EnumName, IDHolder {
 		
 		NONE("minecraft:none"),
 		ARMORER("minecraft:armorer"),
@@ -195,8 +158,6 @@ public interface AbstractVillager extends Merchant {
 		TOOLSMITH("minecraft:toolsmith"),
 		WEAPONSMITH("minecraft:weaponsmith");
 		
-		private static List<VillagerProfession> VALUES;
-		
 		private final String name;
 		
 		private VillagerProfession(String name) {
@@ -211,41 +172,6 @@ public interface AbstractVillager extends Merchant {
 		@Override
 		public int getID() {
 			return ordinal();
-		}
-		
-		public static VillagerProfession getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<VillagerProfession> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-		
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
-		}
-
-		public static VillagerProfession getByName(String name) {
-			if (name == null)
-				throw new IllegalArgumentException("Name can not be null!");
-			List<VillagerProfession> professions = getValues();
-			final int size = professions.size();
-			for (int i = 0; i < size; i++) {
-				VillagerProfession profession = professions.get(i);
-				if (profession.name.equals(name))
-					return profession;
-			}
-			return null;
 		}
 		
 	}

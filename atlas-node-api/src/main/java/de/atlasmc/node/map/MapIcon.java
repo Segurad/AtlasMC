@@ -1,10 +1,9 @@
 package de.atlasmc.node.map;
 
-import java.util.List;
-
+import de.atlasmc.IDHolder;
 import de.atlasmc.chat.Chat;
-import de.atlasmc.util.AtlasEnum;
 import de.atlasmc.util.CloneException;
+import de.atlasmc.util.EnumName;
 import de.atlasmc.util.nbt.serialization.NBTSerializable;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
@@ -14,7 +13,7 @@ public class MapIcon implements Cloneable, NBTSerializable {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(MapIcon.class)
 					.defaultConstructor(MapIcon::new)
-					.enumStringField("type", MapIcon::getType, MapIcon::setType, IconType::getByName, IconType.PLAYER)
+					.enumStringField("type", MapIcon::getType, MapIcon::setType, IconType.class, IconType.PLAYER)
 					.doubleField("x", MapIcon::getX, MapIcon::setX, 0)
 					.doubleField("z", MapIcon::getZ, MapIcon::setZ, 0)
 					.floatField("rotation", MapIcon::getRotation, MapIcon::setRotation, 0)
@@ -102,7 +101,7 @@ public class MapIcon implements Cloneable, NBTSerializable {
 		return NBT_HANDLER;
 	}
 	
-	public enum IconType implements AtlasEnum {
+	public enum IconType implements IDHolder, EnumName {
 		
 		PLAYER,
 		FRAME,
@@ -139,8 +138,6 @@ public class MapIcon implements Cloneable, NBTSerializable {
 		JUNGLE_TEMPLATE,
 		SWAMP_HUT;
 		
-		private static List<IconType> VALUES;
-		
 		private final String name;
 		
 		private IconType() {
@@ -155,41 +152,6 @@ public class MapIcon implements Cloneable, NBTSerializable {
 		@Override
 		public int getID() {
 			return ordinal();
-		}
-		
-		public static IconType getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<IconType> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-		
-		public static IconType getByName(String name) {
-			if (name == null)
-				throw new IllegalArgumentException("Name can not be null!");
-			List<IconType> values = getValues();
-			final int size = values.size();
-			for (int i = 0; i < size; i++) {
-				IconType value = values.get(i);
-				if (value.name.equals(name))
-					return value;
-			}
-			return null;
-		}
-		
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
 		}
 		
 	}

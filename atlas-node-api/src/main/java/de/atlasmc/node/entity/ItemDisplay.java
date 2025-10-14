@@ -1,10 +1,8 @@
 package de.atlasmc.node.entity;
 
-import java.util.List;
-
+import de.atlasmc.IDHolder;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.EnumValueCache;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface ItemDisplay extends Display {
@@ -14,7 +12,7 @@ public interface ItemDisplay extends Display {
 					.builder(ItemDisplay.class)
 					.include(Display.NBT_HANDLER)
 					.typeCompoundField("item", ItemDisplay::getItem, ItemDisplay::setItem, ItemStack.NBT_HANDLER)
-					.enumStringField("item_display", ItemDisplay::getRenderType, ItemDisplay::setRenderType, RenderType::getByName, RenderType.NONE)
+					.enumStringField("item_display", ItemDisplay::getRenderType, ItemDisplay::setRenderType, RenderType.class, RenderType.NONE)
 					.build();
 	
 	ItemStack getItem();
@@ -30,7 +28,7 @@ public interface ItemDisplay extends Display {
 		return NBT_HANDLER;
 	}
 	
-	public static enum RenderType implements EnumName, EnumValueCache {
+	public static enum RenderType implements EnumName, IDHolder {
 		
 		NONE,
 		THIRDPERSON_LEFT_HAND,
@@ -41,8 +39,6 @@ public interface ItemDisplay extends Display {
 		GUI,
 		GROUND,
 		FIXED;
-		
-		private static List<RenderType> VALUES;
 		
 		private String name;
 		
@@ -55,43 +51,9 @@ public interface ItemDisplay extends Display {
 			return name;
 		}
 		
-		public static RenderType getByName(String name) {
-			if (name == null)
-				throw new IllegalArgumentException("Name can not be null!");
-			final List<RenderType> values = getValues();
-			final int size = values.size();
-			for (int i = 0; i < size; i++) {
-				RenderType value = values.get(i);
-				if (value.name.equals(name))
-					return value;
-			}
-			throw new IllegalArgumentException("No value with name found: " + name);
-		}
-		
+		@Override
 		public int getID() {
 			return ordinal();
-		}
-		
-		public static RenderType getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<RenderType> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
 		}
 		
 	}

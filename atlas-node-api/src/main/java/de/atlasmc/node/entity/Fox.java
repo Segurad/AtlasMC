@@ -3,7 +3,7 @@ package de.atlasmc.node.entity;
 import java.util.List;
 import java.util.UUID;
 
-import de.atlasmc.util.EnumID;
+import de.atlasmc.IDHolder;
 import de.atlasmc.util.EnumName;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
@@ -17,7 +17,7 @@ public interface Fox extends Animal {
 					.boolField("Sitting", Fox::isSitting, Fox::setSitting, false)
 					.boolField("Sleeping", Fox::isSleeping, Fox::setSleeping, false)
 					.uuidList("Trusted", Fox::hasTrusted, Fox::getTrusted, true)
-					.enumStringField("Type", Fox::getFoxType, Fox::setFoxType, Type::getByName, Type.RED)
+					.enumStringField("Type", Fox::getFoxType, Fox::setFoxType, Type.class, Type.RED)
 					.build();
 	
 	Type getFoxType();
@@ -80,7 +80,8 @@ public interface Fox extends Animal {
 		return NBT_HANDLER;
 	}
 
-	public static enum Type implements EnumName, EnumID {
+	public static enum Type implements EnumName, IDHolder {
+		
 		RED,
 		SNOW;
 		
@@ -94,33 +95,12 @@ public interface Fox extends Animal {
 		public String getName() {
 			return name;
 		}
- 
-		public static Type getByID(int id) {
-			switch (id) {
-			case 0:
-				return RED;
-			case 1:
-				return SNOW;
-			default:
-				return RED;
-			}
-		}
 
 		@Override
 		public int getID() {
 			return ordinal();
 		}
 
-		public static Type getByName(String name) {
-			switch (name) {
-			case "red":
-				return RED;
-			case "snow":
-				return SNOW;
-			default:
-				return null;
-			}
-		}
 	}
 	
 }

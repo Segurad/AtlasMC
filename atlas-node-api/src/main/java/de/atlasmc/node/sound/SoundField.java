@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
@@ -48,7 +49,7 @@ final class SoundField<T> extends AbstractObjectField<T, Sound> {
 		Sound sound;
 		switch (type) {
 		case STRING:
-			sound = EnumSound.getByName(reader.readStringTag());
+			sound = EnumUtil.getByName(EnumSound.class, reader.readStringTag());
 			break;
 		case COMPOUND:
 			reader.readNextEntry();

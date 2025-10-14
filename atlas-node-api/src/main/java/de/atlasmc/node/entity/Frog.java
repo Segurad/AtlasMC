@@ -1,8 +1,7 @@
 package de.atlasmc.node.entity;
 
-import java.util.List;
-
-import de.atlasmc.util.AtlasEnum;
+import de.atlasmc.IDHolder;
+import de.atlasmc.util.EnumName;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Frog extends Animal {
@@ -11,7 +10,7 @@ public interface Frog extends Animal {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(Frog.class)
 					.include(Animal.NBT_HANDLER)
-					.enumStringField("variant", Frog::getVariant, Frog::setVariant, Variant::getByName, Variant.TEMPERATE)
+					.enumStringField("variant", Frog::getVariant, Frog::setVariant, Variant.class, Variant.TEMPERATE)
 					.build();
 	
 	Variant getVariant();
@@ -27,12 +26,11 @@ public interface Frog extends Animal {
 		return NBT_HANDLER;
 	}
 	
-	public static enum Variant implements AtlasEnum {
+	public static enum Variant implements EnumName, IDHolder {
+		
 		TEMPERATE,
 		WARM,
 		COLD;
-		
-		private static List<Variant> VALUES;
 		
 		private String name;
 		
@@ -46,45 +44,11 @@ public interface Frog extends Animal {
 			return name;
 		}
 		
-		public static Variant getByName(String name) {
-			if (name == null)
-				throw new IllegalArgumentException("Name can not be null!");
-			List<Variant> values = getValues();
-			final int size = values.size();
-			for (int i = 0; i < size; i++) {
-				Variant value = values.get(i);
-				if (value.name.equals(name))
-					return value;
-			}
-			return null;
-		}
-		
 		@Override
 		public int getID() {
 			return ordinal();
 		}
 		
-		public static Variant getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<Variant> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
-		}
 	}
 
 }

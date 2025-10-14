@@ -33,6 +33,7 @@ import de.atlasmc.node.Gamemode;
 import de.atlasmc.node.io.protocol.play.PacketOutPlayerInfoUpdate;
 import de.atlasmc.node.io.protocol.play.PacketOutPlayerInfoUpdate.PlayerInfo;
 import de.atlasmc.util.EncryptionUtil;
+import de.atlasmc.util.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutPlayerInfoUpdate implements PacketIO<PacketOutPlayerInfoUpdate> {
@@ -77,7 +78,7 @@ public class CorePacketOutPlayerInfoUpdate implements PacketIO<PacketOutPlayerIn
 				info.chatSignature = sigData;
 			}
 			if ((actions & ACTION_UPDATE_GAMEMODE) != 0) {
-				Gamemode gamemode = Gamemode.getByID(readVarInt(in));
+				Gamemode gamemode = EnumUtil.getByID(Gamemode.class, readVarInt(in));
 				info.gamemode = gamemode;
 			}
 			if ((actions & ACTION_UPDATE_LISTED) != 0) {

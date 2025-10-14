@@ -5,22 +5,23 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import de.atlasmc.util.EnumName;
+import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 
-public class InterfacedEnumStringField<T, K extends Enum<?> & EnumName> extends NBTField<T> {
+public class InterfacedEnumStringField<T, K extends Enum<K> & EnumName> extends NBTField<T> {
 
 	private final Function<T, ? super K> get;
 	private final BiConsumer<T, ? super K> set;
-	private final Function<String, K> enumSupplier;
+	private final Class<K> clazz;
 	private final K defaultValue;
 	
-	public InterfacedEnumStringField(CharSequence key, Function<T, ? super K> get, BiConsumer<T, ? super K> set, Function<String, K> enumSupplier, K defaultValue) {
+	public InterfacedEnumStringField(CharSequence key, Function<T, ? super K> get, BiConsumer<T, ? super K> set, Class<K> clazz, K defaultValue) {
 		super(key, STRING, true);
 		this.get = get;
 		this.set = set;
-		this.enumSupplier = enumSupplier;
+		this.clazz = clazz;
 		this.defaultValue = defaultValue;
 	}
 
@@ -37,7 +38,7 @@ public class InterfacedEnumStringField<T, K extends Enum<?> & EnumName> extends 
 
 	@Override
 	public void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException {
-		K v = enumSupplier.apply(reader.readStringTag());
+		K v = EnumUtil.getByName(clazz, reader.readStringTag());
 		set.accept(value, v);
 	}
 

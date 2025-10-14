@@ -1,8 +1,7 @@
 package de.atlasmc.node.entity;
 
-import java.util.List;
-
-import de.atlasmc.util.AtlasEnum;
+import de.atlasmc.IDHolder;
+import de.atlasmc.util.EnumName;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface SpellcasterIllager extends AbstractIllager {
@@ -12,7 +11,7 @@ public interface SpellcasterIllager extends AbstractIllager {
 					.builder(SpellcasterIllager.class)
 					.include(AbstractIllager.NBT_HANDLER)
 					.intField("SpellTicks", SpellcasterIllager::getSpellcastTime, SpellcasterIllager::setSpellcastTime, 0)
-					.enumStringField("Spell", SpellcasterIllager::getSpell, SpellcasterIllager::setSpell, Spell::getByName, Spell.NONE) // non standard
+					.enumStringField("Spell", SpellcasterIllager::getSpell, SpellcasterIllager::setSpell, Spell.class, Spell.NONE) // non standard
 					.build();
 	
 	Spell getSpell();
@@ -32,15 +31,14 @@ public interface SpellcasterIllager extends AbstractIllager {
 		return NBT_HANDLER;
 	}
 	
-	public static enum Spell implements AtlasEnum {
+	public static enum Spell implements IDHolder, EnumName {
+		
 		NONE,
 		SUMMON_VEX,
 		ATTACK,
 		WOLOLO,
 		DISAPEAR,
 		BLINDNESS;
-		
-		private static List<Spell> VALUES;
 		
 		private final String name;
 		
@@ -53,44 +51,9 @@ public interface SpellcasterIllager extends AbstractIllager {
 			return ordinal();
 		}
 		
-		public static Spell getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		public static Spell getByName(String name) {
-			if (name == null)
-				throw new IllegalArgumentException("Name can not be null!");
-			final List<Spell> values = getValues();
-			final int size = values.size();
-			for (int i = 0; i < size; i++) {
-				Spell value = values.get(i);
-				if (value.name.equals(name))
-					return value;
-			}
-			return null;
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<Spell> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-		
 		@Override
 		public String getName() {
 			return name;
-		}
-		
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
 		}
 		
 	}

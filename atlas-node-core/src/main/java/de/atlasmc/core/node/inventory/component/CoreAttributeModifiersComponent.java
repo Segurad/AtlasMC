@@ -15,6 +15,7 @@ import de.atlasmc.node.inventory.EquipmentSlot;
 import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.AttributeModifiersComponent;
 import de.atlasmc.node.inventory.component.ComponentType;
+import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.map.ArrayListMultimap;
 import de.atlasmc.util.map.ListMultimap;
 import de.atlasmc.util.map.Multimap;
@@ -145,8 +146,8 @@ public class CoreAttributeModifiersComponent extends AbstractItemComponent imple
 			Attribute attribute = Attribute.getByID(readVarInt(buf));
 			NamespacedKey modifierID = readIdentifier(buf);
 			double amount = buf.readDouble();
-			Operation operation = Operation.getByID(readVarInt(buf));
-			EquipmentSlot slot = EquipmentSlot.getByID(readVarInt(buf));
+			Operation operation = EnumUtil.getByID(Operation.class, readVarInt(buf));
+			EquipmentSlot slot = EnumUtil.getByID(EquipmentSlot.class, readVarInt(buf));
 			AttributeModifier modifier = new AttributeModifier(modifierID, amount, operation, slot);
 			modifiers.put(attribute, modifier);
 		}

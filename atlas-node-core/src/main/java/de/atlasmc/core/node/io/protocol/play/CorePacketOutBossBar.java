@@ -13,6 +13,7 @@ import de.atlasmc.node.BossBar.BarColor;
 import de.atlasmc.node.BossBar.BarStyle;
 import de.atlasmc.node.io.protocol.play.PacketOutBossBar;
 import de.atlasmc.node.io.protocol.play.PacketOutBossBar.BossBarAction;
+import de.atlasmc.util.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutBossBar implements PacketIO<PacketOutBossBar> {
@@ -22,14 +23,14 @@ public class CorePacketOutBossBar implements PacketIO<PacketOutBossBar> {
 		long most = in.readLong();
 		long least = in.readLong();
 		packet.uuid = new UUID(most, least);
-		BossBarAction action = BossBarAction.getByID(readVarInt(in));
+		BossBarAction action = EnumUtil.getByID(BossBarAction.class, readVarInt(in));
 		packet.action = action;
 		switch (action) {
 		case ADD: 
 			packet.title = readTextComponent(in);
 			packet.health = in.readFloat();
-			packet.color = BarColor.getByID(readVarInt(in));
-			packet.style = BarStyle.getByID(readVarInt(in));
+			packet.color = EnumUtil.getByID(BarColor.class, readVarInt(in));
+			packet.style = EnumUtil.getByID(BarStyle.class, readVarInt(in));
 			packet.flags = in.readUnsignedByte();
 			break;
 		case REMOVE: 
@@ -41,8 +42,8 @@ public class CorePacketOutBossBar implements PacketIO<PacketOutBossBar> {
 			packet.title = readTextComponent(in);
 			break;
 		case UPDATE_STYLE: 
-			packet.color = BarColor.getByID(readVarInt(in));
-			packet.style = BarStyle.getByID(readVarInt(in));
+			packet.color = EnumUtil.getByID(BarColor.class, readVarInt(in));
+			packet.style = EnumUtil.getByID(BarStyle.class, readVarInt(in));
 			break;
 		case UPDATE_FLAGS: 
 			packet.flags = in.readUnsignedByte();

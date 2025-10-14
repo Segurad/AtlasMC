@@ -1,11 +1,8 @@
 package de.atlasmc.util.nbt;
 
-import java.util.List;
 import java.util.function.Supplier;
 
-import de.atlasmc.util.EnumID;
-import de.atlasmc.util.EnumValueCache;
-import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.IDHolder;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.nbt.tag.ByteArrayTag;
 import de.atlasmc.util.nbt.tag.ByteTag;
@@ -22,7 +19,7 @@ import de.atlasmc.util.nbt.tag.NBT;
 import de.atlasmc.util.nbt.tag.ShortTag;
 import de.atlasmc.util.nbt.tag.StringTag;
 
-public enum TagType implements EnumID, EnumValueCache {
+public enum TagType implements IDHolder {
 
 	TAG_END(() -> { return EndTag.INSTANCE; }),
 	BYTE(ByteTag::new, true),
@@ -37,8 +34,6 @@ public enum TagType implements EnumID, EnumValueCache {
 	COMPOUND(CompoundTag::new),
 	INT_ARRAY(IntArrayTag::new, false, true),
 	LONG_ARRAY(LongArrayTag::new, false, true);
-	
-	private static List<TagType> VALUES;
 	
 	private final boolean isNum;
 	private final boolean isArray;
@@ -61,12 +56,6 @@ public enum TagType implements EnumID, EnumValueCache {
 	@Override
 	public int getID() {
 		return ordinal();
-	}
-	
-	public static TagType getByID(int id) {
-		if (id < 0 || id > 12) 
-			throw new IllegalArgumentException("ID (" + id + ") must be between 0 and 12");
-		return getValues().get(id);
 	}
 	
 	/**
@@ -123,25 +112,6 @@ public enum TagType implements EnumID, EnumValueCache {
 		nbt.setName(name);
 		nbt.setData(value);
 		return nbt;
-	}
-	
-	/**
-	 * Returns a immutable List of all Types.<br>
-	 * This method avoid allocation of a new array not like {@link #values()}.
-	 * @return list
-	 */
-	@NotNull
-	public static List<TagType> getValues() {
-		if (VALUES == null)
-			VALUES = List.of(values());
-		return VALUES;
-	}
-	
-	/**
-	 * Releases the system resources used from the values cache
-	 */
-	public static void freeValues() {
-		VALUES = null;
 	}
 	
 }

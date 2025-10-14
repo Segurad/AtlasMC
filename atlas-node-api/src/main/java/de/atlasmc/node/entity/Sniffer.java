@@ -1,8 +1,7 @@
 package de.atlasmc.node.entity;
 
-import java.util.List;
-
-import de.atlasmc.util.AtlasEnum;
+import de.atlasmc.IDHolder;
+import de.atlasmc.util.EnumName;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Sniffer extends Animal {
@@ -11,7 +10,7 @@ public interface Sniffer extends Animal {
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(Sniffer.class)
 					.include(Animal.NBT_HANDLER)
-					.enumStringField("SnifferState", Sniffer::getState, Sniffer::setState, State::getByName, State.IDLING) // non standard
+					.enumStringField("SnifferState", Sniffer::getState, Sniffer::setState, State.class, State.IDLING) // non standard
 					.build();
 	
 	State getState();
@@ -27,7 +26,8 @@ public interface Sniffer extends Animal {
 		return NBT_HANDLER;
 	}
 	
-	public static enum State implements AtlasEnum {
+	public static enum State implements IDHolder, EnumName {
+		
 		IDLING,
 		FEELING_HAPPY,
 		SCENTING,
@@ -36,48 +36,14 @@ public interface Sniffer extends Animal {
 		DIGGING,
 		RISING;
 		
-		private static List<State> VALUES;
-		
 		@Override
 		public String getName() {
 			return name();
 		}
 		
-		public static State getByName(String name) {
-			if (name == null)
-				throw new IllegalArgumentException("NameID can not be null!");
-			for (State value : getValues()) {
-				if (value.getName().equals(name))
-					return value;
-			}
-			throw new IllegalArgumentException("No value with name found: " + name);
-		}
-		
 		@Override
 		public int getID() {
 			return ordinal();
-		}
-		
-		public static State getByID(int id) {
-			return getValues().get(id);
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<State> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
-		}
-
-		/**
-		 * Releases the system resources used from the values cache
-		 */
-		public static void freeValues() {
-			VALUES = null;
 		}
 		
 	}

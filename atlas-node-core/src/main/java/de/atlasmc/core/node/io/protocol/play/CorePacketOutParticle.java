@@ -10,6 +10,7 @@ import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.entity.data.MetaDataType;
 import de.atlasmc.node.io.protocol.play.PacketOutParticle;
 import de.atlasmc.node.world.particle.ParticleType;
+import de.atlasmc.util.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutParticle implements PacketIO<PacketOutParticle> {
@@ -25,7 +26,7 @@ public class CorePacketOutParticle implements PacketIO<PacketOutParticle> {
 		packet.offZ = in.readFloat();
 		packet.maxSpeed = in.readFloat();
 		packet.count = in.readInt();
-		packet.particle = ParticleType.getByID(readVarInt(in));
+		packet.particle = EnumUtil.getByID(ParticleType.class, readVarInt(in));
 		packet.data = MetaDataType.PARTICLE.read(packet.particle, in);
 	}
 

@@ -28,7 +28,7 @@ public interface ChatComponent extends Chat, NBTSerializable {
 	public static final NBTSerializationHandler<ChatComponent> 
 	NBT_HANDLER = NBTSerializationHandler
 					.builder(ChatComponent.class)
-					.searchKeyEnumConstructor("type", ComponentType::getByNameID, ComponentType::createComponent, ChatComponent::getType)
+					.searchKeyEnumConstructor("type", ComponentType.class, ComponentType::createComponent, ChatComponent::getType)
 					.defaultConstructor(BaseComponent::new)
 					.boolField("bold", ChatComponent::isBold, ChatComponent::setBold, false)
 					.boolField("italic", ChatComponent::isItalic, ChatComponent::setItalic, false)

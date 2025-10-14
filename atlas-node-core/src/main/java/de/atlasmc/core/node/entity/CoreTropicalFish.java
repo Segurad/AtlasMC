@@ -6,6 +6,7 @@ import de.atlasmc.node.entity.TropicalFish;
 import de.atlasmc.node.entity.data.MetaData;
 import de.atlasmc.node.entity.data.MetaDataField;
 import de.atlasmc.node.entity.data.MetaDataType;
+import de.atlasmc.util.EnumUtil;
 
 public class CoreTropicalFish extends CoreFish implements TropicalFish {
 
@@ -50,7 +51,7 @@ public class CoreTropicalFish extends CoreFish implements TropicalFish {
 
 	@Override
 	public DyeColor getBaseColor() {
-		return DyeColor.getByID((metaContainer.getData(META_TROPICAL_VARIANT) >> 16) & 0xFF);
+		return EnumUtil.getByID(DyeColor.class, ((metaContainer.getData(META_TROPICAL_VARIANT) >> 16) & 0xFF));
 	}
 
 	@Override
@@ -63,7 +64,7 @@ public class CoreTropicalFish extends CoreFish implements TropicalFish {
 
 	@Override
 	public DyeColor getPatternColor() {
-		return DyeColor.getByID((metaContainer.getData(META_TROPICAL_VARIANT) >> 24) & 0xFF);
+		return EnumUtil.getByID(DyeColor.class, ((metaContainer.getData(META_TROPICAL_VARIANT) >> 24) & 0xFF));
 	}
 
 	@Override

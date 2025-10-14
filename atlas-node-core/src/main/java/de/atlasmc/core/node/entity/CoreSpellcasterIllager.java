@@ -4,6 +4,7 @@ import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.SpellcasterIllager;
 import de.atlasmc.node.entity.data.MetaDataField;
 import de.atlasmc.node.entity.data.MetaDataType;
+import de.atlasmc.util.EnumUtil;
 
 public class CoreSpellcasterIllager extends CoreRaider implements SpellcasterIllager {
 
@@ -31,7 +32,7 @@ public class CoreSpellcasterIllager extends CoreRaider implements SpellcasterIll
 
 	@Override
 	public Spell getSpell() {
-		return Spell.getByID(metaContainer.getData(META_SPELL));
+		return EnumUtil.getByID(Spell.class, metaContainer.getData(META_SPELL));
 	}
 
 	@Override

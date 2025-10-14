@@ -7,6 +7,8 @@ import java.util.Set;
 
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.block.BlockType;
+import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.EnumUtil.EnumData;
 import de.atlasmc.util.configuration.ConfigurationSection;
 
 /**
@@ -27,8 +29,9 @@ public class MultipleFacingBlockDataFactory extends ClassBlockDataFactory {
 		super(cfg);
 		List<String> rawFaces = cfg.getStringList("faces");
 		List<BlockFace> faces = new ArrayList<>(rawFaces.size());
+		final EnumData<BlockFace> blockFace = EnumUtil.getData(BlockFace.class);
 		for (String s : rawFaces)
-			faces.add(BlockFace.getByName(s));
+			faces.add(blockFace.getByName(s));
 		this.faces = EnumSet.copyOf(faces);
 	}
 	

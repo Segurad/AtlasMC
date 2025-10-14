@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.function.IntConsumer;
 import java.util.function.LongConsumer;
 
+import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.map.key.CharKeyBuffer;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
@@ -349,7 +350,7 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 			int rawTag = ioReadByte();
 			if (rawTag == -1)
 				throw new IOException("End of stream reached!");
-			type = TagType.getByID(rawTag);
+			type = EnumUtil.getByID(TagType.class, rawTag);
 			if (type == TagType.TAG_END) {
 				return; // no more preparation for end tag
 			}
@@ -374,7 +375,7 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 
 	private void addList() throws IOException {
 		ensureOpen();
-		TagType type = TagType.getByID(ioReadByte());
+		TagType type = EnumUtil.getByID(TagType.class, ioReadByte());
 		int payload = ioReadInt();
 		addList(type, payload);
 	}

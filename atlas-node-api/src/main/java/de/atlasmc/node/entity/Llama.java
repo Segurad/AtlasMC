@@ -1,8 +1,8 @@
 package de.atlasmc.node.entity;
 
+import de.atlasmc.IDHolder;
 import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.inventory.LlamaInventory;
-import de.atlasmc.util.EnumID;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Llama extends ChestedHorse {
@@ -12,7 +12,7 @@ public interface Llama extends ChestedHorse {
 					.builder(Llama.class)
 					.include(ChestedHorse.NBT_HANDLER)
 					.intField("Strength", Llama::getStrength, Llama::setStrength, 3)
-					.enumIntField("Variant", Llama::getColor, Llama::setColor, LlamaColor::getByID, LlamaColor.CREAMY)
+					.enumIntField("Variant", Llama::getColor, Llama::setColor, LlamaColor.class, LlamaColor.CREAMY)
 					.build();
 					
 	
@@ -35,29 +35,16 @@ public interface Llama extends ChestedHorse {
 		return NBT_HANDLER;
 	}
 	
-	public static enum LlamaColor implements EnumID {
+	public static enum LlamaColor implements IDHolder {
+		
 		CREAMY,
 		WHITE,
 		BROWN,
 		GRAY;
 		
+		@Override
 		public int getID() {
 			return ordinal();
-		}
-		
-		public static LlamaColor getByID(int id) {
-			switch (id) {
-			case 0:
-				return CREAMY;
-			case 1:
-				return WHITE;
-			case 2:
-				return BROWN;
-			case 3:
-				return GRAY;
-			default:
-				return CREAMY;
-			}
 		}
 		
 	}

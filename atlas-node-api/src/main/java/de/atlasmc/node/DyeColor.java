@@ -1,18 +1,16 @@
 package de.atlasmc.node;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import de.atlasmc.Color;
+import de.atlasmc.IDHolder;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.inventory.ItemType;
-import de.atlasmc.util.EnumID;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.EnumValueCache;
 
-public enum DyeColor implements EnumID, EnumName, EnumValueCache {
+public enum DyeColor implements IDHolder, EnumName {
 	
 	WHITE(0xF9FFFE),
 	ORANGE(0xF9801D),
@@ -30,8 +28,6 @@ public enum DyeColor implements EnumID, EnumName, EnumValueCache {
 	GREEN(0x5E7C16),
 	RED(0xB02E26),
 	BLACK(0x1D1D21);
-	
-	private static List<DyeColor> VALUES;
 	
 	private static final Map<NamespacedKey, DyeColor> DYE_BY_BANNER;
 	private static final Map<DyeColor, NamespacedKey> BANNER_BY_DYE;
@@ -100,24 +96,6 @@ public enum DyeColor implements EnumID, EnumName, EnumValueCache {
 		return color;
 	}
 	
-	public static DyeColor getByID(int id) {
-		final List<DyeColor> colors = getValues();
-		return id >= colors.size() ? null : colors.get(id);
-	}
-	
-	public static DyeColor getByName(String name) {
-		if (name == null)
-			throw new IllegalArgumentException("Name can not be null!");
-		List<DyeColor> colors = getValues();
-		final int size = colors.size();
-		for (int i = 0; i < size; i++) {
-			DyeColor color = colors.get(i);
-			if (color.name.equals(name))
-				return color;
-		}
-		return null;
-	}
-	
 	public static DyeColor getByBanner(ItemType type) {
 		if (type == null)
 			throw new IllegalArgumentException("Type can not be null!");
@@ -153,24 +131,6 @@ public enum DyeColor implements EnumID, EnumName, EnumValueCache {
 	@Override
 	public String getName() {
 		return name;
-	}
-	
-	/**
-	 * Returns a immutable List of all Types.<br>
-	 * This method avoid allocation of a new array not like {@link #values()}.
-	 * @return list
-	 */
-	public static List<DyeColor> getValues() {
-		if (VALUES == null)
-			VALUES = List.of(values());
-		return VALUES;
-	}
-
-	/**
-	 * Releases the system resources used from the values cache
-	 */
-	public static void freeValues() {
-		VALUES = null;
 	}
 	
 }

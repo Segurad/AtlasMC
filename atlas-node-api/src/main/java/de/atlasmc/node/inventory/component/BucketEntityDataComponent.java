@@ -20,9 +20,9 @@ public interface BucketEntityDataComponent extends ItemComponent {
 					.boolField("Invulnerable", BucketEntityDataComponent::isInvulnerable, BucketEntityDataComponent::setInvulnerable, false)
 					.floatField("Health", BucketEntityDataComponent::getHealth, BucketEntityDataComponent::setHealth, 0)
 					.intField("Age", BucketEntityDataComponent::getAge, BucketEntityDataComponent::setAge, 0)
-					.enumIntField("Variant", BucketEntityDataComponent::getVariant, BucketEntityDataComponent::setVariant, Variant::getByID, null)
+					.enumIntField("Variant", BucketEntityDataComponent::getVariant, BucketEntityDataComponent::setVariant, Variant.class, null)
 					.longField("HuntingCooldown", BucketEntityDataComponent::getHuntingCooldown, BucketEntityDataComponent::setHuntingCooldown, 0)
-					.enumStringField("type", BucketEntityDataComponent::getSalmonType, BucketEntityDataComponent::setSalmonType, Type::getByName, null)
+					.enumStringField("type", BucketEntityDataComponent::getSalmonType, BucketEntityDataComponent::setSalmonType, Type.class, null)
 					.endComponent()
 					.build();
 	

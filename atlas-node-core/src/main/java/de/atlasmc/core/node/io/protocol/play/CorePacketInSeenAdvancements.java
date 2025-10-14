@@ -9,13 +9,14 @@ import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketInSeenAdvancements;
 import de.atlasmc.node.io.protocol.play.PacketInSeenAdvancements.Action;
+import de.atlasmc.util.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketInSeenAdvancements implements PacketIO<PacketInSeenAdvancements> {
 
 	@Override
 	public void read(PacketInSeenAdvancements packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.action = Action.getByID(in.readInt());
+		packet.action = EnumUtil.getByID(Action.class, in.readInt());
 		packet.tabID = readIdentifier(in);
 	}
 

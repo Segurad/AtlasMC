@@ -19,6 +19,8 @@ import de.atlasmc.node.block.tile.Banner.ResourcePatternType;
 import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.BannerPatternsComponent;
 import de.atlasmc.node.inventory.component.ComponentType;
+import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.EnumUtil.EnumData;
 import io.netty.buffer.ByteBuf;
 
 public class CoreBannerPatternsComponent extends AbstractItemComponent implements BannerPatternsComponent {
@@ -98,17 +100,19 @@ public class CoreBannerPatternsComponent extends AbstractItemComponent implement
 		}
 		List<Pattern> patterns = getPatterns();
 		patterns.clear();
+		final EnumData<EnumPatternType> patternType = EnumUtil.getData(EnumPatternType.class);
+		final EnumData<DyeColor> dyeColor = EnumUtil.getData(DyeColor.class);
 		for (int i = 0; i < count; i++) {
 			final int typeID = readVarInt(buf);
 			PatternType type;
 			if (typeID > 0) {
-				type = EnumPatternType.getByID(typeID-1);
+				type = patternType.getByID(typeID-1);
 			} else {
 				NamespacedKey key = readIdentifier(buf);
 				String translation = readString(buf);
 				type = new ResourcePatternType(key, translation);
 			}
-			DyeColor color = DyeColor.getByID(readVarInt(buf));
+			DyeColor color = dyeColor.getByID(readVarInt(buf));
 			patterns.add(new Pattern(color, type));
 		}
 	}

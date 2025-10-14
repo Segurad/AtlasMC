@@ -1,9 +1,6 @@
 package de.atlasmc.node.entity;
 
-import java.util.List;
-
-import de.atlasmc.util.EnumID;
-import de.atlasmc.util.EnumValueCache;
+import de.atlasmc.IDHolder;
 import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public interface Rabbit extends Animal {
@@ -13,7 +10,7 @@ public interface Rabbit extends Animal {
 					.builder(Rabbit.class)
 					.include(Animal.NBT_HANDLER)
 					//.intField("MoreCarrotTicks", null, null)
-					.enumIntField("RabbitType", Rabbit::getRabbitType, Rabbit::setRabbitType, Type::getByID, Type.BROWN)
+					.enumIntField("RabbitType", Rabbit::getRabbitType, Rabbit::setRabbitType, Type.class, Type.BROWN)
 					.build();
 	
 	Type getRabbitType();
@@ -25,7 +22,8 @@ public interface Rabbit extends Animal {
 		return NBT_HANDLER;
 	}
 	
-	public static enum Type implements EnumID, EnumValueCache {
+	public static enum Type implements IDHolder {
+		
 		BROWN(0),
 		WHITE(1),
 		BLACK(2),
@@ -35,35 +33,15 @@ public interface Rabbit extends Animal {
 		THE_KILLER_BUNNY(99),
 		TOAST(Integer.MAX_VALUE);
 		
-		private static List<Type> VALUES;
-		
 		private int id;
 		
 		private Type(int id) {
 			this.id = id;
 		}
 		
+		@Override
 		public int getID() {
 			return id;
-		}
-		
-		public static Type getByID(int id) {
-			for (Type type : getValues()) {
-				if (type.getID() == id)
-					return type;
-			}
-			return TOAST;
-		}
-		
-		/**
-		 * Returns a immutable List of all Types.<br>
-		 * This method avoid allocation of a new array not like {@link #values()}.
-		 * @return list
-		 */
-		public static List<Type> getValues() {
-			if (VALUES == null)
-				VALUES = List.of(values());
-			return VALUES;
 		}
 		
 	}

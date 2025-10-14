@@ -1,12 +1,9 @@
 package de.atlasmc.node.inventory;
 
-import java.util.List;
-
-import de.atlasmc.util.EnumID;
+import de.atlasmc.IDHolder;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.EnumValueCache;
 
-public enum EquipmentSlot implements EnumID, EnumName, EnumValueCache {
+public enum EquipmentSlot implements IDHolder, EnumName {
 
 	/**
 	 * Slot that defines any {@link EquipmentSlot}
@@ -28,46 +25,20 @@ public enum EquipmentSlot implements EnumID, EnumName, EnumValueCache {
 	 */
 	BODY("body");
 	
-	private static List<EquipmentSlot> VALUES;
-	
 	private String name;
 	
 	private EquipmentSlot(String name) {
 		this.name = name;
 	}
 	
+	@Override
 	public String getName() {
 		return name;
 	}
-	
-	public static EquipmentSlot getByName(String name) {
-		List<EquipmentSlot> values = getValues();
-		final int size = values.size();
-		for (int i = 0; i < size; i++) {
-			EquipmentSlot slot = values.get(i);
-			if (slot.name.equals(name))
-				return slot;
-		}
-		return null;
-	}
 
+	@Override
 	public int getID() {
 		return ordinal();
-	}
-	
-	public static EquipmentSlot getByID(int id) {
-		return getValues().get(id);
-	}
-
-	/**
-	 * Returns a immutable List of all Types.<br>
-	 * This method avoid allocation of a new array not like {@link #values()}.
-	 * @return list
-	 */
-	public static List<EquipmentSlot> getValues() {
-		if (VALUES == null)
-			VALUES = List.of(values());
-		return VALUES;
 	}
 	
 }

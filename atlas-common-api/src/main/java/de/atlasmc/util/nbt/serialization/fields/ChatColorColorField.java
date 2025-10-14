@@ -6,6 +6,7 @@ import java.util.function.Function;
 
 import de.atlasmc.Color;
 import de.atlasmc.chat.ChatColor;
+import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
@@ -40,7 +41,7 @@ public class ChatColorColorField<T> extends AbstractObjectField<T, ChatColor> {
 		if (raw.charAt(0) == '#') {
 			setColor.accept(value, Color.fromARGB(Integer.parseInt(raw, 1, raw.length(), 16)));
 		} else {
-			ChatColor color = ChatColor.getByName(raw);
+			ChatColor color = EnumUtil.getByName(ChatColor.class, raw);
 			set.accept(value, color);
 		}
 	}
