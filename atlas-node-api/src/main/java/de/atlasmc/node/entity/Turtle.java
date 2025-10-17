@@ -2,12 +2,12 @@ package de.atlasmc.node.entity;
 
 import de.atlasmc.node.Location;
 import de.atlasmc.node.SimpleLocation;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Turtle extends Animal {
 	
-	public static final NBTSerializationHandler<Turtle>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Turtle>
+	NBT_HANDLER = NBTCodec
 					.builder(Turtle.class)
 					.include(Animal.NBT_HANDLER)
 					.boolField("has_egg", Turtle::hasEgg, Turtle::setEgg, false)
@@ -42,7 +42,7 @@ public interface Turtle extends Animal {
 	void setTraveling(boolean traveling);
 	
 	@Override
-	default NBTSerializationHandler<? extends Turtle> getNBTHandler() {
+	default NBTCodec<? extends Turtle> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

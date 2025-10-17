@@ -1,12 +1,12 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Axolotl extends Fish, AgeableMob {
 	
-	public static final NBTSerializationHandler<Axolotl>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Axolotl>
+	NBT_HANDLER = NBTCodec
 					.builder(Axolotl.class)
 					.include(AgeableMob.NBT_HANDLER)
 					.include(Fish.NBT_HANDLER)
@@ -18,7 +18,7 @@ public interface Axolotl extends Fish, AgeableMob {
 	void setVariant(Variant variant);
 
 	@Override
-	default NBTSerializationHandler<? extends Axolotl> getNBTHandler() {
+	default NBTCodec<? extends Axolotl> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

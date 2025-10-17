@@ -1,11 +1,11 @@
 package de.atlasmc.node.inventory.component;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface PotionDurationScaleComponent extends ItemComponent {
 
-	public static final NBTSerializationHandler<PotionDurationScaleComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<PotionDurationScaleComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(PotionDurationScaleComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.floatField(ComponentType.POTION_DURATION_SCALE.getNamespacedKey(), PotionDurationScaleComponent::getScale, PotionDurationScaleComponent::setScale, 1)
@@ -18,7 +18,7 @@ public interface PotionDurationScaleComponent extends ItemComponent {
 	PotionDurationScaleComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends PotionDurationScaleComponent> getNBTHandler() {
+	default NBTCodec<? extends PotionDurationScaleComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

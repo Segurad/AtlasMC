@@ -4,7 +4,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import de.atlasmc.NamespacedKey.Namespaced;
-import de.atlasmc.util.nbt.serialization.fields.NBTField;
+import de.atlasmc.util.nbt.codec.type.NBTField;
 
 public interface Sound extends Namespaced {
 

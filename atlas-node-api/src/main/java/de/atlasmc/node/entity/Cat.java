@@ -3,12 +3,12 @@ package de.atlasmc.node.entity;
 import de.atlasmc.IDHolder;
 import de.atlasmc.node.DyeColor;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Cat extends Tameable {
 	
-	public static final NBTSerializationHandler<Cat>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Cat>
+	NBT_HANDLER = NBTCodec
 					.builder(Cat.class)
 					.include(Tameable.NBT_HANDLER)
 					.enumByteField("CollarColor", Cat::getCollarColor, Cat::setCollarColor, DyeColor.class, DyeColor::getID, DyeColor.RED)
@@ -32,7 +32,7 @@ public interface Cat extends Tameable {
 	void setCollarColor(DyeColor color);
 	
 	@Override
-	default NBTSerializationHandler<? extends Cat> getNBTHandler() {
+	default NBTCodec<? extends Cat> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

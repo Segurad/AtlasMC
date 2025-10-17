@@ -1,12 +1,12 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Rabbit extends Animal {
 	
-	public static final NBTSerializationHandler<Rabbit>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Rabbit>
+	NBT_HANDLER = NBTCodec
 					.builder(Rabbit.class)
 					.include(Animal.NBT_HANDLER)
 					//.intField("MoreCarrotTicks", null, null)
@@ -18,7 +18,7 @@ public interface Rabbit extends Animal {
 	void setRabbitType(Type type);
 	
 	@Override
-	default NBTSerializationHandler<? extends Rabbit> getNBTHandler() {
+	default NBTCodec<? extends Rabbit> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

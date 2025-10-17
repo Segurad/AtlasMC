@@ -4,12 +4,12 @@ import java.util.List;
 
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.inventory.ItemType;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ContainerComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<ContainerComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ContainerComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(ContainerComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.typeListSearchIntIndexField(ComponentType.CONTAINER.getNamespacedKey(), "slot", ContainerComponent::hasItems, ContainerComponent::getItems, ItemStack.NBT_HANDLER, true)
@@ -30,7 +30,7 @@ public interface ContainerComponent extends ItemComponent {
 	ContainerComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends ContainerComponent> getNBTHandler() {
+	default NBTCodec<? extends ContainerComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

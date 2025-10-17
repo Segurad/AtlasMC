@@ -1,12 +1,12 @@
 package de.atlasmc.node.block.tile;
 
 import de.atlasmc.node.inventory.AbstractFurnaceInventory;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Furnace extends AbstractContainerTile<AbstractFurnaceInventory> {
 
-	public static final NBTSerializationHandler<Furnace>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Furnace>
+	NBT_HANDLER = NBTCodec
 					.builder(Furnace.class)
 					.include(AbstractContainerTile.NBT_HANDLER)
 					.shortField("lit_time_remaining", Furnace::getFuelLevel, Furnace::setFuelLevel, (short) 0)
@@ -49,7 +49,7 @@ public interface Furnace extends AbstractContainerTile<AbstractFurnaceInventory>
 	}
 	
 	@Override
-	default NBTSerializationHandler<? extends Furnace> getNBTHandler() {
+	default NBTCodec<? extends Furnace> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

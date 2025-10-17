@@ -2,12 +2,12 @@ package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ItemFrame extends Hanging {
 	
-	public static final NBTSerializationHandler<ItemFrame>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ItemFrame>
+	NBT_HANDLER = NBTCodec
 					.builder(ItemFrame.class)
 					.include(Hanging.NBT_HANDLER)
 					.boolField("Fixed", ItemFrame::isFixed, ItemFrame::setFixed)
@@ -40,7 +40,7 @@ public interface ItemFrame extends Hanging {
 	float getItemDropChance();
 	
 	@Override
-	default NBTSerializationHandler<? extends ItemFrame> getNBTHandler() {
+	default NBTCodec<? extends ItemFrame> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

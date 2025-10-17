@@ -1,11 +1,11 @@
 package de.atlasmc.chat.component;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class TextComponent extends AbstractBaseComponent<TextComponent> {
 
-	public static final NBTSerializationHandler<TextComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<TextComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(TextComponent.class)
 					.include(AbstractBaseComponent.NBT_HANDLER)
 					.string("text", TextComponent::getValue, TextComponent::setValue)
@@ -39,7 +39,7 @@ public class TextComponent extends AbstractBaseComponent<TextComponent> {
 	}
 	
 	@Override
-	public NBTSerializationHandler<? extends ChatComponent> getNBTHandler() {
+	public NBTCodec<? extends ChatComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

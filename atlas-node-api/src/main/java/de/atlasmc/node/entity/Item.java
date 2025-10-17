@@ -3,12 +3,12 @@ package de.atlasmc.node.entity;
 import java.util.UUID;
 
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Item extends Entity {
 	
-	public static final NBTSerializationHandler<Item>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Item>
+	NBT_HANDLER = NBTCodec
 					.builder(Item.class)
 					.include(Entity.NBT_HANDLER)
 					.shortField("Age", Item::getLifeTime, Item::setLifeTime, (short) 6000)
@@ -57,7 +57,7 @@ public interface Item extends Entity {
 	void setHealth(int health);
 	
 	@Override
-	default NBTSerializationHandler<? extends Item> getNBTHandler() {
+	default NBTCodec<? extends Item> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

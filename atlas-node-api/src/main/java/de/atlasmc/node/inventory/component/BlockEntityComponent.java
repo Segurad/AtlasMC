@@ -1,12 +1,12 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.node.block.tile.TileEntity;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface BlockEntityComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<BlockEntityComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<BlockEntityComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(BlockEntityComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.typeCompoundField(ComponentType.BLOCK_ENTITY_DATA.getNamespacedKey(), BlockEntityComponent::getTileEntity, BlockEntityComponent::setTileEntity, TileEntity.NBT_HANDLER)
@@ -20,7 +20,7 @@ public interface BlockEntityComponent extends ItemComponent {
 	void setTileEntity(TileEntity tile);
 	
 	@Override
-	default NBTSerializationHandler<? extends BlockEntityComponent> getNBTHandler() {
+	default NBTCodec<? extends BlockEntityComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

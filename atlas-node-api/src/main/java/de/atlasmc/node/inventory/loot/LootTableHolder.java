@@ -1,12 +1,12 @@
 package de.atlasmc.node.inventory.loot;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface LootTableHolder {
 	
-	public static final NBTSerializationHandler<LootTableHolder>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<LootTableHolder>
+	NBT_HANDLER = NBTCodec
 					.builder(LootTableHolder.class)
 					.namespacedKey("LootTable", LootTableHolder::getLootTable, LootTableHolder::setLootTable)
 					.longField("LootTableSeed", LootTableHolder::getLootTableSeed, LootTableHolder::setLootTableSeed, 0)

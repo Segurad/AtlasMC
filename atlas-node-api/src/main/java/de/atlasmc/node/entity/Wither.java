@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Wither extends Monster {
 	
-	public static final NBTSerializationHandler<Wither>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Wither>
+	NBT_HANDLER = NBTCodec
 					.builder(Wither.class)
 					.include(Monster.NBT_HANDLER)
 					.intField("Invul", Wither::getInvulnerableTime, Wither::setInvulnerableTime, 0)
@@ -28,7 +28,7 @@ public interface Wither extends Monster {
 	void setRightHeadTarget(Entity entity);
 
 	@Override
-	default NBTSerializationHandler<? extends Wither> getNBTHandler() {
+	default NBTCodec<? extends Wither> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

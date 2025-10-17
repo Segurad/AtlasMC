@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Witch extends Raider {
 	
-	public static final NBTSerializationHandler<Witch>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Witch>
+	NBT_HANDLER = NBTCodec
 					.builder(Witch.class)
 					.include(Raider.NBT_HANDLER)
 					.boolField("IsDrinkingPotion", Witch::isDrinkingPotion, Witch::setDrinkingPotion, false) // non standard
@@ -16,7 +16,7 @@ public interface Witch extends Raider {
 	void setDrinkingPotion(boolean drinking);
 	
 	@Override
-	default NBTSerializationHandler<? extends Witch> getNBTHandler() {
+	default NBTCodec<? extends Witch> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

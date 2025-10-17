@@ -8,13 +8,13 @@ import java.util.function.Consumer;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.node.inventory.EquipmentSlot;
 import de.atlasmc.util.AtlasUtil;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class AttributeInstance implements NBTSerializable {
 	
-	public static final NBTSerializationHandler<AttributeInstance>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<AttributeInstance>
+	NBT_HANDLER = NBTCodec
 					.builder(AttributeInstance.class)
 					.doubleField("base", AttributeInstance::getBaseValue, AttributeInstance::setBaseValue, 0)
 					.typeList("modifiers", AttributeInstance::hasModifiers, AttributeInstance::getModifiers, AttributeModifier.NBT_HANDLER)
@@ -206,7 +206,7 @@ public class AttributeInstance implements NBTSerializable {
 	}
 	
 	@Override
-	public NBTSerializationHandler<? extends AttributeInstance> getNBTHandler() {
+	public NBTCodec<? extends AttributeInstance> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

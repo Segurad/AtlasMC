@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Fish extends WaterAnimal {
 	
-	public static final NBTSerializationHandler<Fish>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Fish>
+	NBT_HANDLER = NBTCodec
 					.builder(Fish.class)
 					.include(WaterAnimal.NBT_HANDLER)
 					.boolField("FromBucket", Fish::isFromBucket, Fish::setFromBucket, false)
@@ -16,7 +16,7 @@ public interface Fish extends WaterAnimal {
 	void setFromBucket(boolean from);
 	
 	@Override
-	default NBTSerializationHandler<? extends Fish> getNBTHandler() {
+	default NBTCodec<? extends Fish> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

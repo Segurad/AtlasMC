@@ -1,11 +1,11 @@
 package de.atlasmc.chat.component.event.click;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public final class CopyToClipboardClickEvent implements ClickEvent {
 	
-	public static final NBTSerializationHandler<CopyToClipboardClickEvent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<CopyToClipboardClickEvent>
+	NBT_HANDLER = NBTCodec
 					.builder(CopyToClipboardClickEvent.class)
 					.include(ClickEvent.NBT_HANDLER)
 					.string("value", CopyToClipboardClickEvent::getValue, CopyToClipboardClickEvent::setValue)
@@ -27,7 +27,7 @@ public final class CopyToClipboardClickEvent implements ClickEvent {
 	}
 	
 	@Override
-	public NBTSerializationHandler<? extends CopyToClipboardClickEvent> getNBTHandler() {
+	public NBTCodec<? extends CopyToClipboardClickEvent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

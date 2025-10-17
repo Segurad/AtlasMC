@@ -4,13 +4,13 @@ import java.util.List;
 
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.property.BlockDataProperty;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface BlockData extends Cloneable, NBTSerializable {
 
-	public static final NBTSerializationHandler<BlockData>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<BlockData>
+	NBT_HANDLER = NBTCodec
 					.builder(BlockData.class)
 					.searchKeyConstructor("Name", BlockType.REGISTRY_KEY, BlockType::createBlockData, BlockData::getType)
 					.addField(BlockDataProperty.getBlockDataPropertiesField("Properties"))
@@ -25,7 +25,7 @@ public interface BlockData extends Cloneable, NBTSerializable {
 	List<BlockDataProperty<?>> getProperties();
 	
 	@Override
-	default NBTSerializationHandler<? extends BlockData> getNBTHandler() {
+	default NBTCodec<? extends BlockData> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

@@ -8,13 +8,13 @@ import de.atlasmc.node.sound.Sound;
 import de.atlasmc.util.EnumName;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class BiomeEffects implements NBTSerializable {
 
-	public static final NBTSerializationHandler<BiomeEffects>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<BiomeEffects>
+	NBT_HANDLER = NBTCodec
 					.builder(BiomeEffects.class)
 					.defaultConstructor(BiomeEffects::new)
 					.color("fog_color", BiomeEffects::getFogColor, BiomeEffects::setFogColor)
@@ -213,7 +213,7 @@ public class BiomeEffects implements NBTSerializable {
 	}
 	
 	@Override
-	public NBTSerializationHandler<? extends BiomeEffects> getNBTHandler() {
+	public NBTCodec<? extends BiomeEffects> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

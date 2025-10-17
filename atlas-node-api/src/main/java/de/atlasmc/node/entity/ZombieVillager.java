@@ -2,12 +2,12 @@ package de.atlasmc.node.entity;
 
 import java.util.UUID;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ZombieVillager extends Zombie, AbstractVillager {
 	
-	public static final NBTSerializationHandler<ZombieVillager>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ZombieVillager>
+	NBT_HANDLER = NBTCodec
 					.builder(ZombieVillager.class)
 					.include(Zombie.NBT_HANDLER)
 					.include(AbstractVillager.NBT_HANDLER)

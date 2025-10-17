@@ -1,11 +1,11 @@
 package de.atlasmc.chat.component.event.click;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public final class OpenUrlClickEvent implements ClickEvent {
 	
-	public static final NBTSerializationHandler<OpenUrlClickEvent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<OpenUrlClickEvent>
+	NBT_HANDLER = NBTCodec
 					.builder(OpenUrlClickEvent.class)
 					.include(ClickEvent.NBT_HANDLER)
 					.string("url", OpenUrlClickEvent::getURL, OpenUrlClickEvent::setURL)
@@ -27,7 +27,7 @@ public final class OpenUrlClickEvent implements ClickEvent {
 	}
 	
 	@Override
-	public NBTSerializationHandler<? extends OpenUrlClickEvent> getNBTHandler() {
+	public NBTCodec<? extends OpenUrlClickEvent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

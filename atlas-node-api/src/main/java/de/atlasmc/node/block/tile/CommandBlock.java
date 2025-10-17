@@ -5,12 +5,12 @@ import java.util.List;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.command.CommandSender;
 import de.atlasmc.node.Nameable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface CommandBlock extends TileEntity, Nameable, CommandSender {
 	
-	public static final NBTSerializationHandler<CommandBlock>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<CommandBlock>
+	NBT_HANDLER = NBTCodec
 					.builder(CommandBlock.class)
 					.include(TileEntity.NBT_HANDLER)
 					.boolField("auto", CommandBlock::isAlwaysActive, CommandBlock::setAlwaysActive)
@@ -106,7 +106,7 @@ public interface CommandBlock extends TileEntity, Nameable, CommandSender {
 	}
 	
 	@Override
-	default NBTSerializationHandler<? extends CommandBlock> getNBTHandler() {
+	default NBTCodec<? extends CommandBlock> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

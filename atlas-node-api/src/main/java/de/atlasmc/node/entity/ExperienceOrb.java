@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ExperienceOrb extends Entity {
 	
-	public static final NBTSerializationHandler<ExperienceOrb>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ExperienceOrb>
+	NBT_HANDLER = NBTCodec
 					.builder(ExperienceOrb.class)
 					.include(Entity.NBT_HANDLER)
 					.shortField("Age", ExperienceOrb::getLifeTime, ExperienceOrb::setLifeTime, (short) 6000)
@@ -34,7 +34,7 @@ public interface ExperienceOrb extends Entity {
 	void setCount(int count);
 	
 	@Override
-	default NBTSerializationHandler<? extends ExperienceOrb> getNBTHandler() {
+	default NBTCodec<? extends ExperienceOrb> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

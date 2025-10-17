@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Strider extends Animal {
 	
-	public static final NBTSerializationHandler<Strider>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Strider>
+	NBT_HANDLER = NBTCodec
 					.builder(Strider.class)
 					.include(Animal.NBT_HANDLER)
 					.intField("BoostTime", Strider::getBoostTime, Strider::setBoostTime, 0)
@@ -26,7 +26,7 @@ public interface Strider extends Animal {
 	void setSaddle(boolean saddle);
 	
 	@Override
-	default NBTSerializationHandler<? extends Strider> getNBTHandler() {
+	default NBTCodec<? extends Strider> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

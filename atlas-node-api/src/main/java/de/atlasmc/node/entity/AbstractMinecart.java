@@ -2,12 +2,12 @@ package de.atlasmc.node.entity;
 
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.BlockData;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface AbstractMinecart extends Vehicle {
 	
-	public static final NBTSerializationHandler<AbstractMinecart>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<AbstractMinecart>
+	NBT_HANDLER = NBTCodec
 					.builder(AbstractMinecart.class)
 					.include(Vehicle.NBT_HANDLER)
 					.intField("DisplayOffset", AbstractMinecart::getCustomBlockY, AbstractMinecart::setCustomBlockY)
@@ -31,7 +31,7 @@ public interface AbstractMinecart extends Vehicle {
 	void setShowCustomBlock(boolean show);
 	
 	@Override
-	default NBTSerializationHandler<? extends AbstractMinecart> getNBTHandler() {
+	default NBTCodec<? extends AbstractMinecart> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

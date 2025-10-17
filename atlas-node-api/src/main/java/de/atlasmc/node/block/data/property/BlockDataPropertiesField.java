@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.List;
 
 import de.atlasmc.node.block.data.BlockData;
+import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.codec.type.NBTField;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
-import de.atlasmc.util.nbt.serialization.fields.NBTField;
 
 final class BlockDataPropertiesField<T extends BlockData> extends NBTField<T> {
 
@@ -17,7 +17,7 @@ final class BlockDataPropertiesField<T extends BlockData> extends NBTField<T> {
 	}
 
 	@Override
-	public boolean serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
+	public boolean serialize(T value, NBTWriter writer, CodecContext context) throws IOException {
 		final List<BlockDataProperty<?>> properties = value.getProperties();
 		if (properties.isEmpty()) {
 			return true;
@@ -33,7 +33,7 @@ final class BlockDataPropertiesField<T extends BlockData> extends NBTField<T> {
 	}
 
 	@Override
-	public void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException {
+	public void deserialize(T value, NBTReader reader, CodecContext context) throws IOException {
 		reader.readNextEntry();
 		while (reader.getType() != TagType.TAG_END) {
 			CharSequence key = reader.getFieldName();

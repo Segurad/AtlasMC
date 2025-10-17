@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Skeleton extends AbstractSkeleton {
 	
-	public static final NBTSerializationHandler<Skeleton>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Skeleton>
+	NBT_HANDLER = NBTCodec
 					.builder(Skeleton.class)
 					.include(AbstractSkeleton.NBT_HANDLER)
 					.intField("StrayConversionTime", Skeleton::getStrayConversionTime, Skeleton::setStrayConversionTime, -1)
@@ -16,7 +16,7 @@ public interface Skeleton extends AbstractSkeleton {
 	void setStrayConversionTime(int time);
 	
 	@Override
-	default NBTSerializationHandler<? extends Skeleton> getNBTHandler() {
+	default NBTCodec<? extends Skeleton> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

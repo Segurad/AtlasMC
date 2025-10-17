@@ -3,12 +3,12 @@ package de.atlasmc.node.inventory.component;
 import java.util.List;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface RecipesComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<RecipesComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<RecipesComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(RecipesComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.namespacedKeyListField(ComponentType.RECIPES.getNamespacedKey(), RecipesComponent::hasRecipes, RecipesComponent::getRecipes)
@@ -35,7 +35,7 @@ public interface RecipesComponent extends ItemComponent {
 	RecipesComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends RecipesComponent> getNBTHandler() {
+	default NBTCodec<? extends RecipesComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

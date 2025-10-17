@@ -3,12 +3,12 @@ package de.atlasmc.node.entity;
 import java.util.UUID;
 
 import de.atlasmc.node.block.data.BlockData;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface PrimedTNT extends Entity {
 	
-	public static final NBTSerializationHandler<PrimedTNT>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<PrimedTNT>
+	NBT_HANDLER = NBTCodec
 					.builder(PrimedTNT.class)
 					.include(Entity.NBT_HANDLER)
 					.shortField("fuse", PrimedTNT::getFuseTime, PrimedTNT::setFuseTime)
@@ -38,7 +38,7 @@ public interface PrimedTNT extends Entity {
 	void setSourceUUID(UUID uuid);
 	
 	@Override
-	default NBTSerializationHandler<? extends PrimedTNT> getNBTHandler() {
+	default NBTCodec<? extends PrimedTNT> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

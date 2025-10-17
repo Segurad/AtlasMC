@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface AbstractPiglin extends Monster {
 	
-	public static final NBTSerializationHandler<AbstractPiglin>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<AbstractPiglin>
+	NBT_HANDLER = NBTCodec
 					.builder(AbstractPiglin.class)
 					.include(Monster.NBT_HANDLER)
 					.boolField("IsImmuneToZombification", AbstractPiglin::isImmune, AbstractPiglin::setImmune, false)
@@ -17,7 +17,7 @@ public interface AbstractPiglin extends Monster {
 	void setImmune(boolean immune);
 	
 	@Override
-	default NBTSerializationHandler<? extends AbstractPiglin> getNBTHandler() {
+	default NBTCodec<? extends AbstractPiglin> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

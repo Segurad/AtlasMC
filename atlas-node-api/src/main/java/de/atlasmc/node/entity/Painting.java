@@ -2,12 +2,12 @@ package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Painting extends Hanging {
 
-	public static final NBTSerializationHandler<Painting>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Painting>
+	NBT_HANDLER = NBTCodec
 					.builder(Painting.class)
 					.include(Hanging.NBT_HANDLER)
 					.enumStringField("motive", Painting::getMotive, Painting::setMotive, Motive.class, Motive.KEBAB)
@@ -18,7 +18,7 @@ public interface Painting extends Hanging {
 	void setMotive(Motive motive);
 	
 	@Override
-	default NBTSerializationHandler<? extends Painting> getNBTHandler() {
+	default NBTCodec<? extends Painting> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

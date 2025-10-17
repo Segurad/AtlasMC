@@ -4,12 +4,12 @@ import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.entity.Axolotl.Variant;
 import de.atlasmc.node.entity.Salmon.Type;
 import de.atlasmc.node.entity.TropicalFish.Pattern;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface BucketEntityDataComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<BucketEntityDataComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<BucketEntityDataComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(BucketEntityDataComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.beginComponent(ComponentType.BUCKET_ENTITY_DATA.getNamespacedKey())

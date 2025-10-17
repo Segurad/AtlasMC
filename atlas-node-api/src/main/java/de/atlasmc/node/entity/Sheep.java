@@ -1,12 +1,12 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.node.DyeColor;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Sheep extends Animal {
 	
-	public static final NBTSerializationHandler<Sheep>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Sheep>
+	NBT_HANDLER = NBTCodec
 					.builder(Sheep.class)
 					.include(Animal.NBT_HANDLER)
 					.enumByteField("Color", Sheep::getColor, Sheep::setColor, DyeColor.class, DyeColor::getID, DyeColor.WHITE)
@@ -22,7 +22,7 @@ public interface Sheep extends Animal {
 	void setSheared(boolean sheared);
 	
 	@Override
-	default NBTSerializationHandler<? extends Sheep> getNBTHandler() {
+	default NBTCodec<? extends Sheep> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

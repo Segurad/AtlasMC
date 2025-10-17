@@ -72,6 +72,8 @@ public class NumberConversion {
 	 * @return value or alt
 	 */
 	public static int toInt(@Nullable Object value, int alt) {
+		if (value == null)
+			return alt;
 		if (value instanceof Number num) {
 			return num.intValue();
 		}
@@ -88,6 +90,8 @@ public class NumberConversion {
 	 * @return value or alt
 	 */
 	public static double toDouble(@Nullable Object value, double alt) {
+		if (value == null)
+			return alt;
 		if (value instanceof Number num) {
 			return num.doubleValue();
 		}
@@ -104,6 +108,8 @@ public class NumberConversion {
 	 * @return value or alt
 	 */
 	public static byte toByte(@Nullable Object value, int alt) {
+		if (value == null)
+			return (byte) alt;
 		if (value instanceof Number num) {
 			return num.byteValue();
 		}
@@ -120,6 +126,8 @@ public class NumberConversion {
 	 * @return value or alt
 	 */
 	public static long toLong(@Nullable Object value, long alt) {
+		if (value == null)
+			return alt;
 		if (value instanceof Number num) {
 			return num.longValue();
 		}
@@ -136,6 +144,8 @@ public class NumberConversion {
 	 * @return value or alt
 	 */
 	public static short toShort(@Nullable Object value, int alt) {
+		if (value == null)
+			return (short) alt;
 		if (value instanceof Number num) {
 			return num.shortValue();
 		}
@@ -152,6 +162,8 @@ public class NumberConversion {
 	 * @return value or alt
 	 */
 	public static float toFloat(@Nullable Object value, float alt) {
+		if (value == null)
+			return alt;
 		if (value instanceof Number num) {
 			return num.floatValue();
 		}

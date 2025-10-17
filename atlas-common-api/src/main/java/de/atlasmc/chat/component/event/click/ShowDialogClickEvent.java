@@ -2,12 +2,12 @@ package de.atlasmc.chat.component.event.click;
 
 import de.atlasmc.dialog.Dialog;
 import de.atlasmc.registry.Registries;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public final class ShowDialogClickEvent implements ClickEvent {
 	
-	public static final NBTSerializationHandler<ShowDialogClickEvent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ShowDialogClickEvent>
+	NBT_HANDLER = NBTCodec
 					.builder(ShowDialogClickEvent.class)
 					.include(ClickEvent.NBT_HANDLER)
 					.registryValue("dialog", ShowDialogClickEvent::getDialog, ShowDialogClickEvent::setDialog, Registries.getRegistry(Dialog.class), Dialog.NBT_HANDLER)
@@ -29,7 +29,7 @@ public final class ShowDialogClickEvent implements ClickEvent {
 	}
 	
 	@Override
-	public NBTSerializationHandler<? extends ShowDialogClickEvent> getNBTHandler() {
+	public NBTCodec<? extends ShowDialogClickEvent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

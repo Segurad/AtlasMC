@@ -6,13 +6,13 @@ import org.joml.Vector3i;
 
 import de.atlasmc.node.entity.Bee;
 import de.atlasmc.util.annotation.UnsafeAPI;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Beehive extends TileEntity {
 	
-	public static final NBTSerializationHandler<Beehive>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Beehive>
+	NBT_HANDLER = NBTCodec
 					.builder(Beehive.class)
 					.include(TileEntity.NBT_HANDLER)
 					.typeList("bee", Beehive::hasBees, Beehive::getBees, Occupant.NBT_HANDLER)
@@ -47,14 +47,14 @@ public interface Beehive extends TileEntity {
 	Beehive clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends Beehive> getNBTHandler() {
+	default NBTCodec<? extends Beehive> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	
 	public static class Occupant implements NBTSerializable {
 		
-		public static final NBTSerializationHandler<Occupant>
-		NBT_HANDLER = NBTSerializationHandler
+		public static final NBTCodec<Occupant>
+		NBT_HANDLER = NBTCodec
 						.builder(Occupant.class)
 						.defaultConstructor(Occupant::new)
 						.typeCompoundField("entity_data", Occupant::getBee, Occupant::setBee, Bee.NBT_HANDLER)
@@ -105,7 +105,7 @@ public interface Beehive extends TileEntity {
 		}
 		
 		@Override
-		public NBTSerializationHandler<? extends NBTSerializable> getNBTHandler() {
+		public NBTCodec<? extends NBTSerializable> getNBTCodec() {
 			return NBT_HANDLER;
 		}
 		

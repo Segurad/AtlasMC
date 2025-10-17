@@ -1,12 +1,12 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.node.DyeColor;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface BaseColorComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<BaseColorComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<BaseColorComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(BaseColorComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.enumStringField(ComponentType.BASE_COLOR.getNamespacedKey(), BaseColorComponent::getColor, BaseColorComponent::setColor, DyeColor.class, null)
@@ -19,7 +19,7 @@ public interface BaseColorComponent extends ItemComponent {
 	void setColor(DyeColor color);
 	
 	@Override
-	default NBTSerializationHandler<? extends BaseColorComponent> getNBTHandler() {
+	default NBTCodec<? extends BaseColorComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

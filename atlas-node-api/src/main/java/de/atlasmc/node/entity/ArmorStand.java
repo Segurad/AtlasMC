@@ -3,12 +3,12 @@ package de.atlasmc.node.entity;
 import org.joml.Vector3f;
 
 import de.atlasmc.util.annotation.UnsafeAPI;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ArmorStand extends LivingEntity {
 	
-	public static final NBTSerializationHandler<ArmorStand>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ArmorStand>
+	NBT_HANDLER = NBTCodec
 					.builder(ArmorStand.class)
 					.include(LivingEntity.NBT_HANDLER)
 					.intField("DisabledSlots", ArmorStand::getSlotInteractionFlags, ArmorStand::setSlotInteractionFlags, 0)
@@ -217,7 +217,7 @@ public interface ArmorStand extends LivingEntity {
 	int getSlotInteractionFlags();
 	
 	@Override
-	default NBTSerializationHandler<? extends ArmorStand> getNBTHandler() {
+	default NBTCodec<? extends ArmorStand> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

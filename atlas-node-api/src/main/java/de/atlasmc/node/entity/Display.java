@@ -8,13 +8,13 @@ import org.joml.Vector3f;
 import de.atlasmc.Color;
 import de.atlasmc.IDHolder;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Display extends Entity {
 	
-	public static final NBTSerializationHandler<Display>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Display>
+	NBT_HANDLER = NBTCodec
 					.builder(Display.class)
 					.include(Entity.NBT_HANDLER)
 					.enumStringField("billboard", Display::getBillboard, Display::setBillboard, Billboard.class, Billboard.FIXED)
@@ -84,14 +84,14 @@ public interface Display extends Entity {
 	void setTransformation(Transformation transformation);
 	
 	@Override
-	default NBTSerializationHandler<? extends Display> getNBTHandler() {
+	default NBTCodec<? extends Display> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	
 	public static final class Transformation implements NBTSerializable, Cloneable  {
 		
-		public static final NBTSerializationHandler<Transformation>
-		NBT_HANDLER = NBTSerializationHandler
+		public static final NBTCodec<Transformation>
+		NBT_HANDLER = NBTCodec
 						.builder(Transformation.class)
 						.quaternionf("right_rotation", Transformation::getRotationRight, Transformation::setRotationRight)
 						.vector3f("scale", Transformation::getScale, Transformation::setScale)
@@ -176,7 +176,7 @@ public interface Display extends Entity {
 		}
 		
 		@Override
-		public NBTSerializationHandler<? extends Transformation> getNBTHandler() {
+		public NBTCodec<? extends Transformation> getNBTCodec() {
 			return NBT_HANDLER;
 		}
 		
@@ -184,8 +184,8 @@ public interface Display extends Entity {
 	
 	public static final class Brightness implements NBTSerializable {
 		
-		public static final NBTSerializationHandler<Brightness>
-		NBT_HANDLER = NBTSerializationHandler
+		public static final NBTCodec<Brightness>
+		NBT_HANDLER = NBTCodec
 						.builder(Brightness.class)
 						.defaultConstructor(Brightness::new)
 						.intField("block", Brightness::getBlockLightLevel, Brightness::setBlockLightLevel)
@@ -242,7 +242,7 @@ public interface Display extends Entity {
 		}
 		
 		@Override
-		public NBTSerializationHandler<? extends Brightness> getNBTHandler() {
+		public NBTCodec<? extends Brightness> getNBTCodec() {
 			return NBT_HANDLER;
 		}
 		

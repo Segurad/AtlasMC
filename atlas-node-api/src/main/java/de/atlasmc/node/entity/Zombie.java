@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Zombie extends Monster {
 	
-	public static final NBTSerializationHandler<Zombie>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Zombie>
+	NBT_HANDLER = NBTCodec
 					.builder(Zombie.class)
 					.include(Monster.NBT_HANDLER)
 					.boolField("CanBreakDoors", Zombie::canBreakDoors, Zombie::setCanBreakDoors, false)
@@ -37,7 +37,7 @@ public interface Zombie extends Monster {
 	int getDrownedConverionTime();
 	
 	@Override
-	default NBTSerializationHandler<? extends Zombie> getNBTHandler() {
+	default NBTCodec<? extends Zombie> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

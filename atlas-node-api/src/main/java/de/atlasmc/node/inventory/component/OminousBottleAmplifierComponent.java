@@ -1,11 +1,11 @@
 package de.atlasmc.node.inventory.component;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface OminousBottleAmplifierComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<OminousBottleAmplifierComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<OminousBottleAmplifierComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(OminousBottleAmplifierComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.intField(ComponentType.OMINOUS_BOTTLE_AMPLIFIER.getNamespacedKey(), OminousBottleAmplifierComponent::getAmplifier, OminousBottleAmplifierComponent::setAmplifier, 0)
@@ -18,7 +18,7 @@ public interface OminousBottleAmplifierComponent extends ItemComponent {
 	OminousBottleAmplifierComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends OminousBottleAmplifierComponent> getNBTHandler() {
+	default NBTCodec<? extends OminousBottleAmplifierComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

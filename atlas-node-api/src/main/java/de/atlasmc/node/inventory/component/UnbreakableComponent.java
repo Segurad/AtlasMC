@@ -1,11 +1,11 @@
 package de.atlasmc.node.inventory.component;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface UnbreakableComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<UnbreakableComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<UnbreakableComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(UnbreakableComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.beginComponent(ComponentType.UNBREAKABLE.getNamespacedKey())
@@ -15,7 +15,7 @@ public interface UnbreakableComponent extends ItemComponent {
 	UnbreakableComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends ItemComponent> getNBTHandler() {
+	default NBTCodec<? extends ItemComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

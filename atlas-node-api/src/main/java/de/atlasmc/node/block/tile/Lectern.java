@@ -3,12 +3,12 @@ package de.atlasmc.node.block.tile;
 import de.atlasmc.node.inventory.InventoryHolder;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.inventory.LecternInventory;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Lectern extends TileEntity, InventoryHolder {
 	
-	public static final NBTSerializationHandler<Lectern>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Lectern>
+	NBT_HANDLER = NBTCodec
 					.builder(Lectern.class)
 					.include(TileEntity.NBT_HANDLER)
 					.typeCompoundField("Book", Lectern::getBook, Lectern::setBook, ItemStack.NBT_HANDLER)
@@ -26,7 +26,7 @@ public interface Lectern extends TileEntity, InventoryHolder {
 	void setPage(int page);
 	
 	@Override
-	default NBTSerializationHandler<? extends Lectern> getNBTHandler() {
+	default NBTCodec<? extends Lectern> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

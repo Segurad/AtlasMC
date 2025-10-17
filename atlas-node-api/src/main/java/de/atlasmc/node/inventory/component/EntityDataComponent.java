@@ -1,12 +1,12 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.node.entity.Entity;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface EntityDataComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<EntityDataComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<EntityDataComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(EntityDataComponent.class)
 					.typeCompoundField(ComponentType.ENTITY_DATA.getNamespacedKey(), EntityDataComponent::getEntity, EntityDataComponent::setEntity, Entity.NBT_HANDLER)
 					.build();
@@ -18,7 +18,7 @@ public interface EntityDataComponent extends ItemComponent {
 	EntityDataComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends EntityDataComponent> getNBTHandler() {
+	default NBTCodec<? extends EntityDataComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

@@ -4,12 +4,12 @@ import de.atlasmc.Color;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.node.potion.PotionData;
 import de.atlasmc.node.potion.PotionEffect;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface PotionContentsComponent extends AbstractPotionEffectComponent {
 	
-	public static final NBTSerializationHandler<PotionContentsComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<PotionContentsComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(PotionContentsComponent.class)
 					.include(AbstractPotionEffectComponent.NBT_HANDLER)
 					.beginComponent(ComponentType.POTION_CONTENTS.getNamespacedKey(), PotionContentsComponent::hasCustomData)
@@ -38,7 +38,7 @@ public interface PotionContentsComponent extends AbstractPotionEffectComponent {
 	PotionContentsComponent clone();
 
 	@Override
-	default NBTSerializationHandler<? extends PotionContentsComponent> getNBTHandler() {
+	default NBTCodec<? extends PotionContentsComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

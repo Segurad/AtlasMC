@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface SnowGolem extends AbstractGolem {
 	
-	public static final NBTSerializationHandler<SnowGolem>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<SnowGolem>
+	NBT_HANDLER = NBTCodec
 					.builder(SnowGolem.class)
 					.include(AbstractGolem.NBT_HANDLER)
 					.boolField("Pumpkin", SnowGolem::hasPumpkinHat, SnowGolem::setPumkinHat, true)
@@ -16,7 +16,7 @@ public interface SnowGolem extends AbstractGolem {
 	void setPumkinHat(boolean hat);
 
 	@Override
-	default NBTSerializationHandler<? extends SnowGolem> getNBTHandler() {
+	default NBTCodec<? extends SnowGolem> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

@@ -1,12 +1,12 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.node.inventory.loot.LootTableHolder;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ContainerLootComponent extends ItemComponent, LootTableHolder {
 	
-	public static final NBTSerializationHandler<ContainerLootComponent> 
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ContainerLootComponent> 
+	NBT_HANDLER = NBTCodec
 					.builder(ContainerLootComponent.class)
 					.beginComponent(ComponentType.CONTAINER_LOOT.getNamespacedKey())
 					.include(LootTableHolder.NBT_HANDLER)
@@ -16,7 +16,7 @@ public interface ContainerLootComponent extends ItemComponent, LootTableHolder {
 	ContainerLootComponent clone();
 
 	@Override
-	default NBTSerializationHandler<ContainerLootComponent> getNBTHandler() {
+	default NBTCodec<ContainerLootComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

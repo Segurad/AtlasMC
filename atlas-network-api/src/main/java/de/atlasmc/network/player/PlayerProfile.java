@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.UUID;
 
 import de.atlasmc.util.CloneException;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class PlayerProfile implements NBTSerializable, Cloneable {
 	
-	public static final NBTSerializationHandler<PlayerProfile>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<PlayerProfile>
+	NBT_HANDLER = NBTCodec
 					.builder(PlayerProfile.class)
 					.defaultConstructor(PlayerProfile::new)
 					.string("name", PlayerProfile::getName, PlayerProfile::setName)
@@ -78,7 +78,7 @@ public class PlayerProfile implements NBTSerializable, Cloneable {
 	}
 	
 	@Override
-	public NBTSerializationHandler<? extends PlayerProfile> getNBTHandler() {
+	public NBTCodec<? extends PlayerProfile> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

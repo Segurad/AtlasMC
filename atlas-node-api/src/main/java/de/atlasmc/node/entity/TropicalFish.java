@@ -3,12 +3,12 @@ package de.atlasmc.node.entity;
 import java.util.List;
 
 import de.atlasmc.node.DyeColor;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface TropicalFish extends Fish {
 	
-	public static final NBTSerializationHandler<TropicalFish>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<TropicalFish>
+	NBT_HANDLER = NBTCodec
 					.builder(TropicalFish.class)
 					.include(Fish.NBT_HANDLER)
 					.intField("Variant", TropicalFish::getVariantID, TropicalFish::setVariantID, 0)
@@ -31,7 +31,7 @@ public interface TropicalFish extends Fish {
 	void setVariantID(int id);
 	
 	@Override
-	default NBTSerializationHandler<? extends TropicalFish> getNBTHandler() {
+	default NBTCodec<? extends TropicalFish> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

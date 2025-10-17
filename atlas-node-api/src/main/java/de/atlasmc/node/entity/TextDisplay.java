@@ -4,12 +4,12 @@ import de.atlasmc.Color;
 import de.atlasmc.IDHolder;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface TextDisplay extends Display {
 	
-	public static final NBTSerializationHandler<TextDisplay>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<TextDisplay>
+	NBT_HANDLER = NBTCodec
 					.builder(TextDisplay.class)
 					.include(Display.NBT_HANDLER)
 					.enumStringField("alignment", TextDisplay::getAlignment, TextDisplay::setAlignment, TextAlignment.class, TextAlignment.CENTER)
@@ -55,7 +55,7 @@ public interface TextDisplay extends Display {
 	void setTextOpacity(int opacity);
 	
 	@Override
-	default NBTSerializationHandler<? extends TextDisplay> getNBTHandler() {
+	default NBTCodec<? extends TextDisplay> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

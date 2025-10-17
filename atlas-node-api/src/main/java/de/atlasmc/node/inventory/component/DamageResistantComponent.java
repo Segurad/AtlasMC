@@ -2,12 +2,12 @@ package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.node.entity.DamageType;
 import de.atlasmc.tag.TagKey;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface DamageResistantComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<DamageResistantComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<DamageResistantComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(DamageResistantComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.beginComponent(ComponentType.DAMAGE_RESISTANT.getNamespacedKey())
@@ -22,7 +22,7 @@ public interface DamageResistantComponent extends ItemComponent {
 	DamageResistantComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends DamageResistantComponent> getNBTHandler() {
+	default NBTCodec<? extends DamageResistantComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

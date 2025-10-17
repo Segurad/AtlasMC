@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Tadpole extends Fish {
 	
-	public static final NBTSerializationHandler<Tadpole>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Tadpole>
+	NBT_HANDLER = NBTCodec
 					.builder(Tadpole.class)
 					.include(Fish.NBT_HANDLER)
 					.intField("Age", Tadpole::getAge, Tadpole::setAge, 0)
@@ -16,7 +16,7 @@ public interface Tadpole extends Fish {
 	void setAge(int age);
 	
 	@Override
-	default NBTSerializationHandler<? extends Fish> getNBTHandler() {
+	default NBTCodec<? extends Fish> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

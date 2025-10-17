@@ -5,13 +5,13 @@ import java.util.List;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatColor;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Sign extends TileEntity {
 	
-	public static final NBTSerializationHandler<Sign>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Sign>
+	NBT_HANDLER = NBTCodec
 					.builder(Sign.class)
 					.include(TileEntity.NBT_HANDLER)
 					.boolField("is_waxed", Sign::isWaxed, Sign::setWaxed)
@@ -33,8 +33,8 @@ public interface Sign extends TileEntity {
 	
 	public class SignText implements NBTSerializable {
 		
-		public static final NBTSerializationHandler<SignText>
-		NBT_HANDLER = NBTSerializationHandler
+		public static final NBTCodec<SignText>
+		NBT_HANDLER = NBTCodec
 						.builder(SignText.class)
 						.defaultConstructor(SignText::new)
 						.boolField("has_glowing_text", SignText::isGlowing, SignText::setGlowing)
@@ -73,7 +73,7 @@ public interface Sign extends TileEntity {
 		}
 		
 		@Override
-		public NBTSerializationHandler<? extends SignText> getNBTHandler() {
+		public NBTCodec<? extends SignText> getNBTCodec() {
 			return NBT_HANDLER;
 		}
 		

@@ -4,12 +4,12 @@ import java.util.Map;
 
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ItemComponentHolder {
 	
-	public static final NBTSerializationHandler<ItemComponentHolder>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ItemComponentHolder>
+	NBT_HANDLER = NBTCodec
 					.builder(ItemComponentHolder.class)
 					.compoundMapNamespacedType2Type("components", ItemComponentHolder::hasComponents, ItemComponentHolder::getComponents, ItemComponent.NBT_HANDLER, ItemComponent::getType)
 					.build();

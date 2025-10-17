@@ -17,12 +17,12 @@ import de.atlasmc.node.potion.PotionEffect;
 import de.atlasmc.node.potion.PotionEffectType;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.UnsafeAPI;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface LivingEntity extends Entity, Attributeable, ProjectileSource {
 	
-	public static final NBTSerializationHandler<LivingEntity>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<LivingEntity>
+	NBT_HANDLER = NBTCodec
 					.builder(LivingEntity.class)
 					.include(Entity.NBT_HANDLER)
 					.floatField("AbsorptionAmount", LivingEntity::getAbsorption, LivingEntity::setAbsorption, 0)
@@ -228,7 +228,7 @@ public interface LivingEntity extends Entity, Attributeable, ProjectileSource {
 	SimpleLocation getEyeLocation(SimpleLocation location);
 	
 	@Override
-	default NBTSerializationHandler<? extends LivingEntity> getNBTHandler() {
+	default NBTCodec<? extends LivingEntity> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

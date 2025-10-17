@@ -4,13 +4,13 @@ import java.util.List;
 import java.util.UUID;
 
 import de.atlasmc.util.annotation.NotNull;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Warden extends Monster {
 	
-	public static final NBTSerializationHandler<Warden>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Warden>
+	NBT_HANDLER = NBTCodec
 					.builder(Warden.class)
 					.include(Monster.NBT_HANDLER)
 					.beginComponent("anger")
@@ -29,14 +29,14 @@ public interface Warden extends Monster {
 	void setAnger(int anger);
 	
 	@Override
-	default NBTSerializationHandler<? extends Warden> getNBTHandler() {
+	default NBTCodec<? extends Warden> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	
 	public static class Suspect implements NBTSerializable {
 		
-		public static final NBTSerializationHandler<Suspect>
-		NBT_HANDLER = NBTSerializationHandler
+		public static final NBTCodec<Suspect>
+		NBT_HANDLER = NBTCodec
 						.builder(Suspect.class)
 						.defaultConstructor(Suspect::new)
 						.intField("anger", Suspect::getAnger, Suspect::setAnger)
@@ -72,7 +72,7 @@ public interface Warden extends Monster {
 		}
 		
 		@Override
-		public NBTSerializationHandler<? extends NBTSerializable> getNBTHandler() {
+		public NBTCodec<? extends NBTSerializable> getNBTCodec() {
 			return NBT_HANDLER;
 		}
 		

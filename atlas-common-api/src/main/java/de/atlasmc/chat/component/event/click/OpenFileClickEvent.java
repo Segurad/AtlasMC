@@ -1,11 +1,11 @@
 package de.atlasmc.chat.component.event.click;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public final class OpenFileClickEvent implements ClickEvent {
 	
-	public static final NBTSerializationHandler<OpenFileClickEvent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<OpenFileClickEvent>
+	NBT_HANDLER = NBTCodec
 					.builder(OpenFileClickEvent.class)
 					.include(ClickEvent.NBT_HANDLER)
 					.string("path", OpenFileClickEvent::getPath, OpenFileClickEvent::setPath)
@@ -27,7 +27,7 @@ public final class OpenFileClickEvent implements ClickEvent {
 	}
 	
 	@Override
-	public NBTSerializationHandler<? extends OpenFileClickEvent> getNBTHandler() {
+	public NBTCodec<? extends OpenFileClickEvent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

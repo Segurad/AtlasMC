@@ -7,10 +7,10 @@ import java.util.Map;
 import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.ComponentType;
 import de.atlasmc.node.inventory.component.CustomDataComponent;
+import de.atlasmc.util.codec.CodecContext;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
-import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 import de.atlasmc.util.nbt.tag.NBT;
 import io.netty.buffer.ByteBuf;
 
@@ -68,7 +68,7 @@ public class CoreCustomDataComponent extends AbstractItemComponent implements Cu
 	@Override
 	public void write(ByteBuf buf) throws IOException {
 		NBTNIOWriter writer = new NBTNIOWriter(buf, true);
-		writeToNBT(writer, NBTSerializationContext.DEFAULT_CLIENT);
+		writeToNBT(writer, CodecContext.DEFAULT_CLIENT);
 		writer.close();
 	}
 	
@@ -78,8 +78,8 @@ public class CoreCustomDataComponent extends AbstractItemComponent implements Cu
 		if (values != null)
 			values.clear();
 		@SuppressWarnings("unchecked")
-		NBTSerializationHandler<CustomDataComponent> handler = (NBTSerializationHandler<CustomDataComponent>) getNBTHandler();
-		handler.deserialize(this, reader, NBTSerializationContext.DEFAULT_CLIENT);
+		NBTCodec<CustomDataComponent> handler = (NBTCodec<CustomDataComponent>) getNBTCodec();
+		handler.deserialize(this, reader, CodecContext.DEFAULT_CLIENT);
 		reader.close();
 	}
 

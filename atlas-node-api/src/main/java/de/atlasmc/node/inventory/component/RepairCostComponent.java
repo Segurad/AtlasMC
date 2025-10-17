@@ -1,11 +1,11 @@
 package de.atlasmc.node.inventory.component;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface RepairCostComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<RepairCostComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<RepairCostComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(RepairCostComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.intField(ComponentType.REPAIR_COST.getNamespacedKey(), RepairCostComponent::getRepairCost, RepairCostComponent::setRepairCost, 0)
@@ -18,7 +18,7 @@ public interface RepairCostComponent extends ItemComponent {
 	RepairCostComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends ItemComponent> getNBTHandler() {
+	default NBTCodec<? extends ItemComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

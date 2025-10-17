@@ -14,8 +14,8 @@ import de.atlasmc.chat.component.event.hover.HoverEvent;
 import de.atlasmc.chat.component.event.hover.HoverItemEvent;
 import de.atlasmc.chat.component.event.hover.HoverTextEvent;
 import de.atlasmc.util.annotation.Nullable;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 import de.atlasmc.util.nbt.tag.NBT;
 
 public interface ChatComponent extends Chat, NBTSerializable {
@@ -25,8 +25,8 @@ public interface ChatComponent extends Chat, NBTSerializable {
 		FONT_ALT = "minecraft:alt",
 		FONT_UNIFORM = "minecraft:uniform";
 	
-	public static final NBTSerializationHandler<ChatComponent> 
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ChatComponent> 
+	NBT_HANDLER = NBTCodec
 					.builder(ChatComponent.class)
 					.searchKeyEnumConstructor("type", ComponentType.class, ComponentType::createComponent, ChatComponent::getType)
 					.defaultConstructor(BaseComponent::new)
@@ -144,7 +144,7 @@ public interface ChatComponent extends Chat, NBTSerializable {
 	ChatComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends ChatComponent> getNBTHandler() {
+	default NBTCodec<? extends ChatComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Camel extends AbstractHorse {
 	
-	public static final NBTSerializationHandler<Camel>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Camel>
+	NBT_HANDLER = NBTCodec
 					.builder(Camel.class)
 					.include(AbstractHorse.NBT_HANDLER)
 					.longField("LastPoseTick", Camel::getLastPoseTick, Camel::setLastPoseTick)
@@ -20,7 +20,7 @@ public interface Camel extends AbstractHorse {
 	void setDashing(boolean dashing);
 
 	@Override
-	default NBTSerializationHandler<? extends Camel> getNBTHandler() {
+	default NBTCodec<? extends Camel> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

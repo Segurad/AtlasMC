@@ -4,12 +4,12 @@ import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Shulker extends AbstractGolem {
 	
-	public static final NBTSerializationHandler<Shulker>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Shulker>
+	NBT_HANDLER = NBTCodec
 					.builder(Shulker.class)
 					.include(AbstractGolem.NBT_HANDLER)
 					.enumByteField("AttachFace", Shulker::getAttachedFace, Shulker::setAttachedFace, BlockFace::getByFaceID, BlockFace::getFaceID, BlockFace.DOWN)
@@ -32,7 +32,7 @@ public interface Shulker extends AbstractGolem {
 	void setColor(@Nullable DyeColor color);
 	
 	@Override
-	default NBTSerializationHandler<? extends Shulker> getNBTHandler() {
+	default NBTCodec<? extends Shulker> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

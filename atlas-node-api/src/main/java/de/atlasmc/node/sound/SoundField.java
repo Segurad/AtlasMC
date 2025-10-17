@@ -6,12 +6,12 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.codec.type.AbstractObjectField;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
-import de.atlasmc.util.nbt.serialization.fields.AbstractObjectField;
 
 final class SoundField<T> extends AbstractObjectField<T, Sound> {
 
@@ -25,7 +25,7 @@ final class SoundField<T> extends AbstractObjectField<T, Sound> {
 	}
 
 	@Override
-	public boolean serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
+	public boolean serialize(T value, NBTWriter writer, CodecContext context) throws IOException {
 		Sound sound = get.apply(value);
 		if (sound == null)
 			return true;
@@ -44,7 +44,7 @@ final class SoundField<T> extends AbstractObjectField<T, Sound> {
 	}
 
 	@Override
-	public void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException {
+	public void deserialize(T value, NBTReader reader, CodecContext context) throws IOException {
 		final TagType type = reader.getType();
 		Sound sound;
 		switch (type) {

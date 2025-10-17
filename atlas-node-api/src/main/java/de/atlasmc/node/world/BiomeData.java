@@ -1,13 +1,13 @@
 package de.atlasmc.node.world;
 
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class BiomeData implements NBTSerializable {
 	
-	public static final NBTSerializationHandler<BiomeData>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<BiomeData>
+	NBT_HANDLER = NBTCodec
 					.builder(BiomeData.class)
 					.boolField("has_precipitation", BiomeData::hasPrecipitation, BiomeData::setPrecipitation, false)
 					.floatField("temparature", BiomeData::getTemperature, BiomeData::setTemperature, 0)
@@ -69,7 +69,7 @@ public class BiomeData implements NBTSerializable {
 	}
 	
 	@Override
-	public NBTSerializationHandler<? extends BiomeData> getNBTHandler() {
+	public NBTCodec<? extends BiomeData> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

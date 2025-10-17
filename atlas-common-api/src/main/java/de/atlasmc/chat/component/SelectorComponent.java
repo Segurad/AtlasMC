@@ -1,11 +1,11 @@
 package de.atlasmc.chat.component;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class SelectorComponent extends AbstractBaseComponent<SelectorComponent> {
 	
-	public static final NBTSerializationHandler<SelectorComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<SelectorComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(SelectorComponent.class)
 					.include(AbstractBaseComponent.NBT_HANDLER)
 					.string("selector", SelectorComponent::getSelector, SelectorComponent::setSelector)

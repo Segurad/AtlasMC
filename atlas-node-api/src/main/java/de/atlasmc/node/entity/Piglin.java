@@ -3,12 +3,12 @@ package de.atlasmc.node.entity;
 import java.util.List;
 
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Piglin extends AbstractPiglin {
 	
-	public static final NBTSerializationHandler<Piglin>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Piglin>
+	NBT_HANDLER = NBTCodec
 					.builder(Piglin.class)
 					.boolField("CannotHunt", Piglin::cannotHunt, Piglin::setCannotHunt, false)
 					.typeList("Inventory", Piglin::hasPocketItems, Piglin::getPocketItems, ItemStack.NBT_HANDLER)
@@ -43,7 +43,7 @@ public interface Piglin extends AbstractPiglin {
 	void removePocketItem(ItemStack item);
 	
 	@Override
-	default NBTSerializationHandler<? extends Piglin> getNBTHandler() {
+	default NBTCodec<? extends Piglin> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

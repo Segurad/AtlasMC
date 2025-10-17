@@ -4,12 +4,12 @@ import java.util.UUID;
 
 import de.atlasmc.node.inventory.AbstractHorseInventory;
 import de.atlasmc.node.inventory.InventoryHolder;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface AbstractHorse extends Animal, InventoryHolder {
 	
-	public static final NBTSerializationHandler<AbstractHorse>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<AbstractHorse>
+	NBT_HANDLER = NBTCodec
 					.builder(AbstractHorse.class)
 					.include(Animal.NBT_HANDLER)
 					.boolField("Bred", AbstractHorse::canBred, AbstractHorse::setCanBred, false)
@@ -58,7 +58,7 @@ public interface AbstractHorse extends Animal, InventoryHolder {
 	AbstractHorseInventory getInventory();
 	
 	@Override
-	default NBTSerializationHandler<? extends AbstractHorse> getNBTHandler() {
+	default NBTCodec<? extends AbstractHorse> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

@@ -2,12 +2,12 @@ package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface RarityComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<RarityComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<RarityComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(RarityComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.enumStringField(ComponentType.RARITY.getNamespacedKey(), RarityComponent::getRarity, RarityComponent::setRarity, Rarity.class, null)
@@ -21,7 +21,7 @@ public interface RarityComponent extends ItemComponent {
 	RarityComponent clone();
 
 	@Override
-	default NBTSerializationHandler<? extends RarityComponent> getNBTHandler() {
+	default NBTCodec<? extends RarityComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

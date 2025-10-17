@@ -3,12 +3,12 @@ package de.atlasmc.node.inventory.component;
 import java.util.List;
 
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface BundleContentsComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<BundleContentsComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<BundleContentsComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(BundleContentsComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.typeList(ComponentType.BUNDLE_CONTENTS.getNamespacedKey(), BundleContentsComponent::hasItems, BundleContentsComponent::getItems, ItemStack.NBT_HANDLER)
@@ -25,7 +25,7 @@ public interface BundleContentsComponent extends ItemComponent {
 	BundleContentsComponent clone();
 
 	@Override
-	default NBTSerializationHandler<? extends BundleContentsComponent> getNBTHandler() {
+	default NBTCodec<? extends BundleContentsComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

@@ -1,12 +1,12 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.node.inventory.InventoryHolder;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Allay extends Creature, InventoryHolder {
 	
-	public static final NBTSerializationHandler<Allay>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Allay>
+	NBT_HANDLER = NBTCodec
 					.builder(Allay.class)
 					.include(Creature.NBT_HANDLER)
 					.include(InventoryHolder.NBT_HANDLER)
@@ -23,7 +23,7 @@ public interface Allay extends Creature, InventoryHolder {
 	void setDuplicationCooldown(long cooldown);
 	
 	@Override
-	default NBTSerializationHandler<? extends Allay> getNBTHandler() {
+	default NBTCodec<? extends Allay> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

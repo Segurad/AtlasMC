@@ -11,18 +11,18 @@ import de.atlasmc.node.inventory.component.ItemComponentHolder;
 import de.atlasmc.node.inventory.component.MaxStackSizeComponent;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
+import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 
 public class ItemStack implements NBTSerializable, ItemComponentHolder {
 
-	public static final NBTSerializationHandler<ItemStack> NBT_HANDLER;
+	public static final NBTCodec<ItemStack> NBT_HANDLER;
 	
 	protected static final CharKey
 	NBT_COUNT = CharKey.literal("count"),
@@ -32,7 +32,7 @@ public class ItemStack implements NBTSerializable, ItemComponentHolder {
 	NBT_IGNORED_COMPONENTS = CharKey.literal("ignored-components");
 	
 	static {
-		NBT_HANDLER = NBTSerializationHandler
+		NBT_HANDLER = NBTCodec
 				.builder(ItemStack.class)
 				.intField("count", ItemStack::getAmount, ItemStack::setAmount, 1)
 				.include(ItemComponentHolder.NBT_HANDLER)
@@ -257,8 +257,8 @@ public class ItemStack implements NBTSerializable, ItemComponentHolder {
 			writer.writeCompoundTag(NBT_COMPONENTS);
 			for (ItemComponent comp : components.values()) {
 				@SuppressWarnings("unchecked")
-				NBTSerializationHandler<ItemComponent> handler = (NBTSerializationHandler<ItemComponent>) comp.getNBTHandler();
-				handler.serialize(comp, writer, systemData ? NBTSerializationContext.DEFAULT_SERVER : NBTSerializationContext.DEFAULT_CLIENT);
+				NBTCodec<ItemComponent> handler = (NBTCodec<ItemComponent>) comp.getNBTCodec();
+				handler.serialize(comp, writer, systemData ? CodecContext.DEFAULT_SERVER : CodecContext.DEFAULT_CLIENT);
 			}
 			writer.writeEndTag();
 		}
@@ -283,7 +283,7 @@ public class ItemStack implements NBTSerializable, ItemComponentHolder {
 	}
 
 	@Override
-	public NBTSerializationHandler<ItemStack> getNBTHandler() {
+	public NBTCodec<ItemStack> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

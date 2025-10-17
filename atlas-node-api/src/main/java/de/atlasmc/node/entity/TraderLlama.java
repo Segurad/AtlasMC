@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface TraderLlama extends Llama {
 
-	public static final NBTSerializationHandler<TraderLlama>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<TraderLlama>
+	NBT_HANDLER = NBTCodec
 					.builder(TraderLlama.class)
 					.include(Llama.NBT_HANDLER)
 					.intField("DespawnDelay", TraderLlama::getDespawnDelay, TraderLlama::setDespawnDelay)
@@ -16,7 +16,7 @@ public interface TraderLlama extends Llama {
 	void setDespawnDelay(int delay);
 	
 	@Override
-	default NBTSerializationHandler<? extends Llama> getNBTHandler() {
+	default NBTCodec<? extends Llama> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

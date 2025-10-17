@@ -1,12 +1,12 @@
 package de.atlasmc.node.block.tile;
 
 import de.atlasmc.node.inventory.BrewingInventory;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface BrewingStand extends AbstractContainerTile<BrewingInventory> {
 	
-	public static final NBTSerializationHandler<BrewingStand>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<BrewingStand>
+	NBT_HANDLER = NBTCodec
 					.builder(BrewingStand.class)
 					.include(AbstractContainerTile.NBT_HANDLER)
 					.shortField("BrewTime", BrewingStand::getBrewTime, BrewingStand::setBrewTime)
@@ -30,7 +30,7 @@ public interface BrewingStand extends AbstractContainerTile<BrewingInventory> {
 	void setBrewTime(int value);
 	
 	@Override
-	default NBTSerializationHandler<? extends BrewingStand> getNBTHandler() {
+	default NBTCodec<? extends BrewingStand> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

@@ -1,14 +1,14 @@
 package de.atlasmc.chat.component.event.hover;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
-import de.atlasmc.util.nbt.serialization.fields.NBTField;
+import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.util.nbt.codec.type.NBTField;
 import de.atlasmc.util.nbt.tag.NBT;
 
 public class HoverItemEvent implements HoverEvent {
 	
-	public static final NBTSerializationHandler<HoverItemEvent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<HoverItemEvent>
+	NBT_HANDLER = NBTCodec
 					.builder(HoverItemEvent.class)
 					.include(HoverEvent.NBT_HANDLER)
 					.namespacedKey("id", HoverItemEvent::getID, HoverItemEvent::setID)
@@ -50,7 +50,7 @@ public class HoverItemEvent implements HoverEvent {
 	}
 
 	@Override
-	public NBTSerializationHandler<? extends HoverItemEvent> getNBTHandler() {
+	public NBTCodec<? extends HoverItemEvent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

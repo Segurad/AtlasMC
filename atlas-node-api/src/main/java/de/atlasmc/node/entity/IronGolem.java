@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface IronGolem extends AbstractGolem {
 	
-	public static final NBTSerializationHandler<IronGolem>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<IronGolem>
+	NBT_HANDLER = NBTCodec
 					.builder(IronGolem.class)
 					.include(AbstractGolem.NBT_HANDLER)
 					.boolField("PlayerCreated", IronGolem::isPlayerCreated, IronGolem::setPlayerCreated, false)
@@ -16,7 +16,7 @@ public interface IronGolem extends AbstractGolem {
 	void setPlayerCreated(boolean playercreated);
 	
 	@Override
-	default NBTSerializationHandler<? extends IronGolem> getNBTHandler() {
+	default NBTCodec<? extends IronGolem> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

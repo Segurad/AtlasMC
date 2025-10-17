@@ -3,13 +3,13 @@ package de.atlasmc.node.entity.spawncondition;
 import java.util.function.Predicate;
 
 import de.atlasmc.node.Location;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Condition extends Predicate<Location>, NBTSerializable {
 	
-	public static final NBTSerializationHandler<Condition>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Condition>
+	NBT_HANDLER = NBTCodec
 					.builder(Condition.class)
 					.searchKeyConstructor("type", ConditionType.REGISTRY_KEY, ConditionType::createCondition, Condition::getType)
 					.build();
@@ -17,7 +17,7 @@ public interface Condition extends Predicate<Location>, NBTSerializable {
 	ConditionType getType();
 	
 	@Override
-	default NBTSerializationHandler<? extends Condition> getNBTHandler() {
+	default NBTCodec<? extends Condition> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

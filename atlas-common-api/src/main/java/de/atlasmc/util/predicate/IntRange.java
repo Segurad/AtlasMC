@@ -1,12 +1,12 @@
 package de.atlasmc.util.predicate;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 import it.unimi.dsi.fastutil.ints.IntPredicate;
 
 public class IntRange implements IntPredicate {
 	
-	public static final NBTSerializationHandler<IntRange>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<IntRange>
+	NBT_HANDLER = NBTCodec
 					.builder(IntRange.class)
 					.defaultConstructor(IntRange::new)
 					.intField("min", IntRange::getMin, IntRange::setMin, Integer.MIN_VALUE)

@@ -24,12 +24,12 @@ import de.atlasmc.permission.Permissible;
 import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.util.annotation.UnsafeAPI;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Player extends HumanEntity, Permissible, Messageable, SoundListener {
 	
-	public static final NBTSerializationHandler<Player>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Player>
+	NBT_HANDLER = NBTCodec
 					.builder(Player.class)
 					.include(HumanEntity.NBT_HANDLER)
 					.enumIntField("playerGameType", Player::getGamemode, Player::setGamemode, Gamemode.class, Gamemode.SURVIVAL)

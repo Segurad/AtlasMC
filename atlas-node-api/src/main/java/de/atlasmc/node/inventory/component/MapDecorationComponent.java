@@ -3,12 +3,12 @@ package de.atlasmc.node.inventory.component;
 import java.util.Map;
 
 import de.atlasmc.node.map.MapIcon;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface MapDecorationComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<MapDecorationComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<MapDecorationComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(MapDecorationComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.compoundMapString2Type(ComponentType.MAP_DECORATIONS.getNamespacedKey(), MapDecorationComponent::hasDecoration, MapDecorationComponent::getDecorations, MapIcon.NBT_HANDLER)
@@ -27,7 +27,7 @@ public interface MapDecorationComponent extends ItemComponent {
 	MapDecorationComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends MapDecorationComponent> getNBTHandler() {
+	default NBTCodec<? extends MapDecorationComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

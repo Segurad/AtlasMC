@@ -6,13 +6,13 @@ import java.util.List;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.node.entity.spawncondition.SpawnCondition;
 import de.atlasmc.registry.ProtocolRegistryValueBase;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class EntityVariant extends ProtocolRegistryValueBase implements NBTSerializable {
 	
-	public static final NBTSerializationHandler<EntityVariant>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<EntityVariant>
+	NBT_HANDLER = NBTCodec
 					.builder(EntityVariant.class)
 					.defaultConstructor(EntityVariant::new)
 					.typeList("spawn_conditions", EntityVariant::hasSpawnConditions, EntityVariant::getSpawnCondition, SpawnCondition.NBT_HANDLER)
@@ -43,7 +43,7 @@ public class EntityVariant extends ProtocolRegistryValueBase implements NBTSeria
 	}
 
 	@Override
-	public NBTSerializationHandler<? extends NBTSerializable> getNBTHandler() {
+	public NBTCodec<? extends NBTSerializable> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

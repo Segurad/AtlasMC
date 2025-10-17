@@ -16,10 +16,10 @@ import de.atlasmc.node.inventory.ItemType;
 import de.atlasmc.node.inventory.MainHand;
 import de.atlasmc.node.inventory.PlayerInventory;
 import de.atlasmc.util.CooldownHandler;
+import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.nbt.NBTException;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 import de.atlasmc.util.nbt.io.NBTObjectWriter;
-import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 import de.atlasmc.util.nbt.tag.CompoundTag;
 
 public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
@@ -186,10 +186,10 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 		else {
 			try {
 				@SuppressWarnings("unchecked")
-				NBTSerializationHandler<Entity> handler = (NBTSerializationHandler<Entity>) entity.getNBTHandler();
+				NBTCodec<Entity> handler = (NBTCodec<Entity>) entity.getNBTCodec();
 				NBTObjectWriter writer = new NBTObjectWriter();
 				writer.writeCompoundTag();
-				handler.serialize(entity, writer, NBTSerializationContext.DEFAULT_CLIENT);
+				handler.serialize(entity, writer, CodecContext.DEFAULT_CLIENT);
 				writer.writeEndTag();
 				CompoundTag tag = (CompoundTag) writer.toNBT();
 				metaContainer.get(shoulder).setData(tag);

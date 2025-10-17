@@ -1,12 +1,12 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.node.inventory.ItemPredicate;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface LockComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<LockComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<LockComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(LockComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.typeCompoundField(ComponentType.LOCK.getNamespacedKey(), LockComponent::getPredicate, LockComponent::setPredicate, ItemPredicate.NBT_HANDLER)
@@ -19,7 +19,7 @@ public interface LockComponent extends ItemComponent {
 	LockComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends ItemComponent> getNBTHandler() {
+	default NBTCodec<? extends ItemComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

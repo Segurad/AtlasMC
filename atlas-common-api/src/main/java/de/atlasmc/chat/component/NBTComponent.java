@@ -1,11 +1,11 @@
 package de.atlasmc.chat.component;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class NBTComponent extends AbstractBaseComponent<NBTComponent> {
 	
-	public static final NBTSerializationHandler<NBTComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<NBTComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(NBTComponent.class)
 					.string("source", NBTComponent::getSource, NBTComponent::setSource)
 					.string("nbt", NBTComponent::getNbtPath, NBTComponent::setNbtPath)

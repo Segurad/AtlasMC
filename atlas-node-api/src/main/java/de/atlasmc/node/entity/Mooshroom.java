@@ -2,12 +2,12 @@ package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Mooshroom extends AgeableMob {
 	
-	public static final NBTSerializationHandler<Mooshroom>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Mooshroom>
+	NBT_HANDLER = NBTCodec
 					.builder(Mooshroom.class)
 					.include(AgeableMob.NBT_HANDLER)
 					.enumStringField("Type", Mooshroom::getVariant, Mooshroom::setVariant, Variant.class, Variant.RED)

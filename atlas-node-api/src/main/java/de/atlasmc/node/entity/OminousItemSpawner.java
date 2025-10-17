@@ -1,12 +1,12 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface OminousItemSpawner extends Entity {
 	
-	public static final NBTSerializationHandler<OminousItemSpawner>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<OminousItemSpawner>
+	NBT_HANDLER = NBTCodec
 					.builder(OminousItemSpawner.class)
 					.include(Entity.NBT_HANDLER)
 					.typeCompoundField("item", OminousItemSpawner::getItem, OminousItemSpawner::setItem, ItemStack.NBT_HANDLER)
@@ -22,7 +22,7 @@ public interface OminousItemSpawner extends Entity {
 	void setSpawnTicks(long ticks);
 	
 	@Override
-	default NBTSerializationHandler<? extends OminousItemSpawner> getNBTHandler() {
+	default NBTCodec<? extends OminousItemSpawner> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

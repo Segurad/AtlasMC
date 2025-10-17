@@ -2,15 +2,15 @@ package de.atlasmc.node.inventory.component;
 
 import java.util.List;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 import it.unimi.dsi.fastutil.booleans.BooleanList;
 import it.unimi.dsi.fastutil.floats.FloatList;
 import it.unimi.dsi.fastutil.ints.IntList;
 
 public interface CustomModelDataComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<CustomModelDataComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<CustomModelDataComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(CustomModelDataComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.beginComponent(ComponentType.CUSTOM_MODEL_DATA.getNamespacedKey())

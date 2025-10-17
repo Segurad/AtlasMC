@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Endermite extends Monster {
 
-	public static final NBTSerializationHandler<Endermite>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Endermite>
+	NBT_HANDLER = NBTCodec
 					.builder(Endermite.class)
 					.include(Monster.NBT_HANDLER)
 					.intField("Lifetime", Endermite::getLifetime, Endermite::setLifetime, -1)

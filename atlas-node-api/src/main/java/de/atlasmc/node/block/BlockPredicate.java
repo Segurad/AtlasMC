@@ -6,13 +6,13 @@ import java.util.Map;
 import de.atlasmc.node.block.data.property.BlockDataProperty;
 import de.atlasmc.node.block.tile.TileEntity;
 import de.atlasmc.util.dataset.DataSet;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class BlockPredicate implements NBTSerializable {
 
-	public static final NBTSerializationHandler<BlockPredicate>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<BlockPredicate>
+	NBT_HANDLER = NBTCodec
 					.builder(BlockPredicate.class)
 					.defaultConstructor(BlockPredicate::new)
 					.dataSetField("blocks", BlockPredicate::getTypes, BlockPredicate::setTypes, BlockType.getRegistry())
@@ -57,7 +57,7 @@ public class BlockPredicate implements NBTSerializable {
 	}
 	
 	@Override
-	public NBTSerializationHandler<? extends NBTSerializable> getNBTHandler() {
+	public NBTCodec<? extends NBTSerializable> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

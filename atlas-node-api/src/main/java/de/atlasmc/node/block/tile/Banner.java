@@ -9,13 +9,13 @@ import de.atlasmc.chat.Chat;
 import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.Nameable;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Banner extends TileEntity, Nameable {
 	
-	public static final NBTSerializationHandler<Banner>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Banner>
+	NBT_HANDLER = NBTCodec
 					.builder(Banner.class)
 					.include(TileEntity.NBT_HANDLER)
 					.include(Nameable.NBT_HANDLER)
@@ -47,14 +47,14 @@ public interface Banner extends TileEntity, Nameable {
 	void setCustomName(Chat name);
 	
 	@Override
-	default NBTSerializationHandler<? extends Banner> getNBTHandler() {
+	default NBTCodec<? extends Banner> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	
 	public static class Pattern implements NBTSerializable {
 		
-		public static final NBTSerializationHandler<Pattern>
-		NBT_HANDLER = NBTSerializationHandler
+		public static final NBTCodec<Pattern>
+		NBT_HANDLER = NBTCodec
 						.builder(Pattern.class)
 						.defaultConstructor(Pattern::new)
 						.enumStringField("color", Pattern::getColor, Pattern::setColor, DyeColor.class, null)
@@ -89,7 +89,7 @@ public interface Banner extends TileEntity, Nameable {
 		}
 		
 		@Override
-		public NBTSerializationHandler<? extends Pattern> getNBTHandler() {
+		public NBTCodec<? extends Pattern> getNBTCodec() {
 			return NBT_HANDLER;
 		}
 		
@@ -99,8 +99,8 @@ public interface Banner extends TileEntity, Nameable {
 	
 	public static class ResourcePatternType implements PatternType, NBTSerializable {
 		
-		public static final NBTSerializationHandler<ResourcePatternType>
-		NBT_HANDLER = NBTSerializationHandler
+		public static final NBTCodec<ResourcePatternType>
+		NBT_HANDLER = NBTCodec
 						.builder(ResourcePatternType.class)
 						.defaultConstructor(ResourcePatternType::new)
 						.namespacedKey("asset_id", ResourcePatternType::getAssetID, ResourcePatternType::setAssetID)
@@ -134,7 +134,7 @@ public interface Banner extends TileEntity, Nameable {
 		}
 		
 		@Override
-		public NBTSerializationHandler<? extends ResourcePatternType> getNBTHandler() {
+		public NBTCodec<? extends ResourcePatternType> getNBTCodec() {
 			return NBT_HANDLER;
 		}
 		

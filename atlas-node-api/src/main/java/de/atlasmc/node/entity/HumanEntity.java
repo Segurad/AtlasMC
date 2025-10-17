@@ -5,12 +5,12 @@ import de.atlasmc.node.inventory.InventoryHolder;
 import de.atlasmc.node.inventory.ItemType;
 import de.atlasmc.node.inventory.MainHand;
 import de.atlasmc.node.inventory.PlayerInventory;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface HumanEntity extends LivingEntity, InventoryHolder {
 	
-	public static final NBTSerializationHandler<HumanEntity>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<HumanEntity>
+	NBT_HANDLER = NBTCodec
 					.builder(HumanEntity.class)
 					.beginComponent("abilities")
 					.boolField("flying", HumanEntity::isFlying, HumanEntity::setFlying, false)

@@ -1,12 +1,12 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.node.inventory.PocketHolder;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface WanderingTrader extends Breedable, Merchant, PocketHolder {
 	
-	public static final NBTSerializationHandler<WanderingTrader>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<WanderingTrader>
+	NBT_HANDLER = NBTCodec
 					.builder(WanderingTrader.class)
 					.include(Breedable.NBT_HANDLER)
 					.include(Merchant.NBT_HANDLER)
@@ -24,7 +24,7 @@ public interface WanderingTrader extends Breedable, Merchant, PocketHolder {
 	int getDespawnDelay();
 	
 	@Override
-	default NBTSerializationHandler<? extends WanderingTrader> getNBTHandler() {
+	default NBTCodec<? extends WanderingTrader> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

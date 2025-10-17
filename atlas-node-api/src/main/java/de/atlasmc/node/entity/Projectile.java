@@ -3,12 +3,12 @@ package de.atlasmc.node.entity;
 import java.util.UUID;
 
 import de.atlasmc.node.ProjectileSource;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Projectile extends Entity {
 	
-	public static final NBTSerializationHandler<Projectile>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Projectile>
+	NBT_HANDLER = NBTCodec
 					.builder(Projectile.class)
 					.include(Entity.NBT_HANDLER)
 					// ignore because event will be triggered by shooter 
@@ -30,7 +30,7 @@ public interface Projectile extends Entity {
 	void setLeftOwner(boolean value);
 	
 	@Override
-	default NBTSerializationHandler<? extends Projectile> getNBTHandler() {
+	default NBTCodec<? extends Projectile> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

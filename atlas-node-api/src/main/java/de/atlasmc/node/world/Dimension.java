@@ -4,13 +4,13 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.registry.ProtocolRegistryValueBase;
 import de.atlasmc.util.annotation.Nullable;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class Dimension extends ProtocolRegistryValueBase implements NBTSerializable, Namespaced {
 	
-	public static final NBTSerializationHandler<Dimension> 
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Dimension> 
+	NBT_HANDLER = NBTCodec
 					.builder(Dimension.class)
 					.boolField("natural", Dimension::isNatural, Dimension::setNatural)
 					.boolField("has_skylight", Dimension::hasSkyLight, Dimension::setSkylight)
@@ -117,7 +117,7 @@ public class Dimension extends ProtocolRegistryValueBase implements NBTSerializa
 	}
 
 	@Override
-	public NBTSerializationHandler<? extends Dimension> getNBTHandler() {
+	public NBTCodec<? extends Dimension> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

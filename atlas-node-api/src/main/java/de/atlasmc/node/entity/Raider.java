@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Raider extends Monster {
 	
-	public static final NBTSerializationHandler<Raider>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Raider>
+	NBT_HANDLER = NBTCodec
 					.builder(Raider.class)
 					.include(Monster.NBT_HANDLER)
 					.boolField("IsCelebrating", Raider::isCelebrating, Raider::setCelebrating, false) // non standard
@@ -22,7 +22,7 @@ public interface Raider extends Monster {
 	void setCelebrating(boolean celebrating);
 	
 	@Override
-	default NBTSerializationHandler<? extends Raider> getNBTHandler() {
+	default NBTCodec<? extends Raider> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

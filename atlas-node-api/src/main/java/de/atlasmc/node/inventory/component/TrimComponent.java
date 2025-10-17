@@ -8,12 +8,12 @@ import de.atlasmc.chat.Chat;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryKey;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface TrimComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<TrimComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<TrimComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(TrimComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.beginComponent(ComponentType.TRIM.getNamespacedKey())
@@ -33,7 +33,7 @@ public interface TrimComponent extends ItemComponent {
 	TrimComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends TrimComponent> getNBTHandler() {
+	default NBTCodec<? extends TrimComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

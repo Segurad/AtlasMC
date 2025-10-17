@@ -1,11 +1,11 @@
 package de.atlasmc.chat.component;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class ScoreComponent extends AbstractBaseComponent<ScoreComponent> {
 
-	public static final NBTSerializationHandler<ScoreComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ScoreComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(ScoreComponent.class)
 					.include(AbstractBaseComponent.NBT_HANDLER)
 					.beginComponent("score")
@@ -44,7 +44,7 @@ public class ScoreComponent extends AbstractBaseComponent<ScoreComponent> {
 	}
 	
 	@Override
-	public NBTSerializationHandler<? extends ScoreComponent> getNBTHandler() {
+	public NBTCodec<? extends ScoreComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

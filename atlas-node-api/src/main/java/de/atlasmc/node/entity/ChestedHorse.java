@@ -1,12 +1,12 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.node.inventory.InventoryHolder;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ChestedHorse extends AbstractHorse {
 	
-	public static final NBTSerializationHandler<ChestedHorse>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ChestedHorse>
+	NBT_HANDLER = NBTCodec
 					.builder(ChestedHorse.class)
 					.include(AbstractHorse.NBT_HANDLER)
 					.include(InventoryHolder.NBT_HANDLER)
@@ -18,7 +18,7 @@ public interface ChestedHorse extends AbstractHorse {
 	void setChest(boolean chest);
 	
 	@Override
-	default NBTSerializationHandler<? extends ChestedHorse> getNBTHandler() {
+	default NBTCodec<? extends ChestedHorse> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

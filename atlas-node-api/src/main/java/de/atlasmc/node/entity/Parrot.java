@@ -1,12 +1,12 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Parrot extends Tameable {
 	
-	public static final NBTSerializationHandler<Parrot>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Parrot>
+	NBT_HANDLER = NBTCodec
 					.builder(Parrot.class)
 					.include(Tameable.NBT_HANDLER)
 					.enumIntField("Variant", Parrot::getParrotType, Parrot::setParrotType, Type.class, Type.RED_BLUE)
@@ -17,7 +17,7 @@ public interface Parrot extends Tameable {
 	void setParrotType(Type type);
 	
 	@Override
-	default NBTSerializationHandler<? extends Parrot> getNBTHandler() {
+	default NBTCodec<? extends Parrot> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

@@ -3,12 +3,12 @@ package de.atlasmc.node.entity;
 import de.atlasmc.IDHolder;
 import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.inventory.LlamaInventory;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Llama extends ChestedHorse {
 	
-	public static final NBTSerializationHandler<Llama>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Llama>
+	NBT_HANDLER = NBTCodec
 					.builder(Llama.class)
 					.include(ChestedHorse.NBT_HANDLER)
 					.intField("Strength", Llama::getStrength, Llama::setStrength, 3)
@@ -31,7 +31,7 @@ public interface Llama extends ChestedHorse {
 	LlamaInventory getInventory();
 	
 	@Override
-	default NBTSerializationHandler<? extends Llama> getNBTHandler() {
+	default NBTCodec<? extends Llama> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

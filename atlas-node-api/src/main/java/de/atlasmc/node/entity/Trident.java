@@ -1,12 +1,12 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Trident extends AbstractArrow {
 	
-	public static final NBTSerializationHandler<Trident>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Trident>
+	NBT_HANDLER = NBTCodec
 					.builder(Trident.class)
 					.include(AbstractArrow.NBT_HANDLER)
 					.boolField("DealtDamage", Trident::hasDealtDamage, Trident::setDealtDamage, false)
@@ -32,7 +32,7 @@ public interface Trident extends AbstractArrow {
 	boolean hasItem();
 	
 	@Override
-	default NBTSerializationHandler<? extends AbstractArrow> getNBTHandler() {
+	default NBTCodec<? extends AbstractArrow> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

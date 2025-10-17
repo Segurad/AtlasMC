@@ -9,13 +9,13 @@ import de.atlasmc.node.world.World;
 import de.atlasmc.util.annotation.InternalAPI;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.UnsafeAPI;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface TileEntity extends Cloneable, NBTSerializable, ItemComponentHolder {
 	
-	public static final NBTSerializationHandler<TileEntity>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<TileEntity>
+	NBT_HANDLER = NBTCodec
 					.builder(TileEntity.class)
 					.searchKeyConstructor("id", BlockType.REGISTRY_KEY, BlockType::createTileEntity, TileEntity::getType)
 					.intField("x", TileEntity::getX, TileEntity::setX)
@@ -70,7 +70,7 @@ public interface TileEntity extends Cloneable, NBTSerializable, ItemComponentHol
 	int getID();
 	
 	@Override
-	default NBTSerializationHandler<? extends TileEntity> getNBTHandler() {
+	default NBTCodec<? extends TileEntity> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

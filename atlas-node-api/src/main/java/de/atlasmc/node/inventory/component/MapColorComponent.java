@@ -1,12 +1,12 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.Color;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface MapColorComponent extends ItemComponent {
 
-	public static final NBTSerializationHandler<MapColorComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<MapColorComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(MapColorComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.color(ComponentType.MAP_COLOR.getNamespacedKey(), MapColorComponent::getColor, MapColorComponent::setColor)
@@ -19,7 +19,7 @@ public interface MapColorComponent extends ItemComponent {
 	MapColorComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends MapColorComponent> getNBTHandler() {
+	default NBTCodec<? extends MapColorComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

@@ -1,12 +1,12 @@
 package de.atlasmc.chat.component.event.hover;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class HoverTextEvent implements HoverEvent {
 
-	public static final NBTSerializationHandler<HoverTextEvent> 
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<HoverTextEvent> 
+	NBT_HANDLER = NBTCodec
 					.builder(HoverTextEvent.class)
 					.include(HoverEvent.NBT_HANDLER)
 					.chat("value", HoverTextEvent::getValue, HoverTextEvent::setValue)
@@ -28,7 +28,7 @@ public class HoverTextEvent implements HoverEvent {
 	}
 
 	@Override
-	public NBTSerializationHandler<? extends HoverTextEvent> getNBTHandler() {
+	public NBTCodec<? extends HoverTextEvent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

@@ -8,19 +8,19 @@ import de.atlasmc.registry.ProtocolRegistryValueBase;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 import de.atlasmc.registry.RegistryKey;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 @RegistryHolder(key = "minecraft:instrument", target = Target.PROTOCOL)
 public class Instrument extends ProtocolRegistryValueBase implements NBTSerializable {
 	
-	public static final NBTSerializationHandler<Instrument> NBT_HANDLER;
+	public static final NBTCodec<Instrument> NBT_HANDLER;
 	
 	public static final RegistryKey<Instrument> REGISTRY_KEY = Registries.getRegistryKey(Instrument.class);
 	
 	static {
-		NBT_HANDLER = NBTSerializationHandler
+		NBT_HANDLER = NBTCodec
 						.builder(Instrument.class)
 						.defaultConstructor(Instrument::new)
 						.chat("description", Instrument::getDescription, Instrument::setDescription)
@@ -102,7 +102,7 @@ public class Instrument extends ProtocolRegistryValueBase implements NBTSerializ
 	}
 	
 	@Override
-	public NBTSerializationHandler<? extends Instrument> getNBTHandler() {
+	public NBTCodec<? extends Instrument> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

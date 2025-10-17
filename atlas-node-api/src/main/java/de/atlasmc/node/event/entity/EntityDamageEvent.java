@@ -6,8 +6,8 @@ import de.atlasmc.node.entity.Entity;
 import de.atlasmc.node.event.ServerHandlerList;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.util.dataset.DataSet;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class EntityDamageEvent extends EntityEvent implements Cancellable {
 	
@@ -38,8 +38,8 @@ public class EntityDamageEvent extends EntityEvent implements Cancellable {
 	
 	public static class DamageReduction implements NBTSerializable {
 		
-		public static final NBTSerializationHandler<DamageReduction>
-		NBT_HANDLER = NBTSerializationHandler
+		public static final NBTCodec<DamageReduction>
+		NBT_HANDLER = NBTCodec
 						.builder(DamageReduction.class)
 						.defaultConstructor(DamageReduction::new)
 						.setRedirectAfterConstruction(false)
@@ -87,7 +87,7 @@ public class EntityDamageEvent extends EntityEvent implements Cancellable {
 		}
 
 		@Override
-		public NBTSerializationHandler<? extends DamageReduction> getNBTHandler() {
+		public NBTCodec<? extends DamageReduction> getNBTCodec() {
 			return NBT_HANDLER;
 		}
 		

@@ -1,12 +1,12 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ItemModelComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<ItemModelComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ItemModelComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(ItemModelComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.namespacedKey(ComponentType.ITEM_MODEL.getNamespacedKey(), ItemModelComponent::getModel, ItemModelComponent::setModel)
@@ -19,7 +19,7 @@ public interface ItemModelComponent extends ItemComponent {
 	ItemModelComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends ItemModelComponent> getNBTHandler() {
+	default NBTCodec<? extends ItemModelComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

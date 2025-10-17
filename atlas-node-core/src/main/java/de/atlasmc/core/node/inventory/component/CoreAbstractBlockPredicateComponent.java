@@ -21,12 +21,12 @@ import de.atlasmc.node.block.tile.TileEntity;
 import de.atlasmc.node.inventory.component.AbstractBlockPredicateComponent;
 import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.ComponentType;
+import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.dataset.DataSet;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
 import io.netty.buffer.ByteBuf;
 
 public class CoreAbstractBlockPredicateComponent extends AbstractItemComponent implements AbstractBlockPredicateComponent {
@@ -106,7 +106,7 @@ public class CoreAbstractBlockPredicateComponent extends AbstractItemComponent i
 						writer = new NBTNIOWriter(buf, true);
 					writer.writeCompoundTag();
 					if (tile != null)
-						tile.writeToNBT(writer, NBTSerializationContext.DEFAULT_CLIENT);
+						tile.writeToNBT(writer, CodecContext.DEFAULT_CLIENT);
 					writer.writeEndTag();
 				}
 			}

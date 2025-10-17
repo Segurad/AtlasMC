@@ -2,12 +2,12 @@ package de.atlasmc.node.entity;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.command.CommandSender;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface MinecartCommandBlock extends AbstractMinecart, CommandSender {
 	
-	public static final NBTSerializationHandler<MinecartCommandBlock>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<MinecartCommandBlock>
+	NBT_HANDLER = NBTCodec
 					.builder(MinecartCommandBlock.class)
 					.include(AbstractMinecart.NBT_HANDLER)
 					.string("Command", MinecartCommandBlock::getCommand, MinecartCommandBlock::setCommand)
@@ -38,7 +38,7 @@ public interface MinecartCommandBlock extends AbstractMinecart, CommandSender {
 	boolean isTrackingOutput();
 	
 	@Override
-	default NBTSerializationHandler<? extends MinecartCommandBlock> getNBTHandler() {
+	default NBTCodec<? extends MinecartCommandBlock> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

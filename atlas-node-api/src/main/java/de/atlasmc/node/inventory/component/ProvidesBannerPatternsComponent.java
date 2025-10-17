@@ -2,12 +2,12 @@ package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.node.block.tile.Banner.PatternType;
 import de.atlasmc.tag.TagKey;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ProvidesBannerPatternsComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<ProvidesBannerPatternsComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ProvidesBannerPatternsComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(ProvidesBannerPatternsComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.tagField(ComponentType.PROVIDES_BANNER_PATTERNS.getNamespacedKey(), ProvidesBannerPatternsComponent::getPatterns, ProvidesBannerPatternsComponent::setPatterns)
@@ -20,7 +20,7 @@ public interface ProvidesBannerPatternsComponent extends ItemComponent {
 	ProvidesBannerPatternsComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends ProvidesBannerPatternsComponent> getNBTHandler() {
+	default NBTCodec<? extends ProvidesBannerPatternsComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

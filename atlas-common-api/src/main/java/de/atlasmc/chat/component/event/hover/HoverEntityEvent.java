@@ -4,12 +4,12 @@ import java.util.UUID;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.component.ChatComponent;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class HoverEntityEvent implements HoverEvent {
 	
-	public static final NBTSerializationHandler<HoverEntityEvent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<HoverEntityEvent>
+	NBT_HANDLER = NBTCodec
 					.builder(HoverEntityEvent.class)
 					.include(HoverEvent.NBT_HANDLER)
 					.typeCompoundField("name", HoverEntityEvent::getName, HoverEntityEvent::setName, ChatComponent.NBT_HANDLER)
@@ -51,7 +51,7 @@ public class HoverEntityEvent implements HoverEvent {
 	}
 
 	@Override
-	public NBTSerializationHandler<? extends HoverEntityEvent> getNBTHandler() {
+	public NBTCodec<? extends HoverEntityEvent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface PolarBear extends Animal, AngerableMob {
 	
-	public static final NBTSerializationHandler<PolarBear>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<PolarBear>
+	NBT_HANDLER = NBTCodec
 					.builder(PolarBear.class)
 					.include(Animal.NBT_HANDLER)
 					.include(AngerableMob.NBT_HANDLER)
@@ -17,7 +17,7 @@ public interface PolarBear extends Animal, AngerableMob {
 	void setStandingUp(boolean standing);
 
 	@Override
-	default NBTSerializationHandler<? extends PolarBear> getNBTHandler() {
+	default NBTCodec<? extends PolarBear> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

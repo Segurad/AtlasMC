@@ -1,12 +1,12 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.Color;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface DyedColorComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<DyedColorComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<DyedColorComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(DyedColorComponent.class)
 					.color(ComponentType.DYED_COLOR.getNamespacedKey(), DyedColorComponent::getColor, DyedColorComponent::setColor)
 					.build();
@@ -18,7 +18,7 @@ public interface DyedColorComponent extends ItemComponent {
 	DyedColorComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends DyedColorComponent> getNBTHandler() {
+	default NBTCodec<? extends DyedColorComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

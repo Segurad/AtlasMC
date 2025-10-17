@@ -4,13 +4,13 @@ import de.atlasmc.IDHolder;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.node.inventory.EquipmentSlot;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class AttributeModifier implements Cloneable, NBTSerializable {
 
-	public static final NBTSerializationHandler<AttributeModifier>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<AttributeModifier>
+	NBT_HANDLER = NBTCodec
 					.builder(AttributeModifier.class)
 					.defaultConstructor(AttributeModifier::new)
 					.doubleField("amount", AttributeModifier::getAmount, AttributeModifier::setAmount, 0)
@@ -152,7 +152,7 @@ public class AttributeModifier implements Cloneable, NBTSerializable {
 	}
 
 	@Override
-	public NBTSerializationHandler<? extends AttributeModifier> getNBTHandler() {
+	public NBTCodec<? extends AttributeModifier> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

@@ -3,12 +3,12 @@ package de.atlasmc.node.inventory.component;
 import java.util.List;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface PotDecorationComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<PotDecorationComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<PotDecorationComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(PotDecorationComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.namespacedKeyListField(ComponentType.POT_DECORATIONS.getNamespacedKey(), PotDecorationComponent::hasDecorations, PotDecorationComponent::getDecorations)
@@ -25,7 +25,7 @@ public interface PotDecorationComponent extends ItemComponent {
 	PotDecorationComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends ItemComponent> getNBTHandler() {
+	default NBTCodec<? extends ItemComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

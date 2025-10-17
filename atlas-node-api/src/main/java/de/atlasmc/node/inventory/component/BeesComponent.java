@@ -4,12 +4,12 @@ import java.util.List;
 
 import de.atlasmc.node.block.tile.Beehive.Occupant;
 import de.atlasmc.node.entity.Bee;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface BeesComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<BeesComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<BeesComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(BeesComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.typeList(ComponentType.BEES.getNamespacedKey(), BeesComponent::hasBees, BeesComponent::getBees, Occupant.NBT_HANDLER)
@@ -32,7 +32,7 @@ public interface BeesComponent extends ItemComponent {
 	int getBeeCount();
 	
 	@Override
-	default NBTSerializationHandler<? extends BeesComponent> getNBTHandler() {
+	default NBTCodec<? extends BeesComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

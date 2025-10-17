@@ -2,12 +2,12 @@ package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Armadillo extends Animal {
 	
-	public static final NBTSerializationHandler<Armadillo>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Armadillo>
+	NBT_HANDLER = NBTCodec
 					.builder(Armadillo.class)
 					.include(Animal.NBT_HANDLER)
 					.intField("scute_time", Armadillo::getScuteTime, Armadillo::setScuteTime, -1)
@@ -23,7 +23,7 @@ public interface Armadillo extends Animal {
 	void setState(ArmadilloState state);
 	
 	@Override
-	default NBTSerializationHandler<? extends Armadillo> getNBTHandler() {
+	default NBTCodec<? extends Armadillo> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

@@ -5,13 +5,13 @@ import java.util.List;
 import de.atlasmc.node.inventory.ItemType;
 import de.atlasmc.util.CloneException;
 import de.atlasmc.util.dataset.DataSet;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ToolComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<ToolComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ToolComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(ToolComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.beginComponent(ComponentType.TOOL.getNamespacedKey())
@@ -55,14 +55,14 @@ public interface ToolComponent extends ItemComponent {
 	}
 	
 	@Override
-	default NBTSerializationHandler<? extends ToolComponent> getNBTHandler() {
+	default NBTCodec<? extends ToolComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	
 	public static class Rule implements NBTSerializable, Cloneable {
 		
-		public static final NBTSerializationHandler<Rule>
-		NBT_HANDLER = NBTSerializationHandler
+		public static final NBTCodec<Rule>
+		NBT_HANDLER = NBTCodec
 						.builder(Rule.class)
 						.defaultConstructor(Rule::new)
 						.dataSetField("blocks", Rule::getBlocks, Rule::setBlocks, ItemType.getRegistry())
@@ -99,7 +99,7 @@ public interface ToolComponent extends ItemComponent {
 		}
 		
 		@Override
-		public NBTSerializationHandler<? extends NBTSerializable> getNBTHandler() {
+		public NBTCodec<? extends NBTSerializable> getNBTCodec() {
 			return NBT_HANDLER;
 		}
 		

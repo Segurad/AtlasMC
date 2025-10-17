@@ -1,12 +1,12 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.node.block.BlockPredicate;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface CanPlaceOnComponent extends AbstractBlockPredicateComponent {
 	
-	public static final NBTSerializationHandler<CanPlaceOnComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<CanPlaceOnComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(CanPlaceOnComponent.class)
 					.include(AbstractBlockPredicateComponent.NBT_HANDLER)
 					.typeList(ComponentType.CAN_PLACE_ON.getNamespacedKey(), CanPlaceOnComponent::hasPredicates, CanPlaceOnComponent::getPredicates, BlockPredicate.NBT_HANDLER)
@@ -15,7 +15,7 @@ public interface CanPlaceOnComponent extends AbstractBlockPredicateComponent {
 	CanPlaceOnComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends CanPlaceOnComponent> getNBTHandler() {
+	default NBTCodec<? extends CanPlaceOnComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

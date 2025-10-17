@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Bat extends AmbientCreature {
 	
-	public static final NBTSerializationHandler<Bat>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Bat>
+	NBT_HANDLER = NBTCodec
 					.builder(Bat.class)
 					.include(AmbientCreature.NBT_HANDLER)
 					.boolField("BatFlags", Bat::isHanging, Bat::setHanging, false)
@@ -16,7 +16,7 @@ public interface Bat extends AmbientCreature {
 	void setHanging(boolean hanging);
 
 	@Override
-	default NBTSerializationHandler<? extends Bat> getNBTHandler() {
+	default NBTCodec<? extends Bat> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

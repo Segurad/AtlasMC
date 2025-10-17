@@ -1,12 +1,12 @@
 package de.atlasmc.chat.component.event.click;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public final class CustomClickEvent implements ClickEvent {
 	
-	public static final NBTSerializationHandler<CustomClickEvent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<CustomClickEvent>
+	NBT_HANDLER = NBTCodec
 					.builder(CustomClickEvent.class)
 					.include(ClickEvent.NBT_HANDLER)
 					.namespacedKey("id", CustomClickEvent::getID, CustomClickEvent::setID)
@@ -38,7 +38,7 @@ public final class CustomClickEvent implements ClickEvent {
 	}
 	
 	@Override
-	public NBTSerializationHandler<? extends CustomClickEvent> getNBTHandler() {
+	public NBTCodec<? extends CustomClickEvent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

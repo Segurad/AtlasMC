@@ -3,12 +3,12 @@ package de.atlasmc.node.inventory.component.effect;
 import de.atlasmc.node.potion.PotionEffectType;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.util.dataset.DataSet;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface RemoveEffects extends ComponentEffect {
 	
-	public static final NBTSerializationHandler<RemoveEffects>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<RemoveEffects>
+	NBT_HANDLER = NBTCodec
 					.builder(RemoveEffects.class)
 					.include(ComponentEffect.NBT_HANDLER)
 					.dataSetField("effects", RemoveEffects::getEffects, RemoveEffects::setEffects, Registries.getRegistry(PotionEffectType.class))
@@ -23,7 +23,7 @@ public interface RemoveEffects extends ComponentEffect {
 	RemoveEffects clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends ComponentEffect> getNBTHandler() {
+	default NBTCodec<? extends ComponentEffect> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

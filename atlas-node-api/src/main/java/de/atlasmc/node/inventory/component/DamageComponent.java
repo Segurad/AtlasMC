@@ -1,11 +1,11 @@
 package de.atlasmc.node.inventory.component;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface DamageComponent extends ItemComponent {
 	
-	public static NBTSerializationHandler<DamageComponent> 
-	NBT_HANDLER = NBTSerializationHandler
+	public static NBTCodec<DamageComponent> 
+	NBT_HANDLER = NBTCodec
 			.builder(DamageComponent.class)
 			.include(ItemComponent.NBT_HANDLER)
 			.intField(ComponentType.DAMAGE.getNamespacedKey(), DamageComponent::getDamage, DamageComponent::setDamage)
@@ -18,7 +18,7 @@ public interface DamageComponent extends ItemComponent {
 	DamageComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<DamageComponent> getNBTHandler() {
+	default NBTCodec<DamageComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

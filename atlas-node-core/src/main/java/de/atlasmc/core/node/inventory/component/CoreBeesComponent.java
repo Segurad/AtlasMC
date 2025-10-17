@@ -11,12 +11,12 @@ import de.atlasmc.node.entity.Bee;
 import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.BeesComponent;
 import de.atlasmc.node.inventory.component.ComponentType;
+import de.atlasmc.util.codec.CodecContext;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 import io.netty.buffer.ByteBuf;
 
 public class CoreBeesComponent extends AbstractItemComponent implements BeesComponent {
@@ -84,7 +84,7 @@ public class CoreBeesComponent extends AbstractItemComponent implements BeesComp
 		bees.clear();
 		NBTReader reader = new NBTNIOReader(buf, true);
 		for (int i = 0; i < count; i++) {
-			NBTSerializationHandler<? extends Bee> handler = Bee.NBT_HANDLER;
+			NBTCodec<? extends Bee> handler = Bee.NBT_HANDLER;
 			Bee bee = handler.deserialize(reader);
 			int ticksInHive = readVarInt(buf);
 			int minTicksInHive = readVarInt(buf);
@@ -106,7 +106,7 @@ public class CoreBeesComponent extends AbstractItemComponent implements BeesComp
 		for (int i = 0; i < count; i++) {
 			writer.writeCompoundTag();
 			Occupant occupant = bees.get(i);
-			occupant.writeToNBT(writer, NBTSerializationContext.DEFAULT_CLIENT);
+			occupant.writeToNBT(writer, CodecContext.DEFAULT_CLIENT);
 			writer.writeEndTag();
 			writeVarInt(occupant.getTicksInHive(), buf);
 			writeVarInt(occupant.getMinTicksInHive(), buf);

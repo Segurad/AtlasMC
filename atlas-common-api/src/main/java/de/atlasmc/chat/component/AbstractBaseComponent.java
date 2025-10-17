@@ -12,8 +12,8 @@ import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.event.click.ClickEvent;
 import de.atlasmc.chat.component.event.hover.HoverEvent;
 import de.atlasmc.util.nbt.NBTException;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 import de.atlasmc.util.nbt.io.SNBTWriter;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 
 public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> implements ChatComponent {
 	
@@ -186,7 +186,7 @@ public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> 
 		try {
 			writer.writeCompoundTag();
 			@SuppressWarnings("unchecked")
-			NBTSerializationHandler<ChatComponent> handler = (NBTSerializationHandler<ChatComponent>) getNBTHandler();
+			NBTCodec<ChatComponent> handler = (NBTCodec<ChatComponent>) getNBTCodec();
 			handler.serialize(this, writer);
 			writer.writeEndTag();
 		} catch (IOException e) {

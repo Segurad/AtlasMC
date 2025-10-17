@@ -3,12 +3,12 @@ package de.atlasmc.node.inventory.component;
 import java.util.List;
 
 import de.atlasmc.util.annotation.NotNull;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface WritableBookContentComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<WritableBookContentComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<WritableBookContentComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(WritableBookContentComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.beginComponent(ComponentType.WRITABLE_BOOK_CONTENT.getNamespacedKey())
@@ -38,7 +38,7 @@ public interface WritableBookContentComponent extends ItemComponent {
 	WritableBookContentComponent clone();
 
 	@Override
-	default NBTSerializationHandler<? extends WritableBookContentComponent> getNBTHandler() {
+	default NBTCodec<? extends WritableBookContentComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

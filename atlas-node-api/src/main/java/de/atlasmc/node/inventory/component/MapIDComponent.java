@@ -1,11 +1,11 @@
 package de.atlasmc.node.inventory.component;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface MapIDComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<MapIDComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<MapIDComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(MapIDComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.intField(ComponentType.MAP_ID.getNamespacedKey(), MapIDComponent::getMapID, MapIDComponent::setMapID)
@@ -18,7 +18,7 @@ public interface MapIDComponent extends ItemComponent {
 	MapIDComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends MapIDComponent> getNBTHandler() {
+	default NBTCodec<? extends MapIDComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

@@ -5,12 +5,12 @@ import java.util.UUID;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Fox extends Animal {
 	
-	public static final NBTSerializationHandler<Fox>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Fox>
+	NBT_HANDLER = NBTCodec
 					.builder(Fox.class)
 					.include(Animal.NBT_HANDLER)
 					.boolField("Crouching", Fox::isCrouching, Fox::setCrouching, false)
@@ -76,7 +76,7 @@ public interface Fox extends Animal {
 	boolean removeTrusted(UUID trusted);
 	
 	@Override
-	default NBTSerializationHandler<? extends Fox> getNBTHandler() {
+	default NBTCodec<? extends Fox> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

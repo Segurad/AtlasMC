@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface MinecartFurnace extends AbstractMinecart {
 	
-	public static final NBTSerializationHandler<MinecartFurnace>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<MinecartFurnace>
+	NBT_HANDLER = NBTCodec
 					.builder(MinecartFurnace.class)
 					.include(AbstractMinecart.NBT_HANDLER)
 					.shortField("Fuel", MinecartFurnace::getFuelLevel, MinecartFurnace::setFuelLevel)

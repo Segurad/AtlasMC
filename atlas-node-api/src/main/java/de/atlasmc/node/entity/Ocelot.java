@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Ocelot extends Animal {
 	
-	public static final NBTSerializationHandler<Ocelot>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Ocelot>
+	NBT_HANDLER = NBTCodec
 					.builder(Ocelot.class)
 					.include(Animal.NBT_HANDLER)
 					.boolField("Trusting", Ocelot::isTrusting, Ocelot::setTrusting, false)
@@ -16,7 +16,7 @@ public interface Ocelot extends Animal {
 	void setTrusting(boolean trusting);
 
 	@Override
-	default NBTSerializationHandler<? extends AgeableMob> getNBTHandler() {
+	default NBTCodec<? extends AgeableMob> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

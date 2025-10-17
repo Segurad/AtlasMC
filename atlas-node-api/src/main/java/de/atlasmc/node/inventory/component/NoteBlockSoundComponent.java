@@ -1,12 +1,12 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.node.sound.EnumSound;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface NoteBlockSoundComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<NoteBlockSoundComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<NoteBlockSoundComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(NoteBlockSoundComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.enumStringField(ComponentType.NOTE_BLOCK_SOUND.getNamespacedKey(), NoteBlockSoundComponent::getSound, NoteBlockSoundComponent::setSound, EnumSound.class, null)
@@ -19,7 +19,7 @@ public interface NoteBlockSoundComponent extends ItemComponent {
 	NoteBlockSoundComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends NoteBlockSoundComponent> getNBTHandler() {
+	default NBTCodec<? extends NoteBlockSoundComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

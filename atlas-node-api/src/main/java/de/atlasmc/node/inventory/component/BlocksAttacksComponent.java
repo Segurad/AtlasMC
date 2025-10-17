@@ -8,13 +8,13 @@ import de.atlasmc.node.sound.Sound;
 import de.atlasmc.tag.TagKey;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface BlocksAttacksComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<BlocksAttacksComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<BlocksAttacksComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(BlocksAttacksComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.beginComponent(ComponentType.BLOCKS_ATTACKS.getNamespacedKey())
@@ -62,14 +62,14 @@ public interface BlocksAttacksComponent extends ItemComponent {
 	void setBypassedBy(@Nullable TagKey<DamageType> types);
 	
 	@Override
-	default NBTSerializationHandler<? extends ItemComponent> getNBTHandler() {
+	default NBTCodec<? extends ItemComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	
 	public static class ItemDamage implements NBTSerializable {
 		
-		public static final NBTSerializationHandler<ItemDamage>
-		NBT_HANDLER = NBTSerializationHandler
+		public static final NBTCodec<ItemDamage>
+		NBT_HANDLER = NBTCodec
 						.builder(ItemDamage.class)
 						.setRedirectAfterConstruction(false)
 						.floatField("threshold", ItemDamage::getThreashold, ItemDamage::setThreashold, 0)
@@ -106,7 +106,7 @@ public interface BlocksAttacksComponent extends ItemComponent {
 		}
 
 		@Override
-		public NBTSerializationHandler<? extends NBTSerializable> getNBTHandler() {
+		public NBTCodec<? extends NBTSerializable> getNBTCodec() {
 			return NBT_HANDLER;
 		}
 		

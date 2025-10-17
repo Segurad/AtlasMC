@@ -18,13 +18,13 @@ import de.atlasmc.tick.Tickable;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.annotation.ThreadSafe;
 import de.atlasmc.util.annotation.UnsafeAPI;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitter {
 	
-	public static final NBTSerializationHandler<Entity>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Entity>
+	NBT_HANDLER = NBTCodec
 					.builder(Entity.class)
 					.searchKeyConstructor("id", EntityType.REGISTRY_KEY, EntityType::createEntity, Entity::getType)
 					.shortField("Air", Entity::getAirTicks, Entity::setAirTicks, (short) 300)
@@ -257,7 +257,7 @@ public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitte
 	boolean isTicking();
 	
 	@Override
-	default NBTSerializationHandler<? extends Entity> getNBTHandler() {
+	default NBTCodec<? extends Entity> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

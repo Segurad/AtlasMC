@@ -5,12 +5,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
+import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.function.ToBooleanFunction;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.codec.type.AbstractCollectionField;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
-import de.atlasmc.util.nbt.serialization.fields.AbstractCollectionField;
 
 final class BlockDataPropertiesMapField<T> extends AbstractCollectionField<T, Map<BlockDataProperty<?>, Object>> {
 
@@ -19,7 +19,7 @@ final class BlockDataPropertiesMapField<T> extends AbstractCollectionField<T, Ma
 	}
 
 	@Override
-	public boolean serialize(T value, NBTWriter writer, NBTSerializationContext context) throws IOException {
+	public boolean serialize(T value, NBTWriter writer, CodecContext context) throws IOException {
 		if (has != null && !has.applyAsBoolean(value))
 			return true;
 		final Map<BlockDataProperty<?>, Object> map = get.apply(value);
@@ -36,7 +36,7 @@ final class BlockDataPropertiesMapField<T> extends AbstractCollectionField<T, Ma
 	}
 
 	@Override
-	public void deserialize(T value, NBTReader reader, NBTSerializationContext context) throws IOException {
+	public void deserialize(T value, NBTReader reader, CodecContext context) throws IOException {
 		final Map<BlockDataProperty<?>, Object> properties = get.apply(value);
 		reader.readNextEntry();
 		while (reader.getType() != TagType.TAG_END) {

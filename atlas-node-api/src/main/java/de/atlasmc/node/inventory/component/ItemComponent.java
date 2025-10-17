@@ -3,13 +3,13 @@ package de.atlasmc.node.inventory.component;
 import de.atlasmc.io.IOReadable;
 import de.atlasmc.io.IOWriteable;
 import de.atlasmc.util.annotation.NotNull;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ItemComponent extends NBTSerializable, Cloneable, IOReadable, IOWriteable {
 	
-	public static final NBTSerializationHandler<ItemComponent> 
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ItemComponent> 
+	NBT_HANDLER = NBTCodec
 					.builder(ItemComponent.class)
 					.fieldKeyConstructor(ComponentType.REGISTRY_KEY, ComponentType::createItemComponent)
 					.build();
@@ -24,7 +24,7 @@ public interface ItemComponent extends NBTSerializable, Cloneable, IOReadable, I
 	ItemComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends ItemComponent> getNBTHandler() {
+	default NBTCodec<? extends ItemComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

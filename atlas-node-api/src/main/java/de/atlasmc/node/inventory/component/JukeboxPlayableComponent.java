@@ -1,12 +1,12 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface JukeboxPlayableComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<JukeboxPlayableComponent> 
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<JukeboxPlayableComponent> 
+	NBT_HANDLER = NBTCodec
 					.builder(JukeboxPlayableComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.namespacedKey(ComponentType.JUKEBOX_PLAYABLE.getNamespacedKey(), JukeboxPlayableComponent::getSong, JukeboxPlayableComponent::setSong)
@@ -17,7 +17,7 @@ public interface JukeboxPlayableComponent extends ItemComponent {
 	void setSong(NamespacedKey song);
 	
 	@Override
-	default NBTSerializationHandler<JukeboxPlayableComponent> getNBTHandler() {
+	default NBTCodec<JukeboxPlayableComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

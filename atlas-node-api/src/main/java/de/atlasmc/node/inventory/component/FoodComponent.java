@@ -1,11 +1,11 @@
 package de.atlasmc.node.inventory.component;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface FoodComponent extends ItemComponent {
 
-	public static final NBTSerializationHandler<FoodComponent> 
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<FoodComponent> 
+	NBT_HANDLER = NBTCodec
 					.builder(FoodComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.beginComponent(ComponentType.FOOD.getNamespacedKey())
@@ -30,7 +30,7 @@ public interface FoodComponent extends ItemComponent {
 	FoodComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<FoodComponent> getNBTHandler() {
+	default NBTCodec<FoodComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

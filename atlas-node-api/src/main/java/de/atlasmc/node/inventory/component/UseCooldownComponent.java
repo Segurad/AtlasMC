@@ -1,12 +1,12 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface UseCooldownComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<UseCooldownComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<UseCooldownComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(UseCooldownComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.beginComponent(ComponentType.USE_COOLDOWN.getNamespacedKey())
@@ -27,7 +27,7 @@ public interface UseCooldownComponent extends ItemComponent {
 	UseCooldownComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends ItemComponent> getNBTHandler() {
+	default NBTCodec<? extends ItemComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

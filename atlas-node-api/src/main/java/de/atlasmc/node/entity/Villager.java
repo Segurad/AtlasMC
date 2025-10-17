@@ -1,12 +1,12 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.node.inventory.PocketHolder;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Villager extends AbstractVillager, Breedable, PocketHolder {
 	
-	public static final NBTSerializationHandler<Villager>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Villager>
+	NBT_HANDLER = NBTCodec
 					.builder(Villager.class)
 					.include(Breedable.NBT_HANDLER)
 					.include(AbstractVillager.NBT_HANDLER)

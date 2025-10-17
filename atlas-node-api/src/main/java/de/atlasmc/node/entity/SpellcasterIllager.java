@@ -2,12 +2,12 @@ package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface SpellcasterIllager extends AbstractIllager {
 	
-	public static final NBTSerializationHandler<SpellcasterIllager>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<SpellcasterIllager>
+	NBT_HANDLER = NBTCodec
 					.builder(SpellcasterIllager.class)
 					.include(AbstractIllager.NBT_HANDLER)
 					.intField("SpellTicks", SpellcasterIllager::getSpellcastTime, SpellcasterIllager::setSpellcastTime, 0)
@@ -27,7 +27,7 @@ public interface SpellcasterIllager extends AbstractIllager {
 	int getSpellcastTime();
 	
 	@Override
-	default NBTSerializationHandler<? extends SpellcasterIllager> getNBTHandler() {
+	default NBTCodec<? extends SpellcasterIllager> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

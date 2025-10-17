@@ -2,13 +2,13 @@ package de.atlasmc.node.entity;
 
 import java.util.UUID;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Interaction extends Entity {
 	
-	public static final NBTSerializationHandler<Interaction>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Interaction>
+	NBT_HANDLER = NBTCodec
 					.builder(Interaction.class)
 					.include(Entity.NBT_HANDLER)
 					.floatField("width", Interaction::getWidth, Interaction::setWidth, 1)
@@ -39,14 +39,14 @@ public interface Interaction extends Entity {
 	void setLastInteraction(PreviousInteraction interaction);
 	
 	@Override
-	default NBTSerializationHandler<? extends Interaction> getNBTHandler() {
+	default NBTCodec<? extends Interaction> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	
 	public static class PreviousInteraction implements NBTSerializable {
 		
-		public static final NBTSerializationHandler<PreviousInteraction>
-		NBT_HANDLER = NBTSerializationHandler
+		public static final NBTCodec<PreviousInteraction>
+		NBT_HANDLER = NBTCodec
 						.builder(PreviousInteraction.class)
 						.defaultConstructor(PreviousInteraction::new)
 						.uuid("player", PreviousInteraction::getUUID, PreviousInteraction::setUUID)
@@ -82,7 +82,7 @@ public interface Interaction extends Entity {
 		}
 		
 		@Override
-		public NBTSerializationHandler<? extends NBTSerializable> getNBTHandler() {
+		public NBTCodec<? extends NBTSerializable> getNBTCodec() {
 			return NBT_HANDLER;
 		}
 		

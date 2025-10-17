@@ -3,13 +3,13 @@ package de.atlasmc.dialog;
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.registry.Registries;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Dialog extends NBTSerializable, Namespaced {
 	
-	static final NBTSerializationHandler<Dialog>
-	NBT_HANDLER = NBTSerializationHandler
+	static final NBTCodec<Dialog>
+	NBT_HANDLER = NBTCodec
 					.builder(Dialog.class)
 					.searchKeyConstructor("type", Registries.getRegistry(DialogType.class), DialogType::createDialog, Dialog::getType)
 					.build();

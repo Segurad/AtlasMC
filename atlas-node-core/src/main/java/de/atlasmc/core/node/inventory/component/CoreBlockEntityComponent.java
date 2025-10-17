@@ -6,11 +6,11 @@ import de.atlasmc.node.block.tile.TileEntity;
 import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.BlockEntityComponent;
 import de.atlasmc.node.inventory.component.ComponentType;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 import io.netty.buffer.ByteBuf;
 
 public class CoreBlockEntityComponent extends AbstractItemComponent implements BlockEntityComponent {
@@ -56,7 +56,7 @@ public class CoreBlockEntityComponent extends AbstractItemComponent implements B
 		writer.writeCompoundTag(null);
 		if (tile != null) {
 			@SuppressWarnings("unchecked")
-			NBTSerializationHandler<TileEntity> handler = (NBTSerializationHandler<TileEntity>) tile.getNBTHandler();
+			NBTCodec<TileEntity> handler = (NBTCodec<TileEntity>) tile.getNBTCodec();
 			handler.serialize(tile, writer);
 		}
 		writer.writeEndTag();

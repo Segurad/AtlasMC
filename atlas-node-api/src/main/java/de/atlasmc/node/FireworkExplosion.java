@@ -5,13 +5,13 @@ import java.util.Objects;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class FireworkExplosion implements NBTSerializable {
 	
-	public static final NBTSerializationHandler<FireworkExplosion>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<FireworkExplosion>
+	NBT_HANDLER = NBTCodec
 					.builder(FireworkExplosion.class)
 					.defaultConstructor(FireworkExplosion::new)
 					.enumStringField("shape", FireworkExplosion::getShape, FireworkExplosion::setShape, Shape.class, Shape.SMALL_BALL)
@@ -90,7 +90,7 @@ public class FireworkExplosion implements NBTSerializable {
 	}
 	
 	@Override
-	public NBTSerializationHandler<? extends FireworkExplosion> getNBTHandler() {
+	public NBTCodec<? extends FireworkExplosion> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

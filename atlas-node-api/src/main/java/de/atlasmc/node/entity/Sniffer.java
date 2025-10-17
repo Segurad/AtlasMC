@@ -2,12 +2,12 @@ package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Sniffer extends Animal {
 	
-	public static final NBTSerializationHandler<Sniffer>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Sniffer>
+	NBT_HANDLER = NBTCodec
 					.builder(Sniffer.class)
 					.include(Animal.NBT_HANDLER)
 					.enumStringField("SnifferState", Sniffer::getState, Sniffer::setState, State.class, State.IDLING) // non standard
@@ -22,7 +22,7 @@ public interface Sniffer extends Animal {
 	void setDropSeedAtTick(int tick);
 	
 	@Override
-	default NBTSerializationHandler<? extends Sniffer> getNBTHandler() {
+	default NBTCodec<? extends Sniffer> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

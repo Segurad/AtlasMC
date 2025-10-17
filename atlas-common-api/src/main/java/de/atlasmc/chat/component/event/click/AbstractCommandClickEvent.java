@@ -1,11 +1,11 @@
 package de.atlasmc.chat.component.event.click;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public abstract class AbstractCommandClickEvent implements ClickEvent {
 	
-	public static final NBTSerializationHandler<AbstractCommandClickEvent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<AbstractCommandClickEvent>
+	NBT_HANDLER = NBTCodec
 					.builder(AbstractCommandClickEvent.class)
 					.include(ClickEvent.NBT_HANDLER)
 					.string("command", AbstractCommandClickEvent::getCommand, AbstractCommandClickEvent::setCommand)
@@ -24,7 +24,7 @@ public abstract class AbstractCommandClickEvent implements ClickEvent {
 	}
 	
 	@Override
-	public NBTSerializationHandler<? extends AbstractCommandClickEvent> getNBTHandler() {
+	public NBTCodec<? extends AbstractCommandClickEvent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

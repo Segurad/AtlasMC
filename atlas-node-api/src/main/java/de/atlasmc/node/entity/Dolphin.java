@@ -2,12 +2,12 @@ package de.atlasmc.node.entity;
 
 import org.joml.Vector3i;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Dolphin extends WaterAnimal {
 	
-	public static final NBTSerializationHandler<Dolphin>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Dolphin>
+	NBT_HANDLER = NBTCodec
 					.builder(Dolphin.class)
 					.include(WaterAnimal.NBT_HANDLER)
 					.intField("Moistness", Dolphin::getMoistureLevel, Dolphin::setMoistureLevel, 2400)
@@ -37,7 +37,7 @@ public interface Dolphin extends WaterAnimal {
 	int getMaxMoistureLevel();
 	
 	@Override
-	default NBTSerializationHandler<? extends LivingEntity> getNBTHandler() {
+	default NBTCodec<? extends LivingEntity> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

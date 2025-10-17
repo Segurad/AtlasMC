@@ -5,12 +5,12 @@ import java.util.UUID;
 import de.atlasmc.node.entity.LivingEntity;
 import de.atlasmc.node.potion.PotionEffect;
 import de.atlasmc.node.potion.PotionEffectType;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public abstract class CoreAbstractPotionEffect implements PotionEffect {
 	
-	public static final NBTSerializationHandler<CoreAbstractPotionEffect>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<CoreAbstractPotionEffect>
+	NBT_HANDLER = NBTCodec
 					.builder(CoreAbstractPotionEffect.class)
 					.include(PotionEffect.NBT_HANDLER)
 					.byteField("amplifier", CoreAbstractPotionEffect::getAmplifier, CoreAbstractPotionEffect::setAmplifier, (byte) 0)

@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Chicken extends Animal {
 	
-	public static final NBTSerializationHandler<Chicken>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Chicken>
+	NBT_HANDLER = NBTCodec
 					.builder(Chicken.class)
 					.include(Animal.NBT_HANDLER)
 					.intField("EggLayTime", Chicken::getEggLayTime, Chicken::setEggLayTime, -1)

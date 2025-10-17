@@ -1,11 +1,11 @@
 package de.atlasmc.node.inventory.component;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface GliderComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<GliderComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<GliderComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(GliderComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.beginComponent(ComponentType.GLIDER.getNamespacedKey())
@@ -15,7 +15,7 @@ public interface GliderComponent extends ItemComponent {
 	GliderComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends GliderComponent> getNBTHandler() {
+	default NBTCodec<? extends GliderComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

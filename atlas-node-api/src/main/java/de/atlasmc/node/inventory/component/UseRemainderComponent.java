@@ -1,12 +1,12 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface UseRemainderComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<UseRemainderComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<UseRemainderComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(UseRemainderComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.typeCompoundField(ComponentType.USE_REMAINDER.getNamespacedKey(), UseRemainderComponent::getItem, UseRemainderComponent::setItem, ItemStack.NBT_HANDLER)
@@ -19,7 +19,7 @@ public interface UseRemainderComponent extends ItemComponent {
 	UseRemainderComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends UseRemainderComponent> getNBTHandler() {
+	default NBTCodec<? extends UseRemainderComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

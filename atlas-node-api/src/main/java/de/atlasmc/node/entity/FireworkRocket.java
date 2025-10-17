@@ -2,12 +2,12 @@ package de.atlasmc.node.entity;
 
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.inventory.component.FireworksComponent;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface FireworkRocket extends Projectile {
 	
-	public static final NBTSerializationHandler<FireworkRocket>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<FireworkRocket>
+	NBT_HANDLER = NBTCodec
 					.builder(FireworkRocket.class)
 					.include(Projectile.NBT_HANDLER)
 					.typeCompoundField("FireworkItem", FireworkRocket::getFirework, FireworkRocket::setFirework, ItemStack.NBT_HANDLER)
@@ -48,7 +48,7 @@ public interface FireworkRocket extends Projectile {
 	int getMaxLifeTime();
 	
 	@Override
-	default NBTSerializationHandler<? extends FireworkRocket> getNBTHandler() {
+	default NBTCodec<? extends FireworkRocket> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

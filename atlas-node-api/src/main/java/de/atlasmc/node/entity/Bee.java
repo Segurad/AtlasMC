@@ -3,12 +3,12 @@ package de.atlasmc.node.entity;
 import org.joml.Vector3i;
 
 import de.atlasmc.util.annotation.UnsafeAPI;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Bee extends Animal, AngerableMob {
 
-	public static final NBTSerializationHandler<Bee>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Bee>
+	NBT_HANDLER = NBTCodec
 					.builder(Bee.class)
 					.include(Animal.NBT_HANDLER)
 					.include(AngerableMob.NBT_HANDLER)
@@ -64,7 +64,7 @@ public interface Bee extends Animal, AngerableMob {
 	int getCropsGrownSincePollination();
 	
 	@Override
-	default NBTSerializationHandler<? extends Bee> getNBTHandler() {
+	default NBTCodec<? extends Bee> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

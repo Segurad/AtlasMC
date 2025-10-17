@@ -6,12 +6,12 @@ import de.atlasmc.node.entity.LivingEntity;
 import de.atlasmc.util.annotation.InternalAPI;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface PotionEffect extends Cloneable {
 	
-	public static final NBTSerializationHandler<PotionEffect>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<PotionEffect>
+	NBT_HANDLER = NBTCodec
 					.builder(PotionEffect.class)
 					.searchKeyConstructor("id", PotionEffectType.REGISTRY_KEY, PotionEffectType::createEffect, PotionEffect::getType)
 					.build();

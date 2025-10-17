@@ -4,12 +4,12 @@ import java.util.Collection;
 import java.util.List;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.util.annotation.NotNull;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface LoreComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<LoreComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<LoreComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(LoreComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.chatList(ComponentType.LORE.getNamespacedKey(), LoreComponent::hasLore, LoreComponent::getLore, true)
@@ -45,7 +45,7 @@ public interface LoreComponent extends ItemComponent {
 	}
 	
 	@Override
-	default NBTSerializationHandler<? extends LoreComponent> getNBTHandler() {
+	default NBTCodec<? extends LoreComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

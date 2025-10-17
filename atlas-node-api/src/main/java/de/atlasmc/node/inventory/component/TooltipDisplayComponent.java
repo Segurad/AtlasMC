@@ -2,12 +2,12 @@ package de.atlasmc.node.inventory.component;
 
 import java.util.List;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface TooltipDisplayComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<TooltipDisplayComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<TooltipDisplayComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(TooltipDisplayComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.beginComponent(ComponentType.TOOLTIP_DISPLAY.getNamespacedKey())
@@ -27,7 +27,7 @@ public interface TooltipDisplayComponent extends ItemComponent {
 	TooltipDisplayComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends TooltipDisplayComponent> getNBTHandler() {
+	default NBTCodec<? extends TooltipDisplayComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

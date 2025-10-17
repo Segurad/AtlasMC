@@ -2,8 +2,8 @@ package de.atlasmc.node.sound;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class ResourceSound implements Sound, NBTSerializable {
 
@@ -11,8 +11,8 @@ public class ResourceSound implements Sound, NBTSerializable {
 	NBT_SOUND_ID = CharKey.literal("sound_id"),
 	NBT_RANGE = CharKey.literal("range");
 	
-	public static final NBTSerializationHandler<ResourceSound>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ResourceSound>
+	NBT_HANDLER = NBTCodec
 					.builder(ResourceSound.class)
 					.defaultConstructor(ResourceSound::new)
 					.namespacedKey("sound_id", ResourceSound::getNamespacedKey, ResourceSound::setNamespacedKey)
@@ -55,7 +55,7 @@ public class ResourceSound implements Sound, NBTSerializable {
 	}
 	
 	@Override
-	public NBTSerializationHandler<? extends ResourceSound> getNBTHandler() {
+	public NBTCodec<? extends ResourceSound> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

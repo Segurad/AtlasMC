@@ -7,12 +7,12 @@ import de.atlasmc.Color;
 import de.atlasmc.node.potion.PotionData;
 import de.atlasmc.node.potion.PotionEffect;
 import de.atlasmc.node.world.particle.Particle;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface AreaEffectCloud extends Entity {
 	
-	public static final NBTSerializationHandler<AreaEffectCloud>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<AreaEffectCloud>
+	NBT_HANDLER = NBTCodec
 					.builder(AreaEffectCloud.class)
 					.include(Entity.NBT_HANDLER)
 					.intField("Age", AreaEffectCloud::getAge, AreaEffectCloud::setAge, 0)
@@ -120,7 +120,7 @@ public interface AreaEffectCloud extends Entity {
 	int getInactiveTime();
 	
 	@Override
-	default NBTSerializationHandler<? extends AreaEffectCloud> getNBTHandler() {
+	default NBTCodec<? extends AreaEffectCloud> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

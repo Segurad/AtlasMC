@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface SkeletonHorse extends AbstractHorse {
 
-	public static final NBTSerializationHandler<SkeletonHorse>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<SkeletonHorse>
+	NBT_HANDLER = NBTCodec
 					.builder(SkeletonHorse.class)
 					.include(AbstractHorse.NBT_HANDLER)
 					.boolField("SkeletonTrap", SkeletonHorse::isSkeletonTrap, SkeletonHorse::setSkeletonTrap, false)
@@ -21,7 +21,7 @@ public interface SkeletonHorse extends AbstractHorse {
 	void setSkeletonTrapTime(int time);
 	
 	@Override
-	default NBTSerializationHandler<? extends SkeletonHorse> getNBTHandler() {
+	default NBTCodec<? extends SkeletonHorse> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

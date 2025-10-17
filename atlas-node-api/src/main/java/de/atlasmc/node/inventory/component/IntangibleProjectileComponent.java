@@ -1,11 +1,11 @@
 package de.atlasmc.node.inventory.component;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface IntangibleProjectileComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<IntangibleProjectileComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<IntangibleProjectileComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(IntangibleProjectileComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.beginComponent(ComponentType.INTANGIBLE_PROJECTILE.getNamespacedKey())
@@ -15,7 +15,7 @@ public interface IntangibleProjectileComponent extends ItemComponent {
 	IntangibleProjectileComponent clone();
 
 	@Override
-	default NBTSerializationHandler<? extends ItemComponent> getNBTHandler() {
+	default NBTCodec<? extends ItemComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

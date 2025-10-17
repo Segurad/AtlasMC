@@ -2,12 +2,12 @@ package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Panda extends Animal {
 	
-	public static final NBTSerializationHandler<Panda>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Panda>
+	NBT_HANDLER = NBTCodec
 					.builder(Panda.class)
 					.include(Animal.NBT_HANDLER)
 					.enumStringField("HiddenGene", Panda::getHiddenGene, Panda::setHiddenGene, Gene.class, Gene.NORMAL)
@@ -56,7 +56,7 @@ public interface Panda extends Animal {
 	void setOnBack(boolean onback);
 	
 	@Override
-	default NBTSerializationHandler<? extends Panda> getNBTHandler() {
+	default NBTCodec<? extends Panda> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

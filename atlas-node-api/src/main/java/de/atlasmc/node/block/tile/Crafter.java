@@ -2,13 +2,13 @@ package de.atlasmc.node.block.tile;
 
 import de.atlasmc.node.inventory.Inventory;
 import de.atlasmc.node.inventory.loot.LootTableHolder;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 import it.unimi.dsi.fastutil.ints.IntSet;
 
 public interface Crafter extends AbstractContainerTile<Inventory>, LootTableHolder {
 	
-	public static final NBTSerializationHandler<Crafter>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Crafter>
+	NBT_HANDLER = NBTCodec
 					.builder(Crafter.class)
 					.include(AbstractContainerTile.NBT_HANDLER)
 					.include(LootTableHolder.NBT_HANDLER)
@@ -34,7 +34,7 @@ public interface Crafter extends AbstractContainerTile<Inventory>, LootTableHold
 	void setTriggered(boolean triggered);
 	
 	@Override
-	default NBTSerializationHandler<? extends Crafter> getNBTHandler() {
+	default NBTCodec<? extends Crafter> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

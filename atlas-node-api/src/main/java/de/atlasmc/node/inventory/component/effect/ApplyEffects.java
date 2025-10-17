@@ -3,12 +3,12 @@ package de.atlasmc.node.inventory.component.effect;
 import java.util.List;
 
 import de.atlasmc.node.potion.PotionEffect;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ApplyEffects extends ComponentEffect {
 	
-	public static final NBTSerializationHandler<ApplyEffects>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ApplyEffects>
+	NBT_HANDLER = NBTCodec
 					.builder(ApplyEffects.class)
 					.include(ComponentEffect.NBT_HANDLER)
 					.typeList("effects", ApplyEffects::hasEffects, ApplyEffects::getEffects, PotionEffect.NBT_HANDLER)
@@ -30,7 +30,7 @@ public interface ApplyEffects extends ComponentEffect {
 	ApplyEffects clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends ApplyEffects> getNBTHandler() {
+	default NBTCodec<? extends ApplyEffects> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

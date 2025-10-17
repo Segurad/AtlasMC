@@ -4,12 +4,12 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Pig extends Animal {
 	
-	public static final NBTSerializationHandler<Pig>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Pig>
+	NBT_HANDLER = NBTCodec
 					.builder(Pig.class)
 					.include(Animal.NBT_HANDLER)
 					.boolField("HasSaddle", Pig::hasSaddle, Pig::setSaddle, false)
@@ -32,8 +32,8 @@ public interface Pig extends Animal {
 	@RegistryHolder(key = "minecraft:pig_variant", target = Target.PROTOCOL)
 	public static class PigVariant extends EntityVariant {
 		
-		public static final NBTSerializationHandler<PigVariant>
-		NBT_HANDLER = NBTSerializationHandler
+		public static final NBTCodec<PigVariant>
+		NBT_HANDLER = NBTCodec
 						.builder(PigVariant.class)
 						.defaultConstructor(PigVariant::new)
 						.include(PigVariant.NBT_HANDLER)
@@ -73,7 +73,7 @@ public interface Pig extends Animal {
 		}
 		
 		@Override
-		public NBTSerializationHandler<? extends PigVariant> getNBTHandler() {
+		public NBTCodec<? extends PigVariant> getNBTCodec() {
 			return NBT_HANDLER;
 		}
 		

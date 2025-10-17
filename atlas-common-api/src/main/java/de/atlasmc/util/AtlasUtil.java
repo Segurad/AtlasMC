@@ -1,5 +1,7 @@
 package de.atlasmc.util;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
 
@@ -121,6 +123,24 @@ public class AtlasUtil {
 		T removed = list.set(index, list.get(last));
 		list.set(last, null);
 		return removed != null;
+	}
+	
+	public static <T> T getSingleton(Class<T> clazz) {
+		Method m;
+		try {
+			m = clazz.getDeclaredMethod("getInstance");
+		} catch (NoSuchMethodException | SecurityException e) {
+			throw new IllegalArgumentException("Error while fetching getInstance method!", e);
+		}
+		try {
+			@SuppressWarnings("unchecked")
+			T instance = (T) m.invoke(null);
+			if (instance == null)
+				throw new IllegalStateException("Singleton was null for type: " + clazz);
+			return instance;
+		} catch (ClassCastException | IllegalAccessException | InvocationTargetException e) {
+			throw new IllegalArgumentException("Error while fetching instance!", e);
+		}
 	}
 
 }

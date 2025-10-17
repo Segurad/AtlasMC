@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Ghast extends Monster {
 	
-	public static final NBTSerializationHandler<Ghast>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Ghast>
+	NBT_HANDLER = NBTCodec
 					.builder(Ghast.class)
 					.include(Ghast.NBT_HANDLER)
 					.byteField("ExplosionPower", Ghast::getExplosionPower, Ghast::setExplosionPower, (byte) 1)
@@ -25,7 +25,7 @@ public interface Ghast extends Monster {
 	int getExplosionPower();
 	
 	@Override
-	default NBTSerializationHandler<? extends Ghast> getNBTHandler() {
+	default NBTCodec<? extends Ghast> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

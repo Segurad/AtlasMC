@@ -4,13 +4,13 @@ import de.atlasmc.IDHolder;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.util.CloneException;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class MapIcon implements Cloneable, NBTSerializable {
 	
-	public static final NBTSerializationHandler<MapIcon>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<MapIcon>
+	NBT_HANDLER = NBTCodec
 					.builder(MapIcon.class)
 					.defaultConstructor(MapIcon::new)
 					.enumStringField("type", MapIcon::getType, MapIcon::setType, IconType.class, IconType.PLAYER)
@@ -97,7 +97,7 @@ public class MapIcon implements Cloneable, NBTSerializable {
 	}
 	
 	@Override
-	public NBTSerializationHandler<? extends MapIcon> getNBTHandler() {
+	public NBTCodec<? extends MapIcon> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

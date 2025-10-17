@@ -1,15 +1,15 @@
 package de.atlasmc.util.annotation;
 
 import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks a class a singleton
+ * Marks a class a singleton.
+ * Types marked with this annotation should contain a static function getInstance()
  */
-@Retention(RUNTIME)
+@Retention(RetentionPolicy.SOURCE)
 @Target(TYPE)
 public @interface Singleton {
 

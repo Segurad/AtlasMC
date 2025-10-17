@@ -1,0 +1,54 @@
+package de.atlasmc.util.nbt.codec.type;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.function.Function;
+
+import de.atlasmc.NamespacedKey;
+import de.atlasmc.util.codec.CodecContext;
+import de.atlasmc.util.function.ToBooleanFunction;
+import de.atlasmc.util.nbt.NBTException;
+import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.io.NBTReader;
+import de.atlasmc.util.nbt.io.NBTWriter;
+
+public class NamespacedKeyListField<T> extends AbstractCollectionField<T, List<NamespacedKey>> {
+
+	public NamespacedKeyListField(CharSequence key, ToBooleanFunction<T> has, Function<T, List<NamespacedKey>> getCollection) {
+		super(key, LIST, has, getCollection, true);
+	}
+
+	@Override
+	public boolean serialize(T value, NBTWriter writer, CodecContext context) throws IOException {
+		if (has != null && !has.applyAsBoolean(value))
+			return true;
+		final List<NamespacedKey> list = get.apply(value);
+		final int size = list.size();
+		if (size == 0)
+			return true;
+		writer.writeListTag(key, TagType.STRING, size);
+		for (int i = 0; i < size; i++) {
+			writer.writeNamespacedKey(null, list.get(i));
+		}
+		return true;
+	}
+
+	@Override
+	public void deserialize(T value, NBTReader reader, CodecContext context) throws IOException {
+		final TagType listType = reader.getListType();
+		if (listType == TagType.TAG_END || reader.getNextPayload() == 0) {
+			reader.readNextEntry();
+			reader.readNextEntry();
+			return;
+		}
+		if (listType != TagType.STRING)
+			throw new NBTException("Expected list of type STRING but was: " + listType);
+		final List<NamespacedKey> list = get.apply(value);
+		reader.readNextEntry();
+		while (reader.getRestPayload() > 0) {
+			list.add(reader.readNamespacedKey());
+		}
+		reader.readNextEntry();
+	}
+
+}

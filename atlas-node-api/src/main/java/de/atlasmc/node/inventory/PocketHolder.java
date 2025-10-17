@@ -3,12 +3,12 @@ package de.atlasmc.node.inventory;
 import java.util.List;
 
 import de.atlasmc.util.annotation.NotNull;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface PocketHolder {
 	
-	public static final NBTSerializationHandler<PocketHolder>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<PocketHolder>
+	NBT_HANDLER = NBTCodec
 					.builder(PocketHolder.class)
 					.typeList("Inventory", PocketHolder::hasPocketItems, PocketHolder::getPocketItems, ItemStack.NBT_HANDLER)
 					.build();

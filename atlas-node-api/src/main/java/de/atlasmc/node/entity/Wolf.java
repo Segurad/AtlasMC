@@ -9,13 +9,13 @@ import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.registry.RegistryKey;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Wolf extends Tameable, AngerableMob {
 	
-	public static final NBTSerializationHandler<Wolf>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Wolf>
+	NBT_HANDLER = NBTCodec
 					.builder(Wolf.class)
 					.include(Tameable.NBT_HANDLER)
 					.include(AngerableMob.NBT_HANDLER)
@@ -37,7 +37,7 @@ public interface Wolf extends Tameable, AngerableMob {
 	void setVariant(WolfVariant variant);
 	
 	@Override
-	default NBTSerializationHandler<? extends Wolf> getNBTHandler() {
+	default NBTCodec<? extends Wolf> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	
@@ -46,8 +46,8 @@ public interface Wolf extends Tameable, AngerableMob {
 
 		public static final RegistryKey<WolfVariant> REGISTRY_KEY = Registries.getRegistryKey(WolfVariant.class);
 		
-		public static final NBTSerializationHandler<WolfVariant>
-		NBT_HANDLER = NBTSerializationHandler
+		public static final NBTCodec<WolfVariant>
+		NBT_HANDLER = NBTCodec
 						.builder(WolfVariant.class)
 						.defaultConstructor(WolfVariant::new)
 						.beginComponent("assets")
@@ -128,7 +128,7 @@ public interface Wolf extends Tameable, AngerableMob {
 		}
 		
 		@Override
-		public NBTSerializationHandler<? extends WolfVariant> getNBTHandler() {
+		public NBTCodec<? extends WolfVariant> getNBTCodec() {
 			return NBT_HANDLER;
 		}
 		

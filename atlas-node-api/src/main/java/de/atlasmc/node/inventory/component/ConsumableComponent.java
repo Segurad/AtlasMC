@@ -7,12 +7,12 @@ import de.atlasmc.node.inventory.component.effect.ComponentEffect;
 import de.atlasmc.node.sound.EnumSound;
 import de.atlasmc.node.sound.Sound;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ConsumableComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<ConsumableComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ConsumableComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(ConsumableComponent.class)
 					.beginComponent(ComponentType.CONSUMABLE.getNamespacedKey())
 					.floatField("consume_seconds", ConsumableComponent::getConsumeSeconds, ConsumableComponent::setConsumeSeconds, 1.6f)

@@ -3,12 +3,12 @@ package de.atlasmc.node.inventory.component;
 import java.util.List;
 
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ChargedProjectilesComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<ChargedProjectilesComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ChargedProjectilesComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(ChargedProjectilesComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.typeList(ComponentType.CHARGED_PROJECTILES.getNamespacedKey(), ChargedProjectilesComponent::hasProjectiles, ChargedProjectilesComponent::getProjectiles, ItemStack.NBT_HANDLER)
@@ -25,7 +25,7 @@ public interface ChargedProjectilesComponent extends ItemComponent {
 	ChargedProjectilesComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends ChargedProjectilesComponent> getNBTHandler() {
+	default NBTCodec<? extends ChargedProjectilesComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

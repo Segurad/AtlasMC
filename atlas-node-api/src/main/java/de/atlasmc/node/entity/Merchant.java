@@ -6,13 +6,13 @@ import de.atlasmc.node.inventory.InventoryHolder;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.inventory.MerchantInventory;
 import de.atlasmc.util.annotation.NotNull;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Merchant extends InventoryHolder {
 
-	public static final NBTSerializationHandler<Merchant>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Merchant>
+	NBT_HANDLER = NBTCodec
 					.builder(Merchant.class)
 					.beginComponent("Offers")
 					.typeList("Recipes", Merchant::hasRecipes, Merchant::getRecipes, MerchantRecipe.NBT_HANDLER)
@@ -50,8 +50,8 @@ public interface Merchant extends InventoryHolder {
 	
 	public static class MerchantRecipe implements Cloneable, NBTSerializable {
 		
-		public static final NBTSerializationHandler<MerchantRecipe>
-		NBT_HANDLER = NBTSerializationHandler
+		public static final NBTCodec<MerchantRecipe>
+		NBT_HANDLER = NBTCodec
 						.builder(MerchantRecipe.class)
 						.defaultConstructor(MerchantRecipe::new)
 						.typeCompoundField("buy", MerchantRecipe::getInputItem1, MerchantRecipe::setInputItem1, ItemStack.NBT_HANDLER)
@@ -188,7 +188,7 @@ public interface Merchant extends InventoryHolder {
 		}
 		
 		@Override
-		public NBTSerializationHandler<? extends MerchantRecipe> getNBTHandler() {
+		public NBTCodec<? extends MerchantRecipe> getNBTCodec() {
 			return NBT_HANDLER;
 		}
 		

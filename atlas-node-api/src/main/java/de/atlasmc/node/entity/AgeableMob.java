@@ -3,12 +3,12 @@ package de.atlasmc.node.entity;
 import java.util.UUID;
 
 import de.atlasmc.node.event.entity.EntityGrowEvent;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface AgeableMob extends Mob {
 	
-	public static final NBTSerializationHandler<AgeableMob>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<AgeableMob>
+	NBT_HANDLER = NBTCodec
 					.builder(AgeableMob.class)
 					.include(LivingEntity.NBT_HANDLER)
 					.intField("Age", AgeableMob::getAge, AgeableMob::setAge, 0)
@@ -62,7 +62,7 @@ public interface AgeableMob extends Mob {
 	UUID getLoveCause();
 	
 	@Override
-	default NBTSerializationHandler<? extends AgeableMob> getNBTHandler() {
+	default NBTCodec<? extends AgeableMob> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

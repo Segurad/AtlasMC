@@ -2,12 +2,12 @@ package de.atlasmc.node.entity;
 
 import org.joml.Vector3i;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface EndCrystal extends Entity {
 	
-	public static final NBTSerializationHandler<EndCrystal>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<EndCrystal>
+	NBT_HANDLER = NBTCodec
 					.builder(EndCrystal.class)
 					.include(Entity.NBT_HANDLER)
 					.vector3i("beam_target", EndCrystal::getBeamTarget, EndCrystal::setBeamTarget)
@@ -31,7 +31,7 @@ public interface EndCrystal extends Entity {
 	void setShowBottom(boolean show);
 	
 	@Override
-	default NBTSerializationHandler<? extends EndCrystal> getNBTHandler() {
+	default NBTCodec<? extends EndCrystal> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

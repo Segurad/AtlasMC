@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Vindicator extends AbstractIllager {
 	
-	public static final NBTSerializationHandler<Vindicator>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Vindicator>
+	NBT_HANDLER = NBTCodec
 					.builder(Vindicator.class)
 					.include(AbstractIllager.NBT_HANDLER)
 					.boolField("Johnny", Vindicator::isJohnny, Vindicator::setJohnny, false)
@@ -16,7 +16,7 @@ public interface Vindicator extends AbstractIllager {
 	boolean isJohnny();
 	
 	@Override
-	default NBTSerializationHandler<? extends Vindicator> getNBTHandler() {
+	default NBTCodec<? extends Vindicator> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

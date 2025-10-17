@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface AngerableMob extends LivingEntity {
 	
-	public static final NBTSerializationHandler<AngerableMob>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<AngerableMob>
+	NBT_HANDLER = NBTCodec
 					.builder(AngerableMob.class)
 					.include(LivingEntity.NBT_HANDLER)
 					.intField("AngerTime", AngerableMob::getAngerTime, AngerableMob::setAngerTime, 0)
@@ -26,7 +26,7 @@ public interface AngerableMob extends LivingEntity {
 	void setAngerTime(int ticks);
 	
 	@Override
-	default NBTSerializationHandler<? extends AngerableMob> getNBTHandler() {
+	default NBTCodec<? extends AngerableMob> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

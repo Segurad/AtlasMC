@@ -2,12 +2,12 @@ package de.atlasmc.node.entity;
 
 import org.joml.Vector3i;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Phantom extends FlyingMob {
 	
-	public static final NBTSerializationHandler<Phantom>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Phantom>
+	NBT_HANDLER = NBTCodec
 					.builder(Phantom.class)
 					.include(FlyingMob.NBT_HANDLER)
 					.intField("size", Phantom::getSize, Phantom::setSize, 0)
@@ -29,7 +29,7 @@ public interface Phantom extends FlyingMob {
 	void setAnchor(Vector3i pos);
 	
 	@Override
-	default NBTSerializationHandler<? extends Phantom> getNBTHandler() {
+	default NBTCodec<? extends Phantom> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

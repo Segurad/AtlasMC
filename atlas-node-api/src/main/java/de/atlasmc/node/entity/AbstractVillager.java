@@ -3,13 +3,13 @@ package de.atlasmc.node.entity;
 import de.atlasmc.IDHolder;
 import de.atlasmc.util.EnumName;
 import de.atlasmc.util.annotation.UnsafeAPI;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface AbstractVillager extends Merchant {
 	
-	public static final NBTSerializationHandler<AbstractVillager>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<AbstractVillager>
+	NBT_HANDLER = NBTCodec
 					.builder(AbstractVillager.class)
 					.include(Merchant.NBT_HANDLER)
 					// Gossip
@@ -44,8 +44,8 @@ public interface AbstractVillager extends Merchant {
 	
 	public static class VillagerData implements NBTSerializable, Cloneable {
 		
-		public static final NBTSerializationHandler<VillagerData>
-		NBT_HANDLER = NBTSerializationHandler
+		public static final NBTCodec<VillagerData>
+		NBT_HANDLER = NBTCodec
 						.builder(VillagerData.class)
 						.defaultConstructor(VillagerData::new)
 						.intField("level", VillagerData::getLevel, VillagerData::setLevel, 1)
@@ -92,7 +92,7 @@ public interface AbstractVillager extends Merchant {
 		}
 		
 		@Override
-		public NBTSerializationHandler<? extends VillagerData> getNBTHandler() {
+		public NBTCodec<? extends VillagerData> getNBTCodec() {
 			return NBT_HANDLER;
 		}
 		

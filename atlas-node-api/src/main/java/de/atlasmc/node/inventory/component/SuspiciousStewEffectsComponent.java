@@ -1,12 +1,12 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.node.potion.PotionEffect;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface SuspiciousStewEffectsComponent extends AbstractPotionEffectComponent {
 	
-	public static final NBTSerializationHandler<SuspiciousStewEffectsComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<SuspiciousStewEffectsComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(SuspiciousStewEffectsComponent.class)
 					.include(AbstractPotionEffectComponent.NBT_HANDLER)
 					.typeList(ComponentType.SUSPICIOUS_STEW_EFFECTS.getNamespacedKey(), SuspiciousStewEffectsComponent::hasEffects, SuspiciousStewEffectsComponent::getEffects, PotionEffect.NBT_HANDLER)
@@ -15,7 +15,7 @@ public interface SuspiciousStewEffectsComponent extends AbstractPotionEffectComp
 	SuspiciousStewEffectsComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends SuspiciousStewEffectsComponent> getNBTHandler() {
+	default NBTCodec<? extends SuspiciousStewEffectsComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

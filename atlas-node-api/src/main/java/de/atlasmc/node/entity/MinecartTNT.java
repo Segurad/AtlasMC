@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface MinecartTNT extends AbstractMinecart {
 
-	public static final NBTSerializationHandler<MinecartTNT>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<MinecartTNT>
+	NBT_HANDLER = NBTCodec
 					.builder(MinecartTNT.class)
 					.include(AbstractMinecart.NBT_HANDLER)
 					.intField("fuse", MinecartTNT::getFuseTime, MinecartTNT::setFuseTime, -1)
@@ -30,7 +30,7 @@ public interface MinecartTNT extends AbstractMinecart {
 	void setExplosionSpeedFactor(float speedFactor);
 
 	@Override
-	default NBTSerializationHandler<? extends AbstractMinecart> getNBTHandler() {
+	default NBTCodec<? extends AbstractMinecart> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

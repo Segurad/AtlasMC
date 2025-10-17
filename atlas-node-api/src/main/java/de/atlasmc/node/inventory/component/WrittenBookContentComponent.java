@@ -6,12 +6,12 @@ import de.atlasmc.IDHolder;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface WrittenBookContentComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<WrittenBookContentComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<WrittenBookContentComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(WrittenBookContentComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.beginComponent(ComponentType.WRITTEN_BOOK_CONTENT.getNamespacedKey())
@@ -66,7 +66,7 @@ public interface WrittenBookContentComponent extends ItemComponent {
 	WrittenBookContentComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends ItemComponent> getNBTHandler() {
+	default NBTCodec<? extends ItemComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

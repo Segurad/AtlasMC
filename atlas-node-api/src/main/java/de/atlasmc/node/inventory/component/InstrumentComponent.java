@@ -1,11 +1,11 @@
 package de.atlasmc.node.inventory.component;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface InstrumentComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<InstrumentComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<InstrumentComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(InstrumentComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.registryValue(ComponentType.INSTRUMENT.getNamespacedKey(), InstrumentComponent::getInstrument, InstrumentComponent::setInstrument, Instrument.REGISTRY_KEY, Instrument.NBT_HANDLER)
@@ -18,7 +18,7 @@ public interface InstrumentComponent extends ItemComponent {
 	InstrumentComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends InstrumentComponent> getNBTHandler() {
+	default NBTCodec<? extends InstrumentComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

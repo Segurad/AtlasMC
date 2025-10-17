@@ -1,12 +1,12 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ItemNameComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<ItemNameComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ItemNameComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(ItemNameComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.chat(ComponentType.ITEM_NAME.getNamespacedKey(), ItemNameComponent::getName, ItemNameComponent::setName)
@@ -19,7 +19,7 @@ public interface ItemNameComponent extends ItemComponent {
 	ItemNameComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends ItemNameComponent> getNBTHandler() {
+	default NBTCodec<? extends ItemNameComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

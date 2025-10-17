@@ -1,11 +1,11 @@
 package de.atlasmc.chat.component;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class KeybindComponent extends AbstractBaseComponent<KeybindComponent> {
 
-	public static final NBTSerializationHandler<KeybindComponent> 
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<KeybindComponent> 
+	NBT_HANDLER = NBTCodec
 					.builder(KeybindComponent.class)
 					.include(AbstractBaseComponent.NBT_HANDLER)
 					.string("keybind", KeybindComponent::getKey, KeybindComponent::setKey)
@@ -68,7 +68,7 @@ public class KeybindComponent extends AbstractBaseComponent<KeybindComponent> {
 	}
 	
 	@Override
-	public NBTSerializationHandler<? extends KeybindComponent> getNBTHandler() {
+	public NBTCodec<? extends KeybindComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

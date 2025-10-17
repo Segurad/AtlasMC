@@ -1,12 +1,12 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Salmon extends Fish {
 	
-	public static final NBTSerializationHandler<Salmon>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Salmon>
+	NBT_HANDLER = NBTCodec
 					.builder(Salmon.class)
 					.include(Fish.NBT_HANDLER)
 					.enumStringField("type", Salmon::getSalmonType, Salmon::setSalmonType, Type.class, Type.MEDIUM)
@@ -17,7 +17,7 @@ public interface Salmon extends Fish {
 	void setSalmonType(Type type);
 	
 	@Override
-	default NBTSerializationHandler<? extends Fish> getNBTHandler() {
+	default NBTCodec<? extends Fish> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

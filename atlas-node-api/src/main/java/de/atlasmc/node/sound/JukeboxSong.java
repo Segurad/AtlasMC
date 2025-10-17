@@ -3,13 +3,13 @@ package de.atlasmc.node.sound;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.registry.ProtocolRegistryValueBase;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class JukeboxSong extends ProtocolRegistryValueBase implements NBTSerializable {
 	
-	public static final NBTSerializationHandler<JukeboxSong>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<JukeboxSong>
+	NBT_HANDLER = NBTCodec
 					.builder(JukeboxSong.class)
 					.addField(Sound.getNBTSoundField("sound_event", JukeboxSong::getSound, JukeboxSong::setSound, null))
 					.chat("description", JukeboxSong::getDescription, JukeboxSong::setDescription)
@@ -72,7 +72,7 @@ public class JukeboxSong extends ProtocolRegistryValueBase implements NBTSeriali
 	}
 
 	@Override
-	public NBTSerializationHandler<? extends JukeboxSong> getNBTHandler() {
+	public NBTCodec<? extends JukeboxSong> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

@@ -32,9 +32,9 @@ import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.function.ToBooleanFunction;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.codec.type.NBTField;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.util.nbt.serialization.fields.NBTField;
 
 public abstract class BlockDataProperty<T> {
 

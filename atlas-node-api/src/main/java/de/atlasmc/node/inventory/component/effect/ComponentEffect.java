@@ -4,13 +4,13 @@ import de.atlasmc.io.IOReadable;
 import de.atlasmc.io.IOWriteable;
 import de.atlasmc.node.entity.Entity;
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ComponentEffect extends NBTSerializable, IOReadable, IOWriteable, Cloneable {
 	
-	public static final NBTSerializationHandler<ComponentEffect>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ComponentEffect>
+	NBT_HANDLER = NBTCodec
 					.builder(ComponentEffect.class)
 					.searchKeyConstructor("type", ComponentEffectType.REGISTRY_KEY, ComponentEffectType::createEffect, ComponentEffect::getType)
 					.build();
@@ -22,7 +22,7 @@ public interface ComponentEffect extends NBTSerializable, IOReadable, IOWriteabl
 	ComponentEffect clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends ComponentEffect> getNBTHandler() {
+	default NBTCodec<? extends ComponentEffect> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

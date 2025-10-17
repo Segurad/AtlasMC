@@ -3,12 +3,12 @@ package de.atlasmc.node.entity;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.block.tile.TileEntity;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface FallingBlock extends Entity {
 	
-	public static final NBTSerializationHandler<FallingBlock>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<FallingBlock>
+	NBT_HANDLER = NBTCodec
 					.builder(FallingBlock.class)
 					.include(Entity.NBT_HANDLER)
 					.typeCompoundField("BlockState", FallingBlock::getBlockData, FallingBlock::setBlockData, BlockData.NBT_HANDLER)
@@ -62,7 +62,7 @@ public interface FallingBlock extends Entity {
 	void setAge(int age);
 	
 	@Override
-	default NBTSerializationHandler<? extends FallingBlock> getNBTHandler() {
+	default NBTCodec<? extends FallingBlock> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

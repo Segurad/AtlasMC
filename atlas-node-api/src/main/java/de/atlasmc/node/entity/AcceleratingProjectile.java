@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface AcceleratingProjectile extends Projectile {
 	
-	public static final NBTSerializationHandler<AcceleratingProjectile>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<AcceleratingProjectile>
+	NBT_HANDLER = NBTCodec
 					.builder(AcceleratingProjectile.class)
 					.include(Projectile.NBT_HANDLER)
 					.doubleField("acceleration_power", AcceleratingProjectile::getAccelerationPower, AcceleratingProjectile::setAccelerationPower)
@@ -16,7 +16,7 @@ public interface AcceleratingProjectile extends Projectile {
 	void setAccelerationPower(double power);
 	
 	@Override
-	default NBTSerializationHandler<? extends AcceleratingProjectile> getNBTHandler() {
+	default NBTCodec<? extends AcceleratingProjectile> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

@@ -1,12 +1,12 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface EnderDragon extends Mob {
 	
-	public static final NBTSerializationHandler<EnderDragon>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<EnderDragon>
+	NBT_HANDLER = NBTCodec
 					.builder(EnderDragon.class)
 					.include(Mob.NBT_HANDLER)
 					.enumIntField("DragonPhase", EnderDragon::getPhase, EnderDragon::setPhase, DragonPhase.class, DragonPhase.HOVERING)
@@ -17,7 +17,7 @@ public interface EnderDragon extends Mob {
 	void setPhase(DragonPhase phase);
 	
 	@Override
-	default NBTSerializationHandler<? extends EnderDragon> getNBTHandler() {
+	default NBTCodec<? extends EnderDragon> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

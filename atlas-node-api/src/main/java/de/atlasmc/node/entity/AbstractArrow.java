@@ -4,12 +4,12 @@ import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.sound.EnumSound;
 import de.atlasmc.node.sound.Sound;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface AbstractArrow extends Projectile {
 	
-	public static final NBTSerializationHandler<AbstractArrow>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<AbstractArrow>
+	NBT_HANDLER = NBTCodec
 					.builder(AbstractArrow.class)
 					.include(Projectile.NBT_HANDLER)
 					.boolField("crit", AbstractArrow::isCritical, AbstractArrow::setCritical, false)
@@ -83,7 +83,7 @@ public interface AbstractArrow extends Projectile {
 	void setShake(int shake);
 	
 	@Override
-	default NBTSerializationHandler<? extends AbstractArrow> getNBTHandler() {
+	default NBTCodec<? extends AbstractArrow> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

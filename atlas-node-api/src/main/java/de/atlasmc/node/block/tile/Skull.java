@@ -2,12 +2,12 @@ package de.atlasmc.node.block.tile;
 
 import de.atlasmc.network.player.PlayerProfile;
 import de.atlasmc.node.sound.EnumSound;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Skull extends TileEntity {
 	
-	public static final NBTSerializationHandler<Skull>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Skull>
+	NBT_HANDLER = NBTCodec
 					.builder(Skull.class)
 					.include(TileEntity.NBT_HANDLER)
 					.string("custom_name", Skull::getCustomName, Skull::setCustomName)
@@ -29,7 +29,7 @@ public interface Skull extends TileEntity {
 	void setNoteBlockSound(EnumSound sound);
 	
 	@Override
-	default NBTSerializationHandler<? extends Skull> getNBTHandler() {
+	default NBTCodec<? extends Skull> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

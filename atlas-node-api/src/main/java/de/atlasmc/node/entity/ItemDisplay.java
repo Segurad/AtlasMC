@@ -3,12 +3,12 @@ package de.atlasmc.node.entity;
 import de.atlasmc.IDHolder;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ItemDisplay extends Display {
 	
-	public static final NBTSerializationHandler<ItemDisplay>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ItemDisplay>
+	NBT_HANDLER = NBTCodec
 					.builder(ItemDisplay.class)
 					.include(Display.NBT_HANDLER)
 					.typeCompoundField("item", ItemDisplay::getItem, ItemDisplay::setItem, ItemStack.NBT_HANDLER)
@@ -24,7 +24,7 @@ public interface ItemDisplay extends Display {
 	void setRenderType(RenderType renderType);
 	
 	@Override
-	default NBTSerializationHandler<? extends ItemDisplay> getNBTHandler() {
+	default NBTCodec<? extends ItemDisplay> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

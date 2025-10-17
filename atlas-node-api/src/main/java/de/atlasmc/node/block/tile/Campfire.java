@@ -1,12 +1,12 @@
 package de.atlasmc.node.block.tile;
 
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Campfire extends TileEntity {
 	
-	static final NBTSerializationHandler<Campfire>
-	NBT_HANDLER = NBTSerializationHandler
+	static final NBTCodec<Campfire>
+	NBT_HANDLER = NBTCodec
 					.builder(Campfire.class)
 					.include(TileEntity.NBT_HANDLER)
 					.typeArraySearchByteIndexField("Items", "slot", null, Campfire::getItems, ItemStack.NBT_HANDLER)
@@ -39,7 +39,7 @@ public interface Campfire extends TileEntity {
 	int getTotalCookingTime(int index);
 	
 	@Override
-	default NBTSerializationHandler<? extends Campfire> getNBTHandler() {
+	default NBTCodec<? extends Campfire> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

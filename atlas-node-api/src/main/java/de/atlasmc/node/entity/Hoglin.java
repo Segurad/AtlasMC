@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Hoglin extends Animal {
 	
-	public static final NBTSerializationHandler<Hoglin>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Hoglin>
+	NBT_HANDLER = NBTCodec
 					.builder(Hoglin.class)
 					.include(Animal.NBT_HANDLER)
 					.boolField("Cannot", Hoglin::isHuntable, Hoglin::setHuntable, false)
@@ -22,7 +22,7 @@ public interface Hoglin extends Animal {
 	boolean isHuntable();
 
 	@Override
-	default NBTSerializationHandler<? extends Hoglin> getNBTHandler() {
+	default NBTCodec<? extends Hoglin> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

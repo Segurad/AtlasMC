@@ -1,13 +1,13 @@
 package de.atlasmc.node.world;
 
 import de.atlasmc.node.sound.Sound;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class BiomeMusic implements NBTSerializable {
 	
-	public static final NBTSerializationHandler<BiomeMusic>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<BiomeMusic>
+	NBT_HANDLER = NBTCodec
 					.builder(BiomeMusic.class)
 					.beginComponent("data")
 					.addField(Sound.getNBTSoundField("sound", BiomeMusic::getSound, BiomeMusic::setSound, null))
@@ -65,7 +65,7 @@ public class BiomeMusic implements NBTSerializable {
 	}
 	
 	@Override
-	public NBTSerializationHandler<? extends BiomeMusic> getNBTHandler() {
+	public NBTCodec<? extends BiomeMusic> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

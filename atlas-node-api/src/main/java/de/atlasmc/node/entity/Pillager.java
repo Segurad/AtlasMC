@@ -1,12 +1,12 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.node.inventory.PocketHolder;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Pillager extends AbstractIllager, PocketHolder {
 	
-	public static final NBTSerializationHandler<Pillager>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Pillager>
+	NBT_HANDLER = NBTCodec
 					.builder(Pillager.class)
 					.include(AbstractIllager.NBT_HANDLER)
 					.include(PocketHolder.NBT_HANDLER)

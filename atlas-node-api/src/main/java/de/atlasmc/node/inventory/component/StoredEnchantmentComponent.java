@@ -1,12 +1,12 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.node.enchantments.Enchantment;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface StoredEnchantmentComponent extends AbstractEnchantmentComponent {
 	
-	static final NBTSerializationHandler<StoredEnchantmentComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	static final NBTCodec<StoredEnchantmentComponent>
+	NBT_HANDLER = NBTCodec
 			.builder(StoredEnchantmentComponent.class)
 			.include(AbstractEnchantmentComponent.NBT_HANDLER)
 			.compoundMapNamespaced2Int(ComponentType.STORED_ENCHANTMENTS.getNamespacedKey(), StoredEnchantmentComponent::hasEnchants, StoredEnchantmentComponent::getStoredEnchants, Enchantment::getEnchantment)
@@ -15,7 +15,7 @@ public interface StoredEnchantmentComponent extends AbstractEnchantmentComponent
 	StoredEnchantmentComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends ItemComponent> getNBTHandler() {
+	default NBTCodec<? extends ItemComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

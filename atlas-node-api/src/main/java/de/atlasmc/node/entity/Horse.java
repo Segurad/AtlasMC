@@ -3,12 +3,12 @@ package de.atlasmc.node.entity;
 import java.util.List;
 
 import de.atlasmc.node.inventory.HorseInventory;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Horse extends AbstractHorse {
 	
-	public static final NBTSerializationHandler<Horse>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Horse>
+	NBT_HANDLER = NBTCodec
 					.builder(Horse.class)
 					.include(AbstractHorse.NBT_HANDLER)
 					.intField("Variant", Horse::getVariantID, Horse::setVariantID, 0)
@@ -29,7 +29,7 @@ public interface Horse extends AbstractHorse {
 	HorseInventory getInventory();
 	
 	@Override
-	default NBTSerializationHandler<? extends Horse> getNBTHandler() {
+	default NBTCodec<? extends Horse> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

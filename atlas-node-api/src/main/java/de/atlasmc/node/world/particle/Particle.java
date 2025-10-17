@@ -1,19 +1,19 @@
 package de.atlasmc.node.world.particle;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Particle extends NBTSerializable, Cloneable {
 	
-	public static final NBTSerializationHandler<Particle>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Particle>
+	NBT_HANDLER = NBTCodec
 					.builder(Particle.class)
 					.build();
 	
 	Particle clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends Particle> getNBTHandler() {
+	default NBTCodec<? extends Particle> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

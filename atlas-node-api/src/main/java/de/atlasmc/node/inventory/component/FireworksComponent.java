@@ -3,12 +3,12 @@ package de.atlasmc.node.inventory.component;
 import java.util.List;
 
 import de.atlasmc.node.FireworkExplosion;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface FireworksComponent extends ItemComponent {
 
-	public static final NBTSerializationHandler<FireworksComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<FireworksComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(FireworksComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.beginComponent(ComponentType.FIREWORKS.getNamespacedKey())
@@ -32,7 +32,7 @@ public interface FireworksComponent extends ItemComponent {
 	FireworksComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends FireworksComponent> getNBTHandler() {
+	default NBTCodec<? extends FireworksComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

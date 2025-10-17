@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Creeper extends Monster {
 	
-	public static final NBTSerializationHandler<Creeper>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Creeper>
+	NBT_HANDLER = NBTCodec
 					.builder(Creeper.class)
 					.include(Creeper.NBT_HANDLER)
 					.byteField("ExplosionRadius", Creeper::getExplosionRadius, Creeper::setExplosionRadius, (byte) 3)
@@ -56,7 +56,7 @@ public interface Creeper extends Monster {
 	int getExplosionRadius();
 	
 	@Override
-	default NBTSerializationHandler<? extends LivingEntity> getNBTHandler() {
+	default NBTCodec<? extends LivingEntity> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

@@ -1,11 +1,11 @@
 package de.atlasmc.chat.component.event.click;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public final class ChangePageClickEvent implements ClickEvent {
 	
-	public static final NBTSerializationHandler<ChangePageClickEvent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ChangePageClickEvent>
+	NBT_HANDLER = NBTCodec
 					.builder(ChangePageClickEvent.class)
 					.include(ClickEvent.NBT_HANDLER)
 					.intField("page", ChangePageClickEvent::getPage, ChangePageClickEvent::setPage)
@@ -27,7 +27,7 @@ public final class ChangePageClickEvent implements ClickEvent {
 	}
 	
 	@Override
-	public NBTSerializationHandler<? extends ChangePageClickEvent> getNBTHandler() {
+	public NBTCodec<? extends ChangePageClickEvent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

@@ -2,12 +2,12 @@ package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.node.inventory.ItemType;
 import de.atlasmc.util.dataset.DataSet;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface RepairableComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<RepairableComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<RepairableComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(RepairableComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.beginComponent(ComponentType.REPAIRABLE.getNamespacedKey())
@@ -22,7 +22,7 @@ public interface RepairableComponent extends ItemComponent {
 	RepairableComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends RepairableComponent> getNBTHandler() {
+	default NBTCodec<? extends RepairableComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

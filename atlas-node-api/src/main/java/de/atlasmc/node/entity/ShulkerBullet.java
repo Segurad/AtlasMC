@@ -2,12 +2,12 @@ package de.atlasmc.node.entity;
 
 import java.util.UUID;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ShulkerBullet extends Projectile {
 	
-	public static final NBTSerializationHandler<ShulkerBullet>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ShulkerBullet>
+	NBT_HANDLER = NBTCodec
 					.builder(ShulkerBullet.class)
 					.include(Projectile.NBT_HANDLER)
 					//.intField("Steps", null, null)
@@ -26,7 +26,7 @@ public interface ShulkerBullet extends Projectile {
 	UUID getTargetUUID();
 	
 	@Override
-	default NBTSerializationHandler<? extends ShulkerBullet> getNBTHandler() {
+	default NBTCodec<? extends ShulkerBullet> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

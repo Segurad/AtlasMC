@@ -1,11 +1,11 @@
 package de.atlasmc.node.inventory.component;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface WeaponComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<WeaponComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<WeaponComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(WeaponComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.beginComponent(ComponentType.WEAPON.getNamespacedKey())
@@ -25,7 +25,7 @@ public interface WeaponComponent extends ItemComponent {
 	WeaponComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends WeaponComponent> getNBTHandler() {
+	default NBTCodec<? extends WeaponComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

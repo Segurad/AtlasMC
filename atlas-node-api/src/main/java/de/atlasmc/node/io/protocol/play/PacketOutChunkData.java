@@ -11,10 +11,10 @@ import de.atlasmc.node.io.protocol.common.AbstractPacketChunkLight;
 import de.atlasmc.node.world.Chunk;
 import de.atlasmc.node.world.ChunkSection;
 import de.atlasmc.node.world.World;
+import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.nbt.NBTException;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
-import de.atlasmc.util.nbt.serialization.NBTSerializationContext;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
@@ -65,9 +65,9 @@ public class PacketOutChunkData extends AbstractPacketChunkLight implements Pack
 			writeVarInt(entity.getID(), data);
 			try {
 				@SuppressWarnings("unchecked")
-				NBTSerializationHandler<TileEntity> handler = (NBTSerializationHandler<TileEntity>) entity.getNBTHandler();
+				NBTCodec<TileEntity> handler = (NBTCodec<TileEntity>) entity.getNBTCodec();
 				writer.writeCompoundTag();
-				handler.serialize(entity, writer, NBTSerializationContext.DEFAULT_CLIENT);
+				handler.serialize(entity, writer, CodecContext.DEFAULT_CLIENT);
 				writer.writeEndTag();
 			} catch (IOException e) {
 				throw new NBTException("Error while writing TileEntity", e);

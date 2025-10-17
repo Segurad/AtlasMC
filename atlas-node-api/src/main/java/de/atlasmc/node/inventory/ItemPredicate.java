@@ -10,14 +10,14 @@ import de.atlasmc.node.inventory.component.ItemComponent;
 import de.atlasmc.node.inventory.component.ItemComponentHolder;
 import de.atlasmc.node.inventory.component.predicate.ItemComponentPredicate;
 import de.atlasmc.util.dataset.DataSet;
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 import de.atlasmc.util.predicate.IntRange;
 
 public class ItemPredicate implements NBTSerializable, ItemComponentHolder, Predicate<ItemStack> {
 	
-	public static final NBTSerializationHandler<ItemPredicate>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<ItemPredicate>
+	NBT_HANDLER = NBTCodec
 					.builder(ItemPredicate.class)
 					.defaultConstructor(ItemPredicate::new)
 					.dataSetField("items", ItemPredicate::getItems, ItemPredicate::setItems, ItemType.getRegistry())
@@ -80,7 +80,7 @@ public class ItemPredicate implements NBTSerializable, ItemComponentHolder, Pred
 	}
 
 	@Override
-	public NBTSerializationHandler<? extends ItemPredicate> getNBTHandler() {
+	public NBTCodec<? extends ItemPredicate> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

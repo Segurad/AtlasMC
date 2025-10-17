@@ -1,12 +1,12 @@
 package de.atlasmc.node.block.tile;
 
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Jukebox extends TileEntity {
 	
-	public static final NBTSerializationHandler<Jukebox>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Jukebox>
+	NBT_HANDLER = NBTCodec
 					.builder(Jukebox.class)
 					.include(TileEntity.NBT_HANDLER)
 					.typeCompoundField("RecordItem", Jukebox::getRecordItem, Jukebox::setRecordItem, ItemStack.NBT_HANDLER)
@@ -22,7 +22,7 @@ public interface Jukebox extends TileEntity {
 	void setTicksSinceSongStarted(long ticks);
 	
 	@Override
-	default NBTSerializationHandler<? extends Jukebox> getNBTHandler() {
+	default NBTCodec<? extends Jukebox> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

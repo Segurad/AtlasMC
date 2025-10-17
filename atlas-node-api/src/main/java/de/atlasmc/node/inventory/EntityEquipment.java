@@ -1,11 +1,11 @@
 package de.atlasmc.node.inventory;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface EntityEquipment {
 	
-	public static final NBTSerializationHandler<EntityEquipment>
-	NBT_EQUIPMENT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<EntityEquipment>
+	NBT_EQUIPMENT_HANDLER = NBTCodec
 					.builder(EntityEquipment.class)
 					.typeCompoundField("head", EntityEquipment::getHelmet, EntityEquipment::setHelmet, ItemStack.NBT_HANDLER)
 					.typeCompoundField("chest", EntityEquipment::getChestplate, EntityEquipment::setChestplate, ItemStack.NBT_HANDLER)
@@ -17,8 +17,8 @@ public interface EntityEquipment {
 					.typeCompoundField("saddle", EntityEquipment::getSaddle, EntityEquipment::setSaddle, ItemStack.NBT_HANDLER)
 					.build();
 	
-	public static final NBTSerializationHandler<EntityEquipment>
-	NBT_DROP_CHANCE_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<EntityEquipment>
+	NBT_DROP_CHANCE_HANDLER = NBTCodec
 					.builder(EntityEquipment.class)
 					.floatField("head", EntityEquipment::getHelmetDropChance, EntityEquipment::setHelmetDropChance, 1)
 					.floatField("chest", EntityEquipment::getChestplateDropChance, EntityEquipment::setChestplateDropChance, 1)

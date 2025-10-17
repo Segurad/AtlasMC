@@ -1,12 +1,12 @@
 package de.atlasmc.chat.component.event.hover;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializable;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface HoverEvent extends NBTSerializable {
 	
-	static final NBTSerializationHandler<HoverEvent>
-	NBT_HANDLER = NBTSerializationHandler
+	static final NBTCodec<HoverEvent>
+	NBT_HANDLER = NBTCodec
 					.builder(HoverEvent.class)
 					.searchKeyEnumConstructor("action", HoverAction.class, HoverAction::createEvent, HoverEvent::getAction)
 					.build();
@@ -14,7 +14,7 @@ public interface HoverEvent extends NBTSerializable {
 	HoverAction getAction();
 	
 	@Override
-	default NBTSerializationHandler<? extends HoverEvent> getNBTHandler() {
+	default NBTCodec<? extends HoverEvent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

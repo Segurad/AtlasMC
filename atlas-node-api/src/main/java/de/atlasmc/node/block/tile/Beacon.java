@@ -2,12 +2,12 @@ package de.atlasmc.node.block.tile;
 
 import de.atlasmc.node.inventory.BeaconInventory;
 import de.atlasmc.node.potion.PotionEffectType;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Beacon extends AbstractContainerTile<BeaconInventory> {
 	
-	public static final NBTSerializationHandler<Beacon>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<Beacon>
+	NBT_HANDLER = NBTCodec
 					.builder(Beacon.class)
 					.include(AbstractContainerTile.NBT_HANDLER)
 					.registryValue("primary_effect", Beacon::getPrimaryEffectType, Beacon::setPrimaryEffectType, PotionEffectType.REGISTRY_KEY)
@@ -23,7 +23,7 @@ public interface Beacon extends AbstractContainerTile<BeaconInventory> {
 	void setSecondaryEffectType(PotionEffectType secondary);
 	
 	@Override
-	default NBTSerializationHandler<? extends Beacon> getNBTHandler() {
+	default NBTCodec<? extends Beacon> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

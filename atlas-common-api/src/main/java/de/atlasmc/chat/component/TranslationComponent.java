@@ -3,7 +3,7 @@ package de.atlasmc.chat.component;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 /**
  * {@link ChatComponent} that translates its contents
@@ -14,8 +14,8 @@ import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
  */
 public class TranslationComponent extends AbstractBaseComponent<TranslationComponent> {
 	
-	public static final NBTSerializationHandler<TranslationComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<TranslationComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(TranslationComponent.class)
 					.string("key", TranslationComponent::getKey, TranslationComponent::setKey)
 					.string("fallback", TranslationComponent::getFallback, TranslationComponent::setFallback)

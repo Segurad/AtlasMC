@@ -4,13 +4,13 @@ import de.atlasmc.node.Nameable;
 import de.atlasmc.node.inventory.Inventory;
 import de.atlasmc.node.inventory.InventoryHolder;
 import de.atlasmc.node.inventory.ItemPredicate;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface AbstractContainerTile<I extends Inventory> extends TileEntity, InventoryHolder, Nameable {
 	
 	@SuppressWarnings("rawtypes")
-	public static final NBTSerializationHandler<AbstractContainerTile>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<AbstractContainerTile>
+	NBT_HANDLER = NBTCodec
 					.builder(AbstractContainerTile.class)
 					.include(TileEntity.NBT_HANDLER)
 					.include(Nameable.NBT_HANDLER)
@@ -32,7 +32,7 @@ public interface AbstractContainerTile<I extends Inventory> extends TileEntity, 
 	
 	@SuppressWarnings("rawtypes")
 	@Override
-	default NBTSerializationHandler<? extends AbstractContainerTile> getNBTHandler() {
+	default NBTCodec<? extends AbstractContainerTile> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 	

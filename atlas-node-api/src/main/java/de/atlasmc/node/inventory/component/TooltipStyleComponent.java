@@ -1,12 +1,12 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface TooltipStyleComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<TooltipStyleComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<TooltipStyleComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(TooltipStyleComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.namespacedKey(ComponentType.TOOLTIP_STYLE.getNamespacedKey(), TooltipStyleComponent::getStyle, TooltipStyleComponent::setStyle)
@@ -19,7 +19,7 @@ public interface TooltipStyleComponent extends ItemComponent {
 	TooltipStyleComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends TooltipStyleComponent> getNBTHandler() {
+	default NBTCodec<? extends TooltipStyleComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 

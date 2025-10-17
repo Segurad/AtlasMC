@@ -7,12 +7,12 @@ import de.atlasmc.node.sound.EnumSound;
 import de.atlasmc.node.sound.Sound;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.util.dataset.DataSet;
-import de.atlasmc.util.nbt.serialization.NBTSerializationHandler;
+import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface EquippableComponent extends ItemComponent {
 	
-	public static final NBTSerializationHandler<EquippableComponent>
-	NBT_HANDLER = NBTSerializationHandler
+	public static final NBTCodec<EquippableComponent>
+	NBT_HANDLER = NBTCodec
 					.builder(EquippableComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.beginComponent(ComponentType.EQUIPPABLE.getNamespacedKey())
@@ -69,7 +69,7 @@ public interface EquippableComponent extends ItemComponent {
 	EquippableComponent clone();
 	
 	@Override
-	default NBTSerializationHandler<? extends EquippableComponent> getNBTHandler() {
+	default NBTCodec<? extends EquippableComponent> getNBTCodec() {
 		return NBT_HANDLER;
 	}
 
