@@ -5,10 +5,11 @@ import java.util.List;
 import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.codec.type.ObjectType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
-public class ObjectListField<T, V> extends AbstractCollectionField<T, List<V>, V> {
+public class ObjectListField<T, V> extends AbstractCollectionField<T, List<V>, ObjectType<V>> {
 
 	private final List<TagType> types;
 	private final boolean optional;

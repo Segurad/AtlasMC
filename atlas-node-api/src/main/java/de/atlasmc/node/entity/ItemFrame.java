@@ -14,7 +14,7 @@ public interface ItemFrame extends Hanging {
 					.boolField("Invisible", ItemFrame::isInvisible, ItemFrame::setInvisible)
 					.typeCompoundField("Item", ItemFrame::getItem, ItemFrame::setItemStack, ItemStack.NBT_HANDLER)
 					.floatField("ItemDropChance", ItemFrame::getItemDropChance, ItemFrame::setItemDropChance, 1)
-					.enumByteField("ItemRotation", ItemFrame::getRotation, ItemFrame::setRotation, Rotation.class, Rotation::getID, Rotation.NONE)
+					.enumByteField("ItemRotation", ItemFrame::getRotation, ItemFrame::setRotation, Rotation.class, Rotation.NONE)
 					.build();
 
 	ItemStack getItem();

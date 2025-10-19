@@ -2,6 +2,7 @@ package de.atlasmc;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 import de.atlasmc.util.NumberConversion;
@@ -10,6 +11,8 @@ import de.atlasmc.util.annotation.Nullable;
 
 public class NamespacedKey implements CharSequence {
 
+	private static final Function<Namespaced, NamespacedKey> KEY_SUPPLIER = Namespaced::getNamespacedKey;
+	
 	/**
 	 * Key for {@link Namespaced} classes that have no unique key
 	 */
@@ -74,6 +77,11 @@ public class NamespacedKey implements CharSequence {
 	}
 	
 	public static interface Namespaced {
+		
+		@SuppressWarnings("unchecked")
+		public static <T extends Namespaced> Function<T, NamespacedKey> getKeySupplier() {
+			return (Function<T, NamespacedKey>) KEY_SUPPLIER;
+		}
 		
 		/**
 		 * Returns the key

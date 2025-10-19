@@ -1,47 +1,39 @@
-package de.atlasmc.util.nbt.codec.type;
+package de.atlasmc.util.nbt.codec.field;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
-
 import de.atlasmc.util.codec.CodecContext;
-import de.atlasmc.util.function.ToBooleanFunction;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.codec.NBTCodec;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
-public class TypeCollectionField<T, K> extends AbstractCollectionField<T, Collection<K>> {
+public class TypeCollectionField<T, V> extends AbstractCollectionField<T, Collection<V>, NBTCodec<V>> {
 
-	private final BiConsumer<T, K> set;
-	private final NBTCodec<K> handler;
+	private final BiConsumer<T, V> setter;
 	
-	public TypeCollectionField(CharSequence key, ToBooleanFunction<T> has, Function<T, Collection<K>> get, BiConsumer<T, K> set, NBTCodec<K> handler, boolean optional) {
-		super(key, LIST, has, get, optional);
-		this.handler = handler;
-		this.set = set;
+	public TypeCollectionField(TypeCollectionFieldBuilder<T, V> builder) {
+		super(builder);
+		this.setter = Objects.requireNonNull(builder.getSetter());
 	}
 
 	@Override
 	public boolean serialize(T value, NBTWriter writer, CodecContext context) throws IOException {
-		if (has != null && !has.applyAsBoolean(value)) {
-			if (!useDefault)
-				writer.writeListTag(key, TagType.COMPOUND, 0);
+		if (hasData != null && !hasData.applyAsBoolean(value)) {
 			return true;
 		}
-		final Collection<K> list = get.apply(value);
+		final Collection<V> list = getter.apply(value);
 		final int size = list.size();
 		if (size == 0) {
-			if (!useDefault)
-				writer.writeListTag(key, TagType.COMPOUND, 0);
 			return true;
 		}
 		writer.writeListTag(key, TagType.COMPOUND, size);
-		for (K v : list) {
+		for (V v : list) {
 			writer.writeCompoundTag();
-			handler.serialize(v, writer, context);
+			fieldType.serialize(v, writer, context);
 			writer.writeEndTag();
 		}
 		return true;
@@ -60,8 +52,8 @@ public class TypeCollectionField<T, K> extends AbstractCollectionField<T, Collec
 		reader.readNextEntry();
 		while (reader.getRestPayload() > 0) {
 			reader.readNextEntry();
-			K v = handler.deserialize(reader, context);
-			set.accept(value, v);
+			V v = fieldType.deserialize(reader, context);
+			setter.accept(value, v);
 		}
 		reader.readNextEntry();
 	}

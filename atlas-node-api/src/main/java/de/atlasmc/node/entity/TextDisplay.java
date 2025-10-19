@@ -13,7 +13,7 @@ public interface TextDisplay extends Display {
 					.builder(TextDisplay.class)
 					.include(Display.NBT_HANDLER)
 					.enumStringField("alignment", TextDisplay::getAlignment, TextDisplay::setAlignment, TextAlignment.class, TextAlignment.CENTER)
-					.color("background", TextDisplay::getBackgroundColor, TextDisplay::setBackgroundColor, 0x40000000)
+					.color("background", TextDisplay::getBackgroundColor, TextDisplay::setBackgroundColor, Color.fromARGB(0x40000000))
 					.boolField("default_background", TextDisplay::hasDefaultBackground, TextDisplay::setDefaultBachground, false)
 					.intField("line_width", TextDisplay::getLineWidth, TextDisplay::setLineWidth, 200)
 					.boolField("see_through", TextDisplay::isSeeThrough, TextDisplay::setSeeThrough, false)

@@ -65,7 +65,7 @@ public interface ToolComponent extends ItemComponent {
 		NBT_HANDLER = NBTCodec
 						.builder(Rule.class)
 						.defaultConstructor(Rule::new)
-						.dataSetField("blocks", Rule::getBlocks, Rule::setBlocks, ItemType.getRegistry())
+						.dataSetField("blocks", Rule::getBlocks, Rule::setBlocks, ItemType.REGISTRY_KEY)
 						.floatField("speed", Rule::getSpeed, Rule::setSpeed)
 						.boolField("correct_for_drops", Rule::isCorrectForDrops, Rule::setCorrectForDrops, false)
 						.build();

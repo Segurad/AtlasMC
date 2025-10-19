@@ -11,7 +11,7 @@ import de.atlasmc.util.nbt.codec.constructor.Constructor;
 import de.atlasmc.util.nbt.codec.constructor.FieldKeyConstructor;
 import de.atlasmc.util.nbt.codec.constructor.SearchFieldEnumConstructor;
 import de.atlasmc.util.nbt.codec.constructor.SearchFieldRegistryConstructor;
-import de.atlasmc.util.nbt.codec.type.NBTCompoundField;
+import de.atlasmc.util.nbt.codec.field.NBTCompoundField;
 
 public class NBTCodecBuilder<T> extends AbstractNBTCompoundFieldBuilder<T, NBTCodecBuilder<T>>  implements Builder<NBTCodec<T>> {
 	
@@ -64,6 +64,7 @@ public class NBTCodecBuilder<T> extends AbstractNBTCompoundFieldBuilder<T, NBTCo
 	}
 	
 	public NBTCodecBuilder<T> include(NBTCodec<? super T> include) {
+		// TODO include
 		return this;
 	}
 	

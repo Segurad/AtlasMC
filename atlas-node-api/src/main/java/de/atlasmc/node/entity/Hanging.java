@@ -9,7 +9,7 @@ public interface Hanging extends Entity {
 	NBT_HANDLER = NBTCodec
 					.builder(Hanging.class)
 					.include(Entity.NBT_HANDLER)
-					.enumByteField("Facing", Hanging::getAttachedFace, Hanging::setFacingDirection, BlockFace::getByFaceID, BlockFace::getFaceID, BlockFace.SOUTH)
+					.objectByteField("Facing", Hanging::getAttachedFace, Hanging::setFacingDirection, BlockFace::getByFaceID, BlockFace::getFaceID, BlockFace.SOUTH)
 					.build();
 	
 	BlockFace getAttachedFace();

@@ -2,11 +2,12 @@ package de.atlasmc;
 
 import java.util.List;
 
+import de.atlasmc.chat.ChatColor;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.annotation.ThreadSafe;
 
 @ThreadSafe
-public final class Color {
+public final class Color implements ColorValue {
 	
 	public static final Color 
 	BLACK = new Color("BLACK", 0x00, 0x00, 0x00), 
@@ -95,24 +96,8 @@ public final class Color {
 		this(color.name, color.r, color.g, color.b, color.a);
 	}
 	
-	private Color(int rgb) {
-		this("ARGB", (rgb & 0xFF0000) >> 16, (rgb & 0xFF00) >> 8, rgb & 0xFF, (rgb & 0xFF000000) >> 24);
-	}
-
-	public Color(float red, float green, float blue) {
-		this(red, green, blue, 0);
-	}
-	
-	public Color(float red, float green, float blue, float alpha) {
-		red = Math.clamp(0, red, 1.0f);
-		green = Math.clamp(0, green, 1.0f);
-		blue = Math.clamp(0, blue, 1.0f);
-		alpha = Math.clamp(0, green, 1.0f);
-		r = (byte) (red == 1.0 ? 255 : red * 256);
-		g = (byte) (green == 1.0 ? 255 : green * 256);
-		b = (byte) (blue == 1.0 ? 255 : blue * 256);
-		a = (byte) (alpha == 1.0 ? 255 : blue * 256);
-		this.name = "RGB";
+	private Color(String name, int rgb) {
+		this(name, (rgb & 0xFF0000) >> 16, (rgb & 0xFF00) >> 8, rgb & 0xFF, (rgb & 0xFF000000) >> 24);
 	}
 	
 	@Nullable
@@ -163,6 +148,7 @@ public final class Color {
 		return "RGB:" + r + "," + g + "," + b;
 	}
 
+	@Override
 	public String toString() {
 		if (this.name.equals("RGB")) {
 			return toRGBString();
@@ -170,10 +156,12 @@ public final class Color {
 		return this.name;
 	}
 
+	@Override
 	public int asRGB() {
 		return (r << 8 | g) << 8 | b;
 	}
 	
+	@Override
 	public int asARGB() {
 		return ((a << 8 | r) << 8 | g) << 8 | b;
 	}
@@ -183,7 +171,7 @@ public final class Color {
 			if (c.asRGB() == color)
 				return c;
 		}
-		return new Color(color & 0xFFFFFF);
+		return new Color("RGB", color & 0xFFFFFF);
 	}
 	
 	public static Color fromARGB(int color) {
@@ -193,7 +181,7 @@ public final class Color {
 					return c;
 			}
 		}
-		return new Color(color);
+		return new Color("ARGB", color);
 	}
 	
 	@Override
@@ -207,7 +195,7 @@ public final class Color {
 		return result;
 	}
 	
-	
+	@Override
 	public String asConsoleColor() {
 		return asConsoleColor(r & 0xFF, g & 0xFF, b & 0xFF);
 	}
@@ -235,6 +223,32 @@ public final class Color {
 			return false;
 		Color color = (Color) obj;
 		return r == color.r && g == color.g && b == color.b && a == color.a;
+	}
+	
+	public static int asRGB(float r, float g, float b) {
+		return asARGB(r, g, b, 0) & 0xFFFFFFF;
+	}
+	
+	public static int asARGB(float red, float green, float blue, float alpha) {
+		red = Math.clamp(0, red, 1.0f);
+		green = Math.clamp(0, green, 1.0f);
+		blue = Math.clamp(0, blue, 1.0f);
+		alpha = Math.clamp(0, green, 1.0f);
+		byte r = (byte) (red == 1.0 ? 255 : red * 256);
+		byte g = (byte) (green == 1.0 ? 255 : green * 256);
+		byte b = (byte) (blue == 1.0 ? 255 : blue * 256);
+		byte a = (byte) (alpha == 1.0 ? 255 : blue * 256);
+		return ((a << 8 | r) << 8 | g) << 8 | b;
+	}
+
+	@Override
+	public Color asColor() {
+		return this;
+	}
+
+	@Override
+	public ChatColor asChatColor() {
+		return ChatColor.getByColor(this);
 	}
 	
 }

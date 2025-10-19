@@ -4,13 +4,12 @@ import java.util.Objects;
 import java.util.function.Function;
 
 import de.atlasmc.util.function.ToBooleanFunction;
-import de.atlasmc.util.nbt.codec.type.ObjectType;
 
 public abstract class AbstractCollectionField<T, C, V> extends NBTField<T> {
 
 	protected final ToBooleanFunction<T> hasData;
 	protected final Function<T, C> getter;
-	protected final ObjectType<V> fieldType;
+	protected final V fieldType;
 	
 	public AbstractCollectionField(AbstractCollectionFieldBuilder<T, C, V, ?> builder) {
 		super(builder);

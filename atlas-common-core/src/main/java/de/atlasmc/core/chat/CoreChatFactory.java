@@ -3,6 +3,7 @@ package de.atlasmc.core.chat;
 import java.io.IOException;
 
 import de.atlasmc.Color;
+import de.atlasmc.ColorValue;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.chat.ChatFactory;
@@ -62,10 +63,10 @@ public class CoreChatFactory implements ChatFactory {
 	
 	private void buildLegacy(StringBuilder builder, ChatComponent component, char formatPrefix) {
 		if (!(component instanceof TextComponent) || component.getClass() != BaseComponent.class) {	
-			ChatColor color = component.getColorChat();
-			if (color != null) {
+			ColorValue color = component.getColor();
+			if (color != null && color instanceof ChatColor chat) {
 				builder.append(formatPrefix);
-				builder.append(color.getFormatID());
+				builder.append(chat.getFormatID());
 			}
 			if (color != ChatColor.RESET) {
 				if (component.isBold()) {
@@ -206,34 +207,30 @@ public class CoreChatFactory implements ChatFactory {
 			throw new IllegalArgumentException("Component can not be null!");
 		StringBuilder builder = new StringBuilder();
 		buildConsole(builder, component);
-		builder.append(ChatColor.RESET.getConsoleFormat());
+		builder.append(ChatColor.RESET.asConsoleColor());
 		return builder.toString();
 	}
 	
 	private void buildConsole(StringBuilder builder, ChatComponent component) {
 		if (!(component instanceof TextComponent) || component.getClass() != BaseComponent.class) {	
-			ChatColor color = component.getColorChat();
-			if (color != null) {
-				builder.append(color.getConsoleFormat());
-			}
+			ColorValue color = component.getColor();
 			if (color != ChatColor.RESET) {
 				if (component.isBold()) {
-					builder.append(ChatColor.BOLD.getConsoleFormat());
+					builder.append(ChatColor.BOLD.asConsoleColor());
 				}
 				if (component.isItalic()) {
-					builder.append(ChatColor.ITALIC.getConsoleFormat());
+					builder.append(ChatColor.ITALIC.asConsoleColor());
 				}
 				if (component.isObfuscated()) {
-					builder.append(ChatColor.OBFUSCATED.getConsoleFormat());
+					builder.append(ChatColor.OBFUSCATED.asConsoleColor());
 				}
 				if (component.isStrikethrough()) {
-					builder.append(ChatColor.STRIKETHROUGH.getConsoleFormat());
+					builder.append(ChatColor.STRIKETHROUGH.asConsoleColor());
 				}
 				if (component.isUnderlined()) {
-					builder.append(ChatColor.UNDERLINE.getConsoleFormat());
+					builder.append(ChatColor.UNDERLINE.asConsoleColor());
 				}
-			}
-			if (component.hasColor()) {
+			} else {
 				builder.append(component.getColor().asConsoleColor());
 			}
 			if (component instanceof TextComponent text) {

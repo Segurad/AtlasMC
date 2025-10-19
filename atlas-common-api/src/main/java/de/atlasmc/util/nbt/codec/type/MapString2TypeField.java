@@ -1,35 +1,30 @@
 package de.atlasmc.util.nbt.codec.type;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Function;
-
+import java.util.Objects;
 import de.atlasmc.util.codec.CodecContext;
-import de.atlasmc.util.function.ToBooleanFunction;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.codec.NBTCodec;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
-public class MapString2TypeField<T, K> extends AbstractCollectionField<T, Map<String, K>> {
+public class MapString2TypeField<V> extends ObjectType<Map<String, V>> {
 
-	private final NBTCodec<K> handler;
+	private final NBTCodec<V> codec;
 	
-	public MapString2TypeField(CharSequence key, ToBooleanFunction<T> has, Function<T, Map<String, K>> getMap, NBTCodec<K> handler) {
-		super(key, COMPOUND, has, getMap, true);
-		this.handler = handler;
+	public MapString2TypeField(NBTCodec<V> codec) {
+		this.codec = Objects.requireNonNull(codec);
 	}
 
 	@Override
-	public boolean serialize(T value, NBTWriter writer, CodecContext context) throws IOException {
-		if (has != null && !has.applyAsBoolean(value))
-			return true;
-		final Map<String, K> map = get.apply(value);
+	public boolean serialize(CharSequence key, Map<String, V> value, NBTWriter writer, CodecContext context) throws IOException {
 		writer.writeCompoundTag(key);
-		for (Entry<String, K> entry : map.entrySet()) {
+		for (Entry<String, V> entry : value.entrySet()) {
 			writer.writeCompoundTag(entry.getKey());
-			handler.serialize(entry.getValue(), writer, context);
+			codec.serialize(entry.getValue(), writer, context);
 			writer.writeEndTag();
 		}
 		writer.writeEndTag();
@@ -37,15 +32,20 @@ public class MapString2TypeField<T, K> extends AbstractCollectionField<T, Map<St
 	}
 
 	@Override
-	public void deserialize(T value, NBTReader reader, CodecContext context) throws IOException {
-		final Map<String, K> map = get.apply(value);
+	public Map<String, V> deserialize(Map<String, V> value, NBTReader reader, CodecContext context) throws IOException {
 		reader.readNextEntry();
 		while (reader.getType() != TagType.TAG_END) {
 			String key = reader.getFieldName().toString();
-			K entry = handler.deserialize(reader);
-			map.put(key, entry);
+			V entry = codec.deserialize(reader);
+			value.put(key, entry);
 		}
 		reader.readNextEntry();
+		return value;
+	}
+
+	@Override
+	public List<TagType> getTypes() {
+		return COMPOUND;
 	}
 
 }

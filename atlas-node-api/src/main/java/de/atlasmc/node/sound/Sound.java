@@ -4,7 +4,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import de.atlasmc.NamespacedKey.Namespaced;
-import de.atlasmc.util.nbt.codec.type.NBTField;
+import de.atlasmc.util.nbt.codec.field.NBTField;
+import de.atlasmc.util.nbt.codec.field.ObjectFieldBuilder;
 
 public interface Sound extends Namespaced {
 
@@ -24,7 +25,7 @@ public interface Sound extends Namespaced {
 	boolean hasFixedRange();
 	
 	public static <T> NBTField<T> getNBTSoundField(CharSequence key, Function<T, Sound> get, BiConsumer<T, Sound> set, Sound defaultSound) {
-		return new SoundField<>(key, get, set, defaultSound);
+		return new ObjectFieldBuilder<T, Sound>().setKey(key).setGetter(get).setSetter(set).setDefaultValue(defaultSound).setFieldType(SoundType.getInstance()).build();
 	}
 	
 }

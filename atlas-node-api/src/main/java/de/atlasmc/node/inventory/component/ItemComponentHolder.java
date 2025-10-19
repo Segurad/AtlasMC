@@ -11,7 +11,7 @@ public interface ItemComponentHolder {
 	public static final NBTCodec<ItemComponentHolder>
 	NBT_HANDLER = NBTCodec
 					.builder(ItemComponentHolder.class)
-					.compoundMapNamespacedType2Type("components", ItemComponentHolder::hasComponents, ItemComponentHolder::getComponents, ItemComponent.NBT_HANDLER, ItemComponent::getType)
+					.compoundMapType2Type("components", ItemComponentHolder::hasComponents, ItemComponentHolder::getComponents, ItemComponent.NBT_HANDLER, ItemComponent::getType)
 					.build();
 	
 	@NotNull

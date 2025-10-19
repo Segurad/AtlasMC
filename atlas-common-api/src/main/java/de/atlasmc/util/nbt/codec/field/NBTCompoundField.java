@@ -1,4 +1,4 @@
-package de.atlasmc.util.nbt.codec.type;
+package de.atlasmc.util.nbt.codec.field;
 
 import java.io.IOException;
 import java.util.Map;
@@ -7,8 +7,6 @@ import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.function.ToBooleanFunction;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.codec.NBTCompoundFieldBuilder;
-import de.atlasmc.util.nbt.codec.field.NBTField;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -21,7 +19,7 @@ public class NBTCompoundField<T> extends NBTField<T> {
 	private final ToBooleanFunction<T> has;
 
 	public NBTCompoundField(NBTCompoundFieldBuilder<T> builder) {
-		super(builder.key, builder.types, builder.useDefault);
+		super(builder);
 		this.has = builder.has;
 		this.fields = builder.buildFieldsArray();
 		this.count = fields.length;

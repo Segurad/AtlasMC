@@ -3,13 +3,12 @@ package de.atlasmc.util.nbt.codec.field;
 import java.util.function.Function;
 
 import de.atlasmc.util.function.ToBooleanFunction;
-import de.atlasmc.util.nbt.codec.type.ObjectType;
 
 public abstract class AbstractCollectionFieldBuilder<T, C, V, B extends AbstractCollectionFieldBuilder<T, C, V, B>> extends NBTFieldBuilder<T, B> {
 
 	private ToBooleanFunction<T> hasData;
 	private Function<T, C> getter;
-	private ObjectType<V> fieldType;
+	private V fieldType;
 	
 	public Function<T, C> getGetter() {
 		return getter;
@@ -24,11 +23,11 @@ public abstract class AbstractCollectionFieldBuilder<T, C, V, B extends Abstract
 		return hasData;
 	}
 	
-	public ObjectType<V> getFieldType() {
+	public V getFieldType() {
 		return fieldType;
 	}
 	
-	public B setFieldType(ObjectType<V> fieldType) {
+	public B setFieldType(V fieldType) {
 		this.fieldType = fieldType;
 		return getThis();
 	}

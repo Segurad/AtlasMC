@@ -32,6 +32,10 @@ public interface NBT extends Cloneable, NBTHolder {
 	
 	NBT clone();
 	
+	default void toNBT(NBTWriter writer, boolean systemData) throws IOException {
+		toNBT(getName(), writer, systemData);
+	}
+	
 	/**
 	 * Write the NBT of the Holder
 	 * Does not create a new CompoundTag

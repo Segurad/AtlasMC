@@ -180,7 +180,6 @@ public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitte
 	
 	void setFireTicks(int ticks);
 
-
 	void setNoGravity(boolean gravity);
 	
 	void setInvulnerable(boolean invulnerable);

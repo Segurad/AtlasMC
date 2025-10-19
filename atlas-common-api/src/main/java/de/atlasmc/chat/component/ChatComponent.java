@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import de.atlasmc.Color;
+import de.atlasmc.ColorValue;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatColor;
@@ -35,8 +36,8 @@ public interface ChatComponent extends Chat, NBTSerializable {
 					.boolField("underlined", ChatComponent::isUnderlined, ChatComponent::setUnderlined, false)
 					.boolField("obfuscated", ChatComponent::isObfuscated, ChatComponent::setObfuscated, false)
 					.boolField("strikethrough", ChatComponent::isStrikethrough, ChatComponent::setStrikethrough, false)
-					.color("shadow_color", ChatComponent::getShadowColor, ChatComponent::setShadowColor)
-					.chatColorColor("color", ChatComponent::getColorChat, ChatComponent::setColor, ChatComponent::getColor, ChatComponent::setColor)
+					.color("shadow_color", ChatComponent::getShadowColor, ChatComponent::setShadowColor, null)
+					.colorValue("color", ChatComponent::getColor, ChatComponent::setColor)
 					.string("font", ChatComponent::getFont, ChatComponent::setFont)
 					.typeList("extra", ChatComponent::hasExtra, ChatComponent::getExtra, ChatComponent.NBT_HANDLER)
 					.string("insertion", ChatComponent::getInsertion, ChatComponent::setInsertion)
@@ -81,29 +82,17 @@ public interface ChatComponent extends Chat, NBTSerializable {
 	ChatComponent setFont(String font);
 	
 	/**
-	 * Returns the color.
-	 * @return rgb
+	 * Returns the color value
+	 * @return color
 	 */
-	Color getColor();
+	ColorValue getColor();
 	
 	/**
-	 * Returns the ChatColor represented by the color or null
-	 * @return ChatColor or null
-	 */
-	ChatColor getColorChat();
-	
-	/**
-	 * Sets the color
-	 * @param rgb
-	 */
-	ChatComponent setColor(Color rgb);
-	
-	/**
-	 * Sets the color by {@link ChatColor} or null to remove.
-	 * Format is allowed but the dedicated methods should be used instead
+	 * Sets the color or null to remove.
+	 * {@link ChatColor} format color is allowed but the dedicated methods should be used instead
 	 * @param color
 	 */
-	ChatComponent setColor(ChatColor color);
+	ChatComponent setColor(ColorValue value);
 	
 	/**
 	 * Returns whether or not this Component has a color

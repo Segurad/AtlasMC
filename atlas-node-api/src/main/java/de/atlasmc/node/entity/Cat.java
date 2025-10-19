@@ -11,7 +11,7 @@ public interface Cat extends Tameable {
 	NBT_HANDLER = NBTCodec
 					.builder(Cat.class)
 					.include(Tameable.NBT_HANDLER)
-					.enumByteField("CollarColor", Cat::getCollarColor, Cat::setCollarColor, DyeColor.class, DyeColor::getID, DyeColor.RED)
+					.enumByteField("CollarColor", Cat::getCollarColor, Cat::setCollarColor, DyeColor.class, DyeColor.RED)
 					.enumStringField("variant", Cat::getCatType, Cat::setCatType, Type.class, Type.BLACK)
 					.build();
 	

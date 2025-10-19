@@ -15,7 +15,7 @@ public class BlockPredicate implements NBTSerializable {
 	NBT_HANDLER = NBTCodec
 					.builder(BlockPredicate.class)
 					.defaultConstructor(BlockPredicate::new)
-					.dataSetField("blocks", BlockPredicate::getTypes, BlockPredicate::setTypes, BlockType.getRegistry())
+					.dataSetField("blocks", BlockPredicate::getTypes, BlockPredicate::setTypes, BlockType.REGISTRY_KEY)
 					.typeCompoundField("nbt", BlockPredicate::getTile, BlockPredicate::setTile, TileEntity.NBT_HANDLER)
 					.addField(BlockDataProperty.getBlockDataPropertiesMapField("state", BlockPredicate::hasStates, BlockPredicate::getStates))
 					.build();

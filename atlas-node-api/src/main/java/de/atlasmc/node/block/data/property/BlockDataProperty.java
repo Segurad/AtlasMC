@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import de.atlasmc.node.Axis;
@@ -32,7 +33,9 @@ import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.function.ToBooleanFunction;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.codec.type.NBTField;
+import de.atlasmc.util.nbt.codec.field.NBTField;
+import de.atlasmc.util.nbt.codec.field.ObjectFieldBuilder;
+import de.atlasmc.util.nbt.codec.field.ReuseableObjectFieldBuilder;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
@@ -325,12 +328,16 @@ public abstract class BlockDataProperty<T> {
 		}
 	}
 	
+	private static final Function<BlockData, BlockData> GET_SELF = v -> { return v; };
+	private static final BiConsumer<BlockData, BlockData> SET_VOID = (a, b) -> {};
+	
+	@SuppressWarnings("unchecked")
 	public static <T extends BlockData> NBTField<T> getBlockDataPropertiesField(CharSequence key) {
-		return new BlockDataPropertiesField<>(key);
+		return new ObjectFieldBuilder<T, T>().setKey(key).setGetter((Function<T, T>) GET_SELF).setSetter((BiConsumer<T, T>) SET_VOID).setFieldType(BlockDataPropertiesType.getInstance()).build();
 	}
 	
-	public static <T> NBTField<T> getBlockDataPropertiesMapField(CharSequence key, ToBooleanFunction<T> has, Function<T, Map<BlockDataProperty<?>, Object>> getCollection) {
-		return new BlockDataPropertiesMapField<>(key, has, getCollection);
+	public static <T> NBTField<T> getBlockDataPropertiesMapField(CharSequence key, ToBooleanFunction<T> has, Function<T, Map<BlockDataProperty<?>, Object>> get) {
+		return new ReuseableObjectFieldBuilder<T, Map<BlockDataProperty<?>, Object>>().setKey(key).setHasData(has).setGetter(get).setFieldType(BlockDataPropertiesMapType.getInstance()).build();
 	}
 
 }

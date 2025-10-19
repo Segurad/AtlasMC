@@ -74,5 +74,15 @@ public class ObjectFieldBuilder<T, V> extends NBTFieldBuilder<T, ObjectFieldBuil
 		this.defaultValue = defaultValue;
 		return this;
 	}
+	
+	@Override
+	public void clear() {
+		super.clear();
+		defaultValue = null;
+		fieldType = null;
+		getter = null;
+		reuseValue = false;
+		setter = null;
+	}
 
 }

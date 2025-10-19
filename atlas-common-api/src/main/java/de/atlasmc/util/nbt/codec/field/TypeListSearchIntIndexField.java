@@ -1,11 +1,8 @@
-package de.atlasmc.util.nbt.codec.type;
+package de.atlasmc.util.nbt.codec.field;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.function.Function;
-
 import de.atlasmc.util.codec.CodecContext;
-import de.atlasmc.util.function.ToBooleanFunction;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
@@ -13,29 +10,23 @@ import de.atlasmc.util.nbt.codec.NBTCodec;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
-public class TypeListSearchIntIndexField<T, K> extends AbstractCollectionField<T, List<K>> {
+public class TypeListSearchIntIndexField<T, V> extends AbstractCollectionField<T, List<V>, NBTCodec<V>> {
 
 	private final CharKey indexKey;
-	private final NBTCodec<K> handler;
 	
-	public TypeListSearchIntIndexField(CharSequence key, CharSequence indexKey, ToBooleanFunction<T> has, Function<T, List<K>> getList, NBTCodec<K> handler, boolean optional) {
-		super(key, LIST, has, getList, optional);
-		this.handler = handler;
-		this.indexKey = CharKey.literal(indexKey);
+	public TypeListSearchIntIndexField(TypeListSearchIntIndexFieldBuilder<T, V> builder) {
+		super(builder);
+		this.indexKey = CharKey.literal(builder.getIndexKey());
 	}
 
 	@Override
 	public boolean serialize(T value, NBTWriter writer, CodecContext context) throws IOException {
-		if (has != null && !has.applyAsBoolean(value)) {
-			if (!useDefault)
-				writer.writeListTag(key, TagType.COMPOUND, 0);
+		if (hasData != null && !hasData.applyAsBoolean(value)) {
 			return true;
 		}
-		final List<K> list = get.apply(value);
+		final List<V> list = getter.apply(value);
 		final int size = list.size();
 		if (size == 0) {
-			if (!useDefault)
-				writer.writeListTag(key, TagType.COMPOUND, 0);
 			return true;
 		}
 		int count = 0;
@@ -47,8 +38,8 @@ public class TypeListSearchIntIndexField<T, K> extends AbstractCollectionField<T
 		for (int i = 0; i < size; i++) {
 			writer.writeCompoundTag();
 			writer.writeIntTag(indexKey, i);
-			K v = list.get(i);
-			handler.serialize(v, writer, context);
+			V v = list.get(i);
+			fieldType.serialize(v, writer, context);
 			writer.writeEndTag();
 		}
 		return true;
@@ -64,21 +55,21 @@ public class TypeListSearchIntIndexField<T, K> extends AbstractCollectionField<T
 		}
 		if (listType != TagType.COMPOUND)
 			throw new NBTException("Expected list of type COMPOUND but was: " + listType);
-		final List<K> list = get.apply(value);
+		final List<V> list = getter.apply(value);
 		reader.readNextEntry();
 		while (reader.getRestPayload() > 0) {
 			reader.readNextEntry();
 			int index;
 			if (!indexKey.equals(reader.getFieldName())) {
 				reader.mark();
-				if (!reader.search(indexKey, TagType.BYTE))
+				if (!reader.search(indexKey, TagType.INT))
 					throw new NBTException("Key field not found: " + indexKey);
-				index = reader.readByteTag() & 0xFF; // index is unsigned
+				index = reader.readIntTag();
 				reader.reset();
 			} else {
-				index = reader.readByteTag() & 0xFF; // index is unsigned
+				index = reader.readIntTag();
 			}
-			K v = handler.deserialize(reader, context);
+			V v = fieldType.deserialize(reader, context);
 			list.add(index, v);
 		}
 		reader.readNextEntry();

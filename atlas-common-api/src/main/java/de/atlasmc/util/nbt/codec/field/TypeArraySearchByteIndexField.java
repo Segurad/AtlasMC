@@ -1,10 +1,7 @@
-package de.atlasmc.util.nbt.codec.type;
+package de.atlasmc.util.nbt.codec.field;
 
 import java.io.IOException;
-import java.util.function.Function;
-
 import de.atlasmc.util.codec.CodecContext;
-import de.atlasmc.util.function.ToBooleanFunction;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
@@ -12,22 +9,20 @@ import de.atlasmc.util.nbt.codec.NBTCodec;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
-public class TypeArraySearchByteIndexField<T, K> extends AbstractCollectionField<T, K[]> {
+public class TypeArraySearchByteIndexField<T, V> extends AbstractCollectionField<T, V[], NBTCodec<V>> {
 
 	private final CharKey indexKey;
-	private final NBTCodec<K> handler;
 	
-	public TypeArraySearchByteIndexField(CharSequence key, CharSequence indexKey, ToBooleanFunction<T> has, Function<T, K[]> getArray, NBTCodec<K> handler) {
-		super(key, LIST, has, getArray, true);
-		this.handler = handler;
-		this.indexKey = CharKey.literal(indexKey);
+	public TypeArraySearchByteIndexField(TypeArraySearchByteIndexFieldBuilder<T, V> builder) {
+		super(builder);
+		this.indexKey = CharKey.literal(builder.getIndexKey());
 	}
 
 	@Override
 	public boolean serialize(T value, NBTWriter writer, CodecContext context) throws IOException {
-		if (has != null && !has.applyAsBoolean(value))
+		if (hasData != null && !hasData.applyAsBoolean(value))
 			return true;
-		final K[] array = get.apply(value);
+		final V[] array = getter.apply(value);
 		final int size = array.length;
 		if (size == 0)
 			return true;
@@ -38,12 +33,12 @@ public class TypeArraySearchByteIndexField<T, K> extends AbstractCollectionField
 		}
 		writer.writeListTag(key, TagType.COMPOUND, count);
 		for (int i = 0; i < size; i++) {
-			final K entry = array[i];
+			final V entry = array[i];
 			if (entry == null)
 				continue;
 			writer.writeCompoundTag();
 			writer.writeByteTag(indexKey, i);
-			handler.serialize(entry, writer, context);
+			fieldType.serialize(entry, writer, context);
 			writer.writeEndTag();
 		}
 		return true;
@@ -59,7 +54,7 @@ public class TypeArraySearchByteIndexField<T, K> extends AbstractCollectionField
 		}
 		if (listType != TagType.COMPOUND)
 			throw new NBTException("Expected float tag but was: " + listType);
-		final K[] array = get.apply(value);
+		final V[] array = getter.apply(value);
 		reader.readNextEntry();
 		while (reader.getRestPayload() > 0) {
 			reader.readNextEntry();
@@ -73,7 +68,7 @@ public class TypeArraySearchByteIndexField<T, K> extends AbstractCollectionField
 			} else {
 				index = reader.readByteTag() & 0xFF; // index is unsigned
 			}
-			K entry = handler.deserialize(reader, context);
+			V entry = fieldType.deserialize(reader, context);
 			array[index] = entry;
 			reader.readNextEntry();
 		}

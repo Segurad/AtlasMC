@@ -3,12 +3,13 @@ package de.atlasmc.chat;
 import java.util.List;
 
 import de.atlasmc.Color;
+import de.atlasmc.ColorValue;
 import de.atlasmc.IDHolder;
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.util.EnumName;
 import de.atlasmc.util.EnumUtil;
 
-public enum ChatColor implements EnumName, IDHolder {
+public enum ChatColor implements EnumName, IDHolder, ColorValue {
 
 	BLACK('0', Color.fromRGB(0x000000)),
 	DARK_BLUE('1', Color.fromRGB(0x0000AA)),
@@ -53,23 +54,8 @@ public enum ChatColor implements EnumName, IDHolder {
 		this.name = this.name().toLowerCase().intern();
 	}
 	
-	/**
-	 * Returns the Color of this ChatColor<br>
-	 * {@link #OBFUSCATED}, {@link #BOLD}, {@link #STRIKETHROUGH}, 
-	 * {@link #UNDERLINE}, {@link #ITALIC} and {@link #RESET}
-	 * will return black 
-	 * @return the color of this ChatColor
-	 */
-	public Color getColor() {
-		return color;
-	}
-	
 	public char getFormatID() {
 		return formatID;
-	}
-	
-	public String getConsoleFormat() {
-		return consoleFormat;
 	}
 	
 	@Override
@@ -144,6 +130,38 @@ public enum ChatColor implements EnumName, IDHolder {
 				return c;
 		}
 		return null;
+	}
+
+	/**
+	 * Returns the Color of this ChatColor<br>
+	 * {@link #OBFUSCATED}, {@link #BOLD}, {@link #STRIKETHROUGH}, 
+	 * {@link #UNDERLINE}, {@link #ITALIC} and {@link #RESET}
+	 * will return black 
+	 * @return the color of this ChatColor
+	 */
+	@Override
+	public Color asColor() {
+		return color;
+	}
+
+	@Override
+	public ChatColor asChatColor() {
+		return this;
+	}
+	
+	@Override
+	public String asConsoleColor() {
+		return consoleFormat;
+	}
+
+	@Override
+	public int asRGB() {
+		return color.asRGB();
+	}
+
+	@Override
+	public int asARGB() {
+		return color.asARGB();
 	}
 
 	

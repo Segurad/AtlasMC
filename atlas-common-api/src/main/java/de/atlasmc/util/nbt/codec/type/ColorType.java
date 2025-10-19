@@ -39,7 +39,11 @@ public class ColorType extends ObjectType<Color> {
 			if (reader.getListType() != TagType.FLOAT)
 				throw new NBTException("Expected float tag but was: " + reader.getListType());
 			reader.readNextEntry();
-			Color c = new Color(reader.readFloatTag(), reader.readFloatTag(), reader.readFloatTag(), reader.readFloatTag());
+			float r = reader.readFloatTag();
+			float g = reader.readFloatTag();
+			float b = reader.readFloatTag();
+			float a = reader.getRestPayload() > 0 ? reader.readFloatTag() : 0;
+			Color c = Color.fromRGB(Color.asARGB(r, g, b, a));
 			reader.readNextEntry();
 			return c;
 		}

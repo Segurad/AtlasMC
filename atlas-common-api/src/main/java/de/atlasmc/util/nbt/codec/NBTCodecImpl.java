@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.codec.constructor.Constructor;
-import de.atlasmc.util.nbt.codec.type.NBTCompoundField;
+import de.atlasmc.util.nbt.codec.field.NBTCompoundField;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 

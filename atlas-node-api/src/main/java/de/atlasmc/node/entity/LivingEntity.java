@@ -27,7 +27,7 @@ public interface LivingEntity extends Entity, Attributeable, ProjectileSource {
 					.include(Entity.NBT_HANDLER)
 					.floatField("AbsorptionAmount", LivingEntity::getAbsorption, LivingEntity::setAbsorption, 0)
 					.typeCollection("active_effects", LivingEntity::hasPotionEffects, LivingEntity::getActivePotionEffects, LivingEntity::addPotionEffect, PotionEffect.NBT_HANDLER)
-					.typeCollectionInnerSearchKey("attributes", LivingEntity::hasAttributes, LivingEntity::getAttributes, "id", Attribute::getByName, LivingEntity::getAttribute, AttributeInstance::getAttribute, true)
+					.typeCollectionInnerSearchKey("attributes", LivingEntity::hasAttributes, LivingEntity::getAttributes, "id", Attribute::getByName, LivingEntity::getAttribute, AttributeInstance::getAttribute)
 					// Brain
 					.boolField("CanPickUpLoot", LivingEntity::canPickUpLoot, LivingEntity::setPickUpLoot, false)
 					.shortField("DeathTime", LivingEntity::getDeathAnimationTime, LivingEntity::setDeathAnimationTime, (short) 0)

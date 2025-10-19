@@ -9,7 +9,7 @@ public interface Sheep extends Animal {
 	NBT_HANDLER = NBTCodec
 					.builder(Sheep.class)
 					.include(Animal.NBT_HANDLER)
-					.enumByteField("Color", Sheep::getColor, Sheep::setColor, DyeColor.class, DyeColor::getID, DyeColor.WHITE)
+					.enumByteField("Color", Sheep::getColor, Sheep::setColor, DyeColor.class, DyeColor.WHITE)
 					.boolField("Sheared", Sheep::isSheared, Sheep::setSheared, false)
 					.build();
 	

@@ -19,7 +19,7 @@ public interface Display extends Entity {
 					.include(Entity.NBT_HANDLER)
 					.enumStringField("billboard", Display::getBillboard, Display::setBillboard, Billboard.class, Billboard.FIXED)
 					.typeCompoundField("brightness", Display::getBrightness, Display::setBrightness, Brightness.NBT_HANDLER)
-					.color("glow_color_override", Display::getGlowColorOverride, Display::setGlowColorOverride)
+					.color("glow_color_override", Display::getGlowColorOverride, Display::setGlowColorOverride, null)
 					.floatField("height", Display::getDisplayHeight, Display::setDisplayHeight, 0)
 					.floatField("width", Display::getDisplayWidth, Display::setDisplayWidth, 0)
 					.intField("interpolation_duration", Display::getTransformationInterpolationDuration, Display::setTransformationInterpolationDuration, 0)

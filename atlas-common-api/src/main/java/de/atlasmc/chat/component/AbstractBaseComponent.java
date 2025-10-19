@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 
 import de.atlasmc.Color;
-import de.atlasmc.chat.ChatColor;
+import de.atlasmc.ColorValue;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.event.click.ClickEvent;
 import de.atlasmc.chat.component.event.hover.HoverEvent;
@@ -25,8 +25,7 @@ public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> 
 	FLAG_STRIKETHROUGH = 0x10;
 	private byte flags;
 	private String font = ChatComponent.FONT_DEFAULT;
-	private Color color = null;
-	private ChatColor chatColor = null;
+	private ColorValue color = null;
 	private Color shadowColor = null;
 	private ClickEvent clickEvent;
 	private HoverEvent hoverEvent;
@@ -115,24 +114,13 @@ public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> 
 	}
 
 	@Override
-	public Color getColor() {
+	public ColorValue getColor() {
 		return color;
 	}
 
 	@Override
-	public ChatColor getColorChat() {
-		return chatColor;
-	}
-
-	@Override
-	public T setColor(Color rgb) {
-		color = rgb;
-		return getThis();
-	}
-
-	@Override
-	public T setColor(ChatColor color) {
-		this.chatColor = color;
+	public T setColor(ColorValue value) {
+		color = value;
 		return getThis();
 	}
 

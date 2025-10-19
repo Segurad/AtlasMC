@@ -129,7 +129,7 @@ public class CorePermissionGroup extends CorePermissionContextHolder implements 
 				return;
 			groupChanged = true;
 		}
-		setChatColor(chatColor.getColor());
+		setChatColor(chatColor.asColor());
 	}
 	
 	@Override
@@ -154,7 +154,7 @@ public class CorePermissionGroup extends CorePermissionContextHolder implements 
 				return;
 			groupChanged = true;
 		}
-		setNameColor(color.getColor());
+		setNameColor(color.asColor());
 	}
 	
 	@Override

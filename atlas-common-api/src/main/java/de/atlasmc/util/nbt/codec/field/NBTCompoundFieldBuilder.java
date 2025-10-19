@@ -1,4 +1,4 @@
-package de.atlasmc.util.nbt.codec;
+package de.atlasmc.util.nbt.codec.field;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,8 +12,8 @@ import de.atlasmc.util.function.ToBooleanFunction;
 import de.atlasmc.util.map.IdentityStrategy;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.codec.field.NBTField;
-import de.atlasmc.util.nbt.codec.type.NBTCompoundField;
+import de.atlasmc.util.nbt.codec.AbstractNBTCompoundFieldBuilder;
+import de.atlasmc.util.nbt.codec.type.FieldType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 import it.unimi.dsi.fastutil.bytes.ByteArrays;
@@ -22,34 +22,41 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap.Entry;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 
-public class NBTCompoundFieldBuilder<T> extends NBTField<T> implements Builder<NBTField<T>> {
+public class NBTCompoundFieldBuilder<T> extends NBTFieldBuilder<T, NBTCompoundFieldBuilder<T>> {
 
 	private final List<NBTField<T>> fieldOrder = new ArrayList<>();
 	private final List<Map<CharKey, NBTField<T>>> typeFields = new ArrayList<>(AbstractNBTCompoundFieldBuilder.TYPE_COUNT);
 	private final Object2IntMap<NBTField<T>> refCounts = new Object2IntLinkedOpenCustomHashMap<>(IdentityStrategy.getInstance());
 	public ToBooleanFunction<T> has;
-	public NBTCompoundFieldBuilder<T> parent;
+	public final NBTCompoundFieldBuilder<T> parent;
 	private boolean buildPrepared = true;
 	
 	public NBTCompoundFieldBuilder() {
-		this("root", null, null);
+		setKey("root");
+		this.parent = null;
 	}
 	
-	public NBTCompoundFieldBuilder(CharSequence key, ToBooleanFunction<T> has, NBTCompoundFieldBuilder<T> parent) {
-		super(key, COMPOUND, true);
-		this.has = has;
+	public NBTCompoundFieldBuilder(CharSequence key, NBTCompoundFieldBuilder<T> parent, boolean serverOnly) {
 		this.parent = parent;
+		if (parent != null)
+			parent.addField(new BuilderField<>(key, FieldType.COMPOUND, serverOnly, this));
 		for (int i = 0; i < AbstractNBTCompoundFieldBuilder.TYPE_COUNT; i++) {
 			typeFields.add(i, null);
 		}
 	}
 	
-	public ToBooleanFunction<T> getHas() {
+	@Override
+	public List<TagType> getTypes() {
+		return FieldType.COMPOUND;
+	}
+	
+	public ToBooleanFunction<T> getHasData() {
 		return has;
 	}
 	
-	public void setHas(ToBooleanFunction<T> has) {
-		this.has = has;
+	public NBTCompoundFieldBuilder<T> setHasData(ToBooleanFunction<T> hasData) {
+		this.has = hasData;
+		return this;
 	}
 
 	private void prepareBuild() {
@@ -158,10 +165,6 @@ public class NBTCompoundFieldBuilder<T> extends NBTField<T> implements Builder<N
 	public NBTCompoundFieldBuilder<T> addField(NBTField<T> field) {
 		if (field == null)
 			throw new IllegalArgumentException("Field can not be null!");
-		if (field.key == null)
-			throw new IllegalArgumentException("Key of field can not be null!");
-		if (field.types.isEmpty())
-			throw new IllegalArgumentException("Types can not be empty!");
 		buildPrepared = false;
 		int refCount = refCounts.getOrDefault(field, -1);
 		if (refCount == -1)
@@ -188,20 +191,15 @@ public class NBTCompoundFieldBuilder<T> extends NBTField<T> implements Builder<N
 		refCounts.put(field, refCount);
 		return this;
 	}
-	
-	@Override
-	public boolean serialize(T value, NBTWriter writer, CodecContext context) throws IOException {
-		throw new UnsupportedOperationException("Builder");
-	}
-
-	@Override
-	public void deserialize(T value, NBTReader reader, CodecContext context) throws IOException {
-		throw new UnsupportedOperationException("Builder");
-	}
 
 	@Override
 	public NBTCompoundField<T> build() {
 		return new NBTCompoundField<>(this);
+	}
+	
+	@Override
+	protected NBTCompoundFieldBuilder<T> getThis() {
+		return this;
 	}
 
 	@Override
@@ -210,6 +208,37 @@ public class NBTCompoundFieldBuilder<T> extends NBTField<T> implements Builder<N
 		typeFields.clear();
 		refCounts.clear();
 		buildPrepared = true;
+	}
+	
+	private static class BuilderField<T> extends NBTField<T> implements Builder<NBTField<T>> {
+
+		private final NBTCompoundFieldBuilder<T> builder;
+		
+		public BuilderField(CharSequence key, List<TagType> types, boolean serverOnly, NBTCompoundFieldBuilder<T> builder) {
+			super(key, types, serverOnly);
+			this.builder = builder;
+		}
+
+		@Override
+		public NBTField<T> build() {
+			return builder.build();
+		}
+
+		@Override
+		public void clear() {
+			builder.clear();
+		}
+
+		@Override
+		public boolean serialize(T type, NBTWriter writer, CodecContext context) throws IOException {
+			throw new UnsupportedOperationException("Builder");
+		}
+
+		@Override
+		public void deserialize(T type, NBTReader reader, CodecContext context) throws IOException {
+			throw new UnsupportedOperationException("Builder");
+		}
+		
 	}
 
 }

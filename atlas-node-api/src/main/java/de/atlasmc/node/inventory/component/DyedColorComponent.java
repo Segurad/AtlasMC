@@ -8,7 +8,7 @@ public interface DyedColorComponent extends ItemComponent {
 	public static final NBTCodec<DyedColorComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(DyedColorComponent.class)
-					.color(ComponentType.DYED_COLOR.getNamespacedKey(), DyedColorComponent::getColor, DyedColorComponent::setColor)
+					.color(ComponentType.DYED_COLOR.getNamespacedKey(), DyedColorComponent::getColor, DyedColorComponent::setColor, null)
 					.build();
 	
 	Color getColor();

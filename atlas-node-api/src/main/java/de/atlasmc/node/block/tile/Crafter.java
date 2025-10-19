@@ -14,7 +14,7 @@ public interface Crafter extends AbstractContainerTile<Inventory>, LootTableHold
 					.include(LootTableHolder.NBT_HANDLER)
 					.intField("crafting_ticks_remaining", Crafter::getCraftingTicksRemaining, Crafter::setCraftingticksRemaining, 0)
 					.boolField("triggered", Crafter::isTriggered, Crafter::setTriggered, false)
-					.intSetField("disabled_slots", Crafter::hasDisabledSlots, Crafter::getDisabledSlots)
+					.intListField("disabled_slots", Crafter::hasDisabledSlots, Crafter::getDisabledSlots)
 					.build();
 	
 	int getCraftingTicksRemaining();

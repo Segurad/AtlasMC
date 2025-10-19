@@ -2,39 +2,39 @@ package de.atlasmc.util.nbt.codec.type;
 
 import java.io.IOException;
 import java.util.List;
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.EnumUtil;
+import java.util.Objects;
+import java.util.function.IntFunction;
+import java.util.function.ToIntFunction;
+
 import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
-public class InterfacedEnumStringType<V, E extends Enum<E> & EnumName> extends ObjectType<V> {
+public class ByteToObjectType<V> extends ObjectType<V> {
 
-	private final Class<E> clazz;
+	private final IntFunction<V> toObject;
+	private final ToIntFunction<V> toByte;
 	
-	public InterfacedEnumStringType(Class<E> clazz) {
-		this.clazz = clazz;
+	public ByteToObjectType(IntFunction<V> toObject, ToIntFunction<V> toByte) {
+		this.toObject = Objects.requireNonNull(toObject);
+		this.toByte = Objects.requireNonNull(toByte);
 	}
-
+	
 	@Override
 	public boolean serialize(CharSequence key, V value, NBTWriter writer, CodecContext context) throws IOException {
-		if (!clazz.isInstance(value))
-			return false;
-		writer.writeStringTag(key, ((EnumName) value).getName());
+		writer.writeByteTag(key, toByte.applyAsInt(value));
 		return true;
 	}
 
 	@Override
 	public V deserialize(V value, NBTReader reader, CodecContext context) throws IOException {
-		@SuppressWarnings("unchecked")
-		V v = (V) EnumUtil.getByName(clazz, reader.readStringTag());
-		return v;
+		return toObject.apply(reader.readByteTag() & 0xFF);
 	}
 
 	@Override
 	public List<TagType> getTypes() {
-		return STRING;
+		return BYTE;
 	}
 
 }

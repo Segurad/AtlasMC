@@ -2,6 +2,7 @@ package de.atlasmc.util.nbt.codec.field;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.map.key.CharKey;
@@ -10,21 +11,6 @@ import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public abstract class NBTField<T> {
-	
-	public static final List<TagType>
-	BYTE = List.of(TagType.BYTE),
-	SHORT = List.of(TagType.SHORT),
-	INT = List.of(TagType.INT),
-	LONG = List.of(TagType.LONG),
-	FLOAT = List.of(TagType.FLOAT),
-	DOUBLE = List.of(TagType.DOUBLE),
-	BYTE_ARRAY = List.of(TagType.BYTE_ARRAY),
-	STRING = List.of(TagType.STRING),
-	LIST = List.of(TagType.LIST),
-	COMPOUND = List.of(TagType.COMPOUND),
-	INT_ARRAY = List.of(TagType.INT_ARRAY),
-	LONG_ARRAY = List.of(TagType.LONG_ARRAY),
-	LIST_STRING = List.of(TagType.LIST, TagType.STRING);
 	
 	/**
 	 * The key used for this field
@@ -39,10 +25,16 @@ public abstract class NBTField<T> {
 	 */
 	public final boolean serverOnly;
 	
+	public NBTField(CharSequence key, List<TagType> types, boolean serverOnly) {
+		this.key = CharKey.literal(key);
+		if (Objects.requireNonNull(types).isEmpty())
+			throw new IllegalArgumentException("Types can not be empty!");
+		this.types = types;
+		this.serverOnly = serverOnly;
+	}
+	
 	public NBTField(NBTFieldBuilder<T, ?> builder) {
-		this.key = CharKey.literal(builder.getKey());
-		this.types = builder.getTypes();
-		this.serverOnly = builder.isServerOnly();
+		this(builder.getKey(), builder.getTypes(), builder.isServerOnly());
 	}
 	
 	/**

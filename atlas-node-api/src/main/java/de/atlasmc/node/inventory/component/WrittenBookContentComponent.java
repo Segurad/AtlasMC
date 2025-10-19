@@ -15,7 +15,7 @@ public interface WrittenBookContentComponent extends ItemComponent {
 					.builder(WrittenBookContentComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.beginComponent(ComponentType.WRITTEN_BOOK_CONTENT.getNamespacedKey())
-					.chatList("pages", WrittenBookContentComponent::hasPages, WrittenBookContentComponent::getPages, true)
+					.chatList("pages", WrittenBookContentComponent::hasPages, WrittenBookContentComponent::getPages)
 					.beginComponent("title")
 					.string("raw", WrittenBookContentComponent::getTitle, WrittenBookContentComponent::setTitle)
 					.endComponent()

@@ -9,21 +9,27 @@ import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
-public class EnumByteType<V extends Enum<V> & IDHolder> extends AbstractEnumType<V> {
+public class EnumByteType<V, E extends Enum<E> & IDHolder> extends AbstractEnumType<V, E> {
 
-	public EnumByteType(Class<V> clazz) {
+	public EnumByteType(Class<E> clazz) {
 		super(clazz);
 	}
 
 	@Override
 	public boolean serialize(CharSequence key, V value, NBTWriter writer, CodecContext context) throws IOException {
-		writer.writeByteTag(key, value.getID());
+		if (!clazz.isInstance(value))
+			return false;
+		@SuppressWarnings("unchecked")
+		E enumValue = (E) value;
+		writer.writeByteTag(key, enumValue.getID());
 		return true;
 	}
 
 	@Override
 	public V deserialize(V value, NBTReader reader, CodecContext context) throws IOException {
-		return EnumUtil.getByID(clazz, reader.readByteTag() & 0xFF);
+		@SuppressWarnings("unchecked")
+		V v = (V) EnumUtil.getByID(clazz, reader.readByteTag() & 0xFF);
+		return v;
 	}
 
 	@Override

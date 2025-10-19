@@ -9,7 +9,7 @@ public interface MapColorComponent extends ItemComponent {
 	NBT_HANDLER = NBTCodec
 					.builder(MapColorComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
-					.color(ComponentType.MAP_COLOR.getNamespacedKey(), MapColorComponent::getColor, MapColorComponent::setColor)
+					.color(ComponentType.MAP_COLOR.getNamespacedKey(), MapColorComponent::getColor, MapColorComponent::setColor, null)
 					.build();
 	
 	Color getColor();

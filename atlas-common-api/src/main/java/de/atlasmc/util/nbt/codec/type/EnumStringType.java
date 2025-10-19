@@ -9,21 +9,27 @@ import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
-public class EnumStringType<V extends Enum<V> & EnumName> extends AbstractEnumType<V> {
+public class EnumStringType<V, E extends Enum<E> & EnumName> extends AbstractEnumType<V, E> {
 
-	public EnumStringType(Class<V> clazz) {
+	public EnumStringType(Class<E> clazz) {
 		super(clazz);
 	}
 
 	@Override
 	public boolean serialize(CharSequence key, V value, NBTWriter writer, CodecContext context) throws IOException {
-		writer.writeStringTag(key, value.getName());
+		if (!clazz.isInstance(value))
+			return false;
+		@SuppressWarnings("unchecked")
+		E enumValue = (E) value;
+		writer.writeStringTag(key, enumValue.getName());
 		return true;
 	}
 
 	@Override
 	public V deserialize(V value, NBTReader reader, CodecContext context) throws IOException {
-		return EnumUtil.getByName(clazz, reader.readStringTag());
+		@SuppressWarnings("unchecked")
+		V v = (V) EnumUtil.getByName(clazz, reader.readStringTag());
+		return v;
 	}
 
 	@Override

@@ -1,14 +1,14 @@
-package de.atlasmc.util.nbt.codec.type;
+package de.atlasmc.util.nbt.codec.field;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.util.codec.CodecContext;
-import de.atlasmc.util.function.ToBooleanFunction;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTException;
 import de.atlasmc.util.nbt.TagType;
@@ -17,43 +17,37 @@ import de.atlasmc.util.nbt.codec.NBTCodec;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
-public class TypeCollectionInnerSearchKeyField<T, K extends NBTSerializable, C extends Namespaced> extends AbstractCollectionField<T, Collection<K>> {
+public class TypeCollectionInnerSearchKeyField<T, V extends NBTSerializable, C extends Namespaced> extends AbstractCollectionField<T, Collection<V>, BiFunction<T, C, V>> {
 
 	private final CharKey keyField;
-	private final BiFunction<T, C, K> constructor;
-	private final Function<K, C> keyReverse;
+	private final Function<V, C> keyReverse;
 	private final Function<NamespacedKey, C> keySupplier;
 	
-	public TypeCollectionInnerSearchKeyField(CharSequence key, ToBooleanFunction<T> has, Function<T, Collection<K>> get, CharSequence keyField, Function<NamespacedKey, C> keySupplier, BiFunction<T, C, K> constructor, Function<K, C> keyReverse, boolean optional) {
-		super(key, LIST, has, get, optional);
-		this.keyField = CharKey.literal(keyField);
-		this.constructor = constructor;
-		this.keyReverse = keyReverse;
-		this.keySupplier = keySupplier;
+	public TypeCollectionInnerSearchKeyField(TypeCollectionInnerSearchKeyFieldBuilder<T, V, C> builder) {
+		super(builder);
+		this.keyField = CharKey.literal(builder.getKeyField());
+		this.keyReverse = Objects.requireNonNull(builder.getKeyReverse());
+		this.keySupplier = Objects.requireNonNull(builder.getKeySupplier());
 	}
 
 	@Override
 	public boolean serialize(T value, NBTWriter writer, CodecContext context) throws IOException {
-		if (has != null && !has.applyAsBoolean(value)) {
-			if (!useDefault)
-				writer.writeListTag(key, TagType.COMPOUND, 0);
+		if (hasData != null && !hasData.applyAsBoolean(value)) {
 			return true;
 		}
-		final Collection<K> list = get.apply(value);
+		final Collection<V> list = getter.apply(value);
 		final int size = list.size();
 		if (size == 0) {
-			if (!useDefault)
-				writer.writeListTag(key, TagType.COMPOUND, 0);
 			return true;
 		}
 		writer.writeListTag(key, TagType.COMPOUND, size);
-		for (K v : list) {
+		for (V v : list) {
 			writer.writeCompoundTag();
 			C valueKey = keyReverse.apply(v);
 			NamespacedKey nKey = context.clientSide ? valueKey.getClientKey() : valueKey.getNamespacedKey();
 			writer.writeNamespacedKey(keyField, nKey);
 			@SuppressWarnings("unchecked")
-			NBTCodec<K> handler = (NBTCodec<K>) v.getNBTCodec();
+			NBTCodec<V> handler = (NBTCodec<V>) v.getNBTCodec();
 			handler.serialize(v, writer, context);
 			writer.writeEndTag();
 		}
@@ -84,9 +78,9 @@ public class TypeCollectionInnerSearchKeyField<T, K extends NBTSerializable, C e
 				key = reader.readNamespacedKey();
 			}
 			C valueKey = keySupplier.apply(key);
-			K v = constructor.apply(value, valueKey);
+			V v = fieldType.apply(value, valueKey);
 			@SuppressWarnings("unchecked")
-			NBTCodec<K> handler = (NBTCodec<K>) v.getNBTCodec();
+			NBTCodec<V> handler = (NBTCodec<V>) v.getNBTCodec();
 			handler.deserialize(v, reader, context);
 		}
 		reader.readNextEntry();

@@ -11,7 +11,7 @@ public interface RepairableComponent extends ItemComponent {
 					.builder(RepairableComponent.class)
 					.include(ItemComponent.NBT_HANDLER)
 					.beginComponent(ComponentType.REPAIRABLE.getNamespacedKey())
-					.dataSetField("items", RepairableComponent::getItems, RepairableComponent::setItems, ItemType.getRegistry())
+					.dataSetField("items", RepairableComponent::getItems, RepairableComponent::setItems, ItemType.REGISTRY_KEY)
 					.endComponent()
 					.build();
 	

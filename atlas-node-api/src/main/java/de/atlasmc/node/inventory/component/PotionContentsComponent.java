@@ -14,7 +14,7 @@ public interface PotionContentsComponent extends AbstractPotionEffectComponent {
 					.include(AbstractPotionEffectComponent.NBT_HANDLER)
 					.beginComponent(ComponentType.POTION_CONTENTS.getNamespacedKey(), PotionContentsComponent::hasCustomData)
 					.registryValue("potion", PotionContentsComponent::getPotionData, PotionContentsComponent::setPotionData, PotionData.REGISTRY_KEY)
-					.color("custom_color", PotionContentsComponent::getCustomColor, PotionContentsComponent::setCustomColor)
+					.color("custom_color", PotionContentsComponent::getCustomColor, PotionContentsComponent::setCustomColor, null)
 					.chat("custom_name", PotionContentsComponent::getCustomName, PotionContentsComponent::setCustomName)
 					.typeList("custom_effects", PotionContentsComponent::hasEffects, PotionContentsComponent::getEffects, PotionEffect.NBT_HANDLER)
 					.endComponent()

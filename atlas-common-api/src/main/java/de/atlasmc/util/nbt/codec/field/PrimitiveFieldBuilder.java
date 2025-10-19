@@ -8,10 +8,13 @@ import java.util.function.ToDoubleFunction;
 import java.util.function.ToIntFunction;
 import java.util.function.ToLongFunction;
 
+import de.atlasmc.util.function.ObjBooleanConsumer;
 import de.atlasmc.util.function.ObjFloatConsumer;
 import de.atlasmc.util.function.ObjShortConsumer;
+import de.atlasmc.util.function.ToBooleanFunction;
 import de.atlasmc.util.function.ToFloatFunction;
 import de.atlasmc.util.nbt.TagType;
+import de.atlasmc.util.nbt.codec.type.FieldType;
 
 public class PrimitiveFieldBuilder<T, G, S> extends NBTFieldBuilder<T, PrimitiveFieldBuilder<T, G, S>> {
 
@@ -105,6 +108,7 @@ public class PrimitiveFieldBuilder<T, G, S> extends NBTFieldBuilder<T, Primitive
 		case LONG -> new LongField<T>((PrimitiveFieldBuilder<T, ToLongFunction<T>, ObjLongConsumer<T>>) this);
 		case FLOAT -> new FloatField<T>((PrimitiveFieldBuilder<T, ToFloatFunction<T>, ObjFloatConsumer<T>>) this);
 		case DOUBLE -> new DoubleField<T>((PrimitiveFieldBuilder<T, ToDoubleFunction<T>, ObjDoubleConsumer<T>>) this);
+		case null -> new BooleanField<T>((PrimitiveFieldBuilder<T, ToBooleanFunction<T>, ObjBooleanConsumer<T>>) this);
 		default ->
 			throw new IllegalArgumentException("Unsupported type: " + type);
 		};
@@ -113,12 +117,13 @@ public class PrimitiveFieldBuilder<T, G, S> extends NBTFieldBuilder<T, Primitive
 	@Override
 	public List<TagType> getTypes() {
 		return switch (type) {
-		case BYTE -> NBTField.BYTE;
-		case SHORT -> NBTField.SHORT;
-		case INT -> NBTField.INT;
-		case LONG -> NBTField.LONG;
-		case FLOAT -> NBTField.FLOAT;
-		case DOUBLE -> NBTField.DOUBLE;
+		case BYTE -> FieldType.BYTE;
+		case SHORT -> FieldType.SHORT;
+		case INT -> FieldType.INT;
+		case LONG -> FieldType.LONG;
+		case FLOAT -> FieldType.FLOAT;
+		case DOUBLE -> FieldType.DOUBLE;
+		case null -> FieldType.BYTE;
 		default ->
 			throw new IllegalArgumentException("Unsupported type: " + type);
 		};
@@ -127,6 +132,15 @@ public class PrimitiveFieldBuilder<T, G, S> extends NBTFieldBuilder<T, Primitive
 	@Override
 	protected PrimitiveFieldBuilder<T, G, S> getThis() {
 		return this;
+	}
+	
+	@Override
+	public void clear() {
+		super.clear();
+		defaultValue = null;
+		getter = null;
+		setter = null;
+		type = null;
 	}
 	
 }

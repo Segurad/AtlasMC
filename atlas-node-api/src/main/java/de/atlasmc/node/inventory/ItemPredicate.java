@@ -20,11 +20,11 @@ public class ItemPredicate implements NBTSerializable, ItemComponentHolder, Pred
 	NBT_HANDLER = NBTCodec
 					.builder(ItemPredicate.class)
 					.defaultConstructor(ItemPredicate::new)
-					.dataSetField("items", ItemPredicate::getItems, ItemPredicate::setItems, ItemType.getRegistry())
+					.dataSetField("items", ItemPredicate::getItems, ItemPredicate::setItems, ItemType.REGISTRY_KEY)
 					.intNullableField("count", ItemPredicate::getCount, ItemPredicate::setCount, null)
 					.typeCompoundField("count", ItemPredicate::getRange, ItemPredicate::setRange, IntRange.NBT_HANDLER)
 					.include(ItemComponentHolder.NBT_HANDLER)
-					.compoundMapNamespacedType2Type("predicates", ItemPredicate::hasPredicates, ItemPredicate::getPredicates, ItemComponentPredicate.NBT_HANDLER, ItemComponentPredicate::getType)
+					.compoundMapType2Type("predicates", ItemPredicate::hasPredicates, ItemPredicate::getPredicates, ItemComponentPredicate.NBT_HANDLER, ItemComponentPredicate::getType)
 					.build();
 
 	private DataSet<ItemType> items;

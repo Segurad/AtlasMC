@@ -2,10 +2,11 @@ package de.atlasmc.util.nbt.codec.field;
 
 import java.io.IOException;
 import de.atlasmc.util.codec.CodecContext;
+import de.atlasmc.util.nbt.codec.type.ObjectType;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
-public class ReuseableObjectField<T, V> extends AbstractCollectionField<T, V, V> {
+public class ReuseableObjectField<T, V> extends AbstractCollectionField<T, V, ObjectType<V>> {
 
 	public ReuseableObjectField(ReuseableObjectFieldBuilder<T, V> builder) {
 		super(builder);
