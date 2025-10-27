@@ -1,10 +1,9 @@
 package de.atlasmc.node.io.protocol.play;
 
-import java.util.Map;
-
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 import de.atlasmc.node.inventory.ItemStack;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 
 @DefaultPacketID(packetID = PacketPlay.IN_CLICK_CONTAINER, definition = "container_click")
 public class PacketInClickContainer extends AbstractPacket implements PacketPlayIn {
@@ -14,7 +13,7 @@ public class PacketInClickContainer extends AbstractPacket implements PacketPlay
 	public int slot;
 	public int button;
 	public int mode;
-	public Map<Integer, ItemStack> slotsChanged;
+	public Int2ObjectMap<ItemStack> slotsChanged;
 	public ItemStack carriedItem;
 	
 	@Override

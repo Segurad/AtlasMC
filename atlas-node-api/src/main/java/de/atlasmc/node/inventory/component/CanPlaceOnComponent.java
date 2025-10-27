@@ -8,7 +8,7 @@ public interface CanPlaceOnComponent extends AbstractBlockPredicateComponent {
 	public static final NBTCodec<CanPlaceOnComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(CanPlaceOnComponent.class)
-					.include(AbstractBlockPredicateComponent.NBT_HANDLER)
+					.include(AbstractBlockPredicateComponent.NBT_CODEC)
 					.typeList(ComponentType.CAN_PLACE_ON.getNamespacedKey(), CanPlaceOnComponent::hasPredicates, CanPlaceOnComponent::getPredicates, BlockPredicate.NBT_HANDLER)
 					.build();
 

@@ -8,7 +8,7 @@ public interface TooltipStyleComponent extends ItemComponent {
 	public static final NBTCodec<TooltipStyleComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(TooltipStyleComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.namespacedKey(ComponentType.TOOLTIP_STYLE.getNamespacedKey(), TooltipStyleComponent::getStyle, TooltipStyleComponent::setStyle)
 					.build();
 	

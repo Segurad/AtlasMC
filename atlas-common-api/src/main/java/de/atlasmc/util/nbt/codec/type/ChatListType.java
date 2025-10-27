@@ -63,7 +63,7 @@ public class ChatListType extends ObjectType<List<Chat>> {
 			reader.readNextEntry();
 			while (reader.getRestPayload() > 0) {
 				reader.readNextEntry();
-				Chat v = ChatComponent.NBT_HANDLER.deserialize(reader, context);
+				Chat v = ChatComponent.NBT_CODEC.deserialize(reader, context);
 				value.add(v);
 			}
 			reader.readNextEntry();

@@ -5,8 +5,8 @@ import java.util.List;
 
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Pillager;
-import de.atlasmc.node.entity.data.MetaDataField;
-import de.atlasmc.node.entity.data.MetaDataType;
+import de.atlasmc.node.entity.metadata.type.MetaDataField;
+import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.ItemStack;
 
 public class CorePillager extends CoreRaider implements Pillager {

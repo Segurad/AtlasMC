@@ -4,9 +4,9 @@ import java.util.UUID;
 
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Item;
-import de.atlasmc.node.entity.data.MetaData;
-import de.atlasmc.node.entity.data.MetaDataField;
-import de.atlasmc.node.entity.data.MetaDataType;
+import de.atlasmc.node.entity.metadata.type.MetaData;
+import de.atlasmc.node.entity.metadata.type.MetaDataField;
+import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.ItemStack;
 
 public class CoreItem extends CoreEntity implements Item {

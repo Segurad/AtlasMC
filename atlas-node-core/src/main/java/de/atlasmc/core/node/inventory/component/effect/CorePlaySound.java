@@ -1,9 +1,5 @@
 package de.atlasmc.core.node.inventory.component.effect;
 
-import static de.atlasmc.node.io.protocol.ProtocolUtil.readSound;
-import static de.atlasmc.node.io.protocol.ProtocolUtil.writeSound;
-
-import java.io.IOException;
 import java.util.Objects;
 
 import de.atlasmc.node.entity.Entity;
@@ -11,7 +7,6 @@ import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.inventory.component.effect.ComponentEffectType;
 import de.atlasmc.node.inventory.component.effect.PlaySound;
 import de.atlasmc.node.sound.Sound;
-import io.netty.buffer.ByteBuf;
 
 public class CorePlaySound extends CoreAbstractEffect implements PlaySound {
 
@@ -24,16 +19,6 @@ public class CorePlaySound extends CoreAbstractEffect implements PlaySound {
 	@Override
 	public void apply(Entity target, ItemStack item) {
 		target.causeSound(sound);
-	}
-
-	@Override
-	public void read(ByteBuf buf) throws IOException {
-		sound = readSound(buf);
-	}
-
-	@Override
-	public void write(ByteBuf buf) throws IOException {
-		writeSound(sound, buf);
 	}
 
 	@Override

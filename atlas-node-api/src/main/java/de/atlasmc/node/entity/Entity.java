@@ -6,9 +6,9 @@ import java.util.UUID;
 import org.joml.Vector3d;
 
 import de.atlasmc.IDHolder;
-import de.atlasmc.node.Location;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.Nameable;
-import de.atlasmc.node.SimpleLocation;
+import de.atlasmc.node.Location;
 import de.atlasmc.node.server.LocalServer;
 import de.atlasmc.node.sound.SoundEmitter;
 import de.atlasmc.node.world.Chunk;
@@ -24,7 +24,7 @@ import de.atlasmc.util.nbt.codec.NBTCodec;
 public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitter {
 	
 	public static final NBTCodec<Entity>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Entity.class)
 					.searchKeyConstructor("id", EntityType.REGISTRY_KEY, EntityType::createEntity, Entity::getType)
 					.shortField("Air", Entity::getAirTicks, Entity::setAirTicks, (short) 300)
@@ -68,17 +68,17 @@ public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitte
 	int getID();
 	
 	@UnsafeAPI
-	Location getLocationUnsafe();
+	WorldLocation getLocationUnsafe();
 	
-	Location getLocation();
+	WorldLocation getLocation();
 	
 	void setLocation(Vector3d loc);
 	
-	void setLocation(SimpleLocation loc);
+	void setLocation(Location loc);
+	
+	WorldLocation getLocation(WorldLocation loc);
 	
 	Location getLocation(Location loc);
-	
-	SimpleLocation getLocation(SimpleLocation loc);
 	
 	Pose getPose();
 	
@@ -196,15 +196,15 @@ public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitte
 	
 	void setFreezeTicks(int ticks);
 	
-	default void teleport(SimpleLocation loc) {
+	default void teleport(Location loc) {
 		teleport(loc, null, 0);
 	}
 	
-	default void teleport(SimpleLocation loc, int flags) {
+	default void teleport(Location loc, int flags) {
 		teleport(loc, null, flags);
 	}
 	
-	default void teleport(SimpleLocation loc, Vector3d velocity) {
+	default void teleport(Location loc, Vector3d velocity) {
 		teleport(loc, velocity, 0);
 	}
 	
@@ -215,7 +215,7 @@ public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitte
 	 * @param velocity
 	 * @param flags
 	 */
-	void teleport(SimpleLocation loc, Vector3d velocity, int flags);
+	void teleport(Location loc, Vector3d velocity, int flags);
 	
 	default void teleport(double x, double y, double z) {
 		teleport(x, y, z, 0);
@@ -257,7 +257,7 @@ public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitte
 	
 	@Override
 	default NBTCodec<? extends Entity> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public static enum Animation implements IDHolder {

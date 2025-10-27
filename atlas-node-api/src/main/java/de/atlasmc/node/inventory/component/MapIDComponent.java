@@ -7,7 +7,7 @@ public interface MapIDComponent extends ItemComponent {
 	public static final NBTCodec<MapIDComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(MapIDComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.intField(ComponentType.MAP_ID.getNamespacedKey(), MapIDComponent::getMapID, MapIDComponent::setMapID)
 					.build();
 	

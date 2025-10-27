@@ -10,7 +10,7 @@ public interface AttributeModifiersComponent extends ItemComponent, Attributeabl
 	public static final NBTCodec<AttributeModifiersComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(AttributeModifiersComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.multimapType2TypeList(ComponentType.ATTRIBUTE_MODIFIERS.getNamespacedKey(), AttributeModifiersComponent::hasAttributeModifiers, AttributeModifiersComponent::getAttributeModifiers, "id", Attribute::getByName, AttributeModifier.NBT_HANDLER)
 					.build();
 	

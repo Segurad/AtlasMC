@@ -7,7 +7,7 @@ public interface ExperienceOrb extends Entity {
 	public static final NBTCodec<ExperienceOrb>
 	NBT_HANDLER = NBTCodec
 					.builder(ExperienceOrb.class)
-					.include(Entity.NBT_HANDLER)
+					.include(Entity.NBT_CODEC)
 					.shortField("Age", ExperienceOrb::getLifeTime, ExperienceOrb::setLifeTime, (short) 6000)
 					.intField("Count", ExperienceOrb::getCount, ExperienceOrb::setCount, 1)
 					.shortField("Health", ExperienceOrb::getHealth, ExperienceOrb::setHealth, (short) 5)

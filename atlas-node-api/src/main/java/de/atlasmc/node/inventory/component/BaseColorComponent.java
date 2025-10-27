@@ -8,7 +8,7 @@ public interface BaseColorComponent extends ItemComponent {
 	public static final NBTCodec<BaseColorComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(BaseColorComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.enumStringField(ComponentType.BASE_COLOR.getNamespacedKey(), BaseColorComponent::getColor, BaseColorComponent::setColor, DyeColor.class, null)
 					.build();
 	

@@ -4,11 +4,13 @@ import static de.atlasmc.node.io.protocol.ProtocolUtil.*;
 
 import java.io.IOException;
 
+import de.atlasmc.chat.Chat;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateScore;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateScore.NumberFormatType;
+import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutUpdateScore implements PacketIO<PacketOutUpdateScore> {
@@ -18,12 +20,13 @@ public class CorePacketOutUpdateScore implements PacketIO<PacketOutUpdateScore> 
 		packet.entry = readString(in, MAX_IDENTIFIER_LENGTH);
 		packet.objective = readString(in, MAX_IDENTIFIER_LENGTH);
 		packet.value = readVarInt(in);
+		final CodecContext context = handler.getCodecContext();
 		if (in.readBoolean())
-			packet.displayName = readTextComponent(in);
+			packet.displayName = Chat.STREAM_CODEC.deserialize(in, context);
 		if (in.readBoolean()) {
 			packet.formatType = NumberFormatType.getByID(readVarInt(in));
 			if (packet.formatType != NumberFormatType.BLANK)
-				packet.numberFormat = readTextComponent(in).toComponent();
+				packet.numberFormat = Chat.STREAM_CODEC.deserialize(in, context).toComponent();
 		}
 	}
 
@@ -32,16 +35,17 @@ public class CorePacketOutUpdateScore implements PacketIO<PacketOutUpdateScore> 
 		writeString(packet.entry, out);
 		writeString(packet.objective, out);
 		writeVarInt(packet.value, out);
+		final CodecContext context = handler.getCodecContext();
 		if (packet.displayName != null) {
 			out.writeBoolean(true);
-			writeTextComponent(packet.displayName, out);
+			Chat.STREAM_CODEC.serialize(packet.displayName, out, context);
 		} else {
 			out.writeBoolean(false);
 		}
 		if (packet.formatType != null) {
 			out.writeBoolean(true);
 			if (packet.formatType != NumberFormatType.BLANK);
-				writeTextComponent(packet.numberFormat, out);
+				Chat.STREAM_CODEC.serialize(packet.numberFormat, out, context);
 		} else {
 			out.writeBoolean(false);
 		}

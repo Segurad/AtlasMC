@@ -1,5 +1,7 @@
 package de.atlasmc.node.world;
 
+import de.atlasmc.node.sound.EnumSound;
+import de.atlasmc.node.sound.ResourceSound;
 import de.atlasmc.node.sound.Sound;
 import de.atlasmc.util.nbt.codec.NBTSerializable;
 import de.atlasmc.util.nbt.codec.NBTCodec;
@@ -10,7 +12,7 @@ public class BiomeMusic implements NBTSerializable {
 	NBT_HANDLER = NBTCodec
 					.builder(BiomeMusic.class)
 					.beginComponent("data")
-					.addField(Sound.getNBTSoundField("sound", BiomeMusic::getSound, BiomeMusic::setSound, null))
+					.enumStringOrType("sound", BiomeMusic::getSound, BiomeMusic::setSound, EnumSound.class, ResourceSound.NBT_CODEC)
 					.intField("min_delay", BiomeMusic::getMinDelay, BiomeMusic::setMinDelay, 0)
 					.intField("max_delay", BiomeMusic::getMaxDelay, BiomeMusic::setMaxDelay, 0)
 					.boolField("replace_current_music", BiomeMusic::isRepalceCurrentMusic, BiomeMusic::setRepalceCurrentMusic, false)

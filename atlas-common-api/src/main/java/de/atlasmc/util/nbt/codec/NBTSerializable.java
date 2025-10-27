@@ -11,8 +11,8 @@ public interface NBTSerializable {
 	
 	default void writeToNBT(NBTWriter writer, CodecContext context) throws IOException {
 		@SuppressWarnings("unchecked")
-		NBTCodec<NBTSerializable> handler = (NBTCodec<NBTSerializable>) getNBTCodec();
-		handler.serialize(this, writer, context);
+		NBTCodec<NBTSerializable> codec = (NBTCodec<NBTSerializable>) getNBTCodec();
+		codec.serialize(this, writer, context);
 	}
 
 }

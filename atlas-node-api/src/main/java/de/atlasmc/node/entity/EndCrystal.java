@@ -9,7 +9,7 @@ public interface EndCrystal extends Entity {
 	public static final NBTCodec<EndCrystal>
 	NBT_HANDLER = NBTCodec
 					.builder(EndCrystal.class)
-					.include(Entity.NBT_HANDLER)
+					.include(Entity.NBT_CODEC)
 					.vector3i("beam_target", EndCrystal::getBeamTarget, EndCrystal::setBeamTarget)
 					.boolField("ShowBottom", EndCrystal::getShowBottom, EndCrystal::setShowBottom, false)
 					.build();

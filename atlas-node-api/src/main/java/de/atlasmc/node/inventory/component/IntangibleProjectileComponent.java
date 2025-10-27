@@ -7,7 +7,7 @@ public interface IntangibleProjectileComponent extends ItemComponent {
 	public static final NBTCodec<IntangibleProjectileComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(IntangibleProjectileComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.INTANGIBLE_PROJECTILE.getNamespacedKey())
 					.endComponent()
 					.build();

@@ -11,7 +11,7 @@ public class JukeboxSong extends ProtocolRegistryValueBase implements NBTSeriali
 	public static final NBTCodec<JukeboxSong>
 	NBT_HANDLER = NBTCodec
 					.builder(JukeboxSong.class)
-					.addField(Sound.getNBTSoundField("sound_event", JukeboxSong::getSound, JukeboxSong::setSound, null))
+					.enumStringOrType("sound_event", JukeboxSong::getSound, JukeboxSong::setSound, EnumSound.class, ResourceSound.NBT_CODEC)
 					.chat("description", JukeboxSong::getDescription, JukeboxSong::setDescription)
 					.floatField("length_in_seconds", JukeboxSong::getLength, JukeboxSong::setLength)
 					.intField("comparator_output", JukeboxSong::getComparatorOutput, JukeboxSong::setComparatorOutput, 0)

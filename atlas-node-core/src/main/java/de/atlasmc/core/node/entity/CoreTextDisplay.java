@@ -5,9 +5,9 @@ import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.TextDisplay;
-import de.atlasmc.node.entity.data.MetaData;
-import de.atlasmc.node.entity.data.MetaDataField;
-import de.atlasmc.node.entity.data.MetaDataType;
+import de.atlasmc.node.entity.metadata.type.MetaData;
+import de.atlasmc.node.entity.metadata.type.MetaDataField;
+import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreTextDisplay extends CoreDisplay implements TextDisplay {
 

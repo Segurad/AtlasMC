@@ -20,8 +20,9 @@ public class StreamCodecImpl<T> implements StreamCodec<T> {
 	}
 
 	@Override
-	public CodecContext getDefaultContext() {
-		return CodecContext.DEFAULT_SERVER;
+	public Class<? extends T> getType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

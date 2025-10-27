@@ -1,11 +1,11 @@
 package de.atlasmc.node.schematic;
 
-import de.atlasmc.node.SimpleLocation;
+import de.atlasmc.node.Location;
 
 public class CoreSchematicAccess implements SchematicAccess {
 
 	private boolean visible;
-	private final SimpleLocation off; // stores the offset and the rotation
+	private final Location off; // stores the offset and the rotation
 	private final Schematic schematic;
 	
 	public CoreSchematicAccess(Schematic schematic, int offX, int offY, int offZ) {
@@ -17,7 +17,7 @@ public class CoreSchematicAccess implements SchematicAccess {
 	}
 	
 	public CoreSchematicAccess(Schematic schematic, int offX, int offY, int offZ, float rotation, boolean visible) {
-		off = new SimpleLocation(offX, offY, offZ, rotation, 0);
+		off = new Location(offX, offY, offZ, rotation, 0);
 		this.visible = visible;
 		this.schematic = schematic;
 	}
@@ -33,17 +33,17 @@ public class CoreSchematicAccess implements SchematicAccess {
 	}
 
 	@Override
-	public SimpleLocation getOffset() {
+	public Location getOffset() {
 		return off.clone();
 	}
 
 	@Override
-	public SimpleLocation getOffset(SimpleLocation loc) {
+	public Location getOffset(Location loc) {
 		return off.copyTo(loc);
 	}
 
 	@Override
-	public void setOffset(SimpleLocation loc) {
+	public void setOffset(Location loc) {
 		off.set(loc);		
 	}
 

@@ -43,7 +43,7 @@ public class CoreChatFactory implements ChatFactory {
 		SNBTReader reader = new SNBTReader(json);
 		ChatComponent comp;
 		try {
-			comp = ChatComponent.NBT_HANDLER.deserialize(reader);
+			comp = ChatComponent.NBT_CODEC.deserialize(reader);
 		} catch (IOException e) {
 			throw new NBTException("Error while parsing chat!", e);
 		} finally {
@@ -263,7 +263,7 @@ public class CoreChatFactory implements ChatFactory {
 			return comp;
 		} else if (type == TagType.COMPOUND) {
 			reader.readNextEntry();
-			return ChatComponent.NBT_HANDLER.deserialize(reader);
+			return ChatComponent.NBT_CODEC.deserialize(reader);
 		} else {
 			throw new NBTException("Unexpected element type: " + type.name());
 		}
@@ -273,7 +273,7 @@ public class CoreChatFactory implements ChatFactory {
 	public void toNBT(CharSequence key, Chat chat, NBTWriter writer) throws IOException {
 		if (chat instanceof ChatComponent comp) {
 			writer.writeCompoundTag(key);
-			ChatComponent.NBT_HANDLER.serialize(comp, writer);
+			ChatComponent.NBT_CODEC.serialize(comp, writer);
 			writer.writeEndTag();
 		} else {
 			writer.writeStringTag(key, chat.toText());

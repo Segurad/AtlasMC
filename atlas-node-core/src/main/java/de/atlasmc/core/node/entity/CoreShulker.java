@@ -4,8 +4,8 @@ import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Shulker;
-import de.atlasmc.node.entity.data.MetaDataField;
-import de.atlasmc.node.entity.data.MetaDataType;
+import de.atlasmc.node.entity.metadata.type.MetaDataField;
+import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.util.EnumUtil;
 
 public class CoreShulker extends CoreMob implements Shulker {

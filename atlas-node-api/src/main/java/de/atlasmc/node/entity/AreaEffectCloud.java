@@ -14,12 +14,12 @@ public interface AreaEffectCloud extends Entity {
 	public static final NBTCodec<AreaEffectCloud>
 	NBT_HANDLER = NBTCodec
 					.builder(AreaEffectCloud.class)
-					.include(Entity.NBT_HANDLER)
+					.include(Entity.NBT_CODEC)
 					.intField("Age", AreaEffectCloud::getAge, AreaEffectCloud::setAge, 0)
 					.color("Color", AreaEffectCloud::getColor, AreaEffectCloud::setColor, null)
 					.intField("Duration", AreaEffectCloud::getMaxDuration, AreaEffectCloud::setMaxDuration, 0)
 					.intField("DurationOnUse", AreaEffectCloud::getDurationOnUse, AreaEffectCloud::setDurationOnUse, 0)
-					.typeList("potion_contents", AreaEffectCloud::hasPotionEffects, AreaEffectCloud::getPotionEffects, PotionEffect.NBT_HANDLER)
+					.typeList("potion_contents", AreaEffectCloud::hasPotionEffects, AreaEffectCloud::getPotionEffects, PotionEffect.NBT_CODEC)
 					.uuid("Owner", AreaEffectCloud::getOwner, AreaEffectCloud::setOwner)
 					.typeCompoundField("custom_particle", AreaEffectCloud::getParticle, AreaEffectCloud::setParticle, Particle.NBT_HANDLER)
 					.registryValue("Potion", AreaEffectCloud::getPotionData, AreaEffectCloud::setPotionData, PotionData.REGISTRY_KEY)

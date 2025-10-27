@@ -15,6 +15,7 @@ import de.atlasmc.io.Protocol;
 import de.atlasmc.log.Log;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.ThreadSafe;
+import de.atlasmc.util.codec.CodecContext;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 
@@ -73,6 +74,8 @@ public interface ConnectionHandler {
 	void handlePacket(Packet packet) throws IOException;
 	
 	void handleSyncPackets(Log logger);
+	
+	CodecContext getCodecContext();
 	
 	@NotNull
 	Log getLogger();

@@ -1,7 +1,7 @@
 package de.atlasmc.core.node.world.chunkprovider;
 
 import de.atlasmc.core.node.block.CoreBlockAccess;
-import de.atlasmc.node.Location;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.block.Block;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.util.MathUtil;
@@ -127,7 +127,7 @@ public abstract class CoreAbstractChunkProvider implements ChunkProvider {
 		Chunk chunk = getChunk(x >> 4, z >> 4, false);
 		if (chunk == null)
 			return null;
-		return new CoreBlockAccess(new Location(world, x, y, z), chunk);
+		return new CoreBlockAccess(new WorldLocation(world, x, y, z), chunk);
 	}
 
 

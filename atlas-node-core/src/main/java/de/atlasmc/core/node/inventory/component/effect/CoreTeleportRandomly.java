@@ -1,13 +1,11 @@
 package de.atlasmc.core.node.inventory.component.effect;
 
-import java.io.IOException;
 import java.util.Objects;
 
 import de.atlasmc.node.entity.Entity;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.inventory.component.effect.ComponentEffectType;
 import de.atlasmc.node.inventory.component.effect.TeleportRandomly;
-import io.netty.buffer.ByteBuf;
 
 public class CoreTeleportRandomly extends CoreAbstractEffect implements TeleportRandomly {
 	
@@ -20,16 +18,6 @@ public class CoreTeleportRandomly extends CoreAbstractEffect implements Teleport
 	@Override
 	public void apply(Entity target, ItemStack item) {
 		// TODO teleport random
-	}
-
-	@Override
-	public void read(ByteBuf buf) throws IOException {
-		diameter = buf.readFloat();
-	}
-
-	@Override
-	public void write(ByteBuf buf) throws IOException {
-		buf.writeFloat(diameter);
 	}
 
 	@Override

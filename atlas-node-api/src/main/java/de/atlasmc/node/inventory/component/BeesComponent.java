@@ -11,7 +11,7 @@ public interface BeesComponent extends ItemComponent {
 	public static final NBTCodec<BeesComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(BeesComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.typeList(ComponentType.BEES.getNamespacedKey(), BeesComponent::hasBees, BeesComponent::getBees, Occupant.NBT_HANDLER)
 					.build();
 	

@@ -7,7 +7,7 @@ public interface MaxDamageComponent extends ItemComponent {
 	public static final NBTCodec<MaxDamageComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(MaxDamageComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.intField(ComponentType.MAX_DAMAGE.getNamespacedKey(), MaxDamageComponent::getMaxDamage, MaxDamageComponent::setMaxDamage, 0)
 					.build();
 	

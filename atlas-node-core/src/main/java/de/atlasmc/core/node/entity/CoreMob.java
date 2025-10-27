@@ -2,9 +2,9 @@ package de.atlasmc.core.node.entity;
 
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Mob;
-import de.atlasmc.node.entity.data.MetaData;
-import de.atlasmc.node.entity.data.MetaDataField;
-import de.atlasmc.node.entity.data.MetaDataType;
+import de.atlasmc.node.entity.metadata.type.MetaData;
+import de.atlasmc.node.entity.metadata.type.MetaDataField;
+import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreMob extends CoreLivingEntity implements Mob {
 

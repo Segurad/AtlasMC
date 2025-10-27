@@ -10,7 +10,7 @@ public interface BannerPatternsComponent extends ItemComponent {
 	public static final NBTCodec<BannerPatternsComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(BannerPatternsComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.typeList(ComponentType.BANNER_PATTERNS.getNamespacedKey(), BannerPatternsComponent::hasPatterns, BannerPatternsComponent::getPatterns, Pattern.NBT_HANDLER)
 					.build();
 	

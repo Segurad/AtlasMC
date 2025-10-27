@@ -2,7 +2,7 @@ package de.atlasmc.node.util;
 
 import org.joml.Vector3d;
 
-import de.atlasmc.node.SimpleLocation;
+import de.atlasmc.node.Location;
 import de.atlasmc.node.block.BlockFace;
 
 public final class MathGraphUtil {
@@ -23,7 +23,7 @@ public final class MathGraphUtil {
 	
 	/**
 	 * Cast a Ray through cells
-	 * @see #castVoxelRay3D(SimpleLocation, Vector, double, VoxelRayConsumer)
+	 * @see #castVoxelRay3D(Location, Vector, double, VoxelRayConsumer)
 	 */
 	public static void castVoxelRay3D(double x, double y, double z, double vX, double vY, double vZ, double length, VoxelRayConsumer consumer) {
 		if (consumer == null) 

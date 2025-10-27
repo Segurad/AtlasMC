@@ -11,7 +11,7 @@ public interface LoreComponent extends ItemComponent {
 	public static final NBTCodec<LoreComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(LoreComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.chatList(ComponentType.LORE.getNamespacedKey(), LoreComponent::hasLore, LoreComponent::getLore)
 					.build();
 	

@@ -12,7 +12,7 @@ public abstract class CoreAbstractPotionEffect implements PotionEffect {
 	public static final NBTCodec<CoreAbstractPotionEffect>
 	NBT_HANDLER = NBTCodec
 					.builder(CoreAbstractPotionEffect.class)
-					.include(PotionEffect.NBT_HANDLER)
+					.include(PotionEffect.NBT_CODEC)
 					.byteField("amplifier", CoreAbstractPotionEffect::getAmplifier, CoreAbstractPotionEffect::setAmplifier, (byte) 0)
 					.intField("duration", CoreAbstractPotionEffect::getDuration, CoreAbstractPotionEffect::setDuration, 1)
 					.boolField("ambient", CoreAbstractPotionEffect::hasReducedAmbient, CoreAbstractPotionEffect::setReducedAmbient, false)

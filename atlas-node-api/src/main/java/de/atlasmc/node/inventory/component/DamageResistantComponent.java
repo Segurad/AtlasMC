@@ -9,7 +9,7 @@ public interface DamageResistantComponent extends ItemComponent {
 	public static final NBTCodec<DamageResistantComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(DamageResistantComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.DAMAGE_RESISTANT.getNamespacedKey())
 					.tagField("types", DamageResistantComponent::getDamageTypes, DamageResistantComponent::setDamageTypes)
 					.endComponent()

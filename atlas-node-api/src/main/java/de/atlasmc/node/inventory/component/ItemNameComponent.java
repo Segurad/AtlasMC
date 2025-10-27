@@ -8,7 +8,7 @@ public interface ItemNameComponent extends ItemComponent {
 	public static final NBTCodec<ItemNameComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(ItemNameComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.chat(ComponentType.ITEM_NAME.getNamespacedKey(), ItemNameComponent::getName, ItemNameComponent::setName)
 					.build();
 	

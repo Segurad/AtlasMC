@@ -2,16 +2,16 @@ package de.atlasmc.node.world;
 
 import org.joml.Vector3d;
 
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.Location;
-import de.atlasmc.node.SimpleLocation;
 
 /**
  * Represents a region between two locations
  */
 public class Region implements Cloneable {
 
-	protected SimpleLocation loc1;
-	protected SimpleLocation loc2;
+	protected Location loc1;
+	protected Location loc2;
 
 	protected double maxx;
 	protected double maxy;
@@ -26,13 +26,13 @@ public class Region implements Cloneable {
 	 * @param loc1 The region's location 1
 	 * @param loc2 The region's location 2
 	 */
-	public Region(SimpleLocation loc1, SimpleLocation loc2) {
+	public Region(Location loc1, Location loc2) {
 		this.loc1 = loc1.clone();
 		this.loc2 = loc2.clone();
 		update();
 	}
 
-	public Region(SimpleLocation loc) {
+	public Region(Location loc) {
 		loc1 = loc.clone();
 		loc2 = loc.clone();
 		maxx = loc.x;
@@ -48,11 +48,11 @@ public class Region implements Cloneable {
 	 * 
 	 * @return location 1
 	 */
-	public SimpleLocation getLoc1() {
+	public Location getLoc1() {
 		return loc1.clone();
 	}
 	
-	public SimpleLocation getLoc1(SimpleLocation loc) {
+	public Location getLoc1(Location loc) {
 		return loc.set(loc);
 	}
 
@@ -60,7 +60,7 @@ public class Region implements Cloneable {
 	 * Sets the region's location 1 to location
 	 * @param loc The location you want to set as location 1
 	 */
-	public void setLoc1(Location loc) {
+	public void setLoc1(WorldLocation loc) {
 		loc1.set(loc);
 		update();
 	}
@@ -70,11 +70,11 @@ public class Region implements Cloneable {
 	 * 
 	 * @return location 2
 	 */
-	public SimpleLocation getLoc2() {
+	public Location getLoc2() {
 		return loc2.clone();
 	}
 	
-	public SimpleLocation getLoc2(SimpleLocation loc) {
+	public Location getLoc2(Location loc) {
 		return loc.set(loc);
 	}
 
@@ -82,7 +82,7 @@ public class Region implements Cloneable {
 	 * Sets the region's location 2 to location
 	 * @param loc The location you want to set as location 2
 	 */
-	public void setLoc2(Location loc) {
+	public void setLoc2(WorldLocation loc) {
 		loc2.set(loc);
 		update();
 	}
@@ -183,8 +183,8 @@ public class Region implements Cloneable {
 		return getWidhtX() * getHeight() * getWidhtZ();
 	}
 
-	public SimpleLocation getCenter() {
-		return new SimpleLocation(getMinX() + getWidhtX() / 2, getMinY() + getHeight() / 2, getMinZ() + getWidhtZ() / 2);
+	public Location getCenter() {
+		return new Location(getMinX() + getWidhtX() / 2, getMinY() + getHeight() / 2, getMinZ() + getWidhtZ() / 2);
 	}
 
 	public Region clone() {

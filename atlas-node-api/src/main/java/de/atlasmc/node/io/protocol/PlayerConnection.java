@@ -11,7 +11,7 @@ import de.atlasmc.chat.Messageable;
 import de.atlasmc.log.Log;
 import de.atlasmc.network.AtlasNode;
 import de.atlasmc.node.NodePlayer;
-import de.atlasmc.node.SimpleLocation;
+import de.atlasmc.node.Location;
 import de.atlasmc.node.entity.Player;
 import de.atlasmc.node.event.player.PlayerAnimationEvent;
 import de.atlasmc.node.event.player.PlayerHeldItemChangeEvent;
@@ -108,7 +108,7 @@ public interface PlayerConnection extends Messageable {
 	 * @param flags
 	 * @return
 	 */
-	int teleport(SimpleLocation loc, Vector3d velocity, int flags);
+	int teleport(Location loc, Vector3d velocity, int flags);
 	
 	/**
 	 * Returns the id of the last teleport
@@ -131,14 +131,14 @@ public interface PlayerConnection extends Messageable {
 	 * Returns the last location the client send and marks it as unchanged
 	 * @return location
 	 */
-	SimpleLocation acceptClientLocation();
+	Location acceptClientLocation();
 	
 	/**
 	 * Returns the last location the client send.
 	 * Can be used for changes.
 	 * @return
 	 */
-	SimpleLocation getClientLocation();
+	Location getClientLocation();
 	
 	/**
 	 * Returns all {@link RecipeBook}s of this player

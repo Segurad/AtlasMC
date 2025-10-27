@@ -9,16 +9,16 @@ import java.util.function.BiConsumer;
 import org.joml.Vector3d;
 
 import de.atlasmc.chat.Chat;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.Location;
-import de.atlasmc.node.SimpleLocation;
 import de.atlasmc.node.SoundCategory;
 import de.atlasmc.node.entity.Entity;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Player;
-import de.atlasmc.node.entity.data.MetaData;
-import de.atlasmc.node.entity.data.MetaDataContainer;
-import de.atlasmc.node.entity.data.MetaDataField;
-import de.atlasmc.node.entity.data.MetaDataType;
+import de.atlasmc.node.entity.metadata.type.MetaData;
+import de.atlasmc.node.entity.metadata.type.MetaDataContainer;
+import de.atlasmc.node.entity.metadata.type.MetaDataField;
+import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.io.protocol.PlayerConnection;
 import de.atlasmc.node.io.protocol.play.PacketOutRemoveEntities;
 import de.atlasmc.node.io.protocol.play.PacketOutSetEntityMetadata;
@@ -103,8 +103,8 @@ public class CoreEntity implements Entity {
 	protected final Vector3d motion;
 	private List<Entity> passengers;
 	private int portalCooldown;
-	protected final Location loc;
-	protected final Location oldLoc;
+	protected final WorldLocation loc;
+	protected final WorldLocation oldLoc;
 	private Chunk chunk;
 	private List<String> scoreboardTags;
 	private EntityPerception perception;
@@ -127,8 +127,8 @@ public class CoreEntity implements Entity {
 		this.aremoved = true;
 		this.ticking = true;
 		this.type = type;
-		this.loc = new Location(null, 0, 0, 0);
-		this.oldLoc = new Location(loc);
+		this.loc = new WorldLocation(null, 0, 0, 0);
+		this.oldLoc = new WorldLocation(loc);
 		this.motion = new Vector3d();
 		this.viewers = createViewerSet();
 		metaContainer = new MetaDataContainer(getMetaContainerSize());
@@ -231,17 +231,17 @@ public class CoreEntity implements Entity {
 	}
 
 	@Override
-	public Location getLocation() {
+	public WorldLocation getLocation() {
 		return loc.clone();
 	}
 
 	@Override
-	public Location getLocation(Location loc) {
+	public WorldLocation getLocation(WorldLocation loc) {
 		return this.loc.copyTo(loc);
 	}
 
 	@Override
-	public SimpleLocation getLocation(SimpleLocation loc) {
+	public Location getLocation(Location loc) {
 		return this.loc.copyTo(loc);
 	}
 
@@ -370,7 +370,7 @@ public class CoreEntity implements Entity {
 	}
 	
 	@Override
-	public void teleport(SimpleLocation loc, Vector3d velocity, int flags) {
+	public void teleport(Location loc, Vector3d velocity, int flags) {
 		if (loc == null)
 			throw new IllegalArgumentException("Location can not be null!");
 		teleported = true;
@@ -701,7 +701,7 @@ public class CoreEntity implements Entity {
 	}
 
 	@Override
-	public Location getLocationUnsafe() {
+	public WorldLocation getLocationUnsafe() {
 		return loc;
 	}
 
@@ -711,7 +711,7 @@ public class CoreEntity implements Entity {
 	}
 
 	@Override
-	public void setLocation(SimpleLocation loc) {
+	public void setLocation(Location loc) {
 		loc.set(loc);
 	}
 

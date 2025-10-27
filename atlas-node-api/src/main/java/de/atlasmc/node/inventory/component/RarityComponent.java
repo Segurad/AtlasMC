@@ -9,7 +9,7 @@ public interface RarityComponent extends ItemComponent {
 	public static final NBTCodec<RarityComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(RarityComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.enumStringField(ComponentType.RARITY.getNamespacedKey(), RarityComponent::getRarity, RarityComponent::setRarity, Rarity.class, null)
 					.build();
 	

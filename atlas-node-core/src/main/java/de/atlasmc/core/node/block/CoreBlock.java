@@ -1,6 +1,6 @@
 package de.atlasmc.core.node.block;
 
-import de.atlasmc.node.Location;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.world.Chunk;
@@ -12,18 +12,18 @@ public class CoreBlock extends CoreBlockAccess {
 	
 	private BlockData data;
 	
-	public CoreBlock(Location loc, BlockData data) {
+	public CoreBlock(WorldLocation loc, BlockData data) {
 		this(loc, loc.getWorld().getChunk(loc), data);
 	}
 	
-	public CoreBlock(Location loc, Chunk chunk, BlockData data) {
+	public CoreBlock(WorldLocation loc, Chunk chunk, BlockData data) {
 		super(loc, chunk);
 		if (data == null)
 			throw new IllegalArgumentException("BlockData can not be null!");
 		this.data = data;
 	}
 	
-	public CoreBlock(Location loc, BlockType type) {
+	public CoreBlock(WorldLocation loc, BlockType type) {
 		this(loc, type.createBlockData());
 	}
 

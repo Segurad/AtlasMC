@@ -2,7 +2,7 @@ package de.atlasmc.node.schematic;
 
 import java.util.List;
 
-import de.atlasmc.node.SimpleLocation;
+import de.atlasmc.node.Location;
 
 public interface Schematic {
 	
@@ -14,11 +14,11 @@ public interface Schematic {
 	
 	public int getLengthZ();
 
-	public SimpleLocation getOffset();
+	public Location getOffset();
 	
-	public SimpleLocation getOffset(SimpleLocation loc);
+	public Location getOffset(Location loc);
 	
-	public void setOffset(SimpleLocation loc);
+	public void setOffset(Location loc);
 	
 	/**
 	 * Returns a List containing all Schematics linked in this Schematic

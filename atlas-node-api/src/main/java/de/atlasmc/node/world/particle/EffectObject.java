@@ -2,7 +2,7 @@ package de.atlasmc.node.world.particle;
 
 import org.joml.Vector3f;
 
-import de.atlasmc.node.Location;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.entity.Player;
 import de.atlasmc.node.world.WorldEvent;
 
@@ -24,12 +24,12 @@ public class EffectObject implements Animation {
 	
 	
 	@Override
-	public void play(Player player, Location loc, Vector3f angle) {
+	public void play(Player player, WorldLocation loc, Vector3f angle) {
 		player.playEffect(loc, effect, data);
 	}
 
 	@Override
-	public void playAll(Location loc, Vector3f angle) {
+	public void playAll(WorldLocation loc, Vector3f angle) {
 		loc.getWorld().playEffect(loc, effect, data, radius);
 	}
 

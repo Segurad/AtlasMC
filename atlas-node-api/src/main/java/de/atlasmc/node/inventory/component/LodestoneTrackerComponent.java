@@ -10,7 +10,7 @@ public interface LodestoneTrackerComponent extends ItemComponent {
 	public static final NBTCodec<LodestoneTrackerComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(LodestoneTrackerComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.LODESTONE_TRACKER.getNamespacedKey())
 					.beginComponent("target", LodestoneTrackerComponent::hasTarget)
 					.vector3i("pos", LodestoneTrackerComponent::getLocation, LodestoneTrackerComponent::setLocation)

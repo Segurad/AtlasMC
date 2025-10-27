@@ -8,7 +8,7 @@ public interface JukeboxPlayableComponent extends ItemComponent {
 	public static final NBTCodec<JukeboxPlayableComponent> 
 	NBT_HANDLER = NBTCodec
 					.builder(JukeboxPlayableComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.namespacedKey(ComponentType.JUKEBOX_PLAYABLE.getNamespacedKey(), JukeboxPlayableComponent::getSong, JukeboxPlayableComponent::setSong)
 					.build();
 	

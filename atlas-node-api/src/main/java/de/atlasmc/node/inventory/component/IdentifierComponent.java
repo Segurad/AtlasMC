@@ -11,7 +11,7 @@ public interface IdentifierComponent extends ItemComponent {
 	public static final NBTCodec<IdentifierComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(IdentifierComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.namespacedKey(ComponentType.IDENTIFIER.getNamespacedKey(), IdentifierComponent::getIdentifier, IdentifierComponent::setIdentifier)
 					.build();
 	

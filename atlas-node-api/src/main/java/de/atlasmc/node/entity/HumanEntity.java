@@ -33,8 +33,8 @@ public interface HumanEntity extends LivingEntity, InventoryHolder {
 					// ignore_fall_damage_from_current_explosion
 					// Inventory
 					// LastDeathLocation
-					.typeCompoundField("ShoulderEntityLeft", HumanEntity::getLeftShoulder, HumanEntity::setLeftShoulder, Entity.NBT_HANDLER)
-					.typeCompoundField("ShoulderEntityRight", HumanEntity::getRightShoulder, HumanEntity::setRightShoulder, Entity.NBT_HANDLER)
+					.typeCompoundField("ShoulderEntityLeft", HumanEntity::getLeftShoulder, HumanEntity::setLeftShoulder, Entity.NBT_CODEC)
+					.typeCompoundField("ShoulderEntityRight", HumanEntity::getRightShoulder, HumanEntity::setRightShoulder, Entity.NBT_CODEC)
 					.build();
 	
 	float getWalkSpeed();

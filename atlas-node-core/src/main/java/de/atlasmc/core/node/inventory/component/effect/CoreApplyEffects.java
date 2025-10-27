@@ -1,11 +1,5 @@
 package de.atlasmc.core.node.inventory.component.effect;
 
-import static de.atlasmc.io.PacketUtil.readVarInt;
-import static de.atlasmc.io.PacketUtil.writeVarInt;
-import static de.atlasmc.node.io.protocol.ProtocolUtil.readPotionEffect;
-import static de.atlasmc.node.io.protocol.ProtocolUtil.writePotionEffect;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -16,7 +10,6 @@ import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.inventory.component.effect.ApplyEffects;
 import de.atlasmc.node.inventory.component.effect.ComponentEffectType;
 import de.atlasmc.node.potion.PotionEffect;
-import io.netty.buffer.ByteBuf;
 
 public class CoreApplyEffects extends CoreAbstractEffect implements ApplyEffects {
 
@@ -39,37 +32,6 @@ public class CoreApplyEffects extends CoreAbstractEffect implements ApplyEffects
 			PotionEffect effect = effects.get(i);
 			entity.addPotionEffect(effect);
 		}
-	}
-
-	@Override
-	public void read(ByteBuf buf) throws IOException {
-		if (!hasEffects()) {
-			writeVarInt(0, buf);
-			buf.writeFloat(probability);
-			return;
-		}
-		final int size = effects.size();
-		for (int i = 0; i < size; i++) {
-			PotionEffect effect = effects.get(i);
-			writePotionEffect(effect, buf);
-		}
-		buf.writeFloat(probability);
-	}
-
-	@Override
-	public void write(ByteBuf buf) throws IOException {
-		final int count = readVarInt(buf);
-		if (effects != null)
-			effects.clear();
-		if (count > 0) {
-			for (int i = 0; i < count; i++) {
-				PotionEffect effect = readPotionEffect(buf);
-				if (effect == null)
-					continue;
-				addEffect(effect);
-			}
-		}
-		probability = buf.readFloat();
 	}
 
 	@Override

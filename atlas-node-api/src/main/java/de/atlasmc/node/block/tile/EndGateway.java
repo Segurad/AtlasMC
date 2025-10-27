@@ -1,6 +1,6 @@
 package de.atlasmc.node.block.tile;
 
-import de.atlasmc.node.Location;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface EndGateway extends TileEntity {
@@ -34,9 +34,9 @@ public interface EndGateway extends TileEntity {
 	
 	void setRelativeCoordinates(boolean relative);
 	
-	Location getExitPortal();
+	WorldLocation getExitPortal();
 	
-	void setExitPortal(Location loc);
+	void setExitPortal(WorldLocation loc);
 	
 	@Override
 	default NBTCodec<? extends EndGateway> getNBTCodec() {

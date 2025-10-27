@@ -2,11 +2,11 @@ package de.atlasmc.core.node.entity;
 
 import org.joml.Vector3i;
 
-import de.atlasmc.node.Location;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Turtle;
-import de.atlasmc.node.entity.data.MetaDataField;
-import de.atlasmc.node.entity.data.MetaDataType;
+import de.atlasmc.node.entity.metadata.type.MetaDataField;
+import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.util.MathUtil;
 
 public class CoreTurtle extends CoreAgeableMob implements Turtle {
@@ -83,7 +83,7 @@ public class CoreTurtle extends CoreAgeableMob implements Turtle {
 	}
 
 	@Override
-	public Location getTravelPos(Location loc) {
+	public WorldLocation getTravelPos(WorldLocation loc) {
 		return MathUtil.getLocation(getWorld(), loc, metaContainer.getData(META_TRAVEL_POS));
 	}
 

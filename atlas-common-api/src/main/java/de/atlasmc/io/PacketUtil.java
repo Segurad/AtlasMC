@@ -7,22 +7,20 @@ import java.util.BitSet;
 import java.util.Collection;
 import java.util.UUID;
 
+import de.atlasmc.IDHolder;
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.chat.Chat;
-import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.registry.ProtocolRegistry;
 import de.atlasmc.registry.ProtocolRegistryValue;
 import de.atlasmc.tag.Tag;
 import de.atlasmc.tag.Tags;
+import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
+import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.dataset.DataSet;
 import de.atlasmc.util.dataset.SingleValueDataSet;
 import de.atlasmc.util.dataset.TagDataSet;
-import de.atlasmc.util.nbt.io.NBTNIOReader;
-import de.atlasmc.util.nbt.io.NBTNIOWriter;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 
@@ -317,25 +315,27 @@ public class PacketUtil {
 		out.writeLong(uuid.getLeastSignificantBits());
 	}
 	
-	public static Chat readTextComponent(ByteBuf in) throws IOException {
-		NBTNIOReader reader = new NBTNIOReader(in, true);
-		Chat chat = ChatUtil.fromNBT(reader);
-		reader.close();
-		return chat;
+	public static <T> void writeVarIntOrCodec(T value, ByteBuf out, StreamCodec<? extends T> codec, CodecContext context) throws IOException {
+		if (value instanceof IDHolder v) {
+			int id = v.getID();
+			if (id >= 0) {
+				writeVarInt(id, out);
+			}
+		}
+		if (!codec.getType().isInstance(value))
+			throw new ProtocolException("Codec: " + codec.getType() + " is incompatible with type: " + value.getClass());
+		@SuppressWarnings("unchecked")
+		StreamCodec<T> c = (StreamCodec<T>) codec;
+		c.serialize(value, out, context);
 	}
 	
-	public static void writeTextComponent(Chat text, ByteBuf out) throws IOException {
-		NBTWriter writer = new NBTNIOWriter(out, true);
-		ChatUtil.toNBT(null, text, writer);
-		writer.close();
-	}
-	
-	public static Chat readTextComponent(NBTReader reader) throws IOException {
-		return ChatUtil.fromNBT(reader);
-	}
-	
-	public static void writeTextComponent(Chat text, NBTWriter writer) throws IOException {
-		ChatUtil.toNBT(null, text, writer);
+	@SuppressWarnings("unchecked")
+	public static <T, E extends Enum<E> & IDHolder> T readVarIntEnumOrCodec(ByteBuf in, Class<E> clazz, StreamCodec<T> codec, CodecContext context) throws IOException {
+		int id = readVarInt(in);
+		if (id > 0)
+			return (T) EnumUtil.getByID(clazz, id);
+		else
+			return codec.deserialize(in, context);
 	}
 	
 	public static <T extends ProtocolRegistryValue> void writeDataSet(DataSet<T> set, ProtocolRegistry<T> registry, ByteBuf out) {

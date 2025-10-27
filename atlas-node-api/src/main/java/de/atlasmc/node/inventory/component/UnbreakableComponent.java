@@ -7,7 +7,7 @@ public interface UnbreakableComponent extends ItemComponent {
 	public static final NBTCodec<UnbreakableComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(UnbreakableComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.UNBREAKABLE.getNamespacedKey())
 					.endComponent()
 					.build();

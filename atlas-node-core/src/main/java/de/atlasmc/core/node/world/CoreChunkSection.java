@@ -36,8 +36,6 @@ public class CoreChunkSection implements ChunkSection {
 	public CoreChunkSection() {
 		blockData = new AdaptivePalette<>(4, 4096, GLOBAL_BLOCK_DATA, 8);
 		biomes = new AdaptivePalette<>(1, 64, GLOBAL_BIOMES, 3);
-		skylight = new NibbleArray(2048);
-		blocklight = new NibbleArray(2048);
 	}
 
 	/**
@@ -97,12 +95,26 @@ public class CoreChunkSection implements ChunkSection {
 
 	@Override
 	public NibbleArray getBlockLight() {
+		if (blocklight == null)
+			blocklight = new NibbleArray(2048);
 		return blocklight;
+	}
+	
+	@Override
+	public void setBlockLigth(NibbleArray light) {
+		this.blocklight = light;
 	}
 
 	@Override
 	public NibbleArray getSkyLight() {
+		if (skylight == null)
+			skylight = new NibbleArray(2048);
 		return skylight;
+	}
+	
+	@Override
+	public void setSkyLight(NibbleArray light) {
+		this.skylight = light;
 	}
 
 	@Override

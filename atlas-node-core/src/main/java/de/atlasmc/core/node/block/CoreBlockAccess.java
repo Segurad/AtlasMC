@@ -1,6 +1,6 @@
 package de.atlasmc.core.node.block;
 
-import de.atlasmc.node.Location;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.block.Block;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.BlockData;
@@ -14,15 +14,15 @@ import de.atlasmc.node.world.World;
  */
 public class CoreBlockAccess implements Block {
 	
-	private final Location loc;
+	private final WorldLocation loc;
 	private final Chunk chunk;
 	
-	public CoreBlockAccess(Location loc, Chunk chunk) {
+	public CoreBlockAccess(WorldLocation loc, Chunk chunk) {
 		this.loc = loc;
 		this.chunk = chunk;
 	}
 	
-	public CoreBlockAccess(Location location) {
+	public CoreBlockAccess(WorldLocation location) {
 		this.loc = location;
 		chunk = loc.getWorld().getChunk(loc);
 	}
@@ -97,12 +97,12 @@ public class CoreBlockAccess implements Block {
 	}
 
 	@Override
-	public Location getLocation() {
+	public WorldLocation getLocation() {
 		return loc.clone();
 	}
 
 	@Override
-	public Location getLocation(Location loc) {
+	public WorldLocation getLocation(WorldLocation loc) {
 		return this.loc.copyTo(loc);
 	}
 

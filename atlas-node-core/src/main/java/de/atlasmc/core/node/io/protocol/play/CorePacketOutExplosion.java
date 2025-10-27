@@ -1,18 +1,17 @@
 package de.atlasmc.core.node.io.protocol.play;
 
-import static de.atlasmc.node.io.protocol.ProtocolUtil.readVarInt;
-import static de.atlasmc.node.io.protocol.ProtocolUtil.writeVarInt;
-
 import java.io.IOException;
-
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
+import static de.atlasmc.io.PacketUtil.*;
 import de.atlasmc.io.connection.ConnectionHandler;
-import de.atlasmc.node.entity.data.MetaDataType;
-import de.atlasmc.node.io.protocol.ProtocolUtil;
+import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.io.protocol.play.PacketOutExplosion;
+import de.atlasmc.node.sound.EnumSound;
+import de.atlasmc.node.sound.ResourceSound;
 import de.atlasmc.node.world.particle.ParticleType;
 import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutExplosion implements PacketIO<PacketOutExplosion> {
@@ -31,11 +30,12 @@ public class CorePacketOutExplosion implements PacketIO<PacketOutExplosion> {
 		packet.motionY = in.readFloat();
 		packet.motionZ = in.readFloat();
 		packet.blockInteraction = readVarInt(in);
+		final CodecContext context = handler.getCodecContext();
 		packet.smallExplosionParticle = EnumUtil.getByID(ParticleType.class, readVarInt(in));
-		packet.smallExplosionParticleData = MetaDataType.PARTICLE.read(packet.smallExplosionParticle, in);
+		packet.smallExplosionParticleData = MetaDataType.PARTICLE.read(packet.smallExplosionParticle, in, context);
 		packet.largeExplosionParticle = EnumUtil.getByID(ParticleType.class, readVarInt(in));
-		packet.largeExplosionParticleData = MetaDataType.PARTICLE.read(packet.smallExplosionParticle, in);
-		packet.explosionSound = ProtocolUtil.readSound(in);
+		packet.largeExplosionParticleData = MetaDataType.PARTICLE.read(packet.smallExplosionParticle, in, context);
+		packet.explosionSound = readVarIntEnumOrCodec(in, EnumSound.class, ResourceSound.STREAM_CODEC, context);
 	}
 
 	@Override
@@ -50,9 +50,10 @@ public class CorePacketOutExplosion implements PacketIO<PacketOutExplosion> {
 		out.writeFloat(packet.motionY);
 		out.writeFloat(packet.motionZ);
 		writeVarInt(packet.blockInteraction, out);
-		MetaDataType.PARTICLE.write(packet.smallExplosionParticle, packet.smallExplosionParticleData, false, out);
-		MetaDataType.PARTICLE.write(packet.largeExplosionParticle, packet.largeExplosionParticleData, false, out);
-		ProtocolUtil.writeSound(packet.explosionSound, out);
+		final CodecContext context = handler.getCodecContext();
+		MetaDataType.PARTICLE.write(packet.smallExplosionParticle, packet.smallExplosionParticleData, false, out, context);
+		MetaDataType.PARTICLE.write(packet.largeExplosionParticle, packet.largeExplosionParticleData, false, out, context);
+		writeVarIntOrCodec(packet.explosionSound, out, ResourceSound.STREAM_CODEC, handler.getCodecContext());
 	}
 	
 	@Override

@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Set;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.io.codec.StreamSerializable;
 import de.atlasmc.node.inventory.component.ComponentType;
 import de.atlasmc.node.inventory.component.ItemComponent;
 import de.atlasmc.node.inventory.component.ItemComponentHolder;
@@ -17,12 +19,87 @@ import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.codec.NBTSerializable;
 import de.atlasmc.util.nbt.codec.NBTCodec;
 import de.atlasmc.util.nbt.io.NBTWriter;
+import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
+import static de.atlasmc.node.io.protocol.ProtocolUtil.*;
 
-public class ItemStack implements NBTSerializable, ItemComponentHolder {
+public class ItemStack implements NBTSerializable, StreamSerializable, ItemComponentHolder {
 
 	public static final NBTCodec<ItemStack> NBT_HANDLER;
+	
+	public static final StreamCodec<ItemStack> STREAM_CODEC = new StreamCodec<ItemStack>() {
+		
+		@Override
+		public boolean serialize(ItemStack value, ByteBuf output, CodecContext context) throws IOException {
+			if (value == null || value.isEmtpy()) {
+				writeVarInt(0, output);
+				return true;
+			}
+			writeVarInt(value.getAmount(), output);
+			writeVarInt(value.getType().getID(), output);
+			final int ptrCompCount = output.readerIndex();
+			writeVarInt(0, output);
+			final int ptrIgnoredCount = output.readerIndex();
+			writeVarInt(0, output);
+			if (value.hasComponents()) {
+				int count = 0;
+				Map<ComponentType, ItemComponent> components = value.getComponents();
+				for (ItemComponent comp : components.values()) {
+					count++;
+					@SuppressWarnings("unchecked")
+					StreamCodec<ItemComponent> codec = (StreamCodec<ItemComponent>) comp.getStreamCodec();
+					codec.serialize(comp, output, context);
+				}
+				if (count > 127) {
+					/*
+					 * Varints up to 127 only take one byte. To prevent data corruption throw exception
+					 */
+					throw new IllegalStateException("More than 127 ItemComponent written!");
+				} else if (count > 0) {
+					final int  ptrEnd = output.writerIndex();
+					output.writerIndex(ptrCompCount);
+					writeVarInt(count, output);
+					output.writerIndex(ptrEnd);
+				}
+			}
+			if (value.hasIgnoredComponents()) {
+				Set<ComponentType> ignored = value.getIgnoredComponents();
+				for (ComponentType type : ignored)
+					writeVarInt(type.getID(), output);
+				final int  ptrEnd = output.writerIndex();
+				output.writerIndex(ptrIgnoredCount);
+				writeVarInt(ignored.size(), output);
+				output.writerIndex(ptrEnd);
+			}
+			return true;
+		}
+		
+		@Override
+		public Class<? extends ItemStack> getType() {
+			return ItemStack.class;
+		}
+		
+		@Override
+		public ItemStack deserialize(ItemStack value, ByteBuf input, CodecContext context) throws IOException {
+			final int amount = readVarInt(input);
+			if (amount == 0)
+				return null;
+			ItemType itemType = ItemType.getByID(readVarInt(input));
+			ItemStack item = new ItemStack(itemType, amount);
+			final int compCount = readVarInt(input);
+			final int ignoredCount = readVarInt(input);
+			for (int i = 0; i < compCount; i++) {
+				ItemComponent comp = ItemComponent.STREAM_CODEC.deserialize(input, context);
+				item.setComponent(comp);
+			}
+			for (int i = 0; i < ignoredCount; i++) {
+				ComponentType type = ComponentType.getByID(readVarInt(input));
+				item.addIgnoredComponent(type);
+			}
+			return item;
+		}
+	};
 	
 	protected static final CharKey
 	NBT_COUNT = CharKey.literal("count"),
@@ -169,8 +246,8 @@ public class ItemStack implements NBTSerializable, ItemComponentHolder {
 	}
 	
 	public void setAmount(int amount) {
-		if (amount < 1) 
-			throw new IllegalArgumentException("Amount must be higher than 0: " + amount);
+		if (amount < 0) 
+			throw new IllegalArgumentException("Amount can not be lower than 0: " + amount);
 		this.amount = amount;
 	}
 
@@ -182,6 +259,10 @@ public class ItemStack implements NBTSerializable, ItemComponentHolder {
 	 */
 	public boolean isSimilar(ItemStack item) {
 		return isSimilar(item, true);
+	}
+	
+	public boolean isEmtpy() {
+		return getType() == ItemType.AIR.get() || getAmount() == 0;
 	}
 	
 	public ItemStack clone() {
@@ -283,8 +364,13 @@ public class ItemStack implements NBTSerializable, ItemComponentHolder {
 	}
 
 	@Override
-	public NBTCodec<ItemStack> getNBTCodec() {
+	public NBTCodec<? extends ItemStack> getNBTCodec() {
 		return NBT_HANDLER;
+	}
+	
+	@Override
+	public StreamCodec<? extends ItemStack> getStreamCodec() {
+		return STREAM_CODEC;
 	}
 	
 }

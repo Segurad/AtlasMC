@@ -9,7 +9,7 @@ public interface EvokerFangs extends Entity {
 	public static final NBTCodec<EvokerFangs>
 	NBT_HANDLER = NBTCodec
 					.builder(EvokerFangs.class)
-					.include(Entity.NBT_HANDLER)
+					.include(Entity.NBT_CODEC)
 					.uuid("Owner", EvokerFangs::getCasterUUID, EvokerFangs::setCasterUUID)
 					.intField("Warmup", EvokerFangs::getWarmup, EvokerFangs::setWarmup)
 					.build();

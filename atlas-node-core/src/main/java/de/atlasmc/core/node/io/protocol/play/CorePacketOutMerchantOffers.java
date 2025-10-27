@@ -2,8 +2,6 @@ package de.atlasmc.core.node.io.protocol.play;
 
 import static de.atlasmc.io.PacketUtil.readVarInt;
 import static de.atlasmc.io.PacketUtil.writeVarInt;
-import static de.atlasmc.node.io.protocol.ProtocolUtil.readSlot;
-import static de.atlasmc.node.io.protocol.ProtocolUtil.writeSlot;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,6 +13,7 @@ import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.entity.Merchant.MerchantRecipe;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.io.protocol.play.PacketOutMerchantOffers;
+import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutMerchantOffers implements PacketIO<PacketOutMerchantOffers> {
@@ -24,11 +23,12 @@ public class CorePacketOutMerchantOffers implements PacketIO<PacketOutMerchantOf
 		packet.windowID = readVarInt(in);
 		final int size = readVarInt(in);
 		if (size > 0) {
+			final CodecContext context = handler.getCodecContext();
 			List<MerchantRecipe> recipes = new ArrayList<>(size);
 			for (int i = 0; i < size; i++) {
-				ItemStack in1 = readSlot(in);
-				ItemStack out = readSlot(in);
-				ItemStack in2 = readSlot(in);
+				ItemStack in1 = ItemStack.STREAM_CODEC.deserialize(in, context);
+				ItemStack out = ItemStack.STREAM_CODEC.deserialize(in, context);
+				ItemStack in2 = ItemStack.STREAM_CODEC.deserialize(in, context);
 				int trades = in.readInt();
 				int maxtrades = in.readInt();
 				int xp = in.readInt();
@@ -64,11 +64,12 @@ public class CorePacketOutMerchantOffers implements PacketIO<PacketOutMerchantOf
 		final int size = trades.size();
 		writeVarInt(size, out);
 		if (size > 0) {
+			final CodecContext context = handler.getCodecContext();
 			for (int i = 0; i < size; i++) {
 				MerchantRecipe t = trades.get(i);
-				writeSlot(t.getInputItem1(), out);
-				writeSlot(t.getOutputItem(), out);
-				writeSlot(t.getInputItem2(), out);
+				ItemStack.STREAM_CODEC.serialize(t.getInputItem1(), out, context);
+				ItemStack.STREAM_CODEC.serialize(t.getOutputItem(), out, context);
+				ItemStack.STREAM_CODEC.serialize(t.getInputItem2(), out, context);
 				out.writeBoolean(t.isRewardExp());
 				out.writeInt(t.getUses());
 				out.writeInt(t.getMaxUses());

@@ -21,5 +21,12 @@ public class RegistryKey<T> extends NamespacedAccessKey<Registry<T>> {
 	public T getValue(CharSequence key) {
 		return get().get(key);
 	}
+	
+	public T getValue(int id) {
+		ProtocolRegistry<?> registry = getRegistry();
+		@SuppressWarnings("unchecked")
+		T value = (T) registry.getByID(id);
+		return value;
+	}
 
 }

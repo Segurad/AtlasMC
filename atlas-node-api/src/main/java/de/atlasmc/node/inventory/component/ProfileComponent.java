@@ -8,7 +8,7 @@ public interface ProfileComponent extends ItemComponent {
 	public static final NBTCodec<ProfileComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(ProfileComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.typeCompoundField(ComponentType.PROFILE.getNamespacedKey(), ProfileComponent::getProfile, ProfileComponent::setProfile, PlayerProfile.NBT_HANDLER)
 					.build();
 	

@@ -2,7 +2,7 @@ package de.atlasmc.node.util.raytracing;
 
 import org.joml.Vector3d;
 
-import de.atlasmc.node.Location;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.util.MathGraphUtil;
@@ -13,7 +13,7 @@ import de.atlasmc.node.world.World;
 
 public class BlockRayTracer implements VoxelRayConsumer {
 
-	private final Location loc;
+	private final WorldLocation loc;
 	private final Vector3d direction;
 	private final World world;
 	private Chunk chunk;
@@ -22,7 +22,7 @@ public class BlockRayTracer implements VoxelRayConsumer {
 	private BlockRayCollisionRule rule;
 	private BlockFace lastHit;
 	
-	public BlockRayTracer(Location loc, Vector3d direction, BlockRayCollisionRule rule) {
+	public BlockRayTracer(WorldLocation loc, Vector3d direction, BlockRayCollisionRule rule) {
 		if (direction == null) 
 			throw new IllegalArgumentException("Direction can not be null!");
 		if (loc == null) 

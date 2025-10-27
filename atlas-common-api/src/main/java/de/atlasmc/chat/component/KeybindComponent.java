@@ -7,7 +7,7 @@ public class KeybindComponent extends AbstractBaseComponent<KeybindComponent> {
 	public static final NBTCodec<KeybindComponent> 
 	NBT_HANDLER = NBTCodec
 					.builder(KeybindComponent.class)
-					.include(AbstractBaseComponent.NBT_HANDLER)
+					.include(AbstractBaseComponent.NBT_CODEC)
 					.string("keybind", KeybindComponent::getKey, KeybindComponent::setKey)
 					.build();
 	

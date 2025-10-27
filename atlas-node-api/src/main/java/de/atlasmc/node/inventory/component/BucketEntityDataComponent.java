@@ -1,17 +1,19 @@
 package de.atlasmc.node.inventory.component;
 
+import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.entity.Axolotl.Variant;
 import de.atlasmc.node.entity.Salmon.Type;
 import de.atlasmc.node.entity.TropicalFish.Pattern;
+import de.atlasmc.util.AtlasUtil;
 import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface BucketEntityDataComponent extends ItemComponent {
 	
 	public static final NBTCodec<BucketEntityDataComponent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(BucketEntityDataComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.BUCKET_ENTITY_DATA.getNamespacedKey())
 					.boolField("NoAI", BucketEntityDataComponent::hasNoAI, BucketEntityDataComponent::setNoAI, false)
 					.boolField("Silent", BucketEntityDataComponent::isSilent, BucketEntityDataComponent::setSilent, false)
@@ -24,6 +26,13 @@ public interface BucketEntityDataComponent extends ItemComponent {
 					.longField("HuntingCooldown", BucketEntityDataComponent::getHuntingCooldown, BucketEntityDataComponent::setHuntingCooldown, 0)
 					.enumStringField("type", BucketEntityDataComponent::getSalmonType, BucketEntityDataComponent::setSalmonType, Type.class, null)
 					.endComponent()
+					.build();
+
+	public static final StreamCodec<BucketEntityDataComponent>
+	STREAM_CODEC = StreamCodec
+					.builder(BucketEntityDataComponent.class)
+					.include(ItemComponent.STREAM_CODEC)
+					.codec(AtlasUtil.getSelf(), AtlasUtil.getSetVoid(), NBT_CODEC)
 					.build();
 	
 	BucketEntityDataComponent clone();
@@ -83,5 +92,15 @@ public interface BucketEntityDataComponent extends ItemComponent {
 	Type getSalmonType();
 	
 	void setSalmonType(Type type);
+	
+	@Override
+	default NBTCodec<? extends BucketEntityDataComponent> getNBTCodec() {
+		return NBT_CODEC;
+	}
+	
+	@Override
+	default StreamCodec<? extends BucketEntityDataComponent> getStreamCodec() {
+		return STREAM_CODEC;
+	}
 	
 }

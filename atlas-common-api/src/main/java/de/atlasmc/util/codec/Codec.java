@@ -6,6 +6,8 @@ import de.atlasmc.util.annotation.NotNull;
 
 public interface Codec<T, I, O, C> {
 	
+	Class<? extends T> getType();
+	
 	default void serialize(T value, @NotNull O ouput) throws IOException {
 		serialize(value, ouput, getDefaultContext());
 	}
@@ -13,12 +15,12 @@ public interface Codec<T, I, O, C> {
 	/**
 	 * Serializes the given values to the given output
 	 * @param value to serialize
-	 * @param ouput the output
+	 * @param output the output
 	 * @param context a arbitrary context for serialization
 	 * @return true if success
 	 * @throws IOException
 	 */
-	boolean serialize(T value, @NotNull O ouput, C context) throws IOException;
+	boolean serialize(T value, @NotNull O output, C context) throws IOException;
 	
 	default T deserialize(@NotNull I input) throws IOException {
 		return deserialize(input, getDefaultContext());

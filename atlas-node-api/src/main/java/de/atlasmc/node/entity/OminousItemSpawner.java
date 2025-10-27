@@ -8,7 +8,7 @@ public interface OminousItemSpawner extends Entity {
 	public static final NBTCodec<OminousItemSpawner>
 	NBT_HANDLER = NBTCodec
 					.builder(OminousItemSpawner.class)
-					.include(Entity.NBT_HANDLER)
+					.include(Entity.NBT_CODEC)
 					.typeCompoundField("item", OminousItemSpawner::getItem, OminousItemSpawner::setItem, ItemStack.NBT_HANDLER)
 					.longField("spawn_item_after_ticks", OminousItemSpawner::getSpawnTicks, OminousItemSpawner::setSpawnTicks)
 					.build();

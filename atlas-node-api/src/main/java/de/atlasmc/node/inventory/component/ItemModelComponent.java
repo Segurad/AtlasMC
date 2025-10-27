@@ -8,7 +8,7 @@ public interface ItemModelComponent extends ItemComponent {
 	public static final NBTCodec<ItemModelComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(ItemModelComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.namespacedKey(ComponentType.ITEM_MODEL.getNamespacedKey(), ItemModelComponent::getModel, ItemModelComponent::setModel)
 					.build();
 	

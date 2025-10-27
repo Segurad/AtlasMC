@@ -26,7 +26,6 @@ import de.atlasmc.IDHolder;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.chat.Chat;
-import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.registry.RegistryKey;
 import de.atlasmc.tag.TagKey;
@@ -42,7 +41,6 @@ import de.atlasmc.util.function.ToFloatFunction;
 import de.atlasmc.util.map.Multimap;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.codec.field.InnerTypeField;
-import de.atlasmc.util.nbt.codec.field.NBTCompoundFieldBuilder;
 import de.atlasmc.util.nbt.codec.field.NBTField;
 import de.atlasmc.util.nbt.codec.field.NBTFieldBuilder;
 import de.atlasmc.util.nbt.codec.field.ObjectFieldBuilder;
@@ -57,215 +55,216 @@ import de.atlasmc.util.nbt.codec.type.*;
 import de.atlasmc.util.nbt.tag.NBT;
 import it.unimi.dsi.fastutil.booleans.BooleanList;
 import it.unimi.dsi.fastutil.floats.FloatList;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 
-public abstract class AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCompoundFieldBuilder<T, B>> {
+public interface AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCompoundFieldBuilder<T, B>> {
 	
 	public static final int TYPE_COUNT = EnumUtil.getValues(TagType.class).size() - 1; // tag end (0) is not used
 	
-	protected final NBTCompoundFieldBuilder<T> root = new NBTCompoundFieldBuilder<>();
-	protected NBTCompoundFieldBuilder<T> builder = root;
+	B addField(NBTField<T> field);
 	
-	private static final Function<Chat, String> chatToString = Chat::toText;
-	private static final Function<String, Chat> stringToChat = ChatUtil::toChat;
-	
-	public B addField(NBTField<T> field) {
-		builder.addField(field);
-		return getThis();
-	}
-	
-	public B addField(NBTFieldBuilder<T, ?> builder) {
+	default B addField(NBTFieldBuilder<T, ?> builder) {
 		return addField(builder.build());
 	}
 	
-	public B intField(CharSequence key, ToIntFunction<T> get, ObjIntConsumer<T> set) {
+	default B intField(CharSequence key, ToIntFunction<T> get, ObjIntConsumer<T> set) {
 		return addField(primitiveBuilder(key, TagType.INT, get, set).setDefaultValue(0));
 	}
 	
-	public B intField(CharSequence key, ToIntFunction<T> get, ObjIntConsumer<T> set, int defaultValue) {
+	default B intField(CharSequence key, ToIntFunction<T> get, ObjIntConsumer<T> set, int defaultValue) {
 		return addField(primitiveBuilder(key, TagType.INT, get, set).setDefaultValue(defaultValue));
 	}
 	
-	public B intNullableField(CharSequence key, Function<T, Integer> get, BiConsumer<T, Integer> set, Integer defaultValue) {
+	default B intNullableField(CharSequence key, Function<T, Integer> get, BiConsumer<T, Integer> set, Integer defaultValue) {
 		return addField(objectBuilder(key, get, set, IntObjectType.getInstance()).setDefaultValue(defaultValue));
 	}
 	
-	public B byteField(CharSequence key, ToIntFunction<T> get, ObjByteConsumer<T> set) {
+	default B byteField(CharSequence key, ToIntFunction<T> get, ObjByteConsumer<T> set) {
 		return addField(primitiveBuilder(key, TagType.BYTE, get, set).setDefaultValue(0));
 	}
 	
-	public B byteField(CharSequence key, ToIntFunction<T> get, ObjByteConsumer<T> set, byte defaultValue) {
+	default B byteField(CharSequence key, ToIntFunction<T> get, ObjByteConsumer<T> set, byte defaultValue) {
 		return addField(primitiveBuilder(key, TagType.BYTE, get, set).setDefaultValue(defaultValue));
 	}
 	
-	public B longField(CharSequence key, ToLongFunction<T> get, ObjLongConsumer<T> set) {
+	default B longField(CharSequence key, ToLongFunction<T> get, ObjLongConsumer<T> set) {
 		return addField(primitiveBuilder(key, TagType.LONG, get, set).setDefaultValue(0));
 	}
 	
-	public B longNullableField(CharSequence key, Function<T, Long> get, BiConsumer<T, Long> set) {
+	default B longNullableField(CharSequence key, Function<T, Long> get, BiConsumer<T, Long> set) {
 		return addField(objectBuilder(key, get, set, LongObjectType.getInstance()));
 	}
 	
-	public B longField(CharSequence key, ToLongFunction<T> get, ObjLongConsumer<T> set, long defaultValue) {
+	default B longField(CharSequence key, ToLongFunction<T> get, ObjLongConsumer<T> set, long defaultValue) {
 		return addField(primitiveBuilder(key, TagType.LONG, get, set).setDefaultValue(defaultValue));
 	}
 	
-	public B shortField(CharSequence key, ToIntFunction<T> get, ObjShortConsumer<T> set) {
+	default B shortField(CharSequence key, ToIntFunction<T> get, ObjShortConsumer<T> set) {
 		return addField(primitiveBuilder(key, TagType.SHORT, get, set).setDefaultValue(0));
 	}
 	
-	public B shortField(CharSequence key, ToIntFunction<T> get, ObjShortConsumer<T> set, short defaultValue) {
+	default B shortField(CharSequence key, ToIntFunction<T> get, ObjShortConsumer<T> set, short defaultValue) {
 		return addField(primitiveBuilder(key, TagType.SHORT, get, set).setDefaultValue(defaultValue));
 	}
 	
-	public B doubleField(CharSequence key, ToDoubleFunction<T> get, ObjDoubleConsumer<T> set) {
+	default B doubleField(CharSequence key, ToDoubleFunction<T> get, ObjDoubleConsumer<T> set) {
 		return addField(primitiveBuilder(key, TagType.DOUBLE, get, set).setDefaultValue(0));
 	}
 	
-	public B doubleField(CharSequence key, ToDoubleFunction<T> get, ObjDoubleConsumer<T> set, double defaultValue) {
+	default B doubleField(CharSequence key, ToDoubleFunction<T> get, ObjDoubleConsumer<T> set, double defaultValue) {
 		return addField(primitiveBuilder(key, TagType.DOUBLE, get, set).setDefaultValue(defaultValue));
 	}
 	
-	public B floatField(CharSequence key, ToFloatFunction<T> get, ObjFloatConsumer<T> set) {
+	default B floatField(CharSequence key, ToFloatFunction<T> get, ObjFloatConsumer<T> set) {
 		return addField(primitiveBuilder(key, TagType.FLOAT, get, set).setDefaultValue(0));
 	}
 	
-	public B floatField(CharSequence key, ToFloatFunction<T> get, ObjFloatConsumer<T> set, float defaultValue) {
+	default B floatField(CharSequence key, ToFloatFunction<T> get, ObjFloatConsumer<T> set, float defaultValue) {
 		return addField(primitiveBuilder(key, TagType.FLOAT, get, set).setDefaultValue(defaultValue));
 	}
 	
-	public B boolField(CharSequence key, ToBooleanFunction<T> get, ObjBooleanConsumer<T> set) {
+	default B boolField(CharSequence key, ToBooleanFunction<T> get, ObjBooleanConsumer<T> set) {
 		return addField(primitiveBuilder(key, null, get, set).setDefaultValue(false));
 	}
 	
-	public B boolField(CharSequence key, ToBooleanFunction<T> get, ObjBooleanConsumer<T> set, boolean defaultValue) {
+	default B boolField(CharSequence key, ToBooleanFunction<T> get, ObjBooleanConsumer<T> set, boolean defaultValue) {
 		return addField(primitiveBuilder(key, null, get, set).setDefaultValue(defaultValue));
 	}
 	
-	public B string(CharSequence key, Function<T, String> get, BiConsumer<T, String> set) {
+	default B string(CharSequence key, Function<T, String> get, BiConsumer<T, String> set) {
 		return addField(objectBuilder(key, get, set, StringType.getInstance()));
 	}
 	
-	public <V extends Namespaced> B registryValue(CharSequence key, Function<T, V> get, BiConsumer<T, V> set, RegistryKey<V> registry) {
+	default <V extends Namespaced> B registryValue(CharSequence key, Function<T, V> get, BiConsumer<T, V> set, RegistryKey<V> registry) {
 		return addField(objectBuilder(key, get, set, new RegistryValueType<>(registry)));
 	}
 	
-	public <V extends Namespaced> B registryValueList(CharSequence key, ToBooleanFunction<T> has, Function<T, List<V>> get, RegistryKey<V> registry) {
+	default <V extends Namespaced> B registryValueList(CharSequence key, ToBooleanFunction<T> has, Function<T, List<V>> get, RegistryKey<V> registry) {
 		return addField(new ObjectListFieldBuilder<T, V>().setKey(key).setGetter(get).setHasData(has).setFieldType(new RegistryValueType<>(registry)));
 	}
 	
-	public <V extends Namespaced & NBTSerializable> B registryValue(CharSequence key, Function<T, V> get, BiConsumer<T, V> set, RegistryKey<V> registry, NBTCodec<V> codec) {
+	default <V extends Namespaced & NBTSerializable> B registryValue(CharSequence key, Function<T, V> get, BiConsumer<T, V> set, RegistryKey<V> registry, NBTCodec<V> codec) {
 		registryValue(key, get, set, registry);
 		return typeCompoundField(key, get, set, codec);
 	}
 	
-	public B namespacedKey(CharSequence key, Function<T, NamespacedKey> get, BiConsumer<T, NamespacedKey> set) {
+	default B namespacedKey(CharSequence key, Function<T, NamespacedKey> get, BiConsumer<T, NamespacedKey> set) {
 		return addField(objectBuilder(key, get, set, NamespacedKeyType.getInstance()));
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <V> B typeCompoundField(CharSequence key, Function<T, ? super V> get, BiConsumer<T, ? super V> set, NBTCodec<V> codec) {
+	default <V> B typeCompoundField(CharSequence key, Function<T, ? super V> get, BiConsumer<T, ? super V> set, NBTCodec<V> codec) {
 		return addField(objectBuilder(key, (Function<T, Object>) get, (BiConsumer<T, Object>) set, new CodecType<>(codec)));
 	}
 	
-	public <V> B innerTypeCompoundField(CharSequence key, Function<T, ? super V> get, NBTCodec<V> codec) {
+	default <V> B innerTypeCompoundField(CharSequence key, Function<T, ? super V> get, NBTCodec<V> codec) {
 		return addField(new InnerTypeField<>(key, get, codec, false));
 	}
 	
-	public <V extends Namespaced> B compoundMapNamespaced2Int(CharSequence key, ToBooleanFunction<T> has, Function<T, Object2IntMap<V>> get, Function<String, V> keySupplier) {
+	default <V extends Namespaced> B compoundMapNamespaced2Int(CharSequence key, ToBooleanFunction<T> has, Function<T, Object2IntMap<V>> get, Function<String, V> keySupplier) {
 		return addField(reuseableObjectBuilder(key, has, get, new MapNamespaced2Int<>(keySupplier)));
 	}
 	
-	public <V extends Namespaced> B compoundMapNamespacedType(CharSequence key, ToBooleanFunction<T> has, Function<T, Map<NamespacedKey, V>> getMap, NBTCodec<V> codec) {
+	default <V extends Namespaced> B compoundMapNamespacedType(CharSequence key, ToBooleanFunction<T> has, Function<T, Map<NamespacedKey, V>> getMap, NBTCodec<V> codec) {
 		return compoundMapType2Type(key, has, getMap, codec, Namespaced.getKeySupplier());
 	}
 	
-	public <V> B compoundMapString2Type(CharSequence key, ToBooleanFunction<T> has, Function<T, Map<String, V>> get, NBTCodec<V> codec) {
+	default <V> B compoundMapString2Type(CharSequence key, ToBooleanFunction<T> has, Function<T, Map<String, V>> get, NBTCodec<V> codec) {
 		return addField(reuseableObjectBuilder(key, has, get, new MapString2TypeField<>(codec)));
 	}
 	
-	public <K extends Namespaced, V> B multimapType2TypeList(CharSequence key, ToBooleanFunction<T> has, Function<T, Multimap<K, V>> get, CharSequence keyField, Function<NamespacedKey, K> keySupplier, NBTCodec<V> codec) {
+	default <K extends Namespaced, V> B multimapType2TypeList(CharSequence key, ToBooleanFunction<T> has, Function<T, Multimap<K, V>> get, CharSequence keyField, Function<NamespacedKey, K> keySupplier, NBTCodec<V> codec) {
 		return addField(reuseableObjectBuilder(key, has, get, new MultimapType2TypeList<>(keyField, keySupplier, codec)));
 	}
 	
-	public <K, V> B compoundMapType2Type(CharSequence key, ToBooleanFunction<T> has, Function<T, Map<K, V>> get, NBTCodec<V> codec, Function<V, K> getKey) {
+	default <K, V> B compoundMapType2Type(CharSequence key, ToBooleanFunction<T> has, Function<T, Map<K, V>> get, NBTCodec<V> codec, Function<V, K> getKey) {
 		return addField(reuseableObjectBuilder(key, has, get, new MapType2Type<>(codec, getKey)));
 	}
 	
-	public B color(CharSequence key, Function<T, Color> get, BiConsumer<T, Color> set, Color defaultValue) {
+	default B color(CharSequence key, Function<T, Color> get, BiConsumer<T, Color> set, Color defaultValue) {
 		return addField(objectBuilder(key, get, set, ColorType.getInstance()).setDefaultValue(defaultValue));
 	}
 	
-	public B colorValue(CharSequence key, Function<T, ColorValue> get, BiConsumer<T, ColorValue> set) {
+	default B colorValue(CharSequence key, Function<T, ColorValue> get, BiConsumer<T, ColorValue> set) {
 		return addField(objectBuilder(key, get, set, ColorValueType.getInstance()));
 	}
 	
-	public <K> B stringToObject(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, Function<String, K> stringToObject, Function<K, String> objectToString) {
+	default <K> B stringToObject(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, Function<String, K> stringToObject, Function<K, String> objectToString) {
 		return addField(objectBuilder(key, get, set, new StringToObjectType<>(stringToObject, objectToString)));
 	}
 	
-	public <K extends Enum<K> & EnumName> B enumStringField(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, Class<K> clazz, K defaultValue) {
+	default <K extends Enum<K> & EnumName> B enumStringField(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, Class<K> clazz, K defaultValue) {
 		return addField(objectBuilder(key, get, set, new EnumStringType<>(clazz)).setDefaultValue(defaultValue));
 	}
 	
-	public <K> B objectByteField(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, IntFunction<K> toObject, ToIntFunction<K> toByte, K defaultValue) {
+	default <K, E extends Enum<E> & EnumName> B enumStringOrType(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, Class<E> clazz, NBTCodec<? extends K> codec) {
+		return enumStringOrType(key, get, set, clazz, codec, null);
+	}
+	
+	default <K, E extends Enum<E> & EnumName> B enumStringOrType(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, Class<E> clazz, NBTCodec<? extends K> codec, K defaultValue) {
+		addField(objectBuilder(key, get, set, new EnumStringType<>(clazz)).setDefaultValue(defaultValue));
+		return typeCompoundField(key, get, set, codec);
+	}
+	
+	default <V> B objectByteField(CharSequence key, Function<T, V> get, BiConsumer<T, V> set, IntFunction<V> toObject, ToIntFunction<V> toByte, V defaultValue) {
 		return addField(objectBuilder(key, get, set, new ByteToObjectType<>(toObject, toByte)).setDefaultValue(defaultValue));
 	}
 	
-	public <K extends Enum<K> & IDHolder> B enumByteField(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, Class<K> clazz, K defaultValue) {
+	default <K extends Enum<K> & IDHolder> B enumByteField(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, Class<K> clazz, K defaultValue) {
 		return addField(objectBuilder(key, get, set, new EnumByteType<>(clazz)).setDefaultValue(defaultValue));
 	}
 	
-	public <K extends Enum<K> & IDHolder> B enumIntField(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, Class<K> clazz, K defaultValue) {
+	default <K extends Enum<K> & IDHolder> B enumIntField(CharSequence key, Function<T, K> get, BiConsumer<T, K> set, Class<K> clazz, K defaultValue) {
 		return addField(objectBuilder(key, get, set, new EnumIntType<>(clazz)).setDefaultValue(defaultValue));
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <K extends Enum<K> & EnumName> B interfacedEnumStringField(CharSequence key, Function<T, ? super K> get, BiConsumer<T, ? super K> set, Class<K> clazz, K defaultValue) {
+	default <K extends Enum<K> & EnumName> B interfacedEnumStringField(CharSequence key, Function<T, ? super K> get, BiConsumer<T, ? super K> set, Class<K> clazz, K defaultValue) {
 		return addField(objectBuilder(key, (Function<T, Object>) get, (BiConsumer<T, Object>) set, new EnumStringType<Object, K>(clazz)));
 	}
 	
-	public B chat(CharSequence key, Function<T, Chat> get, BiConsumer<T, Chat> set) {
-		typeCompoundField(key, get, set, ChatComponent.NBT_HANDLER);			
-		return stringToObject(key, get, set, stringToChat, chatToString);
+	default B chat(CharSequence key, Function<T, Chat> get, BiConsumer<T, Chat> set) {
+		typeCompoundField(key, get, set, ChatComponent.NBT_CODEC);			
+		return stringToObject(key, get, set, NBTCodecBuilder.stringToChat, NBTCodecBuilder.chatToString);
 		// list format will be ignored
 	}
 	
-	public B chatList(CharSequence key, ToBooleanFunction<T> has, Function<T, List<Chat>> get) {
+	default B chatList(CharSequence key, ToBooleanFunction<T> has, Function<T, List<Chat>> get) {
 		return addField(reuseableObjectBuilder(key, has, get, ChatListType.getInstance()));
 	}
 	
-	public B rawField(CharSequence key, List<TagType> types, Function<T, NBT> get, BiConsumer<T, NBT> set) {
+	default B rawField(CharSequence key, List<TagType> types, Function<T, NBT> get, BiConsumer<T, NBT> set) {
 		return addField(objectBuilder(key, get, set, new RawType(types)));
 	}
 	
-	public B uuid(CharSequence key, Function<T, UUID> get, BiConsumer<T, UUID> set) {
+	default B uuid(CharSequence key, Function<T, UUID> get, BiConsumer<T, UUID> set) {
 		return addField(objectBuilder(key, get, set, UUIDType.getInstance()));
 	}
 	
-	public B uuidList(CharSequence key, ToBooleanFunction<T> has, Function<T, List<UUID>> get, boolean optional) {
+	default B uuidList(CharSequence key, ToBooleanFunction<T> has, Function<T, List<UUID>> get, boolean optional) {
 		return addField(new ObjectListFieldBuilder<T, UUID>().setKey(key).setGetter(get).setHasData(has).setOptional(optional).setFieldType(UUIDType.getInstance()));
 	}
 	
-	public B intArray(CharSequence key, Function<T, int[]> get, BiConsumer<T, int[]> set) {
+	default B intArray(CharSequence key, Function<T, int[]> get, BiConsumer<T, int[]> set) {
 		return addField(objectBuilder(key, get, set, IntArrayType.getInstance()));
 	}
 	
 
-	public <K> B typeList(CharSequence key, ToBooleanFunction<T> has, Function<T, List<K>> getList, NBTCodec<K> handler) {
+	default <V> B typeList(CharSequence key, ToBooleanFunction<T> has, Function<T, List<V>> getList, NBTCodec<V> handler) {
 		return typeList(key, has, getList, handler, true);
 	}
 	
-	public <K> B typeList(CharSequence key, ToBooleanFunction<T> has, Function<T, List<K>> get, NBTCodec<K> codec, boolean optional) {
-		return addField(new ObjectListFieldBuilder<T, K>().setKey(key).setGetter(get).setHasData(has).setOptional(optional).setFieldType(new CodecType<>(codec)));
+	default <V> B typeList(CharSequence key, ToBooleanFunction<T> has, Function<T, List<V>> get, NBTCodec<V> codec, boolean optional) {
+		return addField(new ObjectListFieldBuilder<T, V>().setKey(key).setGetter(get).setHasData(has).setOptional(optional).setFieldType(new CodecType<>(codec)));
 	}
 	
-	public <K> B typeCollection(CharSequence key, ToBooleanFunction<T> has, Function<T, Collection<K>> get, BiConsumer<T, K> set, NBTCodec<K> codec) {
-		return addField(new TypeCollectionFieldBuilder<T, K>().setKey(key).setHasData(has).setGetter(get).setSetter(set).setFieldType(codec));
+	default <V> B typeCollection(CharSequence key, ToBooleanFunction<T> has, Function<T, Collection<V>> get, BiConsumer<T, V> set, NBTCodec<V> codec) {
+		return addField(new TypeCollectionFieldBuilder<T, V>().setKey(key).setHasData(has).setGetter(get).setSetter(set).setFieldType(codec));
 	}
 	
-	public <K extends NBTSerializable, C extends Namespaced> B typeCollectionInnerSearchKey(CharSequence key, ToBooleanFunction<T> has, Function<T, Collection<K>> get, CharSequence keyField, Function<NamespacedKey, C> keySupplier, BiFunction<T, C, K> constructor, Function<K, C> keyReverse) {
+	default <K extends NBTSerializable, C extends Namespaced> B typeCollectionInnerSearchKey(CharSequence key, ToBooleanFunction<T> has, Function<T, Collection<K>> get, CharSequence keyField, Function<NamespacedKey, C> keySupplier, BiFunction<T, C, K> constructor, Function<K, C> keyReverse) {
 		return addField(new TypeCollectionInnerSearchKeyFieldBuilder<T, K, C>()
 				.setKey(key)
 				.setHasData(has)
@@ -276,99 +275,74 @@ public abstract class AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCo
 				.setKeyReverse(keyReverse));
 	}
 	
-	public <V> B typeListSearchIntIndexField(CharSequence key, CharSequence indexKey, ToBooleanFunction<T> has, Function<T, List<V>> get, NBTCodec<V> codec) {
+	default <V> B typeListSearchIntIndexField(CharSequence key, CharSequence indexKey, ToBooleanFunction<T> has, Function<T, Int2ObjectMap<V>> get, NBTCodec<V> codec) {
 		return addField(new TypeListSearchIntIndexFieldBuilder<T, V>().setKey(key).setHasData(has).setGetter(get).setFieldType(codec).setIndexKey(indexKey));
 	}
 	
-	public <V> B typeArraySearchByteIndexField(CharSequence key, CharSequence indexKey, ToBooleanFunction<T> has, Function<T, V[]> get, NBTCodec<V> codec) {
+	default <V> B typeArraySearchByteIndexField(CharSequence key, CharSequence indexKey, ToBooleanFunction<T> has, Function<T, V[]> get, NBTCodec<V> codec) {
 		return addField(new TypeArraySearchByteIndexFieldBuilder<T, V>().setKey(key).setIndexKey(indexKey).setHasData(has).setGetter(get).setFieldType(codec));
 	}
 	
-	public <V extends Namespaced> B dataSetField(CharSequence key, Function<T, DataSet<V>> get, BiConsumer<T, DataSet<V>> set, RegistryKey<V> registry) {
+	default <V extends Namespaced> B dataSetField(CharSequence key, Function<T, DataSet<V>> get, BiConsumer<T, DataSet<V>> set, RegistryKey<V> registry) {
 		return addField(objectBuilder(key, get, set, new DataSetType<>(registry)));
 	}
 	
-	public <V> B tagField(CharSequence key, Function<T, TagKey<V>> get, BiConsumer<T, TagKey<V>> set) {
+	default <V> B tagField(CharSequence key, Function<T, TagKey<V>> get, BiConsumer<T, TagKey<V>> set) {
 		return addField(objectBuilder(key, get, set, TagKeyType.getInstance()));
 	}
 	
-	public B floatListField(CharSequence key, ToBooleanFunction<T> has, Function<T, FloatList> get) {
+	default B floatListField(CharSequence key, ToBooleanFunction<T> has, Function<T, FloatList> get) {
 		return addField(new ReuseableObjectFieldBuilder<T, FloatList>().setKey(key).setHasData(has).setGetter(get).setFieldType(FloatListType.getInstance()));
 	}
 	
-	public B byteArrayField(CharSequence key, Function<T, byte[]> get, BiConsumer<T, byte[]> set) {
+	default B byteArrayField(CharSequence key, Function<T, byte[]> get, BiConsumer<T, byte[]> set) {
 		return addField(objectBuilder(key, get, set, ByteArrayType.getInstance()));
 	}
 	
-	public B stringListField(CharSequence key, ToBooleanFunction<T> has, Function<T, List<String>> get) {
+	default B stringListField(CharSequence key, ToBooleanFunction<T> has, Function<T, List<String>> get) {
 		return addField(new ObjectListFieldBuilder<T, String>().setKey(key).setHasData(has).setGetter(get).setFieldType(StringType.getInstance()));
 	}
 	
-	public B namespacedKeyListField(CharSequence key, ToBooleanFunction<T> has, Function<T, List<NamespacedKey>> get) {
+	default B namespacedKeyListField(CharSequence key, ToBooleanFunction<T> has, Function<T, List<NamespacedKey>> get) {
 		return addField(new ObjectListFieldBuilder<T, NamespacedKey>().setKey(key).setHasData(has).setGetter(get).setFieldType(NamespacedKeyType.getInstance()));
 	}
 	
-	public B booleanListField(CharSequence key, ToBooleanFunction<T> has, Function<T, BooleanList> get) {
+	default B booleanListField(CharSequence key, ToBooleanFunction<T> has, Function<T, BooleanList> get) {
 		return addField(reuseableObjectBuilder(key, has, get, BooleanListType.getInstance()));
 	}
 	
-	public B intListField(CharSequence key, ToBooleanFunction<T> has, Function<T, IntCollection> get) {
+	default B intListField(CharSequence key, ToBooleanFunction<T> has, Function<T, IntCollection> get) {
 		return addField(reuseableObjectBuilder(key, has, get, IntCollectionType.getInstance()));
 	}
 	
-	public B vector3f(CharSequence key, Function<T, Vector3f> get, BiConsumer<T, Vector3f> set) {
+	default B vector3f(CharSequence key, Function<T, Vector3f> get, BiConsumer<T, Vector3f> set) {
 		return addField(objectBuilder(key, get, set, Vector3fType.getInstance()).setReuseValue(true));
 	}
 	
-	public B vector3i(CharSequence key, Function<T, Vector3i> get, BiConsumer<T, Vector3i> set) {
+	default B vector3i(CharSequence key, Function<T, Vector3i> get, BiConsumer<T, Vector3i> set) {
 		return addField(objectBuilder(key, get, set, Vector3iType.getInstance()).setReuseValue(true));
 	}
 	
-	public B vector3d(CharSequence key, Function<T, Vector3d> get, BiConsumer<T, Vector3d> set) {
+	default B vector3d(CharSequence key, Function<T, Vector3d> get, BiConsumer<T, Vector3d> set) {
 		return addField(objectBuilder(key, get, set, Vector3dType.getInstance()).setReuseValue(true));
 	}
 	
-	public B quaternionf(CharSequence key, Function<T, Quaternionf> get, BiConsumer<T, Quaternionf> set) {
+	default B quaternionf(CharSequence key, Function<T, Quaternionf> get, BiConsumer<T, Quaternionf> set) {
 		return addField(objectBuilder(key, get, set, QuaternionfType.getInstance()).setReuseValue(true));
 	}
 	
-	private <V> ObjectFieldBuilder<T, V> objectBuilder(CharSequence key, Function<T, V> get, BiConsumer<T, V> set, ObjectType<V> type) {
+	default <V> ObjectFieldBuilder<T, V> objectBuilder(CharSequence key, Function<T, V> get, BiConsumer<T, V> set, ObjectType<V> type) {
 		return new ObjectFieldBuilder<T, V>().setKey(key).setGetter(get).setSetter(set).setFieldType(type);
 	}
 	
-	private PrimitiveFieldBuilder<T, Object, Object> primitiveBuilder(CharSequence key, TagType type, Object get, Object set) {
-		return new PrimitiveFieldBuilder<T, Object, Object>().setKey(key).setType(TagType.INT).setGetter(get).setSetter(set);
+	default <G, S> PrimitiveFieldBuilder<T, G, S> primitiveBuilder(CharSequence key, TagType type, G get, S set) {
+		return new PrimitiveFieldBuilder<T, G, S>().setKey(key).setType(type).setGetter(get).setSetter(set);
 	}
 	
-	private <V> ReuseableObjectFieldBuilder<T, V> reuseableObjectBuilder(CharSequence key, ToBooleanFunction<T> has, Function<T, V> get, ObjectType<V> type) {
+	default <V> ReuseableObjectFieldBuilder<T, V> reuseableObjectBuilder(CharSequence key, ToBooleanFunction<T> has, Function<T, V> get, ObjectType<V> type) {
 		return new ReuseableObjectFieldBuilder<T, V>().setKey(key).setHasData(has).setGetter(get).setFieldType(type);
 	}
 	
-	public B beginComponent(CharSequence key) {
-		return beginComponent(key, null, false);
-	}
-	
-	public B beginComponent(CharSequence key, boolean serverOnly) {
-		return beginComponent(key, null, serverOnly);
-	}
-	
-	public B beginComponent(CharSequence key, ToBooleanFunction<T> has) {
-		return beginComponent(key, has, false);
-	}
-	
-	public B beginComponent(CharSequence key, ToBooleanFunction<T> has, boolean serverOnly) {
-		builder = new NBTCompoundFieldBuilder<>(key, builder, serverOnly);
-		builder.has = has;
-		return getThis();
-	}
-	
-	public B endComponent() {
-		if (builder.parent == null)
-			throw new IllegalStateException("No component to end!");
-		builder = builder.parent;
-		return getThis();
-	}
-	
-	protected abstract B getThis();
+	B getThis();
 
 }

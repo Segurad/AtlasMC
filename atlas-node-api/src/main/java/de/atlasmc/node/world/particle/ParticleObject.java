@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.joml.Vector3f;
 
-import de.atlasmc.node.Location;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.entity.Player;
 
 public class ParticleObject implements Animation, Cloneable {
@@ -36,12 +36,12 @@ public class ParticleObject implements Animation, Cloneable {
 	}
 
 	@Override
-	public void play(Player player, Location loc, Vector3f angle) {
+	public void play(Player player, WorldLocation loc, Vector3f angle) {
 		player.spawnParticle(particle, loc.x, loc.y, loc.z,0 ,0 ,0 ,0 ,amount, this);
 	}
 	
 	@Override
-	public void playAll(Location loc, Vector3f angle) {
+	public void playAll(WorldLocation loc, Vector3f angle) {
 		loc.getWorld().spawnParticle(particle, loc, amount);
 	}
 

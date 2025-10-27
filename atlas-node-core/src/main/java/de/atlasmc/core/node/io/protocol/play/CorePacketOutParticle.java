@@ -7,7 +7,7 @@ import java.io.IOException;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
-import de.atlasmc.node.entity.data.MetaDataType;
+import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.io.protocol.play.PacketOutParticle;
 import de.atlasmc.node.world.particle.ParticleType;
 import de.atlasmc.util.EnumUtil;
@@ -27,7 +27,7 @@ public class CorePacketOutParticle implements PacketIO<PacketOutParticle> {
 		packet.maxSpeed = in.readFloat();
 		packet.count = in.readInt();
 		packet.particle = EnumUtil.getByID(ParticleType.class, readVarInt(in));
-		packet.data = MetaDataType.PARTICLE.read(packet.particle, in);
+		packet.data = MetaDataType.PARTICLE.read(packet.particle, in, handler.getCodecContext());
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class CorePacketOutParticle implements PacketIO<PacketOutParticle> {
 		out.writeFloat(packet.offZ);
 		out.writeFloat(packet.maxSpeed);
 		out.writeInt(packet.count);
-		MetaDataType.PARTICLE.write(packet.particle, packet.data, false, out);
+		MetaDataType.PARTICLE.write(packet.particle, packet.data, false, out, handler.getCodecContext());
 	}
 
 	@Override

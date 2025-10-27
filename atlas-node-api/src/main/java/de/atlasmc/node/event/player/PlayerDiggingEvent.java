@@ -1,7 +1,7 @@
 package de.atlasmc.node.event.player;
 
 import de.atlasmc.event.Cancellable;
-import de.atlasmc.node.Location;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.entity.Player;
 import de.atlasmc.node.event.ServerHandlerList;
@@ -11,12 +11,12 @@ public class PlayerDiggingEvent extends PlayerEvent implements Cancellable {
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
 	private DiggingStatus status;
-	private final Location loc;
+	private final WorldLocation loc;
 	private BlockFace face;
 	private boolean cancelled;
 	private float progressPerTick;
 	
-	public PlayerDiggingEvent(Player player, DiggingStatus status, Location loc, BlockFace face) {
+	public PlayerDiggingEvent(Player player, DiggingStatus status, WorldLocation loc, BlockFace face) {
 		super(player);
 		this.status = status;
 		this.face = face;
@@ -35,7 +35,7 @@ public class PlayerDiggingEvent extends PlayerEvent implements Cancellable {
 		return status;
 	}
 	
-	public Location getLocation() {
+	public WorldLocation getLocation() {
 		return loc;
 	}
 	

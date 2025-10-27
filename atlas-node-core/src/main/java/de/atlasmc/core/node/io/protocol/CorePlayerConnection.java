@@ -17,7 +17,7 @@ import de.atlasmc.io.connection.ServerSocketConnectionHandler;
 import de.atlasmc.log.Log;
 import de.atlasmc.network.player.AtlasPlayer;
 import de.atlasmc.node.NodePlayer;
-import de.atlasmc.node.SimpleLocation;
+import de.atlasmc.node.Location;
 import de.atlasmc.node.entity.Player;
 import de.atlasmc.node.event.player.PlayerAnimationEvent;
 import de.atlasmc.node.event.player.PlayerDiggingEvent;
@@ -71,7 +71,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	// Client controlled values
 	private boolean clientOnGround;
 	private boolean clientPushWall;
-	private SimpleLocation clientLocation;
+	private Location clientLocation;
 	private boolean locationChanged;
 	private float chunksPerTick;
 	private int selectedTrade = -1;
@@ -213,13 +213,13 @@ public class CorePlayerConnection implements PlayerConnection {
 	}
 
 	@Override
-	public SimpleLocation acceptClientLocation() {
+	public Location acceptClientLocation() {
 		locationChanged = false;
 		return clientLocation;
 	}
 	
 	@Override
-	public SimpleLocation getClientLocation() {
+	public Location getClientLocation() {
 		return clientLocation;
 	}
 	
@@ -242,7 +242,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	}
 	
 	@Override
-	public int teleport(SimpleLocation loc, Vector3d velocity, int flags) {
+	public int teleport(Location loc, Vector3d velocity, int flags) {
 		PacketOutSynchronizePlayerPosition packet = new PacketOutSynchronizePlayerPosition();
 		packet.x = loc.x;
 		packet.y = loc.y;
@@ -350,7 +350,7 @@ public class CorePlayerConnection implements PlayerConnection {
 		if (connection.isClosed())
 			return;
 		PacketOutDisconnect packet = new PacketOutDisconnect();
-		packet.reason = message;
+		packet.text = message;
 		connection.sendPacket(packet, (future) -> {
 			connection.close();
 		});

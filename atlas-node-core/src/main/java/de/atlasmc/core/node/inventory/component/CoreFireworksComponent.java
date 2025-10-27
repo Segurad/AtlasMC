@@ -1,8 +1,5 @@
 package de.atlasmc.core.node.inventory.component;
 
-import static de.atlasmc.node.io.protocol.ProtocolUtil.*;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +7,6 @@ import de.atlasmc.node.FireworkExplosion;
 import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.ComponentType;
 import de.atlasmc.node.inventory.component.FireworksComponent;
-import io.netty.buffer.ByteBuf;
 
 public class CoreFireworksComponent extends AbstractItemComponent implements FireworksComponent {
 	
@@ -67,34 +63,6 @@ public class CoreFireworksComponent extends AbstractItemComponent implements Fir
 	@Override
 	public void setFlightDuration(int duration) {
 		this.flightDuration = duration;
-	}
-	
-	@Override
-	public void read(ByteBuf buf) throws IOException {
-		flightDuration = readVarInt(buf);
-		final int count = readVarInt(buf);
-		if (explosions != null)
-			explosions.clear();
-		if (count > 0) {
-			for (int i = 0; i < count; i++) {
-				addExplosion(readFireworkExplosion(buf));
-			}
-		}
-	}
-	
-	@Override
-	public void write(ByteBuf buf) throws IOException {
-		writeVarInt(flightDuration, buf);
-		if (hasExplosions()) {
-			final int size = explosions.size();
-			writeVarInt(size, buf);
-			for (int i = 0; i < size; i++) {
-				FireworkExplosion explosion = explosions.get(i);
-				writeFireworkExplosion(explosion, buf);
-			}
-		} else {
-			writeVarInt(0, buf);
-		}
 	}
 
 }

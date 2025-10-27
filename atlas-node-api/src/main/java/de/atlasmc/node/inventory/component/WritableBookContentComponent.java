@@ -10,7 +10,7 @@ public interface WritableBookContentComponent extends ItemComponent {
 	public static final NBTCodec<WritableBookContentComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(WritableBookContentComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.WRITABLE_BOOK_CONTENT.getNamespacedKey())
 					.stringListField("pages", WritableBookContentComponent::hasPages, WritableBookContentComponent::getPages)
 					.endComponent()

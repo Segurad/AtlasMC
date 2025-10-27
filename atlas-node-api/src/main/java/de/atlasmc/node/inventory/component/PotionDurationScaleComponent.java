@@ -7,7 +7,7 @@ public interface PotionDurationScaleComponent extends ItemComponent {
 	public static final NBTCodec<PotionDurationScaleComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(PotionDurationScaleComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.floatField(ComponentType.POTION_DURATION_SCALE.getNamespacedKey(), PotionDurationScaleComponent::getScale, PotionDurationScaleComponent::setScale, 1)
 					.build();
 	

@@ -3,8 +3,8 @@ package de.atlasmc.node.util;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.Location;
-import de.atlasmc.node.SimpleLocation;
 import de.atlasmc.node.world.World;
 
 public final class MathUtil {
@@ -71,7 +71,7 @@ public final class MathUtil {
 		return toPosition(floor(x), floor(y),  floor(z));
 	}
 	
-	public static long toPosition(SimpleLocation loc) {
+	public static long toPosition(Location loc) {
 		return toPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 	}
 	
@@ -121,11 +121,11 @@ public final class MathUtil {
 		return blockstate << 12 | (x << 8 | y << 4 | z);
 	}
 
-	public static Location getLocation(World world, long position) {
-		return new Location(world, getPositionX(position), getPositionY(position), getPositionZ(position));
+	public static WorldLocation getLocation(World world, long position) {
+		return new WorldLocation(world, getPositionX(position), getPositionY(position), getPositionZ(position));
 	}
 	
-	public static Location getLocation(World world, Location loc, long position) {
+	public static WorldLocation getLocation(World world, WorldLocation loc, long position) {
 		return loc.set(world, getPositionX(position), getPositionY(position), getPositionZ(position));
 	}
 	
@@ -141,8 +141,8 @@ public final class MathUtil {
 		return (T) loc.set(getPositionX(position), getPositionY(position), getPositionZ(position));
 	}
 	
-	public static SimpleLocation getLocation(long position) {
-		return new SimpleLocation(getPositionX(position), getPositionY(position), getPositionZ(position));
+	public static Location getLocation(long position) {
+		return new Location(getPositionX(position), getPositionY(position), getPositionZ(position));
 	}
 	
 	public static float getYaw(double x, double z, double lockX, double lockZ) {

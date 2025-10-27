@@ -1,9 +1,5 @@
 package de.atlasmc.core.node.inventory.component.effect;
 
-import static de.atlasmc.io.PacketUtil.readDataSet;
-import static de.atlasmc.io.PacketUtil.writeDataSet;
-
-import java.io.IOException;
 import java.util.Objects;
 
 import de.atlasmc.node.entity.Entity;
@@ -12,9 +8,7 @@ import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.inventory.component.effect.ComponentEffectType;
 import de.atlasmc.node.inventory.component.effect.RemoveEffects;
 import de.atlasmc.node.potion.PotionEffectType;
-import de.atlasmc.registry.Registries;
 import de.atlasmc.util.dataset.DataSet;
-import io.netty.buffer.ByteBuf;
 
 public class CoreRemoveEffects extends CoreAbstractEffect implements RemoveEffects {
 
@@ -32,16 +26,6 @@ public class CoreRemoveEffects extends CoreAbstractEffect implements RemoveEffec
 				entity.removePotionEffect(type);
 			}
 		}
-	}
-
-	@Override
-	public void read(ByteBuf buf) throws IOException {
-		effects = readDataSet(Registries.getRegistry(PotionEffectType.class), buf);
-	}
-
-	@Override
-	public void write(ByteBuf buf) throws IOException {
-		writeDataSet(effects, Registries.getRegistry(PotionEffectType.class), buf);
 	}
 
 	@Override

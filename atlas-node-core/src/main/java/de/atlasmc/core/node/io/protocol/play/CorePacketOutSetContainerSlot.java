@@ -7,6 +7,7 @@ import java.io.IOException;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
+import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.io.protocol.play.PacketOutSetContainerSlot;
 import io.netty.buffer.ByteBuf;
 
@@ -17,7 +18,7 @@ public class CorePacketOutSetContainerSlot implements PacketIO<PacketOutSetConta
 		packet.windowID = in.readByte();
 		packet.stateID = readVarInt(in);
 		packet.slot = in.readShort();
-		packet.item = readSlot(in);
+		packet.item = ItemStack.STREAM_CODEC.deserialize(in, handler.getCodecContext());
 	}
 
 	@Override
@@ -25,7 +26,7 @@ public class CorePacketOutSetContainerSlot implements PacketIO<PacketOutSetConta
 		out.writeByte(packet.windowID);
 		writeVarInt(packet.stateID, out);
 		out.writeShort(packet.slot);
-		writeSlot(packet.item, out);
+		ItemStack.STREAM_CODEC.serialize(packet.item, out, handler.getCodecContext());
 	}
 
 	@Override

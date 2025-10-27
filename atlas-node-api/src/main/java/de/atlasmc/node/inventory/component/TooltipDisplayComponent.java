@@ -9,7 +9,7 @@ public interface TooltipDisplayComponent extends ItemComponent {
 	public static final NBTCodec<TooltipDisplayComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(TooltipDisplayComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.TOOLTIP_DISPLAY.getNamespacedKey())
 					.boolField("hide_tooltip", TooltipDisplayComponent::isHideTooltip, TooltipDisplayComponent::setHideTooltip, false)
 					.registryValueList("hidden_components", TooltipDisplayComponent::hasHiddenComponents, TooltipDisplayComponent::getHiddenComponents, ComponentType.REGISTRY_KEY)

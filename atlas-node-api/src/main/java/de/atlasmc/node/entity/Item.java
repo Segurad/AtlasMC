@@ -10,7 +10,7 @@ public interface Item extends Entity {
 	public static final NBTCodec<Item>
 	NBT_HANDLER = NBTCodec
 					.builder(Item.class)
-					.include(Entity.NBT_HANDLER)
+					.include(Entity.NBT_CODEC)
 					.shortField("Age", Item::getLifeTime, Item::setLifeTime, (short) 6000)
 					.shortField("Health", Item::getHealth, Item::setHealth, (short) 5)
 					.typeCompoundField("Item", Item::getItem, Item::setItem, ItemStack.NBT_HANDLER)

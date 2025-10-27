@@ -1,7 +1,7 @@
 package de.atlasmc.node.entity;
 
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.Location;
-import de.atlasmc.node.SimpleLocation;
 import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Turtle extends Animal {
@@ -21,13 +21,13 @@ public interface Turtle extends Animal {
 	
 	void setLayingEgg(boolean laying);
 	
-	default Location getTravelPos() {
-		return getTravelPos(new Location(getWorld()));
+	default WorldLocation getTravelPos() {
+		return getTravelPos(new WorldLocation(getWorld()));
 	}
 	
-	Location getTravelPos(Location loc);
+	WorldLocation getTravelPos(WorldLocation loc);
 	
-	default void setTravelPos(SimpleLocation loc) {
+	default void setTravelPos(Location loc) {
 		setTravelPos(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 	}
 	

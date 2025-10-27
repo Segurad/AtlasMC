@@ -27,7 +27,7 @@ public interface ChatComponent extends Chat, NBTSerializable {
 		FONT_UNIFORM = "minecraft:uniform";
 	
 	public static final NBTCodec<ChatComponent> 
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(ChatComponent.class)
 					.searchKeyEnumConstructor("type", ComponentType.class, ComponentType::createComponent, ChatComponent::getType)
 					.defaultConstructor(BaseComponent::new)
@@ -39,7 +39,7 @@ public interface ChatComponent extends Chat, NBTSerializable {
 					.color("shadow_color", ChatComponent::getShadowColor, ChatComponent::setShadowColor, null)
 					.colorValue("color", ChatComponent::getColor, ChatComponent::setColor)
 					.string("font", ChatComponent::getFont, ChatComponent::setFont)
-					.typeList("extra", ChatComponent::hasExtra, ChatComponent::getExtra, ChatComponent.NBT_HANDLER)
+					.typeList("extra", ChatComponent::hasExtra, ChatComponent::getExtra, ChatComponent.NBT_CODEC)
 					.string("insertion", ChatComponent::getInsertion, ChatComponent::setInsertion)
 					.typeCompoundField("click_event", ChatComponent::getClickEvent, ChatComponent::setClickEvent, ClickEvent.NBT_HANDLER)
 					.typeCompoundField("hover_event", ChatComponent::getHoverEvent, ChatComponent::setHoverEvent, HoverEvent.NBT_HANDLER)
@@ -134,7 +134,7 @@ public interface ChatComponent extends Chat, NBTSerializable {
 	
 	@Override
 	default NBTCodec<? extends ChatComponent> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	static BaseComponent chat(ChatComponent... components) {

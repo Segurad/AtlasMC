@@ -4,6 +4,8 @@ import java.util.List;
 
 import de.atlasmc.node.entity.DamageType;
 import de.atlasmc.node.event.entity.EntityDamageEvent.DamageReduction;
+import de.atlasmc.node.sound.EnumSound;
+import de.atlasmc.node.sound.ResourceSound;
 import de.atlasmc.node.sound.Sound;
 import de.atlasmc.tag.TagKey;
 import de.atlasmc.util.annotation.NotNull;
@@ -16,14 +18,14 @@ public interface BlocksAttacksComponent extends ItemComponent {
 	public static final NBTCodec<BlocksAttacksComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(BlocksAttacksComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.BLOCKS_ATTACKS.getNamespacedKey())
 					.floatField("block_delay_seconds", BlocksAttacksComponent::getBlockDelay, BlocksAttacksComponent::setBlockDelay, 0)
 					.floatField("disable_cooldown_scale", BlocksAttacksComponent::getDisableCooldownScale, BlocksAttacksComponent::setDisableCooldownScale, 1)
 					.typeList("damage_reductions", BlocksAttacksComponent::hasReduction, BlocksAttacksComponent::getReduction, DamageReduction.NBT_HANDLER)
 					.typeCompoundField("item_damage", BlocksAttacksComponent::getItemDamage, BlocksAttacksComponent::setItemDamage, ItemDamage.NBT_HANDLER)
-					.addField(Sound.getNBTSoundField("block_sound", BlocksAttacksComponent::getBlockSound, BlocksAttacksComponent::setBlockSound, null))
-					.addField(Sound.getNBTSoundField("disabled_sound", BlocksAttacksComponent::getDisabledSound, BlocksAttacksComponent::setDisabledSound, null))
+					.enumStringOrType("block_sound", BlocksAttacksComponent::getBlockSound, BlocksAttacksComponent::setBlockSound, EnumSound.class, ResourceSound.NBT_CODEC)
+					.enumStringOrType("disabled_sound", BlocksAttacksComponent::getDisabledSound, BlocksAttacksComponent::setDisabledSound, EnumSound.class, ResourceSound.NBT_CODEC)
 					.tagField("bypassed_by", BlocksAttacksComponent::getBypassedBy, BlocksAttacksComponent::setBypassedBy)
 					.endComponent()
 					.build();

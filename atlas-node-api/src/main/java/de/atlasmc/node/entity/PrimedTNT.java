@@ -10,7 +10,7 @@ public interface PrimedTNT extends Entity {
 	public static final NBTCodec<PrimedTNT>
 	NBT_HANDLER = NBTCodec
 					.builder(PrimedTNT.class)
-					.include(Entity.NBT_HANDLER)
+					.include(Entity.NBT_CODEC)
 					.shortField("fuse", PrimedTNT::getFuseTime, PrimedTNT::setFuseTime)
 					.typeCompoundField("block_state", PrimedTNT::getBlockData, PrimedTNT::setBlockData, BlockData.NBT_HANDLER)
 					.floatField("explosion_power", PrimedTNT::getExplosionPower, PrimedTNT::setExplosionPower)

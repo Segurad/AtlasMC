@@ -8,7 +8,7 @@ import de.atlasmc.chat.Messageable;
 import de.atlasmc.network.player.AtlasPlayer;
 import de.atlasmc.node.Gamemode;
 import de.atlasmc.node.NodePlayer;
-import de.atlasmc.node.SimpleLocation;
+import de.atlasmc.node.Location;
 import de.atlasmc.node.SoundCategory;
 import de.atlasmc.node.block.DiggingHandler;
 import de.atlasmc.node.inventory.EquipmentSlot;
@@ -57,7 +57,7 @@ public interface Player extends HumanEntity, Permissible, Messageable, SoundList
 	
 	void setLevel(int level, float progress);
 
-	default void playEffect(SimpleLocation loc, WorldEvent effect) {
+	default void playEffect(Location loc, WorldEvent effect) {
 		playEffect(loc, effect, null, true);
 	}
 	
@@ -68,7 +68,7 @@ public interface Player extends HumanEntity, Permissible, Messageable, SoundList
 	 * @param data
 	 * @implNote {@link #playEffect(int, int, int, WorldEvent, Object, boolean)}
 	 */
-	default void playEffect(SimpleLocation loc, WorldEvent effect, Object data) {
+	default void playEffect(Location loc, WorldEvent effect, Object data) {
 		playEffect(loc, effect, data, true);
 	}
 	
@@ -79,7 +79,7 @@ public interface Player extends HumanEntity, Permissible, Messageable, SoundList
 	 * @param data
 	 * @param relativeSound
 	 */
-	void playEffect(SimpleLocation loc, WorldEvent effect, Object data, boolean relativeSound);
+	void playEffect(Location loc, WorldEvent effect, Object data, boolean relativeSound);
 	
 	void playEffect(int x, int y, int z, WorldEvent effect, Object data, boolean relativeSound);
 	

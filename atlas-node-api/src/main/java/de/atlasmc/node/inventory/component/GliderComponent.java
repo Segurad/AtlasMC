@@ -7,7 +7,7 @@ public interface GliderComponent extends ItemComponent {
 	public static final NBTCodec<GliderComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(GliderComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.GLIDER.getNamespacedKey())
 					.endComponent()
 					.build();

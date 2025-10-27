@@ -1,11 +1,11 @@
-package de.atlasmc.node.entity.data;
+package de.atlasmc.node.entity.metadata.type;
 
 import static de.atlasmc.node.io.protocol.ProtocolUtil.*;
 
 import java.io.IOException;
 
 import de.atlasmc.Color;
-import de.atlasmc.node.SimpleLocation;
+import de.atlasmc.node.Location;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.util.MathUtil;
@@ -16,22 +16,23 @@ import de.atlasmc.node.world.particle.ParticleType.DustColor;
 import de.atlasmc.node.world.particle.ParticleType.DustColorTransition;
 import de.atlasmc.node.world.particle.ParticleType.VibrationData;
 import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
-public final class ParticleMetaDataType extends MetaDataType<Particle> {
+public final class ParticleMetaType extends MetaDataType<Particle> {
 
-	public ParticleMetaDataType(int type) {
+	public ParticleMetaType(int type) {
 		super(type, ParticleObject.class);
 	}
 
 	@Override
-	public Particle read(ByteBuf in) {
+	public Particle read(ByteBuf in, CodecContext context) {
 		ParticleType p = EnumUtil.getByID(ParticleType.class, readVarInt(in));
 		// TODO read
 		return null;
 	}
 
-	public Object read(ParticleType particle, ByteBuf in) {
+	public Object read(ParticleType particle, ByteBuf in, CodecContext context) throws IOException {
 		Object data = null;
 		switch (particle) {
 		case BLOCK:
@@ -57,17 +58,13 @@ public final class ParticleMetaDataType extends MetaDataType<Particle> {
 			data = Color.fromRGB(readVarInt(in));
 			break;
 		case ITEM:
-			try {
-				data = readSlot(in);
-			} catch (IOException e) {
-				throw new IllegalStateException("Error while reading particle meta data!", e);
-			}
+			data = ItemStack.STREAM_CODEC.deserialize(in, context);
 			break;
 		case VIBRATION: {
 			int type = readVarInt(in);
 			switch (type) {
 			case 0:
-				SimpleLocation pos = MathUtil.getLocation(in.readLong());
+				Location pos = MathUtil.getLocation(in.readLong());
 				int ticks = readVarInt(in);
 				data = new VibrationData(pos, ticks);
 				break;
@@ -95,11 +92,11 @@ public final class ParticleMetaDataType extends MetaDataType<Particle> {
 	}
 	
 	@Override
-	public void write(Particle data, ByteBuf out) {
+	public void write(Particle data, ByteBuf out, CodecContext context) {
 		// TODO write
 	}
 	
-	public void write(ParticleType particle, Object data, boolean dataOnly, ByteBuf out) {
+	public void write(ParticleType particle, Object data, boolean dataOnly, ByteBuf out, CodecContext context) throws IOException {
 		if (!dataOnly) 
 			writeVarInt(particle.getID(), out);
 		switch (particle) {
@@ -149,11 +146,7 @@ public final class ParticleMetaDataType extends MetaDataType<Particle> {
 			break;
 		case ITEM:
 			if (data instanceof ItemStack item) {
-				try {
-					writeSlot(item, out);
-				} catch (IOException e) {
-					throw new IllegalStateException("Error while writing particle meta data!", e);
-				}
+				ItemStack.STREAM_CODEC.serialize(item, out, context);
 			} else if (data != null) {
 				throw new IllegalArgumentException("Invalid data type: " + data.getClass().getName());
 			} else {

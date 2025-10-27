@@ -1,14 +1,8 @@
 package de.atlasmc.core.node.inventory.component;
 
-import static de.atlasmc.io.PacketUtil.readVarInt;
-import static de.atlasmc.io.PacketUtil.writeVarInt;
-
-import java.io.IOException;
-
 import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.ComponentType;
 import de.atlasmc.node.inventory.component.FoodComponent;
-import io.netty.buffer.ByteBuf;
 
 public class CoreFoodComponent extends AbstractItemComponent implements FoodComponent  {
 	
@@ -53,20 +47,6 @@ public class CoreFoodComponent extends AbstractItemComponent implements FoodComp
 	@Override
 	public void setAlwaysEatable(boolean eatable) {
 		this.canAlwaysEat = eatable;
-	}
-	
-	@Override
-	public void read(ByteBuf buf) throws IOException {
-		nutrition = readVarInt(buf);
-		saturation = buf.readFloat();
-		canAlwaysEat = buf.readBoolean();
-	}
-	
-	@Override
-	public void write(ByteBuf buf) throws IOException {
-		writeVarInt(nutrition, buf);
-		buf.writeFloat(saturation);
-		buf.writeBoolean(canAlwaysEat);
 	}
 
 }

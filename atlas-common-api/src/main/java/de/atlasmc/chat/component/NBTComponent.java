@@ -10,7 +10,7 @@ public class NBTComponent extends AbstractBaseComponent<NBTComponent> {
 					.string("source", NBTComponent::getSource, NBTComponent::setSource)
 					.string("nbt", NBTComponent::getNbtPath, NBTComponent::setNbtPath)
 					.boolField("interpret", NBTComponent::isInterpret, NBTComponent::setInterpret, false)
-					.typeCompoundField("separator", NBTComponent::getSeparator, NBTComponent::setSeparator, ChatComponent.NBT_HANDLER)
+					.typeCompoundField("separator", NBTComponent::getSeparator, NBTComponent::setSeparator, ChatComponent.NBT_CODEC)
 					.string("block", NBTComponent::getBlock, NBTComponent::setBlock)
 					.string("entity", NBTComponent::getEntity, NBTComponent::setEntity)
 					.string("storage", NBTComponent::getStorage, NBTComponent::setStorage)

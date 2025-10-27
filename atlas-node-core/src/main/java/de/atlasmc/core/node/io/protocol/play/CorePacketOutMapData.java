@@ -15,10 +15,7 @@ import de.atlasmc.node.map.MapIcon;
 import de.atlasmc.node.map.MapIcon.IconType;
 import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.EnumUtil.EnumData;
-import de.atlasmc.util.nbt.io.NBTNIOReader;
-import de.atlasmc.util.nbt.io.NBTNIOWriter;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutMapData implements PacketIO<PacketOutMapData> {
@@ -31,18 +28,17 @@ public class CorePacketOutMapData implements PacketIO<PacketOutMapData> {
 		if (in.readBoolean()) {
 			final int count = readVarInt(in);
 			final EnumData<IconType> iconType = EnumUtil.getData(IconType.class);
+			final CodecContext context = handler.getCodecContext();
 			if (count > 0) {
 				List<MapIcon> icons = new ArrayList<>(count);
-				NBTReader nbtReader = new NBTNIOReader(in, true);
 				for (int i = 0; i < count; i++) {
 					int type = readVarInt(in);
 					byte x = in.readByte();
 					byte z = in.readByte();
 					float direction = Math.clamp(in.readByte() * 16, 0, 360);
-					boolean name = in.readBoolean();
 					Chat dname = null;
-					if (name) 
-						dname = readTextComponent(nbtReader);
+					if (in.readBoolean()) 
+						dname = Chat.STREAM_CODEC.deserialize(in, context);
 					MapIcon icon = new MapIcon(iconType.getByID(type), x, z, direction);
 					icon.setDisplayName(dname);
 					icons.add(icon);
@@ -72,7 +68,7 @@ public class CorePacketOutMapData implements PacketIO<PacketOutMapData> {
 			out.writeBoolean(true);
 			final int size = icons.size();
 			writeVarInt(size, out);
-			NBTWriter nbtWriter = new NBTNIOWriter(out, true);
+			final CodecContext context = handler.getCodecContext();
 			for (int i = 0; i < size; i++) {
 				MapIcon icon = icons.get(i);
 				writeVarInt(icon.getType().getID(), out);
@@ -81,7 +77,7 @@ public class CorePacketOutMapData implements PacketIO<PacketOutMapData> {
 				out.writeByte((int) (icon.getRotation() / 16));
 				out.writeBoolean(icon.hasDisplayName());
 				if (icon.hasDisplayName())
-					writeTextComponent(icon.getDisplayName(), nbtWriter);
+					Chat.STREAM_CODEC.serialize(icon.getDisplayName(), out, context);
 			}
 		} else {
 			out.writeBoolean(false);

@@ -9,7 +9,7 @@ public interface ProvidesBannerPatternsComponent extends ItemComponent {
 	public static final NBTCodec<ProvidesBannerPatternsComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(ProvidesBannerPatternsComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.tagField(ComponentType.PROVIDES_BANNER_PATTERNS.getNamespacedKey(), ProvidesBannerPatternsComponent::getPatterns, ProvidesBannerPatternsComponent::setPatterns)
 					.build();
 

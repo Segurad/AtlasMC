@@ -2,8 +2,6 @@ package de.atlasmc.core.node.io.protocol.play;
 
 import static de.atlasmc.io.PacketUtil.readVarInt;
 import static de.atlasmc.io.PacketUtil.writeVarInt;
-import static de.atlasmc.node.io.protocol.ProtocolUtil.readSlot;
-import static de.atlasmc.node.io.protocol.ProtocolUtil.writeSlot;
 
 import java.io.IOException;
 
@@ -12,6 +10,7 @@ import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.io.protocol.play.PacketOutSetContainerContents;
+import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutSetContainerContents implements PacketIO<PacketOutSetContainerContents> {
@@ -21,12 +20,13 @@ public class CorePacketOutSetContainerContents implements PacketIO<PacketOutSetC
 		packet.windowID = in.readByte();
 		packet.stateID = readVarInt(in);
 		final int count = in.readShort();
-		ItemStack[] slots = new ItemStack[count];
+		final CodecContext context = handler.getCodecContext();
+		final ItemStack[] slots = new ItemStack[count];
 		for (int i = 0; i < count; i++) {
-			slots[i] = readSlot(in);
+			slots[i] = ItemStack.STREAM_CODEC.deserialize(in, context);
 		}
 		packet.setItems(slots);
-		packet.carriedItem = readSlot(in);
+		packet.carriedItem = ItemStack.STREAM_CODEC.deserialize(in, context);
 	}
 
 	@Override
@@ -34,10 +34,11 @@ public class CorePacketOutSetContainerContents implements PacketIO<PacketOutSetC
 		out.writeByte(packet.windowID);
 		writeVarInt(packet.stateID, out);
 		out.writeShort(packet.items.length);
+		final CodecContext context = handler.getCodecContext();
 		for (ItemStack i : packet.items) {
-			writeSlot(i, out);
+			ItemStack.STREAM_CODEC.serialize(i, out, context);
 		}
-		writeSlot(packet.carriedItem, out);
+		ItemStack.STREAM_CODEC.serialize(packet.carriedItem, out, context);
 	}
 
 	@Override

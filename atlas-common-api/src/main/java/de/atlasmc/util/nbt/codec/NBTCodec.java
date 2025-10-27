@@ -7,8 +7,6 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 
 public interface NBTCodec<T> extends Codec<T, NBTReader, NBTWriter, CodecContext> {
 	
-	Class<? extends T> getType();
-	
 	@Override
 	default CodecContext getDefaultContext() {
 		return CodecContext.DEFAULT_SERVER;

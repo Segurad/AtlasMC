@@ -10,6 +10,7 @@ import de.atlasmc.io.PacketChunker;
 import de.atlasmc.io.PacketListener;
 import de.atlasmc.io.Protocol;
 import de.atlasmc.log.Log;
+import de.atlasmc.util.codec.CodecContext;
 
 public abstract class AbstractConnectionHandler implements ConnectionHandler {
 
@@ -173,6 +174,11 @@ public abstract class AbstractConnectionHandler implements ConnectionHandler {
 			}
 			nextListener.handleSyncPackets(logger); // handle packet without locking listeners
 		} while (index != -1);
+	}
+	
+	@Override
+	public CodecContext getCodecContext() {
+		return CodecContext.DEFAULT_CLIENT;
 	}
 
 }

@@ -1,24 +1,17 @@
 package de.atlasmc.core.node.inventory.component;
 
-import static de.atlasmc.io.PacketUtil.readVarInt;
-import static de.atlasmc.io.PacketUtil.writeVarInt;
-import static de.atlasmc.node.io.protocol.ProtocolUtil.readSlot;
-import static de.atlasmc.node.io.protocol.ProtocolUtil.writeSlot;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.inventory.ItemType;
 import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.ComponentType;
 import de.atlasmc.node.inventory.component.ContainerComponent;
-import io.netty.buffer.ByteBuf;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap.Entry;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 public class CoreContainerComponent extends AbstractItemComponent implements ContainerComponent {
 	
-	private List<ItemStack> slots;
+	private Int2ObjectMap<ItemStack> slots;
 	
 	public CoreContainerComponent(ComponentType type) {
 		super(type);
@@ -28,20 +21,20 @@ public class CoreContainerComponent extends AbstractItemComponent implements Con
 	public CoreContainerComponent clone() {
 		CoreContainerComponent clone = (CoreContainerComponent) super.clone();
 		if (hasItems()) {
-			clone.slots = new ArrayList<>();
-			final int size = slots.size();
-			for (int i = 0; i < size; i++) {
-				ItemStack item = slots.get(i);
-				clone.slots.add(item);
+			clone.slots = new Int2ObjectOpenHashMap<>(slots.size());
+			for (Entry<ItemStack> entry : slots.int2ObjectEntrySet()) {
+				clone.slots.put(entry.getIntKey(), entry.getValue().clone());
 			}
+		} else {
+			clone.slots = null;
 		}
 		return clone;
 	}
 
 	@Override
-	public List<ItemStack> getItems() {
+	public Int2ObjectMap<ItemStack> getItems() {
 		if (slots == null)
-			slots = new ArrayList<>();
+			slots = new Int2ObjectOpenHashMap<>();
 		return slots;
 	}
 
@@ -51,64 +44,42 @@ public class CoreContainerComponent extends AbstractItemComponent implements Con
 	}
 
 	@Override
-	public void setItem(int slot, ItemStack item) {
+	public ItemStack setItem(int slot, ItemStack item) {
 		if (item == null && slots != null) {
-			slots.remove(slot);
-			return;
+			return slots.remove(slot);
 		}
-		slots.set(slot, item);
-	}
-	
-	@Override
-	public void addItem(ItemStack item) {
-		if (item == null)
-			throw new IllegalArgumentException("Item can not be null!");
-		getItems().add(item);
+		return slots.put(slot, item);
 	}
 
 	@Override
-	public void removeItem(ItemStack item) {
+	public boolean removeItem(ItemStack item) {
 		if (!hasItems())
-			return;
-		slots.remove(item);
+			return false;
+		for (Entry<ItemStack> entry : slots.int2ObjectEntrySet()) {
+			if (!entry.getValue().equals(item))
+				continue;
+			return slots.remove(entry.getIntKey(), entry.getValue());
+		}
+		return false;
 	}
 
 	@Override
-	public void removeItem(ItemType type) {
+	public boolean removeItem(ItemType type) {
 		if (!hasItems())
-			return;
+			return false;
 		for (int i = 0; i < slots.size(); i++) {
 			ItemStack item = slots.get(i);
 			if (item.getType() != type)
 				continue;
 			slots.remove(i);
-			break;
+			return true;
 		}
+		return false;
 	}
-	
+
 	@Override
-	public void read(ByteBuf buf) throws IOException {
-		final int count = readVarInt(buf);
-		for (int i = 0; i < count; i++) {
-			ItemStack item = readSlot(buf);
-			if (item == null)
-				continue;
-			addItem(item);
-		}
-	}
-	
-	@Override
-	public void write(ByteBuf buf) throws IOException {
-		if (!hasItems()) {
-			writeVarInt(0, buf);
-			return;
-		}
-		final int size = slots.size();
-		writeVarInt(size, buf);
-		for (int i = 0; i < size; i++) {
-			ItemStack item = slots.get(i);
-			writeSlot(item, buf);
-		}
+	public ItemStack removeItem(int slot) {
+		return slots != null ? slots.remove(slot) : null;
 	}
 
 }

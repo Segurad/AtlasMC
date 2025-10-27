@@ -2,7 +2,7 @@ package de.atlasmc.node.util;
 
 import org.joml.Vector3d;
 
-import de.atlasmc.node.SimpleLocation;
+import de.atlasmc.node.Location;
 
 public class TeleportFlags {
 	
@@ -57,11 +57,11 @@ public class TeleportFlags {
 		return (flags & ROTATE_VELOCITY) == ROTATE_VELOCITY;
 	}
 
-	public static void set(SimpleLocation to, SimpleLocation from, int flags) {
+	public static void set(Location to, Location from, int flags) {
 		set(to, from.x, from.y, from.z, from.pitch, from.yaw, flags);
 	}
 	
-	public static void set(SimpleLocation to, double x, double y, double z, int flags) {
+	public static void set(Location to, double x, double y, double z, int flags) {
 		if ((flags & RELATIVE_X) == RELATIVE_X) {
 			to.x += x;
 		} else {
@@ -79,7 +79,7 @@ public class TeleportFlags {
 		}
 	}
 
-	public static void set(SimpleLocation to, double x, double y, double z, float pitch, float yaw, int flags) {
+	public static void set(Location to, double x, double y, double z, float pitch, float yaw, int flags) {
 		if ((flags & RELATIVE_X) == RELATIVE_X) {
 			to.x += x;
 		} else {

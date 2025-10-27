@@ -7,7 +7,7 @@ public interface DamageComponent extends ItemComponent {
 	public static NBTCodec<DamageComponent> 
 	NBT_HANDLER = NBTCodec
 			.builder(DamageComponent.class)
-			.include(ItemComponent.NBT_HANDLER)
+			.include(ItemComponent.NBT_CODEC)
 			.intField(ComponentType.DAMAGE.getNamespacedKey(), DamageComponent::getDamage, DamageComponent::setDamage)
 			.build();
 	

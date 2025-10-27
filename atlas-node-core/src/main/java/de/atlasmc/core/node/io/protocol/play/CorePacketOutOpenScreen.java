@@ -4,6 +4,7 @@ import static de.atlasmc.node.io.protocol.ProtocolUtil.*;
 
 import java.io.IOException;
 
+import de.atlasmc.chat.Chat;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
@@ -18,14 +19,14 @@ public class CorePacketOutOpenScreen implements PacketIO<PacketOutOpenScreen> {
 	public void read(PacketOutOpenScreen packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.windowID = readVarInt(in);
 		packet.type = EnumUtil.getByID(InventoryType.class, readVarInt(in));
-		packet.title = readTextComponent(in);
+		packet.title = Chat.STREAM_CODEC.deserialize(in, handler.getCodecContext());
 	}
 
 	@Override
 	public void write(PacketOutOpenScreen packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.windowID, out);
 		writeVarInt(packet.type.getID(), out);
-		writeTextComponent(packet.title, out);
+		Chat.STREAM_CODEC.serialize(packet.title, out, handler.getCodecContext());
 	}
 	
 	@Override

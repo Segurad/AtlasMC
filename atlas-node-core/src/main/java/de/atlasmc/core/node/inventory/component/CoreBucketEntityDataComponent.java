@@ -1,7 +1,5 @@
 package de.atlasmc.core.node.inventory.component;
 
-import java.io.IOException;
-
 import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.entity.Axolotl.Variant;
 import de.atlasmc.node.entity.Salmon.Type;
@@ -10,12 +8,6 @@ import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.BucketEntityDataComponent;
 import de.atlasmc.node.inventory.component.ComponentType;
 import de.atlasmc.util.EnumUtil;
-import de.atlasmc.util.codec.CodecContext;
-import de.atlasmc.util.nbt.io.NBTNIOReader;
-import de.atlasmc.util.nbt.io.NBTNIOWriter;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
-import io.netty.buffer.ByteBuf;
 
 public class CoreBucketEntityDataComponent extends AbstractItemComponent implements BucketEntityDataComponent {
 	
@@ -182,20 +174,6 @@ public class CoreBucketEntityDataComponent extends AbstractItemComponent impleme
 	@Override
 	public void setSalmonType(Type type) {
 		this.type = type;
-	}
-	
-	@Override
-	public void read(ByteBuf buf) throws IOException {
-		NBTReader reader = new NBTNIOReader(buf, true);
-		BucketEntityDataComponent.NBT_HANDLER.deserialize(this, reader, CodecContext.DEFAULT_CLIENT);
-		reader.close();
-	}
-	
-	@Override
-	public void write(ByteBuf buf) throws IOException {
-		NBTWriter writer = new NBTNIOWriter(buf, true);
-		BucketEntityDataComponent.NBT_HANDLER.serialize(this, writer, CodecContext.DEFAULT_CLIENT);
-		writer.close();
 	}
 
 }

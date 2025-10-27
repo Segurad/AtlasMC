@@ -8,7 +8,7 @@ public interface CanBreakComponent extends AbstractBlockPredicateComponent {
 	public static final NBTCodec<CanBreakComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(CanBreakComponent.class)
-					.include(AbstractBlockPredicateComponent.NBT_HANDLER)
+					.include(AbstractBlockPredicateComponent.NBT_CODEC)
 					.typeList(ComponentType.CAN_BREAK.getNamespacedKey(), CanBreakComponent::hasPredicates, CanBreakComponent::getPredicates, BlockPredicate.NBT_HANDLER)
 					.build();
 	

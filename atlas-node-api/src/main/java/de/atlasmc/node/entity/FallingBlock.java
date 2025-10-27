@@ -10,7 +10,7 @@ public interface FallingBlock extends Entity {
 	public static final NBTCodec<FallingBlock>
 	NBT_HANDLER = NBTCodec
 					.builder(FallingBlock.class)
-					.include(Entity.NBT_HANDLER)
+					.include(Entity.NBT_CODEC)
 					.typeCompoundField("BlockState", FallingBlock::getBlockData, FallingBlock::setBlockData, BlockData.NBT_HANDLER)
 					.boolField("CancelDrop", FallingBlock::getCancelDrop, FallingBlock::setCancelDrop, false)
 					.boolField("DropItem", FallingBlock::getDropItem, FallingBlock::setDropItem, false)

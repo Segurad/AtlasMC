@@ -7,9 +7,9 @@ public class SelectorComponent extends AbstractBaseComponent<SelectorComponent> 
 	public static final NBTCodec<SelectorComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(SelectorComponent.class)
-					.include(AbstractBaseComponent.NBT_HANDLER)
+					.include(AbstractBaseComponent.NBT_CODEC)
 					.string("selector", SelectorComponent::getSelector, SelectorComponent::setSelector)
-					.typeCompoundField("separator", SelectorComponent::getSeparator, SelectorComponent::setSeparator, ChatComponent.NBT_HANDLER)
+					.typeCompoundField("separator", SelectorComponent::getSeparator, SelectorComponent::setSeparator, ChatComponent.NBT_CODEC)
 					.build();
 	
 	private String selector;

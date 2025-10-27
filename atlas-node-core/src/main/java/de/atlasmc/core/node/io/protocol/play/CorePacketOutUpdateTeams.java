@@ -7,6 +7,7 @@ import java.net.ProtocolException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
@@ -15,6 +16,7 @@ import de.atlasmc.node.io.protocol.play.PacketOutUpdateTeams;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateTeams.Mode;
 import de.atlasmc.node.scoreboard.TeamOptionType;
 import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> {
@@ -24,15 +26,16 @@ public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> 
 		packet.name = readString(in, MAX_IDENTIFIER_LENGTH);
 		Mode mode = Mode.getByID(in.readByte());
 		packet.mode = mode;
+		final CodecContext context = handler.getCodecContext();
 		switch (mode) {
 		case CREATE_TEAM: {
-				packet.displayName = readTextComponent(in);
+				packet.displayName = Chat.STREAM_CODEC.deserialize(in, context);
 				packet.flags = in.readByte();
 				packet.nameTagVisibility = getNameTagVisibility(readString(in, 40));
 				packet.collisionRule = getCollisionRule(readString(in, 40));
 				packet.color = EnumUtil.getByID(ChatColor.class, readVarInt(in));
-				packet.prefix = readTextComponent(in);
-				packet.suffix = readTextComponent(in);
+				packet.prefix = Chat.STREAM_CODEC.deserialize(in, context);
+				packet.suffix = Chat.STREAM_CODEC.deserialize(in, context);
 				final int size = readVarInt(in);
 				if (size > 0) {
 					List<String> entities = new ArrayList<>(size);
@@ -48,13 +51,13 @@ public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> 
 		case REMOVE_TEAM:
 			break;
 		case UPDATE_TEAM_INFO:
-			packet.displayName = readTextComponent(in);
+			packet.displayName = Chat.STREAM_CODEC.deserialize(in, context);
 			packet.flags = in.readByte();
 			packet.nameTagVisibility = getNameTagVisibility(readString(in, 40));
 			packet.collisionRule = getCollisionRule(readString(in, 40));
 			packet.color = EnumUtil.getByID(ChatColor.class, readVarInt(in));
-			packet.prefix = readTextComponent(in);
-			packet.suffix = readTextComponent(in);
+			packet.prefix = Chat.STREAM_CODEC.deserialize(in, context);
+			packet.suffix = Chat.STREAM_CODEC.deserialize(in, context);
 			break;
 		case ADD_ENTITIES:
 		case REMOVE_ENTITIES: {
@@ -79,15 +82,16 @@ public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> 
 	public void write(PacketOutUpdateTeams packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeString(packet.name, out);
 		out.writeByte(packet.mode.getID());
+		final CodecContext context = handler.getCodecContext();
 		switch (packet.mode) {
 		case CREATE_TEAM: {
-				writeTextComponent(packet.displayName, out);
+				packet.displayName.writeToStream(out, context);
 				out.writeByte(packet.flags & 0x03);
 				writeString(optionToStringNameTagVisible(packet.nameTagVisibility), out);
 				writeString(optionToStringCollision(packet.collisionRule), out);
 				writeVarInt(packet.color.getID(), out);
-				writeTextComponent(packet.prefix, out);
-				writeTextComponent(packet.suffix, out);
+				packet.prefix.writeToStream(out, context);
+				packet.suffix.writeToStream(out, context);
 				if (packet.entities == null) {
 					writeVarInt(0, out);
 					break;
@@ -100,13 +104,13 @@ public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> 
 				break;
 			}
 		case UPDATE_TEAM_INFO:
-			writeTextComponent(packet.displayName, out);
+			packet.displayName.writeToStream(out, context);
 			out.writeByte(packet.flags & 0x03);
 			writeString(optionToStringNameTagVisible(packet.nameTagVisibility), out);
 			writeString(optionToStringCollision(packet.collisionRule), out);
 			writeVarInt(packet.color.getID(), out);
-			writeTextComponent(packet.prefix, out);
-			writeTextComponent(packet.suffix, out);
+			packet.prefix.writeToStream(out, context);
+			packet.suffix.writeToStream(out, context);
 			break;
 		case REMOVE_TEAM:
 			break;

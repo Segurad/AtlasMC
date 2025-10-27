@@ -10,7 +10,7 @@ public interface PotDecorationComponent extends ItemComponent {
 	public static final NBTCodec<PotDecorationComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(PotDecorationComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.namespacedKeyListField(ComponentType.POT_DECORATIONS.getNamespacedKey(), PotDecorationComponent::hasDecorations, PotDecorationComponent::getDecorations)
 					.build();
 	

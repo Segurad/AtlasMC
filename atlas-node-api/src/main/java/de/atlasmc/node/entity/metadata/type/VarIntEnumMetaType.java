@@ -1,27 +1,28 @@
-package de.atlasmc.node.entity.data;
+package de.atlasmc.node.entity.metadata.type;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.io.PacketUtil;
 import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
-public class VarIntEnumMetaDataType<T extends Enum<T> & IDHolder> extends MetaDataType<T> {
+public class VarIntEnumMetaType<T extends Enum<T> & IDHolder> extends MetaDataType<T> {
 
 	private final Class<T> enumClass;
 	
-	public VarIntEnumMetaDataType(int type, Class<T> typeClass) {
+	public VarIntEnumMetaType(int type, Class<T> typeClass) {
 		super(type, typeClass);
 		this.enumClass = typeClass;
 	}
 
 	@Override
-	public T read(ByteBuf in) {
+	public T read(ByteBuf in, CodecContext context) {
 		int id = PacketUtil.readVarInt(in);
 		return EnumUtil.getByID(enumClass, id);
 	}
 
 	@Override
-	public void write(T data, ByteBuf out) {
+	public void write(T data, ByteBuf out, CodecContext context) {
 		PacketUtil.writeVarInt(data.getID(), out);
 	}
 

@@ -1,11 +1,9 @@
 package de.atlasmc.core.node.io.protocol.play;
 
 import static de.atlasmc.io.PacketUtil.readString;
-import static de.atlasmc.io.PacketUtil.readTextComponent;
 import static de.atlasmc.io.PacketUtil.readUUID;
 import static de.atlasmc.io.PacketUtil.readVarInt;
 import static de.atlasmc.io.PacketUtil.writeString;
-import static de.atlasmc.io.PacketUtil.writeTextComponent;
 import static de.atlasmc.io.PacketUtil.writeVarInt;
 import static de.atlasmc.node.io.protocol.play.PacketOutPlayerInfoUpdate.ACTION_ADD_PLAYER;
 import static de.atlasmc.node.io.protocol.play.PacketOutPlayerInfoUpdate.ACTION_INIT_CHAT;
@@ -34,6 +32,7 @@ import de.atlasmc.node.io.protocol.play.PacketOutPlayerInfoUpdate;
 import de.atlasmc.node.io.protocol.play.PacketOutPlayerInfoUpdate.PlayerInfo;
 import de.atlasmc.util.EncryptionUtil;
 import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutPlayerInfoUpdate implements PacketIO<PacketOutPlayerInfoUpdate> {
@@ -43,6 +42,7 @@ public class CorePacketOutPlayerInfoUpdate implements PacketIO<PacketOutPlayerIn
 		byte actions = in.readByte();
 		packet.actions = actions;
 		final int count = readVarInt(in);
+		final CodecContext context = handler.getCodecContext();
 		List<PlayerInfo> infos = new ArrayList<>(count);
 		for (int i = 0; i < count; i++) {
 			PlayerInfo info = new PlayerInfo(readUUID(in));
@@ -89,7 +89,7 @@ public class CorePacketOutPlayerInfoUpdate implements PacketIO<PacketOutPlayerIn
 			}
 			if ((actions & ACTION_UPDATE_DISPLAY_NAME) != 0) {
 				if (in.readBoolean()) {
-					info.displayName = readTextComponent(in);
+					info.displayName = Chat.STREAM_CODEC.deserialize(in, context);
 				}
 			}
 		}
@@ -101,6 +101,7 @@ public class CorePacketOutPlayerInfoUpdate implements PacketIO<PacketOutPlayerIn
 		out.writeByte(actions);
 		List<PlayerInfo> infos = packet.info;
 		final int size = infos.size();
+		final CodecContext context = handler.getCodecContext();
 		writeVarInt(size, out);
 		for (int i = 0; i < size; i++) {
 			PlayerInfo info = infos.get(i);
@@ -160,7 +161,7 @@ public class CorePacketOutPlayerInfoUpdate implements PacketIO<PacketOutPlayerIn
 					out.writeBoolean(false);
 				} else {
 					out.writeBoolean(true);
-					writeTextComponent(name, out);
+					name.writeToStream(out, context);
 				}
 			}
 		}

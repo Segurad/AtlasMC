@@ -7,7 +7,7 @@ public interface WeaponComponent extends ItemComponent {
 	public static final NBTCodec<WeaponComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(WeaponComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.WEAPON.getNamespacedKey())
 					.intField("item_damage_per_attack", WeaponComponent::getItemDamagePerAttack, WeaponComponent::setItemDamagePerAttack, 0)
 					.floatField("disable_blocking_for_seconds", WeaponComponent::getDisableBlockSeconds, WeaponComponent::setDisableBlockSeconds, 0)

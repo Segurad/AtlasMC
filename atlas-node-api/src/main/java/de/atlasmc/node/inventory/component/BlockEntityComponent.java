@@ -8,7 +8,7 @@ public interface BlockEntityComponent extends ItemComponent {
 	public static final NBTCodec<BlockEntityComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(BlockEntityComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.typeCompoundField(ComponentType.BLOCK_ENTITY_DATA.getNamespacedKey(), BlockEntityComponent::getTileEntity, BlockEntityComponent::setTileEntity, TileEntity.NBT_HANDLER)
 					.build();
 	

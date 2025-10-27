@@ -2,7 +2,7 @@ package de.atlasmc.node.world.particle;
 
 import org.joml.Vector3f;
 
-import de.atlasmc.node.Location;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.entity.Player;
 
 public class GrowigCircle extends Circle {
@@ -29,7 +29,7 @@ public class GrowigCircle extends Circle {
 	}
 	
 	@Override
-	public void play(Player player, Location loc, Vector3f angle) {
+	public void play(Player player, WorldLocation loc, Vector3f angle) {
 		if (delay > 0) {
 			Runnable rable = new Runnable() {
 				int repeats = GrowigCircle.this.repeats;
@@ -37,7 +37,7 @@ public class GrowigCircle extends Circle {
 				@Override
 				public void run() {
 					if (repeats > 0) {
-						for(Location l : getLocations(loc, rad)) {
+						for(WorldLocation l : getLocations(loc, rad)) {
 							anm.play(player, l, angle);
 						}
 						repeats--;
@@ -54,7 +54,7 @@ public class GrowigCircle extends Circle {
 				@Override
 				public void run() {
 					if (repeats > 0) {
-						for(Location l : getLocations(loc, rad)) {
+						for(WorldLocation l : getLocations(loc, rad)) {
 							anm.play(player, l, angle);
 						}
 						repeats--;
@@ -68,7 +68,7 @@ public class GrowigCircle extends Circle {
 	}
 	
 	@Override
-	public void playAll(Location loc, Vector3f angle) {
+	public void playAll(WorldLocation loc, Vector3f angle) {
 		if (delay > 0) {
 			Runnable rable = new Runnable() {
 				int repeats = GrowigCircle.this.repeats;
@@ -76,7 +76,7 @@ public class GrowigCircle extends Circle {
 				@Override
 				public void run() {
 					if (repeats > 0) {
-						for(Location l : getLocations(loc, rad)) {
+						for(WorldLocation l : getLocations(loc, rad)) {
 							anm.playAll(l, angle);
 						}
 						repeats--;
@@ -93,7 +93,7 @@ public class GrowigCircle extends Circle {
 				@Override
 				public void run() {
 					if (repeats > 0) {
-						for(Location l : getLocations(loc, rad)) {
+						for(WorldLocation l : getLocations(loc, rad)) {
 							anm.playAll(l, angle);
 						}
 						repeats--;

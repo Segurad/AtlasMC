@@ -1,9 +1,8 @@
 package de.atlasmc.core.node.io.protocol.play;
 
-import static de.atlasmc.node.io.protocol.ProtocolUtil.*;
-
 import java.io.IOException;
 
+import de.atlasmc.chat.Chat;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
@@ -14,13 +13,13 @@ public class CorePacketOutSystemChatMessage implements PacketIO<PacketOutSystemC
 
 	@Override
 	public void read(PacketOutSystemChatMessage packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.message = readTextComponent(in);
+		packet.message = Chat.STREAM_CODEC.deserialize(in, handler.getCodecContext());
 		packet.actionbar = in.readBoolean();
 	}
 
 	@Override
 	public void write(PacketOutSystemChatMessage packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeTextComponent(packet.message, out);
+		Chat.STREAM_CODEC.serialize(packet.message, out, handler.getCodecContext());
 		out.writeBoolean(packet.actionbar);
 	}
 

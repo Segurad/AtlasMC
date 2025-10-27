@@ -5,8 +5,9 @@ import java.util.List;
 import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.codec.NBTCodec;
 import de.atlasmc.util.nbt.codec.type.FieldType;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 
-public class TypeListSearchIntIndexFieldBuilder<T, V> extends AbstractCollectionFieldBuilder<T, List<V>, NBTCodec<V>, TypeListSearchIntIndexFieldBuilder<T, V>> {
+public class TypeListSearchIntIndexFieldBuilder<T, V> extends AbstractCollectionFieldBuilder<T, Int2ObjectMap<V>, NBTCodec<V>, TypeListSearchIntIndexFieldBuilder<T, V>> {
 
 	private CharSequence indexKey;
 	

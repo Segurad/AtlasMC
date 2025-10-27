@@ -16,7 +16,7 @@ public interface Display extends Entity {
 	public static final NBTCodec<Display>
 	NBT_HANDLER = NBTCodec
 					.builder(Display.class)
-					.include(Entity.NBT_HANDLER)
+					.include(Entity.NBT_CODEC)
 					.enumStringField("billboard", Display::getBillboard, Display::setBillboard, Billboard.class, Billboard.FIXED)
 					.typeCompoundField("brightness", Display::getBrightness, Display::setBrightness, Brightness.NBT_HANDLER)
 					.color("glow_color_override", Display::getGlowColorOverride, Display::setGlowColorOverride, null)

@@ -7,7 +7,7 @@ public class ScoreComponent extends AbstractBaseComponent<ScoreComponent> {
 	public static final NBTCodec<ScoreComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(ScoreComponent.class)
-					.include(AbstractBaseComponent.NBT_HANDLER)
+					.include(AbstractBaseComponent.NBT_CODEC)
 					.beginComponent("score")
 					.string("name", ScoreComponent::getName, ScoreComponent::setName)
 					.string("objective", ScoreComponent::getObjective, ScoreComponent::setObjective)

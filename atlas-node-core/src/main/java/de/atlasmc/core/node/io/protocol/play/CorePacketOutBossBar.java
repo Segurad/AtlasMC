@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.ProtocolException;
 import java.util.UUID;
 
+import de.atlasmc.chat.Chat;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
@@ -27,7 +28,7 @@ public class CorePacketOutBossBar implements PacketIO<PacketOutBossBar> {
 		packet.action = action;
 		switch (action) {
 		case ADD: 
-			packet.title = readTextComponent(in);
+			packet.title = Chat.STREAM_CODEC.deserialize(in, handler.getCodecContext());
 			packet.health = in.readFloat();
 			packet.color = EnumUtil.getByID(BarColor.class, readVarInt(in));
 			packet.style = EnumUtil.getByID(BarStyle.class, readVarInt(in));
@@ -39,7 +40,7 @@ public class CorePacketOutBossBar implements PacketIO<PacketOutBossBar> {
 			packet.health = in.readFloat();
 			break;
 		case UPDATE_TITLE: 
-			packet.title = readTextComponent(in);
+			packet.title = Chat.STREAM_CODEC.deserialize(in, handler.getCodecContext());
 			break;
 		case UPDATE_STYLE: 
 			packet.color = EnumUtil.getByID(BarColor.class, readVarInt(in));
@@ -61,7 +62,7 @@ public class CorePacketOutBossBar implements PacketIO<PacketOutBossBar> {
 		writeVarInt(packet.action.getID(), out);
 		switch (packet.action) {
 		case ADD: 
-			writeTextComponent(packet.title, out);
+			Chat.STREAM_CODEC.serialize(packet.title, out, handler.getCodecContext());
 			out.writeFloat(packet.health);
 			writeVarInt(packet.color.getID(), out);
 			writeVarInt(packet.style.getID(), out);
@@ -73,7 +74,7 @@ public class CorePacketOutBossBar implements PacketIO<PacketOutBossBar> {
 			out.writeFloat(packet.health);
 			break;
 		case UPDATE_TITLE: 
-			writeTextComponent(packet.title, out);
+			Chat.STREAM_CODEC.serialize(packet.title, out, handler.getCodecContext());
 			break;
 		case UPDATE_STYLE: writeVarInt(packet.color.getID(), out);
 			writeVarInt(packet.style.getID(), out);

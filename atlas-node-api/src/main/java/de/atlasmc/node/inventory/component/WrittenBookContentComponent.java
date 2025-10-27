@@ -13,7 +13,7 @@ public interface WrittenBookContentComponent extends ItemComponent {
 	public static final NBTCodec<WrittenBookContentComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(WrittenBookContentComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.WRITTEN_BOOK_CONTENT.getNamespacedKey())
 					.chatList("pages", WrittenBookContentComponent::hasPages, WrittenBookContentComponent::getPages)
 					.beginComponent("title")

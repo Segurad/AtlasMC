@@ -8,7 +8,7 @@ public interface NoteBlockSoundComponent extends ItemComponent {
 	public static final NBTCodec<NoteBlockSoundComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(NoteBlockSoundComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.enumStringField(ComponentType.NOTE_BLOCK_SOUND.getNamespacedKey(), NoteBlockSoundComponent::getSound, NoteBlockSoundComponent::setSound, EnumSound.class, null)
 					.build();
 					

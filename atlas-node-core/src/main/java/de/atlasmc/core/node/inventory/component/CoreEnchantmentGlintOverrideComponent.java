@@ -1,11 +1,8 @@
 package de.atlasmc.core.node.inventory.component;
 
-import java.io.IOException;
-
 import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.ComponentType;
 import de.atlasmc.node.inventory.component.EnchantmentGlintOverrideComponent;
-import io.netty.buffer.ByteBuf;
 
 public class CoreEnchantmentGlintOverrideComponent extends AbstractItemComponent implements EnchantmentGlintOverrideComponent {
 
@@ -29,16 +26,6 @@ public class CoreEnchantmentGlintOverrideComponent extends AbstractItemComponent
 	@Override
 	public void setGlint(boolean glint) {
 		this.glint = glint;
-	}
-	
-	@Override
-	public void read(ByteBuf buf) throws IOException {
-		glint = buf.readBoolean();
-	}
-	
-	@Override
-	public void write(ByteBuf buf) throws IOException {
-		buf.writeBoolean(glint);
 	}
 	
 }

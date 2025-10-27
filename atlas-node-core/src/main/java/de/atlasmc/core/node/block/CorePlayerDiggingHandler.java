@@ -1,7 +1,7 @@
 package de.atlasmc.core.node.block;
 
 import de.atlasmc.event.HandlerList;
-import de.atlasmc.node.Location;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.block.Block;
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.block.DiggingHandler;
@@ -90,7 +90,7 @@ public class CorePlayerDiggingHandler implements DiggingHandler {
 	}
 
 	@Override
-	public Location getLocation() {
+	public WorldLocation getLocation() {
 		return block.getLocation();
 	}
 
@@ -112,7 +112,7 @@ public class CorePlayerDiggingHandler implements DiggingHandler {
 			throw new IllegalArgumentException("Can only start digging in the current world!");
 		if (digging)
 			cancelDigging();
-		Location loc = new Location(world, x, y, z);
+		WorldLocation loc = new WorldLocation(world, x, y, z);
 		PlayerDiggingEvent event = new PlayerDiggingEvent(player, DiggingStatus.START_DIGGING, loc, face);
 		HandlerList.callEvent(event);
 		if (event.isCancelled())

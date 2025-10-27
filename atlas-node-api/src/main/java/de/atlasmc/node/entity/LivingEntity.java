@@ -6,9 +6,9 @@ import java.util.List;
 import org.joml.Vector3i;
 
 import de.atlasmc.Color;
-import de.atlasmc.node.Location;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.ProjectileSource;
-import de.atlasmc.node.SimpleLocation;
+import de.atlasmc.node.Location;
 import de.atlasmc.node.attribute.Attribute;
 import de.atlasmc.node.attribute.AttributeInstance;
 import de.atlasmc.node.attribute.Attributeable;
@@ -24,9 +24,9 @@ public interface LivingEntity extends Entity, Attributeable, ProjectileSource {
 	public static final NBTCodec<LivingEntity>
 	NBT_HANDLER = NBTCodec
 					.builder(LivingEntity.class)
-					.include(Entity.NBT_HANDLER)
+					.include(Entity.NBT_CODEC)
 					.floatField("AbsorptionAmount", LivingEntity::getAbsorption, LivingEntity::setAbsorption, 0)
-					.typeCollection("active_effects", LivingEntity::hasPotionEffects, LivingEntity::getActivePotionEffects, LivingEntity::addPotionEffect, PotionEffect.NBT_HANDLER)
+					.typeCollection("active_effects", LivingEntity::hasPotionEffects, LivingEntity::getActivePotionEffects, LivingEntity::addPotionEffect, PotionEffect.NBT_CODEC)
 					.typeCollectionInnerSearchKey("attributes", LivingEntity::hasAttributes, LivingEntity::getAttributes, "id", Attribute::getByName, LivingEntity::getAttribute, AttributeInstance::getAttribute)
 					// Brain
 					.boolField("CanPickUpLoot", LivingEntity::canPickUpLoot, LivingEntity::setPickUpLoot, false)
@@ -221,11 +221,11 @@ public interface LivingEntity extends Entity, Attributeable, ProjectileSource {
 	
 	double getEyeHeight();
 	
-	Location getEyeLocation();
+	WorldLocation getEyeLocation();
+	
+	WorldLocation getEyeLocation(WorldLocation location);
 	
 	Location getEyeLocation(Location location);
-	
-	SimpleLocation getEyeLocation(SimpleLocation location);
 	
 	@Override
 	default NBTCodec<? extends LivingEntity> getNBTCodec() {

@@ -6,11 +6,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatSignature;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutChatMessage;
+import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutChatMessage implements PacketIO<PacketOutChatMessage> {
@@ -42,17 +44,18 @@ public class CorePacketOutChatMessage implements PacketIO<PacketOutChatMessage> 
 				previous.add(new ChatSignature(id, signature));
 			}
 		}
+		final CodecContext context = con.getCodecContext();
 		if (in.readBoolean()) {
-			packet.unsignedContent = readTextComponent(in);
+			packet.unsignedContent = Chat.STREAM_CODEC.deserialize(in, context);
 		}
 		packet.filterType = readVarInt(in);
 		if (packet.filterType == 2) {
 			packet.filterBits = readBitSet(in);
 		}
 		packet.chatType = readVarInt(in);
-		packet.senderName = readTextComponent(in);
+		packet.senderName = Chat.STREAM_CODEC.deserialize(in, context);
 		if (in.readBoolean())
-			packet.targetName = readTextComponent(in);
+			packet.targetName = Chat.STREAM_CODEC.deserialize(in, context);
 	}
 
 	@Override
@@ -82,9 +85,10 @@ public class CorePacketOutChatMessage implements PacketIO<PacketOutChatMessage> 
 				}
 			}
 		}
+		final CodecContext context = con.getCodecContext();
 		if (packet.unsignedContent != null) {
 			out.writeBoolean(true);
-			writeTextComponent(packet.unsignedContent, out);
+			Chat.STREAM_CODEC.serialize(packet.unsignedContent, out, context);
 		} else {
 			out.writeBoolean(false);
 		}
@@ -93,10 +97,10 @@ public class CorePacketOutChatMessage implements PacketIO<PacketOutChatMessage> 
 			writeBitSet(packet.filterBits, out);
 		}
 		writeVarInt(packet.chatType, out);
-		writeTextComponent(packet.senderName, out);
+		Chat.STREAM_CODEC.serialize(packet.senderName, out, context);
 		if (packet.targetName != null) {
 			out.writeBoolean(true);
-			writeTextComponent(packet.targetName, out);
+			Chat.STREAM_CODEC.serialize(packet.targetName, out, context);
 		} else {
 			out.writeBoolean(false);
 		}

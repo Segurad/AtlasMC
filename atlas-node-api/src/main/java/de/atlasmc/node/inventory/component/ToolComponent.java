@@ -13,7 +13,7 @@ public interface ToolComponent extends ItemComponent {
 	public static final NBTCodec<ToolComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(ToolComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.TOOL.getNamespacedKey())
 					.floatField("default_mining_speed", ToolComponent::getDefaultMinigSpeed, ToolComponent::setDefaultMinigSpeed, 1)
 					.intField("damage_per_block", ToolComponent::getDamagePerBlock, ToolComponent::setDamagePerBlock, 1)

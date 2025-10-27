@@ -4,8 +4,8 @@ import org.joml.Vector3i;
 
 import de.atlasmc.node.entity.EndCrystal;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.node.entity.data.MetaDataField;
-import de.atlasmc.node.entity.data.MetaDataType;
+import de.atlasmc.node.entity.metadata.type.MetaDataField;
+import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.util.MathUtil;
 
 public class CoreEndCrystal extends CoreEntity implements EndCrystal {

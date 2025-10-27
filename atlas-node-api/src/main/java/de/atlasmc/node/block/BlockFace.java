@@ -1,7 +1,8 @@
 package de.atlasmc.node.block;
 
 import org.joml.Vector3d;
-
+import org.joml.Vector3f;
+import org.joml.Vector3i;
 import de.atlasmc.util.EnumName;
 
 public enum BlockFace implements EnumName {
@@ -78,6 +79,10 @@ public enum BlockFace implements EnumName {
 		this.name = name().toLowerCase().intern();
 	}
 	
+	/**
+	 * Returns the rotation id
+	 * @return rotation
+	 */
 	public int getRotation() {
 		return rotation;
 	}
@@ -103,20 +108,87 @@ public enum BlockFace implements EnumName {
 		return yaw;
 	}
 	
+	/**
+	 * Returns how this face would modify the x coordinate
+	 * @return modifier
+	 */
 	public int getModX() {
 		return modX;
 	}
 	
+	/**
+	 * Returns how this face would modify the y coordinate
+	 * @return modifier
+	 */
 	public int getModY() {
 		return modY;
 	}
 	
+	/**
+	 * Returns how this face would modify the z coordinate
+	 * @return modifier
+	 */
 	public int getModZ() {
 		return modZ;
 	}
 	
-	public <T extends Vector3d> T modifiy(T loc) {
-		loc.add(loc);
+	public <T extends Vector3d> T add(T loc) {
+		loc.add(modX, modY, modZ);
+		return loc;
+	}
+	
+	public <T extends Vector3d> T sub(T loc) {
+		loc.sub(modX, modY, modZ);
+		return loc;
+	}
+	
+	public <T extends Vector3d> T add(T loc, double mul) {
+		loc.add(modX * mul, modY * mul, modZ * mul);
+		return loc;
+	}
+	
+	public <T extends Vector3d> T sub(T loc, double mul) {
+		loc.sub(modX * mul, modY * mul, modZ * mul);
+		return loc;
+	}
+	
+	public <T extends Vector3i> T add(T loc) {
+		loc.add(modX, modY, modZ);
+		return loc;
+	}
+	
+	public <T extends Vector3i> T sub(T loc) {
+		loc.sub(modX, modY, modZ);
+		return loc;
+	}
+	
+	public <T extends Vector3i> T add(T loc, double mul) {
+		loc.add((int) (modX * mul), (int) (modY * mul), (int) (modZ * mul));
+		return loc;
+	}
+	
+	public <T extends Vector3i> T sub(T loc, double mul) {
+		loc.sub((int) (modX * mul), (int) (modY * mul), (int) (modZ * mul));
+		return loc;
+	}
+	
+	public <T extends Vector3f> T add(T loc) {
+		loc.add(modX, modY, modZ);
+		return loc;
+	}
+	
+	public <T extends Vector3f> T sub(T loc) {
+		loc.sub(modX, modY, modZ);
+		return loc;
+	}
+	
+	public <T extends Vector3f> T add(T loc, float mul) {
+		loc.add(modX * mul, modY * mul, modZ * mul);
+		return loc;
+	}
+	
+	public <T extends Vector3f> T sub(T loc, float mul) {
+		loc.sub(modX * mul, modY * mul, modZ * mul);
 		return loc;
 	}
 	

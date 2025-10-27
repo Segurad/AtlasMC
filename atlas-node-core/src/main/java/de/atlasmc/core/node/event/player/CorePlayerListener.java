@@ -3,8 +3,8 @@ package de.atlasmc.core.node.event.player;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.event.EventHandler;
 import de.atlasmc.event.Listener;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.Location;
-import de.atlasmc.node.SimpleLocation;
 import de.atlasmc.node.entity.Player;
 import de.atlasmc.node.event.player.PlayerChatSettingsEvent;
 import de.atlasmc.node.event.player.PlayerHeldItemChangeEvent;
@@ -19,10 +19,10 @@ public class CorePlayerListener implements Listener {
 	@EventHandler
 	public void onMove(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
-		SimpleLocation clientLoc = player.getConnection().getClientLocation();
+		Location clientLoc = player.getConnection().getClientLocation();
 		if (event.isCancelled() 
 				|| !clientLoc.matches(event.getTo())) {
-			Location to = event.getTo();
+			WorldLocation to = event.getTo();
 			player.teleport(to.x, to.y, to.z, to.yaw, to.pitch);		
 		}
 	}

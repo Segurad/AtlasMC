@@ -12,7 +12,7 @@ public interface CustomModelDataComponent extends ItemComponent {
 	public static final NBTCodec<CustomModelDataComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(CustomModelDataComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.CUSTOM_MODEL_DATA.getNamespacedKey())
 					.floatListField("floats", CustomModelDataComponent::hasFloats, CustomModelDataComponent::getFloats)
 					.booleanListField("flags", CustomModelDataComponent::hasFlags, CustomModelDataComponent::getFlags)

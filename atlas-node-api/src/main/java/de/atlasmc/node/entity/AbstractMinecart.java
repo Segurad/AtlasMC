@@ -9,7 +9,7 @@ public interface AbstractMinecart extends Vehicle {
 	public static final NBTCodec<AbstractMinecart>
 	NBT_HANDLER = NBTCodec
 					.builder(AbstractMinecart.class)
-					.include(Vehicle.NBT_HANDLER)
+					.include(Vehicle.NBT_CODEC)
 					.intField("DisplayOffset", AbstractMinecart::getCustomBlockY, AbstractMinecart::setCustomBlockY)
 					.typeCompoundField("DisplayState", AbstractMinecart::getCustomBlock, AbstractMinecart::setCustomBlock, BlockData.NBT_HANDLER)
 					.build();

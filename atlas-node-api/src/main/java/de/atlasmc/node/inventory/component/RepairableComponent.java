@@ -9,7 +9,7 @@ public interface RepairableComponent extends ItemComponent {
 	public static final NBTCodec<RepairableComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(RepairableComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.REPAIRABLE.getNamespacedKey())
 					.dataSetField("items", RepairableComponent::getItems, RepairableComponent::setItems, ItemType.REGISTRY_KEY)
 					.endComponent()

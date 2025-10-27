@@ -7,7 +7,7 @@ public class TextComponent extends AbstractBaseComponent<TextComponent> {
 	public static final NBTCodec<TextComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(TextComponent.class)
-					.include(AbstractBaseComponent.NBT_HANDLER)
+					.include(AbstractBaseComponent.NBT_CODEC)
 					.string("text", TextComponent::getValue, TextComponent::setValue)
 					.build();
 	

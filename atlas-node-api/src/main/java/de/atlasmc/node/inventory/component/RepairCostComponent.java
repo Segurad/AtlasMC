@@ -7,7 +7,7 @@ public interface RepairCostComponent extends ItemComponent {
 	public static final NBTCodec<RepairCostComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(RepairCostComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.intField(ComponentType.REPAIR_COST.getNamespacedKey(), RepairCostComponent::getRepairCost, RepairCostComponent::setRepairCost, 0)
 					.build();
 	

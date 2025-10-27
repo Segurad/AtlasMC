@@ -1,4 +1,4 @@
-package de.atlasmc.node.entity.data;
+package de.atlasmc.node.entity.metadata.type;
 
 /**
  * Field of {@link MetaData} defines the index, default data and {@link MetaDataType}

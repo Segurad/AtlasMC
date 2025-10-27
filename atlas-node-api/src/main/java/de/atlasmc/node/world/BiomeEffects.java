@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.Color;
+import de.atlasmc.node.sound.EnumSound;
+import de.atlasmc.node.sound.ResourceSound;
 import de.atlasmc.node.sound.Sound;
 import de.atlasmc.util.EnumName;
 import de.atlasmc.util.annotation.NotNull;
@@ -26,15 +28,15 @@ public class BiomeEffects implements NBTSerializable {
 					.color("grass_color", BiomeEffects::getGrassColor, BiomeEffects::setGrassColor, null)
 					.enumStringField("grass_color_modifier", BiomeEffects::getGrassColorModifier, BiomeEffects::setGrassColorModifier, GrassColorModifier.class, GrassColorModifier.NONE)
 					//.beginComponent("particle")
-					.addField(Sound.getNBTSoundField("ambient_sound", BiomeEffects::getAmbientSound, BiomeEffects::setAmbientSound, null))
+					.enumStringOrType("ambient_sound", BiomeEffects::getAmbientSound, BiomeEffects::setAmbientSound, EnumSound.class, ResourceSound.NBT_CODEC)
 					.beginComponent("mood_sound", BiomeEffects::hasMoodSound)
-					.addField(Sound.getNBTSoundField("sound", BiomeEffects::getMoodSound, BiomeEffects::setMoodSound, null))
+					.enumStringOrType("sound", BiomeEffects::getMoodSound, BiomeEffects::setMoodSound, EnumSound.class, ResourceSound.NBT_CODEC)
 					.intField("tick_delay", BiomeEffects::getMoodTickDelay, BiomeEffects::setMoodTickDelay, 0)
 					.intField("block_search_extent", BiomeEffects::getMoodBlockSearchExtent, BiomeEffects::setMoodBlockSearchExtent, 0)
 					.doubleField("offset", BiomeEffects::getMoodOffset, BiomeEffects::setMoodOffset, 0)
 					.endComponent()
 					.beginComponent("additions_sound", BiomeEffects::hasAdditionsSound)
-					.addField(Sound.getNBTSoundField("sound", BiomeEffects::getAdditionsSound, BiomeEffects::setAdditionsSound, null))
+					.enumStringOrType("sound", BiomeEffects::getAdditionsSound, BiomeEffects::setAdditionsSound, EnumSound.class, ResourceSound.NBT_CODEC)
 					.doubleField("tick_chance", BiomeEffects::getAddtionsTickChance, BiomeEffects::setAddtionsTickChance)
 					.endComponent()
 					.typeList("music", BiomeEffects::hasMusic, BiomeEffects::getMusic, BiomeMusic.NBT_HANDLER)

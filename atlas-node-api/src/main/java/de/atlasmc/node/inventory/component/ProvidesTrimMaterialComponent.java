@@ -8,7 +8,7 @@ public interface ProvidesTrimMaterialComponent extends ItemComponent {
 	public static final NBTCodec<ProvidesTrimMaterialComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(ProvidesTrimMaterialComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.registryValue(ComponentType.PROVIDES_TRIM_MATERIAL.getNamespacedKey(), ProvidesTrimMaterialComponent::getMaterial, ProvidesTrimMaterialComponent::setMaterial, TrimMaterial.REGISTRY_KEY)
 					.build();
 	

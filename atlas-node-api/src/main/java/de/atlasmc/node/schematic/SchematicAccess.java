@@ -1,6 +1,6 @@
 package de.atlasmc.node.schematic;
 
-import de.atlasmc.node.SimpleLocation;
+import de.atlasmc.node.Location;
 
 /**
  * Represents a wrapping of a {@link Schematic} used within Schematics as Parts
@@ -11,11 +11,11 @@ public interface SchematicAccess {
 	
 	public void setVisible(boolean visible);
 	
-	public SimpleLocation getOffset();
+	public Location getOffset();
 	
-	public SimpleLocation getOffset(SimpleLocation loc);
+	public Location getOffset(Location loc);
 	
-	public void setOffset(SimpleLocation loc);
+	public void setOffset(Location loc);
 	
 	public Schematic getSchematic();
 

@@ -4,11 +4,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 
 public class AtlasUtil {
+	
+	private static final Function<?, ?> GET_SELF = v -> { return v; };
+	private static final BiConsumer<?, ?> SET_VOID = (a, b) -> {};
 	
 	/**
 	 * UUID with value 0
@@ -16,6 +21,16 @@ public class AtlasUtil {
 	public static final UUID ZERO_UUID = new UUID(0, 0);
 	
 	private AtlasUtil() {}
+	
+	@SuppressWarnings("unchecked")
+	public static <A, B> BiConsumer<A, B> getSetVoid() {
+		return (BiConsumer<A, B>) SET_VOID;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> Function<T, T> getSelf() {
+		return (Function<T, T>) GET_SELF;
+	}
 	
 	@NotNull
 	public static UUID uuidFromBytes(@NotNull byte[] bytes) {

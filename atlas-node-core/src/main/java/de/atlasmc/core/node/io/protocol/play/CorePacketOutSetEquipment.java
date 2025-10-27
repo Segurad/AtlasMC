@@ -14,6 +14,7 @@ import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.io.protocol.play.PacketOutSetEquipment;
 import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.Pair;
+import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutSetEquipment implements PacketIO<PacketOutSetEquipment> {
@@ -22,12 +23,13 @@ public class CorePacketOutSetEquipment implements PacketIO<PacketOutSetEquipment
 	public void read(PacketOutSetEquipment packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.entityID = readVarInt(in);
 		List<Pair<EquipmentSlot, ItemStack>> slots = new ArrayList<>();
+		final CodecContext context = handler.getCodecContext();
 		boolean next;
 		do {
 			int raw = in.readByte();
 			next = (raw & 0x80) != 0x00;
 			EquipmentSlot slot = EnumUtil.getByID(EquipmentSlot.class, raw & 0x7F);
-			ItemStack item = readSlot(in);
+			ItemStack item = ItemStack.STREAM_CODEC.deserialize(in, context);
 			slots.add(Pair.of(slot, item));
 		} while (next);
 		packet.slots = slots;
@@ -38,13 +40,14 @@ public class CorePacketOutSetEquipment implements PacketIO<PacketOutSetEquipment
 		writeVarInt(packet.entityID, out);
 		List<Pair<EquipmentSlot, ItemStack>> slots = packet.slots;
 		final int size = slots.size();
+		final CodecContext context = handler.getCodecContext();
 		for (int i = 0; i < size; i++) {
 			Pair<EquipmentSlot, ItemStack> pair = slots.get(i);
 			int slot = pair.getValue1().getID();
 			if (i+1 < size) 
 				slot |= 0x80;
 			out.writeInt(slot);
-			writeSlot(pair.getValue2(), out);
+			ItemStack.STREAM_CODEC.serialize(pair.getValue2(), out, context);
 		}
 	}
 

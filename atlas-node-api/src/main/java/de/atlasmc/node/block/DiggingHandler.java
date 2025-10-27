@@ -1,6 +1,6 @@
 package de.atlasmc.node.block;
 
-import de.atlasmc.node.Location;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.entity.Player;
 import de.atlasmc.node.world.World;
 import de.atlasmc.tick.Tickable;
@@ -36,11 +36,11 @@ public interface DiggingHandler extends Tickable {
 	boolean isDigging();
 	
 	/**
-	 * Returns the {@link Location} of the {@link Block} where the digging is performed
+	 * Returns the {@link WorldLocation} of the {@link Block} where the digging is performed
 	 * @return location
 	 * @throws NullPointerException if no digging is in progress
 	 */
-	Location getLocation();
+	WorldLocation getLocation();
 	
 	/**
 	 * Returns the {@link Block} where the digging is performed or null of no digging is performed

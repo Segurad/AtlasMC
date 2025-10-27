@@ -8,8 +8,8 @@ public interface SuspiciousStewEffectsComponent extends AbstractPotionEffectComp
 	public static final NBTCodec<SuspiciousStewEffectsComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(SuspiciousStewEffectsComponent.class)
-					.include(AbstractPotionEffectComponent.NBT_HANDLER)
-					.typeList(ComponentType.SUSPICIOUS_STEW_EFFECTS.getNamespacedKey(), SuspiciousStewEffectsComponent::hasEffects, SuspiciousStewEffectsComponent::getEffects, PotionEffect.NBT_HANDLER)
+					.include(AbstractPotionEffectComponent.NBT_CODEC)
+					.typeList(ComponentType.SUSPICIOUS_STEW_EFFECTS.getNamespacedKey(), SuspiciousStewEffectsComponent::hasEffects, SuspiciousStewEffectsComponent::getEffects, PotionEffect.NBT_CODEC)
 					.build();
 	
 	SuspiciousStewEffectsComponent clone();

@@ -8,7 +8,7 @@ public interface LockComponent extends ItemComponent {
 	public static final NBTCodec<LockComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(LockComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.typeCompoundField(ComponentType.LOCK.getNamespacedKey(), LockComponent::getPredicate, LockComponent::setPredicate, ItemPredicate.NBT_HANDLER)
 					.build();
 	

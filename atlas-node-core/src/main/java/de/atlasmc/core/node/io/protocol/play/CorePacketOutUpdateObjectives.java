@@ -2,11 +2,10 @@ package de.atlasmc.core.node.io.protocol.play;
 
 import java.io.IOException;
 
-import static de.atlasmc.io.PacketUtil.readTextComponent;
 import static de.atlasmc.io.PacketUtil.readVarInt;
-import static de.atlasmc.io.PacketUtil.writeTextComponent;
 import static de.atlasmc.node.io.protocol.ProtocolUtil.*;
 
+import de.atlasmc.chat.Chat;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
@@ -14,6 +13,7 @@ import de.atlasmc.node.io.protocol.play.PacketOutUpdateObjectives;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateObjectives.Mode;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateScore.NumberFormatType;
 import de.atlasmc.node.scoreboard.RenderType;
+import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutUpdateObjectives implements PacketIO<PacketOutUpdateObjectives> {
@@ -24,12 +24,13 @@ public class CorePacketOutUpdateObjectives implements PacketIO<PacketOutUpdateOb
 		packet.mode = Mode.getByID(in.readByte());
 		if (packet.mode == Mode.REMOVE) 
 			return;
-		packet.displayName = readTextComponent(in);
+		final CodecContext context = handler.getCodecContext();
+		packet.displayName = Chat.STREAM_CODEC.deserialize(in, context);
 		packet.renderType = RenderType.getByID(readVarInt(in));
 		if (in.readBoolean()) {
 			packet.formatType = NumberFormatType.getByID(readVarInt(in));
 			if (packet.formatType != NumberFormatType.BLANK)
-				packet.numberFormat = readTextComponent(in).toComponent();
+				packet.numberFormat = Chat.STREAM_CODEC.deserialize(in, context).toComponent();
 		}
 	}
 
@@ -39,12 +40,13 @@ public class CorePacketOutUpdateObjectives implements PacketIO<PacketOutUpdateOb
 		out.writeByte(packet.mode.getID());
 		if (packet.mode == Mode.REMOVE) 
 			return;
-		writeTextComponent(packet.displayName, out);
+		final CodecContext context = handler.getCodecContext();
+		packet.displayName.writeToStream(out, context);
 		writeVarInt(packet.renderType.getID(), out);
 		if (packet.formatType != null) {
 			out.writeBoolean(true);
 			if (packet.formatType != NumberFormatType.BLANK);
-				writeTextComponent(packet.numberFormat, out);
+				packet.numberFormat.writeToStream(out, context);
 		} else {
 			out.writeBoolean(false);
 		}

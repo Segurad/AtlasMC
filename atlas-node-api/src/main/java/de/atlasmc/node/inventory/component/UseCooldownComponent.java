@@ -8,7 +8,7 @@ public interface UseCooldownComponent extends ItemComponent {
 	public static final NBTCodec<UseCooldownComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(UseCooldownComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.USE_COOLDOWN.getNamespacedKey())
 					.floatField("seconds", UseCooldownComponent::getSeconds, UseCooldownComponent::setSeconds)
 					.namespacedKey("cooldown_group", UseCooldownComponent::getGroup, UseCooldownComponent::setGroup)

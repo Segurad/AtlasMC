@@ -10,7 +10,7 @@ public interface RecipesComponent extends ItemComponent {
 	public static final NBTCodec<RecipesComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(RecipesComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.namespacedKeyListField(ComponentType.RECIPES.getNamespacedKey(), RecipesComponent::hasRecipes, RecipesComponent::getRecipes)
 					.build();
 	

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import de.atlasmc.node.Axis;
@@ -28,6 +27,7 @@ import de.atlasmc.node.block.data.type.RedstoneWire.Connection;
 import de.atlasmc.node.block.data.type.SculkSensor.Phase;
 import de.atlasmc.node.block.data.type.TrialSpawner.TrialSpawnerState;
 import de.atlasmc.node.block.data.type.Vault.VaultState;
+import de.atlasmc.util.AtlasUtil;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.function.ToBooleanFunction;
@@ -40,7 +40,7 @@ import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
 
 public abstract class BlockDataProperty<T> {
-
+	
 	private static final Map<CharSequence, Map<TagType, BlockDataProperty<?>>> properties = new ConcurrentHashMap<>();
 
 	public static final BlockDataProperty<BlockFace> FACING = new FacingProperty();
@@ -328,12 +328,8 @@ public abstract class BlockDataProperty<T> {
 		}
 	}
 	
-	private static final Function<BlockData, BlockData> GET_SELF = v -> { return v; };
-	private static final BiConsumer<BlockData, BlockData> SET_VOID = (a, b) -> {};
-	
-	@SuppressWarnings("unchecked")
 	public static <T extends BlockData> NBTField<T> getBlockDataPropertiesField(CharSequence key) {
-		return new ObjectFieldBuilder<T, T>().setKey(key).setGetter((Function<T, T>) GET_SELF).setSetter((BiConsumer<T, T>) SET_VOID).setFieldType(BlockDataPropertiesType.getInstance()).build();
+		return new ObjectFieldBuilder<T, T>().setKey(key).setGetter(AtlasUtil.getSelf()).setSetter(AtlasUtil.getSetVoid()).setFieldType(BlockDataPropertiesType.getInstance()).build();
 	}
 	
 	public static <T> NBTField<T> getBlockDataPropertiesMapField(CharSequence key, ToBooleanFunction<T> has, Function<T, Map<BlockDataProperty<?>, Object>> get) {

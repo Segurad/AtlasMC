@@ -10,7 +10,7 @@ public interface MapDecorationComponent extends ItemComponent {
 	public static final NBTCodec<MapDecorationComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(MapDecorationComponent.class)
-					.include(ItemComponent.NBT_HANDLER)
+					.include(ItemComponent.NBT_CODEC)
 					.compoundMapString2Type(ComponentType.MAP_DECORATIONS.getNamespacedKey(), MapDecorationComponent::hasDecoration, MapDecorationComponent::getDecorations, MapIcon.NBT_HANDLER)
 					.build();
 	

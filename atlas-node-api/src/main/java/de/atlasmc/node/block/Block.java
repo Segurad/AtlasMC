@@ -1,6 +1,6 @@
 package de.atlasmc.node.block;
 
-import de.atlasmc.node.Location;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.block.tile.TileEntity;
 import de.atlasmc.node.world.Biome;
@@ -48,8 +48,8 @@ public interface Block {
 	 * Returns a copy of the Blocks location
 	 * @return location
 	 */
-	Location getLocation();
+	WorldLocation getLocation();
 	
-	Location getLocation(Location loc);
+	WorldLocation getLocation(WorldLocation loc);
 	
 }

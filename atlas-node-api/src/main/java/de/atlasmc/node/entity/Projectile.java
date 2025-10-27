@@ -10,7 +10,7 @@ public interface Projectile extends Entity {
 	public static final NBTCodec<Projectile>
 	NBT_HANDLER = NBTCodec
 					.builder(Projectile.class)
-					.include(Entity.NBT_HANDLER)
+					.include(Entity.NBT_CODEC)
 					// ignore because event will be triggered by shooter 
 					//.boolField("HasBeenShot", Projectile::hasBeenShot, Projectile::setBeenShoot, true)
 					.boolField("LeftOwner", Projectile::hasLeftOwner, Projectile::setLeftOwner, false)

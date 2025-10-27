@@ -10,7 +10,7 @@ public interface Interaction extends Entity {
 	public static final NBTCodec<Interaction>
 	NBT_HANDLER = NBTCodec
 					.builder(Interaction.class)
-					.include(Entity.NBT_HANDLER)
+					.include(Entity.NBT_CODEC)
 					.floatField("width", Interaction::getWidth, Interaction::setWidth, 1)
 					.floatField("height", Interaction::getHeight, Interaction::setHeight, 1)
 					.boolField("response", Interaction::isResponsive, Interaction::setResponsive, false)

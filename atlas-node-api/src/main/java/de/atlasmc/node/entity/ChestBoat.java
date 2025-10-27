@@ -9,7 +9,7 @@ public interface ChestBoat extends Boat, InventoryHolder, LootTableHolder {
 	public static final NBTCodec<ChestBoat>
 	NBT_HANDLER = NBTCodec
 					.builder(ChestBoat.class)
-					.include(Boat.NBT_HANDLER)
+					.include(Boat.NBT_CODEC)
 					.include(InventoryHolder.NBT_HANDLER)
 					.include(LootTableHolder.NBT_HANDLER)
 					.build();

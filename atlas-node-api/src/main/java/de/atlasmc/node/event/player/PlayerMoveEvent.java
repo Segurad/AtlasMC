@@ -1,7 +1,7 @@
 package de.atlasmc.node.event.player;
 
 import de.atlasmc.event.Cancellable;
-import de.atlasmc.node.Location;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.entity.Player;
 import de.atlasmc.node.event.ServerHandlerList;
 
@@ -9,21 +9,21 @@ public class PlayerMoveEvent extends PlayerEvent implements Cancellable {
 
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
-	private final Location from;
-	private final Location to;
+	private final WorldLocation from;
+	private final WorldLocation to;
 	private boolean cancelled;
 	
-	public PlayerMoveEvent(Player player, Location from, Location to) {
+	public PlayerMoveEvent(Player player, WorldLocation from, WorldLocation to) {
 		super(player);
 		this.from = from;
 		this.to = to;
 	}
 	
-	public Location getFrom() {
+	public WorldLocation getFrom() {
 		return from;
 	}
 	
-	public Location getTo() {
+	public WorldLocation getTo() {
 		return to;
 	}
 

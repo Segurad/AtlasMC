@@ -2,14 +2,13 @@ package de.atlasmc.core.node.io.protocol.common;
 
 import static de.atlasmc.io.PacketUtil.MAX_IDENTIFIER_LENGTH;
 import static de.atlasmc.io.PacketUtil.readString;
-import static de.atlasmc.io.PacketUtil.readTextComponent;
 import static de.atlasmc.io.PacketUtil.readUUID;
 import static de.atlasmc.io.PacketUtil.writeString;
-import static de.atlasmc.io.PacketUtil.writeTextComponent;
 import static de.atlasmc.io.PacketUtil.writeUUID;
 
 import java.io.IOException;
 
+import de.atlasmc.chat.Chat;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.common.AbstractPacketAddResourcePack;
@@ -24,7 +23,7 @@ public abstract class CoreAbstractPacketAddResourcePack<T extends AbstractPacket
 		packet.hash = readString(in, 40);
 		packet.force = in.readBoolean();
 		if (in.readBoolean()) {
-			packet.promptMessage = readTextComponent(in);
+			packet.promptMessage = Chat.STREAM_CODEC.deserialize(in, con.getCodecContext());
 		}
 	}
 
@@ -36,7 +35,7 @@ public abstract class CoreAbstractPacketAddResourcePack<T extends AbstractPacket
 		out.writeBoolean(packet.force);
 		if (packet.promptMessage != null) {
 			out.writeBoolean(true);
-			writeTextComponent(packet.promptMessage, out);
+			packet.promptMessage.writeToStream(out, con.getCodecContext());
 		} else {
 			out.writeBoolean(false);
 		}

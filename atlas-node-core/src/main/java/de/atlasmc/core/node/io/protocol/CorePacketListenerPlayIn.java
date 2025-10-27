@@ -8,8 +8,8 @@ import de.atlasmc.event.HandlerList;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.ProtocolException;
 import de.atlasmc.node.Gamemode;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.Location;
-import de.atlasmc.node.SimpleLocation;
 import de.atlasmc.node.block.Block;
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.block.BlockType;
@@ -154,7 +154,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 		});
 		initHandler(PacketInQueryBlockEntityTag.class, (con, packet) -> { // 0x01
 				Player player = con.getPlayer();
-				Location loc = MathUtil.getLocation(player.getWorld(), packet.getPosition());
+				WorldLocation loc = MathUtil.getLocation(player.getWorld(), packet.getPosition());
 				HandlerList.callEvent(new PlayerQueryBlockNBTEvent(player, packet.getTransactionID(), loc));
 		});
 		initHandler(PacketInChangeDifficulty.class, (con, packet) -> { // 0x02
@@ -460,7 +460,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				return;
 			PlayerMoveEvent eventMove = con.getEventMove();
 			eventMove.setCancelled(false);
-			SimpleLocation loc = con.getClientLocation();
+			Location loc = con.getClientLocation();
 			loc.x = packet.x;
 			loc.y = packet.feetY;
 			loc.z = packet.z;
@@ -477,7 +477,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				return;
 			PlayerMoveEvent eventMove = con.getEventMove();
 			eventMove.setCancelled(false);
-			SimpleLocation loc = con.getClientLocation();
+			Location loc = con.getClientLocation();
 			loc.x = packet.x;
 			loc.y = packet.feetY;
 			loc.z = packet.z;
@@ -496,7 +496,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				return;
 			PlayerMoveEvent eventMove = con.getEventMove();
 			eventMove.setCancelled(false);
-			SimpleLocation loc = con.getClientLocation();
+			Location loc = con.getClientLocation();
 			loc.yaw = packet.yaw;
 			loc.pitch = packet.pitch;
 			loc.copyTo(eventMove.getTo());
@@ -674,7 +674,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 		});
 		initHandler(PacketInProgramCommandBlock.class, (con, packet) -> { // 0x26
 			Player player = con.getPlayer();
-			Location loc = MathUtil.getLocation(player.getWorld(), packet.position);
+			WorldLocation loc = MathUtil.getLocation(player.getWorld(), packet.position);
 			boolean trackoutput = (packet.flags & 0x01) == 0x01;
 			boolean conditional = (packet.flags & 0x02) == 0x02;
 			boolean alwaysactive = (packet.flags & 0x04) == 0x04;
@@ -734,7 +734,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			BlockFace face = packet.face;
 			long pos = packet.position;
 			Player player = con.getPlayer();
-			Location loc = MathUtil.getLocation(player.getWorld(), pos);
+			WorldLocation loc = MathUtil.getLocation(player.getWorld(), pos);
 			Block block = new CoreBlockAccess(loc);
 			ItemType itemType;
 			switch (hand) {
@@ -753,7 +753,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 		});
 		initHandler(PacketInUseItem.class, (con, packet) -> { // 0x2F
 			Player player = con.getPlayer();
-			Location loc = player.getLocation();
+			WorldLocation loc = player.getLocation();
 			double length = player.getGamemode() == Gamemode.CREATIVE ? 5.0 : 4.5;
 			BlockRayTracer ray = new BlockRayTracer(loc, loc.getDirection(), BlockRayCollisionRule.IGNORE_FUID_AND_AIR);
 			Chunk chunk = ray.getFirstBlockHit(length);

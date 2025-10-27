@@ -2,8 +2,6 @@ package de.atlasmc.core.node.inventory.component;
 
 import static de.atlasmc.io.PacketUtil.readVarInt;
 import static de.atlasmc.io.PacketUtil.writeVarInt;
-import static de.atlasmc.node.io.protocol.ProtocolUtil.readSlot;
-import static de.atlasmc.node.io.protocol.ProtocolUtil.writeSlot;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,6 +11,7 @@ import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.ChargedProjectilesComponent;
 import de.atlasmc.node.inventory.component.ComponentType;
+import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
 public class CoreChargedProjectilesComponent extends AbstractItemComponent implements ChargedProjectilesComponent {
@@ -62,7 +61,7 @@ public class CoreChargedProjectilesComponent extends AbstractItemComponent imple
 		if (count == 0)
 			return;
 		for (int i = 0; i < count; i++) {
-			ItemStack item = readSlot(buf);
+			ItemStack item = ItemStack.STREAM_CODEC.deserialize(buf, CodecContext.DEFAULT_CLIENT);
 			if (item == null)
 				continue;
 			addProjectile(item);
@@ -78,7 +77,7 @@ public class CoreChargedProjectilesComponent extends AbstractItemComponent imple
 		final int count = projectiles.size();
 		writeVarInt(count, buf);
 		for (int i = 0; i < count; i++) {
-			writeSlot(projectiles.get(i), buf);
+			ItemStack.STREAM_CODEC.serialize(projectiles.get(i), buf, CodecContext.DEFAULT_CLIENT);
 		}
 	}
 

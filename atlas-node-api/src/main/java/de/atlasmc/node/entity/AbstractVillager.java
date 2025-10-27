@@ -1,6 +1,8 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
+import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.io.codec.StreamSerializable;
 import de.atlasmc.util.EnumName;
 import de.atlasmc.util.annotation.UnsafeAPI;
 import de.atlasmc.util.nbt.codec.NBTSerializable;
@@ -13,7 +15,7 @@ public interface AbstractVillager extends Merchant {
 					.builder(AbstractVillager.class)
 					.include(Merchant.NBT_HANDLER)
 					// Gossip
-					.typeCompoundField("VillagerData", AbstractVillager::getVillagerDataUnsafe, AbstractVillager::setVillagerData, VillagerData.NBT_HANDLER)
+					.typeCompoundField("VillagerData", AbstractVillager::getVillagerDataUnsafe, AbstractVillager::setVillagerData, VillagerData.NBT_CODEC)
 					.intField("Xp", AbstractVillager::getXp, AbstractVillager::setXp)
 					.build();
 	
@@ -42,15 +44,24 @@ public interface AbstractVillager extends Merchant {
 	
 	void setVillagerData(VillagerData data);
 	
-	public static class VillagerData implements NBTSerializable, Cloneable {
+	public static class VillagerData implements NBTSerializable, StreamSerializable, Cloneable {
 		
 		public static final NBTCodec<VillagerData>
-		NBT_HANDLER = NBTCodec
+		NBT_CODEC = NBTCodec
 						.builder(VillagerData.class)
 						.defaultConstructor(VillagerData::new)
 						.intField("level", VillagerData::getLevel, VillagerData::setLevel, 1)
 						.enumStringField("profession", VillagerData::getProfession, VillagerData::setProfession, VillagerProfession.class, VillagerProfession.NONE)
 						.enumStringField("type", VillagerData::getType, VillagerData::setType, VillagerType.class, VillagerType.PLAINS)
+						.build();
+		
+		public static final StreamCodec<VillagerData>
+		STREAM_CODEC = StreamCodec
+						.builder(VillagerData.class)
+						.defaultConstructor(VillagerData::new)
+						.varIntEnum(VillagerData::getType, VillagerData::setType, VillagerType.class)
+						.varIntEnum(VillagerData::getProfession, VillagerData::setProfession, VillagerProfession.class)
+						.varInt(VillagerData::getLevel, VillagerData::setLevel)
 						.build();
 		
 		private VillagerType type;
@@ -93,7 +104,12 @@ public interface AbstractVillager extends Merchant {
 		
 		@Override
 		public NBTCodec<? extends VillagerData> getNBTCodec() {
-			return NBT_HANDLER;
+			return NBT_CODEC;
+		}
+		
+		@Override
+		public StreamCodec<VillagerData> getStreamCodec() {
+			return STREAM_CODEC;
 		}
 		
 		@Override

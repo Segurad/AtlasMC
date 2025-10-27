@@ -1,20 +1,21 @@
-package de.atlasmc.node.entity.data;
+package de.atlasmc.node.entity.metadata.type;
 
 import java.io.IOException;
 
+import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.nbt.io.NBTNIOReader;
 import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import de.atlasmc.util.nbt.tag.CompoundTag;
 import io.netty.buffer.ByteBuf;
 
-final class NBTMetaDataType extends MetaDataType<CompoundTag> {
+final class NBTMetaType extends MetaDataType<CompoundTag> {
 
-    public NBTMetaDataType(int type) {
+    public NBTMetaType(int type) {
 		super(type, CompoundTag.class);
 	}
 
 	@Override
-    public CompoundTag read(ByteBuf in) {
+    public CompoundTag read(ByteBuf in, CodecContext context) {
         NBTNIOReader reader = null;
         CompoundTag tag = null;
         try {
@@ -29,7 +30,7 @@ final class NBTMetaDataType extends MetaDataType<CompoundTag> {
     }
 
     @Override
-    public void write(CompoundTag data, ByteBuf out) {
+    public void write(CompoundTag data, ByteBuf out, CodecContext context) {
         NBTNIOWriter writer = new NBTNIOWriter(out, true);
         try {
             if (data == null)

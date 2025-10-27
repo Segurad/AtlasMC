@@ -11,11 +11,15 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 
 public class BuilderField<T> extends NBTField<T> implements Builder<NBTField<T>> {
 
-	private final NBTCompoundFieldBuilder<T> builder;
+	private final Builder<NBTField<T>> builder;
 	
 	public BuilderField(CharSequence key, List<TagType> types, boolean serverOnly, NBTCompoundFieldBuilder<T> builder) {
 		super(key, types, serverOnly);
 		this.builder = builder;
+	}
+	
+	public Builder<NBTField<T>> getBuilder() {
+		return builder;
 	}
 
 	@Override

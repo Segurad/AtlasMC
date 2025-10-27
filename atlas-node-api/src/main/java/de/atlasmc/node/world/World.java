@@ -2,8 +2,8 @@ package de.atlasmc.node.world;
 
 import java.util.Collection;
 
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.Location;
-import de.atlasmc.node.SimpleLocation;
 import de.atlasmc.node.block.Block;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.entity.Entity;
@@ -31,7 +31,7 @@ public interface World extends Tickable, SoundListener {
 	@NotNull
 	LocalServer getServer();
 
-	default Entity spawnEntity(EntityType type, SimpleLocation loc) {
+	default Entity spawnEntity(EntityType type, Location loc) {
 		return spawnEntity(type, loc.x, loc.y, loc.z, loc.pitch, loc.yaw);
 	}
 	
@@ -52,7 +52,7 @@ public interface World extends Tickable, SoundListener {
 	 */
 	Entity spawnEntity(EntityType type, double x, double y, double z, float pitch, float yaw);
 	
-	default boolean spawnEntity(Entity entity, SimpleLocation loc) {
+	default boolean spawnEntity(Entity entity, Location loc) {
 		return spawnEntity(entity, loc.x, loc.y, loc.z, loc.pitch, loc.yaw);
 	}
 	
@@ -89,22 +89,22 @@ public interface World extends Tickable, SoundListener {
 	 */
 	long getTime();
 
-	void playEffect(SimpleLocation loc, WorldEvent effect, Object data, int radius);
+	void playEffect(Location loc, WorldEvent effect, Object data, int radius);
 
-	void spawnParticle(ParticleType particle, SimpleLocation loc, int amount);
+	void spawnParticle(ParticleType particle, Location loc, int amount);
 
 	/**
 	 * Returns the spawn Location of this world
 	 * @return the spawn location
 	 */
-	Location getSpawnLocation();
+	WorldLocation getSpawnLocation();
 	
 	/**
 	 * Copies all spawn Location coordinates to the given Location
 	 * @param loc the given Location
 	 * @return the given Location
 	 */
-	Location getSpawnLocation(Location loc);
+	WorldLocation getSpawnLocation(WorldLocation loc);
 	
 	boolean hasFlag(WorldFlag flag);
 	
@@ -112,7 +112,7 @@ public interface World extends Tickable, SoundListener {
 	
 	void removeFlag(WorldFlag flag);
 
-	default Block getBlock(SimpleLocation loc) {
+	default Block getBlock(Location loc) {
 		return getBlock(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 	}
 	
@@ -147,7 +147,7 @@ public interface World extends Tickable, SoundListener {
 	 * @return chunk
 	 */
 	@Nullable
-	Chunk getChunk(SimpleLocation loc);
+	Chunk getChunk(Location loc);
 	
 	/**
 	 * Returns the Chunk at this location or null if not loaded
@@ -156,7 +156,7 @@ public interface World extends Tickable, SoundListener {
 	 * @return chunk or null
 	 */
 	@Nullable
-	Chunk getChunk(SimpleLocation loc, boolean load);
+	Chunk getChunk(Location loc, boolean load);
 
 	@NotNull
 	Dimension getDimension();

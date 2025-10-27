@@ -16,7 +16,7 @@ import de.atlasmc.event.HandlerList;
 import de.atlasmc.network.player.AtlasPlayer;
 import de.atlasmc.node.Gamemode;
 import de.atlasmc.node.NodePlayer;
-import de.atlasmc.node.SimpleLocation;
+import de.atlasmc.node.Location;
 import de.atlasmc.node.SoundCategory;
 import de.atlasmc.node.block.DiggingHandler;
 import de.atlasmc.node.entity.Entity;
@@ -238,7 +238,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	}
 
 	@Override
-	public void playEffect(SimpleLocation loc, WorldEvent effect, Object data, boolean relativeSound) {
+	public void playEffect(Location loc, WorldEvent effect, Object data, boolean relativeSound) {
 		if (loc == null)
 			throw new IllegalArgumentException("Location can not be null!");
 		playEffect(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), effect, data, relativeSound);
@@ -542,7 +542,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	}
 	
 	@Override
-	public void teleport(SimpleLocation loc, Vector3d velocity, int flags) {
+	public void teleport(Location loc, Vector3d velocity, int flags) {
 		super.teleport(loc, velocity, flags);
 		if (velocity == null)
 			velocity = super.motion;

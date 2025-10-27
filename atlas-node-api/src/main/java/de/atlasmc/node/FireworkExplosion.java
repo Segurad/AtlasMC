@@ -4,11 +4,14 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import de.atlasmc.IDHolder;
+import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.io.codec.StreamCodecs;
+import de.atlasmc.io.codec.StreamSerializable;
 import de.atlasmc.util.EnumName;
 import de.atlasmc.util.nbt.codec.NBTSerializable;
 import de.atlasmc.util.nbt.codec.NBTCodec;
 
-public class FireworkExplosion implements NBTSerializable {
+public class FireworkExplosion implements NBTSerializable, StreamSerializable {
 	
 	public static final NBTCodec<FireworkExplosion>
 	NBT_HANDLER = NBTCodec
@@ -19,6 +22,17 @@ public class FireworkExplosion implements NBTSerializable {
 					.intArray("fade_colors", FireworkExplosion::getFadeColors, FireworkExplosion::setFadeColors)
 					.boolField("has_trail", FireworkExplosion::hasTrail, FireworkExplosion::setTrail, false)
 					.boolField("has_twinkle", FireworkExplosion::hasTwinkel, FireworkExplosion::setTwinkel, false)
+					.build();
+	
+	public static final StreamCodec<FireworkExplosion>
+	STREAM_CODEC = StreamCodec
+					.builder(FireworkExplosion.class)
+					.defaultConstructor(FireworkExplosion::new)
+					.varIntEnum(FireworkExplosion::getShape, FireworkExplosion::setShape, Shape.class)
+					.codec(FireworkExplosion::getColors, FireworkExplosion::setColors, StreamCodecs.INT_ARRAY)
+					.codec(FireworkExplosion::getFadeColors, FireworkExplosion::setFadeColors, StreamCodecs.INT_ARRAY)
+					.booleanValue(FireworkExplosion::hasTrail, FireworkExplosion::setTrail)
+					.booleanValue(FireworkExplosion::hasTwinkel, FireworkExplosion::setTwinkel)
 					.build();
 	
 	private int[] colors;
@@ -92,6 +106,11 @@ public class FireworkExplosion implements NBTSerializable {
 	@Override
 	public NBTCodec<? extends FireworkExplosion> getNBTCodec() {
 		return NBT_HANDLER;
+	}
+	
+	@Override
+	public StreamCodec<? extends FireworkExplosion> getStreamCodec() {
+		return STREAM_CODEC;
 	}
 	
 	public static enum Shape implements IDHolder, EnumName {

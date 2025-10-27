@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.joml.Vector3f;
 
-import de.atlasmc.node.Location;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.entity.Player;
 
 public class Circle implements Animation {
@@ -35,27 +35,27 @@ public class Circle implements Animation {
 	}
 	
 	@Override
-	public void play(Player player, Location loc, Vector3f angle) {
-		for(Location l : getLocations(loc, radius)) {
+	public void play(Player player, WorldLocation loc, Vector3f angle) {
+		for(WorldLocation l : getLocations(loc, radius)) {
 			anm.play(player, l, angle);
 		}
 	}
 
 	@Override
-	public void playAll(Location loc, Vector3f angle) {
-		for(Location l : getLocations(loc, radius)) {
+	public void playAll(WorldLocation loc, Vector3f angle) {
+		for(WorldLocation l : getLocations(loc, radius)) {
 			anm.playAll(l, angle);
 		}
 	}
 	
-	protected List<Location> getLocations(Location center, double radius) {
-		List<Location> locs = new ArrayList<>();
+	protected List<WorldLocation> getLocations(WorldLocation center, double radius) {
+		List<WorldLocation> locs = new ArrayList<>();
 		double degree = 360 / points;
 		for (int d = 0; d <= points; d++) {
 			//loc(x|z) = [ loc.x + radius * cos(d) | loc.z + radius * sin(d)]
 			double x = center.x + radius * Math.cos(Math.toRadians(degree) * d);
 			double z = center.z + radius * Math.sin(Math.toRadians(degree) * d);
-			locs.add(new Location(center.getWorld(), x, center.y, z));
+			locs.add(new WorldLocation(center.getWorld(), x, center.y, z));
 		}
 		return locs;
 	}

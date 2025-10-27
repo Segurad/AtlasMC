@@ -14,6 +14,7 @@ import de.atlasmc.node.io.protocol.common.AbstractPacketServerLinks.Label;
 import de.atlasmc.node.io.protocol.common.AbstractPacketServerLinks.ServerLink;
 import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.EnumUtil.EnumData;
+import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
 public abstract class CoreAbstractPacketServerLinks<T extends AbstractPacketServerLinks> implements PacketIO<T> {
@@ -25,15 +26,17 @@ public abstract class CoreAbstractPacketServerLinks<T extends AbstractPacketServ
 			packet.links = List.of();
 			return;
 		}
-		ArrayList<ServerLink> links = new ArrayList<>(count);
-		EnumData<Label> enumData = EnumUtil.getData(Label.class);
+		final CodecContext context = con.getCodecContext();
+		final ArrayList<ServerLink> links = new ArrayList<>(count);
+		packet.links = links;
+		final EnumData<Label> enumData = EnumUtil.getData(Label.class);
 		for (int i = 0; i < count; i++) {
 			Chat customLabel = null;
 			Label label = null;
 			if (in.readBoolean()) {
 				label = enumData.getByID(readVarInt(in));
 			} else {
-				customLabel = readTextComponent(in);
+				customLabel = Chat.STREAM_CODEC.deserialize(in, context);
 			}
 			String url = readString(in);
 			links.add(new ServerLink(label, customLabel, url));
@@ -44,6 +47,7 @@ public abstract class CoreAbstractPacketServerLinks<T extends AbstractPacketServ
 	public void write(T packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		List<ServerLink> links = packet.links;
 		final int count = links.size();
+		final CodecContext context = con.getCodecContext();
 		writeVarInt(count, out);
 		for (int i = 0; i < count; i++) {
 			ServerLink link = links.get(i);
@@ -51,7 +55,7 @@ public abstract class CoreAbstractPacketServerLinks<T extends AbstractPacketServ
 				out.writeBoolean(true);
 				writeVarInt(link.label.getID(), out);
 			} else {
-				writeTextComponent(link.customLabel, out);
+				Chat.STREAM_CODEC.serialize(link.customLabel, out, context);
 			}
 			writeString(link.url, out);
 		}

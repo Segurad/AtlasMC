@@ -16,8 +16,8 @@ import org.joml.Vector3i;
 
 import de.atlasmc.Color;
 import de.atlasmc.event.HandlerList;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.Location;
-import de.atlasmc.node.SimpleLocation;
 import de.atlasmc.node.attribute.Attribute;
 import de.atlasmc.node.attribute.AttributeInstance;
 import de.atlasmc.node.attribute.AttributeModifier;
@@ -26,9 +26,9 @@ import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.LivingEntity;
 import de.atlasmc.node.entity.Player;
 import de.atlasmc.node.entity.Projectile;
-import de.atlasmc.node.entity.data.MetaData;
-import de.atlasmc.node.entity.data.MetaDataField;
-import de.atlasmc.node.entity.data.MetaDataType;
+import de.atlasmc.node.entity.metadata.type.MetaData;
+import de.atlasmc.node.entity.metadata.type.MetaDataField;
+import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.event.entity.ProjectileLounchEvent;
 import de.atlasmc.node.inventory.EntityEquipment;
 import de.atlasmc.node.inventory.EquipmentSlot;
@@ -682,19 +682,19 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	}
 
 	@Override
-	public Location getEyeLocation() {
-		return getEyeLocation(new Location(loc));
+	public WorldLocation getEyeLocation() {
+		return getEyeLocation(new WorldLocation(loc));
 	}
 
 	@Override
-	public Location getEyeLocation(Location location) {
+	public WorldLocation getEyeLocation(WorldLocation location) {
 		loc.copyTo(location);
 		location.y += getEyeHeight();
 		return location;
 	}
 
 	@Override
-	public SimpleLocation getEyeLocation(SimpleLocation location) {
+	public Location getEyeLocation(Location location) {
 		loc.copyTo(location);
 		location.y += getEyeHeight();
 		return location;

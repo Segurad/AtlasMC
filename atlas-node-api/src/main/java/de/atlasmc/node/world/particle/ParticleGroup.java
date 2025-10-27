@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.joml.Vector3f;
 
-import de.atlasmc.node.Location;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.entity.Player;
 
 public class ParticleGroup implements Animation {
@@ -37,14 +37,14 @@ public class ParticleGroup implements Animation {
 	}
 
 	@Override
-	public void play(Player player, Location loc, Vector3f angle) {
+	public void play(Player player, WorldLocation loc, Vector3f angle) {
 		animations.forEach(a -> a.play(player, loc, angle));
 		if (next != null) 
 			next.play(player, loc, angle);
 	}
 
 	@Override
-	public void playAll(Location loc, Vector3f angle) {
+	public void playAll(WorldLocation loc, Vector3f angle) {
 		animations.forEach(a -> a.playAll(loc, angle));
 		if (next != null) 
 			next.playAll(loc, angle);

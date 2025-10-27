@@ -2,8 +2,8 @@ package de.atlasmc.core.node.entity;
 
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Merchant;
-import de.atlasmc.node.entity.data.MetaDataField;
-import de.atlasmc.node.entity.data.MetaDataType;
+import de.atlasmc.node.entity.metadata.type.MetaDataField;
+import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.ContainerFactory;
 import de.atlasmc.node.inventory.InventoryType;
 import de.atlasmc.node.inventory.MerchantInventory;

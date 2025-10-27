@@ -1,11 +1,8 @@
 package de.atlasmc.core.node.inventory.component;
 
-import java.io.IOException;
-
 import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.ComponentType;
 import de.atlasmc.node.inventory.component.MapIDComponent;
-import io.netty.buffer.ByteBuf;
 
 public class CoreMapIDComponent extends AbstractItemComponent implements MapIDComponent {
 
@@ -27,18 +24,6 @@ public class CoreMapIDComponent extends AbstractItemComponent implements MapIDCo
 	@Override
 	public void setMapID(int id) {
 		this.mapID = id;
-	}
-	
-	@Override
-	public void read(ByteBuf buf) throws IOException {
-		// TODO Auto-generated method stub
-		super.read(buf);
-	}
-	
-	@Override
-	public void write(ByteBuf buf) throws IOException {
-		// TODO Auto-generated method stub
-		super.write(buf);
 	}
 
 }

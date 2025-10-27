@@ -1,26 +1,10 @@
 package de.atlasmc.core.node.io.protocol.play;
 
-import static de.atlasmc.node.io.protocol.ProtocolUtil.*;
-
-import java.io.IOException;
-
+import de.atlasmc.core.node.io.protocol.common.CoreAbstractPacketText;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
-import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutDisconnect;
-import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutDisconnect implements PacketIO<PacketOutDisconnect> {
-
-	@Override
-	public void read(PacketOutDisconnect packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.reason = readTextComponent(in);
-	}
-
-	@Override
-	public void write(PacketOutDisconnect packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeTextComponent(packet.reason, out);
-	}
+public class CorePacketOutDisconnect extends CoreAbstractPacketText<PacketOutDisconnect> {
 
 	@Override
 	public PacketOutDisconnect createPacketData() {

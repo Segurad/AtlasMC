@@ -2,7 +2,7 @@ package de.atlasmc.node.world.particle;
 
 import de.atlasmc.Color;
 import de.atlasmc.IDHolder;
-import de.atlasmc.node.SimpleLocation;
+import de.atlasmc.node.Location;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.util.EnumName;
@@ -150,12 +150,12 @@ public enum ParticleType implements EnumName, IDHolder {
 	public static class VibrationData {
 		
 		private boolean entity;
-		private SimpleLocation sourceLocation;
+		private Location sourceLocation;
 		private int sourceEntity;
 		private float eyeHeight;
 		private int travelTicks;
 		
-		public VibrationData(SimpleLocation sourceLocation, int travelTicks) {
+		public VibrationData(Location sourceLocation, int travelTicks) {
 			this.sourceLocation = sourceLocation;
 			this.travelTicks = travelTicks;
 		}
@@ -183,7 +183,7 @@ public enum ParticleType implements EnumName, IDHolder {
 			return travelTicks;
 		}
 		
-		public SimpleLocation getSourceLocation() {
+		public Location getSourceLocation() {
 			return sourceLocation;
 		}
 		

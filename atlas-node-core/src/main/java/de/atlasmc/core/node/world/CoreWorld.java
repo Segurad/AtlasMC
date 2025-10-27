@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.Collection;
 
 import de.atlasmc.event.HandlerList;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.Location;
-import de.atlasmc.node.SimpleLocation;
 import de.atlasmc.node.SoundCategory;
 import de.atlasmc.node.block.Block;
 import de.atlasmc.node.block.data.BlockData;
@@ -50,7 +50,7 @@ public class CoreWorld implements World {
 	private long time;
 	private boolean timeCycle;
 	private long age;
-	private Location spawn;
+	private WorldLocation spawn;
 	
 	public CoreWorld(WorldBuilder builder) {
 		if (builder == null)
@@ -127,7 +127,7 @@ public class CoreWorld implements World {
 	}
 
 	@Override
-	public void playEffect(SimpleLocation loc, WorldEvent effect, Object data, int radius) {
+	public void playEffect(Location loc, WorldEvent effect, Object data, int radius) {
 		if (loc == null)
 			throw new IllegalArgumentException("Location can not be null!");
 		if (effect == null)
@@ -151,7 +151,7 @@ public class CoreWorld implements World {
 	}
 
 	@Override
-	public void spawnParticle(ParticleType particle, SimpleLocation loc, int amount) {
+	public void spawnParticle(ParticleType particle, Location loc, int amount) {
 		if (loc == null)
 			throw new IllegalArgumentException("Location can not be null!");
 		if (particle == null)
@@ -177,12 +177,12 @@ public class CoreWorld implements World {
 	}
 
 	@Override
-	public Location getSpawnLocation() {
+	public WorldLocation getSpawnLocation() {
 		return spawn.clone();
 	}
 	
 	@Override
-	public Location getSpawnLocation(Location loc) {
+	public WorldLocation getSpawnLocation(WorldLocation loc) {
 		return spawn.copyTo(loc);
 	}
 	
@@ -299,12 +299,12 @@ public class CoreWorld implements World {
 	}
 
 	@Override
-	public Chunk getChunk(SimpleLocation loc) {
+	public Chunk getChunk(Location loc) {
 		return getChunk(loc, true);
 	}
 	
 	@Override
-	public Chunk getChunk(SimpleLocation loc, boolean load) {
+	public Chunk getChunk(Location loc, boolean load) {
 		return getChunk(loc.getBlockX() >> 4, loc.getBlockZ() >> 4, load);
 	}
 

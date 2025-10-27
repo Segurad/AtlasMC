@@ -1,26 +1,10 @@
 package de.atlasmc.core.node.io.protocol.play;
 
+import de.atlasmc.core.node.io.protocol.common.CoreAbstractPacketText;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
-import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutSetActionBarText;
-import io.netty.buffer.ByteBuf;
 
-import static de.atlasmc.node.io.protocol.ProtocolUtil.*;
-
-import java.io.IOException;
-
-public class CorePacketOutSetActionBarText implements PacketIO<PacketOutSetActionBarText> {
-
-	@Override
-	public void read(PacketOutSetActionBarText packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.text = readTextComponent(in);
-	}
-
-	@Override
-	public void write(PacketOutSetActionBarText packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		writeTextComponent(packet.text, out);
-	}
+public class CorePacketOutSetActionBarText extends CoreAbstractPacketText<PacketOutSetActionBarText> {
 
 	@Override
 	public PacketOutSetActionBarText createPacketData() {

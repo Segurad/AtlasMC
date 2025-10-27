@@ -4,8 +4,8 @@ import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.entity.BlockDisplay;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.node.entity.data.MetaDataField;
-import de.atlasmc.node.entity.data.MetaDataType;
+import de.atlasmc.node.entity.metadata.type.MetaDataField;
+import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreBlockDisplay extends CoreDisplay implements BlockDisplay {
 

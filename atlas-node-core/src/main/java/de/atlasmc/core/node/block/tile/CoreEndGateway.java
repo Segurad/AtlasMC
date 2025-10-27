@@ -1,6 +1,6 @@
 package de.atlasmc.core.node.block.tile;
 
-import de.atlasmc.node.Location;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.tile.EndGateway;
 import de.atlasmc.node.world.Chunk;
@@ -10,11 +10,11 @@ public class CoreEndGateway extends CoreTileEntity implements EndGateway {
 	private long age;
 	private boolean exactTeleport;
 	private boolean relativeCoordinates;
-	private final Location exit;
+	private final WorldLocation exit;
 	
 	public CoreEndGateway(BlockType type) {
 		super(type);
-		exit = new Location(null, Double.NaN, Double.NaN, Double.NaN);
+		exit = new WorldLocation(null, Double.NaN, Double.NaN, Double.NaN);
 	}
 
 	@Override
@@ -48,12 +48,12 @@ public class CoreEndGateway extends CoreTileEntity implements EndGateway {
 	}
 
 	@Override
-	public Location getExitPortal() {
+	public WorldLocation getExitPortal() {
 		return exit;
 	}
 
 	@Override
-	public void setExitPortal(Location loc) {
+	public void setExitPortal(WorldLocation loc) {
 		exit.set(loc);
 	}
 	

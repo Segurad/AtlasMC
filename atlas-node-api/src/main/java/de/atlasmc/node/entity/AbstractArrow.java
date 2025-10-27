@@ -3,6 +3,7 @@ package de.atlasmc.node.entity;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.sound.EnumSound;
+import de.atlasmc.node.sound.ResourceSound;
 import de.atlasmc.node.sound.Sound;
 import de.atlasmc.util.nbt.codec.NBTCodec;
 
@@ -21,7 +22,7 @@ public interface AbstractArrow extends Projectile {
 					.byteField("PierceLevel", AbstractArrow::getPiercingLevel, AbstractArrow::setPiercingLevel, (byte) 0)
 					.byteField("shake", AbstractArrow::getShake, AbstractArrow::setShake, (byte) 0)
 					.boolField("ShotFromCrossbow", AbstractArrow::isShotFromCrossbow, AbstractArrow::setShotFromCrossbow)
-					.addField(Sound.getNBTSoundField("SoundEvent", AbstractArrow::getHitSound, AbstractArrow::setHitSound, EnumSound.ENTITY_ARROW_HIT))
+					.enumStringOrType("SoundEvent", AbstractArrow::getHitSound, AbstractArrow::setHitSound, EnumSound.class, ResourceSound.NBT_CODEC, EnumSound.ENTITY_ARROW_HIT)
 					.typeCompoundField("item", AbstractArrow::getItem, AbstractArrow::setItem, ItemStack.NBT_HANDLER)
 					.typeCompoundField("weapon", AbstractArrow::getWeapon, AbstractArrow::setWeapon, ItemStack.NBT_HANDLER)
 					.build();

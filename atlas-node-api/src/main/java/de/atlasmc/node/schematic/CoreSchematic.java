@@ -3,13 +3,13 @@ package de.atlasmc.node.schematic;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.node.SimpleLocation;
+import de.atlasmc.node.Location;
 
 public class CoreSchematic implements Schematic {
 	
 	private final SchematicSection[] sections; // ordered by y > z > x
 	private List<SchematicAccess> schematics;
-	private final SimpleLocation off;
+	private final Location off;
 	private final int lengthX;
 	private final int lengthZ;
 	private final int height;
@@ -18,7 +18,7 @@ public class CoreSchematic implements Schematic {
 	 * Creates a new CoreSchamtic instance with no contents
 	 * @param off the offset added when placed
 	 */
-	public CoreSchematic(SimpleLocation off) {
+	public CoreSchematic(Location off) {
 		this(off, 0, 0, 0);
 	}
 	
@@ -31,7 +31,7 @@ public class CoreSchematic implements Schematic {
 	 * @param height
 	 * @param lengthZ 
 	 */
-	public CoreSchematic(SimpleLocation off, int lengthX, int height, int lengthZ) {
+	public CoreSchematic(Location off, int lengthX, int height, int lengthZ) {
 		this.off = off.clone().convertToBlock();
 		this.lengthX = lengthX;
 		this.lengthZ = lengthZ;
@@ -65,17 +65,17 @@ public class CoreSchematic implements Schematic {
 	}
 
 	@Override
-	public SimpleLocation getOffset() {
+	public Location getOffset() {
 		return off.clone();
 	}
 
 	@Override
-	public SimpleLocation getOffset(SimpleLocation loc) {
+	public Location getOffset(Location loc) {
 		return off.copyTo(loc);
 	}
 
 	@Override
-	public void setOffset(SimpleLocation loc) {
+	public void setOffset(Location loc) {
 		off.set(loc);
 	}
 

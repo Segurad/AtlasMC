@@ -8,7 +8,7 @@ public interface EnchantmentComponent extends AbstractEnchantmentComponent {
 	static final NBTCodec<EnchantmentComponent>
 	NBT_HANDLER = NBTCodec
 			.builder(EnchantmentComponent.class)
-			.include(AbstractEnchantmentComponent.NBT_HANDLER)
+			.include(AbstractEnchantmentComponent.NBT_CODEC)
 			.compoundMapNamespaced2Int(ComponentType.ENCHANTMENTS.getNamespacedKey(), EnchantmentComponent::hasEnchants, EnchantmentComponent::getStoredEnchants, Enchantment::getEnchantment)
 			.build();
 	

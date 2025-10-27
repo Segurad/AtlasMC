@@ -8,7 +8,7 @@ public interface BlockDataComponent extends AbstractBlockDataComponent {
 	public static final NBTCodec<BlockDataComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(BlockDataComponent.class)
-					.include(AbstractBlockDataComponent.NBT_HANDLER)
+					.include(AbstractBlockDataComponent.NBT_CODEC)
 					.addField(BlockDataProperty.getBlockDataPropertiesMapField(ComponentType.BLOCK_STATE.getNamespacedKey(), BlockDataComponent::hasProperties, BlockDataComponent::getProperties))
 					.build();
 	

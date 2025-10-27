@@ -1,9 +1,6 @@
 package de.atlasmc.node.inventory.component;
 
-import java.io.IOException;
-
 import de.atlasmc.util.CloneException;
-import io.netty.buffer.ByteBuf;
 
 public abstract class AbstractItemComponent implements ItemComponent {
 
@@ -18,16 +15,6 @@ public abstract class AbstractItemComponent implements ItemComponent {
 	@Override
 	public ComponentType getType() {
 		return type;
-	}
-	
-	@Override
-	public void read(ByteBuf buf) throws IOException {
-		// not required for custom components
-	}
-	
-	@Override
-	public void write(ByteBuf buf) throws IOException {
-		// not required for custom components	
 	}
 	
 	public AbstractItemComponent clone() {

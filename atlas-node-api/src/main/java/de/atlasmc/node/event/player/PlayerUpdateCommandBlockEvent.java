@@ -1,7 +1,7 @@
 package de.atlasmc.node.event.player;
 
 import de.atlasmc.event.Cancellable;
-import de.atlasmc.node.Location;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.block.tile.CommandBlock.Mode;
 import de.atlasmc.node.entity.Player;
 import de.atlasmc.node.event.ServerHandlerList;
@@ -10,7 +10,7 @@ public class PlayerUpdateCommandBlockEvent extends PlayerEvent implements Cancel
 
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
-	private final Location loc;
+	private final WorldLocation loc;
 	private String command;
 	private Mode mode;
 	private boolean trackoutput;
@@ -18,7 +18,7 @@ public class PlayerUpdateCommandBlockEvent extends PlayerEvent implements Cancel
 	private boolean alwaysactive;
 	private boolean cancelled;
 	
-	public PlayerUpdateCommandBlockEvent(Player player, Location loc, String command, Mode mode, boolean trackoutput, boolean conditional, boolean alwaysactive) {
+	public PlayerUpdateCommandBlockEvent(Player player, WorldLocation loc, String command, Mode mode, boolean trackoutput, boolean conditional, boolean alwaysactive) {
 		super(player);
 		this.loc = loc;
 		this.command = command;
@@ -44,7 +44,7 @@ public class PlayerUpdateCommandBlockEvent extends PlayerEvent implements Cancel
 		return alwaysactive;
 	}
 	
-	public Location getLocation() {
+	public WorldLocation getLocation() {
 		return loc;
 	}
 	

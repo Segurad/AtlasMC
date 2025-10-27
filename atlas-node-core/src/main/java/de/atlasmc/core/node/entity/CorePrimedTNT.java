@@ -6,8 +6,8 @@ import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.entity.Entity;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.PrimedTNT;
-import de.atlasmc.node.entity.data.MetaDataField;
-import de.atlasmc.node.entity.data.MetaDataType;
+import de.atlasmc.node.entity.metadata.type.MetaDataField;
+import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CorePrimedTNT extends CoreEntity implements PrimedTNT {
 

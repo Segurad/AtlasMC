@@ -1,7 +1,6 @@
 package de.atlasmc.util.nbt.codec.field;
 
 import java.io.IOException;
-import java.util.List;
 import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.map.key.CharKey;
 import de.atlasmc.util.nbt.NBTException;
@@ -9,8 +8,10 @@ import de.atlasmc.util.nbt.TagType;
 import de.atlasmc.util.nbt.codec.NBTCodec;
 import de.atlasmc.util.nbt.io.NBTReader;
 import de.atlasmc.util.nbt.io.NBTWriter;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap.Entry;
 
-public class TypeListSearchIntIndexField<T, V> extends AbstractCollectionField<T, List<V>, NBTCodec<V>> {
+public class TypeListSearchIntIndexField<T, V> extends AbstractCollectionField<T, Int2ObjectMap<V>, NBTCodec<V>> {
 
 	private final CharKey indexKey;
 	
@@ -24,21 +25,16 @@ public class TypeListSearchIntIndexField<T, V> extends AbstractCollectionField<T
 		if (hasData != null && !hasData.applyAsBoolean(value)) {
 			return true;
 		}
-		final List<V> list = getter.apply(value);
+		final Int2ObjectMap<V> list = getter.apply(value);
 		final int size = list.size();
 		if (size == 0) {
 			return true;
 		}
-		int count = 0;
-		for (int i = 0; i < size; i++) {
-			if (list.get(i) != null)
-				count++;
-		}
-		writer.writeListTag(key, TagType.COMPOUND, count);
-		for (int i = 0; i < size; i++) {
+		writer.writeListTag(key, TagType.COMPOUND, size);
+		for (Entry<V> entry : list.int2ObjectEntrySet()) {
 			writer.writeCompoundTag();
-			writer.writeIntTag(indexKey, i);
-			V v = list.get(i);
+			writer.writeIntTag(indexKey, entry.getIntKey());
+			V v = entry.getValue();
 			fieldType.serialize(v, writer, context);
 			writer.writeEndTag();
 		}
@@ -55,7 +51,7 @@ public class TypeListSearchIntIndexField<T, V> extends AbstractCollectionField<T
 		}
 		if (listType != TagType.COMPOUND)
 			throw new NBTException("Expected list of type COMPOUND but was: " + listType);
-		final List<V> list = getter.apply(value);
+		final Int2ObjectMap<V> list = getter.apply(value);
 		reader.readNextEntry();
 		while (reader.getRestPayload() > 0) {
 			reader.readNextEntry();
@@ -70,7 +66,7 @@ public class TypeListSearchIntIndexField<T, V> extends AbstractCollectionField<T
 				index = reader.readIntTag();
 			}
 			V v = fieldType.deserialize(reader, context);
-			list.add(index, v);
+			list.put(index, v);
 		}
 		reader.readNextEntry();
 	}
