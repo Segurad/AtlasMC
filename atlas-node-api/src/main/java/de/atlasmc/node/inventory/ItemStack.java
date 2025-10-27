@@ -1,5 +1,7 @@
 package de.atlasmc.node.inventory;
 
+import static de.atlasmc.io.PacketUtil.*;
+
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
@@ -22,7 +24,6 @@ import de.atlasmc.util.nbt.io.NBTWriter;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
-import static de.atlasmc.node.io.protocol.ProtocolUtil.*;
 
 public class ItemStack implements NBTSerializable, StreamSerializable, ItemComponentHolder {
 

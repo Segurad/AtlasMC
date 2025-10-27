@@ -5,7 +5,7 @@ import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutProjectilePower;
 import io.netty.buffer.ByteBuf;
 
-import static de.atlasmc.node.io.protocol.ProtocolUtil.*;
+import static de.atlasmc.io.PacketUtil.*;
 
 import java.io.IOException;
 

@@ -1,6 +1,6 @@
 package de.atlasmc.node.entity.metadata.type;
 
-import static de.atlasmc.node.io.protocol.ProtocolUtil.*;
+import static de.atlasmc.io.PacketUtil.*;
 
 import java.io.IOException;
 

@@ -1,6 +1,6 @@
 package de.atlasmc.core.node.io.protocol.common;
 
-import static de.atlasmc.node.io.protocol.ProtocolUtil.*;
+import static de.atlasmc.io.PacketUtil.*;
 
 import java.io.IOException;
 import de.atlasmc.io.PacketIO;

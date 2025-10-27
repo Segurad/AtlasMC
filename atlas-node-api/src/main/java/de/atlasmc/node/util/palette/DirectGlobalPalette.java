@@ -1,6 +1,6 @@
 package de.atlasmc.node.util.palette;
 
-import static de.atlasmc.node.io.protocol.ProtocolUtil.*;
+import static de.atlasmc.io.PacketUtil.*;
 
 import java.util.Collection;
 

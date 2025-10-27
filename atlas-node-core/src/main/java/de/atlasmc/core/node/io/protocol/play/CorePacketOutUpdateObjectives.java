@@ -1,9 +1,8 @@
 package de.atlasmc.core.node.io.protocol.play;
 
-import java.io.IOException;
+import static de.atlasmc.io.PacketUtil.*;
 
-import static de.atlasmc.io.PacketUtil.readVarInt;
-import static de.atlasmc.node.io.protocol.ProtocolUtil.*;
+import java.io.IOException;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.io.Packet;

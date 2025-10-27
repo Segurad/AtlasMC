@@ -1,6 +1,6 @@
 package de.atlasmc.core.node.io.protocol.play;
 
-import static de.atlasmc.node.io.protocol.ProtocolUtil.*;
+import static de.atlasmc.io.PacketUtil.*;
 
 import java.io.IOException;
 import java.util.HashMap;
