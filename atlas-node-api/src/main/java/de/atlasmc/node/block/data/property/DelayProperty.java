@@ -10,16 +10,16 @@ class DelayProperty extends AbstractIntProperty {
 	}
 
 	@Override
-	public void set(BlockData data, Integer value) {
+	public void setInt(BlockData data, int value) {
 		if (data instanceof Repeater repeater)
 			repeater.setDelay(value);
 	}
 
 	@Override
-	public Integer get(BlockData data) {
+	public int getInt(BlockData data) {
 		if (data instanceof Repeater repeater)
 			return repeater.getDelay();
-		return null;
+		return 0;
 	}
 
 	@Override

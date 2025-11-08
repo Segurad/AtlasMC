@@ -1,8 +1,9 @@
 package de.atlasmc.node.block.tile;
 
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.network.player.PlayerProfile;
 import de.atlasmc.node.sound.EnumSound;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Skull extends TileEntity {
 	
@@ -10,10 +11,10 @@ public interface Skull extends TileEntity {
 	NBT_HANDLER = NBTCodec
 					.builder(Skull.class)
 					.include(TileEntity.NBT_HANDLER)
-					.string("custom_name", Skull::getCustomName, Skull::setCustomName)
-					.enumStringField("note_block_sound", Skull::getNoteBlockSound, Skull::setNoteBlockSound, EnumSound.class, null)
-					.typeCompoundField("profile", Skull::getProfile, Skull::setProfile, PlayerProfile.NBT_HANDLER)
-					.stringToObject("profile", Skull::getProfile, Skull::setProfile, PlayerProfile::new, PlayerProfile::getName)
+					.codec("custom_name", Skull::getCustomName, Skull::setCustomName, NBTCodecs.STRING)
+					.codec("note_block_sound", Skull::getNoteBlockSound, Skull::setNoteBlockSound, EnumSound.NBT_CODEC)
+					.codec("profile", Skull::getProfile, Skull::setProfile, PlayerProfile.NBT_CODEC)
+					.codec("profile", Skull::getProfile, Skull::setProfile, PlayerProfile.NAME_NBT_CODEC)
 					.build();
 	
 	String getCustomName();

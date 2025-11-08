@@ -4,14 +4,14 @@ import java.util.List;
 
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.WaterloggedDirectional;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 
 public class CoreWaterloggedDirectional4Faces extends CoreDirectional4Faces implements WaterloggedDirectional {
 	
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, BlockDataProperty.WATERLOGGED);
+		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, PropertyType.WATERLOGGED);
 	}
 	
 	protected boolean waterlogged;
@@ -38,7 +38,7 @@ public class CoreWaterloggedDirectional4Faces extends CoreDirectional4Faces impl
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

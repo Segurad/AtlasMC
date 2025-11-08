@@ -13,7 +13,7 @@ import de.atlasmc.node.SoundCategory;
 import de.atlasmc.node.io.protocol.play.PacketOutEntitySoundEffect;
 import de.atlasmc.node.sound.EnumSound;
 import de.atlasmc.node.sound.ResourceSound;
-import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutEntitySoundEffect implements PacketIO<PacketOutEntitySoundEffect> {

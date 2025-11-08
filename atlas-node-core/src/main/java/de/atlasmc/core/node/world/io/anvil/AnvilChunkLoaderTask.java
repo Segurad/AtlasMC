@@ -9,9 +9,9 @@ import java.util.zip.InflaterInputStream;
 
 import de.atlasmc.core.node.world.ChunkWorker.ChunkWorkerTask;
 import de.atlasmc.log.Log;
+import de.atlasmc.nbt.io.NBTIOReader;
 import de.atlasmc.node.world.Chunk;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
-import de.atlasmc.util.nbt.io.NBTIOReader;
 
 public class AnvilChunkLoaderTask implements ChunkWorkerTask {
 	
@@ -63,6 +63,7 @@ public class AnvilChunkLoaderTask implements ChunkWorkerTask {
 		future.complete(chunk);
 	}
 	
+	@SuppressWarnings("resource")
 	private InputStream getCompressedStream(byte compression, InputStream in, int buffersize) throws IOException {
 		switch(compression) {
 		case 1: return new InflaterInputStream(in, new Inflater(false), buffersize); // Zlib

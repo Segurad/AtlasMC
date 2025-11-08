@@ -10,16 +10,16 @@ class LayersProperty extends AbstractIntProperty {
 	}
 
 	@Override
-	public void set(BlockData data, Integer value) {
+	public void setInt(BlockData data, int value) {
 		if (data instanceof Snow snow)
 			snow.setLayers(value);
 	}
 
 	@Override
-	public Integer get(BlockData data) {
+	public int getInt(BlockData data) {
 		if (data instanceof Snow snow)
 			return snow.getLayers();
-		return null;
+		return 0;
 	}
 
 	@Override

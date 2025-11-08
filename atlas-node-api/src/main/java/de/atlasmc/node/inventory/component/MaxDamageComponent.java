@@ -1,6 +1,6 @@
 package de.atlasmc.node.inventory.component;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 
 public interface MaxDamageComponent extends ItemComponent {
 	

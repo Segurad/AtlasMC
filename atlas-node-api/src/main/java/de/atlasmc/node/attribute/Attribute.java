@@ -4,10 +4,11 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import de.atlasmc.IDHolder;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
 
-public class Attribute implements Namespaced {
+public class Attribute implements Namespaced, IDHolder {
 	
 	private static final Map<NamespacedKey, Attribute> BY_NAME;
 	

@@ -31,8 +31,8 @@ import de.atlasmc.node.Gamemode;
 import de.atlasmc.node.io.protocol.play.PacketOutPlayerInfoUpdate;
 import de.atlasmc.node.io.protocol.play.PacketOutPlayerInfoUpdate.PlayerInfo;
 import de.atlasmc.util.EncryptionUtil;
-import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.codec.CodecContext;
+import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutPlayerInfoUpdate implements PacketIO<PacketOutPlayerInfoUpdate> {

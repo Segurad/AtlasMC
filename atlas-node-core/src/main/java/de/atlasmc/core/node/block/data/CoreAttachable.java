@@ -4,14 +4,14 @@ import java.util.List;
 
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.Attachable;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 
 public class CoreAttachable extends CoreBlockData implements Attachable {
 	
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.ATTACHED);
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, PropertyType.ATTACHED);
 	}
 	
 	private boolean attached;
@@ -36,7 +36,7 @@ public class CoreAttachable extends CoreBlockData implements Attachable {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

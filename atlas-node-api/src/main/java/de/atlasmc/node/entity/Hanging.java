@@ -1,7 +1,7 @@
 package de.atlasmc.node.entity;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.block.BlockFace;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Hanging extends Entity {
 	
@@ -9,7 +9,7 @@ public interface Hanging extends Entity {
 	NBT_HANDLER = NBTCodec
 					.builder(Hanging.class)
 					.include(Entity.NBT_CODEC)
-					.objectByteField("Facing", Hanging::getAttachedFace, Hanging::setFacingDirection, BlockFace::getByFaceID, BlockFace::getFaceID, BlockFace.SOUTH)
+					.codec("Facing", Hanging::getAttachedFace, Hanging::setFacingDirection, BlockFace.FACE_ID_NBT_CODEC, BlockFace.SOUTH)
 					.build();
 	
 	BlockFace getAttachedFace();

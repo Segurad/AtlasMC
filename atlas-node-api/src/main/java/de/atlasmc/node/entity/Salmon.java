@@ -1,7 +1,8 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumName;
+import de.atlasmc.util.enums.EnumUtil;
 
 public interface Salmon extends Fish {
 	
@@ -9,7 +10,7 @@ public interface Salmon extends Fish {
 	NBT_HANDLER = NBTCodec
 					.builder(Salmon.class)
 					.include(Fish.NBT_HANDLER)
-					.enumStringField("type", Salmon::getSalmonType, Salmon::setSalmonType, Type.class, Type.MEDIUM)
+					.codec("type", Salmon::getSalmonType, Salmon::setSalmonType, EnumUtil.enumStringNBTCodec(Type.class), Type.MEDIUM)
 					.build();
 
 	Type getSalmonType();

@@ -6,14 +6,14 @@ import java.util.Set;
 
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.Rail;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 
 public class CoreRail extends CoreWaterlogged implements Rail {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreWaterlogged.PROPERTIES, BlockDataProperty.SHAPE);
+		PROPERTIES = merge(CoreWaterlogged.PROPERTIES, PropertyType.SHAPE);
 	}
 	
 	private Shape shape;
@@ -44,7 +44,7 @@ public class CoreRail extends CoreWaterlogged implements Rail {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

@@ -2,7 +2,8 @@ package de.atlasmc.node.entity;
 
 import java.util.UUID;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 
 public interface ShulkerBullet extends Projectile {
 	
@@ -11,7 +12,7 @@ public interface ShulkerBullet extends Projectile {
 					.builder(ShulkerBullet.class)
 					.include(Projectile.NBT_HANDLER)
 					//.intField("Steps", null, null)
-					.uuid("Target", ShulkerBullet::getTargetUUID, ShulkerBullet::setTargetUUID)
+					.codec("Target", ShulkerBullet::getTargetUUID, ShulkerBullet::setTargetUUID, NBTCodecs.UUID_CODEC)
 					//.doubleField("TXD", null, null)
 					//.doubleField("TYD", null, null)
 					//.doubleField("TZD", null, null)

@@ -4,8 +4,9 @@ import java.util.List;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.command.CommandSender;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.node.Nameable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface CommandBlock extends TileEntity, Nameable, CommandSender {
 	
@@ -14,11 +15,11 @@ public interface CommandBlock extends TileEntity, Nameable, CommandSender {
 					.builder(CommandBlock.class)
 					.include(TileEntity.NBT_HANDLER)
 					.boolField("auto", CommandBlock::isAlwaysActive, CommandBlock::setAlwaysActive)
-					.string("Command", CommandBlock::getCommand, CommandBlock::setCommand)
+					.codec("Command", CommandBlock::getCommand, CommandBlock::setCommand, NBTCodecs.STRING)
 					.boolField("conditionMet", CommandBlock::isConditionMet, CommandBlock::setConditionMet)
-					.chat("CustomName", CommandBlock::getCustomName, CommandBlock::setCustomName)
+					.codec("CustomName", CommandBlock::getCustomName, CommandBlock::setCustomName, Chat.NBT_CODEC)
 					.longField("LastExecution", CommandBlock::getLastExecution, CommandBlock::setLastExecution)
-					.chat("LastOutput", CommandBlock::getLastMessage, CommandBlock::setLastMessage)
+					.codec("LastOutput", CommandBlock::getLastMessage, CommandBlock::setLastMessage, Chat.NBT_CODEC)
 					.boolField("powered", CommandBlock::isPowered, CommandBlock::setPowered)
 					.intField("SuccessCount", CommandBlock::getSuccessCount, CommandBlock::setSuccessCount)
 					.boolField("TrackOutput", CommandBlock::getTrackOutput, CommandBlock::setTrackOutput)

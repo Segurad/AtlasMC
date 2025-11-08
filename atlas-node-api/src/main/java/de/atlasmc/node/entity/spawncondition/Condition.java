@@ -2,9 +2,9 @@ package de.atlasmc.node.entity.spawncondition;
 
 import java.util.function.Predicate;
 
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.WorldLocation;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Condition extends Predicate<WorldLocation>, NBTSerializable {
 	

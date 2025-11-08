@@ -1,9 +1,17 @@
 package de.atlasmc.node.inventory.component;
 
+import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.node.enchantments.Enchantment;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 
 public interface AbstractEnchantmentComponent extends ItemComponent {
+	
+	public static final StreamCodec<AbstractEnchantmentComponent>
+	STREAM_CODEC = StreamCodec
+					.builder(AbstractEnchantmentComponent.class)
+					.include(ItemComponent.STREAM_CODEC)
+					.mapRegistryValueToInt(AbstractEnchantmentComponent::hasEnchants, AbstractEnchantmentComponent::getStoredEnchants, Enchantment.REGISTRY_KEY)
+					.build();
 	
 	void addEnchant(Enchantment ench, int level);
 	
@@ -20,5 +28,10 @@ public interface AbstractEnchantmentComponent extends ItemComponent {
 	void removeEnchant(Enchantment ench);
 	
 	AbstractEnchantmentComponent clone();
+	
+	@Override
+	default StreamCodec<? extends AbstractEnchantmentComponent> getStreamCodec() {
+		return STREAM_CODEC;
+	}
 
 }

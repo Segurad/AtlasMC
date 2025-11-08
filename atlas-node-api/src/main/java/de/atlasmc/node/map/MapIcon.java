@@ -2,18 +2,19 @@ package de.atlasmc.node.map;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.chat.Chat;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.util.CloneException;
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumName;
+import de.atlasmc.util.enums.EnumUtil;
 
 public class MapIcon implements Cloneable, NBTSerializable {
 	
 	public static final NBTCodec<MapIcon>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(MapIcon.class)
 					.defaultConstructor(MapIcon::new)
-					.enumStringField("type", MapIcon::getType, MapIcon::setType, IconType.class, IconType.PLAYER)
+					.codec("type", MapIcon::getType, MapIcon::setType, EnumUtil.enumStringNBTCodec(IconType.class), IconType.PLAYER)
 					.doubleField("x", MapIcon::getX, MapIcon::setX, 0)
 					.doubleField("z", MapIcon::getZ, MapIcon::setZ, 0)
 					.floatField("rotation", MapIcon::getRotation, MapIcon::setRotation, 0)
@@ -98,7 +99,7 @@ public class MapIcon implements Cloneable, NBTSerializable {
 	
 	@Override
 	public NBTCodec<? extends MapIcon> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public enum IconType implements IDHolder, EnumName {

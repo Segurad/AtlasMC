@@ -10,16 +10,16 @@ class StageProperty extends AbstractIntProperty {
 	}
 
 	@Override
-	public void set(BlockData data, Integer value) {
+	public void setInt(BlockData data, int value) {
 		if (data instanceof Sapling sapling)
 			sapling.setStage(value);
 	}
 
 	@Override
-	public Integer get(BlockData data) {
+	public int getInt(BlockData data) {
 		if (data instanceof Sapling sapling)
 			return sapling.getStage();
-		return null;
+		return 0;
 	}
 
 	@Override

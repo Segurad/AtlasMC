@@ -6,15 +6,15 @@ import static de.atlasmc.io.PacketUtil.writeVarInt;
 import java.io.IOException;
 
 import de.atlasmc.io.DefaultPacketID;
+import de.atlasmc.nbt.NBTException;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.io.NBTNIOWriter;
 import de.atlasmc.node.block.tile.TileEntity;
 import de.atlasmc.node.io.protocol.common.AbstractPacketChunkLight;
 import de.atlasmc.node.world.Chunk;
 import de.atlasmc.node.world.ChunkSection;
 import de.atlasmc.node.world.World;
 import de.atlasmc.util.codec.CodecContext;
-import de.atlasmc.util.nbt.NBTException;
-import de.atlasmc.util.nbt.codec.NBTCodec;
-import de.atlasmc.util.nbt.io.NBTNIOWriter;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 

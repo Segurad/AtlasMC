@@ -51,7 +51,7 @@ public class CoreLoadRepoPluginTask implements Runnable {
 			try {
 				File file;
 				if (repoEntry.isDirectory()) {
-					file = new File(tempDir, repoEntry.getKey());
+					file = new File(tempDir, repoEntry.getNamespacedKey().key());
 					repoEntry.copyTo(file);
 				} else {
 					repoEntry.copyTo(tempDir);

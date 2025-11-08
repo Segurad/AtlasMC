@@ -2,10 +2,10 @@ package de.atlasmc.node.entity.metadata.type;
 
 import java.io.IOException;
 
+import de.atlasmc.nbt.io.NBTNIOReader;
+import de.atlasmc.nbt.io.NBTNIOWriter;
+import de.atlasmc.nbt.tag.CompoundTag;
 import de.atlasmc.util.codec.CodecContext;
-import de.atlasmc.util.nbt.io.NBTNIOReader;
-import de.atlasmc.util.nbt.io.NBTNIOWriter;
-import de.atlasmc.util.nbt.tag.CompoundTag;
 import io.netty.buffer.ByteBuf;
 
 final class NBTMetaType extends MetaDataType<CompoundTag> {

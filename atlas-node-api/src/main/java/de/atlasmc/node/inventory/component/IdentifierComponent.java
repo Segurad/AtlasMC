@@ -1,7 +1,7 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 
 /**
  * Component that stores a {@link NamespacedKey} to identify a item.
@@ -12,7 +12,7 @@ public interface IdentifierComponent extends ItemComponent {
 	NBT_HANDLER = NBTCodec
 					.builder(IdentifierComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.namespacedKey(ComponentType.IDENTIFIER.getNamespacedKey(), IdentifierComponent::getIdentifier, IdentifierComponent::setIdentifier)
+					.codec(ComponentType.IDENTIFIER.getNamespacedKey(), IdentifierComponent::getIdentifier, IdentifierComponent::setIdentifier, NamespacedKey.NBT_CODEC)
 					.build();
 	
 	void setIdentifier(NamespacedKey id);

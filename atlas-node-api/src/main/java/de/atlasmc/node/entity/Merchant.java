@@ -2,12 +2,12 @@ package de.atlasmc.node.entity;
 
 import java.util.List;
 
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.inventory.InventoryHolder;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.inventory.MerchantInventory;
 import de.atlasmc.util.annotation.NotNull;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Merchant extends InventoryHolder {
 
@@ -15,7 +15,7 @@ public interface Merchant extends InventoryHolder {
 	NBT_HANDLER = NBTCodec
 					.builder(Merchant.class)
 					.beginComponent("Offers")
-					.typeList("Recipes", Merchant::hasRecipes, Merchant::getRecipes, MerchantRecipe.NBT_HANDLER)
+					.codecList("Recipes", Merchant::hasRecipes, Merchant::getRecipes, MerchantRecipe.NBT_HANDLER)
 					.endComponent()
 					.intField("HeadShakeTimer", Merchant::getHeadShakeTimer, Merchant::setHeadShakeTimer)
 					.build();
@@ -54,13 +54,13 @@ public interface Merchant extends InventoryHolder {
 		NBT_HANDLER = NBTCodec
 						.builder(MerchantRecipe.class)
 						.defaultConstructor(MerchantRecipe::new)
-						.typeCompoundField("buy", MerchantRecipe::getInputItem1, MerchantRecipe::setInputItem1, ItemStack.NBT_HANDLER)
-						.typeCompoundField("buyB", MerchantRecipe::getInputItem2, MerchantRecipe::setInputItem2, ItemStack.NBT_HANDLER)
+						.codec("buy", MerchantRecipe::getInputItem1, MerchantRecipe::setInputItem1, ItemStack.NBT_HANDLER)
+						.codec("buyB", MerchantRecipe::getInputItem2, MerchantRecipe::setInputItem2, ItemStack.NBT_HANDLER)
 						.intField("demand", MerchantRecipe::getDemand, MerchantRecipe::setDemand, 0)
 						.intField("maxUses", MerchantRecipe::getMaxUses, MerchantRecipe::setMaxUses, 0)
 						.floatField("priceMultiplier", MerchantRecipe::getPriceMultiplier, MerchantRecipe::setPriceMultiplier, 0)
 						.boolField("rewarded", MerchantRecipe::isRewardExp, MerchantRecipe::setRewardExp, false)
-						.typeCompoundField("sell", MerchantRecipe::getOutputItem, MerchantRecipe::setOutputItem, ItemStack.NBT_HANDLER)
+						.codec("sell", MerchantRecipe::getOutputItem, MerchantRecipe::setOutputItem, ItemStack.NBT_HANDLER)
 						.intField("specialPRice", MerchantRecipe::getSpecialPrice, MerchantRecipe::setSpecialPrice, 0)
 						.intField("uses", MerchantRecipe::getUses, MerchantRecipe::setUses, 0)
 						.intField("xp", MerchantRecipe::getXP, MerchantRecipe::setXP, 0)

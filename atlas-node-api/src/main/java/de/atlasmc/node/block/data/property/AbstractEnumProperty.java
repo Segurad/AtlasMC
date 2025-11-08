@@ -1,32 +1,23 @@
 package de.atlasmc.node.block.data.property;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.nbt.TagType;
+import de.atlasmc.nbt.io.NBTReader;
+import de.atlasmc.nbt.io.NBTWriter;
+import de.atlasmc.util.enums.EnumName;
+import de.atlasmc.util.enums.EnumUtil;
+import de.atlasmc.util.enums.EnumUtil.EnumData;
 
-public abstract class AbstractEnumProperty<T extends Enum<?>> extends BlockDataProperty<T> {
+public abstract class AbstractEnumProperty<T extends Enum<?>> extends PropertyType<T> {
 
 	private final Map<String, T> enums;
 	
 	public AbstractEnumProperty(String key, Class<T> clazz) {
 		super(key);
-		T[] values = clazz.getEnumConstants();
-		Map<String, T> enums = new HashMap<>();
-		if (EnumName.class.isAssignableFrom(clazz)) {
-			for (T value : values) {
-				enums.put(((EnumName) value).getName(), value);
-			}
-		} else {
-			for (T value : values) {
-				enums.put(value.name(), value);
-			}
-		}
-		this.enums = Map.copyOf(enums);
+		EnumData<T> data = EnumUtil.getData(clazz);
+		this.enums = data.getByName();
 	}
 	
 	public AbstractEnumProperty(String key, Map<String, T> map) {

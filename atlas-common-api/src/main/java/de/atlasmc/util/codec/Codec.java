@@ -6,10 +6,10 @@ import de.atlasmc.util.annotation.NotNull;
 
 public interface Codec<T, I, O, C> {
 	
-	Class<? extends T> getType();
+	Class<?> getType();
 	
-	default void serialize(T value, @NotNull O ouput) throws IOException {
-		serialize(value, ouput, getDefaultContext());
+	default void serialize(T value, @NotNull O output) throws IOException {
+		serialize(value, output, getDefaultContext());
 	}
 	
 	/**

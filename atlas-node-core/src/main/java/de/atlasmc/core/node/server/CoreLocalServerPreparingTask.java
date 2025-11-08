@@ -210,7 +210,7 @@ public class CoreLocalServerPreparingTask extends AtlasTask {
 			futures.add(pluginCfgFuture);
 		}
 		CumulativeFuture<Collection<RepositoryEntry>> cumFuture = new CumulativeFuture<>(futures);
-		cumFuture.setListener((future) -> {
+		cumFuture.setListener((_) -> {
 			Atlas.getScheduler().runAsyncTaskLater(Atlas.getSystem(), this, 1L);
 		});
 	}

@@ -1,7 +1,7 @@
 package de.atlasmc.node.block.tile;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.WorldLocation;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface EndGateway extends TileEntity {
 

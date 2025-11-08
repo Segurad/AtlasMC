@@ -1,7 +1,7 @@
 package de.atlasmc.node.inventory.component;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.enchantments.Enchantment;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface EnchantmentComponent extends AbstractEnchantmentComponent {
 	
@@ -9,7 +9,7 @@ public interface EnchantmentComponent extends AbstractEnchantmentComponent {
 	NBT_HANDLER = NBTCodec
 			.builder(EnchantmentComponent.class)
 			.include(AbstractEnchantmentComponent.NBT_CODEC)
-			.compoundMapNamespaced2Int(ComponentType.ENCHANTMENTS.getNamespacedKey(), EnchantmentComponent::hasEnchants, EnchantmentComponent::getStoredEnchants, Enchantment::getEnchantment)
+			.mapNamespacedToInt(ComponentType.ENCHANTMENTS.getNamespacedKey(), EnchantmentComponent::hasEnchants, EnchantmentComponent::getStoredEnchants, Enchantment::getEnchantment)
 			.build();
 	
 	EnchantmentComponent clone();

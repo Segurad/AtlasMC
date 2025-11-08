@@ -3,8 +3,8 @@ package de.atlasmc.node.inventory.component;
 import java.util.Collection;
 import java.util.List;
 import de.atlasmc.chat.Chat;
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.util.annotation.NotNull;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface LoreComponent extends ItemComponent {
 	
@@ -12,7 +12,7 @@ public interface LoreComponent extends ItemComponent {
 	NBT_HANDLER = NBTCodec
 					.builder(LoreComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.chatList(ComponentType.LORE.getNamespacedKey(), LoreComponent::hasLore, LoreComponent::getLore)
+					.codecCollection(ComponentType.LORE.getNamespacedKey(), LoreComponent::hasLore, LoreComponent::getLore, Chat.CHAT_LIST_NBT_CODEC)
 					.build();
 	
 	@NotNull

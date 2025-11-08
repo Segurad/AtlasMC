@@ -1,7 +1,7 @@
 package de.atlasmc.node.inventory.component;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.network.player.PlayerProfile;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ProfileComponent extends ItemComponent {
 
@@ -9,7 +9,7 @@ public interface ProfileComponent extends ItemComponent {
 	NBT_HANDLER = NBTCodec
 					.builder(ProfileComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.typeCompoundField(ComponentType.PROFILE.getNamespacedKey(), ProfileComponent::getProfile, ProfileComponent::setProfile, PlayerProfile.NBT_HANDLER)
+					.codec(ComponentType.PROFILE.getNamespacedKey(), ProfileComponent::getProfile, ProfileComponent::setProfile, PlayerProfile.NBT_CODEC)
 					.build();
 	
 	PlayerProfile getProfile();

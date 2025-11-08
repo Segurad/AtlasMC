@@ -3,6 +3,8 @@ package de.atlasmc.util.dataset;
 import java.util.Collection;
 
 import de.atlasmc.NamespacedKey.Namespaced;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.registry.RegistryKey;
 import de.atlasmc.tag.Tag;
 
 public interface DataSet<T extends Namespaced> {
@@ -14,6 +16,10 @@ public interface DataSet<T extends Namespaced> {
 	int size();
 	
 	boolean isEmpty();
+	
+	static <T extends Namespaced> NBTCodec<DataSet<T>> nbtCodec(RegistryKey<T> key) {
+		return new DataSetCodec<>(key);
+	}
 	
 	static <T extends Namespaced> DataSet<T> of() {
 		@SuppressWarnings("unchecked")

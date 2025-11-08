@@ -17,6 +17,7 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.io.codec.StreamCodecs;
+import de.atlasmc.nbt.tag.CompoundTag;
 import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.block.BlockFace;
@@ -31,7 +32,6 @@ import de.atlasmc.node.entity.Wolf.WolfVariant;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.util.MathUtil;
 import de.atlasmc.util.codec.CodecContext;
-import de.atlasmc.util.nbt.tag.CompoundTag;
 import io.netty.buffer.ByteBuf;
 
 /**

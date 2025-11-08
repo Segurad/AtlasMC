@@ -6,6 +6,8 @@ import java.util.List;
 import org.joml.Vector3i;
 
 import de.atlasmc.Color;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.ProjectileSource;
 import de.atlasmc.node.Location;
@@ -17,7 +19,6 @@ import de.atlasmc.node.potion.PotionEffect;
 import de.atlasmc.node.potion.PotionEffectType;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.UnsafeAPI;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface LivingEntity extends Entity, Attributeable, ProjectileSource {
 	
@@ -35,7 +36,7 @@ public interface LivingEntity extends Entity, Attributeable, ProjectileSource {
 					.innerTypeCompoundField("equipment", LivingEntity::getEquipment, EntityEquipment.NBT_EQUIPMENT_HANDLER)
 					.boolField("FallFlying", LivingEntity::isFallFlying, LivingEntity::setFallFlying, false)
 					.floatField("Health", LivingEntity::getHealth, LivingEntity::setHealth)
-					.vector3i("home_pos", LivingEntity::getHomePositionUnsafe, LivingEntity::setHomePosition)
+					.codec("home_pos", LivingEntity::getHomePositionUnsafe, LivingEntity::setHomePosition, NBTCodecs.VECTOR_3I)
 					.intField("home_radius", LivingEntity::getHomeRadius, LivingEntity::setHomeRadius, 0)
 					.intField("HurtByTimestamp", LivingEntity::getLastHurtTime, LivingEntity::setLastHurtTime, 0)
 					.shortField("HurtTime", LivingEntity::getHurtAnimationTime, LivingEntity::setHurtAnimationTime, (short) 0)
@@ -44,8 +45,8 @@ public interface LivingEntity extends Entity, Attributeable, ProjectileSource {
 					// locator_bar_icon
 					.boolField("NoAI", LivingEntity::hasNoAI, LivingEntity::setNoAi, false)
 					.boolField("PersistenceRequired", LivingEntity::isPersistent, LivingEntity::setPersistent, false)
-					.vector3i("sleeping_pos", LivingEntity::getSleepingPositionUnsafe, LivingEntity::setSleeptingPosition)
-					.string("Team", LivingEntity::getTeam, LivingEntity::setTeam)
+					.codec("sleeping_pos", LivingEntity::getSleepingPositionUnsafe, LivingEntity::setSleeptingPosition, NBTCodecs.VECTOR_3I)
+					.codec("Team", LivingEntity::getTeam, LivingEntity::setTeam, NBTCodecs.STRING)
 					.build();
 	
 	String getTeam();

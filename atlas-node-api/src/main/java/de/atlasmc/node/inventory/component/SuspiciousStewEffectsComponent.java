@@ -1,7 +1,7 @@
 package de.atlasmc.node.inventory.component;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.potion.PotionEffect;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface SuspiciousStewEffectsComponent extends AbstractPotionEffectComponent {
 	
@@ -9,7 +9,7 @@ public interface SuspiciousStewEffectsComponent extends AbstractPotionEffectComp
 	NBT_HANDLER = NBTCodec
 					.builder(SuspiciousStewEffectsComponent.class)
 					.include(AbstractPotionEffectComponent.NBT_CODEC)
-					.typeList(ComponentType.SUSPICIOUS_STEW_EFFECTS.getNamespacedKey(), SuspiciousStewEffectsComponent::hasEffects, SuspiciousStewEffectsComponent::getEffects, PotionEffect.NBT_CODEC)
+					.codecList(ComponentType.SUSPICIOUS_STEW_EFFECTS.getNamespacedKey(), SuspiciousStewEffectsComponent::hasEffects, SuspiciousStewEffectsComponent::getEffects, PotionEffect.NBT_CODEC)
 					.build();
 	
 	SuspiciousStewEffectsComponent clone();

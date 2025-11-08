@@ -2,8 +2,9 @@ package de.atlasmc.node.entity;
 
 import java.util.UUID;
 
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.node.block.data.BlockData;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface PrimedTNT extends Entity {
 	
@@ -12,9 +13,9 @@ public interface PrimedTNT extends Entity {
 					.builder(PrimedTNT.class)
 					.include(Entity.NBT_CODEC)
 					.shortField("fuse", PrimedTNT::getFuseTime, PrimedTNT::setFuseTime)
-					.typeCompoundField("block_state", PrimedTNT::getBlockData, PrimedTNT::setBlockData, BlockData.NBT_HANDLER)
+					.codec("block_state", PrimedTNT::getBlockData, PrimedTNT::setBlockData, BlockData.NBT_HANDLER)
 					.floatField("explosion_power", PrimedTNT::getExplosionPower, PrimedTNT::setExplosionPower)
-					.uuid("owner", PrimedTNT::getSourceUUID, PrimedTNT::setSourceUUID)
+					.codec("owner", PrimedTNT::getSourceUUID, PrimedTNT::setSourceUUID, NBTCodecs.UUID_CODEC)
 					.build();
 	
 	int getFuseTime();

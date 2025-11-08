@@ -2,7 +2,8 @@ package de.atlasmc.node.entity;
 
 import java.util.UUID;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 
 public interface ZombieVillager extends Zombie, AbstractVillager {
 	
@@ -12,7 +13,7 @@ public interface ZombieVillager extends Zombie, AbstractVillager {
 					.include(Zombie.NBT_HANDLER)
 					.include(AbstractVillager.NBT_HANDLER)
 					.intField("ConversionTime", ZombieVillager::getConversionTime, ZombieVillager::setConversionTime, -1)
-					.uuid("ConversionPlayer", ZombieVillager::getConversionPlayer, ZombieVillager::setConversionPlayer)
+					.codec("ConversionPlayer", ZombieVillager::getConversionPlayer, ZombieVillager::setConversionPlayer, NBTCodecs.UUID_CODEC)
 					.boolField("IsConverting", ZombieVillager::isConverting, ZombieVillager::setConverting, false)
 					.build();
 	

@@ -2,8 +2,8 @@ package de.atlasmc.node.entity;
 
 import java.util.List;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Piglin extends AbstractPiglin {
 	
@@ -11,7 +11,7 @@ public interface Piglin extends AbstractPiglin {
 	NBT_HANDLER = NBTCodec
 					.builder(Piglin.class)
 					.boolField("CannotHunt", Piglin::cannotHunt, Piglin::setCannotHunt, false)
-					.typeList("Inventory", Piglin::hasPocketItems, Piglin::getPocketItems, ItemStack.NBT_HANDLER)
+					.codecList("Inventory", Piglin::hasPocketItems, Piglin::getPocketItems, ItemStack.NBT_HANDLER)
 					.boolField("IsBaby", Piglin::isBaby, Piglin::setBaby, false)
 					// non standard
 					.boolField("IsDancing", Piglin::isDancing, Piglin::setDancing, false)

@@ -2,14 +2,14 @@ package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.inventory.EquipmentSlot;
 import de.atlasmc.node.sound.EnumSound;
 import de.atlasmc.node.sound.ResourceSound;
 import de.atlasmc.node.sound.Sound;
-import de.atlasmc.registry.Registries;
 import de.atlasmc.util.dataset.DataSet;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumUtil;
 
 public interface EquippableComponent extends ItemComponent {
 	
@@ -18,15 +18,15 @@ public interface EquippableComponent extends ItemComponent {
 					.builder(EquippableComponent.class)
 					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.EQUIPPABLE.getNamespacedKey())
-					.enumStringField("slot", EquippableComponent::getSlot, EquippableComponent::setSlot, EquipmentSlot.class, null)
-					.enumStringOrType("equip_sound", EquippableComponent::getEquipSound, EquippableComponent::setEquipSound, EnumSound.class, ResourceSound.NBT_CODEC, EnumSound.ITEM_ARMOR_EQUIP_GENERIC)
-					.namespacedKey("asset_id", EquippableComponent::getAssetID, EquippableComponent::setAssetID)
-					.dataSetField("allowed_entities", EquippableComponent::getAllowedEntities, EquippableComponent::setAllowedEntities, Registries.getRegistry(EntityType.class))
+					.codec("slot", EquippableComponent::getSlot, EquippableComponent::setSlot, EnumUtil.enumStringNBTCodec(EquipmentSlot.class), null)
+					.codec("equip_sound", EquippableComponent::getEquipSound, EquippableComponent::setEquipSound, Sound.NBT_CODEC, EnumSound.ITEM_ARMOR_EQUIP_GENERIC)
+					.codec("asset_id", EquippableComponent::getAssetID, EquippableComponent::setAssetID, NamespacedKey.NBT_CODEC)
+					.codec("allowed_entities", EquippableComponent::getAllowedEntities, EquippableComponent::setAllowedEntities, DataSet.nbtCodec(EntityType.REGISTRY_KEY))
 					.boolField("dispensable", EquippableComponent::isDispensable, EquippableComponent::setDispensable, true)
 					.boolField("swappable", EquippableComponent::isSwappable, EquippableComponent::setSwappable, true)
 					.boolField("damage_on_hurt", EquippableComponent::isDamageOnHurt, EquippableComponent::setDamageOnHurt, true)
 					.boolField("equip_on_interact", EquippableComponent::isEquipOnInteract, EquippableComponent::setEquipOnInteract, true)
-					.namespacedKey("camera_overlay", EquippableComponent::getCameraOverlay, EquippableComponent::setCameraOverlay)
+					.codec("camera_overlay", EquippableComponent::getCameraOverlay, EquippableComponent::setCameraOverlay, NamespacedKey.NBT_CODEC)
 					.endComponent()
 					.build();
 	

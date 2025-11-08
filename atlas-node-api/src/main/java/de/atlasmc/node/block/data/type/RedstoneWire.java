@@ -4,7 +4,7 @@ import java.util.Set;
 
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.block.data.AnaloguePowerable;
-import de.atlasmc.util.EnumName;
+import de.atlasmc.util.enums.EnumName;
 
 public interface RedstoneWire extends AnaloguePowerable {
 	

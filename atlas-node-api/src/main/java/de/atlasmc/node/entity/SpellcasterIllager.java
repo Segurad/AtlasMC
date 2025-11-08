@@ -1,8 +1,9 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumName;
+import de.atlasmc.util.enums.EnumUtil;
 
 public interface SpellcasterIllager extends AbstractIllager {
 	
@@ -11,7 +12,7 @@ public interface SpellcasterIllager extends AbstractIllager {
 					.builder(SpellcasterIllager.class)
 					.include(AbstractIllager.NBT_HANDLER)
 					.intField("SpellTicks", SpellcasterIllager::getSpellcastTime, SpellcasterIllager::setSpellcastTime, 0)
-					.enumStringField("Spell", SpellcasterIllager::getSpell, SpellcasterIllager::setSpell, Spell.class, Spell.NONE) // non standard
+					.codec("Spell", SpellcasterIllager::getSpell, SpellcasterIllager::setSpell, EnumUtil.enumStringNBTCodec(Spell.class), Spell.NONE) // non standard
 					.build();
 	
 	Spell getSpell();

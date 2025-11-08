@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.chat.component.ChatComponent;
+import de.atlasmc.nbt.io.NBTReader;
+import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.util.annotation.ThreadSafe;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 @ThreadSafe
 public final class ChatUtil {

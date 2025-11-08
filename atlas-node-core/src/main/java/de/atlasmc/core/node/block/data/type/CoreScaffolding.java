@@ -4,17 +4,17 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreWaterlogged;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.Scaffolding;
 
 public class CoreScaffolding extends CoreWaterlogged implements Scaffolding {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
 		PROPERTIES = merge(CoreWaterlogged.PROPERTIES, 
-				BlockDataProperty.BOTTOM,
-				BlockDataProperty.DISTANCE);
+				PropertyType.BOTTOM,
+				PropertyType.DISTANCE);
 	}
 	
 	private boolean bottom;
@@ -60,7 +60,7 @@ public class CoreScaffolding extends CoreWaterlogged implements Scaffolding {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

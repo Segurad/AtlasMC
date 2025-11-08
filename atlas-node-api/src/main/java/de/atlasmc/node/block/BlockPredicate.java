@@ -1,28 +1,47 @@
 package de.atlasmc.node.block;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import java.util.ArrayList;
+import java.util.List;
+import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.io.codec.StreamSerializable;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
+import de.atlasmc.node.block.data.property.PropertyValuePredicate;
 import de.atlasmc.node.block.tile.TileEntity;
 import de.atlasmc.util.dataset.DataSet;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
-public class BlockPredicate implements NBTSerializable {
+public class BlockPredicate implements NBTSerializable, StreamSerializable {
 
 	public static final NBTCodec<BlockPredicate>
 	NBT_HANDLER = NBTCodec
 					.builder(BlockPredicate.class)
 					.defaultConstructor(BlockPredicate::new)
-					.dataSetField("blocks", BlockPredicate::getTypes, BlockPredicate::setTypes, BlockType.REGISTRY_KEY)
-					.typeCompoundField("nbt", BlockPredicate::getTile, BlockPredicate::setTile, TileEntity.NBT_HANDLER)
-					.addField(BlockDataProperty.getBlockDataPropertiesMapField("state", BlockPredicate::hasStates, BlockPredicate::getStates))
+					.codec("blocks", BlockPredicate::getTypes, BlockPredicate::setTypes, DataSet.nbtCodec(BlockType.REGISTRY_KEY))
+					.codec("nbt", BlockPredicate::getTile, BlockPredicate::setTile, TileEntity.NBT_HANDLER)
+					.codecCollection("state", BlockPredicate::hasStates, BlockPredicate::getStates, PropertyValuePredicate.LIST_NBT_CODEC)
+					.build();
+	
+	public static final StreamCodec<BlockPredicate>
+	STREAM_CODEC = StreamCodec
+					.builder(BlockPredicate.class)
+					.defaultConstructor(BlockPredicate::new)
+					.optional(BlockPredicate::hasTypes)
+					.dataSet(BlockPredicate::getTypes, BlockPredicate::setTypes, BlockType.REGISTRY_KEY)
+					.optional(BlockPredicate::hasStates)
+					.listCodec(BlockPredicate::hasStates, BlockPredicate::getStates, PropertyValuePredicate.STREAM_CODEC)
+					.optional(BlockPredicate::hasTile)
+					.codec(BlockPredicate::getTile, BlockPredicate::setTile, TileEntity.NBT_HANDLER)
+					.staticBooleanValue(false) // TODO match data component
+					.staticBooleanValue(false) // TODO data component predicates
 					.build();
 
 	private DataSet<BlockType> types;
 	private TileEntity tile;
-	private Map<BlockDataProperty<?>, Object> states;
+	private List<PropertyValuePredicate> states;
+	
+	public boolean hasTypes() {
+		return types != null && !types.isEmpty();
+	}
 	
 	public DataSet<BlockType> getTypes() {
 		return types;
@@ -30,6 +49,10 @@ public class BlockPredicate implements NBTSerializable {
 	
 	public void setTypes(DataSet<BlockType> types) {
 		this.types = types;
+	}
+	
+	public boolean hasTile() {
+		return tile != null;
 	}
 	
 	public TileEntity getTile() {
@@ -44,21 +67,20 @@ public class BlockPredicate implements NBTSerializable {
 		return states != null && !states.isEmpty();
 	}
 	
-	public Map<BlockDataProperty<?>, Object> getStates() {
+	public List<PropertyValuePredicate> getStates() {
 		if (states == null)
-			states = new HashMap<>();
+			states = new ArrayList<>();
 		return states;
 	}
 	
-	public void setStates(Map<BlockDataProperty<?>, Object> states) {
-		Map<BlockDataProperty<?>, Object> map = getStates();
-		map.clear();
-		map.putAll(states);
+	@Override
+	public NBTCodec<? extends BlockPredicate> getNBTCodec() {
+		return NBT_HANDLER;
 	}
 	
 	@Override
-	public NBTCodec<? extends NBTSerializable> getNBTCodec() {
-		return NBT_HANDLER;
+	public StreamCodec<? extends BlockPredicate> getStreamCodec() {
+		return STREAM_CODEC;
 	}
 	
 }

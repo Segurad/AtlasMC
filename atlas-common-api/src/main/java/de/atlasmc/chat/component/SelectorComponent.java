@@ -1,6 +1,7 @@
 package de.atlasmc.chat.component;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 
 public class SelectorComponent extends AbstractBaseComponent<SelectorComponent> {
 	
@@ -8,8 +9,8 @@ public class SelectorComponent extends AbstractBaseComponent<SelectorComponent> 
 	NBT_HANDLER = NBTCodec
 					.builder(SelectorComponent.class)
 					.include(AbstractBaseComponent.NBT_CODEC)
-					.string("selector", SelectorComponent::getSelector, SelectorComponent::setSelector)
-					.typeCompoundField("separator", SelectorComponent::getSeparator, SelectorComponent::setSeparator, ChatComponent.NBT_CODEC)
+					.codec("selector", SelectorComponent::getSelector, SelectorComponent::setSelector, NBTCodecs.STRING)
+					.codec("separator", SelectorComponent::getSeparator, SelectorComponent::setSeparator, ChatComponent.NBT_CODEC)
 					.build();
 	
 	private String selector;

@@ -2,7 +2,8 @@ package de.atlasmc.node.entity;
 
 import java.util.UUID;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 
 public interface EvokerFangs extends Entity {
 	
@@ -10,7 +11,7 @@ public interface EvokerFangs extends Entity {
 	NBT_HANDLER = NBTCodec
 					.builder(EvokerFangs.class)
 					.include(Entity.NBT_CODEC)
-					.uuid("Owner", EvokerFangs::getCasterUUID, EvokerFangs::setCasterUUID)
+					.codec("Owner", EvokerFangs::getCasterUUID, EvokerFangs::setCasterUUID, NBTCodecs.UUID_CODEC)
 					.intField("Warmup", EvokerFangs::getWarmup, EvokerFangs::setWarmup)
 					.build();
 	

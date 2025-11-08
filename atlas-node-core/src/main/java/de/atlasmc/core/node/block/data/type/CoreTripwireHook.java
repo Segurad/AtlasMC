@@ -4,17 +4,17 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreDirectional4Faces;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.TripwireHook;
 
 public class CoreTripwireHook extends CoreDirectional4Faces implements TripwireHook {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
 		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, 
-				BlockDataProperty.POWERED,
-				BlockDataProperty.ATTACHED);
+				PropertyType.POWERED,
+				PropertyType.ATTACHED);
 	}
 	
 	private boolean powered;
@@ -53,7 +53,7 @@ public class CoreTripwireHook extends CoreDirectional4Faces implements TripwireH
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

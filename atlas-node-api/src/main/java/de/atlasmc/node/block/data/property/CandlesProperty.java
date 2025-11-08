@@ -10,16 +10,16 @@ class CandlesProperty extends AbstractIntProperty {
 	}
 
 	@Override
-	public void set(BlockData data, Integer value) {
+	public void setInt(BlockData data, int value) {
 		if (data instanceof Candle candle)
 			candle.setCandles(value);
 	}
 
 	@Override
-	public Integer get(BlockData data) {
+	public int getInt(BlockData data) {
 		if (data instanceof Candle candle)
 			return candle.getCandles();
-		return null;
+		return 0;
 	}
 
 	@Override

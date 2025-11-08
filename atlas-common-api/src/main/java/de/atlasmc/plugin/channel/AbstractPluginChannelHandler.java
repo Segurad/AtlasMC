@@ -77,7 +77,7 @@ public abstract class AbstractPluginChannelHandler implements PluginChannelHandl
 	 * @return true if channel was removed
 	 */
 	protected final synchronized boolean unregisterChannel(PluginChannel channel) {
-		return channels.remove(channel.getNamespacedKeyRaw(), channel);
+		return channels.remove(channel.getNamespacedKey().toString(), channel);
 	}
 
 }

@@ -16,7 +16,7 @@ public class CoreServerEventTickTaskFactory implements AtlasThreadTaskFactory {
 	@SuppressWarnings("unchecked")
 	@Override
 	public AtlasThreadTask<LocalServer> createTask(ConfigurationSection config) {
-		return (server, tick) -> {
+		return (server, _) -> {
 			Queue<Event> events = server.getEventQueue();
 			Event event = null;
 			while ((event = events.poll()) != null) {

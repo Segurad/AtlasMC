@@ -15,8 +15,8 @@ import de.atlasmc.node.world.particle.ParticleType;
 import de.atlasmc.node.world.particle.ParticleType.DustColor;
 import de.atlasmc.node.world.particle.ParticleType.DustColorTransition;
 import de.atlasmc.node.world.particle.ParticleType.VibrationData;
-import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.codec.CodecContext;
+import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public final class ParticleMetaType extends MetaDataType<Particle> {

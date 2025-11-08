@@ -2,17 +2,17 @@ package de.atlasmc.node.sound;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.registry.ProtocolRegistryValueBase;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class JukeboxSong extends ProtocolRegistryValueBase implements NBTSerializable {
 	
 	public static final NBTCodec<JukeboxSong>
 	NBT_HANDLER = NBTCodec
 					.builder(JukeboxSong.class)
-					.enumStringOrType("sound_event", JukeboxSong::getSound, JukeboxSong::setSound, EnumSound.class, ResourceSound.NBT_CODEC)
-					.chat("description", JukeboxSong::getDescription, JukeboxSong::setDescription)
+					.codec("sound_event", JukeboxSong::getSound, JukeboxSong::setSound, Sound.NBT_CODEC)
+					.codec("description", JukeboxSong::getDescription, JukeboxSong::setDescription, Chat.NBT_CODEC)
 					.floatField("length_in_seconds", JukeboxSong::getLength, JukeboxSong::setLength)
 					.intField("comparator_output", JukeboxSong::getComparatorOutput, JukeboxSong::setComparatorOutput, 0)
 					.build();

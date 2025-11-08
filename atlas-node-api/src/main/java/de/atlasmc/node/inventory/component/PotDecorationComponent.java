@@ -3,7 +3,7 @@ package de.atlasmc.node.inventory.component;
 import java.util.List;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 
 public interface PotDecorationComponent extends ItemComponent {
 	
@@ -11,7 +11,7 @@ public interface PotDecorationComponent extends ItemComponent {
 	NBT_HANDLER = NBTCodec
 					.builder(PotDecorationComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.namespacedKeyListField(ComponentType.POT_DECORATIONS.getNamespacedKey(), PotDecorationComponent::hasDecorations, PotDecorationComponent::getDecorations)
+					.codecList(ComponentType.POT_DECORATIONS.getNamespacedKey(), PotDecorationComponent::hasDecorations, PotDecorationComponent::getDecorations, NamespacedKey.NBT_CODEC)
 					.build();
 	
 	List<NamespacedKey> getDecorations();

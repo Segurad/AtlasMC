@@ -9,7 +9,7 @@ import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketInPlayerCommand;
 import de.atlasmc.node.io.protocol.play.PacketInPlayerCommand.Action;
-import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketInPlayerCommand implements PacketIO<PacketInPlayerCommand> {

@@ -1,7 +1,8 @@
 package de.atlasmc.chat.component.event.click;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 
 public final class CustomClickEvent implements ClickEvent {
 	
@@ -9,8 +10,8 @@ public final class CustomClickEvent implements ClickEvent {
 	NBT_HANDLER = NBTCodec
 					.builder(CustomClickEvent.class)
 					.include(ClickEvent.NBT_HANDLER)
-					.namespacedKey("id", CustomClickEvent::getID, CustomClickEvent::setID)
-					.string("payload", CustomClickEvent::getPayload, CustomClickEvent::setPayload)
+					.codec("id", CustomClickEvent::getID, CustomClickEvent::setID, NamespacedKey.NBT_CODEC)
+					.codec("payload", CustomClickEvent::getPayload, CustomClickEvent::setPayload, NBTCodecs.STRING)
 					.build();
 	
 	private NamespacedKey id;

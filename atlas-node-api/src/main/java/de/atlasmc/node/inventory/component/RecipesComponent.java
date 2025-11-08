@@ -3,7 +3,7 @@ package de.atlasmc.node.inventory.component;
 import java.util.List;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 
 public interface RecipesComponent extends ItemComponent {
 	
@@ -11,7 +11,7 @@ public interface RecipesComponent extends ItemComponent {
 	NBT_HANDLER = NBTCodec
 					.builder(RecipesComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.namespacedKeyListField(ComponentType.RECIPES.getNamespacedKey(), RecipesComponent::hasRecipes, RecipesComponent::getRecipes)
+					.codecList(ComponentType.RECIPES.getNamespacedKey(), RecipesComponent::hasRecipes, RecipesComponent::getRecipes, NamespacedKey.NBT_CODEC)
 					.build();
 	
 	List<NamespacedKey> getRecipes();

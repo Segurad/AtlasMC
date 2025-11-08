@@ -2,7 +2,7 @@ package de.atlasmc.node.block.data;
 
 import java.util.Set;
 
-import de.atlasmc.util.EnumName;
+import de.atlasmc.util.enums.EnumName;
 
 public interface Rail extends Waterlogged {
 	

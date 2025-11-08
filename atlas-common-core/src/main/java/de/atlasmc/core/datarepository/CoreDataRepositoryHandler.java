@@ -57,7 +57,7 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 	public Future<RepositoryEntry> getEntry(NamespacedKey key, boolean load) {
 		if (key.hasChildKey()) {
 			NamespacedKey repoKey = key.getChildKey();
-			Repository repo = getRepo(key.getNamespace());
+			Repository repo = getRepo(key.namespace());
 			return repo.getEntry(repoKey);
 		}
 		RepositoryEntry entry = getLocal(key);
@@ -69,7 +69,7 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 	}
 	
 	private Future<RepositoryEntry> getRemote(NamespacedKey key) {
-		Repository repo = repoByNamespace.get(key.getNamespace());
+		Repository repo = repoByNamespace.get(key.namespace());
 		if (repo == null)
 			return CompleteFuture.getNullFuture();
 		return repo.getEntry(key);
@@ -78,7 +78,7 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 	private RepositoryEntry getLocal(NamespacedKey key) {
 		RepositoryEntry entry = null;
 		for (LocalRepository local : localRepos.values()) {
-			if (local.getNamespace(key.getKey()) == null)
+			if (local.getNamespace(key.key()) == null)
 				continue;
 			entry = local.getLocalEntry(key);
 			if (entry != null)

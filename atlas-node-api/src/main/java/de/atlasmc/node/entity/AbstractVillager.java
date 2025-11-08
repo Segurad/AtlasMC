@@ -3,10 +3,11 @@ package de.atlasmc.node.entity;
 import de.atlasmc.IDHolder;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.io.codec.StreamSerializable;
-import de.atlasmc.util.EnumName;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.util.annotation.UnsafeAPI;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumName;
+import de.atlasmc.util.enums.EnumUtil;
 
 public interface AbstractVillager extends Merchant {
 	
@@ -15,7 +16,7 @@ public interface AbstractVillager extends Merchant {
 					.builder(AbstractVillager.class)
 					.include(Merchant.NBT_HANDLER)
 					// Gossip
-					.typeCompoundField("VillagerData", AbstractVillager::getVillagerDataUnsafe, AbstractVillager::setVillagerData, VillagerData.NBT_CODEC)
+					.codec("VillagerData", AbstractVillager::getVillagerDataUnsafe, AbstractVillager::setVillagerData, VillagerData.NBT_CODEC)
 					.intField("Xp", AbstractVillager::getXp, AbstractVillager::setXp)
 					.build();
 	
@@ -51,8 +52,8 @@ public interface AbstractVillager extends Merchant {
 						.builder(VillagerData.class)
 						.defaultConstructor(VillagerData::new)
 						.intField("level", VillagerData::getLevel, VillagerData::setLevel, 1)
-						.enumStringField("profession", VillagerData::getProfession, VillagerData::setProfession, VillagerProfession.class, VillagerProfession.NONE)
-						.enumStringField("type", VillagerData::getType, VillagerData::setType, VillagerType.class, VillagerType.PLAINS)
+						.codec("profession", VillagerData::getProfession, VillagerData::setProfession, EnumUtil.enumStringNBTCodec(VillagerProfession.class), VillagerProfession.NONE)
+						.codec("type", VillagerData::getType, VillagerData::setType, EnumUtil.enumStringNBTCodec(VillagerType.class), VillagerType.PLAINS)
 						.build();
 		
 		public static final StreamCodec<VillagerData>

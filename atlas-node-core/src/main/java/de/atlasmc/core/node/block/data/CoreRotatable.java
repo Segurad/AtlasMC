@@ -5,14 +5,14 @@ import java.util.List;
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.Rotatable;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 
 public class CoreRotatable extends CoreBlockData implements Rotatable {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.ROTATION);
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, PropertyType.ROTATION);
 	}
 	
 	private BlockFace rotation;
@@ -46,7 +46,7 @@ public class CoreRotatable extends CoreBlockData implements Rotatable {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

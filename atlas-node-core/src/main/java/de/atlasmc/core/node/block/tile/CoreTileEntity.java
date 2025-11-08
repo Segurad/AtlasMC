@@ -32,7 +32,7 @@ public class CoreTileEntity implements TileEntity {
 	@Override
 	public void setType(BlockType material) {
 		if (!material.isValidTile(this))
-			throw new IllegalArgumentException("Tile ist not compatible with this type: " + material.getNamespacedKeyRaw());
+			throw new IllegalArgumentException("Tile ist not compatible with this type: " + material.getNamespacedKey());
 		this.type = material;
 	}
 	

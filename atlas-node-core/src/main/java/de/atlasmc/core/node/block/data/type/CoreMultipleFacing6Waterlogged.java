@@ -6,14 +6,14 @@ import de.atlasmc.core.node.block.data.CoreMultipleFacing6;
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.Waterlogged;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 
 public class CoreMultipleFacing6Waterlogged extends CoreMultipleFacing6 implements Waterlogged {
 	
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreMultipleFacing6.PROPERTIES, BlockDataProperty.WATERLOGGED);
+		PROPERTIES = merge(CoreMultipleFacing6.PROPERTIES, PropertyType.WATERLOGGED);
 	}
 	
 	private boolean waterlogged;
@@ -45,7 +45,7 @@ public class CoreMultipleFacing6Waterlogged extends CoreMultipleFacing6 implemen
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 	

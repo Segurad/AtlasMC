@@ -2,10 +2,11 @@ package de.atlasmc.node.world;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.registry.ProtocolRegistryValueBase;
 import de.atlasmc.util.annotation.Nullable;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class Dimension extends ProtocolRegistryValueBase implements NBTSerializable, Namespaced {
 	
@@ -16,12 +17,12 @@ public class Dimension extends ProtocolRegistryValueBase implements NBTSerializa
 					.boolField("has_skylight", Dimension::hasSkyLight, Dimension::setSkylight)
 					.boolField("has_ceiling", Dimension::hasCeiling, Dimension::setCeiling)
 					.floatField("ambient_light", Dimension::getAmbientLight, Dimension::setAmbientLight)
-					.longNullableField("fixed_time", Dimension::getFixedTime, Dimension::setFixedTime)
+					.codec("fixed_time", Dimension::getFixedTime, Dimension::setFixedTime, NBTCodecs.LONG)
 					.intField("logical_height", Dimension::getLogicalHeight, Dimension::setLogicalHeight)
 					.intField("cloud_height", Dimension::getCloudHeight, Dimension::setCloudHeight)
 					.intField("min_y", Dimension::getMinY, Dimension::setMinY)
 					.intField("height", Dimension::getHeight, Dimension::setHeight)
-					.namespacedKey("effects", Dimension::getEffects, Dimension::setEffects)
+					.codec("effects", Dimension::getEffects, Dimension::setEffects, NamespacedKey.NBT_CODEC)
 					.build();
 	
 	private boolean natural;

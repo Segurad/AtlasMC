@@ -12,7 +12,7 @@ public class CoreServerSchedulerTickTaskFactory implements AtlasThreadTaskFactor
 	@SuppressWarnings("unchecked")
 	@Override
 	public AtlasThreadTask<LocalServer> createTask(ConfigurationSection config) {
-		return (server, tick) -> {
+		return (server, _) -> {
 				server.getScheduler().runNextTasks();
 		};
 	}

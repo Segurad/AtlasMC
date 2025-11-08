@@ -4,15 +4,15 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreDirectional4Faces;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.Cocoa;
 
 public class CoreCocoa extends CoreDirectional4Faces implements Cocoa {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, BlockDataProperty.AGE);
+		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, PropertyType.AGE);
 	}
 	
 	private int age;
@@ -44,7 +44,7 @@ public class CoreCocoa extends CoreDirectional4Faces implements Cocoa {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

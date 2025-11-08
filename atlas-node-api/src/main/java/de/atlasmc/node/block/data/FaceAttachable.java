@@ -1,6 +1,6 @@
 package de.atlasmc.node.block.data;
 
-import de.atlasmc.util.EnumName;
+import de.atlasmc.util.enums.EnumName;
 
 public interface FaceAttachable extends BlockData {
 

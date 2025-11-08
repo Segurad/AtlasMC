@@ -2,8 +2,9 @@ package de.atlasmc.node.entity;
 
 import java.util.UUID;
 
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Item extends Entity {
 	
@@ -13,10 +14,10 @@ public interface Item extends Entity {
 					.include(Entity.NBT_CODEC)
 					.shortField("Age", Item::getLifeTime, Item::setLifeTime, (short) 6000)
 					.shortField("Health", Item::getHealth, Item::setHealth, (short) 5)
-					.typeCompoundField("Item", Item::getItem, Item::setItem, ItemStack.NBT_HANDLER)
-					.uuid("Owner", Item::getOwner, Item::setOwner)
+					.codec("Item", Item::getItem, Item::setItem, ItemStack.NBT_HANDLER)
+					.codec("Owner", Item::getOwner, Item::setOwner, NBTCodecs.UUID_CODEC)
 					.shortField("PickupDelay", Item::getPickupDelay, Item::setPickupDelay, (short) 0)
-					.uuid("Thrower", Item::getThrower, Item::setThrower)
+					.codec("Thrower", Item::getThrower, Item::setThrower, NBTCodecs.UUID_CODEC)
 					.build();
 	
 	ItemStack getItem();

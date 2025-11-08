@@ -2,22 +2,34 @@ package de.atlasmc.node.attribute;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.io.codec.StreamSerializable;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.inventory.EquipmentSlot;
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumName;
+import de.atlasmc.util.enums.EnumUtil;
 
-public class AttributeModifier implements Cloneable, NBTSerializable {
+public class AttributeModifier implements Cloneable, NBTSerializable, StreamSerializable {
 
 	public static final NBTCodec<AttributeModifier>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(AttributeModifier.class)
 					.defaultConstructor(AttributeModifier::new)
 					.doubleField("amount", AttributeModifier::getAmount, AttributeModifier::setAmount, 0)
-					.namespacedKey("id", AttributeModifier::getID, AttributeModifier::setID)
-					.enumStringField("operation", AttributeModifier::getOperation, AttributeModifier::setOperation, Operation.class, Operation.ADD_VALUE)
-					.enumStringField("slot", AttributeModifier::getSlot, AttributeModifier::setSlot, EquipmentSlot.class, EquipmentSlot.ANY)
+					.codec("id", AttributeModifier::getID, AttributeModifier::setID, NamespacedKey.NBT_CODEC)
+					.codec("operation", AttributeModifier::getOperation, AttributeModifier::setOperation, EnumUtil.enumStringNBTCodec(Operation.class), Operation.ADD_VALUE)
+					.codec("slot", AttributeModifier::getSlot, AttributeModifier::setSlot, EnumUtil.enumStringNBTCodec(EquipmentSlot.class), EquipmentSlot.ANY)
 					// TODO display
+					.build();
+	
+	public static final StreamCodec<AttributeModifier>
+	STREAM_CODEC = StreamCodec
+					.builder(AttributeModifier.class)
+					.namespacedKey(AttributeModifier::getID, AttributeModifier::setID)
+					.doubleValue(AttributeModifier::getAmount, AttributeModifier::setAmount)
+					.varIntEnum(AttributeModifier::getOperation, AttributeModifier::setOperation, Operation.class)
+					.varIntEnum(AttributeModifier::getSlot, AttributeModifier::setSlot, EquipmentSlot.class)
 					.build();
 	
 	private double amount;
@@ -153,7 +165,12 @@ public class AttributeModifier implements Cloneable, NBTSerializable {
 
 	@Override
 	public NBTCodec<? extends AttributeModifier> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
+	}
+	
+	@Override
+	public StreamCodec<? extends AttributeModifier> getStreamCodec() {
+		return STREAM_CODEC;
 	}
 
 }

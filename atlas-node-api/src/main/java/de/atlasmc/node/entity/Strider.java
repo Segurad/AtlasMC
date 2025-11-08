@@ -1,13 +1,13 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 
 public interface Strider extends Animal {
 	
 	public static final NBTCodec<Strider>
 	NBT_HANDLER = NBTCodec
 					.builder(Strider.class)
-					.include(Animal.NBT_HANDLER)
+					.include(Animal.NBT_CODEC)
 					.intField("BoostTime", Strider::getBoostTime, Strider::setBoostTime, 0)
 					.boolField("IsShaking", Strider::isShaking, Strider::setShaking, false)
 					.boolField("HasSaddle", Strider::hasSaddle, Strider::setSaddle, false)

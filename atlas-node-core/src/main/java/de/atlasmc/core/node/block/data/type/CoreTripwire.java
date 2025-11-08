@@ -5,18 +5,18 @@ import java.util.List;
 import de.atlasmc.core.node.block.data.CoreMultipleFacing4;
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.Tripwire;
 
 public class CoreTripwire extends CoreMultipleFacing4 implements Tripwire {
 	
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
 		PROPERTIES = merge(CoreMultipleFacing4.PROPERTIES, 
-				BlockDataProperty.DISARMED,
-				BlockDataProperty.POWERED,
-				BlockDataProperty.ATTACHED);
+				PropertyType.DISARMED,
+				PropertyType.POWERED,
+				PropertyType.ATTACHED);
 	}
 	
 	private boolean attached;
@@ -70,7 +70,7 @@ public class CoreTripwire extends CoreMultipleFacing4 implements Tripwire {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

@@ -1,9 +1,9 @@
 package de.atlasmc.node.entity;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.block.tile.TileEntity;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface FallingBlock extends Entity {
 	
@@ -11,13 +11,13 @@ public interface FallingBlock extends Entity {
 	NBT_HANDLER = NBTCodec
 					.builder(FallingBlock.class)
 					.include(Entity.NBT_CODEC)
-					.typeCompoundField("BlockState", FallingBlock::getBlockData, FallingBlock::setBlockData, BlockData.NBT_HANDLER)
+					.codec("BlockState", FallingBlock::getBlockData, FallingBlock::setBlockData, BlockData.NBT_HANDLER)
 					.boolField("CancelDrop", FallingBlock::getCancelDrop, FallingBlock::setCancelDrop, false)
 					.boolField("DropItem", FallingBlock::getDropItem, FallingBlock::setDropItem, false)
 					.floatField("FallHurtAmount", FallingBlock::getDamagePerBlock, FallingBlock::setDamagePerBlock, 0)
 					.intField("FallHurtMax", FallingBlock::getMaxDamage, FallingBlock::setMaxDamage, 40)
 					.boolField("HurtEntities", FallingBlock::canHurtEntities, FallingBlock::setHurtEntities, true)
-					.typeCompoundField("TileEntityData", FallingBlock::getTileEntity, FallingBlock::setTileEntity, TileEntity.NBT_HANDLER)
+					.codec("TileEntityData", FallingBlock::getTileEntity, FallingBlock::setTileEntity, TileEntity.NBT_HANDLER)
 					.intField("Time", FallingBlock::getAge, FallingBlock::setAge, 0)
 					.build();
 

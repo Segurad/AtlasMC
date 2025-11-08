@@ -4,7 +4,8 @@ import java.util.UUID;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.component.ChatComponent;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 
 public class HoverEntityEvent implements HoverEvent {
 	
@@ -12,9 +13,9 @@ public class HoverEntityEvent implements HoverEvent {
 	NBT_HANDLER = NBTCodec
 					.builder(HoverEntityEvent.class)
 					.include(HoverEvent.NBT_HANDLER)
-					.typeCompoundField("name", HoverEntityEvent::getName, HoverEntityEvent::setName, ChatComponent.NBT_CODEC)
-					.namespacedKey("id", HoverEntityEvent::getType, HoverEntityEvent::setType)
-					.uuid("uuid", HoverEntityEvent::getUUID, HoverEntityEvent::setUUUID)
+					.codec("name", HoverEntityEvent::getName, HoverEntityEvent::setName, ChatComponent.NBT_CODEC)
+					.codec("id", HoverEntityEvent::getType, HoverEntityEvent::setType, NamespacedKey.NBT_CODEC)
+					.codec("uuid", HoverEntityEvent::getUUID, HoverEntityEvent::setUUUID, NBTCodecs.UUID_CODEC)
 					.build();
 	
 	private ChatComponent name;

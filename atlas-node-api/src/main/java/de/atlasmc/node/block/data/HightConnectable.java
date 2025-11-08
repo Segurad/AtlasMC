@@ -3,7 +3,7 @@ package de.atlasmc.node.block.data;
 import java.util.Set;
 
 import de.atlasmc.node.block.BlockFace;
-import de.atlasmc.util.EnumName;
+import de.atlasmc.util.enums.EnumName;
 
 public interface HightConnectable extends BlockData {
 	

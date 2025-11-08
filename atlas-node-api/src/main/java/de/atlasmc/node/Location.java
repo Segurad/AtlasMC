@@ -5,11 +5,12 @@ import org.joml.Vector3i;
 
 import de.atlasmc.node.util.MathUtil;
 import de.atlasmc.util.CloneException;
+import de.atlasmc.util.OpenCloneable;
 
 /**
  * Position pitch and yaw
  */
-public class Location extends Vector3d implements Cloneable {
+public class Location extends Vector3d implements OpenCloneable {
 
 	public float pitch;
 	public float yaw;
@@ -75,13 +76,11 @@ public class Location extends Vector3d implements Cloneable {
 	}
 
 	public Location clone() {
-		Location clone = null;
 		try {
-			clone = (Location) super.clone();
+			return (Location) super.clone();
 		} catch (CloneNotSupportedException e) {
 			throw new CloneException(e);
 		}
-		return clone;
 	}
 
 	/**

@@ -10,16 +10,16 @@ class EggsProperty extends AbstractIntProperty {
 	}
 
 	@Override
-	public void set(BlockData data, Integer value) {
+	public void setInt(BlockData data, int value) {
 		if (data instanceof TurtleEgg egg)
 			egg.setEggs(value);
 	}
 
 	@Override
-	public Integer get(BlockData data) {
+	public int getInt(BlockData data) {
 		if (data instanceof TurtleEgg egg)
 			return egg.getEggs();
-		return null;
+		return 0;
 	}
 
 	@Override

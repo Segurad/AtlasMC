@@ -2,7 +2,7 @@ package de.atlasmc.chat.component.event.click;
 
 import java.util.function.Supplier;
 
-import de.atlasmc.util.EnumName;
+import de.atlasmc.util.enums.EnumName;
 
 public enum ClickAction implements EnumName {
 	

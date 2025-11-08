@@ -3,8 +3,8 @@ package de.atlasmc.node.inventory.component;
 import java.util.List;
 
 import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface BundleContentsComponent extends ItemComponent {
 	
@@ -12,7 +12,7 @@ public interface BundleContentsComponent extends ItemComponent {
 	NBT_HANDLER = NBTCodec
 					.builder(BundleContentsComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.typeList(ComponentType.BUNDLE_CONTENTS.getNamespacedKey(), BundleContentsComponent::hasItems, BundleContentsComponent::getItems, ItemStack.NBT_HANDLER)
+					.codecList(ComponentType.BUNDLE_CONTENTS.getNamespacedKey(), BundleContentsComponent::hasItems, BundleContentsComponent::getItems, ItemStack.NBT_HANDLER)
 					.build();
 	
 	public static final StreamCodec<BundleContentsComponent>

@@ -2,16 +2,14 @@ package de.atlasmc.node.inventory.component;
 
 import java.util.List;
 
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.entity.DamageType;
 import de.atlasmc.node.event.entity.EntityDamageEvent.DamageReduction;
-import de.atlasmc.node.sound.EnumSound;
-import de.atlasmc.node.sound.ResourceSound;
 import de.atlasmc.node.sound.Sound;
 import de.atlasmc.tag.TagKey;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface BlocksAttacksComponent extends ItemComponent {
 	
@@ -22,11 +20,11 @@ public interface BlocksAttacksComponent extends ItemComponent {
 					.beginComponent(ComponentType.BLOCKS_ATTACKS.getNamespacedKey())
 					.floatField("block_delay_seconds", BlocksAttacksComponent::getBlockDelay, BlocksAttacksComponent::setBlockDelay, 0)
 					.floatField("disable_cooldown_scale", BlocksAttacksComponent::getDisableCooldownScale, BlocksAttacksComponent::setDisableCooldownScale, 1)
-					.typeList("damage_reductions", BlocksAttacksComponent::hasReduction, BlocksAttacksComponent::getReduction, DamageReduction.NBT_HANDLER)
-					.typeCompoundField("item_damage", BlocksAttacksComponent::getItemDamage, BlocksAttacksComponent::setItemDamage, ItemDamage.NBT_HANDLER)
-					.enumStringOrType("block_sound", BlocksAttacksComponent::getBlockSound, BlocksAttacksComponent::setBlockSound, EnumSound.class, ResourceSound.NBT_CODEC)
-					.enumStringOrType("disabled_sound", BlocksAttacksComponent::getDisabledSound, BlocksAttacksComponent::setDisabledSound, EnumSound.class, ResourceSound.NBT_CODEC)
-					.tagField("bypassed_by", BlocksAttacksComponent::getBypassedBy, BlocksAttacksComponent::setBypassedBy)
+					.codecList("damage_reductions", BlocksAttacksComponent::hasReduction, BlocksAttacksComponent::getReduction, DamageReduction.NBT_HANDLER)
+					.codec("item_damage", BlocksAttacksComponent::getItemDamage, BlocksAttacksComponent::setItemDamage, ItemDamage.NBT_HANDLER)
+					.codec("block_sound", BlocksAttacksComponent::getBlockSound, BlocksAttacksComponent::setBlockSound, Sound.NBT_CODEC)
+					.codec("disabled_sound", BlocksAttacksComponent::getDisabledSound, BlocksAttacksComponent::setDisabledSound, Sound.NBT_CODEC)
+					.codec("bypassed_by", BlocksAttacksComponent::getBypassedBy, BlocksAttacksComponent::setBypassedBy, TagKey.NBT_CODEC)
 					.endComponent()
 					.build();
 	

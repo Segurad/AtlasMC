@@ -1,14 +1,14 @@
 package de.atlasmc.node.entity;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.PocketHolder;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Villager extends AbstractVillager, Breedable, PocketHolder {
 	
 	public static final NBTCodec<Villager>
 	NBT_HANDLER = NBTCodec
 					.builder(Villager.class)
-					.include(Breedable.NBT_HANDLER)
+					.include(Breedable.NBT_CODEC)
 					.include(AbstractVillager.NBT_HANDLER)
 					.include(PocketHolder.NBT_HANDLER)
 					.longField("LastRestock", Villager::getLastRestock, Villager::setLastRestock, 0)

@@ -11,11 +11,11 @@ import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.BaseComponent;
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.chat.component.TextComponent;
-import de.atlasmc.util.nbt.NBTException;
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.util.nbt.io.SNBTReader;
+import de.atlasmc.nbt.NBTException;
+import de.atlasmc.nbt.TagType;
+import de.atlasmc.nbt.io.NBTReader;
+import de.atlasmc.nbt.io.NBTWriter;
+import de.atlasmc.nbt.io.SNBTReader;
 
 public class CoreChatFactory implements ChatFactory {
 

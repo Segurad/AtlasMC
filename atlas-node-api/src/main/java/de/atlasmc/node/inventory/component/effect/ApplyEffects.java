@@ -3,8 +3,8 @@ package de.atlasmc.node.inventory.component.effect;
 import java.util.List;
 
 import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.potion.PotionEffect;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ApplyEffects extends ComponentEffect {
 	
@@ -12,7 +12,7 @@ public interface ApplyEffects extends ComponentEffect {
 	NBT_HANDLER = NBTCodec
 					.builder(ApplyEffects.class)
 					.include(ComponentEffect.NBT_HANDLER)
-					.typeList("effects", ApplyEffects::hasEffects, ApplyEffects::getEffects, PotionEffect.NBT_CODEC)
+					.codecList("effects", ApplyEffects::hasEffects, ApplyEffects::getEffects, PotionEffect.NBT_CODEC)
 					.floatField("probability", ApplyEffects::getProbability, ApplyEffects::setProbability, 1)
 					.build();
 	

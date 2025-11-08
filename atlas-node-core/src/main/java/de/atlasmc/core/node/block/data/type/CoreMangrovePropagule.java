@@ -4,18 +4,18 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreAgeable;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.MangrovePropagule;
 
 public class CoreMangrovePropagule extends CoreAgeable implements MangrovePropagule {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
 		PROPERTIES = merge(CoreAgeable.PROPERTIES, 
-				BlockDataProperty.WATERLOGGED,
-				BlockDataProperty.HANGING,
-				BlockDataProperty.STAGE);
+				PropertyType.WATERLOGGED,
+				PropertyType.HANGING,
+				PropertyType.STAGE);
 	}
 	
 	private boolean waterlogged;
@@ -74,7 +74,7 @@ public class CoreMangrovePropagule extends CoreAgeable implements MangrovePropag
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

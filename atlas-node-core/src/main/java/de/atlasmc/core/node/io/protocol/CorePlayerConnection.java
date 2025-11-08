@@ -351,7 +351,7 @@ public class CorePlayerConnection implements PlayerConnection {
 			return;
 		PacketOutDisconnect packet = new PacketOutDisconnect();
 		packet.text = message;
-		connection.sendPacket(packet, (future) -> {
+		connection.sendPacket(packet, (_) -> {
 			connection.close();
 		});
 	}

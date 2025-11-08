@@ -2,11 +2,11 @@ package de.atlasmc.node.inventory.component;
 
 import java.util.List;
 
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.inventory.ItemType;
 import de.atlasmc.util.CloneException;
 import de.atlasmc.util.dataset.DataSet;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ToolComponent extends ItemComponent {
 	
@@ -18,7 +18,7 @@ public interface ToolComponent extends ItemComponent {
 					.floatField("default_mining_speed", ToolComponent::getDefaultMinigSpeed, ToolComponent::setDefaultMinigSpeed, 1)
 					.intField("damage_per_block", ToolComponent::getDamagePerBlock, ToolComponent::setDamagePerBlock, 1)
 					.boolField("can_destroy_blocks_in_creative", ToolComponent::canDestroyBlocksInCreative, ToolComponent::setDestroyBlockInCreative, true)
-					.typeList("rules", ToolComponent::hasRules, ToolComponent::getRules, Rule.NBT_HANDLER)
+					.codecList("rules", ToolComponent::hasRules, ToolComponent::getRules, Rule.NBT_HANDLER)
 					.endComponent()
 					.build();
 	
@@ -65,7 +65,7 @@ public interface ToolComponent extends ItemComponent {
 		NBT_HANDLER = NBTCodec
 						.builder(Rule.class)
 						.defaultConstructor(Rule::new)
-						.dataSetField("blocks", Rule::getBlocks, Rule::setBlocks, ItemType.REGISTRY_KEY)
+						.codec("blocks", Rule::getBlocks, Rule::setBlocks, DataSet.nbtCodec(ItemType.REGISTRY_KEY))
 						.floatField("speed", Rule::getSpeed, Rule::setSpeed)
 						.boolField("correct_for_drops", Rule::isCorrectForDrops, Rule::setCorrectForDrops, false)
 						.build();

@@ -4,17 +4,17 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreWaterlogged;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.SculkShrieker;
 
 public class CoreSculkShrieker extends CoreWaterlogged implements SculkShrieker {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
 		PROPERTIES = merge(CoreWaterlogged.PROPERTIES, 
-				BlockDataProperty.CAN_SUMMON,
-				BlockDataProperty.SHRIEKING);
+				PropertyType.CAN_SUMMON,
+				PropertyType.SHRIEKING);
 	}
 	
 	private boolean canSummon;
@@ -55,7 +55,7 @@ public class CoreSculkShrieker extends CoreWaterlogged implements SculkShrieker 
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

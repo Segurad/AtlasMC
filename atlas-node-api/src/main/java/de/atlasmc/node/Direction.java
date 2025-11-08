@@ -3,7 +3,7 @@ package de.atlasmc.node;
 import java.util.List;
 
 import de.atlasmc.IDHolder;
-import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.enums.EnumUtil;
 
 public enum Direction implements IDHolder {
 

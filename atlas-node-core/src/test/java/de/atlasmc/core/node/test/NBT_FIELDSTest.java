@@ -5,8 +5,8 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
+import de.atlasmc.nbt.AbstractNBTBase;
 import de.atlasmc.test.util.ReflectionUtil;
-import de.atlasmc.util.nbt.AbstractNBTBase;
 
 /**
  * Tests classes that extends {@link AbstractNBTBase}

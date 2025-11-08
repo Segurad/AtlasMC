@@ -4,14 +4,14 @@ import java.util.List;
 
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.Lightable;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 
 public class CoreLightable extends CoreBlockData implements Lightable {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.LIT);
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, PropertyType.LIT);
 	}
 	
 	protected boolean lit;
@@ -36,7 +36,7 @@ public class CoreLightable extends CoreBlockData implements Lightable {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 	

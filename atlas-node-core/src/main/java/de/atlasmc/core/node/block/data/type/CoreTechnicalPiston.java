@@ -4,15 +4,15 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreDirectional6Faces;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.TechnicalPiston;
 
 public class CoreTechnicalPiston extends CoreDirectional6Faces implements TechnicalPiston {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreDirectional6Faces.PROPERTIES, BlockDataProperty.TYPE);
+		PROPERTIES = merge(CoreDirectional6Faces.PROPERTIES, PropertyType.TYPE);
 	}
 	
 	protected Type pistonType;
@@ -40,7 +40,7 @@ public class CoreTechnicalPiston extends CoreDirectional6Faces implements Techni
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

@@ -6,15 +6,15 @@ import java.util.Set;
 
 import de.atlasmc.core.node.block.data.CoreRail;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.RedstoneRail;
 
 public class CoreRedstoneRail extends CoreRail implements RedstoneRail {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreRail.PROPERTIES, BlockDataProperty.POWERED);
+		PROPERTIES = merge(CoreRail.PROPERTIES, PropertyType.POWERED);
 	}
 	
 	private boolean powered;
@@ -50,7 +50,7 @@ public class CoreRedstoneRail extends CoreRail implements RedstoneRail {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

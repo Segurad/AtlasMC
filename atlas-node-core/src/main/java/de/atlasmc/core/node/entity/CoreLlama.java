@@ -8,7 +8,7 @@ import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.AbstractHorseInventory;
 import de.atlasmc.node.inventory.ContainerFactory;
 import de.atlasmc.node.inventory.LlamaInventory;
-import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.enums.EnumUtil;
 
 public class CoreLlama extends CoreChestedHorse implements Llama {
 

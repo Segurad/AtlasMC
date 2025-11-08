@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 
 public interface AngerableMob extends LivingEntity {
 	
 	public static final NBTCodec<AngerableMob>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(AngerableMob.class)
 					.include(LivingEntity.NBT_HANDLER)
 					.intField("AngerTime", AngerableMob::getAngerTime, AngerableMob::setAngerTime, 0)
@@ -27,7 +27,7 @@ public interface AngerableMob extends LivingEntity {
 	
 	@Override
 	default NBTCodec<? extends AngerableMob> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

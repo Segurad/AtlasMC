@@ -1,7 +1,8 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.io.codec.StreamCodec;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.registry.Registries;
 
 public interface InstrumentComponent extends ItemComponent {
 	
@@ -9,7 +10,8 @@ public interface InstrumentComponent extends ItemComponent {
 	NBT_CODEC = NBTCodec
 					.builder(InstrumentComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.registryValue(ComponentType.INSTRUMENT.getNamespacedKey(), InstrumentComponent::getInstrument, InstrumentComponent::setInstrument, Instrument.REGISTRY_KEY, Instrument.NBT_HANDLER)
+					.codec(ComponentType.INSTRUMENT.getNamespacedKey(), InstrumentComponent::getInstrument, InstrumentComponent::setInstrument, Registries.registryValueNBTCodec(Instrument.REGISTRY_KEY))
+					.codec(ComponentType.INSTRUMENT.getNamespacedKey(), InstrumentComponent::getInstrument, InstrumentComponent::setInstrument, Instrument.NBT_HANDLER)
 					.build();
 	
 	public static final StreamCodec<InstrumentComponent>

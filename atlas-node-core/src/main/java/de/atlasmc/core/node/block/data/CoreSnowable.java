@@ -4,14 +4,14 @@ import java.util.List;
 
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.Snowable;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 
 public class CoreSnowable extends CoreBlockData implements Snowable {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.SNOWY);
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, PropertyType.SNOWY);
 	}
 	
 	private boolean snowy;
@@ -36,7 +36,7 @@ public class CoreSnowable extends CoreBlockData implements Snowable {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 	

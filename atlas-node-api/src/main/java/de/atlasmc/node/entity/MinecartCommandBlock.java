@@ -2,7 +2,8 @@ package de.atlasmc.node.entity;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.command.CommandSender;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 
 public interface MinecartCommandBlock extends AbstractMinecart, CommandSender {
 	
@@ -10,8 +11,8 @@ public interface MinecartCommandBlock extends AbstractMinecart, CommandSender {
 	NBT_HANDLER = NBTCodec
 					.builder(MinecartCommandBlock.class)
 					.include(AbstractMinecart.NBT_HANDLER)
-					.string("Command", MinecartCommandBlock::getCommand, MinecartCommandBlock::setCommand)
-					.chat("LastOutput", MinecartCommandBlock::getLastMessage, MinecartCommandBlock::setLastMessage)
+					.codec("Command", MinecartCommandBlock::getCommand, MinecartCommandBlock::setCommand, NBTCodecs.STRING)
+					.codec("LastOutput", MinecartCommandBlock::getLastMessage, MinecartCommandBlock::setLastMessage, Chat.NBT_CODEC)
 					.intField("SucessCount", MinecartCommandBlock::getRedstoneSignal, MinecartCommandBlock::setRedstoneSignal)
 					.boolField("TrackOutput", MinecartCommandBlock::isTrackingOutput, MinecartCommandBlock::setTrackOutput, false)
 					.build();

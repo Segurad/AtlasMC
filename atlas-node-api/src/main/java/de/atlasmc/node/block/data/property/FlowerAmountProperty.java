@@ -10,16 +10,16 @@ class FlowerAmountProperty extends AbstractIntProperty {
 	}
 
 	@Override
-	public void set(BlockData data, Integer value) {
+	public void setInt(BlockData data, int value) {
 		if (data instanceof Flower petals)
 			petals.setFlowerAmount(value);
 	}
 
 	@Override
-	public Integer get(BlockData data) {
+	public int getInt(BlockData data) {
 		if (data instanceof Flower petals)
 			return petals.getFlowerAmount();
-		return null;
+		return 0;
 	}
 
 	@Override

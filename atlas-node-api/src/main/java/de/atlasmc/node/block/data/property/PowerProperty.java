@@ -10,16 +10,16 @@ class PowerProperty extends AbstractIntProperty {
 	}
 
 	@Override
-	public void set(BlockData data, Integer value) {
+	public void setInt(BlockData data, int value) {
 		if (data instanceof AnaloguePowerable powerable)
 			powerable.setPower(value);
 	}
 
 	@Override
-	public Integer get(BlockData data) {
+	public int getInt(BlockData data) {
 		if (data instanceof AnaloguePowerable powerable)
 			return powerable.getPower();
-		return null;
+		return 0;
 	}
 
 	@Override

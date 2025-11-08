@@ -10,16 +10,16 @@ public class HydrationProperty extends AbstractIntProperty {
 	}
 
 	@Override
-	public void set(BlockData data, Integer value) {
+	public void setInt(BlockData data, int value) {
 		if (data instanceof DriedGhast hydratable)
 			hydratable.setHydration(value);
 	}
 
 	@Override
-	public Integer get(BlockData data) {
+	public int getInt(BlockData data) {
 		if (data instanceof DriedGhast hydatable)
 			return hydatable.getHydration();
-		return null;
+		return 0;
 	}
 
 	@Override

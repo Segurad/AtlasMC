@@ -2,6 +2,10 @@ package de.atlasmc.core.node.entity;
 
 import java.io.IOException;
 
+import de.atlasmc.nbt.NBTException;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.io.NBTObjectWriter;
+import de.atlasmc.nbt.tag.CompoundTag;
 import de.atlasmc.node.entity.Entity;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.HumanEntity;
@@ -17,10 +21,6 @@ import de.atlasmc.node.inventory.MainHand;
 import de.atlasmc.node.inventory.PlayerInventory;
 import de.atlasmc.util.CooldownHandler;
 import de.atlasmc.util.codec.CodecContext;
-import de.atlasmc.util.nbt.NBTException;
-import de.atlasmc.util.nbt.codec.NBTCodec;
-import de.atlasmc.util.nbt.io.NBTObjectWriter;
-import de.atlasmc.util.nbt.tag.CompoundTag;
 
 public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 	

@@ -1,6 +1,7 @@
 package de.atlasmc.chat.component;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 
 public class TextComponent extends AbstractBaseComponent<TextComponent> {
 
@@ -8,7 +9,7 @@ public class TextComponent extends AbstractBaseComponent<TextComponent> {
 	NBT_HANDLER = NBTCodec
 					.builder(TextComponent.class)
 					.include(AbstractBaseComponent.NBT_CODEC)
-					.string("text", TextComponent::getValue, TextComponent::setValue)
+					.codec("text", TextComponent::getValue, TextComponent::setValue, NBTCodecs.STRING)
 					.build();
 	
 	private String text;

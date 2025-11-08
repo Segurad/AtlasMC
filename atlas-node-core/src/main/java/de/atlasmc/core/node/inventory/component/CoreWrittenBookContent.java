@@ -1,18 +1,13 @@
 package de.atlasmc.core.node.inventory.component;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.atlasmc.chat.Chat;
-import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.ComponentType;
 import de.atlasmc.node.inventory.component.WrittenBookContentComponent;
 
-public class CoreWrittenBookContent extends AbstractItemComponent implements WrittenBookContentComponent {
+public class CoreWrittenBookContent extends CoreBookContentComponent<Chat> implements WrittenBookContentComponent {
 
 	private String title;
 	private String author;
-	private List<Chat> pages;
 	private Generation generation = Generation.ORGINAL;
 	private boolean resolved;
 	
@@ -28,18 +23,6 @@ public class CoreWrittenBookContent extends AbstractItemComponent implements Wri
 	@Override
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	@Override
-	public List<Chat> getPages() {
-		if (pages == null)
-			pages = new ArrayList<>();
-		return pages;
-	}
-
-	@Override
-	public boolean hasPages() {
-		return pages != null && !pages.isEmpty();
 	}
 
 	@Override
@@ -76,14 +59,7 @@ public class CoreWrittenBookContent extends AbstractItemComponent implements Wri
 	
 	@Override
 	public CoreWrittenBookContent clone() {
-		CoreWrittenBookContent clone = (CoreWrittenBookContent) super.clone();
-		if (hasPages()) {
-			clone.pages = new ArrayList<>(pages.size());
-			for (Chat page : pages) {
-				clone.pages.add(page.clone());
-			}
-		}
-		return clone;
+		return (CoreWrittenBookContent) super.clone();
 	}
 
 }

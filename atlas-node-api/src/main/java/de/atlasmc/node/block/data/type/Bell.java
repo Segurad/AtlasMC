@@ -2,7 +2,7 @@ package de.atlasmc.node.block.data.type;
 
 import de.atlasmc.node.block.data.Directional;
 import de.atlasmc.node.block.data.Powerable;
-import de.atlasmc.util.EnumName;
+import de.atlasmc.util.enums.EnumName;
 
 public interface Bell extends Directional, Powerable {
 	

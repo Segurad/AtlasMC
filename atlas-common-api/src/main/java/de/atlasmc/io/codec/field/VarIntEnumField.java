@@ -7,8 +7,8 @@ import java.util.function.Function;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.io.PacketUtil;
-import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.codec.CodecContext;
+import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class VarIntEnumField<T, V extends Enum<V> & IDHolder> extends AbstractObjectField<T, V> {

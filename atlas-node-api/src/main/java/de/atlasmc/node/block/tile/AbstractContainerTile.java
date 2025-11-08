@@ -1,10 +1,10 @@
 package de.atlasmc.node.block.tile;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.Nameable;
 import de.atlasmc.node.inventory.Inventory;
 import de.atlasmc.node.inventory.InventoryHolder;
 import de.atlasmc.node.inventory.ItemPredicate;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface AbstractContainerTile<I extends Inventory> extends TileEntity, InventoryHolder, Nameable {
 	
@@ -15,7 +15,7 @@ public interface AbstractContainerTile<I extends Inventory> extends TileEntity, 
 					.include(TileEntity.NBT_HANDLER)
 					.include(Nameable.NBT_HANDLER)
 					.include(InventoryHolder.NBT_HANDLER)
-					.typeCompoundField("lock", AbstractContainerTile::getLock, AbstractContainerTile::setLock, ItemPredicate.NBT_HANDLER)
+					.codec("lock", AbstractContainerTile::getLock, AbstractContainerTile::setLock, ItemPredicate.NBT_HANDLER)
 					.build();
 	
 	/**

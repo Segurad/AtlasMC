@@ -4,15 +4,15 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreDirectional6Faces;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.CommandBlock;
 
 public class CoreCommandBlock extends CoreDirectional6Faces implements CommandBlock {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreDirectional6Faces.PROPERTIES, BlockDataProperty.CONDITIONAL);
+		PROPERTIES = merge(CoreDirectional6Faces.PROPERTIES, PropertyType.CONDITIONAL);
 	}
 	
 	private boolean conditional;
@@ -37,7 +37,7 @@ public class CoreCommandBlock extends CoreDirectional6Faces implements CommandBl
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

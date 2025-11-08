@@ -1,7 +1,7 @@
 package de.atlasmc.node.entity;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.PocketHolder;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Pillager extends AbstractIllager, PocketHolder {
 	

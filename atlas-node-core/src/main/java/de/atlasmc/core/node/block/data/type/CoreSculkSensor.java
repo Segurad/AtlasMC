@@ -4,17 +4,17 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreAnaloguePowerable;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.SculkSensor;
 
 public class CoreSculkSensor extends CoreAnaloguePowerable implements SculkSensor {
 	
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
 		PROPERTIES = merge(CoreAnaloguePowerable.PROPERTIES, 
-				BlockDataProperty.WATERLOGGED,
-				BlockDataProperty.SCULK_SENSOR_PHASE);
+				PropertyType.WATERLOGGED,
+				PropertyType.SCULK_SENSOR_PHASE);
 	}
 	
 	private boolean waterlogged;
@@ -53,7 +53,7 @@ public class CoreSculkSensor extends CoreAnaloguePowerable implements SculkSenso
 	}
 
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 	

@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.inventory.EquipmentSlot;
 import de.atlasmc.util.AtlasUtil;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class AttributeInstance implements NBTSerializable {
 	
@@ -17,7 +17,7 @@ public class AttributeInstance implements NBTSerializable {
 	NBT_HANDLER = NBTCodec
 					.builder(AttributeInstance.class)
 					.doubleField("base", AttributeInstance::getBaseValue, AttributeInstance::setBaseValue, 0)
-					.typeList("modifiers", AttributeInstance::hasModifiers, AttributeInstance::getModifiers, AttributeModifier.NBT_HANDLER)
+					.codecList("modifiers", AttributeInstance::hasModifiers, AttributeInstance::getModifiers, AttributeModifier.NBT_CODEC)
 					.build();
 	
 	private final Consumer<AttributeInstance> updateListener;

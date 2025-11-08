@@ -3,29 +3,20 @@ package de.atlasmc.core.node.inventory.component;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.node.inventory.component.AbstractItemComponent;
+import de.atlasmc.chat.Filterable;
 import de.atlasmc.node.inventory.component.ComponentType;
 import de.atlasmc.node.inventory.component.WritableBookContentComponent;
 
-public class CoreWritableBookContentComponent extends AbstractItemComponent implements WritableBookContentComponent {
+public class CoreWritableBookContentComponent extends CoreBookContentComponent<String> implements WritableBookContentComponent {
 
-	private List<String> pages;
+	private List<Filterable<String>> pages;
 	
 	public CoreWritableBookContentComponent(ComponentType type) {
 		super(type);
 	}
-	
-	@Override
-	public CoreWritableBookContentComponent clone() {
-		CoreWritableBookContentComponent clone = (CoreWritableBookContentComponent) super.clone();
-		if (hasPages()) {
-			clone.pages = new ArrayList<>(pages);
-		}
-		return clone;
-	}
 
 	@Override
-	public List<String> getPages() {
+	public List<Filterable<String>> getPages() {
 		if (pages == null)
 			pages = new ArrayList<>();
 		return pages;

@@ -2,22 +2,23 @@ package de.atlasmc.node.entity;
 
 import org.joml.Vector3i;
 
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.util.annotation.UnsafeAPI;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Bee extends Animal, AngerableMob {
 
 	public static final NBTCodec<Bee>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Bee.class)
-					.include(Animal.NBT_HANDLER)
-					.include(AngerableMob.NBT_HANDLER)
+					.include(Animal.NBT_CODEC)
+					.include(AngerableMob.NBT_CODEC)
 					.intField("CannotEnterHiveTicks", Bee::getTicksCannotEnterHive, Bee::setTicksCannotEnterHive, 0)
 					.intField("CropsGrownSincePollination", Bee::getCropsGrownSincePollination, Bee::setCropsGrownSincePollination, 0)
-					.vector3i("flower_pos", Bee::getFlowerLocationUnsafe, Bee::setFlowerLocation)
+					.codec("flower_pos", Bee::getFlowerLocationUnsafe, Bee::setFlowerLocation, NBTCodecs.VECTOR_3I)
 					.boolField("HasNectar", Bee::hasNectar, Bee::setNectar, false)
 					.boolField("HasStung", Bee::hasStung, Bee::setStung, false)
-					.vector3i("hive_pos", Bee::getHiveLocationUnsafe, Bee::setHiveLocation)
+					.codec("hive_pos", Bee::getHiveLocationUnsafe, Bee::setHiveLocation, NBTCodecs.VECTOR_3I)
 					.intField("TicksSincePollination", Bee::getTicksSincePollination, Bee::setTicksSincePollination, 0)
 					.build();
 	
@@ -65,7 +66,7 @@ public interface Bee extends Animal, AngerableMob {
 	
 	@Override
 	default NBTCodec<? extends Bee> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

@@ -5,7 +5,7 @@ import de.atlasmc.IDHolder;
 import de.atlasmc.node.Location;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.util.EnumName;
+import de.atlasmc.util.enums.EnumName;
 
 public enum ParticleType implements EnumName, IDHolder {
 	

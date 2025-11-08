@@ -1,17 +1,18 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumName;
+import de.atlasmc.util.enums.EnumUtil;
 
 public interface Panda extends Animal {
 	
 	public static final NBTCodec<Panda>
 	NBT_HANDLER = NBTCodec
 					.builder(Panda.class)
-					.include(Animal.NBT_HANDLER)
-					.enumStringField("HiddenGene", Panda::getHiddenGene, Panda::setHiddenGene, Gene.class, Gene.NORMAL)
-					.enumStringField("MainGene", Panda::getMainGene, Panda::setMainGene, Gene.class, Gene.NORMAL)
+					.include(Animal.NBT_CODEC)
+					.codec("HiddenGene", Panda::getHiddenGene, Panda::setHiddenGene, EnumUtil.enumStringNBTCodec(Gene.class), Gene.NORMAL)
+					.codec("MainGene", Panda::getMainGene, Panda::setMainGene, EnumUtil.enumStringNBTCodec(Gene.class), Gene.NORMAL)
 					// non standard
 					.boolField("IsSneezing", Panda::isSneezing, Panda::setSneezing, false)
 					.boolField("IsRolling", Panda::isRolling, Panda::setRolling, false)

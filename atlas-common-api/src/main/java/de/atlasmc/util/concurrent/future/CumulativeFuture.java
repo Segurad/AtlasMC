@@ -19,7 +19,7 @@ public class CumulativeFuture<V> extends AbstractFuture<List<Future<V>>> {
 	public CumulativeFuture(Collection<? extends Future<V>> futures) {
 		final List<Future<V>> result = List.copyOf(futures);
 		final AtomicInteger awaiting = new AtomicInteger(result.size());
-		FutureListener<V> listener = (future) -> {
+		FutureListener<V> listener = (_) -> {
 			if (awaiting.decrementAndGet() > 0)
 				return;
 			final int size = 0;

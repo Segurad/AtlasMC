@@ -1,7 +1,7 @@
 package de.atlasmc.node.block.data.type;
 
 import de.atlasmc.node.block.data.Ageable;
-import de.atlasmc.util.EnumName;
+import de.atlasmc.util.enums.EnumName;
 
 public interface Bamboo extends Ageable, Sapling {
 

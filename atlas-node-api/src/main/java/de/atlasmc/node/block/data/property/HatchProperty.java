@@ -10,16 +10,16 @@ class HatchProperty extends AbstractIntProperty {
 	}
 
 	@Override
-	public void set(BlockData data, Integer value) {
+	public void setInt(BlockData data, int value) {
 		if (data instanceof TurtleEgg egg)
 			egg.setHatch(value);
 	}
 
 	@Override
-	public Integer get(BlockData data) {
+	public int getInt(BlockData data) {
 		if (data instanceof TurtleEgg egg)
 			return egg.getHatch();
-		return null;
+		return 0;
 	}
 
 	@Override

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import de.atlasmc.chat.component.event.click.ClickAction;
-import de.atlasmc.util.EnumName;
+import de.atlasmc.util.enums.EnumName;
 
 public enum ComponentType implements EnumName {
 	

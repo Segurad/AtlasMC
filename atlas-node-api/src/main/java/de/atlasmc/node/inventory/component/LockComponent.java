@@ -1,7 +1,7 @@
 package de.atlasmc.node.inventory.component;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.ItemPredicate;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface LockComponent extends ItemComponent {
 	
@@ -9,7 +9,7 @@ public interface LockComponent extends ItemComponent {
 	NBT_HANDLER = NBTCodec
 					.builder(LockComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.typeCompoundField(ComponentType.LOCK.getNamespacedKey(), LockComponent::getPredicate, LockComponent::setPredicate, ItemPredicate.NBT_HANDLER)
+					.codec(ComponentType.LOCK.getNamespacedKey(), LockComponent::getPredicate, LockComponent::setPredicate, ItemPredicate.NBT_HANDLER)
 					.build();
 	
 	ItemPredicate getPredicate();

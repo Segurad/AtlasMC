@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.entity.spawncondition.SpawnCondition;
 import de.atlasmc.registry.ProtocolRegistryValueBase;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class EntityVariant extends ProtocolRegistryValueBase implements NBTSerializable {
 	
@@ -15,7 +15,7 @@ public class EntityVariant extends ProtocolRegistryValueBase implements NBTSeria
 	NBT_HANDLER = NBTCodec
 					.builder(EntityVariant.class)
 					.defaultConstructor(EntityVariant::new)
-					.typeList("spawn_conditions", EntityVariant::hasSpawnConditions, EntityVariant::getSpawnCondition, SpawnCondition.NBT_HANDLER)
+					.codecList("spawn_conditions", EntityVariant::hasSpawnConditions, EntityVariant::getSpawnCondition, SpawnCondition.NBT_HANDLER)
 					.build();
 	
 	private List<SpawnCondition> conditions;

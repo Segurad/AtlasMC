@@ -81,7 +81,7 @@ public class DefaultBlockStateTest {
 					int stateID = data.getStateID();
 					if (id == stateID)
 						continue;
-					fail = "Internal type block id does not match default state id: " + id + "  | " + stateID + " | " + type.getNamespacedKeyRaw();
+					fail = "Internal type block id does not match default state id: " + id + "  | " + stateID + " | " + type.getNamespacedKey();
 				}
 				reader.endArray();
 			}

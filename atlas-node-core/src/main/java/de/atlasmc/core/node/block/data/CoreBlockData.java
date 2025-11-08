@@ -5,12 +5,12 @@ import java.util.List;
 
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.BlockData;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.util.annotation.NotNull;
 
 public class CoreBlockData implements BlockData {
 	
-	protected static final List<BlockDataProperty<?>> PROPERTIES = List.of();
+	protected static final List<PropertyType<?>> PROPERTIES = List.of();
 	
 	protected final BlockType type;
 	
@@ -38,8 +38,18 @@ public class CoreBlockData implements BlockData {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
+	}
+	
+	@Override
+	public PropertyType<?> getProperty(CharSequence key) {
+		var properties = getProperties();
+		for (var property : properties) {
+			if (property.getKey().equals(key))
+				return property;
+		}
+		return null;
 	}
 	
 	/**
@@ -49,10 +59,10 @@ public class CoreBlockData implements BlockData {
 	 * @return list
 	 */
 	@NotNull
-	protected static List<BlockDataProperty<?>> merge(List<BlockDataProperty<?>> parent, BlockDataProperty<?>... values) {
-		ArrayList<BlockDataProperty<?>> newList = new ArrayList<>(parent.size() + values.length);
+	protected static List<PropertyType<?>> merge(List<PropertyType<?>> parent, PropertyType<?>... values) {
+		ArrayList<PropertyType<?>> newList = new ArrayList<>(parent.size() + values.length);
 		newList.addAll(parent);
-		for (BlockDataProperty<?> property : values) {
+		for (PropertyType<?> property : values) {
 			if (newList.contains(property))
 				continue;
 			newList.add(property);

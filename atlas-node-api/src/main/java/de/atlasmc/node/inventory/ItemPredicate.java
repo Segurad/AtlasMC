@@ -5,13 +5,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
 
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.inventory.component.ComponentType;
 import de.atlasmc.node.inventory.component.ItemComponent;
 import de.atlasmc.node.inventory.component.ItemComponentHolder;
 import de.atlasmc.node.inventory.component.predicate.ItemComponentPredicate;
 import de.atlasmc.util.dataset.DataSet;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 import de.atlasmc.util.predicate.IntRange;
 
 public class ItemPredicate implements NBTSerializable, ItemComponentHolder, Predicate<ItemStack> {
@@ -20,11 +21,11 @@ public class ItemPredicate implements NBTSerializable, ItemComponentHolder, Pred
 	NBT_HANDLER = NBTCodec
 					.builder(ItemPredicate.class)
 					.defaultConstructor(ItemPredicate::new)
-					.dataSetField("items", ItemPredicate::getItems, ItemPredicate::setItems, ItemType.REGISTRY_KEY)
-					.intNullableField("count", ItemPredicate::getCount, ItemPredicate::setCount, null)
-					.typeCompoundField("count", ItemPredicate::getRange, ItemPredicate::setRange, IntRange.NBT_HANDLER)
+					.codec("items", ItemPredicate::getItems, ItemPredicate::setItems, DataSet.nbtCodec(ItemType.REGISTRY_KEY))
+					.codec("count", ItemPredicate::getCount, ItemPredicate::setCount, NBTCodecs.INT)
+					.codec("count", ItemPredicate::getRange, ItemPredicate::setRange, IntRange.NBT_HANDLER)
 					.include(ItemComponentHolder.NBT_HANDLER)
-					.compoundMapType2Type("predicates", ItemPredicate::hasPredicates, ItemPredicate::getPredicates, ItemComponentPredicate.NBT_HANDLER, ItemComponentPredicate::getType)
+					.mapTypeToCodec("predicates", ItemPredicate::hasPredicates, ItemPredicate::getPredicates, ItemComponentPredicate.NBT_HANDLER, ItemComponentPredicate::getType)
 					.build();
 
 	private DataSet<ItemType> items;

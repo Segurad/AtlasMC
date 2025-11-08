@@ -4,14 +4,14 @@ import java.util.List;
 
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.FaceAttachable;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 
 public class CoreFaceAttachable extends CoreBlockData implements FaceAttachable {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.FACE);
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, PropertyType.FACE);
 	}
 	
 	private AttachedFace face;
@@ -39,7 +39,7 @@ public class CoreFaceAttachable extends CoreBlockData implements FaceAttachable 
 	}
 
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 	

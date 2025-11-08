@@ -1,13 +1,13 @@
 package de.atlasmc.node.inventory;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 
 public interface InventoryHolder {
 	
 	public static final NBTCodec<InventoryHolder>
 	NBT_HANDLER = NBTCodec
 					.builder(InventoryHolder.class)
-					.typeArraySearchByteIndexField("Items", "Slot", InventoryHolder::hasInventory, (value) -> { return value.getInventory().getContentsUnsafe(); }, ItemStack.NBT_HANDLER)
+					.codecArraySearchByteIndexField("Items", "Slot", InventoryHolder::hasInventory, (value) -> { return value.getInventory().getContentsUnsafe(); }, ItemStack.NBT_HANDLER)
 					.build();
 	
 	/**

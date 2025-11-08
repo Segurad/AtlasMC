@@ -14,13 +14,13 @@ import de.atlasmc.registry.ProtocolRegistry;
 import de.atlasmc.registry.ProtocolRegistryValue;
 import de.atlasmc.tag.Tag;
 import de.atlasmc.tag.Tags;
-import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.dataset.DataSet;
 import de.atlasmc.util.dataset.SingleValueDataSet;
 import de.atlasmc.util.dataset.TagDataSet;
+import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 

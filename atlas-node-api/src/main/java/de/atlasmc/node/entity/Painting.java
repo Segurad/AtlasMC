@@ -1,8 +1,9 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumName;
+import de.atlasmc.util.enums.EnumUtil;
 
 public interface Painting extends Hanging {
 
@@ -10,7 +11,7 @@ public interface Painting extends Hanging {
 	NBT_HANDLER = NBTCodec
 					.builder(Painting.class)
 					.include(Hanging.NBT_HANDLER)
-					.enumStringField("motive", Painting::getMotive, Painting::setMotive, Motive.class, Motive.KEBAB)
+					.codec("motive", Painting::getMotive, Painting::setMotive, EnumUtil.enumStringNBTCodec(Motive.class), Motive.KEBAB)
 					.build();
 	
 	Motive getMotive();

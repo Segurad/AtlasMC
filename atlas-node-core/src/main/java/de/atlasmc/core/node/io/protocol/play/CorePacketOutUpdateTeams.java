@@ -15,8 +15,8 @@ import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateTeams;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateTeams.Mode;
 import de.atlasmc.node.scoreboard.TeamOptionType;
-import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.codec.CodecContext;
+import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> {

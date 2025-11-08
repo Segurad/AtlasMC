@@ -1,19 +1,20 @@
 package de.atlasmc.chat.component;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import static de.atlasmc.nbt.codec.NBTCodecs.STRING;
 
 public class NBTComponent extends AbstractBaseComponent<NBTComponent> {
 	
 	public static final NBTCodec<NBTComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(NBTComponent.class)
-					.string("source", NBTComponent::getSource, NBTComponent::setSource)
-					.string("nbt", NBTComponent::getNbtPath, NBTComponent::setNbtPath)
+					.codec("source", NBTComponent::getSource, NBTComponent::setSource, STRING)
+					.codec("nbt", NBTComponent::getNbtPath, NBTComponent::setNbtPath, STRING)
 					.boolField("interpret", NBTComponent::isInterpret, NBTComponent::setInterpret, false)
-					.typeCompoundField("separator", NBTComponent::getSeparator, NBTComponent::setSeparator, ChatComponent.NBT_CODEC)
-					.string("block", NBTComponent::getBlock, NBTComponent::setBlock)
-					.string("entity", NBTComponent::getEntity, NBTComponent::setEntity)
-					.string("storage", NBTComponent::getStorage, NBTComponent::setStorage)
+					.codec("separator", NBTComponent::getSeparator, NBTComponent::setSeparator, ChatComponent.NBT_CODEC)
+					.codec("block", NBTComponent::getBlock, NBTComponent::setBlock, STRING)
+					.codec("entity", NBTComponent::getEntity, NBTComponent::setEntity, STRING)
+					.codec("storage", NBTComponent::getStorage, NBTComponent::setStorage, STRING)
 					.build();
 	
 	private String source;

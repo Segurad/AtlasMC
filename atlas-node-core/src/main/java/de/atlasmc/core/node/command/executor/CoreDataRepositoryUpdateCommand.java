@@ -60,9 +60,9 @@ public class CoreDataRepositoryUpdateCommand implements CommandExecutor {
 						sender.sendMessage("Nothing update...");
 						return;
 					}
-					sender.sendMessage("=== Updated: " + update.getKey() + " ===");
+					sender.sendMessage("=== Updated: " + update.getNamespacedKey().key() + " ===");
 					for (Pair<String, Change> change : update.getFilesChanged())
-						sender.sendMessage("- " + change.getValue1() + " [" + change.getValue2().symbol() + "]");
+						sender.sendMessage("- " + change.value1() + " [" + change.value2().symbol() + "]");
 				} else {
 					sender.sendMessage("Failed to perform update!");
 				}
@@ -77,9 +77,9 @@ public class CoreDataRepositoryUpdateCommand implements CommandExecutor {
 			return;
 		}
 		for (RepositoryEntryUpdate update : updated) {
-			sender.sendMessage("=== Updated: " + update.getKey() + " ===");
+			sender.sendMessage("=== Updated: " + update.getNamespacedKey().key() + " ===");
 			for (Pair<String, Change> change : update.getFilesChanged())
-				sender.sendMessage("- " + change.getValue1() + " [" + change.getValue2().symbol() + "]");
+				sender.sendMessage("- " + change.value1() + " [" + change.value2().symbol() + "]");
 		}
 	}
 

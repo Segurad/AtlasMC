@@ -128,7 +128,7 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 			PlayerConnection con = new CorePlayerConnection(handler.player, handler.con, adapter);
 			handler.con.setProtocol(configuration, configuration.createDefaultPacketListenerServerbound(con));
 		}, true);
-		initHandler(ServerboundLoginPluginResponse.class, (handle, packet) -> {
+		initHandler(ServerboundLoginPluginResponse.class, (handler, packet) -> {
 			// TODO handle plugin response
 		}, true);
 		initHandler(ServerboundCookieResponse.class, (handler, packet) -> {

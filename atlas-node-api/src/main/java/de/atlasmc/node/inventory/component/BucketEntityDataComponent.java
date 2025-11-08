@@ -1,12 +1,13 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.entity.Axolotl.Variant;
 import de.atlasmc.node.entity.Salmon.Type;
 import de.atlasmc.node.entity.TropicalFish.Pattern;
 import de.atlasmc.util.AtlasUtil;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumUtil;
 
 public interface BucketEntityDataComponent extends ItemComponent {
 	
@@ -22,9 +23,9 @@ public interface BucketEntityDataComponent extends ItemComponent {
 					.boolField("Invulnerable", BucketEntityDataComponent::isInvulnerable, BucketEntityDataComponent::setInvulnerable, false)
 					.floatField("Health", BucketEntityDataComponent::getHealth, BucketEntityDataComponent::setHealth, 0)
 					.intField("Age", BucketEntityDataComponent::getAge, BucketEntityDataComponent::setAge, 0)
-					.enumIntField("Variant", BucketEntityDataComponent::getVariant, BucketEntityDataComponent::setVariant, Variant.class, null)
+					.codec("Variant", BucketEntityDataComponent::getVariant, BucketEntityDataComponent::setVariant, EnumUtil.enumIntNBTCodec(Variant.class))
 					.longField("HuntingCooldown", BucketEntityDataComponent::getHuntingCooldown, BucketEntityDataComponent::setHuntingCooldown, 0)
-					.enumStringField("type", BucketEntityDataComponent::getSalmonType, BucketEntityDataComponent::setSalmonType, Type.class, null)
+					.codec("type", BucketEntityDataComponent::getSalmonType, BucketEntityDataComponent::setSalmonType, EnumUtil.enumStringNBTCodec(Type.class))
 					.endComponent()
 					.build();
 

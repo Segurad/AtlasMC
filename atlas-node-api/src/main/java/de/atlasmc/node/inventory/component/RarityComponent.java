@@ -1,8 +1,9 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.IDHolder;
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumName;
+import de.atlasmc.util.enums.EnumUtil;
 
 public interface RarityComponent extends ItemComponent {
 	
@@ -10,7 +11,7 @@ public interface RarityComponent extends ItemComponent {
 	NBT_HANDLER = NBTCodec
 					.builder(RarityComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.enumStringField(ComponentType.RARITY.getNamespacedKey(), RarityComponent::getRarity, RarityComponent::setRarity, Rarity.class, null)
+					.codec(ComponentType.RARITY.getNamespacedKey(), RarityComponent::getRarity, RarityComponent::setRarity, EnumUtil.enumStringNBTCodec(Rarity.class))
 					.build();
 	
 	Rarity getRarity();

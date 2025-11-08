@@ -1,8 +1,9 @@
 package de.atlasmc.network.player;
 
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.util.CloneException;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import static de.atlasmc.nbt.codec.NBTCodecs.STRING;
 
 public class ProfileProperty implements NBTSerializable, Cloneable {
 
@@ -10,9 +11,9 @@ public class ProfileProperty implements NBTSerializable, Cloneable {
 	NBT_HANDLER = NBTCodec
 					.builder(ProfileProperty.class)
 					.defaultConstructor(ProfileProperty::new)
-					.string("name", ProfileProperty::getName, ProfileProperty::setName)
-					.string("value", ProfileProperty::getValue, ProfileProperty::setValue)
-					.string("signature", ProfileProperty::getSignature, ProfileProperty::setSignature)
+					.codec("name", ProfileProperty::getName, ProfileProperty::setName, STRING)
+					.codec("value", ProfileProperty::getValue, ProfileProperty::setValue, STRING)
+					.codec("signature", ProfileProperty::getSignature, ProfileProperty::setSignature, STRING)
 					.build();
 	
 	private String name;

@@ -4,14 +4,14 @@ import java.util.List;
 
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.AnaloguePowerable;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 
 public class CoreAnaloguePowerable extends CoreBlockData implements AnaloguePowerable {
 	
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.POWER);
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, PropertyType.POWER);
 	}
 	
 	protected int power;
@@ -43,7 +43,7 @@ public class CoreAnaloguePowerable extends CoreBlockData implements AnaloguePowe
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

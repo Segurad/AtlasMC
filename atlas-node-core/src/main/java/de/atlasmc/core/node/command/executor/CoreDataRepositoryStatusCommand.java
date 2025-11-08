@@ -59,7 +59,7 @@ public class CoreDataRepositoryStatusCommand implements CommandExecutor {
 		if (!touched.isEmpty()) {
 			sender.sendMessage("Touched:");
 			for (RepositoryEntry entry : touched)
-				sender.sendMessage("- " + entry.getKey());
+				sender.sendMessage("- " + entry.getNamespacedKey().key());
 		}
 		Collection<String> untracked = status.untracked();
 		if (!untracked.isEmpty()) {

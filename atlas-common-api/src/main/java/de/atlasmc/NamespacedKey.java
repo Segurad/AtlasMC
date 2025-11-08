@@ -1,16 +1,48 @@
 package de.atlasmc;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
+import de.atlasmc.nbt.TagType;
+import de.atlasmc.nbt.codec.CodecTags;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.io.NBTReader;
+import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.util.NumberConversion;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
+import de.atlasmc.util.codec.CodecContext;
 
 public class NamespacedKey implements CharSequence {
 
+	public static final NBTCodec<NamespacedKey> NBT_CODEC = new NBTCodec<NamespacedKey>() {
+		
+		@Override
+		public Class<? extends NamespacedKey> getType() {
+			return NamespacedKey.class;
+		}
+		
+		@Override
+		public NamespacedKey deserialize(NamespacedKey value, NBTReader input, CodecContext context) throws IOException {
+			return input.readNamespacedKey();
+		}
+		
+		@Override
+		public boolean serialize(CharSequence key, NamespacedKey value, NBTWriter output, CodecContext context) throws IOException {
+			output.writeNamespacedKey(key, value);
+			return true;
+		}
+		
+		@Override
+		public List<TagType> getTags() {
+			return CodecTags.STRING;
+		}
+	};
+	
 	private static final Function<Namespaced, NamespacedKey> KEY_SUPPLIER = Namespaced::getNamespacedKey;
 	
 	/**
@@ -45,12 +77,12 @@ public class NamespacedKey implements CharSequence {
 	}
 	
 	@NotNull
-	public String getKey() {
+	public String key() {
 		return key;
 	}
 	
 	@NotNull
-	public String getNamespace() {
+	public String namespace() {
 		return namespace;
 	}
 	
@@ -60,7 +92,7 @@ public class NamespacedKey implements CharSequence {
 	}
 	
 	/**
-	 * Returns whether or no {@link #getKey()} can be represented as valid {@link NamespacedKey}
+	 * Returns whether or no {@link #key()} can be represented as valid {@link NamespacedKey}
 	 * @return true if child key
 	 */
 	public boolean hasChildKey() {
@@ -68,7 +100,7 @@ public class NamespacedKey implements CharSequence {
 	}
 	
 	/**
-	 * Returns the {@link NamespacedKey} representation of {@link #getKey()} or null if not valid NamespacedKey
+	 * Returns the {@link NamespacedKey} representation of {@link #key()} or null if not valid NamespacedKey
 	 * @return child or null
 	 */
 	@Nullable
@@ -81,33 +113,6 @@ public class NamespacedKey implements CharSequence {
 		@SuppressWarnings("unchecked")
 		public static <T extends Namespaced> Function<T, NamespacedKey> getKeySupplier() {
 			return (Function<T, NamespacedKey>) KEY_SUPPLIER;
-		}
-		
-		/**
-		 * Returns the key
-		 * @return key
-		 */
-		@NotNull
-		public default String getKey() {
-			return getNamespacedKey().getKey();
-		}
-		
-		/**
-		 * Returns the namespace
-		 * @return namespace
-		 */
-		@NotNull
-		public default String getNamespace() {
-			return getNamespacedKey().getNamespace();
-		}
-		
-		/**
-		 * Returns the {@link NamespacedKey} as String
-		 * @return namespaced key
-		 */
-		@NotNull
-		public default String getNamespacedKeyRaw() {
-			return getNamespacedKey().toString();
 		}
 		
 		/**

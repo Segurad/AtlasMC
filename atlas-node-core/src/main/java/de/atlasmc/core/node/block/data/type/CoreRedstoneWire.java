@@ -7,19 +7,19 @@ import java.util.Set;
 import de.atlasmc.core.node.block.data.CoreAnaloguePowerable;
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.RedstoneWire;
 
 public class CoreRedstoneWire extends CoreAnaloguePowerable implements RedstoneWire {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
 		PROPERTIES = merge(CoreAnaloguePowerable.PROPERTIES, 
-				BlockDataProperty.CON_EAST,
-				BlockDataProperty.CON_NORTH,
-				BlockDataProperty.CON_SOUTH,
-				BlockDataProperty.CON_WEST);
+				PropertyType.CON_EAST,
+				PropertyType.CON_NORTH,
+				PropertyType.CON_SOUTH,
+				PropertyType.CON_WEST);
 	}
 	
 	private Connection[] connections;
@@ -70,7 +70,7 @@ public class CoreRedstoneWire extends CoreAnaloguePowerable implements RedstoneW
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

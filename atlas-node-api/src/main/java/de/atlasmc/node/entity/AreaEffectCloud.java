@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.UUID;
 
 import de.atlasmc.Color;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.node.potion.PotionData;
 import de.atlasmc.node.potion.PotionEffect;
 import de.atlasmc.node.world.particle.Particle;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.registry.Registries;
 
 public interface AreaEffectCloud extends Entity {
 	
@@ -16,13 +18,13 @@ public interface AreaEffectCloud extends Entity {
 					.builder(AreaEffectCloud.class)
 					.include(Entity.NBT_CODEC)
 					.intField("Age", AreaEffectCloud::getAge, AreaEffectCloud::setAge, 0)
-					.color("Color", AreaEffectCloud::getColor, AreaEffectCloud::setColor, null)
+					.codec("Color", AreaEffectCloud::getColor, AreaEffectCloud::setColor, Color.NBT_CODEC)
 					.intField("Duration", AreaEffectCloud::getMaxDuration, AreaEffectCloud::setMaxDuration, 0)
 					.intField("DurationOnUse", AreaEffectCloud::getDurationOnUse, AreaEffectCloud::setDurationOnUse, 0)
-					.typeList("potion_contents", AreaEffectCloud::hasPotionEffects, AreaEffectCloud::getPotionEffects, PotionEffect.NBT_CODEC)
-					.uuid("Owner", AreaEffectCloud::getOwner, AreaEffectCloud::setOwner)
-					.typeCompoundField("custom_particle", AreaEffectCloud::getParticle, AreaEffectCloud::setParticle, Particle.NBT_HANDLER)
-					.registryValue("Potion", AreaEffectCloud::getPotionData, AreaEffectCloud::setPotionData, PotionData.REGISTRY_KEY)
+					.codecList("potion_contents", AreaEffectCloud::hasPotionEffects, AreaEffectCloud::getPotionEffects, PotionEffect.NBT_CODEC)
+					.codec("Owner", AreaEffectCloud::getOwner, AreaEffectCloud::setOwner, NBTCodecs.UUID_CODEC)
+					.codec("custom_particle", AreaEffectCloud::getParticle, AreaEffectCloud::setParticle, Particle.NBT_HANDLER)
+					.codec("Potion", AreaEffectCloud::getPotionData, AreaEffectCloud::setPotionData, Registries.registryValueNBTCodec(PotionData.REGISTRY_KEY))
 					.floatField("potion_duration_scale", AreaEffectCloud::getPotionDurationScale, AreaEffectCloud::setPotionDurationScale, 1)
 					.floatField("Radius", AreaEffectCloud::getRadius, AreaEffectCloud::setRadius, 0.5f)
 					.floatField("RadiusOnUse", AreaEffectCloud::getRadiusOnUse, AreaEffectCloud::setRadiusOnUse, 0)

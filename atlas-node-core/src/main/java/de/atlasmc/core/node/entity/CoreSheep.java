@@ -6,7 +6,7 @@ import de.atlasmc.node.entity.Sheep;
 import de.atlasmc.node.entity.metadata.type.MetaData;
 import de.atlasmc.node.entity.metadata.type.MetaDataField;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
-import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.enums.EnumUtil;
 
 public class CoreSheep extends CoreAgeableMob implements Sheep {
 

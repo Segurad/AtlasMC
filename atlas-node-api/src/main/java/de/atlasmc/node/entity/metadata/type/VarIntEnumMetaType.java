@@ -2,8 +2,8 @@ package de.atlasmc.node.entity.metadata.type;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.io.PacketUtil;
-import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.codec.CodecContext;
+import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class VarIntEnumMetaType<T extends Enum<T> & IDHolder> extends MetaDataType<T> {

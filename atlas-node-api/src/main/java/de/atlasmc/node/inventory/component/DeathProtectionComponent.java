@@ -3,8 +3,8 @@ package de.atlasmc.node.inventory.component;
 import java.util.List;
 
 import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.component.effect.ComponentEffect;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface DeathProtectionComponent extends ItemComponent {
 	
@@ -12,7 +12,7 @@ public interface DeathProtectionComponent extends ItemComponent {
 	NBT_CODEC = NBTCodec
 					.builder(DeathProtectionComponent.class)
 					.beginComponent(ComponentType.DEATH_PROTECTION.getNamespacedKey())
-					.typeList("death_effects", DeathProtectionComponent::hasEffects, DeathProtectionComponent::getEffects, ComponentEffect.NBT_HANDLER)
+					.codecList("death_effects", DeathProtectionComponent::hasEffects, DeathProtectionComponent::getEffects, ComponentEffect.NBT_HANDLER)
 					.endComponent()
 					.build();
 	

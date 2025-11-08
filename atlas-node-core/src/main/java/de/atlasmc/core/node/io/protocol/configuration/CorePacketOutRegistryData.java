@@ -13,12 +13,12 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
+import de.atlasmc.nbt.io.NBTNIOReader;
+import de.atlasmc.nbt.io.NBTNIOWriter;
+import de.atlasmc.nbt.io.NBTWriter;
+import de.atlasmc.nbt.tag.NBT;
 import de.atlasmc.node.io.protocol.configuration.ClientboundRegistryData;
 import de.atlasmc.node.io.protocol.configuration.ClientboundRegistryData.RegistryEntry;
-import de.atlasmc.util.nbt.io.NBTNIOReader;
-import de.atlasmc.util.nbt.io.NBTNIOWriter;
-import de.atlasmc.util.nbt.io.NBTWriter;
-import de.atlasmc.util.nbt.tag.NBT;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutRegistryData implements PacketIO<ClientboundRegistryData> {

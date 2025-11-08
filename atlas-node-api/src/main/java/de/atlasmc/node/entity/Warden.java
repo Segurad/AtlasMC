@@ -3,9 +3,10 @@ package de.atlasmc.node.entity;
 import java.util.List;
 import java.util.UUID;
 
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.util.annotation.NotNull;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Warden extends Monster {
 	
@@ -14,7 +15,7 @@ public interface Warden extends Monster {
 					.builder(Warden.class)
 					.include(Monster.NBT_HANDLER)
 					.beginComponent("anger")
-					.typeList("suspects", Warden::hasSuspects, Warden::getSuspects, Suspect.NBT_HANDLER)
+					.codecList("suspects", Warden::hasSuspects, Warden::getSuspects, Suspect.NBT_HANDLER)
 					.intField("angerLevel", Warden::getAnger, Warden::setAnger, 0) // non standard
 					.endComponent()
 					.build();
@@ -40,7 +41,7 @@ public interface Warden extends Monster {
 						.builder(Suspect.class)
 						.defaultConstructor(Suspect::new)
 						.intField("anger", Suspect::getAnger, Suspect::setAnger)
-						.uuid("uuid", Suspect::getUUID, Suspect::setUUID)
+						.codec("uuid", Suspect::getUUID, Suspect::setUUID, NBTCodecs.UUID_CODEC)
 						.build();
 		
 		private UUID uuid;

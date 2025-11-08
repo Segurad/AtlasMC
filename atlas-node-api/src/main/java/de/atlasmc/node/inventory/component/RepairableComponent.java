@@ -1,8 +1,8 @@
 package de.atlasmc.node.inventory.component;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.ItemType;
 import de.atlasmc.util.dataset.DataSet;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface RepairableComponent extends ItemComponent {
 	
@@ -11,7 +11,7 @@ public interface RepairableComponent extends ItemComponent {
 					.builder(RepairableComponent.class)
 					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.REPAIRABLE.getNamespacedKey())
-					.dataSetField("items", RepairableComponent::getItems, RepairableComponent::setItems, ItemType.REGISTRY_KEY)
+					.codec("items", RepairableComponent::getItems, RepairableComponent::setItems, DataSet.nbtCodec(ItemType.REGISTRY_KEY))
 					.endComponent()
 					.build();
 	

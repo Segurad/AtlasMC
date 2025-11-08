@@ -4,14 +4,14 @@ import java.util.List;
 
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.Waterlogged;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 
 public class CoreWaterlogged extends CoreBlockData implements Waterlogged {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.WATERLOGGED);
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, PropertyType.WATERLOGGED);
 	}
 	
 	protected boolean waterlogged;
@@ -36,7 +36,7 @@ public class CoreWaterlogged extends CoreBlockData implements Waterlogged {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 	

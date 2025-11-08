@@ -5,6 +5,7 @@ import java.util.UUID;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.Messageable;
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.network.player.AtlasPlayer;
 import de.atlasmc.node.Gamemode;
 import de.atlasmc.node.NodePlayer;
@@ -24,7 +25,7 @@ import de.atlasmc.permission.Permissible;
 import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.util.annotation.UnsafeAPI;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumUtil;
 
 public interface Player extends HumanEntity, Permissible, Messageable, SoundListener {
 	
@@ -32,8 +33,8 @@ public interface Player extends HumanEntity, Permissible, Messageable, SoundList
 	NBT_HANDLER = NBTCodec
 					.builder(Player.class)
 					.include(HumanEntity.NBT_HANDLER)
-					.enumIntField("playerGameType", Player::getGamemode, Player::setGamemode, Gamemode.class, Gamemode.SURVIVAL)
-					.enumIntField("previousPlayerGameType", Player::getPreviousGamemode, Player::setPreviousGamemode, Gamemode.class, null)
+					.codec("playerGameType", Player::getGamemode, Player::setGamemode, EnumUtil.enumIntNBTCodec(Gamemode.class), Gamemode.SURVIVAL)
+					.codec("previousPlayerGameType", Player::getPreviousGamemode, Player::setPreviousGamemode, EnumUtil.enumIntNBTCodec(Gamemode.class), null)
 					.intField("XpLevel", Player::getLevel, Player::setLevel, 0)
 					.floatField("XpP", Player::getExpBar, Player::setExpBar, 0)
 					.intField("XpTotal", Player::getExp, Player::setExp, 0)

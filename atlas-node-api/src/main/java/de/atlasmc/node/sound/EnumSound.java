@@ -2,7 +2,9 @@ package de.atlasmc.node.sound;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.EnumName;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumName;
+import de.atlasmc.util.enums.EnumUtil;
 
 public enum EnumSound implements Sound, IDHolder, EnumName {
 
@@ -1734,6 +1736,8 @@ public enum EnumSound implements Sound, IDHolder, EnumName {
 	EVENT_MOB_EFFECT_TRIAL_OMEN("minecraft:event.mob_effect.trial_omen"),
 	EVENT_MOB_EFFECT_RAID_OMEN("minecraft:event.mob_effect.raid_omen"),
 	ITEM_SADDLE_UNEQUIP("minecraft:item.saddle.unequip");
+	
+	public static final NBTCodec<EnumSound> NBT_CODEC = EnumUtil.enumStringNBTCodec(EnumSound.class);
 	
 	private final NamespacedKey name;
 	

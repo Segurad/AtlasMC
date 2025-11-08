@@ -13,9 +13,9 @@ import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutMapData;
 import de.atlasmc.node.map.MapIcon;
 import de.atlasmc.node.map.MapIcon.IconType;
-import de.atlasmc.util.EnumUtil;
-import de.atlasmc.util.EnumUtil.EnumData;
 import de.atlasmc.util.codec.CodecContext;
+import de.atlasmc.util.enums.EnumUtil;
+import de.atlasmc.util.enums.EnumUtil.EnumData;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutMapData implements PacketIO<PacketOutMapData> {

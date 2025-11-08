@@ -1,8 +1,9 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumUtil;
 
 public interface ItemFrame extends Hanging {
 	
@@ -12,9 +13,9 @@ public interface ItemFrame extends Hanging {
 					.include(Hanging.NBT_HANDLER)
 					.boolField("Fixed", ItemFrame::isFixed, ItemFrame::setFixed)
 					.boolField("Invisible", ItemFrame::isInvisible, ItemFrame::setInvisible)
-					.typeCompoundField("Item", ItemFrame::getItem, ItemFrame::setItemStack, ItemStack.NBT_HANDLER)
+					.codec("Item", ItemFrame::getItem, ItemFrame::setItemStack, ItemStack.NBT_HANDLER)
 					.floatField("ItemDropChance", ItemFrame::getItemDropChance, ItemFrame::setItemDropChance, 1)
-					.enumByteField("ItemRotation", ItemFrame::getRotation, ItemFrame::setRotation, Rotation.class, Rotation.NONE)
+					.codec("ItemRotation", ItemFrame::getRotation, ItemFrame::setRotation, EnumUtil.enumByteNBTCodec(Rotation.class), Rotation.NONE)
 					.build();
 
 	ItemStack getItem();

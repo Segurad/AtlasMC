@@ -3,7 +3,8 @@ package de.atlasmc.node.inventory.component;
 import org.joml.Vector3i;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 
 public interface LodestoneTrackerComponent extends ItemComponent {
 	
@@ -13,8 +14,8 @@ public interface LodestoneTrackerComponent extends ItemComponent {
 					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.LODESTONE_TRACKER.getNamespacedKey())
 					.beginComponent("target", LodestoneTrackerComponent::hasTarget)
-					.vector3i("pos", LodestoneTrackerComponent::getLocation, LodestoneTrackerComponent::setLocation)
-					.namespacedKey("dimension", LodestoneTrackerComponent::getDimension, LodestoneTrackerComponent::setDimension)
+					.codec("pos", LodestoneTrackerComponent::getLocation, LodestoneTrackerComponent::setLocation, NBTCodecs.VECTOR_3I)
+					.codec("dimension", LodestoneTrackerComponent::getDimension, LodestoneTrackerComponent::setDimension, NamespacedKey.NBT_CODEC)
 					.endComponent()
 					.boolField("tracked", LodestoneTrackerComponent::isTracked, LodestoneTrackerComponent::setTracked, true)
 					.endComponent()

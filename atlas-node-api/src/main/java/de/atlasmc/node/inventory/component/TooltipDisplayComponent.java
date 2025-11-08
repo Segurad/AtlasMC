@@ -2,7 +2,8 @@ package de.atlasmc.node.inventory.component;
 
 import java.util.List;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.registry.Registries;
 
 public interface TooltipDisplayComponent extends ItemComponent {
 	
@@ -12,7 +13,7 @@ public interface TooltipDisplayComponent extends ItemComponent {
 					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.TOOLTIP_DISPLAY.getNamespacedKey())
 					.boolField("hide_tooltip", TooltipDisplayComponent::isHideTooltip, TooltipDisplayComponent::setHideTooltip, false)
-					.registryValueList("hidden_components", TooltipDisplayComponent::hasHiddenComponents, TooltipDisplayComponent::getHiddenComponents, ComponentType.REGISTRY_KEY)
+					.codecList("hidden_components", TooltipDisplayComponent::hasHiddenComponents, TooltipDisplayComponent::getHiddenComponents, Registries.registryValueNBTCodec(ComponentType.REGISTRY_KEY))
 					.endComponent()
 					.build();
 	

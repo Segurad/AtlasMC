@@ -1,7 +1,8 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumUtil;
 
 public interface Parrot extends Tameable {
 	
@@ -9,7 +10,7 @@ public interface Parrot extends Tameable {
 	NBT_HANDLER = NBTCodec
 					.builder(Parrot.class)
 					.include(Tameable.NBT_HANDLER)
-					.enumIntField("Variant", Parrot::getParrotType, Parrot::setParrotType, Type.class, Type.RED_BLUE)
+					.codec("Variant", Parrot::getParrotType, Parrot::setParrotType, EnumUtil.enumIntNBTCodec(Type.class), Type.RED_BLUE)
 					.build();
 	
 	Type getParrotType();

@@ -6,8 +6,8 @@ import de.atlasmc.node.inventory.InventoryHolder;
 import de.atlasmc.node.inventory.InventoryType;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.inventory.LoomInventory;
-import de.atlasmc.util.EnumUtil;
 import de.atlasmc.node.inventory.InventoryType.SlotType;
+import de.atlasmc.util.enums.EnumUtil;
 
 public class CoreLoomInventory extends CoreInventory implements LoomInventory {
 

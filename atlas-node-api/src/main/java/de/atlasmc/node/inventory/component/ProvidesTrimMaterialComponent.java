@@ -1,7 +1,8 @@
 package de.atlasmc.node.inventory.component;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.component.TrimComponent.TrimMaterial;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.registry.Registries;
 
 public interface ProvidesTrimMaterialComponent extends ItemComponent {
 	
@@ -9,7 +10,7 @@ public interface ProvidesTrimMaterialComponent extends ItemComponent {
 	NBT_HANDLER = NBTCodec
 					.builder(ProvidesTrimMaterialComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.registryValue(ComponentType.PROVIDES_TRIM_MATERIAL.getNamespacedKey(), ProvidesTrimMaterialComponent::getMaterial, ProvidesTrimMaterialComponent::setMaterial, TrimMaterial.REGISTRY_KEY)
+					.codec(ComponentType.PROVIDES_TRIM_MATERIAL.getNamespacedKey(), ProvidesTrimMaterialComponent::getMaterial, ProvidesTrimMaterialComponent::setMaterial, Registries.registryValueNBTCodec(TrimMaterial.REGISTRY_KEY))
 					.build();
 	
 	TrimMaterial getMaterial();

@@ -4,20 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.util.CloneException;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class PlayerProfile implements NBTSerializable, Cloneable {
 	
 	public static final NBTCodec<PlayerProfile>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(PlayerProfile.class)
 					.defaultConstructor(PlayerProfile::new)
-					.string("name", PlayerProfile::getName, PlayerProfile::setName)
-					.uuid("id", PlayerProfile::getUUID, PlayerProfile::setUUID)
-					.typeList("properties", PlayerProfile::hasProperties, PlayerProfile::getProperties, ProfileProperty.NBT_HANDLER)
+					.codec("name", PlayerProfile::getName, PlayerProfile::setName, NBTCodecs.STRING)
+					.codec("id", PlayerProfile::getUUID, PlayerProfile::setUUID, NBTCodecs.UUID_CODEC)
+					.codecList("properties", PlayerProfile::hasProperties, PlayerProfile::getProperties, ProfileProperty.NBT_HANDLER)
 					.build();
+	
+	public static final NBTCodec<PlayerProfile> NAME_NBT_CODEC = NBTCodec.stringToObject(PlayerProfile.class, PlayerProfile::new, PlayerProfile::getName);
 	
 	private String name;
 	private UUID uuid;
@@ -79,7 +82,7 @@ public class PlayerProfile implements NBTSerializable, Cloneable {
 	
 	@Override
 	public NBTCodec<? extends PlayerProfile> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

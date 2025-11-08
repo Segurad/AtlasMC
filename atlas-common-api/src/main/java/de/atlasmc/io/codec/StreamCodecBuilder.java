@@ -1,11 +1,14 @@
 package de.atlasmc.io.codec;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
+import java.util.function.ObjDoubleConsumer;
 import java.util.function.ObjIntConsumer;
 import java.util.function.Supplier;
+import java.util.function.ToDoubleFunction;
 import java.util.function.ToIntFunction;
 
 import de.atlasmc.IDHolder;
@@ -13,16 +16,22 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.io.codec.constructor.Constructor;
 import de.atlasmc.io.codec.constructor.RegistryVarIntConstructor;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.registry.ProtocolRegistryValue;
 import de.atlasmc.registry.RegistryKey;
+import de.atlasmc.tag.TagKey;
 import de.atlasmc.util.Builder;
 import de.atlasmc.util.dataset.DataSet;
 import de.atlasmc.util.function.ObjBooleanConsumer;
 import de.atlasmc.util.function.ObjFloatConsumer;
 import de.atlasmc.util.function.ToBooleanFunction;
 import de.atlasmc.util.function.ToFloatFunction;
-import de.atlasmc.util.nbt.codec.NBTCodec;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
+import de.atlasmc.util.map.Multimap;
+import it.unimi.dsi.fastutil.booleans.BooleanList;
+import it.unimi.dsi.fastutil.floats.FloatList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 
 public class StreamCodecBuilder<T> implements Builder<StreamCodec<T>>{
 
@@ -73,11 +82,24 @@ public class StreamCodecBuilder<T> implements Builder<StreamCodec<T>>{
 		return this;
 	}
 	
+	public StreamCodecBuilder<T> staticBooleanValue(boolean value) {
+		return this;
+	}
+	
 	public StreamCodecBuilder<T> namespacedKey(Function<T, NamespacedKey> get, BiConsumer<T, NamespacedKey> set) {
 		return this;
 	}
 	
+	public StreamCodecBuilder<T> stringValue(Function<T, String> get, BiConsumer<T, String> set) {
+		return this;
+	}
+	
 	public StreamCodecBuilder<T> floatValue(ToFloatFunction<T> get, ObjFloatConsumer<T> set) {
+		// add field
+		return this;
+	}
+	
+	public StreamCodecBuilder<T> doubleValue(ToDoubleFunction<T> get, ObjDoubleConsumer<T> set) {
 		// add field
 		return this;
 	}
@@ -93,6 +115,22 @@ public class StreamCodecBuilder<T> implements Builder<StreamCodec<T>>{
 	}
 	
 	public <V extends StreamSerializable> StreamCodecBuilder<T> listCodec(ToBooleanFunction<T> has, Function<T, List<V>> get, StreamCodec<V> codec) {
+		return this;
+	}
+	
+	public StreamCodecBuilder<T> floatList(ToBooleanFunction<T> has, Function<T, FloatList> get) {
+		return this;
+	}
+	
+	public StreamCodecBuilder<T> intList(ToBooleanFunction<T> has, Function<T, IntList> get) {
+		return this;
+	}
+	
+	public StreamCodecBuilder<T> booleanList(ToBooleanFunction<T> has, Function<T, BooleanList> get) {
+		return this;
+	}
+	
+	public StreamCodecBuilder<T> stringList(ToBooleanFunction<T> has, Function<T, List<String>> get) {
 		return this;
 	}
 	
@@ -113,6 +151,24 @@ public class StreamCodecBuilder<T> implements Builder<StreamCodec<T>>{
 	}
 	
 	public <V extends Namespaced> StreamCodecBuilder<T> dataSet(Function<T, DataSet<V>> get, BiConsumer<T, DataSet<V>> set, RegistryKey<V> registry) {
+		return this;
+	}
+	
+	public <V extends Namespaced> StreamCodecBuilder<T> tagKey(Function<T, TagKey<V>> get, BiConsumer<T, TagKey<V>> set) {
+		return this;
+	}
+	
+	public <K extends IDHolder, V> StreamCodecBuilder<T> multimapType2TypeList(ToBooleanFunction<T> has, Function<T, Multimap<K, V>> get, IntFunction<K> keySupplier, StreamCodec<V> codec) {
+		
+		return this;
+	}
+	
+	public <K extends IDHolder> StreamCodecBuilder<T> mapRegistryValueToInt(ToBooleanFunction<T> has, Function<T, Object2IntMap<K>> get, RegistryKey<K> registry) {
+		
+		return this;
+	}
+	
+	public <K, V> StreamCodecBuilder<T> mapType2TypeList(ToBooleanFunction<T> has, Function<T, Map<K, V>> get, StreamCodec<V> codec, Function<V, K> getKey) {
 		return this;
 	}
 

@@ -1,6 +1,6 @@
 package de.atlasmc.util.predicate;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 import it.unimi.dsi.fastutil.ints.IntPredicate;
 
 public class IntRange implements IntPredicate {

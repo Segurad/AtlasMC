@@ -4,15 +4,15 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreDirectional4Faces;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.Flower;
 
 public class CoreFlower extends CoreDirectional4Faces implements Flower {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, BlockDataProperty.FLOWER_AMOUNT);
+		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, PropertyType.FLOWER_AMOUNT);
 	}
 	
 	private int flowerAmount;
@@ -50,7 +50,7 @@ public class CoreFlower extends CoreDirectional4Faces implements Flower {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

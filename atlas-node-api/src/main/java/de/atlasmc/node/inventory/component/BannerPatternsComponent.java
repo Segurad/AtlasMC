@@ -2,16 +2,24 @@ package de.atlasmc.node.inventory.component;
 
 import java.util.List;
 
+import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.block.tile.Banner.Pattern;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface BannerPatternsComponent extends ItemComponent {
 	
 	public static final NBTCodec<BannerPatternsComponent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(BannerPatternsComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.typeList(ComponentType.BANNER_PATTERNS.getNamespacedKey(), BannerPatternsComponent::hasPatterns, BannerPatternsComponent::getPatterns, Pattern.NBT_HANDLER)
+					.codecList(ComponentType.BANNER_PATTERNS.getNamespacedKey(), BannerPatternsComponent::hasPatterns, BannerPatternsComponent::getPatterns, Pattern.NBT_CODEC)
+					.build();
+	
+	public static final StreamCodec<BannerPatternsComponent>
+	STREAM_CODEC = StreamCodec
+					.builder(BannerPatternsComponent.class)
+					.include(ItemComponent.STREAM_CODEC)
+					.listCodec(BannerPatternsComponent::hasPatterns, BannerPatternsComponent::getPatterns, Pattern.STREAM_CODEC)
 					.build();
 	
 	BannerPatternsComponent clone();
@@ -34,7 +42,12 @@ public interface BannerPatternsComponent extends ItemComponent {
 	
 	@Override
 	default NBTCodec<? extends BannerPatternsComponent> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
+	}
+	
+	@Override
+	default StreamCodec<? extends BannerPatternsComponent> getStreamCodec() {
+		return STREAM_CODEC;
 	}
 
 }

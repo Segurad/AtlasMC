@@ -1,7 +1,7 @@
 package de.atlasmc.node.entity.spawncondition;
 
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 
 public class SpawnCondition implements NBTSerializable {
 	
@@ -10,7 +10,7 @@ public class SpawnCondition implements NBTSerializable {
 					.builder(SpawnCondition.class)
 					.defaultConstructor(SpawnCondition::new)
 					.intField("priority", SpawnCondition::getPriority, SpawnCondition::setPriority)
-					.typeCompoundField("condition", SpawnCondition::getCondition, SpawnCondition::setCondition, Condition.NBT_HANDLER)
+					.codec("condition", SpawnCondition::getCondition, SpawnCondition::setCondition, Condition.NBT_HANDLER)
 					.build();
 
 	private int priority;

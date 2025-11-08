@@ -1,8 +1,8 @@
 package de.atlasmc.node.entity;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.inventory.component.FireworksComponent;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface FireworkRocket extends Projectile {
 	
@@ -10,7 +10,7 @@ public interface FireworkRocket extends Projectile {
 	NBT_HANDLER = NBTCodec
 					.builder(FireworkRocket.class)
 					.include(Projectile.NBT_HANDLER)
-					.typeCompoundField("FireworkItem", FireworkRocket::getFirework, FireworkRocket::setFirework, ItemStack.NBT_HANDLER)
+					.codec("FireworkItem", FireworkRocket::getFirework, FireworkRocket::setFirework, ItemStack.NBT_HANDLER)
 					.intField("Life", FireworkRocket::getLifeTime, FireworkRocket::setLifeTime, 0)
 					.intField("LifeTime", FireworkRocket::getMaxLifeTime, FireworkRocket::setMaxLifeTime)
 					.boolField("ShotAtAngle", FireworkRocket::isShotAtAngle, FireworkRocket::setShotAtAngle)

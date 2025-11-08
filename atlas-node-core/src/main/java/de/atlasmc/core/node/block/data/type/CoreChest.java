@@ -4,15 +4,15 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreWaterloggedDirectional4Faces;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.Chest;
 
 public class CoreChest extends CoreWaterloggedDirectional4Faces implements Chest {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreWaterloggedDirectional4Faces.PROPERTIES, BlockDataProperty.TYPE);
+		PROPERTIES = merge(CoreWaterloggedDirectional4Faces.PROPERTIES, PropertyType.TYPE);
 	}
 	
 	private Type chestType;
@@ -43,7 +43,7 @@ public class CoreChest extends CoreWaterloggedDirectional4Faces implements Chest
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

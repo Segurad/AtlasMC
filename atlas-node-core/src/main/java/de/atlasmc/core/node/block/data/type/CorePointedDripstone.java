@@ -4,17 +4,17 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreWaterlogged;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.PointedDripstone;
 
 public class CorePointedDripstone extends CoreWaterlogged implements PointedDripstone {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
 		PROPERTIES = merge(CoreWaterlogged.PROPERTIES, 
-				BlockDataProperty.THICKNESS,
-				BlockDataProperty.VERTICAL_DIRECTION);
+				PropertyType.THICKNESS,
+				PropertyType.VERTICAL_DIRECTION);
 	}
 	
 	private Thickness thickness;
@@ -56,7 +56,7 @@ public class CorePointedDripstone extends CoreWaterlogged implements PointedDrip
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 	

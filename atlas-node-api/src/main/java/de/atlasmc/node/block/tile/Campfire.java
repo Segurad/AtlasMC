@@ -1,7 +1,8 @@
 package de.atlasmc.node.block.tile;
 
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Campfire extends TileEntity {
 	
@@ -9,9 +10,9 @@ public interface Campfire extends TileEntity {
 	NBT_HANDLER = NBTCodec
 					.builder(Campfire.class)
 					.include(TileEntity.NBT_HANDLER)
-					.typeArraySearchByteIndexField("Items", "slot", null, Campfire::getItems, ItemStack.NBT_HANDLER)
-					.intArray("CookingTimes", Campfire::getCookingTimes, Campfire::setCookingTimes)
-					.intArray("CookingTotalTimes", Campfire::getTotalCookingTimes, Campfire::setTotalCookingTimes)
+					.codecArraySearchByteIndexField("Items", "slot", null, Campfire::getItems, ItemStack.NBT_HANDLER)
+					.codec("CookingTimes", Campfire::getCookingTimes, Campfire::setCookingTimes, NBTCodecs.INT_ARRAY)
+					.codec("CookingTotalTimes", Campfire::getTotalCookingTimes, Campfire::setTotalCookingTimes, NBTCodecs.INT_ARRAY)
 					.build();
 	
 	ItemStack[] getItems();

@@ -2,20 +2,21 @@ package de.atlasmc.node.entity;
 
 import java.util.UUID;
 
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.node.event.entity.EntityGrowEvent;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface AgeableMob extends Mob {
 	
 	public static final NBTCodec<AgeableMob>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(AgeableMob.class)
 					.include(LivingEntity.NBT_HANDLER)
 					.intField("Age", AgeableMob::getAge, AgeableMob::setAge, 0)
 					.boolField("IsBaby", AgeableMob::isBaby, AgeableMob::setBaby, false) // non standard
 					.intField("ForcedAge", AgeableMob::getForcedAge, AgeableMob::setForcedAge, 0)
 					.intField("InLove", AgeableMob::getInLove, AgeableMob::setInLove, 0)
-					.uuid("LoveCause", AgeableMob::getLoveCause, AgeableMob::setLoveCause)
+					.codec("LoveCause", AgeableMob::getLoveCause, AgeableMob::setLoveCause, NBTCodecs.UUID_CODEC)
 					.build();
 	
 	boolean isBaby();
@@ -63,7 +64,7 @@ public interface AgeableMob extends Mob {
 	
 	@Override
 	default NBTCodec<? extends AgeableMob> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

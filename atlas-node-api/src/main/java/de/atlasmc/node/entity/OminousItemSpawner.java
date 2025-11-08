@@ -1,7 +1,7 @@
 package de.atlasmc.node.entity;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface OminousItemSpawner extends Entity {
 	
@@ -9,7 +9,7 @@ public interface OminousItemSpawner extends Entity {
 	NBT_HANDLER = NBTCodec
 					.builder(OminousItemSpawner.class)
 					.include(Entity.NBT_CODEC)
-					.typeCompoundField("item", OminousItemSpawner::getItem, OminousItemSpawner::setItem, ItemStack.NBT_HANDLER)
+					.codec("item", OminousItemSpawner::getItem, OminousItemSpawner::setItem, ItemStack.NBT_HANDLER)
 					.longField("spawn_item_after_ticks", OminousItemSpawner::getSpawnTicks, OminousItemSpawner::setSpawnTicks)
 					.build();
 	

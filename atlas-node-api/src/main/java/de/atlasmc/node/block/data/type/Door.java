@@ -4,7 +4,7 @@ import de.atlasmc.node.block.data.Bisected;
 import de.atlasmc.node.block.data.Directional;
 import de.atlasmc.node.block.data.Openable;
 import de.atlasmc.node.block.data.Powerable;
-import de.atlasmc.util.EnumName;
+import de.atlasmc.util.enums.EnumName;
 
 public interface Door extends Bisected, Directional, Openable, Powerable {
 	

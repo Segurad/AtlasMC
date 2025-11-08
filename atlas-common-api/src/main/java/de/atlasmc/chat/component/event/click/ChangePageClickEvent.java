@@ -1,6 +1,6 @@
 package de.atlasmc.chat.component.event.click;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 
 public final class ChangePageClickEvent implements ClickEvent {
 	

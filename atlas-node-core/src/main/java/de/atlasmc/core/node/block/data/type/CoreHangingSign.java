@@ -3,15 +3,15 @@ package de.atlasmc.core.node.block.data.type;
 import java.util.List;
 
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.HangingSign;
 
 public class CoreHangingSign extends CoreSign implements HangingSign {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreSign.PROPERTIES, BlockDataProperty.ATTACHED);
+		PROPERTIES = merge(CoreSign.PROPERTIES, PropertyType.ATTACHED);
 	}
 	
 	private boolean attached;
@@ -36,7 +36,7 @@ public class CoreHangingSign extends CoreSign implements HangingSign {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

@@ -10,16 +10,16 @@ public class SegmentAmountProperty extends AbstractIntProperty {
 	}
 
 	@Override
-	public void set(BlockData data, Integer value) {
+	public void setInt(BlockData data, int value) {
 		if (data instanceof LeafLitter segmentable)
 			segmentable.setSegmentAmount(value);
 	}
 
 	@Override
-	public Integer get(BlockData data) {
+	public int getInt(BlockData data) {
 		if (data instanceof LeafLitter segmentable)
 			return segmentable.getSegmentAmount();
-		return null;
+		return 0;
 	}
 
 	@Override

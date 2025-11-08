@@ -8,7 +8,7 @@ import de.atlasmc.IDHolder;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.inventory.ItemType;
-import de.atlasmc.util.EnumName;
+import de.atlasmc.util.enums.EnumName;
 
 public enum DyeColor implements IDHolder, EnumName {
 	

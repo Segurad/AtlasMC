@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.Color;
-import de.atlasmc.node.sound.EnumSound;
-import de.atlasmc.node.sound.ResourceSound;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.sound.Sound;
-import de.atlasmc.util.EnumName;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumName;
+import de.atlasmc.util.enums.EnumUtil;
 
 public class BiomeEffects implements NBTSerializable {
 
@@ -19,27 +18,27 @@ public class BiomeEffects implements NBTSerializable {
 	NBT_HANDLER = NBTCodec
 					.builder(BiomeEffects.class)
 					.defaultConstructor(BiomeEffects::new)
-					.color("fog_color", BiomeEffects::getFogColor, BiomeEffects::setFogColor, null)
-					.color("sky_color", BiomeEffects::getSkyColor, BiomeEffects::setSkyColor, null)
-					.color("water_color", BiomeEffects::getWaterColor, BiomeEffects::setWaterColor, null)
-					.color("water_fog_color", BiomeEffects::getWaterFogColor, BiomeEffects::setWaterFogColor, null)
-					.color("foliage_color", BiomeEffects::getFoliageColor, BiomeEffects::setFoliageColor, null)
-					.color("dry_foliage_color", BiomeEffects::getDryFoliageColor, BiomeEffects::setDryFoliageColor, null)
-					.color("grass_color", BiomeEffects::getGrassColor, BiomeEffects::setGrassColor, null)
-					.enumStringField("grass_color_modifier", BiomeEffects::getGrassColorModifier, BiomeEffects::setGrassColorModifier, GrassColorModifier.class, GrassColorModifier.NONE)
+					.codec("fog_color", BiomeEffects::getFogColor, BiomeEffects::setFogColor, Color.NBT_CODEC)
+					.codec("sky_color", BiomeEffects::getSkyColor, BiomeEffects::setSkyColor, Color.NBT_CODEC)
+					.codec("water_color", BiomeEffects::getWaterColor, BiomeEffects::setWaterColor, Color.NBT_CODEC)
+					.codec("water_fog_color", BiomeEffects::getWaterFogColor, BiomeEffects::setWaterFogColor, Color.NBT_CODEC)
+					.codec("foliage_color", BiomeEffects::getFoliageColor, BiomeEffects::setFoliageColor, Color.NBT_CODEC)
+					.codec("dry_foliage_color", BiomeEffects::getDryFoliageColor, BiomeEffects::setDryFoliageColor, Color.NBT_CODEC)
+					.codec("grass_color", BiomeEffects::getGrassColor, BiomeEffects::setGrassColor, Color.NBT_CODEC)
+					.codec("grass_color_modifier", BiomeEffects::getGrassColorModifier, BiomeEffects::setGrassColorModifier, EnumUtil.enumStringNBTCodec(GrassColorModifier.class), GrassColorModifier.NONE)
 					//.beginComponent("particle")
-					.enumStringOrType("ambient_sound", BiomeEffects::getAmbientSound, BiomeEffects::setAmbientSound, EnumSound.class, ResourceSound.NBT_CODEC)
+					.codec("ambient_sound", BiomeEffects::getAmbientSound, BiomeEffects::setAmbientSound, Sound.NBT_CODEC)
 					.beginComponent("mood_sound", BiomeEffects::hasMoodSound)
-					.enumStringOrType("sound", BiomeEffects::getMoodSound, BiomeEffects::setMoodSound, EnumSound.class, ResourceSound.NBT_CODEC)
+					.codec("sound", BiomeEffects::getMoodSound, BiomeEffects::setMoodSound, Sound.NBT_CODEC)
 					.intField("tick_delay", BiomeEffects::getMoodTickDelay, BiomeEffects::setMoodTickDelay, 0)
 					.intField("block_search_extent", BiomeEffects::getMoodBlockSearchExtent, BiomeEffects::setMoodBlockSearchExtent, 0)
 					.doubleField("offset", BiomeEffects::getMoodOffset, BiomeEffects::setMoodOffset, 0)
 					.endComponent()
 					.beginComponent("additions_sound", BiomeEffects::hasAdditionsSound)
-					.enumStringOrType("sound", BiomeEffects::getAdditionsSound, BiomeEffects::setAdditionsSound, EnumSound.class, ResourceSound.NBT_CODEC)
+					.codec("sound", BiomeEffects::getAdditionsSound, BiomeEffects::setAdditionsSound, Sound.NBT_CODEC)
 					.doubleField("tick_chance", BiomeEffects::getAddtionsTickChance, BiomeEffects::setAddtionsTickChance)
 					.endComponent()
-					.typeList("music", BiomeEffects::hasMusic, BiomeEffects::getMusic, BiomeMusic.NBT_HANDLER)
+					.codecList("music", BiomeEffects::hasMusic, BiomeEffects::getMusic, BiomeMusic.NBT_HANDLER)
 					.build();
 	
 	private Color fogColor;

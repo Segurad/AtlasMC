@@ -17,8 +17,8 @@ public class CoreLoadPluginsTaskFactory implements AtlasThreadTaskFactory {
 	@SuppressWarnings("unchecked")
 	@Override
 	public AtlasThreadTask<StartupContext> createTask(ConfigurationSection config) {
-		return (context, tick) -> {
-			Log log = Atlas.getLogger();
+		return (context, _) -> {
+			Log log = context.getLogger();
 			log.info("Loading core modules...");
 			File tmpCoremodulDir = new File(Atlas.getWorkdir(), "tmp/modules/");
 			tmpCoremodulDir.mkdirs();

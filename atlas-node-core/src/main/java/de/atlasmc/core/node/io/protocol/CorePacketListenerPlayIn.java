@@ -659,7 +659,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			con.setSelectedTrade(packet.selectedSlot);
 			HandlerList.callEvent(new SelectTradeEvent(player.getOpenInventory(), packet.selectedSlot, oldID));
 		});
-		initHandler(PacketInSetBeaconEffect.class, (listener, packet) -> { // 0x24
+		initHandler(PacketInSetBeaconEffect.class, (con, packet) -> { // 0x24
 			// int primaryID = packet.getPrimaryEffect();
 			// int secondaryID = packet.getSecondaryEffect();
 			// PotionEffect primary = PotionEffectType.createByPotionID(primaryID); TODO research for ids

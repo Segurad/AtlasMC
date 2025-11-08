@@ -4,19 +4,19 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreDirectional4Faces;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.TrapDoor;
 
 public class CoreTrapDoor extends CoreDirectional4Faces implements TrapDoor {
 	
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
 		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, 
-				BlockDataProperty.WATERLOGGED,
-				BlockDataProperty.HALF,
-				BlockDataProperty.OPEN,
-				BlockDataProperty.POWERED);
+				PropertyType.WATERLOGGED,
+				PropertyType.HALF,
+				PropertyType.OPEN,
+				PropertyType.POWERED);
 	}
 	
 	private Half half;
@@ -89,7 +89,7 @@ public class CoreTrapDoor extends CoreDirectional4Faces implements TrapDoor {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

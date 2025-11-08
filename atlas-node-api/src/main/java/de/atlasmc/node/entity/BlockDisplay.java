@@ -1,8 +1,8 @@
 package de.atlasmc.node.entity;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.BlockData;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface BlockDisplay extends Display {
 	
@@ -10,7 +10,7 @@ public interface BlockDisplay extends Display {
 	NBT_HANDLER = NBTCodec
 					.builder(BlockDisplay.class)
 					.include(Display.NBT_HANDLER)
-					.typeCompoundField("block_state", BlockDisplay::getBlockData, BlockDisplay::setBlockData, BlockData.NBT_HANDLER)
+					.codec("block_state", BlockDisplay::getBlockData, BlockDisplay::setBlockData, BlockData.NBT_HANDLER)
 					.build();
 	
 	BlockData getBlockData();

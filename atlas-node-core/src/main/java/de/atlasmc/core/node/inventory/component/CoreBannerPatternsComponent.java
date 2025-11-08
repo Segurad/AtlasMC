@@ -1,27 +1,12 @@
 package de.atlasmc.core.node.inventory.component;
 
-import static de.atlasmc.io.PacketUtil.readIdentifier;
-import static de.atlasmc.io.PacketUtil.readString;
-import static de.atlasmc.io.PacketUtil.readVarInt;
-import static de.atlasmc.io.PacketUtil.writeIdentifier;
-import static de.atlasmc.io.PacketUtil.writeString;
-import static de.atlasmc.io.PacketUtil.writeVarInt;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.NamespacedKey;
-import de.atlasmc.node.DyeColor;
-import de.atlasmc.node.block.tile.Banner.EnumPatternType;
 import de.atlasmc.node.block.tile.Banner.Pattern;
-import de.atlasmc.node.block.tile.Banner.PatternType;
-import de.atlasmc.node.block.tile.Banner.ResourcePatternType;
 import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.BannerPatternsComponent;
 import de.atlasmc.node.inventory.component.ComponentType;
-import de.atlasmc.util.EnumUtil;
-import de.atlasmc.util.EnumUtil.EnumData;
-import io.netty.buffer.ByteBuf;
 
 public class CoreBannerPatternsComponent extends AbstractItemComponent implements BannerPatternsComponent {
 	
@@ -90,53 +75,6 @@ public class CoreBannerPatternsComponent extends AbstractItemComponent implement
 			clone.patterns = new ArrayList<>(patterns);
 		}
 		return clone;
-	}
-	
-	@Override
-	public void read(ByteBuf buf) {
-		final int count = readVarInt(buf);
-		if (count == 0) {
-			return;
-		}
-		List<Pattern> patterns = getPatterns();
-		patterns.clear();
-		final EnumData<EnumPatternType> patternType = EnumUtil.getData(EnumPatternType.class);
-		final EnumData<DyeColor> dyeColor = EnumUtil.getData(DyeColor.class);
-		for (int i = 0; i < count; i++) {
-			final int typeID = readVarInt(buf);
-			PatternType type;
-			if (typeID > 0) {
-				type = patternType.getByID(typeID-1);
-			} else {
-				NamespacedKey key = readIdentifier(buf);
-				String translation = readString(buf);
-				type = new ResourcePatternType(key, translation);
-			}
-			DyeColor color = dyeColor.getByID(readVarInt(buf));
-			patterns.add(new Pattern(color, type));
-		}
-	}
-	
-	@Override
-	public void write(ByteBuf buf) {
-		if (patterns == null || patterns.isEmpty()) {
-			writeVarInt(0, buf);
-			return;
-		}
-		final int size = patterns.size();
-		writeVarInt(size, buf);
-		for (int i = 0; i < size; i++) {
-			Pattern pattern = patterns.get(i);
-			PatternType type = pattern.getType();
-			if (type instanceof EnumPatternType enumType) {
-				writeVarInt(enumType.getID() + 1, buf);
-			} else if (type instanceof ResourcePatternType resource){
-				writeVarInt(0, buf);
-				writeIdentifier(resource.getAssetID(), buf);
-				writeString(resource.getTranslationKey(), buf);
-			}
-			writeVarInt(pattern.getColor().getID(), buf);
-		}
 	}
 
 }

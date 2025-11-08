@@ -1,6 +1,6 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 
 public interface MinecartFurnace extends AbstractMinecart {
 	

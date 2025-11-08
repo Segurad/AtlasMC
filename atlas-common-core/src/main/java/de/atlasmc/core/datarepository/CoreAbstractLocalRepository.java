@@ -121,7 +121,7 @@ public abstract class CoreAbstractLocalRepository extends CoreAbstractRepository
 	
 	@Override
 	public RepositoryNamespace getNamespace(NamespacedKey key) {
-		return namespaces.get(key.getKey());
+		return namespaces.get(key.key());
 	}
 
 	@Override
@@ -157,7 +157,7 @@ public abstract class CoreAbstractLocalRepository extends CoreAbstractRepository
 	}
 	
 	protected CoreLocalRepositoryEntry loadEntry(NamespacedKey key) throws IOException {
-		CoreLocalNamespace namespace = namespaces.get(key.getNamespace());
+		CoreLocalNamespace namespace = namespaces.get(key.namespace());
 		if (namespace == null)
 			throw new IllegalArgumentException("Repository does not support the given namespace: " + key.toString());
 		ConfigurationSection rawEntry = namespace.loadEntry(key);
@@ -181,7 +181,7 @@ public abstract class CoreAbstractLocalRepository extends CoreAbstractRepository
 	
 	protected boolean copyEntry(CoreLocalRepositoryEntry entry, File destination, boolean override) throws IOException {
 		FileUtils.ensureDir(destination);
-		CoreLocalNamespace namespace = namespaces.get(entry.getNamespace());
+		CoreLocalNamespace namespace = namespaces.get(entry.getNamespacedKey().namespace());
 		Path nsPath = namespace.getPath();
 		Path destPath = destination.toPath();
 		for (EntryFile file : entry.getFiles()) {
@@ -198,11 +198,11 @@ public abstract class CoreAbstractLocalRepository extends CoreAbstractRepository
 	}
 
 	protected Future<Boolean> delete(CoreLocalRepositoryEntry entry) {
-		CoreLocalNamespace ns = namespaces.get(entry.getNamespace());
+		CoreLocalNamespace ns = namespaces.get(entry.getNamespacedKey().namespace());
 		if (ns == null)
 			return CompleteFuture.of(false);
 		try {
-			if (ns.delete(entry.getKey())) {
+			if (ns.delete(entry.getNamespacedKey().key())) {
 				WeakReference<CoreLocalRepositoryEntry> ref = entryCache.remove(entry.getNamespacedKey());
 				if (ref != null)
 					ref.clear();
@@ -215,14 +215,14 @@ public abstract class CoreAbstractLocalRepository extends CoreAbstractRepository
 	}
 
 	protected boolean isTouched(CoreLocalRepositoryEntry entry, boolean shallow) throws IOException {
-		CoreLocalNamespace ns = namespaces.get(entry.getNamespace());
+		CoreLocalNamespace ns = namespaces.get(entry.getNamespacedKey().namespace());
 		if (ns == null)
 			return false;
 		return ns.isTouched(entry, shallow);
 	}
 
 	protected Future<RepositoryEntryUpdate> update(CoreLocalRepositoryEntry entry) {
-		CoreLocalNamespace ns = namespaces.get(entry.getNamespace());
+		CoreLocalNamespace ns = namespaces.get(entry.getNamespacedKey().namespace());
 		if (ns == null)
 			return CompleteFuture.getNullFuture();
 		return ns.update(entry, readonly);

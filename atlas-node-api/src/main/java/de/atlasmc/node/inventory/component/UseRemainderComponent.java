@@ -1,7 +1,7 @@
 package de.atlasmc.node.inventory.component;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface UseRemainderComponent extends ItemComponent {
 	
@@ -9,7 +9,7 @@ public interface UseRemainderComponent extends ItemComponent {
 	NBT_HANDLER = NBTCodec
 					.builder(UseRemainderComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.typeCompoundField(ComponentType.USE_REMAINDER.getNamespacedKey(), UseRemainderComponent::getItem, UseRemainderComponent::setItem, ItemStack.NBT_HANDLER)
+					.codec(ComponentType.USE_REMAINDER.getNamespacedKey(), UseRemainderComponent::getItem, UseRemainderComponent::setItem, ItemStack.NBT_HANDLER)
 					.build();
 	
 	ItemStack getItem();

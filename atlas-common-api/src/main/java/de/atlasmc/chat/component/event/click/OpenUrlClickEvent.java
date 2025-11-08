@@ -1,6 +1,7 @@
 package de.atlasmc.chat.component.event.click;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 
 public final class OpenUrlClickEvent implements ClickEvent {
 	
@@ -8,7 +9,7 @@ public final class OpenUrlClickEvent implements ClickEvent {
 	NBT_HANDLER = NBTCodec
 					.builder(OpenUrlClickEvent.class)
 					.include(ClickEvent.NBT_HANDLER)
-					.string("url", OpenUrlClickEvent::getURL, OpenUrlClickEvent::setURL)
+					.codec("url", OpenUrlClickEvent::getURL, OpenUrlClickEvent::setURL, NBTCodecs.STRING)
 					.build();
 	
 	private String url;

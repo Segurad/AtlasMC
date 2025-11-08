@@ -1,7 +1,7 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.Color;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 
 public interface MapColorComponent extends ItemComponent {
 
@@ -9,7 +9,7 @@ public interface MapColorComponent extends ItemComponent {
 	NBT_HANDLER = NBTCodec
 					.builder(MapColorComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.color(ComponentType.MAP_COLOR.getNamespacedKey(), MapColorComponent::getColor, MapColorComponent::setColor, null)
+					.codec(ComponentType.MAP_COLOR.getNamespacedKey(), MapColorComponent::getColor, MapColorComponent::setColor, Color.NBT_CODEC)
 					.build();
 	
 	Color getColor();

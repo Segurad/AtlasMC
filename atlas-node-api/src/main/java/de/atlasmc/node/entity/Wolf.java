@@ -1,6 +1,8 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.DyeColor;
 import de.atlasmc.registry.ProtocolRegistry;
 import de.atlasmc.registry.ProtocolRegistryValueBase;
@@ -8,9 +10,8 @@ import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.registry.RegistryKey;
+import de.atlasmc.util.enums.EnumUtil;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Wolf extends Tameable, AngerableMob {
 	
@@ -18,9 +19,9 @@ public interface Wolf extends Tameable, AngerableMob {
 	NBT_HANDLER = NBTCodec
 					.builder(Wolf.class)
 					.include(Tameable.NBT_HANDLER)
-					.include(AngerableMob.NBT_HANDLER)
-					.enumByteField("CollarColor", Wolf::getCollarColor, Wolf::setCollarColor, DyeColor.class, DyeColor.RED)
-					.registryValue("variant", Wolf::getVariant, Wolf::setVariant, WolfVariant.REGISTRY_KEY)
+					.include(AngerableMob.NBT_CODEC)
+					.codec("CollarColor", Wolf::getCollarColor, Wolf::setCollarColor, EnumUtil.enumByteNBTCodec(DyeColor.class), DyeColor.RED)
+					.codec("variant", Wolf::getVariant, Wolf::setVariant, Registries.registryValueNBTCodec(WolfVariant.REGISTRY_KEY))
 					// sound_variant
 					.build();
 	
@@ -51,9 +52,9 @@ public interface Wolf extends Tameable, AngerableMob {
 						.builder(WolfVariant.class)
 						.defaultConstructor(WolfVariant::new)
 						.beginComponent("assets")
-						.namespacedKey("angry", WolfVariant::getAngryTexture, WolfVariant::setAngryTexture)
-						.namespacedKey("wild", WolfVariant::getWildTexture, WolfVariant::setWildTexture)
-						.namespacedKey("tame", WolfVariant::getTameTexture, WolfVariant::setTameTexture)
+						.codec("angry", WolfVariant::getAngryTexture, WolfVariant::setAngryTexture, NamespacedKey.NBT_CODEC)
+						.codec("wild", WolfVariant::getWildTexture, WolfVariant::setWildTexture, NamespacedKey.NBT_CODEC)
+						.codec("tame", WolfVariant::getTameTexture, WolfVariant::setTameTexture, NamespacedKey.NBT_CODEC)
 						.endComponent()
 						.build();
 		

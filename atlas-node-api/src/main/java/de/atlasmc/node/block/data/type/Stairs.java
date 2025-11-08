@@ -4,7 +4,7 @@ import de.atlasmc.IDHolder;
 import de.atlasmc.node.block.data.Bisected;
 import de.atlasmc.node.block.data.Directional;
 import de.atlasmc.node.block.data.Waterlogged;
-import de.atlasmc.util.EnumName;
+import de.atlasmc.util.enums.EnumName;
 
 public interface Stairs extends Bisected, Directional, Waterlogged {
 	

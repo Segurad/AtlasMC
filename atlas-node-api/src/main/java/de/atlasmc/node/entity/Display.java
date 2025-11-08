@@ -7,9 +7,11 @@ import org.joml.Vector3f;
 
 import de.atlasmc.Color;
 import de.atlasmc.IDHolder;
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.nbt.codec.NBTSerializable;
+import de.atlasmc.util.enums.EnumName;
+import de.atlasmc.util.enums.EnumUtil;
 
 public interface Display extends Entity {
 	
@@ -17,9 +19,9 @@ public interface Display extends Entity {
 	NBT_HANDLER = NBTCodec
 					.builder(Display.class)
 					.include(Entity.NBT_CODEC)
-					.enumStringField("billboard", Display::getBillboard, Display::setBillboard, Billboard.class, Billboard.FIXED)
-					.typeCompoundField("brightness", Display::getBrightness, Display::setBrightness, Brightness.NBT_HANDLER)
-					.color("glow_color_override", Display::getGlowColorOverride, Display::setGlowColorOverride, null)
+					.codec("billboard", Display::getBillboard, Display::setBillboard, EnumUtil.enumStringNBTCodec(Billboard.class), Billboard.FIXED)
+					.codec("brightness", Display::getBrightness, Display::setBrightness, Brightness.NBT_HANDLER)
+					.codec("glow_color_override", Display::getGlowColorOverride, Display::setGlowColorOverride, Color.NBT_CODEC)
 					.floatField("height", Display::getDisplayHeight, Display::setDisplayHeight, 0)
 					.floatField("width", Display::getDisplayWidth, Display::setDisplayWidth, 0)
 					.intField("interpolation_duration", Display::getTransformationInterpolationDuration, Display::setTransformationInterpolationDuration, 0)
@@ -28,7 +30,7 @@ public interface Display extends Entity {
 					.floatField("shadow_radius", Display::getShadowRadius, Display::setShadowRadius, 0)
 					.floatField("shadow_strength", Display::getShadowStrength, Display::setShadowStrength, 0)
 					.floatField("view_range", Display::getViewRange, Display::setViewRange, 1)
-					.typeCompoundField("transformation", Display::getTransformation, Display::setTransformation, Transformation.NBT_HANDLER)
+					.codec("transformation", Display::getTransformation, Display::setTransformation, Transformation.NBT_HANDLER)
 					.build();
 	
 	Brightness getBrightness();
@@ -93,10 +95,10 @@ public interface Display extends Entity {
 		public static final NBTCodec<Transformation>
 		NBT_HANDLER = NBTCodec
 						.builder(Transformation.class)
-						.quaternionf("right_rotation", Transformation::getRotationRight, Transformation::setRotationRight)
-						.vector3f("scale", Transformation::getScale, Transformation::setScale)
-						.quaternionf("left_rotation", Transformation::getRotationLeft, Transformation::setRotationLeft)
-						.vector3f("translation", Transformation::getTranslation, Transformation::setTranslation)
+						.codec("right_rotation", Transformation::getRotationRight, Transformation::setRotationRight, NBTCodecs.QUATERNION_F)
+						.codec("scale", Transformation::getScale, Transformation::setScale, NBTCodecs.VECTOR_3F)
+						.codec("left_rotation", Transformation::getRotationLeft, Transformation::setRotationLeft, NBTCodecs.QUATERNION_F)
+						.codec("translation", Transformation::getTranslation, Transformation::setTranslation, NBTCodecs.VECTOR_3F)
 						.build();
 		
 		private final Vector3f scale;

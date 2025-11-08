@@ -1,6 +1,7 @@
 package de.atlasmc.chat.component;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 
 public class ScoreComponent extends AbstractBaseComponent<ScoreComponent> {
 
@@ -9,8 +10,8 @@ public class ScoreComponent extends AbstractBaseComponent<ScoreComponent> {
 					.builder(ScoreComponent.class)
 					.include(AbstractBaseComponent.NBT_CODEC)
 					.beginComponent("score")
-					.string("name", ScoreComponent::getName, ScoreComponent::setName)
-					.string("objective", ScoreComponent::getObjective, ScoreComponent::setObjective)
+					.codec("name", ScoreComponent::getName, ScoreComponent::setName, NBTCodecs.STRING)
+					.codec("objective", ScoreComponent::getObjective, ScoreComponent::setObjective, NBTCodecs.STRING)
 					.endComponent()
 					.build();
 	

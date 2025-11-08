@@ -1,16 +1,17 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumUtil;
 
 public interface Rabbit extends Animal {
 	
 	public static final NBTCodec<Rabbit>
 	NBT_HANDLER = NBTCodec
 					.builder(Rabbit.class)
-					.include(Animal.NBT_HANDLER)
+					.include(Animal.NBT_CODEC)
 					//.intField("MoreCarrotTicks", null, null)
-					.enumIntField("RabbitType", Rabbit::getRabbitType, Rabbit::setRabbitType, Type.class, Type.BROWN)
+					.codec("RabbitType", Rabbit::getRabbitType, Rabbit::setRabbitType, EnumUtil.enumIntNBTCodec(Type.class), Type.BROWN)
 					.build();
 	
 	Type getRabbitType();

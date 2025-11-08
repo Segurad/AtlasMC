@@ -10,7 +10,7 @@ import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.io.protocol.play.PacketOutParticle;
 import de.atlasmc.node.world.particle.ParticleType;
-import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutParticle implements PacketIO<PacketOutParticle> {

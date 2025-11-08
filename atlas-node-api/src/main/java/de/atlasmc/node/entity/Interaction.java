@@ -2,8 +2,9 @@ package de.atlasmc.node.entity;
 
 import java.util.UUID;
 
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.nbt.codec.NBTSerializable;
 
 public interface Interaction extends Entity {
 	
@@ -14,8 +15,8 @@ public interface Interaction extends Entity {
 					.floatField("width", Interaction::getWidth, Interaction::setWidth, 1)
 					.floatField("height", Interaction::getHeight, Interaction::setHeight, 1)
 					.boolField("response", Interaction::isResponsive, Interaction::setResponsive, false)
-					.typeCompoundField("attack", Interaction::getLastAttack, Interaction::setLastAttack, PreviousInteraction.NBT_HANDLER)
-					.typeCompoundField("interaction", Interaction::getLastInteraction, Interaction::setLastInteraction, PreviousInteraction.NBT_HANDLER)
+					.codec("attack", Interaction::getLastAttack, Interaction::setLastAttack, PreviousInteraction.NBT_HANDLER)
+					.codec("interaction", Interaction::getLastInteraction, Interaction::setLastInteraction, PreviousInteraction.NBT_HANDLER)
 					.build();
 	
 	void setWidth(float width);
@@ -49,7 +50,7 @@ public interface Interaction extends Entity {
 		NBT_HANDLER = NBTCodec
 						.builder(PreviousInteraction.class)
 						.defaultConstructor(PreviousInteraction::new)
-						.uuid("player", PreviousInteraction::getUUID, PreviousInteraction::setUUID)
+						.codec("player", PreviousInteraction::getUUID, PreviousInteraction::setUUID, NBTCodecs.UUID_CODEC)
 						.longField("timestamp", PreviousInteraction::getTimestamp, PreviousInteraction::setTimestamp)
 						.build();
 		

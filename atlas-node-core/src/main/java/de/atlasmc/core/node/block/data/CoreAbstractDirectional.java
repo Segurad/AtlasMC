@@ -6,14 +6,14 @@ import java.util.Set;
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.Directional;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 
 public abstract class CoreAbstractDirectional extends CoreBlockData implements Directional {
 	
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.FACING);
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, PropertyType.FACING);
 	}
 	
 	private BlockFace face;
@@ -63,7 +63,7 @@ public abstract class CoreAbstractDirectional extends CoreBlockData implements D
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

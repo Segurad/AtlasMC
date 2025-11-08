@@ -4,15 +4,15 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreAxisOrientable;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.Chain;
 
 public class CoreChain extends CoreAxisOrientable implements Chain {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreAxisOrientable.PROPERTIES, BlockDataProperty.WATERLOGGED);
+		PROPERTIES = merge(CoreAxisOrientable.PROPERTIES, PropertyType.WATERLOGGED);
 	}
 	
 	private boolean waterlogged;
@@ -39,7 +39,7 @@ public class CoreChain extends CoreAxisOrientable implements Chain {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

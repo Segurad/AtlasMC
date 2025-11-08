@@ -1,6 +1,7 @@
 package de.atlasmc.chat.component.event.click;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 
 public abstract class AbstractCommandClickEvent implements ClickEvent {
 	
@@ -8,7 +9,7 @@ public abstract class AbstractCommandClickEvent implements ClickEvent {
 	NBT_HANDLER = NBTCodec
 					.builder(AbstractCommandClickEvent.class)
 					.include(ClickEvent.NBT_HANDLER)
-					.string("command", AbstractCommandClickEvent::getCommand, AbstractCommandClickEvent::setCommand)
+					.codec("command", AbstractCommandClickEvent::getCommand, AbstractCommandClickEvent::setCommand, NBTCodecs.STRING)
 					.build();
 	
 	private String command;

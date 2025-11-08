@@ -1,14 +1,14 @@
 package de.atlasmc.node.entity;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.PocketHolder;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface WanderingTrader extends Breedable, Merchant, PocketHolder {
 	
 	public static final NBTCodec<WanderingTrader>
 	NBT_HANDLER = NBTCodec
 					.builder(WanderingTrader.class)
-					.include(Breedable.NBT_HANDLER)
+					.include(Breedable.NBT_CODEC)
 					.include(Merchant.NBT_HANDLER)
 					.intField("DespawnDelay", WanderingTrader::getDespawnDelay, WanderingTrader::setDespawnDelay, 0)
 					// wander target

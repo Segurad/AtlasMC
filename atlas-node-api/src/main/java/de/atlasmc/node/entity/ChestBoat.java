@@ -1,8 +1,8 @@
 package de.atlasmc.node.entity;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.InventoryHolder;
 import de.atlasmc.node.inventory.loot.LootTableHolder;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ChestBoat extends Boat, InventoryHolder, LootTableHolder {
 	
@@ -11,7 +11,7 @@ public interface ChestBoat extends Boat, InventoryHolder, LootTableHolder {
 					.builder(ChestBoat.class)
 					.include(Boat.NBT_CODEC)
 					.include(InventoryHolder.NBT_HANDLER)
-					.include(LootTableHolder.NBT_HANDLER)
+					.include(LootTableHolder.NBT_CODEC)
 					.build();
 
 	@Override

@@ -1,7 +1,7 @@
 package de.atlasmc.node.block.data.type;
 
 import de.atlasmc.node.block.data.Directional;
-import de.atlasmc.util.EnumName;
+import de.atlasmc.util.enums.EnumName;
 
 public interface Bed extends Directional {
 	

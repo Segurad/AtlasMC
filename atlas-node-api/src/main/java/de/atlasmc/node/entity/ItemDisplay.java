@@ -1,9 +1,11 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.enums.EnumName;
+import de.atlasmc.util.enums.EnumUtil;
 
 public interface ItemDisplay extends Display {
 	
@@ -11,17 +13,18 @@ public interface ItemDisplay extends Display {
 	NBT_HANDLER = NBTCodec
 					.builder(ItemDisplay.class)
 					.include(Display.NBT_HANDLER)
-					.typeCompoundField("item", ItemDisplay::getItem, ItemDisplay::setItem, ItemStack.NBT_HANDLER)
-					.enumStringField("item_display", ItemDisplay::getRenderType, ItemDisplay::setRenderType, RenderType.class, RenderType.NONE)
+					.codec("item", ItemDisplay::getItem, ItemDisplay::setItem, ItemStack.NBT_HANDLER)
+					.codec("item_display", ItemDisplay::getRenderType, ItemDisplay::setRenderType, EnumUtil.enumStringNBTCodec(RenderType.class), RenderType.NONE)
 					.build();
 	
 	ItemStack getItem();
 	
 	void setItem(ItemStack item);
 	
+	@NotNull
 	RenderType getRenderType();
 	
-	void setRenderType(RenderType renderType);
+	void setRenderType(@NotNull RenderType renderType);
 	
 	@Override
 	default NBTCodec<? extends ItemDisplay> getNBTCodec() {

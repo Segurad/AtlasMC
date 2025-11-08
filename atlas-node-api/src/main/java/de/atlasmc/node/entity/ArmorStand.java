@@ -2,8 +2,9 @@ package de.atlasmc.node.entity;
 
 import org.joml.Vector3f;
 
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.util.annotation.UnsafeAPI;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ArmorStand extends LivingEntity {
 	
@@ -16,12 +17,12 @@ public interface ArmorStand extends LivingEntity {
 					.boolField("Marker", ArmorStand::isMarker, ArmorStand::setMarker, false)
 					.boolField("NoBasePlate", ArmorStand::hasNoBasePlate, ArmorStand::setNoBasePlate, false)
 					.beginComponent("Pose")
-					.vector3f("Body", ArmorStand::getBodyPoseUnsafe, ArmorStand::setBodyPose)
-					.vector3f("Head", ArmorStand::getHeadPoseUnsafe, ArmorStand::setHeadPose)
-					.vector3f("LeftArm", ArmorStand::getLeftArmPoseUnsafe, ArmorStand::setLeftArmPose)
-					.vector3f("LeftLeg", ArmorStand::getLeftLegPoseUnsafe, ArmorStand::setLeftLegPose)
-					.vector3f("RightArm", ArmorStand::getRightArmPoseUnsafe, ArmorStand::setRightArmPose)
-					.vector3f("RightLeg", ArmorStand::getRightLegPoseUnsafe, ArmorStand::setRightLegPose)
+					.codec("Body", ArmorStand::getBodyPoseUnsafe, ArmorStand::setBodyPose, NBTCodecs.VECTOR_3F)
+					.codec("Head", ArmorStand::getHeadPoseUnsafe, ArmorStand::setHeadPose, NBTCodecs.VECTOR_3F)
+					.codec("LeftArm", ArmorStand::getLeftArmPoseUnsafe, ArmorStand::setLeftArmPose, NBTCodecs.VECTOR_3F)
+					.codec("LeftLeg", ArmorStand::getLeftLegPoseUnsafe, ArmorStand::setLeftLegPose, NBTCodecs.VECTOR_3F)
+					.codec("RightArm", ArmorStand::getRightArmPoseUnsafe, ArmorStand::setRightArmPose, NBTCodecs.VECTOR_3F)
+					.codec("RightLeg", ArmorStand::getRightLegPoseUnsafe, ArmorStand::setRightLegPose, NBTCodecs.VECTOR_3F)
 					.endComponent()
 					.boolField("ShowArms", ArmorStand::hasArms, ArmorStand::setArms, false)
 					.boolField("Small", ArmorStand::isSmall, ArmorStand::setSmall, false)

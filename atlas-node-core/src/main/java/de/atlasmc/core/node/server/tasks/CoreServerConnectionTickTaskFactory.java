@@ -14,7 +14,7 @@ public class CoreServerConnectionTickTaskFactory implements AtlasThreadTaskFacto
 	@SuppressWarnings("unchecked")
 	@Override
 	public AtlasThreadTask<LocalServer> createTask(ConfigurationSection config) {
-		return (server, tick) -> {
+		return (server, _) -> {
 			final Log logger = server.getLogger();
 			for (NodePlayer player : server.getPlayers()) {
 				player.getConnection().handleSyncPackets(logger);

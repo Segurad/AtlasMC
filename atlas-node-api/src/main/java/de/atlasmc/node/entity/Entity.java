@@ -6,6 +6,9 @@ import java.util.UUID;
 import org.joml.Vector3d;
 
 import de.atlasmc.IDHolder;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.Nameable;
 import de.atlasmc.node.Location;
@@ -18,8 +21,6 @@ import de.atlasmc.tick.Tickable;
 import de.atlasmc.util.ViewerSet;
 import de.atlasmc.util.annotation.ThreadSafe;
 import de.atlasmc.util.annotation.UnsafeAPI;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitter {
 	
@@ -36,17 +37,17 @@ public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitte
 					.boolField("Glowing", Entity::isGlowing, Entity::setGlowing, false)
 					.boolField("HasVisualFire", Entity::hasVisualFire, Entity::setVisualFire, false)
 					.boolField("Invulnerable", Entity::isInvulnerable, Entity::setInvulnerable, false)
-					.vector3d("Motion", Entity::getVelocityUnsafe, Entity::setVelocity)
+					.codec("Motion", Entity::getVelocityUnsafe, Entity::setVelocity, NBTCodecs.VECTOR_3D)
 					.boolField("NoGravity", Entity::hasNoGravity, Entity::setNoGravity, false)
 					.boolField("OnGround", Entity::isOnGround, Entity::setOnGround, true)
 					// Passengers (not implemented because recursive)
 					.intField("PortalCooldown", Entity::getPortalCooldown, Entity::setPortalCooldown, 0)
-					.vector3d("Pos", Entity::getLocationUnsafe, Entity::setLocation)
+					.codec("Pos", Entity::getLocationUnsafe, Entity::setLocation, NBTCodecs.VECTOR_3D)
 					// Rotation
 					.boolField("Silent", Entity::isSilent, Entity::setSilent)
-					.stringListField("Tags", Entity::hasScoreboardTags, Entity::getScoreboardTags)
+					.codecList("Tags", Entity::hasScoreboardTags, Entity::getScoreboardTags, NBTCodecs.STRING)
 					.intField("TicksFrozen", Entity::getFreezeTicks, Entity::setFreezeTicks, 0)
-					.uuid("UUID", Entity::getUUID, Entity::setUUID)
+					.codec("UUID", Entity::getUUID, Entity::setUUID, NBTCodecs.UUID_CODEC)
 					.build();
 	
 	void addScoreboardTag(String tag);

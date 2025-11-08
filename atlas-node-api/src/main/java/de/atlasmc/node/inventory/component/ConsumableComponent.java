@@ -4,12 +4,13 @@ import java.util.List;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.component.effect.ComponentEffect;
 import de.atlasmc.node.sound.EnumSound;
 import de.atlasmc.node.sound.ResourceSound;
 import de.atlasmc.node.sound.Sound;
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumName;
+import de.atlasmc.util.enums.EnumUtil;
 
 public interface ConsumableComponent extends ItemComponent {
 	
@@ -18,10 +19,10 @@ public interface ConsumableComponent extends ItemComponent {
 					.builder(ConsumableComponent.class)
 					.beginComponent(ComponentType.CONSUMABLE.getNamespacedKey())
 					.floatField("consume_seconds", ConsumableComponent::getConsumeSeconds, ConsumableComponent::setConsumeSeconds, 1.6f)
-					.enumStringField("animation", ConsumableComponent::getAnimation, ConsumableComponent::setAnimation, Animation.class, Animation.EAT)
-					.enumStringOrType("sound", ConsumableComponent::getSound, ConsumableComponent::setSound, EnumSound.class, ResourceSound.NBT_CODEC, EnumSound.ENTITY_GENERIC_EAT)
+					.codec("animation", ConsumableComponent::getAnimation, ConsumableComponent::setAnimation, EnumUtil.enumStringNBTCodec(Animation.class), Animation.EAT)
+					.codec("sound", ConsumableComponent::getSound, ConsumableComponent::setSound, Sound.NBT_CODEC, EnumSound.ENTITY_GENERIC_EAT)
 					.boolField("has_consume_particles", ConsumableComponent::hasParticles, ConsumableComponent::setParticles)
-					.typeList("on_consume_effects", ConsumableComponent::hasEffects, ConsumableComponent::getEffects, ComponentEffect.NBT_HANDLER)
+					.codecList("on_consume_effects", ConsumableComponent::hasEffects, ConsumableComponent::getEffects, ComponentEffect.NBT_HANDLER)
 					.endComponent()
 					.build();
 	

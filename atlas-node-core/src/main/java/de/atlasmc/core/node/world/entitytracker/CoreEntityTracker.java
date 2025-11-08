@@ -29,11 +29,13 @@ public class CoreEntityTracker implements EntityTracker {
 	private final CoreTrackingTarget<Entity> targetAll;
 	private final Int2ObjectMap<Entity> entityByID;
 	private final Map<UUID, Entity> entityByUUID;
-	private CoreTrackedEntity<?>[] tickingEntities;
-	private int tickingEntitiesSize;
-	private boolean tickingEntitiesChanged;
-	private CoreTrackedEntity<?>[] persistentTickingEntities;
-	private int persistentTickingEntitiesSize;
+	
+	// ticking entities as double buffered implementation 
+	private CoreTrackedEntity<?>[] tickingEntities; // currently modified version of persistent ticking entities
+	private int tickingEntitiesSize; // number of entities in tickingEntitites
+	private boolean tickingEntitiesChanged; // if ticking entities has changed
+	private CoreTrackedEntity<?>[] persistentTickingEntities; // currently ticked entities
+	private int persistentTickingEntitiesSize; // entities in ticked entities
 
 	private int entityID;
 	

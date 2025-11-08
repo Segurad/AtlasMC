@@ -3,7 +3,7 @@ package de.atlasmc.node.block.data.property;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.atlasmc.util.EnumName;
+import de.atlasmc.util.enums.EnumName;
 
 abstract class AbstractMultiEnumProperty extends AbstractEnumProperty<Enum<?>> {
 	

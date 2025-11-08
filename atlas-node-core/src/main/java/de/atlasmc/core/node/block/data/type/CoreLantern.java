@@ -4,15 +4,15 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreWaterlogged;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.Lantern;
 
 public class CoreLantern extends CoreWaterlogged implements Lantern {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreWaterlogged.PROPERTIES, BlockDataProperty.HANGING);
+		PROPERTIES = merge(CoreWaterlogged.PROPERTIES, PropertyType.HANGING);
 	}
 	
 	protected boolean hanging;
@@ -38,7 +38,7 @@ public class CoreLantern extends CoreWaterlogged implements Lantern {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

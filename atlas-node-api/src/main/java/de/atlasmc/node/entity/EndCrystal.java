@@ -2,7 +2,8 @@ package de.atlasmc.node.entity;
 
 import org.joml.Vector3i;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 
 public interface EndCrystal extends Entity {
 	
@@ -10,7 +11,7 @@ public interface EndCrystal extends Entity {
 	NBT_HANDLER = NBTCodec
 					.builder(EndCrystal.class)
 					.include(Entity.NBT_CODEC)
-					.vector3i("beam_target", EndCrystal::getBeamTarget, EndCrystal::setBeamTarget)
+					.codec("beam_target", EndCrystal::getBeamTarget, EndCrystal::setBeamTarget, NBTCodecs.VECTOR_3I)
 					.boolField("ShowBottom", EndCrystal::getShowBottom, EndCrystal::setShowBottom, false)
 					.build();
 

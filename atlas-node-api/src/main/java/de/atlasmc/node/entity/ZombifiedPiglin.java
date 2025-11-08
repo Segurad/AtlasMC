@@ -1,6 +1,6 @@
 package de.atlasmc.node.entity;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 
 public interface ZombifiedPiglin extends Zombie, AngerableMob  {
 	
@@ -8,7 +8,7 @@ public interface ZombifiedPiglin extends Zombie, AngerableMob  {
 	NBT_HANDLER = NBTCodec
 					.builder(ZombifiedPiglin.class)
 					.include(Zombie.NBT_HANDLER)
-					.include(AngerableMob.NBT_HANDLER)
+					.include(AngerableMob.NBT_CODEC)
 					.build();
 	
 	@Override

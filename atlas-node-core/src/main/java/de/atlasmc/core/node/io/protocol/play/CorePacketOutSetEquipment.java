@@ -12,9 +12,9 @@ import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.inventory.EquipmentSlot;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.io.protocol.play.PacketOutSetEquipment;
-import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.Pair;
 import de.atlasmc.util.codec.CodecContext;
+import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutSetEquipment implements PacketIO<PacketOutSetEquipment> {
@@ -43,11 +43,11 @@ public class CorePacketOutSetEquipment implements PacketIO<PacketOutSetEquipment
 		final CodecContext context = handler.getCodecContext();
 		for (int i = 0; i < size; i++) {
 			Pair<EquipmentSlot, ItemStack> pair = slots.get(i);
-			int slot = pair.getValue1().getID();
+			int slot = pair.value1().getID();
 			if (i+1 < size) 
 				slot |= 0x80;
 			out.writeInt(slot);
-			ItemStack.STREAM_CODEC.serialize(pair.getValue2(), out, context);
+			ItemStack.STREAM_CODEC.serialize(pair.value2(), out, context);
 		}
 	}
 

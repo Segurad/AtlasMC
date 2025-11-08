@@ -2,11 +2,14 @@ package de.atlasmc.dialog;
 
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.chat.Chat;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.registry.Registries;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.registry.RegistryKey;
 
 public interface Dialog extends NBTSerializable, Namespaced {
+
+	static final RegistryKey<Dialog> REGISTRY_KEY = Registries.getRegistryKey(Dialog.class);
 	
 	static final NBTCodec<Dialog>
 	NBT_HANDLER = NBTCodec

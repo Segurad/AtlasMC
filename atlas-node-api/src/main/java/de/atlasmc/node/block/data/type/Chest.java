@@ -2,7 +2,7 @@ package de.atlasmc.node.block.data.type;
 
 import de.atlasmc.node.block.data.Directional;
 import de.atlasmc.node.block.data.Waterlogged;
-import de.atlasmc.util.EnumName;
+import de.atlasmc.util.enums.EnumName;
 
 public interface Chest extends Directional, Waterlogged {
 	

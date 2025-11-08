@@ -4,7 +4,7 @@ import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.SpellcasterIllager;
 import de.atlasmc.node.entity.metadata.type.MetaDataField;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
-import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.enums.EnumUtil;
 
 public class CoreSpellcasterIllager extends CoreRaider implements SpellcasterIllager {
 

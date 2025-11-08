@@ -3,6 +3,8 @@ package de.atlasmc.node.inventory.component;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.sound.EnumSound;
 import de.atlasmc.node.sound.ResourceSound;
 import de.atlasmc.node.sound.Sound;
@@ -11,8 +13,6 @@ import de.atlasmc.registry.ProtocolRegistryValueBase;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 import de.atlasmc.registry.RegistryKey;
 
 @RegistryHolder(key = "minecraft:instrument", target = Target.PROTOCOL)
@@ -24,8 +24,8 @@ public class Instrument extends ProtocolRegistryValueBase implements NBTSerializ
 	NBT_HANDLER =  NBTCodec
 					.builder(Instrument.class)
 					.defaultConstructor(Instrument::new)
-					.chat("description", Instrument::getDescription, Instrument::setDescription)
-					.enumStringOrType("sound_event", Instrument::getSound, Instrument::setSound, EnumSound.class, ResourceSound.NBT_CODEC)
+					.codec("description", Instrument::getDescription, Instrument::setDescription, Chat.NBT_CODEC)
+					.codec("sound_event", Instrument::getSound, Instrument::setSound, Sound.NBT_CODEC)
 					.floatField("use_duration", Instrument::getUseDuration, Instrument::setUseDuration, 0)
 					.floatField("range", Instrument::getRange, Instrument::setRange, 0)
 					.build();

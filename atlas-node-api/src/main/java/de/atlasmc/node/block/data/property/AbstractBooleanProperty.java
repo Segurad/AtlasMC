@@ -2,11 +2,11 @@ package de.atlasmc.node.block.data.property;
 
 import java.io.IOException;
 
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.nbt.TagType;
+import de.atlasmc.nbt.io.NBTReader;
+import de.atlasmc.nbt.io.NBTWriter;
 
-public abstract class AbstractBooleanProperty extends BlockDataProperty<Boolean> {
+public abstract class AbstractBooleanProperty extends PropertyType<Boolean> {
 
 	public AbstractBooleanProperty(String key) {
 		super(key);

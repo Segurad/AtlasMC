@@ -3,8 +3,8 @@ package de.atlasmc.chat;
 import java.io.IOException;
 
 import de.atlasmc.chat.component.ChatComponent;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
+import de.atlasmc.nbt.io.NBTReader;
+import de.atlasmc.nbt.io.NBTWriter;
 
 public interface ChatFactory {
 	

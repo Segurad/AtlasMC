@@ -3,7 +3,9 @@ package de.atlasmc.node.block;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
-import de.atlasmc.util.EnumName;
+
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumName;
 
 public enum BlockFace implements EnumName {
 	
@@ -53,6 +55,8 @@ public enum BlockFace implements EnumName {
 			SOUTH_EAST,
 			SOUTH_SOUTH_EAST
 	};
+	
+	public static NBTCodec<BlockFace> FACE_ID_NBT_CODEC = NBTCodec.byteToObject(BlockFace.class, BlockFace::getByFaceID, BlockFace::getFaceID);
 	
 	private final String name;
 	

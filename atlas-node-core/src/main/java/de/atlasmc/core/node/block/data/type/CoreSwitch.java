@@ -4,17 +4,17 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreDirectional4Faces;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.Switch;
 
 public class CoreSwitch extends CoreDirectional4Faces implements Switch {
 	
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
 		PROPERTIES = merge(CoreDirectional4Faces.PROPERTIES, 
-				BlockDataProperty.POWERED,
-				BlockDataProperty.FACE);
+				PropertyType.POWERED,
+				PropertyType.FACE);
 	}
 	
 	private AttachedFace face;
@@ -56,7 +56,7 @@ public class CoreSwitch extends CoreDirectional4Faces implements Switch {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

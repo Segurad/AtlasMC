@@ -12,9 +12,9 @@ import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.common.AbstractPacketServerLinks;
 import de.atlasmc.node.io.protocol.common.AbstractPacketServerLinks.Label;
 import de.atlasmc.node.io.protocol.common.AbstractPacketServerLinks.ServerLink;
-import de.atlasmc.util.EnumUtil;
-import de.atlasmc.util.EnumUtil.EnumData;
 import de.atlasmc.util.codec.CodecContext;
+import de.atlasmc.util.enums.EnumUtil;
+import de.atlasmc.util.enums.EnumUtil.EnumData;
 import io.netty.buffer.ByteBuf;
 
 public abstract class CoreAbstractPacketServerLinks<T extends AbstractPacketServerLinks> implements PacketIO<T> {

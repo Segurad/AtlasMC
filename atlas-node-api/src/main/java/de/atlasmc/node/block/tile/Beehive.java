@@ -4,10 +4,13 @@ import java.util.List;
 
 import org.joml.Vector3i;
 
+import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.io.codec.StreamSerializable;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.entity.Bee;
 import de.atlasmc.util.annotation.UnsafeAPI;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Beehive extends TileEntity {
 	
@@ -15,8 +18,8 @@ public interface Beehive extends TileEntity {
 	NBT_HANDLER = NBTCodec
 					.builder(Beehive.class)
 					.include(TileEntity.NBT_HANDLER)
-					.typeList("bee", Beehive::hasBees, Beehive::getBees, Occupant.NBT_HANDLER)
-					.vector3i("flower_pos", Beehive::getFlowerPosUnsafe, Beehive::setFlowerPos)
+					.codecList("bee", Beehive::hasBees, Beehive::getBees, Occupant.NBT_CODEC)
+					.codec("flower_pos", Beehive::getFlowerPosUnsafe, Beehive::setFlowerPos, NBTCodecs.VECTOR_3I)
 					.build();
 	
 	@UnsafeAPI
@@ -51,15 +54,24 @@ public interface Beehive extends TileEntity {
 		return NBT_HANDLER;
 	}
 	
-	public static class Occupant implements NBTSerializable {
+	public static class Occupant implements NBTSerializable, StreamSerializable {
 		
 		public static final NBTCodec<Occupant>
-		NBT_HANDLER = NBTCodec
+		NBT_CODEC = NBTCodec
 						.builder(Occupant.class)
 						.defaultConstructor(Occupant::new)
-						.typeCompoundField("entity_data", Occupant::getBee, Occupant::setBee, Bee.NBT_HANDLER)
+						.codec("entity_data", Occupant::getBee, Occupant::setBee, Bee.NBT_CODEC)
 						.intField("min_ticks_in_hive", Occupant::getMinTicksInHive, Occupant::setMinTicksInHive, 0)
 						.intField("ticks_in_hive", Occupant::getTicksInHive, Occupant::setTicksInHive, 0)
+						.build();
+		
+		public static final StreamCodec<Occupant>
+		STREAM_CODEC = StreamCodec
+						.builder(Occupant.class)
+						.defaultConstructor(Occupant::new)
+						.codec(Occupant::getBee, Occupant::setBee, Bee.NBT_CODEC)
+						.varInt(Occupant::getTicksInHive, Occupant::setTicksInHive)
+						.varInt(Occupant::getMinTicksInHive, Occupant::setMinTicksInHive)
 						.build();
 		
 		private Bee bee;
@@ -105,8 +117,13 @@ public interface Beehive extends TileEntity {
 		}
 		
 		@Override
-		public NBTCodec<? extends NBTSerializable> getNBTCodec() {
-			return NBT_HANDLER;
+		public NBTCodec<? extends Occupant> getNBTCodec() {
+			return NBT_CODEC;
+		}
+		
+		@Override
+		public StreamCodec<? extends Occupant> getStreamCodec() {
+			return STREAM_CODEC;
 		}
 		
 	}

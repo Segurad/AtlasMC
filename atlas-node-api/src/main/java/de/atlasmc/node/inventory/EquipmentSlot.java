@@ -1,7 +1,7 @@
 package de.atlasmc.node.inventory;
 
 import de.atlasmc.IDHolder;
-import de.atlasmc.util.EnumName;
+import de.atlasmc.util.enums.EnumName;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;

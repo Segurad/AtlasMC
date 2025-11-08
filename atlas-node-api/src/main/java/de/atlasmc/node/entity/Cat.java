@@ -1,9 +1,10 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.DyeColor;
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumName;
+import de.atlasmc.util.enums.EnumUtil;
 
 public interface Cat extends Tameable {
 	
@@ -11,8 +12,8 @@ public interface Cat extends Tameable {
 	NBT_HANDLER = NBTCodec
 					.builder(Cat.class)
 					.include(Tameable.NBT_HANDLER)
-					.enumByteField("CollarColor", Cat::getCollarColor, Cat::setCollarColor, DyeColor.class, DyeColor.RED)
-					.enumStringField("variant", Cat::getCatType, Cat::setCatType, Type.class, Type.BLACK)
+					.codec("CollarColor", Cat::getCollarColor, Cat::setCollarColor, EnumUtil.enumByteNBTCodec(DyeColor.class), DyeColor.RED)
+					.codec("variant", Cat::getCatType, Cat::setCatType, EnumUtil.enumStringNBTCodec(Type.class), Type.BLACK)
 					.build();
 	
 	Type getCatType();

@@ -2,8 +2,8 @@ package de.atlasmc.node.entity;
 
 import java.util.List;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.DyeColor;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface TropicalFish extends Fish {
 	

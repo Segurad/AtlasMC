@@ -10,16 +10,16 @@ class DustedProperty extends AbstractIntProperty {
 	}
 
 	@Override
-	public void set(BlockData data, Integer value) {
+	public void setInt(BlockData data, int value) {
 		if (data instanceof Brushable block)
 			block.setDusted(value);
 	}
 
 	@Override
-	public Integer get(BlockData data) {
+	public int getInt(BlockData data) {
 		if (data instanceof Brushable block)
 			return block.getDusted();
-		return null;
+		return 0;
 	}
 
 	@Override

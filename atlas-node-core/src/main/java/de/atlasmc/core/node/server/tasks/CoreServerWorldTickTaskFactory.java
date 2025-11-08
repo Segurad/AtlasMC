@@ -13,7 +13,7 @@ public class CoreServerWorldTickTaskFactory implements AtlasThreadTaskFactory {
 	@SuppressWarnings("unchecked")
 	@Override
 	public AtlasThreadTask<? extends LocalServer> createTask(ConfigurationSection config) {
-		return (server, tick) -> {
+		return (server, _) -> {
 			for (World world : server.getWorlds()) {
 				world.tick();
 			}

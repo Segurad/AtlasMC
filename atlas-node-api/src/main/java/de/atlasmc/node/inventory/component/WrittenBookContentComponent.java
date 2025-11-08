@@ -1,26 +1,27 @@
 package de.atlasmc.node.inventory.component;
 
-import java.util.List;
-
 import de.atlasmc.IDHolder;
 import de.atlasmc.chat.Chat;
+import de.atlasmc.chat.Filterable;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumUtil;
 
-public interface WrittenBookContentComponent extends ItemComponent {
+public interface WrittenBookContentComponent extends BookContentComponent<Chat> {
 	
 	public static final NBTCodec<WrittenBookContentComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(WrittenBookContentComponent.class)
-					.include(ItemComponent.NBT_CODEC)
+					.include(BookContentComponent.NBT_CODEC)
 					.beginComponent(ComponentType.WRITTEN_BOOK_CONTENT.getNamespacedKey())
-					.chatList("pages", WrittenBookContentComponent::hasPages, WrittenBookContentComponent::getPages)
+					.codecList("pages", WrittenBookContentComponent::hasPages, WrittenBookContentComponent::getPages, Filterable.filterableCodec(Chat.NBT_CODEC))
 					.beginComponent("title")
-					.string("raw", WrittenBookContentComponent::getTitle, WrittenBookContentComponent::setTitle)
+					.codec("raw", WrittenBookContentComponent::getTitle, WrittenBookContentComponent::setTitle, NBTCodecs.STRING)
 					.endComponent()
-					.string("author", WrittenBookContentComponent::getAuthor, WrittenBookContentComponent::setAuthor)
-					.enumIntField("generation", WrittenBookContentComponent::getGeneration, WrittenBookContentComponent::setGeneration, Generation.class, Generation.ORGINAL)
+					.codec("author", WrittenBookContentComponent::getAuthor, WrittenBookContentComponent::setAuthor, NBTCodecs.STRING)
+					.codec("generation", WrittenBookContentComponent::getGeneration, WrittenBookContentComponent::setGeneration, EnumUtil.enumIntNBTCodec(Generation.class), Generation.ORGINAL)
 					.boolField("resolved", WrittenBookContentComponent::isResolved, WrittenBookContentComponent::setResolved, false)
 					.endComponent()
 					.build();
@@ -29,25 +30,6 @@ public interface WrittenBookContentComponent extends ItemComponent {
 	String getTitle();
 	
 	void setTitle(String title);
-	
-	@NotNull
-	List<Chat> getPages();
-	
-	boolean hasPages();
-	
-	default boolean addPage(@NotNull Chat page) {
-		if (page == null)
-			throw new IllegalArgumentException("Page can not be null!");
-		return getPages().add(page);
-	}
-	
-	default boolean removePage(@NotNull Chat page) {
-		if (page == null)
-			throw new IllegalArgumentException("Page can not be null!");
-		if (hasPages())
-			return getPages().remove(page);
-		return false;
-	}
 	
 	@Nullable
 	String getAuthor();

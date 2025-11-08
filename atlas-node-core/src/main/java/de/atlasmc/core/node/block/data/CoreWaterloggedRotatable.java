@@ -4,14 +4,14 @@ import java.util.List;
 
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.WaterloggedRotatable;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 
 public class CoreWaterloggedRotatable extends CoreRotatable implements WaterloggedRotatable {
 	
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreRotatable.PROPERTIES, BlockDataProperty.WATERLOGGED);
+		PROPERTIES = merge(CoreRotatable.PROPERTIES, PropertyType.WATERLOGGED);
 	}
 	
 	private boolean waterlogged;
@@ -38,7 +38,7 @@ public class CoreWaterloggedRotatable extends CoreRotatable implements Waterlogg
 	}
 
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 	

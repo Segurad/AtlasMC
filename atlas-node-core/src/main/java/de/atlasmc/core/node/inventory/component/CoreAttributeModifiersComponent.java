@@ -1,25 +1,19 @@
 package de.atlasmc.core.node.inventory.component;
 
-import static de.atlasmc.io.PacketUtil.*;
-
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.node.attribute.Attribute;
 import de.atlasmc.node.attribute.AttributeModifier;
-import de.atlasmc.node.attribute.AttributeModifier.Operation;
 import de.atlasmc.node.inventory.EquipmentSlot;
 import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.AttributeModifiersComponent;
 import de.atlasmc.node.inventory.component.ComponentType;
-import de.atlasmc.util.EnumUtil;
 import de.atlasmc.util.map.ArrayListMultimap;
 import de.atlasmc.util.map.ListMultimap;
 import de.atlasmc.util.map.Multimap;
-import io.netty.buffer.ByteBuf;
 
 public class CoreAttributeModifiersComponent extends AbstractItemComponent implements AttributeModifiersComponent {
 	
@@ -133,46 +127,6 @@ public class CoreAttributeModifiersComponent extends AbstractItemComponent imple
 			}
 		}
 		return clone;
-	}
-
-	@Override
-	public void read(ByteBuf buf) {
-		final int count = readVarInt(buf);
-		if (count == 0)
-			return;
-		Multimap<Attribute, AttributeModifier> modifiers = getAttributeModifiers();
-		modifiers.clear();
-		for (int i = 0; i < count; i++) {
-			Attribute attribute = Attribute.getByID(readVarInt(buf));
-			NamespacedKey modifierID = readIdentifier(buf);
-			double amount = buf.readDouble();
-			Operation operation = EnumUtil.getByID(Operation.class, readVarInt(buf));
-			EquipmentSlot slot = EnumUtil.getByID(EquipmentSlot.class, readVarInt(buf));
-			AttributeModifier modifier = new AttributeModifier(modifierID, amount, operation, slot);
-			modifiers.put(attribute, modifier);
-		}
-	}
-
-	@Override
-	public void write(ByteBuf buf) {
-		if (attributes == null || attributes.isEmpty()) {
-			writeVarInt(0, buf);
-			return;
-		}
-		writeVarInt(attributes.valuesSize(), buf);
-		for (Entry<Attribute, Collection<AttributeModifier>> entry : attributes.entrySet()) {
-			final Attribute key = entry.getKey();
-			final List<AttributeModifier> modifiers = (List<AttributeModifier>) entry.getValue();
-			final int size = modifiers.size();
-			for (int i = 0; i < size; i++) {
-				writeVarInt(key.getID(), buf);
-				AttributeModifier modifier = modifiers.get(i);
-				writeIdentifier(modifier.getID(), buf);
-				buf.writeDouble(modifier.getAmount());
-				writeVarInt(modifier.getOperation().getID(), buf);
-				writeVarInt(modifier.getSlot().getID(), buf);
-			}
-		}
 	}
 
 }

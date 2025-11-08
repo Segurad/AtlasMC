@@ -7,20 +7,20 @@ import java.util.Set;
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.HightConnectable;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 
 public class CoreHightConnectable extends CoreBlockData implements HightConnectable {
 
 	private static final Set<BlockFace> ALLOWED_FACES;
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
 		PROPERTIES = merge(CoreBlockData.PROPERTIES,
-				BlockDataProperty.CON_NORTH,
-				BlockDataProperty.CON_EAST,
-				BlockDataProperty.CON_WEST,
-				BlockDataProperty.CON_SOUTH);
+				PropertyType.CON_NORTH,
+				PropertyType.CON_EAST,
+				PropertyType.CON_WEST,
+				PropertyType.CON_SOUTH);
 		ALLOWED_FACES = EnumSet.range(BlockFace.NORTH, BlockFace.WEST);
 	}
 	
@@ -71,7 +71,7 @@ public class CoreHightConnectable extends CoreBlockData implements HightConnecta
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

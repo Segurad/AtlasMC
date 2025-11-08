@@ -6,15 +6,15 @@ import de.atlasmc.core.node.block.data.CoreAbstractMultipleFacing;
 import de.atlasmc.core.node.block.data.CoreMultipleFacing5;
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.Fire;
 
 public class CoreFire extends CoreMultipleFacing5 implements Fire {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreAbstractMultipleFacing.PROPERTIES, BlockDataProperty.AGE);
+		PROPERTIES = merge(CoreAbstractMultipleFacing.PROPERTIES, PropertyType.AGE);
 	}
 	
 	private int age;
@@ -55,7 +55,7 @@ public class CoreFire extends CoreMultipleFacing5 implements Fire {
 	}
 
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

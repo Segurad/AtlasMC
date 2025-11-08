@@ -2,7 +2,8 @@ package de.atlasmc.node.entity;
 
 import org.joml.Vector3i;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 
 public interface Phantom extends FlyingMob {
 	
@@ -11,7 +12,7 @@ public interface Phantom extends FlyingMob {
 					.builder(Phantom.class)
 					.include(FlyingMob.NBT_HANDLER)
 					.intField("size", Phantom::getSize, Phantom::setSize, 0)
-					.vector3i("anchor_pos", Phantom::getAnchorUnsafe, Phantom::setAnchor)
+					.codec("anchor_pos", Phantom::getAnchorUnsafe, Phantom::setAnchor, NBTCodecs.VECTOR_3I)
 					.build();
 	
 	int getSize();

@@ -10,16 +10,16 @@ class DistanceProperty extends AbstractIntProperty {
 	}
 
 	@Override
-	public void set(BlockData data, Integer value) {
+	public void setInt(BlockData data, int value) {
 		if (data instanceof Distanced leaves)
 			leaves.setDistance(value);
 	}
 
 	@Override
-	public Integer get(BlockData data) {
+	public int getInt(BlockData data) {
 		if (data instanceof Distanced leaves)
 			return leaves.getDistance();
-		return null;
+		return 0;
 	}
 
 	@Override

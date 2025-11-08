@@ -1,16 +1,17 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumName;
+import de.atlasmc.util.enums.EnumUtil;
 
 public interface Mooshroom extends AgeableMob {
 	
 	public static final NBTCodec<Mooshroom>
 	NBT_HANDLER = NBTCodec
 					.builder(Mooshroom.class)
-					.include(AgeableMob.NBT_HANDLER)
-					.enumStringField("Type", Mooshroom::getVariant, Mooshroom::setVariant, Variant.class, Variant.RED)
+					.include(AgeableMob.NBT_CODEC)
+					.codec("Type", Mooshroom::getVariant, Mooshroom::setVariant, EnumUtil.enumStringNBTCodec(Variant.class), Variant.RED)
 					.build();
 	
 	Variant getVariant();

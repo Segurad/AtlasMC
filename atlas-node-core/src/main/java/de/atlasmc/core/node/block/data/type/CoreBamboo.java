@@ -3,17 +3,17 @@ package de.atlasmc.core.node.block.data.type;
 import java.util.List;
 
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.Bamboo;
 
 public class CoreBamboo extends CoreSapling implements Bamboo {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
 		PROPERTIES = merge(CoreSapling.PROPERTIES, 
-				BlockDataProperty.AGE,
-				BlockDataProperty.LEAVES);
+				PropertyType.AGE,
+				PropertyType.LEAVES);
 	}
 	
 	private int age;
@@ -52,7 +52,7 @@ public class CoreBamboo extends CoreSapling implements Bamboo {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

@@ -5,7 +5,7 @@ import java.util.List;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.util.nbt.tag.NBT;
+import de.atlasmc.nbt.tag.NBT;
 
 @DefaultPacketID(packetID = PacketConfiguration.OUT_REGISTRY_DATA, definition = "registry_data")
 public class ClientboundRegistryData extends AbstractPacket implements PacketConfigurationClientbound {

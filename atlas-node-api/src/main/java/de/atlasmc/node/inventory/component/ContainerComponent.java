@@ -1,10 +1,10 @@
 package de.atlasmc.node.inventory.component;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.inventory.ItemType;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 
 public interface ContainerComponent extends ItemComponent {

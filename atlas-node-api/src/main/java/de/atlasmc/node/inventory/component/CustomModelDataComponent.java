@@ -2,7 +2,9 @@ package de.atlasmc.node.inventory.component;
 
 import java.util.List;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 import it.unimi.dsi.fastutil.booleans.BooleanList;
 import it.unimi.dsi.fastutil.floats.FloatList;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -10,15 +12,25 @@ import it.unimi.dsi.fastutil.ints.IntList;
 public interface CustomModelDataComponent extends ItemComponent {
 	
 	public static final NBTCodec<CustomModelDataComponent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(CustomModelDataComponent.class)
 					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.CUSTOM_MODEL_DATA.getNamespacedKey())
-					.floatListField("floats", CustomModelDataComponent::hasFloats, CustomModelDataComponent::getFloats)
-					.booleanListField("flags", CustomModelDataComponent::hasFlags, CustomModelDataComponent::getFlags)
-					.stringListField("strings", CustomModelDataComponent::hasStrings, CustomModelDataComponent::getStrings)
-					.intListField("colors", CustomModelDataComponent::hasColors, CustomModelDataComponent::getColors)
+					.codecCollection("floats", CustomModelDataComponent::hasFloats, CustomModelDataComponent::getFloats, NBTCodecs.FLOAT_LIST)
+					.codecCollection("flags", CustomModelDataComponent::hasFlags, CustomModelDataComponent::getFlags, NBTCodecs.BOOLEAN_LIST)
+					.codecList("strings", CustomModelDataComponent::hasStrings, CustomModelDataComponent::getStrings, NBTCodecs.STRING)
+					.codecCollection("colors", CustomModelDataComponent::hasColors, CustomModelDataComponent::getColors, NBTCodecs.INT_COLLECTION)
 					.endComponent()
+					.build();
+	
+	public static final StreamCodec<CustomModelDataComponent>
+	STREAM_CODEC = StreamCodec
+					.builder(CustomModelDataComponent.class)
+					.include(ItemComponent.STREAM_CODEC)
+					.floatList(CustomModelDataComponent::hasFloats, CustomModelDataComponent::getFloats)
+					.booleanList(CustomModelDataComponent::hasFlags, CustomModelDataComponent::getFlags)
+					.stringList(CustomModelDataComponent::hasStrings, CustomModelDataComponent::getStrings)
+					.intList(CustomModelDataComponent::hasColors, CustomModelDataComponent::getColors)
 					.build();
 	
 	FloatList getFloats();
@@ -46,5 +58,15 @@ public interface CustomModelDataComponent extends ItemComponent {
 	boolean hasColors();
 	
 	CustomModelDataComponent clone();
+	
+	@Override
+	default NBTCodec<? extends CustomModelDataComponent> getNBTCodec() {
+		return NBT_CODEC;
+	}
+	
+	@Override
+	default StreamCodec<? extends CustomModelDataComponent> getStreamCodec() {
+		return STREAM_CODEC;
+	}
 
 }

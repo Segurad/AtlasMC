@@ -11,9 +11,9 @@ import de.atlasmc.ColorValue;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.event.click.ClickEvent;
 import de.atlasmc.chat.component.event.hover.HoverEvent;
-import de.atlasmc.util.nbt.NBTException;
-import de.atlasmc.util.nbt.codec.NBTCodec;
-import de.atlasmc.util.nbt.io.SNBTWriter;
+import de.atlasmc.nbt.NBTException;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.io.SNBTWriter;
 
 public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> implements ChatComponent {
 	

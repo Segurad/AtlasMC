@@ -1,6 +1,7 @@
 package de.atlasmc.chat.component;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 
 public class KeybindComponent extends AbstractBaseComponent<KeybindComponent> {
 
@@ -8,7 +9,7 @@ public class KeybindComponent extends AbstractBaseComponent<KeybindComponent> {
 	NBT_HANDLER = NBTCodec
 					.builder(KeybindComponent.class)
 					.include(AbstractBaseComponent.NBT_CODEC)
-					.string("keybind", KeybindComponent::getKey, KeybindComponent::setKey)
+					.codec("keybind", KeybindComponent::getKey, KeybindComponent::setKey, NBTCodecs.STRING)
 					.build();
 	
 	public static final String

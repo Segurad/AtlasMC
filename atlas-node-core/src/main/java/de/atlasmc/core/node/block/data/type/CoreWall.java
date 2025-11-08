@@ -4,17 +4,17 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreHightConnectable;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.Wall;
 
 public class CoreWall extends CoreHightConnectable implements Wall {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
 		PROPERTIES = merge(CoreHightConnectable.PROPERTIES,
-				BlockDataProperty.WATERLOGGED,
-				BlockDataProperty.UP);
+				PropertyType.WATERLOGGED,
+				PropertyType.UP);
 	}
 	
 	protected boolean waterlogged;
@@ -57,7 +57,7 @@ public class CoreWall extends CoreHightConnectable implements Wall {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

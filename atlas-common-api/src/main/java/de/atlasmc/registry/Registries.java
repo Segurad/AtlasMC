@@ -12,6 +12,7 @@ import com.google.gson.stream.JsonReader;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.log.Log;
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.registry.RegistryHolder.Target;
@@ -233,7 +234,7 @@ public class Registries {
 				throw new FactoryException("Error while fetching class: " + rawType);
 			}
 			if (!registryType.isAssignableFrom(typeClass))
-				throw new FactoryException("Given type (" + rawType + ") is not compatiple with registry: " + registry.getNamespacedKeyRaw());
+				throw new FactoryException("Given type (" + rawType + ") is not compatiple with registry: " + registry.getNamespacedKey());
 			Constructor<?> constructor = null;
 			try {
 				constructor = typeClass.getConstructor(ConfigurationSection.class);
@@ -266,6 +267,10 @@ public class Registries {
 			}
 		}
 		reader.endArray();
+	}
+	
+	public static <T extends Namespaced> NBTCodec<T> registryValueNBTCodec(RegistryKey<T> key) {
+		return new RegistryValueNBTCodec<>(key);
 	}
 	
 	@InternalAPI

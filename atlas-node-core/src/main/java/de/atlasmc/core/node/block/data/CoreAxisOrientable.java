@@ -7,14 +7,14 @@ import java.util.Set;
 import de.atlasmc.node.Axis;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.AxisOrientable;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 
 public class CoreAxisOrientable extends CoreBlockData implements AxisOrientable {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.AXIS);
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, PropertyType.AXIS);
 	}
 	
 	private static final Set<Axis> ALLOWED_AXIS =
@@ -56,7 +56,7 @@ public class CoreAxisOrientable extends CoreBlockData implements AxisOrientable 
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

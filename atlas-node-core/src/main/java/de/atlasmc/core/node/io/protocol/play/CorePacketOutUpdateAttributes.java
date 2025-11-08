@@ -18,8 +18,8 @@ import de.atlasmc.node.attribute.AttributeInstance;
 import de.atlasmc.node.attribute.AttributeModifier;
 import de.atlasmc.node.attribute.AttributeModifier.Operation;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateAttributes;
-import de.atlasmc.util.EnumUtil;
-import de.atlasmc.util.EnumUtil.EnumData;
+import de.atlasmc.util.enums.EnumUtil;
+import de.atlasmc.util.enums.EnumUtil.EnumData;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutUpdateAttributes implements PacketIO<PacketOutUpdateAttributes> {

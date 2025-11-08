@@ -2,19 +2,20 @@ package de.atlasmc.node.entity;
 
 import java.util.UUID;
 
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.node.inventory.AbstractHorseInventory;
 import de.atlasmc.node.inventory.InventoryHolder;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface AbstractHorse extends Animal, InventoryHolder {
 	
 	public static final NBTCodec<AbstractHorse>
 	NBT_HANDLER = NBTCodec
 					.builder(AbstractHorse.class)
-					.include(Animal.NBT_HANDLER)
+					.include(Animal.NBT_CODEC)
 					.boolField("Bred", AbstractHorse::canBred, AbstractHorse::setCanBred, false)
 					.boolField("EatingHaystack", AbstractHorse::isEating, AbstractHorse::setEating, false)
-					.uuid("Owner", AbstractHorse::getOwner, AbstractHorse::setOwner)
+					.codec("Owner", AbstractHorse::getOwner, AbstractHorse::setOwner, NBTCodecs.UUID_CODEC)
 					.boolField("Tame", AbstractHorse::isTamed, AbstractHorse::setTamed, false)
 					.intField("Temper", AbstractHorse::getTemper, AbstractHorse::setTemper, 0)
 					.build();

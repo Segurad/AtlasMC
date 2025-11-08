@@ -1,7 +1,7 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 
 public interface UseCooldownComponent extends ItemComponent {
 	
@@ -11,7 +11,7 @@ public interface UseCooldownComponent extends ItemComponent {
 					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.USE_COOLDOWN.getNamespacedKey())
 					.floatField("seconds", UseCooldownComponent::getSeconds, UseCooldownComponent::setSeconds)
-					.namespacedKey("cooldown_group", UseCooldownComponent::getGroup, UseCooldownComponent::setGroup)
+					.codec("cooldown_group", UseCooldownComponent::getGroup, UseCooldownComponent::setGroup, NamespacedKey.NBT_CODEC)
 					.endComponent()
 					.build();
 					

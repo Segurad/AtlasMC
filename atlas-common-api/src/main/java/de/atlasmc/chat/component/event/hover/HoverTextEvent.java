@@ -1,7 +1,7 @@
 package de.atlasmc.chat.component.event.hover;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 
 public class HoverTextEvent implements HoverEvent {
 
@@ -9,7 +9,7 @@ public class HoverTextEvent implements HoverEvent {
 	NBT_HANDLER = NBTCodec
 					.builder(HoverTextEvent.class)
 					.include(HoverEvent.NBT_HANDLER)
-					.chat("value", HoverTextEvent::getValue, HoverTextEvent::setValue)
+					.codec("value", HoverTextEvent::getValue, HoverTextEvent::setValue, Chat.NBT_CODEC)
 					.build();
 	
 	private Chat value;

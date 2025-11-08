@@ -1,8 +1,8 @@
 package de.atlasmc.node.entity;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.BlockData;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Enderman extends Monster, AngerableMob {
 	
@@ -10,7 +10,7 @@ public interface Enderman extends Monster, AngerableMob {
 	NBT_HANDLER = NBTCodec
 					.builder(Enderman.class)
 					.include(Monster.NBT_HANDLER)
-					.typeCompoundField("carriedBlockState", Enderman::getCarriedBlock, Enderman::setCarriedBlock, BlockData.NBT_HANDLER)
+					.codec("carriedBlockState", Enderman::getCarriedBlock, Enderman::setCarriedBlock, BlockData.NBT_HANDLER)
 					.build();
 
 	BlockType getCarriedBlockType();

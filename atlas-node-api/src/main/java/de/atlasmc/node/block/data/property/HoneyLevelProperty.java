@@ -10,16 +10,16 @@ class HoneyLevelProperty extends AbstractIntProperty {
 	}
 
 	@Override
-	public void set(BlockData data, Integer value) {
+	public void setInt(BlockData data, int value) {
 		if (data instanceof Beehive beehive)
 			beehive.setHoneyLevel(value);
 	}
 
 	@Override
-	public Integer get(BlockData data) {
+	public int getInt(BlockData data) {
 		if (data instanceof Beehive beehive)
 			return beehive.getHoneyLevel();
-		return null;
+		return 0;
 	}
 
 	@Override

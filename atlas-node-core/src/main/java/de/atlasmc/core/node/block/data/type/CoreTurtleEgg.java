@@ -4,15 +4,15 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreHatchable;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.TurtleEgg;
 
 public class CoreTurtleEgg extends CoreHatchable implements TurtleEgg {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreHatchable.PROPERTIES, BlockDataProperty.EGGS);
+		PROPERTIES = merge(CoreHatchable.PROPERTIES, PropertyType.EGGS);
 	}
 	
 	private int eggs;
@@ -50,7 +50,7 @@ public class CoreTurtleEgg extends CoreHatchable implements TurtleEgg {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

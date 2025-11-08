@@ -7,7 +7,7 @@ import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutGameEvent;
 import de.atlasmc.node.io.protocol.play.PacketOutGameEvent.GameEventType;
-import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutGameEvent implements PacketIO<PacketOutGameEvent> {

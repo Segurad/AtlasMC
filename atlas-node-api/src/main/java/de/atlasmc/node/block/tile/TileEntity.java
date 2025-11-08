@@ -2,6 +2,8 @@ package de.atlasmc.node.block.tile;
 
 import org.joml.Vector3i;
 
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.inventory.component.ItemComponentHolder;
 import de.atlasmc.node.world.Chunk;
@@ -9,8 +11,6 @@ import de.atlasmc.node.world.World;
 import de.atlasmc.util.annotation.InternalAPI;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.UnsafeAPI;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface TileEntity extends Cloneable, NBTSerializable, ItemComponentHolder {
 	

@@ -1,8 +1,8 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.FireworkExplosion;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface FireworkExplosionComponent extends ItemComponent {
 	
@@ -10,7 +10,7 @@ public interface FireworkExplosionComponent extends ItemComponent {
 	NBT_HANDLER = NBTCodec
 					.builder(FireworkExplosionComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.typeCompoundField(ComponentType.FIREWORK_EXPLOSION.getNamespacedKey(), FireworkExplosionComponent::getExplosion, FireworkExplosionComponent::setExplosion, FireworkExplosion.NBT_HANDLER)
+					.codec(ComponentType.FIREWORK_EXPLOSION.getNamespacedKey(), FireworkExplosionComponent::getExplosion, FireworkExplosionComponent::setExplosion, FireworkExplosion.NBT_HANDLER)
 					.build();
 	
 	public static final StreamCodec<FireworkExplosionComponent>

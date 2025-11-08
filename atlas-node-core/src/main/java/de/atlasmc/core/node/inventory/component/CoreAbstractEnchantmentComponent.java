@@ -1,17 +1,10 @@
 package de.atlasmc.core.node.inventory.component;
 
-import static de.atlasmc.io.PacketUtil.readVarInt;
-import static de.atlasmc.io.PacketUtil.writeVarInt;
-
-import java.io.IOException;
-
 import de.atlasmc.node.enchantments.Enchantment;
 import de.atlasmc.node.inventory.component.AbstractEnchantmentComponent;
 import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.ComponentType;
-import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntMap.Entry;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 public class CoreAbstractEnchantmentComponent extends AbstractItemComponent implements AbstractEnchantmentComponent {
@@ -72,37 +65,6 @@ public class CoreAbstractEnchantmentComponent extends AbstractItemComponent impl
 		if (enchantments == null)
 			return;
 		enchantments.removeInt(ench);
-	}
-	
-	@Override
-	public void write(ByteBuf buf) throws IOException {
-		if (hasEnchants()) {
-			final int size = enchantments.size();
-			writeVarInt(size, buf);
-			for (Entry<Enchantment> entry : enchantments.object2IntEntrySet()) {
-				writeVarInt(entry.getKey().getID(), buf);
-				writeVarInt(entry.getIntValue(), buf);
-			}
-		} else {
-			writeVarInt(0, buf);
-		}
-	}
-	
-	@Override
-	public void read(ByteBuf buf) throws IOException {
-		if (enchantments != null)
-			enchantments.clear();
-		final int count = readVarInt(buf);
-		if (count > 0) {
-			for (int i = 0; i < count; i++) {
-				int id = readVarInt(buf);
-				int level = readVarInt(buf);
-				Enchantment ench = Enchantment.getByID(id);
-				if (ench == null)
-					continue;
-				addEnchant(ench, level);
-			}
-		}
 	}
 
 }

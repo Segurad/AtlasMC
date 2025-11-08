@@ -3,21 +3,16 @@ package de.atlasmc.node.sound;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.io.codec.StreamSerializable;
-import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 
 public class ResourceSound implements Sound, NBTSerializable, StreamSerializable {
-
-	protected static final CharKey
-	NBT_SOUND_ID = CharKey.literal("sound_id"),
-	NBT_RANGE = CharKey.literal("range");
 	
 	public static final NBTCodec<ResourceSound>
 	NBT_CODEC = NBTCodec
 					.builder(ResourceSound.class)
 					.defaultConstructor(ResourceSound::new)
-					.namespacedKey("sound_id", ResourceSound::getNamespacedKey, ResourceSound::setNamespacedKey)
+					.codec("sound_id", ResourceSound::getNamespacedKey, ResourceSound::setNamespacedKey, NamespacedKey.NBT_CODEC)
 					.floatField("range", ResourceSound::getFixedRange, ResourceSound::setFixedRange, 0)
 					.build();
 	

@@ -1,10 +1,10 @@
 package de.atlasmc.node.inventory.component.effect;
 
 import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.sound.EnumSound;
 import de.atlasmc.node.sound.ResourceSound;
 import de.atlasmc.node.sound.Sound;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface PlaySound extends ComponentEffect {
 	
@@ -12,7 +12,7 @@ public interface PlaySound extends ComponentEffect {
 	NBT_CODEC = NBTCodec
 					.builder(PlaySound.class)
 					.include(ComponentEffect.NBT_HANDLER)
-					.enumStringOrType("sound", PlaySound::getSound, PlaySound::setSound, EnumSound.class, ResourceSound.NBT_CODEC)
+					.codec("sound", PlaySound::getSound, PlaySound::setSound, Sound.NBT_CODEC)
 					.build();
 	
 	public static final StreamCodec<PlaySound>

@@ -6,8 +6,8 @@ import de.atlasmc.Color;
 import de.atlasmc.ColorValue;
 import de.atlasmc.IDHolder;
 import de.atlasmc.chat.component.ChatComponent;
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.enums.EnumName;
+import de.atlasmc.util.enums.EnumUtil;
 
 public enum ChatColor implements EnumName, IDHolder, ColorValue {
 

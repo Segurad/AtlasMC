@@ -1,9 +1,12 @@
 package de.atlasmc.node.sound;
 
 import de.atlasmc.NamespacedKey.Namespaced;
+import de.atlasmc.nbt.codec.NBTCodec;
 
 public interface Sound extends Namespaced {
 
+	public static final NBTCodec<Sound> NBT_CODEC = NBTCodec.codecOrElse(Sound.class, EnumSound.NBT_CODEC, ResourceSound.NBT_CODEC);
+	
 	final long DEFAULT_SEED = 0x4aa2903b89ec2ff6L;
 
 	/**

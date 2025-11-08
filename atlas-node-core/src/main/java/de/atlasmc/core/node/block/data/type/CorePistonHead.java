@@ -3,15 +3,15 @@ package de.atlasmc.core.node.block.data.type;
 import java.util.List;
 
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.PistonHead;
 
 public class CorePistonHead extends CoreTechnicalPiston implements PistonHead {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreTechnicalPiston.PROPERTIES, BlockDataProperty.SHORT);
+		PROPERTIES = merge(CoreTechnicalPiston.PROPERTIES, PropertyType.SHORT);
 	}
 	
 	private boolean isShort;
@@ -36,7 +36,7 @@ public class CorePistonHead extends CoreTechnicalPiston implements PistonHead {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

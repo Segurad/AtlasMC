@@ -13,7 +13,7 @@ import de.atlasmc.util.annotation.Nullable;
 public class AtlasUtil {
 	
 	private static final Function<?, ?> GET_SELF = v -> { return v; };
-	private static final BiConsumer<?, ?> SET_VOID = (a, b) -> {};
+	private static final BiConsumer<?, ?> SET_VOID = (_, _) -> {};
 	
 	/**
 	 * UUID with value 0
@@ -22,14 +22,16 @@ public class AtlasUtil {
 	
 	private AtlasUtil() {}
 	
-	@SuppressWarnings("unchecked")
 	public static <A, B> BiConsumer<A, B> getSetVoid() {
-		return (BiConsumer<A, B>) SET_VOID;
+		@SuppressWarnings("unchecked")
+		var function = (BiConsumer<A, B>) SET_VOID;
+		return function;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static <T> Function<T, T> getSelf() {
-		return (Function<T, T>) GET_SELF;
+		@SuppressWarnings("unchecked")
+		var function = (Function<T, T>) GET_SELF;
+		return function;
 	}
 	
 	@NotNull

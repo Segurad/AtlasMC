@@ -1,16 +1,17 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumUtil;
 
 public interface Axolotl extends Fish, AgeableMob {
 	
 	public static final NBTCodec<Axolotl>
 	NBT_HANDLER = NBTCodec
 					.builder(Axolotl.class)
-					.include(AgeableMob.NBT_HANDLER)
+					.include(AgeableMob.NBT_CODEC)
 					.include(Fish.NBT_HANDLER)
-					.enumIntField("Variant", Axolotl::getVariant, Axolotl::setVariant, Variant.class, Variant.LUCY)
+					.codec("Variant", Axolotl::getVariant, Axolotl::setVariant, EnumUtil.enumIntNBTCodec(Variant.class), Variant.LUCY)
 					.build();
 	
 	Variant getVariant();

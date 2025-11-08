@@ -6,19 +6,19 @@ import java.util.Set;
 
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 
 public class CoreMultipleFacing5 extends CoreAbstractMultipleFacing {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
 		PROPERTIES = merge(CoreAbstractMultipleFacing.PROPERTIES,
-				BlockDataProperty.NORTH,
-				BlockDataProperty.SOUTH,
-				BlockDataProperty.EAST,
-				BlockDataProperty.WEST,
-				BlockDataProperty.UP);
+				PropertyType.NORTH,
+				PropertyType.SOUTH,
+				PropertyType.EAST,
+				PropertyType.WEST,
+				PropertyType.UP);
 	}
 	
 	private static final Set<BlockFace> ALLOWED_FACES =
@@ -53,7 +53,7 @@ public class CoreMultipleFacing5 extends CoreAbstractMultipleFacing {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

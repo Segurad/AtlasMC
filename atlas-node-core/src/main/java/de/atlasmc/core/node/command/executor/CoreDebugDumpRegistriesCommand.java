@@ -67,7 +67,7 @@ public class CoreDebugDumpRegistriesCommand implements CommandExecutor {
 	}
 	
 	private void dumpRegistry(Registry<Object> registry, ConfigurationSection cfg) {
-		cfg.set("key", registry.getNamespacedKeyRaw());
+		cfg.set("key", registry.getNamespacedKey().toString());
 		cfg.set("type", registry.getType().getName());
 		cfg.set("target", registry.getTarget().name());
 		Object defaultEntry = registry.getDefault();

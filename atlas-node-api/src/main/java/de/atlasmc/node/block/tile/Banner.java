@@ -1,16 +1,18 @@
 package de.atlasmc.node.block.tile;
 
 import java.util.List;
-import java.util.function.Function;
-
 import de.atlasmc.IDHolder;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
+import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.io.codec.StreamSerializable;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.Nameable;
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumName;
+import de.atlasmc.util.enums.EnumUtil;
 
 public interface Banner extends TileEntity, Nameable {
 	
@@ -19,7 +21,7 @@ public interface Banner extends TileEntity, Nameable {
 					.builder(Banner.class)
 					.include(TileEntity.NBT_HANDLER)
 					.include(Nameable.NBT_HANDLER)
-					.typeList("patterns", Banner::hasPatterns, Banner::getPatterns, Pattern.NBT_HANDLER)
+					.codecList("patterns", Banner::hasPatterns, Banner::getPatterns, Pattern.NBT_CODEC)
 					.build();
 	
 	boolean hasPatterns();
@@ -51,16 +53,24 @@ public interface Banner extends TileEntity, Nameable {
 		return NBT_HANDLER;
 	}
 	
-	public static class Pattern implements NBTSerializable {
+	public static class Pattern implements NBTSerializable, StreamSerializable {
 		
 		public static final NBTCodec<Pattern>
-		NBT_HANDLER = NBTCodec
+		NBT_CODEC = NBTCodec
 						.builder(Pattern.class)
 						.defaultConstructor(Pattern::new)
-						.enumStringField("color", Pattern::getColor, Pattern::setColor, DyeColor.class, null)
-						.interfacedEnumStringField("pattern", (Function<Pattern, PatternType>) Pattern::getType, Pattern::setType, EnumPatternType.class, null)
-						.typeCompoundField("pattern", (Function<Pattern, PatternType>) Pattern::getType, Pattern::setType, ResourcePatternType.NBT_HANDLER)
+						.codec("color", Pattern::getColor, Pattern::setColor, EnumUtil.enumStringNBTCodec(DyeColor.class))
+						.codec("pattern", Pattern::getType, Pattern::setType, PatternType.NBT_CODEC)
 						.build();
+		
+		public static final StreamCodec<Pattern>
+		STREAM_CODEC = StreamCodec
+						.builder(Pattern.class)
+						.defaultConstructor(Pattern::new)
+						.enumValueOrCodec(Pattern::getType, Pattern::setType, EnumPatternType.class, ResourcePatternType.STREAM_CODEC)
+						.varIntEnum(Pattern::getColor, Pattern::setColor, DyeColor.class)
+						.build();
+						
 		
 		private DyeColor color;
 		private PatternType type;
@@ -90,21 +100,38 @@ public interface Banner extends TileEntity, Nameable {
 		
 		@Override
 		public NBTCodec<? extends Pattern> getNBTCodec() {
-			return NBT_HANDLER;
+			return NBT_CODEC;
+		}
+		
+		@Override
+		public StreamCodec<? extends Pattern> getStreamCodec() {
+			return STREAM_CODEC;
 		}
 		
 	}
 	
-	public static interface PatternType {}
+	public static interface PatternType {
+		
+		public static final NBTCodec<PatternType> NBT_CODEC = NBTCodec.codecOrElse(PatternType.class, EnumPatternType.NBT_CODEC, ResourcePatternType.NBT_CODEC);
+		
+	}
 	
-	public static class ResourcePatternType implements PatternType, NBTSerializable {
+	public static class ResourcePatternType implements PatternType, NBTSerializable, StreamSerializable {
 		
 		public static final NBTCodec<ResourcePatternType>
-		NBT_HANDLER = NBTCodec
+		NBT_CODEC = NBTCodec
 						.builder(ResourcePatternType.class)
 						.defaultConstructor(ResourcePatternType::new)
-						.namespacedKey("asset_id", ResourcePatternType::getAssetID, ResourcePatternType::setAssetID)
-						.string("translation_key", ResourcePatternType::getTranslationKey, ResourcePatternType::setTranslationKey)
+						.codec("asset_id", ResourcePatternType::getAssetID, ResourcePatternType::setAssetID, NamespacedKey.NBT_CODEC)
+						.codec("translation_key", ResourcePatternType::getTranslationKey, ResourcePatternType::setTranslationKey, NBTCodecs.STRING)
+						.build();
+		
+		public static final StreamCodec<ResourcePatternType>
+		STREAM_CODEC = StreamCodec
+						.builder(ResourcePatternType.class)
+						.defaultConstructor(ResourcePatternType::new)
+						.namespacedKey(ResourcePatternType::getAssetID, ResourcePatternType::setAssetID)
+						.stringValue(ResourcePatternType::getTranslationKey, ResourcePatternType::setTranslationKey)
 						.build();
 		
 		private NamespacedKey assetID;
@@ -135,7 +162,12 @@ public interface Banner extends TileEntity, Nameable {
 		
 		@Override
 		public NBTCodec<? extends ResourcePatternType> getNBTCodec() {
-			return NBT_HANDLER;
+			return NBT_CODEC;
+		}
+		
+		@Override
+		public StreamCodec<? extends ResourcePatternType> getStreamCodec() {
+			return STREAM_CODEC;
 		}
 		
 	}
@@ -185,6 +217,8 @@ public interface Banner extends TileEntity, Nameable {
 		SNOUT("snout"),
 		FLOW("flow"),
 		GUSTER("guster");
+		
+		public static final NBTCodec<EnumPatternType> NBT_CODEC = EnumUtil.enumStringNBTCodec(EnumPatternType.class);
 
 		private final String name;
 		

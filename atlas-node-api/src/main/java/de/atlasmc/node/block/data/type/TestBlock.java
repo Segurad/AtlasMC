@@ -1,7 +1,7 @@
 package de.atlasmc.node.block.data.type;
 
 import de.atlasmc.node.block.data.BlockData;
-import de.atlasmc.util.EnumName;
+import de.atlasmc.util.enums.EnumName;
 
 public interface TestBlock extends BlockData {
 	

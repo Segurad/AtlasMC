@@ -1,13 +1,64 @@
 package de.atlasmc;
 
+import java.io.IOException;
 import java.util.List;
 
 import de.atlasmc.chat.ChatColor;
+import de.atlasmc.nbt.NBTException;
+import de.atlasmc.nbt.TagType;
+import de.atlasmc.nbt.codec.CodecTags;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.io.NBTReader;
+import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.annotation.ThreadSafe;
+import de.atlasmc.util.codec.CodecContext;
 
 @ThreadSafe
 public final class Color implements ColorValue {
+	
+	public static final NBTCodec<Color> NBT_CODEC = new NBTCodec<Color>() {
+		
+		@Override
+		public Class<?> getType() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public Color deserialize(Color value, NBTReader input, CodecContext context) throws IOException {
+			switch (input.getType()) {
+			case TagType.INT: {
+				return Color.fromARGB(input.readIntTag());
+			}
+			case TagType.LIST: {
+				if (input.getListType() != TagType.FLOAT)
+					throw new NBTException("Expected float tag but was: " + input.getListType());
+				input.readNextEntry();
+				float r = input.readFloatTag();
+				float g = input.readFloatTag();
+				float b = input.readFloatTag();
+				float a = input.getRestPayload() > 0 ? input.readFloatTag() : 0;
+				Color c = Color.fromRGB(Color.asARGB(r, g, b, a));
+				input.readNextEntry();
+				return c;
+			}
+			default:
+				throw new NBTException("Unexpected tag type: " + input.getType());
+			}
+		}
+		
+		@Override
+		public boolean serialize(CharSequence key, Color value, NBTWriter output, CodecContext context) throws IOException {
+			output.writeIntTag(key, value.asARGB());
+			return true;
+		}
+		
+		@Override
+		public List<TagType> getTags() {
+			return CodecTags.INT_LIST;
+		}
+	};
 	
 	public static final Color 
 	BLACK = new Color("BLACK", 0x00, 0x00, 0x00), 

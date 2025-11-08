@@ -2,11 +2,11 @@ package de.atlasmc.node.block.data.property;
 
 import java.io.IOException;
 
+import de.atlasmc.nbt.io.NBTReader;
+import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.block.data.Rotatable;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 
 class RotationProperty extends AbstractEnumProperty<BlockFace> {
 

@@ -10,16 +10,16 @@ class ChargesProperty extends AbstractIntProperty {
 	}
 
 	@Override
-	public void set(BlockData data, Integer value) {
+	public void setInt(BlockData data, int value) {
 		if (data instanceof RespawnAnchor anchor)
 			anchor.setCharges(value);
 	}
 
 	@Override
-	public Integer get(BlockData data) {
+	public int getInt(BlockData data) {
 		if (data instanceof RespawnAnchor anchor)
 			return anchor.getCharges();
-		return null;
+		return 0;
 	}
 
 	@Override

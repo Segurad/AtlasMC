@@ -1,7 +1,7 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 
 public interface JukeboxPlayableComponent extends ItemComponent {
 	
@@ -9,7 +9,7 @@ public interface JukeboxPlayableComponent extends ItemComponent {
 	NBT_HANDLER = NBTCodec
 					.builder(JukeboxPlayableComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.namespacedKey(ComponentType.JUKEBOX_PLAYABLE.getNamespacedKey(), JukeboxPlayableComponent::getSong, JukeboxPlayableComponent::setSong)
+					.codec(ComponentType.JUKEBOX_PLAYABLE.getNamespacedKey(), JukeboxPlayableComponent::getSong, JukeboxPlayableComponent::setSong, NamespacedKey.NBT_CODEC)
 					.build();
 	
 	NamespacedKey getSong();

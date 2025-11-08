@@ -4,17 +4,17 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreWaterloggedDirectional4Faces;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.Campfire;
 
 public class CoreCampfire extends CoreWaterloggedDirectional4Faces implements Campfire {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
 		PROPERTIES = merge(CoreWaterloggedDirectional4Faces.PROPERTIES, 
-				BlockDataProperty.LIT,
-				BlockDataProperty.SIGNAL_FIRE);
+				PropertyType.LIT,
+				PropertyType.SIGNAL_FIRE);
 	}
 	
 	private boolean lit;
@@ -55,7 +55,7 @@ public class CoreCampfire extends CoreWaterloggedDirectional4Faces implements Ca
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

@@ -4,18 +4,18 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreBlockData;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.BrewingStand;
 
 public class CoreBrewingStand extends CoreBlockData implements BrewingStand {
 	
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
 		PROPERTIES = merge(CoreBlockData.PROPERTIES, 
-				BlockDataProperty.HAS_BOTTLE_0,
-				BlockDataProperty.HAS_BOTTLE_1,
-				BlockDataProperty.HAS_BOOTLE_2);
+				PropertyType.HAS_BOTTLE_0,
+				PropertyType.HAS_BOTTLE_1,
+				PropertyType.HAS_BOOTLE_2);
 	}
 	
 	private boolean[] bottles;
@@ -44,7 +44,7 @@ public class CoreBrewingStand extends CoreBlockData implements BrewingStand {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

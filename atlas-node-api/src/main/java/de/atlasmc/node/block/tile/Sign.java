@@ -5,8 +5,9 @@ import java.util.List;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatColor;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
+import de.atlasmc.util.enums.EnumUtil;
 
 public interface Sign extends TileEntity {
 	
@@ -15,8 +16,8 @@ public interface Sign extends TileEntity {
 					.builder(Sign.class)
 					.include(TileEntity.NBT_HANDLER)
 					.boolField("is_waxed", Sign::isWaxed, Sign::setWaxed)
-					.typeCompoundField("front_text", Sign::getFrontText, Sign::setFrontText, SignText.NBT_HANDLER)
-					.typeCompoundField("back_text", Sign::getBackText, Sign::setBackText, SignText.NBT_HANDLER)
+					.codec("front_text", Sign::getFrontText, Sign::setFrontText, SignText.NBT_HANDLER)
+					.codec("back_text", Sign::getBackText, Sign::setBackText, SignText.NBT_HANDLER)
 					.build();
 	
 	boolean isWaxed();
@@ -38,8 +39,8 @@ public interface Sign extends TileEntity {
 						.builder(SignText.class)
 						.defaultConstructor(SignText::new)
 						.boolField("has_glowing_text", SignText::isGlowing, SignText::setGlowing)
-						.enumStringField("color", SignText::getColor, SignText::setColor, ChatColor.class, ChatColor.BLACK)
-						.chatList("messages", SignText::hasMessages, SignText::getMessages)
+						.codec("color", SignText::getColor, SignText::setColor, EnumUtil.enumStringNBTCodec(ChatColor.class), ChatColor.BLACK)
+						.codecCollection("messages", SignText::hasMessages, SignText::getMessages, Chat.CHAT_LIST_NBT_CODEC)
 						.build();
 		
 		private boolean glowing;

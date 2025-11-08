@@ -4,18 +4,18 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CorePowerable;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.Instrument;
 import de.atlasmc.node.block.data.type.NoteBlock;
 
 public class CoreNoteBlock extends CorePowerable implements NoteBlock {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
 		PROPERTIES = merge(CorePowerable.PROPERTIES, 
-				BlockDataProperty.INSTRUMENT,
-				BlockDataProperty.NOTE);
+				PropertyType.INSTRUMENT,
+				PropertyType.NOTE);
 	}
 	
 	private Instrument instrument;
@@ -53,7 +53,7 @@ public class CoreNoteBlock extends CorePowerable implements NoteBlock {
 	}
 
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 	

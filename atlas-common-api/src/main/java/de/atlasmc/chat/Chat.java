@@ -1,20 +1,101 @@
 package de.atlasmc.chat;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.io.codec.StreamSerializable;
+import de.atlasmc.nbt.NBTException;
+import de.atlasmc.nbt.TagType;
+import de.atlasmc.nbt.codec.CodecTags;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.io.NBTNIOReader;
+import de.atlasmc.nbt.io.NBTNIOWriter;
+import de.atlasmc.nbt.io.NBTReader;
+import de.atlasmc.nbt.io.NBTWriter;
+import de.atlasmc.util.OpenCloneable;
 import de.atlasmc.util.codec.CodecContext;
-import de.atlasmc.util.nbt.NBTException;
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.io.NBTNIOReader;
-import de.atlasmc.util.nbt.io.NBTNIOWriter;
-import de.atlasmc.util.nbt.io.NBTReader;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import io.netty.buffer.ByteBuf;
 
-public interface Chat extends Cloneable, StreamSerializable {
+public interface Chat extends OpenCloneable, StreamSerializable {
+	
+	public static final NBTCodec<List<Chat>> CHAT_LIST_NBT_CODEC = new NBTCodec<List<Chat>>() {
+		
+		@Override
+		public Class<?> getType() {
+			return List.class;
+		}
+		
+		@Override
+		public List<Chat> deserialize(List<Chat> value, NBTReader input, CodecContext context) throws IOException {
+			if (value == null)
+				value = new ArrayList<>();
+			final TagType listType = input.getListType();
+			if (listType == TagType.TAG_END || input.getNextPayload() == 0) {
+				input.readNextEntry();
+				input.readNextEntry();
+				return value;
+			}
+			switch (listType) {
+			case COMPOUND:
+				input.readNextEntry();
+				while (input.getRestPayload() > 0) {
+					input.readNextEntry();
+					Chat v = ChatComponent.NBT_CODEC.deserialize(input, context);
+					value.add(v);
+				}
+				input.readNextEntry();
+				break;
+			case STRING:
+				input.readNextEntry();
+				while (input.getRestPayload() > 0) {
+					String raw = input.readStringTag();
+					Chat v = ChatUtil.toChat(raw);
+					value.add(v);
+				}
+				input.readNextEntry();
+				break;
+			default:
+				throw new NBTException("Expected list of type COMPOUND or STRING but was: " + listType);
+			}
+			return value;
+		}
+		
+		@Override
+		public boolean serialize(CharSequence key, List<Chat> value, NBTWriter output, CodecContext context) throws IOException {
+			final int size = value.size();
+			if (value.get(0).isComponent()) {
+				output.writeListTag(key, TagType.COMPOUND, size);
+				for (int i = 0; i < size; i++) {
+					Chat v = value.get(i);
+					ChatComponent comp = v.toComponent();
+					@SuppressWarnings("unchecked")
+					NBTCodec<ChatComponent> handler = (NBTCodec<ChatComponent>) comp.getNBTCodec();
+					output.writeCompoundTag();
+					handler.serialize(comp, output, context);
+					output.writeEndTag();
+				}
+			} else {
+				output.writeListTag(key, TagType.STRING, size);
+				for (int i = 0; i < size; i++) {
+					Chat v = value.get(i);
+					output.writeStringTag(null, v.toText());
+				}
+			}
+			return true;
+		}
+		
+		@Override
+		public List<TagType> getTags() {
+			return CodecTags.LIST;
+		}
+	};
+	
+	public static final NBTCodec<Chat> RAW_NBT_CODEC = NBTCodec.stringToObject(Chat.class, ChatUtil::toChat, Chat::toText);
+	
+	public static final NBTCodec<Chat> NBT_CODEC = NBTCodec.codecOrElse(Chat.class, RAW_NBT_CODEC, ChatComponent.NBT_CODEC);
 	
 	public static final StreamCodec<Chat>
 	STREAM_CODEC = new StreamCodec<Chat>() {

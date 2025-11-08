@@ -1,7 +1,7 @@
 package de.atlasmc.chat.component.event.hover;
 
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 
 public interface HoverEvent extends NBTSerializable {
 	

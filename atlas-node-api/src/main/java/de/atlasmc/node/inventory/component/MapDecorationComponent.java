@@ -2,8 +2,8 @@ package de.atlasmc.node.inventory.component;
 
 import java.util.Map;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.map.MapIcon;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface MapDecorationComponent extends ItemComponent {
 	
@@ -11,7 +11,7 @@ public interface MapDecorationComponent extends ItemComponent {
 	NBT_HANDLER = NBTCodec
 					.builder(MapDecorationComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.compoundMapString2Type(ComponentType.MAP_DECORATIONS.getNamespacedKey(), MapDecorationComponent::hasDecoration, MapDecorationComponent::getDecorations, MapIcon.NBT_HANDLER)
+					.mapFieldNameToCodec(ComponentType.MAP_DECORATIONS.getNamespacedKey(), MapDecorationComponent::hasDecoration, MapDecorationComponent::getDecorations, MapIcon.NBT_CODEC)
 					.build();
 	
 	Map<String, MapIcon> getDecorations();

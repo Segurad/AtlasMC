@@ -1,6 +1,6 @@
 package de.atlasmc.node;
 
-import de.atlasmc.util.EnumName;
+import de.atlasmc.util.enums.EnumName;
 
 public enum Axis implements EnumName {
 	

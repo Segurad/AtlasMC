@@ -155,7 +155,7 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 		logger.debug("Initializing tick tasks...");
 		buildTasks(thread.getTickTasks(), TASKS_ON_TICK, "tick-tasks");
 		this.future = future = thread.startThread();
-		future.setListener((f) -> {
+		future.setListener((_) -> {
 			lock.lock();
 			logger.info("Server online...");
 			this.status = Status.ONLINE;
@@ -217,7 +217,7 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 	private <T> void buildDefaultTasks(List<Pair<String, String>> defaults, AtlasThreadTaskManager<T> taskManager) {
 		Registry<AtlasThreadTaskFactory> registry = Registries.getRegistry(AtlasThreadTaskFactory.class);
 		for (Pair<String, String> rawTask : defaults) {
-			String key = rawTask.getValue2();
+			String key = rawTask.value2();
 			AtlasThreadTaskFactory factory = registry.get(key);
 			if (factory == null) {
 				logger.warn("Missing default task factory: {}", key);
@@ -230,8 +230,8 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 				logger.error("Error while creating default task: " + key, e);
 				continue;
 			}
-			if (!taskManager.addTask(rawTask.getValue1(), task))
-				logger.warn("Failed to add default task: " + rawTask.getValue1());
+			if (!taskManager.addTask(rawTask.value1(), task))
+				logger.warn("Failed to add default task: " + rawTask.value1());
 		}
 	}
 	
@@ -266,7 +266,7 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 		this.scheduler.shutdown();
 		this.scheduler = null;
 		this.future = future = this.thread.stopThread();
-		future.setListener((f) -> {
+		future.setListener((_) -> {
 			lock.lock();
 			logger.info("Server offline...");
 			this.status = Status.OFFLINE;

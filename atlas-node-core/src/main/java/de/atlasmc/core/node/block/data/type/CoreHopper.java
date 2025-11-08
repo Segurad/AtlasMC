@@ -6,7 +6,7 @@ import java.util.Set;
 import de.atlasmc.core.node.block.data.CoreAbstractDirectional;
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.Hopper;
 
 public class CoreHopper extends CoreAbstractDirectional implements Hopper {
@@ -18,10 +18,10 @@ public class CoreHopper extends CoreAbstractDirectional implements Hopper {
 					BlockFace.WEST,
 					BlockFace.DOWN);
 	
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreAbstractDirectional.PROPERTIES, BlockDataProperty.ENABLED);
+		PROPERTIES = merge(CoreAbstractDirectional.PROPERTIES, PropertyType.ENABLED);
 	}
 	
 	private boolean enabled;
@@ -66,7 +66,7 @@ public class CoreHopper extends CoreAbstractDirectional implements Hopper {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

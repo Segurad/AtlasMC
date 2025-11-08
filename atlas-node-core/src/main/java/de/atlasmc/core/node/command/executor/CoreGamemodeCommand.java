@@ -11,7 +11,7 @@ import de.atlasmc.node.Gamemode;
 import de.atlasmc.node.NodePlayer;
 import de.atlasmc.node.entity.Player;
 import de.atlasmc.registry.RegistryValue;
-import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.enums.EnumUtil;
 
 @RegistryValue(registry = "atlas:command/executor", key="atlas-core:gamemode")
 public class CoreGamemodeCommand implements CommandExecutor {

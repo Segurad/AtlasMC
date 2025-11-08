@@ -4,15 +4,15 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreWaterloggedDirectional4Faces;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.DecoratedPot;
 
 public class CoreDecoratedPot extends CoreWaterloggedDirectional4Faces implements DecoratedPot {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreWaterloggedDirectional4Faces.PROPERTIES, BlockDataProperty.CRACKED);
+		PROPERTIES = merge(CoreWaterloggedDirectional4Faces.PROPERTIES, PropertyType.CRACKED);
 	}
 	
 	private boolean cracked;
@@ -42,7 +42,7 @@ public class CoreDecoratedPot extends CoreWaterloggedDirectional4Faces implement
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

@@ -6,13 +6,13 @@ import java.util.UUID;
 import de.atlasmc.io.ProtocolException;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.io.codec.StreamSerializable;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.entity.LivingEntity;
 import de.atlasmc.util.annotation.InternalAPI;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.codec.CodecContext;
-import de.atlasmc.util.nbt.codec.NBTCodec;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
 import io.netty.buffer.ByteBuf;
 
 import static de.atlasmc.io.PacketUtil.writeVarInt;

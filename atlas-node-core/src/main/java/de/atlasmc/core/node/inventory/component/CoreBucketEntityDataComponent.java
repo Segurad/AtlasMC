@@ -7,7 +7,7 @@ import de.atlasmc.node.entity.TropicalFish.Pattern;
 import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.BucketEntityDataComponent;
 import de.atlasmc.node.inventory.component.ComponentType;
-import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.enums.EnumUtil;
 
 public class CoreBucketEntityDataComponent extends AbstractItemComponent implements BucketEntityDataComponent {
 	

@@ -1,6 +1,7 @@
 package de.atlasmc.chat.component.event.click;
 
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 
 public final class CopyToClipboardClickEvent implements ClickEvent {
 	
@@ -8,7 +9,7 @@ public final class CopyToClipboardClickEvent implements ClickEvent {
 	NBT_HANDLER = NBTCodec
 					.builder(CopyToClipboardClickEvent.class)
 					.include(ClickEvent.NBT_HANDLER)
-					.string("value", CopyToClipboardClickEvent::getValue, CopyToClipboardClickEvent::setValue)
+					.codec("value", CopyToClipboardClickEvent::getValue, CopyToClipboardClickEvent::setValue, NBTCodecs.STRING)
 					.build();
 	
 	private String value;

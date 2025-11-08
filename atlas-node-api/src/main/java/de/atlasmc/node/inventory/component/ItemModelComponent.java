@@ -1,7 +1,7 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
 
 public interface ItemModelComponent extends ItemComponent {
 	
@@ -9,7 +9,7 @@ public interface ItemModelComponent extends ItemComponent {
 	NBT_HANDLER = NBTCodec
 					.builder(ItemModelComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.namespacedKey(ComponentType.ITEM_MODEL.getNamespacedKey(), ItemModelComponent::getModel, ItemModelComponent::setModel)
+					.codec(ComponentType.ITEM_MODEL.getNamespacedKey(), ItemModelComponent::getModel, ItemModelComponent::setModel, NamespacedKey.NBT_CODEC)
 					.build();
 	
 	NamespacedKey getModel();

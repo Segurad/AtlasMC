@@ -2,16 +2,16 @@ package de.atlasmc.node.inventory.component;
 
 import java.util.Map;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface ItemComponentHolder {
 	
 	public static final NBTCodec<ItemComponentHolder>
 	NBT_HANDLER = NBTCodec
 					.builder(ItemComponentHolder.class)
-					.compoundMapType2Type("components", ItemComponentHolder::hasComponents, ItemComponentHolder::getComponents, ItemComponent.NBT_CODEC, ItemComponent::getType)
+					.mapTypeToCodec("components", ItemComponentHolder::hasComponents, ItemComponentHolder::getComponents, ItemComponent.NBT_CODEC, ItemComponent::getType)
 					.build();
 	
 	@NotNull

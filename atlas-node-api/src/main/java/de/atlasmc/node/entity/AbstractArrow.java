@@ -1,11 +1,10 @@
 package de.atlasmc.node.entity;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.sound.EnumSound;
-import de.atlasmc.node.sound.ResourceSound;
 import de.atlasmc.node.sound.Sound;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface AbstractArrow extends Projectile {
 	
@@ -15,16 +14,16 @@ public interface AbstractArrow extends Projectile {
 					.include(Projectile.NBT_HANDLER)
 					.boolField("crit", AbstractArrow::isCritical, AbstractArrow::setCritical, false)
 					.doubleField("damage", AbstractArrow::getDamage, AbstractArrow::setDamage, 2)
-					.typeCompoundField("inBlockState", AbstractArrow::getBlockDataIn, AbstractArrow::setBlockDataIn, BlockData.NBT_HANDLER)
+					.codec("inBlockState", AbstractArrow::getBlockDataIn, AbstractArrow::setBlockDataIn, BlockData.NBT_HANDLER)
 					.boolField("inGround", AbstractArrow::isInGround, AbstractArrow::setInGround, false)
 					.shortField("life", AbstractArrow::getLifeTime, AbstractArrow::setLifeTime, (short) 1200)
 					.boolField("pickup", AbstractArrow::isPickupable, AbstractArrow::setPickupable, true)
 					.byteField("PierceLevel", AbstractArrow::getPiercingLevel, AbstractArrow::setPiercingLevel, (byte) 0)
 					.byteField("shake", AbstractArrow::getShake, AbstractArrow::setShake, (byte) 0)
 					.boolField("ShotFromCrossbow", AbstractArrow::isShotFromCrossbow, AbstractArrow::setShotFromCrossbow)
-					.enumStringOrType("SoundEvent", AbstractArrow::getHitSound, AbstractArrow::setHitSound, EnumSound.class, ResourceSound.NBT_CODEC, EnumSound.ENTITY_ARROW_HIT)
-					.typeCompoundField("item", AbstractArrow::getItem, AbstractArrow::setItem, ItemStack.NBT_HANDLER)
-					.typeCompoundField("weapon", AbstractArrow::getWeapon, AbstractArrow::setWeapon, ItemStack.NBT_HANDLER)
+					.codec("SoundEvent", AbstractArrow::getHitSound, AbstractArrow::setHitSound, Sound.NBT_CODEC, EnumSound.ENTITY_ARROW_HIT)
+					.codec("item", AbstractArrow::getItem, AbstractArrow::setItem, ItemStack.NBT_HANDLER)
+					.codec("weapon", AbstractArrow::getWeapon, AbstractArrow::setWeapon, ItemStack.NBT_HANDLER)
 					.build();
 	
 	ItemStack getItem();

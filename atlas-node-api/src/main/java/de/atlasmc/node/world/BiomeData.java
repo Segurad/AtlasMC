@@ -1,8 +1,9 @@
 package de.atlasmc.node.world;
 
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
+import de.atlasmc.util.enums.EnumName;
+import de.atlasmc.util.enums.EnumUtil;
 
 public class BiomeData implements NBTSerializable {
 	
@@ -11,9 +12,9 @@ public class BiomeData implements NBTSerializable {
 					.builder(BiomeData.class)
 					.boolField("has_precipitation", BiomeData::hasPrecipitation, BiomeData::setPrecipitation, false)
 					.floatField("temparature", BiomeData::getTemperature, BiomeData::setTemperature, 0)
-					.enumStringField("temperature_modifier", BiomeData::getTemperatureModifier, BiomeData::setTemperatureModifier, TemperatureModifier.class, TemperatureModifier.NONE)
+					.codec("temperature_modifier", BiomeData::getTemperatureModifier, BiomeData::setTemperatureModifier, EnumUtil.enumStringNBTCodec(TemperatureModifier.class), TemperatureModifier.NONE)
 					.floatField("downfall", BiomeData::getDownfall, BiomeData::setDownfall, 0)
-					.typeCompoundField("effects", BiomeData::getEffects, BiomeData::setEffects, BiomeEffects.NBT_HANDLER)
+					.codec("effects", BiomeData::getEffects, BiomeData::setEffects, BiomeEffects.NBT_HANDLER)
 					.build();
 	
 	private boolean precipitation;

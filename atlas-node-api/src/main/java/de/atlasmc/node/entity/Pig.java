@@ -1,20 +1,21 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.registry.RegistryKey;
 
 public interface Pig extends Animal {
 	
 	public static final NBTCodec<Pig>
 	NBT_HANDLER = NBTCodec
 					.builder(Pig.class)
-					.include(Animal.NBT_HANDLER)
+					.include(Animal.NBT_CODEC)
 					.boolField("HasSaddle", Pig::hasSaddle, Pig::setSaddle, false)
 					.intField("BoostTime", Pig::getBoostTime, Pig::setBoostTime, 0)
-					.registryValue("variant", Pig::getVariant, Pig::setVariant, Registries.getRegistry(PigVariant.class))
+					.codec("variant", Pig::getVariant, Pig::setVariant, Registries.registryValueNBTCodec(PigVariant.REGISTRY_KEY))
 					.build();
 	
 	boolean hasSaddle();
@@ -32,13 +33,15 @@ public interface Pig extends Animal {
 	@RegistryHolder(key = "minecraft:pig_variant", target = Target.PROTOCOL)
 	public static class PigVariant extends EntityVariant {
 		
+		public static final RegistryKey<PigVariant> REGISTRY_KEY = Registries.getRegistryKey(PigVariant.class);
+		
 		public static final NBTCodec<PigVariant>
 		NBT_HANDLER = NBTCodec
 						.builder(PigVariant.class)
 						.defaultConstructor(PigVariant::new)
 						.include(PigVariant.NBT_HANDLER)
-						.namespacedKey("asset_id", PigVariant::getAssetID, PigVariant::setAssetID)
-						.namespacedKey("model", PigVariant::getModel, PigVariant::setModel)
+						.codec("asset_id", PigVariant::getAssetID, PigVariant::setAssetID, NamespacedKey.NBT_CODEC)
+						.codec("model", PigVariant::getModel, PigVariant::setModel, NamespacedKey.NBT_CODEC)
 						.build();
 		
 		private NamespacedKey assetID;

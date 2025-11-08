@@ -4,17 +4,17 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreOrientable;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.Crafter;
 
 public class CoreCrafter extends CoreOrientable implements Crafter {
 
-protected static final List<BlockDataProperty<?>> PROPERTIES;
+protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
 		PROPERTIES = merge(CoreOrientable.PROPERTIES, 
-				BlockDataProperty.TRIGGERED,
-				BlockDataProperty.CRAFTING);
+				PropertyType.TRIGGERED,
+				PropertyType.CRAFTING);
 	}
 	
 	protected boolean triggered;
@@ -55,7 +55,7 @@ protected static final List<BlockDataProperty<?>> PROPERTIES;
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

@@ -84,16 +84,16 @@ public class WorldBuilder implements Builder<World> {
 		this.dimension = getRequiredOptional(Dimension.class, "dimension", config);
 		Pair<ChunkGeneratorFactory, ConfigurationSection> chunkGen =
 				getOptionalFactory(ChunkGeneratorFactory.class, "chunk-generator", config);
-		this.chunkGenerator = chunkGen.getValue1();
-		this.chunkGenConfig = chunkGen.getValue2();
+		this.chunkGenerator = chunkGen.value1();
+		this.chunkGenConfig = chunkGen.value2();
 		Pair<ChunkLoaderFactory, ConfigurationSection> loader =
 				getOptionalFactory(ChunkLoaderFactory.class, "chunk-loader", config);
-		this.chunkLoader = loader.getValue1();
-		this.chunkLoaderConfig = loader.getValue2();
+		this.chunkLoader = loader.value1();
+		this.chunkLoaderConfig = loader.value2();
 		Pair<ChunkProviderFactory, ConfigurationSection> provider = 
 				getOptionalFactory(ChunkProviderFactory.class, "chunk-provider", config);
-		this.chunkProviderFactory = provider.getValue1();
-		this.chunkProviderConfig = provider.getValue2();
+		this.chunkProviderFactory = provider.value1();
+		this.chunkProviderConfig = provider.value2();
 	}
 	
 	public LocalServer getServer() {

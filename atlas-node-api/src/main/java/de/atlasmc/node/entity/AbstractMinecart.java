@@ -1,8 +1,8 @@
 package de.atlasmc.node.entity;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.BlockData;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface AbstractMinecart extends Vehicle {
 	
@@ -11,7 +11,7 @@ public interface AbstractMinecart extends Vehicle {
 					.builder(AbstractMinecart.class)
 					.include(Vehicle.NBT_CODEC)
 					.intField("DisplayOffset", AbstractMinecart::getCustomBlockY, AbstractMinecart::setCustomBlockY)
-					.typeCompoundField("DisplayState", AbstractMinecart::getCustomBlock, AbstractMinecart::setCustomBlock, BlockData.NBT_HANDLER)
+					.codec("DisplayState", AbstractMinecart::getCustomBlock, AbstractMinecart::setCustomBlock, BlockData.NBT_HANDLER)
 					.build();
 	
 	BlockData getCustomBlock();

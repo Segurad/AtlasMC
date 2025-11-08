@@ -44,7 +44,7 @@ public abstract class AbstractConnectionHandler implements ConnectionHandler {
 		Packet next = chunker.nextChunk();
 		if (next == null)
 			return;
-		sendPacket(next, (future) -> {
+		sendPacket(next, (_) -> {
 			sendChunkedPacket(chunker);
 		});
 	}

@@ -17,8 +17,8 @@ public class NamespacedKeyTest {
 		NamespacedKey key = NamespacedKey.of(TEST_NAMESPACED_KEY);
 		Assertions.assertNotNull(key, "NamespacedKey was null!");
 		Assertions.assertEquals(TEST_NAMESPACED_KEY, key.toString(), "Full namespaced key missmatch!");
-		Assertions.assertEquals(TEST_KEY, key.getKey(), "Key missmatch!");
-		Assertions.assertEquals(TEST_NAMESPACE, key.getNamespace(), "Namespace missmatch!");
+		Assertions.assertEquals(TEST_KEY, key.key(), "Key missmatch!");
+		Assertions.assertEquals(TEST_NAMESPACE, key.namespace(), "Namespace missmatch!");
 	}
 	
 	@Test
@@ -26,8 +26,8 @@ public class NamespacedKeyTest {
 		NamespacedKey key = NamespacedKey.of(TEST_NAMESPACE, TEST_KEY);
 		Assertions.assertNotNull(key, "NamespacedKey was null!");
 		Assertions.assertEquals(TEST_NAMESPACED_KEY, key.toString(), "Full namespaced key missmatch!");
-		Assertions.assertEquals(TEST_KEY, key.getKey(), "Key missmatch!");
-		Assertions.assertEquals(TEST_NAMESPACE, key.getNamespace(), "Namespace missmatch!");
+		Assertions.assertEquals(TEST_KEY, key.key(), "Key missmatch!");
+		Assertions.assertEquals(TEST_NAMESPACE, key.namespace(), "Namespace missmatch!");
 	}
 	
 	@Test
@@ -35,8 +35,8 @@ public class NamespacedKeyTest {
 		NamespacedKey key = NamespacedKey.literal(TEST_NAMESPACED_KEY);
 		Assertions.assertNotNull(key, "NamespacedKey was null!");
 		Assertions.assertEquals(TEST_NAMESPACED_KEY, key.toString(), "Full namespaced key missmatch!");
-		Assertions.assertEquals(TEST_KEY, key.getKey(), "Key missmatch!");
-		Assertions.assertEquals(TEST_NAMESPACE, key.getNamespace(), "Namespace missmatch!");
+		Assertions.assertEquals(TEST_KEY, key.key(), "Key missmatch!");
+		Assertions.assertEquals(TEST_NAMESPACE, key.namespace(), "Namespace missmatch!");
 	}
 
 }

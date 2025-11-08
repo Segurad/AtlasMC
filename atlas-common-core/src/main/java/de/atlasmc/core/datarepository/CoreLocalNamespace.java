@@ -60,12 +60,12 @@ class CoreLocalNamespace implements RepositoryNamespace {
 	}
 
 	protected ConfigurationSection loadEntry(NamespacedKey key) throws IOException {
-		return JsonConfiguration.loadConfiguration(new File(metaDir, key.getKey()));
+		return JsonConfiguration.loadConfiguration(new File(metaDir, key.key()));
 	}
 
 	@Override
 	public RepositoryEntry getEntry(NamespacedKey key) {
-		if (!namespace.equals(key.getNamespace()))
+		if (!namespace.equals(key.namespace()))
 			return null;
 		return repo.getLocalEntry(key);
 	}
@@ -218,7 +218,7 @@ class CoreLocalNamespace implements RepositoryNamespace {
 	protected RepositoryEntryUpdate internalUpdate(CoreLocalRepositoryEntry entry, boolean shallow) throws IOException {
 		Path entryRoot = path.resolve(entry.getRoot());
 		if (!Files.exists(entryRoot)) {
-			File metaFile = new File(metaDir, entry.getKey() + ".json");
+			File metaFile = new File(metaDir, entry.getNamespacedKey().key() + ".json");
 			metaFile.delete();
 			return new CoreRepositoryEntryUpdate(entry.getNamespacedKey(), Change.DELETED, List.of());
 		}
@@ -287,7 +287,7 @@ class CoreLocalNamespace implements RepositoryNamespace {
 		}
 		Change change = null;
 		if (updated) {
-			File metaFile = new File(metaDir, entry.getKey() + ".json");
+			File metaFile = new File(metaDir, entry.getNamespacedKey().key() + ".json");
 			entry.toConfiguration(new JsonConfiguration()).save(metaFile);
 			change = Change.CHANGED;
 		}

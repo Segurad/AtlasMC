@@ -2,8 +2,8 @@ package de.atlasmc.node.entity;
 
 import java.util.List;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.HorseInventory;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface Horse extends AbstractHorse {
 	

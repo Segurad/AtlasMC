@@ -4,15 +4,15 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreRotatable;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.Skull;
 
 public class CoreSkull extends CoreRotatable implements Skull {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreRotatable.PROPERTIES, BlockDataProperty.POWERED);
+		PROPERTIES = merge(CoreRotatable.PROPERTIES, PropertyType.POWERED);
 	}
 	
 	private boolean powered;
@@ -37,7 +37,7 @@ public class CoreSkull extends CoreRotatable implements Skull {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

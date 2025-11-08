@@ -1,11 +1,11 @@
 package de.atlasmc.node.entity;
 
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.CraftingInventory;
 import de.atlasmc.node.inventory.InventoryHolder;
 import de.atlasmc.node.inventory.ItemType;
 import de.atlasmc.node.inventory.MainHand;
 import de.atlasmc.node.inventory.PlayerInventory;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface HumanEntity extends LivingEntity, InventoryHolder {
 	
@@ -33,8 +33,8 @@ public interface HumanEntity extends LivingEntity, InventoryHolder {
 					// ignore_fall_damage_from_current_explosion
 					// Inventory
 					// LastDeathLocation
-					.typeCompoundField("ShoulderEntityLeft", HumanEntity::getLeftShoulder, HumanEntity::setLeftShoulder, Entity.NBT_CODEC)
-					.typeCompoundField("ShoulderEntityRight", HumanEntity::getRightShoulder, HumanEntity::setRightShoulder, Entity.NBT_CODEC)
+					.codec("ShoulderEntityLeft", HumanEntity::getLeftShoulder, HumanEntity::setLeftShoulder, Entity.NBT_CODEC)
+					.codec("ShoulderEntityRight", HumanEntity::getRightShoulder, HumanEntity::setRightShoulder, Entity.NBT_CODEC)
 					.build();
 	
 	float getWalkSpeed();

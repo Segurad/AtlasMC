@@ -192,7 +192,7 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager impl
 		CompletableFuture<V> future = futures.get(key);
 		final CompletableFuture<Boolean> result = new CompletableFuture<>();
 		if (future != null && !future.isDone()) {
-			future.setListener((f) -> {
+			future.setListener((_) -> {
 				delete0(result, cache, futures, key, deleteFunction);
 			});
 		}

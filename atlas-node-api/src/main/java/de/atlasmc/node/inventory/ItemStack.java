@@ -9,6 +9,8 @@ import java.util.Set;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.io.codec.StreamSerializable;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.inventory.component.ComponentType;
 import de.atlasmc.node.inventory.component.ItemComponent;
 import de.atlasmc.node.inventory.component.ItemComponentHolder;
@@ -17,10 +19,6 @@ import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.map.key.CharKey;
-import de.atlasmc.util.nbt.TagType;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
-import de.atlasmc.util.nbt.io.NBTWriter;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
@@ -317,39 +315,6 @@ public class ItemStack implements NBTSerializable, StreamSerializable, ItemCompo
 			return false;
 		}
 		return true;
-	}
-	
-	/**
-	 * Same as {@link #toNBT(NBTWriter, boolean)} but does write the slot number
-	 * @param writer
-	 * @param systemData
-	 * @param slot the slot number or -999 for none
-	 * @throws IOException 
-	 */
-	public void toSlot(NBTWriter writer, boolean systemData, int slot) throws IOException {
-		if (systemData) {
-			writer.writeStringTag(NBT_ID, getType().getNamespacedKeyRaw());
-		} else {
-			writer.writeStringTag(NBT_ID, getType().getClientKey().toString());
-		}
-		writer.writeByteTag(NBT_COUNT, (byte) getAmount());
-		if (slot != -999) 
-			writer.writeByteTag(NBT_SLOT, slot);
-		if(components != null && !components.isEmpty()) {
-			writer.writeCompoundTag(NBT_COMPONENTS);
-			for (ItemComponent comp : components.values()) {
-				@SuppressWarnings("unchecked")
-				NBTCodec<ItemComponent> handler = (NBTCodec<ItemComponent>) comp.getNBTCodec();
-				handler.serialize(comp, writer, systemData ? CodecContext.DEFAULT_SERVER : CodecContext.DEFAULT_CLIENT);
-			}
-			writer.writeEndTag();
-		}
-		if (systemData && ignoredComponents != null && !ignoredComponents.isEmpty()) {
-			writer.writeListTag(NBT_IGNORED_COMPONENTS, TagType.STRING, ignoredComponents.size());
-			for (ComponentType type : ignoredComponents) {
-				writer.writeStringTag(null, type.getKey().toString());
-			}
-		}
 	}
 	
 	@Override

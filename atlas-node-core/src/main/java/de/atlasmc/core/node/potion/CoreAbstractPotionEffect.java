@@ -2,10 +2,11 @@ package de.atlasmc.core.node.potion;
 
 import java.util.UUID;
 
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.node.entity.LivingEntity;
 import de.atlasmc.node.potion.PotionEffect;
 import de.atlasmc.node.potion.PotionEffectType;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public abstract class CoreAbstractPotionEffect implements PotionEffect {
 	
@@ -18,7 +19,7 @@ public abstract class CoreAbstractPotionEffect implements PotionEffect {
 					.boolField("ambient", CoreAbstractPotionEffect::hasReducedAmbient, CoreAbstractPotionEffect::setReducedAmbient, false)
 					.boolField("show_particles", CoreAbstractPotionEffect::hasParticels, CoreAbstractPotionEffect::setParticles, true)
 					.boolField("show_icon", CoreAbstractPotionEffect::isShowingIcon, CoreAbstractPotionEffect::setIcon, true)
-					.uuid("uuid", CoreAbstractPotionEffect::getUUID, CoreAbstractPotionEffect::setUUID)
+					.codec("uuid", CoreAbstractPotionEffect::getUUID, CoreAbstractPotionEffect::setUUID, NBTCodecs.UUID_CODEC)
 					.build();
 	
 	private PotionEffectType type;

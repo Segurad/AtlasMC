@@ -4,15 +4,15 @@ import java.util.List;
 
 import de.atlasmc.core.node.block.data.CoreBlockData;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.node.block.data.property.BlockDataProperty;
+import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.node.block.data.type.Jukebox;
 
 public class CoreJukebox extends CoreBlockData implements Jukebox {
 
-	protected static final List<BlockDataProperty<?>> PROPERTIES;
+	protected static final List<PropertyType<?>> PROPERTIES;
 	
 	static {
-		PROPERTIES = merge(CoreBlockData.PROPERTIES, BlockDataProperty.HAS_RECORD);
+		PROPERTIES = merge(CoreBlockData.PROPERTIES, PropertyType.HAS_RECORD);
 	}
 	
 	private boolean record;
@@ -37,7 +37,7 @@ public class CoreJukebox extends CoreBlockData implements Jukebox {
 	}
 	
 	@Override
-	public List<BlockDataProperty<?>> getProperties() {
+	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
 	}
 

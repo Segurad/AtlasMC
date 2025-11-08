@@ -5,10 +5,10 @@ import java.util.Map;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.chat.Chat;
+import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryKey;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public interface TrimComponent extends ItemComponent {
 	
@@ -17,8 +17,8 @@ public interface TrimComponent extends ItemComponent {
 					.builder(TrimComponent.class)
 					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.TRIM.getNamespacedKey())
-					.registryValue("pattern", TrimComponent::getTrimMaterial, TrimComponent::setTrimMaterial, TrimMaterial.REGISTRY_KEY)
-					.registryValue("material", TrimComponent::getTrimPattern, TrimComponent::setTrimPattern, TrimPattern.REGISTRY_KEY)
+					.codec("pattern", TrimComponent::getTrimMaterial, TrimComponent::setTrimMaterial, Registries.registryValueNBTCodec(TrimMaterial.REGISTRY_KEY))
+					.codec("material", TrimComponent::getTrimPattern, TrimComponent::setTrimPattern, Registries.registryValueNBTCodec(TrimPattern.REGISTRY_KEY))
 					.endComponent()
 					.build();
 	

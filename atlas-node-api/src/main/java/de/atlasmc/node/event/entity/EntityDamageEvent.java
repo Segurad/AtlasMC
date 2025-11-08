@@ -1,13 +1,12 @@
 package de.atlasmc.node.event.entity;
 
 import de.atlasmc.event.Cancellable;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.entity.DamageType;
 import de.atlasmc.node.entity.Entity;
 import de.atlasmc.node.event.ServerHandlerList;
-import de.atlasmc.registry.Registries;
 import de.atlasmc.util.dataset.DataSet;
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
 
 public class EntityDamageEvent extends EntityEvent implements Cancellable {
 	
@@ -43,7 +42,7 @@ public class EntityDamageEvent extends EntityEvent implements Cancellable {
 						.builder(DamageReduction.class)
 						.defaultConstructor(DamageReduction::new)
 						.setRedirectAfterConstruction(false)
-						.dataSetField("type", DamageReduction::getTypes, DamageReduction::setTypes, Registries.getRegistry(DamageType.class))
+						.codec("type", DamageReduction::getTypes, DamageReduction::setTypes, DataSet.nbtCodec(DamageType.REGISTRY_KEY))
 						.floatField("base", DamageReduction::getBase, DamageReduction::setBase, 0)
 						.floatField("factor", DamageReduction::getFactor, DamageReduction::setFactor, 0)
 						.floatField("horizontal_blocking_angle", DamageReduction::getBlockAngle, DamageReduction::setBlockAngle, 90)

@@ -1,17 +1,18 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
-import de.atlasmc.util.EnumName;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.enums.EnumName;
+import de.atlasmc.util.enums.EnumUtil;
 
 public interface Armadillo extends Animal {
 	
 	public static final NBTCodec<Armadillo>
 	NBT_HANDLER = NBTCodec
 					.builder(Armadillo.class)
-					.include(Animal.NBT_HANDLER)
+					.include(Animal.NBT_CODEC)
 					.intField("scute_time", Armadillo::getScuteTime, Armadillo::setScuteTime, -1)
-					.enumStringField("state", Armadillo::getState, Armadillo::setState, ArmadilloState.class, ArmadilloState.IDLE)
+					.codec("state", Armadillo::getState, Armadillo::setState, EnumUtil.enumStringNBTCodec(ArmadilloState.class), ArmadilloState.IDLE)
 					.build();
 	
 	int getScuteTime();

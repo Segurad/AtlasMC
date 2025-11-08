@@ -1,7 +1,7 @@
 package de.atlasmc.node.world.particle;
 
-import de.atlasmc.util.nbt.codec.NBTSerializable;
-import de.atlasmc.util.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
 
 public interface Particle extends NBTSerializable, Cloneable {
 	

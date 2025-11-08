@@ -14,7 +14,7 @@ import de.atlasmc.node.BossBar.BarColor;
 import de.atlasmc.node.BossBar.BarStyle;
 import de.atlasmc.node.io.protocol.play.PacketOutBossBar;
 import de.atlasmc.node.io.protocol.play.PacketOutBossBar.BossBarAction;
-import de.atlasmc.util.EnumUtil;
+import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutBossBar implements PacketIO<PacketOutBossBar> {

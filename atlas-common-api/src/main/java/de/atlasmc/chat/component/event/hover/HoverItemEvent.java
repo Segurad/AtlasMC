@@ -1,9 +1,9 @@
 package de.atlasmc.chat.component.event.hover;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.util.nbt.codec.NBTCodec;
-import de.atlasmc.util.nbt.codec.type.FieldType;
-import de.atlasmc.util.nbt.tag.NBT;
+import de.atlasmc.nbt.codec.CodecTags;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.tag.NBT;
 
 public class HoverItemEvent implements HoverEvent {
 	
@@ -11,9 +11,9 @@ public class HoverItemEvent implements HoverEvent {
 	NBT_HANDLER = NBTCodec
 					.builder(HoverItemEvent.class)
 					.include(HoverEvent.NBT_HANDLER)
-					.namespacedKey("id", HoverItemEvent::getID, HoverItemEvent::setID)
+					.codec("id", HoverItemEvent::getID, HoverItemEvent::setID, NamespacedKey.NBT_CODEC)
 					.intField("count", HoverItemEvent::getCount, HoverItemEvent::setCount, 1)
-					.rawField("components", FieldType.COMPOUND, HoverItemEvent::getComponents, HoverItemEvent::setComponents)
+					.codec("components", HoverItemEvent::getComponents, HoverItemEvent::setComponents, NBT.rawFieldNBTCodec(CodecTags.COMPOUND))
 					.build();
 	
 	private NamespacedKey id;

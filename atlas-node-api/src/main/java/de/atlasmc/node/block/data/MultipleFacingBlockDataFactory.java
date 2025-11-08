@@ -7,9 +7,9 @@ import java.util.Set;
 
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.block.BlockType;
-import de.atlasmc.util.EnumUtil;
-import de.atlasmc.util.EnumUtil.EnumData;
 import de.atlasmc.util.configuration.ConfigurationSection;
+import de.atlasmc.util.enums.EnumUtil;
+import de.atlasmc.util.enums.EnumUtil.EnumData;
 
 /**
  * ClassMetaDataFactory implementation for {@link MultipleFacing} Blocks that applies default faces.
