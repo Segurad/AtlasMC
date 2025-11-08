@@ -249,11 +249,9 @@ public abstract class PropertyType<T> {
 
 	public boolean match(BlockData data, T value) {
 		T present = get(data);
-		if (present == value)
-			return true;
 		if (present != null)
 			return present.equals(value);
-		return false;
+		return value == null;
 	}
 
 	public abstract boolean supports(BlockData data);

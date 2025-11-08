@@ -4,32 +4,14 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import de.atlasmc.node.entity.AbstractVillager.VillagerType;
-import de.atlasmc.test.util.EnumTest;
-import de.atlasmc.test.util.EnumTest.EnumTestCases;
+import de.atlasmc.test.util.EnumTestUtil;
 
-public class VillagerTypeTest implements EnumTestCases {
+public class VillagerTypeTest {
 	
 	@Test
 	@Order(Integer.MAX_VALUE)
 	void testVillagerTypes() throws Exception {
-		EnumTest.testRegistryProtocolEnum(VillagerType.class, "/minecraft/registries/registry_minecraft_villager_type.json");
-	}
-
-	@Test
-	@Override
-	public void testCacheMethods() {
-		EnumTest.testCacheMethods(VillagerType.class);
-	}
-
-	@Test
-	@Override
-	public void testIDMethods() {
-		EnumTest.testIDMethods(VillagerType.class);
-	}
-
-	@Override
-	public void testNameMethods() {
-		EnumTest.testNameMethods(VillagerType.class);
+		EnumTestUtil.testRegistryProtocolEnum(VillagerType.class, "/minecraft/registries/registry_minecraft_villager_type.json");
 	}
 
 }

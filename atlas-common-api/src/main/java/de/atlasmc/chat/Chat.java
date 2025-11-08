@@ -30,13 +30,14 @@ public interface Chat extends OpenCloneable, StreamSerializable {
 		
 		@Override
 		public List<Chat> deserialize(List<Chat> value, NBTReader input, CodecContext context) throws IOException {
+			List<Chat> list = value;
 			if (value == null)
-				value = new ArrayList<>();
+				list = new ArrayList<>();
 			final TagType listType = input.getListType();
 			if (listType == TagType.TAG_END || input.getNextPayload() == 0) {
 				input.readNextEntry();
 				input.readNextEntry();
-				return value;
+				return list;
 			}
 			switch (listType) {
 			case COMPOUND:
@@ -44,7 +45,7 @@ public interface Chat extends OpenCloneable, StreamSerializable {
 				while (input.getRestPayload() > 0) {
 					input.readNextEntry();
 					Chat v = ChatComponent.NBT_CODEC.deserialize(input, context);
-					value.add(v);
+					list.add(v);
 				}
 				input.readNextEntry();
 				break;
@@ -53,7 +54,7 @@ public interface Chat extends OpenCloneable, StreamSerializable {
 				while (input.getRestPayload() > 0) {
 					String raw = input.readStringTag();
 					Chat v = ChatUtil.toChat(raw);
-					value.add(v);
+					list.add(v);
 				}
 				input.readNextEntry();
 				break;
