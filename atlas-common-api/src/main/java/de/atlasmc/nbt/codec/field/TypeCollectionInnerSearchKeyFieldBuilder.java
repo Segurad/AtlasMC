@@ -58,13 +58,5 @@ public class TypeCollectionInnerSearchKeyFieldBuilder<T, V extends NBTSerializab
 	protected TypeCollectionInnerSearchKeyFieldBuilder<T, V, C> getThis() {
 		return this;
 	}
-	
-	@Override
-	public void clear() {
-		super.clear();
-		keyField = null;
-		keyReverse = null;
-		keySupplier = null;
-	}
 
 }

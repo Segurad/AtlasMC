@@ -134,13 +134,4 @@ public class PrimitiveFieldBuilder<T, G, S> extends NBTFieldBuilder<T, Primitive
 		return this;
 	}
 	
-	@Override
-	public void clear() {
-		super.clear();
-		defaultValue = null;
-		getter = null;
-		setter = null;
-		type = null;
-	}
-	
 }

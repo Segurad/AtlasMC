@@ -101,7 +101,6 @@ public class CommandContextBuilder implements Builder<CommandContext> {
 		return new CommandContext(sender, rawCommand, command, parsedArgs, arguments, lastArg);
 	}
 
-	@Override
 	public void clear() {
 		sender = null;
 		rawCommand = null;

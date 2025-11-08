@@ -67,11 +67,4 @@ public class AtlasNodeBuilder implements Builder<LocalAtlasNode> {
 		return factory.createNode(this);
 	}
 
-	@Override
-	public void clear() {
-		serverManager = null;
-		proxyManager = null;
-		protocolAdapterHandler = null;
-	}
-
 }

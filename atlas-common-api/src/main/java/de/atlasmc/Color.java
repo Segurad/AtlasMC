@@ -14,6 +14,9 @@ import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.annotation.ThreadSafe;
 import de.atlasmc.util.codec.CodecContext;
 
+/**
+ * Simple rgba color value
+ */
 @ThreadSafe
 public final class Color implements ColorValue {
 	

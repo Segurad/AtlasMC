@@ -14,6 +14,9 @@ import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.enums.EnumUtil;
 
+/**
+ * Represents a color value
+ */
 public interface ColorValue {
 	
 	public static final NBTCodec<ColorValue> NBT_CODEC = new NBTCodec<ColorValue>() {

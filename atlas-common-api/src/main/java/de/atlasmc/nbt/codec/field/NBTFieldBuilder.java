@@ -32,10 +32,4 @@ public abstract class NBTFieldBuilder<T, B extends NBTFieldBuilder<T, B>> implem
 	
 	protected abstract B getThis();
 
-	@Override
-	public void clear() {
-		key = null;
-		serverOnly = false;
-	}
-
 }

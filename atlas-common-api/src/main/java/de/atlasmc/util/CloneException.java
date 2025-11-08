@@ -1,5 +1,8 @@
 package de.atlasmc.util;
 
+/**
+ * Runtime that can be throw in clone operations
+ */
 public class CloneException extends RuntimeException {
 
 	/**

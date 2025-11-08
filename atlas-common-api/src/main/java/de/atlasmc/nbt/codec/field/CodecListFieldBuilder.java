@@ -33,11 +33,5 @@ public class CodecListFieldBuilder<T, V> extends AbstractCollectionFieldBuilder<
 	protected CodecListFieldBuilder<T, V> getThis() {
 		return this;
 	}
-	
-	@Override
-	public void clear() {
-		super.clear();
-		optional = true;
-	}
 
 }

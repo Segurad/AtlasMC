@@ -86,14 +86,4 @@ public abstract class CoreAbstractAtlasNetworkHandlerBuilder<T extends CoreAbstr
 	
 	public abstract T getThis();
 
-	@Override
-	public void clear() {
-		nodeManager = null;
-		profileHandler = null;
-		serverManager = null;
-		permissionManager = null;
-		publicKey = null;
-		uuid = null;
-	}
-
 }

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 
 import de.atlasmc.nbt.TagType;
@@ -42,8 +41,6 @@ public class NamespacedKey implements CharSequence {
 			return CodecTags.STRING;
 		}
 	};
-	
-	private static final Function<Namespaced, NamespacedKey> KEY_SUPPLIER = Namespaced::getNamespacedKey;
 	
 	/**
 	 * Key for {@link Namespaced} classes that have no unique key
@@ -108,12 +105,10 @@ public class NamespacedKey implements CharSequence {
 		return hasChildKey() ? NamespacedKey.of(key) : null;
 	}
 	
+	/**
+	 * Represents a object that has a {@link NamespacedKey}
+	 */
 	public static interface Namespaced {
-		
-		@SuppressWarnings("unchecked")
-		public static <T extends Namespaced> Function<T, NamespacedKey> getKeySupplier() {
-			return (Function<T, NamespacedKey>) KEY_SUPPLIER;
-		}
 		
 		/**
 		 * Returns the {@link NamespacedKey} of this Object

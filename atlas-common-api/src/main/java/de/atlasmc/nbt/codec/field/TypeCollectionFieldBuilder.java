@@ -35,11 +35,5 @@ public class TypeCollectionFieldBuilder<T, V> extends AbstractCollectionFieldBui
 	protected TypeCollectionFieldBuilder<T, V> getThis() {
 		return this;
 	}
-	
-	@Override
-	public void clear() {
-		super.clear();
-		setter = null;
-	}
 
 }

@@ -242,7 +242,6 @@ public class WorldBuilder implements Builder<World> {
 		return this;
 	}
 
-	@Override
 	public void clear() {
 		server = null;
 		name = null;

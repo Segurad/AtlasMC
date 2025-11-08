@@ -84,11 +84,6 @@ public class NBTCodecBuilder<T> implements AbstractNBTCompoundFieldBuilder<T, NB
 	public NBTCodec<T> build() {
 		return new NBTCodecImpl<>(getThis());
 	}
-
-	@Override
-	public void clear() {
-		this.constructor = null;
-	}
 	
 	public NBTCodecBuilder<T> include(NBTCodec<? super T> include) {
 		// TODO include

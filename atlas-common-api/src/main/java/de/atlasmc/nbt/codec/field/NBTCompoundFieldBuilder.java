@@ -198,12 +198,4 @@ public class NBTCompoundFieldBuilder<T> extends NBTFieldBuilder<T, NBTCompoundFi
 		return this;
 	}
 
-	@Override
-	public void clear() {
-		fieldOrder.clear();
-		typeFields.clear();
-		refCounts.clear();
-		buildPrepared = true;
-	}
-
 }

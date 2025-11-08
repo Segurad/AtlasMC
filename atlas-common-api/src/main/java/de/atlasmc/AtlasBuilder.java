@@ -28,16 +28,6 @@ public final class AtlasBuilder implements Builder<Boolean> {
 		return Boolean.TRUE;
 	}
 
-	@Override
-	public void clear() {
-		scheduler = null;
-		logger = null;
-		workDir = null;
-		pluginManager = null;
-		keyPair = null;
-		dataHandler = null;
-	}
-
 	public Scheduler getScheduler() {
 		return scheduler;
 	}

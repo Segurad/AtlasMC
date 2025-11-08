@@ -177,11 +177,5 @@ public class StreamCodecBuilder<T> implements Builder<StreamCodec<T>>{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public void clear() {
-		// TODO Auto-generated method stub
-		
-	}
 	
 }

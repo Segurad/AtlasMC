@@ -98,15 +98,4 @@ public class AtlasMasterBuilder implements Builder<Boolean> {
 		return true;
 	}
 
-	@Override
-	public void clear() {
-		logger = null;
-		nodeManager = null;
-		permissionManager = null;
-		profileManager = null;
-		socketManager = null;
-		serverManager = null;
-		uuid = null;
-	}
-
 }

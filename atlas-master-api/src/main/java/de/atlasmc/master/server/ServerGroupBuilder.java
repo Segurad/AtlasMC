@@ -171,7 +171,6 @@ public class ServerGroupBuilder implements Builder<ServerGroup> {
 		return AtlasMaster.getServerManager().createServerGroup(this);
 	}
 
-	@Override
 	public void clear() {
 		name = null;
 		minServers = 0;

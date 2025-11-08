@@ -65,14 +65,5 @@ public class CodecFieldBuilder<T, V> extends NBTFieldBuilder<T, CodecFieldBuilde
 		this.defaultValue = defaultValue;
 		return this;
 	}
-	
-	@Override
-	public void clear() {
-		super.clear();
-		defaultValue = null;
-		codec = null;
-		getter = null;
-		setter = null;
-	}
 
 }

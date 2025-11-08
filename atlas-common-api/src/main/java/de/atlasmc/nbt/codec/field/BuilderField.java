@@ -28,11 +28,6 @@ public class BuilderField<T> extends NBTField<T> implements Builder<NBTField<T>>
 	}
 
 	@Override
-	public void clear() {
-		builder.clear();
-	}
-
-	@Override
 	public boolean serialize(T type, NBTWriter writer, CodecContext context) throws IOException {
 		throw new UnsupportedOperationException("Builder");
 	}

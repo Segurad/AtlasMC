@@ -33,11 +33,5 @@ public class CodecArraySearchByteIndexFieldBuilder<T, V> extends AbstractCollect
 	protected CodecArraySearchByteIndexFieldBuilder<T, V> getThis() {
 		return this;
 	}
-	
-	@Override
-	public void clear() {
-		super.clear();
-		indexKey = null;
-	}
 
 }

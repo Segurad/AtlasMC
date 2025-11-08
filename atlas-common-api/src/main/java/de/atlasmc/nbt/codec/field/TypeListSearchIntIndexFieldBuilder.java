@@ -34,11 +34,5 @@ public class TypeListSearchIntIndexFieldBuilder<T, V> extends AbstractCollection
 	protected TypeListSearchIntIndexFieldBuilder<T, V> getThis() {
 		return this;
 	}
-	
-	@Override
-	public void clear() {
-		super.clear();
-		indexKey = null;
-	}
 
 }
