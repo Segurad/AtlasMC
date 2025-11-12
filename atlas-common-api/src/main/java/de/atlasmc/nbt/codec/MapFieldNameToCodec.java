@@ -31,16 +31,8 @@ final class MapFieldNameToCodec<V> implements NBTCodec<Map<String, V>> {
 	@Override
 	public boolean serialize(CharSequence key, Map<String, V> value, NBTWriter writer, CodecContext context) throws IOException {
 		writer.writeCompoundTag(key);
-		if (codec.isField()) {
-			for (Entry<String, V> entry : value.entrySet()) {
-				codec.serialize(entry.getKey(), entry.getValue(), writer, context);
-			}
-		} else {
-			for (Entry<String, V> entry : value.entrySet()) {
-				writer.writeCompoundTag(entry.getKey());
-				codec.serialize(entry.getValue(), writer, context);
-				writer.writeEndTag();
-			}
+		for (Entry<String, V> entry : value.entrySet()) {
+			codec.serialize(entry.getKey(), entry.getValue(), writer, context);
 		}
 		writer.writeEndTag();
 		return true;
@@ -49,19 +41,10 @@ final class MapFieldNameToCodec<V> implements NBTCodec<Map<String, V>> {
 	@Override
 	public Map<String, V> deserialize(Map<String, V> value, NBTReader reader, CodecContext context) throws IOException {
 		reader.readNextEntry();
-		if (codec.isField()) {
-			while (reader.getType() != TagType.TAG_END) {
-				String key = reader.getFieldName().toString();
-				V entry = codec.deserialize(reader);
-				value.put(key, entry);
-			}
-		} else {
-			while (reader.getType() != TagType.TAG_END) {
-				String key = reader.getFieldName().toString();
-				reader.readNextEntry();
-				V entry = codec.deserialize(reader);
-				value.put(key, entry);
-			}
+		while (reader.getType() != TagType.TAG_END) {
+			String key = reader.getFieldName().toString();
+			V entry = codec.deserialize(reader);
+			value.put(key, entry);
 		}
 		reader.readNextEntry();
 		return value;

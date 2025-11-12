@@ -50,5 +50,10 @@ public class SearchFieldRegistryConstructor<T, K extends Namespaced> extends Abs
 		NamespacedKey nkey = context.clientSide ? key.getClientKey() : key.getNamespacedKey();
 		writer.writeStringTag(keyField, nkey.toString());
 	}
+	
+	@Override
+	public boolean requiredField() {
+		return false;
+	}
 
 }

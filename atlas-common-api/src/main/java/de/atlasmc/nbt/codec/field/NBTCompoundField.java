@@ -1,6 +1,7 @@
 package de.atlasmc.nbt.codec.field;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import de.atlasmc.nbt.TagType;
@@ -26,13 +27,20 @@ public class NBTCompoundField<T> extends NBTField<T> {
 		this.typeFields = builder.buildTypeFieldsArray();
 		this.skips = builder.buildSkipArray();
 	}
-	
-	public ToBooleanFunction<T> getHasData() {
-		return has;
-	}
 
 	@Override
 	public boolean serialize(T value, NBTWriter writer, CodecContext context) throws IOException {
+		if (has != null && !has.applyAsBoolean(value))
+			return true;
+		if (serverOnly && context.clientSide)
+			return true;
+		writer.writeCompoundTag(key);
+		serializePartial(value, writer, context);
+		writer.writeEndTag();
+		return true;
+	}
+	
+	public boolean serializePartial(T value, NBTWriter writer, CodecContext context) throws IOException {
 		if (has != null && !has.applyAsBoolean(value))
 			return true;
 		for (int i = 0; i < count; i++) {
@@ -43,10 +51,16 @@ public class NBTCompoundField<T> extends NBTField<T> {
 		}
 		return true;
 	}
+	
+	
 
 	@Override
 	public void deserialize(T value, NBTReader reader, CodecContext context) throws IOException {
 		reader.readNextEntry();
+		deserializePartial(value, reader, context);
+	}
+	
+	public void deserializePartial(T value, NBTReader reader, CodecContext context) throws IOException {
 		TagType type = null;
 		while ((type = reader.getType()) != TagType.TAG_END) {
 			final Map<CharKey, NBTField<T>> fields = typeFields[type.getID() - 1];
@@ -62,6 +76,20 @@ public class NBTCompoundField<T> extends NBTField<T> {
 			field.deserialize(value, reader, context);
 		}
 		reader.readNextEntry();
+	}
+	
+	public List<NBTField<T>> getFields() {
+		return List.of(fields);
+	}
+	
+	void builder(NBTCompoundFieldBuilder<T> builder) {
+		builder
+		.setKey(key)
+		.setServerOnly(serverOnly)
+		.setHasData(has);
+		for (var field : fields) {
+			builder.addField(field);
+		}
 	}
 
 }

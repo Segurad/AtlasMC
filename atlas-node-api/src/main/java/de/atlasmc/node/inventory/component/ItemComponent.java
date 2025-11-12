@@ -29,6 +29,9 @@ public interface ItemComponent extends NBTSerializable, StreamSerializable, Open
 	ComponentType getType();
 	
 	@Override
+	ItemComponent clone();
+	
+	@Override
 	default NBTCodec<? extends ItemComponent> getNBTCodec() {
 		return NBT_CODEC;
 	}

@@ -135,26 +135,7 @@ public abstract class MetaDataType<T> {
 	
 	public static final MetaDataType<BlockFace> DIRECTION = new DirectionMetaType(TYPE_ID_DIRECTION);
 	
-	public static final MetaDataType<UUID> OPT_UUID = new MetaDataType<>(TYPE_ID_OPT_UUID, UUID.class, true) {
-
-        @Override
-        public UUID read(ByteBuf in, CodecContext context) {
-            if (!in.readBoolean()) 
-            	return null;
-            long most = in.readLong();
-            long least = in.readLong();
-            return new UUID(most, least);
-        }
-
-        @Override
-        public void write(UUID data, ByteBuf out, CodecContext context) {
-            out.writeBoolean(data != null);
-            if (data == null) return;
-            out.writeLong(data.getMostSignificantBits());
-            out.writeLong(data.getLeastSignificantBits());
-        }
-
-    };
+	public static final MetaDataType<UUID> OPT_UUID = new OptUUIDMetaType(TYPE_ID_OPT_UUID);
     
 	public static final MetaDataType<Integer> BLOCKSTATE = new VarIntMetaType(TYPE_ID_BLOCKSTATE);
 	

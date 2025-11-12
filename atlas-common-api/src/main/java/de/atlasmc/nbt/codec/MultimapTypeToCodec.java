@@ -46,7 +46,7 @@ final class MultimapTypeToCodec<K extends Namespaced, V> implements NBTCodec<Mul
 			for (V v : entry.getValue()) {
 				writer.writeCompoundTag();
 				writer.writeNamespacedKey(keyField, nKey);
-				codec.serialize(v, writer, context);
+				codec.serializePartial(v, writer, context);
 				writer.writeEndTag();
 			}
 		}
@@ -78,7 +78,7 @@ final class MultimapTypeToCodec<K extends Namespaced, V> implements NBTCodec<Mul
 				rawKey = reader.readNamespacedKey();
 			}
 			K key = keySupplier.apply(rawKey);
-			V entry = codec.deserialize(reader);
+			V entry = codec.deserializePartial(null, reader, context);
 			value.put(key, entry);
 		}
 		reader.readNextEntry();

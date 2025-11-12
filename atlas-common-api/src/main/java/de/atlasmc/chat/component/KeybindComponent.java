@@ -6,7 +6,7 @@ import de.atlasmc.nbt.codec.NBTCodecs;
 public class KeybindComponent extends AbstractBaseComponent<KeybindComponent> {
 
 	public static final NBTCodec<KeybindComponent> 
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(KeybindComponent.class)
 					.include(AbstractBaseComponent.NBT_CODEC)
 					.codec("keybind", KeybindComponent::getKey, KeybindComponent::setKey, NBTCodecs.STRING)
@@ -70,7 +70,7 @@ public class KeybindComponent extends AbstractBaseComponent<KeybindComponent> {
 	
 	@Override
 	public NBTCodec<? extends KeybindComponent> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

@@ -2,6 +2,7 @@ package de.atlasmc.nbt.codec.field;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import de.atlasmc.nbt.TagType;
 import de.atlasmc.nbt.io.NBTReader;
@@ -13,9 +14,9 @@ public class BuilderField<T> extends NBTField<T> implements Builder<NBTField<T>>
 
 	private final Builder<NBTField<T>> builder;
 	
-	public BuilderField(CharSequence key, List<TagType> types, boolean serverOnly, NBTCompoundFieldBuilder<T> builder) {
+	public BuilderField(CharSequence key, List<TagType> types, boolean serverOnly, Builder<NBTField<T>> builder) {
 		super(key, types, serverOnly);
-		this.builder = builder;
+		this.builder = Objects.requireNonNull(builder);
 	}
 	
 	public Builder<NBTField<T>> getBuilder() {

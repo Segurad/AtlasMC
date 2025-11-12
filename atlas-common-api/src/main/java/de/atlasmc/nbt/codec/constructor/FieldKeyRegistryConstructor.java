@@ -25,5 +25,10 @@ public class FieldKeyRegistryConstructor<T, K> extends AbstractRegistryConstruct
 	public void serialize(T value, NBTWriter writer, CodecContext context) throws IOException {
 		// not required
 	}
+	
+	@Override
+	public boolean requiredField() {
+		return true;
+	}
 
 }

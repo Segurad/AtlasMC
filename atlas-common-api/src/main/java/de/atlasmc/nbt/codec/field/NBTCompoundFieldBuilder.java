@@ -27,17 +27,38 @@ public class NBTCompoundFieldBuilder<T> extends NBTFieldBuilder<T, NBTCompoundFi
 	private boolean buildPrepared = true;
 	
 	public NBTCompoundFieldBuilder() {
-		setKey("root");
-		this.parent = null;
+		this(null, (CharSequence) null);
 	}
 	
-	public NBTCompoundFieldBuilder(CharSequence key, NBTCompoundFieldBuilder<T> parent, boolean serverOnly) {
+	private NBTCompoundFieldBuilder(NBTCompoundFieldBuilder<T> parent, CharSequence key) {
+		setKey(key);
 		this.parent = parent;
-		if (parent != null)
-			parent.addField(new BuilderField<>(key, CodecTags.COMPOUND, serverOnly, this));
 		for (int i = 0; i < AbstractNBTCompoundFieldBuilder.TYPE_COUNT; i++) {
 			typeFields.add(i, null);
 		}
+	}
+	
+	private NBTCompoundFieldBuilder(NBTCompoundFieldBuilder<T> parent, CharSequence key, ToBooleanFunction<T> has, boolean serverOnly) {
+		this(parent, key);
+		this.has = has;
+		setServerOnly(serverOnly);
+	}
+	
+	private NBTCompoundFieldBuilder(NBTCompoundFieldBuilder<T> parent, NBTCompoundField<T> field) {
+		this(parent, field.key);
+		field.builder(this);
+	}
+	
+	public NBTField<T> getField(CharSequence key, TagType type) {
+		int id = type.getID() - 1;
+		var map = typeFields.get(id);
+		if (map == null)
+			return null;
+		return map.get(CharKey.of(key));
+	}
+	
+	public void replaceField(NBTField<T> field, NBTField<T> newField) {
+		
 	}
 	
 	@Override
@@ -186,6 +207,41 @@ public class NBTCompoundFieldBuilder<T> extends NBTFieldBuilder<T, NBTCompoundFi
 		}
 		refCounts.put(field, refCount);
 		return this;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public NBTCompoundFieldBuilder<T> beginComponent(CharSequence key, ToBooleanFunction<T> has, boolean serverOnly) {
+		var field = getField(key, TagType.COMPOUND);
+		if (field instanceof BuilderField rawBuilder) {
+			@SuppressWarnings("rawtypes")
+			Builder builder = rawBuilder.getBuilder();
+			if (builder instanceof NBTCompoundFieldBuilder compBuilder) {
+				return compBuilder;
+			}
+		} else if (field instanceof NBTCompoundField comp) {
+			var builder = new NBTCompoundFieldBuilder<>(this, comp);
+			replaceField(field, new BuilderField<>(key, CodecTags.COMPOUND, serverOnly, builder));
+			return builder;
+		}
+		var builder = new NBTCompoundFieldBuilder<>(this, key, has, serverOnly);
+		if (field != null) {
+			replaceField(field, new BuilderField<>(key, CodecTags.COMPOUND, serverOnly, builder));
+		} else {
+			addField(new BuilderField<>(key, CodecTags.COMPOUND, serverOnly, builder));
+		}
+		return builder;
+	}
+	
+	@Override
+	public NBTCompoundFieldBuilder<T> endComponent() {
+		if (parent == null)
+			throw new IllegalStateException("No component to end!");
+		return parent;
+	}
+	
+	public boolean hasParent() {
+		return parent != null;
 	}
 
 	@Override

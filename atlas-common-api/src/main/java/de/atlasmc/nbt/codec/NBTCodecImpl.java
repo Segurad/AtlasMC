@@ -43,6 +43,14 @@ public class NBTCodecImpl<T> implements NBTCodec<T> {
 	
 	@Override
 	public boolean serialize(CharSequence key, T value, NBTWriter output, CodecContext context) throws IOException {
+		output.writeCompoundTag(key);
+		serializePartial(value, output, context);
+		output.writeEndTag();
+		return true;
+	}
+	
+	@Override
+	public boolean serializePartial(T value, NBTWriter output, CodecContext context) throws IOException {
 		if (redirectAfterConstruction && value instanceof NBTSerializable serializable) {
 			@SuppressWarnings("unchecked")
 			NBTCodec<T> handler = (NBTCodec<T>) serializable.getNBTCodec();
@@ -53,12 +61,18 @@ public class NBTCodecImpl<T> implements NBTCodec<T> {
 		if (constructor != null)
 			constructor.serialize(value, output, context);
 		if (fields != null)
-			return fields.serialize(value, output, context);
+			return fields.serializePartial(value, output, context);
 		return true;
 	}
 
 	@Override
 	public T deserialize(T value, NBTReader input, CodecContext context) throws IOException {
+		input.readNextEntry();
+		return deserializePartial(value, input, context);
+	}
+	
+	@Override
+	public T deserializePartial(T value, NBTReader input, CodecContext context) throws IOException {
 		if (value == null) { // initialize value using constructor or default constructor
 			if (constructor != null)
 				value = constructor.construct(input, context);
@@ -73,16 +87,26 @@ public class NBTCodecImpl<T> implements NBTCodec<T> {
 			@SuppressWarnings("unchecked")
 			NBTCodec<T> handler = (NBTCodec<T>) serializable.getNBTCodec();
 			if (handler != this) {
-				return handler.deserialize(value, input, context);
+				return handler.deserializePartial(value, input, context);
 			}
 		}
-		fields.deserialize(value, input, context);
+		fields.deserializePartial(value, input, context);
 		return value;
 	}
 
 	@Override
 	public Class<T> getType() {
 		return type;
+	}
+	
+	void addToBuilder(NBTCodecBuilder<T> builder) {
+		if (constructor != null)
+			builder.setConstructor(constructor);
+		if (defaultConstrcutor != null)
+			builder.defaultConstructor(defaultConstrcutor);
+		for (var field : fields.getFields()) {
+			builder.addField(field);
+		}
 	}
 
 }

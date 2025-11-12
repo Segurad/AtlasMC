@@ -8,8 +8,14 @@ import de.atlasmc.util.codec.CodecContext;
 
 public interface Constructor<T> {
 	
-	public T construct(NBTReader reader, CodecContext context) throws IOException;
+	T construct(NBTReader reader, CodecContext context) throws IOException;
 	
-	public void serialize(T value, NBTWriter writer, CodecContext context) throws IOException;
+	void serialize(T value, NBTWriter writer, CodecContext context) throws IOException;
 
+	/**
+	 * Whether or not the codec must be a field in order to be constructed
+	 * @return true if requires
+	 */
+	boolean requiredField();
+	
 }

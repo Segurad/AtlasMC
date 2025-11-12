@@ -18,8 +18,6 @@ final class MapTypeToCodec<K, V> implements NBTCodec<Map<K, V>> {
 	
 	public MapTypeToCodec(NBTCodec<V> codec, Function<V, K> keySupplier) {
 		this.codec = Objects.requireNonNull(codec);
-		if (!codec.isField())
-			throw new IllegalArgumentException("NBTCodec must be field!");
 		this.keySupplier = Objects.requireNonNull(keySupplier);
 	}
 

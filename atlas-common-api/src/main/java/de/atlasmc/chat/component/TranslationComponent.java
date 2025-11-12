@@ -16,8 +16,9 @@ import de.atlasmc.nbt.codec.NBTCodecs;
 public class TranslationComponent extends AbstractBaseComponent<TranslationComponent> {
 	
 	public static final NBTCodec<TranslationComponent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(TranslationComponent.class)
+					.include(AbstractBaseComponent.NBT_CODEC)
 					.codec("key", TranslationComponent::getKey, TranslationComponent::setKey, NBTCodecs.STRING)
 					.codec("fallback", TranslationComponent::getFallback, TranslationComponent::setFallback, NBTCodecs.STRING)
 					.build();
@@ -102,6 +103,11 @@ public class TranslationComponent extends AbstractBaseComponent<TranslationCompo
 				copy.with.add(comp.clone());
 		}
 		return copy;
+	}
+	
+	@Override
+	public NBTCodec<? extends TranslationComponent> getNBTCodec() {
+		return NBT_CODEC;
 	}
 
 }

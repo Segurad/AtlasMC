@@ -20,8 +20,8 @@ public interface NBTCodec<T> extends Codec<T, NBTReader, NBTWriter, CodecContext
 	}
 	
 	/**
-	 * Serializes the given values to the given output
-	 * @param key to use in case of {@link #isField()}
+	 * Serializes the given values to the given output as field.
+	 * @param key to use
 	 * @param value to serialize
 	 * @param output the output
 	 * @param context a arbitrary context for serialization
@@ -29,6 +29,33 @@ public interface NBTCodec<T> extends Codec<T, NBTReader, NBTWriter, CodecContext
 	 * @throws IOException
 	 */
 	boolean serialize(CharSequence key, T value, @NotNull NBTWriter output, CodecContext context) throws IOException;
+	
+	/**
+	 * Serializes the given values to the given output as partial field.
+	 * If {@link #isField()} a error is thrown.
+	 * @param value to serialize
+	 * @param output the output
+	 * @param context a arbitrary context for serialization
+	 * @return true if success
+	 * @throws IOException
+	 */
+	default boolean serializePartial(T value, @NotNull NBTWriter output, CodecContext context) throws IOException {
+		throw new UnsupportedOperationException();
+	}
+	
+	/**
+	 * Deserialize the the input to a object as partial field.
+	 * If {@link #isField()} a error is thrown.
+	 * @param value the object deserialized to
+	 * @param input the input
+	 * @param context a arbitrary context for serialization
+	 * @return deserialized object
+	 * @throws IOException
+	 */
+	T deserialize(T value, @NotNull NBTReader input, CodecContext context) throws IOException;
+	default T deserializePartial(T value, NBTReader input, CodecContext context) throws IOException {
+		throw new UnsupportedOperationException();
+	}
 	
 	/**
 	 * Whether or not this is a representation of a field or partial component.
@@ -63,7 +90,7 @@ public interface NBTCodec<T> extends Codec<T, NBTReader, NBTWriter, CodecContext
 	}
 	
 	public static <T> NBTCodec<T> codecOrElse(Class<T> clazz, NBTCodec<? extends T> a, NBTCodec<? extends T> b) {
-		return new OrElseCodec<>(null, a, b);
+		return new OrElseCodec<>(clazz, a, b);
 	}
 	
 	public static <T> NBTCodec<T> byteToObject(Class<T> clazz, IntFunction<T> toObject, ToIntFunction<T> toByte) {

@@ -6,7 +6,7 @@ import de.atlasmc.nbt.codec.NBTCodecs;
 public class SelectorComponent extends AbstractBaseComponent<SelectorComponent> {
 	
 	public static final NBTCodec<SelectorComponent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(SelectorComponent.class)
 					.include(AbstractBaseComponent.NBT_CODEC)
 					.codec("selector", SelectorComponent::getSelector, SelectorComponent::setSelector, NBTCodecs.STRING)
@@ -47,6 +47,11 @@ public class SelectorComponent extends AbstractBaseComponent<SelectorComponent> 
 	@Override
 	protected SelectorComponent getThis() {
 		return this;
+	}
+	
+	@Override
+	public NBTCodec<? extends SelectorComponent> getNBTCodec() {
+		return NBT_CODEC;
 	}
 
 }

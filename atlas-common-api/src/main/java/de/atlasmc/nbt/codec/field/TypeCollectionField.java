@@ -33,9 +33,7 @@ public class TypeCollectionField<T, V> extends AbstractCollectionField<T, Collec
 		}
 		writer.writeListTag(key, TagType.COMPOUND, size);
 		for (V v : list) {
-			writer.writeCompoundTag();
 			fieldType.serialize(v, writer, context);
-			writer.writeEndTag();
 		}
 		return true;
 	}
@@ -52,7 +50,6 @@ public class TypeCollectionField<T, V> extends AbstractCollectionField<T, Collec
 			throw new NBTException("Expected list of type COMPOUND but was: " + listType);
 		reader.readNextEntry();
 		while (reader.getRestPayload() > 0) {
-			reader.readNextEntry();
 			V v = fieldType.deserialize(reader, context);
 			setter.accept(value, v);
 		}

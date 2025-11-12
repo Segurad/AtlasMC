@@ -39,7 +39,7 @@ public interface Pig extends Animal {
 		NBT_HANDLER = NBTCodec
 						.builder(PigVariant.class)
 						.defaultConstructor(PigVariant::new)
-						.include(PigVariant.NBT_HANDLER)
+						.include(EntityVariant.NBT_HANDLER)
 						.codec("asset_id", PigVariant::getAssetID, PigVariant::setAssetID, NamespacedKey.NBT_CODEC)
 						.codec("model", PigVariant::getModel, PigVariant::setModel, NamespacedKey.NBT_CODEC)
 						.build();

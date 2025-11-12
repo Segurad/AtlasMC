@@ -15,7 +15,6 @@ import de.atlasmc.chat.component.event.hover.HoverEvent;
 import de.atlasmc.chat.component.event.hover.HoverItemEvent;
 import de.atlasmc.chat.component.event.hover.HoverTextEvent;
 import de.atlasmc.nbt.codec.NBTCodec;
-import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.nbt.tag.NBT;
 import de.atlasmc.util.annotation.Nullable;
@@ -32,18 +31,6 @@ public interface ChatComponent extends Chat, NBTSerializable {
 					.builder(ChatComponent.class)
 					.searchKeyEnumConstructor("type", ComponentType.class, ComponentType::createComponent, ChatComponent::getType)
 					.defaultConstructor(BaseComponent::new)
-					.boolField("bold", ChatComponent::isBold, ChatComponent::setBold, false)
-					.boolField("italic", ChatComponent::isItalic, ChatComponent::setItalic, false)
-					.boolField("underlined", ChatComponent::isUnderlined, ChatComponent::setUnderlined, false)
-					.boolField("obfuscated", ChatComponent::isObfuscated, ChatComponent::setObfuscated, false)
-					.boolField("strikethrough", ChatComponent::isStrikethrough, ChatComponent::setStrikethrough, false)
-					.codec("shadow_color", ChatComponent::getShadowColor, ChatComponent::setShadowColor, Color.NBT_CODEC)
-					.codec("color", ChatComponent::getColor, ChatComponent::setColor, ColorValue.NBT_CODEC)
-					.codec("font", ChatComponent::getFont, ChatComponent::setFont, NBTCodecs.STRING)
-					.codecList("extra", ChatComponent::hasExtra, ChatComponent::getExtra, ChatComponent.NBT_CODEC)
-					.codec("insertion", ChatComponent::getInsertion, ChatComponent::setInsertion, NBTCodecs.STRING)
-					.codec("click_event", ChatComponent::getClickEvent, ChatComponent::setClickEvent, ClickEvent.NBT_HANDLER)
-					.codec("hover_event", ChatComponent::getHoverEvent, ChatComponent::setHoverEvent, HoverEvent.NBT_HANDLER)
 					.build();
 	
 	@Nullable

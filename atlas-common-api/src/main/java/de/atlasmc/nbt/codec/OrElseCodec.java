@@ -39,41 +39,17 @@ final class OrElseCodec<T> implements NBTCodec<T> {
 	public T deserialize(T value, NBTReader input, CodecContext context) throws IOException {
 		final var tag = input.getType();
 		if (a.getTags().contains(tag)) {
-			if (a.isField()) {
-				return a.deserialize(input, context);
-			} else {
-				input.readNextEntry();
-				return a.deserialize(input);
-			}
+			return a.deserialize(input, context);
 		}
-		if (b.isField()) {
-			return b.deserialize(input, context);
-		} else {
-			input.readNextEntry();
-			return b.deserialize(input);
-		}
+		return b.deserialize(input, context);
 	}
 
 	@Override
 	public boolean serialize(CharSequence key, T value, NBTWriter output, CodecContext context) throws IOException {
 		if (a.getType().isInstance(value)) {
-			if (a.isField()) {
-				return a.serialize(key, value, output, context);
-			} else {
-				output.writeCompoundTag(key);
-				a.serialize(value, output, context);
-				output.writeEndTag();
-				return true;
-			}
+			return a.serialize(key, value, output, context);
 		} else if (b.getType().isInstance(value)) {
-			if (b.isField()) {
-				return b.serialize(key, value, output, context);
-			} else {
-				output.writeCompoundTag(key);
-				b.serialize(value, output, context);
-				output.writeEndTag();
-				return true;
-			}
+			return b.serialize(key, value, output, context);
 		}
 		return false;
 	}

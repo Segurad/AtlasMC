@@ -6,7 +6,7 @@ import de.atlasmc.nbt.codec.NBTCodecs;
 public class ScoreComponent extends AbstractBaseComponent<ScoreComponent> {
 
 	public static final NBTCodec<ScoreComponent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(ScoreComponent.class)
 					.include(AbstractBaseComponent.NBT_CODEC)
 					.beginComponent("score")
@@ -46,7 +46,7 @@ public class ScoreComponent extends AbstractBaseComponent<ScoreComponent> {
 	
 	@Override
 	public NBTCodec<? extends ScoreComponent> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

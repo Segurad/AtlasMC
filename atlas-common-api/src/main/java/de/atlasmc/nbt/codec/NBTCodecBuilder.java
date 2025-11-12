@@ -25,7 +25,7 @@ public class NBTCodecBuilder<T> implements AbstractNBTCompoundFieldBuilder<T, NB
 	private Boolean redirectAfterConstruction;
 	private Boolean isField;
 	
-	protected final NBTCompoundFieldBuilder<T> root = new NBTCompoundFieldBuilder<>();
+	protected final NBTCompoundFieldBuilder<T> root = new NBTCompoundFieldBuilder<T>().setKey("root");
 	protected NBTCompoundFieldBuilder<T> builder = root;
 	
 	protected NBTCodecBuilder(Class<T> clazz) {
@@ -33,7 +33,7 @@ public class NBTCodecBuilder<T> implements AbstractNBTCompoundFieldBuilder<T, NB
 	}
 	
 	public boolean isField() {
-		return isField != null ? isField : false;
+		return isField != null ? isField : constructor != null ? constructor.requiredField() : false;
 	}
 	
 	public Boolean getIsField() {
@@ -85,8 +85,11 @@ public class NBTCodecBuilder<T> implements AbstractNBTCompoundFieldBuilder<T, NB
 		return new NBTCodecImpl<>(getThis());
 	}
 	
+	@SuppressWarnings("unchecked")
 	public NBTCodecBuilder<T> include(NBTCodec<? super T> include) {
-		// TODO include
+		if (!(include instanceof NBTCodecImpl codec))
+			throw new IllegalArgumentException("Codec must be instanceof NBTCodecImpl!");
+		codec.addToBuilder(this);
 		return this;
 	}
 	
@@ -120,29 +123,15 @@ public class NBTCodecBuilder<T> implements AbstractNBTCompoundFieldBuilder<T, NB
 		return this;
 	}
 	
-	public NBTCodecBuilder<T> beginComponent(CharSequence key) {
-		return beginComponent(key, null, false);
-	}
-	
-	public NBTCodecBuilder<T> beginComponent(CharSequence key, boolean serverOnly) {
-		return beginComponent(key, null, serverOnly);
-	}
-	
-	public NBTCodecBuilder<T> beginComponent(CharSequence key, ToBooleanFunction<T> has) {
-		return beginComponent(key, has, false);
-	}
-	
+	@Override
 	public NBTCodecBuilder<T> beginComponent(CharSequence key, ToBooleanFunction<T> has, boolean serverOnly) {
-		
-		builder = new NBTCompoundFieldBuilder<>(key, builder, serverOnly);
-		builder.has = has;
+		builder = builder.beginComponent(key, has, serverOnly);
 		return getThis();
 	}
 	
+	@Override
 	public NBTCodecBuilder<T> endComponent() {
-		if (builder.parent == null)
-			throw new IllegalStateException("No component to end!");
-		builder = builder.parent;
+		builder = builder.endComponent();
 		return getThis();
 	}
 

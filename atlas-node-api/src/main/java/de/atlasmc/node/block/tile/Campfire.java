@@ -10,10 +10,12 @@ public interface Campfire extends TileEntity {
 	NBT_HANDLER = NBTCodec
 					.builder(Campfire.class)
 					.include(TileEntity.NBT_HANDLER)
-					.codecArraySearchByteIndexField("Items", "slot", null, Campfire::getItems, ItemStack.NBT_HANDLER)
+					.codecArraySearchByteIndexField("Items", "slot", Campfire::hasItems, Campfire::getItems, ItemStack.NBT_HANDLER)
 					.codec("CookingTimes", Campfire::getCookingTimes, Campfire::setCookingTimes, NBTCodecs.INT_ARRAY)
 					.codec("CookingTotalTimes", Campfire::getTotalCookingTimes, Campfire::setTotalCookingTimes, NBTCodecs.INT_ARRAY)
 					.build();
+	
+	boolean hasItems();
 	
 	ItemStack[] getItems();
 	

@@ -87,7 +87,7 @@ public class CoreFlatworldChunkGenerator implements ChunkGenerator {
 	@Override
 	public Future<Chunk> generate(int x, int z) {
 		final CompletableFuture<Chunk> future = new CompletableFuture<>();
-		ChunkWorker.queueTask((logger) -> {
+		ChunkWorker.queueTask((_) -> {
 			Chunk chunk = chunkFactory.createChunk(world, x, z);
 			if (this.blocks != null) { // Fill chunk with Blocks				
 				for (int y = startheight, i = 0; i < layers.length; i++) {

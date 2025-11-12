@@ -51,5 +51,10 @@ public class SearchFieldEnumConstructor<T, K extends Enum<K> & EnumName> impleme
 			return;
 		writer.writeStringTag(keyField, key.getName());
 	}
+	
+	@Override
+	public boolean requiredField() {
+		return false;
+	}
 
 }

@@ -25,5 +25,10 @@ public class FieldKeyConstructor<T> implements Constructor<T> {
 	public void serialize(T value, NBTWriter writer, CodecContext context) throws IOException {
 		// not required
 	}
+	
+	@Override
+	public boolean requiredField() {
+		return true;
+	}
 
 }

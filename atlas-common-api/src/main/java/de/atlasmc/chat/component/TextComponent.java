@@ -6,7 +6,7 @@ import de.atlasmc.nbt.codec.NBTCodecs;
 public class TextComponent extends AbstractBaseComponent<TextComponent> {
 
 	public static final NBTCodec<TextComponent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(TextComponent.class)
 					.include(AbstractBaseComponent.NBT_CODEC)
 					.codec("text", TextComponent::getValue, TextComponent::setValue, NBTCodecs.STRING)
@@ -40,8 +40,8 @@ public class TextComponent extends AbstractBaseComponent<TextComponent> {
 	}
 	
 	@Override
-	public NBTCodec<? extends ChatComponent> getNBTCodec() {
-		return NBT_HANDLER;
+	public NBTCodec<? extends TextComponent> getNBTCodec() {
+		return NBT_CODEC;
 	}
 
 }

@@ -77,4 +77,14 @@ public class CoreCampfire extends CoreTileEntity implements Campfire {
 		System.arraycopy(totalCookingTimes, 0, this.cookingTotalTimes, 0, 4);
 	}
 
+	@Override
+	public boolean hasItems() {
+		final ItemStack[] items = this.items;
+		for (int i = 0; i < items.length; i++) {
+			if (items[i] != null)
+				return true;
+		}
+		return false;
+	}
+
 }

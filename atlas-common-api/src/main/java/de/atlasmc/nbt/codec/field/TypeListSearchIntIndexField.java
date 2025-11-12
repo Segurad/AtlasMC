@@ -18,6 +18,8 @@ public class TypeListSearchIntIndexField<T, V> extends AbstractCollectionField<T
 	
 	public TypeListSearchIntIndexField(TypeListSearchIntIndexFieldBuilder<T, V> builder) {
 		super(builder);
+		if (fieldType.isField())
+			throw new IllegalArgumentException("NBTCodec must not be a field!");
 		this.indexKey = CharKey.literal(builder.getIndexKey());
 	}
 

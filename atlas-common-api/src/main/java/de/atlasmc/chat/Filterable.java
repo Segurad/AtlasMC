@@ -1,10 +1,16 @@
 package de.atlasmc.chat;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.nbt.NBTException;
+import de.atlasmc.nbt.TagType;
+import de.atlasmc.nbt.codec.CodecTags;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.io.NBTReader;
+import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.util.CloneException;
 import de.atlasmc.util.OpenCloneable;
 import de.atlasmc.util.codec.CodecContext;
@@ -49,7 +55,7 @@ public class Filterable<T> implements OpenCloneable {
 	}
 	
 	public static <T> NBTCodec<Filterable<T>> filterableCodec(NBTCodec<T> codec) {
-		return null;
+		return new FilterableNBTCodec<>(codec);
 	}
 	
 	public static <T> StreamCodec<Filterable<T>> filterableCodec(StreamCodec<T> codec) {
@@ -72,6 +78,71 @@ public class Filterable<T> implements OpenCloneable {
 		return clone;
 	}
 	
+	private static class FilterableNBTCodec<T> implements NBTCodec<Filterable<T>> {
+
+		private final NBTCodec<T> codec;
+		
+		public FilterableNBTCodec(NBTCodec<T> codec) {
+			if (!codec.isField())
+				throw new IllegalArgumentException("NBTCodec must be a field!");
+			this.codec = codec;
+		}
+		
+		@Override
+		public Class<?> getType() {
+			return Filterable.class;
+		}
+
+		@Override
+		public boolean serialize(CharSequence key, Filterable<T> value, NBTWriter output, CodecContext context) throws IOException {
+			if (value.hasFiltered()) {
+				codec.serialize(key, value.raw, output, context);
+			} else {
+				output.writeCompoundTag(key);
+				codec.serialize("raw", value.raw, output, context);
+				codec.serialize("filtered", value.filtered, output, context);
+				output.writeEndTag();
+			}
+			return true;
+		}
+
+		@SuppressWarnings("unlikely-arg-type")
+		@Override
+		public Filterable<T> deserialize(Filterable<T> value, NBTReader input, CodecContext context) throws IOException {
+			if (value == null)
+				value = new Filterable<>();
+			switch (input.getType()) {
+			case STRING: {
+				value.raw = codec.deserialize(null, input, context);
+				break;
+			}
+			case COMPOUND: {
+				input.readNextEntry();
+				while (input.getType() != TagType.TAG_END) {
+					if (input.getFieldName().equals("raw")) {
+						value.raw = codec.deserialize(null, input, context);
+					} else if (input.getFieldName().equals("filtered")) {
+						value.filtered = codec.deserialize(null, input, context);
+					} else {
+						input.skipTag();
+					}
+				}
+				input.readNextEntry();
+				break;
+			}
+			default:
+				throw new NBTException("Unexpected type: " + input.getType());
+			}
+			return value;
+		}
+
+		@Override
+		public List<TagType> getTags() {
+			return CodecTags.COMPOUND_STRING;
+		}
+		
+	}
+	
 	private static class FilterableStreamCodec<T> implements StreamCodec<Filterable<T>> {
 
 		private final StreamCodec<T> codec;
@@ -80,10 +151,9 @@ public class Filterable<T> implements OpenCloneable {
 			this.codec = Objects.requireNonNull(codec);
 		}
 		
-		@SuppressWarnings("unchecked")
 		@Override
-		public Class<? extends Filterable<T>> getType() {
-			return (Class<? extends Filterable<T>>) Filterable.class;
+		public Class<?> getType() {
+			return Filterable.class;
 		}
 
 		@Override

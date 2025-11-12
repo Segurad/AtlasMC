@@ -28,9 +28,7 @@ public class InnerCodecField<T, K> extends NBTField<T> {
 			return false;
 		@SuppressWarnings("unchecked")
 		K v = (K) raw;
-		writer.writeCompoundTag(key);
-		codec.serialize(v, writer, context);
-		writer.writeEndTag();
+		codec.serialize(key, v, writer, context);
 		return true;
 	}
 
@@ -41,7 +39,6 @@ public class InnerCodecField<T, K> extends NBTField<T> {
 			throw new NBTException("Invalid type: " + raw.getClass() + " for handler type: " + codec.getType());
 		@SuppressWarnings("unchecked")
 		K v = (K) raw;
-		reader.readNextEntry();
 		codec.deserialize(v, reader, context);
 	}
 }

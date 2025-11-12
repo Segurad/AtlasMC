@@ -23,7 +23,9 @@ public class RegistryKey<T> extends NamespacedAccessKey<Registry<T>> {
 	}
 	
 	public T getValue(int id) {
-		ProtocolRegistry<?> registry = getRegistry();
+		Registry<?> reg = getRegistry();
+		if (!(reg instanceof ProtocolRegistry registry))
+			return null;
 		@SuppressWarnings("unchecked")
 		T value = (T) registry.getByID(id);
 		return value;

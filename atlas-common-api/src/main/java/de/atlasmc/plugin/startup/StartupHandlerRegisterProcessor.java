@@ -31,7 +31,7 @@ import de.atlasmc.util.configuration.MemoryConfiguration;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
 
 @SupportedAnnotationTypes({"de.atlasmc.plugin.startup.StartupHandlerRegister"})
-@SupportedSourceVersion(SourceVersion.RELEASE_21)
+@SupportedSourceVersion(SourceVersion.RELEASE_25)
 public class StartupHandlerRegisterProcessor extends AbstractProcessor {
 
 	private Configuration startup;

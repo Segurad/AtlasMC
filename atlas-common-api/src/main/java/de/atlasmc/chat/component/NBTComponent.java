@@ -6,7 +6,7 @@ import static de.atlasmc.nbt.codec.NBTCodecs.STRING;
 public class NBTComponent extends AbstractBaseComponent<NBTComponent> {
 	
 	public static final NBTCodec<NBTComponent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(NBTComponent.class)
 					.codec("source", NBTComponent::getSource, NBTComponent::setSource, STRING)
 					.codec("nbt", NBTComponent::getNbtPath, NBTComponent::setNbtPath, STRING)
@@ -96,6 +96,11 @@ public class NBTComponent extends AbstractBaseComponent<NBTComponent> {
 	public NBTComponent setStorage(String storage) {
 		this.storage = storage;
 		return this;
+	}
+	
+	@Override
+	public NBTCodec<? extends NBTComponent> getNBTCodec() {
+		return NBT_CODEC;
 	}
 
 }

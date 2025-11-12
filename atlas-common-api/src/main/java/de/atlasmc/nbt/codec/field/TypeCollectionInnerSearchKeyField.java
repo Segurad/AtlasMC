@@ -48,7 +48,7 @@ public class TypeCollectionInnerSearchKeyField<T, V extends NBTSerializable, C e
 			writer.writeNamespacedKey(keyField, nKey);
 			@SuppressWarnings("unchecked")
 			NBTCodec<V> handler = (NBTCodec<V>) v.getNBTCodec();
-			handler.serialize(v, writer, context);
+			handler.serializePartial(v, writer, context);
 			writer.writeEndTag();
 		}
 		return true;
@@ -81,7 +81,7 @@ public class TypeCollectionInnerSearchKeyField<T, V extends NBTSerializable, C e
 			V v = fieldType.apply(value, valueKey);
 			@SuppressWarnings("unchecked")
 			NBTCodec<V> handler = (NBTCodec<V>) v.getNBTCodec();
-			handler.deserialize(v, reader, context);
+			handler.deserializePartial(v, reader, context);
 		}
 		reader.readNextEntry();
 	}

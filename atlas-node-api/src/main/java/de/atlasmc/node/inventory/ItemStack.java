@@ -4,6 +4,7 @@ import static de.atlasmc.io.PacketUtil.*;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import de.atlasmc.NamespacedKey;
@@ -15,17 +16,24 @@ import de.atlasmc.node.inventory.component.ComponentType;
 import de.atlasmc.node.inventory.component.ItemComponent;
 import de.atlasmc.node.inventory.component.ItemComponentHolder;
 import de.atlasmc.node.inventory.component.MaxStackSizeComponent;
+import de.atlasmc.util.CloneException;
+import de.atlasmc.util.OpenCloneable;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.codec.CodecContext;
-import de.atlasmc.util.map.key.CharKey;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 
-public class ItemStack implements NBTSerializable, StreamSerializable, ItemComponentHolder {
+public class ItemStack implements NBTSerializable, StreamSerializable, ItemComponentHolder, OpenCloneable {
 
-	public static final NBTCodec<ItemStack> NBT_HANDLER;
+	public static final NBTCodec<ItemStack>
+	NBT_HANDLER = NBTCodec
+					.builder(ItemStack.class)
+					.searchKeyConstructor("id", ItemType.REGISTRY_KEY, ItemStack::new, ItemStack::getType)
+					.intField("count", ItemStack::getAmount, ItemStack::setAmount, 1)
+					.include(ItemComponentHolder.NBT_HANDLER)
+					.build();
 	
 	public static final StreamCodec<ItemStack> STREAM_CODEC = new StreamCodec<ItemStack>() {
 		
@@ -99,21 +107,6 @@ public class ItemStack implements NBTSerializable, StreamSerializable, ItemCompo
 			return item;
 		}
 	};
-	
-	protected static final CharKey
-	NBT_COUNT = CharKey.literal("count"),
-	NBT_ID = CharKey.literal("id"),
-	NBT_SLOT = CharKey.literal("Slot"),
-	NBT_COMPONENTS = CharKey.literal("components"),
-	NBT_IGNORED_COMPONENTS = CharKey.literal("ignored-components");
-	
-	static {
-		NBT_HANDLER = NBTCodec
-				.builder(ItemStack.class)
-				.intField("count", ItemStack::getAmount, ItemStack::setAmount, 1)
-				.include(ItemComponentHolder.NBT_HANDLER)
-				.build();
-	}
 	
 	private int amount;
 	private ItemType type;
@@ -261,19 +254,25 @@ public class ItemStack implements NBTSerializable, StreamSerializable, ItemCompo
 	}
 	
 	public boolean isEmtpy() {
-		return getType() == ItemType.AIR.get() || getAmount() == 0;
+		return getAmount() == 0 || getType() == ItemType.AIR.get();
 	}
 	
+	@Override
 	public ItemStack clone() {
 		try {
 			ItemStack clone = (ItemStack) super.clone();
-			if (components != null) 
-				clone.components = new Object2ObjectArrayMap<>(components);
+			if (components != null) {
+				clone.components = new Object2ObjectArrayMap<>(components.size());
+				for (Entry<ComponentType, ItemComponent> entry : components.entrySet()) {
+					clone.components.put(entry.getKey(), entry.getValue().clone());
+				}
+			}
 			if (ignoredComponents != null)
 				clone.ignoredComponents = new ObjectArraySet<>(ignoredComponents);
 			return clone;
-		} catch (CloneNotSupportedException e) {}
-		return null;
+		} catch (CloneNotSupportedException e) {
+			throw new CloneException(e);
+		}
 	}
 	
 	@Override
@@ -322,9 +321,9 @@ public class ItemStack implements NBTSerializable, StreamSerializable, ItemCompo
 		int h = 1;
 		h = 31 * h + amount;
 		h = 31 * h + type.hashCode();
-		if (components != null)
+		if (components != null && !components.isEmpty())
 			h = 31 * h + components.hashCode();
-		if (ignoredComponents != null)
+		if (ignoredComponents != null && !components.isEmpty())
 			h = 31 * h + ignoredComponents.hashCode();
 		return h;
 	}

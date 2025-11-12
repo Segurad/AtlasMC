@@ -179,6 +179,22 @@ public interface AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCompoun
 		return new CodecCollectionFieldBuilder<T, V>().setKey(key).setHasData(has).setGetter(get).setFieldType(type);
 	}
 	
+	default B beginComponent(CharSequence key) {
+		return beginComponent(key, null, false);
+	}
+	
+	default B beginComponent(CharSequence key, boolean serverOnly) {
+		return beginComponent(key, null, serverOnly);
+	}
+	
+	default B beginComponent(CharSequence key, ToBooleanFunction<T> has) {
+		return beginComponent(key, has, false);
+	}
+	
+	B beginComponent(CharSequence key, ToBooleanFunction<T> has, boolean serverOnly);
+	
+	B endComponent();
+	
 	B getThis();
 
 }
