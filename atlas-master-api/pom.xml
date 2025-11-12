@@ -6,11 +6,29 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>atlas-master-api</artifactId>
+   <build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${plugin.maven.compiler.version}</version>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>de.atlasmc</groupId>
+							<artifactId>atlas-common-api</artifactId>
+							<version>${project.version}</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
   <dependencies>
   	<dependency>
   		<groupId>de.atlasmc</groupId>
   		<artifactId>atlas-network-api</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
+  		<version>${project.version}</version>
   	</dependency>
   </dependencies>
 </project>

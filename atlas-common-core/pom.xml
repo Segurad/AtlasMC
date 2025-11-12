@@ -8,11 +8,34 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>atlas-common-core</artifactId>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${plugin.maven.compiler.version}</version>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>de.atlasmc</groupId>
+							<artifactId>atlas-common-api</artifactId>
+							<version>${project.version}</version>
+						</path>
+						<path>
+							<groupId>org.apache.logging.log4j</groupId>
+							<artifactId>log4j-core</artifactId>
+							<version>2.25.1</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 	<dependencies>
 		<dependency>
 			<groupId>de.atlasmc</groupId>
 			<artifactId>atlas-common-api</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>

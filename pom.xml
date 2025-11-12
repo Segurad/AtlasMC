@@ -34,6 +34,7 @@
 		<dependency.snakeyaml.version>2.4</dependency.snakeyaml.version>
 		<dependency.fastutil.version>8.5.16</dependency.fastutil.version>
 		<dependency.junit.version>5.13.4</dependency.junit.version>
+		<plugin.maven.compiler.version>3.14.1</plugin.maven.compiler.version>
 	</properties>
 	<dependencies>
 		<dependency>
