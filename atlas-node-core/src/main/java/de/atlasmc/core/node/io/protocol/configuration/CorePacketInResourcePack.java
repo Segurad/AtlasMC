@@ -3,9 +3,9 @@ package de.atlasmc.core.node.io.protocol.configuration;
 import static de.atlasmc.io.PacketUtil.*;
 
 import java.io.IOException;
-
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.codec.UUIDCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.event.player.PlayerResourcePackStatusEvent.ResourcePackStatus;
 import de.atlasmc.node.io.protocol.configuration.ServerboundResourcePack;
@@ -16,13 +16,13 @@ public class CorePacketInResourcePack implements PacketIO<ServerboundResourcePac
 
 	@Override
 	public void read(ServerboundResourcePack packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.uuid = readUUID(in);
+		packet.uuid = UUIDCodec.readUUID(in);
 		packet.status = EnumUtil.getByID(ResourcePackStatus.class, readVarInt(in));
 	}
 
 	@Override
 	public void write(ServerboundResourcePack packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		writeUUID(packet.uuid, out);
+		UUIDCodec.writeUUID(packet.uuid, out);
 		writeVarInt(packet.status.getID(), out);
 	}
 

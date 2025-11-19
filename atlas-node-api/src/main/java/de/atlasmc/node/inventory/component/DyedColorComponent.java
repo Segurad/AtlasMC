@@ -16,7 +16,7 @@ public interface DyedColorComponent extends ItemComponent {
 	STREAM_CODEC = StreamCodec
 					.builder(DyedColorComponent.class)
 					.include(ItemComponent.STREAM_CODEC)
-					.intToObject(DyedColorComponent::getColor, DyedColorComponent::setColor, Color::fromRGB, Color::asRGB)
+					.codec(DyedColorComponent::getColor, DyedColorComponent::setColor, Color.STREAM_CODEC)
 					.build();
 	
 	Color getColor();

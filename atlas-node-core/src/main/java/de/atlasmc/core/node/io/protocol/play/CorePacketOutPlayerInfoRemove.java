@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.codec.UUIDCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutPlayerInfoRemove;
 import io.netty.buffer.ByteBuf;
@@ -22,7 +23,7 @@ public class CorePacketOutPlayerInfoRemove implements PacketIO<PacketOutPlayerIn
 			return;
 		List<UUID> players = new ArrayList<>(count);
 		for (int i = 0; i < count; i++)
-			players.add(readUUID(in));
+			players.add(UUIDCodec.readUUID(in));
 		packet.players = players;
 	}
 
@@ -33,7 +34,7 @@ public class CorePacketOutPlayerInfoRemove implements PacketIO<PacketOutPlayerIn
 			writeVarInt(0, out);
 		} else {
 			for (UUID uuid : players) {
-				writeUUID(uuid, out);
+				UUIDCodec.writeUUID(uuid, out);
 			}
 		}
 	}

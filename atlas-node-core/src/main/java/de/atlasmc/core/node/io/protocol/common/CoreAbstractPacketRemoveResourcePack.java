@@ -1,10 +1,9 @@
 package de.atlasmc.core.node.io.protocol.common;
 
-import static de.atlasmc.io.PacketUtil.*;
-
 import java.io.IOException;
 
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.codec.UUIDCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.common.AbstractPacketRemoveResourcePack;
 import io.netty.buffer.ByteBuf;
@@ -14,7 +13,7 @@ public abstract class CoreAbstractPacketRemoveResourcePack<T extends AbstractPac
 	@Override
 	public void read(T packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		if (in.readBoolean())
-			packet.uuid = readUUID(in);
+			packet.uuid = UUIDCodec.readUUID(in);
 	}
 	
 	@Override
@@ -23,7 +22,7 @@ public abstract class CoreAbstractPacketRemoveResourcePack<T extends AbstractPac
 			out.writeBoolean(false);
 		} else {
 			out.writeBoolean(true);
-			writeUUID(packet.uuid, out);
+			UUIDCodec.writeUUID(packet.uuid, out);
 		}
 	}
 

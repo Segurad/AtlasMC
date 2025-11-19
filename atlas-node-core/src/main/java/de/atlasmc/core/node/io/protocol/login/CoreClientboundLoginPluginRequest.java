@@ -4,6 +4,7 @@ import static de.atlasmc.io.PacketUtil.*;
 
 import java.io.IOException;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
@@ -15,14 +16,14 @@ public class CoreClientboundLoginPluginRequest implements PacketIO<ClientboundLo
 	@Override
 	public void read(ClientboundLoginPluginRequest packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.messageID = readVarInt(in);
-		packet.channel = readIdentifier(in);
+		packet.channel = NamespacedKey.STREAM_CODEC.deserialize(null, in, null);
 		packet.data = in.readBytes(in.readableBytes());
 	}
 
 	@Override
 	public void write(ClientboundLoginPluginRequest packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		writeVarInt(packet.messageID, out);
-		writeIdentifier(packet.channel, out);
+		NamespacedKey.STREAM_CODEC.serialize(packet.channel, out, null);
 		out.writeBytes(packet.data);
 	}
 

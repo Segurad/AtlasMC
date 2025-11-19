@@ -1,9 +1,11 @@
 package de.atlasmc.util.dataset;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import de.atlasmc.NamespacedKey.Namespaced;
+import it.unimi.dsi.fastutil.objects.ObjectIterators;
 
 class EmptyDataSet<T extends Namespaced> extends AbstractDataSet<T> {
 
@@ -36,6 +38,11 @@ class EmptyDataSet<T extends Namespaced> extends AbstractDataSet<T> {
 		if (this == obj)
 			return true;
 		return super.equals(obj);
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		return ObjectIterators.emptyIterator();
 	}
 
 }

@@ -15,9 +15,10 @@ public class CoreAtlasInfoCommand implements CommandExecutor {
 		sender.sendMessage(
 				"VM-Name: " + System.getProperty("java.vm.name"),
 				"VM-Verions: " + System.getProperty("java.vm.version"),
+				"VM-Vendor: " + System.getProperty("java.vendor"),
 				"OS-Name: " + System.getProperty("os.name"),
 				"Processors: " + rt.availableProcessors(),
-				"Memory: " + ((rt.totalMemory() - rt.freeMemory()) / 1000 / 1000) + "mb /" + rt.totalMemory() / 1000 / 1000 + "mb (max: " + rt.maxMemory() / 1000 / 1000 + "mb)"
+				"Memory: " + ((rt.totalMemory() - rt.freeMemory()) / 1_000_000) + "mb / " + rt.totalMemory() / 1_000_000 + "mb (max: " + rt.maxMemory() / 1000 / 1000 + "mb)"
 				);
 		return true;
 	}

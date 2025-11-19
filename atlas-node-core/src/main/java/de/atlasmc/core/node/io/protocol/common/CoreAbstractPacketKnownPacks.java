@@ -1,8 +1,6 @@
 package de.atlasmc.core.node.io.protocol.common;
 
-import static de.atlasmc.io.PacketUtil.readString;
 import static de.atlasmc.io.PacketUtil.readVarInt;
-import static de.atlasmc.io.PacketUtil.writeString;
 import static de.atlasmc.io.PacketUtil.writeVarInt;
 
 import java.io.IOException;
@@ -10,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.common.AbstractPacketKnownPacks;
 import de.atlasmc.node.io.protocol.common.AbstractPacketKnownPacks.PackInfo;
@@ -23,9 +22,9 @@ public abstract class CoreAbstractPacketKnownPacks<T extends AbstractPacketKnown
 		ArrayList<PackInfo> packs = new ArrayList<>(count);
 		for (int i = 0; i < count; i++) {
 			PackInfo pack = new PackInfo();
-			pack.namespace = readString(in);
-			pack.id = readString(in);
-			pack.version = readString(in);
+			pack.namespace = StringCodec.readString(in);
+			pack.id = StringCodec.readString(in);
+			pack.version = StringCodec.readString(in);
 			packs.add(pack);
 		}
 		packet.knownPacks = packs;
@@ -38,9 +37,9 @@ public abstract class CoreAbstractPacketKnownPacks<T extends AbstractPacketKnown
 		writeVarInt(count, out);
 		for (int i = 0; i < count; i++) {
 			PackInfo pack = packs.get(i);
-			writeString(pack.namespace, out);
-			writeString(pack.id, out);
-			writeString(pack.version, out);
+			StringCodec.writeString(pack.namespace, out);
+			StringCodec.writeString(pack.id, out);
+			StringCodec.writeString(pack.version, out);
 		}
 	}
 

@@ -67,7 +67,7 @@ public interface Banner extends TileEntity, Nameable {
 		STREAM_CODEC = StreamCodec
 						.builder(Pattern.class)
 						.defaultConstructor(Pattern::new)
-						.enumValueOrCodec(Pattern::getType, Pattern::setType, EnumPatternType.class, ResourcePatternType.STREAM_CODEC)
+						.varIntEnumOrCodec(Pattern::getType, Pattern::setType, EnumPatternType.class, ResourcePatternType.STREAM_CODEC)
 						.varIntEnum(Pattern::getColor, Pattern::setColor, DyeColor.class)
 						.build();
 						

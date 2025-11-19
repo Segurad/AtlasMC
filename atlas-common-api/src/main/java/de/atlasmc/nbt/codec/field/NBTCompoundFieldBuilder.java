@@ -49,7 +49,7 @@ public class NBTCompoundFieldBuilder<T> extends NBTFieldBuilder<T, NBTCompoundFi
 		field.builder(this);
 	}
 	
-	public NBTField<T> getField(CharSequence key, TagType type) {
+	private NBTField<T> getField(CharSequence key, TagType type) {
 		int id = type.getID() - 1;
 		var map = typeFields.get(id);
 		if (map == null)
@@ -57,8 +57,42 @@ public class NBTCompoundFieldBuilder<T> extends NBTFieldBuilder<T, NBTCompoundFi
 		return map.get(CharKey.of(key));
 	}
 	
-	public void replaceField(NBTField<T> field, NBTField<T> newField) {
-		
+	private void replaceField(NBTField<T> field, NBTField<T> newField) {
+		buildPrepared = false;
+		int refCount = refCounts.getOrDefault(newField, -1);
+		if (refCount == -1) {
+			if (field == null) {
+				fieldOrder.add(newField);
+			} else {
+				final int size = fieldOrder.size();
+				for (int i = 0; i < size; i++) {
+					if (fieldOrder.get(i) == field) {
+						fieldOrder.set(i, newField);
+					}
+				}
+			}
+		}
+		refCount = 0;
+		for (TagType type : newField.types) {
+			if (type == TagType.TAG_END)
+				throw new IllegalArgumentException("TAG_END is not supported!");
+			final int id = type.getID() - 1; // tag end (0) is not used 
+			Map<CharKey, NBTField<T>> fields = typeFields.get(id);
+			if (fields == null)
+				typeFields.set(id, fields = new HashMap<>());
+			NBTField<T> old = fields.put(newField.key, newField);
+			refCount++;
+			if (old != null) {
+				if (old == newField) {
+					refCount--;
+				} else {
+					int oldRefCount = refCounts.getInt(old);
+					oldRefCount--;
+					refCounts.put(old, oldRefCount);
+				}
+			}
+		}
+		refCounts.put(field, refCount);
 	}
 	
 	@Override
@@ -182,30 +216,7 @@ public class NBTCompoundFieldBuilder<T> extends NBTFieldBuilder<T, NBTCompoundFi
 	public NBTCompoundFieldBuilder<T> addField(NBTField<T> field) {
 		if (field == null)
 			throw new IllegalArgumentException("Field can not be null!");
-		buildPrepared = false;
-		int refCount = refCounts.getOrDefault(field, -1);
-		if (refCount == -1)
-			fieldOrder.add(field);
-		for (TagType type : field.types) {
-			if (type == TagType.TAG_END)
-				throw new IllegalArgumentException("TAG_END is not supported!");
-			final int id = type.getID() - 1; // tag end (0) is not used 
-			Map<CharKey, NBTField<T>> fields = typeFields.get(id);
-			if (fields == null)
-				typeFields.set(id, fields = new HashMap<>());
-			NBTField<T> old = fields.put(field.key, field);
-			refCount++;
-			if (old != null) {
-				if (old == field) {
-					refCount--;
-				} else {
-					int oldRefCount = refCounts.getInt(old);
-					oldRefCount--;
-					refCounts.put(old, oldRefCount);
-				}
-			}
-		}
-		refCounts.put(field, refCount);
+		replaceField(null, field);
 		return this;
 	}
 	

@@ -94,7 +94,7 @@ public interface NBTCodec<T> extends Codec<T, NBTReader, NBTWriter, CodecContext
 	}
 	
 	public static <T> NBTCodec<T> byteToObject(Class<T> clazz, IntFunction<T> toObject, ToIntFunction<T> toByte) {
-		return new ByteToObjectType<>(clazz, toObject, toByte);
+		return new ByteToObjectCodec<>(clazz, toObject, toByte);
 	}
 	
 	public static <T> NBTCodec<T> stringToObject(Class<T> clazz, Function<String, T> toObject, Function<T, String> toString) {

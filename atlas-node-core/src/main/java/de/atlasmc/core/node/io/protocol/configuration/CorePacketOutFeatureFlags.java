@@ -22,7 +22,7 @@ public class CorePacketOutFeatureFlags implements PacketIO<ClientboundFeatureFla
 			return;
 		List<NamespacedKey> flags = packet.flags = new ArrayList<>(size);
 		for (int i = 0; i < size; i++) {
-			flags.add(readIdentifier(in));
+			flags.add(NamespacedKey.STREAM_CODEC.deserialize(null, in, null));
 		}
 	}
 
@@ -34,7 +34,7 @@ public class CorePacketOutFeatureFlags implements PacketIO<ClientboundFeatureFla
 		} else {
 			writeVarInt(flags.size(), out);
 			for (NamespacedKey key : flags)
-				writeIdentifier(key, out);
+				NamespacedKey.STREAM_CODEC.serialize(key, out, null);
 		}
 	}
 

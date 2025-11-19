@@ -1,5 +1,7 @@
 package de.atlasmc;
 
+import java.util.Objects;
+
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.util.annotation.Nullable;
 
@@ -38,6 +40,29 @@ public abstract class NamespacedAccessKey<T> implements Namespaced {
 	 */
 	public boolean exists() {
 		return get() != null;
+	}
+	
+	@Override
+	public String toString() {
+		return key.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(key);
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		NamespacedAccessKey other = (NamespacedAccessKey) obj;
+		return Objects.equals(key, other.key);
 	}
 
 }

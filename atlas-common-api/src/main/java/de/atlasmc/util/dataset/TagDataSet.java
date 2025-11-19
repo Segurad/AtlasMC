@@ -1,6 +1,7 @@
 package de.atlasmc.util.dataset;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Objects;
 
 import de.atlasmc.NamespacedKey.Namespaced;
@@ -55,6 +56,11 @@ public class TagDataSet<T extends Namespaced> extends AbstractDataSet<T> {
 			return super.equals(obj);
 		TagDataSet<?> other = (TagDataSet<?>) obj;
 		return Objects.equals(tag, other.tag);
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		return tag.iterator();
 	}
 
 }

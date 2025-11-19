@@ -27,11 +27,11 @@ public abstract class CoreAbstractPacketUpdateTags<T extends AbstractPacketUpdat
 		}
 		Multimap<NamespacedKey, ProtocolTag<?>> tags = new ArrayListMultimap<>();
 		for (int i = 0; i < count; i++) {
-			NamespacedKey registryKey = readIdentifier(in);
+			NamespacedKey registryKey = NamespacedKey.STREAM_CODEC.deserialize(null, in, null);
 			ProtocolRegistry<?> registry = Registries.getRegistry(registryKey);
 			final int tagCount = readVarInt(in);
 			for (int j = 0; j < tagCount; j++) {
-				NamespacedKey tagKey = readIdentifier(in);
+				NamespacedKey tagKey = NamespacedKey.STREAM_CODEC.deserialize(null, in, null);
 				ProtocolTag<?> tag = new ProtocolTag<>(tagKey, registry);
 				tag.read(in);
 				tags.put(registryKey, tag);
@@ -48,7 +48,7 @@ public abstract class CoreAbstractPacketUpdateTags<T extends AbstractPacketUpdat
 			return;
 		}
 		for (NamespacedKey key : tags.keySet()) {
-			writeIdentifier(key, out);
+			NamespacedKey.STREAM_CODEC.serialize(key, out, null);
 			Collection<ProtocolTag<?>> values = tags.get(key);
 			if (values == null || values.isEmpty()) {
 				writeVarInt(0, out);
@@ -56,7 +56,7 @@ public abstract class CoreAbstractPacketUpdateTags<T extends AbstractPacketUpdat
 			}
 			writeVarInt(values.size(), out);
 			for (ProtocolTag<?> tag : values) {
-				writeIdentifier(tag.getNamespacedKey(), out);
+				NamespacedKey.STREAM_CODEC.serialize(tag.getClientKey(), out, null);
 				tag.write(out);
 			}
 		}

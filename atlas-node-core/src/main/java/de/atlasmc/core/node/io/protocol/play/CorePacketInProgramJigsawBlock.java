@@ -4,8 +4,10 @@ import static de.atlasmc.io.PacketUtil.*;
 
 import java.io.IOException;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketInProgramJigsawBlock;
 import io.netty.buffer.ByteBuf;
@@ -15,11 +17,11 @@ public class CorePacketInProgramJigsawBlock implements PacketIO<PacketInProgramJ
 	@Override
 	public void read(PacketInProgramJigsawBlock packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.position = in.readLong();
-		packet.name = readIdentifier(in);
-		packet.target = readIdentifier(in);
-		packet.pool = readIdentifier(in);
-		packet.finalState = readString(in, MAX_IDENTIFIER_LENGTH);
-		packet.jointtype = readString(in, MAX_IDENTIFIER_LENGTH);
+		packet.name = NamespacedKey.STREAM_CODEC.deserialize(null, in, null);
+		packet.target = NamespacedKey.STREAM_CODEC.deserialize(null, in, null);
+		packet.pool = NamespacedKey.STREAM_CODEC.deserialize(null, in, null);
+		packet.finalState = StringCodec.readString(in);
+		packet.jointtype = StringCodec.readString(in);
 		packet.selectionPriority = readVarInt(in);
 		packet.placementPriority = readVarInt(in);
 	}
@@ -27,11 +29,11 @@ public class CorePacketInProgramJigsawBlock implements PacketIO<PacketInProgramJ
 	@Override
 	public void write(PacketInProgramJigsawBlock packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		out.writeLong(packet.position);
-		writeIdentifier(packet.name, out);
-		writeIdentifier(packet.target, out);
-		writeIdentifier(packet.pool, out);
-		writeString(packet.finalState, out);
-		writeString(packet.jointtype, out);
+		NamespacedKey.STREAM_CODEC.serialize(packet.name, out, null);
+		NamespacedKey.STREAM_CODEC.serialize(packet.target, out, null);
+		NamespacedKey.STREAM_CODEC.serialize(packet.pool, out, null);
+		StringCodec.writeString(packet.finalState, out);
+		StringCodec.writeString(packet.jointtype, out);
 		writeVarInt(packet.selectionPriority, out);
 		writeVarInt(packet.placementPriority, out);
 	}

@@ -11,13 +11,13 @@ import de.atlasmc.nbt.io.NBTReader;
 import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.util.codec.CodecContext;
 
-final class ByteToObjectType<V> implements NBTCodec<V> {
+final class ByteToObjectCodec<V> implements NBTCodec<V> {
 
 	private final Class<?> clazz;
 	private final IntFunction<V> toObject;
 	private final ToIntFunction<V> toByte;
 	
-	public ByteToObjectType(Class<V> clazz, IntFunction<V> toObject, ToIntFunction<V> toByte) {
+	public ByteToObjectCodec(Class<V> clazz, IntFunction<V> toObject, ToIntFunction<V> toByte) {
 		this.clazz = Objects.requireNonNull(clazz);
 		this.toObject = Objects.requireNonNull(toObject);
 		this.toByte = Objects.requireNonNull(toByte);

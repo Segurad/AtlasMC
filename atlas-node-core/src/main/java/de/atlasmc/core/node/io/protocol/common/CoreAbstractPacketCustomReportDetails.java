@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.common.AbstractPacketCustomReportDetails;
 import de.atlasmc.node.io.protocol.common.AbstractPacketCustomReportDetails.Detail;
@@ -19,8 +20,8 @@ public abstract class CoreAbstractPacketCustomReportDetails<T extends AbstractPa
 		final int count = readVarInt(in);
 		ArrayList<Detail> details = new ArrayList<>(count);
 		for (int i = 0; i < count; i++) {
-			String title = readString(in, 128);
-			String description = readString(in, 4096);
+			String title = StringCodec.readString(in, 128);
+			String description = StringCodec.readString(in, 4096);
 			details.add(new Detail(title, description));
 		}
 	}
@@ -32,8 +33,8 @@ public abstract class CoreAbstractPacketCustomReportDetails<T extends AbstractPa
 		writeVarInt(count, out);
 		for (int i = 0; i < count; i++) {
 			Detail detail = details.get(i);
-			writeString(detail.title, out);
-			writeString(detail.description, out);
+			StringCodec.writeString(detail.title, out);
+			StringCodec.writeString(detail.description, out);
 		}
 	}
 	

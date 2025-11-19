@@ -1,8 +1,6 @@
 package de.atlasmc.core.node.io.protocol.play;
 
-import static de.atlasmc.io.PacketUtil.readIdentifier;
 import static de.atlasmc.io.PacketUtil.readVarInt;
-import static de.atlasmc.io.PacketUtil.writeIdentifier;
 import static de.atlasmc.io.PacketUtil.writeVarInt;
 
 import java.io.IOException;
@@ -28,7 +26,7 @@ public class CorePacketOutLogin implements PacketIO<PacketOutLogin> {
 		if (worldCount > 0) {
 			List<NamespacedKey> worlds = packet.worlds = new ArrayList<>(worldCount);
 			for (int i = 0; i < worldCount; i++) {
-				worlds.add(readIdentifier(in));
+				worlds.add(NamespacedKey.STREAM_CODEC.deserialize(null, in, null));
 			}
 		}
 		packet.maxPlayers = readVarInt(in); // ignored value previous max players
@@ -38,7 +36,7 @@ public class CorePacketOutLogin implements PacketIO<PacketOutLogin> {
 		packet.respawnScreen = in.readBoolean();
 		packet.limitedCrafting = in.readBoolean();
 		packet.dimension = readVarInt(in);
-		packet.world = readIdentifier(in);
+		packet.world = NamespacedKey.STREAM_CODEC.deserialize(null, in, null);
 		packet.seed = in.readLong();
 		packet.gamemode = EnumUtil.getByID(Gamemode.class, in.readUnsignedByte());
 		int oldGamemode = in.readByte();
@@ -47,7 +45,7 @@ public class CorePacketOutLogin implements PacketIO<PacketOutLogin> {
 		packet.debug = in.readBoolean();
 		packet.flat = in.readBoolean();
 		if (in.readBoolean()) {
-			packet.deathWorld = readIdentifier(in);
+			packet.deathWorld = NamespacedKey.STREAM_CODEC.deserialize(null, in, null);
 			packet.deathPosition = in.readLong();
 		}
 		packet.portalCooldown = readVarInt(in);
@@ -63,7 +61,7 @@ public class CorePacketOutLogin implements PacketIO<PacketOutLogin> {
 		} else {
 			writeVarInt(worlds.size(), out);
 			for (NamespacedKey world : worlds) {
-				writeIdentifier(world, out);
+				NamespacedKey.STREAM_CODEC.serialize(world, out);
 			}
 		}
 		writeVarInt(packet.maxPlayers, out); // ignored value was once max players (why mojang why is this value still in the packet)
@@ -73,7 +71,7 @@ public class CorePacketOutLogin implements PacketIO<PacketOutLogin> {
 		out.writeBoolean(packet.respawnScreen);
 		out.writeBoolean(packet.limitedCrafting);
 		writeVarInt(packet.dimension, out);
-		writeIdentifier(packet.world, out);
+		NamespacedKey.STREAM_CODEC.serialize(packet.world, out);
 		out.writeLong(packet.seed);
 		out.writeByte(packet.gamemode.getID());
 		out.writeByte(packet.gamemode != null ? packet.gamemode.getID() : (byte) -1);
@@ -81,7 +79,7 @@ public class CorePacketOutLogin implements PacketIO<PacketOutLogin> {
 		out.writeBoolean(packet.flat);
 		out.writeBoolean(packet.deathWorld != null);
 		if (packet.deathWorld != null) {
-			writeIdentifier(packet.deathWorld, out);
+			NamespacedKey.STREAM_CODEC.serialize(packet.deathWorld, out);
 			out.writeLong(packet.deathPosition);
 		}
 		writeVarInt(packet.portalCooldown, out);

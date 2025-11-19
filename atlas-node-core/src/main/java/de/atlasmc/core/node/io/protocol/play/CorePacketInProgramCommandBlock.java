@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.block.tile.CommandBlock.Mode;
 import de.atlasmc.node.io.protocol.play.PacketInProgramCommandBlock;
@@ -16,7 +17,7 @@ public class CorePacketInProgramCommandBlock implements PacketIO<PacketInProgram
 	@Override
 	public void read(PacketInProgramCommandBlock packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.position = in.readLong();
-		packet.command = readString(in, 32767);
+		packet.command = StringCodec.readString(in);
 		packet.mode = Mode.getByID(readVarInt(in));
 		packet.flags = in.readByte();
 	}
@@ -24,7 +25,7 @@ public class CorePacketInProgramCommandBlock implements PacketIO<PacketInProgram
 	@Override
 	public void write(PacketInProgramCommandBlock packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		out.writeLong(packet.position);
-		writeString(packet.command, out);
+		StringCodec.writeString(packet.command, out);
 		writeVarInt(packet.mode.getID(), out);
 		out.writeByte(packet.flags);
 	}

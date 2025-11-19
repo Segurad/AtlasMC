@@ -20,7 +20,7 @@ public interface DamageResistantComponent extends ItemComponent {
 	STREAM_CODEC = StreamCodec
 					.builder(DamageResistantComponent.class)
 					.include(ItemComponent.STREAM_CODEC)
-					.tagKey(DamageResistantComponent::getDamageTypes, DamageResistantComponent::setDamageTypes)
+					.codec(DamageResistantComponent::getDamageTypes, DamageResistantComponent::setDamageTypes, TagKey.STREAM_CODEC)
 					.build();
 	
 	TagKey<DamageType> getDamageTypes();

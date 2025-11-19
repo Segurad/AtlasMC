@@ -1,10 +1,12 @@
 package de.atlasmc.util.dataset;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
 import de.atlasmc.NamespacedKey.Namespaced;
+import de.atlasmc.util.iterator.SingleValueIterator;
 
 public class SingleValueDataSet<T extends Namespaced> extends AbstractDataSet<T> {
 
@@ -55,6 +57,11 @@ public class SingleValueDataSet<T extends Namespaced> extends AbstractDataSet<T>
 			return super.equals(obj);
 		SingleValueDataSet<?> other = (SingleValueDataSet<?>) obj;
 		return Objects.equals(value, other.value);
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		return new SingleValueIterator<>(value);
 	}
 	
 }

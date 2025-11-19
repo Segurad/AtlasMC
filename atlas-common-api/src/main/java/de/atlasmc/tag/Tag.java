@@ -1,6 +1,7 @@
 package de.atlasmc.tag;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -8,7 +9,7 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.util.annotation.NotNull;
 
-public class Tag<T> implements Namespaced {
+public class Tag<T> implements Namespaced, Iterable<T> {
 	
 	protected final Class<?> type;
 	protected final Set<T> values;
@@ -65,6 +66,11 @@ public class Tag<T> implements Namespaced {
 
 	public boolean isEmpty() {
 		return values.isEmpty();
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		return getValues().iterator();
 	}
 	
 }

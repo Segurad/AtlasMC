@@ -3,6 +3,7 @@ package de.atlasmc.node.inventory.component;
 import java.util.List;
 
 import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.io.codec.StreamCodecs;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import it.unimi.dsi.fastutil.booleans.BooleanList;
@@ -27,10 +28,10 @@ public interface CustomModelDataComponent extends ItemComponent {
 	STREAM_CODEC = StreamCodec
 					.builder(CustomModelDataComponent.class)
 					.include(ItemComponent.STREAM_CODEC)
-					.floatList(CustomModelDataComponent::hasFloats, CustomModelDataComponent::getFloats)
-					.booleanList(CustomModelDataComponent::hasFlags, CustomModelDataComponent::getFlags)
+					.codecCollection(CustomModelDataComponent::hasFloats, CustomModelDataComponent::getFloats, StreamCodecs.FLOAT_LIST)
+					.codecCollection(CustomModelDataComponent::hasFlags, CustomModelDataComponent::getFlags, StreamCodecs.BOOLEAN_LIST)
 					.stringList(CustomModelDataComponent::hasStrings, CustomModelDataComponent::getStrings)
-					.intList(CustomModelDataComponent::hasColors, CustomModelDataComponent::getColors)
+					.codecCollection(CustomModelDataComponent::hasColors, CustomModelDataComponent::getColors, StreamCodecs.INT_COLLECTION)
 					.build();
 	
 	FloatList getFloats();

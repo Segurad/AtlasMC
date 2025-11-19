@@ -1,10 +1,6 @@
 package de.atlasmc.node.entity.metadata.type;
 
-import static de.atlasmc.io.PacketUtil.readIdentifier;
-import static de.atlasmc.io.PacketUtil.readString;
 import static de.atlasmc.io.PacketUtil.readVarInt;
-import static de.atlasmc.io.PacketUtil.writeIdentifier;
-import static de.atlasmc.io.PacketUtil.writeString;
 import static de.atlasmc.io.PacketUtil.writeVarInt;
 import java.io.IOException;
 import java.util.UUID;
@@ -15,8 +11,10 @@ import org.joml.Vector3f;
 import de.atlasmc.IDHolder;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
-import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.io.codec.StreamCodecs;
+import de.atlasmc.io.codec.StringCodec;
+import de.atlasmc.io.codec.UUIDCodec;
 import de.atlasmc.nbt.tag.CompoundTag;
 import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.WorldLocation;
@@ -88,40 +86,11 @@ public abstract class MetaDataType<T> {
   	
 	public static final MetaDataType<Float> FLOAT = new FloatMetaType(TYPE_ID_FLOAT);
 	
-	public static final MetaDataType<String> STRING = new StringMetaType(TYPE_ID_STRING);
+	public static final MetaDataType<String> STRING = new StreamCodecMetaType<>(TYPE_ID_STRING, false, StringCodec.MAX_LENGTH_CODEC);
 	
-	public static final MetaDataType<Chat> CHAT = new MetaDataType<>(TYPE_ID_CHAT, Chat.class) {
-
-        @Override
-        public Chat read(ByteBuf in, CodecContext context) {
-            return ChatUtil.toChat(readString(in));
-        }
-
-        @Override
-        public void write(Chat data, ByteBuf out, CodecContext context) {
-            writeString(data.toText(), out);
-        }
-
-    };
+	public static final MetaDataType<Chat> CHAT = new StreamCodecMetaType<>(TYPE_ID_CHAT, false, Chat.STREAM_CODEC);
 	
-	public static final MetaDataType<Chat> OPT_CHAT = new MetaDataType<>(TYPE_ID_OPT_CHAT, Chat.class, true) {
-
-        @Override
-        public Chat read(ByteBuf in, CodecContext context) {
-            if (!in.readBoolean()) 
-            	return null;
-            return ChatUtil.toChat(readString(in));
-        }
-
-        @Override
-        public void write(Chat data, ByteBuf out, CodecContext context) {
-            out.writeBoolean(data != null);
-            if (data == null) 
-            	return;
-            writeString(data.toText(), out);
-        }
-
-    };
+	public static final MetaDataType<Chat> OPT_CHAT = new StreamCodecMetaType<>(TYPE_ID_OPT_CHAT, true, StreamCodec.optNullable(Chat.STREAM_CODEC));
 	
 	public static final MetaDataType<ItemStack> SLOT = new StreamCodecMetaType<>(TYPE_ID_SLOT, false, ItemStack.STREAM_CODEC, ItemStack::clone);
 	
@@ -135,7 +104,7 @@ public abstract class MetaDataType<T> {
 	
 	public static final MetaDataType<BlockFace> DIRECTION = new DirectionMetaType(TYPE_ID_DIRECTION);
 	
-	public static final MetaDataType<UUID> OPT_UUID = new OptUUIDMetaType(TYPE_ID_OPT_UUID);
+	public static final MetaDataType<UUID> OPT_UUID = new StreamCodecMetaType<>(TYPE_ID_OPT_UUID, true, StreamCodec.optNullable(UUIDCodec.STREAM_CODEC));
     
 	public static final MetaDataType<Integer> BLOCKSTATE = new VarIntMetaType(TYPE_ID_BLOCKSTATE);
 	
@@ -177,22 +146,22 @@ public abstract class MetaDataType<T> {
 
 		@SuppressWarnings("unused")
 		@Override
-		public WorldLocation read(ByteBuf in, CodecContext context) {
+		public WorldLocation read(ByteBuf in, CodecContext context) throws IOException {
 			if (!in.readBoolean())
 				return null;
-			NamespacedKey key = readIdentifier(in);
+			NamespacedKey key = NamespacedKey.STREAM_CODEC.deserialize(in);
 			long pos = in.readLong();
 			// TODO opt pos global to location
 			return null;
 		}
 
 		@Override
-		public void write(WorldLocation data, ByteBuf out, CodecContext context) {
+		public void write(WorldLocation data, ByteBuf out, CodecContext context) throws IOException {
 			if (data == null) {
 				out.writeBoolean(false);
 			} else {
 				out.writeBoolean(true);
-				writeIdentifier(data.getWorld().getDimension().getNamespacedKey(), out);
+				NamespacedKey.STREAM_CODEC.serialize(data.getWorld().getDimension().getNamespacedKey(), out);
 				out.writeLong(MathUtil.toPosition(data));
 			}
 		}
@@ -274,7 +243,7 @@ public abstract class MetaDataType<T> {
 		case 20: return POSE;
 		case 21: return CAT_VARIANT;
 		case 22: return FROG_VARIANT;
-		case 23: return null; //OPT_GLOBAL_POSITION;
+		case 23: return OPT_GLOBAL_POSITION;
 		case 24: return PAINTING_VARIANT;
 		case 25: return SNIFFER_STATE;
 		case 26: return VECTOR_3;

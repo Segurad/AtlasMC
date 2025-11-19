@@ -515,16 +515,16 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			con.setClientOnGround(onGround);
 			con.setClientPushWall(pushWall);
 		});
-		initHandler(PacketInMoveVehicle.class, (con, packet) -> { // 0x16
+		initHandler(PacketInMoveVehicle.class, (con, packet) -> {
 			// TODO handle packet
 		});
-		initHandler(PacketInPaddleBoat.class, (con, packet) -> { // 0x17
+		initHandler(PacketInPaddleBoat.class, (con, packet) -> {
 			// TODO handle packet
 		});
-		initHandler(PacketInPickItemFromBlock.class, (con, packet) -> { // 0x18
+		initHandler(PacketInPickItemFromBlock.class, (con, packet) -> {
 			HandlerList.callEvent(new PlayerPickItemEvent(con.getPlayer(), packet.slotToUse));
 		});
-		initHandler(PacketInPlaceRecipe.class, (con, packet) -> { // 0x19
+		initHandler(PacketInPlaceRecipe.class, (con, packet) -> {
 			int windowID = packet.windowID;
 			if (con.getInventoryID() != windowID) 
 				return;
@@ -533,11 +533,11 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			Player player = con.getPlayer();
 			HandlerList.callEvent(new PlayerQuickcraftRequestEvent(player, recipe, craftAll));
 		});
-		initHandler(PacketInPlayerAbilities.class, (con, packet) -> { // 0x1A
+		initHandler(PacketInPlayerAbilities.class, (con, packet) -> {
 			Player player = con.getPlayer();
 			HandlerList.callEvent(new PlayerToggleFlightEvent(player, packet.isFlying()));
 		});
-		initHandler(PacketInPlayerAction.class, (con, packet) -> { // 0x1B
+		initHandler(PacketInPlayerAction.class, (con, packet) -> {
 			final int status = packet.status;
 			Player player = con.getPlayer();
 			switch (status) {
@@ -633,19 +633,19 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			boolean filtered = packet.filterActive;
 			HandlerList.callEvent(new PlayerSetRecipeBookStateEvent(player, type, open, filtered));
 		});
-		initHandler(PacketInSetSeenRecipe.class, (con, packet) -> { // 0x1F
+		initHandler(PacketInSetSeenRecipe.class, (con, packet) -> {
 			Player player = con.getPlayer();
 			HandlerList.callEvent(new PlayerSetDisplayRecipeEvent(player, packet.recipeID));
 		});
-		initHandler(PacketInRenameItem.class, (con, packet) -> { // 0x20
+		initHandler(PacketInRenameItem.class, (con, packet) -> {
 			Player player = con.getPlayer();
 			HandlerList.callEvent(new SmithingNameInputEvent(player.getOpenInventory(), packet.itemName));
 		});
-		initHandler(PacketInResourcePack.class, (con, packet) -> { // 0x21
+		initHandler(PacketInResourcePack.class, (con, packet) -> {
 			Player player = con.getPlayer();
 			HandlerList.callEvent(new PlayerResourcePackStatusEvent(player, packet.uuid ,packet.status));
 		});
-		initHandler(PacketInSeenAdvancements.class, (con, packet) -> { // 0x22
+		initHandler(PacketInSeenAdvancements.class, (con, packet) -> {
 			Player player = con.getPlayer();
 			if (packet.action == Action.OPEN) {
 				HandlerList.callEvent(new AdvancementsOpenEvent(player, packet.tabID));
@@ -653,7 +653,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				HandlerList.callEvent(new AdvancementsCloseEvent(player));
 			}
 		});
-		initHandler(PacketInSelectTrade.class, (con, packet) -> { // 0x23
+		initHandler(PacketInSelectTrade.class, (con, packet) -> {
 			Player player = con.getPlayer();
 			int oldID = con.getSelectedTrade();
 			con.setSelectedTrade(packet.selectedSlot);
@@ -736,17 +736,12 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			Player player = con.getPlayer();
 			WorldLocation loc = MathUtil.getLocation(player.getWorld(), pos);
 			Block block = new CoreBlockAccess(loc);
-			ItemType itemType;
-			switch (hand) {
-			case MAIN_HAND: 
-				itemType = player.getInventory().getItemInMainHandUnsafe().getType();
-				break;
-			case OFF_HAND:
-				itemType = player.getInventory().getItemInOffHandUnsafe().getType();
-				break;
-			default:
+			ItemType itemType = switch (hand) {
+			case MAIN_HAND -> player.getInventory().getItemInMainHandUnsafe().getType();
+			case OFF_HAND -> player.getInventory().getItemInOffHandUnsafe().getType();
+			default ->
 				throw new ProtocolException("Invalid equipment slot: " + hand);
-			}
+			};
 			BlockType blockType = itemType.getBlockType();
 			Block against = new CoreBlock(loc, blockType);
 			HandlerList.callEvent(new BlockPlaceEvent(block, against, player, hand, face, cX, cY, cZ));

@@ -1,5 +1,6 @@
 package de.atlasmc.plugin;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,6 +72,23 @@ public final class Version implements Comparable<Version> {
 					.append(patch)
 					.toString();
 		return raw;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(major, minor, patch);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Version other = (Version) obj;
+		return major == other.major && minor == other.minor && patch == other.patch;
 	}
 
 }

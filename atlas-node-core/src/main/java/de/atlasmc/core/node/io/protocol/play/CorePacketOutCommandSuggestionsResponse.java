@@ -8,6 +8,7 @@ import java.util.List;
 
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutCommandSuggestionsResponse;
 import de.atlasmc.node.io.protocol.play.PacketOutCommandSuggestionsResponse.Match;
@@ -23,11 +24,11 @@ public class CorePacketOutCommandSuggestionsResponse implements PacketIO<PacketO
 		int count = readVarInt(in);
 		List<Match> matches = new ArrayList<>(count);
 		while (count > 0) {
-			String match = readString(in, MAX_IDENTIFIER_LENGTH);
+			String match = StringCodec.readString(in);
 			boolean hasToolTip = in.readBoolean();
 			String toolTip = null;
 			if (hasToolTip) 
-				toolTip = readString(in);
+				toolTip = StringCodec.readString(in);
 			matches.add(new Match(match, toolTip));
 			count--;
 		}
@@ -44,11 +45,11 @@ public class CorePacketOutCommandSuggestionsResponse implements PacketIO<PacketO
 		writeVarInt(size, out);
 		for (int i = 0; i < size; i++) {
 			Match m = matches.get(i);
-			writeString(m.getMatch(), out);
+			StringCodec.writeString(m.getMatch(), out);
 			String toolTip = m.getToolTip();
 			if (toolTip != null) { 
 				out.writeBoolean(true);
-				writeString(m.getToolTip(), out);
+				StringCodec.writeString(m.getToolTip(), out);
 			} else {
 				out.writeBoolean(false);
 			}

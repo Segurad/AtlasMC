@@ -7,6 +7,7 @@ import java.io.IOException;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateScore;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateScore.NumberFormatType;
@@ -17,8 +18,8 @@ public class CorePacketOutUpdateScore implements PacketIO<PacketOutUpdateScore> 
 
 	@Override
 	public void read(PacketOutUpdateScore packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.entry = readString(in, MAX_IDENTIFIER_LENGTH);
-		packet.objective = readString(in, MAX_IDENTIFIER_LENGTH);
+		packet.entry = StringCodec.readString(in);
+		packet.objective = StringCodec.readString(in);
 		packet.value = readVarInt(in);
 		final CodecContext context = handler.getCodecContext();
 		if (in.readBoolean())
@@ -32,8 +33,8 @@ public class CorePacketOutUpdateScore implements PacketIO<PacketOutUpdateScore> 
 
 	@Override
 	public void write(PacketOutUpdateScore packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeString(packet.entry, out);
-		writeString(packet.objective, out);
+		StringCodec.writeString(packet.entry, out);
+		StringCodec.writeString(packet.objective, out);
 		writeVarInt(packet.value, out);
 		final CodecContext context = handler.getCodecContext();
 		if (packet.displayName != null) {

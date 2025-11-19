@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.codec.UUIDCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketInPlayerSession;
 import io.netty.buffer.ByteBuf;
@@ -14,7 +15,7 @@ public class CorePacketInPlayerSession implements PacketIO<PacketInPlayerSession
 
 	@Override
 	public void read(PacketInPlayerSession packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.sessionID = readUUID(in);
+		packet.sessionID = UUIDCodec.readUUID(in);
 		packet.expiresAt = in.readLong();
 		int keySize = readVarInt(in);
 		byte[] key = packet.publicKey = new byte[keySize];
@@ -26,7 +27,7 @@ public class CorePacketInPlayerSession implements PacketIO<PacketInPlayerSession
 
 	@Override
 	public void write(PacketInPlayerSession packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		writeUUID(packet.sessionID, out);
+		UUIDCodec.writeUUID(packet.sessionID, out);
 		out.writeLong(packet.expiresAt);
 		writeVarInt(packet.publicKey.length, out);
 		out.writeBytes(packet.publicKey);

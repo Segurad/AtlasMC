@@ -1,8 +1,6 @@
 package de.atlasmc.core.node.io.handshake;
 
-import static de.atlasmc.io.PacketUtil.readString;
 import static de.atlasmc.io.PacketUtil.readVarInt;
-import static de.atlasmc.io.PacketUtil.writeString;
 import static de.atlasmc.io.PacketUtil.writeVarInt;
 
 import java.io.IOException;
@@ -10,6 +8,7 @@ import java.io.IOException;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.Protocol;
 import de.atlasmc.io.ProtocolException;
+import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.io.protocol.handshake.HandshakePacketIO;
 import de.atlasmc.node.AtlasNode;
@@ -42,7 +41,7 @@ public class CorePacketMinecraftHandshake extends HandshakePacketIO<PacketMinecr
 	@Override
 	public void read(PacketMinecraftHandshake packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.protocolVersion = readVarInt(in);
-		packet.address = readString(in, 255);
+		packet.address = StringCodec.readString(in, 255);
 		packet.port = in.readUnsignedShort();
 		packet.nextState = readVarInt(in);
 	}
@@ -50,7 +49,7 @@ public class CorePacketMinecraftHandshake extends HandshakePacketIO<PacketMinecr
 	@Override
 	public void write(PacketMinecraftHandshake packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		writeVarInt(packet.protocolVersion, out);
-		writeString(packet.address, out);
+		StringCodec.writeString(packet.address, out);
 		out.writeShort(packet.port);
 		writeVarInt(packet.nextState, out);
 	}

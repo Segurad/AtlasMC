@@ -10,7 +10,7 @@ public interface AbstractEnchantmentComponent extends ItemComponent {
 	STREAM_CODEC = StreamCodec
 					.builder(AbstractEnchantmentComponent.class)
 					.include(ItemComponent.STREAM_CODEC)
-					.mapRegistryValueToInt(AbstractEnchantmentComponent::hasEnchants, AbstractEnchantmentComponent::getStoredEnchants, Enchantment.REGISTRY_KEY)
+					.mapRegistryValueToVarInt(AbstractEnchantmentComponent::hasEnchants, AbstractEnchantmentComponent::getStoredEnchants, Enchantment.REGISTRY_KEY)
 					.build();
 	
 	void addEnchant(Enchantment ench, int level);

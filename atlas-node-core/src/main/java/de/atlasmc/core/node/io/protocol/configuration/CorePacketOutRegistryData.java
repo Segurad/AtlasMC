@@ -1,8 +1,6 @@
 package de.atlasmc.core.node.io.protocol.configuration;
 
-import static de.atlasmc.io.PacketUtil.readIdentifier;
 import static de.atlasmc.io.PacketUtil.readVarInt;
-import static de.atlasmc.io.PacketUtil.writeIdentifier;
 import static de.atlasmc.io.PacketUtil.writeVarInt;
 
 import java.io.IOException;
@@ -25,14 +23,14 @@ public class CorePacketOutRegistryData implements PacketIO<ClientboundRegistryDa
 	
 	@Override
 	public void read(ClientboundRegistryData packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.registryID = readIdentifier(in);
+		packet.registryID = NamespacedKey.STREAM_CODEC.deserialize(null, in, null);
 		final int count = readVarInt(in);
 		if (count == 0)
 			return;
 		NBTNIOReader reader = null;
 		List<RegistryEntry> entries = packet.entries = new ArrayList<>(count); 
 		for (int i = 0; i < count; i++) {
-			NamespacedKey id = readIdentifier(in);
+			NamespacedKey id = NamespacedKey.STREAM_CODEC.deserialize(null, in, null);
 			NBT nbt = null;
 			if (in.readBoolean()) {
 				if (reader == null)
@@ -47,7 +45,7 @@ public class CorePacketOutRegistryData implements PacketIO<ClientboundRegistryDa
 
 	@Override
 	public void write(ClientboundRegistryData packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		writeIdentifier(packet.registryID, out);
+		NamespacedKey.STREAM_CODEC.serialize(packet.registryID, out, null);
 		List<RegistryEntry> entries = packet.entries;
 		if (entries == null) {
 			writeVarInt(0, out);
@@ -60,7 +58,7 @@ public class CorePacketOutRegistryData implements PacketIO<ClientboundRegistryDa
 		NBTWriter writer = new NBTNIOWriter(out);
 		for (int i = 0; i < count; i++) {
 			RegistryEntry entry = entries.get(i);
-			writeIdentifier(entry.entryID, out);
+			NamespacedKey.STREAM_CODEC.serialize(entry.entryID, out, null);
 			NBT nbt = entry.data;
 			if (nbt == null) {
 				out.writeBoolean(false);

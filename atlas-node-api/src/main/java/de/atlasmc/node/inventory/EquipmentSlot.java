@@ -17,7 +17,7 @@ public enum EquipmentSlot implements IDHolder, EnumName {
 	/**
 	 * Slot that defines a general hand slot {@link MainHand} or {@link #OFF_HAND}
 	 */
-	HAND("hand", -1),
+	HAND("hand", -2),
 	FEET("feet", 1),
 	LEGS("legs", 2),
 	CHEST("chest", 3),
@@ -78,7 +78,7 @@ public enum EquipmentSlot implements IDHolder, EnumName {
 			return false;
 		if (this == slot || this == ANY)
 			return true;
-		if (equippableID != -1) {
+		if (equippableID >= 0) {
 			return this == slot;
 		} else if (this == HAND) {
 			return slot == MAIN_HAND || slot == OFF_HAND;

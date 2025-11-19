@@ -7,6 +7,7 @@ import java.io.IOException;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateObjectives;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateObjectives.Mode;
@@ -19,7 +20,7 @@ public class CorePacketOutUpdateObjectives implements PacketIO<PacketOutUpdateOb
 
 	@Override
 	public void read(PacketOutUpdateObjectives packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.name = readString(in, MAX_IDENTIFIER_LENGTH);
+		packet.name = StringCodec.readString(in);
 		packet.mode = Mode.getByID(in.readByte());
 		if (packet.mode == Mode.REMOVE) 
 			return;
@@ -35,7 +36,7 @@ public class CorePacketOutUpdateObjectives implements PacketIO<PacketOutUpdateOb
 
 	@Override
 	public void write(PacketOutUpdateObjectives packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeString(packet.name, out);
+		StringCodec.writeString(packet.name, out);
 		out.writeByte(packet.mode.getID());
 		if (packet.mode == Mode.REMOVE) 
 			return;

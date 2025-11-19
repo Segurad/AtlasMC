@@ -1,8 +1,6 @@
 package de.atlasmc.core.node.io.protocol.play;
 
-import static de.atlasmc.io.PacketUtil.readIdentifier;
 import static de.atlasmc.io.PacketUtil.readVarInt;
-import static de.atlasmc.io.PacketUtil.writeIdentifier;
 import static de.atlasmc.io.PacketUtil.writeVarInt;
 
 import java.io.IOException;
@@ -39,7 +37,7 @@ public class CorePacketOutUpdateAttributes implements PacketIO<PacketOutUpdateAt
 			final int modifierCount = readVarInt(in);
 			List<AttributeModifier> modifiers = new ArrayList<>(attributeCount);
 			for (int j = 0; j < modifierCount; j++) {
-				NamespacedKey id = readIdentifier(in);
+				NamespacedKey id = NamespacedKey.STREAM_CODEC.deserialize(null, in, null);
 				double amount = in.readDouble();
 				Operation op = enumData.getByID(i);
 				AttributeModifier modifier = new AttributeModifier(id, amount, op);
@@ -66,7 +64,7 @@ public class CorePacketOutUpdateAttributes implements PacketIO<PacketOutUpdateAt
 			writeVarInt(modCount, out);
 			for (int j = 0; j < modCount; j++) {
 				AttributeModifier mod = modifiers.get(j);
-				writeIdentifier(mod.getID(), out);
+				NamespacedKey.STREAM_CODEC.serialize(mod.getID(), out, null);
 				out.writeDouble(mod.getAmount());
 				out.writeByte(mod.getOperation().getID());
 			}

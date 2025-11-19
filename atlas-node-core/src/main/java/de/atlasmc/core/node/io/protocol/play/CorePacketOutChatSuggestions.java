@@ -8,6 +8,7 @@ import java.util.List;
 
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutChatSuggestions;
 import io.netty.buffer.ByteBuf;
@@ -22,7 +23,7 @@ public class CorePacketOutChatSuggestions implements PacketIO<PacketOutChatSugge
 			return;
 		List<String> entries = new ArrayList<>(count);
 		for (int i = 0; i < count; i++)
-			entries.add(readString(in, 32767));
+			entries.add(StringCodec.readString(in));
 		packet.entries = entries;
 	}
 
@@ -35,7 +36,7 @@ public class CorePacketOutChatSuggestions implements PacketIO<PacketOutChatSugge
 			return;
 		}
 		for (String s : entries)
-			writeString(s, out);
+			StringCodec.writeString(s, out);
 	}
 
 	@Override

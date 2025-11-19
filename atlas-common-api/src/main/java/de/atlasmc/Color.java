@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import de.atlasmc.chat.ChatColor;
+import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.NBTException;
 import de.atlasmc.nbt.TagType;
 import de.atlasmc.nbt.codec.CodecTags;
@@ -62,6 +63,8 @@ public final class Color implements ColorValue {
 			return CodecTags.INT_LIST;
 		}
 	};
+	
+	public static final StreamCodec<Color> STREAM_CODEC = StreamCodec.intToObject(Color.class, Color::fromRGB, Color::asRGB);
 	
 	public static final Color 
 	BLACK = new Color("BLACK", 0x00, 0x00, 0x00), 

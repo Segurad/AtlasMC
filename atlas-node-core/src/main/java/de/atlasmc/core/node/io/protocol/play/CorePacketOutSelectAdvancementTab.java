@@ -7,8 +7,6 @@ import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutSelectAdvancementTab;
 import io.netty.buffer.ByteBuf;
 
-import static de.atlasmc.io.PacketUtil.*;
-
 import java.io.IOException;
 
 public class CorePacketOutSelectAdvancementTab implements PacketIO<PacketOutSelectAdvancementTab> {
@@ -16,7 +14,7 @@ public class CorePacketOutSelectAdvancementTab implements PacketIO<PacketOutSele
 	@Override
 	public void read(PacketOutSelectAdvancementTab packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		if (in.readBoolean())
-			packet.tabID = readIdentifier(in);
+			packet.tabID = NamespacedKey.STREAM_CODEC.deserialize(null, in, null);
 	}
 
 	@Override
@@ -26,7 +24,7 @@ public class CorePacketOutSelectAdvancementTab implements PacketIO<PacketOutSele
 			out.writeBoolean(false);
 		} else {
 			out.writeBoolean(true);
-			writeIdentifier(tab, out);
+			NamespacedKey.STREAM_CODEC.serialize(tab, out, null);
 		}
 	}
 

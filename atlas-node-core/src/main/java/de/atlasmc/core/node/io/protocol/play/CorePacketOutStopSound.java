@@ -4,6 +4,7 @@ import static de.atlasmc.io.PacketUtil.*;
 
 import java.io.IOException;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
@@ -23,7 +24,7 @@ public class CorePacketOutStopSound implements PacketIO<PacketOutStopSound> {
 			packet.category = EnumUtil.getByID(SoundCategory.class, readVarInt(in));
 		}
 		if ((flags & 0x2) == 0x2) {
-			packet.sound = readIdentifier(in);
+			packet.sound = NamespacedKey.STREAM_CODEC.deserialize(null, in, null);
 		}
 	}
 
@@ -38,7 +39,7 @@ public class CorePacketOutStopSound implements PacketIO<PacketOutStopSound> {
 		if (packet.category != null)
 			writeVarInt(packet.category.getID(), out);
 		if (packet.sound != null)
-			writeIdentifier(packet.sound, out);
+			NamespacedKey.STREAM_CODEC.serialize(packet.sound, out, null);
 	}
 	
 	@Override

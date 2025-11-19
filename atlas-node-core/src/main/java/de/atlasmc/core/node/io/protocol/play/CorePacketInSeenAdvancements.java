@@ -1,9 +1,8 @@
 package de.atlasmc.core.node.io.protocol.play;
 
-import static de.atlasmc.io.PacketUtil.*;
-
 import java.io.IOException;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
@@ -17,13 +16,13 @@ public class CorePacketInSeenAdvancements implements PacketIO<PacketInSeenAdvanc
 	@Override
 	public void read(PacketInSeenAdvancements packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.action = EnumUtil.getByID(Action.class, in.readInt());
-		packet.tabID = readIdentifier(in);
+		packet.tabID = NamespacedKey.STREAM_CODEC.deserialize(null, in, null);
 	}
 
 	@Override
 	public void write(PacketInSeenAdvancements packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		out.writeInt(packet.action.getID());
-		writeIdentifier(packet.tabID, out);
+		NamespacedKey.STREAM_CODEC.serialize(packet.tabID, out, null);
 	}
 	
 	@Override

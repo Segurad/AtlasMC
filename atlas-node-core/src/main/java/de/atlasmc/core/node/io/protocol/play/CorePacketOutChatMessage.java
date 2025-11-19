@@ -10,6 +10,8 @@ import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatSignature;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.codec.StringCodec;
+import de.atlasmc.io.codec.UUIDCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutChatMessage;
 import de.atlasmc.util.codec.CodecContext;
@@ -19,14 +21,14 @@ public class CorePacketOutChatMessage implements PacketIO<PacketOutChatMessage> 
 
 	@Override
 	public void read(PacketOutChatMessage packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.sender = readUUID(in);
+		packet.sender = UUIDCodec.readUUID(in);
 		packet.index = readVarInt(in);
 		if (in.readBoolean()) {
 			byte[] signature = new byte[256];
 			in.readBytes(signature);
 			packet.signature = signature;
 		}
-		packet.message = readString(in, 256);
+		packet.message = StringCodec.readString(in, 256);
 		packet.messageTimestamp = in.readLong();
 		packet.salt = in.readLong();
 		final int previousCount = readVarInt(in);
@@ -60,7 +62,7 @@ public class CorePacketOutChatMessage implements PacketIO<PacketOutChatMessage> 
 
 	@Override
 	public void write(PacketOutChatMessage packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		writeUUID(packet.sender, out);
+		UUIDCodec.writeUUID(packet.sender, out);
 		writeVarInt(packet.index, out);
 		if (packet.signature != null) {
 			out.writeBoolean(true);
@@ -68,7 +70,7 @@ public class CorePacketOutChatMessage implements PacketIO<PacketOutChatMessage> 
 		} else {
 			out.writeBoolean(false);
 		}
-		writeString(packet.message, out);
+		StringCodec.writeString(packet.message, out);
 		out.writeLong(packet.messageTimestamp);
 		out.writeLong(packet.salt);
 		List<ChatSignature> previous = packet.previous;

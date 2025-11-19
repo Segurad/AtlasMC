@@ -7,6 +7,7 @@ import java.io.IOException;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
+import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.inventory.EquipmentSlot;
 import de.atlasmc.node.io.protocol.play.PacketInUseItemOn;
 import io.netty.buffer.ByteBuf;
@@ -17,7 +18,7 @@ public class CorePacketInUseItemOn implements PacketIO<PacketInUseItemOn> {
 	public void read(PacketInUseItemOn packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.hand = readVarInt(in) == 0 ? EquipmentSlot.MAIN_HAND : EquipmentSlot.OFF_HAND;
 		packet.position = in.readLong();
-		packet.face = CorePacketInPlayerAction.FACES.get(readVarInt(in));
+		packet.face = BlockFace.getByFaceID(readVarInt(in));
 		packet.cursorPosX = in.readFloat();
 		packet.cursorPosY = in.readFloat();
 		packet.cursorPosZ = in.readFloat();	
@@ -30,7 +31,7 @@ public class CorePacketInUseItemOn implements PacketIO<PacketInUseItemOn> {
 	public void write(PacketInUseItemOn packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		writeVarInt(packet.hand == EquipmentSlot.MAIN_HAND ? 0 : 1, out);
 		out.writeLong(packet.position);
-		writeVarInt(CorePacketInPlayerAction.FACES.indexOf(packet.face), out);
+		writeVarInt(packet.face.getFaceID(), out);
 		out.writeFloat(packet.cursorPosX);
 		out.writeFloat(packet.cursorPosY);
 		out.writeFloat(packet.cursorPosZ);

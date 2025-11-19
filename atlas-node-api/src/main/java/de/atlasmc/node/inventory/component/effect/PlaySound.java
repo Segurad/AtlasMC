@@ -19,7 +19,7 @@ public interface PlaySound extends ComponentEffect {
 	STREAM_CODEC = StreamCodec
 					.builder(PlaySound.class)
 					.include(ComponentEffect.STREAM_CODEC)
-					.enumValueOrCodec(PlaySound::getSound, PlaySound::setSound, EnumSound.class, ResourceSound.STREAM_CODEC)
+					.varIntEnumOrCodec(PlaySound::getSound, PlaySound::setSound, EnumSound.class, ResourceSound.STREAM_CODEC)
 					.build();
 	
 	Sound getSound();

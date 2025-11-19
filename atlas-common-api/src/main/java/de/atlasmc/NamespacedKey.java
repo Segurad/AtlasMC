@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
+import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.nbt.TagType;
 import de.atlasmc.nbt.codec.CodecTags;
 import de.atlasmc.nbt.codec.NBTCodec;
@@ -15,6 +17,7 @@ import de.atlasmc.util.NumberConversion;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.codec.CodecContext;
+import io.netty.buffer.ByteBuf;
 
 public class NamespacedKey implements CharSequence {
 
@@ -40,6 +43,26 @@ public class NamespacedKey implements CharSequence {
 		public List<TagType> getTags() {
 			return CodecTags.STRING;
 		}
+	};
+	
+	public static final StreamCodec<NamespacedKey> STREAM_CODEC = new StreamCodec<NamespacedKey>() {
+		
+		@Override
+		public boolean serialize(NamespacedKey value, ByteBuf output, CodecContext context) throws IOException {
+			StringCodec.MAX_LENGTH_CODEC.serialize(value.toString(), output, context);
+			return true;
+		}
+		
+		@Override
+		public Class<?> getType() {
+			return NamespacedKey.class;
+		}
+		
+		@Override
+		public NamespacedKey deserialize(NamespacedKey value, ByteBuf input, CodecContext context) throws IOException {
+			return NamespacedKey.of(StringCodec.MAX_LENGTH_CODEC.deserialize(input, context));
+		}
+		
 	};
 	
 	/**

@@ -1,9 +1,6 @@
 package de.atlasmc.core.node.io.protocol.play;
 
-import static de.atlasmc.io.PacketUtil.readString;
-import static de.atlasmc.io.PacketUtil.readUUID;
 import static de.atlasmc.io.PacketUtil.readVarInt;
-import static de.atlasmc.io.PacketUtil.writeString;
 import static de.atlasmc.io.PacketUtil.writeVarInt;
 import static de.atlasmc.node.io.protocol.play.PacketOutPlayerInfoUpdate.ACTION_ADD_PLAYER;
 import static de.atlasmc.node.io.protocol.play.PacketOutPlayerInfoUpdate.ACTION_INIT_CHAT;
@@ -25,6 +22,8 @@ import de.atlasmc.chat.PlayerChatSignatureData;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.ProtocolException;
+import de.atlasmc.io.codec.StringCodec;
+import de.atlasmc.io.codec.UUIDCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.network.player.ProfileProperty;
 import de.atlasmc.node.Gamemode;
@@ -45,23 +44,23 @@ public class CorePacketOutPlayerInfoUpdate implements PacketIO<PacketOutPlayerIn
 		final CodecContext context = handler.getCodecContext();
 		List<PlayerInfo> infos = new ArrayList<>(count);
 		for (int i = 0; i < count; i++) {
-			PlayerInfo info = new PlayerInfo(readUUID(in));
+			PlayerInfo info = new PlayerInfo(UUIDCodec.readUUID(in));
 			infos.add(info);
 			if ((actions & ACTION_ADD_PLAYER) != 0) {
-				info.name = readString(in);
+				info.name = StringCodec.readString(in);
 				final int propCount = readVarInt(in);
 				if (propCount > 0) {
 					List<ProfileProperty> props = info.properties = new ArrayList<>(propCount);
 					for (int j = 0; j < propCount; j++) {
-						String name = readString(in, 32767);
-						String value = readString(in, 32767);
-						String signature = in.readBoolean() ? readString(in, 32767) : null;
+						String name = StringCodec.readString(in);
+						String value = StringCodec.readString(in);
+						String signature = in.readBoolean() ? StringCodec.readString(in) : null;
 						props.add(new ProfileProperty(name, value, signature));
 					}
 				}
 			}
 			if ((actions & ACTION_INIT_CHAT) != 0 && in.readBoolean()) {
-				UUID sid = readUUID(in);
+				UUID sid = UUIDCodec.readUUID(in);
 				long expiration = in.readLong();
 				int keySize = readVarInt(in);
 				byte[] rawKey = new byte[keySize];
@@ -109,21 +108,21 @@ public class CorePacketOutPlayerInfoUpdate implements PacketIO<PacketOutPlayerIn
 			out.writeLong(uuid.getMostSignificantBits());
 			out.writeLong(uuid.getLeastSignificantBits());
 			if ((actions & ACTION_ADD_PLAYER) != 0) {
-				writeString(info.name, out);
+				StringCodec.writeString(info.name, out);
 				List<ProfileProperty> props = info.properties;
 				if (props == null || props.isEmpty()) {
 					writeVarInt(0, out);
 				} else {
 					writeVarInt(props.size(), out);
 					for (ProfileProperty prop : props) {
-						writeString(prop.getName(), out);
-						writeString(prop.getValue(), out);
+						StringCodec.writeString(prop.getName(), out);
+						StringCodec.writeString(prop.getValue(), out);
 						String signature = prop.getSignature();
 						if (signature == null) {
 							out.writeBoolean(false);
 						} else {
 							out.writeBoolean(true);
-							writeString(signature, out);
+							StringCodec.writeString(signature, out);
 						}
 					}
 				}

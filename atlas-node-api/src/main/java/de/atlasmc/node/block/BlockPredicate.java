@@ -26,7 +26,7 @@ public class BlockPredicate implements NBTSerializable, StreamSerializable {
 					.builder(BlockPredicate.class)
 					.defaultConstructor(BlockPredicate::new)
 					.optional(BlockPredicate::hasTypes)
-					.dataSet(BlockPredicate::getTypes, BlockPredicate::setTypes, BlockType.REGISTRY_KEY)
+					.codec(BlockPredicate::getTypes, BlockPredicate::setTypes, DataSet.streamCodec(BlockType.REGISTRY_KEY))
 					.optional(BlockPredicate::hasStates)
 					.listCodec(BlockPredicate::hasStates, BlockPredicate::getStates, PropertyValuePredicate.STREAM_CODEC)
 					.optional(BlockPredicate::hasTile)

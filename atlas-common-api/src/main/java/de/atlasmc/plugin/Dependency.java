@@ -1,18 +1,28 @@
 package de.atlasmc.plugin;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 
 public final class Dependency {
 	
 	// ^(?P<order>[\+\-\~])?(?P<type>[!\?\*])?(?: ?(?P<name>[a-zA-Z0-9-_]+))(?: (?P<operation>\>|\<|\=\=|\>\=|\<\=) (?P<version>v?[0-9a-zA-Z-.\+]+))?(?: (?P<from>v?[0-9a-zA-Z-.\+]+) - (?P<to>v?[0-9a-zA-Z-.\+]+))?$
 	public static final Pattern PATTERN = Pattern.compile("^(?P<order>[\\+\\-\\~])?(?P<type>[!\\?\\*])?(?: ?(?P<name>[a-zA-Z0-9-_]+))(?: (?P<operation>\\>|\\<|\\=\\=|\\>\\=|\\<\\=) (?P<version>v?[0-9a-zA-Z-.\\+]+))?(?: (?P<from>v?[0-9a-zA-Z-.\\+]+) - (?P<to>v?[0-9a-zA-Z-.\\+]+))?$");
 	
+	@NotNull
 	public final String name;
+	@Nullable
 	public final Version version;
+	@Nullable
 	public final Version toVersion;
+	@NotNull
 	public final MatchOperation operation;
+	@NotNull
 	public final Order order;
+	@NotNull
 	public final Type type;
 	
 	public Dependency(String name) {
@@ -44,36 +54,17 @@ public final class Dependency {
 	}
 	
 	private Dependency(String name, Type type, Order order, MatchOperation operation, Version from, Version to) {
-		if (name == null)
-			throw new IllegalArgumentException("Name can not be null!");
-		if (type == null)
-			throw new IllegalArgumentException("Type can not be null!");
-		if (order == null)
-			throw new IllegalArgumentException("Order can not be null!");
-		if (operation == null)
-			throw new IllegalArgumentException("Operation can not be null!");
 		if (operation != MatchOperation.ANY) {
-			if (operation == MatchOperation.RANGE) {
-				if (from == null)
-					throw new IllegalArgumentException("From can not be null!");
-				if (to == null)
-					throw new IllegalArgumentException("To can not be null!");
-				this.version = from;
-				this.toVersion = to;
-			} else if (from == null) {
-				throw new IllegalArgumentException("Version can not be null!");
-			} else {
-				this.version = from;
-				this.toVersion = null;
-			}
+			this.version = Objects.requireNonNull(from);
+			this.toVersion = operation == MatchOperation.RANGE ? Objects.requireNonNull(to) : null;
 		} else {
 			this.version = null;
 			this.toVersion = null;
 		}
-		this.name = name;
-		this.type = type;
-		this.operation = operation;
-		this.order = order;
+		this.name = Objects.requireNonNull(name);
+		this.type = Objects.requireNonNull(type);
+		this.operation = Objects.requireNonNull(operation);
+		this.order = Objects.requireNonNull(order);
 	}
 	
 	@Override
@@ -247,8 +238,8 @@ public final class Dependency {
 		RANGE(null, Integer.MAX_VALUE, false);
 		
 		private final String identifier;
-		private boolean equal;
-		private int comp;
+		private final boolean equal;
+		private final int comp;
 		
 		private MatchOperation(String identifier, int comp, boolean equal) {
 			this.equal = equal;

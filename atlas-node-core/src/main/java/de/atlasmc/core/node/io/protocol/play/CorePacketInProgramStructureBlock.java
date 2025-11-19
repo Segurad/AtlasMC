@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketInProgramStructureBlock;
 import io.netty.buffer.ByteBuf;
@@ -17,7 +18,7 @@ public class CorePacketInProgramStructureBlock implements PacketIO<PacketInProgr
 		packet.position = in.readLong();
 		packet.action = readVarInt(in);
 		packet.mode = readVarInt(in);
-		packet.name = readString(in, MAX_IDENTIFIER_LENGTH);
+		packet.name = StringCodec.readString(in);
 		packet.offsetX = in.readByte();
 		packet.offsetY = in.readByte();
 		packet.offsetZ = in.readByte();
@@ -26,7 +27,7 @@ public class CorePacketInProgramStructureBlock implements PacketIO<PacketInProgr
 		packet.sizeZ = in.readByte();
 		packet.mirror = readVarInt(in);
 		packet.rotation = readVarInt(in);
-		packet.metadata = readString(in, 128);
+		packet.metadata = StringCodec.readString(in, 128);
 		packet.integrity = in.readFloat();
 		packet.seed = readVarLong(in);
 		packet.flags = in.readByte();
@@ -38,7 +39,7 @@ public class CorePacketInProgramStructureBlock implements PacketIO<PacketInProgr
 		out.writeLong(packet.position);
 		writeVarInt(packet.action, out);
 		writeVarInt(packet.mode, out);
-		writeString(packet.name, out);
+		StringCodec.writeString(packet.name, out);
 		out.writeByte(packet.offsetX);
 		out.writeByte(packet.offsetY);
 		out.writeByte(packet.offsetZ);
@@ -47,7 +48,7 @@ public class CorePacketInProgramStructureBlock implements PacketIO<PacketInProgr
 		out.writeByte(packet.sizeZ);
 		writeVarInt(packet.mirror, out);
 		writeVarInt(packet.rotation, out);
-		writeString(packet.metadata, out);
+		StringCodec.writeString(packet.metadata, out);
 		out.writeFloat(packet.integrity);
 		writeVarLong(packet.seed, out);
 		out.writeByte(packet.flags);

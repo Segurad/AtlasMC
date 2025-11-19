@@ -11,6 +11,7 @@ import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateTeams;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateTeams.Mode;
@@ -23,7 +24,7 @@ public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> 
 
 	@Override
 	public void read(PacketOutUpdateTeams packet, ByteBuf in, ConnectionHandler handler) throws IOException {
-		packet.name = readString(in, MAX_IDENTIFIER_LENGTH);
+		packet.name = StringCodec.readString(in);
 		Mode mode = Mode.getByID(in.readByte());
 		packet.mode = mode;
 		final CodecContext context = handler.getCodecContext();
@@ -31,8 +32,8 @@ public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> 
 		case CREATE_TEAM: {
 				packet.displayName = Chat.STREAM_CODEC.deserialize(in, context);
 				packet.flags = in.readByte();
-				packet.nameTagVisibility = getNameTagVisibility(readString(in, 40));
-				packet.collisionRule = getCollisionRule(readString(in, 40));
+				packet.nameTagVisibility = getNameTagVisibility(StringCodec.readString(in, 40));
+				packet.collisionRule = getCollisionRule(StringCodec.readString(in, 40));
 				packet.color = EnumUtil.getByID(ChatColor.class, readVarInt(in));
 				packet.prefix = Chat.STREAM_CODEC.deserialize(in, context);
 				packet.suffix = Chat.STREAM_CODEC.deserialize(in, context);
@@ -40,7 +41,7 @@ public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> 
 				if (size > 0) {
 					List<String> entities = new ArrayList<>(size);
 					for (int i = 0; i < size; i++) {
-						entities.add(readString(in, MAX_IDENTIFIER_LENGTH));
+						entities.add(StringCodec.readString(in));
 					}
 					packet.entities = (entities);
 				} else {
@@ -53,8 +54,8 @@ public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> 
 		case UPDATE_TEAM_INFO:
 			packet.displayName = Chat.STREAM_CODEC.deserialize(in, context);
 			packet.flags = in.readByte();
-			packet.nameTagVisibility = getNameTagVisibility(readString(in, 40));
-			packet.collisionRule = getCollisionRule(readString(in, 40));
+			packet.nameTagVisibility = getNameTagVisibility(StringCodec.readString(in, 40));
+			packet.collisionRule = getCollisionRule(StringCodec.readString(in, 40));
 			packet.color = EnumUtil.getByID(ChatColor.class, readVarInt(in));
 			packet.prefix = Chat.STREAM_CODEC.deserialize(in, context);
 			packet.suffix = Chat.STREAM_CODEC.deserialize(in, context);
@@ -65,7 +66,7 @@ public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> 
 				if (size > 0) {
 					List<String> entities = new ArrayList<>(size);
 					for (int i = 0; i < size; i++) {
-						entities.add(readString(in, MAX_IDENTIFIER_LENGTH));
+						entities.add(StringCodec.readString(in));
 					}
 					packet.entities = (entities);
 				} else {
@@ -80,15 +81,15 @@ public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> 
 
 	@Override
 	public void write(PacketOutUpdateTeams packet, ByteBuf out, ConnectionHandler handler) throws IOException {
-		writeString(packet.name, out);
+		StringCodec.writeString(packet.name, out);
 		out.writeByte(packet.mode.getID());
 		final CodecContext context = handler.getCodecContext();
 		switch (packet.mode) {
 		case CREATE_TEAM: {
 				packet.displayName.writeToStream(out, context);
 				out.writeByte(packet.flags & 0x03);
-				writeString(optionToStringNameTagVisible(packet.nameTagVisibility), out);
-				writeString(optionToStringCollision(packet.collisionRule), out);
+				StringCodec.writeString(optionToStringNameTagVisible(packet.nameTagVisibility), out);
+				StringCodec.writeString(optionToStringCollision(packet.collisionRule), out);
 				writeVarInt(packet.color.getID(), out);
 				packet.prefix.writeToStream(out, context);
 				packet.suffix.writeToStream(out, context);
@@ -99,15 +100,15 @@ public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> 
 				final int size = packet.entities.size();
 				writeVarInt(size, out);
 				for (int i = 0; i < size; i++) {
-					writeString(packet.entities.get(i), out);
+					StringCodec.writeString(packet.entities.get(i), out);
 				}
 				break;
 			}
 		case UPDATE_TEAM_INFO:
 			packet.displayName.writeToStream(out, context);
 			out.writeByte(packet.flags & 0x03);
-			writeString(optionToStringNameTagVisible(packet.nameTagVisibility), out);
-			writeString(optionToStringCollision(packet.collisionRule), out);
+			StringCodec.writeString(optionToStringNameTagVisible(packet.nameTagVisibility), out);
+			StringCodec.writeString(optionToStringCollision(packet.collisionRule), out);
 			writeVarInt(packet.color.getID(), out);
 			packet.prefix.writeToStream(out, context);
 			packet.suffix.writeToStream(out, context);
@@ -123,7 +124,7 @@ public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> 
 				final int size = packet.entities.size();
 				writeVarInt(size, out);
 				for (int i = 0; i < size; i++) {
-					writeString(packet.entities.get(i), out);
+					StringCodec.writeString(packet.entities.get(i), out);
 				}
 				break;
 			}

@@ -7,7 +7,7 @@ public interface Ghast extends Monster {
 	public static final NBTCodec<Ghast>
 	NBT_HANDLER = NBTCodec
 					.builder(Ghast.class)
-					.include(Ghast.NBT_HANDLER)
+					.include(Monster.NBT_HANDLER)
 					.byteField("ExplosionPower", Ghast::getExplosionPower, Ghast::setExplosionPower, (byte) 1)
 					.boolField("Attacking", Ghast::isAttacking, Ghast::setAttacking, false) // non standard
 					.build();

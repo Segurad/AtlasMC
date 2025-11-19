@@ -19,7 +19,7 @@ public interface AttributeModifiersComponent extends ItemComponent, Attributeabl
 	STREAM_CODEC = StreamCodec
 					.builder(AttributeModifiersComponent.class)
 					.include(ItemComponent.STREAM_CODEC)
-					.multimapType2TypeList(AttributeModifiersComponent::hasAttributeModifiers, AttributeModifiersComponent::getAttributeModifiers, Attribute::getByID, AttributeModifier.STREAM_CODEC)
+					.multimapTypeToCodec(AttributeModifiersComponent::hasAttributeModifiers, AttributeModifiersComponent::getAttributeModifiers, Attribute::getByID, AttributeModifier.STREAM_CODEC)
 					.build();
 	
 	AttributeModifiersComponent clone();

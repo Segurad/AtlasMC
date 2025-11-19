@@ -18,12 +18,6 @@ public interface PluginChannel extends Namespaced {
 	void sendMessage(ByteBuf message);
 	
 	/**
-	 * Sends a message to the holder of this channel
-	 * @param message to send
-	 */
-	void sendMessage(byte[] message);
-	
-	/**
 	 * In bound message of the holder of this channel
 	 * @param message to handle
 	 */

@@ -17,8 +17,8 @@ public interface RemoveEffects extends ComponentEffect {
 	public static final StreamCodec<RemoveEffects>
 	STREAM_CODEC = StreamCodec
 					.builder(RemoveEffects.class)
-					.include(RemoveEffects.STREAM_CODEC)
-					.dataSet(RemoveEffects::getEffects, RemoveEffects::setEffects, PotionEffectType.REGISTRY_KEY)
+					.include(ComponentEffect.STREAM_CODEC)
+					.codec(RemoveEffects::getEffects, RemoveEffects::setEffects, DataSet.streamCodec(PotionEffectType.REGISTRY_KEY))
 					.build();
 
 	DataSet<PotionEffectType> getEffects();

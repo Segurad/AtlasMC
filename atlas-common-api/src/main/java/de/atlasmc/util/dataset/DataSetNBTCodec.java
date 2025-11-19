@@ -18,11 +18,11 @@ import de.atlasmc.tag.Tag;
 import de.atlasmc.tag.Tags;
 import de.atlasmc.util.codec.CodecContext;
 
-final class DataSetCodec<T extends Namespaced> implements NBTCodec<DataSet<T>> {
+final class DataSetNBTCodec<T extends Namespaced> implements NBTCodec<DataSet<T>> {
 
 	private final RegistryKey<T> registry;
 	
-	public DataSetCodec(RegistryKey<T> registry) {
+	public DataSetNBTCodec(RegistryKey<T> registry) {
 		this.registry = Objects.requireNonNull(registry);
 	}
 	

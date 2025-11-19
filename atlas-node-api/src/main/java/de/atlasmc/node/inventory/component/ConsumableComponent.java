@@ -32,7 +32,7 @@ public interface ConsumableComponent extends ItemComponent {
 					.include(ItemComponent.STREAM_CODEC)
 					.floatValue(ConsumableComponent::getConsumeSeconds, ConsumableComponent::setConsumeSeconds)
 					.varIntEnum(ConsumableComponent::getAnimation, ConsumableComponent::setAnimation, Animation.class)
-					.enumValueOrCodec(ConsumableComponent::getSound, ConsumableComponent::setSound, EnumSound.class, ResourceSound.STREAM_CODEC)
+					.varIntEnumOrCodec(ConsumableComponent::getSound, ConsumableComponent::setSound, EnumSound.class, ResourceSound.STREAM_CODEC)
 					.booleanValue(ConsumableComponent::hasParticles, ConsumableComponent::setParticles)
 					.listCodec(ConsumableComponent::hasEffects, ConsumableComponent::getEffects, ComponentEffect.STREAM_CODEC)
 					.build();

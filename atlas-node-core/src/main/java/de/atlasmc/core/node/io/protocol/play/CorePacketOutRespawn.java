@@ -1,12 +1,11 @@
 package de.atlasmc.core.node.io.protocol.play;
 
-import static de.atlasmc.io.PacketUtil.readIdentifier;
 import static de.atlasmc.io.PacketUtil.readVarInt;
-import static de.atlasmc.io.PacketUtil.writeIdentifier;
 import static de.atlasmc.io.PacketUtil.writeVarInt;
 
 import java.io.IOException;
 
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
@@ -20,7 +19,7 @@ public class CorePacketOutRespawn implements PacketIO<PacketOutRespawn> {
 	@Override
 	public void read(PacketOutRespawn packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.dimension = readVarInt(in);
-		packet.world = readIdentifier(in);
+		packet.world = NamespacedKey.STREAM_CODEC.deserialize(null, in, null);
 		packet.seed = in.readLong();
 		packet.gamemode = EnumUtil.getByID(Gamemode.class, in.readUnsignedByte());
 		int rawPreviousGamemode = readVarInt(in);
@@ -29,7 +28,7 @@ public class CorePacketOutRespawn implements PacketIO<PacketOutRespawn> {
 		packet.debug = in.readBoolean();
 		packet.flat = in.readBoolean();
 		if (in.readBoolean()) {
-			packet.deathDimension = readIdentifier(in);
+			packet.deathDimension = NamespacedKey.STREAM_CODEC.deserialize(null, in, null);
 			packet.deathLocation = in.readLong();
 		}
 		packet.portalCooldown = readVarInt(in);
@@ -39,7 +38,7 @@ public class CorePacketOutRespawn implements PacketIO<PacketOutRespawn> {
 	@Override
 	public void write(PacketOutRespawn packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.dimension, out);
-		writeIdentifier(packet.world, out);
+		NamespacedKey.STREAM_CODEC.serialize(packet.world, out, null);
 		out.writeLong(packet.seed);
 		out.writeByte(packet.gamemode.getID());
 		if (packet.previous != null) {
@@ -51,7 +50,7 @@ public class CorePacketOutRespawn implements PacketIO<PacketOutRespawn> {
 		out.writeBoolean(packet.flat);
 		if (packet.deathDimension != null) {
 			out.writeBoolean(true);
-			writeIdentifier(packet.deathDimension, out);
+			NamespacedKey.STREAM_CODEC.serialize(packet.deathDimension, out, null);
 			out.writeLong(packet.deathLocation);
 		} else {
 			out.writeBoolean(false);

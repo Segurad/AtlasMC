@@ -8,6 +8,7 @@ import java.util.List;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.common.AbstractPacketServerLinks;
 import de.atlasmc.node.io.protocol.common.AbstractPacketServerLinks.Label;
@@ -38,7 +39,7 @@ public abstract class CoreAbstractPacketServerLinks<T extends AbstractPacketServ
 			} else {
 				customLabel = Chat.STREAM_CODEC.deserialize(in, context);
 			}
-			String url = readString(in);
+			String url = StringCodec.readString(in);
 			links.add(new ServerLink(label, customLabel, url));
 		}
 	}
@@ -57,7 +58,7 @@ public abstract class CoreAbstractPacketServerLinks<T extends AbstractPacketServ
 			} else {
 				Chat.STREAM_CODEC.serialize(link.customLabel, out, context);
 			}
-			writeString(link.url, out);
+			StringCodec.writeString(link.url, out);
 		}
 	}
 

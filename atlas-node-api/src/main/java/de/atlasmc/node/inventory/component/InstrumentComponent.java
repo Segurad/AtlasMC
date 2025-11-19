@@ -18,7 +18,7 @@ public interface InstrumentComponent extends ItemComponent {
 	STREAM_CODEC = StreamCodec
 					.builder(InstrumentComponent.class)
 					.include(ItemComponent.STREAM_CODEC)
-					.registryValueOrCodec(InstrumentComponent::getInstrument, InstrumentComponent::setInstrument, Instrument.REGISTRY_KEY, Instrument.STREAM_CODEC)
+					.varIntRegistryOrCodec(InstrumentComponent::getInstrument, InstrumentComponent::setInstrument, Instrument.REGISTRY_KEY, Instrument.STREAM_CODEC)
 					.build();
 	
 	Instrument getInstrument();

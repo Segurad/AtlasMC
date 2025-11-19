@@ -3,6 +3,8 @@ package de.atlasmc.core.node.io.protocol.common;
 import static de.atlasmc.io.PacketUtil.*;
 
 import java.io.IOException;
+
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.common.AbstractPacketCookieData;
@@ -12,7 +14,7 @@ public abstract class CoreAbstractPacketCookieResponse<T extends AbstractPacketC
 
 	@Override
 	public void write(T packet, ByteBuf out, ConnectionHandler con) throws IOException {
-		writeIdentifier(packet.key, out);
+		NamespacedKey.STREAM_CODEC.serialize(packet.key, out, null);
 		if (packet.payload == null) {
 			out.writeBoolean(false);
 		} else {
@@ -24,7 +26,7 @@ public abstract class CoreAbstractPacketCookieResponse<T extends AbstractPacketC
 	
 	@Override
 	public void read(T packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.key = readIdentifier(in);
+		packet.key = NamespacedKey.STREAM_CODEC.deserialize(null, in, null);
 		if (in.readBoolean()) {
 			int size = readArrayLength(in, 5120);
 			packet.payload = in.readBytes(size);

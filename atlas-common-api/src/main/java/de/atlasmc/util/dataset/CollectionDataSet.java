@@ -1,6 +1,7 @@
 package de.atlasmc.util.dataset;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 
@@ -58,6 +59,11 @@ public class CollectionDataSet<T extends Namespaced> extends AbstractDataSet<T> 
 			return super.equals(obj);
 		CollectionDataSet<?> other = (CollectionDataSet<?>) obj;
 		return Objects.equals(values, other.values);
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		return values.iterator();
 	}
 	
 }

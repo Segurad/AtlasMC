@@ -7,7 +7,7 @@ public interface Creeper extends Monster {
 	public static final NBTCodec<Creeper>
 	NBT_HANDLER = NBTCodec
 					.builder(Creeper.class)
-					.include(Creeper.NBT_HANDLER)
+					.include(Monster.NBT_HANDLER)
 					.byteField("ExplosionRadius", Creeper::getExplosionRadius, Creeper::setExplosionRadius, (byte) 3)
 					.shortField("Fuse", Creeper::getFuseTime, Creeper::setFuseTime, (short) 30)
 					.boolField("ignited", Creeper::isIgnited, Creeper::setIgnited, false)

@@ -72,12 +72,5 @@ public class SimplePluginChannel implements PluginChannel {
 			throw new PluginChannelException("Channel closed!");
 		handler.sendMessage(this, message);
 	}
-	
-	@Override
-	public void sendMessage(byte[] message) {
-		if (unregistered)
-			throw new PluginChannelException("Channel closed!");
-		handler.sendMessage(this, message);
-	}
  
 }

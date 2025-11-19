@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.io.codec.StreamSerializable;
+import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.nbt.NBTException;
 import de.atlasmc.nbt.TagType;
 import de.atlasmc.nbt.codec.CodecTags;
@@ -16,7 +17,6 @@ import de.atlasmc.util.CloneException;
 import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.map.key.CharKey;
 import io.netty.buffer.ByteBuf;
-import static de.atlasmc.io.PacketUtil.*;
 
 /**
  * Property value that stores the key of the property and a exact or min/max value
@@ -92,14 +92,14 @@ public class PropertyValuePredicate implements StreamSerializable, Cloneable {
 		
 		@Override
 		public boolean serialize(PropertyValuePredicate value, ByteBuf output, CodecContext context) throws IOException {
-			writeString(value.key, output);
+			StringCodec.writeString(value.key, output);
 			if (value.maxValue == null) {
 				output.writeBoolean(true);
-				writeString(value.value, output);
+				StringCodec.writeString(value.value, output);
 			} else {
 				output.writeBoolean(false);
-				writeString(value.value, output);
-				writeString(value.maxValue, output);
+				StringCodec.writeString(value.value, output);
+				StringCodec.writeString(value.maxValue, output);
 			}
 			return true;
 		}
@@ -111,12 +111,12 @@ public class PropertyValuePredicate implements StreamSerializable, Cloneable {
 		
 		@Override
 		public PropertyValuePredicate deserialize(PropertyValuePredicate value, ByteBuf input, CodecContext context) throws IOException {
-			PropertyValuePredicate predicate = new PropertyValuePredicate(readString(input));
+			PropertyValuePredicate predicate = new PropertyValuePredicate(StringCodec.readString(input));
 			if (input.readBoolean()) {
-				predicate.value = readString(input);
+				predicate.value = StringCodec.readString(input);
 			} else {
-				predicate.value = readString(input);
-				predicate.value = readString(input);
+				predicate.value = StringCodec.readString(input);
+				predicate.value = StringCodec.readString(input);
 			}
 			return predicate;
 		}

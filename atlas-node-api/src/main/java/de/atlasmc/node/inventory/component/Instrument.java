@@ -33,7 +33,7 @@ public class Instrument extends ProtocolRegistryValueBase implements NBTSerializ
 	public static final StreamCodec<Instrument>
 	STREAM_CODEC = StreamCodec
 					.builder(Instrument.class)
-					.enumValueOrCodec(Instrument::getSound, Instrument::setSound, EnumSound.class, ResourceSound.STREAM_CODEC)
+					.varIntEnumOrCodec(Instrument::getSound, Instrument::setSound, EnumSound.class, ResourceSound.STREAM_CODEC)
 					.floatValue(Instrument::getUseDuration, Instrument::setUseDuration)
 					.floatValue(Instrument::getRange, Instrument::setRange)
 					.codec(Instrument::getDescription, Instrument::setDescription, Chat.STREAM_CODEC)

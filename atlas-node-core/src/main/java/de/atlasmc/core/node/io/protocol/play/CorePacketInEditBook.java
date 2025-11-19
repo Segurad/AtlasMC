@@ -7,6 +7,7 @@ import java.io.IOException;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.ProtocolException;
+import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketInEditBook;
 import io.netty.buffer.ByteBuf;
@@ -22,11 +23,11 @@ public class CorePacketInEditBook implements PacketIO<PacketInEditBook> {
 		if (pageCount > 0) {
 			String[] pages = new String[pageCount];
 			for (int i = 0; i < pageCount; i++)
-				pages[i] = readString(in, 8192);
+				pages[i] = StringCodec.readString(in, 8192);
 			packet.pages = pages;
 		}
 		if (in.readBoolean())
-			packet.title = readString(in, 128);
+			packet.title = StringCodec.readString(in, 128);
 	}
 
 	@Override
@@ -38,14 +39,14 @@ public class CorePacketInEditBook implements PacketIO<PacketInEditBook> {
 		} else {
 			writeVarInt(pages.length, out);
 			for (String s : pages)
-				writeString(s, out);
+				StringCodec.writeString(s, out);
 		}
 		String title = packet.title;
 		if (title == null) {
 			out.writeBoolean(false);
 		} else {
 			out.writeBoolean(true);
-			writeString(title, out);
+			StringCodec.writeString(title, out);
 		}
 	}
 	
