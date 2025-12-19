@@ -20,7 +20,7 @@ import de.atlasmc.node.io.protocol.PlayerConnection;
 import de.atlasmc.node.scoreboard.ScoreboardView;
 import de.atlasmc.node.sound.SoundListener;
 import de.atlasmc.node.world.WorldEvent;
-import de.atlasmc.node.world.particle.ParticleType;
+import de.atlasmc.node.world.particle.Particle;
 import de.atlasmc.permission.Permissible;
 import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.plugin.Plugin;
@@ -148,13 +148,11 @@ public interface Player extends HumanEntity, Permissible, Messageable, SoundList
 	
 	// --- Particle ---
 	
-	void spawnParticle(ParticleType particle, double x, double y, double z, float maxSpeed);
+	void spawnParticle(Particle particle, double x, double y, double z, float maxSpeed);
 	
-	void spawnParticle(ParticleType particle, double x, double y, double z, float maxSpeed, int count);
+	void spawnParticle(Particle particle, double x, double y, double z, float maxSpeed, int count);
 	
-	void spawnParticle(ParticleType particle, double x, double y, double z, float maxSpeed, int count, Object data);
-	
-	void spawnParticle(ParticleType particle, double x, double y, double z, float offX, float offY, float offZ, float maxSpeed, int count, Object data);
+	void spawnParticle(Particle particle, double x, double y, double z, float offX, float offY, float offZ, float maxSpeed, int count);
 	
 	// --- Inventory Stuff ---
 	

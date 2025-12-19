@@ -1,5 +1,9 @@
 package de.atlasmc.node.world.particle;
 
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import de.atlasmc.Color;
 import de.atlasmc.IDHolder;
 import de.atlasmc.node.Location;
@@ -10,8 +14,8 @@ import de.atlasmc.util.enums.EnumName;
 public enum ParticleType implements EnumName, IDHolder {
 	
 	ANGRY_VILLAGER,
-	BLOCK(BlockData.class),
-	BLOCK_MARKER(BlockData.class),
+	BLOCK(BlockDataParticle::new),
+	BLOCK_MARKER(BlockDataParticle::new),
 	BUBBLE,
 	CLOUD,
 	CRIT,
@@ -22,8 +26,8 @@ public enum ParticleType implements EnumName, IDHolder {
 	LANDING_LAVA,
 	DRIPPING_WATER,
 	FALLING_WATER,
-	DUST(DustColor.class),
-	DUST_COLOR_TRANSITION(DustColorTransition.class),
+	DUST(DustColorParticle::new),
+	DUST_COLOR_TRANSITION(DustColorTransitionParticle::new),
 	EFFECT,
 	ELDER_GUARDIAN,
 	ENCHANTED_HIT,
@@ -37,7 +41,7 @@ public enum ParticleType implements EnumName, IDHolder {
 	GUST_EMITTER_LARGE,
 	GUST_EMITTER_SMALL,
 	SONIC_BOOM,
-	FALLING_DUST(BlockData.class),
+	FALLING_DUST(BlockDataParticle::new),
 	FIREWORK,
 	FISHING,
 	FLAME,
@@ -119,23 +123,24 @@ public enum ParticleType implements EnumName, IDHolder {
 	TRIAL_SPAWNER_DETECTION,
 	TRIAL_SPAWNER_DETECTION_OMINOUS,
 	VAULT_CONNECTION,
-	DUST_PILLAR(BlockData.class),
+	DUST_PILLAR(BlockDataParticle::new),
 	OMINOUS_SPAWNING,
 	RAID_OMEN,
 	TRIAL_OMEN,
 	BLOCK_CRUMBLE;
-	
-	private final Class<?> data;
+
+	private final Function<ParticleType, Particle> constructor;
 	private final String name;
 	
-	private ParticleType(Class<?> data) {
-		this.data = data;
-		String name = "minecraft:" + name().toLowerCase();
-		this.name = name.intern();
+	private ParticleType(Function<ParticleType, Particle> constructor) {
+		this.name = "minecraft:" + name().toLowerCase().intern();
+		this.constructor = Objects.requireNonNull(constructor);
 	}
 	
 	private ParticleType() {
-		this(void.class);
+		name = "minecraft:" + name().toLowerCase().intern();
+		final var instance = new SimpleParticle(this);
+		constructor = (_) -> { return instance; }; 
 	}
 	
 	@Override
@@ -143,8 +148,8 @@ public enum ParticleType implements EnumName, IDHolder {
 		return ordinal();
 	}
 	
-	public Class<?> getData() {
-		return data;
+	public Particle createParticle() {
+		return constructor.apply(this);
 	}
 	
 	public static class VibrationData {
@@ -187,66 +192,6 @@ public enum ParticleType implements EnumName, IDHolder {
 			return sourceLocation;
 		}
 		
-	}
-	
-	public static class DustColor {
-		
-		private final Color color;
-		private final float scale;
-		
-		public DustColor(Color color, float scale) {
-			if (color == null) 
-				throw new IllegalArgumentException("Color can not be null!");
-			if (scale < 0.01 || scale > 4) 
-				throw new IllegalArgumentException("Size is not between 0.01 and 4: " + scale);
-			this.color = color;
-			this.scale = scale;
-		}
-		
-		public Color getColor() {
-			return color;
-		}
-		
-		public float getScale() {
-			return scale;
-		}
-	}
-	
-	public static class DustColorTransition {
-		
-		private final Color from;
-		private final Color to;
-		private final float scale;
-		
-		public DustColorTransition(Color from, Color to, float scale) {
-			if (from == null) 
-				throw new IllegalArgumentException("From can not be null!");
-			if (to == null)
-				throw new IllegalArgumentException("To can not be null!");
-			if (scale < 0.01 || scale > 4) 
-				throw new IllegalArgumentException("Size is not between 0.01 and 4: " + scale);
-			this.from = from;
-			this.to = to;
-			this.scale = scale;
-		}
-		
-		public Color getColorFrom() {
-			return from;
-		}
-		
-		public Color getColorTo() {
-			return to;
-		}
-		
-		public float getScale() {
-			return scale;
-		}
-	}
-
-	public boolean isValid(Object data) {
-		if (this.data == null) 
-			return data == null;
-		return this.data.isInstance(data);
 	}
 	
 	@Override

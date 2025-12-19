@@ -23,7 +23,7 @@ public interface AreaEffectCloud extends Entity {
 					.intField("DurationOnUse", AreaEffectCloud::getDurationOnUse, AreaEffectCloud::setDurationOnUse, 0)
 					.codecList("potion_contents", AreaEffectCloud::hasPotionEffects, AreaEffectCloud::getPotionEffects, PotionEffect.NBT_CODEC)
 					.codec("Owner", AreaEffectCloud::getOwner, AreaEffectCloud::setOwner, NBTCodecs.UUID_CODEC)
-					.codec("custom_particle", AreaEffectCloud::getParticle, AreaEffectCloud::setParticle, Particle.NBT_HANDLER)
+					.codec("custom_particle", AreaEffectCloud::getParticle, AreaEffectCloud::setParticle, Particle.NBT_CODEC)
 					.codec("Potion", AreaEffectCloud::getPotionData, AreaEffectCloud::setPotionData, Registries.registryValueNBTCodec(PotionData.REGISTRY_KEY))
 					.floatField("potion_duration_scale", AreaEffectCloud::getPotionDurationScale, AreaEffectCloud::setPotionDurationScale, 1)
 					.floatField("Radius", AreaEffectCloud::getRadius, AreaEffectCloud::setRadius, 0.5f)

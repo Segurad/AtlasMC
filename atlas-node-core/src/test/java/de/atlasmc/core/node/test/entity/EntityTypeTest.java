@@ -11,20 +11,14 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 
 import de.atlasmc.core.node.test.registry.RegistryTestHelper;
-import de.atlasmc.core.registry.CoreRegistryHandler;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.registry.Registries;
 import de.atlasmc.test.AtlasTest;
 
 public class EntityTypeTest {
 	
 	@Test
 	void testEntityTypes() throws IOException, ClassNotFoundException {
-		try {
-			Registries.init(new CoreRegistryHandler());
-		} catch (IllegalStateException e) {}
-		Registries.createRegistry(EntityType.class);
-		RegistryTestHelper.loadBulk("/data/entity_types.json");
+		RegistryTestHelper.loadBulk(EntityType.class, "/data/entity_types.json");
 		JsonReader reader = AtlasTest.getJsonResourceReader("/minecraft/registries/registry_minecraft_entity_type.json");
 		LinkedList<Executable> checks = new LinkedList<>();
 		reader.beginObject();

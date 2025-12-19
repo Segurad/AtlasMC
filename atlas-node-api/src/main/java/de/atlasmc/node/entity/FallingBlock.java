@@ -11,7 +11,7 @@ public interface FallingBlock extends Entity {
 	NBT_HANDLER = NBTCodec
 					.builder(FallingBlock.class)
 					.include(Entity.NBT_CODEC)
-					.codec("BlockState", FallingBlock::getBlockData, FallingBlock::setBlockData, BlockData.NBT_HANDLER)
+					.codec("BlockState", FallingBlock::getBlockData, FallingBlock::setBlockData, BlockData.NBT_CODEC)
 					.boolField("CancelDrop", FallingBlock::getCancelDrop, FallingBlock::setCancelDrop, false)
 					.boolField("DropItem", FallingBlock::getDropItem, FallingBlock::setDropItem, false)
 					.floatField("FallHurtAmount", FallingBlock::getDamagePerBlock, FallingBlock::setDamagePerBlock, 0)

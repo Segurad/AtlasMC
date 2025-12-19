@@ -10,7 +10,7 @@ public interface BlockDisplay extends Display {
 	NBT_HANDLER = NBTCodec
 					.builder(BlockDisplay.class)
 					.include(Display.NBT_HANDLER)
-					.codec("block_state", BlockDisplay::getBlockData, BlockDisplay::setBlockData, BlockData.NBT_HANDLER)
+					.codec("block_state", BlockDisplay::getBlockData, BlockDisplay::setBlockData, BlockData.NBT_CODEC)
 					.build();
 	
 	BlockData getBlockData();

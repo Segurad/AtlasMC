@@ -59,7 +59,7 @@ public interface BlockData extends Cloneable, NBTSerializable {
 	};
 	
 	public static final NBTCodec<BlockData>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(BlockData.class)
 					.searchKeyConstructor("Name", BlockType.REGISTRY_KEY, BlockType::createBlockData, BlockData::getType)
 					.codec("Properties", AtlasUtil.getSelf(), AtlasUtil.getSetVoid(), PROPERTIES_NBT_CODEC)
@@ -77,7 +77,7 @@ public interface BlockData extends Cloneable, NBTSerializable {
 	
 	@Override
 	default NBTCodec<? extends BlockData> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

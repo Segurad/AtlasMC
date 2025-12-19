@@ -10,7 +10,7 @@ public interface Enderman extends Monster, AngerableMob {
 	NBT_HANDLER = NBTCodec
 					.builder(Enderman.class)
 					.include(Monster.NBT_HANDLER)
-					.codec("carriedBlockState", Enderman::getCarriedBlock, Enderman::setCarriedBlock, BlockData.NBT_HANDLER)
+					.codec("carriedBlockState", Enderman::getCarriedBlock, Enderman::setCarriedBlock, BlockData.NBT_CODEC)
 					.build();
 
 	BlockType getCarriedBlockType();

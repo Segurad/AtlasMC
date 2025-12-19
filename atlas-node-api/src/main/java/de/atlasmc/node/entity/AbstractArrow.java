@@ -14,7 +14,7 @@ public interface AbstractArrow extends Projectile {
 					.include(Projectile.NBT_HANDLER)
 					.boolField("crit", AbstractArrow::isCritical, AbstractArrow::setCritical, false)
 					.doubleField("damage", AbstractArrow::getDamage, AbstractArrow::setDamage, 2)
-					.codec("inBlockState", AbstractArrow::getBlockDataIn, AbstractArrow::setBlockDataIn, BlockData.NBT_HANDLER)
+					.codec("inBlockState", AbstractArrow::getBlockDataIn, AbstractArrow::setBlockDataIn, BlockData.NBT_CODEC)
 					.boolField("inGround", AbstractArrow::isInGround, AbstractArrow::setInGround, false)
 					.shortField("life", AbstractArrow::getLifeTime, AbstractArrow::setLifeTime, (short) 1200)
 					.boolField("pickup", AbstractArrow::isPickupable, AbstractArrow::setPickupable, true)

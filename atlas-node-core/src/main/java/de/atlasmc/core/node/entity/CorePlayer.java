@@ -52,7 +52,7 @@ import de.atlasmc.node.scoreboard.ScoreboardView;
 import de.atlasmc.node.sound.Sound;
 import de.atlasmc.node.util.MathUtil;
 import de.atlasmc.node.world.WorldEvent;
-import de.atlasmc.node.world.particle.ParticleType;
+import de.atlasmc.node.world.particle.Particle;
 import de.atlasmc.permission.Permission;
 import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.util.CooldownHandler;
@@ -370,8 +370,7 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	}
 
 	@Override
-	public void spawnParticle(ParticleType particle, double x, double y, double z, float offX, float offY, float offZ, float maxSpeed, int count, Object data) {
-		if (!particle.isValid(data)) throw new IllegalArgumentException("Data is not valid!");
+	public void spawnParticle(Particle particle, double x, double y, double z, float offX, float offY, float offZ, float maxSpeed, int count) {
 		PacketOutParticle packet = new PacketOutParticle();
 		packet.particle = particle;
 		packet.x = x;
@@ -382,23 +381,17 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 		packet.offZ = offZ;
 		packet.maxSpeed = maxSpeed;
 		packet.count = count;
-		packet.data = data;
 		con.sendPacked(packet);
 	}
 
 	@Override
-	public void spawnParticle(ParticleType particle, double x, double y, double z, float particledata) {
+	public void spawnParticle(Particle particle, double x, double y, double z, float particledata) {
 		spawnParticle(particle, x, y, z, particledata, 1);
 	}
 
 	@Override
-	public void spawnParticle(ParticleType particle, double x, double y, double z, float particledata, int count) {
-		spawnParticle(particle, x, y, z, particledata, count, null);
-	}
-
-	@Override
-	public void spawnParticle(ParticleType particle, double x, double y, double z, float particledata, int count, Object data) {
-		spawnParticle(particle, x, y, z, 0, 0, 0, particledata, count, data);
+	public void spawnParticle(Particle particle, double x, double y, double z, float particledata, int count) {
+		spawnParticle(particle, x, y, z, 0, 0, 0, particledata, count);
 	}
 
 	@Override

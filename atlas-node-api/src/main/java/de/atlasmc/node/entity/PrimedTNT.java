@@ -13,7 +13,7 @@ public interface PrimedTNT extends Entity {
 					.builder(PrimedTNT.class)
 					.include(Entity.NBT_CODEC)
 					.shortField("fuse", PrimedTNT::getFuseTime, PrimedTNT::setFuseTime)
-					.codec("block_state", PrimedTNT::getBlockData, PrimedTNT::setBlockData, BlockData.NBT_HANDLER)
+					.codec("block_state", PrimedTNT::getBlockData, PrimedTNT::setBlockData, BlockData.NBT_CODEC)
 					.floatField("explosion_power", PrimedTNT::getExplosionPower, PrimedTNT::setExplosionPower)
 					.codec("owner", PrimedTNT::getSourceUUID, PrimedTNT::setSourceUUID, NBTCodecs.UUID_CODEC)
 					.build();

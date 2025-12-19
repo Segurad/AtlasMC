@@ -10,10 +10,7 @@ import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.util.MathUtil;
 import de.atlasmc.node.world.particle.Particle;
-import de.atlasmc.node.world.particle.ParticleObject;
 import de.atlasmc.node.world.particle.ParticleType;
-import de.atlasmc.node.world.particle.ParticleType.DustColor;
-import de.atlasmc.node.world.particle.ParticleType.DustColorTransition;
 import de.atlasmc.node.world.particle.ParticleType.VibrationData;
 import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.enums.EnumUtil;
@@ -22,7 +19,7 @@ import io.netty.buffer.ByteBuf;
 public final class ParticleMetaType extends MetaDataType<Particle> {
 
 	public ParticleMetaType(int type) {
-		super(type, ParticleObject.class);
+		super(type, Particle.class);
 	}
 
 	@Override

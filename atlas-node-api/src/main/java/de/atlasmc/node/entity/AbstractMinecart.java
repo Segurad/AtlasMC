@@ -11,7 +11,7 @@ public interface AbstractMinecart extends Vehicle {
 					.builder(AbstractMinecart.class)
 					.include(Vehicle.NBT_CODEC)
 					.intField("DisplayOffset", AbstractMinecart::getCustomBlockY, AbstractMinecart::setCustomBlockY)
-					.codec("DisplayState", AbstractMinecart::getCustomBlock, AbstractMinecart::setCustomBlock, BlockData.NBT_HANDLER)
+					.codec("DisplayState", AbstractMinecart::getCustomBlock, AbstractMinecart::setCustomBlock, BlockData.NBT_CODEC)
 					.build();
 	
 	BlockData getCustomBlock();
