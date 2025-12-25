@@ -12,7 +12,7 @@ public interface ChargedProjectilesComponent extends ItemComponent {
 	NBT_HANDLER = NBTCodec
 					.builder(ChargedProjectilesComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.codecList(ComponentType.CHARGED_PROJECTILES.getNamespacedKey(), ChargedProjectilesComponent::hasProjectiles, ChargedProjectilesComponent::getProjectiles, ItemStack.NBT_HANDLER)
+					.codecList(ComponentType.CHARGED_PROJECTILES.getNamespacedKey(), ChargedProjectilesComponent::hasProjectiles, ChargedProjectilesComponent::getProjectiles, ItemStack.NBT_CODEC)
 					.build();
 	
 	public static final StreamCodec<ChargedProjectilesComponent>

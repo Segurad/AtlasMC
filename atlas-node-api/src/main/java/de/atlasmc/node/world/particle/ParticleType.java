@@ -2,13 +2,7 @@ package de.atlasmc.node.world.particle;
 
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.function.Supplier;
-
-import de.atlasmc.Color;
 import de.atlasmc.IDHolder;
-import de.atlasmc.node.Location;
-import de.atlasmc.node.block.data.BlockData;
-import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.util.enums.EnumName;
 
 public enum ParticleType implements EnumName, IDHolder {
@@ -20,7 +14,7 @@ public enum ParticleType implements EnumName, IDHolder {
 	CLOUD,
 	CRIT,
 	DAMAGE_INDICATOR,
-	DRAGON_BREATH,
+	DRAGON_BREATH(DragonBreathParticle::new),
 	DRIPPING_LAVA,
 	FALLING_LAVA,
 	LANDING_LAVA,
@@ -28,12 +22,12 @@ public enum ParticleType implements EnumName, IDHolder {
 	FALLING_WATER,
 	DUST(DustColorParticle::new),
 	DUST_COLOR_TRANSITION(DustColorTransitionParticle::new),
-	EFFECT,
+	EFFECT(EffectParticle::new),
 	ELDER_GUARDIAN,
 	ENCHANTED_HIT,
 	ENCHANT,
 	END_ROD,
-	ENTITY_EFFECT(Color.class),
+	ENTITY_EFFECT(ColorParticle::new),
 	EXPLOSION_EMITTER,
 	EXPLOSION,
 	GUST,
@@ -49,7 +43,7 @@ public enum ParticleType implements EnumName, IDHolder {
 	CHERRY_LEAVES,
 	PALE_OAK_LEAVES,
 	SCULK_SOUL,
-	SCULK_CHARGE(Float.class),
+	SCULK_CHARGE(SculkChargeParticle::new),
 	SCULK_CHARGE_POP,
 	SOUL_FIRE_FLAME,
 	SOUL,
@@ -57,10 +51,10 @@ public enum ParticleType implements EnumName, IDHolder {
 	HAPPY_VILLAGER,
 	COMPOSTER,
 	HEART,
-	INSTANT_EFFECT,
-	ITEM(ItemStack.class),
-	VIBRATION(VibrationData.class),
-	TRAIL,
+	INSTANT_EFFECT(EffectParticle::new),
+	ITEM(ItemParticle::new),
+	VIBRATION(VibrationParticle::new),
+	TRAIL(TrailParticle::new),
 	ITEM_SLIME,
 	ITEM_COBWEB,
 	ITEM_SNOWBALL,
@@ -114,10 +108,7 @@ public enum ParticleType implements EnumName, IDHolder {
 	WAX_OFF,
 	ELECTRIC_SPARK,
 	SCRAPE,
-	/**
-	 * Has a Integer value for delay
-	 */
-	SHRIEK(Integer.class),
+	SHRIEK(DelayedParticle::new),
 	EGG_CRACK,
 	DUST_PLUME,
 	TRIAL_SPAWNER_DETECTION,
@@ -150,48 +141,6 @@ public enum ParticleType implements EnumName, IDHolder {
 	
 	public Particle createParticle() {
 		return constructor.apply(this);
-	}
-	
-	public static class VibrationData {
-		
-		private boolean entity;
-		private Location sourceLocation;
-		private int sourceEntity;
-		private float eyeHeight;
-		private int travelTicks;
-		
-		public VibrationData(Location sourceLocation, int travelTicks) {
-			this.sourceLocation = sourceLocation;
-			this.travelTicks = travelTicks;
-		}
-		
-		public VibrationData(int entityID, float eyeHeight, int travelTicks) {
-			entity = true;
-			this.sourceEntity = entityID;
-			this.eyeHeight = eyeHeight;
-			this.travelTicks = travelTicks;
-		}
-		
-		public boolean isEntity() {
-			return entity;
-		}
-		
-		public int getSourceEntity() {
-			return sourceEntity;
-		}
-		
-		public float getEyeHeight() {
-			return eyeHeight;
-		}
-		
-		public int getTravelTicks() {
-			return travelTicks;
-		}
-		
-		public Location getSourceLocation() {
-			return sourceLocation;
-		}
-		
 	}
 	
 	@Override

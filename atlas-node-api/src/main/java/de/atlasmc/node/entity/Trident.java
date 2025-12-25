@@ -10,7 +10,7 @@ public interface Trident extends AbstractArrow {
 					.builder(Trident.class)
 					.include(AbstractArrow.NBT_HANDLER)
 					.boolField("DealtDamage", Trident::hasDealtDamage, Trident::setDealtDamage, false)
-					.codec("item", Trident::getItem, Trident::setItem, ItemStack.NBT_HANDLER)
+					.codec("item", Trident::getItem, Trident::setItem, ItemStack.NBT_CODEC)
 					.build();
 	
 	int getLoyalityLevel();

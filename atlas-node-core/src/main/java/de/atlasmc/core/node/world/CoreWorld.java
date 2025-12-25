@@ -3,9 +3,12 @@ package de.atlasmc.core.node.world;
 import java.io.File;
 import java.util.Collection;
 
+import org.joml.Vector3d;
+import org.joml.Vector3f;
+import org.joml.Vector3i;
+
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.node.WorldLocation;
-import de.atlasmc.node.Location;
 import de.atlasmc.node.SoundCategory;
 import de.atlasmc.node.block.Block;
 import de.atlasmc.node.block.data.BlockData;
@@ -37,7 +40,7 @@ import de.atlasmc.node.world.WorldEvent;
 import de.atlasmc.node.world.WorldFlag;
 import de.atlasmc.node.world.entitytracker.EntityTracker;
 import de.atlasmc.node.world.entitytracker.EntityTrackerFactory;
-import de.atlasmc.node.world.particle.ParticleType;
+import de.atlasmc.node.world.particle.Particle;
 import de.atlasmc.util.configuration.ConfigurationSection;
 
 public class CoreWorld implements World {
@@ -127,12 +130,10 @@ public class CoreWorld implements World {
 	}
 
 	@Override
-	public void playEffect(Location loc, WorldEvent effect, Object data, int radius) {
-		if (loc == null)
-			throw new IllegalArgumentException("Location can not be null!");
+	public void playEffect(Vector3i loc, WorldEvent effect, Object data, boolean relativeSound) {
 		if (effect == null)
 			throw new IllegalArgumentException("Effect can not be null!");
-		Chunk chunk = getChunk(loc, false);
+		Chunk chunk = getChunk(loc.x, loc.z, false);
 		if (chunk == null)
 			return;
 		PacketOutWorldEvent packet = null;
@@ -141,23 +142,18 @@ public class CoreWorld implements World {
 				continue;
 			PlayerChunkListener player = (PlayerChunkListener) listener;
 			if (packet == null) {
-				packet = new PacketOutWorldEvent();
-				packet.event = effect;
-				packet.position = MathUtil.toPosition(loc);
-				packet.data = effect.getDataValueByObject(data);
+				packet = new PacketOutWorldEvent(loc, effect, data, relativeSound);
 			}
 			player.getConnection().sendPacked(packet);
 		}
 	}
 
 	@Override
-	public void spawnParticle(ParticleType particle, Location loc, int amount) {
-		if (loc == null)
-			throw new IllegalArgumentException("Location can not be null!");
+	public void spawnParticle(Particle particle, Vector3d loc, Vector3f off, float maxSpeed, int count) {
 		if (particle == null)
 			throw new IllegalArgumentException("Particle can not be null!");
 		PacketOutParticle packet = null;
-		Chunk chunk = getChunk(loc, false);
+		Chunk chunk = getChunk(MathUtil.floor(loc.x), MathUtil.floor(loc.z), false);
 		if (chunk == null)
 			return;
 		for (ChunkViewer listener : chunk.getViewers()) {
@@ -165,12 +161,7 @@ public class CoreWorld implements World {
 				continue;
 			PlayerChunkListener player = (PlayerChunkListener) listener;
 			if (packet == null) {
-				packet = new PacketOutParticle();
-				packet.particle = particle;
-				packet.x = loc.x;
-				packet.y = loc.y;
-				packet.z = loc.z;
-				packet.count = amount;
+				packet = new PacketOutParticle(particle, loc, off, maxSpeed, count);
 			}
 			player.getConnection().sendPacked(packet);
 		}
@@ -287,25 +278,10 @@ public class CoreWorld implements World {
 	public Entity getEntity(int entityID) {
 		return entityTracker.getEntity(entityID);
 	}
-
-	@Override
-	public Chunk getChunk(int x, int z) {
-		return getChunk(x, z, true);
-	}
 	
 	@Override
 	public Chunk getChunk(int x, int z, boolean load) {
 		return chunks.getChunk(x, z, load);
-	}
-
-	@Override
-	public Chunk getChunk(Location loc) {
-		return getChunk(loc, true);
-	}
-	
-	@Override
-	public Chunk getChunk(Location loc, boolean load) {
-		return getChunk(loc.getBlockX() >> 4, loc.getBlockZ() >> 4, load);
 	}
 
 	@Override

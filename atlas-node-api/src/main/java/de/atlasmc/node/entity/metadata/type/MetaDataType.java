@@ -29,6 +29,7 @@ import de.atlasmc.node.entity.Sniffer.State;
 import de.atlasmc.node.entity.Wolf.WolfVariant;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.util.MathUtil;
+import de.atlasmc.node.world.particle.Particle;
 import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
@@ -124,7 +125,7 @@ public abstract class MetaDataType<T> {
 	
 	public static final MetaDataType<CompoundTag> NBT_DATA = new NBTMetaType(TYPE_ID_NBT);
 	
-	public static final ParticleMetaType PARTICLE = new ParticleMetaType(TYPE_ID_PARTICLE);
+	public static final MetaDataType<Particle> PARTICLE = new StreamCodecMetaType<>(TYPE_ID_PARTICLE, false, Particle.STREAM_CODEC);
 	
 	public static final MetaDataType<VillagerData> VILLAGER_DATA = new StreamCodecMetaType<>(TYPE_ID_VILLAGER_DATA, false, VillagerData.STREAM_CODEC, VillagerData::clone);
 	

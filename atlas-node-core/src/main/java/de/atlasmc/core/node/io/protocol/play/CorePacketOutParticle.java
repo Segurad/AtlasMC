@@ -1,16 +1,12 @@
 package de.atlasmc.core.node.io.protocol.play;
 
-import static de.atlasmc.io.PacketUtil.*;
-
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketIO;
 import de.atlasmc.io.connection.ConnectionHandler;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.io.protocol.play.PacketOutParticle;
-import de.atlasmc.node.world.particle.ParticleType;
-import de.atlasmc.util.enums.EnumUtil;
+import de.atlasmc.node.world.particle.Particle;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutParticle implements PacketIO<PacketOutParticle> {
@@ -26,8 +22,7 @@ public class CorePacketOutParticle implements PacketIO<PacketOutParticle> {
 		packet.offZ = in.readFloat();
 		packet.maxSpeed = in.readFloat();
 		packet.count = in.readInt();
-		packet.particle = EnumUtil.getByID(ParticleType.class, readVarInt(in));
-		packet.data = MetaDataType.PARTICLE.read(packet.particle, in, handler.getCodecContext());
+		packet.particle = Particle.STREAM_CODEC.deserialize(in, handler.getCodecContext());
 	}
 
 	@Override
@@ -41,7 +36,7 @@ public class CorePacketOutParticle implements PacketIO<PacketOutParticle> {
 		out.writeFloat(packet.offZ);
 		out.writeFloat(packet.maxSpeed);
 		out.writeInt(packet.count);
-		MetaDataType.PARTICLE.write(packet.particle, packet.data, false, out, handler.getCodecContext());
+		packet.particle.writeToStream(out, handler.getCodecContext());
 	}
 
 	@Override

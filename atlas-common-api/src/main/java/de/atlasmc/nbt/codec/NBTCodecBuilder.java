@@ -89,6 +89,8 @@ public class NBTCodecBuilder<T> implements AbstractNBTCompoundFieldBuilder<T, NB
 	public NBTCodecBuilder<T> include(NBTCodec<? super T> include) {
 		if (!(include instanceof NBTCodecImpl codec))
 			throw new IllegalArgumentException("Codec must be instanceof NBTCodecImpl!");
+		if (codec.getType().isAssignableFrom(clazz))
+			throw new IllegalArgumentException("Codec type: " + codec.getType() + " is not assignable from type: " + clazz);
 		codec.addToBuilder(this);
 		return this;
 	}

@@ -1,5 +1,7 @@
 package de.atlasmc.node.world;
 
+import java.util.function.ToIntFunction;
+
 import de.atlasmc.IDHolder;
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.block.data.BlockData;
@@ -18,7 +20,7 @@ public enum WorldEvent implements IDHolder {
 	WOODEN_TRAPDOOR_OPENED(1007, Type.SOUND),
 	FENCE_GATE_OPENED(1008, Type.SOUND),
 	FIRE_EXTINGUISHED(1009, Type.SOUND),
-	PLAY_RECORD(1010, Type.SOUND, ItemType.class),
+	PLAY_RECORD(1010, Type.SOUND, ItemType.class, ItemType::getID),
 	IRON_DOOR_CLOSED(1011, Type.SOUND),
 	WOODEN_DOOR_CLOSED(1012, Type.SOUND),
 	WOODEN_TRAPDOOR_CLOSED(1013, Type.SOUND),
@@ -64,14 +66,14 @@ public enum WorldEvent implements IDHolder {
 	LAVA_CONVERTS_BLOCK(1501, Type.PARTICLE),
 	REDSTONE_TORCH_BURNS_OUT(1502, Type.PARTICLE),
 	ENDER_EYE_PLACED(1503, Type.PARTICLE),
-	SPAWNS_SMOKE(2000, Type.PARTICLE, BlockFace.class),
-	BLOCK_BREAK(2001, Type.PARTICLE, BlockData.class),
-	SPLASH_POTION_BREAK(2002, Type.PARTICLE, Integer.class),
+	SPAWNS_SMOKE(2000, Type.PARTICLE, BlockFace.class, BlockFace::getFaceID),
+	BLOCK_BREAK(2001, Type.PARTICLE, BlockData.class, BlockData::getStateID),
+	SPLASH_POTION_BREAK(2002, Type.PARTICLE, Integer.class, (data) -> { return data & 0xFFFFFF; }),
 	EYE_OF_ENDER_BREAK(2003, Type.PARTICLE),
 	MOB_SPAWN_PARTICLE(2004, Type.PARTICLE),
-	BONEMEAL_PARTICLES(2005, Type.PARTICLE, Integer.class),
+	BONEMEAL_PARTICLES(2005, Type.PARTICLE, Integer.class, (data) -> { return Math.clamp(data, 0, 15);}),
 	DRAGON_BREATH(2006, Type.PARTICLE),
-	INSTANT_SPASH_POTION_BREAK(2007, Type.PARTICLE, Integer.class),
+	INSTANT_SPASH_POTION_BREAK(2007, Type.PARTICLE, Integer.class, (data) -> { return data & 0xFFFFFF; }),
 	ENDER_DRAGON_DESTROYS_BLOCK(2008, Type.PARTICLE),
 	WET_SPONGE_VAPORIZES_IN_NETHER(2009, Type.PARTICLE),
 	END_GATEWAY_SPAWN(3000, Type.PARTICLE),
@@ -81,18 +83,21 @@ public enum WorldEvent implements IDHolder {
 	COPPER_REMOVE_WAX(3004, Type.PARTICLE),
 	COPPER_SCRAPE_OXIDATION(3005, Type.PARTICLE);
 	
-	private int id;
-	private Class<?> clazz;
-	private Type type;
+	private final int id;
+	private final Class<?> clazz;
+	private final Type type;
+	private final ToIntFunction<Object> toInt;
 	
 	private WorldEvent(int id, Type type) {
-		this(id, type, null);
+		this(id, type, null, null);
 	}
 	
-	private WorldEvent(int id, Type type, Class<?> clazz) {
+	@SuppressWarnings("unchecked")
+	private <T> WorldEvent(int id, Type type, Class<T> clazz, ToIntFunction<T> toInt) {
 		this.id = id;
 		this.clazz = clazz;
 		this.type = type;
+		this.toInt = (ToIntFunction<Object>) toInt;
 	}
 	
 	public Type getType() {
@@ -117,41 +122,15 @@ public enum WorldEvent implements IDHolder {
 	
 	public int getDataValueByObject(Object data) {
 		if (data != null) {
-			if (!getData().isInstance(data)) 
+			if (!clazz.isInstance(data)) 
 				throw new IllegalArgumentException("Data not compatiple with this Effect!");
 		} else {
-			if (getData() != null) 
+			if (clazz != null) 
 				throw new IllegalArgumentException("Data can not be null for this Effect!");
 		}
 		if (data == null) 
 			return 0;
-		switch (this) {
-		case SPLASH_POTION_BREAK:
-		case INSTANT_SPASH_POTION_BREAK: 
-			return (int) data & 0xFFFFFF;
-		case BONEMEAL_PARTICLES:
-			int count = (int) data;
-			return count > 15 || count < 0 ? 0 : count;
-		case BLOCK_BREAK: 
-			return ((BlockData) data).getStateID();
-		case SPAWNS_SMOKE: {
-			BlockFace face = (BlockFace) data;
-			switch (face) {
-			case DOWN: return 0;
-			case UP: return 1;
-			case NORTH: return 2;
-			case SOUTH: return 3;
-			case WEST: return 4;
-			case EAST: return 5;
-			default: return 0;
-			}
-		}
-		case PLAY_RECORD: {
-			ItemType type = (ItemType) data;
-			return type.getID();
-		}
-		default: return 0;
-		}
+		return toInt.applyAsInt(data);
 	}
 
 }

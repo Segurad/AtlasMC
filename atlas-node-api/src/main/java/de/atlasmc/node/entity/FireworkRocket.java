@@ -10,7 +10,7 @@ public interface FireworkRocket extends Projectile {
 	NBT_HANDLER = NBTCodec
 					.builder(FireworkRocket.class)
 					.include(Projectile.NBT_HANDLER)
-					.codec("FireworkItem", FireworkRocket::getFirework, FireworkRocket::setFirework, ItemStack.NBT_HANDLER)
+					.codec("FireworkItem", FireworkRocket::getFirework, FireworkRocket::setFirework, ItemStack.NBT_CODEC)
 					.intField("Life", FireworkRocket::getLifeTime, FireworkRocket::setLifeTime, 0)
 					.intField("LifeTime", FireworkRocket::getMaxLifeTime, FireworkRocket::setMaxLifeTime)
 					.boolField("ShotAtAngle", FireworkRocket::isShotAtAngle, FireworkRocket::setShotAtAngle)

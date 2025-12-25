@@ -7,14 +7,14 @@ public interface EntityEquipment {
 	public static final NBTCodec<EntityEquipment>
 	NBT_EQUIPMENT_HANDLER = NBTCodec
 					.builder(EntityEquipment.class)
-					.codec("head", EntityEquipment::getHelmet, EntityEquipment::setHelmet, ItemStack.NBT_HANDLER)
-					.codec("chest", EntityEquipment::getChestplate, EntityEquipment::setChestplate, ItemStack.NBT_HANDLER)
-					.codec("legs", EntityEquipment::getLeggings, EntityEquipment::setLeggings, ItemStack.NBT_HANDLER)
-					.codec("feet", EntityEquipment::getBoots, EntityEquipment::setBoots, ItemStack.NBT_HANDLER)
-					.codec("mainhand", EntityEquipment::getMainHand, EntityEquipment::setMainHand, ItemStack.NBT_HANDLER)
-					.codec("offhand", EntityEquipment::getOffHand, EntityEquipment::setOffHand, ItemStack.NBT_HANDLER)
-					.codec("body", EntityEquipment::getBody, EntityEquipment::setBody, ItemStack.NBT_HANDLER)
-					.codec("saddle", EntityEquipment::getSaddle, EntityEquipment::setSaddle, ItemStack.NBT_HANDLER)
+					.codec("head", EntityEquipment::getHelmet, EntityEquipment::setHelmet, ItemStack.NBT_CODEC)
+					.codec("chest", EntityEquipment::getChestplate, EntityEquipment::setChestplate, ItemStack.NBT_CODEC)
+					.codec("legs", EntityEquipment::getLeggings, EntityEquipment::setLeggings, ItemStack.NBT_CODEC)
+					.codec("feet", EntityEquipment::getBoots, EntityEquipment::setBoots, ItemStack.NBT_CODEC)
+					.codec("mainhand", EntityEquipment::getMainHand, EntityEquipment::setMainHand, ItemStack.NBT_CODEC)
+					.codec("offhand", EntityEquipment::getOffHand, EntityEquipment::setOffHand, ItemStack.NBT_CODEC)
+					.codec("body", EntityEquipment::getBody, EntityEquipment::setBody, ItemStack.NBT_CODEC)
+					.codec("saddle", EntityEquipment::getSaddle, EntityEquipment::setSaddle, ItemStack.NBT_CODEC)
 					.build();
 	
 	public static final NBTCodec<EntityEquipment>

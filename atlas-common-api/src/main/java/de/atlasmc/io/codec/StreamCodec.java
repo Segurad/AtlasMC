@@ -3,6 +3,7 @@ package de.atlasmc.io.codec;
 import java.util.function.IntFunction;
 import java.util.function.ToIntFunction;
 
+import de.atlasmc.IDHolder;
 import de.atlasmc.util.codec.Codec;
 import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
@@ -28,6 +29,10 @@ public interface StreamCodec<T> extends Codec<T, ByteBuf, ByteBuf, CodecContext>
 	
 	static <T> StreamCodec<T> intToObject(Class<T> clazz, IntFunction<T> toObject, ToIntFunction<T> toInt) {
 		return new IntToObjectCodec<>(clazz, toObject, toInt);
+	}
+	
+	static <T, E extends Enum<E> & IDHolder> StreamCodec<T> varIntEnumOrCodec(Class<T> typeClass, Class<E> clazz, StreamCodec<? extends T> codec) {
+		return new VarIntEnumOrCodec<T, E>(typeClass, clazz, codec);
 	}
 	
 }

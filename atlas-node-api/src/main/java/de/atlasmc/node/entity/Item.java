@@ -14,7 +14,7 @@ public interface Item extends Entity {
 					.include(Entity.NBT_CODEC)
 					.shortField("Age", Item::getLifeTime, Item::setLifeTime, (short) 6000)
 					.shortField("Health", Item::getHealth, Item::setHealth, (short) 5)
-					.codec("Item", Item::getItem, Item::setItem, ItemStack.NBT_HANDLER)
+					.codec("Item", Item::getItem, Item::setItem, ItemStack.NBT_CODEC)
 					.codec("Owner", Item::getOwner, Item::setOwner, NBTCodecs.UUID_CODEC)
 					.shortField("PickupDelay", Item::getPickupDelay, Item::setPickupDelay, (short) 0)
 					.codec("Thrower", Item::getThrower, Item::setThrower, NBTCodecs.UUID_CODEC)

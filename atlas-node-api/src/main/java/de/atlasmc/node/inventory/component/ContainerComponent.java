@@ -13,7 +13,7 @@ public interface ContainerComponent extends ItemComponent {
 	NBT_CODEC = NBTCodec
 					.builder(ContainerComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.typeListSearchIntIndexField(ComponentType.CONTAINER.getNamespacedKey(), "slot", ContainerComponent::hasItems, ContainerComponent::getItems, ItemStack.NBT_HANDLER)
+					.typeListSearchIntIndexField(ComponentType.CONTAINER.getNamespacedKey(), "slot", ContainerComponent::hasItems, ContainerComponent::getItems, ItemStack.NBT_CODEC)
 					.build();
 	
 	@NotNull

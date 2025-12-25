@@ -9,7 +9,7 @@ public interface UseRemainderComponent extends ItemComponent {
 	NBT_HANDLER = NBTCodec
 					.builder(UseRemainderComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.codec(ComponentType.USE_REMAINDER.getNamespacedKey(), UseRemainderComponent::getItem, UseRemainderComponent::setItem, ItemStack.NBT_HANDLER)
+					.codec(ComponentType.USE_REMAINDER.getNamespacedKey(), UseRemainderComponent::getItem, UseRemainderComponent::setItem, ItemStack.NBT_CODEC)
 					.build();
 	
 	ItemStack getItem();

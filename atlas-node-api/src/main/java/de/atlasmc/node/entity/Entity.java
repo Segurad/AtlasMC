@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.joml.Vector3d;
+import org.joml.Vector3i;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.nbt.codec.NBTCodec;
@@ -78,6 +79,10 @@ public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitte
 	void setLocation(Location loc);
 	
 	WorldLocation getLocation(WorldLocation loc);
+	
+	Vector3d getLocation(Vector3d vec);
+	
+	Vector3i getLocation(Vector3i vec);
 	
 	Location getLocation(Location loc);
 	

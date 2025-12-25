@@ -12,7 +12,7 @@ public interface BundleContentsComponent extends ItemComponent {
 	NBT_HANDLER = NBTCodec
 					.builder(BundleContentsComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.codecList(ComponentType.BUNDLE_CONTENTS.getNamespacedKey(), BundleContentsComponent::hasItems, BundleContentsComponent::getItems, ItemStack.NBT_HANDLER)
+					.codecList(ComponentType.BUNDLE_CONTENTS.getNamespacedKey(), BundleContentsComponent::hasItems, BundleContentsComponent::getItems, ItemStack.NBT_CODEC)
 					.build();
 	
 	public static final StreamCodec<BundleContentsComponent>

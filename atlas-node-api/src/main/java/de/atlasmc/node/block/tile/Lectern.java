@@ -11,7 +11,7 @@ public interface Lectern extends TileEntity, InventoryHolder {
 	NBT_HANDLER = NBTCodec
 					.builder(Lectern.class)
 					.include(TileEntity.NBT_HANDLER)
-					.codec("Book", Lectern::getBook, Lectern::setBook, ItemStack.NBT_HANDLER)
+					.codec("Book", Lectern::getBook, Lectern::setBook, ItemStack.NBT_CODEC)
 					.intField("Page", Lectern::getPage, Lectern::setPage)
 					.build();
 	

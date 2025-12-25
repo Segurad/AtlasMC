@@ -9,7 +9,7 @@ public interface ThrowableProjectile extends Projectile {
 	NBT_HANDLER = NBTCodec
 					.builder(ThrowableProjectile.class)
 					.include(Projectile.NBT_HANDLER)
-					.codec("Item", ThrowableProjectile::getItem, ThrowableProjectile::setItem, ItemStack.NBT_HANDLER)
+					.codec("Item", ThrowableProjectile::getItem, ThrowableProjectile::setItem, ItemStack.NBT_CODEC)
 					.build();
 
 	ItemStack getItem();

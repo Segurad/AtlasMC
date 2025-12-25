@@ -12,12 +12,12 @@ import de.atlasmc.node.event.entity.EntitySpawnEvent;
 import de.atlasmc.node.server.LocalServer;
 import de.atlasmc.node.sound.SoundListener;
 import de.atlasmc.node.world.entitytracker.EntityTracker;
-import de.atlasmc.node.world.particle.ParticleType;
+import de.atlasmc.node.world.particle.ParticleListener;
 import de.atlasmc.tick.Tickable;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 
-public interface World extends Tickable, SoundListener {
+public interface World extends Tickable, SoundListener, ParticleListener, WorldEventListener {
 
 	@NotNull
 	Collection<Entity> getEntities();
@@ -89,10 +89,6 @@ public interface World extends Tickable, SoundListener {
 	 */
 	long getTime();
 
-	void playEffect(Location loc, WorldEvent effect, Object data, int radius);
-
-	void spawnParticle(ParticleType particle, Location loc, int amount);
-
 	/**
 	 * Returns the spawn Location of this world
 	 * @return the spawn location
@@ -129,7 +125,9 @@ public interface World extends Tickable, SoundListener {
 	 * @return the chunk
 	 */
 	@Nullable
-	Chunk getChunk(int x, int z);
+	default Chunk getChunk(int x, int z) {
+		return getChunk(x, z, true);
+	}
 	
 	/**
 	 * Returns the chunk at the given x and z coordinates or null if not loaded
@@ -147,7 +145,9 @@ public interface World extends Tickable, SoundListener {
 	 * @return chunk
 	 */
 	@Nullable
-	Chunk getChunk(Location loc);
+	default Chunk getChunk(Location loc) {
+		return getChunk(loc, true);
+	}
 	
 	/**
 	 * Returns the Chunk at this location or null if not loaded
@@ -156,8 +156,10 @@ public interface World extends Tickable, SoundListener {
 	 * @return chunk or null
 	 */
 	@Nullable
-	Chunk getChunk(Location loc, boolean load);
-
+	default Chunk getChunk(Location loc, boolean load) {
+		return getChunk(loc.getBlockX() >> 4, loc.getBlockZ() >> 4, load);
+	}
+	
 	@NotNull
 	Dimension getDimension();
 	

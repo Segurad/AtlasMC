@@ -13,7 +13,7 @@ public interface ItemFrame extends Hanging {
 					.include(Hanging.NBT_HANDLER)
 					.boolField("Fixed", ItemFrame::isFixed, ItemFrame::setFixed)
 					.boolField("Invisible", ItemFrame::isInvisible, ItemFrame::setInvisible)
-					.codec("Item", ItemFrame::getItem, ItemFrame::setItemStack, ItemStack.NBT_HANDLER)
+					.codec("Item", ItemFrame::getItem, ItemFrame::setItemStack, ItemStack.NBT_CODEC)
 					.floatField("ItemDropChance", ItemFrame::getItemDropChance, ItemFrame::setItemDropChance, 1)
 					.codec("ItemRotation", ItemFrame::getRotation, ItemFrame::setRotation, EnumUtil.enumByteNBTCodec(Rotation.class), Rotation.NONE)
 					.build();

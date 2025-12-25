@@ -4,20 +4,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collection;
-import de.atlasmc.IDHolder;
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.registry.ProtocolRegistry;
 import de.atlasmc.registry.ProtocolRegistryValue;
 import de.atlasmc.tag.Tag;
 import de.atlasmc.tag.Tags;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
-import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.dataset.DataSet;
 import de.atlasmc.util.dataset.SingleValueDataSet;
 import de.atlasmc.util.dataset.TagDataSet;
-import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class PacketUtil {
@@ -251,29 +247,6 @@ public class PacketUtil {
 		for (long l : data) {
 			out.writeLong(l);
 		}
-	}
-	
-	public static <T> void writeVarIntOrCodec(T value, ByteBuf out, StreamCodec<? extends T> codec, CodecContext context) throws IOException {
-		if (value instanceof IDHolder v) {
-			int id = v.getID();
-			if (id >= 0) {
-				writeVarInt(id, out);
-			}
-		}
-		if (!codec.getType().isInstance(value))
-			throw new ProtocolException("Codec: " + codec.getType() + " is incompatible with type: " + value.getClass());
-		@SuppressWarnings("unchecked")
-		StreamCodec<T> c = (StreamCodec<T>) codec;
-		c.serialize(value, out, context);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static <T, E extends Enum<E> & IDHolder> T readVarIntEnumOrCodec(ByteBuf in, Class<E> clazz, StreamCodec<T> codec, CodecContext context) throws IOException {
-		int id = readVarInt(in);
-		if (id > 0)
-			return (T) EnumUtil.getByID(clazz, id);
-		else
-			return codec.deserialize(in, context);
 	}
 	
 	public static <T extends ProtocolRegistryValue> void writeDataSet(DataSet<T> set, ProtocolRegistry<T> registry, ByteBuf out) throws IOException {

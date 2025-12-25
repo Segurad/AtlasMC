@@ -10,7 +10,7 @@ public interface PocketHolder {
 	public static final NBTCodec<PocketHolder>
 	NBT_HANDLER = NBTCodec
 					.builder(PocketHolder.class)
-					.codecList("Inventory", PocketHolder::hasPocketItems, PocketHolder::getPocketItems, ItemStack.NBT_HANDLER)
+					.codecList("Inventory", PocketHolder::hasPocketItems, PocketHolder::getPocketItems, ItemStack.NBT_CODEC)
 					.build();
 	
 	@NotNull

@@ -22,8 +22,8 @@ public interface AbstractArrow extends Projectile {
 					.byteField("shake", AbstractArrow::getShake, AbstractArrow::setShake, (byte) 0)
 					.boolField("ShotFromCrossbow", AbstractArrow::isShotFromCrossbow, AbstractArrow::setShotFromCrossbow)
 					.codec("SoundEvent", AbstractArrow::getHitSound, AbstractArrow::setHitSound, Sound.NBT_CODEC, EnumSound.ENTITY_ARROW_HIT)
-					.codec("item", AbstractArrow::getItem, AbstractArrow::setItem, ItemStack.NBT_HANDLER)
-					.codec("weapon", AbstractArrow::getWeapon, AbstractArrow::setWeapon, ItemStack.NBT_HANDLER)
+					.codec("item", AbstractArrow::getItem, AbstractArrow::setItem, ItemStack.NBT_CODEC)
+					.codec("weapon", AbstractArrow::getWeapon, AbstractArrow::setWeapon, ItemStack.NBT_CODEC)
 					.build();
 	
 	ItemStack getItem();

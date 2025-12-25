@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import org.joml.Vector3d;
+import org.joml.Vector3f;
+import org.joml.Vector3i;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
@@ -50,7 +52,6 @@ import de.atlasmc.node.io.protocol.play.PacketOutWorldEvent;
 import de.atlasmc.node.io.protocol.play.PacketOutGameEvent.GameEventType;
 import de.atlasmc.node.scoreboard.ScoreboardView;
 import de.atlasmc.node.sound.Sound;
-import de.atlasmc.node.util.MathUtil;
 import de.atlasmc.node.world.WorldEvent;
 import de.atlasmc.node.world.particle.Particle;
 import de.atlasmc.permission.Permission;
@@ -236,24 +237,12 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	public void setLevel(int level, float progress) {
 		setExp(level, xp, progress);
 	}
-
-	@Override
-	public void playEffect(Location loc, WorldEvent effect, Object data, boolean relativeSound) {
-		if (loc == null)
-			throw new IllegalArgumentException("Location can not be null!");
-		playEffect(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), effect, data, relativeSound);
-	}
 	
 	@Override
-	public void playEffect(int x, int y, int z, WorldEvent effect, Object data, boolean relativeSound) {
+	public void playEffect(Vector3i loc, WorldEvent effect, Object data, boolean relativeSound) {
 		if (effect == null)
 			throw new IllegalArgumentException("Effect can not be null!");
-		PacketOutWorldEvent packet = new PacketOutWorldEvent();
-		packet.event = effect;
-		packet.position = MathUtil.toPosition(x, y, z);
-		packet.data = effect.getDataValueByObject(data);
-		packet.disableRelativeVolume = !relativeSound;
-		con.sendPacked(packet);
+		con.sendPacked(new PacketOutWorldEvent(loc, effect, data, relativeSound));
 	}
 
 	@Override
@@ -370,28 +359,8 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	}
 
 	@Override
-	public void spawnParticle(Particle particle, double x, double y, double z, float offX, float offY, float offZ, float maxSpeed, int count) {
-		PacketOutParticle packet = new PacketOutParticle();
-		packet.particle = particle;
-		packet.x = x;
-		packet.y = y;
-		packet.z = z;
-		packet.offX = offX;
-		packet.offY = offY;
-		packet.offZ = offZ;
-		packet.maxSpeed = maxSpeed;
-		packet.count = count;
-		con.sendPacked(packet);
-	}
-
-	@Override
-	public void spawnParticle(Particle particle, double x, double y, double z, float particledata) {
-		spawnParticle(particle, x, y, z, particledata, 1);
-	}
-
-	@Override
-	public void spawnParticle(Particle particle, double x, double y, double z, float particledata, int count) {
-		spawnParticle(particle, x, y, z, 0, 0, 0, particledata, count);
+	public void spawnParticle(Particle particle, Vector3d loc, Vector3f off, float maxSpeed, int count) {
+		con.sendPacked(new PacketOutParticle(particle, loc, off, maxSpeed, count));
 	}
 
 	@Override

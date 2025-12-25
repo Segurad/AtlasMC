@@ -28,7 +28,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 public class ItemStack implements NBTSerializable, StreamSerializable, ItemComponentHolder, OpenCloneable {
 
 	public static final NBTCodec<ItemStack>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(ItemStack.class)
 					.searchKeyConstructor("id", ItemType.REGISTRY_KEY, ItemStack::new, ItemStack::getType)
 					.intField("count", ItemStack::getAmount, ItemStack::setAmount, 1)
@@ -330,7 +330,7 @@ public class ItemStack implements NBTSerializable, StreamSerializable, ItemCompo
 
 	@Override
 	public NBTCodec<? extends ItemStack> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	@Override

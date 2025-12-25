@@ -11,7 +11,7 @@ public interface Piglin extends AbstractPiglin {
 	NBT_HANDLER = NBTCodec
 					.builder(Piglin.class)
 					.boolField("CannotHunt", Piglin::cannotHunt, Piglin::setCannotHunt, false)
-					.codecList("Inventory", Piglin::hasPocketItems, Piglin::getPocketItems, ItemStack.NBT_HANDLER)
+					.codecList("Inventory", Piglin::hasPocketItems, Piglin::getPocketItems, ItemStack.NBT_CODEC)
 					.boolField("IsBaby", Piglin::isBaby, Piglin::setBaby, false)
 					// non standard
 					.boolField("IsDancing", Piglin::isDancing, Piglin::setDancing, false)

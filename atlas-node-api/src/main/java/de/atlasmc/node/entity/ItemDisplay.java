@@ -13,7 +13,7 @@ public interface ItemDisplay extends Display {
 	NBT_HANDLER = NBTCodec
 					.builder(ItemDisplay.class)
 					.include(Display.NBT_HANDLER)
-					.codec("item", ItemDisplay::getItem, ItemDisplay::setItem, ItemStack.NBT_HANDLER)
+					.codec("item", ItemDisplay::getItem, ItemDisplay::setItem, ItemStack.NBT_CODEC)
 					.codec("item_display", ItemDisplay::getRenderType, ItemDisplay::setRenderType, EnumUtil.enumStringNBTCodec(RenderType.class), RenderType.NONE)
 					.build();
 	

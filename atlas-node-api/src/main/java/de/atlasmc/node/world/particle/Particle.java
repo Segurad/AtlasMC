@@ -17,7 +17,7 @@ public interface Particle extends NBTSerializable, StreamSerializable , OpenClon
 	public static final StreamCodec<Particle>
 	STREAM_CODEC = StreamCodec
 					.builder(Particle.class)
-					.constr
+					.enumVarIntConstructor(ParticleType.class, ParticleType::createParticle, Particle::getType)
 					.build();
 	
 	ParticleType getType();
@@ -27,6 +27,11 @@ public interface Particle extends NBTSerializable, StreamSerializable , OpenClon
 	@Override
 	default NBTCodec<? extends Particle> getNBTCodec() {
 		return NBT_CODEC;
+	}
+	
+	@Override
+	default StreamCodec<? extends Particle> getStreamCodec() {
+		return STREAM_CODEC;
 	}
 
 }

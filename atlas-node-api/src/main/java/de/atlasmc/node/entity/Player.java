@@ -9,7 +9,6 @@ import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.network.player.AtlasPlayer;
 import de.atlasmc.node.Gamemode;
 import de.atlasmc.node.NodePlayer;
-import de.atlasmc.node.Location;
 import de.atlasmc.node.SoundCategory;
 import de.atlasmc.node.block.DiggingHandler;
 import de.atlasmc.node.inventory.EquipmentSlot;
@@ -19,15 +18,15 @@ import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.io.protocol.PlayerConnection;
 import de.atlasmc.node.scoreboard.ScoreboardView;
 import de.atlasmc.node.sound.SoundListener;
-import de.atlasmc.node.world.WorldEvent;
-import de.atlasmc.node.world.particle.Particle;
+import de.atlasmc.node.world.WorldEventListener;
+import de.atlasmc.node.world.particle.ParticleListener;
 import de.atlasmc.permission.Permissible;
 import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.util.annotation.UnsafeAPI;
 import de.atlasmc.util.enums.EnumUtil;
 
-public interface Player extends HumanEntity, Permissible, Messageable, SoundListener {
+public interface Player extends HumanEntity, Permissible, Messageable, SoundListener, ParticleListener, WorldEventListener {
 	
 	public static final NBTCodec<Player>
 	NBT_HANDLER = NBTCodec
@@ -57,32 +56,6 @@ public interface Player extends HumanEntity, Permissible, Messageable, SoundList
 	void setExp(int level, int exp, float progress);
 	
 	void setLevel(int level, float progress);
-
-	default void playEffect(Location loc, WorldEvent effect) {
-		playEffect(loc, effect, null, true);
-	}
-	
-	/**
-	 * 
-	 * @param loc
-	 * @param effect
-	 * @param data
-	 * @implNote {@link #playEffect(int, int, int, WorldEvent, Object, boolean)}
-	 */
-	default void playEffect(Location loc, WorldEvent effect, Object data) {
-		playEffect(loc, effect, data, true);
-	}
-	
-	/**
-	 * Plays a sound or particle effect
-	 * @param loc
-	 * @param effect
-	 * @param data
-	 * @param relativeSound
-	 */
-	void playEffect(Location loc, WorldEvent effect, Object data, boolean relativeSound);
-	
-	void playEffect(int x, int y, int z, WorldEvent effect, Object data, boolean relativeSound);
 	
 	void setConnection(PlayerConnection con);
 
@@ -145,14 +118,6 @@ public interface Player extends HumanEntity, Permissible, Messageable, SoundList
 	// --- Sound ---
 	
 	void stopSound(SoundCategory category, NamespacedKey sound);
-	
-	// --- Particle ---
-	
-	void spawnParticle(Particle particle, double x, double y, double z, float maxSpeed);
-	
-	void spawnParticle(Particle particle, double x, double y, double z, float maxSpeed, int count);
-	
-	void spawnParticle(Particle particle, double x, double y, double z, float offX, float offY, float offZ, float maxSpeed, int count);
 	
 	// --- Inventory Stuff ---
 	

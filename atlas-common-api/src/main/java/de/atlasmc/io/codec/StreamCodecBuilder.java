@@ -7,13 +7,16 @@ import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.ObjDoubleConsumer;
 import java.util.function.ObjIntConsumer;
+import java.util.function.ObjLongConsumer;
 import java.util.function.Supplier;
 import java.util.function.ToDoubleFunction;
 import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.codec.constructor.Constructor;
+import de.atlasmc.io.codec.constructor.EnumVarIntConstructor;
 import de.atlasmc.io.codec.constructor.RegistryVarIntConstructor;
 import de.atlasmc.io.codec.field.BooleanField;
 import de.atlasmc.io.codec.field.CodecCollectionField;
@@ -23,6 +26,8 @@ import de.atlasmc.io.codec.field.DoubleField;
 import de.atlasmc.io.codec.field.VarIntEnumOrCodecField;
 import de.atlasmc.io.codec.field.FloatField;
 import de.atlasmc.io.codec.field.HasOptionalField;
+import de.atlasmc.io.codec.field.IntField;
+import de.atlasmc.io.codec.field.LongField;
 import de.atlasmc.io.codec.field.MapRegistryValueToVarIntField;
 import de.atlasmc.io.codec.field.MultimapTypeToCodecField;
 import de.atlasmc.io.codec.field.NBTCodecField;
@@ -86,6 +91,11 @@ public class StreamCodecBuilder<T> implements Builder<StreamCodec<T>>{
 		return this;
 	}
 	
+	public <K extends Enum<K> & IDHolder> StreamCodecBuilder<T> enumVarIntConstructor(Class<K> clazz, Function<K, T> constructor, Function<T, K> keyReverseSupplier) {
+		this.constructor = new EnumVarIntConstructor<>(clazz, constructor, keyReverseSupplier);
+		return this;
+	}
+	
 	public <K extends ProtocolRegistryValue> StreamCodecBuilder<T> registryVarIntConstructor(RegistryKey<K> registry, Function<K, T> constructor, Function<T, K> keyReverseSupplier) {
 		this.constructor = new RegistryVarIntConstructor<>(registry, constructor, keyReverseSupplier);
 		return this;
@@ -100,6 +110,8 @@ public class StreamCodecBuilder<T> implements Builder<StreamCodec<T>>{
 	public StreamCodecBuilder<T> include(StreamCodec<? super T> include) {
 		if (!(include instanceof StreamCodecImpl codec))
 			throw new IllegalArgumentException("Codec must be instanceof StreamCodecImpl!");
+		if (codec.getType().isAssignableFrom(clazz))
+			throw new IllegalArgumentException("Codec type: " + codec.getType() + " is not assignable from type: " + clazz);
 		codec.addToBuilder(this);
 		return this;
 	}
@@ -142,6 +154,14 @@ public class StreamCodecBuilder<T> implements Builder<StreamCodec<T>>{
 	
 	public StreamCodecBuilder<T> floatValue(ToFloatFunction<T> get, ObjFloatConsumer<T> set) {
 		return addField(new FloatField<>(get, set));
+	}
+	
+	public StreamCodecBuilder<T> longValue(ToLongFunction<T> get, ObjLongConsumer<T> set) {
+		return addField(new LongField<>(get, set));
+	}
+	
+	public StreamCodecBuilder<T> intValue(ToIntFunction<T> get, ObjIntConsumer<T> set) {
+		return addField(new IntField<>(get, set));
 	}
 	
 	public StreamCodecBuilder<T> doubleValue(ToDoubleFunction<T> get, ObjDoubleConsumer<T> set) {

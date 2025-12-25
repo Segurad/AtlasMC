@@ -3,6 +3,7 @@ package de.atlasmc.io.codec;
 import java.io.IOException;
 
 import org.joml.Quaternionf;
+import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 import de.atlasmc.io.PacketUtil;
@@ -33,6 +34,14 @@ public class StreamCodecs {
 			.floatValue(Vector3f::x, (t, v) -> t.x = v)
 			.floatValue(Vector3f::y, (t, v) -> t.y = v)
 			.floatValue(Vector3f::z, (t, v) -> t.z = v)
+			.build();
+	
+	public static final StreamCodec<Vector3d> VECTOR_3D = StreamCodec
+			.builder(Vector3d.class)
+			.defaultConstructor(Vector3d::new)
+			.doubleValue(Vector3d::x, (t, v) -> t.x = v)
+			.doubleValue(Vector3d::y, (t, v) -> t.y = v)
+			.doubleValue(Vector3d::z, (t, v) -> t.z = v)
 			.build();
 	
 	public static final StreamCodec<int[]> INT_ARRAY = new StreamCodec<int[]>() {

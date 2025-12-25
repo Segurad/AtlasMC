@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.function.BiConsumer;
 
 import org.joml.Vector3d;
+import org.joml.Vector3i;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.node.WorldLocation;
@@ -703,6 +704,16 @@ public class CoreEntity implements Entity {
 	@Override
 	public WorldLocation getLocationUnsafe() {
 		return loc;
+	}
+	
+	@Override
+	public Vector3d getLocation(Vector3d vec) {
+		return vec.set(loc);
+	}
+	
+	@Override
+	public Vector3i getLocation(Vector3i vec) {
+		return vec.set(loc);
 	}
 
 	@Override

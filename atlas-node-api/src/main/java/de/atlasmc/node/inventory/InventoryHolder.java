@@ -7,7 +7,7 @@ public interface InventoryHolder {
 	public static final NBTCodec<InventoryHolder>
 	NBT_HANDLER = NBTCodec
 					.builder(InventoryHolder.class)
-					.codecArraySearchByteIndexField("Items", "Slot", InventoryHolder::hasInventory, (value) -> { return value.getInventory().getContentsUnsafe(); }, ItemStack.NBT_HANDLER)
+					.codecArraySearchByteIndexField("Items", "Slot", InventoryHolder::hasInventory, (value) -> { return value.getInventory().getContentsUnsafe(); }, ItemStack.NBT_CODEC)
 					.build();
 	
 	/**
