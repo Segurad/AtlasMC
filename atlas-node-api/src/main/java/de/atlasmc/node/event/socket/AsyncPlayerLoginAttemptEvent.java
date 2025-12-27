@@ -1,22 +1,21 @@
 package de.atlasmc.node.event.socket;
 
-import de.atlasmc.io.connection.ConnectionHandler;
-import de.atlasmc.io.connection.ServerSocketConnectionHandler;
 import de.atlasmc.node.event.SocketHandlerList;
+import de.atlasmc.node.io.protocol.LoginHandler;
 import de.atlasmc.node.io.socket.NodeSocket;
 
-public class PlayerLoginAtemptEvent extends SocketEvent {
+public class AsyncPlayerLoginAttemptEvent extends SocketEvent {
 
 	private static final SocketHandlerList handlers = new SocketHandlerList();
 	
-	private final ConnectionHandler handler;
+	private final LoginHandler handler;
 	
-	public PlayerLoginAtemptEvent(ConnectionHandler handler) {
-		super((NodeSocket) ((ServerSocketConnectionHandler) handler).getSocket());
+	public AsyncPlayerLoginAttemptEvent(LoginHandler handler) {
+		super(true, (NodeSocket) handler.getSocket());
 		this.handler = handler;
 	}
 	
-	public ConnectionHandler getConnection() {
+	public LoginHandler getConnection() {
 		return handler;
 	}
 

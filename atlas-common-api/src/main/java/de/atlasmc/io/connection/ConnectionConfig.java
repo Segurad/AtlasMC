@@ -8,6 +8,7 @@ public class ConnectionConfig implements ConfigurationSerializable {
 	private String name;
 	private int timeout;
 	private int rateLimit;
+	private boolean encryption;
 	private boolean authentication;
 	private boolean enableCompression;
 	private int compressionThreshold;
@@ -17,7 +18,8 @@ public class ConnectionConfig implements ConfigurationSerializable {
 		this.name = config.getString("name");
 		this.timeout = config.getInt("timeout");
 		this.rateLimit = config.getInt("rate-limit");
-		this.authentication = config.getBoolean("authentication");
+		this.encryption = config.getBoolean("enable-encryption", true);
+		this.authentication = config.getBoolean("authentication", true);
 		this.enableCompression = config.getBoolean("enable-compression");
 		this.compressionThreshold = config.getInt("compression-threshold");
 		this.compressionBufferSize = config.getInt("compression-buffer-size");
@@ -45,6 +47,14 @@ public class ConnectionConfig implements ConfigurationSerializable {
 
 	public void setRateLimit(int rateLimit) {
 		this.rateLimit = rateLimit;
+	}
+	
+	public boolean hasEncryption() {
+		return encryption;
+	}
+	
+	public void setEncryption(boolean encryption) {
+		this.encryption = encryption;
 	}
 
 	public boolean hasAuthentication() {
@@ -83,6 +93,7 @@ public class ConnectionConfig implements ConfigurationSerializable {
 	public <T extends ConfigurationSection> T toConfiguration(T config) {
 		config.set("timeout", timeout);
 		config.set("rate-limit", rateLimit);
+		config.set("enable-encryption", encryption);
 		config.set("authentication", authentication);
 		config.set("enable-compression", enableCompression);
 		config.set("compression-threshold", compressionThreshold);

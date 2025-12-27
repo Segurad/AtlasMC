@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Random;
+import java.util.UUID;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -17,18 +18,16 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import de.atlasmc.Atlas;
+import de.atlasmc.event.HandlerList;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.Protocol;
 import de.atlasmc.io.ProtocolException;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.io.connection.ServerSocketConnectionHandler;
-import de.atlasmc.io.socket.SocketConfig;
-import de.atlasmc.network.AtlasNetwork;
 import de.atlasmc.network.player.AtlasPlayer;
-import de.atlasmc.network.player.PlayerConnectionConfig;
-import de.atlasmc.network.player.PlayerProfile;
-import de.atlasmc.network.player.ProfileHandler;
 import de.atlasmc.node.AtlasNode;
+import de.atlasmc.node.event.socket.AsyncPlayerLoginAttemptEvent;
+import de.atlasmc.node.io.protocol.LoginHandler;
 import de.atlasmc.node.io.protocol.PlayerConnection;
 import de.atlasmc.node.io.protocol.ProtocolAdapter;
 import de.atlasmc.node.io.protocol.login.ServerboundCookieResponse;
@@ -37,49 +36,18 @@ import de.atlasmc.node.io.protocol.login.ServerboundLoginAcknowledged;
 import de.atlasmc.node.io.protocol.login.ServerboundLoginPluginResponse;
 import de.atlasmc.node.io.protocol.login.ServerboundLoginStart;
 import de.atlasmc.node.io.protocol.login.PacketLogin;
-import de.atlasmc.node.io.protocol.login.ClientboundEncryptionRequest;
-import de.atlasmc.node.io.protocol.login.ClientboundLoginSuccess;
-import de.atlasmc.node.io.socket.NodeSocket;
 
 public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePacketListenerLoginIn, Packet> {
 
 	private static final PacketHandler<?, ?>[] HANDLERS;
 	private static final boolean[] HANDLE_ASYNC;
-	private static final Random RANDOM = new Random();
-	private static final int VERIFY_TOKEN_LENGTH = 32;
-	private static final String SERVER_ID = "AtlasMC";
 	
 	static {
 		HANDLERS = new PacketHandler[PacketLogin.PACKET_COUNT_IN];
 		HANDLE_ASYNC = new boolean[PacketLogin.PACKET_COUNT_IN];
 		initHandler(ServerboundLoginStart.class, (handler, packet) -> {
-			NodeSocket socket = (NodeSocket) ((ServerSocketConnectionHandler) handler.con).getSocket();
-			SocketConfig config = socket.getConfig();
-			PlayerConnectionConfig conConfig = config.getConnectionConfig("player-connection");
-			if (conConfig.hasAuthentication()) {
-				ClientboundEncryptionRequest packetOut = new ClientboundEncryptionRequest();
-				packetOut.serverID = SERVER_ID;
-				packetOut.publicKey = Atlas.getKeyPair().getPublic().getEncoded();
-				byte[] token = generateVerifyToken();
-				handler.verifyToken = token;
-				packetOut.verifyToken = token;
-				handler.con.sendPacket(packet);
-			} else if (socket.isSync()) {
-				ProfileHandler profiles = AtlasNetwork.getProfileHandler();
-				AtlasPlayer player = profiles.getPlayer(packet.uuid);
-				if (player == null) {
-					// TODO request profile implementation
-				}
-				ClientboundLoginSuccess packetOut = new ClientboundLoginSuccess();
-				PlayerProfile profile = new PlayerProfile();
-				profile.setName(player.getInternalName());
-				profile.setUUID(player.getInternalUUID());
-				packetOut.profile = profile;
-				handler.player = player;
-				handler.con.sendPacket(packetOut);
-			} else {
-				handler.syncQueue.add(packet);
-			}
+			AsyncPlayerLoginAttemptEvent event = new AsyncPlayerLoginAttemptEvent(handler.createLoginHandler(packet.name, packet.uuid));
+			HandlerList.callEvent(event);
 		}, true);
 		initHandler(ServerboundEncryptionResponse.class, (handler, packet) -> {
 			PrivateKey privateKey = Atlas.getKeyPair().getPrivate();
@@ -136,9 +104,8 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 		}, false);
 	}
 	
-	private final ConnectionHandler con;
-	private volatile AtlasPlayer player;
-	private volatile byte[] verifyToken;
+	private final ServerSocketConnectionHandler con;
+	private volatile LoginHandler handler;
 	
 	private static <T extends PacketLogin> void initHandler(Class<T> clazz, PacketHandler<CorePacketListenerLoginIn, T> handler, boolean async) {
 	    int id = Packet.getDefaultPacketID(clazz);
@@ -149,23 +116,16 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 	public CorePacketListenerLoginIn(ConnectionHandler handler) {
 		super(null, PacketLogin.PACKET_COUNT_IN);
 		holder = this;
-		con = handler;
+		con = (ServerSocketConnectionHandler) handler;
 	}
 	
-	private static String createServerHash(PublicKey key, SecretKey secret) throws Exception {
-		MessageDigest md = MessageDigest.getInstance("SHA-1");
-		md.update(SERVER_ID.getBytes("ISO-8859-1"));
-		md.update(key.getEncoded());
-		md.update(secret.getEncoded());
-		byte[] data = md.digest();
-		return new BigInteger(data).toString(16);
-	}
-	
-	private static byte[] generateVerifyToken() {
-		byte[] token = new byte[VERIFY_TOKEN_LENGTH];
-		for (int i = 0; i < VERIFY_TOKEN_LENGTH; i++)
-			token[i] = (byte) RANDOM.nextInt(0x100);
-		return token;
+	private synchronized LoginHandler createLoginHandler(String name, UUID uuid) {
+		if (handler != null) {
+			throw new ProtocolException("Login already initialized!");
+		}
+		var handler = new CoreLoginHandler(con, name, uuid);
+		this.handler = handler;
+		return handler;
 	}
 
 	@Override
