@@ -11,7 +11,6 @@ import de.atlasmc.event.EventPriority;
 import de.atlasmc.event.GenericEvent;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.Listener;
-import de.atlasmc.log.Log;
 import de.atlasmc.network.server.ServerGroup;
 import de.atlasmc.node.server.LocalServer;
 import de.atlasmc.plugin.PluginHandle;
@@ -71,7 +70,6 @@ public class ServerHandlerList extends HandlerList {
 	protected void callEvent(Event event, boolean cancelled) {
 		@SuppressWarnings("unchecked")
 		final LocalServer server = ((GenericEvent<LocalServer, ?>) event).getEventSource();
-		final Log log = server.getLogger();
 		final EventExecutor[] groupexes = this.groupExecutors.get(server.getGroup());
 		final EventExecutor[] serverexes = this.serverExecutors.get(server);
 		final EventExecutor[] globalexes = this.globalExecutors;
@@ -83,13 +81,13 @@ public class ServerHandlerList extends HandlerList {
 			final int monitor = EventPriority.MONITOR.ordinal();
 			for (int i = 0; i <= monitor; i++) {
 				if (i == monitor)
-					fireDefaultExecutor(defaultHandler, event, log);
-				serverIndex = fireEvents(serverexes, serverIndex, i, event, cancelled, log);
-				groupIndex = fireEvents(groupexes, groupIndex, i, event, cancelled, log);
-				globalIndex = fireEvents(globalexes, globalIndex, i, event, cancelled, log);
+					fireDefaultExecutor(defaultHandler, event);
+				serverIndex = fireEvents(serverexes, serverIndex, i, event, cancelled);
+				groupIndex = fireEvents(groupexes, groupIndex, i, event, cancelled);
+				globalIndex = fireEvents(globalexes, globalIndex, i, event, cancelled);
 			}
 		} else {
-			fireDefaultExecutor(defaultHandler, event, log);
+			fireDefaultExecutor(defaultHandler, event);
 		}
 	}
 	

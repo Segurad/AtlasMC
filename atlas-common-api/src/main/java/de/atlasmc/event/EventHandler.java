@@ -28,5 +28,11 @@ public @interface EventHandler {
 	 * @return true if ignore
 	 */
 	boolean ignoreCancelled() default false;
+	
+	/**
+	 * Whether or not this handler is ignored if the event is handled.
+	 * @return action
+	 */
+	EventHandledAction ignoreHandled() default EventHandledAction.DEFAULT;
 
 }

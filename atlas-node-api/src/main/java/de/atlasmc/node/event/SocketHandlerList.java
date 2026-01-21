@@ -6,7 +6,7 @@ import de.atlasmc.node.io.socket.NodeSocket;
 public class SocketHandlerList extends ContextHandlerList<NodeSocket> {
 	
 	public SocketHandlerList() {
-		super(NodeSocket.class, NodeSocket::getLogger);
+		super(NodeSocket.class);
 	}
 
 }

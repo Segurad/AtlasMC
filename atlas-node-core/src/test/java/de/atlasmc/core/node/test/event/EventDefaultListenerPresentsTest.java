@@ -35,7 +35,7 @@ class EventDefaultListenerPresentsTest {
 	private static void initDefaultExecutor(Listener listener) {
 		List<EventExecutor> exes = MethodEventExecutor.getExecutors(CorePluginManager.SYSTEM, listener);
 		for (EventExecutor exe : exes) {
-			Class<? extends Event> clazz = exe.getEventClass();
+			Class<? extends Event> clazz = exe.eventClass;
 			HandlerList handlers = HandlerList.getHandlerListOf(clazz);
 			handlers.setDefaultExecutor(exe);
 		}
@@ -95,7 +95,7 @@ class EventDefaultListenerPresentsTest {
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 					fail(e);
 				}
-				if (handlers.getDefaultExecutor() == null || handlers.getDefaultExecutor() == EventExecutor.NULL_EXECUTOR) {
+				if (handlers.getDefaultExecutor() == null || handlers.getDefaultExecutor() == null) {
 					checks.add(() -> fail("Missing DefaultExecutor: " + clazz.getName()));
 				}
 				break;

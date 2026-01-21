@@ -2,14 +2,22 @@ package de.atlasmc.event;
 
 public abstract class Event {
 
-	private final boolean async;
+	/**
+	 * Whether or not this event is asynchronous. If true this event may still be called in the right sync context.
+	 */
+	public final boolean isAsync;
+	/**
+	 * Whether or not this event is handled.
+	 * If a event is marked as handled the outcome of this event was already handled.
+	 */
+	public boolean isHandled;
 	
 	public Event() {
 		this(false);
 	}
 	
 	public Event(boolean async) {
-		this.async = async;
+		this.isAsync = async;
 	}
 	
 	/**
@@ -17,14 +25,6 @@ public abstract class Event {
 	 * @return handler list
 	 */
 	public abstract HandlerList getHandlers();
-
-	/**
-	 * Returns whether or not this event is async
-	 * @return true if async
-	 */
-	public final boolean isAsynchronous() {
-		return async;
-	}
 
 	/**
 	 * Returns the name of this event

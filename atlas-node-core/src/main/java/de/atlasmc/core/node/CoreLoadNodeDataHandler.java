@@ -186,7 +186,7 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 	private static void initDefaultExecutor(Log log, Listener listener) {
 		List<EventExecutor> exes = MethodEventExecutor.getExecutors(Atlas.getSystem(), listener);
 		for (EventExecutor exe : exes) {
-			Class<? extends Event> clazz = exe.getEventClass();
+			Class<? extends Event> clazz = exe.eventClass;
 			log.debug("Set default executor for event: {}", clazz.getSimpleName());
 			HandlerList handlers = HandlerList.getHandlerListOf(clazz);
 			handlers.setDefaultExecutor(exe);

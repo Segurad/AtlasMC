@@ -3,21 +3,20 @@ package de.atlasmc.event;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.atlasmc.plugin.PluginHandle;
 
 /**
  * EventExecutor implementation that invokes methods
  */
-public class MethodEventExecutor extends AbstractEventExecutor {
+public final class MethodEventExecutor extends EventExecutor {
 	
 	private final Method method;
 	
-	public MethodEventExecutor(PluginHandle plugin, Class<? extends Event> eventClass, Method method, EventPriority priority, boolean ignoreCancelled, Listener listener) {
-		super(plugin, eventClass, ignoreCancelled, priority, listener);
-		if (method == null)
-			throw new IllegalArgumentException("Method can not be null!");
-		this.method = method;
+	public MethodEventExecutor(PluginHandle plugin, Class<? extends Event> eventClass, Method method, EventPriority priority, EventHandledAction action, boolean ignoreCancelled, Listener listener) {
+		super(plugin, eventClass, ignoreCancelled, priority, action, listener);
+		this.method = Objects.requireNonNull(method, "method");
 		method.setAccessible(true); // we set this accessible because event handler may be private for API clarity
 	}	
 	
@@ -43,14 +42,16 @@ public class MethodEventExecutor extends AbstractEventExecutor {
 				continue;
 			if (executors == null)
 				executors = new ArrayList<>();
-			executors.add(new MethodEventExecutor(plugin, eventClass, method, handler.priority(), handler.ignoreCancelled(), listener));
+			executors.add(new MethodEventExecutor(plugin, eventClass, method, handler.priority(), handler.ignoreHandled(), handler.ignoreCancelled(), listener));
 		}
 		return executors == null ? List.of() : executors;
 	}
 
 	@Override
-	protected void internalFireEvent(Event event) throws Exception{
-		method.invoke(getListener(), event);
+	public void fireEvent(Event event) throws Exception {
+		if (!eventClass.isInstance(event))
+			return;
+		method.invoke(listener, event);
 	}
 	
 }

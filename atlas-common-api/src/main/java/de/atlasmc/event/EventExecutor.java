@@ -1,87 +1,64 @@
 package de.atlasmc.event;
 
+import java.util.Objects;
+
 import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.util.annotation.NotNull;
 
 /**
  * This class contains informations of a {@link EventHandler}
  */
-public interface EventExecutor {
+public abstract class EventExecutor {
 	
 	/**
-	 * EventExecutor that does nothing
+	 * Whether or not this handler is ignored when the event is cancelled.
 	 */
-	public static final EventExecutor NULL_EXECUTOR = new EventExecutor() {
-
-		@Override
-		public Listener getListener() {
-			return null;
-		}
-
-		@Override
-		public boolean getIgnoreCancelled() {
-			return true;
-		}
-
-		@Override
-		public Class<? extends Event> getEventClass() {
-			return Event.class;
-		}
-
-		@Override
-		public EventPriority getPriority() {
-			return EventPriority.MONITOR;
-		}
-
-		@Override
-		public void fireEvent(Event event) {
-			// not required
-		}
-
-		@Override
-		public PluginHandle getPlugin() {
-			return null;
-		}
-	};
+	public final boolean ignoreCancelled;
 	
 	/**
-	 * Returns the listener this handler belongs to
-	 * @return listener
+	 * The event class this handler handles.
 	 */
 	@NotNull
-	Listener getListener();
+	public final Class<? extends Event> eventClass;
+	
+	/**
+	 * The {@link EventPriority} for the handler.
+	 */
+	@NotNull
+	public final EventPriority priority;
+	
+	/**
+	 * The listener this handler belongs to.
+	 */
+	@NotNull
+	public final Listener listener;
+	
+	/**
+	 * The {@link PluginHandle} this handler belongs to.
+	 */
+	@NotNull
+	public final PluginHandle plugin;
+	
+	/**
+	 * Whether or not this handler is ignored when the event is handled.
+	 */
+	public final boolean ignoreHandled;
+	
+	public EventExecutor(PluginHandle plugin, Class<? extends Event> eventClass, boolean ignoreCancelled, EventPriority priority, EventHandledAction action, Listener listener) {
+		this.plugin = Objects.requireNonNull(plugin, "plugin");
+		this.eventClass = Objects.requireNonNull(eventClass, "class");
+		this.ignoreCancelled = ignoreCancelled;
+		this.priority = Objects.requireNonNull(priority, "priority");
+		this.listener = Objects.requireNonNull(listener, "listener");
+		this.ignoreHandled = priority.getIgnoreHandled(action);
+	}
 
-	/**
-	 * Returns whether or not this handler is ignored when the event is canclled
-	 * @return true if ignore
-	 */
-	boolean getIgnoreCancelled();
-	
-	/**
-	 * Returns the event class this handler handles
-	 * @return
-	 */
-	@NotNull
-	Class<? extends Event> getEventClass();
-	
-	/**
-	 * Returns the {@link EventPriority} for the handler
-	 * @return priority
-	 */
-	@NotNull
-	EventPriority getPriority();
-	
-	/**
-	 * Returns the {@link PluginHandle} this handler belongs to
-	 * @return handle
-	 */
-	PluginHandle getPlugin();
-	
 	/**
 	 * Invokes the EventHandler Method of this EventExecutor
 	 * @param event
+	 * @return 
 	 * @throws Exception 
 	 */
-	void fireEvent(Event event) throws Exception;
+	public abstract void fireEvent(Event event) throws Exception;
 
 }
