@@ -2,9 +2,10 @@ package de.atlasmc.core.node.io.protocol;
 
 import de.atlasmc.core.node.io.protocol.play.*;
 import de.atlasmc.io.AbstractProtocol;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.PacketListener;
 import de.atlasmc.node.io.protocol.PlayerConnection;
+import de.atlasmc.node.io.protocol.ProtocolAdapter;
 import de.atlasmc.node.io.protocol.ProtocolPlay;
 import de.atlasmc.node.io.protocol.play.PacketPlayIn;
 import de.atlasmc.node.io.protocol.play.PacketPlayOut;
@@ -13,7 +14,7 @@ public class CoreProtocolPlay extends AbstractProtocol<PacketPlayIn, PacketPlayO
 	
 	@SuppressWarnings("unchecked")
 	public CoreProtocolPlay() {
-		super(new PacketIO[] {
+		super(new PacketCodec[] {
 				new CorePacketInConfirmTeleport(),
 				new CorePacketInQueryBlockEntityTag(),
 				new CorePacketInChangeDifficulty(),
@@ -76,7 +77,7 @@ public class CoreProtocolPlay extends AbstractProtocol<PacketPlayIn, PacketPlayO
 				new CorePacketInClientTickEnd(),
 				new CorePacketInPickItemFromEntity(),
 				new CorePacketInPlayerLoaded()
-		}, new PacketIO[] {
+		}, new PacketCodec[] {
 				new CorePacketOutSpawnEntity(),
 				new CorePacketOutSpawnExperienceOrb(),
 				new CorePacketOutEntityAnimation(),
@@ -213,7 +214,7 @@ public class CoreProtocolPlay extends AbstractProtocol<PacketPlayIn, PacketPlayO
 	
 	@Override
 	public int getVersion() {
-		return CoreProtocolAdapter.VERSION;
+		return ProtocolAdapter.VERSION;
 	}
 
 	@Override

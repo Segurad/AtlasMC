@@ -90,4 +90,16 @@ public class LocalConnectionHandler extends AbstractConnectionHandler {
 		return false;
 	}
 
+	@Override
+	public boolean isInboundTerminated() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isOutboundTerminated() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

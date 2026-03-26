@@ -5,16 +5,16 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateEntityPositionAndRotation;
 import de.atlasmc.node.util.MathUtil;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutEntityUpdatePositionAndRotation implements PacketIO<PacketOutUpdateEntityPositionAndRotation> {
+public class CorePacketOutEntityUpdatePositionAndRotation implements PacketCodec<PacketOutUpdateEntityPositionAndRotation> {
 	
 	@Override
-	public void read(PacketOutUpdateEntityPositionAndRotation packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutUpdateEntityPositionAndRotation packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.entityID = readVarInt(in);
 		packet.deltaX = in.readShort();
 		packet.deltaY = in.readShort();
@@ -25,7 +25,7 @@ public class CorePacketOutEntityUpdatePositionAndRotation implements PacketIO<Pa
 	}
 
 	@Override
-	public void write(PacketOutUpdateEntityPositionAndRotation packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutUpdateEntityPositionAndRotation packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.entityID, out);
 		out.writeShort(packet.deltaX);
 		out.writeShort(packet.deltaY);

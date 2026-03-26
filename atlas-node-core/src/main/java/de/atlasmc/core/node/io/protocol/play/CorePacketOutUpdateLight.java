@@ -5,15 +5,15 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateLight;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutUpdateLight implements PacketIO<PacketOutUpdateLight> {
+public class CorePacketOutUpdateLight implements PacketCodec<PacketOutUpdateLight> {
 	
 	@Override
-	public void read(PacketOutUpdateLight packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutUpdateLight packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.chunkX = readVarInt(in);
 		packet.chunkZ = readVarInt(in);
 		packet.skyMask = readBitSet(in);
@@ -29,7 +29,7 @@ public class CorePacketOutUpdateLight implements PacketIO<PacketOutUpdateLight> 
 	}
 
 	@Override
-	public void write(PacketOutUpdateLight packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutUpdateLight packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.chunkX, out);
 		writeVarInt(packet.chunkZ, out);
 		writeBitSet(packet.skyMask, out);

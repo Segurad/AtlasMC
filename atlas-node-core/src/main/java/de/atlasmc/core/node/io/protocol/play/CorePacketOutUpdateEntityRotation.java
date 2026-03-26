@@ -6,16 +6,16 @@ import static de.atlasmc.io.PacketUtil.writeVarInt;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateEntityRotation;
 import de.atlasmc.node.util.MathUtil;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutUpdateEntityRotation implements PacketIO<PacketOutUpdateEntityRotation> {
+public class CorePacketOutUpdateEntityRotation implements PacketCodec<PacketOutUpdateEntityRotation> {
 
 	@Override
-	public void read(PacketOutUpdateEntityRotation packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutUpdateEntityRotation packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.entityID = readVarInt(in);
 		packet.yaw = MathUtil.fromAngle(in.readUnsignedByte());
 		packet.pitch = MathUtil.fromAngle(in.readUnsignedByte());
@@ -23,7 +23,7 @@ public class CorePacketOutUpdateEntityRotation implements PacketIO<PacketOutUpda
 	}
 
 	@Override
-	public void write(PacketOutUpdateEntityRotation packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutUpdateEntityRotation packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.entityID, out);
 		out.writeByte(MathUtil.toAngle(packet.yaw));
 		out.writeByte(MathUtil.toAngle(packet.pitch));

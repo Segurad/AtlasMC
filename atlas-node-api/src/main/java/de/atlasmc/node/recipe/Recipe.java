@@ -1,6 +1,7 @@
 package de.atlasmc.node.recipe;
 
 import java.util.List;
+import java.util.Objects;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
@@ -16,12 +17,8 @@ public abstract class Recipe implements Namespaced {
 	protected RecipeCategory category;
 	
 	public Recipe(NamespacedKey key, RecipeCategory category) {
-		if (key == null)
-			throw new IllegalArgumentException("Key can not be null!");
-		if (category == null)
-			throw new IllegalArgumentException("Category can not be null!");
-		this.key = key;
-		this.category = category;
+		this.key = Objects.requireNonNull(key);
+		this.category = Objects.requireNonNull(category);
 	}
 	
 	public List<Condition> getConditions() {

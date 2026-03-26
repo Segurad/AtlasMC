@@ -2,23 +2,23 @@ package de.atlasmc.core.node.io.protocol.play;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutSelectAdvancementTab;
 import io.netty.buffer.ByteBuf;
 
 import java.io.IOException;
 
-public class CorePacketOutSelectAdvancementTab implements PacketIO<PacketOutSelectAdvancementTab> {
+public class CorePacketOutSelectAdvancementTab implements PacketCodec<PacketOutSelectAdvancementTab> {
 
 	@Override
-	public void read(PacketOutSelectAdvancementTab packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketOutSelectAdvancementTab packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		if (in.readBoolean())
 			packet.tabID = NamespacedKey.STREAM_CODEC.deserialize(null, in, null);
 	}
 
 	@Override
-	public void write(PacketOutSelectAdvancementTab packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketOutSelectAdvancementTab packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		NamespacedKey tab = packet.tabID;
 		if (tab == null) {
 			out.writeBoolean(false);

@@ -261,6 +261,8 @@ public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitte
 
 	boolean isTicking();
 	
+	int getObjectData();
+	
 	@Override
 	default NBTCodec<? extends Entity> getNBTCodec() {
 		return NBT_CODEC;

@@ -5,15 +5,15 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutRemoveEntities;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutRemoveEntities implements PacketIO<PacketOutRemoveEntities> {
+public class CorePacketOutRemoveEntities implements PacketCodec<PacketOutRemoveEntities> {
 
 	@Override
-	public void read(PacketOutRemoveEntities packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutRemoveEntities packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		final int size = readVarInt(in);
 		if (size == 0)
 			return;
@@ -25,7 +25,7 @@ public class CorePacketOutRemoveEntities implements PacketIO<PacketOutRemoveEnti
 	}
 
 	@Override
-	public void write(PacketOutRemoveEntities packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutRemoveEntities packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		int[] entities = packet.entityIDs;
 		if (entities != null) {
 			writeVarInt(entities.length, out);

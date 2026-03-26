@@ -3,15 +3,15 @@ package de.atlasmc.core.node.io.protocol.play;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateAdvancements;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutUpdateAdvancements implements PacketIO<PacketOutUpdateAdvancements> {
+public class CorePacketOutUpdateAdvancements implements PacketCodec<PacketOutUpdateAdvancements> {
 
 	@Override
-	public void read(PacketOutUpdateAdvancements packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketOutUpdateAdvancements packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		throw new UnsupportedOperationException("Not implemented yet!");
 //		packet.setReset(in.readBoolean());
 //		int size = readVarInt(in); // Size of advancements
@@ -25,7 +25,7 @@ public class CorePacketOutUpdateAdvancements implements PacketIO<PacketOutUpdate
 	}
 
 	@Override
-	public void write(PacketOutUpdateAdvancements packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketOutUpdateAdvancements packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		throw new UnsupportedOperationException("Not implemented yet");
 	}
 

@@ -5,15 +5,15 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateEntityPosition;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutUpdateEntityPosition implements PacketIO<PacketOutUpdateEntityPosition> {
+public class CorePacketOutUpdateEntityPosition implements PacketCodec<PacketOutUpdateEntityPosition> {
 
 	@Override
-	public void read(PacketOutUpdateEntityPosition packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutUpdateEntityPosition packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.entityID = readVarInt(in);
 		packet.deltaX = in.readShort();
 		packet.deltaY = in.readShort();
@@ -22,7 +22,7 @@ public class CorePacketOutUpdateEntityPosition implements PacketIO<PacketOutUpda
 	}
 
 	@Override
-	public void write(PacketOutUpdateEntityPosition packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutUpdateEntityPosition packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.entityID, out);
 		out.writeShort(packet.deltaX);
 		out.writeShort(packet.deltaY);

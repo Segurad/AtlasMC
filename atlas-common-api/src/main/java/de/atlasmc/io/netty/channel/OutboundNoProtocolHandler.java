@@ -7,6 +7,10 @@ import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
 import io.netty.channel.ChannelHandler.Sharable;
 
+/**
+ * Channel handler that throws a {@link ProtocolException} when a packet passes it.
+ * Used for marking the channel direction as not usable.
+ */
 @Sharable
 public class OutboundNoProtocolHandler extends ChannelOutboundHandlerAdapter {
 	

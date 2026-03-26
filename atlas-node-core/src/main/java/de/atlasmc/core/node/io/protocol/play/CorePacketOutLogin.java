@@ -9,17 +9,17 @@ import java.util.List;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.Gamemode;
 import de.atlasmc.node.io.protocol.play.PacketOutLogin;
 import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutLogin implements PacketIO<PacketOutLogin> {
+public class CorePacketOutLogin implements PacketCodec<PacketOutLogin> {
 
 	@Override
-	public void read(PacketOutLogin packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutLogin packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.entityID = readVarInt(in);
 		packet.hardcore = in.readBoolean();
 		final int worldCount = readVarInt(in);
@@ -52,7 +52,7 @@ public class CorePacketOutLogin implements PacketIO<PacketOutLogin> {
 	}
 
 	@Override
-	public void write(PacketOutLogin packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutLogin packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.entityID, out);
 		out.writeBoolean(packet.hardcore);
 		List<NamespacedKey> worlds = packet.worlds;

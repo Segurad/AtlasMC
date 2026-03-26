@@ -2,9 +2,10 @@ package de.atlasmc.core.node.io.protocol;
 
 import de.atlasmc.core.node.io.protocol.configuration.*;
 import de.atlasmc.io.AbstractProtocol;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.PacketListener;
 import de.atlasmc.node.io.protocol.PlayerConnection;
+import de.atlasmc.node.io.protocol.ProtocolAdapter;
 import de.atlasmc.node.io.protocol.ProtocolConfiguration;
 import de.atlasmc.node.io.protocol.configuration.PacketConfigurationServerbound;
 import de.atlasmc.node.io.protocol.configuration.PacketConfigurationClientbound;
@@ -13,7 +14,7 @@ public class CoreProtocolConfiguration extends AbstractProtocol<PacketConfigurat
 
 	@SuppressWarnings("unchecked")
 	public CoreProtocolConfiguration() {
-		super(new PacketIO[] {
+		super(new PacketCodec[] {
 			new CorePacketInClientInformation(),
 			new CorePacketInPluginMessage(),
 			new CorePacketInFinishConfiguration(),
@@ -22,7 +23,7 @@ public class CoreProtocolConfiguration extends AbstractProtocol<PacketConfigurat
 			new CorePacketInResourcePack(),
 			new CorePacketInCookieResponse(),
 			new CorePacketInKnownPacks()
-		}, new PacketIO[] {
+		}, new PacketCodec[] {
 			new CorePacketOutPluginMessage(),
 			new CorePacketOutDisconnect(),
 			new CorePacketOutFinishConfiguration(),
@@ -45,7 +46,7 @@ public class CoreProtocolConfiguration extends AbstractProtocol<PacketConfigurat
 	
 	@Override
 	public int getVersion() {
-		return CoreProtocolAdapter.VERSION;
+		return ProtocolAdapter.VERSION;
 	}
 
 	@Override

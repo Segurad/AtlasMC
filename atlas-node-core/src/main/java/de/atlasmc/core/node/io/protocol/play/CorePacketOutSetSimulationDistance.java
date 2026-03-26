@@ -5,20 +5,20 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutSetSimulationDistance;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutSetSimulationDistance implements PacketIO<PacketOutSetSimulationDistance> {
+public class CorePacketOutSetSimulationDistance implements PacketCodec<PacketOutSetSimulationDistance> {
 
 	@Override
-	public void read(PacketOutSetSimulationDistance packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketOutSetSimulationDistance packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.distance = readVarInt(in);
 	}
 
 	@Override
-	public void write(PacketOutSetSimulationDistance packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketOutSetSimulationDistance packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		writeVarInt(packet.distance, out);
 	}
 

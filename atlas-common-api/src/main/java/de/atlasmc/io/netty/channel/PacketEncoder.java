@@ -1,7 +1,7 @@
 package de.atlasmc.io.netty.channel;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.PacketUtil;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.io.connection.SocketConnectionHandler;
@@ -26,8 +26,8 @@ public class PacketEncoder extends MessageToByteEncoder<Packet> {
 		final int packetID = msg.getID();
 		PacketUtil.writeVarInt(msg.getID(), out);
 		@SuppressWarnings("unchecked")
-		PacketIO<Packet> io = (PacketIO<Packet>) handler.getProtocol().getHandlerClientbound(packetID);
-		io.write(msg, out, handler);
+		PacketCodec<Packet> io = (PacketCodec<Packet>) handler.getProtocol().getHandlerClientbound(packetID);
+		io.serialize(msg, out, handler);
 		
 		handler.getLogger().debug("Encoded packet: {}", msg.getClass().getSimpleName());
 		

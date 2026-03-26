@@ -3,21 +3,21 @@ package de.atlasmc.core.node.io.protocol.play;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutPlayerRotation;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutPlayerRotation implements PacketIO<PacketOutPlayerRotation> {
+public class CorePacketOutPlayerRotation implements PacketCodec<PacketOutPlayerRotation> {
 
 	@Override
-	public void read(PacketOutPlayerRotation packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketOutPlayerRotation packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.yaw = in.readFloat();
 		packet.pitch = in.readFloat();
 	}
 
 	@Override
-	public void write(PacketOutPlayerRotation packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketOutPlayerRotation packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		out.writeFloat(packet.yaw);
 		out.writeFloat(packet.pitch);
 	}

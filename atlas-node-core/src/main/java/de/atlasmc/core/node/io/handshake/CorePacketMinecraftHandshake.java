@@ -39,7 +39,7 @@ public class CorePacketMinecraftHandshake extends HandshakePacketIO<PacketMinecr
 	}
 
 	@Override
-	public void read(PacketMinecraftHandshake packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketMinecraftHandshake packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.protocolVersion = readVarInt(in);
 		packet.address = StringCodec.readString(in, 255);
 		packet.port = in.readUnsignedShort();
@@ -47,7 +47,7 @@ public class CorePacketMinecraftHandshake extends HandshakePacketIO<PacketMinecr
 	}
 
 	@Override
-	public void write(PacketMinecraftHandshake packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketMinecraftHandshake packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		writeVarInt(packet.protocolVersion, out);
 		StringCodec.writeString(packet.address, out);
 		out.writeShort(packet.port);

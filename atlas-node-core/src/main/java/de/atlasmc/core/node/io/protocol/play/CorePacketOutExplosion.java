@@ -2,7 +2,7 @@ package de.atlasmc.core.node.io.protocol.play;
 
 import java.io.IOException;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import static de.atlasmc.io.PacketUtil.*;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutExplosion;
@@ -11,10 +11,10 @@ import de.atlasmc.node.world.particle.Particle;
 import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutExplosion implements PacketIO<PacketOutExplosion> {
+public class CorePacketOutExplosion implements PacketCodec<PacketOutExplosion> {
 
 	@Override
-	public void read(PacketOutExplosion packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutExplosion packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.x = in.readDouble();
 		packet.y = in.readDouble();
 		packet.z = in.readDouble();
@@ -41,7 +41,7 @@ public class CorePacketOutExplosion implements PacketIO<PacketOutExplosion> {
 	}
 
 	@Override
-	public void write(PacketOutExplosion packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutExplosion packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		out.writeDouble(packet.x);
 		out.writeDouble(packet.y);
 		out.writeDouble(packet.z);

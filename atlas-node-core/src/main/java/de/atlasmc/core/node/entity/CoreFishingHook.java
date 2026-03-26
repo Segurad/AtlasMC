@@ -3,7 +3,7 @@ package de.atlasmc.core.node.entity;
 import de.atlasmc.node.entity.Entity;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.FishingHook;
-import de.atlasmc.node.entity.metadata.type.MetaDataField;
+import de.atlasmc.node.entity.metadata.MetaDataField;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreFishingHook extends CoreAbstractProjectile implements FishingHook {
@@ -16,6 +16,7 @@ public class CoreFishingHook extends CoreAbstractProjectile implements FishingHo
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+2;
 	
 	private Entity hooked;
+	private Entity owner;
 	
 	public CoreFishingHook(EntityType type) {
 		super(type);
@@ -45,6 +46,22 @@ public class CoreFishingHook extends CoreAbstractProjectile implements FishingHo
 		if (hooked != null)
 			id = hooked.getID()+1;
 		metaContainer.get(META_HOCKED_ENTITY).setData(id);
+	}
+
+	@Override
+	public Entity getOwner() {
+		return owner;
+	}
+
+	@Override
+	public void setOwner(Entity owner) {
+		this.owner = owner;
+	}
+	
+	@Override
+	public int getObjectData() {
+		var owner = this.owner;
+		return owner == null ? 0 : owner.getID();
 	}
 
 }

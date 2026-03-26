@@ -9,7 +9,7 @@ import java.util.List;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.nbt.io.NBTNIOReader;
 import de.atlasmc.nbt.io.NBTNIOWriter;
@@ -19,10 +19,10 @@ import de.atlasmc.node.io.protocol.configuration.ClientboundRegistryData;
 import de.atlasmc.node.io.protocol.configuration.ClientboundRegistryData.RegistryEntry;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutRegistryData implements PacketIO<ClientboundRegistryData> {
+public class CorePacketOutRegistryData implements PacketCodec<ClientboundRegistryData> {
 	
 	@Override
-	public void read(ClientboundRegistryData packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(ClientboundRegistryData packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.registryID = NamespacedKey.STREAM_CODEC.deserialize(null, in, null);
 		final int count = readVarInt(in);
 		if (count == 0)
@@ -44,7 +44,7 @@ public class CorePacketOutRegistryData implements PacketIO<ClientboundRegistryDa
 	}
 
 	@Override
-	public void write(ClientboundRegistryData packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(ClientboundRegistryData packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		NamespacedKey.STREAM_CODEC.serialize(packet.registryID, out, null);
 		List<RegistryEntry> entries = packet.entries;
 		if (entries == null) {

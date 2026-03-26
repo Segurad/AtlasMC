@@ -3,7 +3,7 @@ package de.atlasmc.io.protocol.handshake;
 import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.PacketListener;
 import de.atlasmc.io.Protocol;
 import de.atlasmc.io.connection.ConnectionHandler;
@@ -59,12 +59,12 @@ public class HandshakeProtocol implements Protocol {
 	}
 
 	@Override
-	public PacketIO<? extends Packet> getHandlerServerbound(int id) {
+	public PacketCodec<? extends Packet> getHandlerServerbound(int id) {
 		return packets.get(id);
 	}
 
 	@Override
-	public PacketIO<? extends Packet> getHandlerClientbound(int id) {
+	public PacketCodec<? extends Packet> getHandlerClientbound(int id) {
 		return getHandlerServerbound(id);
 	}
 

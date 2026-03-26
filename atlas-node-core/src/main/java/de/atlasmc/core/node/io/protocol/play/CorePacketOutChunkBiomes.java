@@ -6,16 +6,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutChunkBiomes;
 import de.atlasmc.node.io.protocol.play.PacketOutChunkBiomes.BiomeData;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutChunkBiomes implements PacketIO<PacketOutChunkBiomes> {
+public class CorePacketOutChunkBiomes implements PacketCodec<PacketOutChunkBiomes> {
 
 	@Override
-	public void read(PacketOutChunkBiomes packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketOutChunkBiomes packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		final int count = readVarInt(in);
 		if (count <= 0)
 			return;
@@ -30,7 +30,7 @@ public class CorePacketOutChunkBiomes implements PacketIO<PacketOutChunkBiomes> 
 	}
 
 	@Override
-	public void write(PacketOutChunkBiomes packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketOutChunkBiomes packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		if (packet.chunks == null || packet.chunks.isEmpty()) {
 			writeVarInt(0, out);
 			return;

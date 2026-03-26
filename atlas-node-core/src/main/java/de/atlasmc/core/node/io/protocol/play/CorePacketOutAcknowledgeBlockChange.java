@@ -5,20 +5,20 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutAcknowledgeBlockChange;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutAcknowledgeBlockChange implements PacketIO<PacketOutAcknowledgeBlockChange>{
+public class CorePacketOutAcknowledgeBlockChange implements PacketCodec<PacketOutAcknowledgeBlockChange>{
 
 	@Override
-	public void read(PacketOutAcknowledgeBlockChange packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketOutAcknowledgeBlockChange packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.sequence = readVarInt(in);
 	}
 
 	@Override
-	public void write(PacketOutAcknowledgeBlockChange packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketOutAcknowledgeBlockChange packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		writeVarInt(packet.sequence, out);	
 	}
 

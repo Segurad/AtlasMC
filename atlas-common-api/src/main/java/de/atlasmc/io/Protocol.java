@@ -13,7 +13,7 @@ public interface Protocol {
 	 * @return handler or null
 	 */
 	@Nullable
-	PacketIO<? extends Packet> getHandlerServerbound(int id);
+	PacketCodec<? extends Packet> getHandlerServerbound(int id);
 	
 	/**
 	 * Returns the packet handler for the given id.
@@ -21,7 +21,7 @@ public interface Protocol {
 	 * @return handler or null
 	 */
 	@Nullable
-	PacketIO<? extends Packet> getHandlerClientbound(int id);
+	PacketCodec<? extends Packet> getHandlerClientbound(int id);
 	
 	/**
 	 * Returns a new packet for the given id.

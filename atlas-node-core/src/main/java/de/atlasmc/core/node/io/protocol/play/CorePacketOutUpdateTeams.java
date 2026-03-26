@@ -10,7 +10,7 @@ import java.util.List;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateTeams;
@@ -20,10 +20,10 @@ import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> {
+public class CorePacketOutUpdateTeams implements PacketCodec<PacketOutUpdateTeams> {
 
 	@Override
-	public void read(PacketOutUpdateTeams packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutUpdateTeams packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.name = StringCodec.readString(in);
 		Mode mode = Mode.getByID(in.readByte());
 		packet.mode = mode;
@@ -80,7 +80,7 @@ public class CorePacketOutUpdateTeams implements PacketIO<PacketOutUpdateTeams> 
 	}
 
 	@Override
-	public void write(PacketOutUpdateTeams packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutUpdateTeams packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		StringCodec.writeString(packet.name, out);
 		out.writeByte(packet.mode.getID());
 		final CodecContext context = handler.getCodecContext();

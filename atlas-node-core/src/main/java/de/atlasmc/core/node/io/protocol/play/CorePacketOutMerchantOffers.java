@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.entity.Merchant.MerchantRecipe;
 import de.atlasmc.node.inventory.ItemStack;
@@ -16,10 +16,10 @@ import de.atlasmc.node.io.protocol.play.PacketOutMerchantOffers;
 import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutMerchantOffers implements PacketIO<PacketOutMerchantOffers> {
+public class CorePacketOutMerchantOffers implements PacketCodec<PacketOutMerchantOffers> {
 
 	@Override
-	public void read(PacketOutMerchantOffers packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutMerchantOffers packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.windowID = readVarInt(in);
 		final int size = readVarInt(in);
 		if (size > 0) {
@@ -58,7 +58,7 @@ public class CorePacketOutMerchantOffers implements PacketIO<PacketOutMerchantOf
 	}
 
 	@Override
-	public void write(PacketOutMerchantOffers packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutMerchantOffers packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.windowID, out);
 		List<MerchantRecipe> trades = packet.trades;
 		final int size = trades.size();

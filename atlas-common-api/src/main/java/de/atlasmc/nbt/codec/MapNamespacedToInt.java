@@ -11,6 +11,7 @@ import de.atlasmc.nbt.TagType;
 import de.atlasmc.nbt.io.NBTReader;
 import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.util.codec.CodecContext;
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap.Entry;
 
@@ -42,11 +43,17 @@ final class MapNamespacedToInt<K extends Namespaced> implements NBTCodec<Object2
 	@Override
 	public Object2IntMap<K> deserialize(Object2IntMap<K> value, NBTReader reader, CodecContext context) throws IOException {
 		reader.readNextEntry();
+		final Object2IntMap<K> map = value != null ? value : new Object2IntArrayMap<>();
 		while (reader.getType() != TagType.TAG_END) {
-			value.put(keySupplier.apply(reader.getFieldName().toString()), reader.readIntTag());
+			map.put(keySupplier.apply(reader.getFieldName().toString()), reader.readIntTag());
 		}
 		reader.readNextEntry();
-		return value;
+		return map;
+	}
+	
+	@Override
+	public boolean isReuseValue() {
+		return true;
 	}
 
 	@Override

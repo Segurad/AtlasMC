@@ -8,16 +8,16 @@ import java.util.List;
 import java.util.UUID;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.codec.UUIDCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutPlayerInfoRemove;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutPlayerInfoRemove implements PacketIO<PacketOutPlayerInfoRemove> {
+public class CorePacketOutPlayerInfoRemove implements PacketCodec<PacketOutPlayerInfoRemove> {
 
 	@Override
-	public void read(PacketOutPlayerInfoRemove packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketOutPlayerInfoRemove packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		final int count = readVarInt(in);
 		if (count <= 0)
 			return;
@@ -28,7 +28,7 @@ public class CorePacketOutPlayerInfoRemove implements PacketIO<PacketOutPlayerIn
 	}
 
 	@Override
-	public void write(PacketOutPlayerInfoRemove packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketOutPlayerInfoRemove packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		List<UUID> players = packet.players;
 		if (players == null || players.isEmpty()) {
 			writeVarInt(0, out);

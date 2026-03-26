@@ -1,6 +1,7 @@
 package de.atlasmc.plugin.channel;
 
 import de.atlasmc.NamespacedKey.Namespaced;
+import de.atlasmc.util.annotation.NotNull;
 import io.netty.buffer.ByteBuf;
 
 public interface PluginChannel extends Namespaced {
@@ -27,6 +28,7 @@ public interface PluginChannel extends Namespaced {
 	 * Returns the handler of this channel
 	 * @return handler
 	 */
+	@NotNull
 	PluginChannelHandler getHolder();
 
 }

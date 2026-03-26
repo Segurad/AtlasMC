@@ -6,8 +6,8 @@ import org.joml.Vector3f;
 import de.atlasmc.Color;
 import de.atlasmc.node.entity.Display;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.node.entity.metadata.type.MetaData;
-import de.atlasmc.node.entity.metadata.type.MetaDataField;
+import de.atlasmc.node.entity.metadata.MetaData;
+import de.atlasmc.node.entity.metadata.MetaDataField;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreDisplay extends CoreEntity implements Display {
@@ -15,10 +15,10 @@ public class CoreDisplay extends CoreEntity implements Display {
 	protected static final MetaDataField<Integer> META_INTERPOLATION_DELAY = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, 0, MetaDataType.VAR_INT);
 	protected static final MetaDataField<Integer> META_TRANSFORMATION_INTERPOLATION_DURATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+2, 0, MetaDataType.VAR_INT);
 	protected static final MetaDataField<Integer> META_POSITION_INTERPOLATION_DURATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+3, 0, MetaDataType.VAR_INT);
-	protected static final MetaDataField<Vector3f> META_TRANSLATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+4, new Vector3f(), MetaDataType.VECTOR_3);
-	protected static final MetaDataField<Vector3f> META_SCALE = new MetaDataField<>(CoreEntity.LAST_META_INDEX+5, new Vector3f(1f,1f,1f), MetaDataType.VECTOR_3);
-	protected static final MetaDataField<Quaternionf> META_LEFT_ROTATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+6, new Quaternionf(), MetaDataType.QUATERNION);
-	protected static final MetaDataField<Quaternionf> META_RIGHT_ROTATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+7, new Quaternionf(), MetaDataType.QUATERNION);
+	protected static final MetaDataField<Vector3f> META_TRANSLATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+4, new Vector3f(), MetaDataType.VECTOR_3F);
+	protected static final MetaDataField<Vector3f> META_SCALE = new MetaDataField<>(CoreEntity.LAST_META_INDEX+5, new Vector3f(1f,1f,1f), MetaDataType.VECTOR_3F);
+	protected static final MetaDataField<Quaternionf> META_LEFT_ROTATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+6, new Quaternionf(), MetaDataType.QUATERNION_F);
+	protected static final MetaDataField<Quaternionf> META_RIGHT_ROTATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+7, new Quaternionf(), MetaDataType.QUATERNION_F);
 	protected static final MetaDataField<Billboard> META_BILLBOARD = new MetaDataField<>(CoreEntity.LAST_META_INDEX+8, Billboard.FIXED, MetaDataType.getByteEnumType(Billboard.class)); 
 	protected static final MetaDataField<Integer> META_BRIGHTNESS_OVERRIDE = new MetaDataField<>(CoreEntity.LAST_META_INDEX+9, -1, MetaDataType.VAR_INT);
 	protected static final MetaDataField<Float> META_VIEW_RANGE = new MetaDataField<>(CoreEntity.LAST_META_INDEX+10, 1f, MetaDataType.FLOAT);

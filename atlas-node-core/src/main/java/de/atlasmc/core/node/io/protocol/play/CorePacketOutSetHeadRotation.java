@@ -5,22 +5,22 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutSetHeadRotation;
 import de.atlasmc.node.util.MathUtil;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutSetHeadRotation implements PacketIO<PacketOutSetHeadRotation> {
+public class CorePacketOutSetHeadRotation implements PacketCodec<PacketOutSetHeadRotation> {
 
 	@Override
-	public void read(PacketOutSetHeadRotation packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutSetHeadRotation packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.entityID = readVarInt(in);
 		packet.yaw = MathUtil.fromAngle(in.readByte());
 	}
 
 	@Override
-	public void write(PacketOutSetHeadRotation packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutSetHeadRotation packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.entityID, out);
 		out.writeByte(MathUtil.toAngle(packet.yaw));
 	}

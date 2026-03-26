@@ -1,6 +1,7 @@
 package de.atlasmc.nbt.codec;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -34,12 +35,18 @@ final class MapTypeToCodec<K, V> implements NBTCodec<Map<K, V>> {
 	@Override
 	public Map<K, V> deserialize(Map<K, V> value, NBTReader reader, CodecContext context) throws IOException {
 		reader.readNextEntry();
+		final Map<K, V> map = value != null ? value : new HashMap<>();
 		while (reader.getType() != TagType.TAG_END) {
 			V entry = codec.deserialize(reader);
-			value.put(keySupplier.apply(entry), entry);
+			map.put(keySupplier.apply(entry), entry);
 		}
 		reader.readNextEntry();
-		return value;
+		return map;
+	}
+	
+	@Override
+	public boolean isReuseValue() {
+		return true;
 	}
 	
 	@Override

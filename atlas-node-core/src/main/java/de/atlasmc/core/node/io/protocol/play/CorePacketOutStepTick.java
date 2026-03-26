@@ -5,20 +5,20 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutStepTick;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutStepTick implements PacketIO<PacketOutStepTick> {
+public class CorePacketOutStepTick implements PacketCodec<PacketOutStepTick> {
 
 	@Override
-	public void read(PacketOutStepTick packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketOutStepTick packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.steps = readVarInt(in);
 	}
 
 	@Override
-	public void write(PacketOutStepTick packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketOutStepTick packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		writeVarInt(packet.steps, out);
 	}
 

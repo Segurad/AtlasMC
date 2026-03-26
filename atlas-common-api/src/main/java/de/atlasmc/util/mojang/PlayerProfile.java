@@ -1,4 +1,4 @@
-package de.atlasmc.network.player;
+package de.atlasmc.util.mojang;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,9 @@ import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.util.CloneException;
+import de.atlasmc.util.OpenCloneable;
 
-public class PlayerProfile implements NBTSerializable, Cloneable {
+public class PlayerProfile implements NBTSerializable, OpenCloneable {
 	
 	public static final NBTCodec<PlayerProfile>
 	NBT_CODEC = NBTCodec
@@ -24,6 +25,7 @@ public class PlayerProfile implements NBTSerializable, Cloneable {
 	
 	private String name;
 	private UUID uuid;
+	private boolean legacy;
 	private List<ProfileProperty> properties;
 	
 	public PlayerProfile() {
@@ -32,6 +34,14 @@ public class PlayerProfile implements NBTSerializable, Cloneable {
 	
 	public PlayerProfile(String name) {
 		this.name = name;
+	}
+	
+	public boolean isLegacy() {
+		return legacy;
+	}
+	
+	public void setLegacy(boolean legacy) {
+		this.legacy = legacy;
 	}
 	
 	public String getName() {

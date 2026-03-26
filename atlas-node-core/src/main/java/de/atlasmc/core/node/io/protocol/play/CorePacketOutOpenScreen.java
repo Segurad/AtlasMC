@@ -6,24 +6,24 @@ import java.io.IOException;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.inventory.InventoryType;
 import de.atlasmc.node.io.protocol.play.PacketOutOpenScreen;
 import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutOpenScreen implements PacketIO<PacketOutOpenScreen> {
+public class CorePacketOutOpenScreen implements PacketCodec<PacketOutOpenScreen> {
 
 	@Override
-	public void read(PacketOutOpenScreen packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutOpenScreen packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.windowID = readVarInt(in);
 		packet.type = EnumUtil.getByID(InventoryType.class, readVarInt(in));
 		packet.title = Chat.STREAM_CODEC.deserialize(in, handler.getCodecContext());
 	}
 
 	@Override
-	public void write(PacketOutOpenScreen packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutOpenScreen packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.windowID, out);
 		writeVarInt(packet.type.getID(), out);
 		Chat.STREAM_CODEC.serialize(packet.title, out, handler.getCodecContext());

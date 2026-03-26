@@ -5,21 +5,21 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutSetCooldown;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutSetCooldown implements PacketIO<PacketOutSetCooldown> {
+public class CorePacketOutSetCooldown implements PacketCodec<PacketOutSetCooldown> {
 
 	@Override
-	public void read(PacketOutSetCooldown packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutSetCooldown packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.itemID = readVarInt(in);
 		packet.cooldown = readVarInt(in);
 	}
 
 	@Override
-	public void write(PacketOutSetCooldown packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutSetCooldown packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.itemID, out);
 		writeVarInt(packet.cooldown, out);
 	}

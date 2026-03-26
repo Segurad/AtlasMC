@@ -5,15 +5,15 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateSectionBlocks;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutUpdateSectionBlocks implements PacketIO<PacketOutUpdateSectionBlocks> {
+public class CorePacketOutUpdateSectionBlocks implements PacketCodec<PacketOutUpdateSectionBlocks> {
 	
 	@Override
-	public void read(PacketOutUpdateSectionBlocks packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutUpdateSectionBlocks packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.section = in.readLong();
 		final int size = readVarInt(in);
 		long[] blocks = new long[size];
@@ -24,7 +24,7 @@ public class CorePacketOutUpdateSectionBlocks implements PacketIO<PacketOutUpdat
 	}
 
 	@Override
-	public void write(PacketOutUpdateSectionBlocks packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutUpdateSectionBlocks packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		out.writeLong(packet.section);
 		writeVarInt(packet.blocks.length, out);
 		for (long l : packet.blocks) {

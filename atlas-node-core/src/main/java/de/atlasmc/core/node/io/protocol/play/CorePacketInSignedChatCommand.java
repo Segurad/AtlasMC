@@ -7,16 +7,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketInSignedChatCommand;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInSignedChatCommand implements PacketIO<PacketInSignedChatCommand> {
+public class CorePacketInSignedChatCommand implements PacketCodec<PacketInSignedChatCommand> {
 
 	@Override
-	public void read(PacketInSignedChatCommand packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketInSignedChatCommand packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.command = StringCodec.readString(in);
 		packet.commandTimestamp = in.readLong();
 		packet.salt = in.readLong();
@@ -35,7 +35,7 @@ public class CorePacketInSignedChatCommand implements PacketIO<PacketInSignedCha
 	}
 
 	@Override
-	public void write(PacketInSignedChatCommand packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketInSignedChatCommand packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		StringCodec.writeString(packet.command, out);
 		out.writeLong(packet.commandTimestamp);
 		out.writeLong(packet.salt);

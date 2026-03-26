@@ -6,7 +6,7 @@ import static de.atlasmc.io.PacketUtil.writeVarInt;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.io.protocol.play.PacketInClickContainer;
@@ -15,10 +15,10 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap.Entry;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
-public class CorePacketInClickWindow implements PacketIO<PacketInClickContainer> {
+public class CorePacketInClickWindow implements PacketCodec<PacketInClickContainer> {
 
 	@Override
-	public void read(PacketInClickContainer packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketInClickContainer packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.windowID = in.readByte();
 		packet.stateID = readVarInt(in);
 		packet.slot = in.readShort();
@@ -38,7 +38,7 @@ public class CorePacketInClickWindow implements PacketIO<PacketInClickContainer>
 	}
 
 	@Override
-	public void write(PacketInClickContainer packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketInClickContainer packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		out.writeByte(packet.windowID);
 		writeVarInt(packet.stateID, out);
 		out.writeShort(packet.slot);

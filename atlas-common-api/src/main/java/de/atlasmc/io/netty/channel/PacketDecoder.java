@@ -3,7 +3,7 @@ package de.atlasmc.io.netty.channel;
 import java.util.List;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.PacketUtil;
 import de.atlasmc.io.Protocol;
 import de.atlasmc.io.ProtocolException;
@@ -30,12 +30,12 @@ public class PacketDecoder extends ByteToMessageDecoder {
 		final int id = PacketUtil.readVarInt(in);
 		final Protocol prot = handler.getProtocol();
 		@SuppressWarnings("unchecked")
-		final PacketIO<Packet> io = (PacketIO<Packet>) prot.getHandlerServerbound(id);
+		final PacketCodec<Packet> io = (PacketCodec<Packet>) prot.getHandlerServerbound(id);
 		if (io == null)
 			throw new ProtocolException("Invalid Packet ID: " + id, prot, null);
 		final Packet packet = prot.createPacketServerbound(id);
 		packet.setTimestamp(System.currentTimeMillis());
-		io.read(packet, in, handler);
+		io.deserialize(packet, in, handler);
 		
 		if (in.readableBytes() > 0) // check for unread data
 			throw new ProtocolException("Packet " + id + " longer than exspected extra bytes found: " + in.readableBytes() , prot, packet);

@@ -279,4 +279,14 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 		
 	}
 
+	@Override
+	public boolean isInboundTerminated() {
+		return channel.pipeline().get(CHANNEL_PIPE_INBOUND_NO_PROTOCOL) != null;
+	}
+
+	@Override
+	public boolean isOutboundTerminated() {
+		return channel.pipeline().get(CHANNEL_PIPE_OUTBOUND_NO_PROTOCOL) != null;
+	}
+
 }

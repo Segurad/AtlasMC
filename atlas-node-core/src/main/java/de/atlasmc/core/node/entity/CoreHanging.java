@@ -30,5 +30,10 @@ public class CoreHanging extends CoreEntity implements Hanging {
 		loc.set(face.getYaw());
 		loc.set(face.getPitch());
 	}
+	
+	@Override
+	public int getObjectData() {
+		return face.getFaceID();
+	}
 
 }

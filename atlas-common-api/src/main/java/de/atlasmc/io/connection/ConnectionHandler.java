@@ -79,5 +79,9 @@ public interface ConnectionHandler {
 	
 	@NotNull
 	Log getLogger();
+	
+	boolean isInboundTerminated();
+	
+	boolean isOutboundTerminated();
 
 }

@@ -5,16 +5,16 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.inventory.EquipmentSlot;
 import de.atlasmc.node.io.protocol.play.PacketInInteract;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInInteract implements PacketIO<PacketInInteract> {
+public class CorePacketInInteract implements PacketCodec<PacketInInteract> {
 
 	@Override
-	public void read(PacketInInteract packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketInInteract packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.entityID = readVarInt(in);
 		packet.type = readVarInt(in);
 		packet.x = in.readFloat();
@@ -25,7 +25,7 @@ public class CorePacketInInteract implements PacketIO<PacketInInteract> {
 	}
 
 	@Override
-	public void write(PacketInInteract packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketInInteract packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		writeVarInt(packet.entityID, out);
 		writeVarInt(packet.type, out);
 		out.writeFloat(packet.x);

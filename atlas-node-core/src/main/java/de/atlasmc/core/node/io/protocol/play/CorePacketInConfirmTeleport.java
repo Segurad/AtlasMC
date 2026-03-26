@@ -5,20 +5,20 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketInConfirmTeleport;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInConfirmTeleport implements PacketIO<PacketInConfirmTeleport> {
+public class CorePacketInConfirmTeleport implements PacketCodec<PacketInConfirmTeleport> {
 
 	@Override
-	public void read(PacketInConfirmTeleport packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketInConfirmTeleport packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.teleportID = readVarInt(in);
 	}
 
 	@Override
-	public void write(PacketInConfirmTeleport packet, ByteBuf out, ConnectionHandler handler) {
+	public void serialize(PacketInConfirmTeleport packet, ByteBuf out, ConnectionHandler handler) {
 		writeVarInt(packet.teleportID, out);
 	}
 

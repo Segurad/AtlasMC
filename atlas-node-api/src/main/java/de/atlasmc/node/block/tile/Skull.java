@@ -2,8 +2,8 @@ package de.atlasmc.node.block.tile;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
-import de.atlasmc.network.player.PlayerProfile;
 import de.atlasmc.node.sound.EnumSound;
+import de.atlasmc.util.mojang.PlayerProfile;
 
 public interface Skull extends TileEntity {
 	

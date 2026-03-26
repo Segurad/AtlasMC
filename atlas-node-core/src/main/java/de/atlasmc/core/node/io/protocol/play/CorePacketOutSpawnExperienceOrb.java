@@ -5,15 +5,15 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutSpawnExperienceOrb;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutSpawnExperienceOrb implements PacketIO<PacketOutSpawnExperienceOrb> {
+public class CorePacketOutSpawnExperienceOrb implements PacketCodec<PacketOutSpawnExperienceOrb> {
 
 	@Override
-	public void read(PacketOutSpawnExperienceOrb packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutSpawnExperienceOrb packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.entityID = readVarInt(in);
 		packet.x = in.readDouble();
 		packet.y = in.readDouble();
@@ -22,7 +22,7 @@ public class CorePacketOutSpawnExperienceOrb implements PacketIO<PacketOutSpawnE
 	}
 
 	@Override
-	public void write(PacketOutSpawnExperienceOrb packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutSpawnExperienceOrb packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.entityID, out);
 		out.writeDouble(packet.x);
 		out.writeDouble(packet.y);

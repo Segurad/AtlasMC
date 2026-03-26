@@ -7,8 +7,8 @@ import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.PlayerChatSignatureData;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.network.player.ProfileProperty;
 import de.atlasmc.node.Gamemode;
+import de.atlasmc.util.mojang.ProfileProperty;
 
 @DefaultPacketID(packetID = PacketPlay.OUT_PLAYER_INFO_UPDATE, definition = "player_info_update")
 public class PacketOutPlayerInfoUpdate extends AbstractPacket implements PacketPlayOut {

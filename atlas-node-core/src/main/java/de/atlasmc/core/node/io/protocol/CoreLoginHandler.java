@@ -1,17 +1,13 @@
 package de.atlasmc.core.node.io.protocol;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.PublicKey;
 import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
-
-import javax.crypto.SecretKey;
-
 import de.atlasmc.Atlas;
 import de.atlasmc.chat.Chat;
+import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.io.connection.ServerSocketConnectionHandler;
+import de.atlasmc.network.player.AtlasPlayer;
 import de.atlasmc.node.io.protocol.LoginHandler;
 import de.atlasmc.node.io.protocol.login.ClientboundDisconnect;
 import de.atlasmc.node.io.protocol.login.ClientboundEncryptionRequest;
@@ -20,21 +16,33 @@ import de.atlasmc.util.concurrent.future.Future;
 
 public class CoreLoginHandler implements LoginHandler {
 	
+	static final String SERVER_ID = "AtlasMC";
 	private static final int VERIFY_TOKEN_LENGTH = 32;
-	private static final String SERVER_ID = "AtlasMC";
 	
 	private final ServerSocketConnectionHandler connection;
 	private final String name;
 	private final UUID uuid;
+	private final long loginTime;
 	private volatile boolean closed;
 	private volatile Chat disconnectMessage;
 	private volatile boolean useAuthentication;
 	private volatile CompletableFuture<Boolean> encryptionFuture;
+	private volatile byte[] verifyToken;
 	
-	public CoreLoginHandler(ServerSocketConnectionHandler connection, String name, UUID uuid) {
+	public CoreLoginHandler(ServerSocketConnectionHandler connection, String name, UUID uuid, long loginTime) {
 		this.connection = Objects.requireNonNull(connection);
 		this.name = Objects.requireNonNull(name);
 		this.uuid = Objects.requireNonNull(uuid);
+		this.connection.setExceptionHandler((_, e) -> {
+			disconnect(ChatUtil.toChat(e.getMessage()));
+			return true;
+		});
+		this.loginTime = loginTime;
+	}
+	
+	@Override
+	public long getLoginTime() {
+		return loginTime;
 	}
 	
 	@Override
@@ -84,20 +92,27 @@ public class CoreLoginHandler implements LoginHandler {
 	}
 
 	@Override
-	public synchronized Future<Boolean> enableEncryption(boolean authentication) {
+	public synchronized Future<Boolean> enableEncryption() {
 		var future = this.encryptionFuture;
 		if (future != null)
 			return future;
-		this.useAuthentication = authentication;
 		future = new CompletableFuture<>();
 		this.encryptionFuture = future;
 		var packet = new ClientboundEncryptionRequest();
 		packet.serverID = SERVER_ID;
 		packet.publicKey = Atlas.getKeyPair().getPublic().getEncoded();
-		packet.verifyToken = generateVerifyToken();
-		packet.authenticate = authentication;
+		verifyToken = packet.verifyToken = generateVerifyToken();
+		packet.authenticate = useAuthentication;
 		connection.sendPacket(packet);
 		return future;
+	}
+	
+	@Override
+	public boolean isValidToken(byte[] token) {
+		byte[] verifyToken = this.verifyToken;
+		if (verifyToken == null)
+			throw new IllegalStateException("Token not initialized!"); // not authentication started
+		return verifyToken.equals(token);
 	}
 	
 	private static byte[] generateVerifyToken() {
@@ -107,14 +122,28 @@ public class CoreLoginHandler implements LoginHandler {
 			token[i] = (byte) rand.nextInt(0x100);
 		return token;
 	}
+
+	@Override
+	public synchronized void setAuthentication(boolean authentication) {
+		if (encryptionFuture != null)
+			return;
+		this.useAuthentication = authentication;
+	}
+
+	@Override
+	public boolean hasAuthentication() {
+		return useAuthentication;
+	}
 	
-	private static String createServerHash(PublicKey key, SecretKey secret) throws Exception {
-		MessageDigest md = MessageDigest.getInstance("SHA-1");
-		md.update(SERVER_ID.getBytes("ISO-8859-1"));
-		md.update(key.getEncoded());
-		md.update(secret.getEncoded());
-		byte[] data = md.digest();
-		return new BigInteger(data).toString(16);
+	@Override
+	public Future<AtlasPlayer> getPlayer() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isAuthenticated() {
+		return false;
 	}
 
 }

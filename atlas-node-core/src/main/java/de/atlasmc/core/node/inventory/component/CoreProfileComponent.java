@@ -1,9 +1,9 @@
 package de.atlasmc.core.node.inventory.component;
 
-import de.atlasmc.network.player.PlayerProfile;
 import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.ComponentType;
 import de.atlasmc.node.inventory.component.ProfileComponent;
+import de.atlasmc.util.mojang.PlayerProfile;
 
 public class CoreProfileComponent extends AbstractItemComponent implements ProfileComponent {
 

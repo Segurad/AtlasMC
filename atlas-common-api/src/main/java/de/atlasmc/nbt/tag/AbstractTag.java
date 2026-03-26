@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import java.io.UncheckedIOException;
 
 import de.atlasmc.nbt.io.SNBTWriter;
+import de.atlasmc.util.CloneException;
 
 abstract class AbstractTag implements NBT {
 	
@@ -27,13 +28,11 @@ abstract class AbstractTag implements NBT {
 	}
 	
 	public AbstractTag clone() {
-		AbstractTag clone = null;
 		try {
-			clone = (AbstractTag) super.clone();
+			return (AbstractTag) super.clone();
 		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
+			throw new CloneException(e);
 		}
-		return clone;
 	}
 
 	@Override

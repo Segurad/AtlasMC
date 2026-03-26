@@ -3,15 +3,15 @@ package de.atlasmc.core.node.io.protocol.play;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketInSetPlayerPosition;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInSetPlayerPosition implements PacketIO<PacketInSetPlayerPosition> {
+public class CorePacketInSetPlayerPosition implements PacketCodec<PacketInSetPlayerPosition> {
 
 	@Override
-	public void read(PacketInSetPlayerPosition packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketInSetPlayerPosition packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.x = in.readDouble();
 		packet.feetY = in.readDouble();
 		packet.z = in.readDouble();
@@ -19,7 +19,7 @@ public class CorePacketInSetPlayerPosition implements PacketIO<PacketInSetPlayer
 	}
 
 	@Override
-	public void write(PacketInSetPlayerPosition packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketInSetPlayerPosition packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		out.writeDouble(packet.x);
 		out.writeDouble(packet.feetY);
 		out.writeDouble(packet.z);

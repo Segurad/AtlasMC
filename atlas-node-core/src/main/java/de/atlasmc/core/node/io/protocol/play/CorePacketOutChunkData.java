@@ -5,7 +5,7 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.nbt.TagType;
 import de.atlasmc.nbt.io.NBTNIOReader;
@@ -13,10 +13,10 @@ import de.atlasmc.nbt.io.NBTNIOWriter;
 import de.atlasmc.node.io.protocol.play.PacketOutChunkData;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutChunkData implements PacketIO<PacketOutChunkData> {
+public class CorePacketOutChunkData implements PacketCodec<PacketOutChunkData> {
 
 	@Override
-	public void read(PacketOutChunkData packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutChunkData packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		// position
 		packet.chunkX = in.readInt();
 		packet.chunkZ = in.readInt();
@@ -49,7 +49,7 @@ public class CorePacketOutChunkData implements PacketIO<PacketOutChunkData> {
 	}
 
 	@Override
-	public void write(PacketOutChunkData packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutChunkData packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		// position
 		out.writeInt(packet.chunkX);
 		out.writeInt(packet.chunkZ);

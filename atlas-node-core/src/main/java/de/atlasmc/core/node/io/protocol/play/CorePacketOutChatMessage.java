@@ -9,7 +9,7 @@ import java.util.List;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatSignature;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.codec.UUIDCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
@@ -17,10 +17,10 @@ import de.atlasmc.node.io.protocol.play.PacketOutChatMessage;
 import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutChatMessage implements PacketIO<PacketOutChatMessage> {
+public class CorePacketOutChatMessage implements PacketCodec<PacketOutChatMessage> {
 
 	@Override
-	public void read(PacketOutChatMessage packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketOutChatMessage packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.sender = UUIDCodec.readUUID(in);
 		packet.index = readVarInt(in);
 		if (in.readBoolean()) {
@@ -61,7 +61,7 @@ public class CorePacketOutChatMessage implements PacketIO<PacketOutChatMessage> 
 	}
 
 	@Override
-	public void write(PacketOutChatMessage packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketOutChatMessage packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		UUIDCodec.writeUUID(packet.sender, out);
 		writeVarInt(packet.index, out);
 		if (packet.signature != null) {

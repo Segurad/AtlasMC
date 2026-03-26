@@ -7,8 +7,11 @@ import de.atlasmc.nbt.NBTHolder;
 import de.atlasmc.nbt.TagType;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.io.NBTWriter;
+import de.atlasmc.util.OpenCloneable;
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 
-public interface NBT extends Cloneable, NBTHolder {
+public interface NBT extends OpenCloneable, NBTHolder {
 	
 	static NBTCodec<NBT> rawFieldNBTCodec(List<TagType> types) {
 		return new RawFieldNBTCodec(types);
@@ -18,6 +21,7 @@ public interface NBT extends Cloneable, NBTHolder {
 	 * Returns the name key of this NBT
 	 * @return name key
 	 */
+	@Nullable
 	String getName();
 	
 	/**
@@ -26,6 +30,7 @@ public interface NBT extends Cloneable, NBTHolder {
 	 */
 	void setName(String name);
 	
+	@Nullable
 	Object getData();
 	
 	void setData(Object data);
@@ -34,8 +39,10 @@ public interface NBT extends Cloneable, NBTHolder {
 	 * Returns the type of this NBT
 	 * @return type
 	 */
+	@NotNull
 	TagType getType();
 	
+	@NotNull
 	NBT clone();
 	
 	default void toNBT(NBTWriter writer, boolean systemData) throws IOException {

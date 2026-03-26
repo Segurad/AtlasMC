@@ -8,7 +8,7 @@ import java.util.List;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutMapData;
 import de.atlasmc.node.map.MapIcon;
@@ -18,10 +18,10 @@ import de.atlasmc.util.enums.EnumUtil;
 import de.atlasmc.util.enums.EnumUtil.EnumData;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutMapData implements PacketIO<PacketOutMapData> {
+public class CorePacketOutMapData implements PacketCodec<PacketOutMapData> {
 
 	@Override
-	public void read(PacketOutMapData packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutMapData packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.mapID = readVarInt(in);
 		packet.scale = in.readByte();
 		packet.locked = in.readBoolean();
@@ -59,7 +59,7 @@ public class CorePacketOutMapData implements PacketIO<PacketOutMapData> {
 	}
 
 	@Override
-	public void write(PacketOutMapData packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutMapData packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.mapID, out);
 		out.writeByte(packet.scale);
 		out.writeBoolean(packet.locked);

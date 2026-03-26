@@ -7,17 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutCommandSuggestionsResponse;
 import de.atlasmc.node.io.protocol.play.PacketOutCommandSuggestionsResponse.Match;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutCommandSuggestionsResponse implements PacketIO<PacketOutCommandSuggestionsResponse> {
+public class CorePacketOutCommandSuggestionsResponse implements PacketCodec<PacketOutCommandSuggestionsResponse> {
 
 	@Override
-	public void read(PacketOutCommandSuggestionsResponse packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutCommandSuggestionsResponse packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.transactionID = readVarInt(in);
 		packet.start = readVarInt(in);
 		packet.length = readVarInt(in);
@@ -36,7 +36,7 @@ public class CorePacketOutCommandSuggestionsResponse implements PacketIO<PacketO
 	}
 
 	@Override
-	public void write(PacketOutCommandSuggestionsResponse packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutCommandSuggestionsResponse packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.transactionID, out);
 		writeVarInt(packet.start, out);
 		writeVarInt(packet.length, out);

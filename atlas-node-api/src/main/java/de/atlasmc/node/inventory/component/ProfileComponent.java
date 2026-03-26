@@ -1,7 +1,7 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.nbt.codec.NBTCodec;
-import de.atlasmc.network.player.PlayerProfile;
+import de.atlasmc.util.mojang.PlayerProfile;
 
 public interface ProfileComponent extends ItemComponent {
 

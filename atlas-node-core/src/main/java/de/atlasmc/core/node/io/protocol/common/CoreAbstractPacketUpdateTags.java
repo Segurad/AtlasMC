@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.common.AbstractPacketUpdateTags;
 import de.atlasmc.registry.ProtocolRegistry;
@@ -16,10 +16,10 @@ import de.atlasmc.util.map.ArrayListMultimap;
 import de.atlasmc.util.map.Multimap;
 import io.netty.buffer.ByteBuf;
 
-public abstract class CoreAbstractPacketUpdateTags<T extends AbstractPacketUpdateTags> implements PacketIO<T> {
+public abstract class CoreAbstractPacketUpdateTags<T extends AbstractPacketUpdateTags> implements PacketCodec<T> {
 
 	@Override
-	public void read(T packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(T packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		final int count = readVarInt(in);
 		if (count == 0) {
 			packet.tags = Multimap.of();
@@ -41,7 +41,7 @@ public abstract class CoreAbstractPacketUpdateTags<T extends AbstractPacketUpdat
 	}
 
 	@Override
-	public void write(T packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(T packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		Multimap<NamespacedKey, ProtocolTag<?>> tags = packet.tags;
 		if (tags == null || tags.isEmpty()) {
 			writeVarInt(0, out);

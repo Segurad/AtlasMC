@@ -67,7 +67,7 @@ public abstract class AbstractPluginChannelHandler implements PluginChannelHandl
 	 * @return
 	 */
 	protected PluginChannel createChannel(NamespacedKey channelName) {
-		return new SimplePluginChannel(this, channelName);
+		return new DefaultPluginChannel(this, channelName);
 	}
 	
 	/**

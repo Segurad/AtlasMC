@@ -4,7 +4,7 @@ import static de.atlasmc.io.PacketUtil.*;
 
 import java.io.IOException;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.codec.UUIDCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.event.player.PlayerResourcePackStatusEvent.ResourcePackStatus;
@@ -12,16 +12,16 @@ import de.atlasmc.node.io.protocol.configuration.ServerboundResourcePack;
 import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInResourcePack implements PacketIO<ServerboundResourcePack> {
+public class CorePacketInResourcePack implements PacketCodec<ServerboundResourcePack> {
 
 	@Override
-	public void read(ServerboundResourcePack packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(ServerboundResourcePack packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.uuid = UUIDCodec.readUUID(in);
 		packet.status = EnumUtil.getByID(ResourcePackStatus.class, readVarInt(in));
 	}
 
 	@Override
-	public void write(ServerboundResourcePack packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(ServerboundResourcePack packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		UUIDCodec.writeUUID(packet.uuid, out);
 		writeVarInt(packet.status.getID(), out);
 	}

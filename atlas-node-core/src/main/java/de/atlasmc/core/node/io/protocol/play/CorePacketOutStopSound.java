@@ -6,17 +6,17 @@ import java.io.IOException;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.SoundCategory;
 import de.atlasmc.node.io.protocol.play.PacketOutStopSound;
 import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutStopSound implements PacketIO<PacketOutStopSound> {
+public class CorePacketOutStopSound implements PacketCodec<PacketOutStopSound> {
 
 	@Override
-	public void read(PacketOutStopSound packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutStopSound packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		int flags = in.readByte();
 		if (flags == 0) 
 			return;
@@ -29,7 +29,7 @@ public class CorePacketOutStopSound implements PacketIO<PacketOutStopSound> {
 	}
 
 	@Override
-	public void write(PacketOutStopSound packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutStopSound packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		int flags = 0;
 		if (packet.category != null)
 			flags |= 0x1;

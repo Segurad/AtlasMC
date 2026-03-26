@@ -16,9 +16,9 @@ import de.atlasmc.node.SoundCategory;
 import de.atlasmc.node.entity.Entity;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Player;
-import de.atlasmc.node.entity.metadata.type.MetaData;
-import de.atlasmc.node.entity.metadata.type.MetaDataContainer;
-import de.atlasmc.node.entity.metadata.type.MetaDataField;
+import de.atlasmc.node.entity.metadata.MetaData;
+import de.atlasmc.node.entity.metadata.MetaDataContainer;
+import de.atlasmc.node.entity.metadata.MetaDataField;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.io.protocol.PlayerConnection;
 import de.atlasmc.node.io.protocol.play.PacketOutRemoveEntities;
@@ -729,6 +729,11 @@ public class CoreEntity implements Entity {
 	@Override
 	public Vector3d getVelocityUnsafe() {
 		return motion;
+	}
+	
+	@Override
+	public int getObjectData() {
+		return 0;
 	}
 	
 }

@@ -4,12 +4,19 @@ import java.util.UUID;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.io.connection.ServerSocketConnectionHandler;
+import de.atlasmc.network.player.AtlasPlayer;
 import de.atlasmc.node.io.socket.NodeSocket;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.concurrent.future.Future;
 
 public interface LoginHandler {
+	
+	/**
+	 * Returns the time stamp the login packet was received
+	 * @return time
+	 */
+	long getLoginTime();
 	
 	@NotNull
 	default NodeSocket getSocket() {
@@ -34,11 +41,35 @@ public interface LoginHandler {
 	UUID getLoginUUID();
 	
 	/**
+	 * Checks whether the given token matches the generated token
+	 * @return true if matches
+	 */
+	boolean isValidToken(byte[] token);
+	
+	/**
 	 * The message send for disconnect
 	 * @return message
 	 */
 	@Nullable
 	Chat getDisconnectMessage();
+	
+	/**
+	 * Sets whether or not this client should be authenticated when encryption is enabled
+	 * @param authentication
+	 */
+	void setAuthentication(boolean authentication);
+	
+	/**
+	 * Whether or not this client should be authenticated when encryption is enabled
+	 * @return true if should
+	 */
+	boolean hasAuthentication();
+	
+	/**
+	 * Whether or not this client is authenticated successfully
+	 * @return true if authenticated
+	 */
+	boolean isAuthenticated();
 	
 	/**
 	 * Whether or not the connection is closed
@@ -56,11 +87,13 @@ public interface LoginHandler {
 	
 	/**
 	 * Starts the encryption process
-	 * @param authentication whether or not mojang authentication should be performed
 	 * @return future
 	 */
 	@NotNull
-	Future<Boolean> enableEncryption(boolean authentication);
+	Future<Boolean> enableEncryption();
+	
+	@NotNull
+	Future<AtlasPlayer> getPlayer();
 	
 	/**
 	 * Whether or not encryption is enabled

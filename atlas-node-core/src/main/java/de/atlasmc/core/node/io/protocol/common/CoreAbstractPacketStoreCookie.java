@@ -6,15 +6,15 @@ import java.io.IOException;
 import java.net.ProtocolException;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.common.AbstractPacketCookieData;
 import io.netty.buffer.ByteBuf;
 
-public abstract class CoreAbstractPacketStoreCookie<T extends AbstractPacketCookieData> implements PacketIO<T> {
+public abstract class CoreAbstractPacketStoreCookie<T extends AbstractPacketCookieData> implements PacketCodec<T> {
 
 	@Override
-	public void write(T packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(T packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		NamespacedKey.STREAM_CODEC.serialize(packet.key, out, null);
 		if (packet.payload == null) {
 			writeVarInt(0, out);
@@ -25,7 +25,7 @@ public abstract class CoreAbstractPacketStoreCookie<T extends AbstractPacketCook
 	}
 	
 	@Override
-	public void read(T packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(T packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.key = NamespacedKey.STREAM_CODEC.deserialize(null, in, null);
 		int size = readVarInt(in);
 		if (size == 0)

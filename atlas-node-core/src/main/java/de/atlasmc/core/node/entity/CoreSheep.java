@@ -3,8 +3,8 @@ package de.atlasmc.core.node.entity;
 import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Sheep;
-import de.atlasmc.node.entity.metadata.type.MetaData;
-import de.atlasmc.node.entity.metadata.type.MetaDataField;
+import de.atlasmc.node.entity.metadata.MetaData;
+import de.atlasmc.node.entity.metadata.MetaDataField;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.util.enums.EnumUtil;
 

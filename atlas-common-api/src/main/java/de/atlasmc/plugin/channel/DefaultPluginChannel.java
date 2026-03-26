@@ -1,21 +1,22 @@
 package de.atlasmc.plugin.channel;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.atlasmc.NamespacedKey;
 import io.netty.buffer.ByteBuf;
 
-public class SimplePluginChannel implements PluginChannel {
+public class DefaultPluginChannel implements PluginChannel {
 	
 	private final AbstractPluginChannelHandler handler;
 	private final NamespacedKey name;
 	private final Collection<ChannelListener> listener;
 	private volatile boolean unregistered;
 	
-	public SimplePluginChannel(AbstractPluginChannelHandler handler, NamespacedKey name) {
-		this.handler = handler;
-		this.name = name;
+	public DefaultPluginChannel(AbstractPluginChannelHandler handler, NamespacedKey name) {
+		this.handler = Objects.requireNonNull(handler);
+		this.name = Objects.requireNonNull(name);
 		this.listener = new CopyOnWriteArrayList<>();
 	}
 	
@@ -25,18 +26,14 @@ public class SimplePluginChannel implements PluginChannel {
 	}
 	
 	@Override
-	public void unregister() {
+	public synchronized void unregister() {
 		if (unregistered)
 			return;
-		synchronized (this) {
-			if (unregistered)
-				return;
-			unregistered = true;
-			handler.unregisterChannel(this);
-			for (ChannelListener l : listener)
-				l.onUnregisterChannel(this);
-			listener.clear();
-		}
+		unregistered = true;
+		handler.unregisterChannel(this);
+		for (ChannelListener l : listener)
+			l.onUnregisterChannel(this);
+		listener.clear();
 	}
 	
 	@Override

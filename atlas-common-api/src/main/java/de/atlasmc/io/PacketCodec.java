@@ -9,7 +9,7 @@ import io.netty.buffer.ByteBuf;
 /**
  * Used for reading writing and creating of packets
  */
-public interface PacketIO<P extends Packet> {
+public interface PacketCodec<P extends Packet> {
 	
 	/**
 	 * Reads the packet from the given input.
@@ -18,7 +18,7 @@ public interface PacketIO<P extends Packet> {
 	 * @param con the connection this operation is performed for
 	 * @throws IOException
 	 */
-	void read(@NotNull P packet, @NotNull ByteBuf in, @NotNull ConnectionHandler con) throws IOException;
+	void deserialize(@NotNull P packet, @NotNull ByteBuf in, @NotNull ConnectionHandler con) throws IOException;
 	
 	/**
 	 * Writes the packet to the given output.
@@ -27,7 +27,7 @@ public interface PacketIO<P extends Packet> {
 	 * @param con the connection this operation is performed for
 	 * @throws IOException
 	 */
-	void write(@NotNull P packet, @NotNull ByteBuf out, @NotNull ConnectionHandler con) throws IOException;
+	void serialize(@NotNull P packet, @NotNull ByteBuf out, @NotNull ConnectionHandler con) throws IOException;
 	
 	/**
 	 * Creates a new packet

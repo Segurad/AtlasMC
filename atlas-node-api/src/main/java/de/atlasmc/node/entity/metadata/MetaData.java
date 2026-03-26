@@ -1,5 +1,6 @@
-package de.atlasmc.node.entity.metadata.type;
+package de.atlasmc.node.entity.metadata;
 
+import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.util.CloneException;
 
 /**

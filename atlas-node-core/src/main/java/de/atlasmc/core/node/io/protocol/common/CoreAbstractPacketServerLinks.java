@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.common.AbstractPacketServerLinks;
@@ -18,10 +18,10 @@ import de.atlasmc.util.enums.EnumUtil;
 import de.atlasmc.util.enums.EnumUtil.EnumData;
 import io.netty.buffer.ByteBuf;
 
-public abstract class CoreAbstractPacketServerLinks<T extends AbstractPacketServerLinks> implements PacketIO<T> {
+public abstract class CoreAbstractPacketServerLinks<T extends AbstractPacketServerLinks> implements PacketCodec<T> {
 
 	@Override
-	public void read(T packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(T packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		final int count = readVarInt(in);
 		if (count == 0) {
 			packet.links = List.of();
@@ -45,7 +45,7 @@ public abstract class CoreAbstractPacketServerLinks<T extends AbstractPacketServ
 	}
 
 	@Override
-	public void write(T packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(T packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		List<ServerLink> links = packet.links;
 		final int count = links.size();
 		final CodecContext context = con.getCodecContext();

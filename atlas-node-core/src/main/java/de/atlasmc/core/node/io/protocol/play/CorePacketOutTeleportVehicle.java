@@ -6,16 +6,16 @@ import static de.atlasmc.io.PacketUtil.writeVarInt;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutTeleportVehicle;
 import de.atlasmc.node.util.MathUtil;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutTeleportVehicle implements PacketIO<PacketOutTeleportVehicle> {
+public class CorePacketOutTeleportVehicle implements PacketCodec<PacketOutTeleportVehicle> {
 
 	@Override
-	public void read(PacketOutTeleportVehicle packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketOutTeleportVehicle packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.entityID = readVarInt(in);
 		packet.x = in.readDouble();
 		packet.y = in.readDouble();
@@ -30,7 +30,7 @@ public class CorePacketOutTeleportVehicle implements PacketIO<PacketOutTeleportV
 	}
 
 	@Override
-	public void write(PacketOutTeleportVehicle packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketOutTeleportVehicle packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		writeVarInt(packet.entityID, out);
 		out.writeDouble(packet.x);
 		out.writeDouble(packet.y);

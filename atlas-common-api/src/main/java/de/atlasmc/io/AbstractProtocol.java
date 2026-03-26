@@ -4,12 +4,12 @@ import java.util.Arrays;
 
 public abstract class AbstractProtocol<I extends PacketServerbound, O extends PacketClientbound> implements Protocol {
 	
-	private final PacketIO<?>[] packetIn;
-	private final PacketIO<?>[] packetOut;
+	private final PacketCodec<?>[] packetIn;
+	private final PacketCodec<?>[] packetOut;
 	private final int COUNT_IN;
 	private final int COUNT_OUT;
 	
-	protected AbstractProtocol(PacketIO<? extends I>[] in, PacketIO<? extends O>[] out) {
+	protected AbstractProtocol(PacketCodec<? extends I>[] in, PacketCodec<? extends O>[] out) {
 		sort(in);
 		sort(out);
 		COUNT_IN = in.length;
@@ -18,7 +18,7 @@ public abstract class AbstractProtocol<I extends PacketServerbound, O extends Pa
 		packetOut = out.clone();
 	}
 	
-	private void sort(PacketIO<?>[] ary) {
+	private void sort(PacketCodec<?>[] ary) {
 		Arrays.sort(ary, (a, b) -> {
 			if (a.getPacketID() == b.getPacketID())
 				throw new IllegalStateException("Packet id duplication \"" + a.getClass().getName() + "\" and \"" + b.getClass().getName() + "\"");
@@ -28,31 +28,31 @@ public abstract class AbstractProtocol<I extends PacketServerbound, O extends Pa
 	
 	@Override
 	public I createPacketServerbound(int id) {
-		PacketIO<? extends I> handler = getHandlerServerbound(id);
+		PacketCodec<? extends I> handler = getHandlerServerbound(id);
 		return handler != null ? handler.createPacketData() : null;
 	}
 
 	@Override
 	public O createPacketClientbound(int id) {
-		PacketIO<? extends O> handler = getHandlerClientbound(id);
+		PacketCodec<? extends O> handler = getHandlerClientbound(id);
 		return handler != null ? handler.createPacketData() : null;
 	}
 	
 	@Override
-	public PacketIO<? extends I> getHandlerServerbound(int id) {
+	public PacketCodec<? extends I> getHandlerServerbound(int id) {
 		if (id >= COUNT_IN || id < 0)
 			return null;
 		@SuppressWarnings("unchecked")
-		PacketIO<? extends I> packet = (PacketIO<? extends I>) packetIn[id];
+		PacketCodec<? extends I> packet = (PacketCodec<? extends I>) packetIn[id];
 		return packet;
 	}
 
 	@Override
-	public PacketIO<? extends O> getHandlerClientbound(int id) {
+	public PacketCodec<? extends O> getHandlerClientbound(int id) {
 		if (id >= COUNT_OUT || id < 0)
 			return null;
 		@SuppressWarnings("unchecked")
-		PacketIO<? extends O> packet = (PacketIO<? extends O>) packetOut[id];
+		PacketCodec<? extends O> packet = (PacketCodec<? extends O>) packetOut[id];
 		return packet;
 	}
 

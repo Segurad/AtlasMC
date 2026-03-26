@@ -5,22 +5,22 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketInJigsawGenerate;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInJigsawGenerate implements PacketIO<PacketInJigsawGenerate> {
+public class CorePacketInJigsawGenerate implements PacketCodec<PacketInJigsawGenerate> {
 	
 	@Override
-	public void read(PacketInJigsawGenerate packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketInJigsawGenerate packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.position = in.readLong();
 		packet.levels = readVarInt(in);
 		packet.keepJigsaws = in.readBoolean();
 	}
 
 	@Override
-	public void write(PacketInJigsawGenerate packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketInJigsawGenerate packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		out.writeLong(packet.position);
 		writeVarInt(packet.levels, out);
 		out.writeBoolean(packet.keepJigsaws);

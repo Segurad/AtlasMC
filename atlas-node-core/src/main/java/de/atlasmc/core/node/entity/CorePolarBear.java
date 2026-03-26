@@ -2,8 +2,8 @@ package de.atlasmc.core.node.entity;
 
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.PolarBear;
-import de.atlasmc.node.entity.metadata.type.MetaData;
-import de.atlasmc.node.entity.metadata.type.MetaDataField;
+import de.atlasmc.node.entity.metadata.MetaData;
+import de.atlasmc.node.entity.metadata.MetaDataField;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CorePolarBear extends CoreAgeableMob implements PolarBear {

@@ -5,15 +5,15 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutRecipeBookRemove;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutRecipeBookRemove implements PacketIO<PacketOutRecipeBookRemove> {
+public class CorePacketOutRecipeBookRemove implements PacketCodec<PacketOutRecipeBookRemove> {
 
 	@Override
-	public void read(PacketOutRecipeBookRemove packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketOutRecipeBookRemove packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		final int count = readVarInt(in);
 		if (count == 0)
 			return;
@@ -25,7 +25,7 @@ public class CorePacketOutRecipeBookRemove implements PacketIO<PacketOutRecipeBo
 	}
 
 	@Override
-	public void write(PacketOutRecipeBookRemove packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketOutRecipeBookRemove packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		int[] recipes = packet.recipes;
 		if (recipes == null || recipes.length == 0) {
 			writeVarInt(0, out);

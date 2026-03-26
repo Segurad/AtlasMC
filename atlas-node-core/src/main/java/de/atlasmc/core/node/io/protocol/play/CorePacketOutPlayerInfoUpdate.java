@@ -20,24 +20,24 @@ import java.util.UUID;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.PlayerChatSignatureData;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.ProtocolException;
 import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.codec.UUIDCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
-import de.atlasmc.network.player.ProfileProperty;
 import de.atlasmc.node.Gamemode;
 import de.atlasmc.node.io.protocol.play.PacketOutPlayerInfoUpdate;
 import de.atlasmc.node.io.protocol.play.PacketOutPlayerInfoUpdate.PlayerInfo;
 import de.atlasmc.util.EncryptionUtil;
 import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.enums.EnumUtil;
+import de.atlasmc.util.mojang.ProfileProperty;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutPlayerInfoUpdate implements PacketIO<PacketOutPlayerInfoUpdate> {
+public class CorePacketOutPlayerInfoUpdate implements PacketCodec<PacketOutPlayerInfoUpdate> {
 
 	@Override
-	public void read(PacketOutPlayerInfoUpdate packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutPlayerInfoUpdate packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		byte actions = in.readByte();
 		packet.actions = actions;
 		final int count = readVarInt(in);
@@ -95,7 +95,7 @@ public class CorePacketOutPlayerInfoUpdate implements PacketIO<PacketOutPlayerIn
 	}
 
 	@Override
-	public void write(PacketOutPlayerInfoUpdate packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutPlayerInfoUpdate packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		byte actions = packet.actions;
 		out.writeByte(actions);
 		List<PlayerInfo> infos = packet.info;

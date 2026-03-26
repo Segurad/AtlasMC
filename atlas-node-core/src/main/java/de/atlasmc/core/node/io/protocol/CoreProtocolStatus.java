@@ -5,21 +5,22 @@ import de.atlasmc.core.node.io.protocol.status.CorePacketInRequest;
 import de.atlasmc.core.node.io.protocol.status.CorePacketOutPong;
 import de.atlasmc.core.node.io.protocol.status.CorePacketOutResponse;
 import de.atlasmc.io.AbstractProtocol;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.PacketServerbound;
 import de.atlasmc.io.PacketListener;
 import de.atlasmc.io.PacketClientbound;
 import de.atlasmc.io.connection.ConnectionHandler;
+import de.atlasmc.node.io.protocol.ProtocolAdapter;
 import de.atlasmc.node.io.protocol.ProtocolStatus;
 
 public class CoreProtocolStatus extends AbstractProtocol<PacketServerbound, PacketClientbound> implements ProtocolStatus {
 	
 	@SuppressWarnings("unchecked")
 	public CoreProtocolStatus() {
-		super(new PacketIO[] {
+		super(new PacketCodec[] {
 			new CorePacketInRequest(),
 			new CorePacketInPing()
-		}, new PacketIO[] {
+		}, new PacketCodec[] {
 			new CorePacketOutResponse(),
 			new CorePacketOutPong()
 		});
@@ -27,7 +28,7 @@ public class CoreProtocolStatus extends AbstractProtocol<PacketServerbound, Pack
 	
 	@Override
 	public int getVersion() {
-		return CoreProtocolAdapter.VERSION;
+		return ProtocolAdapter.VERSION;
 	}
 
 	@Override

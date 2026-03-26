@@ -12,7 +12,7 @@ import de.atlasmc.core.node.io.protocol.CoreProtocolConfiguration;
 import de.atlasmc.core.node.io.protocol.CoreProtocolLogin;
 import de.atlasmc.core.node.io.protocol.CoreProtocolPlay;
 import de.atlasmc.core.node.io.protocol.CoreProtocolStatus;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.Protocol;
 import de.atlasmc.node.io.protocol.configuration.PacketConfiguration;
 import de.atlasmc.node.io.protocol.login.PacketLogin;
@@ -49,7 +49,7 @@ public class ProtocolTest {
 		
 		final int packetCountIn = packetsIn.size();
 		for (int i = 0; i < packetCountIn; i++) {
-			PacketIO<?> handler = null;
+			PacketCodec<?> handler = null;
 			try {
 				handler = protocol.getHandlerServerbound(i);
 			} catch(Exception e) {}
@@ -59,7 +59,7 @@ public class ProtocolTest {
 		}
 		final int packetCountOut = packetsOut.size();
 		for (int i = 0; i < packetCountOut; i++) {
-			PacketIO<?> handler = null;
+			PacketCodec<?> handler = null;
 			try {
 				handler = protocol.getHandlerClientbound(i);
 			} catch(Exception e) {}

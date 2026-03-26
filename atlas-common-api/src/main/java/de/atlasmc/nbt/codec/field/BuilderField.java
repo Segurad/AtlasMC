@@ -10,6 +10,10 @@ import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.util.Builder;
 import de.atlasmc.util.codec.CodecContext;
 
+/**
+ * Pseudo field used as placeholder field in Codec construction
+ * @param <T>
+ */
 public class BuilderField<T> extends NBTField<T> implements Builder<NBTField<T>> {
 
 	private final Builder<NBTField<T>> builder;

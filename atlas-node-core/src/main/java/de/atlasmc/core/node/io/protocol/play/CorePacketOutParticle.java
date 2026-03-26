@@ -3,16 +3,16 @@ package de.atlasmc.core.node.io.protocol.play;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutParticle;
 import de.atlasmc.node.world.particle.Particle;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutParticle implements PacketIO<PacketOutParticle> {
+public class CorePacketOutParticle implements PacketCodec<PacketOutParticle> {
 
 	@Override
-	public void read(PacketOutParticle packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutParticle packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.longDistance = in.readBoolean();
 		packet.x = in.readDouble();
 		packet.y = in.readDouble();
@@ -26,7 +26,7 @@ public class CorePacketOutParticle implements PacketIO<PacketOutParticle> {
 	}
 
 	@Override
-	public void write(PacketOutParticle packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutParticle packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		out.writeBoolean(packet.longDistance);
 		out.writeDouble(packet.x);
 		out.writeDouble(packet.y);

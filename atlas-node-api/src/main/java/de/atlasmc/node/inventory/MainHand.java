@@ -1,10 +1,13 @@
 package de.atlasmc.node.inventory;
 
-public enum MainHand {
+import de.atlasmc.IDHolder;
+
+public enum MainHand implements IDHolder {
 	
 	LEFT,
 	RIGHT;
 	
+	@Override
 	public int getID() {
 		return ordinal();
 	}

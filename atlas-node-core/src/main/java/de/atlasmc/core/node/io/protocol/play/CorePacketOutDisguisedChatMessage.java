@@ -6,16 +6,16 @@ import java.io.IOException;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutDisguisedChatMessage;
 import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutDisguisedChatMessage implements PacketIO<PacketOutDisguisedChatMessage> {
+public class CorePacketOutDisguisedChatMessage implements PacketCodec<PacketOutDisguisedChatMessage> {
 
 	@Override
-	public void read(PacketOutDisguisedChatMessage packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketOutDisguisedChatMessage packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		final CodecContext context = con.getCodecContext();
 		packet.message = Chat.STREAM_CODEC.deserialize(in, context);
 		packet.chatType = readVarInt(in);
@@ -25,7 +25,7 @@ public class CorePacketOutDisguisedChatMessage implements PacketIO<PacketOutDisg
 	}
 
 	@Override
-	public void write(PacketOutDisguisedChatMessage packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketOutDisguisedChatMessage packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		final CodecContext context = con.getCodecContext();
 		Chat.STREAM_CODEC.serialize(packet.message, out, context);
 		writeVarInt(packet.chatType, out);

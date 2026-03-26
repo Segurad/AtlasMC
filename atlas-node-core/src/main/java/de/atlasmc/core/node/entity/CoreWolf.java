@@ -3,7 +3,7 @@ package de.atlasmc.core.node.entity;
 import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Wolf;
-import de.atlasmc.node.entity.metadata.type.MetaDataField;
+import de.atlasmc.node.entity.metadata.MetaDataField;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreWolf extends CoreTameable implements Wolf {

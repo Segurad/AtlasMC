@@ -5,21 +5,21 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketInQueryEntityTag;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInQueryEntityTag implements PacketIO<PacketInQueryEntityTag> {
+public class CorePacketInQueryEntityTag implements PacketCodec<PacketInQueryEntityTag> {
 
 	@Override
-	public void read(PacketInQueryEntityTag packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketInQueryEntityTag packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.transactionID = readVarInt(in);
 		packet.entityID = readVarInt(in);
 	}
 
 	@Override
-	public void write(PacketInQueryEntityTag packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketInQueryEntityTag packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.transactionID, out);
 		writeVarInt(packet.entityID, out);
 	}

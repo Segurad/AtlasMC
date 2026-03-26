@@ -5,21 +5,21 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.inventory.EquipmentSlot;
 import de.atlasmc.node.io.protocol.play.PacketOutOpenBook;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutOpenBook implements PacketIO<PacketOutOpenBook> {
+public class CorePacketOutOpenBook implements PacketCodec<PacketOutOpenBook> {
 
 	@Override
-	public void read(PacketOutOpenBook packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutOpenBook packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.hand = readVarInt(in) == 1 ? EquipmentSlot.OFF_HAND : EquipmentSlot.MAIN_HAND;
 	}
 
 	@Override
-	public void write(PacketOutOpenBook packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutOpenBook packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.hand == EquipmentSlot.MAIN_HAND ? 0 : 1, out);
 	}
 

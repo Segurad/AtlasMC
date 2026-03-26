@@ -5,15 +5,15 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutSynchronizePlayerPosition;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutSynchronizePlayerPosition implements PacketIO<PacketOutSynchronizePlayerPosition> {
+public class CorePacketOutSynchronizePlayerPosition implements PacketCodec<PacketOutSynchronizePlayerPosition> {
 
 	@Override
-	public void read(PacketOutSynchronizePlayerPosition packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutSynchronizePlayerPosition packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.teleportID = readVarInt(in);
 		packet.x = in.readDouble();
 		packet.y = in.readDouble();
@@ -27,7 +27,7 @@ public class CorePacketOutSynchronizePlayerPosition implements PacketIO<PacketOu
 	}
 
 	@Override
-	public void write(PacketOutSynchronizePlayerPosition packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutSynchronizePlayerPosition packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.teleportID, out);
 		out.writeDouble(packet.x);
 		out.writeDouble(packet.y);

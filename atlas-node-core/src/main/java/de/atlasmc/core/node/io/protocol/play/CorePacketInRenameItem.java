@@ -3,21 +3,21 @@ package de.atlasmc.core.node.io.protocol.play;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketInRenameItem;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInRenameItem implements PacketIO<PacketInRenameItem> {
+public class CorePacketInRenameItem implements PacketCodec<PacketInRenameItem> {
 	
 	@Override
-	public void read(PacketInRenameItem packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketInRenameItem packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		 packet.itemName =StringCodec.readString(in);
 	}
 
 	@Override
-	public void write(PacketInRenameItem packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketInRenameItem packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		StringCodec.writeString(packet.itemName, out);
 	}
 	

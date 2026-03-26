@@ -5,15 +5,15 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutDebugSample;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutDebugSample implements PacketIO<PacketOutDebugSample> {
+public class CorePacketOutDebugSample implements PacketCodec<PacketOutDebugSample> {
 
 	@Override
-	public void read(PacketOutDebugSample packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketOutDebugSample packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		final int length = readVarInt(in);
 		long[] samples = new long[length];
 		for (int i = 0; i < length; i++) {
@@ -24,7 +24,7 @@ public class CorePacketOutDebugSample implements PacketIO<PacketOutDebugSample> 
 	}
 
 	@Override
-	public void write(PacketOutDebugSample packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketOutDebugSample packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		long[] samples = packet.samples;
 		final int length = samples.length;
 		for (int i = 0; i < length; i++) {

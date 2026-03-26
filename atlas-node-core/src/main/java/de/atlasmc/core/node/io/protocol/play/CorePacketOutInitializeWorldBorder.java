@@ -5,15 +5,15 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutInitializeWorldBorder;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutInitializeWorldBorder implements PacketIO<PacketOutInitializeWorldBorder> {
+public class CorePacketOutInitializeWorldBorder implements PacketCodec<PacketOutInitializeWorldBorder> {
 
 	@Override
-	public void read(PacketOutInitializeWorldBorder packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketOutInitializeWorldBorder packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.x = in.readDouble();
 		packet.z = in.readDouble();
 		packet.oldDiameter = in.readDouble();
@@ -25,7 +25,7 @@ public class CorePacketOutInitializeWorldBorder implements PacketIO<PacketOutIni
 	}
 
 	@Override
-	public void write(PacketOutInitializeWorldBorder packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketOutInitializeWorldBorder packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		out.writeDouble(packet.x);
 		out.writeDouble(packet.z);
 		out.writeDouble(packet.oldDiameter);

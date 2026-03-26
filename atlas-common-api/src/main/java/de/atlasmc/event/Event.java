@@ -6,6 +6,7 @@ public abstract class Event {
 	 * Whether or not this event is asynchronous. If true this event may still be called in the right sync context.
 	 */
 	public final boolean isAsync;
+	
 	/**
 	 * Whether or not this event is handled.
 	 * If a event is marked as handled the outcome of this event was already handled.

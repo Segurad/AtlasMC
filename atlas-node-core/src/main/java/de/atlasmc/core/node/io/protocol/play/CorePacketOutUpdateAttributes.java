@@ -9,7 +9,7 @@ import java.util.List;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.attribute.Attribute;
 import de.atlasmc.node.attribute.AttributeInstance;
@@ -20,10 +20,10 @@ import de.atlasmc.util.enums.EnumUtil;
 import de.atlasmc.util.enums.EnumUtil.EnumData;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutUpdateAttributes implements PacketIO<PacketOutUpdateAttributes> {
+public class CorePacketOutUpdateAttributes implements PacketCodec<PacketOutUpdateAttributes> {
 	
 	@Override
-	public void read(PacketOutUpdateAttributes packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutUpdateAttributes packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.entityID = readVarInt(in);
 		final int attributeCount = in.readInt();
 		List<AttributeInstance> attributes = new ArrayList<>(attributeCount);
@@ -50,7 +50,7 @@ public class CorePacketOutUpdateAttributes implements PacketIO<PacketOutUpdateAt
 	}
 
 	@Override
-	public void write(PacketOutUpdateAttributes packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutUpdateAttributes packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.entityID, out);
 		List<AttributeInstance> attributes = packet.attributes;
 		final int size = attributes.size();

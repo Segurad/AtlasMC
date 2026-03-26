@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Piglin;
-import de.atlasmc.node.entity.metadata.type.MetaDataField;
+import de.atlasmc.node.entity.metadata.MetaDataField;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.ItemStack;
 

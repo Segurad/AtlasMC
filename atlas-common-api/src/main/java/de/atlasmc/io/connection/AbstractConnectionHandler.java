@@ -13,20 +13,19 @@ import de.atlasmc.log.Log;
 import de.atlasmc.util.codec.CodecContext;
 
 public abstract class AbstractConnectionHandler implements ConnectionHandler {
+	
+	protected static final PacketListener[] EMPTY = new PacketListener[0];
 
 	protected final Log log;
 	protected volatile Protocol protocol;
 	protected final Object listenerLock = new Object();
-	private int listenerCount;
-	private PacketListener[] listeners;
+	private volatile PacketListener[] listeners = EMPTY;
 	protected volatile int compressionThreshold;
-	private volatile IOExceptionHandler errHandler;
+	private volatile IOExceptionHandler errHandler = IOExceptionHandler.UNHANDLED;
 	
 	public AbstractConnectionHandler(Log log, Protocol protocol) {
 		this.log = Objects.requireNonNull(log);
 		this.protocol = Objects.requireNonNull(protocol);
-		this.listeners = new PacketListener[2];
-		this.errHandler = IOExceptionHandler.UNHANDLED;
 	}
 
 	@Override
@@ -71,15 +70,10 @@ public abstract class AbstractConnectionHandler implements ConnectionHandler {
 		if (listener == null)
 			throw new IllegalArgumentException("Listener can not be null!");
 		synchronized (listenerLock) {
-			for (int i = 0; i < listenerCount; i++) { // check present
-				if (listeners[i] == listener)
-					return false;
-			}
-			if (listeners.length == listenerCount) { // grow listener array
-				listeners = Arrays.copyOf(listeners, listenerCount << 1);
-			}
-			// add listener
-			listeners[listenerCount++] = listener;
+			PacketListener[] listeners = this.listeners;
+			listeners = Arrays.copyOf(listeners, listeners.length + 1);
+			listeners[listeners.length - 1] = listener;
+			this.listeners = listeners;
 			log.debug("Registered packet listener: {}", listener.getClass().getSimpleName());
 			return true;
 		}
@@ -90,13 +84,20 @@ public abstract class AbstractConnectionHandler implements ConnectionHandler {
 		if (listener == null)
 			return false;
 		synchronized (listenerLock) {
-			for (int i = 0; i < listenerCount; i++) {
+			PacketListener[] listeners = this.listeners;
+			if (listeners == null)
+				return false;
+			final int count = listeners.length;
+			for (int i = 0; i < count; i++) {
 				if (listeners[i] != listener)
 					continue;
-				listeners[i] = null;
-				listenerCount--;
-				if (listenerCount > i)
-					System.arraycopy(listeners, i+1, listeners, i, listenerCount);
+				final int newCount = count - 1;
+				if (newCount == 0) {
+					this.listeners = EMPTY;
+				} else {
+					PacketListener[] newListeners = Arrays.copyOf(listeners, newCount);
+					System.arraycopy(listeners, i+1, newListeners, i, newCount - i);
+				}
 				return true;
 			}
 			return false;
@@ -106,11 +107,7 @@ public abstract class AbstractConnectionHandler implements ConnectionHandler {
 	@Override
 	public void removeAllPacketListener() {
 		synchronized (listenerLock) {
-			for (int i = 0; i < listenerCount; i++) {
-				listeners[i].handleUnregister();
-				listeners[i] = null;
-			}
-			listenerCount = 0;
+			listeners = EMPTY;
 		}
 	}
 
@@ -144,36 +141,28 @@ public abstract class AbstractConnectionHandler implements ConnectionHandler {
 	}
 
 	@Override
-	public void handlePacket(Packet packet) throws IOException {
-		synchronized (listenerLock) {
-			for (int i = 0; i < listenerCount; i++)
-				listeners[i].handlePacket(packet);
+	public void handlePacket(final Packet packet) throws IOException {
+		final PacketListener[] listeners = this.listeners;
+		if (listeners == null)
+			return;
+		final int count = listeners.length;
+		for (int i = 0; i < count; i++) {
+			listeners[i].handlePacket(packet);
 		}
 	}
 
 	@Override
-	public void handleSyncPackets(Log logger) {
-		if (listenerCount == 0)
+	public void handleSyncPackets(final Log logger) {
+		final PacketListener[] listeners = this.listeners;
+		if (listeners == null)
 			return;
-		Protocol protocol = this.protocol;
-		int index = 0;
-		do {
-			PacketListener nextListener;
-			synchronized (listenerLock) { // search next listener
-				if (this.protocol != protocol)
-					return; // protocol has changed so cancel execution
-				do {
-					nextListener = listeners[index++];
-					if (nextListener == null)
-						return;
-					if (nextListener.hasSyncPackets())
-						break;
-					if (index == -1)
-						return;
-				} while (true);
-			}
-			nextListener.handleSyncPackets(logger); // handle packet without locking listeners
-		} while (index != -1);
+		final int count = listeners.length;
+		for (int i = 0; i < count; i++) {
+			final PacketListener listener = listeners[i];
+			if (!listener.hasSyncPackets())
+				continue;
+			listener.handleSyncPackets(logger);
+		}
 	}
 	
 	@Override

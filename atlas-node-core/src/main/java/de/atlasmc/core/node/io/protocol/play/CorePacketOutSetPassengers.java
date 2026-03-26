@@ -5,15 +5,15 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutSetPassengers;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutSetPassengers implements PacketIO<PacketOutSetPassengers> {
+public class CorePacketOutSetPassengers implements PacketCodec<PacketOutSetPassengers> {
 
 	@Override
-	public void read(PacketOutSetPassengers packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutSetPassengers packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.vehicleID = readVarInt(in);
 		final int size = readVarInt(in);
 		int[] passengers = new int[size];
@@ -24,7 +24,7 @@ public class CorePacketOutSetPassengers implements PacketIO<PacketOutSetPassenge
 	}
 
 	@Override
-	public void write(PacketOutSetPassengers packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutSetPassengers packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.vehicleID, out);
 		writeVarInt(packet.passengers.length, out);
 		for (int i : packet.passengers) {

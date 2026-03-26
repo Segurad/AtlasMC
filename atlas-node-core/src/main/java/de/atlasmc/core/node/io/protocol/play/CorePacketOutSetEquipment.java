@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.inventory.EquipmentSlot;
 import de.atlasmc.node.inventory.ItemStack;
@@ -17,10 +17,10 @@ import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutSetEquipment implements PacketIO<PacketOutSetEquipment> {
+public class CorePacketOutSetEquipment implements PacketCodec<PacketOutSetEquipment> {
 
 	@Override
-	public void read(PacketOutSetEquipment packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutSetEquipment packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.entityID = readVarInt(in);
 		List<Pair<EquipmentSlot, ItemStack>> slots = new ArrayList<>();
 		final CodecContext context = handler.getCodecContext();
@@ -36,7 +36,7 @@ public class CorePacketOutSetEquipment implements PacketIO<PacketOutSetEquipment
 	}
 	
 	@Override
-	public void write(PacketOutSetEquipment packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutSetEquipment packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.entityID, out);
 		List<Pair<EquipmentSlot, ItemStack>> slots = packet.slots;
 		final int size = slots.size();

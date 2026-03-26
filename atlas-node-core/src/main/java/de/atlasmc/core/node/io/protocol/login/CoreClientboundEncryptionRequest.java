@@ -5,16 +5,16 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.login.ClientboundEncryptionRequest;
 import io.netty.buffer.ByteBuf;
 
-public class CoreClientboundEncryptionRequest implements PacketIO<ClientboundEncryptionRequest> {
+public class CoreClientboundEncryptionRequest implements PacketCodec<ClientboundEncryptionRequest> {
 
 	@Override
-	public void read(ClientboundEncryptionRequest packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(ClientboundEncryptionRequest packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.serverID = StringCodec.readString(in);
 		int length = readVarInt(in);
 		byte[] publicKey = new byte[length];
@@ -28,7 +28,7 @@ public class CoreClientboundEncryptionRequest implements PacketIO<ClientboundEnc
 	}
 
 	@Override
-	public void write(ClientboundEncryptionRequest packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(ClientboundEncryptionRequest packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		StringCodec.writeString(packet.serverID, out);
 		writeVarInt(packet.publicKey.length, out);
 		out.writeBytes(packet.publicKey);

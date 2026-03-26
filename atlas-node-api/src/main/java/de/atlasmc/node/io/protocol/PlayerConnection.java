@@ -8,6 +8,7 @@ import org.joml.Vector3d;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.Messageable;
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.log.Log;
 import de.atlasmc.network.AtlasNode;
 import de.atlasmc.node.NodePlayer;
@@ -33,7 +34,7 @@ public interface PlayerConnection extends Messageable {
 
 	ProtocolAdapter getProtocolAdapter();
 	
-	ProtocolPlay getProtocol();
+	ConnectionHandler getHandler();
 
 	/**
 	 * 
@@ -54,12 +55,27 @@ public interface PlayerConnection extends Messageable {
 	 */
 	Player getPlayer();
 	
+	/**
+	 * The node player associated with the connection
+	 * @return
+	 */
 	NodePlayer getNodePlayer();
 	
+	/**
+	 * Whether or not the last keep alive ping has a response
+	 * @return true if response
+	 */
 	boolean hasKeepAliveResponse();
 	
+	/**
+	 * The last time a keep alive confirmation was received
+	 * @return time
+	 */
 	long getLastKeepAlive();
 	
+	/**
+	 * Sends a keep alive to the client
+	 */
 	void sendKeepAlive();
 	
 	/**

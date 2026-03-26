@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.opentest4j.MultipleFailuresError;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.PacketServerbound;
 import de.atlasmc.io.PacketClientbound;
 import de.atlasmc.node.io.protocol.configuration.PacketConfiguration;
@@ -45,7 +45,7 @@ public class PacketIOPresentTest {
 		HashMap<Integer, String> packetIDsIn = ids[0];
 		HashMap<Integer, String> packetIDsOut = ids[1];
 		ReflectionUtil.getClassesInPacket(pathToPacketPackage, (ioClass) -> {
-			if (!PacketIO.class.isAssignableFrom(ioClass))
+			if (!PacketCodec.class.isAssignableFrom(ioClass))
 				return;
 			Method m = null;
 			try {

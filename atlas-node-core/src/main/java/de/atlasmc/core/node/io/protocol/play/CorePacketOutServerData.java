@@ -4,16 +4,16 @@ import java.io.IOException;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutServerData;
 import io.netty.buffer.ByteBuf;
 import static de.atlasmc.io.PacketUtil.*;
 
-public class CorePacketOutServerData implements PacketIO<PacketOutServerData> {
+public class CorePacketOutServerData implements PacketCodec<PacketOutServerData> {
 
 	@Override
-	public void read(PacketOutServerData packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketOutServerData packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.motd = Chat.STREAM_CODEC.deserialize(in, con.getCodecContext());
 		if (in.readBoolean()) {
 			int size = readVarInt(in);
@@ -23,7 +23,7 @@ public class CorePacketOutServerData implements PacketIO<PacketOutServerData> {
 	}
 
 	@Override
-	public void write(PacketOutServerData packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketOutServerData packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		Chat.STREAM_CODEC.serialize(packet.motd, out, con.getCodecContext());
 		if (packet.icon != null) {
 			out.writeBoolean(true);

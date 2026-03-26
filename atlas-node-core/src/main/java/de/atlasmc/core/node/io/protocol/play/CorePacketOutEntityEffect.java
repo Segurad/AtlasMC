@@ -6,16 +6,16 @@ import static de.atlasmc.io.PacketUtil.writeVarInt;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutEntityEffect;
 import de.atlasmc.node.potion.PotionEffectType;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutEntityEffect implements PacketIO<PacketOutEntityEffect> {
+public class CorePacketOutEntityEffect implements PacketCodec<PacketOutEntityEffect> {
 
 	@Override
-	public void read(PacketOutEntityEffect packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutEntityEffect packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.entityID = readVarInt(in);
 		packet.effect = PotionEffectType.getByID(in.readByte());
 		packet.amplifier = in.readByte();
@@ -24,7 +24,7 @@ public class CorePacketOutEntityEffect implements PacketIO<PacketOutEntityEffect
 	}
 
 	@Override
-	public void write(PacketOutEntityEffect packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutEntityEffect packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.entityID, out);
 		out.writeByte(packet.effect.getID());
 		out.writeByte(packet.amplifier);

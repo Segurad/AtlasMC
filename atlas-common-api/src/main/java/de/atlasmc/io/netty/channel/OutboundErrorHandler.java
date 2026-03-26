@@ -4,6 +4,9 @@ import de.atlasmc.log.Log;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 
+/**
+ * Channel handler for handling errors
+ */
 public class OutboundErrorHandler extends ChannelOutboundHandlerAdapter {
 
 	private final Log log;

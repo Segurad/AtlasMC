@@ -1,7 +1,8 @@
-package de.atlasmc.node.entity.metadata.type;
+package de.atlasmc.node.entity.metadata;
 
 import java.util.Iterator;
 
+import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.util.iterator.ArrayIterator;
 
 /**

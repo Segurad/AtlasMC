@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutRecipeBookAdd;
 import de.atlasmc.node.io.protocol.play.PacketOutRecipeBookAdd.RecipeData;
@@ -15,10 +15,10 @@ import de.atlasmc.node.recipe.Ingredient;
 import de.atlasmc.node.recipe.RecipeCategory;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutRecipeBookAdd implements PacketIO<PacketOutRecipeBookAdd> {
+public class CorePacketOutRecipeBookAdd implements PacketCodec<PacketOutRecipeBookAdd> {
 
 	@Override
-	public void read(PacketOutRecipeBookAdd packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketOutRecipeBookAdd packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		final int count = readVarInt(in);
 		if (count == 0) {
 			packet.recipes = List.of();
@@ -46,7 +46,7 @@ public class CorePacketOutRecipeBookAdd implements PacketIO<PacketOutRecipeBookA
 	}
 
 	@Override
-	public void write(PacketOutRecipeBookAdd packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketOutRecipeBookAdd packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		List<RecipeData> recipes = packet.recipes;
 		if (recipes == null || recipes.isEmpty()) {
 			writeVarInt(0, out);

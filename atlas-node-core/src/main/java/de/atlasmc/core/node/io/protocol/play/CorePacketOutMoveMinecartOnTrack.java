@@ -7,17 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutMoveMinecartOnTrack;
 import de.atlasmc.node.io.protocol.play.PacketOutMoveMinecartOnTrack.Step;
 import de.atlasmc.node.util.MathUtil;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutMoveMinecartOnTrack implements PacketIO<PacketOutMoveMinecartOnTrack> {
+public class CorePacketOutMoveMinecartOnTrack implements PacketCodec<PacketOutMoveMinecartOnTrack> {
 
 	@Override
-	public void read(PacketOutMoveMinecartOnTrack packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketOutMoveMinecartOnTrack packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.entityID = readVarInt(in);
 		final int count = readVarInt(in);
 		if (count == 0) {
@@ -42,7 +42,7 @@ public class CorePacketOutMoveMinecartOnTrack implements PacketIO<PacketOutMoveM
 	}
 
 	@Override
-	public void write(PacketOutMoveMinecartOnTrack packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketOutMoveMinecartOnTrack packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		writeVarInt(packet.entityID, out);
 		List<Step> steps = packet.steps;
 		if (steps == null || steps.isEmpty()) {

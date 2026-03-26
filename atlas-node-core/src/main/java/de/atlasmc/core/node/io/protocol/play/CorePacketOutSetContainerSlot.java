@@ -5,16 +5,16 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.io.protocol.play.PacketOutSetContainerSlot;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutSetContainerSlot implements PacketIO<PacketOutSetContainerSlot> {
+public class CorePacketOutSetContainerSlot implements PacketCodec<PacketOutSetContainerSlot> {
 
 	@Override
-	public void read(PacketOutSetContainerSlot packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutSetContainerSlot packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.windowID = in.readByte();
 		packet.stateID = readVarInt(in);
 		packet.slot = in.readShort();
@@ -22,7 +22,7 @@ public class CorePacketOutSetContainerSlot implements PacketIO<PacketOutSetConta
 	}
 
 	@Override
-	public void write(PacketOutSetContainerSlot packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutSetContainerSlot packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		out.writeByte(packet.windowID);
 		writeVarInt(packet.stateID, out);
 		out.writeShort(packet.slot);

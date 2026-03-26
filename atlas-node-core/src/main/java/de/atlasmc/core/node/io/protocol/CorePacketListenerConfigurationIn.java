@@ -53,7 +53,7 @@ public class CorePacketListenerConfigurationIn extends CoreAbstractPacketListene
 				HandlerList.callEvent(new PlayerChangeDisplayedSkinPartsEvent(con.getPlayer(), skinparts, oldSkinParts));
 			}
 			// Main Hand
-			int mainHand = packet.mainHand;
+			var mainHand = packet.mainHand;
 			if (mainHand != settings.getMainHand()) {
 				settings.setMainHand(mainHand);
 				HandlerList.callEvent(new PlayerMainHandChangeEvent(con.getPlayer(), mainHand));

@@ -5,15 +5,15 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutSetEntityVelocity;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutSetEntityVelocity implements PacketIO<PacketOutSetEntityVelocity> {
+public class CorePacketOutSetEntityVelocity implements PacketCodec<PacketOutSetEntityVelocity> {
 
 	@Override
-	public void read(PacketOutSetEntityVelocity packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutSetEntityVelocity packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.entityID = readVarInt(in);
 		packet.x = ((double)in.readShort())/8000d;
 		packet.y = ((double)in.readShort())/8000d;
@@ -21,7 +21,7 @@ public class CorePacketOutSetEntityVelocity implements PacketIO<PacketOutSetEnti
 	}
 
 	@Override
-	public void write(PacketOutSetEntityVelocity packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutSetEntityVelocity packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.entityID, out);
 		out.writeShort((int) (packet.x*8000));
 		out.writeShort((int) (packet.y*8000));

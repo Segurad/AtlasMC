@@ -3,6 +3,7 @@ package de.atlasmc.core.node.io.protocol;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import org.joml.Vector3d;
 
@@ -30,7 +31,6 @@ import de.atlasmc.node.io.protocol.PacketProtocol;
 import de.atlasmc.node.io.protocol.PlayerConnection;
 import de.atlasmc.node.io.protocol.PlayerSettings;
 import de.atlasmc.node.io.protocol.ProtocolAdapter;
-import de.atlasmc.node.io.protocol.ProtocolPlay;
 import de.atlasmc.node.io.protocol.play.PacketOutDisconnect;
 import de.atlasmc.node.io.protocol.play.PacketOutKeepAlive;
 import de.atlasmc.node.io.protocol.play.PacketOutRecipeBookSettings;
@@ -44,6 +44,7 @@ import de.atlasmc.node.recipe.RecipeBook;
 import de.atlasmc.node.server.LocalServer;
 import de.atlasmc.plugin.channel.PluginChannelHandler;
 import de.atlasmc.util.annotation.ThreadSafe;
+import de.atlasmc.util.enums.EnumUtil;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 
@@ -52,13 +53,11 @@ public class CorePlayerConnection implements PlayerConnection {
 	private Player player;
 	private final NodePlayer aplayer;
 	private final ConnectionHandler connection;
-	private final ProtocolAdapter protocol;
-	private final ProtocolPlay protocolPlay;
 	private LocalServer server;
 	private final PluginChannelHandler pluginChannelHandler;
-	
+	private final ProtocolAdapter protocol;
 	private volatile boolean waitingForProtocolChange;
-	private volatile boolean inConfiguration;
+	
 	private byte invID;
 	private int teleportID;
 	private boolean teleportConfirmed = true;
@@ -96,22 +95,16 @@ public class CorePlayerConnection implements PlayerConnection {
 	
 	public CorePlayerConnection(AtlasPlayer player, ConnectionHandler connection, ProtocolAdapter protocol) {
 		this.aplayer = new CoreNodePlayer(this, player);
-		this.connection = connection;
-		this.protocol = protocol;
-		this.inConfiguration = true;
-		this.protocolPlay = protocol.getPlayProtocol();
-		this.settings = new CorePlayerSettings();
+		this.connection = Objects.requireNonNull(connection);
+		this.settings = new PlayerSettings();
+		this.protocol = Objects.requireNonNull(protocol);
 		this.pluginChannelHandler = new CorePlayerPluginChannelHandler(this);
-		CoreRecipeBook[] recipeBooks = new CoreRecipeBook[BookType.getValues().size()];
+		var values = EnumUtil.getValues(BookType.class);
+		CoreRecipeBook[] recipeBooks = new CoreRecipeBook[values.size()];
 		int index = 0;
-		for (BookType type : BookType.getValues())
+		for (BookType type : values)
 			recipeBooks[index++] = new CoreRecipeBook(type);
 		this.recipeBooks = List.of(recipeBooks);
-	}
-
-	@Override
-	public ProtocolAdapter getProtocolAdapter() {
-		return protocol;
 	}
 	
 	@Override
@@ -170,7 +163,7 @@ public class CorePlayerConnection implements PlayerConnection {
 			return;
 		lastKeepAlive = System.currentTimeMillis();
 		keepAliveResponse = false;
-		if (inConfiguration) {
+		if (isInConfiguration()) {
 			de.atlasmc.node.io.protocol.configuration.ClientboundKeepAlive packet = new de.atlasmc.node.io.protocol.configuration.ClientboundKeepAlive();
 			packet.keepAliveID = lastKeepAlive;
 			sendPacked(packet);
@@ -195,11 +188,6 @@ public class CorePlayerConnection implements PlayerConnection {
 	@Override
 	public void sendPacket(PacketProtocol packet, GenericFutureListener<? extends Future<? super Void>> listener) {
 		connection.sendPacket(packet, listener);	
-	}
-
-	@Override
-	public ProtocolPlay getProtocol() {
-		return protocolPlay;
 	}
 
 	@Override
@@ -442,16 +430,12 @@ public class CorePlayerConnection implements PlayerConnection {
 	}
 
 	@Override
-	public void switchToConfiguration() {
-		if (waitingForProtocolChange || inConfiguration)
+	public synchronized void switchToConfiguration() {
+		if (waitingForProtocolChange || isInConfiguration())
 			return;
-		synchronized (this) {
-			if (waitingForProtocolChange || inConfiguration)
-				return;
-			waitingForProtocolChange = true;
-			// TODO remove from server
-			connection.sendPacket(new PacketOutStartConfiguration());
-		}
+		waitingForProtocolChange = true;
+		// TODO remove from server
+		connection.sendPacket(new PacketOutStartConfiguration());
 	}
 
 	@Override
@@ -461,26 +445,16 @@ public class CorePlayerConnection implements PlayerConnection {
 
 	@Override
 	public boolean isInConfiguration() {
-		return inConfiguration;
+		return connection.getProtocol() == protocol.getConfigurationProtocol();
 	}
 
 	@Override
-	public void protocolChangeAcknowledged() {
+	public synchronized void protocolChangeAcknowledged() {
 		if (!waitingForProtocolChange)
 			return;
-		synchronized (this) {
-			if (!waitingForProtocolChange)
-				return;
-			boolean inConfiguration = this.inConfiguration;
-			if (inConfiguration) {
-				connection.setProtocol(protocolPlay, protocolPlay.createDefaultPacketListenerServerbound(this));
-			} else {
-				Protocol prot = protocol.getConfigurationProtocol();
-				connection.setProtocol(prot, prot.createDefaultPacketListenerServerbound(this));
-			}
-			this.inConfiguration = !inConfiguration;
-			waitingForProtocolChange = false;
-		}
+		Protocol prot = isInConfiguration() ? protocol.getPlayProtocol() : protocol.getConfigurationProtocol();
+		connection.setProtocol(prot, prot.createDefaultPacketListenerServerbound(this));
+		waitingForProtocolChange = false;
 	}
 
 	@Override
@@ -520,6 +494,16 @@ public class CorePlayerConnection implements PlayerConnection {
 	@Override
 	public int getSelectedTrade() {
 		return selectedTrade;
+	}
+
+	@Override
+	public ProtocolAdapter getProtocolAdapter() {
+		return protocol;
+	}
+
+	@Override
+	public ConnectionHandler getHandler() {
+		return connection;
 	}
 	
 	

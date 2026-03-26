@@ -3,20 +3,20 @@ package de.atlasmc.core.node.io.protocol.play;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutSetHeldItem;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutSetHeldItem implements PacketIO<PacketOutSetHeldItem> {
+public class CorePacketOutSetHeldItem implements PacketCodec<PacketOutSetHeldItem> {
 
 	@Override
-	public void read(PacketOutSetHeldItem packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutSetHeldItem packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.slot = in.readByte();
 	}
 
 	@Override
-	public void write(PacketOutSetHeldItem packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutSetHeldItem packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		out.writeByte(packet.slot);
 	}
 

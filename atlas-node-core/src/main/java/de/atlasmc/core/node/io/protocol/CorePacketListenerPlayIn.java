@@ -148,22 +148,22 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 	static {
 		HANDLE_ASYNC = new boolean[PacketPlay.PACKET_COUNT_IN];
 		HANDLERS = new PacketHandler[PacketPlay.PACKET_COUNT_IN];
-		initHandler(PacketInConfirmTeleport.class, (con, packet) -> { // 0x00
+		initHandler(PacketInConfirmTeleport.class, (con, packet) -> {
 			if (packet.teleportID == con.getTeleportID())
 				con.confirmTeleport();
 		});
-		initHandler(PacketInQueryBlockEntityTag.class, (con, packet) -> { // 0x01
+		initHandler(PacketInQueryBlockEntityTag.class, (con, packet) -> {
 				Player player = con.getPlayer();
 				WorldLocation loc = MathUtil.getLocation(player.getWorld(), packet.getPosition());
 				HandlerList.callEvent(new PlayerQueryBlockNBTEvent(player, packet.getTransactionID(), loc));
 		});
-		initHandler(PacketInChangeDifficulty.class, (con, packet) -> { // 0x02
+		initHandler(PacketInChangeDifficulty.class, (_, _) -> {
 			// TODO Button not available in multiplayer clarification needed
 		});
-		initHandler(PacketInChatMessage.class, (con, packet) -> { // 0x03
+		initHandler(PacketInChatMessage.class, (con, packet) -> {
 			HandlerList.callEvent(new AsyncPlayerChatEvent(true, con.getPlayer(), packet.message));
 		}, true);
-		initHandler(PacketInClientCommand.class, (con, packet) -> { // 0x04
+		initHandler(PacketInClientCommand.class, (con, packet) -> {
 			if (packet.action == StatusAction.RESPAWN) {
 				HandlerList.callEvent(new PlayerRespawnEvent(con.getPlayer()));
 			}
@@ -189,7 +189,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				HandlerList.callEvent(new PlayerChangeDisplayedSkinPartsEvent(con.getPlayer(), skinparts, oldSkinParts));
 			}
 			// Main Hand
-			int mainHand = packet.mainHand;
+			var mainHand = packet.mainHand;
 			if (mainHand != settings.getMainHand()) {
 				settings.setMainHand(mainHand);
 				HandlerList.callEvent(new PlayerMainHandChangeEvent(con.getPlayer(), mainHand));
@@ -208,10 +208,10 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				HandlerList.callEvent(new PlayerLocaleChangeEvent(con.getPlayer(), clientLocale));
 			}
 		});
-		initHandler(PacketInCommandSuggestionsRequest.class, (player, packet) -> { // 0x06
+		initHandler(PacketInCommandSuggestionsRequest.class, (player, packet) -> {
 			// TODO handle packet
 		});
-		initHandler(PacketInClickContainerButton.class, (con, packet) -> { // 0x08
+		initHandler(PacketInClickContainerButton.class, (con, packet) -> {
 			LocalServer s = con.getLocalSever();
 			if (s == null) 
 				return;
@@ -256,7 +256,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			}
 			HandlerList.callEvent(new InventoryClickButtonEvent(view, type, id));
 		});
-		initHandler(PacketInClickContainer.class, (con, packet) -> { // 0x09
+		initHandler(PacketInClickContainer.class, (con, packet) -> {
 			LocalServer s = con.getLocalSever();
 			if (s == null) 
 				return;
@@ -416,13 +416,15 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				//HandlerList.callEvent(new InventoryDragEvent(player.getOpenInventory(), newCursor, oldCursor, dragItems));
 			}
 		});
-		initHandler(PacketInCloseContainer.class, (con, packet) -> { // 0x0A
+		initHandler(PacketInCloseContainer.class, (con, packet) -> {
 			LocalServer s = con.getLocalSever();
 			if (s == null) 
 				return;
-			con.getPlayer().closeInventory();
+			var inv = con.getPlayer().getOpenInventory();
+			if (inv.getViewID() == packet.windowID)
+				inv.close();
 		});
-		initHandler(PacketInPluginMessage.class, (con, packet) -> { // 0x0B
+		initHandler(PacketInPluginMessage.class, (con, packet) -> {
 			PluginChannel channel = con.getPluginChannelHandler().getChannel(packet.channel);
 			if (channel == null) {
 				Player player = con.getPlayer();
@@ -433,29 +435,29 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			}
 			channel.handleMessage(packet.data);
 		});
-		initHandler(PacketInEditBook.class, (con, packet) -> { // 0x0C
+		initHandler(PacketInEditBook.class, (con, packet) -> {
 			// TODO handle packet
 		});
-		initHandler(PacketInInteract.class, (con, packet) -> { // 0x0E
+		initHandler(PacketInInteract.class, (con, packet) -> {
 			// TODO handle packet
 		});
-		initHandler(PacketInQueryEntityTag.class, (con, packet) -> { // 0x0D
+		initHandler(PacketInQueryEntityTag.class, (con, packet) -> {
 			int transaction = packet.transactionID;
 			int entityID = packet.entityID;
 			HandlerList.callEvent(new PlayerQueryEntityNBTEvent(con.getPlayer(), transaction, entityID));
 		});
-		initHandler(PacketInJigsawGenerate.class, (player, packet) -> { // 0x0F
+		initHandler(PacketInJigsawGenerate.class, (player, packet) -> {
 			// TODO handle packet
 		});
-		initHandler(PacketInKeepAlive.class, (con, packet) -> { // 0x10
+		initHandler(PacketInKeepAlive.class, (con, packet) -> {
 			if (packet.keepAliveID != con.getLastKeepAlive()) 
 				return;
 			con.confirmKeepAlive(packet.getTimestamp());
 		});
-		initHandler(PacketInLockDifficulty.class, (con, packet) -> { // 0x11
+		initHandler(PacketInLockDifficulty.class, (con, packet) -> {
 			// TODO Button not available in multiplayer clarification needed
 		});
-		initHandler(PacketInSetPlayerPosition.class, (con, packet) -> { // 0x12
+		initHandler(PacketInSetPlayerPosition.class, (con, packet) -> {
 			if (!con.isTeleportConfirmed()) 
 				return;
 			PlayerMoveEvent eventMove = con.getEventMove();
@@ -472,7 +474,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			con.getPlayer().getLocation(eventMove.getFrom());
 			HandlerList.callEvent(eventMove);
 		});
-		initHandler(PacketInSetPlayerPositionAndRotation.class, (con, packet) -> { // 0x13
+		initHandler(PacketInSetPlayerPositionAndRotation.class, (con, packet) -> {
 			if (!con.isTeleportConfirmed()) 
 				return;
 			PlayerMoveEvent eventMove = con.getEventMove();
@@ -491,7 +493,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			con.getPlayer().getLocation(eventMove.getFrom());
 			HandlerList.callEvent(eventMove);
 		});
-		initHandler(PacketInSetPlayerRotation.class, (con, packet) -> { // 0x14
+		initHandler(PacketInSetPlayerRotation.class, (con, packet) -> {
 			if (!con.isTeleportConfirmed()) 
 				return;
 			PlayerMoveEvent eventMove = con.getEventMove();
@@ -507,7 +509,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			con.getPlayer().getLocation(eventMove.getFrom());
 			HandlerList.callEvent(eventMove);
 		});
-		initHandler(PacketInSetPlayerMoveFlags.class, (con, packet) -> { // 0x15
+		initHandler(PacketInSetPlayerMoveFlags.class, (con, packet) -> {
 			if (!con.isTeleportConfirmed())
 				return;
 			boolean onGround = (packet.flags & 0x01) == 0x01;

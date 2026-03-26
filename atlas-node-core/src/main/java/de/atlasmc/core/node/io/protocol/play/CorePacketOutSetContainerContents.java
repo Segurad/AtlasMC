@@ -6,17 +6,17 @@ import static de.atlasmc.io.PacketUtil.writeVarInt;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.io.protocol.play.PacketOutSetContainerContents;
 import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutSetContainerContents implements PacketIO<PacketOutSetContainerContents> {
+public class CorePacketOutSetContainerContents implements PacketCodec<PacketOutSetContainerContents> {
 
 	@Override
-	public void read(PacketOutSetContainerContents packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutSetContainerContents packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.windowID = in.readByte();
 		packet.stateID = readVarInt(in);
 		final int count = in.readShort();
@@ -30,7 +30,7 @@ public class CorePacketOutSetContainerContents implements PacketIO<PacketOutSetC
 	}
 
 	@Override
-	public void write(PacketOutSetContainerContents packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutSetContainerContents packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		out.writeByte(packet.windowID);
 		writeVarInt(packet.stateID, out);
 		out.writeShort(packet.items.length);

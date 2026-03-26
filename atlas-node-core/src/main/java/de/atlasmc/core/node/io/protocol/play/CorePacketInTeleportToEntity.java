@@ -4,22 +4,22 @@ import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketInTeleportToEntity;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInTeleportToEntity implements PacketIO<PacketInTeleportToEntity> {
+public class CorePacketInTeleportToEntity implements PacketCodec<PacketInTeleportToEntity> {
 	
 	@Override
-	public void read(PacketInTeleportToEntity packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketInTeleportToEntity packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		long most = in.readLong();
 		long least = in.readLong();
 		packet.uuid = new UUID(most, least);
 	}
 
 	@Override
-	public void write(PacketInTeleportToEntity packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketInTeleportToEntity packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		UUID uuid = packet.uuid;
 		out.writeLong(uuid.getMostSignificantBits());
 		out.writeLong(uuid.getLeastSignificantBits());

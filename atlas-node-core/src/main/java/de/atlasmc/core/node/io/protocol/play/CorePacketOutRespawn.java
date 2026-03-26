@@ -7,17 +7,17 @@ import java.io.IOException;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.Gamemode;
 import de.atlasmc.node.io.protocol.play.PacketOutRespawn;
 import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutRespawn implements PacketIO<PacketOutRespawn> {
+public class CorePacketOutRespawn implements PacketCodec<PacketOutRespawn> {
 
 	@Override
-	public void read(PacketOutRespawn packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutRespawn packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.dimension = readVarInt(in);
 		packet.world = NamespacedKey.STREAM_CODEC.deserialize(null, in, null);
 		packet.seed = in.readLong();
@@ -36,7 +36,7 @@ public class CorePacketOutRespawn implements PacketIO<PacketOutRespawn> {
 	}
 
 	@Override
-	public void write(PacketOutRespawn packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutRespawn packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.dimension, out);
 		NamespacedKey.STREAM_CODEC.serialize(packet.world, out, null);
 		out.writeLong(packet.seed);

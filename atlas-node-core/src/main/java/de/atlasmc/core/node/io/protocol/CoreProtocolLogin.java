@@ -12,24 +12,25 @@ import de.atlasmc.core.node.io.protocol.login.CoreClientboundLoginPluginRequest;
 import de.atlasmc.core.node.io.protocol.login.CoreClientboundLoginSuccess;
 import de.atlasmc.core.node.io.protocol.login.CoreClientboundSetCompression;
 import de.atlasmc.io.AbstractProtocol;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.PacketServerbound;
 import de.atlasmc.io.PacketListener;
 import de.atlasmc.io.PacketClientbound;
 import de.atlasmc.io.connection.ConnectionHandler;
+import de.atlasmc.node.io.protocol.ProtocolAdapter;
 import de.atlasmc.node.io.protocol.ProtocolLogin;
 
 public class CoreProtocolLogin extends AbstractProtocol<PacketServerbound, PacketClientbound> implements ProtocolLogin {
 	
 	@SuppressWarnings("unchecked")
 	public CoreProtocolLogin() {
-		super(new PacketIO[] {
+		super(new PacketCodec[] {
 				new CoreServerboundLoginStart(),
 				new CoreServerboundEncryptionResponse(),
 				new CoreServerboundLoginPluginResponse(),
 				new CoreServerboundLoginAcknowledged(),
 				new CoreServerboundCookieResponse()
-		}, new PacketIO[] {
+		}, new PacketCodec[] {
 				new CoreClientboundDisconnect(),
 				new CoreClientboundEncryptionRequest(),
 				new CoreClientboundLoginSuccess(),
@@ -41,7 +42,7 @@ public class CoreProtocolLogin extends AbstractProtocol<PacketServerbound, Packe
 	
 	@Override
 	public int getVersion() {
-		return CoreProtocolAdapter.VERSION;
+		return ProtocolAdapter.VERSION;
 	}
 
 	@Override

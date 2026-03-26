@@ -5,7 +5,7 @@ import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.block.tile.TileEntity;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.FallingBlock;
-import de.atlasmc.node.entity.metadata.type.MetaDataField;
+import de.atlasmc.node.entity.metadata.MetaDataField;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreFallingBlock extends CoreEntity implements FallingBlock {
@@ -130,6 +130,12 @@ public class CoreFallingBlock extends CoreEntity implements FallingBlock {
 	@Override
 	public void setAge(int age) {
 		this.age = age;
+	}
+	
+	@Override
+	public int getObjectData() {
+		BlockData data = this.data;
+		return data == null ? 0 : data.getStateID();
 	}
 	
 }

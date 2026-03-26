@@ -1,9 +1,9 @@
 package de.atlasmc.core.node.block.tile;
 
-import de.atlasmc.network.player.PlayerProfile;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.tile.Skull;
 import de.atlasmc.node.sound.EnumSound;
+import de.atlasmc.util.mojang.PlayerProfile;
 
 public class CoreSkull extends CoreTileEntity implements Skull {
 	

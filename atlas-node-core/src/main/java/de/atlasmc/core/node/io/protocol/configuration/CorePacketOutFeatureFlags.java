@@ -8,15 +8,15 @@ import java.util.List;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.configuration.ClientboundFeatureFlags;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutFeatureFlags implements PacketIO<ClientboundFeatureFlags> {
+public class CorePacketOutFeatureFlags implements PacketCodec<ClientboundFeatureFlags> {
 
 	@Override
-	public void read(ClientboundFeatureFlags packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(ClientboundFeatureFlags packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		final int size = readVarInt(in);
 		if (size <= 0)
 			return;
@@ -27,7 +27,7 @@ public class CorePacketOutFeatureFlags implements PacketIO<ClientboundFeatureFla
 	}
 
 	@Override
-	public void write(ClientboundFeatureFlags packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(ClientboundFeatureFlags packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		List<NamespacedKey> flags = packet.flags;
 		if (flags == null || flags.isEmpty()) {
 			writeVarInt(0, out);

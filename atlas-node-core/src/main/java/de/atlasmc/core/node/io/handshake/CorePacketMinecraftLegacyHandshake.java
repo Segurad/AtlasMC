@@ -11,12 +11,12 @@ import io.netty.buffer.ByteBuf;
 public class CorePacketMinecraftLegacyHandshake extends HandshakePacketIO<PacketMinecraftLegacyHandshake> {
 
 	@Override
-	public void read(PacketMinecraftLegacyHandshake packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketMinecraftLegacyHandshake packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.status = in.readUnsignedByte();
 	}
 
 	@Override
-	public void write(PacketMinecraftLegacyHandshake packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketMinecraftLegacyHandshake packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		out.writeByte(packet.status);
 	}
 

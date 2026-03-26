@@ -204,6 +204,10 @@ public enum BlockFace implements EnumName {
 		return BY_FACE_ID[faceID];
 	}
 	
+	/**
+	 * Returns the face id of this BlockFace. Will be -1 if no valid face id.
+	 * @return
+	 */
 	public int getFaceID() {
 		return faceID;
 	}

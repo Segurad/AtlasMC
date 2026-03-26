@@ -5,20 +5,20 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketInSelectTrade;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInSelectTrade implements PacketIO<PacketInSelectTrade> {
+public class CorePacketInSelectTrade implements PacketCodec<PacketInSelectTrade> {
 
 	@Override
-	public void read(PacketInSelectTrade packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketInSelectTrade packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.selectedSlot = readVarInt(in);
 	}
 
 	@Override
-	public void write(PacketInSelectTrade packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketInSelectTrade packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.selectedSlot, out);
 	}
 

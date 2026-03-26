@@ -3,21 +3,21 @@ package de.atlasmc.core.node.io.protocol.play;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketInClickContainerButton;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInClickContainerButton implements PacketIO<PacketInClickContainerButton> {
+public class CorePacketInClickContainerButton implements PacketCodec<PacketInClickContainerButton> {
 	
 	@Override
-	public void read(PacketInClickContainerButton packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketInClickContainerButton packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.windowID = in.readByte();
 		packet.buttonID = in.readByte();
 	}
 
 	@Override
-	public void write(PacketInClickContainerButton packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketInClickContainerButton packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		out.writeByte(packet.windowID);
 		out.writeByte(packet.buttonID);
 	}

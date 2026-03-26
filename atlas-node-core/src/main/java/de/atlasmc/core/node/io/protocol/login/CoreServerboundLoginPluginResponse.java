@@ -4,15 +4,15 @@ import static de.atlasmc.io.PacketUtil.*;
 
 import java.io.IOException;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.login.ServerboundLoginPluginResponse;
 import io.netty.buffer.ByteBuf;
 
-public class CoreServerboundLoginPluginResponse implements PacketIO<ServerboundLoginPluginResponse> {
+public class CoreServerboundLoginPluginResponse implements PacketCodec<ServerboundLoginPluginResponse> {
 
 	@Override
-	public void read(ServerboundLoginPluginResponse packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(ServerboundLoginPluginResponse packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.messageID = readVarInt(in);
 		if (in.readBoolean()) {
 			int size = readArrayLength(in, 1048576);
@@ -21,7 +21,7 @@ public class CoreServerboundLoginPluginResponse implements PacketIO<ServerboundL
 	}
 
 	@Override
-	public void write(ServerboundLoginPluginResponse packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(ServerboundLoginPluginResponse packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		writeVarInt(packet.messageID, out);
 		if (packet.data == null) {
 			out.writeBoolean(false);

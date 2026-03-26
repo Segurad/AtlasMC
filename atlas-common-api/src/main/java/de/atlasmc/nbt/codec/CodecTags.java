@@ -4,6 +4,9 @@ import java.util.List;
 
 import de.atlasmc.nbt.TagType;
 
+/**
+ * Some constants storing immutable lists of tags
+ */
 public class CodecTags {
 	
 	public static final List<TagType>

@@ -7,7 +7,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.Random;
 import java.util.UUID;
 
 import javax.crypto.BadPaddingException;
@@ -24,7 +23,6 @@ import de.atlasmc.io.Protocol;
 import de.atlasmc.io.ProtocolException;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.io.connection.ServerSocketConnectionHandler;
-import de.atlasmc.network.player.AtlasPlayer;
 import de.atlasmc.node.AtlasNode;
 import de.atlasmc.node.event.socket.AsyncPlayerLoginAttemptEvent;
 import de.atlasmc.node.io.protocol.LoginHandler;
@@ -46,11 +44,12 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 		HANDLERS = new PacketHandler[PacketLogin.PACKET_COUNT_IN];
 		HANDLE_ASYNC = new boolean[PacketLogin.PACKET_COUNT_IN];
 		initHandler(ServerboundLoginStart.class, (handler, packet) -> {
-			AsyncPlayerLoginAttemptEvent event = new AsyncPlayerLoginAttemptEvent(handler.createLoginHandler(packet.name, packet.uuid));
+			AsyncPlayerLoginAttemptEvent event = new AsyncPlayerLoginAttemptEvent(handler.createLoginHandler(packet.name, packet.uuid, packet.getTimestamp()));
 			HandlerList.callEvent(event);
 		}, true);
 		initHandler(ServerboundEncryptionResponse.class, (handler, packet) -> {
 			PrivateKey privateKey = Atlas.getKeyPair().getPrivate();
+			// initialize cipher with node public key
 			Cipher cipher = null;
 			try {
 				cipher = Cipher.getInstance("RSA");
@@ -62,20 +61,22 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 			} catch (InvalidKeyException e) {
 				throw new ProtocolException("Error while initializing cipher", e);
 			}
-			byte[] secret = null;
+			// decrypt and validate send token
 			byte[] token = null;
-			try {
-				secret = cipher.doFinal(packet.secret);
-			} catch (IllegalBlockSizeException | BadPaddingException e) {
-				throw new ProtocolException("Unable to decrypt secret!", e, handler.con.getProtocol(), packet);
-			}
 			try {
 				token = cipher.doFinal(packet.verifyToken);
 			} catch (IllegalBlockSizeException | BadPaddingException e) {
 				throw new ProtocolException("Unable to decrypt verify token!", e, handler.con.getProtocol(), packet);
 			}
-			if (!token.equals(handler.verifyToken)) {
+			if (!handler.handler.isValidToken(token)) {
 				throw new ProtocolException("Client send invalid verify token!");
+			}
+			// decrypt shared secret for encryption
+			byte[] secret = null;
+			try {
+				secret = cipher.doFinal(packet.secret);
+			} catch (IllegalBlockSizeException | BadPaddingException e) {
+				throw new ProtocolException("Unable to decrypt secret!", e, handler.con.getProtocol(), packet);
 			}
 			SecretKey secretKey = new SecretKeySpec(secret, "AES");
 			try {
@@ -83,18 +84,24 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 			} catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
 				throw new ProtocolException("Failed to enable encryption!", e);
 			}
+			if (!handler.handler.hasAuthentication()) { // no mojang authentication required
+				return;
+			}
 			try {
 				String hash = createServerHash(Atlas.getKeyPair().getPublic(), secretKey);
 			} catch (Exception e) {
 				throw new ProtocolException("Failed to create server id hash!");
 			}
 		}, true);
-		initHandler(ServerboundLoginAcknowledged.class, (handler, packet) -> {
+		initHandler(ServerboundLoginAcknowledged.class, (handler, _) -> {
 			int version = handler.con.getProtocol().getVersion();
 			ProtocolAdapter adapter = AtlasNode.getProtocolAdapter(version);
 			Protocol configuration = adapter.getConfigurationProtocol();
-			PlayerConnection con = new CorePlayerConnection(handler.player, handler.con, adapter);
-			handler.con.setProtocol(configuration, configuration.createDefaultPacketListenerServerbound(con));
+			var futurePlayer = handler.handler.getPlayer();
+			futurePlayer.setListener((future) -> {
+				PlayerConnection con = new CorePlayerConnection(future.getNow(), handler.con, adapter);
+				handler.con.setProtocol(configuration, configuration.createDefaultPacketListenerServerbound(con));
+			});
 		}, true);
 		initHandler(ServerboundLoginPluginResponse.class, (handler, packet) -> {
 			// TODO handle plugin response
@@ -119,11 +126,20 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 		con = (ServerSocketConnectionHandler) handler;
 	}
 	
-	private synchronized LoginHandler createLoginHandler(String name, UUID uuid) {
+	private static String createServerHash(PublicKey key, SecretKey secret) throws Exception {
+		MessageDigest md = MessageDigest.getInstance("SHA-1");
+		md.update(CoreLoginHandler.SERVER_ID.getBytes("ISO-8859-1"));
+		md.update(key.getEncoded());
+		md.update(secret.getEncoded());
+		byte[] data = md.digest();
+		return new BigInteger(data).toString(16);
+	}
+	
+	private synchronized LoginHandler createLoginHandler(String name, UUID uuid, long loginStart) {
 		if (handler != null) {
 			throw new ProtocolException("Login already initialized!");
 		}
-		var handler = new CoreLoginHandler(con, name, uuid);
+		var handler = new CoreLoginHandler(con, name, uuid, loginStart);
 		this.handler = handler;
 		return handler;
 	}

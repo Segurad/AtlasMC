@@ -5,15 +5,15 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutLookAt;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutLookAt implements PacketIO<PacketOutLookAt> {
+public class CorePacketOutLookAt implements PacketCodec<PacketOutLookAt> {
 
 	@Override
-	public void read(PacketOutLookAt packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutLookAt packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.aimWithEyes = readVarInt(in) == 1;
 		packet.x = in.readDouble();
 		packet.y = in.readDouble();
@@ -27,7 +27,7 @@ public class CorePacketOutLookAt implements PacketIO<PacketOutLookAt> {
 	}
 
 	@Override
-	public void write(PacketOutLookAt packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutLookAt packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.aimWithEyes ? 1 : 0, out);
 		out.writeDouble(packet.x);
 		out.writeDouble(packet.y);

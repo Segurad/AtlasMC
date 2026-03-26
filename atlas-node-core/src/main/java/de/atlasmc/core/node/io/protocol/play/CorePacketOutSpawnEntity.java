@@ -6,17 +6,17 @@ import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.io.protocol.play.PacketOutSpawnEntity;
 import de.atlasmc.node.util.MathUtil;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutSpawnEntity implements PacketIO<PacketOutSpawnEntity> {
+public class CorePacketOutSpawnEntity implements PacketCodec<PacketOutSpawnEntity> {
 
 	@Override
-	public void read(PacketOutSpawnEntity packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutSpawnEntity packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.entityID = readVarInt(in);
 		long most = in.readLong();
 		long least = in.readLong();
@@ -35,7 +35,7 @@ public class CorePacketOutSpawnEntity implements PacketIO<PacketOutSpawnEntity> 
 	}
 
 	@Override
-	public void write(PacketOutSpawnEntity packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutSpawnEntity packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.entityID, out);
 		UUID uuid = packet.uuid;
 		out.writeLong(uuid.getMostSignificantBits());

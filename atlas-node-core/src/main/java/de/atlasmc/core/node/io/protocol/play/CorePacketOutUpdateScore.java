@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateScore;
@@ -14,10 +14,10 @@ import de.atlasmc.node.io.protocol.play.PacketOutUpdateScore.NumberFormatType;
 import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutUpdateScore implements PacketIO<PacketOutUpdateScore> {
+public class CorePacketOutUpdateScore implements PacketCodec<PacketOutUpdateScore> {
 
 	@Override
-	public void read(PacketOutUpdateScore packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutUpdateScore packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.entry = StringCodec.readString(in);
 		packet.objective = StringCodec.readString(in);
 		packet.value = readVarInt(in);
@@ -32,7 +32,7 @@ public class CorePacketOutUpdateScore implements PacketIO<PacketOutUpdateScore> 
 	}
 
 	@Override
-	public void write(PacketOutUpdateScore packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutUpdateScore packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		StringCodec.writeString(packet.entry, out);
 		StringCodec.writeString(packet.objective, out);
 		writeVarInt(packet.value, out);

@@ -3,15 +3,15 @@ package de.atlasmc.core.node.io.protocol.play;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutRecipeBookSettings;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutRecipeBookSettings implements PacketIO<PacketOutRecipeBookSettings> {
+public class CorePacketOutRecipeBookSettings implements PacketCodec<PacketOutRecipeBookSettings> {
 
 	@Override
-	public void read(PacketOutRecipeBookSettings packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutRecipeBookSettings packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.craftingOpen = in.readBoolean();
 		packet.craftingFilter = in.readBoolean();
 		packet.smeltingOpen = in.readBoolean();
@@ -23,7 +23,7 @@ public class CorePacketOutRecipeBookSettings implements PacketIO<PacketOutRecipe
 	}
 
 	@Override
-	public void write(PacketOutRecipeBookSettings packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutRecipeBookSettings packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		out.writeBoolean(packet.craftingOpen);
 		out.writeBoolean(packet.craftingFilter);
 		out.writeBoolean(packet.smeltingOpen);

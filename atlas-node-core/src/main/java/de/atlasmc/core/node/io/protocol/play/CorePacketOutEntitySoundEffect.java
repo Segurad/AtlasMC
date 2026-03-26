@@ -6,7 +6,7 @@ import static de.atlasmc.io.PacketUtil.writeVarInt;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.SoundCategory;
 import de.atlasmc.node.io.protocol.play.PacketOutEntitySoundEffect;
@@ -14,10 +14,10 @@ import de.atlasmc.node.sound.Sound;
 import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutEntitySoundEffect implements PacketIO<PacketOutEntitySoundEffect> {
+public class CorePacketOutEntitySoundEffect implements PacketCodec<PacketOutEntitySoundEffect> {
 	
 	@Override
-	public void read(PacketOutEntitySoundEffect packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutEntitySoundEffect packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.sound = Sound.STREAM_CODEC.deserialize(in, handler.getCodecContext());
 		packet.category = EnumUtil.getByID(SoundCategory.class, readVarInt(in));
 		packet.entityID = readVarInt(in);
@@ -27,7 +27,7 @@ public class CorePacketOutEntitySoundEffect implements PacketIO<PacketOutEntityS
 	}
 
 	@Override
-	public void write(PacketOutEntitySoundEffect packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutEntitySoundEffect packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		Sound.STREAM_CODEC.serialize(packet.sound, out, handler.getCodecContext());
 		writeVarInt(packet.category.getID(), out);
 		writeVarInt(packet.entityID, out);

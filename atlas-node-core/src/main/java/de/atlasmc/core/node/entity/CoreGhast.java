@@ -2,7 +2,7 @@ package de.atlasmc.core.node.entity;
 
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Ghast;
-import de.atlasmc.node.entity.metadata.type.MetaDataField;
+import de.atlasmc.node.entity.metadata.MetaDataField;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreGhast extends CoreMob implements Ghast {

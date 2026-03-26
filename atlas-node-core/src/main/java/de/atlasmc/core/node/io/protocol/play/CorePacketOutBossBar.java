@@ -8,7 +8,7 @@ import java.util.UUID;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.BossBar.BarColor;
 import de.atlasmc.node.BossBar.BarStyle;
@@ -17,10 +17,10 @@ import de.atlasmc.node.io.protocol.play.PacketOutBossBar.BossBarAction;
 import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutBossBar implements PacketIO<PacketOutBossBar> {
+public class CorePacketOutBossBar implements PacketCodec<PacketOutBossBar> {
 
 	@Override
-	public void read(PacketOutBossBar packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutBossBar packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		long most = in.readLong();
 		long least = in.readLong();
 		packet.uuid = new UUID(most, least);
@@ -55,7 +55,7 @@ public class CorePacketOutBossBar implements PacketIO<PacketOutBossBar> {
 	}
 
 	@Override
-	public void write(PacketOutBossBar packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutBossBar packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		UUID uuid = packet.uuid;
 		out.writeLong(uuid.getMostSignificantBits());
 		out.writeLong(uuid.getLeastSignificantBits());

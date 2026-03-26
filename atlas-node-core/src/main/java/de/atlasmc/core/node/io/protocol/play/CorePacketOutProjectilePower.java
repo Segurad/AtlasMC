@@ -1,6 +1,6 @@
 package de.atlasmc.core.node.io.protocol.play;
 
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutProjectilePower;
 import io.netty.buffer.ByteBuf;
@@ -11,16 +11,16 @@ import java.io.IOException;
 
 import de.atlasmc.io.Packet;
 
-public class CorePacketOutProjectilePower implements PacketIO<PacketOutProjectilePower> {
+public class CorePacketOutProjectilePower implements PacketCodec<PacketOutProjectilePower> {
 
 	@Override
-	public void read(PacketOutProjectilePower packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketOutProjectilePower packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.entityID = readVarInt(in);
 		packet.power = in.readDouble();
 	}
 
 	@Override
-	public void write(PacketOutProjectilePower packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketOutProjectilePower packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		writeVarInt(packet.entityID, out);
 		out.writeDouble(packet.power);
 	}

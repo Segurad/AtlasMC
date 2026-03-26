@@ -6,19 +6,19 @@ import java.io.IOException;
 import java.util.List;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.codec.UUIDCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
-import de.atlasmc.network.player.PlayerProfile;
-import de.atlasmc.network.player.ProfileProperty;
 import de.atlasmc.node.io.protocol.login.ClientboundLoginSuccess;
+import de.atlasmc.util.mojang.PlayerProfile;
+import de.atlasmc.util.mojang.ProfileProperty;
 import io.netty.buffer.ByteBuf;
 
-public class CoreClientboundLoginSuccess implements PacketIO<ClientboundLoginSuccess> {
+public class CoreClientboundLoginSuccess implements PacketCodec<ClientboundLoginSuccess> {
 
 	@Override
-	public void read(ClientboundLoginSuccess packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(ClientboundLoginSuccess packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		PlayerProfile profile = packet.profile;
 		profile.setUUID(UUIDCodec.readUUID(in));
 		profile.setName(StringCodec.readString(in, 16));
@@ -34,7 +34,7 @@ public class CoreClientboundLoginSuccess implements PacketIO<ClientboundLoginSuc
 	}
 
 	@Override
-	public void write(ClientboundLoginSuccess packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(ClientboundLoginSuccess packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		PlayerProfile profile = packet.profile;
 		UUIDCodec.writeUUID(profile.getUUID(), out);
 		StringCodec.writeString(profile.getName(), out);

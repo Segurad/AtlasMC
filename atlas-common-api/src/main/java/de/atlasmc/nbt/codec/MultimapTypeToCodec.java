@@ -14,6 +14,7 @@ import de.atlasmc.nbt.TagType;
 import de.atlasmc.nbt.io.NBTReader;
 import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.util.codec.CodecContext;
+import de.atlasmc.util.map.ArrayListMultimap;
 import de.atlasmc.util.map.Multimap;
 import de.atlasmc.util.map.key.CharKey;
 
@@ -64,6 +65,7 @@ final class MultimapTypeToCodec<K extends Namespaced, V> implements NBTCodec<Mul
 		}
 		if (listType != TagType.COMPOUND)
 			throw new NBTException("Expected list of type COMPOUND but was: " + listType);
+		final Multimap<K, V> map = value != null ? value : new ArrayListMultimap<>();
 		reader.readNextEntry();
 		while (reader.getRestPayload() > 0) {
 			reader.readNextEntry();
@@ -79,10 +81,15 @@ final class MultimapTypeToCodec<K extends Namespaced, V> implements NBTCodec<Mul
 			}
 			K key = keySupplier.apply(rawKey);
 			V entry = codec.deserializePartial(null, reader, context);
-			value.put(key, entry);
+			map.put(key, entry);
 		}
 		reader.readNextEntry();
-		return value;
+		return map;
+	}
+	
+	@Override
+	public boolean isReuseValue() {
+		return true;
 	}
 
 	@Override

@@ -3,20 +3,20 @@ package de.atlasmc.core.node.io.protocol.status;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.status.ClientboundPong;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutPong implements PacketIO<ClientboundPong> {
+public class CorePacketOutPong implements PacketCodec<ClientboundPong> {
 
 	@Override
-	public void read(ClientboundPong packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(ClientboundPong packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.pong = in.readLong();
 	}
 
 	@Override
-	public void write(ClientboundPong packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(ClientboundPong packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		out.writeLong(packet.pong);
 	}
 	

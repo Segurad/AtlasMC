@@ -7,16 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketOutChatSuggestions;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutChatSuggestions implements PacketIO<PacketOutChatSuggestions> {
+public class CorePacketOutChatSuggestions implements PacketCodec<PacketOutChatSuggestions> {
 
 	@Override
-	public void read(PacketOutChatSuggestions packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketOutChatSuggestions packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.action = readVarInt(in);
 		final int count = readVarInt(in);
 		if (count <= 0)
@@ -28,7 +28,7 @@ public class CorePacketOutChatSuggestions implements PacketIO<PacketOutChatSugge
 	}
 
 	@Override
-	public void write(PacketOutChatSuggestions packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketOutChatSuggestions packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		writeVarInt(packet.action, out);
 		List<String> entries = packet.entries;
 		if (entries == null || entries.isEmpty()) {

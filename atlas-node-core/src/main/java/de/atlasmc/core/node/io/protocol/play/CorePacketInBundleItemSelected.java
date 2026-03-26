@@ -5,21 +5,21 @@ import static de.atlasmc.io.PacketUtil.*;
 import java.io.IOException;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketInBundleItemSelected;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketInBundleItemSelected implements PacketIO<PacketInBundleItemSelected> {
+public class CorePacketInBundleItemSelected implements PacketCodec<PacketInBundleItemSelected> {
 
 	@Override
-	public void read(PacketInBundleItemSelected packet, ByteBuf in, ConnectionHandler con) throws IOException {
+	public void deserialize(PacketInBundleItemSelected packet, ByteBuf in, ConnectionHandler con) throws IOException {
 		packet.slot = readVarInt(in);
 		packet.bundleSlot = readVarInt(in);
 	}
 
 	@Override
-	public void write(PacketInBundleItemSelected packet, ByteBuf out, ConnectionHandler con) throws IOException {
+	public void serialize(PacketInBundleItemSelected packet, ByteBuf out, ConnectionHandler con) throws IOException {
 		writeVarInt(packet.slot, out);
 		writeVarInt(packet.bundleSlot, out);
 	}

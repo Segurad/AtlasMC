@@ -1,11 +1,13 @@
-package de.atlasmc.network.player;
+package de.atlasmc.util.mojang;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.util.CloneException;
+import de.atlasmc.util.OpenCloneable;
+
 import static de.atlasmc.nbt.codec.NBTCodecs.STRING;
 
-public class ProfileProperty implements NBTSerializable, Cloneable {
+public class ProfileProperty implements NBTSerializable, OpenCloneable {
 
 	public static final NBTCodec<ProfileProperty>
 	NBT_HANDLER = NBTCodec

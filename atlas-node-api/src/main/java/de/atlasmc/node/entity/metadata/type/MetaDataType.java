@@ -27,6 +27,7 @@ import de.atlasmc.node.entity.Frog.Variant;
 import de.atlasmc.node.entity.Painting.Motive;
 import de.atlasmc.node.entity.Sniffer.State;
 import de.atlasmc.node.entity.Wolf.WolfVariant;
+import de.atlasmc.node.entity.metadata.MetaData;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.util.MathUtil;
 import de.atlasmc.node.world.particle.Particle;
@@ -37,7 +38,7 @@ import io.netty.buffer.ByteBuf;
  * Represents a {@link MetaData}s type
  * @param <T>
  */
-public abstract class MetaDataType<T> {
+public abstract class MetaDataType<T> implements IDHolder {
 	
 	public static final int
 	TYPE_ID_BYTE = 0,
@@ -135,9 +136,9 @@ public abstract class MetaDataType<T> {
 	
     public static final MetaDataType<Motive> PAINTING_VARIANT = getVarIntEnumType(TYPE_ID_PAINTING_VARIANT, Motive.class);
 
-    public static final MetaDataType<Vector3f> VECTOR_3 = new StreamCodecMetaType<>(TYPE_ID_VECTOR_3F, false, StreamCodecs.VECTOR_3F, t -> { return new Vector3f(t);});
+    public static final MetaDataType<Vector3f> VECTOR_3F = new StreamCodecMetaType<>(TYPE_ID_VECTOR_3F, false, StreamCodecs.VECTOR_3F, t -> { return new Vector3f(t);});
     
-    public static final MetaDataType<Quaternionf> QUATERNION = new StreamCodecMetaType<>(TYPE_ID_QUATERNION_F, false, StreamCodecs.QUATERNION_F, t -> { return new Quaternionf(t);});
+    public static final MetaDataType<Quaternionf> QUATERNION_F = new StreamCodecMetaType<>(TYPE_ID_QUATERNION_F, false, StreamCodecs.QUATERNION_F, t -> { return new Quaternionf(t);});
     
     public static final MetaDataType<Variant> FROG_VARIANT = getVarIntEnumType(TYPE_ID_FROG_VARIANT, Variant.class);
     
@@ -175,6 +176,45 @@ public abstract class MetaDataType<T> {
 	
 	public static final MetaDataType<DyeColor> VAR_INT_COLOR = getVarIntEnumType(DyeColor.class);
 	
+	private static final MetaDataType<?>[] TYPES = new MetaDataType<?>[] {
+		BYTE,
+		VAR_INT,
+		VAR_LONG,
+		FLOAT,
+		STRING,
+		CHAT,
+		OPT_CHAT,
+		SLOT,
+		BOOLEAN,
+		ROTATION,
+		POSITION,
+		OPT_POSITION,
+		DIRECTION,
+		OPT_UUID,
+		BLOCKSTATE, // BlockID in wiki
+		OPT_BLOCKSTATE, // OptBlockID in wiki
+		NBT_DATA,
+		PARTICLE,
+		VILLAGER_DATA,
+		OPT_VAR_INT,
+		POSE,
+		CAT_VARIANT,
+		WOLF_VARIANT,
+		//WOLF_SOUND_VARIANT,
+		FROG_VARIANT,
+		//PIG_VARIANT,
+		//CHICKEN_VARIANT,
+		OPT_GLOBAL_POSITION,
+		PAINTING_VARIANT,
+		SNIFFER_STATE,
+		ARMADILLO_STATE,
+		//COPPER_GOLEM_STATE,
+		//WEATHERING_COPPER_STATE,
+		VECTOR_3F,
+		QUATERNION_F,
+		//RESOLVED_PROFILE
+	};
+	
 	private final int type;
 	private final boolean optional;
 	private final Class<?> clazz;
@@ -189,7 +229,8 @@ public abstract class MetaDataType<T> {
 		this.optional = optional;
 	}
 	
-	public int getTypeID() {
+	@Override
+	public int getID() {
 		return type;
 	}
 	
@@ -220,38 +261,9 @@ public abstract class MetaDataType<T> {
 	}
 	
 	public static MetaDataType<?> getByID(int id) {
-		switch (id) {
-		case 0: return BYTE;
-		case 1: return VAR_INT;
-		case 2: return VAR_LONG;
-		case 3: return FLOAT;
-		case 4: return STRING;
-		case 5: return CHAT;
-		case 6: return OPT_CHAT;
-		case 7: return SLOT;
-		case 8: return BOOLEAN;
-		case 9: return ROTATION;
-		case 10: return POSITION;
-		case 11: return OPT_POSITION;
-		case 12: return DIRECTION;
-		case 13: return OPT_UUID;
-		case 14: return BLOCKSTATE;
-		case 15: return OPT_BLOCKSTATE;
-		case 16: return NBT_DATA;
-		case 17: return PARTICLE;
-		case 18: return VILLAGER_DATA;
-		case 19: return OPT_VAR_INT;
-		case 20: return POSE;
-		case 21: return CAT_VARIANT;
-		case 22: return FROG_VARIANT;
-		case 23: return OPT_GLOBAL_POSITION;
-		case 24: return PAINTING_VARIANT;
-		case 25: return SNIFFER_STATE;
-		case 26: return VECTOR_3;
-		case 27: return QUATERNION;
-		default:
+		if (id < 0 || id > TYPES.length)
 			throw new IllegalArgumentException("Invalid Type ID: " + id);
-		}
+		return TYPES[id];
 	}
 	
 	public static <T extends Enum<T> & IDHolder> MetaDataType<T> getVarIntEnumType(Class<T> clazz) {

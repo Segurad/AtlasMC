@@ -7,19 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketIO;
+import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
-import de.atlasmc.node.entity.metadata.type.MetaData;
-import de.atlasmc.node.entity.metadata.type.MetaDataField;
+import de.atlasmc.node.entity.metadata.MetaData;
+import de.atlasmc.node.entity.metadata.MetaDataField;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.io.protocol.play.PacketOutSetEntityMetadata;
 import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketOutSetEntityMetadata implements PacketIO<PacketOutSetEntityMetadata> {
+public class CorePacketOutSetEntityMetadata implements PacketCodec<PacketOutSetEntityMetadata> {
 
 	@Override
-	public void read(PacketOutSetEntityMetadata packet, ByteBuf in, ConnectionHandler handler) throws IOException {
+	public void deserialize(PacketOutSetEntityMetadata packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.entityID = readVarInt(in);
 		List<MetaData<?>> data = null;
 		int index = 0;
@@ -39,13 +39,13 @@ public class CorePacketOutSetEntityMetadata implements PacketIO<PacketOutSetEnti
 	}
 
 	@Override
-	public void write(PacketOutSetEntityMetadata packet, ByteBuf out, ConnectionHandler handler) throws IOException {
+	public void serialize(PacketOutSetEntityMetadata packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.entityID, out);
 		final CodecContext context = handler.getCodecContext();
 		for (MetaData<?> data : packet.data) {
 			out.writeByte(data.getIndex());
 			MetaDataType<?> type = data.getType();
-			writeVarInt(type.getTypeID(), out);
+			writeVarInt(type.getID(), out);
 			type.writeRaw(data.getData(), out, context);
 		}
 		out.writeByte(0xFF);
