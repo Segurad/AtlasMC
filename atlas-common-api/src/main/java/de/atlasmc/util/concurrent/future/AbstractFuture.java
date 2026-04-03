@@ -71,7 +71,7 @@ public class AbstractFuture<V> implements Future<V> {
 	}
 
 	@Override
-	public V getNow() {
+	public V resultNow() {
 		return result;
 	}
 
@@ -137,32 +137,28 @@ public class AbstractFuture<V> implements Future<V> {
 		complete(result, null);
 	}
 	
-	protected void complete(V result, Throwable cause) {
+	protected synchronized void complete(V result, Throwable cause) {
 		if (isDone())
 			throw new IllegalStateException("Already complete");
-		synchronized (this) {
-			if (isDone())
-				throw new IllegalStateException("Already complete");
-			this.result = result;
-			this.cause = cause;
-			this.done = true;
-			Object listener = this.listener;
-			if (listener != null) {
-				if (listener instanceof CopyOnWriteArraySet) {
-					@SuppressWarnings("unchecked")
-					Iterable<FutureListener<V>> listeners = (Iterable<FutureListener<V>>) listener;
-					for (FutureListener<V> l : listeners) {
-						l.complete(this);
-					}
-				} else {
-					@SuppressWarnings("unchecked")
-					FutureListener<V> l = (FutureListener<V>) listener;
+		this.result = result;
+		this.cause = cause;
+		this.done = true;
+		Object listener = this.listener;
+		if (listener != null) {
+			if (listener instanceof CopyOnWriteArraySet) {
+				@SuppressWarnings("unchecked")
+				Iterable<FutureListener<V>> listeners = (Iterable<FutureListener<V>>) listener;
+				for (FutureListener<V> l : listeners) {
 					l.complete(this);
 				}
-				this.listener = null;
+			} else {
+				@SuppressWarnings("unchecked")
+				FutureListener<V> l = (FutureListener<V>) listener;
+				l.complete(this);
 			}
-			notifyAll();
+			this.listener = null;
 		}
+		notifyAll();
 	}
 
 }

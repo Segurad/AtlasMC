@@ -143,7 +143,7 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 				futureAll = new CompletableFuture<>();
 				final CompletableFuture<Collection<RepositoryEntry>> finalFuture = futureAll;
 				listener = (future) -> {
-					RepositoryEntry futureEntry = future.getNow();
+					RepositoryEntry futureEntry = future.resultNow();
 					if (futureEntry == null)
 						return;
 					synchronized (entries) {

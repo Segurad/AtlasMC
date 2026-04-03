@@ -79,7 +79,7 @@ public class CoreNodeServerManager implements NodeServerManager {
 		FileUtils.ensureDir(workDir);
 		NodeServer server = factory.createServer(uuid, workDir, group);
 		server.prepare().setListener((future) -> {
-			if (future.getNow()) {
+			if (future.resultNow()) {
 				servers.put(uuid, server);
 				serverByGroup.put(group, server);
 				Atlas.getLogger().info("Starting server {}-{}", group.getName(), uuid);

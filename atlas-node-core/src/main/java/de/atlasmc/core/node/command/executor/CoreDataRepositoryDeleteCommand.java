@@ -31,7 +31,7 @@ public class CoreDataRepositoryDeleteCommand implements CommandExecutor {
 		if (rawNamespace == null) {
 			if (skipConfirm) {
 				repo.delete().setListener((future) -> {
-					if (future.isSuccess() && future.getNow()) {
+					if (future.isSuccess() && future.resultNow()) {
 						sender.sendMessage("Repository deleted");
 					} else {
 						sender.sendMessage("Failed to delete repository!");
@@ -39,14 +39,14 @@ public class CoreDataRepositoryDeleteCommand implements CommandExecutor {
 				});
 			} else {
 				Commands.awaitConfirm(sender, 1200).setListener((confirm) -> {
-					CommandContext ctx = confirm.getNow();
+					CommandContext ctx = confirm.resultNow();
 					String confirmValue = ctx.getArgument("confirmation", String.class, false);
 					if (!rawRepo.equalsIgnoreCase(confirmValue)) {
 						sender.sendMessage("Invalid repository name: " + confirmValue);
 						return;
 					}
 					repo.delete().setListener((future) -> {
-						if (future.isSuccess() && future.getNow()) {
+						if (future.isSuccess() && future.resultNow()) {
 							sender.sendMessage("Repository deleted");
 						} else {
 							sender.sendMessage("Failed to delete repository!");
@@ -74,14 +74,14 @@ public class CoreDataRepositoryDeleteCommand implements CommandExecutor {
 				}
 			} else {
 				Commands.awaitConfirm(sender, 1200).setListener((confirm) -> {
-					CommandContext ctx = confirm.getNow();
+					CommandContext ctx = confirm.resultNow();
 					String confirmValue = ctx.getArgument("confirmation", String.class, false);
 					if (!rawNamespace.equalsIgnoreCase(confirmValue)) {
 						sender.sendMessage("Invalid namespace name: " + confirmValue);
 						return;
 					}
 					repo.delete().setListener((future) -> {
-						if (future.isSuccess() && future.getNow()) {
+						if (future.isSuccess() && future.resultNow()) {
 							sender.sendMessage("Namespace deleted");
 						} else {
 							sender.sendMessage("Failed to delete namespace!");
@@ -98,10 +98,10 @@ public class CoreDataRepositoryDeleteCommand implements CommandExecutor {
 				sender.sendMessage("No entry found with name: " + rawEntry);
 				return;
 			}
-			RepositoryEntry entry = future.getNow();
+			RepositoryEntry entry = future.resultNow();
 			if (skipConfirm) {
 				entry.delete().setListener((delFuture) -> {
-					if (delFuture.isSuccess() && delFuture.getNow()) {
+					if (delFuture.isSuccess() && delFuture.resultNow()) {
 						sender.sendMessage("Entry deleted");
 					} else {
 						sender.sendMessage("Failed to delete entry!");
@@ -110,14 +110,14 @@ public class CoreDataRepositoryDeleteCommand implements CommandExecutor {
 				sender.sendMessage("Entry deleted");
 			} else {
 				Commands.awaitConfirm(sender, 1200).setListener((confirm) -> {
-					CommandContext ctx = confirm.getNow();
+					CommandContext ctx = confirm.resultNow();
 					String confirmValue = ctx.getArgument("confirmation", String.class, false);
 					if (!rawEntry.equalsIgnoreCase(confirmValue)) {
 						sender.sendMessage("Invalid entry name: " + confirmValue);
 						return;
 					}
 					repo.delete().setListener((defFuture) -> {
-						if (defFuture.isSuccess() && defFuture.getNow()) {
+						if (defFuture.isSuccess() && defFuture.resultNow()) {
 							sender.sendMessage("Repository deleted");
 						} else {
 							sender.sendMessage("Failed to delete repository!");

@@ -97,9 +97,9 @@ public class CoreLocalServerPreparingTask extends AtlasTask {
 		data.clear();
 		CumulativeFuture<RepositoryEntry> cumFuture = new CumulativeFuture<>(futures);
 		cumFuture.setListener(future -> {
-			for (Future<RepositoryEntry> entryFuture : future.getNow()) {
+			for (Future<RepositoryEntry> entryFuture : future.resultNow()) {
 				if (entryFuture.isSuccess()) {
-					RepositoryEntry entry = entryFuture.getNow();
+					RepositoryEntry entry = entryFuture.resultNow();
 					data.put(entry.getNamespacedKey(), entry);
 				} else {
 					if (entryFuture.cause() != null)
@@ -157,7 +157,7 @@ public class CoreLocalServerPreparingTask extends AtlasTask {
 					log.info("Failed to prepare template: {}", key);
 					failed = true;
 				} else {
-					Collection<RepositoryEntry> entries = future.getNow();
+					Collection<RepositoryEntry> entries = future.resultNow();
 					for (RepositoryEntry entry : entries)
 						this.data.put(entry.getNamespacedKey(), entry);
 				}
@@ -172,7 +172,7 @@ public class CoreLocalServerPreparingTask extends AtlasTask {
 					log.info("Failed to prepare data!");
 					failed = true;
 				} else {
-					Collection<RepositoryEntry> entries = future.getNow();
+					Collection<RepositoryEntry> entries = future.resultNow();
 					for (RepositoryEntry entry : entries) {
 						this.data.put(entry.getNamespacedKey(), entry);
 					}
@@ -188,7 +188,7 @@ public class CoreLocalServerPreparingTask extends AtlasTask {
 					log.info("Failed to prepare plugins!");
 					failed = true;
 				} else {
-					Collection<RepositoryEntry> entries = future.getNow();
+					Collection<RepositoryEntry> entries = future.resultNow();
 					for (RepositoryEntry entry : entries) {
 						this.data.put(entry.getNamespacedKey(), entry);
 					}
@@ -201,7 +201,7 @@ public class CoreLocalServerPreparingTask extends AtlasTask {
 					log.info("Failed to prepare plugin configurations!");
 					failed = true;
 				} else {
-					Collection<RepositoryEntry> entries = future.getNow();
+					Collection<RepositoryEntry> entries = future.resultNow();
 					for (RepositoryEntry entry : entries) {
 						this.data.put(entry.getNamespacedKey(), entry);
 					}

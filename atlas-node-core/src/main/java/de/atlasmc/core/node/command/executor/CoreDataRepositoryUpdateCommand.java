@@ -52,10 +52,10 @@ public class CoreDataRepositoryUpdateCommand implements CommandExecutor {
 				sender.sendMessage("No entry found with name: " + rawEntry);
 				return;
 			}
-			RepositoryEntry entry = future.getNow();
+			RepositoryEntry entry = future.resultNow();
 			entry.update().setListener((entryFuture) -> {
 				if (entryFuture.isSuccess()) {
-					RepositoryEntryUpdate update = entryFuture.getNow();
+					RepositoryEntryUpdate update = entryFuture.resultNow();
 					if (update.getEntryChange() == null && !update.hasFilesChanged()) {
 						sender.sendMessage("Nothing update...");
 						return;

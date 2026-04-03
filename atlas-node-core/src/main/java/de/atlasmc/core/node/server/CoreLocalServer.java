@@ -297,7 +297,7 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 		targetStatus = Status.AWAIT_START;
 		future.setListener((f) -> {
 			lock.lock();
-			if (f.getNow()) {
+			if (f.resultNow()) {
 				if (status == Status.PREPARATION) {
 					this.status = Status.AWAIT_START;
 				}

@@ -47,7 +47,7 @@ public class CoreLoadRepoPluginTask implements Runnable {
 		Map<File, CompletableFuture<Plugin>> files = new HashMap<>(entries.size());
 		for (Entry<NamespacedKey, Future<RepositoryEntry>> entry : entries.entrySet()) {
 			Future<RepositoryEntry> future = entry.getValue();
-			RepositoryEntry repoEntry = future.getNow();
+			RepositoryEntry repoEntry = future.resultNow();
 			try {
 				File file;
 				if (repoEntry.isDirectory()) {
@@ -75,7 +75,7 @@ public class CoreLoadRepoPluginTask implements Runnable {
 	private Map<NamespacedKey, Future<RepositoryEntry>> makeAvailable(Map<NamespacedKey, Future<RepositoryEntry>> entries) {
 		for (Entry<NamespacedKey, Future<RepositoryEntry>> entry : entries.entrySet()) {
 			Future<RepositoryEntry> future = entry.getValue();
-			RepositoryEntry repoEntry = future.getNow();
+			RepositoryEntry repoEntry = future.resultNow();
 			if (repoEntry == null)
 				continue;
 			entry.setValue(repoEntry.makeAvailable());

@@ -168,7 +168,7 @@ public class CoreAnvilRegionFile {
 		final AtomicInteger missing = new AtomicInteger(128);
 		final FutureListener<Chunk> listener = (chunkFuture) -> {
 			synchronized (chunks) {
-				chunks.add(chunkFuture.getNow());
+				chunks.add(chunkFuture.resultNow());
 				if (missing.decrementAndGet() <= 0)
 					future.complete(chunks);
 			}

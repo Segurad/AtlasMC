@@ -228,7 +228,7 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager impl
 			if (oldFuture != null) {
 				final CompletableFuture<V> createFuture = future;
 				oldFuture.setListener((f) -> {
-					V v = f.getNow();
+					V v = f.resultNow();
 					if (v != null) {
 						createFuture.complete(v);
 						return;
@@ -645,10 +645,10 @@ public class CoreSQLPermissionManager extends CoreAbstractPermissionManager impl
 		final CompletableFuture<Collection<PermissionGroup>> future = new CompletableFuture<>();
 		CumulativeFuture<PermissionGroup> groupsFuture = new CumulativeFuture<>(futureGroups);
 		groupsFuture.setListener((f) -> {
-			Collection<Future<PermissionGroup>> futures = f.getNow();
+			Collection<Future<PermissionGroup>> futures = f.resultNow();
 			ArrayList<PermissionGroup> groups = new ArrayList<>(futures.size());
 			for (Future<PermissionGroup> groupFuture : futures) {
-				PermissionGroup group = groupFuture.getNow();
+				PermissionGroup group = groupFuture.resultNow();
 				if (group == null)
 					continue;
 				groups.add(group);

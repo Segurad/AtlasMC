@@ -78,7 +78,7 @@ public class CompleteFuture<V> implements Future<V> {
 	}
 
 	@Override
-	public V getNow() {
+	public V resultNow() {
 		return result;
 	}
 

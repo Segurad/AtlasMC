@@ -78,7 +78,7 @@ public abstract class CoreAbstractChunkProvider implements ChunkProvider {
 				});
 				return;
 			}
-			final Chunk c = (Chunk) futureChunk.getNow();
+			final Chunk c = (Chunk) futureChunk.resultNow();
 			if (c != null) {
 				world.getServer().runTask(() -> {
 					addCachedChunk(pos, chunk);
@@ -101,7 +101,7 @@ public abstract class CoreAbstractChunkProvider implements ChunkProvider {
 				});
 				return;
 			}
-			final Chunk c = (Chunk) futureChunk.getNow();
+			final Chunk c = (Chunk) futureChunk.resultNow();
 			world.getServer().runTask(() -> {
 				if (c != null)
 					addCachedChunk(pos, c);
