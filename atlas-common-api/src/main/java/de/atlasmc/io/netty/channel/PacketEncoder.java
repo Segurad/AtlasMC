@@ -23,10 +23,10 @@ public class PacketEncoder extends MessageToByteEncoder<Packet> {
 	
 	@Override
 	protected void encode(ChannelHandlerContext ctx, Packet msg, ByteBuf out) throws Exception {
-		final int packetID = msg.getID();
-		PacketUtil.writeVarInt(msg.getID(), out);
+		
 		@SuppressWarnings("unchecked")
-		PacketCodec<Packet> io = (PacketCodec<Packet>) handler.getProtocol().getHandlerClientbound(packetID);
+		PacketCodec<Packet> io = (PacketCodec<Packet>) handler.getProtocol().getCodecClientboundByDefault(msg.getDefaultID());
+		PacketUtil.writeVarInt(io.getPacketID(), out);
 		io.serialize(msg, out, handler);
 		
 		handler.getLogger().debug("Encoded packet: {}", msg.getClass().getSimpleName());

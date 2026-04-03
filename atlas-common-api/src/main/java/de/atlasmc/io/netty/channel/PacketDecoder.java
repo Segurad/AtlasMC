@@ -30,10 +30,10 @@ public class PacketDecoder extends ByteToMessageDecoder {
 		final int id = PacketUtil.readVarInt(in);
 		final Protocol prot = handler.getProtocol();
 		@SuppressWarnings("unchecked")
-		final PacketCodec<Packet> io = (PacketCodec<Packet>) prot.getHandlerServerbound(id);
+		final PacketCodec<Packet> io = (PacketCodec<Packet>) prot.getCodecServerbound(id);
 		if (io == null)
 			throw new ProtocolException("Invalid Packet ID: " + id, prot, null);
-		final Packet packet = prot.createPacketServerbound(id);
+		final Packet packet = io.createPacketData();
 		packet.setTimestamp(System.currentTimeMillis());
 		io.deserialize(packet, in, handler);
 		

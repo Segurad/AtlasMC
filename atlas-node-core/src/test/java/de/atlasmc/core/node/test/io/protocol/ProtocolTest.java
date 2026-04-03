@@ -51,7 +51,7 @@ public class ProtocolTest {
 		for (int i = 0; i < packetCountIn; i++) {
 			PacketCodec<?> handler = null;
 			try {
-				handler = protocol.getHandlerServerbound(i);
+				handler = protocol.getCodecServerbound(i);
 			} catch(Exception e) {}
 			if (handler == null)
 				continue;
@@ -61,7 +61,7 @@ public class ProtocolTest {
 		for (int i = 0; i < packetCountOut; i++) {
 			PacketCodec<?> handler = null;
 			try {
-				handler = protocol.getHandlerClientbound(i);
+				handler = protocol.getCodecClientbound(i);
 			} catch(Exception e) {}
 			if (handler == null)
 				continue;

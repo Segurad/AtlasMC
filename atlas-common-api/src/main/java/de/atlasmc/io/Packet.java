@@ -26,10 +26,19 @@ public interface Packet {
 	void setTimestamp(long timestamp);
 	
 	/**
-	 * The id used for this packet
+	 * The id used for this packet.
+	 * For packets constructed using the default constructor this id should match {@link #getDefaultID()}.
+	 * For packets read this id should be the id used within the protocol.
 	 * @return the packet id
 	 */
 	int getID();
+	
+	/**
+	 * Used to set the packet id.
+	 * Do not modify except you know what you are doing.
+	 * @param id
+	 */
+	void setID(int id);
 	
 	/**
 	 * The id used by the latest supported protocol version

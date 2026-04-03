@@ -2,7 +2,7 @@ package de.atlasmc.io;
 
 public abstract class AbstractPacket implements Packet {
 	
-	private final int id;
+	private int id;
 	private boolean cancelled;
 	private long timestamp;
 	
@@ -36,6 +36,11 @@ public abstract class AbstractPacket implements Packet {
 	@Override
 	public int getID() {
 		return id;
+	}
+	
+	@Override
+	public void setID(int id) {
+		this.id = id;
 	}
 	
 	@Override

@@ -27,19 +27,7 @@ public abstract class AbstractProtocol<I extends PacketServerbound, O extends Pa
 	}
 	
 	@Override
-	public I createPacketServerbound(int id) {
-		PacketCodec<? extends I> handler = getHandlerServerbound(id);
-		return handler != null ? handler.createPacketData() : null;
-	}
-
-	@Override
-	public O createPacketClientbound(int id) {
-		PacketCodec<? extends O> handler = getHandlerClientbound(id);
-		return handler != null ? handler.createPacketData() : null;
-	}
-	
-	@Override
-	public PacketCodec<? extends I> getHandlerServerbound(int id) {
+	public PacketCodec<? extends I> getCodecServerbound(int id) {
 		if (id >= COUNT_IN || id < 0)
 			return null;
 		@SuppressWarnings("unchecked")
@@ -48,12 +36,22 @@ public abstract class AbstractProtocol<I extends PacketServerbound, O extends Pa
 	}
 
 	@Override
-	public PacketCodec<? extends O> getHandlerClientbound(int id) {
+	public PacketCodec<? extends O> getCodecClientbound(int id) {
 		if (id >= COUNT_OUT || id < 0)
 			return null;
 		@SuppressWarnings("unchecked")
 		PacketCodec<? extends O> packet = (PacketCodec<? extends O>) packetOut[id];
 		return packet;
+	}
+	
+	@Override
+	public PacketCodec<? extends Packet> getCodecClientboundByDefault(int id) {
+		return getCodecClientbound(id);
+	}
+	
+	@Override
+	public PacketCodec<? extends Packet> getCodecServerboundByDefault(int id) {
+		return getCodecServerbound(id);
 	}
 
 }

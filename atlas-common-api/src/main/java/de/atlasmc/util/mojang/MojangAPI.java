@@ -1,12 +1,19 @@
 package de.atlasmc.util.mojang;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.util.UUID;
 import java.util.function.Function;
+
+import javax.crypto.SecretKey;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -53,10 +60,16 @@ public class MojangAPI {
 	 */
 	PLAYER_NAME_LENGTH = 16;
 	
+	private static final class LazyHolder {
+		
+		private static final MojangAPI INSTANCE = new MojangAPI();
+		
+	}
+	
 	private final HttpClient client = HttpClient.newHttpClient();
 	
-	public MojangAPI() {
-		
+	public static MojangAPI getInstance() {
+		return LazyHolder.INSTANCE;
 	}
 	
 	private URI playerByNameURI(String name) {
@@ -292,6 +305,16 @@ public class MojangAPI {
 		default:
 			throw new MojangAPIException(response);
 		}
+	}
+	
+	@NotNull
+	public static String buildServerIDHash(String serverID, PublicKey key, SecretKey secret) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+		MessageDigest md = MessageDigest.getInstance("SHA-1");
+		md.update(serverID.getBytes("ISO-8859-1"));
+		md.update(key.getEncoded());
+		md.update(secret.getEncoded());
+		byte[] data = md.digest();
+		return new BigInteger(data).toString(16);
 	}
 	
 	@NotNull

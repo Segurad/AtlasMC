@@ -2,6 +2,8 @@ package de.atlasmc.node.io.protocol;
 
 import java.util.UUID;
 
+import javax.crypto.SecretKey;
+
 import de.atlasmc.chat.Chat;
 import de.atlasmc.io.connection.ServerSocketConnectionHandler;
 import de.atlasmc.network.player.AtlasPlayer;
@@ -9,6 +11,7 @@ import de.atlasmc.node.io.socket.NodeSocket;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.concurrent.future.Future;
+import de.atlasmc.util.mojang.PlayerProfile;
 
 public interface LoginHandler {
 	
@@ -71,6 +74,8 @@ public interface LoginHandler {
 	 */
 	boolean isAuthenticated();
 	
+	void setAuthenticated(boolean authenticated);
+	
 	/**
 	 * Whether or not the connection is closed
 	 * @return true if closed
@@ -92,8 +97,15 @@ public interface LoginHandler {
 	@NotNull
 	Future<Boolean> enableEncryption();
 	
+	void enableEncryption(SecretKey key);
+	
 	@NotNull
 	Future<AtlasPlayer> getPlayer();
+	
+	@Nullable
+	PlayerProfile getPlayerProfile();
+	
+	void setPlayerProfile(PlayerProfile profile);
 	
 	/**
 	 * Whether or not encryption is enabled

@@ -46,26 +46,23 @@ public class HandshakeProtocol implements Protocol {
 	}
 
 	@Override
-	public Packet createPacketServerbound(int id) {
-		HandshakePacketIO<?> io = packets.get(id);
-		if (io == null)
-			return null;
-		return io.createPacketData();
-	}
-
-	@Override
-	public Packet createPacketClientbound(int id) {
-		return createPacketServerbound(id);
-	}
-
-	@Override
-	public PacketCodec<? extends Packet> getHandlerServerbound(int id) {
+	public PacketCodec<? extends Packet> getCodecServerbound(int id) {
 		return packets.get(id);
 	}
 
 	@Override
-	public PacketCodec<? extends Packet> getHandlerClientbound(int id) {
-		return getHandlerServerbound(id);
+	public PacketCodec<? extends Packet> getCodecClientbound(int id) {
+		return getCodecServerbound(id);
+	}
+
+	@Override
+	public PacketCodec<? extends Packet> getCodecServerboundByDefault(int id) {
+		return packets.get(id);
+	}
+
+	@Override
+	public PacketCodec<? extends Packet> getCodecClientboundByDefault(int id) {
+		return getCodecServerboundByDefault(id);
 	}
 
 }

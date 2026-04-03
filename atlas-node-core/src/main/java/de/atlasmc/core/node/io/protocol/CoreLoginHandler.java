@@ -1,11 +1,17 @@
 package de.atlasmc.core.node.io.protocol;
 
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
+
+import javax.crypto.SecretKey;
+
 import de.atlasmc.Atlas;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.io.ProtocolException;
 import de.atlasmc.io.connection.ServerSocketConnectionHandler;
 import de.atlasmc.network.player.AtlasPlayer;
 import de.atlasmc.node.io.protocol.LoginHandler;
@@ -13,6 +19,7 @@ import de.atlasmc.node.io.protocol.login.ClientboundDisconnect;
 import de.atlasmc.node.io.protocol.login.ClientboundEncryptionRequest;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
 import de.atlasmc.util.concurrent.future.Future;
+import de.atlasmc.util.mojang.PlayerProfile;
 
 public class CoreLoginHandler implements LoginHandler {
 	
@@ -28,13 +35,16 @@ public class CoreLoginHandler implements LoginHandler {
 	private volatile boolean useAuthentication;
 	private volatile CompletableFuture<Boolean> encryptionFuture;
 	private volatile byte[] verifyToken;
+	private volatile PlayerProfile profile;
+	private volatile boolean authenticated;
 	
 	public CoreLoginHandler(ServerSocketConnectionHandler connection, String name, UUID uuid, long loginTime) {
 		this.connection = Objects.requireNonNull(connection);
 		this.name = Objects.requireNonNull(name);
 		this.uuid = Objects.requireNonNull(uuid);
-		this.connection.setExceptionHandler((_, e) -> {
+		this.connection.setExceptionHandler((con, e) -> {
 			disconnect(ChatUtil.toChat(e.getMessage()));
+			con.getLogger().error("Error in login process: " + CoreLoginHandler.this, e);
 			return true;
 		});
 		this.loginTime = loginTime;
@@ -87,6 +97,7 @@ public class CoreLoginHandler implements LoginHandler {
 		packet.text = message;
 		connection.sendPacket(packet, (_) -> {
 			connection.close();
+			closed = true;
 		});
 		return true;
 	}
@@ -143,7 +154,40 @@ public class CoreLoginHandler implements LoginHandler {
 
 	@Override
 	public boolean isAuthenticated() {
-		return false;
+		return authenticated;
+	}
+
+	@Override
+	public PlayerProfile getPlayerProfile() {
+		return profile;
+	}
+
+	@Override
+	public void setPlayerProfile(PlayerProfile profile) {
+		this.profile = profile;
+	}
+
+	@Override
+	public void setAuthenticated(boolean authenticated) {
+		this.authenticated = authenticated;
+	}
+	
+	@Override
+	public String toString() {
+		return "[ " + name + " | " + uuid + " | " + connection.getRemoteAddress() + " ]";
+	}
+
+	@Override
+	public synchronized void enableEncryption(SecretKey key) {
+		if (encryptionFuture == null)
+			encryptionFuture = new CompletableFuture<>();
+		try {
+			connection.enableEncryption(key);
+			encryptionFuture.complete(true);
+		} catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
+			encryptionFuture.complete(false, e);
+			throw new ProtocolException("Failed to enable encryption!", e);
+		}
 	}
 
 }

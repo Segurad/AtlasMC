@@ -8,36 +8,36 @@ import de.atlasmc.util.annotation.Nullable;
 public interface Protocol {
 	
 	/**
-	 * Returns a packet handler for the given id.
+	 * Returns a packet codec for the given id.
 	 * @param id
-	 * @return handler or null
+	 * @return codec or null
 	 */
 	@Nullable
-	PacketCodec<? extends Packet> getHandlerServerbound(int id);
+	PacketCodec<? extends Packet> getCodecServerbound(int id);
 	
 	/**
-	 * Returns the packet handler for the given id.
+	 * Returns the packet codec for the given id.
 	 * @param id
-	 * @return handler or null
+	 * @return codec or null
 	 */
 	@Nullable
-	PacketCodec<? extends Packet> getHandlerClientbound(int id);
+	PacketCodec<? extends Packet> getCodecClientbound(int id);
 	
 	/**
-	 * Returns a new packet for the given id.
+	 * Returns a packet codec for the given default id.
 	 * @param id
-	 * @return packet or null
+	 * @return codec or null
 	 */
 	@Nullable
-	Packet createPacketServerbound(int id);
+	PacketCodec<? extends Packet> getCodecServerboundByDefault(int id);
 	
 	/**
-	 * Returns a new packet for the given id.
+	 * Returns the packet codec for the given default id.
 	 * @param id
-	 * @return packet or null
+	 * @return codec or null
 	 */
 	@Nullable
-	Packet createPacketClientbound(int id);
+	PacketCodec<? extends Packet> getCodecClientboundByDefault(int id);
 	
 	/**
 	 * Returns the protocols version id
