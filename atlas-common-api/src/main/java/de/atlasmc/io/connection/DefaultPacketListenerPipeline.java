@@ -207,7 +207,7 @@ public class DefaultPacketListenerPipeline implements PacketListenerPipeline {
 		for (int i = 0; i < count; i++) {
 			final PacketListener listener = listeners[i];
 			try {
-				listener.handlePacketSync(handler, packet);
+				listener.handlePacket(handler, packet);
 			} catch (Exception e) {
 				handler.handleException(e);
 			}

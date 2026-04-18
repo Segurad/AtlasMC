@@ -25,15 +25,6 @@ public abstract class CoreAbstractPacketListener<H, P extends Packet> implements
 		}
 	}
 	
-	@Override
-	public void handlePacketSync(ConnectionHandler handler, Packet packet) {
-		int id = packet.getID();
-		if (id < 0 && id >= packetCount) {
-			return;
-		}
-		handle(packet);
-	}
-	
 	protected abstract boolean handleAsync(int packetID);
 	
 	protected abstract void handle(Packet packet);
