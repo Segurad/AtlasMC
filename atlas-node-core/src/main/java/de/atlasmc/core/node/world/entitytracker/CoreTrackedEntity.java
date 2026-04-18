@@ -7,14 +7,39 @@ import de.atlasmc.node.world.entitytracker.TrackerBinding;
 
 class CoreTrackedEntity<T extends Entity> implements TrackerBinding {
 	
+	/**
+	 * Pointer within the ticking entity array may change if other entities are added or removed.
+	 * If -1 the entity is not ticked
+	 */
 	int tickingEntitiesPointer = -1;
+	/**
+	 * The entity tracked will be null if unregistered
+	 */
 	T entity;
+	/**
+	 * Tracked perception is null if the entity has no perception
+	 */
 	CoreTrackedPerception<T> perception;
+	/**
+	 * entities x
+	 */
 	double x;
+	/**
+	 * entities y
+	 */
 	double y;
+	/**
+	 * entities z
+	 */
 	double z;
+	/**
+	 * The entities id given by the tracker
+	 */
 	final int id;
-	CoreEntityTracker tracker; // set to most fitting tracker with perception
+	/**
+	 * tracker this entity is registered on will be null if unregistered
+	 */
+	CoreEntityTracker tracker;
 	
 	public CoreTrackedEntity(int id, T entity, EntityPerception perception, CoreEntityTracker tracker) {
 		this.entity = entity;
@@ -48,6 +73,8 @@ class CoreTrackedEntity<T extends Entity> implements TrackerBinding {
 			throw new IllegalStateException("Tracker is unregistered!");
 		CoreTrackedPerception<T> currentPerception = this.perception;
 		if (currentPerception != null) {
+			if (currentPerception.perception == perception)
+				return;
 			currentPerception.unregister();
 			currentPerception = null;
 		}

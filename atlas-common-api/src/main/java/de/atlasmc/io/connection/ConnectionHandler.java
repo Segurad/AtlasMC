@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.util.Queue;
 
 import javax.crypto.SecretKey;
 
 import de.atlasmc.io.IOExceptionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketChunker;
-import de.atlasmc.io.PacketListener;
 import de.atlasmc.io.Protocol;
 import de.atlasmc.log.Log;
 import de.atlasmc.util.annotation.NotNull;
@@ -24,26 +24,43 @@ public interface ConnectionHandler {
 	
 	InetSocketAddress getRemoteAddress();
 	
+	/**
+	 * Sends a packet
+	 * @param packet
+	 */
 	void sendPacket(Packet packet);
 	
+	/**
+	 * Sends a packet and invokes the given
+	 * @param packet
+	 * @param listener
+	 */
 	void sendPacket(Packet packet, GenericFutureListener<? extends Future<? super Void>> listener);
 	
 	void sendChunkedPacket(PacketChunker<? extends Packet> chunker);
-
-	void writeQueuedPackets();
-
-	boolean hasQueued();
 	
-	void setProtocol(Protocol protocol, PacketListener listener);
+	void setProtocol(Protocol protocol);
 	
 	@NotNull
 	Protocol getProtocol();
 	
-	boolean registerPacketListener(PacketListener listener);
+	/**
+	 * Returns the inbound listener pipeline.
+	 * This pipeline is used to handle inbound packages.
+	 * At least one listener in this pipeline must mark a inbound package as handled or a exception is thrown.
+	 * @return pipeline
+	 */
+	@NotNull
+	PacketListenerPipeline getInboundListeners();
 	
-	boolean unregisterPacketListener(PacketListener listener);
-	
-	void removeAllPacketListener();
+	/**
+	 * Returns the outbound listener pipeline.
+	 * This pipeline is used to handle outbound packages.
+	 * If a outbound packet is marked as handled after passing this pipeline it will not be send.
+	 * @return pipeline
+	 */
+	@NotNull
+	PacketListenerPipeline getOutboundListeners();
 
 	void close();
 	
@@ -73,7 +90,39 @@ public interface ConnectionHandler {
 	
 	void handlePacket(Packet packet) throws IOException;
 	
-	void handleSyncPackets(Log logger);
+	/**
+	 * Sets whether or not this connection handles sync packets
+	 * @param enable
+	 */
+	void setSyncPacketHandling(boolean enable);
+	
+	/**
+	 * Whether or not this connection handles sync packets
+	 * @return true if enabled
+	 */
+	boolean hasSyncPacketHandling();
+	
+	default boolean hasSyncPackets() {
+		return getSyncPacketCount() > 0;
+	}
+	
+	/**
+	 * Number of sync packets
+	 * @return count
+	 */
+	int getSyncPacketCount();
+	
+	/**
+	 * Handles all queued sync packets using the listeners
+	 */
+	void handleSyncPackets();
+	
+	/**
+	 * Returns the queue containing all packets that need to be handled synchronous
+	 * @return queue
+	 */
+	@NotNull
+	Queue<Packet> getSyncPacketQueue();
 	
 	CodecContext getCodecContext();
 	

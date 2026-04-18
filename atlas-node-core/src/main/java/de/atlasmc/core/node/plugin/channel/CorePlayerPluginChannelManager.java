@@ -2,16 +2,16 @@ package de.atlasmc.core.node.plugin.channel;
 
 import de.atlasmc.node.io.protocol.PlayerConnection;
 import de.atlasmc.node.io.protocol.play.PacketOutPluginMessage;
-import de.atlasmc.plugin.channel.AbstractPluginChannelHandler;
+import de.atlasmc.plugin.channel.AbstractPluginChannelManager;
 import de.atlasmc.plugin.channel.PluginChannel;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
-public class CorePlayerPluginChannelHandler extends AbstractPluginChannelHandler {
+public class CorePlayerPluginChannelManager extends AbstractPluginChannelManager {
 
 	private final PlayerConnection con;
 	
-	public CorePlayerPluginChannelHandler(PlayerConnection con) {
+	public CorePlayerPluginChannelManager(PlayerConnection con) {
 		this.con = con;
 	}
 	

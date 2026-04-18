@@ -1,42 +1,31 @@
 package de.atlasmc.io.protocol.handshake;
 
+import java.io.IOException;
+
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketListener;
 import de.atlasmc.io.connection.ConnectionHandler;
-import de.atlasmc.log.Log;
+import de.atlasmc.io.connection.PacketListener;
 
 public class HandshakePacketListener implements PacketListener {
 		
 	private final HandshakeProtocol protocol;
-	private final ConnectionHandler handler;
 	
 	public HandshakePacketListener(ConnectionHandler handler, HandshakeProtocol protocol) {
-		this.handler = handler;
 		this.protocol = protocol;
 	}
 
 	@Override
-	public void handlePacket(Packet packet) {
+	public void handlePacket(ConnectionHandler handler, Packet packet) {
 		@SuppressWarnings("unchecked")
-		HandshakePacketIO<Packet> handler = (HandshakePacketIO<Packet>) protocol.getPacketIO(packet.getID());
-		if (handler == null)
+		HandshakePacketCodec<Packet> codec = (HandshakePacketCodec<Packet>) protocol.getPacketIO(packet.getID());
+		if (codec == null)
 			throw new IllegalStateException("No handler for handshake with id (" + packet.getID() + ") found!");
-		handler.handle(this.handler, packet);
+		codec.handle(handler, packet);
 	}
 
 	@Override
-	public void handleUnregister() {
+	public void handlePacketSync(ConnectionHandler handler, Packet packet) throws IOException {
 		// not required
-	}
-
-	@Override
-	public void handleSyncPackets(Log logger) {
-		// not required
-	}
-
-	@Override
-	public boolean hasSyncPackets() {
-		return false;
 	}
 
 }

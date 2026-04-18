@@ -3,7 +3,6 @@ package de.atlasmc.core.node.io.protocol;
 import java.util.UUID;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.chat.ChatType;
 import de.atlasmc.network.player.AtlasPlayer;
 import de.atlasmc.node.NodePlayer;
 import de.atlasmc.node.entity.Player;
@@ -21,25 +20,10 @@ public class CoreNodePlayer implements NodePlayer {
 		this.con = con;
 		this.atlasPlayer = atlasPlayer;
 	}
-	
-	@Override
-	public void sendTranslation(String key, Object... values) {
-		con.sendTranslation(key, values);
-	}
 
 	@Override
-	public void sendMessage(Chat chat) {
-		con.sendMessage(chat);
-	}
-
-	@Override
-	public void sendMessage(String message) {
-		con.sendMessage(message);
-	}
-
-	@Override
-	public void sendMessage(String message, ChatType type, String source, String target) {
-		con.sendMessage(message, type, source, target);
+	public void sendMessage(Chat chat, boolean overlay) {
+		con.sendMessage(chat, overlay);
 	}
 
 	@Override

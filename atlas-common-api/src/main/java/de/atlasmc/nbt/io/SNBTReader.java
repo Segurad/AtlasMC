@@ -19,6 +19,7 @@ import de.atlasmc.nbt.tag.ListTag;
 import de.atlasmc.nbt.tag.LongArrayTag;
 import de.atlasmc.nbt.tag.LongTag;
 import de.atlasmc.nbt.tag.NBT;
+import de.atlasmc.util.annotation.Nullable;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
@@ -37,6 +38,10 @@ public class SNBTReader extends NBTObjectReader {
 	STRING_TOKEN,
 	END_TOKEN;
 	
+	private static final Token
+	TOKEN_END_LIST,
+	TOKEN_END_COMPONENT;
+	
 	private static final int GROUP_COUNT;
 	
 	static {
@@ -49,13 +54,13 @@ public class SNBTReader extends NBTObjectReader {
 		STRING_TOKEN = groups.get("string");
 		END_TOKEN = groups.get("end");
 		GROUP_COUNT = groups.size();
+		TOKEN_END_LIST = new Token(END_TOKEN, "]");
+		TOKEN_END_COMPONENT = new Token(END_TOKEN, "}");
 	}
 	
 	public SNBTReader(CharSequence snbt) {
 		super(toObject(snbt));
 	}
-	
-	
 	
 	private static NBT toObject(CharSequence snbt) {
 		List<Token> tokens = buildTokens(snbt);
@@ -66,6 +71,12 @@ public class SNBTReader extends NBTObjectReader {
 		return nbt;
 	}
 	
+	/**
+	 * Reads tokens to build a NBT if a end token is found null will be returned.
+	 * @param iterator
+	 * @return nbt or null
+	 */
+	@Nullable
 	private static NBT toNBT(ListIterator<Token> iterator) {
 		String key = null;
 		while (iterator.hasNext()) {
@@ -80,7 +91,7 @@ public class SNBTReader extends NBTObjectReader {
 				return toIntTag(key, next.token);
 			} else if (KEY_TOKEN == next.tokenType) {
 				if (key != null)
-					throw new NBTException("Tag may not contain two keys! Token: " + iterator.previousIndex());
+					throw new NBTException("Tag must not contain two keys! Token: " + iterator.previousIndex());
 				key = unescape(next.token);
 				continue;
 			} else if (STRING_TOKEN == next.tokenType) {
@@ -122,10 +133,10 @@ public class SNBTReader extends NBTObjectReader {
 							continue;
 						switch (c) {
 						case '}':
-							tokens.add(new Token(i, "}"));
+							tokens.add(TOKEN_END_COMPONENT);
 							break;
 						case ']':
-							tokens.add(new Token(i, "]"));
+							tokens.add(TOKEN_END_LIST);
 							break;
 						default:
 							throw new IllegalArgumentException("Unknown char in end token: " + c + " <" + value + "> match: "+ match + " index: " + tokens.size());
@@ -186,27 +197,16 @@ public class SNBTReader extends NBTObjectReader {
 		for (int i = 1; i < length - 1; i++) {
 			char c = rawValue.charAt(i);
 			if (escaped) {
-				switch (c) {
-				case '\\', '"', '\'':
-					break;
-				case 'n':
-					c = '\n';
-					break;
-				case 't':
-					c = '\t';
-					break;
-				case 'b':
-					c = '\b';
-					break;
-				case 'r':
-					c = '\r';
-					break;
-				case 'f':
-					c = '\f';
-					break;
-				default:
+				c = switch (c) {
+				case '\\', '"', '\'' -> c;
+				case 'n' -> '\n';
+				case 't'-> '\t';
+				case 'b' -> '\b';
+				case 'r' -> '\r';
+				case 'f' -> '\f';
+				default ->
 					throw new NBTException("Unknown Escaped char (" + c + ") in value: " + rawValue);
-				}
+				};
 				builder.append(c);
 				escaped = false;
 				continue;
@@ -234,7 +234,7 @@ public class SNBTReader extends NBTObjectReader {
 			}
 			nextIndex = iterator.previousIndex();
 			Token endToken = iterator.previous();
-			if (!endToken.token.equals("}"))
+			if (endToken != TOKEN_END_COMPONENT)
 				throw new NBTException("Invalid end token(" + endToken.token + "): " + nextIndex);
 			iterator.next();
 			end = true;
@@ -317,8 +317,7 @@ public class SNBTReader extends NBTObjectReader {
 				throw new NBTException("Unexpected array type: " + arrayType);
 			}
 		} else { // list
-			ListTag list = new ListTag();
-			list.setName(key);
+			ListTag list = new ListTag(key);
 			boolean end = false;
 			while (iterator.hasNext()) {
 				int nextIndex = iterator.nextIndex();
@@ -331,7 +330,7 @@ public class SNBTReader extends NBTObjectReader {
 				}
 				nextIndex = iterator.previousIndex();
 				Token endToken = iterator.previous();
-				if (!endToken.token.equals("]"))
+				if (endToken != TOKEN_END_LIST)
 					throw new NBTException("Invalid end token(" + endToken.token + "): " + nextIndex);
 				iterator.next();
 				end = true;

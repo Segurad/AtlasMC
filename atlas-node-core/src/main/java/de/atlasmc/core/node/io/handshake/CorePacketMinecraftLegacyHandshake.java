@@ -4,11 +4,11 @@ import java.io.IOException;
 
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.connection.ConnectionHandler;
-import de.atlasmc.io.protocol.handshake.HandshakePacketIO;
+import de.atlasmc.io.protocol.handshake.HandshakePacketCodec;
 import de.atlasmc.node.io.protocol.handshake.PacketMinecraftLegacyHandshake;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketMinecraftLegacyHandshake extends HandshakePacketIO<PacketMinecraftLegacyHandshake> {
+public class CorePacketMinecraftLegacyHandshake extends HandshakePacketCodec<PacketMinecraftLegacyHandshake> {
 
 	@Override
 	public void deserialize(PacketMinecraftLegacyHandshake packet, ByteBuf in, ConnectionHandler con) throws IOException {

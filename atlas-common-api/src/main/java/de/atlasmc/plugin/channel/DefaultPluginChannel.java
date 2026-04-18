@@ -9,12 +9,12 @@ import io.netty.buffer.ByteBuf;
 
 public class DefaultPluginChannel implements PluginChannel {
 	
-	private final AbstractPluginChannelHandler handler;
+	private final AbstractPluginChannelManager handler;
 	private final NamespacedKey name;
 	private final Collection<ChannelListener> listener;
 	private volatile boolean unregistered;
 	
-	public DefaultPluginChannel(AbstractPluginChannelHandler handler, NamespacedKey name) {
+	public DefaultPluginChannel(AbstractPluginChannelManager handler, NamespacedKey name) {
 		this.handler = Objects.requireNonNull(handler);
 		this.name = Objects.requireNonNull(name);
 		this.listener = new CopyOnWriteArrayList<>();
@@ -49,7 +49,7 @@ public class DefaultPluginChannel implements PluginChannel {
 	}
 	
 	@Override
-	public PluginChannelHandler getHolder() {
+	public PluginChannelManager getHolder() {
 		return handler;
 	}
 

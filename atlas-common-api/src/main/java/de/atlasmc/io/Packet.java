@@ -6,12 +6,16 @@ package de.atlasmc.io;
 public interface Packet {
 	
 	/**
-	 * Whether or not this packet is cancelled
-	 * @return
+	 * Whether or not this packet was handled successfully
+	 * @return true if handled
 	 */
-	boolean isCancelled();
+	boolean isHandled();
 	
-	void setCancelled(boolean cancelled);
+	/**
+	 * Sets whether or not this packet was handled
+	 * @param handled
+	 */
+	void setHandled(boolean handled);
 	
 	/**
 	 * Return the Time this Packet arrived in milliseconds and 0 if it is outbound
@@ -59,8 +63,17 @@ public interface Packet {
 		DefaultPacketID annotation = clazz.getAnnotation(DefaultPacketID.class);
 	    if (annotation == null) 
 	    	throw new IllegalArgumentException("Class does not contain DefaultPacketID annotation: " + clazz.getName());
-	    int id = annotation.packetID();
-	    return id;
+	    return annotation.packetID();
+	}
+	
+	/**
+	 * Returns the packet definition provided by the {@link DefaultPacketID} annotation
+	 */
+	public static String getPacketDefinition(Class<?> clazz) {
+		DefaultPacketID annotation = clazz.getAnnotation(DefaultPacketID.class);
+	    if (annotation == null) 
+	    	throw new IllegalArgumentException("Class does not contain DefaultPacketID annotation: " + clazz.getName());
+	    return annotation.definition();
 	}
 	
 }

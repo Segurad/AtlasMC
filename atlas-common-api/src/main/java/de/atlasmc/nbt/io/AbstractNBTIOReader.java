@@ -62,29 +62,19 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 	@Override
 	public byte readByteTag() throws IOException {
 		prepareTag();
-		byte data = 0;
+		byte data;
 		if (type == TagType.BYTE) {
 			data = (byte) ioReadByte();
 		} else { // misc number read
-			switch (type) {
-			case INT:
-				data =  (byte) ioReadInt();
-				break;
-			case SHORT:
-				data = (byte) ioReadShort();
-				break;
-			case LONG:
-				data = (byte) ioReadLong();
-				break;
-			case FLOAT:
-				data = (byte) ioReadFloat();
-				break;
-			case DOUBLE:
-				data = (byte) ioReadDouble();
-				break;
-			default:
+			data = switch (type) {
+			case INT -> (byte) ioReadInt();
+			case SHORT -> (byte) ioReadShort();
+			case LONG -> (byte) ioReadLong();
+			case FLOAT -> (byte) ioReadFloat();
+			case DOUBLE -> (byte) ioReadDouble();
+			default ->
 				throw new NBTException("Tried to read tag as number: " + type);
-			}
+			};
 		}
 		tagConsumed();
 		return data;
@@ -93,29 +83,19 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 	@Override
 	public double readDoubleTag() throws IOException {
 		prepareTag();
-		double data = 0;
+		double data;
 		if (type == TagType.DOUBLE) {
 			data = ioReadDouble();
 		} else { // misc number read
-			switch (type) {
-			case BYTE:
-				data = ioReadByte();
-				break;
-			case SHORT:
-				data = ioReadShort();
-				break;
-			case INT:
-				data = ioReadInt();
-				break;
-			case LONG:
-				data = ioReadLong();
-				break;
-			case FLOAT:
-				data = ioReadFloat();
-				break;
-			default:
+			data = switch (type) {
+			case BYTE -> ioReadByte();
+			case SHORT -> ioReadShort();
+			case INT -> ioReadInt();
+			case LONG -> ioReadLong();
+			case FLOAT -> ioReadFloat();
+			default ->
 				throw new NBTException("Tried to read tag as number: " + type);
-			}
+			};
 		}
 		tagConsumed();
 		return data;
@@ -124,29 +104,19 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 	@Override
 	public float readFloatTag() throws IOException {
 		prepareTag();
-		float data = 0;
+		float data;
 		if (type == TagType.FLOAT) {
 			data = ioReadFloat();
 		} else { // misc number read
-			switch (type) {
-			case BYTE:
-				data = ioReadByte();
-				break;
-			case SHORT:
-				data = ioReadShort();
-				break;
-			case INT:
-				data = ioReadInt();
-				break;
-			case LONG:
-				data = ioReadLong();
-				break;
-			case DOUBLE:
-				data = (float) ioReadDouble();
-				break;
-			default:
+			data = switch (type) {
+			case BYTE -> ioReadByte();
+			case SHORT -> ioReadShort();
+			case INT -> ioReadInt();
+			case LONG -> ioReadLong();
+			case DOUBLE -> (float) ioReadDouble();
+			default ->
 				throw new NBTException("Tried to read tag as number: " + type);
-			}
+			};
 		}
 		tagConsumed();
 		return data;
@@ -196,29 +166,19 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 	@Override
 	public int readIntTag() throws IOException {
 		prepareTag();
-		int data = 0;
+		int data;
 		if (type == TagType.INT) {
 			data = ioReadInt();
 		} else { // misc number read
-			switch (type) {
-			case BYTE:
-				data = ioReadByte();
-				break;
-			case SHORT:
-				data = ioReadShort();
-				break;
-			case LONG:
-				data = (int) ioReadLong();
-				break;
-			case FLOAT:
-				data = (int) ioReadFloat();
-				break;
-			case DOUBLE:
-				data = (int) ioReadDouble();
-				break;
-			default:
+			data = switch (type) {
+			case BYTE -> ioReadByte();
+			case SHORT -> ioReadShort();
+			case LONG -> (int) ioReadLong();
+			case FLOAT -> (int) ioReadFloat();
+			case DOUBLE -> (int) ioReadDouble();
+			default ->
 				throw new NBTException("Tried to read tag as number: " + type);
-			}
+			};
 		}
 		tagConsumed();
 		return data;
@@ -299,29 +259,19 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 	@Override
 	public short readShortTag() throws IOException {
 		prepareTag();
-		short data = 0;
+		short data;
 		if (type == TagType.SHORT) {
 			data = ioReadShort();
 		} else { // misc number read
-			switch (type) {
-			case BYTE:
-				data = (short) ioReadByte();
-				break;
-			case INT:
-				data = (short) ioReadInt();
-				break;
-			case LONG:
-				data = (short) ioReadLong();
-				break;
-			case FLOAT:
-				data = (short) ioReadFloat();
-				break;
-			case DOUBLE:
-				data = (short) ioReadDouble();
-				break;
-			default:
+			data = switch (type) {
+			case BYTE -> (short) ioReadByte();
+			case INT -> (short) ioReadInt();
+			case LONG -> (short) ioReadLong();
+			case FLOAT -> (short) ioReadFloat();
+			case DOUBLE -> (short) ioReadDouble();
+			default ->
 				throw new NBTException("Tried to read tag as number: " + type);
-			}
+			};
 		}
 		tagConsumed();
 		return data;

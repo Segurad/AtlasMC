@@ -116,10 +116,6 @@ public final class Dependency {
 				String rawTo = matcher.group("to");
 				try {
 					from = new Version(rawFrom);
-				} catch(IllegalArgumentException e) {
-					throw new IllegalArgumentException("Invalid from version format in dependency String: " + dependency);
-				}
-				try {
 					to = new Version(rawTo);
 				} catch(IllegalArgumentException e) {
 					throw new IllegalArgumentException("Invalid from version format in dependency String: " + dependency);

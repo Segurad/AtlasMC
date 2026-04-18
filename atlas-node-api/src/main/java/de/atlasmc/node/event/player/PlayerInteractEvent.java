@@ -16,20 +16,14 @@ public class PlayerInteractEvent extends PlayerEvent implements Cancellable {
 	private Block clicked;
 	private BlockFace clickedFace;
 	private EquipmentSlot hand;
-	private Action action;
 	private boolean cancelled;
 	
-	public PlayerInteractEvent(Player player, Action action, ItemStack item, Block clicked, BlockFace clickedFace, EquipmentSlot hand) {
+	public PlayerInteractEvent(Player player, ItemStack item, Block clicked, BlockFace clickedFace, EquipmentSlot hand) {
 		super(player);
 		this.clickedFace = clickedFace;
 		this.clicked = clicked;
 		this.hand = hand;
-		this.action = action;
 		this.item = item;
-	}
-	
-	public Action getAction() {
-		return action;
 	}
 	
 	public EquipmentSlot getHand() {
@@ -70,21 +64,4 @@ public class PlayerInteractEvent extends PlayerEvent implements Cancellable {
 	public static ServerHandlerList getHandlerList() {
 		return HANDLERS;
 	}
-	
-	public static enum Action {
-		LEFT_CLICK_AIR,
-		LEFT_CLICK_BLOCK,
-		RIGHT_CLICK_AIR,
-		RIGHT_CLICK_BLOCK,
-		PHYSICAL;
-		
-		public boolean isLeft() {
-			return this == LEFT_CLICK_AIR || this == LEFT_CLICK_BLOCK;
-		}
-		
-		public boolean isRight() {
-			return this == RIGHT_CLICK_AIR || this == RIGHT_CLICK_BLOCK;
-		}
-	}
-
 }

@@ -14,10 +14,25 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 
 class CoreTrackingTarget<T extends Entity> implements TrackingTarget<T> {
 	
+	/**
+	 * Class for entity selection
+	 */
 	final Class<T> target;
+	/**
+	 * All entites of this target
+	 */
 	final Set<T> entities;
+	/**
+	 * Immutable view
+	 */
 	final Set<T> entitiesView;
+	/**
+	 * All perceptions of this target
+	 */
 	final Set<CoreTrackedPerception<T>> perceptions;
+	/**
+	 * Chunk storage for this target
+	 */
 	final Long2ObjectMap<CoreTrackedChunk<T>> chunks;
 	
 	public CoreTrackingTarget(Class<T> target) {
@@ -32,6 +47,7 @@ class CoreTrackingTarget<T extends Entity> implements TrackingTarget<T> {
 		CoreTrackedChunk<T> chunk = chunks.get(index);
 		if (chunk == null) {
 			chunks.put(index, chunk = new CoreTrackedChunk<>());
+			// we need to add all perceptions in range to the created chunk
 			int x = (int) (index >> 32);
 			int z = (int) (index & 0xFFFFFFFF);
 			for (CoreTrackedPerception<T> perception : perceptions) {
@@ -43,19 +59,6 @@ class CoreTrackingTarget<T extends Entity> implements TrackingTarget<T> {
 			}
 		}
 		chunk.addEntity(entity);
-		final int perceptionsSize = chunk.perceptionsSize;
-		if (perceptionsSize == 0)
-			return;
-		final CoreTrackedPerception<?>[] perceptions = chunk.perceptions;
-		for (int i = 0; i < perceptionsSize; i++) {
-			CoreTrackedPerception<?> perception = perceptions[i];
-			if (perception.source == entity || !perception.clazz.isInstance(entity))
-				continue;
-			int entityYChunk = MathUtil.toChunkCoordinate(entity.getY());
-			if (Math.abs(perception.chunkY - entityYChunk) > perception.perceptionRange)
-				continue;
-			perception.perception.add(entity);
-		}
 	}
 	
 	void removeFromChunk(long index, T entity) {
@@ -63,19 +66,6 @@ class CoreTrackingTarget<T extends Entity> implements TrackingTarget<T> {
 		if (chunk == null)
 			return;
 		chunk.removeEntity(entity);
-		final int perceptionsSize = chunk.perceptionsSize;
-		if (perceptionsSize == 0)
-			return;
-		final CoreTrackedPerception<?>[] perceptions = chunk.perceptions;
-		for (int i = 0; i < perceptionsSize; i++) {
-			CoreTrackedPerception<?> perception = perceptions[i];
-			if (perception.source == entity || !perception.clazz.isInstance(entity))
-				continue;
-			int entityYChunk = MathUtil.toChunkCoordinate(entity.getY());
-			if (Math.abs(perception.chunkY - entityYChunk) > perception.perceptionRange)
-				continue;
-			perception.perception.remove(entity);
-		}
 		if (chunk.entitiesSize == 0) {
 			chunks.remove(index);
 		}
@@ -116,7 +106,7 @@ class CoreTrackingTarget<T extends Entity> implements TrackingTarget<T> {
 		final int deltaY = oldY - newY;
 		final int deltaZ = oldZ - newZ;
 		final int range = perception.perceptionRange;
-		if (range == 0) { // can only view current chunk
+		if (range == 0) { // only update current chunk because perception range is one chunk
 			if (deltaX != 0 || deltaZ != 0) { // only update chunks if x z changes
 				CoreTrackedChunk<T> oldChunk = chunks.get(MathUtil.toChunkPosition(oldX, oldZ)); 
 				if (oldChunk != null) {
@@ -132,9 +122,8 @@ class CoreTrackingTarget<T extends Entity> implements TrackingTarget<T> {
 					chunk.updatePerceptionY(perception, oldY, newY);
 				}
 			}
-			return;
-		}
-		if (deltaX > 1 || deltaX < -1 || deltaZ > 1 || deltaZ < -1) {
+		} else if (deltaX > 1 || deltaX < -1 || deltaZ > 1 || deltaZ < -1) {
+			// in case delta is greater than 1 we assume the entity was teleported so we just rebuild the area
 			removeFullArea(perception, oldX, oldY, oldZ);
 			addFullArea(perception, newX, newY, newZ);
 		} else {
@@ -253,7 +242,7 @@ class CoreTrackingTarget<T extends Entity> implements TrackingTarget<T> {
 					chunk.addPerception(perception, chunkY);
 				pos++;
 			}
-			pos += 0x0000000100000000L;
+			pos += 0x100000000L;
 		}
 	}
 

@@ -1,8 +1,9 @@
 package de.atlasmc.io.netty.channel;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketListener;
 import de.atlasmc.io.connection.ConnectionHandler;
+import de.atlasmc.io.connection.PacketListener;
+import de.atlasmc.io.connection.SocketConnectionHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
@@ -11,9 +12,9 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
  */
 public class PacketProcessor extends ChannelInboundHandlerAdapter {
 	
-	private final ConnectionHandler handler;
+	private final SocketConnectionHandler handler;
 	
-	public PacketProcessor(ConnectionHandler handler) {
+	public PacketProcessor(SocketConnectionHandler handler) {
 		this.handler = handler;
 	}
 	

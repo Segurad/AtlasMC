@@ -7,9 +7,8 @@ import de.atlasmc.core.node.io.protocol.status.CorePacketOutResponse;
 import de.atlasmc.io.AbstractProtocol;
 import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.PacketServerbound;
-import de.atlasmc.io.PacketListener;
 import de.atlasmc.io.PacketClientbound;
-import de.atlasmc.io.connection.ConnectionHandler;
+import de.atlasmc.io.connection.PacketListener;
 import de.atlasmc.node.io.protocol.ProtocolAdapter;
 import de.atlasmc.node.io.protocol.ProtocolStatus;
 
@@ -33,7 +32,7 @@ public class CoreProtocolStatus extends AbstractProtocol<PacketServerbound, Pack
 
 	@Override
 	public PacketListener createDefaultPacketListenerServerbound(Object o) {
-		return new CorePacketListenerStatus((ConnectionHandler) o);
+		return CorePacketListenerStatus.INSTANCE;
 	}
 	
 	@Override

@@ -3,21 +3,19 @@ package de.atlasmc.chat;
 public interface Messageable {
 	
 	default void sendMessage(String... messages) {
-		for (String message : messages) {
-			sendMessage(message);
+		for (var msg : messages) {
+			sendMessage(msg);
 		}
 	}
 	
-	void sendTranslation(String key, Object... values);
-	
-	void sendMessage(Chat chat);
-	
-	void sendMessage(String message);
-	
-	default void sendMessage(String message, ChatType type, String source) {
-		sendMessage(message, type, source, null);
+	default void sendMessage(String message) {
+		sendMessage(ChatUtil.toChat(message));
 	}
 	
-	void sendMessage(String message, ChatType type, String source, String target);
+	default void sendMessage(Chat chat) {
+		sendMessage(chat, false);
+	}
+	
+	void sendMessage(Chat chat, boolean overlay);
 
 }

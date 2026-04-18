@@ -11,7 +11,6 @@ import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.io.netty.channel.DefaultChannelInitHandler;
 import de.atlasmc.io.socket.ServerSocket;
 import de.atlasmc.io.socket.SocketConfig;
-import de.atlasmc.log.Log;
 import de.atlasmc.log.Logging;
 import de.atlasmc.network.AtlasNode;
 import de.atlasmc.node.LocalAtlasNode;
@@ -44,9 +43,8 @@ public class CoreNodeSocket extends ServerSocket implements NodeSocket {
 	@Override
 	public void tick() {
 		if (!connectionProcesses.isEmpty()) {
-			final Log logger = getLogger();
 			connectionProcesses.forEach((handler) -> {
-				handler.handleSyncPackets(logger);
+				handler.handleSyncPackets();
 			});
 		}
 	}

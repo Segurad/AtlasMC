@@ -29,6 +29,6 @@ public interface PluginChannel extends Namespaced {
 	 * @return handler
 	 */
 	@NotNull
-	PluginChannelHandler getHolder();
+	PluginChannelManager getHolder();
 
 }

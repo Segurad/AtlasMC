@@ -3,8 +3,18 @@ package de.atlasmc.io;
 public abstract class AbstractPacket implements Packet {
 	
 	private int id;
-	private boolean cancelled;
 	private long timestamp;
+	private boolean handled;
+	
+	@Override
+	public boolean isHandled() {
+		return handled;
+	}
+	
+	@Override
+	public void setHandled(boolean handled) {
+		this.handled = handled;
+	}
 	
 	/**
 	 * 
@@ -12,7 +22,6 @@ public abstract class AbstractPacket implements Packet {
 	 */
 	public AbstractPacket(int id) {
 		this.id = id;
-		this.cancelled = false;
 	}
 	
 	/**
@@ -20,17 +29,7 @@ public abstract class AbstractPacket implements Packet {
 	 */
 	public AbstractPacket() {
 		this.id = getDefaultID();
-		this.cancelled = false;
-	}
 
-	@Override
-	public boolean isCancelled() {
-		return cancelled;
-	}
-
-	@Override
-	public void setCancelled(boolean cancelled) {
-		this.cancelled = cancelled;
 	}
 
 	@Override
@@ -56,6 +55,11 @@ public abstract class AbstractPacket implements Packet {
 	@Override
 	public boolean isTerminating() {
 		return false;
+	}
+	
+	@Override
+	public String toString() {
+		return Packet.getPacketDefinition(getClass()) + "[" + getDefaultID() + "|" + getID() + "]: " + getClass().getName();
 	}
 
 }

@@ -31,18 +31,6 @@ public class LocalConnectionHandler extends AbstractConnectionHandler {
 	}
 
 	@Override
-	public void writeQueuedPackets() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean hasQueued() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public void close() {
 		// TODO Auto-generated method stub
 		
@@ -56,37 +44,31 @@ public class LocalConnectionHandler extends AbstractConnectionHandler {
 
 	@Override
 	public void enableEncryption(SecretKey secret) throws InvalidKeyException, InvalidAlgorithmParameterException {
-		// TODO Auto-generated method stub
-		
+		// not required
 	}
 
 	@Override
 	public boolean isEncryotionEnabled() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void setDecompression(boolean enable) {
-		// TODO Auto-generated method stub
-		
+		// not required
 	}
 
 	@Override
 	public boolean hasCompression() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void setCompression(boolean enbale) {
-		// TODO Auto-generated method stub
-		
+		// not required
 	}
 
 	@Override
 	public boolean hasDecompression() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

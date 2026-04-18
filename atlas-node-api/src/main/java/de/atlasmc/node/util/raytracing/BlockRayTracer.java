@@ -1,5 +1,7 @@
 package de.atlasmc.node.util.raytracing;
 
+import java.util.Objects;
+
 import org.joml.Vector3d;
 
 import de.atlasmc.node.WorldLocation;
@@ -29,13 +31,21 @@ public class BlockRayTracer implements VoxelRayConsumer {
 			throw new IllegalArgumentException("Location can not be null!");
 		if (rule == null) 
 			throw new IllegalArgumentException("Rule can not be null!");
-		this.loc = loc;
-		this.direction = direction;
+		this.loc = Objects.requireNonNull(loc);
+		this.direction = Objects.requireNonNull(direction);
 		world = loc.getWorld();
 		chunk = world.getChunk(loc);
-		chunkX = loc.getBlockX() >> 4;
-		chunkZ = loc.getBlockZ() >> 4;
+		chunkX = loc.getChunkX();
+		chunkZ = loc.getChunkZ();
 		this.rule = rule;
+	}
+	
+	public BlockRayCollisionRule getRule() {
+		return rule;
+	}
+	
+	public void setRule(BlockRayCollisionRule rule) {
+		this.rule = Objects.requireNonNull(rule);
 	}
 
 	public Chunk getFirstBlockHit(double length) {
@@ -49,15 +59,17 @@ public class BlockRayTracer implements VoxelRayConsumer {
 
 	@Override
 	public boolean next(BlockFace passed, double x, double y, double z, int traversed) {
-		final int newChunkX = ((int) loc.x) >> 4;
-		final int newChunkZ = ((int) loc.z) >> 4;
+		final var loc = this.loc;
+		loc.set(x, y, z);
+		final int newChunkX = loc.getChunkX();
+		final int newChunkZ = loc.getBlockZ();
 		if (chunkZ != newChunkZ || chunkX != newChunkX) {
 			chunk = world.getChunk(newChunkX, newChunkZ);
 			chunkX = newChunkX;
 			chunkZ = newChunkZ;
 		}
 		lastHit = passed;
-		BlockData data = chunk.getBlockDataAt(MathUtil.floor(x), MathUtil.floor(y), MathUtil.floor(z));
+		BlockData data = chunk.getBlockDataAtUnsafe(MathUtil.floor(x), MathUtil.floor(y), MathUtil.floor(z));
 		return rule.isValid(data);
 	}
 }

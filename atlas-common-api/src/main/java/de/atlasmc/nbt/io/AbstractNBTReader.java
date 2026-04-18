@@ -50,32 +50,18 @@ public abstract class AbstractNBTReader implements NBTReader {
 
 	@Override
 	public Number readNumber() throws IOException {
-		Number data = null;
 		TagType type = getType();
 		ensureNumberTag(type);
-		switch (type) {
-		case BYTE:
-			data = readByteTag();
-			break;
-		case SHORT:
-			data = readShortTag();
-			break;
-		case INT:
-			data = readIntTag();
-			break;
-		case LONG:
-			data = readLongTag();
-			break;
-		case FLOAT:
-			data = readFloatTag();
-			break;
-		case DOUBLE:
-			data = readDoubleTag();
-			break;
-		default:
+		return switch (type) {
+		case BYTE -> readByteTag();
+		case SHORT -> readShortTag();
+		case INT -> readIntTag();
+		case LONG -> readLongTag();
+		case FLOAT -> readFloatTag();
+		case DOUBLE -> readDoubleTag();
+		default ->
 			throw new NBTException("Unsupported nunmber type: " + type);
-		}
-		return data;
+		};
 	}
 	
 	@Override

@@ -65,7 +65,7 @@ For explanation read below. In case not Version or Range is defined any Version 
 
 Defines the order in which Plugins are loaded.
 
-- `+` loads the Plugin after the dependency.
+- `+` loads the Plugin after the dependency. (default)
 - `-` loads the Plugin befor the dependency.
 - `~` does not affect the load order.
 
@@ -75,7 +75,7 @@ It is not required to define a order value. If not defined it defaults to `+` lo
 
 Defines the type of the dependency.
 
-- `!` is a incompatiple dependency. If the dependecy is present it will prevent this plugin from loading.
+- `!` is a incompatiple dependency. If the dependecy is present it will prevent this plugin from loading. (default)
 - `*` is a required dependency. If the dependency is not present it will prevent this plugin from loading.
 - `?` is a optional dependency. This dependency is not required for this plugin but if it is the load order can be modifier with this type.
 

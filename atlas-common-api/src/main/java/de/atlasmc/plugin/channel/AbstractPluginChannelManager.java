@@ -7,11 +7,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import de.atlasmc.NamespacedKey;
 import io.netty.buffer.ByteBuf;
 
-public abstract class AbstractPluginChannelHandler implements PluginChannelHandler {
+public abstract class AbstractPluginChannelManager implements PluginChannelManager {
 
 	private Map<String, PluginChannel> channels;
 	
-	public AbstractPluginChannelHandler() {
+	public AbstractPluginChannelManager() {
 		channels = new ConcurrentHashMap<>();
 	}
 	

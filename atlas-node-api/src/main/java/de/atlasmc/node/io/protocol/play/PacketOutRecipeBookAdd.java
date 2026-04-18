@@ -4,9 +4,10 @@ import java.util.List;
 
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.node.recipe.Ingredient;
+import de.atlasmc.node.inventory.ItemType;
 import de.atlasmc.node.recipe.RecipeCategory;
 import de.atlasmc.node.recipe.display.RecipeDisplay;
+import de.atlasmc.util.dataset.DataSet;
 
 @DefaultPacketID(packetID = PacketPlay.OUT_RECIPE_BOOK_ADD, definition = "recipe_book_add")
 public class PacketOutRecipeBookAdd extends AbstractPacket implements PacketPlayOut {
@@ -20,7 +21,7 @@ public class PacketOutRecipeBookAdd extends AbstractPacket implements PacketPlay
 		public RecipeDisplay display;
 		public int groupID;
 		public RecipeCategory category;
-		public List<Ingredient> ingredients;
+		public DataSet<ItemType>[] ingredients;
 		/**
 		 * <ul>
 		 * <li>0x01 = show notification</li>

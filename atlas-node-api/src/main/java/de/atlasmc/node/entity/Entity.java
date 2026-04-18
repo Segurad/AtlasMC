@@ -257,8 +257,16 @@ public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitte
 	
 	void setPerceptionDistance(double distance);
 	
+	/**
+	 * Sets whether or not this entity should be ticked
+	 * @param ticking
+	 */
 	void setTicking(boolean ticking);
 
+	/**
+	 * Whether or not this entity should be ticked
+	 * @return return whether or not this entity should be ticked
+	 */
 	boolean isTicking();
 	
 	int getObjectData();

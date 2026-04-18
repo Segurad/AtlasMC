@@ -1,8 +1,8 @@
 package de.atlasmc.node.recipe;
 
-import java.util.List;
+import de.atlasmc.util.enums.EnumName;
 
-public enum RecipeType {
+public enum RecipeType implements EnumName {
 	
 	CRAFTING_SHAPELESS,
 	CRAFTING_SHAPED,
@@ -28,42 +28,19 @@ public enum RecipeType {
 	CRAFTING_SPECIAL_SUSPICIOUSSTEW,
 	CRAFTING_DECORATED_POT;
 	
-	private static List<RecipeType> VALUES;
-	
-	private String nameID;
+	private String name;
 	
 	private RecipeType() {
-		this.nameID = "minecraft:" + name().toLowerCase();
+		this.name = "minecraft:" + name().toLowerCase();
 	}
 	
-	public static RecipeType getByName(String name) {
-		for (RecipeType i : getValues()) {
-			if (i.name().equalsIgnoreCase(name)) 
-				return i;
-		}
-		return null;
+	@Override
+	public String getName() {
+		return name;
 	}
 	
-	public String getNameID() {
-		return nameID;
-	}
-	
-	/**
-	 * Returns a immutable List of all Types.<br>
-	 * This method avoid allocation of a new array not like {@link #values()}.
-	 * @return list
-	 */
-	public static List<RecipeType> getValues() {
-		if (VALUES == null)
-			VALUES = List.of(values());
-		return VALUES;
-	}
-	
-	/**
-	 * Releases the system resources used from the values cache
-	 */
-	public static void freeValues() {
-		VALUES = null;
+	public Recipe createRecipe() {
+		throw new UnsupportedOperationException("Not implemented!");
 	}
 	
 }

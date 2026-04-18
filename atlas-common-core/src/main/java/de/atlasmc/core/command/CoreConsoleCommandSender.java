@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.chat.ChatType;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.command.ConsoleCommandSender;
@@ -69,7 +68,7 @@ public class CoreConsoleCommandSender implements ConsoleCommandSender {
 	}
 
 	@Override
-	public void sendMessage(Chat chat) {
+	public void sendMessage(Chat chat, boolean overlay) {
 		if (colorConsole) {
 			internalSend(ChatUtil.componentToConsole(chat.toComponent()));
 		} else {
@@ -81,15 +80,6 @@ public class CoreConsoleCommandSender implements ConsoleCommandSender {
 	public void sendMessage(String message) {
 		if (colorConsole) {
 			sendMessage(ChatUtil.legacyToComponent(message));
-		} else {
-			internalSend(ChatUtil.legacyToRawText(message));
-		}
-	}
-
-	@Override
-	public void sendMessage(String message, ChatType type, String source, String target) {
-		if (colorConsole) {
-		sendMessage(ChatUtil.legacyToComponent(message));
 		} else {
 			internalSend(ChatUtil.legacyToRawText(message));
 		}
@@ -111,12 +101,6 @@ public class CoreConsoleCommandSender implements ConsoleCommandSender {
 	@Override
 	public void setUseColor(boolean colors) {
 		this.colorConsole = colors;
-	}
-
-	@Override
-	public void sendTranslation(String key, Object... values) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

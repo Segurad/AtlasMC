@@ -9,13 +9,11 @@ import org.joml.Vector3d;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
-import de.atlasmc.chat.ChatType;
-import de.atlasmc.core.node.plugin.channel.CorePlayerPluginChannelHandler;
+import de.atlasmc.core.node.plugin.channel.CorePlayerPluginChannelManager;
 import de.atlasmc.core.node.recipe.CoreRecipeBook;
 import de.atlasmc.io.Protocol;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.io.connection.ServerSocketConnectionHandler;
-import de.atlasmc.log.Log;
 import de.atlasmc.network.player.AtlasPlayer;
 import de.atlasmc.node.NodePlayer;
 import de.atlasmc.node.Location;
@@ -37,12 +35,13 @@ import de.atlasmc.node.io.protocol.play.PacketOutRecipeBookSettings;
 import de.atlasmc.node.io.protocol.play.PacketOutSelectAdvancementTab;
 import de.atlasmc.node.io.protocol.play.PacketOutStartConfiguration;
 import de.atlasmc.node.io.protocol.play.PacketOutSynchronizePlayerPosition;
+import de.atlasmc.node.io.protocol.play.PacketOutSystemChatMessage;
 import de.atlasmc.node.io.socket.NodeSocket;
 import de.atlasmc.node.recipe.BookType;
 import de.atlasmc.node.recipe.Recipe;
 import de.atlasmc.node.recipe.RecipeBook;
 import de.atlasmc.node.server.LocalServer;
-import de.atlasmc.plugin.channel.PluginChannelHandler;
+import de.atlasmc.plugin.channel.PluginChannelManager;
 import de.atlasmc.util.annotation.ThreadSafe;
 import de.atlasmc.util.enums.EnumUtil;
 import io.netty.util.concurrent.Future;
@@ -54,7 +53,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	private final NodePlayer aplayer;
 	private final ConnectionHandler connection;
 	private LocalServer server;
-	private final PluginChannelHandler pluginChannelHandler;
+	private final PluginChannelManager pluginChannelManager;
 	private final ProtocolAdapter protocol;
 	private volatile boolean waitingForProtocolChange;
 	
@@ -98,7 +97,7 @@ public class CorePlayerConnection implements PlayerConnection {
 		this.connection = Objects.requireNonNull(connection);
 		this.settings = new PlayerSettings();
 		this.protocol = Objects.requireNonNull(protocol);
-		this.pluginChannelHandler = new CorePlayerPluginChannelHandler(this);
+		this.pluginChannelManager = new CorePlayerPluginChannelManager(this);
 		var values = EnumUtil.getValues(BookType.class);
 		CoreRecipeBook[] recipeBooks = new CoreRecipeBook[values.size()];
 		int index = 0;
@@ -329,8 +328,8 @@ public class CorePlayerConnection implements PlayerConnection {
 	}
 
 	@Override
-	public PluginChannelHandler getPluginChannelHandler() {
-		return pluginChannelHandler;
+	public PluginChannelManager getPluginChannelManager() {
+		return pluginChannelManager;
 	}
 
 	@Override
@@ -453,37 +452,17 @@ public class CorePlayerConnection implements PlayerConnection {
 		if (!waitingForProtocolChange)
 			return;
 		Protocol prot = isInConfiguration() ? protocol.getPlayProtocol() : protocol.getConfigurationProtocol();
-		connection.setProtocol(prot, prot.createDefaultPacketListenerServerbound(this));
+		connection.setProtocol(prot);
+		connection.getInboundListeners().addFirst("default", prot.createDefaultPacketListenerServerbound(this));
 		waitingForProtocolChange = false;
 	}
 
 	@Override
-	public void handleSyncPackets(Log logger) {
-		connection.handleSyncPackets(logger);
-	}
-
-	@Override
-	public void sendTranslation(String key, Object... values) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void sendMessage(Chat chat) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void sendMessage(String message) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void sendMessage(String message, ChatType type, String source, String target) {
-		// TODO Auto-generated method stub
-		
+	public void sendMessage(Chat chat, boolean overlay) {
+		PacketOutSystemChatMessage packet = new PacketOutSystemChatMessage();
+		packet.message = chat;
+		packet.overlay = overlay;
+		connection.sendPacket(packet);
 	}
 
 	@Override

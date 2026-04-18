@@ -2,7 +2,7 @@ package de.atlasmc.core.network.io.atlasprotocol;
 
 import de.atlasmc.io.AbstractProtocol;
 import de.atlasmc.io.PacketCodec;
-import de.atlasmc.io.PacketListener;
+import de.atlasmc.io.connection.PacketListener;
 import de.atlasmc.network.io.protocol.AtlasPacketIn;
 import de.atlasmc.network.io.protocol.AtlasPacketOut;
 

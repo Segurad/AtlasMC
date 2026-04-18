@@ -1,31 +1,45 @@
 package de.atlasmc.io.connection;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Objects;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.atlasmc.io.IOExceptionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketChunker;
-import de.atlasmc.io.PacketListener;
 import de.atlasmc.io.Protocol;
+import de.atlasmc.io.ProtocolException;
 import de.atlasmc.log.Log;
 import de.atlasmc.util.codec.CodecContext;
 
 public abstract class AbstractConnectionHandler implements ConnectionHandler {
-	
-	protected static final PacketListener[] EMPTY = new PacketListener[0];
 
 	protected final Log log;
 	protected volatile Protocol protocol;
-	protected final Object listenerLock = new Object();
-	private volatile PacketListener[] listeners = EMPTY;
+	protected final DefaultPacketListenerPipeline inboundListeners;
+	protected final DefaultPacketListenerPipeline outboundPipeline;
 	protected volatile int compressionThreshold;
 	private volatile IOExceptionHandler errHandler = IOExceptionHandler.UNHANDLED;
+	protected final Queue<Packet> syncPacketQueue;
+	protected boolean syncPacketHandling;
 	
 	public AbstractConnectionHandler(Log log, Protocol protocol) {
 		this.log = Objects.requireNonNull(log);
 		this.protocol = Objects.requireNonNull(protocol);
+		this.syncPacketQueue = new ConcurrentLinkedQueue<>();
+		this.inboundListeners = new DefaultPacketListenerPipeline();
+		this.outboundPipeline = new DefaultPacketListenerPipeline();
+	}
+	
+	@Override
+	public PacketListenerPipeline getInboundListeners() {
+		return inboundListeners;
+	}
+	
+	@Override
+	public PacketListenerPipeline getOutboundListeners() {
+		return outboundPipeline;
 	}
 
 	@Override
@@ -54,61 +68,14 @@ public abstract class AbstractConnectionHandler implements ConnectionHandler {
 	}
 
 	@Override
-	public void setProtocol(Protocol protocol, PacketListener listener) {
+	public synchronized void setProtocol(Protocol protocol) {
 		if (protocol == null) 
 			throw new IllegalArgumentException("Protocol can not be null!");
-		synchronized (listenerLock) {
-			this.protocol = protocol;
-			removeAllPacketListener();
-			if (listener != null)
-				registerPacketListener(listener);
-		}
-	}
-	
-	@Override
-	public boolean registerPacketListener(PacketListener listener) {
-		if (listener == null)
-			throw new IllegalArgumentException("Listener can not be null!");
-		synchronized (listenerLock) {
-			PacketListener[] listeners = this.listeners;
-			listeners = Arrays.copyOf(listeners, listeners.length + 1);
-			listeners[listeners.length - 1] = listener;
-			this.listeners = listeners;
-			log.debug("Registered packet listener: {}", listener.getClass().getSimpleName());
-			return true;
-		}
-	}
-
-	@Override
-	public boolean unregisterPacketListener(PacketListener listener) {
-		if (listener == null)
-			return false;
-		synchronized (listenerLock) {
-			PacketListener[] listeners = this.listeners;
-			if (listeners == null)
-				return false;
-			final int count = listeners.length;
-			for (int i = 0; i < count; i++) {
-				if (listeners[i] != listener)
-					continue;
-				final int newCount = count - 1;
-				if (newCount == 0) {
-					this.listeners = EMPTY;
-				} else {
-					PacketListener[] newListeners = Arrays.copyOf(listeners, newCount);
-					System.arraycopy(listeners, i+1, newListeners, i, newCount - i);
-				}
-				return true;
-			}
-			return false;
-		}
-	}
-	
-	@Override
-	public void removeAllPacketListener() {
-		synchronized (listenerLock) {
-			listeners = EMPTY;
-		}
+		log.debug("Switching Protocol to: {}", protocol.getClass().getSimpleName());
+		this.protocol = protocol;
+		syncPacketQueue.clear();
+		inboundListeners.removeListeners();
+		outboundPipeline.removeListeners();
 	}
 
 	@Override
@@ -142,32 +109,48 @@ public abstract class AbstractConnectionHandler implements ConnectionHandler {
 
 	@Override
 	public void handlePacket(final Packet packet) throws IOException {
-		final PacketListener[] listeners = this.listeners;
-		if (listeners == null)
+		inboundListeners.handlePacket(this, packet);
+		if (packet.isHandled())
 			return;
-		final int count = listeners.length;
-		for (int i = 0; i < count; i++) {
-			listeners[i].handlePacket(packet);
-		}
+		if (!syncPacketHandling)
+			throw new ProtocolException("Unhandled packet: " + packet, protocol, packet);
+		syncPacketQueue.add(packet);
+	}
+	
+	@Override
+	public int getSyncPacketCount() {
+		return syncPacketQueue.size();
+	}
+	
+	@Override
+	public Queue<Packet> getSyncPacketQueue() {
+		return syncPacketQueue;
 	}
 
 	@Override
-	public void handleSyncPackets(final Log logger) {
-		final PacketListener[] listeners = this.listeners;
-		if (listeners == null)
-			return;
-		final int count = listeners.length;
-		for (int i = 0; i < count; i++) {
-			final PacketListener listener = listeners[i];
-			if (!listener.hasSyncPackets())
-				continue;
-			listener.handleSyncPackets(logger);
+	public void handleSyncPackets() {
+		Packet packet = null;
+		while ((packet = syncPacketQueue.poll()) != null) {
+			inboundListeners.handlePacket(this, packet);
+			if (!packet.isHandled()) {
+				throw new ProtocolException("Unhandled packet: " + packet, protocol, packet);
+			}
 		}
 	}
 	
 	@Override
 	public CodecContext getCodecContext() {
 		return CodecContext.DEFAULT_CLIENT;
+	}
+	
+	@Override
+	public void setSyncPacketHandling(boolean enable) {
+		this.syncPacketHandling = true;
+	}
+	
+	@Override
+	public boolean hasSyncPacketHandling() {
+		return syncPacketHandling;
 	}
 
 }

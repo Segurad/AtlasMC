@@ -18,7 +18,7 @@ public interface EntityPerception {
 	
 	/**
 	 * Called by the tracker if a entity that is a instance of {@link #tracking()} is in {@link #range()}
-		 * @param entity
+	 * @param entity
 	 */
 	void add(Entity entity);
 	

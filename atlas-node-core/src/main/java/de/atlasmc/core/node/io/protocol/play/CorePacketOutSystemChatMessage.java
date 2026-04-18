@@ -14,13 +14,13 @@ public class CorePacketOutSystemChatMessage implements PacketCodec<PacketOutSyst
 	@Override
 	public void deserialize(PacketOutSystemChatMessage packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.message = Chat.STREAM_CODEC.deserialize(in, handler.getCodecContext());
-		packet.actionbar = in.readBoolean();
+		packet.overlay = in.readBoolean();
 	}
 
 	@Override
 	public void serialize(PacketOutSystemChatMessage packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		Chat.STREAM_CODEC.serialize(packet.message, out, handler.getCodecContext());
-		out.writeBoolean(packet.actionbar);
+		out.writeBoolean(packet.overlay);
 	}
 
 	@Override

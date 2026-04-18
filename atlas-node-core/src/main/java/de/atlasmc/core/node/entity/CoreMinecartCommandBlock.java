@@ -1,7 +1,6 @@
 package de.atlasmc.core.node.entity;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.chat.ChatType;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.MinecartCommandBlock;
@@ -83,25 +82,9 @@ public class CoreMinecartCommandBlock extends CoreAbstractMinecart implements Mi
 	}
 
 	@Override
-	public void sendMessage(String message) {
-		sendMessage(ChatUtil.toChat(message));
-	}
-
-	@Override
-	public void sendMessage(Chat chat) {
+	public void sendMessage(Chat chat, boolean overlay) {
 		if (isTrackingOutput())
 			metaContainer.set(META_LAST_OUTPUT, chat != null ? chat : ChatUtil.EMPTY);
-	}
-
-	@Override
-	public void sendMessage(String message, ChatType type, String source, String target) {
-		sendMessage(message);
-	}
-
-	@Override
-	public void sendTranslation(String key, Object... values) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

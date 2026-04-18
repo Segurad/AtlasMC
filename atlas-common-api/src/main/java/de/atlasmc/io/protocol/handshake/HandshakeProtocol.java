@@ -4,15 +4,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketCodec;
-import de.atlasmc.io.PacketListener;
 import de.atlasmc.io.Protocol;
 import de.atlasmc.io.connection.ConnectionHandler;
+import de.atlasmc.io.connection.PacketListener;
 
 public class HandshakeProtocol implements Protocol {
 
 	public static final HandshakeProtocol DEFAULT_PROTOCOL;
 
-	private final ConcurrentHashMap<Integer, HandshakePacketIO<?>> packets;
+	private final ConcurrentHashMap<Integer, HandshakePacketCodec<?>> packets;
 	
 	static {
 		DEFAULT_PROTOCOL = new HandshakeProtocol();
@@ -37,11 +37,11 @@ public class HandshakeProtocol implements Protocol {
 		return null;
 	}
 	
-	public void setPacketIO(int id, HandshakePacketIO<? extends PacketHandshake> io) {
+	public void setPacketIO(int id, HandshakePacketCodec<? extends PacketHandshake> io) {
 		packets.put(id, io);
 	}
 	
-	public HandshakePacketIO<?> getPacketIO(int id) {
+	public HandshakePacketCodec<?> getPacketIO(int id) {
 		return packets.get(id);
 	}
 

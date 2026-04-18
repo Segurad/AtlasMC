@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.crypto.SecretKey;
 
 import de.atlasmc.io.Packet;
-import de.atlasmc.io.PacketListener;
 import de.atlasmc.io.Protocol;
 import de.atlasmc.io.netty.channel.InboundErrorHandler;
 import de.atlasmc.io.netty.channel.OutboundErrorHandler;
@@ -77,19 +76,18 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 	 *  "packet_decompressor" and "packet_compressor" are only present if {@link #setCompression(int)} has been called with a value > 0
 	 */
 	protected final SocketChannel channel;
-	private volatile boolean encryption;
 	private final Queue<Object> queue; // contains Packet and FuturePacket
 	private volatile PacketDecompressor decompressor; // use lock over this
 	private volatile PacketCompressor compressor; // use lock over this
 	
 	public SocketConnectionHandler(SocketChannel channel, Log log) {
 		this(channel, log, HandshakeProtocol.DEFAULT_PROTOCOL);
-		registerPacketListener(HandshakeProtocol.DEFAULT_PROTOCOL.createDefaultPacketListenerServerbound(this));
+		inboundListeners.addFirst("default", protocol.createDefaultPacketListenerServerbound(this));
 	}
 	
 	public SocketConnectionHandler(SocketChannel channel, Log log, Protocol protocol) {
 		super(log, protocol);
-		queue = new ConcurrentLinkedQueue<>();
+		this.queue = new ConcurrentLinkedQueue<>();
 		this.channel = Objects.requireNonNull(channel);
 		
 		channel.pipeline()
@@ -112,6 +110,9 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 	@Override
 	public void sendPacket(Packet packet, GenericFutureListener<? extends Future<? super Void>> listener) {
 		if (isClosed())
+			return;
+		outboundPipeline.handlePacket(this, packet);
+		if (packet.isHandled())
 			return;
 		if (channel.isActive()) {
 			writeQueuedPackets();
@@ -136,7 +137,6 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 			queue.add(new FuturePacket(packet, listener));
 	}
 
-	@Override
 	public void writeQueuedPackets() {
 		if (!channel.isActive() || queue.isEmpty())
 			return;
@@ -153,9 +153,12 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 		}
 	}
 
-	@Override
 	public boolean hasQueued() {
 		return !queue.isEmpty();
+	}
+	
+	public Queue<Object> getQueue() {
+		return queue;
 	}
 
 	@Override
@@ -172,58 +175,46 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 		return !channel.isOpen();
 	}
 	
-	@Override
-	public void enableEncryption(SecretKey secret) throws InvalidKeyException, InvalidAlgorithmParameterException {
-		if (isEncryotionEnabled())
-			throw new IllegalStateException("Encryption already enabled");
-		synchronized (this) {
-			if (isEncryotionEnabled())
-				throw new IllegalStateException("Encryption already enabled");
-			channel.pipeline()
-			.addAfter(CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER, CHANNEL_PIPE_PACKET_ENCRYPTOR, new PacketEncryptor(secret))
-			.addAfter(CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER, CHANNEL_PIPE_PACKET_DECRYPTOR, new PacketDecryptor(secret));
-			encryption = true;
-		}
+	public SocketChannel getChannel() {
+		return channel;
 	}
 	
 	@Override
-	public synchronized void setProtocol(Protocol protocol, PacketListener listener) {
-		if (protocol == null) 
-			throw new IllegalArgumentException("Protocol can not be null!");
-		synchronized (listenerLock) {
-			log.debug("Switching Protocol to: {}", protocol.getClass().getSimpleName());
-			this.protocol = protocol;
-			removeAllPacketListener();
-			if (listener != null)
-				registerPacketListener(listener);
-			ChannelPipeline pipeline = channel.pipeline();
-			if (pipeline.get(CHANNEL_PIPE_INBOUND_NO_PROTOCOL) != null)
-				channel.pipeline().remove(CHANNEL_PIPE_INBOUND_NO_PROTOCOL);
-			if (pipeline.get(CHANNEL_PIPE_OUTBOUND_NO_PROTOCOL) != null)
-				channel.pipeline().remove(CHANNEL_PIPE_OUTBOUND_NO_PROTOCOL);
-			channel.config().setAutoRead(true);
-		}
+	public synchronized void enableEncryption(SecretKey secret) throws InvalidKeyException, InvalidAlgorithmParameterException {
+		if (isEncryotionEnabled())
+			throw new IllegalStateException("Encryption already enabled");
+		channel.pipeline()
+			.addAfter(CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER, CHANNEL_PIPE_PACKET_ENCRYPTOR, new PacketEncryptor(secret))
+			.addAfter(CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER, CHANNEL_PIPE_PACKET_DECRYPTOR, new PacketDecryptor(secret));
+	}
+	
+	@Override
+	public synchronized void setProtocol(Protocol protocol) {
+		super.setProtocol(protocol);
+		ChannelPipeline pipeline = channel.pipeline();
+		if (pipeline.get(CHANNEL_PIPE_INBOUND_NO_PROTOCOL) != null)
+			channel.pipeline().remove(CHANNEL_PIPE_INBOUND_NO_PROTOCOL);
+		if (pipeline.get(CHANNEL_PIPE_OUTBOUND_NO_PROTOCOL) != null)
+			channel.pipeline().remove(CHANNEL_PIPE_OUTBOUND_NO_PROTOCOL);
+		channel.config().setAutoRead(true);
 	}
 	
 	@Override
 	public boolean isEncryotionEnabled() {
-		return encryption;
+		return channel.pipeline().get(CHANNEL_PIPE_PACKET_ENCRYPTOR) != null;
 	}
 	
 	@Override
-	public void setCompressionThreshold(int threshold) {
+	public synchronized void setCompressionThreshold(int threshold) {
 		if (threshold < 0)
 			threshold = 0;
 		if (compressionThreshold == threshold)
 			return;
-		synchronized (this) {
-			if (compressionThreshold == threshold)
-				return;
-			compressionThreshold = threshold;
-			if (hasCompression()) {
-				setCompression(false);
-				setCompression(true);
-			}
+		compressionThreshold = threshold;
+		if (hasCompression()) {
+			var compressor = new PacketCompressor(threshold);
+			this.compressor = compressor;
+			channel.pipeline().replace(CHANNEL_PIPE_PACKET_COMPRESSOR, CHANNEL_PIPE_PACKET_COMPRESSOR, compressor);
 		}
 	}
 	

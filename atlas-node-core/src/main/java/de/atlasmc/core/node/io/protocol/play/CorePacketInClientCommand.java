@@ -9,13 +9,14 @@ import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.play.PacketInClientCommand;
 import de.atlasmc.node.io.protocol.play.PacketInClientCommand.StatusAction;
+import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketInClientCommand implements PacketCodec<PacketInClientCommand> {
 	
 	@Override
 	public void deserialize(PacketInClientCommand packet, ByteBuf in, ConnectionHandler con) throws IOException {
-		packet.action = StatusAction.getByID(readVarInt(in));
+		packet.action = EnumUtil.getByID(StatusAction.class, readVarInt(in));
 	}
 
 	@Override

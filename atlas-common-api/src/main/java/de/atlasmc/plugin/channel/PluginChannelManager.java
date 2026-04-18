@@ -5,7 +5,7 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 
-public interface PluginChannelHandler {
+public interface PluginChannelManager {
 	
 	PluginChannel registerChannel(NamespacedKey channel);
 	

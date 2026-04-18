@@ -19,7 +19,7 @@ public class PacketDecryptor extends MessageToMessageDecoder<ByteBuf> {
 	private final Cipher cip;
 	
 	public PacketDecryptor(SecretKey secret) throws InvalidKeyException, InvalidAlgorithmParameterException {
-		Cipher cip = null;
+		Cipher cip;
 		try {
 			cip = Cipher.getInstance("AES/CFB8/NoPadding");
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {

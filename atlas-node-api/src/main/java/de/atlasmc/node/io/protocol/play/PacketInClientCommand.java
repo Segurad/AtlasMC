@@ -1,5 +1,6 @@
 package de.atlasmc.node.io.protocol.play;
 
+import de.atlasmc.IDHolder;
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
 
@@ -13,22 +14,16 @@ public class PacketInClientCommand extends AbstractPacket implements PacketPlayI
 		return IN_CLIENT_COMMAND;
 	}
 	
-	public static enum StatusAction {
+	public static enum StatusAction implements IDHolder {
+		
 		RESPAWN,
 		STATS;
 		
+		@Override
 		public int getID() {
 			return ordinal();
 		}
 		
-		public static StatusAction getByID(int id) {
-			if (id == 0) {
-				return RESPAWN;
-			} else if (id == 1) {
-				return STATS;
-			}
-			return null;
-		}
 	}
 
 }

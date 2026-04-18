@@ -10,13 +10,13 @@ import de.atlasmc.io.Protocol;
 import de.atlasmc.io.ProtocolException;
 import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
-import de.atlasmc.io.protocol.handshake.HandshakePacketIO;
+import de.atlasmc.io.protocol.handshake.HandshakePacketCodec;
 import de.atlasmc.node.AtlasNode;
 import de.atlasmc.node.io.protocol.ProtocolAdapter;
 import de.atlasmc.node.io.protocol.handshake.PacketMinecraftHandshake;
 import io.netty.buffer.ByteBuf;
 
-public class CorePacketMinecraftHandshake extends HandshakePacketIO<PacketMinecraftHandshake> {
+public class CorePacketMinecraftHandshake extends HandshakePacketCodec<PacketMinecraftHandshake> {
 
 	@Override
 	public void handle(ConnectionHandler handler, PacketMinecraftHandshake packet) {
@@ -27,15 +27,13 @@ public class CorePacketMinecraftHandshake extends HandshakePacketIO<PacketMinecr
 			return;
 		}
 		final int nextState = packet.nextState;
-		if (nextState == 1) {
-			final Protocol prot = adapter.getStatusProtocol();
-			handler.setProtocol(prot, prot.createDefaultPacketListenerServerbound(handler));
-		} else if (nextState == 2) {
-			final Protocol prot = adapter.getLoginProtocol();
-			handler.setProtocol(prot, prot.createDefaultPacketListenerServerbound(handler));
-		} else {
-			throw new ProtocolException("Invalid id for next protocol state: " + nextState);
-		}
+		final Protocol prot = switch (nextState) {
+		case 1 -> adapter.getStatusProtocol();
+		case 2 -> adapter.getLoginProtocol();
+		default -> throw new ProtocolException("Invalid id for next protocol state: " + nextState);
+		};
+		handler.setProtocol(prot);
+		handler.getInboundListeners().addFirst("default", prot.createDefaultPacketListenerServerbound(prot));
 	}
 
 	@Override

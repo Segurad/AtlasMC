@@ -15,6 +15,7 @@ import de.atlasmc.node.world.entitytracker.EntityPerception;
 import de.atlasmc.node.world.entitytracker.EntityTracker;
 import de.atlasmc.node.world.entitytracker.TrackerBinding;
 import de.atlasmc.node.world.entitytracker.TrackingTarget;
+import de.atlasmc.util.annotation.Nullable;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
@@ -75,6 +76,12 @@ public class CoreEntityTracker implements EntityTracker {
 		return target;
 	}
 	
+	/**
+	 * Finds the best matching tracker for the given class
+	 * @param clazz
+	 * @return tracker or null
+	 */
+	@Nullable
 	CoreTrackingTarget<?> getClosestTracker(Class<?> clazz) {
 		CoreTrackingTarget<?> target = null;
 	    for (CoreTrackingTarget<?> t : fastTarget) {

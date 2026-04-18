@@ -9,7 +9,6 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.Messageable;
 import de.atlasmc.io.connection.ConnectionHandler;
-import de.atlasmc.log.Log;
 import de.atlasmc.network.AtlasNode;
 import de.atlasmc.node.NodePlayer;
 import de.atlasmc.node.Location;
@@ -24,7 +23,7 @@ import de.atlasmc.node.recipe.BookType;
 import de.atlasmc.node.recipe.Recipe;
 import de.atlasmc.node.recipe.RecipeBook;
 import de.atlasmc.node.server.LocalServer;
-import de.atlasmc.plugin.channel.PluginChannelHandler;
+import de.atlasmc.plugin.channel.PluginChannelManager;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.annotation.ThreadSafe;
 import io.netty.util.concurrent.Future;
@@ -53,6 +52,7 @@ public interface PlayerConnection extends Messageable {
 	 * 
 	 * @return the current {@link Player} Entity bound to this connection or null
 	 */
+	@Nullable
 	Player getPlayer();
 	
 	/**
@@ -198,7 +198,7 @@ public interface PlayerConnection extends Messageable {
 	
 	Collection<Recipe> getAvailableRecipes();
 	
-	PluginChannelHandler getPluginChannelHandler();
+	PluginChannelManager getPluginChannelManager();
 
 	/**
 	 * Will disconnect the player form the network
@@ -293,7 +293,5 @@ public interface PlayerConnection extends Messageable {
 	 * Changes the protocol to the new protocol
 	 */
 	void protocolChangeAcknowledged();
-	
-	void handleSyncPackets(Log logger);
 	
 }

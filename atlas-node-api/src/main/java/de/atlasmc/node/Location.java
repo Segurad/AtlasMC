@@ -58,6 +58,18 @@ public class Location extends Vector3d implements OpenCloneable {
 	public int getBlockY() {
 		return MathUtil.floor(y);
 	}
+	
+	public int getChunkX() {
+		return MathUtil.toChunkCoordinate(x);
+	}
+	
+	public int getChunkY() {
+		return MathUtil.toChunkCoordinate(y);
+	}
+	
+	public int getChunkZ() {
+		return MathUtil.toChunkCoordinate(z);
+	}
 
 	/**
 	 * Returns the floor of Z

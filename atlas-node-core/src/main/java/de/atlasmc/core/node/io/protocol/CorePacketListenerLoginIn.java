@@ -96,7 +96,8 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<CorePa
 			var futurePlayer = handler.handler.getPlayer();
 			futurePlayer.setListener((future) -> {
 				PlayerConnection con = new CorePlayerConnection(future.resultNow(), handler.con, adapter);
-				handler.con.setProtocol(configuration, configuration.createDefaultPacketListenerServerbound(con));
+				handler.con.setProtocol(configuration);
+				handler.con.getInboundListeners().addFirst("default", configuration.createDefaultPacketListenerServerbound(con));
 			});
 		}, true);
 		initHandler(ServerboundLoginPluginResponse.class, (handler, packet) -> {

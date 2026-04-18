@@ -80,7 +80,7 @@ public class CorePacketListenerConfigurationIn extends CoreAbstractPacketListene
 		});
 		initHandler(ServerboundPluginMessage.class, (con, packet) -> {
 			System.out.println(packet.channel.toString());
-			PluginChannel channel = con.getPluginChannelHandler().getChannel(packet.channel);
+			PluginChannel channel = con.getPluginChannelManager().getChannel(packet.channel);
 			if (channel == null) {
 				Atlas.getPluginManager().callEvent(new PlayerPluginChannelUnknownEvent(false, con.getPlayer(), packet.channel, packet.data));
 			} else {
@@ -122,6 +122,8 @@ public class CorePacketListenerConfigurationIn extends CoreAbstractPacketListene
 
 	@Override
 	protected void handle(Packet packet) {
+		if (packet.isHandled())
+			return;
 		if (holder.isWaitingForProtocolChange() && !(packet instanceof ServerboundFinishConfiguration)) {
 			return;
 		}

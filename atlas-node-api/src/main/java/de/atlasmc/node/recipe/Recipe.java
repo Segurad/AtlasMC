@@ -1,60 +1,32 @@
 package de.atlasmc.node.recipe;
 
-import java.util.List;
-import java.util.Objects;
+import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.NBTSerializable;
+import de.atlasmc.node.recipe.display.RecipeDisplay;
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 
-import de.atlasmc.NamespacedKey;
-import de.atlasmc.NamespacedKey.Namespaced;
-import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.node.recipe.condition.Condition;
-
-public abstract class Recipe implements Namespaced {
+public interface Recipe extends NBTSerializable {
 	
-	protected List<Condition> con;
-	protected final NamespacedKey key;
-	protected ItemStack result;
-	protected ResultProcessor resultProcessor;
-	protected RecipeCategory category;
+	public static final NBTCodec<Recipe>
+	NBT_CODEC = NBTCodec.builder(Recipe.class)
+				.searchKeyEnumConstructor("type", RecipeType.class, RecipeType::createRecipe, Recipe::getType)
+				.build();
 	
-	public Recipe(NamespacedKey key, RecipeCategory category) {
-		this.key = Objects.requireNonNull(key);
-		this.category = Objects.requireNonNull(category);
-	}
+	@NotNull
+	RecipeType getType();
 	
-	public List<Condition> getConditions() {
-		return con;
-	}
+	RecipeDisplay getDisplay();
 	
-	public RecipeCategory getCategory() {
-		return category;
-	}
+	@NotNull
+	RecipeCategory getCategory();
 	
-	public ItemStack getResult() {
-		return result;
-	}
+	@Nullable
+	String getGroup();
 	
-	public void setResult(ItemStack result) {
-		this.result = result;
-	}
-	
-	public ResultProcessor getResultProcessor() {
-		return resultProcessor;
-	}
-	
-	public void setResultProcessor(ResultProcessor resultProcessor) {
-		this.resultProcessor = resultProcessor;
-	}
-
 	@Override
-	public NamespacedKey getNamespacedKey() {
-		return key;
-	}
-	
-	public abstract RecipeType getType();
-
-	public static Recipe getByName(String readStringTag) {
-		// TODO Auto-generated method stub
-		return null;
+	default NBTCodec<? extends NBTSerializable> getNBTCodec() {
+		return NBT_CODEC;
 	}
 	
 }

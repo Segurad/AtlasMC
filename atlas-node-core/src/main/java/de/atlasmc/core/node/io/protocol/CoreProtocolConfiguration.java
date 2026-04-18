@@ -3,7 +3,7 @@ package de.atlasmc.core.node.io.protocol;
 import de.atlasmc.core.node.io.protocol.configuration.*;
 import de.atlasmc.io.AbstractProtocol;
 import de.atlasmc.io.PacketCodec;
-import de.atlasmc.io.PacketListener;
+import de.atlasmc.io.connection.PacketListener;
 import de.atlasmc.node.io.protocol.PlayerConnection;
 import de.atlasmc.node.io.protocol.ProtocolAdapter;
 import de.atlasmc.node.io.protocol.ProtocolConfiguration;

@@ -8,7 +8,7 @@ import de.atlasmc.io.DefaultPacketID;
 public class PacketOutSystemChatMessage extends AbstractPacket implements PacketPlayOut {
 
 	public Chat message;
-	public boolean actionbar;
+	public boolean overlay;
 	
 	@Override
 	public int getDefaultID() {

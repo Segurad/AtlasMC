@@ -10,7 +10,6 @@ import org.joml.Vector3i;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
-import de.atlasmc.chat.ChatType;
 import de.atlasmc.core.node.block.CorePlayerDiggingHandler;
 import de.atlasmc.core.node.inventory.CoreInventoryView;
 import de.atlasmc.core.node.inventory.CorePlayerItemCooldownHandler;
@@ -364,13 +363,8 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	}
 
 	@Override
-	public void sendMessage(Chat chat) {
-		con.sendMessage(chat);
-	}
-	
-	@Override
-	public void sendMessage(String message) {
-		con.sendMessage(message);
+	public void sendMessage(Chat chat, boolean overlay) {
+		con.sendMessage(chat, overlay);
 	}
 
 	@Override
@@ -530,16 +524,6 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	public boolean performCommand(String command) {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	public void sendMessage(String message, ChatType type, String source, String target) {
-		con.sendMessage(message, type, source, target);
-	}
-
-	@Override
-	public void sendTranslation(String key, Object... values) {
-		con.sendTranslation(key, values);
 	}
 
 	@Override

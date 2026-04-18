@@ -6,7 +6,13 @@ import de.atlasmc.node.world.entitytracker.EntityPerception;
 
 public class CoreTrackedPerception<T extends Entity> {
 	
+	/**
+	 * the entities perception
+	 */
 	final EntityPerception perception;
+	/**
+	 * the entity
+	 */
 	final Entity source;
 	CoreTrackingTarget<? extends T> target;
 	final Class<? extends T> clazz;

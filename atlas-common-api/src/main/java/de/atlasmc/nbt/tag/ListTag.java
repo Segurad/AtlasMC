@@ -14,6 +14,10 @@ public final class ListTag extends AbstractCollectionTag<ListTag, List<NBT>> imp
 	private TagType datatype;
 	private int exspected;
 	
+	public ListTag(String name) {
+		this(name, null, 0);
+	}
+	
 	public ListTag(String name, TagType datatype) {
 		this(name, datatype, 0);
 	}
@@ -25,7 +29,7 @@ public final class ListTag extends AbstractCollectionTag<ListTag, List<NBT>> imp
 	}
 
 	public ListTag() {
-		this.exspected = 0;
+		this(null);
 	}
 	
 	public int getPayloadSize() {

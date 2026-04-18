@@ -153,9 +153,9 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				con.confirmTeleport();
 		});
 		initHandler(PacketInQueryBlockEntityTag.class, (con, packet) -> {
-				Player player = con.getPlayer();
-				WorldLocation loc = MathUtil.getLocation(player.getWorld(), packet.getPosition());
-				HandlerList.callEvent(new PlayerQueryBlockNBTEvent(player, packet.getTransactionID(), loc));
+			Player player = con.getPlayer();
+			WorldLocation loc = MathUtil.getLocation(player.getWorld(), packet.getPosition());
+			HandlerList.callEvent(new PlayerQueryBlockNBTEvent(player, packet.getTransactionID(), loc));
 		});
 		initHandler(PacketInChangeDifficulty.class, (_, _) -> {
 			// TODO Button not available in multiplayer clarification needed
@@ -219,35 +219,21 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			InventoryButtonType type = null;
 			int id = packet.buttonID;
 			if (view.getType() == InventoryType.ENCHANTING) {
-				switch (id) {
-				case 0: 
-					type = InventoryButtonType.ENCHANTING_TOP_ENCHANTMENT; 
-					break;
-				case 1: 
-					type = InventoryButtonType.ENCHANTING_MIDDLE_ENCHANTMENT; 
-					break;
-				case 2: 
-					type = InventoryButtonType.ENCHANTING_BOTTOM_EMCHANTMENT; 
-					break;
-				default:
+				type = switch (id) {
+				case 0 -> InventoryButtonType.ENCHANTING_TOP_ENCHANTMENT;
+				case 1 -> InventoryButtonType.ENCHANTING_MIDDLE_ENCHANTMENT; 
+				case 2 -> InventoryButtonType.ENCHANTING_BOTTOM_EMCHANTMENT; 
+				default ->
 					throw new ProtocolException("Unknown button id for Enchanting Inventory: " + id);
-				}
+				};
 				id = -1;
 			} else if (view.getType() == InventoryType.LECTERN) {
-				switch (id) {
-				case 1: 
-					type = InventoryButtonType.LECTERN_PREVIOUS_PAGE; 
-					break;
-				case 2: 
-					type = InventoryButtonType.LECTERN_NEXT_PAGE; 
-					break;
-				case 3: 
-					type = InventoryButtonType.LECTERN_TAKE_BOOK; 
-					break;
-				default: 
-					type = InventoryButtonType.LECTERN_OPEN_PAGE_NUMBER; 
-					break;
-				}
+				type = switch (id) {
+				case 1 -> InventoryButtonType.LECTERN_PREVIOUS_PAGE;
+				case 2 -> InventoryButtonType.LECTERN_NEXT_PAGE;
+				case 3 -> InventoryButtonType.LECTERN_TAKE_BOOK;
+				default -> InventoryButtonType.LECTERN_OPEN_PAGE_NUMBER;
+				};
 				id = id < 100 ? -1 : id - 100;
 			} else if (view.getType() == InventoryType.STONECUTTER) {
 				type = InventoryButtonType.STONECUTTER_RECIPE_NUMBER;
@@ -425,7 +411,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				inv.close();
 		});
 		initHandler(PacketInPluginMessage.class, (con, packet) -> {
-			PluginChannel channel = con.getPluginChannelHandler().getChannel(packet.channel);
+			PluginChannel channel = con.getPluginChannelManager().getChannel(packet.channel);
 			if (channel == null) {
 				Player player = con.getPlayer();
 				NamespacedKey channelID = packet.channel;
@@ -755,19 +741,8 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			BlockRayTracer ray = new BlockRayTracer(loc, loc.getDirection(), BlockRayCollisionRule.IGNORE_FUID_AND_AIR);
 			Chunk chunk = ray.getFirstBlockHit(length);
 			Block block = new CoreBlockAccess(loc, chunk);
-			
-			EquipmentSlot hand = packet.hand;
-			PlayerInteractEvent.Action action;
-			final BlockType air = BlockType.AIR.get();
-			if (air == block.getType()) {
-				if (hand == EquipmentSlot.MAIN_HAND) {
-					action = PlayerInteractEvent.Action.LEFT_CLICK_AIR;
-				} else action = PlayerInteractEvent.Action.RIGHT_CLICK_AIR;
-			} else if (hand == EquipmentSlot.MAIN_HAND) {
-				action = PlayerInteractEvent.Action.LEFT_CLICK_BLOCK;
-			} else action = PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK;
 			ItemStack item = player.getInventory().getItemInMainHand();
-			HandlerList.callEvent(new PlayerInteractEvent(player, action, item, block, ray.getLastHitFace(), hand));
+			HandlerList.callEvent(new PlayerInteractEvent(player, item, block, ray.getLastHitFace(), packet.hand));
 		});
 		initHandler(PacketInAcknowledgeMessage.class, (con, packet) -> {
 			// TODO handle message acknowledgment
@@ -838,11 +813,14 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 
 	@Override
 	protected void handle(Packet packet) {
-		if (holder.isWaitingForProtocolChange() && !(packet instanceof PacketInAcknowledgeConfiguration))
+		if (holder.isWaitingForProtocolChange() && !(packet instanceof PacketInAcknowledgeConfiguration)) {
+			packet.setHandled(true);
 			return;
+		}
 		@SuppressWarnings("unchecked")
 		PacketHandler<PlayerConnection, Packet> handler = (PacketHandler<PlayerConnection, Packet>) HANDLERS[packet.getID()];
 		handler.handle(holder, packet);
+		packet.setHandled(true);
 	}
 
 }

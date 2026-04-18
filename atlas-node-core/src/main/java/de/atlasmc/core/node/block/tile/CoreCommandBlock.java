@@ -1,7 +1,6 @@
 package de.atlasmc.core.node.block.tile;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.chat.ChatType;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.tile.CommandBlock;
@@ -124,18 +123,7 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 	}
 
 	@Override
-	public void sendMessage(String message) {
-		sendMessage(ChatUtil.toChat(message));
-	}
-	
-	@Override
-	public void sendTranslation(String key, Object... values) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void sendMessage(Chat chat) {
+	public void sendMessage(Chat chat, boolean overlay) {
 		if (trackOutput)
 			lastoutput = chat;
 	}
@@ -143,11 +131,6 @@ public class CoreCommandBlock extends CoreTileEntity implements CommandBlock {
 	@Override
 	public void setLastMessage(Chat message) {
 		lastoutput = message;
-	}
-
-	@Override
-	public void sendMessage(String message, ChatType type, String source, String target) {
-		sendMessage(message);
 	}
 
 	@Override

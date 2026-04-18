@@ -6,7 +6,6 @@ import java.util.UUID;
 import java.util.concurrent.Future;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.chat.ChatType;
 import de.atlasmc.network.player.AtlasPlayer;
 import de.atlasmc.network.server.Server;
 import de.atlasmc.network.socket.AtlasSocket;
@@ -97,26 +96,10 @@ public class CoreAtlasPlayer implements AtlasPlayer {
 	}
 
 	@Override
-	public void sendMessage(String message) {
-		sendInternalMessage(message);
-	}
-
-	@Override
-	public void sendMessage(Chat chat) {
+	public void sendMessage(Chat chat, boolean overlay) {
 		if (chat == null)
 			throw new IllegalArgumentException("Chat can not be null!");
-		sendInternalMessage(chat.toText());
 		// TODO handle chat
-	}
-	
-	@Override
-	public void sendTranslation(String key, Object... values) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	private void sendInternalMessage(String message) {
-		// TODO implement
 	}
 
 	@Override
@@ -127,12 +110,6 @@ public class CoreAtlasPlayer implements AtlasPlayer {
 	@Override
 	public Date getLastJoin() {
 		return lastJoin;
-	}
-
-	@Override
-	public void sendMessage(String message, ChatType type, String source, String target) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
