@@ -201,6 +201,29 @@ public class FileUtils {
 		return result;
 	}
 	
+	/**
+	 * Returns all regular files in the given directory.
+	 * @param path
+	 * @return
+	 * @throws IOException
+	 */
+	@NotNull
+	public static Set<Path> getFilesRecursive(@NotNull Path path) throws IOException {
+		if (!Files.isDirectory(path))
+			return Set.of();
+		Set<Path> result = new HashSet<>();
+		try (Stream<Path> files = Files.walk(path)) {
+			files.forEach((file) -> {
+				if (!Files.isRegularFile(file))
+					return;
+				result.add(file);
+			});
+		}
+		if (result.isEmpty())
+			return Set.of();
+		return result;
+	}
+	
 	public static void deleteDir(@NotNull Path path) throws IOException {
 		Files.walkFileTree(path, DeleteFileVisitor.INSTANCE);
 	}

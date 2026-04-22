@@ -56,7 +56,7 @@ public class MojangAPITest {
 		var info = api.playerByUUID(UUID.fromString(UUID_STRING));
 		Assertions.assertNotNull(info);
 		Assertions.assertEquals(PLAYER_NAME, info.name());
-		Assertions.assertEquals(UUID_NO_SPACE, info.uuid());
+		Assertions.assertEquals(UUID_VALUE, info.uuid());
 		api.close();
 	}
 	

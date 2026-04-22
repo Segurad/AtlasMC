@@ -17,12 +17,6 @@ public interface LocalRepository extends Repository {
 	boolean registerNamespace(String namespace, String path);
 
 	@NotNull
-	RepositoryNamespace getNamespace(String key);
-	
-	@NotNull
-	RepositoryNamespace getNamespace(NamespacedKey key);
-
-	@NotNull
 	RepositoryEntry getLocalEntry(NamespacedKey key);
 
 	/**

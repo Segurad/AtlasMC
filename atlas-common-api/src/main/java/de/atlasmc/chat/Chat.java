@@ -16,6 +16,7 @@ import de.atlasmc.nbt.io.NBTNIOWriter;
 import de.atlasmc.nbt.io.NBTReader;
 import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.util.OpenCloneable;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
@@ -72,11 +73,7 @@ public interface Chat extends OpenCloneable, StreamSerializable {
 				for (int i = 0; i < size; i++) {
 					Chat v = value.get(i);
 					ChatComponent comp = v.toComponent();
-					@SuppressWarnings("unchecked")
-					NBTCodec<ChatComponent> handler = (NBTCodec<ChatComponent>) comp.getNBTCodec();
-					output.writeCompoundTag();
-					handler.serialize(comp, output, context);
-					output.writeEndTag();
+					comp.writeToNBT(output, context);
 				}
 			} else {
 				output.writeListTag(key, TagType.STRING, size);
@@ -139,30 +136,35 @@ public interface Chat extends OpenCloneable, StreamSerializable {
 	 * Always returns the text in legacy format.
 	 * @return text in legacy
 	 */
+	@NotNull
 	String toLegacyText();
 	
 	/**
 	 * Always returns the text in json format.
 	 * @return text in json
 	 */
+	@NotNull
 	String toJsonText();
 	
 	/**
 	 * Returns the text in json format if present otherwise it will return in legacy format
 	 * @return text in json or legacy
 	 */
+	@NotNull
 	String toText();
 	
 	/**
 	 * Returns the raw text without any format codes
 	 * @return raw text
 	 */
+	@NotNull
 	String toRawText();
 	
 	/**
 	 * Returns the text as {@link ChatComponent}
 	 * @return component
 	 */
+	@NotNull
 	ChatComponent toComponent();
 	
 	/**

@@ -354,13 +354,16 @@ public class Commands {
 		CommandContextBuilder builder = new CommandContextBuilder();
 		builder.setSender(sender);
 		builder.setCommand(cmd);
-		builder.setRawCommand(rawCommand);
+		builder.setRawCommand(command);
 		CommandArg currentArg = cmd;
 		while (currentArg != null) {
 			reader.skipWhitespaces();
+			if (!reader.canRead())
+				break; // end of command
+			final int cursor = reader.getCursor();
 			// lookup literals
 			if (currentArg.hasLiteralArgs()) {
-				final int cursor = reader.getCursor();
+				
 				String rawArg = reader.readUnquotedString();
 				LiteralCommandArg next = currentArg.getLiteralArg(rawArg);
 				if (next != null) {
@@ -378,7 +381,6 @@ public class Commands {
 				Collection<VarCommandArg> varArgs = currentArg.getVarArgs();
 				VarCommandArg next = null;
 				for (VarCommandArg varArg : varArgs) {
-					final int cursor = reader.getCursor();
 					try {
 						VarArgParser<?> parser = varArg.getParser();
 						if (parser == null)
@@ -392,19 +394,17 @@ public class Commands {
 						next = varArg;
 						break;
 					} catch (CommandSyntaxException e) {
-						// TODO handle exception
 						reader.setCursor(cursor);
 						continue;
 					}
 				}
 				if (next != null) {
-					builder.updateArguments(next);
 					currentArg = next;
 					continue;
 				}
 			}
 			// TODO implement redirects
-			break; // break no node found
+			throw new CommandException(rawCommand, "Failed to parse command!");
 		}
 		return builder.build();
 	}

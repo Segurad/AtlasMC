@@ -72,11 +72,13 @@ public class CorePacketListenerConfigurationIn extends CoreAbstractPacketListene
 				HandlerList.callEvent(new PlayerLocaleChangeEvent(con.getPlayer(), clientLocale));
 			}
 		});
-		initHandler(ServerboundFinishConfiguration.class, (con, packet) -> {
+		initHandler(ServerboundFinishConfiguration.class, (con, _) -> {
 			con.protocolChangeAcknowledged();
 		});
 		initHandler(ServerboundKeepAlive.class, (con, packet) -> {
-			// TODO handle keep alive
+			if (packet.keepAliveID != con.getLastKeepAlive()) 
+				return;
+			con.confirmKeepAlive(packet.getTimestamp());
 		});
 		initHandler(ServerboundPluginMessage.class, (con, packet) -> {
 			System.out.println(packet.channel.toString());

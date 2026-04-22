@@ -110,7 +110,7 @@ public class StreamCodecBuilder<T> implements Builder<StreamCodec<T>>{
 	public StreamCodecBuilder<T> include(StreamCodec<? super T> include) {
 		if (!(include instanceof StreamCodecImpl codec))
 			throw new IllegalArgumentException("Codec must be instanceof StreamCodecImpl!");
-		if (codec.getType().isAssignableFrom(clazz))
+		if (!codec.getType().isAssignableFrom(clazz))
 			throw new IllegalArgumentException("Codec type: " + codec.getType() + " is not assignable from type: " + clazz);
 		codec.addToBuilder(this);
 		return this;

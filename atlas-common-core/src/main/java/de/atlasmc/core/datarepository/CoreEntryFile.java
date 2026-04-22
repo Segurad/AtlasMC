@@ -2,14 +2,14 @@ package de.atlasmc.core.datarepository;
 
 import de.atlasmc.datarepository.EntryFile;
 
-public class CoreLocalEntryFile implements EntryFile {
+public class CoreEntryFile implements EntryFile {
 
 	private byte[] checksum;
 	private long lastTouch;
 	private String file;
 	private long size;
 	
-	public CoreLocalEntryFile(String file, long lastTouch, byte[] checksum, long size) {
+	public CoreEntryFile(String file, long lastTouch, byte[] checksum, long size) {
 		this.file = file;
 		this.lastTouch = lastTouch;
 		this.checksum = checksum;

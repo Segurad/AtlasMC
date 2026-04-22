@@ -25,8 +25,7 @@ public final class Color implements ColorValue {
 		
 		@Override
 		public Class<?> getType() {
-			// TODO Auto-generated method stub
-			return null;
+			return Color.class;
 		}
 		
 		@Override

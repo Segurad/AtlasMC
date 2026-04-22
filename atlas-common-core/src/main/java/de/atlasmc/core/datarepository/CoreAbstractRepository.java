@@ -1,8 +1,12 @@
 package de.atlasmc.core.datarepository;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 
 import de.atlasmc.datarepository.Repository;
+import de.atlasmc.datarepository.RepositoryEntryUpdate;
+import de.atlasmc.util.concurrent.future.Future;
 
 public abstract class CoreAbstractRepository implements Repository {
 
@@ -34,5 +38,13 @@ public abstract class CoreAbstractRepository implements Repository {
 	public boolean isReadOnly() {
 		return readonly;
 	}
+
+	protected abstract boolean copyEntry(CoreRepositoryEntry entry, File destination, boolean override) throws IOException;
+
+	protected abstract Future<Boolean> delete(CoreRepositoryEntry entry);
+
+	protected abstract boolean isTouched(CoreRepositoryEntry entry, boolean shallow) throws IOException;
+
+	protected abstract Future<RepositoryEntryUpdate> update(CoreRepositoryEntry entry);
 	
 }

@@ -40,7 +40,7 @@ public class CommandStringReader {
 	}
 	
 	public boolean isAllowedNumber(char c) {
-		return c >= '0' && c <= '9' || c == '.' || c == '-';
+		return c >= '0' && c <= '9' || c == '.' || c == '-' || c == '+';
 	}
 	
 	public void skip() {
@@ -73,13 +73,11 @@ public class CommandStringReader {
 		String rawNumber = command.substring(start, cursor);
 		if (rawNumber.isEmpty())
 			throw new CommandSyntaxException(command, start, "Exspected number but found nothing");
-		int value = 0;
 		try {
-			value = Integer.parseInt(rawNumber);
+			return Integer.parseInt(rawNumber);
 		} catch(NumberFormatException e) {
 			throw new CommandSyntaxException(command, start, "Unable to parse int", e);
 		}
-		return value;
 	}
 	
 	public long readLong() {
@@ -90,13 +88,11 @@ public class CommandStringReader {
 		String rawNumber = command.substring(start, cursor);
 		if (rawNumber.isEmpty())
 			throw new CommandSyntaxException(command, start, "Exspected number but found nothing");
-		long value = 0;
 		try {
-			value = Long.parseLong(rawNumber);
+			return Long.parseLong(rawNumber);
 		} catch(NumberFormatException e) {
 			throw new CommandSyntaxException(command, start, "Unable to parse long", e);
 		}
-		return value;
 	}
 	
 	public float readFloat() {
@@ -107,13 +103,11 @@ public class CommandStringReader {
 		String rawNumber = command.substring(start, cursor);
 		if (rawNumber.isEmpty())
 			throw new CommandSyntaxException(command, start, "Exspected number but found nothing");
-		float value = 0;
 		try {
-			value = Float.parseFloat(rawNumber);
+			return Float.parseFloat(rawNumber);
 		} catch(NumberFormatException e) {
 			throw new CommandSyntaxException(command, start, "Unable to parse float", e);
 		}
-		return value;
 	}
 	
 	public double readDouble() {
@@ -124,13 +118,11 @@ public class CommandStringReader {
 		String rawNumber = command.substring(start, cursor);
 		if (rawNumber.isEmpty())
 			throw new CommandSyntaxException(command, start, "Exspected number but found nothing");
-		double value = 0;
 		try {
-			value = Double.parseDouble(rawNumber);
+			return Double.parseDouble(rawNumber);
 		} catch(NumberFormatException e) {
 			throw new CommandSyntaxException(command, start, "Unable to parse double", e);
 		}
-		return value;
 	}
 	
 	public boolean isQuoteChar(char c) {
@@ -143,7 +135,7 @@ public class CommandStringReader {
 				Character.isDigit(c) ||
 				c == '.' || c == '_' ||
 				c == '+' || c == '-' ||
-				c == ':';
+				c == ':' || c == '\\' || c == '/';
 	}
 	
 	@NotNull
@@ -199,6 +191,10 @@ public class CommandStringReader {
 	@NotNull
 	public String readUnquotedString() {
 		final int start = cursor;
+		if (!canRead())
+			throw new CommandSyntaxException(command, cursor, "Unexpected end of command!");
+		if (!isValidUnquotedChar(peek()))
+			throw new CommandSyntaxException(command, cursor, "Invalid char first char for unquoted String: " + peek());
 		while (canRead() && isValidUnquotedChar(peek())) {
 			skip();
 		}

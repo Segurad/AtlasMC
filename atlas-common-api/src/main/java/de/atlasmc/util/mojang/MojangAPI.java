@@ -52,10 +52,6 @@ public class MojangAPI {
 	 */
 	HTTP_BAD_REQUEST = 400,
 	/**
-	 * Length of a UUID String without dashes
-	 */
-	ID_LENGTH = 32,
-	/**
 	 * Length of a player name
 	 */
 	PLAYER_NAME_LENGTH = 16;
@@ -119,8 +115,8 @@ public class MojangAPI {
 	}
 	
 	private void validateID(String id) {
-		if (id.length() != ID_LENGTH || id.length() == 36) {
-			throw new IllegalArgumentException("Name can not be longer than " + ID_LENGTH + " chars: " + id.length());
+		if (id.length() != 32 && id.length() != 36) {
+			throw new IllegalArgumentException("ID must be 32 or 36 chars: \"" + id + "\" was: " + id.length());
 		}
 	}
 	

@@ -16,7 +16,13 @@ public interface Repository {
 	UUID getUUID();
 	
 	@NotNull
-	Collection<? extends RepositoryNamespace> getNamespaces();
+	RepositoryNamespace getNamespace(String key);
+	
+	@NotNull
+	RepositoryNamespace getNamespace(NamespacedKey key);
+	
+	@NotNull
+	Collection<RepositoryNamespace> getNamespaces();
 	
 	boolean isReadOnly();
 	

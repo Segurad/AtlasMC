@@ -19,16 +19,16 @@ import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.ConfigurationSerializable;
 import de.atlasmc.util.configuration.MemoryConfigurationSection;
 
-public class CoreLocalRepositoryEntry implements RepositoryEntry, ConfigurationSerializable {
+public class CoreRepositoryEntry implements RepositoryEntry, ConfigurationSerializable {
 
-	private final CoreAbstractLocalRepository repo;
+	private final CoreAbstractRepository repo;
 	private final NamespacedKey key;
 	private String description;
 	private String root;
-	private final List<CoreLocalEntryFile> files;
+	private final List<CoreEntryFile> files;
 	private byte[] checksum;
 	
-	public CoreLocalRepositoryEntry(CoreAbstractLocalRepository repo, NamespacedKey key, ConfigurationSection config) {
+	public CoreRepositoryEntry(CoreAbstractLocalRepository repo, NamespacedKey key, ConfigurationSection config) {
 		this.repo = repo;
 		this.key = key;
 		this.root = config.getString("root");
@@ -37,20 +37,20 @@ public class CoreLocalRepositoryEntry implements RepositoryEntry, ConfigurationS
 		HexFormat hex = HexFormat.of();
 		this.checksum = hex.parseHex(checksumRaw);
 		List<ConfigurationSection> fileConfigs = config.getListOfType("files", ConfigurationSection.class);
-		List<CoreLocalEntryFile> files = new ArrayList<>(fileConfigs.size());
+		List<CoreEntryFile> files = new ArrayList<>(fileConfigs.size());
 		for (ConfigurationSection fileConfig : fileConfigs) {
 			String filePath = fileConfig.getString("file");
 			long lastTouch = fileConfig.getLong("lastTouch");
 			String fileChecksumRaw = fileConfig.getString("checksum");
 			byte[] fileChecksum = hex.parseHex(fileChecksumRaw);
 			long size = fileConfig.getLong("size");
-			CoreLocalEntryFile file = new CoreLocalEntryFile(filePath, lastTouch, fileChecksum, size);
+			CoreEntryFile file = new CoreEntryFile(filePath, lastTouch, fileChecksum, size);
 			files.add(file);
 		}
 		this.files = new CopyOnWriteArrayList<>(files);
 	}
 	
-	public CoreLocalRepositoryEntry(CoreAbstractLocalRepository repo, NamespacedKey key, String description, byte[] checksum, Collection<? extends CoreLocalEntryFile> files) {
+	public CoreRepositoryEntry(CoreAbstractLocalRepository repo, NamespacedKey key, String description, byte[] checksum, Collection<? extends CoreEntryFile> files) {
 		this.repo = repo;
 		this.key = key;
 		this.checksum = Arrays.copyOf(checksum, checksum.length);
@@ -70,7 +70,7 @@ public class CoreLocalRepositoryEntry implements RepositoryEntry, ConfigurationS
 	}
 
 	@Override
-	public List<? extends CoreLocalEntryFile> getFiles() {
+	public List<? extends CoreEntryFile> getFiles() {
 		return files;
 	}
 
@@ -110,7 +110,7 @@ public class CoreLocalRepositoryEntry implements RepositoryEntry, ConfigurationS
 	
 	@Override
 	public boolean isTouched(boolean shallow) throws IOException {
-		return repo.isTouched(null, shallow);
+		return repo.isTouched(this, shallow);
 	}
 
 	@Override
@@ -124,7 +124,7 @@ public class CoreLocalRepositoryEntry implements RepositoryEntry, ConfigurationS
 	}
 
 	public void addFile(String file, long lastTouch, byte[] checksum, long size) {
-		files.add(new CoreLocalEntryFile(file, lastTouch, checksum, size));
+		files.add(new CoreEntryFile(file, lastTouch, checksum, size));
 	}
 
 	public void setChecksum(byte[] checksum) {
@@ -142,7 +142,7 @@ public class CoreLocalRepositoryEntry implements RepositoryEntry, ConfigurationS
 		config.set("checksum", HexFormat.of().formatHex(checksum));
 		ArrayList<ConfigurationSection> files = new ArrayList<>(this.files.size());
 		config.set("files", files);
-		for (CoreLocalEntryFile file : this.files) {
+		for (CoreEntryFile file : this.files) {
 			ConfigurationSection fileCfg = new MemoryConfigurationSection(config);
 			fileCfg.set("file", file.file());
 			fileCfg.set("checksum", HexFormat.of().formatHex(file.checksum()));

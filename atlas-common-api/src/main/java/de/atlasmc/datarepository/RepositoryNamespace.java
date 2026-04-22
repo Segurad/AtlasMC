@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.concurrent.future.Future;
 
 public interface RepositoryNamespace {
 	
@@ -26,6 +27,7 @@ public interface RepositoryNamespace {
 	@NotNull
 	Collection<RepositoryEntryUpdate> update() throws IOException;
 
-	boolean delete() throws IOException;
+	@NotNull
+	Future<Boolean> delete();
 
 }

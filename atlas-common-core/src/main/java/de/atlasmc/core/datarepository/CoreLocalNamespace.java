@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.security.DigestException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -37,6 +38,9 @@ import de.atlasmc.util.configuration.file.JsonConfiguration;
  *  A namespace of a local data repository
  */
 class CoreLocalNamespace implements RepositoryNamespace {
+	
+	private static final String HASH_ALGORITHM = "md5";
+	private static final int DIGEST_BUFFER_SIZE = 0x1000;
 	
 	private final CoreAbstractLocalRepository repo;
 	private final String namespace;
@@ -93,9 +97,11 @@ class CoreLocalNamespace implements RepositoryNamespace {
 		ArrayList<ConfigurationSection> entryFiles = new ArrayList<>();
 		config.set("files", entryFiles);
 		try {
-			MessageDigest totalDigest = MessageDigest.getInstance("md5");
-			MessageDigest md5 = MessageDigest.getInstance("md5");
-			byte[] buff = new byte[0x1000];
+			MessageDigest totalDigest = MessageDigest.getInstance(HASH_ALGORITHM);
+			MessageDigest md = MessageDigest.getInstance(HASH_ALGORITHM);
+			byte[] buff = new byte[DIGEST_BUFFER_SIZE];
+			int digestLength = md.getDigestLength();
+			byte[] checksumBuff = digestLength == 0 ? null : new byte[digestLength];
 			Stream<Path> files = Files.walk(entryPath);
 			files.forEach((entryFilePath) -> {
 				if (Files.isDirectory(entryFilePath))
@@ -104,7 +110,7 @@ class CoreLocalNamespace implements RepositoryNamespace {
 					BasicFileAttributes attributes = Files.readAttributes(entryFilePath, BasicFileAttributes.class);
 					long lastTouch = attributes.lastModifiedTime().toMillis();
 					long size = attributes.size();
-					byte[] rawChecksum = fileChecksum(md5, buff, entryFilePath);
+					byte[] rawChecksum = fileChecksum(md, buff, entryFilePath, checksumBuff);
 					totalDigest.update(rawChecksum);
 					String checksum = HexFormat.of().formatHex(rawChecksum);
 					MemoryConfigurationSection fileCfg = new MemoryConfigurationSection(config);
@@ -144,7 +150,7 @@ class CoreLocalNamespace implements RepositoryNamespace {
 				continue;
 			JsonConfiguration cfg = JsonConfiguration.loadConfiguration(meta);
 			NamespacedKey key = NamespacedKey.of(cfg.getString("key"));
-			CoreLocalRepositoryEntry entry = repo.createEntry(key, cfg);
+			CoreRepositoryEntry entry = repo.createEntry(key, cfg);
 			roots.add(path.resolve(entry.getRoot()));
 			if (isTouched(entry, true)) {
 				touchedEntries.add(entry);
@@ -171,22 +177,21 @@ class CoreLocalNamespace implements RepositoryNamespace {
 		return true;
 	}
 
-	protected boolean isTouched(CoreLocalRepositoryEntry entry, boolean shallow) throws IOException {
-		final MessageDigest md5; 
-		final byte[] buff; 
-		final Set<Path> files;
+	protected boolean isTouched(CoreRepositoryEntry entry, boolean shallow) throws IOException {
+		MessageDigest md = null; 
+		byte[] buff = null; 
+		Set<Path> files = null;
+		byte[] checksumBuff = null;
 		if (!shallow) {
 			try {
-				md5 = MessageDigest.getInstance("md5");
+				md = MessageDigest.getInstance(HASH_ALGORITHM);
 			} catch (NoSuchAlgorithmException e) {
 				throw new RepositoryException(e);
 			}
-			buff = new byte[0x1000];
-			files = FileUtils.getFiles(path.resolve(entry.getRoot()));
-		} else {
-			md5 = null;
-			buff = null;
-			files = null;
+			buff = new byte[DIGEST_BUFFER_SIZE];
+			files = FileUtils.getFilesRecursive(path.resolve(entry.getRoot()));
+			int digestLength = md.getDigestLength();
+			checksumBuff = digestLength == 0 ? null : new byte[digestLength];
 		}
 		for (EntryFile file : entry.getFiles()) {
 			Path filePath = path.resolve(file.file());
@@ -199,7 +204,7 @@ class CoreLocalNamespace implements RepositoryNamespace {
 				return true;
 			if (!shallow) {
 				files.remove(filePath);
-				byte[] rawChecksum = fileChecksum(md5, buff, filePath);
+				byte[] rawChecksum = fileChecksum(md, buff, filePath, checksumBuff);
 				if (!file.matchChecksum(rawChecksum))
 					return true;
 			}
@@ -207,7 +212,7 @@ class CoreLocalNamespace implements RepositoryNamespace {
 		return !shallow && !files.isEmpty();
 	}
 
-	public Future<RepositoryEntryUpdate> update(CoreLocalRepositoryEntry entry, boolean shallow) {
+	public Future<RepositoryEntryUpdate> update(CoreRepositoryEntry entry, boolean shallow) {
 		try {
 			return CompleteFuture.of(internalUpdate(entry, shallow));
 		} catch(IOException e) {
@@ -215,7 +220,7 @@ class CoreLocalNamespace implements RepositoryNamespace {
 		}
 	}
 	
-	protected RepositoryEntryUpdate internalUpdate(CoreLocalRepositoryEntry entry, boolean shallow) throws IOException {
+	protected RepositoryEntryUpdate internalUpdate(CoreRepositoryEntry entry, boolean shallow) throws IOException {
 		Path entryRoot = path.resolve(entry.getRoot());
 		if (!Files.exists(entryRoot)) {
 			File metaFile = new File(metaDir, entry.getNamespacedKey().key() + ".json");
@@ -223,21 +228,24 @@ class CoreLocalNamespace implements RepositoryNamespace {
 			return new CoreRepositoryEntryUpdate(entry.getNamespacedKey(), Change.DELETED, List.of());
 		}
 		final MessageDigest totalChecksum;
-		final MessageDigest md5; 
-		final byte[] buff = new byte[0x1000];
-		final Set<Path> files = FileUtils.getFiles(path.resolve(entry.getRoot()));
+		final MessageDigest md; 
+		final byte[] buff = new byte[DIGEST_BUFFER_SIZE];
+		final Set<Path> files = FileUtils.getFilesRecursive(path.resolve(entry.getRoot()));
+		final byte[] checksumBuff;
 		try {
-			totalChecksum = MessageDigest.getInstance("md5");
-			md5 = MessageDigest.getInstance("md5");
+			totalChecksum = MessageDigest.getInstance(HASH_ALGORITHM);
+			md = MessageDigest.getInstance(HASH_ALGORITHM);
+			int digestLength = md.getDigestLength();
+			checksumBuff = digestLength == 0 ? null : new byte[digestLength];
 		} catch (NoSuchAlgorithmException e) {
 			throw new RepositoryException(e);
 		}
 		boolean updated = false;
-		Collection<? extends CoreLocalEntryFile> entries = entry.getFiles();
-		Iterator<? extends CoreLocalEntryFile> entryIter = entries.iterator();
+		Collection<? extends CoreEntryFile> entries = entry.getFiles();
+		Iterator<? extends CoreEntryFile> entryIter = entries.iterator();
 		ArrayList<Pair<String, Change>> changes = new ArrayList<>();
 		while (entryIter.hasNext()) {
-			CoreLocalEntryFile file = entryIter.next();
+			CoreEntryFile file = entryIter.next();
 			Path filePath = path.resolve(file.file());
 			if (!Files.exists(filePath)) {
 				entryIter.remove();
@@ -256,7 +264,7 @@ class CoreLocalNamespace implements RepositoryNamespace {
 			if (fileUpdated || !shallow) {
 				file.setLastTouch(attributes.lastModifiedTime().toMillis());
 				file.setSize(attributes.size());
-				byte[] rawChecksum = fileChecksum(md5, buff, filePath);
+				byte[] rawChecksum = fileChecksum(md, buff, filePath, checksumBuff);
 				totalChecksum.update(rawChecksum);
 				if (!file.matchChecksum(rawChecksum))
 					fileUpdated = true;
@@ -274,7 +282,7 @@ class CoreLocalNamespace implements RepositoryNamespace {
 				String rawFile = path.relativize(filePath).toString().replace('\\', '/');
 				long lastTouch = attributes.lastModifiedTime().toMillis();
 				long size = attributes.size();
-				byte[] checksum = fileChecksum(md5, buff, filePath);
+				byte[] checksum = fileChecksum(md, buff, filePath, checksumBuff);
 				totalChecksum.update(checksum);
 				entry.addFile(rawFile, lastTouch, checksum, size);
 				changes.add(Pair.of(rawFile, Change.CREATED));
@@ -294,14 +302,19 @@ class CoreLocalNamespace implements RepositoryNamespace {
 		return new CoreRepositoryEntryUpdate(entry.getNamespacedKey(), change, changes);
 	}
 	
-	private static byte[] fileChecksum(MessageDigest md5, byte[] buff, Path path) throws IOException {
+	private static byte[] fileChecksum(MessageDigest md, byte[] buff, Path path, byte[] checksumBuff) throws IOException {
 		try (InputStream in = Files.newInputStream(path)) {
 			while (in.available() > 0) {
 				int bytesRead = in.read(buff);
-				md5.update(buff, 0, bytesRead);
+				md.update(buff, 0, bytesRead);
 			}
-			return md5.digest();
-		}	
+			if (checksumBuff == null)
+				return md.digest();
+			md.digest(checksumBuff, 0, checksumBuff.length);
+			return checksumBuff; 
+		} catch (DigestException e) {
+			throw new RepositoryException("Failed to create checksum!", e);
+		}
 	}
 
 	@Override
@@ -319,7 +332,7 @@ class CoreLocalNamespace implements RepositoryNamespace {
 			if (!fileName.endsWith(".json"))
 				continue;
 			NamespacedKey key = NamespacedKey.of(namespace, fileName.replace(".json", ""));
-			CoreLocalRepositoryEntry entry = repo.getCachedEntry(key);
+			CoreRepositoryEntry entry = repo.getCachedEntry(key);
 			if (entry == null) {
 				JsonConfiguration cfg = JsonConfiguration.loadConfiguration(meta);
 				entry = repo.createEntry(key, cfg);
@@ -335,10 +348,14 @@ class CoreLocalNamespace implements RepositoryNamespace {
 	}
 
 	@Override
-	public boolean delete() throws IOException {
-		internalDelete();
-		repo.removeNamespace(this);
-		return true;
+	public Future<Boolean> delete() {
+		try {
+			internalDelete();
+			repo.removeNamespace(this);
+		} catch(IOException e) {
+			return new CompleteFuture<>(e);
+		}
+		return CompleteFuture.of(true);
 	}
 	
 	protected void internalDelete() throws IOException {

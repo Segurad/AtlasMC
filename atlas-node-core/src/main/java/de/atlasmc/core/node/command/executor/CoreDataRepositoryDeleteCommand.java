@@ -1,7 +1,5 @@
 package de.atlasmc.core.node.command.executor;
 
-import java.io.IOException;
-
 import de.atlasmc.Atlas;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.command.CommandContext;
@@ -32,9 +30,10 @@ public class CoreDataRepositoryDeleteCommand implements CommandExecutor {
 			if (skipConfirm) {
 				repo.delete().setListener((future) -> {
 					if (future.isSuccess() && future.resultNow()) {
-						sender.sendMessage("Repository deleted");
+						sender.sendMessage("Deleted repository: " + rawRepo);
 					} else {
-						sender.sendMessage("Failed to delete repository!");
+						sender.sendMessage("Failed to delete repository: " + rawRepo);
+						Atlas.getLogger().error("Failed to delete repository: " + rawRepo, future.cause());
 					}
 				});
 			} else {
@@ -47,9 +46,10 @@ public class CoreDataRepositoryDeleteCommand implements CommandExecutor {
 					}
 					repo.delete().setListener((future) -> {
 						if (future.isSuccess() && future.resultNow()) {
-							sender.sendMessage("Repository deleted");
+							sender.sendMessage("Deleted repository: " + rawRepo);
 						} else {
-							sender.sendMessage("Failed to delete repository!");
+							sender.sendMessage("Failed to delete repository: " + rawRepo);
+							Atlas.getLogger().error("Failed to delete repository: " + rawRepo, future.cause());
 						}
 					});
 				});
@@ -62,16 +62,14 @@ public class CoreDataRepositoryDeleteCommand implements CommandExecutor {
 		if (rawEntry == null) {
 			RepositoryNamespace namespace = repo.getNamespace(rawNamespace);
 			if (skipConfirm) {
-				try {
-					if (namespace.delete()) {
-						sender.sendMessage("Namespace deleted");
+				namespace.delete().setListener((future) -> {
+					if (future.isSuccess() && future.resultNow()) {
+						sender.sendMessage("Deleted namespace: " + rawNamespace);
 					} else {
-						sender.sendMessage("Failed to delete namespace!");
+						sender.sendMessage("Failed to delete namespace: " + rawNamespace);
+						Atlas.getLogger().error("Failed to delete namespace: " + rawNamespace, future.cause());
 					}
-				} catch (IOException e) {
-					sender.sendMessage("Error while deleting namespace!");
-					Atlas.getLogger().error("Erro while deleting namespace: " + rawNamespace, e);
-				}
+				});
 			} else {
 				Commands.awaitConfirm(sender, 1200).setListener((confirm) -> {
 					CommandContext ctx = confirm.resultNow();
@@ -80,15 +78,16 @@ public class CoreDataRepositoryDeleteCommand implements CommandExecutor {
 						sender.sendMessage("Invalid namespace name: " + confirmValue);
 						return;
 					}
-					repo.delete().setListener((future) -> {
+					namespace.delete().setListener((future) -> {
 						if (future.isSuccess() && future.resultNow()) {
-							sender.sendMessage("Namespace deleted");
+							sender.sendMessage("Deleted namespace: " + rawNamespace);
 						} else {
-							sender.sendMessage("Failed to delete namespace!");
+							sender.sendMessage("Failed to delete namespace: " + rawNamespace);
+							Atlas.getLogger().error("Failed to delete namespace: " + rawNamespace, future.cause());
 						}
 					});
 				});
-				sender.sendMessage("Confirm this action with: /confirm " + rawRepo);
+				sender.sendMessage("Confirm this action with: /confirm " + rawNamespace);
 			}
 			return true;
 		}
@@ -102,9 +101,10 @@ public class CoreDataRepositoryDeleteCommand implements CommandExecutor {
 			if (skipConfirm) {
 				entry.delete().setListener((delFuture) -> {
 					if (delFuture.isSuccess() && delFuture.resultNow()) {
-						sender.sendMessage("Entry deleted");
+						sender.sendMessage("Deleted entry: " + rawEntry);
 					} else {
-						sender.sendMessage("Failed to delete entry!");
+						sender.sendMessage("Failed to delete entry: " + rawEntry);
+						Atlas.getLogger().error("Failed to delete entry: " + rawEntry, future.cause());
 					}
 				});
 				sender.sendMessage("Entry deleted");
@@ -116,15 +116,16 @@ public class CoreDataRepositoryDeleteCommand implements CommandExecutor {
 						sender.sendMessage("Invalid entry name: " + confirmValue);
 						return;
 					}
-					repo.delete().setListener((defFuture) -> {
+					entry.delete().setListener((defFuture) -> {
 						if (defFuture.isSuccess() && defFuture.resultNow()) {
-							sender.sendMessage("Repository deleted");
+							sender.sendMessage("Deleted entry: " + rawEntry);
 						} else {
-							sender.sendMessage("Failed to delete repository!");
+							sender.sendMessage("Failed to delete entry: " + rawEntry);
+							Atlas.getLogger().error("Failed to delete entry: " + rawEntry, future.cause());
 						}
 					});
 				});
-				sender.sendMessage("Confirm this action with: /confirm " + rawRepo);
+				sender.sendMessage("Confirm this action with: /confirm " + rawEntry);
 			}
 		});
 		return true;

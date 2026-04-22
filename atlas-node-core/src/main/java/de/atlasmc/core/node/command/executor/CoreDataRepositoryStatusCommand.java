@@ -42,7 +42,7 @@ public class CoreDataRepositoryStatusCommand implements CommandExecutor {
 	}
 	
 	private void sendStatus(CommandSender sender, RepositoryNamespace namespace) {
-		NamespaceStatus status = null;
+		NamespaceStatus status;
 		try {
 			status = namespace.getStatus();
 		} catch (IOException e) {

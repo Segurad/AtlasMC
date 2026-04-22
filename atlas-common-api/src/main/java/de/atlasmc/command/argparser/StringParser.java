@@ -50,7 +50,7 @@ public class StringParser implements VarArgParser<String> {
 
 	@Override
 	public String parse(CommandStringReader reader) {
-		String result = null;
+		String result;
 		if (type == StringType.GREEDY_PHRASE) {
 			result = reader.getRemaining();
 			reader.setCursor(reader.getTotalLength());
@@ -59,9 +59,7 @@ public class StringParser implements VarArgParser<String> {
 		} else {
 			result = reader.readString();
 		}
-		if (result.length() == 0)
-			return null;
-		return result;
+		return result.length() == 0 ? null : result;
 	}
 
 	@Override

@@ -57,6 +57,7 @@ commands:
 - name: aliases
   aliases:
   - a
+  - alias
   cmd-description: "Provides information about command aliases"
   executor: atlas:aliases
   args:
@@ -133,9 +134,11 @@ commands:
           args:
           - type: var
             name: path
-            parser: brigadier:string
+            parser: 
+              type: brigadier:string
+              string-type: QUOTABLE_PHRASE
             description: "Creates a new namespace with the given name and path"
-            executor: atlas:dummy_executor
+            executor: atlas-core:datarepo/create
       - type: literal
         name: entry
         arg-key: toCreate
@@ -153,7 +156,9 @@ commands:
             args:
             - type: var
               name: path
-              parser: brigadier:string
+              parser: 
+                type: brigadier:string
+                string-type: QUOTABLE_PHRASE
               description: "Creates a new entry with the given name and path"
               executor: atlas-core:datarepo/create
     - type: literal
