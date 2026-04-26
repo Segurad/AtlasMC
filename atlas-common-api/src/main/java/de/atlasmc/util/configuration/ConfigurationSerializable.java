@@ -33,11 +33,11 @@ public interface ConfigurationSerializable {
 	}
 	
 	@NotNull
-	public static <T extends ConfigurationSerializable> T deserialize(ConfigurationSection section, String className) {
+	public static <T extends ConfigurationSerializable> T deserialize(ConfigurationSection section, String className, ClassLoader loader) {
 		Class<T> clazz;
 		try {
 			@SuppressWarnings("unchecked")
-			Class<T> c = (Class<T>) Class.forName(className);
+			Class<T> c = (Class<T>) loader.loadClass(className);
 			clazz = c;
 		} catch (ClassNotFoundException e) {
 			throw new ConfigurationException(e);

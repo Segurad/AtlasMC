@@ -44,7 +44,7 @@ final class CorePluginLockMonitor extends Thread {
 				return;
 			running = false;	
 			if (getState() == State.WAITING)
-				notify(); // cancel waiting for next enqueued reference
+				interrupt(); // cancel waiting for next enqueued reference
 		}
 	}
 

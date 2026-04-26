@@ -180,10 +180,10 @@ public class NamespacedKey implements CharSequence {
 			throw new IllegalArgumentException("NamespacedKey can not be null!");
 		if (namespacedKey instanceof NamespacedKey key)
 			return key;
+		String rawKey = namespacedKey.toString();
 		NamespacedKey k = CACHE.get(namespacedKey);
 		if (k != null)
 			return k;
-		String rawKey = namespacedKey.toString();
 		int first = rawKey.indexOf(':');
 		String namespace;
 		String key;

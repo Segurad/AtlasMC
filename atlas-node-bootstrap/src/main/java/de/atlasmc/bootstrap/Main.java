@@ -183,7 +183,7 @@ public class Main {
 		consoleDeamon.setDaemon(true);
 		loadCommands(log, workDir);
 		
-		initStartupHandler(log, context, Main.class.getResourceAsStream("/META-INF/atlas/startup-handlers.yml"));
+		initStartupHandler(log, context, Main.class.getResourceAsStream("/META-INF/atlas/startup-handlers.yml"), Main.class.getClassLoader());
 		
 		for (Plugin plugin : pluginManager.getPlugins()) {
 			if (!(plugin instanceof AtlasModul modul))
@@ -191,7 +191,7 @@ public class Main {
 			if (!plugin.isEnabled())
 				continue;
 			modul.initStartupHandler(context);
-			initStartupHandler(log, context, plugin.getResourceAsStream("/META-INF/atlas/startup-handlers.yml"));
+			initStartupHandler(log, context, plugin.getResourceAsStream("/META-INF/atlas/startup-handlers.yml"), plugin.getClass().getClassLoader());
 		}
 		
 		try {
@@ -227,7 +227,7 @@ public class Main {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static void initStartupHandler(Log logger, StartupContext context, InputStream in) {
+	private static void initStartupHandler(Log logger, StartupContext context, InputStream in, ClassLoader loader) {
 		if (in == null)
 			return;
 		logger.info("Loading startup handlers...");
@@ -248,7 +248,7 @@ public class Main {
 					initializedHandlers.put(rawHandlerClass, null);
 					Class<?> handlerClass;
 					try {
-						handlerClass = Class.forName(rawHandlerClass);
+						handlerClass = loader.loadClass(rawHandlerClass);
 					} catch (ClassNotFoundException e) {
 						logger.error("Unable to find startup stage handler class for stage: " + key, e);
 						continue;

@@ -3,19 +3,19 @@
   <parent>
     <groupId>de.atlasmc</groupId>
     <artifactId>atlas-mc</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${revision}</version>
   </parent>
   <artifactId>atlas-node-bootstrap</artifactId>
   <dependencies>
 	  <dependency>
 	  	<groupId>de.atlasmc</groupId>
 	  	<artifactId>atlas-common-core</artifactId>
-	  	<version>0.0.1-SNAPSHOT</version>
+	  	<version>${revision}</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>de.atlasmc</groupId>
 	  	<artifactId>atlas-common-api</artifactId>
-	  	<version>0.0.1-SNAPSHOT</version>
+	  	<version>${revision}</version>
 	  </dependency>
   </dependencies>
 </project>

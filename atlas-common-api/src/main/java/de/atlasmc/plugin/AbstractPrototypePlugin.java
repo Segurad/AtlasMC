@@ -3,6 +3,7 @@ package de.atlasmc.plugin;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.util.configuration.Configuration;
@@ -32,24 +33,18 @@ public abstract class AbstractPrototypePlugin implements PrototypePlugin {
 		if (rawVersion == null)
 			throw new ConfigurationException("Version is not defined!");
 		this.version = new Version(rawVersion);
-		List<String> rawDependencies = pluginInfo.getStringList("dependencies", List.of());
-		List<Dependency> dependencies = new ArrayList<>(rawDependencies.size());
-		for (String raw : rawDependencies) {
-			dependencies.add(Dependency.of(raw));
+		this.dependencies = loadList("dependencies", Dependency::of);
+		this.requiredFeatures = loadList("required-features", NamespacedKey::of);
+		this.softRequiredFeatures = loadList("soft-required-features", NamespacedKey::of);
+	}
+	
+	private <T> List<T> loadList(String key, Function<String, T> constructor) {
+		List<String> rawList = pluginInfo.getStringList(key, List.of());
+		List<T> list = new ArrayList<>(rawList.size());
+		for (String raw : rawList) {
+			list.add(constructor.apply(raw));
 		}
-		this.dependencies = List.copyOf(dependencies);
-		List<String> rawRequiredFeatures = pluginInfo.getStringList("required-features", List.of());
-		List<NamespacedKey> requiredFeatures = new ArrayList<>(rawRequiredFeatures.size());
-		for (String raw : rawRequiredFeatures) {
-			requiredFeatures.add(NamespacedKey.of(raw));
-		}
-		this.requiredFeatures = List.copyOf(requiredFeatures);
-		List<String> rawSoftRequiredFeatures = pluginInfo.getStringList("soft-required-features", List.of());
-		List<NamespacedKey> softRequiredFeatures = new ArrayList<>(rawRequiredFeatures.size());
-		for (String raw : rawSoftRequiredFeatures) {
-			softRequiredFeatures.add(NamespacedKey.of(raw));
-		}
-		this.softRequiredFeatures = List.copyOf(softRequiredFeatures);
+		return List.copyOf(list);
 	}
 	
 	@Override

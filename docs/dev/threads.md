@@ -13,5 +13,7 @@
 - Atlas Master
 - Server
 - Scheduler
-- Scheudlerworker
+- Schedulerworker
 - WorldIO
+- Plugin Lock Monitor
+- PluginManager Worker

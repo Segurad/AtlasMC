@@ -11,7 +11,7 @@ Plugin Resourcepaths:
 
 ---
 
-Atlas has a command API verry similar to mojangs bridadier.
+Atlas has a command API based on Mojangs Brigadier API.
 As Developer you have the powerfull option define your commands with simple YAML. There is no need to pares and verify commands yourself. You just need to implement the CommandExecutor that will handle your Command.
 
 See also:

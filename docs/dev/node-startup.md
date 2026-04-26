@@ -32,7 +32,7 @@ For interaction with the startup process your Plugin needs to implement the `Atl
 
 New stages may be added at any time. The only requirement is they must be added after the current stage or later. To listen for future stage changes you are able to add a new stage handler to the context using `addStageChangeHandler(Consumer<String> handler)`
 
-The startup pocess provides a context `Map<String, Object>` used to share data between handlers. It will be cleared each stage. A stage has 3.
+The startup pocess provides a context `Map<String, Object>` used to share data between handlers. It will be cleared each stage. A stage has 3 phases.
 
 - `prepare` used to provide stage relevant context e.g. provide builder.
 - `handle` used to populate builders and prepare data.

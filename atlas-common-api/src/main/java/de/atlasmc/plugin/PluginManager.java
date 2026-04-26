@@ -11,6 +11,7 @@ import de.atlasmc.event.Event;
 import de.atlasmc.event.EventPriority;
 import de.atlasmc.event.FunctionalListener;
 import de.atlasmc.event.Listener;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.concurrent.future.Future;
 
@@ -18,7 +19,7 @@ public interface PluginManager {
 	
 	/**
 	 * Loads and returns the Plugin represented by the file or null if unable to load.<br>
-	 * If the given lock is null {@link Plugin#isKeepLoaded()} is set to true.
+	 * If the given lock is null {@link PluginManager#isKeepLoaded(Plugin)} is set to true.
 	 * @param file file of the Plugin
 	 * @param lock to keep the Plugin alive
 	 * @return Plugin or null if not successful
@@ -85,11 +86,17 @@ public interface PluginManager {
 	
 	void setKeepLoaded(Plugin plugin, boolean keepLoaded);
 	
+	@NotNull
 	Collection<Plugin> getPlugins();
 	
 	@Nullable
 	Plugin getPlugin(String name);
 	
+	/**
+	 * Returns a collection containing all PluginLoaders
+	 * @return loaders
+	 */
+	@NotNull
 	Collection<PluginLoader> getLoaders();
 	
 	/**
@@ -128,6 +135,11 @@ public interface PluginManager {
 	
 	void callEvent(Event event);
 	
+	/**
+	 * Returns a set of all features supported by this PluginManager
+	 * @return features
+	 */
+	@NotNull
 	Set<NamespacedKey> getFeatures();
 	
 	boolean hasFeature(NamespacedKey feature);

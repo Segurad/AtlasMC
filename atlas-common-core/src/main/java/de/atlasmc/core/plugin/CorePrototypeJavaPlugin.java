@@ -20,18 +20,13 @@ final class CorePrototypeJavaPlugin extends AbstractPrototypePlugin {
 	}
 
 	@Override
-	public Plugin create() throws IOException {
-		Plugin plugin = this.plugin;
+	public synchronized Plugin create() throws IOException {
+		plugin = this.plugin;
 		if (plugin != null)
 			return plugin;
-		synchronized (this) {
-			plugin = this.plugin;
-			if (plugin != null)
-				return plugin;
-			plugin = loader.internalLoad(this);
-			this.plugin = plugin;
-			return plugin;
-		}
+		plugin = loader.internalLoad(this);
+		this.plugin = plugin;
+		return plugin;
 	}
 
 	@Override

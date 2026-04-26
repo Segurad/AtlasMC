@@ -12,6 +12,8 @@ import java.util.jar.JarOutputStream;
 
 import org.apache.maven.plugins.shade.relocation.Relocator;
 import org.apache.maven.plugins.shade.resource.ReproducibleResourceTransformer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.atlasmc.util.configuration.file.YamlConfiguration;
 
@@ -21,6 +23,12 @@ public class YamlTransformer implements ReproducibleResourceTransformer {
 	
 	private String target;
 
+	private final Logger log;
+	
+	public YamlTransformer() {
+		this.log = LoggerFactory.getLogger(YamlTransformer.class);
+	}
+	
 	@Override
 	public boolean canTransformResource(String resource) {
 		return resource.endsWith(".yml") || resource.endsWith(".yaml");
@@ -33,9 +41,10 @@ public class YamlTransformer implements ReproducibleResourceTransformer {
 	
 	@Override
 	public void processResource(String resource, InputStream is, List<Relocator> relocators, long time) throws IOException {
+		log.debug("Processing resource: {}", resource);
 		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(is);
 		ResourceFile presentCfg = resources.get(resource);
-		if (presentCfg == null) {			
+		if (presentCfg == null) {
 			resources.put(resource, new ResourceFile(cfg, time));
 			return;
 		}
@@ -65,12 +74,13 @@ public class YamlTransformer implements ReproducibleResourceTransformer {
             }
             resource.config.save(targetFile);
             if (resource.changed)
-            	System.out.println("Merged Yaml: " + e.getKey());
+            	log.info("Merged Yaml: {}", e.getKey());
         }
 	}
 	
 	public void setTarget(String target) {
 		this.target = target;
+		log.debug("Setting target:  {}", target);
 	}
 	
 	private static final class ResourceFile {

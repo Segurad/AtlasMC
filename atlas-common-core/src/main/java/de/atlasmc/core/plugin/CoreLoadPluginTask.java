@@ -67,7 +67,7 @@ final class CoreLoadPluginTask implements Runnable {
 			// TODO validate dependencies
 			try {
 				plugin.prototype.create();
-				log.debug("Plugin created: " + prototype);
+				log.debug("Plugin created: {}", prototype);
 			} catch (Exception e) {
 				loadOrder.remove(i--);
 				if (plugins.get(prototype.getName()) == plugin) { // only full clear on loading plugins
@@ -89,7 +89,7 @@ final class CoreLoadPluginTask implements Runnable {
 			// TODO validate dependencies
 			try {
 				pl.load();
-				log.debug("Plugin loaded: " + prototype);
+				log.debug("Plugin loaded: {}", prototype);
 			} catch (Exception e) {
 				loadOrder.remove(i--);
 				if (plugins.get(prototype.getName()) == plugin) { // only full clear on loading plugins
@@ -114,7 +114,7 @@ final class CoreLoadPluginTask implements Runnable {
 			// TODO validate dependencies
 			try {
 				pl.enable();
-				log.debug("Plugin enabled: " + prototype);
+				log.debug("Plugin enabled: {}", prototype);
 			} catch (Exception e) {
 				loadOrder.remove(i--);
 				if (plugins.get(prototype.getName()) == plugin) { // only full clear on loading plugins
@@ -229,57 +229,56 @@ final class CoreLoadPluginTask implements Runnable {
 				fail(plugin, new PluginException(msg));
 				return false;
 			}
-			if (dependency.matches(dependencyPlugin.prototype.getVersion())) {
-				if (dependency.type == Type.INCOMPATIPLE) {
-					String msg = "Incompatiple Plugin found: " + dependencyPlugin.prototype + " for plugin: " + plugin.prototype;
+			if (!dependency.matches(dependencyPlugin.prototype.getVersion()) && dependency.type == Type.REQUIRED) {
+				String msg = "Unsatisfied dependency " + dependency + " for plugin: " + plugin.prototype;
+				log.error(msg);
+				fail(plugin, new PluginException(msg));
+				return false;
+			}
+			if (dependency.type == Type.INCOMPATIPLE) {
+				String msg = "Incompatiple Plugin found: " + dependencyPlugin.prototype + " for plugin: " + plugin.prototype;
+				log.error(msg);
+				fail(plugin, new PluginException(msg));
+				return false;
+			}
+			switch (dependency.order) {
+			case AFTER:
+				if (!resolvePluginDependencies(dependencyPlugin, resolved, unresolved) && dependency.type == Type.REQUIRED) {
+					String msg = "Dependency was not resolved: " + dependencyPlugin.prototype + " for plugin: " + plugin.prototype;
 					log.error(msg);
 					fail(plugin, new PluginException(msg));
-					return false;
+					return false;	
 				}
-				switch (dependency.order) {
-				case AFTER:
-					if (!resolvePluginDependencies(dependencyPlugin, resolved, unresolved) && dependency.type == Type.REQUIRED) {
-						String msg = "Dependency was not resolved: " + dependencyPlugin.prototype + " for plugin: " + plugin.prototype;
+				resolved.add(plugin);
+				plugin.addDependency(plugin);
+				break;
+			case BEFORE:
+				if (!resolvePluginDependencies(dependencyPlugin, resolved, unresolved)) {
+					if (dependency.type == Type.REQUIRED) {
+						String msg = "Dependency was not resolved: " + dependencyPlugin + " for plugin: " + plugin.prototype;
 						log.error(msg);
 						fail(plugin, new PluginException(msg));
-						return false;	
+						return false;
 					}
 					resolved.add(plugin);
-					plugin.addDependency(plugin);
-					break;
-				case BEFORE:
-					if (!resolvePluginDependencies(dependencyPlugin, resolved, unresolved)) {
-						if (dependency.type == Type.REQUIRED) {
-							String msg = "Dependency was not resolved: " + dependencyPlugin + " for plugin: " + plugin.prototype;
-							log.error(msg);
-							fail(plugin, new PluginException(msg));
-							return false;
-						}
-						resolved.add(plugin);
-					} else {
-						int index = resolved.indexOf(dependencyPlugin);
-						if (index == -1) { // should never happen just in case
-							String msg = "Dependency was not resolved: " + dependencyPlugin.prototype.getName() + " " + dependencyPlugin.prototype.getVersion() + " for plugin: " + plugin.prototype;
-							log.error(msg);
-							fail(plugin, new PluginException(msg));
-							return false;
-						}
-						resolved.add(index, plugin);
-						dependencyPlugin.addDependency(plugin);
+				} else {
+					int index = resolved.indexOf(dependencyPlugin);
+					if (index == -1) { // should never happen just in case
+						String msg = "Dependency was not resolved: " + dependencyPlugin.prototype.getName() + " " + dependencyPlugin.prototype.getVersion() + " for plugin: " + plugin.prototype;
+						log.error(msg);
+						fail(plugin, new PluginException(msg));
+						return false;
 					}
-					break;
-				case WHATEVER:
-					resolved.add(plugin);
-					plugin.addDependency(dependencyPlugin);
-					break;
-				default:
-					String msg = "Unable to resolve dependency order order (" + dependency.order + " | " + dependency + ") for plugin: " + plugin.prototype;
-					log.error(msg);
-					fail(plugin, new PluginException(msg));
-					return false;
+					resolved.add(index, plugin);
+					dependencyPlugin.addDependency(plugin);
 				}
-			} else if (dependency.type == Type.REQUIRED){
-				String msg = "Unsatisfied dependency " + dependency + " for plugin: " + plugin.prototype;
+				break;
+			case WHATEVER:
+				resolved.add(plugin);
+				plugin.addDependency(dependencyPlugin);
+				break;
+			default:
+				String msg = "Unable to resolve dependency order order (" + dependency.order + " | " + dependency + ") for plugin: " + plugin.prototype;
 				log.error(msg);
 				fail(plugin, new PluginException(msg));
 				return false;

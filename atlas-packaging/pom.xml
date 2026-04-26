@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>de.atlasmc</groupId>
 		<artifactId>atlas-mc</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>${revision}</version>
 	</parent>
 	<artifactId>atlas-packaging</artifactId>
 	<build>
@@ -34,12 +34,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.5.2</version>
+				<version>3.6.2</version>
 				<dependencies>
 					<dependency>
 						<groupId>de.atlasmc</groupId>
 						<artifactId>atlas-shade-plugin</artifactId>
-						<version>0.0.1-SNAPSHOT</version>
+						<version>${revision}</version>
 					</dependency>
 				</dependencies>
 				<executions>
@@ -78,27 +78,27 @@
 		<dependency>
 			<groupId>de.atlasmc</groupId>
 			<artifactId>atlas-node-bootstrap</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${revision}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.atlasmc</groupId>
 			<artifactId>atlas-network-core-master</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${revision}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.atlasmc</groupId>
 			<artifactId>atlas-network-core-minion</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${revision}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.atlasmc</groupId>
 			<artifactId>atlas-node-core</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${revision}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.atlasmc</groupId>
 			<artifactId>atlas-master-core</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${revision}</version>
 		</dependency>
 	</dependencies>
 </project>

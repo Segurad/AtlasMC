@@ -3,11 +3,12 @@ package de.atlasmc.nbt.io;
 import java.io.IOException;
 import java.io.InputStream;
 
-import de.atlasmc.util.ByteDataBuffer;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 
 public class NBTIOReader extends AbstractNBTIOReader {
 	
-	private ByteDataBuffer buf;
+	private ByteBuf buf;
 	private boolean readBuf;
 	private boolean writeBuf;
 	private InputStream  in;
@@ -33,7 +34,7 @@ public class NBTIOReader extends AbstractNBTIOReader {
 	@Override
 	protected void ioMark() {
 		if (buf == null) 
-			buf = new ByteDataBuffer();
+			buf = Unpooled.buffer();
 		else 
 			buf.clear();
 		writeBuf = true;
@@ -71,10 +72,10 @@ public class NBTIOReader extends AbstractNBTIOReader {
 	@Override
 	protected void ioReadBytes(byte[] buffer, int off, int length) throws IOException {
 		if (readBuf())
-			buf.readFully(buffer, off, length);
+			buf.readBytes(buffer, off, length);
 		in.read(buffer, off, length);
 		if (writeBuf) 
-			buf.write(buffer, off, length);
+			buf.writeBytes(buffer, off, length);
 	}
 
 	@Override
@@ -135,16 +136,20 @@ public class NBTIOReader extends AbstractNBTIOReader {
 	@Override
 	protected void skipBytes(int bytes) throws IOException {
 		if (readBuf()) {
-			bytes -= buf.skipBytes(bytes);
+			int readable = buf.readableBytes();
+			if (readable >= bytes) {
+				buf.skipBytes(bytes);
+				return;
+			}
+			buf.skipBytes(readable);
+			bytes -= readable;
 		}
-		if (bytes < 1)
-			return;
 		if (!writeBuf) {
 			if (in.skip(bytes) != bytes)
 				throw new IOException("Failed to skip required byte count!");
 			return;
 		}
-		buf.copyFromInput(in, bytes);
+		buf.writeBytes(in, bytes);
 	}
 
 }

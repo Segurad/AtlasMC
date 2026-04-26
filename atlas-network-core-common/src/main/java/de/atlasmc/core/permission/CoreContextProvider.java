@@ -17,8 +17,6 @@ public class CoreContextProvider implements ContextProvider {
 	@Override
 	public String set(String key, String context) {
 		String old = this.context.put(key, context);
-		if (context == old)
-			return old;
 		if (context != null && context.equals(old))
 			return old;
 		contextChanged = true;

@@ -80,17 +80,15 @@ public class CoreJavaPluginLoader implements PluginLoader {
 	 */
 	@NotNull
 	private Configuration getInfo(File file) throws IOException {
-		JarFile jar = new JarFile(file);
-		JarEntry entry = jar.getJarEntry("atlas-plugin.yml");
-		if (entry == null) { 
-			jar.close();
-			return null;
+		try (JarFile jar = new JarFile(file)) {
+			JarEntry entry = jar.getJarEntry("atlas-plugin.yml");
+			if (entry == null) { 
+				return null;
+			}
+			try (InputStream in = jar.getInputStream(entry)) {
+				return YamlConfiguration.loadConfiguration(in);
+			}
 		}
-		InputStream in = jar.getInputStream(entry);
-		YamlConfiguration pluginyml = YamlConfiguration.loadConfiguration(in);
-		in.close();
-		jar.close();
-		return pluginyml;
 	}
 
 	Class<?> getClassByName(String name, CoreJavaClassLoader source) throws ClassNotFoundException {

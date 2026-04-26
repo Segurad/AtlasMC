@@ -17,7 +17,6 @@ import de.atlasmc.log.Log;
 import de.atlasmc.log.Logging;
 import de.atlasmc.plugin.JavaPlugin;
 import de.atlasmc.plugin.PluginException;
-import de.atlasmc.util.ByteDataBuffer;
 
 public class CoreJavaClassLoader extends URLClassLoader {
 	
@@ -71,13 +70,12 @@ public class CoreJavaClassLoader extends URLClassLoader {
 		String path = name.replace('.', '/').concat(".class");
 		JarEntry entry = jar.getJarEntry(path);
 		if (entry != null) { // present try to load class
-			byte[] classData;
-			try {
-				InputStream in = jar.getInputStream(entry);
-				ByteDataBuffer buf = new ByteDataBuffer(in.available());
-				buf.copyAllFromInput(in);
-				classData = buf.toByteArray();
-				
+			long size = entry.getSize();
+			if (size > Integer.MAX_VALUE)
+				throw new PluginException("Class data for class: " + path + " larger than int max value: " + size);
+			try (InputStream in = jar.getInputStream(entry)) {
+				byte[] classData = new byte[(int) (size & 0xFFFFFFFF)];
+				in.read(classData);
 				int index = name.lastIndexOf('.');
 				if (index != -1) { // define packet
 					String packetName = name.substring(0, index);
@@ -91,7 +89,7 @@ public class CoreJavaClassLoader extends URLClassLoader {
 				// define class
 				CodeSigner[] signer = entry.getCodeSigners();
 				CodeSource source = new CodeSource(url, signer);
-				defineClass(name, classData, 0, classData.length, source);
+				clazz = defineClass(name, classData, 0, classData.length, source);
 			} catch (IOException e) {
 				throw new ClassNotFoundException(name, e);
 			}

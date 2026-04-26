@@ -140,7 +140,7 @@ public class Registries {
 			String rawClass = regCfg.getString("type");
 			Target target = Target.valueOf(regCfg.getString("target"));
 			try {
-				Class<?> registryType = Class.forName(rawClass);
+				Class<?> registryType = Class.forName(rawClass, true, plugin.getPlugin().getClass().getClassLoader());
 				createRegistry(NamespacedKey.of(key), registryType, target);
 				logger.debug("Created registry ({}) of type: {}", key, rawClass);
 			} catch (ClassNotFoundException e) {
@@ -168,7 +168,7 @@ public class Registries {
 				String rawClass = entryCfg.getString("type");
 				Class<?> entryClass = null;
 				try {
-					entryClass = Class.forName(rawClass);
+					entryClass = Class.forName(rawClass, true, plugin.getPlugin().getClass().getClassLoader());
 				} catch (ClassNotFoundException e) {
 					logger.error("Registry (" + key + ") entry class not found: " + rawClass, e);
 					continue;
@@ -228,7 +228,7 @@ public class Registries {
 			Class<?> typeClass;
 			String rawType = config.getString("type");
 			try {
-				Class<?> clazz = Class.forName(rawType);
+				Class<?> clazz = Class.forName(rawType, true, plugin.getPlugin().getClass().getClassLoader());
 				typeClass = clazz;
 			} catch (ClassNotFoundException e) {
 				throw new FactoryException("Error while fetching class: " + rawType);

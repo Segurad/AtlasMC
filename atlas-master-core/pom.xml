@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>de.atlasmc</groupId>
 		<artifactId>atlas-mc</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>${revision}</version>
 	</parent>
 	<artifactId>atlas-master-core</artifactId>
 	 <build>
@@ -19,7 +19,7 @@
 						<path>
 							<groupId>de.atlasmc</groupId>
 							<artifactId>atlas-common-api</artifactId>
-							<version>${project.version}</version>
+							<version>${revision}</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
@@ -30,12 +30,12 @@
 		<dependency>
 			<groupId>de.atlasmc</groupId>
 			<artifactId>atlas-master-api</artifactId>
-			<version>${project.version}</version>
+			<version>${revision}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.atlasmc</groupId>
 			<artifactId>atlas-network-core-common</artifactId>
-			<version>${project.version}</version>
+			<version>${revision}</version>
 		</dependency>
 		<!-- LGPL-2.1 -->
 		<!-- https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client -->

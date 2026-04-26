@@ -3,5 +3,5 @@ target/
 .settings/
 .classpath
 .project
-Atlas.txt
 dependency-reduced-pom.xml
+.flattened-pom.xml

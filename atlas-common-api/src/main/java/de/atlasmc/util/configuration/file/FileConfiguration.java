@@ -76,39 +76,38 @@ public abstract class FileConfiguration extends MemoryConfiguration {
 	protected void mapToSection(Map<?, ?> map, ConfigurationSection section) {
 		if (map == null)
 			return;
-		final boolean autoSerialize = getSettings().isAutoSerialize();
-		mapToSection(true, autoSerialize, map, section);
+		mapToSection(true, map, section);
 	}
 	
-	private Object mapToSection(boolean root, boolean autoSerialize, Map<?, ?> map, ConfigurationSection section) {
+	private Object mapToSection(boolean root, Map<?, ?> map, ConfigurationSection section) {
 		for (Entry<?, ?> entry : map.entrySet()) {
 			final String key = (String) entry.getKey();
 			final Object value = entry.getValue();
 			if (value instanceof Map mapValue) {
 				ConfigurationSection s = section.createSection(key);
-				section.set(key, mapToSection(false, autoSerialize, mapValue, s));
+				section.set(key, mapToSection(false, mapValue, s));
 			} else if (value instanceof List list) {
 				ListConfigurationSection listSection = section.createListSection(key);
-				remapList(autoSerialize, list, listSection);
+				remapList(list, listSection);
 			} else {
 				section.set(key, value);
 			}
 		};
-		if (root || !autoSerialize)
+		if (root || !getSettings().isAutoSerialize())
 			return section;
 		String clazz = section.getString("==");
 		if (clazz == null)
 			return section;
-		return ConfigurationSerializable.deserialize(section, clazz);
+		return ConfigurationSerializable.deserialize(section, clazz, getSettings().getLaoder());
 	}
 	
-	private void remapList(boolean autoSerialize, List<?> list, ListConfigurationSection listSection) {
+	private void remapList(List<?> list, ListConfigurationSection listSection) {
 		for (Object listValue : list) {
 			if (listValue instanceof Map mapListValue) {
 				ConfigurationSection s = listSection.addSection();
-				listSection.set(listSection.size() - 1, mapToSection(false, autoSerialize, mapListValue, s));
+				listSection.set(listSection.size() - 1, mapToSection(false, mapListValue, s));
 			} else if (listValue instanceof List l) {
-				remapList(autoSerialize, l, listSection.addListSection());
+				remapList(l, listSection.addListSection());
 			} else {
 				listSection.add(listValue);
 			}

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.atlasmc</groupId>
 	<artifactId>atlas-mc</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${revision}</version>
 	<packaging>pom</packaging>
 	<name>AtlasMC</name>
 	<description>A Minecraft server software</description>
@@ -15,7 +15,6 @@
 		<module>atlas-network-core-master</module>
 		<module>atlas-network-core-minion</module>
 		<module>atlas-node-bootstrap</module>
-		<module>atlas-packaging</module>
 		<module>atlas-test</module>
 		<module>atlas-shade-plugin</module>
 		<module>atlas-common-api</module>
@@ -23,6 +22,7 @@
 		<module>atlas-common-core</module>
 		<module>atlas-master-api</module>
 		<module>atlas-master-core</module>
+		<module>atlas-packaging</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -35,7 +35,36 @@
 		<dependency.fastutil.version>8.5.16</dependency.fastutil.version>
 		<dependency.junit.version>5.13.4</dependency.junit.version>
 		<plugin.maven.compiler.version>3.14.1</plugin.maven.compiler.version>
+		<revision>0.0.1-SNAPSHOT</revision>
 	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>flatten-maven-plugin</artifactId>
+				<version>1.7.3</version>
+				<configuration>
+				</configuration>
+				<executions>
+					<!-- enable flattening -->
+					<execution>
+						<id>flatten</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>flatten</goal>
+						</goals>
+					</execution>
+					<!-- ensure proper cleanup -->
+					<execution>
+						<id>flatten.clean</id>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 	<dependencies>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>

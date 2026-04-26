@@ -40,7 +40,7 @@ new FunctionalListenerExecutor(SomeEvent.class, (event)->{
     // your listener code here
 }, ignoreCancelled, EventPriority.NORMAL);
 
-Atlas.getPluginManager().registerFunctionListener(MY_PLUGUNG, SomeEvent.class, (event) -> {
+Atlas.getPluginManager().registerFunctionalListener(MY_PLUGIN, SomeEvent.class, (event) -> {
     // your listener code here
 }, ignoreCancelled, EventPriority.NORMAL);
 ```
