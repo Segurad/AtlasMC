@@ -4,6 +4,7 @@ import static de.atlasmc.io.PacketUtil.*;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.ToIntFunction;
 
 import de.atlasmc.node.util.VariableValueArray;
 import io.netty.buffer.ByteBuf;
@@ -13,21 +14,21 @@ public class SingleValuePalette<E> implements Palette<E> {
 	public static final int NULL_PALETTE_SERIALIZED_SIZE = 1 + getVarIntLength(0) * 2;
 	
 	private final int capacity;
-	private BasePaletteEntry<E> entry;
+	private DefaultPaletteEntry<E> entry;
 	private Collection<PaletteEntry<E>> collection;
-	private final GlobalValueProvider<E> provider;
+	private final ToIntFunction<E> provider;
 	
-	public SingleValuePalette(int capacity, GlobalValueProvider<E> provider) {
+	public SingleValuePalette(int capacity, ToIntFunction<E> provider) {
 		this(capacity, provider, null);
 	}
 	
-	public SingleValuePalette(int capacity, GlobalValueProvider<E> provider, E entry) {
+	public SingleValuePalette(int capacity, ToIntFunction<E> provider, E entry) {
 		this.capacity = capacity;
 		this.provider = provider;
 		if (entry == null)
 			return;
-		int value = provider.value(entry);
-		this.entry = new BasePaletteEntry<>(value, value, entry);
+		int value = provider.applyAsInt(entry);
+		this.entry = new DefaultPaletteEntry<>(value, value, entry);
 		this.entry.count = capacity;
 	}
 
@@ -42,7 +43,7 @@ public class SingleValuePalette<E> implements Palette<E> {
 	}
 
 	@Override
-	public PaletteEntry<E> getEntry(E entry) {
+	public PaletteEntry<E> getPaletteEntry(E entry) {
 		return this.entry != null && this.entry.entry.equals(entry) ? this.entry : null;
 	}
 
@@ -58,15 +59,17 @@ public class SingleValuePalette<E> implements Palette<E> {
 		if (entry == null)
 			throw new IllegalArgumentException("Entry can not be null!");
 		if (this.entry == null) {
-			int value = provider.value(entry);
-			this.entry = new BasePaletteEntry<>(value, value, entry);
+			int value = provider.applyAsInt(entry);
+			this.entry = new DefaultPaletteEntry<>(value, value, entry);
+			return value;
 		}
 		return -1;
 	}
 
 	@Override
-	public void setRawEntry(int index, int entryValue) {
+	public boolean setRawEntry(int index, int entryValue) {
 		// not required
+		return false;
 	}
 	
 
@@ -77,7 +80,9 @@ public class SingleValuePalette<E> implements Palette<E> {
 
 	@Override
 	public int getEntryValue(E entry) {
-		return this.entry != null && this.entry.entry.equals(entry) ? this.entry.paletteValue : null;
+		if (this.entry == null || this.entry.entry == null)
+			return -1;
+		return this.entry.entry.equals(entry) ? this.entry.paletteValue : -1;
 	}
 
 	@Override
@@ -131,7 +136,7 @@ public class SingleValuePalette<E> implements Palette<E> {
 	}
 
 	@Override
-	public GlobalValueProvider<E> getGlobalProvider() {
+	public ToIntFunction<E> getGlobalProvider() {
 		return provider;
 	}
 

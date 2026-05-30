@@ -76,9 +76,10 @@ public class MetaData<T> implements Cloneable {
 		return true;
 	}
 	
+	@Override
 	@SuppressWarnings("unchecked")
 	public MetaData<T> clone() {
-		MetaData<T> clone = null;
+		MetaData<T> clone;
 		try {
 			clone = (MetaData<T>) super.clone();
 		} catch (CloneNotSupportedException e) {

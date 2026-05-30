@@ -7,11 +7,13 @@ import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.node.entity.LivingEntity;
 import de.atlasmc.node.potion.PotionEffect;
 import de.atlasmc.node.potion.PotionEffectType;
+import de.atlasmc.util.annotation.NotNull;
 
 public abstract class CoreAbstractPotionEffect implements PotionEffect {
 	
+	@NotNull
 	public static final NBTCodec<CoreAbstractPotionEffect>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(CoreAbstractPotionEffect.class)
 					.include(PotionEffect.NBT_CODEC)
 					.byteField("amplifier", CoreAbstractPotionEffect::getAmplifier, CoreAbstractPotionEffect::setAmplifier, (byte) 0)
@@ -117,6 +119,11 @@ public abstract class CoreAbstractPotionEffect implements PotionEffect {
 	
 	private void setUUID(UUID uuid) {
 		this.uuid = uuid;
+	}
+	
+	@Override
+	public NBTCodec<? extends CoreAbstractPotionEffect> getNBTCodec() {
+		return NBT_CODEC;
 	}
 
 }

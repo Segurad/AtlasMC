@@ -1,5 +1,7 @@
 package de.atlasmc.core.node.inventory.component;
 
+import java.util.Objects;
+
 import de.atlasmc.chat.Chat;
 import de.atlasmc.node.inventory.component.ComponentType;
 import de.atlasmc.node.inventory.component.WrittenBookContentComponent;
@@ -42,9 +44,7 @@ public class CoreWrittenBookContent extends CoreBookContentComponent<Chat> imple
 
 	@Override
 	public void setGeneration(Generation generation) {
-		if (generation == null)
-			throw new IllegalArgumentException("Generation can not be null!");
-		this.generation = generation;
+		this.generation = Objects.requireNonNull(generation, "generation");
 	}
 
 	@Override

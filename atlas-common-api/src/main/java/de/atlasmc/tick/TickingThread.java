@@ -54,7 +54,7 @@ public class TickingThread extends Thread implements WatchableThread {
 		running = true;
 		nextTick = System.nanoTime();
 		lastActive = nextTick;
-		while (isRunning()) {
+		while (running) {
 			tickStart = System.nanoTime();
 			lastActive = tickStart;
 			// Start process;

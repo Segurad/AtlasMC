@@ -8,8 +8,9 @@ import de.atlasmc.util.annotation.Nullable;
 
 public interface ItemComponentHolder {
 	
+	@NotNull
 	public static final NBTCodec<ItemComponentHolder>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(ItemComponentHolder.class)
 					.mapTypeToCodec("components", ItemComponentHolder::hasComponents, ItemComponentHolder::getComponents, ItemComponent.NBT_CODEC, ItemComponent::getType)
 					.build();
@@ -36,8 +37,7 @@ public interface ItemComponentHolder {
 	
 	@NotNull
 	default <T extends ItemComponent> T getComponent(@NotNull ComponentType type) {
-		if (type == null)
-			throw new IllegalArgumentException("Key can not be null!");
+		assert type != null;
 		if (hasComponents()) {
 			@SuppressWarnings("unchecked")
 			T component = (T) getComponents().get(type);
@@ -57,9 +57,8 @@ public interface ItemComponentHolder {
 	 */
 	@Nullable
 	default ItemComponent setComponent(@NotNull ItemComponent component) {
-		if (component == null)
-			throw new IllegalArgumentException("Component can not be null!");
-		return getComponents().put(component.getType(), component);
+		var type = component.getType();
+		return getComponents().put(type, component);
 	}
 	
 	/**
@@ -69,8 +68,6 @@ public interface ItemComponentHolder {
 	 */
 	@Nullable
 	default ItemComponent removeComponent(@NotNull ComponentType type) {
-		if (type == null)
-			throw new IllegalArgumentException("Type can not be null!");
 		if (hasComponents())
 			return null;
 		return getComponents().remove(type);

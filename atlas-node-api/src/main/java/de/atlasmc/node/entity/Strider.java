@@ -1,11 +1,13 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Strider extends Animal {
 	
+	@NotNull
 	public static final NBTCodec<Strider>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Strider.class)
 					.include(Animal.NBT_CODEC)
 					.intField("BoostTime", Strider::getBoostTime, Strider::setBoostTime, 0)
@@ -27,7 +29,7 @@ public interface Strider extends Animal {
 	
 	@Override
 	default NBTCodec<? extends Strider> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

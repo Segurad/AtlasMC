@@ -12,19 +12,21 @@ import de.atlasmc.node.inventory.component.ComponentType;
 import de.atlasmc.node.inventory.component.ItemComponent;
 import de.atlasmc.node.inventory.component.ItemComponentHolder;
 import de.atlasmc.node.inventory.component.predicate.ItemComponentPredicate;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.dataset.DataSet;
 import de.atlasmc.util.predicate.IntRange;
 
 public class ItemPredicate implements NBTSerializable, ItemComponentHolder, Predicate<ItemStack> {
 	
+	@NotNull
 	public static final NBTCodec<ItemPredicate>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(ItemPredicate.class)
 					.defaultConstructor(ItemPredicate::new)
 					.codec("items", ItemPredicate::getItems, ItemPredicate::setItems, DataSet.nbtCodec(ItemType.REGISTRY_KEY))
 					.codec("count", ItemPredicate::getCount, ItemPredicate::setCount, NBTCodecs.INT)
 					.codec("count", ItemPredicate::getRange, ItemPredicate::setRange, IntRange.NBT_HANDLER)
-					.include(ItemComponentHolder.NBT_HANDLER)
+					.include(ItemComponentHolder.NBT_CODEC)
 					.mapTypeToCodec("predicates", ItemPredicate::hasPredicates, ItemPredicate::getPredicates, ItemComponentPredicate.NBT_HANDLER, ItemComponentPredicate::getType)
 					.build();
 
@@ -82,7 +84,7 @@ public class ItemPredicate implements NBTSerializable, ItemComponentHolder, Pred
 
 	@Override
 	public NBTCodec<? extends ItemPredicate> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 	@Override

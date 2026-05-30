@@ -74,8 +74,8 @@ public abstract class AbstractConnectionHandler implements ConnectionHandler {
 		log.debug("Switching Protocol to: {}", protocol.getClass().getSimpleName());
 		this.protocol = protocol;
 		syncPacketQueue.clear();
-		inboundListeners.removeListeners();
-		outboundPipeline.removeListeners();
+		inboundListeners.clear();
+		outboundPipeline.clear();
 	}
 
 	@Override
@@ -145,7 +145,7 @@ public abstract class AbstractConnectionHandler implements ConnectionHandler {
 	
 	@Override
 	public void setSyncPacketHandling(boolean enable) {
-		this.syncPacketHandling = true;
+		this.syncPacketHandling = enable;
 	}
 	
 	@Override

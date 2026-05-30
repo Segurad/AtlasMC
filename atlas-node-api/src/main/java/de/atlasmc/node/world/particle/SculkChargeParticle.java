@@ -2,9 +2,11 @@ package de.atlasmc.node.world.particle;
 
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public class SculkChargeParticle extends AbstractParticle {
 
+	@NotNull
 	public static final NBTCodec<SculkChargeParticle>
 	NBT_CODEC = NBTCodec
 				.builder(SculkChargeParticle.class)
@@ -12,6 +14,7 @@ public class SculkChargeParticle extends AbstractParticle {
 				.floatField("roll", SculkChargeParticle::getRoll, SculkChargeParticle::setRoll)
 				.build();
 	
+	@NotNull
 	public static final StreamCodec<SculkChargeParticle>
 	STREAM_CODEC = StreamCodec
 					.builder(SculkChargeParticle.class)

@@ -7,7 +7,7 @@ public interface PufferFish extends Fish {
 	public static final NBTCodec<PufferFish>
 	NBT_HANDLER = NBTCodec
 					.builder(PufferFish.class)
-					.include(Fish.NBT_HANDLER)
+					.include(Fish.NBT_CODEC)
 					.intField("PuffState", PufferFish::getPuffState, PufferFish::setPuffState, 0)
 					.build();
 	

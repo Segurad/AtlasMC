@@ -1,21 +1,28 @@
 package de.atlasmc.node.util.palette;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Objects;
+import java.util.function.ToIntFunction;
 
 import de.atlasmc.node.util.VariableValueArray;
+import de.atlasmc.util.annotation.Nullable;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 public abstract class AbstractPalette<E> implements Palette<E> {
 	
-	protected final Map<E, Entry<E>> entryMap;
+	/**
+	 * Stores entries by the {@link Objects#hashCode()}
+	 */
+	protected final Int2ObjectMap<Entry<E>> entryMap;
+	/**
+	 * Stores entries by using a mapping id
+	 */
 	protected final Int2ObjectMap<Entry<E>> valueToEntry;
 	protected final VariableValueArray values;
 	protected final int minBitsPerEntry;
 	protected final int maxBitsPerEntry;
-	protected final GlobalValueProvider<E> globalProvider;
+	protected final ToIntFunction<E> globalProvider;
 	
 	/**
 	 * Creates a new instance of {@link AbstractPalette}
@@ -24,13 +31,11 @@ public abstract class AbstractPalette<E> implements Palette<E> {
 	 * @param palette to use as template. The entries must be copied by a child implementation of this class.
 	 */
 	protected AbstractPalette(int minBitsPerEntry, int maxBitsPerEntry, Palette<E> palette) {
-		if (palette == null)
-			throw new IllegalArgumentException("Palette can not be null!");
+		this.globalProvider = palette.getGlobalProvider();
 		this.valueToEntry = new Int2ObjectOpenHashMap<>();
-		this.entryMap = new HashMap<>();
+		this.entryMap = new Int2ObjectOpenHashMap<>();
 		this.minBitsPerEntry = minBitsPerEntry;
 		this.maxBitsPerEntry = maxBitsPerEntry;
-		this.globalProvider = palette.getGlobalProvider();
 		if (palette.getBitsPerValue() > 0) {
 			this.values = new VariableValueArray(palette.getValues());
 		} else {
@@ -46,13 +51,11 @@ public abstract class AbstractPalette<E> implements Palette<E> {
 	 * @param capacity
 	 * @param maxBitsPerEntry
 	 */
-	protected AbstractPalette(int minBitsPerEntry, int capacity, int maxBitsPerEntry, GlobalValueProvider<E> provider) {
-		if (provider == null)
-			throw new IllegalArgumentException("Provider can not be null!");
+	protected AbstractPalette(int minBitsPerEntry, int capacity, int maxBitsPerEntry, ToIntFunction<E> provider) {
+		this.globalProvider = Objects.requireNonNull(provider, "provider");
 		this.valueToEntry = new Int2ObjectOpenHashMap<>();
-		this.entryMap = new HashMap<>();
+		this.entryMap = new Int2ObjectOpenHashMap<>();
 		this.minBitsPerEntry = minBitsPerEntry;
-		this.globalProvider = provider;
 		/**
 		 * Stores the maximum number of bits used to represent a entry.
 		 * May be 0 for no limit
@@ -85,26 +88,25 @@ public abstract class AbstractPalette<E> implements Palette<E> {
 	protected abstract void setEntries(Collection<? extends PaletteEntry<E>> entries);
 	
 	/**
-	 * Adds the Entry to the palette if it not exist or returns the entry of the existing element.<br>
-	 * Will return null if not added or found
+	 * Tries to get an existing {@link PaletteEntry} with the given entry.<br>
+	 * If there is no present entry the entry at the given will be checked if {@link PaletteEntry#count()} is 1.<br>
+	 * If it is 1 the present entry will be replaced.<br>
+	 * Otherwise the default implementation returns null.<br>
+	 * Child implementations should add a new entry if possible and return it
 	 * @param entry
 	 * @param index
-	 * @param checkIndex if true it will be checked if the palette entry a the location has a 
-	 * count of 1 and if so it will be replaced to keep a smaller palette
 	 * @return palette entry or null
 	 */
-	protected Entry<E> addOrReplaceEntry(E entry, int index, boolean checkIndex) {
-		Entry<E> pEntry = entryMap.get(entry); 
+	@Nullable
+	protected Entry<E> addOrReplaceEntry(E entry, int index) {
+		Entry<E> pEntry = entryMap.get(entry.hashCode()); 
 		if (pEntry != null) 
 			return pEntry; // no entry to be added return existing
-		if (checkIndex) { // checking for entry with count of 1 to be replaced by the new entry
-			pEntry = valueToEntry.get(values.get(index));
-			if (pEntry.count == 1) { // if the entry at the index has a count of 1 to replace it a
-				entryMap.remove(pEntry.entry);
-				pEntry.entry = entry;
-				entryMap.put(entry, pEntry);
-				return pEntry;
-			}
+		// checking for entry with count of 1 to be replaced by the new entry
+		pEntry = valueToEntry.get(values.get(index));
+		if (pEntry.count == 1) { // if the entry at the index has a count of 1 to replace it a
+			pEntry.updateEntry(entry);
+			return pEntry;
 		}
 		return null;
 	}
@@ -121,15 +123,15 @@ public abstract class AbstractPalette<E> implements Palette<E> {
 		newEntry.count++;
 		if (oldEntry.count > 0)
 			return false;
-		entryMap.remove(oldEntry.entry);
-		valueToEntry.remove(oldEntry.count);
+		entryMap.remove(oldEntry.hash);
+		valueToEntry.remove(oldEntry.paletteValue);
 		return true;
 	}
 	
 	protected Entry<E> addEntry(E entry, int value) {
-		Entry<E> pEntry = new Entry<>(this, value, globalProvider.value(entry), entry);
+		Entry<E> pEntry = new Entry<>(this, value, globalProvider.applyAsInt(entry), entry);
 		valueToEntry.put(value, pEntry);
-		entryMap.put(entry, pEntry);
+		entryMap.put(pEntry.hash, pEntry);
 		return pEntry;
 	}
 
@@ -146,8 +148,8 @@ public abstract class AbstractPalette<E> implements Palette<E> {
 	}
 	
 	@Override
-	public PaletteEntry<E> getEntry(E entry) {
-		return entryMap.get(entry);
+	public PaletteEntry<E> getPaletteEntry(E entry) {
+		return entryMap.get(entry.hashCode());
 	}
 
 	@Override
@@ -159,7 +161,7 @@ public abstract class AbstractPalette<E> implements Palette<E> {
 	public int setEntry(E entry, int index) {
 		if (entry == null)
 			throw new IllegalArgumentException("Entry can not be null!");
-		Entry<E> pEntry = addOrReplaceEntry(entry, index, true);
+		Entry<E> pEntry = addOrReplaceEntry(entry, index);
 		if (pEntry == null)
 			return -1;
 		int entryValue = pEntry.paletteValue;
@@ -169,22 +171,25 @@ public abstract class AbstractPalette<E> implements Palette<E> {
 	}
 
 	@Override
-	public void setRawEntry(int index, int entryValue) {
+	public boolean setRawEntry(int index, int entryValue) {
+		var newEntry = valueToEntry.get(entryValue);
+		if (newEntry == null)
+			return false;
 		int oldValue = values.replace(index, entryValue);
 		if (oldValue == entryValue)
-			return;
-		replaceEntry(valueToEntry.get(oldValue), valueToEntry.get(entryValue));
+			return true;
+		replaceEntry(valueToEntry.get(oldValue), newEntry);
+		return true;
 	}
 
 	@Override
 	public void optimize() {
-		// TODO Auto-generated method stub
-		
+		// override as needed
 	}
 
 	@Override
 	public int getEntryValue(E entry) {
-		Entry<E> pEntry = entryMap.get(entry);
+		var pEntry = entryMap.get(entry.hashCode());
 		return pEntry == null ? -1 : pEntry.paletteValue;
 	}
 
@@ -249,7 +254,7 @@ public abstract class AbstractPalette<E> implements Palette<E> {
 		return pEntry.paletteValue;
 	}
 	
-	protected static final class Entry<E> extends BasePaletteEntry<E> {
+	protected static final class Entry<E> extends DefaultPaletteEntry<E> {
 		
 		private int hash;
 		private final AbstractPalette<E> palette;
@@ -261,8 +266,12 @@ public abstract class AbstractPalette<E> implements Palette<E> {
 		
 		@Override
 		public E updateEntry(E entry) {
-			if (hash != 0)
-				hash = entry.hashCode();
+			var oldHash = hash;
+			hash = entry.hashCode();
+			if (oldHash != hash) { // update entry map
+				palette.entryMap.remove(oldHash);
+				palette.entryMap.put(hash, this);
+			}
 			E oldEntry = this.entry;
 			this.entry = entry;
 			int oldValue = paletteValue;
@@ -289,7 +298,7 @@ public abstract class AbstractPalette<E> implements Palette<E> {
 	}
 	
 	@Override
-	public GlobalValueProvider<E> getGlobalProvider() {
+	public ToIntFunction<E> getGlobalProvider() {
 		return globalProvider;
 	}
 

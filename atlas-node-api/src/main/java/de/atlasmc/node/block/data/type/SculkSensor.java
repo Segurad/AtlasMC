@@ -11,6 +11,7 @@ public interface SculkSensor extends AnaloguePowerable, Waterlogged {
 	
 	Phase getPhase();
 	
+	@Override
 	SculkSensor clone();
 	
 	public static enum Phase  {

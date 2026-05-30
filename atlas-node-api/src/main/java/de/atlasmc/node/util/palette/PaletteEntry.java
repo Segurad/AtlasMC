@@ -20,7 +20,7 @@ public interface PaletteEntry<E> {
 	
 	/**
 	 * Will update the entry in the mappings.
-	 * Should be used when entry was changed in a way that will affect {@link Object#hashCode()}
+	 * Should be used when entry was changed in a way that that the {@link Palette#getGlobalProvider()} will return a new value
 	 * @return the current entry
 	 */
 	E updateEntry();

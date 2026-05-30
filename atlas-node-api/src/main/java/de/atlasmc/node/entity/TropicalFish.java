@@ -4,13 +4,15 @@ import java.util.List;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.DyeColor;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface TropicalFish extends Fish {
 	
+	@NotNull
 	public static final NBTCodec<TropicalFish>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(TropicalFish.class)
-					.include(Fish.NBT_HANDLER)
+					.include(Fish.NBT_CODEC)
 					.intField("Variant", TropicalFish::getVariantID, TropicalFish::setVariantID, 0)
 					.build();
 	
@@ -32,7 +34,7 @@ public interface TropicalFish extends Fish {
 	
 	@Override
 	default NBTCodec<? extends TropicalFish> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public static enum Pattern {

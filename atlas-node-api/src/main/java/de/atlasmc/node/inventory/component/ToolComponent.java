@@ -6,19 +6,21 @@ import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.inventory.ItemType;
 import de.atlasmc.util.CloneException;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.dataset.DataSet;
 
 public interface ToolComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<ToolComponent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(ToolComponent.class)
 					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.TOOL.getNamespacedKey())
 					.floatField("default_mining_speed", ToolComponent::getDefaultMinigSpeed, ToolComponent::setDefaultMinigSpeed, 1)
 					.intField("damage_per_block", ToolComponent::getDamagePerBlock, ToolComponent::setDamagePerBlock, 1)
 					.boolField("can_destroy_blocks_in_creative", ToolComponent::canDestroyBlocksInCreative, ToolComponent::setDestroyBlockInCreative, true)
-					.codecList("rules", ToolComponent::hasRules, ToolComponent::getRules, Rule.NBT_HANDLER)
+					.codecList("rules", ToolComponent::hasRules, ToolComponent::getRules, Rule.NBT_CODEC)
 					.endComponent()
 					.build();
 	
@@ -38,6 +40,7 @@ public interface ToolComponent extends ItemComponent {
 	
 	boolean hasRules();
 	
+	@Override
 	ToolComponent clone();
 	
 	default boolean addRule(Rule rule) {
@@ -56,13 +59,14 @@ public interface ToolComponent extends ItemComponent {
 	
 	@Override
 	default NBTCodec<? extends ToolComponent> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public static class Rule implements NBTSerializable, Cloneable {
 		
+		@NotNull
 		public static final NBTCodec<Rule>
-		NBT_HANDLER = NBTCodec
+		NBT_CODEC = NBTCodec
 						.builder(Rule.class)
 						.defaultConstructor(Rule::new)
 						.codec("blocks", Rule::getBlocks, Rule::setBlocks, DataSet.nbtCodec(ItemType.REGISTRY_KEY))
@@ -100,7 +104,7 @@ public interface ToolComponent extends ItemComponent {
 		
 		@Override
 		public NBTCodec<? extends NBTSerializable> getNBTCodec() {
-			return NBT_HANDLER;
+			return NBT_CODEC;
 		}
 		
 		@Override

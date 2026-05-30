@@ -4,8 +4,10 @@ import java.util.List;
 
 public interface ListMultimap<K, V> extends Multimap<K, V> {
 
-	public List<V> get(K key);
+	@Override
+	List<V> get(K key);
 	
-	public List<V> remove(K key);
+	@Override
+	List<V> remove(K key);
 	
 }

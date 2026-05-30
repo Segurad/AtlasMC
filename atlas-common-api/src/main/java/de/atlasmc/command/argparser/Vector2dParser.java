@@ -7,6 +7,7 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.command.CommandStringReader;
 import de.atlasmc.command.CommandSyntaxException;
 import de.atlasmc.registry.RegistryValue;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import io.netty.buffer.ByteBuf;
 import static de.atlasmc.command.argparser.Vector3dParser.parseRelative;
@@ -15,6 +16,7 @@ import static de.atlasmc.command.argparser.Vector3dParser.parseRelative;
 public class Vector2dParser implements VarArgParser<ArgumentVector2d> {
 
 	public static final int ID = 11;
+	@NotNull
 	public static final NamespacedKey KEY = NamespacedKey.of("minecraft:vec2");
 	
 	@Override

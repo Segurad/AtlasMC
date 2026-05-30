@@ -1,17 +1,19 @@
 package de.atlasmc.node.event.socket;
 
+import de.atlasmc.event.Cancellable;
 import de.atlasmc.node.event.SocketHandlerList;
 import de.atlasmc.node.io.protocol.LoginHandler;
 import de.atlasmc.node.io.socket.NodeSocket;
 
-public class AsyncPlayerLoginAttemptEvent extends SocketEvent {
+public class AsyncPlayerLoginAttemptEvent extends SocketEvent implements Cancellable {
 
 	private static final SocketHandlerList handlers = new SocketHandlerList();
 	
 	private final LoginHandler handler;
+	private boolean cancelled;
 	
-	public AsyncPlayerLoginAttemptEvent(LoginHandler handler) {
-		super(true, (NodeSocket) handler.getSocket());
+	public AsyncPlayerLoginAttemptEvent(boolean async, LoginHandler handler) {
+		super(async, (NodeSocket) handler.getSocket());
 		this.handler = handler;
 	}
 	
@@ -26,6 +28,16 @@ public class AsyncPlayerLoginAttemptEvent extends SocketEvent {
 	
 	public static SocketHandlerList getHandlerList() {
 		return handlers;
+	}
+
+	@Override
+	public void setCancelled(boolean cancelled) {
+		this.cancelled = cancelled;
+	}
+
+	@Override
+	public boolean isCancelled() {
+		return cancelled;
 	}
 
 }

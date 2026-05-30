@@ -2,11 +2,13 @@ package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface FoodComponent extends ItemComponent {
 
+	@NotNull
 	public static final NBTCodec<FoodComponent> 
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(FoodComponent.class)
 					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.FOOD.getNamespacedKey())
@@ -16,6 +18,7 @@ public interface FoodComponent extends ItemComponent {
 					.endComponent()
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<FoodComponent>
 	STREAM_CODEC = StreamCodec
 					.builder(FoodComponent.class)
@@ -37,11 +40,12 @@ public interface FoodComponent extends ItemComponent {
 	
 	void setAlwaysEatable(boolean eatable);
 	
+	@Override
 	FoodComponent clone();
 	
 	@Override
 	default NBTCodec<? extends FoodComponent> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	@Override

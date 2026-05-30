@@ -50,6 +50,7 @@ class ChildNBTFieldSet<H> extends NBTFieldSet<H> {
 	 * @param key of the set
 	 * @return the new set set
 	 */
+	@Override
 	public NBTFieldSet<H> setSet(CharKey key) {
 		if (key == null)
 			throw new IllegalArgumentException("Key can not be null!");

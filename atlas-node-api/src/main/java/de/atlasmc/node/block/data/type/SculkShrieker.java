@@ -12,6 +12,7 @@ public interface SculkShrieker extends Waterlogged {
 	
 	void setShrieking(boolean shrieking);
 	
+	@Override
 	SculkShrieker clone();
 
 }

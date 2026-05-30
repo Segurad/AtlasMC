@@ -9,6 +9,7 @@ public interface DecoratedPot extends Directional, Waterlogged {
 	
 	void setCracked(boolean cracked);
 	
+	@Override
 	DecoratedPot clone();
 
 }

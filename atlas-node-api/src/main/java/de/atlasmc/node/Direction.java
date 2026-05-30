@@ -26,18 +26,11 @@ public enum Direction implements IDHolder {
 	
 	public static Direction getDirectionYaw(float yaw) {
 		final float y = yaw + 180;
-		List<Direction> values = EnumUtil.getValues(Direction.class);
-		final int size = values.size();
-		for (int i = 0; i < size; i++) {
-			Direction d = values.get(i);
-			if (y > d.min && y <= d.max) 
-				return d;
-		}
-		return NORTH;
+		return getDirectionDegree(y);
 	}
 	
 	public static Direction getDirectionDegree(float degree) {
-		final float y = degree;
+		final float y = Math.abs(degree) % 360;
 		List<Direction> values = EnumUtil.getValues(Direction.class);
 		final int size = values.size();
 		for (int i = 0; i < size; i++) {

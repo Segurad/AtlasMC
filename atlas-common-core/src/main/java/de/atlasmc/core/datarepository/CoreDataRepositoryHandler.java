@@ -58,7 +58,7 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 		if (key.hasChildKey()) {
 			NamespacedKey repoKey = key.getChildKey();
 			Repository repo = getRepo(key.namespace());
-			return repo.getEntry(repoKey);
+			return repo != null ? repo.getEntry(repoKey) : null;
 		}
 		RepositoryEntry entry = getLocal(key);
 		if (entry != null)
@@ -76,17 +76,14 @@ public class CoreDataRepositoryHandler implements DataRepositoryHandler {
 	}
 	
 	private RepositoryEntry getLocal(NamespacedKey key) {
-		RepositoryEntry entry = null;
 		for (LocalRepository local : localRepos.values()) {
 			if (local.getNamespace(key.key()) == null)
 				continue;
-			entry = local.getLocalEntry(key);
+			var entry = local.getLocalEntry(key);
 			if (entry != null)
-				break;
+				return entry;
 		}
-		if (entry == null)
-			return cache.getLocalEntry(key);
-		return entry;
+		return cache.getLocalEntry(key);
 	}
 	
 	@Override

@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 
 public interface LocalRepository extends Repository {
 	
@@ -16,7 +17,7 @@ public interface LocalRepository extends Repository {
 	 */
 	boolean registerNamespace(String namespace, String path);
 
-	@NotNull
+	@Nullable
 	RepositoryEntry getLocalEntry(NamespacedKey key);
 
 	/**

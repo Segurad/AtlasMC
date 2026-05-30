@@ -46,8 +46,6 @@ public class CoreItemDisplay extends CoreDisplay implements ItemDisplay {
 
 	@Override
 	public void setRenderType(RenderType renderType) {
-		if (renderType == null)
-			throw new IllegalArgumentException("RenderType can not be null!");
 		metaContainer.get(META_DISPLAY_TYPE).setData(renderType);
 	}
 

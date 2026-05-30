@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.concurrent.future.Future;
 
 public interface Repository {
@@ -15,10 +16,10 @@ public interface Repository {
 	@NotNull
 	UUID getUUID();
 	
-	@NotNull
+	@Nullable
 	RepositoryNamespace getNamespace(String key);
 	
-	@NotNull
+	@Nullable
 	RepositoryNamespace getNamespace(NamespacedKey key);
 	
 	@NotNull

@@ -10,12 +10,13 @@ import de.atlasmc.util.annotation.NotNull;
 
 public interface Warden extends Monster {
 	
+	@NotNull
 	public static final NBTCodec<Warden>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Warden.class)
-					.include(Monster.NBT_HANDLER)
+					.include(Monster.NBT_CODEC)
 					.beginComponent("anger")
-					.codecList("suspects", Warden::hasSuspects, Warden::getSuspects, Suspect.NBT_HANDLER)
+					.codecList("suspects", Warden::hasSuspects, Warden::getSuspects, Suspect.NBT_CODEC)
 					.intField("angerLevel", Warden::getAnger, Warden::setAnger, 0) // non standard
 					.endComponent()
 					.build();
@@ -31,13 +32,14 @@ public interface Warden extends Monster {
 	
 	@Override
 	default NBTCodec<? extends Warden> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public static class Suspect implements NBTSerializable {
 		
+		@NotNull
 		public static final NBTCodec<Suspect>
-		NBT_HANDLER = NBTCodec
+		NBT_CODEC = NBTCodec
 						.builder(Suspect.class)
 						.defaultConstructor(Suspect::new)
 						.intField("anger", Suspect::getAnger, Suspect::setAnger)
@@ -74,7 +76,7 @@ public interface Warden extends Monster {
 		
 		@Override
 		public NBTCodec<? extends NBTSerializable> getNBTCodec() {
-			return NBT_HANDLER;
+			return NBT_CODEC;
 		}
 		
 	}

@@ -181,6 +181,7 @@ public abstract class CoreAbstractLocalRepository extends CoreAbstractRepository
 		return new CoreRepositoryEntry(this, key, config);
 	}
 	
+	@Override
 	protected boolean copyEntry(CoreRepositoryEntry entry, File destination, boolean override) throws IOException {
 		FileUtils.ensureDir(destination);
 		CoreLocalNamespace namespace = namespaces.get(entry.getNamespacedKey().namespace());
@@ -199,6 +200,7 @@ public abstract class CoreAbstractLocalRepository extends CoreAbstractRepository
 		return true;
 	}
 
+	@Override
 	protected Future<Boolean> delete(CoreRepositoryEntry entry) {
 		CoreLocalNamespace ns = namespaces.get(entry.getNamespacedKey().namespace());
 		if (ns == null)

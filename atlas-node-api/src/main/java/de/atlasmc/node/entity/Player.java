@@ -6,6 +6,7 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.Messageable;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.network.permission.PermissionHandler;
 import de.atlasmc.network.player.AtlasPlayer;
 import de.atlasmc.node.Gamemode;
 import de.atlasmc.node.NodePlayer;
@@ -21,23 +22,29 @@ import de.atlasmc.node.sound.SoundListener;
 import de.atlasmc.node.world.WorldEventListener;
 import de.atlasmc.node.world.particle.ParticleListener;
 import de.atlasmc.permission.Permissible;
-import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.plugin.Plugin;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.UnsafeAPI;
 import de.atlasmc.util.enums.EnumUtil;
 
 public interface Player extends HumanEntity, Permissible, Messageable, SoundListener, ParticleListener, WorldEventListener {
 	
+	@NotNull
 	public static final NBTCodec<Player>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Player.class)
-					.include(HumanEntity.NBT_HANDLER)
+					.include(HumanEntity.NBT_CODEC)
 					.codec("playerGameType", Player::getGamemode, Player::setGamemode, EnumUtil.enumIntNBTCodec(Gamemode.class), Gamemode.SURVIVAL)
 					.codec("previousPlayerGameType", Player::getPreviousGamemode, Player::setPreviousGamemode, EnumUtil.enumIntNBTCodec(Gamemode.class), null)
 					.intField("XpLevel", Player::getLevel, Player::setLevel, 0)
 					.floatField("XpP", Player::getExpBar, Player::setExpBar, 0)
 					.intField("XpTotal", Player::getExp, Player::setExp, 0)
 					.build();
+	
+	@Override
+	default NBTCodec<? extends Player> getNBTCodec() {
+		return NBT_CODEC;
+	}
 	
 	PermissionHandler getPermissionHandler();
 	
@@ -68,10 +75,6 @@ public interface Player extends HumanEntity, Permissible, Messageable, SoundList
 	String getName();
 
 	String getLocal();
-
-	boolean getCanBuild();
-
-	void setCanBuild(boolean canBuild);
 
 	Gamemode getGamemode();
 	
@@ -167,6 +170,7 @@ public interface Player extends HumanEntity, Permissible, Messageable, SoundList
 	 * Returns the UUID of this Player equivalent to {@link AtlasPlayer#getInternalUUID()}
 	 * @return UUID
 	 */
+	@Override
 	UUID getUUID();
 	
 	boolean performCommand(String command);

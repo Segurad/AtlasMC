@@ -12,6 +12,7 @@ import de.atlasmc.cache.CacheHolder;
 import de.atlasmc.cache.Caching;
 import de.atlasmc.master.ProfileManager;
 import de.atlasmc.network.player.AtlasPlayer;
+import de.atlasmc.util.annotation.NotNull;
 
 public abstract class CoreProfileManager implements ProfileManager, CacheHolder {
 	
@@ -109,14 +110,14 @@ public abstract class CoreProfileManager implements ProfileManager, CacheHolder 
 		
 	}
 	
-	public AtlasPlayer createPlayer(UUID mojangUUID, UUID internalUUID, String mojangName, String internalName, Date firstJoin) {
+	public AtlasPlayer createPlayer(@NotNull UUID mojangUUID, @NotNull UUID internalUUID, String mojangName, String internalName, Date firstJoin) {
 		AtlasPlayer player = internalCreatePlayer(mojangUUID, internalUUID, mojangName, internalName, firstJoin);
 		if (player != null)
 			cache(player);
 		return player;
 	}
 	
-	protected abstract AtlasPlayer internalCreatePlayer(UUID mojangUUID, UUID internalUUID, String mojangName, String internalName, Date firstJoin);
+	protected abstract AtlasPlayer internalCreatePlayer(@NotNull UUID mojangUUID, @NotNull UUID internalUUID, String mojangName, String internalName, Date firstJoin);
 
 	protected abstract void updateInternalName(AtlasPlayer coreAtlasPlayer, String name);
 

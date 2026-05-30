@@ -9,6 +9,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 
 public interface ContainerComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<ContainerComponent>
 	NBT_CODEC = NBTCodec
 					.builder(ContainerComponent.class)
@@ -31,6 +32,7 @@ public interface ContainerComponent extends ItemComponent {
 	
 	boolean removeItem(ItemType type);
 	
+	@Override
 	ContainerComponent clone();
 	
 	@Override

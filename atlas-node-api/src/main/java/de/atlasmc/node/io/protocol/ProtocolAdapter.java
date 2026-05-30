@@ -10,7 +10,7 @@ public class ProtocolAdapter {
 	/**
 	 * The protocol version id used by the latest supported protocol
 	 */
-	public static final int VERSION = 773;
+	public static final int VERSION = 775;
 	/**
 	 * The protocol version used by the latest supported protocol
 	 */

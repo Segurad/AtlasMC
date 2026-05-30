@@ -15,8 +15,8 @@ import de.atlasmc.io.AbstractProtocol;
 import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.PacketServerbound;
 import de.atlasmc.io.PacketClientbound;
-import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.io.connection.PacketListener;
+import de.atlasmc.node.io.protocol.LoginHandler;
 import de.atlasmc.node.io.protocol.ProtocolAdapter;
 import de.atlasmc.node.io.protocol.ProtocolLogin;
 
@@ -47,7 +47,7 @@ public class CoreProtocolLogin extends AbstractProtocol<PacketServerbound, Packe
 
 	@Override
 	public PacketListener createDefaultPacketListenerServerbound(Object o) {
-		return new CorePacketListenerLoginIn((ConnectionHandler) o);
+		return new CorePacketListenerLoginIn((LoginHandler) o);
 	}
 
 	@Override

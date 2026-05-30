@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 import de.atlasmc.network.AtlasNode;
-import de.atlasmc.node.io.protocol.ProtocolAdapterHandler;
+import de.atlasmc.node.io.protocol.ProtocolAdapterManager;
 import de.atlasmc.node.io.socket.NodeSocket;
 import de.atlasmc.node.io.socket.SocketManager;
 import de.atlasmc.node.server.NodeServer;
@@ -20,7 +20,7 @@ public interface LocalAtlasNode extends AtlasNode {
 	SocketManager getSocketManager();
 
 	@NotNull
-	ProtocolAdapterHandler getProtocolAdapterHandler();
+	ProtocolAdapterManager getProtocolAdapterManager();
 	
 	@NotNull
 	NodeSocket getSocket(UUID uuid);

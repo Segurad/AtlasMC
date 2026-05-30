@@ -37,6 +37,7 @@ public class CoreServerManager implements ServerManager, Tickable {
 		return serverGroups.get(name);
 	}
 	
+	@Override
 	public Server getServer(UUID uuid) {
 		return servers.get(uuid);
 	}

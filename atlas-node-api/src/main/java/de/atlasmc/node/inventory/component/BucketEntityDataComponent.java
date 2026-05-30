@@ -7,10 +7,12 @@ import de.atlasmc.node.entity.Axolotl.Variant;
 import de.atlasmc.node.entity.Salmon.Type;
 import de.atlasmc.node.entity.TropicalFish.Pattern;
 import de.atlasmc.util.AtlasUtil;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumUtil;
 
 public interface BucketEntityDataComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<BucketEntityDataComponent>
 	NBT_CODEC = NBTCodec
 					.builder(BucketEntityDataComponent.class)
@@ -29,6 +31,7 @@ public interface BucketEntityDataComponent extends ItemComponent {
 					.endComponent()
 					.build();
 
+	@NotNull
 	public static final StreamCodec<BucketEntityDataComponent>
 	STREAM_CODEC = StreamCodec
 					.builder(BucketEntityDataComponent.class)
@@ -36,6 +39,7 @@ public interface BucketEntityDataComponent extends ItemComponent {
 					.codec(AtlasUtil.getSelf(), AtlasUtil.getSetVoid(), NBT_CODEC)
 					.build();
 	
+	@Override
 	BucketEntityDataComponent clone();
 	
 	boolean hasNoAI();

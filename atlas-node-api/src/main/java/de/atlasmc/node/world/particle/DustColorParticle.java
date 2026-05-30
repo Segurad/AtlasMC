@@ -3,9 +3,11 @@ package de.atlasmc.node.world.particle;
 import de.atlasmc.Color;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public class DustColorParticle extends AbstractParticle {
 
+	@NotNull
 	public static final NBTCodec<DustColorParticle>
 	NBT_CODEC = NBTCodec
 				.builder(DustColorParticle.class)
@@ -14,6 +16,7 @@ public class DustColorParticle extends AbstractParticle {
 				.floatField("scale", DustColorParticle::getScale, DustColorParticle::setScale)
 				.build();
 	
+	@NotNull
 	public static final StreamCodec<DustColorParticle>
 	STREAM_CODEC = StreamCodec
 					.builder(DustColorParticle.class)

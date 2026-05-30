@@ -59,7 +59,7 @@ public abstract class AbstractPacket implements Packet {
 	
 	@Override
 	public String toString() {
-		return Packet.getPacketDefinition(getClass()) + "[" + getDefaultID() + "|" + getID() + "]: " + getClass().getName();
+		return Packet.getPacketDefinition(getClass()) + "(" + getDefaultID() + "|" + getID() + "): " + getClass().getName();
 	}
 
 }

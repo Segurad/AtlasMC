@@ -1,5 +1,7 @@
 package de.atlasmc.node.attribute;
 
+import java.util.Objects;
+
 import de.atlasmc.IDHolder;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.codec.StreamCodec;
@@ -7,11 +9,13 @@ import de.atlasmc.io.codec.StreamSerializable;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.inventory.EquipmentSlot;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumName;
 import de.atlasmc.util.enums.EnumUtil;
 
 public class AttributeModifier implements Cloneable, NBTSerializable, StreamSerializable {
 
+	@NotNull
 	public static final NBTCodec<AttributeModifier>
 	NBT_CODEC = NBTCodec
 					.builder(AttributeModifier.class)
@@ -23,6 +27,7 @@ public class AttributeModifier implements Cloneable, NBTSerializable, StreamSeri
 					// TODO display
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<AttributeModifier>
 	STREAM_CODEC = StreamCodec
 					.builder(AttributeModifier.class)
@@ -84,10 +89,10 @@ public class AttributeModifier implements Cloneable, NBTSerializable, StreamSeri
 		 */
 		ADD_MULTIPLIED_TOTAL("add_multiplied_total");
 
-		private String name;
+		private final String name;
 		
 		private Operation(String name) {
-			this.name = name;
+			this.name = Objects.requireNonNull(name, "name");
 		}
 		
 		@Override

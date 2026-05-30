@@ -1188,7 +1188,6 @@ public class BlockType extends ProtocolRegistryValueBase {
 		return blockDataFactory;
 	}
 	
-	@NotNull
 	public void setBlockDataFactory(BlockDataFactory factory) {
 		if (factory == null) {
 			blockDataFactory = Registries.getDefault(BlockDataFactory.class);

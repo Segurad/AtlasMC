@@ -1,13 +1,15 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Ravager extends Raider {
 	
+	@NotNull
 	public static final NBTCodec<Ravager>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Ravager.class)
-					.include(Raider.NBT_HANDLER)
+					.include(Raider.NBT_CODEC)
 					.intField("AttackTick", Ravager::getAttackCooldown, Ravager::setAttackCooldown, 0)
 					.intField("RoarTick", Ravager::getRoarTime, Ravager::setRoarTime, 0)
 					.intField("StunTick", Ravager::getStunTime, Ravager::setStunTime, 0)
@@ -27,7 +29,7 @@ public interface Ravager extends Raider {
 	
 	@Override
 	default NBTCodec<? extends Ravager> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

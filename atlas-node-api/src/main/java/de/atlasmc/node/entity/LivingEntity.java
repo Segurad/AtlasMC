@@ -22,8 +22,9 @@ import de.atlasmc.util.annotation.UnsafeAPI;
 
 public interface LivingEntity extends Entity, Attributeable, ProjectileSource {
 	
+	@NotNull
 	public static final NBTCodec<LivingEntity>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(LivingEntity.class)
 					.include(Entity.NBT_CODEC)
 					.floatField("AbsorptionAmount", LivingEntity::getAbsorption, LivingEntity::setAbsorption, 0)
@@ -230,7 +231,7 @@ public interface LivingEntity extends Entity, Attributeable, ProjectileSource {
 	
 	@Override
 	default NBTCodec<? extends LivingEntity> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

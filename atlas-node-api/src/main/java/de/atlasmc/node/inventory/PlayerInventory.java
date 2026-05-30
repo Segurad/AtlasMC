@@ -1,6 +1,7 @@
 package de.atlasmc.node.inventory;
 
 import de.atlasmc.node.entity.HumanEntity;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.UnsafeAPI;
 
 public interface PlayerInventory extends Inventory {
@@ -55,6 +56,8 @@ public interface PlayerInventory extends Inventory {
 	@UnsafeAPI
 	void setArmorContentsUnsafe(ItemStack[] items);
 	
+	@Override
+	@NotNull
 	HumanEntity getHolder();
 
 	ItemStack getItemInMainHand();

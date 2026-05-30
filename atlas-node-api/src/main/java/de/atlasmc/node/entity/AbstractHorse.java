@@ -6,11 +6,13 @@ import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.node.inventory.AbstractHorseInventory;
 import de.atlasmc.node.inventory.InventoryHolder;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface AbstractHorse extends Animal, InventoryHolder {
 	
+	@NotNull
 	public static final NBTCodec<AbstractHorse>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(AbstractHorse.class)
 					.include(Animal.NBT_CODEC)
 					.boolField("Bred", AbstractHorse::canBred, AbstractHorse::setCanBred, false)
@@ -56,11 +58,12 @@ public interface AbstractHorse extends Animal, InventoryHolder {
 	 * May not return the same Inventory every time e.g. {@link ChestedHorse} may return a new Inventory if the has chest value is changed
 	 * @return inventory
 	 */
+	@Override
 	AbstractHorseInventory getInventory();
 	
 	@Override
 	default NBTCodec<? extends AbstractHorse> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

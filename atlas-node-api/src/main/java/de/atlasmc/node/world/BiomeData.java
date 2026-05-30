@@ -2,19 +2,21 @@ package de.atlasmc.node.world;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTSerializable;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumName;
 import de.atlasmc.util.enums.EnumUtil;
 
 public class BiomeData implements NBTSerializable {
 	
+	@NotNull
 	public static final NBTCodec<BiomeData>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(BiomeData.class)
 					.boolField("has_precipitation", BiomeData::hasPrecipitation, BiomeData::setPrecipitation, false)
 					.floatField("temparature", BiomeData::getTemperature, BiomeData::setTemperature, 0)
 					.codec("temperature_modifier", BiomeData::getTemperatureModifier, BiomeData::setTemperatureModifier, EnumUtil.enumStringNBTCodec(TemperatureModifier.class), TemperatureModifier.NONE)
 					.floatField("downfall", BiomeData::getDownfall, BiomeData::setDownfall, 0)
-					.codec("effects", BiomeData::getEffects, BiomeData::setEffects, BiomeEffects.NBT_HANDLER)
+					.codec("effects", BiomeData::getEffects, BiomeData::setEffects, BiomeEffects.NBT_CODEC)
 					.build();
 	
 	private boolean precipitation;
@@ -71,7 +73,7 @@ public class BiomeData implements NBTSerializable {
 	
 	@Override
 	public NBTCodec<? extends BiomeData> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public static enum TemperatureModifier implements EnumName {

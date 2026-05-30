@@ -50,16 +50,15 @@ public class CoreLocalServerPreparingTask extends AtlasTask {
 		log.info("Writing server data...");
 		File workDir = server.getWorkdir();
 		ServerConfig cfg = server.getConfig();
-		{ // write config to server dir
-			YamlConfiguration serverConfig = new YamlConfiguration(cfg.getConfig());
-			try {
-				serverConfig.save(new File(workDir, "server-config.yml"));
-			} catch (IOException e) {
-				log.error("Error while writing server config!", e);
-				failed = true;
-				future.complete(false);
-				return;
-			}
+		// write config to server dir
+		YamlConfiguration serverConfig = new YamlConfiguration(cfg.getConfig());
+		try {
+			serverConfig.save(new File(workDir, "server-config.yml"));
+		} catch (IOException e) {
+			log.error("Error while writing server config!", e);
+			failed = true;
+			future.complete(false);
+			return;
 		}
 		// load template if exists
 		NamespacedKey key = cfg.getTemplate();

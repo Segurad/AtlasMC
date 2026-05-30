@@ -13,15 +13,16 @@ import de.atlasmc.util.annotation.Nullable;
 
 public interface BlocksAttacksComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<BlocksAttacksComponent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(BlocksAttacksComponent.class)
 					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.BLOCKS_ATTACKS.getNamespacedKey())
 					.floatField("block_delay_seconds", BlocksAttacksComponent::getBlockDelay, BlocksAttacksComponent::setBlockDelay, 0)
 					.floatField("disable_cooldown_scale", BlocksAttacksComponent::getDisableCooldownScale, BlocksAttacksComponent::setDisableCooldownScale, 1)
-					.codecList("damage_reductions", BlocksAttacksComponent::hasReduction, BlocksAttacksComponent::getReduction, DamageReduction.NBT_HANDLER)
-					.codec("item_damage", BlocksAttacksComponent::getItemDamage, BlocksAttacksComponent::setItemDamage, ItemDamage.NBT_HANDLER)
+					.codecList("damage_reductions", BlocksAttacksComponent::hasReduction, BlocksAttacksComponent::getReduction, DamageReduction.NBT_CODEC)
+					.codec("item_damage", BlocksAttacksComponent::getItemDamage, BlocksAttacksComponent::setItemDamage, ItemDamage.NBT_CODEC)
 					.codec("block_sound", BlocksAttacksComponent::getBlockSound, BlocksAttacksComponent::setBlockSound, Sound.NBT_CODEC)
 					.codec("disabled_sound", BlocksAttacksComponent::getDisabledSound, BlocksAttacksComponent::setDisabledSound, Sound.NBT_CODEC)
 					.codec("bypassed_by", BlocksAttacksComponent::getBypassedBy, BlocksAttacksComponent::setBypassedBy, TagKey.NBT_CODEC)
@@ -63,13 +64,14 @@ public interface BlocksAttacksComponent extends ItemComponent {
 	
 	@Override
 	default NBTCodec<? extends ItemComponent> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public static class ItemDamage implements NBTSerializable {
 		
+		@NotNull
 		public static final NBTCodec<ItemDamage>
-		NBT_HANDLER = NBTCodec
+		NBT_CODEC = NBTCodec
 						.builder(ItemDamage.class)
 						.setRedirectAfterConstruction(false)
 						.floatField("threshold", ItemDamage::getThreashold, ItemDamage::setThreashold, 0)
@@ -107,7 +109,7 @@ public interface BlocksAttacksComponent extends ItemComponent {
 
 		@Override
 		public NBTCodec<? extends NBTSerializable> getNBTCodec() {
-			return NBT_HANDLER;
+			return NBT_CODEC;
 		}
 		
 	}

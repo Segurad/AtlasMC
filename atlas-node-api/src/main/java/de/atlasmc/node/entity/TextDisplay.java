@@ -4,15 +4,17 @@ import de.atlasmc.Color;
 import de.atlasmc.IDHolder;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumName;
 import de.atlasmc.util.enums.EnumUtil;
 
 public interface TextDisplay extends Display {
 	
+	@NotNull
 	public static final NBTCodec<TextDisplay>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(TextDisplay.class)
-					.include(Display.NBT_HANDLER)
+					.include(Display.NBT_CODEC)
 					.codec("alignment", TextDisplay::getAlignment, TextDisplay::setAlignment, EnumUtil.enumStringNBTCodec(TextAlignment.class), TextAlignment.CENTER)
 					.codec("background", TextDisplay::getBackgroundColor, TextDisplay::setBackgroundColor, Color.NBT_CODEC, Color.fromARGB(0x40000000))
 					.boolField("default_background", TextDisplay::hasDefaultBackground, TextDisplay::setDefaultBachground, false)
@@ -57,7 +59,7 @@ public interface TextDisplay extends Display {
 	
 	@Override
 	default NBTCodec<? extends TextDisplay> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public static enum TextAlignment implements IDHolder, EnumName {
@@ -66,7 +68,7 @@ public interface TextDisplay extends Display {
 		LEFT,
 		RIGHT;
 		
-		private String name;
+		private final String name;
 		
 		private TextAlignment() {
 			name = name().toLowerCase();

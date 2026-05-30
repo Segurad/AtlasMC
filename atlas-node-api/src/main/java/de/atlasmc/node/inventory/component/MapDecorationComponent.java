@@ -5,9 +5,11 @@ import java.util.Map;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.map.MapIcon;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface MapDecorationComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<MapDecorationComponent>
 	NBT_CODEC = NBTCodec
 					.builder(MapDecorationComponent.class)
@@ -15,6 +17,7 @@ public interface MapDecorationComponent extends ItemComponent {
 					.mapFieldNameToCodec(ComponentType.MAP_DECORATIONS.getNamespacedKey(), MapDecorationComponent::hasDecoration, MapDecorationComponent::getDecorations, MapIcon.NBT_CODEC)
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<MapDecorationComponent>
 	STREAM_CODEC = StreamCodec
 					.builder(MapDecorationComponent.class)
@@ -32,6 +35,7 @@ public interface MapDecorationComponent extends ItemComponent {
 	
 	void removeDecoration(String name);
 	
+	@Override
 	MapDecorationComponent clone();
 	
 	@Override

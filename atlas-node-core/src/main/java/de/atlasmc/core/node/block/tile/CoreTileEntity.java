@@ -11,6 +11,7 @@ import de.atlasmc.node.inventory.component.ComponentType;
 import de.atlasmc.node.inventory.component.ItemComponent;
 import de.atlasmc.node.world.Chunk;
 import de.atlasmc.node.world.World;
+import de.atlasmc.util.CloneException;
 
 public class CoreTileEntity implements TileEntity {
 	
@@ -66,11 +67,13 @@ public class CoreTileEntity implements TileEntity {
 		this.pos.z = z;
 	}
 	
+	@Override
 	public TileEntity clone() {
 		try {
 			return (TileEntity) super.clone();
-		} catch (CloneNotSupportedException e) {}
-		return null;
+		} catch (CloneNotSupportedException e) {
+			throw new CloneException(e);
+		}
 	}
 
 	@Override

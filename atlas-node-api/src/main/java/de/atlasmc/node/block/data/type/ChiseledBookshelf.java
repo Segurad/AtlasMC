@@ -14,6 +14,7 @@ public interface ChiseledBookshelf extends Directional {
 	
 	void setSlotOccupied(int slot, boolean occupied);
 	
+	@Override
 	ChiseledBookshelf clone();
 
 }

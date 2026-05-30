@@ -5,10 +5,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import de.atlasmc.NamespacedKey.Namespaced;
+import de.atlasmc.util.annotation.NotNull;
 import it.unimi.dsi.fastutil.objects.ObjectIterators;
 
 class EmptyDataSet<T extends Namespaced> extends AbstractDataSet<T> {
 
+	@NotNull
 	public static final EmptyDataSet<?> INSTANCE = new EmptyDataSet<>();
 	
 	private EmptyDataSet() {}

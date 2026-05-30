@@ -1,6 +1,6 @@
 package de.atlasmc.core.node.io.protocol;
 
-import java.util.UUID;
+import java.util.Objects;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.network.player.AtlasPlayer;
@@ -13,37 +13,16 @@ import de.atlasmc.node.server.NodeServer;
 public class CoreNodePlayer implements NodePlayer {
 
 	private final PlayerConnection con;
-	private volatile Player player;
 	private final AtlasPlayer atlasPlayer;
 	
 	public CoreNodePlayer(PlayerConnection con, AtlasPlayer atlasPlayer) {
-		this.con = con;
-		this.atlasPlayer = atlasPlayer;
+		this.con = Objects.requireNonNull(con);
+		this.atlasPlayer = Objects.requireNonNull(atlasPlayer);
 	}
 
 	@Override
 	public void sendMessage(Chat chat, boolean overlay) {
 		con.sendMessage(chat, overlay);
-	}
-
-	@Override
-	public String getInternalName() {
-		return atlasPlayer.getInternalName();
-	}
-
-	@Override
-	public UUID getInternalUUID() {
-		return atlasPlayer.getInternalUUID();
-	}
-
-	@Override
-	public String getMojangName() {
-		return atlasPlayer.getMojangName();
-	}
-
-	@Override
-	public UUID getMojangUUID() {
-		return atlasPlayer.getMojangUUID();
 	}
 
 	@Override
@@ -53,7 +32,12 @@ public class CoreNodePlayer implements NodePlayer {
 
 	@Override
 	public Player getPlayer() {
-		return player;
+		return con.getPlayer();
+	}
+	
+	@Override
+	public boolean hasPlayer() {
+		return con.hasPlayer();
 	}
 
 	@Override

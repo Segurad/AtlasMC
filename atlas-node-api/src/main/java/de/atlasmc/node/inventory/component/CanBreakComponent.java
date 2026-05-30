@@ -2,16 +2,19 @@ package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.block.BlockPredicate;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface CanBreakComponent extends AbstractBlockPredicateComponent {
 	
+	@NotNull
 	public static final NBTCodec<CanBreakComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(CanBreakComponent.class)
 					.include(AbstractBlockPredicateComponent.NBT_CODEC)
-					.codecList(ComponentType.CAN_BREAK.getNamespacedKey(), CanBreakComponent::hasPredicates, CanBreakComponent::getPredicates, BlockPredicate.NBT_HANDLER)
+					.codecList(ComponentType.CAN_BREAK.getNamespacedKey(), CanBreakComponent::hasPredicates, CanBreakComponent::getPredicates, BlockPredicate.NBT_CODEC)
 					.build();
 	
+	@Override
 	CanBreakComponent clone();
 	
 	@Override

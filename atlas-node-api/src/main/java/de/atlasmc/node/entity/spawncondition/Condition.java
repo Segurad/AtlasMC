@@ -5,9 +5,11 @@ import java.util.function.Predicate;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.WorldLocation;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Condition extends Predicate<WorldLocation>, NBTSerializable {
 	
+	@NotNull
 	public static final NBTCodec<Condition>
 	NBT_HANDLER = NBTCodec
 					.builder(Condition.class)

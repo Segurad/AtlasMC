@@ -9,10 +9,11 @@ import de.atlasmc.util.enums.EnumUtil;
 
 public interface Shulker extends AbstractGolem {
 	
+	@NotNull
 	public static final NBTCodec<Shulker>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Shulker.class)
-					.include(AbstractGolem.NBT_HANDLER)
+					.include(AbstractGolem.NBT_CODEC)
 					.codec("AttachFace", Shulker::getAttachedFace, Shulker::setAttachedFace, BlockFace.FACE_ID_NBT_CODEC, BlockFace.DOWN)
 					.codec("Color", Shulker::getColor, Shulker::setColor, EnumUtil.enumByteNBTCodec(DyeColor.class), DyeColor.MAGENTA)
 					.byteField("Peek", Shulker::getShieldHeight, Shulker::setShieldHeight, (byte) 16)
@@ -34,7 +35,7 @@ public interface Shulker extends AbstractGolem {
 	
 	@Override
 	default NBTCodec<? extends Shulker> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

@@ -1,11 +1,13 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Hoglin extends Animal {
 	
+	@NotNull
 	public static final NBTCodec<Hoglin>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Hoglin.class)
 					.include(Animal.NBT_CODEC)
 					.boolField("Cannot", Hoglin::isHuntable, Hoglin::setHuntable, false)
@@ -23,7 +25,7 @@ public interface Hoglin extends Animal {
 
 	@Override
 	default NBTCodec<? extends Hoglin> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

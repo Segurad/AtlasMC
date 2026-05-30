@@ -6,12 +6,16 @@ import de.atlasmc.node.inventory.InventoryHolder;
 import de.atlasmc.node.inventory.ItemType;
 import de.atlasmc.node.inventory.MainHand;
 import de.atlasmc.node.inventory.PlayerInventory;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface HumanEntity extends LivingEntity, InventoryHolder {
 	
+	@NotNull
 	public static final NBTCodec<HumanEntity>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(HumanEntity.class)
+					.include(LivingEntity.NBT_CODEC)
+					.include(InventoryHolder.NBT_CODEC)
 					.beginComponent("abilities")
 					.boolField("flying", HumanEntity::isFlying, HumanEntity::setFlying, false)
 					.floatField("flySPeed", HumanEntity::getFlySpeed, HumanEntity::setFlySpeed, 0.05f)
@@ -37,6 +41,11 @@ public interface HumanEntity extends LivingEntity, InventoryHolder {
 					.codec("ShoulderEntityRight", HumanEntity::getRightShoulder, HumanEntity::setRightShoulder, Entity.NBT_CODEC)
 					.build();
 	
+	@Override
+	default NBTCodec<? extends HumanEntity> getNBTCodec() {
+		return NBT_CODEC;
+	}
+	
 	float getWalkSpeed();
 	
 	void setWalkSpeed(float speed);
@@ -61,6 +70,8 @@ public interface HumanEntity extends LivingEntity, InventoryHolder {
 	
 	void setCanBuild(boolean canBuild);
 	
+	@NotNull
+	@Override
 	PlayerInventory getInventory();
 	
 	double getAdditionHearts();

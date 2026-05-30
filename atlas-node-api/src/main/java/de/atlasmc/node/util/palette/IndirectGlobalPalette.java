@@ -3,6 +3,7 @@ package de.atlasmc.node.util.palette;
 import static de.atlasmc.io.PacketUtil.*;
 
 import java.util.Collection;
+import java.util.function.ToIntFunction;
 
 import de.atlasmc.node.util.MathUtil;
 import io.netty.buffer.ByteBuf;
@@ -12,7 +13,7 @@ public class IndirectGlobalPalette<E> extends AbstractIndirectPalette<E> {
 	private int globalMaxValue;
 	private int globalBits;
 	
-	public IndirectGlobalPalette(int minBitsPerEntry, int capacity, int maxBitsPerEntry, GlobalValueProvider<E> provider) {
+	public IndirectGlobalPalette(int minBitsPerEntry, int capacity, int maxBitsPerEntry, ToIntFunction<E> provider) {
 		super(minBitsPerEntry, capacity, maxBitsPerEntry, provider);
 		globalMaxValue = MathUtil.createBitMask(values.getBitsPerValue());
 		globalBits = values.getBitsPerValue();
@@ -45,8 +46,8 @@ public class IndirectGlobalPalette<E> extends AbstractIndirectPalette<E> {
 	}
 	
 	@Override
-	protected Entry<E> addOrReplaceEntry(E entry, int index, boolean checkIndex) {
-		Entry<E> pEntry = super.addOrReplaceEntry(entry, index, checkIndex);
+	protected Entry<E> addOrReplaceEntry(E entry, int index) {
+		Entry<E> pEntry = super.addOrReplaceEntry(entry, index);
 		if (pEntry == null)
 			return null;
 		ensureBits(pEntry.globalValue);
@@ -55,7 +56,7 @@ public class IndirectGlobalPalette<E> extends AbstractIndirectPalette<E> {
 	
 	@Override
 	protected int updateValue(Entry<E> pEntry, E entry) {
-		int newValue = globalProvider.value(entry);
+		int newValue = globalProvider.applyAsInt(entry);
 		ensureBits(newValue);
 		return pEntry.paletteValue;
 	}
@@ -105,7 +106,7 @@ public class IndirectGlobalPalette<E> extends AbstractIndirectPalette<E> {
 		int globalValuesPerLong = 64 / globalBits;
 		int globalArraySize = MathUtil.upper(this.values.getCapacity() / (double) globalValuesPerLong);
 		size += getVarIntLength(globalArraySize);
-		size += globalArraySize * 9; // use max number of bytes to represent long values as varlong
+		size += globalArraySize * 8; // use max number of bytes to represent long values as varlong
 		return size;
 	}
 

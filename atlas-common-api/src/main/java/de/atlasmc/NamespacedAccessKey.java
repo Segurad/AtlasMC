@@ -17,9 +17,7 @@ public abstract class NamespacedAccessKey<T> implements Namespaced {
 	protected final NamespacedKey key;
 	
 	public NamespacedAccessKey(NamespacedKey key) {
-		if (key == null)
-			throw new IllegalArgumentException("Key can not be null!");
-		this.key = key;
+		this.key = Objects.requireNonNull(key, "key");
 	}
 	
 	@Override

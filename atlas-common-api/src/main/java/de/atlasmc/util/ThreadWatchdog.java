@@ -46,28 +46,30 @@ public class ThreadWatchdog extends TickingThread {
 			if (dead == null)
 				dead = new ArrayList<>();
 			dead.add(thread);
-			watched.remove(ref);
 		}
 		if (dead == null)
 			return;
 		ThreadInfo[] info = ManagementFactory.getThreadMXBean().dumpAllThreads(true, true);
+		logger.error("");
+		logger.error("### Threads stopped sponding ################################################");
+		logger.error("");
 		for (Thread thread : dead) {
-			logger.error("Thread stopped responding for to long and was interrupted: {} ID: {}", thread.getName(), thread.threadId());
+			logger.error("- {} ID: {}", thread.getName(), thread.threadId());
 			thread.interrupt();
 		}
 		for (ThreadInfo i : info) {
 			dumpInfo(i);
 		}
 		logger.error("");
-		logger.error("###############################################################################");
+		logger.error("#############################################################################");
 		logger.error("");
 	}
 	
 	private void dumpInfo(ThreadInfo info) {
 		logger.error("");
-		logger.error("###############################################################################");
+		logger.error("#############################################################################");
 		logger.error("");
-		logger.error("--- ThreadInfo ----------------------------------------------------------------");
+		logger.error("--- ThreadInfo --------------------------------------------------------------");
 		logger.error("Name: {} ID: {} | Suspended: {} Native: {} State: {}", 
 				info.getThreadName(), 
 				info.getThreadId(), 
@@ -77,7 +79,7 @@ public class ThreadWatchdog extends TickingThread {
 		final MonitorInfo[] monitorInfo = info.getLockedMonitors();
 		if (monitorInfo.length > 0) {
 			logger.error("");
-			logger.error("--- Lock Monitors -------------------------------------------------------------");
+			logger.error("--- Lock Monitors -------------------------------------------------------");
 			logger.error("Waiting with Monitors: {}", monitorInfo.length);
 			for (MonitorInfo lock : monitorInfo) {
 				logger.error("Lock on: {}", lock.getLockedStackFrame());
@@ -87,14 +89,14 @@ public class ThreadWatchdog extends TickingThread {
 		final LockInfo[] lockInfo = info.getLockedSynchronizers();
 		if (lockInfo.length > 0) {
 			logger.error("");
-			logger.error("--- Lock Synchronizer -------------------------------------------------------------");
+			logger.error("--- Lock Synchronizer ---------------------------------------------------");
 			logger.error("Waiting with Synchronizer: {}", lockInfo.length);
 			for (LockInfo lock : lockInfo) {
 				logger.error("Lock on: {}#{}", lock.getClassName(), lock.getIdentityHashCode());
 			}
 		}
 		logger.error("");
-		logger.error("--- StackTrace ----------------------------------------------------------------");
+		logger.error("--- StackTrace --------------------------------------------------------------");
 		final StackTraceElement[] stack = info.getStackTrace();
 		for (StackTraceElement element : stack)
 			logger.error("Stack: {}", element);

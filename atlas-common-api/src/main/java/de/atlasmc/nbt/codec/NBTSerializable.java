@@ -11,7 +11,7 @@ public interface NBTSerializable {
 	@NotNull
 	NBTCodec<? extends NBTSerializable> getNBTCodec();
 	
-	default void writeToNBT(NBTWriter writer, CodecContext context) throws IOException {
+	default void writeToNBT(@NotNull NBTWriter writer, CodecContext context) throws IOException {
 		@SuppressWarnings("unchecked")
 		NBTCodec<NBTSerializable> codec = (NBTCodec<NBTSerializable>) getNBTCodec();
 		if (codec.isField()) {

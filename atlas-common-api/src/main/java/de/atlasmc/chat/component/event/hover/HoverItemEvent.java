@@ -4,11 +4,13 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.nbt.codec.CodecTags;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.tag.NBT;
+import de.atlasmc.util.annotation.NotNull;
 
 public class HoverItemEvent implements HoverEvent {
 	
+	@NotNull
 	public static final NBTCodec<HoverItemEvent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(HoverItemEvent.class)
 					.include(HoverEvent.NBT_HANDLER)
 					.codec("id", HoverItemEvent::getID, HoverItemEvent::setID, NamespacedKey.NBT_CODEC)
@@ -51,7 +53,7 @@ public class HoverItemEvent implements HoverEvent {
 
 	@Override
 	public NBTCodec<? extends HoverItemEvent> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

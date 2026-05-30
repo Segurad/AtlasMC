@@ -2,13 +2,15 @@ package de.atlasmc.node.block.tile;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.BrewingInventory;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface BrewingStand extends AbstractContainerTile<BrewingInventory> {
 	
+	@NotNull
 	public static final NBTCodec<BrewingStand>
 	NBT_HANDLER = NBTCodec
 					.builder(BrewingStand.class)
-					.include(AbstractContainerTile.NBT_HANDLER)
+					.include(AbstractContainerTile.NBT_CODEC)
 					.shortField("BrewTime", BrewingStand::getBrewTime, BrewingStand::setBrewTime)
 					.byteField("Fuel", BrewingStand::getFuelLevel, BrewingStand::setFuelLevel)
 					.build();

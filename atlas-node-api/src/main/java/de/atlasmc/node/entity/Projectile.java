@@ -5,11 +5,13 @@ import java.util.UUID;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.node.ProjectileSource;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Projectile extends Entity {
 	
+	@NotNull
 	public static final NBTCodec<Projectile>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Projectile.class)
 					.include(Entity.NBT_CODEC)
 					// ignore because event will be triggered by shooter 
@@ -32,7 +34,7 @@ public interface Projectile extends Entity {
 	
 	@Override
 	default NBTCodec<? extends Projectile> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

@@ -1,11 +1,13 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Vex extends Monster {
 	
+	@NotNull
 	public static final NBTCodec<Vex>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Vex.class)
 					.intField("life_ticks", Vex::getLifeTime, Vex::setLifeTime, -1)
 					.boolField("IsAttacking", Vex::isAttacking, Vex::setAttacking, false) // non standard
@@ -27,7 +29,7 @@ public interface Vex extends Monster {
 	
 	@Override
 	default NBTCodec<? extends Vex> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

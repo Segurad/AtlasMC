@@ -4,11 +4,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import de.atlasmc.node.entity.Entity;
 import de.atlasmc.node.util.MathUtil;
 import de.atlasmc.node.world.entitytracker.TrackingTarget;
+import de.atlasmc.util.annotation.NotNull;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 
@@ -17,10 +19,12 @@ class CoreTrackingTarget<T extends Entity> implements TrackingTarget<T> {
 	/**
 	 * Class for entity selection
 	 */
+	@NotNull
 	final Class<T> target;
 	/**
 	 * All entites of this target
 	 */
+	@NotNull
 	final Set<T> entities;
 	/**
 	 * Immutable view
@@ -35,8 +39,8 @@ class CoreTrackingTarget<T extends Entity> implements TrackingTarget<T> {
 	 */
 	final Long2ObjectMap<CoreTrackedChunk<T>> chunks;
 	
-	public CoreTrackingTarget(Class<T> target) {
-		this.target = target;
+	public CoreTrackingTarget(@NotNull Class<T> target) {
+		this.target = Objects.requireNonNull(target);
 		this.entities = new HashSet<>();
 		this.entitiesView = Collections.unmodifiableSet(entities);
 		this.perceptions = new HashSet<>();

@@ -189,8 +189,6 @@ public abstract class AbstractCollectionTag<T extends AbstractCollectionTag<T, C
 	public T clone() {
 		@SuppressWarnings("unchecked")
 		T clone = (T) super.clone();
-		if (clone == null)
-			return null;
 		if (data != null) {
 			clone.data = clone.createCollection();
 			clone.setData(data);

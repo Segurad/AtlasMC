@@ -10,14 +10,16 @@ import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.entity.Bee;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.UnsafeAPI;
 
 public interface Beehive extends TileEntity {
 	
+	@NotNull
 	public static final NBTCodec<Beehive>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Beehive.class)
-					.include(TileEntity.NBT_HANDLER)
+					.include(TileEntity.NBT_CODEC)
 					.codecList("bee", Beehive::hasBees, Beehive::getBees, Occupant.NBT_CODEC)
 					.codec("flower_pos", Beehive::getFlowerPosUnsafe, Beehive::setFlowerPos, NBTCodecs.VECTOR_3I)
 					.build();
@@ -47,15 +49,17 @@ public interface Beehive extends TileEntity {
 	
 	int getBeeCount();
 	
+	@Override
 	Beehive clone();
 	
 	@Override
 	default NBTCodec<? extends Beehive> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public static class Occupant implements NBTSerializable, StreamSerializable {
 		
+		@NotNull
 		public static final NBTCodec<Occupant>
 		NBT_CODEC = NBTCodec
 						.builder(Occupant.class)
@@ -65,6 +69,7 @@ public interface Beehive extends TileEntity {
 						.intField("ticks_in_hive", Occupant::getTicksInHive, Occupant::setTicksInHive, 0)
 						.build();
 		
+		@NotNull
 		public static final StreamCodec<Occupant>
 		STREAM_CODEC = StreamCodec
 						.builder(Occupant.class)

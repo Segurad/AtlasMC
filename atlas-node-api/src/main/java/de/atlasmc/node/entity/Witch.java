@@ -1,13 +1,15 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Witch extends Raider {
 	
+	@NotNull
 	public static final NBTCodec<Witch>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Witch.class)
-					.include(Raider.NBT_HANDLER)
+					.include(Raider.NBT_CODEC)
 					.boolField("IsDrinkingPotion", Witch::isDrinkingPotion, Witch::setDrinkingPotion, false) // non standard
 					.build();
 	
@@ -17,7 +19,7 @@ public interface Witch extends Raider {
 	
 	@Override
 	default NBTCodec<? extends Witch> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

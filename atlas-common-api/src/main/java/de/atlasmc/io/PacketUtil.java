@@ -249,7 +249,7 @@ public class PacketUtil {
 		}
 	}
 	
-	public static <T extends ProtocolRegistryValue> void writeDataSet(DataSet<T> set, ProtocolRegistry<T> registry, ByteBuf out) throws IOException {
+	public static <T extends ProtocolRegistryValue> void writeDataSet(DataSet<T> set, ProtocolRegistry<T> registry, @NotNull ByteBuf out) throws IOException {
 		if (set == null) {
 			writeVarInt(1, out);
 			return;
@@ -272,7 +272,7 @@ public class PacketUtil {
 	}
 	
 	@NotNull
-	public static <T extends ProtocolRegistryValue> DataSet<T> readDataSet(ProtocolRegistry<T> registry, ByteBuf in) throws IOException {
+	public static <T extends ProtocolRegistryValue> DataSet<T> readDataSet(ProtocolRegistry<T> registry, @NotNull ByteBuf in) throws IOException {
 		final int id = readVarInt(in);
 		if (id == 0) {
 			NamespacedKey key = NamespacedKey.STREAM_CODEC.deserialize(in);

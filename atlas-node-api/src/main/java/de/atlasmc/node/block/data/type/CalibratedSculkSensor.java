@@ -4,6 +4,7 @@ import de.atlasmc.node.block.data.Directional;
 
 public interface CalibratedSculkSensor extends SculkSensor, Directional {
 	
+	@Override
 	CalibratedSculkSensor clone();
 
 }

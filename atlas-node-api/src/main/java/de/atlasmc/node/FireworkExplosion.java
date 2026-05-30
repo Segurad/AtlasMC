@@ -10,13 +10,16 @@ import de.atlasmc.io.codec.StreamSerializable;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.nbt.codec.NBTSerializable;
+import de.atlasmc.util.CloneException;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumName;
 import de.atlasmc.util.enums.EnumUtil;
 
 public class FireworkExplosion implements NBTSerializable, StreamSerializable {
 	
+	@NotNull
 	public static final NBTCodec<FireworkExplosion>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(FireworkExplosion.class)
 					.defaultConstructor(FireworkExplosion::new)
 					.codec("shape", FireworkExplosion::getShape, FireworkExplosion::setShape, EnumUtil.enumStringNBTCodec(Shape.class), Shape.SMALL_BALL)
@@ -26,6 +29,7 @@ public class FireworkExplosion implements NBTSerializable, StreamSerializable {
 					.boolField("has_twinkle", FireworkExplosion::hasTwinkel, FireworkExplosion::setTwinkel, false)
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<FireworkExplosion>
 	STREAM_CODEC = StreamCodec
 					.builder(FireworkExplosion.class)
@@ -89,15 +93,14 @@ public class FireworkExplosion implements NBTSerializable, StreamSerializable {
 		this.fadeColors = fadeColors;
 	}
 	
+	@Override
 	public FireworkExplosion clone() {
-		FireworkExplosion clone = null;
+		FireworkExplosion clone;
 		try {
 			clone = (FireworkExplosion) super.clone();
 		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
+			throw new CloneException(e);
 		}
-		if (clone == null)
-			return null;
 		if (colors != null)
 			clone.colors = colors.clone();
 		if (fadeColors != null)
@@ -107,7 +110,7 @@ public class FireworkExplosion implements NBTSerializable, StreamSerializable {
 	
 	@Override
 	public NBTCodec<? extends FireworkExplosion> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	@Override

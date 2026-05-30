@@ -120,6 +120,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	 * 
 	 * @return the current server or null if not at this note
 	 */
+	@Override
 	@ThreadSafe
 	public synchronized LocalServer getLocalSever() {
 		return server;
@@ -127,7 +128,15 @@ public class CorePlayerConnection implements PlayerConnection {
 	
 	@Override
 	public Player getPlayer() {
+		var player = this.player;
+		if (player == null)
+			throw new IllegalStateException("No player bound!");
 		return player;
+	}
+	
+	@Override
+	public boolean hasPlayer() {
+		return player != null;
 	}
 	
 	@Override

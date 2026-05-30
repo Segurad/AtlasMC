@@ -82,12 +82,7 @@
 		</dependency>
 		<dependency>
 			<groupId>de.atlasmc</groupId>
-			<artifactId>atlas-network-core-master</artifactId>
-			<version>${revision}</version>
-		</dependency>
-		<dependency>
-			<groupId>de.atlasmc</groupId>
-			<artifactId>atlas-network-core-minion</artifactId>
+			<artifactId>atlas-network-core-common</artifactId>
 			<version>${revision}</version>
 		</dependency>
 		<dependency>

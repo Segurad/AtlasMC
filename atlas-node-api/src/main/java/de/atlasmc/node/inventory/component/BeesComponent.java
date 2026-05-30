@@ -6,9 +6,11 @@ import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.block.tile.Beehive.Occupant;
 import de.atlasmc.node.entity.Bee;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface BeesComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<BeesComponent>
 	NBT_CODEC = NBTCodec
 					.builder(BeesComponent.class)
@@ -16,6 +18,7 @@ public interface BeesComponent extends ItemComponent {
 					.codecList(ComponentType.BEES.getNamespacedKey(), BeesComponent::hasBees, BeesComponent::getBees, Occupant.NBT_CODEC)
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<BeesComponent>
 	STREAM_CODEC = StreamCodec
 					.builder(BeesComponent.class)
@@ -23,6 +26,7 @@ public interface BeesComponent extends ItemComponent {
 					.listCodec(BeesComponent::hasBees, BeesComponent::getBees, Occupant.STREAM_CODEC)
 					.build();
 	
+	@Override
 	BeesComponent clone();
 	
 	boolean hasBees();

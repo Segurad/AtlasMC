@@ -89,11 +89,12 @@ class EventDefaultListenerPresentsTest {
 					continue;
 				if (!Modifier.isStatic(m.getModifiers())) 
 					continue;
-				HandlerList handlers = null;
+				HandlerList handlers;
 				try {
 					handlers = (HandlerList) m.invoke(clazz);
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 					fail(e);
+					return;
 				}
 				if (handlers.getDefaultExecutor() == null || handlers.getDefaultExecutor() == null) {
 					checks.add(() -> fail("Missing DefaultExecutor: " + clazz.getName()));

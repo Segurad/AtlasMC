@@ -8,6 +8,7 @@ import de.atlasmc.node.block.data.Waterlogged;
 
 public interface TrapDoor extends Bisected, Directional, Openable, Powerable, Waterlogged {
 	
+	@Override
 	TrapDoor clone();
 
 }

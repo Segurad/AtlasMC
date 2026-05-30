@@ -15,6 +15,7 @@ import de.atlasmc.util.codec.CodecContext;
 
 public interface NBTCodec<T> extends Codec<T, NBTReader, NBTWriter, CodecContext> {
 	
+	@Override
 	default boolean serialize(T value, @NotNull NBTWriter output, CodecContext context) throws IOException {
 		return serialize(null, value, output, context);
 	}
@@ -52,7 +53,9 @@ public interface NBTCodec<T> extends Codec<T, NBTReader, NBTWriter, CodecContext
 	 * @return deserialized object
 	 * @throws IOException
 	 */
+	@Override
 	T deserialize(T value, @NotNull NBTReader input, CodecContext context) throws IOException;
+	
 	default T deserializePartial(T value, NBTReader input, CodecContext context) throws IOException {
 		throw new UnsupportedOperationException();
 	}
@@ -85,18 +88,22 @@ public interface NBTCodec<T> extends Codec<T, NBTReader, NBTWriter, CodecContext
 		return CodecContext.DEFAULT_SERVER;
 	}
 	
-	public static <T> NBTCodecBuilder<T> builder(Class<T> clazz) {
+	@NotNull
+	public static <T> NBTCodecBuilder<T> builder(@NotNull Class<T> clazz) {
 		return new NBTCodecBuilder<>(clazz);
 	}
 	
+	@NotNull
 	public static <T> NBTCodec<T> codecOrElse(Class<T> clazz, NBTCodec<? extends T> a, NBTCodec<? extends T> b) {
 		return new OrElseCodec<>(clazz, a, b);
 	}
 	
+	@NotNull
 	public static <T> NBTCodec<T> byteToObject(Class<T> clazz, IntFunction<T> toObject, ToIntFunction<T> toByte) {
 		return new ByteToObjectCodec<>(clazz, toObject, toByte);
 	}
 	
+	@NotNull
 	public static <T> NBTCodec<T> stringToObject(Class<T> clazz, Function<String, T> toObject, Function<T, String> toString) {
 		return new StringToObjectCodec<>(clazz, toObject, toString);
 	}

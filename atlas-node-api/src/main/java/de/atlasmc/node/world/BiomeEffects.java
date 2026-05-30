@@ -2,6 +2,7 @@ package de.atlasmc.node.world;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.atlasmc.Color;
 import de.atlasmc.nbt.codec.NBTCodec;
@@ -14,8 +15,9 @@ import de.atlasmc.util.enums.EnumUtil;
 
 public class BiomeEffects implements NBTSerializable {
 
+	@NotNull
 	public static final NBTCodec<BiomeEffects>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(BiomeEffects.class)
 					.defaultConstructor(BiomeEffects::new)
 					.codec("fog_color", BiomeEffects::getFogColor, BiomeEffects::setFogColor, Color.NBT_CODEC)
@@ -38,7 +40,7 @@ public class BiomeEffects implements NBTSerializable {
 					.codec("sound", BiomeEffects::getAdditionsSound, BiomeEffects::setAdditionsSound, Sound.NBT_CODEC)
 					.doubleField("tick_chance", BiomeEffects::getAddtionsTickChance, BiomeEffects::setAddtionsTickChance)
 					.endComponent()
-					.codecList("music", BiomeEffects::hasMusic, BiomeEffects::getMusic, BiomeMusic.NBT_HANDLER)
+					.codecList("music", BiomeEffects::hasMusic, BiomeEffects::getMusic, BiomeMusic.NBT_CODEC)
 					.build();
 	
 	private Color fogColor;
@@ -208,14 +210,12 @@ public class BiomeEffects implements NBTSerializable {
 	}
 	
 	public void setGrassColorModifier(@NotNull GrassColorModifier modifier) {
-		if (modifier == null)
-			throw new IllegalArgumentException("Modififer can not be null!");
-		this.grassColorModifier = modifier;
+		this.grassColorModifier = Objects.requireNonNull(modifier, "modifier");
 	}
 	
 	@Override
 	public NBTCodec<? extends BiomeEffects> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public static enum GrassColorModifier implements EnumName {

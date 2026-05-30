@@ -6,8 +6,6 @@ public abstract class AtlasTask implements Runnable {
 	
 	private volatile boolean cancelled;
 	
-	public abstract void run();
-	
 	public final boolean isCancelled() {
 		return cancelled;
 	}

@@ -6,10 +6,10 @@ import java.util.UUID;
 import java.util.concurrent.Future;
 
 import de.atlasmc.chat.Messageable;
+import de.atlasmc.network.permission.PermissionHandler;
 import de.atlasmc.network.server.Server;
 import de.atlasmc.network.socket.AtlasSocket;
 import de.atlasmc.permission.Permissible;
-import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.util.annotation.NotNull;
 
 /**
  * {@link ChatComponent} that translates its contents
@@ -15,18 +16,20 @@ import de.atlasmc.nbt.codec.NBTCodecs;
  */
 public class TranslationComponent extends AbstractBaseComponent<TranslationComponent> {
 	
+	@NotNull
 	public static final NBTCodec<TranslationComponent>
 	NBT_CODEC = NBTCodec
 					.builder(TranslationComponent.class)
 					.include(AbstractBaseComponent.NBT_CODEC)
-					.codec("key", TranslationComponent::getKey, TranslationComponent::setKey, NBTCodecs.STRING)
+					.codec("translate", TranslationComponent::getKey, TranslationComponent::setKey, NBTCodecs.STRING)
 					.codec("fallback", TranslationComponent::getFallback, TranslationComponent::setFallback, NBTCodecs.STRING)
+					.codecList("with", TranslationComponent::hasWith, TranslationComponent::getWith, ChatComponent.NBT_CODEC)
 					.build();
 	
-	public static final String
-	JSON_TRANSLATE = "translate",
-	JSON_WITH = "with",
-	JSON_FALLBACK = "fallback";
+//	public static final String
+//	JSON_TRANSLATE = "translate",
+//	JSON_WITH = "with",
+//	JSON_FALLBACK = "fallback";
 	
 	private String key;
 	private String fallback;
@@ -59,6 +62,10 @@ public class TranslationComponent extends AbstractBaseComponent<TranslationCompo
 		if (with == null)
 			with = new ArrayList<>(1);
 		return with;
+	}
+	
+	public boolean hasWith() {
+		return with != null && !with.isEmpty();
 	}
 	
 	public TranslationComponent setWith(List<ChatComponent> with) {
@@ -95,8 +102,6 @@ public class TranslationComponent extends AbstractBaseComponent<TranslationCompo
 	@Override
 	public TranslationComponent clone() {
 		TranslationComponent copy = super.clone();
-		if (copy == null)
-			return null;
 		if (with != null) {
 			copy.with = new ArrayList<>(with.size());
 			for (ChatComponent comp : with)

@@ -91,10 +91,13 @@ public interface Chat extends OpenCloneable, StreamSerializable {
 		}
 	};
 	
+	@NotNull
 	public static final NBTCodec<Chat> RAW_NBT_CODEC = NBTCodec.stringToObject(Chat.class, ChatUtil::toChat, Chat::toText);
 	
+	@NotNull
 	public static final NBTCodec<Chat> NBT_CODEC = NBTCodec.codecOrElse(Chat.class, RAW_NBT_CODEC, ChatComponent.NBT_CODEC);
 	
+	@NotNull
 	public static final StreamCodec<Chat>
 	STREAM_CODEC = new StreamCodec<Chat>() {
 		
@@ -187,6 +190,7 @@ public interface Chat extends OpenCloneable, StreamSerializable {
 	 */
 	boolean isComponent();
 	
+	@Override
 	Chat clone();
 	
 	@Override

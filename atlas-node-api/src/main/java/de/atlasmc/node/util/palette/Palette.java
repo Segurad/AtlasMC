@@ -1,12 +1,23 @@
 package de.atlasmc.node.util.palette;
 
 import java.util.Collection;
+import java.util.function.ToIntFunction;
 
-import de.atlasmc.io.IOSerializedSizePredictable;
+import de.atlasmc.io.StreamSerializedSizePredictable;
 import de.atlasmc.io.IOWriteable;
 import de.atlasmc.node.util.VariableValueArray;
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 
-public interface Palette<E> extends IOWriteable, IOSerializedSizePredictable {
+/**
+ * Palettes project objects to a {@link VariableValueArray}.
+ * Entries are mapped using {@link Object#hashCode()}.
+ * If mutable entries are used and changed in some form that affects {@link Object#hashCode()}. Beforehand a reference to the {@link PaletteEntry} should be acquired.
+ * After changing the entry. {@link PaletteEntry#updateEntry()} should be used to update internal references.
+ * Otherwise internal mappings may break.
+ * @param <E>
+ */
+public interface Palette<E> extends IOWriteable, StreamSerializedSizePredictable {
 	
 	/**
 	 * Returns the values mapped to the entries
@@ -14,16 +25,28 @@ public interface Palette<E> extends IOWriteable, IOSerializedSizePredictable {
 	 */
 	VariableValueArray getValues();
 	
-	GlobalValueProvider<E> getGlobalProvider();
+	/**
+	 * Returns the mapping function that provides global values for entries
+	 * @return function
+	 */
+	@NotNull
+	ToIntFunction<E> getGlobalProvider();
 	
 	/**
 	 * Returns the entry at the given index or null if not present
 	 * @param index
 	 * @return entry or null
 	 */
+	@Nullable
 	E getEntry(int index);
 	
-	PaletteEntry<E> getEntry(E entry);
+	/**
+	 * Returns the {@link PaletteEntry} of the global value of the given entry
+	 * @param entry
+	 * @return palette entry or null
+	 */
+	@Nullable
+	PaletteEntry<E> getPaletteEntry(E entry);
 	
 	/**
 	 * Returning a collection containing all entries
@@ -40,10 +63,25 @@ public interface Palette<E> extends IOWriteable, IOSerializedSizePredictable {
 	 */
 	int setEntry(E entry, int index);
 	
-	void setRawEntry(int index, int entryValue);
+	/**
+	 * Sets the a entry value at a the given index.
+	 * Returns false if no entry associated with the given value exists
+	 * @param index
+	 * @param entryValue
+	 * @return true if success
+	 */
+	boolean setRawEntry(int index, int entryValue);
 	
+	/**
+	 * Tries to optimize the palette
+	 */
 	void optimize();
 	
+	/**
+	 * Returns the value used within the {@link VariableValueArray} of the given entry or -1 if no valid entry
+	 * @param entry
+	 * @return value or -1
+	 */
 	int getEntryValue(E entry);
 	
 	/**
@@ -79,8 +117,16 @@ public interface Palette<E> extends IOWriteable, IOSerializedSizePredictable {
 	 */
 	int getEntryValueAt(int index);
 	
+	/**
+	 * Number of bits used to represent a value within {@link VariableValueArray}
+	 * @return bits
+	 */
 	int getBitsPerValue();
 	
+	/**
+	 * Minimum number of bits used for representing a value
+	 * @return bits
+	 */
 	int getMinBitsPerValue();
 	
 	/**
@@ -90,6 +136,10 @@ public interface Palette<E> extends IOWriteable, IOSerializedSizePredictable {
 	 */
 	int getMaxBitsPerValue();
 
+	/**
+	 * Capacity of the {@link VariableValueArray}
+	 * @return capacity
+	 */
 	int getCapacity();
 
 }

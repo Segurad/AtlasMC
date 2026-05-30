@@ -7,6 +7,7 @@ import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTSerializable;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumUtil;
 
 public interface Sign extends TileEntity {
@@ -14,10 +15,10 @@ public interface Sign extends TileEntity {
 	public static final NBTCodec<Sign>
 	NBT_HANDLER = NBTCodec
 					.builder(Sign.class)
-					.include(TileEntity.NBT_HANDLER)
+					.include(TileEntity.NBT_CODEC)
 					.boolField("is_waxed", Sign::isWaxed, Sign::setWaxed)
-					.codec("front_text", Sign::getFrontText, Sign::setFrontText, SignText.NBT_HANDLER)
-					.codec("back_text", Sign::getBackText, Sign::setBackText, SignText.NBT_HANDLER)
+					.codec("front_text", Sign::getFrontText, Sign::setFrontText, SignText.NBT_CODEC)
+					.codec("back_text", Sign::getBackText, Sign::setBackText, SignText.NBT_CODEC)
 					.build();
 	
 	boolean isWaxed();
@@ -34,8 +35,9 @@ public interface Sign extends TileEntity {
 	
 	public class SignText implements NBTSerializable {
 		
+		@NotNull
 		public static final NBTCodec<SignText>
-		NBT_HANDLER = NBTCodec
+		NBT_CODEC = NBTCodec
 						.builder(SignText.class)
 						.defaultConstructor(SignText::new)
 						.boolField("has_glowing_text", SignText::isGlowing, SignText::setGlowing)
@@ -75,7 +77,7 @@ public interface Sign extends TileEntity {
 		
 		@Override
 		public NBTCodec<? extends SignText> getNBTCodec() {
-			return NBT_HANDLER;
+			return NBT_CODEC;
 		}
 		
 	}

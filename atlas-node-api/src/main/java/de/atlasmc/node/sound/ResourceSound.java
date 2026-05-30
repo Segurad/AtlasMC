@@ -5,9 +5,11 @@ import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.io.codec.StreamSerializable;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTSerializable;
+import de.atlasmc.util.annotation.NotNull;
 
 public class ResourceSound implements Sound, NBTSerializable, StreamSerializable {
 	
+	@NotNull
 	public static final NBTCodec<ResourceSound>
 	NBT_CODEC = NBTCodec
 					.builder(ResourceSound.class)
@@ -16,6 +18,7 @@ public class ResourceSound implements Sound, NBTSerializable, StreamSerializable
 					.floatField("range", ResourceSound::getFixedRange, ResourceSound::setFixedRange, 0)
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<ResourceSound>
 	STREAM_CODEC = StreamCodec
 					.builder(ResourceSound.class)

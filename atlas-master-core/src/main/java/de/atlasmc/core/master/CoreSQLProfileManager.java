@@ -73,6 +73,7 @@ public class CoreSQLProfileManager extends CoreProfileManager  {
 		return queryProfile("mojang_uuid", AtlasUtil.uuidToBytes(uuid));
 	}
 
+	@Override
 	protected void updateLastJoind(AtlasPlayer player, Date date) {
 		try (Connection con = AtlasMaster.getDatabase().getConnection(true)) {
 			PreparedStatement stmt = con.prepareStatement("UPDATE profiles SET join_last=? WHERE internal_uuid=?");

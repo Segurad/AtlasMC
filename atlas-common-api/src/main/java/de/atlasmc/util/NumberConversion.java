@@ -7,7 +7,7 @@ import de.atlasmc.util.annotation.ThreadSafe;
  * Collection of some number related Methods useful or not
  */
 @ThreadSafe
-public class NumberConversion {
+public final class NumberConversion {
 
 	private NumberConversion() {}
 	

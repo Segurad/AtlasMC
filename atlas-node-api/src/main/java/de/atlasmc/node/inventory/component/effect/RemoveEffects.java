@@ -3,17 +3,20 @@ package de.atlasmc.node.inventory.component.effect;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.potion.PotionEffectType;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.dataset.DataSet;
 
 public interface RemoveEffects extends ComponentEffect {
 	
+	@NotNull
 	public static final NBTCodec<RemoveEffects>
 	NBT_CODEC = NBTCodec
 					.builder(RemoveEffects.class)
-					.include(ComponentEffect.NBT_HANDLER)
+					.include(ComponentEffect.NBT_CODEC)
 					.codec("effects", RemoveEffects::getEffects, RemoveEffects::setEffects, DataSet.nbtCodec(PotionEffectType.REGISTRY_KEY))
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<RemoveEffects>
 	STREAM_CODEC = StreamCodec
 					.builder(RemoveEffects.class)
@@ -27,6 +30,7 @@ public interface RemoveEffects extends ComponentEffect {
 	
 	boolean hasEffects();
 	
+	@Override
 	RemoveEffects clone();
 	
 	@Override

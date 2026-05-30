@@ -8,14 +8,16 @@ import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.entity.spawncondition.SpawnCondition;
 import de.atlasmc.registry.ProtocolRegistryValueBase;
+import de.atlasmc.util.annotation.NotNull;
 
 public class EntityVariant extends ProtocolRegistryValueBase implements NBTSerializable {
 	
+	@NotNull
 	public static final NBTCodec<EntityVariant>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(EntityVariant.class)
 					.defaultConstructor(EntityVariant::new)
-					.codecList("spawn_conditions", EntityVariant::hasSpawnConditions, EntityVariant::getSpawnCondition, SpawnCondition.NBT_HANDLER)
+					.codecList("spawn_conditions", EntityVariant::hasSpawnConditions, EntityVariant::getSpawnCondition, SpawnCondition.NBT_CODEC)
 					.build();
 	
 	private List<SpawnCondition> conditions;
@@ -44,7 +46,7 @@ public class EntityVariant extends ProtocolRegistryValueBase implements NBTSeria
 
 	@Override
 	public NBTCodec<? extends NBTSerializable> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

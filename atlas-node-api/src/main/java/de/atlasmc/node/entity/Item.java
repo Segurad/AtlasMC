@@ -5,11 +5,13 @@ import java.util.UUID;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.node.inventory.ItemStack;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Item extends Entity {
 	
+	@NotNull
 	public static final NBTCodec<Item>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Item.class)
 					.include(Entity.NBT_CODEC)
 					.shortField("Age", Item::getLifeTime, Item::setLifeTime, (short) 6000)
@@ -59,7 +61,7 @@ public interface Item extends Entity {
 	
 	@Override
 	default NBTCodec<? extends Item> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

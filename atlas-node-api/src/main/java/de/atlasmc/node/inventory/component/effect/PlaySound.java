@@ -5,16 +5,19 @@ import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.sound.EnumSound;
 import de.atlasmc.node.sound.ResourceSound;
 import de.atlasmc.node.sound.Sound;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface PlaySound extends ComponentEffect {
 	
+	@NotNull
 	public static final NBTCodec<PlaySound>
 	NBT_CODEC = NBTCodec
 					.builder(PlaySound.class)
-					.include(ComponentEffect.NBT_HANDLER)
+					.include(ComponentEffect.NBT_CODEC)
 					.codec("sound", PlaySound::getSound, PlaySound::setSound, Sound.NBT_CODEC)
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<PlaySound>
 	STREAM_CODEC = StreamCodec
 					.builder(PlaySound.class)
@@ -26,6 +29,7 @@ public interface PlaySound extends ComponentEffect {
 	
 	void setSound(Sound sound);
 	
+	@Override
 	PlaySound clone();
 	
 	@Override

@@ -207,7 +207,7 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 			}
 			try {
 				AtlasThreadTask<T> task = factory.createTask(taskCfg);
-				taskManager.addTask(name, task);
+				taskManager.addLast(name, task);
 			} catch(Exception e) {
 				logger.error("Error while creating task: " + key, e);
 			}
@@ -230,7 +230,7 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 				logger.error("Error while creating default task: " + key, e);
 				continue;
 			}
-			if (!taskManager.addTask(rawTask.value1(), task))
+			if (!taskManager.addLast(rawTask.value1(), task))
 				logger.warn("Failed to add default task: " + rawTask.value1());
 		}
 	}

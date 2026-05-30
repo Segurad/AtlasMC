@@ -1,13 +1,15 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Wither extends Monster {
 	
+	@NotNull
 	public static final NBTCodec<Wither>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Wither.class)
-					.include(Monster.NBT_HANDLER)
+					.include(Monster.NBT_CODEC)
 					.intField("Invul", Wither::getInvulnerableTime, Wither::setInvulnerableTime, 0)
 					.build();
 	
@@ -29,7 +31,7 @@ public interface Wither extends Monster {
 
 	@Override
 	default NBTCodec<? extends Wither> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

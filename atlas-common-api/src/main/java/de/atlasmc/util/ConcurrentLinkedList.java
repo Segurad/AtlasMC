@@ -51,10 +51,12 @@ public class ConcurrentLinkedList<E> implements Collection<E> {
 		return tail != null ? tail.entry : null;
 	}
 	
+	@Override
 	public int size() {
 		return count;
 	}
 	
+	@Override
 	public synchronized void clear() {
 		if (head == null) return;
 		Node<E> node = head;

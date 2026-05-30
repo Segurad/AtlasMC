@@ -136,6 +136,7 @@ public class CoreRepositoryEntry implements RepositoryEntry, ConfigurationSerial
 		return files.size() > 1 || !files.get(0).file().equals(root);
 	}
 	
+	@Override
 	public <T extends ConfigurationSection> T toConfiguration(T config) {
 		config.set("root", root);
 		config.set("description", description);

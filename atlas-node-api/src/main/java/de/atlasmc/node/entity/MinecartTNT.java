@@ -1,13 +1,15 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface MinecartTNT extends AbstractMinecart {
 
+	@NotNull
 	public static final NBTCodec<MinecartTNT>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(MinecartTNT.class)
-					.include(AbstractMinecart.NBT_HANDLER)
+					.include(AbstractMinecart.NBT_CODEC)
 					.intField("fuse", MinecartTNT::getFuseTime, MinecartTNT::setFuseTime, -1)
 					.floatField("explosion_power", MinecartTNT::getExplosionPower, MinecartTNT::setExplosionPower, 4)
 					.floatField("explosion_speed_factor", MinecartTNT::getExplosionSpeedFactor, MinecartTNT::setExplosionSpeedFactor, 1)
@@ -31,7 +33,7 @@ public interface MinecartTNT extends AbstractMinecart {
 
 	@Override
 	default NBTCodec<? extends AbstractMinecart> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

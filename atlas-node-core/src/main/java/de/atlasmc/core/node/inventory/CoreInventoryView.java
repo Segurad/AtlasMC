@@ -22,6 +22,7 @@ public class CoreInventoryView implements InventoryView {
 		this.viewID = viewID;
 	}
 	
+	@Override
 	public void close() {
 		player.closeInventory();
 	}
@@ -30,6 +31,7 @@ public class CoreInventoryView implements InventoryView {
 	 * Return the type of the top Inventory
 	 * @return
 	 */
+	@Override
 	public InventoryType getType() {
 		return top.getType();
 	}
@@ -38,10 +40,12 @@ public class CoreInventoryView implements InventoryView {
 	 * 
 	 * @return the owner of this view
 	 */
+	@Override
 	public Player getPlayer() {
 		return player;
 	}
 	
+	@Override
 	public Inventory getTopInventory() {
 		return top;
 	}
@@ -50,14 +54,17 @@ public class CoreInventoryView implements InventoryView {
 		this.top = inv;
 	}
 	
+	@Override
 	public Inventory getBottomInventory() {
 		return bottom;
 	}
 	
+	@Override
 	public void setCursor(ItemStack item) {
 		player.setItemOnCursor(item);
 	}
 	
+	@Override
 	public ItemStack getCursor() {
 		return player.getItemOnCursor();
 	}
@@ -72,11 +79,13 @@ public class CoreInventoryView implements InventoryView {
 		return player.getItemOnCursorUnsafe();
 	}
 
+	@Override
 	public ItemStack getItem(int rawSlot) {
 		Inventory inv = getInventory(rawSlot);
 		return inv == null ? null : inv.getItem(convertSlot(rawSlot));
 	}
 	
+	@Override
 	public void setItem(int rawSlot, ItemStack item) {
 		Inventory inv = getInventory(rawSlot);
 		if (inv != null) 
@@ -96,10 +105,12 @@ public class CoreInventoryView implements InventoryView {
 			inv.setItemUnsafe(convertSlot(rawSlot), item);
 	}
 	
+	@Override
 	public int countSlots() {
 		return top.getSize() + bottom.getSize();
 	}
 	
+	@Override
 	public int convertSlot(int rawSlot) {
 		int numInTop = getTopInventory().getSize();
         // Index from the top inventory as having slots from [0,size]
@@ -170,6 +181,7 @@ public class CoreInventoryView implements InventoryView {
 	 * @param slot
 	 * @return
 	 */
+	@Override
 	public int convertSlot(Inventory inv, int slot) {
 		if (inv == getBottomInventory()) {
 			if (slot < 0 || slot > 40) throw new ArrayIndexOutOfBoundsException("Slot out of Bounds!");
@@ -189,6 +201,7 @@ public class CoreInventoryView implements InventoryView {
 			throw new IllegalArgumentException("Inventory does not belong to this InventoryView!");
 	}
 	
+	@Override
 	public SlotType getSlotType(int rawSlot) {
 		Inventory inv = getInventory(rawSlot);
 		if (inv == null) 
@@ -196,6 +209,7 @@ public class CoreInventoryView implements InventoryView {
 		return inv.getSlotType(convertSlot(rawSlot));
 	}
 	
+	@Override
 	public Inventory getInventory(int rawSlot) {
 		if (rawSlot == -999 || rawSlot == -1) {
 			return null;
@@ -207,10 +221,12 @@ public class CoreInventoryView implements InventoryView {
 		return bottom;
 	}
 	
+	@Override
 	public Chat getTitle() {
 		return top.getTitle();
 	}
 	
+	@Override
 	public int getViewID() {
 		return viewID;
 	}

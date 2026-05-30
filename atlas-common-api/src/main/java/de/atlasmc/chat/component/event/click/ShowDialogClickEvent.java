@@ -3,13 +3,15 @@ package de.atlasmc.chat.component.event.click;
 import de.atlasmc.dialog.Dialog;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.registry.Registries;
+import de.atlasmc.util.annotation.NotNull;
 
 public final class ShowDialogClickEvent implements ClickEvent {
 	
+	@NotNull
 	public static final NBTCodec<ShowDialogClickEvent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(ShowDialogClickEvent.class)
-					.include(ClickEvent.NBT_HANDLER)
+					.include(ClickEvent.NBT_CODEC)
 					.codec("dialog", ShowDialogClickEvent::getDialog, ShowDialogClickEvent::setDialog, Registries.registryValueNBTCodec(Dialog.REGISTRY_KEY))
 					.codec("dialog", ShowDialogClickEvent::getDialog, ShowDialogClickEvent::setDialog, Dialog.NBT_HANDLER)
 					.build();
@@ -31,7 +33,7 @@ public final class ShowDialogClickEvent implements ClickEvent {
 	
 	@Override
 	public NBTCodec<? extends ShowDialogClickEvent> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

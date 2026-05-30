@@ -5,11 +5,13 @@ import java.util.UUID;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.node.block.data.BlockData;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface PrimedTNT extends Entity {
 	
+	@NotNull
 	public static final NBTCodec<PrimedTNT>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(PrimedTNT.class)
 					.include(Entity.NBT_CODEC)
 					.shortField("fuse", PrimedTNT::getFuseTime, PrimedTNT::setFuseTime)
@@ -40,7 +42,7 @@ public interface PrimedTNT extends Entity {
 	
 	@Override
 	default NBTCodec<? extends PrimedTNT> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

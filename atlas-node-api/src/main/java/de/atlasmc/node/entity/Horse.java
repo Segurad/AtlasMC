@@ -4,13 +4,15 @@ import java.util.List;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.HorseInventory;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Horse extends AbstractHorse {
 	
+	@NotNull
 	public static final NBTCodec<Horse>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Horse.class)
-					.include(AbstractHorse.NBT_HANDLER)
+					.include(AbstractHorse.NBT_CODEC)
 					.intField("Variant", Horse::getVariantID, Horse::setVariantID, 0)
 					.build();
 	
@@ -26,11 +28,12 @@ public interface Horse extends AbstractHorse {
 	
 	void setVariantID(int id);
 	
+	@Override
 	HorseInventory getInventory();
 	
 	@Override
 	default NBTCodec<? extends Horse> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public static enum HorseColor {

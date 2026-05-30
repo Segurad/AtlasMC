@@ -97,14 +97,10 @@ public enum DyeColor implements IDHolder, EnumName {
 	}
 	
 	public static DyeColor getByBanner(ItemType type) {
-		if (type == null)
-			throw new IllegalArgumentException("Type can not be null!");
 		return DYE_BY_BANNER.get(type.getNamespacedKey());
 	}
 	
 	public static DyeColor getByBanner(BlockType type) {
-		if (type == null)
-			throw new IllegalArgumentException("Type can not be null!");
 		return DYE_BY_BANNER.get(type.getNamespacedKey());
 	}
 	

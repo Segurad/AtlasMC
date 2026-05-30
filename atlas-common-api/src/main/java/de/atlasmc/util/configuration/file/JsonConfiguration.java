@@ -16,6 +16,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.MemoryConfiguration;
 
@@ -174,24 +175,28 @@ public class JsonConfiguration extends FileConfiguration {
 		reader.endArray();
 	}
 	
+	@NotNull
 	public static JsonConfiguration loadConfiguration(File file) throws FileNotFoundException, IOException {
 		JsonConfiguration cfg = new JsonConfiguration();
 		cfg.load(file);
 		return cfg;
 	}
 
+	@NotNull
 	public static JsonConfiguration loadConfiguration(Reader reader) throws IOException {
 		JsonConfiguration cfg = new JsonConfiguration();
 		cfg.load(reader);
 		return cfg;
 	}
 	
+	@NotNull
 	public static JsonConfiguration loadConfiguration(JsonReader reader) {
 		JsonConfiguration cfg = new JsonConfiguration();
 		cfg.load(reader);
 		return cfg;
 	}
 
+	@NotNull
 	public static JsonConfiguration loadConfiguration(InputStream input) throws IOException {
 		JsonConfiguration cfg = new JsonConfiguration();
 		cfg.load(input);

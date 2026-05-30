@@ -2,6 +2,8 @@ package de.atlasmc.util.configuration;
 
 import java.util.Objects;
 
+import de.atlasmc.util.annotation.NotNull;
+
 public abstract class AbstractConfigurationSection implements ConfigurationSection {
 
 	private final Configuration root;
@@ -21,8 +23,6 @@ public abstract class AbstractConfigurationSection implements ConfigurationSecti
 	
 	@Override
 	public Object get(String path, Object def) {
-		if (path == null)
-			throw new IllegalArgumentException("Path can not be null!");
 		if (path.length() == 0)
 			return this;
 
@@ -48,8 +48,6 @@ public abstract class AbstractConfigurationSection implements ConfigurationSecti
 	
 	@Override
 	public ConfigurationSection createSection(String path) {
-		if (path == null)
-			throw new IllegalArgumentException("Path can not be null!");
 		if (path.length() == 0)
 			throw new IllegalArgumentException("Path can not be empty!");
 
@@ -78,8 +76,6 @@ public abstract class AbstractConfigurationSection implements ConfigurationSecti
 	
 	@Override
 	public ListConfigurationSection createListSection(String path) {
-		if (path == null)
-			throw new IllegalArgumentException("Path can not be null!");
 		if (path.length() == 0)
 			throw new IllegalArgumentException("Path can not be empty!");
 
@@ -108,8 +104,6 @@ public abstract class AbstractConfigurationSection implements ConfigurationSecti
 
 	@Override
 	public Object set(String path, Object value) {
-		if (path == null)
-			throw new IllegalArgumentException("Path can not be null!");
 		if (path.length() == 0)
 			throw new IllegalArgumentException("Path can not be empty!");
 
@@ -177,6 +171,7 @@ public abstract class AbstractConfigurationSection implements ConfigurationSecti
 	
 	protected abstract Object internalSet(String key, Object value);
 	
+	@NotNull
 	protected ConfigurationSection createSection() {
 		return new MemoryConfigurationSection(this);
 	}

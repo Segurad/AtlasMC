@@ -1,11 +1,13 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface PolarBear extends Animal, AngerableMob {
 	
+	@NotNull
 	public static final NBTCodec<PolarBear>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(PolarBear.class)
 					.include(Animal.NBT_CODEC)
 					.include(AngerableMob.NBT_CODEC)
@@ -18,7 +20,7 @@ public interface PolarBear extends Animal, AngerableMob {
 
 	@Override
 	default NBTCodec<? extends PolarBear> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

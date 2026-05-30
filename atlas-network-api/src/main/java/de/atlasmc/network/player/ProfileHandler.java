@@ -2,6 +2,7 @@ package de.atlasmc.network.player;
 
 import java.util.UUID;
 
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.concurrent.future.Future;
 
 public interface ProfileHandler {
@@ -33,14 +34,14 @@ public interface ProfileHandler {
 	 * @param load if the profile should be loaded
 	 * @return player or null
 	 */
-	AtlasPlayer getPlayerByMojang(String name);
+	AtlasPlayer getPlayerByMojang(@NotNull String name);
 	
-	Future<AtlasPlayer> loadPlayer(String name);
+	Future<AtlasPlayer> loadPlayer(@NotNull String name);
 	
-	Future<AtlasPlayer> loadPlayer(UUID uuid);
+	Future<AtlasPlayer> loadPlayer(@NotNull UUID uuid);
 	
-	Future<AtlasPlayer> loadPlayerByMojang(String name);
+	Future<AtlasPlayer> loadPlayerByMojang(@NotNull String name);
 	
-	Future<AtlasPlayer> loadPlayerByMojang(UUID uuid);
+	Future<AtlasPlayer> loadPlayerByMojang(@NotNull UUID uuid);
 
 }

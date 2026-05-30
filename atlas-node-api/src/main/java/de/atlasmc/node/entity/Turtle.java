@@ -1,13 +1,15 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.node.WorldLocation;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.Location;
 
 public interface Turtle extends Animal {
 	
+	@NotNull
 	public static final NBTCodec<Turtle>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Turtle.class)
 					.include(Animal.NBT_CODEC)
 					.boolField("has_egg", Turtle::hasEgg, Turtle::setEgg, false)
@@ -43,7 +45,7 @@ public interface Turtle extends Animal {
 	
 	@Override
 	default NBTCodec<? extends Turtle> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

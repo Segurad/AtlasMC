@@ -11,10 +11,13 @@ import javax.crypto.SecretKey;
 import de.atlasmc.Atlas;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.event.HandlerList;
 import de.atlasmc.io.ProtocolException;
 import de.atlasmc.io.connection.ServerSocketConnectionHandler;
 import de.atlasmc.network.player.AtlasPlayer;
+import de.atlasmc.node.event.socket.AsyncPlayerLoginAttemptEvent;
 import de.atlasmc.node.io.protocol.LoginHandler;
+import de.atlasmc.node.io.protocol.handshake.HandshakeData;
 import de.atlasmc.node.io.protocol.login.ClientboundDisconnect;
 import de.atlasmc.node.io.protocol.login.ClientboundEncryptionRequest;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
@@ -27,9 +30,10 @@ public class CoreLoginHandler implements LoginHandler {
 	private static final int VERIFY_TOKEN_LENGTH = 32;
 	
 	private final ServerSocketConnectionHandler connection;
-	private final String name;
-	private final UUID uuid;
-	private final long loginTime;
+	private final HandshakeData handshakeData;
+	private volatile String name;
+	private volatile UUID uuid;
+	private volatile long loginTime;
 	private volatile boolean closed;
 	private volatile Chat disconnectMessage;
 	private volatile boolean useAuthentication;
@@ -38,16 +42,20 @@ public class CoreLoginHandler implements LoginHandler {
 	private volatile PlayerProfile profile;
 	private volatile boolean authenticated;
 	
-	public CoreLoginHandler(ServerSocketConnectionHandler connection, String name, UUID uuid, long loginTime) {
+	public CoreLoginHandler(ServerSocketConnectionHandler connection, HandshakeData handshake) {
 		this.connection = Objects.requireNonNull(connection);
-		this.name = Objects.requireNonNull(name);
-		this.uuid = Objects.requireNonNull(uuid);
+		this.handshakeData = Objects.requireNonNull(handshake);
 		this.connection.setExceptionHandler((con, e) -> {
 			disconnect(ChatUtil.toChat(e.getMessage()));
 			con.getLogger().error("Error in login process: " + CoreLoginHandler.this, e);
 			return true;
 		});
-		this.loginTime = loginTime;
+		this.loginTime = handshake.timestamp();
+	}
+	
+	@Override
+	public HandshakeData getHandshakeData() {
+		return handshakeData;
 	}
 	
 	@Override
@@ -188,6 +196,23 @@ public class CoreLoginHandler implements LoginHandler {
 			encryptionFuture.complete(false, e);
 			throw new ProtocolException("Failed to enable encryption!", e);
 		}
+	}
+
+	@Override
+	public synchronized void start(String name, UUID uuid, long timestamp) {
+		if (isStarted())
+			throw new ProtocolException("Login already started!");
+		name = Objects.requireNonNull(name);
+		uuid = Objects.requireNonNull(uuid);
+		loginTime = timestamp;
+		connection.getLogger().debug("Login started for {} with {} | {}", connection, name, uuid);
+		AsyncPlayerLoginAttemptEvent event = new AsyncPlayerLoginAttemptEvent(true, this);
+		HandlerList.callEvent(event);
+	}
+
+	@Override
+	public boolean isStarted() {
+		return name != null;
 	}
 
 }

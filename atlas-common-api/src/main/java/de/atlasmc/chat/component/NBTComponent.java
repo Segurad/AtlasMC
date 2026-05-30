@@ -1,10 +1,13 @@
 package de.atlasmc.chat.component;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
+
 import static de.atlasmc.nbt.codec.NBTCodecs.STRING;
 
 public class NBTComponent extends AbstractBaseComponent<NBTComponent> {
 	
+	@NotNull
 	public static final NBTCodec<NBTComponent>
 	NBT_CODEC = NBTCodec
 					.builder(NBTComponent.class)

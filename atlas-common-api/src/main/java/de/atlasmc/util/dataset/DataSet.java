@@ -8,6 +8,7 @@ import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.registry.ProtocolRegistryValue;
 import de.atlasmc.registry.RegistryKey;
 import de.atlasmc.tag.Tag;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface DataSet<T extends Namespaced> extends Iterable<T> {
 	
@@ -27,16 +28,19 @@ public interface DataSet<T extends Namespaced> extends Iterable<T> {
 		return new DataSetStreamCodec<>(key);
 	}
 	
+	@NotNull
 	static <T extends Namespaced> DataSet<T> of() {
 		@SuppressWarnings("unchecked")
 		DataSet<T> set = (DataSet<T>) EmptyDataSet.INSTANCE;
 		return set;
 	}
 	
+	@NotNull
 	static <T extends Namespaced> TagDataSet<T> of(Tag<T> tag) {
 		return new TagDataSet<>(tag);
 	}
 	
+	@NotNull
 	static <T extends Namespaced> DataSet<T> of(T value) {
 		if (value == null)
 			return of();
@@ -54,6 +58,7 @@ public interface DataSet<T extends Namespaced> extends Iterable<T> {
 		return new CollectionDataSet<>(values);
 	}
 	
+	@NotNull
 	static <T extends Namespaced> DataSet<T> of(Collection<T> values) {
 		if (values == null)
 			throw new IllegalArgumentException("Values can not be null!");

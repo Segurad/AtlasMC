@@ -4,11 +4,13 @@ import org.joml.Vector3i;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface EndCrystal extends Entity {
 	
+	@NotNull
 	public static final NBTCodec<EndCrystal>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(EndCrystal.class)
 					.include(Entity.NBT_CODEC)
 					.codec("beam_target", EndCrystal::getBeamTarget, EndCrystal::setBeamTarget, NBTCodecs.VECTOR_3I)
@@ -33,7 +35,7 @@ public interface EndCrystal extends Entity {
 	
 	@Override
 	default NBTCodec<? extends EndCrystal> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

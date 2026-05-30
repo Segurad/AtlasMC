@@ -1,11 +1,13 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Goat extends Animal {
 	
+	@NotNull
 	public static final NBTCodec<Goat>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Goat.class)
 					.include(Animal.NBT_CODEC)
 					.boolField("HasLeftHorn", Goat::hasLeftHorn, Goat::setLeftHorn, true)
@@ -27,7 +29,7 @@ public interface Goat extends Animal {
 	
 	@Override
 	default NBTCodec<? extends Goat> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

@@ -13,6 +13,7 @@ public interface PointedDripstone extends Waterlogged {
 	
 	void setDirection(VerticalDirection direction);
 	
+	@Override
 	PointedDripstone clone();
 	
 	public static enum Thickness implements EnumName {

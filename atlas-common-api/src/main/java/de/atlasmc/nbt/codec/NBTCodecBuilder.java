@@ -14,6 +14,7 @@ import de.atlasmc.nbt.codec.field.NBTCompoundFieldBuilder;
 import de.atlasmc.nbt.codec.field.NBTField;
 import de.atlasmc.registry.RegistryKey;
 import de.atlasmc.util.Builder;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumName;
 import de.atlasmc.util.function.ToBooleanFunction;
 
@@ -28,7 +29,7 @@ public class NBTCodecBuilder<T> implements AbstractNBTCompoundFieldBuilder<T, NB
 	protected final NBTCompoundFieldBuilder<T> root = new NBTCompoundFieldBuilder<T>().setKey("root");
 	protected NBTCompoundFieldBuilder<T> builder = root;
 	
-	protected NBTCodecBuilder(Class<T> clazz) {
+	protected NBTCodecBuilder(@NotNull Class<T> clazz) {
 		this.clazz = clazz;
 	}
 	
@@ -86,7 +87,7 @@ public class NBTCodecBuilder<T> implements AbstractNBTCompoundFieldBuilder<T, NB
 	}
 	
 	@SuppressWarnings("unchecked")
-	public NBTCodecBuilder<T> include(NBTCodec<? super T> include) {
+	public NBTCodecBuilder<T> include(@NotNull NBTCodec<? super T> include) {
 		if (!(include instanceof NBTCodecImpl codec))
 			throw new IllegalArgumentException("Codec must be instanceof NBTCodecImpl!");
 		if (!codec.getType().isAssignableFrom(clazz))

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.atlasmc.util.annotation.NotNull;
@@ -22,9 +23,7 @@ public class CommandArg {
 	private Map<String, VarCommandArg> varArgs;
  	
 	public CommandArg(@NotNull String name) {
-		if (name == null)
-			throw new IllegalArgumentException("Name can not be null!");
-		this.name = name;
+		this.name = Objects.requireNonNull(name, "name");
 	}
 	
 	/**

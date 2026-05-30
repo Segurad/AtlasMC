@@ -16,5 +16,12 @@ public interface PacketListener {
 	 * @throws IOException
 	 */
 	void handlePacket(ConnectionHandler handler, @NotNull Packet packet) throws IOException;
+	
+	/**
+	 * Handle a {@link Packet} this packet sync
+	 * @param packet
+	 * @throws IOException
+	 */
+	void handlePacketSync(ConnectionHandler handler, @NotNull Packet packet) throws IOException;
 
 }

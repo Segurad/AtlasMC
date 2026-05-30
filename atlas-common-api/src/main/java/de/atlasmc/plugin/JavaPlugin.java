@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import de.atlasmc.Atlas;
 import de.atlasmc.NamespacedKey;
@@ -37,7 +38,7 @@ public class JavaPlugin implements Plugin {
 	public final void enable() {
 		if (isEnabled())
 			return;
-		if (!isEnabled())
+		if (!isLoaded())
 			throw new IllegalStateException("Plugin has to be loaded first!");
 		onEnable();
 		enabled = true;
@@ -134,12 +135,8 @@ public class JavaPlugin implements Plugin {
 
 	@InternalAPI
 	public final synchronized void init(PrototypePlugin prototype, Log logger) {
-		if (prototype == null)
-			throw new IllegalArgumentException("Prototype can not be null!");
-		if (logger == null)
-			throw new IllegalArgumentException("Logger can not be null!");
-		this.prototype = prototype;
-		this.logger = logger;
+		this.prototype = Objects.requireNonNull(prototype, "prototype");
+		this.logger = Objects.requireNonNull(logger, "logger");
 	}
 
 	@Override

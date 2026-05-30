@@ -82,6 +82,7 @@ public class CoreEnchantingInventory extends CoreInventory implements Enchanting
 		return properties[PROPERTY_ENCH_SEED];
 	}
 	
+	@Override
 	public void setDisplayedSeed(int seed) {
 		updateProperty(PROPERTY_ENCH_SEED, seed);
 	}

@@ -2,6 +2,7 @@ package de.atlasmc.tag;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -16,14 +17,10 @@ public class Tag<T> implements Namespaced, Iterable<T> {
 	private Set<T> view;
 	protected final NamespacedKey identifier;
 	
-	public Tag(NamespacedKey identifier, Class<?> type) {
-		if (identifier == null)
-			throw new IllegalArgumentException("Identifier can not be null!");
-		if (type == null)
-			throw new IllegalArgumentException("Type can not be null!");
-		this.identifier = identifier;
+	public Tag(@NotNull NamespacedKey identifier, @NotNull Class<?> type) {
+		this.identifier = Objects.requireNonNull(identifier, "identifier");
 		this.values = ConcurrentHashMap.newKeySet();
-		this.type = type;
+		this.type = Objects.requireNonNull(type, "type");
 	}
 	
 	@Override

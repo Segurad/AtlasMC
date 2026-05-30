@@ -4,13 +4,15 @@ import java.util.UUID;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface ShulkerBullet extends Projectile {
 	
+	@NotNull
 	public static final NBTCodec<ShulkerBullet>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(ShulkerBullet.class)
-					.include(Projectile.NBT_HANDLER)
+					.include(Projectile.NBT_CODEC)
 					//.intField("Steps", null, null)
 					.codec("Target", ShulkerBullet::getTargetUUID, ShulkerBullet::setTargetUUID, NBTCodecs.UUID_CODEC)
 					//.doubleField("TXD", null, null)
@@ -28,7 +30,7 @@ public interface ShulkerBullet extends Projectile {
 	
 	@Override
 	default NBTCodec<? extends ShulkerBullet> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

@@ -3,6 +3,7 @@ package de.atlasmc.registry;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.registry.RegistryHolder.Target;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface RegistryHandler {
 
@@ -18,6 +19,7 @@ public interface RegistryHandler {
 	
 	<T extends Registry<?>> T getRegistry(Class<?> clazz);
 
+	@NotNull
 	Registry<Registry<?>> getRegistries();
 
 	boolean registerRegistry(Registry<?> registry);

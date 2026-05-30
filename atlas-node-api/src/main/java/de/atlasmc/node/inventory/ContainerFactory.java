@@ -1,6 +1,7 @@
 package de.atlasmc.node.inventory;
 
 import de.atlasmc.chat.Chat;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.factory.Factory;
 
 /**
@@ -125,18 +126,22 @@ public abstract class ContainerFactory<I extends Inventory> implements Factory {
 	 */
 	public static ContainerFactory<LoomInventory> LOOM_INV_FACTORY;
 	
+	@NotNull
 	public I create(InventoryHolder holder) {
 		return create(null, null, holder);
 	}
 	
+	@NotNull
 	public I create(InventoryType type, InventoryHolder holder) {
 		return create(type, null, holder);
 	}
 	
+	@NotNull
 	public I create(Chat title, InventoryHolder holder) {
 		return create(null, title, holder);
 	}
 	
+	@NotNull
 	public abstract I create(InventoryType type, Chat title, InventoryHolder holder);
 
 }

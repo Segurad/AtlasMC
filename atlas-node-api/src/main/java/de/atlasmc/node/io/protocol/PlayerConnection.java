@@ -24,6 +24,7 @@ import de.atlasmc.node.recipe.Recipe;
 import de.atlasmc.node.recipe.RecipeBook;
 import de.atlasmc.node.server.LocalServer;
 import de.atlasmc.plugin.channel.PluginChannelManager;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.annotation.ThreadSafe;
 import io.netty.util.concurrent.Future;
@@ -49,11 +50,22 @@ public interface PlayerConnection extends Messageable {
 	void setPlayer(Player player);
 	
 	/**
-	 * 
-	 * @return the current {@link Player} Entity bound to this connection or null
+	 * Returns the current {@link Player} Entity bound to this connection.
+	 * In most context like Server this method should be safe to call. 
+	 * This method throws a exception if no player is set to make it easier to find calls in improper context.
+	 * If you need to access a the player in a context that is not guaranteed to provide a entity,
+	 * either catch the exception or use {@link #hasPlayer()} to check if a player is bound
+	 * @return player
+	 * @throws IllegalStateException if not player is set
 	 */
-	@Nullable
+	@NotNull
 	Player getPlayer();
+	
+	/**
+	 * Returns whether or not a player entity is bound
+	 * @return true if has player
+	 */
+	boolean hasPlayer();
 	
 	/**
 	 * The node player associated with the connection

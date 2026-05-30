@@ -229,8 +229,6 @@ public class FileUtils {
 	}
 
 	public static void deleteDir(@NotNull File file) throws IOException {
-		if (file == null)
-			throw new IllegalArgumentException("File can not be null!");
 		deleteDir(file.toPath());
 	}
 	

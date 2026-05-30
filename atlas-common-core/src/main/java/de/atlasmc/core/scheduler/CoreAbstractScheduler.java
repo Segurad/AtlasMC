@@ -9,6 +9,7 @@ import de.atlasmc.scheduler.AtlasTask;
 import de.atlasmc.scheduler.Scheduler;
 import de.atlasmc.util.ConcurrentLinkedList;
 import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
+import de.atlasmc.util.annotation.NotNull;
 
 public abstract class CoreAbstractScheduler implements Scheduler {
 
@@ -189,6 +190,7 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 		return task.isDead();
 	}
 	
+	@NotNull
 	private AtlasTask asTask(Runnable task) {
 		if (task instanceof AtlasTask atlasTask) {
 			return atlasTask;
@@ -210,7 +212,6 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 		}
 		if (!syncTasks.isEmpty()) {
 			tasks = syncTasks.iterator();
-			task = null;
 			while ((task = tasks.next()) != null) {
 				tasks.remove();
 				task.getTask().cancel();

@@ -4,11 +4,13 @@ import java.util.List;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.ItemStack;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Piglin extends AbstractPiglin {
 	
+	@NotNull
 	public static final NBTCodec<Piglin>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Piglin.class)
 					.boolField("CannotHunt", Piglin::cannotHunt, Piglin::setCannotHunt, false)
 					.codecList("Inventory", Piglin::hasPocketItems, Piglin::getPocketItems, ItemStack.NBT_CODEC)
@@ -44,7 +46,7 @@ public interface Piglin extends AbstractPiglin {
 	
 	@Override
 	default NBTCodec<? extends Piglin> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

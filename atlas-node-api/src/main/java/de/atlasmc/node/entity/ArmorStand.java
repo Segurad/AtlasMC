@@ -4,14 +4,16 @@ import org.joml.Vector3f;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.UnsafeAPI;
 
 public interface ArmorStand extends LivingEntity {
 	
+	@NotNull
 	public static final NBTCodec<ArmorStand>
 	NBT_HANDLER = NBTCodec
 					.builder(ArmorStand.class)
-					.include(LivingEntity.NBT_HANDLER)
+					.include(LivingEntity.NBT_CODEC)
 					.intField("DisabledSlots", ArmorStand::getSlotInteractionFlags, ArmorStand::setSlotInteractionFlags, 0)
 					.boolField("Invisible", ArmorStand::isInvisible, ArmorStand::setInvisible, false)
 					.boolField("Marker", ArmorStand::isMarker, ArmorStand::setMarker, false)

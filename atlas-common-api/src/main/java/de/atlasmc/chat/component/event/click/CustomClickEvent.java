@@ -3,13 +3,15 @@ package de.atlasmc.chat.component.event.click;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.util.annotation.NotNull;
 
 public final class CustomClickEvent implements ClickEvent {
 	
+	@NotNull
 	public static final NBTCodec<CustomClickEvent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(CustomClickEvent.class)
-					.include(ClickEvent.NBT_HANDLER)
+					.include(ClickEvent.NBT_CODEC)
 					.codec("id", CustomClickEvent::getID, CustomClickEvent::setID, NamespacedKey.NBT_CODEC)
 					.codec("payload", CustomClickEvent::getPayload, CustomClickEvent::setPayload, NBTCodecs.STRING)
 					.build();
@@ -40,7 +42,7 @@ public final class CustomClickEvent implements ClickEvent {
 	
 	@Override
 	public NBTCodec<? extends CustomClickEvent> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

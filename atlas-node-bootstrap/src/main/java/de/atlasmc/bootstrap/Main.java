@@ -107,6 +107,7 @@ public class Main {
 		}
 		if (config == null) {
 			System.exit(1);
+			return;
 		}
 		
 		ChatUtil.init(new CoreChatFactory());
@@ -168,7 +169,9 @@ public class Main {
 			log.error("Error while running setup!", e);
 		}
 		
+		log.debug("Loading system registries...");
 		Registries.loadRegistries(Atlas.getSystem());
+		log.debug("Loading system registry data...");
 		Registries.loadRegistryEntries(Atlas.getSystem());
 		
 		pluginManager.loadPlugins(modulDir);
@@ -392,41 +395,31 @@ public class Main {
 			} catch (Exception e) {
 				log.error("Error while loading keypair!", e);
 				System.exit(1);
+				return null;
 			}
-			return null;
 		} else {
 			log.info("Generating keypair...");
-			KeyPairGenerator gen = null;
+			KeyPairGenerator gen;
 			try {
 				gen = KeyPairGenerator.getInstance("RSA");
 			} catch (NoSuchAlgorithmException e) {
 				log.error("Unable to find RSA key factory!", e);
 				System.exit(1);
+				return null;
 			}
 			gen.initialize(2048);
 			KeyPair pair = gen.generateKeyPair();
-			FileOutputStream out = null;
-			try {
-				out = new FileOutputStream(privateKeyFile);
+			try (var out = new FileOutputStream(privateKeyFile)) {
 				out.write(pair.getPrivate().getEncoded());
 			} catch (IOException e) {
 				log.error("Error while writing private key file!", e);
-			} finally {
-				try {
-					out.close();
-				} catch (IOException e) {}
 			}
 			String publicKey = EncryptionUtil.keyToString(pair.getPublic());
 			File publicKeyFile = new File(workDir, "node-key.pub");
-			try {
-				out = new FileOutputStream(publicKeyFile);
+			try (var out = new FileOutputStream(publicKeyFile)) {
 				out.write(publicKey.getBytes());
 			} catch (IOException e) {
 				log.error("Error while writing public key file!", e);
-			} finally {
-				try {
-					out.close();
-				} catch (IOException e) {}
 			}
 			log.info("\n\n{}", publicKey);
 			return pair;

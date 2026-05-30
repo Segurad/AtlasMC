@@ -216,12 +216,14 @@ commands:
 - name: plugin
   cmd-description: "Command to manage plugins"
   permission: atlas.plugins
+  aliases:
+  - pl
   args:
   - type: literal
     name: list
     description: "Lists all active plugins"
     executor: atlas:dummy_executor
-    permission: atlas.plugins.list
+    permission: atlas-core:command/list
   - type: var
     name: plugin
     parser: brigadier:string
@@ -255,7 +257,7 @@ commands:
     - type: literal
       name: info
       description: "Gives informations about the given plugin"
-      executor: atlas:dummy_executor
+      executor: atlas-core:command/info
     - type: literal
       name: unload
       description: "Unloads the given plugin"

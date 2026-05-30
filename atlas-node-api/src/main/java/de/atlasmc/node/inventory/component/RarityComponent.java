@@ -2,13 +2,15 @@ package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumName;
 import de.atlasmc.util.enums.EnumUtil;
 
 public interface RarityComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<RarityComponent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(RarityComponent.class)
 					.include(ItemComponent.NBT_CODEC)
 					.codec(ComponentType.RARITY.getNamespacedKey(), RarityComponent::getRarity, RarityComponent::setRarity, EnumUtil.enumStringNBTCodec(Rarity.class))
@@ -23,7 +25,7 @@ public interface RarityComponent extends ItemComponent {
 
 	@Override
 	default NBTCodec<? extends RarityComponent> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public static enum Rarity implements IDHolder, EnumName {
@@ -33,7 +35,7 @@ public interface RarityComponent extends ItemComponent {
 		RARE,
 		EPIC;
 			
-		private String name;
+		private final String name;
 		
 		private Rarity() {
 			this.name = name().toLowerCase().intern();

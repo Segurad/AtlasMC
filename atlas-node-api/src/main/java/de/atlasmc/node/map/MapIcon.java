@@ -5,11 +5,13 @@ import de.atlasmc.chat.Chat;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.util.CloneException;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumName;
 import de.atlasmc.util.enums.EnumUtil;
 
 public class MapIcon implements Cloneable, NBTSerializable {
 	
+	@NotNull
 	public static final NBTCodec<MapIcon>
 	NBT_CODEC = NBTCodec
 					.builder(MapIcon.class)
@@ -85,6 +87,7 @@ public class MapIcon implements Cloneable, NBTSerializable {
 		this.name = name;
 	}
 	
+	@Override
 	public MapIcon clone() {
 		try {
 			return (MapIcon) super.clone();

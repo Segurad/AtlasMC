@@ -18,7 +18,6 @@ import de.atlasmc.node.world.ChunkViewer;
 import de.atlasmc.node.world.Dimension;
 import de.atlasmc.node.world.World;
 import de.atlasmc.util.ViewerSet;
-import de.atlasmc.util.annotation.NotNull;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
@@ -62,7 +61,7 @@ public class CoreChunk implements Chunk {
 	}
 
 	@Override
-	public @NotNull ChunkSection getSection(int height) {
+	public ChunkSection getSection(int height) {
 		final int sIndex = getSectionIndex(height);
 		ChunkSection section = sections[sIndex];
 		if (section == null) {
@@ -147,7 +146,8 @@ public class CoreChunk implements Chunk {
 		TileEntity tile = null;
 		if (type != null) {
 			tile = type.createTileEntity();
-			tile.setLocation(this, x, y, z);
+			if (tile != null)
+				tile.setLocation(this, x, y, z);
 		}
 		return internalSetTileUnsafe(tile, x, y, z);
 	}
@@ -208,26 +208,17 @@ public class CoreChunk implements Chunk {
 
 	@Override
 	public BlockData getBlockDataAt(int x, int y, int z) {
-		ChunkSection section = getSection(y);
-		if (section == null) 
-			return null;
-		return section.getBlockData(x, y, z);
+		return hasSection(y) ? getSection(y).getBlockData(x, y, z) : null;
 	}
 	
 	@Override
 	public BlockData getBlockDataAtUnsafe(int x, int y, int z) {
-		ChunkSection section = getSection(y);
-		if (section == null) 
-			return null;
-		return section.getBlockDataUnsafe(x, y, z);
+		return hasSection(y) ? getSection(y).getBlockDataUnsafe(x, y, z) : null;
 	}
 
 	@Override
 	public BlockType getBlockType(int x, int y, int z) {
-		ChunkSection section = getSection(y);
-		if (section == null) 
-			return BlockType.AIR.get();
-		return section.getBlockType(x, y, z);
+		return hasSection(y) ? getSection(y).getBlockType(x, y, z) : BlockType.AIR.get();
 	}
 
 	@Override

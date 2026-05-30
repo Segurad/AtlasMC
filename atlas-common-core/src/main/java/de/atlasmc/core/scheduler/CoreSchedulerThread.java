@@ -54,14 +54,13 @@ public class CoreSchedulerThread extends TickingThread {
 		if (!scheduler.isDead()) 
 			return;
 		CoreAsyncTaskWorker worker = null;
-		do { // find queued non dead worker
-			worker = workerQueue.poll();
+		while ((worker = workerQueue.poll()) != null) { // find queued non dead worker
 			if (!worker.isAlive())
 				continue;
 			fetchedWorkers.add(worker);
 			worker.setTask(task);
 			return;
-		} while(worker != null);
+		}
 		tasks.add(task); // queue task
 	}
 	

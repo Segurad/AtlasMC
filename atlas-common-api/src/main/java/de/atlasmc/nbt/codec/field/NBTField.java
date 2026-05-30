@@ -7,6 +7,7 @@ import java.util.Objects;
 import de.atlasmc.nbt.TagType;
 import de.atlasmc.nbt.io.NBTReader;
 import de.atlasmc.nbt.io.NBTWriter;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.map.key.CharKey;
 
@@ -45,7 +46,7 @@ public abstract class NBTField<T> {
 	 * @return true of field was handled successfully
 	 * @throws IOException
 	 */
-	public abstract boolean serialize(T type, NBTWriter writer, CodecContext context) throws IOException;
+	public abstract boolean serialize(T type, @NotNull NBTWriter writer, CodecContext context) throws IOException;
 	
 	/**
 	 * Deserializes the field for the given type
@@ -54,6 +55,6 @@ public abstract class NBTField<T> {
 	 * @param context used in this operation
 	 * @throws IOException
 	 */
-	public abstract void deserialize(T type, NBTReader reader, CodecContext context) throws IOException;
+	public abstract void deserialize(T type, @NotNull NBTReader reader, CodecContext context) throws IOException;
 	
 }

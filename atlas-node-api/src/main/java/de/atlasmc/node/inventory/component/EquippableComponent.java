@@ -8,13 +8,15 @@ import de.atlasmc.node.inventory.EquipmentSlot;
 import de.atlasmc.node.sound.EnumSound;
 import de.atlasmc.node.sound.ResourceSound;
 import de.atlasmc.node.sound.Sound;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.dataset.DataSet;
 import de.atlasmc.util.enums.EnumUtil;
 
 public interface EquippableComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<EquippableComponent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(EquippableComponent.class)
 					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.EQUIPPABLE.getNamespacedKey())
@@ -30,6 +32,7 @@ public interface EquippableComponent extends ItemComponent {
 					.endComponent()
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<EquippableComponent>
 	STREAM_CODEC = StreamCodec
 					.builder(EquippableComponent.class)
@@ -93,11 +96,12 @@ public interface EquippableComponent extends ItemComponent {
 	
 	void setAssetID(NamespacedKey assetID);
 	
+	@Override
 	EquippableComponent clone();
 	
 	@Override
 	default NBTCodec<? extends EquippableComponent> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	@Override

@@ -3,15 +3,18 @@ package de.atlasmc.node.inventory.component;
 import de.atlasmc.Color;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface DyedColorComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<DyedColorComponent>
 	NBT_CODEC = NBTCodec
 					.builder(DyedColorComponent.class)
 					.codec(ComponentType.DYED_COLOR.getNamespacedKey(), DyedColorComponent::getColor, DyedColorComponent::setColor, Color.NBT_CODEC)
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<DyedColorComponent>
 	STREAM_CODEC = StreamCodec
 					.builder(DyedColorComponent.class)
@@ -23,6 +26,7 @@ public interface DyedColorComponent extends ItemComponent {
 	
 	void setColor(Color color);
 	
+	@Override
 	DyedColorComponent clone();
 	
 	@Override

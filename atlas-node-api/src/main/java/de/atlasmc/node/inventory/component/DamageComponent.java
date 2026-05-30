@@ -2,9 +2,11 @@ package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface DamageComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<DamageComponent> 
 	NBT_HANDLER = NBTCodec
 			.builder(DamageComponent.class)
@@ -12,6 +14,7 @@ public interface DamageComponent extends ItemComponent {
 			.intField(ComponentType.DAMAGE.getNamespacedKey(), DamageComponent::getDamage, DamageComponent::setDamage)
 			.build();
 	
+	@NotNull
 	public static final StreamCodec<DamageComponent>
 	STREAM_CODEC = StreamCodec
 					.builder(DamageComponent.class)
@@ -23,6 +26,7 @@ public interface DamageComponent extends ItemComponent {
 	
 	void setDamage(int damage);
 	
+	@Override
 	DamageComponent clone();
 	
 	@Override

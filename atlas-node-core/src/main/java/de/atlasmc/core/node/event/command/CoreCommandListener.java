@@ -10,7 +10,7 @@ import de.atlasmc.event.command.CommandEvent;
 public class CoreCommandListener implements Listener {
 	
 	@EventHandler
-	public void onCommand(CommandEvent event) {
+	private void onCommand(CommandEvent event) {
 		if (event.isCancelled())
 			return;
 		String command = event.getCommand();

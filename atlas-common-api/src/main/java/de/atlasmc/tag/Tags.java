@@ -50,8 +50,7 @@ public class Tags {
 		}
 		ProtocolTag<T> tag = new ProtocolTag<T>(key, registry);
 		tags.put(key, tag);
-		if (registry != null)
-			registryTags.put(registry.getNamespacedKey(), tag);
+		registryTags.put(registry.getNamespacedKey(), tag);
 		modifyLock.unlock();
 		return tag;
 	}

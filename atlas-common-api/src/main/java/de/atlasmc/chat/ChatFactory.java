@@ -5,6 +5,7 @@ import java.io.IOException;
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.nbt.io.NBTReader;
 import de.atlasmc.nbt.io.NBTWriter;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface ChatFactory {
 	
@@ -21,6 +22,7 @@ public interface ChatFactory {
 	
 	ChatComponent jsonToComponent(CharSequence json);
 	
+	@NotNull
 	String componentToRawText(ChatComponent component);
 	
 	String componentToLegacy(ChatComponent component, char formatPrefix);

@@ -10,15 +10,17 @@ import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.registry.RegistryKey;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumUtil;
 import de.atlasmc.util.map.key.CharKey;
 
 public interface Wolf extends Tameable, AngerableMob {
 	
+	@NotNull
 	public static final NBTCodec<Wolf>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Wolf.class)
-					.include(Tameable.NBT_HANDLER)
+					.include(Tameable.NBT_CODEC)
 					.include(AngerableMob.NBT_CODEC)
 					.codec("CollarColor", Wolf::getCollarColor, Wolf::setCollarColor, EnumUtil.enumByteNBTCodec(DyeColor.class), DyeColor.RED)
 					.codec("variant", Wolf::getVariant, Wolf::setVariant, Registries.registryValueNBTCodec(WolfVariant.REGISTRY_KEY))
@@ -39,7 +41,7 @@ public interface Wolf extends Tameable, AngerableMob {
 	
 	@Override
 	default NBTCodec<? extends Wolf> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	@RegistryHolder(key = "minecraft:wolf_variant", target = Target.PROTOCOL)
@@ -47,8 +49,9 @@ public interface Wolf extends Tameable, AngerableMob {
 
 		public static final RegistryKey<WolfVariant> REGISTRY_KEY = Registries.getRegistryKey(WolfVariant.class);
 		
+		@NotNull
 		public static final NBTCodec<WolfVariant>
-		NBT_HANDLER = NBTCodec
+		NBT_CODEC = NBTCodec
 						.builder(WolfVariant.class)
 						.defaultConstructor(WolfVariant::new)
 						.beginComponent("assets")
@@ -130,7 +133,7 @@ public interface Wolf extends Tameable, AngerableMob {
 		
 		@Override
 		public NBTCodec<? extends WolfVariant> getNBTCodec() {
-			return NBT_HANDLER;
+			return NBT_CODEC;
 		}
 		
 	}

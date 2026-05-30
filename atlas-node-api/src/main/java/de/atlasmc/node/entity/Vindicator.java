@@ -1,13 +1,15 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Vindicator extends AbstractIllager {
 	
+	@NotNull
 	public static final NBTCodec<Vindicator>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Vindicator.class)
-					.include(AbstractIllager.NBT_HANDLER)
+					.include(AbstractIllager.NBT_CODEC)
 					.boolField("Johnny", Vindicator::isJohnny, Vindicator::setJohnny, false)
 					.build();
 
@@ -17,7 +19,7 @@ public interface Vindicator extends AbstractIllager {
 	
 	@Override
 	default NBTCodec<? extends Vindicator> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

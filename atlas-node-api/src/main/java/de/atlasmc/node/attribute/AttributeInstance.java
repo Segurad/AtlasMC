@@ -10,9 +10,11 @@ import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.inventory.EquipmentSlot;
 import de.atlasmc.util.AtlasUtil;
+import de.atlasmc.util.annotation.NotNull;
 
 public class AttributeInstance implements NBTSerializable {
 	
+	@NotNull
 	public static final NBTCodec<AttributeInstance>
 	NBT_HANDLER = NBTCodec
 					.builder(AttributeInstance.class)

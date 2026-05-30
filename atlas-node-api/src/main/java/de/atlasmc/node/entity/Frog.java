@@ -2,13 +2,15 @@ package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumName;
 import de.atlasmc.util.enums.EnumUtil;
 
 public interface Frog extends Animal {
 
+	@NotNull
 	public static final NBTCodec<Frog>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Frog.class)
 					.include(Animal.NBT_CODEC)
 					.codec("variant", Frog::getVariant, Frog::setVariant, EnumUtil.enumStringNBTCodec(Variant.class), Variant.TEMPERATE)
@@ -24,7 +26,7 @@ public interface Frog extends Animal {
 	
 	@Override
 	default NBTCodec<? extends Frog> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public static enum Variant implements EnumName, IDHolder {

@@ -2,13 +2,15 @@ package de.atlasmc.node.entity;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.ItemStack;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface ThrowableProjectile extends Projectile {
 	
+	@NotNull
 	public static final NBTCodec<ThrowableProjectile>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(ThrowableProjectile.class)
-					.include(Projectile.NBT_HANDLER)
+					.include(Projectile.NBT_CODEC)
 					.codec("Item", ThrowableProjectile::getItem, ThrowableProjectile::setItem, ItemStack.NBT_CODEC)
 					.build();
 
@@ -18,7 +20,7 @@ public interface ThrowableProjectile extends Projectile {
 	
 	@Override
 	default NBTCodec<? extends ThrowableProjectile> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

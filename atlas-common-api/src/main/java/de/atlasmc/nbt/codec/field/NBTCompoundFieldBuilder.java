@@ -213,6 +213,7 @@ public class NBTCompoundFieldBuilder<T> extends NBTFieldBuilder<T, NBTCompoundFi
 		return array;
 	}
 	
+	@Override
 	public NBTCompoundFieldBuilder<T> addField(NBTField<T> field) {
 		if (field == null)
 			throw new IllegalArgumentException("Field can not be null!");

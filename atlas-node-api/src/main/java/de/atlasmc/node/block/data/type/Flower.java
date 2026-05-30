@@ -10,6 +10,7 @@ public interface Flower extends Directional {
 	
 	int getMaxFlowerAmount();
 
+	@Override
 	Flower clone();
 	
 }

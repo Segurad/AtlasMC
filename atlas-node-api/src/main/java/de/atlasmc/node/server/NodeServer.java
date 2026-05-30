@@ -16,7 +16,6 @@ public interface NodeServer extends Server {
 	
 	@NotNull
 	Collection<NodePlayer> getPlayers();
-	
 
 	@ThreadSafe
 	@NotNull
@@ -33,9 +32,6 @@ public interface NodeServer extends Server {
 	@ThreadSafe
 	@NotNull
 	Future<Boolean> stop();
-	
-	@ThreadSafe
-	boolean isRunning();
 
 	@ThreadSafe
 	@NotNull

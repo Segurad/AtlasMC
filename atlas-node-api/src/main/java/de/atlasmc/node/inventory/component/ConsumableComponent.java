@@ -9,23 +9,26 @@ import de.atlasmc.node.inventory.component.effect.ComponentEffect;
 import de.atlasmc.node.sound.EnumSound;
 import de.atlasmc.node.sound.ResourceSound;
 import de.atlasmc.node.sound.Sound;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumName;
 import de.atlasmc.util.enums.EnumUtil;
 
 public interface ConsumableComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<ConsumableComponent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(ConsumableComponent.class)
 					.beginComponent(ComponentType.CONSUMABLE.getNamespacedKey())
 					.floatField("consume_seconds", ConsumableComponent::getConsumeSeconds, ConsumableComponent::setConsumeSeconds, 1.6f)
 					.codec("animation", ConsumableComponent::getAnimation, ConsumableComponent::setAnimation, EnumUtil.enumStringNBTCodec(Animation.class), Animation.EAT)
 					.codec("sound", ConsumableComponent::getSound, ConsumableComponent::setSound, Sound.NBT_CODEC, EnumSound.ENTITY_GENERIC_EAT)
 					.boolField("has_consume_particles", ConsumableComponent::hasParticles, ConsumableComponent::setParticles)
-					.codecList("on_consume_effects", ConsumableComponent::hasEffects, ConsumableComponent::getEffects, ComponentEffect.NBT_HANDLER)
+					.codecList("on_consume_effects", ConsumableComponent::hasEffects, ConsumableComponent::getEffects, ComponentEffect.NBT_CODEC)
 					.endComponent()
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<ConsumableComponent>
 	STREAM_CODEC = StreamCodec
 					.builder(ConsumableComponent.class)
@@ -61,7 +64,18 @@ public interface ConsumableComponent extends ItemComponent {
 	
 	void removeEffect(ComponentEffect effect);
 	
+	@Override
 	ConsumableComponent clone();
+	
+	@Override
+	default NBTCodec<? extends ConsumableComponent> getNBTCodec() {
+		return NBT_CODEC;
+	}
+	
+	@Override
+	default StreamCodec<? extends ConsumableComponent> getStreamCodec() {
+		return STREAM_CODEC;
+	}
 	
 	public static enum Animation implements EnumName, IDHolder {
 		

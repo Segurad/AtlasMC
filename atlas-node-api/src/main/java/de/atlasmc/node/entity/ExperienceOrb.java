@@ -1,11 +1,13 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface ExperienceOrb extends Entity {
 	
+	@NotNull
 	public static final NBTCodec<ExperienceOrb>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(ExperienceOrb.class)
 					.include(Entity.NBT_CODEC)
 					.shortField("Age", ExperienceOrb::getLifeTime, ExperienceOrb::setLifeTime, (short) 6000)
@@ -13,6 +15,7 @@ public interface ExperienceOrb extends Entity {
 					.shortField("Health", ExperienceOrb::getHealth, ExperienceOrb::setHealth, (short) 5)
 					.shortField("Value", ExperienceOrb::getExperience, ExperienceOrb::setExperience)
 					.build();
+	
 	int getExperience();
 	
 	void setExperience(int xp);
@@ -35,7 +38,7 @@ public interface ExperienceOrb extends Entity {
 	
 	@Override
 	default NBTCodec<? extends ExperienceOrb> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

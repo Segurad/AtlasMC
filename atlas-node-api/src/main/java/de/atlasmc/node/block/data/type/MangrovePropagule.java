@@ -6,6 +6,7 @@ import de.atlasmc.node.block.data.Waterlogged;
 
 public interface MangrovePropagule extends Ageable, Sapling, Waterlogged, Hangable {
 	
+	@Override
 	MangrovePropagule clone();
 
 }

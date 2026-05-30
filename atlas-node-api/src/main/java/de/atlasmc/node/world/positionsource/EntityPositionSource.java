@@ -9,9 +9,11 @@ import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.node.entity.Entity;
 import de.atlasmc.node.world.World;
+import de.atlasmc.util.annotation.NotNull;
 
 public class EntityPositionSource implements PositionSource {
 
+	@NotNull
 	public static final NBTCodec<EntityPositionSource>
 	NBT_CODEC = NBTCodec
 				.builder(EntityPositionSource.class)
@@ -20,6 +22,7 @@ public class EntityPositionSource implements PositionSource {
 				.floatField("y_offset", EntityPositionSource::getOffset, EntityPositionSource::setOffset, 0)
 				.build();
 	
+	@NotNull
 	public static final StreamCodec<EntityPositionSource>
 	STREAM_CODEC = StreamCodec
 					.builder(EntityPositionSource.class)

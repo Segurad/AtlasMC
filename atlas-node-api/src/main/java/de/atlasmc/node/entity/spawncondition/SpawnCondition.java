@@ -2,11 +2,13 @@ package de.atlasmc.node.entity.spawncondition;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTSerializable;
+import de.atlasmc.util.annotation.NotNull;
 
 public class SpawnCondition implements NBTSerializable {
 	
+	@NotNull
 	public static final NBTCodec<SpawnCondition>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(SpawnCondition.class)
 					.defaultConstructor(SpawnCondition::new)
 					.intField("priority", SpawnCondition::getPriority, SpawnCondition::setPriority)
@@ -45,7 +47,7 @@ public class SpawnCondition implements NBTSerializable {
 	
 	@Override
 	public NBTCodec<? extends SpawnCondition> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

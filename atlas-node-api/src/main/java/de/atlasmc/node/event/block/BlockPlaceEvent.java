@@ -80,7 +80,7 @@ public class BlockPlaceEvent extends BlockEvent implements Cancellable {
 	}
 	
 	public boolean canBuild() {
-		return player.getCanBuild();
+		return player.canBuild();
 	}
 	
 	public void setBuild(boolean canBuild) {

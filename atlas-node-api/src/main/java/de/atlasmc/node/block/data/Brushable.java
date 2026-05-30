@@ -8,6 +8,7 @@ public interface Brushable extends BlockData {
 	
 	void setDusted(int dusted);
 	
+	@Override
 	Brushable clone();
 
 }

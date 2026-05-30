@@ -2,13 +2,15 @@ package de.atlasmc.node.block.tile;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.AbstractFurnaceInventory;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Furnace extends AbstractContainerTile<AbstractFurnaceInventory> {
 
+	@NotNull
 	public static final NBTCodec<Furnace>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Furnace.class)
-					.include(AbstractContainerTile.NBT_HANDLER)
+					.include(AbstractContainerTile.NBT_CODEC)
 					.shortField("lit_time_remaining", Furnace::getFuelLevel, Furnace::setFuelLevel, (short) 0)
 					.shortField("cooking_time_spend", Furnace::getProgress, Furnace::setProgress, (short) 0)
 					.shortField("cooking_time_total", Furnace::getMaxProgress, Furnace::setMaxProgress, (short) 0)
@@ -50,7 +52,7 @@ public interface Furnace extends AbstractContainerTile<AbstractFurnaceInventory>
 	
 	@Override
 	default NBTCodec<? extends Furnace> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

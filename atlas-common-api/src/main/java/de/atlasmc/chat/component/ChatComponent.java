@@ -17,6 +17,7 @@ import de.atlasmc.chat.component.event.hover.HoverTextEvent;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.nbt.tag.NBT;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 
 public interface ChatComponent extends Chat, NBTSerializable {
@@ -26,6 +27,7 @@ public interface ChatComponent extends Chat, NBTSerializable {
 		FONT_ALT = "minecraft:alt",
 		FONT_UNIFORM = "minecraft:uniform";
 	
+	@NotNull
 	public static final NBTCodec<ChatComponent> 
 	NBT_CODEC = NBTCodec
 					.builder(ChatComponent.class)
@@ -118,6 +120,7 @@ public interface ChatComponent extends Chat, NBTSerializable {
 
 	ChatComponent setExtra(Collection<ChatComponent> extra);
 	
+	@Override
 	ChatComponent clone();
 	
 	@Override

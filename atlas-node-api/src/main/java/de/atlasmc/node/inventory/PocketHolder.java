@@ -7,8 +7,9 @@ import de.atlasmc.util.annotation.NotNull;
 
 public interface PocketHolder {
 	
+	@NotNull
 	public static final NBTCodec<PocketHolder>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(PocketHolder.class)
 					.codecList("Inventory", PocketHolder::hasPocketItems, PocketHolder::getPocketItems, ItemStack.NBT_CODEC)
 					.build();

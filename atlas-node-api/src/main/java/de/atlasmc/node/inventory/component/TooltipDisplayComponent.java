@@ -4,11 +4,13 @@ import java.util.List;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.registry.Registries;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface TooltipDisplayComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<TooltipDisplayComponent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(TooltipDisplayComponent.class)
 					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.TOOLTIP_DISPLAY.getNamespacedKey())
@@ -25,11 +27,12 @@ public interface TooltipDisplayComponent extends ItemComponent {
 	
 	boolean hasHiddenComponents();
 	
+	@Override
 	TooltipDisplayComponent clone();
 	
 	@Override
 	default NBTCodec<? extends TooltipDisplayComponent> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

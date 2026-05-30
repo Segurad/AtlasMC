@@ -3,9 +3,11 @@ package de.atlasmc.node.inventory.component;
 import de.atlasmc.Color;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface MapColorComponent extends ItemComponent {
 
+	@NotNull
 	public static final NBTCodec<MapColorComponent>
 	NBT_CODEC = NBTCodec
 					.builder(MapColorComponent.class)
@@ -24,6 +26,7 @@ public interface MapColorComponent extends ItemComponent {
 	
 	void setColor(Color color);
 	
+	@Override
 	MapColorComponent clone();
 	
 	@Override

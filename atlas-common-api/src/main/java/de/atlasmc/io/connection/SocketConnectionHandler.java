@@ -89,7 +89,6 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 		super(log, protocol);
 		this.queue = new ConcurrentLinkedQueue<>();
 		this.channel = Objects.requireNonNull(channel);
-		
 		channel.pipeline()
 		.addLast(CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER, new OutboundErrorHandler(this.getLogger()))
 		.addLast(CHANNEL_PIPE_PACKET_LENGTH_DECODER, new PacketLengthDecoder())

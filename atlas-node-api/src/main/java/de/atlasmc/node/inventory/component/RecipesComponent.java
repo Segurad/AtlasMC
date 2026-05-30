@@ -4,11 +4,13 @@ import java.util.List;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface RecipesComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<RecipesComponent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(RecipesComponent.class)
 					.include(ItemComponent.NBT_CODEC)
 					.codecList(ComponentType.RECIPES.getNamespacedKey(), RecipesComponent::hasRecipes, RecipesComponent::getRecipes, NamespacedKey.NBT_CODEC)
@@ -32,11 +34,12 @@ public interface RecipesComponent extends ItemComponent {
 		return false;
 	}
 	
+	@Override
 	RecipesComponent clone();
 	
 	@Override
 	default NBTCodec<? extends RecipesComponent> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

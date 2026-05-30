@@ -12,11 +12,15 @@ import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.property.PropertyType;
 import de.atlasmc.util.AtlasUtil;
+import de.atlasmc.util.OpenCloneable;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.codec.CodecContext;
 
-public interface BlockData extends Cloneable, NBTSerializable {
+public interface BlockData extends OpenCloneable, NBTSerializable {
 
-	public static final NBTCodec<BlockData> PROPERTIES_NBT_CODEC = new NBTCodec<BlockData>() {
+	@NotNull
+	public static final NBTCodec<BlockData> 
+	PROPERTIES_NBT_CODEC = new NBTCodec<BlockData>() {
 		
 		@Override
 		public Class<?> getType() {
@@ -58,6 +62,7 @@ public interface BlockData extends Cloneable, NBTSerializable {
 		}
 	};
 	
+	@NotNull
 	public static final NBTCodec<BlockData>
 	NBT_CODEC = NBTCodec
 					.builder(BlockData.class)
@@ -65,8 +70,10 @@ public interface BlockData extends Cloneable, NBTSerializable {
 					.codec("Properties", AtlasUtil.getSelf(), AtlasUtil.getSetVoid(), PROPERTIES_NBT_CODEC)
 					.build();
 	
+	@Override
 	BlockData clone();
 	
+	@NotNull
 	BlockType getType();
 	
 	int getStateID();

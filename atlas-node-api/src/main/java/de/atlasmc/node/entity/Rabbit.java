@@ -2,12 +2,14 @@ package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumUtil;
 
 public interface Rabbit extends Animal {
 	
+	@NotNull
 	public static final NBTCodec<Rabbit>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Rabbit.class)
 					.include(Animal.NBT_CODEC)
 					//.intField("MoreCarrotTicks", null, null)
@@ -20,7 +22,7 @@ public interface Rabbit extends Animal {
 	
 	@Override
 	default NBTCodec<? extends Rabbit> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public static enum Type implements IDHolder {

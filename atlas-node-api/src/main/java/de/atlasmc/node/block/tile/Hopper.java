@@ -2,13 +2,15 @@ package de.atlasmc.node.block.tile;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.Inventory;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Hopper extends AbstractContainerTile<Inventory> {
 	
+	@NotNull
 	public static final NBTCodec<Hopper>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Hopper.class)
-					.include(AbstractContainerTile.NBT_HANDLER)
+					.include(AbstractContainerTile.NBT_CODEC)
 					.intField("TransferCooldown", Hopper::getTransferCooldown, Hopper::setTransferCooldown)
 					.build();
 	
@@ -18,7 +20,7 @@ public interface Hopper extends AbstractContainerTile<Inventory> {
 	
 	@Override
 	default NBTCodec<? extends Hopper> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

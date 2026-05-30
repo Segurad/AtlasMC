@@ -3,9 +3,11 @@ package de.atlasmc.node.world.particle;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.block.data.BlockData;
+import de.atlasmc.util.annotation.NotNull;
 
 public class BlockDataParticle extends AbstractParticle {
 
+	@NotNull
 	public static final NBTCodec<BlockDataParticle>
 	NBT_CODEC = NBTCodec
 				.builder(BlockDataParticle.class)
@@ -13,6 +15,7 @@ public class BlockDataParticle extends AbstractParticle {
 				.codec("block_state", BlockDataParticle::getData, BlockDataParticle::setData, BlockData.NBT_CODEC)
 				.build();
 	
+	@NotNull
 	public static final StreamCodec<BlockDataParticle>
 	STREAM_CODEC = StreamCodec
 					.builder(BlockDataParticle.class)

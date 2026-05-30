@@ -9,6 +9,7 @@ public interface BigDripleaf extends Dripleaf {
 	
 	void setTilt(Tilt tilt);
 	
+	@Override
 	BigDripleaf clone();
 	
 	public static enum Tilt implements IDHolder, EnumName {
@@ -18,7 +19,7 @@ public interface BigDripleaf extends Dripleaf {
 		PARTIAL,
 		FULL;
 		
-		private String name;
+		private final String name;
 		
 		private Tilt() {
 			this.name = name().toLowerCase().intern();

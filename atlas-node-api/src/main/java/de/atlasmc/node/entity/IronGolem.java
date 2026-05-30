@@ -1,13 +1,15 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface IronGolem extends AbstractGolem {
 	
+	@NotNull
 	public static final NBTCodec<IronGolem>
 	NBT_HANDLER = NBTCodec
 					.builder(IronGolem.class)
-					.include(AbstractGolem.NBT_HANDLER)
+					.include(AbstractGolem.NBT_CODEC)
 					.boolField("PlayerCreated", IronGolem::isPlayerCreated, IronGolem::setPlayerCreated, false)
 					.build();
 	

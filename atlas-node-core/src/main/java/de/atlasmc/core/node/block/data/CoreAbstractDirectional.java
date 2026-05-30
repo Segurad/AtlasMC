@@ -37,8 +37,6 @@ public abstract class CoreAbstractDirectional extends CoreBlockData implements D
 
 	@Override
 	public void setFacing(BlockFace face) {
-		if (face == null) 
-			throw new IllegalArgumentException("BlockFace can not be null!");
 		if (getFaceValue(face) == -1) 
 			throw new IllegalArgumentException("BlockFace is not valid: " + face.name());
 		this.face = face;

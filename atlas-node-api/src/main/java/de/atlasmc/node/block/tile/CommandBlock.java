@@ -7,13 +7,15 @@ import de.atlasmc.command.CommandSender;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.node.Nameable;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface CommandBlock extends TileEntity, Nameable, CommandSender {
 	
+	@NotNull
 	public static final NBTCodec<CommandBlock>
 	NBT_HANDLER = NBTCodec
 					.builder(CommandBlock.class)
-					.include(TileEntity.NBT_HANDLER)
+					.include(TileEntity.NBT_CODEC)
 					.boolField("auto", CommandBlock::isAlwaysActive, CommandBlock::setAlwaysActive)
 					.codec("Command", CommandBlock::getCommand, CommandBlock::setCommand, NBTCodecs.STRING)
 					.boolField("conditionMet", CommandBlock::isConditionMet, CommandBlock::setConditionMet)

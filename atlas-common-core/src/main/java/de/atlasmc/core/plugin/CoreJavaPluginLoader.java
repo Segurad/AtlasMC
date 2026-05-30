@@ -11,7 +11,7 @@ import java.util.jar.JarFile;
 import de.atlasmc.plugin.JavaPlugin;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginLoader;
-import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
 
@@ -78,7 +78,7 @@ public class CoreJavaPluginLoader implements PluginLoader {
 	 * @return info as {@link Configuration} or null if not present
 	 * @throws IOException
 	 */
-	@NotNull
+	@Nullable
 	private Configuration getInfo(File file) throws IOException {
 		try (JarFile jar = new JarFile(file)) {
 			JarEntry entry = jar.getJarEntry("atlas-plugin.yml");

@@ -1,13 +1,15 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface SkeletonHorse extends AbstractHorse {
 
+	@NotNull
 	public static final NBTCodec<SkeletonHorse>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(SkeletonHorse.class)
-					.include(AbstractHorse.NBT_HANDLER)
+					.include(AbstractHorse.NBT_CODEC)
 					.boolField("SkeletonTrap", SkeletonHorse::isSkeletonTrap, SkeletonHorse::setSkeletonTrap, false)
 					.intField("SkeletonTrapTime", SkeletonHorse::getSkeletonTrapTime, SkeletonHorse::setSkeletonTrapTime, 0)
 					.build();
@@ -22,7 +24,7 @@ public interface SkeletonHorse extends AbstractHorse {
 	
 	@Override
 	default NBTCodec<? extends SkeletonHorse> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

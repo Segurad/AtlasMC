@@ -2,10 +2,12 @@ package de.atlasmc.core.node.block.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.block.data.property.PropertyType;
+import de.atlasmc.util.CloneException;
 import de.atlasmc.util.annotation.NotNull;
 
 public class CoreBlockData implements BlockData {
@@ -14,17 +16,17 @@ public class CoreBlockData implements BlockData {
 	
 	protected final BlockType type;
 	
-	public CoreBlockData(BlockType material) {
-		if (material == null) 
-			throw new IllegalArgumentException("BlockType can not be null!");
-		this.type = material;
+	public CoreBlockData(BlockType type) {
+		this.type = Objects.requireNonNull(type, "type");
 	}
 	
+	@Override
 	public BlockData clone() {
 		try {
 			return (BlockData) super.clone();
-		} catch (CloneNotSupportedException e) {}
-		return null;
+		} catch (CloneNotSupportedException e) {
+			throw new CloneException(e);
+		}
 	}
 
 	@Override
@@ -40,6 +42,21 @@ public class CoreBlockData implements BlockData {
 	@Override
 	public List<PropertyType<?>> getProperties() {
 		return PROPERTIES;
+	}
+	
+	@Override
+	public int hashCode() {
+		int hash = 31;
+		hash = 31 * hash + type.hashCode();
+		hash = 31 * hash + getStateID();
+		return hash;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof BlockData data)
+			return data.getType() == type && getStateID() == data.getStateID();
+		return false;
 	}
 	
 	@Override

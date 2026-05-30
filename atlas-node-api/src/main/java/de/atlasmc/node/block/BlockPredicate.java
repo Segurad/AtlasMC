@@ -8,19 +8,22 @@ import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.block.data.property.PropertyValuePredicate;
 import de.atlasmc.node.block.tile.TileEntity;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.dataset.DataSet;
 
 public class BlockPredicate implements NBTSerializable, StreamSerializable {
 
+	@NotNull
 	public static final NBTCodec<BlockPredicate>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(BlockPredicate.class)
 					.defaultConstructor(BlockPredicate::new)
 					.codec("blocks", BlockPredicate::getTypes, BlockPredicate::setTypes, DataSet.nbtCodec(BlockType.REGISTRY_KEY))
-					.codec("nbt", BlockPredicate::getTile, BlockPredicate::setTile, TileEntity.NBT_HANDLER)
+					.codec("nbt", BlockPredicate::getTile, BlockPredicate::setTile, TileEntity.NBT_CODEC)
 					.codecCollection("state", BlockPredicate::hasStates, BlockPredicate::getStates, PropertyValuePredicate.LIST_NBT_CODEC)
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<BlockPredicate>
 	STREAM_CODEC = StreamCodec
 					.builder(BlockPredicate.class)
@@ -30,7 +33,7 @@ public class BlockPredicate implements NBTSerializable, StreamSerializable {
 					.optional(BlockPredicate::hasStates)
 					.listCodec(BlockPredicate::hasStates, BlockPredicate::getStates, PropertyValuePredicate.STREAM_CODEC)
 					.optional(BlockPredicate::hasTile)
-					.codec(BlockPredicate::getTile, BlockPredicate::setTile, TileEntity.NBT_HANDLER)
+					.codec(BlockPredicate::getTile, BlockPredicate::setTile, TileEntity.NBT_CODEC)
 					.staticBooleanValue(false) // TODO match data component
 					.staticBooleanValue(false) // TODO data component predicates
 					.build();
@@ -75,7 +78,7 @@ public class BlockPredicate implements NBTSerializable, StreamSerializable {
 	
 	@Override
 	public NBTCodec<? extends BlockPredicate> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	@Override

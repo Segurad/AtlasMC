@@ -1,33 +1,33 @@
 package de.atlasmc.core.node.world;
 
+import java.util.function.ToIntFunction;
+
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.util.palette.AdaptivePalette;
-import de.atlasmc.node.util.palette.GlobalValueProvider;
 import de.atlasmc.node.util.palette.Palette;
 import de.atlasmc.node.util.palette.PaletteEntry;
 import de.atlasmc.node.world.Biome;
 import de.atlasmc.node.world.ChunkSection;
 import de.atlasmc.util.NibbleArray;
+import de.atlasmc.util.annotation.NotNull;
 
 /**
  * Default implementation of {@link ChunkSection}
  */
 public class CoreChunkSection implements ChunkSection {
 	
-	private static final GlobalValueProvider<BlockData> GLOBAL_BLOCK_DATA = (block) -> {
-		return block.getStateID();
-	};
-	private static final GlobalValueProvider<Biome> GLOBAL_BIOMES = (biome) -> {
-		return biome.getID();
-	};
+	private static final ToIntFunction<BlockData> GLOBAL_BLOCK_DATA = BlockData::getStateID;
+	private static final ToIntFunction<Biome> GLOBAL_BIOMES = Biome::getID;
 	
 	/**
 	 * 0x00F - X pos<br>
 	 * 0x0F0 - Z pos<br>
 	 * 0xF00 - Y pos<br>
 	 */
+	@NotNull
 	private final Palette<BlockData> blockData; // ordered by y > z > x (as hex 0xY00 + 0xZ0 + 0xX)
+	@NotNull
 	private final Palette<Biome> biomes;
 	
 	private NibbleArray blocklight;
@@ -95,8 +95,9 @@ public class CoreChunkSection implements ChunkSection {
 
 	@Override
 	public NibbleArray getBlockLight() {
+		var blocklight = this.blocklight;
 		if (blocklight == null)
-			blocklight = new NibbleArray(2048);
+			this.blocklight = blocklight = new NibbleArray(2048);
 		return blocklight;
 	}
 	
@@ -107,8 +108,9 @@ public class CoreChunkSection implements ChunkSection {
 
 	@Override
 	public NibbleArray getSkyLight() {
+		var skylight = this.skylight;
 		if (skylight == null)
-			skylight = new NibbleArray(2048);
+			this.skylight = skylight = new NibbleArray(2048);
 		return skylight;
 	}
 	

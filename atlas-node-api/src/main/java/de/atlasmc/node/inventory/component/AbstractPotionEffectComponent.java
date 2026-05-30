@@ -24,6 +24,7 @@ public interface AbstractPotionEffectComponent extends ItemComponent {
 		return false;
 	}
 	
+	@Override
 	AbstractPotionEffectComponent clone();
 	
 }

@@ -4,13 +4,15 @@ import de.atlasmc.chat.Chat;
 import de.atlasmc.command.CommandSender;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface MinecartCommandBlock extends AbstractMinecart, CommandSender {
 	
+	@NotNull
 	public static final NBTCodec<MinecartCommandBlock>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(MinecartCommandBlock.class)
-					.include(AbstractMinecart.NBT_HANDLER)
+					.include(AbstractMinecart.NBT_CODEC)
 					.codec("Command", MinecartCommandBlock::getCommand, MinecartCommandBlock::setCommand, NBTCodecs.STRING)
 					.codec("LastOutput", MinecartCommandBlock::getLastMessage, MinecartCommandBlock::setLastMessage, Chat.NBT_CODEC)
 					.intField("SucessCount", MinecartCommandBlock::getRedstoneSignal, MinecartCommandBlock::setRedstoneSignal)
@@ -40,7 +42,7 @@ public interface MinecartCommandBlock extends AbstractMinecart, CommandSender {
 	
 	@Override
 	default NBTCodec<? extends MinecartCommandBlock> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

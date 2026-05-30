@@ -3,9 +3,11 @@ package de.atlasmc.node.world.particle;
 import de.atlasmc.Color;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public class ColorParticle extends AbstractParticle {
 
+	@NotNull
 	public static final NBTCodec<ColorParticle>
 	NBT_CODEC = NBTCodec
 				.builder(ColorParticle.class)
@@ -13,6 +15,7 @@ public class ColorParticle extends AbstractParticle {
 				.codec("color", ColorParticle::getColor, ColorParticle::setColor, Color.NBT_CODEC)
 				.build();
 	
+	@NotNull
 	public static final StreamCodec<ColorParticle>
 	STREAM_CODEC = StreamCodec
 					.builder(ColorParticle.class)

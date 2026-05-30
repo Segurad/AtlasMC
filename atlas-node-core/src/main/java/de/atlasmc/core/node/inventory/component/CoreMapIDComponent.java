@@ -12,6 +12,7 @@ public class CoreMapIDComponent extends AbstractItemComponent implements MapIDCo
 		super(type);
 	}
 	
+	@Override
 	public CoreMapIDComponent clone() {
 		return (CoreMapIDComponent) super.clone();
 	}

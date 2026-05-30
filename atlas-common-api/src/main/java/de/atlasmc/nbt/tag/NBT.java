@@ -42,9 +42,11 @@ public interface NBT extends OpenCloneable, NBTHolder {
 	@NotNull
 	TagType getType();
 	
+	@Override
 	@NotNull
 	NBT clone();
 	
+	@Override
 	default void toNBT(NBTWriter writer, boolean systemData) throws IOException {
 		toNBT(getName(), writer, systemData);
 	}

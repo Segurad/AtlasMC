@@ -27,14 +27,16 @@ import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 
 public class ItemStack implements NBTSerializable, StreamSerializable, ItemComponentHolder, OpenCloneable {
 
+	@NotNull
 	public static final NBTCodec<ItemStack>
 	NBT_CODEC = NBTCodec
 					.builder(ItemStack.class)
 					.searchKeyConstructor("id", ItemType.REGISTRY_KEY, ItemStack::new, ItemStack::getType)
 					.intField("count", ItemStack::getAmount, ItemStack::setAmount, 1)
-					.include(ItemComponentHolder.NBT_HANDLER)
+					.include(ItemComponentHolder.NBT_CODEC)
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<ItemStack> STREAM_CODEC = new StreamCodec<ItemStack>() {
 		
 		@Override

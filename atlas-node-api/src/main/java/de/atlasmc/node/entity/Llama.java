@@ -4,14 +4,16 @@ import de.atlasmc.IDHolder;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.inventory.LlamaInventory;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumUtil;
 
 public interface Llama extends ChestedHorse {
 	
+	@NotNull
 	public static final NBTCodec<Llama>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Llama.class)
-					.include(ChestedHorse.NBT_HANDLER)
+					.include(ChestedHorse.NBT_CODEC)
 					.intField("Strength", Llama::getStrength, Llama::setStrength, 3)
 					.codec("Variant", Llama::getColor, Llama::setColor, EnumUtil.enumIntNBTCodec(LlamaColor.class), LlamaColor.CREAMY)
 					.build();
@@ -29,11 +31,12 @@ public interface Llama extends ChestedHorse {
 	
 	void setColor(LlamaColor color);
 	
+	@Override
 	LlamaInventory getInventory();
 	
 	@Override
 	default NBTCodec<? extends Llama> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public static enum LlamaColor implements IDHolder {

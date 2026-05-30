@@ -202,15 +202,14 @@ public class VariableValueArray implements Cloneable {
 		Arrays.fill(values, storedLong);
 	}
 	
+	@Override
 	public VariableValueArray clone() {
-		VariableValueArray clone = null;
+		VariableValueArray clone;
 		try {
 			clone = (VariableValueArray) super.clone();
 		} catch (CloneNotSupportedException e) {
 			throw new CloneException(e);
 		}
-		if (clone == null)
-			return null;
 		clone.values = values.clone();
 		return clone;	
 	}

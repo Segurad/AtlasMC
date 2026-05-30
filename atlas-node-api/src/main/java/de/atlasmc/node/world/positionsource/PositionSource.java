@@ -7,15 +7,18 @@ import de.atlasmc.io.codec.StreamSerializable;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.world.World;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface PositionSource extends NBTSerializable, StreamSerializable {
 	
+	@NotNull
 	public static final NBTCodec<PositionSource>
 	NBT_CODEC = NBTCodec
 				.builder(PositionSource.class)
 				.searchKeyEnumConstructor("type", PositionSourceType.class, PositionSourceType::createSource, PositionSource::getType)
 				.build();
 	
+	@NotNull
 	public static final StreamCodec<PositionSource>
 	STREAM_CODEC = StreamCodec
 					.builder(PositionSource.class)

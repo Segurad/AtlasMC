@@ -5,13 +5,15 @@ import java.util.UUID;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.node.event.entity.EntityGrowEvent;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface AgeableMob extends Mob {
 	
+	@NotNull
 	public static final NBTCodec<AgeableMob>
 	NBT_CODEC = NBTCodec
 					.builder(AgeableMob.class)
-					.include(LivingEntity.NBT_HANDLER)
+					.include(LivingEntity.NBT_CODEC)
 					.intField("Age", AgeableMob::getAge, AgeableMob::setAge, 0)
 					.boolField("IsBaby", AgeableMob::isBaby, AgeableMob::setBaby, false) // non standard
 					.intField("ForcedAge", AgeableMob::getForcedAge, AgeableMob::setForcedAge, 0)

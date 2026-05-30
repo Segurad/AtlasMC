@@ -6,6 +6,7 @@ public class SimpleParticle extends AbstractParticle {
 		super(type);
 	}
 	
+	@Override
 	public SimpleParticle clone() {
 		return this;
 	}

@@ -7,15 +7,17 @@ import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.inventory.InventoryHolder;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.inventory.MerchantInventory;
+import de.atlasmc.util.CloneException;
 import de.atlasmc.util.annotation.NotNull;
 
 public interface Merchant extends InventoryHolder {
 
+	@NotNull
 	public static final NBTCodec<Merchant>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Merchant.class)
 					.beginComponent("Offers")
-					.codecList("Recipes", Merchant::hasRecipes, Merchant::getRecipes, MerchantRecipe.NBT_HANDLER)
+					.codecList("Recipes", Merchant::hasRecipes, Merchant::getRecipes, MerchantRecipe.NBT_CODEC)
 					.endComponent()
 					.intField("HeadShakeTimer", Merchant::getHeadShakeTimer, Merchant::setHeadShakeTimer)
 					.build();
@@ -24,6 +26,7 @@ public interface Merchant extends InventoryHolder {
 	
 	void setHeadShakeTimer(int time);
 	
+	@Override
 	MerchantInventory getInventory();
 	
 	default MerchantRecipe getRecipe(int index) {
@@ -50,8 +53,9 @@ public interface Merchant extends InventoryHolder {
 	
 	public static class MerchantRecipe implements Cloneable, NBTSerializable {
 		
+		@NotNull
 		public static final NBTCodec<MerchantRecipe>
-		NBT_HANDLER = NBTCodec
+		NBT_CODEC = NBTCodec
 						.builder(MerchantRecipe.class)
 						.defaultConstructor(MerchantRecipe::new)
 						.codec("buy", MerchantRecipe::getInputItem1, MerchantRecipe::setInputItem1, ItemStack.NBT_CODEC)
@@ -172,14 +176,14 @@ public interface Merchant extends InventoryHolder {
 			return inputItem2 != null;
 		}
 		
+		@Override
 		public MerchantRecipe clone() {
-			MerchantRecipe clone = null;
+			MerchantRecipe clone;
 			try {
 				clone = (MerchantRecipe) super.clone();
 			} catch (CloneNotSupportedException e) {
-				e.printStackTrace();
+				throw new CloneException(e);
 			}
-			if (clone == null) return null;
 			clone.setInputItem1(inputItem1.clone());
 			clone.setOutputItem(outputItem.clone());
 			if (hasInputItem2()) 
@@ -189,7 +193,7 @@ public interface Merchant extends InventoryHolder {
 		
 		@Override
 		public NBTCodec<? extends MerchantRecipe> getNBTCodec() {
-			return NBT_HANDLER;
+			return NBT_CODEC;
 		}
 		
 	}

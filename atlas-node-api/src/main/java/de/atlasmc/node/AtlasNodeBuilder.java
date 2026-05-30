@@ -2,7 +2,7 @@ package de.atlasmc.node;
 
 import java.util.UUID;
 
-import de.atlasmc.node.io.protocol.ProtocolAdapterHandler;
+import de.atlasmc.node.io.protocol.ProtocolAdapterManager;
 import de.atlasmc.node.io.socket.SocketManager;
 import de.atlasmc.node.server.NodeServerManager;
 import de.atlasmc.util.Builder;
@@ -11,7 +11,7 @@ public class AtlasNodeBuilder implements Builder<LocalAtlasNode> {
 	
 	private NodeServerManager serverManager;
 	private SocketManager proxyManager;
-	private ProtocolAdapterHandler protocolAdapterHandler;
+	private ProtocolAdapterManager protocolAdapterManager;
 	private UUID uuid;
 	private LocalAtlasNodeFactory factory;
 	
@@ -20,8 +20,8 @@ public class AtlasNodeBuilder implements Builder<LocalAtlasNode> {
 		return this;
 	}
 	
-	public AtlasNodeBuilder setProtocolAdapterHandler(ProtocolAdapterHandler protocolAdapterHandler) {
-		this.protocolAdapterHandler = protocolAdapterHandler;
+	public AtlasNodeBuilder setProtocolAdapterManager(ProtocolAdapterManager protocolAdapterManager) {
+		this.protocolAdapterManager = protocolAdapterManager;
 		return this;
 	}
 	
@@ -34,8 +34,8 @@ public class AtlasNodeBuilder implements Builder<LocalAtlasNode> {
 		return serverManager;
 	}
 	
-	public ProtocolAdapterHandler getProtocolAdapterHandler() {
-		return protocolAdapterHandler;
+	public ProtocolAdapterManager getProtocolAdapterManager() {
+		return protocolAdapterManager;
 	}
 	
 	public SocketManager getProxyManager() {

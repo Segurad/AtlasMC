@@ -8,7 +8,7 @@ import de.atlasmc.Atlas;
 import de.atlasmc.node.AtlasNodeBuilder;
 import de.atlasmc.node.LocalAtlasNode;
 import de.atlasmc.node.NodePlayer;
-import de.atlasmc.node.io.protocol.ProtocolAdapterHandler;
+import de.atlasmc.node.io.protocol.ProtocolAdapterManager;
 import de.atlasmc.node.io.socket.NodeSocket;
 import de.atlasmc.node.io.socket.SocketManager;
 import de.atlasmc.node.server.NodeServer;
@@ -16,7 +16,7 @@ import de.atlasmc.node.server.NodeServerManager;
 
 public class CoreLocalAtlasNode implements LocalAtlasNode {
 	
-	private final ProtocolAdapterHandler adapterHandler;
+	private final ProtocolAdapterManager adapterManager;
 	private final SocketManager socketManager;
 	private final NodeServerManager smanager;
 	private final UUID uuid;
@@ -24,7 +24,7 @@ public class CoreLocalAtlasNode implements LocalAtlasNode {
 	
 	public CoreLocalAtlasNode(AtlasNodeBuilder builder) {
 		this.uuid = Objects.requireNonNull(builder.getUUID());
-		this.adapterHandler = Objects.requireNonNull(builder.getProtocolAdapterHandler());
+		this.adapterManager = Objects.requireNonNull(builder.getProtocolAdapterManager());
 		this.smanager = Objects.requireNonNull(builder.getServerManager());
 		this.socketManager = Objects.requireNonNull(builder.getProxyManager());
 		this.status = NodeStatus.STARTING;
@@ -36,8 +36,8 @@ public class CoreLocalAtlasNode implements LocalAtlasNode {
 	}
 
 	@Override
-	public ProtocolAdapterHandler getProtocolAdapterHandler() {
-		return adapterHandler;
+	public ProtocolAdapterManager getProtocolAdapterManager() {
+		return adapterManager;
 	}
 
 	@Override

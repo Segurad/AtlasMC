@@ -9,11 +9,13 @@ import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryKey;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface TrimComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<TrimComponent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(TrimComponent.class)
 					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.TRIM.getNamespacedKey())
@@ -30,11 +32,12 @@ public interface TrimComponent extends ItemComponent {
 	
 	void setTrimPattern(TrimPattern pattern);
 	
+	@Override
 	TrimComponent clone();
 	
 	@Override
 	default NBTCodec<? extends TrimComponent> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	@RegistryHolder(key="atlas:trim_material")

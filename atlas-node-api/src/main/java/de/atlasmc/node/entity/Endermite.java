@@ -7,7 +7,7 @@ public interface Endermite extends Monster {
 	public static final NBTCodec<Endermite>
 	NBT_HANDLER = NBTCodec
 					.builder(Endermite.class)
-					.include(Monster.NBT_HANDLER)
+					.include(Monster.NBT_CODEC)
 					.intField("Lifetime", Endermite::getLifetime, Endermite::setLifetime, -1)
 					.build();
 	

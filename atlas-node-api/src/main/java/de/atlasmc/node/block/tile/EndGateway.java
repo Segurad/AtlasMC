@@ -2,13 +2,15 @@ package de.atlasmc.node.block.tile;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.WorldLocation;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface EndGateway extends TileEntity {
 
+	@NotNull
 	public static final NBTCodec<EndGateway>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(EndGateway.class)
-					.include(TileEntity.NBT_HANDLER)
+					.include(TileEntity.NBT_CODEC)
 					.longField("Age", EndGateway::getAge, EndGateway::setAge)
 					.boolField("ExactTeleport", EndGateway::isExactTeleport, EndGateway::setExactTeleport)
 					// TODO exit location int array 3 values
@@ -40,7 +42,7 @@ public interface EndGateway extends TileEntity {
 	
 	@Override
 	default NBTCodec<? extends EndGateway> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

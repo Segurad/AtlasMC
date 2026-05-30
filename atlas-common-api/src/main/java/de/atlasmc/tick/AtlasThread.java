@@ -11,8 +11,8 @@ public class AtlasThread<T> extends TickingThread {
 	private final AtlasThreadTaskManager<T> shutdownTasks;
 	private final AtlasThreadTaskManager<T> startupTasks;
 	private final T context;
-	private Future<Boolean> startupFuture;
-	private Future<Boolean> shutdownFuture;
+	private volatile Future<Boolean> startupFuture;
+	private volatile Future<Boolean> shutdownFuture;
 	
 	public AtlasThread(String name, int ticktime, Log logger, boolean exitOnError,  T context) {
 		this(name, ticktime, logger, exitOnError, context, new AtlasThreadTaskManager<>(), new AtlasThreadTaskManager<>(), new AtlasThreadTaskManager<>());
@@ -38,7 +38,7 @@ public class AtlasThread<T> extends TickingThread {
 	@Override
 	public void run() {
 		running = true;
-		runTasks(startupTasks, "Error in startup task: ", -1);
+		startupTasks.runTasks(this, "Error in startup task: ", -1);
 		if (running) {
 			synchronized (this) {
 				((CompletableFuture<Boolean>) startupFuture).complete(true);
@@ -46,24 +46,15 @@ public class AtlasThread<T> extends TickingThread {
 			}
 			super.run();
 		}
-		runTasks(shutdownTasks, "Error in shutdown task: ", -1);
+		shutdownTasks.runTasks(this, "Error in shutdown task: ", -1);
 		synchronized (this) {
 			((CompletableFuture<Boolean>) shutdownFuture).complete(true);
 			shutdownFuture = CompleteFuture.getBooleanFuture(true);
 		}
 	}
 	
-	private void runTasks(AtlasThreadTaskManager<T> tasks, String error, int tick) {
-		final AtlasThreadTask<T>[] fastTasks = tasks.fastTasks;
-		if (fastTasks.length == 0)
-			return;
-		for (AtlasThreadTask<T> task : fastTasks) {
-			try {
-				task.run(context, tick);
-			} catch (Exception e) {
-				logger.error(error + tasks.getTaskName(task), e);
-			}
-		}
+	public T getContext() {
+		return context;
 	}
 	
 	public AtlasThreadTaskManager<T> getTickTasks() {
@@ -78,42 +69,33 @@ public class AtlasThread<T> extends TickingThread {
 		return shutdownTasks;
 	}
 	
+	@Override
 	protected void tick(int tick) {
-		runTasks(tickTasks, "Error in tick task: ", tick);
+		tickTasks.runTasks(this, "Error in tick task: ", tick);
 	}
 
-	public Future<Boolean> startThread() {
+	public synchronized Future<Boolean> startThread() {
 		if (getState() == State.TERMINATED)
 			return CompleteFuture.getBooleanFuture(false);
-		Future<Boolean> future = this.startupFuture;
+		var future = this.startupFuture;
 		if (future != null)
 			return future;
-		synchronized (this) {
-			future = this.startupFuture;
-			if (future != null)
-				return future;
-			future = new CompletableFuture<>();
-			this.startupFuture = future;
-			start();
-			return future;
-		}
+		future = new CompletableFuture<>();
+		this.startupFuture = future;
+		start();
+		return future;
 	}
 
-	public Future<Boolean> stopThread() {
+	public synchronized Future<Boolean> stopThread() {
 		if (getState() == State.NEW)
 			return CompleteFuture.getBooleanFuture(false);
-		Future<Boolean> future = this.shutdownFuture;
+		var future = this.shutdownFuture;
 		if (future != null)
 			return future;
-		synchronized (this) {
-			future = this.shutdownFuture;
-			if (future != null)
-				return future;
-			future = new CompletableFuture<>();
-			this.shutdownFuture = future;
-			shutdown();
-			return future;
-		}
+		future = new CompletableFuture<>();
+		this.shutdownFuture = future;
+		shutdown();
+		return future;
 	}
 
 }

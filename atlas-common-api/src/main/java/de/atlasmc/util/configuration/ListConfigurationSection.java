@@ -12,6 +12,7 @@ public interface ListConfigurationSection extends ConfigurationSection, List<Obj
 	
 	<T> List<T> asListOfType(Class<T> clazz);
 	
+	@Override
 	@Nullable
 	default Object get(int index) {
 		return get(index, null);

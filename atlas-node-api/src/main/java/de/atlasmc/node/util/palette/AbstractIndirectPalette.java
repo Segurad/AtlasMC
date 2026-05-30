@@ -1,6 +1,7 @@
 package de.atlasmc.node.util.palette;
 
 import java.util.Collection;
+import java.util.function.ToIntFunction;
 
 import de.atlasmc.node.util.MathUtil;
 
@@ -10,7 +11,7 @@ public abstract class AbstractIndirectPalette<E> extends AbstractPalette<E> {
 	protected int currentMaxEntries; // number of entries stored before growing
 	protected int highestEntry = -1;
 
-	public AbstractIndirectPalette(int minBitsPerEntry, int capacity, int maxBitsPerEntry, GlobalValueProvider<E> provider) {
+	public AbstractIndirectPalette(int minBitsPerEntry, int capacity, int maxBitsPerEntry, ToIntFunction<E> provider) {
 		super(minBitsPerEntry, capacity, maxBitsPerEntry, provider);
 		this.currentMaxEntries = MathUtil.createBitMask(minBitsPerEntry)+1;
 	}
@@ -29,8 +30,8 @@ public abstract class AbstractIndirectPalette<E> extends AbstractPalette<E> {
 	}
 
 	@Override
-	protected Entry<E> addOrReplaceEntry(E entry, int index, boolean checkIndex) {
-		Entry<E> pEntry = super.addOrReplaceEntry(entry, index, checkIndex);
+	protected Entry<E> addOrReplaceEntry(E entry, int index) {
+		Entry<E> pEntry = super.addOrReplaceEntry(entry, index);
 		if (pEntry != null)
 			return pEntry;
 		if (lowestEntry < currentMaxEntries) { // insert value at valid position

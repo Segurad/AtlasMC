@@ -1,11 +1,13 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface WeaponComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<WeaponComponent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(WeaponComponent.class)
 					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.WEAPON.getNamespacedKey())
@@ -22,11 +24,12 @@ public interface WeaponComponent extends ItemComponent {
 	
 	void setDisableBlockSeconds(float disable);
 	
+	@Override
 	WeaponComponent clone();
 	
 	@Override
 	default NBTCodec<? extends WeaponComponent> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

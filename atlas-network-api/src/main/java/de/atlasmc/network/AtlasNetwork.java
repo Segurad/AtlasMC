@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 import de.atlasmc.io.socket.SocketConfig;
+import de.atlasmc.network.permission.PermissionManager;
 import de.atlasmc.network.player.ProfileHandler;
 import de.atlasmc.network.server.ServerManager;
 import de.atlasmc.util.annotation.InternalAPI;

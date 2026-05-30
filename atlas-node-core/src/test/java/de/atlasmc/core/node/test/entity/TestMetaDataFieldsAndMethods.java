@@ -61,11 +61,12 @@ public class TestMetaDataFieldsAndMethods implements Consumer<Class<?>> {
 		}
 		if (Modifier.isAbstract(clazz.getModifiers()))
 			return;
-		Constructor<?> construct = null;
+		Constructor<?> construct;
 		try {
 			construct = clazz.getConstructor(EntityType.class, UUID.class);
 		} catch (NoSuchMethodException | SecurityException e) {
 			fail("Entity constructor(EntityType, UUID) missing: " + clazz.getName(), e);
+			return;
 		}
 		try {
 			construct.newInstance(null, null);

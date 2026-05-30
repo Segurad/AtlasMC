@@ -7,6 +7,7 @@ import java.util.List;
 import de.atlasmc.node.entity.Entity;
 import de.atlasmc.node.util.MathUtil;
 import de.atlasmc.node.world.entitytracker.EntityPerception;
+import de.atlasmc.util.annotation.NotNull;
 
 class CoreTrackedChunk<T extends Entity> {
 
@@ -180,9 +181,11 @@ class CoreTrackedChunk<T extends Entity> {
 		}
 	}
 
+	@NotNull
 	List<T> getEntityView() {
+		var entitiesView = this.entitiesView;
 		if (entitiesView == null)
-			this.entitiesView = new EntityView<>(this);
+			this.entitiesView = entitiesView = new EntityView<>(this);
 		return entitiesView;
 	}
 

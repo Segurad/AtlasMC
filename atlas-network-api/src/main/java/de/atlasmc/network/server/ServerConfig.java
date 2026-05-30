@@ -82,6 +82,7 @@ public class ServerConfig implements Cloneable {
 		}
 	}
 	
+	@Override
 	public ServerConfig clone() {
 		ServerConfig clone = null;
 		try {

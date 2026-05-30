@@ -49,7 +49,6 @@ public class ServerSocket implements Closeable {
 			throw new IllegalStateException("Socket already open!");
 		
 		ChannelType type = config.getType();
-		
 		bossGroup = new MultiThreadIoEventLoopGroup(config.getBossThreads(), type.getDefaultFactory());
 		workerGroup = new MultiThreadIoEventLoopGroup(config.getWorkerThreads(), type.getDefaultFactory());
 		ServerBootstrap b = new ServerBootstrap();

@@ -7,6 +7,7 @@ import javax.crypto.SecretKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.io.connection.ServerSocketConnectionHandler;
 import de.atlasmc.network.player.AtlasPlayer;
+import de.atlasmc.node.io.protocol.handshake.HandshakeData;
 import de.atlasmc.node.io.socket.NodeSocket;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
@@ -21,6 +22,10 @@ public interface LoginHandler {
 	 */
 	long getLoginTime();
 	
+	void start(String name, UUID uuid, long timestamp);
+	
+	boolean isStarted();
+	
 	@NotNull
 	default NodeSocket getSocket() {
 		return (NodeSocket) getConnection().getSocket();
@@ -30,17 +35,17 @@ public interface LoginHandler {
 	ServerSocketConnectionHandler getConnection();
 	
 	/**
-	 * The name used in login attempt
+	 * The name used in login attempt.
+	 * Null if login is not started.
 	 * @return name
 	 */
-	@NotNull
 	String getLoginName();
 	
 	/**
-	 * The uuid used in login attempt
+	 * The uuid used in login attempt.
+	 * Null if login is not started.
 	 * @return uuid
 	 */
-	@NotNull
 	UUID getLoginUUID();
 	
 	/**
@@ -114,5 +119,7 @@ public interface LoginHandler {
 	default boolean hasEncryption() {
 		return getConnection().isEncryotionEnabled();
 	}
+
+	HandshakeData getHandshakeData();
 
 }

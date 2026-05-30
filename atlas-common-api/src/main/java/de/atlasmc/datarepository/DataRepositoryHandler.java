@@ -35,7 +35,7 @@ public interface DataRepositoryHandler {
 	 * @param key
 	 * @return future
 	 */
-	@NotNull
+	@Nullable
 	Future<RepositoryEntry> getEntry(NamespacedKey key);
 	
 	/**
@@ -44,7 +44,7 @@ public interface DataRepositoryHandler {
 	 * @param load whether or not the entry should be requested from remote
 	 * @return future
 	 */
-	@NotNull
+	@Nullable
 	Future<RepositoryEntry> getEntry(NamespacedKey key, boolean load);
 
 	@NotNull

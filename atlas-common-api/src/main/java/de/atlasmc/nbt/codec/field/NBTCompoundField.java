@@ -7,6 +7,7 @@ import java.util.Map;
 import de.atlasmc.nbt.TagType;
 import de.atlasmc.nbt.io.NBTReader;
 import de.atlasmc.nbt.io.NBTWriter;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.function.ToBooleanFunction;
 import de.atlasmc.util.map.key.CharKey;
@@ -40,7 +41,7 @@ public class NBTCompoundField<T> extends NBTField<T> {
 		return true;
 	}
 	
-	public boolean serializePartial(T value, NBTWriter writer, CodecContext context) throws IOException {
+	public boolean serializePartial(T value, @NotNull NBTWriter writer, CodecContext context) throws IOException {
 		if (has != null && !has.applyAsBoolean(value))
 			return true;
 		for (int i = 0; i < count; i++) {

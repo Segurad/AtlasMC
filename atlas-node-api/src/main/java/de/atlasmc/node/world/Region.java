@@ -187,6 +187,7 @@ public class Region implements Cloneable {
 		return new Location(getMinX() + getWidhtX() / 2, getMinY() + getHeight() / 2, getMinZ() + getWidhtZ() / 2);
 	}
 
+	@Override
 	public Region clone() {
 		return new Region(loc1.clone(), loc2.clone());
 	}

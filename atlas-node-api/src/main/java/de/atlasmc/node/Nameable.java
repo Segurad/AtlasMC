@@ -2,6 +2,7 @@ package de.atlasmc.node;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 
 /**
@@ -9,8 +10,9 @@ import de.atlasmc.util.annotation.Nullable;
  */
 public interface Nameable {
 	
+	@NotNull
 	public static final NBTCodec<Nameable>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Nameable.class)
 					.codec("CustomName", Nameable::getCustomName, Nameable::setCustomName, Chat.NBT_CODEC)
 					.build();

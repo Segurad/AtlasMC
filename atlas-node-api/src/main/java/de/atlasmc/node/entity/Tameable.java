@@ -4,11 +4,13 @@ import java.util.UUID;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Tameable extends Animal {
 	
+	@NotNull
 	public static final NBTCodec<Tameable>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Tameable.class)
 					.include(Animal.NBT_CODEC)
 					.codec("Owner", Tameable::getOwner, Tameable::setOwner, NBTCodecs.UUID_CODEC)
@@ -30,7 +32,7 @@ public interface Tameable extends Animal {
 	
 	@Override
 	default NBTCodec<? extends Tameable> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

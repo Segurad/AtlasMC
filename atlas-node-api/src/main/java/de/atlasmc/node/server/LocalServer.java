@@ -30,6 +30,7 @@ public interface LocalServer extends NodeServer, SyncThreadHolder, LogHolder {
 	@NotNull
 	Scheduler getScheduler();
 	
+	@Override
 	@ThreadSafe
 	@NotNull
 	Log getLogger();

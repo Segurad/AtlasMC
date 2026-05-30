@@ -14,7 +14,7 @@ import de.atlasmc.io.protocol.handshake.HandshakeProtocol;
 import de.atlasmc.network.AtlasNetwork;
 import de.atlasmc.node.AtlasNodeBuilder;
 import de.atlasmc.node.io.protocol.ProtocolAdapter;
-import de.atlasmc.node.io.protocol.ProtocolAdapterHandler;
+import de.atlasmc.node.io.protocol.ProtocolAdapterManager;
 import de.atlasmc.node.io.protocol.handshake.PacketMinecraftHandshake;
 import de.atlasmc.node.io.protocol.handshake.PacketMinecraftLegacyHandshake;
 import de.atlasmc.plugin.startup.StartupContext;
@@ -31,15 +31,20 @@ class CoreInitNodeHandler implements StartupStageHandler {
 			.setUUID(AtlasNetwork.getNodeUUID())
 			.setFactory(new CoreLocalAtlasNodeFactory())
 			.setProxyManager(new CoreSocketManager())
-			.setProtocolAdapterHandler(new ProtocolAdapterHandler());
-		builder.getProtocolAdapterHandler().setProtocol(
-				new ProtocolAdapter(
-						new CoreProtocolStatus(),
-						new CoreProtocolLogin(),
-						new CoreProtocolPlay(),
-						new CoreProtocolConfiguration()));
-		HandshakeProtocol.DEFAULT_PROTOCOL.setPacketIO(Packet.getDefaultPacketID(PacketMinecraftHandshake.class), new CorePacketMinecraftHandshake());
-		HandshakeProtocol.DEFAULT_PROTOCOL.setPacketIO(Packet.getDefaultPacketID(PacketMinecraftLegacyHandshake.class), new CorePacketMinecraftLegacyHandshake());
+			.setProtocolAdapterManager(new ProtocolAdapterManager());
+		var adapter = new ProtocolAdapter(
+				new CoreProtocolStatus(),
+				new CoreProtocolLogin(),
+				new CoreProtocolPlay(),
+				new CoreProtocolConfiguration());
+		builder.getProtocolAdapterManager().setProtocol(adapter);
+		builder.getProtocolAdapterManager().setDefaultProtocol(adapter);
+		HandshakeProtocol.DEFAULT_PROTOCOL.setPacketIO(
+				Packet.getDefaultPacketID(PacketMinecraftHandshake.class), 
+				new CorePacketMinecraftHandshake());
+		HandshakeProtocol.DEFAULT_PROTOCOL.setPacketIO(
+				Packet.getDefaultPacketID(PacketMinecraftLegacyHandshake.class), 
+				new CorePacketMinecraftLegacyHandshake());
 	}
 
 }

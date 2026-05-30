@@ -1,13 +1,15 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Zombie extends Monster {
 	
+	@NotNull
 	public static final NBTCodec<Zombie>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Zombie.class)
-					.include(Monster.NBT_HANDLER)
+					.include(Monster.NBT_CODEC)
 					.boolField("CanBreakDoors", Zombie::canBreakDoors, Zombie::setCanBreakDoors, false)
 					.intField("DrownedConverionTime", Zombie::getDrownedConverionTime, Zombie::setDrownedConversionTime, -1)
 					//.intField("InWaterTime", null, null)
@@ -38,7 +40,7 @@ public interface Zombie extends Monster {
 	
 	@Override
 	default NBTCodec<? extends Zombie> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

@@ -10,9 +10,11 @@ import de.atlasmc.node.potion.PotionData;
 import de.atlasmc.node.potion.PotionEffect;
 import de.atlasmc.node.world.particle.Particle;
 import de.atlasmc.registry.Registries;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface AreaEffectCloud extends Entity {
 	
+	@NotNull
 	public static final NBTCodec<AreaEffectCloud>
 	NBT_HANDLER = NBTCodec
 					.builder(AreaEffectCloud.class)

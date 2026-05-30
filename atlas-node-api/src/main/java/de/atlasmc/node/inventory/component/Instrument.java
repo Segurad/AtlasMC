@@ -14,14 +14,16 @@ import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.registry.RegistryKey;
+import de.atlasmc.util.annotation.NotNull;
 
 @RegistryHolder(key = "minecraft:instrument", target = Target.PROTOCOL)
 public class Instrument extends ProtocolRegistryValueBase implements NBTSerializable {
 	
 	public static final RegistryKey<Instrument> REGISTRY_KEY = Registries.getRegistryKey(Instrument.class);
 	
+	@NotNull
 	public static final NBTCodec<Instrument> 
-	NBT_HANDLER =  NBTCodec
+	NBT_CODEC =  NBTCodec
 					.builder(Instrument.class)
 					.defaultConstructor(Instrument::new)
 					.codec("description", Instrument::getDescription, Instrument::setDescription, Chat.NBT_CODEC)
@@ -30,6 +32,7 @@ public class Instrument extends ProtocolRegistryValueBase implements NBTSerializ
 					.floatField("range", Instrument::getRange, Instrument::setRange, 0)
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<Instrument>
 	STREAM_CODEC = StreamCodec
 					.builder(Instrument.class)
@@ -112,7 +115,7 @@ public class Instrument extends ProtocolRegistryValueBase implements NBTSerializ
 	
 	@Override
 	public NBTCodec<? extends Instrument> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

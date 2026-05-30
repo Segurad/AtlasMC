@@ -65,12 +65,13 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 		File nodeIDFile = new File(Atlas.getWorkdir(), "node-id.yml");
 		UUID nodeID = null;
 		if (nodeIDFile.exists()) {
-			YamlConfiguration nodeIDCfg = null;
+			YamlConfiguration nodeIDCfg;
 			try {
 				nodeIDCfg = YamlConfiguration.loadConfiguration(nodeIDFile);
 			} catch (IOException e) {
 				log.error("Error while loading node id file!", e);
 				context.fail(e);
+				return;
 			}
 			String rawID = nodeIDCfg.getString("node-id");
 			if (rawID != null)
@@ -85,6 +86,7 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 			} catch (IOException e) {
 				log.error("Error while writing node id file!", e);
 				context.fail(e);
+				return;
 			}
 		}
 
@@ -104,7 +106,7 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 	private SQLConnectionPool getDBConnection(ConfigurationSection dbConfig) {
 		dbName = dbConfig.getString("database");
 		String dbHost = dbConfig.getString("host");
-		int dbPort = dbConfig.getInt("port");
+		int dbPort = dbConfig.getInt("port", 3306);
 		String dbUser = dbConfig.getString("user");
 		String dbPassword = dbConfig.getString("password");
 		int poolMinSize = dbConfig.getInt("pool-min-size");
@@ -118,10 +120,8 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 		MariaDbPoolDataSource src = new MariaDbPoolDataSource();
 		try {
 			log.info("Connecting to database...");
-			try {
-				src.setUser(dbUser);
-				src.setPassword(dbPassword);
-			} catch(SQLException e) { /* Silence no url set */  }
+			src.setUser(dbUser);
+			src.setPassword(dbPassword);
 			src.setUrl(url);
 			src.getConnection().close();
 		} catch (SQLException e) {
@@ -179,7 +179,7 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 					runner.setSendFullScript(false);
 					runner.runScript(new InputStreamReader(in));
 					PreparedStatement verionStmt = con.prepareStatement(
-							"INSERT INTO schema_versions (name, plugin, plugin-version, version) VALUES (?, ?, ?, ?)");
+							"INSERT INTO schema_versions (name, plugin, plugin_version, version) VALUES (?, ?, ?, ?)");
 					verionStmt.setString(1, "atlas-master");
 					verionStmt.setString(2, "atlas-master");
 					verionStmt.setString(3, Atlas.getSystem().getVersion().toString());

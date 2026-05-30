@@ -180,7 +180,7 @@ class CoreLocalNamespace implements RepositoryNamespace {
 	protected boolean isTouched(CoreRepositoryEntry entry, boolean shallow) throws IOException {
 		MessageDigest md = null; 
 		byte[] buff = null; 
-		Set<Path> files = null;
+		Set<Path> files = Set.of();
 		byte[] checksumBuff = null;
 		if (!shallow) {
 			try {

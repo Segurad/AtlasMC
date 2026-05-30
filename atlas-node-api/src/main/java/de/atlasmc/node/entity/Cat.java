@@ -3,15 +3,17 @@ package de.atlasmc.node.entity;
 import de.atlasmc.IDHolder;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.DyeColor;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumName;
 import de.atlasmc.util.enums.EnumUtil;
 
 public interface Cat extends Tameable {
 	
+	@NotNull
 	public static final NBTCodec<Cat>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Cat.class)
-					.include(Tameable.NBT_HANDLER)
+					.include(Tameable.NBT_CODEC)
 					.codec("CollarColor", Cat::getCollarColor, Cat::setCollarColor, EnumUtil.enumByteNBTCodec(DyeColor.class), DyeColor.RED)
 					.codec("variant", Cat::getCatType, Cat::setCatType, EnumUtil.enumStringNBTCodec(Type.class), Type.BLACK)
 					.build();
@@ -34,7 +36,7 @@ public interface Cat extends Tameable {
 	
 	@Override
 	default NBTCodec<? extends Cat> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public static enum Type implements EnumName, IDHolder {
@@ -51,7 +53,7 @@ public interface Cat extends Tameable {
 		JELLIE,
 		ALL_BLACK;
 		
-		private String name;
+		private final String name;
 		
 		private Type() {
 			String name = "minecraft:" + name().toLowerCase();

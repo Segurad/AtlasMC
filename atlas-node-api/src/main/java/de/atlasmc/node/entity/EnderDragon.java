@@ -2,14 +2,16 @@ package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumUtil;
 
 public interface EnderDragon extends Mob {
 	
+	@NotNull
 	public static final NBTCodec<EnderDragon>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(EnderDragon.class)
-					.include(Mob.NBT_HANDLER)
+					.include(Mob.NBT_CODEC)
 					.codec("DragonPhase", EnderDragon::getPhase, EnderDragon::setPhase, EnumUtil.enumIntNBTCodec(DragonPhase.class), DragonPhase.HOVERING)
 					.build();
 	
@@ -19,7 +21,7 @@ public interface EnderDragon extends Mob {
 	
 	@Override
 	default NBTCodec<? extends EnderDragon> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public static enum DragonPhase implements IDHolder {

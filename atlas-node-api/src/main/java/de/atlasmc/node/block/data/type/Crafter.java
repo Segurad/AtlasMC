@@ -9,6 +9,7 @@ public interface Crafter extends Orientable, Triggerable {
 	
 	void setCrafting(boolean crafting);
 	
+	@Override
 	Crafter clone();
 
 }

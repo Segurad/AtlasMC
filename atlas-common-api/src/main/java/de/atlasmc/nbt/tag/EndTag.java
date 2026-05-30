@@ -5,9 +5,11 @@ import java.io.IOException;
 import de.atlasmc.nbt.TagType;
 import de.atlasmc.nbt.io.NBTReader;
 import de.atlasmc.nbt.io.NBTWriter;
+import de.atlasmc.util.annotation.NotNull;
 
 public class EndTag implements NBT {
 	
+	@NotNull
 	public static final EndTag INSTANCE = new EndTag();
 
 	private EndTag() {}

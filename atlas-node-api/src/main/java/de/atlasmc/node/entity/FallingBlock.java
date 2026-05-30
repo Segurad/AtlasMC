@@ -4,11 +4,13 @@ import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.block.tile.TileEntity;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface FallingBlock extends Entity {
 	
+	@NotNull
 	public static final NBTCodec<FallingBlock>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(FallingBlock.class)
 					.include(Entity.NBT_CODEC)
 					.codec("BlockState", FallingBlock::getBlockData, FallingBlock::setBlockData, BlockData.NBT_CODEC)
@@ -17,7 +19,7 @@ public interface FallingBlock extends Entity {
 					.floatField("FallHurtAmount", FallingBlock::getDamagePerBlock, FallingBlock::setDamagePerBlock, 0)
 					.intField("FallHurtMax", FallingBlock::getMaxDamage, FallingBlock::setMaxDamage, 40)
 					.boolField("HurtEntities", FallingBlock::canHurtEntities, FallingBlock::setHurtEntities, true)
-					.codec("TileEntityData", FallingBlock::getTileEntity, FallingBlock::setTileEntity, TileEntity.NBT_HANDLER)
+					.codec("TileEntityData", FallingBlock::getTileEntity, FallingBlock::setTileEntity, TileEntity.NBT_CODEC)
 					.intField("Time", FallingBlock::getAge, FallingBlock::setAge, 0)
 					.build();
 
@@ -63,7 +65,7 @@ public interface FallingBlock extends Entity {
 	
 	@Override
 	default NBTCodec<? extends FallingBlock> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

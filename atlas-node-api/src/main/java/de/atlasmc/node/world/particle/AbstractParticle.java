@@ -15,6 +15,7 @@ public abstract class AbstractParticle implements Particle {
 		return type;
 	}
 	
+	@Override
 	public AbstractParticle clone() {
 		try {
 			return (AbstractParticle) super.clone();

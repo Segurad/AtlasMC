@@ -15,9 +15,11 @@ import de.atlasmc.nbt.NBTException;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.nbt.io.SNBTWriter;
+import de.atlasmc.util.annotation.NotNull;
 
 public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> implements ChatComponent {
 	
+	@NotNull
 	@SuppressWarnings("rawtypes")
 	public static final NBTCodec<AbstractBaseComponent>
 	NBT_CODEC = NBTCodec
@@ -33,7 +35,7 @@ public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> 
 					.codec("font", ChatComponent::getFont, ChatComponent::setFont, NBTCodecs.STRING)
 					.codecList("extra", ChatComponent::hasExtra, ChatComponent::getExtra, ChatComponent.NBT_CODEC)
 					.codec("insertion", ChatComponent::getInsertion, ChatComponent::setInsertion, NBTCodecs.STRING)
-					.codec("click_event", ChatComponent::getClickEvent, ChatComponent::setClickEvent, ClickEvent.NBT_HANDLER)
+					.codec("click_event", ChatComponent::getClickEvent, ChatComponent::setClickEvent, ClickEvent.NBT_CODEC)
 					.codec("hover_event", ChatComponent::getHoverEvent, ChatComponent::setHoverEvent, HoverEvent.NBT_HANDLER)
 					.build();
 	

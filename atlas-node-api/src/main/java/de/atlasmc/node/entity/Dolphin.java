@@ -3,13 +3,15 @@ package de.atlasmc.node.entity;
 import org.joml.Vector3i;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Dolphin extends WaterAnimal {
 	
+	@NotNull
 	public static final NBTCodec<Dolphin>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Dolphin.class)
-					.include(WaterAnimal.NBT_HANDLER)
+					.include(WaterAnimal.NBT_CODEC)
 					.intField("Moistness", Dolphin::getMoistureLevel, Dolphin::setMoistureLevel, 2400)
 					.boolField("GotFish", Dolphin::hasFish, Dolphin::setFish, false)
 					.build();
@@ -38,7 +40,7 @@ public interface Dolphin extends WaterAnimal {
 	
 	@Override
 	default NBTCodec<? extends LivingEntity> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

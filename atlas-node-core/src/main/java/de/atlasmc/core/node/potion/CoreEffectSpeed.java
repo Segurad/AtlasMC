@@ -8,9 +8,11 @@ import de.atlasmc.node.attribute.AttributeModifier;
 import de.atlasmc.node.attribute.AttributeModifier.Operation;
 import de.atlasmc.node.entity.LivingEntity;
 import de.atlasmc.node.potion.PotionEffectType;
+import de.atlasmc.util.annotation.NotNull;
 
 public class CoreEffectSpeed extends CoreAbstractAttributeModifierPotionEffect {
 
+	@NotNull
 	public static final NamespacedKey MODIFIER_ID = NamespacedKey.literal("minecraft:speed");
 	
 	public CoreEffectSpeed(PotionEffectType type, int amplifier, int duration, boolean reducedAmbient, boolean particles, boolean icon, UUID uuid) {

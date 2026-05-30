@@ -5,16 +5,18 @@ import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.io.codec.StreamSerializable;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTSerializable;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.UnsafeAPI;
 import de.atlasmc.util.enums.EnumName;
 import de.atlasmc.util.enums.EnumUtil;
 
 public interface AbstractVillager extends Merchant {
 	
+	@NotNull
 	public static final NBTCodec<AbstractVillager>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(AbstractVillager.class)
-					.include(Merchant.NBT_HANDLER)
+					.include(Merchant.NBT_CODEC)
 					// Gossip
 					.codec("VillagerData", AbstractVillager::getVillagerDataUnsafe, AbstractVillager::setVillagerData, VillagerData.NBT_CODEC)
 					.intField("Xp", AbstractVillager::getXp, AbstractVillager::setXp)
@@ -47,6 +49,7 @@ public interface AbstractVillager extends Merchant {
 	
 	public static class VillagerData implements NBTSerializable, StreamSerializable, Cloneable {
 		
+		@NotNull
 		public static final NBTCodec<VillagerData>
 		NBT_CODEC = NBTCodec
 						.builder(VillagerData.class)
@@ -56,6 +59,7 @@ public interface AbstractVillager extends Merchant {
 						.codec("type", VillagerData::getType, VillagerData::setType, EnumUtil.enumStringNBTCodec(VillagerType.class), VillagerType.PLAINS)
 						.build();
 		
+		@NotNull
 		public static final StreamCodec<VillagerData>
 		STREAM_CODEC = StreamCodec
 						.builder(VillagerData.class)

@@ -5,18 +5,20 @@ import java.util.UUID;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.nbt.codec.NBTSerializable;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Interaction extends Entity {
 	
+	@NotNull
 	public static final NBTCodec<Interaction>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Interaction.class)
 					.include(Entity.NBT_CODEC)
 					.floatField("width", Interaction::getWidth, Interaction::setWidth, 1)
 					.floatField("height", Interaction::getHeight, Interaction::setHeight, 1)
 					.boolField("response", Interaction::isResponsive, Interaction::setResponsive, false)
-					.codec("attack", Interaction::getLastAttack, Interaction::setLastAttack, PreviousInteraction.NBT_HANDLER)
-					.codec("interaction", Interaction::getLastInteraction, Interaction::setLastInteraction, PreviousInteraction.NBT_HANDLER)
+					.codec("attack", Interaction::getLastAttack, Interaction::setLastAttack, PreviousInteraction.NBT_CODEC)
+					.codec("interaction", Interaction::getLastInteraction, Interaction::setLastInteraction, PreviousInteraction.NBT_CODEC)
 					.build();
 	
 	void setWidth(float width);
@@ -41,13 +43,14 @@ public interface Interaction extends Entity {
 	
 	@Override
 	default NBTCodec<? extends Interaction> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public static class PreviousInteraction implements NBTSerializable {
 		
+		@NotNull
 		public static final NBTCodec<PreviousInteraction>
-		NBT_HANDLER = NBTCodec
+		NBT_CODEC = NBTCodec
 						.builder(PreviousInteraction.class)
 						.defaultConstructor(PreviousInteraction::new)
 						.codec("player", PreviousInteraction::getUUID, PreviousInteraction::setUUID, NBTCodecs.UUID_CODEC)
@@ -83,8 +86,8 @@ public interface Interaction extends Entity {
 		}
 		
 		@Override
-		public NBTCodec<? extends NBTSerializable> getNBTCodec() {
-			return NBT_HANDLER;
+		public NBTCodec<? extends PreviousInteraction> getNBTCodec() {
+			return NBT_CODEC;
 		}
 		
 	}

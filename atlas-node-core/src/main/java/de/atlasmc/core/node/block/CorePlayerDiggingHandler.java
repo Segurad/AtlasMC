@@ -117,7 +117,6 @@ public class CorePlayerDiggingHandler implements DiggingHandler {
 		HandlerList.callEvent(event);
 		if (event.isCancelled())
 			return;
-		
 	}
 
 	@Override

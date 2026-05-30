@@ -5,9 +5,11 @@ import java.util.List;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.block.tile.Banner.Pattern;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface BannerPatternsComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<BannerPatternsComponent>
 	NBT_CODEC = NBTCodec
 					.builder(BannerPatternsComponent.class)
@@ -15,6 +17,7 @@ public interface BannerPatternsComponent extends ItemComponent {
 					.codecList(ComponentType.BANNER_PATTERNS.getNamespacedKey(), BannerPatternsComponent::hasPatterns, BannerPatternsComponent::getPatterns, Pattern.NBT_CODEC)
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<BannerPatternsComponent>
 	STREAM_CODEC = StreamCodec
 					.builder(BannerPatternsComponent.class)
@@ -22,6 +25,7 @@ public interface BannerPatternsComponent extends ItemComponent {
 					.listCodec(BannerPatternsComponent::hasPatterns, BannerPatternsComponent::getPatterns, Pattern.STREAM_CODEC)
 					.build();
 	
+	@Override
 	BannerPatternsComponent clone();
 	
 	void addPattern(Pattern pattern);

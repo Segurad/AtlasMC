@@ -45,7 +45,7 @@ public class StartupHandlerRegisterProcessor extends AbstractProcessor {
 			return true;
 		}
 		final Elements elements = processingEnv.getElementUtils();
-		log.printMessage(Kind.NOTE, "Processing startup handler reguster annotation");
+		log.printMessage(Kind.NOTE, "Processing startup handler register annotation");
 		for (TypeElement annotation : annotations) {
 			for (Element ele : roundEnv.getElementsAnnotatedWith(annotation)) {
 				Collection<AnnotationMirror> annotationMirrors = AnnotationProcessorUtils.getAnnotationMirrorsByType(ele, annotation);

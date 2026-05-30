@@ -20,17 +20,19 @@ import de.atlasmc.node.world.World;
 import de.atlasmc.node.world.entitytracker.EntityPerception;
 import de.atlasmc.tick.Tickable;
 import de.atlasmc.util.ViewerSet;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.ThreadSafe;
 import de.atlasmc.util.annotation.UnsafeAPI;
 
 public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitter {
 	
+	@NotNull
 	public static final NBTCodec<Entity>
 	NBT_CODEC = NBTCodec
 					.builder(Entity.class)
 					.searchKeyConstructor("id", EntityType.REGISTRY_KEY, EntityType::createEntity, Entity::getType)
 					.shortField("Air", Entity::getAirTicks, Entity::setAirTicks, (short) 300)
-					.include(Nameable.NBT_HANDLER)
+					.include(Nameable.NBT_CODEC)
 					.boolField("CustomNameVisible", Entity::isCustomNameVisible, Entity::setCustomNameVisible, false)
 					// data
 					.doubleField("fall_distance", Entity::getFallDistance, Entity::setFallDistance, 0)

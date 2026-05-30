@@ -9,6 +9,7 @@ public interface Bisected extends BlockData {
 	
 	void setHalf(Half half);
 	
+	@Override
 	Bisected clone();
 	
 	public static enum Half implements EnumName, IDHolder {

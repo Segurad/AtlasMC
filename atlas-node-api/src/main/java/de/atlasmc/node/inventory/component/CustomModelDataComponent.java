@@ -6,12 +6,14 @@ import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.io.codec.StreamCodecs;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.util.annotation.NotNull;
 import it.unimi.dsi.fastutil.booleans.BooleanList;
 import it.unimi.dsi.fastutil.floats.FloatList;
 import it.unimi.dsi.fastutil.ints.IntList;
 
 public interface CustomModelDataComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<CustomModelDataComponent>
 	NBT_CODEC = NBTCodec
 					.builder(CustomModelDataComponent.class)
@@ -24,6 +26,7 @@ public interface CustomModelDataComponent extends ItemComponent {
 					.endComponent()
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<CustomModelDataComponent>
 	STREAM_CODEC = StreamCodec
 					.builder(CustomModelDataComponent.class)
@@ -58,6 +61,7 @@ public interface CustomModelDataComponent extends ItemComponent {
 	
 	boolean hasColors();
 	
+	@Override
 	CustomModelDataComponent clone();
 	
 	@Override

@@ -2,15 +2,17 @@ package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumName;
 import de.atlasmc.util.enums.EnumUtil;
 
 public interface Painting extends Hanging {
 
+	@NotNull
 	public static final NBTCodec<Painting>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Painting.class)
-					.include(Hanging.NBT_HANDLER)
+					.include(Hanging.NBT_CODEC)
 					.codec("motive", Painting::getMotive, Painting::setMotive, EnumUtil.enumStringNBTCodec(Motive.class), Motive.KEBAB)
 					.build();
 	
@@ -20,7 +22,7 @@ public interface Painting extends Hanging {
 	
 	@Override
 	default NBTCodec<? extends Painting> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public static enum Motive implements IDHolder, EnumName {

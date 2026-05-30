@@ -277,10 +277,8 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 			throw new IllegalArgumentException("Attribute can not be null!");
 		if (attributes == null)
 			return false;
-		AttributeInstance instance = getAttribute(attribute);
-		if (instance == null)
-			return false;
-		return instance.removeModifiers();
+		var instance = attributes.get(attribute);
+		return instance != null ? instance.removeModifiers() : false;
 	}
 
 	@Override

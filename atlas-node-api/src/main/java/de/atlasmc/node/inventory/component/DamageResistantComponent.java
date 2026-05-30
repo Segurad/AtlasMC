@@ -4,9 +4,11 @@ import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.entity.DamageType;
 import de.atlasmc.tag.TagKey;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface DamageResistantComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<DamageResistantComponent>
 	NBT_CODEC = NBTCodec
 					.builder(DamageResistantComponent.class)
@@ -16,6 +18,7 @@ public interface DamageResistantComponent extends ItemComponent {
 					.endComponent()
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<DamageResistantComponent>
 	STREAM_CODEC = StreamCodec
 					.builder(DamageResistantComponent.class)
@@ -27,6 +30,7 @@ public interface DamageResistantComponent extends ItemComponent {
 	
 	void setDamageTypes(TagKey<DamageType> types);
 	
+	@Override
 	DamageResistantComponent clone();
 	
 	@Override

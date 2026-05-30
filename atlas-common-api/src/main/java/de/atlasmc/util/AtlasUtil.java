@@ -12,8 +12,8 @@ import de.atlasmc.util.annotation.Nullable;
 
 public class AtlasUtil {
 	
-	private static final Function<?, ?> GET_SELF = v -> { return v; };
-	private static final BiConsumer<?, ?> SET_VOID = (_, _) -> {};
+	public static final Function<?, ?> GET_SELF = v -> { return v; };
+	public static final BiConsumer<?, ?> SET_VOID = (_, _) -> {};
 	
 	/**
 	 * UUID with value 0
@@ -90,8 +90,6 @@ public class AtlasUtil {
 	 */
 	@NotNull
 	public static byte[] uuidToBytes(@NotNull UUID uuid, @NotNull byte[] buff, int offset) {
-		if (uuid == null)
-			throw new IllegalArgumentException("UUID can not be null!");
 		if (buff.length - offset < 16)
 			throw new IllegalArgumentException("Can not write 16 bytes to buff: " + (buff.length - offset));
 		long most = uuid.getMostSignificantBits();
@@ -131,8 +129,7 @@ public class AtlasUtil {
 	 * @return true if removed
 	 */
 	public static <T> boolean fastRemove(@NotNull List<T> list, @NotNull Object element) {
-		if (element == null)
-			throw new IllegalArgumentException("Element can not be null!");
+		assert element != null;
 		int index = list.indexOf(element);
 		if (index == -1)
 			return false;

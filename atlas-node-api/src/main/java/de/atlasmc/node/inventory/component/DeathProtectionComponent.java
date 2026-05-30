@@ -5,17 +5,20 @@ import java.util.List;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.component.effect.ComponentEffect;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface DeathProtectionComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<DeathProtectionComponent>
 	NBT_CODEC = NBTCodec
 					.builder(DeathProtectionComponent.class)
 					.beginComponent(ComponentType.DEATH_PROTECTION.getNamespacedKey())
-					.codecList("death_effects", DeathProtectionComponent::hasEffects, DeathProtectionComponent::getEffects, ComponentEffect.NBT_HANDLER)
+					.codecList("death_effects", DeathProtectionComponent::hasEffects, DeathProtectionComponent::getEffects, ComponentEffect.NBT_CODEC)
 					.endComponent()
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<DeathProtectionComponent>
 	STREAM_CODEC = StreamCodec
 					.builder(DeathProtectionComponent.class)
@@ -31,6 +34,7 @@ public interface DeathProtectionComponent extends ItemComponent {
 	
 	void removeEffect(ComponentEffect effect);
 
+	@Override
 	DeathProtectionComponent clone();
 	
 	@Override

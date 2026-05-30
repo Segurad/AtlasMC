@@ -4,19 +4,23 @@ import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.io.codec.StreamSerializable;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTSerializable;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface RecipeDisplay extends NBTSerializable, StreamSerializable {
 	
+	@NotNull
 	public static final StreamCodec<RecipeDisplay> 
 	STREAM_CODEC = StreamCodec.builder(RecipeDisplay.class)
 					.enumVarIntConstructor(DisplayType.class, DisplayType::createDisplay, RecipeDisplay::getType)
 					.build();
 	
+	@NotNull
 	public static final NBTCodec<RecipeDisplay>
 	NBT_CODEC = NBTCodec.builder(RecipeDisplay.class)
 				.searchKeyEnumConstructor("id", DisplayType.class, DisplayType::createDisplay, RecipeDisplay::getType)
 				.build();
 	
+	@NotNull
 	DisplayType getType();
 	
 	@Override

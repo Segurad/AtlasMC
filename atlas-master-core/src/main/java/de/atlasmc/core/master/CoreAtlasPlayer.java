@@ -6,11 +6,11 @@ import java.util.UUID;
 import java.util.concurrent.Future;
 
 import de.atlasmc.chat.Chat;
+import de.atlasmc.network.permission.PermissionHandler;
 import de.atlasmc.network.player.AtlasPlayer;
 import de.atlasmc.network.server.Server;
 import de.atlasmc.network.socket.AtlasSocket;
 import de.atlasmc.permission.Permission;
-import de.atlasmc.permission.PermissionHandler;
 
 /**
  * Stores the profile data of a player
@@ -39,22 +39,27 @@ public class CoreAtlasPlayer implements AtlasPlayer {
 		this.lastJoin = lastJoin;
 	}
 
+	@Override
 	public String getMojangName() {
 		return mojangName;
 	}
 
+	@Override
 	public UUID getMojangUUID() {
 		return mojangUUID;
 	}
 
+	@Override
 	public AtlasSocket getOriginProxy() {
 		return originProxy;
 	}
 
+	@Override
 	public AtlasSocket getProxy() {
 		return proxy;
 	}
 
+	@Override
 	public Server getCurrentServer() {
 		return currentServer;
 	}
@@ -69,6 +74,7 @@ public class CoreAtlasPlayer implements AtlasPlayer {
 		return internalName;
 	}
 
+	@Override
 	public void setInternalName(String name) {
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null!");

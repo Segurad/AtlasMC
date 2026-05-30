@@ -2,9 +2,11 @@ package de.atlasmc.node.world.particle;
 
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public class DelayedParticle extends AbstractParticle {
 
+	@NotNull
 	public static final NBTCodec<DelayedParticle>
 	NBT_CODEC = NBTCodec
 				.builder(DelayedParticle.class)
@@ -12,6 +14,7 @@ public class DelayedParticle extends AbstractParticle {
 				.intField("delay", DelayedParticle::getDelay, DelayedParticle::setDelay)
 				.build();
 	
+	@NotNull
 	public static final StreamCodec<DelayedParticle>
 	STREAM_CODEC = StreamCodec
 					.builder(DelayedParticle.class)

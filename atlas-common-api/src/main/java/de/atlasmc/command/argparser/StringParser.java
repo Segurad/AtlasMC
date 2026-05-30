@@ -6,6 +6,7 @@ import java.util.List;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.command.CommandStringReader;
 import de.atlasmc.registry.RegistryValue;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import io.netty.buffer.ByteBuf;
 import static de.atlasmc.io.PacketUtil.*;
@@ -14,7 +15,8 @@ import static de.atlasmc.io.PacketUtil.*;
 public class StringParser implements VarArgParser<String> {
 
 	public static final int ID = 5;
-	public static final NamespacedKey KEY = NamespacedKey.of("brigadier:string");
+	@NotNull
+	public static final NamespacedKey KEY = NamespacedKey.literal("brigadier:string");
 	
 	private final StringType type;
 	

@@ -1,6 +1,5 @@
 package de.atlasmc.network;
 
-import java.util.Collection;
 import java.util.List;
 
 import de.atlasmc.util.configuration.ConfigurationSection;
@@ -9,8 +8,8 @@ import de.atlasmc.util.configuration.ConfigurationSerializable;
 public class NodeConfig implements ConfigurationSerializable {
 	
 	private final String name;
-	private final Collection<String> serverGroups;
-	private final Collection<String> coreModules;
+	private final List<String> serverGroups;
+	private final List<String> coreModules;
 	
 	public NodeConfig(ConfigurationSection config) {
 		this.name = config.getString("name");
@@ -18,11 +17,11 @@ public class NodeConfig implements ConfigurationSerializable {
 		coreModules = List.copyOf(config.getStringList("core-modules", List.of()));
 	}
 	
-	public Collection<String> getServerGroups() {
+	public List<String> getServerGroups() {
 		return serverGroups;
 	}
 	
-	public Collection<String> getCoreModules() {
+	public List<String> getCoreModules() {
 		return coreModules;
 	}
 	

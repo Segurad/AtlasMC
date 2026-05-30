@@ -3,13 +3,15 @@ package de.atlasmc.node.block.tile;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.node.inventory.ItemStack;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Campfire extends TileEntity {
 	
+	@NotNull
 	static final NBTCodec<Campfire>
 	NBT_HANDLER = NBTCodec
 					.builder(Campfire.class)
-					.include(TileEntity.NBT_HANDLER)
+					.include(TileEntity.NBT_CODEC)
 					.codecArraySearchByteIndexField("Items", "slot", Campfire::hasItems, Campfire::getItems, ItemStack.NBT_CODEC)
 					.codec("CookingTimes", Campfire::getCookingTimes, Campfire::setCookingTimes, NBTCodecs.INT_ARRAY)
 					.codec("CookingTotalTimes", Campfire::getTotalCookingTimes, Campfire::setTotalCookingTimes, NBTCodecs.INT_ARRAY)

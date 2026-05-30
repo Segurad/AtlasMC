@@ -7,16 +7,14 @@ import de.atlasmc.node.block.tile.CommandBlock.Mode;
 @DefaultPacketID(packetID = PacketPlay.IN_PROGRAM_COMMAND_BLOCK, definition = "set_command_block")
 public class PacketInProgramCommandBlock extends AbstractPacket implements PacketPlayIn {
 	
+	public static final int
+	FLAG_TRACK_OUTPUT = 0x01,
+	FLAG_IS_CONDITIONAL = 0x02,
+	FLAG_AUTOMATIC = 0x04;
+	
 	public long position;
 	public String command;
 	public Mode mode;
-	/**
-	 * <ul>
-	 * <li>0x01 = track output</li>
-	 * <li>0x02 = is conditional</li>
-	 * <li>0x04 = automatic</li>
-	 * </ul>
-	 */
 	public int flags;
 	
 	@Override

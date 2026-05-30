@@ -20,12 +20,14 @@ import static de.atlasmc.io.PacketUtil.readVarInt;
 
 public interface PotionEffect extends Cloneable, NBTSerializable, StreamSerializable {
 	
+	@NotNull
 	public static final NBTCodec<PotionEffect>
 	NBT_CODEC = NBTCodec
 					.builder(PotionEffect.class)
 					.searchKeyConstructor("id", PotionEffectType.REGISTRY_KEY, PotionEffectType::createEffect, PotionEffect::getType)
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<PotionEffect>
 	STREAM_CODEC = new StreamCodec<PotionEffect>() {
 		

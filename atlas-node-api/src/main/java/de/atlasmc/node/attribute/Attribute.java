@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import de.atlasmc.IDHolder;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
+import de.atlasmc.util.annotation.NotNull;
 
 public class Attribute implements Namespaced, IDHolder {
 	
@@ -31,6 +32,7 @@ public class Attribute implements Namespaced, IDHolder {
 		BY_NAME = new ConcurrentHashMap<>();
 	}
 	
+	@NotNull
 	private final NamespacedKey key;
 	
 	private Attribute(String key) {
@@ -60,6 +62,7 @@ public class Attribute implements Namespaced, IDHolder {
 		return null;
 	}
 
+	@Override
 	public int getID() {
 		// TODO Auto-generated method stub
 		return 0;

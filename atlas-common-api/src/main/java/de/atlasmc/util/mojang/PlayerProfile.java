@@ -9,16 +9,18 @@ import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.util.CloneException;
 import de.atlasmc.util.OpenCloneable;
+import de.atlasmc.util.annotation.NotNull;
 
 public class PlayerProfile implements NBTSerializable, OpenCloneable {
 	
+	@NotNull
 	public static final NBTCodec<PlayerProfile>
 	NBT_CODEC = NBTCodec
 					.builder(PlayerProfile.class)
 					.defaultConstructor(PlayerProfile::new)
 					.codec("name", PlayerProfile::getName, PlayerProfile::setName, NBTCodecs.STRING)
 					.codec("id", PlayerProfile::getUUID, PlayerProfile::setUUID, NBTCodecs.UUID_CODEC)
-					.codecList("properties", PlayerProfile::hasProperties, PlayerProfile::getProperties, ProfileProperty.NBT_HANDLER)
+					.codecList("properties", PlayerProfile::hasProperties, PlayerProfile::getProperties, ProfileProperty.NBT_CODEC)
 					.build();
 	
 	public static final NBTCodec<PlayerProfile> NAME_NBT_CODEC = NBTCodec.stringToObject(PlayerProfile.class, PlayerProfile::new, PlayerProfile::getName);

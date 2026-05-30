@@ -27,6 +27,7 @@ import de.atlasmc.nbt.codec.field.CodecArraySearchByteIndexFieldBuilder;
 import de.atlasmc.nbt.codec.field.TypeCollectionFieldBuilder;
 import de.atlasmc.nbt.codec.field.TypeCollectionInnerSearchKeyFieldBuilder;
 import de.atlasmc.nbt.codec.field.TypeListSearchIntIndexFieldBuilder;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumUtil;
 import de.atlasmc.util.function.ObjBooleanConsumer;
 import de.atlasmc.util.function.ObjByteConsumer;
@@ -108,11 +109,11 @@ public interface AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCompoun
 		return addField(codecCollectionBuilder(key, has, get, codec));
 	}
 	
-	default <V> B codec(CharSequence key, Function<T, V> get, BiConsumer<T, V> set, NBTCodec<? extends V> codec) {
+	default <V> B codec(@NotNull CharSequence key, Function<T, V> get, BiConsumer<T, V> set, NBTCodec<? extends V> codec) {
 		return addField(objectBuilder(key, get, set, codec));
 	}
 	
-	default <V> B codec(CharSequence key, Function<T, V> get, BiConsumer<T, V> set, NBTCodec<? extends V> codec, V defaultValue) {
+	default <V> B codec(@NotNull CharSequence key, Function<T, V> get, BiConsumer<T, V> set, NBTCodec<? extends V> codec, V defaultValue) {
 		return addField(objectBuilder(key, get, set, codec).setDefaultValue(defaultValue));
 	}
 	
@@ -136,11 +137,11 @@ public interface AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCompoun
 		return addField(codecCollectionBuilder(key, has, get, new MapTypeToCodec<>(codec, getKey)));
 	}
 	
-	default <K extends Namespaced, V> B multimapTypeToCodec(CharSequence key, ToBooleanFunction<T> has, Function<T, Multimap<K, V>> get, NBTCodec<V> codec, CharSequence keyField, Function<NamespacedKey, K> keySupplier) {
+	default <K extends Namespaced, V> B multimapTypeToCodec(@NotNull CharSequence key, ToBooleanFunction<T> has, Function<T, Multimap<K, V>> get, NBTCodec<V> codec, CharSequence keyField, Function<NamespacedKey, K> keySupplier) {
 		return addField(codecCollectionBuilder(key, has, get, new MultimapTypeToCodec<>(keyField, keySupplier, codec)));
 	}
 	
-	default <V> B mapFieldNameToCodec(CharSequence key, ToBooleanFunction<T> has, Function<T, Map<String, V>> get, NBTCodec<V> codec) {
+	default <V> B mapFieldNameToCodec(@NotNull CharSequence key, ToBooleanFunction<T> has, Function<T, Map<String, V>> get, NBTCodec<V> codec) {
 		return addField(codecCollectionBuilder(key, has, get, new MapFieldNameToCodec<>(codec)));
 	}
 	

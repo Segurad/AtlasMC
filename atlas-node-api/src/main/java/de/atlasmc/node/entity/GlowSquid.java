@@ -1,13 +1,15 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface GlowSquid extends Squid {
 	
+	@NotNull
 	public static final NBTCodec<GlowSquid>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(GlowSquid.class)
-					.include(Squid.NBT_HANDLER)
+					.include(Squid.NBT_CODEC)
 					.intField("DarkTicksRemaining", GlowSquid::getDarkTicksRemaining, GlowSquid::setDarkTicksRemaining, 0)
 					.build();
 	
@@ -17,7 +19,7 @@ public interface GlowSquid extends Squid {
 	
 	@Override
 	default NBTCodec<? extends GlowSquid> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

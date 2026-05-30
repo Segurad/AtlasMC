@@ -2,9 +2,11 @@ package de.atlasmc.node.world.particle;
 
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public class DragonBreathParticle extends AbstractParticle {
 
+	@NotNull
 	public static final NBTCodec<DragonBreathParticle>
 	NBT_CODEC = NBTCodec
 				.builder(DragonBreathParticle.class)
@@ -12,6 +14,7 @@ public class DragonBreathParticle extends AbstractParticle {
 				.floatField("power", DragonBreathParticle::getPower, DragonBreathParticle::setPower, 1)
 				.build();
 	
+	@NotNull
 	public static final StreamCodec<DragonBreathParticle>
 	STREAM_CODEC = StreamCodec
 					.builder(DragonBreathParticle.class)

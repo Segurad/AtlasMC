@@ -6,13 +6,15 @@ import java.util.UUID;
 import de.atlasmc.IDHolder;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumName;
 import de.atlasmc.util.enums.EnumUtil;
 
 public interface Fox extends Animal {
 	
+	@NotNull
 	public static final NBTCodec<Fox>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Fox.class)
 					.include(Animal.NBT_CODEC)
 					.boolField("Crouching", Fox::isCrouching, Fox::setCrouching, false)
@@ -79,7 +81,7 @@ public interface Fox extends Animal {
 	
 	@Override
 	default NBTCodec<? extends Fox> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 	public static enum Type implements EnumName, IDHolder {

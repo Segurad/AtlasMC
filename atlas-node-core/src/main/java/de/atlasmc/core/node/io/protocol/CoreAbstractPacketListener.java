@@ -1,5 +1,7 @@
 package de.atlasmc.core.node.io.protocol;
 
+import java.io.IOException;
+
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.io.connection.PacketListener;
@@ -22,7 +24,18 @@ public abstract class CoreAbstractPacketListener<H, P extends Packet> implements
 		}
 		if (handleAsync(id)) {
 			handle(packet);
+			packet.setHandled(true);
 		}
+	}
+	
+	@Override
+	public void handlePacketSync(ConnectionHandler handler, Packet packet) throws IOException {
+		int id = packet.getID();
+		if (id < 0 && id >= packetCount) {
+			return;
+		}
+		handle(packet);
+		packet.setHandled(true);
 	}
 	
 	protected abstract boolean handleAsync(int packetID);

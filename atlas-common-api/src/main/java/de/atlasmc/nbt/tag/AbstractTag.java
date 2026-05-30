@@ -27,6 +27,7 @@ abstract class AbstractTag implements NBT {
 		this.name = name;
 	}
 	
+	@Override
 	public AbstractTag clone() {
 		try {
 			return (AbstractTag) super.clone();

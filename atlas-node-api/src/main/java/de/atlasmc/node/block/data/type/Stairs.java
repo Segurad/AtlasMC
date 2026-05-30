@@ -12,6 +12,7 @@ public interface Stairs extends Bisected, Directional, Waterlogged {
 	
 	void setShape(Shape shape);
 	
+	@Override
 	Stairs clone();
 	
 	public static enum Shape implements IDHolder, EnumName {
@@ -22,7 +23,7 @@ public interface Stairs extends Bisected, Directional, Waterlogged {
 		OUTER_LEFT,
 		OUTER_RIGHT;
 
-		private String name;
+		private final String name;
 		
 		private Shape() {
 			this.name = name().toLowerCase().intern();

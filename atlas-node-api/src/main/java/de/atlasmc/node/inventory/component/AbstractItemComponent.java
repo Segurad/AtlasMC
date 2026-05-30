@@ -17,6 +17,7 @@ public abstract class AbstractItemComponent implements ItemComponent {
 		return type;
 	}
 	
+	@Override
 	public AbstractItemComponent clone() {
 		try {
 			return (AbstractItemComponent) super.clone();

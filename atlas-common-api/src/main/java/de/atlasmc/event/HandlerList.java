@@ -89,12 +89,11 @@ public class HandlerList {
 	}
 	
 	public void registerExecutor(@NotNull EventExecutor executor) {
-		if (executor == null) 
-			return;
+		assert executor != null;
 		register(globalExecutors, executor);
 	}
 	
-	public void registerExecutor(EventExecutor executor, Object... context) {
+	public void registerExecutor(@NotNull EventExecutor executor, Object... context) {
 		registerExecutor(executor);
 	}
 	
@@ -302,8 +301,7 @@ public class HandlerList {
 	 * @return
 	 */
 	protected static EventExecutor[] internalUnregister(final Listener listener, final EventExecutor[] executors) {
-		if (listener == null)
-			throw new IllegalArgumentException("Listener can not be null!");
+		assert listener != null;
 		final int length = executors.length;
 		if (length == 0)
 			return executors;
@@ -347,8 +345,7 @@ public class HandlerList {
 	 * @param executors
 	 */
 	protected static EventExecutor[] internalUnregister(PluginHandle plugin, EventExecutor[] executors) {
-		if (plugin == null)
-			throw new IllegalArgumentException("Plugin can not be null!");
+		assert plugin != null;
 		final int length = executors.length;
 		if (length == 0)
 			return executors;
@@ -397,10 +394,6 @@ public class HandlerList {
 	 * @param context the context in which this listener should be registered
 	 */
 	public static void registerListener(PluginHandle plugin, Listener listener, Object... context) {
-		if (listener == null) 
-			throw new IllegalArgumentException("Listener can not be null!");
-		if (plugin == null)
-			throw new IllegalArgumentException("Plugin can not be null!");
 		List<EventExecutor> exes = MethodEventExecutor.getExecutors(plugin, listener);
 		for (EventExecutor exe : exes) {
 			HandlerList handlers = getHandlerListOf(exe.eventClass);
@@ -417,10 +410,6 @@ public class HandlerList {
 	 * @param context optional context for registration
 	 */
 	public static <E extends Event> void registerFunctionalListener(PluginHandle plugin, Class<E> eventClass, FunctionalListener<E> listener, Object... context) {
-		if (listener == null) 
-			throw new IllegalArgumentException("Listener can not be null!");
-		if (plugin == null)
-			throw new IllegalArgumentException("Plugin can not be null!");
 		HandlerList handlers = getHandlerListOf(eventClass);
 		FunctionalListenerExecutor exe = new FunctionalListenerExecutor(plugin, eventClass, listener);
 		handlers.registerExecutor(exe, context);

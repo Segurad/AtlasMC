@@ -9,12 +9,14 @@ import de.atlasmc.util.annotation.NotNull;
 
 public interface ItemComponent extends NBTSerializable, StreamSerializable, OpenCloneable {
 	
+	@NotNull
 	public static final NBTCodec<ItemComponent> 
 	NBT_CODEC = NBTCodec
 					.builder(ItemComponent.class)
 					.fieldKeyRegistryConstructor(ComponentType.REGISTRY_KEY, ComponentType::createItemComponent)
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<ItemComponent>
 	STREAM_CODEC = StreamCodec
 					.builder(ItemComponent.class)

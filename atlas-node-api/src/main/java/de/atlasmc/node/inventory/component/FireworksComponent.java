@@ -5,19 +5,22 @@ import java.util.List;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.FireworkExplosion;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface FireworksComponent extends ItemComponent {
 
+	@NotNull
 	public static final NBTCodec<FireworksComponent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(FireworksComponent.class)
 					.include(ItemComponent.NBT_CODEC)
 					.beginComponent(ComponentType.FIREWORKS.getNamespacedKey())
-					.codecList("explosion", FireworksComponent::hasExplosions, FireworksComponent::getExplosions, FireworkExplosion.NBT_HANDLER)
+					.codecList("explosion", FireworksComponent::hasExplosions, FireworksComponent::getExplosions, FireworkExplosion.NBT_CODEC)
 					.byteField("flight_duration", FireworksComponent::getFlightDuration, FireworksComponent::setFlightDuration, (byte) 1)
 					.endComponent()
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<FireworksComponent>
 	STREAM_CODEC = StreamCodec
 					.builder(FireworksComponent.class)
@@ -38,11 +41,12 @@ public interface FireworksComponent extends ItemComponent {
 	
 	void setFlightDuration(int duration);
 	
+	@Override
 	FireworksComponent clone();
 	
 	@Override
 	default NBTCodec<? extends FireworksComponent> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	@Override

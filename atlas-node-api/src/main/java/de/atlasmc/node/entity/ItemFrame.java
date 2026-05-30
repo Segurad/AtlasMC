@@ -3,14 +3,16 @@ package de.atlasmc.node.entity;
 import de.atlasmc.IDHolder;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.ItemStack;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumUtil;
 
 public interface ItemFrame extends Hanging {
 	
+	@NotNull
 	public static final NBTCodec<ItemFrame>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(ItemFrame.class)
-					.include(Hanging.NBT_HANDLER)
+					.include(Hanging.NBT_CODEC)
 					.boolField("Fixed", ItemFrame::isFixed, ItemFrame::setFixed)
 					.boolField("Invisible", ItemFrame::isInvisible, ItemFrame::setInvisible)
 					.codec("Item", ItemFrame::getItem, ItemFrame::setItemStack, ItemStack.NBT_CODEC)
@@ -42,7 +44,7 @@ public interface ItemFrame extends Hanging {
 	
 	@Override
 	default NBTCodec<? extends ItemFrame> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public static enum Rotation implements IDHolder {

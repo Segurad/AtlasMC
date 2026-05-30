@@ -4,10 +4,12 @@ import org.joml.Vector3i;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.UnsafeAPI;
 
 public interface Bee extends Animal, AngerableMob {
 
+	@NotNull
 	public static final NBTCodec<Bee>
 	NBT_CODEC = NBTCodec
 					.builder(Bee.class)

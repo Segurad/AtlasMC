@@ -2,21 +2,26 @@ package de.atlasmc.node.util.palette;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.function.ToIntFunction;
 
 import de.atlasmc.node.util.VariableValueArray;
 import io.netty.buffer.ByteBuf;
 
+/**
+ * Palette wrapper that changes the backing implementation based on the size
+ * @param <E>
+ */
 public class AdaptivePalette<E> implements Palette<E> {
 	
 	private Palette<E> palette;
 	private final int minBitsPerEntry; // used when resizing down as lower bound
 	private final int globalBitThreshold; // used to switch to global palette when growing
 	
-	public AdaptivePalette(int minBitsPerEntry, int capacity, GlobalValueProvider<E> globalPalette, int globalThreshold) {
+	public AdaptivePalette(int minBitsPerEntry, int capacity, ToIntFunction<E> globalPalette, int globalThreshold) {
 		this(minBitsPerEntry, capacity, globalPalette, globalThreshold, null);
 	}
 	
-	public AdaptivePalette(int minBitsPerEntry, int capacity, GlobalValueProvider<E> globalPalette, int globalBitThreshold, E entry) {
+	public AdaptivePalette(int minBitsPerEntry, int capacity, ToIntFunction<E> globalPalette, int globalBitThreshold, E entry) {
 		this.minBitsPerEntry = minBitsPerEntry;
 		this.globalBitThreshold = globalBitThreshold;
 		this.palette = new SingleValuePalette<>(capacity, globalPalette, entry);
@@ -53,8 +58,8 @@ public class AdaptivePalette<E> implements Palette<E> {
 	}
 	
 	@Override
-	public void setRawEntry(int index, int entryValue) {
-		palette.setRawEntry(index, entryValue);
+	public boolean setRawEntry(int index, int entryValue) {
+		return palette.setRawEntry(index, entryValue);
 	}
 	
 	@Override
@@ -98,8 +103,8 @@ public class AdaptivePalette<E> implements Palette<E> {
 	}
 
 	@Override
-	public PaletteEntry<E> getEntry(E entry) {
-		return palette.getEntry(entry);
+	public PaletteEntry<E> getPaletteEntry(E entry) {
+		return palette.getPaletteEntry(entry);
 	}
 
 	@Override
@@ -123,7 +128,7 @@ public class AdaptivePalette<E> implements Palette<E> {
 	}
 
 	@Override
-	public GlobalValueProvider<E> getGlobalProvider() {
+	public ToIntFunction<E> getGlobalProvider() {
 		return palette.getGlobalProvider();
 	}
 	

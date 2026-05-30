@@ -2,9 +2,7 @@ package de.atlasmc.node;
 
 import java.util.UUID;
 
-import de.atlasmc.Atlas;
-import de.atlasmc.node.io.protocol.ProtocolAdapter;
-import de.atlasmc.node.io.protocol.ProtocolAdapterHandler;
+import de.atlasmc.node.io.protocol.ProtocolAdapterManager;
 import de.atlasmc.node.io.socket.SocketManager;
 import de.atlasmc.node.server.NodeServerManager;
 
@@ -19,7 +17,7 @@ public class AtlasNode {
 			throw new IllegalArgumentException("Node can not be null!");
 		if (INSTANCE != null) 
 			throw new IllegalStateException("Atlas already initialized!");
-		synchronized (Atlas.class) {
+		synchronized (AtlasNode.class) {
 			if (INSTANCE != null)
 				throw new IllegalStateException("Atlas already initialized!");
 			AtlasNode.INSTANCE = node;
@@ -41,13 +39,9 @@ public class AtlasNode {
 	public static LocalAtlasNode getAtlas() {
 		return INSTANCE;
 	}
-
-	public static ProtocolAdapter getProtocolAdapter(int version) {
-		return INSTANCE.getProtocolAdapterHandler().getProtocol(version);
-	}
 	
-	public static ProtocolAdapterHandler getProtocolAdapterHandler() {
-		return INSTANCE.getProtocolAdapterHandler();
+	public static ProtocolAdapterManager getProtocolAdapterManager() {
+		return INSTANCE.getProtocolAdapterManager();
 	}
 
 	public static SocketManager getSocketManager() {

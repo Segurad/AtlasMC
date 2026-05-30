@@ -48,9 +48,9 @@ public class CoreBlockDisplay extends CoreDisplay implements BlockDisplay {
 	@Override
 	public void setBlockDataType(BlockType type) {
 		int id = 0;
-		if (type == null)
+		if (type == null) {
 			block = null;
-		if (block == null || block.getType() != type) {
+		} else if (block == null || block.getType() != type) {
 			block = type.createBlockData();
 			id = block.getStateID();
 		}

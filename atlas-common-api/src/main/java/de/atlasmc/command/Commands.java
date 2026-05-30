@@ -152,18 +152,12 @@ public class Commands {
 		String type = config.getString("type");
 		if (type == null)
 			return null;
-		CommandArg arg = null;
-		switch (type) {
-		case "literal":
-			arg = loadLiteralArg(config, templates, permission, validator);
-			break;
-		case "var":
-			arg = loadVarArg(config, templates, permission, validator);
-			break;
-		default:
-			throw new ConfigurationException("Unknwon arg type: " + type);
-		}
-		return arg;
+		CommandArg arg = switch (type) {
+            case "literal" -> loadLiteralArg(config, templates, permission, validator);
+            case "var" -> loadVarArg(config, templates, permission, validator);
+            default -> throw new ConfigurationException("Unknwon arg type: " + type);
+        };
+        return arg;
 	}
 	
 	private static void loadArg(ConfigurationSection config, CommandArg arg, Map<String, CommandArg> templates, String permission, CommandSourceValidator validator) {

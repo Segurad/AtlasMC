@@ -7,7 +7,7 @@ import java.util.UUID;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.network.AtlasNetworkHandler;
 import de.atlasmc.network.NodeManager;
-import de.atlasmc.network.PermissionManager;
+import de.atlasmc.network.permission.PermissionManager;
 import de.atlasmc.network.player.ProfileHandler;
 import de.atlasmc.network.server.ServerManager;
 

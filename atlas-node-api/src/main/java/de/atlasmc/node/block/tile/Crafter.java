@@ -4,14 +4,16 @@ import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.node.inventory.Inventory;
 import de.atlasmc.node.inventory.loot.LootTableHolder;
+import de.atlasmc.util.annotation.NotNull;
 import it.unimi.dsi.fastutil.ints.IntSet;
 
 public interface Crafter extends AbstractContainerTile<Inventory>, LootTableHolder {
 	
+	@NotNull
 	public static final NBTCodec<Crafter>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Crafter.class)
-					.include(AbstractContainerTile.NBT_HANDLER)
+					.include(AbstractContainerTile.NBT_CODEC)
 					.include(LootTableHolder.NBT_CODEC)
 					.intField("crafting_ticks_remaining", Crafter::getCraftingTicksRemaining, Crafter::setCraftingticksRemaining, 0)
 					.boolField("triggered", Crafter::isTriggered, Crafter::setTriggered, false)
@@ -36,7 +38,7 @@ public interface Crafter extends AbstractContainerTile<Inventory>, LootTableHold
 	
 	@Override
 	default NBTCodec<? extends Crafter> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

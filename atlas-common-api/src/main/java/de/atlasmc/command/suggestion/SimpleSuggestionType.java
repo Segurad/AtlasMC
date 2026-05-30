@@ -1,5 +1,7 @@
 package de.atlasmc.command.suggestion;
 
+import java.util.Objects;
+
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
@@ -10,7 +12,7 @@ final class SimpleSuggestionType implements SuggestionType {
 	private final NamespacedKey key;
 	
 	SimpleSuggestionType(NamespacedKey key) {
-		this.key = key;
+		this.key = Objects.requireNonNull(key, "key");
 	}
 	
 	@Override

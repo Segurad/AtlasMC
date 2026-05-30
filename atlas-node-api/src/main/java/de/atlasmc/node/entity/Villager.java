@@ -9,8 +9,8 @@ public interface Villager extends AbstractVillager, Breedable, PocketHolder {
 	NBT_HANDLER = NBTCodec
 					.builder(Villager.class)
 					.include(Breedable.NBT_CODEC)
-					.include(AbstractVillager.NBT_HANDLER)
-					.include(PocketHolder.NBT_HANDLER)
+					.include(AbstractVillager.NBT_CODEC)
+					.include(PocketHolder.NBT_CODEC)
 					.longField("LastRestock", Villager::getLastRestock, Villager::setLastRestock, 0)
 					//.longField("LastGossipDecay", null, null, 0)
 					.intField("RestocksToday", Villager::getRestocksToday, Villager::setRestocksToday, 0)

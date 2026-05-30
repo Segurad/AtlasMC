@@ -56,7 +56,7 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 		@SuppressWarnings("unchecked")
 		V entryValue = (V) value; // TODO test if try catch ClassCastException can should be used
 		for (CacheEntry<K, V> entry : map.values()) {
-			if (entry.ref.refersTo(entryValue))
+			if (entry.refersTo(entryValue))
 				return true;
 		}
 		return false;
@@ -74,7 +74,7 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 		final int currentTick = this.currentTick;
 		V value = entry.value;
 		if (value == null || entry.newttl < currentTick) {
-			value = entry.ref.get();
+			value = entry.get();
 			if (value != null) { // resurrect entry
 				entry.newttl = currentTick + entry.ttlIncrement;
 				entry.value = value;
@@ -96,7 +96,7 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 		CacheEntry<K, V> entry = map.get(key);
 		if (entry == null)
 			return null;
-		V value = entry.ref.get();
+		V value = entry.get();
 		return value;
 	}
 
@@ -117,9 +117,9 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 		if (oldEntry == null)
 			return null;
 		ttlList.remove(oldEntry);
-		if (oldEntry.newttl < currentTick)
-			return null;
-		return oldEntry.value;
+		var oldValue = oldEntry.get();
+		oldEntry.clear();
+		return oldValue;
 	}
 
 	@Override
@@ -127,9 +127,10 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 		CacheEntry<K, V> entry = map.remove(key);
 		if (entry == null)
 			return null;
-		if (entry.newttl < currentTick)
-			return null;
-		return entry.ref.get();
+		ttlList.remove(entry);
+		var oldValue = entry.get();
+		entry.clear();
+		return oldValue;
 	}
 
 	@Override
@@ -156,9 +157,9 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 		CacheEntry<K, V> entry = null;
 		while ((entry = it.next()) != null) {
 			if (entry.ttl >= currentTick)
-				continue;
+				break;
 			entry.value = null;
-			if (!entry.ref.refersTo(null))
+			if (!entry.refersTo(null))
 				continue;
 			it.remove();
 			int newttl = entry.newttl;
@@ -181,7 +182,7 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 		CacheEntry<K, V> entry = null;
 		int ttl = insert.ttl;
 		while ((entry = it.next()) != null) {
-			if (entry.newttl >= ttl) {
+			if (entry.ttl >= ttl) {
 				it.addBefor(insert);
 				return;
 			}
@@ -253,7 +254,7 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 				CacheEntry<K, V> nextValue = next.getValue();
 				if (nextValue.ttl >= currentTTL) // TTL is valid
 					return nextValue;
-				if (!nextValue.ref.refersTo(null)) // TTL ended but held alive by reference
+				if (!nextValue.refersTo(null)) // TTL ended but held alive by reference
 					return nextValue;
 			}
 			return null;
@@ -270,22 +271,21 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 		
 	}
 	
-	private static class CacheEntry<K, V> implements Entry<K, V> {
+	private static class CacheEntry<K, V> extends WeakReference<V> implements Entry<K, V> {
 		
 		public final K key;
 		public volatile V value;
-		public final WeakReference1<V, CacheEntry<K, V>> ref;
 		public final int ttlIncrement;
 		public volatile int ttl;
 		public volatile int newttl;
 		
 		public CacheEntry(K key, V value, int ttlIncrement, int ttl, ReferenceQueue<V> queue) {
+			super(value, queue);
 			this.key = key;
 			this.value = value;
 			this.ttlIncrement = ttlIncrement;
 			this.ttl = ttl;
 			this.newttl = ttl;
-			this.ref = new WeakReference1<>(value, queue, this);
 		}
 
 		@Override
@@ -295,7 +295,7 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 
 		@Override
 		public V getValue() {
-			return ref.get();
+			return get();
 		}
 
 		@Override

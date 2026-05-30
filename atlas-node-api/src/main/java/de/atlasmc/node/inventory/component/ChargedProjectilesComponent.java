@@ -5,9 +5,11 @@ import java.util.List;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.ItemStack;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface ChargedProjectilesComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<ChargedProjectilesComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(ChargedProjectilesComponent.class)
@@ -15,6 +17,7 @@ public interface ChargedProjectilesComponent extends ItemComponent {
 					.codecList(ComponentType.CHARGED_PROJECTILES.getNamespacedKey(), ChargedProjectilesComponent::hasProjectiles, ChargedProjectilesComponent::getProjectiles, ItemStack.NBT_CODEC)
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<ChargedProjectilesComponent>
 	STREAM_CODEC = StreamCodec
 					.builder(ChargedProjectilesComponent.class)
@@ -30,6 +33,7 @@ public interface ChargedProjectilesComponent extends ItemComponent {
 	
 	void removeProjectile(ItemStack item);
 	
+	@Override
 	ChargedProjectilesComponent clone();
 	
 	@Override

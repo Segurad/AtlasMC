@@ -27,6 +27,7 @@ import de.atlasmc.util.factory.FactoryException;
 public class Registries {
 	
 	private static RegistryHandler HANDLER;
+	
 	public static final String DEFAULT_REGISTRY_KEY = "registry:default";
 	
 	private Registries() {}

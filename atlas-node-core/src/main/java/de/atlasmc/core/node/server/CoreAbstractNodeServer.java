@@ -79,9 +79,4 @@ public abstract class CoreAbstractNodeServer implements NodeServer {
 		return workdir;
 	}
 
-	@Override
-	public boolean isRunning() {
-		return status == Status.ONLINE;
-	}
-
 }

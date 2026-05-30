@@ -2,9 +2,11 @@ package de.atlasmc.node.inventory.loot;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface LootTableHolder {
 	
+	@NotNull
 	public static final NBTCodec<LootTableHolder>
 	NBT_CODEC = NBTCodec
 					.builder(LootTableHolder.class)

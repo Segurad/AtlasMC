@@ -2,12 +2,17 @@ package de.atlasmc.node.util.palette;
 
 import static de.atlasmc.io.PacketUtil.*;
 
+import java.util.function.ToIntFunction;
+
 import io.netty.buffer.ByteBuf;
 
-public class IndirectPalette<E> extends AbstractIndirectPalette<E> {
-	
+/**
+ * Palette implementation that remaps global ids to smaller ids
+ * @param <E>
+ */
+public class IndirectPalette<E> extends AbstractIndirectPalette<E> {	
 
-	public IndirectPalette(int minBitsPerEntry, int capacity, int maxBitsPerEntry, GlobalValueProvider<E> provider) {
+	public IndirectPalette(int minBitsPerEntry, int capacity, int maxBitsPerEntry, ToIntFunction<E> provider) {
 		super(minBitsPerEntry, capacity, maxBitsPerEntry, provider);
 	}
 	
@@ -49,7 +54,7 @@ public class IndirectPalette<E> extends AbstractIndirectPalette<E> {
 		}
 		long[] values = this.values.array();
 		size += getVarIntLength(values.length);
-		size += values.length * 9; // use max number of bytes to represent long values as varlong
+		size += values.length * 8; // use max number of bytes to represent long values as varlong
 		return size;
 	}
 	

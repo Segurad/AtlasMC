@@ -1,13 +1,15 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface MinecartHopper extends AbstractMinecartContainer {
 
+	@NotNull
 	public static final NBTCodec<MinecartHopper>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(MinecartHopper.class)
-					.include(AbstractMinecartContainer.NBT_HANDLER)
+					.include(AbstractMinecartContainer.NBT_CODEC)
 					.boolField("Enable", MinecartHopper::isEnabled, MinecartHopper::setEnabled)
 					.build();
 	
@@ -17,7 +19,7 @@ public interface MinecartHopper extends AbstractMinecartContainer {
 
 	@Override
 	default NBTCodec<? extends MinecartHopper> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

@@ -3,23 +3,31 @@ package de.atlasmc.network.server;
 import java.util.UUID;
 
 import de.atlasmc.network.AtlasNode;
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 
 public interface Server {
 	
+	@Nullable
 	ServerGroup getGroup();
 	
 	int getPlayerCount();
 	
 	int getMaxPlayers();
 	
+	@NotNull
 	UUID getServerID();
 	
+	@NotNull
 	String getServerName();
 	
+	@NotNull
 	AtlasNode getNode();
 
+	@NotNull
 	String getImplementationName();
 	
+	@NotNull
 	Status getStatus();
 	
 	public static enum Status {

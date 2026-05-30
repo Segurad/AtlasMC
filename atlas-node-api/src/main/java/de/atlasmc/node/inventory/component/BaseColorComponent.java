@@ -3,10 +3,12 @@ package de.atlasmc.node.inventory.component;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.DyeColor;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumUtil;
 
 public interface BaseColorComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<BaseColorComponent>
 	NBT_CODEC = NBTCodec
 					.builder(BaseColorComponent.class)
@@ -14,6 +16,7 @@ public interface BaseColorComponent extends ItemComponent {
 					.codec(ComponentType.BASE_COLOR.getNamespacedKey(), BaseColorComponent::getColor, BaseColorComponent::setColor, EnumUtil.enumStringNBTCodec(DyeColor.class))
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<BaseColorComponent>
 	STREAM_CODEC = StreamCodec
 					.builder(BaseColorComponent.class)
@@ -21,6 +24,7 @@ public interface BaseColorComponent extends ItemComponent {
 					.varIntEnum(BaseColorComponent::getColor, BaseColorComponent::setColor, DyeColor.class)
 					.build();
 	
+	@Override
 	BaseColorComponent clone();
 	
 	DyeColor getColor();

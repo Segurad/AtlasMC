@@ -7,6 +7,7 @@ import java.util.List;
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.nbt.io.NBTReader;
 import de.atlasmc.nbt.io.NBTWriter;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.ThreadSafe;
 
 @ThreadSafe
@@ -117,6 +118,7 @@ public final class ChatUtil {
 		return FACTORY.legacyToComponent(legacy, formatPrefix);
 	}
 	
+	@NotNull
 	public static String componentToLegacy(ChatComponent component) {
 		return componentToLegacy(component, DEFAULT_CHAT_FORMAT_PREFIX);
 	}
@@ -155,6 +157,7 @@ public final class ChatUtil {
 		return FACTORY.legacyToRawText(legacy, fomatPrefix);
 	}
 	
+	@NotNull
 	public static String componentToRawText(ChatComponent component) {
 		return FACTORY.componentToRawText(component);
 	}

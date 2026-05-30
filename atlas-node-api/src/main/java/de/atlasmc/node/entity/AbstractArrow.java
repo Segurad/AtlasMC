@@ -5,13 +5,15 @@ import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.sound.EnumSound;
 import de.atlasmc.node.sound.Sound;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface AbstractArrow extends Projectile {
 	
+	@NotNull
 	public static final NBTCodec<AbstractArrow>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(AbstractArrow.class)
-					.include(Projectile.NBT_HANDLER)
+					.include(Projectile.NBT_CODEC)
 					.boolField("crit", AbstractArrow::isCritical, AbstractArrow::setCritical, false)
 					.doubleField("damage", AbstractArrow::getDamage, AbstractArrow::setDamage, 2)
 					.codec("inBlockState", AbstractArrow::getBlockDataIn, AbstractArrow::setBlockDataIn, BlockData.NBT_CODEC)
@@ -84,7 +86,7 @@ public interface AbstractArrow extends Projectile {
 	
 	@Override
 	default NBTCodec<? extends AbstractArrow> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

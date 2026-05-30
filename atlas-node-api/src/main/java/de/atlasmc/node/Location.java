@@ -87,6 +87,7 @@ public class Location extends Vector3d implements OpenCloneable {
 		return vec.set(getBlockX(), getBlockY(), getBlockZ());
 	}
 
+	@Override
 	public Location clone() {
 		try {
 			return (Location) super.clone();

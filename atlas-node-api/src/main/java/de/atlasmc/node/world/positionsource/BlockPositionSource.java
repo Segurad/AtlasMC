@@ -8,9 +8,11 @@ import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.node.util.MathUtil;
 import de.atlasmc.node.world.World;
+import de.atlasmc.util.annotation.NotNull;
 
 public class BlockPositionSource implements PositionSource {
 
+	@NotNull
 	public static final NBTCodec<BlockPositionSource>
 	NBT_CODEC = NBTCodec
 				.builder(BlockPositionSource.class)
@@ -18,6 +20,7 @@ public class BlockPositionSource implements PositionSource {
 				.codec("pos", BlockPositionSource::getPosition, BlockPositionSource::setPosition, NBTCodecs.VECTOR_3I)
 				.build();
 	
+	@NotNull
 	public static final StreamCodec<BlockPositionSource>
 	STREAM_CODEC = StreamCodec
 					.builder(BlockPositionSource.class)

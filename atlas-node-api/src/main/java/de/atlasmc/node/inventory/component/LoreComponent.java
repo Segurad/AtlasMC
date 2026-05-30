@@ -8,8 +8,9 @@ import de.atlasmc.util.annotation.NotNull;
 
 public interface LoreComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<LoreComponent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(LoreComponent.class)
 					.include(ItemComponent.NBT_CODEC)
 					.codecCollection(ComponentType.LORE.getNamespacedKey(), LoreComponent::hasLore, LoreComponent::getLore, Chat.CHAT_LIST_NBT_CODEC)
@@ -34,6 +35,7 @@ public interface LoreComponent extends ItemComponent {
 		return false;
 	}
 	
+	@Override
 	LoreComponent clone();
 
 	default void setLore(@NotNull Collection<Chat> lore) {
@@ -46,7 +48,7 @@ public interface LoreComponent extends ItemComponent {
 	
 	@Override
 	default NBTCodec<? extends LoreComponent> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

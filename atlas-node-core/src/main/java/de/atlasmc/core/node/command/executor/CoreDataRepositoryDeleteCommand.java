@@ -61,6 +61,10 @@ public class CoreDataRepositoryDeleteCommand implements CommandExecutor {
 		String rawEntry = context.getArgument("entry", String.class, false);
 		if (rawEntry == null) {
 			RepositoryNamespace namespace = repo.getNamespace(rawNamespace);
+			if (namespace == null) {
+				sender.sendMessage("No namespace found with name: " + rawEntry);
+				return true;
+			}
 			if (skipConfirm) {
 				namespace.delete().setListener((future) -> {
 					if (future.isSuccess() && future.resultNow()) {

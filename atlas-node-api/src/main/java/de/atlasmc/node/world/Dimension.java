@@ -6,12 +6,14 @@ import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.registry.ProtocolRegistryValueBase;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 
 public class Dimension extends ProtocolRegistryValueBase implements NBTSerializable, Namespaced {
 	
+	@NotNull
 	public static final NBTCodec<Dimension> 
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Dimension.class)
 					.boolField("natural", Dimension::isNatural, Dimension::setNatural)
 					.boolField("has_skylight", Dimension::hasSkyLight, Dimension::setSkylight)
@@ -119,7 +121,7 @@ public class Dimension extends ProtocolRegistryValueBase implements NBTSerializa
 
 	@Override
 	public NBTCodec<? extends Dimension> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 	public int getMinY() {

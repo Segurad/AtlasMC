@@ -17,6 +17,7 @@ import de.atlasmc.core.node.event.command.CoreCommandListener;
 import de.atlasmc.core.node.event.inventory.CoreInventoryListener;
 import de.atlasmc.core.node.event.player.CorePlayerListener;
 import de.atlasmc.core.node.system.init.ContainerFactoryLoader;
+import de.atlasmc.core.node.system.listener.CoreSocketListener;
 import de.atlasmc.event.Event;
 import de.atlasmc.event.EventExecutor;
 import de.atlasmc.event.HandlerList;
@@ -116,6 +117,7 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 		initDefaultExecutor(log, new CorePlayerListener());
 		initDefaultExecutor(log, new CoreInventoryListener());
 		initDefaultExecutor(log, new CoreCommandListener());
+		initDefaultExecutor(log, new CoreSocketListener());
 		loadData();
 		ContainerFactoryLoader.loadContainerFactories();
 	}
@@ -132,7 +134,8 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 			return;
 		} finally {
 			try {
-				indexStream.close();
+				if (indexStream != null)
+					indexStream.close();
 			} catch (IOException e) {}
 		}
 		List<String> registries = index.getStringList("registries", List.of());

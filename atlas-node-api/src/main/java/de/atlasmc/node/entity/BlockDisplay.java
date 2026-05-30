@@ -3,13 +3,15 @@ package de.atlasmc.node.entity;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.BlockData;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface BlockDisplay extends Display {
 	
+	@NotNull
 	public static final NBTCodec<BlockDisplay>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(BlockDisplay.class)
-					.include(Display.NBT_HANDLER)
+					.include(Display.NBT_CODEC)
 					.codec("block_state", BlockDisplay::getBlockData, BlockDisplay::setBlockData, BlockData.NBT_CODEC)
 					.build();
 	
@@ -23,7 +25,7 @@ public interface BlockDisplay extends Display {
 	
 	@Override
 	default NBTCodec<? extends BlockDisplay> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

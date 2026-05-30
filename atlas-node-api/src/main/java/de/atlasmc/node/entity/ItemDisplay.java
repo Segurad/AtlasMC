@@ -9,10 +9,11 @@ import de.atlasmc.util.enums.EnumUtil;
 
 public interface ItemDisplay extends Display {
 	
+	@NotNull
 	public static final NBTCodec<ItemDisplay>
 	NBT_HANDLER = NBTCodec
 					.builder(ItemDisplay.class)
-					.include(Display.NBT_HANDLER)
+					.include(Display.NBT_CODEC)
 					.codec("item", ItemDisplay::getItem, ItemDisplay::setItem, ItemStack.NBT_CODEC)
 					.codec("item_display", ItemDisplay::getRenderType, ItemDisplay::setRenderType, EnumUtil.enumStringNBTCodec(RenderType.class), RenderType.NONE)
 					.build();
@@ -43,7 +44,7 @@ public interface ItemDisplay extends Display {
 		GROUND,
 		FIXED;
 		
-		private String name;
+		private final String name;
 		
 		private RenderType() {
 			name = name().toLowerCase();

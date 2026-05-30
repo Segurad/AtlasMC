@@ -9,8 +9,11 @@ import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryKey;
 import de.atlasmc.registry.RegistryValueKey;
 import de.atlasmc.registry.RegistryHolder.Target;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import static de.atlasmc.registry.RegistryValueKey.ofLiteral;
+
+import java.util.Objects;
 
 /**
  * Represents all component types known to the client custom ones are not included.
@@ -131,8 +134,9 @@ public class ComponentType extends ProtocolRegistryValueBase {
 		factory = registry.getOrDefault(factoryKey);
 	}
 	
+	@NotNull
 	public ItemComponent createItemComponent() {
-		return factory != null ? factory.createComponent(this) : null;
+		return factory.createComponent(this);
 	}
 	
 	public ItemComponentFactory getFactory() {
@@ -140,7 +144,7 @@ public class ComponentType extends ProtocolRegistryValueBase {
 	}
 	
 	public void setFactory(ItemComponentFactory factory) {
-		this.factory = factory;
+		this.factory = Objects.requireNonNull(factory);
 	}
 	
 	public static ComponentType get(NamespacedKey key) {

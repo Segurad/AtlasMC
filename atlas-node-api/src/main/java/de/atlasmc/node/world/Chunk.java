@@ -32,6 +32,7 @@ public interface Chunk extends Tickable {
 	@NotNull
 	ChunkSection getSection(int height);
 	
+	@NotNull
 	ChunkSection getSectionByIndex(int index);
 	
 	boolean hasSection(int height);
@@ -156,6 +157,13 @@ public interface Chunk extends Tickable {
 	 */
 	int getBlockState(int x, int y, int z);
 	
+	/**
+	 * Returns the {@link BlockType} at the given position returns {@link BlockType#AIR} if {@link #hasSection(int)} is false
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return
+	 */
 	BlockType getBlockType(int x, int y, int z);
 	
 	/**

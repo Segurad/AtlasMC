@@ -12,6 +12,7 @@ public enum RecipeCategory implements IDHolder {
 	COOKING_BLOCKS,
 	COOKING_MISC;
 	
+	@Override
 	public int getID() {
 		return ordinal();
 	}

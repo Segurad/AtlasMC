@@ -37,8 +37,6 @@ public final class ByteArrayTag extends AbstractTag {
 	@Override
 	public ByteArrayTag clone() {
 		ByteArrayTag clone = (ByteArrayTag) super.clone();
-		if (clone == null)
-			return null;
 		if (data != null)
 			clone.setData(data.clone());
 		return clone;

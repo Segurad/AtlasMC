@@ -28,6 +28,7 @@ public class CoreBlaze extends CoreMob implements Blaze {
 		return LAST_META_INDEX+1;
 	}
 	
+	@Override
 	public boolean isOnFire() {
 		return (metaContainer.getData(META_BLAZE_ON_FIRE) & 0x01) == 0x01;
 	}

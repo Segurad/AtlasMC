@@ -10,8 +10,8 @@ public interface ZombieVillager extends Zombie, AbstractVillager {
 	public static final NBTCodec<ZombieVillager>
 	NBT_HANDLER = NBTCodec
 					.builder(ZombieVillager.class)
-					.include(Zombie.NBT_HANDLER)
-					.include(AbstractVillager.NBT_HANDLER)
+					.include(Zombie.NBT_CODEC)
+					.include(AbstractVillager.NBT_CODEC)
 					.intField("ConversionTime", ZombieVillager::getConversionTime, ZombieVillager::setConversionTime, -1)
 					.codec("ConversionPlayer", ZombieVillager::getConversionPlayer, ZombieVillager::setConversionPlayer, NBTCodecs.UUID_CODEC)
 					.boolField("IsConverting", ZombieVillager::isConverting, ZombieVillager::setConverting, false)

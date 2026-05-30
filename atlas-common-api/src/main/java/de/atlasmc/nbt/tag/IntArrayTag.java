@@ -37,8 +37,6 @@ public final class IntArrayTag extends AbstractTag {
 	@Override
 	public IntArrayTag clone() {
 		IntArrayTag clone = (IntArrayTag) super.clone();
-		if (clone == null)
-			return null;
 		if (data != null)
 			clone.setData(data.clone());
 		return clone;

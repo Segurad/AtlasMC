@@ -14,23 +14,28 @@ public class CoreRecipeBook implements RecipeBook {
 		this.type = type;
 	}
 	
+	@Override
 	public BookType getType() {
 		return type;
 	}
 	
+	@Override
 	public boolean isOpen() {
 		return open;
 	}
 	
+	@Override
 	public void setOpen(boolean open) {
 		this.open = open;
 		changed = true;
 	}
 	
+	@Override
 	public boolean hasFilter() {
 		return filter;
 	}
 	
+	@Override
 	public void setFilter(boolean filter) {
 		this.filter = filter;
 		changed = true;

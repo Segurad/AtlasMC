@@ -2,9 +2,11 @@ package de.atlasmc.chat.component;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.util.annotation.NotNull;
 
 public class TextComponent extends AbstractBaseComponent<TextComponent> {
 
+	@NotNull
 	public static final NBTCodec<TextComponent>
 	NBT_CODEC = NBTCodec
 					.builder(TextComponent.class)

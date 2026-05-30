@@ -2,10 +2,12 @@ package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.node.enchantments.Enchantment;
+import de.atlasmc.util.annotation.NotNull;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 
 public interface AbstractEnchantmentComponent extends ItemComponent {
 	
+	@NotNull
 	public static final StreamCodec<AbstractEnchantmentComponent>
 	STREAM_CODEC = StreamCodec
 					.builder(AbstractEnchantmentComponent.class)
@@ -27,6 +29,7 @@ public interface AbstractEnchantmentComponent extends ItemComponent {
 	
 	void removeEnchant(Enchantment ench);
 	
+	@Override
 	AbstractEnchantmentComponent clone();
 	
 	@Override

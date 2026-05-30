@@ -1,17 +1,21 @@
 package de.atlasmc.node.util.palette;
 
-import static de.atlasmc.io.PacketUtil.*;
-
 import java.util.Collection;
+import java.util.function.ToIntFunction;
 
+import de.atlasmc.io.PacketUtil;
 import de.atlasmc.node.util.MathUtil;
 import io.netty.buffer.ByteBuf;
 
+/**
+ * Palette implementation maps entries to its global values
+ * @param <E>
+ */
 public class DirectGlobalPalette<E> extends AbstractPalette<E> {
 
 	private int currentMaxValue;
 	
-	public DirectGlobalPalette(int minBitsPerValue, int capacity, int maxBitsPerValue, GlobalValueProvider<E> provider) {
+	public DirectGlobalPalette(int minBitsPerValue, int capacity, int maxBitsPerValue, ToIntFunction<E> provider) {
 		super(minBitsPerValue, capacity, maxBitsPerValue, provider);
 		currentMaxValue = MathUtil.createBitMask(values.getBitsPerValue());
 	}
@@ -26,7 +30,7 @@ public class DirectGlobalPalette<E> extends AbstractPalette<E> {
 		for (PaletteEntry<E> entry : entries) {
 			E rawEntry = entry.getEntry();
 			Entry<E> newEntry = addEntry(rawEntry, entry.value());
-			newEntry.paletteValue = globalProvider.value(rawEntry);
+			newEntry.paletteValue = globalProvider.applyAsInt(rawEntry);
 			if (newEntry.paletteValue > maxValue)
 				maxValue = newEntry.paletteValue;
 		}
@@ -42,11 +46,11 @@ public class DirectGlobalPalette<E> extends AbstractPalette<E> {
 	}
 	
 	@Override
-	protected Entry<E> addOrReplaceEntry(E entry, int index, boolean checkIndex) {
-		Entry<E> pEntry = super.addOrReplaceEntry(entry, index, checkIndex);
+	protected Entry<E> addOrReplaceEntry(E entry, int index) {
+		Entry<E> pEntry = super.addOrReplaceEntry(entry, index);
 		if (pEntry != null)
 			return pEntry;
-		int value = globalProvider.value(entry);
+		int value = globalProvider.applyAsInt(entry);
 		pEntry = addEntry(entry, value);
 		ensureBits(value);
 		return pEntry;
@@ -54,7 +58,7 @@ public class DirectGlobalPalette<E> extends AbstractPalette<E> {
 	
 	@Override
 	protected int updateValue(Entry<E> pEntry, E entry) {
-		int newValue = globalProvider.value(entry);
+		int newValue = globalProvider.applyAsInt(entry);
 		ensureBits(newValue);
 		return newValue;
 	}
@@ -64,9 +68,9 @@ public class DirectGlobalPalette<E> extends AbstractPalette<E> {
 		buf.writeByte(values.getBitsPerValue());
 		// write data
 		final long[] values = this.values.array();
-		writeVarInt(values.length, buf);
+		PacketUtil.writeVarInt(values.length, buf);
 		for (long value : values) {
-			writeVarLong(value, buf);
+			buf.writeLong(value);
 		}
 	}
 	
@@ -74,8 +78,8 @@ public class DirectGlobalPalette<E> extends AbstractPalette<E> {
 	public long getSerializedSize() {
 		int size = 1;
 		long[] values = this.values.array();
-		size += getVarIntLength(values.length);
-		size += values.length * 9; // use max number of bytes to represent long values as varlong
+		size += PacketUtil.getVarIntLength(values.length);
+		size += values.length * 8; // use max number of bytes to represent long values as varlong
 		return size;
 	}
 	

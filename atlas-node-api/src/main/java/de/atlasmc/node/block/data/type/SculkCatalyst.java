@@ -8,6 +8,7 @@ public interface SculkCatalyst extends BlockData {
 	
 	void setBloom(boolean bloom);
 	
+	@Override
 	SculkCatalyst clone();
 
 }

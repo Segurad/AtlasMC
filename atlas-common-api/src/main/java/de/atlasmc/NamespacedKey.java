@@ -86,11 +86,13 @@ public class NamespacedKey implements CharSequence {
 		INLINE_DEFINITION = literal("atlas:inline-definition");
 	}
 	
+	@NotNull
 	private final String key;
+	@NotNull
 	private final String namespace;
 	private final String combination;
 	
-	private NamespacedKey(String namespace, String key, String namespacedKey) {
+	private NamespacedKey(@NotNull String namespace, @NotNull String key, @NotNull String namespacedKey) {
 		this.key = key;
 		this.namespace = namespace.intern();
 		this.combination = namespacedKey;
@@ -175,9 +177,7 @@ public class NamespacedKey implements CharSequence {
 	}
 
 	@NotNull
-	public static NamespacedKey of(CharSequence namespacedKey) {
-		if (namespacedKey == null)
-			throw new IllegalArgumentException("NamespacedKey can not be null!");
+	public static NamespacedKey of(@NotNull CharSequence namespacedKey) {
 		if (namespacedKey instanceof NamespacedKey key)
 			return key;
 		String rawKey = namespacedKey.toString();
@@ -206,11 +206,9 @@ public class NamespacedKey implements CharSequence {
 	}
 	
 	@NotNull
-	public static NamespacedKey of(String namespace, String key) {
-		if (namespace == null) 
-			throw new IllegalArgumentException("Namespace can not be null!");
-		if (key == null) 
-			throw new IllegalArgumentException("Name can not be null!");
+	public static NamespacedKey of(@NotNull String namespace, @NotNull String key) {
+		assert namespace != null;
+		assert key != null;
 		String namespacedKey = namespace + ":" + key;
 		NamespacedKey k = CACHE.get(namespacedKey);
 		if (k != null)
@@ -221,9 +219,7 @@ public class NamespacedKey implements CharSequence {
 	}
 	
 	@NotNull
-	public static NamespacedKey literal(String namespacedKey) {
-		if (namespacedKey == null)
-			throw new IllegalArgumentException("NamespacedKey can not be null!");
+	public static NamespacedKey literal(@NotNull String namespacedKey) {
 		NamespacedKey k = CACHE.get(namespacedKey);
 		if (k != null)
 			return k;

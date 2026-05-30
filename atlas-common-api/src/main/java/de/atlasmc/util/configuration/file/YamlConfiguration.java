@@ -11,6 +11,7 @@ import java.util.Map;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.configuration.ConfigurationSection;
 
 import org.yaml.snakeyaml.Yaml;
@@ -65,18 +66,21 @@ public class YamlConfiguration extends FileConfiguration {
 		mapToSection(input, this);
 	}
 	
+	@NotNull
 	public static YamlConfiguration loadConfiguration(File file) throws FileNotFoundException, IOException {
 		YamlConfiguration cfg = new YamlConfiguration();
 		cfg.load(file);
 		return cfg;
 	}
 	
+	@NotNull
 	public static YamlConfiguration loadConfiguration(InputStream file) throws IOException {
 		YamlConfiguration cfg = new YamlConfiguration();
 		cfg.load(file);
 		return cfg;
 	}
 
+	@NotNull
 	public static YamlConfiguration loadConfiguration(Reader reader) throws IOException {
 		YamlConfiguration cfg = new YamlConfiguration();
 		cfg.load(reader);

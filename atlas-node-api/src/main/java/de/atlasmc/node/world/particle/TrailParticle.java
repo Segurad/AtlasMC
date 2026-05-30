@@ -7,9 +7,11 @@ import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.io.codec.StreamCodecs;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.util.annotation.NotNull;
 
 public class TrailParticle extends AbstractParticle {
 
+	@NotNull
 	public static final NBTCodec<TrailParticle>
 	NBT_CODEC = NBTCodec
 				.builder(TrailParticle.class)
@@ -19,6 +21,7 @@ public class TrailParticle extends AbstractParticle {
 				.intField("duration", TrailParticle::getDuration, TrailParticle::setDuration)
 				.build();
 	
+	@NotNull
 	public static final StreamCodec<TrailParticle>
 	STREAM_CODEC = StreamCodec
 					.builder(TrailParticle.class)

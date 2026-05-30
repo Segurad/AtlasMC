@@ -107,6 +107,7 @@ public abstract class PotionEffectType extends ProtocolRegistryValueBase  {
 		return key;
 	}
 	
+	@Override
 	public final int getID() {
 		return id;
 	}

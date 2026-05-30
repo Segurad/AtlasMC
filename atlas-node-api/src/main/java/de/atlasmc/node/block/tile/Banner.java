@@ -3,7 +3,6 @@ package de.atlasmc.node.block.tile;
 import java.util.List;
 import de.atlasmc.IDHolder;
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.chat.Chat;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.io.codec.StreamSerializable;
 import de.atlasmc.nbt.codec.NBTCodec;
@@ -11,16 +10,18 @@ import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.Nameable;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumName;
 import de.atlasmc.util.enums.EnumUtil;
 
 public interface Banner extends TileEntity, Nameable {
 	
+	@NotNull
 	public static final NBTCodec<Banner>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Banner.class)
-					.include(TileEntity.NBT_HANDLER)
-					.include(Nameable.NBT_HANDLER)
+					.include(TileEntity.NBT_CODEC)
+					.include(Nameable.NBT_CODEC)
 					.codecList("patterns", Banner::hasPatterns, Banner::getPatterns, Pattern.NBT_CODEC)
 					.build();
 	
@@ -44,17 +45,14 @@ public interface Banner extends TileEntity, Nameable {
 	
 	void setPatterns(List<Pattern> pattern);
 	
-	Chat getCustomName();
-	
-	void setCustomName(Chat name);
-	
 	@Override
 	default NBTCodec<? extends Banner> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public static class Pattern implements NBTSerializable, StreamSerializable {
 		
+		@NotNull
 		public static final NBTCodec<Pattern>
 		NBT_CODEC = NBTCodec
 						.builder(Pattern.class)
@@ -63,6 +61,7 @@ public interface Banner extends TileEntity, Nameable {
 						.codec("pattern", Pattern::getType, Pattern::setType, PatternType.NBT_CODEC)
 						.build();
 		
+		@NotNull
 		public static final StreamCodec<Pattern>
 		STREAM_CODEC = StreamCodec
 						.builder(Pattern.class)
@@ -118,6 +117,7 @@ public interface Banner extends TileEntity, Nameable {
 	
 	public static class ResourcePatternType implements PatternType, NBTSerializable, StreamSerializable {
 		
+		@NotNull
 		public static final NBTCodec<ResourcePatternType>
 		NBT_CODEC = NBTCodec
 						.builder(ResourcePatternType.class)
@@ -126,6 +126,7 @@ public interface Banner extends TileEntity, Nameable {
 						.codec("translation_key", ResourcePatternType::getTranslationKey, ResourcePatternType::setTranslationKey, NBTCodecs.STRING)
 						.build();
 		
+		@NotNull
 		public static final StreamCodec<ResourcePatternType>
 		STREAM_CODEC = StreamCodec
 						.builder(ResourcePatternType.class)

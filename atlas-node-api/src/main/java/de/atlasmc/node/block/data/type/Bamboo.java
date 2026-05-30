@@ -15,7 +15,7 @@ public interface Bamboo extends Ageable, Sapling {
 		SMALL,
 		LARGE;
 		
-		private String name;
+		private final String name;
 		
 		private Leaves() {
 			this.name = name().toLowerCase().intern();

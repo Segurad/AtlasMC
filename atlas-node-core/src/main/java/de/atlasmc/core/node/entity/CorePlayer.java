@@ -14,6 +14,7 @@ import de.atlasmc.core.node.block.CorePlayerDiggingHandler;
 import de.atlasmc.core.node.inventory.CoreInventoryView;
 import de.atlasmc.core.node.inventory.CorePlayerItemCooldownHandler;
 import de.atlasmc.event.HandlerList;
+import de.atlasmc.network.permission.PermissionHandler;
 import de.atlasmc.network.player.AtlasPlayer;
 import de.atlasmc.node.Gamemode;
 import de.atlasmc.node.NodePlayer;
@@ -54,7 +55,6 @@ import de.atlasmc.node.sound.Sound;
 import de.atlasmc.node.world.WorldEvent;
 import de.atlasmc.node.world.particle.Particle;
 import de.atlasmc.permission.Permission;
-import de.atlasmc.permission.PermissionHandler;
 import de.atlasmc.util.CooldownHandler;
 
 public class CorePlayer extends CoreHumanEntity implements Player {
@@ -88,7 +88,6 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	private Gamemode gamemode;
 	private Gamemode previousGamemode;
 	private ItemStack cursorItem;
-	private boolean canBuild;
 	private Object pluginData;
 	private DiggingHandler digging;
 	
@@ -327,16 +326,6 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	@Override
 	public Gamemode getGamemode() {
 		return gamemode;
-	}
-
-	@Override
-	public boolean getCanBuild() {
-		return canBuild;
-	}
-
-	@Override
-	public void setCanBuild(boolean canBuild) {
-		this.canBuild = canBuild;
 	}
 
 	@Override

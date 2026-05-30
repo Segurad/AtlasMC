@@ -2,13 +2,15 @@ package de.atlasmc.chat.component.event.click;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.util.annotation.NotNull;
 
 public final class OpenFileClickEvent implements ClickEvent {
 	
+	@NotNull
 	public static final NBTCodec<OpenFileClickEvent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(OpenFileClickEvent.class)
-					.include(ClickEvent.NBT_HANDLER)
+					.include(ClickEvent.NBT_CODEC)
 					.codec("path", OpenFileClickEvent::getPath, OpenFileClickEvent::setPath, NBTCodecs.STRING)
 					.build();
 	
@@ -29,7 +31,7 @@ public final class OpenFileClickEvent implements ClickEvent {
 	
 	@Override
 	public NBTCodec<? extends OpenFileClickEvent> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

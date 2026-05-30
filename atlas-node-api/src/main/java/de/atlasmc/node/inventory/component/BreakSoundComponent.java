@@ -2,9 +2,11 @@ package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.sound.Sound;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface BreakSoundComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<BreakSoundComponent>
 	NBT_HANDLER = NBTCodec
 					.builder(BreakSoundComponent.class)

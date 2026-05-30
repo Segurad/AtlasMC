@@ -6,9 +6,11 @@ import de.atlasmc.nbt.TagType;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.tag.NBT;
 import de.atlasmc.util.AtlasUtil;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface CustomDataComponent extends ItemComponent {
 	
+	@NotNull
 	public static final NBTCodec<CustomDataComponent>
 	NBT_CODEC = NBTCodec
 					.builder(CustomDataComponent.class)
@@ -16,6 +18,7 @@ public interface CustomDataComponent extends ItemComponent {
 					.codec(ComponentType.CUSTOM_DATA.getNamespacedKey(), CustomDataComponent::getData, CustomDataComponent::setData, NBT.rawFieldNBTCodec(List.of(TagType.COMPOUND, TagType.STRING)))
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<CustomDataComponent>
 	STREAM_CODEC = StreamCodec
 					.builder(CustomDataComponent.class)
@@ -23,6 +26,7 @@ public interface CustomDataComponent extends ItemComponent {
 					.codec(AtlasUtil.getSelf(), AtlasUtil.getSetVoid(), NBT_CODEC)
 					.build();
 	
+	@Override
 	CustomDataComponent clone();
 	
 	NBT getData();

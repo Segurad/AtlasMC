@@ -1,13 +1,15 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Bat extends AmbientCreature {
 	
+	@NotNull
 	public static final NBTCodec<Bat>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Bat.class)
-					.include(AmbientCreature.NBT_HANDLER)
+					.include(AmbientCreature.NBT_CODEC)
 					.boolField("BatFlags", Bat::isHanging, Bat::setHanging, false)
 					.build();
 	
@@ -17,7 +19,7 @@ public interface Bat extends AmbientCreature {
 
 	@Override
 	default NBTCodec<? extends Bat> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

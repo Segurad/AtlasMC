@@ -6,11 +6,13 @@ import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.util.annotation.NotNull;
 
 public class HoverEntityEvent implements HoverEvent {
 	
+	@NotNull
 	public static final NBTCodec<HoverEntityEvent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(HoverEntityEvent.class)
 					.include(HoverEvent.NBT_HANDLER)
 					.codec("name", HoverEntityEvent::getName, HoverEntityEvent::setName, ChatComponent.NBT_CODEC)
@@ -53,7 +55,7 @@ public class HoverEntityEvent implements HoverEvent {
 
 	@Override
 	public NBTCodec<? extends HoverEntityEvent> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

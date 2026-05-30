@@ -1,13 +1,15 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Raider extends Monster {
 	
+	@NotNull
 	public static final NBTCodec<Raider>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Raider.class)
-					.include(Monster.NBT_HANDLER)
+					.include(Monster.NBT_CODEC)
 					.boolField("IsCelebrating", Raider::isCelebrating, Raider::setCelebrating, false) // non standard
 					// CanJoinRaid
 					// PatrolLeader
@@ -23,7 +25,7 @@ public interface Raider extends Monster {
 	
 	@Override
 	default NBTCodec<? extends Raider> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

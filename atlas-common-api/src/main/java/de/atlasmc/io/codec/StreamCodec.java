@@ -4,13 +4,14 @@ import java.util.function.IntFunction;
 import java.util.function.ToIntFunction;
 
 import de.atlasmc.IDHolder;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.codec.Codec;
 import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
 public interface StreamCodec<T> extends Codec<T, ByteBuf, ByteBuf, CodecContext> {
 
-	public static <T> StreamCodecBuilder<T> builder(Class<T> clazz) {
+	public static <T> StreamCodecBuilder<T> builder(@NotNull Class<T> clazz) {
 		return new StreamCodecBuilder<>(clazz);
 	}
 	

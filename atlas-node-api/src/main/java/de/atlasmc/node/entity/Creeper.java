@@ -1,13 +1,15 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Creeper extends Monster {
 	
+	@NotNull
 	public static final NBTCodec<Creeper>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Creeper.class)
-					.include(Monster.NBT_HANDLER)
+					.include(Monster.NBT_CODEC)
 					.byteField("ExplosionRadius", Creeper::getExplosionRadius, Creeper::setExplosionRadius, (byte) 3)
 					.shortField("Fuse", Creeper::getFuseTime, Creeper::setFuseTime, (short) 30)
 					.boolField("ignited", Creeper::isIgnited, Creeper::setIgnited, false)
@@ -57,7 +59,7 @@ public interface Creeper extends Monster {
 	
 	@Override
 	default NBTCodec<? extends LivingEntity> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

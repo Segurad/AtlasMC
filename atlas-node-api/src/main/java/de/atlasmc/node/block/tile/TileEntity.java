@@ -14,14 +14,15 @@ import de.atlasmc.util.annotation.UnsafeAPI;
 
 public interface TileEntity extends Cloneable, NBTSerializable, ItemComponentHolder {
 	
+	@NotNull
 	public static final NBTCodec<TileEntity>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(TileEntity.class)
 					.searchKeyConstructor("id", BlockType.REGISTRY_KEY, BlockType::createTileEntity, TileEntity::getType)
 					.intField("x", TileEntity::getX, TileEntity::setX)
 					.intField("y", TileEntity::getY, TileEntity::setY)
 					.intField("z", TileEntity::getZ, TileEntity::setZ)
-					.include(ItemComponentHolder.NBT_HANDLER)
+					.include(ItemComponentHolder.NBT_CODEC)
 					.build();
 	
 	@NotNull
@@ -71,7 +72,7 @@ public interface TileEntity extends Cloneable, NBTSerializable, ItemComponentHol
 	
 	@Override
 	default NBTCodec<? extends TileEntity> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

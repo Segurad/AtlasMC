@@ -5,9 +5,11 @@ import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.attribute.Attribute;
 import de.atlasmc.node.attribute.AttributeModifier;
 import de.atlasmc.node.attribute.Attributeable;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface AttributeModifiersComponent extends ItemComponent, Attributeable {
 	
+	@NotNull
 	public static final NBTCodec<AttributeModifiersComponent>
 	NBT_CODEC = NBTCodec
 					.builder(AttributeModifiersComponent.class)
@@ -15,6 +17,7 @@ public interface AttributeModifiersComponent extends ItemComponent, Attributeabl
 					.multimapTypeToCodec(ComponentType.ATTRIBUTE_MODIFIERS.getNamespacedKey(), AttributeModifiersComponent::hasAttributeModifiers, AttributeModifiersComponent::getAttributeModifiers, AttributeModifier.NBT_CODEC, "id", Attribute::getByName)
 					.build();
 	
+	@NotNull
 	public static final StreamCodec<AttributeModifiersComponent>
 	STREAM_CODEC = StreamCodec
 					.builder(AttributeModifiersComponent.class)
@@ -22,6 +25,7 @@ public interface AttributeModifiersComponent extends ItemComponent, Attributeabl
 					.multimapTypeToCodec(AttributeModifiersComponent::hasAttributeModifiers, AttributeModifiersComponent::getAttributeModifiers, Attribute::getByID, AttributeModifier.STREAM_CODEC)
 					.build();
 	
+	@Override
 	AttributeModifiersComponent clone();
 	
 	@Override

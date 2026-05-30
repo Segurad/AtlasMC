@@ -6,11 +6,13 @@ import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.potion.PotionData;
 import de.atlasmc.node.potion.PotionEffect;
 import de.atlasmc.registry.Registries;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface PotionContentsComponent extends AbstractPotionEffectComponent {
 	
+	@NotNull
 	public static final NBTCodec<PotionContentsComponent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(PotionContentsComponent.class)
 					.include(AbstractPotionEffectComponent.NBT_CODEC)
 					.beginComponent(ComponentType.POTION_CONTENTS.getNamespacedKey(), PotionContentsComponent::hasCustomData)
@@ -36,11 +38,12 @@ public interface PotionContentsComponent extends AbstractPotionEffectComponent {
 	
 	void setCustomName(Chat name);
 	
+	@Override
 	PotionContentsComponent clone();
 
 	@Override
 	default NBTCodec<? extends PotionContentsComponent> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

@@ -5,11 +5,13 @@ import de.atlasmc.chat.Chat;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.registry.ProtocolRegistryValueBase;
+import de.atlasmc.util.annotation.NotNull;
 
 public class JukeboxSong extends ProtocolRegistryValueBase implements NBTSerializable {
 	
+	@NotNull
 	public static final NBTCodec<JukeboxSong>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(JukeboxSong.class)
 					.codec("sound_event", JukeboxSong::getSound, JukeboxSong::setSound, Sound.NBT_CODEC)
 					.codec("description", JukeboxSong::getDescription, JukeboxSong::setDescription, Chat.NBT_CODEC)
@@ -73,7 +75,7 @@ public class JukeboxSong extends ProtocolRegistryValueBase implements NBTSeriali
 
 	@Override
 	public NBTCodec<? extends JukeboxSong> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 
 }

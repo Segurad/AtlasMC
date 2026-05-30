@@ -127,7 +127,7 @@ final class EmptyConfiguration implements Configuration {
 
 	@Override
 	public ConfigurationSection createSection(String path) {
-		return null;
+		return this;
 	}
 
 	@Override

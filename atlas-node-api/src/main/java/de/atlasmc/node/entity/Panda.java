@@ -2,13 +2,15 @@ package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumName;
 import de.atlasmc.util.enums.EnumUtil;
 
 public interface Panda extends Animal {
 	
+	@NotNull
 	public static final NBTCodec<Panda>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Panda.class)
 					.include(Animal.NBT_CODEC)
 					.codec("HiddenGene", Panda::getHiddenGene, Panda::setHiddenGene, EnumUtil.enumStringNBTCodec(Gene.class), Gene.NORMAL)
@@ -58,7 +60,7 @@ public interface Panda extends Animal {
 	
 	@Override
 	default NBTCodec<? extends Panda> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public static enum Gene implements IDHolder, EnumName {

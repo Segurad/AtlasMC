@@ -6,6 +6,7 @@ import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.registry.RegistryKey;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Pig extends Animal {
 	
@@ -35,11 +36,12 @@ public interface Pig extends Animal {
 		
 		public static final RegistryKey<PigVariant> REGISTRY_KEY = Registries.getRegistryKey(PigVariant.class);
 		
+		@NotNull
 		public static final NBTCodec<PigVariant>
-		NBT_HANDLER = NBTCodec
+		NBT_CODEC = NBTCodec
 						.builder(PigVariant.class)
 						.defaultConstructor(PigVariant::new)
-						.include(EntityVariant.NBT_HANDLER)
+						.include(EntityVariant.NBT_CODEC)
 						.codec("asset_id", PigVariant::getAssetID, PigVariant::setAssetID, NamespacedKey.NBT_CODEC)
 						.codec("model", PigVariant::getModel, PigVariant::setModel, NamespacedKey.NBT_CODEC)
 						.build();
@@ -77,7 +79,7 @@ public interface Pig extends Animal {
 		
 		@Override
 		public NBTCodec<? extends PigVariant> getNBTCodec() {
-			return NBT_HANDLER;
+			return NBT_CODEC;
 		}
 		
 	}

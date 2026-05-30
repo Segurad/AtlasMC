@@ -32,10 +32,12 @@ public class CoreBucketEntityDataComponent extends AbstractItemComponent impleme
 		return (CoreBucketEntityDataComponent) super.clone();
 	}
 	
+	@Override
 	public int getTropicalFishVariant() {
 		return tropicalFishVariant;
 	}
 	
+	@Override
 	public void setTropicalFishVariant(int tropicalFishVariant) {
 		this.tropicalFishVariant = tropicalFishVariant;
 	}

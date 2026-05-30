@@ -3,9 +3,11 @@ package de.atlasmc.node.world.particle;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.world.positionsource.PositionSource;
+import de.atlasmc.util.annotation.NotNull;
 
 public class VibrationParticle extends AbstractParticle {
 
+	@NotNull
 	public static final NBTCodec<VibrationParticle>
 	NBT_CODEC = NBTCodec
 				.builder(VibrationParticle.class)
@@ -14,6 +16,7 @@ public class VibrationParticle extends AbstractParticle {
 				.intField("arrival_in_ticks", VibrationParticle::getTravelTicks, VibrationParticle::setTravelTicks)
 				.build();
 	
+	@NotNull
 	public static final StreamCodec<VibrationParticle>
 	STREAM_CODEC = StreamCodec
 					.builder(VibrationParticle.class)

@@ -2,9 +2,11 @@ package de.atlasmc.chat.component.event.hover;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTSerializable;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface HoverEvent extends NBTSerializable {
 	
+	@NotNull
 	static final NBTCodec<HoverEvent>
 	NBT_HANDLER = NBTCodec
 					.builder(HoverEvent.class)

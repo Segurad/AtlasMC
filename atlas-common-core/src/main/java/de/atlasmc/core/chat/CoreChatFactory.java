@@ -40,16 +40,11 @@ public class CoreChatFactory implements ChatFactory {
 	public ChatComponent jsonToComponent(CharSequence json) {
 		if (json == null)
 			throw new IllegalArgumentException("Json can not be null!");
-		SNBTReader reader = new SNBTReader(json);
-		ChatComponent comp;
-		try {
-			comp = ChatComponent.NBT_CODEC.deserialize(reader);
+		try (SNBTReader reader = new SNBTReader(json)) {
+			return ChatComponent.NBT_CODEC.deserialize(reader);
 		} catch (IOException e) {
 			throw new NBTException("Error while parsing chat!", e);
-		} finally {
-			reader.close();
 		}
-		return comp;
 	}
 
 	@Override

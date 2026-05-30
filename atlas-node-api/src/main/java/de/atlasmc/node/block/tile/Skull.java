@@ -3,14 +3,16 @@ package de.atlasmc.node.block.tile;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.node.sound.EnumSound;
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.mojang.PlayerProfile;
 
 public interface Skull extends TileEntity {
 	
+	@NotNull
 	public static final NBTCodec<Skull>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Skull.class)
-					.include(TileEntity.NBT_HANDLER)
+					.include(TileEntity.NBT_CODEC)
 					.codec("custom_name", Skull::getCustomName, Skull::setCustomName, NBTCodecs.STRING)
 					.codec("note_block_sound", Skull::getNoteBlockSound, Skull::setNoteBlockSound, EnumSound.NBT_CODEC)
 					.codec("profile", Skull::getProfile, Skull::setProfile, PlayerProfile.NBT_CODEC)
@@ -31,7 +33,7 @@ public interface Skull extends TileEntity {
 	
 	@Override
 	default NBTCodec<? extends Skull> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

@@ -9,7 +9,6 @@ import de.atlasmc.io.Packet;
 import de.atlasmc.io.ProtocolException;
 import de.atlasmc.node.Gamemode;
 import de.atlasmc.node.WorldLocation;
-import de.atlasmc.node.Location;
 import de.atlasmc.node.block.Block;
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.block.BlockType;
@@ -168,7 +167,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				HandlerList.callEvent(new PlayerRespawnEvent(con.getPlayer()));
 			}
 		});
-		initHandler(ServerboundClientInformation.class, (con, packet) -> { // 0x05
+		initHandler(ServerboundClientInformation.class, (con, packet) -> {
 			PlayerSettings settings = con.getSettings();
 			// Chat settings
 			boolean chatColors = packet.chatColors;
@@ -249,22 +248,23 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			int key = -1;
 			final int slot = packet.slot;
 			final int button = packet.button;
-			final InventoryView view = con.getPlayer().getOpenInventory();
+			final Player player = con.getPlayer();
+			final InventoryView view = player.getOpenInventory();
 			int stateID = packet.stateID;
 			Inventory clickedInv = view.getInventory(slot);
 			if (clickedInv != null && stateID != clickedInv.getStateID()) {
 				clickedInv.updateSlots(con.getPlayer());
 				return; // inv out of sync resend to resync
 			}
-			if (packet.mode != 5) {
+			if (packet.mode != PacketInClickContainer.MODE_DRAG) {
 				InventoryAction action = InventoryAction.UNKNOWN;
 				ClickType click = ClickType.UNKNOWN;
 				final ItemStack slotItem = slot != -999 ? view.getItemUnsafe(slot) : null;
-				final ItemStack cursorItem = con.getPlayer().getItemOnCursorUnsafe();
+				final ItemStack cursorItem = player.getItemOnCursorUnsafe();
 				if (slotItem == null && cursorItem == null)
 					action = InventoryAction.NOTHING;
 				switch (packet.mode) {
-				case 0: 
+				case PacketInClickContainer.MODE_CLICK: 
 					if (button == 0) {
 						click = ClickType.LEFT;
 						if (slotItem != null) {
@@ -301,7 +301,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 						}
 					}
 					break;
-				case 1:
+				case PacketInClickContainer.MODE_SHIFT_CLICK:
 					if (button == 0) {
 						click = ClickType.SHIFT_LEFT;
 					} else {
@@ -311,7 +311,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 						action = InventoryAction.MOVE_TO_OTHER_INVENTORY; // TODO check for available space else NOTHING
 					}
 					break;
-				case 2:
+				case PacketInClickContainer.MODE_NUMBER_CLICK:
 					key = packet.button;
 					click = ClickType.NUMBER_KEY;
 					if (slot == 40)
@@ -324,13 +324,13 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 						action = InventoryAction.HOTBAR_MOVE_AND_READD;
 					}
 					break;
-				case 3:
+				case PacketInClickContainer.MODE_MIDDLE_CLICK:
 					click = ClickType.MIDDLE;
 					if (con.getPlayer().getGamemode() == Gamemode.CREATIVE) {
 						action = InventoryAction.CLONE_STACK;
 					}
 					break;
-				case 4:
+				case PacketInClickContainer.MODE_DROP:
 					if (slot != -999) {
 						if (button == 0) {
 							click = ClickType.DROP;
@@ -363,7 +363,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 						}
 					}
 					break;
-				case 6:
+				case PacketInClickContainer.MODE_DOUBLE_CLICK:
 					click = ClickType.DOUBLE_CLICK;
 					if (slotItem != null) {
 						action = InventoryAction.COLLECT_TO_CURSOR; // TODO check if any items of type are present else NOTHING
@@ -443,66 +443,20 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 		initHandler(PacketInLockDifficulty.class, (con, packet) -> {
 			// TODO Button not available in multiplayer clarification needed
 		});
-		initHandler(PacketInSetPlayerPosition.class, (con, packet) -> {
+		PacketHandler<PlayerConnection, PacketInSetPlayerMoveFlags> MOVE_HANDLER = (con, packet) -> {
 			if (!con.isTeleportConfirmed()) 
 				return;
+			packet.updatePlayer(con);
 			PlayerMoveEvent eventMove = con.getEventMove();
 			eventMove.setCancelled(false);
-			Location loc = con.getClientLocation();
-			loc.x = packet.x;
-			loc.y = packet.feetY;
-			loc.z = packet.z;
-			loc.copyTo(eventMove.getTo());
-			boolean onGround = (packet.flags & 0x01) == 0x01;
-			boolean pushWall = (packet.flags & 0x02) == 0x02;
-			con.setClientOnGround(onGround);
-			con.setClientPushWall(pushWall);
+			con.getClientLocation().copyTo(eventMove.getTo());
 			con.getPlayer().getLocation(eventMove.getFrom());
 			HandlerList.callEvent(eventMove);
-		});
-		initHandler(PacketInSetPlayerPositionAndRotation.class, (con, packet) -> {
-			if (!con.isTeleportConfirmed()) 
-				return;
-			PlayerMoveEvent eventMove = con.getEventMove();
-			eventMove.setCancelled(false);
-			Location loc = con.getClientLocation();
-			loc.x = packet.x;
-			loc.y = packet.feetY;
-			loc.z = packet.z;
-			loc.pitch = packet.pitch;
-			loc.yaw = packet.yaw;
-			loc.copyTo(eventMove.getTo());
-			boolean onGround = (packet.flags & 0x01) == 0x01;
-			boolean pushWall = (packet.flags & 0x02) == 0x02;
-			con.setClientOnGround(onGround);
-			con.setClientPushWall(pushWall);
-			con.getPlayer().getLocation(eventMove.getFrom());
-			HandlerList.callEvent(eventMove);
-		});
-		initHandler(PacketInSetPlayerRotation.class, (con, packet) -> {
-			if (!con.isTeleportConfirmed()) 
-				return;
-			PlayerMoveEvent eventMove = con.getEventMove();
-			eventMove.setCancelled(false);
-			Location loc = con.getClientLocation();
-			loc.yaw = packet.yaw;
-			loc.pitch = packet.pitch;
-			loc.copyTo(eventMove.getTo());
-			boolean onGround = (packet.flags & 0x01) == 0x01;
-			boolean pushWall = (packet.flags & 0x02) == 0x02;
-			con.setClientOnGround(onGround);
-			con.setClientPushWall(pushWall);
-			con.getPlayer().getLocation(eventMove.getFrom());
-			HandlerList.callEvent(eventMove);
-		});
-		initHandler(PacketInSetPlayerMoveFlags.class, (con, packet) -> {
-			if (!con.isTeleportConfirmed())
-				return;
-			boolean onGround = (packet.flags & 0x01) == 0x01;
-			boolean pushWall = (packet.flags & 0x02) == 0x02;
-			con.setClientOnGround(onGround);
-			con.setClientPushWall(pushWall);
-		});
+		};
+		HANDLERS[Packet.getDefaultPacketID(PacketInSetPlayerPosition.class)] = MOVE_HANDLER;
+		HANDLERS[Packet.getDefaultPacketID(PacketInSetPlayerPositionAndRotation.class)] = MOVE_HANDLER;
+		HANDLERS[Packet.getDefaultPacketID(PacketInSetPlayerRotation.class)] = MOVE_HANDLER;
+		HANDLERS[Packet.getDefaultPacketID(PacketInSetPlayerMoveFlags.class)] = MOVE_HANDLER;
 		initHandler(PacketInMoveVehicle.class, (con, packet) -> {
 			// TODO handle packet
 		});
@@ -529,7 +483,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			final int status = packet.status;
 			Player player = con.getPlayer();
 			switch (status) {
-			case 0: { // Start Digging
+			case PacketInPlayerAction.STATUS_START_DIGGING: {
 				DiggingHandler handler = player.getDigging();
 				long pos = packet.position;
 				int x = MathUtil.getPositionX(pos);
@@ -538,28 +492,28 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				handler.startDigging(packet.face, player.getWorld(), x, y, z);
 				break;
 			}
-			case 1: { // Cancelled Digging
+			case PacketInPlayerAction.STATUS_CANCEL_DIGGING: {
 				DiggingHandler handler = player.getDigging();
 				handler.cancelDigging();
 				break;
 			}
-			case 2: { // Finished Digging
+			case PacketInPlayerAction.STATUS_FINISH_DIGGING: {
 				DiggingHandler handler = player.getDigging();
 				handler.finishDigging();
 				break;
 			}
-			case 3: // Drop ItemStack all
+			case PacketInPlayerAction.STATUS_DROP_ITEM_STACK:
 				ItemStack mainHand = player.getInventory().getItemInMainHand();
 				HandlerList.callEvent(new PlayerDropItemEvent(player, mainHand, mainHand.getAmount(), mainHand.getAmount(), true));
 				break;
-			case 4: // Drop ItemStack one
+			case PacketInPlayerAction.STATUS_DROP_ITEM:
 				mainHand = player.getInventory().getItemInMainHand();
 				HandlerList.callEvent(new PlayerDropItemEvent(player, mainHand, 1, 1, false));
 				break;
-			case 5: // Shoot arrow / finish eating
+			case PacketInPlayerAction.STATUS_UPDATE_ITEM:
 				// TODO eating shooting etc
 				break;
-			case 6: // Swap Item in Hand
+			case PacketInPlayerAction.STATUS_SWAP_ITEM_IN_HAND:
 				PlayerInventory inv = player.getInventory();
 				mainHand = inv.getItemInMainHand();
 				ItemStack offHand = inv.getItemInOffHand();
@@ -569,7 +523,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				throw new ProtocolException("Unknown status: " + status);
 			}
 		});
-		initHandler(PacketInPlayerCommand.class, (con, packet) -> { // 0x1C
+		initHandler(PacketInPlayerCommand.class, (con, packet) -> {
 			switch (packet.action) {
 			case START_SNEAKING: {
 				PlayerToggleSneakEvent eventSneak = con.getEventSneak(); 
@@ -611,10 +565,10 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				throw new ProtocolException("Unknown action: " + packet.action);
 			}
 		});
-		initHandler(PacketInPlayerInput.class, (con, packet) -> { // 0x1D
+		initHandler(PacketInPlayerInput.class, (con, packet) -> {
 			// TODO handle packet
 		});
-		initHandler(PacketInChangeRecipeBookSettings.class, (con, packet) -> { // 0x1E
+		initHandler(PacketInChangeRecipeBookSettings.class, (con, packet) -> {
 			Player player = con.getPlayer();
 			BookType type = packet.bookType;
 			boolean open = packet.bookOpen;
@@ -647,49 +601,49 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			con.setSelectedTrade(packet.selectedSlot);
 			HandlerList.callEvent(new SelectTradeEvent(player.getOpenInventory(), packet.selectedSlot, oldID));
 		});
-		initHandler(PacketInSetBeaconEffect.class, (con, packet) -> { // 0x24
+		initHandler(PacketInSetBeaconEffect.class, (con, packet) -> {
 			// int primaryID = packet.getPrimaryEffect();
 			// int secondaryID = packet.getSecondaryEffect();
 			// PotionEffect primary = PotionEffectType.createByPotionID(primaryID); TODO research for ids
 			// PotionEffect secondary = PotionEffectType.createByPotionID(secondaryID);
 			// HandlerList.callEvent(new BeaconEffectChangeEvent(player.getOpenInventory(), primary, secondary, primaryID, secondaryID));
 		});
-		initHandler(PacketInSetHeldItem.class, (con, packet) -> { // 0x25
+		initHandler(PacketInSetHeldItem.class, (con, packet) -> {
 			PlayerHeldItemChangeEvent event = con.getEventHeldItemChange();
 			event.setCancelled(false);
 			event.setNewSlot(packet.slot);
 			HandlerList.callEvent(event);
 		});
-		initHandler(PacketInProgramCommandBlock.class, (con, packet) -> { // 0x26
+		initHandler(PacketInProgramCommandBlock.class, (con, packet) -> {
 			Player player = con.getPlayer();
 			WorldLocation loc = MathUtil.getLocation(player.getWorld(), packet.position);
-			boolean trackoutput = (packet.flags & 0x01) == 0x01;
-			boolean conditional = (packet.flags & 0x02) == 0x02;
-			boolean alwaysactive = (packet.flags & 0x04) == 0x04;
+			boolean trackoutput = (packet.flags & PacketInProgramCommandBlock.FLAG_TRACK_OUTPUT) == PacketInProgramCommandBlock.FLAG_TRACK_OUTPUT;
+			boolean conditional = (packet.flags & PacketInProgramCommandBlock.FLAG_IS_CONDITIONAL) == PacketInProgramCommandBlock.FLAG_IS_CONDITIONAL;
+			boolean alwaysactive = (packet.flags & PacketInProgramCommandBlock.FLAG_TRACK_OUTPUT) == PacketInProgramCommandBlock.FLAG_TRACK_OUTPUT;
 			String command = packet.command;
 			HandlerList.callEvent(new PlayerUpdateCommandBlockEvent(player, loc, command, packet.mode, trackoutput, conditional, alwaysactive));
 		});
-		initHandler(PacketInProgramCommandBlockMinecart.class, (con, packet) -> { // 0x27
+		initHandler(PacketInProgramCommandBlockMinecart.class, (con, packet) -> {
 			Player player = con.getPlayer();
 			int entityID = packet.entityID;
 			String command = packet.command;
 			boolean trackOutput = packet.trackOutput;
 			HandlerList.callEvent(new PlayerUpdateCommandBlockMinecartEvent(player, entityID, command, trackOutput));
 		});
-		initHandler(PacketInSetCreativeModeSlot.class, (con, packet) -> { // 0x28
+		initHandler(PacketInSetCreativeModeSlot.class, (con, packet) -> {
 			Player player = con.getPlayer();
 			InventoryView view = player.getOpenInventory();
 			int slot = packet.slot < 0 ? -999 : packet.slot;
 			ItemStack item = packet.clickedItem;
 			HandlerList.callEvent(new InventoryCreativeClickEvent(view, slot, item));
 		});
-		initHandler(PacketInProgramJigsawBlock.class, (con, packet) -> { // 0x29
+		initHandler(PacketInProgramJigsawBlock.class, (con, packet) -> {
 			// TODO handle packet
 		});
-		initHandler(PacketInProgramStructureBlock.class, (con, packet) -> { // 0x2A
+		initHandler(PacketInProgramStructureBlock.class, (con, packet) -> {
 			// TODO handle packet
 		});
-		initHandler(PacketInUpdateSign.class, (con, packet) -> { // 0x2B
+		initHandler(PacketInUpdateSign.class, (con, packet) -> {
 			long pos = packet.position;
 			Player player = con.getPlayer();
 			int x = MathUtil.getPositionX(pos);
@@ -705,16 +659,16 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			};
 			HandlerList.callEvent(new SignChangeEvent(b, player, lines, front));
 		});
-		initHandler(PacketInSwingArm.class, (con, packet) -> { // 0x2C
+		initHandler(PacketInSwingArm.class, (con, packet) -> {
 			PlayerAnimationEvent event = con.getEventAnimation();
 			event.setAnimation(packet.hand);
 			event.setCancelled(false);
 			HandlerList.callEvent(event);
 		});
-		initHandler(PacketInTeleportToEntity.class, (con, packet) -> { // 0x2D
+		initHandler(PacketInTeleportToEntity.class, (con, packet) -> {
 			HandlerList.callEvent(new PlayerSpectateEvent(con.getPlayer(), packet.uuid));
 		});
-		initHandler(PacketInUseItemOn.class, (con, packet) -> { // 0x2E
+		initHandler(PacketInUseItemOn.class, (con, packet) -> {
 			float cX = packet.cursorPosX;
 			float cY = packet.cursorPosY;
 			float cZ = packet.cursorPosZ;
@@ -734,7 +688,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			Block against = new CoreBlock(loc, blockType);
 			HandlerList.callEvent(new BlockPlaceEvent(block, against, player, hand, face, cX, cY, cZ));
 		});
-		initHandler(PacketInUseItem.class, (con, packet) -> { // 0x2F
+		initHandler(PacketInUseItem.class, (con, packet) -> {
 			Player player = con.getPlayer();
 			WorldLocation loc = player.getLocation();
 			double length = player.getGamemode() == Gamemode.CREATIVE ? 5.0 : 4.5;

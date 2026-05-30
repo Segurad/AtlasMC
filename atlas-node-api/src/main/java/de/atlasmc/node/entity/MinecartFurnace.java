@@ -7,7 +7,7 @@ public interface MinecartFurnace extends AbstractMinecart {
 	public static final NBTCodec<MinecartFurnace>
 	NBT_HANDLER = NBTCodec
 					.builder(MinecartFurnace.class)
-					.include(AbstractMinecart.NBT_HANDLER)
+					.include(AbstractMinecart.NBT_CODEC)
 					.shortField("Fuel", MinecartFurnace::getFuelLevel, MinecartFurnace::setFuelLevel)
 					.doubleField("PushX", MinecartFurnace::getPushX, MinecartFurnace::setPushX, 0)
 					.doubleField("PushZ", MinecartFurnace::getPushZ, MinecartFurnace::setPushZ, 0)

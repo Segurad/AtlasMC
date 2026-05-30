@@ -7,9 +7,11 @@ import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.inventory.component.ComponentType;
 import de.atlasmc.node.inventory.component.ItemComponent;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface ItemComponentPredicate extends Namespaced, NBTSerializable, Predicate<ItemComponent> {
 	
+	@NotNull
 	public static final NBTCodec<ItemComponentPredicate>
 	NBT_HANDLER = NBTCodec
 					.builder(ItemComponentPredicate.class)

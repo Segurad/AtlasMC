@@ -1,13 +1,15 @@
 package de.atlasmc.node.entity;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface AbstractPiglin extends Monster {
 	
+	@NotNull
 	public static final NBTCodec<AbstractPiglin>
 	NBT_HANDLER = NBTCodec
 					.builder(AbstractPiglin.class)
-					.include(Monster.NBT_HANDLER)
+					.include(Monster.NBT_CODEC)
 					.boolField("IsImmuneToZombification", AbstractPiglin::isImmune, AbstractPiglin::setImmune, false)
 					// int TimeInOverworld
 					.build();

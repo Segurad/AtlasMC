@@ -4,11 +4,13 @@ import java.util.UUID;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface EvokerFangs extends Entity {
 	
+	@NotNull
 	public static final NBTCodec<EvokerFangs>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(EvokerFangs.class)
 					.include(Entity.NBT_CODEC)
 					.codec("Owner", EvokerFangs::getCasterUUID, EvokerFangs::setCasterUUID, NBTCodecs.UUID_CODEC)
@@ -29,7 +31,7 @@ public interface EvokerFangs extends Entity {
 	
 	@Override
 	default NBTCodec<? extends EvokerFangs> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

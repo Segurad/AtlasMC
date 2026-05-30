@@ -4,13 +4,15 @@ import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.util.CloneException;
 import de.atlasmc.util.OpenCloneable;
+import de.atlasmc.util.annotation.NotNull;
 
 import static de.atlasmc.nbt.codec.NBTCodecs.STRING;
 
 public class ProfileProperty implements NBTSerializable, OpenCloneable {
 
+	@NotNull
 	public static final NBTCodec<ProfileProperty>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(ProfileProperty.class)
 					.defaultConstructor(ProfileProperty::new)
 					.codec("name", ProfileProperty::getName, ProfileProperty::setName, STRING)
@@ -67,7 +69,7 @@ public class ProfileProperty implements NBTSerializable, OpenCloneable {
 	
 	@Override
 	public NBTCodec<? extends ProfileProperty> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 }

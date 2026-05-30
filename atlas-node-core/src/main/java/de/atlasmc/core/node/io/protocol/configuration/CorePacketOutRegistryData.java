@@ -55,7 +55,7 @@ public class CorePacketOutRegistryData implements PacketCodec<ClientboundRegistr
 		writeVarInt(count, out);
 		if (count == 0)
 			return;
-		NBTWriter writer = new NBTNIOWriter(out);
+		NBTWriter writer = null;
 		for (int i = 0; i < count; i++) {
 			RegistryEntry entry = entries.get(i);
 			NamespacedKey.STREAM_CODEC.serialize(entry.entryID, out, null);

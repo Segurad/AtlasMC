@@ -11,8 +11,9 @@ import de.atlasmc.util.enums.EnumUtil;
 
 public interface WrittenBookContentComponent extends BookContentComponent<Chat> {
 	
+	@NotNull
 	public static final NBTCodec<WrittenBookContentComponent>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(WrittenBookContentComponent.class)
 					.include(BookContentComponent.NBT_CODEC)
 					.beginComponent(ComponentType.WRITTEN_BOOK_CONTENT.getNamespacedKey())
@@ -45,11 +46,12 @@ public interface WrittenBookContentComponent extends BookContentComponent<Chat> 
 	
 	void setResolved(boolean resolved);
 	
+	@Override
 	WrittenBookContentComponent clone();
 	
 	@Override
 	default NBTCodec<? extends ItemComponent> getNBTCodec() {
-		return NBT_HANDLER;
+		return NBT_CODEC;
 	}
 	
 	public static enum Generation implements IDHolder {

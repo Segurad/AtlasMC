@@ -8,6 +8,7 @@ import de.atlasmc.util.annotation.Nullable;
 
 public interface Recipe extends NBTSerializable {
 	
+	@NotNull
 	public static final NBTCodec<Recipe>
 	NBT_CODEC = NBTCodec.builder(Recipe.class)
 				.searchKeyEnumConstructor("type", RecipeType.class, RecipeType::createRecipe, Recipe::getType)
