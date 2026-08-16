@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 import de.atlasmc.node.attribute.Attribute;
 import de.atlasmc.node.attribute.AttributeModifier;
@@ -37,8 +38,7 @@ public class CoreAttributeModifiersComponent extends AbstractItemComponent imple
 
 	@Override
 	public List<AttributeModifier> getAttributeModifiers(Attribute attribute) {
-		if (attribute == null)
-			throw new IllegalArgumentException("Attribute can not be null!");
+		Objects.requireNonNull(attribute, "attribute");
 		if (attributes == null || attributes.isEmpty()) 
 			return List.of();
 		List<AttributeModifier> list = attributes.get(attribute);
@@ -47,10 +47,8 @@ public class CoreAttributeModifiersComponent extends AbstractItemComponent imple
 
 	@Override
 	public boolean addAttributeModifier(Attribute attribute, AttributeModifier modifier) {
-		if (attribute == null) 
-			throw new IllegalArgumentException("Attribute can not be null!");
-		if (modifier == null) 
-			throw new IllegalArgumentException("AttributeModifier can not be null!");
+		Objects.requireNonNull(attribute, "attribute");
+		Objects.requireNonNull(modifier, "modifier");
 		if (attributes == null)
 			attributes = new ArrayListMultimap<>();
 		return this.attributes.put(attribute, modifier);
@@ -58,16 +56,14 @@ public class CoreAttributeModifiersComponent extends AbstractItemComponent imple
 	
 	@Override
 	public void setAttributeModifiers(Multimap<Attribute, AttributeModifier> attributeModifiers) {
-		if (attributeModifiers == null) 
-			throw new IllegalArgumentException("AttributeModifier can not be null!");
+		Objects.requireNonNull(attributeModifiers, "attributeModifiers");
 		this.attributes.clear();
 		this.attributes.putAll(attributeModifiers);
 	}
 
 	@Override
 	public boolean removeAttributeModifier(Attribute attribute) {
-		if (attribute == null) 
-			throw new IllegalArgumentException("Attribute can not be null!");
+		Objects.requireNonNull(attribute, "attribute");
 		if (attributes == null) 
 			return false;
 		return attributes.remove(attribute) != null;
@@ -75,10 +71,8 @@ public class CoreAttributeModifiersComponent extends AbstractItemComponent imple
 
 	@Override
 	public boolean removeAttributeModifier(Attribute attribute, AttributeModifier modifier) {
-		if (attribute == null) 
-			throw new IllegalArgumentException("Attribute can not be null!");
-		if (modifier == null) 
-			throw new IllegalArgumentException("AttributeModifier can not be null!");
+		Objects.requireNonNull(attribute, "attribute");
+		Objects.requireNonNull(modifier, "modifier");
 		if (attributes == null) 
 			return false;
 		List<AttributeModifier> mods = getAttributeModifiers(attribute);
@@ -89,8 +83,7 @@ public class CoreAttributeModifiersComponent extends AbstractItemComponent imple
 
 	@Override
 	public boolean removeAttributeModifier(EquipmentSlot slot) {
-		if (slot == null) 
-			throw new IllegalArgumentException("EquipmentSlot can not be null!");
+		Objects.requireNonNull(slot, "slot");
 		if (!hasAttributeModifiers()) 
 			return false;
 		boolean changes = false;

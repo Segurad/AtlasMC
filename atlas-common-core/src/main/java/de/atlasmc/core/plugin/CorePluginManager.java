@@ -211,25 +211,19 @@ public class CorePluginManager implements PluginManager {
 
 	@Override
 	public boolean lockPlugin(Plugin plugin, Object lock) {
-		if (plugin == null)
-			throw new IllegalArgumentException("Plugin can not be null!");
-		if (lock == null)
-			throw new IllegalArgumentException("Lock can not be null!");
 		CoreRegisteredPlugin registered = plugins.get(plugin.getName());
 		if (registered == null)
 			return false;
+		Objects.requireNonNull(lock, "lock");
 		return registered.lock(lock);
 	}
 
 	@Override
 	public boolean unlockPlugin(Plugin plugin, Object lock) {
-		if (plugin == null)
-			throw new IllegalArgumentException("Plugin can not be null!");
-		if (lock == null)
-			throw new IllegalArgumentException("Lock can not be null!");
 		CoreRegisteredPlugin registered = plugins.get(plugin.getName());
 		if (registered == null)
 			return false;
+		Objects.requireNonNull(lock, "lock");
 		return registered.unlock(lock);
 	}
 

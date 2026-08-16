@@ -1,5 +1,7 @@
 package de.atlasmc.util.pipeline;
 
+import java.util.Objects;
+
 public abstract class AbstractConcurrentPipeline<E> extends AbstractPipeline<E> {
 
 	protected volatile E[] entries = getEmpty();
@@ -7,8 +9,7 @@ public abstract class AbstractConcurrentPipeline<E> extends AbstractPipeline<E> 
 	
 	@Override
 	public E get(String name) {
-		if (name == null)
-			throw new NullPointerException("name");
+		Objects.requireNonNull(name, "name");
 		E[] entries;
 		String[] names;
 		synchronized (this) {
@@ -21,8 +22,7 @@ public abstract class AbstractConcurrentPipeline<E> extends AbstractPipeline<E> 
 
 	@Override
 	public synchronized boolean addFirst(String name, E entry) {
-		if (entry == null)
-			throw new NullPointerException("entry");
+		Objects.requireNonNull(entry, "entry");
 		var names = this.names;
 		var eName = getEntryName(name, entry);
 		ensureNotPresent(names, eName);
@@ -35,8 +35,7 @@ public abstract class AbstractConcurrentPipeline<E> extends AbstractPipeline<E> 
 
 	@Override
 	public synchronized boolean addLast(String name, E entry) {
-		if (entry == null)
-			throw new NullPointerException("entry");
+		Objects.requireNonNull(entry, "entry");
 		var names = this.names;
 		var eName = getEntryName(name, entry);
 		ensureNotPresent(names, eName);
@@ -49,10 +48,8 @@ public abstract class AbstractConcurrentPipeline<E> extends AbstractPipeline<E> 
 
 	@Override
 	public synchronized boolean addBefore(String before, String name, E entry) {
-		if (before == null)
-			throw new NullPointerException("before");
-		if (entry == null)
-			throw new NullPointerException("entry");
+		Objects.requireNonNull(before, "before");
+		Objects.requireNonNull(entry, "entry");
 		var names = this.names;
 		int index = findIndex(names, before);
 		if (index == -1)
@@ -68,10 +65,8 @@ public abstract class AbstractConcurrentPipeline<E> extends AbstractPipeline<E> 
 
 	@Override
 	public synchronized boolean addAfter(String after, String name, E entry) {
-		if (after == null)
-			throw new NullPointerException("after");
-		if (entry == null)
-			throw new NullPointerException("entry");
+		Objects.requireNonNull(after, "after");
+		Objects.requireNonNull(entry, "entry");
 		var names = this.names;
 		int index = findIndex(names, after);
 		if (index == -1)
@@ -88,10 +83,8 @@ public abstract class AbstractConcurrentPipeline<E> extends AbstractPipeline<E> 
 
 	@Override
 	public synchronized boolean replace(String old, String name, E entry) {
-		if (old == null)
-			throw new NullPointerException("old");
-		if (entry == null)
-			throw new NullPointerException("entry");
+		Objects.requireNonNull(old, "old");
+		Objects.requireNonNull(entry, "entry");
 		var names = this.names;
 		int index = findIndex(names, old);
 		if (index == -1)
@@ -150,15 +143,13 @@ public abstract class AbstractConcurrentPipeline<E> extends AbstractPipeline<E> 
 	
 	@Override
 	public boolean contains(E entry) {
-		if (entry == null)
-			throw new NullPointerException("entry");
+		Objects.requireNonNull(entry, "entry");
 		return findIndex(entries, entry) != -1;
 	}
 	
 	@Override
 	public boolean contains(String name) {
-		if (name == null)
-			throw new NullPointerException("name");
+		Objects.requireNonNull(name, "name");
 		return findIndex(names, name) != -1;
 	}
 

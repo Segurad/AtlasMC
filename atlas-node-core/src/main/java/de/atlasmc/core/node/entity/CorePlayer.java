@@ -2,6 +2,7 @@ package de.atlasmc.core.node.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 
 import org.joml.Vector3d;
@@ -384,12 +385,9 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	
 	@Override
 	public void playSound(Entity entity, Sound sound, SoundCategory category, float volume, float pitch, long seed) {
-		if (entity == null)
-			throw new IllegalArgumentException("Entity can not be null!");
-		if (sound == null)
-			throw new IllegalArgumentException("Sound can not be null!");
-		if (category == null)
-			throw new IllegalAccessError("Category can not be null!");
+		Objects.requireNonNull(entity, "entity");
+		Objects.requireNonNull(sound, "sound");
+		Objects.requireNonNull(category, "category");
 		PacketOutEntitySoundEffect packet = new PacketOutEntitySoundEffect();
 		packet.entityID = entity.getID();
 		packet.sound = sound;
@@ -402,10 +400,8 @@ public class CorePlayer extends CoreHumanEntity implements Player {
 	
 	@Override
 	public void playSound(double x, double y, double z, Sound sound, SoundCategory category, float volume, float pitch, long seed) {
-		if (sound == null)
-			throw new IllegalArgumentException("Sound can not be null!");
-		if (category == null)
-			throw new IllegalAccessError("Category can not be null!");
+		Objects.requireNonNull(sound, "sound");
+		Objects.requireNonNull(category, "category");
 		PacketOutSoundEffect packet = new PacketOutSoundEffect();
 		packet.x = x;
 		packet.y = y;

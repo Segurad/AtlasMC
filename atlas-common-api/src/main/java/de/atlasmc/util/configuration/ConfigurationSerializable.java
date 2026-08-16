@@ -49,22 +49,8 @@ public interface ConfigurationSerializable {
 	
 	@NotNull
 	public static <T extends ConfigurationSerializable> T deserialize(ConfigurationSection section, Class<T> clazz) {
-		if (ConfigurationSerializable.class.isInstance(clazz))
-			throw new IllegalArgumentException("Class must be assignable from ConfigurationSerializable: " + clazz.getName());
-		Constructor<T> constructor;
-		try {
-			constructor = clazz.getConstructor(ConfigurationSection.class);
-		} catch (NoSuchMethodException e) {
-			throw new IllegalArgumentException("Class does not have constructor accepting only ConfigurationSection!", e);
-		}
-		T instance;
-		try {
-			instance = constructor.newInstance(section);
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e) {
-			throw new ConfigurationException("Error while creating new instance of class: " + clazz.getName(), e);
-		}
-		return instance;
+		var constructor = getConstructor(clazz);
+		return construct(constructor, section);
 	}
 	
 	public static <T extends ConfigurationSerializable> Collection<T> deserialize(Collection<ConfigurationSection> sections, Class<T> clazz) {
@@ -72,25 +58,32 @@ public interface ConfigurationSerializable {
 	}
 	
 	public static <T extends ConfigurationSerializable, C extends Collection<T>> C deserialize(Collection<ConfigurationSection> sections, Class<T> clazz, C buf) {
+		var constructor = getConstructor(clazz);
+		for (ConfigurationSection section : sections) {
+			buf.add(construct(constructor, section));
+		}
+		return buf;
+	}
+	
+	private static <T extends ConfigurationSerializable> T construct(Constructor<T> constructor, ConfigurationSection section) {
+		T instance;
+		try {
+			instance = constructor.newInstance(section);
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			throw new ConfigurationException("Error while creating new instance of class: " + constructor.getDeclaringClass().getName(), e);
+		}
+		return instance;
+	}
+	
+	private static <T extends ConfigurationSerializable> Constructor<T> getConstructor(Class<T> clazz) {
 		if (ConfigurationSerializable.class.isInstance(clazz))
 			throw new IllegalArgumentException("Class must be assignable from ConfigurationSerializable: " + clazz.getName());
-		Constructor<T> constructor;
 		try {
-			constructor = clazz.getConstructor(ConfigurationSection.class);
+			return clazz.getConstructor(ConfigurationSection.class);
 		} catch (NoSuchMethodException e) {
 			throw new IllegalArgumentException("Class does not have constructor accepting only ConfigurationSection!", e);
 		}
-		for (ConfigurationSection section : sections) {
-			T instance;
-			try {
-				instance = constructor.newInstance(section);
-			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-					| InvocationTargetException e) {
-				throw new ConfigurationException("Error while creating new instance of class: " + clazz.getName(), e);
-			}
-			buf.add(instance);
-		}
-		return buf;
 	}
 	
 	/**

@@ -2,6 +2,7 @@ package de.atlasmc.core.node.world;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Objects;
 
 import org.joml.Vector3d;
 import org.joml.Vector3f;
@@ -179,10 +180,8 @@ public class CoreWorld implements World {
 	
 	@Override
 	public void playSound(double x, double y, double z, Sound sound, SoundCategory category, float volume, float pitch, long seed) {
-		if (sound == null)
-			throw new IllegalArgumentException("Sound can not be null!");
-		if (category == null)
-			throw new IllegalAccessError("Category can not be null!");
+		Objects.requireNonNull(sound, "sound");
+		Objects.requireNonNull(category, "category");
 		PacketOutSoundEffect packet = null;
 		Chunk chunk = getChunk((int) x, (int) z, false);
 		if (chunk == null)
@@ -208,12 +207,9 @@ public class CoreWorld implements World {
 	
 	@Override
 	public void playSound(Entity entity, Sound sound, SoundCategory category, float volume, float pitch, long seed) {
-		if (entity == null)
-			throw new IllegalArgumentException("Entity can not be null!");
-		if (sound == null)
-			throw new IllegalArgumentException("Sound can not be null!");
-		if (category == null)
-			throw new IllegalAccessError("Category can not be null!");
+		Objects.requireNonNull(entity, "entity");
+		Objects.requireNonNull(sound, "sound");
+		Objects.requireNonNull(category, "category");
 		PacketOutEntitySoundEffect packet = null;
 		for (Player player : entity.getViewers()) {
 			if (packet == null) {

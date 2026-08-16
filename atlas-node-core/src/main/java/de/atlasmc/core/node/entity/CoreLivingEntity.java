@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -215,8 +216,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 
 	@Override
 	public void setAttributeModifiers(Multimap<Attribute, AttributeModifier> attributeModifiers) {
-		if (attributeModifiers == null)
-			throw new IllegalArgumentException("Modifiers can not be null!");
+		Objects.requireNonNull(attributeModifiers, "attributeModifiers");
 		attributeModifiers.asMap().forEach((attribute, modifiers) -> {
 			AttributeInstance instance = getAttribute(attribute);
 			instance.setModifiers(modifiers);
@@ -225,10 +225,8 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 
 	@Override
 	public boolean addAttributeModifier(Attribute attribute, AttributeModifier modifier) {
-		if (attribute == null)
-			throw new IllegalArgumentException("Attribute can not be null!");
-		if (modifier == null)
-			throw new IllegalArgumentException("Modifier can not be null!");
+		Objects.requireNonNull(attribute, "attribute");
+		Objects.requireNonNull(modifier, "modifier");
 		AttributeInstance instance = getAttribute(attribute);
 		instance.addAttributeModififer(modifier);
 		return true;
@@ -236,8 +234,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	
 	@Override
 	public List<AttributeModifier> getAttributeModifiers(Attribute attribute) {
-		if (attribute == null)
-			throw new IllegalArgumentException("Attribute can not be null!");
+		Objects.requireNonNull(attribute, "attribute");
 		if (attributes == null || attributes.isEmpty()) 
 			return List.of();
 		AttributeInstance instance = attributes.get(attribute);
@@ -273,8 +270,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 
 	@Override
 	public boolean removeAttributeModifier(Attribute attribute) {
-		if (attribute == null)
-			throw new IllegalArgumentException("Attribute can not be null!");
+		Objects.requireNonNull(attribute, "attribute");
 		if (attributes == null)
 			return false;
 		var instance = attributes.get(attribute);
@@ -291,8 +287,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 
 	@Override
 	public boolean removeAttributeModifier(EquipmentSlot slot) {
-		if (slot == null) 
-			throw new IllegalArgumentException("EquipmentSlot can not be null!");
+		Objects.requireNonNull(slot, "slot");
 		if (!hasAttributeModifiers()) 
 			return false;
 		boolean changes = false;
@@ -320,29 +315,21 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 
 	@Override
 	public void addPotionEffect(PotionEffectType type, int amplifier, int duration) {
-		if (type == null)
-			throw new IllegalArgumentException("Type can not be null!");
 		internalAddPotionEffect(type.createEffect(amplifier, duration));
 	}
 	
 	@Override
 	public void addPotionEffect(PotionEffectType type, int amplifier, int duration, boolean reducedAmbient, boolean particles, boolean icon) {
-		if (type == null)
-			throw new IllegalArgumentException("Type can not be null!");
 		internalAddPotionEffect(type.createEffect(amplifier, duration, reducedAmbient, particles, icon));
 	}
 	
 	@Override
 	public void addPotionEffect(PotionEffect effect) {
-		if (effect == null)
-			throw new IllegalArgumentException("Effect can not be null!");
 		internalAddPotionEffect(effect.clone());	
 	}
 	
 	@Override
 	public void addPotionEffects(List<PotionEffect> effects) {
-		if (effects == null)
-			throw new IllegalArgumentException("Effects can not be null!");
 		for (PotionEffect effect : effects)
 			internalAddPotionEffect(effect.clone());
 	}
@@ -652,8 +639,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 
 	@Override
 	public Projectile launchProjectile(Projectile projectile, Vector3d velocity) {
-		if (projectile == null)
-			throw new IllegalArgumentException("Projectile can not be null!");
+		Objects.requireNonNull(projectile, "projectile");
 		World world = getWorld();
 		ProjectileLounchEvent event = new ProjectileLounchEvent(projectile, world, loc.x, loc.y + getEyeHeight(), loc.z, loc.pitch, loc.yaw);
 		HandlerList.callEvent(event);
@@ -663,14 +649,6 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		if (velocity != null)
 			projectile.setVelocity(velocity);
 		return projectile;
-	}
-
-	@Override
-	public Projectile launchProjectile(EntityType type, Vector3d velocity) {
-		if (type == null)
-			throw new IllegalArgumentException("Type can not be null!");
-		Projectile pro = (Projectile) type.createEntity();
-		return launchProjectile(pro, velocity);
 	}
 	
 	@Override

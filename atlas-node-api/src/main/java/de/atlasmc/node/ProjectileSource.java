@@ -9,7 +9,10 @@ public interface ProjectileSource {
 	
 	Projectile launchProjectile(Projectile projectile, Vector3d velocity);
 	
-	Projectile launchProjectile(EntityType type, Vector3d velocity);
+	default Projectile launchProjectile(EntityType type, Vector3d velocity) {
+		Projectile pro = (Projectile) type.createEntity();
+		return launchProjectile(pro, velocity);
+	}
 	
 	default Projectile launchProjectile(Projectile projectile) {
 		return launchProjectile(projectile, null);
