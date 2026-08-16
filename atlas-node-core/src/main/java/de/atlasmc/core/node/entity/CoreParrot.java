@@ -34,9 +34,7 @@ public class CoreParrot extends CoreTameable implements Parrot {
 
 	@Override
 	public void setParrotType(Type type) {
-		if (type == null)
-			throw new IllegalArgumentException("Type can not be null!");
-		metaContainer.get(META_PARROT_TYPE).setData(type);
+		metaContainer.setData(META_PARROT_TYPE, type);
 	}
 
 }

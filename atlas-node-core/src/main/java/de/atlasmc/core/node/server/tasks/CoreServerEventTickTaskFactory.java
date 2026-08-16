@@ -4,7 +4,7 @@ import java.util.Queue;
 
 import de.atlasmc.event.Event;
 import de.atlasmc.event.HandlerList;
-import de.atlasmc.node.server.LocalServer;
+import de.atlasmc.node.server.InternalServer;
 import de.atlasmc.registry.RegistryValue;
 import de.atlasmc.tick.AtlasThreadTask;
 import de.atlasmc.tick.AtlasThreadTaskFactory;
@@ -15,7 +15,7 @@ public class CoreServerEventTickTaskFactory implements AtlasThreadTaskFactory {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public AtlasThreadTask<LocalServer> createTask(ConfigurationSection config) {
+	public AtlasThreadTask<InternalServer> createTask(ConfigurationSection config) {
 		return (server, _) -> {
 			Queue<Event> events = server.getEventQueue();
 			Event event = null;

@@ -1,6 +1,7 @@
 package de.atlasmc.node.server;
 
 import java.util.Collection;
+import java.util.Set;
 import java.util.UUID;
 
 import de.atlasmc.network.server.ServerGroup;
@@ -16,13 +17,13 @@ public interface NodeServerManager {
 	Collection<NodeServer> getServers(ServerGroup group);
 
 	NodeServer deployServer(ServerGroup group);
-
-	boolean registerServerGroup(ServerGroup group);
 	
-	boolean unregisterServerGroup(ServerGroup group);
+	Set<String> getPreferedServerGroups();
 	
-	Collection<ServerGroup> getServerGroups();
+	boolean addPreferedServerGroup(String group);
 	
-	ServerGroup getServerGroup(String name);
+	boolean removePreferedServerGroup(String group);
+	
+	boolean hasPreferedServerGroup(String group);
 
 }

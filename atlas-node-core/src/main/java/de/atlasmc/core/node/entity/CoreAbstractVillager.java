@@ -2,14 +2,13 @@ package de.atlasmc.core.node.entity;
 
 import de.atlasmc.node.entity.AbstractVillager;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.node.entity.metadata.MetaData;
 import de.atlasmc.node.entity.metadata.MetaDataField;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreAbstractVillager extends CoreMerchant implements AbstractVillager {
 
 	protected static final MetaDataField<VillagerData>
-	META_VILLAGER_DATA = new MetaDataField<>(CoreAbstractVillager.LAST_META_INDEX+2, null, MetaDataType.VILLAGER_DATA);
+	META_VILLAGER_DATA = new MetaDataField<>(CoreAbstractVillager.LAST_META_INDEX+2, new VillagerData(), MetaDataType.VILLAGER_DATA);
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+2;
 		
@@ -52,11 +51,7 @@ public class CoreAbstractVillager extends CoreMerchant implements AbstractVillag
 
 	@Override
 	public void setVillagerData(VillagerData data) {
-		if (data == null)
-			throw new IllegalArgumentException("Data can not be null!");
-		MetaData<VillagerData> field = metaContainer.get(META_VILLAGER_DATA);
-		field.getData().set(data);
-		field.setChanged(true);
+		metaContainer.setData(META_VILLAGER_DATA, data);
 	}
 
 }

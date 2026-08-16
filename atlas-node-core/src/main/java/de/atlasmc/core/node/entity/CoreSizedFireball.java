@@ -35,7 +35,7 @@ public abstract class CoreSizedFireball extends CoreAbstractAcceleratingProjecti
 
 	@Override
 	public void setItem(ItemStack item) {
-		metaContainer.get(META_FIREBALL_ITEM).setData(item);
+		metaContainer.setData(META_FIREBALL_ITEM, item);
 	}
 
 }

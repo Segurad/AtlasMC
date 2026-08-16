@@ -1,8 +1,11 @@
 package de.atlasmc.node.entity.metadata;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
+import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.iterator.ArrayIterator;
 
 /**
@@ -11,6 +14,7 @@ import de.atlasmc.util.iterator.ArrayIterator;
 public class MetaDataContainer implements Iterable<MetaData<?>> {
 	
 	private final MetaData<?>[] data;
+	private boolean changed;
 	
 	public MetaDataContainer(int size) {
 		data = new MetaData<?>[size];
@@ -45,43 +49,76 @@ public class MetaDataContainer implements Iterable<MetaData<?>> {
 		return (MetaData<T>) data[field.getIndex()];
 	}
 	
+	public <T> boolean setData(MetaDataField<T> field, T data) {
+		@SuppressWarnings("unchecked")
+		var metaData = (MetaData<T>) this.data[field.getIndex()];
+		var changed = metaData.setData(data);
+		if (changed)
+			this.changed = true;
+		return changed;
+	}
+	
+	public <T> boolean resetData(MetaDataField<T> field) {
+		@SuppressWarnings("unchecked")
+		var metaData = (MetaData<T>) this.data[field.getIndex()];
+		if (metaData.isDefault())
+			return false;
+		var changed = metaData.setData(field.getType().copyData(field.getDefaultData()));
+		if (changed)
+			this.changed = true;
+		return changed;
+	}
+	
+	public <T> boolean setData(MetaDataField<T> field, T data, boolean changed) {
+		@SuppressWarnings("unchecked")
+		var metaData = (MetaData<T>) this.data[field.getIndex()];
+		metaData.setData(data);
+		metaData.changed = changed;
+		if (changed)
+			this.changed = true;
+		return changed;
+	}
+	
+	public void setChanged(MetaDataField<?> field) {
+		var metaData = this.data[field.getIndex()];
+		metaData.changed = changed;
+		if (changed)
+			this.changed = true;
+	}
+	
 	/**
 	 * Sets the data at it's index and marks it as changed.
 	 * @param data
 	 * @return the set {@link MetaData}
 	 */
-	public <T> MetaData<T> set(MetaData<T> data) {
-		this.data[data.getIndex()] = data;
-		data.setChanged(true);
+	private <T> MetaData<T> set(MetaData<T> data) {
+		this.data[data.getField().getIndex()] = data;
+		data.changed = true;
+		changed = true;
 		return data;
 	}
-	
-	public MetaDataType<?> getType(int index) {
-		return data[index].getType();
-	}
-	
+
 	/**
 	 * 
 	 * @return true one entry has changed
 	 */
 	public boolean hasChanges() {
-		for (MetaData<?> meta : data) {
-			if (meta.hasChanged()) 
-				return true;
-		}
-		return false;
+		return changed;
 	}
 	
 	/**
 	 * Sets the changed value for all entries
 	 * @param changed
 	 */
-	public void setChanged(boolean changed) {
+	public void setUnchanged() {
+		if (!this.changed)
+			return;
 		for (MetaData<?> meta : data) {
 			if (meta == null)
 				continue;
-			meta.setChanged(changed);
+			meta.changed = false;
 		}
+		changed = false;
 	}
 
 	/**
@@ -103,6 +140,44 @@ public class MetaDataContainer implements Iterable<MetaData<?>> {
 	 */
 	public <T> MetaData<T> set(MetaDataField<T> field, T data) {
 		return set(new MetaData<>(field, data));
+	}
+	
+	/**
+	 * Gets all data that is not the default value. Returns null if no non default data.
+	 * @param data or null
+	 */
+	@Nullable
+	public List<MetaDataInfo<Object>> getNonDefaultData() {
+		List<MetaDataInfo<Object>> data = null;
+		for (var meta : this.data) {
+			if (meta.isDefault())
+				continue;
+			if (data == null)
+				data = new ArrayList<>();
+			@SuppressWarnings("unchecked")
+			var info = (MetaDataInfo<Object>) meta.info();
+			data.add(info);
+		}
+		return data;
+	}
+	
+	/**
+	 * Gets all data that is changed. Returns null if not changed.
+	 * @return data or null
+	 */
+	@Nullable
+	public List<MetaDataInfo<Object>> getChangedData() {
+		if (!changed)
+			return null;
+		var data = new ArrayList<MetaDataInfo<Object>>();
+		for (MetaData<?> meta : this.data) {
+			if (!meta.changed)
+				continue;
+			@SuppressWarnings("unchecked")
+			var info = (MetaDataInfo<Object>) meta.info();
+			data.add(info);
+		}
+		return data;
 	}
 
 	@Override

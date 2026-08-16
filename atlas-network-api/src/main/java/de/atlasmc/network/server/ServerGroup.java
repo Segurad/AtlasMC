@@ -1,5 +1,6 @@
 package de.atlasmc.network.server;
 
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.ThreadSafe;
 
 @ThreadSafe
@@ -21,6 +22,7 @@ public interface ServerGroup {
 	
 	boolean isMaintenance();
 	
+	@NotNull
 	String getName();
 
 }

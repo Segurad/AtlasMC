@@ -1,11 +1,11 @@
 package de.atlasmc.node.event.player;
 
-import de.atlasmc.network.server.Server;
+import de.atlasmc.network.server.BaseServer;
 import de.atlasmc.node.entity.Player;
 import de.atlasmc.node.event.ServerHandlerList;
 
 /**
- * Called when a player disconnect from a {@link Server}
+ * Called when a player disconnect from a {@link BaseServer}
  */
 public class PlayerDisconnectEvent extends PlayerEvent {
 	

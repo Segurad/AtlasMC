@@ -5,7 +5,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.ThreadSafe;
 
+@ThreadSafe
 public final class Version implements Comparable<Version> {
 	
 	@NotNull
@@ -32,8 +34,7 @@ public final class Version implements Comparable<Version> {
 	}
 	
 	public Version(String version) {
-		if (version == null)
-			throw new IllegalArgumentException("Version can not be null!");
+		Objects.requireNonNull(version, "version");
 		Matcher matcher = PATTERN.matcher(version);
 		if (!matcher.matches())
 			throw new IllegalArgumentException("Invalid version String: " + version);

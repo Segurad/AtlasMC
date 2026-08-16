@@ -109,6 +109,11 @@ public interface Plugin extends PluginHandle {
 	@Nullable
 	URL getResource(String name);
 	
+	/**
+	 * Returns all handles of this Plugin.
+	 * Does not include the handle representation of the Plugin itself.
+	 * @return handles
+	 */
 	@NotNull
 	Collection<PluginHandle> getHandles();
 

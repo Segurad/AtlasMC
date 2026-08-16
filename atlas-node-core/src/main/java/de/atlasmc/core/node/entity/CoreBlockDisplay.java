@@ -42,7 +42,7 @@ public class CoreBlockDisplay extends CoreDisplay implements BlockDisplay {
 			block = data;
 			id = data.getStateID();
 		}
-		metaContainer.get(META_DISPLAYED_BLOCK).setData(id);
+		metaContainer.setData(META_DISPLAYED_BLOCK, id);
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class CoreBlockDisplay extends CoreDisplay implements BlockDisplay {
 			block = type.createBlockData();
 			id = block.getStateID();
 		}
-		metaContainer.get(META_DISPLAYED_BLOCK).setData(id);
+		metaContainer.setData(META_DISPLAYED_BLOCK, id);
 	}
 
 	@Override

@@ -65,7 +65,7 @@ public class CoreWither extends CoreMob implements Wither {
 	public void setInvulnerableTime(int time) {
 		if (time < 0)
 			throw new IllegalArgumentException("Time can not be lower than 0: " + time);
-		metaContainer.get(META_INVULNERABLE_TIME).setData(time);
+		metaContainer.setData(META_INVULNERABLE_TIME, time);
 	}
 
 	@Override
@@ -88,11 +88,11 @@ public class CoreWither extends CoreMob implements Wither {
 	
 	private void setHeadTarget(MetaDataField<Integer> head, Entity entity) {
 		if (entity == null) {
-			metaContainer.get(head).setData(0);
+			metaContainer.setData(head, 0);
 		} else { 
 			if (entity.isRemoved())
 				throw new IllegalArgumentException("Target must be a removed Entity!");
-			metaContainer.get(head).setData(entity.getID());
+			metaContainer.setData(head, entity.getID());
 		}
 	}
 

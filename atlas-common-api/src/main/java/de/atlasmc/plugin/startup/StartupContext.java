@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import de.atlasmc.log.Log;
-import de.atlasmc.plugin.AtlasModul;
+import de.atlasmc.plugin.AtlasCorePlugin;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginLoader;
 import de.atlasmc.util.annotation.NotNull;
@@ -31,7 +31,7 @@ public class StartupContext {
 	 * <ul>
 	 * <li>prepareStage - Register new {@link PluginLoader}</li>
 	 * <li>handleStage - Load {@link Plugin}s</li>
-	 * <li>prepareStage - {@link AtlasModul#initStartupHandler(StartupContext)}</li>
+	 * <li>prepareStage - {@link AtlasCorePlugin#initStartupHandler(StartupContext)}</li>
 	 * </ul>
 	 */
 	public static final String LOAD_EXTRA_PLUGINS = "load-extra-plugins";
@@ -45,6 +45,10 @@ public class StartupContext {
 	 */
 	public static final String LOAD_MASTER_DATA = "load-master-data";
 	/**
+	 * Stage to finalize master startup
+	 */
+	public static final String FINALIZE_MASTER_STARTUP = "finish-master-startup";
+	/**
 	 * Stage for connecting node to master
 	 */
 	public static final String CONNECT_MASTER = "connect-master"; 
@@ -57,7 +61,10 @@ public class StartupContext {
 	 * Stage for loading node data
 	 */
 	public static final String LOAD_NODE_DATA = "load-node-data";
-	
+	/**
+	 * Stage to finalize node startup
+	 */
+	public static final String FINALIZE_NODE_STARTUP = "finish-node-startup";
 	/**
 	 * Final stage for completing last initializations
 	 */

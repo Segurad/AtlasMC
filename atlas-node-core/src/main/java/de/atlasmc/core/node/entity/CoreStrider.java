@@ -50,17 +50,17 @@ public class CoreStrider extends CoreAgeableMob implements Strider {
 
 	@Override
 	public void setBoostTime(int time) {
-		metaContainer.get(META_BOOST_TIME).setData(time);		
+		metaContainer.setData(META_BOOST_TIME, time);		
 	}
 
 	@Override
 	public void setShaking(boolean shaking) {
-		metaContainer.get(META_IS_SHAKING).setData(shaking);		
+		metaContainer.setData(META_IS_SHAKING, shaking);		
 	}
 
 	@Override
 	public void setSaddle(boolean saddle) {
-		metaContainer.get(META_HAS_SADDLE).setData(saddle);		
+		metaContainer.setData(META_HAS_SADDLE, saddle);		
 	}
 	
 }

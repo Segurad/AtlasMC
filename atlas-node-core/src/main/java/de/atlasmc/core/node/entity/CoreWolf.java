@@ -46,7 +46,7 @@ public class CoreWolf extends CoreTameable implements Wolf {
 
 	@Override
 	public void setBegging(boolean begging) {
-		metaContainer.get(META_IS_BEGGING).setData(begging);		
+		metaContainer.setData(META_IS_BEGGING, begging);		
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class CoreWolf extends CoreTameable implements Wolf {
 	public void setCollarColor(DyeColor color) {
 		if (color == null)
 			throw new IllegalArgumentException("Color can not be null!");
-		metaContainer.get(META_COLAR_COLOR).setData(color);
+		metaContainer.setData(META_COLAR_COLOR, color);
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class CoreWolf extends CoreTameable implements Wolf {
 
 	@Override
 	public void setAngry(boolean angry) {
-		metaContainer.get(META_ANGER_TIME).setData(angry ? 1 : 0);
+		metaContainer.setData(META_ANGER_TIME, angry ? 1 : 0);
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class CoreWolf extends CoreTameable implements Wolf {
 
 	@Override
 	public void setVariant(WolfVariant variant) {
-		metaContainer.get(META_WOLF_VARIANT).setData(variant);
+		metaContainer.setData(META_WOLF_VARIANT, variant);
 	}
 
 }

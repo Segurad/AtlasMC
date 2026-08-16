@@ -19,7 +19,7 @@ import de.atlasmc.log.Logging;
 import de.atlasmc.network.server.ServerConfig;
 import de.atlasmc.network.server.ServerGroup;
 import de.atlasmc.node.NodePlayer;
-import de.atlasmc.node.server.LocalServer;
+import de.atlasmc.node.server.InternalServer;
 import de.atlasmc.node.server.ServerException;
 import de.atlasmc.node.world.World;
 import de.atlasmc.registry.Registries;
@@ -35,7 +35,7 @@ import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 
-public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServer {
+public class CoreInternalServer extends CoreAbstractNodeServer implements InternalServer {
 	
 	private static final List<Pair<String, String>> TASKS_ON_STARTUP;
 	private static final List<Pair<String, String>> TASKS_ON_SHUTDOWN;
@@ -55,22 +55,22 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 	private final Queue<Event> eventQueue;
 	private final Set<NodePlayer> players;
 	private final Set<World> worlds;
-	private AtlasThread<CoreLocalServer> thread;
+	private AtlasThread<CoreInternalServer> thread;
 	private Scheduler scheduler;
 	private final Log logger;
 	private volatile Status targetStatus;
  	private volatile Future<Boolean> future;
 	protected final Lock lock = new ReentrantLock();
 	
-	public CoreLocalServer(UUID serverID, File workdir, ServerGroup group) {
+	public CoreInternalServer(UUID serverID, File workdir, ServerGroup group) {
 		this(serverID, workdir, group, group.getServerConfig().clone());
 	}
 	
-	public CoreLocalServer(UUID serverID, File workdir, ServerConfig config) {
+	public CoreInternalServer(UUID serverID, File workdir, ServerConfig config) {
 		this(serverID, workdir, null, config);
 	}
 	
-	protected CoreLocalServer(UUID serverID, File workdir, ServerGroup group, ServerConfig config) {
+	protected CoreInternalServer(UUID serverID, File workdir, ServerGroup group, ServerConfig config) {
 		super(serverID, workdir, new File(workdir, "worlds/"), group, config);
 		this.players = new HashSet<>();
 		this.worlds = new HashSet<>();
@@ -147,7 +147,7 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 		}
 		status = Status.STARTUP;
 		logger.info("Starting...");
-		AtlasThread<CoreLocalServer> thread = this.thread = new AtlasThread<>(this.getServerName(), 50, logger, false,  this);
+		AtlasThread<CoreInternalServer> thread = this.thread = new AtlasThread<>(this.getServerName(), 50, logger, false,  this);
 		logger.debug("Initializing startup hooks...");
 		buildTasks(thread.getStartupTasks(), TASKS_ON_STARTUP, "startup-tasks");
 		logger.debug("Initializing shutdown hooks...");
@@ -292,7 +292,7 @@ public class CoreLocalServer extends CoreAbstractNodeServer implements LocalServ
 		}
 		status = Status.PREPARATION;
 		logger.info("Preparing...");
-		CoreLocalServerPreparingTask task = new CoreLocalServerPreparingTask(this);
+		CoreInternalServerPreparingTask task = new CoreInternalServerPreparingTask(this);
 		this.future = future = task.getFuture();
 		targetStatus = Status.AWAIT_START;
 		future.setListener((f) -> {

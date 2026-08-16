@@ -108,59 +108,58 @@ public class CoreFox extends CoreAgeableMob implements Fox {
 
 	@Override
 	public void setFoxType(Type type) {
-		metaContainer.get(META_FOX_TYPE).setData(type);
+		metaContainer.setData(META_FOX_TYPE, type);
 	}
 
+	private void setFoxFlag(int flag, boolean set) {
+		MetaData<Byte> data = metaContainer.get(META_FOX_FLAGS);
+		var value = (byte) (set ? data.getData() | flag : data.getData() & ~flag);
+		metaContainer.setData(META_FOX_FLAGS, value);
+	}
+	
 	@Override
 	public void setSitting(boolean sitting) {
-		MetaData<Byte> data = metaContainer.get(META_FOX_FLAGS);
-		data.setData((byte) (sitting ? data.getData() | FLAG_IS_SITTING : data.getData() & ~FLAG_IS_SITTING));
+		setFoxFlag(FLAG_IS_SITTING, sitting);
 	}
 
 	@Override
 	public void setInterested(boolean interested) {
-		MetaData<Byte> data = metaContainer.get(META_FOX_FLAGS);
-		data.setData((byte) (interested ? data.getData() | FLAG_IS_INTERESTED : data.getData() & ~FLAG_IS_INTERESTED));
+		setFoxFlag(FLAG_IS_INTERESTED, interested);
 	}
 
 	@Override
 	public void setPouncing(boolean pouncing) {
-		MetaData<Byte> data = metaContainer.get(META_FOX_FLAGS);
-		data.setData((byte) (pouncing ? data.getData() | FLAG_IS_POUNCING : data.getData() & ~FLAG_IS_POUNCING));
+		setFoxFlag(FLAG_IS_POUNCING, pouncing);
 	}
 
 	@Override
 	public void setSleeping(boolean sleeping) {
-		MetaData<Byte> data = metaContainer.get(META_FOX_FLAGS);
-		data.setData((byte) (sleeping ? data.getData() | FLAG_IS_SLEEPING : data.getData() & ~FLAG_IS_SLEEPING));
+		setFoxFlag(FLAG_IS_SLEEPING, sleeping);
 	}
 
 	@Override
 	public void setFaceplanted(boolean faceplanted) {
-		MetaData<Byte> data = metaContainer.get(META_FOX_FLAGS);
-		data.setData((byte) (faceplanted ? data.getData() | FLAG_IS_FACEPLANTED : data.getData() & ~FLAG_IS_FACEPLANTED));
+		setFoxFlag(FLAG_IS_FACEPLANTED, faceplanted);
 	}
 
 	@Override
 	public void setDefending(boolean defending) {
-		MetaData<Byte> data = metaContainer.get(META_FOX_FLAGS);
-		data.setData((byte) (defending ? data.getData() | FLAG_IS_DEFENDING : data.getData() & ~FLAG_IS_DEFENDING));		
+		setFoxFlag(FLAG_IS_DEFENDING, defending);
 	}
 
 	@Override
 	public void setFirstTrusted(UUID uuid) {
-		metaContainer.get(META_FOX_FIRST_TRUSTED).setData(uuid);		
+		metaContainer.setData(META_FOX_FIRST_TRUSTED, uuid);		
 	}
 
 	@Override
 	public void setSecondTrusted(UUID uuid) {
-		metaContainer.get(META_FOX_LAST_TRUSTED).setData(uuid);		
+		metaContainer.setData(META_FOX_LAST_TRUSTED, uuid);		
 	}
 
 	@Override
 	public void setCrouching(boolean crouching) {
-		MetaData<Byte> data = metaContainer.get(META_FOX_FLAGS);
-		data.setData((byte) (crouching ? data.getData() | FLAG_IS_CROUCHING : data.getData() & ~FLAG_IS_CROUCHING));
+		setFoxFlag(FLAG_IS_CROUCHING, crouching);
 	}
 	
 	@Override

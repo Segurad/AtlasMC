@@ -7,8 +7,14 @@ import de.atlasmc.util.pipeline.Pipeline;
 @ThreadSafe
 public interface PacketListenerPipeline extends Pipeline<PacketListener> {
 	
-	void handlePacket(ConnectionHandler handler, Packet packet);
+	/**
+	 * Handles a packet
+	 * @param handler
+	 * @param packet
+	 * @return if the packet was handled or not
+	 */
+	boolean handlePacket(ConnectionHandler handler, Packet packet);
 	
-	void handlePacketSync(ConnectionHandler handler, Packet packet);
+	boolean handlePacketSync(ConnectionHandler handler, Packet packet);
 	
 }

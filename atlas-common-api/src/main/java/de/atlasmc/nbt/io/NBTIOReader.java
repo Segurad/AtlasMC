@@ -2,6 +2,7 @@ package de.atlasmc.nbt.io;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -26,9 +27,7 @@ public class NBTIOReader extends AbstractNBTIOReader {
 	 */
 	public NBTIOReader(InputStream in, boolean unnamedRoot) {
 		super(unnamedRoot);
-		if (in == null) 
-			throw new IllegalArgumentException("DataInput can not be null!");
-		this.in = in;
+		this.in = Objects.requireNonNull(in, "in");
 	}
 	
 	@Override

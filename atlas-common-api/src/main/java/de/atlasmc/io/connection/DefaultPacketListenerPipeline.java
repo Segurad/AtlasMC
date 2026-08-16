@@ -13,35 +13,39 @@ public class DefaultPacketListenerPipeline extends AbstractConcurrentPipeline<Pa
 	}
 
 	@Override
-	public void handlePacket(final ConnectionHandler handler, final Packet packet) {
+	public boolean handlePacket(final ConnectionHandler handler, final Packet packet) {
 		final var listeners = this.entries;
 		final int count = listeners.length;
 		if (count == 0)
-			return;
+			return false;
+		boolean handled = false;
 		for (int i = 0; i < count; i++) {
 			final PacketListener listener = listeners[i];
 			try {
-				listener.handlePacket(handler, packet);
+				handled = listener.handlePacket(handler, packet, handled);
 			} catch (Exception e) {
 				handler.handleException(e);
 			}
 		}
+		return handled;
 	}
 	
 	@Override
-	public void handlePacketSync(final ConnectionHandler handler, final Packet packet) {
+	public boolean handlePacketSync(final ConnectionHandler handler, final Packet packet) {
 		final var listeners = this.entries;
 		final int count = listeners.length;
 		if (count == 0)
-			return;
+			return false;
+		boolean handled = false;
 		for (int i = 0; i < count; i++) {
 			final PacketListener listener = listeners[i];
 			try {
-				listener.handlePacket(handler, packet);
+				handled = listener.handlePacketSync(handler, packet, handled);
 			} catch (Exception e) {
 				handler.handleException(e);
 			}
 		}
+		return handled;
 	}
 
 	@Override

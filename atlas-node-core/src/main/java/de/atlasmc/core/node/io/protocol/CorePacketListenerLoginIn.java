@@ -108,7 +108,7 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<LoginH
 	}
 
 	public CorePacketListenerLoginIn(LoginHandler handler) {
-		super(handler, PacketLogin.PACKET_COUNT_IN);
+		super(handler, PacketLogin.PACKET_COUNT_IN, true);
 	}
 	
 	private static Cipher buildCipher() {

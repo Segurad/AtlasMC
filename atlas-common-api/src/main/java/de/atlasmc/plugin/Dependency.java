@@ -6,7 +6,9 @@ import java.util.regex.Pattern;
 
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
+import de.atlasmc.util.annotation.ThreadSafe;
 
+@ThreadSafe
 public final class Dependency {
 	
 	// ^(?P<order>[\+\-\~])?(?P<type>[!\?\*])?(?: ?(?P<name>[a-zA-Z0-9-_]+))(?: (?P<operation>\>|\<|\=\=|\>\=|\<\=) (?P<version>v?[0-9a-zA-Z-.\+]+))?(?: (?P<from>v?[0-9a-zA-Z-.\+]+) - (?P<to>v?[0-9a-zA-Z-.\+]+))?$
@@ -95,16 +97,15 @@ public final class Dependency {
 	 * <li>"(order)(type) (name) (operation) (version)"</li>
 	 * <li>"(order)(type) (name) (from) - (to)"</li>
 	 * </ul>
-	 * @param dependency
+	 * @param value
 	 * @return dependency
 	 */
-	public static Dependency of(String dependency) {
-		if (dependency == null)
-			throw new IllegalArgumentException("Dependency can not be null!");
-		Matcher matcher = PATTERN.matcher(dependency);
+	public static Dependency of(String value) {
+		Objects.requireNonNull(value, "value");
+		Matcher matcher = PATTERN.matcher(value);
 		String name = matcher.group("name");
 		if (name == null)
-			throw new IllegalArgumentException("Invalid dependency String: " + dependency);
+			throw new IllegalArgumentException("Invalid dependency String: " + value);
 		Order order = Order.getByIdentifier(matcher.group("order"));
 		Type type = Type.getByIdentifier(matcher.group("type"));
 		MatchOperation operation = MatchOperation.getByIdentifier(matcher.group("operation"));
@@ -118,7 +119,7 @@ public final class Dependency {
 					from = new Version(rawFrom);
 					to = new Version(rawTo);
 				} catch(IllegalArgumentException e) {
-					throw new IllegalArgumentException("Invalid from version format in dependency String: " + dependency);
+					throw new IllegalArgumentException("Invalid from version format in dependency String: " + value);
 				}
 				operation = MatchOperation.RANGE;
 			}
@@ -126,7 +127,7 @@ public final class Dependency {
 			try {
 				from = new Version(matcher.group("version"));
 			} catch(IllegalArgumentException e) {
-				throw new IllegalArgumentException("Invalid version format in dependency String: " + dependency);
+				throw new IllegalArgumentException("Invalid version format in dependency String: " + value);
 			}
 		}
 		return new Dependency(name, type, order, operation, from, to);
@@ -268,8 +269,7 @@ public final class Dependency {
 	}
 	
 	public boolean matches(Version version) {
-		if (version == null)
-			throw new IllegalArgumentException("Version can not be null!");
+		Objects.requireNonNull(version, "version");
 		if (operation == MatchOperation.ANY)
 			return true;
 		if (operation == MatchOperation.RANGE) {

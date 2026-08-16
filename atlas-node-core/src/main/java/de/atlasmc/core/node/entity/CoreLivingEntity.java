@@ -26,7 +26,6 @@ import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.LivingEntity;
 import de.atlasmc.node.entity.Player;
 import de.atlasmc.node.entity.Projectile;
-import de.atlasmc.node.entity.metadata.MetaData;
 import de.atlasmc.node.entity.metadata.MetaDataField;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.event.entity.ProjectileLounchEvent;
@@ -48,13 +47,14 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 
 	protected static final BiConsumer<Entity, Player>
 		VIEWER_ADD_FUNCTION = (holder, viewer) -> {
+			var ent = (CoreLivingEntity) holder;
 			PlayerConnection con = viewer.getConnection();
 			PacketOutSpawnEntity packet = new PacketOutSpawnEntity();
 			packet.setEntity(holder);
 			con.sendPacked(packet);
-			((CoreLivingEntity) holder).sendMetadata(viewer);
-			((CoreLivingEntity) holder).sendEntityEffects(viewer);
-			((CoreLivingEntity) holder).sendAttributes(viewer);
+			ent.sendMetadata(viewer);
+			ent.sendEntityEffects(viewer);
+			ent.sendAttributes(viewer);
 		};
 	
 	/**
@@ -116,13 +116,13 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
-		metaContainer.set(new MetaData<>(META_HAND_STATES));
-		metaContainer.set(new MetaData<>(META_HEALTH));
-		metaContainer.set(new MetaData<>(META_POTION_EFFECT_COLOR));
-		metaContainer.set(new MetaData<>(META_REDUCE_POTION_AMBIENT));
-		metaContainer.set(new MetaData<>(META_DISPLAY_ARROWS));
-		metaContainer.set(new MetaData<>(META_DISPLAY_BEE_STINGERS));
-		metaContainer.set(new MetaData<>(META_OCCUPIED_BED_POSITION));
+		metaContainer.set(META_HAND_STATES);
+		metaContainer.set(META_HEALTH);
+		metaContainer.set(META_POTION_EFFECT_COLOR);
+		metaContainer.set(META_REDUCE_POTION_AMBIENT);
+		metaContainer.set(META_DISPLAY_ARROWS);
+		metaContainer.set(META_DISPLAY_BEE_STINGERS);
+		metaContainer.set(META_OCCUPIED_BED_POSITION);
 	}
 	
 	@Override
@@ -141,7 +141,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 		super.prepUpdate();
 		if (healthChanged) {
 			healthChanged = false;
-			metaContainer.get(META_HEALTH).setData((float) health);
+			metaContainer.setData(META_HEALTH, health);
 		}
 	}
 
@@ -173,12 +173,12 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 
 	@Override
 	public void setDisplayedArrows(int arrows) {
-		metaContainer.get(META_DISPLAY_ARROWS).setData(arrows);		
+		metaContainer.setData(META_DISPLAY_ARROWS, arrows);		
 	}
 
 	@Override
 	public void setDisplayedBeeStringers(int stingers) {
-		metaContainer.get(META_DISPLAY_BEE_STINGERS).setData(stingers);		
+		metaContainer.setData(META_DISPLAY_BEE_STINGERS, stingers);		
 	}
 
 	@Override
@@ -200,7 +200,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	public void setPotionAmbientColor(int rgb) {
 		if (rgb < 0 || rgb > 0xFFFFFF)
 			throw new IllegalArgumentException("Color out of range: " + rgb);
-		metaContainer.get(META_POTION_EFFECT_COLOR).setData(rgb);
+		metaContainer.set(META_POTION_EFFECT_COLOR, rgb);
 	}
 
 	@Override
@@ -210,7 +210,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 
 	@Override
 	public void setPotionAmbientReduced(boolean reduced) {
-		metaContainer.get(META_REDUCE_POTION_AMBIENT).setData(reduced);	
+		metaContainer.setData(META_REDUCE_POTION_AMBIENT, reduced);	
 	}
 
 	@Override
@@ -648,7 +648,6 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	@Override
 	public void damage(float damage) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package de.atlasmc.plugin;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 import de.atlasmc.NamespacedKey;
@@ -20,12 +21,8 @@ public abstract class AbstractPrototypePlugin implements PrototypePlugin {
 	private final List<NamespacedKey> softRequiredFeatures;
 	
 	public AbstractPrototypePlugin(File file, Configuration pluginInfo) {
-		if (file == null)
-			throw new IllegalArgumentException("File can not be null!");
-		if (pluginInfo == null)
-			throw new IllegalArgumentException("Plugin info can not be null!");
-		this.file = file;
-		this.pluginInfo = pluginInfo;
+		this.file = Objects.requireNonNull(file, "file");
+		this.pluginInfo = Objects.requireNonNull(pluginInfo, "info");
 		this.name = pluginInfo.getString("name");
 		if (name == null)
 			throw new ConfigurationException("Name is not defined!");

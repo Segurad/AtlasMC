@@ -10,7 +10,6 @@ import de.atlasmc.node.entity.Entity;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.HumanEntity;
 import de.atlasmc.node.entity.Player;
-import de.atlasmc.node.entity.metadata.MetaData;
 import de.atlasmc.node.entity.metadata.MetaDataField;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.ContainerFactory;
@@ -111,7 +110,7 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 
 	@Override
 	public void setDisplayedSkinParts(int parts) {
-		metaContainer.get(META_SKIN_SETTINGS).setData((byte) parts);
+		metaContainer.setData(META_SKIN_SETTINGS, (byte) parts);
 	}
 
 	@Override
@@ -123,7 +122,7 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 	public void setMainHand(MainHand hand) {
 		if (hand == null)
 			throw new IllegalArgumentException("Hand can not be null!");
-		metaContainer.get(META_MAIN_HAND).setData((byte) hand.getID());
+		metaContainer.setData(META_MAIN_HAND, (byte) hand.getID());
 	}
 
 	@Override
@@ -182,7 +181,7 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 	
 	private void prepShoulderUpdate(MetaDataField<CompoundTag> shoulder, Entity entity) {
 		if (entity == null)
-			metaContainer.get(shoulder).setData(null);
+			metaContainer.setData(shoulder, null);
 		else {
 			try {
 				@SuppressWarnings("unchecked")
@@ -192,7 +191,7 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 				handler.serialize(entity, writer, CodecContext.DEFAULT_CLIENT);
 				writer.writeEndTag();
 				CompoundTag tag = (CompoundTag) writer.toNBT();
-				metaContainer.get(shoulder).setData(tag);
+				metaContainer.setData(shoulder, tag);
 			} catch (IOException e) {
 				throw new NBTException("Error while createing entity nbt!", e);
 			}
@@ -213,8 +212,7 @@ public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 
 	@Override
 	public void setSneaking(boolean sneaking) {
-		MetaData<Byte> meta = metaContainer.get(META_ENTITY_FLAGS);
-		meta.setData((byte) (sneaking ? meta.getData() | 0x02 : meta.getData() & 0xFD));
+		setEntityFlag(FLAG_CROUCHING, sneaking);
 	}
 
 	@Override

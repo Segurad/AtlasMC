@@ -9,7 +9,6 @@ import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.io.socket.SocketConfig;
 import de.atlasmc.network.permission.PermissionManager;
 import de.atlasmc.network.player.ProfileHandler;
-import de.atlasmc.network.server.ServerGroup;
 import de.atlasmc.network.server.ServerManager;
 import de.atlasmc.tick.Tickable;
 import de.atlasmc.util.annotation.NotNull;
@@ -19,9 +18,6 @@ public interface AtlasNetworkHandler extends Tickable {
 	
 	@NotNull
 	NodeManager getNodeManager();
-	
-	@NotNull
-	ServerGroup getFallBack();
 	
 	@NotNull
 	ServerManager getServerManager();
@@ -43,18 +39,15 @@ public interface AtlasNetworkHandler extends Tickable {
 	
 	@NotNull
 	Future<Collection<SocketConfig>> getSocketConfigs(Collection<String> names);
-
-	int getOnlinePlayerCount();
-
-	int getMaxPlayers();
+	
+	@NotNull
+	NetworkStats getNetworkStats();
 	
 	@NotNull
 	NetworkInfo getNetworkInfo();
 
 	@NotNull
 	NetworkInfo getNetworkInfoMaintenance();
-
-	boolean isMaintenance();
 	
 	@NotNull
 	Collection<Repository> getRepositories();

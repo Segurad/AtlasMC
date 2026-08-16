@@ -46,7 +46,7 @@ public class CoreArmadillo extends CoreAgeableMob implements Armadillo {
 
 	@Override
 	public void setState(ArmadilloState state) {
-		metaContainer.get(META_ARMADILLO_STATE).setData(state);
+		metaContainer.setData(META_ARMADILLO_STATE, state);
 	}
 
 }

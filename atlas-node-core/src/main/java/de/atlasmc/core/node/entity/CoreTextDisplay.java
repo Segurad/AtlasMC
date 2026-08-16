@@ -11,6 +11,13 @@ import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreTextDisplay extends CoreDisplay implements TextDisplay {
 
+	protected static final int
+	FLAG_IS_SHADOWED = 0x01,
+	FLAG_IS_SEE_THROUGH = 0x02,
+	FLAG_DEFAULT_BACKGROUND = 0x04,
+	FLAG_TEXT_ALIGN_LEFT = 0x08,
+	FLAG_TEXT_ALIGN_RIGHT = 0x10;
+	
 	protected static final MetaDataField<Chat> META_TEXT = new MetaDataField<>(CoreDisplay.LAST_META_INDEX+1, ChatUtil.EMPTY, MetaDataType.CHAT);
 	protected static final MetaDataField<Integer> META_LINE_WIDTH = new MetaDataField<>(CoreDisplay.LAST_META_INDEX+2, 200, MetaDataType.VAR_INT);
 	protected static final MetaDataField<Integer> META_BACKGROUND_COLOR = new MetaDataField<>(CoreDisplay.LAST_META_INDEX+3, 0x40000000, MetaDataType.VAR_INT);
@@ -41,26 +48,33 @@ public class CoreTextDisplay extends CoreDisplay implements TextDisplay {
 	@Override
 	public TextAlignment getAlignment() {
 		int val = metaContainer.getData(META_TEXT_DISPLAY_FLAGS);
-		return (val & 0x08) != 0 ? TextAlignment.LEFT : (val & 0x10) != 0 ? TextAlignment.RIGHT : TextAlignment.CENTER;
+		return (val & FLAG_TEXT_ALIGN_LEFT) == FLAG_TEXT_ALIGN_LEFT ? TextAlignment.LEFT : 
+			(val & FLAG_TEXT_ALIGN_RIGHT) == FLAG_TEXT_ALIGN_RIGHT ? TextAlignment.RIGHT : TextAlignment.CENTER;
+	}
+	
+	protected void setTextDisplayFlag(int flag, boolean set) {
+		MetaData<Byte> data = metaContainer.get(META_TEXT_DISPLAY_FLAGS);
+		var value = (byte) (set ? data.getData() | flag : data.getData() & ~flag);
+		metaContainer.setData(META_TEXT_DISPLAY_FLAGS, value);
 	}
 
 	@Override
 	public void setAlignment(TextAlignment alignment) {
 		MetaData<Byte> data = metaContainer.get(META_TEXT_DISPLAY_FLAGS);
-		int val = data.getData() & 0x07;
+		int val = data.getData() & ~(FLAG_TEXT_ALIGN_LEFT | FLAG_TEXT_ALIGN_RIGHT);
 		if (alignment != null) {
 			switch (alignment) {
 			case LEFT:
-				val |= 0x08;
+				val |= FLAG_TEXT_ALIGN_LEFT;
 				break;
 			case RIGHT:
-				val |= 0x10;
+				val |= FLAG_TEXT_ALIGN_RIGHT;
 				break;
 			default:
 				break;
 			}
 		}
-		data.setData((byte) val);
+		metaContainer.setData(META_TEXT_DISPLAY_FLAGS, (byte) val);
 	}
 
 	@Override
@@ -70,26 +84,18 @@ public class CoreTextDisplay extends CoreDisplay implements TextDisplay {
 
 	@Override
 	public void setBackgroundColor(Color color) {
-		if (color == null) {
-			metaContainer.get(META_BACKGROUND_COLOR).setData(META_BACKGROUND_COLOR.getDefaultData());
-		} else {
-			metaContainer.get(META_BACKGROUND_COLOR).setData(color.asARGB());
-		}
+			metaContainer.setData(META_BACKGROUND_COLOR, color == null ? 
+					META_BACKGROUND_COLOR.getDefaultData() : color.asARGB());
 	}
 
 	@Override
 	public boolean hasDefaultBackground() {
-		return (metaContainer.getData(META_TEXT_DISPLAY_FLAGS) & 0x04) != 0;
+		return (metaContainer.getData(META_TEXT_DISPLAY_FLAGS) & FLAG_DEFAULT_BACKGROUND) == FLAG_DEFAULT_BACKGROUND;
 	}
 
 	@Override
 	public void setDefaultBachground(boolean defaultBackground) {
-		MetaData<Byte> data = metaContainer.get(META_TEXT_DISPLAY_FLAGS);
-		if (defaultBackground) {
-			data.setData((byte) (data.getData() | 0x04));
-		} else {
-			data.setData((byte) (data.getData() & 0xFB));
-		}
+		setTextDisplayFlag(FLAG_DEFAULT_BACKGROUND, defaultBackground);
 	}
 
 	@Override
@@ -99,37 +105,27 @@ public class CoreTextDisplay extends CoreDisplay implements TextDisplay {
 
 	@Override
 	public void setLineWidth(int lineWidth) {
-		metaContainer.get(META_LINE_WIDTH).setData(lineWidth);
+		metaContainer.setData(META_LINE_WIDTH, lineWidth);
 	}
 
 	@Override
 	public boolean isSeeThrough() {
-		return (metaContainer.getData(META_TEXT_DISPLAY_FLAGS) & 0x02) != 0;
+		return (metaContainer.getData(META_TEXT_DISPLAY_FLAGS) & FLAG_IS_SEE_THROUGH) == FLAG_IS_SEE_THROUGH;
 	}
 
 	@Override
 	public void setSeeThrough(boolean seeThrough) {
-		MetaData<Byte> data = metaContainer.get(META_TEXT_DISPLAY_FLAGS);
-		if (seeThrough) {
-			data.setData((byte) (data.getData() | 0x02));
-		} else {
-			data.setData((byte) (data.getData() & 0xFD));
-		}
+		setTextDisplayFlag(FLAG_IS_SEE_THROUGH, seeThrough);
 	}
 
 	@Override
 	public boolean isShadowed() {
-		return (metaContainer.getData(META_TEXT_DISPLAY_FLAGS) & 0x01) != 0;
+		return (metaContainer.getData(META_TEXT_DISPLAY_FLAGS) & FLAG_IS_SHADOWED) == FLAG_IS_SHADOWED;
 	}
 
 	@Override
 	public void setShadowed(boolean shadowed) {
-		MetaData<Byte> data = metaContainer.get(META_TEXT_DISPLAY_FLAGS);
-		if (shadowed) {
-			data.setData((byte) (data.getData() | 0x01));
-		} else {
-			data.setData((byte) (data.getData() & 0xFE));
-		}
+		setTextDisplayFlag(FLAG_IS_SHADOWED, shadowed);
 	}
 
 	@Override
@@ -139,9 +135,7 @@ public class CoreTextDisplay extends CoreDisplay implements TextDisplay {
 
 	@Override
 	public void setText(Chat text) {
-		if (text == null)
-			text = ChatUtil.EMPTY;
-		metaContainer.get(META_TEXT).setData(text);
+		metaContainer.setData(META_TEXT, text == null ? ChatUtil.EMPTY : text);
 	}
 
 	@Override
@@ -151,7 +145,7 @@ public class CoreTextDisplay extends CoreDisplay implements TextDisplay {
 
 	@Override
 	public void setTextOpacity(int opacity) {
-		metaContainer.get(META_TEXT_OPACITY).setData((byte) opacity);
+		metaContainer.setData(META_TEXT_OPACITY, (byte) opacity);
 	}
 
 }

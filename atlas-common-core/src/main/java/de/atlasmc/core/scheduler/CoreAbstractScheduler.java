@@ -1,9 +1,9 @@
 package de.atlasmc.core.scheduler;
 
-import java.util.Iterator;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Arrays;
+import java.util.Objects;
 
+import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.scheduler.AtlasTask;
 import de.atlasmc.scheduler.Scheduler;
@@ -15,7 +15,7 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 
 	protected final ConcurrentLinkedList<CoreRegisteredTask> asyncTasks;
 	protected final ConcurrentLinkedList<CoreRegisteredTask> syncTasks;
-	private final Set<Scheduler> children;
+	private volatile Scheduler[] children;
 	protected final LinkedListIterator<CoreRegisteredTask> asyncIt;
 	protected final LinkedListIterator<CoreRegisteredTask> syncIt;
 
@@ -27,7 +27,6 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 	public CoreAbstractScheduler() {
 		this.syncTasks = new ConcurrentLinkedList<>();
 		this.asyncTasks = new ConcurrentLinkedList<>();
-		this.children = ConcurrentHashMap.newKeySet();
 		this.asyncIt = asyncTasks.iterator();
 		this.syncIt = syncTasks.iterator();
 	}
@@ -107,10 +106,13 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 		if (dead)
 			return;
 		dead = true;
-		for (Scheduler scd : children) {
-			scd.shutdown();
+		var children = this.children;
+		if (children != null) {
+			for (Scheduler scd : children) {
+				scd.shutdown();
+			}
+			this.children = null;
 		}
-		children.clear();
 		for (CoreRegisteredTask task : asyncTasks) {
 			task.getTask().notifiyShutdown();
 		}
@@ -123,9 +125,9 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 	
 	@Override
 	public void runNextTasks() {
-		if (dead)
+		if (dead || syncTasks.isEmpty())
 			return;
-		for (CoreRegisteredTask task = syncIt.gotoHead(); task != null; syncIt.next()) {
+		for (CoreRegisteredTask task = syncIt.gotoHead(); syncIt.hasNext(); task = syncIt.next()) {
 			if (tickSyncTask(task))
 				syncIt.remove();
 		}
@@ -137,13 +139,45 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 	}
 	
 	@Override
-	public boolean addChild(Scheduler scheduler) {
-		return children.add(scheduler);
+	public synchronized boolean addChild(Scheduler scheduler) {
+		if (scheduler.isDead())
+			throw new IllegalArgumentException("Child is dead!");
+		var children = this.children;
+		if (children == null) {
+			this.children = new Scheduler[] { scheduler };
+			return true;
+		}
+		for (var child : children) {
+			if (child == scheduler)
+				return false;
+		}
+		children = Arrays.copyOf(children, children.length + 1);
+		children[children.length - 1] = scheduler;
+		this.children = children;
+		return true;
 	}
 	
 	@Override
-	public boolean removeChild(Scheduler scheduler) {
-		return children.remove(scheduler);
+	public synchronized boolean removeChild(Scheduler scheduler) {
+		Objects.requireNonNull(scheduler);
+		var children = this.children;
+		final int length = children.length;
+		for (int i = 0; i < length; i++) {
+			var child = children[i];
+			if (child == scheduler) {
+				var newLength = length - 1;
+				if (newLength == 0) {
+					this.children = null;
+					return true;
+				}
+				var newChildren = Arrays.copyOf(children, length - 1);
+				if (i < length - 1)
+					newChildren[i] = children[length - 1];
+				this.children = newChildren;
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -153,14 +187,17 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 	protected void tickTasks(CoreSchedulerThread master) {
 		if (dead)
 			return;
-		for (CoreRegisteredTask task = asyncIt.gotoHead(); task != null; asyncIt.next()) {
-			if (tickAsyncTask(master, task))
-				asyncIt.remove();
+		if (!asyncTasks.isEmpty()) {
+			for (CoreRegisteredTask task = asyncIt.gotoHead(); asyncIt.hasNext(); task = asyncIt.next()) {
+				if (tickAsyncTask(master, task))
+					asyncIt.remove();
+			}
 		}
-		if (!children.isEmpty()) {
+		var children = this.children;
+		if (children != null) {
 			for (Scheduler scheduler : children) {
-				if (scheduler instanceof CoreAbstractScheduler)
-					((CoreAbstractScheduler) scheduler).tickTasks(master);
+				if (scheduler instanceof CoreAbstractScheduler child)
+					child.tickTasks(master);
 			}
 		}
 	}
@@ -200,26 +237,43 @@ public abstract class CoreAbstractScheduler implements Scheduler {
 	}
 	
 	@Override
+	public void removeAllTasks(Plugin plugin) {
+		removeTasks(asyncTasks, plugin, true);
+		removeTasks(syncTasks, plugin, true);
+		var children = this.children;
+		if (children != null) {
+			for (Scheduler child : children)
+				child.removeAllTasks(plugin);
+		}
+	}
+	
+	@Override
 	public void removeTasks(PluginHandle plugin) {
-		Iterator<CoreRegisteredTask> tasks = null;
-		CoreRegisteredTask task = null;
-		if (!asyncTasks.isEmpty()) {
-			tasks = asyncTasks.iterator();
-			while ((task = tasks.next()) != null) {
-				tasks.remove();
-				task.getTask().cancel();
-			}
-		}
-		if (!syncTasks.isEmpty()) {
-			tasks = syncTasks.iterator();
-			while ((task = tasks.next()) != null) {
-				tasks.remove();
-				task.getTask().cancel();
-			}
-		}
-		if (!children.isEmpty()) {
+		removeTasks(asyncTasks, plugin, false);
+		removeTasks(syncTasks, plugin, false);
+		var children = this.children;
+		if (children != null) {
 			for (Scheduler child : children)
 				child.removeTasks(plugin);
+		}
+	}
+	
+	@Override
+	public Scheduler createScheduler() {
+		return new CoreChildScheduler(this);
+	}
+	
+	private void removeTasks(ConcurrentLinkedList<CoreRegisteredTask> tasks, PluginHandle plugin, boolean byPlugin) {
+		if (tasks.isEmpty())
+			return;
+		var it = tasks.iterator();
+		while (it.hasNext()) {
+			var task = it.next();
+			var pl = task.getPlugin();
+			if (pl == plugin || (byPlugin && pl.getPlugin() == plugin)) {
+				it.remove();
+				task.getTask().cancel();
+			}
 		}
 	}
 	

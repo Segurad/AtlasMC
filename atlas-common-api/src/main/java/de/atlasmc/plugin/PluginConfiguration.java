@@ -1,6 +1,7 @@
 package de.atlasmc.plugin;
 
 import java.io.File;
+import java.util.Objects;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.NamespacedKey.Namespaced;
@@ -11,12 +12,8 @@ public class PluginConfiguration implements Namespaced {
 	private final File dir;
 	
 	public PluginConfiguration(NamespacedKey key, File dir) {
-		if (key == null)
-			throw new IllegalArgumentException("Key can not be null!");
-		if (dir == null)
-			throw new IllegalArgumentException("Dir can not be null!");
-		this.key = key;
-		this.dir = dir;
+		this.key = Objects.requireNonNull(key, "key");
+		this.dir = Objects.requireNonNull(dir, "dir");
 	}
 	
 	File getDirectory() {

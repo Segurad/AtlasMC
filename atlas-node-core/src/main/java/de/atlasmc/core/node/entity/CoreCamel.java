@@ -37,7 +37,7 @@ public class CoreCamel extends CoreAbstractHorse implements Camel {
 
 	@Override
 	public void setLastPoseTick(long pose) {
-		metaContainer.get(META_LAST_POSE_TICK).setData(pose);
+		metaContainer.setData(META_LAST_POSE_TICK, pose);
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class CoreCamel extends CoreAbstractHorse implements Camel {
 
 	@Override
 	public void setDashing(boolean dashing) {
-		metaContainer.get(META_DASHING).setData(dashing);
+		metaContainer.setData(META_DASHING, dashing);
 	}
 
 	@Override

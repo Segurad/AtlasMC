@@ -22,7 +22,7 @@ import de.atlasmc.node.io.socket.NodeSocket;
 import de.atlasmc.node.recipe.BookType;
 import de.atlasmc.node.recipe.Recipe;
 import de.atlasmc.node.recipe.RecipeBook;
-import de.atlasmc.node.server.LocalServer;
+import de.atlasmc.node.server.InternalServer;
 import de.atlasmc.plugin.channel.PluginChannelManager;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
@@ -41,7 +41,7 @@ public interface PlayerConnection extends Messageable {
 	 * @return the current server or null if not at this note
 	 */
 	@ThreadSafe
-	LocalServer getLocalSever();
+	InternalServer getLocalSever();
 	
 	/**
 	 * Used to bind a {@link Player} Entity to this connection if the player is currently on this {@link AtlasNode}

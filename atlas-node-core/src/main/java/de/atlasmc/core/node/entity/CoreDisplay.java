@@ -6,7 +6,6 @@ import org.joml.Vector3f;
 import de.atlasmc.Color;
 import de.atlasmc.node.entity.Display;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.node.entity.metadata.MetaData;
 import de.atlasmc.node.entity.metadata.MetaDataField;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
@@ -73,7 +72,7 @@ public class CoreDisplay extends CoreEntity implements Display {
 		int val = -1;
 		if (brightness != null)
 			val = brightness.getBlockLightLevel() << 4 | brightness.getSkyLightLevel() << 20;
-		metaContainer.get(META_BRIGHTNESS_OVERRIDE).setData(val);
+		metaContainer.setData(META_BRIGHTNESS_OVERRIDE, val);
 	}
 
 	@Override
@@ -88,9 +87,7 @@ public class CoreDisplay extends CoreEntity implements Display {
 
 	@Override
 	public void setBillboard(Billboard billboard) {
-		if (billboard == null)
-			throw new IllegalArgumentException("Billboard can not be null!");
-		metaContainer.get(META_BILLBOARD).setData(billboard);
+		metaContainer.setData(META_BILLBOARD, billboard);
 	}
 
 	@Override
@@ -106,7 +103,7 @@ public class CoreDisplay extends CoreEntity implements Display {
 		int val = -1;
 		if (color != null)
 			val = color.asARGB();
-		metaContainer.get(META_GLOW_COLOR_OVERRIDE).setData(val);
+		metaContainer.setData(META_GLOW_COLOR_OVERRIDE, val);
 	}
 
 	@Override
@@ -116,7 +113,7 @@ public class CoreDisplay extends CoreEntity implements Display {
 
 	@Override
 	public void setDisplayWidth(float width) {
-		metaContainer.get(META_WIDTH).setData(width);
+		metaContainer.setData(META_WIDTH, width);
 	}
 
 	@Override
@@ -126,7 +123,7 @@ public class CoreDisplay extends CoreEntity implements Display {
 
 	@Override
 	public void setDisplayHeight(float height) {
-		metaContainer.get(META_HEIGHT).setData(height);
+		metaContainer.setData(META_HEIGHT, height);
 	}
 
 	@Override
@@ -136,7 +133,7 @@ public class CoreDisplay extends CoreEntity implements Display {
 
 	@Override
 	public void setTransformationInterpolationDuration(int duration) {
-		metaContainer.get(META_TRANSFORMATION_INTERPOLATION_DURATION).setData(duration);
+		metaContainer.setData(META_TRANSFORMATION_INTERPOLATION_DURATION, duration);
 	}
 
 	@Override
@@ -146,7 +143,7 @@ public class CoreDisplay extends CoreEntity implements Display {
 
 	@Override
 	public void setInterpolationDelay(int delay) {
-		metaContainer.get(META_INTERPOLATION_DELAY).setData(delay);
+		metaContainer.setData(META_INTERPOLATION_DELAY, delay);
 	}
 
 	@Override
@@ -156,7 +153,7 @@ public class CoreDisplay extends CoreEntity implements Display {
 
 	@Override
 	public void setShadowRadius(float radius) {
-		metaContainer.get(META_SHADOW_RADIUS).setData(radius);
+		metaContainer.setData(META_SHADOW_RADIUS, radius);
 	}
 
 	@Override
@@ -166,7 +163,7 @@ public class CoreDisplay extends CoreEntity implements Display {
 
 	@Override
 	public void setShadowStrength(float strength) {
-		metaContainer.get(META_SHADOW_STRENGTH).setData(strength);
+		metaContainer.setData(META_SHADOW_STRENGTH, strength);
 	}
 
 	@Override
@@ -176,7 +173,7 @@ public class CoreDisplay extends CoreEntity implements Display {
 
 	@Override
 	public void setViewRange(float range) {
-		metaContainer.get(META_VIEW_RANGE).setData(range);
+		metaContainer.setData(META_VIEW_RANGE, range);
 	}
 
 	@Override
@@ -197,48 +194,17 @@ public class CoreDisplay extends CoreEntity implements Display {
 
 	@Override
 	public void setTransformation(Transformation transformation) {
+		var metaContainer = this.metaContainer;
 		if (transformation == null) {
-			MetaData<Vector3f> scale = metaContainer.get(META_SCALE);
-			if (!scale.getData().equals(META_SCALE.getDefaultData())) {
-				scale.getData().set(META_SCALE.getDefaultData());
-				scale.setChanged(true);
-			}
-			MetaData<Vector3f> translation = metaContainer.get(META_TRANSLATION);
-			if (!translation.getData().equals(META_TRANSLATION.getDefaultData())) {
-				translation.getData().set(META_TRANSLATION.getDefaultData());
-				translation.setChanged(true);
-			}
-			MetaData<Quaternionf> rightRotation = metaContainer.get(META_RIGHT_ROTATION);
-			if (!rightRotation.getData().equals(META_RIGHT_ROTATION.getDefaultData())) {
-				rightRotation.getData().set(META_RIGHT_ROTATION.getDefaultData());
-				rightRotation.setChanged(true);
-			}
-			MetaData<Quaternionf> leftRotation = metaContainer.get(META_LEFT_ROTATION);
-			if (!leftRotation.getData().equals(META_LEFT_ROTATION.getDefaultData())) {
-				leftRotation.getData().set(META_LEFT_ROTATION.getDefaultData());
-				leftRotation.setChanged(true);
-			}
+			metaContainer.resetData(META_SCALE);
+			metaContainer.resetData(META_TRANSLATION);
+			metaContainer.resetData(META_RIGHT_ROTATION);
+			metaContainer.resetData(META_LEFT_ROTATION);
 		} else {
-			MetaData<Vector3f> scale = metaContainer.get(META_SCALE);
-			if (!scale.getData().equals(transformation.getScale())) {
-				scale.getData().set(transformation.getScale());
-				scale.setChanged(true);
-			}
-			MetaData<Vector3f> translation = metaContainer.get(META_TRANSLATION);
-			if (!translation.getData().equals(transformation.getTranslation())) {
-				translation.getData().set(transformation.getTranslation());
-				translation.setChanged(true);
-			}
-			MetaData<Quaternionf> rightRotation = metaContainer.get(META_RIGHT_ROTATION);
-			if (!rightRotation.getData().equals(transformation.getRotationRight())) {
-				rightRotation.getData().set(transformation.getRotationRight());
-				rightRotation.setChanged(true);
-			}
-			MetaData<Quaternionf> leftRotation = metaContainer.get(META_LEFT_ROTATION);
-			if (!leftRotation.getData().equals(transformation.getRotationLeft())) {
-				leftRotation.getData().set(transformation.getRotationLeft());
-				leftRotation.setChanged(true);
-			}
+			metaContainer.setData(META_SCALE, transformation.getScale());
+			metaContainer.setData(META_TRANSLATION, transformation.getTranslation());
+			metaContainer.setData(META_RIGHT_ROTATION, transformation.getRotationRight());
+			metaContainer.setData(META_LEFT_ROTATION, transformation.getRotationLeft());
 		}
 	}
 
@@ -249,7 +215,7 @@ public class CoreDisplay extends CoreEntity implements Display {
 
 	@Override
 	public void setPositionInterpolationDuration(int duration) {
-		metaContainer.get(META_POSITION_INTERPOLATION_DURATION).setData(duration);
+		metaContainer.setData(META_POSITION_INTERPOLATION_DURATION, duration);
 	}
 
 }

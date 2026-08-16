@@ -32,7 +32,7 @@ public class CorePermissionGroupHolder implements PermissionGroupHolder {
 		while (it.hasNext()) {
 			PermissionGroup next = it.next();
 			if (next.getPower() < power) {
-				it.addBefor(group);
+				it.addBefore(group);
 				changed = true;
 				return;
 			}

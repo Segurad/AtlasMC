@@ -35,7 +35,7 @@ public class CorePufferFish extends CoreFish implements PufferFish {
 	@Override
 	public void setPuffState(int state) {
 		if (state > 2 || state < 0) throw new IllegalArgumentException("State is not between 0 and 2: " + state);
-		metaContainer.get(META_PUFF_STATE).setData(state);		
+		metaContainer.setData(META_PUFF_STATE, state);		
 	}
 
 }

@@ -15,17 +15,18 @@ public class HandshakePacketListener implements PacketListener {
 	}
 
 	@Override
-	public void handlePacket(ConnectionHandler handler, Packet packet) {
+	public boolean handlePacket(ConnectionHandler handler, Packet packet, boolean handled) {
 		@SuppressWarnings("unchecked")
 		HandshakePacketCodec<Packet> codec = (HandshakePacketCodec<Packet>) protocol.getPacketIO(packet.getID());
 		if (codec == null)
 			throw new IllegalStateException("No handler for handshake with id (" + packet.getID() + ") found!");
 		codec.handle(handler, packet);
+		return true;
 	}
 	
 	@Override
-	public void handlePacketSync(ConnectionHandler handler, Packet packet) throws IOException {
-		handlePacket(handler, packet);
+	public boolean handlePacketSync(ConnectionHandler handler, Packet packet, boolean handled) throws IOException {
+		return handlePacket(handler, packet, handled);
 	}
 
 }

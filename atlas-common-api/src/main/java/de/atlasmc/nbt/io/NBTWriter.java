@@ -60,8 +60,6 @@ public interface NBTWriter extends Closeable {
 	}
 	
 	default void writeIntArrayTag(CharSequence name, int[] data) throws IOException {
-		if (data == null)
-			throw new IllegalArgumentException("Data can not be null!");
 		writeIntArrayTag(name, data, 0, data.length);
 	}
 	
@@ -76,8 +74,6 @@ public interface NBTWriter extends Closeable {
 	void writeUUID(CharSequence name, UUID uuid) throws IOException;
 	
 	default void writeLongArrayTag(CharSequence name, long[] data) throws IOException {
-		if (data == null)
-			throw new IllegalArgumentException("Data can not be null!");
 		writeLongArrayTag(name, data, 0, data.length);
 	}
 	
@@ -88,5 +84,17 @@ public interface NBTWriter extends Closeable {
 	void writeNBT(NBT nbt) throws IOException;
 	
 	void writeNBT(CharSequence name, NBT nbt) throws IOException;
+	
+	default void writeNBT(NBTReader reader) throws IOException {
+		writeNBT(reader.getFieldName(), reader);
+	}
+	
+	/**
+	 * Writes the next tag of the read.
+	 * @param name
+	 * @param reader
+	 * @throws IOException
+	 */
+	void writeNBT(CharSequence name, NBTReader reader) throws IOException;
 	
 }

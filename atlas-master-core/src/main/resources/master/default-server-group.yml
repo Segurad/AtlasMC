@@ -12,7 +12,7 @@ node-selector:
   memory-utilisation: 0.5
   internal: true
 server-config:
-  server-factory: atlas-core:localserver
+  server-factory: atlas-core:internalserver
   config:
     startup-tasks:
       sometask: myplugin:some_task

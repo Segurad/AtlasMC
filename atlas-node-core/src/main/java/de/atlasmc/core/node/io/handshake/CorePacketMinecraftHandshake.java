@@ -20,7 +20,6 @@ public class CorePacketMinecraftHandshake extends HandshakePacketCodec<PacketMin
 
 	@Override
 	public void handle(ConnectionHandler handler, PacketMinecraftHandshake packet) {
-		packet.setHandled(true);
 		HandlerList.callEvent(
 				new AsyncPlayerHandshakeEvent(
 						true, 

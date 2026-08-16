@@ -33,7 +33,7 @@ public class CoreWarden extends CoreMob implements Warden {
 	
 	@Override
 	public void setAnger(int anger) {
-		metaContainer.get(META_ANGER).setData(anger);
+		metaContainer.setData(META_ANGER, anger);
 	}
 
 	@Override

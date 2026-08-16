@@ -15,10 +15,12 @@ import de.atlasmc.util.annotation.NotNull;
  */
 public interface ConfigurationSerializable {
 	
+	static final String DEFAULT_TYPE_KEY = "==type";
+	
 	public static <C extends ConfigurationSerializable, T extends C> T deserializeSafe(ConfigurationSection section, Class<C> required) {
-		String raw = section.getString("==");
+		String raw = section.getString(DEFAULT_TYPE_KEY);
 		if (raw == null)
-			throw new ConfigurationException("No field found with name \"==\"!");
+			throw new ConfigurationException("No field found with name \"" + DEFAULT_TYPE_KEY + "\"!");
 		Class<T> clazz;
 		try {
 			@SuppressWarnings("unchecked")

@@ -35,7 +35,7 @@ public class CoreInteraction extends CoreEntity implements Interaction {
 	
 	@Override
 	public void setWidth(float width) {
-		metaContainer.get(META_WIDTH).setData(width);
+		metaContainer.setData(META_WIDTH, width);
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class CoreInteraction extends CoreEntity implements Interaction {
 
 	@Override
 	public void setHeight(float height) {
-		metaContainer.get(META_HEIGHT).setData(height);
+		metaContainer.setData(META_HEIGHT, height);
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class CoreInteraction extends CoreEntity implements Interaction {
 
 	@Override
 	public void setResponsive(boolean responsive) {
-		metaContainer.get(META_RESPONSIVE).setData(responsive);
+		metaContainer.setData(META_RESPONSIVE, responsive);
 	}
 
 	@Override

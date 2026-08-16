@@ -2,7 +2,7 @@ package de.atlasmc.plugin;
 
 import de.atlasmc.plugin.startup.StartupContext;
 
-public interface AtlasModul {
+public interface AtlasCorePlugin {
 	
 	void initStartupHandler(StartupContext context);
 	

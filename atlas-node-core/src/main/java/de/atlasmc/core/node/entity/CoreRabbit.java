@@ -35,9 +35,7 @@ public class CoreRabbit extends CoreAgeableMob implements Rabbit {
 
 	@Override
 	public void setRabbitType(Type type) {
-		if (type == null)
-			throw new IllegalArgumentException("Type can not be null!");
-		metaContainer.get(META_RABBIT_TYPE).setData(type.getID());		
+		metaContainer.setData(META_RABBIT_TYPE, type.getID());		
 	}
 
 }

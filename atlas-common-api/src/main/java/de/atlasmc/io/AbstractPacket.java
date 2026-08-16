@@ -4,17 +4,6 @@ public abstract class AbstractPacket implements Packet {
 	
 	private int id;
 	private long timestamp;
-	private boolean handled;
-	
-	@Override
-	public boolean isHandled() {
-		return handled;
-	}
-	
-	@Override
-	public void setHandled(boolean handled) {
-		this.handled = handled;
-	}
 	
 	/**
 	 * 

@@ -2,6 +2,7 @@ package de.atlasmc.util;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 
 /**
@@ -29,7 +30,7 @@ public class ViewerSet<H, V> extends HashSet<V> {
 	 * @param removeFunction function that is called when a viewer is removed
 	 */
 	public ViewerSet(H holder, BiConsumer<H, V> addFunction, BiConsumer<H, V> removeFunction) {
-		this.holder = holder;
+		this.holder = Objects.requireNonNull(holder, "holder");
 		this.addFunction = addFunction;
 		this.removeFunction = removeFunction;
 	}

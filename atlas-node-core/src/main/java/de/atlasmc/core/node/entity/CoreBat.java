@@ -41,7 +41,7 @@ public class CoreBat extends CoreMob implements Bat {
 	@Override
 	public void setHanging(boolean hanging) {
 		MetaData<Byte> data = metaContainer.get(META_BAT_FLAGS);
-		data.setData((byte) (hanging ? data.getData() | FLAG_IS_HANGING : data.getData() & ~FLAG_IS_HANGING));
+		metaContainer.setData(META_BAT_FLAGS, (byte) (hanging ? data.getData() | FLAG_IS_HANGING : data.getData() & ~FLAG_IS_HANGING));
 	}
 
 }

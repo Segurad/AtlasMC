@@ -38,7 +38,7 @@ public class CoreMinecraftFurnace extends CoreAbstractMinecart implements Mineca
 
 	@Override
 	public void setFuel(boolean fuel) {
-		metaContainer.get(META_HAS_FUEL).setData(fuel);		
+		metaContainer.setData(META_HAS_FUEL, fuel);		
 	}
 
 	@Override

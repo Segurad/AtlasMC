@@ -2,7 +2,7 @@ package de.atlasmc.node.world;
 
 import java.io.File;
 
-import de.atlasmc.node.server.LocalServer;
+import de.atlasmc.node.server.InternalServer;
 import de.atlasmc.node.world.entitytracker.EntityTrackerFactory;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
@@ -14,7 +14,7 @@ import de.atlasmc.util.configuration.ConfigurationException;
 
 public class WorldBuilder implements Builder<World> {
 
-	private LocalServer server;
+	private InternalServer server;
 	private String name;
 	private File worldDir;
 	private ConfigurationSection chunkGenConfig;
@@ -96,7 +96,7 @@ public class WorldBuilder implements Builder<World> {
 		this.chunkProviderConfig = provider.value2();
 	}
 	
-	public LocalServer getServer() {
+	public InternalServer getServer() {
 		return server;
 	}
 
@@ -141,7 +141,7 @@ public class WorldBuilder implements Builder<World> {
 		return this;
 	}
 
-	public WorldBuilder setServer(LocalServer server) {
+	public WorldBuilder setServer(InternalServer server) {
 		this.server = server;
 		return this;
 	}

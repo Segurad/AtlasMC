@@ -2,6 +2,7 @@ package de.atlasmc.core.plugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 import de.atlasmc.plugin.AbstractPrototypePlugin;
 import de.atlasmc.plugin.Plugin;
@@ -14,9 +15,7 @@ final class CorePrototypeJavaPlugin extends AbstractPrototypePlugin {
 	
 	public CorePrototypeJavaPlugin(CoreJavaPluginLoader loader, File file, Configuration pluginInfo) {
 		super(file, pluginInfo);
-		if (loader == null)
-			throw new IllegalArgumentException("Loader can not be null!");
-		this.loader = loader;
+		this.loader = Objects.requireNonNull(loader, "loader");
 	}
 
 	@Override

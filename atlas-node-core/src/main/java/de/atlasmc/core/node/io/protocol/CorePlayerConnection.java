@@ -40,7 +40,7 @@ import de.atlasmc.node.io.socket.NodeSocket;
 import de.atlasmc.node.recipe.BookType;
 import de.atlasmc.node.recipe.Recipe;
 import de.atlasmc.node.recipe.RecipeBook;
-import de.atlasmc.node.server.LocalServer;
+import de.atlasmc.node.server.InternalServer;
 import de.atlasmc.plugin.channel.PluginChannelManager;
 import de.atlasmc.util.annotation.ThreadSafe;
 import de.atlasmc.util.enums.EnumUtil;
@@ -52,7 +52,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	private Player player;
 	private final NodePlayer aplayer;
 	private final ConnectionHandler connection;
-	private LocalServer server;
+	private InternalServer server;
 	private final PluginChannelManager pluginChannelManager;
 	private final ProtocolAdapter protocol;
 	private volatile boolean waitingForProtocolChange;
@@ -122,7 +122,7 @@ public class CorePlayerConnection implements PlayerConnection {
 	 */
 	@Override
 	@ThreadSafe
-	public synchronized LocalServer getLocalSever() {
+	public synchronized InternalServer getLocalSever() {
 		return server;
 	}
 	

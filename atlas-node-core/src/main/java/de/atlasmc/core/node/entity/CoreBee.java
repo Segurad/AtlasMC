@@ -69,29 +69,32 @@ public class CoreBee extends CoreAgeableMob implements Bee {
 		return metaContainer.getData(META_BEE_ANGER_TIME);
 	}
 
+	protected void setBeeFlag(int flag, boolean set) {
+		MetaData<Byte> data = metaContainer.get(META_BEE_FLAGS);
+		var value = (byte) (set ? data.getData() | flag : data.getData() & ~flag);
+		metaContainer.setData(META_BEE_FLAGS, value);
+	}
+	
 	@Override
 	public void setAngry(boolean angry) {
-		MetaData<Byte> data = metaContainer.get(META_BEE_FLAGS);
-		data.setData((byte) (angry ? data.getData() | FLAG_IS_ANGRY : data.getData() & ~FLAG_IS_ANGRY));
+		setBeeFlag(FLAG_IS_ANGRY, angry);
 	}
 
 	@Override
 	public void setStung(boolean stung) {
-		MetaData<Byte> data = metaContainer.get(META_BEE_FLAGS);
-		data.setData((byte) (stung ? data.getData() | FLAG_HAS_STUNG : data.getData() & ~FLAG_HAS_STUNG));
+		setBeeFlag(FLAG_HAS_STUNG, stung);
 	}
 
 	@Override
 	public void setNectar(boolean nectar) {
-		MetaData<Byte> data = metaContainer.get(META_BEE_FLAGS);
-		data.setData((byte) (nectar ? data.getData() | FLAG_HAS_NECTAR : data.getData() & ~FLAG_HAS_NECTAR));
+		setBeeFlag(FLAG_HAS_NECTAR, nectar);
 	}
 
 	@Override
 	public void setAngerTime(int ticks) {
 		if (ticks < 0)
 			throw new IllegalArgumentException("Ticks must be higher than 0: " + ticks);
-		metaContainer.get(META_BEE_ANGER_TIME).setData(ticks);
+		metaContainer.setData(META_BEE_ANGER_TIME, ticks);
 	}
 
 	@Override

@@ -78,22 +78,22 @@ public class CoreAreaEffectCloud extends CoreEntity implements AreaEffectCloud {
 
 	@Override
 	public void setRadius(float radius) {
-		metaContainer.get(META_RADIUS).setData(radius);
+		metaContainer.setData(META_RADIUS, radius);
 	}
 
 	@Override
 	public void setColor(Color color) {
-		metaContainer.get(META_COLOR).setData(color.asARGB());
+		metaContainer.setData(META_COLOR, color.asARGB());
 	}
 
 	@Override
 	public void setIngnoreRadius(boolean ignore) {
-		metaContainer.get(META_IGNORE_RADIUS).setData(ignore);
+		metaContainer.setData(META_IGNORE_RADIUS, ignore);
 	}
 
 	@Override
 	public void setParticle(Particle particle) {
-		metaContainer.get(META_PARTICLE).setData(particle);
+		metaContainer.setData(META_PARTICLE, particle);
 	}
 
 	@Override

@@ -10,8 +10,8 @@ import de.atlasmc.registry.RegistryHolder;
 @RegistryHolder(key="atlas:factory/server")
 public interface ServerFactory {
 	
-	LocalServer createServer(UUID uuid, File workdir, ServerConfig config);
+	InternalServer createServer(UUID uuid, File workdir, ServerConfig config);
 	
-	LocalServer createServer(UUID uuid, File workdir, ServerGroup group);
+	InternalServer createServer(UUID uuid, File workdir, ServerGroup group);
 
 }

@@ -11,17 +11,23 @@ import de.atlasmc.util.annotation.NotNull;
 public interface PacketListener {
 	
 	/**
-	 * Handle a {@link Packet} this packet may or may not be sync
+	 * Handle a {@link Packet} this packet may or may not be sync.
+	 * @param handler
 	 * @param packet
+	 * @param handled whether or not the packed was handled by a previous handler
 	 * @throws IOException
+	 * @return whether or not this packet was handled. If the handler does not change the handled state it should return the given state.
 	 */
-	void handlePacket(ConnectionHandler handler, @NotNull Packet packet) throws IOException;
+	boolean handlePacket(ConnectionHandler handler, @NotNull Packet packet, boolean handled) throws IOException;
 	
 	/**
 	 * Handle a {@link Packet} this packet sync
+	 * @param handler
 	 * @param packet
+	 * @param handled whether or not the packed was handled by a previous handler
 	 * @throws IOException
+	 * @return whether or not this packet was handled. If the handler does not change the handled state it should return the given state.
 	 */
-	void handlePacketSync(ConnectionHandler handler, @NotNull Packet packet) throws IOException;
+	boolean handlePacketSync(ConnectionHandler handler, @NotNull Packet packet, boolean handled) throws IOException;
 
 }

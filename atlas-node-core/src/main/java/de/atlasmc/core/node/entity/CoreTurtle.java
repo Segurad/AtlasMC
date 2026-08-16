@@ -69,17 +69,17 @@ public class CoreTurtle extends CoreAgeableMob implements Turtle {
 	@Override
 	public void setHomePosition(Vector3i pos) {
 		super.setHomePosition(pos);
-		metaContainer.get(META_HOME_POS).setData(MathUtil.toPosition(pos));
+		metaContainer.setData(META_HOME_POS, MathUtil.toPosition(pos));
 	}
 
 	@Override
 	public void setEgg(boolean egg) {
-		metaContainer.get(META_HAS_EGG).setData(egg);
+		metaContainer.setData(META_HAS_EGG, egg);
 	}
 
 	@Override
 	public void setLayingEgg(boolean laying) {
-		metaContainer.get(META_IS_LAYING_EGG).setData(laying);		
+		metaContainer.setData(META_IS_LAYING_EGG, laying);		
 	}
 
 	@Override
@@ -89,17 +89,17 @@ public class CoreTurtle extends CoreAgeableMob implements Turtle {
 
 	@Override
 	public void setTravelPos(int x, int y, int z) {
-		metaContainer.get(META_TRAVEL_POS).setData(MathUtil.toPosition(x, y, z));
+		metaContainer.setData(META_TRAVEL_POS, MathUtil.toPosition(x, y, z));
 	}
 
 	@Override
 	public void setGoingHome(boolean home) {
-		metaContainer.get(META_IS_GOING_HOME).setData(home);		
+		metaContainer.setData(META_IS_GOING_HOME, home);		
 	}
 
 	@Override
 	public void setTraveling(boolean traveling) {
-		metaContainer.get(META_IS_TRAVELING).setData(traveling);
+		metaContainer.setData(META_IS_TRAVELING, traveling);
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -31,7 +32,7 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 	private volatile int currentTick;
 	
 	public MapCache() {
-		this(6000);
+		this(DEFAULT_TTL);
 	}
 	
 	public MapCache(int defaultTimeToLive) {
@@ -54,7 +55,7 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 	@Override
 	public boolean containsValue(Object value) {
 		@SuppressWarnings("unchecked")
-		V entryValue = (V) value; // TODO test if try catch ClassCastException can should be used
+		V entryValue = (V) value;
 		for (CacheEntry<K, V> entry : map.values()) {
 			if (entry.refersTo(entryValue))
 				return true;
@@ -106,10 +107,8 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 	}
 
 	public V put(K key, V value, int ttl) {
-		if (key == null)
-			throw new IllegalArgumentException("Key can not be null!");
-		if (value == null)
-			throw new IllegalArgumentException("Value can not be null!");
+		Objects.requireNonNull(key, "key");
+		Objects.requireNonNull(value, "value");
 		int currentTick = this.currentTick;
 		CacheEntry<K, V> newEntry = new CacheEntry<>(key, value, ttl, ttl + currentTick, refQueue);
 		CacheEntry<K, V> oldEntry = map.put(key, newEntry);
@@ -154,8 +153,8 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 	public void cleanUp() {
 		int currentTick = ++this.currentTick;
 		LinkedListIterator<CacheEntry<K, V>> it = ttlList.iterator();
-		CacheEntry<K, V> entry = null;
-		while ((entry = it.next()) != null) {
+		while (it.hasNext()) {
+			var entry = it.next();
 			if (entry.ttl >= currentTick)
 				break;
 			entry.value = null;
@@ -179,11 +178,11 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 	
 	private void insertTTL(CacheEntry<K, V> insert) {
 		LinkedListIterator<CacheEntry<K, V>> it = ttlList.iterator();
-		CacheEntry<K, V> entry = null;
 		int ttl = insert.ttl;
-		while ((entry = it.next()) != null) {
+		while (it.hasNext()) {
+			var entry = it.next();
 			if (entry.ttl >= ttl) {
-				it.addBefor(insert);
+				it.addBefore(insert);
 				return;
 			}
 		}

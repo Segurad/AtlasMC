@@ -1,5 +1,7 @@
 package de.atlasmc.node.entity;
 
+import java.util.Objects;
+
 import de.atlasmc.IDHolder;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.io.codec.StreamSerializable;
@@ -78,8 +80,8 @@ public interface AbstractVillager extends Merchant {
 		}
 		
 		public VillagerData(VillagerType type, VillagerProfession profession, int level) {
-			this.type = type;
-			this.profession = profession;
+			setType(type);
+			setProfession(profession);
 			this.level = level;
 		}
 		
@@ -96,7 +98,7 @@ public interface AbstractVillager extends Merchant {
 		}
 		
 		public void setType(VillagerType type) {
-			this.type = type;
+			this.type = Objects.requireNonNull(type, "type");
 		}
 		
 		public void setLevel(int level) {
@@ -104,7 +106,7 @@ public interface AbstractVillager extends Merchant {
 		}
 		
 		public void setProfession(VillagerProfession profession) {
-			this.profession = profession;
+			this.profession = Objects.requireNonNull(profession, "profession");
 		}
 		
 		@Override

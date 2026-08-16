@@ -2,6 +2,7 @@ package de.atlasmc.nbt.io;
 
 import java.io.IOException;
 import java.io.UTFDataFormatException;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.IntConsumer;
 import java.util.function.LongConsumer;
@@ -21,14 +22,13 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 	}
 
 	@Override
-	public void readByteArrayTag(IntConsumer dataConsumer) throws IOException {
+	public void readByteArrayTag(IntConsumer consumer) throws IOException {
 		prepareTag();
 		ensureTag(TagType.BYTE_ARRAY);
-		if (dataConsumer == null)
-			throw new IllegalArgumentException("DataConsumer can not be null!");
+		Objects.requireNonNull(consumer, "consumer");
 		final int payload = arrayTagPayload;
 		for (int i = 0; i < payload; i++)
-			dataConsumer.accept(ioReadByte());
+			consumer.accept(ioReadByte());
 		tagConsumed();
 	}
 

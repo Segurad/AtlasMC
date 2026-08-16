@@ -1,7 +1,5 @@
 package de.atlasmc.node.entity.metadata.type;
 
-import static de.atlasmc.io.PacketUtil.readVarInt;
-import static de.atlasmc.io.PacketUtil.writeVarInt;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -9,7 +7,6 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import de.atlasmc.IDHolder;
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.io.codec.StreamCodecs;
@@ -29,7 +26,6 @@ import de.atlasmc.node.entity.Sniffer.State;
 import de.atlasmc.node.entity.Wolf.WolfVariant;
 import de.atlasmc.node.entity.metadata.MetaData;
 import de.atlasmc.node.inventory.ItemStack;
-import de.atlasmc.node.util.MathUtil;
 import de.atlasmc.node.world.particle.Particle;
 import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
@@ -110,19 +106,7 @@ public abstract class MetaDataType<T> implements IDHolder {
     
 	public static final MetaDataType<Integer> BLOCKSTATE = new VarIntMetaType(TYPE_ID_BLOCKSTATE);
 	
-	public static final MetaDataType<Integer> OPT_BLOCKSTATE = new MetaDataType<>(TYPE_ID_OPT_BLOCKSTATE, Number.class, true) {
-
-        @Override
-        public Integer read(ByteBuf in, CodecContext context) {
-            return readVarInt(in);
-        }
-
-        @Override
-        public void write(Integer data, ByteBuf out, CodecContext context) {
-            writeVarInt(data != null ? data : 0, out);
-        }
-
-    };
+	public static final MetaDataType<Integer> OPT_BLOCKSTATE = new VarIntMetaType(TYPE_ID_OPT_BLOCKSTATE, true); 
 	
 	public static final MetaDataType<CompoundTag> NBT_DATA = new NBTMetaType(TYPE_ID_NBT);
 	
@@ -144,31 +128,7 @@ public abstract class MetaDataType<T> implements IDHolder {
     
     public static final MetaDataType<State> SNIFFER_STATE = getVarIntEnumType(TYPE_ID_SNIFFER_STATE, State.class);
     
-    public static final MetaDataType<WorldLocation> OPT_GLOBAL_POSITION = new MetaDataType<>(TYPE_ID_OPT_GLOBAL_POSITION, WorldLocation.class, true) {
-
-		@SuppressWarnings("unused")
-		@Override
-		public WorldLocation read(ByteBuf in, CodecContext context) throws IOException {
-			if (!in.readBoolean())
-				return null;
-			NamespacedKey key = NamespacedKey.STREAM_CODEC.deserialize(in);
-			long pos = in.readLong();
-			// TODO opt pos global to location
-			return null;
-		}
-
-		@Override
-		public void write(WorldLocation data, ByteBuf out, CodecContext context) throws IOException {
-			if (data == null) {
-				out.writeBoolean(false);
-			} else {
-				out.writeBoolean(true);
-				NamespacedKey.STREAM_CODEC.serialize(data.getWorld().getDimension().getNamespacedKey(), out);
-				out.writeLong(MathUtil.toPosition(data));
-			}
-		}
-	
-    };
+    public static final MetaDataType<WorldLocation> OPT_GLOBAL_POSITION = new WorldLocationMetaType(TYPE_ID_OPT_GLOBAL_POSITION);
     
     public static final MetaDataType<ArmadilloState> ARMADILLO_STATE = getVarIntEnumType(TYPE_ID_ARMADILLO_STATE, ArmadilloState.class);
 	

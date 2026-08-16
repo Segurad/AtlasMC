@@ -1,6 +1,7 @@
 package de.atlasmc.core.network;
 
 import java.security.PublicKey;
+import java.util.Objects;
 import java.util.UUID;
 
 import de.atlasmc.network.AtlasNode;
@@ -12,12 +13,8 @@ public abstract class CoreAtlasNode implements AtlasNode {
 	private NodeStatus status;
 	
 	public CoreAtlasNode(UUID uuid, PublicKey key) {
-		if (uuid == null)
-			throw new IllegalArgumentException("UUID can not be null!");
-		if (key == null)
-			throw new IllegalArgumentException("Key can not be null!");
-		this.uuid = uuid;
-		this.key = key;
+		this.uuid = Objects.requireNonNull(uuid, "uuid");
+		this.key = Objects.requireNonNull(key, "key");
 		this.status = NodeStatus.OFFLINE;
 	}
 
@@ -33,7 +30,7 @@ public abstract class CoreAtlasNode implements AtlasNode {
 	}
 
 	@Override
-	public UUID getUUID() {
+	public UUID getID() {
 		return uuid;
 	}
 	

@@ -27,6 +27,12 @@ public class CoreMob extends CoreLivingEntity implements Mob {
 		super(type);
 	}
 	
+	protected void setMobFlag(int flag, boolean set) {
+		MetaData<Byte> data = metaContainer.get(META_MOB_FLAGS);
+		var value = (byte) (set ? data.getData() | flag : data.getData() & ~flag);
+		metaContainer.setData(META_MOB_FLAGS, value);
+	}
+	
 	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
@@ -45,8 +51,7 @@ public class CoreMob extends CoreLivingEntity implements Mob {
 
 	@Override
 	public void setLeftHanded(boolean left) {
-		MetaData<Byte> data = metaContainer.get(META_MOB_FLAGS);
-		data.setData((byte) (left ? data.getData() | FLAG_IS_LEFT_HANDED : data.getData() & ~FLAG_IS_LEFT_HANDED));
+		setMobFlag(FLAG_IS_LEFT_HANDED, left);
 	}
 	
 	@Override
@@ -56,8 +61,7 @@ public class CoreMob extends CoreLivingEntity implements Mob {
 	
 	@Override
 	public void setNoAi(boolean ai) {
-		MetaData<Byte> data = metaContainer.get(META_MOB_FLAGS);
-		data.setData((byte) (ai ? data.getData() | FLAG_NO_AI : data.getData() & ~FLAG_NO_AI));
+		setMobFlag(FLAG_NO_AI, ai);
 	}
 
 }

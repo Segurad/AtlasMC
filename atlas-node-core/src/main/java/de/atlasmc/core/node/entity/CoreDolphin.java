@@ -48,12 +48,12 @@ public class CoreDolphin extends CoreMob implements Dolphin {
 
 	@Override
 	public void setTreasurePosition(int x, int y, int z) {
-		metaContainer.get(META_TREASURE_POSITION).setData(MathUtil.toPosition(x, y, z));
+		metaContainer.setData(META_TREASURE_POSITION, MathUtil.toPosition(x, y, z));
 	}
 
 	@Override
 	public void setFish(boolean fish) {
-		metaContainer.get(META_HAS_FISH).setData(fish);
+		metaContainer.setData(META_HAS_FISH, fish);
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class CoreDolphin extends CoreMob implements Dolphin {
 	public void setMoistureLevel(int level) {
 		if (level > 2400 || level < 0)
 			throw new IllegalArgumentException("Level is not between 0 and 2400: " + level);
-		metaContainer.get(META_MOISTURE_LEVEL).setData(level);
+		metaContainer.setData(META_MOISTURE_LEVEL, level);
 	}
 
 	@Override

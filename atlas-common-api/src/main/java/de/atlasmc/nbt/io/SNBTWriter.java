@@ -2,11 +2,9 @@ package de.atlasmc.nbt.io;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.UUID;
 import java.util.function.LongSupplier;
 
 import de.atlasmc.nbt.TagType;
-import de.atlasmc.nbt.tag.NBT;
 
 /**
  * {@link NBTWriter} implementation for SNBT
@@ -215,27 +213,6 @@ public class SNBTWriter extends AbstractNBTWriter {
 		}
 		out.write(']');
 		removeList();
-	}
-
-	@Override
-	public void writeNBT(NBT nbt) throws IOException {
-		ensureOpen();
-		if (nbt == null) 
-			throw new IllegalArgumentException("NBT can not be null!");
-		nbt.toNBT(this, true);
-	}
-
-	@Override
-	public void writeUUID(CharSequence name, UUID uuid) throws IOException {
-		ensureOpen();
-		if (uuid == null) 
-			throw new IllegalArgumentException("UUID can not be null!");
-		writeIntArrayTag(name, new int[] {
-				(int) (uuid.getMostSignificantBits()>>32),
-				(int) uuid.getMostSignificantBits(),
-				(int) (uuid.getLeastSignificantBits()>>32),
-				(int) uuid.getLeastSignificantBits()
-		});
 	}
 	
 	private void prepareTag(TagType type, CharSequence name) throws IOException {

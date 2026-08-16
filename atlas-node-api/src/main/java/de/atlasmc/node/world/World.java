@@ -9,7 +9,7 @@ import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.entity.Entity;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.event.entity.EntitySpawnEvent;
-import de.atlasmc.node.server.LocalServer;
+import de.atlasmc.node.server.InternalServer;
 import de.atlasmc.node.sound.SoundListener;
 import de.atlasmc.node.world.entitytracker.EntityTracker;
 import de.atlasmc.node.world.particle.ParticleListener;
@@ -29,7 +29,7 @@ public interface World extends Tickable, SoundListener, ParticleListener, WorldE
 	String getName();
 	
 	@NotNull
-	LocalServer getServer();
+	InternalServer getServer();
 
 	default Entity spawnEntity(EntityType type, Location loc) {
 		return spawnEntity(type, loc.x, loc.y, loc.z, loc.pitch, loc.yaw);

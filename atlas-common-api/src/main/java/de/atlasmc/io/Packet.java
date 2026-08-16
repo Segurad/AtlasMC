@@ -6,18 +6,6 @@ package de.atlasmc.io;
 public interface Packet {
 	
 	/**
-	 * Whether or not this packet was handled successfully
-	 * @return true if handled
-	 */
-	boolean isHandled();
-	
-	/**
-	 * Sets whether or not this packet was handled
-	 * @param handled
-	 */
-	void setHandled(boolean handled);
-	
-	/**
 	 * Return the Time this Packet arrived in milliseconds and 0 if it is outbound
 	 * @return 
 	 */

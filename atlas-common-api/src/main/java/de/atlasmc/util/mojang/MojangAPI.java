@@ -210,7 +210,7 @@ public class MojangAPI {
 	
 	private URI verifyLoginServerURI(String name, String serverID, String ip) {
 		validateName(name);
-		var uri = SESSION_SERVER + "/minecraft/HasJoined?username=" + name + "&serverId=" + serverID;
+		var uri = SESSION_SERVER + "/HasJoined?username=" + name + "&serverId=" + serverID;
 		if (ip != null)
 			uri += "&ip=" + ip;
 		return URI.create(uri);

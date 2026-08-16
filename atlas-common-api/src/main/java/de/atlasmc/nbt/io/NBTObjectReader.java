@@ -3,6 +3,7 @@ package de.atlasmc.nbt.io;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.IntConsumer;
 import java.util.function.LongConsumer;
 
@@ -30,20 +31,17 @@ public class NBTObjectReader extends AbstractNBTReader {
 	private int markDepth;
 	
 	public NBTObjectReader(NBT nbt) {
-		if (nbt == null)
-			throw new IllegalArgumentException("NBT can not be null!");
-		this.current = nbt;
+		this.current = Objects.requireNonNull(nbt, "nbt");
 	}
 
 	@Override
-	public void readByteArrayTag(IntConsumer dataConsumer) throws IOException {
+	public void readByteArrayTag(IntConsumer consumer) throws IOException {
 		prepareTag();
 		ensureTag(TagType.BYTE_ARRAY);
-		if (dataConsumer == null)
-			throw new IllegalArgumentException("DataConsumer can not be null!");
+		Objects.requireNonNull(consumer, "consumer");
 		byte[] data = (byte[]) current.getData();
 		for (byte value : data)
-			dataConsumer.accept(value);
+			consumer.accept(value);
 		tagConsumed();
 	}
 	
@@ -103,14 +101,13 @@ public class NBTObjectReader extends AbstractNBTReader {
 	}
 	
 	@Override
-	public void readIntArrayTag(IntConsumer dataConsumer) throws IOException {
+	public void readIntArrayTag(IntConsumer consumer) throws IOException {
 		prepareTag();
 		ensureTag(TagType.INT_ARRAY);
-		if (dataConsumer == null)
-			throw new IllegalArgumentException("DataConsumer can not be null!");
+		Objects.requireNonNull(consumer, "consumer");
 		int[] data = (int[]) current.getData();
 		for (int value : data)
-			dataConsumer.accept(value);
+			consumer.accept(value);
 		tagConsumed();
 	}
 

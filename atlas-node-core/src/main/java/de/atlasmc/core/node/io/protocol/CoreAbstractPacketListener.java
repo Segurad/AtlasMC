@@ -10,32 +10,38 @@ public abstract class CoreAbstractPacketListener<H, P extends Packet> implements
 
 	protected H holder;
 	protected final int packetCount;
+	protected final boolean ignoreHandled;
 	
-	public CoreAbstractPacketListener(H holder, int packetCount) {
+	public CoreAbstractPacketListener(H holder, int packetCount, boolean ignoreHandled) {
 		this.holder = holder;
 		this.packetCount = packetCount;
+		this.ignoreHandled = ignoreHandled;
 	}
 	
 	@Override
-	public void handlePacket(ConnectionHandler handler, Packet packet) {
+	public boolean handlePacket(ConnectionHandler handler, Packet packet, boolean handled) {
+		if (handled && ignoreHandled)
+			return handled;
 		int id = packet.getID();
 		if (id < 0 && id >= packetCount) {
-			return;
+			return handled;
 		}
-		if (handleAsync(id)) {
+		if (!handleAsync(id))
+			return handled;
 			handle(packet);
-			packet.setHandled(true);
-		}
+		return true;
 	}
 	
 	@Override
-	public void handlePacketSync(ConnectionHandler handler, Packet packet) throws IOException {
+	public boolean handlePacketSync(ConnectionHandler handler, Packet packet, boolean handled) throws IOException {
+		if (handled && ignoreHandled)
+			return handled;
 		int id = packet.getID();
 		if (id < 0 && id >= packetCount) {
-			return;
+			return handled;
 		}
 		handle(packet);
-		packet.setHandled(true);
+		return true;
 	}
 	
 	protected abstract boolean handleAsync(int packetID);

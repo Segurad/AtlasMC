@@ -38,7 +38,7 @@ public class CoreMerchant extends CoreAgeableMob implements Merchant {
 
 	@Override
 	public void setHeadShakeTimer(int time) {
-		metaContainer.get(META_HEAD_SHAKE_TIME).setData(time);		
+		metaContainer.setData(META_HEAD_SHAKE_TIME, time);		
 	}
 
 	@Override

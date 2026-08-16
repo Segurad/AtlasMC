@@ -34,9 +34,7 @@ public class CoreEnderDragon extends CoreMob implements EnderDragon {
 
 	@Override
 	public void setPhase(DragonPhase phase) {
-		if (phase == null)
-			throw new IllegalArgumentException("Phase can not be null!");
-		metaContainer.get(META_DRAGON_PHASE).setData(phase);
+		metaContainer.setData(META_DRAGON_PHASE, phase);
 	}
 
 }

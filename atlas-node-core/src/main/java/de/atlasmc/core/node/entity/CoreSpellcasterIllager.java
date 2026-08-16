@@ -37,9 +37,7 @@ public class CoreSpellcasterIllager extends CoreRaider implements SpellcasterIll
 
 	@Override
 	public void setSpell(Spell spell) {
-		if (spell == null)
-			throw new IllegalArgumentException("Spell can not be null!");
-		metaContainer.get(META_SPELL).setData((byte) spell.getID());
+		metaContainer.setData(META_SPELL, (byte) spell.getID());
 	}
 
 	@Override

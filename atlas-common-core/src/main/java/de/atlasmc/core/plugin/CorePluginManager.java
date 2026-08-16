@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -18,12 +19,6 @@ import java.util.function.Function;
 
 import de.atlasmc.Atlas;
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.event.Event;
-import de.atlasmc.event.EventPriority;
-import de.atlasmc.event.FunctionalListener;
-import de.atlasmc.event.FunctionalListenerExecutor;
-import de.atlasmc.event.HandlerList;
-import de.atlasmc.event.Listener;
 import de.atlasmc.log.Log;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginConfiguration;
@@ -32,6 +27,7 @@ import de.atlasmc.plugin.PluginLoader;
 import de.atlasmc.plugin.PluginManager;
 import de.atlasmc.plugin.PrototypePlugin;
 import de.atlasmc.plugin.Version;
+import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
@@ -44,20 +40,14 @@ public class CorePluginManager implements PluginManager {
 	final ReferenceQueue<Object> lockQueue;
 	private final Log logger;
 	private final Map<String, CoreRegisteredPlugin> plugins;
-	private final Map<File, CoreRegisteredPlugin> pluginByFile;
-	private final Map<NamespacedKey, CoreRegisteredPlugin> pluginByRepo;
 	private final List<PluginLoader> loaders;
 	private final Set<NamespacedKey> features;
 	private final Values values;
 	private final CorePluginManagerWorker worker;
 	
 	public CorePluginManager(Log logger) {
-		if (logger == null)
-			throw new IllegalArgumentException("Logger can not be null!");
-		this.logger = logger;
+		this.logger = Objects.requireNonNull(logger, "logger");
 		this.plugins = new ConcurrentHashMap<>();
-		this.pluginByFile = new ConcurrentHashMap<>();
-		this.pluginByRepo = new ConcurrentHashMap<>();
 		this.loaders = new CopyOnWriteArrayList<>();
 		this.lockQueue = new ReferenceQueue<>();
 		this.features = ConcurrentHashMap.newKeySet();
@@ -69,8 +59,6 @@ public class CorePluginManager implements PluginManager {
 
 	@Override
 	public Future<Boolean> unloadPlugin(Plugin plugin, boolean force) {
-		if (plugin == null)
-			throw new IllegalArgumentException("Plugin can not be null!");
 		CoreRegisteredPlugin registered = plugins.get(plugin.getName());
 		if (registered == null)
 			return CompleteFuture.getBooleanFuture(true);
@@ -91,8 +79,7 @@ public class CorePluginManager implements PluginManager {
 	
 	@Override
 	public Future<Plugin> loadRepoPlugin(NamespacedKey entry, Object lock) {
-		if (entry == null)
-			throw new IllegalArgumentException("Entry can not be null!");
+		Objects.requireNonNull(entry, "entry");
 		List<Future<Plugin>> futures = internalLoadRepoPlugins(List.of(entry), lock);
 		if (futures.isEmpty())
 			return CompleteFuture.getNullFuture();
@@ -106,8 +93,6 @@ public class CorePluginManager implements PluginManager {
 	
 	@Override
 	public List<Future<Plugin>> loadPlugins(File directory, Object lock) {
-		if (directory == null)
-			throw new IllegalArgumentException("Directory can not be null!");
 		if (!directory.isDirectory())
 			throw new IllegalArgumentException("Directory does not exist: ".concat(directory.getPath()));
 		logger.debug("Loading plugins from directory: {}", directory.getPath());
@@ -123,34 +108,30 @@ public class CorePluginManager implements PluginManager {
 	
 	private List<Future<Plugin>> internalLoadPlugins(Collection<File> files, Object pluginLock) {
 		List<Future<Plugin>> futures = new ArrayList<>(files.size());
-		final Map<File, CompletableFuture<Plugin>> fileFutures = new HashMap<>(futures.size());
+		final Map<File, CompletableFuture<Plugin>> keyedFutures = new HashMap<>(futures.size());
 		for (File file : files) {
 			CompletableFuture<Plugin> future = new CompletableFuture<>();
 			futures.add(future);
-			fileFutures.put(file, future);
+			keyedFutures.put(file, future);
 		}
-		worker.queueTask(new CoreLoadPluginTask(this, fileFutures, pluginLock));
+		worker.queueTask(new CoreLoadPluginTask(this, keyedFutures, pluginLock));
 		return futures;
 	}
 	
 	private List<Future<Plugin>> internalLoadRepoPlugins(Collection<NamespacedKey> entries, Object pluginLock) {
 		List<Future<Plugin>> futures = new ArrayList<>(entries.size());
-		final Map<NamespacedKey, CompletableFuture<Plugin>> fileFutures = new HashMap<>(futures.size());
+		final Map<NamespacedKey, CompletableFuture<Plugin>> keyedFutures = new HashMap<>(futures.size());
 		for (NamespacedKey entry : entries) {
 			CompletableFuture<Plugin> future = new CompletableFuture<>();
 			futures.add(future);
-			fileFutures.put(entry, future);
+			keyedFutures.put(entry, future);
 		}
-		worker.queueTask(new CoreLoadRepoPluginTask(this, fileFutures, pluginLock));
+		worker.queueTask(new CoreLoadRepoPluginTask(this, keyedFutures, pluginLock));
 		return futures;
 	}
 	
 	void internalRegisterPlugin(CoreRegisteredPlugin plugin) {
 		plugins.put(plugin.prototype.getName(), plugin);
-		pluginByFile.put(plugin.prototype.getFile(), plugin);
-		NamespacedKey repo = plugin.repoEntry;
-		if (repo != null)
-			pluginByRepo.put(repo, plugin);
 	}
 	
 	/**
@@ -158,6 +139,7 @@ public class CorePluginManager implements PluginManager {
 	 * @param file
 	 * @return PreparedPlugin or null
 	 */
+	@Nullable
 	PrototypePlugin preparePlugin(File file) {
 		try {
 			for (PluginLoader loader : loaders) {
@@ -184,8 +166,7 @@ public class CorePluginManager implements PluginManager {
 
 	@Override
 	public Plugin getPlugin(String name) {
-		if (name == null)
-			throw new IllegalArgumentException("Name can not be null!");
+		Objects.requireNonNull(name, "name");
 		CoreRegisteredPlugin plugin = plugins.get(name);
 		return plugin != null ? plugin.prototype.getPlugin() : null;
 	}
@@ -196,7 +177,7 @@ public class CorePluginManager implements PluginManager {
 	}
 
 	@Override
-	public boolean addLoader(PluginLoader loader) {
+	public synchronized boolean addLoader(PluginLoader loader) {
 		if (loaders.contains(loader)) 
 			return false;
 		loaders.add(loader);
@@ -206,52 +187,6 @@ public class CorePluginManager implements PluginManager {
 	@Override
 	public boolean removeLoader(PluginLoader loader) {
 		return loaders.remove(loader);
-	}
-	
-	@Override
-	public void registerEvents(PluginHandle plugin, Listener listener) {
-		HandlerList.registerListener(plugin, listener);
-	}
-
-	@Override
-	public void registerEvents(PluginHandle plugin, Listener listener, Object... context) {
-		HandlerList.registerListener(plugin, listener, context);
-	}
-	
-	@Override
-	public <E extends Event> void registerFunctionalListener(PluginHandle plugin, Class<E> eventClass, FunctionalListener<E> listener) {
-		HandlerList.registerFunctionalListener(plugin, eventClass, listener);
-	}
-
-	@Override
-	public <E extends Event> void registerFunctionalListener(PluginHandle plugin, Class<E> eventClass, FunctionalListener<E> listener, Object... context) {
-		HandlerList.registerFunctionalListener(plugin, eventClass, listener, context);
-	}
-	
-	@Override
-	public <E extends Event> void registerFunctionalListener(PluginHandle plugin, Class<E> eventClass,
-			FunctionalListener<E> listener, boolean ignoreCancelled, EventPriority priority) {
-		HandlerList handlers = HandlerList.getHandlerListOf(eventClass);
-		FunctionalListenerExecutor exe = new FunctionalListenerExecutor(plugin, eventClass, listener, priority, ignoreCancelled);
-		handlers.registerExecutor(exe);
-	}
-
-	@Override
-	public <E extends Event> void registerFunctionalListener(PluginHandle plugin, Class<E> eventClass,
-			FunctionalListener<E> listener, boolean ignoreCancelled, EventPriority priority, Object... context) {
-		HandlerList handlers = HandlerList.getHandlerListOf(eventClass);
-		FunctionalListenerExecutor exe = new FunctionalListenerExecutor(plugin, eventClass, listener, priority, ignoreCancelled);
-		handlers.registerExecutor(exe, context);
-	}
-
-	@Override
-	public void callEvent(Event event) {
-		HandlerList.callEvent(event);
-	}
-
-	@Override
-	public void removeEvents(PluginHandle handle) {
-		HandlerList.unregisterListenerGlobal(handle);
 	}
 
 	@Override
@@ -344,19 +279,22 @@ public class CorePluginManager implements PluginManager {
 		return logger;		
 	}
 	
+	@Nullable
 	CoreRegisteredPlugin getRegisteredPlugin(File file) {
-		return pluginByFile.get(file);
+		for (var plugin : plugins.values()) {
+			if (plugin.prototype.getFile().equals(file));
+				return plugin;
+		}
+		return null;
 	}
 	
+	@Nullable
 	CoreRegisteredPlugin getRegisteredPlugin(String name) {
 		return plugins.get(name);
 	}
 	
 	void removePlugin(CoreRegisteredPlugin plugin) {
 		plugins.remove(plugin.prototype.getName(), plugin);
-		pluginByFile.remove(plugin.prototype.getFile(), plugin);
-		if (plugin.repoEntry != null)
-			pluginByRepo.remove(plugin.repoEntry, plugin);
 	}
 
 	void tryUnloadPlugin(CoreRegisteredPlugin plugin) {

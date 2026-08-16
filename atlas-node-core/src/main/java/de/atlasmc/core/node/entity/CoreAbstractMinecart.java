@@ -44,11 +44,8 @@ public class CoreAbstractMinecart extends CoreVehicle implements AbstractMinecar
 
 	@Override
 	public void setCustomBlock(BlockData data) {
-		if (data == null)
-			metaContainer.get(META_CUSTOM_BLOCK_ID).setData(0);
-		else
-			metaContainer.get(META_CUSTOM_BLOCK_ID).setData(data.getStateID());
-		this.customBlockData = data;		
+		metaContainer.setData(META_CUSTOM_BLOCK_ID, data == null ? 0 : data.getStateID());
+		customBlockData = data;		
 	}
 
 	@Override
@@ -60,7 +57,7 @@ public class CoreAbstractMinecart extends CoreVehicle implements AbstractMinecar
 	public void setCustomBlockY(int y) {
 		if (y < 0 || y > 16)
 			throw new IllegalArgumentException("Y must be between 0 and 16: " + y);
-		metaContainer.get(META_CUSTOM_BLOCK_Y).setData(y);
+		metaContainer.setData(META_CUSTOM_BLOCK_Y, y);
 	}
 
 	@Override
@@ -70,7 +67,7 @@ public class CoreAbstractMinecart extends CoreVehicle implements AbstractMinecar
 
 	@Override
 	public void setShowCustomBlock(boolean show) {
-		metaContainer.get(META_SHOW_CUSTOM_BLOCK).setData(show);		
+		metaContainer.setData(META_SHOW_CUSTOM_BLOCK, show);		
 	}
 
 	@Override

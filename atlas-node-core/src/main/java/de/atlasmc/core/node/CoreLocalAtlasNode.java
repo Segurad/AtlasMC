@@ -56,7 +56,7 @@ public class CoreLocalAtlasNode implements LocalAtlasNode {
 	}
 	
 	@Override
-	public UUID getUUID() {
+	public UUID getID() {
 		return uuid;
 	}
 
@@ -97,6 +97,12 @@ public class CoreLocalAtlasNode implements LocalAtlasNode {
 	public int getPlayerCount() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public UUID getSocketID() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

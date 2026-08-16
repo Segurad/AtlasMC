@@ -39,7 +39,7 @@ public class CoreSnowGolem extends CoreMob implements SnowGolem {
 	@Override
 	public void setPumkinHat(boolean hat) {
 		MetaData<Byte> data = metaContainer.get(META_SNOW_GOLEM_FLAGS);
-		data.setData((byte) (hat ? data.getData() | FLAG_HAS_HAT : data.getData() & ~FLAG_HAS_HAT));
+		metaContainer.setData(META_SNOW_GOLEM_FLAGS, (byte) (hat ? data.getData() | FLAG_HAS_HAT : data.getData() & ~FLAG_HAS_HAT));
 	}
 	
 }

@@ -5,6 +5,6 @@ import de.atlasmc.io.PacketServerbound;
 /**
  * Packets directed to nodes
  */
-public interface AtlasPacketIn extends AtlasPacket, PacketServerbound {
+public interface AtlasPacketServerbound extends AtlasPacket, PacketServerbound {
 
 }

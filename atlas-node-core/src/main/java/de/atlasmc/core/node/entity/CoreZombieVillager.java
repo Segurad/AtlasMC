@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.ZombieVillager;
-import de.atlasmc.node.entity.metadata.MetaData;
 import de.atlasmc.node.entity.metadata.MetaDataField;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.ContainerFactory;
@@ -18,7 +17,7 @@ public class CoreZombieVillager extends CoreZombie implements ZombieVillager {
 	protected static final MetaDataField<Boolean>
 	META_IS_CONVERTING = new MetaDataField<>(CoreZombie.LAST_META_INDEX+1, false, MetaDataType.BOOLEAN);
 	protected static final MetaDataField<VillagerData>
-	META_VILLAGER_DATA = new MetaDataField<>(CoreZombie.LAST_META_INDEX + 2, null, MetaDataType.VILLAGER_DATA);
+	META_VILLAGER_DATA = new MetaDataField<>(CoreZombie.LAST_META_INDEX + 2, new VillagerData(), MetaDataType.VILLAGER_DATA);
 	
 	protected static final int LAST_META_INDEX = CoreZombie.LAST_META_INDEX+2;
 	
@@ -51,7 +50,7 @@ public class CoreZombieVillager extends CoreZombie implements ZombieVillager {
 
 	@Override
 	public void setConverting(boolean converting) {
-		metaContainer.get(META_IS_CONVERTING).setData(converting);
+		metaContainer.setData(META_IS_CONVERTING, converting);
 	}
 
 	@Override
@@ -140,17 +139,14 @@ public class CoreZombieVillager extends CoreZombie implements ZombieVillager {
 
 	@Override
 	public void setVillagerData(VillagerData data) {
-		if (data == null)
-			throw new IllegalArgumentException("Data can not be null!");
-		MetaData<VillagerData> field = metaContainer.get(META_VILLAGER_DATA);
-		field.getData().set(data);
-		field.setChanged(true);
+		metaContainer.setData(META_VILLAGER_DATA, data);
 	}
 
 	@Override
 	public MerchantInventory getInventory() {
+		var inv = this.inv;
 		if (inv == null)
-			inv = ContainerFactory.MERCHANT_INV_FACTORY.create(InventoryType.MERCHANT, this);
+			this.inv = inv = ContainerFactory.MERCHANT_INV_FACTORY.create(InventoryType.MERCHANT, this);
 		return inv;
 	}
 

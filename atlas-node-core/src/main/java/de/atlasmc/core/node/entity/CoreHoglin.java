@@ -36,7 +36,7 @@ public class CoreHoglin extends CoreAgeableMob implements Hoglin {
 
 	@Override
 	public void setImmune(boolean immune) {
-		metaContainer.get(META_IMMUNE).setData(immune);	
+		metaContainer.setData(META_IMMUNE, immune);	
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.security.PublicKey;
 import java.util.Collection;
 import java.util.UUID;
 
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.io.socket.SocketConfig;
 import de.atlasmc.network.permission.PermissionManager;
 import de.atlasmc.network.player.ProfileHandler;
@@ -58,21 +59,9 @@ public class AtlasNetwork  {
 	public static Future<Collection<SocketConfig>> getSocketConfigs(Collection<String> names) {
 		return HANDLER.getSocketConfigs(names);
 	}
-
-	public static int getOnlinePlayerCount() {
-		return HANDLER.getOnlinePlayerCount();
-	}
-
-	public static int getMaxPlayers() {
-		return HANDLER.getMaxPlayers();
-	}
 	
 	public static NetworkInfo getNetworkInfo() {
 		return HANDLER.getNetworkInfo();
-	}
-
-	public static boolean isMaintenance() {
-		return HANDLER.isMaintenance();
 	}
 	
 	/**
@@ -90,6 +79,10 @@ public class AtlasNetwork  {
 	 */
 	public static PublicKey getPublicKey() {
 		return HANDLER.getPublicKey();
+	}
+	
+	public static ConnectionHandler getMasterConnection() {
+		return HANDLER.getMasterConnection();
 	}
 	
 }

@@ -63,7 +63,6 @@ public interface NBTReader extends Closeable {
 	/**
 	 * Returns the Depth in the current NBT Structure.
 	 * The depth will increase by 1 for each ListTag or CompoundTag entered with {@link #readNextEntry()}.
-	 * For ListTag of CompoundTag this increase will be 2 because the first compound is automatically entered.
 	 * @return depth
 	 * @throws IOException 
 	 */
@@ -129,10 +128,10 @@ public interface NBTReader extends Closeable {
 	
 	/**
 	 * Reads the current tag as byte array and consumes the values with the given consumer.
-	 * @param dataConsumer
+	 * @param consumer
 	 * @throws IOException
 	 */
-	void readByteArrayTag(IntConsumer dataConsumer) throws IOException;
+	void readByteArrayTag(IntConsumer consumer) throws IOException;
 	
 	/**
 	 * Reads current tag as byte array to the given buffer.
@@ -172,10 +171,10 @@ public interface NBTReader extends Closeable {
 	
 	/**
 	 * Reads the current tag as int array and consumes the values with the given consumer.
-	 * @param dataConsumer
+	 * @param consumer
 	 * @throws IOException
 	 */
-	void readIntArrayTag(IntConsumer dataConsumer) throws IOException;
+	void readIntArrayTag(IntConsumer consumer) throws IOException;
 	
 	/**
 	 * Reads the current tag as int array to the given buffer.
@@ -201,10 +200,10 @@ public interface NBTReader extends Closeable {
 	
 	/**
 	 * Reads the current tag as long array and consumes the values with the given consumer.
-	 * @param dataConsumer
+	 * @param consumer
 	 * @throws IOException
 	 */
-	void readLongArrayTag(LongConsumer dataConsumer) throws IOException;
+	void readLongArrayTag(LongConsumer consumer) throws IOException;
 	
 	/**
 	 * Reads current tag as long array to the given buffer.

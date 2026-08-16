@@ -53,12 +53,12 @@ public class CoreBoat extends CoreVehicle implements Boat {
 	
 	@Override
 	public void setLeftPaddleTurning(boolean turning) {
-		metaContainer.get(META_LEFT_PADDLE_TURNING).setData(turning);
+		metaContainer.setData(META_LEFT_PADDLE_TURNING, turning);
 	}
 
 	@Override
 	public void setRightPaddleTurning(boolean turning) {
-		metaContainer.get(META_RIGHT_PADDLE_TURNING).setData(turning);
+		metaContainer.setData(META_RIGHT_PADDLE_TURNING, turning);
 	}
 
 }

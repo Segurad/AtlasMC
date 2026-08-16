@@ -34,7 +34,7 @@ public class CoreAbstractSlime extends CoreMob implements AbstractSlime {
 
 	@Override
 	public void setSize(int size) {
-		metaContainer.get(META_SLIME_SIZE).setData(size);		
+		metaContainer.setData(META_SLIME_SIZE, size);		
 	}
 	
 }

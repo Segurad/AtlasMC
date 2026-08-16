@@ -1,7 +1,5 @@
 package de.atlasmc.core.cache;
 
-import java.lang.ref.ReferenceQueue;
-
 import de.atlasmc.cache.CacheHandler;
 import de.atlasmc.cache.CacheHolder;
 import de.atlasmc.log.Log;
@@ -21,14 +19,14 @@ public class CoreCacheHandler implements CacheHandler {
 	private volatile int defaultIntervall = DEFAULT_INTERVALL;
 	private volatile boolean cleanUpNow = false;
 	private volatile int lastTick;
+	private final LinkedListIterator<CoreCacheHolderRef> iter;
 	private final ConcurrentLinkedList<CoreCacheHolderRef> cacheQueue;
-	private final ReferenceQueue<CacheHolder> refQueue;
 	private final Object lock = new Object();
 	private final CoreCacheWorker worker;
 	
 	public CoreCacheHandler() {
 		this.cacheQueue = new ConcurrentLinkedList<>();
-		this.refQueue = new ReferenceQueue<>();
+		this.iter = cacheQueue.iterator();
 		this.worker = new CoreCacheWorker(this);
 		this.worker.start();
 		ThreadWatchdog.watch(worker);
@@ -51,17 +49,17 @@ public class CoreCacheHandler implements CacheHandler {
 
 	@Override
 	public boolean register(CacheHolder holder, int intervall) {
-		CoreCacheHolderRef ref = new CoreCacheHolderRef(holder, intervall, refQueue);
+		CoreCacheHolderRef ref = new CoreCacheHolderRef(holder, intervall);
 		ref.nextExecution = lastTick + intervall;
-		cacheQueue.add(new CoreCacheHolderRef(holder, intervall, refQueue));
+		cacheQueue.add(ref);
 		return true;
 	}
 
 	@Override
 	public boolean unregister(CacheHolder holder) {
-		CoreCacheHolderRef ref = null;
 		LinkedListIterator<CoreCacheHolderRef> iter = cacheQueue.iterator();
-		while ((ref = iter.next()) != null) {
+		while (iter.hasNext()) {
+			var ref = iter.next();
 			if (!ref.refersTo(holder))
 				continue;
 			ref.clear();
@@ -85,11 +83,10 @@ public class CoreCacheHandler implements CacheHandler {
 			if (cacheQueue.isEmpty()) {
 				return false;
 			}
-			internalCleanUp();
 			final boolean cleanUpNow = this.cleanUpNow;
 			final Log log = worker.getLogger();
 			if (cleanUpNow) {
-				for (CoreCacheHolderRef ref : cacheQueue) {
+				for (var ref = iter.gotoHead(); iter.hasNext(); ref = iter.next()) {
 					if (ref.nextExecution > tick)
 						continue;
 					CacheHolder holder = ref.get();
@@ -107,16 +104,6 @@ public class CoreCacheHandler implements CacheHandler {
 			}
 		}
 		return true;
-	}
-	
-	private void internalCleanUp() {
-		CoreCacheHolderRef ref = null;
-		LinkedListIterator<CoreCacheHolderRef> iter = cacheQueue.iterator();
-		while ((ref = (CoreCacheHolderRef) refQueue.poll()) != null) {
-			iter.gotoHead();
-			if (iter.find(ref) != null)
-				iter.remove();
-		}
 	}
 
 }

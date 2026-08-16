@@ -13,7 +13,7 @@ import de.atlasmc.nbt.codec.NBTSerializable;
 import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.Nameable;
 import de.atlasmc.node.Location;
-import de.atlasmc.node.server.LocalServer;
+import de.atlasmc.node.server.InternalServer;
 import de.atlasmc.node.sound.SoundEmitter;
 import de.atlasmc.node.world.Chunk;
 import de.atlasmc.node.world.World;
@@ -92,7 +92,7 @@ public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitte
 	
 	List<String> getScoreboardTags();
 	
-	LocalServer getServer();
+	InternalServer getServer();
 	
 	EntityType getType();
 	

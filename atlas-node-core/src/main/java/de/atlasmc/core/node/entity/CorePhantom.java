@@ -38,7 +38,7 @@ public class CorePhantom extends CoreMob implements Phantom {
 
 	@Override
 	public void setSize(int size) {
-		metaContainer.get(META_PHANTOM_SIZE).setData(size);	
+		metaContainer.setData(META_PHANTOM_SIZE, size);	
 		// TODO alter hitbox (horizontal=0.9 + 0.2*size and vertical=0.5 + 0.1 * i)
 	}
 

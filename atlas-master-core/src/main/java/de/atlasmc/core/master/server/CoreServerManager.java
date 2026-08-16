@@ -104,7 +104,7 @@ public class CoreServerManager implements ServerManager, Tickable {
 	}
 
 	void addServer(CoreServer server) {
-		servers.put(server.getServerID(), server);
+		servers.put(server.getID(), server);
 	}
 
 }

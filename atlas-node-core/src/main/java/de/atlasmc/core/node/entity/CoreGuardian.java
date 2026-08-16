@@ -45,7 +45,7 @@ public class CoreGuardian extends CoreMob implements Guardian {
 
 	@Override
 	public void setRetractingSpikes(boolean retracting) {
-		metaContainer.get(META_RETRACTING_SPIKES).setData(retracting);
+		metaContainer.setData(META_RETRACTING_SPIKES, retracting);
 	}
 
 	@Override
@@ -56,11 +56,11 @@ public class CoreGuardian extends CoreMob implements Guardian {
 	@Override
 	public void setTarget(Entity target) {
 		if (target == null)
-			metaContainer.get(META_TARGET_EID).setData(0);
+			metaContainer.setData(META_TARGET_EID, 0);
 		else {
 			if (target.isRemoved())
 				throw new IllegalArgumentException("Target must be a removed Entity!");
-			metaContainer.get(META_TARGET_EID).setData(target.getID());
+			metaContainer.setData(META_TARGET_EID, target.getID());
 		}
 		this.target = target;
 	}

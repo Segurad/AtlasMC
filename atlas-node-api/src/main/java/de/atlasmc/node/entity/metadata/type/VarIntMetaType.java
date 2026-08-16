@@ -11,6 +11,10 @@ final class VarIntMetaType extends MetaDataType<Integer> {
 	public VarIntMetaType(int type) {
 		super(type, Number.class);
 	}
+	
+	public VarIntMetaType(int type, boolean optional) {
+		super(type, Number.class, optional);
+	}
 
 	@Override
 	public Integer read(ByteBuf in, CodecContext context) {
@@ -19,7 +23,7 @@ final class VarIntMetaType extends MetaDataType<Integer> {
 
 	@Override
 	public void write(Integer data, ByteBuf out, CodecContext context) {
-		writeVarInt(data, out);
+		writeVarInt(data != null ? data : 0, out);
 	}
 
 }

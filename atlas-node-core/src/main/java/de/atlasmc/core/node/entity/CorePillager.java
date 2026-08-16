@@ -40,7 +40,7 @@ public class CorePillager extends CoreRaider implements Pillager {
 
 	@Override
 	public void setCharging(boolean charging) {
-		metaContainer.get(META_IS_CELEBRATING).setData(charging);
+		metaContainer.setData(META_IS_CELEBRATING, charging);
 	}
 
 	@Override

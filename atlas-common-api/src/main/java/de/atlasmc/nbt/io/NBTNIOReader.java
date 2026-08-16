@@ -1,6 +1,7 @@
 package de.atlasmc.nbt.io;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import io.netty.buffer.ByteBuf;
 
@@ -21,9 +22,7 @@ public class NBTNIOReader extends AbstractNBTIOReader {
 	 */
 	public NBTNIOReader(ByteBuf in, boolean unnamedRoot) {
 		super(unnamedRoot);
-		if (in == null) 
-			throw new IllegalArgumentException("ByteBuf can not be null!");
-		this.in = in;
+		this.in = Objects.requireNonNull(in, "in");
 	}
 
 	@Override

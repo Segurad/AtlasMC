@@ -4,10 +4,9 @@ import java.net.InetAddress;
 import java.sql.Date;
 import java.util.UUID;
 import java.util.concurrent.Future;
-
 import de.atlasmc.chat.Messageable;
 import de.atlasmc.network.permission.PermissionHandler;
-import de.atlasmc.network.server.Server;
+import de.atlasmc.network.server.BaseServer;
 import de.atlasmc.network.socket.AtlasSocket;
 import de.atlasmc.permission.Permissible;
 import de.atlasmc.util.annotation.NotNull;
@@ -30,19 +29,19 @@ public interface AtlasPlayer extends Messageable, Permissible {
 	UUID getMojangUUID();
 	
 	/**
-	 * Returns the Proxy the player connected to the network
-	 * @return proxy
+	 * Returns the {@link AtlasSocket#getUUID()} the player connected to the network
+	 * @return socket or null
 	 */
 	@Nullable
-	AtlasSocket getOriginProxy();
+	UUID getOriginSocketID();
 	
 	/**
-	 * Returns the Proxy the player is currently at e.g. of when connected to another node in the network.
-	 * May be the same as {@link #getOriginProxy()}
-	 * @return proxy
+	 * Returns the {@link AtlasSocket#getUUID()} the player is currently at e.g. of when connected to another node in the network.
+	 * May be the same as {@link #getOriginSocketID()}
+	 * @return socket or null
 	 */
 	@Nullable
-	AtlasSocket getProxy();
+	UUID getSocketID();
 	
 	/**
 	 * Returns whether or not the player is online.
@@ -63,14 +62,14 @@ public interface AtlasPlayer extends Messageable, Permissible {
 	 * @return future success
 	 */
 	@NotNull
-	Future<Boolean> sendToServer(Server server);
+	Future<Boolean> sendToServer(BaseServer server);
 	
 	/**
-	 * Returns the server the player is currently connected to.
+	 * Returns the server's id the player is currently connected to.
 	 * @return server
 	 */
 	@Nullable
-	Server getCurrentServer();
+	UUID getCurrentServerID();
 	
 	/**
 	 * Returns the UUID used to identify a profile.

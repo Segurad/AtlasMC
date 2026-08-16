@@ -131,7 +131,7 @@ import de.atlasmc.node.io.protocol.play.PacketPlayIn;
 import de.atlasmc.node.io.protocol.play.PacketInClientCommand.StatusAction;
 import de.atlasmc.node.io.protocol.play.PacketInSeenAdvancements.Action;
 import de.atlasmc.node.recipe.BookType;
-import de.atlasmc.node.server.LocalServer;
+import de.atlasmc.node.server.InternalServer;
 import de.atlasmc.node.util.MathUtil;
 import de.atlasmc.node.util.raytracing.BlockRayCollisionRule;
 import de.atlasmc.node.util.raytracing.BlockRayTracer;
@@ -211,7 +211,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			// TODO handle packet
 		});
 		initHandler(PacketInClickContainerButton.class, (con, packet) -> {
-			LocalServer s = con.getLocalSever();
+			InternalServer s = con.getLocalSever();
 			if (s == null) 
 				return;
 			InventoryView view = con.getPlayer().getOpenInventory();
@@ -242,7 +242,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			HandlerList.callEvent(new InventoryClickButtonEvent(view, type, id));
 		});
 		initHandler(PacketInClickContainer.class, (con, packet) -> {
-			LocalServer s = con.getLocalSever();
+			InternalServer s = con.getLocalSever();
 			if (s == null) 
 				return;
 			int key = -1;
@@ -403,7 +403,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			}
 		});
 		initHandler(PacketInCloseContainer.class, (con, packet) -> {
-			LocalServer s = con.getLocalSever();
+			InternalServer s = con.getLocalSever();
 			if (s == null) 
 				return;
 			var inv = con.getPlayer().getOpenInventory();
@@ -757,7 +757,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 	}
 	
 	public CorePacketListenerPlayIn(PlayerConnection con) {
-		super(con, PacketPlay.PACKET_COUNT_IN);
+		super(con, PacketPlay.PACKET_COUNT_IN, true);
 	}
 
 	@Override
@@ -768,13 +768,11 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 	@Override
 	protected void handle(Packet packet) {
 		if (holder.isWaitingForProtocolChange() && !(packet instanceof PacketInAcknowledgeConfiguration)) {
-			packet.setHandled(true);
 			return;
 		}
 		@SuppressWarnings("unchecked")
 		PacketHandler<PlayerConnection, Packet> handler = (PacketHandler<PlayerConnection, Packet>) HANDLERS[packet.getID()];
 		handler.handle(holder, packet);
-		packet.setHandled(true);
 	}
 
 }

@@ -43,7 +43,7 @@ public class CoreShulker extends CoreMob implements Shulker {
 
 	@Override
 	public void setAttachedFace(BlockFace attached) {
-		metaContainer.get(META_DIRECTION).setData(attached);
+		metaContainer.setData(META_DIRECTION, attached);
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class CoreShulker extends CoreMob implements Shulker {
 	public void setShieldHeight(int height) {
 		if (height < 0 || height > 100)
 			throw new IllegalArgumentException("Height must be between 0 and 100: " + height);
-		metaContainer.get(META_SHIELD_HEIGHT).setData((byte) height);
+		metaContainer.setData(META_SHIELD_HEIGHT, (byte) height);
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class CoreShulker extends CoreMob implements Shulker {
 		int value = 16;
 		if (color != null)
 			value = color.getID();
-		metaContainer.get(META_COLOR).setData((byte) value);
+		metaContainer.setData(META_COLOR, (byte) value);
 	}
 	
 }

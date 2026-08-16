@@ -68,7 +68,7 @@ public abstract class AbstractNBTStreamReader extends AbstractNBTReader {
 		prepareTag();
 		if (list == null || list.depth >= depth)
 			return -1;
-		return list.depth;
+		return list.payload;
 	}
 
 	@Override

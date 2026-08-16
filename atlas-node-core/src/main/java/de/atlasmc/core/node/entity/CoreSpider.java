@@ -34,7 +34,7 @@ public class CoreSpider extends CoreMob implements Spider {
 
 	@Override
 	public void setClimbing(boolean climbing) {
-		metaContainer.get(META_SPIDER_FLAGS).setData((byte) (climbing ? 0x01 : 0x00));		
+		metaContainer.setData(META_SPIDER_FLAGS, (byte) (climbing ? 0x01 : 0x00));		
 	}
 
 }

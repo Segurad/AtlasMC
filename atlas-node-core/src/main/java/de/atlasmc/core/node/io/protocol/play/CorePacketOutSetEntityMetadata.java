@@ -9,8 +9,7 @@ import java.util.List;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
-import de.atlasmc.node.entity.metadata.MetaData;
-import de.atlasmc.node.entity.metadata.MetaDataField;
+import de.atlasmc.node.entity.metadata.MetaDataInfo;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.io.protocol.play.PacketOutSetEntityMetadata;
 import de.atlasmc.util.codec.CodecContext;
@@ -21,18 +20,17 @@ public class CorePacketOutSetEntityMetadata implements PacketCodec<PacketOutSetE
 	@Override
 	public void deserialize(PacketOutSetEntityMetadata packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		packet.entityID = readVarInt(in);
-		List<MetaData<?>> data = null;
+		List<MetaDataInfo<Object>> data = null;
 		int index = 0;
 		final CodecContext context = handler.getCodecContext();
 		while ((index = in.readUnsignedByte()) != 0xFF) {
 			if (data == null)
 				data = new ArrayList<>();
 			int typeID = readVarInt(in);
-			MetaDataType<?> type = MetaDataType.getByID(typeID);
+			@SuppressWarnings("unchecked")
+			MetaDataType<Object> type = (MetaDataType<Object>) MetaDataType.getByID(typeID);
 			Object value = type.read(in, context);
-			MetaDataField<?> field = new MetaDataField<>(index, null, type);
-			@SuppressWarnings({ "unchecked", "rawtypes" })
-			MetaData<?> meta = new MetaData(field, value);
+			var meta = new MetaDataInfo<>(index, type, value);
 			data.add(meta);
 		}
 		packet.data = data;
@@ -42,9 +40,9 @@ public class CorePacketOutSetEntityMetadata implements PacketCodec<PacketOutSetE
 	public void serialize(PacketOutSetEntityMetadata packet, ByteBuf out, ConnectionHandler handler) throws IOException {
 		writeVarInt(packet.entityID, out);
 		final CodecContext context = handler.getCodecContext();
-		for (MetaData<?> data : packet.data) {
+		for (var data : packet.data) {
 			out.writeByte(data.getIndex());
-			MetaDataType<?> type = data.getType();
+			MetaDataType<Object> type = data.getType();
 			writeVarInt(type.getID(), out);
 			type.writeRaw(data.getData(), out, context);
 		}

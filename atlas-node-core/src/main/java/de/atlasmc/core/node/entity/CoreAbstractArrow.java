@@ -12,6 +12,9 @@ import de.atlasmc.node.sound.Sound;
 
 public abstract class CoreAbstractArrow extends CoreAbstractProjectile implements AbstractArrow {
 
+	protected static final int
+	FLAG_CRITICAL = 0x01;
+	
 	protected static final MetaDataField<Byte> 
 	META_ABSTRACT_ARROW_FLAGS = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, (byte) 0, MetaDataType.BYTE);
 	protected static final MetaDataField<Byte>
@@ -45,16 +48,21 @@ public abstract class CoreAbstractArrow extends CoreAbstractProjectile implement
 	protected int getMetaContainerSize() {
 		return LAST_META_INDEX+1;
 	}
+	
+	protected void setAbstractArrowFlag(int flag, boolean set) {
+		MetaData<Byte> data = metaContainer.get(META_ABSTRACT_ARROW_FLAGS);
+		var value = (byte) (set ? data.getData() | flag : data.getData() & ~flag);
+		metaContainer.setData(META_ABSTRACT_ARROW_FLAGS, value);
+	}
 
 	@Override
 	public boolean isCritical() {
-		return (metaContainer.getData(META_ABSTRACT_ARROW_FLAGS) & 0x1) == 0x1;
+		return (metaContainer.getData(META_ABSTRACT_ARROW_FLAGS) & FLAG_CRITICAL) == FLAG_CRITICAL;
 	}
 
 	@Override
 	public void setCritical(boolean critical) {
-		MetaData<Byte> data = metaContainer.get(META_ABSTRACT_ARROW_FLAGS);
-		data.setData((byte) (data.getData() | 0x1));
+		setAbstractArrowFlag(FLAG_CRITICAL, critical);
 	}
 	
 	@Override
@@ -64,7 +72,7 @@ public abstract class CoreAbstractArrow extends CoreAbstractProjectile implement
 	
 	@Override
 	public void setPiercingLevel(int level) {
-		metaContainer.get(META_PIERCING_LEVEL).setData((byte) level);
+		metaContainer.setData(META_PIERCING_LEVEL, (byte) level);
 	}
 	
 	@Override

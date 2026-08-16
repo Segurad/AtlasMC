@@ -41,7 +41,7 @@ public class CoreAgeableMob extends CoreMob implements AgeableMob {
 
 	@Override
 	public void setBaby(boolean baby) {
-		metaContainer.get(META_IS_BABY).setData(baby);
+		metaContainer.setData(META_IS_BABY, baby);
 	}
 
 	@Override

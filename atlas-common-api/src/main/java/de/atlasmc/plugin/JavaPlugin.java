@@ -9,6 +9,7 @@ import java.util.Objects;
 
 import de.atlasmc.Atlas;
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.Listener;
 import de.atlasmc.log.Log;
 import de.atlasmc.util.annotation.InternalAPI;
@@ -49,6 +50,8 @@ public class JavaPlugin implements Plugin {
 		if (!isEnabled())
 			return;
 		onDisable();
+		HandlerList.unregisterAllListenerGlobal(this);
+		Atlas.getScheduler().removeAllTasks(this);
 		enabled = false;
 	}
 
@@ -59,7 +62,6 @@ public class JavaPlugin implements Plugin {
 		if (isEnabled())
 			throw new IllegalStateException("Plugin has the be disabled first!");
 		onUnload();
-		unloadHandle(this);
 		loaded = false;
 	}
 	
@@ -202,7 +204,7 @@ public class JavaPlugin implements Plugin {
 	}
 	
 	protected void unloadHandle(PluginHandle handle) {
-		Atlas.getPluginManager().removeEvents(handle);
+		HandlerList.unregisterListenerGlobal(handle);
 		Atlas.getScheduler().removeTasks(handle);
 	}
 

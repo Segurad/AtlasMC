@@ -34,7 +34,7 @@ public class CoreRaider extends CoreMob implements Raider {
 
 	@Override
 	public void setCelebrating(boolean celebrating) {
-		metaContainer.get(META_IS_CELEBRATING).setData(celebrating);
+		metaContainer.setData(META_IS_CELEBRATING, celebrating);
 	}
 
 }

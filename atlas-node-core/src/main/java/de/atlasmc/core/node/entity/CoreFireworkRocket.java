@@ -65,7 +65,7 @@ public class CoreFireworkRocket extends CoreAbstractProjectile implements Firewo
 	@Override
 	public void setFireworkMeta(FireworksComponent component) {
 		if (component == null) {
-			metaContainer.get(META_FIREWORK_INFO).setData(null);
+			metaContainer.setData(META_FIREWORK_INFO, null);
 			return;
 		}
 		MetaData<ItemStack> data = metaContainer.get(META_FIREWORK_INFO);
@@ -73,13 +73,12 @@ public class CoreFireworkRocket extends CoreAbstractProjectile implements Firewo
 		if (item == null)
 			item = new ItemStack(ItemType.FIREWORK_ROCKET.get());
 		item.setComponent(component);
-		metaContainer.get(META_FIREWORK_INFO).setData(item);
-		data.setChanged(true);
+		metaContainer.setData(META_FIREWORK_INFO, item);
 	}
 
 	@Override
 	public void setShotAtAngle(boolean shotAtAngle) {
-		metaContainer.get(META_SHOT_AT_ANGLE).setData(shotAtAngle);
+		metaContainer.setData(META_SHOT_AT_ANGLE, shotAtAngle);
 	}
 
 	@Override
@@ -89,18 +88,17 @@ public class CoreFireworkRocket extends CoreAbstractProjectile implements Firewo
 
 	@Override
 	public void setFirework(ItemStack firework) {
-		metaContainer.get(META_FIREWORK_INFO).setData(firework);
+		metaContainer.setData(META_FIREWORK_INFO, firework);
 	}
 	
 	@Override
 	public void setShooter(ProjectileSource source) {
 		super.setShooter(source);
-		if (!(source instanceof Entity)) {
-			metaContainer.get(META_SHOOTER_ID).setData(null);
+		if (!(source instanceof Entity ent)) {
+			metaContainer.setData(META_SHOOTER_ID, null);
 			return;
 		}
-		Entity entity = (Entity) source;
-		metaContainer.get(META_SHOOTER_ID).setData(entity.getID());
+		metaContainer.setData(META_SHOOTER_ID, ent.getID());
 	}
 
 	@Override

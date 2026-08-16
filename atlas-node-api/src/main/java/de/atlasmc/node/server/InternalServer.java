@@ -15,7 +15,7 @@ import de.atlasmc.util.annotation.ThreadSafe;
 /**
  * A server running as a thread in this node
  */
-public interface LocalServer extends NodeServer, SyncThreadHolder, LogHolder {
+public interface InternalServer extends NodeServer, SyncThreadHolder, LogHolder {
 	
 	@NotNull
 	Collection<World> getWorlds();

@@ -1,5 +1,7 @@
 package de.atlasmc.core.node.block;
 
+import java.util.Objects;
+
 import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.block.Block;
 import de.atlasmc.node.block.BlockType;
@@ -18,8 +20,8 @@ public class CoreBlockAccess implements Block {
 	private final Chunk chunk;
 	
 	public CoreBlockAccess(WorldLocation loc, Chunk chunk) {
-		this.loc = loc;
-		this.chunk = chunk;
+		this.loc = Objects.requireNonNull(loc, "loc");
+		this.chunk = Objects.requireNonNull(chunk, "chunk");
 	}
 	
 	public CoreBlockAccess(WorldLocation location) {
@@ -94,6 +96,11 @@ public class CoreBlockAccess implements Block {
 		if (getType() != block.getType())
 			return false;
 		return getBlockData().equals(block.getBlockData());
+	}
+	
+	@Override
+	public Chunk getChunk() {
+		return chunk;
 	}
 
 	@Override

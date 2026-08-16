@@ -34,7 +34,7 @@ public class CoreOcelot extends CoreAgeableMob implements Ocelot {
 
 	@Override
 	public void setTrusting(boolean trusting) {
-		metaContainer.get(META_OCELOT_TRUSTING).setData(trusting);
+		metaContainer.setData(META_OCELOT_TRUSTING, trusting);
 	}
 
 }

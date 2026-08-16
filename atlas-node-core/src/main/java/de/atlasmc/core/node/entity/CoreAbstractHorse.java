@@ -87,46 +87,46 @@ public abstract class CoreAbstractHorse extends CoreAgeableMob implements Abstra
 	public boolean isTamed() {
 		return (metaContainer.getData(META_HORSE_FLAGS) & FLAG_IS_TAME) == FLAG_IS_TAME;
 	}
+	
+	protected void setHorseFlag(int flag, boolean set) {
+		MetaData<Byte> data = metaContainer.get(META_HORSE_FLAGS);
+		var value = (byte) (set ? data.getData() | flag : data.getData() & ~flag);
+		metaContainer.setData(META_HORSE_FLAGS, value);
+	}
 
 	@Override
 	public void setTamed(boolean tamed) {
-		MetaData<Byte> data = metaContainer.get(META_HORSE_FLAGS);
-		data.setData((byte) (tamed ? data.getData() | FLAG_IS_TAME : data.getData() &  ~FLAG_IS_TAME));
+		setHorseFlag(FLAG_IS_TAME, tamed);
 	}
 
 	@Override
 	public void setSaddled(boolean saddled) {
-		MetaData<Byte> data = metaContainer.get(META_HORSE_FLAGS);
-		data.setData((byte) (saddled ? data.getData() | FLAG_IS_SADDLED : data.getData() & ~FLAG_IS_SADDLED));
+		setHorseFlag(FLAG_IS_SADDLED, saddled);
 	}
 
 	@Override
 	public void setCanBred(boolean breed) {
-		MetaData<Byte> data = metaContainer.get(META_HORSE_FLAGS);
-		data.setData((byte) (breed ? data.getData() | FLAG_CAN_BRED : data.getData() & ~FLAG_CAN_BRED));
+		setHorseFlag(FLAG_CAN_BRED, breed);
 	}
 
 	@Override
 	public void setEating(boolean eating) {
-		MetaData<Byte> data = metaContainer.get(META_HORSE_FLAGS);
-		data.setData((byte) (eating ? data.getData() | FLAG_IS_EATING : data.getData() & ~FLAG_IS_EATING));
+		setHorseFlag(FLAG_IS_EATING, eating);
 	}
 
 	@Override
 	public void setRearing(boolean rearing) {
-		MetaData<Byte> data = metaContainer.get(META_HORSE_FLAGS);
-		data.setData((byte) (rearing ? data.getData() | FLAG_IS_REARING : data.getData() & ~FLAG_IS_REARING));
+		setHorseFlag(FLAG_IS_REARING, rearing);
 	}
 
 	@Override
 	public void setMouthOpen(boolean open) {
-		MetaData<Byte> data = metaContainer.get(META_HORSE_FLAGS);
-		data.setData((byte) (open ? data.getData() | FLAG_IS_MOUTH_OPEN : data.getData() & ~FLAG_IS_MOUTH_OPEN));
+		setHorseFlag(FLAG_IS_MOUTH_OPEN, open);
 	}
 
 	@Override
 	public void setOwner(UUID owner) {
-		metaContainer.get(META_HORSE_OWNER).setData(owner);
+		metaContainer.setData(META_HORSE_OWNER, owner);
 	}
 
 	@Override

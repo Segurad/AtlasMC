@@ -56,12 +56,12 @@ public class CoreCreeper extends CoreMob implements Creeper {
 
 	@Override
 	public void setChared(boolean charged) {
-		metaContainer.get(META_IS_CHARGED).setData(charged);
+		metaContainer.setData(META_IS_CHARGED, charged);
 	}
 
 	@Override
 	public void setIgnited(boolean ignited) {
-		metaContainer.get(META_IS_IGNITED).setData(ignited);
+		metaContainer.setData(META_IS_IGNITED, ignited);
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class CoreCreeper extends CoreMob implements Creeper {
 
 	@Override
 	public void setFusing(boolean fuzing) {
-		metaContainer.get(META_CREEPER_STATE).setData(fuzing ? 1 : -1);
+		metaContainer.setData(META_CREEPER_STATE, fuzing ? 1 : -1);
 	}
 
 	@Override

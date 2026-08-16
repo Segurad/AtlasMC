@@ -34,7 +34,7 @@ public class CoreWitherSkull extends CoreAbstractAcceleratingProjectile implemen
 
 	@Override
 	public void setCharged(boolean charged) {
-		metaContainer.get(META_SKULL_CHARGED).setData(charged);		
+		metaContainer.setData(META_SKULL_CHARGED, charged);		
 	}
 
 }

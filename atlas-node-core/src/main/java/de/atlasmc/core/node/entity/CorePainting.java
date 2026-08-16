@@ -33,7 +33,7 @@ public class CorePainting extends CoreHanging implements Painting {
 
 	@Override
 	public void setMotive(Motive motive) {
-		metaContainer.get(META_MOTIVE).setData(motive);
+		metaContainer.setData(META_MOTIVE, motive);
 	}
 
 }

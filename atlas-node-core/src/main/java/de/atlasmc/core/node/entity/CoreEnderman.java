@@ -4,7 +4,6 @@ import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.entity.Enderman;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.node.entity.metadata.MetaData;
 import de.atlasmc.node.entity.metadata.MetaDataField;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
@@ -45,10 +44,7 @@ public class CoreEnderman extends CoreMob implements Enderman {
 		super.prepUpdate();
 		if (blockChanged) {
 			blockChanged = false;
-			if (block == null)
-				metaContainer.get(META_CARRIED_BLOCK).setData(null);
-			else
-				metaContainer.get(META_CARRIED_BLOCK).setData(block.getStateID());
+			metaContainer.setData(META_CARRIED_BLOCK, block == null ? null : block.getStateID());
 		}
 	}
 
@@ -98,12 +94,12 @@ public class CoreEnderman extends CoreMob implements Enderman {
 
 	@Override
 	public void setScreaming(boolean screaming) {
-		metaContainer.get(META_IS_SCREAMING).setData(screaming);
+		metaContainer.setData(META_IS_SCREAMING, screaming);
 	}
 
 	@Override
 	public void setStaring(boolean staring) {
-		metaContainer.get(META_IS_STARING).setData(staring);
+		metaContainer.setData(META_IS_STARING, staring);
 	}
 
 	@Override
@@ -118,8 +114,7 @@ public class CoreEnderman extends CoreMob implements Enderman {
 
 	@Override
 	public void setAngry(boolean angry) {
-		MetaData<Byte> data = metaContainer.get(META_MOB_FLAGS);
-		data.setData((byte) (angry ? data.getData() | FLAG_IS_ANGRY : data.getData() & ~FLAG_IS_ANGRY));
+		setMobFlag(FLAG_IS_ANGRY, angry);
 	}
 
 	@Override

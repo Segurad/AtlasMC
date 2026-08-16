@@ -1,7 +1,7 @@
 package de.atlasmc.core.node.server.tasks;
 
 import de.atlasmc.node.NodePlayer;
-import de.atlasmc.node.server.LocalServer;
+import de.atlasmc.node.server.InternalServer;
 import de.atlasmc.registry.RegistryValue;
 import de.atlasmc.tick.AtlasThreadTask;
 import de.atlasmc.tick.AtlasThreadTaskFactory;
@@ -12,7 +12,7 @@ public class CoreServerConnectionTickTaskFactory implements AtlasThreadTaskFacto
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public AtlasThreadTask<LocalServer> createTask(ConfigurationSection config) {
+	public AtlasThreadTask<InternalServer> createTask(ConfigurationSection config) {
 		return (server, _) -> {
 			for (NodePlayer player : server.getPlayers()) {
 				player.getConnection().getHandler().handleSyncPackets();

@@ -1,16 +1,18 @@
 package de.atlasmc.node.entity.metadata;
 
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
-import de.atlasmc.util.CloneException;
+import java.util.Objects;
+
+import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 
 /**
  * Stores data of a {@link MetaData}, keeps track of changes and contains {@link MetaDataField} information
  * @param <T>
  */
-public class MetaData<T> implements Cloneable {
+public class MetaData<T> {
 
 	private T data;
-	private boolean changed;
+	boolean changed;
 	private final MetaDataField<T> field;
 	
 	public MetaData(MetaDataField<T> field) {
@@ -18,25 +20,23 @@ public class MetaData<T> implements Cloneable {
 	}
 	
 	public MetaData(MetaDataField<T> field, T data) {
-		this.field = field;
-		this.data = data;
+		this.field = Objects.requireNonNull(field, "field");
+		setData(data);
+		changed = false;
+	}
+	
+	@NotNull
+	public MetaDataField<T> getField() {
+		return field;
 	}
 	
 	/**
 	 * Returns the value of this meta data. 
-	 * If the value is mutable and was modified {@link #setChanged(boolean)} must be called manually.
 	 * @return value
 	 */
+	@Nullable
 	public T getData() {
 		return data;
-	}
-	
-	public int getIndex() {
-		return field.getIndex();
-	}
-	
-	public MetaDataType<T> getType() {
-		return field.getType();
 	}
 	
 	public boolean hasChanged() {
@@ -47,19 +47,13 @@ public class MetaData<T> implements Cloneable {
 		return data != null;
 	}
 	
-	public void setChanged(boolean changed) {
-		this.changed = changed;
-	}
-	
 	/**
 	 * Returns whether or not the data is equals to the fields default data
 	 * @return true if default
 	 */
 	public boolean isDefault() {
 		T defaultData = field.getDefaultData();
-		if (data == null)
-			return defaultData == null;
-		return data.equals(defaultData);
+		return Objects.equals(this.data, defaultData);
 	}
 	
 	/**
@@ -67,8 +61,8 @@ public class MetaData<T> implements Cloneable {
 	 * @param data
 	 * @return true if changed
 	 */
-	public boolean setData(T data) {
-		if (this.data == data)
+	boolean setData(T data) {
+		if (!Objects.equals(this.data, data))
 			return false;
 		field.validateData(data);
 		this.data = data;
@@ -76,18 +70,8 @@ public class MetaData<T> implements Cloneable {
 		return true;
 	}
 	
-	@Override
-	@SuppressWarnings("unchecked")
-	public MetaData<T> clone() {
-		MetaData<T> clone;
-		try {
-			clone = (MetaData<T>) super.clone();
-		} catch (CloneNotSupportedException e) {
-			throw new CloneException();
-		}
-		if (data != null)
-			clone.data = field.getType().copyData(data);
-		return clone;
+	public MetaDataInfo<T> info() {
+		return new MetaDataInfo<>(this);
 	}
 
 }

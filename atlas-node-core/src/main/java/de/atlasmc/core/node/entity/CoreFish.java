@@ -34,7 +34,7 @@ public class CoreFish extends CoreMob implements Fish {
 
 	@Override
 	public void setFromBucket(boolean from) {
-		metaContainer.get(META_FROM_BUCKET).setData(from);
+		metaContainer.setData(META_FROM_BUCKET, from);
 	}
 
 }

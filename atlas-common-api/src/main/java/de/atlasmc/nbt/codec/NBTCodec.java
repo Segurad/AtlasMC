@@ -73,6 +73,7 @@ public interface NBTCodec<T> extends Codec<T, NBTReader, NBTWriter, CodecContext
 	 * Returns a immutable list of all tags that the type may be represented as
 	 * @return tags
 	 */
+	@NotNull
 	List<TagType> getTags();
 	
 	/**

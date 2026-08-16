@@ -1,4 +1,4 @@
-package de.atlasmc.core.network;
+package de.atlasmc.core.network.server;
 
 import de.atlasmc.network.server.ServerConfig;
 import de.atlasmc.network.server.ServerGroup;

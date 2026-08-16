@@ -34,7 +34,7 @@ public class CoreWitch extends CoreRaider implements Witch {
 
 	@Override
 	public void setDrinkingPotion(boolean drinking) {
-		metaContainer.get(META_IS_DRINKING_POTION).setData(drinking);		
+		metaContainer.setData(META_IS_DRINKING_POTION, drinking);		
 	}
 
 }

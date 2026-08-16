@@ -45,7 +45,7 @@ public class CorePrimedTNT extends CoreEntity implements PrimedTNT {
 	public void setFuseTime(int time) {
 		if (time < 0)
 			throw new IllegalArgumentException("Time can not be lower than 0: " + time);
-		metaContainer.get(META_FUSE_TIME).setData(time);		
+		metaContainer.setData(META_FUSE_TIME, time);		
 	}
 
 	@Override

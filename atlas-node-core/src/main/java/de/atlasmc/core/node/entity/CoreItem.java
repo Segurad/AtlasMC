@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Item;
-import de.atlasmc.node.entity.metadata.MetaData;
 import de.atlasmc.node.entity.metadata.MetaDataField;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.ItemStack;
@@ -44,9 +43,7 @@ public class CoreItem extends CoreEntity implements Item {
 
 	@Override
 	public void setItem(ItemStack item) {
-		MetaData<ItemStack> data = metaContainer.get(META_ITEM);
-		data.setData(item);
-		data.setChanged(true);
+		metaContainer.setData(META_ITEM, item);
 	}
 
 	@Override

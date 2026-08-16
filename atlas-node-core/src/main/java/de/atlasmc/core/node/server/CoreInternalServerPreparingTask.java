@@ -27,15 +27,15 @@ import de.atlasmc.util.configuration.file.YamlConfiguration;
  * Task that ensures all required templates, data, plugins are available.
  * Copies templates and data to server workdir.
  */
-public class CoreLocalServerPreparingTask extends AtlasTask {
+public class CoreInternalServerPreparingTask extends AtlasTask {
 
-	private final CoreLocalServer server;
+	private final CoreInternalServer server;
 	private final CompletableFuture<Boolean> future;
 	private volatile int stage = 0;
 	private final Map<NamespacedKey, RepositoryEntry> data;
 	private volatile boolean failed;
 	
-	public CoreLocalServerPreparingTask(CoreLocalServer server) {
+	public CoreInternalServerPreparingTask(CoreInternalServer server) {
 		this.server = server;
 		this.future = new CompletableFuture<>();
 		this.data = new ConcurrentHashMap<>();

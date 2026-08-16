@@ -37,7 +37,7 @@ public class CoreSniffer extends CoreAgeableMob implements Sniffer {
 
 	@Override
 	public void setState(State state) {
-		metaContainer.get(META_SNIFFER_STATE).setData(state);
+		metaContainer.setData(META_SNIFFER_STATE, state);
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class CoreSniffer extends CoreAgeableMob implements Sniffer {
 
 	@Override
 	public void setDropSeedAtTick(int tick) {
-		metaContainer.get(META_DROP_SEED_TICK).setData(tick);
+		metaContainer.setData(META_DROP_SEED_TICK, tick);
 	}
 
 }

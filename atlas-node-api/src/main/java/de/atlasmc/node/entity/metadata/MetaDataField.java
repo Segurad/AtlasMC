@@ -34,7 +34,7 @@ public class MetaDataField<T> {
 		if (data == null && !type.isOptional())
 			throw new IllegalArgumentException("Data can not be null for non optional Type!");
 		else if (!type.getTypeClass().isInstance(data))
-				throw new IllegalArgumentException("Data incompatible with Type!");
+			throw new IllegalArgumentException("Data incompatible with Type!");
 	}
 
 }

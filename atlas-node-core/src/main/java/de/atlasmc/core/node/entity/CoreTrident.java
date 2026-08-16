@@ -46,12 +46,12 @@ public class CoreTrident extends CoreAbstractArrow implements Trident {
 
 	@Override
 	public void setLoyalityLevel(int level) {
-		metaContainer.get(META_LOYALITY_LEVEL).setData(level);
+		metaContainer.setData(META_LOYALITY_LEVEL, level);
 	}
 
 	@Override
 	public void setEnchantmentGlint(boolean glint) {
-		metaContainer.get(META_ENCHANTMENT_GLINT).setData(glint);
+		metaContainer.setData(META_ENCHANTMENT_GLINT, glint);
 	}
 
 	@Override

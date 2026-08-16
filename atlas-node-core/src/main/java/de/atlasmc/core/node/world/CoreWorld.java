@@ -20,7 +20,7 @@ import de.atlasmc.node.io.protocol.play.PacketOutEntitySoundEffect;
 import de.atlasmc.node.io.protocol.play.PacketOutParticle;
 import de.atlasmc.node.io.protocol.play.PacketOutSoundEffect;
 import de.atlasmc.node.io.protocol.play.PacketOutWorldEvent;
-import de.atlasmc.node.server.LocalServer;
+import de.atlasmc.node.server.InternalServer;
 import de.atlasmc.node.sound.Sound;
 import de.atlasmc.node.util.MathUtil;
 import de.atlasmc.node.world.Chunk;
@@ -47,7 +47,7 @@ public class CoreWorld implements World {
 	
 	private final ChunkProvider chunks;
 	private final String name;
-	private final LocalServer server;
+	private final InternalServer server;
 	private final Dimension dimension;
 	private final EntityTracker entityTracker;
 	private long time;
@@ -110,7 +110,7 @@ public class CoreWorld implements World {
 	}
 
 	@Override
-	public LocalServer getServer() {
+	public InternalServer getServer() {
 		return server;
 	}
 

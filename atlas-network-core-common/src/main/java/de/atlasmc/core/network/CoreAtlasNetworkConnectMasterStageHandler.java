@@ -5,10 +5,12 @@ import de.atlasmc.core.network.io.atlasprotocol.CoreAtlasProtocol;
 import de.atlasmc.core.network.node.CoreNodeManager;
 import de.atlasmc.core.network.server.CoreServerManager;
 import de.atlasmc.io.connection.InternalConnectionHandler;
+import de.atlasmc.io.connection.SocketConnectionHandler;
 import de.atlasmc.network.AtlasNetwork;
 import de.atlasmc.plugin.startup.StartupContext;
 import de.atlasmc.plugin.startup.StartupHandlerRegister;
 import de.atlasmc.plugin.startup.StartupStageHandler;
+import io.netty.channel.EventLoopGroup;
 
 @StartupHandlerRegister(value = { StartupContext.CONNECT_MASTER })
 class CoreAtlasNetworkConnectMasterStageHandler implements StartupStageHandler {
@@ -16,6 +18,7 @@ class CoreAtlasNetworkConnectMasterStageHandler implements StartupStageHandler {
 	@Override
 	public void prepareStage(StartupContext context) {
 		context.getLogger().info("Connecting to master...");
+		SocketConnectionHandler conHandler = new SocketConnectionHandler(null, Atlas.getLogger());
 		context.setContex("builder", new CoreAtlasNetworkHandlerBuilder());
 	}
 	
@@ -26,7 +29,7 @@ class CoreAtlasNetworkConnectMasterStageHandler implements StartupStageHandler {
 			.setServerManager(new CoreServerManager(AtlasMaster.getServerManager()))
 			.setProfileHandler(AtlasMaster.getProfileManager())
 			.setPermissionManager(AtlasMaster.getPermissionManager())
-			.setUUID(AtlasMaster.getUUID())
+			.setUUID(AtlasMaster.getID())
 			.setPublicKey(Atlas.getKeyPair().getPublic())
 			.setConnection(new InternalConnectionHandler(context.getLogger(), CoreAtlasProtocol.INSTANCE));
 	}

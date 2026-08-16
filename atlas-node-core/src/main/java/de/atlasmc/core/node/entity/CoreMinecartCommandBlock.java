@@ -47,12 +47,12 @@ public class CoreMinecartCommandBlock extends CoreAbstractMinecart implements Mi
 
 	@Override
 	public void setCommand(String command) {
-		metaContainer.get(META_COMMAND).setData(command);
+		metaContainer.setData(META_COMMAND, command);
 	}
 
 	@Override
 	public void setLastMessage(Chat message) {
-		metaContainer.get(META_LAST_OUTPUT).setData(message != null ? message : ChatUtil.EMPTY);
+		metaContainer.setData(META_LAST_OUTPUT, message != null ? message : ChatUtil.EMPTY);
 	}
 
 	@Override

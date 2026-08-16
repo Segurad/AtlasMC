@@ -42,7 +42,7 @@ public class CoreVehicle extends CoreEntity implements Vehicle {
 	public void setShakingPower(int power) {
 		if (power < 0)
 			throw new IllegalArgumentException("Power can not be lower than 0: " + power);
-		metaContainer.get(META_SHAKING_POWER).setData(power);		
+		metaContainer.setData(META_SHAKING_POWER, power);		
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class CoreVehicle extends CoreEntity implements Vehicle {
 
 	@Override
 	public void setShakingDirection(int direction) {
-		metaContainer.get(META_SHAKING_DIRECTION).setData(direction);
+		metaContainer.setData(META_SHAKING_DIRECTION, direction);
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class CoreVehicle extends CoreEntity implements Vehicle {
 
 	@Override
 	public void setShakingMultiplier(float multiplier) {
-		metaContainer.get(META_SHAKING_MULTIPLIER).setData(multiplier);		
+		metaContainer.setData(META_SHAKING_MULTIPLIER, multiplier);		
 	}
 
 }

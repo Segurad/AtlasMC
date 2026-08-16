@@ -45,7 +45,7 @@ public class CoreFishingHook extends CoreAbstractProjectile implements FishingHo
 		int id = 0;
 		if (hooked != null)
 			id = hooked.getID()+1;
-		metaContainer.get(META_HOCKED_ENTITY).setData(id);
+		metaContainer.setData(META_HOCKED_ENTITY, id);
 	}
 
 	@Override

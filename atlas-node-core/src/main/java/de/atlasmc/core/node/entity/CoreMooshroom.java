@@ -35,9 +35,7 @@ public class CoreMooshroom extends CoreAgeableMob implements Mooshroom {
 
 	@Override
 	public void setVariant(Variant variant) {
-		if (variant == null)
-			throw new IllegalArgumentException("Variant can not be null!");
-		metaContainer.get(META_SHROOM_TYPE).setData(variant.getName());
+		metaContainer.setData(META_SHROOM_TYPE, variant.getName());
 	}
 
 }

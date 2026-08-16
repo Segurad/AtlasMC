@@ -105,51 +105,53 @@ public class CorePanda extends CoreAgeableMob implements Panda {
 
 	@Override
 	public void setBreedTimer(int time) {
-		metaContainer.get(META_TIMER_BREED).setData(time);
+		metaContainer.setData(META_TIMER_BREED, time);
 	}
 
 	@Override
 	public void setSneezeTimer(int time) {
-		metaContainer.get(META_TIMER_SNEEZE).setData(time);	
+		metaContainer.setData(META_TIMER_SNEEZE, time);	
 	}
 
 	@Override
 	public void setEatTimer(int time) {
-		metaContainer.get(META_TIMER_EAT).setData(time);		
+		metaContainer.setData(META_TIMER_EAT, time);		
 	}
 
 	@Override
 	public void setMainGene(Gene gene) {
-		metaContainer.get(META_GENE_MAIN).setData(gene);
+		metaContainer.setData(META_GENE_MAIN, gene);
 	}
 
 	@Override
 	public void setHiddenGene(Gene gene) {
-		metaContainer.get(META_GENE_HIDDEN).setData(gene);
+		metaContainer.setData(META_GENE_HIDDEN, gene);
+	}
+	
+	protected void setPandaFlag(int flag, boolean set) {
+		MetaData<Byte> data = metaContainer.get(META_PANDA_FLAGS);
+		var value = (byte) (set ? data.getData() | flag : data.getData() & ~flag);
+		metaContainer.setData(META_PANDA_FLAGS, value);
 	}
 
 	@Override
 	public void setSneezing(boolean sneezing) {
-		MetaData<Byte> data = metaContainer.get(META_PANDA_FLAGS);
-		data.setData((byte) (sneezing ? data.getData() | FLAG_IS_SNEEZING : data.getData() & ~FLAG_IS_SNEEZING));
+		setPandaFlag(FLAG_IS_SNEEZING, sneezing);
 	}
 
 	@Override
 	public void setRolling(boolean rolling) {
-		MetaData<Byte> data = metaContainer.get(META_PANDA_FLAGS);
-		data.setData((byte) (rolling ? data.getData() | FLAG_IS_ROLLING : data.getData() & ~FLAG_IS_ROLLING));
+		setPandaFlag(FLAG_IS_ROLLING, rolling);
 	}
 
 	@Override
 	public void setSitting(boolean sitting) {
-		MetaData<Byte> data = metaContainer.get(META_PANDA_FLAGS);
-		data.setData((byte) (sitting ? data.getData() | FLAG_IS_SITTING : data.getData() & ~FLAG_IS_SITTING));
+		setPandaFlag(FLAG_IS_SITTING, sitting);
 	}
 
 	@Override
 	public void setOnBack(boolean onback) {
-		MetaData<Byte> data = metaContainer.get(META_PANDA_FLAGS);
-		data.setData((byte) (onback ? data.getData() | FLAG_IS_ON_BACK : data.getData() & ~FLAG_IS_ON_BACK));
+		setOnBack(onback);
 	}
 
 }

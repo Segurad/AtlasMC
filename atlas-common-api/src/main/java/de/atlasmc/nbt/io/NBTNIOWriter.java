@@ -1,6 +1,7 @@
 package de.atlasmc.nbt.io;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import io.netty.buffer.ByteBuf;
 
@@ -14,9 +15,7 @@ public class NBTNIOWriter extends AbstractNBTIOWriter {
 	
 	public NBTNIOWriter(ByteBuf out, boolean unnamedRoot) {
 		super(unnamedRoot);
-		if (out == null) 
-			throw new IllegalArgumentException("ByteBuf can not be null!");
-		this.out = out;
+		this.out = Objects.requireNonNull(out, "out");
 	}
 
 	@Override

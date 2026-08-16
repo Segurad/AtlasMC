@@ -8,7 +8,7 @@ import java.util.concurrent.Future;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.network.permission.PermissionHandler;
 import de.atlasmc.network.player.AtlasPlayer;
-import de.atlasmc.network.server.Server;
+import de.atlasmc.network.server.BaseServer;
 import de.atlasmc.network.socket.AtlasSocket;
 import de.atlasmc.permission.Permission;
 
@@ -26,7 +26,7 @@ public class CoreAtlasPlayer implements AtlasPlayer {
 	private volatile Date lastJoin;
 	private volatile AtlasSocket originProxy;
 	private volatile AtlasSocket proxy;
-	private volatile Server currentServer;
+	private volatile BaseServer currentServer;
 	private volatile PermissionHandler permhandler;
 	
 	public CoreAtlasPlayer(CoreProfileManager handler, String mojangName, UUID mojangUUID, String name, UUID uuid, Date firstJoin, Date lastJoin) {
@@ -50,18 +50,21 @@ public class CoreAtlasPlayer implements AtlasPlayer {
 	}
 
 	@Override
-	public AtlasSocket getOriginProxy() {
-		return originProxy;
+	public UUID getOriginSocketID() {
+		var originProxy = this.originProxy;
+		return originProxy != null ? originProxy.getUUID() : null;
 	}
 
 	@Override
-	public AtlasSocket getProxy() {
-		return proxy;
+	public UUID getSocketID() {
+		var proxy = this.proxy;
+		return proxy != null ? proxy.getUUID() : null;
 	}
 
 	@Override
-	public Server getCurrentServer() {
-		return currentServer;
+	public UUID getCurrentServerID() {
+		var currentServer = this.currentServer;
+		return currentServer != null ? currentServer.getID() : null;
 	}
 
 	@Override
@@ -82,7 +85,7 @@ public class CoreAtlasPlayer implements AtlasPlayer {
 	}
 
 	@Override
-	public Future<Boolean> sendToServer(Server server) {
+	public Future<Boolean> sendToServer(BaseServer server) {
 		// TODO implement
 		throw new UnsupportedOperationException("Not implemented!");
 	}

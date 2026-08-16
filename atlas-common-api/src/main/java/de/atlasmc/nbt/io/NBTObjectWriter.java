@@ -3,7 +3,7 @@ package de.atlasmc.nbt.io;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.UUID;
+import java.util.Objects;
 import java.util.function.LongSupplier;
 
 import de.atlasmc.nbt.NBTException;
@@ -12,7 +12,7 @@ import de.atlasmc.nbt.tag.CompoundTag;
 import de.atlasmc.nbt.tag.ListTag;
 import de.atlasmc.nbt.tag.NBT;
 
-public class NBTObjectWriter implements NBTWriter {
+public class NBTObjectWriter extends AbstractNBTWriter implements NBTWriter {
 	
 	private LinkedList<NBT> containers;
 	private NBT highestContainer;
@@ -30,12 +30,13 @@ public class NBTObjectWriter implements NBTWriter {
 	 * @param root root of this writer
 	 */
 	public NBTObjectWriter(NBT root) {
-		highestContainer = root;
+		highestContainer = Objects.requireNonNull(root, "root");
 		masterContainer = highestContainer;
 	}
 
 	@Override
 	public void writeEndTag() throws IOException {
+		ensureOpen();
 		if (highestContainer == masterContainer) 
 			throw new NBTException("No NBT to close available!");
 		highestContainer = containers.poll();
@@ -48,69 +49,65 @@ public class NBTObjectWriter implements NBTWriter {
 			writeEndTag();
 	}
 
+	private String getNameValue(CharSequence name) {
+		if (highestContainer.getType() == TagType.LIST)
+			return null;
+		return name != null ? name.toString() : null;
+	}
+
 	@Override
 	public void writeByteTag(CharSequence name, int value) throws IOException {
-		if (highestContainer.getType() == TagType.LIST)
-			name = null;
-		highestContainer.setData(NBT.createByteTag(name != null ? name.toString() : null, value));
+		ensureOpen();
+		highestContainer.setData(NBT.createByteTag(getNameValue(name), value));
 	}
 
 	@Override
 	public void writeShortTag(CharSequence name, int value) throws IOException {
-		if (highestContainer.getType() == TagType.LIST)
-			name = null;
-		highestContainer.setData(NBT.createShortTag(name != null ? name.toString() : null, value));
+		ensureOpen();
+		highestContainer.setData(NBT.createShortTag(getNameValue(name), value));
 	}
 
 	@Override
 	public void writeIntTag(CharSequence name, int value) throws IOException {
-		if (highestContainer.getType() == TagType.LIST)
-			name = null;
-		highestContainer.setData(NBT.createIntTag(name != null ? name.toString() : null, value));
+		ensureOpen();
+		highestContainer.setData(NBT.createIntTag(getNameValue(name), value));
 	}
 
 	@Override
 	public void writeLongTag(CharSequence name, long value) throws IOException {
-		if (highestContainer.getType() == TagType.LIST)
-			name = null;
-		highestContainer.setData(NBT.createLongTag(name != null ? name.toString() : null, value));
+		ensureOpen();
+		highestContainer.setData(NBT.createLongTag(getNameValue(name), value));
 	}
 
 	@Override
 	public void writeFloatTag(CharSequence name, float value) throws IOException {
-		if (highestContainer.getType() == TagType.LIST)
-			name = null;
-		highestContainer.setData(NBT.createFloatTag(name != null ? name.toString() : null, value));
+		ensureOpen();
+		highestContainer.setData(NBT.createFloatTag(getNameValue(name), value));
 	}
 
 	@Override
 	public void writeDoubleTag(CharSequence name, double value) throws IOException {
-		if (highestContainer.getType() == TagType.LIST)
-			name = null;
-		highestContainer.setData(NBT.createDoubleTag(name != null ? name.toString() : null, value));
+		ensureOpen();
+		highestContainer.setData(NBT.createDoubleTag(getNameValue(name), value));
 	}
 
 	@Override
 	public void writeByteArrayTag(CharSequence name, byte[] data, int offset, int length) throws IOException {
-		if (data == null)
-			throw new IllegalArgumentException("Data can not be null!");
-		if (highestContainer.getType() == TagType.LIST)
-			name = null;
-		highestContainer.setData(NBT.createByteArrayTag(name != null ? name.toString() : null, Arrays.copyOfRange(data, offset, offset + length)));
+		ensureOpen();
+		Objects.requireNonNull(data, "data");
+		highestContainer.setData(NBT.createByteArrayTag(getNameValue(name), Arrays.copyOfRange(data, offset, offset + length)));
 	}
 
 	@Override
 	public void writeStringTag(CharSequence name, String value) throws IOException {
-		if (highestContainer.getType() == TagType.LIST)
-			name = null;
-		highestContainer.setData(NBT.createStringTag(name != null ? name.toString() : null, value));
+		ensureOpen();
+		highestContainer.setData(NBT.createStringTag(getNameValue(name), value));
 	}
 
 	@Override
 	public void writeListTag(CharSequence name, TagType payload, int payloadsize) throws IOException {
-		if (highestContainer.getType() == TagType.LIST)
-			name = null;
-		NBT tag = NBT.createListTag(name != null ? name.toString() : null, payload, payloadsize);
+		ensureOpen();
+		NBT tag = NBT.createListTag(getNameValue(name), payload, payloadsize);
 		if (containers == null)
 			containers = new LinkedList<>();
 		containers.add(highestContainer);
@@ -122,9 +119,8 @@ public class NBTObjectWriter implements NBTWriter {
 
 	@Override
 	public void writeCompoundTag(CharSequence name) throws IOException {
-		if (highestContainer.getType() == TagType.LIST)
-			name = null;
-		NBT tag = NBT.createCompoundTag(name != null ? name.toString() : null);
+		ensureOpen();
+		NBT tag = NBT.createCompoundTag(getNameValue(name));
 		if (containers == null)
 			containers = new LinkedList<>();
 		containers.add(highestContainer);
@@ -134,41 +130,37 @@ public class NBTObjectWriter implements NBTWriter {
 	
 	@Override
 	public void writeIntArrayTag(CharSequence name, int[] data, int offset, int length) throws IOException {
-		if (data == null)
-			throw new IllegalArgumentException("Data can not be null!");
-		if (highestContainer.getType() == TagType.LIST)
-			name = null;
-		highestContainer.setData(NBT.createIntArrayTag(name != null ? name.toString() : null, Arrays.copyOfRange(data, offset, offset + length)));
+		ensureOpen();
+		Objects.requireNonNull(data, "data");
+		highestContainer.setData(NBT.createIntArrayTag(getNameValue(name), Arrays.copyOfRange(data, offset, offset + length)));
 	}
 	
 	@Override
 	public void writeLongArrayTag(CharSequence name, long[] data, int offset, int length) throws IOException {
-		if (data == null)
-			throw new IllegalArgumentException("Data can not be null!");
-		if (highestContainer.getType() == TagType.LIST)
-			name = null;
-		highestContainer.setData(NBT.createLongArrayTag(name != null ? name.toString() : null, Arrays.copyOfRange(data, offset, offset + length)));
+		ensureOpen();
+		Objects.requireNonNull(data, "data");
+		highestContainer.setData(NBT.createLongArrayTag(getNameValue(name), Arrays.copyOfRange(data, offset, offset + length)));
 	}
 	
 	@Override
 	public void writeLongArrayTag(CharSequence name, int length, LongSupplier supplier) throws IOException {
-		if (supplier == null)
-			throw new IllegalArgumentException("Supplier can not be null!");
+		ensureOpen();
+		Objects.requireNonNull(supplier, "supplier");
 		long[] data = new long[length];
 		for (int i = 0; i < length; i++)
 			data[i] = supplier.getAsLong();
-		if (highestContainer.getType() == TagType.LIST)
-			name = null;
-		highestContainer.setData(NBT.createLongArrayTag(name != null ? name.toString() : null, data));
+		highestContainer.setData(NBT.createLongArrayTag(getNameValue(name), data));
 	}
 
 	@Override
 	public void writeNBT(NBT nbt) throws IOException {
+		ensureOpen();
 		highestContainer.setData(nbt.clone());
 	}
 	
 	@Override
 	public void writeNBT(CharSequence name, NBT nbt) throws IOException {
+		ensureOpen();
 		NBT copy = nbt.clone();
 		copy.setName(name != null ? name.toString() : null);
 		highestContainer.setData(copy);
@@ -179,20 +171,8 @@ public class NBTObjectWriter implements NBTWriter {
 	}
 
 	@Override
-	public void writeUUID(CharSequence name, UUID uuid) throws IOException {
-		if (highestContainer.getType() == TagType.LIST)
-			name = null;
-		if (uuid == null) throw new IllegalArgumentException("UUID can not be null!");
-		writeIntArrayTag(name, new int[] {
-				(int) (uuid.getMostSignificantBits()>>32),
-				(int) uuid.getMostSignificantBits(),
-				(int) (uuid.getLeastSignificantBits()>>32),
-				(int) uuid.getLeastSignificantBits()
-		});
-	}
-
-	@Override
 	public void close() throws IOException {
+		super.close();
 		containers = null;
 		highestContainer = null;
 		masterContainer = null;

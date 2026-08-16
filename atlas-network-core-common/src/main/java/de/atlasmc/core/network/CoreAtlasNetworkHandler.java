@@ -1,103 +1,130 @@
 package de.atlasmc.core.network;
 
-import java.util.ArrayList;
+import java.security.PublicKey;
 import java.util.Collection;
+import java.util.Objects;
+import java.util.UUID;
 
 import de.atlasmc.datarepository.Repository;
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.io.socket.SocketConfig;
-import de.atlasmc.master.AtlasMaster;
-import de.atlasmc.master.node.NodeManager;
-import de.atlasmc.master.socket.SocketManager;
+import de.atlasmc.network.AtlasNetworkHandler;
 import de.atlasmc.network.NetworkInfo;
+import de.atlasmc.network.NetworkStats;
 import de.atlasmc.network.NodeConfig;
-import de.atlasmc.network.server.ServerGroup;
-import de.atlasmc.util.concurrent.future.CompleteFuture;
+import de.atlasmc.network.NodeManager;
+import de.atlasmc.network.permission.PermissionManager;
+import de.atlasmc.network.player.ProfileHandler;
+import de.atlasmc.network.server.ServerManager;
 import de.atlasmc.util.concurrent.future.Future;
 
-public class CoreAtlasNetworkHandler extends CoreAbstractAtlasNetworkHandler {
+public class CoreAtlasNetworkHandler implements AtlasNetworkHandler {
+
+	private final NodeManager nodeManager;
+	private final ServerManager serverManager;
+	private final ProfileHandler profileHandler;
+	private final PermissionManager permissionProvider;
+	private final UUID uuid;
+	private final PublicKey publicKey;
+	private final ConnectionHandler con;
+	private final NetworkInfo info;
+	private final NetworkInfo infoMaintenance;
+	private final NetworkStats stats;
 	
-	public CoreAtlasNetworkHandler(CoreAtlasNetworkHandlerBuilder builder) {
-		super(builder);
-	}
-	
-	@Override
-	public ServerGroup getFallBack() {
-		return AtlasMaster.getServerManager().getFallBack();
-	}
-
-	@Override
-	public int getOnlinePlayerCount() {
-		return AtlasMaster.getOnlinePlayerCount();
-	}
-	
-	@Override
-	public int getMaxPlayers() {
-		return AtlasMaster.getMaxSlots();
+	public CoreAtlasNetworkHandler(CoreAbstractAtlasNetworkHandlerBuilder<?> builder) {
+		this.nodeManager = Objects.requireNonNull(builder.getNodeManager());
+		this.serverManager = Objects.requireNonNull(builder.getServerManager());
+		this.profileHandler = Objects.requireNonNull(builder.getProfileHandler());
+		this.permissionProvider = Objects.requireNonNull(builder.getPermissionManager());
+		this.uuid = Objects.requireNonNull(builder.getUUID());
+		this.publicKey = Objects.requireNonNull(builder.getPublicKey());
+		this.con = Objects.requireNonNull(builder.getConnection());
 	}
 
 	@Override
-	public NetworkInfo getNetworkInfo() {
-		return AtlasMaster.getNetworkInfo();
+	public NodeManager getNodeManager() {
+		return nodeManager;
 	}
 
 	@Override
-	public NetworkInfo getNetworkInfoMaintenance() {
-		return AtlasMaster.getNetworkInfoMaintenance();
+	public ServerManager getServerManager() {
+		return serverManager;
 	}
 
 	@Override
-	public boolean isMaintenance() {
-		return AtlasMaster.isMaintenance();
+	public ProfileHandler getProfileHandler() {
+		return profileHandler;
 	}
 
 	@Override
-	public Future<NodeConfig> getNodeConfig(String name) {
-		return CompleteFuture.of(AtlasMaster.getNodeManager().getNodeConfig(name));
-	}
-	
-	@Override
-	public Future<Collection<NodeConfig>> getNodeConfigs(Collection<String> names) {
-		if (names.isEmpty())
-			return CompleteFuture.getEmptyListFuture();
-		NodeManager nodeManager = AtlasMaster.getNodeManager();
-		ArrayList<NodeConfig> configs = new ArrayList<>(names.size());
-		for (String name : names) {
-			NodeConfig cfg = nodeManager.getNodeConfig(name);
-			if (cfg == null)
-				continue;
-			configs.add(cfg);
-		}
-		return CompleteFuture.of(configs);
+	public PermissionManager getPermissionManager() {
+		return permissionProvider;
 	}
 
 	@Override
-	public Future<SocketConfig> getSocketConfig(String name) {
-		return CompleteFuture.of(AtlasMaster.getSocketManager().getSocketConfig(name));
+	public UUID getNodeUUID() {
+		return uuid;
+	}
+
+	@Override
+	public PublicKey getPublicKey() {
+		return publicKey;
 	}
 	
 	@Override
-	public Future<Collection<SocketConfig>> getSocketConfigs(Collection<String> names) {
-		if (names.isEmpty())
-			return CompleteFuture.getEmptyListFuture();
-		SocketManager proxyManager = AtlasMaster.getSocketManager();
-		ArrayList<SocketConfig> configs = new ArrayList<>(names.size());
-		for (String name : names) {
-			SocketConfig cfg = proxyManager.getSocketConfig(name);
-			if (cfg == null)
-				continue;
-			configs.add(cfg);
-		}
-		return CompleteFuture.of(configs);
-	}
-
-	@Override
-	public Collection<Repository> getRepositories() {
-		return AtlasMaster.getRepositories();
+	public ConnectionHandler getMasterConnection() {
+		return con;
 	}
 
 	@Override
 	public void tick() {
-		// not required
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Future<NodeConfig> getNodeConfig(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Future<Collection<NodeConfig>> getNodeConfigs(Collection<String> names) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Future<SocketConfig> getSocketConfig(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Future<Collection<SocketConfig>> getSocketConfigs(Collection<String> names) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public NetworkStats getNetworkStats() {
+		return stats;
+	}
+
+	@Override
+	public NetworkInfo getNetworkInfo() {
+		return info;
+	}
+
+	@Override
+	public NetworkInfo getNetworkInfoMaintenance() {
+		return infoMaintenance;
+	}
+
+	@Override
+	public Collection<Repository> getRepositories() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

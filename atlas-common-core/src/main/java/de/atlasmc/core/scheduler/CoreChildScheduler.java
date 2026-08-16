@@ -12,11 +12,6 @@ public class CoreChildScheduler extends CoreAbstractScheduler {
 	}
 
 	@Override
-	public Scheduler createScheduler() {
-		return new CoreChildScheduler(this);
-	}
-
-	@Override
 	public void shutdown() {
 		super.shutdown();
 		parent.removeChild(this);

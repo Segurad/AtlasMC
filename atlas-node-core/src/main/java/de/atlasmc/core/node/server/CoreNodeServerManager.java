@@ -3,6 +3,7 @@ package de.atlasmc.core.node.server;
 import java.io.File;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,13 +24,13 @@ public class CoreNodeServerManager implements NodeServerManager {
 	
 	private final Map<UUID, NodeServer> servers;
 	private final Multimap<ServerGroup, NodeServer> serverByGroup;
-	private final Map<String, ServerGroup> groups;
+	private final Set<String> groups;
 	private final File tmpServerPath;
 	private final File staticServerPath;
 	
 	public CoreNodeServerManager(File workDir) {
 		this.servers = new ConcurrentHashMap<>();
-		this.groups = new ConcurrentHashMap<>();
+		this.groups = ConcurrentHashMap.newKeySet();
 		this.serverByGroup = new CopyOnWriteArrayListMultimap<>();
 		tmpServerPath = new File(workDir, "tmp/servers/");
 		FileUtils.ensureDir(tmpServerPath);
@@ -90,29 +91,27 @@ public class CoreNodeServerManager implements NodeServerManager {
 	}
 
 	@Override
-	public boolean registerServerGroup(ServerGroup group) {
-		if (group == null)
-			throw new IllegalArgumentException("Group can not be null!");
-		return groups.put(group.getName(), group) != group;
+	public Set<String> getPreferedServerGroups() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public boolean unregisterServerGroup(ServerGroup group) {
-		if (group == null)
-			throw new IllegalArgumentException("Group can not be null!");
-		return groups.remove(group.getName(), group);
+	public boolean addPreferedServerGroup(String group) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
-	public Collection<ServerGroup> getServerGroups() {
-		return groups.values();
+	public boolean removePreferedServerGroup(String group) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
-	public ServerGroup getServerGroup(String name) {
-		if (name == null)
-			throw new IllegalArgumentException("Name can not be null!");
-		return groups.get(name);
+	public boolean hasPreferedServerGroup(String group) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

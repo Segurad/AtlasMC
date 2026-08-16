@@ -16,27 +16,28 @@ public class CorePacketListenerStatus implements PacketListener {
 	public static final CorePacketListenerStatus INSTANCE = new CorePacketListenerStatus();
 	
 	@Override
-	public void handlePacket(ConnectionHandler handler, Packet packet) {
+	public boolean handlePacket(ConnectionHandler handler, Packet packet, boolean handled) {
 		if (packet.getID() == 0) {
 			ClientboundResponse response = new ClientboundResponse();
 			NetworkInfo info = AtlasNetwork.getNetworkInfo();
 			int version = handler.getProtocol().getVersion();
 			response.response = info.getStatusInfo(version);
 			handler.sendPacket(response);
-			packet.setHandled(true);
+			return true;
 		} else if (packet.getID() == 1) {
 			ServerboundPing ping = (ServerboundPing) packet;
 			ClientboundPong pong = new ClientboundPong();
 			pong.pong = ping.ping;
 			handler.sendPacket(pong);
 			handler.close();
-			packet.setHandled(true);
+			return true;
 		}
+		return handled;
 	}
 	
 	@Override
-	public void handlePacketSync(ConnectionHandler handler, Packet packet) throws IOException {
-		handlePacket(handler, packet);
+	public boolean handlePacketSync(ConnectionHandler handler, Packet packet, boolean handled) throws IOException {
+		return handlePacket(handler, packet, handled);
 	}
 
 }

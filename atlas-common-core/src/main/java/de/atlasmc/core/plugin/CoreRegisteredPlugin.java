@@ -1,6 +1,7 @@
 package de.atlasmc.core.plugin;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -19,12 +20,8 @@ final class CoreRegisteredPlugin {
 	private volatile boolean keepLoaded;
 
 	public CoreRegisteredPlugin(CorePluginManager manager, PrototypePlugin prototype, NamespacedKey repoEntry) {
-		if (manager == null)
-			throw new IllegalArgumentException("Manager can not be null!");
-		if (prototype == null)
-			throw new IllegalArgumentException("Prototype can not be null!");
-		this.manager = manager;
-		this.prototype = prototype;
+		this.manager = Objects.requireNonNull(manager, "manager");
+		this.prototype = Objects.requireNonNull(prototype, "prototype");
 		this.dependencies = ConcurrentHashMap.newKeySet();
 		this.depending = ConcurrentHashMap.newKeySet();
 		this.locks = new CopyOnWriteArrayList<>();

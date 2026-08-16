@@ -36,7 +36,7 @@ public class CoreItemDisplay extends CoreDisplay implements ItemDisplay {
 
 	@Override
 	public void setItem(ItemStack item) {
-		metaContainer.get(META_DISPLAYED_ITEM).setData(item);
+		metaContainer.setData(META_DISPLAYED_ITEM, item);
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class CoreItemDisplay extends CoreDisplay implements ItemDisplay {
 
 	@Override
 	public void setRenderType(RenderType renderType) {
-		metaContainer.get(META_DISPLAY_TYPE).setData(renderType);
+		metaContainer.setData(META_DISPLAY_TYPE, renderType);
 	}
 
 }

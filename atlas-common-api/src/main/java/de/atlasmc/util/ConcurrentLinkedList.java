@@ -1,21 +1,28 @@
 package de.atlasmc.util;
 
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.AbstractCollection;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
+import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.annotation.ThreadSafe;
 
 /**
- * This class is a thread safe implementation of a LinkedList using volatile for the most reading operations and synchronized for manipulation
+ * Thread-safe doubly linked collection with weakly consistent cursor iterators.
+ *
+ * Iterators operate on node positions rather than indexes and support
+ * insertion relative to the current cursor position.
+ *
+ * Concurrent modifications may affect traversal order.
  */
 @ThreadSafe
-public class ConcurrentLinkedList<E> implements Collection<E> {
+public class ConcurrentLinkedList<E> extends AbstractCollection<E> {
 	
 	private volatile Node<E> head;
 	private volatile Node<E> tail;
-	private volatile int count = 0; // Modify only by sync over ConcurrentLikedList.this
+	private volatile int count = 0; // Modify only by sync over ConcurrentLinkedList.this
 	
 	@Override
 	public boolean add(E entry) {
@@ -58,13 +65,17 @@ public class ConcurrentLinkedList<E> implements Collection<E> {
 	
 	@Override
 	public synchronized void clear() {
-		if (head == null) return;
+		if (head == null) 
+			return;
 		Node<E> node = head;
 		head = null;
 		tail = null;
 		while(node != null) {
 			node.removed = true;
-			node = node.next;
+			var next = node.next;
+			node.next = null;
+			node.prev = null;
+			node = next;
 		}
 		count = 0; // no modify method needed is in sync method
 	}
@@ -75,8 +86,9 @@ public class ConcurrentLinkedList<E> implements Collection<E> {
 			return false;
 		Node<E> next = head;
 		while(next != null) {
-			if (entry.equals(next.entry)) return true;
-			next = next.next;
+			if (entry.equals(next.entry)) 
+				return true;
+			next = nextValid(next);
 		}
 		return false;
 	}
@@ -91,17 +103,15 @@ public class ConcurrentLinkedList<E> implements Collection<E> {
 				next = nextValid(next);
 				continue;
 			}
-			removeNode(next);
-			return true;
+			return removeNode(next);
 		}
 		return false;
 	}
 	
-	private synchronized void removeNode(Node<E> node) {
+	private synchronized boolean removeNode(Node<E> node) {
 		if (node.removed) 
-			return;
+			return false;
 		node.removed = true;
-		decrementCount();
 		Node<E> prev = prevValid(node);
 		Node<E> next = nextValid(node);
 		if (prev != null) 
@@ -112,6 +122,8 @@ public class ConcurrentLinkedList<E> implements Collection<E> {
 			updateHead(next);
 		if (node == tail) 
 			updateTail(prev);
+		decrementCount();
+		return true;
 	}
 	
 	/**
@@ -119,12 +131,14 @@ public class ConcurrentLinkedList<E> implements Collection<E> {
 	 * @param node
 	 * @return node or null
 	 */
-	private Node<E> nextValid(Node<E> node) {
+	@Nullable
+	private Node<E> nextValid(@Nullable Node<E> node) {
 		if (node == null)
 			return null;
 		node = node.next;
 		while (node != null) {
-			if (!node.removed) return node;
+			if (!node.removed) 
+				return node;
 			node = node.next;
 		}
 		return null;
@@ -135,7 +149,8 @@ public class ConcurrentLinkedList<E> implements Collection<E> {
 	 * @param node
 	 * @return node or null
 	 */
-	private Node<E> prevValid(Node<E> node) {
+	@Nullable
+	private Node<E> prevValid(@Nullable Node<E> node) {
 		if (node == null)
 			return null;
 		node = node.prev;
@@ -166,14 +181,15 @@ public class ConcurrentLinkedList<E> implements Collection<E> {
 	private synchronized Node<E> internalAdd(E entry) {
 		if (entry == null)
 			throw new IllegalArgumentException("Entry can not be null!");
-		incrementCount();
 		if (head == null) {
 			head = new Node<>(entry, null, null);
 			tail = head;
+			incrementCount();
 			return tail;
 		}
 		tail.next = new Node<>(entry, tail, null);
 		tail = tail.next;
+		incrementCount();
 		return tail;
 	}
 	
@@ -198,109 +214,21 @@ public class ConcurrentLinkedList<E> implements Collection<E> {
 		incrementCount();
 	}
 	
-	private synchronized void insertBefor(Node<E> node, E entry) {
+	private synchronized void insertBefore(Node<E> node, E entry) {
 		insertAfter(prevValid(node), entry);
 	}
 	
-	private synchronized void incrementCount() {
+	private void incrementCount() {
 		count++;
 	}
 	
-	private synchronized void decrementCount() {
+	private void decrementCount() {
 		count--;
 	}
 
 	@Override
 	public LinkedListIterator<E> iterator() {
 		return new LinkedListIterator<>(this);
-	}
-
-	@Override
-	public boolean isEmpty() {
-		return count == 0;
-	}
-
-	@Override
-	public Object[] toArray() {
-		Object[] data = new Object[count];
-		if (data.length == 0) 
-			return data;
-		int index = 0;
-		for (E e : this) {
-			data[index] = e;
-			index++;
-			if (index >= data.length) 
-				break;
-		}
-		return data;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T[] toArray(T[] a) {
-		if (a.length < count) {
-			a = Arrays.copyOf(a, count);
-		}
-		int index = 0;
-		for (E e : this) {
-			a[index] = (T) e;
-			index++;
-			if (index >= a.length) 
-				break;
-		}
-		if (index < a.length) 
-			Arrays.fill(a, index, a.length, null);
-		return a;
-	}
-
-	@Override
-	public boolean containsAll(Collection<?> c) {
-		for (Object o : c) {
-			if (!contains(o)) 
-				return false;
-		}
-		return true;
-	}
-
-	@Override
-	public boolean addAll(Collection<? extends E> c) {
-		if (c == null)
-			return false;
-		boolean changes = false;
-		for (E e : c) {
-			if (add(e))
-				changes = true;
-		}
-		return changes;
-	}
-
-	@Override
-	public boolean removeAll(Collection<?> c) {
-		if (c == null)
-			return false;
-		if (c.isEmpty())
-			return false;
-		boolean changes = false;
-		for (Object o : c) {
-			if (remove(o)) 
-				changes = true;
-		}
-		return changes;
-	}
-
-	@Override
-	public boolean retainAll(Collection<?> c) {
-		if (c == null)
-			return false;
-		boolean changes = false;
-		LinkedListIterator<E> it = iterator();
-		while (it.hasNext()) {
-			if (c.contains(it.next())) 
-				continue;
-			changes = true;
-			it.remove();
-		}
-		return changes;
 	}
 	
 	static final class Node<T> {
@@ -325,99 +253,178 @@ public class ConcurrentLinkedList<E> implements Collection<E> {
 	 */
 	public static final class LinkedListIterator<E> implements Iterator<E> {
 		
+		private static final Node<?> DUMMY = new Node<>(null, null, null);
+		
 		private Node<E> node;
-		private Node<E> peeked;
+		private Node<E> nextNode; // stores the next peeked node
+		private Node<E> previousNode; // stores the previous peeked node
 		private final ConcurrentLinkedList<E> list;
+		private boolean removed;
 		
 		LinkedListIterator(ConcurrentLinkedList<E> list) {
 			this.list = list;
-			node = new Node<>(null, null, list.head);
+			reset();
+		}
+		
+		/**
+		 * Resets this iterator as if it was not used
+		 */
+		@SuppressWarnings("unchecked")
+		public void reset() {
+			this.node = (Node<E>) DUMMY;
+			this.nextNode = null;
+			this.previousNode = null;
+			this.removed = false;
 		}
 		
 		@Override
 		public boolean hasNext() {
-			return list.nextValid(node) != null;
+			return peekNext() != null;
+		}
+		
+		public boolean hasPrevious() {
+			return peekPrevious() != null;
 		}
 
+		@NotNull
 		@Override
 		public E next() {
-			node = list.nextValid(node);
-			return node == null ? null : node.entry;
+			var node = this.nextNode;
+			if (node != null)
+				return gotoNode(node);
+			node = this.node;
+			node = node == DUMMY ? list.head : list.nextValid(node);
+			if (node == null)
+				throw new NoSuchElementException();
+			return gotoNode(node);
 		}
 		
 		/**
-		 * Returns the element of the current node
+		 * May or may not return the previous of the current element due to changes made to the collection<br>
+		 * e.g. does not return the element you had before if it is no longer in this collection or a new element had been inserted
+		 * @return the current previous
+		 * @throws NoSuchElementException if there is no previous node
+		 */
+		@NotNull
+		public E previous() {
+			var node = this.previousNode;
+			if (node != null)
+				return gotoNode(node);
+			node = this.node;
+			node = node == DUMMY ? null : list.prevValid(node);
+			if (node == null)
+				throw new NoSuchElementException();
+			return gotoNode(node);
+		}
+		
+		/**
+		 * Returns the element of the current node or null if non valid
 		 * @return element or null
 		 */
 		@Nullable
 		public E get() {
-			if (node == null)
-				return null;
-			return node.entry;
+			if (node == null || node == DUMMY || node.removed)
+		        return null;
+		    return node.entry;
 		}
 		
 		/**
-		 * Returns the next element but does not move the iterators position
+		 * Sets the element of the last returned node
+		 * @param entry
+		 * @return the entry that was replaces or null if in no valid state
+		 */
+		public E set(@NotNull E entry) {
+			Objects.requireNonNull(entry);
+			var node = this.node;
+			if (node == null || node == DUMMY)
+				return null;
+			var old = node.entry;
+			node.entry = entry;
+			return old;
+		}
+		
+		/**
+		 * Returns the next element but does not move the iterators position.
+		 * Returns null if there is no valid node.
 		 * @return the next element or null
 		 */
+		@Nullable
 		public E peekNext() {
-			peeked = list.nextValid(node);
-			return peeked == null ? null : peeked.entry;
+			var node = this.node;
+			var nextNode = node == DUMMY ? list.head : list.nextValid(node);
+			this.nextNode = nextNode;
+			this.previousNode = null;
+			return nextNode == null ? null : nextNode.entry;
 		}
 		
 		/**
 		 * Returns the previous element but does not move the iterators position
+		 * Returns null if there is no valid previous node.
 		 * @return the previous element or null
 		 */
+		@Nullable
 		public E peekPrevious() {
-			peeked = list.prevValid(node);
-			return peeked == null ? null : peeked.entry;
+			var node = this.node;
+			if (node == DUMMY || node == null)
+				return null;
+			var previousNode = list.prevValid(node);
+			this.previousNode = previousNode;
+			this.nextNode = null;
+			return previousNode == null ? null : previousNode.entry;
 		}
 		
 		/**
 		 * Goto the last peeked element if available
 		 */
 		public void gotoPeeked() {
-			if (peeked == null) 
+			var peeked = nextNode;
+			if (peeked != null) {
+				gotoNode(peeked);
 				return;
-			node = peeked;
+			}
+			peeked = previousNode;
+			if (peeked != null) {
+				gotoNode(peeked);
+			}
 		}
 		
 		/**
-		 * Goto the first element of this list and returns it
-		 * @return element
+		 * Goto the first element of this list and returns it null if the list is empty
+		 * @return element or null
 		 */
+		@Nullable
 		public E gotoHead() {
-			node = list.head;
-			return node != null ? node.entry : null;
+			return gotoNode(list.head);
 		}
 		
 		/**
-		 * Goto the last element of this list and returns it
-		 * @return element
+		 * Goto the last element of this list and returns it null if the list is empty
+		 * @return element or null
 		 */
+		@Nullable
 		public E gotoTail() {
-			node = list.tail;
+			return gotoNode(list.tail);
+		}
+		
+		private E gotoNode(Node<E> node) {
+			this.node = node;
+			nextNode = null;
+			previousNode = null;
+			removed = false;
 			return node != null ? node.entry : null;
 		}
 
-		public boolean hasPrevious() {
-			return list.prevValid(node) != null;
-		}
-
-		/**
-		 * May or may not return the previous of the current element due to changes made to the collection<br>
-		 * e.g. does not return the element you had before if it is no longer in this collection or a new element had been inserted
-		 * @return the current previous or null
-		 */
-		public E previous() {
-			node = list.prevValid(node);
-			return node == null ? null : node.entry;
-		}
-
+		@SuppressWarnings("unchecked")
 		@Override
 		public void remove() {
+			if (removed)
+				throw new IllegalStateException();
+			if (node == DUMMY)
+				return;
 			list.removeNode(node);
+			var prev = node.prev;
+			node = prev != null ? prev : (Node<E>) DUMMY;
+			removed = true;
 		}
 
 		/**
@@ -425,41 +432,17 @@ public class ConcurrentLinkedList<E> implements Collection<E> {
 		 * @param entry the entry to add
 		 */
 		public void add(E entry) {
-			if (entry == null)
-				throw new IllegalArgumentException("Entry can not be null!");
-			list.insertAfter(node, entry);
+			var node = this.node;
+			list.insertAfter(node == DUMMY ? null : node, entry);
 		}
 		
 		/**
 		 * Adds the given entry before the current cursor position
 		 * @param entry the entry to add
 		 */
-		public void addBefor(E entry) {
-			if (entry == null)
-				throw new IllegalArgumentException("Entry can not be null!");
-			list.insertBefor(node, entry);
-		}
-
-		/**
-		 * Tries to find the given element. Returns null if not found.
-		 * If the entry is found this iterator will point to the entry.
-		 * If no matching entry is found the iterator will point to no entry.
-		 * @param entry
-		 * @return the entry matching the given entry or null of not found
-		 */
-		public E find(E entry) {
-			E next = get();
-			if (entry == next)
-				return next;
-			if (entry.equals(next))
-				return next;
-			while ((next = next()) != null) {
-				if (entry == next)
-					return next;
-				if (entry.equals(next))
-					return next;
-			}
-			return null;
+		public void addBefore(E entry) {
+			var node = this.node;
+			list.insertBefore(node == DUMMY ? null : node, entry);
 		}
 		
 	}

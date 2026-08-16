@@ -2,6 +2,7 @@ package de.atlasmc.core.node.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Piglin;
@@ -57,17 +58,17 @@ public class CorePiglin extends CoreAbstractPiglin implements Piglin {
 
 	@Override
 	public void setBaby(boolean baby) {
-		metaContainer.get(META_IS_BABY).setData(baby);		
+		metaContainer.setData(META_IS_BABY, baby);		
 	}
 
 	@Override
 	public void setChargingCorssbow(boolean charging) {
-		metaContainer.get(META_IS_CHARGING_CROSSBOW).setData(charging);		
+		metaContainer.setData(META_IS_CHARGING_CROSSBOW, charging);		
 	}
 
 	@Override
 	public void setDancing(boolean dancing) {
-		metaContainer.get(META_IS_DANCING).setData(dancing);		
+		metaContainer.setData(META_IS_DANCING, dancing);		
 	}
 
 	@Override
@@ -94,8 +95,7 @@ public class CorePiglin extends CoreAbstractPiglin implements Piglin {
 
 	@Override
 	public void addPocketItem(ItemStack item) {
-		if (item == null)
-			throw new IllegalArgumentException("Item can not be null!");
+		Objects.requireNonNull(item, "item");
 		getPocketItems().add(item);
 	}
 

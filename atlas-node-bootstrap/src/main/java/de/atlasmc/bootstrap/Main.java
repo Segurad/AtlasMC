@@ -39,7 +39,7 @@ import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.command.CommandEvent;
 import de.atlasmc.log.Log;
 import de.atlasmc.log.Logging;
-import de.atlasmc.plugin.AtlasModul;
+import de.atlasmc.plugin.AtlasCorePlugin;
 import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginManager;
 import de.atlasmc.plugin.startup.StartupContext;
@@ -149,12 +149,14 @@ public class Main {
 				StartupContext.CONNECT_MASTER, 
 				StartupContext.INIT_NODE,
 				StartupContext.LOAD_NODE_DATA,
+				StartupContext.FINALIZE_NODE_STARTUP,
 				StartupContext.FINALIZE_STARTUP);
 		if (isMaster) {
 			context.addStageAfter(
 					StartupContext.INIT_STAGES,
 					StartupContext.INIT_MASTER,
-					StartupContext.LOAD_MASTER_DATA);
+					StartupContext.LOAD_MASTER_DATA,
+					StartupContext.FINALIZE_MASTER_STARTUP);
 			pluginManager.addFeature(NamespacedKey.literal("atlas:node-master"));
 		} else {
 			pluginManager.addFeature(NamespacedKey.literal("atlas:node-minion"));
@@ -189,7 +191,7 @@ public class Main {
 		initStartupHandler(log, context, Main.class.getResourceAsStream("/META-INF/atlas/startup-handlers.yml"), Main.class.getClassLoader());
 		
 		for (Plugin plugin : pluginManager.getPlugins()) {
-			if (!(plugin instanceof AtlasModul modul))
+			if (!(plugin instanceof AtlasCorePlugin modul))
 				continue;
 			if (!plugin.isEnabled())
 				continue;

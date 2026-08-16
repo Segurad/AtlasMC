@@ -109,8 +109,7 @@ public abstract class AbstractConnectionHandler implements ConnectionHandler {
 
 	@Override
 	public void handlePacket(final Packet packet) throws IOException {
-		inboundListeners.handlePacket(this, packet);
-		if (packet.isHandled())
+		if (inboundListeners.handlePacket(this, packet))
 			return;
 		if (!syncPacketHandling)
 			throw new ProtocolException("Unhandled packet: " + packet, protocol, packet);
@@ -131,8 +130,7 @@ public abstract class AbstractConnectionHandler implements ConnectionHandler {
 	public void handleSyncPackets() {
 		Packet packet = null;
 		while ((packet = syncPacketQueue.poll()) != null) {
-			inboundListeners.handlePacket(this, packet);
-			if (!packet.isHandled()) {
+			if (inboundListeners.handlePacket(this, packet)) {
 				throw new ProtocolException("Unhandled packet: " + packet, protocol, packet);
 			}
 		}

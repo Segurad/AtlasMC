@@ -27,11 +27,8 @@ import de.atlasmc.io.socket.SocketConfig;
 import de.atlasmc.log.Log;
 import de.atlasmc.network.AtlasNetwork;
 import de.atlasmc.network.NodeConfig;
-import de.atlasmc.network.server.ServerGroup;
-import de.atlasmc.network.server.ServerManager;
 import de.atlasmc.node.AtlasNode;
 import de.atlasmc.node.io.socket.SocketManager;
-import de.atlasmc.node.server.NodeServerManager;
 import de.atlasmc.plugin.startup.StartupContext;
 import de.atlasmc.plugin.startup.StartupHandlerRegister;
 import de.atlasmc.plugin.startup.StartupStageHandler;
@@ -45,13 +42,11 @@ import de.atlasmc.util.configuration.file.YamlConfiguration;
 class CoreLoadNodeDataHandler implements StartupStageHandler {
 
 	private Log log;
-	private Map<String, ServerGroup> serverGroups;
 	private Map<String, NodeConfig> nodeConfigs;
 	private Set<NamespacedKey> modules;
 	
 	@Override
 	public void handleStage(StartupContext context) {
-		serverGroups = new HashMap<>();
 		modules = new HashSet<>();
 		nodeConfigs = new HashMap<>();
 		log = context.getLogger();
@@ -89,15 +84,8 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 			}
 		}
 		serverGroupNames.addAll(config.getStringList("server-groups", List.of()));
-		if (!serverGroupNames.isEmpty()) {
-			resolveServerGroups(serverGroupNames);
-		}
 		if (!modules.isEmpty()) {
 			// TODO load remote modules
-		}
-		NodeServerManager serverManager = AtlasNode.getServerManager();
-		for (ServerGroup group : serverGroups.values()) {
-			serverManager.registerServerGroup(group);
 		}
 		SocketManager socketManager = AtlasNode.getSocketManager();
 		List<ConfigurationSection> sockets = config.getConfigurationList("sockets");
@@ -151,25 +139,6 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 			log.debug("Loaded data registry file: {}", file);
 		} catch (Exception e) {
 			log.error("Error while loading: " + file, e);
-		}
-	}
-	
-	private void resolveServerGroups(Collection<String> serverGroupNames) {
-		ServerManager smanager = AtlasNetwork.getServerManager();
-		Collection<? extends ServerGroup> groups;
-		try {
-			groups = smanager.getServerGroups(serverGroupNames).get();
-		} catch (Exception e) {
-			log.error("Error while loading server groups!", e);
-			return;
-		}
-		for (ServerGroup group : groups) {
-			serverGroups.put(group.getName(), group);
-		}
-		for (String group : serverGroupNames) {
-			if (serverGroups.containsKey(group))
-				continue;
-			log.warn("Unable to load server group: {}", group);
 		}
 	}
 	

@@ -36,7 +36,7 @@ public class CoreGhast extends CoreMob implements Ghast {
 
 	@Override
 	public void setAttacking(boolean attacking) {
-		metaContainer.get(META_IS_ATTACKING).setData(attacking);		
+		metaContainer.setData(META_IS_ATTACKING, attacking);		
 	}
 
 	@Override

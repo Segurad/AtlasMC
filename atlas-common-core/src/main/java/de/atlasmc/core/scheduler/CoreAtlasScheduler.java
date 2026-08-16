@@ -1,6 +1,5 @@
 package de.atlasmc.core.scheduler;
 
-import de.atlasmc.scheduler.Scheduler;
 import de.atlasmc.util.ThreadWatchdog;
 
 public class CoreAtlasScheduler extends CoreAbstractScheduler {
@@ -33,11 +32,6 @@ public class CoreAtlasScheduler extends CoreAbstractScheduler {
 		thread.shutdown();
 		thread = null;
 		super.shutdown();
-	}
-
-	@Override
-	public Scheduler createScheduler() {
-		return new CoreChildScheduler(this);
 	}
 
 }

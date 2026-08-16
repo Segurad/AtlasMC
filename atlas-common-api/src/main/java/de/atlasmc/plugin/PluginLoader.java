@@ -3,6 +3,8 @@ package de.atlasmc.plugin;
 import java.io.File;
 import java.io.IOException;
 
+import de.atlasmc.util.annotation.Nullable;
+
 public interface PluginLoader {
 
 	/**
@@ -19,6 +21,7 @@ public interface PluginLoader {
 	 * @return Plugin or null if unable to load
 	 * @throws IOException 
 	 */
+	@Nullable
 	Plugin load(File file) throws IOException;
 	
 	/**
@@ -27,6 +30,7 @@ public interface PluginLoader {
 	 * @return PreparedPlugin or null if unable to load
 	 * @throws IOException
 	 */
+	@Nullable
 	PrototypePlugin preparePlugin(File file) throws IOException;
 
 	/**

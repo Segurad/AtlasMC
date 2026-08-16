@@ -1,19 +1,19 @@
 package de.atlasmc.node.event.server;
 
 import de.atlasmc.event.Event;
-import de.atlasmc.network.server.Server;
+import de.atlasmc.network.server.BaseServer;
 
 public abstract class ServerEvent extends Event {
 
-	private final Server server;
+	private final BaseServer server;
 	
-	public ServerEvent(Server server) {
+	public ServerEvent(BaseServer server) {
 		if (server == null)
 			throw new IllegalArgumentException("Server can not be null!");
 		this.server = server;
 	}
 	
-	public Server getServer() {
+	public BaseServer getServer() {
 		return server;
 	}
 	

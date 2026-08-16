@@ -34,7 +34,7 @@ public class CoreZoglin extends CoreMob implements Zoglin {
 
 	@Override
 	public void setBaby(boolean baby) {
-		metaContainer.get(META_IS_BABY).setData(baby);
+		metaContainer.setData(META_IS_BABY, baby);
 	}
 
 }

@@ -44,12 +44,12 @@ public class CorePig extends CoreAgeableMob implements Pig {
 
 	@Override
 	public void setSaddle(boolean saddle) {
-		metaContainer.get(META_HAS_SADDLE).setData(saddle);
+		metaContainer.setData(META_HAS_SADDLE, saddle);
 	}
 
 	@Override
 	public void setBoostTime(int time) {
-		metaContainer.get(META_BOOST_TIME).setData(time);		
+		metaContainer.setData(META_BOOST_TIME, time);		
 	}
 
 	@Override

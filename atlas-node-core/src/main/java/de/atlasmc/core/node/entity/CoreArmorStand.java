@@ -134,15 +134,13 @@ public class CoreArmorStand extends CoreLivingEntity implements ArmorStand {
 	private void setRotation(MetaDataField<Vector3f> field, Vector3f angle) {
 		if (angle == null)
 			throw new IllegalArgumentException("Angle can not be null!");
-		MetaData<Vector3f> data = metaContainer.get(field);
-		data.getData().set(angle);
-		data.setChanged(true);
+		metaContainer.getData(field).set(angle);
+		metaContainer.setChanged(field);
 	}
 	
 	private void setRotation(MetaDataField<Vector3f> field, float x, float y, float z) {
 		MetaData<Vector3f> data = metaContainer.get(field);
 		data.getData().set(x, y, z);
-		data.setChanged(true);
 	}
 
 	@Override
@@ -150,10 +148,15 @@ public class CoreArmorStand extends CoreLivingEntity implements ArmorStand {
 		return (metaContainer.getData(META_ARMOR_STAND_FLAGS) & FLAG_IS_SMALL) == FLAG_IS_SMALL;
 	}
 
+	protected void setArmorStandFlag(int flag, boolean set) {
+		MetaData<Byte> data = metaContainer.get(META_ARMOR_STAND_FLAGS);
+		var value = (byte) (set ? data.getData() | flag : data.getData() & ~flag);
+		metaContainer.setData(META_ARMOR_STAND_FLAGS, value);
+	}
+	
 	@Override
 	public void setSmall(boolean small) {
-		MetaData<Byte> data = metaContainer.get(META_ARMOR_STAND_FLAGS);
-		data.setData((byte) (small ? data.getData() | FLAG_IS_SMALL : data.getData() & ~FLAG_IS_SMALL));
+		setArmorStandFlag(FLAG_IS_SMALL, small);
 	}
 
 	@Override
@@ -163,8 +166,7 @@ public class CoreArmorStand extends CoreLivingEntity implements ArmorStand {
 
 	@Override
 	public void setArms(boolean arms) {
-		MetaData<Byte> data = metaContainer.get(META_ARMOR_STAND_FLAGS);
-		data.setData((byte) (arms ? data.getData() | FLAG_HAS_ARMS : data.getData() & ~FLAG_HAS_ARMS));
+		setArmorStandFlag(FLAG_HAS_ARMS, arms);
 	}
 
 	@Override
@@ -174,8 +176,7 @@ public class CoreArmorStand extends CoreLivingEntity implements ArmorStand {
 
 	@Override
 	public void setNoBasePlate(boolean baseplate) {
-		MetaData<Byte> data = metaContainer.get(META_ARMOR_STAND_FLAGS);
-		data.setData((byte) (!baseplate ? data.getData() | FLAG_HAS_NO_BASEPLATE : data.getData() & ~FLAG_HAS_NO_BASEPLATE));
+		setArmorStandFlag(FLAG_HAS_NO_BASEPLATE, baseplate);
 	}
 
 	@Override
@@ -185,8 +186,7 @@ public class CoreArmorStand extends CoreLivingEntity implements ArmorStand {
 
 	@Override
 	public void setMarker(boolean marker) {
-		MetaData<Byte> data = metaContainer.get(META_ARMOR_STAND_FLAGS);
-		data.setData((byte) (marker ? data.getData() | FLAG_IS_MARKER : data.getData() & ~FLAG_IS_MARKER));
+		setArmorStandFlag(FLAG_IS_MARKER, marker);
 	}
 
 	@Override

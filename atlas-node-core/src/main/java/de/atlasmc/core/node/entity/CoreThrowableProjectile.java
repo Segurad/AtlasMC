@@ -35,7 +35,7 @@ public abstract class CoreThrowableProjectile extends CoreAbstractProjectile imp
 
 	@Override
 	public void setItem(ItemStack item) {
-		metaContainer.get(META_PROJECTILE_ITEM).setData(item);
+		metaContainer.setData(META_PROJECTILE_ITEM, item);
 	}
 	
 }

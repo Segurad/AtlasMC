@@ -36,7 +36,7 @@ public class CoreChestedHorse extends CoreAbstractHorse implements ChestedHorse 
 
 	@Override
 	public void setChest(boolean chest) {
-		if (!metaContainer.get(META_HORSE_HAS_CHEST).setData(chest) || inv == null)
+		if (!metaContainer.setData(META_HORSE_HAS_CHEST, chest) || inv == null)
 			return;
 		// create new inventory because of size change and copy contents
 		AbstractHorseInventory old = inv;

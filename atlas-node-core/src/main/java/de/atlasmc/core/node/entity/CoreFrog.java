@@ -40,7 +40,7 @@ public class CoreFrog extends CoreAgeableMob implements Frog {
 
 	@Override
 	public void setVariant(Variant variant) {
-		metaContainer.get(META_FROG_VARIANT).setData(variant);
+		metaContainer.setData(META_FROG_VARIANT, variant);
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class CoreFrog extends CoreAgeableMob implements Frog {
 
 	@Override
 	public void setTangueTarget(Entity entity) {
-		metaContainer.get(META_TONGUE_TARGET).setData(entity != null ? entity.getID() : null);
+		metaContainer.setData(META_TONGUE_TARGET, entity != null ? entity.getID() : null);
 		this.tongueTarget = entity;
 	}
 

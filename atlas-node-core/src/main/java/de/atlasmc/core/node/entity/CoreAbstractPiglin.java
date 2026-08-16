@@ -34,7 +34,7 @@ public class CoreAbstractPiglin extends CoreMob implements AbstractPiglin {
 
 	@Override
 	public void setImmune(boolean immune) {
-		metaContainer.get(META_IMMUNE).setData(immune);		
+		metaContainer.setData(META_IMMUNE, immune);		
 	}
 	
 }

@@ -46,7 +46,7 @@ public class CoreTropicalFish extends CoreFish implements TropicalFish {
 		if (pattern == null)
 			throw new IllegalArgumentException("Pattern can not be null!");
 		MetaData<Integer> data = metaContainer.get(META_TROPICAL_VARIANT);
-		data.setData((data.getData() & 0xFFFF) | pattern.getDataID());
+		metaContainer.setData(META_TROPICAL_VARIANT, (data.getData() & 0xFFFF) | pattern.getDataID());
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class CoreTropicalFish extends CoreFish implements TropicalFish {
 		if (color == null)
 			throw new IllegalArgumentException("Color can not be null");
 		MetaData<Integer> data = metaContainer.get(META_TROPICAL_VARIANT);
-		data.setData((data.getData() & 0xFF0000) | (color.getID() << 16));
+		metaContainer.setData(META_TROPICAL_VARIANT, (data.getData() & 0xFF0000) | (color.getID() << 16));
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class CoreTropicalFish extends CoreFish implements TropicalFish {
 		if (color == null)
 			throw new IllegalArgumentException("Color can not be null");
 		MetaData<Integer> data = metaContainer.get(META_TROPICAL_VARIANT);
-		data.setData((data.getData() & 0xFF000000) | (color.getID() << 24));
+		metaContainer.setData(META_TROPICAL_VARIANT, (data.getData() & 0xFF000000) | (color.getID() << 24));
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class CoreTropicalFish extends CoreFish implements TropicalFish {
 
 	@Override
 	public void setVariantID(int id) {
-		metaContainer.get(META_TROPICAL_VARIANT).setData(id);
+		metaContainer.setData(META_TROPICAL_VARIANT, id);
 	}
 
 }

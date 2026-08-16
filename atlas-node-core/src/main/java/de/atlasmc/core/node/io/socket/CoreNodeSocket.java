@@ -12,7 +12,6 @@ import de.atlasmc.io.netty.channel.DefaultChannelInitHandler;
 import de.atlasmc.io.socket.ServerSocket;
 import de.atlasmc.io.socket.SocketConfig;
 import de.atlasmc.log.Logging;
-import de.atlasmc.network.AtlasNode;
 import de.atlasmc.node.LocalAtlasNode;
 import de.atlasmc.node.io.socket.NodeSocket;
 import de.atlasmc.util.AtlasUtil;
@@ -62,8 +61,8 @@ public class CoreNodeSocket extends ServerSocket implements NodeSocket {
 	}
 
 	@Override
-	public AtlasNode getNode() {
-		return de.atlasmc.node.AtlasNode.getAtlas();
+	public UUID getNodeID() {
+		return de.atlasmc.node.AtlasNode.getAtlas().getID();
 	}
 
 	@Override

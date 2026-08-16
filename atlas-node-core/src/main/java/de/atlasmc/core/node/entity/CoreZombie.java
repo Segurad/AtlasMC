@@ -46,12 +46,12 @@ public class CoreZombie extends CoreMob implements Zombie {
 
 	@Override
 	public void setBaby(boolean baby) {
-		metaContainer.get(META_IS_BABY).setData(baby);
+		metaContainer.setData(META_IS_BABY, baby);
 	}
 
 	@Override
 	public void setBecomingDorwned(boolean drowned) {
-		metaContainer.get(META_IS_BECOMING_DROWNED).setData(drowned);		
+		metaContainer.setData(META_IS_BECOMING_DROWNED, drowned);		
 	}
 
 	@Override

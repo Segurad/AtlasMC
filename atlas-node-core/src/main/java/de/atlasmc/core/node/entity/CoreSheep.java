@@ -40,7 +40,7 @@ public class CoreSheep extends CoreAgeableMob implements Sheep {
 		if (color == null)
 			throw new IllegalArgumentException("Color can not be null!");
 		MetaData<Byte> data = metaContainer.get(META_SHEEP_FLAGS);
-		data.setData((byte) ((data.getData() & 0xF0) | color.getID()));
+		metaContainer.setData(META_SHEEP_FLAGS, (byte) ((data.getData() & 0xF0) | color.getID()));
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class CoreSheep extends CoreAgeableMob implements Sheep {
 	@Override
 	public void setSheared(boolean sheared) {
 		MetaData<Byte> data = metaContainer.get(META_SHEEP_FLAGS);
-		data.setData((byte) (sheared ? data.getData() | 0x10 : data.getData() & 0xEF));
+		metaContainer.setData(META_SHEEP_FLAGS, (byte) (sheared ? data.getData() | 0x10 : data.getData() & 0xEF));
 	}
 	
 }

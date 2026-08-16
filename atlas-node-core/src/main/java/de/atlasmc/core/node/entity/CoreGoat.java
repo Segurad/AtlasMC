@@ -40,7 +40,7 @@ public class CoreGoat extends CoreAgeableMob implements Goat {
 
 	@Override
 	public void setScreamingGoat(boolean screaming) {
-		metaContainer.get(META_IS_SCREAMING_GOAT).setData(screaming);
+		metaContainer.setData(META_IS_SCREAMING_GOAT, screaming);
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class CoreGoat extends CoreAgeableMob implements Goat {
 
 	@Override
 	public void setLeftHorn(boolean horn) {
-		metaContainer.get(META_HAS_LEFT_HORN).setData(horn);
+		metaContainer.setData(META_HAS_LEFT_HORN, horn);
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class CoreGoat extends CoreAgeableMob implements Goat {
 
 	@Override
 	public void setRightHorn(boolean horn) {
-		metaContainer.get(META_HAS_RIGHT_HORN).setData(horn);
+		metaContainer.setData(META_HAS_RIGHT_HORN, horn);
 	}
 
 }

@@ -50,10 +50,7 @@ public class CoreArrow extends CoreAbstractArrow implements Arrow {
 
 	@Override
 	public void setColorRGB(int rgb) {
-		if (rgb < 0)
-			metaContainer.get(META_COLOR).setData(-1);
-		else
-			metaContainer.get(META_COLOR).setData(rgb & 0xFFFFFF);
+		metaContainer.setData(META_COLOR, rgb < 0 ? -1 : rgb & 0xFFFFFF);
 	}
 	
 	@Override

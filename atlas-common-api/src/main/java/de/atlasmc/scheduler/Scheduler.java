@@ -1,5 +1,6 @@
 package de.atlasmc.scheduler;
 
+import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.ThreadSafe;
@@ -116,13 +117,17 @@ public interface Scheduler {
 	Scheduler createScheduler();
 	
 	/**
-	 * Adds a Scheduler as child and returns its pointer for later removal
+	 * Adds a Scheduler as child.
+	 * If {@link #shutdown()} is called this will be propagated to the child.
+	 * If the child {@link #isDead()} it will be automatically removed if detected
 	 * @param scheduler
-	 * @return pointer
+	 * @return true if registered
 	 */
 	boolean addChild(Scheduler scheduler);
 	
 	boolean removeChild(Scheduler scheduler);
+	
+	void removeAllTasks(Plugin plugin);
 	
 	/**
 	 * Removes all task of the given Plugin

@@ -2,6 +2,7 @@ package de.atlasmc.nbt.io;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Objects;
 
 public class NBTIOWriter extends AbstractNBTIOWriter {
 	
@@ -13,9 +14,7 @@ public class NBTIOWriter extends AbstractNBTIOWriter {
 	
 	public NBTIOWriter(OutputStream out, boolean unnamedRoot) {
 		super(unnamedRoot);
-		if (out == null) 
-			throw new IllegalArgumentException("DataOutput can not be null!");
-		this.out = out;
+		this.out = Objects.requireNonNull(out, "out");
 	}
 	
 	@Override

@@ -26,7 +26,7 @@ public class CoreHorse extends CoreAbstractHorse implements Horse {
 	
 	@Override
 	public void setVariantID(int id) {
-		metaContainer.get(META_HORSE_VARIANT).setData(id);
+		metaContainer.setData(META_HORSE_VARIANT, id);
 	}
 	
 	@Override
@@ -55,7 +55,7 @@ public class CoreHorse extends CoreAbstractHorse implements Horse {
 		if (color == null)
 			throw new IllegalArgumentException("Color can not be null!");
 		MetaData<Integer> data = metaContainer.get(META_HORSE_VARIANT);
-		data.setData(data.getData() & 0xFF00 | color.getID());
+		metaContainer.setData(META_HORSE_VARIANT, data.getData() & 0xFF00 | color.getID());
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class CoreHorse extends CoreAbstractHorse implements Horse {
 		if (style == null)
 			throw new IllegalArgumentException("Style can not be null!");
 		MetaData<Integer> data = metaContainer.get(META_HORSE_VARIANT);
-		data.setData(data.getData() & 0xFF | (style.getID() << 8));
+		metaContainer.setData(META_HORSE_VARIANT, data.getData() & 0xFF | (style.getID() << 8));
 	}
 	
 	@Override

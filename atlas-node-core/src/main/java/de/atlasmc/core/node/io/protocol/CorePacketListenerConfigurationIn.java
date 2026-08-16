@@ -1,6 +1,5 @@
 package de.atlasmc.core.node.io.protocol;
 
-import de.atlasmc.Atlas;
 import de.atlasmc.chat.ChatMode;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.io.Packet;
@@ -84,7 +83,7 @@ public class CorePacketListenerConfigurationIn extends CoreAbstractPacketListene
 			System.out.println(packet.channel.toString());
 			PluginChannel channel = con.getPluginChannelManager().getChannel(packet.channel);
 			if (channel == null) {
-				Atlas.getPluginManager().callEvent(new PlayerPluginChannelUnknownEvent(false, con.getPlayer(), packet.channel, packet.data));
+				HandlerList.callEvent(new PlayerPluginChannelUnknownEvent(false, con.getPlayer(), packet.channel, packet.data));
 			} else {
 				channel.handleMessage(packet.data);
 			}
@@ -114,7 +113,7 @@ public class CorePacketListenerConfigurationIn extends CoreAbstractPacketListene
 	}
 	
 	public CorePacketListenerConfigurationIn(PlayerConnection holder) {
-		super(holder, PacketConfiguration.PACKET_COUNT_IN);
+		super(holder, PacketConfiguration.PACKET_COUNT_IN, true);
 	}
 
 	@Override
@@ -124,8 +123,6 @@ public class CorePacketListenerConfigurationIn extends CoreAbstractPacketListene
 
 	@Override
 	protected void handle(Packet packet) {
-		if (packet.isHandled())
-			return;
 		if (holder.isWaitingForProtocolChange() && !(packet instanceof ServerboundFinishConfiguration)) {
 			return;
 		}

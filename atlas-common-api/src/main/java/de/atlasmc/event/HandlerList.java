@@ -9,11 +9,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import de.atlasmc.Atlas;
+import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
@@ -260,7 +262,28 @@ public class HandlerList {
 	 * Unregisters the Listener of a Plugin from all HandlerLists
 	 * @param plugin
 	 */
+	public static void unregisterAllListenerGlobal(@NotNull Plugin plugin) {
+		Objects.requireNonNull(plugin, "plugin");
+		synchronized (HANDLERS) {
+			removeStaleEntries();
+			for (WeakReference<HandlerList> ref : HANDLERS) {
+				if (ref.refersTo(null))
+					continue;
+				HandlerList list = ref.get();
+				if (list == null)
+					continue;
+				list.unregisterAllListener(plugin);
+			}
+		}
+	}
+
+	
+	/**
+	 * Unregisters the Listener of a Plugin from all HandlerLists
+	 * @param plugin
+	 */
 	public static void unregisterListenerGlobal(@NotNull PluginHandle plugin) {
+		Objects.requireNonNull(plugin, "plugin");
 		synchronized (HANDLERS) {
 			removeStaleEntries();
 			for (WeakReference<HandlerList> ref : HANDLERS) {
@@ -286,11 +309,21 @@ public class HandlerList {
 		modLock.unlock();
 	}
 	
-	public void unregisterListener(PluginHandle plugin) {
-		if (plugin == null)
-			throw new IllegalArgumentException("Plugin can not be null!");
+	/**
+	 * Unregisters all listeners that are registered by this {@link Plugin}
+	 * @param plugin
+	 */
+	public void unregisterAllListener(Plugin plugin) {
+		Objects.requireNonNull("plugin");
 		modLock.lock();
-		globalExecutors = internalUnregister(plugin, globalExecutors);
+		globalExecutors = internalUnregister(plugin, globalExecutors, true);
+		modLock.unlock();
+	}
+	
+	public void unregisterListener(PluginHandle plugin) {
+		Objects.requireNonNull("plugin");
+		modLock.lock();
+		globalExecutors = internalUnregister(plugin, globalExecutors, false);
 		modLock.unlock();
 	}
 	
@@ -340,19 +373,24 @@ public class HandlerList {
 	}
 	
 	/**
-	 * 
+	 * Removes all {@link EventException} form the given array that belong to the given {@link PluginHandle}
 	 * @param plugin
 	 * @param executors
+	 * @param byPlugin
 	 */
-	protected static EventExecutor[] internalUnregister(PluginHandle plugin, EventExecutor[] executors) {
+	protected static EventExecutor[] internalUnregister(PluginHandle plugin, EventExecutor[] executors, boolean byPlugin) {
 		assert plugin != null;
 		final int length = executors.length;
 		if (length == 0)
 			return executors;
+		
+		if (byPlugin && plugin.getPlugin() != plugin)
+			throw new IllegalArgumentException("Given handle is not a plugin!");
+		
 		int newLength = length;
 		// counting elements to remove
 		for (EventExecutor exe : executors) {
-			if (exe.plugin == plugin)
+			if (exe.plugin == plugin || (byPlugin && exe.plugin.getPlugin() == plugin))
 				newLength--;
 		}
 		if (newLength == length)
@@ -363,18 +401,21 @@ public class HandlerList {
 		final EventExecutor[] newExes = new EventExecutor[newLength];
 		for (int i = 0, j = 0; i < length; i++) {
 			EventExecutor exe = executors[i];
-			if (exe.plugin == plugin)
+			if (exe.plugin == plugin || (byPlugin && exe.plugin.getPlugin() == plugin))
 				continue;
 			newExes[j++] = exe;
 		}
 		return executors;
 	}
 	
-	protected static void internalUnregister(final PluginHandle plugin, final Map<?, EventExecutor[]> contextExecutors) {
+	protected static void internalUnregister(final PluginHandle plugin, final Map<?, EventExecutor[]> contextExecutors, boolean byPlugin) {
+		if (byPlugin && plugin.getPlugin() != plugin)
+			throw new IllegalArgumentException("Given handle is not a plugin!");
+		
 		for (Entry<?, EventExecutor[]> entry : contextExecutors.entrySet()) {
 			final Object key = entry.getKey();
 			final EventExecutor[] executors = entry.getValue();
-			final EventExecutor[] newExecutors = internalUnregister(plugin, executors);
+			final EventExecutor[] newExecutors = internalUnregister(plugin, executors, byPlugin);
 			if (executors == newExecutors)
 				continue;
 			if (newExecutors.length == 0) {

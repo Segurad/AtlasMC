@@ -7,7 +7,10 @@ import de.atlasmc.node.entity.metadata.MetaDataField;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreIronGolem extends CoreMob implements IronGolem {
-
+	
+	protected static final int
+	FLAG_IS_PLAYER_CREATED = 0x01;
+	
 	protected static final MetaDataField<Byte>
 	META_IRON_GOLEM_FLAGS = new MetaDataField<>(CoreMob.LAST_META_INDEX+1, (byte) 0, MetaDataType.BYTE);
 	
@@ -32,11 +35,16 @@ public class CoreIronGolem extends CoreMob implements IronGolem {
 	public boolean isPlayerCreated() {
 		return (metaContainer.getData(META_IRON_GOLEM_FLAGS) & 0x01) == 0x01;
 	}
+	
+	protected void setIronGolemFlag(int flag, boolean set) {
+		MetaData<Byte> data = metaContainer.get(META_IRON_GOLEM_FLAGS);
+		var value = (byte) (set ? data.getData() | flag : data.getData() & ~flag);
+		metaContainer.setData(META_IRON_GOLEM_FLAGS, value);
+	}
 
 	@Override
 	public void setPlayerCreated(boolean playercreated) {
-		MetaData<Byte> data = metaContainer.get(META_IRON_GOLEM_FLAGS);
-		data.setData((byte) (playercreated ? data.getData() | 0x01 : data.getData() & 0xFE));
+		setIronGolemFlag(FLAG_IS_PLAYER_CREATED, playercreated);
 	}
 
 }

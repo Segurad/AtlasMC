@@ -49,12 +49,12 @@ public class CoreEndCrystal extends CoreEntity implements EndCrystal {
 			resetTarget();
 			return;
 		}
-		metaContainer.get(META_BEAM_TARGET).setData(MathUtil.toPosition(loc));
+		metaContainer.setData(META_BEAM_TARGET, MathUtil.toPosition(loc));
 	}
 
 	@Override
 	public void setBeamTarget(int x, int y, int z) {
-		metaContainer.get(META_BEAM_TARGET).setData(MathUtil.toPosition(x, y, z));
+		metaContainer.setData(META_BEAM_TARGET, MathUtil.toPosition(x, y, z));
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class CoreEndCrystal extends CoreEntity implements EndCrystal {
 
 	@Override
 	public void setShowBottom(boolean show) {
-		metaContainer.get(META_SHOW_BOTTOM).setData(show);		
+		metaContainer.setData(META_SHOW_BOTTOM, show);		
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class CoreEndCrystal extends CoreEntity implements EndCrystal {
 
 	@Override
 	public void resetTarget() {
-		metaContainer.get(META_BEAM_TARGET).setData(null);
+		metaContainer.setData(META_BEAM_TARGET, null);
 	}	
 
 }

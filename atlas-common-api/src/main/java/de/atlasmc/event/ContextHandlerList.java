@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+
+import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
@@ -76,8 +78,7 @@ public class ContextHandlerList<T> extends HandlerList {
 	
 	@Override
 	public synchronized void unregisterListener(Listener listener) {
-		if (listener == null)
-			throw new IllegalArgumentException("Listener can not be null!");
+		Objects.requireNonNull("listener");
 		modLock.lock();
 		globalExecutors = super.internalUnregister(listener, globalExecutors);
 		super.internalUnregister(listener, contextExecutors);
@@ -85,12 +86,20 @@ public class ContextHandlerList<T> extends HandlerList {
 	}
 	
 	@Override
-	public synchronized void unregisterListener(PluginHandle plugin) {
-		if (plugin == null)
-			throw new IllegalArgumentException("Plugin can not be null!");
+	public synchronized void unregisterAllListener(Plugin plugin) {
+		Objects.requireNonNull("plugin");
 		modLock.lock();
-		globalExecutors = super.internalUnregister(plugin, globalExecutors);
-		super.internalUnregister(plugin, contextExecutors);
+		globalExecutors = super.internalUnregister(plugin, globalExecutors, true);
+		super.internalUnregister(plugin, contextExecutors, true);
+		modLock.unlock();
+	}
+	
+	@Override
+	public synchronized void unregisterListener(PluginHandle plugin) {
+		Objects.requireNonNull("plugin");
+		modLock.lock();
+		globalExecutors = super.internalUnregister(plugin, globalExecutors, false);
+		super.internalUnregister(plugin, contextExecutors, false);
 		modLock.unlock();
 	}
 	

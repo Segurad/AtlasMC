@@ -21,8 +21,6 @@ abstract class CoreRegisteredTask {
 		return plugin;
 	}
 	
-	public abstract void tick();
-	
 	/**
 	 * Returns whether or not this task is Dead
 	 * @return true if dead
@@ -30,10 +28,15 @@ abstract class CoreRegisteredTask {
 	public boolean isDead() {
 		return task.isCancelled();
 	}
-	public abstract boolean isRunnable();
 	
 	public AtlasTask getTask() {
 		return task;
+	}
+
+	protected abstract void tick();
+
+	protected boolean isRunnable() {
+		return !task.isCancelled();
 	}
 
 }

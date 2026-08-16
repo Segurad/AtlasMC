@@ -12,12 +12,17 @@ import de.atlasmc.util.configuration.Configuration;
 public interface PrototypePlugin {
 	
 	/**
-	 * Creates the Plugin
+	 * Creates the Plugin or throws a exception if a error occures
 	 * @return the Plugin
 	 * @throws IOException 
 	 */
+	@NotNull
 	Plugin create() throws IOException;
 	
+	/**
+	 * Returns whether or not the plugin is already created
+	 * @return true if created
+	 */
 	boolean isCreated();
 	
 	/**
@@ -27,10 +32,13 @@ public interface PrototypePlugin {
 	@NotNull
 	String getName();
 	
+	@NotNull
 	File getFile();
 	
+	@NotNull
 	PluginLoader getLoader();
 	
+	@NotNull
 	Version getVersion();
 	
 	@NotNull

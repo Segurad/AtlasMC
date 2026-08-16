@@ -3,6 +3,7 @@ package de.atlasmc.node.event;
 import java.lang.ref.WeakReference;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.event.Event;
@@ -12,14 +13,15 @@ import de.atlasmc.event.GenericEvent;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.event.Listener;
 import de.atlasmc.network.server.ServerGroup;
-import de.atlasmc.node.server.LocalServer;
+import de.atlasmc.node.server.InternalServer;
+import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.util.annotation.NotNull;
 
 public class ServerHandlerList extends HandlerList {
 	
 	private final Map<ServerGroup, EventExecutor[]> groupExecutors;
-	private final Map<LocalServer, EventExecutor[]> serverExecutors;
+	private final Map<InternalServer, EventExecutor[]> serverExecutors;
 	
 	public ServerHandlerList() {
 		super();
@@ -31,7 +33,7 @@ public class ServerHandlerList extends HandlerList {
 		register(group, groupExecutors, executor);
 	}
 	
-	public void registerExecutor(LocalServer server, EventExecutor executor) {
+	public void registerExecutor(InternalServer server, EventExecutor executor) {
 		register(server, serverExecutors, executor);
 	}
 	
@@ -41,8 +43,8 @@ public class ServerHandlerList extends HandlerList {
 			for (Object o : handleroptions) {
 				if (ServerGroup.class.isInstance(o)) {
 					registerExecutor((ServerGroup) o, executor);
-				} else if (LocalServer.class.isInstance(o)) {
-					registerExecutor((LocalServer) o, executor);
+				} else if (InternalServer.class.isInstance(o)) {
+					registerExecutor((InternalServer) o, executor);
 				} else registerExecutor(executor);
 			}
 		} else registerExecutor(executor);
@@ -62,15 +64,15 @@ public class ServerHandlerList extends HandlerList {
 	 * @param server
 	 * @return iterator or null
 	 */
-	public Iterator<EventExecutor> getExecutors(@NotNull LocalServer server) {
+	public Iterator<EventExecutor> getExecutors(@NotNull InternalServer server) {
 		return getContextIterator(server, serverExecutors);
 	}
 	
 	@Override
 	protected void callEvent(Event event, boolean cancelled) {
 		@SuppressWarnings("unchecked")
-		final LocalServer server = ((GenericEvent<LocalServer, ?>) event).getEventSource();
-		final EventExecutor[] groupexes = this.groupExecutors.get(server.getGroup());
+		final InternalServer server = ((GenericEvent<InternalServer, ?>) event).getEventSource();
+		final EventExecutor[] groupexes = this.groupExecutors.get(server.getServerGroup());
 		final EventExecutor[] serverexes = this.serverExecutors.get(server);
 		final EventExecutor[] globalexes = this.globalExecutors;
 		final EventExecutor defaultHandler = this.defaultExecutor;
@@ -103,17 +105,26 @@ public class ServerHandlerList extends HandlerList {
 	}
 	
 	@Override
-	public synchronized void unregisterListener(PluginHandle plugin) {
-		if (plugin == null)
-			throw new IllegalArgumentException("Plugin can not be null!");
+	public void unregisterAllListener(Plugin plugin) {
+		Objects.requireNonNull("plugin");
 		modLock.lock();
-		globalExecutors = super.internalUnregister(plugin, globalExecutors);
-		super.internalUnregister(plugin, serverExecutors);
-		super.internalUnregister(plugin, groupExecutors);
+		globalExecutors = super.internalUnregister(plugin, globalExecutors, true);
+		super.internalUnregister(plugin, serverExecutors, true);
+		super.internalUnregister(plugin, groupExecutors, true);
 		modLock.unlock();
 	}
 	
-	public static void unregisterServer(LocalServer server) {
+	@Override
+	public void unregisterListener(PluginHandle plugin) {
+		Objects.requireNonNull("plugin");
+		modLock.lock();
+		globalExecutors = super.internalUnregister(plugin, globalExecutors, false);
+		super.internalUnregister(plugin, serverExecutors, false);
+		super.internalUnregister(plugin, groupExecutors, false);
+		modLock.unlock();
+	}
+	
+	public static void unregisterServer(InternalServer server) {
 		if (server == null) 
 			throw new IllegalArgumentException("Server can not be null!");
 		synchronized (HANDLERS) {

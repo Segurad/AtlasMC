@@ -44,9 +44,7 @@ public class CoreCat extends CoreTameable implements Cat {
 
 	@Override
 	public void setCatType(Type type) {
-		if (type == null)
-			throw new IllegalArgumentException("Type can not be null!");
-		metaContainer.get(META_CAT_TYPE).setData(type);
+		metaContainer.setData(META_CAT_TYPE, type);
 	}
 
 	@Override
@@ -56,7 +54,7 @@ public class CoreCat extends CoreTameable implements Cat {
 
 	@Override
 	public void setLying(boolean lying) {
-		metaContainer.get(META_IS_LYING).setData(lying);		
+		metaContainer.setData(META_IS_LYING, lying);		
 	}
 
 	@Override
@@ -66,7 +64,7 @@ public class CoreCat extends CoreTameable implements Cat {
 
 	@Override
 	public void setRelaxed(boolean relaxed) {
-		metaContainer.get(META_IS_RELAXED).setData(relaxed);		
+		metaContainer.setData(META_IS_RELAXED, relaxed);		
 	}
 
 	@Override
@@ -76,9 +74,7 @@ public class CoreCat extends CoreTameable implements Cat {
 
 	@Override
 	public void setCollarColor(DyeColor color) {
-		if (color == null)
-			throw new IllegalArgumentException("Color can not be null!");
-		metaContainer.get(META_COLLAR_COLOR).setData(color);		
+		metaContainer.setData(META_COLLAR_COLOR, color);		
 	}
 
 }

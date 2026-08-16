@@ -1,5 +1,7 @@
 package de.atlasmc.tick;
 
+import java.util.Objects;
+
 import de.atlasmc.log.Log;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
 import de.atlasmc.util.concurrent.future.CompleteFuture;
@@ -23,16 +25,10 @@ public class AtlasThread<T> extends TickingThread {
 		super(name, ticktime, logger, exitOnError);
 		//if (context == null)
 		//	throw new IllegalArgumentException("Context can not be null!");
-		if (startupTasks == null)
-			throw new IllegalArgumentException("Startup tasks can not be null!");
-		if (tickTasks == null)
-			throw new IllegalArgumentException("Tick tasks can not be null!");
-		if (shutdownTasks == null)
-			throw new IllegalArgumentException("Shutdown tasks can not be null!");
 		this.context = context;
-		this.tickTasks = tickTasks;
-		this.shutdownTasks = shutdownTasks;
-		this.startupTasks = startupTasks;
+		this.tickTasks = Objects.requireNonNull(tickTasks, "tick tasks");
+		this.shutdownTasks = Objects.requireNonNull(shutdownTasks, "shutdown tasks");
+		this.startupTasks = Objects.requireNonNull(startupTasks, "startup tasks");
 	}
 	
 	@Override

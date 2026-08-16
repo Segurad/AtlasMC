@@ -55,7 +55,7 @@ public class CoreLlama extends CoreChestedHorse implements Llama {
 
 	@Override
 	public void setStrength(int strength) {
-		if (!metaContainer.get(META_LLAMA_STRENGTH).setData(strength) || inv == null)
+		if (!metaContainer.setData(META_LLAMA_STRENGTH, strength) || inv == null)
 			return;
 		AbstractHorseInventory old = inv;
 		inv = createInventory();
@@ -64,17 +64,12 @@ public class CoreLlama extends CoreChestedHorse implements Llama {
 
 	@Override
 	public void setCarpedColor(DyeColor color) {
-		if (color == null)
-			metaContainer.get(META_LLAMA_CARPET).setData(-1);
-		else 
-			metaContainer.get(META_LLAMA_CARPET).setData(color.getID());
+		metaContainer.setData(META_LLAMA_CARPET, color != null ? color.getID() : -1);
 	}
 
 	@Override
 	public void setColor(LlamaColor color) {
-		if (color == null)
-			throw new IllegalArgumentException("Color can not be null!");
-		metaContainer.get(META_LLAMA_VARIANT).setData(color);
+		metaContainer.setData(META_LLAMA_VARIANT, color);
 	}
 	
 	@Override
@@ -89,7 +84,7 @@ public class CoreLlama extends CoreChestedHorse implements Llama {
 	
 	@Override
 	public void setChest(boolean chest) {
-		metaContainer.get(META_HORSE_HAS_CHEST).setData(chest);
+		metaContainer.setData(META_HORSE_HAS_CHEST, chest);
 	}
 	
 }

@@ -2,6 +2,7 @@ package de.atlasmc.nbt.io;
 
 import java.io.IOException;
 import java.io.UTFDataFormatException;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.LongSupplier;
 
@@ -72,8 +73,7 @@ public abstract class AbstractNBTIOWriter extends AbstractNBTWriter {
 	
 	@Override
 	public void writeByteArrayTag(CharSequence name, byte[] data, int offset, int length) throws IOException {
-		if (data == null)
-			throw new IllegalArgumentException("Data can not be null!");
+		Objects.requireNonNull(data, "data");
 		prepareTag(TagType.BYTE_ARRAY, name);
 		ioWriteInt(length);
 		ioWriteBytes(data, offset, length);
@@ -81,8 +81,7 @@ public abstract class AbstractNBTIOWriter extends AbstractNBTWriter {
 
 	@Override
 	public void writeStringTag(CharSequence name, String value) throws IOException {
-		if (value == null) 
-			throw new IllegalArgumentException("Value can not be null!");
+		Objects.requireNonNull(value, "value");
 		prepareTag(TagType.STRING, name);
 		byte[] buffer = value.getBytes();
 		ioWriteShort(buffer.length);
@@ -91,8 +90,7 @@ public abstract class AbstractNBTIOWriter extends AbstractNBTWriter {
 	
 	@Override
 	public void writeListTag(CharSequence name, TagType payload, int payloadsize) throws IOException {
-		if (payload == null)
-			throw new IllegalArgumentException("PayloadType can not be null!");
+		Objects.requireNonNull(payload, "payload");
 		prepareTag(TagType.LIST, name);
 		ioWriteByte(payload.getID());
 		ioWriteInt(payloadsize);
@@ -107,8 +105,7 @@ public abstract class AbstractNBTIOWriter extends AbstractNBTWriter {
 	
 	@Override
 	public void writeIntArrayTag(CharSequence name, int[] data, int offset, int length) throws IOException {
-		if (data == null)
-			throw new IllegalArgumentException("Data can not be null!");
+		Objects.requireNonNull(data, "data");
 		prepareTag(TagType.INT_ARRAY, name);
 		ioWriteInt(length);
 		for (int i = 0, o = offset; i < length; i++, o++) {
@@ -119,8 +116,7 @@ public abstract class AbstractNBTIOWriter extends AbstractNBTWriter {
 	@Override
 	public void writeUUID(CharSequence name, UUID uuid) throws IOException {
 		ensureOpen();
-		if (uuid == null) 
-			throw new IllegalArgumentException("UUID can not be null!");
+		Objects.requireNonNull(uuid, "uuid");
 		prepareTag(TagType.INT_ARRAY, name);
 		ioWriteInt(4);
 		ioWriteLong(uuid.getMostSignificantBits());
@@ -129,8 +125,8 @@ public abstract class AbstractNBTIOWriter extends AbstractNBTWriter {
 	
 	@Override
 	public void writeLongArrayTag(CharSequence name, long[] data, int offset, int length) throws IOException {
-		if (data == null)
-			throw new IllegalArgumentException("Data can not be null!");
+		ensureOpen();
+		Objects.requireNonNull(data, "data");
 		prepareTag(TagType.LONG_ARRAY, name);
 		ioWriteInt(length);
 		for (int i = 0, o = offset; i < length; i++, o++) {
@@ -140,8 +136,7 @@ public abstract class AbstractNBTIOWriter extends AbstractNBTWriter {
 	
 	@Override
 	public void writeLongArrayTag(CharSequence name, int length, LongSupplier supplier) throws IOException {
-		if (supplier == null)
-			throw new IllegalArgumentException("Supplier can not be null!");
+		Objects.requireNonNull(supplier, "supplier");
 		prepareTag(TagType.LONG_ARRAY, name);
 		ioWriteInt(length);
 		for (int i = 0; i < length; i++) {

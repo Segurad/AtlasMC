@@ -1,12 +1,13 @@
 package de.atlasmc.core.node.server;
 
 import java.io.File;
+import java.util.Objects;
 import java.util.UUID;
 
+import de.atlasmc.chat.Chat;
 import de.atlasmc.network.server.ServerConfig;
 import de.atlasmc.network.server.ServerGroup;
 import de.atlasmc.node.AtlasNode;
-import de.atlasmc.node.LocalAtlasNode;
 import de.atlasmc.node.server.NodeServer;
 
 public abstract class CoreAbstractNodeServer implements NodeServer {
@@ -18,6 +19,8 @@ public abstract class CoreAbstractNodeServer implements NodeServer {
 	protected final File workdir;
 	protected final File worldDir;
 	protected volatile Status status;
+	protected volatile GameState state;
+	protected volatile Chat motd;
 	
 	public CoreAbstractNodeServer(UUID serverID, File workdir, File worldDir, ServerGroup group) {
 		this(serverID, workdir, worldDir, group, group.getServerConfig().clone());
@@ -28,25 +31,27 @@ public abstract class CoreAbstractNodeServer implements NodeServer {
 	}
 	
 	protected CoreAbstractNodeServer(UUID serverID, File workdir, File worldDir, ServerGroup group, ServerConfig config) {
-		if (serverID == null)
-			throw new IllegalArgumentException("Server id can not be null!");
-		if (config == null)
-			throw new IllegalArgumentException("Config can not be null!");
-		if (workdir == null)
-			throw new IllegalArgumentException("Workdir can not be null!");
-		if (worldDir == null)
-			throw new IllegalArgumentException("Worlddir can not be null!");
-		this.workdir = workdir;
-		this.worldDir = worldDir;
-		this.config = config;
+		this.serverID = Objects.requireNonNull(serverID, "serverID");
+		this.workdir = Objects.requireNonNull(workdir, "workdir");
+		this.worldDir = Objects.requireNonNull(worldDir, "worldDir");
+		this.config = Objects.requireNonNull(config, "config");
 		this.group = group;
-		this.name = group.getName() + "-" + serverID.toString();
-		this.serverID = serverID;
+		this.name = (group != null ? group.getName() : "Server") + "-" + serverID.toString();
 	}
-
+	
 	@Override
-	public ServerGroup getGroup() {
+	public boolean isMaintenance() {
+		return config.isMaintenance();
+	}
+	
+	@Override
+	public ServerGroup getServerGroup() {
 		return group;
+	}
+	
+	@Override
+	public String getGroup() {
+		return group != null ? group.getName() : null;
 	}
 	
 	@Override
@@ -55,7 +60,7 @@ public abstract class CoreAbstractNodeServer implements NodeServer {
 	}
 
 	@Override
-	public UUID getServerID() {
+	public UUID getID() {
 		return serverID;
 	}
 
@@ -65,13 +70,18 @@ public abstract class CoreAbstractNodeServer implements NodeServer {
 	}
 
 	@Override
-	public LocalAtlasNode getNode() {
-		return AtlasNode.getAtlas();
+	public UUID getNodeID() {
+		return AtlasNode.getAtlas().getID();
 	}
 
 	@Override
 	public Status getStatus() {
 		return status;
+	}
+	
+	@Override
+	public GameState getState() {
+		return state;
 	}
 
 	@Override

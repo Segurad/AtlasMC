@@ -28,7 +28,7 @@ import de.atlasmc.node.io.protocol.play.PacketOutSpawnEntity;
 import de.atlasmc.node.io.protocol.play.PacketOutTeleportEntity;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateEntityPositionAndRotation;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateEntityRotation;
-import de.atlasmc.node.server.LocalServer;
+import de.atlasmc.node.server.InternalServer;
 import de.atlasmc.node.sound.Sound;
 import de.atlasmc.node.util.MathUtil;
 import de.atlasmc.node.util.TeleportFlags;
@@ -100,7 +100,7 @@ public class CoreEntity implements Entity {
 	private boolean invulnerable;
 	private boolean removed;
 	private volatile boolean aremoved;
-	private volatile LocalServer server;
+	private volatile InternalServer server;
 	protected final Vector3d motion;
 	private List<Entity> passengers;
 	private int portalCooldown;
@@ -154,14 +154,16 @@ public class CoreEntity implements Entity {
 	public boolean isInvisible() {
 		return (metaContainer.getData(META_ENTITY_FLAGS) & FLAG_INVISIBLE) == FLAG_INVISIBLE;
 	}
+	
+	protected void setEntityFlag(int flag, boolean set) {
+		MetaData<Byte> data = metaContainer.get(META_ENTITY_FLAGS);
+		var value = (byte) (set ? data.getData() | flag : data.getData() & ~flag);
+		metaContainer.setData(META_ENTITY_FLAGS, value);
+	}
 
 	@Override
 	public void setInvisible(boolean invisible) {
-		MetaData<Byte> data = this.metaContainer.get(META_ENTITY_FLAGS);
-		if (invisible)
-			data.setData((byte) (data.getData() | FLAG_INVISIBLE));
-		else
-			data.setData((byte) (data.getData() & ~FLAG_INVISIBLE));
+		setEntityFlag(FLAG_INVISIBLE, invisible);
 	}
 	
 	@Override
@@ -223,12 +225,12 @@ public class CoreEntity implements Entity {
 
 	@Override
 	public void setCustomNameVisible(boolean value) {
-		metaContainer.get(META_CUSTOM_NAME_VISIBLE).setData(value);
+		metaContainer.setData(META_CUSTOM_NAME_VISIBLE, value);
 	}
 
 	@Override
 	public void setCustomName(Chat name) {
-		metaContainer.get(META_CUSTOM_NAME).setData(name);
+		metaContainer.setData(META_CUSTOM_NAME, name);
 	}
 
 	@Override
@@ -252,7 +254,7 @@ public class CoreEntity implements Entity {
 	}
 
 	@Override
-	public LocalServer getServer() {
+	public InternalServer getServer() {
 		return server;
 	}
 
@@ -357,7 +359,7 @@ public class CoreEntity implements Entity {
 
 	@Override
 	public void setPose(Pose pose) {
-		metaContainer.get(META_POSE).setData(pose);
+		metaContainer.setData(META_POSE, pose);
 	}
 
 	@Override
@@ -409,7 +411,7 @@ public class CoreEntity implements Entity {
 
 	@Override
 	public void setNoGravity(boolean gravity) {
-		metaContainer.get(META_HAS_NO_GRAVITY).setData(!gravity);
+		metaContainer.setData(META_HAS_NO_GRAVITY, !gravity);
 	}
 
 	@Override
@@ -419,7 +421,7 @@ public class CoreEntity implements Entity {
 
 	@Override
 	public void setSilent(boolean silent) {
-		metaContainer.get(META_IS_SILENT).setData(silent);
+		metaContainer.setData(META_IS_SILENT, silent);
 	}
 
 	@Override
@@ -475,7 +477,7 @@ public class CoreEntity implements Entity {
 		chunk = getWorld().getChunk(loc);
 		fallDistance = 0;
 		fire = 0;
-		metaContainer.setChanged(false); // reset changes made by EntitySpawnEvent to avoid duplications on first tick
+		metaContainer.setUnchanged(); // reset changes made by EntitySpawnEvent to avoid duplications on first tick
 	}
 
 	@Override
@@ -581,15 +583,17 @@ public class CoreEntity implements Entity {
 				con.sendPacked(packet);
 			}
 		}
-		if (metaContainer.hasChanges()) {
+		var metaContainer = this.metaContainer;
+		var changed = metaContainer.getChangedData();
+		if (changed == null) {
 			PacketOutSetEntityMetadata packet = new PacketOutSetEntityMetadata();
 			packet.entityID = getID();
-			packet.setChangedData(metaContainer);
+			packet.data = changed;
 			for (Player viewer : viewers) {
 				PlayerConnection con = viewer.getConnection();
 				con.sendPacked(packet);
 			}
-			metaContainer.setChanged(false);
+			metaContainer.setUnchanged();
 		}
 	}
 	
@@ -623,10 +627,13 @@ public class CoreEntity implements Entity {
 	}
 
 	protected void sendMetadata(Player player) {
+		var nonDefault = metaContainer.getNonDefaultData();
+		if (nonDefault == null)
+			return;
 		PlayerConnection con = player.getConnection();
 		PacketOutSetEntityMetadata packet = new PacketOutSetEntityMetadata();
 		packet.entityID = getID();
-		packet.setNonDefaultData(metaContainer);
+		packet.data = nonDefault;
 		con.sendPacked(packet);
 	}
 
@@ -642,7 +649,7 @@ public class CoreEntity implements Entity {
 
 	@Override
 	public void setFreezeTicks(int ticks) {
-		metaContainer.get(META_TICKS_FROZEN).setData(ticks);
+		metaContainer.setData(META_TICKS_FROZEN, ticks);
 	}
 
 	@Override
@@ -689,11 +696,7 @@ public class CoreEntity implements Entity {
 
 	@Override
 	public void setVisualFire(boolean fire) {
-		MetaData<Byte> data = this.metaContainer.get(META_ENTITY_FLAGS);
-		if (fire)
-			data.setData((byte) (data.getData() | FLAG_INVISIBLE));
-		else
-			data.setData((byte) (data.getData() & ~FLAG_INVISIBLE));
+		setEntityFlag(FLAG_ON_FIRE, fire);
 	}
 
 	@Override

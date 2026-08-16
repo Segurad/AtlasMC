@@ -36,7 +36,7 @@ public class CoreBlaze extends CoreMob implements Blaze {
 	@Override
 	public void setOnFire(boolean fire) {
 		MetaData<Byte> data = metaContainer.get(META_BLAZE_ON_FIRE);
-		data.setData((byte) (fire ? data.getData() | 0x01 : data.getData() & 0xFE));
+		metaContainer.setData(META_BLAZE_ON_FIRE, (byte) (fire ? data.getData() | 0x01 : data.getData() & 0xFE));
 	}
 
 }

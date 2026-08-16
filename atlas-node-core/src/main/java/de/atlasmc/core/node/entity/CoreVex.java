@@ -39,7 +39,7 @@ public class CoreVex extends CoreMob implements Vex {
 
 	@Override
 	public void setAttacking(boolean attacking) {
-		metaContainer.get(META_VEX_FLAGS).setData((byte) (attacking ? FLAG_IS_ATTACKING : ~FLAG_IS_ATTACKING));	
+		metaContainer.setData(META_VEX_FLAGS, (byte) (attacking ? FLAG_IS_ATTACKING : ~FLAG_IS_ATTACKING));	
 	}
 
 	@Override

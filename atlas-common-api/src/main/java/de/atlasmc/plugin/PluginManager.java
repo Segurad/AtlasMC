@@ -7,10 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.event.Event;
-import de.atlasmc.event.EventPriority;
-import de.atlasmc.event.FunctionalListener;
-import de.atlasmc.event.Listener;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.concurrent.future.Future;
@@ -82,9 +78,19 @@ public interface PluginManager {
 	 */
 	int lockCount(Plugin plugin);
 	
-	boolean isKeepLoaded(Plugin plugin);
+	/**
+	 * Whether or not this Plugin is kept loaded event if no locks are set
+	 * @param plugin
+	 * @return true if kept loaded
+	 */
+	boolean isKeepLoaded(@NotNull Plugin plugin);
 	
-	void setKeepLoaded(Plugin plugin, boolean keepLoaded);
+	/**
+	 * Sets whether or not the Plugin should be kept loaded.
+	 * @param plugin
+	 * @param keepLoaded
+	 */
+	void setKeepLoaded(@NotNull Plugin plugin, boolean keepLoaded);
 	
 	@NotNull
 	Collection<Plugin> getPlugins();
@@ -118,22 +124,6 @@ public interface PluginManager {
 	 * @return count
 	 */
 	int getPluginCount();
-	
-	void registerEvents(PluginHandle plugin, Listener listener);
-	
-	void registerEvents(PluginHandle plugin, Listener listener, Object... context);
-	
-	<E extends Event> void registerFunctionalListener(PluginHandle plugin, Class<E> eventClass, FunctionalListener<E> listener);
-	
-	<E extends Event> void registerFunctionalListener(PluginHandle plugin, Class<E> eventClass, FunctionalListener<E> listener,  Object... context);
-
-	<E extends Event> void registerFunctionalListener(PluginHandle plugin, Class<E> eventClass, FunctionalListener<E> listener, boolean ignoreCancelled, EventPriority priority);
-
-	<E extends Event> void registerFunctionalListener(PluginHandle plugin, Class<E> eventClass, FunctionalListener<E> listener, boolean ignoreCancelled, EventPriority priority, Object... context);	
-
-	void removeEvents(PluginHandle handle);
-	
-	void callEvent(Event event);
 	
 	/**
 	 * Returns a set of all features supported by this PluginManager

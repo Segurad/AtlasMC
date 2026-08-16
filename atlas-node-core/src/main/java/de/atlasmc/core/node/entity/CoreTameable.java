@@ -45,11 +45,16 @@ public class CoreTameable extends CoreAgeableMob implements Tameable {
 	public boolean isSitting() {
 		return (metaContainer.getData(META_TAMEABLE_FLAGS) & FLAG_IS_SITTING) == FLAG_IS_SITTING;
 	}
+	
+	protected void setTameableFlag(int flag, boolean set) {
+		MetaData<Byte> data = metaContainer.get(META_TAMEABLE_FLAGS);
+		var value = (byte) (set ? data.getData() | flag : data.getData() & ~flag);
+		metaContainer.setData(META_TAMEABLE_FLAGS, value);
+	}
 
 	@Override
 	public void setSitting(boolean sitting) {
-		MetaData<Byte> data = metaContainer.get(META_TAMEABLE_FLAGS);
-		data.setData((byte) (sitting ? data.getData() | FLAG_IS_SITTING : data.getData() & ~FLAG_IS_SITTING));
+		setTameableFlag(FLAG_IS_SITTING, sitting);
 	}
 
 	@Override
@@ -59,8 +64,7 @@ public class CoreTameable extends CoreAgeableMob implements Tameable {
 
 	@Override
 	public void setTamed(boolean tamed) {
-		MetaData<Byte> data = metaContainer.get(META_TAMEABLE_FLAGS);
-		data.setData((byte) (tamed ? data.getData() | FLAG_IS_TAMED : data.getData() & ~FLAG_IS_TAMED));
+		setTameableFlag(FLAG_IS_TAMED, tamed);
 	}
 
 	@Override
@@ -70,7 +74,7 @@ public class CoreTameable extends CoreAgeableMob implements Tameable {
 
 	@Override
 	public void setOwner(UUID owner) {
-		metaContainer.get(META_OWNER).setData(owner);
+		metaContainer.setData(META_OWNER, owner);
 	}
 
 }

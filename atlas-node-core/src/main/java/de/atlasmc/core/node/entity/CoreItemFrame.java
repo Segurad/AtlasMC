@@ -3,7 +3,6 @@ package de.atlasmc.core.node.entity;
 import de.atlasmc.node.SoundCategory;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.ItemFrame;
-import de.atlasmc.node.entity.metadata.MetaData;
 import de.atlasmc.node.entity.metadata.MetaDataField;
 import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.ItemStack;
@@ -29,8 +28,8 @@ public class CoreItemFrame extends CoreHanging implements ItemFrame {
 	@Override
 	protected void initMetaContainer() {
 		super.initMetaContainer();
-		metaContainer.set(new MetaData<>(META_FRAME_ITEM));
-		metaContainer.set(new MetaData<>(META_FRAME_ROTATION));
+		metaContainer.set(META_FRAME_ITEM);
+		metaContainer.set(META_FRAME_ROTATION);
 	}
 	
 	@Override
@@ -45,9 +44,7 @@ public class CoreItemFrame extends CoreHanging implements ItemFrame {
 
 	@Override
 	public void setItemStack(ItemStack item) {
-		MetaData<ItemStack> data =metaContainer.get(META_FRAME_ITEM);
-		data.setData(item);
-		data.setChanged(true);
+		metaContainer.setData(META_FRAME_ITEM, item);
 	}
 
 	@Override
@@ -66,7 +63,7 @@ public class CoreItemFrame extends CoreHanging implements ItemFrame {
 
 	@Override
 	public void setRotation(Rotation rotation) {
-		metaContainer.get(META_FRAME_ROTATION).setData(rotation);
+		metaContainer.setData(META_FRAME_ROTATION, rotation);
 	}
 
 	@Override
