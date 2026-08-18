@@ -88,7 +88,7 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<LoginH
 			Protocol configuration = adapter.getConfigurationProtocol();
 			var futurePlayer = handler.getPlayer();
 			futurePlayer.setListener((future) -> {
-				PlayerConnection playerCon = new CorePlayerConnection(future.resultNow(), con, adapter);
+				PlayerConnection playerCon = new CorePlayerConnection(future.resultNow(), con, adapter, handler.getCookieManager());
 				con.setProtocol(configuration);
 				con.getInboundListeners().addFirst("default", configuration.createDefaultPacketListenerServerbound(playerCon));
 			});
@@ -97,7 +97,8 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<LoginH
 			// TODO handle plugin response
 		}, true);
 		initHandler(ServerboundCookieResponse.class, (handler, packet) -> {
-			// TODO handle cookie response
+			var manager = handler.getCookieManager();
+			manager.handleCookieResponse(packet.key, packet.payload);
 		}, true);
 	}
 	

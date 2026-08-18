@@ -29,6 +29,10 @@ import de.atlasmc.node.io.protocol.PacketProtocol;
 import de.atlasmc.node.io.protocol.PlayerConnection;
 import de.atlasmc.node.io.protocol.PlayerSettings;
 import de.atlasmc.node.io.protocol.ProtocolAdapter;
+import de.atlasmc.node.io.protocol.common.AbstractPacketCookieData;
+import de.atlasmc.node.io.protocol.common.AbstractPacketCookieRequest;
+import de.atlasmc.node.io.protocol.cookie.CookieClient;
+import de.atlasmc.node.io.protocol.cookie.CookieManager;
 import de.atlasmc.node.io.protocol.play.PacketOutDisconnect;
 import de.atlasmc.node.io.protocol.play.PacketOutKeepAlive;
 import de.atlasmc.node.io.protocol.play.PacketOutRecipeBookSettings;
@@ -47,12 +51,13 @@ import de.atlasmc.util.enums.EnumUtil;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 
-public class CorePlayerConnection implements PlayerConnection {
+public class CorePlayerConnection implements PlayerConnection, CookieClient {
 	
 	private Player player;
 	private final NodePlayer aplayer;
 	private final ConnectionHandler connection;
 	private InternalServer server;
+	private final CookieManager cookieManager;
 	private final PluginChannelManager pluginChannelManager;
 	private final ProtocolAdapter protocol;
 	private volatile boolean waitingForProtocolChange;
@@ -92,18 +97,45 @@ public class CorePlayerConnection implements PlayerConnection {
 	private List<Recipe> recipesAvailable;
 	
 	
-	public CorePlayerConnection(AtlasPlayer player, ConnectionHandler connection, ProtocolAdapter protocol) {
+	public CorePlayerConnection(AtlasPlayer player, ConnectionHandler connection, ProtocolAdapter protocol, CookieManager cookies) {
+		this.connection = Objects.requireNonNull(connection, "connection");
+		this.protocol = Objects.requireNonNull(protocol, "protocol");
 		this.aplayer = new CoreNodePlayer(this, player);
-		this.connection = Objects.requireNonNull(connection);
 		this.settings = new PlayerSettings();
-		this.protocol = Objects.requireNonNull(protocol);
 		this.pluginChannelManager = new CorePlayerPluginChannelManager(this);
+		this.cookieManager = Objects.requireNonNull(cookies, "cookies");
+		cookies.setClient(this);
 		var values = EnumUtil.getValues(BookType.class);
 		CoreRecipeBook[] recipeBooks = new CoreRecipeBook[values.size()];
 		int index = 0;
 		for (BookType type : values)
 			recipeBooks[index++] = new CoreRecipeBook(type);
 		this.recipeBooks = List.of(recipeBooks);
+	}
+	
+	@Override
+	public void updateCookie(NamespacedKey key, ByteBuf payload) {
+		AbstractPacketCookieData packet;
+		if (isInConfiguration()) {
+			packet = new de.atlasmc.node.io.protocol.configuration.ClientboundStoreCookie();
+		} else {
+			packet = new de.atlasmc.node.io.protocol.play.ClientboundStoreCookie();
+		}
+		packet.key = key;
+		packet.payload = payload;
+		connection.sendPacket(packet);
+	}
+	
+	@Override
+	public void requestCookie(NamespacedKey key) {
+		AbstractPacketCookieRequest packet;
+		if (isInConfiguration()) {
+			packet = new de.atlasmc.node.io.protocol.configuration.ClientboundCookieRequest();
+		} else {
+			packet = new de.atlasmc.node.io.protocol.play.PacketOutCookieRequest();
+		}
+		packet.key = key;
+		connection.sendPacket(packet);
 	}
 	
 	@Override
@@ -339,6 +371,11 @@ public class CorePlayerConnection implements PlayerConnection {
 	@Override
 	public PluginChannelManager getPluginChannelManager() {
 		return pluginChannelManager;
+	}
+	
+	@Override
+	public CookieManager getCookieManager() {
+		return cookieManager;
 	}
 
 	@Override

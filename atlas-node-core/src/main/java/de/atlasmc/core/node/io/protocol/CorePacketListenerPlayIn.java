@@ -727,8 +727,9 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			// TODO handle in command
 		});
 		initHandler(PacketInCookieResponse.class, (con, packet) -> {
-			// TODO handle cookie response
-		});
+			var manager = con.getCookieManager();
+			manager.handleCookieResponse(packet.key, packet.payload);
+		}, true);
 		initHandler(PacketInDebugSampleSubscription.class, (con, packet) -> {
 			// TODO handle debug sample subscription
 		});

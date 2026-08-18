@@ -9,28 +9,35 @@ import java.util.UUID;
 import javax.crypto.SecretKey;
 
 import de.atlasmc.Atlas;
+import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.core.node.io.protocol.cookie.CoreCookieManager;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.io.ProtocolException;
 import de.atlasmc.io.connection.ServerSocketConnectionHandler;
 import de.atlasmc.network.player.AtlasPlayer;
 import de.atlasmc.node.event.socket.AsyncPlayerLoginAttemptEvent;
 import de.atlasmc.node.io.protocol.LoginHandler;
+import de.atlasmc.node.io.protocol.cookie.CookieClient;
+import de.atlasmc.node.io.protocol.cookie.CookieManager;
 import de.atlasmc.node.io.protocol.handshake.HandshakeData;
+import de.atlasmc.node.io.protocol.login.ClientboundCookieRequest;
 import de.atlasmc.node.io.protocol.login.ClientboundDisconnect;
 import de.atlasmc.node.io.protocol.login.ClientboundEncryptionRequest;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
 import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.util.mojang.PlayerProfile;
+import io.netty.buffer.ByteBuf;
 
-public class CoreLoginHandler implements LoginHandler {
+public class CoreLoginHandler implements LoginHandler, CookieClient {
 	
 	static final String SERVER_ID = "AtlasMC";
 	private static final int VERIFY_TOKEN_LENGTH = 32;
 	
 	private final ServerSocketConnectionHandler connection;
 	private final HandshakeData handshakeData;
+	private final CookieManager cookieManager;
 	private volatile String name;
 	private volatile UUID uuid;
 	private volatile long loginTime;
@@ -43,8 +50,9 @@ public class CoreLoginHandler implements LoginHandler {
 	private volatile boolean authenticated;
 	
 	public CoreLoginHandler(ServerSocketConnectionHandler connection, HandshakeData handshake) {
-		this.connection = Objects.requireNonNull(connection);
-		this.handshakeData = Objects.requireNonNull(handshake);
+		this.connection = Objects.requireNonNull(connection, "connection");
+		this.handshakeData = Objects.requireNonNull(handshake, "handshake");
+		this.cookieManager = new CoreCookieManager(this);
 		this.connection.setExceptionHandler((con, e) -> {
 			disconnect(ChatUtil.toChat(e.getMessage()));
 			con.getLogger().error("Error in login process: " + CoreLoginHandler.this, e);
@@ -213,6 +221,23 @@ public class CoreLoginHandler implements LoginHandler {
 	@Override
 	public boolean isStarted() {
 		return name != null;
+	}
+
+	@Override
+	public void requestCookie(NamespacedKey key) {
+		var packet = new ClientboundCookieRequest();
+		packet.key = key;
+		connection.sendPacket(packet);
+	}
+
+	@Override
+	public void updateCookie(NamespacedKey key, ByteBuf payload) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public CookieManager getCookieManager() {
+		return cookieManager;
 	}
 
 }

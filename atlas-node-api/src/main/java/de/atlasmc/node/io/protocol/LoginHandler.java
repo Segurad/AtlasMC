@@ -7,6 +7,7 @@ import javax.crypto.SecretKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.io.connection.ServerSocketConnectionHandler;
 import de.atlasmc.network.player.AtlasPlayer;
+import de.atlasmc.node.io.protocol.cookie.CookieManager;
 import de.atlasmc.node.io.protocol.handshake.HandshakeData;
 import de.atlasmc.node.io.socket.NodeSocket;
 import de.atlasmc.util.annotation.NotNull;
@@ -15,6 +16,9 @@ import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.util.mojang.PlayerProfile;
 
 public interface LoginHandler {
+	
+	@NotNull
+	CookieManager getCookieManager();
 	
 	/**
 	 * Returns the time stamp the login packet was received

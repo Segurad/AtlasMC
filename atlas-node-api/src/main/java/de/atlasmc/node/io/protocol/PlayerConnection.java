@@ -18,6 +18,7 @@ import de.atlasmc.node.event.player.PlayerHeldItemChangeEvent;
 import de.atlasmc.node.event.player.PlayerMoveEvent;
 import de.atlasmc.node.event.player.PlayerToggleSneakEvent;
 import de.atlasmc.node.event.player.PlayerToggleSprintEvent;
+import de.atlasmc.node.io.protocol.cookie.CookieManager;
 import de.atlasmc.node.io.socket.NodeSocket;
 import de.atlasmc.node.recipe.BookType;
 import de.atlasmc.node.recipe.Recipe;
@@ -305,5 +306,8 @@ public interface PlayerConnection extends Messageable {
 	 * Changes the protocol to the new protocol
 	 */
 	void protocolChangeAcknowledged();
+
+	@NotNull
+	CookieManager getCookieManager();
 	
 }
