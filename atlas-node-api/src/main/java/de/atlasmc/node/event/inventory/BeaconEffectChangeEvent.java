@@ -3,6 +3,7 @@ package de.atlasmc.node.event.inventory;
 import de.atlasmc.event.Cancellable;
 import de.atlasmc.node.event.ServerHandlerList;
 import de.atlasmc.node.inventory.BeaconInventory;
+import de.atlasmc.node.inventory.Inventory;
 import de.atlasmc.node.inventory.InventoryType;
 import de.atlasmc.node.inventory.InventoryView;
 import de.atlasmc.node.potion.PotionEffectType;
@@ -15,9 +16,10 @@ public class BeaconEffectChangeEvent extends InventoryEvent implements Cancellab
 	private PotionEffectType newSecondary;
 	private boolean cancelled;
 	
-	public BeaconEffectChangeEvent(InventoryView view, PotionEffectType newPrimary, PotionEffectType newSecondary) {
-		super(view);
-		if (view.getType() != InventoryType.BEACON) throw new IllegalArgumentException("Inventory must have the Type BEACON: " + view.getType());
+	public BeaconEffectChangeEvent(InventoryView view, Inventory inv, PotionEffectType newPrimary, PotionEffectType newSecondary) {
+		super(view, inv);
+		if (view.getType() != InventoryType.BEACON) 
+			throw new IllegalArgumentException("Inventory must have the Type BEACON: " + view.getType());
 		this.newPrimary = newPrimary;
 		this.newSecondary = newSecondary;
 	}

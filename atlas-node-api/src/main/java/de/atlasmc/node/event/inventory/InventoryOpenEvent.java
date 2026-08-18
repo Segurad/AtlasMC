@@ -10,12 +10,10 @@ public class InventoryOpenEvent extends InventoryEvent implements Cancellable {
 
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	private boolean cancelled;
-	private Inventory inv;
 
 	public InventoryOpenEvent(InventoryView view, Inventory inv) {
-		super(view);
+		super(view, inv);
 		cancelled = false;
-		this.inv = inv;
 	}
 
 	@Override
@@ -26,11 +24,6 @@ public class InventoryOpenEvent extends InventoryEvent implements Cancellable {
 	@Override
 	public boolean isCancelled() {
 		return cancelled;
-	}
-
-	@Override
-	public Inventory getInventory() {
-		return inv;
 	}
 	
 	@Override

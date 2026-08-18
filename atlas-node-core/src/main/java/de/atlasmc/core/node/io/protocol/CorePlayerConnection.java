@@ -18,6 +18,7 @@ import de.atlasmc.network.player.AtlasPlayer;
 import de.atlasmc.node.NodePlayer;
 import de.atlasmc.node.Location;
 import de.atlasmc.node.entity.Player;
+import de.atlasmc.node.event.player.AsyncPlayerTickEndEvent;
 import de.atlasmc.node.event.player.PlayerAnimationEvent;
 import de.atlasmc.node.event.player.PlayerDiggingEvent;
 import de.atlasmc.node.event.player.PlayerHeldItemChangeEvent;
@@ -48,6 +49,7 @@ import de.atlasmc.node.server.InternalServer;
 import de.atlasmc.plugin.channel.PluginChannelManager;
 import de.atlasmc.util.annotation.ThreadSafe;
 import de.atlasmc.util.enums.EnumUtil;
+import io.netty.buffer.ByteBuf;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 
@@ -86,6 +88,7 @@ public class CorePlayerConnection implements PlayerConnection, CookieClient {
 	private PlayerHeldItemChangeEvent eventHeldItemChange;
 	private PlayerToggleSneakEvent eventSneak;
 	private PlayerToggleSprintEvent eventSprint;
+	private AsyncPlayerTickEndEvent eventTickEnd;
 	
 	// Keep Alive
 	private long lastKeepAlive; // the Time the last KeepAlive has been send or received
@@ -180,6 +183,7 @@ public class CorePlayerConnection implements PlayerConnection, CookieClient {
 		eventHeldItemChange = new PlayerHeldItemChangeEvent(player, 0);
 		eventSneak = new PlayerToggleSneakEvent(player, false);
 		eventSprint = new PlayerToggleSprintEvent(player, false);
+		eventTickEnd = new AsyncPlayerTickEndEvent(player);
 	}
 
 	@Override
@@ -437,6 +441,11 @@ public class CorePlayerConnection implements PlayerConnection, CookieClient {
 	@Override
 	public PlayerMoveEvent getEventMove() {
 		return eventMove;
+	}
+	
+	@Override
+	public AsyncPlayerTickEndEvent getEventTickEnd() {
+		return eventTickEnd;
 	}
 
 	@Override

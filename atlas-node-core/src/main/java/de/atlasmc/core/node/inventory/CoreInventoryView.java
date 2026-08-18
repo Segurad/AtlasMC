@@ -1,5 +1,7 @@
 package de.atlasmc.core.node.inventory;
 
+import java.util.Objects;
+
 import de.atlasmc.chat.Chat;
 import de.atlasmc.node.entity.Player;
 import de.atlasmc.node.inventory.Inventory;
@@ -16,8 +18,8 @@ public class CoreInventoryView implements InventoryView {
 	private int viewID;
 	
 	public CoreInventoryView(Player player, Inventory bottom, Inventory top, int viewID) {
-		this.player = player;
-		this.bottom = bottom;
+		this.player = Objects.requireNonNull(player, "player");
+		this.bottom = Objects.requireNonNull(bottom, "bottom");
 		this.top = top;
 		this.viewID = viewID;
 	}
@@ -210,11 +212,19 @@ public class CoreInventoryView implements InventoryView {
 	}
 	
 	@Override
+	public boolean isValidSlot(int rawSlot) {
+		if (rawSlot == -999 || rawSlot == -1) {
+			return true;
+		}
+		return rawSlot >= 0 && rawSlot < countSlots();
+	}
+	
+	@Override
 	public Inventory getInventory(int rawSlot) {
 		if (rawSlot == -999 || rawSlot == -1) {
 			return null;
 		}
-		if (rawSlot < 0 || rawSlot > countSlots()) 
+		if (rawSlot < 0 || rawSlot >= countSlots()) 
 			throw new IllegalArgumentException("Unknown Slot: " + rawSlot);
 		if (rawSlot < top.getSize()) 
 			return top;

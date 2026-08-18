@@ -19,6 +19,7 @@ import de.atlasmc.node.event.block.SignChangeEvent;
 import de.atlasmc.node.event.inventory.ClickType;
 import de.atlasmc.node.event.inventory.InventoryAction;
 import de.atlasmc.node.event.inventory.InventoryButtonType;
+import de.atlasmc.node.event.inventory.InventoryChangeSlotStateEvent;
 import de.atlasmc.node.event.inventory.InventoryClickButtonEvent;
 import de.atlasmc.node.event.inventory.InventoryClickEvent;
 import de.atlasmc.node.event.inventory.InventoryCreativeClickEvent;
@@ -31,9 +32,11 @@ import de.atlasmc.node.event.player.PlayerAnimationEvent;
 import de.atlasmc.node.event.player.PlayerChangeDisplayedSkinPartsEvent;
 import de.atlasmc.node.event.player.PlayerChatSettingsEvent;
 import de.atlasmc.node.event.player.PlayerDropItemEvent;
+import de.atlasmc.node.event.player.PlayerEditBookEvent;
 import de.atlasmc.node.event.player.PlayerHeldItemChangeEvent;
 import de.atlasmc.node.event.player.PlayerInteractEvent;
 import de.atlasmc.node.event.player.PlayerLeaveBedEvent;
+import de.atlasmc.node.event.player.PlayerLoadedEvent;
 import de.atlasmc.node.event.player.PlayerLocaleChangeEvent;
 import de.atlasmc.node.event.player.PlayerMainHandChangeEvent;
 import de.atlasmc.node.event.player.PlayerMoveEvent;
@@ -47,6 +50,7 @@ import de.atlasmc.node.event.player.PlayerRespawnEvent;
 import de.atlasmc.node.event.player.PlayerSetDisplayRecipeEvent;
 import de.atlasmc.node.event.player.PlayerSetRecipeBookStateEvent;
 import de.atlasmc.node.event.player.PlayerSpectateEvent;
+import de.atlasmc.node.event.player.PlayerStatRequestEvent;
 import de.atlasmc.node.event.player.PlayerSwapHandItemsEvent;
 import de.atlasmc.node.event.player.PlayerToggleFlightEvent;
 import de.atlasmc.node.event.player.PlayerToggleSneakEvent;
@@ -56,7 +60,6 @@ import de.atlasmc.node.event.player.PlayerUpdateCommandBlockMinecartEvent;
 import de.atlasmc.node.event.player.PlayerViewDistanceChangeEvent;
 import de.atlasmc.node.inventory.EquipmentSlot;
 import de.atlasmc.node.inventory.Inventory;
-import de.atlasmc.node.inventory.InventoryType;
 import de.atlasmc.node.inventory.InventoryView;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.inventory.ItemType;
@@ -128,7 +131,6 @@ import de.atlasmc.node.io.protocol.play.PacketInUseItem;
 import de.atlasmc.node.io.protocol.play.PacketInUseItemOn;
 import de.atlasmc.node.io.protocol.play.PacketPlay;
 import de.atlasmc.node.io.protocol.play.PacketPlayIn;
-import de.atlasmc.node.io.protocol.play.PacketInClientCommand.StatusAction;
 import de.atlasmc.node.io.protocol.play.PacketInSeenAdvancements.Action;
 import de.atlasmc.node.recipe.BookType;
 import de.atlasmc.node.server.InternalServer;
@@ -163,8 +165,15 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			HandlerList.callEvent(new AsyncPlayerChatEvent(true, con.getPlayer(), packet.message));
 		}, true);
 		initHandler(PacketInClientCommand.class, (con, packet) -> {
-			if (packet.action == StatusAction.RESPAWN) {
+			switch (packet.action) {
+			case RESPAWN:
 				HandlerList.callEvent(new PlayerRespawnEvent(con.getPlayer()));
+				break;
+			case STATS:
+				HandlerList.callEvent(new PlayerStatRequestEvent(con.getPlayer()));
+				break;
+			default:
+				throw new ProtocolException("Unknown client command: " + packet.action);
 			}
 		});
 		initHandler(ServerboundClientInformation.class, (con, packet) -> {
@@ -211,13 +220,13 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			// TODO handle packet
 		});
 		initHandler(PacketInClickContainerButton.class, (con, packet) -> {
-			InternalServer s = con.getLocalSever();
-			if (s == null) 
-				return;
 			InventoryView view = con.getPlayer().getOpenInventory();
-			InventoryButtonType type = null;
+			if (view.getViewID() != packet.windowID)
+				return; // old packet for other view
+			InventoryButtonType type;
 			int id = packet.buttonID;
-			if (view.getType() == InventoryType.ENCHANTING) {
+			switch (view.getType()) {
+			case ENCHANTING:
 				type = switch (id) {
 				case 0 -> InventoryButtonType.ENCHANTING_TOP_ENCHANTMENT;
 				case 1 -> InventoryButtonType.ENCHANTING_MIDDLE_ENCHANTMENT; 
@@ -226,7 +235,8 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 					throw new ProtocolException("Unknown button id for Enchanting Inventory: " + id);
 				};
 				id = -1;
-			} else if (view.getType() == InventoryType.LECTERN) {
+				break;
+			case LECTERN:
 				type = switch (id) {
 				case 1 -> InventoryButtonType.LECTERN_PREVIOUS_PAGE;
 				case 2 -> InventoryButtonType.LECTERN_NEXT_PAGE;
@@ -234,22 +244,26 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				default -> InventoryButtonType.LECTERN_OPEN_PAGE_NUMBER;
 				};
 				id = id < 100 ? -1 : id - 100;
-			} else if (view.getType() == InventoryType.STONECUTTER) {
+				break;
+			case STONECUTTER:
 				type = InventoryButtonType.STONECUTTER_RECIPE_NUMBER;
-			} else if (view.getType() == InventoryType.LOOM) {
+				break;
+			case LOOM:
 				type = InventoryButtonType.LOOM_RECIPE_NUMBER;
+				break;
+			default:
+				throw new ProtocolException("Unhandled inventory type for button: " + view.getType());
 			}
 			HandlerList.callEvent(new InventoryClickButtonEvent(view, type, id));
 		});
 		initHandler(PacketInClickContainer.class, (con, packet) -> {
-			InternalServer s = con.getLocalSever();
-			if (s == null) 
-				return;
+			final Player player = con.getPlayer();
+			final InventoryView view = player.getOpenInventory();
+			if (view.getViewID() != packet.windowID)
+				return; // old packet for other view
 			int key = -1;
 			final int slot = packet.slot;
 			final int button = packet.button;
-			final Player player = con.getPlayer();
-			final InventoryView view = player.getOpenInventory();
 			int stateID = packet.stateID;
 			Inventory clickedInv = view.getInventory(slot);
 			if (clickedInv != null && stateID != clickedInv.getStateID()) {
@@ -422,7 +436,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			channel.handleMessage(packet.data);
 		});
 		initHandler(PacketInEditBook.class, (con, packet) -> {
-			// TODO handle packet
+			HandlerList.callEvent(new PlayerEditBookEvent(con.getPlayer(), packet.slot, packet.title, packet.pages));
 		});
 		initHandler(PacketInInteract.class, (con, packet) -> {
 			// TODO handle packet
@@ -714,14 +728,20 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 			con.setChunksPerTick(packet.chunksPerTick);
 			// TODO handle chunks batch received
 		});
-		initHandler(PacketInAcknowledgeConfiguration.class, (con, packet) -> {
+		initHandler(PacketInAcknowledgeConfiguration.class, (con, _) -> {
 			con.protocolChangeAcknowledged();
 		});
 		initHandler(PacketInPingRequest.class, (con, packet) -> {
 			// TODO handle ping request
 		});
 		initHandler(PacketInChangeContaierSlotState.class, (con, packet) -> {
-			// TODO handle in change container slot state
+			var p = con.getPlayer();
+			var view = p.getOpenInventory();
+			if (view.getViewID() != packet.windowID)
+				return; // packet for older view
+			var inv = view.getInventory(packet.slot);
+			var slot = view.convertSlot(inv, packet.slot);
+			HandlerList.callEvent(new InventoryChangeSlotStateEvent(view, inv, slot, packet.enabled));
 		});
 		initHandler(PacketInChatCommand.class, (con, packet) -> {
 			// TODO handle in command
@@ -736,14 +756,14 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 		initHandler(PacketInBundleItemSelected.class, (con, packet) -> {
 			// TODO handle bundle item selected
 		});
-		initHandler(PacketInClientTickEnd.class, (con, packet) -> {
-			// TODO handle client tick end
-		});
+		initHandler(PacketInClientTickEnd.class, (con, _) -> {
+			HandlerList.callEvent(con.getEventTickEnd());
+		}, true);
 		initHandler(PacketInPickItemFromEntity.class, (con, packet) -> {
 			// TODO handle pick item from entity
 		});
-		initHandler(PacketInPlayerLoaded.class, (con, packet) -> {
-			// TODO handle player loaded
+		initHandler(PacketInPlayerLoaded.class, (con, _) -> {
+			HandlerList.callEvent(new PlayerLoadedEvent(con.getPlayer()));
 		});
 	}
 

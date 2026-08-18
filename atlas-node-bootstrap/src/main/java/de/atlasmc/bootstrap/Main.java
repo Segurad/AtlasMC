@@ -69,8 +69,9 @@ public class Main {
 				"\t / / ______/\\ \\ \\    \\::\\ \\    \\:\\/___/\\ \\:.\\ \\  \\ \\  /____\\:\\\n" + 
 				"\t/ / /_     __\\ \\_\\    \\__\\/     \\_____\\/  \\__\\/\\__\\/  \\_____\\/\n" + 
 				"\t\\_\\___\\   /____/_/ by Segurad\n");
-		File workDir = null;
 		Map<String, String> arguments = getJVMArgs(args);
+		// setup working directory
+		File workDir = null;
 		String workDirPath = arguments.get("atlas.workDir");
 		boolean altWorkDir = false;
 		if (workDirPath != null) {
@@ -83,14 +84,15 @@ public class Main {
 			workDir.mkdirs();
 		System.setProperty("atlas.workDir", workDir.getAbsolutePath());
 		AtlasBuilder.initWorkDir(workDir);
+		
 		Logging.init(new CoreLogHandler());
-		ThreadWatchdog.init();
 		Log log  = Logging.getLogger("Atlas", "Atlas");
 		log.sendToConsole(true);
 		log.info("VM-Name: {}", System.getProperty("java.vm.name"));
 		log.info("VM-Verions: {}", System.getProperty("java.vm.version"));
 		log.info("VM-Vendor: {}", System.getProperty("java.vendor"));
 		log.info("OS-Name: {}", System.getProperty("os.name"));
+		ThreadWatchdog.init();
 		Caching.init(new CoreCacheHandler());
 		if (altWorkDir)
 			log.info("Using alternativ work dir: {}", workDirPath);

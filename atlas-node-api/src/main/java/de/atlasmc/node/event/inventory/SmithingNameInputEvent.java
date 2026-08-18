@@ -10,7 +10,7 @@ public class SmithingNameInputEvent extends InventoryEvent {
 	private final String name;
 	
 	public SmithingNameInputEvent(InventoryView view, String name) {
-		super(view);
+		super(view, view.getTopInventory());
 		this.name = name;
 	}
 	

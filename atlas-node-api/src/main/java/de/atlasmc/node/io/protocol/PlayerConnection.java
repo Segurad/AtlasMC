@@ -13,6 +13,7 @@ import de.atlasmc.network.AtlasNode;
 import de.atlasmc.node.NodePlayer;
 import de.atlasmc.node.Location;
 import de.atlasmc.node.entity.Player;
+import de.atlasmc.node.event.player.AsyncPlayerTickEndEvent;
 import de.atlasmc.node.event.player.PlayerAnimationEvent;
 import de.atlasmc.node.event.player.PlayerHeldItemChangeEvent;
 import de.atlasmc.node.event.player.PlayerMoveEvent;
@@ -250,6 +251,8 @@ public interface PlayerConnection extends Messageable {
 	PlayerToggleSprintEvent getEventSprint();
 
 	PlayerMoveEvent getEventMove();
+	
+	AsyncPlayerTickEndEvent getEventTickEnd();
 
 	void confirmKeepAlive(long lastResponseTime);
 	

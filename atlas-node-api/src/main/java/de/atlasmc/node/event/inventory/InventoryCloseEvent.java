@@ -12,7 +12,7 @@ public class InventoryCloseEvent extends InventoryEvent {
 	protected static final ServerHandlerList handlers = new ServerHandlerList();
 	
 	public InventoryCloseEvent(InventoryView view) {
-		super(view);
+		super(view, view.getTopInventory());
 	}
 
 	public Player getPlayer() {

@@ -19,7 +19,7 @@ public class InventoryClickEvent extends InventoryInteractEvent {
 	}
 	
 	public InventoryClickEvent(InventoryView view, int rawSlot, ClickType click, InventoryAction action, int key) {
-		super(view);
+		super(view, view.getInventory(rawSlot));
 		this.action = action;
 		this.click = click;
 		this.rawSlot = rawSlot;

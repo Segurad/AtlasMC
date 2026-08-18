@@ -5,7 +5,6 @@ import org.joml.Vector3d;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.tile.Dispenser;
-import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Projectile;
 import de.atlasmc.node.event.entity.ProjectileLounchEvent;
 import de.atlasmc.node.inventory.Inventory;

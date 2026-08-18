@@ -3,8 +3,10 @@ package de.atlasmc.node.event.inventory;
 import java.util.Map;
 
 import de.atlasmc.node.event.ServerHandlerList;
+import de.atlasmc.node.inventory.Inventory;
 import de.atlasmc.node.inventory.InventoryView;
 import de.atlasmc.node.inventory.ItemStack;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 
 public class InventoryDragEvent extends InventoryInteractEvent {
 
@@ -13,10 +15,10 @@ public class InventoryDragEvent extends InventoryInteractEvent {
 	private final ItemStack newCursor;
 	private final ItemStack oldCursor;
 	private final DragType dragType;
-	private final Map<Integer, ItemStack> slots;
+	private final Int2ObjectMap<ItemStack> slots;
 	
-	public InventoryDragEvent(InventoryView view, ItemStack newCursor, ItemStack oldCursor, boolean right, Map<Integer, ItemStack> slots) {
-		super(view);
+	public InventoryDragEvent(InventoryView view, Inventory inv, ItemStack newCursor, ItemStack oldCursor, boolean right, Int2ObjectMap<ItemStack> slots) {
+		super(view, inv);
 		this.newCursor = newCursor;
 		this.oldCursor = oldCursor;
 		this.slots = slots;

@@ -1,6 +1,7 @@
 package de.atlasmc.node.event.inventory;
 
 import de.atlasmc.node.event.ServerHandlerList;
+import de.atlasmc.node.inventory.Inventory;
 import de.atlasmc.node.inventory.InventoryView;
 import de.atlasmc.node.inventory.ItemStack;
 
@@ -10,8 +11,8 @@ public class PrepareSmithingEvent extends InventoryEvent {
 	
 	private ItemStack result;
 	
-	public PrepareSmithingEvent(InventoryView view, ItemStack result) {
-		super(view);
+	public PrepareSmithingEvent(InventoryView view, Inventory inv, ItemStack result) {
+		super(view, inv);
 		this.result = result;
 	}
 	

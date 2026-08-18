@@ -2,14 +2,15 @@ package de.atlasmc.node.event.inventory;
 
 import de.atlasmc.event.Cancellable;
 import de.atlasmc.node.entity.Player;
+import de.atlasmc.node.inventory.Inventory;
 import de.atlasmc.node.inventory.InventoryView;
 
 public abstract class InventoryInteractEvent extends InventoryEvent implements Cancellable {
 
 	private boolean cancelled;
 	
-	public InventoryInteractEvent(InventoryView view) {
-		super(view);
+	public InventoryInteractEvent(InventoryView view, Inventory inv) {
+		super(view, inv);
 		cancelled = false;
 	}
 	

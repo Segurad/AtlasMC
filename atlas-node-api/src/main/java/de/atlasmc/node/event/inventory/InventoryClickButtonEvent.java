@@ -1,5 +1,7 @@
 package de.atlasmc.node.event.inventory;
 
+import java.util.Objects;
+
 import de.atlasmc.node.event.ServerHandlerList;
 import de.atlasmc.node.inventory.InventoryView;
 
@@ -16,8 +18,8 @@ public class InventoryClickButtonEvent extends InventoryInteractEvent {
 	 * @param value a extra number like the page number if the type is {@link InventoryButtonType#LECTERN_OPEN_PAGE_NUMBER} or -1 if not necessary 
 	 */
 	public InventoryClickButtonEvent(InventoryView view, InventoryButtonType type, int value) {
-		super(view);
-		this.type = type;
+		super(view, view.getTopInventory());
+		this.type = Objects.requireNonNull(type, "type");
 		this.value = value;
 	}
 	

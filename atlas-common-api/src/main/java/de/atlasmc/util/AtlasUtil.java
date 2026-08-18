@@ -20,6 +20,8 @@ public class AtlasUtil {
 	 */
 	public static final UUID ZERO_UUID = new UUID(0, 0);
 	
+	public static final String[] EMPTY_STRING = {};
+	
 	private AtlasUtil() {}
 	
 	public static <A, B> BiConsumer<A, B> getSetVoid() {

@@ -13,7 +13,7 @@ public class SelectTradeEvent extends InventoryInteractEvent {
 	private final int tradeID;
 	
 	public SelectTradeEvent(InventoryView view, int tradeID, int oldTradeID) {
-		super(view);
+		super(view, view.getTopInventory());
 		this.tradeID = tradeID;
 		this.oldTradeID = oldTradeID;
 	}
