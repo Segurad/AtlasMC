@@ -1,11 +1,11 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaData;
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.entity.AbstractArrow;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.node.entity.metadata.MetaData;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.sound.EnumSound;
 import de.atlasmc.node.sound.Sound;
@@ -16,9 +16,9 @@ public abstract class CoreAbstractArrow extends CoreAbstractProjectile implement
 	FLAG_CRITICAL = 0x01;
 	
 	protected static final MetaDataField<Byte> 
-	META_ABSTRACT_ARROW_FLAGS = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, (byte) 0, MetaDataType.BYTE);
+	META_ABSTRACT_ARROW_FLAGS = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, (byte) 0, EntityMetaTypes.BYTE);
 	protected static final MetaDataField<Byte>
-	META_PIERCING_LEVEL = new MetaDataField<>(CoreEntity.LAST_META_INDEX+2, (byte) 0, MetaDataType.BYTE);
+	META_PIERCING_LEVEL = new MetaDataField<>(CoreEntity.LAST_META_INDEX+2, (byte) 0, EntityMetaTypes.BYTE);
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+2;
 	

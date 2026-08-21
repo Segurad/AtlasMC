@@ -1,8 +1,6 @@
-package de.atlasmc.node.entity.metadata;
+package de.atlasmc.io.metadata;
 
 import java.util.Objects;
-
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class MetaDataInfo<T>  {
 	

@@ -1,13 +1,13 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Painting;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CorePainting extends CoreHanging implements Painting {
 
-	protected static final MetaDataField<Motive> META_MOTIVE = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, Motive.KEBAB, MetaDataType.PAINTING_VARIANT);
+	protected static final MetaDataField<Motive> META_MOTIVE = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, Motive.KEBAB, EntityMetaTypes.PAINTING_VARIANT);
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+1;
 	

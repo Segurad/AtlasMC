@@ -2,16 +2,16 @@ package de.atlasmc.core.node.entity;
 
 import java.util.UUID;
 
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Item;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.ItemStack;
 
 public class CoreItem extends CoreEntity implements Item {
 
 	protected static final MetaDataField<ItemStack>
-	META_ITEM = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, null, MetaDataType.SLOT);
+	META_ITEM = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, null, EntityMetaTypes.SLOT);
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+1;
 	

@@ -1,17 +1,17 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.entity.Entity;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Guardian;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreGuardian extends CoreMob implements Guardian {
 
 	protected static final MetaDataField<Boolean>
-	META_RETRACTING_SPIKES = new MetaDataField<>(CoreMob.LAST_META_INDEX+1, false, MetaDataType.BOOLEAN);
+	META_RETRACTING_SPIKES = new MetaDataField<>(CoreMob.LAST_META_INDEX+1, false, EntityMetaTypes.BOOLEAN);
 	protected static final MetaDataField<Integer>
-	META_TARGET_EID = new MetaDataField<>(CoreMob.LAST_META_INDEX+2, 0, MetaDataType.VAR_INT);
+	META_TARGET_EID = new MetaDataField<>(CoreMob.LAST_META_INDEX+2, 0, EntityMetaTypes.VAR_INT);
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+2;
 	

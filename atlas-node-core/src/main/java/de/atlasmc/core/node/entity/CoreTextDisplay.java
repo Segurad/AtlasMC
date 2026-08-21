@@ -3,11 +3,11 @@ package de.atlasmc.core.node.entity;
 import de.atlasmc.Color;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.io.metadata.MetaData;
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.TextDisplay;
-import de.atlasmc.node.entity.metadata.MetaData;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreTextDisplay extends CoreDisplay implements TextDisplay {
 
@@ -18,11 +18,11 @@ public class CoreTextDisplay extends CoreDisplay implements TextDisplay {
 	FLAG_TEXT_ALIGN_LEFT = 0x08,
 	FLAG_TEXT_ALIGN_RIGHT = 0x10;
 	
-	protected static final MetaDataField<Chat> META_TEXT = new MetaDataField<>(CoreDisplay.LAST_META_INDEX+1, ChatUtil.EMPTY, MetaDataType.CHAT);
-	protected static final MetaDataField<Integer> META_LINE_WIDTH = new MetaDataField<>(CoreDisplay.LAST_META_INDEX+2, 200, MetaDataType.VAR_INT);
-	protected static final MetaDataField<Integer> META_BACKGROUND_COLOR = new MetaDataField<>(CoreDisplay.LAST_META_INDEX+3, 0x40000000, MetaDataType.VAR_INT);
-	protected static final MetaDataField<Byte> META_TEXT_OPACITY = new MetaDataField<>(CoreDisplay.LAST_META_INDEX+4, (byte) -1, MetaDataType.BYTE);
-	protected static final MetaDataField<Byte> META_TEXT_DISPLAY_FLAGS = new MetaDataField<>(CoreDisplay.LAST_META_INDEX+5, (byte) 0, MetaDataType.BYTE);
+	protected static final MetaDataField<Chat> META_TEXT = new MetaDataField<>(CoreDisplay.LAST_META_INDEX+1, ChatUtil.EMPTY, EntityMetaTypes.CHAT);
+	protected static final MetaDataField<Integer> META_LINE_WIDTH = new MetaDataField<>(CoreDisplay.LAST_META_INDEX+2, 200, EntityMetaTypes.VAR_INT);
+	protected static final MetaDataField<Integer> META_BACKGROUND_COLOR = new MetaDataField<>(CoreDisplay.LAST_META_INDEX+3, 0x40000000, EntityMetaTypes.VAR_INT);
+	protected static final MetaDataField<Byte> META_TEXT_OPACITY = new MetaDataField<>(CoreDisplay.LAST_META_INDEX+4, (byte) -1, EntityMetaTypes.BYTE);
+	protected static final MetaDataField<Byte> META_TEXT_DISPLAY_FLAGS = new MetaDataField<>(CoreDisplay.LAST_META_INDEX+5, (byte) 0, EntityMetaTypes.BYTE);
 	
 	protected static final int LAST_META_INDEX = CoreDisplay.LAST_META_INDEX+5;
 	

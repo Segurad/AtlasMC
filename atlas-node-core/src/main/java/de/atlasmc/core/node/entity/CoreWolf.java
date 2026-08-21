@@ -1,21 +1,22 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.DyeColor;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Wolf;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
+import de.atlasmc.util.enums.EnumUtil;
 
 public class CoreWolf extends CoreTameable implements Wolf {
 
 	protected static final MetaDataField<Boolean>
-	META_IS_BEGGING = new MetaDataField<>(CoreTameable.LAST_META_INDEX+1, false, MetaDataType.BOOLEAN);
-	protected static final MetaDataField<DyeColor>
-	META_COLAR_COLOR = new MetaDataField<>(CoreTameable.LAST_META_INDEX+2, DyeColor.RED, MetaDataType.getVarIntEnumType(DyeColor.class));
+	META_IS_BEGGING = new MetaDataField<>(CoreTameable.LAST_META_INDEX+1, false, EntityMetaTypes.BOOLEAN);
 	protected static final MetaDataField<Integer>
-	META_ANGER_TIME = new MetaDataField<>(CoreTameable.LAST_META_INDEX+3, 0, MetaDataType.VAR_INT);
+	META_COLAR_COLOR = new MetaDataField<>(CoreTameable.LAST_META_INDEX+2, DyeColor.RED.getID(), EntityMetaTypes.VAR_INT);
+	protected static final MetaDataField<Integer>
+	META_ANGER_TIME = new MetaDataField<>(CoreTameable.LAST_META_INDEX+3, 0, EntityMetaTypes.VAR_INT);
 	protected static final MetaDataField<WolfVariant>
-	META_WOLF_VARIANT = new MetaDataField<>(CoreTameable.LAST_META_INDEX+4, null, MetaDataType.WOLF_VARIANT);
+	META_WOLF_VARIANT = new MetaDataField<>(CoreTameable.LAST_META_INDEX+4, null, EntityMetaTypes.WOLF_VARIANT);
 	
 	protected static final int LAST_META_INDEX = CoreTameable.LAST_META_INDEX+4;
 	
@@ -51,14 +52,12 @@ public class CoreWolf extends CoreTameable implements Wolf {
 
 	@Override
 	public DyeColor getCollarColor() {
-		return metaContainer.getData(META_COLAR_COLOR);
+		return EnumUtil.getByID(DyeColor.class, metaContainer.getData(META_COLAR_COLOR));
 	}
 
 	@Override
 	public void setCollarColor(DyeColor color) {
-		if (color == null)
-			throw new IllegalArgumentException("Color can not be null!");
-		metaContainer.setData(META_COLAR_COLOR, color);
+		metaContainer.setData(META_COLAR_COLOR, color.getID());
 	}
 
 	@Override

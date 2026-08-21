@@ -1,8 +1,9 @@
-package de.atlasmc.node.entity.metadata.type;
+package de.atlasmc.node.io.metadata;
 
 import java.io.IOException;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.io.metadata.MetaDataType;
 import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.util.MathUtil;
 import de.atlasmc.util.codec.CodecContext;

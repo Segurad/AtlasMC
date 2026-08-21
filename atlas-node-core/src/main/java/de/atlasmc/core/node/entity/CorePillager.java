@@ -3,16 +3,16 @@ package de.atlasmc.core.node.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Pillager;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.ItemStack;
 
 public class CorePillager extends CoreRaider implements Pillager {
 
 	protected static final MetaDataField<Boolean>
-	META_IS_CHARGING = new MetaDataField<>(CoreRaider.LAST_META_INDEX+1, false, MetaDataType.BOOLEAN);
+	META_IS_CHARGING = new MetaDataField<>(CoreRaider.LAST_META_INDEX+1, false, EntityMetaTypes.BOOLEAN);
 	
 	protected static final int LAST_META_INDEX = CoreRaider.LAST_META_INDEX+1;
 	

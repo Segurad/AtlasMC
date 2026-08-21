@@ -1,20 +1,20 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.entity.AbstractMinecart;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreAbstractMinecart extends CoreVehicle implements AbstractMinecart {
 
 	protected static final MetaDataField<Integer>
-	META_CUSTOM_BLOCK_ID = new MetaDataField<>(CoreVehicle.LAST_META_INDEX+1, 0, MetaDataType.VAR_INT);
+	META_CUSTOM_BLOCK_ID = new MetaDataField<>(CoreVehicle.LAST_META_INDEX+1, 0, EntityMetaTypes.VAR_INT);
 	protected static final MetaDataField<Integer>
-	META_CUSTOM_BLOCK_Y = new MetaDataField<>(CoreVehicle.LAST_META_INDEX+2, 6, MetaDataType.VAR_INT);
+	META_CUSTOM_BLOCK_Y = new MetaDataField<>(CoreVehicle.LAST_META_INDEX+2, 6, EntityMetaTypes.VAR_INT);
 	protected static final MetaDataField<Boolean>
-	META_SHOW_CUSTOM_BLOCK = new MetaDataField<>(CoreVehicle.LAST_META_INDEX+3, false, MetaDataType.BOOLEAN);
+	META_SHOW_CUSTOM_BLOCK = new MetaDataField<>(CoreVehicle.LAST_META_INDEX+3, false, EntityMetaTypes.BOOLEAN);
 	
 	protected static final int LAST_META_INDEX = CoreVehicle.LAST_META_INDEX+3;
 	

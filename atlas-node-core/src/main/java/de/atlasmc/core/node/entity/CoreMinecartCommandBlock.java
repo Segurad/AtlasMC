@@ -2,18 +2,18 @@ package de.atlasmc.core.node.entity;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.MinecartCommandBlock;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.permission.Permission;
 
 public class CoreMinecartCommandBlock extends CoreAbstractMinecart implements MinecartCommandBlock {
 
 	protected static final MetaDataField<String>
-	META_COMMAND = new MetaDataField<>(CoreAbstractMinecart.LAST_META_INDEX+1, null, MetaDataType.STRING);
+	META_COMMAND = new MetaDataField<>(CoreAbstractMinecart.LAST_META_INDEX+1, null, EntityMetaTypes.STRING);
 	protected static final MetaDataField<Chat>
-	META_LAST_OUTPUT = new MetaDataField<>(CoreAbstractMinecart.LAST_META_INDEX+2, ChatUtil.EMPTY, MetaDataType.CHAT);
+	META_LAST_OUTPUT = new MetaDataField<>(CoreAbstractMinecart.LAST_META_INDEX+2, ChatUtil.EMPTY, EntityMetaTypes.CHAT);
 	
 	protected static final int LAST_META_INDEX = CoreAbstractMinecart.LAST_META_INDEX+2;
 	

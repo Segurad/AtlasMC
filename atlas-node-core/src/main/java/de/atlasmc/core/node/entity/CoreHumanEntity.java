@@ -2,16 +2,16 @@ package de.atlasmc.core.node.entity;
 
 import java.io.IOException;
 
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.nbt.NBTException;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.io.NBTObjectWriter;
 import de.atlasmc.nbt.tag.CompoundTag;
 import de.atlasmc.node.entity.Entity;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.HumanEntity;
 import de.atlasmc.node.entity.Player;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.ContainerFactory;
 import de.atlasmc.node.inventory.CraftingInventory;
 import de.atlasmc.node.inventory.InventoryType;
@@ -24,17 +24,17 @@ import de.atlasmc.util.codec.CodecContext;
 public class CoreHumanEntity extends CoreLivingEntity implements HumanEntity {
 	
 	protected static final MetaDataField<Float>
-	META_ADDITIONAL_HEARTS = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+1, 0.0f, MetaDataType.FLOAT);
+	META_ADDITIONAL_HEARTS = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+1, 0.0f, EntityMetaTypes.FLOAT);
 	protected static final MetaDataField<Integer>
-	META_SCORE = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+2, 0, MetaDataType.VAR_INT);
+	META_SCORE = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+2, 0, EntityMetaTypes.VAR_INT);
 	protected static final MetaDataField<Byte>
-	META_SKIN_SETTINGS = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+3, (byte) 0, MetaDataType.BYTE);
+	META_SKIN_SETTINGS = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+3, (byte) 0, EntityMetaTypes.BYTE);
 	protected static final MetaDataField<Byte>
-	META_MAIN_HAND = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+4, (byte) 1, MetaDataType.BYTE);
+	META_MAIN_HAND = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+4, (byte) 1, EntityMetaTypes.BYTE);
 	protected static final MetaDataField<CompoundTag>
-	META_SHOULDER_LEFT = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+5, null, MetaDataType.NBT_DATA);
+	META_SHOULDER_LEFT = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+5, null, EntityMetaTypes.NBT_DATA);
 	protected static final MetaDataField<CompoundTag>
-	META_SHOULDER_RIGHT = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+6, null, MetaDataType.NBT_DATA);
+	META_SHOULDER_RIGHT = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+6, null, EntityMetaTypes.NBT_DATA);
 	
 	protected static final int LAST_META_INDEX = CoreLivingEntity.LAST_META_INDEX+6;
 	

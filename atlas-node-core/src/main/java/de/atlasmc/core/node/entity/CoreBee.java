@@ -2,11 +2,11 @@ package de.atlasmc.core.node.entity;
 
 import org.joml.Vector3i;
 
+import de.atlasmc.io.metadata.MetaData;
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.entity.Bee;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.node.entity.metadata.MetaData;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreBee extends CoreAgeableMob implements Bee {
 
@@ -21,9 +21,9 @@ public class CoreBee extends CoreAgeableMob implements Bee {
 	 * 0x08 - has nectar<br>
 	 */
 	protected static final MetaDataField<Byte>
-	META_BEE_FLAGS = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, (byte) 0, MetaDataType.BYTE);
+	META_BEE_FLAGS = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, (byte) 0, EntityMetaTypes.BYTE);
 	protected static final MetaDataField<Integer>
-	META_BEE_ANGER_TIME = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+2, 0, MetaDataType.VAR_INT);
+	META_BEE_ANGER_TIME = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+2, 0, EntityMetaTypes.VAR_INT);
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+2;
 

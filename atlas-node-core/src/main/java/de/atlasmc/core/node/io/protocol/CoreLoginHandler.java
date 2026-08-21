@@ -2,11 +2,15 @@ package de.atlasmc.core.node.io.protocol;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
+import javax.crypto.Cipher;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 
 import de.atlasmc.Atlas;
 import de.atlasmc.NamespacedKey;
@@ -197,13 +201,24 @@ public class CoreLoginHandler implements LoginHandler, CookieClient {
 	public synchronized void enableEncryption(SecretKey key) {
 		if (encryptionFuture == null)
 			encryptionFuture = new CompletableFuture<>();
+		IvParameterSpec spec = new IvParameterSpec(key.getEncoded());
+		Cipher decription;
+		Cipher encription;
 		try {
-			connection.enableEncryption(key);
-			encryptionFuture.complete(true);
+			decription = Cipher.getInstance("AES/CFB8/NoPadding");
+			encription = Cipher.getInstance("AES/CFB8/NoPadding");
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+			throw new ProtocolException("Unable to find AES cipher!");
+		}
+		try {
+			decription.init(Cipher.DECRYPT_MODE, key, spec);
+			encription.init(Cipher.ENCRYPT_MODE, key, spec);
 		} catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
 			encryptionFuture.complete(false, e);
 			throw new ProtocolException("Failed to enable encryption!", e);
 		}
+		connection.enableEncryption(encription, decription);
+		encryptionFuture.complete(true);
 	}
 
 	@Override

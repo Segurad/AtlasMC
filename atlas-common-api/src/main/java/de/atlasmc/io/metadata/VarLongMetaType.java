@@ -1,4 +1,4 @@
-package de.atlasmc.node.entity.metadata.type;
+package de.atlasmc.io.metadata;
 
 import static de.atlasmc.io.PacketUtil.readVarLong;
 import static de.atlasmc.io.PacketUtil.writeVarLong;

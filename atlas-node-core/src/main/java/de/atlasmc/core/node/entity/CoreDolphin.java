@@ -2,20 +2,20 @@ package de.atlasmc.core.node.entity;
 
 import org.joml.Vector3i;
 
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.entity.Dolphin;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.util.MathUtil;
 
 public class CoreDolphin extends CoreMob implements Dolphin {
 
 	protected static final MetaDataField<Long>
-	META_TREASURE_POSITION = new MetaDataField<>(CoreMob.LAST_META_INDEX+1, 0L, MetaDataType.POSITION);
+	META_TREASURE_POSITION = new MetaDataField<>(CoreMob.LAST_META_INDEX+1, 0L, EntityMetaTypes.POSITION);
 	protected static final MetaDataField<Boolean>
-	META_HAS_FISH = new MetaDataField<>(CoreMob.LAST_META_INDEX+2, false, MetaDataType.BOOLEAN);
+	META_HAS_FISH = new MetaDataField<>(CoreMob.LAST_META_INDEX+2, false, EntityMetaTypes.BOOLEAN);
 	protected static final MetaDataField<Integer>
-	META_MOISTURE_LEVEL = new MetaDataField<>(CoreMob.LAST_META_INDEX+3, 2400, MetaDataType.VAR_INT);
+	META_MOISTURE_LEVEL = new MetaDataField<>(CoreMob.LAST_META_INDEX+3, 2400, EntityMetaTypes.VAR_INT);
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+3;
 	

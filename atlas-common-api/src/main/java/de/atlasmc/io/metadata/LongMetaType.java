@@ -1,4 +1,4 @@
-package de.atlasmc.node.entity.metadata.type;
+package de.atlasmc.io.metadata;
 
 import de.atlasmc.util.annotation.Singleton;
 import de.atlasmc.util.codec.CodecContext;

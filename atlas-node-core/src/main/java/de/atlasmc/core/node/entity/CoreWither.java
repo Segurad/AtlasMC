@@ -1,21 +1,21 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.entity.Entity;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Wither;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreWither extends CoreMob implements Wither {
 
 	protected static final MetaDataField<Integer>
-	META_TARGET_CENTER_HEAD = new MetaDataField<>(CoreMob.LAST_META_INDEX+1, 0, MetaDataType.VAR_INT);
+	META_TARGET_CENTER_HEAD = new MetaDataField<>(CoreMob.LAST_META_INDEX+1, 0, EntityMetaTypes.VAR_INT);
 	protected static final MetaDataField<Integer>
-	META_TARGET_LEFT_HEAD = new MetaDataField<>(CoreMob.LAST_META_INDEX+2, 0, MetaDataType.VAR_INT);
+	META_TARGET_LEFT_HEAD = new MetaDataField<>(CoreMob.LAST_META_INDEX+2, 0, EntityMetaTypes.VAR_INT);
 	protected static final MetaDataField<Integer>
-	META_TARGET_RIGHT_HEAD = new MetaDataField<>(CoreMob.LAST_META_INDEX+3, 0, MetaDataType.VAR_INT);
+	META_TARGET_RIGHT_HEAD = new MetaDataField<>(CoreMob.LAST_META_INDEX+3, 0, EntityMetaTypes.VAR_INT);
 	protected static final MetaDataField<Integer>
-	META_INVULNERABLE_TIME = new MetaDataField<>(CoreMob.LAST_META_INDEX + 4, 0, MetaDataType.VAR_INT);
+	META_INVULNERABLE_TIME = new MetaDataField<>(CoreMob.LAST_META_INDEX + 4, 0, EntityMetaTypes.VAR_INT);
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+4;
 	

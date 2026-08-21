@@ -14,8 +14,8 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
 
 import de.atlasmc.core.node.system.init.ContainerFactoryLoader;
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.node.entity.metadata.MetaDataField;
 import de.atlasmc.test.util.ReflectionUtil;
 
 public class TestMetaDataFieldsAndMethods implements Consumer<Class<?>> {

@@ -1,12 +1,12 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaData;
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.ProjectileSource;
 import de.atlasmc.node.entity.Entity;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.FireworkRocket;
-import de.atlasmc.node.entity.metadata.MetaData;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.inventory.ItemType;
 import de.atlasmc.node.inventory.component.ComponentType;
@@ -15,11 +15,11 @@ import de.atlasmc.node.inventory.component.FireworksComponent;
 public class CoreFireworkRocket extends CoreAbstractProjectile implements FireworkRocket {
 	
 	protected static final MetaDataField<ItemStack>
-	META_FIREWORK_INFO = new MetaDataField<>(CoreAbstractProjectile.LAST_META_INDEX+1, null, MetaDataType.SLOT);
+	META_FIREWORK_INFO = new MetaDataField<>(CoreAbstractProjectile.LAST_META_INDEX+1, null, EntityMetaTypes.SLOT);
 	protected static final MetaDataField<Integer>
-	META_SHOOTER_ID = new MetaDataField<>(CoreAbstractProjectile.LAST_META_INDEX+2, null, MetaDataType.OPT_VAR_INT);
+	META_SHOOTER_ID = new MetaDataField<>(CoreAbstractProjectile.LAST_META_INDEX+2, null, EntityMetaTypes.OPT_VAR_INT);
 	protected static final MetaDataField<Boolean>
-	META_SHOT_AT_ANGLE = new MetaDataField<>(CoreAbstractProjectile.LAST_META_INDEX+3, false, MetaDataType.BOOLEAN);
+	META_SHOT_AT_ANGLE = new MetaDataField<>(CoreAbstractProjectile.LAST_META_INDEX+3, false, EntityMetaTypes.BOOLEAN);
 	
 	protected static final int LAST_META_INDEX = CoreAbstractProjectile.LAST_META_INDEX+3;
 	

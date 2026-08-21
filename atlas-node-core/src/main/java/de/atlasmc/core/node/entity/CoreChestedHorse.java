@@ -1,16 +1,16 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.entity.ChestedHorse;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.AbstractHorseInventory;
 import de.atlasmc.node.inventory.ContainerFactory;
 
 public class CoreChestedHorse extends CoreAbstractHorse implements ChestedHorse {
 	
 	protected static final MetaDataField<Boolean>
-	META_HORSE_HAS_CHEST = new MetaDataField<>(CoreAbstractHorse.LAST_META_INDEX+1, false, MetaDataType.BOOLEAN);
+	META_HORSE_HAS_CHEST = new MetaDataField<>(CoreAbstractHorse.LAST_META_INDEX+1, false, EntityMetaTypes.BOOLEAN);
 	
 	protected static final int LAST_META_INDEX = CoreAbstractHorse.LAST_META_INDEX+1;
 	

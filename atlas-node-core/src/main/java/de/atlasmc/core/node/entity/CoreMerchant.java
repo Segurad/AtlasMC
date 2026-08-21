@@ -1,9 +1,9 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Merchant;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.ContainerFactory;
 import de.atlasmc.node.inventory.InventoryType;
 import de.atlasmc.node.inventory.MerchantInventory;
@@ -11,7 +11,7 @@ import de.atlasmc.node.inventory.MerchantInventory;
 public class CoreMerchant extends CoreAgeableMob implements Merchant {
 
 	protected static final MetaDataField<Integer>
-	META_HEAD_SHAKE_TIME = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, 0, MetaDataType.VAR_INT);
+	META_HEAD_SHAKE_TIME = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, 0, EntityMetaTypes.VAR_INT);
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+1;
 		

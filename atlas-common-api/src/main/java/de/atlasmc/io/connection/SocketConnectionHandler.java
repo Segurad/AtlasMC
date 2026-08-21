@@ -1,12 +1,11 @@
 package de.atlasmc.io.connection;
 
 import java.net.InetSocketAddress;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import javax.crypto.SecretKey;
+
+import javax.crypto.Cipher;
 
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.Protocol;
@@ -176,16 +175,16 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 	}
 	
 	@Override
-	public synchronized void enableEncryption(SecretKey secret) throws InvalidKeyException, InvalidAlgorithmParameterException {
+	public synchronized void enableEncryption(Cipher encription, Cipher decription) {
 		if (isEncryotionEnabled())
 			throw new IllegalStateException("Encryption already enabled");
 		channel.pipeline()
 			.addAfter(CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER, 
 					CHANNEL_PIPE_PACKET_ENCRYPTOR, 
-					new PacketEncryptor(secret))
+					new PacketEncryptor(encription))
 			.addAfter(CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER, 
 					CHANNEL_PIPE_PACKET_DECRYPTOR, 
-					new PacketDecryptor(secret));
+					new PacketDecryptor(decription));
 	}
 	
 	@Override

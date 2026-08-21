@@ -1,21 +1,21 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.block.BlockFace;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Shulker;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.util.enums.EnumUtil;
 
 public class CoreShulker extends CoreMob implements Shulker {
 
 	protected static final MetaDataField<BlockFace>
-	META_DIRECTION = new MetaDataField<>(CoreMob.LAST_META_INDEX+1, BlockFace.DOWN, MetaDataType.DIRECTION);
+	META_DIRECTION = new MetaDataField<>(CoreMob.LAST_META_INDEX+1, BlockFace.DOWN, EntityMetaTypes.DIRECTION);
 	protected static final MetaDataField<Byte>
-	META_SHIELD_HEIGHT = new MetaDataField<>(CoreMob.LAST_META_INDEX+3, (byte) 0, MetaDataType.BYTE);
+	META_SHIELD_HEIGHT = new MetaDataField<>(CoreMob.LAST_META_INDEX+3, (byte) 0, EntityMetaTypes.BYTE);
 	protected static final MetaDataField<Byte>
-	META_COLOR = new MetaDataField<>(CoreMob.LAST_META_INDEX+4, (byte) 16, MetaDataType.BYTE);
+	META_COLOR = new MetaDataField<>(CoreMob.LAST_META_INDEX+4, (byte) 16, EntityMetaTypes.BYTE);
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+3;
 	

@@ -1,14 +1,14 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Hoglin;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreHoglin extends CoreAgeableMob implements Hoglin {
 
 	protected static final MetaDataField<Boolean>
-	META_IMMUNE = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, false, MetaDataType.BOOLEAN);
+	META_IMMUNE = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, false, EntityMetaTypes.BOOLEAN);
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+1;
 	

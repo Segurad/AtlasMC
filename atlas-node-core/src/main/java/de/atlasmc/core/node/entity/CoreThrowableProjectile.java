@@ -1,15 +1,15 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.ThrowableProjectile;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.ItemStack;
 
 public abstract class CoreThrowableProjectile extends CoreAbstractProjectile implements ThrowableProjectile {
 	
 	protected static final MetaDataField<ItemStack> 
-	META_PROJECTILE_ITEM = new MetaDataField<>(CoreEntity.LAST_META_INDEX + 1, null, MetaDataType.SLOT);
+	META_PROJECTILE_ITEM = new MetaDataField<>(CoreEntity.LAST_META_INDEX + 1, null, EntityMetaTypes.SLOT);
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+1;
 	

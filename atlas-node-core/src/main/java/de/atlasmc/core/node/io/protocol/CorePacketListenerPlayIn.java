@@ -173,7 +173,7 @@ public class CorePacketListenerPlayIn extends CoreAbstractPacketListener<PlayerC
 				HandlerList.callEvent(new PlayerStatRequestEvent(con.getPlayer()));
 				break;
 			default:
-				throw new ProtocolException("Unknown client command: " + packet.action);
+				throw new ProtocolException("Unhandled client command: " + packet.action);
 			}
 		});
 		initHandler(ServerboundClientInformation.class, (con, packet) -> {

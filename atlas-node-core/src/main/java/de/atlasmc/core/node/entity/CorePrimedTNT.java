@@ -2,17 +2,17 @@ package de.atlasmc.core.node.entity;
 
 import java.util.UUID;
 
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.entity.Entity;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.PrimedTNT;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CorePrimedTNT extends CoreEntity implements PrimedTNT {
 
 	protected static final MetaDataField<Integer>
-	META_FUSE_TIME = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, 80, MetaDataType.VAR_INT);
+	META_FUSE_TIME = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, 80, EntityMetaTypes.VAR_INT);
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+1;
 	

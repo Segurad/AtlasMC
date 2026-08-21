@@ -1,17 +1,17 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.entity.Entity;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Frog;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreFrog extends CoreAgeableMob implements Frog {
 
 	protected static final MetaDataField<Variant> 
-	META_FROG_VARIANT = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, Variant.TEMPERATE, MetaDataType.FROG_VARIANT);
+	META_FROG_VARIANT = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, Variant.TEMPERATE, EntityMetaTypes.FROG_VARIANT);
 	protected static final MetaDataField<Integer> 
-	META_TONGUE_TARGET = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+2, 0, MetaDataType.OPT_VAR_INT);
+	META_TONGUE_TARGET = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+2, 0, EntityMetaTypes.OPT_VAR_INT);
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+2;
 	

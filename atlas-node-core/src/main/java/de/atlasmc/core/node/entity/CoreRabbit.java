@@ -1,15 +1,15 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Rabbit;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.util.enums.EnumUtil;
 
 public class CoreRabbit extends CoreAgeableMob implements Rabbit {
 
 	protected static final MetaDataField<Integer>
-	META_RABBIT_TYPE = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, 0, MetaDataType.VAR_INT);
+	META_RABBIT_TYPE = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, 0, EntityMetaTypes.VAR_INT);
 
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+1;
 	

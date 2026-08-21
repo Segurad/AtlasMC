@@ -1,14 +1,14 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.entity.AbstractVillager;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreAbstractVillager extends CoreMerchant implements AbstractVillager {
 
 	protected static final MetaDataField<VillagerData>
-	META_VILLAGER_DATA = new MetaDataField<>(CoreAbstractVillager.LAST_META_INDEX+2, new VillagerData(), MetaDataType.VILLAGER_DATA);
+	META_VILLAGER_DATA = new MetaDataField<>(CoreAbstractVillager.LAST_META_INDEX+2, new VillagerData(), EntityMetaTypes.VILLAGER_DATA);
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+2;
 		

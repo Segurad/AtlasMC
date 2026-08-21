@@ -1,16 +1,16 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Sniffer;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreSniffer extends CoreAgeableMob implements Sniffer {
 
 	protected static final MetaDataField<State> 
-	META_SNIFFER_STATE = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, State.IDLING, MetaDataType.SNIFFER_STATE);
+	META_SNIFFER_STATE = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, State.IDLING, EntityMetaTypes.SNIFFER_STATE);
 	protected static final MetaDataField<Integer> 
-	META_DROP_SEED_TICK = new MetaDataField<Integer>(CoreAgeableMob.LAST_META_INDEX+2, 0, MetaDataType.VAR_INT);
+	META_DROP_SEED_TICK = new MetaDataField<Integer>(CoreAgeableMob.LAST_META_INDEX+2, 0, EntityMetaTypes.VAR_INT);
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+2;
 	

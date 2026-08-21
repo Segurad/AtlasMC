@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import de.atlasmc.io.metadata.MetaData;
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Fox;
-import de.atlasmc.node.entity.metadata.MetaData;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
+import de.atlasmc.util.enums.EnumUtil;
 
 public class CoreFox extends CoreAgeableMob implements Fox {
 
@@ -21,8 +22,8 @@ public class CoreFox extends CoreAgeableMob implements Fox {
 	FLAG_IS_FACEPLANTED = 0x40,
 	FLAG_IS_DEFENDING = 0x80;
 	
-	protected static final MetaDataField<Type>
-	META_FOX_TYPE = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, Type.RED, MetaDataType.getVarIntEnumType(Type.class));
+	protected static final MetaDataField<Integer>
+	META_FOX_TYPE = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, Type.RED.getID(), EntityMetaTypes.VAR_INT);
 	/**
 	 * 0x01 - Is sitting<br>
 	 * 0x04 - Is crouching<br>
@@ -33,11 +34,11 @@ public class CoreFox extends CoreAgeableMob implements Fox {
 	 * 0x80 - Is defending<br>
 	 */
 	protected static final MetaDataField<Byte>
-	META_FOX_FLAGS = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+2, (byte) 0, MetaDataType.BYTE);
+	META_FOX_FLAGS = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+2, (byte) 0, EntityMetaTypes.BYTE);
 	protected static final MetaDataField<UUID>
-	META_FOX_FIRST_TRUSTED = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+3, null, MetaDataType.OPT_UUID);
+	META_FOX_FIRST_TRUSTED = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+3, null, EntityMetaTypes.OPT_UUID);
 	protected static final MetaDataField<UUID>
-	META_FOX_LAST_TRUSTED = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX + 4, null, MetaDataType.OPT_UUID);
+	META_FOX_LAST_TRUSTED = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX + 4, null, EntityMetaTypes.OPT_UUID);
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+4;
 	
@@ -63,7 +64,7 @@ public class CoreFox extends CoreAgeableMob implements Fox {
 	
 	@Override
 	public Type getFoxType() {
-		return metaContainer.getData(META_FOX_TYPE);
+		return EnumUtil.getByID(Type.class, metaContainer.getData(META_FOX_TYPE));
 	}
 
 	@Override
@@ -108,7 +109,7 @@ public class CoreFox extends CoreAgeableMob implements Fox {
 
 	@Override
 	public void setFoxType(Type type) {
-		metaContainer.setData(META_FOX_TYPE, type);
+		metaContainer.setData(META_FOX_TYPE, type.getID());
 	}
 
 	private void setFoxFlag(int flag, boolean set) {

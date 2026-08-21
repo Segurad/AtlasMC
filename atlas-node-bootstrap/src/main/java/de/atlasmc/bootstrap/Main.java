@@ -286,8 +286,6 @@ public class Main {
 					handler = initializedHandlers.get(rawHandlerClass);
 					logger.debug("Reusing handler {} for stage: {}", rawHandlerClass, key);
 				}
-				if (handler == null)
-					continue;
 				context.addStageHandler(key, handler);
 				logger.debug("Added startup stage handler {} for stage: {}", rawHandlerClass, key);
 			}

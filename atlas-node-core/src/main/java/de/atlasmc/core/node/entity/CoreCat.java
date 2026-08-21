@@ -1,21 +1,22 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.entity.Cat;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
+import de.atlasmc.util.enums.EnumUtil;
 
 public class CoreCat extends CoreTameable implements Cat {
 	
 	protected static final MetaDataField<Type>
-	META_CAT_TYPE = new MetaDataField<>(CoreTameable.LAST_META_INDEX+1, Type.BLACK, MetaDataType.getVarIntEnumType(Type.class));
+	META_CAT_TYPE = new MetaDataField<>(CoreTameable.LAST_META_INDEX+1, Type.BLACK, EntityMetaTypes.CAT_VARIANT);
 	protected static final MetaDataField<Boolean>
-	META_IS_LYING = new MetaDataField<>(CoreTameable.LAST_META_INDEX+2, false, MetaDataType.BOOLEAN);
+	META_IS_LYING = new MetaDataField<>(CoreTameable.LAST_META_INDEX+2, false, EntityMetaTypes.BOOLEAN);
 	protected static final MetaDataField<Boolean>
-	META_IS_RELAXED = new MetaDataField<>(CoreTameable.LAST_META_INDEX+3, false, MetaDataType.BOOLEAN);
-	protected static final MetaDataField<DyeColor>
-	META_COLLAR_COLOR = new MetaDataField<>(CoreTameable.LAST_META_INDEX+4, DyeColor.RED, MetaDataType.getVarIntEnumType(DyeColor.class));
+	META_IS_RELAXED = new MetaDataField<>(CoreTameable.LAST_META_INDEX+3, false, EntityMetaTypes.BOOLEAN);
+	protected static final MetaDataField<Integer>
+	META_COLLAR_COLOR = new MetaDataField<>(CoreTameable.LAST_META_INDEX+4, DyeColor.RED.getID(), EntityMetaTypes.VAR_INT);
 	
 	protected static final int LAST_META_INDEX = CoreTameable.LAST_META_INDEX+4;
 	
@@ -69,12 +70,12 @@ public class CoreCat extends CoreTameable implements Cat {
 
 	@Override
 	public DyeColor getCollarColor() {
-		return metaContainer.getData(META_COLLAR_COLOR);
+		return EnumUtil.getByID(DyeColor.class, metaContainer.getData(META_COLLAR_COLOR));
 	}
 
 	@Override
 	public void setCollarColor(DyeColor color) {
-		metaContainer.setData(META_COLLAR_COLOR, color);		
+		metaContainer.setData(META_COLLAR_COLOR, color.getID());		
 	}
 
 }

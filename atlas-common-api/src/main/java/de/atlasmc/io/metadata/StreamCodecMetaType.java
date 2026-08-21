@@ -1,4 +1,4 @@
-package de.atlasmc.node.entity.metadata.type;
+package de.atlasmc.io.metadata;
 
 import java.io.IOException;
 import java.util.Objects;

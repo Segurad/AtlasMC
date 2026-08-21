@@ -1,20 +1,20 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.entity.Boat;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreBoat extends CoreVehicle implements Boat {
 
 	protected static final MetaDataField<Integer>
-	META_BOAT_TYPE = new MetaDataField<>(CoreVehicle.LAST_META_INDEX+1, 0, MetaDataType.VAR_INT);
+	META_BOAT_TYPE = new MetaDataField<>(CoreVehicle.LAST_META_INDEX+1, 0, EntityMetaTypes.VAR_INT);
 	protected static final MetaDataField<Boolean>
-	META_LEFT_PADDLE_TURNING = new MetaDataField<>(CoreVehicle.LAST_META_INDEX+2, false, MetaDataType.BOOLEAN);
+	META_LEFT_PADDLE_TURNING = new MetaDataField<>(CoreVehicle.LAST_META_INDEX+2, false, EntityMetaTypes.BOOLEAN);
 	protected static final MetaDataField<Boolean>
-	META_RIGHT_PADDLE_TURNING = new MetaDataField<>(CoreVehicle.LAST_META_INDEX + 3, false, MetaDataType.BOOLEAN);
+	META_RIGHT_PADDLE_TURNING = new MetaDataField<>(CoreVehicle.LAST_META_INDEX + 3, false, EntityMetaTypes.BOOLEAN);
 	protected static final MetaDataField<Integer>
-	META_SPLASH_TIMER = new MetaDataField<>(CoreVehicle.LAST_META_INDEX+4, 0, MetaDataType.VAR_INT);
+	META_SPLASH_TIMER = new MetaDataField<>(CoreVehicle.LAST_META_INDEX+4, 0, EntityMetaTypes.VAR_INT);
 	
 	protected static final int LAST_META_INDEX = CoreVehicle.LAST_META_INDEX+4;
 	

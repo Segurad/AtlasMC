@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.UUID;
 
 import de.atlasmc.Color;
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.entity.AreaEffectCloud;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.potion.PotionData;
 import de.atlasmc.node.potion.PotionEffect;
 import de.atlasmc.node.world.particle.Particle;
@@ -16,13 +16,13 @@ import de.atlasmc.node.world.particle.Particle;
 public class CoreAreaEffectCloud extends CoreEntity implements AreaEffectCloud {
 	
 	protected static final MetaDataField<Float> 
-	META_RADIUS = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, 0.5f, MetaDataType.FLOAT);
+	META_RADIUS = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, 0.5f, EntityMetaTypes.FLOAT);
 	protected static final MetaDataField<Integer>
-	META_COLOR = new MetaDataField<>(CoreEntity.LAST_META_INDEX+2, 0, MetaDataType.VAR_INT);
+	META_COLOR = new MetaDataField<>(CoreEntity.LAST_META_INDEX+2, 0, EntityMetaTypes.VAR_INT);
 	protected static final MetaDataField<Boolean>
-	META_IGNORE_RADIUS = new MetaDataField<>(CoreEntity.LAST_META_INDEX+3, false, MetaDataType.BOOLEAN);
+	META_IGNORE_RADIUS = new MetaDataField<>(CoreEntity.LAST_META_INDEX+3, false, EntityMetaTypes.BOOLEAN);
 	protected static final MetaDataField<Particle>
-	META_PARTICLE = new MetaDataField<>(CoreEntity.LAST_META_INDEX + 4, null, MetaDataType.PARTICLE);
+	META_PARTICLE = new MetaDataField<>(CoreEntity.LAST_META_INDEX + 4, null, EntityMetaTypes.PARTICLE);
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+4;
 	

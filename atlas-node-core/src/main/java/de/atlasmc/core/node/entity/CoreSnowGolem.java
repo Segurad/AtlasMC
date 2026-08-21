@@ -1,10 +1,10 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaData;
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.SnowGolem;
-import de.atlasmc.node.entity.metadata.MetaData;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreSnowGolem extends CoreMob implements SnowGolem {
 
@@ -12,7 +12,7 @@ public class CoreSnowGolem extends CoreMob implements SnowGolem {
 	FLAG_HAS_HAT = 0x10;
 	
 	protected static final MetaDataField<Byte>
-	META_SNOW_GOLEM_FLAGS = new MetaDataField<>(CoreMob.LAST_META_INDEX+1, (byte) 0x10, MetaDataType.BYTE);
+	META_SNOW_GOLEM_FLAGS = new MetaDataField<>(CoreMob.LAST_META_INDEX+1, (byte) 0x10, EntityMetaTypes.BYTE);
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+1;
 	

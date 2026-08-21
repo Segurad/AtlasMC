@@ -1,18 +1,18 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Goat;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreGoat extends CoreAgeableMob implements Goat {
 
 	protected static final MetaDataField<Boolean> 
-	META_IS_SCREAMING_GOAT = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, false, MetaDataType.BOOLEAN);
+	META_IS_SCREAMING_GOAT = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, false, EntityMetaTypes.BOOLEAN);
 	protected static final MetaDataField<Boolean> 
-	META_HAS_LEFT_HORN = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+2, true, MetaDataType.BOOLEAN);
+	META_HAS_LEFT_HORN = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+2, true, EntityMetaTypes.BOOLEAN);
 	protected static final MetaDataField<Boolean> 
-	META_HAS_RIGHT_HORN = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+3, true, MetaDataType.BOOLEAN);
+	META_HAS_RIGHT_HORN = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+3, true, EntityMetaTypes.BOOLEAN);
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+3;
 	

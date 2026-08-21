@@ -4,20 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Piglin;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.ItemStack;
 
 public class CorePiglin extends CoreAbstractPiglin implements Piglin {
 	
 	protected static final MetaDataField<Boolean>
-	META_IS_BABY = new MetaDataField<>(CoreAbstractPiglin.LAST_META_INDEX+1, false, MetaDataType.BOOLEAN);
+	META_IS_BABY = new MetaDataField<>(CoreAbstractPiglin.LAST_META_INDEX+1, false, EntityMetaTypes.BOOLEAN);
 	protected static final MetaDataField<Boolean>
-	META_IS_CHARGING_CROSSBOW = new MetaDataField<>(CoreAbstractPiglin.LAST_META_INDEX+2, false, MetaDataType.BOOLEAN);
+	META_IS_CHARGING_CROSSBOW = new MetaDataField<>(CoreAbstractPiglin.LAST_META_INDEX+2, false, EntityMetaTypes.BOOLEAN);
 	protected static final MetaDataField<Boolean>
-	META_IS_DANCING = new MetaDataField<>(CoreAbstractPiglin.LAST_META_INDEX+3, false, MetaDataType.BOOLEAN);
+	META_IS_DANCING = new MetaDataField<>(CoreAbstractPiglin.LAST_META_INDEX+3, false, EntityMetaTypes.BOOLEAN);
 
 	protected static final int LAST_META_INDEX = CoreAbstractPiglin.LAST_META_INDEX+3;
 	

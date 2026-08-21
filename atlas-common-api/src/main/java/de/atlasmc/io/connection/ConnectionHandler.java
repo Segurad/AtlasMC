@@ -2,12 +2,9 @@ package de.atlasmc.io.connection;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.util.Queue;
 
-import javax.crypto.SecretKey;
-
+import javax.crypto.Cipher;
 import de.atlasmc.io.IOExceptionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketChunker;
@@ -72,7 +69,7 @@ public interface ConnectionHandler {
 
 	boolean handleException(Throwable cause);
 	
-	void enableEncryption(SecretKey secret) throws InvalidKeyException, InvalidAlgorithmParameterException;
+	void enableEncryption(Cipher encription, Cipher decription);
 	
 	boolean isEncryotionEnabled();
 	

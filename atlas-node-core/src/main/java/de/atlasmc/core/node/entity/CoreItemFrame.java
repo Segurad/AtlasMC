@@ -1,20 +1,21 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.SoundCategory;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.ItemFrame;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.sound.EnumSound;
 import de.atlasmc.node.sound.Sound;
+import de.atlasmc.util.enums.EnumUtil;
 
 public class CoreItemFrame extends CoreHanging implements ItemFrame {
 
 	protected static final MetaDataField<ItemStack>
-	META_FRAME_ITEM = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, null, MetaDataType.SLOT);
-	protected static final MetaDataField<Rotation>
-	META_FRAME_ROTATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+2, Rotation.NONE, MetaDataType.getVarIntEnumType(Rotation.class));
+	META_FRAME_ITEM = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, null, EntityMetaTypes.SLOT);
+	protected static final MetaDataField<Integer>
+	META_FRAME_ROTATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+2, Rotation.NONE.getID(), EntityMetaTypes.VAR_INT);
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+2;
 	
@@ -58,12 +59,12 @@ public class CoreItemFrame extends CoreHanging implements ItemFrame {
 
 	@Override
 	public Rotation getRotation() {
-		return metaContainer.getData(META_FRAME_ROTATION);
+		return EnumUtil.getByID(Rotation.class, metaContainer.getData(META_FRAME_ROTATION));
 	}
 
 	@Override
 	public void setRotation(Rotation rotation) {
-		metaContainer.setData(META_FRAME_ROTATION, rotation);
+		metaContainer.setData(META_FRAME_ROTATION, rotation.getID());
 	}
 
 	@Override

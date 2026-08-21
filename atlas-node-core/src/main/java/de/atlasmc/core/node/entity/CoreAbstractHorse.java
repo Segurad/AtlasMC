@@ -2,11 +2,11 @@ package de.atlasmc.core.node.entity;
 
 import java.util.UUID;
 
+import de.atlasmc.io.metadata.MetaData;
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.entity.AbstractHorse;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.node.entity.metadata.MetaData;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.AbstractHorseInventory;
 
 public abstract class CoreAbstractHorse extends CoreAgeableMob implements AbstractHorse {
@@ -28,9 +28,9 @@ public abstract class CoreAbstractHorse extends CoreAgeableMob implements Abstra
 	 * 0x40 - Is mouth open
 	 */
 	protected static final MetaDataField<Byte>
-	META_HORSE_FLAGS = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, (byte) 0, MetaDataType.BYTE);
+	META_HORSE_FLAGS = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, (byte) 0, EntityMetaTypes.BYTE);
 	protected static final MetaDataField<UUID>
-	META_HORSE_OWNER = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+2, null, MetaDataType.OPT_UUID);
+	META_HORSE_OWNER = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+2, null, EntityMetaTypes.OPT_UUID);
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+2;
 	

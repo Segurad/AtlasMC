@@ -1,41 +1,45 @@
-package de.atlasmc.node.entity.metadata.type;
+package de.atlasmc.node.entity;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-import de.atlasmc.IDHolder;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.io.codec.StreamCodecs;
 import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.codec.UUIDCodec;
+import de.atlasmc.io.metadata.VarIntMetaType;
+import de.atlasmc.io.metadata.OptVarIntMetaType;
+import de.atlasmc.io.metadata.NBTMetaType;
+import de.atlasmc.io.metadata.BooleanMetaType;
+import de.atlasmc.io.metadata.ByteMetaType;
+import de.atlasmc.io.metadata.FloatMetaType;
+import de.atlasmc.io.metadata.LongMetaType;
+import de.atlasmc.io.metadata.MetaDataType;
+import de.atlasmc.io.metadata.OptLongMetaType;
+import de.atlasmc.io.metadata.RegistryValueMetaType;
+import de.atlasmc.io.metadata.StreamCodecMetaType;
+import de.atlasmc.io.metadata.VarIntEnumMetaType;
+import de.atlasmc.io.metadata.VarLongMetaType;
 import de.atlasmc.nbt.tag.CompoundTag;
 import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.entity.AbstractVillager.VillagerData;
 import de.atlasmc.node.entity.Armadillo.ArmadilloState;
-import de.atlasmc.node.entity.Cat.Type;
 import de.atlasmc.node.entity.Entity.Pose;
 import de.atlasmc.node.entity.Frog.Variant;
 import de.atlasmc.node.entity.Painting.Motive;
-import de.atlasmc.node.entity.Sniffer.State;
 import de.atlasmc.node.entity.Wolf.WolfVariant;
-import de.atlasmc.node.entity.metadata.MetaData;
 import de.atlasmc.node.inventory.ItemStack;
+import de.atlasmc.node.io.metadata.DirectionMetaType;
+import de.atlasmc.node.io.metadata.WorldLocationMetaType;
 import de.atlasmc.node.world.particle.Particle;
-import de.atlasmc.util.codec.CodecContext;
-import io.netty.buffer.ByteBuf;
 
-/**
- * Represents a {@link MetaData}s type
- * @param <T>
- */
-public abstract class MetaDataType<T> implements IDHolder {
-	
+public class EntityMetaTypes {
+
 	public static final int
 	TYPE_ID_BYTE = 0,
 	TYPE_ID_VAR_INT = 1,
@@ -114,27 +118,29 @@ public abstract class MetaDataType<T> implements IDHolder {
 	
 	public static final MetaDataType<VillagerData> VILLAGER_DATA = new StreamCodecMetaType<>(TYPE_ID_VILLAGER_DATA, false, VillagerData.STREAM_CODEC, VillagerData::clone);
 	
-	public static final MetaDataType<Pose> POSE = getVarIntEnumType(TYPE_ID_POSE, Pose.class);
+	public static final MetaDataType<Pose> POSE = new VarIntEnumMetaType<>(TYPE_ID_POSE, Pose.class);
     
-    public static final MetaDataType<Type> CAT_VARIANT = getVarIntEnumType(TYPE_ID_CAT_VARIANT, Type.class);
+    public static final MetaDataType<Cat.Type> CAT_VARIANT = new VarIntEnumMetaType<>(TYPE_ID_CAT_VARIANT, Cat.Type.class);
 	
-    public static final MetaDataType<Motive> PAINTING_VARIANT = getVarIntEnumType(TYPE_ID_PAINTING_VARIANT, Motive.class);
+    public static final MetaDataType<Motive> PAINTING_VARIANT = new VarIntEnumMetaType<>(TYPE_ID_PAINTING_VARIANT, Motive.class);
 
     public static final MetaDataType<Vector3f> VECTOR_3F = new StreamCodecMetaType<>(TYPE_ID_VECTOR_3F, false, StreamCodecs.VECTOR_3F, t -> { return new Vector3f(t);});
     
     public static final MetaDataType<Quaternionf> QUATERNION_F = new StreamCodecMetaType<>(TYPE_ID_QUATERNION_F, false, StreamCodecs.QUATERNION_F, t -> { return new Quaternionf(t);});
     
-    public static final MetaDataType<Variant> FROG_VARIANT = getVarIntEnumType(TYPE_ID_FROG_VARIANT, Variant.class);
+    public static final MetaDataType<Variant> FROG_VARIANT = new VarIntEnumMetaType<Frog.Variant>(TYPE_ID_FROG_VARIANT, Variant.class);
     
-    public static final MetaDataType<State> SNIFFER_STATE = getVarIntEnumType(TYPE_ID_SNIFFER_STATE, State.class);
+    public static final MetaDataType<Sniffer.State> SNIFFER_STATE = new VarIntEnumMetaType<>(TYPE_ID_SNIFFER_STATE, Sniffer.State.class);
     
     public static final MetaDataType<WorldLocation> OPT_GLOBAL_POSITION = new WorldLocationMetaType(TYPE_ID_OPT_GLOBAL_POSITION);
     
-    public static final MetaDataType<ArmadilloState> ARMADILLO_STATE = getVarIntEnumType(TYPE_ID_ARMADILLO_STATE, ArmadilloState.class);
+    public static final MetaDataType<ArmadilloState> ARMADILLO_STATE = new VarIntEnumMetaType<>(TYPE_ID_ARMADILLO_STATE, ArmadilloState.class);
 	
 	public static final MetaDataType<WolfVariant> WOLF_VARIANT = new RegistryValueMetaType<>(TYPE_ID_WOLF_VARIANT, WolfVariant.class, WolfVariant.REGISTRY_KEY);
 	
-	public static final MetaDataType<DyeColor> VAR_INT_COLOR = getVarIntEnumType(DyeColor.class);
+	public static final MetaDataType<DyeColor> VAR_INT_COLOR = new VarIntEnumMetaType<>(TYPE_ID_VAR_INT, DyeColor.class);
+	
+	public static final MetaDataType<Panda.Gene> PANDA_GENE = new VarIntEnumMetaType<>(TYPE_ID_ARMADILLO_STATE, Panda.Gene.class);
 	
 	private static final MetaDataType<?>[] TYPES = new MetaDataType<?>[] {
 		BYTE,
@@ -175,67 +181,10 @@ public abstract class MetaDataType<T> implements IDHolder {
 		//RESOLVED_PROFILE
 	};
 	
-	private final int type;
-	private final boolean optional;
-	private final Class<?> clazz;
-	
-	public MetaDataType(int type, Class<?> typeClass) {
-		this(type, typeClass, false);
-	}
-	
-	public MetaDataType(int type, Class<?> typeClass, boolean optional) {
-		this.type = type;
-		this.clazz = typeClass;
-		this.optional = optional;
-	}
-	
-	@Override
-	public int getID() {
-		return type;
-	}
-	
-	public Class<?> getTypeClass() {
-		return clazz;
-	}
-	
-	public boolean isOptional() {
-		return optional;
-	}
-	
-	/**
-	 * Returns a copy of the data
-	 * @param data
-	 * @return copy
-	 */
-	public T copyData(T data) {
-		return data;
-	}
-	
-	public abstract T read(ByteBuf in, CodecContext context) throws IOException;
-	
-	public abstract void write(T data, ByteBuf out, CodecContext context) throws IOException;
-
-	@SuppressWarnings("unchecked")
-	public void writeRaw(Object data, ByteBuf buf, CodecContext context) throws IOException {
-		write((T) data, buf, context);
-	}
-	
 	public static MetaDataType<?> getByID(int id) {
 		if (id < 0 || id > TYPES.length)
 			throw new IllegalArgumentException("Invalid Type ID: " + id);
 		return TYPES[id];
 	}
 	
-	public static <T extends Enum<T> & IDHolder> MetaDataType<T> getVarIntEnumType(Class<T> clazz) {
-		return getVarIntEnumType(TYPE_ID_VAR_INT, clazz);
-	}
-	
-	public static <T extends Enum<T> & IDHolder> MetaDataType<T> getByteEnumType(Class<T> clazz) {
-		return new ByteEnumMetaType<>(TYPE_ID_BYTE, clazz);
-	}
-	
-	private static <T extends Enum<T> & IDHolder> MetaDataType<T> getVarIntEnumType(int id, Class<T> clazz) {
-		return new VarIntEnumMetaType<>(id, clazz);
-	}
-
 }

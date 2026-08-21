@@ -1,15 +1,15 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Interaction;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreInteraction extends CoreEntity implements Interaction {
 
-	protected static final MetaDataField<Float> META_WIDTH = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, 1f, MetaDataType.FLOAT);
-	protected static final MetaDataField<Float> META_HEIGHT = new MetaDataField<>(CoreEntity.LAST_META_INDEX+2, 1f, MetaDataType.FLOAT);
-	protected static final MetaDataField<Boolean> META_RESPONSIVE = new MetaDataField<Boolean>(CoreEntity.LAST_META_INDEX+3, false, MetaDataType.BOOLEAN);
+	protected static final MetaDataField<Float> META_WIDTH = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, 1f, EntityMetaTypes.FLOAT);
+	protected static final MetaDataField<Float> META_HEIGHT = new MetaDataField<>(CoreEntity.LAST_META_INDEX+2, 1f, EntityMetaTypes.FLOAT);
+	protected static final MetaDataField<Boolean> META_RESPONSIVE = new MetaDataField<Boolean>(CoreEntity.LAST_META_INDEX+3, false, EntityMetaTypes.BOOLEAN);
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+3;
 	

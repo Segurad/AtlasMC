@@ -1,14 +1,14 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.MinecartFurnace;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreMinecraftFurnace extends CoreAbstractMinecart implements MinecartFurnace {
 
 	protected static final MetaDataField<Boolean>
-	META_HAS_FUEL = new MetaDataField<>(CoreAbstractMinecart.LAST_META_INDEX+1, false, MetaDataType.BOOLEAN);
+	META_HAS_FUEL = new MetaDataField<>(CoreAbstractMinecart.LAST_META_INDEX+1, false, EntityMetaTypes.BOOLEAN);
 	
 	protected static final int LAST_META_INDEX = CoreAbstractMinecart.LAST_META_INDEX+1;
 	

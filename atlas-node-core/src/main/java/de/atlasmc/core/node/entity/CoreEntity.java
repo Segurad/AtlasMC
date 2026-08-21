@@ -10,16 +10,16 @@ import org.joml.Vector3d;
 import org.joml.Vector3i;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.node.WorldLocation;
+import de.atlasmc.io.metadata.MetaData;
+import de.atlasmc.io.metadata.MetaDataContainer;
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.Location;
 import de.atlasmc.node.SoundCategory;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.entity.Entity;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Player;
-import de.atlasmc.node.entity.metadata.MetaData;
-import de.atlasmc.node.entity.metadata.MetaDataContainer;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.io.protocol.PlayerConnection;
 import de.atlasmc.node.io.protocol.play.PacketOutRemoveEntities;
 import de.atlasmc.node.io.protocol.play.PacketOutSetEntityMetadata;
@@ -77,14 +77,14 @@ public class CoreEntity implements Entity {
 	FLAG_GLOWING = 0x20,
 	FLAG_FLYING_ELYTRA = 0x40;
 		
-	protected static final MetaDataField<Byte> META_ENTITY_FLAGS = new MetaDataField<>(0, (byte) 0, MetaDataType.BYTE);
-	protected static final MetaDataField<Integer> META_AIR_TICKS = new MetaDataField<>(1, 300, MetaDataType.VAR_INT);
-	protected static final MetaDataField<Chat> META_CUSTOM_NAME = new MetaDataField<>(2, null, MetaDataType.OPT_CHAT); 
-	protected static final MetaDataField<Boolean> META_CUSTOM_NAME_VISIBLE = new MetaDataField<>(3, false, MetaDataType.BOOLEAN);
-	protected static final MetaDataField<Boolean> META_IS_SILENT = new MetaDataField<>(4, false, MetaDataType.BOOLEAN);
-	protected static final MetaDataField<Boolean> META_HAS_NO_GRAVITY = new MetaDataField<>(5, false, MetaDataType.BOOLEAN);
-	protected static final MetaDataField<Pose> META_POSE = new MetaDataField<>(6, Pose.STANDING, MetaDataType.POSE);
-	protected static final MetaDataField<Integer> META_TICKS_FROZEN = new MetaDataField<>(7, 0, MetaDataType.VAR_INT);
+	protected static final MetaDataField<Byte> META_ENTITY_FLAGS = new MetaDataField<>(0, (byte) 0, EntityMetaTypes.BYTE);
+	protected static final MetaDataField<Integer> META_AIR_TICKS = new MetaDataField<>(1, 300, EntityMetaTypes.VAR_INT);
+	protected static final MetaDataField<Chat> META_CUSTOM_NAME = new MetaDataField<>(2, null, EntityMetaTypes.OPT_CHAT); 
+	protected static final MetaDataField<Boolean> META_CUSTOM_NAME_VISIBLE = new MetaDataField<>(3, false, EntityMetaTypes.BOOLEAN);
+	protected static final MetaDataField<Boolean> META_IS_SILENT = new MetaDataField<>(4, false, EntityMetaTypes.BOOLEAN);
+	protected static final MetaDataField<Boolean> META_HAS_NO_GRAVITY = new MetaDataField<>(5, false, EntityMetaTypes.BOOLEAN);
+	protected static final MetaDataField<Pose> META_POSE = new MetaDataField<>(6, Pose.STANDING, EntityMetaTypes.POSE);
+	protected static final MetaDataField<Integer> META_TICKS_FROZEN = new MetaDataField<>(7, 0, EntityMetaTypes.VAR_INT);
 	
 	protected static final int LAST_META_INDEX = 7;
 	

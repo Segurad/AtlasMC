@@ -1,15 +1,15 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.SpellcasterIllager;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.util.enums.EnumUtil;
 
 public class CoreSpellcasterIllager extends CoreRaider implements SpellcasterIllager {
 
 	protected static final MetaDataField<Byte>
-	META_SPELL = new MetaDataField<>(CoreRaider.LAST_META_INDEX+1, (byte) Spell.NONE.getID(), MetaDataType.BYTE);
+	META_SPELL = new MetaDataField<>(CoreRaider.LAST_META_INDEX+1, (byte) Spell.NONE.getID(), EntityMetaTypes.BYTE);
 	
 	protected static final int LAST_META_INDEX = CoreRaider.LAST_META_INDEX+1;
 

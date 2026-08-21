@@ -1,15 +1,15 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.SizedFireball;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.ItemStack;
 
 public abstract class CoreSizedFireball extends CoreAbstractAcceleratingProjectile implements SizedFireball {
 
 	protected static final MetaDataField<ItemStack>
-	META_FIREBALL_ITEM = new MetaDataField<>(CoreAbstractAcceleratingProjectile.LAST_META_INDEX+1, null, MetaDataType.SLOT);
+	META_FIREBALL_ITEM = new MetaDataField<>(CoreAbstractAcceleratingProjectile.LAST_META_INDEX+1, null, EntityMetaTypes.SLOT);
 	
 	protected static final int LAST_META_INDEX = CoreAbstractAcceleratingProjectile.LAST_META_INDEX+1;
 	

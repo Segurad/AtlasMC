@@ -2,18 +2,18 @@ package de.atlasmc.core.node.entity;
 
 import org.joml.Vector3i;
 
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.entity.EndCrystal;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.util.MathUtil;
 
 public class CoreEndCrystal extends CoreEntity implements EndCrystal {
 	
 	protected static final MetaDataField<Long>
-	META_BEAM_TARGET = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, null, MetaDataType.OPT_POSITION);
+	META_BEAM_TARGET = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, null, EntityMetaTypes.OPT_POSITION);
 	protected static final MetaDataField<Boolean>
-	META_SHOW_BOTTOM = new MetaDataField<>(CoreEntity.LAST_META_INDEX+2, true, MetaDataType.BOOLEAN);
+	META_SHOW_BOTTOM = new MetaDataField<>(CoreEntity.LAST_META_INDEX+2, true, EntityMetaTypes.BOOLEAN);
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+2;
 	

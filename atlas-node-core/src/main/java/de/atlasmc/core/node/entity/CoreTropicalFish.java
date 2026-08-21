@@ -1,11 +1,11 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaData;
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.DyeColor;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.TropicalFish;
-import de.atlasmc.node.entity.metadata.MetaData;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.util.enums.EnumUtil;
 
 public class CoreTropicalFish extends CoreFish implements TropicalFish {
@@ -17,7 +17,7 @@ public class CoreTropicalFish extends CoreFish implements TropicalFish {
 	 * 0x000000FF - Size<br>
 	 */
 	protected static final MetaDataField<Integer>
-	META_TROPICAL_VARIANT = new MetaDataField<>(CoreFish.LAST_META_INDEX+1, 0, MetaDataType.VAR_INT);
+	META_TROPICAL_VARIANT = new MetaDataField<>(CoreFish.LAST_META_INDEX+1, 0, EntityMetaTypes.VAR_INT);
 	
 	protected static final int LAST_META_INDEX = CoreFish.LAST_META_INDEX+1;
 	

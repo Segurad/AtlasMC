@@ -4,7 +4,7 @@ import java.util.List;
 
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.io.DefaultPacketID;
-import de.atlasmc.node.entity.metadata.MetaDataInfo;
+import de.atlasmc.io.metadata.MetaDataInfo;
 
 @DefaultPacketID(packetID = PacketPlay.OUT_SET_ENTITY_METADATA, definition = "set_entity_data")
 public class PacketOutSetEntityMetadata extends AbstractPacket implements PacketPlayOut {

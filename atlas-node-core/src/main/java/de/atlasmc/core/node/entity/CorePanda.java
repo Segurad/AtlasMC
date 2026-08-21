@@ -1,25 +1,23 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaData;
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Panda;
-import de.atlasmc.node.entity.metadata.MetaData;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CorePanda extends CoreAgeableMob implements Panda {
-
-	protected static final MetaDataType<Gene> META_TYPE_GENE = MetaDataType.getByteEnumType(Gene.class);
 	
 	protected static final MetaDataField<Integer>
-	META_TIMER_BREED = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, 0, MetaDataType.VAR_INT);
+	META_TIMER_BREED = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, 0, EntityMetaTypes.VAR_INT);
 	protected static final MetaDataField<Integer>
-	META_TIMER_SNEEZE = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+2, 0, MetaDataType.VAR_INT);
+	META_TIMER_SNEEZE = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+2, 0, EntityMetaTypes.VAR_INT);
 	protected static final MetaDataField<Integer>
-	META_TIMER_EAT = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+3, 0, MetaDataType.VAR_INT);
+	META_TIMER_EAT = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+3, 0, EntityMetaTypes.VAR_INT);
 	protected static final MetaDataField<Gene>
-	META_GENE_MAIN = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+4, Gene.NORMAL, META_TYPE_GENE);
+	META_GENE_MAIN = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+4, Gene.NORMAL, EntityMetaTypes.PANDA_GENE);
 	protected static final MetaDataField<Gene>
-	META_GENE_HIDDEN = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+5, Gene.NORMAL, META_TYPE_GENE);
+	META_GENE_HIDDEN = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+5, Gene.NORMAL, EntityMetaTypes.PANDA_GENE);
 	
 	protected static final int
 	FLAG_IS_SNEEZING = 0x02,
@@ -34,7 +32,7 @@ public class CorePanda extends CoreAgeableMob implements Panda {
 	 * 0x10 - Is on back<br>
 	 */
 	protected static final MetaDataField<Byte>
-	META_PANDA_FLAGS = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+6, (byte) 0, MetaDataType.BYTE);
+	META_PANDA_FLAGS = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+6, (byte) 0, EntityMetaTypes.BYTE);
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+6;
 	

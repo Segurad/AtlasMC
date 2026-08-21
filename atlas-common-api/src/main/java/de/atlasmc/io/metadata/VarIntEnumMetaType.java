@@ -1,4 +1,4 @@
-package de.atlasmc.node.entity.metadata.type;
+package de.atlasmc.io.metadata;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.io.PacketUtil;

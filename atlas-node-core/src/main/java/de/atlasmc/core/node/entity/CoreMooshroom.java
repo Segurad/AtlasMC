@@ -1,15 +1,15 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Mooshroom;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.util.enums.EnumUtil;
 
 public class CoreMooshroom extends CoreAgeableMob implements Mooshroom {
 
-	protected static final MetaDataField<String>
-	META_SHROOM_TYPE = new MetaDataField<>(CoreCow.LAST_META_INDEX+1, Variant.RED.getName(), MetaDataType.STRING);
+	protected static final MetaDataField<Integer>
+	META_SHROOM_TYPE = new MetaDataField<>(CoreCow.LAST_META_INDEX+1, Variant.RED.getID(), EntityMetaTypes.VAR_INT);
 	
 	protected static final int LAST_META_INDEX = CoreCow.LAST_META_INDEX+1;
 	
@@ -30,12 +30,12 @@ public class CoreMooshroom extends CoreAgeableMob implements Mooshroom {
 
 	@Override
 	public Variant getVariant() {
-		return EnumUtil.getByName(Variant.class, metaContainer.getData(META_SHROOM_TYPE));
+		return EnumUtil.getByID(Variant.class, metaContainer.getData(META_SHROOM_TYPE));
 	}
 
 	@Override
 	public void setVariant(Variant variant) {
-		metaContainer.setData(META_SHROOM_TYPE, variant.getName());
+		metaContainer.setData(META_SHROOM_TYPE, variant.getID());
 	}
 
 }

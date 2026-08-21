@@ -4,28 +4,29 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import de.atlasmc.Color;
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.entity.Display;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
+import de.atlasmc.util.enums.EnumUtil;
 
 public class CoreDisplay extends CoreEntity implements Display {
 
-	protected static final MetaDataField<Integer> META_INTERPOLATION_DELAY = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, 0, MetaDataType.VAR_INT);
-	protected static final MetaDataField<Integer> META_TRANSFORMATION_INTERPOLATION_DURATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+2, 0, MetaDataType.VAR_INT);
-	protected static final MetaDataField<Integer> META_POSITION_INTERPOLATION_DURATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+3, 0, MetaDataType.VAR_INT);
-	protected static final MetaDataField<Vector3f> META_TRANSLATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+4, new Vector3f(), MetaDataType.VECTOR_3F);
-	protected static final MetaDataField<Vector3f> META_SCALE = new MetaDataField<>(CoreEntity.LAST_META_INDEX+5, new Vector3f(1f,1f,1f), MetaDataType.VECTOR_3F);
-	protected static final MetaDataField<Quaternionf> META_LEFT_ROTATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+6, new Quaternionf(), MetaDataType.QUATERNION_F);
-	protected static final MetaDataField<Quaternionf> META_RIGHT_ROTATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+7, new Quaternionf(), MetaDataType.QUATERNION_F);
-	protected static final MetaDataField<Billboard> META_BILLBOARD = new MetaDataField<>(CoreEntity.LAST_META_INDEX+8, Billboard.FIXED, MetaDataType.getByteEnumType(Billboard.class)); 
-	protected static final MetaDataField<Integer> META_BRIGHTNESS_OVERRIDE = new MetaDataField<>(CoreEntity.LAST_META_INDEX+9, -1, MetaDataType.VAR_INT);
-	protected static final MetaDataField<Float> META_VIEW_RANGE = new MetaDataField<>(CoreEntity.LAST_META_INDEX+10, 1f, MetaDataType.FLOAT);
-	protected static final MetaDataField<Float> META_SHADOW_RADIUS = new MetaDataField<>(CoreEntity.LAST_META_INDEX+11, 0f, MetaDataType.FLOAT);
-	protected static final MetaDataField<Float> META_SHADOW_STRENGTH = new MetaDataField<>(CoreEntity.LAST_META_INDEX+12, 1f, MetaDataType.FLOAT);
-	protected static final MetaDataField<Float> META_WIDTH = new MetaDataField<>(CoreEntity.LAST_META_INDEX+13, 0f, MetaDataType.FLOAT);
-	protected static final MetaDataField<Float> META_HEIGHT = new MetaDataField<>(CoreEntity.LAST_META_INDEX+14, 0f, MetaDataType.FLOAT);
-	protected static final MetaDataField<Integer> META_GLOW_COLOR_OVERRIDE = new MetaDataField<>(CoreEntity.LAST_META_INDEX+15, -1, MetaDataType.VAR_INT);
+	protected static final MetaDataField<Integer> META_INTERPOLATION_DELAY = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, 0, EntityMetaTypes.VAR_INT);
+	protected static final MetaDataField<Integer> META_TRANSFORMATION_INTERPOLATION_DURATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+2, 0, EntityMetaTypes.VAR_INT);
+	protected static final MetaDataField<Integer> META_POSITION_INTERPOLATION_DURATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+3, 0, EntityMetaTypes.VAR_INT);
+	protected static final MetaDataField<Vector3f> META_TRANSLATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+4, new Vector3f(), EntityMetaTypes.VECTOR_3F);
+	protected static final MetaDataField<Vector3f> META_SCALE = new MetaDataField<>(CoreEntity.LAST_META_INDEX+5, new Vector3f(1f,1f,1f), EntityMetaTypes.VECTOR_3F);
+	protected static final MetaDataField<Quaternionf> META_LEFT_ROTATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+6, new Quaternionf(), EntityMetaTypes.QUATERNION_F);
+	protected static final MetaDataField<Quaternionf> META_RIGHT_ROTATION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+7, new Quaternionf(), EntityMetaTypes.QUATERNION_F);
+	protected static final MetaDataField<Byte> META_BILLBOARD = new MetaDataField<>(CoreEntity.LAST_META_INDEX+8, (byte) Billboard.FIXED.getID(), EntityMetaTypes.BYTE); 
+	protected static final MetaDataField<Integer> META_BRIGHTNESS_OVERRIDE = new MetaDataField<>(CoreEntity.LAST_META_INDEX+9, -1, EntityMetaTypes.VAR_INT);
+	protected static final MetaDataField<Float> META_VIEW_RANGE = new MetaDataField<>(CoreEntity.LAST_META_INDEX+10, 1f, EntityMetaTypes.FLOAT);
+	protected static final MetaDataField<Float> META_SHADOW_RADIUS = new MetaDataField<>(CoreEntity.LAST_META_INDEX+11, 0f, EntityMetaTypes.FLOAT);
+	protected static final MetaDataField<Float> META_SHADOW_STRENGTH = new MetaDataField<>(CoreEntity.LAST_META_INDEX+12, 1f, EntityMetaTypes.FLOAT);
+	protected static final MetaDataField<Float> META_WIDTH = new MetaDataField<>(CoreEntity.LAST_META_INDEX+13, 0f, EntityMetaTypes.FLOAT);
+	protected static final MetaDataField<Float> META_HEIGHT = new MetaDataField<>(CoreEntity.LAST_META_INDEX+14, 0f, EntityMetaTypes.FLOAT);
+	protected static final MetaDataField<Integer> META_GLOW_COLOR_OVERRIDE = new MetaDataField<>(CoreEntity.LAST_META_INDEX+15, -1, EntityMetaTypes.VAR_INT);
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX + 15;
 	
@@ -82,12 +83,12 @@ public class CoreDisplay extends CoreEntity implements Display {
 
 	@Override
 	public Billboard getBillboard() { 
-		return metaContainer.getData(META_BILLBOARD);
+		return EnumUtil.getByID(Billboard.class, metaContainer.getData(META_BILLBOARD));
 	}
 
 	@Override
 	public void setBillboard(Billboard billboard) {
-		metaContainer.setData(META_BILLBOARD, billboard);
+		metaContainer.setData(META_BILLBOARD, (byte) billboard.getID());
 	}
 
 	@Override

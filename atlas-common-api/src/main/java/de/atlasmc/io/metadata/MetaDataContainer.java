@@ -1,10 +1,9 @@
-package de.atlasmc.node.entity.metadata;
+package de.atlasmc.io.metadata;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.iterator.ArrayIterator;
 
@@ -140,6 +139,20 @@ public class MetaDataContainer implements Iterable<MetaData<?>> {
 	 */
 	public <T> MetaData<T> set(MetaDataField<T> field, T data) {
 		return set(new MetaData<>(field, data));
+	}
+	
+	public boolean setMetaData(List<MetaDataInfo<Object>> info, boolean changed) {
+		boolean change = false;
+		for (var entry : info) {
+			@SuppressWarnings("unchecked")
+			var metaData = (MetaData<Object>) this.data[entry.getIndex()];
+			var dchanged = metaData.setData(entry.getData());
+			if (dchanged)
+				change = true;
+		}
+		if (change && changed)
+			this.changed = true;
+		return change;
 	}
 	
 	/**

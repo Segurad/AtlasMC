@@ -1,14 +1,14 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.entity.AbstractSlime;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreAbstractSlime extends CoreMob implements AbstractSlime {
 
 	protected static final MetaDataField<Integer>
-	META_SLIME_SIZE = new MetaDataField<>(CoreMob.LAST_META_INDEX+1, 1, MetaDataType.VAR_INT);
+	META_SLIME_SIZE = new MetaDataField<>(CoreMob.LAST_META_INDEX+1, 1, EntityMetaTypes.VAR_INT);
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+1;
 	

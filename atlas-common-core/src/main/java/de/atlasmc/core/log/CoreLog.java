@@ -46,19 +46,8 @@ public class CoreLog implements Log {
 	}
 
 	@Override
-	public void sendToConsole(boolean console) {
-		boolean isConsole = this.console;
-		if (isConsole == console)
-			return;
-		synchronized (this) {
-			if (isConsole == console)
-				return;
-			if (console) {
-				this.console = true;
-			} else {
-				this.console = false;
-			}
-		}
+	public synchronized void sendToConsole(boolean console) {
+		this.console = console;
 	}
 
 	@Override

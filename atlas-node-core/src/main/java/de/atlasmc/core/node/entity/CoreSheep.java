@@ -1,17 +1,17 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaData;
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.DyeColor;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Sheep;
-import de.atlasmc.node.entity.metadata.MetaData;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.util.enums.EnumUtil;
 
 public class CoreSheep extends CoreAgeableMob implements Sheep {
 
 	protected static final MetaDataField<Byte>
-	META_SHEEP_FLAGS = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, (byte) DyeColor.WHITE.getID(), MetaDataType.BYTE);
+	META_SHEEP_FLAGS = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, (byte) DyeColor.WHITE.getID(), EntityMetaTypes.BYTE);
 	
 	protected static final int LAST_META_INDEX = CoreAgeableMob.LAST_META_INDEX+1;
 	

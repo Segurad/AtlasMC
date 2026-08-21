@@ -1,10 +1,9 @@
 package de.atlasmc.core.node.entity;
 
-import de.atlasmc.node.DyeColor;
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.Llama;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.AbstractHorseInventory;
 import de.atlasmc.node.inventory.ContainerFactory;
 import de.atlasmc.node.inventory.LlamaInventory;
@@ -13,13 +12,11 @@ import de.atlasmc.util.enums.EnumUtil;
 public class CoreLlama extends CoreChestedHorse implements Llama {
 
 	protected static final MetaDataField<Integer>
-	META_LLAMA_STRENGTH = new MetaDataField<>(CoreChestedHorse.LAST_META_INDEX+1, 0, MetaDataType.VAR_INT);
+	META_LLAMA_STRENGTH = new MetaDataField<>(CoreChestedHorse.LAST_META_INDEX+1, 0, EntityMetaTypes.VAR_INT);
 	protected static final MetaDataField<Integer>
-	META_LLAMA_CARPET = new MetaDataField<>(CoreChestedHorse.LAST_META_INDEX+2, -1, MetaDataType.VAR_INT);
-	protected static final MetaDataField<LlamaColor>
-	META_LLAMA_VARIANT = new MetaDataField<>(CoreChestedHorse.LAST_META_INDEX+3, LlamaColor.CREAMY, MetaDataType.getVarIntEnumType(LlamaColor.class));
+	META_LLAMA_VARIANT = new MetaDataField<>(CoreChestedHorse.LAST_META_INDEX+2, LlamaColor.CREAMY.getID(), EntityMetaTypes.VAR_INT);
 
-	protected static final int LAST_META_INDEX = CoreChestedHorse.LAST_META_INDEX+3;
+	protected static final int LAST_META_INDEX = CoreChestedHorse.LAST_META_INDEX+2;
 	
 	public CoreLlama(EntityType type) {
 		super(type);
@@ -29,7 +26,6 @@ public class CoreLlama extends CoreChestedHorse implements Llama {
 	protected void initMetaContainer() {
 		super.initMetaContainer();
 		metaContainer.set(META_LLAMA_STRENGTH);
-		metaContainer.set(META_LLAMA_CARPET);
 		metaContainer.set(META_LLAMA_VARIANT);
 	}
 	
@@ -44,13 +40,8 @@ public class CoreLlama extends CoreChestedHorse implements Llama {
 	}
 
 	@Override
-	public DyeColor getCarpetColor() {
-		return EnumUtil.getByID(DyeColor.class, metaContainer.getData(META_LLAMA_CARPET));
-	}
-
-	@Override
 	public LlamaColor getColor() {
-		return metaContainer.getData(META_LLAMA_VARIANT);
+		return EnumUtil.getByID(LlamaColor.class, metaContainer.getData(META_LLAMA_VARIANT));
 	}
 
 	@Override
@@ -63,13 +54,8 @@ public class CoreLlama extends CoreChestedHorse implements Llama {
 	}
 
 	@Override
-	public void setCarpedColor(DyeColor color) {
-		metaContainer.setData(META_LLAMA_CARPET, color != null ? color.getID() : -1);
-	}
-
-	@Override
 	public void setColor(LlamaColor color) {
-		metaContainer.setData(META_LLAMA_VARIANT, color);
+		metaContainer.setData(META_LLAMA_VARIANT, color.getID());
 	}
 	
 	@Override

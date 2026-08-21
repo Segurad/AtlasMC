@@ -1,15 +1,18 @@
 package de.atlasmc.core.node.entity;
 
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.ItemDisplay;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.ItemStack;
+import de.atlasmc.util.enums.EnumUtil;
 
 public class CoreItemDisplay extends CoreDisplay implements ItemDisplay {
 
-	protected static final MetaDataField<ItemStack> META_DISPLAYED_ITEM = new MetaDataField<>(CoreDisplay.LAST_META_INDEX+1, null, MetaDataType.SLOT);
-	protected static final MetaDataField<RenderType> META_DISPLAY_TYPE = new MetaDataField<>(CoreDisplay.LAST_META_INDEX+2, RenderType.NONE, MetaDataType.getByteEnumType(RenderType.class));
+	protected static final MetaDataField<ItemStack> 
+	META_DISPLAYED_ITEM = new MetaDataField<>(CoreDisplay.LAST_META_INDEX+1, null, EntityMetaTypes.SLOT);
+	protected static final MetaDataField<Byte> 
+	META_DISPLAY_TYPE = new MetaDataField<>(CoreDisplay.LAST_META_INDEX+2, (byte) RenderType.NONE.getID(), EntityMetaTypes.BYTE);
 	
 	protected static final int LAST_META_INDEX = CoreDisplay.LAST_META_INDEX+2;
 	
@@ -41,12 +44,12 @@ public class CoreItemDisplay extends CoreDisplay implements ItemDisplay {
 
 	@Override
 	public RenderType getRenderType() {
-		return metaContainer.getData(META_DISPLAY_TYPE);
+		return EnumUtil.getByID(RenderType.class, metaContainer.getData(META_DISPLAY_TYPE));
 	}
 
 	@Override
 	public void setRenderType(RenderType renderType) {
-		metaContainer.setData(META_DISPLAY_TYPE, renderType);
+		metaContainer.setData(META_DISPLAY_TYPE, (byte) renderType.getID());
 	}
 
 }

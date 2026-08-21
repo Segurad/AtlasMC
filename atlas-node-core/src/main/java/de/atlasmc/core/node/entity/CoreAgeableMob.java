@@ -2,15 +2,15 @@ package de.atlasmc.core.node.entity;
 
 import java.util.UUID;
 
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.entity.AgeableMob;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreAgeableMob extends CoreMob implements AgeableMob {
 
 	protected static final MetaDataField<Boolean>
-	META_IS_BABY = new MetaDataField<>(CoreMob.LAST_META_INDEX+1, false, MetaDataType.BOOLEAN);
+	META_IS_BABY = new MetaDataField<>(CoreMob.LAST_META_INDEX+1, false, EntityMetaTypes.BOOLEAN);
 	
 	protected static final int LAST_META_INDEX = CoreMob.LAST_META_INDEX+1;
 	

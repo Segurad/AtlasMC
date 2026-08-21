@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import de.atlasmc.io.metadata.MetaDataField;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.ZombieVillager;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.inventory.ContainerFactory;
 import de.atlasmc.node.inventory.InventoryType;
 import de.atlasmc.node.inventory.MerchantInventory;
@@ -15,9 +15,9 @@ import de.atlasmc.node.inventory.MerchantInventory;
 public class CoreZombieVillager extends CoreZombie implements ZombieVillager {
 
 	protected static final MetaDataField<Boolean>
-	META_IS_CONVERTING = new MetaDataField<>(CoreZombie.LAST_META_INDEX+1, false, MetaDataType.BOOLEAN);
+	META_IS_CONVERTING = new MetaDataField<>(CoreZombie.LAST_META_INDEX+1, false, EntityMetaTypes.BOOLEAN);
 	protected static final MetaDataField<VillagerData>
-	META_VILLAGER_DATA = new MetaDataField<>(CoreZombie.LAST_META_INDEX + 2, new VillagerData(), MetaDataType.VILLAGER_DATA);
+	META_VILLAGER_DATA = new MetaDataField<>(CoreZombie.LAST_META_INDEX + 2, new VillagerData(), EntityMetaTypes.VILLAGER_DATA);
 	
 	protected static final int LAST_META_INDEX = CoreZombie.LAST_META_INDEX+2;
 	

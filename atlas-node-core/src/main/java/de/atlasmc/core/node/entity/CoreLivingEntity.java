@@ -17,18 +17,18 @@ import org.joml.Vector3i;
 
 import de.atlasmc.Color;
 import de.atlasmc.event.HandlerList;
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.Location;
 import de.atlasmc.node.attribute.Attribute;
 import de.atlasmc.node.attribute.AttributeInstance;
 import de.atlasmc.node.attribute.AttributeModifier;
 import de.atlasmc.node.entity.Entity;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.LivingEntity;
 import de.atlasmc.node.entity.Player;
 import de.atlasmc.node.entity.Projectile;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 import de.atlasmc.node.event.entity.ProjectileLounchEvent;
 import de.atlasmc.node.inventory.EntityEquipment;
 import de.atlasmc.node.inventory.EquipmentSlot;
@@ -64,19 +64,19 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	 * 0x04 riptide spin attack<br>
 	 */
 	protected static final MetaDataField<Byte>
-	META_HAND_STATES = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, (byte) 0, MetaDataType.BYTE);
+	META_HAND_STATES = new MetaDataField<>(CoreEntity.LAST_META_INDEX+1, (byte) 0, EntityMetaTypes.BYTE);
 	protected static final MetaDataField<Float>
-	META_HEALTH = new MetaDataField<>(CoreEntity.LAST_META_INDEX+2, 1.0f, MetaDataType.FLOAT);
+	META_HEALTH = new MetaDataField<>(CoreEntity.LAST_META_INDEX+2, 1.0f, EntityMetaTypes.FLOAT);
 	protected static final MetaDataField<Integer>
-	META_POTION_EFFECT_COLOR = new MetaDataField<>(CoreEntity.LAST_META_INDEX+3, 0, MetaDataType.VAR_INT);
+	META_POTION_EFFECT_COLOR = new MetaDataField<>(CoreEntity.LAST_META_INDEX+3, 0, EntityMetaTypes.VAR_INT);
 	protected static final MetaDataField<Boolean>
-	META_REDUCE_POTION_AMBIENT = new MetaDataField<>(CoreEntity.LAST_META_INDEX+4, false, MetaDataType.BOOLEAN);
+	META_REDUCE_POTION_AMBIENT = new MetaDataField<>(CoreEntity.LAST_META_INDEX+4, false, EntityMetaTypes.BOOLEAN);
 	protected static final MetaDataField<Integer>
-	META_DISPLAY_ARROWS = new MetaDataField<>(CoreEntity.LAST_META_INDEX+5, 0, MetaDataType.VAR_INT);
+	META_DISPLAY_ARROWS = new MetaDataField<>(CoreEntity.LAST_META_INDEX+5, 0, EntityMetaTypes.VAR_INT);
 	protected static final MetaDataField<Integer>
-	META_DISPLAY_BEE_STINGERS = new MetaDataField<>(CoreEntity.LAST_META_INDEX+6, 0, MetaDataType.VAR_INT);
+	META_DISPLAY_BEE_STINGERS = new MetaDataField<>(CoreEntity.LAST_META_INDEX+6, 0, EntityMetaTypes.VAR_INT);
 	protected static final MetaDataField<Long>
-	META_OCCUPIED_BED_POSITION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+7, null, MetaDataType.OPT_POSITION);
+	META_OCCUPIED_BED_POSITION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+7, null, EntityMetaTypes.OPT_POSITION);
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+7;
 	

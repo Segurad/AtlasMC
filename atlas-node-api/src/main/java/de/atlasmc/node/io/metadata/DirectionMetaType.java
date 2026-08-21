@@ -1,8 +1,9 @@
-package de.atlasmc.node.entity.metadata.type;
+package de.atlasmc.node.io.metadata;
 
 import static de.atlasmc.io.PacketUtil.readVarInt;
 import static de.atlasmc.io.PacketUtil.writeVarInt;
 
+import de.atlasmc.io.metadata.MetaDataType;
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;

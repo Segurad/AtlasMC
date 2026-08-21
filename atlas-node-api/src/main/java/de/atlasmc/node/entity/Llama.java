@@ -2,7 +2,6 @@ package de.atlasmc.node.entity;
 
 import de.atlasmc.IDHolder;
 import de.atlasmc.nbt.codec.NBTCodec;
-import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.inventory.LlamaInventory;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumUtil;
@@ -22,10 +21,6 @@ public interface Llama extends ChestedHorse {
 	int getStrength();
 	
 	void setStrength(int strength);
-	
-	DyeColor getCarpetColor();
-	
-	void setCarpedColor(DyeColor color);
 	
 	LlamaColor getColor();
 	

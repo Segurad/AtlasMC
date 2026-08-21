@@ -2,11 +2,11 @@ package de.atlasmc.core.node.entity;
 
 import org.joml.Vector3f;
 
+import de.atlasmc.io.metadata.MetaData;
+import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.node.entity.ArmorStand;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.entity.EntityType;
-import de.atlasmc.node.entity.metadata.MetaData;
-import de.atlasmc.node.entity.metadata.MetaDataField;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
 
 public class CoreArmorStand extends CoreLivingEntity implements ArmorStand {
 
@@ -26,19 +26,19 @@ public class CoreArmorStand extends CoreLivingEntity implements ArmorStand {
 	 * </table>
 	 */
 	protected static final MetaDataField<Byte>
-	META_ARMOR_STAND_FLAGS = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+1, (byte) 0, MetaDataType.BYTE);
+	META_ARMOR_STAND_FLAGS = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+1, (byte) 0, EntityMetaTypes.BYTE);
 	protected static final MetaDataField<Vector3f>
-	META_ROTATION_HEAD = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+2, new Vector3f(), MetaDataType.ROTATION);
+	META_ROTATION_HEAD = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+2, new Vector3f(), EntityMetaTypes.ROTATION);
 	protected static final MetaDataField<Vector3f>
-	META_ROTATION_BODY = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+3, new Vector3f(), MetaDataType.ROTATION);
+	META_ROTATION_BODY = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+3, new Vector3f(), EntityMetaTypes.ROTATION);
 	protected static final MetaDataField<Vector3f>
-	META_ROTATION_LEFT_ARM = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+4, new Vector3f(-10.0f, 0.0f, -10.0f), MetaDataType.ROTATION);
+	META_ROTATION_LEFT_ARM = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+4, new Vector3f(-10.0f, 0.0f, -10.0f), EntityMetaTypes.ROTATION);
 	protected static final MetaDataField<Vector3f>
-	META_ROTATION_RIGHT_ARM = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+5, new Vector3f(-15.0f, 0.0f, 10.0f), MetaDataType.ROTATION);
+	META_ROTATION_RIGHT_ARM = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+5, new Vector3f(-15.0f, 0.0f, 10.0f), EntityMetaTypes.ROTATION);
 	protected static final MetaDataField<Vector3f>
-	META_ROTATION_LEFT_LEG = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+6, new Vector3f(-1.0f, 0.0f, -1.0f), MetaDataType.ROTATION);
+	META_ROTATION_LEFT_LEG = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+6, new Vector3f(-1.0f, 0.0f, -1.0f), EntityMetaTypes.ROTATION);
 	protected static final MetaDataField<Vector3f>
-	META_ROTATION_RIGHT_LEG = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+7, new Vector3f(1.0f, 0.0f, 1.0f), MetaDataType.ROTATION);
+	META_ROTATION_RIGHT_LEG = new MetaDataField<>(CoreLivingEntity.LAST_META_INDEX+7, new Vector3f(1.0f, 0.0f, 1.0f), EntityMetaTypes.ROTATION);
 	
 	protected static final int LAST_META_INDEX = CoreLivingEntity.LAST_META_INDEX+7;
 	

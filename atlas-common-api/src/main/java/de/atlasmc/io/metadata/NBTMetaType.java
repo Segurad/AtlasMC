@@ -1,4 +1,4 @@
-package de.atlasmc.node.entity.metadata.type;
+package de.atlasmc.io.metadata;
 
 import java.io.IOException;
 
@@ -8,7 +8,7 @@ import de.atlasmc.nbt.tag.CompoundTag;
 import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
-final class NBTMetaType extends MetaDataType<CompoundTag> {
+public final class NBTMetaType extends MetaDataType<CompoundTag> {
 
     public NBTMetaType(int type) {
 		super(type, CompoundTag.class);

@@ -9,8 +9,9 @@ import java.util.List;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
-import de.atlasmc.node.entity.metadata.MetaDataInfo;
-import de.atlasmc.node.entity.metadata.type.MetaDataType;
+import de.atlasmc.io.metadata.MetaDataInfo;
+import de.atlasmc.io.metadata.MetaDataType;
+import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.node.io.protocol.play.PacketOutSetEntityMetadata;
 import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
@@ -28,7 +29,7 @@ public class CorePacketOutSetEntityMetadata implements PacketCodec<PacketOutSetE
 				data = new ArrayList<>();
 			int typeID = readVarInt(in);
 			@SuppressWarnings("unchecked")
-			MetaDataType<Object> type = (MetaDataType<Object>) MetaDataType.getByID(typeID);
+			MetaDataType<Object> type = (MetaDataType<Object>) EntityMetaTypes.getByID(typeID);
 			Object value = type.read(in, context);
 			var meta = new MetaDataInfo<>(index, type, value);
 			data.add(meta);
