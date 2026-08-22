@@ -1,7 +1,5 @@
 package de.atlasmc.node.inventory.component;
 
-import de.atlasmc.NamespacedKey;
-import de.atlasmc.registry.ProtocolRegistry;
 import de.atlasmc.registry.ProtocolRegistryValueBase;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.Registry;
@@ -145,22 +143,6 @@ public class ComponentType extends ProtocolRegistryValueBase {
 	
 	public void setFactory(ItemComponentFactory factory) {
 		this.factory = Objects.requireNonNull(factory);
-	}
-	
-	public static ComponentType get(NamespacedKey key) {
-		return getRegistry().get(key);
-	}
-	
-	public static ComponentType get(CharSequence key) {
-		return getRegistry().get(key);
-	}
-	
-	public static ComponentType getByID(int id) {
-		return getRegistry().getByID(id);
-	}
-	
-	public static ProtocolRegistry<ComponentType> getRegistry() {
-		return REGISTRY_KEY.getRegistry();
 	}
 
 }

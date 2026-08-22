@@ -103,7 +103,7 @@ public class ItemStack implements NBTSerializable, StreamSerializable, ItemCompo
 				item.setComponent(comp);
 			}
 			for (int i = 0; i < ignoredCount; i++) {
-				ComponentType type = ComponentType.getByID(readVarInt(input));
+				ComponentType type = ComponentType.REGISTRY_KEY.getValue(readVarInt(input));
 				item.addIgnoredComponent(type);
 			}
 			return item;

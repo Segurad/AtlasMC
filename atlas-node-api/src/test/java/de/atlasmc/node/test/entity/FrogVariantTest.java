@@ -3,7 +3,7 @@ package de.atlasmc.node.test.entity;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
-import de.atlasmc.node.entity.Frog.Variant;
+import de.atlasmc.node.entity.component.FrogMetaComponent;
 import de.atlasmc.test.util.EnumTestUtil;
 
 public class FrogVariantTest {
@@ -11,7 +11,7 @@ public class FrogVariantTest {
 	@Test
 	@Order(Integer.MAX_VALUE)
 	void testFrogVariant() throws Exception {
-		EnumTestUtil.testRegistryProtocolEnum(Variant.class, "/minecraft/registries/registry_minecraft_frog_variant.json");
+		EnumTestUtil.testRegistryProtocolEnum(FrogMetaComponent.Variant.class, "/minecraft/registries/registry_minecraft_frog_variant.json");
 	}
 
 }

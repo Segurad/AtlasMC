@@ -7,6 +7,9 @@ import org.joml.Vector3d;
 import org.joml.Vector3i;
 
 import de.atlasmc.IDHolder;
+import de.atlasmc.component.Component;
+import de.atlasmc.component.ComponentHolder;
+import de.atlasmc.io.metadata.MetaDataContainer;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.nbt.codec.NBTSerializable;
@@ -24,7 +27,7 @@ import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.ThreadSafe;
 import de.atlasmc.util.annotation.UnsafeAPI;
 
-public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitter {
+public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitter, ComponentHolder<Component> {
 	
 	@NotNull
 	public static final NBTCodec<Entity>
@@ -52,6 +55,8 @@ public interface Entity extends NBTSerializable, Nameable, Tickable, SoundEmitte
 					.intField("TicksFrozen", Entity::getFreezeTicks, Entity::setFreezeTicks, 0)
 					.codec("UUID", Entity::getUUID, Entity::setUUID, NBTCodecs.UUID_CODEC)
 					.build();
+	
+	MetaDataContainer getMetaContainer();
 	
 	void addScoreboardTag(String tag);
 	

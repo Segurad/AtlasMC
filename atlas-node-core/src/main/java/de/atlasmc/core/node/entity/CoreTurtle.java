@@ -11,14 +11,14 @@ import de.atlasmc.node.util.MathUtil;
 
 public class CoreTurtle extends CoreAgeableMob implements Turtle {
 
-	protected static final MetaDataField<Long>
-	META_HOME_POS = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, 0L, EntityMetaTypes.POSITION);
+	protected static final MetaDataField<Vector3i>
+	META_HOME_POS = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+1, new Vector3i(), EntityMetaTypes.POSITION);
 	protected static final MetaDataField<Boolean>
 	META_HAS_EGG = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+2, false, EntityMetaTypes.BOOLEAN);
 	protected static final MetaDataField<Boolean>
 	META_IS_LAYING_EGG = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+3, false, EntityMetaTypes.BOOLEAN);
-	protected static final MetaDataField<Long>
-	META_TRAVEL_POS = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+4, 0L, EntityMetaTypes.POSITION);
+	protected static final MetaDataField<Vector3i>
+	META_TRAVEL_POS = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+4, new Vector3i(), EntityMetaTypes.POSITION);
 	protected static final MetaDataField<Boolean>
 	META_IS_GOING_HOME = new MetaDataField<>(CoreAgeableMob.LAST_META_INDEX+5, false, EntityMetaTypes.BOOLEAN);
 	protected static final MetaDataField<Boolean>

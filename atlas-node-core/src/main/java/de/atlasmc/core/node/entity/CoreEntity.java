@@ -10,6 +10,8 @@ import org.joml.Vector3d;
 import org.joml.Vector3i;
 
 import de.atlasmc.chat.Chat;
+import de.atlasmc.component.Component;
+import de.atlasmc.component.ComponentType;
 import de.atlasmc.io.metadata.MetaData;
 import de.atlasmc.io.metadata.MetaDataContainer;
 import de.atlasmc.io.metadata.MetaDataField;
@@ -737,6 +739,47 @@ public class CoreEntity implements Entity {
 	@Override
 	public int getObjectData() {
 		return 0;
+	}
+
+	@Override
+	public boolean hasComponents() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean hasComponent(ComponentType type) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public <R extends Component> R getComponent(ComponentType type) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Component setComponent(Component component) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Component removeComponent(ComponentType type) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean removeComponent(Component component) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public MetaDataContainer getMetaContainer() {
+		return metaContainer;
 	}
 	
 }
