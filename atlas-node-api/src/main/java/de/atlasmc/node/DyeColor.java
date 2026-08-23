@@ -8,6 +8,7 @@ import de.atlasmc.IDHolder;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.inventory.ItemType;
+import de.atlasmc.registry.RegistryValueKey;
 import de.atlasmc.util.enums.EnumName;
 
 public enum DyeColor implements IDHolder, EnumName {
@@ -30,52 +31,52 @@ public enum DyeColor implements IDHolder, EnumName {
 	BLACK(0x1D1D21);
 	
 	private static final Map<NamespacedKey, DyeColor> DYE_BY_BANNER;
-	private static final Map<DyeColor, NamespacedKey> BANNER_BY_DYE;
-	private static final Map<DyeColor, NamespacedKey> WALL_BANNER_BY_DYE;
+	private static final Map<DyeColor, RegistryValueKey<BlockType>> BANNER_BY_DYE;
+	private static final Map<DyeColor, RegistryValueKey<BlockType>> WALL_BANNER_BY_DYE;
 	
 	static {
-		HashMap<DyeColor, NamespacedKey> toBanner = new HashMap<>();
-		HashMap<DyeColor, NamespacedKey> toWallBanner = new HashMap<>();
-		toBanner.put(WHITE, BlockType.WHITE_BANNER.getNamespacedKey());
-		toWallBanner.put(WHITE, BlockType.WHITE_WALL_BANNER.getNamespacedKey());
-		toBanner.put(ORANGE, BlockType.ORANGE_BANNER.getNamespacedKey());
-		toWallBanner.put(ORANGE, BlockType.ORANGE_WALL_BANNER.getNamespacedKey());
-		toBanner.put(MAGENTA, BlockType.MAGENTA_BANNER.getNamespacedKey());
-		toWallBanner.put(MAGENTA, BlockType.MAGENTA_WALL_BANNER.getNamespacedKey());
-		toBanner.put(LIGHT_BLUE, BlockType.LIGHT_BLUE_BANNER.getNamespacedKey());
-		toWallBanner.put(LIGHT_BLUE, BlockType.LIGHT_BLUE_WALL_BANNER.getNamespacedKey());
-		toBanner.put(YELLOW, BlockType.YELLOW_BANNER.getNamespacedKey());
-		toWallBanner.put(YELLOW, BlockType.YELLOW_WALL_BANNER.getNamespacedKey());
-		toBanner.put(LIME, BlockType.LIME_BANNER.getNamespacedKey());
-		toWallBanner.put(LIME, BlockType.LIME_WALL_BANNER.getNamespacedKey());
-		toBanner.put(PINK, BlockType.PINK_BANNER.getNamespacedKey());
-		toWallBanner.put(PINK, BlockType.PINK_WALL_BANNER.getNamespacedKey());
-		toBanner.put(GRAY, BlockType.GRAY_BANNER.getNamespacedKey());
-		toWallBanner.put(GRAY, BlockType.GRAY_WALL_BANNER.getNamespacedKey());
-		toBanner.put(LIGHT_GRAY, BlockType.LIGHT_GRAY_BANNER.getNamespacedKey());
-		toWallBanner.put(LIGHT_GRAY, ItemType.LIGHT_GRAY_BANNER.getNamespacedKey());
-		toBanner.put(CYAN, BlockType.CYAN_BANNER.getNamespacedKey());
-		toWallBanner.put(CYAN, BlockType.CYAN_WALL_BANNER.getNamespacedKey());
-		toBanner.put(PURPLE, BlockType.PURPLE_BANNER.getNamespacedKey());
-		toWallBanner.put(PURPLE, BlockType.PURPLE_WALL_BANNER.getNamespacedKey());
-		toBanner.put(BLUE, BlockType.BLUE_BANNER.getNamespacedKey());
-		toWallBanner.put(BLUE, BlockType.BLUE_WALL_BANNER.getNamespacedKey());
-		toBanner.put(BROWN, BlockType.BROWN_BANNER.getNamespacedKey());
-		toWallBanner.put(BROWN, BlockType.BROWN_WALL_BANNER.getNamespacedKey());
-		toBanner.put(GREEN, BlockType.GREEN_BANNER.getNamespacedKey());
-		toWallBanner.put(GREEN, BlockType.GREEN_WALL_BANNER.getNamespacedKey());
-		toBanner.put(RED, BlockType.RED_BANNER.getNamespacedKey());
-		toWallBanner.put(RED, BlockType.RED_WALL_BANNER.getNamespacedKey());
-		toBanner.put(BLACK, BlockType.BLACK_BANNER.getNamespacedKey());
-		toWallBanner.put(BLACK, BlockType.BLACK_WALL_BANNER.getNamespacedKey());
+		HashMap<DyeColor, RegistryValueKey<BlockType>> toBanner = new HashMap<>();
+		HashMap<DyeColor, RegistryValueKey<BlockType>> toWallBanner = new HashMap<>();
+		toBanner.put(WHITE, BlockType.WHITE_BANNER);
+		toWallBanner.put(WHITE, BlockType.WHITE_WALL_BANNER);
+		toBanner.put(ORANGE, BlockType.ORANGE_BANNER);
+		toWallBanner.put(ORANGE, BlockType.ORANGE_WALL_BANNER);
+		toBanner.put(MAGENTA, BlockType.MAGENTA_BANNER);
+		toWallBanner.put(MAGENTA, BlockType.MAGENTA_WALL_BANNER);
+		toBanner.put(LIGHT_BLUE, BlockType.LIGHT_BLUE_BANNER);
+		toWallBanner.put(LIGHT_BLUE, BlockType.LIGHT_BLUE_WALL_BANNER);
+		toBanner.put(YELLOW, BlockType.YELLOW_BANNER);
+		toWallBanner.put(YELLOW, BlockType.YELLOW_WALL_BANNER);
+		toBanner.put(LIME, BlockType.LIME_BANNER);
+		toWallBanner.put(LIME, BlockType.LIME_WALL_BANNER);
+		toBanner.put(PINK, BlockType.PINK_BANNER);
+		toWallBanner.put(PINK, BlockType.PINK_WALL_BANNER);
+		toBanner.put(GRAY, BlockType.GRAY_BANNER);
+		toWallBanner.put(GRAY, BlockType.GRAY_WALL_BANNER);
+		toBanner.put(LIGHT_GRAY, BlockType.LIGHT_GRAY_BANNER);
+		toWallBanner.put(LIGHT_GRAY, BlockType.LIGHT_GRAY_BANNER);
+		toBanner.put(CYAN, BlockType.CYAN_BANNER);
+		toWallBanner.put(CYAN, BlockType.CYAN_WALL_BANNER);
+		toBanner.put(PURPLE, BlockType.PURPLE_BANNER);
+		toWallBanner.put(PURPLE, BlockType.PURPLE_WALL_BANNER);
+		toBanner.put(BLUE, BlockType.BLUE_BANNER);
+		toWallBanner.put(BLUE, BlockType.BLUE_WALL_BANNER);
+		toBanner.put(BROWN, BlockType.BROWN_BANNER);
+		toWallBanner.put(BROWN, BlockType.BROWN_WALL_BANNER);
+		toBanner.put(GREEN, BlockType.GREEN_BANNER);
+		toWallBanner.put(GREEN, BlockType.GREEN_WALL_BANNER);
+		toBanner.put(RED, BlockType.RED_BANNER);
+		toWallBanner.put(RED, BlockType.RED_WALL_BANNER);
+		toBanner.put(BLACK, BlockType.BLACK_BANNER);
+		toWallBanner.put(BLACK, BlockType.BLACK_WALL_BANNER);
 		BANNER_BY_DYE = Map.copyOf(toBanner);
 		WALL_BANNER_BY_DYE = Map.copyOf(toWallBanner);
 		HashMap<NamespacedKey, DyeColor> byBanner = new HashMap<>();
 		toBanner.forEach((k, v) -> {
-			byBanner.put(v, k);
+			byBanner.put(v.getNamespacedKey(), k);
 		});
 		toWallBanner.forEach((k, v) -> {
-			byBanner.put(v, k);
+			byBanner.put(v.getNamespacedKey(), k);
 		});
 		DYE_BY_BANNER = Map.copyOf(byBanner);
 	}
@@ -105,18 +106,15 @@ public enum DyeColor implements IDHolder, EnumName {
 	}
 	
 	public ItemType getBannerItem() {
-		NamespacedKey key = BANNER_BY_DYE.get(this);
-		return ItemType.get(key);
+		return ItemType.REGISTRY_KEY.getValue(BANNER_BY_DYE.get(this).getNamespacedKey());
 	}
 
 	public BlockType getBanner() {
-		NamespacedKey key = BANNER_BY_DYE.get(this);
-		return BlockType.get(key);
+		return BANNER_BY_DYE.get(this).get();
 	}
 
 	public BlockType getWallBanner() {
-		NamespacedKey key = WALL_BANNER_BY_DYE.get(this);
-		return BlockType.get(key);
+		return WALL_BANNER_BY_DYE.get(this).get();
 	}
 
 	@Override

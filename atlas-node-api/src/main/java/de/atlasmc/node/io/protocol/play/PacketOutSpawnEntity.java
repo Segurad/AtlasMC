@@ -10,8 +10,9 @@ import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.entity.Entity;
 import de.atlasmc.node.entity.EntityType;
 import de.atlasmc.node.entity.FallingBlock;
-import de.atlasmc.node.entity.Hanging;
 import de.atlasmc.node.entity.LivingEntity;
+import de.atlasmc.node.entity.component.EntityComponentTypes;
+import de.atlasmc.node.entity.component.HangingMetaComponent;
 
 @DefaultPacketID(packetID = PacketPlay.OUT_SPAWN_ENTITY, definition = "add_entity")
 public class PacketOutSpawnEntity extends AbstractPacket implements PacketPlayOut {
@@ -42,7 +43,9 @@ public class PacketOutSpawnEntity extends AbstractPacket implements PacketPlayOu
 		objectdata = 0;
 		/*if (entity instanceof Projectile) {
 			Ignored
-		} else*/ if (entity instanceof Hanging hanging) {
+		} else*/ 
+		HangingMetaComponent hanging = entity.getComponent(EntityComponentTypes.HANGING_META.get());
+		if (hanging != null) {
 			BlockFace ori = hanging.getAttachedFace();
 			switch (ori) {
 			case DOWN: objectdata = 0; break;

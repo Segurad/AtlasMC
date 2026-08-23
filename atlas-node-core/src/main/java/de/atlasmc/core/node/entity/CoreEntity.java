@@ -115,6 +115,8 @@ public class CoreEntity implements Entity {
 	private boolean ticking;
 	private boolean onGround;
 	
+	private int objectData;
+	
 	// Update flags
 	private boolean teleported;
 	private boolean passengersChanged;
@@ -737,7 +739,7 @@ public class CoreEntity implements Entity {
 	
 	@Override
 	public int getObjectData() {
-		return 0;
+		return objectData;
 	}
 
 	@Override
@@ -775,10 +777,21 @@ public class CoreEntity implements Entity {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	@Override
+	public <R extends Component> R getOrCreateComponent(ComponentType type) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
 	public MetaDataContainer getMetaContainer() {
 		return metaContainer;
+	}
+
+	@Override
+	public void setObjectData(int data) {
+		this.objectData = data;
 	}
 	
 }

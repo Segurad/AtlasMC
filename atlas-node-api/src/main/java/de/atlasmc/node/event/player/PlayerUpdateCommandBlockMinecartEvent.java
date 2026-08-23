@@ -2,7 +2,6 @@ package de.atlasmc.node.event.player;
 
 import de.atlasmc.event.Cancellable;
 import de.atlasmc.node.entity.Entity;
-import de.atlasmc.node.entity.MinecartCommandBlock;
 import de.atlasmc.node.entity.Player;
 import de.atlasmc.node.event.ServerHandlerList;
 
@@ -11,7 +10,7 @@ public class PlayerUpdateCommandBlockMinecartEvent extends PlayerEvent implement
 	private static final ServerHandlerList handlers = new ServerHandlerList();
 	
 	private int entityID;
-	private MinecartCommandBlock entity;
+	private Entity entity;
 	private final String command;
 	private boolean trackoutput;
 	private boolean cancelled;
@@ -32,16 +31,12 @@ public class PlayerUpdateCommandBlockMinecartEvent extends PlayerEvent implement
 	}
 	
 	/**
-	 * Returns a {@link MinecartCommandBlock} or null if no valid Entity is present
+	 * Returns a Entity or null if no valid Entity is present
 	 * @return Entity or null
 	 */
-	public MinecartCommandBlock getEntity() {
+	public Entity getEntity() {
 		if (entity == null && entityID != -1) {
-			Entity ent = getPlayer().getWorld().getEntity(entityID);
-			if (ent instanceof MinecartCommandBlock) 
-				entity = (MinecartCommandBlock) ent;
-			else
-				entityID = -1;
+			entity = getPlayer().getWorld().getEntity(entityID);
 		}
 		return entity;
 	}

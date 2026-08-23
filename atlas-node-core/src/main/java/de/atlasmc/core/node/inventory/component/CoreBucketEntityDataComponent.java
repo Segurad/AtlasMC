@@ -1,9 +1,9 @@
 package de.atlasmc.core.node.inventory.component;
 
 import de.atlasmc.node.DyeColor;
-import de.atlasmc.node.entity.Axolotl.Variant;
-import de.atlasmc.node.entity.Salmon.Type;
-import de.atlasmc.node.entity.TropicalFish.Pattern;
+import de.atlasmc.node.entity.component.AxolotlMetaComponent.Variant;
+import de.atlasmc.node.entity.component.SalmonMetaComponent.Type;
+import de.atlasmc.node.entity.component.TropicalFishMetaComponent.Pattern;
 import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.BucketEntityDataComponent;
 import de.atlasmc.node.inventory.component.ComponentType;

@@ -2,6 +2,8 @@ package de.atlasmc.component;
 
 import java.util.Objects;
 
+import de.atlasmc.util.annotation.Nullable;
+
 public abstract class AbstractHolderBoundComponent<T extends ComponentHolder<?>> implements HolderBoundComponent<T> {
 
 	private final ComponentType type;
@@ -12,19 +14,28 @@ public abstract class AbstractHolderBoundComponent<T extends ComponentHolder<?>>
 	}
 	
 	@Override
-	public ComponentType getType() {
+	public final ComponentType getType() {
 		return type;
 	}
 
 	@Override
-	public void registerHolder(T holder) {
+	public final void registerHolder(T holder) {
 		if (this.holder != null)
 			throw new IllegalStateException("Component is already bound to another holder!");
 		this.holder = holder;
+		holderChanged(holder);
+	}
+	
+	/**
+	 * Called if the holder has changed. Null if the component is unregistered otherwise a valid holder.
+	 * @param holder or null
+	 */
+	protected void holderChanged(@Nullable T holder) {
+		// override in child
 	}
 
 	@Override
-	public void unregisterHolder() {
+	public final void unregisterHolder() {
 		var holder = this.holder;
 		if (holder == null)
 			return;
@@ -33,7 +44,7 @@ public abstract class AbstractHolderBoundComponent<T extends ComponentHolder<?>>
 	}
 
 	@Override
-	public T getHolder() {
+	public final T getHolder() {
 		return holder;
 	}
 

@@ -1,9 +1,7 @@
 package de.atlasmc.node.inventory;
 
-import de.atlasmc.node.entity.Llama;
-
 /**
- * Inventory of a {@link Llama}
+ * Inventory of a Llama entity
  */
 public interface LlamaInventory extends AbstractHorseInventory {
 	

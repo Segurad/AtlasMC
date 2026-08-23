@@ -18,8 +18,25 @@ public interface ComponentHolder<T extends Component> {
 	 */
 	boolean hasComponent(@NotNull ComponentType type);
 	
-	@NotNull
+	/**
+	 * Returns the component with the given type.
+	 * If no component is set with the type return null.
+	 * @param <R>
+	 * @param type
+	 * @return component or null
+	 */
+	@Nullable
 	<R extends T> R getComponent(@NotNull ComponentType type);
+	
+	/**
+	 * Returns the component of the given type.
+	 * If no component is set with the type a new one will be created
+	 * @param <R>
+	 * @param type
+	 * @return
+	 */
+	@NotNull
+	<R extends T> R getOrCreateComponent(@NotNull ComponentType type);
 	
 	/**
 	 * Sets a new {@link Component} and returns the previous value

@@ -29,6 +29,14 @@ public class HangingMetaComponent extends AbstractHolderBoundComponent<Entity> i
 	}
 	
 	@Override
+	protected void holderChanged(Entity holder) {
+		if (holder == null)
+			return;
+		var face = holder.getMetaContainer().getData(META_DIRECTION);
+		updateFace(holder, face);
+	}
+	
+	@Override
 	public void initMetaContainer(MetaDataContainer container) {
 		container.set(META_DIRECTION);
 	}
@@ -45,9 +53,15 @@ public class HangingMetaComponent extends AbstractHolderBoundComponent<Entity> i
 	public void setFacingDirection(BlockFace face) {
 		if (face.ordinal() > 5)
 			throw new IllegalArgumentException("Face not compatible with Painting: " + face.name());
-		if (!getHolder().getMetaContainer().setData(META_DIRECTION, face))
+		var holder = getHolder();
+		if (!holder.getMetaContainer().setData(META_DIRECTION, face))
 			return;
-		var loc = getHolder().getLocationUnsafe();
+		updateFace(holder, face);
+	}
+	
+	private void updateFace(Entity holder, BlockFace face) {
+		holder.setObjectData(face.getFaceID());
+		var loc = holder.getLocationUnsafe();
 		loc.yaw = face.getYaw();
 		loc.pitch = face.getPitch();
 	}

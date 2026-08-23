@@ -21,9 +21,9 @@ public class DolphinMetaComponent extends AbstractHolderBoundComponent<Entity> i
 					.boolField("GotFish", DolphinMetaComponent::hasFish, DolphinMetaComponent::setFish, false)
 					.build();
 	
-	protected static final MetaDataField<Boolean>
+	public static final MetaDataField<Boolean>
 	META_HAS_FISH = new MetaDataField<>(18, false, EntityMetaTypes.BOOLEAN);
-	protected static final MetaDataField<Integer>
+	public static final MetaDataField<Integer>
 	META_MOISTURE_LEVEL = new MetaDataField<>(19, 2400, EntityMetaTypes.VAR_INT);
 
 	public DolphinMetaComponent(ComponentType type) {

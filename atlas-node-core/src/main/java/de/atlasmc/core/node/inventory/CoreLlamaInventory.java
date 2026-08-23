@@ -1,7 +1,6 @@
 package de.atlasmc.core.node.inventory;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.node.entity.Llama;
 import de.atlasmc.node.inventory.InventoryHolder;
 import de.atlasmc.node.inventory.InventoryType;
 import de.atlasmc.node.inventory.ItemStack;
