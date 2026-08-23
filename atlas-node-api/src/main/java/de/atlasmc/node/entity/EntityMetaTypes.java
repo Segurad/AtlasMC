@@ -28,12 +28,14 @@ import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.entity.AbstractVillager.VillagerData;
 import de.atlasmc.node.entity.Entity.Pose;
-import de.atlasmc.node.entity.Wolf.WolfVariant;
 import de.atlasmc.node.entity.component.ArmadilloMetaComponent;
 import de.atlasmc.node.entity.component.CatMetaComponent;
 import de.atlasmc.node.entity.component.FrogMetaComponent;
 import de.atlasmc.node.entity.component.PaintingMetaComponent;
+import de.atlasmc.node.entity.component.PandaMetaComponent;
 import de.atlasmc.node.entity.component.SnifferMetaComponent;
+import de.atlasmc.node.entity.component.WolfMetaComponent.WolfSoundVariant;
+import de.atlasmc.node.entity.component.WolfMetaComponent.WolfVariant;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.io.metadata.DirectionMetaType;
 import de.atlasmc.node.io.metadata.OptPositionMetaType;
@@ -141,9 +143,11 @@ public class EntityMetaTypes {
 	
 	public static final MetaDataType<WolfVariant> WOLF_VARIANT = new RegistryValueMetaType<>(TYPE_ID_WOLF_VARIANT, WolfVariant.class, WolfVariant.REGISTRY_KEY);
 	
+	public static final MetaDataType<WolfSoundVariant> WOLF_SOUND_VARIANT = new RegistryValueMetaType<>(TYPE_ID_WOLF_SOUND_VARIANT, WolfSoundVariant.class, WolfSoundVariant.REGISTRY_KEY);
+	
 	public static final MetaDataType<DyeColor> VAR_INT_COLOR = new VarIntEnumMetaType<>(TYPE_ID_VAR_INT, DyeColor.class);
 	
-	public static final MetaDataType<Panda.Gene> PANDA_GENE = new VarIntEnumMetaType<>(TYPE_ID_ARMADILLO_STATE, Panda.Gene.class);
+	public static final MetaDataType<PandaMetaComponent.Gene> PANDA_GENE = new VarIntEnumMetaType<>(TYPE_ID_ARMADILLO_STATE, PandaMetaComponent.Gene.class);
 	
 	private static final MetaDataType<?>[] TYPES = new MetaDataType<?>[] {
 		BYTE,
@@ -169,7 +173,7 @@ public class EntityMetaTypes {
 		POSE,
 		CAT_VARIANT,
 		WOLF_VARIANT,
-		//WOLF_SOUND_VARIANT,
+		WOLF_SOUND_VARIANT,
 		FROG_VARIANT,
 		//PIG_VARIANT,
 		//CHICKEN_VARIANT,
@@ -185,8 +189,6 @@ public class EntityMetaTypes {
 	};
 	
 	public static MetaDataType<?> getByID(int id) {
-		if (id < 0 || id > TYPES.length)
-			throw new IllegalArgumentException("Invalid Type ID: " + id);
 		return TYPES[id];
 	}
 	

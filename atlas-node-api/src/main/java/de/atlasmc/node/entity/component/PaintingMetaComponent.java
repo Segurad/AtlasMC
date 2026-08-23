@@ -7,7 +7,6 @@ import de.atlasmc.io.metadata.MetaDataContainer;
 import de.atlasmc.io.metadata.MetaDataField;
 import de.atlasmc.io.metadata.MetaDataFieldProvider;
 import de.atlasmc.nbt.codec.NBTCodec;
-import de.atlasmc.node.block.BlockFace;
 import de.atlasmc.node.entity.Entity;
 import de.atlasmc.node.entity.EntityMetaTypes;
 import de.atlasmc.util.annotation.NotNull;
@@ -24,8 +23,6 @@ public class PaintingMetaComponent extends AbstractHolderBoundComponent<Entity> 
 					.codec("motive", PaintingMetaComponent::getMotive, PaintingMetaComponent::setMotive, EnumUtil.enumStringNBTCodec(Motive.class), Motive.KEBAB)
 					.build();
 	
-	public static final MetaDataField<BlockFace>
-	META_DIRECTION = new MetaDataField<>(8, BlockFace.DOWN, EntityMetaTypes.DIRECTION);
 	public static final MetaDataField<Motive> 
 	META_MOTIVE = new MetaDataField<>(9, Motive.KEBAB, EntityMetaTypes.PAINTING_VARIANT);
 	
@@ -35,12 +32,11 @@ public class PaintingMetaComponent extends AbstractHolderBoundComponent<Entity> 
 	
 	@Override
 	public int getMetaFieldCount() {
-		return 2;
+		return 1;
 	}
 	
 	@Override
 	public void initMetaContainer(MetaDataContainer container) {
-		container.set(META_DIRECTION);
 		container.set(META_MOTIVE);
 	}
 
@@ -50,14 +46,6 @@ public class PaintingMetaComponent extends AbstractHolderBoundComponent<Entity> 
 
 	public void setMotive(Motive motive) {
 		getHolder().getMetaContainer().setData(META_MOTIVE, motive);
-	}
-	
-	public void setDirection(BlockFace face) {
-		getHolder().getMetaContainer().setData(META_DIRECTION, face);
-	}
-	
-	public BlockFace getDirection() {
-		return getHolder().getMetaContainer().getData(META_DIRECTION);
 	}
 	
 	@Override

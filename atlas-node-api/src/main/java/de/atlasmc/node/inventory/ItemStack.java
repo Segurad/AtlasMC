@@ -1,6 +1,7 @@
 package de.atlasmc.node.inventory;
 
-import static de.atlasmc.io.PacketUtil.*;
+import static de.atlasmc.io.PacketUtil.readVarInt;
+import static de.atlasmc.io.PacketUtil.writeVarInt;
 
 import java.io.IOException;
 import java.util.Map;
@@ -21,8 +22,10 @@ import de.atlasmc.util.OpenCloneable;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.codec.CodecContext;
+import de.atlasmc.util.map.IdentityStrategy;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 
 public class ItemStack implements NBTSerializable, StreamSerializable, ItemComponentHolder, OpenCloneable {
@@ -141,7 +144,7 @@ public class ItemStack implements NBTSerializable, StreamSerializable, ItemCompo
 	@Override
 	public Map<ComponentType, ItemComponent> getComponents() {
 		if (components == null)
-			components = new Object2ObjectArrayMap<>();
+			components = new Object2ObjectOpenCustomHashMap<>(IdentityStrategy.getInstance());
 		return components;
 	}
 	

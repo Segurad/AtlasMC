@@ -1,5 +1,7 @@
 package de.atlasmc.io.metadata;
 
+import java.util.Objects;
+
 /**
  * Field of {@link MetaData} defines the index, default data and {@link MetaDataType}
  * @param <T>
@@ -12,8 +14,8 @@ public class MetaDataField<T> {
 	
 	public MetaDataField(int index, T defautlData, MetaDataType<T> type) {
 		this.index = (byte) index;
-		this.defaultData = defautlData;
-		this.type = type;
+		this.type = Objects.requireNonNull(type, "type");
+		this.defaultData = type.optional ? Objects.requireNonNull(defautlData, "default") : defautlData;
 	}
 	
 	public int getIndex() {

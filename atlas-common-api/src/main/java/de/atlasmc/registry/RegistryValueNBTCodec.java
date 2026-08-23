@@ -16,7 +16,7 @@ final class RegistryValueNBTCodec<V extends Namespaced> implements NBTCodec<V> {
 	private final RegistryKey<V> registry;
 	
 	public RegistryValueNBTCodec(RegistryKey<V> registry) {
-		this.registry = Objects.requireNonNull(registry);
+		this.registry = Objects.requireNonNull(registry, "registry");
 	}
 
 	@Override

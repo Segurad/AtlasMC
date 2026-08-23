@@ -603,7 +603,6 @@ public class CoreEntity implements Entity {
 	 * Processes the tick
 	 */
 	protected void doTick() {
-		oldLoc.set(loc);
 		loc.add(motion);
 	}
 	

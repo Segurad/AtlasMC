@@ -270,6 +270,13 @@ public class Registries {
 		reader.endArray();
 	}
 	
+	/**
+	 * Returns a NBTCodec that represents a registry value as a string field
+	 * @param <T>
+	 * @param key
+	 * @return codec
+	 */
+	@NotNull
 	public static <T extends Namespaced> NBTCodec<T> registryValueNBTCodec(RegistryKey<T> key) {
 		return new RegistryValueNBTCodec<>(key);
 	}

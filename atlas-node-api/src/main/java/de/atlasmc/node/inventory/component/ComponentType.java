@@ -11,12 +11,10 @@ import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import static de.atlasmc.registry.RegistryValueKey.ofLiteral;
 
-import java.util.Objects;
-
 /**
  * Represents all component types known to the client custom ones are not included.
  */
-@RegistryHolder(key = "minecraft:data_component_type", target = Target.PROTOCOL)
+@RegistryHolder(key = "minecraft:item_component_type", target = Target.PROTOCOL)
 public class ComponentType extends ProtocolRegistryValueBase {
 	
 	public static final RegistryKey<ComponentType> REGISTRY_KEY = Registries.getRegistryKey(ComponentType.class);
@@ -135,14 +133,6 @@ public class ComponentType extends ProtocolRegistryValueBase {
 	@NotNull
 	public ItemComponent createItemComponent() {
 		return factory.createComponent(this);
-	}
-	
-	public ItemComponentFactory getFactory() {
-		return factory;
-	}
-	
-	public void setFactory(ItemComponentFactory factory) {
-		this.factory = Objects.requireNonNull(factory);
 	}
 
 }

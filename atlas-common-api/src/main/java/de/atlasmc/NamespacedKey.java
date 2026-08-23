@@ -219,15 +219,19 @@ public class NamespacedKey implements CharSequence {
 	}
 	
 	@NotNull
-	public static NamespacedKey literal(@NotNull String namespacedKey) {
-		NamespacedKey k = CACHE.get(namespacedKey);
-		if (k != null)
-			return k;
-		k = of(namespacedKey);
-		NamespacedKey cacheKey = CACHE.putIfAbsent(namespacedKey, k);
-		if (cacheKey != null)
-			k = cacheKey;
-		return k;
+	public synchronized static NamespacedKey literal(@NotNull String namespacedKey) {
+		synchronized (CACHE) {
+			var k = of(namespacedKey);	
+			var ck = CACHE.putIfAbsent(k.toString(), k);
+			return ck != null ? ck : k;
+		}
+	}
+	
+	public NamespacedKey literal() {
+		synchronized (CACHE) {
+			var k = CACHE.putIfAbsent(key.toString(), this);
+			return k != null ? k : this;
+		}
 	}
 	
 	public static void clearLiteralCache() {

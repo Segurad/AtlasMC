@@ -1,7 +1,7 @@
 [
     {
         "type": "de.atlasmc.node.inventory.component.ComponentType",
-        "registry": "atlas:component_type",
+        "registry": "atlas:item_component_type",
         "configurations": [
             {
                 "name": "minecraft:attribute_modifiers",
